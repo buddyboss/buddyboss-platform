@@ -221,7 +221,7 @@ class BP_Activity_Component extends BP_Component {
 
 		// Add 'Activity' to the main navigation.
 		$main_nav = array(
-			'name'                => _x( 'Activity', 'Profile activity screen nav', 'buddyboss' ),
+			'name'                => _x( 'Feed', 'Profile activity screen nav', 'buddyboss' ),
 			'slug'                => $slug,
 			'position'            => 10,
 			'screen_function'     => 'bp_activity_screen_my_activity',
@@ -331,7 +331,7 @@ class BP_Activity_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
-				'title'  => _x( 'Activity', 'My Account Activity sub nav', 'buddyboss' ),
+				'title'  => _x( 'Feed', 'My Account Activity sub nav', 'buddyboss' ),
 				'href'   => $activity_link
 			);
 
