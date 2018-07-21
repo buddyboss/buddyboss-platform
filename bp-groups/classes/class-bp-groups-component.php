@@ -102,7 +102,7 @@ class BP_Groups_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'groups',
-			_x( 'User Groups', 'Group screen page <title>', 'buddyboss' ),
+			_x( 'Groups Directory', 'Group screen page <title>', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 70,

@@ -87,8 +87,8 @@ function bp_core_admin_get_directory_pages() {
  */
 function bp_core_admin_get_static_pages() {
 	$static_pages = array(
-		'register' => __( 'Register', 'buddyboss' ),
-		'activate' => __( 'Activate', 'buddyboss' ),
+		'register' => __( 'Register Form', 'buddyboss' ),
+		'activate' => __( 'Activation', 'buddyboss' ),
 	);
 
 	/**
