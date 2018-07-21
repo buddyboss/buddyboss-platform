@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Settings Template Functions.
+ * BuddyBoss Settings Template Functions.
  *
  * @package BuddyBoss
  * @subpackage SettingsTemplate

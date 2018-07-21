@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Settings Loader.
+ * BuddyBoss Settings Loader.
  *
  * @package BuddyBoss
  * @subpackage SettingsLoader

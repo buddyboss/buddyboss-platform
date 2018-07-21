@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Settings Functions
+ * BuddyBoss Settings Functions
  *
  * @package BuddyBoss
  * @subpackage SettingsFunctions
