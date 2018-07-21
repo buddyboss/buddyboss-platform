@@ -2,7 +2,7 @@
 /**
  * BuddyPress Tools panel.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Core
  * @since 2.0.0
  */

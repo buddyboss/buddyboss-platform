@@ -3,7 +3,7 @@
 /**
  * BuddyPress - Users Profile
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-default
  */
 

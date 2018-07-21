@@ -2,7 +2,7 @@
 /**
  * BuddyPress Notifications Template Loop Class.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage TonificationsTemplate
  * @since 1.9.0
  */

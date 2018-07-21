@@ -8,7 +8,7 @@
  * For more information on how the custom AJAX functions work, see
  * http://codex.wordpress.org/AJAX_in_Plugins.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @since BuddyPress (1.2)
  * @subpackage BP-Default
  */

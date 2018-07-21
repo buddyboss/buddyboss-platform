@@ -2,7 +2,7 @@
 /**
  * BuddyPress XProfile Admin Class.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @since 2.0.0
  */
 

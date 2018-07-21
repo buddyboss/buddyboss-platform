@@ -2,7 +2,7 @@
 /**
  * Settings: User's "Settings > Capabilities" screen handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage SettingsScreens
  * @since 3.0.0
  */

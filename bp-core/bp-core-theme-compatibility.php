@@ -2,7 +2,7 @@
 /**
  * BuddyPress Core Theme Compatibility.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage ThemeCompatibility
  * @since 1.7.0
  */

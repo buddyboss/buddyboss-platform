@@ -3,7 +3,7 @@
 /**
  * BuddyPress - Users Activity
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-default
  */
 

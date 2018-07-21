@@ -5,7 +5,7 @@
  * Backwards compatibility functions and filters used for member notifications.
  * Use bp-notifications instead.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage MembersNotifications
  */
 

@@ -4,7 +4,7 @@
  *
  * Functions for the Activity Streams component.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage ActivityFunctions
  * @since 1.5.0
  */

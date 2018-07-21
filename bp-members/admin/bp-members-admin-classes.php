@@ -2,7 +2,7 @@
 /**
  * BuddyPress Members List Classes.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage MembersAdminClasses
  * @since 2.3.0
  */

@@ -2,7 +2,7 @@
 /**
  * Notifications: User's "Notifications" screen handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage NotificationsScreens
  * @since 3.0.0
  */

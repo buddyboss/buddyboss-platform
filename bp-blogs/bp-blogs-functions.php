@@ -2,7 +2,7 @@
 /**
  * Blogs component functions.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage BlogsFunctions
  * @since 1.5.0
  */

@@ -5,7 +5,7 @@
  * This template is used by activity-loop.php and AJAX functions to show
  * each activity.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */

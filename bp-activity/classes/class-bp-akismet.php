@@ -2,7 +2,7 @@
 /**
  * Akismet support for BuddyPress' Activity Stream.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage ActivityAkismet
  * @since 1.6.0
  */

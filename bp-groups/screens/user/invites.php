@@ -2,7 +2,7 @@
 /**
  * Groups: User's "Groups > Invites" screen handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage GroupScreens
  * @since 3.0.0
  */

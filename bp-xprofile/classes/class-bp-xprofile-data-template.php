@@ -2,7 +2,7 @@
 /**
  * BuddyPress XProfile Template Loop Class.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @since 1.0.0
  */
 

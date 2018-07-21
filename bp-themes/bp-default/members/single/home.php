@@ -3,7 +3,7 @@
 /**
  * BuddyPress - Users Home
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-default
  */
 

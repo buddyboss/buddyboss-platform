@@ -2,7 +2,7 @@
 /**
  * BuddyPress Avatars.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Core
  * @since 1.0.0
  */

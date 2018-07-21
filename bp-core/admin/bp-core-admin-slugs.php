@@ -2,7 +2,7 @@
 /**
  * BuddyPress Admin Slug Functions.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage CoreAdministration
  * @since 2.3.0
  */
@@ -104,7 +104,7 @@ function bp_core_admin_get_static_pages() {
 /**
  * Creates reusable markup for page setup on the Components and Pages dashboard panel.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @since 1.6.0
  * @todo Use settings API
  */

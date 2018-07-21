@@ -3,7 +3,7 @@
 /**
  * BuddyPress - Groups Directory
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-default
  */
 

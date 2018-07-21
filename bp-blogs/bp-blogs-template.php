@@ -2,7 +2,7 @@
 /**
  * BuddyPress Blogs Template Tags.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage BlogsTemplate
  * @since 1.5.0
  */

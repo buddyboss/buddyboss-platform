@@ -3,7 +3,7 @@
 /**
  * BuddyPress Notification Settings
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-default
  */
 

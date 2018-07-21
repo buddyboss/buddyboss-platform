@@ -2,7 +2,7 @@
 /**
  * BuddyPress Members component admin screens.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Messages
  * @since 3.0.0
  */

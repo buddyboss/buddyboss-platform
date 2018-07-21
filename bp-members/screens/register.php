@@ -2,7 +2,7 @@
 /**
  * Members: Register screen handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage MembersScreens
  * @since 3.0.0
  */

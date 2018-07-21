@@ -2,7 +2,7 @@
 /**
  * BuddyPress Members Widgets.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage MembersWidgets
  * @since 2.2.0
  */
