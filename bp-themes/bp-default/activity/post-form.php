@@ -19,11 +19,7 @@
 		</a>
 	</div>
 
-	<h5><?php if ( bp_is_group() )
-			printf( __( "What's new in %s, %s?", 'buddypress' ), bp_get_group_name(), bp_get_user_firstname() );
-		else
-			printf( __( "What's new, %s?", 'buddypress' ), bp_get_user_firstname() );
-	?></h5>
+	<h5><?php printf( __( "Write here or use @ to mention someone.", 'buddypress' ), bp_get_user_firstname() ); ?></h5>
 
 	<div id="whats-new-content">
 		<div id="whats-new-textarea">
