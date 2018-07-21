@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Activity Functions.
  *
- * Functions for the Activity Streams component.
+ * Functions for the Activity Feeds component.
  *
  * @package BuddyBoss
  * @subpackage ActivityFunctions

@@ -2477,7 +2477,7 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Allow your users to talk to each other directly and in private. Not just limited to one-on-one discussions, messages can be sent between any number of members.', 'buddypress' )
 		),
 		'activity' => array(
-			'title'       => __( 'Activity Streams', 'buddypress' ),
+			'title'       => __( 'Activity Feeds', 'buddypress' ),
 			'description' => __( 'Global, personal, and group activity streams with threaded commenting, direct posting, favoriting, and @mentions, all with full RSS feed and email notification support.', 'buddypress' )
 		),
 		'notifications' => array(

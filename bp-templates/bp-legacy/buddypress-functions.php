@@ -1174,7 +1174,7 @@ function bp_legacy_theme_spam_activity() {
 		return;
 	}
 
-	// Check that user is logged in, Activity Streams are enabled, and Akismet is present.
+	// Check that user is logged in, Activity Feeds are enabled, and Akismet is present.
 	if ( ! is_user_logged_in() || ! bp_is_active( 'activity' ) || empty( $bp->activity->akismet ) )
 		exit( '-1' );
 

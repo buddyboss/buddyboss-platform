@@ -759,7 +759,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:30
 #: bp-core/bp-core-functions.php:2480
-msgid "Activity Streams"
+msgid "Activity Feeds"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:185
