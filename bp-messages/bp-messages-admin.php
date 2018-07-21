@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Members component admin screens.
+ * BuddyBoss Members component admin screens.
  *
  * @package BuddyBoss
  * @subpackage Messages

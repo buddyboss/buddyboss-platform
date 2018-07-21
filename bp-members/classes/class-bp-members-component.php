@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Defines the BuddyPress Members Component.
+ * Defines the BuddyBoss Members Component.
  *
  * @since 1.5.0
  */

@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Members Filters.
+ * BuddyBoss Members Filters.
  *
  * Filters specific to the Members component.
  *

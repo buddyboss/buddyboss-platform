@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Members Recently Active widget.
+ * BuddyBoss Members Recently Active widget.
  *
  * @package BuddyBoss
  * @subpackage MembersWidgets

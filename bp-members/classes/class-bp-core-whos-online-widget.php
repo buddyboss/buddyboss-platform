@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Members Who's Online Widget.
+ * BuddyBoss Members Who's Online Widget.
  *
  * @package BuddyBoss
  * @subpackage MembersWidgets

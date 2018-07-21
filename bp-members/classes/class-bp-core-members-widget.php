@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Members Widget.
+ * BuddyBoss Members Widget.
  *
  * @package BuddyBoss
  * @subpackage MembersWidgets
