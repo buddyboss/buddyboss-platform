@@ -332,7 +332,7 @@ function bp_activity_get_userid_from_mentionname( $mentionname ) {
  * @param  string        $description     The action description.
  * @param  callable|bool $format_callback Callback for formatting the action string.
  * @param  string|bool   $label           String to describe this action in the activity stream filter dropdown.
- * @param  array         $context         Optional. Activity stream contexts where the filter should appear.
+ * @param  array         $context         Optional. Activity feed contexts where the filter should appear.
  *                                        Values: 'activity', 'member', 'member_groups', 'group'.
  * @param  int           $position        Optional. The position of the action when listed in dropdowns.
  * @return bool False if any param is empty, otherwise true.
@@ -370,7 +370,7 @@ function bp_activity_set_action( $component_id, $type, $description, $format_cal
 	 * @param string   $description     Action description for action being set.
 	 * @param callable $format_callback Callback for formatting the action string.
 	 * @param string   $label           String to describe this action in the activity stream filter dropdown.
-	 * @param array    $context         Activity stream contexts where the filter should appear. 'activity', 'member',
+	 * @param array    $context         Activity feed contexts where the filter should appear. 'activity', 'member',
 	 *                                  'member_groups', 'group'.
 	 */
 	$bp->activity->actions->{$component_id}->{$type} = apply_filters( 'bp_activity_set_action', array(
