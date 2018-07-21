@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Groups Classes.
+ * BuddyBoss Groups Classes.
  *
  * @package BuddyBoss
  * @subpackage GroupsClasses

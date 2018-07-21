@@ -58,7 +58,7 @@ function bp_nouveau_groups_register_scripts( $scripts = array() ) {
  * @since 3.0.0
  */
 function bp_nouveau_groups_enqueue_scripts() {
-	// Neutralize Ajax when using BuddyPress Groups & member widgets on default front page
+	// Neutralize Ajax when using BuddyBoss Groups & member widgets on default front page
 	if ( bp_is_group_home() && bp_nouveau_get_appearance_settings( 'group_front_page' ) ) {
 		wp_add_inline_style( 'bp-nouveau', '
 			#group-front-widgets #groups-list-options,

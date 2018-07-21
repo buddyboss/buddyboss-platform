@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Groups component admin screen.
+ * BuddyBoss Groups component admin screen.
  *
  * Props to WordPress core for the Comments admin screen, and its contextual
  * help text, on which this implementation is heavily based.
@@ -728,7 +728,7 @@ function bp_groups_admin_delete() {
 /**
  * Display the Groups admin index screen.
  *
- * This screen contains a list of all BuddyPress groups.
+ * This screen contains a list of all BuddyBoss groups.
  *
  * @since 1.7.0
  *

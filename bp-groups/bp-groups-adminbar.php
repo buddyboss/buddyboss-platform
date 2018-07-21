@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Groups Toolbar.
+ * BuddyBoss Groups Toolbar.
  *
  * Handles the groups functions related to the WordPress Toolbar.
  *

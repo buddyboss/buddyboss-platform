@@ -111,7 +111,7 @@ If you would like to provide monetary support to BuddyPress, please consider a d
 
 = Discussion Forums =
 
-Try <a href="https://wordpress.org/plugins/bbpress/">bbPress</a>. It integrates with BuddyPress Groups, Profiles, and Notifications. Each group on your site can choose to have its own forum, and each user's topics, replies, favorites, and subscriptions appear in their profiles.
+Try <a href="https://wordpress.org/plugins/bbpress/">bbPress</a>. It integrates with BuddyBoss Groups, Profiles, and Notifications. Each group on your site can choose to have its own forum, and each user's topics, replies, favorites, and subscriptions appear in their profiles.
 
 == Screenshots ==
 
