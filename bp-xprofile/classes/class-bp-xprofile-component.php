@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress XProfile Loader.
+ * BuddyBoss XProfile Loader.
  *
  * An extended profile component for users. This allows site admins to create
  * groups of fields for users to enter information about themselves.

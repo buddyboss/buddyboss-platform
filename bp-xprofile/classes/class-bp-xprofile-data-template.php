@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress XProfile Template Loop Class.
+ * BuddyBoss XProfile Template Loop Class.
  *
  * @package BuddyBoss
  * @since 1.0.0

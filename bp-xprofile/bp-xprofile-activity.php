@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress XProfile Activity & Notification Functions.
+ * BuddyBoss XProfile Activity & Notification Functions.
  *
  * These functions handle the recording, deleting and formatting of activity
  * items and notifications for the user and for this specific component.

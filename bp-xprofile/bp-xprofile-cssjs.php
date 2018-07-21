@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress XProfile CSS and JS.
+ * BuddyBoss XProfile CSS and JS.
  *
  * @package BuddyBoss
  * @subpackage XProfileScripts

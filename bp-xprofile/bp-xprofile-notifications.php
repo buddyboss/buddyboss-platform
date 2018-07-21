@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress XProfile Notifications.
+ * BuddyBoss XProfile Notifications.
  *
  * @package    BuddyPress
  * @subpackage XProfileSettings

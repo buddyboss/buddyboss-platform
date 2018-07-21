@@ -1,4 +1,4 @@
-Feature: Manage BuddyPress XProfile Groups
+Feature: Manage BuddyBoss XProfile Groups
 
   Scenario: XProfile Group CRUD operations
     Given a BP install

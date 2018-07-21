@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress XProfile Filters.
+ * BuddyBoss XProfile Filters.
  *
  * Business functions are where all the magic happens in BuddyPress. They will
  * handle the actual saving or manipulation of information. Usually they will

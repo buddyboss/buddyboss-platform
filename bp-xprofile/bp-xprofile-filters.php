@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress XProfile Filters.
+ * BuddyBoss XProfile Filters.
  *
  * Apply WordPress defined filters.
  *

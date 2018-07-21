@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress XProfile Caching Functions.
+ * BuddyBoss XProfile Caching Functions.
  *
  * Caching functions handle the clearing of cached objects and pages on specific
  * actions throughout BuddyPress.

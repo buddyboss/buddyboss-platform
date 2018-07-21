@@ -1,4 +1,4 @@
-Feature: Manage BuddyPress XProfile Data
+Feature: Manage BuddyBoss XProfile Data
 
   Scenario: XProfile Data CRUD Operations
     Given a BP install
