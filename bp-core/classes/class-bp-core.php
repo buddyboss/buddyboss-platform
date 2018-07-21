@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Core Loader.
+ * BuddyBoss Core Loader.
  *
  * Core contains the commonly used functions, classes, and APIs.
  *
@@ -28,7 +28,7 @@ class BP_Core extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'core',
-			__( 'BuddyPress Core', 'buddypress' ),
+			__( 'BuddyBoss Core', 'buddypress' ),
 			buddypress()->plugin_dir
 		);
 
@@ -47,7 +47,7 @@ class BP_Core extends BP_Component {
 		$bp = buddypress();
 
 		/**
-		 * Fires before the loading of individual components and after BuddyPress Core.
+		 * Fires before the loading of individual components and after BuddyBoss Core.
 		 *
 		 * Allows plugins to run code ahead of the other components.
 		 *

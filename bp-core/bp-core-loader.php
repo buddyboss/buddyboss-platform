@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Core Loader.
+ * BuddyBoss Core Loader.
  *
  * Core contains the commonly used functions, classes, and APIs.
  *

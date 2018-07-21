@@ -18,7 +18,7 @@ Feature: Manage BuddyPress Components
     When I run `wp bp component list --type=required`
     Then STDOUT should be a table containing rows:
       | number | id      | status    |  title             | description                                                       |
-      | 1      | core    | Active    |  BuddyPress Core   | It&#8216;s what makes <del>time travel</del> BuddyPress possible! |
+      | 1      | core    | Active    |  BuddyBoss Core   | It&#8216;s what makes <del>time travel</del> BuddyBoss possible! |
       | 2      | members | Inactive  |  Community Members | Everything in a BuddyPress community revolves around its members. |
 
     When I run `wp bp component list --fields=id --type=required`

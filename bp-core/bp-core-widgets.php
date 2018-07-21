@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Core Component Widgets.
+ * BuddyBoss Core Component Widgets.
  *
  * @package BuddyBoss
  * @subpackage Core

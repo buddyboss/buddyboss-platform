@@ -2447,8 +2447,8 @@ function bp_core_get_minified_asset_suffix() {
 function bp_core_get_components( $type = 'all' ) {
 	$required_components = array(
 		'core' => array(
-			'title'       => __( 'BuddyPress Core', 'buddypress' ),
-			'description' => __( 'It&#8216;s what makes <del>time travel</del> BuddyPress possible!', 'buddypress' )
+			'title'       => __( 'BuddyBoss Core', 'buddypress' ),
+			'description' => __( 'It&#8216;s what makes <del>time travel</del> BuddyBoss possible!', 'buddypress' )
 		),
 		'members' => array(
 			'title'       => __( 'Community Members', 'buddypress' ),

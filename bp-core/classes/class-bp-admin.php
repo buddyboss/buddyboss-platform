@@ -729,7 +729,7 @@ class BP_Admin {
 
 		<div class="wrap bp-about-wrap">
 
-		<h1><?php _e( 'BuddyPress Settings', 'buddypress' ); ?> </h1>
+		<h1><?php _e( 'BuddyBoss Settings', 'buddypress' ); ?> </h1>
 
 		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Credits', 'buddypress' ) ); ?></h2>
 
@@ -1078,7 +1078,7 @@ class BP_Admin {
 		$url = $this->css_url;
 
 		/**
-		 * Filters the BuddyPress Core Admin CSS file path.
+		 * Filters the BuddyBoss Core Admin CSS file path.
 		 *
 		 * @since 1.6.0
 		 *

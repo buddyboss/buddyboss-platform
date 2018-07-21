@@ -51,7 +51,7 @@ class BP_Embed extends WP_Embed {
 		}
 
 		/**
-		 * Filters the BuddyPress Core oEmbed setup.
+		 * Filters the BuddyBoss Core oEmbed setup.
 		 *
 		 * @since 1.5.0
 		 *

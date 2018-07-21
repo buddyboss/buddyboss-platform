@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Core Toolbar.
+ * BuddyBoss Core Toolbar.
  *
  * Handles the core functions related to the WordPress Toolbar.
  *

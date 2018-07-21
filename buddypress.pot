@@ -1161,7 +1161,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:267
 #: bp-core/admin/bp-core-admin-slugs.php:24
 #: bp-core/classes/class-bp-admin.php:732
-msgid "BuddyPress Settings"
+msgid "BuddyBoss Settings"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:26
@@ -2053,11 +2053,11 @@ msgid "Not recently active"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2450 bp-core/classes/class-bp-core.php:31
-msgid "BuddyPress Core"
+msgid "BuddyBoss Core"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2451
-msgid "It&#8216;s what makes <del>time travel</del> BuddyPress possible!"
+msgid "It&#8216;s what makes <del>time travel</del> BuddyBoss possible!"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2454
