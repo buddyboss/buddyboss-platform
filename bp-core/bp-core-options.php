@@ -32,7 +32,7 @@ function bp_get_default_options() {
 		/* XProfile **********************************************************/
 
 		// Default profile groups name.
-		'bp-xprofile-base-group-name'          => 'Overview',
+		'bp-xprofile-base-group-name'          => 'Details',
 
 		// Default fullname field name.
 		'bp-xprofile-fullname-field-name'      => 'Name',
