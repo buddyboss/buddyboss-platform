@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Messages Loader.
+ * BuddyBoss Messages Loader.
  *
  * A private messages component, for users to send messages to each other.
  *

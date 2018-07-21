@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Messages Template Tags.
+ * BuddyBoss Messages Template Tags.
  *
  * @package BuddyBoss
  * @subpackage MessagesTemplate

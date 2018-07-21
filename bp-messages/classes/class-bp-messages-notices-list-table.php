@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress messages admin site-wide notices list table class.
+ * BuddyBoss messages admin site-wide notices list table class.
  *
  * @package BuddyBoss
  * @subpackage Messages

@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Messages Sitewide Notices Widget.
+ * BuddyBoss Messages Sitewide Notices Widget.
  *
  * @package BuddyBoss
  * @subpackage Messages

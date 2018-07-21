@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Messages Notifications.
+ * BuddyBoss Messages Notifications.
  *
  * @package BuddyBoss
  * @subpackage MessagesNotifications

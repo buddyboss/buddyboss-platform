@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Messages Widgets.
+ * BuddyBoss Messages Widgets.
  *
  * @package BuddyBoss
  * @subpackage Messages

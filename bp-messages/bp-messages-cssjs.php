@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Messages CSS and JS.
+ * BuddyBoss Messages CSS and JS.
  *
  * @package BuddyBoss
  * @subpackage MessagesScripts

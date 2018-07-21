@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress messages component Site-wide Notices admin screen.
+ * BuddyBoss messages component Site-wide Notices admin screen.
  *
  *
  * @package BuddyBoss

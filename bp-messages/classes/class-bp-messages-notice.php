@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Messages Classes.
+ * BuddyBoss Messages Classes.
  *
  * @package BuddyBoss
  * @subpackage MessagesClasses

@@ -1,4 +1,4 @@
-Feature: Manage BuddyPress Messages
+Feature: Manage BuddyBoss Messages
 
   Scenario: Message CRUD Operations
     Given a BP install

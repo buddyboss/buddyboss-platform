@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Messages Thread Template Class.
+ * BuddyBoss Messages Thread Template Class.
  *
  * @package BuddyBoss
  * @subpackage MessagesTemplate
