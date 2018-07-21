@@ -763,7 +763,7 @@ msgid "Activity Feeds"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:185
-msgid "Search Activity..."
+msgid "Search Feed..."
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-feed.php:157

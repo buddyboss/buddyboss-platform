@@ -182,7 +182,7 @@ class BP_Activity_Component extends BP_Component {
 			'has_directory'         => true,
 			'directory_title'       => isset( $bp->pages->activity->title ) ? $bp->pages->activity->title : $default_directory_title,
 			'notification_callback' => 'bp_activity_format_notifications',
-			'search_string'         => __( 'Search Activity...', 'buddyboss' ),
+			'search_string'         => __( 'Search Feed...', 'buddyboss' ),
 			'global_tables'         => $global_tables,
 			'meta_tables'           => $meta_tables,
 		);
