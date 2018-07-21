@@ -205,7 +205,7 @@ function bp_friend_search_form() {
 }
 
 /**
- * Output the "Add Friend" button in the member loop.
+ * Output the "Connect" button in the member loop.
  *
  * @since 1.2.6
  */
@@ -326,7 +326,7 @@ function bp_is_friend( $user_id = 0 ) {
 }
 
 /**
- * Output the Add Friend button.
+ * Output the Connect button.
  *
  * @since 1.0.0
  *
@@ -339,14 +339,14 @@ function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false 
 	echo bp_get_add_friend_button( $potential_friend_id, $friend_status );
 }
 	/**
-	 * Create the Add Friend button.
+	 * Create the Connect button.
 	 *
 	 * @since 1.1.0
 	 *
 	 * @param int  $potential_friend_id ID of the user to whom the button
 	 *                                  applies. Default: value of {@link bp_get_potential_friend_id()}.
 	 * @param bool $friend_status       Not currently used.
-	 * @return false|string HTML for the Add Friend button.
+	 * @return false|string HTML for the Connect button.
 	 */
 	function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = false ) {
 
@@ -416,7 +416,7 @@ function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false 
 					'wrapper_class'     => 'friendship-button not_friends',
 					'wrapper_id'        => 'friendship-button-' . $potential_friend_id,
 					'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/add-friend/' . $potential_friend_id . '/', 'friends_add_friend' ),
-					'link_text'         => __( 'Add Friend', 'buddyboss' ),
+					'link_text'         => __( 'Connect', 'buddyboss' ),
 					'link_id'           => 'friend-' . $potential_friend_id,
 					'link_rel'          => 'add',
 					'link_class'        => 'friendship-button not_friends add'

@@ -3511,7 +3511,7 @@ msgstr ""
 #: bp-friends/bp-friends-template.php:419
 #: bp-templates/bp-legacy/buddypress-functions.php:1422
 #: bp-templates/bp-legacy/buddypress-functions.php:1440
-msgid "Add Friend"
+msgid "Connect"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:719
