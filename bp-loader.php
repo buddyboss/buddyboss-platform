@@ -11,10 +11,10 @@
 
 /**
  * Plugin Name: BuddyBoss Platform
- * Plugin URI:  https://buddyboss.org/
+ * Plugin URI:  https://buddyboss.com/
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Streams, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
- * Author URI:  https://buddyboss.org/
+ * Author URI:  https://buddyboss.com/
  * Version:     3.1.0
  * Text Domain: buddypress
  * Domain Path: /bp-languages/
