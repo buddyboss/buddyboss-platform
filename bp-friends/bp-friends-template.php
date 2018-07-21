@@ -101,7 +101,7 @@ function bp_friends_random_friends() {
 		<?php } else { ?>
 
 			<div id="message" class="info">
-				<p><?php bp_word_or_name( __( "You haven't added any friend connections yet.", 'buddyboss' ), __( "%s hasn't created any friend connections yet.", 'buddyboss' ) ) ?></p>
+				<p><?php bp_word_or_name( __( "You haven't added any connections yet.", 'buddyboss' ), __( "%s hasn't created any connections yet.", 'buddyboss' ) ) ?></p>
 			</div>
 
 		<?php } ?>
@@ -244,11 +244,11 @@ function bp_member_total_friend_count() {
 			 * @param string $value String of the form "x friends".
 			 * @param int    $value Total friend count for current member in the loop.
 			 */
-			return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d friend', 'buddyboss' ), (int) $members_template->member->total_friend_count ) );
+			return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d connection', 'buddyboss' ), (int) $members_template->member->total_friend_count ) );
 		} else {
 
 			/** This filter is documented in bp-friends/bp-friends-template.php */
-			return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d friends', 'buddyboss' ), (int) $members_template->member->total_friend_count ) );
+			return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d connections', 'buddyboss' ), (int) $members_template->member->total_friend_count ) );
 		}
 	}
 
@@ -716,7 +716,7 @@ function bp_friends_get_profile_stats( $args = '' ) {
 			}
 
 			// If friends exist, show some formatted output.
-			$r['output'] = $r['before'] . sprintf( _n( '%s friend', '%s friends', $r['friends'], 'buddyboss' ), '<strong>' . $r['friends'] . '</strong>' ) . $r['after'];
+			$r['output'] = $r['before'] . sprintf( _n( '%s connection', '%s connections', $r['friends'], 'buddyboss' ), '<strong>' . $r['friends'] . '</strong>' ) . $r['after'];
 		}
 	}
 

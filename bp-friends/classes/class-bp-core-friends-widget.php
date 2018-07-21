@@ -189,10 +189,10 @@ class BP_Core_Friends_Widget extends WP_Widget {
 
 		<p><label for="<?php echo $this->get_field_id( 'link_title' ); ?>"><input type="checkbox" name="<?php echo $this->get_field_name('link_title'); ?>" id="<?php echo $this->get_field_id( 'link_title' ); ?>" value="1" <?php checked( $link_title ); ?> /> <?php _e( 'Link widget title to Members directory', 'buddyboss' ); ?></label></p>
 
-		<p><label for="<?php echo $this->get_field_id( 'max_friends' ); ?>"><?php _e( 'Max friends to show:', 'buddyboss' ); ?> <input class="widefat" id="<?php echo $this->get_field_id( 'max_friends' ); ?>" name="<?php echo $this->get_field_name( 'max_friends' ); ?>" type="text" value="<?php echo absint( $max_friends ); ?>" style="width: 30%" /></label></p>
+		<p><label for="<?php echo $this->get_field_id( 'max_friends' ); ?>"><?php _e( 'Max connections to show:', 'buddyboss' ); ?> <input class="widefat" id="<?php echo $this->get_field_id( 'max_friends' ); ?>" name="<?php echo $this->get_field_name( 'max_friends' ); ?>" type="text" value="<?php echo absint( $max_friends ); ?>" style="width: 30%" /></label></p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'friend_default' ) ?>"><?php _e( 'Default friends to show:', 'buddyboss' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'friend_default' ) ?>"><?php _e( 'Default connections to show:', 'buddyboss' ); ?></label>
 			<select name="<?php echo $this->get_field_name( 'friend_default' ); ?>" id="<?php echo $this->get_field_id( 'friend_default' ); ?>">
 				<option value="newest" <?php selected( $friend_default, 'newest' ); ?>><?php _e( 'Newest', 'buddyboss' ); ?></option>
 				<option value="active" <?php selected( $friend_default, 'active' );?>><?php _e( 'Active', 'buddyboss' ); ?></option>

@@ -3402,19 +3402,19 @@ function bp_email_get_schema() {
 		),
 		'friends-request' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] New friendship request from {{initiator.name}}', 'buddyboss' ),
+			'post_title'   => __( '[{{{site.name}}}] New connection request from {{initiator.name}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{initiator.url}}}\">{{initiator.name}}</a> wants to add you as a friend.\n\nTo accept this request and manage all of your pending requests, visit: <a href=\"{{{friend-requests.url}}}\">{{{friend-requests.url}}}</a>", 'buddyboss' ),
+			'post_content' => __( "<a href=\"{{{initiator.url}}}\">{{initiator.name}}</a> wants to add you as a connection.\n\nTo accept this request and manage all of your pending requests, visit: <a href=\"{{{friend-requests.url}}}\">{{{friend-requests.url}}}</a>", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{initiator.name}} wants to add you as a friend.\n\nTo accept this request and manage all of your pending requests, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddyboss' ),
+			'post_excerpt' => __( "{{initiator.name}} wants to add you as a connection.\n\nTo accept this request and manage all of your pending requests, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddyboss' ),
 		),
 		'friends-request-accepted' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{friend.name}} accepted your friendship request', 'buddyboss' ),
+			'post_title'   => __( '[{{{site.name}}}] {{friend.name}} accepted your connection request', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> accepted your friend request.", 'buddyboss' ),
+			'post_content' => __( "<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> accepted your connection request.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{friend.name}} accepted your friend request.\n\nTo learn more about them, visit their profile: {{{friendship.url}}}", 'buddyboss' ),
+			'post_excerpt' => __( "{{friend.name}} accepted your connection request.\n\nTo learn more about them, visit their profile: {{{friendship.url}}}", 'buddyboss' ),
 		),
 		'groups-details-updated' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3545,18 +3545,18 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	);
 
 	$friends_request = array(
-		'description'	=> __( 'A member has sent a friend request to the recipient.', 'buddyboss' ),
+		'description'	=> __( 'A member has sent a connection request to the recipient.', 'buddyboss' ),
 		'unsubscribe'	=> array(
 			'meta_key'	=> 'notification_friends_friendship_request',
-			'message'	=> __( 'You will no longer receive emails when someone sends you a friend request.', 'buddyboss' ),
+			'message'	=> __( 'You will no longer receive emails when someone sends you a connection request.', 'buddyboss' ),
 		),
 	);
 
 	$friends_request_accepted = array(
-		'description'	=> __( 'Recipient has had a friend request accepted by a member.', 'buddyboss' ),
+		'description'	=> __( 'Recipient has had a connection request accepted by a member.', 'buddyboss' ),
 		'unsubscribe'	=> array(
 			'meta_key'	=> 'notification_friends_friendship_accepted',
-			'message'	=> __( 'You will no longer receive emails when someone accepts your friendship request.', 'buddyboss' ),
+			'message'	=> __( 'You will no longer receive emails when someone accepts your connection request.', 'buddyboss' ),
 		),
 	);
 

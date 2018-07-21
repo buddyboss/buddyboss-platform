@@ -893,7 +893,7 @@ class Activity extends BuddypressCommand {
 					$r['item-id'] = $this->get_random_user_id();
 				}
 
-				$r['action'] = sprintf( __( '%1$s and %2$s are now friends', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), bp_core_get_userlink( $r['item-id'] ) );
+				$r['action'] = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), bp_core_get_userlink( $r['item-id'] ) );
 
 				break;
 

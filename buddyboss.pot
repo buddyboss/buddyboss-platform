@@ -2293,14 +2293,14 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:3405
 #. translators: do not remove {} brackets or translate its contents.
-msgid "[{{{site.name}}}] New friendship request from {{initiator.name}}"
+msgid "[{{{site.name}}}] New connection request from {{initiator.name}}"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3407
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "<a href=\"{{{initiator.url}}}\">{{initiator.name}}</a> wants to add you as "
-"a friend.\n"
+"a connection.\n"
 "\n"
 "To accept this request and manage all of your pending requests, visit: <a "
 "href=\"{{{friend-requests.url}}}\">{{{friend-requests.url}}}</a>"
@@ -2309,7 +2309,7 @@ msgstr ""
 #: bp-core/bp-core-functions.php:3409
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
-"{{initiator.name}} wants to add you as a friend.\n"
+"{{initiator.name}} wants to add you as a connection.\n"
 "\n"
 "To accept this request and manage all of your pending requests, visit: "
 "{{{friend-requests.url}}}\n"
@@ -2319,20 +2319,20 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:3413
 #. translators: do not remove {} brackets or translate its contents.
-msgid "[{{{site.name}}}] {{friend.name}} accepted your friendship request"
+msgid "[{{{site.name}}}] {{friend.name}} accepted your connection request"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3415
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
-"<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> accepted your friend "
+"<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> accepted your connection "
 "request."
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3417
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
-"{{friend.name}} accepted your friend request.\n"
+"{{friend.name}} accepted your connection request.\n"
 "\n"
 "To learn more about them, visit their profile: {{{friendship.url}}}"
 msgstr ""
@@ -2565,20 +2565,20 @@ msgid "Recipient has registered for an account and site."
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3548
-msgid "A member has sent a friend request to the recipient."
+msgid "A member has sent a connection request to the recipient."
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3551
-msgid "You will no longer receive emails when someone sends you a friend request."
+msgid "You will no longer receive emails when someone sends you a connection request."
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3556
-msgid "Recipient has had a friend request accepted by a member."
+msgid "Recipient has had a connection request accepted by a member."
 msgstr ""
 
 #: bp-core/bp-core-functions.php:3559
 msgid ""
-"You will no longer receive emails when someone accepts your friendship "
+"You will no longer receive emails when someone accepts your connection "
 "request."
 msgstr ""
 
@@ -3392,11 +3392,11 @@ msgid "Connection requested"
 msgstr ""
 
 #: bp-friends/actions/add-friend.php:39
-msgid "You are already friends with this user"
+msgid "You are already connected with this user"
 msgstr ""
 
 #: bp-friends/actions/add-friend.php:41
-msgid "You already have a pending friendship request with this user"
+msgid "You already have a pending connection request with this user"
 msgstr ""
 
 #: bp-friends/actions/remove-friend.php:33
@@ -3431,20 +3431,20 @@ msgid "New connections"
 msgstr ""
 
 #: bp-friends/bp-friends-activity.php:120
-msgid "New friendship created"
+msgid "New connection created"
 msgstr ""
 
 #: bp-friends/bp-friends-activity.php:144
 #: bp-friends/bp-friends-activity.php:178
-msgid "%1$s and %2$s are now friends"
+msgid "%1$s and %2$s are now connected"
 msgstr ""
 
 #: bp-friends/bp-friends-notifications.php:41
-msgid "%d friends accepted your connection requests"
+msgid "%d members accepted your connection requests"
 msgstr ""
 
 #: bp-friends/bp-friends-notifications.php:44
-msgid "%s accepted your friendship request"
+msgid "%s accepted your connection request"
 msgstr ""
 
 #: bp-friends/bp-friends-notifications.php:57
@@ -3452,7 +3452,7 @@ msgid "You have %d pending connection requests"
 msgstr ""
 
 #: bp-friends/bp-friends-notifications.php:60
-msgid "You have a friendship request from %s"
+msgid "You have a connection request from %s"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:84
@@ -3472,11 +3472,11 @@ msgid "See All"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:104
-msgid "You haven't added any friend connections yet."
+msgid "You haven't added any connections yet."
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:104
-msgid "%s hasn't created any friend connections yet."
+msgid "%s hasn't created any connections yet."
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:174
@@ -3488,11 +3488,11 @@ msgid "Filter Connections"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:247
-msgid "%d friend"
+msgid "%d connection"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:251
-msgid "%d friends"
+msgid "%d connections"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:371
@@ -3515,8 +3515,8 @@ msgid "Connect"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:719
-msgid "%s friend"
-msgid_plural "%s friends"
+msgid "%s connection"
+msgid_plural "%s connections"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -3561,11 +3561,11 @@ msgid "Link widget title to Members directory"
 msgstr ""
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:192
-msgid "Max friends to show:"
+msgid "Max connections to show:"
 msgstr ""
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:195
-msgid "Default friends to show:"
+msgid "Default connections to show:"
 msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:134
@@ -4844,12 +4844,12 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-members/bp-members-template.php:488
-msgid "Viewing 1 member with friends"
+msgid "Viewing 1 member with connections"
 msgstr ""
 
 #: bp-members/bp-members-template.php:490
-msgid "Viewing %1$s - %2$s of %3$s member with friends"
-msgid_plural "Viewing %1$s - %2$s of %3$s members with friends"
+msgid "Viewing %1$s - %2$s of %3$s member with connections"
+msgid_plural "Viewing %1$s - %2$s of %3$s members with connections"
 msgstr[0] ""
 msgstr[1] ""
 
@@ -9455,7 +9455,7 @@ msgstr ""
 
 #: bp-friends/bp-friends-notifications.php:260
 msgctxt "Connection settings on notification settings page"
-msgid "A member sends you a friendship request"
+msgid "A member sends you a connection request"
 msgstr ""
 
 #: bp-friends/bp-friends-notifications.php:272

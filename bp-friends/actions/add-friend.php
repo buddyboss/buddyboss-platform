@@ -36,9 +36,9 @@ function friends_action_add_friend() {
 		}
 
 	} elseif ( 'is_friend' == $friendship_status ) {
-		bp_core_add_message( __( 'You are already friends with this user', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'You are already connected with this user', 'buddyboss' ), 'error' );
 	} else {
-		bp_core_add_message( __( 'You already have a pending friendship request with this user', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'You already have a pending connection request with this user', 'buddyboss' ), 'error' );
 	}
 
 	bp_core_redirect( wp_get_referer() );

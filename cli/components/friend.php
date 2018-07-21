@@ -121,7 +121,7 @@ class Friend extends BuddypressCommand {
 	}
 
 	/**
-	 * Mark a friendship request as accepted.
+	 * Mark a connection request as accepted.
 	 *
 	 * ## OPTIONS
 	 *
@@ -149,7 +149,7 @@ class Friend extends BuddypressCommand {
 	}
 
 	/**
-	 * Mark a friendship request as rejected.
+	 * Mark a connection request as rejected.
 	 *
 	 * ## OPTIONS
 	 *

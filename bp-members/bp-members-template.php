@@ -485,9 +485,9 @@ function bp_members_pagination_count() {
 			}
 		} elseif ( 'popular' == $members_template->type ) {
 			if ( 1 == $members_template->total_member_count ) {
-				$pag = __( 'Viewing 1 member with friends', 'buddyboss' );
+				$pag = __( 'Viewing 1 member with connections', 'buddyboss' );
 			} else {
-				$pag = sprintf( _n( 'Viewing %1$s - %2$s of %3$s member with friends', 'Viewing %1$s - %2$s of %3$s members with friends', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
+				$pag = sprintf( _n( 'Viewing %1$s - %2$s of %3$s member with connections', 'Viewing %1$s - %2$s of %3$s members with connections', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
 			}
 		} elseif ( 'online' == $members_template->type ) {
 			if ( 1 == $members_template->total_member_count ) {

@@ -721,7 +721,7 @@ class BP_Friends_Friendship {
 	}
 
 	/**
-	 * Remove a friendship or a friendship request INITIATED BY the logged-in user.
+	 * Remove a connection or a connection request INITIATED BY the logged-in user.
 	 *
 	 * @since 1.6.0
 	 *
@@ -737,7 +737,7 @@ class BP_Friends_Friendship {
 	}
 
 	/**
-	 * Remove a friendship or a friendship request MADE OF the logged-in user.
+	 * Remove a connection or a connection request MADE OF the logged-in user.
 	 *
 	 * @since 1.0.0
 	 *

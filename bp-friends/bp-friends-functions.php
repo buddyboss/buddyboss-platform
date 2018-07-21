@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  * @param int  $friend_userid    ID of the "friend" user (the user whose friendship
  *                               is being requested).
  * @param bool $force_accept     Optional. Whether to force acceptance. When false,
- *                               running friends_add_friend() will result in a friendship request.
+ *                               running friends_add_friend() will result in a connection request.
  *                               When true, running friends_add_friend() will result in an accepted
  *                               friendship, with no notifications being sent. Default: false.
  * @return bool True on success, false on failure.
@@ -152,7 +152,7 @@ function friends_remove_friend( $initiator_userid, $friend_userid ) {
 }
 
 /**
- * Mark a friendship request as accepted.
+ * Mark a connection request as accepted.
  *
  * Also initiates a "friendship_accepted" activity item.
  *
@@ -191,7 +191,7 @@ function friends_accept_friendship( $friendship_id ) {
 }
 
 /**
- * Mark a friendship request as rejected.
+ * Mark a connection request as rejected.
  *
  * @since 1.0.0
  *
@@ -204,7 +204,7 @@ function friends_reject_friendship( $friendship_id ) {
 	if ( empty( $friendship->is_confirmed ) && BP_Friends_Friendship::reject( $friendship_id ) ) {
 
 		/**
-		 * Fires after a friendship request is rejected.
+		 * Fires after a connection request is rejected.
 		 *
 		 * @since 1.0.0
 		 *
@@ -219,7 +219,7 @@ function friends_reject_friendship( $friendship_id ) {
 }
 
 /**
- * Withdraw a friendship request.
+ * Withdraw a connection request.
  *
  * @since 1.6.0
  *
@@ -238,7 +238,7 @@ function friends_withdraw_friendship( $initiator_userid, $friend_userid ) {
 		do_action_ref_array( 'friends_friendship_whithdrawn', array( $friendship_id, &$friendship ) );
 
 		/**
-		 * Fires after a friendship request has been withdrawn.
+		 * Fires after a connection request has been withdrawn.
 		 *
 		 * @since 1.9.0
 		 *
@@ -863,9 +863,9 @@ function friends_notification_new_request( $friendship_id, $initiator_id, $frien
 add_action( 'friends_friendship_requested', 'friends_notification_new_request', 10, 3 );
 
 /**
- * Send notifications related to the acceptance of a friendship request.
+ * Send notifications related to the acceptance of a connection request.
  *
- * When a friendship request is accepted, an email and a BP notification are
+ * When a connection request is accepted, an email and a BP notification are
  * sent to the user who requested the friendship ($initiator_id).
  *
  * @since 1.0.0

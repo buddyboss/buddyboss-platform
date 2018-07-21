@@ -376,19 +376,19 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 
 		} elseif ( $property === 'subject' ) {
 			/**
-			 * Filters the subject for the friend request accepted email.
+			 * Filters the subject for the connection request accepted email.
 			 *
 			 * @since 1.2.0
 			 * @deprecated 2.5.0 Use the filters in BP_Email.
 			 *
-			 * @param string $value       Subject line to be used in friend request accepted email.
+			 * @param string $value       Subject line to be used in connection request accepted email.
 			 * @param string $friend_name Name of the person who accepted the friendship request.
 			 */
 			$value = apply_filters( 'friends_notification_accepted_request_subject', $value, $tokens['friend.name'] );
 
 		} elseif ( $property === 'content' ) {
 			/**
-			 * Filters the message for the friend request accepted email.
+			 * Filters the message for the connection request accepted email.
 			 *
 			 * @since 1.2.0
 			 * @deprecated 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
@@ -815,7 +815,7 @@ function bp_core_deprecated_email_actions( $delivery_status, $email ) {
 
 	} elseif ( $email_type === 'friends-request-accepted' ) {
 		/**
-		 * Fires after the friend request accepted email is sent.
+		 * Fires after the connection request accepted email is sent.
 		 *
 		 * @since 1.5.0
 		 * @deprecated 2.5.0 Use the filters in BP_Email.

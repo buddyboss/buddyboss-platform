@@ -38,10 +38,10 @@ function friends_format_notifications( $action, $item_id, $secondary_item_id, $t
 
 			// Set up the string and the filter.
 			if ( (int) $total_items > 1 ) {
-				$text = sprintf( __( '%d friends accepted your connection requests', 'buddyboss' ), (int) $total_items );
+				$text = sprintf( __( '%d members accepted your connection requests', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
-				$text = sprintf( __( '%s accepted your friendship request', 'buddyboss' ),  bp_core_get_user_displayname( $item_id ) );
+				$text = sprintf( __( '%s accepted your connection request', 'buddyboss' ),  bp_core_get_user_displayname( $item_id ) );
 				$amount = 'single';
 			}
 
@@ -57,7 +57,7 @@ function friends_format_notifications( $action, $item_id, $secondary_item_id, $t
 				$text = sprintf( __( 'You have %d pending connection requests', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
-				$text = sprintf( __( 'You have a friendship request from %s', 'buddyboss' ),  bp_core_get_user_displayname( $item_id ) );
+				$text = sprintf( __( 'You have a connection request from %s', 'buddyboss' ),  bp_core_get_user_displayname( $item_id ) );
 				$amount = 'single';
 			}
 
@@ -257,7 +257,7 @@ function friends_screen_notification_settings() {
 		<tbody>
 			<tr id="friends-notification-settings-request">
 				<td></td>
-				<td><?php _ex( 'A member sends you a friendship request', 'Connection settings on notification settings page', 'buddyboss' ) ?></td>
+				<td><?php _ex( 'A member sends you a connection request', 'Connection settings on notification settings page', 'buddyboss' ) ?></td>
 				<td class="yes"><input type="radio" name="notifications[notification_friends_friendship_request]" id="notification-friends-friendship-request-yes" value="yes" <?php checked( $send_requests, 'yes', true ) ?>/><label for="notification-friends-friendship-request-yes" class="bp-screen-reader-text"><?php
 					/* translators: accessibility text */
 					_e( 'Yes, send email', 'buddyboss' );
