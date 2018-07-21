@@ -634,10 +634,10 @@ class BP_Admin {
 				</p>
 				<?php endif; ?>
 
-				<h2><?php esc_html_e( __( 'New profile field type: telephone numbers', 'buddypress' ) ); ?></h2>
+				<h2><?php esc_html_e( __( 'New profile field type: telephone numbers', 'buddyboss' ) ); ?></h2>
 				<p><?php esc_html_e( 'A new telephone number field type has been added to the Profiles Fields component, with support for all international number formats. With a modern web browser, your members can use this field type to touch-to-dial a number directly.', 'buddyboss' ); ?></p>
 
-				<h2><?php esc_html_e( __( "BuddyPress: leaner, faster, stronger", 'buddypress' ) ); ?></h2>
+				<h2><?php esc_html_e( __( "BuddyPress: leaner, faster, stronger", 'buddyboss' ) ); ?></h2>
 				<p><?php esc_html_e( 'With every BuddyPress version, we strive to make performance improvements alongside new features and fixes; this version is no exception. Memory use has been optimised &mdash; within active components, we now only load each individual code file when it\'s needed, not before.', 'buddyboss' ); ?></p>
 				<p>
 					<?php
@@ -804,31 +804,31 @@ class BP_Admin {
 				<li class="wp-person" id="wp-person-slaffik">
 					<a class="web" href="https://profiles.wordpress.org/r-a-y"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/61fb07ede3247b63f19015f200b3eb2c?s=120">
 					Slava Abakumov</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddypress' ); ?></span>
+					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
 				</li>
 				<li class="wp-person" id="wp-person-offereins">
 					<a class="web" href="https://profiles.wordpress.org/Offereins"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/2404ed0a35bb41aedefd42b0a7be61c1?s=120">
 					Laurens Offereins</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddypress' ); ?></span>
+					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
 				</li>
 				<li class="wp-person" id="wp-person-netweb">
 					<a class="web" href="https://profiles.wordpress.org/netweb"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/97e1620b501da675315ba7cfb740e80f?s=120">
 					Stephen Edgar</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddypress' ); ?></span>
+					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
 				</li>
 				<li class="wp-person" id="wp-person-espellcaste">
 					<a class="web" href="https://profiles.wordpress.org/espellcaste"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/b691e67be0ba5cad6373770656686bc3?s=120">
 					Renato Alves</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddypress' ); ?></span>
+					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
 				</li>
 				<li class="wp-person" id="wp-person-venutius">
 					<a class="web" href="https://profiles.wordpress.org/venutius"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/6a7c42a77fd94b82b217a7a97afdddbc?s=120">
 					Venutius</a>
-					<span class="title"><?php _e( 'Community Support', 'buddypress' ); ?></span>
+					<span class="title"><?php _e( 'Community Support', 'buddyboss' ); ?></span>
 				</li>
 			</ul>
 
-			<h3 class="wp-people-group"><?php _e( 'Recent Rockstars', 'buddypress' ); ?></h3>
+			<h3 class="wp-people-group"><?php _e( 'Recent Rockstars', 'buddyboss' ); ?></h3>
 			<ul class="wp-people-group " id="wp-people-group-rockstars">
 				<li class="wp-person" id="wp-person-dimensionmedia">
 					<a class="web" href="https://profiles.wordpress.org/dimensionmedia"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/7735aada1ec39d0c1118bd92ed4551f1?s=120">
@@ -852,7 +852,7 @@ class BP_Admin {
 				</li>
 			</ul>
 
-			<h3 class="wp-people-group"><?php printf( esc_html__( 'Contributors to BuddyPress %s', 'buddypress' ), self::display_version() ); ?></h3>
+			<h3 class="wp-people-group"><?php printf( esc_html__( 'Contributors to BuddyPress %s', 'buddyboss' ), self::display_version() ); ?></h3>
 			<p class="wp-credits-list">
 				<a href="https://profiles.wordpress.org/1naveengiri">1naveengiri</a>,
 				<a href="https://profiles.wordpress.org/abhishekfdd/">Abhishek Kumar (abhishekfdd)</a>,
@@ -913,7 +913,7 @@ class BP_Admin {
 				<a href="https://profiles.wordpress.org/yahil/">Yahil Madakiya (yahil)</a>
 			</p>
 
-			<h3 class="wp-people-group"><?php _e( 'With our thanks to these Open Source projects', 'buddypress' ); ?></h3>
+			<h3 class="wp-people-group"><?php _e( 'With our thanks to these Open Source projects', 'buddyboss' ); ?></h3>
 			<p class="wp-credits-list">
 				<a href="https://github.com/ichord/At.js">At.js</a>,
 				<a href="https://bbpress.org">bbPress</a>,
@@ -927,12 +927,12 @@ class BP_Admin {
 				<a href="https://wordpress.org">WordPress</a>.
 			</p>
 
-			<h3 class="wp-people-group"><?php _e( 'Contributor Emeriti', 'buddypress' ); ?></h3>
+			<h3 class="wp-people-group"><?php _e( 'Contributor Emeriti', 'buddyboss' ); ?></h3>
 			<ul class="wp-people-group " id="wp-people-group-emeriti">
 				<li class="wp-person" id="wp-person-apeatling">
 					<a class="web" href="https://profiles.wordpress.org/johnjamesjacoby"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/bb29d699b5cba218c313b61aa82249da?s=120">
 					Andy Peatling</a>
-					<span class="title"><?php _e( 'Project Founder', 'buddypress' ); ?></span>
+					<span class="title"><?php _e( 'Project Founder', 'buddyboss' ); ?></span>
 				</li>
 				<li class="wp-person" id="wp-person-burtadsit">
 					<a class="web" href="https://profiles.wordpress.org/burtadsit"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/185e1d3e2d653af9d49a4e8e4fc379df?s=120">
