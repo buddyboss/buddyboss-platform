@@ -964,7 +964,7 @@ class BP_Admin {
 	 */
 	public function emails_register_situation_column( $columns = array() ) {
 		$situation = array(
-			'situation' => _x( 'Situations', 'Email post type', 'buddypress' )
+			'situation' => _x( 'Situations', 'Email post type', 'buddyboss' )
 		);
 
 		// Inject our 'Situations' column just before the last 'Date' column.
