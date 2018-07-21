@@ -50,7 +50,7 @@ function bp_nouveau_notifications_filters() {
 			$output = sprintf( '<option value="%1$s" %2$s>%3$s</option>',
 				0,
 				selected( $selected, 0, false ),
-				esc_html__( '&mdash; Everything &mdash;', 'buddyboss' )
+				esc_html__( '&mdash; View All &mdash;', 'buddyboss' )
 			) . "\n" . $output;
 		}
 

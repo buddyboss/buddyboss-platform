@@ -95,7 +95,7 @@ get_header( 'buddypress' ); ?>
 					<li id="activity-filter-select" class="last">
 						<label for="activity-filter-by"><?php _e( 'Show:', 'buddyboss' ); ?></label>
 						<select id="activity-filter-by">
-							<option value="-1"><?php _e( '&mdash; Everything &mdash;', 'buddyboss' ); ?></option>
+							<option value="-1"><?php _e( '&mdash; View All &mdash;', 'buddyboss' ); ?></option>
 							<option value="activity_update"><?php _e( 'Updates', 'buddyboss' ); ?></option>
 
 							<?php if ( bp_is_active( 'blogs' ) ) : ?>

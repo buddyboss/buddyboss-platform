@@ -17,7 +17,7 @@
 		<li id="activity-filter-select" class="last">
 			<label for="activity-filter-by"><?php _e( 'Show:', 'buddyboss' ); ?></label>
 			<select id="activity-filter-by">
-				<option value="-1"><?php _e( '&mdash; Everything &mdash;', 'buddyboss' ); ?></option>
+				<option value="-1"><?php _e( '&mdash; View All &mdash;', 'buddyboss' ); ?></option>
 
 				<?php bp_activity_show_filters(); ?>
 

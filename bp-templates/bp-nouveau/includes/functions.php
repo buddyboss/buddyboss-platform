@@ -544,7 +544,7 @@ function bp_nouveau_get_component_filters( $context = '', $component = '' ) {
 		$filters = bp_nouveau_get_activity_filters();
 
 		// Specific case for the activity dropdown
-		$filters = array_merge( array( '-1' => __( '&mdash; Everything &mdash;', 'buddyboss' ) ), $filters );
+		$filters = array_merge( array( '-1' => __( '&mdash; View All &mdash;', 'buddyboss' ) ), $filters );
 	} elseif ( 'groups' === $component ) {
 		$filters = bp_nouveau_get_groups_filters( $context );
 	} elseif ( 'blogs' === $component ) {
