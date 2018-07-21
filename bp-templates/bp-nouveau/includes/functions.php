@@ -1054,7 +1054,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		),
 		'member-group-invites-all' => array(
 			'type'    => 'info',
-			'message' => __( 'Currently every member of the community can invite you to join their groups. If you are not comfortable with it, you can always restrict group invites to your friends only.', 'buddyboss' ),
+			'message' => __( 'Currently every member of the community can invite you to join their groups. If you are not comfortable with it, you can always restrict group invites to your connections only.', 'buddyboss' ),
 		),
 		'member-group-invites-friends-only' => array(
 			'type'    => 'info',
@@ -1092,7 +1092,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 	} elseif ( 'member-blogs-loading' === $feedback_id && bp_is_my_profile() ) {
 		$feedback_messages['member-blogs-loading']['message'] = __( 'Loading your blogs. Please wait.', 'buddyboss' );
 	} elseif ( 'member-friends-loading' === $feedback_id && bp_is_my_profile() ) {
-		$feedback_messages['member-friends-loading']['message'] = __( 'Loading your friends. Please wait.', 'buddyboss' );
+		$feedback_messages['member-friends-loading']['message'] = __( 'Loading your connections. Please wait.', 'buddyboss' );
 	} elseif ( 'member-groups-loading' === $feedback_id && bp_is_my_profile() ) {
 		$feedback_messages['member-groups-loading']['message'] = __( 'Loading your groups. Please wait.', 'buddyboss' );
 	}

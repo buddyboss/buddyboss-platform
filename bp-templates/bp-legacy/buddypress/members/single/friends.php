@@ -56,7 +56,7 @@ switch ( bp_current_action() ) :
 		<?php if (is_user_logged_in() ) : ?>
 			<h2 class="bp-screen-reader-text"><?php
 				/* translators: accessibility text */
-				_e( 'My friends', 'buddyboss' );
+				_e( 'My connections', 'buddyboss' );
 			?></h2>
 		<?php else : ?>
 			<h2 class="bp-screen-reader-text"><?php

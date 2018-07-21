@@ -6377,7 +6377,7 @@ msgid "Group Invites"
 msgstr ""
 
 #: bp-templates/bp-legacy/buddypress/groups/create.php:361
-msgid "Select people to invite from your friends list."
+msgid "Select people to invite from your connections list."
 msgstr ""
 
 #: bp-templates/bp-legacy/buddypress/groups/create.php:379
@@ -6388,7 +6388,7 @@ msgstr ""
 
 #: bp-templates/bp-legacy/buddypress/groups/create.php:396
 msgid ""
-"Once you have built up friend connections you will be able to invite others "
+"Once you have built up connections you will be able to invite others "
 "to your group."
 msgstr ""
 
@@ -6532,7 +6532,7 @@ msgid "Group primary navigation"
 msgstr ""
 
 #: bp-templates/bp-legacy/buddypress/groups/single/invites-loop.php:111
-msgid "Select friends to invite."
+msgid "Select connections to invite."
 msgstr ""
 
 #: bp-templates/bp-legacy/buddypress/groups/single/members.php:132
@@ -6590,12 +6590,12 @@ msgstr ""
 
 #: bp-templates/bp-legacy/buddypress/groups/single/send-invites.php:47
 msgid ""
-"Once you've made some friendships, you'll be able to invite those members "
+"Once you've made some connections, you'll be able to invite those members "
 "to this group."
 msgstr ""
 
 #: bp-templates/bp-legacy/buddypress/groups/single/send-invites.php:55
-msgid "All of your friends already belong to this group."
+msgid "All of your connections already belong to this group."
 msgstr ""
 
 #: bp-templates/bp-legacy/buddypress/members/activate.php:45
@@ -6777,7 +6777,7 @@ msgstr ""
 
 #: bp-templates/bp-legacy/buddypress/members/single/friends.php:59
 #. translators: accessibility text
-msgid "My friends"
+msgid "My connections"
 msgstr ""
 
 #: bp-templates/bp-legacy/buddypress/members/single/friends.php:64
@@ -7954,7 +7954,7 @@ msgid "Loading the member's blogs. Please wait."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:1045
-msgid "Loading the member's friends. Please wait."
+msgid "Loading the member's connections. Please wait."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:1049
@@ -7969,7 +7969,7 @@ msgstr ""
 msgid ""
 "Currently every member of the community can invite you to join their "
 "groups. If you are not comfortable with it, you can always restrict group "
-"invites to your friends only."
+"invites to your connections only."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:1061
@@ -7987,7 +7987,7 @@ msgid "Loading your blogs. Please wait."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:1095
-msgid "Loading your friends. Please wait."
+msgid "Loading your connections. Please wait."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:1097
@@ -8034,7 +8034,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:292
 msgid ""
-"Select friends to invite by clicking the + button. Once you've made your "
+"Select connections to invite by clicking the + button. Once you've made your "
 "selection, use the \"Send Invites\" navigation item to continue."
 msgstr ""
 
@@ -8052,12 +8052,12 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:319
 msgid ""
-"All your friends are already members of this group, or have already "
+"All your connections are already members of this group, or have already "
 "received an invite to join this group, or have requested to join it."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:325
-msgid "You have no friends!"
+msgid "You have no connections."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:354

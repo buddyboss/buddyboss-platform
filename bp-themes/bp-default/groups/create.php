@@ -208,7 +208,7 @@ get_header( 'buddypress' ); ?>
 						<div class="main-column">
 
 							<div id="message" class="info">
-								<p><?php _e('Select people to invite from your friends list.', 'buddypress'); ?></p>
+								<p><?php _e('Select people to invite from your connections list.', 'buddypress'); ?></p>
 							</div>
 
 							<?php /* The ID 'friend-list' is important for AJAX support. */ ?>
@@ -243,7 +243,7 @@ get_header( 'buddypress' ); ?>
 					<?php else : ?>
 
 						<div id="message" class="info">
-							<p><?php _e( 'Once you have built up friend connections you will be able to invite others to your group.', 'buddyboss' ); ?></p>
+							<p><?php _e( 'Once you have built up connections you will be able to invite others to your group.', 'buddyboss' ); ?></p>
 						</div>
 
 					<?php endif; ?>

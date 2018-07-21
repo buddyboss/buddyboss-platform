@@ -289,7 +289,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	if ( 'friends' === $request['scope'] ) {
 		$request['user_id'] = bp_loggedin_user_id();
 		$bp->groups->invites_scope = 'friends';
-		$message = __( 'Select friends to invite by clicking the + button. Once you\'ve made your selection, use the "Send Invites" navigation item to continue.', 'buddyboss' );
+		$message = __( 'Select connections to invite by clicking the + button. Once you\'ve made your selection, use the "Send Invites" navigation item to continue.', 'buddyboss' );
 	}
 
 	if ( 'invited' === $request['scope'] ) {
@@ -316,13 +316,13 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 		if ( 'friends' === $bp->groups->invites_scope ) {
 			$error = array(
-				'feedback' => __( 'All your friends are already members of this group, or have already received an invite to join this group, or have requested to join it.', 'buddyboss' ),
+				'feedback' => __( 'All your connections are already members of this group, or have already received an invite to join this group, or have requested to join it.', 'buddyboss' ),
 				'type'     => 'info',
 			);
 
 			if ( 0 === (int) bp_get_total_friend_count( bp_loggedin_user_id() ) ) {
 				$error = array(
-					'feedback' => __( 'You have no friends!', 'buddyboss' ),
+					'feedback' => __( 'You have no connections.', 'buddyboss' ),
 					'type'     => 'info',
 				);
 			}
