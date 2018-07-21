@@ -2,7 +2,7 @@
 /**
  * The BuddyPress Plugin.
  *
- * BuddyPress is social networking software with a twist from the creators of WordPress.
+ * The BuddyBoss Platform is social networking software with a twist.
  *
  * @package BuddyPress
  * @subpackage Main
@@ -10,11 +10,11 @@
  */
 
 /**
- * Plugin Name: BuddyPress
- * Plugin URI:  https://buddypress.org/
- * Description: BuddyPress adds community features to WordPress. Member Profiles, Activity Streams, Direct Messaging, Notifications, and more!
- * Author:      The BuddyPress Community
- * Author URI:  https://buddypress.org/
+ * Plugin Name: The BuddyBoss Platform
+ * Plugin URI:  https://buddyboss.org/
+ * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Streams, Direct Messaging, Notifications, and more!
+ * Author:      BuddyBoss
+ * Author URI:  https://buddyboss.org/
  * Version:     3.1.0
  * Text Domain: buddypress
  * Domain Path: /bp-languages/
