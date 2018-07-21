@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Groups Loader.
+ * BuddyBoss Groups Loader.
  *
  * A groups component, for users to group themselves together. Includes a
  * robust sub-component API that allows Groups to be extended.

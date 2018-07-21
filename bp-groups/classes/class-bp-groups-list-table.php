@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Groups admin list table class.
+ * BuddyBoss Groups admin list table class.
  *
  * Props to WordPress core for the Comments admin screen, and its contextual
  * help text, on which this implementation is heavily based.

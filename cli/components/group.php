@@ -4,7 +4,7 @@ namespace Buddypress\CLI\Command;
 use WP_CLI;
 
 /**
- * Manage BuddyPress Groups.
+ * Manage BuddyBoss Groups.
  *
  * @since 1.5.0
  */

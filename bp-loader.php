@@ -1,8 +1,8 @@
 <?php
 /**
- * The BuddyBoss Platform.
+ * BuddyBoss Platform.
  *
- * The BuddyBoss Platform is social networking software with a twist.
+ * BuddyBoss Platform is social networking software with a twist.
  *
  * @package BuddyBoss
  * @subpackage Main
@@ -10,7 +10,7 @@
  */
 
 /**
- * Plugin Name: The BuddyBoss Platform
+ * Plugin Name: BuddyBoss Platform
  * Plugin URI:  https://buddyboss.org/
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Streams, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss

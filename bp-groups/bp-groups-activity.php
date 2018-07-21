@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Groups Activity Functions.
+ * BuddyBoss Groups Activity Functions.
  *
  * These functions handle the recording, deleting and formatting of activity
  * for the user and for this specific component.
