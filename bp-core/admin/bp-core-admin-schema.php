@@ -529,7 +529,7 @@ function bp_core_install_emails() {
 	bp_update_option( 'bp-emails-unsubscribe-salt', base64_encode( wp_generate_password( 64, true, true ) ) );
 
 	/**
-	 * Fires after BuddyPress adds the posts for its emails.
+	 * Fires after BuddyBoss adds the posts for its emails.
 	 *
 	 * @since 2.5.0
 	 */

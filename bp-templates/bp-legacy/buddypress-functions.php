@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 if ( !class_exists( 'BP_Legacy' ) ) :
 
 /**
- * Loads BuddyPress Legacy Theme functionality.
+ * Loads BuddyBoss Legacy Theme functionality.
  *
  * This is not a real theme by WordPress standards, and is instead used as the
  * fallback for any WordPress theme that does not have BuddyBoss templates in it.
@@ -58,7 +58,7 @@ class BP_Legacy extends BP_Theme_Compat {
 	protected function setup_globals() {
 		$bp            = buddypress();
 		$this->id      = 'legacy';
-		$this->name    = __( 'BuddyPress Legacy', 'buddypress' );
+		$this->name    = __( 'BuddyBoss Legacy', 'buddypress' );
 		$this->version = bp_get_version();
 		$this->dir     = trailingslashit( $bp->themes_dir . '/bp-legacy' );
 		$this->url     = trailingslashit( $bp->themes_url . '/bp-legacy' );

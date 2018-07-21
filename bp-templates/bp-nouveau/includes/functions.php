@@ -364,7 +364,7 @@ function bp_nouveau_is_object_nav_in_sidebar() {
  */
 function bp_nouveau_current_user_can( $capability = '' ) {
 	/**
-	 * Filters whether or not the current user can perform an action for BuddyPress Nouveau.
+	 * Filters whether or not the current user can perform an action for BuddyBoss Nouveau.
 	 *
 	 * @since 3.0.0
 	 *
@@ -909,7 +909,7 @@ function bp_nouveau_theme_cover_image( $params = array() ) {
  */
 function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 	/**
-	 * Filters the BuddyPress Nouveau feedback messages.
+	 * Filters the BuddyBoss Nouveau feedback messages.
 	 *
 	 * Use this filter to add your custom feedback messages.
 	 *

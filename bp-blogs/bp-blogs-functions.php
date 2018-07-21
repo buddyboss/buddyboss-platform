@@ -399,7 +399,7 @@ function bp_blogs_record_blog( $blog_id, $user_id, $no_activity = false ) {
 	$is_private = !apply_filters( 'bp_is_new_blog_public', !$is_private );
 
 	/**
-	 * Fires after BuddyPress has been made aware of a new site for activity tracking.
+	 * Fires after BuddyBoss has been made aware of a new site for activity tracking.
 	 *
 	 * @since 1.0.0
 	 * @since 2.6.0 Added $no_activity as a parameter.
@@ -609,7 +609,7 @@ function bp_blogs_publish_post_activity_meta( $activity_id, $post, $args ) {
 	bp_blogs_update_blogmeta( $args['item_id'], 'last_activity', bp_core_current_time() );
 
 	/**
-	 * Fires after BuddyPress has recorded metadata about a published blog post.
+	 * Fires after BuddyBoss has recorded metadata about a published blog post.
 	 *
 	 * @since 1.0.0
 	 *
@@ -826,7 +826,7 @@ function bp_blogs_comment_sync_activity_comment( &$activity_id, $comment = null,
 
 	if ( 'new_blog_comment' === $activity_post_object->comment_action_id ) {
 		/**
-		 * Fires after BuddyPress has recorded metadata about a published blog post comment.
+		 * Fires after BuddyBoss has recorded metadata about a published blog post comment.
 		 *
 		 * @since 2.5.0
 		 *

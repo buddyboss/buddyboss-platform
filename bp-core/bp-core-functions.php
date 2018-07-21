@@ -3198,7 +3198,7 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 	if ( is_wp_error( $status ) ) {
 
 		/**
-		 * Fires after BuddyPress has tried - and failed - to send an email.
+		 * Fires after BuddyBoss has tried - and failed - to send an email.
 		 *
 		 * @since 2.5.0
 		 *
@@ -3211,7 +3211,7 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 	} else {
 
 		/**
-		 * Fires after BuddyPress has succesfully sent an email.
+		 * Fires after BuddyBoss has succesfully sent an email.
 		 *
 		 * @since 2.5.0
 		 *

@@ -897,7 +897,7 @@ function bp_nouveau_group_reset_front_template( $templates = array(), $group = n
 	}
 
 	/**
-	 * Filters the BuddyPress Nouveau template hierarchy after resetting front template for groups.
+	 * Filters the BuddyBoss Nouveau template hierarchy after resetting front template for groups.
 	 *
 	 * @since 3.0.0
 	 *
@@ -1074,7 +1074,7 @@ function bp_nouveau_groups_add_home_widget_filters() {
 	add_filter( 'bp_before_has_members_parse_args', 'bp_nouveau_group_members_widget_overrides', 10, 1 );
 
 	/**
-	 * Fires after BuddyPress Nouveau groups have added their home widget filters.
+	 * Fires after BuddyBoss Nouveau groups have added their home widget filters.
 	 *
 	 * @since 3.0.0
 	 */
@@ -1092,7 +1092,7 @@ function bp_nouveau_groups_remove_home_widget_filters() {
 	remove_filter( 'bp_before_has_members_parse_args', 'bp_nouveau_group_members_widget_overrides', 10, 1 );
 
 	/**
-	 * Fires after BuddyPress Nouveau groups have removed their home widget filters.
+	 * Fires after BuddyBoss Nouveau groups have removed their home widget filters.
 	 *
 	 * @since 3.0.0
 	 */

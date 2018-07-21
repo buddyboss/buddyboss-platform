@@ -73,7 +73,7 @@ class BP_Nouveau_Groups {
 
 		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_groups_enqueue_scripts' );
 
-		// Avoid Notices for BuddyPress Legacy Backcompat
+		// Avoid Notices for BuddyBoss Legacy Backcompat
 		remove_action( 'bp_groups_directory_group_filter', 'bp_group_backcompat_create_nav_item', 1000 );
 
 		// Register the Groups Notifications filters

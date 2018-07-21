@@ -217,7 +217,7 @@ function bp_nouveau_member_reset_front_template( $templates = array() ) {
 	}
 
 	/**
-	 * Filters the BuddyPress Nouveau template hierarchy after resetting front template for members.
+	 * Filters the BuddyBoss Nouveau template hierarchy after resetting front template for members.
 	 *
 	 * @since 3.0.0
 	 *

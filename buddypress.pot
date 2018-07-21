@@ -7098,7 +7098,7 @@ msgid "Visibility"
 msgstr ""
 
 #: bp-templates/bp-legacy/buddypress-functions.php:61 class-buddypress.php:740
-msgid "BuddyPress Legacy"
+msgid "BuddyBoss Legacy"
 msgstr ""
 
 #: bp-templates/bp-legacy/buddypress-functions.php:293
@@ -7722,7 +7722,7 @@ msgid ""
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:26
-msgid "Customize the appearance of BuddyPress Nouveau Template pack."
+msgid "Customize the appearance of BuddyBoss Nouveau Template pack."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:40
@@ -8813,7 +8813,7 @@ msgid "Cheatin&#8217; huh?"
 msgstr ""
 
 #: class-buddypress.php:748
-msgid "BuddyPress Nouveau"
+msgid "BuddyBoss Nouveau"
 msgstr ""
 
 #. Author URI of the plugin/theme
@@ -10335,7 +10335,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:27
 msgctxt "Customizer Panel"
-msgid "BuddyPress Nouveau"
+msgid "BuddyBoss Nouveau"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:301

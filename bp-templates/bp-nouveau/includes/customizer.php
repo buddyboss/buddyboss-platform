@@ -23,13 +23,13 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	$bp_nouveau_options = bp_nouveau_get_appearance_settings();
 
 	$wp_customize->add_panel( 'bp_nouveau_panel', array(
-		'description' => __( 'Customize the appearance of BuddyPress Nouveau Template pack.', 'buddypress' ),
-		'title'       => _x( 'BuddyPress Nouveau', 'Customizer Panel', 'buddypress' ),
+		'description' => __( 'Customize the appearance of BuddyBoss Nouveau Template pack.', 'buddypress' ),
+		'title'       => _x( 'BuddyBoss Nouveau', 'Customizer Panel', 'buddypress' ),
 		'priority'    => 200,
 	) );
 
 	/**
-	 * Filters the BuddyPress Nouveau customizer sections and their arguments.
+	 * Filters the BuddyBoss Nouveau customizer sections and their arguments.
 	 *
 	 * @since 3.0.0
 	 *
@@ -74,7 +74,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	}
 
 	/**
-	 * Filters the BuddyPress Nouveau customizer settings and their arguments.
+	 * Filters the BuddyBoss Nouveau customizer settings and their arguments.
 	 *
 	 * @since 3.0.0
 	 *
@@ -288,7 +288,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	);
 
 	/**
-	 * Filters the BuddyPress Nouveau customizer controls and their arguments.
+	 * Filters the BuddyBoss Nouveau customizer controls and their arguments.
 	 *
 	 * @since 3.0.0
 	 *

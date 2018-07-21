@@ -382,7 +382,7 @@ function bp_nouveau_get_message_date( $date ) {
 	}
 
 	/**
-	 * Filters the message date for BuddyPress Nouveau display.
+	 * Filters the message date for BuddyBoss Nouveau display.
 	 *
 	 * @since 3.0.0
 	 *
