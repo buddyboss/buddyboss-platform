@@ -510,7 +510,7 @@ abstract class BP_Core_oEmbed_Extension {
 	}
 
 	/**
-	 * Pass our BuddyPress activity permalink for embedding.
+	 * Pass our BuddyBoss activity permalink for embedding.
 	 *
 	 * @since 2.6.0
 	 *

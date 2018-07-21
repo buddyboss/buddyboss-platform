@@ -905,7 +905,7 @@ function bp_blogs_transition_activity_status( $new_status, $old_status, $comment
 }
 
 /**
- * Record a new blog comment in the BuddyPress activity stream.
+ * Record a new blog comment in the BuddyBoss activity stream.
  *
  * Only posts the item if blog is public and post is not password-protected.
  *

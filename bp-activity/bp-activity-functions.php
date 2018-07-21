@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Activity Functions.
+ * BuddyBoss Activity Functions.
  *
  * Functions for the Activity Streams component.
  *

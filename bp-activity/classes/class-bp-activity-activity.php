@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Activity Classes
+ * BuddyBoss Activity Classes
  *
  * @package BuddyBoss
  * @subpackage Activity
@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Database interaction class for the BuddyPress activity component.
+ * Database interaction class for the BuddyBoss activity component.
  * Instance methods are available for creating/editing an activity,
  * static methods for querying activities.
  *

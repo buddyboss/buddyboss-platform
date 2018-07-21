@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Activity Toolbar.
+ * BuddyBoss Activity Toolbar.
  *
  * Handles the activity functions related to the WordPress Toolbar.
  *

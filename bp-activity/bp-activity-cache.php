@@ -1,6 +1,6 @@
 <?php
 /**
- * Functions related to the BuddyPress Activity component and the WP Cache.
+ * Functions related to the BuddyBoss Activity component and the WP Cache.
  *
  * @package BuddyBoss
  * @subpackage ActivityCache

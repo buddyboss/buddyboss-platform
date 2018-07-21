@@ -34,7 +34,7 @@ function bp_blogs_catch_transition_post_status( $new_status, $old_status, $post 
 }
 
 /**
- * Record a new blog post in the BuddyPress activity stream.
+ * Record a new blog post in the BuddyBoss activity stream.
  *
  * @deprecated 2.2.0
  *

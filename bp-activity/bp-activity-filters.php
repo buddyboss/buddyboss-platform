@@ -203,7 +203,7 @@ function bp_activity_check_blacklist_keys( $activity ) {
  */
 function bp_activity_filter_kses( $content ) {
 	/**
-	 * Filters the allowed HTML tags for BuddyPress Activity content.
+	 * Filters the allowed HTML tags for BuddyBoss Activity content.
 	 *
 	 * @since 1.2.0
 	 *
@@ -609,7 +609,7 @@ function bp_activity_heartbeat_strings( $strings = array() ) {
 	}
 
 	/**
-	 * Filters the pulse frequency to be used for the BuddyPress Activity heartbeat.
+	 * Filters the pulse frequency to be used for the BuddyBoss Activity heartbeat.
 	 *
 	 * @since 2.0.0
 	 *

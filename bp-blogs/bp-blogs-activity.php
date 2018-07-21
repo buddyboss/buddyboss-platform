@@ -522,7 +522,7 @@ function bp_blogs_delete_activity( $args = '' ) {
  * Check if a blog post's activity item should be closed from commenting.
  *
  * This mirrors the {@link comments_open()} and {@link _close_comments_for_old_post()}
- * functions, but for use with the BuddyPress activity stream to be as
+ * functions, but for use with the BuddyBoss activity stream to be as
  * lightweight as possible.
  *
  * By lightweight, we actually mirror a few of the blog's commenting settings
