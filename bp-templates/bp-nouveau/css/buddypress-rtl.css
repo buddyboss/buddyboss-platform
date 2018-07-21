@@ -702,10 +702,6 @@ body.buddypress article.page > .entry-header .entry-title {
 	margin-top: 10px;
 }
 
-.buddypress-wrap .subnav-filters .feed {
-	margin-left: 15px;
-}
-
 .buddypress-wrap .subnav-filters .last.filter label {
 	display: inline;
 }
@@ -774,7 +770,6 @@ body.buddypress article.page > .entry-header .entry-title {
 	}
 	.buddypress-wrap .subnav-filters .subnav-search,
 	.buddypress-wrap .subnav-filters .subnav-search form,
-	.buddypress-wrap .subnav-filters .feed,
 	.buddypress-wrap .subnav-filters .bp-search,
 	.buddypress-wrap .subnav-filters .dir-search,
 	.buddypress-wrap .subnav-filters .user-messages-bulk-actions,
