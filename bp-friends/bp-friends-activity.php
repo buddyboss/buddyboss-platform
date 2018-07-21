@@ -110,7 +110,7 @@ function friends_register_activity_actions() {
 	bp_activity_set_action(
 		$bp->friends->id,
 		'friendship_created',
-		__( 'New friendships', 'buddyboss' ),
+		__( 'New connections', 'buddyboss' ),
 		'bp_friends_format_activity_action_friendship_created',
 		__( 'Connections', 'buddyboss' ),
 		array( 'activity', 'member' )

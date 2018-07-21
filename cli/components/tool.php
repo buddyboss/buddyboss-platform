@@ -30,7 +30,7 @@ class Tool extends BuddypressCommand {
 	 *
 	 *     $ wp bp tool repair friend-count
 	 *     $ wp bp tool fix friend-count
-	 *     Success: Counting the number of friends for each user. Complete!
+	 *     Success: Counting the number of connections for each user. Complete!
 	 *
 	 * @alias fix
 	 */

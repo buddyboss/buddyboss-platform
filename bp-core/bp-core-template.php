@@ -2539,7 +2539,7 @@ function bp_is_user_friends() {
 }
 
 /**
- * Is the current page a user's Friend Requests page?
+ * Is the current page a user's Connection Requests page?
  *
  * Eg http://example.com/members/joe/friends/requests/.
  *

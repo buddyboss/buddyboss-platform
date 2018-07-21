@@ -80,7 +80,7 @@ function bp_activity_action_friends_feed() {
 		'title'         => sprintf( __( '%1$s | %2$s | Connections Activity', 'buddyboss' ), bp_get_site_name(), bp_get_displayed_user_fullname() ),
 
 		'link'          => trailingslashit( bp_displayed_user_domain() . bp_get_activity_slug() . '/' . bp_get_friends_slug() ),
-		'description'   => sprintf( __( "Activity feed for %s's friends.", 'buddyboss' ), bp_get_displayed_user_fullname() ),
+		'description'   => sprintf( __( "Activity feed for %s's connections.", 'buddyboss' ), bp_get_displayed_user_fullname() ),
 		'activity_args' => 'scope=friends'
 	) );
 }

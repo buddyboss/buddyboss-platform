@@ -114,7 +114,7 @@ function bp_admin_repair_list() {
 	if ( bp_is_active( 'friends' ) ) {
 		$repair_list[0] = array(
 			'bp-user-friends',
-			__( 'Repair total friends count for each member.', 'buddyboss' ),
+			__( 'Repair total connections count for each member.', 'buddyboss' ),
 			'bp_admin_repair_friend_count',
 		);
 	}
@@ -173,7 +173,7 @@ function bp_admin_repair_friend_count() {
 		return;
 	}
 
-	$statement = __( 'Counting the number of friends for each user&hellip; %s', 'buddyboss' );
+	$statement = __( 'Counting the number of connections for each user&hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	$sql_delete = "DELETE FROM {$wpdb->usermeta} WHERE meta_key IN ( 'total_friend_count' );";

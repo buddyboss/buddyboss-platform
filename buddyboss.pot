@@ -59,7 +59,7 @@ msgid "%1$s | %2$s | Connections Activity"
 msgstr ""
 
 #: bp-activity/actions/feeds.php:83
-msgid "Activity feed for %s's friends."
+msgid "Activity feed for %s's connections."
 msgstr ""
 
 #: bp-activity/actions/feeds.php:110
@@ -1612,7 +1612,7 @@ msgid "Repair member \"last activity\" data."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:117
-msgid "Repair total friends count for each member."
+msgid "Repair total connections count for each member."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:127
@@ -1628,7 +1628,7 @@ msgid "Reinstall emails (delete and restore from defaults)."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:176
-msgid "Counting the number of friends for each user&hellip; %s"
+msgid "Counting the number of connections for each user&hellip; %s"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:177
@@ -3423,11 +3423,11 @@ msgstr ""
 #: bp-friends/bp-friends-activity.php:106
 #: bp-friends/bp-friends-activity.php:115
 #: bp-friends/classes/class-bp-friends-component.php:294
-msgid "Friendships"
+msgid "Connections"
 msgstr ""
 
 #: bp-friends/bp-friends-activity.php:113
-msgid "New friendships"
+msgid "New connections"
 msgstr ""
 
 #: bp-friends/bp-friends-activity.php:120
@@ -9470,7 +9470,7 @@ msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:194
 msgctxt "Connections screen sub nav"
-msgid "Friendships"
+msgid "Connections"
 msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:204
@@ -9502,7 +9502,7 @@ msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:264
 msgctxt "My Account Connections menu sub nav"
-msgid "Friendships"
+msgid "Connections"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:32
