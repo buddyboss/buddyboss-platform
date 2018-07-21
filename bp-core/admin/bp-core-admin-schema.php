@@ -42,7 +42,7 @@ function bp_core_install( $active_components = false ) {
 		bp_core_install_notifications();
 	}
 
-	// Friend Connections.
+	// Connections.
 	if ( !empty( $active_components['friends'] ) ) {
 		bp_core_install_friends();
 	}

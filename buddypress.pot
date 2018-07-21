@@ -2069,7 +2069,7 @@ msgid "Everything in a BuddyPress community revolves around its members."
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2472
-msgid "Friend Connections"
+msgid "Connections"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2473
@@ -9465,7 +9465,7 @@ msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:30
 msgctxt "Friends screen page <title>"
-msgid "Friend Connections"
+msgid "Connections"
 msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:194
