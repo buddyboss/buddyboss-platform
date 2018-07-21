@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Blogs Create
+ * BuddyBoss - Blogs Create
  *
  * @package BuddyBoss
  * @subpackage bp-legacy

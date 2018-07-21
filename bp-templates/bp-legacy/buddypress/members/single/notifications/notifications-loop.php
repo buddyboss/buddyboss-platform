@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Members Notifications Loop
+ * BuddyBoss - Members Notifications Loop
  *
  * @package BuddyBoss
  * @subpackage bp-legacy

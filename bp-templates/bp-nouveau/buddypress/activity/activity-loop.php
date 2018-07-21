@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Activity Loop
+ * BuddyBoss - Activity Loop
  *
  * @version 3.1.0
  */

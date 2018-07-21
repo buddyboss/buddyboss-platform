@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Members Profile Change Cover Image
+ * BuddyBoss - Members Profile Change Cover Image
  *
  * @package BuddyBoss
  * @subpackage bp-legacy

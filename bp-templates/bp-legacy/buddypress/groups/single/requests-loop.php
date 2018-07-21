@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Groups Requests Loop
+ * BuddyBoss - Groups Requests Loop
  *
  * @package BuddyBoss
  * @subpackage bp-legacy

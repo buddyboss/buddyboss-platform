@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Groups Members
+ * BuddyBoss - Groups Members
  *
  * @since 3.0.0
  * @version 3.0.0

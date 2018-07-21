@@ -1,7 +1,7 @@
 <?php
 
 /**
- * BuddyPress - Members Loop
+ * BuddyBoss - Members Loop
  *
  * Querystring is set via AJAX in _inc/ajax.php - bp_dtheme_object_filter()
  *

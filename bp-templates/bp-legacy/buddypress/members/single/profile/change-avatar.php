@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Members Profile Change Avatar
+ * BuddyBoss - Members Profile Change Avatar
  *
  * @package BuddyBoss
  * @subpackage bp-legacy

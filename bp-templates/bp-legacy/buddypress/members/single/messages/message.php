@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Private Message Content.
+ * BuddyBoss - Private Message Content.
  *
  * This template is used in /messages/single.php during the message loop to
  * display each message and when a new message is created via AJAX.

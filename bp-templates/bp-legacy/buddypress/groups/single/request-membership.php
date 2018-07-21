@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Groups Request Membership
+ * BuddyBoss - Groups Request Membership
  *
  * @package BuddyBoss
  * @subpackage bp-legacy

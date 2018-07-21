@@ -1,7 +1,7 @@
 <?php
 
 /**
- * BuddyPress - Activity Post Form
+ * BuddyBoss - Activity Post Form
  *
  * @package BuddyBoss
  * @subpackage bp-default

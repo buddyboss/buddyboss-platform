@@ -1,7 +1,7 @@
 <?php
 
 /**
- * BuddyPress - Blogs Directory
+ * BuddyBoss - Blogs Directory
  *
  * @package BuddyBoss
  * @subpackage bp-default

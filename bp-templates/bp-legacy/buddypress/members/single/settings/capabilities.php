@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Members Settings Capabilities
+ * BuddyBoss - Members Settings Capabilities
  *
  * @package BuddyBoss
  * @subpackage bp-legacy

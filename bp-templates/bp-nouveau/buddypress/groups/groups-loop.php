@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Groups Loop
+ * BuddyBoss - Groups Loop
  *
  * @since 3.0.0
  * @version 3.1.0
