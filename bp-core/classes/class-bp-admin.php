@@ -846,10 +846,6 @@ class BP_Admin {
 					<a class="web" href="https://profiles.wordpress.org/ramiy"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/ce2a269e424156d79cb0c4e1d4d82db1?s=120">
 					Rami Yushuvaev</a>
 				</li>
-				<li class="wp-person" id="wp-person-vapvarun">
-					<a class="web" href="https://profiles.wordpress.org/vapvarun"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/78a3bf7eb3a1132fc667f96f2631e448?s=120">
-					Vapvarun</a>
-				</li>
 			</ul>
 
 			<h3 class="wp-people-group"><?php printf( esc_html__( 'Contributors to BuddyPress %s', 'buddyboss' ), self::display_version() ); ?></h3>
