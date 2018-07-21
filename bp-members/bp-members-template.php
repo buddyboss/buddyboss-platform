@@ -278,7 +278,7 @@ function bp_activate_slug() {
  * Initialize the members loop.
  *
  * Based on the $args passed, bp_has_members() populates the $members_template
- * global, enabling the use of BuddyPress templates and template functions to
+ * global, enabling the use of BuddyBoss templates and template functions to
  * display a list of members.
  *
  * @since 1.2.0

@@ -1488,7 +1488,7 @@ msgid "Allow registered members to delete their own accounts"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:74
-msgid "The selected Template Pack will serve all BuddyPress templates."
+msgid "The selected Template Pack will serve all BuddyBoss templates."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:77
@@ -9410,7 +9410,7 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:477
 #: bp-core/classes/class-bp-admin.php:504
 msgctxt "Colloquial alternative to \"learn about BuddyPress\""
-msgid "Hello, BuddyPress!"
+msgid "Hello, BuddyBoss!"
 msgstr ""
 
 #: bp-core/classes/class-bp-admin.php:971

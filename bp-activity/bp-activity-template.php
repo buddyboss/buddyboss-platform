@@ -101,7 +101,7 @@ function bp_activity_directory_permalink() {
  * Initialize the activity loop.
  *
  * Based on the $args passed, bp_has_activities() populates the
- * $activities_template global, enabling the use of BuddyPress templates and
+ * $activities_template global, enabling the use of BuddyBoss templates and
  * template functions to display a list of activity items.
  *
  * @since 1.0.0
