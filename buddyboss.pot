@@ -8831,12 +8831,12 @@ msgid "The BuddyPress Community"
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:32
-msgctxt "Admin Dashbord SWA page title"
+msgctxt "Admin Dashboard SWA page title"
 msgid "Activity"
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:33
-msgctxt "Admin Dashbord SWA menu"
+msgctxt "Admin Dashboard SWA menu"
 msgid "Activity"
 msgstr ""
 
