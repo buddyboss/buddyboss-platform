@@ -2469,7 +2469,7 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Allow your users to modify their account and notification settings directly from within their profiles.', 'buddyboss' )
 		),
 		'friends'  => array(
-			'title'       => __( 'Friend Connections', 'buddyboss' ),
+			'title'       => __( 'Connections', 'buddyboss' ),
 			'description' => __( 'Let your users make connections so they can track the activity of others and focus on the people they care about the most.', 'buddyboss' )
 		),
 		'messages' => array(

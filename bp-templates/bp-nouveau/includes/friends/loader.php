@@ -1,6 +1,6 @@
 <?php
 /**
- * BP Nouveau Friends
+ * BP Nouveau Connections
  *
  * @since 3.0.0
  * @version 3.0.0
@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Friends Loader class
+ * Connections Loader class
  *
  * @since 3.0.0
  */
@@ -115,7 +115,7 @@ class BP_Nouveau_Friends {
 }
 
 /**
- * Launch the Friends loader class.
+ * Launch the Connections loader class.
  *
  * @since 3.0.0
  */

@@ -1,9 +1,9 @@
 <?php
 /**
- * BuddyPress Friends Classes.
+ * BuddyBoss Connections Classes.
  *
  * @package BuddyBoss
- * @subpackage FriendsClasses
+ * @subpackage ConnectionsClasses
  * @since 1.0.0
  */
 
@@ -670,7 +670,7 @@ class BP_Friends_Friendship {
 	/**
 	 * Get the last active date of many users at once.
 	 *
-	 * @todo Why is this in the Friends component?
+	 * @todo Why is this in the Connections component?
 	 *
 	 * @since 1.0.0
 	 *

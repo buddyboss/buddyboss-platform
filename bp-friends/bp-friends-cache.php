@@ -1,12 +1,12 @@
 <?php
 /**
- * BuddyPress Friends Caching.
+ * BuddyBoss Connections Caching.
  *
  * Caching functions handle the clearing of cached objects and pages on specific
  * actions throughout BuddyPress.
  *
  * @package BuddyBoss
- * @subpackage FriendsCaching
+ * @subpackage ConnectionsCaching
  * @since 1.5.0
  */
 

@@ -1,9 +1,9 @@
 <?php
 /**
- * Friends: Remove action
+ * Connections: Remove action
  *
  * @package BuddyBoss
- * @subpackage FriendsActions
+ * @subpackage ConnectionsActions
  * @since 3.0.0
  */
 

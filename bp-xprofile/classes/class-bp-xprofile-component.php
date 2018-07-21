@@ -193,7 +193,7 @@ class BP_XProfile_Component extends BP_Component {
 		if ( bp_is_active( 'friends' ) ) {
 			$this->visibility_levels['friends'] = array(
 				'id'	=> 'friends',
-				'label'	=> _x( 'My Friends', 'Visibility level setting', 'buddyboss' )
+				'label'	=> _x( 'My Connections', 'Visibility level setting', 'buddyboss' )
 			);
 		}
 

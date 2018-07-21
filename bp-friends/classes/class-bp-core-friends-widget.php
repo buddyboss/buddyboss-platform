@@ -1,9 +1,9 @@
 <?php
 /**
- * BuddyPress Friends Widget.
+ * BuddyBoss Connections Widget.
  *
  * @package BuddyBoss
- * @subpackage Friends
+ * @subpackage Connections
  * @since 1.9.0
  */
 
@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The User Friends widget class.
+ * The User Connections widget class.
  *
  * @since 1.9.0
  */
@@ -24,11 +24,11 @@ class BP_Core_Friends_Widget extends WP_Widget {
 	 */
 	function __construct() {
 		$widget_ops = array(
-			'description'                 => __( 'A dynamic list of recently active, popular, and newest Friends of the displayed member.  Widget is only shown when viewing a member profile.', 'buddyboss' ),
+			'description'                 => __( 'A dynamic list of recently active, popular, and newest Connections of the displayed member.  Widget is only shown when viewing a member profile.', 'buddyboss' ),
 			'classname'                   => 'widget_bp_core_friends_widget buddypress widget',
 			'customize_selective_refresh' => true,
 		);
-		parent::__construct( false, $name = _x( '(BuddyPress) Friends', 'widget name', 'buddyboss' ), $widget_ops );
+		parent::__construct( false, $name = _x( '(BuddyBoss) Connections', 'widget name', 'buddyboss' ), $widget_ops );
 
 		if ( is_customize_preview() || is_active_widget( false, false, $this->id_base ) ) {
 			add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -64,14 +64,14 @@ class BP_Core_Friends_Widget extends WP_Widget {
 
 		$user_id = bp_displayed_user_id();
 		$link = trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() );
-		$instance['title'] = sprintf( __( "%s's Friends", 'buddyboss' ), bp_get_displayed_user_fullname() );
+		$instance['title'] = sprintf( __( "%s's Connections", 'buddyboss' ), bp_get_displayed_user_fullname() );
 
 		if ( empty( $instance['friend_default'] ) ) {
 			$instance['friend_default'] = 'active';
 		}
 
 		/**
-		 * Filters the Friends widget title.
+		 * Filters the Connections widget title.
 		 *
 		 * @since 1.8.0
 		 * @since 2.3.0 Added 'instance' and 'id_base' to arguments passed to filter.

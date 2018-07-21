@@ -155,7 +155,7 @@ function bp_activity_directory_permalink() {
  *                                               defaults to false.
  *     @type int|array|bool    $user_id          The ID(s) of user(s) whose activity should be fetched. Pass a single ID or
  *                                               an array of IDs. When viewing a user profile page (but not that user's
- *                                               activity subpages, ie My Friends, My Groups, etc), 'user_id' defaults to
+ *                                               activity subpages, ie My Connections, My Groups, etc), 'user_id' defaults to
  *                                               the ID of the displayed user. Otherwise the default is false.
  *     @type string|array|bool $object           Filters by the `component` column in the database, which is generally the
  *                                               component ID in the case of BuddyPress components, or the plugin slug in
@@ -3843,7 +3843,7 @@ function bp_activity_show_filters( $context = '' ) {
 		$filters = array();
 		$actions = bp_activity_get_actions_for_context( $context );
 		foreach ( $actions as $action ) {
-			// Friends activity collapses two filters into one.
+			// Connections activity collapses two filters into one.
 			if ( in_array( $action['key'], array( 'friendship_accepted', 'friendship_created' ) ) ) {
 				$action['key'] = 'friendship_accepted,friendship_created';
 			}

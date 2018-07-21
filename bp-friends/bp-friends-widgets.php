@@ -1,9 +1,9 @@
 <?php
 /**
- * BuddyPress Friends Widgets.
+ * BuddyBoss Connections Widgets.
  *
  * @package BuddyBoss
- * @subpackage Friends
+ * @subpackage Connections
  * @since 1.9.0
  */
 
@@ -20,7 +20,7 @@ function bp_friends_register_widgets() {
 		return;
 	}
 
-	// The Friends widget works only when looking an a displayed user,
+	// The Connections widget works only when looking at a displayed user,
 	// and the concept of "displayed user" doesn't exist on non-root blogs,
 	// so we don't register the widget there.
 	if ( ! bp_is_root_blog() ) {
@@ -34,7 +34,7 @@ add_action( 'bp_register_widgets', 'bp_friends_register_widgets' );
 /** Widget AJAX ***************************************************************/
 
 /**
- * Process AJAX pagination or filtering for the Friends widget.
+ * Process AJAX pagination or filtering for the Connections widget.
  *
  * @since 1.9.0
  */

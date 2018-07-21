@@ -1,12 +1,12 @@
 <?php
 /**
- * BuddyPress Friends Activity Functions.
+ * BuddyBoss Connections Activity Functions.
  *
  * These functions handle the recording, deleting and formatting of activity
  * for the user and for this specific component.
  *
  * @package BuddyBoss
- * @subpackage FriendsNotifications
+ * @subpackage ConnectionsNotifications
  * @since 1.0.0
  */
 
@@ -232,7 +232,7 @@ function bp_friends_remove_notifications_data( $user_id = 0 ) {
 add_action( 'friends_remove_data', 'bp_friends_remove_notifications_data', 10, 1 );
 
 /**
- * Add Friends-related settings to the Settings > Notifications page.
+ * Add Connections-related settings to the Settings > Notifications page.
  *
  * @since 1.0.0
  */
@@ -248,7 +248,7 @@ function friends_screen_notification_settings() {
 		<thead>
 			<tr>
 				<th class="icon"></th>
-				<th class="title"><?php _ex( 'Friends', 'Friend settings on notification settings page', 'buddyboss' ) ?></th>
+				<th class="title"><?php _ex( 'Connections', 'Friend settings on notification settings page', 'buddyboss' ) ?></th>
 				<th class="yes"><?php _e( 'Yes', 'buddyboss' ) ?></th>
 				<th class="no"><?php _e( 'No', 'buddyboss' )?></th>
 			</tr>

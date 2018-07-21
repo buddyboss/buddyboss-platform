@@ -93,7 +93,7 @@ class BP_Core_User {
 	/* Extras */
 
 	/**
-	 * The total number of "Friends" the user has on site.
+	 * The total number of "Connections" the user has on site.
 	 *
 	 * @var integer
 	 */

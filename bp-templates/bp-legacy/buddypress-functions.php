@@ -92,7 +92,7 @@ class BP_Legacy extends BP_Theme_Compat {
 
 		if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 			// Register buttons for the relevant component templates
-			// Friends button.
+			// Connections button.
 			if ( bp_is_active( 'friends' ) )
 				add_action( 'bp_member_header_actions',    'bp_add_friend_button',           5 );
 
@@ -141,7 +141,7 @@ class BP_Legacy extends BP_Theme_Compat {
 			'invite_filter'   => 'bp_legacy_theme_invite_template_loader',
 			'requests_filter' => 'bp_legacy_theme_requests_template_loader',
 
-			// Friends.
+			// Connections.
 			'accept_friendship' => 'bp_legacy_theme_ajax_accept_friendship',
 			'addremove_friend'  => 'bp_legacy_theme_ajax_addremove_friend',
 			'reject_friendship' => 'bp_legacy_theme_ajax_reject_friendship',

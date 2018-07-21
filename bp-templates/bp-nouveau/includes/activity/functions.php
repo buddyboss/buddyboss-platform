@@ -237,7 +237,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 				'slug'      => 'friends', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array( 'dynamic' ),
 				'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_friends_slug() . '/',
-				'text'      => __( 'My Friends', 'buddyboss' ),
+				'text'      => __( 'My Connections', 'buddyboss' ),
 				'count'     => '',
 				'position'  => 15,
 			);
@@ -397,7 +397,7 @@ function bp_nouveau_activity_scope_newest_class( $classes = '' ) {
 
 		/*
 		 * These classes will be used to count the number of newest activities for
-		 * the 'Mentions', 'My Groups' & 'My Friends' tabs
+		 * the 'Mentions', 'My Groups' & 'My Connections' tabs
 		 */
 		if ( 'all' === $scope ) {
 			if ( 'groups' === $component && bp_is_active( $component ) ) {
@@ -407,7 +407,7 @@ function bp_nouveau_activity_scope_newest_class( $classes = '' ) {
 				}
 			}
 
-			// Friends can post in groups the user is a member of
+			// Connections can post in groups the user is a member of
 			if ( bp_is_active( 'friends' ) && (int) $user_id !== (int) bp_get_activity_user_id() ) {
 				if ( friends_check_friendship( $user_id, bp_get_activity_user_id() ) ) {
 					$my_classes[] = 'bp-my-friends';
@@ -426,7 +426,7 @@ function bp_nouveau_activity_scope_newest_class( $classes = '' ) {
 
 		/*
 		 * This class will be used to highlight the newest activities when
-		 * viewing the 'Mentions', 'My Groups' or the 'My Friends' tabs
+		 * viewing the 'Mentions', 'My Groups' or the 'My Connections' tabs
 		 */
 		} elseif ( 'friends' === $scope || 'groups' === $scope || 'mentions' === $scope ) {
 			$my_classes[] = 'newest_' . $scope . '_activity';

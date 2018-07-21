@@ -136,7 +136,7 @@ function bp_nouveau_groups_localize_scripts( $params = array() ) {
 	if ( bp_is_active( 'friends' ) ) {
 		$invites_nav['friends'] = array(
 			'id'      => 'friends',
-			'caption' => __( 'My Friends', 'buddyboss' ),
+			'caption' => __( 'My Connections', 'buddyboss' ),
 			'order'   => 0,
 		);
 

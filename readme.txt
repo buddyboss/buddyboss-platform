@@ -119,7 +119,7 @@ Try <a href="https://wordpress.org/plugins/bbpress/">bbPress</a>. It integrates 
 2. **Profiles Fields** - Fully editable profile fields allow you to define the fields users can fill in to describe themselves. Tailor profile fields to suit your audience.
 3. **User Settings** - Give your users complete control over profile and notification settings. Settings are fully integrated into your theme, and can be disabled by the administrator.
 4. **Extensible Groups** - Powerful public, private or hidden groups allow your users to break the discussion down into specific topics. Extend groups with your own custom features using the group extension API.
-5. **Friend Connections** - Let your users make connections so they can track the activity of others, or filter to show only those users they care about the most.
+5. **Connections** - Let your users make connections so they can track the activity of others, or filter to show only those users they care about the most.
 6. **Private Messaging** - Private messaging will allow your users to talk to each other directly and in private. Not just limited to one-on-one discussions, your users can send messages to multiple recipients.
 7. **Site Tracking** - Track posts and comments in the activity feed, and allow your users to add their own blogs using WordPress' Multisite feature.
 8. **Notifications** - Keep your members up-to-date with relevant activity via toolbar and email notifications.

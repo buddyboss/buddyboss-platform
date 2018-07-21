@@ -1,12 +1,12 @@
 <?php
 /**
- * BuddyPress Friends Activity Functions.
+ * BuddyBoss Connections Activity Functions.
  *
  * These functions handle the recording, deleting and formatting of activity
  * for the user and for this specific component.
  *
  * @package BuddyBoss
- * @subpackage FriendsActivity
+ * @subpackage ConnectionsActivity
  * @since 1.5.0
  */
 
@@ -14,9 +14,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Record an activity item related to the Friends component.
+ * Record an activity item related to the Connections component.
  *
- * A wrapper for {@link bp_activity_add()} that provides some Friends-specific
+ * A wrapper for {@link bp_activity_add()} that provides some Connections-specific
  * defaults.
  *
  * @since 1.0.0
@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
  *     An array of arguments for the new activity item. Accepts all parameters
  *     of {@link bp_activity_add()}. The one difference is the following
  *     argument, which has a different default here:
- *     @type string $component Default: the id of your Friends component
+ *     @type string $component Default: the id of your Connections component
  *                             (usually 'friends').
  * }
  * @return WP_Error|bool|int See {@link bp_activity_add()}.
@@ -56,14 +56,14 @@ function friends_record_activity( $args = '' ) {
 }
 
 /**
- * Delete an activity item related to the Friends component.
+ * Delete an activity item related to the Connections component.
  *
  * @since 1.0.0
  *
  * @param array $args {
  *     An array of arguments for the item to delete.
  *     @type int    $item_id ID of the 'item' associated with the activity item.
- *                           For Friends activity items, this is usually the user ID of one
+ *                           For Connections activity items, this is usually the user ID of one
  *                           of the friends.
  *     @type string $type    The 'type' of the activity item (eg
  *                           'friendship_accepted').

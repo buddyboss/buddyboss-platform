@@ -109,7 +109,7 @@ function bp_admin_repair_list() {
 		'bp_admin_repair_last_activity',
 	);
 
-	// Friends:
+	// Connections:
 	// - user friend count.
 	if ( bp_is_active( 'friends' ) ) {
 		$repair_list[0] = array(

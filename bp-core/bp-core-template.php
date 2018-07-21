@@ -441,16 +441,16 @@ function bp_format_time( $time = '', $exclude_time = false, $gmt = true ) {
  *
  * This function can be used in cases where a phrase used in a template will
  * differ for a user looking at his own profile and a user looking at another
- * user's profile (eg, "My Friends" and "Joe's Friends"). Pass both versions
+ * user's profile (eg, "My Connections" and "Joe's Connections"). Pass both versions
  * of the phrase, and bp_word_or_name() will detect which is appropriate, and
  * do the necessary argument swapping for dynamic phrases.
  *
  * @since 1.0.0
  *
- * @param string $youtext    The "you" version of the phrase (eg "Your Friends").
+ * @param string $youtext    The "you" version of the phrase (eg "Your Connections").
  * @param string $nametext   The other-user version of the phrase. Should be in
  *                           a format appropriate for sprintf() - use %s in place of the displayed
- *                           user's name (eg "%'s Friends").
+ *                           user's name (eg "%'s Connections").
  * @param bool   $capitalize Optional. Force into title case. Default: true.
  * @param bool   $echo       Optional. True to echo the results, false to return them.
  *                           Default: true.
@@ -2174,11 +2174,11 @@ function bp_is_messages_component() {
 }
 
 /**
- * Check whether the current page is part of the Friends component.
+ * Check whether the current page is part of the Connections component.
  *
  * @since 1.1.0
  *
- * @return bool True if the current page is part of the Friends component.
+ * @return bool True if the current page is part of the Connections component.
  */
 function bp_is_friends_component() {
 	return (bool) bp_is_current_component( 'friends' );
@@ -2368,13 +2368,13 @@ function bp_is_user_activity() {
 }
 
 /**
- * Is the current page a user's Friends activity feed?
+ * Is the current page a user's Connections activity feed?
  *
  * Eg http://example.com/members/joe/friends/
  *
  * @since 1.1.0
  *
- * @return bool True if the current page is a user's Friends activity feed.
+ * @return bool True if the current page is a user's Connections activity feed.
  */
 function bp_is_user_friends_activity() {
 
@@ -2526,13 +2526,13 @@ function bp_is_user_recent_commments() {
 }
 
 /**
- * Is the current page a user's Friends page?
+ * Is the current page a user's Connections page?
  *
  * Eg http://example.com/members/joe/blogs/friends/ (or a subpage thereof).
  *
  * @since 1.1.0
  *
- * @return bool True if the current page is a user's Friends page.
+ * @return bool True if the current page is a user's Connections page.
  */
 function bp_is_user_friends() {
 	return (bool) ( bp_is_user() && bp_is_friends_component() );
@@ -2545,7 +2545,7 @@ function bp_is_user_friends() {
  *
  * @since 1.5.0
  *
- * @return bool True if the current page is a user's Friends Requests page.
+ * @return bool True if the current page is a user's Connections Requests page.
  */
 function bp_is_user_friend_requests() {
 	return (bool) ( bp_is_user_friends() && bp_is_current_action( 'requests' ) );

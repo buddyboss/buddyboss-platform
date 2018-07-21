@@ -1,6 +1,6 @@
-Feature: Manage BuddyPress Friends
+Feature: Manage BuddyBoss Connections
 
-  Scenario: Friends CRUD Operations
+  Scenario: Connections CRUD Operations
     Given a BP install
 
     When I try `wp user get bogus-user`

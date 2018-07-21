@@ -46,7 +46,7 @@ get_header( 'buddypress' ); ?>
 
 							<?php if ( bp_get_total_friend_count( bp_loggedin_user_id() ) ) : ?>
 
-								<li id="activity-friends"><a href="<?php echo bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_friends_slug() . '/'; ?>" title="<?php esc_attr_e( 'The activity of my friends only.', 'buddyboss' ); ?>"><?php printf( __( 'My Friends <span>%s</span>', 'buddyboss' ), bp_get_total_friend_count( bp_loggedin_user_id() ) ); ?></a></li>
+								<li id="activity-friends"><a href="<?php echo bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_friends_slug() . '/'; ?>" title="<?php esc_attr_e( 'The activity of my friends only.', 'buddyboss' ); ?>"><?php printf( __( 'My Connections <span>%s</span>', 'buddyboss' ), bp_get_total_friend_count( bp_loggedin_user_id() ) ); ?></a></li>
 
 							<?php endif; ?>
 

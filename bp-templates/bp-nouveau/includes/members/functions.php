@@ -59,7 +59,7 @@ function bp_nouveau_get_members_directory_nav_items() {
 				'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array(),
 				'link'      => bp_loggedin_user_domain() . bp_get_friends_slug() . '/my-friends/',
-				'text'      => __( 'My Friends', 'buddyboss' ),
+				'text'      => __( 'My Connections', 'buddyboss' ),
 				'count'     => bp_get_total_friend_count( bp_loggedin_user_id() ),
 				'position'  => 15,
 			);

@@ -1,9 +1,9 @@
 <?php
 /**
- * BuddyPress Friends Template Functions.
+ * BuddyBoss Connections Template Functions.
  *
  * @package BuddyBoss
- * @subpackage FriendsTemplate
+ * @subpackage ConnectionsTemplate
  * @since 1.5.0
  */
 
@@ -33,7 +33,7 @@ function bp_friends_slug() {
 		 *
 		 * @since 1.5.0
 		 *
-		 * @param string $value Friends component slug.
+		 * @param string $value Connections component slug.
 		 */
 		return apply_filters( 'bp_get_friends_slug', buddypress()->friends->slug );
 	}
@@ -61,7 +61,7 @@ function bp_friends_root_slug() {
 		 *
 		 * @since 1.5.0
 		 *
-		 * @param string $value Friends component root slug.
+		 * @param string $value Connections component root slug.
 		 */
 		return apply_filters( 'bp_get_friends_root_slug', buddypress()->friends->root_slug );
 	}
@@ -81,7 +81,7 @@ function bp_friends_random_friends() {
 	} ?>
 
 	<div class="info-group">
-		<h4><?php bp_word_or_name( __( "My Friends", 'buddyboss' ), __( "%s's Friends", 'buddyboss' ) ) ?>  (<?php echo BP_Friends_Friendship::total_friend_count( bp_displayed_user_id() ) ?>) <span><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() ) ?>"><?php _e('See All', 'buddypress') ?></a></span></h4>
+		<h4><?php bp_word_or_name( __( "My Connections", 'buddyboss' ), __( "%s's Connections", 'buddyboss' ) ) ?>  (<?php echo BP_Friends_Friendship::total_friend_count( bp_displayed_user_id() ) ?>) <span><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() ) ?>"><?php _e('See All', 'buddypress') ?></a></span></h4>
 
 		<?php if ( $friend_ids ) { ?>
 
@@ -179,7 +179,7 @@ function bp_friends_random_members( $total_members = 5 ) {
 }
 
 /**
- * Display a Friends search form.
+ * Display a Connections search form.
  *
  * No longer used in BuddyPress.
  *
@@ -188,7 +188,7 @@ function bp_friends_random_members( $total_members = 5 ) {
 function bp_friend_search_form() {
 
 	$action = bp_displayed_user_domain() . bp_get_friends_slug() . '/my-friends/search/';
-	$label  = __( 'Filter Friends', 'buddyboss' ); ?>
+	$label  = __( 'Filter Connections', 'buddyboss' ); ?>
 
 		<form action="<?php echo $action ?>" id="friend-search-form" method="post">
 

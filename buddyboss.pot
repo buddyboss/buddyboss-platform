@@ -53,9 +53,9 @@ msgid "Activity feed for %s."
 msgstr ""
 
 #: bp-activity/actions/feeds.php:80
-#. translators: Friends activity RSS title - "[Site Name] | [User Display Name]
-#. | Friends Activity"
-msgid "%1$s | %2$s | Friends Activity"
+#. translators: Connections activity RSS title - "[Site Name] | [User Display Name]
+#. | Connections Activity"
+msgid "%1$s | %2$s | Connections Activity"
 msgstr ""
 
 #: bp-activity/actions/feeds.php:83
@@ -2069,7 +2069,7 @@ msgid "Everything in a BuddyBoss community revolves around its members."
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2472
-msgid "Friend Connections"
+msgid "Connections"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2473
@@ -3459,12 +3459,12 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/functions.php:240
 #: bp-templates/bp-nouveau/includes/groups/functions.php:139
 #: bp-templates/bp-nouveau/includes/members/functions.php:62
-msgid "My Friends"
+msgid "My Connections"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:84
 #: bp-friends/classes/class-bp-core-friends-widget.php:67
-msgid "%s's Friends"
+msgid "%s's Connections"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:84
@@ -3484,7 +3484,7 @@ msgid "There aren't enough site members to show a random sample just yet."
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:191
-msgid "Filter Friends"
+msgid "Filter Connections"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:247
@@ -3526,7 +3526,7 @@ msgstr ""
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:27
 msgid ""
-"A dynamic list of recently active, popular, and newest Friends of the "
+"A dynamic list of recently active, popular, and newest Connections of the "
 "displayed member.  Widget is only shown when viewing a member profile."
 msgstr ""
 
@@ -3569,12 +3569,12 @@ msgid "Default friends to show:"
 msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:134
-msgid "Search Friends..."
+msgid "Search Connections..."
 msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:175
 #. translators: %s: Friend count for the current user
-msgid "Friends %s"
+msgid "Connections %s"
 msgstr ""
 
 #: bp-friends/screens/requests.php:21
@@ -5967,7 +5967,7 @@ msgstr ""
 
 #: bp-templates/bp-legacy/buddypress/activity/index.php:76
 #: bp-templates/bp-legacy/buddypress/members/index.php:65
-msgid "My Friends %s"
+msgid "My Connections %s"
 msgstr ""
 
 #: bp-templates/bp-legacy/buddypress/activity/index.php:101
@@ -6782,7 +6782,7 @@ msgstr ""
 
 #: bp-templates/bp-legacy/buddypress/members/single/friends.php:64
 #. translators: accessibility text
-msgid "Friends"
+msgid "Connections"
 msgstr ""
 
 #: bp-templates/bp-legacy/buddypress/members/single/groups/invites.php:21
@@ -7459,7 +7459,7 @@ msgid "Connection Requests"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/friends.php:10
-msgid "Friends menu"
+msgid "Connections menu"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/groups.php:10
@@ -7796,7 +7796,7 @@ msgid "Reorder the primary navigation for a user."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:270
-msgid "Member > Friends"
+msgid "Member > Connections"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:277
@@ -8932,7 +8932,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:271
 msgctxt "Profile activity screen sub nav"
-msgid "Friends"
+msgid "Connections"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:284
@@ -8968,7 +8968,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:374
 msgctxt "My Account Activity sub nav"
-msgid "Friends"
+msgid "Connections"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:385
@@ -9023,7 +9023,7 @@ msgstr ""
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:31
 msgctxt "widget name"
-msgid "(BuddyPress) Friends"
+msgid "(BuddyBoss) Connections"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-widget.php:31
@@ -9450,7 +9450,7 @@ msgstr ""
 
 #: bp-friends/bp-friends-notifications.php:251
 msgctxt "Friend settings on notification settings page"
-msgid "Friends"
+msgid "Connections"
 msgstr ""
 
 #: bp-friends/bp-friends-notifications.php:260
@@ -9464,44 +9464,44 @@ msgid "A member accepts your friendship request"
 msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:30
-msgctxt "Friends screen page <title>"
-msgid "Friend Connections"
+msgctxt "Connections screen page <title>"
+msgid "Connections"
 msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:194
-msgctxt "Friends screen sub nav"
+msgctxt "Connections screen sub nav"
 msgid "Friendships"
 msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:204
-msgctxt "Friends screen sub nav"
+msgctxt "Connections screen sub nav"
 msgid "Requests"
 msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:239
 #. translators: %s: Pending friend request count for the current user
-msgctxt "My Account Friends menu"
-msgid "Friends %s"
+msgctxt "My Account Connections menu"
+msgid "Connections %s"
 msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:248
-msgctxt "My Account Friends menu"
-msgid "Friends"
+msgctxt "My Account Connections menu"
+msgid "Connections"
 msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:244
 #. translators: %s: Pending friend request count for the current user
-msgctxt "My Account Friends menu sub nav"
+msgctxt "My Account Connections menu sub nav"
 msgid "Pending Requests %s"
 msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:249
-msgctxt "My Account Friends menu sub nav"
+msgctxt "My Account Connections menu sub nav"
 msgid "No Pending Requests"
 msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:264
-msgctxt "My Account Friends menu sub nav"
+msgctxt "My Account Connections menu sub nav"
 msgid "Friendships"
 msgstr ""
 
@@ -10452,7 +10452,7 @@ msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-component.php:196
 msgctxt "Visibility level setting"
-msgid "My Friends"
+msgid "My Connections"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-component.php:252

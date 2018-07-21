@@ -1,7 +1,7 @@
 <?php
 
 /**
- * BuddyBoss - Users Friends
+ * BuddyBoss - Users Connections
  *
  * @package BuddyBoss
  * @subpackage bp-default

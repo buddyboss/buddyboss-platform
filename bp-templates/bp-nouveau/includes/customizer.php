@@ -267,7 +267,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'choices'    => bp_nouveau_customizer_grid_choices(),
 		),
 		'members_friends_layout' => array(
-			'label'      => __( 'Member > Friends', 'buddyboss' ),
+			'label'      => __( 'Member > Connections', 'buddyboss' ),
 			'section'    => 'bp_nouveau_loops_layout',
 			'settings'   => 'bp_nouveau_appearance[members_friends_layout]',
 			'type'       => 'select',

@@ -114,7 +114,7 @@ function bp_dtheme_setup() {
 
 	if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 		// Register buttons for the relevant component templates
-		// Friends button
+		// Connections button
 		if ( bp_is_active( 'friends' ) )
 			add_action( 'bp_member_header_actions',    'bp_add_friend_button',           5 );
 

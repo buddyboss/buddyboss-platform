@@ -801,7 +801,7 @@ jq(document).ready( function() {
 		return false;
 	});
 
-	/** Invite Friends Interface ****************************************/
+	/** Invite Connections Interface ****************************************/
 
 	/* Select a user from the list of friends and add them to the invite list */
 	jq("div#invite-list input").click( function() {

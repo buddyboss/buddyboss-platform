@@ -1,9 +1,9 @@
 <?php
 /**
- * Friends: Add action
+ * Connections: Add action
  *
  * @package BuddyBoss
- * @subpackage FriendsActions
+ * @subpackage ConnectionsActions
  * @since 3.0.0
  */
 

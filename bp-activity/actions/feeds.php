@@ -76,8 +76,8 @@ function bp_activity_action_friends_feed() {
 	buddypress()->activity->feed = new BP_Activity_Feed( array(
 		'id'            => 'friends',
 
-		/* translators: Friends activity RSS title - "[Site Name] | [User Display Name] | Friends Activity" */
-		'title'         => sprintf( __( '%1$s | %2$s | Friends Activity', 'buddyboss' ), bp_get_site_name(), bp_get_displayed_user_fullname() ),
+		/* translators: Connections activity RSS title - "[Site Name] | [User Display Name] | Connections Activity" */
+		'title'         => sprintf( __( '%1$s | %2$s | Connections Activity', 'buddyboss' ), bp_get_site_name(), bp_get_displayed_user_fullname() ),
 
 		'link'          => trailingslashit( bp_displayed_user_domain() . bp_get_activity_slug() . '/' . bp_get_friends_slug() ),
 		'description'   => sprintf( __( "Activity feed for %s's friends.", 'buddyboss' ), bp_get_displayed_user_fullname() ),

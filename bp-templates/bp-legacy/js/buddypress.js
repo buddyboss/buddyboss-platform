@@ -1040,7 +1040,7 @@ jq(document).ready( function() {
 
 	});
 
-	/** Invite Friends Interface ****************************************/
+	/** Invite Connections Interface ****************************************/
 
 	/* Select a user from the list of friends and add them to the invite list */
 	jq('#send-invite-form').on( 'click', '#invite-list input', function() {

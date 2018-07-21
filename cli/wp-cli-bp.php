@@ -135,7 +135,7 @@ WP_CLI::add_hook( 'before_wp_load', function() {
 			}
 
 			if ( ! bp_is_active( 'friends' ) ) {
-				WP_CLI::error( 'The Friends component is not active.' );
+				WP_CLI::error( 'The Connections component is not active.' );
 			}
 		},
 	) );

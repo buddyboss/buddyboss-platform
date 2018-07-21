@@ -1,6 +1,6 @@
 <?php
 /**
- * Friends Ajax functions
+ * Connections Ajax functions
  *
  * @since 3.0.0
  * @version 3.0.0

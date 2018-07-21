@@ -310,7 +310,7 @@ function bp_activate_slug() {
  *                                                      integer, a comma-separated list of IDs, or false (to disable
  *                                                      this limiting). Default: false.
  *     @type int                   $user_id             If provided, results are limited to the friends of the specified
- *                                                      user. When on a user's Friends page, defaults to the ID of the
+ *                                                      user. When on a user's Connections page, defaults to the ID of the
  *                                                      displayed user. Otherwise defaults to 0.
  *     @type string|array          $member_type         Array or comma-separated list of member types to limit
  *                                                      results to.
@@ -1319,7 +1319,7 @@ function bp_total_site_member_count() {
  * [component_name]setup_nav() function.
  *
  * This navigation array is the top level navigation, so it contains items such as:
- *      [Blog, Profile, Messages, Groups, Friends] ...
+ *      [Blog, Profile, Messages, Groups, Connections] ...
  *
  * The function will also analyze the current component the user is in, to
  * determine whether or not to highlight a particular nav item.

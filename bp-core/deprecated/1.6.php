@@ -111,11 +111,11 @@ function bp_core_add_ajax_hook() {
 }
 
 /**
- * Friends functions
+ * Connections functions
  */
 
 /**
- * Displays Friends header tabs
+ * Displays Connections header tabs
  *
  * @deprecated 1.6.0
  * @deprecated No longer used
@@ -133,7 +133,7 @@ function bp_friends_header_tabs() {
 }
 
 /**
- * Filters the title for the Friends component
+ * Filters the title for the Connections component
  *
  * @deprecated 1.6.0
  * @deprecated No longer used

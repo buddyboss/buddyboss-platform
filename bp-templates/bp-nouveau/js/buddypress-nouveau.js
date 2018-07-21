@@ -653,7 +653,7 @@ window.bp = window.bp || {};
 			}
 
 			// Unfortunately unlike groups
-			// Friends actions does not match the wpnonce
+			// Connections actions does not match the wpnonce
 			var friends_actions_map = {
 				is_friend         : 'remove_friend',
 				not_friends       : 'add_friend',

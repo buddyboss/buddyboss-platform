@@ -268,7 +268,7 @@ class BP_Activity_Component extends BP_Component {
 		// Additional menu if friends is active.
 		if ( bp_is_active( 'friends' ) ) {
 			$sub_nav[] = array(
-				'name'            => _x( 'Friends', 'Profile activity screen sub nav', 'buddyboss' ),
+				'name'            => _x( 'Connections', 'Profile activity screen sub nav', 'buddyboss' ),
 				'slug'            => bp_get_friends_slug(),
 				'parent_url'      => $activity_link,
 				'parent_slug'     => $slug,
@@ -366,12 +366,12 @@ class BP_Activity_Component extends BP_Component {
 				);
 			}
 
-			// Friends?
+			// Connections?
 			if ( bp_is_active( 'friends' ) ) {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-friends',
-					'title'    => _x( 'Friends', 'My Account Activity sub nav', 'buddyboss' ),
+					'title'    => _x( 'Connections', 'My Account Activity sub nav', 'buddyboss' ),
 					'href'     => trailingslashit( $activity_link . bp_get_friends_slug() ),
 					'position' => 40
 				);

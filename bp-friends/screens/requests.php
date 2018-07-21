@@ -1,9 +1,9 @@
 <?php
 /**
- * Friends: User's "Friends > Requests" screen handler
+ * Connections: User's "Connections > Requests" screen handler
  *
  * @package BuddyBoss
- * @subpackage FriendsScreens
+ * @subpackage ConnectionsScreens
  * @since 3.0.0
  */
 
@@ -55,7 +55,7 @@ function friends_screen_requests() {
 	do_action( 'friends_screen_requests' );
 
 	/**
-	 * Filters the template used to display the My Friends page.
+	 * Filters the template used to display the My Connections page.
 	 *
 	 * @since 1.0.0
 	 *

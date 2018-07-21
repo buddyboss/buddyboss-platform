@@ -1,11 +1,11 @@
 <?php
 /**
- * BuddyPress Friends Feeds Loader.
+ * BuddyBoss Connections Feeds Loader.
  *
  * The friends component is for users to create relationships with each other.
  *
  * @package BuddyBoss
- * @subpackage Friends
+ * @subpackage Connections
  * @since 1.5.0
  */
 
@@ -13,7 +13,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Defines the BuddyPress Friends Component.
+ * Defines the BuddyBoss Connections Component.
  *
  * @since 1.5.0
  */
@@ -27,7 +27,7 @@ class BP_Friends_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'friends',
-			_x( 'Friend Connections', 'Friends screen page <title>', 'buddyboss' ),
+			_x( 'Connections', 'Connections screen page <title>', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 60
@@ -77,7 +77,7 @@ class BP_Friends_Component extends BP_Component {
 			return;
 		}
 
-		// Friends.
+		// Connections.
 		if ( bp_is_user_friends() ) {
 			// Authenticated actions.
 			if ( is_user_logged_in() &&
@@ -131,7 +131,7 @@ class BP_Friends_Component extends BP_Component {
 		$args = array(
 			'slug'                  => BP_FRIENDS_SLUG,
 			'has_directory'         => false,
-			'search_string'         => __( 'Search Friends...', 'buddyboss' ),
+			'search_string'         => __( 'Search Connections...', 'buddyboss' ),
 			'notification_callback' => 'friends_format_notifications',
 			'global_tables'         => $global_tables
 		);
@@ -166,13 +166,13 @@ class BP_Friends_Component extends BP_Component {
 		$slug         = bp_get_friends_slug();
 		$friends_link = trailingslashit( $user_domain . $slug );
 
-		// Add 'Friends' to the main navigation.
+		// Add 'Connections' to the main navigation.
 		$count = friends_get_total_friend_count();
 		$class = ( 0 === $count ) ? 'no-count' : 'count';
 
 		$main_nav_name = sprintf(
 			/* translators: %s: Friend count for the current user */
-			__( 'Friends %s', 'buddyboss' ),
+			__( 'Connections %s', 'buddyboss' ),
 			sprintf(
 				'<span class="%s">%s</span>',
 				esc_attr( $class ),
@@ -191,7 +191,7 @@ class BP_Friends_Component extends BP_Component {
 
 		// Add the subnav items to the friends nav item.
 		$sub_nav[] = array(
-			'name'            => _x( 'Connections', 'Friends screen sub nav', 'buddyboss' ),
+			'name'            => _x( 'Connections', 'Connections screen sub nav', 'buddyboss' ),
 			'slug'            => 'my-friends',
 			'parent_url'      => $friends_link,
 			'parent_slug'     => $slug,
@@ -201,7 +201,7 @@ class BP_Friends_Component extends BP_Component {
 		);
 
 		$sub_nav[] = array(
-			'name'            => _x( 'Requests', 'Friends screen sub nav', 'buddyboss' ),
+			'name'            => _x( 'Requests', 'Connections screen sub nav', 'buddyboss' ),
 			'slug'            => 'requests',
 			'parent_url'      => $friends_link,
 			'parent_slug'     => $slug,
@@ -236,17 +236,17 @@ class BP_Friends_Component extends BP_Component {
 			if ( !empty( $count ) ) {
 				$title = sprintf(
 					/* translators: %s: Pending friend request count for the current user */
-					_x( 'Friends %s', 'My Account Friends menu', 'buddyboss' ),
+					_x( 'Connections %s', 'My Account Connections menu', 'buddyboss' ),
 					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 				);
 				$pending = sprintf(
 					/* translators: %s: Pending friend request count for the current user */
-					_x( 'Pending Requests %s', 'My Account Friends menu sub nav', 'buddyboss' ),
+					_x( 'Pending Requests %s', 'My Account Connections menu sub nav', 'buddyboss' ),
 					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 				);
 			} else {
-				$title   = _x( 'Friends',            'My Account Friends menu',         'buddypress' );
-				$pending = _x( 'No Pending Requests','My Account Friends menu sub nav', 'buddyboss' );
+				$title   = _x( 'Connections',            'My Account Connections menu',         'buddypress' );
+				$pending = _x( 'No Pending Requests','My Account Connections menu sub nav', 'buddyboss' );
 			}
 
 			// Add the "My Account" sub menus.
@@ -257,11 +257,11 @@ class BP_Friends_Component extends BP_Component {
 				'href'   => $friends_link
 			);
 
-			// My Friends.
+			// My Connections.
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-friendships',
-				'title'    => _x( 'Connections', 'My Account Friends menu sub nav', 'buddyboss' ),
+				'title'    => _x( 'Connections', 'My Account Connections menu sub nav', 'buddyboss' ),
 				'href'     => $friends_link,
 				'position' => 10
 			);

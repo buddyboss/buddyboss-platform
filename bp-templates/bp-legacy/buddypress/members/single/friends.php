@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Users Friends
+ * BuddyBoss - Users Connections
  *
  * @package BuddyBoss
  * @subpackage bp-legacy
@@ -43,7 +43,7 @@
 <?php
 switch ( bp_current_action() ) :
 
-	// Home/My Friends
+	// Home/My Connections
 	case 'my-friends' :
 
 		/**
@@ -61,7 +61,7 @@ switch ( bp_current_action() ) :
 		<?php else : ?>
 			<h2 class="bp-screen-reader-text"><?php
 				/* translators: accessibility text */
-				_e( 'Friends', 'buddyboss' );
+				_e( 'Connections', 'buddyboss' );
 			?></h2>
 		<?php endif ?>
 

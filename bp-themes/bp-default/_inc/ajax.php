@@ -33,7 +33,7 @@ function bp_dtheme_register_actions() {
 		'members_filter'  => 'bp_dtheme_object_template_loader',
 		'messages_filter' => 'bp_dtheme_messages_template_loader',
 
-		// Friends
+		// Connections
 		'accept_friendship' => 'bp_dtheme_ajax_accept_friendship',
 		'addremove_friend'  => 'bp_dtheme_ajax_addremove_friend',
 		'reject_friendship' => 'bp_dtheme_ajax_reject_friendship',
