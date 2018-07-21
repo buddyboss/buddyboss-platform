@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Core Theme Compatibility.
+ * BuddyBoss Core Theme Compatibility.
  *
  * @package BuddyBoss
  * @subpackage ThemeCompatibility

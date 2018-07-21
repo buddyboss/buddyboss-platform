@@ -1078,7 +1078,7 @@ class BP_Admin {
 		$url = $this->css_url;
 
 		/**
-		 * Filters the BuddyPress Core Admin CSS file path.
+		 * Filters the BuddyBoss Core Admin CSS file path.
 		 *
 		 * @since 1.6.0
 		 *
