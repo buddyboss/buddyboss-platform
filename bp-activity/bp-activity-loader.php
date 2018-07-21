@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Activity Streams Loader.
+ * BuddyBoss Activity Streams Loader.
  *
  * An activity stream component, for users, groups, and site tracking.
  *

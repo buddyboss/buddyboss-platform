@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Activity Notifications.
+ * BuddyBoss Activity Notifications.
  *
  * @package BuddyBoss
  * @subpackage ActivityNotifications

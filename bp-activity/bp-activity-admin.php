@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Activity component admin screen.
+ * BuddyBoss Activity component admin screen.
  *
  * Props to WordPress core for the Comments admin screen, and its contextual
  * help text, on which this implementation is heavily based.

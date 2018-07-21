@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Activity Template Functions.
+ * BuddyBoss Activity Template Functions.
  *
  * @package BuddyBoss
  * @subpackage ActivityTemplate

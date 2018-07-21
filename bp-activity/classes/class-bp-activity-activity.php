@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Activity Classes
+ * BuddyBoss Activity Classes
  *
  * @package BuddyBoss
  * @subpackage Activity

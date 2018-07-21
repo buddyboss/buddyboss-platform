@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_activity_setup_akismet() {
 	/**
-	 * Filters if BuddyPress Activity Akismet support has been disabled by another plugin.
+	 * Filters if BuddyBoss Activity Akismet support has been disabled by another plugin.
 	 *
 	 * @since 1.6.0
 	 *
