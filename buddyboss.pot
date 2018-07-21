@@ -3497,11 +3497,11 @@ msgstr ""
 
 #: bp-friends/bp-friends-template.php:371
 #: bp-templates/bp-legacy/buddypress-functions.php:1432
-msgid "Cancel Friendship Request"
+msgid "Cancel Connect Request"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:387
-msgid "Friendship Requested"
+msgid "Connect Requested"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:403
