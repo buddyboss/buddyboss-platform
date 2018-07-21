@@ -18,7 +18,7 @@ do_action( 'bp_before_member_friend_requests_content' ); ?>
 
 	<h2 class="bp-screen-reader-text"><?php
 		/* translators: accessibility text */
-		_e( 'Friendship requests', 'buddyboss' );
+		_e( 'Connection requests', 'buddyboss' );
 	?></h2>
 
 	<div id="pag-top" class="pagination no-ajax">

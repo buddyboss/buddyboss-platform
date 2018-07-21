@@ -24,7 +24,7 @@
 	 */
 	do_action( 'bp_before_messages_compose_content' ); ?>
 
-	<label for="send-to-input"><?php _e("Send To (Username or Friend's Name)", 'buddyboss' ); ?></label>
+	<label for="send-to-input"><?php _e("Send To (Username or Connection's Name)", 'buddyboss' ); ?></label>
 	<ul class="first acfb-holder">
 		<li>
 			<?php bp_message_get_recipient_tabs(); ?>
