@@ -68,7 +68,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	// Init the query string
 	$qs = array();
 
-	// Activity stream filtering on action.
+	// Activity feed filtering on action.
 	if ( ! empty( $post_query['filter'] ) && '-1' !== $post_query['filter'] ) {
 		if ( 'notifications' === $object ) {
 			$qs[] = 'component_action=' . $post_query['filter'];
@@ -88,7 +88,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 		$qs[]    = 'user_id=' . $user_id;
 	}
 
-	// Activity stream scope only on activity directory.
+	// Activity feed scope only on activity directory.
 	if ( 'all' !== $post_query['scope'] && ! bp_displayed_user_id() && ! bp_is_single_item() ) {
 		$qs[] = 'scope=' . $post_query['scope'];
 	}

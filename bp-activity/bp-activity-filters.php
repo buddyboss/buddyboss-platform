@@ -114,7 +114,7 @@ add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_embed_excerpt_onclick_
 // At-name filter.
 add_action( 'bp_activity_before_save', 'bp_activity_at_name_filter_updates' );
 
-// Activity stream moderation.
+// Activity feed moderation.
 add_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2, 1 );
 add_action( 'bp_activity_before_save', 'bp_activity_check_blacklist_keys',  2, 1 );
 

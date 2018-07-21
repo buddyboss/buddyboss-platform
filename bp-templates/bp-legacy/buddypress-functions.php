@@ -696,7 +696,7 @@ function bp_legacy_theme_ajax_querystring( $query_string, $object ) {
 	 * default params passed to the template loop.
 	 */
 
-	// Activity stream filtering on action.
+	// Activity feed filtering on action.
 	if ( ! empty( $_BP_COOKIE['bp-' . $object . '-filter'] ) && '-1' != $_BP_COOKIE['bp-' . $object . '-filter'] ) {
 		$qs[] = 'type=' . urlencode( $_BP_COOKIE['bp-' . $object . '-filter'] );
 
@@ -719,7 +719,7 @@ function bp_legacy_theme_ajax_querystring( $query_string, $object ) {
 			$qs[] = 'user_id=' . $user_id;
 		}
 
-		// Activity stream scope only on activity directory.
+		// Activity feed scope only on activity directory.
 		if ( 'all' != $_BP_COOKIE['bp-' . $object . '-scope'] && ! bp_displayed_user_id() && ! bp_is_single_item() )
 			$qs[] = 'scope=' . urlencode( $_BP_COOKIE['bp-' . $object . '-scope'] );
 	}
@@ -1174,7 +1174,7 @@ function bp_legacy_theme_spam_activity() {
 		return;
 	}
 
-	// Check that user is logged in, Activity Streams are enabled, and Akismet is present.
+	// Check that user is logged in, Activity Feeds are enabled, and Akismet is present.
 	if ( ! is_user_logged_in() || ! bp_is_active( 'activity' ) || empty( $bp->activity->akismet ) )
 		exit( '-1' );
 

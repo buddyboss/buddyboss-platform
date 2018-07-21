@@ -31,7 +31,7 @@ function bp_core_install( $active_components = false ) {
 		$active_components = apply_filters( 'bp_active_components', bp_get_option( 'bp-active-components' ) );
 	}
 
-	// Install Activity Streams even when inactive (to store last_activity data).
+	// Install Activity Feeds even when inactive (to store last_activity data).
 	bp_core_install_activity_streams();
 
 	// Install the signups table.

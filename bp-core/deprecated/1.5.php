@@ -471,7 +471,7 @@ function bp_dtheme_deprecated() {
 	/**
 	 * In BuddyPress 1.2.x, this function filtered the dropdown on the
 	 * Settings > Reading screen for selecting the page to show on front to
-	 * include "Activity Stream." As of 1.5.x, it is no longer required.
+	 * include "Activity Feed." As of 1.5.x, it is no longer required.
 	 *
 	 * @deprecated 1.5.0
 	 * @deprecated No longer required.

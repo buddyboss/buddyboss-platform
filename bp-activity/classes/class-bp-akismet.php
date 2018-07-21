@@ -1,6 +1,6 @@
 <?php
 /**
- * Akismet support for BuddyPress' Activity Stream.
+ * Akismet support for BuddyPress' Activity Feed.
  *
  * @package BuddyBoss
  * @subpackage ActivityAkismet

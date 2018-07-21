@@ -263,7 +263,7 @@ jq(document).ready( function() {
 			secure: ( 'https:' === window.location.protocol )
 		} );
 
-		/* Activity Stream Tabs */
+		/* Activity Feed Tabs */
 		scope  = target.attr('id').substr( 9, target.attr('id').length );
 		filter = jq('#activity-filter-select select').val();
 

@@ -180,7 +180,7 @@ jq(document).ready( function() {
 			path: '/'
 		} );
 
-		/* Activity Stream Tabs */
+		/* Activity Feed Tabs */
 		var scope = target.attr('id').substr( 9, target.attr('id').length );
 		var filter = jq("#activity-filter-select select").val();
 
