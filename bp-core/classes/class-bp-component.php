@@ -2,7 +2,7 @@
 /**
  * Component classes.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Core
  * @since 1.5.0
  */

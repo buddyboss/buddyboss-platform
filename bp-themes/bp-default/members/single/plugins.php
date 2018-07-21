@@ -7,7 +7,7 @@
  * need is not installed in the current theme. Use the actions in this template
  * to output everything your plugin needs.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-default
  */
 

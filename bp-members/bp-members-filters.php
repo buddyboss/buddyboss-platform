@@ -4,7 +4,7 @@
  *
  * Filters specific to the Members component.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage MembersFilters
  * @since 1.5.0
  */

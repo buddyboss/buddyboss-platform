@@ -4,7 +4,7 @@
  *
  * BuddyBoss is social networking software with a twist from the creators of WordPress.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Main
  * @since 1.0.0
  */

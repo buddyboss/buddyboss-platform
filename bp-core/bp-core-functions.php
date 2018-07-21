@@ -2,7 +2,7 @@
 /**
  * BuddyPress Common Functions.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Functions
  * @since 1.5.0
  */

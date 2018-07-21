@@ -4,7 +4,7 @@
  *
  * Handles the activity functions related to the WordPress Toolbar.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Activity
  */
 

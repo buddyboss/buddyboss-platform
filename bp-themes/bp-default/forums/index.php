@@ -3,7 +3,7 @@
 /**
  * BuddyPress - Forums Directory
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-default
  */
 

@@ -2,7 +2,7 @@
 /**
  * BuddyPress Friends Widget.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Friends
  * @since 1.9.0
  */

@@ -22,7 +22,7 @@
  *
  * For more information on hooks, actions, and filters, see http://codex.wordpress.org/Plugin_API.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage BP-Default
  * @since BuddyPress (1.2)
  */
@@ -553,7 +553,7 @@ if ( !function_exists( 'bp_dtheme_activity_secondary_avatars' ) ) :
  *
  * @param string $action The text of this activity
  * @param BP_Activity_Activity $activity Activity object
- * @package BuddyPress Theme
+ * @package BuddyBoss Theme
  * @return string
  * @since BuddyPress (1.2.6)
  */
@@ -772,7 +772,7 @@ endif;
  *
  * The no-js class is removed by the JavaScript created in bp_dtheme_remove_nojs_body_class().
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @since BuddyPress (1.5).1
  * @see bp_dtheme_remove_nojs_body_class()
  */
@@ -793,7 +793,7 @@ add_filter( 'bp_get_the_body_class', 'bp_dtheme_add_nojs_body_class' );
  *
  * This technique is borrowed from WordPress, wp-admin/admin-header.php.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @since BuddyPress (1.5).1
  * @see bp_dtheme_add_nojs_body_class()
  */

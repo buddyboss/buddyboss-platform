@@ -2,7 +2,7 @@
 /**
  * BuddyPress Activity Classes
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage ActivityQuery
  * @since 2.2.0
  */

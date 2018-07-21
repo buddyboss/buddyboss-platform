@@ -4,7 +4,7 @@
  *
  * Apply WordPress defined filters.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage XProfileFilters
  * @since 1.0.0
  */

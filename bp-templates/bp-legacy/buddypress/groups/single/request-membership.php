@@ -2,7 +2,7 @@
 /**
  * BuddyPress - Groups Request Membership
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.1.0
  */

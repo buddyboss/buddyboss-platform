@@ -6,7 +6,7 @@
  * loading process. Many of those functions are not filterable, and even then
  * would not be robust enough to predict where BuddyPress templates might exist.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage TemplateFunctions
  * @since 1.7.0
  */

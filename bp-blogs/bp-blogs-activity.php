@@ -2,7 +2,7 @@
 /**
  * BuddyPress Blogs Activity.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage BlogsActivity
  * @since 1.5.0
  */

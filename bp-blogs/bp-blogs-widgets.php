@@ -2,7 +2,7 @@
 /**
  * BuddyPress Blogs Widgets.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage BlogsWidgets
  * @since 1.0.0
  */

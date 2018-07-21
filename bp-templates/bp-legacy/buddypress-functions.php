@@ -4,7 +4,7 @@
  *
  * @since 1.7.0
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage BP_Theme_Compat
  * @version 3.1.0
  */
@@ -30,7 +30,7 @@ if ( !class_exists( 'BP_Legacy' ) ) :
  *
  * @since 1.7.0
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage BP_Theme_Compat
  */
 class BP_Legacy extends BP_Theme_Compat {

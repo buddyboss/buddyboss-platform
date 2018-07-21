@@ -2,7 +2,7 @@
 /**
  * BuddyPress Groups Theme Compat.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @since 1.7.0
  */
 

@@ -2,7 +2,7 @@
 /**
  * BuddyPress Activity Classes.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Embeds
  */
 

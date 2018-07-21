@@ -2,7 +2,7 @@
 /**
  * BuddyPress Groups Widgets
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage GroupsWidgets
  * @since 1.0.0
  */

@@ -2,7 +2,7 @@
 /**
  * Friends: User's "Friends > Requests" screen handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage FriendsScreens
  * @since 3.0.0
  */

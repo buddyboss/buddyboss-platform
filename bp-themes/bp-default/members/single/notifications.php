@@ -3,7 +3,7 @@
 /**
  * BuddyPress - Users Notifications
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  */
 

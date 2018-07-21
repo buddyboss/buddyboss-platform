@@ -2,7 +2,7 @@
 /**
  * BuddyPress Messages CSS and JS.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage MessagesScripts
  * @since 1.0.0
  */

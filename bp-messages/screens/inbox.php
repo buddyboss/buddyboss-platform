@@ -2,7 +2,7 @@
 /**
  * Messages: User's "Messages" screen handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage MessageScreens
  * @since 3.0.0
  */

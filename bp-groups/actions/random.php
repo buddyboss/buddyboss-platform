@@ -2,7 +2,7 @@
 /**
  * Groups: Random group action handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage GroupActions
  * @since 3.0.0
  */

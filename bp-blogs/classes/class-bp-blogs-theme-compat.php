@@ -2,7 +2,7 @@
 /**
  * BuddyPress Blogs Theme Compatibility.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage BlogsScreens
  * @since 1.5.0
  */

@@ -2,7 +2,7 @@
 /**
  * BuddyPress Groups Template loop class.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @since 1.2.0
  */
 

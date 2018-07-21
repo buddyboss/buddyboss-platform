@@ -2,7 +2,7 @@
 /**
  * Groups: RSS feed action
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage GroupActions
  * @since 3.0.0
  */

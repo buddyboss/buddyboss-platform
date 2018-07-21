@@ -2,7 +2,7 @@
 /**
  * BuddyPress Options.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Options
  * @since 1.6.0
  */

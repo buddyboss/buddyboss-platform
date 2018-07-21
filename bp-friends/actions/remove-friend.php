@@ -2,7 +2,7 @@
 /**
  * Friends: Remove action
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage FriendsActions
  * @since 3.0.0
  */

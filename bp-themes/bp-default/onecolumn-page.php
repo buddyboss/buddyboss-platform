@@ -4,7 +4,7 @@
  *
  * A custom page template without sidebar.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage BP_Default
  * @since BuddyPress (1.5)
  */

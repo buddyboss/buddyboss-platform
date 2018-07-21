@@ -2,7 +2,7 @@
 /**
  * XProfile: Avatar deletion action handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage XProfileActions
  * @since 3.0.0
  */

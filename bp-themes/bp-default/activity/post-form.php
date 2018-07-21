@@ -3,7 +3,7 @@
 /**
  * BuddyPress - Activity Post Form
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-default
  */
 

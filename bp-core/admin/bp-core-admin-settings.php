@@ -2,7 +2,7 @@
 /**
  * BuddyPress Admin Settings.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage CoreAdministration
  * @since 2.3.0
  */
