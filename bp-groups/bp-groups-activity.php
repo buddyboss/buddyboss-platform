@@ -427,7 +427,7 @@ function bp_groups_filter_activity_can_comment_reply( $retval, $comment ) {
 add_filter( 'bp_activity_can_comment_reply', 'bp_groups_filter_activity_can_comment_reply', 99, 2 );
 
 /**
- * Add an activity stream item when a member joins a group.
+ * Add an activity feed item when a member joins a group.
  *
  * @since 1.9.0
  *
@@ -456,7 +456,7 @@ function bp_groups_membership_accepted_add_activity( $user_id, $group_id ) {
 	 */
 	$action = apply_filters_ref_array( 'groups_activity_membership_accepted_action', array( sprintf( __( '%1$s joined the group %2$s', 'buddypress' ), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_group_permalink( $group ) . '">' . esc_attr( $group->name ) . '</a>' ), $user_id, &$group ) );
 
-	// Record in activity streams.
+	// Record in activity feeds.
 	groups_record_activity( array(
 		'action'  => $action,
 		'type'    => 'joined_group',
@@ -533,7 +533,7 @@ function bp_groups_group_details_updated_add_activity( $group_id, $old_group, $n
 	$time = bp_core_current_time();
 	groups_update_groupmeta( $group_id, 'updated_details_' . $time, $changed );
 
-	// Record in activity streams.
+	// Record in activity feeds.
 	return groups_record_activity( array(
 		'type'          => 'group_details_updated',
 		'item_id'       => $group_id,
@@ -566,7 +566,7 @@ add_action( 'groups_delete_group', 'bp_groups_delete_group_delete_all_activity',
  * Delete group member activity if they leave or are removed within 5 minutes of membership modification.
  *
  * If the user joined this group less than five minutes ago, remove the
- * joined_group activity so users cannot flood the activity stream by
+ * joined_group activity so users cannot flood the activity feed by
  * joining/leaving the group in quick succession.
  *
  * @since 1.9.0

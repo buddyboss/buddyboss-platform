@@ -1496,15 +1496,15 @@ msgid "No template packages available."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:101
-msgid "Allow Akismet to scan for activity stream spam"
+msgid "Allow Akismet to scan for activity feed spam"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:115
-msgid "Allow activity stream commenting on posts and comments"
+msgid "Allow activity feed commenting on posts and comments"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:129
-msgid "Automatically check for new items while viewing the activity stream"
+msgid "Automatically check for new items while viewing the activity feed"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:169
@@ -2091,7 +2091,7 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2481
 msgid ""
-"Global, personal, and group activity streams with threaded commenting, "
+"Global, personal, and group activity feeds with threaded commenting, "
 "direct posting, favoriting, and @mentions, all with full RSS feed and email "
 "notification support."
 msgstr ""
@@ -2103,7 +2103,7 @@ msgstr ""
 #: bp-core/bp-core-functions.php:2489
 msgid ""
 "Groups allow your users to organize themselves into specific public, "
-"private or hidden sections with separate activity streams and member "
+"private or hidden sections with separate activity feeds and member "
 "listings."
 msgstr ""
 
@@ -9819,7 +9819,7 @@ msgid "- &quot;%s&quot;"
 msgstr ""
 
 #: bp-members/bp-members-template.php:1208
-msgctxt "Records the timestamp that the user registered into the activity stream"
+msgctxt "Records the timestamp that the user registered into the activity feed"
 msgid "registered %s"
 msgstr ""
 

@@ -549,7 +549,7 @@ endif;
 
 if ( !function_exists( 'bp_dtheme_activity_secondary_avatars' ) ) :
 /**
- * Add secondary avatar image to this activity stream's record, if supported.
+ * Add secondary avatar image to this activity feed's record, if supported.
  *
  * @param string $action The text of this activity
  * @param BP_Activity_Activity $activity Activity object

@@ -135,7 +135,7 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 }
 
 /**
- * Notify a member when their nicename is mentioned in an activity stream item.
+ * Notify a member when their nicename is mentioned in an activity feed item.
  *
  * Hooked to the 'bp_activity_sent_mention_email' action, we piggy back off the
  * existing email code for now, since it does the heavy lifting for us. In the
@@ -289,7 +289,7 @@ add_action( 'bp_activity_deleted_activities', 'bp_activity_at_mention_delete_not
 /**
  * Add a notification for post comments to the post author or post commenter.
  *
- * Requires "activity stream commenting on posts and comments" to be enabled.
+ * Requires "activity feed commenting on posts and comments" to be enabled.
  *
  * @since 2.6.0
  *

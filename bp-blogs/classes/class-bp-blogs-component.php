@@ -2,7 +2,7 @@
 /**
  * BuddyPress Blogs Loader
  *
- * The blogs component tracks posts and comments to member activity streams,
+ * The blogs component tracks posts and comments to member activity feeds,
  * shows blogs the member can post to in their profiles, and caches useful
  * information from those blogs to make querying blogs in bulk more performant.
  *
@@ -197,7 +197,7 @@ class BP_Blogs_Component extends BP_Component {
 		/**
 		 * Blog/post/comment menus should not appear on single WordPress setups.
 		 * Although comments and posts made by users will still show on their
-		 * activity stream.
+		 * activity feed.
 		 */
 		if ( ! is_multisite() ) {
 			return false;

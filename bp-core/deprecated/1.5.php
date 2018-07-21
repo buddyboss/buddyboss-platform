@@ -488,7 +488,7 @@ function bp_dtheme_deprecated() {
 
 	if ( !function_exists( 'bp_dtheme_page_on_front_update' ) ) :
 	/**
-	 * In BuddyPress 1.2.x, this function hijacked the saving of page on front setting to save the activity stream setting.
+	 * In BuddyPress 1.2.x, this function hijacked the saving of page on front setting to save the activity feed setting.
 	 * As of 1.5.x, it is no longer required.
 	 *
 	 * @deprecated 1.5.0
@@ -509,7 +509,7 @@ function bp_dtheme_deprecated() {
 
 	if ( !function_exists( 'bp_dtheme_page_on_front_template' ) ) :
 	/**
-	 * In BuddyPress 1.2.x, this function loaded the activity stream template if the front page display settings allow.
+	 * In BuddyPress 1.2.x, this function loaded the activity feed template if the front page display settings allow.
 	 * As of 1.5.x, it is no longer required.
 	 *
 	 * @deprecated 1.5.0
@@ -540,7 +540,7 @@ function bp_dtheme_deprecated() {
 
 	if ( !function_exists( 'bp_dtheme_fix_the_posts_on_activity_front' ) ) :
 	/**
-	 * In BuddyPress 1.2.x, this was used as part of the code that set the activity stream to be on the front page.
+	 * In BuddyPress 1.2.x, this was used as part of the code that set the activity feed to be on the front page.
 	 * As of 1.5.x, it is no longer required.
 	 *
 	 * @deprecated 1.5.0

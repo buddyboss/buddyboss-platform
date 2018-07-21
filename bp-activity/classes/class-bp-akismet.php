@@ -36,12 +36,12 @@ class BP_Akismet {
 	}
 
 	/**
-	 * Hook Akismet into the activity stream.
+	 * Hook Akismet into the activity feed.
 	 *
 	 * @since 1.6.0
 	 */
 	protected function setup_actions() {
-		// Add nonces to activity stream lists.
+		// Add nonces to activity feed lists.
 		add_action( 'bp_after_activity_post_form', array( $this, 'add_activity_stream_nonce' ) );
 		add_action( 'bp_activity_entry_comments',  array( $this, 'add_activity_stream_nonce' ) );
 
@@ -138,7 +138,7 @@ class BP_Akismet {
 		$form_id = '_bp_as_nonce';
 		$value   = '_bp_as_nonce_' . bp_loggedin_user_id();
 
-		// If we're in the activity stream loop, we can use the current item's ID to make the nonce unique.
+		// If we're in the activity feed loop, we can use the current item's ID to make the nonce unique.
 		if ( 'bp_activity_entry_comments' == current_filter() ) {
 			$form_id .= '_' . bp_get_activity_id();
 			$value   .= '_' . bp_get_activity_id();
@@ -183,7 +183,7 @@ class BP_Akismet {
 	/**
 	 * Adds a "mark as spam" button to each activity item for site admins.
 	 *
-	 * This function is intended to be used inside the activity stream loop.
+	 * This function is intended to be used inside the activity feed loop.
 	 *
 	 * @since 1.6.0
 	 */
@@ -211,7 +211,7 @@ class BP_Akismet {
 	/**
 	 * Adds a "mark as spam" button to each activity COMMENT item for site admins.
 	 *
-	 * This function is intended to be used inside the activity stream loop.
+	 * This function is intended to be used inside the activity feed loop.
 	 *
 	 * @since 1.6.0
 	 */

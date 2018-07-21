@@ -2355,26 +2355,26 @@ function bp_is_user_front() {
 }
 
 /**
- * Is the current page a user's activity stream page?
+ * Is the current page a user's activity feed page?
  *
  * Eg http://example.com/members/joe/activity/ (or any subpages thereof).
  *
  * @since 1.1.0
  *
- * @return bool True if the current page is a user's activity stream page.
+ * @return bool True if the current page is a user's activity feed page.
  */
 function bp_is_user_activity() {
 	return (bool) ( bp_is_user() && bp_is_activity_component() );
 }
 
 /**
- * Is the current page a user's Friends activity stream?
+ * Is the current page a user's Friends activity feed?
  *
  * Eg http://example.com/members/joe/friends/
  *
  * @since 1.1.0
  *
- * @return bool True if the current page is a user's Friends activity stream.
+ * @return bool True if the current page is a user's Friends activity feed.
  */
 function bp_is_user_friends_activity() {
 
@@ -2396,13 +2396,13 @@ function bp_is_user_friends_activity() {
 }
 
 /**
- * Is the current page a user's Groups activity stream?
+ * Is the current page a user's Groups activity feed?
  *
  * Eg http://example.com/members/joe/groups/
  *
  * @since 1.5.0
  *
- * @return bool True if the current page is a user's Groups activity stream.
+ * @return bool True if the current page is a user's Groups activity feed.
  */
 function bp_is_user_groups_activity() {
 

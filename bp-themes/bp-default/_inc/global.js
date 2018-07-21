@@ -212,7 +212,7 @@ jq(document).ready( function() {
 	jq('div.activity').click( function(event) {
 		var target = jq(event.target);
 
-		/* Favoriting activity stream items */
+		/* Favoriting activity feed items */
 		if ( target.hasClass('fav') || target.hasClass('unfav') ) {
 			var type = target.hasClass('fav') ? 'fav' : 'unfav';
 			var parent = target.closest('.activity-item');
@@ -265,7 +265,7 @@ jq(document).ready( function() {
 			return false;
 		}
 
-		/* Delete activity stream items */
+		/* Delete activity feed items */
 		if ( target.hasClass('delete-activity') ) {
 			var li        = target.parents('div.activity ul li');
 			var id        = li.attr('id').substr( 9, li.attr('id').length );
@@ -295,7 +295,7 @@ jq(document).ready( function() {
 			return false;
 		}
 
-		// Spam activity stream items
+		// Spam activity feed items
 		if ( target.hasClass( 'spam-activity' ) ) {
 			var li = target.parents( 'div.activity ul li' );
 			target.addClass( 'loading' );
@@ -573,7 +573,7 @@ jq(document).ready( function() {
 			return false;
 		}
 
-		// Spam an activity stream comment
+		// Spam an activity feed comment
 		if ( target.hasClass( 'spam-activity-comment' ) ) {
 			var link_href  = target.attr( 'href' );
 			var comment_li = target.parent().parent();
@@ -1452,7 +1452,7 @@ function bp_activity_request(scope, filter) {
 	jq('#object-nav.item-list-tabs li.selected, div.activity-type-tabs li.selected').addClass('loading');
 	jq('#activity-filter-select select option[value="' + filter + '"]').prop( 'selected', true );
 
-	/* Reload the activity stream based on the selection */
+	/* Reload the activity feed based on the selection */
 	jq('.widget_bp_activity_widget h2 span.ajax-loader').show();
 
 	if ( bp_ajax_request )

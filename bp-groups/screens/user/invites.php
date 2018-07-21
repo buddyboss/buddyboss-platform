@@ -23,7 +23,7 @@ function groups_screen_group_invites() {
 		if ( !groups_accept_invite( bp_loggedin_user_id(), $group_id ) ) {
 			bp_core_add_message( __('Group invite could not be accepted', 'buddypress'), 'error' );
 		} else {
-			// Record this in activity streams.
+			// Record this in activity feeds.
 			$group = groups_get_group( $group_id );
 
 			bp_core_add_message( sprintf( __( 'Group invite accepted. Visit %s.', 'buddypress' ), bp_get_group_link( $group ) ) );

@@ -905,7 +905,7 @@ function bp_blogs_transition_activity_status( $new_status, $old_status, $comment
 }
 
 /**
- * Record a new blog comment in the BuddyPress activity stream.
+ * Record a new blog comment in the BuddyPress activity feed.
  *
  * Only posts the item if blog is public and post is not password-protected.
  *
@@ -922,7 +922,7 @@ function bp_blogs_record_comment( $comment_id, $is_approved = true ) {
 }
 
 /**
- * Remove a blog comment activity item from the activity stream.
+ * Remove a blog comment activity item from the activity feed.
  *
  * @deprecated 2.5.0
  *

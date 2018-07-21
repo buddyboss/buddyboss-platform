@@ -98,7 +98,7 @@ function bp_admin_setting_callback_activity_akismet() {
 ?>
 
 	<input id="_bp_enable_akismet" name="_bp_enable_akismet" type="checkbox" value="1" <?php checked( bp_is_akismet_active( true ) ); ?> />
-	<label for="_bp_enable_akismet"><?php _e( 'Allow Akismet to scan for activity stream spam', 'buddypress' ); ?></label>
+	<label for="_bp_enable_akismet"><?php _e( 'Allow Akismet to scan for activity feed spam', 'buddypress' ); ?></label>
 
 <?php
 }
@@ -112,13 +112,13 @@ function bp_admin_setting_callback_blogforum_comments() {
 ?>
 
 	<input id="bp-disable-blogforum-comments" name="bp-disable-blogforum-comments" type="checkbox" value="1" <?php checked( !bp_disable_blogforum_comments( false ) ); ?> />
-	<label for="bp-disable-blogforum-comments"><?php _e( 'Allow activity stream commenting on posts and comments', 'buddypress' ); ?></label>
+	<label for="bp-disable-blogforum-comments"><?php _e( 'Allow activity feed commenting on posts and comments', 'buddypress' ); ?></label>
 
 <?php
 }
 
 /**
- * Allow Heartbeat to refresh activity stream.
+ * Allow Heartbeat to refresh activity feed.
  *
  * @since 2.0.0
  */
@@ -126,7 +126,7 @@ function bp_admin_setting_callback_heartbeat() {
 ?>
 
 	<input id="_bp_enable_heartbeat_refresh" name="_bp_enable_heartbeat_refresh" type="checkbox" value="1" <?php checked( bp_is_activity_heartbeat_active( true ) ); ?> />
-	<label for="_bp_enable_heartbeat_refresh"><?php _e( 'Automatically check for new items while viewing the activity stream', 'buddypress' ); ?></label>
+	<label for="_bp_enable_heartbeat_refresh"><?php _e( 'Automatically check for new items while viewing the activity feed', 'buddypress' ); ?></label>
 
 <?php
 }
