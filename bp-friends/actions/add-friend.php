@@ -30,7 +30,7 @@ function friends_action_add_friend() {
 			return false;
 
 		if ( !friends_add_friend( bp_loggedin_user_id(), $potential_friend_id ) ) {
-			bp_core_add_message( __( 'Friendship could not be requested.', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'Connection could not be requested.', 'buddyboss' ), 'error' );
 		} else {
 			bp_core_add_message( __( 'Friendship requested', 'buddyboss' ) );
 		}

@@ -480,7 +480,7 @@ class BP_Friends_Friendship {
 	 * @param int $user_id Optional. ID of the user whose friendships you
 	 *                     are counting. Default: displayed user (if any), otherwise
 	 *                     logged-in user.
-	 * @return int Friend count for the user.
+	 * @return int Connection count for the user.
 	 */
 	public static function total_friend_count( $user_id = 0 ) {
 		global $wpdb;

@@ -164,7 +164,7 @@ function bp_nouveau_ajax_addremove_friend() {
 		if ( ! friends_remove_friend( bp_loggedin_user_id(), $friend_id ) ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error">%s</div>',
-				esc_html__( 'Friendship could not be cancelled.', 'buddyboss' )
+				esc_html__( 'Connection could not be cancelled.', 'buddyboss' )
 			);
 
 			wp_send_json_error( $response );
@@ -192,7 +192,7 @@ function bp_nouveau_ajax_addremove_friend() {
 		if ( ! friends_add_friend( bp_loggedin_user_id(), $friend_id ) ) {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error">%s</div>',
-				esc_html__( 'Friendship could not be requested.', 'buddyboss' )
+				esc_html__( 'Connection could not be requested.', 'buddyboss' )
 			);
 
 			wp_send_json_error( $response );

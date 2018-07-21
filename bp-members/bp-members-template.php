@@ -378,7 +378,7 @@ function bp_has_members( $args = '' ) {
 		'meta_key'            => false,    // Only return users with this usermeta.
 		'meta_value'          => false,    // Only return users where the usermeta value matches. Requires meta_key.
 
-		'populate_extras'     => true      // Fetch usermeta? Friend count, last active etc.
+		'populate_extras'     => true      // Fetch usermeta? Connection count, last active etc.
 	), 'has_members' );
 
 	// Pass a filter if ?s= is set.

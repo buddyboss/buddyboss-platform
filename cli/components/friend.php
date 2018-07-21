@@ -46,10 +46,10 @@ class Friend extends BuddypressCommand {
 	 * ## EXAMPLES
 	 *
 	 *     $ wp bp friend create user1 another_use
-	 *     Success: Friendship successfully created.
+	 *     Success: Connection successfully created.
 	 *
 	 *     $ wp bp friend create user1 another_use --force-accept
-	 *     Success: Friendship successfully created.
+	 *     Success: Connection successfully created.
 	 *
 	 * @alias add
 	 */
@@ -78,9 +78,9 @@ class Friend extends BuddypressCommand {
 			WP_CLI::line( \BP_Friends_Friendship::get_friendship_id( $initiator->ID, $friend->ID ) );
 		} else {
 			if ( $force ) {
-				WP_CLI::success( 'Friendship successfully created.' );
+				WP_CLI::success( 'Connection successfully created.' );
 			} else {
-				WP_CLI::success( 'Friendship successfully created but not accepted.' );
+				WP_CLI::success( 'Connection successfully created but not accepted.' );
 			}
 		}
 	}
@@ -99,7 +99,7 @@ class Friend extends BuddypressCommand {
 	 * ## EXAMPLE
 	 *
 	 *     $ wp bp friend remove user1 another_user
-	 *     Success: Friendship successfully removed.
+	 *     Success: Connection successfully removed.
 	 *
 	 * @alias delete
 	 */
@@ -114,7 +114,7 @@ class Friend extends BuddypressCommand {
 		}
 
 		if ( friends_remove_friend( $initiator->ID, $friend->ID ) ) {
-			WP_CLI::success( 'Friendship successfully removed.' );
+			WP_CLI::success( 'Connection successfully removed.' );
 		} else {
 			WP_CLI::error( 'There was a problem while removing the friendship.' );
 		}
@@ -131,17 +131,17 @@ class Friend extends BuddypressCommand {
 	 * ## EXAMPLES
 	 *
 	 *     $ wp bp friend accept_invitation 2161
-	 *     Success: Friendship successfully accepted.
+	 *     Success: Connection successfully accepted.
 	 *
 	 *     $ wp bp friend accept 2161
-	 *     Success: Friendship successfully accepted.
+	 *     Success: Connection successfully accepted.
 	 *
 	 * @alias accept_invitation
 	 */
 	public function accept( $args, $assoc_args ) {
 		foreach ( $args as $friendship_id ) {
 			if ( friends_accept_friendship( (int) $friendship_id ) ) {
-				WP_CLI::success( 'Friendship successfully accepted.' );
+				WP_CLI::success( 'Connection successfully accepted.' );
 			} else {
 				WP_CLI::error( 'There was a problem accepting the friendship.' );
 			}
@@ -159,17 +159,17 @@ class Friend extends BuddypressCommand {
 	 * ## EXAMPLES
 	 *
 	 *     $ wp bp friend reject_invitation 2161
-	 *     Success: Friendship successfully accepted.
+	 *     Success: Connection successfully accepted.
 	 *
 	 *     $ wp bp friend reject 2161 151 2121
-	 *     Success: Friendship successfully accepted.
+	 *     Success: Connection successfully accepted.
 	 *
 	 * @alias reject_invitation
 	 */
 	public function reject( $args, $assoc_args ) {
 		foreach ( $args as $friendship_id ) {
 			if ( friends_reject_friendship( (int) $friendship_id ) ) {
-				WP_CLI::success( 'Friendship successfully rejected.' );
+				WP_CLI::success( 'Connection successfully rejected.' );
 			} else {
 				WP_CLI::error( 'There was a problem rejecting the friendship.' );
 			}

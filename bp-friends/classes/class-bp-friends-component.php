@@ -171,7 +171,7 @@ class BP_Friends_Component extends BP_Component {
 		$class = ( 0 === $count ) ? 'no-count' : 'count';
 
 		$main_nav_name = sprintf(
-			/* translators: %s: Friend count for the current user */
+			/* translators: %s: Connection count for the current user */
 			__( 'Connections %s', 'buddyboss' ),
 			sprintf(
 				'<span class="%s">%s</span>',

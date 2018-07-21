@@ -22,7 +22,7 @@ Feature: Manage BuddyBoss Connections
     When I run `wp bp friend create {BOB_ID} {SALLY_ID} --force-accept`
     Then STDOUT should contain:
       """
-      Success: Friendship successfully created.
+      Success: Connection successfully created.
       """
 
     When I run `wp bp friend check {BOB_ID} {SALLY_ID}`
@@ -34,7 +34,7 @@ Feature: Manage BuddyBoss Connections
     When I run `wp bp friend create {BOB_ID} {JOHN_ID} --force-accept`
     Then STDOUT should contain:
       """
-      Success: Friendship successfully created.
+      Success: Connection successfully created.
       """
 
     When I run `wp bp friend list {BOB_ID} --fields=friend_user_id,is_confirmed`
@@ -46,11 +46,11 @@ Feature: Manage BuddyBoss Connections
     When I run `wp bp friend remove {BOB_ID} {SALLY_ID}`
     Then STDOUT should contain:
       """
-      Success: Friendship successfully removed.
+      Success: Connection successfully removed.
       """
 
     When I run `wp bp friend remove {BOB_ID} {JOHN_ID}`
     Then STDOUT should contain:
       """
-      Success: Friendship successfully removed.
+      Success: Connection successfully removed.
       """

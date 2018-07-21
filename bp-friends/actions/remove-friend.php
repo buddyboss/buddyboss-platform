@@ -8,7 +8,7 @@
  */
 
 /**
- * Catch and process Remove Friendship requests.
+ * Catch and process Remove Connection requests.
  *
  * @since 1.0.1
  */
@@ -30,15 +30,15 @@ function friends_action_remove_friend() {
 			return false;
 
 		if ( !friends_remove_friend( bp_loggedin_user_id(), $potential_friend_id ) ) {
-			bp_core_add_message( __( 'Friendship could not be canceled.', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'Connection could not be canceled.', 'buddyboss' ), 'error' );
 		} else {
-			bp_core_add_message( __( 'Friendship canceled', 'buddyboss' ) );
+			bp_core_add_message( __( 'Connection canceled', 'buddyboss' ) );
 		}
 
 	} elseif ( 'not_friends' == $friendship_status ) {
-		bp_core_add_message( __( 'You are not yet friends with this user', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'You are not yet connected with this user', 'buddyboss' ), 'error' );
 	} else {
-		bp_core_add_message( __( 'You have a pending friendship request with this user', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'You have a pending connection request with this user', 'buddyboss' ), 'error' );
 	}
 
 	bp_core_redirect( wp_get_referer() );

@@ -301,7 +301,7 @@ function friends_check_friendship_status( $user_id, $possible_friend_id ) {
  * @since 1.2.0
  *
  * @param int $user_id ID of the user whose friends are being counted.
- * @return int Friend count of the user.
+ * @return int Connection count of the user.
  */
 function friends_get_total_friend_count( $user_id = 0 ) {
 	if ( empty( $user_id ) )
@@ -649,7 +649,7 @@ function friends_count_invitable_friends( $user_id, $group_id ) {
  *
  * @param int $user_id Optional. ID of the user whose friendships you are
  *                     counting. Default: displayed user (if any), otherwise logged-in user.
- * @return int Friend count for the user.
+ * @return int Connection count for the user.
  */
 function friends_get_friend_count_for_user( $user_id ) {
 	return BP_Friends_Friendship::total_friend_count( $user_id );
@@ -698,7 +698,7 @@ function friends_is_friendship_confirmed( $friendship_id ) {
 /**
  * Update user friend counts.
  *
- * Friend counts are cached in usermeta for performance reasons. After a
+ * Connection counts are cached in usermeta for performance reasons. After a
  * friendship event (acceptance, deletion), call this function to regenerate
  * the cached values.
  *

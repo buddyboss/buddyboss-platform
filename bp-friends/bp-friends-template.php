@@ -400,7 +400,7 @@ function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false 
 					'wrapper_class'     => 'friendship-button is_friend',
 					'wrapper_id'        => 'friendship-button-' . $potential_friend_id,
 					'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/remove-friend/' . $potential_friend_id . '/', 'friends_remove_friend' ),
-					'link_text'         => __( 'Cancel Friendship', 'buddyboss' ),
+					'link_text'         => __( 'Remove Connection', 'buddyboss' ),
 					'link_id'           => 'friend-' . $potential_friend_id,
 					'link_rel'          => 'remove',
 					'link_class'        => 'friendship-button is_friend remove'
@@ -653,7 +653,7 @@ function bp_friend_total_requests_count( $user_id = 0 ) {
 	 *
 	 * @param int $user_id ID of the user whose requests are being counted.
 	 *                     Default: ID of the logged-in user.
-	 * @return int Friend count.
+	 * @return int Connection count.
 	 */
 	function bp_friend_get_total_requests_count( $user_id = 0 ) {
 		if ( empty( $user_id ) )

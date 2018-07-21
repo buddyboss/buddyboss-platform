@@ -20,7 +20,7 @@ function friends_screen_requests() {
 		if ( friends_accept_friendship( bp_action_variable( 1 ) ) )
 			bp_core_add_message( __( 'Friendship accepted', 'buddyboss' ) );
 		else
-			bp_core_add_message( __( 'Friendship could not be accepted', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'Connection could not be accepted', 'buddyboss' ), 'error' );
 
 		bp_core_redirect( trailingslashit( bp_loggedin_user_domain() . bp_current_component() . '/' . bp_current_action() ) );
 
@@ -31,7 +31,7 @@ function friends_screen_requests() {
 		if ( friends_reject_friendship( bp_action_variable( 1 ) ) )
 			bp_core_add_message( __( 'Friendship rejected', 'buddyboss' ) );
 		else
-			bp_core_add_message( __( 'Friendship could not be rejected', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'Connection could not be rejected', 'buddyboss' ), 'error' );
 
 		bp_core_redirect( trailingslashit( bp_loggedin_user_domain() . bp_current_component() . '/' . bp_current_action() ) );
 
