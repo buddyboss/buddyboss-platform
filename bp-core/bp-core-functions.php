@@ -2267,7 +2267,7 @@ function bp_is_get_request() {
 /** Miscellaneous hooks *******************************************************/
 
 /**
- * Load the buddypress translation file for current language.
+ * Load the buddyboss translation file for current language.
  *
  * @since 1.0.2
  *
@@ -2276,7 +2276,7 @@ function bp_is_get_request() {
  * @return bool True on success, false on failure.
  */
 function bp_core_load_buddypress_textdomain() {
-	$domain = 'buddypress';
+	$domain = 'buddyboss';
 
 	/**
 	 * Filters the locale to be loaded for the language files.
@@ -2301,7 +2301,7 @@ function bp_core_load_buddypress_textdomain() {
 
 	// Try custom locations in WP_LANG_DIR.
 	foreach ( $locations as $location ) {
-		if ( load_textdomain( 'buddypress', $location . $mofile_custom ) ) {
+		if ( load_textdomain( 'buddyboss', $location . $mofile_custom ) ) {
 			return true;
 		}
 	}
