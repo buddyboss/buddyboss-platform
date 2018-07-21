@@ -168,7 +168,7 @@ function xprofile_delete_activity( $args = '' ) {
 }
 
 /**
- * Register an activity action for the Extended Profiles component.
+ * Register an activity action for the Profile Fields component.
  *
  * @since 1.0.0
  *
