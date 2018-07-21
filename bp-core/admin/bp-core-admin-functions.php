@@ -737,7 +737,7 @@ function bp_admin_wp_nav_menu_meta_box() {
 		return;
 	}
 
-	add_meta_box( 'add-buddypress-nav-menu', __( 'BuddyPress', 'buddyboss' ), 'bp_admin_do_wp_nav_menu_meta_box', 'nav-menus', 'side', 'default' );
+	add_meta_box( 'add-buddypress-nav-menu', __( 'BuddyBoss', 'buddyboss' ), 'bp_admin_do_wp_nav_menu_meta_box', 'nav-menus', 'side', 'default' );
 
 	add_action( 'admin_print_footer_scripts', 'bp_admin_wp_nav_menu_restrict_items' );
 }
