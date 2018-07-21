@@ -7,7 +7,7 @@
  */
 ?>
 
-<h2 class="screen-heading group-invites-screen"><?php esc_html_e( 'Group Invites', 'buddypress' ); ?></h2>
+<h2 class="screen-heading group-invites-screen"><?php esc_html_e( 'Group Invites', 'buddyboss' ); ?></h2>
 
 <?php bp_nouveau_group_hook( 'before', 'invites_content' ); ?>
 

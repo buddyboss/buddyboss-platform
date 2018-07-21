@@ -33,7 +33,7 @@ function bp_admin_bar_my_account_root() {
 		$wp_admin_bar->add_menu( array(
 			'parent'    => 'my-account',
 			'id'        => 'my-account-buddypress',
-			'title'     => __( 'My Account', 'buddypress' ),
+			'title'     => __( 'My Account', 'buddyboss' ),
 			'group'     => true,
 			'meta'      => array(
 				'class' => 'ab-sub-secondary'
@@ -57,7 +57,7 @@ function bp_core_load_admin_bar() {
 
 	// Hide the WordPress Toolbar and show the BuddyBar.
 	if ( ! bp_use_wp_admin_bar() ) {
-		_doing_it_wrong( __FUNCTION__, __( 'The BuddyBar is no longer supported. Please migrate to the WordPress toolbar as soon as possible.', 'buddypress' ), '2.1.0' );
+		_doing_it_wrong( __FUNCTION__, __( 'The BuddyBar is no longer supported. Please migrate to the WordPress toolbar as soon as possible.', 'buddyboss' ), '2.1.0' );
 
 		// Load deprecated code if not available.
 		if ( ! function_exists( 'bp_core_admin_bar' ) ) {

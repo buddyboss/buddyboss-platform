@@ -315,11 +315,11 @@ function bp_core_install_extended_profiles() {
 
 	// These values should only be updated if they are not already present.
 	if ( ! bp_get_option( 'bp-xprofile-base-group-name' ) ) {
-		bp_update_option( 'bp-xprofile-base-group-name', _x( 'General', 'First field-group name', 'buddypress' ) );
+		bp_update_option( 'bp-xprofile-base-group-name', _x( 'General', 'First field-group name', 'buddyboss' ) );
 	}
 
 	if ( ! bp_get_option( 'bp-xprofile-fullname-field-name' ) ) {
-		bp_update_option( 'bp-xprofile-fullname-field-name', _x( 'Display Name', 'Display name field', 'buddypress' ) );
+		bp_update_option( 'bp-xprofile-fullname-field-name', _x( 'Display Name', 'Display name field', 'buddyboss' ) );
 	}
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_xprofile_groups (

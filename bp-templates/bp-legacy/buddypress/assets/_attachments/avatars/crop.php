@@ -21,7 +21,7 @@
 			<img src="{{data.url}}" id="avatar-crop-preview"/>
 		</div>
 		<div id="avatar-crop-actions">
-			<a class="button avatar-crop-submit" href="#"><?php esc_html_e( 'Crop Image', 'buddypress' ); ?></a>
+			<a class="button avatar-crop-submit" href="#"><?php esc_html_e( 'Crop Image', 'buddyboss' ); ?></a>
 		</div>
 	</div>
 </script>

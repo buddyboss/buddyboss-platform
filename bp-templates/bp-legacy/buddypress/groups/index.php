@@ -57,12 +57,12 @@ do_action( 'bp_before_directory_groups_page' ); ?>
 
 		</div>
 
-		<div class="item-list-tabs" aria-label="<?php esc_attr_e( 'Groups directory main navigation', 'buddypress' ); ?>">
+		<div class="item-list-tabs" aria-label="<?php esc_attr_e( 'Groups directory main navigation', 'buddyboss' ); ?>">
 			<ul>
-				<li class="selected" id="groups-all"><a href="<?php bp_groups_directory_permalink(); ?>"><?php printf( __( 'All Groups %s', 'buddypress' ), '<span>' . bp_get_total_group_count() . '</span>' ); ?></a></li>
+				<li class="selected" id="groups-all"><a href="<?php bp_groups_directory_permalink(); ?>"><?php printf( __( 'All Groups %s', 'buddyboss' ), '<span>' . bp_get_total_group_count() . '</span>' ); ?></a></li>
 
 				<?php if ( is_user_logged_in() && bp_get_total_group_count_for_user( bp_loggedin_user_id() ) ) : ?>
-					<li id="groups-personal"><a href="<?php echo bp_loggedin_user_domain() . bp_get_groups_slug() . '/my-groups/'; ?>"><?php printf( __( 'My Groups %s', 'buddypress' ), '<span>' . bp_get_total_group_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></a></li>
+					<li id="groups-personal"><a href="<?php echo bp_loggedin_user_domain() . bp_get_groups_slug() . '/my-groups/'; ?>"><?php printf( __( 'My Groups %s', 'buddyboss' ), '<span>' . bp_get_total_group_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></a></li>
 				<?php endif; ?>
 
 				<?php
@@ -77,7 +77,7 @@ do_action( 'bp_before_directory_groups_page' ); ?>
 			</ul>
 		</div><!-- .item-list-tabs -->
 
-		<div class="item-list-tabs" id="subnav" aria-label="<?php esc_attr_e( 'Groups directory secondary navigation', 'buddypress' ); ?>" role="navigation">
+		<div class="item-list-tabs" id="subnav" aria-label="<?php esc_attr_e( 'Groups directory secondary navigation', 'buddyboss' ); ?>" role="navigation">
 			<ul>
 				<?php
 
@@ -90,13 +90,13 @@ do_action( 'bp_before_directory_groups_page' ); ?>
 
 				<li id="groups-order-select" class="last filter">
 
-					<label for="groups-order-by"><?php _e( 'Order By:', 'buddypress' ); ?></label>
+					<label for="groups-order-by"><?php _e( 'Order By:', 'buddyboss' ); ?></label>
 
 					<select id="groups-order-by">
-						<option value="active"><?php _e( 'Last Active', 'buddypress' ); ?></option>
-						<option value="popular"><?php _e( 'Most Members', 'buddypress' ); ?></option>
-						<option value="newest"><?php _e( 'Newly Created', 'buddypress' ); ?></option>
-						<option value="alphabetical"><?php _e( 'Alphabetical', 'buddypress' ); ?></option>
+						<option value="active"><?php _e( 'Last Active', 'buddyboss' ); ?></option>
+						<option value="popular"><?php _e( 'Most Members', 'buddyboss' ); ?></option>
+						<option value="newest"><?php _e( 'Newly Created', 'buddyboss' ); ?></option>
+						<option value="alphabetical"><?php _e( 'Alphabetical', 'buddyboss' ); ?></option>
 
 						<?php
 
@@ -113,7 +113,7 @@ do_action( 'bp_before_directory_groups_page' ); ?>
 
 		<h2 class="bp-screen-reader-text"><?php
 			/* translators: accessibility text */
-			_e( 'Groups directory', 'buddypress' );
+			_e( 'Groups directory', 'buddyboss' );
 		?></h2>
 
 		<div id="groups-dir-list" class="groups dir-list">

@@ -162,7 +162,7 @@ function bp_core_confirmation_js() {
 	wp_enqueue_script( 'bp-confirm' );
 
 	wp_localize_script( 'bp-confirm', 'BP_Confirm', array(
-		'are_you_sure' => __( 'Are you sure?', 'buddypress' ),
+		'are_you_sure' => __( 'Are you sure?', 'buddyboss' ),
 	) );
 
 }

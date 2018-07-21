@@ -752,7 +752,7 @@ class Activity extends BuddypressCommand {
 					$r['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddypress'), bp_core_get_userlink( $r['user-id'] ), '<a href="' . bp_get_group_permalink( $group_obj ) . '">' . esc_attr( $group_obj->name ) . '</a>' );
 				} else {
 					// old way, for some other kind of update.
-					$r['action'] = sprintf( __( '%s posted an update', 'buddypress' ), bp_core_get_userlink( $r['user-id'] ) );
+					$r['action'] = sprintf( __( '%s posted an update', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ) );
 				}
 				if ( empty( $r['content'] ) ) {
 					$r['content'] = $this->generate_random_text();
@@ -776,7 +776,7 @@ class Activity extends BuddypressCommand {
 					$r['item-id'] = $parent_item->id;
 				}
 
-				$r['action'] = sprintf( __( '%s posted a new activity comment', 'buddypress' ), bp_core_get_userlink( $r['user-id'] ) );
+				$r['action'] = sprintf( __( '%s posted a new activity comment', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ) );
 				$r['content'] = $this->generate_random_text();
 				$r['primary-link'] = bp_core_get_userlink( $r['user-id'] );
 
@@ -839,7 +839,7 @@ class Activity extends BuddypressCommand {
 					}
 
 					if ( '' === $r['action'] ) {
-						$r['action'] = sprintf( __( '%1$s wrote a new post, %2$s', 'buddypress' ), bp_core_get_userlink( (int) $post->post_author ), '<a href="' . $r['primary-link'] . '">' . $post->post_title . '</a>' );
+						$r['action'] = sprintf( __( '%1$s wrote a new post, %2$s', 'buddyboss' ), bp_core_get_userlink( (int) $post->post_author ), '<a href="' . $r['primary-link'] . '">' . $post->post_title . '</a>' );
 					}
 
 					if ( '' === $r['content'] ) {
@@ -868,7 +868,7 @@ class Activity extends BuddypressCommand {
 					}
 
 					if ( '' === $r['action'] ) {
-						$r['action'] = sprintf( __( '%1$s commented on the post, %2$s', 'buddypress' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . $post_permalink . '">' . apply_filters( 'the_title', $post->post_title ) . '</a>' );
+						$r['action'] = sprintf( __( '%1$s commented on the post, %2$s', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . $post_permalink . '">' . apply_filters( 'the_title', $post->post_title ) . '</a>' );
 					}
 
 					if ( '' === $r['content'] ) {
@@ -893,7 +893,7 @@ class Activity extends BuddypressCommand {
 					$r['item-id'] = $this->get_random_user_id();
 				}
 
-				$r['action'] = sprintf( __( '%1$s and %2$s are now friends', 'buddypress' ), bp_core_get_userlink( $r['user-id'] ), bp_core_get_userlink( $r['item-id'] ) );
+				$r['action'] = sprintf( __( '%1$s and %2$s are now friends', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), bp_core_get_userlink( $r['item-id'] ) );
 
 				break;
 
@@ -939,7 +939,7 @@ class Activity extends BuddypressCommand {
 				}
 
 				if ( empty( $r['action'] ) ) {
-					$r['action'] = sprintf( __( '%1$s joined the group %2$s', 'buddypress' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . bp_get_group_permalink( $group ) . '">' . esc_attr( $group->name ) . '</a>' );
+					$r['action'] = sprintf( __( '%1$s joined the group %2$s', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ), '<a href="' . bp_get_group_permalink( $group ) . '">' . esc_attr( $group->name ) . '</a>' );
 				}
 
 				if ( empty( $r['primary-link'] ) ) {
@@ -959,15 +959,15 @@ class Activity extends BuddypressCommand {
 
 				// new_avatar.
 				if ( 'new_avatar' === $r['type'] ) {
-					$r['action'] = sprintf( __( '%s changed their profile picture', 'buddypress' ), $userlink );
+					$r['action'] = sprintf( __( '%s changed their profile picture', 'buddyboss' ), $userlink );
 
 				// new_member.
 				} elseif ( 'new_member' === $r['type'] ) {
-					$r['action'] = sprintf( __( '%s became a registered member', 'buddypress' ), $userlink );
+					$r['action'] = sprintf( __( '%s became a registered member', 'buddyboss' ), $userlink );
 
 				// updated_profile.
 				} else {
-					$r['action'] = sprintf( __( '%s updated their profile', 'buddypress' ), $userlink );
+					$r['action'] = sprintf( __( '%s updated their profile', 'buddyboss' ), $userlink );
 				}
 
 				break;

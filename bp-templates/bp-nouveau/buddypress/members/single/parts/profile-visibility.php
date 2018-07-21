@@ -18,22 +18,22 @@ if ( empty( $GLOBALS['profile_template'] ) ) {
 		<?php
 		printf(
 			/* translators: field visibility level, e.g. "...seen by: everyone". */
-			__( 'This field may be seen by: %s', 'buddypress' ),
+			__( 'This field may be seen by: %s', 'buddyboss' ),
 			'<span class="current-visibility-level">' . bp_get_the_profile_field_visibility_level_label() . '</span>'
 		);
 		?>
-		<button class="visibility-toggle-link text-button" type="button"><?php echo esc_html_x( 'Change', 'button', 'buddypress' ); ?></button>
+		<button class="visibility-toggle-link text-button" type="button"><?php echo esc_html_x( 'Change', 'button', 'buddyboss' ); ?></button>
 
 	</p>
 
 	<div class="field-visibility-settings" id="field-visibility-settings-<?php bp_the_profile_field_id(); ?>">
 		<fieldset>
-			<legend><?php esc_html_e( 'Who is allowed to see this field?', 'buddypress' ); ?></legend>
+			<legend><?php esc_html_e( 'Who is allowed to see this field?', 'buddyboss' ); ?></legend>
 
 			<?php bp_profile_visibility_radio_buttons(); ?>
 
 		</fieldset>
-		<button class="field-visibility-settings-close button" type="button"><?php echo esc_html_x( 'Close', 'button', 'buddypress' ); ?></button>
+		<button class="field-visibility-settings-close button" type="button"><?php echo esc_html_x( 'Close', 'button', 'buddyboss' ); ?></button>
 	</div>
 
 <?php else : ?>
@@ -41,7 +41,7 @@ if ( empty( $GLOBALS['profile_template'] ) ) {
 	<p class="field-visibility-settings-notoggle field-visibility-settings-header" id="field-visibility-settings-toggle-<?php bp_the_profile_field_id(); ?>">
 		<?php
 		printf(
-			esc_html__( 'This field may be seen by: %s', 'buddypress' ),
+			esc_html__( 'This field may be seen by: %s', 'buddyboss' ),
 			'<span class="current-visibility-level">' . bp_get_the_profile_field_visibility_level_label() . '</span>'
 		);
 		?>

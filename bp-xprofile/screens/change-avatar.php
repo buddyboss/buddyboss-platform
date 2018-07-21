@@ -64,7 +64,7 @@ function xprofile_screen_change_avatar() {
 		);
 
 		if ( ! bp_core_avatar_handle_crop( $args ) ) {
-			bp_core_add_message( __( 'There was a problem cropping your profile photo.', 'buddypress' ), 'error' );
+			bp_core_add_message( __( 'There was a problem cropping your profile photo.', 'buddyboss' ), 'error' );
 		} else {
 
 			/**
@@ -78,7 +78,7 @@ function xprofile_screen_change_avatar() {
 			 * @param string $value   Inform about the way the avatar was set ('crop').
 			 */
 			do_action( 'xprofile_avatar_uploaded', (int) $args['item_id'], 'crop' );
-			bp_core_add_message( __( 'Your new profile photo was uploaded successfully.', 'buddypress' ) );
+			bp_core_add_message( __( 'Your new profile photo was uploaded successfully.', 'buddyboss' ) );
 			bp_core_redirect( bp_displayed_user_domain() );
 		}
 	}

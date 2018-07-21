@@ -755,7 +755,7 @@ function bp_core_get_directory_page_default_titles() {
 		'blogs'    => _x( 'Sites',    'Page title for the Sites directory.',          'buddypress' ),
 		'members'  => _x( 'Members',  'Page title for the Members directory.',        'buddypress' ),
 		'activate' => _x( 'Activate', 'Page title for the user activation screen.',   'buddypress' ),
-		'register' => _x( 'Register', 'Page title for the user registration screen.', 'buddypress' ),
+		'register' => _x( 'Register', 'Page title for the user registration screen.', 'buddyboss' ),
 	);
 
 	/**
@@ -1192,7 +1192,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$right_now_text = apply_filters( 'bp_core_time_since_right_now_text', __( 'right now', 'buddypress' ) );
+	$right_now_text = apply_filters( 'bp_core_time_since_right_now_text', __( 'right now', 'buddyboss' ) );
 
 	/**
 	 * Filters the value to use if the time since is some time ago.
@@ -1262,25 +1262,25 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 			// Set output var.
 			switch ( $seconds ) {
 				case YEAR_IN_SECONDS :
-					$output = sprintf( _n( '%s year',   '%s years',   $count, 'buddypress' ), $count );
+					$output = sprintf( _n( '%s year',   '%s years',   $count, 'buddyboss' ), $count );
 					break;
 				case 30 * DAY_IN_SECONDS :
-					$output = sprintf( _n( '%s month',  '%s months',  $count, 'buddypress' ), $count );
+					$output = sprintf( _n( '%s month',  '%s months',  $count, 'buddyboss' ), $count );
 					break;
 				case WEEK_IN_SECONDS :
-					$output = sprintf( _n( '%s week',   '%s weeks',   $count, 'buddypress' ), $count );
+					$output = sprintf( _n( '%s week',   '%s weeks',   $count, 'buddyboss' ), $count );
 					break;
 				case DAY_IN_SECONDS :
-					$output = sprintf( _n( '%s day',    '%s days',    $count, 'buddypress' ), $count );
+					$output = sprintf( _n( '%s day',    '%s days',    $count, 'buddyboss' ), $count );
 					break;
 				case HOUR_IN_SECONDS :
-					$output = sprintf( _n( '%s hour',   '%s hours',   $count, 'buddypress' ), $count );
+					$output = sprintf( _n( '%s hour',   '%s hours',   $count, 'buddyboss' ), $count );
 					break;
 				case MINUTE_IN_SECONDS :
-					$output = sprintf( _n( '%s minute', '%s minutes', $count, 'buddypress' ), $count );
+					$output = sprintf( _n( '%s minute', '%s minutes', $count, 'buddyboss' ), $count );
 					break;
 				default:
-					$output = sprintf( _n( '%s second', '%s seconds', $count, 'buddypress' ), $count );
+					$output = sprintf( _n( '%s second', '%s seconds', $count, 'buddyboss' ), $count );
 			}
 
 			// Step two: the second chunk
@@ -1295,26 +1295,26 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 
 				// Add to output var.
 				if ( 0 != $count2 ) {
-					$output .= _x( ',', 'Separator in time since', 'buddypress' ) . ' ';
+					$output .= _x( ',', 'Separator in time since', 'buddyboss' ) . ' ';
 
 					switch ( $seconds2 ) {
 						case 30 * DAY_IN_SECONDS :
-							$output .= sprintf( _n( '%s month',  '%s months',  $count2, 'buddypress' ), $count2 );
+							$output .= sprintf( _n( '%s month',  '%s months',  $count2, 'buddyboss' ), $count2 );
 							break;
 						case WEEK_IN_SECONDS :
-							$output .= sprintf( _n( '%s week',   '%s weeks',   $count2, 'buddypress' ), $count2 );
+							$output .= sprintf( _n( '%s week',   '%s weeks',   $count2, 'buddyboss' ), $count2 );
 							break;
 						case DAY_IN_SECONDS :
-							$output .= sprintf( _n( '%s day',    '%s days',    $count2, 'buddypress' ), $count2 );
+							$output .= sprintf( _n( '%s day',    '%s days',    $count2, 'buddyboss' ), $count2 );
 							break;
 						case HOUR_IN_SECONDS :
-							$output .= sprintf( _n( '%s hour',   '%s hours',   $count2, 'buddypress' ), $count2 );
+							$output .= sprintf( _n( '%s hour',   '%s hours',   $count2, 'buddyboss' ), $count2 );
 							break;
 						case MINUTE_IN_SECONDS :
-							$output .= sprintf( _n( '%s minute', '%s minutes', $count2, 'buddypress' ), $count2 );
+							$output .= sprintf( _n( '%s minute', '%s minutes', $count2, 'buddyboss' ), $count2 );
 							break;
 						default:
-							$output .= sprintf( _n( '%s second', '%s seconds', $count2, 'buddypress' ), $count2 );
+							$output .= sprintf( _n( '%s second', '%s seconds', $count2, 'buddyboss' ), $count2 );
 					}
 				}
 			}
@@ -1578,7 +1578,7 @@ function bp_core_get_last_activity( $last_activity_date = '', $string = '' ) {
 
 	// Use the string if a last activity date was passed.
 	$last_active = empty( $last_activity_date )
-		? __( 'Not recently active', 'buddypress' )
+		? __( 'Not recently active', 'buddyboss' )
 		: sprintf( $string, bp_core_time_since( $last_activity_date ) );
 
 	/**
@@ -2447,12 +2447,12 @@ function bp_core_get_minified_asset_suffix() {
 function bp_core_get_components( $type = 'all' ) {
 	$required_components = array(
 		'core' => array(
-			'title'       => __( 'BuddyBoss Core', 'buddypress' ),
-			'description' => __( 'It&#8216;s what makes <del>time travel</del> BuddyBoss possible!', 'buddypress' )
+			'title'       => __( 'BuddyBoss Core', 'buddyboss' ),
+			'description' => __( 'It&#8216;s what makes <del>time travel</del> BuddyBoss possible!', 'buddyboss' )
 		),
 		'members' => array(
-			'title'       => __( 'Community Members', 'buddypress' ),
-			'description' => __( 'Everything in a BuddyBoss community revolves around its members.', 'buddypress' )
+			'title'       => __( 'Community Members', 'buddyboss' ),
+			'description' => __( 'Everything in a BuddyBoss community revolves around its members.', 'buddyboss' )
 		),
 	);
 
@@ -2461,42 +2461,42 @@ function bp_core_get_components( $type = 'all' ) {
 
 	$optional_components = array(
 		'xprofile' => array(
-			'title'       => __( 'Profiles Fields', 'buddypress' ),
-			'description' => __( 'Customize your community with fully editable profile fields that allow your users to describe themselves.', 'buddypress' )
+			'title'       => __( 'Profiles Fields', 'buddyboss' ),
+			'description' => __( 'Customize your community with fully editable profile fields that allow your users to describe themselves.', 'buddyboss' )
 		),
 		'settings' => array(
-			'title'       => __( 'Account Settings', 'buddypress' ),
-			'description' => __( 'Allow your users to modify their account and notification settings directly from within their profiles.', 'buddypress' )
+			'title'       => __( 'Account Settings', 'buddyboss' ),
+			'description' => __( 'Allow your users to modify their account and notification settings directly from within their profiles.', 'buddyboss' )
 		),
 		'friends'  => array(
-			'title'       => __( 'Friend Connections', 'buddypress' ),
-			'description' => __( 'Let your users make connections so they can track the activity of others and focus on the people they care about the most.', 'buddypress' )
+			'title'       => __( 'Friend Connections', 'buddyboss' ),
+			'description' => __( 'Let your users make connections so they can track the activity of others and focus on the people they care about the most.', 'buddyboss' )
 		),
 		'messages' => array(
-			'title'       => __( 'Private Messaging', 'buddypress' ),
-			'description' => __( 'Allow your users to talk to each other directly and in private. Not just limited to one-on-one discussions, messages can be sent between any number of members.', 'buddypress' )
+			'title'       => __( 'Private Messaging', 'buddyboss' ),
+			'description' => __( 'Allow your users to talk to each other directly and in private. Not just limited to one-on-one discussions, messages can be sent between any number of members.', 'buddyboss' )
 		),
 		'activity' => array(
-			'title'       => __( 'Activity Feeds', 'buddypress' ),
-			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, favoriting, and @mentions, all with full RSS feed and email notification support.', 'buddypress' )
+			'title'       => __( 'Activity Feeds', 'buddyboss' ),
+			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, favoriting, and @mentions, all with full RSS feed and email notification support.', 'buddyboss' )
 		),
 		'notifications' => array(
-			'title'       => __( 'Notifications', 'buddypress' ),
-			'description' => __( 'Notify members of relevant activity with a toolbar bubble and/or via email, and allow them to customize their notification settings.', 'buddypress' )
+			'title'       => __( 'Notifications', 'buddyboss' ),
+			'description' => __( 'Notify members of relevant activity with a toolbar bubble and/or via email, and allow them to customize their notification settings.', 'buddyboss' )
 		),
 		'groups'   => array(
-			'title'       => __( 'User Groups', 'buddypress' ),
-			'description' => __( 'Groups allow your users to organize themselves into specific public, private or hidden sections with separate activity feeds and member listings.', 'buddypress' )
+			'title'       => __( 'User Groups', 'buddyboss' ),
+			'description' => __( 'Groups allow your users to organize themselves into specific public, private or hidden sections with separate activity feeds and member listings.', 'buddyboss' )
 		),
 		'blogs'    => array(
-			'title'       => __( 'Site Tracking', 'buddypress' ),
-			'description' => __( 'Record activity for new posts and comments from your site.', 'buddypress' )
+			'title'       => __( 'Site Tracking', 'buddyboss' ),
+			'description' => __( 'Record activity for new posts and comments from your site.', 'buddyboss' )
 		)
 	);
 
 	// Add blogs tracking if multisite.
 	if ( is_multisite() ) {
-		$optional_components['blogs']['description'] = __( 'Record activity for new sites, posts, and comments across your network.', 'buddypress' );
+		$optional_components['blogs']['description'] = __( 'Record activity for new sites, posts, and comments across your network.', 'buddyboss' );
 	}
 
 	switch ( $type ) {
@@ -2560,7 +2560,7 @@ function bp_nav_menu_get_loggedin_pages() {
 	// Some BP nav menu items will not be represented in bp_nav, because
 	// they are not real BP components. We add them manually here.
 	$bp_menu_items[] = array(
-		'name' => __( 'Log Out', 'buddypress' ),
+		'name' => __( 'Log Out', 'buddyboss' ),
 		'slug' => 'logout',
 		'link' => wp_logout_url(),
 	);
@@ -2625,7 +2625,7 @@ function bp_nav_menu_get_loggedout_pages() {
 	// Some BP nav menu items will not be represented in bp_nav, because
 	// they are not real BP components. We add them manually here.
 	$bp_menu_items[] = array(
-		'name' => __( 'Log In', 'buddypress' ),
+		'name' => __( 'Log In', 'buddyboss' ),
 		'slug' => 'login',
 		'link' => wp_login_url(),
 	);
@@ -2857,22 +2857,22 @@ function bp_get_email_post_type_labels() {
 	 * @param array $value Associative array (name => label).
 	 */
 	return apply_filters( 'bp_get_email_post_type_labels', array(
-		'add_new'               => _x( 'Add New', 'email post type label', 'buddypress' ),
-		'add_new_item'          => _x( 'Add a New Email', 'email post type label', 'buddypress' ),
-		'all_items'             => _x( 'All Emails', 'email post type label', 'buddypress' ),
-		'edit_item'             => _x( 'Edit Email', 'email post type label', 'buddypress' ),
-		'filter_items_list'     => _x( 'Filter email list', 'email post type label', 'buddypress' ),
-		'items_list'            => _x( 'Email list', 'email post type label', 'buddypress' ),
-		'items_list_navigation' => _x( 'Email list navigation', 'email post type label', 'buddypress' ),
-		'menu_name'             => _x( 'Emails', 'email post type name', 'buddypress' ),
-		'name'                  => _x( 'BuddyPress Emails', 'email post type label', 'buddypress' ),
-		'new_item'              => _x( 'New Email', 'email post type label', 'buddypress' ),
-		'not_found'             => _x( 'No emails found', 'email post type label', 'buddypress' ),
-		'not_found_in_trash'    => _x( 'No emails found in Trash', 'email post type label', 'buddypress' ),
-		'search_items'          => _x( 'Search Emails', 'email post type label', 'buddypress' ),
-		'singular_name'         => _x( 'Email', 'email post type singular name', 'buddypress' ),
-		'uploaded_to_this_item' => _x( 'Uploaded to this email', 'email post type label', 'buddypress' ),
-		'view_item'             => _x( 'View Email', 'email post type label', 'buddypress' ),
+		'add_new'               => _x( 'Add New', 'email post type label', 'buddyboss' ),
+		'add_new_item'          => _x( 'Add a New Email', 'email post type label', 'buddyboss' ),
+		'all_items'             => _x( 'All Emails', 'email post type label', 'buddyboss' ),
+		'edit_item'             => _x( 'Edit Email', 'email post type label', 'buddyboss' ),
+		'filter_items_list'     => _x( 'Filter email list', 'email post type label', 'buddyboss' ),
+		'items_list'            => _x( 'Email list', 'email post type label', 'buddyboss' ),
+		'items_list_navigation' => _x( 'Email list navigation', 'email post type label', 'buddyboss' ),
+		'menu_name'             => _x( 'Emails', 'email post type name', 'buddyboss' ),
+		'name'                  => _x( 'BuddyPress Emails', 'email post type label', 'buddyboss' ),
+		'new_item'              => _x( 'New Email', 'email post type label', 'buddyboss' ),
+		'not_found'             => _x( 'No emails found', 'email post type label', 'buddyboss' ),
+		'not_found_in_trash'    => _x( 'No emails found in Trash', 'email post type label', 'buddyboss' ),
+		'search_items'          => _x( 'Search Emails', 'email post type label', 'buddyboss' ),
+		'singular_name'         => _x( 'Email', 'email post type singular name', 'buddyboss' ),
+		'uploaded_to_this_item' => _x( 'Uploaded to this email', 'email post type label', 'buddyboss' ),
+		'view_item'             => _x( 'View Email', 'email post type label', 'buddyboss' ),
 	) );
 }
 
@@ -2948,21 +2948,21 @@ function bp_get_email_tax_type_labels() {
 	 * @param array $value Associative array (name => label).
 	 */
 	return apply_filters( 'bp_get_email_tax_type_labels', array(
-		'add_new_item'          => _x( 'New Email Situation', 'email type taxonomy label', 'buddypress' ),
-		'all_items'             => _x( 'All Email Situations', 'email type taxonomy label', 'buddypress' ),
-		'edit_item'             => _x( 'Edit Email Situations', 'email type taxonomy label', 'buddypress' ),
-		'items_list'            => _x( 'Email list', 'email type taxonomy label', 'buddypress' ),
-		'items_list_navigation' => _x( 'Email list navigation', 'email type taxonomy label', 'buddypress' ),
-		'menu_name'             => _x( 'Situations', 'email type taxonomy label', 'buddypress' ),
-		'name'                  => _x( 'Situation', 'email type taxonomy name', 'buddypress' ),
-		'new_item_name'         => _x( 'New email situation name', 'email type taxonomy label', 'buddypress' ),
-		'not_found'             => _x( 'No email situations found.', 'email type taxonomy label', 'buddypress' ),
-		'no_terms'              => _x( 'No email situations', 'email type taxonomy label', 'buddypress' ),
-		'popular_items'         => _x( 'Popular Email Situation', 'email type taxonomy label', 'buddypress' ),
-		'search_items'          => _x( 'Search Emails', 'email type taxonomy label', 'buddypress' ),
-		'singular_name'         => _x( 'Email', 'email type taxonomy singular name', 'buddypress' ),
-		'update_item'           => _x( 'Update Email Situation', 'email type taxonomy label', 'buddypress' ),
-		'view_item'             => _x( 'View Email Situation', 'email type taxonomy label', 'buddypress' ),
+		'add_new_item'          => _x( 'New Email Situation', 'email type taxonomy label', 'buddyboss' ),
+		'all_items'             => _x( 'All Email Situations', 'email type taxonomy label', 'buddyboss' ),
+		'edit_item'             => _x( 'Edit Email Situations', 'email type taxonomy label', 'buddyboss' ),
+		'items_list'            => _x( 'Email list', 'email type taxonomy label', 'buddyboss' ),
+		'items_list_navigation' => _x( 'Email list navigation', 'email type taxonomy label', 'buddyboss' ),
+		'menu_name'             => _x( 'Situations', 'email type taxonomy label', 'buddyboss' ),
+		'name'                  => _x( 'Situation', 'email type taxonomy name', 'buddyboss' ),
+		'new_item_name'         => _x( 'New email situation name', 'email type taxonomy label', 'buddyboss' ),
+		'not_found'             => _x( 'No email situations found.', 'email type taxonomy label', 'buddyboss' ),
+		'no_terms'              => _x( 'No email situations', 'email type taxonomy label', 'buddyboss' ),
+		'popular_items'         => _x( 'Popular Email Situation', 'email type taxonomy label', 'buddyboss' ),
+		'search_items'          => _x( 'Search Emails', 'email type taxonomy label', 'buddyboss' ),
+		'singular_name'         => _x( 'Email', 'email type taxonomy singular name', 'buddyboss' ),
+		'update_item'           => _x( 'Update Email Situation', 'email type taxonomy label', 'buddyboss' ),
+		'view_item'             => _x( 'View Email Situation', 'email type taxonomy label', 'buddyboss' ),
 	) );
 }
 
@@ -3250,7 +3250,7 @@ function bp_email_get_appearance_settings() {
 
 		'footer_text' => sprintf(
 			/* translators: email disclaimer, e.g. "© 2016 Site Name". */
-			_x( '&copy; %s %s', 'email', 'buddypress' ),
+			_x( '&copy; %s %s', 'email', 'buddyboss' ),
 			date_i18n( 'Y' ),
 			bp_get_option( 'blogname' )
 		),
@@ -3351,134 +3351,134 @@ function bp_email_get_schema() {
 	return array(
 		'activity-comment' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your updates', 'buddypress' ),
+			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your updates', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{poster.name}} replied to one of your updates:\n\n<blockquote>&quot;{{usermessage}}&quot;</blockquote>\n\n<a href=\"{{{thread.url}}}\">Go to the discussion</a> to reply or catch up on the conversation.", 'buddypress' ),
+			'post_content' => __( "{{poster.name}} replied to one of your updates:\n\n<blockquote>&quot;{{usermessage}}&quot;</blockquote>\n\n<a href=\"{{{thread.url}}}\">Go to the discussion</a> to reply or catch up on the conversation.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{poster.name}} replied to one of your updates:\n\n\"{{usermessage}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddypress' ),
+			'post_excerpt' => __( "{{poster.name}} replied to one of your updates:\n\n\"{{usermessage}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
 		),
 		'activity-comment-author' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your comments', 'buddypress' ),
+			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your comments', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{poster.name}} replied to one of your comments:\n\n<blockquote>&quot;{{usermessage}}&quot;</blockquote>\n\n<a href=\"{{{thread.url}}}\">Go to the discussion</a> to reply or catch up on the conversation.", 'buddypress' ),
+			'post_content' => __( "{{poster.name}} replied to one of your comments:\n\n<blockquote>&quot;{{usermessage}}&quot;</blockquote>\n\n<a href=\"{{{thread.url}}}\">Go to the discussion</a> to reply or catch up on the conversation.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{poster.name}} replied to one of your comments:\n\n\"{{usermessage}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddypress' ),
+			'post_excerpt' => __( "{{poster.name}} replied to one of your comments:\n\n\"{{usermessage}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
 		),
 		'activity-at-message' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a status update', 'buddypress' ),
+			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a status update', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{poster.name}} mentioned you in a status update:\n\n<blockquote>&quot;{{usermessage}}&quot;</blockquote>\n\n<a href=\"{{{mentioned.url}}}\">Go to the discussion</a> to reply or catch up on the conversation.", 'buddypress' ),
+			'post_content' => __( "{{poster.name}} mentioned you in a status update:\n\n<blockquote>&quot;{{usermessage}}&quot;</blockquote>\n\n<a href=\"{{{mentioned.url}}}\">Go to the discussion</a> to reply or catch up on the conversation.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{poster.name}} mentioned you in a status update:\n\n\"{{usermessage}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddypress' ),
+			'post_excerpt' => __( "{{poster.name}} mentioned you in a status update:\n\n\"{{usermessage}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
 		),
 		'groups-at-message' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in an update', 'buddypress' ),
+			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in an update', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n\n<blockquote>&quot;{{usermessage}}&quot;</blockquote>\n\n<a href=\"{{{mentioned.url}}}\">Go to the discussion</a> to reply or catch up on the conversation.", 'buddypress' ),
+			'post_content' => __( "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n\n<blockquote>&quot;{{usermessage}}&quot;</blockquote>\n\n<a href=\"{{{mentioned.url}}}\">Go to the discussion</a> to reply or catch up on the conversation.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n\n\"{{usermessage}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddypress' ),
+			'post_excerpt' => __( "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n\n\"{{usermessage}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
 		),
 		'core-user-registration' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Activate your account', 'buddypress' ),
+			'post_title'   => __( '[{{{site.name}}}] Activate your account', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: <a href=\"{{{activate.url}}}\">{{{activate.url}}}</a>", 'buddypress' ),
+			'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: <a href=\"{{{activate.url}}}\">{{{activate.url}}}</a>", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: {{{activate.url}}}", 'buddypress' )
+			'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: {{{activate.url}}}", 'buddyboss' )
 		),
 		'core-user-registration-with-blog' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Activate {{{user-site.url}}}', 'buddypress' ),
+			'post_title'   => __( '[{{{site.name}}}] Activate {{{user-site.url}}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account and site, go to the following link: <a href=\"{{{activate-site.url}}}\">{{{activate-site.url}}}</a>.\n\nAfter you activate, you can visit your site at <a href=\"{{{user-site.url}}}\">{{{user-site.url}}}</a>.", 'buddypress' ),
+			'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account and site, go to the following link: <a href=\"{{{activate-site.url}}}\">{{{activate-site.url}}}</a>.\n\nAfter you activate, you can visit your site at <a href=\"{{{user-site.url}}}\">{{{user-site.url}}}</a>.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account and site, go to the following link: {{{activate-site.url}}}\n\nAfter you activate, you can visit your site at {{{user-site.url}}}.", 'buddypress' ),
+			'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account and site, go to the following link: {{{activate-site.url}}}\n\nAfter you activate, you can visit your site at {{{user-site.url}}}.", 'buddyboss' ),
 			'args'         => array(
 				'multisite' => true,
 			),
 		),
 		'friends-request' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] New friendship request from {{initiator.name}}', 'buddypress' ),
+			'post_title'   => __( '[{{{site.name}}}] New friendship request from {{initiator.name}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{initiator.url}}}\">{{initiator.name}}</a> wants to add you as a friend.\n\nTo accept this request and manage all of your pending requests, visit: <a href=\"{{{friend-requests.url}}}\">{{{friend-requests.url}}}</a>", 'buddypress' ),
+			'post_content' => __( "<a href=\"{{{initiator.url}}}\">{{initiator.name}}</a> wants to add you as a friend.\n\nTo accept this request and manage all of your pending requests, visit: <a href=\"{{{friend-requests.url}}}\">{{{friend-requests.url}}}</a>", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{initiator.name}} wants to add you as a friend.\n\nTo accept this request and manage all of your pending requests, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddypress' ),
+			'post_excerpt' => __( "{{initiator.name}} wants to add you as a friend.\n\nTo accept this request and manage all of your pending requests, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddyboss' ),
 		),
 		'friends-request-accepted' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{friend.name}} accepted your friendship request', 'buddypress' ),
+			'post_title'   => __( '[{{{site.name}}}] {{friend.name}} accepted your friendship request', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> accepted your friend request.", 'buddypress' ),
+			'post_content' => __( "<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> accepted your friend request.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{friend.name}} accepted your friend request.\n\nTo learn more about them, visit their profile: {{{friendship.url}}}", 'buddypress' ),
+			'post_excerpt' => __( "{{friend.name}} accepted your friend request.\n\nTo learn more about them, visit their profile: {{{friendship.url}}}", 'buddyboss' ),
 		),
 		'groups-details-updated' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Group details updated', 'buddypress' ),
+			'post_title'   => __( '[{{{site.name}}}] Group details updated', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "Group details for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; were updated:\n<blockquote>{{changed_text}}</blockquote>", 'buddypress' ),
+			'post_content' => __( "Group details for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; were updated:\n<blockquote>{{changed_text}}</blockquote>", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "Group details for the group \"{{group.name}}\" were updated:\n\n{{changed_text}}\n\nTo view the group, visit: {{{group.url}}}", 'buddypress' ),
+			'post_excerpt' => __( "Group details for the group \"{{group.name}}\" were updated:\n\n{{changed_text}}\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
 		),
 		'groups-invitation' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] You have an invitation to the group: "{{group.name}}"', 'buddypress' ),
+			'post_title'   => __( '[{{{site.name}}}] You have an invitation to the group: "{{group.name}}"', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{inviter.url}}}\">{{inviter.name}}</a> has invited you to join the group: &quot;{{group.name}}&quot;.\n<a href=\"{{{invites.url}}}\">Go here to accept your invitation</a> or <a href=\"{{{group.url}}}\">visit the group</a> to learn more.", 'buddypress' ),
+			'post_content' => __( "<a href=\"{{{inviter.url}}}\">{{inviter.name}}</a> has invited you to join the group: &quot;{{group.name}}&quot;.\n<a href=\"{{{invites.url}}}\">Go here to accept your invitation</a> or <a href=\"{{{group.url}}}\">visit the group</a> to learn more.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{inviter.name}} has invited you to join the group: \"{{group.name}}\".\n\nTo accept your invitation, visit: {{{invites.url}}}\n\nTo learn more about the group, visit: {{{group.url}}}.\nTo view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'buddypress' ),
+			'post_excerpt' => __( "{{inviter.name}} has invited you to join the group: \"{{group.name}}\".\n\nTo accept your invitation, visit: {{{invites.url}}}\n\nTo learn more about the group, visit: {{{group.url}}}.\nTo view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'buddyboss' ),
 		),
 		'groups-member-promoted' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] You have been promoted in the group: "{{group.name}}"', 'buddypress' ),
+			'post_title'   => __( '[{{{site.name}}}] You have been promoted in the group: "{{group.name}}"', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "You have been promoted to <b>{{promoted_to}}</b> in the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;.", 'buddypress' ),
+			'post_content' => __( "You have been promoted to <b>{{promoted_to}}</b> in the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot;.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "You have been promoted to {{promoted_to}} in the group: \"{{group.name}}\".\n\nTo visit the group, go to: {{{group.url}}}", 'buddypress' ),
+			'post_excerpt' => __( "You have been promoted to {{promoted_to}} in the group: \"{{group.name}}\".\n\nTo visit the group, go to: {{{group.url}}}", 'buddyboss' ),
 		),
 		'groups-membership-request' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Membership request for group: {{group.name}}', 'buddypress' ),
+			'post_title'   => __( '[{{{site.name}}}] Membership request for group: {{group.name}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "<a href=\"{{{profile.url}}}\">{{requesting-user.name}}</a> wants to join the group &quot;{{group.name}}&quot;. As you are an administrator of this group, you must either accept or reject the membership request.\n\n<a href=\"{{{group-requests.url}}}\">Go here to manage this</a> and all other pending requests.", 'buddypress' ),
+			'post_content' => __( "<a href=\"{{{profile.url}}}\">{{requesting-user.name}}</a> wants to join the group &quot;{{group.name}}&quot;. As you are an administrator of this group, you must either accept or reject the membership request.\n\n<a href=\"{{{group-requests.url}}}\">Go here to manage this</a> and all other pending requests.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{requesting-user.name}} wants to join the group \"{{group.name}}\". As you are the administrator of this group, you must either accept or reject the membership request.\n\nTo manage this and all other pending requests, visit: {{{group-requests.url}}}\n\nTo view {{requesting-user.name}}'s profile, visit: {{{profile.url}}}", 'buddypress' ),
+			'post_excerpt' => __( "{{requesting-user.name}} wants to join the group \"{{group.name}}\". As you are the administrator of this group, you must either accept or reject the membership request.\n\nTo manage this and all other pending requests, visit: {{{group-requests.url}}}\n\nTo view {{requesting-user.name}}'s profile, visit: {{{profile.url}}}", 'buddyboss' ),
 		),
 		'messages-unread' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] New message from {{sender.name}}', 'buddypress' ),
+			'post_title'   => __( '[{{{site.name}}}] New message from {{sender.name}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{sender.name}} sent you a new message: &quot;{{usersubject}}&quot;\n\n<blockquote>&quot;{{usermessage}}&quot;</blockquote>\n\n<a href=\"{{{message.url}}}\">Go to the discussion</a> to reply or catch up on the conversation.", 'buddypress' ),
+			'post_content' => __( "{{sender.name}} sent you a new message: &quot;{{usersubject}}&quot;\n\n<blockquote>&quot;{{usermessage}}&quot;</blockquote>\n\n<a href=\"{{{message.url}}}\">Go to the discussion</a> to reply or catch up on the conversation.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{sender.name}} sent you a new message: \"{{usersubject}}\"\n\n\"{{usermessage}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddypress' ),
+			'post_excerpt' => __( "{{sender.name}} sent you a new message: \"{{usersubject}}\"\n\n\"{{usermessage}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 		),
 		'settings-verify-email-change' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Verify your new email address', 'buddypress' ),
+			'post_title'   => __( '[{{{site.name}}}] Verify your new email address', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, <a href=\"{{{verify.url}}}\">go here to confirm the change</a>.\n\nOtherwise, you can safely ignore and delete this email if you have changed your mind, or if you think you have received this email in error.", 'buddypress' ),
+			'post_content' => __( "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, <a href=\"{{{verify.url}}}\">go here to confirm the change</a>.\n\nOtherwise, you can safely ignore and delete this email if you have changed your mind, or if you think you have received this email in error.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, go to the following link to confirm the change: {{{verify.url}}}\n\nOtherwise, you can safely ignore and delete this email if you have changed your mind, or if you think you have received this email in error.", 'buddypress' ),
+			'post_excerpt' => __( "You recently changed the email address associated with your account on {{site.name}} to {{user.email}}. If this is correct, go to the following link to confirm the change: {{{verify.url}}}\n\nOtherwise, you can safely ignore and delete this email if you have changed your mind, or if you think you have received this email in error.", 'buddyboss' ),
 		),
 		'groups-membership-request-accepted' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" accepted', 'buddypress' ),
+			'post_title'   => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" accepted', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been accepted.", 'buddypress' ),
+			'post_content' => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been accepted.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "Your membership request for the group \"{{group.name}}\" has been accepted.\n\nTo view the group, visit: {{{group.url}}}", 'buddypress' ),
+			'post_excerpt' => __( "Your membership request for the group \"{{group.name}}\" has been accepted.\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
 		),
 		'groups-membership-request-rejected' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" rejected', 'buddypress' ),
+			'post_title'   => __( '[{{{site.name}}}] Membership request for group "{{group.name}}" rejected', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been rejected.", 'buddypress' ),
+			'post_content' => __( "Your membership request for the group &quot;<a href=\"{{{group.url}}}\">{{group.name}}</a>&quot; has been rejected.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "Your membership request for the group \"{{group.name}}\" has been rejected.\n\nTo request membership again, visit: {{{group.url}}}", 'buddypress' ),
+			'post_excerpt' => __( "Your membership request for the group \"{{group.name}}\" has been rejected.\n\nTo request membership again, visit: {{{group.url}}}", 'buddyboss' ),
 		),
 	);
 }
@@ -3503,121 +3503,121 @@ function bp_email_get_schema() {
  */
 function bp_email_get_type_schema( $field = 'description' ) {
 	$activity_comment = array(
-		'description'	=> __( 'A member has replied to an activity update that the recipient posted.', 'buddypress' ),
+		'description'	=> __( 'A member has replied to an activity update that the recipient posted.', 'buddyboss' ),
 		'unsubscribe'	=> array(
 			'meta_key'	=> 'notification_activity_new_reply',
-			'message'	=> __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddypress' ),
+			'message'	=> __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
 			),
 	);
 
 	$activity_comment_author = array(
-		'description'	=> __( 'A member has replied to a comment on an activity update that the recipient posted.', 'buddypress' ),
+		'description'	=> __( 'A member has replied to a comment on an activity update that the recipient posted.', 'buddyboss' ),
 		'unsubscribe'	=> array(
 			'meta_key'	=> 'notification_activity_new_reply',
-			'message'	=> __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddypress' ),
+			'message'	=> __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
 			),
 	);
 
 	$activity_at_message = array(
-		'description'	=> __( 'Recipient was mentioned in an activity update.', 'buddypress' ),
+		'description'	=> __( 'Recipient was mentioned in an activity update.', 'buddyboss' ),
 		'unsubscribe'	=> array(
 			'meta_key'	=> 'notification_activity_new_mention',
-			'message'	=> __( 'You will no longer receive emails when someone mentions you in an update.', 'buddypress' ),
+			'message'	=> __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
 		),
 	);
 
 	$groups_at_message = array(
-		'description'	=> __( 'Recipient was mentioned in a group activity update.', 'buddypress' ),
+		'description'	=> __( 'Recipient was mentioned in a group activity update.', 'buddyboss' ),
 		'unsubscribe'	=> array(
 			'meta_key'	=> 'notification_activity_new_mention',
-			'message'	=> __( 'You will no longer receive emails when someone mentions you in an update.', 'buddypress' ),
+			'message'	=> __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
 		),
 	);
 
 	$core_user_registration = array(
-		'description'	=> __( 'Recipient has registered for an account.', 'buddypress' ),
+		'description'	=> __( 'Recipient has registered for an account.', 'buddyboss' ),
 		'unsubscribe'	=> false,
 	);
 
 	$core_user_registration_with_blog = array(
-		'description'	=> __( 'Recipient has registered for an account and site.', 'buddypress' ),
+		'description'	=> __( 'Recipient has registered for an account and site.', 'buddyboss' ),
 		'unsubscribe'	=> false,
 	);
 
 	$friends_request = array(
-		'description'	=> __( 'A member has sent a friend request to the recipient.', 'buddypress' ),
+		'description'	=> __( 'A member has sent a friend request to the recipient.', 'buddyboss' ),
 		'unsubscribe'	=> array(
 			'meta_key'	=> 'notification_friends_friendship_request',
-			'message'	=> __( 'You will no longer receive emails when someone sends you a friend request.', 'buddypress' ),
+			'message'	=> __( 'You will no longer receive emails when someone sends you a friend request.', 'buddyboss' ),
 		),
 	);
 
 	$friends_request_accepted = array(
-		'description'	=> __( 'Recipient has had a friend request accepted by a member.', 'buddypress' ),
+		'description'	=> __( 'Recipient has had a friend request accepted by a member.', 'buddyboss' ),
 		'unsubscribe'	=> array(
 			'meta_key'	=> 'notification_friends_friendship_accepted',
-			'message'	=> __( 'You will no longer receive emails when someone accepts your friendship request.', 'buddypress' ),
+			'message'	=> __( 'You will no longer receive emails when someone accepts your friendship request.', 'buddyboss' ),
 		),
 	);
 
 	$groups_details_updated = array(
-		'description'	=> __( "A group's details were updated.", 'buddypress' ),
+		'description'	=> __( "A group's details were updated.", 'buddyboss' ),
 		'unsubscribe'	=> array(
 			'meta_key'	=> 'notification_groups_group_updated',
-			'message'	=> __( 'You will no longer receive emails when one of your groups is updated.', 'buddypress' ),
+			'message'	=> __( 'You will no longer receive emails when one of your groups is updated.', 'buddyboss' ),
 		),
 	);
 
 	$groups_invitation = array(
-		'description'	=> __( 'A member has sent a group invitation to the recipient.', 'buddypress' ),
+		'description'	=> __( 'A member has sent a group invitation to the recipient.', 'buddyboss' ),
 		'unsubscribe'	=> array(
 			'meta_key'	=> 'notification_groups_invite',
-			'message'	=> __( 'You will no longer receive emails when you are invited to join a group.', 'buddypress' ),
+			'message'	=> __( 'You will no longer receive emails when you are invited to join a group.', 'buddyboss' ),
 		),
 	);
 
 	$groups_member_promoted = array(
-		'description'	=> __( "Recipient's status within a group has changed.", 'buddypress' ),
+		'description'	=> __( "Recipient's status within a group has changed.", 'buddyboss' ),
 		'unsubscribe'	=> array(
 			'meta_key'	=> 'notification_groups_admin_promotion',
-			'message'	=> __( 'You will no longer receive emails when you have been promoted in a group.', 'buddypress' ),
+			'message'	=> __( 'You will no longer receive emails when you have been promoted in a group.', 'buddyboss' ),
 		),
 	);
 
 	$groups_membership_request = array(
-		'description'	=> __( 'A member has requested permission to join a group.', 'buddypress' ),
+		'description'	=> __( 'A member has requested permission to join a group.', 'buddyboss' ),
 		'unsubscribe'	=> array(
 			'meta_key'	=> 'notification_groups_membership_request',
-			'message'	=> __( 'You will no longer receive emails when someone requests to be a member of your group.', 'buddypress' ),
+			'message'	=> __( 'You will no longer receive emails when someone requests to be a member of your group.', 'buddyboss' ),
 		),
 	);
 
 	$messages_unread = array(
-		'description'	=> __( 'Recipient has received a private message.', 'buddypress' ),
+		'description'	=> __( 'Recipient has received a private message.', 'buddyboss' ),
 		'unsubscribe'	=> array(
 			'meta_key'	=> 'notification_messages_new_message',
-			'message'	=> __( 'You will no longer receive emails when someone sends you a message.', 'buddypress' ),
+			'message'	=> __( 'You will no longer receive emails when someone sends you a message.', 'buddyboss' ),
 		),
 	);
 
 	$settings_verify_email_change = array(
-		'description'	=> __( 'Recipient has changed their email address.', 'buddypress' ),
+		'description'	=> __( 'Recipient has changed their email address.', 'buddyboss' ),
 		'unsubscribe'	=> false,
 	);
 
 	$groups_membership_request_accepted = array(
-		'description'	=> __( 'Recipient had requested to join a group, which was accepted.', 'buddypress' ),
+		'description'	=> __( 'Recipient had requested to join a group, which was accepted.', 'buddyboss' ),
 		'unsubscribe'	=> array(
 			'meta_key'	=> 'notification_membership_request_completed',
-			'message'	=> __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddypress' ),
+			'message'	=> __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
 		),
 	);
 
 	$groups_membership_request_rejected = array(
-		'description'	=> __( 'Recipient had requested to join a group, which was rejected.', 'buddypress' ),
+		'description'	=> __( 'Recipient had requested to join a group, which was rejected.', 'buddyboss' ),
 		'unsubscribe'	=> array(
 			'meta_key'	=> 'notification_membership_request_completed',
-			'message'	=> __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddypress' ),
+			'message'	=> __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
 		),
 	);
 
@@ -3662,19 +3662,19 @@ function bp_email_unsubscribe_handler() {
 	// Check required values.
 	if ( ! $raw_user_id || ! $raw_email_type || ! $raw_hash || ! array_key_exists( $raw_email_type, $emails ) ) {
 		$redirect_to = wp_login_url();
-		$result_msg  = __( 'Something has gone wrong.', 'buddypress' );
-		$unsub_msg   = __( 'Please log in and go to your settings to unsubscribe from notification emails.', 'buddypress' );
+		$result_msg  = __( 'Something has gone wrong.', 'buddyboss' );
+		$unsub_msg   = __( 'Please log in and go to your settings to unsubscribe from notification emails.', 'buddyboss' );
 
 	// Check valid hash.
 	} elseif ( ! hash_equals( $new_hash, $raw_hash ) ) {
 		$redirect_to = wp_login_url();
-		$result_msg  = __( 'Something has gone wrong.', 'buddypress' );
-		$unsub_msg   = __( 'Please log in and go to your settings to unsubscribe from notification emails.', 'buddypress' );
+		$result_msg  = __( 'Something has gone wrong.', 'buddyboss' );
+		$unsub_msg   = __( 'Please log in and go to your settings to unsubscribe from notification emails.', 'buddyboss' );
 
 	// Don't let authenticated users unsubscribe other users' email notifications.
 	} elseif ( is_user_logged_in() && get_current_user_id() !== $raw_user_id ) {
-		$result_msg  = __( 'Something has gone wrong.', 'buddypress' );
-		$unsub_msg   = __( 'Please go to your notifications settings to unsubscribe from emails.', 'buddypress' );
+		$result_msg  = __( 'Something has gone wrong.', 'buddyboss' );
+		$unsub_msg   = __( 'Please go to your notifications settings to unsubscribe from emails.', 'buddyboss' );
 
 		if ( bp_is_active( 'settings' ) ) {
 			$redirect_to = sprintf(
@@ -3702,7 +3702,7 @@ function bp_email_unsubscribe_handler() {
 		bp_update_user_meta( $raw_user_id, $meta_key, 'no' );
 
 		$result_msg = $emails[ $raw_email_type ]['unsubscribe']['message'];
-		$unsub_msg  = __( 'You can change this or any other email notification preferences in your email settings.', 'buddypress' );
+		$unsub_msg  = __( 'You can change this or any other email notification preferences in your email settings.', 'buddyboss' );
 	}
 
 	$message = sprintf(

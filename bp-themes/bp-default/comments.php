@@ -9,8 +9,8 @@
 		return;
 
 	if ( post_password_required() ) {
-		echo '<h3 class="comments-header">' . __( 'Password Protected', 'buddypress' ) . '</h3>';
-		echo '<p class="alert password-protected">' . __( 'Enter the password to view comments.', 'buddypress' ) . '</p>';
+		echo '<h3 class="comments-header">' . __( 'Password Protected', 'buddyboss' ) . '</h3>';
+		echo '<p class="alert password-protected">' . __( 'Enter the password to view comments.', 'buddyboss' ) . '</p>';
 		return;
 	}
 
@@ -28,7 +28,7 @@
 	<div id="comments">
 
 		<h3>
-			<?php printf( _n( '1 response to %2$s', '%1$s responses to %2$s', $num_comments, 'buddypress' ), number_format_i18n( $num_comments ), '<em>' . get_the_title() . '</em>' ); ?>
+			<?php printf( _n( '1 response to %2$s', '%1$s responses to %2$s', $num_comments, 'buddyboss' ), number_format_i18n( $num_comments ), '<em>' . get_the_title() . '</em>' ); ?>
 		</h3>
 
 		<?php do_action( 'bp_before_blog_comment_list' ); ?>
@@ -52,11 +52,11 @@
 	<?php if ( ! comments_open() ) : ?>
 		<?php if ( pings_open() ) : ?>
 			<p class="comments-closed pings-open">
-				<?php printf( __( 'Comments are closed, but <a href="%1$s" title="Trackback URL for this post">trackbacks</a> and pingbacks are open.', 'buddypress' ), get_trackback_url() ); ?>
+				<?php printf( __( 'Comments are closed, but <a href="%1$s" title="Trackback URL for this post">trackbacks</a> and pingbacks are open.', 'buddyboss' ), get_trackback_url() ); ?>
 			</p>
 		<?php else : ?>
 			<p class="comments-closed">
-				<?php _e( 'Comments are closed.', 'buddypress' ); ?>
+				<?php _e( 'Comments are closed.', 'buddyboss' ); ?>
 			</p>
 		<?php endif; ?>
 	<?php endif; ?>
@@ -67,7 +67,7 @@
 
 <?php if ( !empty( $num_trackbacks ) ) : ?>
 	<div id="trackbacks">
-		<h3><?php printf( _n( '1 trackback', '%d trackbacks', $num_trackbacks, 'buddypress' ), number_format_i18n( $num_trackbacks ) ); ?></h3>
+		<h3><?php printf( _n( '1 trackback', '%d trackbacks', $num_trackbacks, 'buddyboss' ), number_format_i18n( $num_trackbacks ) ); ?></h3>
 
 		<ul id="trackbacklist">
 			<?php foreach ( (array) $comments as $comment ) : ?>

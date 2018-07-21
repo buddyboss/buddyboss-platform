@@ -16,7 +16,7 @@ else : ?>
 			<?php if ( is_user_logged_in() ) : ?>
 
 				<li>
-					<a href="#post-new" class="show-hide-new"><?php _e( 'New Topic', 'buddypress' ); ?></a>
+					<a href="#post-new" class="show-hide-new"><?php _e( 'New Topic', 'buddyboss' ); ?></a>
 				</li>
 
 			<?php endif; ?>
@@ -33,11 +33,11 @@ else : ?>
 
 			<li id="forums-order-select" class="last filter">
 
-				<label for="forums-order-by"><?php _e( 'Order By:', 'buddypress' ); ?></label>
+				<label for="forums-order-by"><?php _e( 'Order By:', 'buddyboss' ); ?></label>
 				<select id="forums-order-by">
-					<option value="active"><?php _e( 'Last Active', 'buddypress' ); ?></option>
-					<option value="popular"><?php _e( 'Most Posts', 'buddypress' ); ?></option>
-					<option value="unreplied"><?php _e( 'Unreplied', 'buddypress' ); ?></option>
+					<option value="active"><?php _e( 'Last Active', 'buddyboss' ); ?></option>
+					<option value="popular"><?php _e( 'Most Posts', 'buddyboss' ); ?></option>
+					<option value="unreplied"><?php _e( 'Unreplied', 'buddyboss' ); ?></option>
 
 					<?php do_action( 'bp_forums_directory_order_options' ); ?>
 
@@ -66,25 +66,25 @@ else : ?>
 				<?php do_action( 'bp_before_group_forum_post_new' ); ?>
 
 				<?php if ( bp_groups_auto_join() && !bp_group_is_member() ) : ?>
-					<p><?php _e( 'You will auto join this group when you start a new topic.', 'buddypress' ); ?></p>
+					<p><?php _e( 'You will auto join this group when you start a new topic.', 'buddyboss' ); ?></p>
 				<?php endif; ?>
 
 				<p id="post-new"></p>
-				<h4><?php _e( 'Post a New Topic:', 'buddypress' ); ?></h4>
+				<h4><?php _e( 'Post a New Topic:', 'buddyboss' ); ?></h4>
 
-				<label><?php _e( 'Title:', 'buddypress' ); ?></label>
+				<label><?php _e( 'Title:', 'buddyboss' ); ?></label>
 				<input type="text" name="topic_title" id="topic_title" value="" maxlength="100" />
 
-				<label><?php _e( 'Content:', 'buddypress' ); ?></label>
+				<label><?php _e( 'Content:', 'buddyboss' ); ?></label>
 				<textarea name="topic_text" id="topic_text"></textarea>
 
-				<label><?php _e( 'Tags (comma separated):', 'buddypress' ); ?></label>
+				<label><?php _e( 'Tags (comma separated):', 'buddyboss' ); ?></label>
 				<input type="text" name="topic_tags" id="topic_tags" value="" />
 
 				<?php do_action( 'bp_after_group_forum_post_new' ); ?>
 
 				<div class="submit">
-					<input type="submit" name="submit_topic" id="submit" value="<?php esc_attr_e( 'Post Topic', 'buddypress' ); ?>" />
+					<input type="submit" name="submit_topic" id="submit" value="<?php esc_attr_e( 'Post Topic', 'buddyboss' ); ?>" />
 				</div>
 
 				<?php wp_nonce_field( 'bp_forums_new_topic' ); ?>

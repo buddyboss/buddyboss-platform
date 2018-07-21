@@ -50,7 +50,7 @@ function bp_nouveau_notifications_filters() {
 			$output = sprintf( '<option value="%1$s" %2$s>%3$s</option>',
 				0,
 				selected( $selected, 0, false ),
-				esc_html__( '&mdash; Everything &mdash;', 'buddypress' )
+				esc_html__( '&mdash; Everything &mdash;', 'buddyboss' )
 			) . "\n" . $output;
 		}
 
@@ -82,8 +82,8 @@ function bp_nouveau_notifications_sort_order_links() {
 	?>
 
 	<span class="notifications-order-actions">
-		<a href="<?php echo esc_url( $desc ); ?>" class="bp-tooltip" data-bp-tooltip="<?php esc_attr_e( 'Newest First', 'buddypress' ); ?>" aria-label="<?php esc_attr_e( 'Newest First', 'buddypress' ); ?>" data-bp-notifications-order="DESC"><span class="dashicons dashicons-arrow-down" aria-hidden="true"></span></a>
-		<a href="<?php echo esc_url( $asc ); ?>" class="bp-tooltip" data-bp-tooltip="<?php esc_attr_e( 'Oldest First', 'buddypress' ); ?>" aria-label="<?php esc_attr_e( 'Oldest First', 'buddypress' ); ?>" data-bp-notifications-order="ASC"><span class="dashicons dashicons-arrow-up" aria-hidden="true"></span></a>
+		<a href="<?php echo esc_url( $desc ); ?>" class="bp-tooltip" data-bp-tooltip="<?php esc_attr_e( 'Newest First', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Newest First', 'buddyboss' ); ?>" data-bp-notifications-order="DESC"><span class="dashicons dashicons-arrow-down" aria-hidden="true"></span></a>
+		<a href="<?php echo esc_url( $asc ); ?>" class="bp-tooltip" data-bp-tooltip="<?php esc_attr_e( 'Oldest First', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Oldest First', 'buddyboss' ); ?>" data-bp-notifications-order="ASC"><span class="dashicons dashicons-arrow-up" aria-hidden="true"></span></a>
 	</span>
 
 	<?php
@@ -100,24 +100,24 @@ function bp_nouveau_notifications_bulk_management_dropdown() {
 	<div class="select-wrap">
 
 		<label class="bp-screen-reader-text" for="notification-select"><?php
-			esc_html_e( 'Select Bulk Action', 'buddypress' );
+			esc_html_e( 'Select Bulk Action', 'buddyboss' );
 		?></label>
 
 		<select name="notification_bulk_action" id="notification-select">
-			<option value="" selected="selected"><?php echo esc_html( 'Bulk Actions', 'buddypress' ); ?></option>
+			<option value="" selected="selected"><?php echo esc_html( 'Bulk Actions', 'buddyboss' ); ?></option>
 
 			<?php if ( bp_is_current_action( 'unread' ) ) : ?>
-				<option value="read"><?php echo esc_html_x( 'Mark read', 'button', 'buddypress' ); ?></option>
+				<option value="read"><?php echo esc_html_x( 'Mark read', 'button', 'buddyboss' ); ?></option>
 			<?php elseif ( bp_is_current_action( 'read' ) ) : ?>
-				<option value="unread"><?php echo esc_html_x( 'Mark unread', 'button', 'buddypress' ); ?></option>
+				<option value="unread"><?php echo esc_html_x( 'Mark unread', 'button', 'buddyboss' ); ?></option>
 			<?php endif; ?>
-			<option value="delete"><?php echo esc_html_x( 'Delete', 'button', 'buddypress' ); ?></option>
+			<option value="delete"><?php echo esc_html_x( 'Delete', 'button', 'buddyboss' ); ?></option>
 		</select>
 
 		<span class="select-arrow"></span>
 
 	</div><!-- // .select-wrap -->
 
-	<input type="submit" id="notification-bulk-manage" class="button action" value="<?php echo esc_attr_x( 'Apply', 'button', 'buddypress' ); ?>">
+	<input type="submit" id="notification-bulk-manage" class="button action" value="<?php echo esc_attr_x( 'Apply', 'button', 'buddyboss' ); ?>">
 	<?php
 }

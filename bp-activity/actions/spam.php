@@ -56,7 +56,7 @@ function bp_activity_action_spam_activity( $activity_id = 0 ) {
 	$activity->save();
 
 	// Tell the user the spamming has been successful.
-	bp_core_add_message( __( 'The activity item has been marked as spam and is no longer visible.', 'buddypress' ) );
+	bp_core_add_message( __( 'The activity item has been marked as spam and is no longer visible.', 'buddyboss' ) );
 
 	/**
 	 * Fires after the marking activity as spam so plugins can act afterwards based on the activity.

@@ -38,7 +38,7 @@ function bp_members_admin_bar_my_account_menu() {
 		$wp_admin_bar->add_menu( array(
 			'id'     => $bp->my_account_menu_id,
 			'group'  => true,
-			'title'  => __( 'Edit My Profile', 'buddypress' ),
+			'title'  => __( 'Edit My Profile', 'buddyboss' ),
 			'href'   => bp_loggedin_user_domain(),
 			'meta'   => array(
 			'class'  => 'ab-sub-secondary'
@@ -52,7 +52,7 @@ function bp_members_admin_bar_my_account_menu() {
 		// Create the main 'My Account' menu.
 		$wp_admin_bar->add_menu( array(
 			'id'    => 'bp-login',
-			'title' => __( 'Log in', 'buddypress' ),
+			'title' => __( 'Log in', 'buddyboss' ),
 			'href'  => wp_login_url( bp_get_requested_url() )
 		) );
 
@@ -60,7 +60,7 @@ function bp_members_admin_bar_my_account_menu() {
 		if ( bp_get_signup_allowed() ) {
 			$wp_admin_bar->add_menu( array(
 				'id'    => 'bp-register',
-				'title' => __( 'Register', 'buddypress' ),
+				'title' => __( 'Register', 'buddyboss' ),
 				'href'  => bp_get_signup_page()
 			) );
 		}
@@ -92,7 +92,7 @@ function bp_members_admin_bar_user_admin_menu() {
 	// Add the top-level User Admin button.
 	$wp_admin_bar->add_menu( array(
 		'id'    => $bp->user_admin_menu_id,
-		'title' => __( 'Edit Member', 'buddypress' ),
+		'title' => __( 'Edit Member', 'buddyboss' ),
 		'href'  => bp_displayed_user_domain()
 	) );
 
@@ -101,7 +101,7 @@ function bp_members_admin_bar_user_admin_menu() {
 		$wp_admin_bar->add_menu( array(
 			'parent' => $bp->user_admin_menu_id,
 			'id'     => $bp->user_admin_menu_id . '-edit-profile',
-			'title'  => __( "Edit Profile", 'buddypress' ),
+			'title'  => __( "Edit Profile", 'buddyboss' ),
 			'href'   => bp_get_members_component_link( 'profile', 'edit' )
 		) );
 
@@ -110,7 +110,7 @@ function bp_members_admin_bar_user_admin_menu() {
 			$wp_admin_bar->add_menu( array(
 				'parent' => $bp->user_admin_menu_id,
 				'id'     => $bp->user_admin_menu_id . '-change-avatar',
-				'title'  => __( "Edit Profile Photo", 'buddypress' ),
+				'title'  => __( "Edit Profile Photo", 'buddyboss' ),
 				'href'   => bp_get_members_component_link( 'profile', 'change-avatar' )
 			) );
 		}
@@ -120,7 +120,7 @@ function bp_members_admin_bar_user_admin_menu() {
 			$wp_admin_bar->add_menu( array(
 				'parent' => $bp->user_admin_menu_id,
 				'id'     => $bp->user_admin_menu_id . '-change-cover-image',
-				'title'  => __( 'Edit Cover Image', 'buddypress' ),
+				'title'  => __( 'Edit Cover Image', 'buddyboss' ),
 				'href'   => bp_get_members_component_link( 'profile', 'change-cover-image' )
 			) );
 		}
@@ -132,7 +132,7 @@ function bp_members_admin_bar_user_admin_menu() {
 		$wp_admin_bar->add_menu( array(
 			'parent' => $bp->user_admin_menu_id,
 			'id'     => $bp->user_admin_menu_id . '-user-capabilities',
-			'title'  => __( 'User Capabilities', 'buddypress' ),
+			'title'  => __( 'User Capabilities', 'buddyboss' ),
 			'href'   => bp_displayed_user_domain() . 'settings/capabilities/'
 		) );
 
@@ -140,7 +140,7 @@ function bp_members_admin_bar_user_admin_menu() {
 		$wp_admin_bar->add_menu( array(
 			'parent' => $bp->user_admin_menu_id,
 			'id'     => $bp->user_admin_menu_id . '-delete-user',
-			'title'  => __( 'Delete Account', 'buddypress' ),
+			'title'  => __( 'Delete Account', 'buddyboss' ),
 			'href'   => bp_displayed_user_domain() . 'settings/delete-account/'
 		) );
 

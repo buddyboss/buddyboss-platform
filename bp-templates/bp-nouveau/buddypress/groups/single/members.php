@@ -17,7 +17,7 @@
 </div>
 
 <h2 class="bp-screen-title">
-	<?php esc_html_e( 'Membership List', 'buddypress' ); ?>
+	<?php esc_html_e( 'Membership List', 'buddyboss' ); ?>
 </h2>
 
 

@@ -15,7 +15,7 @@
 			</a>
 
 			<h4><?php echo bp_core_get_userlink( bp_loggedin_user_id() ); ?></h4>
-			<a class="button logout" href="<?php echo wp_logout_url( wp_guess_url() ); ?>"><?php _e( 'Log Out', 'buddypress' ); ?></a>
+			<a class="button logout" href="<?php echo wp_logout_url( wp_guess_url() ); ?>"><?php _e( 'Log Out', 'buddyboss' ); ?></a>
 
 			<?php do_action( 'bp_sidebar_me' ); ?>
 		</div>
@@ -34,22 +34,22 @@
 		
 			<p id="login-text">
 
-				<?php printf( __( 'Please <a href="%s" title="Create an account">create an account</a> to get started.', 'buddypress' ), bp_get_signup_page() ); ?>
+				<?php printf( __( 'Please <a href="%s" title="Create an account">create an account</a> to get started.', 'buddyboss' ), bp_get_signup_page() ); ?>
 
 			</p>
 
 		<?php endif; ?>
 
 		<form name="login-form" id="sidebar-login-form" class="standard-form" action="<?php echo site_url( 'wp-login.php', 'login_post' ); ?>" method="post">
-			<label><?php _e( 'Username', 'buddypress' ); ?><br />
+			<label><?php _e( 'Username', 'buddyboss' ); ?><br />
 			<input type="text" name="log" id="sidebar-user-login" class="input" value="<?php if ( isset( $user_login) ) echo esc_attr(stripslashes($user_login)); ?>" tabindex="97" /></label>
 
-			<label><?php _e( 'Password', 'buddypress' ); ?><br />
+			<label><?php _e( 'Password', 'buddyboss' ); ?><br />
 			<input type="password" name="pwd" id="sidebar-user-pass" class="input" value="" tabindex="98" /></label>
 
-			<p class="forgetmenot"><label><input name="rememberme" type="checkbox" id="sidebar-rememberme" value="forever" tabindex="99" /> <?php _e( 'Remember Me', 'buddypress' ); ?></label></p>
+			<p class="forgetmenot"><label><input name="rememberme" type="checkbox" id="sidebar-rememberme" value="forever" tabindex="99" /> <?php _e( 'Remember Me', 'buddyboss' ); ?></label></p>
 
-			<input type="submit" name="wp-submit" id="sidebar-wp-submit" value="<?php esc_attr_e( 'Log In', 'buddypress' ); ?>" tabindex="100" />
+			<input type="submit" name="wp-submit" id="sidebar-wp-submit" value="<?php esc_attr_e( 'Log In', 'buddyboss' ); ?>" tabindex="100" />
 
 			<?php do_action( 'bp_sidebar_login_form' ); ?>
 
@@ -62,7 +62,7 @@
 	<?php /* Show forum tags on the forums directory */
 	if ( bp_is_active( 'forums' ) && bp_is_forums_component() && bp_is_directory() ) : ?>
 		<div id="forum-directory-tags" class="widget tags">
-			<h3 class="widgettitle"><?php _e( 'Forum Topic Tags', 'buddypress' ); ?></h3>
+			<h3 class="widgettitle"><?php _e( 'Forum Topic Tags', 'buddyboss' ); ?></h3>
 			<div id="tag-text"><?php bp_forums_tag_heat_map(); ?></div>
 		</div>
 	<?php endif; ?>

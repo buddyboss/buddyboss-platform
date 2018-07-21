@@ -420,11 +420,11 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 *
 	 * @param string $value Internationalized "Read more" text.
 	 */
-	$append_text    = apply_filters( 'bp_activity_excerpt_append_text', __( '[Read more]', 'buddypress' ) );
+	$append_text    = apply_filters( 'bp_activity_excerpt_append_text', __( '[Read more]', 'buddyboss' ) );
 
 	$excerpt_length = bp_activity_get_excerpt_length();
 
-	$args = wp_parse_args( $args, array( 'ending' => __( '&hellip;', 'buddypress' ) ) );
+	$args = wp_parse_args( $args, array( 'ending' => __( '&hellip;', 'buddyboss' ) ) );
 
 	// Run the text through the excerpt function. If it's too short, the original text will be returned.
 	$excerpt        = bp_create_excerpt( $text, $excerpt_length, $args );
@@ -630,7 +630,7 @@ function bp_activity_heartbeat_strings( $strings = array() ) {
 	}
 
 	$strings = array_merge( $strings, array(
-		'newest' => __( 'Load Newest', 'buddypress' ),
+		'newest' => __( 'Load Newest', 'buddyboss' ),
 		'pulse'  => absint( $pulse ),
 	) );
 

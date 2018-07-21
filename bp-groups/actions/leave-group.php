@@ -38,11 +38,11 @@ function groups_action_leave_group() {
 		$group_admins = groups_get_group_admins( bp_get_current_group_id() );
 
 		if ( 1 == count( $group_admins ) && $group_admins[0]->user_id == bp_loggedin_user_id() ) {
-			bp_core_add_message( __( 'This group must have at least one admin', 'buddypress' ), 'error' );
+			bp_core_add_message( __( 'This group must have at least one admin', 'buddyboss' ), 'error' );
 		} elseif ( ! groups_leave_group( $bp->groups->current_group->id ) ) {
-			bp_core_add_message( __( 'There was an error leaving the group.', 'buddypress' ), 'error' );
+			bp_core_add_message( __( 'There was an error leaving the group.', 'buddyboss' ), 'error' );
 		} else {
-			bp_core_add_message( __( 'You successfully left the group.', 'buddypress' ) );
+			bp_core_add_message( __( 'You successfully left the group.', 'buddyboss' ) );
 		}
 
 		$group = groups_get_current_group();

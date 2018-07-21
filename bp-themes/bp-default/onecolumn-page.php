@@ -26,10 +26,10 @@ get_header(); ?>
 
 					<div class="entry">
 
-						<?php the_content( __( '<p class="serif">Read the rest of this page &rarr;</p>', 'buddypress' ) ); ?>
+						<?php the_content( __( '<p class="serif">Read the rest of this page &rarr;</p>', 'buddyboss' ) ); ?>
 
-						<?php wp_link_pages( array( 'before' => '<div class="page-link"><p>' . __( 'Pages: ', 'buddypress' ), 'after' => '</p></div>', 'next_or_number' => 'number' ) ); ?>
-						<?php edit_post_link( __( 'Edit this page.', 'buddypress' ), '<p class="edit-link">', '</p>'); ?>
+						<?php wp_link_pages( array( 'before' => '<div class="page-link"><p>' . __( 'Pages: ', 'buddyboss' ), 'after' => '</p></div>', 'next_or_number' => 'number' ) ); ?>
+						<?php edit_post_link( __( 'Edit this page.', 'buddyboss' ), '<p class="edit-link">', '</p>'); ?>
 
 					</div>
 

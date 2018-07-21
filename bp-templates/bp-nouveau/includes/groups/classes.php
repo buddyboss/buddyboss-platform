@@ -226,26 +226,26 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 	protected function setup_nav() {
 		$nav_items = array(
 			'root'    => array(
-				'name'                => __( 'Memberships', 'buddypress' ),
+				'name'                => __( 'Memberships', 'buddyboss' ),
 				'slug'                => $this->group->slug,
 				'position'            => -1,
 				/** This filter is documented in bp-groups/classes/class-bp-groups-component.php. */
 				'default_subnav_slug' => apply_filters( 'bp_groups_default_extension', defined( 'BP_GROUPS_DEFAULT_EXTENSION' ) ? BP_GROUPS_DEFAULT_EXTENSION : 'home' ),
 			),
 			'home'    => array(
-				'name'        => _x( 'Home', 'Group screen navigation title', 'buddypress' ),
+				'name'        => _x( 'Home', 'Group screen navigation title', 'buddyboss' ),
 				'slug'        => 'home',
 				'parent_slug' => $this->group->slug,
 				'position'    => 10,
 			),
 			'invites' => array(
-				'name'        => _x( 'Invite', 'My Group screen nav', 'buddypress' ),
+				'name'        => _x( 'Invite', 'My Group screen nav', 'buddyboss' ),
 				'slug'        => 'send-invites',
 				'parent_slug' => $this->group->slug,
 				'position'    => 70,
 			),
 			'manage'  => array(
-				'name'        => _x( 'Manage', 'My Group screen nav', 'buddypress' ),
+				'name'        => _x( 'Manage', 'My Group screen nav', 'buddyboss' ),
 				'slug'        => 'admin',
 				'parent_slug' => $this->group->slug,
 				'position'    => 1000,
@@ -261,14 +261,14 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 
 		if ( ! $front_template ) {
 			if ( bp_is_active( 'activity' ) ) {
-				$nav_items['home']['name'] = _x( 'Home (Activity)', 'Group screen navigation title', 'buddypress' );
+				$nav_items['home']['name'] = _x( 'Home (Activity)', 'Group screen navigation title', 'buddyboss' );
 			} else {
-				$nav_items['home']['name'] = _x( 'Home (Members)', 'Group screen navigation title', 'buddypress' );
+				$nav_items['home']['name'] = _x( 'Home (Members)', 'Group screen navigation title', 'buddyboss' );
 			}
 		} else {
 			if ( bp_is_active( 'activity' ) ) {
 				$nav_items['activity'] = array(
-					'name'        => _x( 'Activity', 'My Group screen nav', 'buddypress' ),
+					'name'        => _x( 'Activity', 'My Group screen nav', 'buddyboss' ),
 					'slug'        => 'activity',
 					'parent_slug' => $this->group->slug,
 					'position'    => 11,
@@ -277,7 +277,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 
 			// Add the members one
 			$nav_items['members'] = array(
-				'name'        => _x( 'Members', 'My Group screen nav', 'buddypress' ),
+				'name'        => _x( 'Members', 'My Group screen nav', 'buddyboss' ),
 				'slug'        => 'members',
 				'parent_slug' => $this->group->slug,
 				'position'    => 60,

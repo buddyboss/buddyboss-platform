@@ -62,7 +62,7 @@ function xprofile_screen_edit_profile() {
 
 		// There are errors.
 		if ( !empty( $errors ) ) {
-			bp_core_add_message( __( 'Your changes have not been saved. Please fill in all required fields, and save your changes again.', 'buddypress' ), 'error' );
+			bp_core_add_message( __( 'Your changes have not been saved. Please fill in all required fields, and save your changes again.', 'buddyboss' ), 'error' );
 
 		// No errors.
 		} else {
@@ -128,9 +128,9 @@ function xprofile_screen_edit_profile() {
 
 			// Set the feedback messages.
 			if ( !empty( $errors ) ) {
-				bp_core_add_message( __( 'There was a problem updating some of your profile information. Please try again.', 'buddypress' ), 'error' );
+				bp_core_add_message( __( 'There was a problem updating some of your profile information. Please try again.', 'buddyboss' ), 'error' );
 			} else {
-				bp_core_add_message( __( 'Changes saved.', 'buddypress' ) );
+				bp_core_add_message( __( 'Changes saved.', 'buddyboss' ) );
 			}
 
 			// Redirect back to the edit screen to display the updates and message.

@@ -21,17 +21,17 @@
 
 <script id="tmpl-bp-cover-image-delete" type="text/html">
 	<# if ( 'user' === data.object ) { #>
-		<p><?php esc_html_e( "If you'd like to delete your current cover image, use the delete Cover Image button.", 'buddypress' ); ?></p>
+		<p><?php esc_html_e( "If you'd like to delete your current cover image, use the delete Cover Image button.", 'buddyboss' ); ?></p>
 		<button type="button" class="button edit" id="bp-delete-cover-image">
 			<?php
-			echo esc_html_x( 'Delete My Cover Image', 'button', 'buddypress' );
+			echo esc_html_x( 'Delete My Cover Image', 'button', 'buddyboss' );
 			?>
 		</button>
 	<# } else if ( 'group' === data.object ) { #>
-		<p><?php esc_html_e( "If you'd like to remove the existing group cover image but not upload a new one, please use the delete group cover image button.", 'buddypress' ); ?></p>
+		<p><?php esc_html_e( "If you'd like to remove the existing group cover image but not upload a new one, please use the delete group cover image button.", 'buddyboss' ); ?></p>
 		<button type="button" class="button edit" id="bp-delete-cover-image">
 			<?php
-			echo esc_html_x( 'Delete Group Cover Image', 'button', 'buddypress' );
+			echo esc_html_x( 'Delete Group Cover Image', 'button', 'buddyboss' );
 			?>
 		</button>
 	<# } else { #>

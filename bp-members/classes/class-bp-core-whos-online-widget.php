@@ -23,8 +23,8 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 	 * @since 1.5.0
 	 */
 	public function __construct() {
-		$name        = _x( "(BuddyPress) Who's Online", 'widget name', 'buddypress' );
-		$description = __( 'Profile photos of online users', 'buddypress' );
+		$name        = _x( "(BuddyPress) Who's Online", 'widget name', 'buddyboss' );
+		$description = __( 'Profile photos of online users', 'buddyboss' );
 		parent::__construct( false, $name, array(
 			'description'                 => $description,
 			'classname'                   => 'widget_bp_core_whos_online_widget buddypress widget',
@@ -94,7 +94,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		<?php else: ?>
 
 			<div class="widget-error">
-				<?php esc_html_e( 'There are no users currently online', 'buddypress' ); ?>
+				<?php esc_html_e( 'There are no users currently online', 'buddyboss' ); ?>
 			</div>
 
 		<?php endif; ?>
@@ -139,14 +139,14 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>">
-				<?php esc_html_e( 'Title:', 'buddypress' ); ?>
+				<?php esc_html_e( 'Title:', 'buddyboss' ); ?>
 				<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" style="width: 100%" />
 			</label>
 		</p>
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'max_members' ); ?>">
-				<?php esc_html_e( 'Max members to show:', 'buddypress' ); ?>
+				<?php esc_html_e( 'Max members to show:', 'buddyboss' ); ?>
 				<input class="widefat" id="<?php echo $this->get_field_id( 'max_members' ); ?>" name="<?php echo $this->get_field_name( 'max_members' ); ?>" type="text" value="<?php echo esc_attr( $max_members ); ?>" style="width: 30%" />
 			</label>
 		</p>
@@ -165,7 +165,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 	 */
 	public function parse_settings( $instance = array() ) {
 		return bp_parse_args( $instance, array(
-			'title' 	     => __( "Who's Online", 'buddypress' ),
+			'title' 	     => __( "Who's Online", 'buddyboss' ),
 			'max_members' 	 => 15,
 		), 'members_widget_settings' );
 	}

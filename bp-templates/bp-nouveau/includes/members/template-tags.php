@@ -286,7 +286,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 						'component'         => 'friends',
 						'must_be_logged_in' => true,
 						'parent_element'    => $parent_element,
-						'link_text'         => _x( 'Accept', 'button', 'buddypress' ),
+						'link_text'         => _x( 'Accept', 'button', 'buddyboss' ),
 						'parent_attr'       => array(
 							'id'    => '',
 							'class' => $parent_class ,
@@ -302,7 +302,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 						'component'         => 'friends',
 						'must_be_logged_in' => true,
 						'parent_element'    => $parent_element,
-						'link_text'         => _x( 'Reject', 'button', 'buddypress' ),
+						'link_text'         => _x( 'Reject', 'button', 'buddyboss' ),
 						'parent_attr'       => array(
 							'id'    => '',
 							'class' => $parent_class,
@@ -690,7 +690,7 @@ function bp_nouveau_members_get_customizer_option_link() {
 		array(
 			'object'    => 'user',
 			'autofocus' => 'bp_nouveau_user_front_page',
-			'text'      => __( 'Members default front page', 'buddypress' ),
+			'text'      => __( 'Members default front page', 'buddyboss' ),
 		)
 	);
 }
@@ -708,7 +708,7 @@ function bp_nouveau_members_get_customizer_widgets_link() {
 		array(
 			'object'    => 'user',
 			'autofocus' => 'sidebar-widgets-sidebar-buddypress-members',
-			'text'      => __( '(BuddyPress) Widgets', 'buddypress' ),
+			'text'      => __( '(BuddyPress) Widgets', 'buddyboss' ),
 		)
 	);
 }
@@ -782,7 +782,7 @@ function bp_nouveau_member_description_edit_link() {
 		add_filter( 'edit_profile_url', 'bp_members_edit_profile_url', 10, 3 );
 		$link .= '#description';
 
-		return sprintf( '<a href="%1$s">%2$s</a>', esc_url( $link ), esc_html__( 'Edit your bio', 'buddypress' ) );
+		return sprintf( '<a href="%1$s">%2$s</a>', esc_url( $link ), esc_html__( 'Edit your bio', 'buddyboss' ) );
 	}
 
 

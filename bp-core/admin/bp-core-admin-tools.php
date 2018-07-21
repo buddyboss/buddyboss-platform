@@ -19,17 +19,17 @@ function bp_core_admin_tools() {
 	?>
 	<div class="wrap">
 
-		<h1><?php esc_html_e( 'BuddyPress Tools', 'buddypress' ) ?></h1>
+		<h1><?php esc_html_e( 'BuddyPress Tools', 'buddyboss' ) ?></h1>
 
-		<p><?php esc_html_e( 'BuddyPress keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration.', 'buddypress' ); ?></p>
-		<p><?php esc_html_e( 'Use the tools below to manually recalculate these relationships.', 'buddypress' ); ?>
+		<p><?php esc_html_e( 'BuddyPress keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration.', 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( 'Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?>
 		</p>
-		<p class="description"><?php esc_html_e( 'Some of these tools create substantial database overhead. Avoid running more than one repair job at a time.', 'buddypress' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Some of these tools create substantial database overhead. Avoid running more than one repair job at a time.', 'buddyboss' ); ?></p>
 
 		<form class="settings" method="post" action="">
 
 			<fieldset>
-				<legend><?php esc_html_e( 'Repair tools', 'buddypress' ) ?></legend>
+				<legend><?php esc_html_e( 'Repair tools', 'buddyboss' ) ?></legend>
 
 				<div class="checkbox">
 				<?php foreach ( bp_admin_repair_list() as $item ) : ?>
@@ -38,7 +38,7 @@ function bp_core_admin_tools() {
 				</div>
 
 				<p class="submit">
-					<input class="button-primary" type="submit" name="bp-tools-submit" value="<?php esc_attr_e( 'Repair Items', 'buddypress' ); ?>" />
+					<input class="button-primary" type="submit" name="bp-tools-submit" value="<?php esc_attr_e( 'Repair Items', 'buddyboss' ); ?>" />
 					<?php wp_nonce_field( 'bp-do-counts' ); ?>
 				</p>
 
@@ -99,13 +99,13 @@ function bp_admin_repair_list() {
 	// - last_activity migration (2.0).
 	$repair_list[20] = array(
 		'bp-total-member-count',
-		__( 'Repair total members count.', 'buddypress' ),
+		__( 'Repair total members count.', 'buddyboss' ),
 		'bp_admin_repair_count_members',
 	);
 
 	$repair_list[25] = array(
 		'bp-last-activity',
-		__( 'Repair member "last activity" data.', 'buddypress' ),
+		__( 'Repair member "last activity" data.', 'buddyboss' ),
 		'bp_admin_repair_last_activity',
 	);
 
@@ -114,7 +114,7 @@ function bp_admin_repair_list() {
 	if ( bp_is_active( 'friends' ) ) {
 		$repair_list[0] = array(
 			'bp-user-friends',
-			__( 'Repair total friends count for each member.', 'buddypress' ),
+			__( 'Repair total friends count for each member.', 'buddyboss' ),
 			'bp_admin_repair_friend_count',
 		);
 	}
@@ -124,7 +124,7 @@ function bp_admin_repair_list() {
 	if ( bp_is_active( 'groups' ) ) {
 		$repair_list[10] = array(
 			'bp-group-count',
-			__( 'Repair total groups count for each member.', 'buddypress' ),
+			__( 'Repair total groups count for each member.', 'buddyboss' ),
 			'bp_admin_repair_group_count',
 		);
 	}
@@ -134,7 +134,7 @@ function bp_admin_repair_list() {
 	if ( bp_is_active( 'blogs' ) ) {
 		$repair_list[90] = array(
 			'bp-blog-records',
-			__( 'Repopulate site tracking records.', 'buddypress' ),
+			__( 'Repopulate site tracking records.', 'buddyboss' ),
 			'bp_admin_repair_blog_records',
 		);
 	}
@@ -143,7 +143,7 @@ function bp_admin_repair_list() {
 	// - reinstall emails.
 	$repair_list[100] = array(
 		'bp-reinstall-emails',
-		__( 'Reinstall emails (delete and restore from defaults).', 'buddypress' ),
+		__( 'Reinstall emails (delete and restore from defaults).', 'buddyboss' ),
 		'bp_admin_reinstall_emails',
 	);
 
@@ -173,8 +173,8 @@ function bp_admin_repair_friend_count() {
 		return;
 	}
 
-	$statement = __( 'Counting the number of friends for each user&hellip; %s', 'buddypress' );
-	$result    = __( 'Failed!', 'buddypress' );
+	$statement = __( 'Counting the number of friends for each user&hellip; %s', 'buddyboss' );
+	$result    = __( 'Failed!', 'buddyboss' );
 
 	$sql_delete = "DELETE FROM {$wpdb->usermeta} WHERE meta_key IN ( 'total_friend_count' );";
 	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
@@ -214,7 +214,7 @@ function bp_admin_repair_friend_count() {
 		return array( 2, sprintf( $statement, $result ) );
 	}
 
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddypress' ) ) );
+	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
 /**
@@ -231,8 +231,8 @@ function bp_admin_repair_group_count() {
 		return;
 	}
 
-	$statement = __( 'Counting the number of groups for each user&hellip; %s', 'buddypress' );
-	$result    = __( 'Failed!', 'buddypress' );
+	$statement = __( 'Counting the number of groups for each user&hellip; %s', 'buddyboss' );
+	$result    = __( 'Failed!', 'buddyboss' );
 
 	$sql_delete = "DELETE FROM {$wpdb->usermeta} WHERE meta_key IN ( 'total_group_count' );";
 	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
@@ -261,7 +261,7 @@ function bp_admin_repair_group_count() {
 		return array( 2, sprintf( $statement, $result ) );
 	}
 
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddypress' ) ) );
+	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
 /**
@@ -274,7 +274,7 @@ function bp_admin_repair_group_count() {
 function bp_admin_repair_blog_records() {
 
 	// Description of this tool, displayed to the user.
-	$statement = __( 'Repopulating Blogs records&hellip; %s', 'buddypress' );
+	$statement = __( 'Repopulating Blogs records&hellip; %s', 'buddyboss' );
 
 	// Default to failure text.
 	$result    = __( 'Failed!',   'buddypress' );
@@ -289,7 +289,7 @@ function bp_admin_repair_blog_records() {
 
 	// Setup success/fail messaging.
 	if ( true === $repair ) {
-		$result = __( 'Complete!', 'buddypress' );
+		$result = __( 'Complete!', 'buddyboss' );
 	}
 
 	// All done!
@@ -302,10 +302,10 @@ function bp_admin_repair_blog_records() {
  * @since 2.0.0
  */
 function bp_admin_repair_count_members() {
-	$statement = __( 'Counting the number of active members on the site&hellip; %s', 'buddypress' );
+	$statement = __( 'Counting the number of active members on the site&hellip; %s', 'buddyboss' );
 	delete_transient( 'bp_active_member_count' );
 	bp_core_get_active_member_count();
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddypress' ) ) );
+	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
 /**
@@ -316,9 +316,9 @@ function bp_admin_repair_count_members() {
  * @since 2.0.0
  */
 function bp_admin_repair_last_activity() {
-	$statement = __( 'Determining last activity dates for each user&hellip; %s', 'buddypress' );
+	$statement = __( 'Determining last activity dates for each user&hellip; %s', 'buddyboss' );
 	bp_last_activity_migrate();
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddypress' ) ) );
+	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
 /**
@@ -375,7 +375,7 @@ function bp_admin_tools_feedback( $message, $class = false ) {
 function bp_core_admin_available_tools_page() {
 	?>
 	<div class="wrap">
-		<h1><?php esc_attr_e( 'Tools', 'buddypress' ) ?></h1>
+		<h1><?php esc_attr_e( 'Tools', 'buddyboss' ) ?></h1>
 
 		<?php
 
@@ -404,10 +404,10 @@ function bp_core_admin_available_tools_intro() {
 	$url  = add_query_arg( $query_arg, bp_get_admin_url( $page ) );
 	?>
 	<div class="card tool-box">
-		<h2><?php esc_html_e( 'BuddyPress Tools', 'buddypress' ) ?></h2>
+		<h2><?php esc_html_e( 'BuddyPress Tools', 'buddyboss' ) ?></h2>
 		<p>
-			<?php esc_html_e( 'BuddyPress keeps track of various relationships between users, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration.', 'buddypress' ); ?>
-			<?php printf( esc_html_x( 'Use the %s to repair these relationships.', 'buddypress tools intro', 'buddypress' ), '<a href="' . esc_url( $url ) . '">' . esc_html__( 'BuddyPress Tools', 'buddypress' ) . '</a>' ); ?>
+			<?php esc_html_e( 'BuddyPress keeps track of various relationships between users, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration.', 'buddyboss' ); ?>
+			<?php printf( esc_html_x( 'Use the %s to repair these relationships.', 'buddypress tools intro', 'buddyboss' ), '<a href="' . esc_url( $url ) . '">' . esc_html__( 'BuddyPress Tools', 'buddyboss' ) . '</a>' ); ?>
 		</p>
 	</div>
 	<?php
@@ -465,7 +465,7 @@ function bp_admin_reinstall_emails() {
 		restore_current_blog();
 	}
 
-	return array( 0, __( 'Emails have been successfully reinstalled.', 'buddypress' ) );
+	return array( 0, __( 'Emails have been successfully reinstalled.', 'buddyboss' ) );
 }
 
 /**
@@ -485,6 +485,6 @@ function bp_core_admin_notice_repopulate_blogs_resume() {
 		return;
 	}
 
-	echo '<div class="error"><p>' . __( 'It looks like you have more sites to record. Resume recording by checking the "Repopulate site tracking records" option.', 'buddypress' ) . '</p></div>';
+	echo '<div class="error"><p>' . __( 'It looks like you have more sites to record. Resume recording by checking the "Repopulate site tracking records" option.', 'buddyboss' ) . '</p></div>';
 }
 add_action( 'network_admin_notices', 'bp_core_admin_notice_repopulate_blogs_resume' );

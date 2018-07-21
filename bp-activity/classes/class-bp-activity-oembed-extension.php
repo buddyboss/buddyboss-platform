@@ -135,7 +135,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 
 		return array(
 			'content'      => $activity->content,
-			'title'        => __( 'Activity', 'buddypress' ),
+			'title'        => __( 'Activity', 'buddyboss' ),
 			'author_name'  => bp_core_get_user_displayname( $activity->user_id ),
 			'author_url'   => bp_core_get_user_domain( $activity->user_id ),
 
@@ -191,7 +191,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 * @return string
 	 */
 	protected function set_iframe_title( $item_id ) {
-		return __( 'Embedded Activity Item', 'buddypress' );
+		return __( 'Embedded Activity Item', 'buddyboss' );
 	}
 
 	/**

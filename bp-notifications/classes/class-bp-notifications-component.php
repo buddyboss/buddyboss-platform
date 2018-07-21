@@ -25,7 +25,7 @@ class BP_Notifications_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'notifications',
-			_x( 'Notifications', 'Page <title>', 'buddypress' ),
+			_x( 'Notifications', 'Page <title>', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 30
@@ -118,7 +118,7 @@ class BP_Notifications_Component extends BP_Component {
 		$args = array(
 			'slug'          => BP_NOTIFICATIONS_SLUG,
 			'has_directory' => false,
-			'search_string' => __( 'Search Notifications...', 'buddypress' ),
+			'search_string' => __( 'Search Notifications...', 'buddyboss' ),
 			'global_tables' => $global_tables,
 			'meta_tables'   => $meta_tables
 		);
@@ -159,7 +159,7 @@ class BP_Notifications_Component extends BP_Component {
 			$class    = ( 0 === $count ) ? 'no-count' : 'count';
 			$nav_name = sprintf(
 				/* translators: %s: Unread notification count for the current user */
-				_x( 'Notifications %s', 'Profile screen nav', 'buddypress' ),
+				_x( 'Notifications %s', 'Profile screen nav', 'buddyboss' ),
 				sprintf(
 					'<span class="%s">%s</span>',
 					esc_attr( $class ),
@@ -167,7 +167,7 @@ class BP_Notifications_Component extends BP_Component {
 				)
 			);
 		} else {
-			$nav_name = _x( 'Notifications', 'Profile screen nav', 'buddypress' );
+			$nav_name = _x( 'Notifications', 'Profile screen nav', 'buddyboss' );
 		}
 
 		// Add 'Notifications' to the main navigation.
@@ -183,7 +183,7 @@ class BP_Notifications_Component extends BP_Component {
 
 		// Add the subnav items to the notifications nav item.
 		$sub_nav[] = array(
-			'name'            => _x( 'Unread', 'Notification screen nav', 'buddypress' ),
+			'name'            => _x( 'Unread', 'Notification screen nav', 'buddyboss' ),
 			'slug'            => 'unread',
 			'parent_url'      => $notifications_link,
 			'parent_slug'     => $slug,
@@ -194,7 +194,7 @@ class BP_Notifications_Component extends BP_Component {
 		);
 
 		$sub_nav[] = array(
-			'name'            => _x( 'Read', 'Notification screen nav', 'buddypress' ),
+			'name'            => _x( 'Read', 'Notification screen nav', 'buddyboss' ),
 			'slug'            => 'read',
 			'parent_url'      => $notifications_link,
 			'parent_slug'     => $slug,
@@ -230,17 +230,17 @@ class BP_Notifications_Component extends BP_Component {
 			if ( ! empty( $count ) ) {
 				$title = sprintf(
 					/* translators: %s: Unread notification count for the current user */
-					_x( 'Notifications %s', 'My Account Notification pending', 'buddypress' ),
+					_x( 'Notifications %s', 'My Account Notification pending', 'buddyboss' ),
 					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 				);
 				$unread = sprintf(
 					/* translators: %s: Unread notification count for the current user */
-					_x( 'Unread %s', 'My Account Notification pending', 'buddypress' ),
+					_x( 'Unread %s', 'My Account Notification pending', 'buddyboss' ),
 					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 				);
 			} else {
 				$title  = _x( 'Notifications', 'My Account Notification',         'buddypress' );
-				$unread = _x( 'Unread',        'My Account Notification sub nav', 'buddypress' );
+				$unread = _x( 'Unread',        'My Account Notification sub nav', 'buddyboss' );
 			}
 
 			// Add the "My Account" sub menus.
@@ -264,7 +264,7 @@ class BP_Notifications_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-read',
-				'title'    => _x( 'Read', 'My Account Notification sub nav', 'buddypress' ),
+				'title'    => _x( 'Read', 'My Account Notification sub nav', 'buddyboss' ),
 				'href'     => trailingslashit( $notifications_link . 'read' ),
 				'position' => 20
 			);
@@ -285,12 +285,12 @@ class BP_Notifications_Component extends BP_Component {
 			$bp = buddypress();
 
 			if ( bp_is_my_profile() ) {
-				$bp->bp_options_title = __( 'Notifications', 'buddypress' );
+				$bp->bp_options_title = __( 'Notifications', 'buddyboss' );
 			} else {
 				$bp->bp_options_avatar = bp_core_fetch_avatar( array(
 					'item_id' => bp_displayed_user_id(),
 					'type'    => 'thumb',
-					'alt'     => sprintf( __( 'Profile picture of %s', 'buddypress' ), bp_get_displayed_user_fullname() )
+					'alt'     => sprintf( __( 'Profile picture of %s', 'buddyboss' ), bp_get_displayed_user_fullname() )
 				) );
 				$bp->bp_options_title = bp_get_displayed_user_fullname();
 			}

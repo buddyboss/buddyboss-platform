@@ -83,18 +83,18 @@ function groups_remove_group_invite() {
 
 	$friend_id = intval( bp_action_variable( 1 ) );
 	$group_id  = bp_get_current_group_id();
-	$message   = __( 'Invite successfully removed', 'buddypress' );
+	$message   = __( 'Invite successfully removed', 'buddyboss' );
 	$redirect  = wp_get_referer();
 	$error     = false;
 
 	if ( ! bp_groups_user_can_send_invites( $group_id ) ) {
-		$message = __( 'You are not allowed to send or remove invites', 'buddypress' );
+		$message = __( 'You are not allowed to send or remove invites', 'buddyboss' );
 		$error = 'error';
 	} elseif ( groups_check_for_membership_request( $friend_id, $group_id ) ) {
-		$message = __( 'The member requested to join the group', 'buddypress' );
+		$message = __( 'The member requested to join the group', 'buddyboss' );
 		$error = 'error';
 	} elseif ( ! groups_uninvite_user( $friend_id, $group_id ) ) {
-		$message = __( 'There was an error removing the invite', 'buddypress' );
+		$message = __( 'There was an error removing the invite', 'buddyboss' );
 		$error = 'error';
 	}
 

@@ -13,7 +13,7 @@
 
 	<h2 class="bp-screen-reader-text"><?php
 		/* translators: accessibility text */
-		_e( 'Notifications', 'buddypress' );
+		_e( 'Notifications', 'buddyboss' );
 	?></h2>
 
 	<div id="pag-top" class="pagination no-ajax">

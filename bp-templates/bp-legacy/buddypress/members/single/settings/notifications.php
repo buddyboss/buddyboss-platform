@@ -12,11 +12,11 @@ do_action( 'bp_before_member_settings_template' ); ?>
 
 <h2 class="bp-screen-reader-text"><?php
 	/* translators: accessibility text */
-	_e( 'Notification settings', 'buddypress' );
+	_e( 'Notification settings', 'buddyboss' );
 ?></h2>
 
 <form action="<?php echo bp_displayed_user_domain() . bp_get_settings_slug() . '/notifications'; ?>" method="post" class="standard-form" id="settings-form">
-	<p><?php _e( 'Send an email notice when:', 'buddypress' ); ?></p>
+	<p><?php _e( 'Send an email notice when:', 'buddyboss' ); ?></p>
 
 	<?php
 
@@ -37,7 +37,7 @@ do_action( 'bp_before_member_settings_template' ); ?>
 	do_action( 'bp_members_notification_settings_before_submit' ); ?>
 
 	<div class="submit">
-		<input type="submit" name="submit" value="<?php esc_attr_e( 'Save Changes', 'buddypress' ); ?>" id="submit" class="auto" />
+		<input type="submit" name="submit" value="<?php esc_attr_e( 'Save Changes', 'buddyboss' ); ?>" id="submit" class="auto" />
 	</div>
 
 	<?php

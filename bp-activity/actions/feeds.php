@@ -25,10 +25,10 @@ function bp_activity_action_sitewide_feed() {
 		'id'            => 'sitewide',
 
 		/* translators: Sitewide activity RSS title - "[Site Name] | Site Wide Activity" */
-		'title'         => sprintf( __( '%s | Site-Wide Activity', 'buddypress' ), bp_get_site_name() ),
+		'title'         => sprintf( __( '%s | Site-Wide Activity', 'buddyboss' ), bp_get_site_name() ),
 
 		'link'          => bp_get_activity_directory_permalink(),
-		'description'   => __( 'Activity feed for the entire site.', 'buddypress' ),
+		'description'   => __( 'Activity feed for the entire site.', 'buddyboss' ),
 		'activity_args' => 'display_comments=threaded'
 	) );
 }
@@ -51,10 +51,10 @@ function bp_activity_action_personal_feed() {
 		'id'            => 'personal',
 
 		/* translators: Personal activity RSS title - "[Site Name] | [User Display Name] | Activity" */
-		'title'         => sprintf( __( '%1$s | %2$s | Activity', 'buddypress' ), bp_get_site_name(), bp_get_displayed_user_fullname() ),
+		'title'         => sprintf( __( '%1$s | %2$s | Activity', 'buddyboss' ), bp_get_site_name(), bp_get_displayed_user_fullname() ),
 
 		'link'          => trailingslashit( bp_displayed_user_domain() . bp_get_activity_slug() ),
-		'description'   => sprintf( __( 'Activity feed for %s.', 'buddypress' ), bp_get_displayed_user_fullname() ),
+		'description'   => sprintf( __( 'Activity feed for %s.', 'buddyboss' ), bp_get_displayed_user_fullname() ),
 		'activity_args' => 'user_id=' . bp_displayed_user_id()
 	) );
 }
@@ -77,10 +77,10 @@ function bp_activity_action_friends_feed() {
 		'id'            => 'friends',
 
 		/* translators: Friends activity RSS title - "[Site Name] | [User Display Name] | Friends Activity" */
-		'title'         => sprintf( __( '%1$s | %2$s | Friends Activity', 'buddypress' ), bp_get_site_name(), bp_get_displayed_user_fullname() ),
+		'title'         => sprintf( __( '%1$s | %2$s | Friends Activity', 'buddyboss' ), bp_get_site_name(), bp_get_displayed_user_fullname() ),
 
 		'link'          => trailingslashit( bp_displayed_user_domain() . bp_get_activity_slug() . '/' . bp_get_friends_slug() ),
-		'description'   => sprintf( __( "Activity feed for %s's friends.", 'buddypress' ), bp_get_displayed_user_fullname() ),
+		'description'   => sprintf( __( "Activity feed for %s's friends.", 'buddyboss' ), bp_get_displayed_user_fullname() ),
 		'activity_args' => 'scope=friends'
 	) );
 }
@@ -107,10 +107,10 @@ function bp_activity_action_my_groups_feed() {
 		'id'            => 'mygroups',
 
 		/* translators: Member groups activity RSS title - "[Site Name] | [User Display Name] | Groups Activity" */
-		'title'         => sprintf( __( '%1$s | %2$s | Group Activity', 'buddypress' ), bp_get_site_name(), bp_get_displayed_user_fullname() ),
+		'title'         => sprintf( __( '%1$s | %2$s | Group Activity', 'buddyboss' ), bp_get_site_name(), bp_get_displayed_user_fullname() ),
 
 		'link'          => trailingslashit( bp_displayed_user_domain() . bp_get_activity_slug() . '/' . bp_get_groups_slug() ),
-		'description'   => sprintf( __( "Public group activity feed of which %s is a member.", 'buddypress' ), bp_get_displayed_user_fullname() ),
+		'description'   => sprintf( __( "Public group activity feed of which %s is a member.", 'buddyboss' ), bp_get_displayed_user_fullname() ),
 		'activity_args' => array(
 			'object'           => buddypress()->groups->id,
 			'primary_id'       => $group_ids,
@@ -141,10 +141,10 @@ function bp_activity_action_mentions_feed() {
 		'id'            => 'mentions',
 
 		/* translators: User mentions activity RSS title - "[Site Name] | [User Display Name] | Mentions" */
-		'title'         => sprintf( __( '%1$s | %2$s | Mentions', 'buddypress' ), bp_get_site_name(), bp_get_displayed_user_fullname() ),
+		'title'         => sprintf( __( '%1$s | %2$s | Mentions', 'buddyboss' ), bp_get_site_name(), bp_get_displayed_user_fullname() ),
 
 		'link'          => bp_displayed_user_domain() . bp_get_activity_slug() . '/mentions/',
-		'description'   => sprintf( __( "Activity feed mentioning %s.", 'buddypress' ), bp_get_displayed_user_fullname() ),
+		'description'   => sprintf( __( "Activity feed mentioning %s.", 'buddyboss' ), bp_get_displayed_user_fullname() ),
 		'activity_args' => array(
 			'search_terms' => '@' . bp_core_get_username( bp_displayed_user_id() )
 		)
@@ -173,10 +173,10 @@ function bp_activity_action_favorites_feed() {
 		'id'            => 'favorites',
 
 		/* translators: User activity favorites RSS title - "[Site Name] | [User Display Name] | Favorites" */
-		'title'         => sprintf( __( '%1$s | %2$s | Favorites', 'buddypress' ), bp_get_site_name(), bp_get_displayed_user_fullname() ),
+		'title'         => sprintf( __( '%1$s | %2$s | Favorites', 'buddyboss' ), bp_get_site_name(), bp_get_displayed_user_fullname() ),
 
 		'link'          => bp_displayed_user_domain() . bp_get_activity_slug() . '/favorites/',
-		'description'   => sprintf( __( "Activity feed of %s's favorites.", 'buddypress' ), bp_get_displayed_user_fullname() ),
+		'description'   => sprintf( __( "Activity feed of %s's favorites.", 'buddyboss' ), bp_get_displayed_user_fullname() ),
 		'activity_args' => 'include=' . $fav_ids
 	) );
 }

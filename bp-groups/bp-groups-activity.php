@@ -30,27 +30,27 @@ function groups_register_activity_actions() {
 	bp_activity_set_action(
 		$bp->groups->id,
 		'created_group',
-		__( 'Created a group', 'buddypress' ),
+		__( 'Created a group', 'buddyboss' ),
 		'bp_groups_format_activity_action_created_group',
-		__( 'New Groups', 'buddypress' ),
+		__( 'New Groups', 'buddyboss' ),
 		array( 'activity', 'member', 'member_groups' )
 	);
 
 	bp_activity_set_action(
 		$bp->groups->id,
 		'joined_group',
-		__( 'Joined a group', 'buddypress' ),
+		__( 'Joined a group', 'buddyboss' ),
 		'bp_groups_format_activity_action_joined_group',
-		__( 'Group Memberships', 'buddypress' ),
+		__( 'Group Memberships', 'buddyboss' ),
 		array( 'activity', 'group', 'member', 'member_groups' )
 	);
 
 	bp_activity_set_action(
 		$bp->groups->id,
 		'group_details_updated',
-		__( 'Group details edited', 'buddypress' ),
+		__( 'Group details edited', 'buddyboss' ),
 		'bp_groups_format_activity_action_group_details_updated',
-		__( 'Group Updates', 'buddypress' ),
+		__( 'Group Updates', 'buddyboss' ),
 		array( 'activity', 'group', 'member', 'member_groups' )
 	);
 
@@ -106,7 +106,7 @@ function bp_groups_format_activity_action_joined_group( $action, $activity ) {
 	$group      = groups_get_group( $activity->item_id );
 	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
 
-	$action = sprintf( __( '%1$s joined the group %2$s', 'buddypress' ), $user_link, $group_link );
+	$action = sprintf( __( '%1$s joined the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
 	// Legacy filters (do not follow parameter patterns of other activity
 	// action filters, and requires apply_filters_ref_array()).
@@ -153,22 +153,22 @@ function bp_groups_format_activity_action_group_details_updated( $action, $activ
 
 	// No changed details were found, so use a generic message.
 	if ( empty( $changed ) ) {
-		$action = sprintf( __( '%1$s updated details for the group %2$s', 'buddypress' ), $user_link, $group_link );
+		$action = sprintf( __( '%1$s updated details for the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
 	// Name and description changed - to keep things short, don't describe changes in detail.
 	} elseif ( isset( $changed['name'] ) && isset( $changed['description'] ) ) {
-		$action = sprintf( __( '%1$s changed the name and description of the group %2$s', 'buddypress' ), $user_link, $group_link );
+		$action = sprintf( __( '%1$s changed the name and description of the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
 	// Name only.
 	} elseif ( ! empty( $changed['name']['old'] ) && ! empty( $changed['name']['new'] ) ) {
-		$action = sprintf( __( '%1$s changed the name of the group %2$s from "%3$s" to "%4$s"', 'buddypress' ), $user_link, $group_link, esc_html( $changed['name']['old'] ), esc_html( $changed['name']['new'] ) );
+		$action = sprintf( __( '%1$s changed the name of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, esc_html( $changed['name']['old'] ), esc_html( $changed['name']['new'] ) );
 
 	// Description only.
 	} elseif ( ! empty( $changed['description']['old'] ) && ! empty( $changed['description']['new'] ) ) {
-		$action = sprintf( __( '%1$s changed the description of the group %2$s from "%3$s" to "%4$s"', 'buddypress' ), $user_link, $group_link, esc_html( $changed['description']['old'] ), esc_html( $changed['description']['new'] ) );
+		$action = sprintf( __( '%1$s changed the description of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, esc_html( $changed['description']['old'] ), esc_html( $changed['description']['new'] ) );
 
 	} elseif ( ! empty( $changed['slug']['old'] ) && ! empty( $changed['slug']['new'] ) ) {
-		$action = sprintf( __( '%1$s changed the permalink of the group %2$s.', 'buddypress' ), $user_link, $group_link );
+		$action = sprintf( __( '%1$s changed the permalink of the group %2$s.', 'buddyboss' ), $user_link, $group_link );
 
 	}
 
@@ -454,7 +454,7 @@ function bp_groups_membership_accepted_add_activity( $user_id, $group_id ) {
 	 * @param int    $user_id  ID of the user joining the group.
 	 * @param int    $group_id ID of the group. Passed by reference.
 	 */
-	$action = apply_filters_ref_array( 'groups_activity_membership_accepted_action', array( sprintf( __( '%1$s joined the group %2$s', 'buddypress' ), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_group_permalink( $group ) . '">' . esc_attr( $group->name ) . '</a>' ), $user_id, &$group ) );
+	$action = apply_filters_ref_array( 'groups_activity_membership_accepted_action', array( sprintf( __( '%1$s joined the group %2$s', 'buddyboss' ), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_group_permalink( $group ) . '">' . esc_attr( $group->name ) . '</a>' ), $user_id, &$group ) );
 
 	// Record in activity feeds.
 	groups_record_activity( array(

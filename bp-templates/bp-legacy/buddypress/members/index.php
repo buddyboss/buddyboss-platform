@@ -57,12 +57,12 @@ do_action( 'bp_before_directory_members_page' ); ?>
 
 	<form action="" method="post" id="members-directory-form" class="dir-form">
 
-		<div class="item-list-tabs" aria-label="<?php esc_attr_e( 'Members directory main navigation', 'buddypress' ); ?>" role="navigation">
+		<div class="item-list-tabs" aria-label="<?php esc_attr_e( 'Members directory main navigation', 'buddyboss' ); ?>" role="navigation">
 			<ul>
-				<li class="selected" id="members-all"><a href="<?php bp_members_directory_permalink(); ?>"><?php printf( __( 'All Members %s', 'buddypress' ), '<span>' . bp_get_total_member_count() . '</span>' ); ?></a></li>
+				<li class="selected" id="members-all"><a href="<?php bp_members_directory_permalink(); ?>"><?php printf( __( 'All Members %s', 'buddyboss' ), '<span>' . bp_get_total_member_count() . '</span>' ); ?></a></li>
 
 				<?php if ( is_user_logged_in() && bp_is_active( 'friends' ) && bp_get_total_friend_count( bp_loggedin_user_id() ) ) : ?>
-					<li id="members-personal"><a href="<?php echo esc_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/my-friends/' ); ?>"><?php printf( __( 'My Friends %s', 'buddypress' ), '<span>' . bp_get_total_friend_count( bp_loggedin_user_id() ) . '</span>' ); ?></a></li>
+					<li id="members-personal"><a href="<?php echo esc_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/my-friends/' ); ?>"><?php printf( __( 'My Friends %s', 'buddyboss' ), '<span>' . bp_get_total_friend_count( bp_loggedin_user_id() ) . '</span>' ); ?></a></li>
 				<?php endif; ?>
 
 				<?php
@@ -77,7 +77,7 @@ do_action( 'bp_before_directory_members_page' ); ?>
 			</ul>
 		</div><!-- .item-list-tabs -->
 
-		<div class="item-list-tabs" id="subnav" aria-label="<?php esc_attr_e( 'Members directory secondary navigation', 'buddypress' ); ?>" role="navigation">
+		<div class="item-list-tabs" id="subnav" aria-label="<?php esc_attr_e( 'Members directory secondary navigation', 'buddyboss' ); ?>" role="navigation">
 			<ul>
 				<?php
 
@@ -89,13 +89,13 @@ do_action( 'bp_before_directory_members_page' ); ?>
 				do_action( 'bp_members_directory_member_sub_types' ); ?>
 
 				<li id="members-order-select" class="last filter">
-					<label for="members-order-by"><?php _e( 'Order By:', 'buddypress' ); ?></label>
+					<label for="members-order-by"><?php _e( 'Order By:', 'buddyboss' ); ?></label>
 					<select id="members-order-by">
-						<option value="active"><?php _e( 'Last Active', 'buddypress' ); ?></option>
-						<option value="newest"><?php _e( 'Newest Registered', 'buddypress' ); ?></option>
+						<option value="active"><?php _e( 'Last Active', 'buddyboss' ); ?></option>
+						<option value="newest"><?php _e( 'Newest Registered', 'buddyboss' ); ?></option>
 
 						<?php if ( bp_is_active( 'xprofile' ) ) : ?>
-							<option value="alphabetical"><?php _e( 'Alphabetical', 'buddypress' ); ?></option>
+							<option value="alphabetical"><?php _e( 'Alphabetical', 'buddyboss' ); ?></option>
 						<?php endif; ?>
 
 						<?php
@@ -113,7 +113,7 @@ do_action( 'bp_before_directory_members_page' ); ?>
 
 		<h2 class="bp-screen-reader-text"><?php
 			/* translators: accessibility text */
-			_e( 'Members directory', 'buddypress' );
+			_e( 'Members directory', 'buddyboss' );
 		?></h2>
 
 		<div id="members-dir-list" class="members dir-list">

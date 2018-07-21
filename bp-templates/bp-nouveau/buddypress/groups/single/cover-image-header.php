@@ -28,7 +28,7 @@
 			<p class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_group_last_active( 0, array( 'relative' => false ) ) ); ?>">
 				<?php
 				/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-				printf( __( 'active %s', 'buddypress' ), bp_get_group_last_active() );
+				printf( __( 'active %s', 'buddyboss' ), bp_get_group_last_active() );
 				?>
 			</p>
 

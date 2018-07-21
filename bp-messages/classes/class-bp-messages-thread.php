@@ -447,7 +447,7 @@ class BP_Messages_Thread {
 
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args ) || func_num_args() > 1 ) {
-			_deprecated_argument( __METHOD__, '2.2.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddypress' ), __METHOD__, __FILE__ ) );
+			_deprecated_argument( __METHOD__, '2.2.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
 				0 => 'user_id',
@@ -849,7 +849,7 @@ class BP_Messages_Thread {
 	public static function get_recipient_links( $recipients ) {
 
 		if ( count( $recipients ) >= 5 ) {
-			return sprintf( __( '%s Recipients', 'buddypress' ), number_format_i18n( count( $recipients ) ) );
+			return sprintf( __( '%s Recipients', 'buddyboss' ), number_format_i18n( count( $recipients ) ) );
 		}
 
 		$recipient_links = array();
@@ -858,7 +858,7 @@ class BP_Messages_Thread {
 			$recipient_link = bp_core_get_userlink( $recipient->user_id );
 
 			if ( empty( $recipient_link ) ) {
-				$recipient_link = __( 'Deleted User', 'buddypress' );
+				$recipient_link = __( 'Deleted User', 'buddyboss' );
 			}
 
 			$recipient_links[] = $recipient_link;

@@ -67,11 +67,11 @@ function bp_core_screen_signup() {
 
 		// Check that both password fields are filled in.
 		if ( empty( $_POST['signup_password'] ) || empty( $_POST['signup_password_confirm'] ) )
-			$bp->signup->errors['signup_password'] = __( 'Please make sure you enter your password twice', 'buddypress' );
+			$bp->signup->errors['signup_password'] = __( 'Please make sure you enter your password twice', 'buddyboss' );
 
 		// Check that the passwords match.
 		if ( ( !empty( $_POST['signup_password'] ) && !empty( $_POST['signup_password_confirm'] ) ) && $_POST['signup_password'] != $_POST['signup_password_confirm'] )
-			$bp->signup->errors['signup_password'] = __( 'The passwords you entered do not match.', 'buddypress' );
+			$bp->signup->errors['signup_password'] = __( 'The passwords you entered do not match.', 'buddyboss' );
 
 		$bp->signup->username = $_POST['signup_username'];
 		$bp->signup->email = $_POST['signup_email'];
@@ -100,7 +100,7 @@ function bp_core_screen_signup() {
 
 					// Create errors for required fields without values.
 					if ( xprofile_check_is_required_field( $field_id ) && empty( $_POST[ 'field_' . $field_id ] ) && ! bp_current_user_can( 'bp_moderate' ) )
-						$bp->signup->errors['field_' . $field_id] = __( 'This is a required field', 'buddypress' );
+						$bp->signup->errors['field_' . $field_id] = __( 'This is a required field', 'buddyboss' );
 				}
 
 				// This situation doesn't naturally occur so bounce to website root.

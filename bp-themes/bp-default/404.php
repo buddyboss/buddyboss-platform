@@ -4,9 +4,9 @@
 		<div class="padder one-column">
 			<?php do_action( 'bp_before_404' ); ?>
 			<div id="post-0" class="post page-404 error404 not-found" role="main">
-				<h2 class="posttitle"><?php _e( "Page not found", 'buddypress' ); ?></h2>
+				<h2 class="posttitle"><?php _e( "Page not found", 'buddyboss' ); ?></h2>
 
-				<p><?php _e( "We're sorry, but we can't find the page that you're looking for. Perhaps searching will help.", 'buddypress' ); ?></p>
+				<p><?php _e( "We're sorry, but we can't find the page that you're looking for. Perhaps searching will help.", 'buddyboss' ); ?></p>
 				<?php get_search_form(); ?>
 
 				<?php do_action( 'bp_404' ); ?>

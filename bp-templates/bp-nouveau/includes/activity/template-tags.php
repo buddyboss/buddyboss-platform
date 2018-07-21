@@ -307,11 +307,11 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				'button_element'    => $button_element,
 				'button_attr'       => array(
 					'class'           => 'button view bp-secondary-action bp-tooltip',
-					'data-bp-tooltip' => __( 'View Conversation', 'buddypress' ),
+					'data-bp-tooltip' => __( 'View Conversation', 'buddyboss' ),
 					),
 				'link_text' => sprintf(
 					'<span class="bp-screen-reader-text">%1$s</span>',
-					__( 'View Conversation', 'buddypress' )
+					__( 'View Conversation', 'buddyboss' )
 				),
 			);
 
@@ -339,12 +339,12 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				'button_attr'       => array(
 					'id'              => 'acomment-comment-' . $activity_id,
 					'class'           => 'button acomment-reply bp-primary-action bp-tooltip',
-					'data-bp-tooltip' => _x( 'Comment', 'button', 'buddypress' ),
+					'data-bp-tooltip' => _x( 'Comment', 'button', 'buddyboss' ),
 					'aria-expanded'   => 'false',
 				),
 				'link_text'  => sprintf(
 					'<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
-					_x( 'Comment', 'link', 'buddypress' ),
+					_x( 'Comment', 'link', 'buddyboss' ),
 					esc_html( bp_activity_get_comment_count() )
 				),
 			);
@@ -374,8 +374,8 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 					'parent_attr'      => $parent_attr,
 					'button_element'   => $button_element,
 					'link_class'       => 'button fav bp-secondary-action bp-tooltip',
-					'data_bp_tooltip'  => __( 'Mark as Favorite', 'buddypress' ),
-					'link_text'        => __( 'Favorite', 'buddypress' ),
+					'data_bp_tooltip'  => __( 'Mark as Favorite', 'buddyboss' ),
+					'link_text'        => __( 'Favorite', 'buddyboss' ),
 					'aria-pressed'     => 'false',
 					'link_attr'        => bp_get_activity_favorite_link(),
 				);
@@ -386,8 +386,8 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 					'parent_attr'     => $parent_attr,
 					'button_element'  => $button_element,
 					'link_class'      => 'button unfav bp-secondary-action bp-tooltip',
-					'data_bp_tooltip' => __( 'Remove Favorite', 'buddypress' ),
-					'link_text'       => __( 'Remove Favorite', 'buddypress' ),
+					'data_bp_tooltip' => __( 'Remove Favorite', 'buddyboss' ),
+					'link_text'       => __( 'Remove Favorite', 'buddyboss' ),
 					'aria-pressed'    => 'true',
 					'link_attr'       => bp_get_activity_unfavorite_link(),
 				);
@@ -453,8 +453,8 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				'link_id'         => '',
 				'link_class'      => 'button item-button bp-secondary-action bp-tooltip delete-activity confirm',
 				'link_rel'        => 'nofollow',
-				'data_bp_tooltip' => _x( 'Delete', 'button', 'buddypress' ),
-				'link_text'       => _x( 'Delete', 'button', 'buddypress' ),
+				'data_bp_tooltip' => _x( 'Delete', 'button', 'buddyboss' ),
+				'link_text'       => _x( 'Delete', 'button', 'buddyboss' ),
 				'link_href'       => bp_get_activity_delete_url(),
 			);
 
@@ -499,12 +499,12 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				'button_attr'       => array(
 					'class'           => 'bp-secondary-action spam-activity confirm button item-button bp-tooltip',
 					'id'              => 'activity_make_spam_' . $activity_id,
-					'data-bp-tooltip' => _x( 'Spam', 'button', 'buddypress' ),
+					'data-bp-tooltip' => _x( 'Spam', 'button', 'buddyboss' ),
 					),
 				'link_text'  => sprintf(
 					/** @todo: use a specific css rule for this *************************************************************/
 					'<span class="dashicons dashicons-flag" style="color:#a00;vertical-align:baseline;width:18px;height:18px" aria-hidden="true"></span><span class="bp-screen-reader-text">%s</span>',
-					esc_html_x( 'Spam', 'button', 'buddypress' )
+					esc_html_x( 'Spam', 'button', 'buddyboss' )
 				),
 			);
 
@@ -678,7 +678,7 @@ function bp_nouveau_activity_comment_action() {
 		 */
 		return apply_filters( 'bp_nouveau_get_activity_comment_action',
 			/* translators: 1: user profile link, 2: user name, 3: activity permalink, 4: activity recorded date, 5: activity timestamp, 6: activity human time since */
-			sprintf( __( '<a href="%1$s">%2$s</a> replied <a href="%3$s" class="activity-time-since"><time class="time-since" datetime="%4$s" data-bp-timestamp="%5$d">%6$s</time></a>', 'buddypress' ),
+			sprintf( __( '<a href="%1$s">%2$s</a> replied <a href="%3$s" class="activity-time-since"><time class="time-since" datetime="%4$s" data-bp-timestamp="%5$d">%6$s</time></a>', 'buddyboss' ),
 				esc_url( bp_get_activity_comment_user_link() ),
 				esc_html( bp_get_activity_comment_name() ),
 				esc_url( bp_get_activity_comment_permalink() ),
@@ -787,7 +787,7 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 				'parent_element'    => $parent_element,
 				'parent_attr'       => $parent_attr,
 				'button_element'    => $button_element,
-				'link_text'         => _x( 'Reply', 'link', 'buddypress' ),
+				'link_text'         => _x( 'Reply', 'link', 'buddyboss' ),
 				'button_attr'       => array(
 					'class' => "acomment-reply bp-primary-action",
 					'id'    => sprintf( 'acomment-reply-%1$s-from-%2$s', $activity_id, $activity_comment_id ),
@@ -801,7 +801,7 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 				'parent_element'    => $parent_element,
 				'parent_attr'       => $parent_attr,
 				'button_element'    => $button_element,
-				'link_text'         => _x( 'Delete', 'link', 'buddypress' ),
+				'link_text'         => _x( 'Delete', 'link', 'buddyboss' ),
 				'button_attr'       => array(
 					'class' => 'delete acomment-delete confirm bp-secondary-action',
 					'rel'   => 'nofollow',
@@ -828,7 +828,7 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 				'parent_element'    => $parent_element,
 				'parent_attr'       => $parent_attr,
 				'button_element'    => $button_element,
-				'link_text'         => _x( 'Spam', 'link', 'buddypress' ),
+				'link_text'         => _x( 'Spam', 'link', 'buddyboss' ),
 				'button_attr'       => array(
 					'id'     => "activity_make_spam_{$activity_comment_id}",
 					'class'  => 'bp-secondary-action spam-activity-comment confirm',

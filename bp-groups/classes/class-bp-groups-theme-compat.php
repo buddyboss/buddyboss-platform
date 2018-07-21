@@ -174,7 +174,7 @@ class BP_Groups_Theme_Compat {
 	 */
 	public function create_dummy_post() {
 
-		$title = _x( 'Groups', 'Group creation page', 'buddypress' );
+		$title = _x( 'Groups', 'Group creation page', 'buddyboss' );
 
 		bp_theme_compat_reset_post( array(
 			'ID'             => 0,

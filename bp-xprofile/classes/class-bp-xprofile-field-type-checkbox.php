@@ -25,8 +25,8 @@ class BP_XProfile_Field_Type_Checkbox extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = _x( 'Multi Fields', 'xprofile field type category', 'buddypress' );
-		$this->name     = _x( 'Checkboxes', 'xprofile field type', 'buddypress' );
+		$this->category = _x( 'Multi Fields', 'xprofile field type category', 'buddyboss' );
+		$this->name     = _x( 'Checkboxes', 'xprofile field type', 'buddyboss' );
 
 		$this->supports_multiple_defaults = true;
 		$this->accepts_null_value         = true;

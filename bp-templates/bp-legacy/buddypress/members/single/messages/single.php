@@ -28,21 +28,21 @@
 
 				<?php if ( bp_get_thread_recipients_count() <= 1 ) : ?>
 
-					<?php _e( 'You are alone in this conversation.', 'buddypress' ); ?>
+					<?php _e( 'You are alone in this conversation.', 'buddyboss' ); ?>
 
 				<?php elseif ( bp_get_max_thread_recipients_to_list() <= bp_get_thread_recipients_count() ) : ?>
 
-					<?php printf( __( 'Conversation between %s recipients.', 'buddypress' ), number_format_i18n( bp_get_thread_recipients_count() ) ); ?>
+					<?php printf( __( 'Conversation between %s recipients.', 'buddyboss' ), number_format_i18n( bp_get_thread_recipients_count() ) ); ?>
 
 				<?php else : ?>
 
-					<?php printf( __( 'Conversation between %s.', 'buddypress' ), bp_get_thread_recipients_list() ); ?>
+					<?php printf( __( 'Conversation between %s.', 'buddyboss' ), bp_get_thread_recipients_list() ); ?>
 
 				<?php endif; ?>
 
 			</span>
 
-			<a class="button confirm" href="<?php bp_the_thread_delete_link(); ?>"><?php _e( 'Delete', 'buddypress' ); ?></a>
+			<a class="button confirm" href="<?php bp_the_thread_delete_link(); ?>"><?php _e( 'Delete', 'buddyboss' ); ?></a>
 
 			<?php
 
@@ -99,7 +99,7 @@
 					<div class="avatar-box">
 						<?php bp_loggedin_user_avatar( 'type=thumb&height=30&width=30' ); ?>
 
-						<strong><?php _e( 'Send a Reply', 'buddypress' ); ?></strong>
+						<strong><?php _e( 'Send a Reply', 'buddyboss' ); ?></strong>
 					</div>
 
 					<?php
@@ -122,7 +122,7 @@
 
 					<label for="message_content" class="bp-screen-reader-text"><?php
 						/* translators: accessibility text */
-						_e( 'Reply to Message', 'buddypress' );
+						_e( 'Reply to Message', 'buddyboss' );
 					?></label>
 					<textarea name="content" id="message_content" rows="15" cols="40"></textarea>
 
@@ -136,7 +136,7 @@
 					do_action( 'bp_after_message_reply_box' ); ?>
 
 					<div class="submit">
-						<input type="submit" name="send" value="<?php esc_attr_e( 'Send Reply', 'buddypress' ); ?>" id="send_reply_button"/>
+						<input type="submit" name="send" value="<?php esc_attr_e( 'Send Reply', 'buddyboss' ); ?>" id="send_reply_button"/>
 					</div>
 
 					<input type="hidden" id="thread_id" name="thread_id" value="<?php bp_the_thread_id(); ?>" />

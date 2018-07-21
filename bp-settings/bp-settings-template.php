@@ -86,12 +86,12 @@ function bp_settings_pending_email_notice() {
 
 	<div id="message" class="bp-template-notice error">
 		<p><?php printf(
-			__( 'There is a pending change of your email address to %s.', 'buddypress' ),
+			__( 'There is a pending change of your email address to %s.', 'buddyboss' ),
 			'<code>' . esc_html( $pending_email['newemail'] ) . '</code>'
 		); ?>
 		<br />
 		<?php printf(
-			__( 'Check your email (%1$s) for the verification link, or <a href="%2$s">cancel the pending change</a>.', 'buddypress' ),
+			__( 'Check your email (%1$s) for the verification link, or <a href="%2$s">cancel the pending change</a>.', 'buddyboss' ),
 			'<code>' . esc_html( bp_get_displayed_user_email() ) . '</code>',
 			esc_url( wp_nonce_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/?dismiss_email_change=1', 'bp_dismiss_email_change' ) )
 		); ?></p>

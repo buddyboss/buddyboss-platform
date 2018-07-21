@@ -36,7 +36,7 @@
 	</div><!-- #item-header -->
 
 	<div id="item-nav">
-		<div class="item-list-tabs no-ajax" id="object-nav" aria-label="<?php esc_attr_e( 'Member primary navigation', 'buddypress' ); ?>" role="navigation">
+		<div class="item-list-tabs no-ajax" id="object-nav" aria-label="<?php esc_attr_e( 'Member primary navigation', 'buddyboss' ); ?>" role="navigation">
 			<ul>
 
 				<?php bp_get_displayed_user_nav(); ?>

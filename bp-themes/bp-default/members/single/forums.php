@@ -15,11 +15,11 @@
 
 		<li id="forums-order-select" class="last filter">
 
-			<label for="forums-order-by"><?php _e( 'Order By:', 'buddypress' ); ?></label>
+			<label for="forums-order-by"><?php _e( 'Order By:', 'buddyboss' ); ?></label>
 			<select id="forums-order-by">
-				<option value="active"><?php _e( 'Last Active', 'buddypress' ); ?></option>
-				<option value="popular"><?php _e( 'Most Posts', 'buddypress' ); ?></option>
-				<option value="unreplied"><?php _e( 'Unreplied', 'buddypress' ); ?></option>
+				<option value="active"><?php _e( 'Last Active', 'buddyboss' ); ?></option>
+				<option value="popular"><?php _e( 'Most Posts', 'buddyboss' ); ?></option>
+				<option value="unreplied"><?php _e( 'Unreplied', 'buddyboss' ); ?></option>
 
 				<?php do_action( 'bp_forums_directory_order_options' ); ?>
 

@@ -9,7 +9,7 @@
 
 ?>
 
-<h2 class="bp-screen-reader-text"><?php _e( 'Manage Group Details', 'buddypress' ); ?></h2>
+<h2 class="bp-screen-reader-text"><?php _e( 'Manage Group Details', 'buddyboss' ); ?></h2>
 
 <?php
 
@@ -20,10 +20,10 @@
  */
 do_action( 'bp_before_group_details_admin' ); ?>
 
-<label for="group-name"><?php _e( 'Group Name (required)', 'buddypress' ); ?></label>
+<label for="group-name"><?php _e( 'Group Name (required)', 'buddyboss' ); ?></label>
 <input type="text" name="group-name" id="group-name" value="<?php bp_group_name(); ?>" aria-required="true" />
 
-<label for="group-desc"><?php _e( 'Group Description (required)', 'buddypress' ); ?></label>
+<label for="group-desc"><?php _e( 'Group Description (required)', 'buddyboss' ); ?></label>
 <textarea name="group-desc" id="group-desc" aria-required="true"><?php bp_group_description_editable(); ?></textarea>
 
 <?php
@@ -37,7 +37,7 @@ do_action( 'groups_custom_group_fields_editable' ); ?>
 
 <p>
 	<label for="group-notify-members">
-		<input type="checkbox" name="group-notify-members" id="group-notify-members" value="1" /> <?php _e( 'Notify group members of these changes via email', 'buddypress' ); ?>
+		<input type="checkbox" name="group-notify-members" id="group-notify-members" value="1" /> <?php _e( 'Notify group members of these changes via email', 'buddyboss' ); ?>
 	</label>
 </p>
 
@@ -50,5 +50,5 @@ do_action( 'groups_custom_group_fields_editable' ); ?>
  */
 do_action( 'bp_after_group_details_admin' ); ?>
 
-<p><input type="submit" value="<?php esc_attr_e( 'Save Changes', 'buddypress' ); ?>" id="save" name="save" /></p>
+<p><input type="submit" value="<?php esc_attr_e( 'Save Changes', 'buddyboss' ); ?>" id="save" name="save" /></p>
 <?php wp_nonce_field( 'groups_edit_group_details' );

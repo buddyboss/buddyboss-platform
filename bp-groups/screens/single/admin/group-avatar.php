@@ -30,9 +30,9 @@ function groups_screen_group_admin_avatar() {
 		check_admin_referer( 'bp_group_avatar_delete' );
 
 		if ( bp_core_delete_existing_avatar( array( 'item_id' => $bp->groups->current_group->id, 'object' => 'group' ) ) ) {
-			bp_core_add_message( __( 'The group profile photo was deleted successfully!', 'buddypress' ) );
+			bp_core_add_message( __( 'The group profile photo was deleted successfully!', 'buddyboss' ) );
 		} else {
-			bp_core_add_message( __( 'There was a problem deleting the group profile photo. Please try again.', 'buddypress' ), 'error' );
+			bp_core_add_message( __( 'There was a problem deleting the group profile photo. Please try again.', 'buddyboss' ), 'error' );
 		}
 	}
 
@@ -75,7 +75,7 @@ function groups_screen_group_admin_avatar() {
 		);
 
 		if ( !bp_core_avatar_handle_crop( $args ) ) {
-			bp_core_add_message( __( 'There was a problem cropping the group profile photo.', 'buddypress' ), 'error' );
+			bp_core_add_message( __( 'There was a problem cropping the group profile photo.', 'buddyboss' ), 'error' );
 		} else {
 			/**
 			 * Fires after a group avatar is uploaded.
@@ -87,7 +87,7 @@ function groups_screen_group_admin_avatar() {
 			 * @param array  $args     Array of parameters passed to the avatar handler.
 			 */
 			do_action( 'groups_avatar_uploaded', bp_get_current_group_id(), 'crop', $args );
-			bp_core_add_message( __( 'The new group profile photo was uploaded successfully.', 'buddypress' ) );
+			bp_core_add_message( __( 'The new group profile photo was uploaded successfully.', 'buddyboss' ) );
 		}
 	}
 

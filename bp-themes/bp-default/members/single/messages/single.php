@@ -11,17 +11,17 @@
 
 				<?php if ( !bp_get_the_thread_recipients() ) : ?>
 
-					<?php _e( 'You are alone in this conversation.', 'buddypress' ); ?>
+					<?php _e( 'You are alone in this conversation.', 'buddyboss' ); ?>
 
 				<?php else : ?>
 
-					<?php printf( __( 'Conversation between %s and you.', 'buddypress' ), bp_get_the_thread_recipients() ); ?>
+					<?php printf( __( 'Conversation between %s and you.', 'buddyboss' ), bp_get_the_thread_recipients() ); ?>
 
 				<?php endif; ?>
 
 			</span>
 
-			<a class="button confirm" href="<?php bp_the_thread_delete_link(); ?>" title="<?php esc_attr_e( "Delete Message", "buddyboss" ); ?>"><?php _e( 'Delete', 'buddypress' ); ?></a> &nbsp;
+			<a class="button confirm" href="<?php bp_the_thread_delete_link(); ?>" title="<?php esc_attr_e( "Delete Message", "buddyboss" ); ?>"><?php _e( 'Delete', 'buddyboss' ); ?></a> &nbsp;
 		</p>
 
 		<?php do_action( 'bp_before_message_thread_list' ); ?>
@@ -72,7 +72,7 @@
 					<div class="avatar-box">
 						<?php bp_loggedin_user_avatar( 'type=thumb&height=30&width=30' ); ?>
 
-						<strong><?php _e( 'Send a Reply', 'buddypress' ); ?></strong>
+						<strong><?php _e( 'Send a Reply', 'buddyboss' ); ?></strong>
 					</div>
 
 					<?php do_action( 'bp_after_message_meta' ); ?>
@@ -88,7 +88,7 @@
 					<?php do_action( 'bp_after_message_reply_box' ); ?>
 
 					<div class="submit">
-						<input type="submit" name="send" value="<?php esc_attr_e( 'Send Reply', 'buddypress' ); ?>" id="send_reply_button"/>
+						<input type="submit" name="send" value="<?php esc_attr_e( 'Send Reply', 'buddyboss' ); ?>" id="send_reply_button"/>
 					</div>
 
 					<input type="hidden" id="thread_id" name="thread_id" value="<?php bp_the_thread_id(); ?>" />

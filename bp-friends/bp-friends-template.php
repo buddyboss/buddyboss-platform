@@ -81,7 +81,7 @@ function bp_friends_random_friends() {
 	} ?>
 
 	<div class="info-group">
-		<h4><?php bp_word_or_name( __( "My Friends", 'buddypress' ), __( "%s's Friends", 'buddypress' ) ) ?>  (<?php echo BP_Friends_Friendship::total_friend_count( bp_displayed_user_id() ) ?>) <span><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() ) ?>"><?php _e('See All', 'buddypress') ?></a></span></h4>
+		<h4><?php bp_word_or_name( __( "My Friends", 'buddyboss' ), __( "%s's Friends", 'buddyboss' ) ) ?>  (<?php echo BP_Friends_Friendship::total_friend_count( bp_displayed_user_id() ) ?>) <span><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() ) ?>"><?php _e('See All', 'buddypress') ?></a></span></h4>
 
 		<?php if ( $friend_ids ) { ?>
 
@@ -101,7 +101,7 @@ function bp_friends_random_friends() {
 		<?php } else { ?>
 
 			<div id="message" class="info">
-				<p><?php bp_word_or_name( __( "You haven't added any friend connections yet.", 'buddypress' ), __( "%s hasn't created any friend connections yet.", 'buddypress' ) ) ?></p>
+				<p><?php bp_word_or_name( __( "You haven't added any friend connections yet.", 'buddyboss' ), __( "%s hasn't created any friend connections yet.", 'buddyboss' ) ) ?></p>
 			</div>
 
 		<?php } ?>
@@ -171,7 +171,7 @@ function bp_friends_random_members( $total_members = 5 ) {
 	<?php } else { ?>
 
 		<div id="message" class="info">
-			<p><?php _e( "There aren't enough site members to show a random sample just yet.", 'buddypress' ) ?></p>
+			<p><?php _e( "There aren't enough site members to show a random sample just yet.", 'buddyboss' ) ?></p>
 		</div>
 
 	<?php } ?>
@@ -188,7 +188,7 @@ function bp_friends_random_members( $total_members = 5 ) {
 function bp_friend_search_form() {
 
 	$action = bp_displayed_user_domain() . bp_get_friends_slug() . '/my-friends/search/';
-	$label  = __( 'Filter Friends', 'buddypress' ); ?>
+	$label  = __( 'Filter Friends', 'buddyboss' ); ?>
 
 		<form action="<?php echo $action ?>" id="friend-search-form" method="post">
 
@@ -244,11 +244,11 @@ function bp_member_total_friend_count() {
 			 * @param string $value String of the form "x friends".
 			 * @param int    $value Total friend count for current member in the loop.
 			 */
-			return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d friend', 'buddypress' ), (int) $members_template->member->total_friend_count ) );
+			return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d friend', 'buddyboss' ), (int) $members_template->member->total_friend_count ) );
 		} else {
 
 			/** This filter is documented in bp-friends/bp-friends-template.php */
-			return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d friends', 'buddypress' ), (int) $members_template->member->total_friend_count ) );
+			return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d friends', 'buddyboss' ), (int) $members_template->member->total_friend_count ) );
 		}
 	}
 
@@ -368,7 +368,7 @@ function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false 
 					'wrapper_class'     => 'friendship-button pending_friend',
 					'wrapper_id'        => 'friendship-button-' . $potential_friend_id,
 					'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/requests/cancel/' . $potential_friend_id . '/', 'friends_withdraw_friendship' ),
-					'link_text'         => __( 'Cancel Friendship Request', 'buddypress' ),
+					'link_text'         => __( 'Cancel Friendship Request', 'buddyboss' ),
 					'link_id'           => 'friend-' . $potential_friend_id,
 					'link_rel'          => 'remove',
 					'link_class'        => 'friendship-button pending_friend requested'
@@ -384,7 +384,7 @@ function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false 
 					'wrapper_class'     => 'friendship-button awaiting_response_friend',
 					'wrapper_id'        => 'friendship-button-' . $potential_friend_id,
 					'link_href'         => bp_loggedin_user_domain() . bp_get_friends_slug() . '/requests/',
-					'link_text'         => __( 'Friendship Requested', 'buddypress' ),
+					'link_text'         => __( 'Friendship Requested', 'buddyboss' ),
 					'link_id'           => 'friend-' . $potential_friend_id,
 					'link_rel'          => 'remove',
 					'link_class'        => 'friendship-button awaiting_response_friend requested'
@@ -400,7 +400,7 @@ function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false 
 					'wrapper_class'     => 'friendship-button is_friend',
 					'wrapper_id'        => 'friendship-button-' . $potential_friend_id,
 					'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/remove-friend/' . $potential_friend_id . '/', 'friends_remove_friend' ),
-					'link_text'         => __( 'Cancel Friendship', 'buddypress' ),
+					'link_text'         => __( 'Cancel Friendship', 'buddyboss' ),
 					'link_id'           => 'friend-' . $potential_friend_id,
 					'link_rel'          => 'remove',
 					'link_class'        => 'friendship-button is_friend remove'
@@ -416,7 +416,7 @@ function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false 
 					'wrapper_class'     => 'friendship-button not_friends',
 					'wrapper_id'        => 'friendship-button-' . $potential_friend_id,
 					'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/add-friend/' . $potential_friend_id . '/', 'friends_add_friend' ),
-					'link_text'         => __( 'Add Friend', 'buddypress' ),
+					'link_text'         => __( 'Add Friend', 'buddyboss' ),
 					'link_id'           => 'friend-' . $potential_friend_id,
 					'link_rel'          => 'add',
 					'link_class'        => 'friendship-button not_friends add'
@@ -716,7 +716,7 @@ function bp_friends_get_profile_stats( $args = '' ) {
 			}
 
 			// If friends exist, show some formatted output.
-			$r['output'] = $r['before'] . sprintf( _n( '%s friend', '%s friends', $r['friends'], 'buddypress' ), '<strong>' . $r['friends'] . '</strong>' ) . $r['after'];
+			$r['output'] = $r['before'] . sprintf( _n( '%s friend', '%s friends', $r['friends'], 'buddyboss' ), '<strong>' . $r['friends'] . '</strong>' ) . $r['after'];
 		}
 	}
 

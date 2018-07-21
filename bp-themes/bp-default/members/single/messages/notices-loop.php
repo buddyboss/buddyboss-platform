@@ -33,7 +33,7 @@
 
 					<?php endif; ?>
 
-					<span class="activity"><?php _e( 'Sent:', 'buddypress' ); ?> <?php bp_message_notice_post_date(); ?></span>
+					<span class="activity"><?php _e( 'Sent:', 'buddyboss' ); ?> <?php bp_message_notice_post_date(); ?></span>
 				</td>
 
 				<?php do_action( 'bp_notices_list_item' ); ?>
@@ -51,7 +51,7 @@
 <?php else: ?>
 
 	<div id="message" class="info">
-		<p><?php _e( 'Sorry, no notices were found.', 'buddypress' ); ?></p>
+		<p><?php _e( 'Sorry, no notices were found.', 'buddyboss' ); ?></p>
 	</div>
 
 <?php endif;?>

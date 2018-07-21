@@ -34,9 +34,9 @@ function bp_messages_action_create_message() {
 		$success  = false;
 
 		if ( empty( $_POST['subject'] ) ) {
-			$feedback = __( 'Your message was not sent. Please enter a subject line.', 'buddypress' );
+			$feedback = __( 'Your message was not sent. Please enter a subject line.', 'buddyboss' );
 		} else {
-			$feedback = __( 'Your message was not sent. Please enter some content.', 'buddypress' );
+			$feedback = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
 		}
 
 	// Subject and content present.
@@ -51,13 +51,13 @@ function bp_messages_action_create_message() {
 			// Attempt to save the notice and redirect to notices.
 			if ( messages_send_notice( $_POST['subject'], $_POST['content'] ) ) {
 				$success     = true;
-				$feedback    = __( 'Notice successfully created.', 'buddypress' );
+				$feedback    = __( 'Notice successfully created.', 'buddyboss' );
 				$redirect_to = trailingslashit( $member_messages . 'notices' );
 
 			// Notice could not be sent.
 			} else {
 				$success  = false;
-				$feedback = __( 'Notice was not created. Please try again.', 'buddypress' );
+				$feedback = __( 'Notice was not created. Please try again.', 'buddyboss' );
 			}
 
 		// Private conversation.
@@ -88,7 +88,7 @@ function bp_messages_action_create_message() {
 			// Send the message and redirect to it.
 			if ( true === is_int( $send ) ) {
 				$success     = true;
-				$feedback    = __( 'Message successfully sent.', 'buddypress' );
+				$feedback    = __( 'Message successfully sent.', 'buddyboss' );
 				$view        = trailingslashit( $member_messages . 'view' );
 				$redirect_to = trailingslashit( $view . $send );
 

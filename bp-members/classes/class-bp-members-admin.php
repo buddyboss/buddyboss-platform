@@ -350,25 +350,25 @@ class BP_Members_Admin {
 			case 'avatar':
 				$notice = array(
 					'class'   => 'updated',
-					'message' => __( 'Profile photo was deleted.', 'buddypress' )
+					'message' => __( 'Profile photo was deleted.', 'buddyboss' )
 				);
 				break;
 			case 'ham' :
 				$notice = array(
 					'class'   => 'updated',
-					'message' => __( 'User removed as spammer.', 'buddypress' )
+					'message' => __( 'User removed as spammer.', 'buddyboss' )
 				);
 				break;
 			case 'spam' :
 				$notice = array(
 					'class'   => 'updated',
-					'message' => __( 'User marked as spammer. Spam users are visible only to site admins.', 'buddypress' )
+					'message' => __( 'User marked as spammer. Spam users are visible only to site admins.', 'buddyboss' )
 				);
 				break;
 			case 1 :
 				$notice = array(
 					'class'   => 'updated',
-					'message' => __( 'Profile updated.', 'buddypress' )
+					'message' => __( 'Profile updated.', 'buddyboss' )
 				);
 				break;
 			}
@@ -380,37 +380,37 @@ class BP_Members_Admin {
 			case 'avatar':
 				$notice = array(
 					'class'   => 'error',
-					'message' => __( 'There was a problem deleting that profile photo. Please try again.', 'buddypress' )
+					'message' => __( 'There was a problem deleting that profile photo. Please try again.', 'buddyboss' )
 				);
 				break;
 			case 'ham' :
 				$notice = array(
 					'class'   => 'error',
-					'message' => __( 'User could not be removed as spammer.', 'buddypress' )
+					'message' => __( 'User could not be removed as spammer.', 'buddyboss' )
 				);
 				break;
 			case 'spam' :
 				$notice = array(
 					'class'   => 'error',
-					'message' => __( 'User could not be marked as spammer.', 'buddypress' )
+					'message' => __( 'User could not be marked as spammer.', 'buddyboss' )
 				);
 				break;
 			case 1 :
 				$notice = array(
 					'class'   => 'error',
-					'message' => __( 'An error occurred while trying to update the profile.', 'buddypress' )
+					'message' => __( 'An error occurred while trying to update the profile.', 'buddyboss' )
 				);
 				break;
 			case 2:
 				$notice = array(
 					'class'   => 'error',
-					'message' => __( 'Your changes have not been saved. Please fill in all required fields, and save your changes again.', 'buddypress' )
+					'message' => __( 'Your changes have not been saved. Please fill in all required fields, and save your changes again.', 'buddyboss' )
 				);
 				break;
 			case 3:
 				$notice = array(
 					'class'   => 'error',
-					'message' => __( 'There was a problem updating some of your profile information. Please try again.', 'buddypress' )
+					'message' => __( 'There was a problem updating some of your profile information. Please try again.', 'buddyboss' )
 				);
 				break;
 			}
@@ -705,11 +705,11 @@ class BP_Members_Admin {
 			 */
 			if ( current_user_can( 'edit_user', $user->ID ) ) : ?>
 
-				<a class="nav-tab<?php echo esc_attr( $wp_active ); ?>" href="<?php echo esc_url( $wordpress_url );?>"><?php _e( 'Profile', 'buddypress' ); ?></a>
+				<a class="nav-tab<?php echo esc_attr( $wp_active ); ?>" href="<?php echo esc_url( $wordpress_url );?>"><?php _e( 'Profile', 'buddyboss' ); ?></a>
 
 			<?php endif; ?>
 
-			<a class="nav-tab<?php echo esc_attr( $bp_active ); ?>" href="<?php echo esc_url( $community_url );?>"><?php _e( 'Extended Profile', 'buddypress' ); ?></a>
+			<a class="nav-tab<?php echo esc_attr( $bp_active ); ?>" href="<?php echo esc_url( $community_url );?>"><?php _e( 'Extended Profile', 'buddyboss' ); ?></a>
 		</h2>
 
 		<?php
@@ -731,7 +731,7 @@ class BP_Members_Admin {
 
 		// Can current user edit this profile?
 		if ( ! $this->member_can_edit( $user_id ) ) {
-			wp_die( __( 'You cannot edit the requested user.', 'buddypress' ) );
+			wp_die( __( 'You cannot edit the requested user.', 'buddyboss' ) );
 		}
 
 		// Build redirection URL.
@@ -771,24 +771,24 @@ class BP_Members_Admin {
 
 			get_current_screen()->add_help_tab( array(
 				'id'      => 'bp-profile-edit-overview',
-				'title'   => __( 'Overview', 'buddypress' ),
+				'title'   => __( 'Overview', 'buddyboss' ),
 				'content' =>
-				'<p>' . __( 'This is the admin view of a user&#39;s profile.', 'buddypress' ) . '</p>' .
-				'<p>' . __( 'In the main column, you can edit the fields of the user&#39;s extended profile.', 'buddypress' ) . '</p>' .
-				'<p>' . __( 'In the right-hand column, you can update the user&#39;s status, delete the user&#39;s avatar, and view recent statistics.', 'buddypress' ) . '</p>'
+				'<p>' . __( 'This is the admin view of a user&#39;s profile.', 'buddyboss' ) . '</p>' .
+				'<p>' . __( 'In the main column, you can edit the fields of the user&#39;s extended profile.', 'buddyboss' ) . '</p>' .
+				'<p>' . __( 'In the right-hand column, you can update the user&#39;s status, delete the user&#39;s avatar, and view recent statistics.', 'buddyboss' ) . '</p>'
 			) );
 
 			// Help panel - sidebar links.
 			get_current_screen()->set_help_sidebar(
-				'<p><strong>' . __( 'For more information:', 'buddypress' ) . '</strong></p>' .
-				'<p>' . __( '<a href="https://codex.buddypress.org/administrator-guide/extended-profiles/">Managing Profiles</a>', 'buddypress' ) . '</p>' .
-				'<p>' . __( '<a href="https://buddypress.org/support/">Support Forums</a>', 'buddypress' ) . '</p>'
+				'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
+				'<p>' . __( '<a href="https://codex.buddypress.org/administrator-guide/extended-profiles/">Managing Profiles</a>', 'buddyboss' ) . '</p>' .
+				'<p>' . __( '<a href="https://buddypress.org/support/">Support Forums</a>', 'buddyboss' ) . '</p>'
 			);
 
 			// Register metaboxes for the edit screen.
 			add_meta_box(
 				'submitdiv',
-				_x( 'Status', 'members user-admin edit screen', 'buddypress' ),
+				_x( 'Status', 'members user-admin edit screen', 'buddyboss' ),
 				array( $this, 'user_admin_status_metabox' ),
 				get_current_screen()->id,
 				'side',
@@ -816,13 +816,13 @@ class BP_Members_Admin {
 			if ( 'normal' === $this->stats_metabox->context ) {
 				$display_name = bp_core_get_user_displayname( $user_id );
 			} else {
-				$display_name = __( 'Member', 'buddypress' );
+				$display_name = __( 'Member', 'buddyboss' );
 			}
 
 			// User Stat metabox.
 			add_meta_box(
 				'bp_members_admin_user_stats',
-				sprintf( _x( "%s's Stats", 'members user-admin edit screen', 'buddypress' ), $display_name ),
+				sprintf( _x( "%s's Stats", 'members user-admin edit screen', 'buddyboss' ), $display_name ),
 				array( $this, 'user_admin_stats_metabox' ),
 				get_current_screen()->id,
 				sanitize_key( $this->stats_metabox->context ),
@@ -834,7 +834,7 @@ class BP_Members_Admin {
 			if ( ! empty( $member_types ) ) {
 				add_meta_box(
 					'bp_members_admin_member_type',
-					_x( 'Member Type', 'members user-admin edit screen', 'buddypress' ),
+					_x( 'Member Type', 'members user-admin edit screen', 'buddyboss' ),
 					array( $this, 'user_admin_member_type_metabox' ),
 					get_current_screen()->id,
 					'side',
@@ -913,7 +913,7 @@ class BP_Members_Admin {
 		if ( true === $this->is_self_profile ) {
 			$title = __( 'Profile',   'buddypress' );
 		} else {
-			$title = __( 'Edit User', 'buddypress' );
+			$title = __( 'Edit User', 'buddyboss' );
 		}
 
 		// Construct URL for form.
@@ -937,7 +937,7 @@ class BP_Members_Admin {
 
 				<?php if ( !empty( $wp_http_referer ) && ( 'updated' === $notice['class'] ) ) : ?>
 
-					<p><a href="<?php echo esc_url( $wp_http_referer ); ?>"><?php esc_html_e( '&larr; Back to Users', 'buddypress' ); ?></a></p>
+					<p><a href="<?php echo esc_url( $wp_http_referer ); ?>"><?php esc_html_e( '&larr; Back to Users', 'buddyboss' ); ?></a></p>
 
 				<?php endif; ?>
 
@@ -954,11 +954,11 @@ class BP_Members_Admin {
 
 					<?php if ( current_user_can( 'create_users' ) ) : ?>
 
-						<a href="user-new.php" class="page-title-action"><?php echo esc_html_x( 'Add New', 'user', 'buddypress' ); ?></a>
+						<a href="user-new.php" class="page-title-action"><?php echo esc_html_x( 'Add New', 'user', 'buddyboss' ); ?></a>
 
 					<?php elseif ( is_multisite() && current_user_can( 'promote_users' ) ) : ?>
 
-						<a href="user-new.php" class="page-title-action"><?php echo esc_html_x( 'Add Existing', 'user', 'buddypress' ); ?></a>
+						<a href="user-new.php" class="page-title-action"><?php echo esc_html_x( 'Add Existing', 'user', 'buddyboss' ); ?></a>
 
 					<?php endif; ?>
 
@@ -974,11 +974,11 @@ class BP_Members_Admin {
 
 						<?php if ( current_user_can( 'create_users' ) ) : ?>
 
-							<a href="user-new.php" class="add-new-h2"><?php echo esc_html_x( 'Add New', 'user', 'buddypress' ); ?></a>
+							<a href="user-new.php" class="add-new-h2"><?php echo esc_html_x( 'Add New', 'user', 'buddyboss' ); ?></a>
 
 						<?php elseif ( is_multisite() && current_user_can( 'promote_users' ) ) : ?>
 
-							<a href="user-new.php" class="add-new-h2"><?php echo esc_html_x( 'Add Existing', 'user', 'buddypress' ); ?></a>
+							<a href="user-new.php" class="add-new-h2"><?php echo esc_html_x( 'Add Existing', 'user', 'buddyboss' ); ?></a>
 
 						<?php endif; ?>
 
@@ -1019,9 +1019,9 @@ class BP_Members_Admin {
 				<p><?php
 					printf(
 						'%1$s <a href="%2$s">%3$s</a>',
-						__( 'No user found with this ID.', 'buddypress' ),
+						__( 'No user found with this ID.', 'buddyboss' ),
 						esc_url( bp_get_admin_url( 'users.php' ) ),
-						__( 'Go back and try again.', 'buddypress' )
+						__( 'Go back and try again.', 'buddyboss' )
 					);
 				?></p>
 
@@ -1052,7 +1052,7 @@ class BP_Members_Admin {
 		// Bail if user has not been activated yet (how did you get here?).
 		if ( isset( $user->user_status ) && ( 2 == $user->user_status ) ) : ?>
 
-			<p class="not-activated"><?php esc_html_e( 'User account has not yet been activated', 'buddypress' ); ?></p><br/>
+			<p class="not-activated"><?php esc_html_e( 'User account has not yet been activated', 'buddyboss' ); ?></p><br/>
 
 			<?php return;
 
@@ -1077,8 +1077,8 @@ class BP_Members_Admin {
 					if ( ( empty( $this->is_self_profile ) && ( ! in_array( $user->user_login, get_super_admins() ) ) && empty( $this->subsite_activated ) ) || ( ! empty( $this->subsite_activated ) && current_user_can( 'manage_network_users' ) ) ) : ?>
 
 						<div class="misc-pub-section" id="comment-status-radio">
-							<label class="approved"><input type="radio" name="user_status" value="ham" <?php checked( $is_spammer, false ); ?>><?php esc_html_e( 'Active', 'buddypress' ); ?></label><br />
-							<label class="spam"><input type="radio" name="user_status" value="spam" <?php checked( $is_spammer, true ); ?>><?php esc_html_e( 'Spammer', 'buddypress' ); ?></label>
+							<label class="approved"><input type="radio" name="user_status" value="ham" <?php checked( $is_spammer, false ); ?>><?php esc_html_e( 'Active', 'buddyboss' ); ?></label><br />
+							<label class="spam"><input type="radio" name="user_status" value="spam" <?php checked( $is_spammer, true ); ?>><?php esc_html_e( 'Spammer', 'buddyboss' ); ?></label>
 						</div>
 
 					<?php endif ;?>
@@ -1087,10 +1087,10 @@ class BP_Members_Admin {
 						<?php
 
 						// Translators: Publish box date format, see http://php.net/date.
-						$datef = __( 'M j, Y @ G:i', 'buddypress' );
+						$datef = __( 'M j, Y @ G:i', 'buddyboss' );
 						$date  = date_i18n( $datef, strtotime( $user->user_registered ) );
 						?>
-						<span id="timestamp"><?php printf( __( 'Registered on: %s', 'buddypress' ), '<strong>' . $date . '</strong>' ); ?></span>
+						<span id="timestamp"><?php printf( __( 'Registered on: %s', 'buddyboss' ), '<strong>' . $date . '</strong>' ); ?></span>
 					</div>
 				</div> <!-- #misc-publishing-actions -->
 
@@ -1100,8 +1100,8 @@ class BP_Members_Admin {
 			<div id="major-publishing-actions">
 
 				<div id="publishing-action">
-					<a class="button bp-view-profile" href="<?php echo esc_url( bp_core_get_user_domain( $user->ID ) ); ?>" target="_blank"><?php esc_html_e( 'View Profile', 'buddypress' ); ?></a>
-					<?php submit_button( esc_html__( 'Update Profile', 'buddypress' ), 'primary', 'save', false ); ?>
+					<a class="button bp-view-profile" href="<?php echo esc_url( bp_core_get_user_domain( $user->ID ) ); ?>" target="_blank"><?php esc_html_e( 'View Profile', 'buddyboss' ); ?></a>
+					<?php submit_button( esc_html__( 'Update Profile', 'buddyboss' ), 'primary', 'save', false ); ?>
 				</div>
 				<div class="clear"></div>
 			</div><!-- #major-publishing-actions -->
@@ -1120,7 +1120,7 @@ class BP_Members_Admin {
 	 */
 	public function user_admin_spammer_metabox( $user = null ) {
 	?>
-		<p><?php printf( __( '%s has been marked as a spammer. All BuddyPress data associated with the user has been removed', 'buddypress' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ) ;?></p>
+		<p><?php printf( __( '%s has been marked as a spammer. All BuddyPress data associated with the user has been removed', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ) ;?></p>
 	<?php
 	}
 
@@ -1147,11 +1147,11 @@ class BP_Members_Admin {
 			$last_active = bp_get_user_last_activity( $user->ID );
 		}
 
-		$datef = __( 'M j, Y @ G:i', 'buddypress' );
+		$datef = __( 'M j, Y @ G:i', 'buddyboss' );
 		$date  = date_i18n( $datef, strtotime( $last_active ) ); ?>
 
 		<ul>
-			<li class="bp-members-profile-stats"><?php printf( __( 'Last active: %1$s', 'buddypress' ), '<strong>' . $date . '</strong>' ); ?></li>
+			<li class="bp-members-profile-stats"><?php printf( __( 'Last active: %1$s', 'buddyboss' ), '<strong>' . $date . '</strong>' ); ?></li>
 
 			<?php
 			// Loading other stats only if user has activated their account.
@@ -1193,12 +1193,12 @@ class BP_Members_Admin {
 
 		<label for="bp-members-profile-member-type" class="screen-reader-text"><?php
 			/* translators: accessibility text */
-			esc_html_e( 'Select member type', 'buddypress' );
+			esc_html_e( 'Select member type', 'buddyboss' );
 		?></label>
 		<select name="bp-members-profile-member-type" id="bp-members-profile-member-type">
 			<option value="" <?php selected( '', $current_type ); ?>><?php
 				/* translators: no option picked in select box */
-				esc_attr_e( '----', 'buddypress' );
+				esc_attr_e( '----', 'buddyboss' );
 			?></option>
 			<?php foreach ( $types as $type ) : ?>
 				<option value="<?php echo esc_attr( $type->name ) ?>" <?php selected( $type->name, $current_type ) ?>><?php echo esc_html( $type->labels['singular_name'] ) ?></option>
@@ -1278,7 +1278,7 @@ class BP_Members_Admin {
 
 			// Add query args and setup the Extended link.
 			$edit_profile      = add_query_arg( $args, $this->edit_profile_url );
-			$edit_profile_link = sprintf( '<a href="%1$s">%2$s</a>',  esc_url( $edit_profile ), esc_html__( 'Extended', 'buddypress' ) );
+			$edit_profile_link = sprintf( '<a href="%1$s">%2$s</a>',  esc_url( $edit_profile ), esc_html__( 'Extended', 'buddyboss' ) );
 
 			/**
 			 * Check the edit action is available
@@ -1439,7 +1439,7 @@ class BP_Members_Admin {
 		}
 
 		$url     = add_query_arg( 'page', 'bp-signups', $base_url );
-		$text    = sprintf( _x( 'Pending %s', 'signup users', 'buddypress' ), '<span class="count">(' . number_format_i18n( $signups ) . ')</span>' );
+		$text    = sprintf( _x( 'Pending %s', 'signup users', 'buddyboss' ), '<span class="count">(' . number_format_i18n( $signups ) . ')</span>' );
 
 		$views['registered'] = sprintf( '<a href="%1$s" class="%2$s">%3$s</a>', esc_url( $url ), $class, $text );
 
@@ -1514,43 +1514,43 @@ class BP_Members_Admin {
 			}
 
 			// The per_page screen option.
-			add_screen_option( 'per_page', array( 'label' => _x( 'Pending Accounts', 'Pending Accounts per page (screen options)', 'buddypress' ) ) );
+			add_screen_option( 'per_page', array( 'label' => _x( 'Pending Accounts', 'Pending Accounts per page (screen options)', 'buddyboss' ) ) );
 
 			get_current_screen()->add_help_tab( array(
 				'id'      => 'bp-signups-overview',
-				'title'   => __( 'Overview', 'buddypress' ),
+				'title'   => __( 'Overview', 'buddyboss' ),
 				'content' =>
-				'<p>' . __( 'This is the administration screen for pending accounts on your site.', 'buddypress' ) . '</p>' .
-				'<p>' . __( 'From the screen options, you can customize the displayed columns and the pagination of this screen.', 'buddypress' ) . '</p>' .
-				'<p>' . __( 'You can reorder the list of your pending accounts by clicking on the Username, Email or Registered column headers.', 'buddypress' ) . '</p>' .
-				'<p>' . __( 'Using the search form, you can find pending accounts more easily. The Username and Email fields will be included in the search.', 'buddypress' ) . '</p>'
+				'<p>' . __( 'This is the administration screen for pending accounts on your site.', 'buddyboss' ) . '</p>' .
+				'<p>' . __( 'From the screen options, you can customize the displayed columns and the pagination of this screen.', 'buddyboss' ) . '</p>' .
+				'<p>' . __( 'You can reorder the list of your pending accounts by clicking on the Username, Email or Registered column headers.', 'buddyboss' ) . '</p>' .
+				'<p>' . __( 'Using the search form, you can find pending accounts more easily. The Username and Email fields will be included in the search.', 'buddyboss' ) . '</p>'
 			) );
 
 			get_current_screen()->add_help_tab( array(
 				'id'      => 'bp-signups-actions',
-				'title'   => __( 'Actions', 'buddypress' ),
+				'title'   => __( 'Actions', 'buddyboss' ),
 				'content' =>
-				'<p>' . __( 'Hovering over a row in the pending accounts list will display action links that allow you to manage pending accounts. You can perform the following actions:', 'buddypress' ) . '</p>' .
-				'<ul><li>' . __( '"Email" takes you to the confirmation screen before being able to send the activation link to the desired pending account. You can only send the activation email once per day.', 'buddypress' ) . '</li>' .
-				'<li>' . __( '"Delete" allows you to delete a pending account from your site. You will be asked to confirm this deletion.', 'buddypress' ) . '</li></ul>' .
-				'<p>' . __( 'By clicking on a Username you will be able to activate a pending account from the confirmation screen.', 'buddypress' ) . '</p>' .
-				'<p>' . __( 'Bulk actions allow you to perform these 3 actions for the selected rows.', 'buddypress' ) . '</p>'
+				'<p>' . __( 'Hovering over a row in the pending accounts list will display action links that allow you to manage pending accounts. You can perform the following actions:', 'buddyboss' ) . '</p>' .
+				'<ul><li>' . __( '"Email" takes you to the confirmation screen before being able to send the activation link to the desired pending account. You can only send the activation email once per day.', 'buddyboss' ) . '</li>' .
+				'<li>' . __( '"Delete" allows you to delete a pending account from your site. You will be asked to confirm this deletion.', 'buddyboss' ) . '</li></ul>' .
+				'<p>' . __( 'By clicking on a Username you will be able to activate a pending account from the confirmation screen.', 'buddyboss' ) . '</p>' .
+				'<p>' . __( 'Bulk actions allow you to perform these 3 actions for the selected rows.', 'buddyboss' ) . '</p>'
 			) );
 
 			// Help panel - sidebar links.
 			get_current_screen()->set_help_sidebar(
-				'<p><strong>' . __( 'For more information:', 'buddypress' ) . '</strong></p>' .
-				'<p>' . __( '<a href="https://buddypress.org/support/">Support Forums</a>', 'buddypress' ) . '</p>'
+				'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
+				'<p>' . __( '<a href="https://buddypress.org/support/">Support Forums</a>', 'buddyboss' ) . '</p>'
 			);
 
 			// Add accessible hidden headings and text for the Pending Users screen.
 			get_current_screen()->set_screen_reader_content( array(
 				/* translators: accessibility text */
-				'heading_views'      => __( 'Filter users list', 'buddypress' ),
+				'heading_views'      => __( 'Filter users list', 'buddyboss' ),
 				/* translators: accessibility text */
-				'heading_pagination' => __( 'Pending users list navigation', 'buddypress' ),
+				'heading_pagination' => __( 'Pending users list navigation', 'buddyboss' ),
 				/* translators: accessibility text */
-				'heading_list'       => __( 'Pending users list', 'buddypress' ),
+				'heading_list'       => __( 'Pending users list', 'buddyboss' ),
 			) );
 
 		} else {
@@ -1810,21 +1810,21 @@ class BP_Members_Admin {
 				case 'do_resend':
 					$notice = array(
 						'class'   => 'error',
-						'message' => esc_html__( 'There was a problem sending the activation emails. Please try again.', 'buddypress' ),
+						'message' => esc_html__( 'There was a problem sending the activation emails. Please try again.', 'buddyboss' ),
 					);
 					break;
 
 				case 'do_activate':
 					$notice = array(
 						'class'   => 'error',
-						'message' => esc_html__( 'There was a problem activating accounts. Please try again.', 'buddypress' ),
+						'message' => esc_html__( 'There was a problem activating accounts. Please try again.', 'buddyboss' ),
 					);
 					break;
 
 				case 'do_delete':
 					$notice = array(
 						'class'   => 'error',
-						'message' => esc_html__( 'There was a problem deleting sign-ups. Please try again.', 'buddypress' ),
+						'message' => esc_html__( 'There was a problem deleting sign-ups. Please try again.', 'buddyboss' ),
 					);
 					break;
 			}
@@ -1948,20 +1948,20 @@ class BP_Members_Admin {
 		<div class="wrap">
 			<?php if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) : ?>
 
-				<h1 class="wp-heading-inline"><?php _e( 'Users', 'buddypress' ); ?></h1>
+				<h1 class="wp-heading-inline"><?php _e( 'Users', 'buddyboss' ); ?></h1>
 
 				<?php if ( current_user_can( 'create_users' ) ) : ?>
 
-					<a href="user-new.php" class="page-title-action"><?php echo esc_html_x( 'Add New', 'user', 'buddypress' ); ?></a>
+					<a href="user-new.php" class="page-title-action"><?php echo esc_html_x( 'Add New', 'user', 'buddyboss' ); ?></a>
 
 				<?php elseif ( is_multisite() && current_user_can( 'promote_users' ) ) : ?>
 
-					<a href="user-new.php" class="page-title-action"><?php echo esc_html_x( 'Add Existing', 'user', 'buddypress' ); ?></a>
+					<a href="user-new.php" class="page-title-action"><?php echo esc_html_x( 'Add Existing', 'user', 'buddyboss' ); ?></a>
 
 				<?php endif;
 
 				if ( $usersearch ) {
-					printf( '<span class="subtitle">' . __( 'Search results for &#8220;%s&#8221;', 'buddypress' ) . '</span>', esc_html( $usersearch ) );
+					printf( '<span class="subtitle">' . __( 'Search results for &#8220;%s&#8221;', 'buddyboss' ) . '</span>', esc_html( $usersearch ) );
 				}
 				?>
 
@@ -1969,20 +1969,20 @@ class BP_Members_Admin {
 
 			<?php else : ?>
 
-				<h1><?php _e( 'Users', 'buddypress' ); ?>
+				<h1><?php _e( 'Users', 'buddyboss' ); ?>
 
 					<?php if ( current_user_can( 'create_users' ) ) : ?>
 
-						<a href="user-new.php" class="add-new-h2"><?php echo esc_html_x( 'Add New', 'user', 'buddypress' ); ?></a>
+						<a href="user-new.php" class="add-new-h2"><?php echo esc_html_x( 'Add New', 'user', 'buddyboss' ); ?></a>
 
 					<?php elseif ( is_multisite() && current_user_can( 'promote_users' ) ) : ?>
 
-						<a href="user-new.php" class="add-new-h2"><?php echo esc_html_x( 'Add Existing', 'user', 'buddypress' ); ?></a>
+						<a href="user-new.php" class="add-new-h2"><?php echo esc_html_x( 'Add Existing', 'user', 'buddyboss' ); ?></a>
 
 					<?php endif;
 
 					if ( $usersearch ) {
-						printf( '<span class="subtitle">' . __( 'Search results for &#8220;%s&#8221;', 'buddypress' ) . '</span>', esc_html( $usersearch ) );
+						printf( '<span class="subtitle">' . __( 'Search results for &#8220;%s&#8221;', 'buddyboss' ) . '</span>', esc_html( $usersearch ) );
 					}
 
 					?>
@@ -1995,7 +1995,7 @@ class BP_Members_Admin {
 
 			<form id="bp-signups-search-form" action="<?php echo esc_url( $search_form_url ) ;?>">
 				<input type="hidden" name="page" value="<?php echo esc_attr( $plugin_page ); ?>" />
-				<?php $bp_members_signup_list_table->search_box( __( 'Search Pending Users', 'buddypress' ), 'bp-signups' ); ?>
+				<?php $bp_members_signup_list_table->search_box( __( 'Search Pending Users', 'buddyboss' ), 'bp-signups' ); ?>
 			</form>
 
 			<form id="bp-signups-form" action="<?php echo esc_url( $form_url );?>" method="post">
@@ -2043,29 +2043,29 @@ class BP_Members_Admin {
 		// Set up strings.
 		switch ( $action ) {
 			case 'delete' :
-				$header_text = __( 'Delete Pending Accounts', 'buddypress' );
+				$header_text = __( 'Delete Pending Accounts', 'buddyboss' );
 				if ( 1 == count( $signup_ids ) ) {
-					$helper_text = __( 'You are about to delete the following account:', 'buddypress' );
+					$helper_text = __( 'You are about to delete the following account:', 'buddyboss' );
 				} else {
-					$helper_text = __( 'You are about to delete the following accounts:', 'buddypress' );
+					$helper_text = __( 'You are about to delete the following accounts:', 'buddyboss' );
 				}
 				break;
 
 			case 'activate' :
-				$header_text = __( 'Activate Pending Accounts', 'buddypress' );
+				$header_text = __( 'Activate Pending Accounts', 'buddyboss' );
 				if ( 1 == count( $signup_ids ) ) {
-					$helper_text = __( 'You are about to activate the following account:', 'buddypress' );
+					$helper_text = __( 'You are about to activate the following account:', 'buddyboss' );
 				} else {
-					$helper_text = __( 'You are about to activate the following accounts:', 'buddypress' );
+					$helper_text = __( 'You are about to activate the following accounts:', 'buddyboss' );
 				}
 				break;
 
 			case 'resend' :
-				$header_text = __( 'Resend Activation Emails', 'buddypress' );
+				$header_text = __( 'Resend Activation Emails', 'buddyboss' );
 				if ( 1 == count( $signup_ids ) ) {
-					$helper_text = __( 'You are about to resend an activation email to the following account:', 'buddypress' );
+					$helper_text = __( 'You are about to resend an activation email to the following account:', 'buddyboss' );
 				} else {
-					$helper_text = __( 'You are about to resend an activation email to the following accounts:', 'buddypress' );
+					$helper_text = __( 'You are about to resend an activation email to the following accounts:', 'buddyboss' );
 				}
 				break;
 		}
@@ -2134,12 +2134,12 @@ class BP_Members_Admin {
 						<table class="wp-list-table widefat fixed striped">
 							<tbody>
 								<tr>
-									<td class="column-fields"><?php esc_html_e( 'Display Name', 'buddypress' ); ?></td>
+									<td class="column-fields"><?php esc_html_e( 'Display Name', 'buddyboss' ); ?></td>
 									<td><?php echo esc_html( $signup->user_name ); ?></td>
 								</tr>
 
 								<tr>
-									<td class="column-fields"><?php esc_html_e( 'Email', 'buddypress' ); ?></td>
+									<td class="column-fields"><?php esc_html_e( 'Email', 'buddyboss' ); ?></td>
 									<td><?php echo sanitize_email( $signup->user_email ); ?></td>
 								</tr>
 
@@ -2166,7 +2166,7 @@ class BP_Members_Admin {
 
 							<?php if ( ! empty( $signup->recently_sent ) ) : ?>
 
-								<span class="attention wp-ui-text-notification"> <?php esc_html_e( '(less than 24 hours ago)', 'buddypress' ); ?></span>
+								<span class="attention wp-ui-text-notification"> <?php esc_html_e( '(less than 24 hours ago)', 'buddyboss' ); ?></span>
 
 							<?php endif; ?>
 						</p>
@@ -2180,12 +2180,12 @@ class BP_Members_Admin {
 
 			<?php if ( 'delete' === $action ) : ?>
 
-				<p><strong><?php esc_html_e( 'This action cannot be undone.', 'buddypress' ) ?></strong></p>
+				<p><strong><?php esc_html_e( 'This action cannot be undone.', 'buddyboss' ) ?></strong></p>
 
 			<?php endif ; ?>
 
-			<a class="button-primary" href="<?php echo esc_url( $action_url ); ?>"><?php esc_html_e( 'Confirm', 'buddypress' ); ?></a>
-			<a class="button" href="<?php echo esc_url( $cancel_url ); ?>"><?php esc_html_e( 'Cancel', 'buddypress' ) ?></a>
+			<a class="button-primary" href="<?php echo esc_url( $action_url ); ?>"><?php esc_html_e( 'Confirm', 'buddyboss' ); ?></a>
+			<a class="button" href="<?php echo esc_url( $cancel_url ); ?>"><?php esc_html_e( 'Cancel', 'buddyboss' ) ?></a>
 		</div>
 
 		<?php
@@ -2218,9 +2218,9 @@ class BP_Members_Admin {
 
 		$types = bp_get_member_types( array(), 'objects' ); ?>
 
-		<label class="screen-reader-text" for="<?php echo $id_name; ?>"><?php _e( 'Change member type to&hellip;', 'buddypress' ) ?></label>
+		<label class="screen-reader-text" for="<?php echo $id_name; ?>"><?php _e( 'Change member type to&hellip;', 'buddyboss' ) ?></label>
 		<select name="<?php echo $id_name; ?>" id="<?php echo $id_name; ?>" style="display:inline-block;float:none;">
-			<option value=""><?php _e( 'Change member type to&hellip;', 'buddypress' ) ?></option>
+			<option value=""><?php _e( 'Change member type to&hellip;', 'buddyboss' ) ?></option>
 
 			<?php foreach( $types as $type ) : ?>
 
@@ -2228,12 +2228,12 @@ class BP_Members_Admin {
 
 			<?php endforeach; ?>
 
-			<option value="remove_member_type"><?php _e( 'No Member Type', 'buddypress' ) ?></option>
+			<option value="remove_member_type"><?php _e( 'No Member Type', 'buddyboss' ) ?></option>
 
 		</select>
 		<?php
 		wp_nonce_field( 'bp-bulk-users-change-type-' . bp_loggedin_user_id(), 'bp-bulk-users-change-type-nonce' );
-		submit_button( __( 'Change', 'buddypress' ), 'button', 'bp_change_member_type', false );
+		submit_button( __( 'Change', 'buddyboss' ), 'button', 'bp_change_member_type', false );
 	}
 
 	/**
@@ -2323,10 +2323,10 @@ class BP_Members_Admin {
 		if ( $updated && in_array( $updated, array( 'member-type-change-error', 'member-type-change-success' ), true ) ) {
 
 			if ( 'member-type-change-error' === $updated ) {
-				$notice = __( 'There was an error while changing member type. Please try again.', 'buddypress' );
+				$notice = __( 'There was an error while changing member type. Please try again.', 'buddyboss' );
 				$type   = 'error';
 			} else {
-				$notice = __( 'Member type was changed successfully.', 'buddypress' );
+				$notice = __( 'Member type was changed successfully.', 'buddyboss' );
 				$type   = 'updated';
 			}
 
@@ -2344,7 +2344,7 @@ class BP_Members_Admin {
 	 * @return array $columns
 	 */
 	public function users_table_add_type_column( $columns = array() ) {
-		$columns[ bp_get_member_type_tax_name() ] = _x( 'Member Type', 'Label for the WP users table member type column', 'buddypress' );
+		$columns[ bp_get_member_type_tax_name() ] = _x( 'Member Type', 'Label for the WP users table member type column', 'buddyboss' );
 
 		return $columns;
 	}

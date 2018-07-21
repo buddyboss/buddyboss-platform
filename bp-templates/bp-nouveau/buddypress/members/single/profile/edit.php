@@ -8,7 +8,7 @@
 
 bp_nouveau_xprofile_hook( 'before', 'edit_content' ); ?>
 
-<h2 class="screen-heading edit-profile-screen"><?php esc_html_e( 'Edit Profile', 'buddypress' ); ?></h2>
+<h2 class="screen-heading edit-profile-screen"><?php esc_html_e( 'Edit Profile', 'buddyboss' ); ?></h2>
 
 <?php if ( bp_has_profile( 'profile_group_id=' . bp_get_current_profile_group_id() ) ) :
 	while ( bp_profile_groups() ) :
@@ -31,7 +31,7 @@ bp_nouveau_xprofile_hook( 'before', 'edit_content' ); ?>
 					<?php
 					printf(
 						/* translators: %s = profile field group name */
-						__( 'Editing "%s" Profile Fields', 'buddypress' ),
+						__( 'Editing "%s" Profile Fields', 'buddyboss' ),
 						bp_get_the_profile_group_name()
 					)
 					?>

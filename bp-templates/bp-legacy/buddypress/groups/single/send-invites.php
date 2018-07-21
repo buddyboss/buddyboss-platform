@@ -18,7 +18,7 @@ do_action( 'bp_before_group_send_invites_content' ); ?>
 /* Does the user have friends that could be invited to the group? */
 if ( bp_get_new_group_invite_friend_list() ) : ?>
 
-	<h2 class="bp-screen-reader-text"><?php _e( 'Send invites', 'buddypress' ); ?></h2>
+	<h2 class="bp-screen-reader-text"><?php _e( 'Send invites', 'buddyboss' ); ?></h2>
 
 	<?php /* 'send-invite-form' is important for AJAX support */ ?>
 	<form action="<?php bp_group_send_invite_form_action(); ?>" method="post" id="send-invite-form" class="standard-form">
@@ -28,7 +28,7 @@ if ( bp_get_new_group_invite_friend_list() ) : ?>
 		</div>
 
 		<div class="submit">
-			<input type="submit" name="submit" id="submit" value="<?php esc_attr_e( 'Send Invites', 'buddypress' ); ?>" />
+			<input type="submit" name="submit" id="submit" value="<?php esc_attr_e( 'Send Invites', 'buddyboss' ); ?>" />
 		</div>
 
 		<?php wp_nonce_field( 'groups_send_invites', '_wpnonce_send_invites' ); ?>
@@ -43,8 +43,8 @@ if ( bp_get_new_group_invite_friend_list() ) : ?>
 elseif ( 0 == bp_get_total_friend_count( bp_loggedin_user_id() ) ) : ?>
 
 	<div id="message" class="info">
-		<p class="notice"><?php _e( 'Group invitations can only be extended to friends.', 'buddypress' ); ?></p>
-		<p class="message-body"><?php _e( "Once you've made some friendships, you'll be able to invite those members to this group.", 'buddypress' ); ?></p>
+		<p class="notice"><?php _e( 'Group invitations can only be extended to friends.', 'buddyboss' ); ?></p>
+		<p class="message-body"><?php _e( "Once you've made some friendships, you'll be able to invite those members to this group.", 'buddyboss' ); ?></p>
 	</div>
 
 <?php
@@ -52,7 +52,7 @@ elseif ( 0 == bp_get_total_friend_count( bp_loggedin_user_id() ) ) : ?>
 else : ?>
 
 	<div id="message" class="info">
-		<p class="notice"><?php _e( 'All of your friends already belong to this group.', 'buddypress' ); ?></p>
+		<p class="notice"><?php _e( 'All of your friends already belong to this group.', 'buddyboss' ); ?></p>
 	</div>
 
 <?php endif; ?>

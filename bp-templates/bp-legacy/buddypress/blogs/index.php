@@ -58,13 +58,13 @@ do_action( 'bp_before_directory_blogs_page' ); ?>
 
 	<form action="" method="post" id="blogs-directory-form" class="dir-form">
 
-		<div class="item-list-tabs" aria-label="<?php esc_attr_e( 'Sites directory main navigation', 'buddypress' ); ?>" role="navigation">
+		<div class="item-list-tabs" aria-label="<?php esc_attr_e( 'Sites directory main navigation', 'buddyboss' ); ?>" role="navigation">
 			<ul>
-				<li class="selected" id="blogs-all"><a href="<?php bp_root_domain(); ?>/<?php bp_blogs_root_slug(); ?>"><?php printf( __( 'All Sites %s', 'buddypress' ), '<span>' . bp_get_total_blog_count() . '</span>' ); ?></a></li>
+				<li class="selected" id="blogs-all"><a href="<?php bp_root_domain(); ?>/<?php bp_blogs_root_slug(); ?>"><?php printf( __( 'All Sites %s', 'buddyboss' ), '<span>' . bp_get_total_blog_count() . '</span>' ); ?></a></li>
 
 				<?php if ( is_user_logged_in() && bp_get_total_blog_count_for_user( bp_loggedin_user_id() ) ) : ?>
 
-					<li id="blogs-personal"><a href="<?php echo bp_loggedin_user_domain() . bp_get_blogs_slug(); ?>"><?php printf( __( 'My Sites %s', 'buddypress' ), '<span>' . bp_get_total_blog_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></a></li>
+					<li id="blogs-personal"><a href="<?php echo bp_loggedin_user_domain() . bp_get_blogs_slug(); ?>"><?php printf( __( 'My Sites %s', 'buddyboss' ), '<span>' . bp_get_total_blog_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></a></li>
 
 				<?php endif; ?>
 
@@ -80,7 +80,7 @@ do_action( 'bp_before_directory_blogs_page' ); ?>
 			</ul>
 		</div><!-- .item-list-tabs -->
 
-		<div class="item-list-tabs" id="subnav" aria-label="<?php esc_attr_e( 'Sites directory secondary navigation', 'buddypress' ); ?>" role="navigation">
+		<div class="item-list-tabs" id="subnav" aria-label="<?php esc_attr_e( 'Sites directory secondary navigation', 'buddyboss' ); ?>" role="navigation">
 			<ul>
 
 				<?php
@@ -94,11 +94,11 @@ do_action( 'bp_before_directory_blogs_page' ); ?>
 
 				<li id="blogs-order-select" class="last filter">
 
-					<label for="blogs-order-by"><?php _e( 'Order By:', 'buddypress' ); ?></label>
+					<label for="blogs-order-by"><?php _e( 'Order By:', 'buddyboss' ); ?></label>
 					<select id="blogs-order-by">
-						<option value="active"><?php _e( 'Last Active', 'buddypress' ); ?></option>
-						<option value="newest"><?php _e( 'Newest', 'buddypress' ); ?></option>
-						<option value="alphabetical"><?php _e( 'Alphabetical', 'buddypress' ); ?></option>
+						<option value="active"><?php _e( 'Last Active', 'buddyboss' ); ?></option>
+						<option value="newest"><?php _e( 'Newest', 'buddyboss' ); ?></option>
+						<option value="alphabetical"><?php _e( 'Alphabetical', 'buddyboss' ); ?></option>
 
 						<?php
 
@@ -116,7 +116,7 @@ do_action( 'bp_before_directory_blogs_page' ); ?>
 
 		<h2 class="bp-screen-reader-text"><?php
 			/* translators: accessibility text */
-			_e( 'Sites directory', 'buddypress' );
+			_e( 'Sites directory', 'buddyboss' );
 		?></h2>
 
 		<div id="blogs-dir-list" class="blogs dir-list">

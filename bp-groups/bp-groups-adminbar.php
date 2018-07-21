@@ -42,7 +42,7 @@ function bp_groups_group_admin_menu() {
 	// Add the top-level Group Admin button.
 	$wp_admin_bar->add_menu( array(
 		'id'    => $bp->group_admin_menu_id,
-		'title' => __( 'Edit Group', 'buddypress' ),
+		'title' => __( 'Edit Group', 'buddyboss' ),
 		'href'  => bp_get_group_permalink( $bp->groups->current_group )
 	) );
 
@@ -64,11 +64,11 @@ function bp_groups_group_admin_menu() {
 		 * the 'show_in_admin_bar' argument of your edit screen to true
 		 */
 		if ( $menu->show_in_admin_bar ) {
-			$title = sprintf( _x( 'Edit Group %s', 'Group WP Admin Bar manage links', 'buddypress' ), $menu->name );
+			$title = sprintf( _x( 'Edit Group %s', 'Group WP Admin Bar manage links', 'buddyboss' ), $menu->name );
 
 			// Title is specific for delete.
 			if ( 'delete-group' == $menu->slug ) {
-				$title = sprintf( _x( '%s Group', 'Group WP Admin Bar delete link', 'buddypress' ), $menu->name );
+				$title = sprintf( _x( '%s Group', 'Group WP Admin Bar delete link', 'buddyboss' ), $menu->name );
 			}
 
 			$wp_admin_bar->add_menu( array(

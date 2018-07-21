@@ -25,9 +25,9 @@ class BP_Core_Login_Widget extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			false,
-			_x( '(BuddyPress) Log In', 'Title of the login widget', 'buddypress' ),
+			_x( '(BuddyPress) Log In', 'Title of the login widget', 'buddyboss' ),
 			array(
-				'description'                 => __( 'Show a Log In form to logged-out visitors, and a Log Out link to those who are logged in.', 'buddypress' ),
+				'description'                 => __( 'Show a Log In form to logged-out visitors, and a Log Out link to those who are logged in.', 'buddyboss' ),
 				'classname'                   => 'widget_bp_core_login_widget buddypress widget',
 				'customize_selective_refresh' => true,
 			)
@@ -81,7 +81,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 
 			<div class="bp-login-widget-user-links">
 				<div class="bp-login-widget-user-link"><?php echo bp_core_get_userlink( bp_loggedin_user_id() ); ?></div>
-				<div class="bp-login-widget-user-logout"><a class="logout" href="<?php echo wp_logout_url( bp_get_requested_url() ); ?>"><?php _e( 'Log Out', 'buddypress' ); ?></a></div>
+				<div class="bp-login-widget-user-logout"><a class="logout" href="<?php echo wp_logout_url( bp_get_requested_url() ); ?>"><?php _e( 'Log Out', 'buddyboss' ); ?></a></div>
 			</div>
 
 			<?php
@@ -105,19 +105,19 @@ class BP_Core_Login_Widget extends WP_Widget {
 			do_action( 'bp_before_login_widget_loggedout' ); ?>
 
 			<form name="bp-login-form" id="bp-login-widget-form" class="standard-form" action="<?php echo esc_url( site_url( 'wp-login.php', 'login_post' ) ); ?>" method="post">
-				<label for="bp-login-widget-user-login"><?php _e( 'Username', 'buddypress' ); ?></label>
+				<label for="bp-login-widget-user-login"><?php _e( 'Username', 'buddyboss' ); ?></label>
 				<input type="text" name="log" id="bp-login-widget-user-login" class="input" value="" />
 
-				<label for="bp-login-widget-user-pass"><?php _e( 'Password', 'buddypress' ); ?></label>
+				<label for="bp-login-widget-user-pass"><?php _e( 'Password', 'buddyboss' ); ?></label>
 				<input type="password" name="pwd" id="bp-login-widget-user-pass" class="input" value="" <?php bp_form_field_attributes( 'password' ) ?> />
 
-				<div class="forgetmenot"><label for="bp-login-widget-rememberme"><input name="rememberme" type="checkbox" id="bp-login-widget-rememberme" value="forever" /> <?php _e( 'Remember Me', 'buddypress' ); ?></label></div>
+				<div class="forgetmenot"><label for="bp-login-widget-rememberme"><input name="rememberme" type="checkbox" id="bp-login-widget-rememberme" value="forever" /> <?php _e( 'Remember Me', 'buddyboss' ); ?></label></div>
 
-				<input type="submit" name="wp-submit" id="bp-login-widget-submit" value="<?php esc_attr_e( 'Log In', 'buddypress' ); ?>" />
+				<input type="submit" name="wp-submit" id="bp-login-widget-submit" value="<?php esc_attr_e( 'Log In', 'buddyboss' ); ?>" />
 
 				<?php if ( bp_get_signup_allowed() ) : ?>
 
-					<span class="bp-login-widget-register-link"><a href="<?php echo esc_url( bp_get_signup_page() ); ?>"><?php _e( 'Register', 'buddypress' ); ?></a></span>
+					<span class="bp-login-widget-register-link"><a href="<?php echo esc_url( bp_get_signup_page() ); ?>"><?php _e( 'Register', 'buddyboss' ); ?></a></span>
 
 				<?php endif; ?>
 
@@ -177,7 +177,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 		) ); ?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'buddypress' ); ?>
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'buddyboss' ); ?>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $settings['title'] ); ?>" /></label>
 		</p>
 

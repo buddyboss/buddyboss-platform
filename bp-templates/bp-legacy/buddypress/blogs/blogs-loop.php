@@ -118,7 +118,7 @@ do_action( 'bp_before_blogs_loop' ); ?>
 <?php else: ?>
 
 	<div id="message" class="info">
-		<p><?php _e( 'Sorry, there were no sites found.', 'buddypress' ); ?></p>
+		<p><?php _e( 'Sorry, there were no sites found.', 'buddyboss' ); ?></p>
 	</div>
 
 <?php endif; ?>

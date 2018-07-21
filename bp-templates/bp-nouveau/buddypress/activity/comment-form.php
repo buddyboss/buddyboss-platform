@@ -16,7 +16,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 	<div class="ac-reply-content">
 		<div class="ac-textarea">
 			<label for="ac-input-<?php bp_activity_id(); ?>" class="bp-screen-reader-text">
-				<?php echo esc_html( _x( 'Comment', 'heading', 'buddypress' ) ); ?>
+				<?php echo esc_html( _x( 'Comment', 'heading', 'buddyboss' ) ); ?>
 			</label>
 			<textarea id="ac-input-<?php bp_activity_id(); ?>" class="ac-input bp-suggestions" name="ac_input_<?php bp_activity_id(); ?>"></textarea>
 		</div>
@@ -26,7 +26,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 		bp_nouveau_submit_button( 'activity-new-comment' );
 		printf(
 			'&nbsp; <button type="button" class="ac-reply-cancel">%s</button>',
-			esc_html( _x( 'Cancel', 'button', 'buddypress' ) )
+			esc_html( _x( 'Cancel', 'button', 'buddyboss' ) )
 		);
 		?>
 	</div>

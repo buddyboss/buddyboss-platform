@@ -148,14 +148,14 @@ class BuddyPress {
 	 *
 	 * @since 1.7.0
 	 */
-	public function __clone() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddypress' ), '1.7' ); }
+	public function __clone() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddyboss' ), '1.7' ); }
 
 	/**
 	 * A dummy magic method to prevent BuddyPress from being unserialized.
 	 *
 	 * @since 1.7.0
 	 */
-	public function __wakeup() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddypress' ), '1.7' ); }
+	public function __wakeup() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddyboss' ), '1.7' ); }
 
 	/**
 	 * Magic method for checking the existence of a certain custom field.
@@ -737,7 +737,7 @@ class BuddyPress {
 		// Register the default theme compatibility package
 		bp_register_theme_package( array(
 			'id'      => 'legacy',
-			'name'    => __( 'BuddyPress Legacy', 'buddypress' ),
+			'name'    => __( 'BuddyPress Legacy', 'buddyboss' ),
 			'version' => bp_get_version(),
 			'dir'     => trailingslashit( $this->themes_dir . '/bp-legacy' ),
 			'url'     => trailingslashit( $this->themes_url . '/bp-legacy' )
@@ -745,7 +745,7 @@ class BuddyPress {
 
 		bp_register_theme_package( array(
 			'id'      => 'nouveau',
-			'name'    => __( 'BuddyPress Nouveau', 'buddypress' ),
+			'name'    => __( 'BuddyPress Nouveau', 'buddyboss' ),
 			'version' => bp_get_version(),
 			'dir'     => trailingslashit( $this->themes_dir . '/bp-nouveau' ),
 			'url'     => trailingslashit( $this->themes_url . '/bp-nouveau' )

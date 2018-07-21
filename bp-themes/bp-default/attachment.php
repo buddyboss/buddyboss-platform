@@ -15,15 +15,15 @@
 
 						<div class="author-box">
 							<?php echo get_avatar( get_the_author_meta( 'user_email' ), '50' ); ?>
-							<p><?php printf( _x( 'by %s', 'Post written by...', 'buddypress' ), str_replace( '<a href=', '<a rel="author" href=', bp_core_get_userlink( $post->post_author ) ) ); ?></p>
+							<p><?php printf( _x( 'by %s', 'Post written by...', 'buddyboss' ), str_replace( '<a href=', '<a rel="author" href=', bp_core_get_userlink( $post->post_author ) ) ); ?></p>
 						</div>
 
 						<div class="post-content">
-							<h2 class="posttitle"><a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php esc_attr_e( 'Permanent Link to', 'buddypress' ); ?> <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
+							<h2 class="posttitle"><a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php esc_attr_e( 'Permanent Link to', 'buddyboss' ); ?> <?php the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
 
 							<p class="date">
 								<?php the_date(); ?>
-								<span class="post-utility alignright"><?php edit_post_link( __( 'Edit this entry', 'buddypress' ) ); ?></span>
+								<span class="post-utility alignright"><?php edit_post_link( __( 'Edit this entry', 'buddyboss' ) ); ?></span>
 							</p>
 
 							<div class="entry">
@@ -37,10 +37,10 @@
 								<?php
 									if ( wp_attachment_is_image() ) :
 										$metadata = wp_get_attachment_metadata();
-										printf( __( 'Full size is %s pixels', 'buddypress' ),
+										printf( __( 'Full size is %s pixels', 'buddyboss' ),
 											sprintf( '<a href="%1$s" title="%2$s">%3$s &times; %4$s</a>',
 												wp_get_attachment_url(),
-												esc_attr( __( 'Link to full size image', 'buddypress' ) ),
+												esc_attr( __( 'Link to full size image', 'buddyboss' ) ),
 												$metadata['width'],
 												$metadata['height']
 											)
@@ -59,7 +59,7 @@
 
 				<?php endwhile; else: ?>
 
-					<p><?php _e( 'Sorry, no attachments matched your criteria.', 'buddypress' ); ?></p>
+					<p><?php _e( 'Sorry, no attachments matched your criteria.', 'buddyboss' ); ?></p>
 
 				<?php endif; ?>
 

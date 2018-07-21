@@ -27,7 +27,7 @@ class BP_Activity_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'activity',
-			__( 'Activity Feeds', 'buddypress' ),
+			__( 'Activity Feeds', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 10,
@@ -182,7 +182,7 @@ class BP_Activity_Component extends BP_Component {
 			'has_directory'         => true,
 			'directory_title'       => isset( $bp->pages->activity->title ) ? $bp->pages->activity->title : $default_directory_title,
 			'notification_callback' => 'bp_activity_format_notifications',
-			'search_string'         => __( 'Search Activity...', 'buddypress' ),
+			'search_string'         => __( 'Search Activity...', 'buddyboss' ),
 			'global_tables'         => $global_tables,
 			'meta_tables'           => $meta_tables,
 		);
@@ -221,7 +221,7 @@ class BP_Activity_Component extends BP_Component {
 
 		// Add 'Activity' to the main navigation.
 		$main_nav = array(
-			'name'                => _x( 'Activity', 'Profile activity screen nav', 'buddypress' ),
+			'name'                => _x( 'Activity', 'Profile activity screen nav', 'buddyboss' ),
 			'slug'                => $slug,
 			'position'            => 10,
 			'screen_function'     => 'bp_activity_screen_my_activity',
@@ -231,7 +231,7 @@ class BP_Activity_Component extends BP_Component {
 
 		// Add the subnav items to the activity nav item if we are using a theme that supports this.
 		$sub_nav[] = array(
-			'name'            => _x( 'Personal', 'Profile activity screen sub nav', 'buddypress' ),
+			'name'            => _x( 'Personal', 'Profile activity screen sub nav', 'buddyboss' ),
 			'slug'            => 'just-me',
 			'parent_url'      => $activity_link,
 			'parent_slug'     => $slug,
@@ -242,7 +242,7 @@ class BP_Activity_Component extends BP_Component {
 		// Check @mentions.
 		if ( bp_activity_do_mentions() ) {
 			$sub_nav[] = array(
-				'name'            => _x( 'Mentions', 'Profile activity screen sub nav', 'buddypress' ),
+				'name'            => _x( 'Mentions', 'Profile activity screen sub nav', 'buddyboss' ),
 				'slug'            => 'mentions',
 				'parent_url'      => $activity_link,
 				'parent_slug'     => $slug,
@@ -255,7 +255,7 @@ class BP_Activity_Component extends BP_Component {
 		// Favorite activity items.
 		if ( bp_activity_can_favorite() ) {
 			$sub_nav[] = array(
-				'name'            => _x( 'Favorites', 'Profile activity screen sub nav', 'buddypress' ),
+				'name'            => _x( 'Favorites', 'Profile activity screen sub nav', 'buddyboss' ),
 				'slug'            => 'favorites',
 				'parent_url'      => $activity_link,
 				'parent_slug'     => $slug,
@@ -268,7 +268,7 @@ class BP_Activity_Component extends BP_Component {
 		// Additional menu if friends is active.
 		if ( bp_is_active( 'friends' ) ) {
 			$sub_nav[] = array(
-				'name'            => _x( 'Friends', 'Profile activity screen sub nav', 'buddypress' ),
+				'name'            => _x( 'Friends', 'Profile activity screen sub nav', 'buddyboss' ),
 				'slug'            => bp_get_friends_slug(),
 				'parent_url'      => $activity_link,
 				'parent_slug'     => $slug,
@@ -281,7 +281,7 @@ class BP_Activity_Component extends BP_Component {
 		// Additional menu if groups is active.
 		if ( bp_is_active( 'groups' ) ) {
 			$sub_nav[] = array(
-				'name'            => _x( 'Groups', 'Profile activity screen sub nav', 'buddypress' ),
+				'name'            => _x( 'Groups', 'Profile activity screen sub nav', 'buddyboss' ),
 				'slug'            => bp_get_groups_slug(),
 				'parent_url'      => $activity_link,
 				'parent_slug'     => $slug,
@@ -319,11 +319,11 @@ class BP_Activity_Component extends BP_Component {
 				if ( !empty( $count ) ) {
 					$title = sprintf(
 						/* translators: %s: Unread mention count for the current user */
-						_x( 'Mentions %s', 'Toolbar Mention logged in user', 'buddypress' ),
+						_x( 'Mentions %s', 'Toolbar Mention logged in user', 'buddyboss' ),
 						'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 					);
 				} else {
-					$title = _x( 'Mentions', 'Toolbar Mention logged in user', 'buddypress' );
+					$title = _x( 'Mentions', 'Toolbar Mention logged in user', 'buddyboss' );
 				}
 			}
 
@@ -331,7 +331,7 @@ class BP_Activity_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
-				'title'  => _x( 'Activity', 'My Account Activity sub nav', 'buddypress' ),
+				'title'  => _x( 'Activity', 'My Account Activity sub nav', 'buddyboss' ),
 				'href'   => $activity_link
 			);
 
@@ -339,7 +339,7 @@ class BP_Activity_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-personal',
-				'title'    => _x( 'Personal', 'My Account Activity sub nav', 'buddypress' ),
+				'title'    => _x( 'Personal', 'My Account Activity sub nav', 'buddyboss' ),
 				'href'     => $activity_link,
 				'position' => 10
 			);
@@ -360,7 +360,7 @@ class BP_Activity_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-favorites',
-					'title'    => _x( 'Favorites', 'My Account Activity sub nav', 'buddypress' ),
+					'title'    => _x( 'Favorites', 'My Account Activity sub nav', 'buddyboss' ),
 					'href'     => trailingslashit( $activity_link . 'favorites' ),
 					'position' => 30
 				);
@@ -371,7 +371,7 @@ class BP_Activity_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-friends',
-					'title'    => _x( 'Friends', 'My Account Activity sub nav', 'buddypress' ),
+					'title'    => _x( 'Friends', 'My Account Activity sub nav', 'buddyboss' ),
 					'href'     => trailingslashit( $activity_link . bp_get_friends_slug() ),
 					'position' => 40
 				);
@@ -382,7 +382,7 @@ class BP_Activity_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-groups',
-					'title'    => _x( 'Groups', 'My Account Activity sub nav', 'buddypress' ),
+					'title'    => _x( 'Groups', 'My Account Activity sub nav', 'buddyboss' ),
 					'href'     => trailingslashit( $activity_link . bp_get_groups_slug() ),
 					'position' => 50
 				);
@@ -405,12 +405,12 @@ class BP_Activity_Component extends BP_Component {
 			$bp = buddypress();
 
 			if ( bp_is_my_profile() ) {
-				$bp->bp_options_title = _x( 'My Activity', 'Page and <title>', 'buddypress' );
+				$bp->bp_options_title = _x( 'My Activity', 'Page and <title>', 'buddyboss' );
 			} else {
 				$bp->bp_options_avatar = bp_core_fetch_avatar( array(
 					'item_id' => bp_displayed_user_id(),
 					'type'    => 'thumb',
-					'alt'	  => sprintf( __( 'Profile picture of %s', 'buddypress' ), bp_get_displayed_user_fullname() )
+					'alt'	  => sprintf( __( 'Profile picture of %s', 'buddyboss' ), bp_get_displayed_user_fullname() )
 				) );
 				$bp->bp_options_title  = bp_get_displayed_user_fullname();
 			}

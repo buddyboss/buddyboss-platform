@@ -123,7 +123,7 @@ function bp_members_member_type_base() {
 		 *
 		 * @param string $base
 		 */
-		return apply_filters( 'bp_members_member_type_base', _x( 'type', 'member type URL base', 'buddypress' ) );
+		return apply_filters( 'bp_members_member_type_base', _x( 'type', 'member type URL base', 'buddyboss' ) );
 	}
 
 /**
@@ -479,27 +479,27 @@ function bp_members_pagination_count() {
 
 		if ( 'active' == $members_template->type ) {
 			if ( 1 == $members_template->total_member_count ) {
-				$pag = __( 'Viewing 1 active member', 'buddypress' );
+				$pag = __( 'Viewing 1 active member', 'buddyboss' );
 			} else {
-				$pag = sprintf( _n( 'Viewing %1$s - %2$s of %3$s active member', 'Viewing %1$s - %2$s of %3$s active members', $members_template->total_member_count, 'buddypress' ), $from_num, $to_num, $total );
+				$pag = sprintf( _n( 'Viewing %1$s - %2$s of %3$s active member', 'Viewing %1$s - %2$s of %3$s active members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
 			}
 		} elseif ( 'popular' == $members_template->type ) {
 			if ( 1 == $members_template->total_member_count ) {
-				$pag = __( 'Viewing 1 member with friends', 'buddypress' );
+				$pag = __( 'Viewing 1 member with friends', 'buddyboss' );
 			} else {
-				$pag = sprintf( _n( 'Viewing %1$s - %2$s of %3$s member with friends', 'Viewing %1$s - %2$s of %3$s members with friends', $members_template->total_member_count, 'buddypress' ), $from_num, $to_num, $total );
+				$pag = sprintf( _n( 'Viewing %1$s - %2$s of %3$s member with friends', 'Viewing %1$s - %2$s of %3$s members with friends', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
 			}
 		} elseif ( 'online' == $members_template->type ) {
 			if ( 1 == $members_template->total_member_count ) {
-				$pag = __( 'Viewing 1 online member', 'buddypress' );
+				$pag = __( 'Viewing 1 online member', 'buddyboss' );
 			} else {
-				$pag = sprintf( _n( 'Viewing %1$s - %2$s of %3$s online member', 'Viewing %1$s - %2$s of %3$s online members', $members_template->total_member_count, 'buddypress' ), $from_num, $to_num, $total );
+				$pag = sprintf( _n( 'Viewing %1$s - %2$s of %3$s online member', 'Viewing %1$s - %2$s of %3$s online members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
 			}
 		} else {
 			if ( 1 == $members_template->total_member_count ) {
-				$pag = __( 'Viewing 1 member', 'buddypress' );
+				$pag = __( 'Viewing 1 member', 'buddyboss' );
 			} else {
-				$pag = sprintf( _n( 'Viewing %1$s - %2$s of %3$s member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddypress' ), $from_num, $to_num, $total );
+				$pag = sprintf( _n( 'Viewing %1$s - %2$s of %3$s member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
 			}
 		}
 
@@ -801,7 +801,7 @@ function bp_member_avatar( $args = '' ) {
 			'height' => false,
 			'class'  => 'avatar',
 			'id'     => false,
-			'alt'    => sprintf( __( 'Profile picture of %s', 'buddypress' ), $fullname )
+			'alt'    => sprintf( __( 'Profile picture of %s', 'buddyboss' ), $fullname )
 		);
 
 		$r = wp_parse_args( $args, $defaults );
@@ -960,7 +960,7 @@ function bp_member_last_active( $args = array() ) {
 
 		// Backwards compatibility for anyone forcing a 'true' active_format.
 		if ( true === $r['active_format'] ) {
-			$r['active_format'] = __( 'active %s', 'buddypress' );
+			$r['active_format'] = __( 'active %s', 'buddyboss' );
 		}
 
 		// Member has logged in at least one time.
@@ -978,7 +978,7 @@ function bp_member_last_active( $args = array() ) {
 
 		// Member has never logged in or been active.
 		} else {
-			$last_activity = __( 'Never active', 'buddypress' );
+			$last_activity = __( 'Never active', 'buddyboss' );
 		}
 
 		/**
@@ -1040,12 +1040,12 @@ function bp_member_latest_update( $args = '' ) {
 		 */
 		$update_content = apply_filters( 'bp_get_activity_latest_update_excerpt', trim( strip_tags( bp_create_excerpt( $update['content'], $length ) ) ), $r );
 
-		$update_content = sprintf( _x( '- &quot;%s&quot;', 'member latest update in member directory', 'buddypress' ), $update_content );
+		$update_content = sprintf( _x( '- &quot;%s&quot;', 'member latest update in member directory', 'buddyboss' ), $update_content );
 
 		// If $view_link is true and the text returned by bp_create_excerpt() is different from the original text (ie it's
 		// been truncated), add the "View" link.
 		if ( $view_link && ( $update_content != $update['content'] ) ) {
-			$view = __( 'View', 'buddypress' );
+			$view = __( 'View', 'buddyboss' );
 
 			$update_content .= '<span class="activity-read-more"><a href="' . bp_activity_get_permalink( $update['id'] ) . '" rel="nofollow">' . $view . '</a></span>';
 		}
@@ -1205,7 +1205,7 @@ function bp_member_registered( $args = array() ) {
 			return esc_attr( $members_template->member->user_registered );
 		}
 
-		$registered = esc_attr( bp_core_get_last_activity( $members_template->member->user_registered, _x( 'registered %s', 'Records the timestamp that the user registered into the activity feed', 'buddypress' ) ) );
+		$registered = esc_attr( bp_core_get_last_activity( $members_template->member->user_registered, _x( 'registered %s', 'Records the timestamp that the user registered into the activity feed', 'buddyboss' ) ) );
 
 		/**
 		 * Filters the 'registered [x days ago]' string for the current member.
@@ -1270,7 +1270,7 @@ function bp_directory_members_search_form() {
 
 	$search_form_html = '<form action="" method="get" id="search-members-form">
 		<label for="members_search"><input type="text" name="' . esc_attr( $query_arg ) . '" id="members_search" placeholder="'. esc_attr( $search_value ) .'" /></label>
-		<input type="submit" id="members_search_submit" name="members_search_submit" value="' . __( 'Search', 'buddypress' ) . '" />
+		<input type="submit" id="members_search_submit" name="members_search_submit" value="' . __( 'Search', 'buddyboss' ) . '" />
 	</form>';
 
 	/**
@@ -1363,7 +1363,7 @@ function bp_get_loggedin_user_nav() {
 	}
 
 	// Always add a log out list item to the end of the navigation.
-	$logout_link = '<li><a id="wp-logout" href="' .  wp_logout_url( bp_get_root_domain() ) . '">' . __( 'Log Out', 'buddypress' ) . '</a></li>';
+	$logout_link = '<li><a id="wp-logout" href="' .  wp_logout_url( bp_get_root_domain() ) . '">' . __( 'Log Out', 'buddyboss' ) . '</a></li>';
 
 	echo apply_filters( 'bp_logout_nav_link', $logout_link );
 }
@@ -1555,7 +1555,7 @@ function bp_loggedin_user_avatar( $args = '' ) {
 			'width'   => false,
 			'height'  => false,
 			'html'    => true,
-			'alt'     => sprintf( __( 'Profile picture of %s', 'buddypress' ), bp_get_loggedin_user_fullname() )
+			'alt'     => sprintf( __( 'Profile picture of %s', 'buddyboss' ), bp_get_loggedin_user_fullname() )
 		) );
 
 		/**
@@ -1610,7 +1610,7 @@ function bp_displayed_user_avatar( $args = '' ) {
 			'width'   => false,
 			'height'  => false,
 			'html'    => true,
-			'alt'     => sprintf( __( 'Profile picture of %s', 'buddypress' ), bp_get_displayed_user_fullname() )
+			'alt'     => sprintf( __( 'Profile picture of %s', 'buddyboss' ), bp_get_displayed_user_fullname() )
 		) );
 
 		/**
@@ -2007,7 +2007,7 @@ function bp_current_member_type_message() {
 	function bp_get_current_member_type_message() {
 		$type_object = bp_get_member_type_object( bp_get_current_member_type() );
 
-		$message = sprintf( __( 'Viewing members of the type: %s', 'buddypress' ), '<strong>' . $type_object->labels['singular_name'] . '</strong>' );
+		$message = sprintf( __( 'Viewing members of the type: %s', 'buddyboss' ), '<strong>' . $type_object->labels['singular_name'] . '</strong>' );
 
 		/**
 		 * Filters the current member type message.
@@ -2462,7 +2462,7 @@ function bp_signup_avatar( $args = '' ) {
 		$defaults = array(
 			'size' => bp_core_avatar_full_width(),
 			'class' => 'avatar',
-			'alt' => __( 'Your Profile Photo', 'buddypress' )
+			'alt' => __( 'Your Profile Photo', 'buddyboss' )
 		);
 
 		$r = wp_parse_args( $args, $defaults );
@@ -2552,7 +2552,7 @@ function bp_members_activity_feed() {
 	if ( !bp_is_active( 'activity' ) || !bp_is_user() )
 		return; ?>
 
-	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ) ?> | <?php bp_displayed_user_fullname() ?> | <?php _e( 'Activity RSS Feed', 'buddypress' ) ?>" href="<?php bp_member_activity_feed_link() ?>" />
+	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ) ?> | <?php bp_displayed_user_fullname() ?> | <?php _e( 'Activity RSS Feed', 'buddyboss' ) ?>" href="<?php bp_member_activity_feed_link() ?>" />
 
 <?php
 }

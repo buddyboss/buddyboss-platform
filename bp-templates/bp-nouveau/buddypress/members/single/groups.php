@@ -7,7 +7,7 @@
  */
 ?>
 
-<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Groups menu', 'buddypress' ); ?>">
+<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Groups menu', 'buddyboss' ); ?>">
 	<ul class="subnav">
 
 		<?php if ( bp_is_my_profile() ) : ?>

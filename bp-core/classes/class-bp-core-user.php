@@ -166,10 +166,10 @@ class BP_Core_User {
 			$this->email     = esc_attr( bp_core_get_user_email( $this->id ) );
 		}
 
-		$this->avatar       = bp_core_fetch_avatar( array( 'item_id' => $this->id, 'type' => 'full', 'alt' => sprintf( __( 'Profile photo of %s', 'buddypress' ), $this->fullname ) ) );
-		$this->avatar_thumb = bp_core_fetch_avatar( array( 'item_id' => $this->id, 'type' => 'thumb', 'alt' => sprintf( __( 'Profile photo of %s', 'buddypress' ), $this->fullname ) ) );
-		$this->avatar_mini  = bp_core_fetch_avatar( array( 'item_id' => $this->id, 'type' => 'thumb', 'alt' => sprintf( __( 'Profile photo of %s', 'buddypress' ), $this->fullname ), 'width' => 30, 'height' => 30 ) );
-		$this->last_active  = bp_core_get_last_activity( bp_get_user_last_activity( $this->id ), __( 'active %s', 'buddypress' ) );
+		$this->avatar       = bp_core_fetch_avatar( array( 'item_id' => $this->id, 'type' => 'full', 'alt' => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $this->fullname ) ) );
+		$this->avatar_thumb = bp_core_fetch_avatar( array( 'item_id' => $this->id, 'type' => 'thumb', 'alt' => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $this->fullname ) ) );
+		$this->avatar_mini  = bp_core_fetch_avatar( array( 'item_id' => $this->id, 'type' => 'thumb', 'alt' => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $this->fullname ), 'width' => 30, 'height' => 30 ) );
+		$this->last_active  = bp_core_get_last_activity( bp_get_user_last_activity( $this->id ), __( 'active %s', 'buddyboss' ) );
 	}
 
 	/**
@@ -183,7 +183,7 @@ class BP_Core_User {
 
 		if ( bp_is_active( 'groups' ) ) {
 			$this->total_groups = BP_Groups_Member::total_group_count( $this->id );
-			$this->total_groups = sprintf( _n( '%d group', '%d groups', $this->total_groups, 'buddypress' ), $this->total_groups );
+			$this->total_groups = sprintf( _n( '%d group', '%d groups', $this->total_groups, 'buddyboss' ), $this->total_groups );
 		}
 	}
 

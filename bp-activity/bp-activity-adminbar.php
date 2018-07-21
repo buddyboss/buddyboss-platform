@@ -40,7 +40,7 @@ function bp_activity_admin_menu() {
 	// Add the top-level Edit Activity button.
 	$wp_admin_bar->add_menu( array(
 		'id'    => 'activity-admin',
-		'title' => __( 'Edit Activity', 'buddypress' ),
+		'title' => __( 'Edit Activity', 'buddyboss' ),
 		'href'  => esc_url( $activity_edit_link ),
 	) );
 }

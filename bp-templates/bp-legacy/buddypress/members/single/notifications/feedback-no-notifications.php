@@ -14,11 +14,11 @@
 
 		<?php if ( bp_is_my_profile() ) : ?>
 
-			<p><?php _e( 'You have no unread notifications.', 'buddypress' ); ?></p>
+			<p><?php _e( 'You have no unread notifications.', 'buddyboss' ); ?></p>
 
 		<?php else : ?>
 
-			<p><?php _e( 'This member has no unread notifications.', 'buddypress' ); ?></p>
+			<p><?php _e( 'This member has no unread notifications.', 'buddyboss' ); ?></p>
 
 		<?php endif; ?>
 
@@ -26,11 +26,11 @@
 
 		<?php if ( bp_is_my_profile() ) : ?>
 
-			<p><?php _e( 'You have no notifications.', 'buddypress' ); ?></p>
+			<p><?php _e( 'You have no notifications.', 'buddyboss' ); ?></p>
 
 		<?php else : ?>
 
-			<p><?php _e( 'This member has no notifications.', 'buddypress' ); ?></p>
+			<p><?php _e( 'This member has no notifications.', 'buddyboss' ); ?></p>
 
 		<?php endif; ?>
 

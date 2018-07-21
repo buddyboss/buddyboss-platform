@@ -28,7 +28,7 @@ class BP_Core extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'core',
-			__( 'BuddyBoss Core', 'buddypress' ),
+			__( 'BuddyBoss Core', 'buddyboss' ),
 			buddypress()->plugin_dir
 		);
 
@@ -305,7 +305,7 @@ class BP_Core extends BP_Component {
 			register_post_type(
 				bp_get_email_post_type(),
 				apply_filters( 'bp_register_email_post_type', array(
-					'description'       => _x( 'BuddyPress emails', 'email post type description', 'buddypress' ),
+					'description'       => _x( 'BuddyPress emails', 'email post type description', 'buddyboss' ),
 					'labels'            => bp_get_email_post_type_labels(),
 					'menu_icon'         => 'dashicons-email',
 					'public'            => false,

@@ -57,7 +57,7 @@ function bp_activity_action_post_update() {
 
 	// No activity content so provide feedback and redirect.
 	if ( empty( $content ) ) {
-		bp_core_add_message( __( 'Please enter some content to post.', 'buddypress' ), 'error' );
+		bp_core_add_message( __( 'Please enter some content to post.', 'buddyboss' ), 'error' );
 		bp_core_redirect( wp_get_referer() );
 	}
 
@@ -87,9 +87,9 @@ function bp_activity_action_post_update() {
 
 	// Provide user feedback.
 	if ( !empty( $activity_id ) )
-		bp_core_add_message( __( 'Update Posted!', 'buddypress' ) );
+		bp_core_add_message( __( 'Update Posted!', 'buddyboss' ) );
 	else
-		bp_core_add_message( __( 'There was an error when posting your update. Please try again.', 'buddypress' ), 'error' );
+		bp_core_add_message( __( 'There was an error when posting your update. Please try again.', 'buddyboss' ), 'error' );
 
 	// Redirect.
 	bp_core_redirect( wp_get_referer() );

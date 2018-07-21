@@ -102,7 +102,7 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 	}
 
 	if ( bp_activity_add_user_favorite( $_POST['id'] ) ) {
-		$response = array( 'content' => __( 'Remove Favorite', 'buddypress' ) );
+		$response = array( 'content' => __( 'Remove Favorite', 'buddyboss' ) );
 
 		if ( ! bp_is_user() ) {
 			$fav_count = (int) bp_get_total_favorite_count_for_user( bp_loggedin_user_id() );
@@ -110,7 +110,7 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 			if ( 1 === $fav_count ) {
 				$response['directory_tab'] = '<li id="activity-favorites" data-bp-scope="favorites" data-bp-object="activity">
 					<a href="' . bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/">
-						' . esc_html__( 'My Favorites', 'buddypress' ) . '
+						' . esc_html__( 'My Favorites', 'buddyboss' ) . '
 					</a>
 				</li>';
 			} else {
@@ -142,13 +142,13 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 	}
 
 	if ( bp_activity_remove_user_favorite( $_POST['id'] ) ) {
-		$response = array( 'content' => __( 'Favorite', 'buddypress' ) );
+		$response = array( 'content' => __( 'Favorite', 'buddyboss' ) );
 
 		$fav_count = (int) bp_get_total_favorite_count_for_user( bp_loggedin_user_id() );
 
 		if ( 0 === $fav_count && ! bp_is_single_activity() ) {
 			$response['no_favorite'] = '<li><div class="bp-feedback bp-messages info">
-				' . __( 'Sorry, there was no activity found. Please try a different filter.', 'buddypress' ) . '
+				' . __( 'Sorry, there was no activity found. Please try a different filter.', 'buddyboss' ) . '
 			</div></li>';
 		} else {
 			$response['fav_count'] = $fav_count;
@@ -192,7 +192,7 @@ function bp_nouveau_ajax_delete_activity() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error">%s</div>',
-			esc_html__( 'There was a problem when deleting. Please try again.', 'buddypress' )
+			esc_html__( 'There was a problem when deleting. Please try again.', 'buddyboss' )
 		),
 	);
 
@@ -246,7 +246,7 @@ function bp_nouveau_ajax_delete_activity() {
 	// If on a single activity redirect to user's home.
 	if ( ! empty( $_POST['is_single'] ) ) {
 		$response['redirect'] = bp_core_get_user_domain( $activity->user_id );
-		bp_core_add_message( __( 'Activity deleted successfully', 'buddypress' ) );
+		bp_core_add_message( __( 'Activity deleted successfully', 'buddyboss' ) );
 	}
 
 	wp_send_json_success( $response );
@@ -264,7 +264,7 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error">%s</div>',
-			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddypress' )
+			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
 		),
 	);
 
@@ -325,7 +325,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error">%s</div>',
-			esc_html__( 'There was an error posting your reply. Please try again.', 'buddypress' )
+			esc_html__( 'There was an error posting your reply. Please try again.', 'buddyboss' )
 		),
 	);
 
@@ -346,7 +346,7 @@ function bp_nouveau_ajax_new_activity_comment() {
 	if ( empty( $_POST['content'] ) ) {
 		wp_send_json_error( array( 'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error">%s</div>',
-			esc_html__( 'Please do not leave the comment area blank.', 'buddypress' )
+			esc_html__( 'Please do not leave the comment area blank.', 'buddyboss' )
 		) ) );
 	}
 
@@ -452,7 +452,7 @@ function bp_nouveau_ajax_get_activity_objects() {
 	}
 
 	if ( empty( $response ) ) {
-		wp_send_json_error( array( 'error' => __( 'No activites were found.', 'buddypress' ) ) );
+		wp_send_json_error( array( 'error' => __( 'No activites were found.', 'buddyboss' ) ) );
 	} else {
 		wp_send_json_success( $response );
 	}
@@ -475,7 +475,7 @@ function bp_nouveau_ajax_post_update() {
 	if ( empty( $_POST['content'] ) ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'Please enter some content to post.', 'buddypress' ),
+				'message' => __( 'Please enter some content to post.', 'buddyboss' ),
 			)
 		);
 	}
@@ -534,7 +534,7 @@ function bp_nouveau_ajax_post_update() {
 	if ( empty( $activity_id ) ) {
 		wp_send_json_error(
 			array(
-				'message' => __( 'There was a problem posting your update. Please try again.', 'buddypress' ),
+				'message' => __( 'There was a problem posting your update. Please try again.', 'buddyboss' ),
 			)
 		);
 	}
@@ -551,7 +551,7 @@ function bp_nouveau_ajax_post_update() {
 
 	wp_send_json_success( array(
 		'id'           => $activity_id,
-		'message'      => esc_html__( 'Update posted.', 'buddypress' ) . ' ' . sprintf( '<a href="%s" class="just-posted">%s</a>', esc_url( bp_activity_get_permalink( $activity_id ) ), esc_html__( 'View activity.', 'buddypress' ) ),
+		'message'      => esc_html__( 'Update posted.', 'buddyboss' ) . ' ' . sprintf( '<a href="%s" class="just-posted">%s</a>', esc_url( bp_activity_get_permalink( $activity_id ) ), esc_html__( 'View activity.', 'buddyboss' ) ),
 		'activity'     => $acivity,
 
 		/**
@@ -579,7 +579,7 @@ function bp_nouveau_ajax_spam_activity() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback bp-messages error">%s</div>',
-			esc_html__( 'There was a problem marking this activity as spam. Please try again.', 'buddypress' )
+			esc_html__( 'There was a problem marking this activity as spam. Please try again.', 'buddyboss' )
 		),
 	);
 
@@ -628,7 +628,7 @@ function bp_nouveau_ajax_spam_activity() {
 	// If on a single activity redirect to user's home.
 	if ( ! empty( $_POST['is_single'] ) ) {
 		$response['redirect'] = bp_core_get_user_domain( $activity->user_id );
-		bp_core_add_message( __( 'This activity has been marked as spam and is no longer visible.', 'buddypress' ) );
+		bp_core_add_message( __( 'This activity has been marked as spam and is no longer visible.', 'buddyboss' ) );
 	}
 
 	// Send the json reply

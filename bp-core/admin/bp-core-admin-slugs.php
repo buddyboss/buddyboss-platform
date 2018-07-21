@@ -21,15 +21,15 @@ function bp_core_admin_slugs_settings() {
 
 	<div class="wrap">
 
-		<h1><?php _e( 'BuddyBoss Settings', 'buddypress' ); ?> </h1>
+		<h1><?php _e( 'BuddyBoss Settings', 'buddyboss' ); ?> </h1>
 
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Pages', 'buddypress' ) ); ?></h2>
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Pages', 'buddyboss' ) ); ?></h2>
 		<form action="" method="post" id="bp-admin-page-form">
 
 			<?php bp_core_admin_slugs_options(); ?>
 
 			<p class="submit clear">
-				<input class="button-primary" type="submit" name="bp-admin-pages-submit" id="bp-admin-pages-submit" value="<?php esc_attr_e( 'Save Settings', 'buddypress' ) ?>"/>
+				<input class="button-primary" type="submit" name="bp-admin-pages-submit" id="bp-admin-pages-submit" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ) ?>"/>
 			</p>
 
 			<?php wp_nonce_field( 'bp-admin-pages-setup' ); ?>
@@ -87,8 +87,8 @@ function bp_core_admin_get_directory_pages() {
  */
 function bp_core_admin_get_static_pages() {
 	$static_pages = array(
-		'register' => __( 'Register', 'buddypress' ),
-		'activate' => __( 'Activate', 'buddypress' ),
+		'register' => __( 'Register', 'buddyboss' ),
+		'activate' => __( 'Activate', 'buddyboss' ),
 	);
 
 	/**
@@ -118,9 +118,9 @@ function bp_core_admin_slugs_options() {
 
 	if ( !empty( $directory_pages ) ) : ?>
 
-		<h3><?php _e( 'Directories', 'buddypress' ); ?></h3>
+		<h3><?php _e( 'Directories', 'buddyboss' ); ?></h3>
 
-		<p><?php _e( 'Associate a WordPress Page with each BuddyPress component directory.', 'buddypress' ); ?></p>
+		<p><?php _e( 'Associate a WordPress Page with each BuddyPress component directory.', 'buddyboss' ); ?></p>
 
 		<table class="form-table">
 			<tbody>
@@ -139,13 +139,13 @@ function bp_core_admin_slugs_options() {
 							<?php echo wp_dropdown_pages( array(
 								'name'             => 'bp_pages[' . esc_attr( $name ) . ']',
 								'echo'             => false,
-								'show_option_none' => __( '- None -', 'buddypress' ),
+								'show_option_none' => __( '- None -', 'buddyboss' ),
 								'selected'         => !empty( $existing_pages[$name] ) ? $existing_pages[$name] : false
 							) ); ?>
 
 							<?php if ( !empty( $existing_pages[$name] ) ) : ?>
 
-								<a href="<?php echo get_permalink( $existing_pages[$name] ); ?>" class="button-secondary" target="_bp"><?php _e( 'View', 'buddypress' ); ?></a>
+								<a href="<?php echo get_permalink( $existing_pages[$name] ); ?>" class="button-secondary" target="_bp"><?php _e( 'View', 'buddyboss' ); ?></a>
 
 							<?php endif; ?>
 
@@ -181,15 +181,15 @@ function bp_core_admin_slugs_options() {
 
 	if ( !empty( $static_pages ) ) : ?>
 
-		<h3><?php _e( 'Registration', 'buddypress' ); ?></h3>
+		<h3><?php _e( 'Registration', 'buddyboss' ); ?></h3>
 
 		<?php if ( bp_get_signup_allowed() ) : ?>
-			<p><?php _e( 'Associate WordPress Pages with the following BuddyPress Registration pages.', 'buddypress' ); ?></p>
+			<p><?php _e( 'Associate WordPress Pages with the following BuddyPress Registration pages.', 'buddyboss' ); ?></p>
 		<?php else : ?>
 			<?php if ( is_multisite() ) : ?>
-				<p><?php printf( __( 'Registration is currently disabled.  Before associating a page is allowed, please enable registration by selecting either the "User accounts may be registered" or "Both sites and user accounts can be registered" option on <a href="%s">this page</a>.', 'buddypress' ), network_admin_url( 'settings.php' ) ); ?></p>
+				<p><?php printf( __( 'Registration is currently disabled.  Before associating a page is allowed, please enable registration by selecting either the "User accounts may be registered" or "Both sites and user accounts can be registered" option on <a href="%s">this page</a>.', 'buddyboss' ), network_admin_url( 'settings.php' ) ); ?></p>
 			<?php else : ?>
-				<p><?php printf( __( 'Registration is currently disabled.  Before associating a page is allowed, please enable registration by clicking on the "Anyone can register" checkbox on <a href="%s">this page</a>.', 'buddypress' ), admin_url( 'options-general.php' ) ); ?></p>
+				<p><?php printf( __( 'Registration is currently disabled.  Before associating a page is allowed, please enable registration by clicking on the "Anyone can register" checkbox on <a href="%s">this page</a>.', 'buddyboss' ), admin_url( 'options-general.php' ) ); ?></p>
 			<?php endif; ?>
 		<?php endif; ?>
 
@@ -210,13 +210,13 @@ function bp_core_admin_slugs_options() {
 							<?php echo wp_dropdown_pages( array(
 								'name'             => 'bp_pages[' . esc_attr( $name ) . ']',
 								'echo'             => false,
-								'show_option_none' => __( '- None -', 'buddypress' ),
+								'show_option_none' => __( '- None -', 'buddyboss' ),
 								'selected'         => !empty( $existing_pages[$name] ) ? $existing_pages[$name] : false
 							) ) ?>
 
 							<?php if ( !empty( $existing_pages[$name] ) ) : ?>
 
-								<a href="<?php echo get_permalink( $existing_pages[$name] ); ?>" class="button-secondary" target="_bp"><?php _e( 'View', 'buddypress' ); ?></a>
+								<a href="<?php echo get_permalink( $existing_pages[$name] ); ?>" class="button-secondary" target="_bp"><?php _e( 'View', 'buddyboss' ); ?></a>
 
 							<?php endif; ?>
 

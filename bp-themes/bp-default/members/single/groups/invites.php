@@ -11,7 +11,7 @@
 					<a href="<?php bp_group_permalink(); ?>"><?php bp_group_avatar( 'type=thumb&width=50&height=50' ); ?></a>
 				</div>
 
-				<h4><a href="<?php bp_group_permalink(); ?>"><?php bp_group_name(); ?></a><span class="small"> - <?php printf( _n( '1 member', '%d members', bp_get_group_total_members( false ), 'buddypress' )  ); ?></span></h4>
+				<h4><a href="<?php bp_group_permalink(); ?>"><?php bp_group_name(); ?></a><span class="small"> - <?php printf( _n( '1 member', '%d members', bp_get_group_total_members( false ), 'buddyboss' )  ); ?></span></h4>
 
 				<p class="desc">
 					<?php bp_group_description_excerpt(); ?>
@@ -20,8 +20,8 @@
 				<?php do_action( 'bp_group_invites_item' ); ?>
 
 				<div class="action">
-					<a class="button accept" href="<?php bp_group_accept_invite_link(); ?>"><?php _e( 'Accept', 'buddypress' ); ?></a> &nbsp;
-					<a class="button reject confirm" href="<?php bp_group_reject_invite_link(); ?>"><?php _e( 'Reject', 'buddypress' ); ?></a>
+					<a class="button accept" href="<?php bp_group_accept_invite_link(); ?>"><?php _e( 'Accept', 'buddyboss' ); ?></a> &nbsp;
+					<a class="button reject confirm" href="<?php bp_group_reject_invite_link(); ?>"><?php _e( 'Reject', 'buddyboss' ); ?></a>
 
 					<?php do_action( 'bp_group_invites_item_action' ); ?>
 
@@ -34,7 +34,7 @@
 <?php else: ?>
 
 	<div id="message" class="info" role="main">
-		<p><?php _e( 'You have no outstanding group invites.', 'buddypress' ); ?></p>
+		<p><?php _e( 'You have no outstanding group invites.', 'buddyboss' ); ?></p>
 	</div>
 
 <?php endif;?>

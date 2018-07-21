@@ -9,18 +9,18 @@
 
 ?>
 
-<div class="item-list-tabs" id="subnav" aria-label="<?php esc_attr_e( 'Member secondary navigation', 'buddypress' ); ?>" role="navigation">
+<div class="item-list-tabs" id="subnav" aria-label="<?php esc_attr_e( 'Member secondary navigation', 'buddyboss' ); ?>" role="navigation">
 	<ul>
 
 		<?php bp_get_options_nav(); ?>
 
 		<li id="blogs-order-select" class="last filter">
 
-			<label for="blogs-order-by"><?php _e( 'Order By:', 'buddypress' ); ?></label>
+			<label for="blogs-order-by"><?php _e( 'Order By:', 'buddyboss' ); ?></label>
 			<select id="blogs-order-by">
-				<option value="active"><?php _e( 'Last Active', 'buddypress' ); ?></option>
-				<option value="newest"><?php _e( 'Newest', 'buddypress' ); ?></option>
-				<option value="alphabetical"><?php _e( 'Alphabetical', 'buddypress' ); ?></option>
+				<option value="active"><?php _e( 'Last Active', 'buddyboss' ); ?></option>
+				<option value="newest"><?php _e( 'Newest', 'buddyboss' ); ?></option>
+				<option value="alphabetical"><?php _e( 'Alphabetical', 'buddyboss' ); ?></option>
 
 				<?php
 

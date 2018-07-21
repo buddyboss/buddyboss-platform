@@ -27,7 +27,7 @@ class BP_Friends_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'friends',
-			_x( 'Friend Connections', 'Friends screen page <title>', 'buddypress' ),
+			_x( 'Friend Connections', 'Friends screen page <title>', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 60
@@ -131,7 +131,7 @@ class BP_Friends_Component extends BP_Component {
 		$args = array(
 			'slug'                  => BP_FRIENDS_SLUG,
 			'has_directory'         => false,
-			'search_string'         => __( 'Search Friends...', 'buddypress' ),
+			'search_string'         => __( 'Search Friends...', 'buddyboss' ),
 			'notification_callback' => 'friends_format_notifications',
 			'global_tables'         => $global_tables
 		);
@@ -172,7 +172,7 @@ class BP_Friends_Component extends BP_Component {
 
 		$main_nav_name = sprintf(
 			/* translators: %s: Friend count for the current user */
-			__( 'Friends %s', 'buddypress' ),
+			__( 'Friends %s', 'buddyboss' ),
 			sprintf(
 				'<span class="%s">%s</span>',
 				esc_attr( $class ),
@@ -191,7 +191,7 @@ class BP_Friends_Component extends BP_Component {
 
 		// Add the subnav items to the friends nav item.
 		$sub_nav[] = array(
-			'name'            => _x( 'Friendships', 'Friends screen sub nav', 'buddypress' ),
+			'name'            => _x( 'Friendships', 'Friends screen sub nav', 'buddyboss' ),
 			'slug'            => 'my-friends',
 			'parent_url'      => $friends_link,
 			'parent_slug'     => $slug,
@@ -201,7 +201,7 @@ class BP_Friends_Component extends BP_Component {
 		);
 
 		$sub_nav[] = array(
-			'name'            => _x( 'Requests', 'Friends screen sub nav', 'buddypress' ),
+			'name'            => _x( 'Requests', 'Friends screen sub nav', 'buddyboss' ),
 			'slug'            => 'requests',
 			'parent_url'      => $friends_link,
 			'parent_slug'     => $slug,
@@ -236,17 +236,17 @@ class BP_Friends_Component extends BP_Component {
 			if ( !empty( $count ) ) {
 				$title = sprintf(
 					/* translators: %s: Pending friend request count for the current user */
-					_x( 'Friends %s', 'My Account Friends menu', 'buddypress' ),
+					_x( 'Friends %s', 'My Account Friends menu', 'buddyboss' ),
 					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 				);
 				$pending = sprintf(
 					/* translators: %s: Pending friend request count for the current user */
-					_x( 'Pending Requests %s', 'My Account Friends menu sub nav', 'buddypress' ),
+					_x( 'Pending Requests %s', 'My Account Friends menu sub nav', 'buddyboss' ),
 					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 				);
 			} else {
 				$title   = _x( 'Friends',            'My Account Friends menu',         'buddypress' );
-				$pending = _x( 'No Pending Requests','My Account Friends menu sub nav', 'buddypress' );
+				$pending = _x( 'No Pending Requests','My Account Friends menu sub nav', 'buddyboss' );
 			}
 
 			// Add the "My Account" sub menus.
@@ -261,7 +261,7 @@ class BP_Friends_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-friendships',
-				'title'    => _x( 'Friendships', 'My Account Friends menu sub nav', 'buddypress' ),
+				'title'    => _x( 'Friendships', 'My Account Friends menu sub nav', 'buddyboss' ),
 				'href'     => $friends_link,
 				'position' => 10
 			);
@@ -291,12 +291,12 @@ class BP_Friends_Component extends BP_Component {
 			$bp = buddypress();
 
 			if ( bp_is_my_profile() ) {
-				$bp->bp_options_title = __( 'Friendships', 'buddypress' );
+				$bp->bp_options_title = __( 'Friendships', 'buddyboss' );
 			} else {
 				$bp->bp_options_avatar = bp_core_fetch_avatar( array(
 					'item_id' => bp_displayed_user_id(),
 					'type'    => 'thumb',
-					'alt'     => sprintf( __( 'Profile picture of %s', 'buddypress' ), bp_get_displayed_user_fullname() )
+					'alt'     => sprintf( __( 'Profile picture of %s', 'buddyboss' ), bp_get_displayed_user_fullname() )
 				) );
 				$bp->bp_options_title = bp_get_displayed_user_fullname();
 			}

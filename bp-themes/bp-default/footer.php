@@ -12,7 +12,7 @@
 
 			<div id="site-generator" role="contentinfo">
 				<?php do_action( 'bp_dtheme_credits' ); ?>
-				<p><?php printf( __( 'Proudly powered by <a href="%1$s">WordPress</a> and <a href="%2$s">BuddyPress</a>.', 'buddypress' ), 'http://wordpress.org', 'http://buddypress.org' ); ?></p>
+				<p><?php printf( __( 'Proudly powered by <a href="%1$s">WordPress</a> and <a href="%2$s">BuddyPress</a>.', 'buddyboss' ), 'http://wordpress.org', 'http://buddypress.org' ); ?></p>
 			</div>
 
 			<?php do_action( 'bp_footer' ); ?>

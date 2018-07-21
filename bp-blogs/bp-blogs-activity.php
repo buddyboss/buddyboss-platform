@@ -22,9 +22,9 @@ function bp_blogs_register_activity_actions() {
 		bp_activity_set_action(
 			buddypress()->blogs->id,
 			'new_blog',
-			__( 'New site created', 'buddypress' ),
+			__( 'New site created', 'buddyboss' ),
 			'bp_blogs_format_activity_action_new_blog',
-			__( 'New Sites', 'buddypress' ),
+			__( 'New Sites', 'buddyboss' ),
 			array( 'activity', 'member' ),
 			0
 		);
@@ -74,9 +74,9 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 	// Set specific params for the 'post' post type.
 	$params->component_id    = buddypress()->blogs->id;
 	$params->action_id       = 'new_blog_post';
-	$params->admin_filter    = __( 'New post published', 'buddypress' );
+	$params->admin_filter    = __( 'New post published', 'buddyboss' );
 	$params->format_callback = 'bp_blogs_format_activity_action_new_blog_post';
-	$params->front_filter    = __( 'Posts', 'buddypress' );
+	$params->front_filter    = __( 'Posts', 'buddyboss' );
 	$params->contexts        = array( 'activity', 'member' );
 	$params->position        = 5;
 
@@ -102,9 +102,9 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 			$params->comments_tracking = new stdClass();
 			$params->comments_tracking->component_id    = buddypress()->blogs->id;
 			$params->comments_tracking->action_id       = 'new_blog_comment';
-			$params->comments_tracking->admin_filter    = __( 'New post comment posted', 'buddypress' );
+			$params->comments_tracking->admin_filter    = __( 'New post comment posted', 'buddyboss' );
 			$params->comments_tracking->format_callback = 'bp_blogs_format_activity_action_new_blog_comment';
-			$params->comments_tracking->front_filter    = __( 'Comments', 'buddypress' );
+			$params->comments_tracking->front_filter    = __( 'Comments', 'buddyboss' );
 			$params->comments_tracking->contexts        = array( 'activity', 'member' );
 			$params->comments_tracking->position        = 10;
 		}
@@ -127,7 +127,7 @@ function bp_blogs_format_activity_action_new_blog( $action, $activity ) {
 	$blog_url  = bp_blogs_get_blogmeta( $activity->item_id, 'url' );
 	$blog_name = bp_blogs_get_blogmeta( $activity->item_id, 'name' );
 
-	$action = sprintf( __( '%s created the site %s', 'buddypress' ), bp_core_get_userlink( $activity->user_id ), '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
+	$action = sprintf( __( '%s created the site %s', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ), '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 
 	// Legacy filter - requires the BP_Blogs_Blog object.
 	if ( has_filter( 'bp_blogs_activity_created_blog_action' ) ) {
@@ -209,7 +209,7 @@ function bp_blogs_format_activity_action_new_blog_post( $action, $activity ) {
 	 */
 	if ( empty( $post_title ) ) {
 		// Defaults to no title.
-		$post_title = esc_html__( '(no title)', 'buddypress' );
+		$post_title = esc_html__( '(no title)', 'buddyboss' );
 
 		switch_to_blog( $activity->item_id );
 
@@ -236,9 +236,9 @@ function bp_blogs_format_activity_action_new_blog_post( $action, $activity ) {
 
 	// Build the complete activity action string.
 	if ( is_multisite() ) {
-		$action  = sprintf( __( '%1$s wrote a new post, %2$s, on the site %3$s', 'buddypress' ), $user_link, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
+		$action  = sprintf( __( '%1$s wrote a new post, %2$s, on the site %3$s', 'buddyboss' ), $user_link, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 	} else {
-		$action  = sprintf( __( '%1$s wrote a new post, %2$s', 'buddypress' ), $user_link, $post_link );
+		$action  = sprintf( __( '%1$s wrote a new post, %2$s', 'buddyboss' ), $user_link, $post_link );
 	}
 
 	// Legacy filter - requires the post object.
@@ -362,9 +362,9 @@ function bp_blogs_format_activity_action_new_blog_comment( $action, $activity ) 
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
 	if ( is_multisite() ) {
-		$action  = sprintf( __( '%1$s commented on the post, %2$s, on the site %3$s', 'buddypress' ), $user_link, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
+		$action  = sprintf( __( '%1$s commented on the post, %2$s, on the site %3$s', 'buddyboss' ), $user_link, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 	} else {
-		$action  = sprintf( __( '%1$s commented on the post, %2$s', 'buddypress' ), $user_link, $post_link );
+		$action  = sprintf( __( '%1$s commented on the post, %2$s', 'buddyboss' ), $user_link, $post_link );
 	}
 
 	// Legacy filter - requires the comment object.

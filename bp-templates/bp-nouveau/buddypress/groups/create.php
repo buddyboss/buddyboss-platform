@@ -8,7 +8,7 @@
 
 bp_nouveau_groups_create_hook( 'before', 'page' ); ?>
 
-	<h2 class="bp-subhead"><?php esc_html_e( 'Create A New Group', 'buddypress' ); ?></h2>
+	<h2 class="bp-subhead"><?php esc_html_e( 'Create A New Group', 'buddyboss' ); ?></h2>
 
 	<?php bp_nouveau_groups_create_hook( 'before', 'content_template' ); ?>
 
@@ -24,7 +24,7 @@ bp_nouveau_groups_create_hook( 'before', 'page' ); ?>
 
 		<div class="item-body" id="group-create-body">
 
-			<nav class="<?php bp_nouveau_groups_create_steps_classes(); ?>" id="group-create-tabs" role="navigation" aria-label="<?php esc_attr_e( 'Group creation menu', 'buddypress' ); ?>">
+			<nav class="<?php bp_nouveau_groups_create_steps_classes(); ?>" id="group-create-tabs" role="navigation" aria-label="<?php esc_attr_e( 'Group creation menu', 'buddyboss' ); ?>">
 				<ol class="group-create-buttons button-tabs">
 
 					<?php bp_group_creation_tabs(); ?>

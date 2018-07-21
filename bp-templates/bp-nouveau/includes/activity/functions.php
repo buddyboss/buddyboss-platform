@@ -87,7 +87,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 			'user_domain'   => bp_loggedin_user_domain(),
 			'avatar_alt'    => sprintf(
 				/* translators: %s = member name */
-				__( 'Profile photo of %s', 'buddypress' ),
+				__( 'Profile photo of %s', 'buddyboss' ),
 				$user_displayname
 			),
 		) );
@@ -134,7 +134,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	if ( ! bp_is_single_item() && ! bp_is_user() ) {
 		$activity_objects = array(
 			'profile' => array(
-				'text'                     => __( 'Post in: Profile', 'buddypress' ),
+				'text'                     => __( 'Post in: Profile', 'buddyboss' ),
 				'autocomplete_placeholder' => '',
 				'priority'                 => 5,
 			),
@@ -143,8 +143,8 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		// the groups component is active & the current user is at least a member of 1 group
 		if ( bp_is_active( 'groups' ) && bp_has_groups( array( 'user_id' => bp_loggedin_user_id(), 'max' => 1 ) ) ) {
 			$activity_objects['group'] = array(
-				'text'                     => __( 'Post in: Group', 'buddypress' ),
-				'autocomplete_placeholder' => __( 'Start typing the group name...', 'buddypress' ),
+				'text'                     => __( 'Post in: Group', 'buddyboss' ),
+				'autocomplete_placeholder' => __( 'Start typing the group name...', 'buddyboss' ),
 				'priority'                 => 10,
 			);
 		}
@@ -160,11 +160,11 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	}
 
 	$activity_strings = array(
-		'whatsnewPlaceholder' => sprintf( __( "Write here or use @ to mention someone.", 'buddypress' ), bp_get_user_firstname( $user_displayname ) ),
-		'whatsnewLabel'       => __( 'Post what\'s new', 'buddypress' ),
-		'whatsnewpostinLabel' => __( 'Post in', 'buddypress' ),
-		'postUpdateButton'    => __( 'Post Update', 'buddypress' ),
-		'cancelButton'        => __( 'Cancel', 'buddypress' ),
+		'whatsnewPlaceholder' => sprintf( __( "Write here or use @ to mention someone.", 'buddyboss' ), bp_get_user_firstname( $user_displayname ) ),
+		'whatsnewLabel'       => __( 'Post what\'s new', 'buddyboss' ),
+		'whatsnewpostinLabel' => __( 'Post in', 'buddyboss' ),
+		'postUpdateButton'    => __( 'Post Update', 'buddyboss' ),
+		'cancelButton'        => __( 'Cancel', 'buddyboss' ),
 	);
 
 	if ( bp_is_group() ) {
@@ -196,7 +196,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
 		'li_class'  => array( 'dynamic' ),
 		'link'      => bp_get_activity_directory_permalink(),
-		'text'      => __( 'All Members', 'buddypress' ),
+		'text'      => __( 'All Members', 'buddyboss' ),
 		'count'     => '',
 		'position'  => 5,
 	);
@@ -224,7 +224,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 				'slug'      => 'favorites', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array(),
 				'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/',
-				'text'      => __( 'My Favorites', 'buddypress' ),
+				'text'      => __( 'My Favorites', 'buddyboss' ),
 				'count'     => false,
 				'position'  => 35,
 			);
@@ -237,7 +237,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 				'slug'      => 'friends', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array( 'dynamic' ),
 				'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_friends_slug() . '/',
-				'text'      => __( 'My Friends', 'buddypress' ),
+				'text'      => __( 'My Friends', 'buddyboss' ),
 				'count'     => '',
 				'position'  => 15,
 			);
@@ -250,7 +250,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 				'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array( 'dynamic' ),
 				'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_groups_slug() . '/',
-				'text'      => __( 'My Groups', 'buddypress' ),
+				'text'      => __( 'My Groups', 'buddyboss' ),
 				'count'     => '',
 				'position'  => 25,
 			);
@@ -270,7 +270,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 				'slug'      => 'mentions', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array( 'dynamic' ),
 				'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/mentions/',
-				'text'      => __( 'Mentions', 'buddypress' ),
+				'text'      => __( 'Mentions', 'buddyboss' ),
 				'count'     => $count,
 				'position'  => 45,
 			);
@@ -487,17 +487,17 @@ function bp_nouveau_activity_notification_filters() {
 	$notifications = array(
 		array(
 			'id'       => 'new_at_mention',
-			'label'    => __( 'New mentions', 'buddypress' ),
+			'label'    => __( 'New mentions', 'buddyboss' ),
 			'position' => 5,
 		),
 		array(
 			'id'       => 'update_reply',
-			'label'    => __( 'New update replies', 'buddypress' ),
+			'label'    => __( 'New update replies', 'buddyboss' ),
 			'position' => 15,
 		),
 		array(
 			'id'       => 'comment_reply',
-			'label'    => __( 'New update comment replies', 'buddypress' ),
+			'label'    => __( 'New update comment replies', 'buddyboss' ),
 			'position' => 25,
 		),
 	);
@@ -519,13 +519,13 @@ function bp_nouveau_activity_notification_filters() {
 function bp_nouveau_activity_customizer_controls( $controls = array() ) {
 	return array_merge( $controls, array(
 		'act_dir_layout' => array(
-			'label'      => __( 'Use column navigation for the Activity directory.', 'buddypress' ),
+			'label'      => __( 'Use column navigation for the Activity directory.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_dir_layout',
 			'settings'   => 'bp_nouveau_appearance[activity_dir_layout]',
 			'type'       => 'checkbox',
 		),
 		'act_dir_tabs' => array(
-			'label'      => __( 'Use tab styling for Activity directory navigation.', 'buddypress' ),
+			'label'      => __( 'Use tab styling for Activity directory navigation.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_dir_layout',
 			'settings'   => 'bp_nouveau_appearance[activity_dir_tabs]',
 			'type'       => 'checkbox',

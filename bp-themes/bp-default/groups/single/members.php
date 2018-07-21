@@ -84,7 +84,7 @@
 <?php else: ?>
 
 	<div id="message" class="info">
-		<p><?php _e( 'This group has no members.', 'buddypress' ); ?></p>
+		<p><?php _e( 'This group has no members.', 'buddyboss' ); ?></p>
 	</div>
 
 <?php endif; ?>

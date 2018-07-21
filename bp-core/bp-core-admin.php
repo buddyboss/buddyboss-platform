@@ -22,9 +22,9 @@ function bp_admin() {
 
 
 	// These are strings we may use to describe maintenance/security releases, where we aim for no new strings.
-	_n_noop( 'Maintenance Release', 'Maintenance Releases', 'buddypress' );
-	_n_noop( 'Security Release', 'Security Releases', 'buddypress' );
-	_n_noop( 'Maintenance and Security Release', 'Maintenance and Security Releases', 'buddypress' );
+	_n_noop( 'Maintenance Release', 'Maintenance Releases', 'buddyboss' );
+	_n_noop( 'Security Release', 'Security Releases', 'buddyboss' );
+	_n_noop( 'Maintenance and Security Release', 'Maintenance and Security Releases', 'buddyboss' );
 
 	/* translators: 1: BuddyPress version number. */
 	_n_noop(
@@ -54,5 +54,5 @@ function bp_admin() {
 		'buddypress'
 	);
 
-	__( 'For more information, see <a href="%s">the release notes</a>.', 'buddypress' );
+	__( 'For more information, see <a href="%s">the release notes</a>.', 'buddyboss' );
 }

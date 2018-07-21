@@ -9,7 +9,7 @@
 
 ?>
 
-<div class="item-list-tabs no-ajax" id="subnav" aria-label="<?php esc_attr_e( 'Member secondary navigation', 'buddypress' ); ?>" role="navigation">
+<div class="item-list-tabs no-ajax" id="subnav" aria-label="<?php esc_attr_e( 'Member secondary navigation', 'buddyboss' ); ?>" role="navigation">
 	<ul>
 		<?php if ( bp_is_my_profile() ) bp_get_options_nav(); ?>
 
@@ -17,12 +17,12 @@
 
 			<li id="groups-order-select" class="last filter">
 
-				<label for="groups-order-by"><?php _e( 'Order By:', 'buddypress' ); ?></label>
+				<label for="groups-order-by"><?php _e( 'Order By:', 'buddyboss' ); ?></label>
 				<select id="groups-order-by">
-					<option value="active"><?php _e( 'Last Active', 'buddypress' ); ?></option>
-					<option value="popular"><?php _e( 'Most Members', 'buddypress' ); ?></option>
-					<option value="newest"><?php _e( 'Newly Created', 'buddypress' ); ?></option>
-					<option value="alphabetical"><?php _e( 'Alphabetical', 'buddypress' ); ?></option>
+					<option value="active"><?php _e( 'Last Active', 'buddyboss' ); ?></option>
+					<option value="popular"><?php _e( 'Most Members', 'buddyboss' ); ?></option>
+					<option value="newest"><?php _e( 'Newly Created', 'buddyboss' ); ?></option>
+					<option value="alphabetical"><?php _e( 'Alphabetical', 'buddyboss' ); ?></option>
 
 					<?php
 
@@ -58,12 +58,12 @@ switch ( bp_current_action() ) :
 		<?php if ( is_user_logged_in() ) : ?>
 			<h2 class="bp-screen-reader-text"><?php
 				/* translators: accessibility text */
-				_e( 'My groups', 'buddypress' );
+				_e( 'My groups', 'buddyboss' );
 			?></h2>
 		<?php else : ?>
 			<h2 class="bp-screen-reader-text"><?php
 				/* translators: accessibility text */
-				_e( 'Member\'s groups', 'buddypress' );
+				_e( 'Member\'s groups', 'buddyboss' );
 			?></h2>
 		<?php endif; ?>
 

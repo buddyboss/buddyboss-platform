@@ -57,10 +57,10 @@ function messages_new_message( $args = '' ) {
 		if ( 'wp_error' === $r['error_type'] ) {
 			if ( empty( $r['sender_id'] ) ) {
 				$error_code = 'messages_empty_sender';
-				$feedback   = __( 'Your message was not sent. Please use a valid sender.', 'buddypress' );
+				$feedback   = __( 'Your message was not sent. Please use a valid sender.', 'buddyboss' );
 			} else {
 				$error_code = 'messages_empty_content';
-				$feedback   = __( 'Your message was not sent. Please enter some content.', 'buddypress' );
+				$feedback   = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
 			}
 
 			return new WP_Error( $error_code, $feedback );
@@ -93,7 +93,7 @@ function messages_new_message( $args = '' ) {
 
 		// Set a default reply subject if none was sent.
 		if ( empty( $message->subject ) ) {
-			$message->subject = sprintf( __( 'Re: %s', 'buddypress' ), $thread->messages[0]->subject );
+			$message->subject = sprintf( __( 'Re: %s', 'buddyboss' ), $thread->messages[0]->subject );
 		}
 
 	// ...otherwise use the recipients passed
@@ -102,7 +102,7 @@ function messages_new_message( $args = '' ) {
 		// Bail if no recipients.
 		if ( empty( $r['recipients'] ) ) {
 			if ( 'wp_error' === $r['error_type'] ) {
-				return new WP_Error( 'message_empty_recipients', __( 'Message could not be sent. Please enter a recipient.', 'buddypress' ) );
+				return new WP_Error( 'message_empty_recipients', __( 'Message could not be sent. Please enter a recipient.', 'buddyboss' ) );
 			} else {
 				return false;
 			}
@@ -110,7 +110,7 @@ function messages_new_message( $args = '' ) {
 
 		// Set a default subject if none exists.
 		if ( empty( $message->subject ) ) {
-			$message->subject = __( 'No Subject', 'buddypress' );
+			$message->subject = __( 'No Subject', 'buddyboss' );
 		}
 
 		// Setup the recipients array.
@@ -162,7 +162,7 @@ function messages_new_message( $args = '' ) {
 		$recipient_ids = array_unique( $recipient_ids );
 		if ( empty( $recipient_ids ) ) {
 			if ( 'wp_error' === $r['error_type'] ) {
-				return new WP_Error( 'message_invalid_recipients', __( 'Message could not be sent because you have entered an invalid username. Please try again.', 'buddypress' ) );
+				return new WP_Error( 'message_invalid_recipients', __( 'Message could not be sent because you have entered an invalid username. Please try again.', 'buddyboss' ) );
 			} else {
 				return false;
 			}
@@ -182,7 +182,7 @@ function messages_new_message( $args = '' ) {
 			if ( is_wp_error( $send ) ) {
 				return $send;
 			} else {
-				return new WP_Error( 'message_generic_error', __( 'Message was not sent. Please try again.', 'buddypress' ) );
+				return new WP_Error( 'message_generic_error', __( 'Message was not sent. Please try again.', 'buddyboss' ) );
 			}
 		}
 

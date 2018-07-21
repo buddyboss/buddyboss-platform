@@ -37,8 +37,8 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 
 			// Specific errors for cover images.
 			'upload_error_strings'  => array(
-				11  => sprintf( __( 'That image is too big. Please upload one smaller than %s', 'buddypress' ), size_format( $max_upload_file_size ) ),
-				12  => sprintf( _n( 'Please upload only this file type: %s.', 'Please upload only these file types: %s.', count( $allowed_types ), 'buddypress' ), self::get_cover_image_types( $allowed_types ) ),
+				11  => sprintf( __( 'That image is too big. Please upload one smaller than %s', 'buddyboss' ), size_format( $max_upload_file_size ) ),
+				12  => sprintf( _n( 'Please upload only this file type: %s.', 'Please upload only these file types: %s.', count( $allowed_types ), 'buddyboss' ), self::get_cover_image_types( $allowed_types ) ),
 			),
 		) );
 	}
@@ -53,7 +53,7 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 	 */
 	public static function get_cover_image_types( $allowed_types = array() ) {
 		$types = array_map( 'strtoupper', $allowed_types );
-		$comma = _x( ',', 'cover image types separator', 'buddypress' );
+		$comma = _x( ',', 'cover image types separator', 'buddyboss' );
 		return join( $comma . ' ', $types );
 	}
 
@@ -207,9 +207,9 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 
 			// Set feedback messages.
 			$script_data['feedback_messages'] = array(
-				1 => __( 'Your new cover image was uploaded successfully.', 'buddypress' ),
-				2 => __( 'There was a problem deleting your cover image. Please try again.', 'buddypress' ),
-				3 => __( 'Your cover image was deleted successfully!', 'buddypress' ),
+				1 => __( 'Your new cover image was uploaded successfully.', 'buddyboss' ),
+				2 => __( 'There was a problem deleting your cover image. Please try again.', 'buddyboss' ),
+				3 => __( 'Your cover image was deleted successfully!', 'buddyboss' ),
 			);
 		} elseif ( bp_is_group() ) {
 			$item_id = bp_get_current_group_id();
@@ -225,9 +225,9 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 
 			// Set feedback messages.
 			$script_data['feedback_messages'] = array(
-				1 => __( 'The group cover image was uploaded successfully.', 'buddypress' ),
-				2 => __( 'There was a problem deleting the group cover image. Please try again.', 'buddypress' ),
-				3 => __( 'The group cover image was deleted successfully!', 'buddypress' ),
+				1 => __( 'The group cover image was uploaded successfully.', 'buddyboss' ),
+				2 => __( 'There was a problem deleting the group cover image. Please try again.', 'buddyboss' ),
+				3 => __( 'The group cover image was deleted successfully!', 'buddyboss' ),
 			);
 		} else {
 

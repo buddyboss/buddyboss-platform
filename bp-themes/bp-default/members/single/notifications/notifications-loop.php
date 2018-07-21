@@ -2,8 +2,8 @@
 	<thead>
 		<tr>
 			<th class="icon"></th>
-			<th class="title"><?php _e( 'Notification', 'buddypress' ); ?></th>
-			<th class="date"><?php _e( 'Date Received', 'buddypress' ); ?></th>
+			<th class="title"><?php _e( 'Notification', 'buddyboss' ); ?></th>
+			<th class="date"><?php _e( 'Date Received', 'buddyboss' ); ?></th>
 			<th class="actions"><?php _e( 'Actions',    'buddypress' ); ?></th>
 		</tr>
 	</thead>

@@ -75,9 +75,9 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		return apply_filters( 'bp_notices_list_table_get_columns', array(
-			'subject'   => _x( 'Subject', 'Admin Notices column header', 'buddypress' ),
-			'message'   => _x( 'Content', 'Admin Notices column header', 'buddypress' ),
-			'date_sent' => _x( 'Created', 'Admin Notices column header', 'buddypress' ),
+			'subject'   => _x( 'Subject', 'Admin Notices column header', 'buddyboss' ),
+			'message'   => _x( 'Content', 'Admin Notices column header', 'buddyboss' ),
+			'date_sent' => _x( 'Created', 'Admin Notices column header', 'buddyboss' ),
 		) );
 	}
 
@@ -116,7 +116,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 					'notice_id'     => $item->id
 				), bp_get_admin_url( 'users.php' ) ), 'messages-activate-notice-' . $item->id ) ),
 				(int) $item->id,
-				esc_html__( 'Activate Notice', 'buddypress' ) ),
+				esc_html__( 'Activate Notice', 'buddyboss' ) ),
 			'delete' => sprintf( '<a href="%s" data-bp-notice-id="%d" data-bp-action="delete">%s</a>', 
 				esc_url( wp_nonce_url( add_query_arg( array(
 					'page'          => 'bp-notices',
@@ -124,11 +124,11 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 					'notice_id'     => $item->id
 				), bp_get_admin_url( 'users.php' ) ), 'messages-delete-notice-' . $item->id ) ),
 				(int) $item->id,
-				esc_html__( 'Delete Notice', 'buddypress' ) )
+				esc_html__( 'Delete Notice', 'buddyboss' ) )
 		);
 
 		if ( ! empty( $item->is_active ) ) {
-			$item->subject = sprintf( _x( 'Active: %s', 'Tag prepended to active site-wide notice titles on WP Admin notices list table', 'buddypress' ), $item->subject );
+			$item->subject = sprintf( _x( 'Active: %s', 'Tag prepended to active site-wide notice titles on WP Admin notices list table', 'buddyboss' ), $item->subject );
 			$actions['activate_deactivate'] = sprintf( '<a href="%s" data-bp-notice-id="%d" data-bp-action="deactivate">%s</a>', 
 				esc_url( wp_nonce_url( add_query_arg( array(
 					'page'          => 'bp-notices',
@@ -136,7 +136,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 					'notice_id'     => $item->id
 				), bp_get_admin_url( 'users.php' ) ), 'messages-deactivate-notice-' . $item->id ) ),
 				(int) $item->id,
-				esc_html__( 'Deactivate Notice', 'buddypress' ) );
+				esc_html__( 'Deactivate Notice', 'buddyboss' ) );
 		}
 
 		echo '<strong>' . apply_filters( 'bp_get_message_notice_subject', $item->subject ) . '</strong> ' . $this->row_actions( $actions );

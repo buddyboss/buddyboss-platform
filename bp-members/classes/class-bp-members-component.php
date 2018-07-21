@@ -35,7 +35,7 @@ class BP_Members_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'members',
-			__( 'Members', 'buddypress' ),
+			__( 'Members', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 20,
@@ -161,7 +161,7 @@ class BP_Members_Component extends BP_Component {
 			'root_slug'       => isset( $bp->pages->members->slug ) ? $bp->pages->members->slug : BP_MEMBERS_SLUG,
 			'has_directory'   => true,
 			'directory_title' => isset( $bp->pages->members->title ) ? $bp->pages->members->title : $default_directory_title,
-			'search_string'   => __( 'Search Members...', 'buddypress' ),
+			'search_string'   => __( 'Search Members...', 'buddyboss' ),
 			'global_tables'   => array(
 				'table_name_last_activity' => bp_core_get_table_prefix() . 'bp_activity',
 				'table_name_signups'       => $wpdb->base_prefix . 'signups', // Signups is a global WordPress table.
@@ -323,7 +323,7 @@ class BP_Members_Component extends BP_Component {
 
 		if ( ! $is_xprofile_active ) {
 			$this->main_nav = array(
-				'name'                => _x( 'Profile', 'Member profile main navigation', 'buddypress' ),
+				'name'                => _x( 'Profile', 'Member profile main navigation', 'buddyboss' ),
 				'slug'                => $slug,
 				'position'            => 20,
 				'screen_function'     => 'bp_members_screen_display_profile',
@@ -339,7 +339,7 @@ class BP_Members_Component extends BP_Component {
 		 * is not active.
 		 */
 		$this->sub_nav = array(
-			'name'            => _x( 'View', 'Member profile view', 'buddypress' ),
+			'name'            => _x( 'View', 'Member profile view', 'buddyboss' ),
 			'slug'            => 'public',
 			'parent_url'      => trailingslashit( $user_domain . $slug ),
 			'parent_slug'     => $slug,
@@ -353,7 +353,7 @@ class BP_Members_Component extends BP_Component {
 		 */
 		if ( bp_displayed_user_has_front_template() ) {
 			$main_nav = array(
-				'name'                => _x( 'Home', 'Member Home page', 'buddypress' ),
+				'name'                => _x( 'Home', 'Member Home page', 'buddyboss' ),
 				'slug'                => 'front',
 				'position'            => 5,
 				'screen_function'     => 'bp_members_screen_display_profile',
@@ -419,13 +419,13 @@ class BP_Members_Component extends BP_Component {
 		$bp = buddypress();
 
 		if ( bp_is_my_profile() ) {
-			$bp->bp_options_title = __( 'You', 'buddypress' );
+			$bp->bp_options_title = __( 'You', 'buddyboss' );
 		} elseif ( bp_is_user() ) {
 			$bp->bp_options_title  = bp_get_displayed_user_fullname();
 			$bp->bp_options_avatar = bp_core_fetch_avatar( array(
 				'item_id' => bp_displayed_user_id(),
 				'type'    => 'thumb',
-				'alt'     => sprintf( __( 'Profile picture of %s', 'buddypress' ), $bp->bp_options_title )
+				'alt'     => sprintf( __( 'Profile picture of %s', 'buddyboss' ), $bp->bp_options_title )
 			) );
 		}
 

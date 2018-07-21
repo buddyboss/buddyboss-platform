@@ -30,15 +30,15 @@ function friends_action_add_friend() {
 			return false;
 
 		if ( !friends_add_friend( bp_loggedin_user_id(), $potential_friend_id ) ) {
-			bp_core_add_message( __( 'Friendship could not be requested.', 'buddypress' ), 'error' );
+			bp_core_add_message( __( 'Friendship could not be requested.', 'buddyboss' ), 'error' );
 		} else {
-			bp_core_add_message( __( 'Friendship requested', 'buddypress' ) );
+			bp_core_add_message( __( 'Friendship requested', 'buddyboss' ) );
 		}
 
 	} elseif ( 'is_friend' == $friendship_status ) {
-		bp_core_add_message( __( 'You are already friends with this user', 'buddypress' ), 'error' );
+		bp_core_add_message( __( 'You are already friends with this user', 'buddyboss' ), 'error' );
 	} else {
-		bp_core_add_message( __( 'You already have a pending friendship request with this user', 'buddypress' ), 'error' );
+		bp_core_add_message( __( 'You already have a pending friendship request with this user', 'buddyboss' ), 'error' );
 	}
 
 	bp_core_redirect( wp_get_referer() );

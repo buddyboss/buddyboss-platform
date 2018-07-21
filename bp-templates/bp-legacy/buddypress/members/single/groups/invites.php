@@ -18,7 +18,7 @@ do_action( 'bp_before_group_invites_content' ); ?>
 
 	<h2 class="bp-screen-reader-text"><?php
 		/* translators: accessibility text */
-		_e( 'Group invitations', 'buddypress' );
+		_e( 'Group invitations', 'buddyboss' );
 	?></h2>
 
 	<ul id="group-list" class="invites item-list">
@@ -32,7 +32,7 @@ do_action( 'bp_before_group_invites_content' ); ?>
 					</div>
 				<?php endif; ?>
 
-				<h4><?php bp_group_link(); ?><span class="small"> - <?php printf( _nx( '%d member', '%d members', bp_get_group_total_members( false ),'Group member count', 'buddypress' ), bp_get_group_total_members( false )  ); ?></span></h4>
+				<h4><?php bp_group_link(); ?><span class="small"> - <?php printf( _nx( '%d member', '%d members', bp_get_group_total_members( false ),'Group member count', 'buddyboss' ), bp_get_group_total_members( false )  ); ?></span></h4>
 
 				<p class="desc">
 					<?php bp_group_description_excerpt(); ?>
@@ -48,8 +48,8 @@ do_action( 'bp_before_group_invites_content' ); ?>
 				do_action( 'bp_group_invites_item' ); ?>
 
 				<div class="action">
-					<a class="button accept" href="<?php bp_group_accept_invite_link(); ?>"><?php _e( 'Accept', 'buddypress' ); ?></a> &nbsp;
-					<a class="button reject confirm" href="<?php bp_group_reject_invite_link(); ?>"><?php _e( 'Reject', 'buddypress' ); ?></a>
+					<a class="button accept" href="<?php bp_group_accept_invite_link(); ?>"><?php _e( 'Accept', 'buddyboss' ); ?></a> &nbsp;
+					<a class="button reject confirm" href="<?php bp_group_reject_invite_link(); ?>"><?php _e( 'Reject', 'buddyboss' ); ?></a>
 
 					<?php
 
@@ -69,7 +69,7 @@ do_action( 'bp_before_group_invites_content' ); ?>
 <?php else: ?>
 
 	<div id="message" class="info">
-		<p><?php _e( 'You have no outstanding group invites.', 'buddypress' ); ?></p>
+		<p><?php _e( 'You have no outstanding group invites.', 'buddyboss' ); ?></p>
 	</div>
 
 <?php endif;?>

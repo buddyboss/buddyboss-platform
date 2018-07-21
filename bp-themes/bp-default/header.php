@@ -19,15 +19,15 @@
 		<div id="header">
 			<div id="search-bar" role="search">
 				<div class="padder">
-					<h1 id="logo" role="banner"><a href="<?php echo home_url(); ?>" title="<?php echo esc_attr_x( 'Home', 'Home page banner link title', 'buddypress' ); ?>"><?php bp_site_name(); ?></a></h1>
+					<h1 id="logo" role="banner"><a href="<?php echo home_url(); ?>" title="<?php echo esc_attr_x( 'Home', 'Home page banner link title', 'buddyboss' ); ?>"><?php bp_site_name(); ?></a></h1>
 
 						<form action="<?php echo bp_search_form_action(); ?>" method="post" id="search-form">
-							<label for="search-terms" class="accessibly-hidden"><?php _e( 'Search for:', 'buddypress' ); ?></label>
+							<label for="search-terms" class="accessibly-hidden"><?php _e( 'Search for:', 'buddyboss' ); ?></label>
 							<input type="text" id="search-terms" name="search-terms" value="<?php echo isset( $_REQUEST['s'] ) ? esc_attr( $_REQUEST['s'] ) : ''; ?>" />
 
 							<?php echo bp_search_form_type_select(); ?>
 
-							<input type="submit" name="search-submit" id="search-submit" value="<?php esc_attr_e( 'Search', 'buddypress' ); ?>" />
+							<input type="submit" name="search-submit" id="search-submit" value="<?php esc_attr_e( 'Search', 'buddyboss' ); ?>" />
 
 							<?php wp_nonce_field( 'bp_search_form' ); ?>
 

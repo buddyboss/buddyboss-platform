@@ -450,9 +450,9 @@ function bp_activity_pagination_count() {
 		$total     = bp_core_number_format( $activities_template->total_activity_count );
 
 		if ( 1 == $activities_template->total_activity_count ) {
-			$message = __( 'Viewing 1 item', 'buddypress' );
+			$message = __( 'Viewing 1 item', 'buddyboss' );
 		} else {
-			$message = sprintf( _n( 'Viewing %1$s - %2$s of %3$s item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddypress' ), $from_num, $to_num, $total );
+			$message = sprintf( _n( 'Viewing %1$s - %2$s of %3$s item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddyboss' ), $from_num, $to_num, $total );
 		}
 
 		return $message;
@@ -1034,7 +1034,7 @@ function bp_activity_avatar( $args = '' ) {
 		$dn_default  = isset( $current_activity_item->display_name ) ? $current_activity_item->display_name : '';
 
 		// Prepend some descriptive text to alt.
-		$alt_default = !empty( $dn_default ) ? sprintf( __( 'Profile picture of %s', 'buddypress' ), $dn_default ) : __( 'Profile picture', 'buddypress' );
+		$alt_default = !empty( $dn_default ) ? sprintf( __( 'Profile picture of %s', 'buddyboss' ), $dn_default ) : __( 'Profile picture', 'buddyboss' );
 
 		$defaults = array(
 			'alt'     => $alt_default,
@@ -1179,10 +1179,10 @@ function bp_activity_secondary_avatar( $args = '' ) {
 				}
 
 				if ( empty( $alt ) ) {
-					$alt = __( 'Group logo', 'buddypress' );
+					$alt = __( 'Group logo', 'buddyboss' );
 
 					if ( ! empty( $name ) ) {
-						$alt = sprintf( __( 'Group logo of %s', 'buddypress' ), $name );
+						$alt = sprintf( __( 'Group logo of %s', 'buddyboss' ), $name );
 					}
 				}
 
@@ -1193,7 +1193,7 @@ function bp_activity_secondary_avatar( $args = '' ) {
 				$link    = home_url();
 
 				if ( empty( $alt ) ) {
-					$alt = sprintf( __( 'Profile picture of the author of the site %s', 'buddypress' ), get_blog_option( $item_id, 'blogname' ) );
+					$alt = sprintf( __( 'Profile picture of the author of the site %s', 'buddyboss' ), get_blog_option( $item_id, 'blogname' ) );
 				}
 
 				break;
@@ -1203,7 +1203,7 @@ function bp_activity_secondary_avatar( $args = '' ) {
 				$link    = bp_core_get_userlink( $item_id, false, true );
 
 				if ( empty( $alt ) ) {
-					$alt = sprintf( __( 'Profile picture of %s', 'buddypress' ), bp_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
+					$alt = sprintf( __( 'Profile picture of %s', 'buddyboss' ), bp_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
 				}
 
 				break;
@@ -1214,7 +1214,7 @@ function bp_activity_secondary_avatar( $args = '' ) {
 				$link    = bp_core_get_userlink( $item_id, false, true );
 
 				if ( empty( $alt ) ) {
-					$alt = sprintf( __( 'Profile picture of %s', 'buddypress' ), $activities_template->activity->display_name );
+					$alt = sprintf( __( 'Profile picture of %s', 'buddyboss' ), $activities_template->activity->display_name );
 				}
 
 				break;
@@ -1496,7 +1496,7 @@ function bp_insert_activity_meta( $content = '' ) {
 		$activity_meta      = sprintf( '%1$s <a href="%2$s" class="view activity-time-since bp-tooltip" data-bp-tooltip="%3$s">%4$s</a>',
 			$new_content,
 			$activity_permalink,
-			esc_attr__( 'View Discussion', 'buddypress' ),
+			esc_attr__( 'View Discussion', 'buddyboss' ),
 			$time_since
 		);
 
@@ -2169,7 +2169,7 @@ function bp_activity_comment_count() {
 
 		// Deprecated notice about $args.
 		if ( ! empty( $deprecated ) ) {
-			_deprecated_argument( __FUNCTION__, '1.2', sprintf( __( '%1$s no longer accepts arguments. See the inline documentation at %2$s for more details.', 'buddypress' ), __FUNCTION__, __FILE__ ) );
+			_deprecated_argument( __FUNCTION__, '1.2', sprintf( __( '%1$s no longer accepts arguments. See the inline documentation at %2$s for more details.', 'buddyboss' ), __FUNCTION__, __FILE__ ) );
 		}
 
 		// Get the count using the purpose-built recursive function.
@@ -2639,7 +2639,7 @@ function bp_activity_delete_link() {
 			$class = 'delete-activity-single';
 		}
 
-		$link = '<a href="' . esc_url( $url ) . '" class="button item-button bp-secondary-action ' . $class . ' confirm" rel="nofollow">' . __( 'Delete', 'buddypress' ) . '</a>';
+		$link = '<a href="' . esc_url( $url ) . '" class="button item-button bp-secondary-action ' . $class . ' confirm" rel="nofollow">' . __( 'Delete', 'buddyboss' ) . '</a>';
 
 		/**
 		 * Filters the activity delete link.
@@ -2744,7 +2744,7 @@ function bp_activity_latest_update( $user_id = 0 ) {
 			'%s <a href="%s">%s</a>',
 			$latest_update,
 			esc_url_raw( bp_activity_get_permalink( $update['id'] ) ),
-			esc_attr__( 'View', 'buddypress' )
+			esc_attr__( 'View', 'buddyboss' )
 		);
 
 		/**
@@ -2853,7 +2853,7 @@ function bp_activity_filter_links( $args = false ) {
 		$link = remove_query_arg( 'afilter' , $link );
 
 		if ( isset( $_GET['afilter'] ) ) {
-			$component_links[] = '<' . $tag . ' id="afilter-clear"><a href="' . esc_url( $link ) . '">' . __( 'Clear Filter', 'buddypress' ) . '</a></' . $tag . '>';
+			$component_links[] = '<' . $tag . ' id="afilter-clear"><a href="' . esc_url( $link ) . '">' . __( 'Clear Filter', 'buddyboss' ) . '</a></' . $tag . '>';
 		}
 
 		/**
@@ -3163,7 +3163,7 @@ function bp_mentioned_user_display_name( $user_id_or_username = false ) {
 
 		// If user somehow has no name, return this really lame string.
 		if ( empty( $name ) ) {
-			$name = __( 'a user', 'buddypress' );
+			$name = __( 'a user', 'buddyboss' );
 		}
 
 		/**
@@ -3220,7 +3220,7 @@ function bp_send_public_message_button( $args = '' ) {
 			'block_self'        => true,
 			'wrapper_id'        => 'post-mention',
 			'link_href'         => bp_get_send_public_message_link(),
-			'link_text'         => __( 'Public Message', 'buddypress' ),
+			'link_text'         => __( 'Public Message', 'buddyboss' ),
 			'link_class'        => 'activity-button mention'
 		) );
 
@@ -3812,7 +3812,7 @@ function bp_activity_feed_item_description() {
 function bp_activity_sitewide_feed() {
 ?>
 
-	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ) ?> | <?php _e( 'Site Wide Activity RSS Feed', 'buddypress' ) ?>" href="<?php bp_sitewide_activity_feed_link() ?>" />
+	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ) ?> | <?php _e( 'Site Wide Activity RSS Feed', 'buddyboss' ) ?>" href="<?php bp_sitewide_activity_feed_link() ?>" />
 
 <?php
 }

@@ -1,21 +1,21 @@
 <div class="item-list-tabs no-ajax" id="subnav" role="navigation">
 	<ul>
-		<li class="feed"><a href="<?php bp_group_activity_feed_link(); ?>" title="<?php esc_attr_e( 'RSS Feed', 'buddypress' ); ?>"><?php _e( 'RSS', 'buddypress' ); ?></a></li>
+		<li class="feed"><a href="<?php bp_group_activity_feed_link(); ?>" title="<?php esc_attr_e( 'RSS Feed', 'buddyboss' ); ?>"><?php _e( 'RSS', 'buddyboss' ); ?></a></li>
 
 		<?php do_action( 'bp_group_activity_syndication_options' ); ?>
 
 		<li id="activity-filter-select" class="last">
-			<label for="activity-filter-by"><?php _e( 'Show:', 'buddypress' ); ?></label> 
+			<label for="activity-filter-by"><?php _e( 'Show:', 'buddyboss' ); ?></label> 
 			<select id="activity-filter-by">
-				<option value="-1"><?php _e( '&mdash; Everything &mdash;', 'buddypress' ); ?></option>
-				<option value="activity_update"><?php _e( 'Updates', 'buddypress' ); ?></option>
+				<option value="-1"><?php _e( '&mdash; Everything &mdash;', 'buddyboss' ); ?></option>
+				<option value="activity_update"><?php _e( 'Updates', 'buddyboss' ); ?></option>
 
 				<?php if ( bp_is_active( 'forums' ) ) : ?>
-					<option value="new_forum_topic"><?php _e( 'Forum Topics', 'buddypress' ); ?></option>
-					<option value="new_forum_post"><?php _e( 'Forum Replies', 'buddypress' ); ?></option>
+					<option value="new_forum_topic"><?php _e( 'Forum Topics', 'buddyboss' ); ?></option>
+					<option value="new_forum_post"><?php _e( 'Forum Replies', 'buddyboss' ); ?></option>
 				<?php endif; ?>
 
-				<option value="joined_group"><?php _e( 'Group Memberships', 'buddypress' ); ?></option>
+				<option value="joined_group"><?php _e( 'Group Memberships', 'buddyboss' ); ?></option>
 
 				<?php do_action( 'bp_group_activity_filter_options' ); ?>
 			</select>

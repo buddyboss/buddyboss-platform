@@ -84,18 +84,18 @@ class BP_Akismet {
 		if ( !$user_result || $user_result == $akismet_result ) {
 			// Show the original Akismet result if the user hasn't overridden it, or if their decision was the same.
 			if ( 'true' == $akismet_result && $activity['is_spam'] )
-				$desc = __( 'Flagged as spam by Akismet', 'buddypress' );
+				$desc = __( 'Flagged as spam by Akismet', 'buddyboss' );
 
 			elseif ( 'false' == $akismet_result && !$activity['is_spam'] )
-				$desc = __( 'Cleared by Akismet', 'buddypress' );
+				$desc = __( 'Cleared by Akismet', 'buddyboss' );
 
 		} else {
 			$who = bp_activity_get_meta( $activity['id'], '_bp_akismet_user' );
 
 			if ( 'true' == $user_result )
-				$desc = sprintf( __( 'Flagged as spam by %s', 'buddypress' ), $who );
+				$desc = sprintf( __( 'Flagged as spam by %s', 'buddyboss' ), $who );
 			else
-				$desc = sprintf( __( 'Un-spammed by %s', 'buddypress' ), $who );
+				$desc = sprintf( __( 'Un-spammed by %s', 'buddyboss' ), $who );
 		}
 
 		// Add a History item to the hover links, just after Edit.
@@ -104,7 +104,7 @@ class BP_Akismet {
 			foreach ( $actions as $k => $item ) {
 				$b[ $k ] = $item;
 				if ( $k == 'edit' )
-					$b['history'] = '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-activity&amp;action=edit&aid=' . $activity['id'] ) ) . '#bp_activity_history"> '. __( 'History', 'buddypress' ) . '</a>';
+					$b['history'] = '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-activity&amp;action=edit&aid=' . $activity['id'] ) ) . '#bp_activity_history"> '. __( 'History', 'buddyboss' ) . '</a>';
 			}
 
 			$actions = $b;
@@ -202,7 +202,7 @@ class BP_Akismet {
 				'id'         => 'activity_make_spam_' . bp_get_activity_id(),
 				'link_class' => 'bp-secondary-action spam-activity confirm button item-button',
 				'link_href'  => wp_nonce_url( bp_get_root_domain() . '/' . bp_get_activity_slug() . '/spam/' . bp_get_activity_id() . '/', 'bp_activity_akismet_spam_' . bp_get_activity_id() ),
-				'link_text'  => __( 'Spam', 'buddypress' ),
+				'link_text'  => __( 'Spam', 'buddyboss' ),
 				'wrapper'    => false,
 			)
 		);
@@ -231,7 +231,7 @@ class BP_Akismet {
 				'id'         => 'activity_make_spam_' . bp_get_activity_comment_id(),
 				'link_class' => 'bp-secondary-action spam-activity-comment confirm',
 				'link_href'  => wp_nonce_url( bp_get_root_domain() . '/' . bp_get_activity_slug() . '/spam/' . bp_get_activity_comment_id() . '/?cid=' . bp_get_activity_comment_id(), 'bp_activity_akismet_spam_' . bp_get_activity_comment_id() ),
-				'link_text'  => __( 'Spam', 'buddypress' ),
+				'link_text'  => __( 'Spam', 'buddyboss' ),
 				'wrapper'    => false,
 			)
 		);
@@ -442,7 +442,7 @@ class BP_Akismet {
 		if ( !in_array( $activity->type, BP_Akismet::get_activity_types() ) )
 			return;
 
-		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as spam', 'buddypress' ), bp_get_loggedin_user_username() ), 'report-spam' );
+		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as spam', 'buddyboss' ), bp_get_loggedin_user_username() ), 'report-spam' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user_result', 'true' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user', bp_get_loggedin_user_username() );
 	}
@@ -459,7 +459,7 @@ class BP_Akismet {
 		if ( !in_array( $activity->type, BP_Akismet::get_activity_types() ) )
 			return;
 
-		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as not spam', 'buddypress' ), bp_get_loggedin_user_username() ), 'report-ham' );
+		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as not spam', 'buddyboss' ), bp_get_loggedin_user_username() ), 'report-ham' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user_result', 'false' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user', bp_get_loggedin_user_username() );
 	}
@@ -483,17 +483,17 @@ class BP_Akismet {
 		// Spam.
 		if ( 'true' == $this->last_activity->akismet_submission['bp_as_result'] ) {
 			bp_activity_update_meta( $activity->id, '_bp_akismet_result', 'true' );
-			$this->update_activity_history( $activity->id, __( 'Akismet caught this item as spam', 'buddypress' ), 'check-spam' );
+			$this->update_activity_history( $activity->id, __( 'Akismet caught this item as spam', 'buddyboss' ), 'check-spam' );
 
 		// Not spam.
 		} elseif ( 'false' == $this->last_activity->akismet_submission['bp_as_result'] ) {
 			bp_activity_update_meta( $activity->id, '_bp_akismet_result', 'false' );
-			$this->update_activity_history( $activity->id, __( 'Akismet cleared this item', 'buddypress' ), 'check-ham' );
+			$this->update_activity_history( $activity->id, __( 'Akismet cleared this item', 'buddyboss' ), 'check-ham' );
 
 		// Uh oh, something's gone horribly wrong. Unexpected result.
 		} else {
 			bp_activity_update_meta( $activity->id, '_bp_akismet_error', bp_core_current_time() );
-			$this->update_activity_history( $activity->id, sprintf( __( 'Akismet was unable to check this item (response: %s), will automatically retry again later.', 'buddypress' ), $this->last_activity->akismet_submission['bp_as_result'] ), 'check-error' );
+			$this->update_activity_history( $activity->id, sprintf( __( 'Akismet was unable to check this item (response: %s), will automatically retry again later.', 'buddyboss' ), $this->last_activity->akismet_submission['bp_as_result'] ), 'check-error' );
 		}
 
 		// Record the original data which was submitted to Akismet for checking.
@@ -598,7 +598,7 @@ class BP_Akismet {
 			return;
 
 		// Display meta box with a low priority (low position on screen by default).
-		add_meta_box( 'bp_activity_history',  __( 'Activity History', 'buddypress' ), array( $this, 'history_metabox' ), get_current_screen()->id, 'normal', 'low' );
+		add_meta_box( 'bp_activity_history',  __( 'Activity History', 'buddyboss' ), array( $this, 'history_metabox' ), get_current_screen()->id, 'normal', 'low' );
 	}
 
 	/**
@@ -618,7 +618,7 @@ class BP_Akismet {
 			return;
 
 		echo '<div class="akismet-history"><div>';
-		printf( _x( '%1$s &mdash; %2$s', 'x hours ago - akismet cleared this item', 'buddypress' ), '<span>' . bp_core_time_since( $history[2] ) . '</span>', esc_html( $history[1] ) );
+		printf( _x( '%1$s &mdash; %2$s', 'x hours ago - akismet cleared this item', 'buddyboss' ), '<span>' . bp_core_time_since( $history[2] ) . '</span>', esc_html( $history[1] ) );
 		echo '</div></div>';
 	}
 

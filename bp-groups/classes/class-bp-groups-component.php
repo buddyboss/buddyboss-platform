@@ -102,7 +102,7 @@ class BP_Groups_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'groups',
-			_x( 'User Groups', 'Group screen page <title>', 'buddypress' ),
+			_x( 'User Groups', 'Group screen page <title>', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 70,
@@ -256,7 +256,7 @@ class BP_Groups_Component extends BP_Component {
 			'has_directory'         => true,
 			'directory_title'       => isset( $bp->pages->groups->title ) ? $bp->pages->groups->title : $default_directory_title,
 			'notification_callback' => 'groups_format_notifications',
-			'search_string'         => _x( 'Search Groups...', 'Component directory search', 'buddypress' ),
+			'search_string'         => _x( 'Search Groups...', 'Component directory search', 'buddyboss' ),
 			'global_tables'         => $global_tables,
 			'meta_tables'           => $meta_tables,
 		);
@@ -386,11 +386,11 @@ class BP_Groups_Component extends BP_Component {
 		 */
 		$this->group_creation_steps = apply_filters( 'groups_create_group_steps', array(
 			'group-details'  => array(
-				'name'       => _x( 'Details', 'Group screen nav', 'buddypress' ),
+				'name'       => _x( 'Details', 'Group screen nav', 'buddyboss' ),
 				'position'   => 0
 			),
 			'group-settings' => array(
-				'name'       => _x( 'Settings', 'Group screen nav', 'buddypress' ),
+				'name'       => _x( 'Settings', 'Group screen nav', 'buddyboss' ),
 				'position'   => 10
 			)
 		) );
@@ -399,14 +399,14 @@ class BP_Groups_Component extends BP_Component {
 		$disabled_avatar_uploads = (int) bp_disable_group_avatar_uploads();
 		if ( ! $disabled_avatar_uploads && $bp->avatar->show_avatars ) {
 			$this->group_creation_steps['group-avatar'] = array(
-				'name'     => _x( 'Photo', 'Group screen nav', 'buddypress' ),
+				'name'     => _x( 'Photo', 'Group screen nav', 'buddyboss' ),
 				'position' => 20
 			);
 		}
 
 		if ( bp_group_use_cover_image_header() ) {
 			$this->group_creation_steps['group-cover-image'] = array(
-				'name'     => _x( 'Cover Image', 'Group screen nav', 'buddypress' ),
+				'name'     => _x( 'Cover Image', 'Group screen nav', 'buddyboss' ),
 				'position' => 25
 			);
 		}
@@ -414,7 +414,7 @@ class BP_Groups_Component extends BP_Component {
 		// If friends component is active, add invitations.
 		if ( bp_is_active( 'friends' ) ) {
 			$this->group_creation_steps['group-invites'] = array(
-				'name'     => _x( 'Invites',  'Group screen nav', 'buddypress' ),
+				'name'     => _x( 'Invites',  'Group screen nav', 'buddyboss' ),
 				'position' => 30
 			);
 		}
@@ -528,7 +528,7 @@ class BP_Groups_Component extends BP_Component {
 
 			$nav_name = sprintf(
 				/* translators: %s: Group count for the current user */
-				_x( 'Groups %s', 'Group screen nav with counter', 'buddypress' ),
+				_x( 'Groups %s', 'Group screen nav with counter', 'buddyboss' ),
 				sprintf(
 					'<span class="%s">%s</span>',
 					esc_attr( $class ),
@@ -536,7 +536,7 @@ class BP_Groups_Component extends BP_Component {
 				)
 			);
 		} else {
-			$nav_name = _x( 'Groups', 'Group screen nav without counter', 'buddypress' );
+			$nav_name = _x( 'Groups', 'Group screen nav without counter', 'buddyboss' );
 		}
 
 		$slug = bp_get_groups_slug();
@@ -557,7 +557,7 @@ class BP_Groups_Component extends BP_Component {
 
 			// Add the My Groups nav item.
 			$sub_nav[] = array(
-				'name'            => __( 'Memberships', 'buddypress' ),
+				'name'            => __( 'Memberships', 'buddyboss' ),
 				'slug'            => 'my-groups',
 				'parent_url'      => $groups_link,
 				'parent_slug'     => $slug,
@@ -568,7 +568,7 @@ class BP_Groups_Component extends BP_Component {
 
 			// Add the Group Invites nav item.
 			$sub_nav[] = array(
-				'name'            => __( 'Invitations', 'buddypress' ),
+				'name'            => __( 'Invitations', 'buddyboss' ),
 				'slug'            => 'invites',
 				'parent_url'      => $groups_link,
 				'parent_slug'     => $slug,
@@ -590,7 +590,7 @@ class BP_Groups_Component extends BP_Component {
 			 * It does not appear in the interface.
 			 */
 			bp_core_new_nav_item( array(
-				'name'                => __( 'Memberships', 'buddypress' ),
+				'name'                => __( 'Memberships', 'buddyboss' ),
 				'slug'                => $this->current_group->slug,
 				'position'            => -1, // Do not show in BuddyBar.
 				'screen_function'     => 'groups_screen_group_home',
@@ -602,7 +602,7 @@ class BP_Groups_Component extends BP_Component {
 
 			// Add the "Home" subnav item, as this will always be present.
 			$sub_nav[] = array(
-				'name'            =>  _x( 'Home', 'Group screen navigation title', 'buddypress' ),
+				'name'            =>  _x( 'Home', 'Group screen navigation title', 'buddyboss' ),
 				'slug'            => 'home',
 				'parent_url'      => $group_link,
 				'parent_slug'     => $this->current_group->slug,
@@ -617,7 +617,7 @@ class BP_Groups_Component extends BP_Component {
 			if ( bp_current_user_can( 'groups_request_membership', array( 'group_id' => $this->current_group->id ) ) ) {
 
 				$sub_nav[] = array(
-					'name'            => _x( 'Request Membership','Group screen nav', 'buddypress' ),
+					'name'            => _x( 'Request Membership','Group screen nav', 'buddyboss' ),
 					'slug'            => 'request-membership',
 					'parent_url'      => $group_link,
 					'parent_slug'     => $this->current_group->slug,
@@ -632,7 +632,7 @@ class BP_Groups_Component extends BP_Component {
 				 */
 				if ( $this->current_group->front_template && bp_is_active( 'activity' ) ) {
 					$sub_nav[] = array(
-						'name'            => _x( 'Activity', 'My Group screen nav', 'buddypress' ),
+						'name'            => _x( 'Activity', 'My Group screen nav', 'buddyboss' ),
 						'slug'            => 'activity',
 						'parent_url'      => $group_link,
 						'parent_slug'     => $this->current_group->slug,
@@ -648,7 +648,7 @@ class BP_Groups_Component extends BP_Component {
 				 * Only add the members subnav if it's not the home's nav.
 				 */
 				$sub_nav[] = array(
-					'name'            => sprintf( _x( 'Members %s', 'My Group screen nav', 'buddypress' ), '<span>' . number_format( $this->current_group->total_member_count ) . '</span>' ),
+					'name'            => sprintf( _x( 'Members %s', 'My Group screen nav', 'buddyboss' ), '<span>' . number_format( $this->current_group->total_member_count ) . '</span>' ),
 					'slug'            => 'members',
 					'parent_url'      => $group_link,
 					'parent_slug'     => $this->current_group->slug,
@@ -662,7 +662,7 @@ class BP_Groups_Component extends BP_Component {
 
 			if ( bp_is_active( 'friends' ) && bp_groups_user_can_send_invites() ) {
 				$sub_nav[] = array(
-					'name'            => _x( 'Send Invites', 'My Group screen nav', 'buddypress' ),
+					'name'            => _x( 'Send Invites', 'My Group screen nav', 'buddyboss' ),
 					'slug'            => 'send-invites',
 					'parent_url'      => $group_link,
 					'parent_slug'     => $this->current_group->slug,
@@ -677,7 +677,7 @@ class BP_Groups_Component extends BP_Component {
 			// If the user is a group admin, then show the group admin nav item.
 			if ( bp_is_item_admin() ) {
 				$sub_nav[] = array(
-					'name'            => _x( 'Manage', 'My Group screen nav', 'buddypress' ),
+					'name'            => _x( 'Manage', 'My Group screen nav', 'buddyboss' ),
 					'slug'            => 'admin',
 					'parent_url'      => $group_link,
 					'parent_slug'     => $this->current_group->slug,
@@ -700,20 +700,20 @@ class BP_Groups_Component extends BP_Component {
 				);
 
 				$sub_nav[] = array_merge( array(
-					'name'     => __( 'Details', 'buddypress' ),
+					'name'     => __( 'Details', 'buddyboss' ),
 					'slug'     => 'edit-details',
 					'position' => 0,
 				), $default_params );
 
 				$sub_nav[] = array_merge( array(
-					'name'     => __( 'Settings', 'buddypress' ),
+					'name'     => __( 'Settings', 'buddyboss' ),
 					'slug'     => 'group-settings',
 					'position' => 10,
 				), $default_params );
 
 				if ( ! bp_disable_group_avatar_uploads() && buddypress()->avatar->show_avatars ) {
 					$sub_nav[] = array_merge( array(
-						'name'     => __( 'Photo', 'buddypress' ),
+						'name'     => __( 'Photo', 'buddyboss' ),
 						'slug'     => 'group-avatar',
 						'position' => 20,
 					), $default_params );
@@ -721,28 +721,28 @@ class BP_Groups_Component extends BP_Component {
 
 				if ( bp_group_use_cover_image_header() ) {
 					$sub_nav[] = array_merge( array(
-						'name'     => __( 'Cover Image', 'buddypress' ),
+						'name'     => __( 'Cover Image', 'buddyboss' ),
 						'slug'     => 'group-cover-image',
 						'position' => 25,
 					), $default_params );
 				}
 
 				$sub_nav[] = array_merge( array(
-					'name'     => __( 'Members', 'buddypress' ),
+					'name'     => __( 'Members', 'buddyboss' ),
 					'slug'     => 'manage-members',
 					'position' => 30,
 				), $default_params );
 
 				if ( 'private' == $this->current_group->status ) {
 					$sub_nav[] = array_merge( array(
-						'name'     => __( 'Requests', 'buddypress' ),
+						'name'     => __( 'Requests', 'buddyboss' ),
 						'slug'     => 'membership-requests',
 						'position' => 40,
 					), $default_params );
 				}
 
 				$sub_nav[] = array_merge( array(
-					'name'     => __( 'Delete', 'buddypress' ),
+					'name'     => __( 'Delete', 'buddyboss' ),
 					'slug'     => 'delete-group',
 					'position' => 1000,
 				), $default_params );
@@ -790,19 +790,19 @@ class BP_Groups_Component extends BP_Component {
 
 			// Pending group invites.
 			$count   = groups_get_invite_count_for_user();
-			$title   = _x( 'Groups', 'My Account Groups', 'buddypress' );
-			$pending = _x( 'No Pending Invites', 'My Account Groups sub nav', 'buddypress' );
+			$title   = _x( 'Groups', 'My Account Groups', 'buddyboss' );
+			$pending = _x( 'No Pending Invites', 'My Account Groups sub nav', 'buddyboss' );
 
 			if ( ! empty( $count['total'] ) ) {
 				$title = sprintf(
 					/* translators: %s: Group invitation count for the current user */
-					_x( 'Groups %s', 'My Account Groups nav', 'buddypress' ),
+					_x( 'Groups %s', 'My Account Groups nav', 'buddyboss' ),
 					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 				);
 
 				$pending = sprintf(
 					/* translators: %s: Group invitation count for the current user */
-					_x( 'Pending Invites %s', 'My Account Groups sub nav', 'buddypress' ),
+					_x( 'Pending Invites %s', 'My Account Groups sub nav', 'buddyboss' ),
 					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 				);
 			}
@@ -819,7 +819,7 @@ class BP_Groups_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-memberships',
-				'title'    => _x( 'Memberships', 'My Account Groups sub nav', 'buddypress' ),
+				'title'    => _x( 'Memberships', 'My Account Groups sub nav', 'buddyboss' ),
 				'href'     => $groups_link,
 				'position' => 10
 			);
@@ -838,7 +838,7 @@ class BP_Groups_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-create',
-					'title'    => _x( 'Create a Group', 'My Account Groups sub nav', 'buddypress' ),
+					'title'    => _x( 'Create a Group', 'My Account Groups sub nav', 'buddyboss' ),
 					'href'     => trailingslashit( bp_get_groups_directory_permalink() . 'create' ),
 					'position' => 90
 				);
@@ -859,13 +859,13 @@ class BP_Groups_Component extends BP_Component {
 			$bp = buddypress();
 
 			if ( bp_is_my_profile() && !bp_is_single_item() ) {
-				$bp->bp_options_title = _x( 'Memberships', 'My Groups page <title>', 'buddypress' );
+				$bp->bp_options_title = _x( 'Memberships', 'My Groups page <title>', 'buddyboss' );
 
 			} elseif ( !bp_is_my_profile() && !bp_is_single_item() ) {
 				$bp->bp_options_avatar = bp_core_fetch_avatar( array(
 					'item_id' => bp_displayed_user_id(),
 					'type'    => 'thumb',
-					'alt'     => sprintf( __( 'Profile picture of %s', 'buddypress' ), bp_get_displayed_user_fullname() )
+					'alt'     => sprintf( __( 'Profile picture of %s', 'buddyboss' ), bp_get_displayed_user_fullname() )
 				) );
 				$bp->bp_options_title = bp_get_displayed_user_fullname();
 
@@ -878,11 +878,11 @@ class BP_Groups_Component extends BP_Component {
 					'object'     => 'group',
 					'type'       => 'thumb',
 					'avatar_dir' => 'group-avatars',
-					'alt'        => __( 'Group Profile Photo', 'buddypress' )
+					'alt'        => __( 'Group Profile Photo', 'buddyboss' )
 				) );
 
 				if ( empty( $bp->bp_options_avatar ) ) {
-					$bp->bp_options_avatar = '<img src="' . esc_url( bp_core_avatar_default_thumb() ) . '" alt="' . esc_attr__( 'No Group Profile Photo', 'buddypress' ) . '" class="avatar" />';
+					$bp->bp_options_avatar = '<img src="' . esc_url( bp_core_avatar_default_thumb() ) . '" alt="' . esc_attr__( 'No Group Profile Photo', 'buddyboss' ) . '" class="avatar" />';
 				}
 			}
 		}

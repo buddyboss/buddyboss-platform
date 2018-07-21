@@ -10,7 +10,7 @@
 <?php if ( bp_is_group_create() ) : ?>
 
 	<h2 class="bp-screen-title creation-step-name">
-		<?php esc_html_e( 'Upload Cover Image', 'buddypress' ); ?>
+		<?php esc_html_e( 'Upload Cover Image', 'buddyboss' ); ?>
 	</h2>
 
 	<div id="header-cover-image"></div>
@@ -18,12 +18,12 @@
 <?php else : ?>
 
 	<h2 class="bp-screen-title">
-		<?php esc_html_e( 'Change Cover Image', 'buddypress' ); ?>
+		<?php esc_html_e( 'Change Cover Image', 'buddyboss' ); ?>
 	</h2>
 
 <?php endif; ?>
 
-<p><?php esc_html_e( 'The Cover Image will be used to customize the header of your group.', 'buddypress' ); ?></p>
+<p><?php esc_html_e( 'The Cover Image will be used to customize the header of your group.', 'buddyboss' ); ?></p>
 
 <?php
 bp_attachments_get_template_part( 'cover-images/index' );

@@ -98,8 +98,8 @@ class BP_Messages_Notices_Admin {
 		}
 
 		$this->screen_id = add_users_page(
-			_x( 'Site Notices', 'Notices admin page title', 'buddypress' ),
-			_x( 'Site Notices', 'Admin Users menu', 'buddypress' ),
+			_x( 'Site Notices', 'Notices admin page title', 'buddyboss' ),
+			_x( 'Site Notices', 'Admin Users menu', 'buddyboss' ),
 			'manage_options',
 			'bp-notices',
 			array( $this, 'admin_index' )
@@ -185,32 +185,32 @@ class BP_Messages_Notices_Admin {
 		<div class="wrap">
 			<?php if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) : ?>
 
-				<h1 class="wp-heading-inline"><?php echo esc_html_x( 'Site Notices', 'Notices admin page title', 'buddypress' ); ?></h1>
+				<h1 class="wp-heading-inline"><?php echo esc_html_x( 'Site Notices', 'Notices admin page title', 'buddyboss' ); ?></h1>
 				<hr class="wp-header-end">
 
 			<?php else : ?>
 
-				<h1><?php echo esc_html_x( 'Site Notices', 'Notices admin page title', 'buddypress' ); ?></h1>
+				<h1><?php echo esc_html_x( 'Site Notices', 'Notices admin page title', 'buddyboss' ); ?></h1>
 
 			<?php endif; ?>
 
-			<p class="bp-notice-about"><?php esc_html_e( 'Manage notices shown at front end of your site to all logged-in users.', 'buddypress' ); ?></p>
+			<p class="bp-notice-about"><?php esc_html_e( 'Manage notices shown at front end of your site to all logged-in users.', 'buddyboss' ); ?></p>
 
 			<div class="bp-new-notice-panel">
 
-				<h2 class="bp-new-notice"><?php esc_html_e( 'Add New Notice', 'buddypress' ); ?></h2>
+				<h2 class="bp-new-notice"><?php esc_html_e( 'Add New Notice', 'buddyboss' ); ?></h2>
 
 				<form action="<?php echo esc_url( wp_nonce_url( $this->url, 'new-notice', 'ns-nonce' ) ); ?>" method="post">
 
 					<div>
-						<label for="bp_notice_subject"><?php esc_html_e( 'Subject', 'buddypress' ); ?></label>
+						<label for="bp_notice_subject"><?php esc_html_e( 'Subject', 'buddyboss' ); ?></label>
 						<input type="text" class="bp-panel-input" id="bp_notice_subject" name="bp_notice[subject]"/>
 
-						<label for="bp_notice_content"><?php esc_html_e( 'Content', 'buddypress' ); ?></label>
+						<label for="bp_notice_content"><?php esc_html_e( 'Content', 'buddyboss' ); ?></label>
 						<textarea class="bp-panel-textarea" id="bp_notice_content" name="bp_notice[content]"></textarea>
 					</div>
 
-					<input type="submit" value="<?php esc_attr_e( 'Publish Notice', 'buddypress' ); ?>" name="bp_notice[send]" class="button button-primary save alignleft">
+					<input type="submit" value="<?php esc_attr_e( 'Publish Notice', 'buddyboss' ); ?>" name="bp_notice[send]" class="button button-primary save alignleft">
 
 				</form>
 
@@ -224,15 +224,15 @@ class BP_Messages_Notices_Admin {
 						<?php
 						if ( isset( $_GET['error'] ) ) {
 							if ( 'create' === $_GET['error'] ) {
-								esc_html_e( 'Notice was not created. Please try again.', 'buddypress' );
+								esc_html_e( 'Notice was not created. Please try again.', 'buddyboss' );
 							} else {
-								esc_html_e( 'Notice was not updated. Please try again.', 'buddypress' );
+								esc_html_e( 'Notice was not updated. Please try again.', 'buddyboss' );
 							}
 						 } else {
 							if ( 'create' === $_GET['success'] ) {
-								esc_html_e( 'Notice successfully created.', 'buddypress' );
+								esc_html_e( 'Notice successfully created.', 'buddyboss' );
 							} else {
-								esc_html_e( 'Notice successfully updated.', 'buddypress' );
+								esc_html_e( 'Notice successfully updated.', 'buddyboss' );
 							}
 						}
 						?>
@@ -242,7 +242,7 @@ class BP_Messages_Notices_Admin {
 
 			<?php endif; ?>
 
-			<h2 class="bp-notices-list"><?php esc_html_e( 'Notices List', 'buddypress' ); ?></h2>
+			<h2 class="bp-notices-list"><?php esc_html_e( 'Notices List', 'buddyboss' ); ?></h2>
 
 			<?php $this->list_table->display(); ?>
 

@@ -46,7 +46,7 @@ get_header( 'buddypress' ); ?>
 					</ul>
 				</div><!-- .item-list-tabs -->
 
-				<h3><?php _e( 'Profile Settings', 'buddypress' ); ?></h3>
+				<h3><?php _e( 'Profile Settings', 'buddyboss' ); ?></h3>
 
 				<?php do_action( 'bp_template_content' ); ?>
 
@@ -62,7 +62,7 @@ get_header( 'buddypress' ); ?>
 									<thead>
 										<tr>
 											<th class="title field-group-name"><?php bp_the_profile_group_name(); ?></th>
-											<th class="title"><?php _e( 'Visibility', 'buddypress' ); ?></th>
+											<th class="title"><?php _e( 'Visibility', 'buddyboss' ); ?></th>
 										</tr>
 									</thead>
 
@@ -89,7 +89,7 @@ get_header( 'buddypress' ); ?>
 					<?php do_action( 'bp_core_xprofile_settings_before_submit' ); ?>
 
 					<div class="submit">
-						<input id="submit" type="submit" name="xprofile-settings-submit" value="<?php esc_attr_e( 'Save Settings', 'buddypress' ); ?>" class="auto" />
+						<input id="submit" type="submit" name="xprofile-settings-submit" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" class="auto" />
 					</div>
 
 					<?php do_action( 'bp_core_xprofile_settings_after_submit' ); ?>
