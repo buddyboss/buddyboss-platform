@@ -2452,7 +2452,7 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'members' => array(
 			'title'       => __( 'Community Members', 'buddypress' ),
-			'description' => __( 'Everything in a BuddyPress community revolves around its members.', 'buddypress' )
+			'description' => __( 'Everything in a BuddyBoss community revolves around its members.', 'buddypress' )
 		),
 	);
 

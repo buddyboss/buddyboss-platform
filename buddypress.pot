@@ -2065,7 +2065,7 @@ msgid "Community Members"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2455
-msgid "Everything in a BuddyPress community revolves around its members."
+msgid "Everything in a BuddyBoss community revolves around its members."
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2472
