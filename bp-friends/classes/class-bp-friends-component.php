@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Friends Streams Loader.
+ * BuddyPress Friends Feeds Loader.
  *
  * The friends component is for users to create relationships with each other.
  *

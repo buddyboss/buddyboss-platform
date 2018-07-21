@@ -293,7 +293,7 @@ jq(document).ready( function() {
 		return false;
 	});
 
-	/* Stream event delegation */
+	/* Feed event delegation */
 	jq('div.activity').on( 'click', function(event) {
 		var target = jq(event.target),
 			type, parent, parent_id,

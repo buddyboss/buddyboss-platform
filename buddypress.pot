@@ -8823,7 +8823,7 @@ msgstr ""
 #. Description of the plugin/theme
 msgid ""
 "BuddyPress adds community features to WordPress. Member Profiles, Activity "
-"Streams, Direct Messaging, Notifications, and more!"
+"Feeds, Direct Messaging, Notifications, and more!"
 msgstr ""
 
 #. Author of the plugin/theme
