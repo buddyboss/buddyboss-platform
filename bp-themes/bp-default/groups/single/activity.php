@@ -1,7 +1,5 @@
 <div class="item-list-tabs no-ajax" id="subnav" role="navigation">
 	<ul>
-		<li class="feed"><a href="<?php bp_group_activity_feed_link(); ?>" title="<?php esc_attr_e( 'RSS Feed', 'buddyboss' ); ?>"><?php _e( 'RSS', 'buddyboss' ); ?></a></li>
-
 		<?php do_action( 'bp_group_activity_syndication_options' ); ?>
 
 		<li id="activity-filter-select" class="last">

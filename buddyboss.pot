@@ -6015,7 +6015,7 @@ msgstr ""
 #: bp-templates/bp-legacy/buddypress/members/single/activity.php:20
 #: bp-templates/bp-nouveau/includes/functions.php:547
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:53
-msgid "&mdash; Everything &mdash;"
+msgid "&mdash; View All &mdash;"
 msgstr ""
 
 #: bp-templates/bp-legacy/buddypress/activity/post-form.php:30
