@@ -384,10 +384,6 @@ class BuddyPress {
 		$this->themes_dir     = $this->plugin_dir . 'bp-templates';
 		$this->themes_url     = $this->plugin_url . 'bp-templates';
 
-		// Themes (for bp-default)
-		$this->old_themes_dir = $this->plugin_dir . 'bp-themes';
-		$this->old_themes_url = $this->plugin_url . 'bp-themes';
-
 		/** Theme Compat ******************************************************/
 
 		$this->theme_compat   = new stdClass(); // Base theme compatibility class
@@ -645,8 +641,7 @@ class BuddyPress {
 			'register_post_statuses',   // Register post statuses
 			'register_taxonomies',      // Register taxonomies
 			'register_views',           // Register the views
-			'register_theme_directory', // Register the theme directory
-			'register_theme_packages',  // Register bundled theme packages (bp-themes)
+			'register_theme_packages',  // Register bundled theme packages
 			'load_textdomain',          // Load textdomain
 			'add_rewrite_tags',         // Add rewrite tags
 			'generate_rewrite_rules'    // Generate rewrite rules
@@ -702,33 +697,11 @@ class BuddyPress {
 	/** Public Methods ********************************************************/
 
 	/**
-	 * Set up BuddyPress's legacy theme directory.
-	 *
-	 * Starting with version 1.2, and ending with version 1.8, BuddyPress
-	 * registered a custom theme directory - bp-themes - which contained
-	 * the bp-default theme. Since BuddyPress 1.9, bp-themes is no longer
-	 * registered (and bp-default no longer offered) on new installations.
-	 * Sites using bp-default (or a child theme of bp-default) will
-	 * continue to have bp-themes registered as before.
-	 *
-	 * @since 1.5.0
-	 *
-	 * @todo Move bp-default to wordpress.org/extend/themes and remove this.
-	 */
-	public function register_theme_directory() {
-		if ( ! bp_do_register_theme_directory() ) {
-			return;
-		}
-
-		register_theme_directory( $this->old_themes_dir );
-	}
-
-	/**
 	 * Register bundled theme packages.
 	 *
-	 * Note that since we currently have complete control over bp-themes and
-	 * the bp-legacy folders, it's fine to hardcode these here. If at a
-	 * later date we need to automate this, an API will need to be built.
+	 * Note that since we currently have complete control over the bp-legacy 
+	 * folders, it's fine to hardcode it here. If at a later date we need 
+	 * to automate this, an API will need to be built.
 	 *
 	 * @since 1.7.0
 	 */
