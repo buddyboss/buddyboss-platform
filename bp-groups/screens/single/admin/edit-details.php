@@ -2,7 +2,7 @@
 /**
  * Groups: Single group "Manage > Details" screen handler
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage GroupsScreens
  * @since 3.0.0
  */

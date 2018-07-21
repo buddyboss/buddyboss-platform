@@ -1,11 +1,11 @@
 <?php
 /**
- * BuddyBoss - Activity Feed (Single Item)
+ * BuddyPress - Activity Stream (Single Item)
  *
  * This template is used by activity-loop.php and AJAX functions to show
  * each activity.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage bp-legacy
  * @version 3.0.0
  */

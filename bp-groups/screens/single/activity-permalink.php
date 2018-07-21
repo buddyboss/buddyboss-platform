@@ -5,7 +5,7 @@
  * Note - This has never worked.
  * See {@link https://buddypress.trac.wordpress.org/ticket/2579}
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage GroupsScreens
  * @since 3.0.0
  */

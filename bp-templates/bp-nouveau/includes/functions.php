@@ -68,7 +68,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	// Init the query string
 	$qs = array();
 
-	// Activity feed filtering on action.
+	// Activity stream filtering on action.
 	if ( ! empty( $post_query['filter'] ) && '-1' !== $post_query['filter'] ) {
 		if ( 'notifications' === $object ) {
 			$qs[] = 'component_action=' . $post_query['filter'];
@@ -88,7 +88,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 		$qs[]    = 'user_id=' . $user_id;
 	}
 
-	// Activity feed scope only on activity directory.
+	// Activity stream scope only on activity directory.
 	if ( 'all' !== $post_query['scope'] && ! bp_displayed_user_id() && ! bp_is_single_item() ) {
 		$qs[] = 'scope=' . $post_query['scope'];
 	}
@@ -364,7 +364,7 @@ function bp_nouveau_is_object_nav_in_sidebar() {
  */
 function bp_nouveau_current_user_can( $capability = '' ) {
 	/**
-	 * Filters whether or not the current user can perform an action for BuddyBoss Nouveau.
+	 * Filters whether or not the current user can perform an action for BuddyPress Nouveau.
 	 *
 	 * @since 3.0.0
 	 *
@@ -909,7 +909,7 @@ function bp_nouveau_theme_cover_image( $params = array() ) {
  */
 function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 	/**
-	 * Filters the BuddyBoss Nouveau feedback messages.
+	 * Filters the BuddyPress Nouveau feedback messages.
 	 *
 	 * Use this filter to add your custom feedback messages.
 	 *

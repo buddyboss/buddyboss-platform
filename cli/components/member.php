@@ -6,7 +6,7 @@ if ( ! class_exists( 'User_Command' ) ) {
 }
 
 /**
- * Manage BuddyBoss Members
+ * Manage BuddyPress Members
  *
  * @since 1.0.0
  */

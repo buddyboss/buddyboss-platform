@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss Members Directory
+ * BuddyPress Members Directory
  *
  * @version 3.0.0
  */

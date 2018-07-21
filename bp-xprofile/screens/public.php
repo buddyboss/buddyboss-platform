@@ -2,7 +2,7 @@
 /**
  * XProfile: User's "Profile" screen handler
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage XProfileScreens
  * @since 3.0.0
  */

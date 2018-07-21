@@ -1,11 +1,11 @@
 <?php
 /**
- * BuddyBoss XProfile Loader.
+ * BuddyPress XProfile Loader.
  *
  * An extended profile component for users. This allows site admins to create
  * groups of fields for users to enter information about themselves.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage XProfileLoader
  * @since 1.5.0
  */
@@ -46,7 +46,7 @@ class BP_XProfile_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'xprofile',
-			_x( 'Profile Fields', 'Component page <title>', 'buddypress' ),
+			_x( 'Extended Profiles', 'Component page <title>', 'buddypress' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 20

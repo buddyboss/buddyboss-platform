@@ -2,7 +2,7 @@
 /**
  * Settings: User's "Settings > Delete Account" screen handler
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage SettingsScreens
  * @since 3.0.0
  */

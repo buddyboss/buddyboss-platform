@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------
-Hello, this is the BuddyBoss Legacy stylesheet.
+Hello, this is the BuddyPress Legacy stylesheet.
 
 @version 3.0.0
 
@@ -23,7 +23,7 @@ Hello, this is the BuddyBoss Legacy stylesheet.
 	3.8 - Headers, Lists and Tabs - Activity, Groups, Blogs, Forums
 		3.8.1 - Cover Image
 	3.9 - Private Messaging Threads
-	3.10 - Profile Fields
+	3.10 - Extended Profiles
 	3.11 - Widgets
 	3.12 - Tooltips
 4.0 - Media Queries
@@ -1909,7 +1909,7 @@ a.message-action-star:hover {
 }
 
 /*--------------------------------------------------------------
-3.10 - Profile Fields
+3.10 - Extended Profiles
 --------------------------------------------------------------*/
 
 #buddypress div.profile h2 {

@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Settings Loader.
+ * BuddyPress Settings Loader.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage SettingsLoader
  * @since 1.5.0
  */

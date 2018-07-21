@@ -4,7 +4,7 @@
  *
  * Functions specific to the members component.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage MembersFunctions
  * @since 1.5.0
  */

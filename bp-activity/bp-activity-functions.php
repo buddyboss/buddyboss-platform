@@ -1,10 +1,10 @@
 <?php
 /**
- * BuddyBoss Activity Functions.
+ * BuddyPress Activity Functions.
  *
- * Functions for the Activity Feeds component.
+ * Functions for the Activity Streams component.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage ActivityFunctions
  * @since 1.5.0
  */
@@ -314,12 +314,12 @@ function bp_activity_get_userid_from_mentionname( $mentionname ) {
 /**
  * Register an activity 'type' and its action description/callback.
  *
- * Activity actions are strings used to describe items in the activity feed,
+ * Activity actions are strings used to describe items in the activity stream,
  * such as 'Joe became a registered member' or 'Bill and Susie are now
  * friends'. Each activity type (such as 'new_member' or 'friendship_created')
  * used by a component should be registered using this function.
  *
- * While it's possible to post items to the activity feed whose types are
+ * While it's possible to post items to the activity stream whose types are
  * not registered using bp_activity_set_action(), it is not recommended;
  * unregistered types will not be displayed properly in the activity admin
  * panel, and dynamic action generation (which is essential for multilingual
@@ -331,8 +331,8 @@ function bp_activity_get_userid_from_mentionname( $mentionname ) {
  * @param  string        $type            The action type.
  * @param  string        $description     The action description.
  * @param  callable|bool $format_callback Callback for formatting the action string.
- * @param  string|bool   $label           String to describe this action in the activity feed filter dropdown.
- * @param  array         $context         Optional. Activity feed contexts where the filter should appear.
+ * @param  string|bool   $label           String to describe this action in the activity stream filter dropdown.
+ * @param  array         $context         Optional. Activity stream contexts where the filter should appear.
  *                                        Values: 'activity', 'member', 'member_groups', 'group'.
  * @param  int           $position        Optional. The position of the action when listed in dropdowns.
  * @return bool False if any param is empty, otherwise true.
@@ -369,8 +369,8 @@ function bp_activity_set_action( $component_id, $type, $description, $format_cal
 	 * @param string   $type            Action type being set.
 	 * @param string   $description     Action description for action being set.
 	 * @param callable $format_callback Callback for formatting the action string.
-	 * @param string   $label           String to describe this action in the activity feed filter dropdown.
-	 * @param array    $context         Activity feed contexts where the filter should appear. 'activity', 'member',
+	 * @param string   $label           String to describe this action in the activity stream filter dropdown.
+	 * @param array    $context         Activity stream contexts where the filter should appear. 'activity', 'member',
 	 *                                  'member_groups', 'group'.
 	 */
 	$bp->activity->actions->{$component_id}->{$type} = apply_filters( 'bp_activity_set_action', array(
@@ -902,7 +902,7 @@ function bp_activity_get_actions_for_context( $context = '' ) {
 /** Favorites ****************************************************************/
 
 /**
- * Get a users favorite activity feed items.
+ * Get a users favorite activity stream items.
  *
  * @since 1.2.0
  *
@@ -930,7 +930,7 @@ function bp_activity_get_user_favorites( $user_id = 0 ) {
 }
 
 /**
- * Add an activity feed item as a favorite for a user.
+ * Add an activity stream item as a favorite for a user.
  *
  * @since 1.2.0
  *
@@ -999,7 +999,7 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0 ) {
 }
 
 /**
- * Remove an activity feed item as a favorite for a user.
+ * Remove an activity stream item as a favorite for a user.
  *
  * @since 1.2.0
  *
@@ -1105,7 +1105,7 @@ function bp_activity_get_last_updated() {
 }
 
 /**
- * Retrieve the number of favorite activity feed items a user has.
+ * Retrieve the number of favorite activity stream items a user has.
  *
  * @since 1.2.0
  *
@@ -1125,7 +1125,7 @@ function bp_activity_total_favorites_for_user( $user_id = 0 ) {
 /** Meta *********************************************************************/
 
 /**
- * Delete a meta entry from the DB for an activity feed item.
+ * Delete a meta entry from the DB for an activity stream item.
  *
  * @since 1.2.0
  *
@@ -1434,7 +1434,7 @@ function bp_register_activity_actions() {
 add_action( 'bp_init', 'bp_register_activity_actions', 8 );
 
 /**
- * Register the activity feed actions for updates.
+ * Register the activity stream actions for updates.
  *
  * @since 1.6.0
  */
@@ -1866,7 +1866,7 @@ function bp_activity_add( $args = '' ) {
 		'item_id'           => false,                  // Optional: The ID of the specific item being recorded, e.g. a blog_id.
 		'secondary_item_id' => false,                  // Optional: A second ID used to further filter e.g. a comment_id.
 		'recorded_time'     => bp_core_current_time(), // The GMT time that this activity was recorded.
-		'hide_sitewide'     => false,                  // Should this be hidden on the sitewide activity feed?
+		'hide_sitewide'     => false,                  // Should this be hidden on the sitewide activity stream?
 		'is_spam'           => false,                  // Is this activity item to be marked as spam?
 		'error_type'        => 'bool'
 	), 'activity_add' );
@@ -2087,7 +2087,7 @@ function bp_activity_post_type_publish( $post_id = 0, $post = null, $user_id = 0
 		return;
 	}
 
-	// Record this in activity feeds.
+	// Record this in activity streams.
 	$blog_url = get_home_url( $blog_id );
 	$post_url = add_query_arg(
 		'p',
@@ -2388,7 +2388,7 @@ function bp_activity_post_type_comment( $comment_id = 0, $is_approved = true, $a
 		'secondary_item_id' => $comment_id,
 	) );
 
-	// Record this in activity feeds.
+	// Record this in activity streams.
 	$comment_link = get_comment_link( $post_type_comment->comment_ID );
 
 	// Backward compatibility filters for the 'blogs' component.
@@ -3170,9 +3170,9 @@ function bp_activity_hide_user_activity( $user_id ) {
 /**
  * Take content, remove images, and replace them with a single thumbnail image.
  *
- * The format of items in the activity feed is such that we do not want to
+ * The format of items in the activity stream is such that we do not want to
  * allow an arbitrary number of arbitrarily large images to be rendered.
- * However, the activity feed is built to elegantly display a single
+ * However, the activity stream is built to elegantly display a single
  * thumbnail corresponding to the activity comment. This function looks
  * through the content, grabs the first image and converts it to a thumbnail,
  * and removes the rest of the images from the string.
@@ -3265,7 +3265,7 @@ function bp_activity_get_excerpt_length() {
 }
 
 /**
- * Create a rich summary of an activity item for the activity feed.
+ * Create a rich summary of an activity item for the activity stream.
  *
  * More than just a simple excerpt, the summary could contain oEmbeds and other types of media.
  * Currently, it's only used for blog post items, but it will probably be used for all types of
@@ -3465,7 +3465,7 @@ function bp_activity_mark_as_spam( &$activity, $source = 'by_a_person' ) {
 
 	$activity->is_spam = 1;
 
-	// Clear the activity feed first page cache.
+	// Clear the activity stream first page cache.
 	wp_cache_delete( 'bp_activity_sitewide_front', 'bp' );
 
 	// Clear the activity comment cache for this activity item.
@@ -3512,7 +3512,7 @@ function bp_activity_mark_as_ham( &$activity, $source = 'by_a_person' ) {
 
 	$activity->is_spam = 0;
 
-	// Clear the activity feed first page cache.
+	// Clear the activity stream first page cache.
 	wp_cache_delete( 'bp_activity_sitewide_front', 'bp' );
 
 	// Clear the activity comment cache for this activity item.
@@ -3907,7 +3907,7 @@ function bp_activity_do_heartbeat() {
 	}
 
 	/**
-	 * Filters whether the heartbeat feature in the activity feed should be active.
+	 * Filters whether the heartbeat feature in the activity stream should be active.
 	 *
 	 * @since 2.8.0
 	 *
@@ -3970,7 +3970,7 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 		if ( $new_status == 'publish' ) {
 			$edit = bp_activity_post_type_update( $post );
 
-			// Post was never recorded into activity feed, so record it now!
+			// Post was never recorded into activity stream, so record it now!
 			if ( null === $edit ) {
 				bp_activity_post_type_publish( $post->ID, $post );
 			}
@@ -4077,7 +4077,7 @@ function bp_activity_transition_post_type_comment_status( $new_status, $old_stat
 	 * If a blog comment transitions to trashed, or spammed, mark the activity as spam.
 	 * If a blog comment transitions to approved (and the activity exists), mark the activity as ham.
 	 * If a blog comment transitions to unapproved (and the activity exists), mark the activity as spam.
-	 * Otherwise, record the comment into the activity feed.
+	 * Otherwise, record the comment into the activity stream.
 	 */
 
 	// This clause handles delete/hold.

@@ -1,10 +1,10 @@
 <?php
 /**
- * BuddyBoss Activity Toolbar.
+ * BuddyPress Activity Toolbar.
  *
  * Handles the activity functions related to the WordPress Toolbar.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Activity
  */
 

@@ -2,7 +2,7 @@
 /**
  * BuddyPress Moderation Functions.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Core
  * @since 1.6.0
  */

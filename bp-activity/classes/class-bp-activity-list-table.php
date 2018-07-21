@@ -1,11 +1,11 @@
 <?php
 /**
- * BuddyBoss Activity component admin list table.
+ * BuddyPress Activity component admin list table.
  *
  * Props to WordPress core for the Comments admin screen, and its contextual
  * help text, on which this implementation is heavily based.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage ActivityAdmin
  * @since 1.6.0
  */

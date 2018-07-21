@@ -759,7 +759,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:30
 #: bp-core/bp-core-functions.php:2480
-msgid "Activity Feeds"
+msgid "Activity Streams"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:185
@@ -1161,7 +1161,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:267
 #: bp-core/admin/bp-core-admin-slugs.php:24
 #: bp-core/classes/class-bp-admin.php:732
-msgid "BuddyBoss Settings"
+msgid "BuddyPress Settings"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:26
@@ -1178,7 +1178,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:67
 #: bp-core/bp-core-functions.php:2464
-msgid "Profile Fields"
+msgid "Extended Profiles"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:68
@@ -1488,7 +1488,7 @@ msgid "Allow registered members to delete their own accounts"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:74
-msgid "The selected Template Pack will serve all BuddyBoss templates."
+msgid "The selected Template Pack will serve all BuddyPress templates."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:77
@@ -1496,15 +1496,15 @@ msgid "No template packages available."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:101
-msgid "Allow Akismet to scan for activity feed spam"
+msgid "Allow Akismet to scan for activity stream spam"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:115
-msgid "Allow activity feed commenting on posts and comments"
+msgid "Allow activity stream commenting on posts and comments"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:129
-msgid "Automatically check for new items while viewing the activity feed"
+msgid "Automatically check for new items while viewing the activity stream"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:169
@@ -2053,11 +2053,11 @@ msgid "Not recently active"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2450 bp-core/classes/class-bp-core.php:31
-msgid "BuddyBoss Core"
+msgid "BuddyPress Core"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2451
-msgid "It&#8216;s what makes <del>time travel</del> BuddyBoss possible!"
+msgid "It&#8216;s what makes <del>time travel</del> BuddyPress possible!"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2454
@@ -2069,7 +2069,7 @@ msgid "Everything in a BuddyPress community revolves around its members."
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2472
-msgid "Connections"
+msgid "Friend Connections"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2473
@@ -2091,7 +2091,7 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2481
 msgid ""
-"Global, personal, and group activity feeds with threaded commenting, "
+"Global, personal, and group activity streams with threaded commenting, "
 "direct posting, favoriting, and @mentions, all with full RSS feed and email "
 "notification support."
 msgstr ""
@@ -2103,7 +2103,7 @@ msgstr ""
 #: bp-core/bp-core-functions.php:2489
 msgid ""
 "Groups allow your users to organize themselves into specific public, "
-"private or hidden sections with separate activity feeds and member "
+"private or hidden sections with separate activity streams and member "
 "listings."
 msgstr ""
 
@@ -2863,7 +2863,7 @@ msgstr ""
 
 #: bp-core/classes/class-bp-admin.php:638
 msgid ""
-"A new telephone number field type has been added to the Profile Fields "
+"A new telephone number field type has been added to the Extended Profiles "
 "component, with support for all international number formats. With a modern "
 "web browser, your members can use this field type to touch-to-dial a number "
 "directly."
@@ -7098,7 +7098,7 @@ msgid "Visibility"
 msgstr ""
 
 #: bp-templates/bp-legacy/buddypress-functions.php:61 class-buddypress.php:740
-msgid "BuddyBoss Legacy"
+msgid "BuddyPress Legacy"
 msgstr ""
 
 #: bp-templates/bp-legacy/buddypress-functions.php:293
@@ -7722,7 +7722,7 @@ msgid ""
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:26
-msgid "Customize the appearance of BuddyBoss Nouveau Template pack."
+msgid "Customize the appearance of BuddyPress Nouveau Template pack."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:40
@@ -8813,7 +8813,7 @@ msgid "Cheatin&#8217; huh?"
 msgstr ""
 
 #: class-buddypress.php:748
-msgid "BuddyBoss Nouveau"
+msgid "BuddyPress Nouveau"
 msgstr ""
 
 #. Author URI of the plugin/theme
@@ -9410,7 +9410,7 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:477
 #: bp-core/classes/class-bp-admin.php:504
 msgctxt "Colloquial alternative to \"learn about BuddyPress\""
-msgid "Hello, BuddyBoss!"
+msgid "Hello, BuddyPress!"
 msgstr ""
 
 #: bp-core/classes/class-bp-admin.php:971
@@ -9465,7 +9465,7 @@ msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:30
 msgctxt "Friends screen page <title>"
-msgid "Connections"
+msgid "Friend Connections"
 msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:194
@@ -9819,7 +9819,7 @@ msgid "- &quot;%s&quot;"
 msgstr ""
 
 #: bp-members/bp-members-template.php:1208
-msgctxt "Records the timestamp that the user registered into the activity feed"
+msgctxt "Records the timestamp that the user registered into the activity stream"
 msgid "registered %s"
 msgstr ""
 
@@ -10335,7 +10335,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:27
 msgctxt "Customizer Panel"
-msgid "BuddyBoss Nouveau"
+msgid "BuddyPress Nouveau"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:301
@@ -10432,7 +10432,7 @@ msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-component.php:49
 msgctxt "Component page <title>"
-msgid "Profile Fields"
+msgid "Extended Profiles"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-component.php:181

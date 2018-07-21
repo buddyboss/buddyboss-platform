@@ -1,9 +1,9 @@
 <?php
 
 /**
- * BuddyBoss - Users Settings
+ * BuddyPress - Users Settings
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage bp-default
  */
 

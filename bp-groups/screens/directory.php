@@ -2,7 +2,7 @@
 /**
  * Groups: Directory screen handler
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage GroupScreens
  * @since 3.0.0
  */

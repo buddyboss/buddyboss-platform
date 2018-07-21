@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Members Notifications Loop
+ * BuddyPress - Members Notifications Loop
  *
  * @since 3.0.0
  * @version 3.1.0

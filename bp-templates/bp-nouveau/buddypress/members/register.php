@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Members/Blogs Registration forms
+ * BuddyPress - Members/Blogs Registration forms
  *
  * @since 3.0.0
  * @version 3.1.0

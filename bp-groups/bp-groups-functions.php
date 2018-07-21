@@ -1,13 +1,13 @@
 <?php
 /**
- * BuddyBoss Groups Functions.
+ * BuddyPress Groups Functions.
  *
  * Functions are where all the magic happens in BuddyPress. They will
  * handle the actual saving or manipulation of information. Usually they will
  * hand off to a database class for data access, then return
  * true or false on success or failure.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage GroupsFunctions
  * @since 1.5.0
  */
@@ -584,7 +584,7 @@ function groups_join_group( $group_id, $user_id = 0 ) {
 	else
 		$group = $bp->groups->current_group;
 
-	// Record this in activity feeds.
+	// Record this in activity streams.
 	if ( bp_is_active( 'activity' ) ) {
 		groups_record_activity( array(
 			'type'    => 'joined_group',
@@ -1311,7 +1311,7 @@ function groups_post_update( $args = '' ) {
 	if ( !bp_current_user_can( 'bp_moderate' ) && !groups_is_user_member( $user_id, $group_id ) )
 		return false;
 
-	// Record this in activity feeds.
+	// Record this in activity streams.
 	$activity_action  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddypress'), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_group_permalink( $bp->groups->current_group ) . '">' . esc_attr( $bp->groups->current_group->name ) . '</a>' );
 	$activity_content = $content;
 

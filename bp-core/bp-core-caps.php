@@ -2,7 +2,7 @@
 /**
  * BuddyPress Capabilities.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Capabilities
  * @since 1.6.0
  */

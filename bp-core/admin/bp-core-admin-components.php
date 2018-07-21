@@ -2,7 +2,7 @@
 /**
  * BuddyPress Admin Component Functions.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage CoreAdministration
  * @since 2.3.0
  */
@@ -21,7 +21,7 @@ function bp_core_admin_components_settings() {
 
 	<div class="wrap">
 
-		<h1><?php _e( 'BuddyBoss Settings', 'buddypress' ); ?> </h1>
+		<h1><?php _e( 'BuddyPress Settings', 'buddypress' ); ?> </h1>
 
 		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Components', 'buddypress' ) ); ?></h2>
 		<form action="" method="post" id="bp-admin-component-form">
@@ -64,7 +64,7 @@ function bp_core_admin_components_options() {
 	// The default components (if none are previously selected).
 	$default_components = array(
 		'xprofile' => array(
-			'title'       => __( 'Profile Fields', 'buddypress' ),
+			'title'       => __( 'Extended Profiles', 'buddypress' ),
 			'description' => __( 'Customize your community with fully editable profile fields that allow your users to describe themselves.', 'buddypress' )
 		),
 		'settings' => array(

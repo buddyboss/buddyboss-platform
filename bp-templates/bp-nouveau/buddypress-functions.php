@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
 /** Theme Setup ***************************************************************/
 
 /**
- * Loads BuddyBoss Nouveau Template pack functionality.
+ * Loads BuddyPress Nouveau Template pack functionality.
  *
  * See @link BP_Theme_Compat() for more.
  *
@@ -118,7 +118,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		}
 
 		/**
-		 * Fires after all of the BuddyBoss Nouveau includes have been loaded. Passed by reference.
+		 * Fires after all of the BuddyPress Nouveau includes have been loaded. Passed by reference.
 		 *
 		 * @since 3.0.0
 		 *
@@ -221,7 +221,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		}
 
 		/**
-		 * Filters the BuddyBoss Nouveau CSS dependencies.
+		 * Filters the BuddyPress Nouveau CSS dependencies.
 		 *
 		 * @since 3.0.0
 		 *
@@ -230,7 +230,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		$css_dependencies = apply_filters( 'bp_nouveau_css_dependencies', array( 'dashicons' ) );
 
 		/**
-		 * Filters the styles to enqueue for BuddyBoss Nouveau.
+		 * Filters the styles to enqueue for BuddyPress Nouveau.
 		 *
 		 * This filter provides a multidimensional array that will map to arguments used for wp_enqueue_style().
 		 * The primary index should have the stylesheet handle to use, and be assigned an array that has indexes for
@@ -294,7 +294,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		unset( $dependencies[ $bp_confirm ] );
 
 		/**
-		 * Filters the scripts to enqueue for BuddyBoss Nouveau.
+		 * Filters the scripts to enqueue for BuddyPress Nouveau.
 		 *
 		 * This filter provides a multidimensional array that will map to arguments used for wp_register_script().
 		 * The primary index should have the script handle to use, and be assigned an array that has indexes for
@@ -372,7 +372,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		}
 
 		/**
-		 * Fires after all of the BuddyBoss Nouveau scripts have been enqueued.
+		 * Fires after all of the BuddyPress Nouveau scripts have been enqueued.
 		 *
 		 * @since 3.0.0
 		 */
@@ -430,7 +430,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		}
 
 		/**
-		 * Filters the supported BuddyBoss Nouveau components.
+		 * Filters the supported BuddyPress Nouveau components.
 		 *
 		 * @since 3.0.0
 		 *

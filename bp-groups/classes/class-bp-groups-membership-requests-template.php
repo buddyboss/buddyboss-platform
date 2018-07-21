@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Groups membership request template loop class.
+ * BuddyPress Groups membership request template loop class.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @since 1.0.0
  */
 

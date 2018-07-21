@@ -4,7 +4,7 @@
  *
  * The friends component is for users to create relationships with each other.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Friends
  * @since 1.5.0
  */
@@ -27,7 +27,7 @@ class BP_Friends_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'friends',
-			_x( 'Connections', 'Friends screen page <title>', 'buddypress' ),
+			_x( 'Friend Connections', 'Friends screen page <title>', 'buddypress' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 60

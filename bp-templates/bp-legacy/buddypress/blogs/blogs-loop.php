@@ -1,10 +1,10 @@
 <?php
 /**
- * BuddyBoss - Blogs Loop
+ * BuddyPress - Blogs Loop
  *
  * Querystring is set via AJAX in _inc/ajax.php - bp_legacy_theme_object_filter().
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage bp-legacy
  * @version 3.0.0
  */

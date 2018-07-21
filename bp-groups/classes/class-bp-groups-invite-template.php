@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Groups Invitation template loop class.
+ * BuddyPress Groups Invitation template loop class.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @since 1.1.0
  */
 

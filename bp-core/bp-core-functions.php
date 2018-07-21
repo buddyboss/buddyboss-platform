@@ -2,7 +2,7 @@
 /**
  * BuddyPress Common Functions.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Functions
  * @since 1.5.0
  */
@@ -2447,8 +2447,8 @@ function bp_core_get_minified_asset_suffix() {
 function bp_core_get_components( $type = 'all' ) {
 	$required_components = array(
 		'core' => array(
-			'title'       => __( 'BuddyBoss Core', 'buddypress' ),
-			'description' => __( 'It&#8216;s what makes <del>time travel</del> BuddyBoss possible!', 'buddypress' )
+			'title'       => __( 'BuddyPress Core', 'buddypress' ),
+			'description' => __( 'It&#8216;s what makes <del>time travel</del> BuddyPress possible!', 'buddypress' )
 		),
 		'members' => array(
 			'title'       => __( 'Community Members', 'buddypress' ),
@@ -2461,7 +2461,7 @@ function bp_core_get_components( $type = 'all' ) {
 
 	$optional_components = array(
 		'xprofile' => array(
-			'title'       => __( 'Profile Fields', 'buddypress' ),
+			'title'       => __( 'Extended Profiles', 'buddypress' ),
 			'description' => __( 'Customize your community with fully editable profile fields that allow your users to describe themselves.', 'buddypress' )
 		),
 		'settings' => array(
@@ -2469,7 +2469,7 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Allow your users to modify their account and notification settings directly from within their profiles.', 'buddypress' )
 		),
 		'friends'  => array(
-			'title'       => __( 'Connections', 'buddypress' ),
+			'title'       => __( 'Friend Connections', 'buddypress' ),
 			'description' => __( 'Let your users make connections so they can track the activity of others and focus on the people they care about the most.', 'buddypress' )
 		),
 		'messages' => array(
@@ -2477,8 +2477,8 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Allow your users to talk to each other directly and in private. Not just limited to one-on-one discussions, messages can be sent between any number of members.', 'buddypress' )
 		),
 		'activity' => array(
-			'title'       => __( 'Activity Feeds', 'buddypress' ),
-			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, favoriting, and @mentions, all with full RSS feed and email notification support.', 'buddypress' )
+			'title'       => __( 'Activity Streams', 'buddypress' ),
+			'description' => __( 'Global, personal, and group activity streams with threaded commenting, direct posting, favoriting, and @mentions, all with full RSS feed and email notification support.', 'buddypress' )
 		),
 		'notifications' => array(
 			'title'       => __( 'Notifications', 'buddypress' ),
@@ -2486,7 +2486,7 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'groups'   => array(
 			'title'       => __( 'User Groups', 'buddypress' ),
-			'description' => __( 'Groups allow your users to organize themselves into specific public, private or hidden sections with separate activity feeds and member listings.', 'buddypress' )
+			'description' => __( 'Groups allow your users to organize themselves into specific public, private or hidden sections with separate activity streams and member listings.', 'buddypress' )
 		),
 		'blogs'    => array(
 			'title'       => __( 'Site Tracking', 'buddypress' ),
@@ -3198,7 +3198,7 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 	if ( is_wp_error( $status ) ) {
 
 		/**
-		 * Fires after BuddyBoss has tried - and failed - to send an email.
+		 * Fires after BuddyPress has tried - and failed - to send an email.
 		 *
 		 * @since 2.5.0
 		 *
@@ -3211,7 +3211,7 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 	} else {
 
 		/**
-		 * Fires after BuddyBoss has succesfully sent an email.
+		 * Fires after BuddyPress has succesfully sent an email.
 		 *
 		 * @since 2.5.0
 		 *

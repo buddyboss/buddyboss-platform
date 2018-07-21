@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Core Login Widget.
+ * BuddyPress Core Login Widget.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Core
  * @since 1.9.0
  */

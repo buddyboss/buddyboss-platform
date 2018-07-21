@@ -11,7 +11,7 @@
  *  - BuddyPress: In {@link BuddyPress::setup_actions()} in BuddyPress.php
  *  - Admin: More in {@link bp_Admin::setup_actions()} in admin.php
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Admin
  * @since 2.3.0
  * @see bp-core-actions.php

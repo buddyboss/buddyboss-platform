@@ -4,7 +4,7 @@
  *
  * Functions that are safe to use inside your template files and themes.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Members
  * @since 1.5.0
  */
@@ -278,7 +278,7 @@ function bp_activate_slug() {
  * Initialize the members loop.
  *
  * Based on the $args passed, bp_has_members() populates the $members_template
- * global, enabling the use of BuddyBoss templates and template functions to
+ * global, enabling the use of BuddyPress templates and template functions to
  * display a list of members.
  *
  * @since 1.2.0
@@ -1205,7 +1205,7 @@ function bp_member_registered( $args = array() ) {
 			return esc_attr( $members_template->member->user_registered );
 		}
 
-		$registered = esc_attr( bp_core_get_last_activity( $members_template->member->user_registered, _x( 'registered %s', 'Records the timestamp that the user registered into the activity feed', 'buddypress' ) ) );
+		$registered = esc_attr( bp_core_get_last_activity( $members_template->member->user_registered, _x( 'registered %s', 'Records the timestamp that the user registered into the activity stream', 'buddypress' ) ) );
 
 		/**
 		 * Filters the 'registered [x days ago]' string for the current member.

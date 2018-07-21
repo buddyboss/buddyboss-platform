@@ -263,7 +263,7 @@ jq(document).ready( function() {
 			secure: ( 'https:' === window.location.protocol )
 		} );
 
-		/* Activity Feed Tabs */
+		/* Activity Stream Tabs */
 		scope  = target.attr('id').substr( 9, target.attr('id').length );
 		filter = jq('#activity-filter-select select').val();
 
@@ -300,7 +300,7 @@ jq(document).ready( function() {
 			li, id, link_href, nonce, timestamp,
 			oldest_page, just_posted;
 
-		/* Favoriting activity feed items */
+		/* Favoriting activity stream items */
 		if ( target.hasClass('fav') || target.hasClass('unfav') ) {
 			/* Bail if a request is in progress */
 			if ( target.hasClass( 'loading' ) ) {
@@ -364,7 +364,7 @@ jq(document).ready( function() {
 			return false;
 		}
 
-		/* Delete activity feed items */
+		/* Delete activity stream items */
 		if ( target.hasClass('delete-activity') ) {
 			li        = target.parents('div.activity ul li');
 			id        = li.attr('id').substr( 9, li.attr('id').length );
@@ -400,7 +400,7 @@ jq(document).ready( function() {
 			return false;
 		}
 
-		// Spam activity feed items
+		// Spam activity stream items
 		if ( target.hasClass( 'spam-activity' ) ) {
 			li        = target.parents( 'div.activity ul li' );
 			timestamp = li.prop( 'class' ).match( /date-recorded-([0-9]+)/ );
@@ -745,7 +745,7 @@ jq(document).ready( function() {
 			return false;
 		}
 
-		// Spam an activity feed comment
+		// Spam an activity stream comment
 		if ( target.hasClass( 'spam-activity-comment' ) ) {
 			link_href  = target.attr( 'href' );
 			comment_li = target.parent().parent();
@@ -1871,7 +1871,7 @@ function bp_activity_request(scope, filter) {
 	jq('#object-nav.item-list-tabs li.selected, div.activity-type-tabs li.selected').addClass('loading');
 	jq('#activity-filter-select select option[value="' + filter + '"]').prop( 'selected', true );
 
-	/* Reload the activity feed based on the selection */
+	/* Reload the activity stream based on the selection */
 	jq('.widget_bp_activity_widget h2 span.ajax-loader').show();
 
 	if ( bp_ajax_request ) {

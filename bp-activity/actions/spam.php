@@ -2,7 +2,7 @@
 /**
  * Activity: Spam action
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage ActivityActions
  * @since 3.0.0
  */

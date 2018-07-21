@@ -4,7 +4,7 @@
  *
  * Classes used for the Notifications component.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage NotificationsClasses
  * @since 1.9.0
  */

@@ -4,7 +4,7 @@ namespace Buddypress\CLI\Command;
 use WP_CLI;
 
 /**
- * Manage BuddyBoss XProfile.
+ * Manage BuddyPress XProfile.
  *
  * ## EXAMPLES
  *

@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Groups Widget.
+ * BuddyPress Groups Widget.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage GroupsWidgets
  * @since 1.0.0
  */

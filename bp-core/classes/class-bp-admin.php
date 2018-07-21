@@ -2,7 +2,7 @@
 /**
  * Main BuddyPress Admin Class.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage CoreAdministration
  * @since 1.0.0
  */
@@ -474,7 +474,7 @@ class BP_Admin {
 		$wp_admin_bar->add_menu( array(
 			'parent' => 'wp-logo',
 			'id'     => 'bp-about',
-			'title'  => esc_html_x( 'Hello, BuddyBoss!', 'Colloquial alternative to "learn about BuddyPress"', 'buddypress' ),
+			'title'  => esc_html_x( 'Hello, BuddyPress!', 'Colloquial alternative to "learn about BuddyPress"', 'buddypress' ),
 			'href'   => bp_get_admin_url( '?hello=buddypress' ),
 			'meta'   => array(
 				'class' => 'say-hello-buddypress',
@@ -501,7 +501,7 @@ class BP_Admin {
 		// Add a few links to the existing links array.
 		return array_merge( $links, array(
 			'settings' => '<a href="' . esc_url( add_query_arg( array( 'page' => 'bp-components' ), bp_get_admin_url( $this->settings_page ) ) ) . '">' . esc_html__( 'Settings', 'buddypress' ) . '</a>',
-			'about'    => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddypress' ) ) . '">' . esc_html_x( 'Hello, BuddyBoss!', 'Colloquial alternative to "learn about BuddyPress"', 'buddypress' ) . '</a>'
+			'about'    => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddypress' ) ) . '">' . esc_html_x( 'Hello, BuddyPress!', 'Colloquial alternative to "learn about BuddyPress"', 'buddypress' ) . '</a>'
 		) );
 	}
 
@@ -635,7 +635,7 @@ class BP_Admin {
 				<?php endif; ?>
 
 				<h2><?php esc_html_e( __( 'New profile field type: telephone numbers', 'buddypress' ) ); ?></h2>
-				<p><?php esc_html_e( 'A new telephone number field type has been added to the Profile Fields component, with support for all international number formats. With a modern web browser, your members can use this field type to touch-to-dial a number directly.', 'buddypress' ); ?></p>
+				<p><?php esc_html_e( 'A new telephone number field type has been added to the Extended Profiles component, with support for all international number formats. With a modern web browser, your members can use this field type to touch-to-dial a number directly.', 'buddypress' ); ?></p>
 
 				<h2><?php esc_html_e( __( "BuddyPress: leaner, faster, stronger", 'buddypress' ) ); ?></h2>
 				<p><?php esc_html_e( 'With every BuddyPress version, we strive to make performance improvements alongside new features and fixes; this version is no exception. Memory use has been optimised &mdash; within active components, we now only load each individual code file when it\'s needed, not before.', 'buddypress' ); ?></p>
@@ -729,7 +729,7 @@ class BP_Admin {
 
 		<div class="wrap bp-about-wrap">
 
-		<h1><?php _e( 'BuddyBoss Settings', 'buddypress' ); ?> </h1>
+		<h1><?php _e( 'BuddyPress Settings', 'buddypress' ); ?> </h1>
 
 		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Credits', 'buddypress' ) ); ?></h2>
 
@@ -1078,7 +1078,7 @@ class BP_Admin {
 		$url = $this->css_url;
 
 		/**
-		 * Filters the BuddyBoss Core Admin CSS file path.
+		 * Filters the BuddyPress Core Admin CSS file path.
 		 *
 		 * @since 1.6.0
 		 *

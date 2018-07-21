@@ -1,4 +1,4 @@
-Feature: Manage BuddyBoss Activity Favorites
+Feature: Manage BuddyPress Activity Favorites
 
   Scenario: Activity Favorite CRUD Operations
     Given a BP install

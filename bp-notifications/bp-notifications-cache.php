@@ -2,7 +2,7 @@
 /**
  * Functions related to notifications caching.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage NotificationsCache
  * @since 2.0.0
  */

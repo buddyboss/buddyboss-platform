@@ -7,7 +7,7 @@
  * hand off to a database class for data access, then return
  * true or false on success or failure.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage FriendsFunctions
  * @since 1.5.0
  */
@@ -115,7 +115,7 @@ function friends_remove_friend( $initiator_userid, $friend_userid ) {
 	 */
 	do_action( 'friends_before_friendship_delete', $friendship_id, $initiator_userid, $friend_userid );
 
-	// Remove the activity feed items about the friendship id.
+	// Remove the activity stream items about the friendship id.
 	friends_delete_activity( array( 'item_id' => $friendship_id, 'type' => 'friendship_created', 'user_id' => 0 ) );
 
 	/**

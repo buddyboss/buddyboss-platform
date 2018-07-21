@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss - Users Notifications
+ * BuddyPress - Users Notifications
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage bp-legacy
  * @version 3.0.0
  */

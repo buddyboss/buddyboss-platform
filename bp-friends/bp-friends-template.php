@@ -2,7 +2,7 @@
 /**
  * BuddyPress Friends Template Functions.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage FriendsTemplate
  * @since 1.5.0
  */

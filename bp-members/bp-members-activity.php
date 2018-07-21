@@ -2,7 +2,7 @@
 /**
  * BuddyPress Member Activity
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage MembersActivity
  * @since 2.2.0
  */

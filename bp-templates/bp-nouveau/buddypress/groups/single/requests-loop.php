@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Groups Requests Loop
+ * BuddyPress - Groups Requests Loop
  *
  * @since 3.0.0
  * @version 3.0.0

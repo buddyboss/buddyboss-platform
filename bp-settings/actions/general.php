@@ -2,7 +2,7 @@
 /**
  * Settings: Email address and password action handler
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage SettingsActions
  * @since 3.0.0
  */

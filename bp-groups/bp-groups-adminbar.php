@@ -1,10 +1,10 @@
 <?php
 /**
- * BuddyBoss Groups Toolbar.
+ * BuddyPress Groups Toolbar.
  *
  * Handles the groups functions related to the WordPress Toolbar.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Groups
  * @since 1.5.0
  */

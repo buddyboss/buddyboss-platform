@@ -1,11 +1,11 @@
 <?php
 /**
- * BuddyBoss - Users Plugins Template
+ * BuddyPress - Users Plugins Template
  *
  * 3rd-party plugins should use this template to easily add template
  * support to their plugins for the members component.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage bp-legacy
  * @version 3.0.0
  */

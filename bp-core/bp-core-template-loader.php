@@ -4,9 +4,9 @@
  *
  * This file contains functions necessary to mirror the WordPress core template
  * loading process. Many of those functions are not filterable, and even then
- * would not be robust enough to predict where BuddyBoss templates might exist.
+ * would not be robust enough to predict where BuddyPress templates might exist.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage TemplateFunctions
  * @since 1.7.0
  */

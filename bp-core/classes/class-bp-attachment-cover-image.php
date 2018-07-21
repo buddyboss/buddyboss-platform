@@ -2,7 +2,7 @@
 /**
  * Core Cover Image attachment class.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Core
  * @since 2.4.0
  */

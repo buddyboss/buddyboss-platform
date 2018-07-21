@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Members Profile Change Cover Image
+ * BuddyPress - Members Profile Change Cover Image
  *
  * @since 3.0.0
  * @version 3.1.0

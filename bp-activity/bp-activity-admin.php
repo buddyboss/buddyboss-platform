@@ -1,11 +1,11 @@
 <?php
 /**
- * BuddyBoss Activity component admin screen.
+ * BuddyPress Activity component admin screen.
  *
  * Props to WordPress core for the Comments admin screen, and its contextual
  * help text, on which this implementation is heavily based.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage ActivityAdmin
  * @since 1.6.0
  */
@@ -557,7 +557,7 @@ function bp_activity_admin_load() {
 		// Save.
 		$result = $activity->save();
 
-		// Clear the activity feed first page cache, in case this activity's timestamp was changed.
+		// Clear the activity stream first page cache, in case this activity's timestamp was changed.
 		wp_cache_delete( 'bp_activity_sitewide_front', 'bp' );
 
 		// Check for any error during activity save.

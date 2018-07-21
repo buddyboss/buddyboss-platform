@@ -2,7 +2,7 @@
 /**
  * Messages: Delete action handler
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage MessageActions
  * @since 3.0.0
  */

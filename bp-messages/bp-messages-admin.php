@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Members component admin screens.
+ * BuddyPress Members component admin screens.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Messages
  * @since 3.0.0
  */

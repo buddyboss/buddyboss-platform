@@ -65,7 +65,7 @@ class BP_Nouveau_Blogs {
 	 */
 	protected function setup_actions() {
 		if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-			// Avoid Notices for BuddyBoss Legacy Backcompat
+			// Avoid Notices for BuddyPress Legacy Backcompat
 			remove_action( 'bp_blogs_directory_blog_types', 'bp_blog_backcompat_create_nav_item', 1000 );
 		}
 

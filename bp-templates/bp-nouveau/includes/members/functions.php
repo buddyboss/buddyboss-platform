@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 3.0.0
  */
 function bp_nouveau_members_enqueue_scripts() {
-	// Neutralize Ajax when using BuddyBoss Groups & member widgets on default front page
+	// Neutralize Ajax when using BuddyPress Groups & member widgets on default front page
 	if ( ! bp_is_user_front() || ! bp_nouveau_get_appearance_settings( 'user_front_page' ) ) {
 		return;
 	}
@@ -217,7 +217,7 @@ function bp_nouveau_member_reset_front_template( $templates = array() ) {
 	}
 
 	/**
-	 * Filters the BuddyBoss Nouveau template hierarchy after resetting front template for members.
+	 * Filters the BuddyPress Nouveau template hierarchy after resetting front template for members.
 	 *
 	 * @since 3.0.0
 	 *

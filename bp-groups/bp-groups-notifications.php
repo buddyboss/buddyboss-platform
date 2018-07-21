@@ -1,11 +1,11 @@
 <?php
 /**
- * BuddyBoss Groups Notification Functions.
+ * BuddyPress Groups Notification Functions.
  *
  * These functions handle the recording, deleting and formatting of notifications
  * for the user and for this specific component.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage GroupsActivity
  * @since 1.0.0
  */

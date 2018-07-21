@@ -2,7 +2,7 @@
 /**
  * Members: Register screen handler
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage MembersScreens
  * @since 3.0.0
  */
@@ -154,7 +154,7 @@ function bp_core_screen_signup() {
 
 			if ( 'none' != $active_signup ) {
 
-				// Make sure the profile fields module is enabled.
+				// Make sure the extended profiles module is enabled.
 				if ( bp_is_active( 'xprofile' ) ) {
 					// Let's compact any profile field info into usermeta.
 					$profile_field_ids = explode( ',', $_POST['signup_profile_field_ids'] );

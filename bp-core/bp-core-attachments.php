@@ -2,7 +2,7 @@
 /**
  * BuddyPress Attachments functions.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Attachments
  * @since 2.3.0
  */

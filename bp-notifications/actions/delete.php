@@ -2,7 +2,7 @@
 /**
  * Notifications: Delete action handler
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage NotificationsActions
  * @since 3.0.0
  */

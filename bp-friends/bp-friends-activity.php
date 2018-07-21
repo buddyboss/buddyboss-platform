@@ -5,7 +5,7 @@
  * These functions handle the recording, deleting and formatting of activity
  * for the user and for this specific component.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage FriendsActivity
  * @since 1.5.0
  */
@@ -365,7 +365,7 @@ function bp_friends_filter_activity_just_me_scope( $retval = array(), $filter = 
 add_filter( 'bp_activity_set_just-me_scope_args', 'bp_friends_filter_activity_just_me_scope', 20, 2 );
 
 /**
- * Add activity feed items when one members accepts another members request
+ * Add activity stream items when one members accepts another members request
  * for virtual friendship.
  *
  * @since 1.9.0
@@ -380,7 +380,7 @@ function bp_friends_friendship_accepted_activity( $friendship_id, $initiator_use
 		return;
 	}
 
-	// Record in activity feeds for the initiator.
+	// Record in activity streams for the initiator.
 	friends_record_activity( array(
 		'user_id'           => $initiator_user_id,
 		'type'              => 'friendship_created',

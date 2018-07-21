@@ -2,7 +2,7 @@
 /**
  * Main BuddyPress Admin Class.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage CoreAdministration
  * @since 1.0.0
  */

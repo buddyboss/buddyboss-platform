@@ -4,7 +4,7 @@
  *
  * A private messages component, for users to send messages to each other.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage MessagesLoader
  * @since 1.5.0
  */

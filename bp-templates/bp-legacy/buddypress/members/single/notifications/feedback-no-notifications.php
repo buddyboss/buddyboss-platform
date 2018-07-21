@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss - Members Feedback No Notifications
+ * BuddyPress - Members Feedback No Notifications
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage bp-legacy
  * @version 3.0.0
  */

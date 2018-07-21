@@ -1,11 +1,11 @@
 <?php
 
 /**
- * BuddyBoss - Members Loop
+ * BuddyPress - Members Loop
  *
  * Querystring is set via AJAX in _inc/ajax.php - bp_dtheme_object_filter()
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage bp-default
  */
 

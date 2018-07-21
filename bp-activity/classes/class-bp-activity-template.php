@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Activity Template.
+ * BuddyPress Activity Template.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage ActivityTemplate
  * @since 1.5.0
  */

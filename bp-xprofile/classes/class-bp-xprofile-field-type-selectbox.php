@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss XProfile Classes.
+ * BuddyPress XProfile Classes.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage XProfileClasses
  * @since 2.0.0
  */

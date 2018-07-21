@@ -1430,7 +1430,7 @@ function bp_nouveau_container_classes() {
 
 		} else {
 			/**
-			 * Filters the BuddyBoss Nouveau single item setting ID.
+			 * Filters the BuddyPress Nouveau single item setting ID.
 			 *
 			 * @since 3.0.0
 			 *
@@ -1477,7 +1477,7 @@ function bp_nouveau_container_classes() {
 		$class = array_map( 'sanitize_html_class', $classes );
 
 		/**
-		 * Filters the final results for BuddyBoss Nouveau container classes.
+		 * Filters the final results for BuddyPress Nouveau container classes.
 		 *
 		 * This filter will return a single string of concatenated classes to be used.
 		 *
@@ -1554,7 +1554,7 @@ function bp_nouveau_single_item_nav_classes() {
 		$class = array_map( 'sanitize_html_class', $classes );
 
 		/**
-		 * Filters the final results for BuddyBoss Nouveau single item nav classes.
+		 * Filters the final results for BuddyPress Nouveau single item nav classes.
 		 *
 		 * This filter will return a single string of concatenated classes to be used.
 		 *
@@ -1614,7 +1614,7 @@ function bp_nouveau_single_item_subnav_classes() {
 		$class = array_map( 'sanitize_html_class', $classes );
 
 		/**
-		 * Filters the final results for BuddyBoss Nouveau single item subnav classes.
+		 * Filters the final results for BuddyPress Nouveau single item subnav classes.
 		 *
 		 * This filter will return a single string of concatenated classes to be used.
 		 *
@@ -1655,7 +1655,7 @@ function bp_nouveau_groups_create_steps_classes() {
 		$class = array_map( 'sanitize_html_class', $classes );
 
 		/**
-		 * Filters the final results for BuddyBoss Nouveau group creation step classes.
+		 * Filters the final results for BuddyPress Nouveau group creation step classes.
 		 *
 		 * This filter will return a single string of concatenated classes to be used.
 		 *
@@ -1965,7 +1965,7 @@ function bp_nouveau_filter_container_id() {
 		if ( isset( $ids[ $component['object'] ] ) ) {
 
 			/**
-			 * Filters the container ID for BuddyBoss Nouveau filters.
+			 * Filters the container ID for BuddyPress Nouveau filters.
 			 *
 			 * @since 3.0.0
 			 *
@@ -2008,7 +2008,7 @@ function bp_nouveau_filter_id() {
 		if ( isset( $ids[ $component['object'] ] ) ) {
 
 			/**
-			 * Filters the filter ID for BuddyBoss Nouveau filters.
+			 * Filters the filter ID for BuddyPress Nouveau filters.
 			 *
 			 * @since 3.0.0
 			 *
@@ -2045,11 +2045,11 @@ function bp_nouveau_filter_label() {
 		}
 
 		/**
-		 * Filters the label for BuddyBoss Nouveau filters.
+		 * Filters the label for BuddyPress Nouveau filters.
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param string $label     Label for BuddyBoss Nouveau filter.
+		 * @param string $label     Label for BuddyPress Nouveau filter.
 		 * @param array  $component The data filter's data-bp-filter attribute value.
 		 */
 		return apply_filters( 'bp_nouveau_get_filter_label', $label, $component );

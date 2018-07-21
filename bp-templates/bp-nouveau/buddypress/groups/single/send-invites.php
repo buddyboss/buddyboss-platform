@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Groups Send Invites
+ * BuddyPress - Groups Send Invites
  *
  * @since 3.0.0
  * @version 3.0.0

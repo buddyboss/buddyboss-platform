@@ -2,11 +2,11 @@
 /**
  * BuddyPress Blogs Loader
  *
- * The blogs component tracks posts and comments to member activity feeds,
+ * The blogs component tracks posts and comments to member activity streams,
  * shows blogs the member can post to in their profiles, and caches useful
  * information from those blogs to make querying blogs in bulk more performant.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage BlogsCore
  * @since 1.5.0
  */

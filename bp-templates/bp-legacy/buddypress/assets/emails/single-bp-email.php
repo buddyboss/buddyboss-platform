@@ -8,7 +8,7 @@
  *
  * @since 2.5.0
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Core
  * @version 3.0.0
  */

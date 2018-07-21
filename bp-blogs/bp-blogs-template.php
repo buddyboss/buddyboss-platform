@@ -2,7 +2,7 @@
 /**
  * BuddyPress Blogs Template Tags.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage BlogsTemplate
  * @since 1.5.0
  */
@@ -108,7 +108,7 @@ function bp_rewind_blogs() {
  * Initialize the blogs loop.
  *
  * Based on the $args passed, bp_has_blogs() populates the $blogs_template
- * global, enabling the use of BuddyBoss templates and template functions to
+ * global, enabling the use of BuddyPress templates and template functions to
  * display a list of activity items.
  *
  * @global object $blogs_template {@link BP_Blogs_Template}

@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Users Cover Image Header
+ * BuddyPress - Users Cover Image Header
  *
  * @since 3.0.0
  * @version 3.0.0

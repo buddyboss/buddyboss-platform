@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Core Theme Compatibility Base Class.
+ * BuddyPress Core Theme Compatibility Base Class.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage ThemeCompatibility
  * @since 1.7.0
  */

@@ -1,11 +1,11 @@
 <?php
 /**
- * BuddyBoss XProfile Activity & Notification Functions.
+ * BuddyPress XProfile Activity & Notification Functions.
  *
  * These functions handle the recording, deleting and formatting of activity
  * items and notifications for the user and for this specific component.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage XProfileActivity
  * @since 1.5.0
  */
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function xprofile_register_activity_actions() {
 
-	// Register the activity feed actions for this component.
+	// Register the activity stream actions for this component.
 	bp_activity_set_action(
 		// Older avatar activity items use 'profile' for component. See r4273.
 		'profile',
@@ -68,11 +68,11 @@ function bp_xprofile_format_activity_action_new_avatar( $action, $activity ) {
 	}
 
 	/**
-	 * Filters the formatted 'new_avatar' activity feed action.
+	 * Filters the formatted 'new_avatar' activity stream action.
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string $action   Formatted action for activity feed.
+	 * @param string $action   Formatted action for activity stream.
 	 * @param object $activity Activity object.
 	 */
 	return apply_filters( 'bp_xprofile_format_activity_action_new_avatar', $action, $activity );
@@ -97,11 +97,11 @@ function bp_xprofile_format_activity_action_updated_profile( $action, $activity 
 	$action	      = sprintf( __( "%s's profile was updated", 'buddypress' ), '<a href="' . $profile_link . '">' . bp_core_get_user_displayname( $activity->user_id ) . '</a>' );
 
 	/**
-	 * Filters the formatted 'updated_profile' activity feed action.
+	 * Filters the formatted 'updated_profile' activity stream action.
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string $action   Formatted action for activity feed.
+	 * @param string $action   Formatted action for activity stream.
 	 * @param object $activity Activity object.
 	 */
 	return apply_filters( 'bp_xprofile_format_activity_action_updated_profile', $action, $activity );
@@ -109,7 +109,7 @@ function bp_xprofile_format_activity_action_updated_profile( $action, $activity 
 
 /**
  * Records activity for the logged in user within the profile component so that
- * it will show in the users activity feed (if installed).
+ * it will show in the users activity stream (if installed).
  *
  * @since 1.0.0
  *
@@ -142,7 +142,7 @@ function xprofile_record_activity( $args = '' ) {
 
 /**
  * Deletes activity for a user within the profile component so that it will be
- * removed from the users activity feed and sitewide stream (if installed).
+ * removed from the users activity stream and sitewide stream (if installed).
  *
  * @since 1.0.0
  *
@@ -168,7 +168,7 @@ function xprofile_delete_activity( $args = '' ) {
 }
 
 /**
- * Register an activity action for the Profile Fields component.
+ * Register an activity action for the Extended Profiles component.
  *
  * @since 1.0.0
  *
@@ -196,7 +196,7 @@ function xprofile_register_activity_action( $key, $value ) {
 }
 
 /**
- * Adds an activity feed item when a user has uploaded a new avatar.
+ * Adds an activity stream item when a user has uploaded a new avatar.
  *
  * @since 1.0.0
  * @since 2.3.4 Add new parameter to get the user id the avatar was set for.

@@ -2,7 +2,7 @@
 /**
  * BuddyPress messages admin site-wide notices list table class.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Messages
  * @since 3.0.0
  */

@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Members Who's Online Widget.
+ * BuddyPress Members Who's Online Widget.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage MembersWidgets
  * @since 1.0.0
  */

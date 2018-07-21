@@ -2,7 +2,7 @@
 /**
  * Deprecated Functions
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Core
  * @deprecated 2.0.0
  */

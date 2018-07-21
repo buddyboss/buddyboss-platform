@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Members Admin
+ * BuddyPress Members Admin
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage MembersAdmin
  * @since 2.0.0
  */

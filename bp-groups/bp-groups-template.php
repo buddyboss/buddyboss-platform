@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Groups Template Functions.
+ * BuddyPress Groups Template Functions.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage GroupsTemplates
  * @since 1.5.0
  */

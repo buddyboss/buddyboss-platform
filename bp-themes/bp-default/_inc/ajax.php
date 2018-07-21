@@ -8,7 +8,7 @@
  * For more information on how the custom AJAX functions work, see
  * http://codex.wordpress.org/AJAX_in_Plugins.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @since BuddyPress (1.2)
  * @subpackage BP-Default
  */
@@ -105,7 +105,7 @@ function bp_dtheme_ajax_querystring( $query_string, $object ) {
 	 * template loop
 	 */
 
-	// Activity feed filtering on action
+	// Activity stream filtering on action
 	if ( ! empty( $_BP_COOKIE['bp-' . $object . '-filter'] ) && '-1' != $_BP_COOKIE['bp-' . $object . '-filter'] ) {
 		$qs[] = 'type='   . urlencode( $_BP_COOKIE['bp-' . $object . '-filter'] );
 		$qs[] = 'action=' . urlencode( $_BP_COOKIE['bp-' . $object . '-filter'] );
@@ -117,7 +117,7 @@ function bp_dtheme_ajax_querystring( $query_string, $object ) {
 			$qs[] = 'user_id=' . $user_id;
 		}
 
-		// Activity feed scope only on activity directory.
+		// Activity stream scope only on activity directory.
 		if ( 'all' != $_BP_COOKIE['bp-' . $object . '-scope'] && ! bp_displayed_user_id() && ! bp_is_single_item() )
 			$qs[] = 'scope=' . urlencode( $_BP_COOKIE['bp-' . $object . '-scope'] );
 	}
@@ -456,7 +456,7 @@ function bp_dtheme_spam_activity() {
 	if ( 'POST' !== strtoupper( $_SERVER['REQUEST_METHOD'] ) )
 		return;
 
-	// Check that user is logged in, Activity Feeds are enabled, and Akismet is present.
+	// Check that user is logged in, Activity Streams are enabled, and Akismet is present.
 	if ( ! is_user_logged_in() || ! bp_is_active( 'activity' ) || empty( $bp->activity->akismet ) )
 		exit( '-1' );
 

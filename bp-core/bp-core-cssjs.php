@@ -2,7 +2,7 @@
 /**
  * Core component CSS & JS.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Core
  * @since 1.0.0
  */
@@ -77,7 +77,7 @@ function bp_core_register_common_scripts() {
 	}
 
 	/**
-	 * Filters the BuddyBoss Core javascript files to register.
+	 * Filters the BuddyPress Core javascript files to register.
 	 *
 	 * Default handles include 'bp-confirm', 'bp-widget-members',
 	 * 'bp-jquery-query', 'bp-jquery-cookie', and 'bp-jquery-scroll-to'.
@@ -120,7 +120,7 @@ function bp_core_register_common_styles() {
 	$admin_bar_file = apply_filters( 'bp_core_admin_bar_css', "{$url}admin-bar{$min}.css" );
 
 	/**
-	 * Filters the BuddyBoss Core stylesheet files to register.
+	 * Filters the BuddyPress Core stylesheet files to register.
 	 *
 	 * @since 2.1.0
 	 *

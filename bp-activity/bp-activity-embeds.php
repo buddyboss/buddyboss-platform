@@ -6,7 +6,7 @@
  *
  * @since 2.6.0
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage ActivityEmbeds
  */
 

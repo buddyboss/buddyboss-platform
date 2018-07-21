@@ -1,8 +1,8 @@
 <?php
 /**
- * Caching functions specific to BuddyBoss Members.
+ * Caching functions specific to BuddyPress Members.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage MembersCache
  * @since 2.2.0
  */

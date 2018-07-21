@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------
-Hello, this is the BuddyBoss Nouveau stylesheet.
+Hello, this is the BuddyPress Nouveau stylesheet.
 
 @version 3.0.0
 
@@ -35,7 +35,7 @@ Hello, this is the BuddyBoss Nouveau stylesheet.
 			5.2.1.4 - Group Activity
 		5.2.2 - item-body: User Accounts
 			5.2.2.1 - classes, pag, filters
-			5.2.2.2 - Profile Fields
+			5.2.2.2 - Extended Profiles
 			5.2.2.3 - Groups
 			5.2.2.4 - friends
 			5.2.2.5 - Private Messaging Threads
@@ -2709,7 +2709,7 @@ body.no-js .single-item-header .js-self-profile-button {
 */
 /**
 *-------------------------------------------
-* @subsection 5.2.2.2 - Profile Fields
+* @subsection 5.2.2.2 - Extended Profiles
 *-------------------------------------------
 */
 .buddypress-wrap .profile {

@@ -2,7 +2,7 @@
 /**
  * BuddyPress Friends Classes.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage FriendsClasses
  * @since 1.0.0
  */

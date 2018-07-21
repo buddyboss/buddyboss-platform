@@ -1,13 +1,13 @@
 <?php
 /**
- * BuddyBoss XProfile Filters.
+ * BuddyPress XProfile Filters.
  *
  * Business functions are where all the magic happens in BuddyPress. They will
  * handle the actual saving or manipulation of information. Usually they will
  * hand off to a database class for data access, then return
  * true or false on success or failure.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage XProfileFunctions
  * @since 1.5.0
  */
@@ -710,7 +710,7 @@ add_action( 'bp_setup_globals', 'xprofile_override_user_fullnames', 100 );
  *
  * @since 1.0.0
  *
- * @package BuddyBoss Core
+ * @package BuddyPress Core
  *
  * @param string $directory The root directory name. Optional.
  * @param int    $user_id   The user ID. Optional.

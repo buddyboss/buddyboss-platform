@@ -1,11 +1,11 @@
 <?php
 /**
- * BuddyBoss - Activity Feed Comment
+ * BuddyPress - Activity Stream Comment
  *
  * This template is used by bp_activity_comments() functions to show
  * each activity.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage bp-legacy
  * @version 3.0.0
  */

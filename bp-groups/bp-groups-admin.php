@@ -1,11 +1,11 @@
 <?php
 /**
- * BuddyBoss Groups component admin screen.
+ * BuddyPress Groups component admin screen.
  *
  * Props to WordPress core for the Comments admin screen, and its contextual
  * help text, on which this implementation is heavily based.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Groups
  * @since 1.7.0
  */

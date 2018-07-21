@@ -2,7 +2,7 @@
 /**
  * Blogs component functions.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage BlogsFunctions
  * @since 1.5.0
  */
@@ -240,7 +240,7 @@ function bp_blogs_record_existing_blogs( $args = array() ) {
 }
 
 /**
- * Check whether a given blog should be recorded in activity feeds.
+ * Check whether a given blog should be recorded in activity streams.
  *
  * If $user_id is provided, you can restrict site from being recordable
  * only to particular users.
@@ -254,7 +254,7 @@ function bp_blogs_record_existing_blogs( $args = array() ) {
 function bp_blogs_is_blog_recordable( $blog_id, $user_id = 0 ) {
 
 	/**
-	 * Filters whether or not a blog is globally activity feed recordable.
+	 * Filters whether or not a blog is globally activity stream recordable.
 	 *
 	 * @since 1.7.0
 	 *
@@ -265,7 +265,7 @@ function bp_blogs_is_blog_recordable( $blog_id, $user_id = 0 ) {
 
 	if ( !empty( $user_id ) ) {
 		/**
-		 * Filters whether or not a blog is globally activity feed recordable for user.
+		 * Filters whether or not a blog is globally activity stream recordable for user.
 		 *
 		 * @since 1.7.0
 		 *
@@ -399,7 +399,7 @@ function bp_blogs_record_blog( $blog_id, $user_id, $no_activity = false ) {
 	$is_private = !apply_filters( 'bp_is_new_blog_public', !$is_private );
 
 	/**
-	 * Fires after BuddyBoss has been made aware of a new site for activity tracking.
+	 * Fires after BuddyPress has been made aware of a new site for activity tracking.
 	 *
 	 * @since 1.0.0
 	 * @since 2.6.0 Added $no_activity as a parameter.
@@ -609,7 +609,7 @@ function bp_blogs_publish_post_activity_meta( $activity_id, $post, $args ) {
 	bp_blogs_update_blogmeta( $args['item_id'], 'last_activity', bp_core_current_time() );
 
 	/**
-	 * Fires after BuddyBoss has recorded metadata about a published blog post.
+	 * Fires after BuddyPress has recorded metadata about a published blog post.
 	 *
 	 * @since 1.0.0
 	 *
@@ -789,7 +789,7 @@ function bp_blogs_comment_sync_activity_comment( &$activity_id, $comment = null,
 			$activity_args = array();
 		}
 
-		// Record in activity feeds
+		// Record in activity streams
 		if ( ! empty( $activity_args ) ) {
 			$activity_id = bp_activity_new_comment( $activity_args );
 
@@ -826,7 +826,7 @@ function bp_blogs_comment_sync_activity_comment( &$activity_id, $comment = null,
 
 	if ( 'new_blog_comment' === $activity_post_object->comment_action_id ) {
 		/**
-		 * Fires after BuddyBoss has recorded metadata about a published blog post comment.
+		 * Fires after BuddyPress has recorded metadata about a published blog post comment.
 		 *
 		 * @since 2.5.0
 		 *
@@ -963,7 +963,7 @@ function bp_blogs_maybe_add_user_to_blog() {
 add_action( 'init', 'bp_blogs_maybe_add_user_to_blog', 1 );
 
 /**
- * Remove the "blog created" item from the BP blogs tracker and activity feed.
+ * Remove the "blog created" item from the BP blogs tracker and activity stream.
  *
  * @param int $blog_id ID of the blog being removed.
  */
@@ -973,7 +973,7 @@ function bp_blogs_remove_blog( $blog_id ) {
 
 	/**
 	 * Fires before a "blog created" item is removed from blogs
-	 * tracker and activity feed.
+	 * tracker and activity stream.
 	 *
 	 * @since 1.5.0
 	 *
@@ -985,7 +985,7 @@ function bp_blogs_remove_blog( $blog_id ) {
 
 	/**
 	 * Fires after a "blog created" item has been removed from blogs
-	 * tracker and activity feed.
+	 * tracker and activity stream.
 	 *
 	 * @since 1.0.0
 	 *
@@ -1031,7 +1031,7 @@ function bp_blogs_remove_blog_for_user( $user_id, $blog_id ) {
 add_action( 'remove_user_from_blog', 'bp_blogs_remove_blog_for_user', 10, 2 );
 
 /**
- * Remove a synced activity comment from the activity feed.
+ * Remove a synced activity comment from the activity stream.
  *
  * @since 2.5.0
  *
@@ -1087,7 +1087,7 @@ function bp_blogs_post_type_remove_comment( $deleted, $comment_id, $activity_pos
 	// Backcompat for comments about the 'post' post type.
 	if ( 'new_blog_comment' === $activity_type ) {
 		/**
-		 * Fires after a blog comment activity item was removed from activity feed.
+		 * Fires after a blog comment activity item was removed from activity stream.
 		 *
 		 * @since 1.0.0
 		 *
@@ -1188,7 +1188,7 @@ function bp_blogs_total_blogs_for_user( $user_id = 0 ) {
 }
 
 /**
- * Remove the all data related to a given blog from the BP blogs tracker and activity feed.
+ * Remove the all data related to a given blog from the BP blogs tracker and activity stream.
  *
  * @param int $blog_id The ID of the blog to expunge.
  */
@@ -1196,7 +1196,7 @@ function bp_blogs_remove_data_for_blog( $blog_id ) {
 
 	/**
 	 * Fires before all data related to a given blog is removed from blogs tracker
-	 * and activity feed.
+	 * and activity stream.
 	 *
 	 * @since 1.5.0
 	 *
@@ -1209,7 +1209,7 @@ function bp_blogs_remove_data_for_blog( $blog_id ) {
 
 	/**
 	 * Fires after all data related to a given blog has been removed from blogs tracker
-	 * and activity feed.
+	 * and activity stream.
 	 *
 	 * @since 1.0.0
 	 *

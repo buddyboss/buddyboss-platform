@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Users Settings
+ * BuddyPress - Users Settings
  *
  * @version 3.0.0
  */

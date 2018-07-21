@@ -9,7 +9,7 @@
  *
  * @since 2.4.0
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage bp-attachments
  * @version 3.0.0
  */

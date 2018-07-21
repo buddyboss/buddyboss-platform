@@ -2,7 +2,7 @@
 /**
  * BuddyPress Avatars.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Core
  * @since 1.0.0
  */
@@ -2009,7 +2009,7 @@ function bp_avatar_get_templates() {
 }
 
 /**
- * Trick to check if the theme's BuddyBoss templates are up to date.
+ * Trick to check if the theme's BuddyPress templates are up to date.
  *
  * If the "avatar templates" are not including the new template tag, this will
  * help users to get the avatar UI.

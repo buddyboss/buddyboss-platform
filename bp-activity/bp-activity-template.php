@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Activity Template Functions.
+ * BuddyPress Activity Template Functions.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage ActivityTemplate
  * @since 1.5.0
  */
@@ -101,7 +101,7 @@ function bp_activity_directory_permalink() {
  * Initialize the activity loop.
  *
  * Based on the $args passed, bp_has_activities() populates the
- * $activities_template global, enabling the use of BuddyBoss templates and
+ * $activities_template global, enabling the use of BuddyPress templates and
  * template functions to display a list of activity items.
  *
  * @since 1.0.0
@@ -181,14 +181,14 @@ function bp_activity_directory_permalink() {
  *     @type string|bool       $display_comments How to handle activity comments. Possible values:
  *                                                 - 'threaded' - comments appear in a threaded tree, under their parent
  *                                                   items.
- *                                                 - 'stream' - the activity feed is presented in a flat manner, with
+ *                                                 - 'stream' - the activity stream is presented in a flat manner, with
  *                                                   comments sorted in chronological order alongside other activity items.
  *                                                 - false - don't fetch activity comments at all.
  *                                               Default: 'threaded'.
  *     @type bool              $show_hidden      Whether to show items marked hide_sitewide. Defaults to false, except in
  *                                               the following cases:
- *                                                 - User is viewing his own activity feed.
- *                                                 - User is viewing the activity feed of a non-public group of which he
+ *                                                 - User is viewing his own activity stream.
+ *                                                 - User is viewing the activity stream of a non-public group of which he
  *                                                   is a member.
  *     @type string|bool       $spam             Spam status. 'ham_only', 'spam_only', or false to show all activity
  *                                               regardless of spam status. Default: 'ham_only'.
@@ -2652,7 +2652,7 @@ function bp_activity_delete_link() {
 	}
 
 /**
- * Output the URL to delete a single activity feed item.
+ * Output the URL to delete a single activity stream item.
  *
  * @since 2.1.0
  *

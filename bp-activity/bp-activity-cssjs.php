@@ -2,7 +2,7 @@
 /**
  * Activity component CSS/JS
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage ActivityScripts
  * @since 1.0.0
  */

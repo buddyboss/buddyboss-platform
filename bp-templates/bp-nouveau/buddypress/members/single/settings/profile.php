@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Members Settings ( Profile )
+ * BuddyPress - Members Settings ( Profile )
  *
  * @since 3.0.0
  * @version 3.1.0

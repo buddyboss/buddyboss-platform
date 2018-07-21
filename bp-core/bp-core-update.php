@@ -2,7 +2,7 @@
 /**
  * BuddyPress Updater.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Updater
  * @since 1.6.0
  */

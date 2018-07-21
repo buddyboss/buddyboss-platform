@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss - Members Settings Notifications
+ * BuddyPress - Members Settings Notifications
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage bp-legacy
  * @version 3.0.0
  */

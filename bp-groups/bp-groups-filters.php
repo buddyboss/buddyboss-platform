@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Groups Filters.
+ * BuddyPress Groups Filters.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage GroupsFilters
  * @since 1.0.0
  */

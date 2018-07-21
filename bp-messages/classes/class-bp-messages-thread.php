@@ -2,7 +2,7 @@
 /**
  * BuddyPress Messages Classes.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage MessagesClasses
  * @since 1.0.0
  */

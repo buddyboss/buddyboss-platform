@@ -1,20 +1,20 @@
 <?php
 /**
- * BuddyBoss Platform.
+ * The BuddyPress Plugin.
  *
- * BuddyBoss Platform is social networking software with a twist.
+ * BuddyPress is social networking software with a twist from the creators of WordPress.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Main
  * @since 1.0.0
  */
 
 /**
- * Plugin Name: BuddyBoss Platform
- * Plugin URI:  https://buddyboss.org/
- * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
- * Author:      BuddyBoss
- * Author URI:  https://buddyboss.org/
+ * Plugin Name: BuddyPress
+ * Plugin URI:  https://buddypress.org/
+ * Description: BuddyPress adds community features to WordPress. Member Profiles, Activity Streams, Direct Messaging, Notifications, and more!
+ * Author:      The BuddyPress Community
+ * Author URI:  https://buddypress.org/
  * Version:     3.1.0
  * Text Domain: buddypress
  * Domain Path: /bp-languages/
@@ -33,14 +33,14 @@ defined( 'ABSPATH' ) || exit;
 define( 'BP_REQUIRED_PHP_VERSION', '5.3.0' );
 
 /**
- * The main function responsible for returning the one true BuddyBoss Instance to functions everywhere.
+ * The main function responsible for returning the one true BuddyPress Instance to functions everywhere.
  *
  * Use this function like you would a global variable, except without needing
  * to declare the global.
  *
  * Example: <?php $bp = buddypress(); ?>
  *
- * @return BuddyBoss|null The one true BuddyBoss Instance.
+ * @return BuddyPress|null The one true BuddyPress Instance.
  */
 function buddypress() {
 	return BuddyPress::instance();
@@ -59,10 +59,10 @@ function bp_php_requirements_notice() {
 	?>
 
 	<div id="message" class="error notice">
-		<p><strong><?php esc_html_e( 'Your site does not support BuddyBoss.', 'buddypress' ); ?></strong></p>
+		<p><strong><?php esc_html_e( 'Your site does not support BuddyPress.', 'buddypress' ); ?></strong></p>
 		<?php /* translators: 1: current PHP version, 2: required PHP version */ ?>
-		<p><?php printf( esc_html__( 'Your site is currently running PHP version %1$s, while BuddyBoss requires version %2$s or greater.', 'buddypress' ), esc_html( phpversion() ), esc_html( BP_REQUIRED_PHP_VERSION ) ); ?> <?php printf( __( 'See <a href="%s">the Codex guide</a> for more information.', 'buddypress' ), 'https://codex.buddypress.org/getting-started/buddypress-2-8-will-require-php-5-3/' ); ?></p>
-		<p><?php esc_html_e( 'Please update your server or deactivate BuddyBoss.', 'buddypress' ); ?></p>
+		<p><?php printf( esc_html__( 'Your site is currently running PHP version %1$s, while BuddyPress requires version %2$s or greater.', 'buddypress' ), esc_html( phpversion() ), esc_html( BP_REQUIRED_PHP_VERSION ) ); ?> <?php printf( __( 'See <a href="%s">the Codex guide</a> for more information.', 'buddypress' ), 'https://codex.buddypress.org/getting-started/buddypress-2-8-will-require-php-5-3/' ); ?></p>
+		<p><?php esc_html_e( 'Please update your server or deactivate BuddyPress.', 'buddypress' ); ?></p>
 	</div>
 
 	<?php
@@ -76,11 +76,11 @@ if ( version_compare( phpversion(), BP_REQUIRED_PHP_VERSION, '<' ) ) {
 	require dirname( __FILE__ ) . '/class-buddypress.php';
 
 	/*
-	 * Hook BuddyBoss early onto the 'plugins_loaded' action.
+	 * Hook BuddyPress early onto the 'plugins_loaded' action.
 	 *
-	 * This gives all other plugins the chance to load before BuddyBoss,
+	 * This gives all other plugins the chance to load before BuddyPress,
 	 * to get their actions, filters, and overrides setup without
-	 * BuddyBoss being in the way.
+	 * BuddyPress being in the way.
 	 */
 	if ( defined( 'BUDDYPRESS_LATE_LOAD' ) ) {
 		add_action( 'plugins_loaded', 'buddypress', (int) BUDDYPRESS_LATE_LOAD );

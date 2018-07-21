@@ -1,10 +1,10 @@
 <?php
 /**
- * BuddyBoss Core Toolbar.
+ * BuddyPress Core Toolbar.
  *
  * Handles the core functions related to the WordPress Toolbar.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Core
  * @since 1.0.0
  */

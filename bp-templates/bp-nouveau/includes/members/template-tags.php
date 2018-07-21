@@ -929,7 +929,7 @@ function bp_nouveau_wp_profile_field_id() {
 		$field = bp_nouveau()->members->wp_profile_current;
 
 		/**
-		 * Filters the WP profile field ID used for BuddyBoss Nouveau.
+		 * Filters the WP profile field ID used for BuddyPress Nouveau.
 		 *
 		 * @since 3.0.0
 		 *
@@ -958,7 +958,7 @@ function bp_nouveau_wp_profile_field_label() {
 		$field = bp_nouveau()->members->wp_profile_current;
 
 		/**
-		 * Filters the WP profile field label used for BuddyBoss Nouveau.
+		 * Filters the WP profile field label used for BuddyPress Nouveau.
 		 *
 		 * @since 3.0.0
 		 *

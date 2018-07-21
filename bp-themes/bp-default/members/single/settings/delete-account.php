@@ -3,7 +3,7 @@
 /**
  * BuddyPress Delete Account
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage bp-default
  */
 ?>

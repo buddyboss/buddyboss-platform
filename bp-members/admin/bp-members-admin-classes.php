@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Members List Classes.
+ * BuddyPress Members List Classes.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage MembersAdminClasses
  * @since 2.3.0
  */

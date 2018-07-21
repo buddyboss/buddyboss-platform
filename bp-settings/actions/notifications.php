@@ -2,7 +2,7 @@
 /**
  * Settings: Email notifications action handler
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage SettingsActions
  * @since 3.0.0
  */

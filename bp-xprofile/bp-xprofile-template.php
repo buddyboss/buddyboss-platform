@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss XProfile Template Tags.
+ * BuddyPress XProfile Template Tags.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage XProfileTemplate
  * @since 1.5.0
  */

@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Blogs Loop
+ * BuddyPress - Blogs Loop
  *
  * @since 3.0.0
  * @version 3.0.0

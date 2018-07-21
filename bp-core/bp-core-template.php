@@ -2,7 +2,7 @@
 /**
  * Core component template tag functions.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage TemplateFunctions
  * @since 1.5.0
  */
@@ -2355,26 +2355,26 @@ function bp_is_user_front() {
 }
 
 /**
- * Is the current page a user's activity feed page?
+ * Is the current page a user's activity stream page?
  *
  * Eg http://example.com/members/joe/activity/ (or any subpages thereof).
  *
  * @since 1.1.0
  *
- * @return bool True if the current page is a user's activity feed page.
+ * @return bool True if the current page is a user's activity stream page.
  */
 function bp_is_user_activity() {
 	return (bool) ( bp_is_user() && bp_is_activity_component() );
 }
 
 /**
- * Is the current page a user's Friends activity feed?
+ * Is the current page a user's Friends activity stream?
  *
  * Eg http://example.com/members/joe/friends/
  *
  * @since 1.1.0
  *
- * @return bool True if the current page is a user's Friends activity feed.
+ * @return bool True if the current page is a user's Friends activity stream.
  */
 function bp_is_user_friends_activity() {
 
@@ -2396,13 +2396,13 @@ function bp_is_user_friends_activity() {
 }
 
 /**
- * Is the current page a user's Groups activity feed?
+ * Is the current page a user's Groups activity stream?
  *
  * Eg http://example.com/members/joe/groups/
  *
  * @since 1.5.0
  *
- * @return bool True if the current page is a user's Groups activity feed.
+ * @return bool True if the current page is a user's Groups activity stream.
  */
 function bp_is_user_groups_activity() {
 

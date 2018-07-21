@@ -1,11 +1,11 @@
 <?php
 /**
- * BuddyBoss XProfile Caching Functions.
+ * BuddyPress XProfile Caching Functions.
  *
  * Caching functions handle the clearing of cached objects and pages on specific
  * actions throughout BuddyPress.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage XProfileCache
  * @since 1.5.0
  */

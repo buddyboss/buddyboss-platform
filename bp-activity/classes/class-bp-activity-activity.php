@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Activity Classes
+ * BuddyPress Activity Classes
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Activity
  * @since 1.0.0
  */
@@ -1106,7 +1106,7 @@ class BP_Activity_Activity {
 	}
 
 	/**
-	 * In BuddyPress 1.2.x, this was used to retrieve specific activity feed items (for example, on an activity's permalink page).
+	 * In BuddyPress 1.2.x, this was used to retrieve specific activity stream items (for example, on an activity's permalink page).
 	 *
 	 * As of 1.5.x, use BP_Activity_Activity::get() with an 'in' parameter instead.
 	 *

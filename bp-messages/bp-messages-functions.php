@@ -7,7 +7,7 @@
  * hand off to a database class for data access, then return
  * true or false on success or failure.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage MessagesFunctions
  * @since 1.5.0
  */

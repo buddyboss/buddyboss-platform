@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss - Members Single Messages Notice Loop
+ * BuddyPress - Members Single Messages Notice Loop
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage bp-legacy
  * @version 3.0.0
  */

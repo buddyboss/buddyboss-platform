@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Groups Theme Compat.
+ * BuddyPress Groups Theme Compat.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @since 1.7.0
  */
 
@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The main theme compat class for BuddyBoss Groups.
+ * The main theme compat class for BuddyPress Groups.
  *
  * This class sets up the necessary theme compatibility actions to safely output
  * group template parts to the_title and the_content areas of a theme.

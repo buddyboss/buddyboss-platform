@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Activity Post Form
+ * BuddyPress - Activity Post Form
  *
  * @version 3.1.0
  */

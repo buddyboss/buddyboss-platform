@@ -2,7 +2,7 @@
 /**
  * BuddyPress Member Loader.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Members
  * @since 1.5.0
  */
@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Defines the BuddyBoss Members Component.
+ * Defines the BuddyPress Members Component.
  *
  * @since 1.5.0
  */

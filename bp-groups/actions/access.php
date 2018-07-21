@@ -2,7 +2,7 @@
 /**
  * Groups: Access protection action handler
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage GroupActions
  * @since 3.0.0
  */

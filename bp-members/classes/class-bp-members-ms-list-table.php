@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Members List Table for Multisite.
+ * BuddyPress Members List Table for Multisite.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage MembersAdminClasses
  * @since 2.3.0
  */

@@ -2,7 +2,7 @@
 /**
  * Functions related to starring private messages.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage MessagesStar
  * @since 2.3.0
  */

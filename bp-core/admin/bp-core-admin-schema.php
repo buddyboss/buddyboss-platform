@@ -2,7 +2,7 @@
 /**
  * BuddyPress DB schema.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage CoreAdministration
  * @since 2.3.0
  */
@@ -31,7 +31,7 @@ function bp_core_install( $active_components = false ) {
 		$active_components = apply_filters( 'bp_active_components', bp_get_option( 'bp-active-components' ) );
 	}
 
-	// Install Activity Feeds even when inactive (to store last_activity data).
+	// Install Activity Streams even when inactive (to store last_activity data).
 	bp_core_install_activity_streams();
 
 	// Install the signups table.
@@ -42,7 +42,7 @@ function bp_core_install( $active_components = false ) {
 		bp_core_install_notifications();
 	}
 
-	// Connections.
+	// Friend Connections.
 	if ( !empty( $active_components['friends'] ) ) {
 		bp_core_install_friends();
 	}
@@ -57,7 +57,7 @@ function bp_core_install( $active_components = false ) {
 		bp_core_install_private_messaging();
 	}
 
-	// Profile Fields.
+	// Extended Profiles.
 	if ( !empty( $active_components['xprofile'] ) ) {
 		bp_core_install_extended_profiles();
 	}
@@ -529,7 +529,7 @@ function bp_core_install_emails() {
 	bp_update_option( 'bp-emails-unsubscribe-salt', base64_encode( wp_generate_password( 64, true, true ) ) );
 
 	/**
-	 * Fires after BuddyBoss adds the posts for its emails.
+	 * Fires after BuddyPress adds the posts for its emails.
 	 *
 	 * @since 2.5.0
 	 */

@@ -2,7 +2,7 @@
 /**
  * BuddyPress Member Template loop class.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Members
  */
 

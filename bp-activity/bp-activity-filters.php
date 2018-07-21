@@ -2,7 +2,7 @@
 /**
  * Filters related to the Activity component.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage ActivityFilters
  * @since 1.0.0
  */
@@ -114,14 +114,14 @@ add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_embed_excerpt_onclick_
 // At-name filter.
 add_action( 'bp_activity_before_save', 'bp_activity_at_name_filter_updates' );
 
-// Activity feed moderation.
+// Activity stream moderation.
 add_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2, 1 );
 add_action( 'bp_activity_before_save', 'bp_activity_check_blacklist_keys',  2, 1 );
 
 /** Functions *****************************************************************/
 
 /**
- * Types of activity feed items to moderate.
+ * Types of activity stream items to moderate.
  *
  * @since 1.6.0
  *
@@ -203,7 +203,7 @@ function bp_activity_check_blacklist_keys( $activity ) {
  */
 function bp_activity_filter_kses( $content ) {
 	/**
-	 * Filters the allowed HTML tags for BuddyBoss Activity content.
+	 * Filters the allowed HTML tags for BuddyPress Activity content.
 	 *
 	 * @since 1.2.0
 	 *
@@ -379,7 +379,7 @@ function bp_activity_make_nofollow_filter( $text ) {
 	}
 
 /**
- * Truncate long activity entries when viewed in activity feeds.
+ * Truncate long activity entries when viewed in activity streams.
  *
  * This method can only be used inside the Activity loop.
  *
@@ -473,7 +473,7 @@ add_filter( 'bp_core_get_js_dependencies', 'bp_activity_get_js_dependencies', 10
  * Add a just-posted classes to the most recent activity item.
  *
  * We use these classes to avoid pagination issues when items are loaded
- * dynamically into the activity feed.
+ * dynamically into the activity stream.
  *
  * @since 2.0.0
  *
@@ -609,7 +609,7 @@ function bp_activity_heartbeat_strings( $strings = array() ) {
 	}
 
 	/**
-	 * Filters the pulse frequency to be used for the BuddyBoss Activity heartbeat.
+	 * Filters the pulse frequency to be used for the BuddyPress Activity heartbeat.
 	 *
 	 * @since 2.0.0
 	 *

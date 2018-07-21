@@ -14,7 +14,7 @@
  *  - Admin: More in {@link BP_Admin::setup_actions()} in
  *            bp-core/bp-core-admin.php
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Core
  * @since 1.5.0
  *

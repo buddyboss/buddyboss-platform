@@ -2,7 +2,7 @@
 /**
  * BuddyPress Admin Settings.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage CoreAdministration
  * @since 2.3.0
  */
@@ -71,7 +71,7 @@ function bp_admin_setting_callback_theme_package_id() {
 
 	if ( $options ) : ?>
 		<select name="_bp_theme_package_id" id="_bp_theme_package_id" aria-describedby="_bp_theme_package_description"><?php echo $options; ?></select>
-		<p id="_bp_theme_package_description" class="description"><?php esc_html_e( 'The selected Template Pack will serve all BuddyBoss templates.', 'buddypress' ); ?></p>
+		<p id="_bp_theme_package_description" class="description"><?php esc_html_e( 'The selected Template Pack will serve all BuddyPress templates.', 'buddypress' ); ?></p>
 
 	<?php else : ?>
 		<p><?php esc_html_e( 'No template packages available.', 'buddypress' ); ?></p>
@@ -98,7 +98,7 @@ function bp_admin_setting_callback_activity_akismet() {
 ?>
 
 	<input id="_bp_enable_akismet" name="_bp_enable_akismet" type="checkbox" value="1" <?php checked( bp_is_akismet_active( true ) ); ?> />
-	<label for="_bp_enable_akismet"><?php _e( 'Allow Akismet to scan for activity feed spam', 'buddypress' ); ?></label>
+	<label for="_bp_enable_akismet"><?php _e( 'Allow Akismet to scan for activity stream spam', 'buddypress' ); ?></label>
 
 <?php
 }
@@ -112,13 +112,13 @@ function bp_admin_setting_callback_blogforum_comments() {
 ?>
 
 	<input id="bp-disable-blogforum-comments" name="bp-disable-blogforum-comments" type="checkbox" value="1" <?php checked( !bp_disable_blogforum_comments( false ) ); ?> />
-	<label for="bp-disable-blogforum-comments"><?php _e( 'Allow activity feed commenting on posts and comments', 'buddypress' ); ?></label>
+	<label for="bp-disable-blogforum-comments"><?php _e( 'Allow activity stream commenting on posts and comments', 'buddypress' ); ?></label>
 
 <?php
 }
 
 /**
- * Allow Heartbeat to refresh activity feed.
+ * Allow Heartbeat to refresh activity stream.
  *
  * @since 2.0.0
  */
@@ -126,7 +126,7 @@ function bp_admin_setting_callback_heartbeat() {
 ?>
 
 	<input id="_bp_enable_heartbeat_refresh" name="_bp_enable_heartbeat_refresh" type="checkbox" value="1" <?php checked( bp_is_activity_heartbeat_active( true ) ); ?> />
-	<label for="_bp_enable_heartbeat_refresh"><?php _e( 'Automatically check for new items while viewing the activity feed', 'buddypress' ); ?></label>
+	<label for="_bp_enable_heartbeat_refresh"><?php _e( 'Automatically check for new items while viewing the activity stream', 'buddypress' ); ?></label>
 
 <?php
 }
@@ -264,7 +264,7 @@ function bp_core_admin_settings() {
 
 	<div class="wrap">
 
-		<h1><?php _e( 'BuddyBoss Settings', 'buddypress' ); ?> </h1>
+		<h1><?php _e( 'BuddyPress Settings', 'buddypress' ); ?> </h1>
 
 		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Options', 'buddypress' ) ); ?></h2>
 

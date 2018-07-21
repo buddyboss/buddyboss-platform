@@ -2,7 +2,7 @@
 /**
  * BuddyPress Blogs Activity.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage BlogsActivity
  * @since 1.5.0
  */
@@ -423,7 +423,7 @@ function bp_blogs_prefetch_activity_object_data( $activities ) {
 add_filter( 'bp_activity_prefetch_object_data', 'bp_blogs_prefetch_activity_object_data' );
 
 /**
- * Record blog-related activity to the activity feed.
+ * Record blog-related activity to the activity stream.
  *
  * @since 1.0.0
  *
@@ -456,11 +456,11 @@ function bp_blogs_record_activity( $args = '' ) {
 	if ( ! empty( $r['action'] ) ) {
 
 		/**
-		 * Filters the action associated with activity for activity feed.
+		 * Filters the action associated with activity for activity stream.
 		 *
 		 * @since 1.2.0
 		 *
-		 * @param string $value Action for the activity feed.
+		 * @param string $value Action for the activity stream.
 		 */
 		$r['action'] = apply_filters( 'bp_blogs_record_activity_action', $r['action'] );
 	}
@@ -468,13 +468,13 @@ function bp_blogs_record_activity( $args = '' ) {
 	if ( ! empty( $r['content'] ) ) {
 
 		/**
-		 * Filters the content associated with activity for activity feed.
+		 * Filters the content associated with activity for activity stream.
 		 *
 		 * @since 1.2.0
 		 *
-		 * @param string $value Generated summary from content for the activity feed.
-		 * @param string $value Content for the activity feed.
-		 * @param array  $r     Array of arguments used for the activity feed item.
+		 * @param string $value Generated summary from content for the activity stream.
+		 * @param string $value Content for the activity stream.
+		 * @param array  $r     Array of arguments used for the activity stream item.
 		 */
 		$r['content'] = apply_filters( 'bp_blogs_record_activity_content', bp_activity_create_summary( $r['content'], $r ), $r['content'], $r );
 	}
@@ -492,7 +492,7 @@ function bp_blogs_record_activity( $args = '' ) {
 }
 
 /**
- * Delete a blog-related activity feed item.
+ * Delete a blog-related activity stream item.
  *
  * @since 1.0.0
  *
@@ -522,12 +522,12 @@ function bp_blogs_delete_activity( $args = '' ) {
  * Check if a blog post's activity item should be closed from commenting.
  *
  * This mirrors the {@link comments_open()} and {@link _close_comments_for_old_post()}
- * functions, but for use with the BuddyPress activity feed to be as
+ * functions, but for use with the BuddyPress activity stream to be as
  * lightweight as possible.
  *
  * By lightweight, we actually mirror a few of the blog's commenting settings
  * to blogmeta and checks the values in blogmeta instead.  This is to prevent
- * multiple {@link switch_to_blog()} calls in the activity feed.
+ * multiple {@link switch_to_blog()} calls in the activity stream.
  *
  * @since 2.0.0
  *
@@ -685,7 +685,7 @@ function bp_blogs_delete_activity_for_site( $blog_id ) {
 add_action( 'bp_blogs_remove_data_for_blog', 'bp_blogs_delete_activity_for_site' );
 
 /**
- * Remove a blog post activity item from the activity feed.
+ * Remove a blog post activity item from the activity stream.
  *
  * @since 1.0.0
  *
@@ -713,7 +713,7 @@ function bp_blogs_remove_post( $post_id, $blog_id = 0, $user_id = 0 ) {
 	}
 
 	/**
-	 * Fires before removal of a blog post activity item from the activity feed.
+	 * Fires before removal of a blog post activity item from the activity stream.
 	 *
 	 * @since 1.5.0
 	 *
@@ -731,7 +731,7 @@ function bp_blogs_remove_post( $post_id, $blog_id = 0, $user_id = 0 ) {
 	) );
 
 	/**
-	 * Fires after removal of a blog post activity item from the activity feed.
+	 * Fires after removal of a blog post activity item from the activity stream.
 	 *
 	 * @since 1.0.0
 	 *
@@ -1027,7 +1027,7 @@ add_action( 'trashed_post_comments', 'bp_blogs_remove_activity_meta_for_trashed_
  *
  * In BuddyPress 2.0, the schema for storing activity items related to blog
  * posts changed. Instead creating new top-level 'new_blog_comment' activity
- * items, blog comments are recorded in the activity feed as comments on the
+ * items, blog comments are recorded in the activity stream as comments on the
  * 'new_blog_post' activity items corresponding to the parent post. This filter
  * ensures that the 'new_blog_comment' filter in bp_has_activities() (which
  * powers the 'Comments' filter in the activity directory dropdown) includes

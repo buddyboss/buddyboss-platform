@@ -2,7 +2,7 @@
 /**
  * BuddyPress Admin Slug Functions.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage CoreAdministration
  * @since 2.3.0
  */
@@ -21,7 +21,7 @@ function bp_core_admin_slugs_settings() {
 
 	<div class="wrap">
 
-		<h1><?php _e( 'BuddyBoss Settings', 'buddypress' ); ?> </h1>
+		<h1><?php _e( 'BuddyPress Settings', 'buddypress' ); ?> </h1>
 
 		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Pages', 'buddypress' ) ); ?></h2>
 		<form action="" method="post" id="bp-admin-page-form">
@@ -104,7 +104,7 @@ function bp_core_admin_get_static_pages() {
 /**
  * Creates reusable markup for page setup on the Components and Pages dashboard panel.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @since 1.6.0
  * @todo Use settings API
  */

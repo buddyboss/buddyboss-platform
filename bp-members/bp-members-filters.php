@@ -1,10 +1,10 @@
 <?php
 /**
- * BuddyBoss Members Filters.
+ * BuddyPress Members Filters.
  *
  * Filters specific to the Members component.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage MembersFilters
  * @since 1.5.0
  */

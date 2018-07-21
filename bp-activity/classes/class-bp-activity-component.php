@@ -1,10 +1,10 @@
 <?php
 /**
- * BuddyBoss Activity Feeds Loader.
+ * BuddyPress Activity Streams Loader.
  *
- * An activity feed component, for users, groups, and site tracking.
+ * An activity stream component, for users, groups, and site tracking.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage ActivityCore
  * @since 1.5.0
  */
@@ -27,7 +27,7 @@ class BP_Activity_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'activity',
-			__( 'Activity Feeds', 'buddypress' ),
+			__( 'Activity Streams', 'buddypress' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 10,

@@ -1,13 +1,13 @@
 <?php
 
 /**
- * BuddyBoss - Users Plugins
+ * BuddyPress - Users Plugins
  *
  * This is a fallback file that external plugins can use if the template they
  * need is not installed in the current theme. Use the actions in this template
  * to output everything your plugin needs.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage bp-default
  */
 

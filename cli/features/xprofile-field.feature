@@ -1,4 +1,4 @@
-Feature: Manage BuddyBoss XProfile Fields
+Feature: Manage BuddyPress XProfile Fields
 
   Scenario: XProfile Field CRUD Operations
     Given a BP install

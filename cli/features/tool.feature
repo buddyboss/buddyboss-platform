@@ -1,6 +1,6 @@
-Feature: Manage BuddyBoss Tools
+Feature: Manage BuddyPress Tools
 
- Scenario: BuddyBoss repair
+ Scenario: BuddyPress repair
     Given a BP install
 
     When I run `wp bp tool repair friend-count`

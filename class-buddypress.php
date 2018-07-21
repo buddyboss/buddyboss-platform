@@ -737,7 +737,7 @@ class BuddyPress {
 		// Register the default theme compatibility package
 		bp_register_theme_package( array(
 			'id'      => 'legacy',
-			'name'    => __( 'BuddyBoss Legacy', 'buddypress' ),
+			'name'    => __( 'BuddyPress Legacy', 'buddypress' ),
 			'version' => bp_get_version(),
 			'dir'     => trailingslashit( $this->themes_dir . '/bp-legacy' ),
 			'url'     => trailingslashit( $this->themes_url . '/bp-legacy' )
@@ -745,7 +745,7 @@ class BuddyPress {
 
 		bp_register_theme_package( array(
 			'id'      => 'nouveau',
-			'name'    => __( 'BuddyBoss Nouveau', 'buddypress' ),
+			'name'    => __( 'BuddyPress Nouveau', 'buddypress' ),
 			'version' => bp_get_version(),
 			'dir'     => trailingslashit( $this->themes_dir . '/bp-nouveau' ),
 			'url'     => trailingslashit( $this->themes_url . '/bp-nouveau' )

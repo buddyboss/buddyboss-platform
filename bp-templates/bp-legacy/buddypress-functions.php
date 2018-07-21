@@ -4,7 +4,7 @@
  *
  * @since 1.7.0
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage BP_Theme_Compat
  * @version 3.1.0
  */
@@ -17,10 +17,10 @@ defined( 'ABSPATH' ) || exit;
 if ( !class_exists( 'BP_Legacy' ) ) :
 
 /**
- * Loads BuddyBoss Legacy Theme functionality.
+ * Loads BuddyPress Legacy Theme functionality.
  *
  * This is not a real theme by WordPress standards, and is instead used as the
- * fallback for any WordPress theme that does not have BuddyBoss templates in it.
+ * fallback for any WordPress theme that does not have BuddyPress templates in it.
  *
  * To make your custom theme BuddyPress compatible and customize the templates, you
  * can copy these files into your theme without needing to merge anything
@@ -30,7 +30,7 @@ if ( !class_exists( 'BP_Legacy' ) ) :
  *
  * @since 1.7.0
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage BP_Theme_Compat
  */
 class BP_Legacy extends BP_Theme_Compat {
@@ -58,7 +58,7 @@ class BP_Legacy extends BP_Theme_Compat {
 	protected function setup_globals() {
 		$bp            = buddypress();
 		$this->id      = 'legacy';
-		$this->name    = __( 'BuddyBoss Legacy', 'buddypress' );
+		$this->name    = __( 'BuddyPress Legacy', 'buddypress' );
 		$this->version = bp_get_version();
 		$this->dir     = trailingslashit( $bp->themes_dir . '/bp-legacy' );
 		$this->url     = trailingslashit( $bp->themes_url . '/bp-legacy' );
@@ -487,7 +487,7 @@ class BP_Legacy extends BP_Theme_Compat {
 	}
 
 	/**
-	 * Add secondary avatar image to this activity feed's record, if supported.
+	 * Add secondary avatar image to this activity stream's record, if supported.
 	 *
 	 * @since 1.7.0
 	 *
@@ -696,7 +696,7 @@ function bp_legacy_theme_ajax_querystring( $query_string, $object ) {
 	 * default params passed to the template loop.
 	 */
 
-	// Activity feed filtering on action.
+	// Activity stream filtering on action.
 	if ( ! empty( $_BP_COOKIE['bp-' . $object . '-filter'] ) && '-1' != $_BP_COOKIE['bp-' . $object . '-filter'] ) {
 		$qs[] = 'type=' . urlencode( $_BP_COOKIE['bp-' . $object . '-filter'] );
 
@@ -719,7 +719,7 @@ function bp_legacy_theme_ajax_querystring( $query_string, $object ) {
 			$qs[] = 'user_id=' . $user_id;
 		}
 
-		// Activity feed scope only on activity directory.
+		// Activity stream scope only on activity directory.
 		if ( 'all' != $_BP_COOKIE['bp-' . $object . '-scope'] && ! bp_displayed_user_id() && ! bp_is_single_item() )
 			$qs[] = 'scope=' . urlencode( $_BP_COOKIE['bp-' . $object . '-scope'] );
 	}
@@ -1174,7 +1174,7 @@ function bp_legacy_theme_spam_activity() {
 		return;
 	}
 
-	// Check that user is logged in, Activity Feeds are enabled, and Akismet is present.
+	// Check that user is logged in, Activity Streams are enabled, and Akismet is present.
 	if ( ! is_user_logged_in() || ! bp_is_active( 'activity' ) || empty( $bp->activity->akismet ) )
 		exit( '-1' );
 

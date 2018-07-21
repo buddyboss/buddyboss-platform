@@ -2,7 +2,7 @@
 /**
  * Deprecated functions
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Core
  * @deprecated 2.2.0
  */
@@ -34,7 +34,7 @@ function bp_blogs_catch_transition_post_status( $new_status, $old_status, $post 
 }
 
 /**
- * Record a new blog post in the BuddyPress activity feed.
+ * Record a new blog post in the BuddyPress activity stream.
  *
  * @deprecated 2.2.0
  *

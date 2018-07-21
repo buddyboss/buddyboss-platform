@@ -1,9 +1,9 @@
 <?php
 
 /**
- * BuddyBoss - Activity Post Form
+ * BuddyPress - Activity Post Form
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage bp-default
  */
 

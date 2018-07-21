@@ -2,7 +2,7 @@
 /**
  * Core attachment class.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Core
  * @since 2.3.0
  */

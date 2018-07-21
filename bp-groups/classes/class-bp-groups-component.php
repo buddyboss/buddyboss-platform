@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Groups Component Class.
+ * BuddyPress Groups Component Class.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage GroupsLoader
  * @since 1.5.0
  */

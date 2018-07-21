@@ -2,7 +2,7 @@
 /**
  * Core BuddyPress Navigational Functions.
  *
- * @package BuddyBoss
+ * @package BuddyPress
  * @subpackage Core
  * @since 1.5.0
  *

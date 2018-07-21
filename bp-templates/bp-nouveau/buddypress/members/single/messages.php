@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Users Messages
+ * BuddyPress - Users Messages
  *
  * @version 3.0.0
  */
