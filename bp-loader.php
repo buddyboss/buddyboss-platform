@@ -2,7 +2,7 @@
 /**
  * The BuddyBoss Platform.
  *
- * BuddyBoss is social networking software with a twist from the creators of WordPress.
+ * BuddyBoss is social networking software with a twist.
  *
  * @package BuddyBoss
  * @subpackage Main
@@ -16,7 +16,7 @@
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
  * Version:     3.1.0
- * Text Domain: buddypress
+ * Text Domain: buddyboss
  * Domain Path: /bp-languages/
  * License:     GPLv2 or later (license.txt)
  */
