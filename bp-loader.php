@@ -1,8 +1,8 @@
 <?php
 /**
- * The BuddyPress Plugin.
+ * The BuddyBoss Platform.
  *
- * BuddyPress is social networking software with a twist from the creators of WordPress.
+ * BuddyBoss is social networking software with a twist from the creators of WordPress.
  *
  * @package BuddyPress
  * @subpackage Main
@@ -10,11 +10,11 @@
  */
 
 /**
- * Plugin Name: BuddyPress
- * Plugin URI:  https://buddypress.org/
- * Description: BuddyPress adds community features to WordPress. Member Profiles, Activity Streams, Direct Messaging, Notifications, and more!
- * Author:      The BuddyPress Community
- * Author URI:  https://buddypress.org/
+ * Plugin Name: BuddyBoss Platform
+ * Plugin URI:  https://buddyboss.org/
+ * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Streams, Direct Messaging, Notifications, and more!
+ * Author:      BuddyBoss
+ * Author URI:  https://buddyboss.org/
  * Version:     3.1.0
  * Text Domain: buddypress
  * Domain Path: /bp-languages/
@@ -76,11 +76,11 @@ if ( version_compare( phpversion(), BP_REQUIRED_PHP_VERSION, '<' ) ) {
 	require dirname( __FILE__ ) . '/class-buddypress.php';
 
 	/*
-	 * Hook BuddyPress early onto the 'plugins_loaded' action.
+	 * Hook BuddyBoss early onto the 'plugins_loaded' action.
 	 *
-	 * This gives all other plugins the chance to load before BuddyPress,
+	 * This gives all other plugins the chance to load before BuddyBoss,
 	 * to get their actions, filters, and overrides setup without
-	 * BuddyPress being in the way.
+	 * BuddyBoss being in the way.
 	 */
 	if ( defined( 'BUDDYPRESS_LATE_LOAD' ) ) {
 		add_action( 'plugins_loaded', 'buddypress', (int) BUDDYPRESS_LATE_LOAD );
