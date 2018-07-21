@@ -7,7 +7,7 @@ if ( bp_has_profile( 'profile_group_id=' . bp_get_current_profile_group_id() ) )
 
 	<?php do_action( 'bp_before_profile_field_content' ); ?>
 
-		<h4><?php printf( __( "Editing '%s' Profile Group", "buddypress" ), bp_get_the_profile_group_name() ); ?></h4>
+		<h4><?php printf( __( "Editing '%s' Profile Group", "buddyboss" ), bp_get_the_profile_group_name() ); ?></h4>
 
 		<ul class="button-nav">
 
