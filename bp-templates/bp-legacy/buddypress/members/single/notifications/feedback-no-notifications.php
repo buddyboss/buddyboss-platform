@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Members Feedback No Notifications
+ * BuddyBoss - Members Feedback No Notifications
  *
  * @package BuddyBoss
  * @subpackage bp-legacy

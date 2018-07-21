@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Group Invites Loop
+ * BuddyBoss - Group Invites Loop
  *
  * @package BuddyBoss
  * @subpackage bp-legacy

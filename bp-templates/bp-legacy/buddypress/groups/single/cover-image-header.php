@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Groups Cover Image Header.
+ * BuddyBoss - Groups Cover Image Header.
  *
  * @package BuddyBoss
  * @subpackage bp-legacy

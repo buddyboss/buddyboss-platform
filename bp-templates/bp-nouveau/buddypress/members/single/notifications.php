@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Users Notifications
+ * BuddyBoss - Users Notifications
  *
  * @since 3.0.0
  * @version 3.0.0

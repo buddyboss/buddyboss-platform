@@ -1,7 +1,7 @@
 <?php
 
 /**
- * BuddyPress - Create Group
+ * BuddyBoss - Create Group
  *
  * @package BuddyBoss
  * @subpackage bp-default

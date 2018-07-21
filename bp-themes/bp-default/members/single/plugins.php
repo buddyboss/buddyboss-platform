@@ -1,7 +1,7 @@
 <?php
 
 /**
- * BuddyPress - Users Plugins
+ * BuddyBoss - Users Plugins
  *
  * This is a fallback file that external plugins can use if the template they
  * need is not installed in the current theme. Use the actions in this template

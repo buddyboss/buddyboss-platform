@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Members Settings ( Delete Account )
+ * BuddyBoss - Members Settings ( Delete Account )
  *
  * @since 3.0.0
  * @version 3.1.0

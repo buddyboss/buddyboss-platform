@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Members Settings Delete Account
+ * BuddyBoss - Members Settings Delete Account
  *
  * @package BuddyBoss
  * @subpackage bp-legacy

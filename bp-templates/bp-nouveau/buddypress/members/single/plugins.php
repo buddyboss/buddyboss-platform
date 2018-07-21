@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Users Plugins Template
+ * BuddyBoss - Users Plugins Template
  *
  * 3rd-party plugins should use this template to easily add template
  * support to their plugins for the members component.

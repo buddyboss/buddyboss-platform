@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Members Profile Loop
+ * BuddyBoss - Members Profile Loop
  *
  * @since 3.0.0
  * @version 3.1.0

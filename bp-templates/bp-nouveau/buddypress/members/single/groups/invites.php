@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Members Single Group Invites
+ * BuddyBoss - Members Single Group Invites
  *
  * @since 3.0.0
  * @version 3.1.0

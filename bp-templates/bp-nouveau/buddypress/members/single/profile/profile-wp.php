@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Members Single Profile WP
+ * BuddyBoss - Members Single Profile WP
  *
  * @since 3.0.0
  * @version 3.1.0

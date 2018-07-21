@@ -1,7 +1,7 @@
 <?php
 
 /**
- * BuddyPress - Users Forums
+ * BuddyBoss - Users Forums
  *
  * @package BuddyBoss
  * @subpackage bp-default

@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Groups Admin - Delete Group
+ * BuddyBoss - Groups Admin - Delete Group
  *
  * @package BuddyBoss
  * @subpackage bp-legacy
