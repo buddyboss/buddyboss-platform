@@ -621,7 +621,7 @@ function bp_disable_account_deletion( $default = false ) {
 }
 
 /**
- * Are post/comment activity stream comments disabled?
+ * Are post/comment activity feed comments disabled?
  *
  * @since 1.6.0
  *
@@ -635,11 +635,11 @@ function bp_disable_account_deletion( $default = false ) {
 function bp_disable_blogforum_comments( $default = false ) {
 
 	/**
-	 * Filters whether or not blog and forum activity stream comments are disabled.
+	 * Filters whether or not blog and forum activity feed comments are disabled.
 	 *
 	 * @since 1.6.0
 	 *
-	 * @param bool $value Whether or not blog and forum activity stream comments are disabled.
+	 * @param bool $value Whether or not blog and forum activity feed comments are disabled.
 	 */
 	return (bool) apply_filters( 'bp_disable_blogforum_comments', (bool) bp_get_option( 'bp-disable-blogforum-comments', $default ) );
 }

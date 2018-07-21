@@ -1,6 +1,6 @@
 === BuddyPress ===
 Contributors: johnjamesjacoby, DJPaul, boonebgorges, r-a-y, imath, mercime, tw2113, dcavins, hnla, karmatosed, slaFFik, dimensionmedia, henrywright, netweb, offereins, espellcaste, modemlooper, danbp, Venutius, apeatling, shanebp
-Tags: user profiles, activity streams, messaging, friends, user groups, notifications, community, social networking
+Tags: user profiles, activity feeds, messaging, friends, user groups, notifications, community, social networking
 Requires at least: 4.5
 Tested up to: 4.9.6
 Requires PHP: 5.3
@@ -8,7 +8,7 @@ Stable tag: 3.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-BuddyPress helps site builders & developers add community features to their websites, with user profiles, activity streams, and more!
+BuddyPress helps site builders & developers add community features to their websites, with user profiles, activity feeds, and more!
 
 == Description ==
 
@@ -115,13 +115,13 @@ Try <a href="https://wordpress.org/plugins/bbpress/">bbPress</a>. It integrates 
 
 == Screenshots ==
 
-1. **Activity Feeds** - Global, personal, and group activity streams with threaded commenting, direct posting, favoriting and @mentions. All with full RSS feeds and email notification support.
+1. **Activity Feeds** - Global, personal, and group activity feeds with threaded commenting, direct posting, favoriting and @mentions. All with full RSS feeds and email notification support.
 2. **Extended Profiles** - Fully editable profile fields allow you to define the fields users can fill in to describe themselves. Tailor profile fields to suit your audience.
 3. **User Settings** - Give your users complete control over profile and notification settings. Settings are fully integrated into your theme, and can be disabled by the administrator.
 4. **Extensible Groups** - Powerful public, private or hidden groups allow your users to break the discussion down into specific topics. Extend groups with your own custom features using the group extension API.
 5. **Friend Connections** - Let your users make connections so they can track the activity of others, or filter to show only those users they care about the most.
 6. **Private Messaging** - Private messaging will allow your users to talk to each other directly and in private. Not just limited to one-on-one discussions, your users can send messages to multiple recipients.
-7. **Site Tracking** - Track posts and comments in the activity stream, and allow your users to add their own blogs using WordPress' Multisite feature.
+7. **Site Tracking** - Track posts and comments in the activity feed, and allow your users to add their own blogs using WordPress' Multisite feature.
 8. **Notifications** - Keep your members up-to-date with relevant activity via toolbar and email notifications.
 
 == Upgrade Notice ==

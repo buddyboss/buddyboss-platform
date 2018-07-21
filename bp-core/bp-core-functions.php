@@ -2478,7 +2478,7 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'activity' => array(
 			'title'       => __( 'Activity Feeds', 'buddypress' ),
-			'description' => __( 'Global, personal, and group activity streams with threaded commenting, direct posting, favoriting, and @mentions, all with full RSS feed and email notification support.', 'buddypress' )
+			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, favoriting, and @mentions, all with full RSS feed and email notification support.', 'buddypress' )
 		),
 		'notifications' => array(
 			'title'       => __( 'Notifications', 'buddypress' ),
@@ -2486,7 +2486,7 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'groups'   => array(
 			'title'       => __( 'User Groups', 'buddypress' ),
-			'description' => __( 'Groups allow your users to organize themselves into specific public, private or hidden sections with separate activity streams and member listings.', 'buddypress' )
+			'description' => __( 'Groups allow your users to organize themselves into specific public, private or hidden sections with separate activity feeds and member listings.', 'buddypress' )
 		),
 		'blogs'    => array(
 			'title'       => __( 'Site Tracking', 'buddypress' ),

@@ -47,13 +47,13 @@ function bp_activity_action_permalink_router() {
 		// Activity is something else.
 		} else {
 
-			// Set redirect to group activity stream.
+			// Set redirect to group activity feed.
 			if ( $group = groups_get_group( $activity->item_id ) ) {
 				$redirect = bp_get_group_permalink( $group ) . bp_get_activity_slug() . '/' . $activity->id . '/';
 			}
 		}
 
-	// Set redirect to users' activity stream.
+	// Set redirect to users' activity feed.
 	} elseif ( ! empty( $activity->user_id ) ) {
 		$redirect = bp_core_get_user_domain( $activity->user_id, $activity->user_nicename, $activity->user_login ) . bp_get_activity_slug() . '/' . $activity->id . '/';
 	}

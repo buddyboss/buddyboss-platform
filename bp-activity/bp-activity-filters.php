@@ -121,7 +121,7 @@ add_action( 'bp_activity_before_save', 'bp_activity_check_blacklist_keys',  2, 1
 /** Functions *****************************************************************/
 
 /**
- * Types of activity stream items to moderate.
+ * Types of activity feed items to moderate.
  *
  * @since 1.6.0
  *
@@ -379,7 +379,7 @@ function bp_activity_make_nofollow_filter( $text ) {
 	}
 
 /**
- * Truncate long activity entries when viewed in activity streams.
+ * Truncate long activity entries when viewed in activity feeds.
  *
  * This method can only be used inside the Activity loop.
  *
@@ -473,7 +473,7 @@ add_filter( 'bp_core_get_js_dependencies', 'bp_activity_get_js_dependencies', 10
  * Add a just-posted classes to the most recent activity item.
  *
  * We use these classes to avoid pagination issues when items are loaded
- * dynamically into the activity stream.
+ * dynamically into the activity feed.
  *
  * @since 2.0.0
  *

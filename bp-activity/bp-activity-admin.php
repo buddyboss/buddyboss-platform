@@ -557,7 +557,7 @@ function bp_activity_admin_load() {
 		// Save.
 		$result = $activity->save();
 
-		// Clear the activity stream first page cache, in case this activity's timestamp was changed.
+		// Clear the activity feed first page cache, in case this activity's timestamp was changed.
 		wp_cache_delete( 'bp_activity_sitewide_front', 'bp' );
 
 		// Check for any error during activity save.

@@ -487,7 +487,7 @@ class BP_Legacy extends BP_Theme_Compat {
 	}
 
 	/**
-	 * Add secondary avatar image to this activity stream's record, if supported.
+	 * Add secondary avatar image to this activity feed's record, if supported.
 	 *
 	 * @since 1.7.0
 	 *
