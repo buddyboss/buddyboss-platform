@@ -902,7 +902,7 @@ jq(document).ready( function() {
 		};
 	});
 
-	/** Friendship Requests **************************************/
+	/** Connection Requests **************************************/
 
 	/* Accept and Reject friendship request buttons */
 	jq("ul#friend-list a.accept, ul#friend-list a.reject").click( function() {

@@ -8,7 +8,7 @@
  */
 
 /**
- * Catch and process friendship requests.
+ * Catch and process connection requests.
  *
  * @since 1.0.1
  */

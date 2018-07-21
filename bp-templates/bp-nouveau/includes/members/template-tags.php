@@ -277,7 +277,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 		}
 
 		if ( bp_is_active( 'friends' ) ) {
-			// It's the member's friendship requests screen
+			// It's the member's connection requests screen
 			if ( 'friendship_request' === $type ) {
 				$buttons = array(
 					'accept_friendship' => array(

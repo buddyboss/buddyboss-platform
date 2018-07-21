@@ -452,7 +452,7 @@ class BP_Friends_Friendship {
 	 * @since 1.2.0
 	 *
 	 * @param int $user_id The ID of the user who has received the
-	 *                     friendship requests.
+	 *                     connection requests.
 	 * @return array|bool An array of user IDs, or false if none are found.
 	 */
 	public static function get_friendship_request_user_ids( $user_id ) {

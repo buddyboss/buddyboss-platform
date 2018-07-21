@@ -38,7 +38,7 @@ function friends_format_notifications( $action, $item_id, $secondary_item_id, $t
 
 			// Set up the string and the filter.
 			if ( (int) $total_items > 1 ) {
-				$text = sprintf( __( '%d friends accepted your friendship requests', 'buddyboss' ), (int) $total_items );
+				$text = sprintf( __( '%d friends accepted your connection requests', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
 				$text = sprintf( __( '%s accepted your friendship request', 'buddyboss' ),  bp_core_get_user_displayname( $item_id ) );
@@ -54,7 +54,7 @@ function friends_format_notifications( $action, $item_id, $secondary_item_id, $t
 
 			// Set up the string and the filter.
 			if ( (int) $total_items > 1 ) {
-				$text = sprintf( __( 'You have %d pending friendship requests', 'buddyboss' ), (int) $total_items );
+				$text = sprintf( __( 'You have %d pending connection requests', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
 				$text = sprintf( __( 'You have a friendship request from %s', 'buddyboss' ),  bp_core_get_user_displayname( $item_id ) );
@@ -220,7 +220,7 @@ function bp_friends_mark_friendship_withdrawn_notifications_by_item_id( $friends
 add_action( 'friends_friendship_withdrawn', 'bp_friends_mark_friendship_withdrawn_notifications_by_item_id', 10, 2 );
 
 /**
- * Remove friendship requests FROM user, used primarily when a user is deleted.
+ * Remove connection requests FROM user, used primarily when a user is deleted.
  *
  * @since 1.9.0
  *

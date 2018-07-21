@@ -1178,7 +1178,7 @@ jq(document).ready( function() {
 		};
 	});
 
-	/** Friendship Requests **************************************/
+	/** Connection Requests **************************************/
 
 	/* Accept and Reject friendship request buttons */
 	jq('#friend-list a.accept, #friend-list a.reject').on( 'click', function() {

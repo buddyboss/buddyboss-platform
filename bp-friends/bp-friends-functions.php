@@ -397,7 +397,7 @@ function friends_search_friends( $search_terms, $user_id, $pag_num = 10, $pag_pa
  *
  * @since 1.2.0
  *
- * @param int $user_id The ID of the user who has received the friendship requests.
+ * @param int $user_id The ID of the user who has received the connection requests.
  * @return array|bool An array of user IDs, or false if none are found.
  */
 function friends_get_friendship_request_user_ids( $user_id ) {
@@ -726,9 +726,9 @@ function friends_update_friend_totals( $initiator_user_id, $friend_user_id, $sta
  *
  * Removes the following:
  *
- * - Friendships of which the user is a member.
+ * - Connections of which the user is a member.
  * - Cached friend count for the user.
- * - Notifications of friendship requests sent by the user.
+ * - Notifications of connection requests sent by the user.
  *
  * @since 1.0.0
  *

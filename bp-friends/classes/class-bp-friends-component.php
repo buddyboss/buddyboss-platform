@@ -191,7 +191,7 @@ class BP_Friends_Component extends BP_Component {
 
 		// Add the subnav items to the friends nav item.
 		$sub_nav[] = array(
-			'name'            => _x( 'Friendships', 'Friends screen sub nav', 'buddyboss' ),
+			'name'            => _x( 'Connections', 'Friends screen sub nav', 'buddyboss' ),
 			'slug'            => 'my-friends',
 			'parent_url'      => $friends_link,
 			'parent_slug'     => $slug,
@@ -261,7 +261,7 @@ class BP_Friends_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-friendships',
-				'title'    => _x( 'Friendships', 'My Account Friends menu sub nav', 'buddyboss' ),
+				'title'    => _x( 'Connections', 'My Account Friends menu sub nav', 'buddyboss' ),
 				'href'     => $friends_link,
 				'position' => 10
 			);
@@ -291,7 +291,7 @@ class BP_Friends_Component extends BP_Component {
 			$bp = buddypress();
 
 			if ( bp_is_my_profile() ) {
-				$bp->bp_options_title = __( 'Friendships', 'buddyboss' );
+				$bp->bp_options_title = __( 'Connections', 'buddyboss' );
 			} else {
 				$bp->bp_options_avatar = bp_core_fetch_avatar( array(
 					'item_id' => bp_displayed_user_id(),

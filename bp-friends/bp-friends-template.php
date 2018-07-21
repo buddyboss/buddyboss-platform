@@ -458,7 +458,7 @@ function bp_get_friend_ids( $user_id = 0 ) {
 }
 
 /**
- * Get a user's friendship requests.
+ * Get a user's connection requests.
  *
  * Note that we return a 0 if no pending requests are found. This is necessary
  * because of the structure of the $include parameter in bp_has_members().
@@ -487,7 +487,7 @@ function bp_get_friendship_requests( $user_id = 0 ) {
 	}
 
 	/**
-	 * Filters the total pending friendship requests for a user.
+	 * Filters the total pending connection requests for a user.
 	 *
 	 * @since 1.2.0
 	 * @since 2.6.0 Added the `$user_id` parameter.

@@ -105,7 +105,7 @@ do_action( 'bp_before_member_friend_requests_content' ); ?>
 <?php else: ?>
 
 	<div id="message" class="info">
-		<p><?php _e( 'You have no pending friendship requests.', 'buddyboss' ); ?></p>
+		<p><?php _e( 'You have no pending connection requests.', 'buddyboss' ); ?></p>
 	</div>
 
 <?php endif;?>

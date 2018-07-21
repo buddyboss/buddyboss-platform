@@ -3440,7 +3440,7 @@ msgid "%1$s and %2$s are now friends"
 msgstr ""
 
 #: bp-friends/bp-friends-notifications.php:41
-msgid "%d friends accepted your friendship requests"
+msgid "%d friends accepted your connection requests"
 msgstr ""
 
 #: bp-friends/bp-friends-notifications.php:44
@@ -3448,7 +3448,7 @@ msgid "%s accepted your friendship request"
 msgstr ""
 
 #: bp-friends/bp-friends-notifications.php:57
-msgid "You have %d pending friendship requests"
+msgid "You have %d pending connection requests"
 msgstr ""
 
 #: bp-friends/bp-friends-notifications.php:60
@@ -6772,7 +6772,7 @@ msgstr ""
 
 #: bp-templates/bp-legacy/buddypress/members/single/friends/requests.php:108
 #: bp-templates/bp-nouveau/includes/functions.php:1017
-msgid "You have no pending friendship requests."
+msgid "You have no pending connection requests."
 msgstr ""
 
 #: bp-templates/bp-legacy/buddypress/members/single/friends.php:59
@@ -7455,7 +7455,7 @@ msgid "You can set the preferences of the %1$s or add %2$s to it."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/friends/requests.php:10
-msgid "Friendship Requests"
+msgid "Connection Requests"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/friends.php:10
@@ -7830,11 +7830,11 @@ msgid "Friendship cancelled."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/friends/loader.php:101
-msgid "Accepted friendship requests"
+msgid "Accepted connection requests"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/friends/loader.php:106
-msgid "Pending friendship requests"
+msgid "Pending connection requests"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:319

@@ -1137,7 +1137,7 @@ class BP_Notifications_Notification {
 	 *
 	 * Multiple notifications of the same type (those that share the same component_name
 	 * and component_action) are collapsed for formatting as "You have 5 pending
-	 * friendship requests", etc. See bp_notifications_get_notifications_for_user().
+	 * connection requests", etc. See bp_notifications_get_notifications_for_user().
 	 * For a full-fidelity list of user notifications, use
 	 * bp_notifications_get_all_notifications_for_user().
 	 *
