@@ -2461,7 +2461,7 @@ function bp_core_get_components( $type = 'all' ) {
 
 	$optional_components = array(
 		'xprofile' => array(
-			'title'       => __( 'Extended Profiles', 'buddypress' ),
+			'title'       => __( 'Profiles Fields', 'buddypress' ),
 			'description' => __( 'Customize your community with fully editable profile fields that allow your users to describe themselves.', 'buddypress' )
 		),
 		'settings' => array(

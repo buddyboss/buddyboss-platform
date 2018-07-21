@@ -1178,7 +1178,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:67
 #: bp-core/bp-core-functions.php:2464
-msgid "Extended Profiles"
+msgid "Profiles Fields"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:68
@@ -2863,7 +2863,7 @@ msgstr ""
 
 #: bp-core/classes/class-bp-admin.php:638
 msgid ""
-"A new telephone number field type has been added to the Extended Profiles "
+"A new telephone number field type has been added to the Profiles Fields "
 "component, with support for all international number formats. With a modern "
 "web browser, your members can use this field type to touch-to-dial a number "
 "directly."
@@ -10432,7 +10432,7 @@ msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-component.php:49
 msgctxt "Component page <title>"
-msgid "Extended Profiles"
+msgid "Profiles Fields"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-component.php:181

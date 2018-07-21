@@ -116,7 +116,7 @@ Try <a href="https://wordpress.org/plugins/bbpress/">bbPress</a>. It integrates 
 == Screenshots ==
 
 1. **Activity Feeds** - Global, personal, and group activity feeds with threaded commenting, direct posting, favoriting and @mentions. All with full RSS feeds and email notification support.
-2. **Extended Profiles** - Fully editable profile fields allow you to define the fields users can fill in to describe themselves. Tailor profile fields to suit your audience.
+2. **Profiles Fields** - Fully editable profile fields allow you to define the fields users can fill in to describe themselves. Tailor profile fields to suit your audience.
 3. **User Settings** - Give your users complete control over profile and notification settings. Settings are fully integrated into your theme, and can be disabled by the administrator.
 4. **Extensible Groups** - Powerful public, private or hidden groups allow your users to break the discussion down into specific topics. Extend groups with your own custom features using the group extension API.
 5. **Friend Connections** - Let your users make connections so they can track the activity of others, or filter to show only those users they care about the most.
