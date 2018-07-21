@@ -1,4 +1,4 @@
-Feature: Manage BuddyPress Emails
+Feature: Manage BuddyBoss Emails
 
   Scenario: BuddyPress reinstall emails
     Given a BP install

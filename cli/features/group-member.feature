@@ -1,4 +1,4 @@
-Feature: Manage BuddyPress Group Members
+Feature: Manage BuddyBoss Group Members
 
   Scenario: Group Member CRUD Operations
     Given a BP install

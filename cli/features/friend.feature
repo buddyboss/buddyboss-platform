@@ -1,4 +1,4 @@
-Feature: Manage BuddyPress Friends
+Feature: Manage BuddyBoss Friends
 
   Scenario: Friends CRUD Operations
     Given a BP install

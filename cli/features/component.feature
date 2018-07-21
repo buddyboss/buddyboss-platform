@@ -1,4 +1,4 @@
-Feature: Manage BuddyPress Components
+Feature: Manage BuddyBoss Components
 
   Scenario: Component CRUD Operations
     Given a BP install

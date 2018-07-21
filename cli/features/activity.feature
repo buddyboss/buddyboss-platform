@@ -1,4 +1,4 @@
-Feature: Manage BuddyPress Activities
+Feature: Manage BuddyBoss Activities
 
   Scenario: Activity CRUD Operations
     Given a BP install

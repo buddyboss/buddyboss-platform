@@ -1,4 +1,4 @@
-Feature: Manage BuddyPress Group Invites
+Feature: Manage BuddyBoss Group Invites
 
   Scenario: Group Invite CRUD Operations
     Given a BP install
