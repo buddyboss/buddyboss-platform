@@ -7447,11 +7447,11 @@ msgid "Sites menu"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/default-front.php:15
-msgid "Configure a default Member Dashboard"
+msgid "Configure a Dashboard to help onboard members"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/default-front.php:19
-msgid "You can set the preferences of the %1$s or add %2$s to it."
+msgid "You can enable or disable the %1$s or add %2$s to it."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/friends/requests.php:10
@@ -7738,7 +7738,7 @@ msgid "Member Dashboard"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:49
-msgid "Configure a Dashboard to help onboard members."
+msgid "Configure a Dashboard to help onboard members"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:52
