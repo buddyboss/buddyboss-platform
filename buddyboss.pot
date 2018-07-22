@@ -7546,11 +7546,11 @@ msgid "I want to restrict Group invites to my friends only."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:12
-msgid "Email Notifications"
+msgid "Email Preferences"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/notifications.php:16
-msgid "Set your email notification preferences."
+msgid "Choose what type of emails you wish to receive."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:12

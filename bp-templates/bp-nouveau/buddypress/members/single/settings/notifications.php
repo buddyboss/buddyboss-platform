@@ -9,11 +9,11 @@
 bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 
 <h2 class="screen-heading email-settings-screen">
-	<?php _e( 'Email Notifications', 'buddyboss' ); ?>
+	<?php _e( 'Email Preferences', 'buddyboss' ); ?>
 </h2>
 
 <p class="bp-help-text email-notifications-info">
-	<?php _e( 'Set your email notification preferences.', 'buddyboss' ); ?>
+	<?php _e( 'Choose what type of emails you wish to receive.', 'buddyboss' ); ?>
 </p>
 
 <form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/notifications' ); ?>" method="post" class="standard-form" id="settings-form">
