@@ -281,7 +281,7 @@ class BP_XProfile_Component extends BP_Component {
 		// Change Avatar.
 		if ( buddypress()->avatar->show_avatars ) {
 			$sub_nav[] = array(
-				'name'            => _x( 'Change Profile Photo', 'Profile header sub menu', 'buddyboss' ),
+				'name'            => _x( 'Profile Photo', 'Profile header sub menu', 'buddyboss' ),
 				'slug'            => 'change-avatar',
 				'parent_url'      => $profile_link,
 				'parent_slug'     => $slug,
@@ -294,7 +294,7 @@ class BP_XProfile_Component extends BP_Component {
 		// Change Cover image.
 		if ( bp_displayed_user_use_cover_image_header() ) {
 			$sub_nav[] = array(
-				'name'            => _x( 'Change Cover Image', 'Profile header sub menu', 'buddyboss' ),
+				'name'            => _x( 'Cover Image', 'Profile header sub menu', 'buddyboss' ),
 				'slug'            => 'change-cover-image',
 				'parent_url'      => $profile_link,
 				'parent_slug'     => $slug,
@@ -393,7 +393,7 @@ class BP_XProfile_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-change-avatar',
-					'title'    => _x( 'Change Profile Photo', 'My Account Profile sub nav', 'buddyboss' ),
+					'title'    => _x( 'Profile Photo', 'My Account Profile sub nav', 'buddyboss' ),
 					'href'     => trailingslashit( $profile_link . 'change-avatar' ),
 					'position' => 30
 				);
@@ -403,7 +403,7 @@ class BP_XProfile_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-change-cover-image',
-					'title'    => _x( 'Change Cover Image', 'My Account Profile sub nav', 'buddyboss' ),
+					'title'    => _x( 'Cover Image', 'My Account Profile sub nav', 'buddyboss' ),
 					'href'     => trailingslashit( $profile_link . 'change-cover-image' ),
 					'position' => 40
 				);
