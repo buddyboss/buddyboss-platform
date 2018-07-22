@@ -178,7 +178,7 @@ class BP_XProfile_Component extends BP_Component {
 		$this->visibility_levels = array(
 			'public' => array(
 				'id'	  => 'public',
-				'label' => _x( 'Everyone', 'Visibility level setting', 'buddyboss' )
+				'label' => _x( 'Public', 'Visibility level setting', 'buddyboss' )
 			),
 			'adminsonly' => array(
 				'id'	  => 'adminsonly',

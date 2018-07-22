@@ -17,8 +17,7 @@ if ( empty( $GLOBALS['profile_template'] ) ) {
 
 		<?php
 		printf(
-			/* translators: field visibility level, e.g. "...seen by: everyone". */
-			__( 'This field may be seen by: %s', 'buddyboss' ),
+			/* translators: field visibility level, e.g. "public". */
 			'<span class="current-visibility-level">' . bp_get_the_profile_field_visibility_level_label() . '</span>'
 		);
 		?>
@@ -41,7 +40,6 @@ if ( empty( $GLOBALS['profile_template'] ) ) {
 	<p class="field-visibility-settings-notoggle field-visibility-settings-header" id="field-visibility-settings-toggle-<?php bp_the_profile_field_id(); ?>">
 		<?php
 		printf(
-			esc_html__( 'This field may be seen by: %s', 'buddyboss' ),
 			'<span class="current-visibility-level">' . bp_get_the_profile_field_visibility_level_label() . '</span>'
 		);
 		?>
