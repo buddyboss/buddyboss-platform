@@ -1374,7 +1374,7 @@ function bp_send_private_message_link() {
 	}
 
 /**
- * Output the 'Private Message' button for member profile headers.
+ * Output the 'Message' button for member profile headers.
  *
  * Explicitly named function to avoid confusion with public messages.
  *
@@ -1386,7 +1386,7 @@ function bp_send_private_message_button() {
 }
 
 /**
- * Output the 'Private Message' button for member profile headers.
+ * Output the 'Message' button for member profile headers.
  *
  * @since 1.2.0
  * @since 3.0.0 Added `$args` parameter.
@@ -1397,7 +1397,7 @@ function bp_send_message_button( $args = '' ) {
 	echo bp_get_send_message_button( $args );
 }
 	/**
-	 * Generate the 'Private Message' button for member profile headers.
+	 * Generate the 'Message' button for member profile headers.
 	 *
 	 * @since 1.2.0
 	 * @since 3.0.0 Added `$args` parameter.
@@ -1412,7 +1412,7 @@ function bp_send_message_button( $args = '' ) {
 	 *     @type string $wrapper_id        Default: 'send-private-message'.
 	 *     @type string $link_href         Default: the private message link for
 	 *                                     the current member in the loop.
-	 *     @type string $link_text         Default: 'Private Message'.
+	 *     @type string $link_text         Default: 'Message'.
 	 *     @type string $link_class        Default: 'send-message'.
 	 * }
 	 * @return string
@@ -1426,7 +1426,7 @@ function bp_send_message_button( $args = '' ) {
 			'block_self'        => true,
 			'wrapper_id'        => 'send-private-message',
 			'link_href'         => bp_get_send_private_message_link(),
-			'link_text'         => __( 'Private Message', 'buddyboss' ),
+			'link_text'         => __( 'Message', 'buddyboss' ),
 			'link_class'        => 'send-message',
 		) );
 
