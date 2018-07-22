@@ -7,7 +7,7 @@
  */
 ?>
 
-<h2 class="screen-heading friendship-requests-screen"><?php esc_html_e( 'Connection Requests', 'buddyboss' ); ?></h2>
+<h2 class="screen-heading friendship-requests-screen"><?php esc_html_e( 'Invitations to Connect', 'buddyboss' ); ?></h2>
 
 <?php bp_nouveau_member_hook( 'before', 'friend_requests_content' ); ?>
 

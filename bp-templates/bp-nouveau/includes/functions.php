@@ -1014,7 +1014,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		),
 		'member-requests-none' => array(
 			'type'    => 'info',
-			'message' => __( 'You have no pending connection requests.', 'buddyboss' ),
+			'message' => __( 'You have no pending invitations to connect.', 'buddyboss' ),
 		),
 		'member-invites-none' => array(
 			'type'    => 'info',

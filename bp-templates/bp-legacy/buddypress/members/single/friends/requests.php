@@ -61,7 +61,7 @@ do_action( 'bp_before_member_friend_requests_content' ); ?>
 
 				<div class="action">
 					<a class="button accept" href="<?php bp_friend_accept_request_link(); ?>"><?php _e( 'Accept', 'buddyboss' ); ?></a> &nbsp;
-					<a class="button reject" href="<?php bp_friend_reject_request_link(); ?>"><?php _e( 'Reject', 'buddyboss' ); ?></a>
+					<a class="button reject" href="<?php bp_friend_reject_request_link(); ?>"><?php _e( 'Ignore', 'buddyboss' ); ?></a>
 
 					<?php
 
@@ -105,7 +105,7 @@ do_action( 'bp_before_member_friend_requests_content' ); ?>
 <?php else: ?>
 
 	<div id="message" class="info">
-		<p><?php _e( 'You have no pending connection requests.', 'buddyboss' ); ?></p>
+		<p><?php _e( 'You have no pending invitations to connect.', 'buddyboss' ); ?></p>
 	</div>
 
 <?php endif;?>

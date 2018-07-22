@@ -201,7 +201,7 @@ class BP_Friends_Component extends BP_Component {
 		);
 
 		$sub_nav[] = array(
-			'name'            => _x( 'Requests', 'Connections screen sub nav', 'buddyboss' ),
+			'name'            => _x( 'Invitations', 'Connections screen sub nav', 'buddyboss' ),
 			'slug'            => 'requests',
 			'parent_url'      => $friends_link,
 			'parent_slug'     => $slug,
