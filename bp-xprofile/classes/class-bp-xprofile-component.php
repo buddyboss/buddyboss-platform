@@ -337,7 +337,7 @@ class BP_XProfile_Component extends BP_Component {
 		$settings_slug = bp_get_settings_slug();
 
 		bp_core_new_subnav_item( array(
-			'name'            => _x( 'Profile Visibility', 'Profile settings sub nav', 'buddyboss' ),
+			'name'            => _x( 'Privacy', 'Profile settings sub nav', 'buddyboss' ),
 			'slug'            => 'profile',
 			'parent_url'      => trailingslashit( $user_domain . $settings_slug ),
 			'parent_slug'     => $settings_slug,
@@ -483,7 +483,7 @@ class BP_XProfile_Component extends BP_Component {
 		$wp_admin_nav[] = array(
 			'parent' => 'my-account-' . buddypress()->settings->id,
 			'id'     => 'my-account-' . buddypress()->settings->id . '-profile',
-			'title'  => _x( 'Profile', 'My Account Settings sub nav', 'buddyboss' ),
+			'title'  => _x( 'Privacy', 'My Account Settings sub nav', 'buddyboss' ),
 			'href'   => trailingslashit( $settings_link . 'profile' )
 		);
 

@@ -148,7 +148,7 @@ class BP_Settings_Component extends BP_Component {
 
 		// Add General Settings nav item.
 		$sub_nav[] = array(
-			'name'            => __( 'General', 'buddyboss' ),
+			'name'            => __( 'Account', 'buddyboss' ),
 			'slug'            => 'general',
 			'parent_url'      => $settings_link,
 			'parent_slug'     => $slug,
@@ -160,7 +160,7 @@ class BP_Settings_Component extends BP_Component {
 		// Add Email nav item. Formerly called 'Notifications', we
 		// retain the old slug and function names for backward compat.
 		$sub_nav[] = array(
-			'name'            => __( 'Email', 'buddyboss' ),
+			'name'            => __( 'Notifications', 'buddyboss' ),
 			'slug'            => 'notifications',
 			'parent_url'      => $settings_link,
 			'parent_slug'     => $slug,
@@ -225,7 +225,7 @@ class BP_Settings_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-general',
-				'title'    => __( 'General', 'buddyboss' ),
+				'title'    => __( 'Account', 'buddyboss' ),
 				'href'     => $settings_link,
 				'position' => 10
 			);
@@ -235,7 +235,7 @@ class BP_Settings_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-notifications',
-					'title'    => __( 'Email', 'buddyboss' ),
+					'title'    => __( 'Notifications', 'buddyboss' ),
 					'href'     => trailingslashit( $settings_link . 'notifications' ),
 					'position' => 20
 				);
