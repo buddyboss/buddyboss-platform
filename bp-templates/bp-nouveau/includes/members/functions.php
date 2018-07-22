@@ -488,7 +488,7 @@ function bp_nouveau_member_customizer_nav() {
 	if ( bp_displayed_user_get_front_template( buddypress()->loggedin_user ) ) {
 		buddypress()->members->nav->add_nav(
 			array(
-				'name'     => _x( 'Home', 'Member Home page', 'buddyboss' ),
+				'name'     => _x( 'Dashboard', 'Member Home page', 'buddyboss' ),
 				'slug'     => 'front',
 				'position' => 5,
 			)

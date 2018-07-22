@@ -684,7 +684,7 @@ function bp_nouveau_members_get_customizer_option_link() {
 		array(
 			'object'    => 'user',
 			'autofocus' => 'bp_nouveau_user_front_page',
-			'text'      => __( 'Members default front page', 'buddyboss' ),
+			'text'      => __( 'Member Dashboard', 'buddyboss' ),
 		)
 	);
 }
@@ -702,7 +702,7 @@ function bp_nouveau_members_get_customizer_widgets_link() {
 		array(
 			'object'    => 'user',
 			'autofocus' => 'sidebar-widgets-sidebar-buddypress-members',
-			'text'      => __( '(BuddyBoss) Widgets', 'buddyboss' ),
+			'text'      => __( 'widgets (content blocks)', 'buddyboss' ),
 		)
 	);
 }

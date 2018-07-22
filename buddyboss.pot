@@ -7447,7 +7447,7 @@ msgid "Sites menu"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/default-front.php:15
-msgid "Manage the members default front page"
+msgid "Configure a default Member Dashboard"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/default-front.php:19
@@ -8222,11 +8222,11 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/template-tags.php:1300
 #: bp-templates/bp-nouveau/includes/members/template-tags.php:711
-msgid "(BuddyBoss) Widgets"
+msgid "widgets (content blocks)"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/members/template-tags.php:693
-msgid "Members default front page"
+msgid "Member Dashboard"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/members/template-tags.php:785

@@ -353,7 +353,7 @@ class BP_Members_Component extends BP_Component {
 		 */
 		if ( bp_displayed_user_has_front_template() ) {
 			$main_nav = array(
-				'name'                => _x( 'Home', 'Member Home page', 'buddyboss' ),
+				'name'                => _x( 'Dashboard', 'Member Home page', 'buddyboss' ),
 				'slug'                => 'front',
 				'position'            => 5,
 				'screen_function'     => 'bp_members_screen_display_profile',
