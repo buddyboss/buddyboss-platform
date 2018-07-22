@@ -241,12 +241,12 @@ class BP_Friends_Component extends BP_Component {
 				);
 				$pending = sprintf(
 					/* translators: %s: Pending friend request count for the current user */
-					_x( 'Pending Requests %s', 'My Account Connections menu sub nav', 'buddyboss' ),
+					_x( 'Pending Invitations %s', 'My Account Connections menu sub nav', 'buddyboss' ),
 					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 				);
 			} else {
 				$title   = _x( 'Connections',            'My Account Connections menu',         'buddypress' );
-				$pending = _x( 'No Pending Requests','My Account Connections menu sub nav', 'buddyboss' );
+				$pending = _x( 'No Pending Invitations','My Account Connections menu sub nav', 'buddyboss' );
 			}
 
 			// Add the "My Account" sub menus.

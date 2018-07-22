@@ -362,7 +362,7 @@ function bp_activity_screen_notification_settings() {
 		<thead>
 			<tr>
 				<th class="icon">&nbsp;</th>
-				<th class="title"><?php _e( 'Activity', 'buddyboss' ) ?></th>
+				<th class="title"><?php _e( 'Activity Feed', 'buddyboss' ) ?></th>
 				<th class="yes"><?php _e( 'Yes', 'buddyboss' ) ?></th>
 				<th class="no"><?php _e( 'No', 'buddyboss' )?></th>
 			</tr>
