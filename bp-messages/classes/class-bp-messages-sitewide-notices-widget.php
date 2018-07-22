@@ -23,7 +23,7 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 	function __construct() {
 		parent::__construct(
 			'bp_messages_sitewide_notices_widget',
-			__( '(BuddyPress) Sitewide Notices', 'buddyboss' ),
+			__( '(BuddyBoss) Sitewide Notices', 'buddyboss' ),
 			array(
 				'classname'                   => 'widget_bp_core_sitewide_messages buddypress widget',
 				'description'                 => __( 'Display Sitewide Notices posted by the site administrator', 'buddyboss' ),

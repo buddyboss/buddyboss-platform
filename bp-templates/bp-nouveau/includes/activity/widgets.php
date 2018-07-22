@@ -37,7 +37,7 @@ class BP_Latest_Activities extends WP_Widget {
 			)
 		);
 
-		parent::__construct( false, __( '(BuddyPress) Latest Activities', 'buddyboss' ), $widget_ops );
+		parent::__construct( false, __( '(BuddyBoss) Latest Activities', 'buddyboss' ), $widget_ops );
 	}
 
 	/**

@@ -28,7 +28,7 @@ class BP_Groups_Widget extends WP_Widget {
 			'classname'                   => 'widget_bp_groups_widget buddypress widget',
 			'customize_selective_refresh' => true,
 		);
-		parent::__construct( false, _x( '(BuddyPress) Groups', 'widget name', 'buddyboss' ), $widget_ops );
+		parent::__construct( false, _x( '(BuddyBoss) Groups', 'widget name', 'buddyboss' ), $widget_ops );
 
 		if ( is_customize_preview() || is_active_widget( false, false, $this->id_base ) ) {
 			add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );

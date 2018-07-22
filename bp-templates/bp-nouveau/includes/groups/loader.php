@@ -132,7 +132,7 @@ class BP_Nouveau_Groups {
 	}
 
 	/**
-	 * Add filters to be sure the (BuddyPress) widgets display will be consistent
+	 * Add filters to be sure the (BuddyBoss) widgets display will be consistent
 	 * with the current group's default front page.
 	 *
 	 * @since 3.0.0
@@ -151,7 +151,7 @@ class BP_Nouveau_Groups {
 	}
 
 	/**
-	 * Remove filters to be sure the (BuddyPress) widgets display will no more take
+	 * Remove filters to be sure the (BuddyBoss) widgets display will no more take
 	 * the current group displayed in account.
 	 *
 	 * @since 3.0.0

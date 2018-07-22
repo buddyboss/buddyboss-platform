@@ -702,7 +702,7 @@ function bp_nouveau_members_get_customizer_widgets_link() {
 		array(
 			'object'    => 'user',
 			'autofocus' => 'sidebar-widgets-sidebar-buddypress-members',
-			'text'      => __( '(BuddyPress) Widgets', 'buddyboss' ),
+			'text'      => __( '(BuddyBoss) Widgets', 'buddyboss' ),
 		)
 	);
 }

@@ -5707,7 +5707,7 @@ msgid "Deactivate Notice"
 msgstr ""
 
 #: bp-messages/classes/class-bp-messages-sitewide-notices-widget.php:26
-msgid "(BuddyPress) Sitewide Notices"
+msgid "(BuddyBoss) Sitewide Notices"
 msgstr ""
 
 #: bp-messages/classes/class-bp-messages-sitewide-notices-widget.php:29
@@ -7656,7 +7656,7 @@ msgid ""
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/widgets.php:40
-msgid "(BuddyPress) Latest Activities"
+msgid "(BuddyBoss) Latest Activities"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/widgets.php:62
@@ -7695,7 +7695,7 @@ msgid ""
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/classes.php:195
-msgid "(BuddyPress) Primary navigation"
+msgid "(BuddyBoss) Primary navigation"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/classes.php:313
@@ -8222,7 +8222,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/template-tags.php:1300
 #: bp-templates/bp-nouveau/includes/members/template-tags.php:711
-msgid "(BuddyPress) Widgets"
+msgid "(BuddyBoss) Widgets"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/members/template-tags.php:693
@@ -9018,7 +9018,7 @@ msgstr ""
 
 #: bp-blogs/classes/class-bp-blogs-recent-posts-widget.php:27
 msgctxt "widget name"
-msgid "(BuddyPress) Recent Networkwide Posts"
+msgid "(BuddyBoss) Recent Networkwide Posts"
 msgstr ""
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:31
@@ -9028,22 +9028,22 @@ msgstr ""
 
 #: bp-groups/classes/class-bp-groups-widget.php:31
 msgctxt "widget name"
-msgid "(BuddyPress) Groups"
+msgid "(BuddyBoss) Groups"
 msgstr ""
 
 #: bp-members/classes/class-bp-core-members-widget.php:28
 msgctxt "widget name"
-msgid "(BuddyPress) Members"
+msgid "(BuddyBoss) Members"
 msgstr ""
 
 #: bp-members/classes/class-bp-core-recently-active-widget.php:26
 msgctxt "widget name"
-msgid "(BuddyPress) Recently Active Members"
+msgid "(BuddyBoss) Recently Active Members"
 msgstr ""
 
 #: bp-members/classes/class-bp-core-whos-online-widget.php:26
 msgctxt "widget name"
-msgid "(BuddyPress) Who's Online"
+msgid "(BuddyBoss) Who's Online"
 msgstr ""
 
 #: bp-blogs/classes/class-bp-blogs-recent-posts-widget.php:159
@@ -9440,7 +9440,7 @@ msgstr ""
 
 #: bp-core/classes/class-bp-core-login-widget.php:28
 msgctxt "Title of the login widget"
-msgid "(BuddyPress) Log In"
+msgid "(BuddyBoss) Log In"
 msgstr ""
 
 #: bp-core/classes/class-bp-core.php:308

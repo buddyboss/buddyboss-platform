@@ -23,7 +23,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 	 * @since 1.5.0
 	 */
 	public function __construct() {
-		$name        = _x( '(BuddyPress) Recently Active Members', 'widget name', 'buddyboss' );
+		$name        = _x( '(BuddyBoss) Recently Active Members', 'widget name', 'buddyboss' );
 		$description = __( 'Profile photos of recently active members', 'buddyboss' );
 		parent::__construct( false, $name, array(
 			'description'                 => $description,

@@ -1297,7 +1297,7 @@ function bp_nouveau_groups_get_customizer_widgets_link() {
 		array(
 			'object'    => 'group',
 			'autofocus' => 'sidebar-widgets-sidebar-buddypress-groups',
-			'text'      => __( '(BuddyPress) Widgets', 'buddyboss' ),
+			'text'      => __( '(BuddyBoss) Widgets', 'buddyboss' ),
 		)
 	);
 }
