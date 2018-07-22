@@ -557,7 +557,7 @@ class BP_Groups_Component extends BP_Component {
 
 			// Add the My Groups nav item.
 			$sub_nav[] = array(
-				'name'            => __( 'Memberships', 'buddyboss' ),
+				'name'            => __( 'My Groups', 'buddyboss' ),
 				'slug'            => 'my-groups',
 				'parent_url'      => $groups_link,
 				'parent_slug'     => $slug,
@@ -590,7 +590,7 @@ class BP_Groups_Component extends BP_Component {
 			 * It does not appear in the interface.
 			 */
 			bp_core_new_nav_item( array(
-				'name'                => __( 'Memberships', 'buddyboss' ),
+				'name'                => __( 'My Groups', 'buddyboss' ),
 				'slug'                => $this->current_group->slug,
 				'position'            => -1, // Do not show in BuddyBar.
 				'screen_function'     => 'groups_screen_group_home',
@@ -819,7 +819,7 @@ class BP_Groups_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-memberships',
-				'title'    => _x( 'Memberships', 'My Account Groups sub nav', 'buddyboss' ),
+				'title'    => _x( 'My Groups', 'My Account Groups sub nav', 'buddyboss' ),
 				'href'     => $groups_link,
 				'position' => 10
 			);
@@ -859,7 +859,7 @@ class BP_Groups_Component extends BP_Component {
 			$bp = buddypress();
 
 			if ( bp_is_my_profile() && !bp_is_single_item() ) {
-				$bp->bp_options_title = _x( 'Memberships', 'My Groups page <title>', 'buddyboss' );
+				$bp->bp_options_title = _x( 'My Groups', 'My Groups page <title>', 'buddyboss' );
 
 			} elseif ( !bp_is_my_profile() && !bp_is_single_item() ) {
 				$bp->bp_options_avatar = bp_core_fetch_avatar( array(

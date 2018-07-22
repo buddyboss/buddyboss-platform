@@ -226,7 +226,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 	protected function setup_nav() {
 		$nav_items = array(
 			'root'    => array(
-				'name'                => __( 'Memberships', 'buddyboss' ),
+				'name'                => __( 'My Groups', 'buddyboss' ),
 				'slug'                => $this->group->slug,
 				'position'            => -1,
 				/** This filter is documented in bp-groups/classes/class-bp-groups-component.php. */
