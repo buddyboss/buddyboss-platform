@@ -414,7 +414,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'comments'            => __( 'comments', 'buddyboss' ),
 			'leave_group_confirm' => __( 'Are you sure you want to leave this group?', 'buddyboss' ),
 			'confirm'             => __( 'Are you sure?', 'buddyboss' ),
-			'my_favs'             => __( 'My Favorites', 'buddyboss' ),
+			'my_favs'             => __( 'Saved', 'buddyboss' ),
 			'rejected'            => __( 'Rejected', 'buddyboss' ),
 			'show_all'            => __( 'Show all', 'buddyboss' ),
 			'show_all_comments'   => __( 'Show all comments for this thread', 'buddyboss' ),

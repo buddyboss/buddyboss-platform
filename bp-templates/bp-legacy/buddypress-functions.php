@@ -291,7 +291,7 @@ class BP_Legacy extends BP_Theme_Compat {
 			'comments'            => __( 'comments', 'buddyboss' ),
 			'leave_group_confirm' => __( 'Are you sure you want to leave this group?', 'buddyboss' ),
 			'mark_as_fav'	      => __( 'Save Post', 'buddyboss' ),
-			'my_favs'             => __( 'My Favorites', 'buddyboss' ),
+			'my_favs'             => __( 'Saved', 'buddyboss' ),
 			'rejected'            => __( 'Rejected', 'buddyboss' ),
 			'remove_fav'	      => __( 'Unsave', 'buddyboss' ),
 			'show_all'            => __( 'Show all', 'buddyboss' ),
