@@ -19,6 +19,9 @@
 
 	<?php if ( bp_has_members( '&include=' . bp_group_admin_ids() ) ) : ?>
 		<dd class="admin-listing">
+			
+			<p><?php esc_html_e( 'Organizers have total control over the contents and settings of a group. That includes all the abilities of moderators, as well as the ability to turn group forums on or off, change group status from public to private, change the group photo,  manage group members, and delete the group.', 'buddyboss' ); ?></p>
+
 			<ul id="admins-list" class="item-list single-line">
 
 				<?php while ( bp_members() ) : bp_the_member(); ?>
@@ -49,7 +52,10 @@
 		<dt class="moderator-section section-title"><?php esc_html_e( 'Moderators', 'buddyboss' ); ?></dt>
 
 		<dd class="moderator-listing">
-		<?php if ( bp_has_members( '&include=' . bp_group_mod_ids() ) ) : ?>
+
+			<p><?php esc_html_e( 'When a group member is promoted to be a moderator of the group, it means that the member gets the ability to edit, close, and delete any forum discussion in the group (if the group has a forum).', 'buddyboss' ); ?></p>
+
+			<?php if ( bp_has_members( '&include=' . bp_group_mod_ids() ) ) : ?>
 			<ul id="mods-list" class="item-list single-line">
 
 				<?php while ( bp_members() ) : bp_the_member(); ?>
@@ -79,6 +85,9 @@
 	<dt class="gen-members-section section-title"><?php esc_html_e( 'Members', 'buddyboss' ); ?></dt>
 
 	<dd class="general-members-listing">
+
+		<p><?php esc_html_e( 'By default, when a user joins a group, he or she has the role of member. Members are able to contribute to the group’s discussions and activity feeds, and view other group members, even in hidden groups.', 'buddyboss' ); ?></p>
+
 		<?php if ( bp_group_has_members( 'per_page=15&exclude_banned=0' ) ) : ?>
 
 			<?php if ( bp_group_member_needs_pagination() ) : ?>
