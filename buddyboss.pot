@@ -7734,11 +7734,11 @@ msgid "Configure general BuddyPress appearance options."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:46
-msgid "Member front page"
+msgid "Member Dashboard"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:49
-msgid "Configure the default front page for members."
+msgid "Configure a Dashboard to help onboard members."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:52
@@ -7772,7 +7772,7 @@ msgid "Use the round style for member and group avatars."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:226
-msgid "Enable default front page for member profiles."
+msgid "Enable the Dashboard for member profiles."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:232

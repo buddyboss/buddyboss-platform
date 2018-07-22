@@ -43,10 +43,10 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'description' => __( 'Configure general BuddyPress appearance options.', 'buddyboss' ),
 		),
 		'bp_nouveau_user_front_page' => array(
-			'title'       => __( 'Member front page', 'buddyboss' ),
+			'title'       => __( 'Member Dashboard', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 30,
-			'description' => __( 'Configure the default front page for members.', 'buddyboss' ),
+			'description' => __( 'Configure a Dashboard to help onboard members.', 'buddyboss' ),
 		),
 		'bp_nouveau_user_primary_nav' => array(
 			'title'       => __( 'Member navigation', 'buddyboss' ),
@@ -223,7 +223,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'type'       => 'checkbox',
 		),
 		'user_front_page' => array(
-			'label'      => __( 'Enable default front page for member profiles.', 'buddyboss' ),
+			'label'      => __( 'Enable the Dashboard for member profiles.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_user_front_page',
 			'settings'   => 'bp_nouveau_appearance[user_front_page]',
 			'type'       => 'checkbox',
