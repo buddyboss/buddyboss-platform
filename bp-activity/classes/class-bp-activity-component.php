@@ -30,7 +30,7 @@ class BP_Activity_Component extends BP_Component {
 			__( 'Global Activity Feed', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
-				'adminbar_myaccount_order' => 10,
+				'adminbar_myaccount_order' => 20,
 				'search_query_arg' => 'activity_search',
 				'features' => array( 'embeds' )
 			)
@@ -223,7 +223,7 @@ class BP_Activity_Component extends BP_Component {
 		$main_nav = array(
 			'name'                => _x( 'Feed', 'Profile activity screen nav', 'buddyboss' ),
 			'slug'                => $slug,
-			'position'            => 10,
+			'position'            => 20,
 			'screen_function'     => 'bp_activity_screen_my_activity',
 			'default_subnav_slug' => 'just-me',
 			'item_css_id'         => $this->id

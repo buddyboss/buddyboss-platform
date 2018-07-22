@@ -38,7 +38,7 @@ class BP_Members_Component extends BP_Component {
 			__( 'Members Directory', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
-				'adminbar_myaccount_order' => 20,
+				'adminbar_myaccount_order' => 10,
 				'search_query_arg' => 'members_search',
 			)
 		);
@@ -325,7 +325,7 @@ class BP_Members_Component extends BP_Component {
 			$this->main_nav = array(
 				'name'                => _x( 'Profile', 'Member profile main navigation', 'buddyboss' ),
 				'slug'                => $slug,
-				'position'            => 20,
+				'position'            => 10,
 				'screen_function'     => 'bp_members_screen_display_profile',
 				'default_subnav_slug' => 'public',
 				'item_css_id'         => buddypress()->profile->id
