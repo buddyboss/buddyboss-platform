@@ -3920,14 +3920,14 @@ msgstr ""
 #: bp-templates/bp-legacy/buddypress/groups/create.php:185
 #: bp-templates/bp-legacy/buddypress/groups/single/admin/group-settings.php:93
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:101
-msgid "Group admins and mods only"
+msgid "Organizers and Moderators only"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:849
 #: bp-templates/bp-legacy/buddypress/groups/create.php:187
 #: bp-templates/bp-legacy/buddypress/groups/single/admin/group-settings.php:95
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:106
-msgid "Group admins only"
+msgid "Organizers only"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:868
@@ -4202,7 +4202,7 @@ msgstr[1] ""
 #: bp-templates/bp-legacy/buddypress/groups/single/admin/manage-members.php:169
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/manage-members.php:35
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/manage-members.php:65
-msgid "Demote to Member"
+msgid "Demote to regular member"
 msgstr ""
 
 #: bp-groups/bp-groups-template.php:2293 bp-groups/bp-groups-template.php:2369
@@ -4219,7 +4219,7 @@ msgstr ""
 #: bp-templates/bp-legacy/buddypress/groups/single/admin/manage-members.php:277
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/manage-members.php:64
 #: bp-templates/bp-nouveau/includes/groups/template-tags.php:884
-msgid "Promote to Admin"
+msgid "Promote to co-organizer"
 msgstr ""
 
 #: bp-groups/bp-groups-template.php:2389
@@ -6499,7 +6499,7 @@ msgstr ""
 
 #: bp-templates/bp-legacy/buddypress/groups/single/admin/manage-members.php:276
 #: bp-templates/bp-nouveau/includes/groups/template-tags.php:875
-msgid "Promote to Mod"
+msgid "Promote to Moderator"
 msgstr ""
 
 #: bp-templates/bp-legacy/buddypress/groups/single/admin/manage-members.php:281

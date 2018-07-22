@@ -13,7 +13,7 @@
 		<h2 class="bp-screen-reader-text"><?php esc_html_e( 'Group Leadership', 'buddyboss' ); ?></h2>
 
 		<dl class="moderators-lists">
-			<dt class="moderators-title"><?php esc_html_e( 'Group Administrators', 'buddyboss' ); ?></dt>
+			<dt class="moderators-title"><?php esc_html_e( 'Organized by', 'buddyboss' ); ?></dt>
 			<dd class="user-list admins"><?php bp_group_list_admins(); ?>
 				<?php bp_nouveau_group_hook( 'after', 'menu_admins' ); ?>
 			</dd>
@@ -25,7 +25,7 @@
 		?>
 
 			<dl class="moderators-lists">
-				<dt class="moderators-title"><?php esc_html_e( 'Group Mods', 'buddyboss' ); ?></dt>
+				<dt class="moderators-title"><?php esc_html_e( 'Moderators', 'buddyboss' ); ?></dt>
 				<dd class="user-list moderators">
 					<?php
 					bp_group_list_mods();

@@ -2277,7 +2277,7 @@ function bp_group_admin_memberlist( $admin_list = false, $group = false ) {
 					<?php echo bp_core_get_userlink( $admin->user_id ); ?>
 
 					<span class="small">
-						<a class="button confirm admin-demote-to-member" href="<?php bp_group_member_demote_link($admin->user_id) ?>"><?php _e( 'Demote to Member', 'buddyboss' ) ?></a>
+						<a class="button confirm admin-demote-to-member" href="<?php bp_group_member_demote_link($admin->user_id) ?>"><?php _e( 'Demote to regular member', 'buddyboss' ) ?></a>
 					</span>
 				</h5>
 			</li>
@@ -2352,8 +2352,8 @@ function bp_group_mod_memberlist( $admin_list = false, $group = false ) {
 					<?php echo bp_core_get_userlink( $mod->user_id ); ?>
 
 					<span class="small">
-						<a href="<?php bp_group_member_promote_admin_link( array( 'user_id' => $mod->user_id ) ) ?>" class="button confirm mod-promote-to-admin"><?php _e( 'Promote to Admin', 'buddyboss' ); ?></a>
-						<a class="button confirm mod-demote-to-member" href="<?php bp_group_member_demote_link($mod->user_id) ?>"><?php _e( 'Demote to Member', 'buddyboss' ) ?></a>
+						<a href="<?php bp_group_member_promote_admin_link( array( 'user_id' => $mod->user_id ) ) ?>" class="button confirm mod-promote-to-admin"><?php _e( 'Promote to co-organizer', 'buddyboss' ); ?></a>
+						<a class="button confirm mod-demote-to-member" href="<?php bp_group_member_demote_link($mod->user_id) ?>"><?php _e( 'Demote to regular member', 'buddyboss' ) ?></a>
 					</span>
 				</h5>
 			</li>

@@ -23,7 +23,7 @@ do_action( 'bp_before_group_manage_members_admin' ); ?>
 <div aria-live="polite" aria-relevant="all" aria-atomic="true">
 
 	<div class="bp-widget group-members-list group-admins-list">
-		<h3 class="section-header"><?php _e( 'Administrators', 'buddyboss' ); ?></h3>
+		<h3 class="section-header"><?php _e( 'Organizers', 'buddyboss' ); ?></h3>
 
 		<?php if ( bp_group_has_members( array( 'per_page' => 15, 'group_role' => array( 'admin' ), 'page_arg' => 'mlpage-admin' ) ) ) : ?>
 
@@ -72,7 +72,7 @@ do_action( 'bp_before_group_manage_members_admin' ); ?>
 
 						<div class="action">
 							<?php if ( count( bp_group_admin_ids( false, 'array' ) ) > 1 ) : ?>
-								<a class="button confirm admin-demote-to-member" href="<?php bp_group_member_demote_link(); ?>"><?php _e( 'Demote to Member', 'buddyboss' ); ?></a>
+								<a class="button confirm admin-demote-to-member" href="<?php bp_group_member_demote_link(); ?>"><?php _e( 'Demote to regular member', 'buddyboss' ); ?></a>
 							<?php endif; ?>
 
 							<?php
@@ -165,8 +165,8 @@ do_action( 'bp_before_group_manage_members_admin' ); ?>
 						</div>
 
 						<div class="action">
-							<a href="<?php bp_group_member_promote_admin_link(); ?>" class="button confirm mod-promote-to-admin"><?php _e( 'Promote to Admin', 'buddyboss' ); ?></a>
-							<a class="button confirm mod-demote-to-member" href="<?php bp_group_member_demote_link(); ?>"><?php _e( 'Demote to Member', 'buddyboss' ); ?></a>
+							<a href="<?php bp_group_member_promote_admin_link(); ?>" class="button confirm mod-promote-to-admin"><?php _e( 'Promote to co-organizer', 'buddyboss' ); ?></a>
+							<a class="button confirm mod-demote-to-member" href="<?php bp_group_member_demote_link(); ?>"><?php _e( 'Demote to regular member', 'buddyboss' ); ?></a>
 
 							<?php
 
@@ -273,8 +273,8 @@ do_action( 'bp_before_group_manage_members_admin' ); ?>
 							<?php else : ?>
 
 								<a href="<?php bp_group_member_ban_link(); ?>" class="button confirm member-ban"><?php _e( 'Kick &amp; Ban', 'buddyboss' ); ?></a>
-								<a href="<?php bp_group_member_promote_mod_link(); ?>" class="button confirm member-promote-to-mod"><?php _e( 'Promote to Mod', 'buddyboss' ); ?></a>
-								<a href="<?php bp_group_member_promote_admin_link(); ?>" class="button confirm member-promote-to-admin"><?php _e( 'Promote to Admin', 'buddyboss' ); ?></a>
+								<a href="<?php bp_group_member_promote_mod_link(); ?>" class="button confirm member-promote-to-mod"><?php _e( 'Promote to Moderator', 'buddyboss' ); ?></a>
+								<a href="<?php bp_group_member_promote_admin_link(); ?>" class="button confirm member-promote-to-admin"><?php _e( 'Promote to co-organizer', 'buddyboss' ); ?></a>
 
 							<?php endif; ?>
 

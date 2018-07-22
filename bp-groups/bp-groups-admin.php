@@ -845,8 +845,8 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 			<legend><?php _e( 'Who can invite others to this group?', 'buddyboss' ); ?></legend>
 
 			<label for="bp-group-invite-status-members"><input type="radio" name="group-invite-status" id="bp-group-invite-status-members" value="members" <?php checked( $invite_status, 'members' ) ?> /><?php _e( 'All group members', 'buddyboss' ) ?></label>
-			<label for="bp-group-invite-status-mods"><input type="radio" name="group-invite-status" id="bp-group-invite-status-mods" value="mods" <?php checked( $invite_status, 'mods' ) ?> /><?php _e( 'Group admins and mods only', 'buddyboss' ) ?></label>
-			<label for="bp-group-invite-status-admins"><input type="radio" name="group-invite-status" id="bp-group-invite-status-admins" value="admins" <?php checked( $invite_status, 'admins' ) ?> /><?php _e( 'Group admins only', 'buddyboss' ) ?></label>
+			<label for="bp-group-invite-status-mods"><input type="radio" name="group-invite-status" id="bp-group-invite-status-mods" value="mods" <?php checked( $invite_status, 'mods' ) ?> /><?php _e( 'Organizers and Moderators only', 'buddyboss' ) ?></label>
+			<label for="bp-group-invite-status-admins"><input type="radio" name="group-invite-status" id="bp-group-invite-status-admins" value="admins" <?php checked( $invite_status, 'admins' ) ?> /><?php _e( 'Organizers only', 'buddyboss' ) ?></label>
 		</fieldset>
 	</div>
 
@@ -930,7 +930,7 @@ function bp_groups_admin_edit_metabox_members( $item ) {
 		<div class="bp-groups-member-type" id="bp-groups-member-type-<?php echo esc_attr( $member_type ) ?>">
 
 			<h3><?php switch ( $member_type ) :
-					case 'admin'  : esc_html_e( 'Administrators', 'buddyboss' ); break;
+					case 'admin'  : esc_html_e( 'Organizers', 'buddyboss' ); break;
 					case 'mod'    : esc_html_e( 'Moderators',     'buddypress' ); break;
 					case 'member' : esc_html_e( 'Members',        'buddypress' ); break;
 					case 'banned' : esc_html_e( 'Banned Members', 'buddyboss' ); break;
@@ -974,7 +974,7 @@ function bp_groups_admin_edit_metabox_members( $item ) {
 							?></label>
 							<select class="bp-groups-role" id="bp-groups-role-<?php echo esc_attr( $type_user->ID ); ?>" name="bp-groups-role[<?php echo esc_attr( $type_user->ID ); ?>]">
 								<optgroup label="<?php esc_attr_e( 'Roles', 'buddyboss' ); ?>">
-									<option class="admin"  value="admin"  <?php selected( 'admin',  $member_type ); ?>><?php esc_html_e( 'Administrator', 'buddyboss' ); ?></option>
+									<option class="admin"  value="admin"  <?php selected( 'admin',  $member_type ); ?>><?php esc_html_e( 'Organizer', 'buddyboss' ); ?></option>
 									<option class="mod"    value="mod"    <?php selected( 'mod',    $member_type ); ?>><?php esc_html_e( 'Moderator',     'buddypress' ); ?></option>
 									<option class="member" value="member" <?php selected( 'member', $member_type ); ?>><?php esc_html_e( 'Member',        'buddypress' ); ?></option>
 									<?php if ( 'banned' === $member_type ) : ?>

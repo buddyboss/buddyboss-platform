@@ -11,11 +11,11 @@
 	<?php esc_html_e( 'Manage Group Members', 'buddyboss' ); ?>
 </h2>
 
-	<p class="bp-help-text"><?php esc_html_e( 'Manage your group members; promote to moderators, admins or demote or ban.', 'buddyboss' ); ?></p>
+	<p class="bp-help-text"><?php esc_html_e( 'Manage your group members; promote to moderators, co-organizers, or demote or ban.', 'buddyboss' ); ?></p>
 
 	<dl class="groups-manage-members-list">
 
-	<dt class="admin-section section-title"><?php esc_html_e( 'Administrators', 'buddyboss' ); ?></dt>
+	<dt class="admin-section section-title"><?php esc_html_e( 'Organizers', 'buddyboss' ); ?></dt>
 
 	<?php if ( bp_has_members( '&include=' . bp_group_admin_ids() ) ) : ?>
 		<dd class="admin-listing">
@@ -32,7 +32,7 @@
 					<?php if ( count( bp_group_admin_ids( false, 'array' ) ) > 1 ) : ?>
 
 						<p class="action text-links-list">
-							<a class="button confirm admin-demote-to-member" href="<?php bp_group_member_demote_link( bp_get_member_user_id() ); ?>"><?php esc_html_e( 'Demote to Member', 'buddyboss' ); ?></a>
+							<a class="button confirm admin-demote-to-member" href="<?php bp_group_member_demote_link( bp_get_member_user_id() ); ?>"><?php esc_html_e( 'Demote to regular member', 'buddyboss' ); ?></a>
 						</p>
 
 					<?php endif; ?>
@@ -61,8 +61,8 @@
 					</p>
 
 					<div class="members-manage-buttons action text-links-list">
-						<a href="<?php bp_group_member_promote_admin_link( array( 'user_id' => bp_get_member_user_id() ) ); ?>" class="button confirm mod-promote-to-admin"><?php esc_html_e( 'Promote to Admin', 'buddyboss' ); ?></a>
-						<a class="button confirm mod-demote-to-member" href="<?php bp_group_member_demote_link( bp_get_member_user_id() ); ?>"><?php esc_html_e( 'Demote to Member', 'buddyboss' ); ?></a>
+						<a href="<?php bp_group_member_promote_admin_link( array( 'user_id' => bp_get_member_user_id() ) ); ?>" class="button confirm mod-promote-to-admin"><?php esc_html_e( 'Promote to co-organizer', 'buddyboss' ); ?></a>
+						<a class="button confirm mod-demote-to-member" href="<?php bp_group_member_demote_link( bp_get_member_user_id() ); ?>"><?php esc_html_e( 'Demote to regular member', 'buddyboss' ); ?></a>
 					</div>
 
 				</li>

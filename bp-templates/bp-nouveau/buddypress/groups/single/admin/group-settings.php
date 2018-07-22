@@ -98,12 +98,12 @@ if ( $group_types ) : ?>
 
 		<label for="group-invite-status-mods">
 			<input type="radio" name="group-invite-status" id="group-invite-status-mods" value="mods"<?php bp_group_show_invite_status_setting( 'mods' ); ?> />
-				<?php esc_html_e( 'Group admins and mods only', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?>
 		</label>
 
 		<label for="group-invite-status-admins">
 			<input type="radio" name="group-invite-status" id="group-invite-status-admins" value="admins"<?php bp_group_show_invite_status_setting( 'admins' ); ?> />
-				<?php esc_html_e( 'Group admins only', 'buddyboss' ); ?>
+				<?php esc_html_e( 'Organizers only', 'buddyboss' ); ?>
 		</label>
 
 	</fieldset>
