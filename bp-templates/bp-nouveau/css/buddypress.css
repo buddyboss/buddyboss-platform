@@ -2184,10 +2184,7 @@ form.ac-form .ac-reply-content input {
 }
 
 .single-headers div.generic-button,
-.single-headers a.button {
-	margin: 10px 10px 0 0;
-}
-
+.single-headers a.button,
 .single-headers li.generic-button {
 	margin: 2px 10px;
 }
