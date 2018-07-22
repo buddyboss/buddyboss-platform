@@ -1514,7 +1514,7 @@ function bp_legacy_theme_ajax_joinleave_group() {
 			if ( ! groups_join_group( $group->id ) ) {
 				_e( 'Error joining group', 'buddyboss' );
 			} else {
-				echo '<a id="group-' . esc_attr( $group->id ) . '" class="group-button leave-group" rel="leave" href="' . wp_nonce_url( bp_get_group_permalink( $group ) . 'leave-group', 'groups_leave_group' ) . '">' . __( 'Leave Group', 'buddyboss' ) . '</a>';
+				echo '<a id="group-' . esc_attr( $group->id ) . '" class="group-button leave-group" rel="leave" href="' . wp_nonce_url( bp_get_group_permalink( $group ) . 'leave-group', 'groups_leave_group' ) . '">' . __( 'Leave this group', 'buddyboss' ) . '</a>';
 			}
 
 		} elseif ( bp_current_user_can( 'groups_request_membership', array( 'group_id' => $group->id ) ) ) {
@@ -1527,7 +1527,7 @@ function bp_legacy_theme_ajax_joinleave_group() {
 				if ( ! groups_accept_invite( bp_loggedin_user_id(), $group->id ) ) {
 					_e( 'Error requesting membership', 'buddyboss' );
 				} else {
-					echo '<a id="group-' . esc_attr( $group->id ) . '" class="group-button leave-group" rel="leave" href="' . wp_nonce_url( bp_get_group_permalink( $group ) . 'leave-group', 'groups_leave_group' ) . '">' . __( 'Leave Group', 'buddyboss' ) . '</a>';
+					echo '<a id="group-' . esc_attr( $group->id ) . '" class="group-button leave-group" rel="leave" href="' . wp_nonce_url( bp_get_group_permalink( $group ) . 'leave-group', 'groups_leave_group' ) . '">' . __( 'Leave this group', 'buddyboss' ) . '</a>';
 				}
 
 			// Otherwise, it's a Request Membership button.
@@ -1548,7 +1548,7 @@ function bp_legacy_theme_ajax_joinleave_group() {
 		if ( ! groups_leave_group( $group->id ) ) {
 			_e( 'Error leaving group', 'buddyboss' );
 		} elseif ( bp_current_user_can( 'groups_join_group', array( 'group_id' => $group->id ) ) ) {
-			echo '<a id="group-' . esc_attr( $group->id ) . '" class="group-button join-group" rel="join" href="' . wp_nonce_url( bp_get_group_permalink( $group ) . 'join', 'groups_join_group' ) . '">' . __( 'Join Group', 'buddyboss' ) . '</a>';
+			echo '<a id="group-' . esc_attr( $group->id ) . '" class="group-button join-group" rel="join" href="' . wp_nonce_url( bp_get_group_permalink( $group ) . 'join', 'groups_join_group' ) . '">' . __( 'Join this group', 'buddyboss' ) . '</a>';
 		} elseif ( bp_current_user_can( 'groups_request_membership', array( 'group_id' => $group->id ) ) ) {
 			echo '<a id="group-' . esc_attr( $group->id ) . '" class="group-button request-membership" rel="join" href="' . wp_nonce_url( bp_get_group_permalink( $group ) . 'request-membership', 'groups_request_membership' ) . '">' . __( 'Request Membership', 'buddyboss' ) . '</a>';
 		}
