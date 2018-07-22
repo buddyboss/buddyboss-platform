@@ -172,11 +172,11 @@ function bp_activity_action_favorites_feed() {
 	buddypress()->activity->feed = new BP_Activity_Feed( array(
 		'id'            => 'favorites',
 
-		/* translators: User activity favorites RSS title - "[Site Name] | [User Display Name] | Favorites" */
+		/* translators: User activity saved RSS title - "[Site Name] | [User Display Name] | Favorites" */
 		'title'         => sprintf( __( '%1$s | %2$s | Favorites', 'buddyboss' ), bp_get_site_name(), bp_get_displayed_user_fullname() ),
 
 		'link'          => bp_displayed_user_domain() . bp_get_activity_slug() . '/favorites/',
-		'description'   => sprintf( __( "Activity feed of %s's favorites.", 'buddyboss' ), bp_get_displayed_user_fullname() ),
+		'description'   => sprintf( __( "Activity feed of %s's saved posts.", 'buddyboss' ), bp_get_displayed_user_fullname() ),
 		'activity_args' => 'include=' . $fav_ids
 	) );
 }

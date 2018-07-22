@@ -23,11 +23,11 @@ msgid "There was an error when deleting that activity"
 msgstr ""
 
 #: bp-activity/actions/favorite.php:25
-msgid "Activity marked as favorite."
+msgid "Activity post saved."
 msgstr ""
 
 #: bp-activity/actions/favorite.php:27
-msgid "There was an error marking that activity as a favorite. Please try again."
+msgid "There was an error saving that post. Please try again."
 msgstr ""
 
 #: bp-activity/actions/feeds.php:28
@@ -83,13 +83,13 @@ msgid "Activity feed mentioning %s."
 msgstr ""
 
 #: bp-activity/actions/feeds.php:176
-#. translators: User activity favorites RSS title - "[Site Name] | [User
+#. translators: User activity saved RSS title - "[Site Name] | [User
 #. Display Name] | Favorites"
 msgid "%1$s | %2$s | Favorites"
 msgstr ""
 
 #: bp-activity/actions/feeds.php:179
-msgid "Activity feed of %s's favorites."
+msgid "Activity feed of %s's saved posts."
 msgstr ""
 
 #: bp-activity/actions/post.php:60
@@ -125,11 +125,11 @@ msgid "The activity item has been marked as spam and is no longer visible."
 msgstr ""
 
 #: bp-activity/actions/unfavorite.php:25
-msgid "Activity removed as favorite."
+msgid "Post unsaved."
 msgstr ""
 
 #: bp-activity/actions/unfavorite.php:27
-msgid "There was an error removing that activity as a favorite. Please try again."
+msgid "There was an error unsaving that post. Please try again."
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:88

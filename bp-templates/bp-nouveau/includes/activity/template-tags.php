@@ -374,8 +374,8 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 					'parent_attr'      => $parent_attr,
 					'button_element'   => $button_element,
 					'link_class'       => 'button fav bp-secondary-action bp-tooltip',
-					'data_bp_tooltip'  => __( 'Mark as Favorite', 'buddyboss' ),
-					'link_text'        => __( 'Favorite', 'buddyboss' ),
+					'data_bp_tooltip'  => __( 'Save Post', 'buddyboss' ),
+					'link_text'        => __( 'Save Post', 'buddyboss' ),
 					'aria-pressed'     => 'false',
 					'link_attr'        => bp_get_activity_favorite_link(),
 				);
@@ -386,8 +386,8 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 					'parent_attr'     => $parent_attr,
 					'button_element'  => $button_element,
 					'link_class'      => 'button unfav bp-secondary-action bp-tooltip',
-					'data_bp_tooltip' => __( 'Remove Favorite', 'buddyboss' ),
-					'link_text'       => __( 'Remove Favorite', 'buddyboss' ),
+					'data_bp_tooltip' => __( 'Unsave', 'buddyboss' ),
+					'link_text'       => __( 'Unsave', 'buddyboss' ),
 					'aria-pressed'    => 'true',
 					'link_attr'       => bp_get_activity_unfavorite_link(),
 				);

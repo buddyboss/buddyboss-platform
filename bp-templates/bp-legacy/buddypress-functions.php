@@ -290,10 +290,10 @@ class BP_Legacy extends BP_Theme_Compat {
 			'close'               => __( 'Close', 'buddyboss' ),
 			'comments'            => __( 'comments', 'buddyboss' ),
 			'leave_group_confirm' => __( 'Are you sure you want to leave this group?', 'buddyboss' ),
-			'mark_as_fav'	      => __( 'Favorite', 'buddyboss' ),
+			'mark_as_fav'	      => __( 'Save Post', 'buddyboss' ),
 			'my_favs'             => __( 'My Favorites', 'buddyboss' ),
 			'rejected'            => __( 'Rejected', 'buddyboss' ),
-			'remove_fav'	      => __( 'Remove Favorite', 'buddyboss' ),
+			'remove_fav'	      => __( 'Unsave', 'buddyboss' ),
 			'show_all'            => __( 'Show all', 'buddyboss' ),
 			'show_all_comments'   => __( 'Show all comments for this thread', 'buddyboss' ),
 			'show_x_comments'     => __( 'Show all comments (%d)', 'buddyboss' ),
@@ -1226,9 +1226,9 @@ function bp_legacy_theme_mark_activity_favorite() {
 	}
 
 	if ( bp_activity_add_user_favorite( $_POST['id'] ) )
-		_e( 'Remove Favorite', 'buddyboss' );
+		_e( 'Unsave', 'buddyboss' );
 	else
-		_e( 'Favorite', 'buddyboss' );
+		_e( 'Save Post', 'buddyboss' );
 
 	exit;
 }
@@ -1256,9 +1256,9 @@ function bp_legacy_theme_unmark_activity_favorite() {
 	}
 
 	if ( bp_activity_remove_user_favorite( $_POST['id'] ) )
-		_e( 'Favorite', 'buddyboss' );
+		_e( 'Save Post', 'buddyboss' );
 	else
-		_e( 'Remove Favorite', 'buddyboss' );
+		_e( 'Unsave', 'buddyboss' );
 
 	exit;
 }
