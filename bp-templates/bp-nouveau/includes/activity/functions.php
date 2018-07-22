@@ -229,52 +229,6 @@ function bp_nouveau_get_activity_directory_nav_items() {
 				'position'  => 35,
 			);
 		}
-
-		// The friends component is active and user has friends
-		if ( bp_is_active( 'friends' ) && bp_get_total_friend_count( bp_loggedin_user_id() ) ) {
-			$nav_items['friends'] = array(
-				'component' => 'activity',
-				'slug'      => 'friends', // slug is used because BP_Core_Nav requires it, but it's the scope
-				'li_class'  => array( 'dynamic' ),
-				'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_friends_slug() . '/',
-				'text'      => __( 'My Connections', 'buddyboss' ),
-				'count'     => '',
-				'position'  => 15,
-			);
-		}
-
-		// The groups component is active and user has groups
-		if ( bp_is_active( 'groups' ) && bp_get_total_group_count_for_user( bp_loggedin_user_id() ) ) {
-			$nav_items['groups'] = array(
-				'component' => 'activity',
-				'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope
-				'li_class'  => array( 'dynamic' ),
-				'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_groups_slug() . '/',
-				'text'      => __( 'My Groups', 'buddyboss' ),
-				'count'     => '',
-				'position'  => 25,
-			);
-		}
-
-		// Mentions are allowed
-		if ( bp_activity_do_mentions() ) {
-			$deprecated_hooks[] = array( 'bp_before_activity_type_tab_mentions', 'activity', 36 );
-
-			$count = '';
-			if ( bp_get_total_mention_count_for_user( bp_loggedin_user_id() ) ) {
-				$count = bp_get_total_mention_count_for_user( bp_loggedin_user_id() );
-			}
-
-			$nav_items['mentions'] = array(
-				'component' => 'activity',
-				'slug'      => 'mentions', // slug is used because BP_Core_Nav requires it, but it's the scope
-				'li_class'  => array( 'dynamic' ),
-				'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/mentions/',
-				'text'      => __( 'Mentions', 'buddyboss' ),
-				'count'     => $count,
-				'position'  => 45,
-			);
-		}
 	}
 
 	// Check for deprecated hooks :

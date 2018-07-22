@@ -56,7 +56,7 @@ do_action( 'bp_before_directory_activity' ); ?>
 			 */
 			do_action( 'bp_before_activity_type_tab_all' ); ?>
 
-			<li class="selected" id="activity-all"><a href="<?php bp_activity_directory_permalink(); ?>"><?php printf( __( 'All Members %s', 'buddyboss' ), '<span>' . bp_get_total_member_count() . '</span>' ); ?></a></li>
+			<li class="selected" id="activity-all"><a href="<?php bp_activity_directory_permalink(); ?>"><?php printf( __( 'Feed %s', 'buddyboss' ), '<span>' . bp_get_total_member_count() . '</span>' ); ?></a></li>
 
 			<?php if ( is_user_logged_in() ) : ?>
 
