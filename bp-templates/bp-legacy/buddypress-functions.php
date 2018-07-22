@@ -96,10 +96,6 @@ class BP_Legacy extends BP_Theme_Compat {
 			if ( bp_is_active( 'friends' ) )
 				add_action( 'bp_member_header_actions',    'bp_add_friend_button',           5 );
 
-			// Activity button.
-			if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() )
-				add_action( 'bp_member_header_actions',    'bp_send_public_message_button',  20 );
-
 			// Messages button.
 			if ( bp_is_active( 'messages' ) )
 				add_action( 'bp_member_header_actions',    'bp_send_private_message_button', 20 );

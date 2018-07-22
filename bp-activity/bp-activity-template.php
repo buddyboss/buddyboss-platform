@@ -3170,63 +3170,6 @@ function bp_mentioned_user_display_name( $user_id_or_username = false ) {
 	}
 
 /**
- * Output button for sending a public message (an @-mention).
- *
- * @since 1.2.0
- *
- * @see bp_get_send_public_message_button() for description of parameters.
- *
- * @param array|string $args See {@link bp_get_send_public_message_button()}.
- */
-function bp_send_public_message_button( $args = '' ) {
-	echo bp_get_send_public_message_button( $args );
-}
-
-	/**
-	 * Return button for sending a public message (an @-mention).
-	 *
-	 * @since 1.2.0
-	 *
-	 *
-	 * @param array|string $args {
-	 *     All arguments are optional. See {@link BP_Button} for complete
-	 *     descriptions.
-	 *     @type string $id                Default: 'public_message'.
-	 *     @type string $component         Default: 'activity'.
-	 *     @type bool   $must_be_logged_in Default: true.
-	 *     @type bool   $block_self        Default: true.
-	 *     @type string $wrapper_id        Default: 'post-mention'.
-	 *     @type string $link_href         Default: the public message link for
-	 *                                     the current member in the loop.
-	 *     @type string $link_text         Default: 'Public Mention'.
-	 *     @type string $link_class        Default: 'activity-button mention'.
-	 * }
-	 * @return string The button for sending a public message.
-	 */
-	function bp_get_send_public_message_button( $args = '' ) {
-
-		$r = bp_parse_args( $args, array(
-			'id'                => 'public_message',
-			'component'         => 'activity',
-			'must_be_logged_in' => true,
-			'block_self'        => true,
-			'wrapper_id'        => 'post-mention',
-			'link_href'         => bp_get_send_public_message_link(),
-			'link_text'         => __( 'Public Mention', 'buddyboss' ),
-			'link_class'        => 'activity-button mention'
-		) );
-
-		/**
-		 * Filters the public message button HTML.
-		 *
-		 * @since 1.2.10
-		 *
-		 * @param array $r Array of arguments for the public message button HTML.
-		 */
-		return bp_get_button( apply_filters( 'bp_get_send_public_message_button', $r ) );
-	}
-
-/**
  * Output the activity post form action.
  *
  * @since 1.2.0

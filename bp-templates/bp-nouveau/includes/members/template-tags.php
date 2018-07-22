@@ -386,12 +386,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 				 *
 				 * See https://buddypress.trac.wordpress.org/ticket/7126
 				 */
-				add_filter( 'bp_get_send_public_message_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
-
-				bp_get_send_public_message_button();
-
-				remove_filter( 'bp_get_send_public_message_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
-
+				
 				if ( ! empty( bp_nouveau()->members->button_args ) ) {
 					$button_args = bp_nouveau()->members->button_args;
 
