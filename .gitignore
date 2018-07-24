@@ -1,0 +1,24 @@
+.DS_Store
+phpunit.xml
+.idea
+
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+
+pids
+logs
+results
+src/vendor
+vendor
+
+node_modules
+npm-debug.log
+
+# The build directory.
+build

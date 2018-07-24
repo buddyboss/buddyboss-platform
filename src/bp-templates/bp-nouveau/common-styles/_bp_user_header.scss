@@ -1,0 +1,20 @@
+// BP Single User Specific Header Styles
+// @version 3.0.0
+
+.bp-user {
+
+	.users-header {
+
+		.user-nicename {
+			margin-bottom: $marg-xsml;
+		}
+	}
+
+	.member-header-actions {
+		overflow: hidden;
+
+		* > * {
+			display: block;
+		}
+	}
+}
