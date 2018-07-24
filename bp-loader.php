@@ -141,7 +141,7 @@ if ( $is_bb_active ) {
 }
 
 
-if ( !$is_bp_active && !$is_bb_active && 2 == 4 ) {
+if ( !$is_bp_active && !$is_bb_active ) {
     
     // Required PHP version.
     define( 'BP_REQUIRED_PHP_VERSION', '5.3.0' );
