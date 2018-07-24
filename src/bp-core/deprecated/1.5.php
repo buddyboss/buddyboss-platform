@@ -2,7 +2,7 @@
 /**
  * Deprecated Functions
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Core
  * @deprecated Since 1.5.0
  */
@@ -45,7 +45,7 @@ function bp_core_is_multisite() {
  *
  * @deprecated 1.5.0
  * @deprecated Use is_main_site()
- * @package BuddyPress
+ * @package BuddyBoss
  * @param int|string $blog_id optional blog id to test (default current blog)
  * @return bool True if not multisite or $blog_id is main site
  * @since 1.2.6
@@ -143,14 +143,14 @@ function bp_core_get_wp_profile() {
 	$ud = get_userdata( bp_displayed_user_id() ); ?>
 
 <div class="bp-widget wp-profile">
-	<h4><?php _e( 'My Profile', 'buddypress' ) ?></h4>
+	<h4><?php _e( 'My Profile', 'buddyboss' ) ?></h4>
 
 	<table class="wp-profile-fields">
 
 		<?php if ( $ud->display_name ) : ?>
 
 			<tr id="wp_displayname">
-				<td class="label"><?php _e( 'Name', 'buddypress' ); ?></td>
+				<td class="label"><?php _e( 'Name', 'buddyboss' ); ?></td>
 				<td class="data"><?php echo $ud->display_name; ?></td>
 			</tr>
 
@@ -159,7 +159,7 @@ function bp_core_get_wp_profile() {
 		<?php if ( $ud->user_description ) : ?>
 
 			<tr id="wp_desc">
-				<td class="label"><?php _e( 'About Me', 'buddypress' ); ?></td>
+				<td class="label"><?php _e( 'About Me', 'buddyboss' ); ?></td>
 				<td class="data"><?php echo $ud->user_description; ?></td>
 			</tr>
 
@@ -168,7 +168,7 @@ function bp_core_get_wp_profile() {
 		<?php if ( $ud->user_url ) : ?>
 
 			<tr id="wp_website">
-				<td class="label"><?php _e( 'Website', 'buddypress' ); ?></td>
+				<td class="label"><?php _e( 'Website', 'buddyboss' ); ?></td>
 				<td class="data"><?php echo make_clickable( $ud->user_url ); ?></td>
 			</tr>
 
@@ -177,7 +177,7 @@ function bp_core_get_wp_profile() {
 		<?php if ( $ud->jabber ) : ?>
 
 			<tr id="wp_jabber">
-				<td class="label"><?php _e( 'Jabber', 'buddypress' ); ?></td>
+				<td class="label"><?php _e( 'Jabber', 'buddyboss' ); ?></td>
 				<td class="data"><?php echo $ud->jabber; ?></td>
 			</tr>
 
@@ -186,7 +186,7 @@ function bp_core_get_wp_profile() {
 		<?php if ( $ud->aim ) : ?>
 
 			<tr id="wp_aim">
-				<td class="label"><?php _e( 'AOL Messenger', 'buddypress' ); ?></td>
+				<td class="label"><?php _e( 'AOL Messenger', 'buddyboss' ); ?></td>
 				<td class="data"><?php echo $ud->aim; ?></td>
 			</tr>
 
@@ -195,7 +195,7 @@ function bp_core_get_wp_profile() {
 		<?php if ( $ud->yim ) : ?>
 
 			<tr id="wp_yim">
-				<td class="label"><?php _e( 'Yahoo Messenger', 'buddypress' ); ?></td>
+				<td class="label"><?php _e( 'Yahoo Messenger', 'buddyboss' ); ?></td>
 				<td class="data"><?php echo $ud->yim; ?></td>
 			</tr>
 
@@ -310,7 +310,7 @@ function bp_page_title() {
 function bp_log_out_link() {
 	_deprecated_function( __FUNCTION__, '1.5', 'wp_logout_url()' );
 
-	$logout_link = '<a href="' . wp_logout_url( bp_get_root_domain() ) . '">' . __( 'Log Out', 'buddypress' ) . '</a>';
+	$logout_link = '<a href="' . wp_logout_url( bp_get_root_domain() ) . '">' . __( 'Log Out', 'buddyboss' ) . '</a>';
 	echo apply_filters( 'bp_logout_link', $logout_link );
 }
 
@@ -355,7 +355,7 @@ function groups_at_message_notification( $content, $poster_user_id, $group_id, $
 			// Set up and send the message
 			$ud = bp_core_get_core_userdata( $receiver_user_id );
 			$to = $ud->user_email;
-			$subject = bp_get_email_subject( array( 'text' => sprintf( __( '%1$s mentioned you in the group "%2$s"', 'buddypress' ), $poster_name, $group->name ) ) );
+			$subject = bp_get_email_subject( array( 'text' => sprintf( __( '%1$s mentioned you in the group "%2$s"', 'buddyboss' ), $poster_name, $group->name ) ) );
 
 $message = sprintf( __(
 '%1$s mentioned you in the group "%2$s":
@@ -365,7 +365,7 @@ $message = sprintf( __(
 To view and respond to the message, log in and visit: %4$s
 
 ---------------------
-', 'buddypress' ), $poster_name, $group->name, $content, $message_link );
+', 'buddyboss' ), $poster_name, $group->name, $content, $message_link );
 
 			/* Send the message */
 			$to = apply_filters( 'groups_at_message_notification_to', $to );
@@ -410,7 +410,7 @@ function bp_search_form() {
 			<input type="text" id="search-terms" name="search-terms" value="" />
 			' . bp_search_form_type_select() . '
 
-			<input type="submit" name="search-submit" id="search-submit" value="' . __( 'Search', 'buddypress' ) . '" />
+			<input type="submit" name="search-submit" id="search-submit" value="' . __( 'Search', 'buddyboss' ) . '" />
 			' . wp_nonce_field( 'bp_search_form' ) . '
 		</form>
 	';
@@ -471,7 +471,7 @@ function bp_dtheme_deprecated() {
 	/**
 	 * In BuddyPress 1.2.x, this function filtered the dropdown on the
 	 * Settings > Reading screen for selecting the page to show on front to
-	 * include "Activity Stream." As of 1.5.x, it is no longer required.
+	 * include "Activity Feed." As of 1.5.x, it is no longer required.
 	 *
 	 * @deprecated 1.5.0
 	 * @deprecated No longer required.
@@ -488,7 +488,7 @@ function bp_dtheme_deprecated() {
 
 	if ( !function_exists( 'bp_dtheme_page_on_front_update' ) ) :
 	/**
-	 * In BuddyPress 1.2.x, this function hijacked the saving of page on front setting to save the activity stream setting.
+	 * In BuddyPress 1.2.x, this function hijacked the saving of page on front setting to save the activity feed setting.
 	 * As of 1.5.x, it is no longer required.
 	 *
 	 * @deprecated 1.5.0
@@ -509,7 +509,7 @@ function bp_dtheme_deprecated() {
 
 	if ( !function_exists( 'bp_dtheme_page_on_front_template' ) ) :
 	/**
-	 * In BuddyPress 1.2.x, this function loaded the activity stream template if the front page display settings allow.
+	 * In BuddyPress 1.2.x, this function loaded the activity feed template if the front page display settings allow.
 	 * As of 1.5.x, it is no longer required.
 	 *
 	 * @deprecated 1.5.0
@@ -540,7 +540,7 @@ function bp_dtheme_deprecated() {
 
 	if ( !function_exists( 'bp_dtheme_fix_the_posts_on_activity_front' ) ) :
 	/**
-	 * In BuddyPress 1.2.x, this was used as part of the code that set the activity stream to be on the front page.
+	 * In BuddyPress 1.2.x, this was used as part of the code that set the activity feed to be on the front page.
 	 * As of 1.5.x, it is no longer required.
 	 *
 	 * @deprecated 1.5.0

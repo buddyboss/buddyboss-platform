@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress - Groups Members
+ * BuddyBoss - Groups Members
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
@@ -129,7 +129,7 @@
 <?php else: ?>
 
 	<div id="message" class="info">
-		<p><?php _e( 'No members were found.', 'buddypress' ); ?></p>
+		<p><?php _e( 'No members were found.', 'buddyboss' ); ?></p>
 	</div>
 
 <?php endif;

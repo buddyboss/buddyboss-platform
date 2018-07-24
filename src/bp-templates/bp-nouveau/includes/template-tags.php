@@ -2038,10 +2038,10 @@ function bp_nouveau_filter_label() {
 	 */
 	function bp_nouveau_get_filter_label() {
 		$component = bp_nouveau_current_object();
-		$label     = __( 'Order By:', 'buddypress' );
+		$label     = __( 'Order By:', 'buddyboss' );
 
 		if ( 'activity' === $component['object'] || 'friends' === $component['object'] ) {
-			$label = __( 'Show:', 'buddypress' );
+			$label = __( 'Show:', 'buddyboss' );
 		}
 
 		/**
@@ -2250,13 +2250,13 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 
 		if ( $required ) {
 			/* translators: Do not translate placeholders. 2 = form field name, 3 = "(required)". */
-			$label_output = __( '<label for="%1$s">%2$s %3$s</label>', 'buddypress' );
+			$label_output = __( '<label for="%1$s">%2$s %3$s</label>', 'buddyboss' );
 		}
 
 		// Output the label for regular fields
 		if ( 'radio' !== $type ) {
 			if ( $required ) {
-				printf( $label_output, esc_attr( $name ), esc_html( $label ), __( '(required)', 'buddypress' ) );
+				printf( $label_output, esc_attr( $name ), esc_html( $label ), __( '(required)', 'buddyboss' ) );
 			} else {
 				printf( $label_output, esc_attr( $name ), esc_html( $label ) );
 			}
@@ -2269,7 +2269,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 		} elseif ( 'signup_blog_privacy_private' !== $name ) {
 			?>
 				<span class="label">
-					<?php esc_html_e( 'I would like my site to appear in search engines, and in public listings around this network.', 'buddypress' ); ?>
+					<?php esc_html_e( 'I would like my site to appear in search engines, and in public listings around this network.', 'buddyboss' ); ?>
 				</span>
 			<?php
 		}

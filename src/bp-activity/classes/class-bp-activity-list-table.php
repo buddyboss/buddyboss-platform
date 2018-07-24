@@ -1,11 +1,11 @@
 <?php
 /**
- * BuddyPress Activity component admin list table.
+ * BuddyBoss Activity component admin list table.
  *
  * Props to WordPress core for the Comments admin screen, and its contextual
  * help text, on which this implementation is heavily based.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage ActivityAdmin
  * @since 1.6.0
  */
@@ -232,7 +232,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	 * @since 1.6.0
 	 */
 	function no_items() {
-		_e( 'No activities found.', 'buddypress' );
+		_e( 'No activities found.', 'buddyboss' );
 	}
 
 	/**
@@ -245,7 +245,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 
 		<h2 class="screen-reader-text"><?php
 			/* translators: accessibility text */
-			_e( 'Activities list', 'buddypress' );
+			_e( 'Activities list', 'buddyboss' );
 		?></h2>
 
 		<table class="wp-list-table <?php echo implode( ' ', $this->get_table_classes() ); ?>" cellspacing="0">
@@ -309,12 +309,12 @@ class BP_Activity_List_Table extends WP_List_Table {
 
 		<h2 class="screen-reader-text"><?php
 			/* translators: accessibility text */
-			_e( 'Filter activities list', 'buddypress' );
+			_e( 'Filter activities list', 'buddyboss' );
 		?></h2>
 
 		<ul class="subsubsub">
-			<li class="all"><a href="<?php echo esc_url( $url_base ); ?>" class="<?php if ( 'spam' != $this->view ) echo 'current'; ?>"><?php _e( 'All', 'buddypress' ); ?></a> |</li>
-			<li class="spam"><a href="<?php echo esc_url( add_query_arg( array( 'activity_status' => 'spam' ), $url_base ) ); ?>" class="<?php if ( 'spam' == $this->view ) echo 'current'; ?>"><?php printf( __( 'Spam <span class="count">(%s)</span>', 'buddypress' ), number_format_i18n( $this->spam_count ) ); ?></a></li>
+			<li class="all"><a href="<?php echo esc_url( $url_base ); ?>" class="<?php if ( 'spam' != $this->view ) echo 'current'; ?>"><?php _e( 'All', 'buddyboss' ); ?></a> |</li>
+			<li class="spam"><a href="<?php echo esc_url( add_query_arg( array( 'activity_status' => 'spam' ), $url_base ) ); ?>" class="<?php if ( 'spam' == $this->view ) echo 'current'; ?>"><?php printf( __( 'Spam <span class="count">(%s)</span>', 'buddyboss' ), number_format_i18n( $this->spam_count ) ); ?></a></li>
 
 			<?php
 
@@ -340,9 +340,9 @@ class BP_Activity_List_Table extends WP_List_Table {
 	 */
 	function get_bulk_actions() {
 		$actions = array();
-		$actions['bulk_spam']   = __( 'Mark as Spam', 'buddypress' );
-		$actions['bulk_ham']    = __( 'Not Spam', 'buddypress' );
-		$actions['bulk_delete'] = __( 'Delete Permanently', 'buddypress' );
+		$actions['bulk_spam']   = __( 'Mark as Spam', 'buddyboss' );
+		$actions['bulk_ham']    = __( 'Not Spam', 'buddyboss' );
+		$actions['bulk_delete'] = __( 'Delete Permanently', 'buddyboss' );
 
 		/**
 		 * Filters the default bulk actions so plugins can add custom actions.
@@ -373,10 +373,10 @@ class BP_Activity_List_Table extends WP_List_Table {
 		 */
 		return apply_filters( 'bp_activity_list_table_get_columns', array(
 			'cb'       => '<input name type="checkbox" />',
-			'author'   => _x('Author', 'Admin SWA column header', 'buddypress' ),
-			'comment'  => _x( 'Activity', 'Admin SWA column header', 'buddypress' ),
-			'action'   => _x( 'Action', 'Admin SWA column header', 'buddypress' ),
-			'response' => _x( 'In Response To', 'Admin SWA column header', 'buddypress' ),
+			'author'   => _x('Author', 'Admin SWA column header', 'buddyboss' ),
+			'comment'  => _x( 'Activity', 'Admin SWA column header', 'buddyboss' ),
+			'action'   => _x( 'Action', 'Admin SWA column header', 'buddyboss' ),
+			'response' => _x( 'In Response To', 'Admin SWA column header', 'buddyboss' ),
 		) );
 	}
 
@@ -422,10 +422,10 @@ class BP_Activity_List_Table extends WP_List_Table {
 		<div class="alignleft actions">
 			<label for="activity-type" class="screen-reader-text"><?php
 				/* translators: accessibility text */
-				_e( 'Filter by activity type', 'buddypress' );
+				_e( 'Filter by activity type', 'buddyboss' );
 			?></label>
 			<select name="activity_type" id="activity-type">
-				<option value="" <?php selected( ! $selected ); ?>><?php _e( 'View all actions', 'buddypress' ); ?></option>
+				<option value="" <?php selected( ! $selected ); ?>><?php _e( 'View all actions', 'buddyboss' ); ?></option>
 
 				<?php foreach ( $activity_actions as $component => $actions ) : ?>
 					<?php
@@ -468,7 +468,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 
 			</select>
 
-			<?php submit_button( __( 'Filter', 'buddypress' ), 'secondary', false, false, array( 'id' => 'post-query-submit' ) ); ?>
+			<?php submit_button( __( 'Filter', 'buddyboss' ), 'secondary', false, false, array( 'id' => 'post-query-submit' ) ); ?>
 		</div>
 
 	<?php
@@ -516,7 +516,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	 */
 	function column_cb( $item ) {
 		/* translators: accessibility text */
-		printf( '<label class="screen-reader-text" for="aid-%1$d">' . __( 'Select activity item %1$d', 'buddypress' ) . '</label><input type="checkbox" name="aid[]" value="%1$d" id="aid-%1$d" />', $item['id'] );
+		printf( '<label class="screen-reader-text" for="aid-%1$d">' . __( 'Select activity item %1$d', 'buddyboss' ) . '</label><input type="checkbox" name="aid[]" value="%1$d" id="aid-%1$d" />', $item['id'] );
 	}
 
 	/**
@@ -547,7 +547,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 		if ( isset( $actions[ $item['type'] ] ) ) {
 			echo $actions[ $item['type'] ];
 		} else {
-			printf( __( 'Unregistered action - %s', 'buddypress' ), $item['type'] );
+			printf( __( 'Unregistered action - %s', 'buddyboss' ), $item['type'] );
 		}
 	}
 
@@ -590,23 +590,23 @@ class BP_Activity_List_Table extends WP_List_Table {
 		// Reply - JavaScript only; implemented by AJAX.
 		if ( 'spam' != $item_status ) {
 			if ( $this->can_comment( $item ) ) {
-				$actions['reply'] = sprintf( '<a href="#" class="reply hide-if-no-js">%s</a>', __( 'Reply', 'buddypress' ) );
+				$actions['reply'] = sprintf( '<a href="#" class="reply hide-if-no-js">%s</a>', __( 'Reply', 'buddyboss' ) );
 			} else {
-				$actions['reply'] = sprintf( '<span class="form-input-tip">%s</span>', __( 'Replies disabled', 'buddypress' ) );
+				$actions['reply'] = sprintf( '<span class="form-input-tip">%s</span>', __( 'Replies disabled', 'buddyboss' ) );
 			}
 
 			// Edit.
-			$actions['edit'] = sprintf( '<a href="%s">%s</a>', $edit_url, __( 'Edit', 'buddypress' ) );
+			$actions['edit'] = sprintf( '<a href="%s">%s</a>', $edit_url, __( 'Edit', 'buddyboss' ) );
 		}
 
 		// Spam/unspam.
 		if ( 'spam' == $item_status )
-			$actions['unspam'] = sprintf( '<a href="%s">%s</a>', $ham_url, __( 'Not Spam', 'buddypress' ) );
+			$actions['unspam'] = sprintf( '<a href="%s">%s</a>', $ham_url, __( 'Not Spam', 'buddyboss' ) );
 		else
-			$actions['spam'] = sprintf( '<a href="%s">%s</a>', $spam_url, __( 'Spam', 'buddypress' ) );
+			$actions['spam'] = sprintf( '<a href="%s">%s</a>', $spam_url, __( 'Spam', 'buddyboss' ) );
 
 		// Delete.
-		$actions['delete'] = sprintf( '<a href="%s" onclick="%s">%s</a>', $delete_url, "javascript:return confirm('" . esc_js( __( 'Are you sure?', 'buddypress' ) ) . "'); ", __( 'Delete Permanently', 'buddypress' ) );
+		$actions['delete'] = sprintf( '<a href="%s" onclick="%s">%s</a>', $delete_url, "javascript:return confirm('" . esc_js( __( 'Are you sure?', 'buddyboss' ) ) . "'); ", __( 'Delete Permanently', 'buddyboss' ) );
 
 		// Start timestamp.
 		echo '<div class="submitted-on">';
@@ -623,13 +623,13 @@ class BP_Activity_List_Table extends WP_List_Table {
 
 		printf(
 			/* translators: %s: activity date and time */
-			__( 'Submitted on %s', 'buddypress' ),
+			__( 'Submitted on %s', 'buddyboss' ),
 			sprintf(
 				'<a href="%1$s">%2$s</a>',
 				bp_activity_get_permalink( $item['id'] ),
 				sprintf(
 					/* translators: 1: activity date, 2: activity time */
-					__( '%1$s at %2$s', 'buddypress' ),
+					__( '%1$s at %2$s', 'buddyboss' ),
 					date_i18n( bp_get_option( 'date_format' ), strtotime( $item['date_recorded'] ) ),
 					get_date_from_gmt( $item['date_recorded'], bp_get_option( 'time_format' ) )
 				)
@@ -687,7 +687,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 		// Activity permalink.
 		$activity_permalink = '';
 		if ( ! $item['is_spam'] ) {
-			$activity_permalink = '<a href="' . bp_activity_get_permalink( $item['id'], (object) $item ) . '" class="comments-view-item-link">' . __( 'View Activity', 'buddypress' ) . '</a>';
+			$activity_permalink = '<a href="' . bp_activity_get_permalink( $item['id'], (object) $item ) . '" class="comments-view-item-link">' . __( 'View Activity', 'buddyboss' ) . '</a>';
 		}
 
 		/**
@@ -787,7 +787,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	 *
 	 * This method merges functionality from {@link bp_activity_can_comment()} and
 	 * {@link bp_blogs_disable_activity_commenting()}. This is done because the activity
-	 * list table doesn't use a BuddyPress activity loop, which prevents those
+	 * list table doesn't use a BuddyBoss activity loop, which prevents those
 	 * functions from working as intended.
 	 *
 	 * @since 2.0.0

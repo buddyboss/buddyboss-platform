@@ -2,7 +2,7 @@
 /**
  * Groups: Single group "Manage > Settings" screen handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage GroupsScreens
  * @since 3.0.0
  */
@@ -67,9 +67,9 @@ function groups_screen_group_admin_settings() {
 		}
 
 		if ( !groups_edit_group_settings( $_POST['group-id'], $enable_forum, $status, $invite_status ) ) {
-			bp_core_add_message( __( 'There was an error updating group settings. Please try again.', 'buddypress' ), 'error' );
+			bp_core_add_message( __( 'There was an error updating group settings. Please try again.', 'buddyboss' ), 'error' );
 		} else {
-			bp_core_add_message( __( 'Group settings were successfully updated.', 'buddypress' ) );
+			bp_core_add_message( __( 'Group settings were successfully updated.', 'buddyboss' ) );
 		}
 
 		/**

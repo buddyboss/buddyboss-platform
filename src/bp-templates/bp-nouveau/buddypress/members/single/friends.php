@@ -1,13 +1,13 @@
 <?php
 /**
- * BuddyPress - Users Friends
+ * BuddyBoss - Users Connections
  *
  * @since 3.0.0
  * @version 3.0.0
  */
 ?>
 
-<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Friends menu', 'buddypress' ); ?>">
+<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Connections menu', 'buddyboss' ); ?>">
 	<ul class="subnav">
 		<?php if ( bp_is_my_profile() ) : ?>
 
@@ -22,7 +22,7 @@
 <?php
 switch ( bp_current_action() ) :
 
-	// Home/My Friends
+	// Home/My Connections
 	case 'my-friends':
 		bp_nouveau_member_hook( 'before', 'friends_content' );
 		?>

@@ -1,10 +1,10 @@
 <?php
 /**
- * BuddyPress - Groups Loop
+ * BuddyBoss - Groups Loop
  *
  * Querystring is set via AJAX in _inc/ajax.php - bp_legacy_theme_object_filter().
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
@@ -64,7 +64,7 @@ do_action( 'bp_before_groups_loop' ); ?>
 
 			<div class="item">
 				<div class="item-title"><?php bp_group_link(); ?></div>
-				<div class="item-meta"><span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_group_last_active( 0, array( 'relative' => false ) ) ); ?>"><?php printf( __( 'active %s', 'buddypress' ), bp_get_group_last_active() ); ?></span></div>
+				<div class="item-meta"><span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_group_last_active( 0, array( 'relative' => false ) ) ); ?>"><?php printf( __( 'active %s', 'buddyboss' ), bp_get_group_last_active() ); ?></span></div>
 
 				<div class="item-desc"><?php bp_group_description_excerpt(); ?></div>
 
@@ -133,7 +133,7 @@ do_action( 'bp_before_groups_loop' ); ?>
 <?php else: ?>
 
 	<div id="message" class="info">
-		<p><?php _e( 'There were no groups found.', 'buddypress' ); ?></p>
+		<p><?php _e( 'There were no groups found.', 'buddyboss' ); ?></p>
 	</div>
 
 <?php endif; ?>

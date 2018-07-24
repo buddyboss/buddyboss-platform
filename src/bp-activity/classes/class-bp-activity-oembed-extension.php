@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress Activity Classes.
+ * BuddyBoss Activity Classes.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Embeds
  */
 
@@ -135,7 +135,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 
 		return array(
 			'content'      => $activity->content,
-			'title'        => __( 'Activity', 'buddypress' ),
+			'title'        => __( 'Activity', 'buddyboss' ),
 			'author_name'  => bp_core_get_user_displayname( $activity->user_id ),
 			'author_url'   => bp_core_get_user_domain( $activity->user_id ),
 
@@ -191,7 +191,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 * @return string
 	 */
 	protected function set_iframe_title( $item_id ) {
-		return __( 'Embedded Activity Item', 'buddypress' );
+		return __( 'Embedded Activity Item', 'buddyboss' );
 	}
 
 	/**
@@ -211,7 +211,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 * @return string
 	 */
 	public function use_custom_iframe_sandbox_attribute( $result, $data, $url ) {
-		// Make sure we are on a BuddyPress activity oEmbed request.
+		// Make sure we are on a BuddyBoss activity oEmbed request.
 		if ( false === isset( $data->x_buddypress ) || 'activity' !== $data->x_buddypress ) {
 			return $result;
 		}

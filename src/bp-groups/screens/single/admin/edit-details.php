@@ -2,7 +2,7 @@
 /**
  * Groups: Single group "Manage > Details" screen handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage GroupsScreens
  * @since 3.0.0
  */
@@ -31,7 +31,7 @@ function groups_screen_group_admin_edit_details() {
 
 			// Name and description are required and may not be empty.
 			if ( empty( $_POST['group-name'] ) || empty( $_POST['group-desc'] ) ) {
-				bp_core_add_message( __( 'Groups must have a name and a description. Please try again.', 'buddypress' ), 'error' );
+				bp_core_add_message( __( 'Groups must have a name and a description. Please try again.', 'buddyboss' ), 'error' );
 			} elseif ( ! groups_edit_base_group_details( array(
 				'group_id'       => $_POST['group-id'],
 				'name'           => $_POST['group-name'],
@@ -39,9 +39,9 @@ function groups_screen_group_admin_edit_details() {
 				'description'    => $_POST['group-desc'],
 				'notify_members' => $group_notify_members,
 			) ) ) {
-				bp_core_add_message( __( 'There was an error updating group details. Please try again.', 'buddypress' ), 'error' );
+				bp_core_add_message( __( 'There was an error updating group details. Please try again.', 'buddyboss' ), 'error' );
 			} else {
-				bp_core_add_message( __( 'Group details were successfully updated.', 'buddypress' ) );
+				bp_core_add_message( __( 'Group details were successfully updated.', 'buddyboss' ) );
 			}
 
 			/**

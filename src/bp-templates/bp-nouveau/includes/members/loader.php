@@ -90,7 +90,7 @@ class BP_Nouveau_Members {
 	}
 
 	/**
-	 * Add filters to be sure the (BuddyPress) widgets display will be consistent
+	 * Add filters to be sure the (BuddyBoss) widgets display will be consistent
 	 * with the displayed user's default front page.
 	 *
 	 * @since 3.0.0
@@ -109,7 +109,7 @@ class BP_Nouveau_Members {
 	}
 
 	/**
-	 * Remove filters to be sure the (BuddyPress) widgets display will no more take
+	 * Remove filters to be sure the (BuddyBoss) widgets display will no more take
 	 * the displayed user in account.
 	 *
 	 * @since 3.0.0

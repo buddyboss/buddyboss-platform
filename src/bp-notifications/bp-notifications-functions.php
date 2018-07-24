@@ -4,7 +4,7 @@
  *
  * Functions and filters used in the Notifications component.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage NotificationsFunctions
  * @since 1.9.0
  */
@@ -410,7 +410,7 @@ function bp_notifications_delete_all_notifications_by_type( $item_id, $component
  *
  * @todo This function assumes that items with the user_id in the item_id slot
  *       are associated with that user. However, this will only be true with
- *       certain components (such as Friends). Use with caution!
+ *       certain components (such as Connections). Use with caution!
  *
  * @since 1.9.0
  *
@@ -542,7 +542,7 @@ function bp_notifications_mark_all_notifications_by_type( $item_id, $component_n
  *
  * @todo This function assumes that items with the user_id in the item_id slot
  *       are associated with that user. However, this will only be true with
- *       certain components (such as Friends). Use with caution!
+ *       certain components (such as Connections). Use with caution!
  *
  * @since 1.9.0
  *

@@ -2,7 +2,7 @@
 /**
  * Activity: Reply action
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage ActivityActions
  * @since 3.0.0
  */
@@ -40,7 +40,7 @@ function bp_activity_action_post_comment() {
 	$content = apply_filters( 'bp_activity_post_comment_content', $_POST['ac_input_' . $activity_id] );
 
 	if ( empty( $content ) ) {
-		bp_core_add_message( __( 'Please do not leave the comment area blank.', 'buddypress' ), 'error' );
+		bp_core_add_message( __( 'Please do not leave the comment area blank.', 'buddyboss' ), 'error' );
 		bp_core_redirect( wp_get_referer() . '#ac-form-' . $activity_id );
 	}
 
@@ -51,9 +51,9 @@ function bp_activity_action_post_comment() {
 	));
 
 	if ( !empty( $comment_id ) )
-		bp_core_add_message( __( 'Reply Posted!', 'buddypress' ) );
+		bp_core_add_message( __( 'Reply Posted!', 'buddyboss' ) );
 	else
-		bp_core_add_message( __( 'There was an error posting that reply. Please try again.', 'buddypress' ), 'error' );
+		bp_core_add_message( __( 'There was an error posting that reply. Please try again.', 'buddyboss' ), 'error' );
 
 	bp_core_redirect( wp_get_referer() . '#ac-form-' . $activity_id );
 }

@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress Groups Classes.
+ * BuddyBoss Groups Classes.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage GroupsClasses
  * @since 1.8.0
  */

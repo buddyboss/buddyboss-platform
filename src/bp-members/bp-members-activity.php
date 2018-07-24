@@ -2,7 +2,7 @@
 /**
  * BuddyPress Member Activity
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage MembersActivity
  * @since 2.2.0
  */
@@ -21,9 +21,9 @@ function bp_members_register_activity_actions() {
 	bp_activity_set_action(
 		buddypress()->members->id,
 		'new_member',
-		__( 'New member registered', 'buddypress' ),
+		__( 'New member registered', 'buddyboss' ),
 		'bp_members_format_activity_action_new_member',
-		__( 'New Members', 'buddypress' ),
+		__( 'New Members', 'buddyboss' ),
 		array( 'activity' )
 	);
 
@@ -47,7 +47,7 @@ add_action( 'bp_register_activity_actions', 'bp_members_register_activity_action
  */
 function bp_members_format_activity_action_new_member( $action, $activity ) {
 	$userlink = bp_core_get_userlink( $activity->user_id );
-	$action   = sprintf( __( '%s became a registered member', 'buddypress' ), $userlink );
+	$action   = sprintf( __( '%s became a registered member', 'buddyboss' ), $userlink );
 
 	// Legacy filter - pass $user_id instead of $activity.
 	if ( has_filter( 'bp_core_activity_registered_member_action' ) ) {

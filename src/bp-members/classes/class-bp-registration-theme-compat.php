@@ -4,7 +4,7 @@
  *
  * Handlers for member screens that aren't handled elsewhere.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage MembersScreens
  * @since 1.7.0
  */
@@ -97,18 +97,18 @@ class BP_Registration_Theme_Compat {
 	public function dummy_post() {
 		// Registration page.
 		if ( bp_is_register_page() ) {
-			$title = __( 'Create an Account', 'buddypress' );
+			$title = __( 'Create an Account', 'buddyboss' );
 
 			if ( 'completed-confirmation' == bp_get_current_signup_step() ) {
-				$title = __( 'Check Your Email To Activate Your Account!', 'buddypress' );
+				$title = __( 'Check Your Email To Activate Your Account!', 'buddyboss' );
 			}
 
 		// Activation page.
 		} else {
-			$title = __( 'Activate Your Account', 'buddypress' );
+			$title = __( 'Activate Your Account', 'buddyboss' );
 
 			if ( bp_account_was_activated() ) {
-				$title = __( 'Account Activated', 'buddypress' );
+				$title = __( 'Account Activated', 'buddyboss' );
 			}
 		}
 

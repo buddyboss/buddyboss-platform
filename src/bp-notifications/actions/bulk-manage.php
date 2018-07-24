@@ -2,7 +2,7 @@
 /**
  * Notifications: Bulk-manage action handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage NotificationsActions
  * @since 3.0.0
  */
@@ -33,7 +33,7 @@ function bp_notifications_action_bulk_manage() {
 
 	// Check the nonce.
 	if ( ! wp_verify_nonce( $nonce, 'notifications_bulk_nonce' ) ) {
-		bp_core_add_message( __( 'There was a problem managing your notifications.', 'buddypress' ), 'error' );
+		bp_core_add_message( __( 'There was a problem managing your notifications.', 'buddyboss' ), 'error' );
 		return false;
 	}
 
@@ -45,21 +45,21 @@ function bp_notifications_action_bulk_manage() {
 			foreach ( $notifications as $notification ) {
 				bp_notifications_delete_notification( $notification );
 			}
-			bp_core_add_message( __( 'Notifications deleted.', 'buddypress' ) );
+			bp_core_add_message( __( 'Notifications deleted.', 'buddyboss' ) );
 		break;
 
 		case 'read' :
 			foreach ( $notifications as $notification ) {
 				bp_notifications_mark_notification( $notification, false );
 			}
-			bp_core_add_message( __( 'Notifications marked as read', 'buddypress' ) );
+			bp_core_add_message( __( 'Notifications marked as read', 'buddyboss' ) );
 		break;
 
 		case 'unread' :
 			foreach ( $notifications as $notification ) {
 				bp_notifications_mark_notification( $notification, true );
 			}
-			bp_core_add_message( __( 'Notifications marked as unread.', 'buddypress' ) );
+			bp_core_add_message( __( 'Notifications marked as unread.', 'buddyboss' ) );
 		break;
 	}
 

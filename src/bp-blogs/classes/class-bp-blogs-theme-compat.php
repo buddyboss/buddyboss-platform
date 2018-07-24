@@ -2,7 +2,7 @@
 /**
  * BuddyPress Blogs Theme Compatibility.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage BlogsScreens
  * @since 1.5.0
  */
@@ -110,7 +110,7 @@ class BP_Blogs_Theme_Compat {
 
 		bp_theme_compat_reset_post( array(
 			'ID'             => 0,
-			'post_title'     => __( 'Sites', 'buddypress' ),
+			'post_title'     => __( 'Sites', 'buddyboss' ),
 			'post_author'    => 0,
 			'post_date'      => 0,
 			'post_content'   => '',
@@ -172,9 +172,9 @@ class BP_Blogs_Theme_Compat {
 
 		// Title based on ability to create blogs.
 		if ( is_user_logged_in() && bp_blog_signup_enabled() ) {
-			$title = __( 'Create a Site', 'buddypress' );
+			$title = __( 'Create a Site', 'buddyboss' );
 		} else {
-			$title = __( 'Sites', 'buddypress' );
+			$title = __( 'Sites', 'buddyboss' );
 		}
 
 		bp_theme_compat_reset_post( array(

@@ -2,7 +2,7 @@
 /**
  * Settings: Email address and password action handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage SettingsActions
  * @since 3.0.0
  */
@@ -186,16 +186,16 @@ function bp_settings_action_general() {
 	// Email feedback.
 	switch ( $email_error ) {
 		case 'invalid' :
-			$feedback['email_invalid']  = __( 'That email address is invalid. Check the formatting and try again.', 'buddypress' );
+			$feedback['email_invalid']  = __( 'That email address is invalid. Check the formatting and try again.', 'buddyboss' );
 			break;
 		case 'blocked' :
-			$feedback['email_blocked']  = __( 'That email address is currently unavailable for use.', 'buddypress' );
+			$feedback['email_blocked']  = __( 'That email address is currently unavailable for use.', 'buddyboss' );
 			break;
 		case 'taken' :
-			$feedback['email_taken']    = __( 'That email address is already taken.', 'buddypress' );
+			$feedback['email_taken']    = __( 'That email address is already taken.', 'buddyboss' );
 			break;
 		case 'empty' :
-			$feedback['email_empty']    = __( 'Email address cannot be empty.', 'buddypress' );
+			$feedback['email_empty']    = __( 'Email address cannot be empty.', 'buddyboss' );
 			break;
 		case false :
 			// No change.
@@ -205,16 +205,16 @@ function bp_settings_action_general() {
 	// Password feedback.
 	switch ( $pass_error ) {
 		case 'invalid' :
-			$feedback['pass_error']    = __( 'Your current password is invalid.', 'buddypress' );
+			$feedback['pass_error']    = __( 'Your current password is invalid.', 'buddyboss' );
 			break;
 		case 'mismatch' :
-			$feedback['pass_mismatch'] = __( 'The new password fields did not match.', 'buddypress' );
+			$feedback['pass_mismatch'] = __( 'The new password fields did not match.', 'buddyboss' );
 			break;
 		case 'empty' :
-			$feedback['pass_empty']    = __( 'One of the password fields was empty.', 'buddypress' );
+			$feedback['pass_empty']    = __( 'One of the password fields was empty.', 'buddyboss' );
 			break;
 		case 'same' :
-			$feedback['pass_same'] 	   = __( 'The new password must be different from the current password.', 'buddypress' );
+			$feedback['pass_same'] 	   = __( 'The new password must be different from the current password.', 'buddyboss' );
 			break;
 		case false :
 			// No change.
@@ -223,15 +223,15 @@ function bp_settings_action_general() {
 
 	// No errors so show a simple success message.
 	if ( ( ( false === $email_error ) || ( false == $pass_error ) ) && ( ( true === $pass_changed ) || ( true === $email_changed ) ) ) {
-		$feedback[]    = __( 'Your settings have been saved.', 'buddypress' );
+		$feedback[]    = __( 'Your settings have been saved.', 'buddyboss' );
 		$feedback_type = 'success';
 
 	// Some kind of errors occurred.
 	} elseif ( ( ( false === $email_error ) || ( false === $pass_error ) ) && ( ( false === $pass_changed ) || ( false === $email_changed ) ) ) {
 		if ( bp_is_my_profile() ) {
-			$feedback['nochange'] = __( 'No changes were made to your account.', 'buddypress' );
+			$feedback['nochange'] = __( 'No changes were made to your account.', 'buddyboss' );
 		} else {
-			$feedback['nochange'] = __( 'No changes were made to this account.', 'buddypress' );
+			$feedback['nochange'] = __( 'No changes were made to this account.', 'buddyboss' );
 		}
 	}
 
@@ -286,10 +286,10 @@ function bp_settings_verify_email_change() {
 			bp_delete_user_meta( bp_displayed_user_id(), 'pending_email_change' );
 
 			// Post a success message and redirect.
-			bp_core_add_message( __( 'You have successfully verified your new email address.', 'buddypress' ) );
+			bp_core_add_message( __( 'You have successfully verified your new email address.', 'buddyboss' ) );
 		} else {
 			// Unknown error.
-			bp_core_add_message( __( 'There was a problem verifying your new email address. Please try again.', 'buddypress' ), 'error' );
+			bp_core_add_message( __( 'There was a problem verifying your new email address. Please try again.', 'buddyboss' ), 'error' );
 		}
 
 		bp_core_redirect( $redirect_to );
@@ -301,7 +301,7 @@ function bp_settings_verify_email_change() {
 
 		if ( $nonce_check ) {
 			bp_delete_user_meta( bp_displayed_user_id(), 'pending_email_change' );
-			bp_core_add_message( __( 'You have successfully dismissed your pending email change.', 'buddypress' ) );
+			bp_core_add_message( __( 'You have successfully dismissed your pending email change.', 'buddyboss' ) );
 		}
 
 		bp_core_redirect( $redirect_to );

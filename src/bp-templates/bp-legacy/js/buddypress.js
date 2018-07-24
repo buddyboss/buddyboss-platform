@@ -263,7 +263,7 @@ jq(document).ready( function() {
 			secure: ( 'https:' === window.location.protocol )
 		} );
 
-		/* Activity Stream Tabs */
+		/* Activity Feed Tabs */
 		scope  = target.attr('id').substr( 9, target.attr('id').length );
 		filter = jq('#activity-filter-select select').val();
 
@@ -293,14 +293,14 @@ jq(document).ready( function() {
 		return false;
 	});
 
-	/* Stream event delegation */
+	/* Feed event delegation */
 	jq('div.activity').on( 'click', function(event) {
 		var target = jq(event.target),
 			type, parent, parent_id,
 			li, id, link_href, nonce, timestamp,
 			oldest_page, just_posted;
 
-		/* Favoriting activity stream items */
+		/* Favoriting activity feed items */
 		if ( target.hasClass('fav') || target.hasClass('unfav') ) {
 			/* Bail if a request is in progress */
 			if ( target.hasClass( 'loading' ) ) {
@@ -364,7 +364,7 @@ jq(document).ready( function() {
 			return false;
 		}
 
-		/* Delete activity stream items */
+		/* Delete activity feed items */
 		if ( target.hasClass('delete-activity') ) {
 			li        = target.parents('div.activity ul li');
 			id        = li.attr('id').substr( 9, li.attr('id').length );
@@ -400,7 +400,7 @@ jq(document).ready( function() {
 			return false;
 		}
 
-		// Spam activity stream items
+		// Spam activity feed items
 		if ( target.hasClass( 'spam-activity' ) ) {
 			li        = target.parents( 'div.activity ul li' );
 			timestamp = li.prop( 'class' ).match( /date-recorded-([0-9]+)/ );
@@ -745,7 +745,7 @@ jq(document).ready( function() {
 			return false;
 		}
 
-		// Spam an activity stream comment
+		// Spam an activity feed comment
 		if ( target.hasClass( 'spam-activity-comment' ) ) {
 			link_href  = target.attr( 'href' );
 			comment_li = target.parent().parent();
@@ -1040,7 +1040,7 @@ jq(document).ready( function() {
 
 	});
 
-	/** Invite Friends Interface ****************************************/
+	/** Invite Connections Interface ****************************************/
 
 	/* Select a user from the list of friends and add them to the invite list */
 	jq('#send-invite-form').on( 'click', '#invite-list input', function() {
@@ -1178,7 +1178,7 @@ jq(document).ready( function() {
 		};
 	});
 
-	/** Friendship Requests **************************************/
+	/** Connection Requests **************************************/
 
 	/* Accept and Reject friendship request buttons */
 	jq('#friend-list a.accept, #friend-list a.reject').on( 'click', function() {
@@ -1871,7 +1871,7 @@ function bp_activity_request(scope, filter) {
 	jq('#object-nav.item-list-tabs li.selected, div.activity-type-tabs li.selected').addClass('loading');
 	jq('#activity-filter-select select option[value="' + filter + '"]').prop( 'selected', true );
 
-	/* Reload the activity stream based on the selection */
+	/* Reload the activity feed based on the selection */
 	jq('.widget_bp_activity_widget h2 span.ajax-loader').show();
 
 	if ( bp_ajax_request ) {

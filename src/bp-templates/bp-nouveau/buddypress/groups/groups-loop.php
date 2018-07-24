@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Groups Loop
+ * BuddyBoss - Groups Loop
  *
  * @since 3.0.0
  * @version 3.1.0
@@ -48,7 +48,7 @@ bp_nouveau_before_loop(); ?>
 							<?php
 							printf(
 								/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-								__( 'active %s', 'buddypress' ),
+								__( 'active %s', 'buddyboss' ),
 								bp_get_group_last_active()
 							);
 							?>

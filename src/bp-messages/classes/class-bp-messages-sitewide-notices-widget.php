@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress Messages Sitewide Notices Widget.
+ * BuddyBoss Messages Sitewide Notices Widget.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Messages
  * @since 1.9.0
  */
@@ -23,10 +23,10 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 	function __construct() {
 		parent::__construct(
 			'bp_messages_sitewide_notices_widget',
-			__( '(BuddyPress) Sitewide Notices', 'buddypress' ),
+			__( '(BuddyBoss) Sitewide Notices', 'buddyboss' ),
 			array(
 				'classname'                   => 'widget_bp_core_sitewide_messages buddypress widget',
-				'description'                 => __( 'Display Sitewide Notices posted by the site administrator', 'buddypress' ),
+				'description'                 => __( 'Display Sitewide Notices posted by the site administrator', 'buddyboss' ),
 				'customize_selective_refresh' => true,
 			)
 		);
@@ -113,7 +113,7 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 		$title = strip_tags( $instance['title'] ); ?>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'buddypress' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'buddyboss' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 		</p>
 

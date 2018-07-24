@@ -2,7 +2,7 @@
 /**
  * Members: Register screen handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage MembersScreens
  * @since 3.0.0
  */
@@ -67,11 +67,11 @@ function bp_core_screen_signup() {
 
 		// Check that both password fields are filled in.
 		if ( empty( $_POST['signup_password'] ) || empty( $_POST['signup_password_confirm'] ) )
-			$bp->signup->errors['signup_password'] = __( 'Please make sure you enter your password twice', 'buddypress' );
+			$bp->signup->errors['signup_password'] = __( 'Please make sure you enter your password twice', 'buddyboss' );
 
 		// Check that the passwords match.
 		if ( ( !empty( $_POST['signup_password'] ) && !empty( $_POST['signup_password_confirm'] ) ) && $_POST['signup_password'] != $_POST['signup_password_confirm'] )
-			$bp->signup->errors['signup_password'] = __( 'The passwords you entered do not match.', 'buddypress' );
+			$bp->signup->errors['signup_password'] = __( 'The passwords you entered do not match.', 'buddyboss' );
 
 		$bp->signup->username = $_POST['signup_username'];
 		$bp->signup->email = $_POST['signup_email'];
@@ -100,7 +100,7 @@ function bp_core_screen_signup() {
 
 					// Create errors for required fields without values.
 					if ( xprofile_check_is_required_field( $field_id ) && empty( $_POST[ 'field_' . $field_id ] ) && ! bp_current_user_can( 'bp_moderate' ) )
-						$bp->signup->errors['field_' . $field_id] = __( 'This is a required field', 'buddypress' );
+						$bp->signup->errors['field_' . $field_id] = __( 'This is a required field', 'buddyboss' );
 				}
 
 				// This situation doesn't naturally occur so bounce to website root.
@@ -154,7 +154,7 @@ function bp_core_screen_signup() {
 
 			if ( 'none' != $active_signup ) {
 
-				// Make sure the extended profiles module is enabled.
+				// Make sure the profiles fields module is enabled.
 				if ( bp_is_active( 'xprofile' ) ) {
 					// Let's compact any profile field info into usermeta.
 					$profile_field_ids = explode( ',', $_POST['signup_profile_field_ids'] );

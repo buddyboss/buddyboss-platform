@@ -1,10 +1,10 @@
 <?php
 /**
- * BuddyPress Activity Streams Loader.
+ * BuddyBoss Activity Feeds Loader.
  *
- * An activity stream component, for users, groups, and site tracking.
+ * An activity feed component, for users, groups, and site tracking.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage ActivityCore
  * @since 1.5.0
  */

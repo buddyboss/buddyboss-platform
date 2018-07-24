@@ -1,9 +1,9 @@
 <?php
 /**
- * BuddyPress Friends Classes.
+ * BuddyBoss Connections Classes.
  *
- * @package BuddyPress
- * @subpackage FriendsClasses
+ * @package BuddyBoss
+ * @subpackage ConnectionsClasses
  * @since 1.0.0
  */
 
@@ -452,7 +452,7 @@ class BP_Friends_Friendship {
 	 * @since 1.2.0
 	 *
 	 * @param int $user_id The ID of the user who has received the
-	 *                     friendship requests.
+	 *                     connection requests.
 	 * @return array|bool An array of user IDs, or false if none are found.
 	 */
 	public static function get_friendship_request_user_ids( $user_id ) {
@@ -480,7 +480,7 @@ class BP_Friends_Friendship {
 	 * @param int $user_id Optional. ID of the user whose friendships you
 	 *                     are counting. Default: displayed user (if any), otherwise
 	 *                     logged-in user.
-	 * @return int Friend count for the user.
+	 * @return int Connection count for the user.
 	 */
 	public static function total_friend_count( $user_id = 0 ) {
 		global $wpdb;
@@ -670,7 +670,7 @@ class BP_Friends_Friendship {
 	/**
 	 * Get the last active date of many users at once.
 	 *
-	 * @todo Why is this in the Friends component?
+	 * @todo Why is this in the Connections component?
 	 *
 	 * @since 1.0.0
 	 *
@@ -721,7 +721,7 @@ class BP_Friends_Friendship {
 	}
 
 	/**
-	 * Remove a friendship or a friendship request INITIATED BY the logged-in user.
+	 * Remove a connection or a connection request INITIATED BY the logged-in user.
 	 *
 	 * @since 1.6.0
 	 *
@@ -737,7 +737,7 @@ class BP_Friends_Friendship {
 	}
 
 	/**
-	 * Remove a friendship or a friendship request MADE OF the logged-in user.
+	 * Remove a connection or a connection request MADE OF the logged-in user.
 	 *
 	 * @since 1.0.0
 	 *

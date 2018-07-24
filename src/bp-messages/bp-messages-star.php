@@ -2,7 +2,7 @@
 /**
  * Functions related to starring private messages.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage MessagesStar
  * @since 2.3.0
  */
@@ -107,8 +107,8 @@ function bp_the_message_star_action_link( $args = array() ) {
 			'text_unstar'         => __( 'Unstar',      'buddypress' ),
 			'text_star'           => __( 'Star',        'buddypress' ),
 			'title_unstar'        => __( 'Starred',     'buddypress' ),
-			'title_star'          => __( 'Not starred', 'buddypress' ),
-			'title_unstar_thread' => __( 'Remove all starred messages in this thread', 'buddypress' ),
+			'title_star'          => __( 'Not starred', 'buddyboss' ),
+			'title_unstar_thread' => __( 'Remove all starred messages in this thread', 'buddyboss' ),
 			'title_star_thread'   => __( 'Star the first message in this thread',      'buddypress' ),
 		), 'messages_star_action_link' );
 
@@ -336,8 +336,8 @@ add_action( 'bp_enqueue_scripts', 'bp_messages_star_enqueue_scripts' );
 function bp_messages_star_bulk_management_dropdown() {
 ?>
 
-	<option value="star"><?php _e( 'Add star', 'buddypress' ); ?></option>
-	<option value="unstar"><?php _e( 'Remove star', 'buddypress' ); ?></option>
+	<option value="star"><?php _e( 'Add star', 'buddyboss' ); ?></option>
+	<option value="unstar"><?php _e( 'Remove star', 'buddyboss' ); ?></option>
 
 <?php
 }

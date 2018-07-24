@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Groups Members
+ * BuddyBoss - Groups Members
  *
  * @since 3.0.0
  * @version 3.0.0
@@ -17,7 +17,7 @@
 </div>
 
 <h2 class="bp-screen-title">
-	<?php esc_html_e( 'Membership List', 'buddypress' ); ?>
+	<?php esc_html_e( 'Membership List', 'buddyboss' ); ?>
 </h2>
 
 

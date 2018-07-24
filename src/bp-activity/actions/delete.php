@@ -2,7 +2,7 @@
 /**
  * Activity: Delete action
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage ActivityActions
  * @since 3.0.0
  */
@@ -49,9 +49,9 @@ function bp_activity_action_delete_activity( $activity_id = 0 ) {
 
 	// Delete the activity item and provide user feedback.
 	if ( bp_activity_delete( array( 'id' => $activity_id, 'user_id' => $activity->user_id ) ) )
-		bp_core_add_message( __( 'Activity deleted successfully', 'buddypress' ) );
+		bp_core_add_message( __( 'Activity deleted successfully', 'buddyboss' ) );
 	else
-		bp_core_add_message( __( 'There was an error when deleting that activity', 'buddypress' ), 'error' );
+		bp_core_add_message( __( 'There was an error when deleting that activity', 'buddyboss' ), 'error' );
 
 	/**
 	 * Fires after the deletion so plugins can act afterwards based on the activity.

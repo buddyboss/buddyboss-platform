@@ -2,7 +2,7 @@
 /**
  * BuddyPress XProfile Classes.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage XProfileClasses
  * @since 2.0.0
  */
@@ -25,8 +25,8 @@ class BP_XProfile_Field_Type_Textbox extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = _x( 'Single Fields', 'xprofile field type category', 'buddypress' );
-		$this->name     = _x( 'Text Box', 'xprofile field type', 'buddypress' );
+		$this->category = _x( 'Single Fields', 'xprofile field type category', 'buddyboss' );
+		$this->name     = _x( 'Text Box', 'xprofile field type', 'buddyboss' );
 
 		$this->set_format( '/^.*$/', 'replace' );
 
@@ -100,7 +100,7 @@ class BP_XProfile_Field_Type_Textbox extends BP_XProfile_Field_Type {
 
 		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text"><?php
 			/* translators: accessibility text */
-			esc_html_e( 'Textbox', 'buddypress' );
+			esc_html_e( 'Textbox', 'buddyboss' );
 		?></label>
 		<input <?php echo $this->get_edit_field_html_elements( $r ); ?>>
 

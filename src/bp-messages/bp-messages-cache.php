@@ -1,11 +1,11 @@
 <?php
 /**
- * BuddyPress Messages Caching.
+ * BuddyBoss Messages Caching.
  *
  * Caching functions handle the clearing of cached objects and pages on specific
  * actions throughout BuddyPress.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage MessagesCache
  * @since 1.5.0
  */

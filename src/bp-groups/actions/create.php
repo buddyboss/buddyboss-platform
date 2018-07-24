@@ -2,7 +2,7 @@
 /**
  * Groups: Create action
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage GroupActions
  * @since 3.0.0
  */
@@ -24,7 +24,7 @@ function groups_action_create_group() {
 		return false;
 
 	if ( !bp_user_can_create_groups() ) {
-		bp_core_add_message( __( 'Sorry, you are not allowed to create groups.', 'buddypress' ), 'error' );
+		bp_core_add_message( __( 'Sorry, you are not allowed to create groups.', 'buddyboss' ), 'error' );
 		bp_core_redirect( bp_get_groups_directory_permalink() );
 	}
 
@@ -63,7 +63,7 @@ function groups_action_create_group() {
 
 		// Only allow the group creator to continue to edit the new group.
 		if ( ! bp_is_group_creator( $bp->groups->current_group, bp_loggedin_user_id() ) ) {
-			bp_core_add_message( __( 'Only the group creator may continue editing this group.', 'buddypress' ), 'error' );
+			bp_core_add_message( __( 'Only the group creator may continue editing this group.', 'buddyboss' ), 'error' );
 			bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create' ) );
 		}
 	}
@@ -76,14 +76,14 @@ function groups_action_create_group() {
 
 		if ( 'group-details' == bp_get_groups_current_create_step() ) {
 			if ( empty( $_POST['group-name'] ) || empty( $_POST['group-desc'] ) || !strlen( trim( $_POST['group-name'] ) ) || !strlen( trim( $_POST['group-desc'] ) ) ) {
-				bp_core_add_message( __( 'Please fill in all of the required fields', 'buddypress' ), 'error' );
+				bp_core_add_message( __( 'Please fill in all of the required fields', 'buddyboss' ), 'error' );
 				bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create/step/' . bp_get_groups_current_create_step() ) );
 			}
 
 			$new_group_id = isset( $bp->groups->new_group_id ) ? $bp->groups->new_group_id : 0;
 
 			if ( !$bp->groups->new_group_id = groups_create_group( array( 'group_id' => $new_group_id, 'name' => $_POST['group-name'], 'description' => $_POST['group-desc'], 'slug' => groups_check_slug( sanitize_title( esc_attr( $_POST['group-name'] ) ) ), 'date_created' => bp_core_current_time(), 'status' => 'public' ) ) ) {
-				bp_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddypress' ), 'error' );
+				bp_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss' ), 'error' );
 				bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create/step/' . bp_get_groups_current_create_step() ) );
 			}
 		}
@@ -102,7 +102,7 @@ function groups_action_create_group() {
 				$group_status = 'hidden';
 
 			if ( !$bp->groups->new_group_id = groups_create_group( array( 'group_id' => $bp->groups->new_group_id, 'status' => $group_status, 'enable_forum' => $group_enable_forum ) ) ) {
-				bp_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddypress' ), 'error' );
+				bp_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss' ), 'error' );
 				bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create/step/' . bp_get_groups_current_create_step() ) );
 			}
 
@@ -181,7 +181,7 @@ function groups_action_create_group() {
 			setcookie( 'bp_new_group_id', false, time() - 3600, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 			setcookie( 'bp_completed_create_steps', false, time() - 3600, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 
-			// Once we completed all steps, record the group creation in the activity stream.
+			// Once we completed all steps, record the group creation in the activity feed.
 			if ( bp_is_active( 'activity' ) ) {
 				groups_record_activity( array(
 					'type' => 'created_group',
@@ -226,11 +226,11 @@ function groups_action_create_group() {
 			return false;
 		}
 
-		$message = __( 'Invite successfully removed', 'buddypress' );
+		$message = __( 'Invite successfully removed', 'buddyboss' );
 		$error   = false;
 
 		if( ! groups_uninvite_user( (int) $_REQUEST['user_id'], $bp->groups->new_group_id ) ) {
-			$message = __( 'There was an error removing the invite', 'buddypress' );
+			$message = __( 'There was an error removing the invite', 'buddyboss' );
 			$error   = 'error';
 		}
 
@@ -271,7 +271,7 @@ function groups_action_create_group() {
 			);
 
 			if ( ! bp_core_avatar_handle_crop( $args ) ) {
-				bp_core_add_message( __( 'There was an error saving the group profile photo, please try uploading again.', 'buddypress' ), 'error' );
+				bp_core_add_message( __( 'There was an error saving the group profile photo, please try uploading again.', 'buddyboss' ), 'error' );
 			} else {
 				/**
 				 * Fires after a group avatar is uploaded.
@@ -284,7 +284,7 @@ function groups_action_create_group() {
 				 */
 				do_action( 'groups_avatar_uploaded', bp_get_current_group_id(), 'crop', $args );
 
-				bp_core_add_message( __( 'The group profile photo was uploaded successfully.', 'buddypress' ) );
+				bp_core_add_message( __( 'The group profile photo was uploaded successfully.', 'buddyboss' ) );
 			}
 		}
 	}

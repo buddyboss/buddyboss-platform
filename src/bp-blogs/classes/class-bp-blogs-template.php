@@ -2,7 +2,7 @@
 /**
  * BuddyPress Blogs Template Class.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage BlogsTemplate
  * @since 1.5.0
  */
@@ -147,7 +147,7 @@ class BP_Blogs_Template {
 				'format'    => '',
 				'total'     => ceil( (int) $this->total_blog_count / (int) $this->pag_num ),
 				'current'   => (int) $this->pag_page,
-				'prev_text' => _x( '&larr;', 'Blog pagination previous text', 'buddypress' ),
+				'prev_text' => _x( '&larr;', 'Blog pagination previous text', 'buddyboss' ),
 				'next_text' => _x( '&rarr;', 'Blog pagination next text',     'buddypress' ),
 				'mid_size'  => 1,
 				'add_args'  => array(),

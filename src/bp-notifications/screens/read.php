@@ -2,7 +2,7 @@
 /**
  * Notifications: User's "Notifications > Read" screen handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage NotificationsScreens
  * @since 3.0.0
  */
@@ -59,7 +59,7 @@ function bp_notifications_action_mark_unread() {
 	if ( bp_verify_nonce_request( 'bp_notification_mark_unread_' . $id ) && bp_notifications_mark_notification( $id, true ) ) {
 		bp_core_add_message( __( 'Notification successfully marked unread.',       'buddypress' )          );
 	} else {
-		bp_core_add_message( __( 'There was a problem marking that notification.', 'buddypress' ), 'error' );
+		bp_core_add_message( __( 'There was a problem marking that notification.', 'buddyboss' ), 'error' );
 	}
 
 	// Redirect.

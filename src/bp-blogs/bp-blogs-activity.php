@@ -2,7 +2,7 @@
 /**
  * BuddyPress Blogs Activity.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage BlogsActivity
  * @since 1.5.0
  */
@@ -22,9 +22,9 @@ function bp_blogs_register_activity_actions() {
 		bp_activity_set_action(
 			buddypress()->blogs->id,
 			'new_blog',
-			__( 'New site created', 'buddypress' ),
+			__( 'New site created', 'buddyboss' ),
 			'bp_blogs_format_activity_action_new_blog',
-			__( 'New Sites', 'buddypress' ),
+			__( 'New Sites', 'buddyboss' ),
 			array( 'activity', 'member' ),
 			0
 		);
@@ -74,9 +74,9 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 	// Set specific params for the 'post' post type.
 	$params->component_id    = buddypress()->blogs->id;
 	$params->action_id       = 'new_blog_post';
-	$params->admin_filter    = __( 'New post published', 'buddypress' );
+	$params->admin_filter    = __( 'New post published', 'buddyboss' );
 	$params->format_callback = 'bp_blogs_format_activity_action_new_blog_post';
-	$params->front_filter    = __( 'Posts', 'buddypress' );
+	$params->front_filter    = __( 'Posts', 'buddyboss' );
 	$params->contexts        = array( 'activity', 'member' );
 	$params->position        = 5;
 
@@ -102,9 +102,9 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 			$params->comments_tracking = new stdClass();
 			$params->comments_tracking->component_id    = buddypress()->blogs->id;
 			$params->comments_tracking->action_id       = 'new_blog_comment';
-			$params->comments_tracking->admin_filter    = __( 'New post comment posted', 'buddypress' );
+			$params->comments_tracking->admin_filter    = __( 'New post comment posted', 'buddyboss' );
 			$params->comments_tracking->format_callback = 'bp_blogs_format_activity_action_new_blog_comment';
-			$params->comments_tracking->front_filter    = __( 'Comments', 'buddypress' );
+			$params->comments_tracking->front_filter    = __( 'Comments', 'buddyboss' );
 			$params->comments_tracking->contexts        = array( 'activity', 'member' );
 			$params->comments_tracking->position        = 10;
 		}
@@ -127,7 +127,7 @@ function bp_blogs_format_activity_action_new_blog( $action, $activity ) {
 	$blog_url  = bp_blogs_get_blogmeta( $activity->item_id, 'url' );
 	$blog_name = bp_blogs_get_blogmeta( $activity->item_id, 'name' );
 
-	$action = sprintf( __( '%s created the site %s', 'buddypress' ), bp_core_get_userlink( $activity->user_id ), '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
+	$action = sprintf( __( '%s created the site %s', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ), '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 
 	// Legacy filter - requires the BP_Blogs_Blog object.
 	if ( has_filter( 'bp_blogs_activity_created_blog_action' ) ) {
@@ -209,7 +209,7 @@ function bp_blogs_format_activity_action_new_blog_post( $action, $activity ) {
 	 */
 	if ( empty( $post_title ) ) {
 		// Defaults to no title.
-		$post_title = esc_html__( '(no title)', 'buddypress' );
+		$post_title = esc_html__( '(no title)', 'buddyboss' );
 
 		switch_to_blog( $activity->item_id );
 
@@ -236,9 +236,9 @@ function bp_blogs_format_activity_action_new_blog_post( $action, $activity ) {
 
 	// Build the complete activity action string.
 	if ( is_multisite() ) {
-		$action  = sprintf( __( '%1$s wrote a new post, %2$s, on the site %3$s', 'buddypress' ), $user_link, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
+		$action  = sprintf( __( '%1$s wrote a new post, %2$s, on the site %3$s', 'buddyboss' ), $user_link, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 	} else {
-		$action  = sprintf( __( '%1$s wrote a new post, %2$s', 'buddypress' ), $user_link, $post_link );
+		$action  = sprintf( __( '%1$s wrote a new post, %2$s', 'buddyboss' ), $user_link, $post_link );
 	}
 
 	// Legacy filter - requires the post object.
@@ -362,9 +362,9 @@ function bp_blogs_format_activity_action_new_blog_comment( $action, $activity ) 
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
 	if ( is_multisite() ) {
-		$action  = sprintf( __( '%1$s commented on the post, %2$s, on the site %3$s', 'buddypress' ), $user_link, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
+		$action  = sprintf( __( '%1$s commented on the post, %2$s, on the site %3$s', 'buddyboss' ), $user_link, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 	} else {
-		$action  = sprintf( __( '%1$s commented on the post, %2$s', 'buddypress' ), $user_link, $post_link );
+		$action  = sprintf( __( '%1$s commented on the post, %2$s', 'buddyboss' ), $user_link, $post_link );
 	}
 
 	// Legacy filter - requires the comment object.
@@ -423,7 +423,7 @@ function bp_blogs_prefetch_activity_object_data( $activities ) {
 add_filter( 'bp_activity_prefetch_object_data', 'bp_blogs_prefetch_activity_object_data' );
 
 /**
- * Record blog-related activity to the activity stream.
+ * Record blog-related activity to the activity feed.
  *
  * @since 1.0.0
  *
@@ -456,11 +456,11 @@ function bp_blogs_record_activity( $args = '' ) {
 	if ( ! empty( $r['action'] ) ) {
 
 		/**
-		 * Filters the action associated with activity for activity stream.
+		 * Filters the action associated with activity for activity feed.
 		 *
 		 * @since 1.2.0
 		 *
-		 * @param string $value Action for the activity stream.
+		 * @param string $value Action for the activity feed.
 		 */
 		$r['action'] = apply_filters( 'bp_blogs_record_activity_action', $r['action'] );
 	}
@@ -468,13 +468,13 @@ function bp_blogs_record_activity( $args = '' ) {
 	if ( ! empty( $r['content'] ) ) {
 
 		/**
-		 * Filters the content associated with activity for activity stream.
+		 * Filters the content associated with activity for activity feed.
 		 *
 		 * @since 1.2.0
 		 *
-		 * @param string $value Generated summary from content for the activity stream.
-		 * @param string $value Content for the activity stream.
-		 * @param array  $r     Array of arguments used for the activity stream item.
+		 * @param string $value Generated summary from content for the activity feed.
+		 * @param string $value Content for the activity feed.
+		 * @param array  $r     Array of arguments used for the activity feed item.
 		 */
 		$r['content'] = apply_filters( 'bp_blogs_record_activity_content', bp_activity_create_summary( $r['content'], $r ), $r['content'], $r );
 	}
@@ -492,7 +492,7 @@ function bp_blogs_record_activity( $args = '' ) {
 }
 
 /**
- * Delete a blog-related activity stream item.
+ * Delete a blog-related activity feed item.
  *
  * @since 1.0.0
  *
@@ -522,12 +522,12 @@ function bp_blogs_delete_activity( $args = '' ) {
  * Check if a blog post's activity item should be closed from commenting.
  *
  * This mirrors the {@link comments_open()} and {@link _close_comments_for_old_post()}
- * functions, but for use with the BuddyPress activity stream to be as
+ * functions, but for use with the BuddyBoss activity feed to be as
  * lightweight as possible.
  *
  * By lightweight, we actually mirror a few of the blog's commenting settings
  * to blogmeta and checks the values in blogmeta instead.  This is to prevent
- * multiple {@link switch_to_blog()} calls in the activity stream.
+ * multiple {@link switch_to_blog()} calls in the activity feed.
  *
  * @since 2.0.0
  *
@@ -685,7 +685,7 @@ function bp_blogs_delete_activity_for_site( $blog_id ) {
 add_action( 'bp_blogs_remove_data_for_blog', 'bp_blogs_delete_activity_for_site' );
 
 /**
- * Remove a blog post activity item from the activity stream.
+ * Remove a blog post activity item from the activity feed.
  *
  * @since 1.0.0
  *
@@ -713,7 +713,7 @@ function bp_blogs_remove_post( $post_id, $blog_id = 0, $user_id = 0 ) {
 	}
 
 	/**
-	 * Fires before removal of a blog post activity item from the activity stream.
+	 * Fires before removal of a blog post activity item from the activity feed.
 	 *
 	 * @since 1.5.0
 	 *
@@ -731,7 +731,7 @@ function bp_blogs_remove_post( $post_id, $blog_id = 0, $user_id = 0 ) {
 	) );
 
 	/**
-	 * Fires after removal of a blog post activity item from the activity stream.
+	 * Fires after removal of a blog post activity item from the activity feed.
 	 *
 	 * @since 1.0.0
 	 *
@@ -1027,7 +1027,7 @@ add_action( 'trashed_post_comments', 'bp_blogs_remove_activity_meta_for_trashed_
  *
  * In BuddyPress 2.0, the schema for storing activity items related to blog
  * posts changed. Instead creating new top-level 'new_blog_comment' activity
- * items, blog comments are recorded in the activity stream as comments on the
+ * items, blog comments are recorded in the activity feed as comments on the
  * 'new_blog_post' activity items corresponding to the parent post. This filter
  * ensures that the 'new_blog_comment' filter in bp_has_activities() (which
  * powers the 'Comments' filter in the activity directory dropdown) includes

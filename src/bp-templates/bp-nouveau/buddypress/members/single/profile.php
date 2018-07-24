@@ -1,13 +1,13 @@
 <?php
 /**
- * BuddyPress - Users Profile
+ * BuddyBoss - Users Profile
  *
  * @since 3.0.0
  * @version 3.0.0
  */
 ?>
 
-<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Profile menu', 'buddypress' ); ?>">
+<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Profile menu', 'buddyboss' ); ?>">
 	<ul class="subnav">
 
 		<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>

@@ -1,15 +1,15 @@
 <?php
 /**
- * BuddyPress - Users Messages
+ * BuddyBoss - Users Messages
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
 
 ?>
 
-<div class="item-list-tabs no-ajax" id="subnav" aria-label="<?php esc_attr_e( 'Member secondary navigation', 'buddypress' ); ?>" role="navigation">
+<div class="item-list-tabs no-ajax" id="subnav" aria-label="<?php esc_attr_e( 'Member secondary navigation', 'buddyboss' ); ?>" role="navigation">
 	<ul>
 
 		<?php bp_get_options_nav(); ?>
@@ -41,12 +41,12 @@ switch ( bp_current_action() ) :
 		<?php if ( bp_is_messages_inbox() ) : ?>
 			<h2 class="bp-screen-reader-text"><?php
 				/* translators: accessibility text */
-				_e( 'Messages inbox', 'buddypress' );
+				_e( 'Messages inbox', 'buddyboss' );
 			?></h2>
 		<?php elseif ( bp_is_messages_sentbox() ) : ?>
 			<h2 class="bp-screen-reader-text"><?php
 				/* translators: accessibility text */
-				_e( 'Sent Messages', 'buddypress' );
+				_e( 'Sent Messages', 'buddyboss' );
 			?></h2>
 		<?php endif; ?>
 
@@ -86,7 +86,7 @@ switch ( bp_current_action() ) :
 
 		<h2 class="bp-screen-reader-text"><?php
 			/* translators: accessibility text */
-			_e( 'Sitewide Notices', 'buddypress' );
+			_e( 'Sitewide Notices', 'buddyboss' );
 		?></h2>
 
 		<div class="messages">

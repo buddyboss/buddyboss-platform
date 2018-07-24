@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress - Members Single Profile
+ * BuddyBoss - Members Single Profile
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
@@ -16,7 +16,7 @@ do_action( 'bp_before_member_settings_template' ); ?>
 
 <h2 class="bp-screen-reader-text"><?php
 	/* translators: accessibility text */
-	_e( 'Profile visibility settings', 'buddypress' );
+	_e( 'Profile visibility settings', 'buddyboss' );
 ?></h2>
 
 <form action="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_settings_slug() . '/profile' ); ?>" method="post" class="standard-form" id="settings-form">
@@ -31,7 +31,7 @@ do_action( 'bp_before_member_settings_template' ); ?>
 					<thead>
 						<tr>
 							<th class="title field-group-name"><?php bp_the_profile_group_name(); ?></th>
-							<th class="title"><?php _e( 'Visibility', 'buddypress' ); ?></th>
+							<th class="title"><?php _e( 'Visibility', 'buddyboss' ); ?></th>
 						</tr>
 					</thead>
 
@@ -65,7 +65,7 @@ do_action( 'bp_before_member_settings_template' ); ?>
 	do_action( 'bp_core_xprofile_settings_before_submit' ); ?>
 
 	<div class="submit">
-		<input id="submit" type="submit" name="xprofile-settings-submit" value="<?php esc_attr_e( 'Save Settings', 'buddypress' ); ?>" class="auto" />
+		<input id="submit" type="submit" name="xprofile-settings-submit" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" class="auto" />
 	</div>
 
 	<?php

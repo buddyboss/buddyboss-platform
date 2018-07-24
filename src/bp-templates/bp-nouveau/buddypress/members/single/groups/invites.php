@@ -1,13 +1,13 @@
 <?php
 /**
- * BuddyPress - Members Single Group Invites
+ * BuddyBoss - Members Single Group Invites
  *
  * @since 3.0.0
  * @version 3.1.0
  */
 ?>
 
-<h2 class="screen-heading group-invites-screen"><?php esc_html_e( 'Group Invites', 'buddypress' ); ?></h2>
+<h2 class="screen-heading group-invites-screen"><?php esc_html_e( 'Group Invites', 'buddyboss' ); ?></h2>
 
 <?php bp_nouveau_group_hook( 'before', 'invites_content' ); ?>
 

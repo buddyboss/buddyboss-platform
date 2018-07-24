@@ -2,7 +2,7 @@
 /**
  * Groups: User's "Groups > Invites" screen handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage GroupScreens
  * @since 3.0.0
  */
@@ -23,10 +23,10 @@ function groups_screen_group_invites() {
 		if ( !groups_accept_invite( bp_loggedin_user_id(), $group_id ) ) {
 			bp_core_add_message( __('Group invite could not be accepted', 'buddypress'), 'error' );
 		} else {
-			// Record this in activity streams.
+			// Record this in activity feeds.
 			$group = groups_get_group( $group_id );
 
-			bp_core_add_message( sprintf( __( 'Group invite accepted. Visit %s.', 'buddypress' ), bp_get_group_link( $group ) ) );
+			bp_core_add_message( sprintf( __( 'Group invite accepted. Visit %s.', 'buddyboss' ), bp_get_group_link( $group ) ) );
 
 			if ( bp_is_active( 'activity' ) ) {
 				groups_record_activity( array(
@@ -50,9 +50,9 @@ function groups_screen_group_invites() {
 			return false;
 
 		if ( !groups_reject_invite( bp_loggedin_user_id(), $group_id ) ) {
-			bp_core_add_message( __( 'Group invite could not be rejected', 'buddypress' ), 'error' );
+			bp_core_add_message( __( 'Group invite could not be rejected', 'buddyboss' ), 'error' );
 		} else {
-			bp_core_add_message( __( 'Group invite rejected', 'buddypress' ) );
+			bp_core_add_message( __( 'Group invite rejected', 'buddyboss' ) );
 		}
 
 		if ( isset( $_GET['redirect_to'] ) ) {

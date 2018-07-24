@@ -2,7 +2,7 @@
 /**
  * BuddyPress XProfile Classes.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage XProfileClasses
  * @since 1.0.0
  */
@@ -586,7 +586,7 @@ class BP_XProfile_Group {
 
 		// Validate Form.
 		if ( empty( $_POST['group_name'] ) ) {
-			$message = __( 'Please make sure you give the group a name.', 'buddypress' );
+			$message = __( 'Please make sure you give the group a name.', 'buddyboss' );
 			return false;
 		} else {
 			return true;
@@ -726,7 +726,7 @@ class BP_XProfile_Group {
 
 		// New field group.
 		if ( empty( $this->id ) ) {
-			$title	= __( 'Add New Field Group', 'buddypress' );
+			$title	= __( 'Add New Field Group', 'buddyboss' );
 			$button	= __( 'Save',                'buddypress' );
 			$action	= add_query_arg( array(
 				'page' => 'bp-profile-setup',
@@ -735,7 +735,7 @@ class BP_XProfile_Group {
 
 		// Existing field group.
 		} else {
-			$title  = __( 'Edit Field Group', 'buddypress' );
+			$title  = __( 'Edit Field Group', 'buddyboss' );
 			$button	= __( 'Update',           'buddypress' );
 			$action	= add_query_arg( array(
 				'page'     => 'bp-profile-setup',
@@ -767,11 +767,11 @@ class BP_XProfile_Group {
 								</div>
 							</div>
 							<div class="postbox">
-								<h2><?php esc_html_e( 'Field Group Description', 'buddypress' ); ?></h2>
+								<h2><?php esc_html_e( 'Field Group Description', 'buddyboss' ); ?></h2>
 								<div class="inside">
 									<label for="group_description" class="screen-reader-text"><?php
 										/* translators: accessibility text */
-										esc_html_e( 'Add description', 'buddypress' );
+										esc_html_e( 'Add description', 'buddyboss' );
 									?></label>
 									<textarea name="group_description" id="group_description" rows="8" cols="60"><?php echo esc_textarea( $this->description ); ?></textarea>
 								</div>
@@ -804,7 +804,7 @@ class BP_XProfile_Group {
 							do_action( 'xprofile_group_before_submitbox', $this ); ?>
 
 							<div id="submitdiv" class="postbox">
-								<h2><?php _e( 'Submit', 'buddypress' ); ?></h2>
+								<h2><?php _e( 'Submit', 'buddyboss' ); ?></h2>
 								<div class="inside">
 									<div id="submitcomment" class="submitbox">
 										<div id="major-publishing-actions">
@@ -828,7 +828,7 @@ class BP_XProfile_Group {
 												<input type="submit" name="save_group" value="<?php echo esc_attr( $button ); ?>" class="button-primary"/>
 											</div>
 											<div id="delete-action">
-												<a href="<?php echo esc_url( $cancel_url ); ?>" class="deletion"><?php _e( 'Cancel', 'buddypress' ); ?></a>
+												<a href="<?php echo esc_url( $cancel_url ); ?>" class="deletion"><?php _e( 'Cancel', 'buddyboss' ); ?></a>
 											</div>
 											<div class="clear"></div>
 										</div>

@@ -1,11 +1,11 @@
 <?php
 /**
- * BuddyPress - Users Plugins Template
+ * BuddyBoss - Users Plugins Template
  *
  * 3rd-party plugins should use this template to easily add template
  * support to their plugins for the members component.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
@@ -19,7 +19,7 @@
 
 		<?php if ( ! bp_is_current_component_core() ) : ?>
 
-		<div class="item-list-tabs no-ajax" id="subnav" aria-label="<?php esc_attr_e( 'Member secondary navigation', 'buddypress' ); ?>" role="navigation">
+		<div class="item-list-tabs no-ajax" id="subnav" aria-label="<?php esc_attr_e( 'Member secondary navigation', 'buddyboss' ); ?>" role="navigation">
 			<ul>
 				<?php bp_get_options_nav(); ?>
 

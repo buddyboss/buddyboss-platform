@@ -1,10 +1,10 @@
 <?php
 /**
- * BuddyPress - Members Loop
+ * BuddyBoss - Members Loop
  *
  * Querystring is set via AJAX in _inc/ajax.php - bp_legacy_theme_object_filter()
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
@@ -140,7 +140,7 @@ do_action( 'bp_before_members_loop' ); ?>
 <?php else: ?>
 
 	<div id="message" class="info">
-		<p><?php _e( "Sorry, no members were found.", 'buddypress' ); ?></p>
+		<p><?php _e( "Sorry, no members were found.", 'buddyboss' ); ?></p>
 	</div>
 
 <?php endif; ?>

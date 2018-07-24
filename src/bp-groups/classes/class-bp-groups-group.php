@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress Groups Classes.
+ * BuddyBoss Groups Classes.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage GroupsClasses
  * @since 1.0.0
  */
@@ -1048,7 +1048,7 @@ class BP_Groups_Group {
 
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args ) || func_num_args() > 1 ) {
-			_deprecated_argument( __METHOD__, '1.7', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddypress' ), __METHOD__, __FILE__ ) );
+			_deprecated_argument( __METHOD__, '1.7', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
 				0 => 'type',

@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress Groups Widgets
+ * BuddyBoss Groups Widgets
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage GroupsWidgets
  * @since 1.0.0
  */
@@ -65,11 +65,11 @@ function groups_ajax_widget_groups_list() {
 					<div class="item-title"><?php bp_group_link(); ?></div>
 					<div class="item-meta">
 						<?php if ( 'newest-groups' === $_POST['filter'] ) : ?>
-							<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_group_date_created( 0, array( 'relative' => false ) ) ); ?>"><?php printf( __( 'created %s', 'buddypress' ), bp_get_group_date_created() ); ?></span>
+							<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_group_date_created( 0, array( 'relative' => false ) ) ); ?>"><?php printf( __( 'created %s', 'buddyboss' ), bp_get_group_date_created() ); ?></span>
 						<?php elseif ( 'popular-groups' === $_POST['filter'] ) : ?>
 							<span class="activity"><?php bp_group_member_count(); ?></span>
 						<?php else : ?>
-							<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_group_last_active( 0, array( 'relative' => false ) ) ); ?>"><?php printf( __( 'active %s', 'buddypress' ), bp_get_group_last_active() ); ?></span>
+							<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_group_last_active( 0, array( 'relative' => false ) ) ); ?>"><?php printf( __( 'active %s', 'buddyboss' ), bp_get_group_last_active() ); ?></span>
 						<?php endif; ?>
 					</div>
 				</div>
@@ -81,7 +81,7 @@ function groups_ajax_widget_groups_list() {
 
 	<?php else: ?>
 
-		<?php echo "-1[[SPLIT]]<li>" . __( "No groups matched the current filter.", 'buddypress' ); ?>
+		<?php echo "-1[[SPLIT]]<li>" . __( "No groups matched the current filter.", 'buddyboss' ); ?>
 
 	<?php endif;
 

@@ -2,7 +2,7 @@
 /**
  * Groups: Single group "Request Membership" screen handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage GroupsScreens
  * @since 3.0.0
  */
@@ -25,9 +25,9 @@ function groups_screen_group_request_membership() {
 	// If the user is already invited, accept invitation.
 	if ( groups_check_user_has_invite( bp_loggedin_user_id(), $bp->groups->current_group->id ) ) {
 		if ( groups_accept_invite( bp_loggedin_user_id(), $bp->groups->current_group->id ) )
-			bp_core_add_message( __( 'Group invite accepted', 'buddypress' ) );
+			bp_core_add_message( __( 'Group invite accepted', 'buddyboss' ) );
 		else
-			bp_core_add_message( __( 'There was an error accepting the group invitation. Please try again.', 'buddypress' ), 'error' );
+			bp_core_add_message( __( 'There was an error accepting the group invitation. Please try again.', 'buddyboss' ), 'error' );
 		bp_core_redirect( bp_get_group_permalink( $bp->groups->current_group ) );
 	}
 
@@ -39,9 +39,9 @@ function groups_screen_group_request_membership() {
 			return false;
 
 		if ( !groups_send_membership_request( bp_loggedin_user_id(), $bp->groups->current_group->id ) ) {
-			bp_core_add_message( __( 'There was an error sending your group membership request. Please try again.', 'buddypress' ), 'error' );
+			bp_core_add_message( __( 'There was an error sending your group membership request. Please try again.', 'buddyboss' ), 'error' );
 		} else {
-			bp_core_add_message( __( 'Your membership request was sent to the group administrator successfully. You will be notified when the group administrator responds to your request.', 'buddypress' ) );
+			bp_core_add_message( __( 'Your membership request was sent to the group administrator successfully. You will be notified when the group administrator responds to your request.', 'buddyboss' ) );
 		}
 		bp_core_redirect( bp_get_group_permalink( $bp->groups->current_group ) );
 	}

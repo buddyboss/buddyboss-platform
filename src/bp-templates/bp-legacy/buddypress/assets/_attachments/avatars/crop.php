@@ -6,7 +6,7 @@
  *
  * @since 2.3.0
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-attachments
  * @version 3.0.0
  */
@@ -21,7 +21,7 @@
 			<img src="{{data.url}}" id="avatar-crop-preview"/>
 		</div>
 		<div id="avatar-crop-actions">
-			<a class="button avatar-crop-submit" href="#"><?php esc_html_e( 'Crop Image', 'buddypress' ); ?></a>
+			<a class="button avatar-crop-submit" href="#"><?php esc_html_e( 'Crop Image', 'buddyboss' ); ?></a>
 		</div>
 	</div>
 </script>

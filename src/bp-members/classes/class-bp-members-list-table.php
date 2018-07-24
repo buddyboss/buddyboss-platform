@@ -2,7 +2,7 @@
 /**
  * BuddyPress Members List Table class.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage MembersAdminClasses
  * @since 2.3.0
  */
@@ -152,7 +152,7 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 			'email'      => __( 'Email',       'buddypress' ),
 			'registered' => __( 'Registered',  'buddypress' ),
 			'date_sent'  => __( 'Last Sent',   'buddypress' ),
-			'count_sent' => __( 'Emails Sent', 'buddypress' )
+			'count_sent' => __( 'Emails Sent', 'buddyboss' )
 		) );
 	}
 
@@ -163,12 +163,12 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
-			'activate' => _x( 'Activate', 'Pending signup action', 'buddypress' ),
-			'resend'   => _x( 'Email',    'Pending signup action', 'buddypress' ),
+			'activate' => _x( 'Activate', 'Pending signup action', 'buddyboss' ),
+			'resend'   => _x( 'Email',    'Pending signup action', 'buddyboss' ),
 		);
 
 		if ( current_user_can( 'delete_users' ) ) {
-			$actions['delete'] = __( 'Delete', 'buddypress' );
+			$actions['delete'] = __( 'Delete', 'buddyboss' );
 		}
 
 		return $actions;
@@ -184,18 +184,18 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 	public function no_items() {
 
 		if ( bp_get_signup_allowed() ) {
-			esc_html_e( 'No pending accounts found.', 'buddypress' );
+			esc_html_e( 'No pending accounts found.', 'buddyboss' );
 		} else {
 			$link = false;
 
 			// Specific case when BuddyPress is not network activated.
 			if ( is_multisite() && current_user_can( 'manage_network_users') ) {
-				$link = sprintf( '<a href="%1$s">%2$s</a>', esc_url( network_admin_url( 'settings.php'       ) ), esc_html__( 'Edit settings', 'buddypress' ) );
+				$link = sprintf( '<a href="%1$s">%2$s</a>', esc_url( network_admin_url( 'settings.php'       ) ), esc_html__( 'Edit settings', 'buddyboss' ) );
 			} elseif ( current_user_can( 'manage_options' ) ) {
-				$link = sprintf( '<a href="%1$s">%2$s</a>', esc_url( bp_get_admin_url( 'options-general.php' ) ), esc_html__( 'Edit settings', 'buddypress' ) );
+				$link = sprintf( '<a href="%1$s">%2$s</a>', esc_url( bp_get_admin_url( 'options-general.php' ) ), esc_html__( 'Edit settings', 'buddyboss' ) );
 			}
 
-			printf( __( 'Registration is disabled. %s', 'buddypress' ), $link );
+			printf( __( 'Registration is disabled. %s', 'buddyboss' ), $link );
 		}
 
 	}
@@ -262,7 +262,7 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 	?>
 		<label class="screen-reader-text" for="signup_<?php echo intval( $signup_object->id ); ?>"><?php
 			/* translators: accessibility text */
-			printf( esc_html__( 'Select user: %s', 'buddypress' ), $signup_object->user_login );
+			printf( esc_html__( 'Select user: %s', 'buddyboss' ), $signup_object->user_login );
 		?></label>
 		<input type="checkbox" id="signup_<?php echo intval( $signup_object->id ) ?>" name="allsignups[]" value="<?php echo esc_attr( $signup_object->id ) ?>" />
 		<?php
@@ -312,11 +312,11 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 
 		$actions = array();
 
-		$actions['activate'] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $activate_link ), __( 'Activate', 'buddypress' ) );
-		$actions['resend']   = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $email_link ), __( 'Email', 'buddypress' ) );
+		$actions['activate'] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $activate_link ), __( 'Activate', 'buddyboss' ) );
+		$actions['resend']   = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $email_link ), __( 'Email', 'buddyboss' ) );
 
 		if ( current_user_can( 'delete_users' ) ) {
-			$actions['delete'] = sprintf( '<a href="%1$s" class="delete">%2$s</a>', esc_url( $delete_link ), __( 'Delete', 'buddypress' ) );
+			$actions['delete'] = sprintf( '<a href="%1$s" class="delete">%2$s</a>', esc_url( $delete_link ), __( 'Delete', 'buddyboss' ) );
 		}
 
 		/**

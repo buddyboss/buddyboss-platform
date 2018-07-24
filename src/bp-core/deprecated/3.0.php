@@ -133,9 +133,9 @@ function bp_core_action_set_spammer_status( $user_id = 0 ) {
 
 		// Add feedback message. @todo - Error reporting.
 		if ( 'spam' == $status ) {
-			bp_core_add_message( __( 'User marked as spammer. Spam users are visible only to site admins.', 'buddypress' ) );
+			bp_core_add_message( __( 'User marked as spammer. Spam users are visible only to site admins.', 'buddyboss' ) );
 		} else {
-			bp_core_add_message( __( 'User removed as spammer.', 'buddypress' ) );
+			bp_core_add_message( __( 'User removed as spammer.', 'buddyboss' ) );
 		}
 
 		// Deprecated. Use bp_core_process_spammer_status.
@@ -171,9 +171,9 @@ function bp_core_action_delete_user() {
 		do_action( 'bp_core_before_action_delete_user', $errors );
 
 		if ( bp_core_delete_account( bp_displayed_user_id() ) ) {
-			bp_core_add_message( sprintf( __( '%s has been deleted from the system.', 'buddypress' ), bp_get_displayed_user_fullname() ) );
+			bp_core_add_message( sprintf( __( '%s has been deleted from the system.', 'buddyboss' ), bp_get_displayed_user_fullname() ) );
 		} else {
-			bp_core_add_message( sprintf( __( 'There was an error deleting %s from the system. Please try again.', 'buddypress' ), bp_get_displayed_user_fullname() ), 'error' );
+			bp_core_add_message( sprintf( __( 'There was an error deleting %s from the system. Please try again.', 'buddyboss' ), bp_get_displayed_user_fullname() ), 'error' );
 			$errors = true;
 		}
 

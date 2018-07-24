@@ -1,15 +1,15 @@
 <?php
 /**
- * BuddyPress - Groups Admin - Membership Requests
+ * BuddyBoss - Groups Admin - Membership Requests
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
 
 ?>
 
-<h2 class="bp-screen-reader-text"><?php _e( 'Manage Membership Requests', 'buddypress' ); ?></h2>
+<h2 class="bp-screen-reader-text"><?php _e( 'Manage Membership Requests', 'buddyboss' ); ?></h2>
 
 <?php
 

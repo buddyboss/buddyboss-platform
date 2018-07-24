@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress - Groups Request Membership
+ * BuddyBoss - Groups Request Membership
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.1.0
  */
@@ -15,14 +15,14 @@
 do_action( 'bp_before_group_request_membership_content' ); ?>
 
 <?php if ( !bp_group_has_requested_membership() ) : ?>
-	<h2 class="bp-screen-reader-text"><?php esc_html_e( 'Group membership request form', 'buddypress' ); ?></h2>
+	<h2 class="bp-screen-reader-text"><?php esc_html_e( 'Group membership request form', 'buddyboss' ); ?></h2>
 
 	<p>
 		<?php
 		echo esc_html(
 			sprintf(
 				/* translators:  %s =group name */
-				__( 'You are requesting to become a member of the group "%s".', 'buddypress' ),
+				__( 'You are requesting to become a member of the group "%s".', 'buddyboss' ),
 				bp_get_group_name()
 			)
 		);
@@ -30,7 +30,7 @@ do_action( 'bp_before_group_request_membership_content' ); ?>
 	</p>
 
 	<form action="<?php bp_group_form_action('request-membership' ); ?>" method="post" name="request-membership-form" id="request-membership-form" class="standard-form">
-		<label for="group-request-membership-comments"><?php esc_html_e( 'Comments (optional)', 'buddypress' ); ?></label>
+		<label for="group-request-membership-comments"><?php esc_html_e( 'Comments (optional)', 'buddyboss' ); ?></label>
 		<textarea name="group-request-membership-comments" id="group-request-membership-comments"></textarea>
 
 		<?php
@@ -42,7 +42,7 @@ do_action( 'bp_before_group_request_membership_content' ); ?>
 		 */
 		do_action( 'bp_group_request_membership_content' ); ?>
 
-		<p><input type="submit" name="group-request-send" id="group-request-send" value="<?php echo esc_attr_x( 'Send Request', 'button', 'buddypress' ); ?>" />
+		<p><input type="submit" name="group-request-send" id="group-request-send" value="<?php echo esc_attr_x( 'Send Request', 'button', 'buddyboss' ); ?>" />
 
 		<?php wp_nonce_field( 'groups_request_membership' ); ?>
 	</form><!-- #request-membership-form -->

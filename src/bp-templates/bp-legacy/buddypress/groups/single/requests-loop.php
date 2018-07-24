@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress - Groups Requests Loop
+ * BuddyBoss - Groups Requests Loop
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
@@ -55,9 +55,9 @@
 
 				<div class="action">
 
-					<?php bp_button( array( 'id' => 'group_membership_accept', 'component' => 'groups', 'wrapper_class' => 'accept', 'link_href' => bp_get_group_request_accept_link(), 'link_text' => __( 'Accept', 'buddypress' ) ) ); ?>
+					<?php bp_button( array( 'id' => 'group_membership_accept', 'component' => 'groups', 'wrapper_class' => 'accept', 'link_href' => bp_get_group_request_accept_link(), 'link_text' => __( 'Accept', 'buddyboss' ) ) ); ?>
 
-					<?php bp_button( array( 'id' => 'group_membership_reject', 'component' => 'groups', 'wrapper_class' => 'reject', 'link_href' => bp_get_group_request_reject_link(), 'link_text' => __( 'Reject', 'buddypress' ) ) ); ?>
+					<?php bp_button( array( 'id' => 'group_membership_reject', 'component' => 'groups', 'wrapper_class' => 'reject', 'link_href' => bp_get_group_request_reject_link(), 'link_text' => __( 'Reject', 'buddyboss' ) ) ); ?>
 
 					<?php
 
@@ -93,7 +93,7 @@
 	<?php else: ?>
 
 		<div id="message" class="info">
-			<p><?php _e( 'There are no pending membership requests.', 'buddypress' ); ?></p>
+			<p><?php _e( 'There are no pending membership requests.', 'buddyboss' ); ?></p>
 		</div>
 
 	<?php endif;

@@ -1,11 +1,11 @@
 <?php
 /**
- * BuddyPress Friends Streams Loader.
+ * BuddyBoss Connections Feeds Loader.
  *
  * The friends component is for users to create relationships with each other.
  *
- * @package BuddyPress
- * @subpackage Friends
+ * @package BuddyBoss
+ * @subpackage Connections
  * @since 1.5.0
  */
 

@@ -2,11 +2,11 @@
 /**
  * BuddyPress Blogs Loader
  *
- * The blogs component tracks posts and comments to member activity streams,
+ * The blogs component tracks posts and comments to member activity feeds,
  * shows blogs the member can post to in their profiles, and caches useful
  * information from those blogs to make querying blogs in bulk more performant.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage BlogsCore
  * @since 1.5.0
  */
@@ -27,7 +27,7 @@ class BP_Blogs_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'blogs',
-			__( 'Site Directory', 'buddypress' ),
+			__( 'Site Directory', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 30,
@@ -77,7 +77,7 @@ class BP_Blogs_Component extends BP_Component {
 			'has_directory'         => is_multisite(), // Non-multisite installs don't need a top-level Sites directory, since there's only one site.
 			'directory_title'       => isset( $bp->pages->blogs->title ) ? $bp->pages->blogs->title : $default_directory_title,
 			'notification_callback' => 'bp_blogs_format_notifications',
-			'search_string'         => __( 'Search sites...', 'buddypress' ),
+			'search_string'         => __( 'Search sites...', 'buddyboss' ),
 			'autocomplete_all'      => defined( 'BP_MESSAGES_AUTOCOMPLETE_ALL' ),
 			'global_tables'         => $global_tables,
 			'meta_tables'           => $meta_tables,
@@ -197,7 +197,7 @@ class BP_Blogs_Component extends BP_Component {
 		/**
 		 * Blog/post/comment menus should not appear on single WordPress setups.
 		 * Although comments and posts made by users will still show on their
-		 * activity stream.
+		 * activity feed.
 		 */
 		if ( ! is_multisite() ) {
 			return false;
@@ -220,7 +220,7 @@ class BP_Blogs_Component extends BP_Component {
 		$class    = ( 0 === $count ) ? 'no-count' : 'count';
 		$nav_text = sprintf(
 			/* translators: %s: Site count for the current user */
-			__( 'Sites %s', 'buddypress' ),
+			__( 'Sites %s', 'buddyboss' ),
 			sprintf(
 				'<span class="%s">%s</span>',
 				esc_attr( $class ),
@@ -237,7 +237,7 @@ class BP_Blogs_Component extends BP_Component {
 		);
 
 		$sub_nav[] = array(
-			'name'            => __( 'My Sites', 'buddypress' ),
+			'name'            => __( 'My Sites', 'buddyboss' ),
 			'slug'            => 'my-sites',
 			'parent_url'      => $parent_url,
 			'parent_slug'     => $slug,
@@ -281,7 +281,7 @@ class BP_Blogs_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
-				'title'  => __( 'Sites', 'buddypress' ),
+				'title'  => __( 'Sites', 'buddyboss' ),
 				'href'   => $blogs_link
 			);
 
@@ -289,7 +289,7 @@ class BP_Blogs_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-my-sites',
-				'title'    => __( 'My Sites', 'buddypress' ),
+				'title'    => __( 'My Sites', 'buddyboss' ),
 				'href'     => $blogs_link,
 				'position' => 10
 			);
@@ -299,7 +299,7 @@ class BP_Blogs_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-create',
-					'title'    => __( 'Create a Site', 'buddypress' ),
+					'title'    => __( 'Create a Site', 'buddyboss' ),
 					'href'     => trailingslashit( bp_get_blogs_directory_permalink() . 'create' ),
 					'position' => 99
 				);
@@ -320,7 +320,7 @@ class BP_Blogs_Component extends BP_Component {
 
 			if ( bp_is_my_profile() ) {
 				if ( bp_is_active( 'xprofile' ) ) {
-					$bp->bp_options_title = __( 'My Sites', 'buddypress' );
+					$bp->bp_options_title = __( 'My Sites', 'buddyboss' );
 				}
 
 			// If we are not viewing the logged in user, set up the current
@@ -329,7 +329,7 @@ class BP_Blogs_Component extends BP_Component {
 				$bp->bp_options_avatar = bp_core_fetch_avatar( array(
 					'item_id' => bp_displayed_user_id(),
 					'type'    => 'thumb',
-					'alt'     => sprintf( __( 'Profile picture of %s', 'buddypress' ), bp_get_displayed_user_fullname() )
+					'alt'     => sprintf( __( 'Profile picture of %s', 'buddyboss' ), bp_get_displayed_user_fullname() )
 				) );
 				$bp->bp_options_title = bp_get_displayed_user_fullname();
 			}

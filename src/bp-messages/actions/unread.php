@@ -2,7 +2,7 @@
 /**
  * Messages: Unread action handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage MessageActions
  * @since 3.0.0
  */
@@ -38,9 +38,9 @@ function bp_messages_action_mark_unread() {
 	// Check access to the message and mark unread.
 	if ( messages_check_thread_access( $id ) || bp_current_user_can( 'bp_moderate' ) ) {
 		messages_mark_thread_unread( $id );
-		bp_core_add_message( __( 'Message marked unread.', 'buddypress' ) );
+		bp_core_add_message( __( 'Message marked unread.', 'buddyboss' ) );
 	} else {
-		bp_core_add_message( __( 'There was a problem marking that message.', 'buddypress' ), 'error' );
+		bp_core_add_message( __( 'There was a problem marking that message.', 'buddyboss' ), 'error' );
 	}
 
 	// Redirect back to the message box URL.

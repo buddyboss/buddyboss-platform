@@ -37,7 +37,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 
 		// It's a group
 		if ( 'group' === $this->type ) {
-			$guide = __( 'Customizing the Groups navigation order needs you create at least one group first.', 'buddypress' );
+			$guide = __( 'Customizing the Groups navigation order needs you create at least one group first.', 'buddyboss' );
 
 			// Try to fetch any random group:
 			$random = groups_get_groups(
@@ -55,14 +55,14 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 			}
 
 			if ( $item_nav ) {
-				$guide = __( 'Drag each possible group navigation items that are listed below into the order you prefer, in some groups some of these navigation items might not be active.', 'buddypress' );
+				$guide = __( 'Drag each possible group navigation items that are listed below into the order you prefer, in some groups some of these navigation items might not be active.', 'buddyboss' );
 			}
 
 		// It's a user!
 		} else {
 			$item_nav = bp_nouveau_member_customizer_nav();
 
-			$guide = __( 'Drag each possible member navigation items that are listed below into the order you prefer.', 'buddypress' );
+			$guide = __( 'Drag each possible member navigation items that are listed below into the order you prefer.', 'buddyboss' );
 		}
 		?>
 

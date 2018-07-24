@@ -1,13 +1,13 @@
 <?php
 /**
- * BuddyPress - Members Friends Requests
+ * BuddyBoss - Members Connections Requests
  *
  * @since 3.0.0
  * @version 3.0.0
  */
 ?>
 
-<h2 class="screen-heading friendship-requests-screen"><?php esc_html_e( 'Friendship Requests', 'buddypress' ); ?></h2>
+<h2 class="screen-heading friendship-requests-screen"><?php esc_html_e( 'Invitations to Connect', 'buddyboss' ); ?></h2>
 
 <?php bp_nouveau_member_hook( 'before', 'friend_requests_content' ); ?>
 

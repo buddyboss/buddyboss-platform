@@ -2,7 +2,7 @@
 /**
  * Core component classes.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Core
  * @since 1.7.0
  */
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * BuddyPress User Query class.
  *
  * Used for querying users in a BuddyPress context, in situations where WP_User_Query won't do the trick:
- * Member directories, the Friends component, etc.
+ * Member directories, the Connections component, etc.
  *
  * @since 1.7.0
  *
@@ -667,7 +667,7 @@ class BP_User_Query {
 		 *
 		 * Two BuddyPress components currently do this:
 		 * - XProfile: To override display names.
-		 * - Friends:  To set whether or not a user is the current users friend.
+		 * - Connections:  To set whether or not a user is the current users friend.
 		 *
 		 * @see bp_xprofile_filter_user_query_populate_extras()
 		 * @see bp_friends_filter_user_query_populate_extras()

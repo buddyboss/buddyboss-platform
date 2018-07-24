@@ -376,19 +376,19 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 
 		} elseif ( $property === 'subject' ) {
 			/**
-			 * Filters the subject for the friend request accepted email.
+			 * Filters the subject for the connection request accepted email.
 			 *
 			 * @since 1.2.0
 			 * @deprecated 2.5.0 Use the filters in BP_Email.
 			 *
-			 * @param string $value       Subject line to be used in friend request accepted email.
+			 * @param string $value       Subject line to be used in connection request accepted email.
 			 * @param string $friend_name Name of the person who accepted the friendship request.
 			 */
 			$value = apply_filters( 'friends_notification_accepted_request_subject', $value, $tokens['friend.name'] );
 
 		} elseif ( $property === 'content' ) {
 			/**
-			 * Filters the message for the friend request accepted email.
+			 * Filters the message for the connection request accepted email.
 			 *
 			 * @since 1.2.0
 			 * @deprecated 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
@@ -815,7 +815,7 @@ function bp_core_deprecated_email_actions( $delivery_status, $email ) {
 
 	} elseif ( $email_type === 'friends-request-accepted' ) {
 		/**
-		 * Fires after the friend request accepted email is sent.
+		 * Fires after the connection request accepted email is sent.
 		 *
 		 * @since 1.5.0
 		 * @deprecated 2.5.0 Use the filters in BP_Email.
@@ -905,7 +905,7 @@ function bp_blogs_transition_activity_status( $new_status, $old_status, $comment
 }
 
 /**
- * Record a new blog comment in the BuddyPress activity stream.
+ * Record a new blog comment in the BuddyBoss activity feed.
  *
  * Only posts the item if blog is public and post is not password-protected.
  *
@@ -922,7 +922,7 @@ function bp_blogs_record_comment( $comment_id, $is_approved = true ) {
 }
 
 /**
- * Remove a blog comment activity item from the activity stream.
+ * Remove a blog comment activity item from the activity feed.
  *
  * @deprecated 2.5.0
  *

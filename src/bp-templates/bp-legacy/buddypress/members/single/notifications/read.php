@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress - Members Read Notifications
+ * BuddyBoss - Members Read Notifications
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
@@ -13,7 +13,7 @@
 
 	<h2 class="bp-screen-reader-text"><?php
 		/* translators: accessibility text */
-		_e( 'Notifications', 'buddypress' );
+		_e( 'Notifications', 'buddyboss' );
 	?></h2>
 
 	<div id="pag-top" class="pagination no-ajax">

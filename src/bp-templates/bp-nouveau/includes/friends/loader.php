@@ -1,6 +1,6 @@
 <?php
 /**
- * BP Nouveau Friends
+ * BP Nouveau Connections
  *
  * @since 3.0.0
  * @version 3.0.0
@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Friends Loader class
+ * Connections Loader class
  *
  * @since 3.0.0
  */
@@ -98,12 +98,12 @@ class BP_Nouveau_Friends {
 		$notifications = array(
 			array(
 				'id'       => 'friendship_accepted',
-				'label'    => __( 'Accepted friendship requests', 'buddypress' ),
+				'label'    => __( 'Accepted connection requests', 'buddyboss' ),
 				'position' => 35,
 			),
 			array(
 				'id'       => 'friendship_request',
-				'label'    => __( 'Pending friendship requests', 'buddypress' ),
+				'label'    => __( 'Pending connection requests', 'buddyboss' ),
 				'position' => 45,
 			),
 		);
@@ -115,7 +115,7 @@ class BP_Nouveau_Friends {
 }
 
 /**
- * Launch the Friends loader class.
+ * Launch the Connections loader class.
  *
  * @since 3.0.0
  */

@@ -277,7 +277,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 		}
 
 		if ( bp_is_active( 'friends' ) ) {
-			// It's the member's friendship requests screen
+			// It's the member's connection requests screen
 			if ( 'friendship_request' === $type ) {
 				$buttons = array(
 					'accept_friendship' => array(
@@ -286,7 +286,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 						'component'         => 'friends',
 						'must_be_logged_in' => true,
 						'parent_element'    => $parent_element,
-						'link_text'         => _x( 'Accept', 'button', 'buddypress' ),
+						'link_text'         => _x( 'Accept', 'button', 'buddyboss' ),
 						'parent_attr'       => array(
 							'id'    => '',
 							'class' => $parent_class ,
@@ -302,7 +302,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 						'component'         => 'friends',
 						'must_be_logged_in' => true,
 						'parent_element'    => $parent_element,
-						'link_text'         => _x( 'Reject', 'button', 'buddypress' ),
+						'link_text'         => _x( 'Ignore', 'button', 'buddyboss' ),
 						'parent_attr'       => array(
 							'id'    => '',
 							'class' => $parent_class,
@@ -386,12 +386,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 				 *
 				 * See https://buddypress.trac.wordpress.org/ticket/7126
 				 */
-				add_filter( 'bp_get_send_public_message_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
-
-				bp_get_send_public_message_button();
-
-				remove_filter( 'bp_get_send_public_message_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
-
+				
 				if ( ! empty( bp_nouveau()->members->button_args ) ) {
 					$button_args = bp_nouveau()->members->button_args;
 
@@ -456,7 +451,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 							'class' => $parent_class,
 						),
 						'button_attr'       => array(
-							'href'  => trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . '#compose?r=' . bp_core_get_username( $user_id ),
+							'href'  => trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . '#compose/?r=' . bp_core_get_username( $user_id ),
 							'id'    => false,
 							'class' => $button_args['link_class'],
 							'rel'   => '',
@@ -561,10 +556,9 @@ function bp_nouveau_member_meta() {
 		if ( empty( $member->template_meta ) ) {
 			// It's a single user's header
 			if ( ! $is_loop ) {
-				$meta['last_activity'] = sprintf(
-					'<span class="activity">%s</span>',
-					esc_html( bp_get_last_activity( bp_displayed_user_id() ) )
-				);
+
+				$register_date = date('F Y', strtotime(get_userdata(bp_displayed_user_id( ))->user_registered));
+				echo '<span class="activity">'. sprintf( __( 'Joined %s', 'buddyboss' ), $register_date ).'</span>';
 
 			// We're in the members loop
 			} else {
@@ -690,7 +684,7 @@ function bp_nouveau_members_get_customizer_option_link() {
 		array(
 			'object'    => 'user',
 			'autofocus' => 'bp_nouveau_user_front_page',
-			'text'      => __( 'Members default front page', 'buddypress' ),
+			'text'      => __( 'Member Dashboard', 'buddyboss' ),
 		)
 	);
 }
@@ -708,7 +702,7 @@ function bp_nouveau_members_get_customizer_widgets_link() {
 		array(
 			'object'    => 'user',
 			'autofocus' => 'sidebar-widgets-sidebar-buddypress-members',
-			'text'      => __( '(BuddyPress) Widgets', 'buddypress' ),
+			'text'      => __( 'widgets (content blocks)', 'buddyboss' ),
 		)
 	);
 }
@@ -782,7 +776,7 @@ function bp_nouveau_member_description_edit_link() {
 		add_filter( 'edit_profile_url', 'bp_members_edit_profile_url', 10, 3 );
 		$link .= '#description';
 
-		return sprintf( '<a href="%1$s">%2$s</a>', esc_url( $link ), esc_html__( 'Edit your bio', 'buddypress' ) );
+		return sprintf( '<a href="%1$s">%2$s</a>', esc_url( $link ), esc_html__( 'Edit your bio', 'buddyboss' ) );
 	}
 
 

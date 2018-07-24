@@ -1,10 +1,10 @@
 <?php
 /**
- * BuddyPress Messages Filters.
+ * BuddyBoss Messages Filters.
  *
  * Apply WordPress defined filters to private messages.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage MessagesFilters
  * @since 1.0.0
  */
@@ -117,7 +117,7 @@ function bp_messages_filter_kses( $content ) {
 	$messages_allowedtags['p'] = array();
 
 	/**
-	 * Filters the allowed HTML tags for BuddyPress Messages content.
+	 * Filters the allowed HTML tags for BuddyBoss Messages content.
 	 *
 	 * @since 3.0.0
 	 *

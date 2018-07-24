@@ -50,7 +50,7 @@ function bp_xprofile_settings_add_feedback_message() {
 
 	// Community moderator editing another user's settings.
 	if ( ! bp_is_my_profile() && bp_core_can_edit_settings() ) {
-		$message = __( "This member's profile settings have been saved.", 'buddypress' );
+		$message = __( "This member's profile settings have been saved.", 'buddyboss' );
 	}
 
 	// Add the message.

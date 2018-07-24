@@ -1,12 +1,12 @@
 <?php
 /**
- * BuddyPress Friends Activity Functions.
+ * BuddyBoss Connections Activity Functions.
  *
  * These functions handle the recording, deleting and formatting of activity
  * for the user and for this specific component.
  *
- * @package BuddyPress
- * @subpackage FriendsActivity
+ * @package BuddyBoss
+ * @subpackage ConnectionsActivity
  * @since 1.5.0
  */
 
@@ -14,9 +14,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Record an activity item related to the Friends component.
+ * Record an activity item related to the Connections component.
  *
- * A wrapper for {@link bp_activity_add()} that provides some Friends-specific
+ * A wrapper for {@link bp_activity_add()} that provides some Connections-specific
  * defaults.
  *
  * @since 1.0.0
@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
  *     An array of arguments for the new activity item. Accepts all parameters
  *     of {@link bp_activity_add()}. The one difference is the following
  *     argument, which has a different default here:
- *     @type string $component Default: the id of your Friends component
+ *     @type string $component Default: the id of your Connections component
  *                             (usually 'friends').
  * }
  * @return WP_Error|bool|int See {@link bp_activity_add()}.
@@ -56,14 +56,14 @@ function friends_record_activity( $args = '' ) {
 }
 
 /**
- * Delete an activity item related to the Friends component.
+ * Delete an activity item related to the Connections component.
  *
  * @since 1.0.0
  *
  * @param array $args {
  *     An array of arguments for the item to delete.
  *     @type int    $item_id ID of the 'item' associated with the activity item.
- *                           For Friends activity items, this is usually the user ID of one
+ *                           For Connections activity items, this is usually the user ID of one
  *                           of the friends.
  *     @type string $type    The 'type' of the activity item (eg
  *                           'friendship_accepted').
@@ -101,23 +101,23 @@ function friends_register_activity_actions() {
 	bp_activity_set_action(
 		$bp->friends->id,
 		'friendship_accepted',
-		__( 'Friendships accepted', 'buddypress' ),
+		__( 'Connections accepted', 'buddyboss' ),
 		'bp_friends_format_activity_action_friendship_accepted',
-		__( 'Friendships', 'buddypress' ),
+		__( 'Connections', 'buddyboss' ),
 		array( 'activity', 'member' )
 	);
 
 	bp_activity_set_action(
 		$bp->friends->id,
 		'friendship_created',
-		__( 'New friendships', 'buddypress' ),
+		__( 'New connections', 'buddyboss' ),
 		'bp_friends_format_activity_action_friendship_created',
-		__( 'Friendships', 'buddypress' ),
+		__( 'Connections', 'buddyboss' ),
 		array( 'activity', 'member' )
 	);
 
 	// < BP 1.6 backpat.
-	bp_activity_set_action( $bp->friends->id, 'friends_register_activity_action', __( 'New friendship created', 'buddypress' ) );
+	bp_activity_set_action( $bp->friends->id, 'friends_register_activity_action', __( 'New connection created', 'buddyboss' ) );
 
 	/**
 	 * Fires after all default bp-friends activity actions have been registered.
@@ -141,7 +141,7 @@ function bp_friends_format_activity_action_friendship_accepted( $action, $activi
 	$initiator_link = bp_core_get_userlink( $activity->user_id );
 	$friend_link    = bp_core_get_userlink( $activity->secondary_item_id );
 
-	$action = sprintf( __( '%1$s and %2$s are now friends', 'buddypress' ), $initiator_link, $friend_link );
+	$action = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss' ), $initiator_link, $friend_link );
 
 	// Backward compatibility for legacy filter
 	// The old filter has the $friendship object passed to it. We want to
@@ -175,7 +175,7 @@ function bp_friends_format_activity_action_friendship_created( $action, $activit
 	$initiator_link = bp_core_get_userlink( $activity->user_id );
 	$friend_link    = bp_core_get_userlink( $activity->secondary_item_id );
 
-	$action = sprintf( __( '%1$s and %2$s are now friends', 'buddypress' ), $initiator_link, $friend_link );
+	$action = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss' ), $initiator_link, $friend_link );
 
 	// Backward compatibility for legacy filter
 	// The old filter has the $friendship object passed to it. We want to
@@ -365,7 +365,7 @@ function bp_friends_filter_activity_just_me_scope( $retval = array(), $filter = 
 add_filter( 'bp_activity_set_just-me_scope_args', 'bp_friends_filter_activity_just_me_scope', 20, 2 );
 
 /**
- * Add activity stream items when one members accepts another members request
+ * Add activity feed items when one members accepts another members request
  * for virtual friendship.
  *
  * @since 1.9.0
@@ -380,7 +380,7 @@ function bp_friends_friendship_accepted_activity( $friendship_id, $initiator_use
 		return;
 	}
 
-	// Record in activity streams for the initiator.
+	// Record in activity feeds for the initiator.
 	friends_record_activity( array(
 		'user_id'           => $initiator_user_id,
 		'type'              => 'friendship_created',

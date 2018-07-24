@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress Activity Classes
+ * BuddyBoss Activity Classes
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Activity
  * @since 1.0.0
  */
@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Database interaction class for the BuddyPress activity component.
+ * Database interaction class for the BuddyBoss activity component.
  * Instance methods are available for creating/editing an activity,
  * static methods for querying activities.
  *
@@ -362,7 +362,7 @@ class BP_Activity_Activity {
 
 		// Backward compatibility with old method of passing arguments.
 		if ( !is_array( $args ) || func_num_args() > 1 ) {
-			_deprecated_argument( __METHOD__, '1.6', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddypress' ), __METHOD__, __FILE__ ) );
+			_deprecated_argument( __METHOD__, '1.6', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
 				0 => 'max',
@@ -1106,7 +1106,7 @@ class BP_Activity_Activity {
 	}
 
 	/**
-	 * In BuddyPress 1.2.x, this was used to retrieve specific activity stream items (for example, on an activity's permalink page).
+	 * In BuddyPress 1.2.x, this was used to retrieve specific activity feed items (for example, on an activity's permalink page).
 	 *
 	 * As of 1.5.x, use BP_Activity_Activity::get() with an 'in' parameter instead.
 	 *

@@ -1,10 +1,10 @@
 <?php
 /**
- * BuddyPress Core Loader.
+ * BuddyBoss Core Loader.
  *
  * Core contains the commonly used functions, classes, and APIs.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Core
  * @since 1.5.0
  */
@@ -28,7 +28,7 @@ class BP_Core extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'core',
-			__( 'BuddyPress Core', 'buddypress' ),
+			__( 'BuddyBoss Core', 'buddyboss' ),
 			buddypress()->plugin_dir
 		);
 
@@ -47,7 +47,7 @@ class BP_Core extends BP_Component {
 		$bp = buddypress();
 
 		/**
-		 * Fires before the loading of individual components and after BuddyPress Core.
+		 * Fires before the loading of individual components and after BuddyBoss Core.
 		 *
 		 * Allows plugins to run code ahead of the other components.
 		 *
@@ -305,7 +305,7 @@ class BP_Core extends BP_Component {
 			register_post_type(
 				bp_get_email_post_type(),
 				apply_filters( 'bp_register_email_post_type', array(
-					'description'       => _x( 'BuddyPress emails', 'email post type description', 'buddypress' ),
+					'description'       => _x( 'BuddyPress emails', 'email post type description', 'buddyboss' ),
 					'labels'            => bp_get_email_post_type_labels(),
 					'menu_icon'         => 'dashicons-email',
 					'public'            => false,

@@ -2,7 +2,7 @@
 /**
  * BuddyPress Member Template loop class.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Members
  */
 
@@ -188,8 +188,8 @@ class BP_Core_Members_Template {
 				'format'    => '',
 				'total'     => ceil( (int) $this->total_member_count / (int) $this->pag_num ),
 				'current'   => (int) $this->pag_page,
-				'prev_text' => _x( '&larr;', 'Member pagination previous text', 'buddypress' ),
-				'next_text' => _x( '&rarr;', 'Member pagination next text', 'buddypress' ),
+				'prev_text' => _x( '&larr;', 'Member pagination previous text', 'buddyboss' ),
+				'next_text' => _x( '&rarr;', 'Member pagination next text', 'buddyboss' ),
 				'mid_size'  => 1,
 				'add_args'  => $add_args,
 			) );

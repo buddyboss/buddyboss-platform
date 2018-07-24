@@ -2,7 +2,7 @@
 /**
  * BuddyPress XProfile Admin Class.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @since 2.0.0
  */
 
@@ -148,7 +148,7 @@ class BP_XProfile_User_Admin {
 			// If member is already a spammer, show a generic metabox.
 			add_meta_box(
 				'bp_xprofile_user_admin_empty_profile',
-				_x( 'User marked as a spammer', 'xprofile user-admin edit screen', 'buddypress' ),
+				_x( 'User marked as a spammer', 'xprofile user-admin edit screen', 'buddyboss' ),
 				array( $this, 'user_admin_spammer_metabox' ),
 				$screen_id,
 				'normal',
@@ -160,7 +160,7 @@ class BP_XProfile_User_Admin {
 			// Avatar Metabox.
 			add_meta_box(
 				'bp_xprofile_user_admin_avatar',
-				_x( 'Profile Photo', 'xprofile user-admin edit screen', 'buddypress' ),
+				_x( 'Profile Photo', 'xprofile user-admin edit screen', 'buddyboss' ),
 				array( $this, 'user_admin_avatar_metabox' ),
 				$screen_id,
 				'side',
@@ -377,7 +377,7 @@ class BP_XProfile_User_Admin {
 
 						<?php
 						printf(
-							__( 'This field can be seen by: %s', 'buddypress' ),
+							__( 'This field can be seen by: %s', 'buddyboss' ),
 							'<span class="current-visibility-level">' . bp_get_the_profile_field_visibility_level_label() . '</span>'
 						);
 						?>
@@ -385,7 +385,7 @@ class BP_XProfile_User_Admin {
 
 						<?php if ( $can_change_visibility ) : ?>
 
-							<button type="button" class="button visibility-toggle-link" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-2" aria-expanded="false"><?php esc_html_e( 'Change', 'buddypress' ); ?></button>
+							<button type="button" class="button visibility-toggle-link" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-2" aria-expanded="false"><?php esc_html_e( 'Change', 'buddyboss' ); ?></button>
 
 						<?php endif; ?>
 					</p>
@@ -394,12 +394,12 @@ class BP_XProfile_User_Admin {
 
 						<div class="field-visibility-settings" id="field-visibility-settings-<?php bp_the_profile_field_id() ?>">
 							<fieldset>
-								<legend><?php _e( 'Who can see this field?', 'buddypress' ); ?></legend>
+								<legend><?php _e( 'Who can see this field?', 'buddyboss' ); ?></legend>
 
 								<?php bp_profile_visibility_radio_buttons(); ?>
 
 							</fieldset>
-							<button type="button" class="button field-visibility-settings-close"><?php esc_html_e( 'Close', 'buddypress' ); ?></button>
+							<button type="button" class="button field-visibility-settings-close"><?php esc_html_e( 'Close', 'buddyboss' ); ?></button>
 						</div>
 
 					<?php endif; ?>
@@ -430,7 +430,7 @@ class BP_XProfile_User_Admin {
 	 */
 	public function user_admin_spammer_metabox( $user = null ) {
 	?>
-		<p><?php printf( __( '%s has been marked as a spammer. All BuddyPress data associated with the user has been removed', 'buddypress' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ) ;?></p>
+		<p><?php printf( __( '%s has been marked as a spammer. All BuddyPress data associated with the user has been removed', 'buddyboss' ), esc_html( bp_core_get_user_displayname( $user->ID ) ) ) ;?></p>
 	<?php
 	}
 
@@ -473,13 +473,13 @@ class BP_XProfile_User_Admin {
 				$community_url = add_query_arg( $query_args, buddypress()->members->admin->edit_profile_url );
 				$delete_link   = wp_nonce_url( $community_url, 'delete_avatar' ); ?>
 
-				<a href="<?php echo esc_url( $delete_link ); ?>" class="bp-xprofile-avatar-user-admin"><?php esc_html_e( 'Delete Profile Photo', 'buddypress' ); ?></a>
+				<a href="<?php echo esc_url( $delete_link ); ?>" class="bp-xprofile-avatar-user-admin"><?php esc_html_e( 'Delete Profile Photo', 'buddyboss' ); ?></a>
 
 			<?php endif;
 
 			// Load the Avatar UI templates if user avatar uploads are enabled and current WordPress version is supported.
 			if ( ! bp_core_get_root_option( 'bp-disable-avatar-uploads' ) && bp_attachments_is_wp_version_supported() ) : ?>
-				<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Edit Profile Photo', 'buddypress' ); ?></a>
+				<a href="#TB_inline?width=800px&height=400px&inlineId=bp-xprofile-avatar-editor" class="thickbox bp-xprofile-avatar-user-edit"><?php esc_html_e( 'Edit Profile Photo', 'buddyboss' ); ?></a>
 				<div id="bp-xprofile-avatar-editor" style="display:none;">
 					<?php bp_attachments_get_template_part( 'avatars/index' ); ?>
 				</div>

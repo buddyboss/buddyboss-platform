@@ -2,7 +2,7 @@
 /**
  * BuddyPress Members Widgets.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage MembersWidgets
  * @since 2.2.0
  */
@@ -98,7 +98,7 @@ function bp_core_ajax_widget_members() {
 
 	<?php else: ?>
 		<?php echo "-1[[SPLIT]]<li>"; ?>
-		<?php esc_html_e( 'There were no members found, please try another filter.', 'buddypress' ) ?>
+		<?php esc_html_e( 'There were no members found, please try another filter.', 'buddyboss' ) ?>
 		<?php echo "</li>"; ?>
 	<?php endif;
 }

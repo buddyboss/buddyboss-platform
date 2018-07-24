@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress - Members Single Messages Notice Loop
+ * BuddyBoss - Members Single Messages Notice Loop
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
@@ -61,7 +61,7 @@ do_action( 'bp_before_notices_loop' ); ?>
 
 					<?php endif; ?>
 
-					<span class="activity"><?php _e( 'Sent:', 'buddypress' ); ?> <?php bp_message_notice_post_date(); ?></span>
+					<span class="activity"><?php _e( 'Sent:', 'buddyboss' ); ?> <?php bp_message_notice_post_date(); ?></span>
 				</td>
 
 				<?php
@@ -75,7 +75,7 @@ do_action( 'bp_before_notices_loop' ); ?>
 
 				<td width="10%">
 					<a class="button" href="<?php bp_message_activate_deactivate_link(); ?>" class="confirm"><?php bp_message_activate_deactivate_text(); ?></a>
-					<a class="button" href="<?php bp_message_notice_delete_link(); ?>" class="confirm"><?php esc_html_e( "Delete Message", 'buddypress' ); ?></a>
+					<a class="button" href="<?php bp_message_notice_delete_link(); ?>" class="confirm"><?php esc_html_e( "Delete Message", 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 		<?php endwhile; ?>
@@ -93,7 +93,7 @@ do_action( 'bp_before_notices_loop' ); ?>
 <?php else: ?>
 
 	<div id="message" class="info">
-		<p><?php _e( 'Sorry, no notices were found.', 'buddypress' ); ?></p>
+		<p><?php _e( 'Sorry, no notices were found.', 'buddyboss' ); ?></p>
 	</div>
 
 <?php endif;?>

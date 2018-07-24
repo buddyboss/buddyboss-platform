@@ -2,7 +2,7 @@
 /**
  * BuddyPress DB schema.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage CoreAdministration
  * @since 2.3.0
  */
@@ -31,7 +31,7 @@ function bp_core_install( $active_components = false ) {
 		$active_components = apply_filters( 'bp_active_components', bp_get_option( 'bp-active-components' ) );
 	}
 
-	// Install Activity Streams even when inactive (to store last_activity data).
+	// Install Activity Feeds even when inactive (to store last_activity data).
 	bp_core_install_activity_streams();
 
 	// Install the signups table.
@@ -42,7 +42,7 @@ function bp_core_install( $active_components = false ) {
 		bp_core_install_notifications();
 	}
 
-	// Friend Connections.
+	// Connections.
 	if ( !empty( $active_components['friends'] ) ) {
 		bp_core_install_friends();
 	}
@@ -57,7 +57,7 @@ function bp_core_install( $active_components = false ) {
 		bp_core_install_private_messaging();
 	}
 
-	// Extended Profiles.
+	// Profiles Fields.
 	if ( !empty( $active_components['xprofile'] ) ) {
 		bp_core_install_extended_profiles();
 	}
@@ -315,11 +315,11 @@ function bp_core_install_extended_profiles() {
 
 	// These values should only be updated if they are not already present.
 	if ( ! bp_get_option( 'bp-xprofile-base-group-name' ) ) {
-		bp_update_option( 'bp-xprofile-base-group-name', _x( 'General', 'First field-group name', 'buddypress' ) );
+		bp_update_option( 'bp-xprofile-base-group-name', _x( 'General', 'First field-group name', 'buddyboss' ) );
 	}
 
 	if ( ! bp_get_option( 'bp-xprofile-fullname-field-name' ) ) {
-		bp_update_option( 'bp-xprofile-fullname-field-name', _x( 'Display Name', 'Display name field', 'buddypress' ) );
+		bp_update_option( 'bp-xprofile-fullname-field-name', _x( 'Display Name', 'Display name field', 'buddyboss' ) );
 	}
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_xprofile_groups (

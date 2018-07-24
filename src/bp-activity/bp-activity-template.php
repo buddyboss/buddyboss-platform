@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress Activity Template Functions.
+ * BuddyBoss Activity Template Functions.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage ActivityTemplate
  * @since 1.5.0
  */
@@ -155,7 +155,7 @@ function bp_activity_directory_permalink() {
  *                                               defaults to false.
  *     @type int|array|bool    $user_id          The ID(s) of user(s) whose activity should be fetched. Pass a single ID or
  *                                               an array of IDs. When viewing a user profile page (but not that user's
- *                                               activity subpages, ie My Friends, My Groups, etc), 'user_id' defaults to
+ *                                               activity subpages, ie My Connections, My Groups, etc), 'user_id' defaults to
  *                                               the ID of the displayed user. Otherwise the default is false.
  *     @type string|array|bool $object           Filters by the `component` column in the database, which is generally the
  *                                               component ID in the case of BuddyPress components, or the plugin slug in
@@ -181,14 +181,14 @@ function bp_activity_directory_permalink() {
  *     @type string|bool       $display_comments How to handle activity comments. Possible values:
  *                                                 - 'threaded' - comments appear in a threaded tree, under their parent
  *                                                   items.
- *                                                 - 'stream' - the activity stream is presented in a flat manner, with
+ *                                                 - 'stream' - the activity feed is presented in a flat manner, with
  *                                                   comments sorted in chronological order alongside other activity items.
  *                                                 - false - don't fetch activity comments at all.
  *                                               Default: 'threaded'.
  *     @type bool              $show_hidden      Whether to show items marked hide_sitewide. Defaults to false, except in
  *                                               the following cases:
- *                                                 - User is viewing his own activity stream.
- *                                                 - User is viewing the activity stream of a non-public group of which he
+ *                                                 - User is viewing his own activity feed.
+ *                                                 - User is viewing the activity feed of a non-public group of which he
  *                                                   is a member.
  *     @type string|bool       $spam             Spam status. 'ham_only', 'spam_only', or false to show all activity
  *                                               regardless of spam status. Default: 'ham_only'.
@@ -450,9 +450,9 @@ function bp_activity_pagination_count() {
 		$total     = bp_core_number_format( $activities_template->total_activity_count );
 
 		if ( 1 == $activities_template->total_activity_count ) {
-			$message = __( 'Viewing 1 item', 'buddypress' );
+			$message = __( 'Viewing 1 item', 'buddyboss' );
 		} else {
-			$message = sprintf( _n( 'Viewing %1$s - %2$s of %3$s item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddypress' ), $from_num, $to_num, $total );
+			$message = sprintf( _n( 'Viewing %1$s - %2$s of %3$s item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddyboss' ), $from_num, $to_num, $total );
 		}
 
 		return $message;
@@ -1034,7 +1034,7 @@ function bp_activity_avatar( $args = '' ) {
 		$dn_default  = isset( $current_activity_item->display_name ) ? $current_activity_item->display_name : '';
 
 		// Prepend some descriptive text to alt.
-		$alt_default = !empty( $dn_default ) ? sprintf( __( 'Profile picture of %s', 'buddypress' ), $dn_default ) : __( 'Profile picture', 'buddypress' );
+		$alt_default = !empty( $dn_default ) ? sprintf( __( 'Profile picture of %s', 'buddyboss' ), $dn_default ) : __( 'Profile picture', 'buddyboss' );
 
 		$defaults = array(
 			'alt'     => $alt_default,
@@ -1179,10 +1179,10 @@ function bp_activity_secondary_avatar( $args = '' ) {
 				}
 
 				if ( empty( $alt ) ) {
-					$alt = __( 'Group logo', 'buddypress' );
+					$alt = __( 'Group logo', 'buddyboss' );
 
 					if ( ! empty( $name ) ) {
-						$alt = sprintf( __( 'Group logo of %s', 'buddypress' ), $name );
+						$alt = sprintf( __( 'Group logo of %s', 'buddyboss' ), $name );
 					}
 				}
 
@@ -1193,7 +1193,7 @@ function bp_activity_secondary_avatar( $args = '' ) {
 				$link    = home_url();
 
 				if ( empty( $alt ) ) {
-					$alt = sprintf( __( 'Profile picture of the author of the site %s', 'buddypress' ), get_blog_option( $item_id, 'blogname' ) );
+					$alt = sprintf( __( 'Profile picture of the author of the site %s', 'buddyboss' ), get_blog_option( $item_id, 'blogname' ) );
 				}
 
 				break;
@@ -1203,7 +1203,7 @@ function bp_activity_secondary_avatar( $args = '' ) {
 				$link    = bp_core_get_userlink( $item_id, false, true );
 
 				if ( empty( $alt ) ) {
-					$alt = sprintf( __( 'Profile picture of %s', 'buddypress' ), bp_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
+					$alt = sprintf( __( 'Profile picture of %s', 'buddyboss' ), bp_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
 				}
 
 				break;
@@ -1214,7 +1214,7 @@ function bp_activity_secondary_avatar( $args = '' ) {
 				$link    = bp_core_get_userlink( $item_id, false, true );
 
 				if ( empty( $alt ) ) {
-					$alt = sprintf( __( 'Profile picture of %s', 'buddypress' ), $activities_template->activity->display_name );
+					$alt = sprintf( __( 'Profile picture of %s', 'buddyboss' ), $activities_template->activity->display_name );
 				}
 
 				break;
@@ -1496,7 +1496,7 @@ function bp_insert_activity_meta( $content = '' ) {
 		$activity_meta      = sprintf( '%1$s <a href="%2$s" class="view activity-time-since bp-tooltip" data-bp-tooltip="%3$s">%4$s</a>',
 			$new_content,
 			$activity_permalink,
-			esc_attr__( 'View Discussion', 'buddypress' ),
+			esc_attr__( 'View Discussion', 'buddyboss' ),
 			$time_since
 		);
 
@@ -1811,14 +1811,6 @@ function bp_activity_comments( $args = '' ) {
 				$activities_template->activity->current_comment = $comment_child;
 
 				$template = bp_locate_template( 'activity/comment.php', false, false );
-
-				// Backward compatibility. In older versions of BP, the markup was
-				// generated in the PHP instead of a template. This ensures that
-				// older themes (which are not children of bp-default and won't
-				// have the new template) will still work.
-				if ( !$template ) {
-					$template = buddypress()->plugin_dir . '/bp-themes/bp-default/activity/comment.php';
-				}
 
 				load_template( $template, false );
 
@@ -2169,7 +2161,7 @@ function bp_activity_comment_count() {
 
 		// Deprecated notice about $args.
 		if ( ! empty( $deprecated ) ) {
-			_deprecated_argument( __FUNCTION__, '1.2', sprintf( __( '%1$s no longer accepts arguments. See the inline documentation at %2$s for more details.', 'buddypress' ), __FUNCTION__, __FILE__ ) );
+			_deprecated_argument( __FUNCTION__, '1.2', sprintf( __( '%1$s no longer accepts arguments. See the inline documentation at %2$s for more details.', 'buddyboss' ), __FUNCTION__, __FILE__ ) );
 		}
 
 		// Get the count using the purpose-built recursive function.
@@ -2639,7 +2631,7 @@ function bp_activity_delete_link() {
 			$class = 'delete-activity-single';
 		}
 
-		$link = '<a href="' . esc_url( $url ) . '" class="button item-button bp-secondary-action ' . $class . ' confirm" rel="nofollow">' . __( 'Delete', 'buddypress' ) . '</a>';
+		$link = '<a href="' . esc_url( $url ) . '" class="button item-button bp-secondary-action ' . $class . ' confirm" rel="nofollow">' . __( 'Delete', 'buddyboss' ) . '</a>';
 
 		/**
 		 * Filters the activity delete link.
@@ -2652,7 +2644,7 @@ function bp_activity_delete_link() {
 	}
 
 /**
- * Output the URL to delete a single activity stream item.
+ * Output the URL to delete a single activity feed item.
  *
  * @since 2.1.0
  *
@@ -2744,7 +2736,7 @@ function bp_activity_latest_update( $user_id = 0 ) {
 			'%s <a href="%s">%s</a>',
 			$latest_update,
 			esc_url_raw( bp_activity_get_permalink( $update['id'] ) ),
-			esc_attr__( 'View', 'buddypress' )
+			esc_attr__( 'View', 'buddyboss' )
 		);
 
 		/**
@@ -2853,7 +2845,7 @@ function bp_activity_filter_links( $args = false ) {
 		$link = remove_query_arg( 'afilter' , $link );
 
 		if ( isset( $_GET['afilter'] ) ) {
-			$component_links[] = '<' . $tag . ' id="afilter-clear"><a href="' . esc_url( $link ) . '">' . __( 'Clear Filter', 'buddypress' ) . '</a></' . $tag . '>';
+			$component_links[] = '<' . $tag . ' id="afilter-clear"><a href="' . esc_url( $link ) . '">' . __( 'Clear Filter', 'buddyboss' ) . '</a></' . $tag . '>';
 		}
 
 		/**
@@ -3163,7 +3155,7 @@ function bp_mentioned_user_display_name( $user_id_or_username = false ) {
 
 		// If user somehow has no name, return this really lame string.
 		if ( empty( $name ) ) {
-			$name = __( 'a user', 'buddypress' );
+			$name = __( 'a user', 'buddyboss' );
 		}
 
 		/**
@@ -3175,63 +3167,6 @@ function bp_mentioned_user_display_name( $user_id_or_username = false ) {
 		 * @param int|string $user_id_or_username User ID or username use for query.
 		 */
 		return apply_filters( 'bp_get_mentioned_user_display_name', $name, $user_id_or_username );
-	}
-
-/**
- * Output button for sending a public message (an @-mention).
- *
- * @since 1.2.0
- *
- * @see bp_get_send_public_message_button() for description of parameters.
- *
- * @param array|string $args See {@link bp_get_send_public_message_button()}.
- */
-function bp_send_public_message_button( $args = '' ) {
-	echo bp_get_send_public_message_button( $args );
-}
-
-	/**
-	 * Return button for sending a public message (an @-mention).
-	 *
-	 * @since 1.2.0
-	 *
-	 *
-	 * @param array|string $args {
-	 *     All arguments are optional. See {@link BP_Button} for complete
-	 *     descriptions.
-	 *     @type string $id                Default: 'public_message'.
-	 *     @type string $component         Default: 'activity'.
-	 *     @type bool   $must_be_logged_in Default: true.
-	 *     @type bool   $block_self        Default: true.
-	 *     @type string $wrapper_id        Default: 'post-mention'.
-	 *     @type string $link_href         Default: the public message link for
-	 *                                     the current member in the loop.
-	 *     @type string $link_text         Default: 'Public Message'.
-	 *     @type string $link_class        Default: 'activity-button mention'.
-	 * }
-	 * @return string The button for sending a public message.
-	 */
-	function bp_get_send_public_message_button( $args = '' ) {
-
-		$r = bp_parse_args( $args, array(
-			'id'                => 'public_message',
-			'component'         => 'activity',
-			'must_be_logged_in' => true,
-			'block_self'        => true,
-			'wrapper_id'        => 'post-mention',
-			'link_href'         => bp_get_send_public_message_link(),
-			'link_text'         => __( 'Public Message', 'buddypress' ),
-			'link_class'        => 'activity-button mention'
-		) );
-
-		/**
-		 * Filters the public message button HTML.
-		 *
-		 * @since 1.2.10
-		 *
-		 * @param array $r Array of arguments for the public message button HTML.
-		 */
-		return bp_get_button( apply_filters( 'bp_get_send_public_message_button', $r ) );
 	}
 
 /**
@@ -3812,7 +3747,7 @@ function bp_activity_feed_item_description() {
 function bp_activity_sitewide_feed() {
 ?>
 
-	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ) ?> | <?php _e( 'Site Wide Activity RSS Feed', 'buddypress' ) ?>" href="<?php bp_sitewide_activity_feed_link() ?>" />
+	<link rel="alternate" type="application/rss+xml" title="<?php bloginfo( 'name' ) ?> | <?php _e( 'Site Wide Activity RSS Feed', 'buddyboss' ) ?>" href="<?php bp_sitewide_activity_feed_link() ?>" />
 
 <?php
 }
@@ -3843,7 +3778,7 @@ function bp_activity_show_filters( $context = '' ) {
 		$filters = array();
 		$actions = bp_activity_get_actions_for_context( $context );
 		foreach ( $actions as $action ) {
-			// Friends activity collapses two filters into one.
+			// Connections activity collapses two filters into one.
 			if ( in_array( $action['key'], array( 'friendship_accepted', 'friendship_created' ) ) ) {
 				$action['key'] = 'friendship_accepted,friendship_created';
 			}

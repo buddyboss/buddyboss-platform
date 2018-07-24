@@ -6,7 +6,7 @@
  * Because BuddyPress can be activated in various ways in a network environment, we
  * must switch to the root blog before using the WP functions.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Core
  * @since 2.2.0
  */
@@ -30,7 +30,7 @@ function bp_register_default_taxonomies() {
 		bp_get_email_tax_type(),
 		bp_get_email_post_type(),
 		apply_filters( 'bp_register_email_tax_type', array(
-			'description'   => _x( 'BuddyPress email types', 'email type taxonomy description', 'buddypress' ),
+			'description'   => _x( 'BuddyPress email types', 'email type taxonomy description', 'buddyboss' ),
 			'labels'        => bp_get_email_tax_type_labels(),
 			'meta_box_cb'   => 'bp_email_tax_type_metabox',
 			'public'        => false,

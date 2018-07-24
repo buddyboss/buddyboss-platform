@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress Activity Theme Compatibility.
+ * BuddyBoss Activity Theme Compatibility.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @since 1.7.0
  */
 
@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The main theme compat class for BuddyPress Activity.
+ * The main theme compat class for BuddyBoss Activity.
  *
  * This class sets up the necessary theme compatibility actions to safely output
  * activity template parts to the_title and the_content areas of a theme.
@@ -158,7 +158,7 @@ class BP_Activity_Theme_Compat {
 	public function single_dummy_post() {
 		bp_theme_compat_reset_post( array(
 			'ID'             => 0,
-			'post_title'     => __( 'Activity', 'buddypress' ),
+			'post_title'     => __( 'Community Feed', 'buddyboss' ),
 			'post_author'    => 0,
 			'post_date'      => 0,
 			'post_content'   => '',

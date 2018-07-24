@@ -2,7 +2,7 @@
 /**
  * BuddyPress XProfile Classes.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage XProfileClasses
  * @since 1.0.0
  */
@@ -781,12 +781,12 @@ class BP_XProfile_Field {
 
 			// Add the 'null' option to the end of the list.
 			if ( $has_null ) {
-				$member_type_labels[] = __( 'Users with no member type', 'buddypress' );
+				$member_type_labels[] = __( 'Users with no member type', 'buddyboss' );
 			}
 
-			$label = sprintf( __( '(Member types: %s)', 'buddypress' ), implode( ', ', array_map( 'esc_html', $member_type_labels ) ) );
+			$label = sprintf( __( '(Member types: %s)', 'buddyboss' ), implode( ', ', array_map( 'esc_html', $member_type_labels ) ) );
 		} else {
-			$label = '<span class="member-type-none-notice">' . __( '(Unavailable to all members)', 'buddypress' ) . '</span>';
+			$label = '<span class="member-type-none-notice">' . __( '(Unavailable to all members)', 'buddyboss' ) . '</span>';
 		}
 
 		return $label;
@@ -1081,25 +1081,25 @@ class BP_XProfile_Field {
 
 		// Check field name.
 		if ( ! isset( $_POST['title'] ) || ( '' === $_POST['title'] ) ) {
-			$message = esc_html__( 'Profile fields must have a name.', 'buddypress' );
+			$message = esc_html__( 'Profile fields must have a name.', 'buddyboss' );
 			return false;
 		}
 
 		// Check field requirement.
 		if ( ! isset( $_POST['required'] ) ) {
-			$message = esc_html__( 'Profile field requirement is missing.', 'buddypress' );
+			$message = esc_html__( 'Profile field requirement is missing.', 'buddyboss' );
 			return false;
 		}
 
 		// Check field type.
 		if ( empty( $_POST['fieldtype'] ) ) {
-			$message = esc_html__( 'Profile field type is missing.', 'buddypress' );
+			$message = esc_html__( 'Profile field type is missing.', 'buddyboss' );
 			return false;
 		}
 
 		// Check that field is of valid type.
 		if ( ! in_array( $_POST['fieldtype'], array_keys( bp_xprofile_get_field_types() ), true ) ) {
-			$message = sprintf( esc_html__( 'The profile field type %s is not registered.', 'buddypress' ), '<code>' . esc_attr( $_POST['fieldtype'] ) . '</code>' );
+			$message = sprintf( esc_html__( 'The profile field type %s is not registered.', 'buddyboss' ), '<code>' . esc_attr( $_POST['fieldtype'] ) . '</code>' );
 			return false;
 		}
 
@@ -1114,7 +1114,7 @@ class BP_XProfile_Field {
 
 			// Check for missing or malformed options.
 			if ( empty( $_POST[ $option_name ] ) || ! is_array( $_POST[ $option_name ] ) ) {
-				$message = esc_html__( 'These field options are invalid.', 'buddypress' );
+				$message = esc_html__( 'These field options are invalid.', 'buddyboss' );
 				return false;
 			}
 
@@ -1125,13 +1125,13 @@ class BP_XProfile_Field {
 
 			// Check for missing or malformed options.
 			if ( 0 === $field_count ) {
-				$message = sprintf( esc_html__( '%s require at least one option.', 'buddypress' ), $field_type->name );
+				$message = sprintf( esc_html__( '%s require at least one option.', 'buddyboss' ), $field_type->name );
 				return false;
 			}
 
 			// If only one option exists, it cannot be an empty string.
 			if ( ( 1 === $field_count ) && ( '' === $field_options[0] ) ) {
-				$message = sprintf( esc_html__( '%s require at least one option.', 'buddypress' ), $field_type->name );
+				$message = sprintf( esc_html__( '%s require at least one option.', 'buddyboss' ), $field_type->name );
 				return false;
 			}
 		}
@@ -1176,7 +1176,7 @@ class BP_XProfile_Field {
 
 		// Add New
 		if ( empty( $this->id ) ) {
-			$title  = __( 'Add New Field', 'buddypress' );
+			$title  = __( 'Add New Field', 'buddyboss' );
 			$button	= __( 'Save',          'buddypress' );
 			$action = add_query_arg( array(
 				'page'     => 'bp-profile-setup',
@@ -1198,7 +1198,7 @@ class BP_XProfile_Field {
 
 		// Edit
 		} else {
-			$title  = __( 'Edit Field', 'buddypress' );
+			$title  = __( 'Edit Field', 'buddyboss' );
 			$button	= __( 'Update',     'buddypress' );
 			$action = add_query_arg( array(
 				'page'     => 'bp-profile-setup',
@@ -1325,7 +1325,7 @@ class BP_XProfile_Field {
 		do_action( 'xprofile_field_before_submitbox', $this ); ?>
 
 		<div id="submitdiv" class="postbox">
-			<h2><?php esc_html_e( 'Submit', 'buddypress' ); ?></h2>
+			<h2><?php esc_html_e( 'Submit', 'buddyboss' ); ?></h2>
 			<div class="inside">
 				<div id="submitcomment" class="submitbox">
 					<div id="major-publishing-actions">
@@ -1352,7 +1352,7 @@ class BP_XProfile_Field {
 						<?php endif; ?>
 
 						<div id="delete-action">
-							<a href="<?php echo esc_url( $cancel_url ); ?>" class="deletion"><?php esc_html_e( 'Cancel', 'buddypress' ); ?></a>
+							<a href="<?php echo esc_url( $cancel_url ); ?>" class="deletion"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
 						</div>
 
 						<?php wp_nonce_field( 'xprofile_delete_option' ); ?>
@@ -1385,17 +1385,17 @@ class BP_XProfile_Field {
 
 		<div id="titlediv">
 			<div class="titlewrap">
-				<label id="title-prompt-text" for="title"><?php echo esc_html_x( 'Name (required)', 'XProfile admin edit field', 'buddypress' ); ?></label>
+				<label id="title-prompt-text" for="title"><?php echo esc_html_x( 'Name (required)', 'XProfile admin edit field', 'buddyboss' ); ?></label>
 				<input type="text" name="title" id="title" value="<?php echo esc_attr( $this->name ); ?>" autocomplete="off" />
 			</div>
 		</div>
 
 		<div class="postbox">
-			<h2><?php echo esc_html_x( 'Description', 'XProfile admin edit field', 'buddypress' ); ?></h2>
+			<h2><?php echo esc_html_x( 'Description', 'XProfile admin edit field', 'buddyboss' ); ?></h2>
 			<div class="inside">
 				<label for="description" class="screen-reader-text"><?php
 					/* translators: accessibility text */
-					esc_html_e( 'Add description', 'buddypress' );
+					esc_html_e( 'Add description', 'buddyboss' );
 				?></label>
 				<textarea name="description" id="description" rows="8" cols="60"><?php echo esc_textarea( $this->description ); ?></textarea>
 			</div>
@@ -1426,9 +1426,9 @@ class BP_XProfile_Field {
 		?>
 
 		<div id="member-types-div" class="postbox">
-			<h2><?php _e( 'Member Types', 'buddypress' ); ?></h2>
+			<h2><?php _e( 'Member Types', 'buddyboss' ); ?></h2>
 			<div class="inside">
-				<p class="description"><?php _e( 'This field should be available to:', 'buddypress' ); ?></p>
+				<p class="description"><?php _e( 'This field should be available to:', 'buddyboss' ); ?></p>
 
 				<ul>
 					<?php foreach ( $member_types as $member_type ) : ?>
@@ -1443,12 +1443,12 @@ class BP_XProfile_Field {
 					<li>
 						<label for="member-type-none">
 							<input name="member-types[]" id="member-type-none" class="member-type-selector" type="checkbox" value="null" <?php checked( in_array( 'null', $field_member_types ) ); ?>/>
-							<?php _e( 'Users with no member type', 'buddypress' ); ?>
+							<?php _e( 'Users with no member type', 'buddyboss' ); ?>
 						</label>
 					</li>
 
 				</ul>
-				<p class="description member-type-none-notice<?php if ( ! empty( $field_member_types ) ) : ?> hide<?php endif; ?>"><?php _e( 'Unavailable to all members.', 'buddypress' ) ?></p>
+				<p class="description member-type-none-notice<?php if ( ! empty( $field_member_types ) ) : ?> hide<?php endif; ?>"><?php _e( 'Unavailable to all members.', 'buddyboss' ) ?></p>
 			</div>
 
 			<input type="hidden" name="has-member-types" value="1" />
@@ -1472,7 +1472,7 @@ class BP_XProfile_Field {
 		} ?>
 
 		<div class="postbox">
-			<h2><label for="default-visibility"><?php esc_html_e( 'Visibility', 'buddypress' ); ?></label></h2>
+			<h2><label for="default-visibility"><?php esc_html_e( 'Visibility', 'buddyboss' ); ?></label></h2>
 			<div class="inside">
 				<div>
 					<select name="default-visibility" id="default-visibility">
@@ -1492,11 +1492,11 @@ class BP_XProfile_Field {
 					<ul>
 						<li>
 							<input type="radio" id="allow-custom-visibility-allowed" name="allow-custom-visibility" value="allowed" <?php checked( $this->get_allow_custom_visibility(), 'allowed' ); ?> />
-							<label for="allow-custom-visibility-allowed"><?php esc_html_e( 'Allow members to override', 'buddypress' ); ?></label>
+							<label for="allow-custom-visibility-allowed"><?php esc_html_e( 'Allow members to override', 'buddyboss' ); ?></label>
 						</li>
 						<li>
 							<input type="radio" id="allow-custom-visibility-disabled" name="allow-custom-visibility" value="disabled" <?php checked( $this->get_allow_custom_visibility(), 'disabled' ); ?> />
-							<label for="allow-custom-visibility-disabled"><?php esc_html_e( 'Enforce field visibility', 'buddypress' ); ?></label>
+							<label for="allow-custom-visibility-disabled"><?php esc_html_e( 'Enforce field visibility', 'buddyboss' ); ?></label>
 						</li>
 					</ul>
 				</div>
@@ -1521,10 +1521,10 @@ class BP_XProfile_Field {
 		} ?>
 
 		<div class="postbox">
-			<h2><label for="required"><?php esc_html_e( 'Requirement', 'buddypress' ); ?></label></h2>
+			<h2><label for="required"><?php esc_html_e( 'Requirement', 'buddyboss' ); ?></label></h2>
 			<div class="inside">
 				<select name="required" id="required">
-					<option value="0"<?php selected( $this->is_required, '0' ); ?>><?php esc_html_e( 'Not Required', 'buddypress' ); ?></option>
+					<option value="0"<?php selected( $this->is_required, '0' ); ?>><?php esc_html_e( 'Not Required', 'buddyboss' ); ?></option>
 					<option value="1"<?php selected( $this->is_required, '1' ); ?>><?php esc_html_e( 'Required',     'buddypress' ); ?></option>
 				</select>
 			</div>
@@ -1544,18 +1544,18 @@ class BP_XProfile_Field {
 		?>
 
 		<div class="postbox">
-			<h2><?php esc_html_e( 'Autolink', 'buddypress' ); ?></h2>
+			<h2><?php esc_html_e( 'Autolink', 'buddyboss' ); ?></h2>
 			<div class="inside">
-				<p class="description"><?php esc_html_e( 'On user profiles, link this field to a search of the Members directory, using the field value as a search term.', 'buddypress' ); ?></p>
+				<p class="description"><?php esc_html_e( 'On user profiles, link this field to a search of the Members directory, using the field value as a search term.', 'buddyboss' ); ?></p>
 
 				<p>
 					<label for="do-autolink" class="screen-reader-text"><?php
 						/* translators: accessibility text */
-						esc_html_e( 'Autolink status for this field', 'buddypress' );
+						esc_html_e( 'Autolink status for this field', 'buddyboss' );
 					?></label>
 					<select name="do_autolink" id="do-autolink">
-						<option value="on" <?php selected( $this->get_do_autolink() ); ?>><?php esc_html_e( 'Enabled', 'buddypress' ); ?></option>
-						<option value="" <?php selected( $this->get_do_autolink(), false ); ?>><?php esc_html_e( 'Disabled', 'buddypress' ); ?></option>
+						<option value="on" <?php selected( $this->get_do_autolink() ); ?>><?php esc_html_e( 'Enabled', 'buddyboss' ); ?></option>
+						<option value="" <?php selected( $this->get_do_autolink(), false ); ?>><?php esc_html_e( 'Disabled', 'buddyboss' ); ?></option>
 					</select>
 				</p>
 			</div>

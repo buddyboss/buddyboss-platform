@@ -2,7 +2,7 @@
 /**
  * Groups: Join action
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage GroupActions
  * @since 3.0.0
  */
@@ -31,16 +31,16 @@ function groups_action_join_group() {
 		// User wants to join a group that requires an invitation to join.
 		if ( ! bp_current_user_can( 'groups_join_group', array( 'group_id' => $bp->groups->current_group->id ) ) ) {
 			if ( !groups_check_user_has_invite( bp_loggedin_user_id(), $bp->groups->current_group->id ) ) {
-				bp_core_add_message( __( 'There was an error joining the group.', 'buddypress' ), 'error' );
+				bp_core_add_message( __( 'There was an error joining the group.', 'buddyboss' ), 'error' );
 				bp_core_redirect( bp_get_group_permalink( $bp->groups->current_group ) );
 			}
 		}
 
 		// User wants to join any group.
 		if ( !groups_join_group( $bp->groups->current_group->id ) )
-			bp_core_add_message( __( 'There was an error joining the group.', 'buddypress' ), 'error' );
+			bp_core_add_message( __( 'There was an error joining the group.', 'buddyboss' ), 'error' );
 		else
-			bp_core_add_message( __( 'You joined the group!', 'buddypress' ) );
+			bp_core_add_message( __( 'You joined the group!', 'buddyboss' ) );
 
 		bp_core_redirect( bp_get_group_permalink( $bp->groups->current_group ) );
 	}

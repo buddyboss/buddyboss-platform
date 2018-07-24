@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress - Members Single Profile Edit
+ * BuddyBoss - Members Single Profile Edit
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
@@ -24,10 +24,10 @@ if ( bp_has_profile( 'profile_group_id=' . bp_get_current_profile_group_id() ) )
 		/** This action is documented in bp-templates/bp-legacy/buddypress/members/single/profile/profile-wp.php */
 		do_action( 'bp_before_profile_field_content' ); ?>
 
-		<h2><?php printf( __( "Editing '%s' Profile Group", 'buddypress' ), bp_get_the_profile_group_name() ); ?></h2>
+		<h2><?php printf( __( "Editing '%s' Profile Group", 'buddyboss' ), bp_get_the_profile_group_name() ); ?></h2>
 
 		<?php if ( bp_profile_has_multiple_groups() ) : ?>
-			<ul class="button-nav" aria-label="<?php esc_attr_e( 'Profile field groups', 'buddypress' ); ?>" role="navigation">
+			<ul class="button-nav" aria-label="<?php esc_attr_e( 'Profile field groups', 'buddyboss' ); ?>" role="navigation">
 
 				<?php bp_profile_group_tabs(); ?>
 
@@ -57,28 +57,28 @@ if ( bp_has_profile( 'profile_group_id=' . bp_get_current_profile_group_id() ) )
 					<p class="field-visibility-settings-toggle" id="field-visibility-settings-toggle-<?php bp_the_profile_field_id() ?>"><span id="<?php bp_the_profile_field_input_name(); ?>-2">
 						<?php
 						printf(
-							__( 'This field can be seen by: %s', 'buddypress' ),
+							__( 'This field can be seen by: %s', 'buddyboss' ),
 							'<span class="current-visibility-level">' . bp_get_the_profile_field_visibility_level_label() . '</span>'
 						);
 						?>
 						</span>
-						<button type="button" class="visibility-toggle-link" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-2" aria-expanded="false"><?php _ex( 'Change', 'Change profile field visibility level', 'buddypress' ); ?></button>
+						<button type="button" class="visibility-toggle-link" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-2" aria-expanded="false"><?php _ex( 'Change', 'Change profile field visibility level', 'buddyboss' ); ?></button>
 					</p>
 
 					<div class="field-visibility-settings" id="field-visibility-settings-<?php bp_the_profile_field_id() ?>">
 						<fieldset>
-							<legend><?php _e( 'Who can see this field?', 'buddypress' ) ?></legend>
+							<legend><?php _e( 'Who can see this field?', 'buddyboss' ) ?></legend>
 
 							<?php bp_profile_visibility_radio_buttons() ?>
 
 						</fieldset>
-						<button type="button" class="field-visibility-settings-close"><?php _e( 'Close', 'buddypress' ) ?></button>
+						<button type="button" class="field-visibility-settings-close"><?php _e( 'Close', 'buddyboss' ) ?></button>
 					</div>
 				<?php else : ?>
 					<div class="field-visibility-settings-notoggle" id="field-visibility-settings-toggle-<?php bp_the_profile_field_id() ?>">
 						<?php
 						printf(
-							__( 'This field can be seen by: %s', 'buddypress' ),
+							__( 'This field can be seen by: %s', 'buddyboss' ),
 							'<span class="current-visibility-level">' . bp_get_the_profile_field_visibility_level_label() . '</span>'
 						);
 						?>
@@ -105,7 +105,7 @@ if ( bp_has_profile( 'profile_group_id=' . bp_get_current_profile_group_id() ) )
 	do_action( 'bp_after_profile_field_content' ); ?>
 
 	<div class="submit">
-		<input type="submit" name="profile-group-edit-submit" id="profile-group-edit-submit" value="<?php esc_attr_e( 'Save Changes', 'buddypress' ); ?> " />
+		<input type="submit" name="profile-group-edit-submit" id="profile-group-edit-submit" value="<?php esc_attr_e( 'Save Changes', 'buddyboss' ); ?> " />
 	</div>
 
 	<input type="hidden" name="field_ids" id="field_ids" value="<?php bp_the_profile_field_ids(); ?>" />

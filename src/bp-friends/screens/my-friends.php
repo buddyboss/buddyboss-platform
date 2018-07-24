@@ -1,28 +1,28 @@
 <?php
 /**
- * Friends: User's "Friends" screen handler
+ * Connections: User's "Connections" screen handler
  *
- * @package BuddyPress
- * @subpackage FriendsScreens
+ * @package BuddyBoss
+ * @subpackage ConnectionsScreens
  * @since 3.0.0
  */
 
 /**
- * Catch and process the My Friends page.
+ * Catch and process the My Connections page.
  *
  * @since 1.0.0
  */
 function friends_screen_my_friends() {
 
 	/**
-	 * Fires before the loading of template for the My Friends page.
+	 * Fires before the loading of template for the My Connections page.
 	 *
 	 * @since 1.0.0
 	 */
 	do_action( 'friends_screen_my_friends' );
 
 	/**
-	 * Filters the template used to display the My Friends page.
+	 * Filters the template used to display the My Connections page.
 	 *
 	 * @since 1.0.0
 	 *

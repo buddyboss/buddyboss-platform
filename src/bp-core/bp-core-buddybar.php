@@ -2,7 +2,7 @@
 /**
  * Core BuddyPress Navigational Functions.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Core
  * @since 1.5.0
  *
@@ -677,7 +677,7 @@ function bp_core_maybe_hook_new_subnav_screen_function( $subnav_item, $component
 
 			// If a redirect URL has been passed to the subnav item, respect it.
 			if ( ! empty( $subnav_item['no_access_url'] ) ) {
-				$message     = __( 'You do not have access to that page.', 'buddypress' );
+				$message     = __( 'You do not have access to that page.', 'buddyboss' );
 				$redirect_to = trailingslashit( $subnav_item['no_access_url'] );
 
 			// In the case of a user page, we try to assume a
@@ -693,7 +693,7 @@ function bp_core_maybe_hook_new_subnav_screen_function( $subnav_item, $component
 				// component, as long as that component is
 				// publicly accessible.
 				if ( bp_is_my_profile() || ( isset( $parent_nav_default_item ) && $parent_nav_default_item->show_for_displayed_user ) ) {
-					$message     = __( 'You do not have access to that page.', 'buddypress' );
+					$message     = __( 'You do not have access to that page.', 'buddyboss' );
 					$redirect_to = bp_displayed_user_domain();
 
 				// In some cases, the default tab is not accessible to
@@ -713,7 +713,7 @@ function bp_core_maybe_hook_new_subnav_screen_function( $subnav_item, $component
 
 			// Fall back to the home page.
 			} else {
-				$message     = __( 'You do not have access to this page.', 'buddypress' );
+				$message     = __( 'You do not have access to this page.', 'buddyboss' );
 				$redirect_to = bp_get_root_domain();
 			}
 

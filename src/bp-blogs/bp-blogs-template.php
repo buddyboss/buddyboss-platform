@@ -2,7 +2,7 @@
 /**
  * BuddyPress Blogs Template Tags.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage BlogsTemplate
  * @since 1.5.0
  */
@@ -240,9 +240,9 @@ function bp_get_blogs_pagination_count() {
 	$total     = bp_core_number_format( $blogs_template->total_blog_count );
 
 	if ( 1 == $blogs_template->total_blog_count ) {
-		$message = __( 'Viewing 1 site', 'buddypress' );
+		$message = __( 'Viewing 1 site', 'buddyboss' );
 	} else {
-		$message = sprintf( _n( 'Viewing %1$s - %2$s of %3$s site', 'Viewing %1$s - %2$s of %3$s sites', $blogs_template->total_blog_count, 'buddypress' ), $from_num, $to_num, $total );
+		$message = sprintf( _n( 'Viewing %1$s - %2$s of %3$s site', 'Viewing %1$s - %2$s of %3$s sites', $blogs_template->total_blog_count, 'buddyboss' ), $from_num, $to_num, $total );
 	}
 
 	/**
@@ -337,7 +337,7 @@ function bp_blog_avatar( $args = '' ) {
 			'height'  => false,
 			'class'   => 'avatar',
 			'id'      => false,
-			'alt'     => sprintf( __( 'Profile picture of site author %s', 'buddypress' ), esc_attr( $author_displayname ) ),
+			'alt'     => sprintf( __( 'Profile picture of site author %s', 'buddyboss' ), esc_attr( $author_displayname ) ),
 			'no_grav' => true,
 		) );
 
@@ -392,7 +392,7 @@ function bp_blog_avatar( $args = '' ) {
 					esc_url( $site_icon ),
 					esc_attr( "{$r['class']} avatar-{$size}" ),
 					esc_attr( $size ),
-					sprintf( esc_attr__( 'Site icon for %s', 'buddypress' ), bp_get_blog_name() )
+					sprintf( esc_attr__( 'Site icon for %s', 'buddyboss' ), bp_get_blog_name() )
 				);
 			}
 		}
@@ -621,7 +621,7 @@ function bp_blog_last_active( $args = array() ) {
 
 		// Backwards compatibility for anyone forcing a 'true' active_format.
 		if ( true === $r['active_format'] ) {
-			$r['active_format'] = __( 'active %s', 'buddypress' );
+			$r['active_format'] = __( 'active %s', 'buddyboss' );
 		}
 
 		// Blog has been posted to at least once.
@@ -634,7 +634,7 @@ function bp_blog_last_active( $args = array() ) {
 
 		// Blog has never been posted to.
 		} else {
-			$last_activity = __( 'Never active', 'buddypress' );
+			$last_activity = __( 'Never active', 'buddyboss' );
 		}
 
 		/**
@@ -686,7 +686,7 @@ function bp_blog_latest_post( $args = array() ) {
 				 *
 				 * @param string $retval Title of the latest post.
 				 */
-				$retval = sprintf( __( 'Latest Post: %s', 'buddypress' ), '<a href="' . $blogs_template->blog->latest_post->guid . '">' . apply_filters( 'the_title', $retval ) . '</a>' );
+				$retval = sprintf( __( 'Latest Post: %s', 'buddyboss' ), '<a href="' . $blogs_template->blog->latest_post->guid . '">' . apply_filters( 'the_title', $retval ) . '</a>' );
 			} else {
 
 				/** This filter is documented in bp-blogs/bp-blogs-template.php */
@@ -1219,17 +1219,17 @@ function bp_blogs_confirm_blog_signup( $domain, $path, $blog_title, $user_name, 
 	restore_current_blog();
 
 	?>
-	<p><?php _e( 'Congratulations! You have successfully registered a new site.', 'buddypress' ) ?></p>
+	<p><?php _e( 'Congratulations! You have successfully registered a new site.', 'buddyboss' ) ?></p>
 	<p>
 		<?php printf(
 			'%s %s',
 			sprintf(
-				__( '%s is your new site.', 'buddypress' ),
+				__( '%s is your new site.', 'buddyboss' ),
 				sprintf( '<a href="%s">%s</a>', esc_url( $blog_url ), esc_url( $blog_url ) )
 			),
 			sprintf(
 				/* translators: 1: Login URL, 2: User name */
-				__( '<a href="%1$s">Log in</a> as "%2$s" using your existing password.', 'buddypress' ),
+				__( '<a href="%1$s">Log in</a> as "%2$s" using your existing password.', 'buddyboss' ),
 				esc_url( $login_url ),
 				esc_html( $user_name )
 			)
@@ -1266,7 +1266,7 @@ function bp_create_blog_link() {
 	 *
 	 * @param string $value HTML link for creating a site.
 	 */
-	echo apply_filters( 'bp_create_blog_link', '<a href="' . trailingslashit( bp_get_blogs_directory_permalink() . 'create' ) . '">' . __( 'Create a Site', 'buddypress' ) . '</a>' );
+	echo apply_filters( 'bp_create_blog_link', '<a href="' . trailingslashit( bp_get_blogs_directory_permalink() . 'create' ) . '">' . __( 'Create a Site', 'buddyboss' ) . '</a>' );
 }
 
 /**
@@ -1282,9 +1282,9 @@ function bp_blogs_blog_tabs() {
 	} ?>
 
 	<ul class="content-header-nav">
-		<li<?php if ( bp_is_current_action( 'my-blogs'        ) || !bp_current_action() ) : ?> class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/my-blogs'        ); ?>"><?php printf( __( "%s's Sites", 'buddypress' ),           bp_get_displayed_user_fullname() ); ?></a></li>
-		<li<?php if ( bp_is_current_action( 'recent-posts'    )                         ) : ?> class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-posts'    ); ?>"><?php printf( __( "%s's Recent Posts", 'buddypress' ),    bp_get_displayed_user_fullname() ); ?></a></li>
-		<li<?php if ( bp_is_current_action( 'recent-comments' )                         ) : ?> class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-comments' ); ?>"><?php printf( __( "%s's Recent Comments", 'buddypress' ), bp_get_displayed_user_fullname() ); ?></a></li>
+		<li<?php if ( bp_is_current_action( 'my-blogs'        ) || !bp_current_action() ) : ?> class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/my-blogs'        ); ?>"><?php printf( __( "%s's Sites", 'buddyboss' ),           bp_get_displayed_user_fullname() ); ?></a></li>
+		<li<?php if ( bp_is_current_action( 'recent-posts'    )                         ) : ?> class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-posts'    ); ?>"><?php printf( __( "%s's Recent Posts", 'buddyboss' ),    bp_get_displayed_user_fullname() ); ?></a></li>
+		<li<?php if ( bp_is_current_action( 'recent-comments' )                         ) : ?> class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-comments' ); ?>"><?php printf( __( "%s's Recent Comments", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
 	</ul>
 
 <?php
@@ -1312,7 +1312,7 @@ function bp_directory_blogs_search_form() {
 
 	$search_form_html = '<form action="" method="get" id="search-blogs-form">
 		<label for="blogs_search"><input type="text" name="' . esc_attr( $query_arg ) . '" id="blogs_search" placeholder="'. esc_attr( $search_value ) .'" /></label>
-		<input type="submit" id="blogs_search_submit" name="blogs_search_submit" value="' . __( 'Search', 'buddypress' ) . '" />
+		<input type="submit" id="blogs_search_submit" name="blogs_search_submit" value="' . __( 'Search', 'buddyboss' ) . '" />
 	</form>';
 
 	/**
@@ -1352,7 +1352,7 @@ function bp_blog_create_button() {
 		$button_args = array(
 			'id'         => 'create_blog',
 			'component'  => 'blogs',
-			'link_text'  => __( 'Create a Site', 'buddypress' ),
+			'link_text'  => __( 'Create a Site', 'buddyboss' ),
 			'link_class' => 'blog-create no-ajax',
 			'link_href'  => trailingslashit( bp_get_blogs_directory_permalink() . 'create' ),
 			'wrapper'    => false,
@@ -1468,7 +1468,7 @@ function bp_blogs_visit_blog_button( $args = '' ) {
 			'wrapper_class'     => 'blog-button visit',
 			'link_href'         => bp_get_blog_permalink(),
 			'link_class'        => 'blog-button visit',
-			'link_text'         => __( 'Visit Site', 'buddypress' ),
+			'link_text'         => __( 'Visit Site', 'buddyboss' ),
 		);
 
 		$button = wp_parse_args( $args, $defaults );
@@ -1528,7 +1528,7 @@ function bp_blogs_get_profile_stats( $args = '' ) {
 			}
 
 			// If blogs exist, show some formatted output.
-			$r['output'] = $r['before'] . sprintf( _n( '%s site', '%s sites', $r['blogs'], 'buddypress' ), '<strong>' . $r['blogs'] . '</strong>' ) . $r['after'];
+			$r['output'] = $r['before'] . sprintf( _n( '%s site', '%s sites', $r['blogs'], 'buddyboss' ), '<strong>' . $r['blogs'] . '</strong>' ) . $r['after'];
 		}
 	}
 

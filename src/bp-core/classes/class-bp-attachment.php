@@ -2,7 +2,7 @@
 /**
  * Core attachment class.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Core
  * @since 2.3.0
  */
@@ -157,15 +157,15 @@ abstract class BP_Attachment {
 		 * Custom errors will start at 9 code
 		 */
 		$upload_errors = array(
-			0 => __( 'The file was uploaded successfully', 'buddypress' ),
-			1 => __( 'The uploaded file exceeds the maximum allowed file size for this site', 'buddypress' ),
-			2 => sprintf( __( 'The uploaded file exceeds the maximum allowed file size of: %s', 'buddypress' ), size_format( $this->original_max_filesize ) ),
-			3 => __( 'The uploaded file was only partially uploaded.', 'buddypress' ),
-			4 => __( 'No file was uploaded.', 'buddypress' ),
+			0 => __( 'The file was uploaded successfully', 'buddyboss' ),
+			1 => __( 'The uploaded file exceeds the maximum allowed file size for this site', 'buddyboss' ),
+			2 => sprintf( __( 'The uploaded file exceeds the maximum allowed file size of: %s', 'buddyboss' ), size_format( $this->original_max_filesize ) ),
+			3 => __( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
+			4 => __( 'No file was uploaded.', 'buddyboss' ),
 			5 => '',
-			6 => __( 'Missing a temporary folder.', 'buddypress' ),
-			7 => __( 'Failed to write file to disk.', 'buddypress' ),
-			8 => __( 'File upload stopped by extension.', 'buddypress' ),
+			6 => __( 'Missing a temporary folder.', 'buddyboss' ),
+			7 => __( 'Failed to write file to disk.', 'buddyboss' ),
+			8 => __( 'File upload stopped by extension.', 'buddyboss' ),
 		);
 
 		if ( ! array_intersect_key( $upload_errors, (array) $param ) ) {
@@ -454,12 +454,12 @@ abstract class BP_Attachment {
 		), 'bp_attachment_crop_args' );
 
 		if ( empty( $r['original_file'] ) || ! file_exists( $r['original_file'] ) ) {
-			$wp_error->add( 'crop_error', __( 'Cropping the file failed: missing source file.', 'buddypress' ) );
+			$wp_error->add( 'crop_error', __( 'Cropping the file failed: missing source file.', 'buddyboss' ) );
 			return $wp_error;
 		}
 
 		// Check image file pathes.
-		$path_error = __( 'Cropping the file failed: the file path is not allowed.', 'buddypress' );
+		$path_error = __( 'Cropping the file failed: the file path is not allowed.', 'buddyboss' );
 
 		// Make sure it's coming from an uploaded file.
 		if ( false === strpos( $r['original_file'], $this->upload_path ) ) {
@@ -478,9 +478,9 @@ abstract class BP_Attachment {
 		}
 
 		// Check image file types.
-		$check_types = array( 'src_file' => array( 'file' => $r['original_file'], 'error' => _x( 'source file', 'Attachment source file', 'buddypress' ) ) );
+		$check_types = array( 'src_file' => array( 'file' => $r['original_file'], 'error' => _x( 'source file', 'Attachment source file', 'buddyboss' ) ) );
 		if ( ! empty( $r['dst_file'] ) ) {
-			$check_types['dst_file'] = array( 'file' => $r['dst_file'], 'error' => _x( 'destination file', 'Attachment destination file', 'buddypress' ) );
+			$check_types['dst_file'] = array( 'file' => $r['dst_file'], 'error' => _x( 'destination file', 'Attachment destination file', 'buddyboss' ) );
 		}
 
 		/**
@@ -500,7 +500,7 @@ abstract class BP_Attachment {
 			$ext           = $is_image['ext'];
 
 			if ( empty( $ext ) || empty( $supported_image_types[ $ext ] ) ) {
-				$wp_error->add( 'crop_error', sprintf( __( 'Cropping the file failed: %s is not a supported image file.', 'buddypress' ), $file['error'] ) );
+				$wp_error->add( 'crop_error', sprintf( __( 'Cropping the file failed: %s is not a supported image file.', 'buddyboss' ), $file['error'] ) );
 				return $wp_error;
 			}
 		}
@@ -533,8 +533,8 @@ abstract class BP_Attachment {
 			'file_data_name'    => $this->file_input,
 			'max_file_size'     => $this->original_max_filesize,
 			'feedback_messages' => array(
-				1 => __( 'Sorry, uploading the file failed.', 'buddypress' ),
-				2 => __( 'File successfully uploaded.', 'buddypress' ),
+				1 => __( 'Sorry, uploading the file failed.', 'buddyboss' ),
+				2 => __( 'File successfully uploaded.', 'buddyboss' ),
 			),
 		);
 

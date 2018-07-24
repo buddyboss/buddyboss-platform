@@ -1,10 +1,10 @@
 <?php
 /**
- * BuddyPress Messages Loader.
+ * BuddyBoss Messages Loader.
  *
  * A private messages component, for users to send messages to each other.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage MessagesLoader
  * @since 1.5.0
  */

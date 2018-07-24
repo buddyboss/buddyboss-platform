@@ -1,15 +1,15 @@
 <?php
 /**
- * BuddyPress - Users Profile
+ * BuddyBoss - Users Profile
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
 
 ?>
 
-<div class="item-list-tabs no-ajax" id="subnav" aria-label="<?php esc_attr_e( 'Member secondary navigation', 'buddypress' ); ?>" role="navigation">
+<div class="item-list-tabs no-ajax" id="subnav" aria-label="<?php esc_attr_e( 'Member secondary navigation', 'buddyboss' ); ?>" role="navigation">
 	<ul>
 		<?php bp_get_options_nav(); ?>
 	</ul>

@@ -4,7 +4,7 @@
  *
  * Admin Bar functions for the Notifications component.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage NotificationsToolbar
  * @since 1.9.0
  */
@@ -53,7 +53,7 @@ function bp_notifications_toolbar_menu() {
 		$wp_admin_bar->add_menu( array(
 			'parent' => 'bp-notifications',
 			'id'     => 'no-notifications',
-			'title'  => __( 'No new notifications', 'buddypress' ),
+			'title'  => __( 'No new notifications', 'buddyboss' ),
 			'href'   => $menu_link,
 		) );
 	}

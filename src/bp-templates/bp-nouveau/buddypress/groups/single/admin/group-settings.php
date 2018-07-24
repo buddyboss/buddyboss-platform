@@ -10,13 +10,13 @@
 <?php if ( bp_is_group_create() ) : ?>
 
 	<h3 class="bp-screen-title creation-step-name">
-		<?php esc_html_e( 'Select Group Settings', 'buddypress' ); ?>
+		<?php esc_html_e( 'Select Group Settings', 'buddyboss' ); ?>
 	</h3>
 
 <?php else : ?>
 
 	<h2 class="bp-screen-title">
-		<?php esc_html_e( 'Change Group Settings', 'buddypress' ); ?>
+		<?php esc_html_e( 'Change Group Settings', 'buddyboss' ); ?>
 	</h2>
 
 <?php endif; ?>
@@ -24,36 +24,36 @@
 <div class="group-settings-selections">
 
 	<fieldset class="radio group-status-type">
-		<legend><?php esc_html_e( 'Privacy Options', 'buddypress' ); ?></legend>
+		<legend><?php esc_html_e( 'Privacy Options', 'buddyboss' ); ?></legend>
 
 		<label for="group-status-public">
-			<input type="radio" name="group-status" id="group-status-public" value="public"<?php if ( 'public' === bp_get_new_group_status() || ! bp_get_new_group_status() ) { ?> checked="checked"<?php } ?> aria-describedby="public-group-description" /> <?php esc_html_e( 'This is a public group', 'buddypress' ); ?>
+			<input type="radio" name="group-status" id="group-status-public" value="public"<?php if ( 'public' === bp_get_new_group_status() || ! bp_get_new_group_status() ) { ?> checked="checked"<?php } ?> aria-describedby="public-group-description" /> <?php esc_html_e( 'This is a public group', 'buddyboss' ); ?>
 		</label>
 
 		<ul id="public-group-description">
-			<li><?php esc_html_e( 'Any site member can join this group.', 'buddypress' ); ?></li>
-			<li><?php esc_html_e( 'This group will be listed in the groups directory and in search results.', 'buddypress' ); ?></li>
-			<li><?php esc_html_e( 'Group content and activity will be visible to any site member.', 'buddypress' ); ?></li>
+			<li><?php esc_html_e( 'Any site member can join this group.', 'buddyboss' ); ?></li>
+			<li><?php esc_html_e( 'This group will be listed in the groups directory and in search results.', 'buddyboss' ); ?></li>
+			<li><?php esc_html_e( 'Group content and activity will be visible to any site member.', 'buddyboss' ); ?></li>
 		</ul>
 
 		<label for="group-status-private">
-			<input type="radio" name="group-status" id="group-status-private" value="private"<?php if ( 'private' === bp_get_new_group_status() ) { ?> checked="checked"<?php } ?> aria-describedby="private-group-description" /> <?php esc_html_e( 'This is a private group', 'buddypress' ); ?>
+			<input type="radio" name="group-status" id="group-status-private" value="private"<?php if ( 'private' === bp_get_new_group_status() ) { ?> checked="checked"<?php } ?> aria-describedby="private-group-description" /> <?php esc_html_e( 'This is a private group', 'buddyboss' ); ?>
 		</label>
 
 		<ul id="private-group-description">
-			<li><?php esc_html_e( 'Only people who request membership and are accepted can join the group.', 'buddypress' ); ?></li>
-			<li><?php esc_html_e( 'This group will be listed in the groups directory and in search results.', 'buddypress' ); ?></li>
-			<li><?php esc_html_e( 'Group content and activity will only be visible to members of the group.', 'buddypress' ); ?></li>
+			<li><?php esc_html_e( 'Only people who request membership and are accepted can join the group.', 'buddyboss' ); ?></li>
+			<li><?php esc_html_e( 'This group will be listed in the groups directory and in search results.', 'buddyboss' ); ?></li>
+			<li><?php esc_html_e( 'Group content and activity will only be visible to members of the group.', 'buddyboss' ); ?></li>
 		</ul>
 
 		<label for="group-status-hidden">
-			<input type="radio" name="group-status" id="group-status-hidden" value="hidden"<?php if ( 'hidden' === bp_get_new_group_status() ) { ?> checked="checked"<?php } ?> aria-describedby="hidden-group-description" /> <?php esc_html_e( 'This is a hidden group', 'buddypress' ); ?>
+			<input type="radio" name="group-status" id="group-status-hidden" value="hidden"<?php if ( 'hidden' === bp_get_new_group_status() ) { ?> checked="checked"<?php } ?> aria-describedby="hidden-group-description" /> <?php esc_html_e( 'This is a hidden group', 'buddyboss' ); ?>
 		</label>
 
 		<ul id="hidden-group-description">
-			<li><?php esc_html_e( 'Only people who are invited can join the group.', 'buddypress' ); ?></li>
-			<li><?php esc_html_e( 'This group will not be listed in the groups directory or search results.', 'buddypress' ); ?></li>
-			<li><?php esc_html_e( 'Group content and activity will only be visible to members of the group.', 'buddypress' ); ?></li>
+			<li><?php esc_html_e( 'Only people who are invited can join the group.', 'buddyboss' ); ?></li>
+			<li><?php esc_html_e( 'This group will not be listed in the groups directory or search results.', 'buddyboss' ); ?></li>
+			<li><?php esc_html_e( 'Group content and activity will only be visible to members of the group.', 'buddyboss' ); ?></li>
 		</ul>
 
 	</fieldset>
@@ -64,9 +64,9 @@ $group_types = bp_groups_get_group_types( array( 'show_in_create_screen' => true
 if ( $group_types ) : ?>
 
 	<fieldset class="group-create-types">
-		<legend><?php esc_html_e( 'Group Types', 'buddypress' ); ?></legend>
+		<legend><?php esc_html_e( 'Group Types', 'buddyboss' ); ?></legend>
 
-		<p tabindex="0"><?php esc_html_e( 'Select the types this group should be a part of.', 'buddypress' ); ?></p>
+		<p tabindex="0"><?php esc_html_e( 'Select the types this group should be a part of.', 'buddyboss' ); ?></p>
 
 		<?php foreach ( $group_types as $type ) : ?>
 			<div class="checkbox">
@@ -87,23 +87,23 @@ if ( $group_types ) : ?>
 <?php endif; ?>
 
 	<fieldset class="radio group-invitations">
-		<legend><?php esc_html_e( 'Group Invitations', 'buddypress' ); ?></legend>
+		<legend><?php esc_html_e( 'Group Invitations', 'buddyboss' ); ?></legend>
 
-		<p tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to invite others?', 'buddypress' ); ?></p>
+		<p tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to invite others?', 'buddyboss' ); ?></p>
 
 		<label for="group-invite-status-members">
 			<input type="radio" name="group-invite-status" id="group-invite-status-members" value="members"<?php bp_group_show_invite_status_setting( 'members' ); ?> />
-				<?php esc_html_e( 'All group members', 'buddypress' ); ?>
+				<?php esc_html_e( 'All group members', 'buddyboss' ); ?>
 		</label>
 
 		<label for="group-invite-status-mods">
 			<input type="radio" name="group-invite-status" id="group-invite-status-mods" value="mods"<?php bp_group_show_invite_status_setting( 'mods' ); ?> />
-				<?php esc_html_e( 'Group admins and mods only', 'buddypress' ); ?>
+				<?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?>
 		</label>
 
 		<label for="group-invite-status-admins">
 			<input type="radio" name="group-invite-status" id="group-invite-status-admins" value="admins"<?php bp_group_show_invite_status_setting( 'admins' ); ?> />
-				<?php esc_html_e( 'Group admins only', 'buddypress' ); ?>
+				<?php esc_html_e( 'Organizers only', 'buddyboss' ); ?>
 		</label>
 
 	</fieldset>

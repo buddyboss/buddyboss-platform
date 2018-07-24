@@ -92,27 +92,27 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 
 	$params['messages'] = array(
 		'errors' => array(
-			'send_to'         => __( 'Please add at least one recipient.', 'buddypress' ),
-			'subject'         => __( 'Please add a subject to your message.', 'buddypress' ),
-			'message_content' => __( 'Please add some content to your message.', 'buddypress' ),
+			'send_to'         => __( 'Please add at least one recipient.', 'buddyboss' ),
+			'subject'         => __( 'Please add a subject to your message.', 'buddyboss' ),
+			'message_content' => __( 'Please add some content to your message.', 'buddyboss' ),
 		),
 		'nonces' => array(
 			'send' => wp_create_nonce( 'messages_send_message' ),
 		),
-		'loading'       => __( 'Loading messages. Please wait.', 'buddypress' ),
+		'loading'       => __( 'Loading messages. Please wait.', 'buddyboss' ),
 		'doingAction'   => array(
-			'read'   => __( 'Marking messages as read. Please wait.', 'buddypress' ),
-			'unread' => __( 'Marking messages as unread. Please wait.', 'buddypress' ),
-			'delete' => __( 'Deleting messages. Please wait.', 'buddypress' ),
-			'star'   => __( 'Starring messages. Please wait.', 'buddypress' ),
-			'unstar' => __( 'Unstarring messages. Please wait.', 'buddypress' ),
+			'read'   => __( 'Marking messages as read. Please wait.', 'buddyboss' ),
+			'unread' => __( 'Marking messages as unread. Please wait.', 'buddyboss' ),
+			'delete' => __( 'Deleting messages. Please wait.', 'buddyboss' ),
+			'star'   => __( 'Starring messages. Please wait.', 'buddyboss' ),
+			'unstar' => __( 'Unstarring messages. Please wait.', 'buddyboss' ),
 		),
 		'bulk_actions'  => bp_nouveau_messages_get_bulk_actions(),
-		'howto'         => __( 'Click on the message title to preview it in the Active conversation box below.', 'buddypress' ),
-		'howtoBulk'     => __( 'Use the select box to define your bulk action and click on the &#10003; button to apply.', 'buddypress' ),
+		'howto'         => __( 'Click on the message title to preview it in the Active conversation box below.', 'buddyboss' ),
+		'howtoBulk'     => __( 'Use the select box to define your bulk action and click on the &#10003; button to apply.', 'buddyboss' ),
 		'toOthers'      => array(
-			'one'  => __( '(and 1 other)', 'buddypress' ),
-			'more' => __( '(and %d others)', 'buddypress' ),
+			'one'  => __( '(and 1 other)', 'buddyboss' ),
+			'more' => __( '(and %d others)', 'buddyboss' ),
 		),
 		'rootUrl' => parse_url( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() ), PHP_URL_PATH ),
 	);
@@ -121,12 +121,12 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 	if ( bp_is_active( 'messages', 'star' ) ) {
 		$params['messages'] = array_merge( $params['messages'], array(
 			'strings' => array(
-				'text_unstar'  => __( 'Unstar', 'buddypress' ),
-				'text_star'    => __( 'Star', 'buddypress' ),
-				'title_unstar' => __( 'Starred', 'buddypress' ),
-				'title_star'   => __( 'Not starred', 'buddypress' ),
-				'title_unstar_thread' => __( 'Remove all starred messages in this thread', 'buddypress' ),
-				'title_star_thread'   => __( 'Star the first message in this thread', 'buddypress' ),
+				'text_unstar'  => __( 'Unstar', 'buddyboss' ),
+				'text_star'    => __( 'Star', 'buddyboss' ),
+				'title_unstar' => __( 'Starred', 'buddyboss' ),
+				'title_star'   => __( 'Not starred', 'buddyboss' ),
+				'title_unstar_thread' => __( 'Remove all starred messages in this thread', 'buddyboss' ),
+				'title_star_thread'   => __( 'Star the first message in this thread', 'buddyboss' ),
 			),
 			'is_single_thread' => (int) bp_is_messages_conversation(),
 			'star_counter'     => 0,
@@ -146,7 +146,7 @@ function bp_nouveau_message_search_form() {
 
 	$search_form_html = '<form action="" method="get" id="search-messages-form">
 		<label for="messages_search"><input type="text" name="' . esc_attr( $query_arg ) . '" id="messages_search" placeholder="' . esc_attr( $placeholder ) . '" /></label>
-		<input type="submit" id="messages_search_submit" name="messages_search_submit" value="' . esc_attr_x( 'Search', 'button', 'buddypress' ) . '" />
+		<input type="submit" id="messages_search_submit" name="messages_search_submit" value="' . esc_attr_x( 'Search', 'button', 'buddyboss' ) . '" />
 	</form>';
 
 	/**
@@ -254,7 +254,7 @@ function bp_nouveau_format_notice_notification_for_user( $array ) {
 	}
 
 	return array(
-		'text' => __( 'New sitewide notice', 'buddypress' ),
+		'text' => __( 'New sitewide notice', 'buddyboss' ),
 		'link' => bp_loggedin_user_domain(),
 	);
 }
@@ -433,7 +433,7 @@ function bp_nouveau_messages_notification_filters() {
 	bp_nouveau_notifications_register_filter(
 		array(
 			'id'       => 'new_message',
-			'label'    => __( 'New private messages', 'buddypress' ),
+			'label'    => __( 'New private messages', 'buddyboss' ),
 			'position' => 115,
 		)
 	);

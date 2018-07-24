@@ -1,10 +1,10 @@
 <?php
 /**
- * BuddyPress Activity Functions.
+ * BuddyBoss Activity Functions.
  *
- * Functions for the Activity Streams component.
+ * Functions for the Activity Feeds component.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage ActivityFunctions
  * @since 1.5.0
  */
@@ -314,12 +314,12 @@ function bp_activity_get_userid_from_mentionname( $mentionname ) {
 /**
  * Register an activity 'type' and its action description/callback.
  *
- * Activity actions are strings used to describe items in the activity stream,
+ * Activity actions are strings used to describe items in the activity feed,
  * such as 'Joe became a registered member' or 'Bill and Susie are now
  * friends'. Each activity type (such as 'new_member' or 'friendship_created')
  * used by a component should be registered using this function.
  *
- * While it's possible to post items to the activity stream whose types are
+ * While it's possible to post items to the activity feed whose types are
  * not registered using bp_activity_set_action(), it is not recommended;
  * unregistered types will not be displayed properly in the activity admin
  * panel, and dynamic action generation (which is essential for multilingual
@@ -331,8 +331,8 @@ function bp_activity_get_userid_from_mentionname( $mentionname ) {
  * @param  string        $type            The action type.
  * @param  string        $description     The action description.
  * @param  callable|bool $format_callback Callback for formatting the action string.
- * @param  string|bool   $label           String to describe this action in the activity stream filter dropdown.
- * @param  array         $context         Optional. Activity stream contexts where the filter should appear.
+ * @param  string|bool   $label           String to describe this action in the activity feed filter dropdown.
+ * @param  array         $context         Optional. Activity feed contexts where the filter should appear.
  *                                        Values: 'activity', 'member', 'member_groups', 'group'.
  * @param  int           $position        Optional. The position of the action when listed in dropdowns.
  * @return bool False if any param is empty, otherwise true.
@@ -369,8 +369,8 @@ function bp_activity_set_action( $component_id, $type, $description, $format_cal
 	 * @param string   $type            Action type being set.
 	 * @param string   $description     Action description for action being set.
 	 * @param callable $format_callback Callback for formatting the action string.
-	 * @param string   $label           String to describe this action in the activity stream filter dropdown.
-	 * @param array    $context         Activity stream contexts where the filter should appear. 'activity', 'member',
+	 * @param string   $label           String to describe this action in the activity feed filter dropdown.
+	 * @param array    $context         Activity feed contexts where the filter should appear. 'activity', 'member',
 	 *                                  'member_groups', 'group'.
 	 */
 	$bp->activity->actions->{$component_id}->{$type} = apply_filters( 'bp_activity_set_action', array(
@@ -504,7 +504,7 @@ function bp_activity_get_post_type_tracking_args( $post_type ) {
 
 	// Fall back to a generic name.
 	} else {
-		$post_type_activity->admin_filter = _x( 'New item published', 'Post Type generic activity post admin filter', 'buddypress' );
+		$post_type_activity->admin_filter = _x( 'New item published', 'Post Type generic activity post admin filter', 'buddyboss' );
 	}
 
 	// Check for the front filter in the post type labels.
@@ -537,7 +537,7 @@ function bp_activity_get_post_type_tracking_args( $post_type ) {
 
 		// Fall back to a generic name.
 		} else {
-			$post_type_activity->comments_tracking->admin_filter = _x( 'New item comment posted', 'Post Type generic comments activity admin filter', 'buddypress' );
+			$post_type_activity->comments_tracking->admin_filter = _x( 'New item comment posted', 'Post Type generic comments activity admin filter', 'buddyboss' );
 		}
 
 		$post_type_activity->comments_tracking->format_callback = $post_type_activity->comment_format_callback;
@@ -548,7 +548,7 @@ function bp_activity_get_post_type_tracking_args( $post_type ) {
 
 		// Fall back to a generic name.
 		} else {
-			$post_type_activity->comments_tracking->front_filter = _x( 'Item comments', 'Post Type generic comments activity front filter', 'buddypress' );
+			$post_type_activity->comments_tracking->front_filter = _x( 'Item comments', 'Post Type generic comments activity front filter', 'buddyboss' );
 		}
 
 		$post_type_activity->comments_tracking->contexts = $post_type_activity->contexts;
@@ -902,7 +902,7 @@ function bp_activity_get_actions_for_context( $context = '' ) {
 /** Favorites ****************************************************************/
 
 /**
- * Get a users favorite activity stream items.
+ * Get a users favorite activity feed items.
  *
  * @since 1.2.0
  *
@@ -930,7 +930,7 @@ function bp_activity_get_user_favorites( $user_id = 0 ) {
 }
 
 /**
- * Add an activity stream item as a favorite for a user.
+ * Add an activity feed item as a favorite for a user.
  *
  * @since 1.2.0
  *
@@ -999,7 +999,7 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0 ) {
 }
 
 /**
- * Remove an activity stream item as a favorite for a user.
+ * Remove an activity feed item as a favorite for a user.
  *
  * @since 1.2.0
  *
@@ -1105,7 +1105,7 @@ function bp_activity_get_last_updated() {
 }
 
 /**
- * Retrieve the number of favorite activity stream items a user has.
+ * Retrieve the number of favorite activity feed items a user has.
  *
  * @since 1.2.0
  *
@@ -1125,7 +1125,7 @@ function bp_activity_total_favorites_for_user( $user_id = 0 ) {
 /** Meta *********************************************************************/
 
 /**
- * Delete a meta entry from the DB for an activity stream item.
+ * Delete a meta entry from the DB for an activity feed item.
  *
  * @since 1.2.0
  *
@@ -1434,7 +1434,7 @@ function bp_register_activity_actions() {
 add_action( 'bp_init', 'bp_register_activity_actions', 8 );
 
 /**
- * Register the activity stream actions for updates.
+ * Register the activity feed actions for updates.
  *
  * @since 1.6.0
  */
@@ -1444,18 +1444,18 @@ function bp_activity_register_activity_actions() {
 	bp_activity_set_action(
 		$bp->activity->id,
 		'activity_update',
-		__( 'Posted a status update', 'buddypress' ),
+		__( 'Posted a status update', 'buddyboss' ),
 		'bp_activity_format_activity_action_activity_update',
-		__( 'Updates', 'buddypress' ),
+		__( 'Updates', 'buddyboss' ),
 		array( 'activity', 'group', 'member', 'member_groups' )
 	);
 
 	bp_activity_set_action(
 		$bp->activity->id,
 		'activity_comment',
-		__( 'Replied to a status update', 'buddypress' ),
+		__( 'Replied to a status update', 'buddyboss' ),
 		'bp_activity_format_activity_action_activity_comment',
-		__( 'Activity Comments', 'buddypress' )
+		__( 'Activity Comments', 'buddyboss' )
 	);
 
 	/**
@@ -1523,7 +1523,7 @@ function bp_activity_generate_action_string( $activity ) {
  * @return string $action
  */
 function bp_activity_format_activity_action_activity_update( $action, $activity ) {
-	$action = sprintf( __( '%s posted an update', 'buddypress' ), bp_core_get_userlink( $activity->user_id ) );
+	$action = sprintf( __( '%s posted an update', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ) );
 
 	/**
 	 * Filters the formatted activity action update string.
@@ -1546,7 +1546,7 @@ function bp_activity_format_activity_action_activity_update( $action, $activity 
  * @return string $action
  */
 function bp_activity_format_activity_action_activity_comment( $action, $activity ) {
-	$action = sprintf( __( '%s posted a new activity comment', 'buddypress' ), bp_core_get_userlink( $activity->user_id ) );
+	$action = sprintf( __( '%s posted a new activity comment', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ) );
 
 	/**
 	 * Filters the formatted activity action comment string.
@@ -1595,13 +1595,13 @@ function bp_activity_format_activity_action_custom_post_type_post( $action, $act
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_action_ms ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_action_ms, $user_link, $post_url, $blog_link );
 		} else {
-			$action = sprintf( _x( '%1$s wrote a new <a href="%2$s">item</a>, on the site %3$s', 'Activity Custom Post Type post action', 'buddypress' ), $user_link, esc_url( $post_url ), $blog_link );
+			$action = sprintf( _x( '%1$s wrote a new <a href="%2$s">item</a>, on the site %3$s', 'Activity Custom Post Type post action', 'buddyboss' ), $user_link, esc_url( $post_url ), $blog_link );
 		}
 	} else {
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_action ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_action, $user_link, $post_url );
 		} else {
-			$action = sprintf( _x( '%1$s wrote a new <a href="%2$s">item</a>', 'Activity Custom Post Type post action', 'buddypress' ), $user_link, esc_url( $post_url ) );
+			$action = sprintf( _x( '%1$s wrote a new <a href="%2$s">item</a>', 'Activity Custom Post Type post action', 'buddyboss' ), $user_link, esc_url( $post_url ) );
 		}
 	}
 
@@ -1646,13 +1646,13 @@ function bp_activity_format_activity_action_custom_post_type_comment( $action, $
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_comment_action_ms ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_comment_action_ms, $user_link, $activity->primary_link, $blog_link );
 		} else {
-			$action = sprintf( _x( '%1$s commented on the <a href="%2$s">item</a>, on the site %3$s', 'Activity Custom Post Type comment action', 'buddypress' ), $user_link, $activity->primary_link, $blog_link );
+			$action = sprintf( _x( '%1$s commented on the <a href="%2$s">item</a>, on the site %3$s', 'Activity Custom Post Type comment action', 'buddyboss' ), $user_link, $activity->primary_link, $blog_link );
 		}
 	} else {
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_comment_action ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_comment_action, $user_link, $activity->primary_link );
 		} else {
-			$action = sprintf( _x( '%1$s commented on the <a href="%2$s">item</a>', 'Activity Custom Post Type post comment action', 'buddypress' ), $user_link, $activity->primary_link );
+			$action = sprintf( _x( '%1$s commented on the <a href="%2$s">item</a>', 'Activity Custom Post Type post comment action', 'buddyboss' ), $user_link, $activity->primary_link );
 		}
 	}
 
@@ -1866,7 +1866,7 @@ function bp_activity_add( $args = '' ) {
 		'item_id'           => false,                  // Optional: The ID of the specific item being recorded, e.g. a blog_id.
 		'secondary_item_id' => false,                  // Optional: A second ID used to further filter e.g. a comment_id.
 		'recorded_time'     => bp_core_current_time(), // The GMT time that this activity was recorded.
-		'hide_sitewide'     => false,                  // Should this be hidden on the sitewide activity stream?
+		'hide_sitewide'     => false,                  // Should this be hidden on the sitewide activity feed?
 		'is_spam'           => false,                  // Is this activity item to be marked as spam?
 		'error_type'        => 'bool'
 	), 'activity_add' );
@@ -2087,7 +2087,7 @@ function bp_activity_post_type_publish( $post_id = 0, $post = null, $user_id = 0
 		return;
 	}
 
-	// Record this in activity streams.
+	// Record this in activity feeds.
 	$blog_url = get_home_url( $blog_id );
 	$post_url = add_query_arg(
 		'p',
@@ -2388,7 +2388,7 @@ function bp_activity_post_type_comment( $comment_id = 0, $is_approved = true, $a
 		'secondary_item_id' => $comment_id,
 	) );
 
-	// Record this in activity streams.
+	// Record this in activity feeds.
 	$comment_link = get_comment_link( $post_type_comment->comment_ID );
 
 	// Backward compatibility filters for the 'blogs' component.
@@ -2587,7 +2587,7 @@ function bp_activity_new_comment( $args = '' ) {
 	}
 
 	// Default error message.
-	$feedback = __( 'There was an error posting your reply. Please try again.', 'buddypress' );
+	$feedback = __( 'There was an error posting your reply. Please try again.', 'buddyboss' );
 
 	// Bail if missing necessary data.
 	if ( empty( $r['content'] ) || empty( $r['user_id'] ) || empty( $r['activity_id'] ) ) {
@@ -2615,7 +2615,7 @@ function bp_activity_new_comment( $args = '' ) {
 
 	// Bail if the parent activity does not exist.
 	if ( empty( $activity->date_recorded ) ) {
-		$error = new WP_Error( 'missing_activity', __( 'The item you were replying to no longer exists.', 'buddypress' ) );
+		$error = new WP_Error( 'missing_activity', __( 'The item you were replying to no longer exists.', 'buddyboss' ) );
 
 		if ( 'wp_error' === $r['error_type'] ) {
 			return $error;
@@ -3170,9 +3170,9 @@ function bp_activity_hide_user_activity( $user_id ) {
 /**
  * Take content, remove images, and replace them with a single thumbnail image.
  *
- * The format of items in the activity stream is such that we do not want to
+ * The format of items in the activity feed is such that we do not want to
  * allow an arbitrary number of arbitrarily large images to be rendered.
- * However, the activity stream is built to elegantly display a single
+ * However, the activity feed is built to elegantly display a single
  * thumbnail corresponding to the activity comment. This function looks
  * through the content, grabs the first image and converts it to a thumbnail,
  * and removes the rest of the images from the string.
@@ -3224,7 +3224,7 @@ function bp_activity_thumbnail_content_images( $content, $link = false, $args = 
 			$ratio      = (int) $width / (int) $height;
 			$new_height = (int) $height >= 100 ? 100 : $height;
 			$new_width  = $new_height * $ratio;
-			$image      = '<img src="' . esc_url( $src ) . '" width="' . absint( $new_width ) . '" height="' . absint( $new_height ) . '" alt="' . __( 'Thumbnail', 'buddypress' ) . '" class="align-left thumbnail" />';
+			$image      = '<img src="' . esc_url( $src ) . '" width="' . absint( $new_width ) . '" height="' . absint( $new_height ) . '" alt="' . __( 'Thumbnail', 'buddyboss' ) . '" class="align-left thumbnail" />';
 
 			if ( !empty( $link ) ) {
 				$image = '<a href="' . esc_url( $link ) . '">' . $image . '</a>';
@@ -3265,7 +3265,7 @@ function bp_activity_get_excerpt_length() {
 }
 
 /**
- * Create a rich summary of an activity item for the activity stream.
+ * Create a rich summary of an activity item for the activity feed.
  *
  * More than just a simple excerpt, the summary could contain oEmbeds and other types of media.
  * Currently, it's only used for blog post items, but it will probably be used for all types of
@@ -3465,7 +3465,7 @@ function bp_activity_mark_as_spam( &$activity, $source = 'by_a_person' ) {
 
 	$activity->is_spam = 1;
 
-	// Clear the activity stream first page cache.
+	// Clear the activity feed first page cache.
 	wp_cache_delete( 'bp_activity_sitewide_front', 'bp' );
 
 	// Clear the activity comment cache for this activity item.
@@ -3512,7 +3512,7 @@ function bp_activity_mark_as_ham( &$activity, $source = 'by_a_person' ) {
 
 	$activity->is_spam = 0;
 
-	// Clear the activity stream first page cache.
+	// Clear the activity feed first page cache.
 	wp_cache_delete( 'bp_activity_sitewide_front', 'bp' );
 
 	// Clear the activity comment cache for this activity item.
@@ -3907,7 +3907,7 @@ function bp_activity_do_heartbeat() {
 	}
 
 	/**
-	 * Filters whether the heartbeat feature in the activity stream should be active.
+	 * Filters whether the heartbeat feature in the activity feed should be active.
 	 *
 	 * @since 2.8.0
 	 *
@@ -3970,7 +3970,7 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 		if ( $new_status == 'publish' ) {
 			$edit = bp_activity_post_type_update( $post );
 
-			// Post was never recorded into activity stream, so record it now!
+			// Post was never recorded into activity feed, so record it now!
 			if ( null === $edit ) {
 				bp_activity_post_type_publish( $post->ID, $post );
 			}
@@ -4077,7 +4077,7 @@ function bp_activity_transition_post_type_comment_status( $new_status, $old_stat
 	 * If a blog comment transitions to trashed, or spammed, mark the activity as spam.
 	 * If a blog comment transitions to approved (and the activity exists), mark the activity as ham.
 	 * If a blog comment transitions to unapproved (and the activity exists), mark the activity as spam.
-	 * Otherwise, record the comment into the activity stream.
+	 * Otherwise, record the comment into the activity feed.
 	 */
 
 	// This clause handles delete/hold.

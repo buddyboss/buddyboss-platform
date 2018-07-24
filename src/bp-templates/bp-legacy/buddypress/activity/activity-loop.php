@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress - Activity Loop
+ * BuddyBoss - Activity Loop
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
@@ -31,7 +31,7 @@ do_action( 'bp_before_activity_loop' ); ?>
 	<?php if ( bp_activity_has_more_items() ) : ?>
 
 		<li class="load-more">
-			<a href="<?php bp_activity_load_more_link() ?>"><?php _e( 'Load More', 'buddypress' ); ?></a>
+			<a href="<?php bp_activity_load_more_link() ?>"><?php _e( 'Load More', 'buddyboss' ); ?></a>
 		</li>
 
 	<?php endif; ?>
@@ -45,7 +45,7 @@ do_action( 'bp_before_activity_loop' ); ?>
 <?php else : ?>
 
 	<div id="message" class="info">
-		<p><?php _e( 'Sorry, there was no activity found. Please try a different filter.', 'buddypress' ); ?></p>
+		<p><?php _e( 'Sorry, there was no activity found. Please try a different filter.', 'buddyboss' ); ?></p>
 	</div>
 
 <?php endif; ?>

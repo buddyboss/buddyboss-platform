@@ -13,12 +13,12 @@
 		<?php if ( ! is_customize_preview() && bp_current_user_can( 'bp_moderate' ) ) : ?>
 
 			<div class="bp-feedback custom-homepage-info info no-icon">
-				<strong><?php esc_html_e( 'Manage the Groups default front page', 'buddypress' ); ?></strong>
+				<strong><?php esc_html_e( 'Manage the Groups default front page', 'buddyboss' ); ?></strong>
 
 				<p>
 				<?php
 				printf(
-					esc_html__( 'You can set your preferences for the %1$s or add %2$s to it.', 'buddypress' ),
+					esc_html__( 'You can set your preferences for the %1$s or add %2$s to it.', 'buddyboss' ),
 					bp_nouveau_groups_get_customizer_option_link(),
 					bp_nouveau_groups_get_customizer_widgets_link()
 				);

@@ -2,7 +2,7 @@
 /**
  * Notifications: Delete action handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage NotificationsActions
  * @since 3.0.0
  */
@@ -35,7 +35,7 @@ function bp_notifications_action_delete() {
 	if ( bp_verify_nonce_request( 'bp_notification_delete_' . $id ) && bp_notifications_delete_notification( $id ) ) {
 		bp_core_add_message( __( 'Notification successfully deleted.',              'buddypress' )          );
 	} else {
-		bp_core_add_message( __( 'There was a problem deleting that notification.', 'buddypress' ), 'error' );
+		bp_core_add_message( __( 'There was a problem deleting that notification.', 'buddyboss' ), 'error' );
 	}
 
 	// Redirect.

@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress - Groups Cover Image Header.
+ * BuddyBoss - Groups Cover Image Header.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
@@ -60,7 +60,7 @@ do_action( 'bp_before_group_header' ); ?>
 				do_action( 'bp_group_header_meta' ); ?>
 
 				<span class="highlight"><?php bp_group_type(); ?></span>
-				<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_group_last_active( 0, array( 'relative' => false ) ) ); ?>"><?php printf( __( 'active %s', 'buddypress' ), bp_get_group_last_active() ); ?></span>
+				<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_group_last_active( 0, array( 'relative' => false ) ) ); ?>"><?php printf( __( 'active %s', 'buddyboss' ), bp_get_group_last_active() ); ?></span>
 
 				<?php bp_group_description(); ?>
 
@@ -72,7 +72,7 @@ do_action( 'bp_before_group_header' ); ?>
 
 			<?php if ( bp_group_is_visible() ) : ?>
 
-				<h2><?php _e( 'Group Admins', 'buddypress' ); ?></h2>
+				<h2><?php _e( 'Group Admins', 'buddyboss' ); ?></h2>
 
 				<?php bp_group_list_admins();
 
@@ -92,7 +92,7 @@ do_action( 'bp_before_group_header' ); ?>
 					 */
 					do_action( 'bp_before_group_menu_mods' ); ?>
 
-					<h2><?php _e( 'Group Mods' , 'buddypress' ); ?></h2>
+					<h2><?php _e( 'Group Mods' , 'buddyboss' ); ?></h2>
 
 					<?php bp_group_list_mods();
 

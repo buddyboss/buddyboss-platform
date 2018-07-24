@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress - Members Friends Requests
+ * BuddyBoss - Members Connections Requests
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
@@ -18,7 +18,7 @@ do_action( 'bp_before_member_friend_requests_content' ); ?>
 
 	<h2 class="bp-screen-reader-text"><?php
 		/* translators: accessibility text */
-		_e( 'Friendship requests', 'buddypress' );
+		_e( 'Connection requests', 'buddyboss' );
 	?></h2>
 
 	<div id="pag-top" class="pagination no-ajax">
@@ -60,8 +60,8 @@ do_action( 'bp_before_member_friend_requests_content' ); ?>
 				</div>
 
 				<div class="action">
-					<a class="button accept" href="<?php bp_friend_accept_request_link(); ?>"><?php _e( 'Accept', 'buddypress' ); ?></a> &nbsp;
-					<a class="button reject" href="<?php bp_friend_reject_request_link(); ?>"><?php _e( 'Reject', 'buddypress' ); ?></a>
+					<a class="button accept" href="<?php bp_friend_accept_request_link(); ?>"><?php _e( 'Accept', 'buddyboss' ); ?></a> &nbsp;
+					<a class="button reject" href="<?php bp_friend_reject_request_link(); ?>"><?php _e( 'Ignore', 'buddyboss' ); ?></a>
 
 					<?php
 
@@ -105,7 +105,7 @@ do_action( 'bp_before_member_friend_requests_content' ); ?>
 <?php else: ?>
 
 	<div id="message" class="info">
-		<p><?php _e( 'You have no pending friendship requests.', 'buddypress' ); ?></p>
+		<p><?php _e( 'You have no pending invitations to connect.', 'buddyboss' ); ?></p>
 	</div>
 
 <?php endif;?>

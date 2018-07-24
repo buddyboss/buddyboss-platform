@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress - Users Header
+ * BuddyBoss - Users Header
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */

@@ -1,14 +1,14 @@
 <?php
 /**
- * BuddyPress - Groups Admin
+ * BuddyBoss - Groups Admin
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
 
 ?>
-<div class="item-list-tabs no-ajax" id="subnav" aria-label="<?php esc_attr_e( 'Group secondary navigation', 'buddypress' ); ?>" role="navigation">
+<div class="item-list-tabs no-ajax" id="subnav" aria-label="<?php esc_attr_e( 'Group secondary navigation', 'buddyboss' ); ?>" role="navigation">
 	<ul>
 		<?php bp_group_admin_tabs(); ?>
 	</ul>

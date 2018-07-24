@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress Groups Theme Compat.
+ * BuddyBoss Groups Theme Compat.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @since 1.7.0
  */
 
@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The main theme compat class for BuddyPress Groups.
+ * The main theme compat class for BuddyBoss Groups.
  *
  * This class sets up the necessary theme compatibility actions to safely output
  * group template parts to the_title and the_content areas of a theme.
@@ -174,7 +174,7 @@ class BP_Groups_Theme_Compat {
 	 */
 	public function create_dummy_post() {
 
-		$title = _x( 'Groups', 'Group creation page', 'buddypress' );
+		$title = _x( 'Groups', 'Group creation page', 'buddyboss' );
 
 		bp_theme_compat_reset_post( array(
 			'ID'             => 0,

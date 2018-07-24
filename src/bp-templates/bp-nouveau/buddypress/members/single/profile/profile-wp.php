@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Members Single Profile WP
+ * BuddyBoss - Members Single Profile WP
  *
  * @since 3.0.0
  * @version 3.1.0
@@ -13,11 +13,11 @@ bp_nouveau_wp_profile_hooks( 'before' ); ?>
 	<h2 class="screen-heading wp-profile-screen">
 		<?php
 		if ( bp_is_my_profile() ) {
-			esc_html_e( 'My Profile', 'buddypress' );
+			esc_html_e( 'My Profile', 'buddyboss' );
 		} else {
 			printf(
 				/* Translators: a member's profile, e.g. "Paul's profile". */
-				__( "%s's Profile", 'buddypress' ),
+				__( "%s's Profile", 'buddyboss' ),
 				bp_get_displayed_user_fullname()
 			);
 		}

@@ -1,12 +1,12 @@
 <?php
 /**
- * BuddyPress Groups Loader.
+ * BuddyBoss Groups Loader.
  *
  * A groups component, for users to group themselves together. Includes a
  * robust sub-component API that allows Groups to be extended.
- * Comes preconfigured with an activity stream, discussion forums, and settings.
+ * Comes preconfigured with an activity feed, discussion forums, and settings.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage GroupsLoader
  * @since 1.5.0
  */

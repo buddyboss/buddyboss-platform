@@ -1,10 +1,10 @@
 <?php
 /**
- * BuddyPress - Blogs Loop
+ * BuddyBoss - Blogs Loop
  *
  * Querystring is set via AJAX in _inc/ajax.php - bp_legacy_theme_object_filter().
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
@@ -118,7 +118,7 @@ do_action( 'bp_before_blogs_loop' ); ?>
 <?php else: ?>
 
 	<div id="message" class="info">
-		<p><?php _e( 'Sorry, there were no sites found.', 'buddypress' ); ?></p>
+		<p><?php _e( 'Sorry, there were no sites found.', 'buddyboss' ); ?></p>
 	</div>
 
 <?php endif; ?>

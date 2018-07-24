@@ -1,14 +1,14 @@
 <?php
 /**
- * BuddyPress Friends Functions.
+ * BuddyBoss Connections Functions.
  *
  * Functions are where all the magic happens in BuddyPress. They will
  * handle the actual saving or manipulation of information. Usually they will
  * hand off to a database class for data access, then return
  * true or false on success or failure.
  *
- * @package BuddyPress
- * @subpackage FriendsFunctions
+ * @package BuddyBoss
+ * @subpackage ConnectionsFunctions
  * @since 1.5.0
  */
 
@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  * @param int  $friend_userid    ID of the "friend" user (the user whose friendship
  *                               is being requested).
  * @param bool $force_accept     Optional. Whether to force acceptance. When false,
- *                               running friends_add_friend() will result in a friendship request.
+ *                               running friends_add_friend() will result in a connection request.
  *                               When true, running friends_add_friend() will result in an accepted
  *                               friendship, with no notifications being sent. Default: false.
  * @return bool True on success, false on failure.
@@ -115,7 +115,7 @@ function friends_remove_friend( $initiator_userid, $friend_userid ) {
 	 */
 	do_action( 'friends_before_friendship_delete', $friendship_id, $initiator_userid, $friend_userid );
 
-	// Remove the activity stream items about the friendship id.
+	// Remove the activity feed items about the friendship id.
 	friends_delete_activity( array( 'item_id' => $friendship_id, 'type' => 'friendship_created', 'user_id' => 0 ) );
 
 	/**
@@ -152,7 +152,7 @@ function friends_remove_friend( $initiator_userid, $friend_userid ) {
 }
 
 /**
- * Mark a friendship request as accepted.
+ * Mark a connection request as accepted.
  *
  * Also initiates a "friendship_accepted" activity item.
  *
@@ -191,7 +191,7 @@ function friends_accept_friendship( $friendship_id ) {
 }
 
 /**
- * Mark a friendship request as rejected.
+ * Mark a connection request as rejected.
  *
  * @since 1.0.0
  *
@@ -204,7 +204,7 @@ function friends_reject_friendship( $friendship_id ) {
 	if ( empty( $friendship->is_confirmed ) && BP_Friends_Friendship::reject( $friendship_id ) ) {
 
 		/**
-		 * Fires after a friendship request is rejected.
+		 * Fires after a connection request is rejected.
 		 *
 		 * @since 1.0.0
 		 *
@@ -219,7 +219,7 @@ function friends_reject_friendship( $friendship_id ) {
 }
 
 /**
- * Withdraw a friendship request.
+ * Withdraw a connection request.
  *
  * @since 1.6.0
  *
@@ -238,7 +238,7 @@ function friends_withdraw_friendship( $initiator_userid, $friend_userid ) {
 		do_action_ref_array( 'friends_friendship_whithdrawn', array( $friendship_id, &$friendship ) );
 
 		/**
-		 * Fires after a friendship request has been withdrawn.
+		 * Fires after a connection request has been withdrawn.
 		 *
 		 * @since 1.9.0
 		 *
@@ -301,7 +301,7 @@ function friends_check_friendship_status( $user_id, $possible_friend_id ) {
  * @since 1.2.0
  *
  * @param int $user_id ID of the user whose friends are being counted.
- * @return int Friend count of the user.
+ * @return int Connection count of the user.
  */
 function friends_get_total_friend_count( $user_id = 0 ) {
 	if ( empty( $user_id ) )
@@ -397,7 +397,7 @@ function friends_search_friends( $search_terms, $user_id, $pag_num = 10, $pag_pa
  *
  * @since 1.2.0
  *
- * @param int $user_id The ID of the user who has received the friendship requests.
+ * @param int $user_id The ID of the user who has received the connection requests.
  * @return array|bool An array of user IDs, or false if none are found.
  */
 function friends_get_friendship_request_user_ids( $user_id ) {
@@ -649,7 +649,7 @@ function friends_count_invitable_friends( $user_id, $group_id ) {
  *
  * @param int $user_id Optional. ID of the user whose friendships you are
  *                     counting. Default: displayed user (if any), otherwise logged-in user.
- * @return int Friend count for the user.
+ * @return int Connection count for the user.
  */
 function friends_get_friend_count_for_user( $user_id ) {
 	return BP_Friends_Friendship::total_friend_count( $user_id );
@@ -698,7 +698,7 @@ function friends_is_friendship_confirmed( $friendship_id ) {
 /**
  * Update user friend counts.
  *
- * Friend counts are cached in usermeta for performance reasons. After a
+ * Connection counts are cached in usermeta for performance reasons. After a
  * friendship event (acceptance, deletion), call this function to regenerate
  * the cached values.
  *
@@ -726,9 +726,9 @@ function friends_update_friend_totals( $initiator_user_id, $friend_user_id, $sta
  *
  * Removes the following:
  *
- * - Friendships of which the user is a member.
+ * - Connections of which the user is a member.
  * - Cached friend count for the user.
- * - Notifications of friendship requests sent by the user.
+ * - Notifications of connection requests sent by the user.
  *
  * @since 1.0.0
  *
@@ -863,9 +863,9 @@ function friends_notification_new_request( $friendship_id, $initiator_id, $frien
 add_action( 'friends_friendship_requested', 'friends_notification_new_request', 10, 3 );
 
 /**
- * Send notifications related to the acceptance of a friendship request.
+ * Send notifications related to the acceptance of a connection request.
  *
- * When a friendship request is accepted, an email and a BP notification are
+ * When a connection request is accepted, an email and a BP notification are
  * sent to the user who requested the friendship ($initiator_id).
  *
  * @since 1.0.0

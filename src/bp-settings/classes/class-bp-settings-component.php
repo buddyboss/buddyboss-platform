@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress Settings Loader.
+ * BuddyBoss Settings Loader.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage SettingsLoader
  * @since 1.5.0
  */
@@ -25,7 +25,7 @@ class BP_Settings_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'settings',
-			__( 'Settings', 'buddypress' ),
+			__( 'Settings', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 100
@@ -138,7 +138,7 @@ class BP_Settings_Component extends BP_Component {
 
 		// Add the settings navigation item.
 		$main_nav = array(
-			'name'                    => __( 'Settings', 'buddypress' ),
+			'name'                    => __( 'Settings', 'buddyboss' ),
 			'slug'                    => $slug,
 			'position'                => 100,
 			'show_for_displayed_user' => $access,
@@ -148,7 +148,7 @@ class BP_Settings_Component extends BP_Component {
 
 		// Add General Settings nav item.
 		$sub_nav[] = array(
-			'name'            => __( 'General', 'buddypress' ),
+			'name'            => __( 'Account', 'buddyboss' ),
 			'slug'            => 'general',
 			'parent_url'      => $settings_link,
 			'parent_slug'     => $slug,
@@ -160,7 +160,7 @@ class BP_Settings_Component extends BP_Component {
 		// Add Email nav item. Formerly called 'Notifications', we
 		// retain the old slug and function names for backward compat.
 		$sub_nav[] = array(
-			'name'            => __( 'Email', 'buddypress' ),
+			'name'            => __( 'Emails', 'buddyboss' ),
 			'slug'            => 'notifications',
 			'parent_url'      => $settings_link,
 			'parent_slug'     => $slug,
@@ -172,7 +172,7 @@ class BP_Settings_Component extends BP_Component {
 		// Add Spam Account nav item.
 		if ( bp_current_user_can( 'bp_moderate' ) ) {
 			$sub_nav[] = array(
-				'name'            => __( 'Capabilities', 'buddypress' ),
+				'name'            => __( 'Capabilities', 'buddyboss' ),
 				'slug'            => 'capabilities',
 				'parent_url'      => $settings_link,
 				'parent_slug'     => $slug,
@@ -185,7 +185,7 @@ class BP_Settings_Component extends BP_Component {
 		// Add Delete Account nav item.
 		if ( ( ! bp_disable_account_deletion() && bp_is_my_profile() ) || bp_current_user_can( 'delete_users' ) ) {
 			$sub_nav[] = array(
-				'name'            => __( 'Delete Account', 'buddypress' ),
+				'name'            => __( 'Delete Account', 'buddyboss' ),
 				'slug'            => 'delete-account',
 				'parent_url'      => $settings_link,
 				'parent_slug'     => $slug,
@@ -217,7 +217,7 @@ class BP_Settings_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
-				'title'  => __( 'Settings', 'buddypress' ),
+				'title'  => __( 'Settings', 'buddyboss' ),
 				'href'   => $settings_link
 			);
 
@@ -225,7 +225,7 @@ class BP_Settings_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-general',
-				'title'    => __( 'General', 'buddypress' ),
+				'title'    => __( 'Account', 'buddyboss' ),
 				'href'     => $settings_link,
 				'position' => 10
 			);
@@ -235,7 +235,7 @@ class BP_Settings_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-notifications',
-					'title'    => __( 'Email', 'buddypress' ),
+					'title'    => __( 'Emails', 'buddyboss' ),
 					'href'     => trailingslashit( $settings_link . 'notifications' ),
 					'position' => 20
 				);
@@ -246,7 +246,7 @@ class BP_Settings_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-delete-account',
-					'title'    => __( 'Delete Account', 'buddypress' ),
+					'title'    => __( 'Delete Account', 'buddyboss' ),
 					'href'     => trailingslashit( $settings_link . 'delete-account' ),
 					'position' => 90
 				);

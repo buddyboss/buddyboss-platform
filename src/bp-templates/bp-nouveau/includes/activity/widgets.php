@@ -32,12 +32,12 @@ class BP_Latest_Activities extends WP_Widget {
 		$widget_ops = apply_filters(
 			'bp_latest_activities', array(
 				'classname'                   => 'bp-latest-activities buddypress',
-				'description'                 => __( 'Display the latest updates of your community having the types of your choice.', 'buddypress' ),
+				'description'                 => __( 'Display the latest updates of your community having the types of your choice.', 'buddyboss' ),
 				'customize_selective_refresh' => true,
 			)
 		);
 
-		parent::__construct( false, __( '(BuddyPress) Latest Activities', 'buddypress' ), $widget_ops );
+		parent::__construct( false, __( '(BuddyBoss) Latest Activities', 'buddyboss' ), $widget_ops );
 	}
 
 	/**
@@ -59,7 +59,7 @@ class BP_Latest_Activities extends WP_Widget {
 	 */
 	public function widget( $args, $instance ) {
 		// Default values
-		$title      = __( 'Latest updates', 'buddypress' );
+		$title      = __( 'Latest updates', 'buddyboss' );
 		$type       = array( 'activity_update' );
 		$max        = 5;
 		$bp_nouveau = bp_nouveau();
@@ -166,7 +166,7 @@ class BP_Latest_Activities extends WP_Widget {
 	 */
 	public function form( $instance ) {
 		$instance = wp_parse_args( (array) $instance, array(
-			'title' => __( 'Latest updates', 'buddypress' ),
+			'title' => __( 'Latest updates', 'buddyboss' ),
 			'max'   => 5,
 			'type'  => '',
 		) );
@@ -180,16 +180,16 @@ class BP_Latest_Activities extends WP_Widget {
 		}
 		?>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'buddypress' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'buddyboss' ); ?></label>
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'max' ); ?>"><?php _e( 'Maximum amount to display:', 'buddypress' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'max' ); ?>"><?php _e( 'Maximum amount to display:', 'buddyboss' ); ?></label>
 			<input type="number" class="widefat" id="<?php echo $this->get_field_id( 'max' ); ?>" name="<?php echo $this->get_field_name( 'max' ); ?>" value="<?php echo intval( $max ); ?>" step="1" min="1" max="20" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'type' ); ?>"><?php esc_html_e( 'Type:', 'buddypress' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'type' ); ?>"><?php esc_html_e( 'Type:', 'buddyboss' ); ?></label>
 			<select class="widefat" multiple="multiple" id="<?php echo $this->get_field_id( 'type' ); ?>" name="<?php echo $this->get_field_name( 'type' ); ?>[]">
 				<?php foreach ( bp_nouveau_get_activity_filters() as $key => $name ) : ?>
 					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( in_array( $key, $type ) ); ?>><?php echo esc_html( $name ); ?></option>

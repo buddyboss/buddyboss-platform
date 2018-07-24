@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress Activity Classes.
+ * BuddyBoss Activity Classes.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage ActivityFeeds
  * @since 1.8.0
  */
@@ -154,7 +154,7 @@ class BP_Activity_Feed {
 
 		// Check if id is valid.
 		if ( empty( $this->id ) ) {
-			_doing_it_wrong( 'BP_Activity_Feed', __( "RSS feed 'id' must be defined", 'buddypress' ), 'BP 1.8' );
+			_doing_it_wrong( 'BP_Activity_Feed', __( "RSS feed 'id' must be defined", 'buddyboss' ), 'BP 1.8' );
 			return false;
 		}
 
@@ -302,7 +302,7 @@ class BP_Activity_Feed {
 
 				if ( 'activity_comment' == bp_get_activity_action_name() ) :
 			?>
-				<strong><?php _e( 'In reply to', 'buddypress' ) ?></strong> -
+				<strong><?php _e( 'In reply to', 'buddyboss' ) ?></strong> -
 				<?php bp_activity_parent_content() ?>
 			<?php
 				endif;

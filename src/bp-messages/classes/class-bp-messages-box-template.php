@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress Messages Box Template Class.
+ * BuddyBoss Messages Box Template Class.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage MessagesTemplate
  * @since 1.5.0
  */
@@ -110,7 +110,7 @@ class BP_Messages_Box_Template {
 
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args ) || func_num_args() > 1 ) {
-			_deprecated_argument( __METHOD__, '2.2.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddypress' ), __METHOD__, __FILE__ ) );
+			_deprecated_argument( __METHOD__, '2.2.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
 				0 => 'user_id',
@@ -212,8 +212,8 @@ class BP_Messages_Box_Template {
 				'format'    => '',
 				'total'     => ceil( (int) $this->total_thread_count / (int) $this->pag_num ),
 				'current'   => $this->pag_page,
-				'prev_text' => _x( '&larr;', 'Message pagination previous text', 'buddypress' ),
-				'next_text' => _x( '&rarr;', 'Message pagination next text', 'buddypress' ),
+				'prev_text' => _x( '&larr;', 'Message pagination previous text', 'buddyboss' ),
+				'next_text' => _x( '&rarr;', 'Message pagination next text', 'buddyboss' ),
 				'mid_size'  => 1,
 				'add_args'  => $add_args,
 			) );

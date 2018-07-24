@@ -1,13 +1,13 @@
 <?php
 /**
- * BuddyPress Groups Functions.
+ * BuddyBoss Groups Functions.
  *
  * Functions are where all the magic happens in BuddyPress. They will
  * handle the actual saving or manipulation of information. Usually they will
  * hand off to a database class for data access, then return
  * true or false on success or failure.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage GroupsFunctions
  * @since 1.5.0
  */
@@ -176,7 +176,7 @@ function groups_create_group( $args = '' ) {
 		$member->group_id      = $group->id;
 		$member->user_id       = $group->creator_id;
 		$member->is_admin      = 1;
-		$member->user_title    = __( 'Group Admin', 'buddypress' );
+		$member->user_title    = __( 'Group Admin', 'buddyboss' );
 		$member->is_confirmed  = 1;
 		$member->date_modified = bp_core_current_time();
 		$member->save();
@@ -242,7 +242,7 @@ function groups_edit_base_group_details( $args = array() ) {
 
 	// Backward compatibility with old method of passing arguments.
 	if ( ! is_array( $args ) || func_num_args() > 1 ) {
-		_deprecated_argument( __METHOD__, '2.9.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddypress' ), __METHOD__, __FILE__ ) );
+		_deprecated_argument( __METHOD__, '2.9.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
 			0 => 'group_id',
@@ -514,7 +514,7 @@ function groups_leave_group( $group_id, $user_id = 0 ) {
 	// Don't let single admins leave the group.
 	if ( count( groups_get_group_admins( $group_id ) ) < 2 ) {
 		if ( groups_is_user_admin( $user_id, $group_id ) ) {
-			bp_core_add_message( __( 'As the only admin, you cannot leave the group.', 'buddypress' ), 'error' );
+			bp_core_add_message( __( 'As the only admin, you cannot leave the group.', 'buddyboss' ), 'error' );
 			return false;
 		}
 	}
@@ -523,7 +523,7 @@ function groups_leave_group( $group_id, $user_id = 0 ) {
 		return false;
 	}
 
-	bp_core_add_message( __( 'You successfully left the group.', 'buddypress' ) );
+	bp_core_add_message( __( 'You successfully left the group.', 'buddyboss' ) );
 
 	/**
 	 * Fires after a user leaves a group.
@@ -584,7 +584,7 @@ function groups_join_group( $group_id, $user_id = 0 ) {
 	else
 		$group = $bp->groups->current_group;
 
-	// Record this in activity streams.
+	// Record this in activity feeds.
 	if ( bp_is_active( 'activity' ) ) {
 		groups_record_activity( array(
 			'type'    => 'joined_group',
@@ -692,7 +692,7 @@ function groups_get_group_members( $args = array() ) {
 
 	// Backward compatibility with old method of passing arguments.
 	if ( ! is_array( $args ) || func_num_args() > 1 ) {
-		_deprecated_argument( __METHOD__, '2.0.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddypress' ), __METHOD__, __FILE__ ) );
+		_deprecated_argument( __METHOD__, '2.0.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
 			0 => 'group_id',
@@ -1311,7 +1311,7 @@ function groups_post_update( $args = '' ) {
 	if ( !bp_current_user_can( 'bp_moderate' ) && !groups_is_user_member( $user_id, $group_id ) )
 		return false;
 
-	// Record this in activity streams.
+	// Record this in activity feeds.
 	$activity_action  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddypress'), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_group_permalink( $bp->groups->current_group ) . '">' . esc_attr( $bp->groups->current_group->name ) . '</a>' );
 	$activity_content = $content;
 
@@ -2306,7 +2306,7 @@ function bp_groups_register_group_type( $group_type, $args = array() ) {
 	$bp = buddypress();
 
 	if ( isset( $bp->groups->types[ $group_type ] ) ) {
-		return new WP_Error( 'bp_group_type_exists', __( 'Group type already exists.', 'buddypress' ), $group_type );
+		return new WP_Error( 'bp_group_type_exists', __( 'Group type already exists.', 'buddyboss' ), $group_type );
 	}
 
 	$r = bp_parse_args( $args, array(
@@ -2333,7 +2333,7 @@ function bp_groups_register_group_type( $group_type, $args = array() ) {
 	 */
 	$illegal_names = apply_filters( 'bp_group_type_illegal_names', array( 'any', 'null', '_none' ) );
 	if ( in_array( $group_type, $illegal_names, true ) ) {
-		return new WP_Error( 'bp_group_type_illegal_name', __( 'You may not register a group type with this name.', 'buddypress' ), $group_type );
+		return new WP_Error( 'bp_group_type_illegal_name', __( 'You may not register a group type with this name.', 'buddyboss' ), $group_type );
 	}
 
 	// Store the group type name as data in the object (not just as the array key).

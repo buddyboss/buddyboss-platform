@@ -2,7 +2,7 @@
 /**
  * Core component template tag functions.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage TemplateFunctions
  * @since 1.5.0
  */
@@ -117,7 +117,7 @@ function bp_get_options_title() {
 	$bp = buddypress();
 
 	if ( empty( $bp->bp_options_title ) ) {
-		$bp->bp_options_title = __( 'Options', 'buddypress' );
+		$bp->bp_options_title = __( 'Options', 'buddyboss' );
 	}
 
 	echo apply_filters( 'bp_get_options_title', esc_attr( $bp->bp_options_title ) );
@@ -143,7 +143,7 @@ function bp_get_directory_title( $component = '' ) {
 
 	// If none is found, concatenate.
 	} elseif ( isset( buddypress()->{$component}->name ) ) {
-		$title = sprintf( __( '%s Directory', 'buddypress' ), buddypress()->{$component}->name );
+		$title = sprintf( __( '%s Directory', 'buddyboss' ), buddypress()->{$component}->name );
 	}
 
 	/**
@@ -196,7 +196,7 @@ function bp_comment_author_avatar() {
 		echo apply_filters( 'bp_comment_author_avatar', bp_core_fetch_avatar( array(
 			'item_id' => $comment->user_id,
 			'type'    => 'thumb',
-			'alt'     => sprintf( __( 'Profile photo of %s', 'buddypress' ), bp_core_get_user_displayname( $comment->user_id ) )
+			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $comment->user_id ) )
 		) ) );
 	} elseif ( function_exists( 'get_avatar' ) ) {
 		get_avatar();
@@ -215,7 +215,7 @@ function bp_post_author_avatar() {
 		echo apply_filters( 'bp_post_author_avatar', bp_core_fetch_avatar( array(
 			'item_id' => $post->post_author,
 			'type'    => 'thumb',
-			'alt'     => sprintf( __( 'Profile photo of %s', 'buddypress' ), bp_core_get_user_displayname( $post->post_author ) )
+			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $post->post_author ) )
 		) ) );
 	} elseif ( function_exists( 'get_avatar' ) ) {
 		get_avatar();
@@ -423,7 +423,7 @@ function bp_format_time( $time = '', $exclude_time = false, $gmt = true ) {
 		$formatted_time = date_i18n( bp_get_option( 'time_format' ), $calculated_time, $gmt );
 
 		// Return string formatted with date and time.
-		$formatted_date = sprintf( esc_html__( '%1$s at %2$s', 'buddypress' ), $formatted_date, $formatted_time );
+		$formatted_date = sprintf( esc_html__( '%1$s at %2$s', 'buddyboss' ), $formatted_date, $formatted_time );
 	}
 
 	/**
@@ -441,16 +441,16 @@ function bp_format_time( $time = '', $exclude_time = false, $gmt = true ) {
  *
  * This function can be used in cases where a phrase used in a template will
  * differ for a user looking at his own profile and a user looking at another
- * user's profile (eg, "My Friends" and "Joe's Friends"). Pass both versions
+ * user's profile (eg, "My Connections" and "Joe's Connections"). Pass both versions
  * of the phrase, and bp_word_or_name() will detect which is appropriate, and
  * do the necessary argument swapping for dynamic phrases.
  *
  * @since 1.0.0
  *
- * @param string $youtext    The "you" version of the phrase (eg "Your Friends").
+ * @param string $youtext    The "you" version of the phrase (eg "Your Connections").
  * @param string $nametext   The other-user version of the phrase. Should be in
  *                           a format appropriate for sprintf() - use %s in place of the displayed
- *                           user's name (eg "%'s Friends").
+ *                           user's name (eg "%'s Connections").
  * @param bool   $capitalize Optional. Force into title case. Default: true.
  * @param bool   $echo       Optional. True to echo the results, false to return them.
  *                           Default: true.
@@ -539,21 +539,21 @@ function bp_search_form_type_select() {
 	$options = array();
 
 	if ( bp_is_active( 'xprofile' ) ) {
-		$options['members'] = _x( 'Members', 'search form', 'buddypress' );
+		$options['members'] = _x( 'Members', 'search form', 'buddyboss' );
 	}
 
 	if ( bp_is_active( 'groups' ) ) {
-		$options['groups']  = _x( 'Groups', 'search form', 'buddypress' );
+		$options['groups']  = _x( 'Groups', 'search form', 'buddyboss' );
 	}
 
 	if ( bp_is_active( 'blogs' ) && is_multisite() ) {
-		$options['blogs']   = _x( 'Blogs', 'search form', 'buddypress' );
+		$options['blogs']   = _x( 'Blogs', 'search form', 'buddyboss' );
 	}
 
-	$options['posts'] = _x( 'Posts', 'search form', 'buddypress' );
+	$options['posts'] = _x( 'Posts', 'search form', 'buddyboss' );
 
 	// Eventually this won't be needed and a page will be built to integrate all search results.
-	$selection_box  = '<label for="search-which" class="accessibly-hidden">' . _x( 'Search these:', 'search form', 'buddypress' ) . '</label>';
+	$selection_box  = '<label for="search-which" class="accessibly-hidden">' . _x( 'Search these:', 'search form', 'buddyboss' ) . '</label>';
 	$selection_box .= '<select name="search-which" id="search-which" style="width: auto">';
 
 	/**
@@ -673,7 +673,7 @@ function bp_search_default_text( $component = '' ) {
 			$component = bp_current_component();
 		}
 
-		$default_text = __( 'Search anything...', 'buddypress' );
+		$default_text = __( 'Search anything...', 'buddyboss' );
 
 		// Most of the time, $component will be the actual component ID.
 		if ( !empty( $component ) ) {
@@ -880,7 +880,7 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 	$filter_shortcodes_default = is_bool( $options ) ? $options : true;
 
 	$r = bp_parse_args( $options, array(
-		'ending'            => __( ' [&hellip;]', 'buddypress' ),
+		'ending'            => __( ' [&hellip;]', 'buddyboss' ),
 		'exact'             => false,
 		'html'              => true,
 		'filter_shortcodes' => $filter_shortcodes_default,
@@ -1214,7 +1214,7 @@ function bp_get_email_subject( $args = array() ) {
 	$r = bp_parse_args( $args, array(
 		'before'  => '[',
 		'after'   => ']',
-		'default' => __( 'Community', 'buddypress' ),
+		'default' => __( 'Community', 'buddyboss' ),
 		'text'    => ''
 	), 'get_email_subject' );
 
@@ -2174,11 +2174,11 @@ function bp_is_messages_component() {
 }
 
 /**
- * Check whether the current page is part of the Friends component.
+ * Check whether the current page is part of the Connections component.
  *
  * @since 1.1.0
  *
- * @return bool True if the current page is part of the Friends component.
+ * @return bool True if the current page is part of the Connections component.
  */
 function bp_is_friends_component() {
 	return (bool) bp_is_current_component( 'friends' );
@@ -2355,26 +2355,26 @@ function bp_is_user_front() {
 }
 
 /**
- * Is the current page a user's activity stream page?
+ * Is the current page a user's activity feed page?
  *
  * Eg http://example.com/members/joe/activity/ (or any subpages thereof).
  *
  * @since 1.1.0
  *
- * @return bool True if the current page is a user's activity stream page.
+ * @return bool True if the current page is a user's activity feed page.
  */
 function bp_is_user_activity() {
 	return (bool) ( bp_is_user() && bp_is_activity_component() );
 }
 
 /**
- * Is the current page a user's Friends activity stream?
+ * Is the current page a user's Connections activity feed?
  *
  * Eg http://example.com/members/joe/friends/
  *
  * @since 1.1.0
  *
- * @return bool True if the current page is a user's Friends activity stream.
+ * @return bool True if the current page is a user's Connections activity feed.
  */
 function bp_is_user_friends_activity() {
 
@@ -2396,13 +2396,13 @@ function bp_is_user_friends_activity() {
 }
 
 /**
- * Is the current page a user's Groups activity stream?
+ * Is the current page a user's Groups activity feed?
  *
  * Eg http://example.com/members/joe/groups/
  *
  * @since 1.5.0
  *
- * @return bool True if the current page is a user's Groups activity stream.
+ * @return bool True if the current page is a user's Groups activity feed.
  */
 function bp_is_user_groups_activity() {
 
@@ -2526,26 +2526,26 @@ function bp_is_user_recent_commments() {
 }
 
 /**
- * Is the current page a user's Friends page?
+ * Is the current page a user's Connections page?
  *
  * Eg http://example.com/members/joe/blogs/friends/ (or a subpage thereof).
  *
  * @since 1.1.0
  *
- * @return bool True if the current page is a user's Friends page.
+ * @return bool True if the current page is a user's Connections page.
  */
 function bp_is_user_friends() {
 	return (bool) ( bp_is_user() && bp_is_friends_component() );
 }
 
 /**
- * Is the current page a user's Friend Requests page?
+ * Is the current page a user's Connection Requests page?
  *
  * Eg http://example.com/members/joe/friends/requests/.
  *
  * @since 1.5.0
  *
- * @return bool True if the current page is a user's Friends Requests page.
+ * @return bool True if the current page is a user's Connections Requests page.
  */
 function bp_is_user_friend_requests() {
 	return (bool) ( bp_is_user_friends() && bp_is_current_action( 'requests' ) );
@@ -3108,7 +3108,7 @@ function bp_get_title_parts( $seplocation = 'right' ) {
 		$current_component = bp_current_component();
 
 		// No current component (when does this happen?).
-		$bp_title_parts = array( _x( 'Directory', 'component directory title', 'buddypress' ) );
+		$bp_title_parts = array( _x( 'Directory', 'component directory title', 'buddyboss' ) );
 
 		if ( ! empty( $current_component ) ) {
 			$bp_title_parts = array( bp_get_directory_title( $current_component ) );
@@ -3116,19 +3116,19 @@ function bp_get_title_parts( $seplocation = 'right' ) {
 
 	// Sign up page.
 	} elseif ( bp_is_register_page() ) {
-		$bp_title_parts = array( __( 'Create an Account', 'buddypress' ) );
+		$bp_title_parts = array( __( 'Create an Account', 'buddyboss' ) );
 
 	// Activation page.
 	} elseif ( bp_is_activation_page() ) {
-		$bp_title_parts = array( __( 'Activate Your Account', 'buddypress' ) );
+		$bp_title_parts = array( __( 'Activate Your Account', 'buddyboss' ) );
 
 	// Group creation page.
 	} elseif ( bp_is_group_create() ) {
-		$bp_title_parts = array( __( 'Create a Group', 'buddypress' ) );
+		$bp_title_parts = array( __( 'Create a Group', 'buddyboss' ) );
 
 	// Blog creation page.
 	} elseif ( bp_is_create_blog() ) {
-		$bp_title_parts = array( __( 'Create a Site', 'buddypress' ) );
+		$bp_title_parts = array( __( 'Create a Site', 'buddyboss' ) );
 	}
 
 	// Strip spans.
@@ -3748,5 +3748,5 @@ function bp_email_the_salutation( $settings = array() ) {
 		 * @param array  $settings Email Settings.
 		 * @param string $token    The Recipient token.
 		 */
-		return apply_filters( 'bp_email_get_salutation', sprintf( _x( 'Hi %s,', 'recipient salutation', 'buddypress' ), $token ), $settings, $token );
+		return apply_filters( 'bp_email_get_salutation', sprintf( _x( 'Hi %s,', 'recipient salutation', 'buddyboss' ), $token ), $settings, $token );
 	}

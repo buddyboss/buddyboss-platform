@@ -1,15 +1,15 @@
 <?php
 /**
- * BuddyPress - Users Friends
+ * BuddyBoss - Users Connections
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
 
 ?>
 
-<div class="item-list-tabs no-ajax" id="subnav" aria-label="<?php esc_attr_e( 'Member secondary navigation', 'buddypress' ); ?>" role="navigation">
+<div class="item-list-tabs no-ajax" id="subnav" aria-label="<?php esc_attr_e( 'Member secondary navigation', 'buddyboss' ); ?>" role="navigation">
 	<ul>
 		<?php if ( bp_is_my_profile() ) bp_get_options_nav(); ?>
 
@@ -17,11 +17,11 @@
 
 			<li id="members-order-select" class="last filter">
 
-				<label for="members-friends"><?php _e( 'Order By:', 'buddypress' ); ?></label>
+				<label for="members-friends"><?php _e( 'Order By:', 'buddyboss' ); ?></label>
 				<select id="members-friends">
-					<option value="active"><?php _e( 'Last Active', 'buddypress' ); ?></option>
-					<option value="newest"><?php _e( 'Newest Registered', 'buddypress' ); ?></option>
-					<option value="alphabetical"><?php _e( 'Alphabetical', 'buddypress' ); ?></option>
+					<option value="active"><?php _e( 'Last Active', 'buddyboss' ); ?></option>
+					<option value="newest"><?php _e( 'Newest Registered', 'buddyboss' ); ?></option>
+					<option value="alphabetical"><?php _e( 'Alphabetical', 'buddyboss' ); ?></option>
 
 					<?php
 
@@ -43,7 +43,7 @@
 <?php
 switch ( bp_current_action() ) :
 
-	// Home/My Friends
+	// Home/My Connections
 	case 'my-friends' :
 
 		/**
@@ -56,12 +56,12 @@ switch ( bp_current_action() ) :
 		<?php if (is_user_logged_in() ) : ?>
 			<h2 class="bp-screen-reader-text"><?php
 				/* translators: accessibility text */
-				_e( 'My friends', 'buddypress' );
+				_e( 'My connections', 'buddyboss' );
 			?></h2>
 		<?php else : ?>
 			<h2 class="bp-screen-reader-text"><?php
 				/* translators: accessibility text */
-				_e( 'Friends', 'buddypress' );
+				_e( 'Connections', 'buddyboss' );
 			?></h2>
 		<?php endif ?>
 

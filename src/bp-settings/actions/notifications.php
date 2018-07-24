@@ -2,7 +2,7 @@
 /**
  * Settings: Email notifications action handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage SettingsActions
  * @since 3.0.0
  */
@@ -41,7 +41,7 @@ function bp_settings_action_notifications() {
 	if ( bp_is_my_profile() ) {
 		bp_core_add_message( __( 'Your notification settings have been saved.',        'buddypress' ), 'success' );
 	} else {
-		bp_core_add_message( __( "This user's notification settings have been saved.", 'buddypress' ), 'success' );
+		bp_core_add_message( __( "This user's notification settings have been saved.", 'buddyboss' ), 'success' );
 	}
 
 	/**

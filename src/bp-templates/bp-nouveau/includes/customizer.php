@@ -23,8 +23,8 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	$bp_nouveau_options = bp_nouveau_get_appearance_settings();
 
 	$wp_customize->add_panel( 'bp_nouveau_panel', array(
-		'description' => __( 'Customize the appearance of BuddyPress Nouveau Template pack.', 'buddypress' ),
-		'title'       => _x( 'BuddyPress Nouveau', 'Customizer Panel', 'buddypress' ),
+		'description' => __( 'Customize the appearance of BuddyPress Nouveau Template pack.', 'buddyboss' ),
+		'title'       => _x( 'BuddyPress Nouveau', 'Customizer Panel', 'buddyboss' ),
 		'priority'    => 200,
 	) );
 
@@ -37,34 +37,34 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	 */
 	$sections = apply_filters( 'bp_nouveau_customizer_sections', array(
 		'bp_nouveau_general_settings' => array(
-			'title'       => __( 'General BP Settings', 'buddypress' ),
+			'title'       => __( 'General BP Settings', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 10,
-			'description' => __( 'Configure general BuddyPress appearance options.', 'buddypress' ),
+			'description' => __( 'Configure general BuddyPress appearance options.', 'buddyboss' ),
 		),
 		'bp_nouveau_user_front_page' => array(
-			'title'       => __( 'Member front page', 'buddypress' ),
+			'title'       => __( 'Member Dashboard', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 30,
-			'description' => __( 'Configure the default front page for members.', 'buddypress' ),
+			'description' => __( 'Configure a Dashboard to help onboard members.', 'buddyboss' ),
 		),
 		'bp_nouveau_user_primary_nav' => array(
-			'title'       => __( 'Member navigation', 'buddypress' ),
+			'title'       => __( 'Member navigation', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 50,
-			'description' => __( 'Customize the navigation menu for members. In the preview window, navigate to a user to preview your changes.', 'buddypress' ),
+			'description' => __( 'Customize the navigation menu for members. In the preview window, navigate to a user to preview your changes.', 'buddyboss' ),
 		),
 		'bp_nouveau_loops_layout' => array(
-			'title'       => __( 'Loop layouts', 'buddypress' ),
+			'title'       => __( 'Loop layouts', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 70,
-			'description' => __( 'Set the number of columns to use for BuddyPress loops.', 'buddypress' ),
+			'description' => __( 'Set the number of columns to use for BuddyPress loops.', 'buddyboss' ),
 		),
 		'bp_nouveau_dir_layout' => array(
-			'title'       => __( 'Directory layouts', 'buddypress' ),
+			'title'       => __( 'Directory layouts', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 80,
-			'description' => __( 'Select the layout style for directory content &amp; navigation.', 'buddypress' ),
+			'description' => __( 'Select the layout style for directory content &amp; navigation.', 'buddyboss' ),
 		),
 	) );
 
@@ -217,70 +217,70 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 
 	$controls = array(
 		'bp_site_avatars' => array(
-			'label'      => __( 'Use the round style for member and group avatars.', 'buddypress' ),
+			'label'      => __( 'Use the round style for member and group avatars.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_general_settings',
 			'settings'   => 'bp_nouveau_appearance[avatar_style]',
 			'type'       => 'checkbox',
 		),
 		'user_front_page' => array(
-			'label'      => __( 'Enable default front page for member profiles.', 'buddypress' ),
+			'label'      => __( 'Enable the Dashboard for member profiles.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_user_front_page',
 			'settings'   => 'bp_nouveau_appearance[user_front_page]',
 			'type'       => 'checkbox',
 		),
 		'user_front_bio' => array(
-			'label'      => __( 'Display the biographical info from the member\'s WordPress profile.', 'buddypress' ),
+			'label'      => __( 'Display the biographical info from the member\'s WordPress profile.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_user_front_page',
 			'settings'   => 'bp_nouveau_appearance[user_front_bio]',
 			'type'       => 'checkbox',
 		),
 		'user_nav_display' => array(
-			'label'      => __( 'Display the member navigation vertically.', 'buddypress' ),
+			'label'      => __( 'Display the member navigation vertically.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_user_primary_nav',
 			'settings'   => 'bp_nouveau_appearance[user_nav_display]',
 			'type'       => 'checkbox',
 		),
 		'user_nav_tabs' => array(
-			'label'      => __( 'Use tab styling for primary nav.', 'buddypress' ),
+			'label'      => __( 'Use tab styling for primary nav.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_user_primary_nav',
 			'settings'   => 'bp_nouveau_appearance[user_nav_tabs]',
 			'type'       => 'checkbox',
 		),
 		'user_subnav_tabs' => array(
-			'label'      => __( 'Use tab styling for secondary nav.', 'buddypress' ),
+			'label'      => __( 'Use tab styling for secondary nav.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_user_primary_nav',
 			'settings'   => 'bp_nouveau_appearance[user_subnav_tabs]',
 			'type'       => 'checkbox',
 		),
 		'user_nav_order' => array(
 			'class'      => 'BP_Nouveau_Nav_Customize_Control',
-			'label'      => __( 'Reorder the primary navigation for a user.', 'buddypress' ),
+			'label'      => __( 'Reorder the primary navigation for a user.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_user_primary_nav',
 			'settings'   => 'bp_nouveau_appearance[user_nav_order]',
 			'type'       => 'user',
 		),
 		'members_layout' => array(
-			'label'      => __( 'Members', 'buddypress' ),
+			'label'      => __( 'Members', 'buddyboss' ),
 			'section'    => 'bp_nouveau_loops_layout',
 			'settings'   => 'bp_nouveau_appearance[members_layout]',
 			'type'       => 'select',
 			'choices'    => bp_nouveau_customizer_grid_choices(),
 		),
 		'members_friends_layout' => array(
-			'label'      => __( 'Member > Friends', 'buddypress' ),
+			'label'      => __( 'Member > Connections', 'buddyboss' ),
 			'section'    => 'bp_nouveau_loops_layout',
 			'settings'   => 'bp_nouveau_appearance[members_friends_layout]',
 			'type'       => 'select',
 			'choices'    => bp_nouveau_customizer_grid_choices(),
 		),
 		'members_dir_layout' => array(
-			'label'      => __( 'Use column navigation for the Members directory.', 'buddypress' ),
+			'label'      => __( 'Use column navigation for the Members directory.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_dir_layout',
 			'settings'   => 'bp_nouveau_appearance[members_dir_layout]',
 			'type'       => 'checkbox',
 		),
 		'members_dir_tabs' => array(
-			'label'      => __( 'Use tab styling for Members directory navigation.', 'buddypress' ),
+			'label'      => __( 'Use tab styling for Members directory navigation.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_dir_layout',
 			'settings'   => 'bp_nouveau_appearance[members_dir_tabs]',
 			'type'       => 'checkbox',

@@ -13,7 +13,7 @@
  * The following functions are wrappers for hooks, allowing them to be
  * manually called and/or piggy-backed on top of other hooks if needed.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Core
  * @since 1.7.0
  */
@@ -417,25 +417,6 @@ function bp_template_redirect() {
 }
 
 /** Theme Helpers *************************************************************/
-
-/**
- * Fire the 'bp_register_theme_directory' action.
- *
- * The main action used registering theme directories.
- *
- * @since 1.5.0
- */
-function bp_register_theme_directory() {
-
-	/**
-	 * Fires inside the 'bp_register_theme_directory' function.
-	 *
-	 * The main action used registering theme directories.
-	 *
-	 * @since 1.7.0
-	 */
-	do_action( 'bp_register_theme_directory' );
-}
 
 /**
  * Fire the 'bp_register_theme_packages' action.

@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress - Activity Post Form
+ * BuddyBoss - Activity Post Form
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
@@ -26,17 +26,15 @@
 		</a>
 	</div>
 
-	<p class="activity-greeting"><?php if ( bp_is_group() )
-		printf( __( "What's new in %s, %s?", 'buddypress' ), bp_get_group_name(), bp_get_user_firstname( bp_get_loggedin_user_fullname() ) );
-	else
-		printf( __( "What's new, %s?", 'buddypress' ), bp_get_user_firstname( bp_get_loggedin_user_fullname() ) );
-	?></p>
+	<p class="activity-greeting">
+		<?php printf( __( "Write here or use @ to mention someone.", 'buddyboss' ), bp_get_user_firstname( bp_get_loggedin_user_fullname() ) ); ?>
+	</p>
 
 	<div id="whats-new-content">
 		<div id="whats-new-textarea">
 			<label for="whats-new" class="bp-screen-reader-text"><?php
 				/* translators: accessibility text */
-				_e( 'Post what\'s new', 'buddypress' );
+				_e( 'Post what\'s new', 'buddyboss' );
 			?></label>
 			<textarea class="bp-suggestions" name="whats-new" id="whats-new" cols="50" rows="10"
 				<?php if ( bp_is_group() ) : ?>data-suggestions-group-id="<?php echo esc_attr( (int) bp_get_current_group_id() ); ?>" <?php endif; ?>
@@ -45,21 +43,21 @@
 
 		<div id="whats-new-options">
 			<div id="whats-new-submit">
-				<input type="submit" name="aw-whats-new-submit" id="aw-whats-new-submit" value="<?php esc_attr_e( 'Post Update', 'buddypress' ); ?>" />
+				<input type="submit" name="aw-whats-new-submit" id="aw-whats-new-submit" value="<?php esc_attr_e( 'Post Update', 'buddyboss' ); ?>" />
 			</div>
 
 			<?php if ( bp_is_active( 'groups' ) && !bp_is_my_profile() && !bp_is_group() ) : ?>
 
 				<div id="whats-new-post-in-box">
 
-					<?php _e( 'Post in', 'buddypress' ); ?>:
+					<?php _e( 'Post in', 'buddyboss' ); ?>:
 
 					<label for="whats-new-post-in" class="bp-screen-reader-text"><?php
 						/* translators: accessibility text */
-						_e( 'Post in', 'buddypress' );
+						_e( 'Post in', 'buddyboss' );
 					?></label>
 					<select id="whats-new-post-in" name="whats-new-post-in">
-						<option selected="selected" value="0"><?php _e( 'My Profile', 'buddypress' ); ?></option>
+						<option selected="selected" value="0"><?php _e( 'My Profile', 'buddyboss' ); ?></option>
 
 						<?php if ( bp_has_groups( 'user_id=' . bp_loggedin_user_id() . '&type=alphabetical&max=100&per_page=100&populate_extras=0&update_meta_cache=0' ) ) :
 							while ( bp_groups() ) : bp_the_group(); ?>

@@ -2,7 +2,7 @@
 /**
  * BuddyPress Notifications Template Functions.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage TonificationsTemplate
  * @since 1.9.0
  */
@@ -471,7 +471,7 @@ function bp_the_notification_time_since() {
 
 		// Notified date is empty, so return a fun string.
 		} else {
-			$retval = __( 'Date not found', 'buddypress' );
+			$retval = __( 'Date not found', 'buddyboss' );
 		}
 
 		/**
@@ -555,7 +555,7 @@ function bp_the_notification_mark_read_link( $user_id = 0 ) {
 		// Set default user ID to use.
 		$user_id = 0 === $user_id ? bp_displayed_user_id() : $user_id;
 
-		$retval = sprintf( '<a href="%1$s" class="mark-read primary">%2$s</a>', esc_url( bp_get_the_notification_mark_read_url( $user_id ) ), __( 'Read', 'buddypress' ) );
+		$retval = sprintf( '<a href="%1$s" class="mark-read primary">%2$s</a>', esc_url( bp_get_the_notification_mark_read_url( $user_id ) ), __( 'Read', 'buddyboss' ) );
 
 		/**
 		 * Filters the mark read link for the current notification.
@@ -647,7 +647,7 @@ function bp_the_notification_mark_unread_link( $user_id = 0 ) {
 		// Set default user ID to use.
 		$user_id = 0 === $user_id ? bp_displayed_user_id() : $user_id;
 
-		$retval = sprintf( '<a href="%1$s" class="mark-unread primary bp-tooltip">%2$s</a>', esc_url( bp_get_the_notification_mark_unread_url( $user_id ) ), __( 'Unread', 'buddypress' ) );
+		$retval = sprintf( '<a href="%1$s" class="mark-unread primary bp-tooltip">%2$s</a>', esc_url( bp_get_the_notification_mark_unread_url( $user_id ) ), __( 'Unread', 'buddyboss' ) );
 
 		/**
 		 * Filters the link used for marking a single notification as unread.
@@ -781,7 +781,7 @@ function bp_the_notification_delete_link( $user_id = 0 ) {
 		// Set default user ID to use.
 		$user_id = 0 === $user_id ? bp_displayed_user_id() : $user_id;
 
-		$retval = sprintf( '<a href="%1$s" class="delete secondary confirm bp-tooltip">%2$s</a>', esc_url( bp_get_the_notification_delete_url( $user_id ) ), __( 'Delete', 'buddypress' ) );
+		$retval = sprintf( '<a href="%1$s" class="delete secondary confirm bp-tooltip">%2$s</a>', esc_url( bp_get_the_notification_delete_url( $user_id ) ), __( 'Delete', 'buddyboss' ) );
 
 		/**
 		 * Filters the delete link for the current notification.
@@ -934,9 +934,9 @@ function bp_notifications_pagination_count() {
 		$total      = bp_core_number_format( $query_loop->total_notification_count );
 
 		if ( 1 == $query_loop->total_notification_count ) {
-			$pag = __( 'Viewing 1 notification', 'buddypress' );
+			$pag = __( 'Viewing 1 notification', 'buddyboss' );
 		} else {
-			$pag = sprintf( _n( 'Viewing %1$s - %2$s of %3$s notification', 'Viewing %1$s - %2$s of %3$s notifications', $query_loop->total_notification_count, 'buddypress' ), $from_num, $to_num, $total );
+			$pag = sprintf( _n( 'Viewing %1$s - %2$s of %3$s notification', 'Viewing %1$s - %2$s of %3$s notifications', $query_loop->total_notification_count, 'buddyboss' ), $from_num, $to_num, $total );
 		}
 
 		/**
@@ -997,15 +997,15 @@ function bp_notifications_sort_order_form() {
 	} ?>
 
 	<form action="" method="get" id="notifications-sort-order">
-		<label for="notifications-sort-order-list"><?php esc_html_e( 'Order By:', 'buddypress' ); ?></label>
+		<label for="notifications-sort-order-list"><?php esc_html_e( 'Order By:', 'buddyboss' ); ?></label>
 
 		<select id="notifications-sort-order-list" name="sort_order" onchange="this.form.submit();">
-			<option value="DESC" <?php selected( $selected, 'DESC' ); ?>><?php _e( 'Newest First', 'buddypress' ); ?></option>
-			<option value="ASC"  <?php selected( $selected, 'ASC'  ); ?>><?php _e( 'Oldest First', 'buddypress' ); ?></option>
+			<option value="DESC" <?php selected( $selected, 'DESC' ); ?>><?php _e( 'Newest First', 'buddyboss' ); ?></option>
+			<option value="ASC"  <?php selected( $selected, 'ASC'  ); ?>><?php _e( 'Oldest First', 'buddyboss' ); ?></option>
 		</select>
 
 		<noscript>
-			<input id="submit" type="submit" name="form-submit" class="submit" value="<?php esc_attr_e( 'Go', 'buddypress' ); ?>" />
+			<input id="submit" type="submit" name="form-submit" class="submit" value="<?php esc_attr_e( 'Go', 'buddyboss' ); ?>" />
 		</noscript>
 	</form>
 
@@ -1021,18 +1021,18 @@ function bp_notifications_bulk_management_dropdown() {
 	?>
 	<label class="bp-screen-reader-text" for="notification-select"><?php
 		/* translators: accessibility text */
-		_e( 'Select Bulk Action', 'buddypress' );
+		_e( 'Select Bulk Action', 'buddyboss' );
 	?></label>
 	<select name="notification_bulk_action" id="notification-select">
-		<option value="" selected="selected"><?php _e( 'Bulk Actions', 'buddypress' ); ?></option>
+		<option value="" selected="selected"><?php _e( 'Bulk Actions', 'buddyboss' ); ?></option>
 
 		<?php if ( bp_is_current_action( 'unread' ) ) : ?>
-			<option value="read"><?php _e( 'Mark read', 'buddypress' ); ?></option>
+			<option value="read"><?php _e( 'Mark read', 'buddyboss' ); ?></option>
 		<?php elseif ( bp_is_current_action( 'read' ) ) : ?>
-			<option value="unread"><?php _e( 'Mark unread', 'buddypress' ); ?></option>
+			<option value="unread"><?php _e( 'Mark unread', 'buddyboss' ); ?></option>
 		<?php endif; ?>
-		<option value="delete"><?php _e( 'Delete', 'buddypress' ); ?></option>
+		<option value="delete"><?php _e( 'Delete', 'buddyboss' ); ?></option>
 	</select>
-	<input type="submit" id="notification-bulk-manage" class="button action" value="<?php esc_attr_e( 'Apply', 'buddypress' ); ?>">
+	<input type="submit" id="notification-bulk-manage" class="button action" value="<?php esc_attr_e( 'Apply', 'buddyboss' ); ?>">
 	<?php
 }

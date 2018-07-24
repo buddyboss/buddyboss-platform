@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress - Blogs Create
+ * BuddyBoss - Blogs Create
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
@@ -38,7 +38,7 @@ do_action( 'bp_before_create_blog_content' ); ?>
 <?php else: ?>
 
 	<div id="message" class="info">
-		<p><?php _e( 'Site registration is currently disabled', 'buddypress' ); ?></p>
+		<p><?php _e( 'Site registration is currently disabled', 'buddyboss' ); ?></p>
 	</div>
 
 <?php endif; ?>

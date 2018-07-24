@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress - Group Invites Loop
+ * BuddyBoss - Group Invites Loop
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
@@ -72,7 +72,7 @@
 				do_action( 'bp_group_send_invites_item' ); ?>
 
 				<div class="action">
-					<a class="button remove" href="<?php bp_group_invite_user_remove_invite_url(); ?>" id="<?php bp_group_invite_item_id(); ?>"><?php _e( 'Remove Invite', 'buddypress' ); ?></a>
+					<a class="button remove" href="<?php bp_group_invite_user_remove_invite_url(); ?>" id="<?php bp_group_invite_item_id(); ?>"><?php _e( 'Remove Invite', 'buddyboss' ); ?></a>
 
 					<?php
 
@@ -108,7 +108,7 @@
 	<?php else : ?>
 
 		<div id="message" class="info">
-			<p><?php _e( 'Select friends to invite.', 'buddypress' ); ?></p>
+			<p><?php _e( 'Select connections to invite.', 'buddyboss' ); ?></p>
 		</div>
 
 	<?php endif; ?>

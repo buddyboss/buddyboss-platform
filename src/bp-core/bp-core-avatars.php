@@ -2,7 +2,7 @@
 /**
  * BuddyPress Avatars.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Core
  * @since 1.0.0
  */
@@ -340,7 +340,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 
 	// Get a fallback for the 'alt' parameter, create html output.
 	if ( empty( $params['alt'] ) ) {
-		$params['alt'] = __( 'Profile Photo', 'buddypress' );
+		$params['alt'] = __( 'Profile Photo', 'buddyboss' );
 	}
 	$html_alt = ' alt="' . esc_attr( $params['alt'] ) . '"';
 
@@ -899,7 +899,7 @@ function bp_core_avatar_handle_upload( $file, $upload_dir_filter ) {
 
 	// In case of an error, stop the process and display a feedback to the user.
 	if ( ! empty( $bp->avatar_admin->original['error'] ) ) {
-		bp_core_add_message( sprintf( __( 'Upload Failed! Error was: %s', 'buddypress' ), $bp->avatar_admin->original['error'] ), 'error' );
+		bp_core_add_message( sprintf( __( 'Upload Failed! Error was: %s', 'buddyboss' ), $bp->avatar_admin->original['error'] ), 'error' );
 		return false;
 	}
 
@@ -927,13 +927,13 @@ function bp_core_avatar_handle_upload( $file, $upload_dir_filter ) {
 
 	// Check for WP_Error on what should be an image.
 	if ( is_wp_error( $bp->avatar_admin->image->dir ) ) {
-		bp_core_add_message( sprintf( __( 'Upload failed! Error was: %s', 'buddypress' ), $bp->avatar_admin->image->dir->get_error_message() ), 'error' );
+		bp_core_add_message( sprintf( __( 'Upload failed! Error was: %s', 'buddyboss' ), $bp->avatar_admin->image->dir->get_error_message() ), 'error' );
 		return false;
 	}
 
 	// If the uploaded image is smaller than the "full" dimensions, throw a warning.
 	if ( $avatar_attachment->is_too_small( $bp->avatar_admin->image->file ) ) {
-		bp_core_add_message( sprintf( __( 'You have selected an image that is smaller than recommended. For best results, upload a picture larger than %d x %d pixels.', 'buddypress' ), bp_core_avatar_full_width(), bp_core_avatar_full_height() ), 'error' );
+		bp_core_add_message( sprintf( __( 'You have selected an image that is smaller than recommended. For best results, upload a picture larger than %d x %d pixels.', 'buddyboss' ), bp_core_avatar_full_width(), bp_core_avatar_full_height() ), 'error' );
 	}
 
 	// Set the url value for the image.
@@ -1056,7 +1056,7 @@ function bp_avatar_ajax_upload() {
 
 	if ( empty( $avatar ) ) {
 		// Default upload error.
-		$message = __( 'Upload failed.', 'buddypress' );
+		$message = __( 'Upload failed.', 'buddyboss' );
 
 		// Use the template message if set.
 		if ( ! empty( $feedback_message ) ) {

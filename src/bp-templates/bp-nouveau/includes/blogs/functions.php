@@ -20,7 +20,7 @@ function bp_nouveau_get_blogs_directory_nav_items() {
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
 		'li_class'  => array( 'selected' ),
 		'link'      => bp_get_root_domain() . '/' . bp_get_blogs_root_slug(),
-		'text'      => __( 'All Sites', 'buddypress' ),
+		'text'      => __( 'All Sites', 'buddyboss' ),
 		'count'     => bp_get_total_blog_count(),
 		'position'  => 5,
 	);
@@ -35,7 +35,7 @@ function bp_nouveau_get_blogs_directory_nav_items() {
 				'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array(),
 				'link'      => bp_loggedin_user_domain() . bp_get_blogs_slug(),
-				'text'      => __( 'My Sites', 'buddypress' ),
+				'text'      => __( 'My Sites', 'buddyboss' ),
 				'count'     => $my_blogs_count,
 				'position'  => 15,
 			);
@@ -48,7 +48,7 @@ function bp_nouveau_get_blogs_directory_nav_items() {
 				'slug'      => 'create', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array( 'no-ajax', 'site-create', 'create-button' ),
 				'link'      => trailingslashit( bp_get_blogs_directory_permalink() . 'create' ),
-				'text'      => __( 'Create a Site', 'buddypress' ),
+				'text'      => __( 'Create a Site', 'buddyboss' ),
 				'count'     => false,
 				'position'  => 999,
 			);
@@ -103,9 +103,9 @@ function bp_nouveau_get_blogs_filters( $context = '' ) {
 	 * @param string the context.
 	 */
 	$filters = apply_filters( 'bp_nouveau_get_blogs_filters', array(
-		'active'       => __( 'Last Active', 'buddypress' ),
-		'newest'       => __( 'Newest', 'buddypress' ),
-		'alphabetical' => __( 'Alphabetical', 'buddypress' ),
+		'active'       => __( 'Last Active', 'buddyboss' ),
+		'newest'       => __( 'Newest', 'buddyboss' ),
+		'alphabetical' => __( 'Alphabetical', 'buddyboss' ),
 	), $context );
 
 	if ( $action ) {
@@ -165,20 +165,20 @@ function bp_nouveau_blogs_customizer_settings( $settings = array() ) {
 function bp_nouveau_blogs_customizer_controls( $controls = array() ) {
 	return array_merge( $controls, array(
 		'blogs_layout' => array(
-			'label'      => __( 'Sites loop:', 'buddypress' ),
+			'label'      => __( 'Sites loop:', 'buddyboss' ),
 			'section'    => 'bp_nouveau_loops_layout',
 			'settings'   => 'bp_nouveau_appearance[blogs_layout]',
 			'type'       => 'select',
 			'choices'    => bp_nouveau_customizer_grid_choices(),
 		),
 		'sites_dir_layout' => array(
-			'label'      => __( 'Use column navigation for the Sites directory.', 'buddypress' ),
+			'label'      => __( 'Use column navigation for the Sites directory.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_dir_layout',
 			'settings'   => 'bp_nouveau_appearance[sites_dir_layout]',
 			'type'       => 'checkbox',
 		),
 		'sites_dir_tabs' => array(
-			'label'      => __( 'Use tab styling for Sites directory navigation.', 'buddypress' ),
+			'label'      => __( 'Use tab styling for Sites directory navigation.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_dir_layout',
 			'settings'   => 'bp_nouveau_appearance[sites_dir_tabs]',
 			'type'       => 'checkbox',

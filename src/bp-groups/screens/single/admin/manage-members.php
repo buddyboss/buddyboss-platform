@@ -2,7 +2,7 @@
 /**
  * Groups: Single group "Manage > Members" screen handler
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage GroupsScreens
  * @since 3.0.0
  */
@@ -33,9 +33,9 @@ function groups_screen_group_admin_manage_members() {
 
 			// Promote a user.
 			if ( !groups_promote_member( $user_id, $bp->groups->current_group->id, $status ) )
-				bp_core_add_message( __( 'There was an error when promoting that user. Please try again.', 'buddypress' ), 'error' );
+				bp_core_add_message( __( 'There was an error when promoting that user. Please try again.', 'buddyboss' ), 'error' );
 			else
-				bp_core_add_message( __( 'User promoted successfully', 'buddypress' ) );
+				bp_core_add_message( __( 'User promoted successfully', 'buddyboss' ) );
 
 			/**
 			 * Fires before the redirect after a group member has been promoted.
@@ -62,13 +62,13 @@ function groups_screen_group_admin_manage_members() {
 			// Stop sole admins from abandoning their group.
 			$group_admins = groups_get_group_admins( $bp->groups->current_group->id );
 			if ( 1 == count( $group_admins ) && $group_admins[0]->user_id == $user_id )
-				bp_core_add_message( __( 'This group must have at least one admin', 'buddypress' ), 'error' );
+				bp_core_add_message( __( 'This group must have at least one admin', 'buddyboss' ), 'error' );
 
 			// Demote a user.
 			elseif ( !groups_demote_member( $user_id, $bp->groups->current_group->id ) )
-				bp_core_add_message( __( 'There was an error when demoting that user. Please try again.', 'buddypress' ), 'error' );
+				bp_core_add_message( __( 'There was an error when demoting that user. Please try again.', 'buddyboss' ), 'error' );
 			else
-				bp_core_add_message( __( 'User demoted successfully', 'buddypress' ) );
+				bp_core_add_message( __( 'User demoted successfully', 'buddyboss' ) );
 
 			/**
 			 * Fires before the redirect after a group member has been demoted.
@@ -92,9 +92,9 @@ function groups_screen_group_admin_manage_members() {
 
 			// Ban a user.
 			if ( !groups_ban_member( $user_id, $bp->groups->current_group->id ) )
-				bp_core_add_message( __( 'There was an error when banning that user. Please try again.', 'buddypress' ), 'error' );
+				bp_core_add_message( __( 'There was an error when banning that user. Please try again.', 'buddyboss' ), 'error' );
 			else
-				bp_core_add_message( __( 'User banned successfully', 'buddypress' ) );
+				bp_core_add_message( __( 'User banned successfully', 'buddyboss' ) );
 
 			/**
 			 * Fires before the redirect after a group member has been banned.
@@ -118,9 +118,9 @@ function groups_screen_group_admin_manage_members() {
 
 			// Remove a ban for user.
 			if ( !groups_unban_member( $user_id, $bp->groups->current_group->id ) )
-				bp_core_add_message( __( 'There was an error when unbanning that user. Please try again.', 'buddypress' ), 'error' );
+				bp_core_add_message( __( 'There was an error when unbanning that user. Please try again.', 'buddyboss' ), 'error' );
 			else
-				bp_core_add_message( __( 'User ban removed successfully', 'buddypress' ) );
+				bp_core_add_message( __( 'User ban removed successfully', 'buddyboss' ) );
 
 			/**
 			 * Fires before the redirect after a group member has been unbanned.
@@ -144,9 +144,9 @@ function groups_screen_group_admin_manage_members() {
 
 			// Remove a user.
 			if ( !groups_remove_member( $user_id, $bp->groups->current_group->id ) )
-				bp_core_add_message( __( 'There was an error removing that user from the group. Please try again.', 'buddypress' ), 'error' );
+				bp_core_add_message( __( 'There was an error removing that user from the group. Please try again.', 'buddyboss' ), 'error' );
 			else
-				bp_core_add_message( __( 'User removed successfully', 'buddypress' ) );
+				bp_core_add_message( __( 'User removed successfully', 'buddyboss' ) );
 
 			/**
 			 * Fires before the redirect after a group member has been removed.

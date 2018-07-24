@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Activity Stream Comment
+ * BuddyBoss - Activity Feed Comment
  *
  * This template is used by bp_activity_comments() functions to show
  * each activity.

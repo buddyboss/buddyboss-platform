@@ -1,8 +1,8 @@
 <?php
 /**
- * Akismet support for BuddyPress' Activity Stream.
+ * Akismet support for BuddyPress' Activity Feed.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage ActivityAkismet
  * @since 1.6.0
  */
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_activity_setup_akismet() {
 	/**
-	 * Filters if BuddyPress Activity Akismet support has been disabled by another plugin.
+	 * Filters if BuddyBoss Activity Akismet support has been disabled by another plugin.
 	 *
 	 * @since 1.6.0
 	 *

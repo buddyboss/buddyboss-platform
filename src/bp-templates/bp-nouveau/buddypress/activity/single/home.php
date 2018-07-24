@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Home
+ * BuddyBoss - Home
  *
  * @version 3.0.0
  */

@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress - Members Notifications Loop
+ * BuddyBoss - Members Notifications Loop
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage bp-legacy
  * @version 3.0.0
  */
@@ -15,10 +15,10 @@
 				<th class="icon"></th>
 				<th class="bulk-select-all"><input id="select-all-notifications" type="checkbox"><label class="bp-screen-reader-text" for="select-all-notifications"><?php
 					/* translators: accessibility text */
-					_e( 'Select all', 'buddypress' );
+					_e( 'Select all', 'buddyboss' );
 				?></label></th>
-				<th class="title"><?php _e( 'Notification', 'buddypress' ); ?></th>
-				<th class="date"><?php _e( 'Date Received', 'buddypress' ); ?></th>
+				<th class="title"><?php _e( 'Notification', 'buddyboss' ); ?></th>
+				<th class="date"><?php _e( 'Date Received', 'buddyboss' ); ?></th>
 				<th class="actions"><?php _e( 'Actions',    'buddypress' ); ?></th>
 			</tr>
 		</thead>
@@ -31,7 +31,7 @@
 					<td></td>
 					<td class="bulk-select-check"><label for="<?php bp_the_notification_id(); ?>"><input id="<?php bp_the_notification_id(); ?>" type="checkbox" name="notifications[]" value="<?php bp_the_notification_id(); ?>" class="notification-check"><span class="bp-screen-reader-text"><?php
 						/* translators: accessibility text */
-						_e( 'Select this notification', 'buddypress' );
+						_e( 'Select this notification', 'buddyboss' );
 					?></span></label></td>
 					<td class="notification-description"><?php bp_the_notification_description();  ?></td>
 					<td class="notification-since"><?php bp_the_notification_time_since();   ?></td>

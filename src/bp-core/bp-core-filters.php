@@ -14,7 +14,7 @@
  *  - Admin: More in {@link BP_Admin::setup_actions()} in
  *            bp-core/bp-core-admin.php
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Core
  * @since 1.5.0
  *
@@ -402,7 +402,7 @@ function bp_core_filter_user_welcome_email( $welcome_email ) {
 	}
 
 	// [User Set] Replaces 'PASSWORD' in welcome email; Represents value set by user
-	return str_replace( 'PASSWORD', __( '[User Set]', 'buddypress' ), $welcome_email );
+	return str_replace( 'PASSWORD', __( '[User Set]', 'buddyboss' ), $welcome_email );
 }
 add_filter( 'update_welcome_user_email', 'bp_core_filter_user_welcome_email' );
 
@@ -435,7 +435,7 @@ function bp_core_filter_blog_welcome_email( $welcome_email, $blog_id, $user_id, 
 		return $welcome_email;
 
 	// [User Set] Replaces $password in welcome email; Represents value set by user
-	return str_replace( $password, __( '[User Set]', 'buddypress' ), $welcome_email );
+	return str_replace( $password, __( '[User Set]', 'buddyboss' ), $welcome_email );
 }
 add_filter( 'update_welcome_email', 'bp_core_filter_blog_welcome_email', 10, 4 );
 
@@ -578,7 +578,7 @@ function bp_modify_page_title( $title = '', $sep = '&raquo;', $seplocation = 'ri
 		$bp_title_parts['site'] = $blogname;
 
 		if ( ( $paged >= 2 || $page >= 2 ) && ! is_404() && ! bp_is_single_activity() ) {
-			$bp_title_parts['page'] = sprintf( __( 'Page %s', 'buddypress' ), max( $paged, $page ) );
+			$bp_title_parts['page'] = sprintf( __( 'Page %s', 'buddyboss' ), max( $paged, $page ) );
 		}
 	}
 
@@ -774,7 +774,7 @@ function bp_customizer_nav_menus_get_items( $items = array(), $type = '', $objec
 			'type'       => $type,
 			'url'        => esc_url_raw( $bp_item->guid ),
 			'classes'    => "bp-menu bp-{$bp_item->post_excerpt}-nav",
-			'type_label' => _x( 'Custom Link', 'customizer menu type label', 'buddypress' ),
+			'type_label' => _x( 'Custom Link', 'customizer menu type label', 'buddyboss' ),
 			'object'     => $object,
 			'object_id'  => -1,
 		);
@@ -795,12 +795,12 @@ add_filter( 'customize_nav_menu_available_items', 'bp_customizer_nav_menus_get_i
 function bp_customizer_nav_menus_set_item_types( $item_types = array() ) {
 	$item_types = array_merge( $item_types, array(
 		'bp_loggedin_nav' => array(
-			'title'  => _x( 'BuddyPress (logged-in)', 'customizer menu section title', 'buddypress' ),
+			'title'  => _x( 'BuddyPress (logged-in)', 'customizer menu section title', 'buddyboss' ),
 			'type'   => 'bp_nav',
 			'object' => 'bp_loggedin_nav',
 		),
 		'bp_loggedout_nav' => array(
-			'title'  => _x( 'BuddyPress (logged-out)', 'customizer menu section title', 'buddypress' ),
+			'title'  => _x( 'BuddyPress (logged-out)', 'customizer menu section title', 'buddyboss' ),
 			'type'   => 'bp_nav',
 			'object' => 'bp_loggedout_nav',
 		),
@@ -1130,7 +1130,7 @@ function bp_core_render_email_template( $template ) {
 	ob_end_clean();
 
 	// Make sure we add a <title> tag so WP Customizer picks it up.
-	$template = str_replace( '<head>', '<head><title>' . esc_html_x( 'BuddyPress Emails', 'screen heading', 'buddypress' ) . '</title>', $template );
+	$template = str_replace( '<head>', '<head><title>' . esc_html_x( 'BuddyPress Emails', 'screen heading', 'buddyboss' ) . '</title>', $template );
 	echo str_replace( '{{{content}}}', wpautop( get_post()->post_content ), $template );
 
 	/*

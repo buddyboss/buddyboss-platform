@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress Activity Notifications.
+ * BuddyBoss Activity Notifications.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage ActivityNotifications
  * @since 1.2.0
  */
@@ -34,44 +34,44 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 		case 'new_at_mention':
 			$action_filter = 'at_mentions';
 			$link          = bp_loggedin_user_domain() . bp_get_activity_slug() . '/mentions/';
-			$title         = sprintf( __( '@%s Mentions', 'buddypress' ), bp_get_loggedin_user_username() );
+			$title         = sprintf( __( '@%s Mentions', 'buddyboss' ), bp_get_loggedin_user_username() );
 			$amount        = 'single';
 
 			if ( (int) $total_items > 1 ) {
-				$text   = sprintf( __( 'You have %1$d new mentions', 'buddypress' ), (int) $total_items );
+				$text   = sprintf( __( 'You have %1$d new mentions', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
-				$text = sprintf( __( '%1$s mentioned you', 'buddypress' ), $user_fullname );
+				$text = sprintf( __( '%1$s mentioned you', 'buddyboss' ), $user_fullname );
 			}
 		break;
 
 		case 'update_reply':
 			$link   = bp_get_notifications_permalink();
-			$title  = __( 'New Activity reply', 'buddypress' );
+			$title  = __( 'New Activity reply', 'buddyboss' );
 			$amount = 'single';
 
 			if ( (int) $total_items > 1 ) {
 				$link   = add_query_arg( 'type', $action, $link );
-				$text   = sprintf( __( 'You have %1$d new replies', 'buddypress' ), (int) $total_items );
+				$text   = sprintf( __( 'You have %1$d new replies', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
 				$link = add_query_arg( 'nid', (int) $id, bp_activity_get_permalink( $activity_id ) );
-				$text = sprintf( __( '%1$s commented on one of your updates', 'buddypress' ), $user_fullname );
+				$text = sprintf( __( '%1$s commented on one of your updates', 'buddyboss' ), $user_fullname );
 			}
 		break;
 
 		case 'comment_reply':
 			$link   = bp_get_notifications_permalink();
-			$title  = __( 'New Activity comment reply', 'buddypress' );
+			$title  = __( 'New Activity comment reply', 'buddyboss' );
 			$amount = 'single';
 
 			if ( (int) $total_items > 1 ) {
 				$link   = add_query_arg( 'type', $action, $link );
-				$text   = sprintf( __( 'You have %1$d new comment replies', 'buddypress' ), (int) $total_items );
+				$text   = sprintf( __( 'You have %1$d new comment replies', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
 				$link = add_query_arg( 'nid', (int) $id, bp_activity_get_permalink( $activity_id ) );
-				$text = sprintf( __( '%1$s replied to one your activity comments', 'buddypress' ), $user_fullname );
+				$text = sprintf( __( '%1$s replied to one your activity comments', 'buddyboss' ), $user_fullname );
 			}
 		break;
 	}
@@ -135,7 +135,7 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 }
 
 /**
- * Notify a member when their nicename is mentioned in an activity stream item.
+ * Notify a member when their nicename is mentioned in an activity feed item.
  *
  * Hooked to the 'bp_activity_sent_mention_email' action, we piggy back off the
  * existing email code for now, since it does the heavy lifting for us. In the
@@ -289,7 +289,7 @@ add_action( 'bp_activity_deleted_activities', 'bp_activity_at_mention_delete_not
 /**
  * Add a notification for post comments to the post author or post commenter.
  *
- * Requires "activity stream commenting on posts and comments" to be enabled.
+ * Requires "activity feed commenting on posts and comments" to be enabled.
  *
  * @since 2.6.0
  *
@@ -362,9 +362,9 @@ function bp_activity_screen_notification_settings() {
 		<thead>
 			<tr>
 				<th class="icon">&nbsp;</th>
-				<th class="title"><?php _e( 'Activity', 'buddypress' ) ?></th>
-				<th class="yes"><?php _e( 'Yes', 'buddypress' ) ?></th>
-				<th class="no"><?php _e( 'No', 'buddypress' )?></th>
+				<th class="title"><?php _e( 'Activity Feed', 'buddyboss' ) ?></th>
+				<th class="yes"><?php _e( 'Yes', 'buddyboss' ) ?></th>
+				<th class="no"><?php _e( 'No', 'buddyboss' )?></th>
 			</tr>
 		</thead>
 
@@ -372,28 +372,28 @@ function bp_activity_screen_notification_settings() {
 			<?php if ( bp_activity_do_mentions() ) : ?>
 				<tr id="activity-notification-settings-mentions">
 					<td>&nbsp;</td>
-					<td><?php printf( __( 'A member mentions you in an update using "@%s"', 'buddypress' ), bp_core_get_username( bp_displayed_user_id() ) ) ?></td>
+					<td><?php printf( __( 'A member mentions you in an update using "@%s"', 'buddyboss' ), bp_core_get_username( bp_displayed_user_id() ) ) ?></td>
 					<td class="yes"><input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-yes" value="yes" <?php checked( $mention, 'yes', true ) ?>/><label for="notification-activity-new-mention-yes" class="bp-screen-reader-text"><?php
 						/* translators: accessibility text */
-						_e( 'Yes, send email', 'buddypress' );
+						_e( 'Yes, send email', 'buddyboss' );
 					?></label></td>
 					<td class="no"><input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-no" value="no" <?php checked( $mention, 'no', true ) ?>/><label for="notification-activity-new-mention-no" class="bp-screen-reader-text"><?php
 						/* translators: accessibility text */
-						_e( 'No, do not send email', 'buddypress' );
+						_e( 'No, do not send email', 'buddyboss' );
 					?></label></td>
 				</tr>
 			<?php endif; ?>
 
 			<tr id="activity-notification-settings-replies">
 				<td>&nbsp;</td>
-				<td><?php _e( "A member replies to an update or comment you've posted", 'buddypress' ) ?></td>
+				<td><?php _e( "A member replies to an update or comment you've posted", 'buddyboss' ) ?></td>
 				<td class="yes"><input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-yes" value="yes" <?php checked( $reply, 'yes', true ) ?>/><label for="notification-activity-new-reply-yes" class="bp-screen-reader-text"><?php
 					/* translators: accessibility text */
-					_e( 'Yes, send email', 'buddypress' );
+					_e( 'Yes, send email', 'buddyboss' );
 				?></label></td>
 				<td class="no"><input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-no" value="no" <?php checked( $reply, 'no', true ) ?>/><label for="notification-activity-new-reply-no" class="bp-screen-reader-text"><?php
 					/* translators: accessibility text */
-					_e( 'No, do not send email', 'buddypress' );
+					_e( 'No, do not send email', 'buddyboss' );
 				?></label></td>
 			</tr>
 

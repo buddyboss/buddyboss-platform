@@ -2,7 +2,7 @@
 /**
  * Roles and capabilities logic for the XProfile component.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage XPRofileCaps
  * @since 1.6.0
  */
@@ -49,7 +49,7 @@ function bp_xprofile_map_meta_caps( $caps, $cap, $user_id, $args ) {
 				break;
 			}
 
-			// Friends don't let friends edit each other's visibility.
+			// Connections don't edit each other's visibility.
 			if ( $profile_user_id != bp_displayed_user_id() && !bp_current_user_can( 'bp_moderate' ) ) {
 				$caps[] = 'do_not_allow';
 				break;

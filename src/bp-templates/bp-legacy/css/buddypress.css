@@ -23,7 +23,7 @@ Hello, this is the BuddyPress Legacy stylesheet.
 	3.8 - Headers, Lists and Tabs - Activity, Groups, Blogs, Forums
 		3.8.1 - Cover Image
 	3.9 - Private Messaging Threads
-	3.10 - Extended Profiles
+	3.10 - Profiles Fields
 	3.11 - Widgets
 	3.12 - Tooltips
 4.0 - Media Queries
@@ -1762,7 +1762,7 @@ body.activity-permalink #buddypress ul.item-list li.activity-item {
 }
 
 #buddypress #header-cover-image {
-	background-color: #c5c5c5;
+	background-color: #b9babe;
 	background-position: center top;
 	background-repeat: no-repeat;
 	background-size: cover;
@@ -1909,7 +1909,7 @@ a.message-action-star:hover {
 }
 
 /*--------------------------------------------------------------
-3.10 - Extended Profiles
+3.10 - Profiles Fields
 --------------------------------------------------------------*/
 
 #buddypress div.profile h2 {

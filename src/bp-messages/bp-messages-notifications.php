@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress Messages Notifications.
+ * BuddyBoss Messages Notifications.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage MessagesNotifications
  * @since 1.0.0
  */
@@ -28,13 +28,13 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 	$total_items = (int) $total_items;
 	$text        = '';
 	$link        = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() . '/inbox' );
-	$title       = __( 'Inbox', 'buddypress' );
+	$title       = __( 'Inbox', 'buddyboss' );
 	$amount      = 'single';
 
 	if ( 'new_message' === $action ) {
 		if ( $total_items > 1 ) {
 			$amount = 'multiple';
-			$text   = sprintf( __( 'You have %d new messages', 'buddypress' ), $total_items );
+			$text   = sprintf( __( 'You have %d new messages', 'buddyboss' ), $total_items );
 
 		} else {
 			// Get message thread ID.
@@ -45,9 +45,9 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 				: false;
 
 			if ( ! empty( $secondary_item_id ) ) {
-				$text = sprintf( __( '%s sent you a new private message', 'buddypress' ), bp_core_get_user_displayname( $secondary_item_id ) );
+				$text = sprintf( __( '%s sent you a new private message', 'buddyboss' ), bp_core_get_user_displayname( $secondary_item_id ) );
 			} else {
-				$text = sprintf( _n( 'You have %s new private message', 'You have %s new private messages', $total_items, 'buddypress' ), bp_core_number_format( $total_items ) );
+				$text = sprintf( _n( 'You have %s new private message', 'You have %s new private messages', $total_items, 'buddyboss' ), bp_core_number_format( $total_items ) );
 			}
 		}
 
@@ -260,23 +260,23 @@ function messages_screen_notification_settings() {
 		<thead>
 			<tr>
 				<th class="icon"></th>
-				<th class="title"><?php _e( 'Messages', 'buddypress' ) ?></th>
-				<th class="yes"><?php _e( 'Yes', 'buddypress' ) ?></th>
-				<th class="no"><?php _e( 'No', 'buddypress' )?></th>
+				<th class="title"><?php _e( 'Messages', 'buddyboss' ) ?></th>
+				<th class="yes"><?php _e( 'Yes', 'buddyboss' ) ?></th>
+				<th class="no"><?php _e( 'No', 'buddyboss' )?></th>
 			</tr>
 		</thead>
 
 		<tbody>
 			<tr id="messages-notification-settings-new-message">
 				<td></td>
-				<td><?php _e( 'A member sends you a new message', 'buddypress' ) ?></td>
+				<td><?php _e( 'A member sends you a new message', 'buddyboss' ) ?></td>
 				<td class="yes"><input type="radio" name="notifications[notification_messages_new_message]" id="notification-messages-new-messages-yes" value="yes" <?php checked( $new_messages, 'yes', true ) ?>/><label for="notification-messages-new-messages-yes" class="bp-screen-reader-text"><?php
 					/* translators: accessibility text */
-					_e( 'Yes, send email', 'buddypress' );
+					_e( 'Yes, send email', 'buddyboss' );
 				?></label></td>
 				<td class="no"><input type="radio" name="notifications[notification_messages_new_message]" id="notification-messages-new-messages-no" value="no" <?php checked( $new_messages, 'no', true ) ?>/><label for="notification-messages-new-messages-no" class="bp-screen-reader-text"><?php
 					/* translators: accessibility text */
-					_e( 'No, do not send email', 'buddypress' );
+					_e( 'No, do not send email', 'buddyboss' );
 				?></label></td>
 			</tr>
 

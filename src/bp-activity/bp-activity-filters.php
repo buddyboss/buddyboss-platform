@@ -2,7 +2,7 @@
 /**
  * Filters related to the Activity component.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage ActivityFilters
  * @since 1.0.0
  */
@@ -114,14 +114,14 @@ add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_embed_excerpt_onclick_
 // At-name filter.
 add_action( 'bp_activity_before_save', 'bp_activity_at_name_filter_updates' );
 
-// Activity stream moderation.
+// Activity feed moderation.
 add_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2, 1 );
 add_action( 'bp_activity_before_save', 'bp_activity_check_blacklist_keys',  2, 1 );
 
 /** Functions *****************************************************************/
 
 /**
- * Types of activity stream items to moderate.
+ * Types of activity feed items to moderate.
  *
  * @since 1.6.0
  *
@@ -203,7 +203,7 @@ function bp_activity_check_blacklist_keys( $activity ) {
  */
 function bp_activity_filter_kses( $content ) {
 	/**
-	 * Filters the allowed HTML tags for BuddyPress Activity content.
+	 * Filters the allowed HTML tags for BuddyBoss Activity content.
 	 *
 	 * @since 1.2.0
 	 *
@@ -379,7 +379,7 @@ function bp_activity_make_nofollow_filter( $text ) {
 	}
 
 /**
- * Truncate long activity entries when viewed in activity streams.
+ * Truncate long activity entries when viewed in activity feeds.
  *
  * This method can only be used inside the Activity loop.
  *
@@ -420,11 +420,11 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 *
 	 * @param string $value Internationalized "Read more" text.
 	 */
-	$append_text    = apply_filters( 'bp_activity_excerpt_append_text', __( '[Read more]', 'buddypress' ) );
+	$append_text    = apply_filters( 'bp_activity_excerpt_append_text', __( '[Read more]', 'buddyboss' ) );
 
 	$excerpt_length = bp_activity_get_excerpt_length();
 
-	$args = wp_parse_args( $args, array( 'ending' => __( '&hellip;', 'buddypress' ) ) );
+	$args = wp_parse_args( $args, array( 'ending' => __( '&hellip;', 'buddyboss' ) ) );
 
 	// Run the text through the excerpt function. If it's too short, the original text will be returned.
 	$excerpt        = bp_create_excerpt( $text, $excerpt_length, $args );
@@ -473,7 +473,7 @@ add_filter( 'bp_core_get_js_dependencies', 'bp_activity_get_js_dependencies', 10
  * Add a just-posted classes to the most recent activity item.
  *
  * We use these classes to avoid pagination issues when items are loaded
- * dynamically into the activity stream.
+ * dynamically into the activity feed.
  *
  * @since 2.0.0
  *
@@ -609,7 +609,7 @@ function bp_activity_heartbeat_strings( $strings = array() ) {
 	}
 
 	/**
-	 * Filters the pulse frequency to be used for the BuddyPress Activity heartbeat.
+	 * Filters the pulse frequency to be used for the BuddyBoss Activity heartbeat.
 	 *
 	 * @since 2.0.0
 	 *
@@ -630,7 +630,7 @@ function bp_activity_heartbeat_strings( $strings = array() ) {
 	}
 
 	$strings = array_merge( $strings, array(
-		'newest' => __( 'Load Newest', 'buddypress' ),
+		'newest' => __( 'Load Newest', 'buddyboss' ),
 		'pulse'  => absint( $pulse ),
 	) );
 

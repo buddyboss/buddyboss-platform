@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress - Groups Requests Loop
+ * BuddyBoss - Groups Requests Loop
  *
  * @since 3.0.0
  * @version 3.0.0
@@ -10,7 +10,7 @@
 <?php if ( bp_group_has_membership_requests( bp_ajax_querystring( 'membership_requests' ) ) ) : ?>
 
 	<h2 class="bp-screen-title">
-		<?php esc_html_e( 'Manage Membership Requests', 'buddypress' ); ?>
+		<?php esc_html_e( 'Manage Membership Requests', 'buddyboss' ); ?>
 	</h2>
 
 	<?php bp_nouveau_pagination( 'top' ); ?>
