@@ -589,85 +589,14 @@ class BP_Admin {
 				</p>
 
 				<hr>
-				<h2><?php esc_html_e( __( 'Say hello to &ldquo;Nouveau&rdquo;!', 'buddyboss' ) ); ?></h2>
-				<p>
-					<?php
-					printf(
-						__( 'A bold reimagining of our legacy templates, Nouveau is our celebration of <a href="%s">10 years of BuddyPress</a>! Nouveau delivers modern markup with fresh JavaScript-powered templates, and full integration with WordPress\' Customizer, allowing more out-of-the-box control of your BuddyPress content than ever before.', 'buddyboss' ),
-						esc_url( 'https://buddypress.org/2018/03/10-years/' )
-					);
-					?>
-				</p>
-				<p><?php esc_html_e( 'Nouveau provides vertical and horizontal layout options for BuddyPress navigation, and for the component directories, you can choose between a grid layout, and a classic flat list.', 'buddyboss' ); ?></p>
-				<p>
-					<?php
-					printf(
-						__( 'Nouveau is fully compatible with WordPress. Existing BuddyPress themes have been written for our legacy template pack, and until they are updated, resolve any compatibility issues by choosing the legacy template pack option in <a href="%s">Settings &gt; BuddyPress</a>.', 'buddyboss' ),
-						esc_url( bp_get_admin_url( 'admin.php?page=bp-settings' ) )
-					);
-					?>
-				</p>
 
-				<?php echo $GLOBALS['wp_embed']->autoembed( 'https://player.vimeo.com/video/270507360' ); ?>
+				<h2><?php esc_html_e( __( 'Feature', 'buddyboss' ) ); ?></h2>
+				<p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'buddyboss' ); ?></p>
 
-				<h2><?php esc_html_e( __( 'Support for WP-CLI', 'buddyboss' ) ); ?></h2>
-				<p>
-					<?php
-					printf(
-						__( '<a href="%s">WP-CLI</a> is the command-line interface for WordPress. You can update plugins, configure multisite installs, and much more, without using a web browser. With this version of BuddyPress, you can now manage your BuddyPress content from WP-CLI.', 'buddyboss' ),
-						esc_url( 'https://wp-cli.org' )
-					);
-					?>
-				</p>
+				<h2><?php esc_html_e( __( "Feature", 'buddyboss' ) ); ?></h2>
+				<p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'buddyboss' ); ?></p>
 
-				<h2><?php esc_html_e( _x( 'Control site-wide notices from your dashboard', 'section heading', 'buddyboss' ) ); ?></h2>
-				<p><?php esc_html_e( 'Site Notices are a feature within the Private Messaging component that allows community managers to share important messages with all members of their community. With Nouveau, the management interface for Site Notices has been removed from the front-end theme templates.', 'buddyboss' ); ?></p>
-
-				<?php if ( bp_is_active( 'messages' ) ) : ?>
-				<p>
-					<?php
-					printf(
-						__( 'Explore the new management interface at <a href="%s">Users &gt; Site Notices</a>.', 'buddyboss' ),
-						esc_url( bp_get_admin_url( 'users.php?page=bp-notices' ) )
-					);
-					?>
-				</p>
-				<?php endif; ?>
-
-				<h2><?php esc_html_e( __( 'New profile field type: telephone numbers', 'buddyboss' ) ); ?></h2>
-				<p><?php esc_html_e( 'A new telephone number field type has been added to the Profiles Fields component, with support for all international number formats. With a modern web browser, your members can use this field type to touch-to-dial a number directly.', 'buddyboss' ); ?></p>
-
-				<h2><?php esc_html_e( __( "BuddyPress: leaner, faster, stronger", 'buddyboss' ) ); ?></h2>
-				<p><?php esc_html_e( 'With every BuddyPress version, we strive to make performance improvements alongside new features and fixes; this version is no exception. Memory use has been optimised &mdash; within active components, we now only load each individual code file when it\'s needed, not before.', 'buddyboss' ); ?></p>
-				<p>
-					<?php
-					printf(
-						__( 'Most notably, the <a href="%s">Legacy Forums component has been removed</a> after 9 years of service. If your site was using Legacy Forums, you need to <a href="%s">migrate to the bbPress plugin</a>.', 'buddyboss' ),
-						esc_url( 'https://bpdevel.wordpress.com/2017/12/07/legacy-forums-support-will-be/' ),
-						esc_url( 'https://codex.buddypress.org/getting-started/guides/migrating-from-old-forums-to-bbpress-2/' )
-					);
-					?>
-				</p>
-
-				<p><em>
-					<?php
-					printf(
-						__( 'To read the full list of features, fixes, and changes in this version of BuddyPress, <a href="%s">visit Trac</a>.', 'buddyboss' ),
-						esc_url( 'https://buddypress.trac.wordpress.org/query?group=status&milestone=3.0' )
-					);
-					?>
-				</em></p>
-
-				<h2><?php esc_html_e( _x( 'Your feedback', 'screen heading', 'buddyboss' ) ); ?></h2>
-				<p>
-					<?php
-					printf(
-						__( ' How are you using BuddyPress? Receiving your feedback and suggestions for future versions of BuddyPress genuinely motivates and encourages our contributors. Please <a href="%s">share your feedback</a> about this version of BuddyPress on our website. ', 'buddyboss' ),
-						esc_url( 'https://buddypress.org/support/' )
-					);
-					?>
-				</p>
-				<p><?php esc_html_e( 'Thank you for using BuddyPress!', 'buddyboss' ); ?></p>
+				<p><?php esc_html_e( 'Thank you for using BuddyBoss!', 'buddyboss' ); ?></p>
 
 				<br /><br />
 			</div>
@@ -677,9 +606,8 @@ class BP_Admin {
 					<p>
 						<?php
 						printf(
-							_n( 'Built by <a href="%s">%s volunteer</a>.', 'Built by <a href="%s">%s volunteers</a>.', 57, 'buddyboss' ),
-							esc_url( bp_get_admin_url( 'admin.php?page=bp-credits' ) ),
-							number_format_i18n( 57 )
+							__( 'Built by <a href="%s">BuddyBoss</a>.', 'buddyboss' ),
+							esc_url( 'https://www.buddyboss.com/' )
 						);
 						?>
 					</p>
@@ -691,8 +619,8 @@ class BP_Admin {
 							<?php
 							printf(
 								'<a class="twitter bp-tooltip" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
-								esc_attr( 'Follow BuddyPress on Twitter', 'buddyboss' ),
-								esc_url( 'https://twitter.com/buddypress' ),
+								esc_attr( 'Follow BuddyBoss on Twitter', 'buddyboss' ),
+								esc_url( 'https://twitter.com/BuddyBossWP' ),
 								esc_html( 'Follow BuddyPress on Twitter', 'buddyboss' )
 							);
 							?>
@@ -701,10 +629,10 @@ class BP_Admin {
 						<li>
 							<?php
 							printf(
-								'<a class="support bp-tooltip" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
-								esc_attr( 'Visit the Support Forums', 'buddyboss' ),
-								esc_url( 'https://buddypress.org/support/' ),
-								esc_html( 'Visit the Support Forums', 'buddyboss' )
+								'<a class="facebook bp-tooltip" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
+								esc_attr( 'Follow BuddyBoss on Facebook', 'buddyboss' ),
+								esc_url( 'https://facebook.com/BuddyBossWP/' ),
+								esc_html( 'Follow BuddyBoss on Facebook', 'buddyboss' )
 							);
 							?>
 						</li>
