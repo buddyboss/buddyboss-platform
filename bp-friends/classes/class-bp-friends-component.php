@@ -246,7 +246,7 @@ class BP_Friends_Component extends BP_Component {
 				);
 			} else {
 				$title   = _x( 'Connections',            'My Account Connections menu',         'buddypress' );
-				$pending = _x( 'No Pending Invitations','My Account Connections menu sub nav', 'buddyboss' );
+				$pending = _x( 'No Pending Invites','My Account Connections menu sub nav', 'buddyboss' );
 			}
 
 			// Add the "My Account" sub menus.
@@ -261,7 +261,7 @@ class BP_Friends_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-friendships',
-				'title'    => _x( 'Connections', 'My Account Connections menu sub nav', 'buddyboss' ),
+				'title'    => _x( 'My Connections', 'My Account Connections menu sub nav', 'buddyboss' ),
 				'href'     => $friends_link,
 				'position' => 10
 			);
