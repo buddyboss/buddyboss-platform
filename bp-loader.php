@@ -74,8 +74,6 @@ if ( $is_bp_active ) {
      * Displays an admin notice when buddypress plugin is also active.
      * 
      * @since 1.0.0
-     * @todo Change the notice title and description
-     * 
      * @return void
      */
     function bp_duplicate_buddypress_notice() {
@@ -109,9 +107,6 @@ if ( $is_bb_active ) {
      * Displays an admin notice when bbpress plugin is also active.
      * 
      * @since 1.0.0
-     * @todo We should change the main plugin version to 1.0.0
-     * @todo Change the notice title and description
-     * 
      * @return void
      */
     function bp_duplicate_bbpress_notice() {
