@@ -88,8 +88,8 @@ if ( $is_bp_active ) {
         ?>
 
         <div id="message" class="error notice">
-            <p><strong><?php esc_html_e( 'BuddyBoss is disabled.', 'buddyboss' ); ?></strong></p>
-            <p><?php printf( esc_html__( 'BuddyBoss platform can\'t work when buddypress plugin is active. Please %s buddypress plugin to enable BuddyBoss platform.', 'buddyboss' ), $link_plugins ); ?></p>
+            <p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
+            <p><?php printf( esc_html__( 'The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please %s BuddyPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ); ?></p>
         </div>
 
         <?php 
@@ -124,8 +124,8 @@ if ( $is_bb_active ) {
         ?>
 
         <div id="message" class="error notice">
-            <p><strong><?php esc_html_e( 'BuddyBoss is disabled.', 'buddyboss' ); ?></strong></p>
-            <p><?php printf( esc_html__( 'BuddyBoss platform can\'t work when bbpress plugin is active. Please %s bbpress plugin to enable BuddyBoss platform.', 'buddyboss' ), $link_plugins ); ?></p>
+            <p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
+            <p><?php printf( esc_html__( 'The BuddyBoss Platform can\'t work while bbPress plugin is active. Please %s bbPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ); ?></p>
         </div>
 
         <?php 
