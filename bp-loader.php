@@ -180,8 +180,8 @@ if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
         ?>
 
         <div id="message" class="error notice">
-            <p><strong><?php esc_html_e( 'BuddyPress can not be activated.', 'buddyboss' ); ?></strong></p>
-            <p><?php _e( 'BuddyBoss platform can\'t work when buddypress plugin is active. Please deactivate BuddyBoss platform first, if you wish to activate buddypress.', 'buddyboss' ); ?></p>
+            <p><strong><?php esc_html_e( 'BuddyPress can\'t be activated.', 'buddyboss' ); ?></strong></p>
+            <p><?php _e( 'The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please deactivate BuddyBoss Platform first, if you wish to activate BuddyPress.', 'buddyboss' ); ?></p>
         </div>
 
         <?php
