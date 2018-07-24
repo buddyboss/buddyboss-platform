@@ -661,7 +661,14 @@ class BP_Admin {
 
 		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Credits', 'buddyboss' ) ); ?></h2>
 
-			<p class="about-description"><?php _e( 'The BuddyBoss Platform is a fork of the open source project <a class="web" href="https://buddypress.org/">BuddyPress</a>. We cannot thank the core BuddyPress team enough for their many years of contributing to the original platform, for which we are forever grateful.', 'buddyboss' ); ?></p>
+			<p class="about-description">
+				<?php
+				printf(
+					__( 'The BuddyBoss Platform is a fork of the open source project <a class="web" href="%s">BuddyPress</a>. We cannot thank the core BuddyPress team enough for their many years of contributing to the original platform, for which we are forever grateful.', 'buddyboss' ),
+					esc_url( 'https://buddypress.org/' )
+				);
+				?>
+			</p>
 
 			<h3 class="wp-people-group"><?php _e( 'BuddyPress Team', 'buddyboss' ); ?></h3>
 			<ul class="wp-people-group " id="wp-people-group-core-team">
