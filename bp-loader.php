@@ -10,13 +10,13 @@
  */
 
 /**
- * Plugin Name: BuddyPress
- * Plugin URI:  https://buddypress.org
- * Description: BuddyPress adds community features to WordPress. Member Profiles, Activity Streams, Direct Messaging, Notifications, and more!
- * Author:      The BuddyPress Community
- * Author URI:  https://buddypress.org/
+ * Plugin Name: BuddyBoss Platform
+ * Plugin URI:  https://buddyboss.com/
+ * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
+ * Author:      BuddyBoss
+ * Author URI:  https://buddyboss.com/
  * Version:     3.1.0
- * Text Domain: buddypress
+ * Text Domain: buddyboss
  * Domain Path: /bp-languages/
  * License:     GPLv2 or later (license.txt)
  */
