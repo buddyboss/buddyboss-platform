@@ -1364,6 +1364,10 @@ body.buddypress article.page > .entry-header .entry-title {
 	text-decoration: underline;
 }
 
+.activity-list .activity-item .activity-header .time-since:before {
+	content: "\00B7 \00A0";
+}
+
 .activity-list .activity-item .activity-content .activity-header,
 .activity-list .activity-item .activity-content .comment-header {
 	color: #767676;

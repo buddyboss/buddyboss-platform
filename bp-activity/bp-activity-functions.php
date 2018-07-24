@@ -1523,7 +1523,7 @@ function bp_activity_generate_action_string( $activity ) {
  * @return string $action
  */
 function bp_activity_format_activity_action_activity_update( $action, $activity ) {
-	$action = sprintf( __( '%s posted an update', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ) );
+	$action = sprintf( __( '%s', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ) );
 
 	/**
 	 * Filters the formatted activity action update string.
