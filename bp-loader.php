@@ -148,6 +148,13 @@ if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
 
     add_action( 'admin_init', 'bp_prevent_activating_buddypress' );
 
+    /**
+     * Check if the current request is to activate buddypress plugins and redirect if so.
+     * 
+     * @since 1.0.0
+     * 
+     * @global string $pagenow
+     */
     function bp_prevent_activating_buddypress () {
         global $pagenow;
 
@@ -169,6 +176,11 @@ if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
         }
     }
 
+    /**
+     * Show a notice that an attempt to activate buddypres plugin was blocked.
+     * 
+     * @since 1.0.0
+     */
     function bp_prevented_activating_buddypress_notice () {
         ?>
 
