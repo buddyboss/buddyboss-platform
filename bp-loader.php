@@ -15,7 +15,7 @@
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     3.1.0
+ * Version:     1.0.0
  * Text Domain: buddyboss
  * Domain Path: /bp-languages/
  * License:     GPLv2 or later (license.txt)
@@ -74,7 +74,6 @@ if ( $is_bp_active ) {
      * Displays an admin notice when buddypress plugin is also active.
      * 
      * @since 1.0.0
-     * @todo We should change the main plugin version to 1.0.0
      * @todo Change the notice title and description
      * 
      * @return void
