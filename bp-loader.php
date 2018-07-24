@@ -139,6 +139,48 @@ if ( $is_bb_active ) {
     
 }
 
+/**
+ * Buddyboss platform's code is already loaded when buddypress is being activated. And buddypress doesn't have function checks to avoid 
+ * duplicate function declarations. This leads to a fatal error.
+ * To avoid that, we prevent buddypress from activating and show a nicer notice, instead of the dirty fatal error.
+ */
+if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
+
+    add_action( 'admin_init', 'bp_prevent_activating_buddypress' );
+
+    function bp_prevent_activating_buddypress () {
+        global $pagenow;
+
+        if ( $pagenow == 'plugins.php' ) {
+
+            if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'activate' && isset( $_GET[ 'plugin' ] ) ) {
+                
+                if ( $_GET[ 'plugin' ] == 'buddypress/bp-loader.php' ) {
+                    wp_redirect( self_admin_url( 'plugins.php?bp_prevent_activating_buddypress=1' ), 301 );
+                    exit;
+                }
+                
+            }
+
+            if ( isset( $_GET[ 'bp_prevent_activating_buddypress' ] ) ) {
+                add_action( 'admin_notices',            'bp_prevented_activating_buddypress_notice' );
+                add_action( 'network_admin_notices',    'bp_prevented_activating_buddypress_notice' );
+            }
+        }
+    }
+
+    function bp_prevented_activating_buddypress_notice () {
+        ?>
+
+        <div id="message" class="error notice">
+            <p><strong><?php esc_html_e( 'BuddyPress can not be activated.', 'buddyboss' ); ?></strong></p>
+            <p><?php _e( 'BuddyBoss platform can\'t work when buddypress plugin is active. Please deactivate BuddyBoss platform first, if you wish to activate buddypress.', 'buddyboss' ); ?></p>
+        </div>
+
+        <?php
+    }
+
+}
 
 if ( !$is_bp_active && !$is_bb_active ) {
     
