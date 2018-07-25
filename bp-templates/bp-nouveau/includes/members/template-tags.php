@@ -386,7 +386,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 				 *
 				 * See https://buddypress.trac.wordpress.org/ticket/7126
 				 */
-				
+
 				if ( ! empty( bp_nouveau()->members->button_args ) ) {
 					$button_args = bp_nouveau()->members->button_args;
 
@@ -451,7 +451,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 							'class' => $parent_class,
 						),
 						'button_attr'       => array(
-							'href'  => trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . '#compose/?r=' . bp_core_get_username( $user_id ),
+							'href'  => trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) . 'compose/?r=' . bp_core_get_username( $user_id ),
 							'id'    => false,
 							'class' => $button_args['link_class'],
 							'rel'   => '',
