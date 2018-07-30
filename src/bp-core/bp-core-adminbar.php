@@ -114,3 +114,24 @@ function bp_core_enqueue_admin_bar_css() {
 	// Enqueue the additional adminbar css.
 	wp_enqueue_style( 'bp-admin-bar' );
 }
+
+
+/**
+ * Replace admin bar "Howdy" text
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_core_replace_howdy( $wp_admin_bar ) {
+
+    if ( is_user_logged_in() ) {
+
+        $my_account = $wp_admin_bar->get_node( 'my-account' );
+        $newtitle = str_replace( 'Howdy,', '', $my_account->title );
+        $wp_admin_bar->add_node( array(
+            'id' => 'my-account',
+            'title' => $newtitle,
+        ) );
+
+    }
+}
+add_filter( 'admin_bar_menu', 'bp_core_replace_howdy', 25 );

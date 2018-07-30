@@ -59,7 +59,7 @@
 	<?php if ( ! empty( bp_nouveau_group_meta()->description ) ) : ?>
 		<div class="desc-wrap">
 			<div class="group-description">
-			<?php echo esc_html( bp_nouveau_group_meta()->description ); ?>
+			<?php echo bp_nouveau_group_meta()->description; ?>
 		</div><!-- //.group_description -->
 	</div>
 	<?php endif; ?>

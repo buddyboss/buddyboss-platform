@@ -1391,13 +1391,25 @@ class BP_XProfile_Field {
 		</div>
 
 		<div class="postbox">
-			<h2><?php echo esc_html_x( 'Description', 'XProfile admin edit field', 'buddyboss' ); ?></h2>
+			<h2><?php echo esc_html_x( 'Help Text', 'XProfile admin edit field', 'buddyboss' ); ?></h2>
 			<div class="inside">
+				
+				<?php /* alternate title while editing */ ?>
+				<label for="title_secondary" class="screen-reader-text"><?php
+					/* translators: accessibility text */
+					esc_html_e( 'Alternate Title', 'buddyboss' );
+				?></label>
+				<p class="description"><?php _e( 'Alternate Title (optional)', 'buddyboss' ); ?></p>
+				<input type="text" name="title_secondary" id="title_secondary" value="" autocomplete="off" />
+				
+				<?php /* description while editing */ ?>
 				<label for="description" class="screen-reader-text"><?php
 					/* translators: accessibility text */
-					esc_html_e( 'Add description', 'buddyboss' );
+					esc_html_e( 'Instructions', 'buddyboss' );
 				?></label>
+				<p class="description" style="margin-top: 15px;"><?php _e( 'Instructions (optional)', 'buddyboss' ); ?></p>
 				<textarea name="description" id="description" rows="8" cols="60"><?php echo esc_textarea( $this->description ); ?></textarea>
+
 			</div>
 		</div>
 

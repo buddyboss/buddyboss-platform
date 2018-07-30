@@ -221,7 +221,7 @@ class BP_Activity_Component extends BP_Component {
 
 		// Add 'Activity' to the main navigation.
 		$main_nav = array(
-			'name'                => _x( 'Feed', 'Profile activity screen nav', 'buddyboss' ),
+			'name'                => _x( 'Timeline', 'Profile activity screen nav', 'buddyboss' ),
 			'slug'                => $slug,
 			'position'            => 20,
 			'screen_function'     => 'bp_activity_screen_my_activity',
@@ -231,13 +231,26 @@ class BP_Activity_Component extends BP_Component {
 
 		// Add the subnav items to the activity nav item if we are using a theme that supports this.
 		$sub_nav[] = array(
-			'name'            => _x( 'Personal', 'Profile activity screen sub nav', 'buddyboss' ),
+			'name'            => _x( 'Posts', 'Profile activity screen sub nav', 'buddyboss' ),
 			'slug'            => 'just-me',
 			'parent_url'      => $activity_link,
 			'parent_slug'     => $slug,
 			'screen_function' => 'bp_activity_screen_my_activity',
 			'position'        => 10
 		);
+
+		// Favorite activity items.
+		if ( bp_activity_can_favorite() && bp_is_my_profile() ) {
+			$sub_nav[] = array(
+				'name'            => _x( 'Saved', 'Profile activity screen sub nav', 'buddyboss' ),
+				'slug'            => 'favorites',
+				'parent_url'      => $activity_link,
+				'parent_slug'     => $slug,
+				'screen_function' => 'bp_activity_screen_favorites',
+				'position'        => 20,
+				'item_css_id'     => 'activity-favs'
+			);
+		}
 
 		// Check @mentions.
 		if ( bp_activity_do_mentions() ) {
@@ -247,21 +260,8 @@ class BP_Activity_Component extends BP_Component {
 				'parent_url'      => $activity_link,
 				'parent_slug'     => $slug,
 				'screen_function' => 'bp_activity_screen_mentions',
-				'position'        => 20,
-				'item_css_id'     => 'activity-mentions'
-			);
-		}
-
-		// Favorite activity items.
-		if ( bp_activity_can_favorite() ) {
-			$sub_nav[] = array(
-				'name'            => _x( 'Saved', 'Profile activity screen sub nav', 'buddyboss' ),
-				'slug'            => 'favorites',
-				'parent_url'      => $activity_link,
-				'parent_slug'     => $slug,
-				'screen_function' => 'bp_activity_screen_favorites',
 				'position'        => 30,
-				'item_css_id'     => 'activity-favs'
+				'item_css_id'     => 'activity-mentions'
 			);
 		}
 
@@ -331,7 +331,7 @@ class BP_Activity_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
-				'title'  => _x( 'Feed', 'My Account Activity sub nav', 'buddyboss' ),
+				'title'  => _x( 'Timeline', 'My Account Activity sub nav', 'buddyboss' ),
 				'href'   => $activity_link
 			);
 
@@ -339,21 +339,10 @@ class BP_Activity_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-personal',
-				'title'    => _x( 'Personal', 'My Account Activity sub nav', 'buddyboss' ),
+				'title'    => _x( 'Posts', 'My Account Activity sub nav', 'buddyboss' ),
 				'href'     => $activity_link,
 				'position' => 10
 			);
-
-			// Mentions.
-			if ( bp_activity_do_mentions() ) {
-				$wp_admin_nav[] = array(
-					'parent'   => 'my-account-' . $this->id,
-					'id'       => 'my-account-' . $this->id . '-mentions',
-					'title'    => $title,
-					'href'     => trailingslashit( $activity_link . 'mentions' ),
-					'position' => 20
-				);
-			}
 
 			// Favorite activity items.
 			if ( bp_activity_can_favorite() ) {
@@ -363,28 +352,6 @@ class BP_Activity_Component extends BP_Component {
 					'title'    => _x( 'Saved', 'My Account Activity sub nav', 'buddyboss' ),
 					'href'     => trailingslashit( $activity_link . 'favorites' ),
 					'position' => 30
-				);
-			}
-
-			// Connections?
-			if ( bp_is_active( 'friends' ) ) {
-				$wp_admin_nav[] = array(
-					'parent'   => 'my-account-' . $this->id,
-					'id'       => 'my-account-' . $this->id . '-friends',
-					'title'    => _x( 'Connections', 'My Account Activity sub nav', 'buddyboss' ),
-					'href'     => trailingslashit( $activity_link . bp_get_friends_slug() ),
-					'position' => 40
-				);
-			}
-
-			// Groups?
-			if ( bp_is_active( 'groups' ) ) {
-				$wp_admin_nav[] = array(
-					'parent'   => 'my-account-' . $this->id,
-					'id'       => 'my-account-' . $this->id . '-groups',
-					'title'    => _x( 'Groups', 'My Account Activity sub nav', 'buddyboss' ),
-					'href'     => trailingslashit( $activity_link . bp_get_groups_slug() ),
-					'position' => 50
 				);
 			}
 		}

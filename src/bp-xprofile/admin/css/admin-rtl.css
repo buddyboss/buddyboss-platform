@@ -310,6 +310,7 @@ th a {
 	top: -2px;
 }
 
+input#title_secondary,
 textarea#description,
 textarea#group_description {
 	border: 1px solid #ddd;
