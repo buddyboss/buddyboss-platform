@@ -20,7 +20,18 @@ class BP_Tests_Routing_Activity extends BP_UnitTestCase {
 
 	function test_activity_directory() {
 		$this->go_to( bp_get_activity_directory_permalink() );
-		$this->assertEquals( bp_get_activity_root_slug(), bp_current_component() );
+        
+        $root_slug = bp_get_activity_root_slug();
+        
+        /**
+         * Since 'community-feed' is the default slug now, instead of 'activity', this will never evaluate to be same as current component, which is still 'activity'.
+         * So, we'll need to factor that 
+         */
+        if ( 'community-feed' == $root_slug ) {
+            $root_slug = 'activity';
+        }
+        
+		$this->assertEquals( $root_slug, bp_current_component() );
 	}
 
 	/**
