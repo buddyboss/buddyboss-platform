@@ -2409,10 +2409,6 @@ function bp_core_get_minified_asset_suffix() {
  */
 function bp_core_get_components( $type = 'all' ) {
 	$required_components = array(
-		'core' => array(
-			'title'       => __( 'BuddyBoss Core', 'buddyboss' ),
-			'description' => __( 'It&#8216;s what makes <del>time travel</del> BuddyBoss possible!', 'buddyboss' )
-		),
 		'members' => array(
 			'title'       => __( 'Community Members', 'buddyboss' ),
 			'description' => __( 'Everything in a BuddyBoss community revolves around its members.', 'buddyboss' )
@@ -2441,7 +2437,7 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'activity' => array(
 			'title'       => __( 'Activity Feeds', 'buddyboss' ),
-			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, favoriting, and @mentions, all with full RSS feed and email notification support.', 'buddyboss' )
+			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, and @mentions, all with email notification support.', 'buddyboss' )
 		),
 		'notifications' => array(
 			'title'       => __( 'Notifications', 'buddyboss' ),

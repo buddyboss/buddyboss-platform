@@ -181,7 +181,7 @@ TABLE OF CONTENTS:
 #adminmenu #toplevel_page_bp-activity .wp-menu-image:before,
 #adminmenu #toplevel_page_bp-activity_user .wp-menu-image:before,
 #adminmenu #toplevel_page_bp-activity_network .wp-menu-image:before {
-	content: "\f452";
+	content: "\f303";
 }
 
 #adminmenu #toplevel_page_bp-groups .wp-menu-image:before,
@@ -235,7 +235,7 @@ TABLE OF CONTENTS:
 }
 
 .settings_page_bp-components tr.activity td.plugin-title span:before {
-	content: "\f452";
+	content: "\f303";
 }
 
 .settings_page_bp-components tr.notifications td.plugin-title span:before {
@@ -264,10 +264,6 @@ TABLE OF CONTENTS:
 
 .settings_page_bp-components tr.friends td.plugin-title span:before {
 	content: "\f454";
-}
-
-.settings_page_bp-components tr.core td.plugin-title span:before {
-	content: "\f448";
 }
 
 .settings_page_bp-components tr.members td.plugin-title span:before {
