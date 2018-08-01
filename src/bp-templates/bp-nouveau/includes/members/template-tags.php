@@ -707,24 +707,6 @@ function bp_nouveau_members_get_customizer_widgets_link() {
 	);
 }
 
-/**
- * Get a link to set the Member's front page widgets and directly
- * reach the Customizer section where it's possible to do it.
- *
- * @since 3.0.0
- *
- * @return string HTML Output
- */
-function bp_nouveau_members_get_customizer_menus_link() {
-	return bp_nouveau_get_customizer_link(
-		array(
-			'object'    => 'user',
-			'autofocus' => 'bp_nouveau_user_primary_nav',
-			'text'      => __( 'navigation order', 'buddyboss' ),
-		)
-	);
-}
-
 
 /** WP Profile tags **********************************************************/
 

@@ -45,19 +45,6 @@
 				</div><!-- #item-meta -->
 			<?php endif; ?>
 
-			<?php if ( ! is_customize_preview() && bp_current_user_can( 'bp_moderate' ) ) : ?>
-
-				<div class="bp-feedback custom-homepage-info info">
-					<?php
-					printf(
-						esc_html__( 'Modify the member %1$s.', 'buddyboss' ),
-						bp_nouveau_members_get_customizer_menus_link()
-					);
-					?>
-				</div>
-
-			<?php endif; ?>
-
 		</div><!-- #item-header-content -->
 
 	</div><!-- #item-header-cover-image -->
