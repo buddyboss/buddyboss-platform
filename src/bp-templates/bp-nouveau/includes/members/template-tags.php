@@ -743,42 +743,6 @@ function bp_nouveau_member_description( $user_id = 0 ) {
 	remove_filter( 'the_author_description', 'stripslashes' );
 }
 
-/**
- * Display the Edit profile link (temporary).
- *
- * @since 3.0.0
- *
- * @todo replace with Ajax feature
- *
- * @return string HTML Output
- */
-function bp_nouveau_member_description_edit_link() {
-	echo bp_nouveau_member_get_description_edit_link();
-}
-
-	/**
-	 * Get the Edit profile link (temporary)
-	 * @todo  replace with Ajax featur
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return string HTML Output
-	 */
-	function bp_nouveau_member_get_description_edit_link() {
-		remove_filter( 'edit_profile_url', 'bp_members_edit_profile_url', 10, 3 );
-
-		if ( is_multisite() && ! current_user_can( 'read' ) ) {
-			$link = get_dashboard_url( bp_displayed_user_id(), 'profile.php' );
-		} else {
-			$link = get_edit_profile_url( bp_displayed_user_id() );
-		}
-
-		add_filter( 'edit_profile_url', 'bp_members_edit_profile_url', 10, 3 );
-		$link .= '#description';
-
-		return sprintf( '<a href="%1$s">%2$s</a>', esc_url( $link ), esc_html__( 'Edit your bio', 'buddyboss' ) );
-	}
-
 
 /** WP Profile tags **********************************************************/
 
