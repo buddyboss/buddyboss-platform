@@ -22,7 +22,7 @@ module.exports = function( grunt ) {
 
 		// SASS generated "Twenty*"" CSS files
 		BP_SCSS_CSS_FILES = [
-			'!bp-templates/bp-legacy/css/twenty*.css',
+			// '!bp-templates/bp-legacy/css/twenty*.css',
 			'!bp-templates/bp-nouveau/css/buddypress.css',
 			'!bp-core/admin/css/hello.css'
 		],
@@ -90,15 +90,15 @@ module.exports = function( grunt ) {
 				indentType: 'tab',
 				indentWidth: '1'
 			},
-			legacy: {
-				cwd: SOURCE_DIR,
-				extDot: 'last',
-				expand: true,
-				ext: '.css',
-				flatten: true,
-				src: ['bp-templates/bp-legacy/css/*.scss'],
-				dest: SOURCE_DIR + 'bp-templates/bp-legacy/css/'
-			},
+			// legacy: {
+			// 	cwd: SOURCE_DIR,
+			// 	extDot: 'last',
+			// 	expand: true,
+			// 	ext: '.css',
+			// 	flatten: true,
+			// 	src: ['bp-templates/bp-legacy/css/*.scss'],
+			// 	dest: SOURCE_DIR + 'bp-templates/bp-legacy/css/'
+			// },
 			nouveau: {
 				cwd: SOURCE_DIR,
 				extDot: 'last',
@@ -139,7 +139,7 @@ module.exports = function( grunt ) {
 		checktextdomain: {
 			options: {
 				correct_domain: false,
-				text_domain: 'buddypress',
+				text_domain: ['buddypress', 'buddyboss'],
 				keywords: [
 					'__:1,2d',
 					'_e:1,2d',
