@@ -50,9 +50,9 @@
 				<div class="bp-feedback custom-homepage-info info">
 					<?php
 					printf(
-						esc_html__( 'You can enable or disable the %1$s or add %2$s to it.', 'buddyboss' ),
+						esc_html__( 'You can enable or disable the %1$s or change the %2$s.', 'buddyboss' ),
 						bp_nouveau_members_get_customizer_option_link(),
-						bp_nouveau_members_get_customizer_widgets_link()
+						bp_nouveau_members_get_customizer_menus_link()
 					);
 					?>
 				</div>
