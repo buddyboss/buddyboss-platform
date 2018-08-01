@@ -166,7 +166,7 @@ function bp_admin_setting_callback_profile_sync() {
 ?>
 
 	<input id="bp-disable-profile-sync" name="bp-disable-profile-sync" type="checkbox" value="1" <?php checked( !bp_disable_profile_sync( false ) ); ?> />
-	<label for="bp-disable-profile-sync"><?php _e( 'Enable BuddyPress to WordPress profile syncing', 'buddyboss' ); ?></label>
+	<label for="bp-disable-profile-sync"><?php _e( 'Enable BuddyBoss to WordPress profile syncing', 'buddyboss' ); ?></label>
 
 <?php
 }
