@@ -707,42 +707,6 @@ function bp_nouveau_members_get_customizer_widgets_link() {
 	);
 }
 
-/**
- * Display the Member description making sure linefeeds are taking in account
- *
- * @since 3.0.0
- *
- * @param int $user_id Optional.
- *
- * @return string HTML output.
- */
-function bp_nouveau_member_description( $user_id = 0 ) {
-	if ( ! $user_id ) {
-		$user_id = bp_loggedin_user_id();
-
-		if ( bp_displayed_user_id() ) {
-			$user_id = bp_displayed_user_id();
-		}
-	}
-
-	// @todo This hack is too brittle.
-	add_filter( 'the_author_description', 'make_clickable', 9 );
-	add_filter( 'the_author_description', 'wpautop' );
-	add_filter( 'the_author_description', 'wptexturize' );
-	add_filter( 'the_author_description', 'convert_smilies' );
-	add_filter( 'the_author_description', 'convert_chars' );
-	add_filter( 'the_author_description', 'stripslashes' );
-
-	the_author_meta( 'description', $user_id );
-
-	remove_filter( 'the_author_description', 'make_clickable', 9 );
-	remove_filter( 'the_author_description', 'wpautop' );
-	remove_filter( 'the_author_description', 'wptexturize' );
-	remove_filter( 'the_author_description', 'convert_smilies' );
-	remove_filter( 'the_author_description', 'convert_chars' );
-	remove_filter( 'the_author_description', 'stripslashes' );
-}
-
 
 /** WP Profile tags **********************************************************/
 

@@ -335,19 +335,6 @@ function bp_nouveau_member_get_template_part( $template = '' ) {
 }
 
 /**
- * Display the User's WordPress bio info into the default front page?
- *
- * @since 3.0.0
- *
- * @return bool True to display. False otherwise.
- */
-function bp_nouveau_members_wp_bio_info() {
-	$user_settings = bp_nouveau_get_appearance_settings();
-
-	return ! empty( $user_settings['user_front_page'] ) && ! empty( $user_settings['user_front_bio'] );
-}
-
-/**
  * Are we inside the Current user's default front page sidebar?
  *
  * @since 3.0.0
