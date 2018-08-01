@@ -23,8 +23,8 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	$bp_nouveau_options = bp_nouveau_get_appearance_settings();
 
 	$wp_customize->add_panel( 'bp_nouveau_panel', array(
-		'description' => __( 'Customize the appearance of BuddyPress Nouveau Template pack.', 'buddyboss' ),
-		'title'       => _x( 'BuddyPress Nouveau', 'Customizer Panel', 'buddyboss' ),
+		'description' => __( 'Customize the appearance of the BuddyBoss Platform.', 'buddyboss' ),
+		'title'       => _x( 'BuddyBoss Platform', 'Customizer Panel', 'buddyboss' ),
 		'priority'    => 200,
 	) );
 
@@ -37,10 +37,10 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	 */
 	$sections = apply_filters( 'bp_nouveau_customizer_sections', array(
 		'bp_nouveau_general_settings' => array(
-			'title'       => __( 'General BP Settings', 'buddyboss' ),
+			'title'       => __( 'General Settings', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 10,
-			'description' => __( 'Configure general BuddyPress appearance options.', 'buddyboss' ),
+			'description' => __( 'Configure general BuddyBoss appearance options.', 'buddyboss' ),
 		),
 		'bp_nouveau_user_front_page' => array(
 			'title'       => __( 'Member Dashboard', 'buddyboss' ),
