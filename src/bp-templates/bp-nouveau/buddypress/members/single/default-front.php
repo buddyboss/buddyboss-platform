@@ -12,7 +12,7 @@
 	<?php if ( ! is_customize_preview() && bp_current_user_can( 'bp_moderate' ) && ! is_active_sidebar( 'sidebar-buddypress-members' ) ) : ?>
 
 		<div class="bp-feedback custom-homepage-info info">
-			<strong><?php esc_html_e( 'Configure a Dashboard to help onboard members', 'buddyboss' ); ?></strong>
+			<strong><?php esc_html_e( 'Configure the member dashboard', 'buddyboss' ); ?></strong>
 			<button type="button" class="bp-tooltip" data-bp-tooltip="<?php echo esc_attr_x( 'Close', 'button', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Close this notice', 'buddyboss' ); ?>" data-bp-close="remove"><span class="dashicons dashicons-dismiss" aria-hidden="true"></span></button><br/>
 			<?php
 			printf(
@@ -22,28 +22,6 @@
 			);
 			?>
 		</div>
-
-	<?php endif; ?>
-
-	<?php if ( bp_nouveau_members_wp_bio_info() ) : ?>
-
-		<div class="member-description">
-
-			<?php if ( get_the_author_meta( 'description', bp_displayed_user_id() ) ) : ?>
-				<blockquote class="member-bio">
-					<?php bp_nouveau_member_description( bp_displayed_user_id() ); ?>
-				</blockquote><!-- .member-bio -->
-			<?php endif; ?>
-
-			<?php
-			if ( bp_is_my_profile() ) :
-
-				bp_nouveau_member_description_edit_link();
-
-			endif;
-			?>
-
-		</div><!-- .member-description -->
 
 	<?php endif; ?>
 

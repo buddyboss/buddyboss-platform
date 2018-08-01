@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Admin Settings.
+ * BuddyBoss Admin Settings.
  *
  * @package BuddyBoss
  * @subpackage CoreAdministration
@@ -71,7 +71,7 @@ function bp_admin_setting_callback_theme_package_id() {
 
 	if ( $options ) : ?>
 		<select name="_bp_theme_package_id" id="_bp_theme_package_id" aria-describedby="_bp_theme_package_description"><?php echo $options; ?></select>
-		<p id="_bp_theme_package_description" class="description"><?php esc_html_e( 'The selected Template Pack will serve all BuddyPress templates.', 'buddyboss' ); ?></p>
+		<p id="_bp_theme_package_description" class="description"><?php esc_html_e( 'The selected Template Pack will serve all BuddyBoss templates.', 'buddyboss' ); ?></p>
 
 	<?php else : ?>
 		<p><?php esc_html_e( 'No template packages available.', 'buddyboss' ); ?></p>
@@ -166,7 +166,7 @@ function bp_admin_setting_callback_profile_sync() {
 ?>
 
 	<input id="bp-disable-profile-sync" name="bp-disable-profile-sync" type="checkbox" value="1" <?php checked( !bp_disable_profile_sync( false ) ); ?> />
-	<label for="bp-disable-profile-sync"><?php _e( 'Enable BuddyPress to WordPress profile syncing', 'buddyboss' ); ?></label>
+	<label for="bp-disable-profile-sync"><?php _e( 'Enable BuddyBoss to WordPress profile syncing', 'buddyboss' ); ?></label>
 
 <?php
 }

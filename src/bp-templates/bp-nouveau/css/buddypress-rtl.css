@@ -1815,26 +1815,6 @@ form.ac-form .ac-reply-content input {
 	clear: right;
 }
 
-.buddypress-wrap .groups-list li .group-desc {
-	border: 1px solid #eaeaea;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	-ms-border-radius: 10px;
-	border-radius: 10px;
-	background-clip: padding-box;
-	font-size: 13px;
-	color: #737373;
-	font-style: italic;
-	margin: 10px auto 0;
-	padding: 1em;
-}
-
-@media screen and (min-width: 46.8em) {
-	.buddypress-wrap .groups-list li .group-desc {
-		font-size: 16px;
-	}
-}
-
 .buddypress-wrap .groups-list li p {
 	margin: 0 0 0.5em;
 }
@@ -1886,34 +1866,6 @@ form.ac-form .ac-reply-content input {
 */
 .buddypress-wrap .members-list li .member-name {
 	margin-bottom: 10px;
-}
-
-.buddypress-wrap .members-list li .user-update {
-	border: 1px solid #eaeaea;
-	-webkit-border-radius: 10px;
-	-moz-border-radius: 10px;
-	-ms-border-radius: 10px;
-	border-radius: 10px;
-	background-clip: padding-box;
-	color: #737373;
-	font-style: italic;
-	font-size: 13px;
-	margin: 15px auto;
-	padding: 1em;
-}
-
-@media screen and (min-width: 46.8em) {
-	.buddypress-wrap .members-list li .user-update {
-		font-size: 16px;
-	}
-}
-
-.buddypress-wrap .members-list li .user-update .activity-read-more {
-	display: block;
-	font-size: 12px;
-	font-style: normal;
-	margin-top: 10px;
-	padding-right: 2px;
 }
 
 @media screen and (min-width: 46.8em) {
@@ -3566,7 +3518,6 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 	margin-left: -25px;
 	padding: 6px 10px 6px 25px;
 	position: relative;
-	text-indent: -2px;
 	z-index: 1;
 	width: 100%;
 }

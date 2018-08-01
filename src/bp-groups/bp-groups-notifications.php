@@ -650,7 +650,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 			$amount = 'single';
 
 			if ( (int) $total_items > 1 ) {
-				$text = sprintf( __( 'You were promoted to an admin in %d groups', 'buddyboss' ), (int) $total_items );
+				$text = sprintf( __( 'You were promoted to an organizer in %d groups', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 				$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() ) . '?n=1';
 
@@ -685,7 +685,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 					), $total_items, $text, $notification_link );
 				}
 			} else {
-				$text = sprintf( __( 'You were promoted to an admin in the group "%s"', 'buddyboss' ), $group->name );
+				$text = sprintf( __( 'You were promoted to an organizer in the group "%s"', 'buddyboss' ), $group->name );
 				$notification_link = $group_link . '?n=1';
 
 				if ( 'string' == $format ) {
@@ -732,7 +732,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 			$amount = 'single';
 
 			if ( (int) $total_items > 1 ) {
-				$text = sprintf( __( 'You were promoted to a mod in %d groups', 'buddyboss' ), (int) $total_items );
+				$text = sprintf( __( 'You were promoted to a moderator in %d groups', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 				$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() ) . '?n=1';
 
@@ -767,7 +767,7 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 					), $total_items, $text, $notification_link );
 				}
 			} else {
-				$text = sprintf( __( 'You were promoted to a mod in the group "%s"', 'buddyboss' ), $group->name );
+				$text = sprintf( __( 'You were promoted to a moderator in the group "%s"', 'buddyboss' ), $group->name );
 				$notification_link = $group_link . '?n=1';
 
 				if ( 'string' == $format ) {

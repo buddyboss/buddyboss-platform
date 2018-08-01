@@ -699,23 +699,11 @@ class BuddyPress {
 	/**
 	 * Register bundled theme packages.
 	 *
-	 * Note that since we currently have complete control over the bp-legacy 
-	 * folders, it's fine to hardcode it here. If at a later date we need 
-	 * to automate this, an API will need to be built.
-	 *
 	 * @since 1.7.0
 	 */
 	public function register_theme_packages() {
 
 		// Register the default theme compatibility package
-		bp_register_theme_package( array(
-			'id'      => 'legacy',
-			'name'    => __( 'BuddyPress Legacy', 'buddyboss' ),
-			'version' => bp_get_version(),
-			'dir'     => trailingslashit( $this->themes_dir . '/bp-legacy' ),
-			'url'     => trailingslashit( $this->themes_url . '/bp-legacy' )
-		) );
-
 		bp_register_theme_package( array(
 			'id'      => 'nouveau',
 			'name'    => __( 'BuddyPress Nouveau', 'buddyboss' ),

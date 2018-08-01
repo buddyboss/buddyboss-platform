@@ -23,8 +23,8 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	$bp_nouveau_options = bp_nouveau_get_appearance_settings();
 
 	$wp_customize->add_panel( 'bp_nouveau_panel', array(
-		'description' => __( 'Customize the appearance of BuddyPress Nouveau Template pack.', 'buddyboss' ),
-		'title'       => _x( 'BuddyPress Nouveau', 'Customizer Panel', 'buddyboss' ),
+		'description' => __( 'Customize the appearance of the BuddyBoss Platform.', 'buddyboss' ),
+		'title'       => _x( 'BuddyBoss Platform', 'Customizer Panel', 'buddyboss' ),
 		'priority'    => 200,
 	) );
 
@@ -37,16 +37,16 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	 */
 	$sections = apply_filters( 'bp_nouveau_customizer_sections', array(
 		'bp_nouveau_general_settings' => array(
-			'title'       => __( 'General BP Settings', 'buddyboss' ),
+			'title'       => __( 'General Settings', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 10,
-			'description' => __( 'Configure general BuddyPress appearance options.', 'buddyboss' ),
+			'description' => __( 'Configure general BuddyBoss appearance options.', 'buddyboss' ),
 		),
 		'bp_nouveau_user_front_page' => array(
 			'title'       => __( 'Member Dashboard', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 30,
-			'description' => __( 'Configure a Dashboard to help onboard members.', 'buddyboss' ),
+			'description' => __( 'Configure the member dashboard.', 'buddyboss' ),
 		),
 		'bp_nouveau_user_primary_nav' => array(
 			'title'       => __( 'Member navigation', 'buddyboss' ),
@@ -90,13 +90,6 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 		),
 		'bp_nouveau_appearance[user_front_page]' => array(
 			'index'             => 'user_front_page',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-		'bp_nouveau_appearance[user_front_bio]' => array(
-			'index'             => 'user_front_bio',
 			'capability'        => 'bp_moderate',
 			'sanitize_callback' => 'absint',
 			'transport'         => 'refresh',
@@ -226,12 +219,6 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'label'      => __( 'Enable the Dashboard for member profiles.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_user_front_page',
 			'settings'   => 'bp_nouveau_appearance[user_front_page]',
-			'type'       => 'checkbox',
-		),
-		'user_front_bio' => array(
-			'label'      => __( 'Display the biographical info from the member\'s WordPress profile.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_user_front_page',
-			'settings'   => 'bp_nouveau_appearance[user_front_bio]',
 			'type'       => 'checkbox',
 		),
 		'user_nav_display' => array(
