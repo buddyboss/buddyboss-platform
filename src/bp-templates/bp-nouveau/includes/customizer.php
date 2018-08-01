@@ -95,13 +95,6 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
-		'bp_nouveau_appearance[user_front_bio]' => array(
-			'index'             => 'user_front_bio',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
 		'bp_nouveau_appearance[user_nav_display]' => array(
 			'index'             => 'user_nav_display',
 			'capability'        => 'bp_moderate',
@@ -226,12 +219,6 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'label'      => __( 'Enable the Dashboard for member profiles.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_user_front_page',
 			'settings'   => 'bp_nouveau_appearance[user_front_page]',
-			'type'       => 'checkbox',
-		),
-		'user_front_bio' => array(
-			'label'      => __( 'Display the biographical info from the member\'s WordPress profile.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_user_front_page',
-			'settings'   => 'bp_nouveau_appearance[user_front_bio]',
 			'type'       => 'checkbox',
 		),
 		'user_nav_display' => array(
