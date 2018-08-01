@@ -46,7 +46,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'title'       => __( 'Member Dashboard', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 30,
-			'description' => __( 'Configure a Dashboard to help onboard members.', 'buddyboss' ),
+			'description' => __( 'Configure the member dashboard.', 'buddyboss' ),
 		),
 		'bp_nouveau_user_primary_nav' => array(
 			'title'       => __( 'Member navigation', 'buddyboss' ),
