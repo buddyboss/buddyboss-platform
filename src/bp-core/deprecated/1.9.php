@@ -6,7 +6,7 @@
  * Use bp-notifications instead.
  *
  * @package BuddyBoss
- * @subpackage MembersNotifications
+ * @subpackage Member Notifications
  */
 
 // Exit if accessed directly
