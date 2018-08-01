@@ -45,7 +45,7 @@
 				</div><!-- #item-meta -->
 			<?php endif; ?>
 
-			<?php if ( ! is_customize_preview() && bp_current_user_can( 'bp_moderate' ) && ! is_active_sidebar( 'sidebar-buddypress-members' ) ) : ?>
+			<?php if ( ! is_customize_preview() && bp_current_user_can( 'bp_moderate' ) ) : ?>
 
 				<div class="bp-feedback custom-homepage-info info">
 					<?php
