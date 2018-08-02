@@ -95,8 +95,8 @@ TABLE OF CONTENTS:
 	color: var(--bp-hello-color-primary);
 }
 
-.bp-hello-social li a.facebook:before {
-	content: "\f304";
+.bp-hello-social li a.support:before {
+	content: "\f448";
 }
 
 .bp-hello-social li a.twitter:before {

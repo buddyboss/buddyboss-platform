@@ -702,6 +702,10 @@ body.buddypress article.page > .entry-header .entry-title {
 	margin-top: 10px;
 }
 
+.buddypress-wrap .subnav-filters .feed {
+	margin-right: 15px;
+}
+
 .buddypress-wrap .subnav-filters .last.filter label {
 	display: inline;
 }
@@ -770,6 +774,7 @@ body.buddypress article.page > .entry-header .entry-title {
 	}
 	.buddypress-wrap .subnav-filters .subnav-search,
 	.buddypress-wrap .subnav-filters .subnav-search form,
+	.buddypress-wrap .subnav-filters .feed,
 	.buddypress-wrap .subnav-filters .bp-search,
 	.buddypress-wrap .subnav-filters .dir-search,
 	.buddypress-wrap .subnav-filters .user-messages-bulk-actions,
@@ -1364,10 +1369,6 @@ body.buddypress article.page > .entry-header .entry-title {
 	text-decoration: underline;
 }
 
-.activity-list .activity-item .activity-header .time-since:before {
-	content: "\00B7 \00A0";
-}
-
 .activity-list .activity-item .activity-content .activity-header,
 .activity-list .activity-item .activity-content .comment-header {
 	color: #767676;
@@ -1815,6 +1816,26 @@ form.ac-form .ac-reply-content input {
 	clear: left;
 }
 
+.buddypress-wrap .groups-list li .group-desc {
+	border: 1px solid #eaeaea;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	-ms-border-radius: 10px;
+	border-radius: 10px;
+	background-clip: padding-box;
+	font-size: 13px;
+	color: #737373;
+	font-style: italic;
+	margin: 10px auto 0;
+	padding: 1em;
+}
+
+@media screen and (min-width: 46.8em) {
+	.buddypress-wrap .groups-list li .group-desc {
+		font-size: 16px;
+	}
+}
+
 .buddypress-wrap .groups-list li p {
 	margin: 0 0 0.5em;
 }
@@ -1866,6 +1887,34 @@ form.ac-form .ac-reply-content input {
 */
 .buddypress-wrap .members-list li .member-name {
 	margin-bottom: 10px;
+}
+
+.buddypress-wrap .members-list li .user-update {
+	border: 1px solid #eaeaea;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	-ms-border-radius: 10px;
+	border-radius: 10px;
+	background-clip: padding-box;
+	color: #737373;
+	font-style: italic;
+	font-size: 13px;
+	margin: 15px auto;
+	padding: 1em;
+}
+
+@media screen and (min-width: 46.8em) {
+	.buddypress-wrap .members-list li .user-update {
+		font-size: 16px;
+	}
+}
+
+.buddypress-wrap .members-list li .user-update .activity-read-more {
+	display: block;
+	font-size: 12px;
+	font-style: normal;
+	margin-top: 10px;
+	padding-left: 2px;
 }
 
 @media screen and (min-width: 46.8em) {
@@ -2140,7 +2189,10 @@ form.ac-form .ac-reply-content input {
 }
 
 .single-headers div.generic-button,
-.single-headers a.button,
+.single-headers a.button {
+	margin: 10px 10px 0 0;
+}
+
 .single-headers li.generic-button {
 	margin: 2px 10px;
 }
@@ -2735,7 +2787,7 @@ body.no-js .buddypress-wrap .field-visibility-settings {
 
 .buddypress-wrap .current-visibility-level {
 	font-style: normal;
-	font-weight: 600;
+	font-weight: 700;
 }
 
 .buddypress-wrap .field-visibility-settings,
@@ -3518,6 +3570,7 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 	margin-right: -25px;
 	padding: 6px 25px 6px 10px;
 	position: relative;
+	text-indent: -2px;
 	z-index: 1;
 	width: 100%;
 }
