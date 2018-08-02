@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileAdmin
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * Creates the administration interface menus and checks to see if the DB
  * tables are set up.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return bool
  */
@@ -33,7 +33,7 @@ add_action( bp_core_admin_hook(), 'xprofile_add_admin_menu' );
  * Handles all actions for the admin area for creating, editing and deleting
  * profile groups and fields.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param string $message Message to display.
  * @param string $type    Type of action to be displayed.
@@ -115,7 +115,7 @@ function xprofile_admin( $message = '', $type = 'error' ) {
 /**
  * Output the main XProfile management screen.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  *
  * @param string $message Feedback message.
  * @param string $type    Feedback type.
@@ -247,7 +247,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 								/**
 								 * Fires at end of action buttons in xprofile management admin.
 								 *
-								 * @since 2.2.0
+								 * @since BuddyPress 2.2.0
 								 *
 								 * @param BP_XProfile_Group $group BP_XProfile_Group object
 								 *                                 for the current group.
@@ -327,7 +327,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 /**
  * Handles the adding or editing of groups.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int|null $group_id Group ID to manage.
  */
@@ -374,7 +374,7 @@ function xprofile_admin_manage_group( $group_id = null ) {
 				/**
 				 * Fires at the end of the group adding/saving process, if successful.
 				 *
-				 * @since 1.0.0
+				 * @since BuddyPress 1.0.0
 				 *
 				 * @param BP_XProfile_Group $group Current BP_XProfile_Group object.
 				 */
@@ -394,7 +394,7 @@ function xprofile_admin_manage_group( $group_id = null ) {
 /**
  * Handles the deletion of profile data groups.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $group_id ID of the group to delete.
  */
@@ -415,7 +415,7 @@ function xprofile_admin_delete_group( $group_id ) {
 		/**
 		 * Fires at the end of group deletion process, if successful.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param BP_XProfile_Group $group Current BP_XProfile_Group object.
 		 */
@@ -428,7 +428,7 @@ function xprofile_admin_delete_group( $group_id ) {
 /**
  * Handles the adding or editing of profile field data for a user.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int      $group_id ID of the group.
  * @param int|null $field_id ID of the field being managed.
@@ -530,7 +530,7 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 				/**
 				 * Fires at the end of the process to save a field for a user, if successful.
 				 *
-				 * @since 1.0.0
+				 * @since BuddyPress 1.0.0
 				 *
 				 * @param BP_XProfile_Field $field Current BP_XProfile_Field object.
 				 */
@@ -552,7 +552,7 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 /**
  * Handles the deletion of a profile field (or field option).
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @global string $message The feedback message to show.
  * @global string $type The type of feedback message to show.
@@ -579,7 +579,7 @@ function xprofile_admin_delete_field( $field_id, $field_type = 'field', $delete_
 		/**
 		 * Fires at the end of the field deletion process, if successful.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param BP_XProfile_Field $field Current BP_XProfile_Field object.
 		 */
@@ -592,7 +592,7 @@ function xprofile_admin_delete_field( $field_id, $field_type = 'field', $delete_
 /**
  * Handles the ajax reordering of fields within a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function xprofile_ajax_reorder_fields() {
 
@@ -616,7 +616,7 @@ add_action( 'wp_ajax_xprofile_reorder_fields', 'xprofile_ajax_reorder_fields' );
 /**
  * Handles the reordering of field groups.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function xprofile_ajax_reorder_field_groups() {
 
@@ -638,7 +638,7 @@ add_action( 'wp_ajax_xprofile_reorder_groups', 'xprofile_ajax_reorder_field_grou
 /**
  * Handles the WYSIWYG display of each profile field on the edit screen.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param BP_XProfile_Field   $admin_field Admin field.
  * @param object $admin_group Admin group object.
@@ -684,7 +684,7 @@ function xprofile_admin_field( $admin_field, $admin_group, $class = '' ) {
 				/**
 				 * Fires at end of legend above the name field in base xprofile group.
 				 *
-				 * @since 2.2.0
+				 * @since BuddyPress 2.2.0
 				 *
 				 * @param BP_XProfile_Field $field Current BP_XProfile_Field
 				 *                                 object being rendered.
@@ -703,7 +703,7 @@ function xprofile_admin_field( $admin_field, $admin_group, $class = '' ) {
 				/**
 				 * Fires after the input if the current field is not in default field types.
 				 *
-				 * @since 1.5.0
+				 * @since BuddyPress 1.5.0
 				 *
 				 * @param BP_XProfile_Field $field Current BP_XProfile_Field
 				 *                                 object being rendered.
@@ -735,7 +735,7 @@ function xprofile_admin_field( $admin_field, $admin_group, $class = '' ) {
 				/**
 				 * Fires at end of field management links in xprofile management admin.
 				 *
-				 * @since 2.2.0
+				 * @since BuddyPress 2.2.0
 				 *
 				 * @param BP_XProfile_Group $group BP_XProfile_Group object
 				 *                                 for the current group.
@@ -752,7 +752,7 @@ function xprofile_admin_field( $admin_field, $admin_group, $class = '' ) {
 /**
  * Print <option> elements containing the xprofile field types.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param string $select_field_type The name of the field type that should be selected.
  *                                  Will defaults to "textbox" if NULL is passed.

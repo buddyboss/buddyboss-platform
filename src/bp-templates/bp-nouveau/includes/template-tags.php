@@ -2,7 +2,7 @@
 /**
  * Common template tags
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Fire specific hooks at various places of templates
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $pieces The list of terms of the hook to join.
  */
@@ -31,7 +31,7 @@ function bp_nouveau_hook( $pieces = array() ) {
 	/**
 	 * Fires inside the `bp_nouveau_hook()` function.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	do_action( $hook );
 }
@@ -39,7 +39,7 @@ function bp_nouveau_hook( $pieces = array() ) {
 /**
  * Fire plugin hooks in the plugins.php template (Groups and Members single items)
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string The suffix of the hook.
  */
@@ -63,7 +63,7 @@ function bp_nouveau_plugin_hook( $suffix = '' ) {
  * @todo Move this into bp-nouveau/includes/friends/template-tags.php
  *       once we'll need other friends template tags.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string The suffix of the hook.
  */
@@ -84,7 +84,7 @@ function bp_nouveau_friend_hook( $suffix = '' ) {
 /**
  * Add classes to style the template notice/feedback message
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_template_message_classes() {
 	$classes = array( 'bp-feedback', 'bp-messages' );
@@ -100,7 +100,7 @@ function bp_nouveau_template_message_classes() {
 	/**
 	 * Get the template notice/feedback message type
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return string The type of the notice. Defaults to error.
 	 */
@@ -120,7 +120,7 @@ function bp_nouveau_template_message_classes() {
 /**
  * Checks if a template notice/feedback message is set
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return bool True if a template notice is set. False otherwise.
  */
@@ -140,7 +140,7 @@ function bp_nouveau_has_template_message() {
  * @todo Dismiss button re-worked to try and prevent buttons on general
  *       BP template notices - Nouveau user_feedback key needs review.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return bool True if a template notice needs a dismiss button. False otherwise.
  */
@@ -167,7 +167,7 @@ function bp_nouveau_has_dismiss_button() {
  * 'clear' is tested for & used to remove cookies, if set, in buddypress-nouveau.js.
  * Currently template_notices(BP) will take $type = 'clear' if button set to true.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_dismiss_button_type() {
 	$bp_nouveau = bp_nouveau();
@@ -183,7 +183,7 @@ function bp_nouveau_dismiss_button_type() {
 /**
  * Displays a template notice/feedback message.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_template_message() {
 	echo bp_nouveau_get_template_message();
@@ -192,7 +192,7 @@ function bp_nouveau_template_message() {
 	/**
 	 * Get the template notice/feedback message and make sure core filter is applied.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return string HTML Output.
 	 */
@@ -213,7 +213,7 @@ function bp_nouveau_template_message() {
 			/**
 			 * Filters the 'template_notices' feedback message content.
 			 *
-			 * @since 1.5.5
+			 * @since BuddyPress 1.5.5
 			 *
 			 * @param string $template_message Feedback message content.
 			 * @param string $type             The type of message being displayed.
@@ -226,7 +226,7 @@ function bp_nouveau_template_message() {
 /**
  * Template tag to display feedback notices to users, if there are to display
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_template_notices() {
 	$bp         = buddypress();
@@ -257,7 +257,7 @@ function bp_nouveau_template_notices() {
 		/**
 		 * Fires after the display of any template_notices feedback messages.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 */
 		do_action( 'bp_core_render_message' );
 	}
@@ -265,7 +265,7 @@ function bp_nouveau_template_notices() {
 	/**
 	 * Fires towards the top of template pages for notice display.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	do_action( 'template_notices' );
 }
@@ -273,7 +273,7 @@ function bp_nouveau_template_notices() {
 /**
  * Displays a feedback message to the user.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $feedback_id The ID of the message to display
  */
@@ -296,7 +296,7 @@ function bp_nouveau_user_feedback( $feedback_id = '' ) {
 		 *
 		 * This is a dynamic filter that is dependent on the "before" value provided by bp_nouveau_get_user_feedback().
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 */
 		do_action( $feedback['before'] );
 	}
@@ -308,7 +308,7 @@ function bp_nouveau_user_feedback( $feedback_id = '' ) {
 		/**
 		 * Filter here if you wish to use a different templates than the notice one.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string path to your template part.
 		 */
@@ -322,7 +322,7 @@ function bp_nouveau_user_feedback( $feedback_id = '' ) {
 		 *
 		 * This is a dynamic filter that is dependent on the "after" value provided by bp_nouveau_get_user_feedback().
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 */
 		do_action( $feedback['after'] );
 	}
@@ -334,7 +334,7 @@ function bp_nouveau_user_feedback( $feedback_id = '' ) {
 /**
  * Template tag to wrap the before component loop
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_before_loop() {
 	$component = bp_current_component();
@@ -348,7 +348,7 @@ function bp_nouveau_before_loop() {
 	 *
 	 * This is a variable hook that is dependent on the current component.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( "bp_before_{$component}_loop" );
 }
@@ -356,7 +356,7 @@ function bp_nouveau_before_loop() {
 /**
  * Template tag to wrap the after component loop
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_after_loop() {
 	$component = bp_current_component();
@@ -370,7 +370,7 @@ function bp_nouveau_after_loop() {
 	 *
 	 * This is a variable hook that is dependent on the current component.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( "bp_after_{$component}_loop" );
 }
@@ -380,7 +380,7 @@ function bp_nouveau_after_loop() {
  *
  * @param string $position
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_pagination( $position ) {
 	$screen          = 'dir';
@@ -456,7 +456,7 @@ function bp_nouveau_pagination( $position ) {
 		/**
 		 * Fires after the component directory list.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 */
 		do_action( $bottom_hook );
 	};
@@ -491,7 +491,7 @@ function bp_nouveau_pagination( $position ) {
 		/**
 		 * Fires before the component directory list.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 */
 		do_action( $top_hook );
 	};
@@ -500,7 +500,7 @@ function bp_nouveau_pagination( $position ) {
 /**
  * Display the component's loop classes
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string CSS class attributes (escaped).
  */
@@ -511,7 +511,7 @@ function bp_nouveau_loop_classes() {
 	/**
 	 * Get the component's loop classes
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return string space separated value of classes.
 	 */
@@ -583,7 +583,7 @@ function bp_nouveau_loop_classes() {
 		 *
 		 * NB: you can also directly add classes into the template parts.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array  $classes   The list of classes.
 		 * @param string $component The current component's loop.
@@ -597,7 +597,7 @@ function bp_nouveau_loop_classes() {
 /**
  * Checks if the layout preferences is set to grid (2 or more columns).
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return bool True if loop is displayed in grid mod. False otherwise.
  */
@@ -611,7 +611,7 @@ function bp_nouveau_loop_is_grid() {
 /**
  * Returns the number of columns of the layout preferences.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return int The number of columns.
  */
@@ -628,7 +628,7 @@ function bp_nouveau_loop_get_grid_columns() {
 	/**
 	 * Filter number of columns for this grid.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param int $columns The number of columns.
 	 */
@@ -640,7 +640,7 @@ function bp_nouveau_loop_get_grid_columns() {
  *
  * Checks if activity, members, groups, blogs has the vert nav layout selected.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return bool
  */
@@ -654,7 +654,7 @@ function bp_dir_is_vert_layout() {
 /**
  * Get the full size avatar args.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return array The avatar arguments.
  */
@@ -662,7 +662,7 @@ function bp_nouveau_avatar_args() {
 	/**
 	 * Filter arguments for full-size avatars.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $args {
 	 *     @param string $type   Avatar type.
@@ -690,7 +690,7 @@ function bp_nouveau_avatar_args() {
 /**
  * Init the Navigation Loop and check it has items.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $args {
  *     Array of arguments.
@@ -784,7 +784,7 @@ function bp_nouveau_has_nav( $args = array() ) {
 		 * Use the filter to use your specific Navigation.
 		 * Use the $n param to check for your custom object.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array $nav The list of item navigations generated by the BP_Core_Nav API.
 		 * @param array $n   The arguments of the Navigation loop.
@@ -813,7 +813,7 @@ function bp_nouveau_has_nav( $args = array() ) {
 /**
  * Checks there are still nav items to display.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return bool True if there are still items to display. False otherwise.
  */
@@ -833,7 +833,7 @@ function bp_nouveau_nav_items() {
 /**
  * Sets the current nav item and prepare the navigation loop to iterate to next one.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_nav_item() {
 	$bp_nouveau = bp_nouveau();
@@ -845,7 +845,7 @@ function bp_nouveau_nav_item() {
 /**
  * Displays the nav item ID.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_nav_id() {
 	echo esc_attr( bp_nouveau_get_nav_id() );
@@ -854,7 +854,7 @@ function bp_nouveau_nav_id() {
 	/**
 	 * Retrieve the ID attribute of the current nav item.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return string the ID attribute.
 	 */
@@ -873,7 +873,7 @@ function bp_nouveau_nav_id() {
 		/**
 		 * Filter to edit the ID attribute of the nav.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $id       The ID attribute of the nav.
 		 * @param object $nav_item The current nav item object.
@@ -885,7 +885,7 @@ function bp_nouveau_nav_id() {
 /**
  * Displays the nav item classes.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_nav_classes() {
 	echo esc_attr( bp_nouveau_get_nav_classes() );
@@ -894,7 +894,7 @@ function bp_nouveau_nav_classes() {
 	/**
 	 * Retrieve a space separated list of classes for the current nav item.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return string List of classes.
 	 */
@@ -937,7 +937,7 @@ function bp_nouveau_nav_classes() {
 		 *
 		 * NB: you can also directly add classes into the template parts.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $value    A space separated list of classes.
 		 * @param array  $classes  The list of classes.
@@ -955,7 +955,7 @@ function bp_nouveau_nav_classes() {
 /**
  * Displays the nav item scope.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_nav_scope() {
 	echo bp_nouveau_get_nav_scope();  // Escaped by bp_get_form_field_attributes().
@@ -964,7 +964,7 @@ function bp_nouveau_nav_scope() {
 	/**
 	 * Retrieve the specific scope for the current nav item.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return string the specific scope of the nav.
 	 */
@@ -983,7 +983,7 @@ function bp_nouveau_nav_scope() {
 			/**
 			 * Filter to add your own scope.
 			 *
-			 * @since 3.0.0
+			 * @since BuddyPress 3.0.0
 			 *
 			 * @param array $scope     Contains the key and the value for your scope.
 			 * @param object $nav_item The current nav item object.
@@ -1002,7 +1002,7 @@ function bp_nouveau_nav_scope() {
 /**
  * Displays the nav item URL.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_nav_link() {
 	echo esc_url( bp_nouveau_get_nav_link() );
@@ -1011,7 +1011,7 @@ function bp_nouveau_nav_link() {
 	/**
 	 * Retrieve the URL for the current nav item.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return string The URL for the nav item.
 	 */
@@ -1035,7 +1035,7 @@ function bp_nouveau_nav_link() {
 		/**
 		 * Filter to edit the URL of the nav item.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $link     The URL for the nav item.
 		 * @param object $nav_item The current nav item object.
@@ -1047,7 +1047,7 @@ function bp_nouveau_nav_link() {
 /**
  * Displays the nav item link ID.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_nav_link_id() {
 	echo esc_attr( bp_nouveau_get_nav_link_id() );
@@ -1056,7 +1056,7 @@ function bp_nouveau_nav_link_id() {
 	/**
 	 * Retrieve the id attribute of the link for the current nav item.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return string The link id for the nav item.
 	 */
@@ -1078,7 +1078,7 @@ function bp_nouveau_nav_link_id() {
 		/**
 		 * Filter to edit the link id attribute of the nav.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $link_id  The link id attribute for the nav item.
 		 * @param object $nav_item The current nav item object.
@@ -1090,7 +1090,7 @@ function bp_nouveau_nav_link_id() {
 /**
  * Displays the nav item link title.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_nav_link_title() {
 	echo esc_attr( bp_nouveau_get_nav_link_title() );
@@ -1099,7 +1099,7 @@ function bp_nouveau_nav_link_title() {
 	/**
 	 * Retrieve the title attribute of the link for the current nav item.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return string The link title for the nav item.
 	 */
@@ -1122,7 +1122,7 @@ function bp_nouveau_nav_link_title() {
 		/**
 		 * Filter to edit the link title attribute of the nav.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $title    The link title attribute for the nav item.
 		 * @param object $nav_item The current nav item object.
@@ -1134,7 +1134,7 @@ function bp_nouveau_nav_link_title() {
 /**
  * Displays the nav item link html text.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_nav_link_text() {
 	echo esc_html( bp_nouveau_get_nav_link_text() );
@@ -1143,7 +1143,7 @@ function bp_nouveau_nav_link_text() {
 	/**
 	 * Retrieve the html text of the link for the current nav item.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return string The html text for the nav item.
 	 */
@@ -1166,7 +1166,7 @@ function bp_nouveau_nav_link_text() {
 		/**
 		 * Filter to edit the html text of the nav.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $link_text The html text of the nav item.
 		 * @param object $nav_item  The current nav item object.
@@ -1178,7 +1178,7 @@ function bp_nouveau_nav_link_text() {
 /**
  * Checks if the nav item has a count attribute.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return bool
  */
@@ -1198,7 +1198,7 @@ function bp_nouveau_nav_has_count() {
 	/**
 	 * Filter to edit whether the nav has a count attribute.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param bool   $value     True if the nav has a count attribute. False otherwise
 	 * @param object $nav_item  The current nav item object.
@@ -1210,7 +1210,7 @@ function bp_nouveau_nav_has_count() {
 /**
  * Displays the nav item count attribute.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_nav_count() {
 	echo esc_html( number_format_i18n( bp_nouveau_get_nav_count() ) );
@@ -1219,7 +1219,7 @@ function bp_nouveau_nav_count() {
 	/**
 	 * Retrieve the count attribute for the current nav item.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return int The count attribute for the nav item.
 	 */
@@ -1249,7 +1249,7 @@ function bp_nouveau_nav_count() {
 		/**
 		 * Filter to edit the count attribute for the nav item.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param int $count    The count attribute for the nav item.
 		 * @param object $nav_item The current nav item object.
@@ -1263,7 +1263,7 @@ function bp_nouveau_nav_count() {
 /**
  * Displays the directory nav class.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_directory_type_navs_class() {
 	echo esc_attr( bp_nouveau_get_directory_type_navs_class() );
@@ -1275,7 +1275,7 @@ function bp_nouveau_directory_type_navs_class() {
 	 * Gets the directory component nav class.
 	 * Gets user selection Customizer options.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return string
 	 */
@@ -1308,7 +1308,7 @@ function bp_nouveau_directory_type_navs_class() {
 		 *
 		 * NB: you can also directly add classes to the class attr.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array $nav_wrapper_classes The list of classes.
 		 */
@@ -1320,7 +1320,7 @@ function bp_nouveau_directory_type_navs_class() {
 /**
  * Displays the directory nav item list class.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_directory_list_class() {
 	echo esc_attr( bp_nouveau_get_directory_list_class() );
@@ -1329,7 +1329,7 @@ function bp_nouveau_directory_list_class() {
 	/**
 	 * Gets the directory nav item list class.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return string
 	 */
@@ -1340,7 +1340,7 @@ function bp_nouveau_directory_list_class() {
 /**
  * Displays the directory nav item object (data-bp attribute).
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_directory_nav_object() {
 	$obj = bp_nouveau_get_directory_nav_object();
@@ -1355,7 +1355,7 @@ function bp_nouveau_directory_nav_object() {
 	 *
 	 * @see BP_Component::setup_nav().
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return array
 	 */
@@ -1375,7 +1375,7 @@ function bp_nouveau_directory_nav_object() {
 /**
  * Output main BuddyPress container classes.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string CSS classes
  */
@@ -1386,7 +1386,7 @@ function bp_nouveau_container_classes() {
 	/**
 	 * Returns the main BuddyPress container classes.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return string CSS classes
 	 */
@@ -1432,7 +1432,7 @@ function bp_nouveau_container_classes() {
 			/**
 			 * Filters the BuddyPress Nouveau single item setting ID.
 			 *
-			 * @since 3.0.0
+			 * @since BuddyPress 3.0.0
 			 *
 			 * @param string $value Setting ID.
 			 */
@@ -1481,7 +1481,7 @@ function bp_nouveau_container_classes() {
 		 *
 		 * This filter will return a single string of concatenated classes to be used.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $value   Concatenated classes.
 		 * @param array  $classes Array of classes that were concatenated.
@@ -1492,7 +1492,7 @@ function bp_nouveau_container_classes() {
 /**
  * Output single item nav container classes
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string CSS classes
  */
@@ -1503,7 +1503,7 @@ function bp_nouveau_single_item_nav_classes() {
 	/**
 	 * Returns the single item nav container classes
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return string CSS classes
 	 */
@@ -1558,7 +1558,7 @@ function bp_nouveau_single_item_nav_classes() {
 		 *
 		 * This filter will return a single string of concatenated classes to be used.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $value   Concatenated classes.
 		 * @param array  $classes Array of classes that were concatenated.
@@ -1569,7 +1569,7 @@ function bp_nouveau_single_item_nav_classes() {
 /**
  * Output single item subnav container classes.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string CSS classes
  */
@@ -1580,7 +1580,7 @@ function bp_nouveau_single_item_subnav_classes() {
 	/**
 	 * Returns the single item subnav container classes.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return string CSS classes
 	 */
@@ -1618,7 +1618,7 @@ function bp_nouveau_single_item_subnav_classes() {
 		 *
 		 * This filter will return a single string of concatenated classes to be used.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $value   Concatenated classes.
 		 * @param array  $classes Array of classes that were concatenated.
@@ -1629,7 +1629,7 @@ function bp_nouveau_single_item_subnav_classes() {
 /**
  * Output the groups create steps classes.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string CSS classes
  */
@@ -1640,7 +1640,7 @@ function bp_nouveau_groups_create_steps_classes() {
 	/**
 	 * Returns the groups create steps customizer option choice class.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return string CSS classes
 	 */
@@ -1659,7 +1659,7 @@ function bp_nouveau_groups_create_steps_classes() {
 		 *
 		 * This filter will return a single string of concatenated classes to be used.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $value   Concatenated classes.
 		 * @param array  $classes Array of classes that were concatenated.
@@ -1673,7 +1673,7 @@ function bp_nouveau_groups_create_steps_classes() {
 /**
  * Get the search primary object
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $object Optional. The primary object.
  *
@@ -1691,7 +1691,7 @@ function bp_nouveau_get_search_primary_object( $object = '' ) {
 		/**
 		 * Filters the search primary object if no other was found.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $object Search object.
 		 */
@@ -1704,7 +1704,7 @@ function bp_nouveau_get_search_primary_object( $object = '' ) {
 /**
  * Get The list of search objects (primary + secondary).
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $objects Optional. The list of objects.
  *
@@ -1729,7 +1729,7 @@ function bp_nouveau_get_search_objects( $objects = array() ) {
 		/**
 		 * Filters the search objects if no others were found.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array $objects Search objects.
 		 */
@@ -1742,7 +1742,7 @@ function bp_nouveau_get_search_objects( $objects = array() ) {
 /**
  * Output the search form container classes.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_search_container_class() {
 	$objects = bp_nouveau_get_search_objects();
@@ -1754,7 +1754,7 @@ function bp_nouveau_search_container_class() {
 /**
  * Output the search form data-bp attribute.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param  string $attr The data-bp attribute.
  * @return string The data-bp attribute.
@@ -1778,7 +1778,7 @@ function bp_nouveau_search_object_data_attr( $attr = '' ) {
 /**
  * Output a selector ID.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $suffix Optional. A string to append at the end of the ID.
  * @param string $sep    Optional. The separator to use between each token.
@@ -1793,7 +1793,7 @@ function bp_nouveau_search_selector_id( $suffix = '', $sep = '-' ) {
 /**
  * Output the name attribute of a selector.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param  string $suffix Optional. A string to append at the end of the name.
  * @param  string $sep    Optional. The separator to use between each token.
@@ -1815,7 +1815,7 @@ function bp_nouveau_search_selector_name( $suffix = '', $sep = '_' ) {
 /**
  * Output the default search text for the search object
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param  string $text    Optional. The default search text for the search object.
  * @param  string $is_attr Optional. True if it's to be output inside an attribute. False Otherwise.
@@ -1842,7 +1842,7 @@ function bp_nouveau_search_default_text( $text = '', $is_attr = true ) {
 /**
  * Get the search form template part and fire some do_actions if needed.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_search_form() {
 	bp_get_template_part( 'common/search/search-form' );
@@ -1857,7 +1857,7 @@ function bp_nouveau_search_form() {
 			/**
 			 * Fires before the display of the activity syndication options.
 			 *
-			 * @since 1.2.0
+			 * @since BuddyPress 1.2.0
 			 */
 			do_action( 'bp_activity_syndication_options' );
 
@@ -1865,7 +1865,7 @@ function bp_nouveau_search_form() {
 			/**
 			 * Fires inside the unordered list displaying blog sub-types.
 			 *
-			 * @since 1.5.0
+			 * @since BuddyPress 1.5.0
 			 */
 			do_action( 'bp_blogs_directory_blog_sub_types' );
 
@@ -1873,7 +1873,7 @@ function bp_nouveau_search_form() {
 			/**
 			 * Fires inside the groups directory group types.
 			 *
-			 * @since 1.2.0
+			 * @since BuddyPress 1.2.0
 			 */
 			do_action( 'bp_groups_directory_group_types' );
 
@@ -1881,7 +1881,7 @@ function bp_nouveau_search_form() {
 			/**
 			 * Fires inside the members directory member sub-types.
 			 *
-			 * @since 1.5.0
+			 * @since BuddyPress 1.5.0
 			 */
 			do_action( 'bp_members_directory_member_sub_types' );
 		}
@@ -1889,7 +1889,7 @@ function bp_nouveau_search_form() {
 		/**
 		 * Fires inside the syndication options list, after the RSS option.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 */
 		do_action( 'bp_group_activity_syndication_options' );
 	}
@@ -1904,7 +1904,7 @@ function bp_nouveau_search_form() {
  * If on single group screens we need to switch from component to bp_current_action() to add the correct
  * IDs/labels for group/activity & similar screens.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_current_object() {
 	/*
@@ -1937,7 +1937,7 @@ function bp_nouveau_current_object() {
 /**
  * Output data filter container's ID attribute value.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_filter_container_id() {
 	echo esc_attr( bp_nouveau_get_filter_container_id() );
@@ -1946,7 +1946,7 @@ function bp_nouveau_filter_container_id() {
 	/**
 	 * Get data filter container's ID attribute value.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param string
 	 */
@@ -1967,7 +1967,7 @@ function bp_nouveau_filter_container_id() {
 			/**
 			 * Filters the container ID for BuddyPress Nouveau filters.
 			 *
-			 * @since 3.0.0
+			 * @since BuddyPress 3.0.0
 			 *
 			 * @param string $value ID based on current component object.
 			 */
@@ -1980,7 +1980,7 @@ function bp_nouveau_filter_container_id() {
 /**
  * Output data filter's ID attribute value.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_filter_id() {
 	echo esc_attr( bp_nouveau_get_filter_id() );
@@ -1989,7 +1989,7 @@ function bp_nouveau_filter_id() {
 	/**
 	 * Get data filter's ID attribute value.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param string
 	 */
@@ -2010,7 +2010,7 @@ function bp_nouveau_filter_id() {
 			/**
 			 * Filters the filter ID for BuddyPress Nouveau filters.
 			 *
-			 * @since 3.0.0
+			 * @since BuddyPress 3.0.0
 			 *
 			 * @param string $value ID based on current component object.
 			 */
@@ -2023,7 +2023,7 @@ function bp_nouveau_filter_id() {
 /**
  * Output data filter's label.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_filter_label() {
 	echo esc_html( bp_nouveau_get_filter_label() );
@@ -2032,7 +2032,7 @@ function bp_nouveau_filter_label() {
 	/**
 	 * Get data filter's label.
  	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param string
 	 */
@@ -2047,7 +2047,7 @@ function bp_nouveau_filter_label() {
 		/**
 		 * Filters the label for BuddyPress Nouveau filters.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $label     Label for BuddyPress Nouveau filter.
 		 * @param array  $component The data filter's data-bp-filter attribute value.
@@ -2058,7 +2058,7 @@ function bp_nouveau_filter_label() {
 /**
  * Output data filter's data-bp-filter attribute value.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_filter_component() {
 	$component = bp_nouveau_current_object();
@@ -2068,7 +2068,7 @@ function bp_nouveau_filter_component() {
 /**
  * Output the <option> of the data filter's <select> element.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_filter_options() {
 	echo bp_nouveau_get_filter_options();  // Escaped in inner functions.
@@ -2077,7 +2077,7 @@ function bp_nouveau_filter_options() {
 	/**
 	 * Get the <option> of the data filter's <select> element.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return string
 	 */
@@ -2108,7 +2108,7 @@ function bp_nouveau_filter_options() {
 /**
  * Get a link to reach a specific section into the customizer
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $args Optional. The argument to customize the Customizer link.
  *
@@ -2169,7 +2169,7 @@ function bp_nouveau_get_customizer_link( $args = array() ) {
 /**
  * Fire specific hooks into the register template
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $when   'before' or 'after'
  * @param string $prefix Use it to add terms before the hook name
@@ -2201,7 +2201,7 @@ function bp_nouveau_signup_hook( $when = '', $prefix = '' ) {
 /**
  * Fire specific hooks into the activate template
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $when   'before' or 'after'
  * @param string $prefix Use it to add terms before the hook name
@@ -2229,7 +2229,7 @@ function bp_nouveau_activation_hook( $when = '', $suffix = '' ) {
 /**
  * Output the signup form for the requested section
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $section Optional. The section of fields to get 'account_details' or 'blog_details'.
  *                        Default: 'account_details'.
@@ -2389,7 +2389,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 	 *
 	 * This is a variable hook that depends on the current section.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 */
 	do_action( "bp_{$section}_fields" );
 }
@@ -2397,7 +2397,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 /**
  * Output a submit button and the nonce for the requested action.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $action The action to get the submit button for. Required.
  */
@@ -2414,7 +2414,7 @@ function bp_nouveau_submit_button( $action ) {
 		 *
 		 * This is a dynamic filter that is dependent on the "before" value provided by bp_nouveau_get_submit_button().
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 */
 		do_action( $submit_data['before'] );
 	}
@@ -2445,7 +2445,7 @@ function bp_nouveau_submit_button( $action ) {
 		 *
 		 * This is a dynamic filter that is dependent on the "after" value provided by bp_nouveau_get_submit_button().
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 */
 		do_action( $submit_data['after'] );
 	}
@@ -2460,7 +2460,7 @@ function bp_nouveau_submit_button( $action ) {
  * @param string $message required: the message to display.
  * @param string $type optional: the type of error message e.g 'error'.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function nouveau_error_template( $message = '', $type = '' ) {
 	if ( ! $message ) {

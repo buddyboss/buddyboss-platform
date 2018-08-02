@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * BuddyPress Customizer font size control.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  */
 class BP_Customizer_Control_Range extends WP_Customize_Control {
 	/**
@@ -23,7 +23,7 @@ class BP_Customizer_Control_Range extends WP_Customize_Control {
 	/**
 	 * Enqueue scripts/styles for the color picker.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 */
 	public function enqueue() {
 		wp_enqueue_script( 'bp-customizer-controls' );
@@ -33,7 +33,7 @@ class BP_Customizer_Control_Range extends WP_Customize_Control {
 	/**
 	 * Render the control.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 */
 	public function render_content() {
 		$id    = 'customize-control-' . str_replace( '[', '-', str_replace( ']', '', $this->id ) );

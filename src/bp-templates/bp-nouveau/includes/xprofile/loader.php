@@ -2,7 +2,7 @@
 /**
  * BP Nouveau xProfile
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.0.0
  */
 
@@ -12,13 +12,13 @@ defined( 'ABSPATH' ) || exit;
 /**
  * xProfile Loader class
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 class BP_Nouveau_xProfile {
 	/**
 	 * Constructor
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function __construct() {
 		$this->setup_globals();
@@ -30,7 +30,7 @@ class BP_Nouveau_xProfile {
 	/**
 	 * Globals
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_globals() {
 		$this->dir = dirname( __FILE__ );
@@ -39,7 +39,7 @@ class BP_Nouveau_xProfile {
 	/**
 	 * Include needed files
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	protected function includes() {
 		require( trailingslashit( $this->dir ) . 'functions.php' );
@@ -49,7 +49,7 @@ class BP_Nouveau_xProfile {
 	/**
 	 * Register do_action() hooks
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_actions() {
 		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_xprofile_enqueue_scripts' );
@@ -58,7 +58,7 @@ class BP_Nouveau_xProfile {
 	/**
 	 * Register add_filter() hooks
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_filters() {
 		add_filter( 'bp_nouveau_register_scripts', 'bp_nouveau_xprofile_register_scripts', 10, 1 );
@@ -68,7 +68,7 @@ class BP_Nouveau_xProfile {
 /**
  * Launch the xProfile loader class.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_xprofile( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {

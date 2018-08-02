@@ -2,7 +2,7 @@
 /**
  * BP Nouveau Connections
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.0.0
  */
 
@@ -12,13 +12,13 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Connections Loader class
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 class BP_Nouveau_Friends {
 	/**
 	 * Constructor
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function __construct() {
 		$this->setup_globals();
@@ -30,7 +30,7 @@ class BP_Nouveau_Friends {
 	/**
 	 * Globals
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_globals() {
 		$this->dir = trailingslashit( dirname( __FILE__ ) );
@@ -39,7 +39,7 @@ class BP_Nouveau_Friends {
 	/**
 	 * Include needed files
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	protected function includes() {
 		// Test suite requires the AJAX functions early.
@@ -59,7 +59,7 @@ class BP_Nouveau_Friends {
 	/**
 	 * Register do_action() hooks
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_actions() {
 		// Remove BuddyPress action for the members loop
@@ -72,7 +72,7 @@ class BP_Nouveau_Friends {
 	/**
 	 * Register add_filter() hooks
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_filters() {
 		$buttons = array(
@@ -92,7 +92,7 @@ class BP_Nouveau_Friends {
 	/**
 	 * Register notifications filters for the friends component.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function notification_filters() {
 		$notifications = array(
@@ -117,7 +117,7 @@ class BP_Nouveau_Friends {
 /**
  * Launch the Connections loader class.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_friends( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {

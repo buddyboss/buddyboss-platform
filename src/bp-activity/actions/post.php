@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage ActivityActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Post user/group activity update.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @return bool False on failure.
  */
@@ -25,7 +25,7 @@ function bp_activity_action_post_update() {
 	/**
 	 * Filters the content provided in the activity input field.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param string $value Activity message being posted.
 	 */
@@ -36,7 +36,7 @@ function bp_activity_action_post_update() {
 		/**
 		 * Filters the item type that the activity update should be associated with.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @param string $value Item type to associate with.
 		 */
@@ -48,7 +48,7 @@ function bp_activity_action_post_update() {
 		/**
 		 * Filters what component the activity is being to.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @param string $value Chosen component to post activity to.
 		 */
@@ -76,7 +76,7 @@ function bp_activity_action_post_update() {
 		/**
 		 * Filters activity object for BuddyPress core and plugin authors before posting activity update.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @param string $object  Activity item being associated to.
 		 * @param string $item_id Component ID being posted to.

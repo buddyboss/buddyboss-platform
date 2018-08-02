@@ -5,7 +5,7 @@
  * 3rd-party plugins should use this template to easily add template
  * support to their plugins for the members component.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.0.0
  */
 

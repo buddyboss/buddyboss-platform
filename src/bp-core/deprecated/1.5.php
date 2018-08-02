@@ -48,7 +48,7 @@ function bp_core_is_multisite() {
  * @package BuddyBoss
  * @param int|string $blog_id optional blog id to test (default current blog)
  * @return bool True if not multisite or $blog_id is main site
- * @since 1.2.6
+ * @since BuddyPress 1.2.6
  */
 function bp_core_is_main_site( $blog_id = '' ) {
 	_deprecated_function( __FUNCTION__, '1.5', 'is_main_site()' );
@@ -78,7 +78,7 @@ if ( !function_exists( 'is_site_admin' ) ) {
  *
  * @deprecated 1.5.0
  * @deprecated Use add_menu_page().
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return string
  */
@@ -275,7 +275,7 @@ function bp_search_form_enabled() {
  *
  * @deprecated 1.5.0
  * @deprecated Use wp_title()
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_page_title() {
 	echo bp_get_page_title();
@@ -286,7 +286,7 @@ function bp_page_title() {
 	 *
 	 * @deprecated 1.5.0
 	 * @deprecated Use wp_title()
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return string
 	 */
@@ -305,7 +305,7 @@ function bp_page_title() {
  *
  * @deprecated 1.5.0
  * @deprecated Use wp_logout_url()
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_log_out_link() {
 	_deprecated_function( __FUNCTION__, '1.5', 'wp_logout_url()' );
@@ -464,7 +464,7 @@ function bp_core_is_root_component( $component_name ) {
  * in BuddyPress 1.5.
  *
  * @deprecated 1.5.0
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_dtheme_deprecated() {
 	if ( !function_exists( 'bp_dtheme_wp_pages_filter' ) ) :
@@ -478,7 +478,7 @@ function bp_dtheme_deprecated() {
 	 * @param string $page_html A list of pages as a dropdown (select list)
 	 * @return string
 	 * @see wp_dropdown_pages()
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	function bp_dtheme_wp_pages_filter( $page_html ) {
 		_deprecated_function( __FUNCTION__, '1.5', "No longer required." );
@@ -496,7 +496,7 @@ function bp_dtheme_deprecated() {
 	 * @param string $oldvalue Previous value of get_option( 'page_on_front' )
 	 * @param string $oldvalue New value of get_option( 'page_on_front' )
 	 * @return false|string
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	function bp_dtheme_page_on_front_update( $oldvalue, $newvalue ) {
 		_deprecated_function( __FUNCTION__, '1.5', "No longer required." );
@@ -516,7 +516,7 @@ function bp_dtheme_deprecated() {
 	 * @deprecated No longer required.
 	 * @param string $template Absolute path to the page template
 	 * @return string
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	function bp_dtheme_page_on_front_template( $template ) {
 		_deprecated_function( __FUNCTION__, '1.5', "No longer required." );
@@ -531,7 +531,7 @@ function bp_dtheme_deprecated() {
 	 *
 	 * @deprecated 1.5.0
 	 * @deprecated No longer required.
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	function bp_dtheme_fix_get_posts_on_activity_front() {
 		_deprecated_function( __FUNCTION__, '1.5', "No longer required." );
@@ -547,7 +547,7 @@ function bp_dtheme_deprecated() {
 	 * @deprecated No longer required.
 	 * @param array $posts Posts as retrieved by WP_Query
 	 * @return array
-	 * @since 1.2.5
+	 * @since BuddyPress 1.2.5
 	 */
 	function bp_dtheme_fix_the_posts_on_activity_front( $posts ) {
 		_deprecated_function( __FUNCTION__, '1.5', "No longer required." );
@@ -562,7 +562,7 @@ function bp_dtheme_deprecated() {
 	 *
 	 * @deprecated 1.5.0
 	 * @deprecated Enqueue the comment-reply script in your theme's header.php.
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	function bp_dtheme_add_blog_comments_js() {
 		_deprecated_function( __FUNCTION__, '1.5', "Enqueue the comment-reply script in your theme's header.php." );
@@ -579,7 +579,7 @@ add_action( 'after_setup_theme', 'bp_dtheme_deprecated', 15 );
  * longer needed as the nav structure is set up by the {@link BP_Component} class.
  *
  * @deprecated 1.5.0
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_core_add_settings_nav() {
 	_deprecated_function( __FUNCTION__, '1.5' );
@@ -592,7 +592,7 @@ function bp_core_add_settings_nav() {
  * introduced.
  *
  * @deprecated 1.5.0
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_core_screen_general_settings() {
 	_deprecated_function( __FUNCTION__, '1.5', 'Moved into theme template' );
@@ -605,7 +605,7 @@ function bp_core_screen_general_settings() {
  * introduced.
  *
  * @deprecated 1.5.0
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_core_screen_general_settings_title() {
 	_deprecated_function( __FUNCTION__, '1.5', 'Moved into theme template' );
@@ -618,7 +618,7 @@ function bp_core_screen_general_settings_title() {
  * introduced.
  *
  * @deprecated 1.5.0
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_core_screen_general_settings_content() {
 	_deprecated_function( __FUNCTION__, '1.5', 'Moved into theme template' );
@@ -631,7 +631,7 @@ function bp_core_screen_general_settings_content() {
  * introduced.
  *
  * @deprecated 1.5.0
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_core_screen_notification_settings() {
 	_deprecated_function( __FUNCTION__, '1.5', 'Moved into theme template' );
@@ -644,7 +644,7 @@ function bp_core_screen_notification_settings() {
  * introduced.
  *
  * @deprecated 1.5.0
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_core_screen_notification_settings_title() {
 	_deprecated_function( __FUNCTION__, '1.5', 'Moved into theme template' );
@@ -657,7 +657,7 @@ function bp_core_screen_notification_settings_title() {
  * introduced.
  *
  * @deprecated 1.5.0
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_core_screen_notification_settings_content() {
 	_deprecated_function( __FUNCTION__, '1.5', 'Moved into theme template' );
@@ -670,7 +670,7 @@ function bp_core_screen_notification_settings_content() {
  * introduced.
  *
  * @deprecated 1.5.0
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_core_screen_delete_account() {
 	_deprecated_function( __FUNCTION__, '1.5', 'Moved into theme template' );
@@ -683,7 +683,7 @@ function bp_core_screen_delete_account() {
  * introduced.
  *
  * @deprecated 1.5.0
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_core_screen_delete_account_title() {
 	_deprecated_function( __FUNCTION__, '1.5', 'Moved into theme template' );
@@ -696,7 +696,7 @@ function bp_core_screen_delete_account_title() {
  * introduced.
  *
  * @deprecated 1.5.0
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_core_screen_delete_account_content() {
 	_deprecated_function( __FUNCTION__, '1.5', 'Moved into theme template' );

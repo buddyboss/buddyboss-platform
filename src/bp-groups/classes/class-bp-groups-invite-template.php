@@ -3,7 +3,7 @@
  * BuddyBoss Groups Invitation template loop class.
  *
  * @package BuddyBoss
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 
 // Exit if accessed directly.
@@ -12,60 +12,60 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Group invitation template loop class.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 class BP_Groups_Invite_Template {
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var int
 	 */
 	public $current_invite = -1;
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var int
 	 */
 	public $invite_count;
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var array
 	 */
 	public $invites;
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var object
 	 */
 	public $invite;
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var bool
 	 */
 	public $in_the_loop;
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var int
 	 */
 	public $pag_page;
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var int
 	 */
 	public $pag_num;
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var string
 	 */
 	public $pag_links;
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var int
 	 */
 	public $total_invite_count;
@@ -73,7 +73,7 @@ class BP_Groups_Invite_Template {
 	/**
 	 * BP_Groups_Invite_Template constructor.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param array $args
 	 */
@@ -140,7 +140,7 @@ class BP_Groups_Invite_Template {
 	/**
 	 * Whether or not there are invites to show.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return bool
 	 */
@@ -155,7 +155,7 @@ class BP_Groups_Invite_Template {
 	/**
 	 * Increments up to the next invite to show.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return object
 	 */
@@ -169,7 +169,7 @@ class BP_Groups_Invite_Template {
 	/**
 	 * Rewinds to the first invite to show.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	public function rewind_invites() {
 		$this->current_invite = -1;
@@ -181,7 +181,7 @@ class BP_Groups_Invite_Template {
 	/**
 	 * Finishes up the invites to show.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return bool
 	 */
@@ -194,9 +194,9 @@ class BP_Groups_Invite_Template {
 			/**
 			 * Fires right before the rewinding of invites list.
 			 *
-			 * @since 1.1.0
-			 * @since 2.3.0 `$this` parameter added.
-			 * @since 2.7.0 Action renamed from `loop_start`.
+			 * @since BuddyPress 1.1.0
+			 * @since BuddyPress 2.3.0 `$this` parameter added.
+			 * @since BuddyPress 2.7.0 Action renamed from `loop_start`.
 			 *
 			 * @param BP_Groups_Invite_Template $this Instance of the current Invites template.
 			 */
@@ -213,7 +213,7 @@ class BP_Groups_Invite_Template {
 	/**
 	 * Sets up the invite to show.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	public function the_invite() {
 		global $group_id;
@@ -259,9 +259,9 @@ class BP_Groups_Invite_Template {
 			/**
 			 * Fires if the current invite item is the first in the loop.
 			 *
-			 * @since 1.1.0
-			 * @since 2.3.0 `$this` parameter added.
-			 * @since 2.7.0 Action renamed from `loop_start`.
+			 * @since BuddyPress 1.1.0
+			 * @since BuddyPress 2.3.0 `$this` parameter added.
+			 * @since BuddyPress 2.7.0 Action renamed from `loop_start`.
 			 *
 			 * @param BP_Groups_Invite_Template $this Instance of the current Invites template.
 			 */

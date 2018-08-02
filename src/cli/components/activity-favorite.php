@@ -6,7 +6,7 @@ use WP_CLI;
 /**
  * Manage BuddyBoss activity favorite.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 class Activity_Favorite extends BuddypressCommand {
 

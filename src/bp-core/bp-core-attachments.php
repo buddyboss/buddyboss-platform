@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Attachments
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 
 // Exit if accessed directly.
@@ -17,8 +17,8 @@ defined( 'ABSPATH' ) || exit;
  * script requires it. So we need to make sure the current WordPress
  * match with our needs.
  *
- * @since 2.3.0
- * @since 3.0.0 We now require WP >= 4.5, so this is always true.
+ * @since BuddyPress 2.3.0
+ * @since BuddyPress 3.0.0 We now require WP >= 4.5, so this is always true.
  *
  * @return bool Always true.
  */
@@ -29,7 +29,7 @@ function bp_attachments_is_wp_version_supported() {
 /**
  * Get the Attachments Uploads dir data.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @param string $data The data to get. Possible values are: 'dir', 'basedir' & 'baseurl'.
  *                     Leave empty to get all datas.
@@ -76,7 +76,7 @@ function bp_attachments_uploads_dir_get( $data = '' ) {
 	/**
 	 * Filter here to edit the Attachments upload dir data.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param string|array $retval The needed Upload dir data or the full array of data
 	 * @param string       $data   The data requested
@@ -87,7 +87,7 @@ function bp_attachments_uploads_dir_get( $data = '' ) {
 /**
  * Gets the upload dir array for cover images.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return array See wp_upload_dir().
  */
@@ -121,7 +121,7 @@ function bp_attachments_cover_image_upload_dir( $args = array() ) {
 	/**
 	 * Filters the cover image upload directory.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param array $value      Array containing the path, URL, and other helpful settings.
 	 * @param array $upload_dir The original Uploads dir.
@@ -139,7 +139,7 @@ function bp_attachments_cover_image_upload_dir( $args = array() ) {
 /**
  * Get the max upload file size for any attachment.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @param string $type A string to inform about the type of attachment
  *                     we wish to get the max upload file size for.
@@ -157,7 +157,7 @@ function bp_attachments_get_max_upload_file_size( $type = '' ) {
 	/**
 	 * Filter here to edit the max upload file size.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param int    $fileupload_maxk Max upload file size for any attachment.
 	 * @param string $type            The attachment type (eg: 'avatar' or 'cover_image').
@@ -168,7 +168,7 @@ function bp_attachments_get_max_upload_file_size( $type = '' ) {
 /**
  * Get allowed types for any attachment.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @param string $type The extension types to get.
  *                     Default: 'avatar'.
@@ -223,7 +223,7 @@ function bp_attachments_get_allowed_types( $type = 'avatar' ) {
 	/**
 	 * Filter here to edit the allowed extensions by attachment type.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param array  $exts List of allowed extensions.
 	 * @param string $type The requested file type.
@@ -234,7 +234,7 @@ function bp_attachments_get_allowed_types( $type = 'avatar' ) {
 /**
  * Get allowed attachment mime types.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @param string $type          The extension types to get (Optional).
  * @param array  $allowed_types List of allowed extensions.
@@ -261,7 +261,7 @@ function bp_attachments_get_allowed_mimes( $type = '', $allowed_types = array() 
 /**
  * Check the uploaded attachment type is allowed.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @param string $file          Full path to the file.
  * @param string $filename      The name of the file (may differ from $file due to $file being
@@ -282,7 +282,7 @@ function bp_attachments_check_filetype( $file, $filename, $allowed_mimes ) {
 /**
  * Use the absolute path to an image to set an attachment type for a given item.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @param string $type The attachment type to create (avatar or cover_image). Default: avatar.
  * @param array  $args {
@@ -445,7 +445,7 @@ function bp_attachments_create_item_type( $type = 'avatar', $args = array() ) {
 /**
  * Get the url or the path for a type of attachment.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @param string $data whether to get the url or the path.
  * @param array  $args {
@@ -473,7 +473,7 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
 	 *
 	 * If you want to override this function, make sure you return false.
 	 *
-	 * @since 2.5.1
+	 * @since BuddyPress 2.5.1
 	 *
 	 * @param null|string $value If null is returned, proceed with default behaviour. Otherwise, value returned verbatim.
 	 * @param array $r {
@@ -547,7 +547,7 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
 /**
  * Delete an attachment for the given arguments
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @see bp_attachments_get_attachment() For more information on accepted arguments.
  *
@@ -562,7 +562,7 @@ function bp_attachments_delete_file( $args = array() ) {
 	 *
 	 * If you want to override this function, make sure you return false.
 	 *
-	 * @since 2.5.1
+	 * @since BuddyPress 2.5.1
 	 *
 	 * @param bool $value Whether or not to delete the BuddyPress attachment.
 `	 * @param array $args Array of arguments for the attachment deletion.
@@ -582,7 +582,7 @@ function bp_attachments_delete_file( $args = array() ) {
 /**
  * Get the BuddyPress Plupload settings.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  *
  * @return array List of BuddyPress Plupload settings.
  */
@@ -630,7 +630,7 @@ function bp_attachments_get_plupload_default_settings() {
 	/**
 	 * Filter the BuddyPress Plupload default settings.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param array $settings Default Plupload parameters array.
 	 */
@@ -640,7 +640,7 @@ function bp_attachments_get_plupload_default_settings() {
 /**
  * Builds localization strings for the BuddyPress Uploader scripts.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  *
  * @return array Plupload default localization strings.
  */
@@ -676,7 +676,7 @@ function bp_attachments_get_plupload_l10n() {
 /**
  * Enqueues the script needed for the Uploader UI.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  *
  * @see BP_Attachment::script_data() && BP_Attachment_Avatar::script_data() for examples showing how
  * to set specific script data.
@@ -797,7 +797,7 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 		/**
 		 * Use this filter to add a navigation to a custom tool to set the object's avatar.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param array  $avatar_nav {
 		 *     An associative array of available nav items where each item is an array organized this way:
@@ -884,7 +884,7 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 	 * Fires at the conclusion of bp_attachments_enqueue_scripts()
 	 * to avoid the scripts to be loaded more than once.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 */
 	do_action( 'bp_attachments_enqueue_scripts' );
 }
@@ -892,7 +892,7 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 /**
  * Check the current user's capability to edit an avatar for a given object.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  *
  * @param string $capability The capability to check.
  * @param array  $args       An array containing the item_id and the object to check.
@@ -936,7 +936,7 @@ function bp_attachments_current_user_can( $capability, $args = array() ) {
 /**
  * Send a JSON response back to an Ajax upload request.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  *
  * @param bool  $success  True for a success, false otherwise.
  * @param bool  $is_html4 True if the Plupload runtime used is html4, false otherwise.
@@ -968,7 +968,7 @@ function bp_attachments_json_response( $success, $is_html4 = false, $data = null
 /**
  * Get an Attachment template part.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  *
  * @param string $slug Template part slug. eg 'uploader' for 'uploader.php'.
  * @return bool
@@ -999,7 +999,7 @@ function bp_attachments_get_template_part( $slug ) {
 /**
  * Get the cover image settings
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @param string $component The component to get the settings for ("xprofile" for user or "groups").
  * @return false|array The cover image settings in array, false on failure.
@@ -1021,7 +1021,7 @@ function bp_attachments_get_cover_image_settings( $component = 'xprofile' ) {
 	 * Eg: for the user's profile cover image use:
 	 * add_filter( 'bp_before_xprofile_cover_image_settings_parse_args', 'your_filter', 10, 1 );
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param array $settings The cover image settings
 	 */
@@ -1050,7 +1050,7 @@ function bp_attachments_get_cover_image_settings( $component = 'xprofile' ) {
 /**
  * Get cover image Width and Height.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @param string $component The BuddyPress component concerned ("xprofile" for user or "groups").
  * @return array|bool An associative array containing the advised width and height for the cover image. False if settings are empty.
@@ -1071,7 +1071,7 @@ function bp_attachments_get_cover_image_dimensions( $component = 'xprofile' ) {
 	/**
 	 * Filter here to edit the cover image dimensions if needed.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param array  $wh       An associative array containing the width and height values.
 	 * @param array  $settings An associative array containing all the feature settings.
@@ -1083,7 +1083,7 @@ function bp_attachments_get_cover_image_dimensions( $component = 'xprofile' ) {
 /**
  * Are we on a page to edit a cover image?
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @return bool True if on a page to edit a cover image, false otherwise.
  */
@@ -1114,7 +1114,7 @@ function bp_attachments_cover_image_is_edit() {
 /**
  * Does the user has a cover image?
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @param int $user_id User ID to retrieve cover image for.
  * @return bool True if the user has a cover image, false otherwise.
@@ -1134,7 +1134,7 @@ function bp_attachments_get_user_has_cover_image( $user_id = 0 ) {
 /**
  * Does the group has a cover image?
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @param int $group_id Group ID to check cover image existence for.
  * @return bool True if the group has a cover image, false otherwise.
@@ -1155,7 +1155,7 @@ function bp_attachments_get_group_has_cover_image( $group_id = 0 ) {
 /**
  * Generate the cover image file.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @param array                          $args {
  *     @type string $file            The absolute path to the image. Required.
@@ -1238,7 +1238,7 @@ function bp_attachments_cover_image_generate_file( $args = array(), $cover_image
 /**
  * Ajax Upload and set a cover image
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @return string|null A json object containing success data if the upload succeeded,
  *                     error message otherwise.
@@ -1311,7 +1311,7 @@ function bp_attachments_cover_image_ajax_upload() {
 	 *
 	 * If you want to override this function, make sure you return an array with the 'result' key set.
 	 *
-	 * @since 2.5.1
+	 * @since BuddyPress 2.5.1
 	 *
 	 * @param array $value
 	 * @param array $bp_params
@@ -1409,8 +1409,8 @@ function bp_attachments_cover_image_ajax_upload() {
 	 * Use add_action( 'xprofile_cover_image_uploaded' ) to run your specific
 	 * code once the user has set his cover image.
 	 *
-	 * @since 2.4.0
-	 * @since 3.0.0 Added $cover_url, $name, $feedback_code arguments.
+	 * @since BuddyPress 2.4.0
+	 * @since BuddyPress 3.0.0 Added $cover_url, $name, $feedback_code arguments.
 	 *
 	 * @param int    $item_id       Inform about the item id the cover image was set for.
 	 * @param string $name          Filename.
@@ -1437,7 +1437,7 @@ add_action( 'wp_ajax_bp_cover_image_upload', 'bp_attachments_cover_image_ajax_up
 /**
  * Ajax delete a cover image for a given object and item id.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @return string|null A json object containing success data if the cover image was deleted
  *                     error message otherwise.
@@ -1483,7 +1483,7 @@ function bp_attachments_cover_image_ajax_delete() {
 		 * Use add_action( 'xprofile_cover_image_deleted' ) to run your specific
 		 * code once the user has deleted his cover image.
 		 *
-		 * @since 2.8.0
+		 * @since BuddyPress 2.8.0
 		 *
 		 * @param int $item_id Inform about the item id the cover image was deleted for.
 		 */

@@ -6,7 +6,7 @@ use WP_CLI;
 /**
  * Manage BuddyPress group members.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 class Group_Member extends BuddypressCommand {
 
@@ -348,7 +348,7 @@ class Group_Member extends BuddypressCommand {
 	/**
 	 * Group Roles.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @return array An array of group roles.
 	 */

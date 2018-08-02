@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileClasses
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class for XProfile Profile Data setup.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 class BP_XProfile_ProfileData {
 
 	/**
 	 * XProfile ID.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var int $id
 	 */
 	public $id;
@@ -28,7 +28,7 @@ class BP_XProfile_ProfileData {
 	/**
 	 * User ID.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var int $user_id
 	 */
 	public $user_id;
@@ -36,7 +36,7 @@ class BP_XProfile_ProfileData {
 	/**
 	 * XProfile field ID.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var int $field_id
 	 */
 	public $field_id;
@@ -44,7 +44,7 @@ class BP_XProfile_ProfileData {
 	/**
 	 * XProfile field value.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var string $value
 	 */
 	public $value;
@@ -52,7 +52,7 @@ class BP_XProfile_ProfileData {
 	/**
 	 * XProfile field last updated time.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var string $last_updated
 	 */
 	public $last_updated;
@@ -60,7 +60,7 @@ class BP_XProfile_ProfileData {
 	/**
 	 * BP_XProfile_ProfileData constructor.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param int|null $field_id Field ID to instantiate.
 	 * @param int|null $user_id  User ID to instantiate for.
@@ -74,7 +74,7 @@ class BP_XProfile_ProfileData {
 	/**
 	 * Populates the XProfile profile data.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $field_id Field ID to populate.
 	 * @param int $user_id  User ID to populate for.
@@ -113,7 +113,7 @@ class BP_XProfile_ProfileData {
 	/**
 	 * Check if there is data already for the user.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @global object $wpdb
 	 * @global array $bp
@@ -137,7 +137,7 @@ class BP_XProfile_ProfileData {
 		/**
 		 * Filters whether or not data already exists for the user.
 		 *
-		 * @since 1.2.7
+		 * @since BuddyPress 1.2.7
 		 *
 		 * @param bool                    $retval Whether or not data already exists.
 		 * @param BP_XProfile_ProfileData $this   Instance of the current BP_XProfile_ProfileData class.
@@ -148,7 +148,7 @@ class BP_XProfile_ProfileData {
 	/**
 	 * Check if this data is for a valid field.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @global object $wpdb
 	 *
@@ -164,7 +164,7 @@ class BP_XProfile_ProfileData {
 		/**
 		 * Filters whether or not data is for a valid field.
 		 *
-		 * @since 1.2.7
+		 * @since BuddyPress 1.2.7
 		 *
 		 * @param bool                    $retval Whether or not data is valid.
 		 * @param BP_XProfile_ProfileData $this   Instance of the current BP_XProfile_ProfileData class.
@@ -175,7 +175,7 @@ class BP_XProfile_ProfileData {
 	/**
 	 * Save the data for the XProfile field.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return bool
 	 */
@@ -187,7 +187,7 @@ class BP_XProfile_ProfileData {
 		/**
 		 * Filters the data's user ID before saving to the database.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param int $user_id The user ID.
 		 * @param int $data_id The field data ID.
@@ -197,7 +197,7 @@ class BP_XProfile_ProfileData {
 		/**
 		 * Filters the data's field ID before saving to the database.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param int $field_id The field ID.
 		 * @param int $data_id  The field data ID.
@@ -207,8 +207,8 @@ class BP_XProfile_ProfileData {
 		/**
 		 * Filters the data's value before saving to the database.
 		 *
-		 * @since 1.0.0
-		 * @since 2.1.0 Added `$reserialize` and `$this` parameters.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.1.0 Added `$reserialize` and `$this` parameters.
 		 *
 		 * @param string                  $field_value The field value.
 		 * @param int                     $data_id     The field data ID.
@@ -220,7 +220,7 @@ class BP_XProfile_ProfileData {
 		/**
 		 * Filters the data's last updated timestamp before saving to the database.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param int $last_updated The last updated timestamp.
 		 * @param int $data_id      The field data ID.
@@ -232,7 +232,7 @@ class BP_XProfile_ProfileData {
 		 *
 		 * Please use this hook to filter the properties above. Each part will be passed in.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param BP_XProfile_ProfileData $this Current instance of the profile data being saved.
 		 */
@@ -258,7 +258,7 @@ class BP_XProfile_ProfileData {
 			/**
 			 * Fires after the current profile data instance gets saved.
 			 *
-			 * @since 1.0.0
+			 * @since BuddyPress 1.0.0
 			 *
 			 * @param BP_XProfile_ProfileData $this Current instance of the profile data being saved.
 			 */
@@ -273,7 +273,7 @@ class BP_XProfile_ProfileData {
 	/**
 	 * Delete specific XProfile field data.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @global object $wpdb
 	 *
@@ -287,7 +287,7 @@ class BP_XProfile_ProfileData {
 		/**
 		 * Fires before the current profile data instance gets deleted.
 		 *
-		 * @since 1.9.0
+		 * @since BuddyPress 1.9.0
 		 *
 		 * @param BP_XProfile_ProfileData $this Current instance of the profile data being deleted.
 		 */
@@ -301,7 +301,7 @@ class BP_XProfile_ProfileData {
 		/**
 		 * Fires after the current profile data instance gets deleted.
 		 *
-		 * @since 1.9.0
+		 * @since BuddyPress 1.9.0
 		 *
 		 * @param BP_XProfile_ProfileData $this Current instance of the profile data being deleted.
 		 */
@@ -315,7 +315,7 @@ class BP_XProfile_ProfileData {
 	/**
 	 * Get a user's profile data for a set of fields.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param int   $user_id   ID of user whose data is being queried.
 	 * @param array $field_ids Array of field IDs to query for.
@@ -395,7 +395,7 @@ class BP_XProfile_ProfileData {
 	/**
 	 * Get all of the profile information for a specific user.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param int $user_id ID of the user.
 	 * @return array
@@ -442,7 +442,7 @@ class BP_XProfile_ProfileData {
 	/**
 	 * Get the user's field data id by the id of the xprofile field.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $field_id Field ID being queried for.
 	 * @param int $user_id  User ID associated with field.
@@ -474,7 +474,7 @@ class BP_XProfile_ProfileData {
 	 *
 	 * Supports multiple user IDs.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int            $field_id ID of the field.
 	 * @param int|array|null $user_ids ID or IDs of user(s).
@@ -569,7 +569,7 @@ class BP_XProfile_ProfileData {
 	/**
 	 * Get profile field values by field name and user ID.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param array|string $fields  Field(s) to get.
 	 * @param int|null     $user_id User ID to get field data for.
@@ -633,7 +633,7 @@ class BP_XProfile_ProfileData {
 	/**
 	 * Delete field.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $field_id ID of the field to delete.
 	 * @return bool
@@ -653,7 +653,7 @@ class BP_XProfile_ProfileData {
 	/**
 	 * Get time for last XProfile field data update by user.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $user_id User ID to get time for.
 	 * @return null|string
@@ -671,7 +671,7 @@ class BP_XProfile_ProfileData {
 	/**
 	 * Delete all data for provided user ID.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $user_id User ID to remove data for.
 	 * @return false|int
@@ -687,7 +687,7 @@ class BP_XProfile_ProfileData {
 	/**
 	 * Get random field type by user ID.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int    $user_id          User ID to query for.
 	 * @param string $exclude_fullname SQL portion used to exclude by field ID.
@@ -706,7 +706,7 @@ class BP_XProfile_ProfileData {
 	/**
 	 * Get fullname for provided user ID.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $user_id ID of the user to query.
 	 * @return mixed

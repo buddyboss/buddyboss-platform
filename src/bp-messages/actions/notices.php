@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage MessageActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handle editing of sitewide notices.
  *
- * @since 2.4.0 This function was split from messages_screen_notices(). See #6505.
+ * @since BuddyPress 2.4.0 This function was split from messages_screen_notices(). See #6505.
  *
  * @return boolean
  */

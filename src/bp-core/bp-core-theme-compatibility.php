@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage ThemeCompatibility
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 
 // Exit if accessed directly.
@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the default theme compat theme.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param string $theme Optional. The unique ID identifier of a theme package.
  */
@@ -49,7 +49,7 @@ function bp_setup_theme_compat( $theme = '' ) {
  * This can be filtered or set manually. Tricky theme authors can override the
  * default and include their own BuddyPress compatibility layers for their themes.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @return string ID of the theme package in use.
  */
@@ -58,7 +58,7 @@ function bp_get_theme_compat_id() {
 	/**
 	 * Filters the ID of the theme package being used.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $id ID of the theme package in use.
 	 */
@@ -71,7 +71,7 @@ function bp_get_theme_compat_id() {
  * This can be filtered or set manually. Tricky theme authors can override the
  * default and include their own BuddyPress compatibility layers for their themes.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @return string Name of the theme package currently in use.
  */
@@ -80,7 +80,7 @@ function bp_get_theme_compat_name() {
 	/**
 	 * Filters the name of the theme package being used.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $name Name of the theme package in use.
 	 */
@@ -93,7 +93,7 @@ function bp_get_theme_compat_name() {
  * This can be filtered or set manually. Tricky theme authors can override the
  * default and include their own BuddyPress compatibility layers for their themes.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @return string The version string of the theme package currently in use.
  */
@@ -102,7 +102,7 @@ function bp_get_theme_compat_version() {
 	/**
 	 * Filters the version of the theme package being used.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $version The version string of the theme package in use.
 	 */
@@ -115,7 +115,7 @@ function bp_get_theme_compat_version() {
  * Or set manually. Tricky theme authors can override the default and include
  * their own BuddyPress compatibility layers for their themes.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @return string The absolute path of the theme package currently in use.
  */
@@ -124,7 +124,7 @@ function bp_get_theme_compat_dir() {
 	/**
 	 * Filters the absolute path of the theme package being used.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $dir The absolute path of the theme package in use.
 	 */
@@ -138,7 +138,7 @@ function bp_get_theme_compat_dir() {
  * the default and include their own BuddyPress compatibility layers for their
  * themes.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @return string URL of the theme package currently in use.
  */
@@ -147,7 +147,7 @@ function bp_get_theme_compat_url() {
 	/**
 	 * Filters the URL of the theme package being used.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $url URL of the theme package in use.
 	 */
@@ -160,7 +160,7 @@ function bp_get_theme_compat_url() {
  * If the current theme's need for theme compat hasn't yet been detected, we
  * do so using bp_detect_theme_compat_with_current_theme().
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @return bool True if the current theme needs theme compatibility.
  */
@@ -172,7 +172,7 @@ function bp_use_theme_compat_with_current_theme() {
 	/**
 	 * Filters whether or not to use theme compat for the active theme.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @param bool $use_with_current_theme True if the current theme needs theme compatibility.
 	 */
@@ -191,7 +191,7 @@ function bp_use_theme_compat_with_current_theme() {
  *    this category will have the members-loop.php template, and so use its
  *    presence as an indicator that theme compatibility is not required
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @return bool True if the current theme needs theme compatibility.
  */
@@ -229,7 +229,7 @@ function bp_detect_theme_compat_with_current_theme() {
 /**
  * Is the current page using theme compatibility?
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @return bool True if the current page uses theme compatibility.
  */
@@ -246,7 +246,7 @@ function bp_is_theme_compat_active() {
 /**
  * Set the flag that tells whether the current page is using theme compatibility.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param bool $set True to set the flag to true, false to set it to false.
  * @return bool Returns the value of $set.
@@ -263,7 +263,7 @@ function bp_set_theme_compat_active( $set = true ) {
  * Stash possible template files for the current query. Useful if plugins want
  * to override them, or see what files are being scanned for inclusion.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param array $templates The template stack.
  * @return array The template stack (value of $templates).
@@ -280,7 +280,7 @@ function bp_set_theme_compat_templates( $templates = array() ) {
  * Stash the template file for the current query. Useful if plugins want
  * to override it, or see what file is being included.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param string $template The template currently in use.
  * @return string The template currently in use (value of $template).
@@ -297,7 +297,7 @@ function bp_set_theme_compat_template( $template = '' ) {
  * Stash the original template file for the current query. Useful for checking
  * if BuddyPress was able to find a more appropriate template.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param string $template The template originally selected by WP.
  * @return string The template originally selected by WP (value of $template).
@@ -311,7 +311,7 @@ function bp_set_theme_compat_original_template( $template = '' ) {
 /**
  * Set a theme compat feature
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @param string $theme_id The theme id (eg: legacy).
  * @param array  $feature  An associative array (eg: array( name => 'feature_name', 'settings' => array() )).
@@ -371,7 +371,7 @@ function bp_set_theme_compat_feature( $theme_id, $feature = array() ) {
 /**
  * Get a theme compat feature
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @param string $feature The feature (eg: cover_image).
  * @return object The feature settings.
@@ -396,7 +396,7 @@ function bp_get_theme_compat_feature( $feature = '' ) {
  * Note: BP Legacy's buddypress-functions.php is not loaded in WP Administration
  * as it's loaded using bp_locate_template(). That's why this function is here.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @global string $content_width the content width of the theme
  */
@@ -476,7 +476,7 @@ function bp_register_theme_compat_default_features() {
 /**
  * Check whether a given template is the one that WP originally selected to display current page.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param string $template The template name to check.
  * @return bool True if the value of $template is the same as the
@@ -498,7 +498,7 @@ function bp_is_theme_compat_original_template( $template = '' ) {
  * For an example of how this function is used, see:
  * {@link BuddyPress::register_theme_packages()}.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @see BP_Theme_Compat for a description of the $theme parameter arguments.
  *
@@ -536,7 +536,7 @@ function bp_register_theme_package( $theme = array(), $override = true ) {
  * (at least, no WordPress post content). By providing dummy data, we ensure
  * that template functions - things like is_page() - don't throw errors.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @global WP_Query $wp_query WordPress database access object.
  * @global object $post Current post object.
@@ -658,7 +658,7 @@ function bp_theme_compat_reset_post( $args = array() ) {
 /**
  * Reset main query vars and filter 'the_content' to output a BuddyPress template part as needed.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param string $template Template name.
  * @return string $template Template name.
@@ -681,7 +681,7 @@ function bp_template_include_theme_compat( $template = '' ) {
 	 * theme compatibility layer whether or not we're replacing the_content()
 	 * with some other template part.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	do_action( 'bp_template_include_reset_dummy_post_data' );
 
@@ -721,7 +721,7 @@ function bp_template_include_theme_compat( $template = '' ) {
 	/**
 	 * Filters the template name to include.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $template Template name.
 	 */
@@ -735,7 +735,7 @@ function bp_template_include_theme_compat( $template = '' ) {
  * normally be handled by BuddyPress, but proper single page templates do not
  * exist in the currently active theme.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param string $content Original post content.
  * @return string $content Post content, potentially modified.
@@ -754,7 +754,7 @@ function bp_replace_the_content( $content = '' ) {
 	/**
 	 * Filters the content to replace in the post.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $content Original post content.
 	 */
@@ -780,7 +780,7 @@ function bp_replace_the_content( $content = '' ) {
 /**
  * Are we currently replacing the_content?
  *
- * @since 1.8.0
+ * @since BuddyPress 1.8.0
  *
  * @return bool True if the_content is currently in the process of being
  *              filtered and replaced.
@@ -797,7 +797,7 @@ function bp_do_theme_compat() {
  * Removed filters are stashed in the $bp global, in case they need to be
  * restored later.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @global WP_filter $wp_filter
  * @global array $merged_filters
@@ -852,7 +852,7 @@ function bp_remove_all_filters( $tag, $priority = false ) {
 /**
  * Restore filters that were removed using bp_remove_all_filters().
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @global WP_filter $wp_filter
  * @global array $merged_filters
@@ -907,7 +907,7 @@ function bp_restore_all_filters( $tag, $priority = false ) {
 /**
  * Force comments_status to 'closed' for BuddyPress post types.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param bool $open    True if open, false if closed.
  * @param int  $post_id ID of the post to check.
@@ -920,7 +920,7 @@ function bp_comments_open( $open, $post_id = 0 ) {
 	/**
 	 * Filters whether or not to force comments_status to closed for BuddyPress post types.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param bool $retval  Whether or not we are on a BuddyPress post type.
 	 * @param bool $open    True if comments open, false if closed.
@@ -943,7 +943,7 @@ function bp_comments_open( $open, $post_id = 0 ) {
  * This is done during the output buffer as late as possible to prevent any
  * wonkiness.
  *
- * @since 1.9.2
+ * @since BuddyPress 1.9.2
  *
  * @param string $retval The current post content.
  * @return string $retval
@@ -965,7 +965,7 @@ add_filter( 'bp_replace_the_content', 'bp_theme_compat_toggle_is_page', 9999 );
 /**
  * Restores the 'is_single' and 'is_page' flags if toggled by BuddyPress.
  *
- * @since 1.9.2
+ * @since BuddyPress 1.9.2
  *
  * @see bp_theme_compat_toggle_is_page()
  * @param object $query The WP_Query object.
@@ -991,7 +991,7 @@ add_action( 'loop_end', 'bp_theme_compat_loop_end' );
 /**
  * Maybe override the preferred template pack if the theme declares a dependency.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_check_theme_template_pack_dependency() {
 	if ( bp_is_deactivation() ) {

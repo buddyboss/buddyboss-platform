@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * API for responding and returning a custom oEmbed request.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  */
 abstract class BP_Core_oEmbed_Extension {
 
@@ -24,7 +24,7 @@ abstract class BP_Core_oEmbed_Extension {
 	 *
 	 * Should be your component id.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @var string
 	 */
@@ -52,7 +52,7 @@ abstract class BP_Core_oEmbed_Extension {
 	/**
 	 * Add content for your oEmbed response here.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @return null
 	 */
@@ -63,7 +63,7 @@ abstract class BP_Core_oEmbed_Extension {
 	 *
 	 * You'll want to return a boolean here. eg. bp_is_single_activity().
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @return bool
 	 */
@@ -72,7 +72,7 @@ abstract class BP_Core_oEmbed_Extension {
 	/**
 	 * Validate the URL to see if it matches your item ID.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param string $url URL to validate.
 	 * @return int Your item ID
@@ -82,7 +82,7 @@ abstract class BP_Core_oEmbed_Extension {
 	/**
 	 * Set the oEmbed response data.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param int $item_id Your item ID to do checks against.
 	 * @return array Should contain 'content', 'title', 'author_url', 'author_name' as array
@@ -96,7 +96,7 @@ abstract class BP_Core_oEmbed_Extension {
 	 * In a WordPress oEmbed item, the fallback HTML is a <blockquote>.  This is
 	 * usually hidden after the <iframe> is loaded.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param int $item_id Your item ID to do checks against.
 	 * @return string Fallback HTML you want to output.
@@ -110,7 +110,7 @@ abstract class BP_Core_oEmbed_Extension {
 	 *
 	 * @see register_rest_route() View the $args parameter for more info.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @return array
 	 */
@@ -123,7 +123,7 @@ abstract class BP_Core_oEmbed_Extension {
 	 *
 	 * If not set, this will fallback to WP's 'Embedded WordPress Post'.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param int $item_id The item ID to do checks for.
 	 */
@@ -132,7 +132,7 @@ abstract class BP_Core_oEmbed_Extension {
 	/**
 	 * Do what you need to do here to initialize any custom hooks.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 */
 	protected function custom_hooks() {}
 
@@ -143,7 +143,7 @@ abstract class BP_Core_oEmbed_Extension {
 	 * you will not need to override this method.  However, if you need to, do
 	 * override in your extended class.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 */
 	protected function set_permalink() {
 		$url = bp_get_requested_url();
@@ -163,7 +163,7 @@ abstract class BP_Core_oEmbed_Extension {
 	 *
 	 * Should only be used during the 'embed_html' hook.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 */
 	protected function get_item_id() {
 		return $this->is_page() ? $this->validate_url_to_item_id( $this->set_permalink() ) : buddypress()->{$this->slug_endpoint}->embedid_in_progress;
@@ -174,7 +174,7 @@ abstract class BP_Core_oEmbed_Extension {
 	/**
 	 * Set up properties.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 */
 	protected function setup_properties() {
 		$this->slug_endpoint = sanitize_title( $this->slug_endpoint );
@@ -185,7 +185,7 @@ abstract class BP_Core_oEmbed_Extension {
 	 *
 	 * More hooks are available in the setup_template_parts() method.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 */
 	protected function setup_hooks() {
 		add_action( 'rest_api_init',    array( $this, 'register_route' ) );
@@ -203,7 +203,7 @@ abstract class BP_Core_oEmbed_Extension {
 	/**
 	 * Register the oEmbed REST API route.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 */
 	public function register_route() {
 		/** This filter is documented in wp-includes/class-wp-oembed-controller.php */
@@ -240,7 +240,7 @@ abstract class BP_Core_oEmbed_Extension {
 	/**
 	 * Set up custom embed template parts for BuddyPress use.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param string $template File path to current embed template.
 	 * @return string
@@ -265,7 +265,7 @@ abstract class BP_Core_oEmbed_Extension {
 	 * We're going to override WP's get_template_part( 'embed, 'content' ) call
 	 * and inject our own template for BuddyPress use.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param string $slug Template slug.
 	 * @param string $name Template name.
@@ -285,7 +285,7 @@ abstract class BP_Core_oEmbed_Extension {
 	 * We're going to override WP's get_template_part( 'embed, 'content' ) call
 	 * and inject our own template for BuddyPress use.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param string $name Template name.
 	 */
@@ -311,7 +311,7 @@ abstract class BP_Core_oEmbed_Extension {
 		 * You shouldn't really need to use this if you extend the
 		 * {@link BP_oEmbed_Component} class.
 		 *
-		 * @since 2.6.0
+		 * @since BuddyPress 2.6.0
 		 */
 		do_action( 'bp_embed_content' );
 
@@ -324,7 +324,7 @@ abstract class BP_Core_oEmbed_Extension {
 	/**
 	 * Adds oEmbed discovery links on single activity pages.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param string $retval Current discovery links.
 	 * @return string
@@ -357,7 +357,7 @@ abstract class BP_Core_oEmbed_Extension {
 	 *
 	 * A simplified version of {@link get_oembed_response_data()}.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @link http://oembed.com/ View the 'Response parameters' section for more details.
 	 *
@@ -409,7 +409,7 @@ abstract class BP_Core_oEmbed_Extension {
 	 *
 	 * Returns the JSON object for the item.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|array oEmbed response data or WP_Error on failure.
@@ -462,7 +462,7 @@ abstract class BP_Core_oEmbed_Extension {
 	 * Basically a copy of {@link _oembed_rest_pre_serve_request()}. Unfortunate
 	 * that we have to duplicate this just for a URL check.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param bool                      $served  Whether the request has already been served.
 	 * @param WP_HTTP_ResponseInterface $result  Result to send to the client. Usually a WP_REST_Response.
@@ -512,7 +512,7 @@ abstract class BP_Core_oEmbed_Extension {
 	/**
 	 * Pass our BuddyBoss activity permalink for embedding.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @see bp_activity_embed_rest_route_callback()
 	 *
@@ -546,7 +546,7 @@ abstract class BP_Core_oEmbed_Extension {
 	/**
 	 * Filters the embed HTML for our BP oEmbed endpoint.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param string $retval Current embed HTML.
 	 * @return string
@@ -585,7 +585,7 @@ abstract class BP_Core_oEmbed_Extension {
 		/**
 		 * Dynamic filter to return BP oEmbed HTML.
 		 *
-		 * @since 2.6.0
+		 * @since BuddyPress 2.6.0
 		 *
 		 * @var string $retval
 		 */
@@ -598,7 +598,7 @@ abstract class BP_Core_oEmbed_Extension {
 	 * Meant to be used as a filter on 'rest_url' before any call to
 	 * {@link get_oembed_endpoint_url()} is used.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @see add_oembed_discovery_links()
 	 *
@@ -612,7 +612,7 @@ abstract class BP_Core_oEmbed_Extension {
 	/**
 	 * Inject content into the embed template.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 */
 	public function inject_content() {
 		if ( ! $this->is_page() ) {

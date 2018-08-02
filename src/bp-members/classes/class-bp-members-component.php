@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Members
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Defines the BuddyPress Members Component.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 class BP_Members_Component extends BP_Component {
 
@@ -22,7 +22,7 @@ class BP_Members_Component extends BP_Component {
 	 *
 	 * @see bp_register_member_type()
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 * @var array
 	 */
 	public $types = array();
@@ -30,7 +30,7 @@ class BP_Members_Component extends BP_Component {
 	/**
 	 * Start the members component creation process.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	public function __construct() {
 		parent::start(
@@ -47,7 +47,7 @@ class BP_Members_Component extends BP_Component {
 	/**
 	 * Include bp-members files.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @see BP_Component::includes() for description of parameters.
 	 *
@@ -82,7 +82,7 @@ class BP_Members_Component extends BP_Component {
 	 *
 	 * Only load up certain code when on specific pages.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function late_includes() {
 		// Bail if PHPUnit is running.
@@ -132,7 +132,7 @@ class BP_Members_Component extends BP_Component {
 	 * The BP_MEMBERS_SLUG constant is deprecated, and only used here for
 	 * backwards compatibility.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @see BP_Component::setup_globals() for description of parameters.
 	 *
@@ -223,7 +223,7 @@ class BP_Members_Component extends BP_Component {
 	/**
 	 * Set up canonical stack for this component.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 */
 	public function setup_canonical_stack() {
 		$bp = buddypress();
@@ -282,7 +282,7 @@ class BP_Members_Component extends BP_Component {
 	/**
 	 * Set up fall-back component navigation if XProfile is inactive.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @see BP_Component::setup_nav() for a description of arguments.
 	 *
@@ -396,7 +396,7 @@ class BP_Members_Component extends BP_Component {
 	 * component is not active and a front template is
 	 * used.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 */
 	public function setup_profile_nav() {
 		if ( empty( $this->main_nav ) || empty( $this->sub_nav ) ) {
@@ -413,7 +413,7 @@ class BP_Members_Component extends BP_Component {
 	/**
 	 * Set up the title for pages and <title>.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	public function setup_title() {
 		$bp = buddypress();
@@ -435,7 +435,7 @@ class BP_Members_Component extends BP_Component {
 	/**
 	 * Setup cache groups.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 */
 	public function setup_cache_groups() {
 

@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -20,7 +20,7 @@ if ( !class_exists( 'BP_Component' ) ) :
  * internally by BuddyPress to create the bundled components, but can be
  * extended to create other really neat things.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 class BP_Component {
 
@@ -37,7 +37,7 @@ class BP_Component {
 	/**
 	 * Unique ID for the component.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var string $id
 	 */
 	public $id = '';
@@ -45,7 +45,7 @@ class BP_Component {
 	/**
 	 * Unique slug for the component, for use in query strings and URLs.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var string $slug
 	 */
 	public $slug = '';
@@ -53,7 +53,7 @@ class BP_Component {
 	/**
 	 * Does the component need a top-level directory?
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var bool $has_directory
 	 */
 	public $has_directory = false;
@@ -61,7 +61,7 @@ class BP_Component {
 	/**
 	 * The path to the component's files.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var string $path
 	 */
 	public $path = '';
@@ -69,7 +69,7 @@ class BP_Component {
 	/**
 	 * The WP_Query loop for this component.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var WP_Query $query
 	 */
 	public $query = false;
@@ -77,7 +77,7 @@ class BP_Component {
 	/**
 	 * The current ID of the queried object.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var string $current_id
 	 */
 	public $current_id = '';
@@ -85,7 +85,7 @@ class BP_Component {
 	/**
 	 * Callback for formatting notifications.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var callable $notification_callback
 	 */
 	public $notification_callback = '';
@@ -93,7 +93,7 @@ class BP_Component {
 	/**
 	 * WordPress Toolbar links.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var array $admin_menu
 	 */
 	public $admin_menu = '';
@@ -101,7 +101,7 @@ class BP_Component {
 	/**
 	 * Placeholder text for component directory search box.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var string $search_string
 	 */
 	public $search_string = '';
@@ -109,7 +109,7 @@ class BP_Component {
 	/**
 	 * Root slug for the component.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var string $root_slug
 	 */
 	public $root_slug = '';
@@ -117,7 +117,7 @@ class BP_Component {
 	/**
 	 * Metadata tables for the component (if applicable).
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @var array
 	 */
@@ -126,7 +126,7 @@ class BP_Component {
 	/**
 	 * Global tables for the component (if applicable).
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @var array
 	 */
@@ -135,7 +135,7 @@ class BP_Component {
 	/**
 	 * Query argument for component search URLs.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 * @var string
 	 */
 	public $search_query_arg = 's';
@@ -145,10 +145,10 @@ class BP_Component {
 	/**
 	 * Component loader.
 	 *
-	 * @since 1.5.0
-	 * @since 1.9.0 Added $params as a parameter.
-	 * @since 2.3.0 Added $params['features'] as a configurable value.
-	 * @since 2.4.0 Added $params['search_query_arg'] as a configurable value.
+	 * @since BuddyPress 1.5.0
+	 * @since BuddyPress 1.9.0 Added $params as a parameter.
+	 * @since BuddyPress 2.3.0 Added $params['features'] as a configurable value.
+	 * @since BuddyPress 2.4.0 Added $params['search_query_arg'] as a configurable value.
 	 *
 	 * @param string $id   Unique ID. Letters, numbers, and underscores only.
 	 * @param string $name Unique name. This should be a translatable name, eg.
@@ -204,7 +204,7 @@ class BP_Component {
 	/**
 	 * Set up component global variables.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 *
 	 * @param array $args {
@@ -246,7 +246,7 @@ class BP_Component {
 		/**
 		 * Filters the slug to be used for the permalink URI chunk after root.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param string $value Slug to use in permalink URI chunk.
 		 */
@@ -255,7 +255,7 @@ class BP_Component {
 		/**
 		 * Filters the slug used for root directory.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param string $value Root directory slug.
 		 */
@@ -264,7 +264,7 @@ class BP_Component {
 		/**
 		 * Filters the component's top-level directory if available.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param bool $value Whether or not there is a top-level directory.
 		 */
@@ -273,7 +273,7 @@ class BP_Component {
 		/**
 		 * Filters the component's directory title.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param string $value Title to use for the directory.
 		 */
@@ -282,7 +282,7 @@ class BP_Component {
 		/**
 		 * Filters the placeholder text for search inputs for component.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param string $value Name to use in search input placeholders.
 		 */
@@ -291,7 +291,7 @@ class BP_Component {
 		/**
 		 * Filters the callable function that formats the component's notifications.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param string $value Function callback.
 		 */
@@ -318,7 +318,7 @@ class BP_Component {
 		 *
 		 * This is a dynamic hook that is based on the component string ID.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 */
 		do_action( 'bp_' . $this->id . '_setup_globals' );
 	}
@@ -346,7 +346,7 @@ class BP_Component {
 	 *   - ./bp-my_component/actions
 	 *   - ./bp-my_component/bp-my_component-actions.php
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 *
 	 * @param array $includes An array of file names, or file name chunks,
@@ -388,7 +388,7 @@ class BP_Component {
 		 *
 		 * This is a dynamic hook that is based on the component string ID.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 */
 		do_action( 'bp_' . $this->id . '_includes' );
 	}
@@ -400,14 +400,14 @@ class BP_Component {
 	 * conditionals such as {@link bp_is_current_component()}. Intentionally left
 	 * empty.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function late_includes() {}
 
 	/**
 	 * Set up the actions.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 */
 	public function setup_actions() {
@@ -466,7 +466,7 @@ class BP_Component {
 		 *
 		 * This is a dynamic hook that is based on the component string ID.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 */
 		do_action( 'bp_' . $this->id . '_setup_actions' );
 	}
@@ -474,14 +474,14 @@ class BP_Component {
 	/**
 	 * Set up the canonical URL stack for this component.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 */
 	public function setup_canonical_stack() {}
 
 	/**
 	 * Set up component navigation.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @see bp_core_new_nav_item() For a description of the $main_nav
 	 *      parameter formatting.
@@ -513,7 +513,7 @@ class BP_Component {
 		 *
 		 * This is a dynamic hook that is based on the component string ID.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 */
 		do_action( 'bp_' . $this->id . '_setup_nav' );
 	}
@@ -521,7 +521,7 @@ class BP_Component {
 	/**
 	 * Set up the component entries in the WordPress Admin Bar.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @see WP_Admin_Bar::add_menu() for a description of the syntax
 	 *      required by each item in the $wp_admin_nav parameter array.
@@ -549,7 +549,7 @@ class BP_Component {
 		 *
 		 * This is a dynamic hook that is based on the component string ID.
 		 *
-		 * @since 1.9.0
+		 * @since BuddyPress 1.9.0
 		 *
 		 * @param array $wp_admin_nav Array of navigation items to add.
 		 */
@@ -597,7 +597,7 @@ class BP_Component {
 		 *
 		 * This is a dynamic hook that is based on the component string ID.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 */
 		do_action( 'bp_' . $this->id . '_setup_admin_bar' );
 	}
@@ -605,7 +605,7 @@ class BP_Component {
 	/**
 	 * Set up the component title.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 */
 	public function setup_title() {
@@ -615,7 +615,7 @@ class BP_Component {
 		 *
 		 * This is a dynamic hook that is based on the component string ID.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 */
 		do_action(  'bp_' . $this->id . '_setup_title' );
 	}
@@ -623,7 +623,7 @@ class BP_Component {
 	/**
 	 * Setup component-specific cache groups.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 */
 	public function setup_cache_groups() {
@@ -633,7 +633,7 @@ class BP_Component {
 		 *
 		 * This is a dynamic hook that is based on the component string ID.
 		 *
-		 * @since 2.2.0
+		 * @since BuddyPress 2.2.0
 		 */
 		do_action( 'bp_' . $this->id . '_setup_cache_groups' );
 	}
@@ -641,7 +641,7 @@ class BP_Component {
 	/**
 	 * Register global tables for the component, so that it may use WordPress's database API.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $tables Table names to register.
 	 */
@@ -654,7 +654,7 @@ class BP_Component {
 		 * It allows for component-specific filtering of table names. To filter
 		 * *all* tables, use the 'bp_core_get_table_prefix' filter instead.
 		 *
-		 * @since 1.6.0
+		 * @since BuddyPress 1.6.0
 		 */
 		$tables = apply_filters( 'bp_' . $this->id . '_global_tables', $tables );
 
@@ -673,7 +673,7 @@ class BP_Component {
 		 *
 		 * This is a dynamic hook that is based on the component string ID.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 */
 		do_action( 'bp_' . $this->id . '_register_global_tables' );
 	}
@@ -684,7 +684,7 @@ class BP_Component {
 	 * Metadata tables are registered in the $wpdb global, for
 	 * compatibility with the WordPress metadata API.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $tables Table names to register.
 	 */
@@ -698,7 +698,7 @@ class BP_Component {
 		 * It allows for component-specific filtering of table names. To filter
 		 * *all* tables, use the 'bp_core_get_table_prefix' filter instead.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 */
 		$tables = apply_filters( 'bp_' . $this->id . '_meta_tables', $tables );
 
@@ -720,7 +720,7 @@ class BP_Component {
 		 *
 		 * This is a dynamic hook that is based on the component string ID.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 */
 		do_action( 'bp_' . $this->id . '_register_meta_tables' );
 	}
@@ -728,7 +728,7 @@ class BP_Component {
 	/**
 	 * Set up the component post types.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 */
 	public function register_post_types() {
@@ -738,7 +738,7 @@ class BP_Component {
 		 *
 		 * This is a dynamic hook that is based on the component string ID.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 */
 		do_action( 'bp_' . $this->id . '_register_post_types' );
 	}
@@ -746,7 +746,7 @@ class BP_Component {
 	/**
 	 * Register component-specific taxonomies.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 */
 	public function register_taxonomies() {
@@ -756,7 +756,7 @@ class BP_Component {
 		 *
 		 * This is a dynamic hook that is based on the component string ID.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 */
 		do_action( 'bp_' . $this->id . '_register_taxonomies' );
 	}
@@ -764,7 +764,7 @@ class BP_Component {
 	/**
 	 * Add any additional rewrite tags.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 */
 	public function add_rewrite_tags() {
@@ -774,7 +774,7 @@ class BP_Component {
 		 *
 		 * This is a dynamic hook that is based on the component string ID.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 */
 		do_action( 'bp_' . $this->id . '_add_rewrite_tags' );
 	}
@@ -782,7 +782,7 @@ class BP_Component {
 	/**
 	 * Add any additional rewrite rules.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 */
 	public function add_rewrite_rules() {
@@ -792,7 +792,7 @@ class BP_Component {
 		 *
 		 * This is a dynamic hook that is based on the component string ID.
 		 *
-		 * @since 1.9.0
+		 * @since BuddyPress 1.9.0
 		 */
 		do_action( 'bp_' . $this->id . '_add_rewrite_rules' );
 	}
@@ -800,7 +800,7 @@ class BP_Component {
 	/**
 	 * Add any permalink structures.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 */
 	public function add_permastructs() {
@@ -810,7 +810,7 @@ class BP_Component {
 		 *
 		 * This is a dynamic hook that is based on the component string ID.
 		 *
-		 * @since 1.9.0
+		 * @since BuddyPress 1.9.0
 		 */
 		do_action( 'bp_' . $this->id . '_add_permastructs' );
 	}
@@ -818,7 +818,7 @@ class BP_Component {
 	/**
 	 * Allow components to parse the main query.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 *
 	 * @param object $query The main WP_Query.
@@ -830,7 +830,7 @@ class BP_Component {
 		 *
 		 * This is a dynamic hook that is based on the component string ID.
 		 *
-		 * @since 1.9.0
+		 * @since BuddyPress 1.9.0
 		 *
 		 * @param object $query Main WP_Query object. Passed by reference.
 		 */
@@ -840,7 +840,7 @@ class BP_Component {
 	/**
 	 * Generate any additional rewrite rules.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 */
 	public function generate_rewrite_rules() {
@@ -850,7 +850,7 @@ class BP_Component {
 		 *
 		 * This is a dynamic hook that is based on the component string ID.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 */
 		do_action( 'bp_' . $this->id . '_generate_rewrite_rules' );
 	}

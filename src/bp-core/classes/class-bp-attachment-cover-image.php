@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  */
 
 // Exit if accessed directly.
@@ -15,13 +15,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * Extends BP Attachment to manage the cover images uploads.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  */
 class BP_Attachment_Cover_Image extends BP_Attachment {
 	/**
 	 * The constuctor.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 */
 	public function __construct() {
 		// Allowed cover image types & upload size.
@@ -46,7 +46,7 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 	/**
 	 * Gets the available cover image types.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param array $allowed_types Array of allowed cover image types.
 	 * @return string $value Comma-separated list of allowed cover image types.
@@ -63,7 +63,7 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 	 * Adds an error if the cover image size or type don't match BuddyPress needs.
 	 * The error code is the index of $upload_error_strings.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param array $file The temporary file attributes (before it has been moved).
 	 * @return array $file The file with extra errors if needed.
@@ -90,7 +90,7 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 	/**
 	 * Set the directory when uploading a file.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param array $upload_dir The original Uploads dir.
 	 * @return array $value Upload data (path, url, basedir...).
@@ -102,7 +102,7 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 	/**
 	 * Adjust the cover image to fit with advised width & height.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param string $file       The absolute path to the file.
 	 * @param array  $dimensions Array of dimensions for the cover image.
@@ -165,7 +165,7 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 	/**
 	 * Generate a filename for the cover image.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param string $file The absolute path to the file.
 	 * @return false|string $value The absolute path to the new file name.
@@ -185,7 +185,7 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 	/**
 	 * Build script datas for the Uploader UI.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @return array The javascript localization data
 	 */
@@ -235,7 +235,7 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 			 * Filters the cover image params to include specific BuddyPress params for your object.
 			 * e.g. Cover image for blogs single item.
 			 *
-			 * @since 2.4.0
+			 * @since BuddyPress 2.4.0
 			 *
 			 * @param array $value The cover image specific BuddyPress parameters.
 			 */
@@ -249,7 +249,7 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 		/**
 		 * Filters the cover image script data.
 		 *
-		 * @since 2.4.0
+		 * @since BuddyPress 2.4.0
 		 *
 		 * @param array $script_data Array of data for the cover image.
 		 */

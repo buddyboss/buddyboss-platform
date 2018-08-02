@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage BlogsScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Load the "Create a Blog" screen.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_blogs_screen_create_a_blog() {
 
@@ -23,7 +23,7 @@ function bp_blogs_screen_create_a_blog() {
 	/**
 	 * Fires right before the loading of the Create A Blog screen template file.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	do_action( 'bp_blogs_screen_create_a_blog' );
 

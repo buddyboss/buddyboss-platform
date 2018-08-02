@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage ActivityFeeds
- * @since 1.8.0
+ * @since BuddyPress 1.8.0
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * You should only construct a new feed when you've validated that you're on
  * the appropriate screen.
  *
- * @since 1.8.0
+ * @since BuddyPress 1.8.0
  *
  * See {@link bp_activity_action_sitewide_feed()} as an example.
  *
@@ -44,7 +44,7 @@ class BP_Activity_Feed {
 	 *
 	 * @see BP_Feed::__construct() This is where $data is added.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 * @var array
 	 */
 	protected $data;
@@ -52,7 +52,7 @@ class BP_Activity_Feed {
 	/**
 	 * Magic method for checking the existence of a certain data variable.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $key Property to check.
 	 * @return bool Whether or not data variable exists.
@@ -62,7 +62,7 @@ class BP_Activity_Feed {
 	/**
 	 * Magic method for getting a certain data variable.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $key Property to get.
 	 * @return mixed Data in variable if available or null.
@@ -72,7 +72,7 @@ class BP_Activity_Feed {
 	/**
 	 * Magic method for setting a certain data variable.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param string $key   The property to set.
 	 * @param mixed  $value The value to set.
@@ -82,7 +82,7 @@ class BP_Activity_Feed {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param array $args Optional.
 	 */
@@ -91,7 +91,7 @@ class BP_Activity_Feed {
 		/**
 		 * Filters if BuddyPress should consider feeds enabled. If disabled, it will return early.
 		 *
-		 * @since 1.8.0
+		 * @since BuddyPress 1.8.0
 		 *
 		 * @param bool true Default true aka feeds are enabled.
 		 */
@@ -143,7 +143,7 @@ class BP_Activity_Feed {
 		/**
 		 * Fires before the feed is setup so plugins can modify.
 		 *
-		 * @since 1.8.0
+		 * @since BuddyPress 1.8.0
 		 *
 		 * @param BP_Activity_Feed $this Current instance of activity feed. Passed by reference.
 		 */
@@ -161,7 +161,7 @@ class BP_Activity_Feed {
 		/**
 		 * Fires after the feed is setup so plugins can modify.
 		 *
-		 * @since 1.8.0
+		 * @since BuddyPress 1.8.0
 		 *
 		 * @param BP_Activity_Feed $this Current instance of activity feed. Passed by reference.
 		 */
@@ -182,7 +182,7 @@ class BP_Activity_Feed {
 	/**
 	 * Setup and validate the class properties.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	protected function setup_properties() {
 		$this->id               = sanitize_title( $this->id );
@@ -207,7 +207,7 @@ class BP_Activity_Feed {
 	 * Currently, these hooks are used to maintain backwards compatibility with
 	 * the RSS feeds previous to BP 1.8.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	protected function setup_hooks() {
 		add_action( 'bp_activity_feed_rss_attributes',   array( $this, 'backpat_rss_attributes' ) );
@@ -220,7 +220,7 @@ class BP_Activity_Feed {
 	/**
 	 * Fire a hook to ensure backward compatibility for RSS attributes.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	public function backpat_rss_attributes() {
 
@@ -229,7 +229,7 @@ class BP_Activity_Feed {
 		 *
 		 * This hook was originally separated out for individual components but has since been abstracted into the BP_Activity_Feed class.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 */
 		do_action( 'bp_activity_' . $this->id . '_feed' );
 	}
@@ -237,7 +237,7 @@ class BP_Activity_Feed {
 	/**
 	 * Fire a hook to ensure backward compatibility for channel elements.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	public function backpat_channel_elements() {
 
@@ -246,7 +246,7 @@ class BP_Activity_Feed {
 		 *
 		 * This hook was originally separated out for individual components but has since been abstracted into the BP_Activity_Feed class.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 */
 		do_action( 'bp_activity_' . $this->id . '_feed_head' );
 	}
@@ -254,7 +254,7 @@ class BP_Activity_Feed {
 	/**
 	 * Fire a hook to ensure backward compatibility for item elements.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	public function backpat_item_elements() {
 		switch ( $this->id ) {
@@ -277,7 +277,7 @@ class BP_Activity_Feed {
 		 *
 		 * This hook was originally separated out for individual components but has since been abstracted into the BP_Activity_Feed class.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 */
 		do_action( 'bp_activity_' . $id . '_feed_item' );
 	}
@@ -287,7 +287,7 @@ class BP_Activity_Feed {
 	/**
 	 * Output the feed's item content.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	protected function feed_content() {
 		bp_activity_content_body();
@@ -316,7 +316,7 @@ class BP_Activity_Feed {
 	 *
 	 * Most of this class method is derived from {@link WP::send_headers()}.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 */
 	protected function http_headers() {
 		// Set up some additional headers if not on a directory page
@@ -392,7 +392,7 @@ class BP_Activity_Feed {
 	/**
 	 * Output the RSS feed.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	protected function output() {
 		$this->http_headers();
@@ -409,7 +409,7 @@ class BP_Activity_Feed {
 	/**
 	 * Fires at the end of the opening RSS tag for feed output so plugins can add extra attributes.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	do_action( 'bp_activity_feed_rss_attributes' ); ?>
 >
@@ -430,7 +430,7 @@ class BP_Activity_Feed {
 	/**
 	 * Fires at the end of channel elements list in RSS feed so plugins can add extra channel elements.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	do_action( 'bp_activity_feed_channel_elements' ); ?>
 
@@ -455,7 +455,7 @@ class BP_Activity_Feed {
 				/**
 				 * Fires at the end of the individual RSS Item list in RSS feed so plugins can add extra item elements.
 				 *
-				 * @since 1.8.0
+				 * @since BuddyPress 1.8.0
 				 */
 				do_action( 'bp_activity_feed_item_elements' ); ?>
 			</item>

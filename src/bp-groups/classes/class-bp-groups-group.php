@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsClasses
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * BuddyPress Group object.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 class BP_Groups_Group {
 
 	/**
 	 * ID of the group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var int
 	 */
 	public $id;
@@ -28,7 +28,7 @@ class BP_Groups_Group {
 	/**
 	 * User ID of the group's creator.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var int
 	 */
 	public $creator_id;
@@ -36,7 +36,7 @@ class BP_Groups_Group {
 	/**
 	 * Name of the group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var string
 	 */
 	public $name;
@@ -44,7 +44,7 @@ class BP_Groups_Group {
 	/**
 	 * Group slug.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var string
 	 */
 	public $slug;
@@ -52,7 +52,7 @@ class BP_Groups_Group {
 	/**
 	 * Group description.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var string
 	 */
 	public $description;
@@ -62,7 +62,7 @@ class BP_Groups_Group {
 	 *
 	 * Core statuses are 'public', 'private', and 'hidden'.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var string
 	 */
 	public $status;
@@ -72,7 +72,7 @@ class BP_Groups_Group {
 	 *
 	 * ID of parent group, if applicable.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 * @var int
 	 */
 	public $parent_id;
@@ -80,8 +80,8 @@ class BP_Groups_Group {
 	/**
 	 * Controls whether the group has a forum enabled.
 	 *
-	 * @since 1.6.0
-	 * @since 3.0.0 Previously, this referred to Legacy Forums. It's still used by bbPress 2 for integration.
+	 * @since BuddyPress 1.6.0
+	 * @since BuddyPress 3.0.0 Previously, this referred to Legacy Forums. It's still used by bbPress 2 for integration.
 	 *
 	 * @var int
 	 */
@@ -90,7 +90,7 @@ class BP_Groups_Group {
 	/**
 	 * Date the group was created.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var string
 	 */
 	public $date_created;
@@ -98,7 +98,7 @@ class BP_Groups_Group {
 	/**
 	 * Data about the group's admins.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var array
 	 */
 	protected $admins;
@@ -106,7 +106,7 @@ class BP_Groups_Group {
 	/**
 	 * Data about the group's moderators.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var array
 	 */
 	protected $mods;
@@ -114,7 +114,7 @@ class BP_Groups_Group {
 	/**
 	 * Total count of group members.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var int
 	 */
 	protected $total_member_count;
@@ -122,7 +122,7 @@ class BP_Groups_Group {
 	/**
 	 * Is the current user a member of this group?
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 * @var bool
 	 */
 	protected $is_member;
@@ -131,7 +131,7 @@ class BP_Groups_Group {
 	 * Is the current user a member of this group?
 	 * Alias of $is_member for backward compatibility.
 	 *
-	 * @since 2.9.0
+	 * @since BuddyPress 2.9.0
 	 * @var bool
 	 */
 	protected $is_user_member;
@@ -139,7 +139,7 @@ class BP_Groups_Group {
 	/**
 	 * Does the current user have an outstanding invitation to this group?
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 * @var bool
 	 */
 	protected $is_invited;
@@ -147,7 +147,7 @@ class BP_Groups_Group {
 	/**
 	 * Does the current user have a pending membership request to this group?
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 * @var bool
 	 */
 	protected $is_pending;
@@ -155,7 +155,7 @@ class BP_Groups_Group {
 	/**
 	 * Timestamp of the last activity that happened in this group.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 * @var string
 	 */
 	protected $last_activity;
@@ -163,7 +163,7 @@ class BP_Groups_Group {
 	/**
 	 * If this is a private or hidden group, does the current user have access?
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var bool
 	 */
 	protected $user_has_access;
@@ -171,7 +171,7 @@ class BP_Groups_Group {
 	/**
 	 * Can the current user know that this group exists?
 	 *
-	 * @since 2.9.0
+	 * @since BuddyPress 2.9.0
 	 * @var bool
 	 */
 	protected $is_visible;
@@ -179,7 +179,7 @@ class BP_Groups_Group {
 	/**
 	 * Raw arguments passed to the constructor.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 * @var array
 	 */
 	public $args;
@@ -187,7 +187,7 @@ class BP_Groups_Group {
 	/**
 	 * Constructor method.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int|null $id   Optional. If the ID of an existing group is provided,
 	 *                       the object will be pre-populated with info about that group.
@@ -206,7 +206,7 @@ class BP_Groups_Group {
 	/**
 	 * Set up data about the current group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	public function populate() {
 		global $wpdb;
@@ -245,7 +245,7 @@ class BP_Groups_Group {
 	/**
 	 * Save the current group to the database.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @return bool True on success, false on failure.
 	 */
@@ -268,7 +268,7 @@ class BP_Groups_Group {
 		 *
 		 * Please use this hook to filter the properties above. Each part will be passed in.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param BP_Groups_Group $this Current instance of the group item being saved. Passed by reference.
 		 */
@@ -352,7 +352,7 @@ class BP_Groups_Group {
 		/**
 		 * Fires after the current group item has been saved.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param BP_Groups_Group $this Current instance of the group item that was saved. Passed by reference.
 		 */
@@ -366,7 +366,7 @@ class BP_Groups_Group {
 	/**
 	 * Delete the current group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @return bool True on success, false on failure.
 	 */
@@ -389,7 +389,7 @@ class BP_Groups_Group {
 		/**
 		 * Fires before the deletion of a group.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @param BP_Groups_Group $this     Current instance of the group item being deleted. Passed by reference.
 		 * @param array           $user_ids Array of user IDs that were members of the group.
@@ -410,7 +410,7 @@ class BP_Groups_Group {
 	/**
 	 * Magic getter.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param string $key Property name.
 	 * @return mixed
@@ -461,7 +461,7 @@ class BP_Groups_Group {
 	 * Used to maintain backward compatibility for properties that are now
 	 * accessible only via magic method.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param string $key Property name.
 	 * @return bool
@@ -492,7 +492,7 @@ class BP_Groups_Group {
 	 * Used to maintain backward compatibility for properties that are now
 	 * accessible only via magic method.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param string $key   Property name.
 	 * @param mixed  $value Property value.
@@ -514,7 +514,7 @@ class BP_Groups_Group {
 	 * Used to provide cache-friendly access to the 'admins' property of
 	 * the group object.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @return array|null
 	 */
@@ -533,7 +533,7 @@ class BP_Groups_Group {
 	 * Used to provide cache-friendly access to the 'mods' property of
 	 * the group object.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @return array|null
 	 */
@@ -551,7 +551,7 @@ class BP_Groups_Group {
 	 *
 	 * Called only when the 'admins' or 'mods' property is accessed.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 */
 	protected function set_up_admins_and_mods() {
 		$admin_ids = BP_Groups_Member::get_group_administrator_ids( $this->id );
@@ -596,7 +596,7 @@ class BP_Groups_Group {
 	/**
 	 * Checks whether the logged-in user is a member of the group.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @return bool|int
 	 */
@@ -612,7 +612,7 @@ class BP_Groups_Group {
 	/**
 	 * Checks whether the logged-in user has access to the group.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @return bool
 	 */
@@ -640,7 +640,7 @@ class BP_Groups_Group {
 	/**
 	 * Checks whether the current user can know the group exists.
 	 *
-	 * @since 2.9.0
+	 * @since BuddyPress 2.9.0
 	 *
 	 * @return bool
 	 */
@@ -670,7 +670,7 @@ class BP_Groups_Group {
 	/**
 	 * Get whether a group exists for a given slug.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string      $slug       Slug to check.
 	 * @param string|bool $table_name Deprecated.
@@ -706,7 +706,7 @@ class BP_Groups_Group {
 	 *
 	 * Alias of {@link BP_Groups_Group::group_exists()}.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string $slug See {@link BP_Groups_Group::group_exists()}.
 	 * @return int|null See {@link BP_Groups_Group::group_exists()}.
@@ -718,7 +718,7 @@ class BP_Groups_Group {
 	/**
 	 * Get whether a group exists for an old slug.
 	 *
-	 * @since 2.9.0
+	 * @since BuddyPress 2.9.0
 	 *
 	 * @param string      $slug       Slug to check.
 	 *
@@ -758,8 +758,8 @@ class BP_Groups_Group {
 	/**
 	 * Get IDs of users with outstanding invites to a given group from a specified user.
 	 *
-	 * @since 1.6.0
-	 * @since 2.9.0 Added $sent as a parameter.
+	 * @since BuddyPress 1.6.0
+	 * @since BuddyPress 2.9.0 Added $sent as a parameter.
 	 *
 	 * @param  int      $user_id  ID of the inviting user.
 	 * @param  int      $group_id ID of the group.
@@ -787,7 +787,7 @@ class BP_Groups_Group {
 	/**
 	 * Get a list of a user's groups, filtered by a search string.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string   $filter  Search term. Matches against 'name' and
 	 *                          'description' fields.
@@ -833,7 +833,7 @@ class BP_Groups_Group {
 	/**
 	 * Get a list of groups, filtered by a search string.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string      $filter  Search term. Matches against 'name' and
 	 *                             'description' fields.
@@ -875,7 +875,7 @@ class BP_Groups_Group {
 	/**
 	 * Check for the existence of a slug.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string $slug Slug to check.
 	 * @return string|null The slug, if found. Otherwise null.
@@ -891,7 +891,7 @@ class BP_Groups_Group {
 	/**
 	 * Get the slug for a given group ID.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $group_id ID of the group.
 	 * @return string|null The slug, if found. Otherwise null.
@@ -907,7 +907,7 @@ class BP_Groups_Group {
 	/**
 	 * Check whether a given group has any members.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $group_id ID of the group.
 	 * @return bool True if the group has members, otherwise false.
@@ -928,7 +928,7 @@ class BP_Groups_Group {
 	/**
 	 * Check whether a group has outstanding membership requests.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $group_id ID of the group.
 	 * @return int|null The number of outstanding requests, or null if
@@ -945,7 +945,7 @@ class BP_Groups_Group {
 	/**
 	 * Get outstanding membership requests for a group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int      $group_id ID of the group.
 	 * @param int|null $limit    Optional. Max number of results to return.
@@ -979,11 +979,11 @@ class BP_Groups_Group {
 	 * @see WP_Meta_Query::queries for a description of the 'meta_query'
 	 *      parameter format.
 	 *
-	 * @since 1.6.0
-	 * @since 2.6.0 Added `$group_type`, `$group_type__in`, and `$group_type__not_in` parameters.
-	 * @since 2.7.0 Added `$update_admin_cache` and `$parent_id` parameters.
-	 * @since 2.8.0 Changed `$search_terms` parameter handling and added `$search_columns` parameter.
-	 * @since 2.9.0 Added `$slug` parameter.
+	 * @since BuddyPress 1.6.0
+	 * @since BuddyPress 2.6.0 Added `$group_type`, `$group_type__in`, and `$group_type__not_in` parameters.
+	 * @since BuddyPress 2.7.0 Added `$update_admin_cache` and `$parent_id` parameters.
+	 * @since BuddyPress 2.8.0 Changed `$search_terms` parameter handling and added `$search_columns` parameter.
+	 * @since BuddyPress 2.9.0 Added `$slug` parameter.
 	 *
 	 * @param array $args {
 	 *     Array of parameters. All items are optional.
@@ -1224,7 +1224,7 @@ class BP_Groups_Group {
 			/**
 			 * Filters the 'type' parameter used to overwrite 'order' and 'orderby' values.
 			 *
-			 * @since 2.1.0
+			 * @since BuddyPress 2.1.0
 			 *
 			 * @param array  $value Converted 'type' value for order and orderby.
 			 * @param string $value Parsed 'type' value for the get method.
@@ -1264,7 +1264,7 @@ class BP_Groups_Group {
 		/**
 		 * Filters the converted 'orderby' term.
 		 *
-		 * @since 2.1.0
+		 * @since BuddyPress 2.1.0
 		 *
 		 * @param string $value   Converted 'orderby' term.
 		 * @param string $orderby Original orderby value.
@@ -1294,7 +1294,7 @@ class BP_Groups_Group {
 		/**
 		 * Filters the pagination SQL statement.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param string $value Concatenated SQL statement.
 		 * @param array  $sql   Array of SQL parts before concatenation.
@@ -1363,7 +1363,7 @@ class BP_Groups_Group {
 		/**
 		 * Filters the SQL used to retrieve total group results.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param string $t_sql     Concatenated SQL statement used for retrieving total group results.
 		 * @param array  $total_sql Array of SQL parts for the query.
@@ -1388,7 +1388,7 @@ class BP_Groups_Group {
 	 * We use WP_Meta_Query to do the heavy lifting of parsing the
 	 * meta_query array and creating the necessary SQL clauses.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param array $meta_query An array of meta_query filters. See the
 	 *                          documentation for {@link WP_Meta_Query} for details.
@@ -1420,7 +1420,7 @@ class BP_Groups_Group {
 	/**
 	 * Convert the 'type' parameter to 'order' and 'orderby'.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $type The 'type' shorthand param.
 	 *
@@ -1465,7 +1465,7 @@ class BP_Groups_Group {
 	/**
 	 * Convert the 'orderby' param into a proper SQL term/column.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $orderby Orderby term as passed to get().
 	 * @return string $order_by_term SQL-friendly orderby term.
@@ -1506,7 +1506,7 @@ class BP_Groups_Group {
 	/**
 	 * Get a list of groups whose names start with a given letter.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string            $letter          The letter.
 	 * @param int|null          $limit           Optional. The max number of results to return.
@@ -1555,7 +1555,7 @@ class BP_Groups_Group {
 	 *
 	 * Use BP_Groups_Group::get() with 'type' = 'random' instead.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int|null          $limit           Optional. The max number of results to return.
 	 *                                           Default: null (no limit).
@@ -1599,7 +1599,7 @@ class BP_Groups_Group {
 	 *     - Logged-in user's status within each group (is_member,
 	 *       is_confirmed, is_pending, is_banned)
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param array        $paged_groups Array of groups.
 	 * @param string|array $group_ids    Array or comma-separated list of IDs matching
@@ -1623,7 +1623,7 @@ class BP_Groups_Group {
 	/**
 	 * Delete all invitations to a given group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $group_id ID of the group whose invitations are being deleted.
 	 * @return int|null Number of rows records deleted on success, null on
@@ -1643,7 +1643,7 @@ class BP_Groups_Group {
 	 * Will include hidden groups in the count only if
 	 * bp_current_user_can( 'bp_moderate' ).
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @return int Group count.
 	 */
@@ -1662,7 +1662,7 @@ class BP_Groups_Group {
 	/**
 	 * Get the member count for a group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $group_id Group ID.
 	 * @return int Count of confirmed members for the group.
@@ -1681,7 +1681,7 @@ class BP_Groups_Group {
 	 * A bit of a kludge workaround for some issues
 	 * with bp_has_groups().
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @return array
 	 */
@@ -1702,7 +1702,7 @@ class BP_Groups_Group {
 	/**
 	 * Get SQL clause for group type(s).
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param  string|array $group_types Group type(s).
 	 * @param  string       $operator    'IN' or 'NOT IN'.
@@ -1774,7 +1774,7 @@ class BP_Groups_Group {
 	 * Used here to normalize SQL fragments generated by `WP_Meta_Query` and
 	 * other utility classes.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param string $s String.
 	 * @return string

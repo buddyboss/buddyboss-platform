@@ -2,7 +2,7 @@
 /**
  * Members functions
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Enqueue the members scripts
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_members_enqueue_scripts() {
 	// Neutralize Ajax when using BuddyBoss Groups & member widgets on default front page
@@ -34,7 +34,7 @@ function bp_nouveau_members_enqueue_scripts() {
 /**
  * Get the nav items for the Members directory
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return array An associative array of nav items.
  */
@@ -75,7 +75,7 @@ function bp_nouveau_get_members_directory_nav_items() {
 	/**
 	 * Use this filter to introduce your custom nav items for the members directory.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $nav_items The list of the members directory nav items.
 	 */
@@ -85,7 +85,7 @@ function bp_nouveau_get_members_directory_nav_items() {
 /**
  * Get Dropdown filters for the members component
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $context Optional.
  *
@@ -124,7 +124,7 @@ function bp_nouveau_get_members_filters( $context = '' ) {
 	/**
 	 * Recommended, filter here instead of adding an action to 'bp_members_directory_order_options'
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array  the members filters.
 	 * @param string the context.
@@ -137,7 +137,7 @@ function bp_nouveau_get_members_filters( $context = '' ) {
 /**
  * Catch the arguments for buttons
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $buttons The arguments of the button that BuddyPress is about to create.
  *
@@ -158,7 +158,7 @@ function bp_nouveau_members_catch_button_args( $button = array() ) {
  * Catch the content hooked to the do_action hooks in single member header
  * and in the members loop.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string|false HTML Output if hooked. False otherwise.
  */
@@ -169,7 +169,7 @@ function bp_nouveau_get_hooked_member_meta() {
 		/**
 		 * Fires inside the display of a directory member item.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 */
 		do_action( 'bp_directory_members_item' );
 
@@ -181,7 +181,7 @@ function bp_nouveau_get_hooked_member_meta() {
 		 * If you'd like to show specific profile fields here use:
 		 * bp_member_profile_data( 'field=About Me' ); -- Pass the name of the field
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 */
 		do_action( 'bp_profile_header_meta' );
 	}
@@ -198,7 +198,7 @@ function bp_nouveau_get_hooked_member_meta() {
 /**
  * Add the default user front template to the front template hierarchy
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $templates The list of templates for the front.php template part.
  *
@@ -219,7 +219,7 @@ function bp_nouveau_member_reset_front_template( $templates = array() ) {
 	/**
 	 * Filters the BuddyPress Nouveau template hierarchy after resetting front template for members.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $templates Array of templates.
 	 */
@@ -229,7 +229,7 @@ function bp_nouveau_member_reset_front_template( $templates = array() ) {
 /**
  * Only locate global user's front templates
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $templates The User's front template hierarchy.
  *
@@ -245,7 +245,7 @@ function bp_nouveau_member_restrict_user_front_templates( $templates = array() )
 /**
  * Locate a single member template into a specific hierarchy.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $template The template part to get (eg: activity, groups...).
  *
@@ -295,7 +295,7 @@ function bp_nouveau_member_locate_template_part( $template = '' ) {
 	/**
 	 * Filters the found template parts for the member template part locating functionality.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $templates Array of found templates.
 	 */
@@ -305,7 +305,7 @@ function bp_nouveau_member_locate_template_part( $template = '' ) {
 /**
  * Load a single member template part
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $template The template part to get (eg: activity, groups...).
  *
@@ -321,7 +321,7 @@ function bp_nouveau_member_get_template_part( $template = '' ) {
 		/**
 		 * Let plugins adding an action to bp_get_template_part get it from here.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $slug Template part slug requested.
 		 * @param string $name Template part name requested.
@@ -337,7 +337,7 @@ function bp_nouveau_member_get_template_part( $template = '' ) {
 /**
  * Are we inside the Current user's default front page sidebar?
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return bool True if in the group's home sidebar. False otherwise.
  */
@@ -348,7 +348,7 @@ function bp_nouveau_member_is_home_widgets() {
 /**
  * Filter the Latest activities Widget to only keep the one of displayed user
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $args The Activities Template arguments.
  *
@@ -363,7 +363,7 @@ function bp_nouveau_member_activity_widget_overrides( $args = array() ) {
 /**
  * Filter the Groups widget to only keep the groups the displayed user is a member of.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $args The Groups Template arguments.
  *
@@ -378,7 +378,7 @@ function bp_nouveau_member_groups_widget_overrides( $args = array() ) {
 /**
  * Filter the Members widgets to only keep members of the displayed group.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $args The Members Template arguments.
  *
@@ -398,7 +398,7 @@ function bp_nouveau_member_members_widget_overrides( $args = array() ) {
 /**
  * Init the Member's default front page filters as we're in the sidebar
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_members_add_home_widget_filters() {
 	add_filter( 'bp_nouveau_activity_widget_query', 'bp_nouveau_member_activity_widget_overrides', 10, 1 );
@@ -408,7 +408,7 @@ function bp_nouveau_members_add_home_widget_filters() {
 	/**
 	 * Fires after Nouveau adds its members home widget filters.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	do_action( 'bp_nouveau_members_add_home_widget_filters' );
 }
@@ -416,7 +416,7 @@ function bp_nouveau_members_add_home_widget_filters() {
 /**
  * Remove the Member's default front page filters as we're no more in the sidebar
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_members_remove_home_widget_filters() {
 	remove_filter( 'bp_nouveau_activity_widget_query', 'bp_nouveau_member_activity_widget_overrides', 10, 1 );
@@ -426,7 +426,7 @@ function bp_nouveau_members_remove_home_widget_filters() {
 	/**
 	 * Fires after Nouveau removes its members home widget filters.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	do_action( 'bp_nouveau_members_remove_home_widget_filters' );
 }
@@ -434,7 +434,7 @@ function bp_nouveau_members_remove_home_widget_filters() {
 /**
  * Get the WP Profile fields for all or a specific user
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param WP_User $user The user object. Optional.
  *
@@ -446,7 +446,7 @@ function bp_nouveau_get_wp_profile_fields( $user = null ) {
 	 *
 	 * Provide a chance for plugins to avoid showing the contact methods they're adding on front end.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array   $value Array of user contact methods.
 	 * @param WP_User $user  WordPress user to get contact methods for.
@@ -465,7 +465,7 @@ function bp_nouveau_get_wp_profile_fields( $user = null ) {
 /**
  * Build the Member's nav for the our customizer control.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return array The Members single item primary nav ordered.
  */

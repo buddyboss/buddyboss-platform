@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage ThemeCompatibility
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * for future Theme Packs to use. {@link BP_Legacy} is a good example of
  * extending this class.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @todo We should probably do something similar to BP_Component::start().
  * @todo If this is only intended to be extended, it should be abstract.
@@ -38,7 +38,7 @@ class BP_Theme_Compat {
 	/**
 	 * Template package properties, as passed to the constructor.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 * @var array
 	 */
 	protected $_data = array();
@@ -46,7 +46,7 @@ class BP_Theme_Compat {
 	/**
 	 * Pass the $properties to the object on creation.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param array $properties Array of properties for BP_Theme_Compat.
 	 */
@@ -59,7 +59,7 @@ class BP_Theme_Compat {
 	 *
 	 * Themes should use this method in their constructor.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	protected function start() {
 		// Sanity check.
@@ -78,7 +78,7 @@ class BP_Theme_Compat {
 	 * Meant to be overridden in your class. See
 	 * {@link BP_Legacy::setup_globals()} for an example.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	protected function setup_globals() {}
 
@@ -88,14 +88,14 @@ class BP_Theme_Compat {
 	 * Meant to be overridden in your class. See
 	 * {@link BP_Legacy::setup_actions()} for an example.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	protected function setup_actions() {}
 
 	/**
 	 * Set a theme's property.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $property Property name.
 	 * @param mixed  $value    Property value.
@@ -108,7 +108,7 @@ class BP_Theme_Compat {
 	/**
 	 * Get a theme's property.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $property Property name.
 	 * @return mixed The value of the property if it exists, otherwise an

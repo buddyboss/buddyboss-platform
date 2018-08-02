@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage BlogsActivity
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register activity actions for the blogs component.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return bool|null Returns false if activity component is not active.
  */
@@ -33,7 +33,7 @@ function bp_blogs_register_activity_actions() {
 	/**
 	 * Fires after the registry of the default blog component activity actions.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'bp_blogs_register_activity_actions' );
 }
@@ -42,7 +42,7 @@ add_action( 'bp_register_activity_actions', 'bp_blogs_register_activity_actions'
 /**
  * Set up the tracking arguments for the 'post' post type.
  *
- * @since 2.5.0 This was moved out of the BP_Blogs_Component class.
+ * @since BuddyPress 2.5.0 This was moved out of the BP_Blogs_Component class.
  *
  * @see bp_activity_get_post_type_tracking_args() for information on parameters.
  *
@@ -55,7 +55,7 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 	/**
 	 * Filters the post types to track for the Blogs component.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @deprecated 2.3.0
 	 *
 	 * Make sure plugins still using 'bp_blogs_record_post_post_types'
@@ -86,7 +86,7 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 		/**
 		 * Filters the post types to track for the Blogs component.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 * @deprecated 2.5.0
 		 *
 		 * Make sure plugins still using 'bp_blogs_record_comment_post_types'
@@ -117,7 +117,7 @@ add_filter( 'bp_activity_get_post_type_tracking_args', 'bp_blogs_register_post_t
 /**
  * Format 'new_blog' activity actions.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param string $action   Static activity action.
  * @param object $activity Activity data object.
@@ -144,7 +144,7 @@ function bp_blogs_format_activity_action_new_blog( $action, $activity ) {
 	/**
 	 * Filters the new blog activity action for the new blog.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param string $action   Constructed activity action.
 	 * @param object $activity Activity data object.
@@ -155,7 +155,7 @@ function bp_blogs_format_activity_action_new_blog( $action, $activity ) {
 /**
  * Format 'new_blog_post' activity actions.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param string $action   Static activity action.
  * @param object $activity Activity data object.
@@ -255,7 +255,7 @@ function bp_blogs_format_activity_action_new_blog_post( $action, $activity ) {
 	/**
 	 * Filters the new blog post action for the new blog.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param string $action   Constructed activity action.
 	 * @param object $activity Activity data object.
@@ -266,7 +266,7 @@ function bp_blogs_format_activity_action_new_blog_post( $action, $activity ) {
 /**
  * Format 'new_blog_comment' activity actions.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param string $action   Static activity action.
  * @param object $activity Activity data object.
@@ -381,7 +381,7 @@ function bp_blogs_format_activity_action_new_blog_comment( $action, $activity ) 
 	/**
 	 * Filters the new blog comment action for the new blog.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param string $action   Constructed activity action.
 	 * @param object $activity Activity data object.
@@ -394,7 +394,7 @@ function bp_blogs_format_activity_action_new_blog_comment( $action, $activity ) 
  *
  * This reduces database overhead during the activity loop.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param array $activities Array of activity items.
  * @return array
@@ -425,7 +425,7 @@ add_filter( 'bp_activity_prefetch_object_data', 'bp_blogs_prefetch_activity_obje
 /**
  * Record blog-related activity to the activity feed.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @see bp_activity_add() for description of parameters.
  *
@@ -458,7 +458,7 @@ function bp_blogs_record_activity( $args = '' ) {
 		/**
 		 * Filters the action associated with activity for activity feed.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @param string $value Action for the activity feed.
 		 */
@@ -470,7 +470,7 @@ function bp_blogs_record_activity( $args = '' ) {
 		/**
 		 * Filters the content associated with activity for activity feed.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @param string $value Generated summary from content for the activity feed.
 		 * @param string $value Content for the activity feed.
@@ -494,7 +494,7 @@ function bp_blogs_record_activity( $args = '' ) {
 /**
  * Delete a blog-related activity feed item.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @see bp_activity_delete() for description of parameters.
  *
@@ -529,7 +529,7 @@ function bp_blogs_delete_activity( $args = '' ) {
  * to blogmeta and checks the values in blogmeta instead.  This is to prevent
  * multiple {@link switch_to_blog()} calls in the activity feed.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param object $activity The BP_Activity_Activity object.
  * @return bool
@@ -613,7 +613,7 @@ function bp_blogs_comments_open( $activity ) {
  *
  * Hooked to the 'bp_blogs_new_blog' action.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param BP_Blogs_Blog $recorded_blog Current site being recorded. Passed by reference.
  * @param bool          $is_private    Whether the current site being recorded is private.
@@ -628,7 +628,7 @@ function bp_blogs_record_activity_on_site_creation( $recorded_blog, $is_private,
 			/**
 			 * Filters the activity created blog primary link.
 			 *
-			 * @since 1.1.0
+			 * @since BuddyPress 1.1.0
 			 *
 			 * @param string $value Blog primary link.
 			 * @param int    $value Blog ID.
@@ -644,7 +644,7 @@ add_action( 'bp_blogs_new_blog', 'bp_blogs_record_activity_on_site_creation', 10
 /**
  * Deletes the 'new_blog' activity entry when a site is deleted.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param int $blog_id Site ID.
  */
@@ -671,7 +671,7 @@ add_action( 'bp_blogs_remove_blog_for_user', 'bp_blogs_delete_new_blog_activity_
 /**
  * Delete all 'blogs' activity items for a site when the site is deleted.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param int $blog_id Site ID.
  */
@@ -687,7 +687,7 @@ add_action( 'bp_blogs_remove_data_for_blog', 'bp_blogs_delete_activity_for_site'
 /**
  * Remove a blog post activity item from the activity feed.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $post_id ID of the post to be removed.
  * @param int $blog_id Optional. Defaults to current blog ID.
@@ -715,7 +715,7 @@ function bp_blogs_remove_post( $post_id, $blog_id = 0, $user_id = 0 ) {
 	/**
 	 * Fires before removal of a blog post activity item from the activity feed.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param int $blog_id ID of the blog associated with the post that was removed.
 	 * @param int $post_id ID of the post that was removed.
@@ -733,7 +733,7 @@ function bp_blogs_remove_post( $post_id, $blog_id = 0, $user_id = 0 ) {
 	/**
 	 * Fires after removal of a blog post activity item from the activity feed.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $blog_id ID of the blog associated with the post that was removed.
 	 * @param int $post_id ID of the post that was removed.
@@ -752,8 +752,8 @@ add_action( 'delete_post', 'bp_blogs_remove_post' );
  *
  * For blog post -> activity comment, see {@link bp_activity_post_type_comment()}.
  *
- * @since 2.0.0
- * @since 2.5.0 Allow custom post types to sync their comments with activity ones
+ * @since BuddyPress 2.0.0
+ * @since BuddyPress 2.5.0 Allow custom post types to sync their comments with activity ones
  *
  * @param int    $comment_id      The activity ID for the posted activity comment.
  * @param array  $params          Parameters for the activity comment.
@@ -856,7 +856,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	/**
 	 * Fires after activity comments have been synced and posted as blog comments.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param int    $comment_id      The activity ID for the posted activity comment.
 	 * @param array  $args            Array of args used for the comment syncing.
@@ -874,8 +874,8 @@ add_action( 'bp_activity_comment_posted', 'bp_blogs_sync_add_from_activity_comme
  * of the 'bp_activity_delete_comment' action because we need to fetch the
  * activity comment children before they are deleted.
  *
- * @since 2.0.0
- * @since 2.5.0 Add the $delected parameter
+ * @since BuddyPress 2.0.0
+ * @since BuddyPress 2.5.0 Add the $delected parameter
  *
  * @param bool $retval             Whether BuddyPress should continue or not.
  * @param int  $parent_activity_id The parent activity ID for the activity comment.
@@ -929,7 +929,7 @@ add_filter( 'bp_activity_delete_comment_pre', 'bp_blogs_sync_delete_from_activit
 /**
  * Updates the blog comment when the associated activity comment is edited.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param BP_Activity_Activity $activity The activity object.
  */
@@ -1007,7 +1007,7 @@ add_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comm
  * Since these activity entries are deleted, we need to remove the deleted
  * activity comment IDs from each comment's meta when a post is trashed.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param int   $post_id  The post ID.
  * @param array $comments Array of comment statuses. The key is comment ID, the
@@ -1033,8 +1033,8 @@ add_action( 'trashed_post_comments', 'bp_blogs_remove_activity_meta_for_trashed_
  * powers the 'Comments' filter in the activity directory dropdown) includes
  * both old-style and new-style activity comments.
  *
- * @since 2.1.0
- * @since 2.5.0 Used for any synced Post type comments, in wp-admin or front-end contexts.
+ * @since BuddyPress 2.1.0
+ * @since BuddyPress 2.5.0 Used for any synced Post type comments, in wp-admin or front-end contexts.
  *
  * @param array $args Arguments passed from bp_parse_args() in bp_has_activities().
  * @return array $args
@@ -1120,7 +1120,7 @@ add_filter( 'bp_activity_list_table_filter_activity_type_items', 'bp_blogs_new_b
  *
  * This is to prevent having to requery these items later on.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @see bp_blogs_disable_activity_commenting()
  * @see bp_blogs_setup_comment_loop_globals_on_ajax()
@@ -1180,7 +1180,7 @@ function bp_blogs_setup_activity_loop_globals( $activity ) {
 /**
  * Set up some globals used in the activity comment loop when AJAX is used.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @see bp_blogs_setup_activity_loop_globals()
  */
@@ -1212,7 +1212,7 @@ add_action( 'bp_before_activity_comment', 'bp_blogs_setup_comment_loop_globals_o
  *    based on a certain age
  *  - the activity entry is a 'new_blog_comment' type
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param bool $retval Is activity commenting enabled for this activity entry.
  * @return bool
@@ -1257,7 +1257,7 @@ add_filter( 'bp_activity_can_comment', 'bp_blogs_disable_activity_commenting' );
 /**
  * Limit the display of post type synced comments.
  *
- * @since  2.5.0
+ * @since BuddyPress  2.5.0
  *
  * When viewing the synced comments in stream mode, this prevents comments to
  * be displayed twice, and avoids a Javascript error as the form to add replies
@@ -1299,7 +1299,7 @@ add_filter( 'bp_activity_get_comment_count', 'bp_blogs_post_type_comments_avoid_
  * This check uses a locally-cached value set in {@link bp_blogs_disable_activity_commenting()}
  * via {@link bp_blogs_setup_activity_loop_globals()}.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param bool         $retval  Are replies allowed for this activity reply.
  * @param object|array $comment The activity comment object.
@@ -1343,7 +1343,7 @@ add_filter( 'bp_activity_can_comment_reply', 'bp_blogs_can_comment_reply', 10, 2
  * This is only done if activity commenting is allowed and whether the parent
  * activity item is a 'new_blog_post' entry.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param string $retval The activity comment permalink.
  * @return string
@@ -1370,7 +1370,7 @@ add_filter( 'bp_get_activity_comment_permalink', 'bp_blogs_activity_comment_perm
  *
  * This is only done if the activity comment is associated with a blog comment.
  *
- * @since 2.0.1
+ * @since BuddyPress 2.0.1
  *
  * @param string               $retval   The activity permalink.
  * @param BP_Activity_Activity $activity Activity object.
@@ -1400,7 +1400,7 @@ add_filter( 'bp_activity_get_permalink', 'bp_blogs_activity_comment_single_perma
  *
  * This is only done if the activity comment is associated with a blog comment.
  *
- * @since 2.0.1
+ * @since BuddyPress 2.0.1
  *
  * @param string               $retval   The activity action.
  * @param BP_Activity_Activity $activity Activity object.

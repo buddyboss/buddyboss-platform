@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage ActivityScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Catch and route requests for single activity item permalinks.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @return bool False on failure.
  */
@@ -68,7 +68,7 @@ function bp_activity_action_permalink_router() {
 	/**
 	 * Filter the intended redirect url before the redirect occurs for the single activity item.
 	 *
-	 * @since 1.2.2
+	 * @since BuddyPress 1.2.2
 	 *
 	 * @param array $value Array with url to redirect to and activity related to the redirect.
 	 */
@@ -84,7 +84,7 @@ add_action( 'bp_actions', 'bp_activity_action_permalink_router' );
 /**
  * Load the page for a single activity item.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @return bool|string Boolean on false or the template for a single activity item on success.
  */
@@ -118,7 +118,7 @@ function bp_activity_screen_single_activity_permalink() {
 	/**
 	 * Check user access to the activity item.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	$has_access = bp_activity_user_can_read( $activity );
 
@@ -131,7 +131,7 @@ function bp_activity_screen_single_activity_permalink() {
 	/**
 	 * Fires before the loading of a single activity template file.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param BP_Activity_Activity $activity   Object representing the current activity item being displayed.
 	 * @param bool                 $has_access Whether or not the current user has access to view activity.
@@ -154,7 +154,7 @@ function bp_activity_screen_single_activity_permalink() {
 	/**
 	 * Filters the template to load for a single activity screen.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $template Path to the activity template to load.
 	 */

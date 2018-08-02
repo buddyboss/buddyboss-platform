@@ -13,8 +13,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * See 'get_avatar' filter description in wp-includes/pluggable.php.
  *
- * @since 1.1.0
- * @since 2.4.0 Added $args parameter to coincide with WordPress 4.2.0.
+ * @since BuddyPress 1.1.0
+ * @since BuddyPress 2.4.0 Added $args parameter to coincide with WordPress 4.2.0.
  *
  * @param string            $avatar  The avatar path passed to 'get_avatar'.
  * @param int|string|object $user    A user ID, email address, or comment object.

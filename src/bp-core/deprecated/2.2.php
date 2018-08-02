@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * See #4090, #3746, #2546 for background.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  * @deprecated 2.2.0
  *
  * @todo Support untrashing better
@@ -52,7 +52,7 @@ function bp_blogs_record_post( $post_id, $post, $user_id = 0 ) {
 /**
  * Updates a blog post's corresponding activity entry during a post edit.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  * @deprecated 2.2.0
  *
  * @see bp_blogs_catch_transition_post_status()
@@ -67,7 +67,7 @@ function bp_blogs_update_post( $post ) {
 /**
  * Clear cache when a new blog is created.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  * @deprecated 2.2.0
  *
  * @param BP_Blogs_Blog $recorded_blog_obj The recorded blog, passed by
@@ -81,7 +81,7 @@ function bp_blogs_format_clear_blog_cache( $recorded_blog_obj ) {
 /**
  * Format 'new_member' activity actions.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  * @deprecated 2.2.0
  *
  * @param string $action Static activity action.
@@ -98,7 +98,7 @@ function bp_xprofile_format_activity_action_new_member( $action, $activity ) {
 /**
  * Add 'bp' to global group of network wide cachable objects.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  * @deprecated 2.2.0
  */
 function bp_core_add_global_group() {

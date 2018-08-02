@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss
  * @subpackage ActivityAdmin
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 
 // Exit if accessed directly.
@@ -23,7 +23,7 @@ if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-activity' == $_REQUEST['p
 /**
  * Register the Activity component admin screen.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_activity_add_admin_menu() {
 
@@ -49,7 +49,7 @@ add_action( bp_core_admin_hook(), 'bp_activity_add_admin_menu' );
  * which all appear together in the middle of the Dashboard menu. This function
  * adds the Activity page to the array of these menu items.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param array $custom_menus The list of top-level BP menu items.
  * @return array $custom_menus List of top-level BP menu items, with Activity added.
@@ -66,7 +66,7 @@ add_filter( 'bp_admin_menu_order', 'bp_activity_admin_menu_order' );
  * Processes requests to add new activity comments, and echoes HTML for a new
  * table row.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_activity_admin_reply() {
 	// Check nonce.
@@ -136,7 +136,7 @@ add_action( 'wp_ajax_bp-activity-admin-reply', 'bp_activity_admin_reply' );
 /**
  * Handle save/update of screen options for the Activity component admin screen.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param string $value     Will always be false unless another plugin filters it first.
  * @param string $option    Screen option name.
@@ -158,7 +158,7 @@ function bp_activity_admin_screen_options( $value, $option, $new_value ) {
 /**
  * Hide the advanced edit meta boxes by default, so we don't clutter the screen.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param array     $hidden Array of items to hide.
  * @param WP_Screen $screen Screen identifier.
@@ -175,7 +175,7 @@ function bp_activity_admin_edit_hidden_metaboxes( $hidden, $screen ) {
 	/**
 	 * Filters default hidden metaboxes so plugins can alter list.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param array     $hidden Default metaboxes to hide.
 	 * @param WP_Screen $screen Screen identifier.
@@ -192,7 +192,7 @@ add_filter( 'default_hidden_meta_boxes', 'bp_activity_admin_edit_hidden_metaboxe
  *   - Enqueues scripts and styles.
  *   - Catches POST and GET requests related to Activity.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @global object                 $bp                     BuddyPress global settings.
  * @global BP_Activity_List_Table $bp_activity_list_table Activity screen list table.
@@ -207,7 +207,7 @@ function bp_activity_admin_load() {
 	/**
 	 * Fires at top of Activity admin page.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string $doaction Current $_GET action being performed in admin screen.
 	 */
@@ -254,7 +254,7 @@ function bp_activity_admin_load() {
 		/**
 		 * Fires after the registration of all of the default activity meta boxes.
 		 *
-		 * @since 2.4.0
+		 * @since BuddyPress 2.4.0
 		 */
 		do_action( 'bp_activity_admin_meta_boxes' );
 
@@ -318,7 +318,7 @@ function bp_activity_admin_load() {
 	/**
 	 * Fires after the activity js and style has been enqueued.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 */
 	do_action( 'bp_activity_admin_enqueue_scripts' );
 
@@ -335,7 +335,7 @@ function bp_activity_admin_load() {
 		/**
 		 * Filters list of IDs being spammed/un-spammed/deleted.
 		 *
-		 * @since 1.6.0
+		 * @since BuddyPress 1.6.0
 		 *
 		 * @param array $activity_ids Activity IDs to spam/un-spam/delete.
 		 */
@@ -426,7 +426,7 @@ function bp_activity_admin_load() {
 		 *
 		 * Passes an activity array counts how many were spam, not spam, deleted, and IDs that were errors.
 		 *
-		 * @since 1.6.0
+		 * @since BuddyPress 1.6.0
 		 *
 		 * @param array  $value        Array holding spam, not spam, deleted counts, error IDs.
 		 * @param string $redirect_to  URL to redirect to.
@@ -451,7 +451,7 @@ function bp_activity_admin_load() {
 		/**
 		 * Filters redirect URL after activity spamming/un-spamming/deletion occurs.
 		 *
-		 * @since 1.6.0
+		 * @since BuddyPress 1.6.0
 		 *
 		 * @param string $redirect_to URL to redirect to.
 		 */
@@ -567,7 +567,7 @@ function bp_activity_admin_load() {
 		/**
 		 * Fires before redirect so plugins can do something first on save action.
 		 *
-		 * @since 1.6.0
+		 * @since BuddyPress 1.6.0
 		 *
 		 * @param array $value Array holding activity object and ID that holds error.
 		 */
@@ -582,7 +582,7 @@ function bp_activity_admin_load() {
 		/**
 		 * Filters URL to redirect to after saving.
 		 *
-		 * @since 1.6.0
+		 * @since BuddyPress 1.6.0
 		 *
 		 * @param string $redirect_to URL to redirect to.
 		 */
@@ -600,7 +600,7 @@ function bp_activity_admin_load() {
 /**
  * Output the Activity component admin screens.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_activity_admin() {
 	// Decide whether to load the index or edit screen.
@@ -618,7 +618,7 @@ function bp_activity_admin() {
 /**
  * Display the single activity edit screen.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_activity_admin_edit() {
 
@@ -653,7 +653,7 @@ function bp_activity_admin_edit() {
 	/**
 	 * Fires before activity edit form is displays so plugins can modify the activity.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param array $value Array holding single activity object that was passed by reference.
 	 */
@@ -731,7 +731,7 @@ function bp_activity_admin_edit() {
 /**
  * Status metabox for the Activity admin edit screen.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param object $item Activity item.
  */
@@ -787,7 +787,7 @@ function bp_activity_admin_edit_metabox_status( $item ) {
 /**
  * Primary link metabox for the Activity admin edit screen.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param object $item Activity item.
  */
@@ -807,7 +807,7 @@ function bp_activity_admin_edit_metabox_link( $item ) {
 /**
  * User ID metabox for the Activity admin edit screen.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param object $item Activity item.
  */
@@ -828,7 +828,7 @@ function bp_activity_admin_edit_metabox_userid( $item ) {
  *
  * Format is [activity_type] => Pretty name for activity type.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @return array $actions
  */
@@ -856,7 +856,7 @@ function bp_activity_admin_get_activity_actions() {
 /**
  * Activity type metabox for the Activity admin edit screen.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param object $item Activity item.
  */
@@ -908,7 +908,7 @@ function bp_activity_admin_edit_metabox_type( $item ) {
 /**
  * Primary item ID/Secondary item ID metabox for the Activity admin edit screen.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param object $item Activity item.
  */
@@ -930,7 +930,7 @@ function bp_activity_admin_edit_metabox_itemids( $item ) {
 /**
  * Display the Activity admin index screen, which contains a list of all the activities.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @global BP_Activity_List_Table $bp_activity_list_table Activity screen list table.
  * @global string                 $plugin_page            The current plugin page.
@@ -998,7 +998,7 @@ function bp_activity_admin_index() {
 	/**
 	 * Fires before edit form is displayed so plugins can modify the activity messages.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param array $messages Array of messages to display at top of page.
 	 */

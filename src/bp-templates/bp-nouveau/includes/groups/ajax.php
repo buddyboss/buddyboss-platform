@@ -2,7 +2,7 @@
 /**
  * Groups Ajax functions
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
 
@@ -36,7 +36,7 @@ add_action( 'admin_init', function() {
 /**
  * Join or leave a group when clicking the "join/leave" button via a POST request.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string HTML
  */
@@ -250,7 +250,7 @@ function bp_nouveau_ajax_joinleave_group() {
 }
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_get_users_to_invite() {
 	$bp = buddypress();
@@ -345,7 +345,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 }
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_send_group_invites() {
 	$bp = buddypress();
@@ -434,7 +434,7 @@ function bp_nouveau_ajax_send_group_invites() {
 }
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_remove_group_invite() {
 	$user_id  = (int) $_POST['user'];

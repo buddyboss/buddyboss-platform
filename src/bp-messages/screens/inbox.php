@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage MessageScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Load the Messages > Inbox screen.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function messages_screen_inbox() {
 
@@ -22,14 +22,14 @@ function messages_screen_inbox() {
 	/**
 	 * Fires right before the loading of the Messages inbox screen template file.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	do_action( 'messages_screen_inbox' );
 
 	/**
 	 * Filters the template to load for the Messages inbox screen.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $template Path to the messages template to load.
 	 */

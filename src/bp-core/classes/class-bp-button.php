@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 1.2.6
+ * @since BuddyPress 1.2.6
  */
 
 // Exit if accessed directly.
@@ -13,8 +13,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * API to create BuddyPress buttons.
  *
- * @since 1.2.6
- * @since 2.7.0 Introduced $parent_element, $parent_attr, $button_element, $button_attr as
+ * @since BuddyPress 1.2.6
+ * @since BuddyPress 2.7.0 Introduced $parent_element, $parent_attr, $button_element, $button_attr as
  *              $args parameters.
  *              Deprecated $wrapper, $wrapper_id, $wrapper_class, $link_href, $link_class,
  *              $link_id, $link_rel, $link_title as $args params.
@@ -52,7 +52,7 @@ class BP_Button {
 	/**
 	 * The button ID.
 	 *
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 *
 	 * @var string
 	 */
@@ -61,7 +61,7 @@ class BP_Button {
 	/**
 	 * The name of the component that the button belongs to.
 	 *
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 *
 	 * @var string
 	 */
@@ -70,7 +70,7 @@ class BP_Button {
 	/**
 	 * Does the user need to be logged in to see this button?
 	 *
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 *
 	 * @var bool
 	 */
@@ -79,7 +79,7 @@ class BP_Button {
 	/**
 	 * Whether the button should be hidden when viewing your own profile.
 	 *
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 *
 	 * @var bool
 	 */
@@ -90,7 +90,7 @@ class BP_Button {
 	/**
 	 * Parent element to wrap button around.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @var string Default: 'div'.
 	 */
@@ -99,7 +99,7 @@ class BP_Button {
 	/**
 	 * Element attributes for parent element.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @var array Set whatever attributes like 'id', 'class' as array key.
 	 */
@@ -110,7 +110,7 @@ class BP_Button {
 	/**
 	 * Button element.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @var string Default: 'a'.
 	 */
@@ -119,7 +119,7 @@ class BP_Button {
 	/**
 	 * Button attributes.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @var array Set whatever attributes like 'id', 'href' as array key.
 	 */
@@ -128,7 +128,7 @@ class BP_Button {
 	/**
 	 * The contents of the button link.
 	 *
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 *
 	 * @var string
 	 */
@@ -137,7 +137,7 @@ class BP_Button {
 	/**
 	 * HTML result.
 	 *
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 *
 	 * @var string
 	 */
@@ -148,7 +148,7 @@ class BP_Button {
 	/**
 	 * The type of DOM element to use for a wrapper.
 	 *
-	 * @since      1.2.6
+	 * @since BuddyPress      1.2.6
 	 * @deprecated 2.7.0 Use $parent_element instead.
 	 *
 	 * @var string|bool
@@ -158,7 +158,7 @@ class BP_Button {
 	/**
 	 * The DOM class of the button wrapper.
 	 *
-	 * @since      1.2.6
+	 * @since BuddyPress      1.2.6
 	 * @deprecated 2.7.0 Set 'class' key in $parent_attr instead.
 	 *
 	 * @var string
@@ -168,7 +168,7 @@ class BP_Button {
 	/**
 	 * The DOM ID of the button wrapper.
 	 *
-	 * @since      1.2.6
+	 * @since BuddyPress      1.2.6
 	 * @deprecated 2.7.0 Set 'id' key in $parent_attr instead.
 	 *
 	 * @var string
@@ -178,7 +178,7 @@ class BP_Button {
 	/**
 	 * The destination link of the button.
 	 *
-	 * @since      1.2.6
+	 * @since BuddyPress      1.2.6
 	 * @deprecated 2.7.0 Set 'href' key in $button_attr instead.
 	 *
 	 * @var string
@@ -188,7 +188,7 @@ class BP_Button {
 	/**
 	 * The DOM class of the button link.
 	 *
-	 * @since      1.2.6
+	 * @since BuddyPress      1.2.6
 	 * @deprecated 2.7.0 Set 'class' key in $button_attr instead.
 	 *
 	 * @var string
@@ -198,7 +198,7 @@ class BP_Button {
 	/**
 	 * The DOM ID of the button link.
 	 *
-	 * @since      1.2.6
+	 * @since BuddyPress      1.2.6
 	 * @deprecated 2.7.0 Set 'id' key in $button_attr instead.
 	 *
 	 * @var string
@@ -208,7 +208,7 @@ class BP_Button {
 	/**
 	 * The DOM rel value of the button link.
 	 *
-	 * @since      1.2.6
+	 * @since BuddyPress      1.2.6
 	 * @deprecated 2.7.0 Set 'rel' key in $button_attr instead.
 	 *
 	 * @var string
@@ -218,7 +218,7 @@ class BP_Button {
 	/**
 	 * Title of the button link.
 	 *
-	 * @since      1.2.6
+	 * @since BuddyPress      1.2.6
 	 * @deprecated 2.7.0 Set 'title' key in $button_attr instead.
 	 *
 	 * @var string
@@ -230,7 +230,7 @@ class BP_Button {
 	/**
 	 * Builds the button based on class parameters.
 	 *
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 *
 	 * @param array|string $args See {@BP_Button}.
 	 */
@@ -341,8 +341,8 @@ class BP_Button {
 		 * This filter is a dynamic filter based on component and component ID and
 		 * allows button to be manipulated externally.
 		 *
-		 * @since 1.2.6
-		 * @since 2.7.0 Added $r as a parameter.
+		 * @since BuddyPress 1.2.6
+		 * @since BuddyPress 2.7.0 Added $r as a parameter.
 		 *
 		 * @param string    $contents HTML being used for the button.
 		 * @param BP_Button $this     Current BP_Button instance.
@@ -357,7 +357,7 @@ class BP_Button {
 	/**
 	 * Provide backward compatibility for deprecated button arguments.
 	 *
-	 * @since 2.7.0.
+	 * @since BuddyPress 2.7.0.
 	 *
 	 * @param  array $r See {@link BP_Button} class for full documentation.
 	 * @return array
@@ -415,7 +415,7 @@ class BP_Button {
 	/**
 	 * Return the markup for the generated button.
 	 *
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 *
 	 * @return string Button markup.
 	 */
@@ -426,7 +426,7 @@ class BP_Button {
 	/**
 	 * Output the markup of button.
 	 *
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 */
 	public function display() {
 		if ( !empty( $this->contents ) )

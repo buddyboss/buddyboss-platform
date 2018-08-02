@@ -2,7 +2,7 @@
 /**
  * Functions of BuddyPress's "Nouveau" template pack.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.1.0
  *
  * @buddypress-template-pack {
@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * See @link BP_Theme_Compat() for more.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 class BP_Nouveau extends BP_Theme_Compat {
 	/**
@@ -40,7 +40,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	/**
 	 * Return the instance of this class.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {
@@ -53,7 +53,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	/**
 	 * The BP Nouveau constructor.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function __construct() {
 		parent::start();
@@ -65,7 +65,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	/**
 	 * BP Nouveau global variables.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_globals() {
 		$bp = buddypress();
@@ -81,7 +81,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	/**
 	 * Includes!
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	protected function includes() {
 		require $this->includes_dir . 'functions.php';
@@ -120,7 +120,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		/**
 		 * Fires after all of the BuddyPress Nouveau includes have been loaded. Passed by reference.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param BP_Nouveau $value Current BP_Nouveau instance.
 		 */
@@ -130,7 +130,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	/**
 	 * Setup the Template Pack features support.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_support() {
 		$width         = 1300;
@@ -158,7 +158,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	/**
 	 * Setup the Template Pack common actions.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_actions() {
 		// Filter BuddyPress template hierarchy and look for page templates.
@@ -200,7 +200,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		/**
 		 * Fires after all of the BuddyPress theme compat actions have been added.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param BP_Nouveau $this Current BP_Nouveau instance.
 		 */
@@ -210,7 +210,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	/**
 	 * Enqueue the template pack css files
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function enqueue_styles() {
 		$min = bp_core_get_minified_asset_suffix();
@@ -223,7 +223,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		/**
 		 * Filters the BuddyPress Nouveau CSS dependencies.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array $value Array of style dependencies. Default Dashicons.
 		 */
@@ -236,7 +236,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 * The primary index should have the stylesheet handle to use, and be assigned an array that has indexes for
 		 * file location, dependencies, and version.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array $value Array of styles to enqueue.
 		 */
@@ -284,7 +284,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	/**
 	 * Register Template Pack JavaScript files
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function register_scripts() {
 		$min          = bp_core_get_minified_asset_suffix();
@@ -300,7 +300,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 * The primary index should have the script handle to use, and be assigned an array that has indexes for
 		 * file location, dependencies, version and if it should load in the footer or not.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array $value Array of scripts to register.
 		 */
@@ -358,7 +358,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	/**
 	 * Enqueue the required JavaScript files
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function enqueue_scripts() {
 		wp_enqueue_script( 'bp-nouveau' );
@@ -374,7 +374,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		/**
 		 * Fires after all of the BuddyPress Nouveau scripts have been enqueued.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 */
 		do_action( 'bp_nouveau_enqueue_scripts' );
 	}
@@ -388,7 +388,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 *
 	 * The no-js class is removed by the JavaScript created in buddypress.js.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $classes Array of classes to append to body tag.
 	 *
@@ -404,7 +404,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 *
 	 * These localizations require information that may not be loaded even by init.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function localize_scripts() {
 		$params = array(
@@ -432,7 +432,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		/**
 		 * Filters the supported BuddyPress Nouveau components.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array $value Array of supported components.
 		 */
@@ -464,7 +464,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		/**
 		 * Filters core JavaScript strings for internationalization before AJAX usage.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array $params Array of key/value pairs for AJAX usage.
 		 */
@@ -477,7 +477,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 *
 	 * @see https://buddypress.trac.wordpress.org/ticket/6065
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $templates Array of templates.
 	 *
@@ -487,7 +487,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		/**
 		 * Filters whether or not we are looking at a directory to determine if to return early.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param bool $value Whether or not we are viewing a directory.
 		 */
@@ -546,7 +546,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	/**
 	 * Add our special 'buddypress' div wrapper to the theme compat template part.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @see bp_buffer_template_part()
 	 *
@@ -571,7 +571,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	/**
 	 * Define the directory nav items
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function setup_directory_nav() {
 		$nav_items = array();
@@ -603,7 +603,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	/**
 	 * We'll handle template notices from BP Nouveau.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function neutralize_core_template_notices() {
 		remove_action( 'template_notices', 'bp_core_render_message' );
@@ -612,7 +612,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	/**
 	 * Set the BP Uri for the customizer in case of Ajax requests.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param  string $path the BP Uri.
 	 * @return string       the BP Uri.
@@ -641,7 +641,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 /**
  * Get a unique instance of BP Nouveau
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return BP_Nouveau the main instance of the class
  */

@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileClasses
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Telephone number xprofile field type.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 
 	/**
 	 * Constructor for the telephone number field type.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -33,7 +33,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 		/**
 		 * Fires inside __construct() method for BP_XProfile_Field_Type_Telephone class.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param BP_XProfile_Field_Type_Telephone $this Current instance of the field type.
 		 */
@@ -45,7 +45,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 	 *
 	 * Must be used inside the {@link bp_profile_fields()} template loop.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $raw_properties Optional key/value array of
 	 *                              {@link http://dev.w3.org/html5/markup/input.text.html permitted attributes}
@@ -89,7 +89,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 	 *
 	 * Must be used inside the {@link bp_profile_fields()} template loop.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $raw_properties Optional key/value array of permitted attributes that you want to add.
 	 */
@@ -111,7 +111,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 	 * This method usually outputs HTML for this field type's children options on the wp-admin Profile Fields
 	 * "Add Field" and "Edit Field" screens, but for this field type, we don't want it, so it's stubbed out.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param BP_XProfile_Field $current_field The current profile field on the add/edit screen.
 	 * @param string            $control_type  Optional. HTML input type used to render the
@@ -122,7 +122,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 	/**
 	 * Format URL values for display.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param string     $field_value The URL value, as saved in the database.
 	 * @param string|int $field_id    Optional. ID of the field.

@@ -6,7 +6,7 @@ use WP_CLI;
 /**
  * Manage BuddyBoss Messages.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 class Message extends BuddypressCommand {
 
@@ -531,7 +531,7 @@ class Message extends BuddypressCommand {
 	/**
 	 * Message Types.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @return array An array of message types.
 	 */
@@ -542,7 +542,7 @@ class Message extends BuddypressCommand {
 	/**
 	 * Message Boxes.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @return array An array of message boxes.
 	 */

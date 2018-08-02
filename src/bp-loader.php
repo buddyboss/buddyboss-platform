@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss
  * @subpackage Main
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 /**
@@ -73,7 +73,7 @@ if ( $is_bp_active ) {
     /**
      * Displays an admin notice when buddypress plugin is also active.
      * 
-     * @since 1.0.0
+     * @since BuddyPress 1.0.0
      * @return void
      */
     function bp_duplicate_buddypress_notice() {
@@ -106,7 +106,7 @@ if ( $is_bb_active ) {
     /**
      * Displays an admin notice when bbpress plugin is also active.
      * 
-     * @since 1.0.0
+     * @since BuddyPress 1.0.0
      * @return void
      */
     function bp_duplicate_bbpress_notice() {
@@ -146,7 +146,7 @@ if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
     /**
      * Check if the current request is to activate buddypress plugins and redirect if so.
      * 
-     * @since 1.0.0
+     * @since BuddyPress 1.0.0
      * 
      * @global string $pagenow
      */
@@ -174,7 +174,7 @@ if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
     /**
      * Show a notice that an attempt to activate buddypres plugin was blocked.
      * 
-     * @since 1.0.0
+     * @since BuddyPress 1.0.0
      */
     function bp_prevented_activating_buddypress_notice () {
         ?>
@@ -212,7 +212,7 @@ if ( !$is_bp_active && !$is_bb_active ) {
     /**
      * Adds an admin notice to installations that don't meet BP's minimum PHP requirement.
      *
-     * @since 2.8.0
+     * @since BuddyPress 2.8.0
      */
     function bp_php_requirements_notice() {
         if ( ! current_user_can( 'update_core' ) ) {

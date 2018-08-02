@@ -6,7 +6,7 @@ use WP_CLI;
 /**
  * Manage BuddyBoss Groups.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 class Group extends BuddypressCommand {
 
@@ -409,7 +409,7 @@ class Group extends BuddypressCommand {
 	/**
 	 * Group Status
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @return array An array of gruop status.
 	 */
@@ -420,7 +420,7 @@ class Group extends BuddypressCommand {
 	/**
 	 * Gets a randon group status.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param  string $status Group status.
 	 * @return string Group Status.

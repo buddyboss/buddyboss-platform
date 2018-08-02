@@ -3,7 +3,7 @@
  * BuddyBoss Groups group members loop template class.
  *
  * @package BuddyBoss
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 
 // Exit if accessed directly.
@@ -12,60 +12,60 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Group Members Loop template class.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 class BP_Groups_Group_Members_Template {
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int
 	 */
 	public $current_member = -1;
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int
 	 */
 	public $member_count;
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var array
 	 */
 	public $members;
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var object
 	 */
 	public $member;
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var bool
 	 */
 	public $in_the_loop;
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int
 	 */
 	public $pag_page;
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int
 	 */
 	public $pag_num;
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var array|string|void
 	 */
 	public $pag_links;
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int
 	 */
 	public $total_group_count;
@@ -73,7 +73,7 @@ class BP_Groups_Group_Members_Template {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param array $args {
 	 *     An array of optional arguments.
@@ -182,7 +182,7 @@ class BP_Groups_Group_Members_Template {
 	/**
 	 * Whether or not there are members to display.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return bool
 	 */
@@ -197,7 +197,7 @@ class BP_Groups_Group_Members_Template {
 	/**
 	 * Increments to the next member to display.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return object
 	 */
@@ -211,7 +211,7 @@ class BP_Groups_Group_Members_Template {
 	/**
 	 * Rewinds to the first member to display.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	public function rewind_members() {
 		$this->current_member = -1;
@@ -223,7 +223,7 @@ class BP_Groups_Group_Members_Template {
 	/**
 	 * Finishes up the members for display.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return bool
 	 */
@@ -236,9 +236,9 @@ class BP_Groups_Group_Members_Template {
 			/**
 			 * Fires right before the rewinding of members list.
 			 *
-			 * @since 1.0.0
-			 * @since 2.3.0 `$this` parameter added.
-			 * @since 2.7.0 Action renamed from `loop_end`.
+			 * @since BuddyPress 1.0.0
+			 * @since BuddyPress 2.3.0 `$this` parameter added.
+			 * @since BuddyPress 2.7.0 Action renamed from `loop_end`.
 			 *
 			 * @param BP_Groups_Group_Members_Template $this Instance of the current Members template.
 			 */
@@ -255,7 +255,7 @@ class BP_Groups_Group_Members_Template {
 	/**
 	 * Sets up the member to display.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	public function the_member() {
 		$this->in_the_loop = true;
@@ -267,9 +267,9 @@ class BP_Groups_Group_Members_Template {
 			/**
 			 * Fires if the current member item is the first in the members list.
 			 *
-			 * @since 1.0.0
-			 * @since 2.3.0 `$this` parameter added.
-			 * @since 2.7.0 Action renamed from `loop_start`.
+			 * @since BuddyPress 1.0.0
+			 * @since BuddyPress 2.3.0 `$this` parameter added.
+			 * @since BuddyPress 2.7.0 Action renamed from `loop_start`.
 			 *
 			 * @param BP_Groups_Group_Members_Template $this Instance of the current Members template.
 			 */

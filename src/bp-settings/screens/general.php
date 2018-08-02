@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage SettingsScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Show the general settings template.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_settings_screen_general() {
 
@@ -22,7 +22,7 @@ function bp_settings_screen_general() {
 	/**
 	 * Filters the template file path to use for the general settings screen.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string $value Directory path to look in for the template file.
 	 */
@@ -32,7 +32,7 @@ function bp_settings_screen_general() {
 /**
  * Removes 'Email' sub nav, if no component has registered options there.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  */
 function bp_settings_remove_email_subnav() {
 	if ( ! has_action( 'bp_notification_settings' ) ) {

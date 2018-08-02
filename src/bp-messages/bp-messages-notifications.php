@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage MessagesNotifications
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Format notifications for the Messages component.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param string $action            The kind of notification being rendered.
  * @param int    $item_id           The primary item id.
@@ -112,7 +112,7 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 		 *
 		 * This is a dynamic filter based on the message notification action.
 		 *
-		 * @since 2.6.0
+		 * @since BuddyPress 2.6.0
 		 *
 		 * @param array  $value             An associative array containing the text and the link of the notification
 		 * @param int    $item_id           ID of the associated item.
@@ -127,7 +127,7 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 	/**
 	 * Fires right before returning the formatted message notifications.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $action            The type of message notification.
 	 * @param int    $item_id           The primary item ID.
@@ -142,7 +142,7 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 /**
  * Send notifications to message recipients.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @param BP_Messages_Message $message Message object.
  */
@@ -166,7 +166,7 @@ add_action( 'messages_message_sent', 'bp_messages_message_sent_add_notification'
 /**
  * Mark new message notification when member reads a message thread directly.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 function bp_messages_screen_conversation_mark_notifications() {
 	global $thread_template;
@@ -208,7 +208,7 @@ add_action( 'thread_loop_start', 'bp_messages_screen_conversation_mark_notificat
  *
  * This callback covers mark-as-read bulk actions.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param int $thread_id ID of the thread being marked as read.
  */
@@ -224,7 +224,7 @@ add_action( 'messages_thread_mark_as_read', 'bp_messages_mark_notification_on_ma
 /**
  * When a message is deleted, delete corresponding notifications.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param int   $thread_id   ID of the thread.
  * @param array $message_ids IDs of the messages.
@@ -243,7 +243,7 @@ add_action( 'bp_messages_thread_after_delete', 'bp_messages_message_delete_notif
 /**
  * Render the markup for the Messages section of Settings > Notifications.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function messages_screen_notification_settings() {
 
@@ -285,7 +285,7 @@ function messages_screen_notification_settings() {
 			/**
 			 * Fires inside the closing </tbody> tag for messages screen notification settings.
 			 *
-			 * @since 1.0.0
+			 * @since BuddyPress 1.0.0
 			 */
 			do_action( 'messages_screen_notification_settings' ); ?>
 		</tbody>

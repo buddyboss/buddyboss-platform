@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage ActivityScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Load the 'My Groups' activity page.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 function bp_activity_screen_groups() {
 	if ( !bp_is_active( 'groups' ) )
@@ -21,14 +21,14 @@ function bp_activity_screen_groups() {
 	/**
 	 * Fires right before the loading of the "My Groups" screen template file.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_activity_screen_groups' );
 
 	/**
 	 * Filters the template to load for the "My Groups" screen.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param string $template Path to the activity template to load.
 	 */

@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  */
 
 // Exit if accessed directly.
@@ -15,13 +15,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * This class is used to build each component's navigation.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  */
 class BP_Core_Nav {
 	/**
 	 * An associative array containing the nav items for the object ID.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 * @var array
 	 */
 	protected $nav;
@@ -29,7 +29,7 @@ class BP_Core_Nav {
 	/**
 	 * The current object ID.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 * @var int
 	 */
 	private $object_id;
@@ -37,7 +37,7 @@ class BP_Core_Nav {
 	/**
 	 * Initializes the Nav belonging to the specified object.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param int $object_id The item ID to build the nav for. Default is the displayed user ID.
 	 */
@@ -54,7 +54,7 @@ class BP_Core_Nav {
 	/**
 	 * Checks whether a nav item is set.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param string $key The requested nav slug.
 	 * @return bool True if the nav item is set, false otherwise.
@@ -66,7 +66,7 @@ class BP_Core_Nav {
 	/**
 	 * Gets a nav item.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param string $key The requested nav slug.
 	 * @return mixed The value corresponding to the requested nav item.
@@ -82,7 +82,7 @@ class BP_Core_Nav {
 	/**
 	 * Sets a nav item.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param string $key   The requested nav slug.
 	 * @param mixed  $value The value of the nav item.
@@ -98,7 +98,7 @@ class BP_Core_Nav {
 	/**
 	 * Gets a specific nav item or array of nav items.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param string $key The nav item slug to get. Optional.
 	 * @return mixed       An array of nav item, a single nav item, or null if none found.
@@ -125,7 +125,7 @@ class BP_Core_Nav {
 	/**
 	 * Adds a new nav item.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param array $args The nav item's arguments.
 	 * @return BP_Core_Nav_Item
@@ -155,7 +155,7 @@ class BP_Core_Nav {
 	/**
 	 * Edits a nav item.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param array  $args        The nav item's arguments.
 	 * @param string $slug        The slug of the nav item.
@@ -208,7 +208,7 @@ class BP_Core_Nav {
 	/**
 	 * Unset an item or a subitem of the nav.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param string $slug        The slug of the main item.
 	 * @param string $parent_slug The slug of the sub item.
@@ -283,7 +283,7 @@ class BP_Core_Nav {
 	/**
 	 * Sorts a list of nav items.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param array $items The nav items to sort.
 	 * @return array
@@ -318,7 +318,7 @@ class BP_Core_Nav {
 	/**
 	 * Gets the primary nav items.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param array $args Filters to select the specific primary items. See wp_list_filter().
 	 * @param bool  $sort True to sort the nav items. False otherwise.
@@ -348,7 +348,7 @@ class BP_Core_Nav {
 	/**
 	 * Gets the secondary nav items.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param array $args Filters to select the specific secondary items. See wp_list_filter().
 	 * @param bool  $sort True to sort the nav items. False otherwise.
@@ -378,7 +378,7 @@ class BP_Core_Nav {
 	/**
 	 * Gets a nested list of visible nav items.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @return array The list of visible nav items.
 	 */

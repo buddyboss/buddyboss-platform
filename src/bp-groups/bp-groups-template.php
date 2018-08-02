@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsTemplates
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Output the groups component slug.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_groups_slug() {
 	echo bp_get_groups_slug();
@@ -21,7 +21,7 @@ function bp_groups_slug() {
 	/**
 	 * Return the groups component slug.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @return string
 	 */
@@ -30,7 +30,7 @@ function bp_groups_slug() {
 		/**
 		 * Filters the groups component slug.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param string $slug Groups component slug.
 		 */
@@ -40,7 +40,7 @@ function bp_groups_slug() {
 /**
  * Output the groups component root slug.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_groups_root_slug() {
 	echo bp_get_groups_root_slug();
@@ -48,7 +48,7 @@ function bp_groups_root_slug() {
 	/**
 	 * Return the groups component root slug.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @return string
 	 */
@@ -57,7 +57,7 @@ function bp_groups_root_slug() {
 		/**
 		 * Filters the groups component root slug.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param string $root_slug Groups component root slug.
 		 */
@@ -67,7 +67,7 @@ function bp_groups_root_slug() {
 /**
  * Output the group type base slug.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  */
 function bp_groups_group_type_base() {
 	echo esc_url( bp_get_groups_group_type_base() );
@@ -79,7 +79,7 @@ function bp_groups_group_type_base() {
 	 * type directory URLs. For example, in example.com/groups/type/foo/, 'foo' is
 	 * the group type and 'type' is the base slug.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @return string
 	 */
@@ -87,7 +87,7 @@ function bp_groups_group_type_base() {
 		/**
 		 * Filters the group type URL base.
 		 *
-		 * @since 2.7.0
+		 * @since BuddyPress 2.7.0
 		 *
 		 * @param string $base
 		 */
@@ -97,7 +97,7 @@ function bp_groups_group_type_base() {
 /**
  * Output group directory permalink.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_groups_directory_permalink() {
 	echo esc_url( bp_get_groups_directory_permalink() );
@@ -105,7 +105,7 @@ function bp_groups_directory_permalink() {
 	/**
 	 * Return group directory permalink.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @return string
 	 */
@@ -114,7 +114,7 @@ function bp_groups_directory_permalink() {
 		/**
 		 * Filters the group directory permalink.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param string $value Permalink for the group directory.
 		 */
@@ -124,7 +124,7 @@ function bp_groups_directory_permalink() {
 /**
  * Output group type directory permalink.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @param string $group_type Optional. Group type.
  */
@@ -134,7 +134,7 @@ function bp_group_type_directory_permalink( $group_type = '' ) {
 	/**
 	 * Return group type directory permalink.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param string $group_type Optional. Group type. Defaults to current group type.
 	 * @return string Group type directory URL on success, an empty string on failure.
@@ -158,7 +158,7 @@ function bp_group_type_directory_permalink( $group_type = '' ) {
 		/**
 		 * Filters the group type directory permalink.
 		 *
-		 * @since 2.7.0
+		 * @since BuddyPress 2.7.0
 		 *
 		 * @param string $value       Group type directory permalink.
 		 * @param object $type        Group type object.
@@ -170,7 +170,7 @@ function bp_group_type_directory_permalink( $group_type = '' ) {
 /**
  * Output group type directory link.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @param string $group_type Unique group type identifier as used in bp_groups_register_group_type().
  */
@@ -180,7 +180,7 @@ function bp_group_type_directory_link( $group_type = '' ) {
 	/**
 	 * Return group type directory link.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param string $group_type Unique group type identifier as used in bp_groups_register_group_type().
 	 * @return string
@@ -196,7 +196,7 @@ function bp_group_type_directory_link( $group_type = '' ) {
 /**
  * Output a comma-delimited list of group types.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  * @see   bp_get_group_type_list() for parameter documentation.
  */
 function bp_group_type_list( $group_id = 0, $r = array() ) {
@@ -205,7 +205,7 @@ function bp_group_type_list( $group_id = 0, $r = array() ) {
 	/**
 	 * Return a comma-delimited list of group types.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param int $group_id Group ID. Defaults to current group ID if on a group page.
 	 * @param array|string $r {
@@ -290,9 +290,9 @@ function bp_group_type_list( $group_id = 0, $r = array() ) {
 /**
  * Start the Groups Template Loop.
  *
- * @since 1.0.0
- * @since 2.6.0 Added `$group_type`, `$group_type__in`, and `$group_type__not_in` parameters.
- * @since 2.7.0 Added `$update_admin_cache` parameter.
+ * @since BuddyPress 1.0.0
+ * @since BuddyPress 2.6.0 Added `$group_type`, `$group_type__in`, and `$group_type__not_in` parameters.
+ * @since BuddyPress 2.7.0 Added `$update_admin_cache` parameter.
  *
  * @param array|string $args {
  *     Array of parameters. All items are optional.
@@ -433,7 +433,7 @@ function bp_has_groups( $args = '' ) {
 	/**
 	 * Filters whether or not there are groups to iterate over for the groups loop.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param bool               $value           Whether or not there are groups to iterate over.
 	 * @param BP_Groups_Template $groups_template BP_Groups_Template object based on parsed arguments.
@@ -445,7 +445,7 @@ function bp_has_groups( $args = '' ) {
 /**
  * Check whether there are more groups to iterate over.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return bool
  */
@@ -457,7 +457,7 @@ function bp_groups() {
 /**
  * Set up the current group inside the loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return object
  */
@@ -475,7 +475,7 @@ function bp_the_group() {
  * If you wish to check that property, use the check:
  * bp_current_user_can( 'groups_see_group' ).
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param BP_Groups_Group|null $group Optional. Group object. Default: current group in loop.
  * @return bool
@@ -497,7 +497,7 @@ function bp_group_is_visible( $group = null ) {
 /**
  * Output the ID of the current group in the loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object. Default: current group in loop.
  */
@@ -507,7 +507,7 @@ function bp_group_id( $group = false ) {
 	/**
 	 * Get the ID of the current group in the loop.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: current group in loop.
@@ -523,8 +523,8 @@ function bp_group_id( $group = false ) {
 		/**
 		 * Filters the ID of the current group in the loop.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param int    $id    ID of the current group in the loop.
 		 * @param object $group Group object.
@@ -535,7 +535,7 @@ function bp_group_id( $group = false ) {
 /**
  * Output the row class of the current group in the loop.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param array $classes Array of custom classes.
  */
@@ -545,7 +545,7 @@ function bp_group_class( $classes = array() ) {
 	/**
 	 * Get the row class of the current group in the loop.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param array $classes Array of custom classes.
 	 * @return string Row class of the group.
@@ -602,7 +602,7 @@ function bp_group_class( $classes = array() ) {
 		/**
 		 * Filters classes that will be applied to row class of the current group in the loop.
 		 *
-		 * @since 1.7.0
+		 * @since BuddyPress 1.7.0
 		 *
 		 * @param array $classes Array of determined classes for the row.
 		 */
@@ -616,7 +616,7 @@ function bp_group_class( $classes = array() ) {
 /**
  * Output the name of the current group in the loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -627,7 +627,7 @@ function bp_group_name( $group = false ) {
 	/**
 	 * Get the name of the current group in the loop.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: current group in loop.
@@ -643,8 +643,8 @@ function bp_group_name( $group = false ) {
 		/**
 		 * Filters the name of the current group in the loop.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $name  Name of the current group in the loop.
 		 * @param object $group Group object.
@@ -655,7 +655,7 @@ function bp_group_name( $group = false ) {
 /**
  * Output the type of the current group in the loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -667,7 +667,7 @@ function bp_group_type( $group = false ) {
 /**
  * Get the type of the current group in the loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -693,8 +693,8 @@ function bp_get_group_type( $group = false ) {
 	/**
 	 * Filters the type for the current group in the loop.
 	 *
-	 * @since 1.0.0
-	 * @since 2.5.0 Added the `$group` parameter.
+	 * @since BuddyPress 1.0.0
+	 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 	 *
 	 * @param string $type  Type for the current group in the loop.
 	 * @param object $group Group object.
@@ -704,7 +704,7 @@ function bp_get_group_type( $group = false ) {
 /**
  * Output the status of the current group in the loop.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -715,7 +715,7 @@ function bp_group_status( $group = false ) {
 	/**
 	 * Get the status of the current group in the loop.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: current group in loop.
@@ -731,8 +731,8 @@ function bp_group_status( $group = false ) {
 		/**
 		 * Filters the status of the current group in the loop.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $status Status of the current group in the loop.
 		 * @param object $group  Group object.
@@ -743,7 +743,7 @@ function bp_group_status( $group = false ) {
 /**
  * Output the group avatar while in the groups loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param array|string $args {
  *      See {@link bp_get_group_avatar()} for description of arguments.
@@ -755,7 +755,7 @@ function bp_group_avatar( $args = '' ) {
 	/**
 	 * Get a group's avatar.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @see bp_core_fetch_avatar() For a description of arguments and return values.
 	 *
@@ -811,7 +811,7 @@ function bp_group_avatar( $args = '' ) {
 		/**
 		 * Filters the group avatar while in the groups loop.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $avatar HTML image element holding the group avatar.
 		 * @param array  $r      Array of parsed arguments for the group avatar.
@@ -822,7 +822,7 @@ function bp_group_avatar( $args = '' ) {
 /**
  * Output the group avatar thumbnail while in the groups loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -833,7 +833,7 @@ function bp_group_avatar_thumb( $group = false ) {
 	/**
 	 * Return the group avatar thumbnail while in the groups loop.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: current group in loop.
@@ -849,7 +849,7 @@ function bp_group_avatar_thumb( $group = false ) {
 /**
  * Output the miniature group avatar thumbnail while in the groups loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -860,7 +860,7 @@ function bp_group_avatar_mini( $group = false ) {
 	/**
 	 * Return the miniature group avatar thumbnail while in the groups loop.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: current group in loop.
@@ -880,7 +880,7 @@ function bp_group_avatar_mini( $group = false ) {
 /**
  * Should we use the group's cover image header.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @return bool True if the displayed user has a cover image,
  *              False otherwise
@@ -892,8 +892,8 @@ function bp_group_use_cover_image_header() {
 /**
  * Output the 'last active' string for the current group in the loop.
  *
- * @since 1.0.0
- * @since 2.7.0 Added $args as a parameter.
+ * @since BuddyPress 1.0.0
+ * @since BuddyPress 2.7.0 Added $args as a parameter.
  *
  * @param object|bool  $group Optional. Group object. Default: current group in loop.
  * @param array|string $args Optional. {@see bp_get_group_last_active()}.
@@ -904,8 +904,8 @@ function bp_group_last_active( $group = false, $args = array() ) {
 	/**
 	 * Return the 'last active' string for the current group in the loop.
 	 *
-	 * @since 1.0.0
-	 * @since 2.7.0 Added $args as a parameter.
+	 * @since BuddyPress 1.0.0
+	 * @since BuddyPress 2.7.0 Added $args as a parameter.
 	 *
 	 * @param object|bool  $group Optional. Group object. Default: current group in loop.
 	 * @param array|string $args {
@@ -945,8 +945,8 @@ function bp_group_last_active( $group = false, $args = array() ) {
 			/**
 			 * Filters the 'last active' string for the current group in the loop.
 			 *
-			 * @since 1.0.0
-			 * @since 2.5.0 Added the `$group` parameter.
+			 * @since BuddyPress 1.0.0
+			 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 			 *
 			 * @param string $value Determined last active value for the current group.
 			 * @param object $group Group object.
@@ -958,7 +958,7 @@ function bp_group_last_active( $group = false, $args = array() ) {
 /**
  * Output the permalink for the current group in the loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param BP_Groups_Group|null $group Optional. Group object. Default: current group in loop.
  */
@@ -968,7 +968,7 @@ function bp_group_permalink( $group = null ) {
 	/**
 	 * Return the permalink for the current group in the loop.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param BP_Groups_Group|null $group Optional. Group object. Default: current group in loop.
 	 * @return string
@@ -983,8 +983,8 @@ function bp_group_permalink( $group = null ) {
 		/**
 		 * Filters the permalink for the current group in the loop.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $value Permalink for the current group in the loop.
 		 * @param object $group Group object.
@@ -995,7 +995,7 @@ function bp_group_permalink( $group = null ) {
 /**
  * Output an HTML-formatted link for the current group in the loop.
  *
- * @since 2.9.0
+ * @since BuddyPress 2.9.0
  *
  * @param BP_Groups_Group|null $group Optional. Group object.
  *                                    Default: current group in loop.
@@ -1006,7 +1006,7 @@ function bp_group_link( $group = null ) {
 	/**
 	 * Return an HTML-formatted link for the current group in the loop.
 	 *
-	 * @since 2.9.0
+	 * @since BuddyPress 2.9.0
 	 *
 	 * @param BP_Groups_Group|null $group Optional. Group object.
 	 *                                    Default: current group in loop.
@@ -1029,7 +1029,7 @@ function bp_group_link( $group = null ) {
 		/**
 		 * Filters the HTML-formatted link for the current group in the loop.
 		 *
-		 * @since 2.9.0
+		 * @since BuddyPress 2.9.0
 		 *
 		 * @param string          $value HTML-formatted link for the
 		 *                               current group in the loop.
@@ -1041,7 +1041,7 @@ function bp_group_link( $group = null ) {
 /**
  * Output the permalink for the admin section of the current group in the loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -1052,7 +1052,7 @@ function bp_group_admin_permalink( $group = false ) {
 	/**
 	 * Return the permalink for the admin section of the current group in the loop.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: current group in loop.
@@ -1068,8 +1068,8 @@ function bp_group_admin_permalink( $group = false ) {
 		/**
 		 * Filters the permalink for the admin section of the current group in the loop.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $value Permalink for the admin section of the current group in the loop.
 		 * @param object $group Group object.
@@ -1080,7 +1080,7 @@ function bp_group_admin_permalink( $group = false ) {
 /**
  * Return the slug for the current group in the loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -1091,7 +1091,7 @@ function bp_group_slug( $group = false ) {
 	/**
 	 * Return the slug for the current group in the loop.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: current group in loop.
@@ -1107,8 +1107,8 @@ function bp_group_slug( $group = false ) {
 		/**
 		 * Filters the slug for the current group in the loop.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $slug  Slug for the current group in the loop.
 		 * @param object $group Group object.
@@ -1119,7 +1119,7 @@ function bp_group_slug( $group = false ) {
 /**
  * Output the description for the current group in the loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -1130,7 +1130,7 @@ function bp_group_description( $group = false ) {
 	/**
 	 * Return the description for the current group in the loop.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: current group in loop.
@@ -1146,8 +1146,8 @@ function bp_group_description( $group = false ) {
 		/**
 		 * Filters the description for the current group in the loop.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $value Description for the current group.
 		 * @param object $group Group object.
@@ -1158,7 +1158,7 @@ function bp_group_description( $group = false ) {
 /**
  * Output the description for the current group in the loop, for use in a textarea.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -1173,7 +1173,7 @@ function bp_group_description_editable( $group = false ) {
 	 * filters that 'bp_get_group_description' has, which makes it
 	 * appropriate for "raw" editing.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: current group in loop.
@@ -1192,8 +1192,8 @@ function bp_group_description_editable( $group = false ) {
 		 * 'bp_get_group_description_editable' does not have the formatting filters that
 		 * 'bp_get_group_description' has, which makes it appropriate for "raw" editing.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $description Description for the current group in the loop.
 		 * @param object $group       Group object.
@@ -1204,7 +1204,7 @@ function bp_group_description_editable( $group = false ) {
 /**
  * Output an excerpt of the group description.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group  Optional. The group being referenced.
  *                            Defaults to the group currently being
@@ -1218,7 +1218,7 @@ function bp_group_description_excerpt( $group = false, $length = 225 ) {
 	/**
 	 * Get an excerpt of a group description.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param object|bool $group  Optional. The group being referenced.
 	 *                            Defaults to the group currently being
@@ -1237,7 +1237,7 @@ function bp_group_description_excerpt( $group = false, $length = 225 ) {
 		/**
 		 * Filters the excerpt of a group description.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $value Excerpt of a group description.
 		 * @param object $group Object for group whose description is made into an excerpt.
@@ -1250,7 +1250,7 @@ function bp_group_description_excerpt( $group = false, $length = 225 ) {
  *
  * Either 'Public' or 'Private'.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -1263,7 +1263,7 @@ function bp_group_public_status( $group = false ) {
 	 *
 	 * Either 'Public' or 'Private'.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: current group in loop.
@@ -1313,7 +1313,7 @@ function bp_group_is_public( $group = false ) {
 		/**
 		 * Filters whether the current group in the loop is public.
 		 *
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param bool   $public True if the group is public.
 		 * @param object $group Group object.
@@ -1324,8 +1324,8 @@ function bp_group_is_public( $group = false ) {
 /**
  * Output the created date of the current group in the loop.
  *
- * @since 1.0.0
- * @since 2.7.0 Added $args as a parameter.
+ * @since BuddyPress 1.0.0
+ * @since BuddyPress 2.7.0 Added $args as a parameter.
  *
  * @param object|bool  $group Optional. Group object. Default: current group in loop.
  * @param array|string $args  {@see bp_get_group_date_created()}.
@@ -1336,8 +1336,8 @@ function bp_group_date_created( $group = false, $args = array() ) {
 	/**
 	 * Return the created date of the current group in the loop.
 	 *
-	 * @since 1.0.0
-	 * @since 2.7.0 Added $args as a parameter.
+	 * @since BuddyPress 1.0.0
+	 * @since BuddyPress 2.7.0 Added $args as a parameter.
 	 *
 	 * @param object|bool  $group Optional. Group object. Default: current group in loop.
 	 * @param array|string $args {
@@ -1368,8 +1368,8 @@ function bp_group_date_created( $group = false, $args = array() ) {
 		/**
 		 * Filters the created date of the current group in the loop.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $value Created date for the current group.
 		 * @param object $group Group object.
@@ -1380,7 +1380,7 @@ function bp_group_date_created( $group = false, $args = array() ) {
 /**
  * Output the username of the creator of the current group in the loop.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -1391,7 +1391,7 @@ function bp_group_creator_username( $group = false ) {
 	/**
 	 * Return the username of the creator of the current group in the loop.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: current group in loop.
@@ -1407,8 +1407,8 @@ function bp_group_creator_username( $group = false ) {
 		/**
 		 * Filters the username of the creator of the current group in the loop.
 		 *
-		 * @since 1.7.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.7.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $value Username of the group creator.
 		 * @param object $group Group object.
@@ -1419,7 +1419,7 @@ function bp_group_creator_username( $group = false ) {
 /**
  * Output the user ID of the creator of the current group in the loop.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -1430,7 +1430,7 @@ function bp_group_creator_id( $group = false ) {
 	/**
 	 * Return the user ID of the creator of the current group in the loop.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: current group in loop.
@@ -1446,8 +1446,8 @@ function bp_group_creator_id( $group = false ) {
 		/**
 		 * Filters the user ID of the creator of the current group in the loop.
 		 *
-		 * @since 1.7.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.7.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param int $creator_id User ID of the group creator.
 		 * @param object $group Group object.
@@ -1458,7 +1458,7 @@ function bp_group_creator_id( $group = false ) {
 /**
  * Output the permalink of the creator of the current group in the loop.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -1469,7 +1469,7 @@ function bp_group_creator_permalink( $group = false ) {
 	/**
 	 * Return the permalink of the creator of the current group in the loop.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: current group in loop.
@@ -1485,8 +1485,8 @@ function bp_group_creator_permalink( $group = false ) {
 		/**
 		 * Filters the permalink of the creator of the current group in the loop.
 		 *
-		 * @since 1.7.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.7.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $value Permalink of the group creator.
 		 * @param object $group Group object.
@@ -1497,7 +1497,7 @@ function bp_group_creator_permalink( $group = false ) {
 /**
  * Determine whether a user is the creator of the current group in the loop.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param BP_Groups_Group|null $group   Optional. Group object. Default: current group in loop.
  * @param int                  $user_id ID of the user.
@@ -1520,7 +1520,7 @@ function bp_is_group_creator( $group = null, $user_id = 0 ) {
 /**
  * Output the avatar of the creator of the current group in the loop.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -1535,7 +1535,7 @@ function bp_group_creator_avatar( $group = false, $args = array() ) {
 	/**
 	 * Return the avatar of the creator of the current group in the loop.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: current group in loop.
@@ -1574,8 +1574,8 @@ function bp_group_creator_avatar( $group = false, $args = array() ) {
 		/**
 		 * Filters the avatar of the creator of the current group in the loop.
 		 *
-		 * @since 1.7.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.7.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $avatar Avatar of the group creator.
 		 * @param object $group  Group object.
@@ -1588,7 +1588,7 @@ function bp_group_creator_avatar( $group = false, $args = array() ) {
  *
  * Alias of {@link bp_is_item_admin()}.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool
  */
@@ -1601,7 +1601,7 @@ function bp_group_is_admin() {
  *
  * Alias of {@link bp_is_item_mod()}.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool
  */
@@ -1612,7 +1612,7 @@ function bp_group_is_mod() {
 /**
  * Output markup listing group admins.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -1641,7 +1641,7 @@ function bp_group_list_admins( $group = false ) {
 /**
  * Output markup listing group mod.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -1678,7 +1678,7 @@ function bp_group_list_mods( $group = false ) {
 /**
  * Return a list of user IDs for a group's admins.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param BP_Groups_Group|bool $group     Optional. The group being queried. Defaults
  *                                        to the current group in the loop.
@@ -1710,8 +1710,8 @@ function bp_group_admin_ids( $group = false, $format = 'string' ) {
 	 *
 	 * This filter may return either an array or a comma separated string.
 	 *
-	 * @since 1.5.0
-	 * @since 2.5.0 Added the `$group` parameter.
+	 * @since BuddyPress 1.5.0
+	 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 	 *
 	 * @param array|string $admin_ids List of user IDs for a group's admins.
 	 * @param object       $group     Group object.
@@ -1722,7 +1722,7 @@ function bp_group_admin_ids( $group = false, $format = 'string' ) {
 /**
  * Return a list of user IDs for a group's moderators.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param BP_Groups_Group|bool $group   Optional. The group being queried.
  *                                      Defaults to the current group in the loop.
@@ -1754,8 +1754,8 @@ function bp_group_mod_ids( $group = false, $format = 'string' ) {
 	 *
 	 * This filter may return either an array or a comma separated string.
 	 *
-	 * @since 1.5.0
-	 * @since 2.5.0 Added the `$group` parameter.
+	 * @since BuddyPress 1.5.0
+	 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 	 *
 	 * @param array|string $admin_ids List of user IDs for a group's moderators.
 	 * @param object       $group     Group object.
@@ -1766,7 +1766,7 @@ function bp_group_mod_ids( $group = false, $format = 'string' ) {
 /**
  * Output the permalink of the current group's Members page.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_all_members_permalink() {
 	echo bp_get_group_all_members_permalink();
@@ -1774,7 +1774,7 @@ function bp_group_all_members_permalink() {
 	/**
 	 * Return the permalink of the Members page of the current group in the loop.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: current group in loop.
@@ -1790,8 +1790,8 @@ function bp_group_all_members_permalink() {
 		/**
 		 * Filters the permalink of the Members page for the current group in the loop.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $value Permalink of the Members page for the current group.
 		 * @param object $group Group object.
@@ -1860,7 +1860,7 @@ function bp_group_is_activity_permalink() {
 /**
  * Output the pagination HTML for a group loop.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 function bp_groups_pagination_links() {
 	echo bp_get_groups_pagination_links();
@@ -1868,7 +1868,7 @@ function bp_groups_pagination_links() {
 	/**
 	 * Get the pagination HTML for a group loop.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @return string
 	 */
@@ -1878,7 +1878,7 @@ function bp_groups_pagination_links() {
 		/**
 		 * Filters the pagination HTML for a group loop.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @param string $pag_links HTML markup for the pagination links.
 		 */
@@ -1888,7 +1888,7 @@ function bp_groups_pagination_links() {
 /**
  * Output the "Viewing x-y of z groups" pagination message.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 function bp_groups_pagination_count() {
 	echo bp_get_groups_pagination_count();
@@ -1896,7 +1896,7 @@ function bp_groups_pagination_count() {
 	/**
 	 * Generate the "Viewing x-y of z groups" pagination message.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @return string
 	 */
@@ -1917,7 +1917,7 @@ function bp_groups_pagination_count() {
 		/**
 		 * Filters the "Viewing x-y of z groups" pagination message.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param string $message  "Viewing x-y of z groups" text.
 		 * @param string $from_num Total amount for the low value in the range.
@@ -1933,7 +1933,7 @@ function bp_groups_pagination_count() {
  * "Auto-join" is the toggle that determines whether users are joined to a
  * public group automatically when creating content in that group.
  *
- * @since 1.2.6
+ * @since BuddyPress 1.2.6
  *
  * @return bool
  */
@@ -1942,7 +1942,7 @@ function bp_groups_auto_join() {
 	/**
 	 * Filters whether groups auto-join is enabled.
 	 *
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 *
 	 * @param bool $value Enabled status.
 	 */
@@ -1952,7 +1952,7 @@ function bp_groups_auto_join() {
 /**
  * Output the total member count for a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object. Default: current group in loop.
  */
@@ -1962,7 +1962,7 @@ function bp_group_total_members( $group = false ) {
 	/**
 	 * Get the total member count for a group.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: current group in loop.
@@ -1978,8 +1978,8 @@ function bp_group_total_members( $group = false ) {
 		/**
 		 * Filters the total member count for a group.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param int    $total_member_count Total member count for a group.
 		 * @param object $group              Group object.
@@ -1990,7 +1990,7 @@ function bp_group_total_members( $group = false ) {
 /**
  * Output the "x members" count string for a group.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 function bp_group_member_count() {
 	echo bp_get_group_member_count();
@@ -1998,7 +1998,7 @@ function bp_group_member_count() {
 	/**
 	 * Generate the "x members" count string for a group.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @return string
 	 */
@@ -2016,7 +2016,7 @@ function bp_group_member_count() {
 		/**
 		 * Filters the "x members" count string for a group.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @param string $count_string The "x members" count string for a group.
 		 */
@@ -2026,7 +2026,7 @@ function bp_group_member_count() {
 /**
  * Output the URL of the Forum page of the current group in the loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_forum_permalink() {
 	echo bp_get_group_forum_permalink();
@@ -2034,7 +2034,7 @@ function bp_group_forum_permalink() {
 	/**
 	 * Generate the URL of the Forum page of a group.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: current group in loop.
@@ -2050,8 +2050,8 @@ function bp_group_forum_permalink() {
 		/**
 		 * Filters the URL of the Forum page of a group.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $value URL permalink for the Forum Page.
 		 * @param object $group Group object.
@@ -2062,7 +2062,7 @@ function bp_group_forum_permalink() {
 /**
  * Determine whether forums are enabled for a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object. Default: current group in loop.
  * @return bool
@@ -2084,7 +2084,7 @@ function bp_group_is_forum_enabled( $group = false ) {
 /**
  * Output the 'checked' attribute for the group forums settings UI.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object. Default: current group in loop.
  */
@@ -2103,7 +2103,7 @@ function bp_group_show_forum_setting( $group = false ) {
 /**
  * Output the 'checked' attribute for a given status in the settings UI.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param string      $setting Group status. 'public', 'private', 'hidden'.
  * @param object|bool $group   Optional. Group object. Default: current group in loop.
@@ -2123,7 +2123,7 @@ function bp_group_show_status_setting( $setting, $group = false ) {
 /**
  * Output the 'checked' value, if needed, for a given invite_status on the group create/admin screens
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param string      $setting The setting you want to check against ('members',
  *                             'mods', or 'admins').
@@ -2150,7 +2150,7 @@ function bp_group_show_invite_status_setting( $setting, $group = false ) {
  *
  * This function can be used either in or out of the loop.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param int|bool $group_id Optional. The ID of the group whose status you want to
  *                           check. Default: the displayed group, or the current group
@@ -2188,7 +2188,7 @@ function bp_group_get_invite_status( $group_id = false ) {
 	 *
 	 * Invite status in this case means who from the group can send invites.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param string $invite_status Membership level needed to send an invite.
 	 * @param int    $group_id      ID of the group whose status is being checked.
@@ -2199,8 +2199,8 @@ function bp_group_get_invite_status( $group_id = false ) {
 /**
  * Can a user send invitations in the specified group?
  *
- * @since 1.5.0
- * @since 2.2.0 Added the $user_id parameter.
+ * @since BuddyPress 1.5.0
+ * @since BuddyPress 2.2.0 Added the $user_id parameter.
  *
  * @param int $group_id The group ID to check.
  * @param int $user_id  The user ID to check.
@@ -2227,8 +2227,8 @@ function bp_groups_user_can_send_invites( $group_id = 0, $user_id = 0 ) {
 	/**
 	 * Filters whether a user can send invites in a group.
 	 *
-	 * @since 1.5.0
-	 * @since 2.2.0 Added the $user_id parameter.
+	 * @since BuddyPress 1.5.0
+	 * @since BuddyPress 2.2.0 Added the $user_id parameter.
 	 *
 	 * @param bool $can_send_invites Whether the user can send invites
 	 * @param int  $group_id         The group ID being checked
@@ -2244,7 +2244,7 @@ function bp_groups_user_can_send_invites( $group_id = 0, $user_id = 0 ) {
  *
  * @deprecated 1.5
  * @deprecated No longer used.
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  * @todo Remove in 1.4
  *
  * @param bool $admin_list
@@ -2395,7 +2395,7 @@ function bp_group_mod_memberlist( $admin_list = false, $group = false ) {
 /**
  * Determine whether a group has moderators.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object. Default: current group in loop.
  * @return array Info about group admins (user_id + date_modified).
@@ -2410,8 +2410,8 @@ function bp_group_has_moderators( $group = false ) {
 	/**
 	 * Filters whether a group has moderators.
 	 *
-	 * @since 1.0.0
-	 * @since 2.5.0 Added the `$group` parameter.
+	 * @since BuddyPress 1.0.0
+	 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 	 *
 	 * @param array  $value Array of user IDs who are a moderator of the provided group.
 	 * @param object $group Group object.
@@ -2422,7 +2422,7 @@ function bp_group_has_moderators( $group = false ) {
 /**
  * Output a URL for promoting a user to moderator.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param array|string $args See {@link bp_get_group_member_promote_mod_link()}.
  */
@@ -2432,7 +2432,7 @@ function bp_group_member_promote_mod_link( $args = '' ) {
 	/**
 	 * Generate a URL for promoting a user to moderator.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param array|string $args {
 	 *     @type int    $user_id ID of the member to promote. Default:
@@ -2453,7 +2453,7 @@ function bp_group_member_promote_mod_link( $args = '' ) {
 		/**
 		 * Filters a URL for promoting a user to moderator.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $value URL to use for promoting a user to moderator.
 		 */
@@ -2463,7 +2463,7 @@ function bp_group_member_promote_mod_link( $args = '' ) {
 /**
  * Output a URL for promoting a user to admin.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param array|string $args See {@link bp_get_group_member_promote_admin_link()}.
  */
@@ -2473,7 +2473,7 @@ function bp_group_member_promote_admin_link( $args = '' ) {
 	/**
 	 * Generate a URL for promoting a user to admin.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param array|string $args {
 	 *     @type int    $user_id ID of the member to promote. Default:
@@ -2494,7 +2494,7 @@ function bp_group_member_promote_admin_link( $args = '' ) {
 		/**
 		 * Filters a URL for promoting a user to admin.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $value URL to use for promoting a user to admin.
 		 */
@@ -2504,7 +2504,7 @@ function bp_group_member_promote_admin_link( $args = '' ) {
 /**
  * Output a URL for demoting a user to member.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id ID of the member to demote. Default: current member in
  *                     a member loop.
@@ -2521,7 +2521,7 @@ function bp_group_member_demote_link( $user_id = 0 ) {
 	/**
 	 * Generate a URL for demoting a user to member.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int         $user_id ID of the member to demote. Default: current
 	 *                             member in a member loop.
@@ -2542,8 +2542,8 @@ function bp_group_member_demote_link( $user_id = 0 ) {
 		/**
 		 * Filters a URL for demoting a user to member.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $value URL to use for demoting a user to member.
 		 * @param object $group Group object.
@@ -2554,7 +2554,7 @@ function bp_group_member_demote_link( $user_id = 0 ) {
 /**
  * Output a URL for banning a member from a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id ID of the member to ban.
  *                     Default: current member in a member loop.
@@ -2571,7 +2571,7 @@ function bp_group_member_ban_link( $user_id = 0 ) {
 	/**
 	 * Generate a URL for banning a member from a group.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int         $user_id ID of the member to ban.
 	 *                             Default: current member in a member loop.
@@ -2588,7 +2588,7 @@ function bp_group_member_ban_link( $user_id = 0 ) {
 		/**
 		 * Filters a URL for banning a member from a group.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $value URL to use for banning a member.
 		 */
@@ -2598,7 +2598,7 @@ function bp_group_member_ban_link( $user_id = 0 ) {
 /**
  * Output a URL for unbanning a member from a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id ID of the member to unban.
  *                     Default: current member in a member loop.
@@ -2615,7 +2615,7 @@ function bp_group_member_unban_link( $user_id = 0 ) {
 	/**
 	 * Generate a URL for unbanning a member from a group.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int         $user_id ID of the member to unban.
 	 *                             Default: current member in a member loop.
@@ -2636,7 +2636,7 @@ function bp_group_member_unban_link( $user_id = 0 ) {
 		/**
 		 * Filters a URL for unbanning a member from a group.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $value URL to use for unbanning a member.
 		 */
@@ -2646,7 +2646,7 @@ function bp_group_member_unban_link( $user_id = 0 ) {
 /**
  * Output a URL for removing a member from a group.
  *
- * @since 1.2.6
+ * @since BuddyPress 1.2.6
  *
  * @param int $user_id ID of the member to remove.
  *                     Default: current member in a member loop.
@@ -2663,7 +2663,7 @@ function bp_group_member_remove_link( $user_id = 0 ) {
 	/**
 	 * Generate a URL for removing a member from a group.
 	 *
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 *
 	 * @param int         $user_id ID of the member to remove.
 	 *                             Default: current member in a member loop.
@@ -2680,8 +2680,8 @@ function bp_group_member_remove_link( $user_id = 0 ) {
 		/**
 		 * Filters a URL for removing a member from a group.
 		 *
-		 * @since 1.2.6
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.2.6
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $value URL to use for removing a member.
 		 * @param object $group Group object.
@@ -2692,7 +2692,7 @@ function bp_group_member_remove_link( $user_id = 0 ) {
 /**
  * HTML admin subnav items for group pages.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in the loop.
@@ -2721,7 +2721,7 @@ function bp_group_admin_tabs( $group = false ) {
  * BackCompat for plugins/themes directly hooking groups_admin_tabs
  * without using the Groups Extension API.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param  string $subnav_output Subnav item output.
  * @param  string $subnav_item   subnav item params.
@@ -2753,7 +2753,7 @@ function bp_group_admin_tabs_backcompat( $subnav_output = '', $subnav_item = '',
 /**
  * Output the group count for the displayed user.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_group_total_for_member() {
 	echo bp_get_group_total_for_member();
@@ -2761,7 +2761,7 @@ function bp_group_total_for_member() {
 	/**
 	 * Get the group count for the displayed user.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return string
 	 */
@@ -2770,7 +2770,7 @@ function bp_group_total_for_member() {
 		/**
 		 * FIlters the group count for a displayed user.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param int $value Total group count for a displayed user.
 		 */
@@ -2780,7 +2780,7 @@ function bp_group_total_for_member() {
 /**
  * Output the 'action' attribute for a group form.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param string $page Page slug.
  */
@@ -2790,7 +2790,7 @@ function bp_group_form_action( $page ) {
 	/**
 	 * Generate the 'action' attribute for a group form.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string      $page  Page slug.
 	 * @param object|bool $group Optional. Group object.
@@ -2807,8 +2807,8 @@ function bp_group_form_action( $page ) {
 		/**
 		 * Filters the 'action' attribute for a group form.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $value Action attribute for a group form.
 		 * @param object $group Group object.
@@ -2819,7 +2819,7 @@ function bp_group_form_action( $page ) {
 /**
  * Output the 'action' attribute for a group admin form.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param string|bool $page Optional. Page slug.
  */
@@ -2829,7 +2829,7 @@ function bp_group_admin_form_action( $page = false ) {
 	/**
 	 * Generate the 'action' attribute for a group admin form.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string|bool $page  Optional. Page slug.
 	 * @param object|bool $group Optional. Group object.
@@ -2850,8 +2850,8 @@ function bp_group_admin_form_action( $page = false ) {
 		/**
 		 * Filters the 'action' attribute for a group admin form.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $value Action attribute for a group admin form.
 		 * @param object $group Group object.
@@ -2862,7 +2862,7 @@ function bp_group_admin_form_action( $page = false ) {
 /**
  * Determine whether the logged-in user has requested membership to a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in the loop.
@@ -2885,7 +2885,7 @@ function bp_group_has_requested_membership( $group = false ) {
 /**
  * Check if current user is member of a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @global object $groups_template
  *
@@ -2908,8 +2908,8 @@ function bp_group_is_member( $group = false ) {
 	/**
 	 * Filters whether current user is member of a group.
 	 *
-	 * @since 1.2.4
-	 * @since 2.5.0 Added the `$group` parameter.
+	 * @since BuddyPress 1.2.4
+	 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 	 *
 	 * @param bool   $is_member If user is a member of group or not.
 	 * @param object $group     Group object.
@@ -2920,7 +2920,7 @@ function bp_group_is_member( $group = false ) {
 /**
  * Check whether the current user has an outstanding invite to the current group in the loop.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  *
  * @param object|bool $group Optional. Group data object.
  *                           Default: the current group in the groups loop.
@@ -2936,8 +2936,8 @@ function bp_group_is_invited( $group = false ) {
 	/**
 	 * Filters whether current user has an outstanding invite to current group in loop.
 	 *
-	 * @since 2.1.0
-	 * @since 2.5.0 Added the `$group` parameter.
+	 * @since BuddyPress 2.1.0
+	 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 	 *
 	 * @param bool   $is_invited If user has an outstanding group invite.
 	 * @param object $group      Group object.
@@ -2958,7 +2958,7 @@ function bp_group_is_invited( $group = false ) {
  * be found from the database.  If the logged-in user had the 'bp_moderate'
  * capability, the return value would be boolean false.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @global BP_Groups_Template $groups_template Group template loop object.
  *
@@ -3000,8 +3000,8 @@ function bp_group_is_user_banned( $group = false, $user_id = 0 ) {
 	/**
 	 * Filters whether current user has been banned from current group in loop.
 	 *
-	 * @since 1.5.0
-	 * @since 2.5.0 Added the `$group` parameter.
+	 * @since BuddyPress 1.5.0
+	 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 	 *
 	 * @param bool   $is_invited If user has been from current group.
 	 * @param object $group      Group object.
@@ -3012,7 +3012,7 @@ function bp_group_is_user_banned( $group = false, $user_id = 0 ) {
 /**
  * Output the URL for accepting an invitation to the current group in the loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_accept_invite_link() {
 	echo bp_get_group_accept_invite_link();
@@ -3020,7 +3020,7 @@ function bp_group_accept_invite_link() {
 	/**
 	 * Generate the URL for accepting an invitation to a group.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: Current group in the loop.
@@ -3038,8 +3038,8 @@ function bp_group_accept_invite_link() {
 		/**
 		 * Filters the URL for accepting an invitation to a group.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $value URL for accepting an invitation to a group.
 		 * @param object $group Group object.
@@ -3050,7 +3050,7 @@ function bp_group_accept_invite_link() {
 /**
  * Output the URL for accepting an invitation to the current group in the loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_reject_invite_link() {
 	echo bp_get_group_reject_invite_link();
@@ -3058,7 +3058,7 @@ function bp_group_reject_invite_link() {
 	/**
 	 * Generate the URL for rejecting an invitation to a group.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: Current group in the loop.
@@ -3076,8 +3076,8 @@ function bp_group_reject_invite_link() {
 		/**
 		 * Filters the URL for rejecting an invitation to a group.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $value URL for rejecting an invitation to a group.
 		 * @param object $group Group object.
@@ -3088,7 +3088,7 @@ function bp_group_reject_invite_link() {
 /**
  * Output the URL for confirming a request to leave a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_leave_confirm_link() {
 	echo bp_get_group_leave_confirm_link();
@@ -3096,7 +3096,7 @@ function bp_group_leave_confirm_link() {
 	/**
 	 * Generate the URL for confirming a request to leave a group.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: Current group in the loop.
@@ -3112,8 +3112,8 @@ function bp_group_leave_confirm_link() {
 		/**
 		 * Filters the URL for confirming a request to leave a group.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $value URL for confirming a request to leave a group.
 		 * @param object $group Group object.
@@ -3124,7 +3124,7 @@ function bp_group_leave_confirm_link() {
 /**
  * Output the URL for rejecting a request to leave a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_leave_reject_link() {
 	echo bp_get_group_leave_reject_link();
@@ -3132,7 +3132,7 @@ function bp_group_leave_reject_link() {
 	/**
 	 * Generate the URL for rejecting a request to leave a group.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: Current group in the loop.
@@ -3148,8 +3148,8 @@ function bp_group_leave_reject_link() {
 		/**
 		 * Filters the URL for rejecting a request to leave a group.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $value URL for rejecting a request to leave a group.
 		 * @param object $group Group object.
@@ -3160,7 +3160,7 @@ function bp_group_leave_reject_link() {
 /**
  * Output the 'action' attribute for a group send invite form.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_send_invite_form_action() {
 	echo bp_get_group_send_invite_form_action();
@@ -3168,7 +3168,7 @@ function bp_group_send_invite_form_action() {
 	/**
 	 * Output the 'action' attribute for a group send invite form.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param object|bool $group Optional. Group object.
 	 *                           Default: current group in the loop.
@@ -3184,8 +3184,8 @@ function bp_group_send_invite_form_action() {
 		/**
 		 * Filters the 'action' attribute for a group send invite form.
 		 *
-		 * @since 1.0.0
-		 * @since 2.5.0 Added the `$group` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 		 *
 		 * @param string $value Action attribute for a group send invite form.
 		 * @param object $group Group object.
@@ -3196,7 +3196,7 @@ function bp_group_send_invite_form_action() {
 /**
  * Determine whether the current user has friends to invite to a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in the loop.
@@ -3223,7 +3223,7 @@ function bp_has_friends_to_invite( $group = false ) {
 /**
  * Output button to join a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param object|bool $group Single group object.
  */
@@ -3233,7 +3233,7 @@ function bp_group_join_button( $group = false ) {
 	/**
 	 * Return button to join a group.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param object|bool $group Single group object.
 	 * @return false|string
@@ -3355,8 +3355,8 @@ function bp_group_join_button( $group = false ) {
 		/**
 		 * Filters the HTML button for joining a group.
 		 *
-		 * @since 1.2.6
-		 * @since 2.4.0 Added $group parameter to filter args.
+		 * @since BuddyPress 1.2.6
+		 * @since BuddyPress 2.4.0 Added $group parameter to filter args.
 		 *
 		 * @param string $button HTML button for joining a group.
 		 * @param object $group BuddyPress group object
@@ -3367,7 +3367,7 @@ function bp_group_join_button( $group = false ) {
 /**
  * Output the Create a Group button.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 function bp_group_create_button() {
 	echo bp_get_group_create_button();
@@ -3375,7 +3375,7 @@ function bp_group_create_button() {
 	/**
 	 * Get the Create a Group button.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @return false|string
 	 */
@@ -3401,7 +3401,7 @@ function bp_group_create_button() {
 		/**
 		 * Filters the HTML button for creating a group.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param string $button HTML button for creating a group.
 		 */
@@ -3411,7 +3411,7 @@ function bp_group_create_button() {
 /**
  * Output the Create a Group nav item.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  */
 function bp_group_create_nav_item() {
 	echo bp_get_group_create_nav_item();
@@ -3420,7 +3420,7 @@ function bp_group_create_nav_item() {
 	/**
 	 * Get the Create a Group nav item.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @return string
 	 */
@@ -3438,7 +3438,7 @@ function bp_group_create_nav_item() {
 		/**
 		 * Filters the Create a Group nav item.
 		 *
-		 * @since 2.2.0
+		 * @since BuddyPress 2.2.0
 		 *
 		 * @param string $output HTML output for nav item.
 		 */
@@ -3449,7 +3449,7 @@ function bp_group_create_nav_item() {
  * Checks if a specific theme is still filtering the Groups directory title
  * if so, transform the title button into a Groups directory nav item.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @return string|null HTML Output
  */
@@ -3472,7 +3472,7 @@ add_action( 'bp_groups_directory_group_filter', 'bp_group_backcompat_create_nav_
  * Prints a message if the group is not visible to the current user (it is a
  * hidden or private group, and the user does not have access).
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @global BP_Groups_Template $groups_template Groups template object.
  *
@@ -3525,7 +3525,7 @@ function bp_group_status_message( $group = null ) {
 	 *
 	 * This will be true if it is a hidden or private group, and the user does not have access.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string $message Message to display to the current user.
 	 * @param object $group   Group to get status message for.
@@ -3538,7 +3538,7 @@ function bp_group_status_message( $group = null ) {
  *
  * This function is no longer used, but may still be used by older themes.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_hidden_fields() {
 	$query_arg = bp_core_get_component_search_query_arg( 'groups' );
@@ -3559,7 +3559,7 @@ function bp_group_hidden_fields() {
 /**
  * Output the total number of groups.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_total_group_count() {
 	echo bp_get_total_group_count();
@@ -3567,7 +3567,7 @@ function bp_total_group_count() {
 	/**
 	 * Return the total number of groups.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return int
 	 */
@@ -3576,7 +3576,7 @@ function bp_total_group_count() {
 		/**
 		 * Filters the total number of groups.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param int $value Total number of groups found.
 		 */
@@ -3586,7 +3586,7 @@ function bp_total_group_count() {
 /**
  * Output the total number of groups a user belongs to.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id User ID to get group membership count.
  */
@@ -3598,7 +3598,7 @@ function bp_total_group_count_for_user( $user_id = 0 ) {
 	 *
 	 * Filtered by `bp_core_number_format()` by default
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $user_id User ID to get group membership count.
 	 * @return string
@@ -3609,7 +3609,7 @@ function bp_total_group_count_for_user( $user_id = 0 ) {
 		/**
 		 * Filters the total number of groups a user belongs to.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @param int $count   Total number of groups for the user.
 		 * @param int $user_id ID of the user being checked.
@@ -3622,7 +3622,7 @@ function bp_total_group_count_for_user( $user_id = 0 ) {
 /**
  * Initialize a group member query loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param array|string $args {
  *     An array of optional arguments.
@@ -3696,7 +3696,7 @@ function bp_group_has_members( $args = '' ) {
 	/**
 	 * Filters whether or not a group member query has members to display.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param bool                             $value            Whether there are members to display.
 	 * @param BP_Groups_Group_Members_Template $members_template Object holding the member query results.
@@ -3705,7 +3705,7 @@ function bp_group_has_members( $args = '' ) {
 }
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return mixed
  */
@@ -3716,7 +3716,7 @@ function bp_group_members() {
 }
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return mixed
  */
@@ -3729,7 +3729,7 @@ function bp_group_the_member() {
 /**
  * Output the group member avatar while in the groups members loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param array|string $args {@see bp_core_fetch_avatar()}.
  */
@@ -3739,7 +3739,7 @@ function bp_group_member_avatar( $args = '' ) {
 	/**
 	 * Return the group member avatar while in the groups members loop.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param array|string $args {@see bp_core_fetch_avatar()}.
 	 * @return string
@@ -3757,7 +3757,7 @@ function bp_group_member_avatar( $args = '' ) {
 		/**
 		 * Filters the group member avatar while in the groups members loop.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $value HTML markup for group member avatar.
 		 * @param array  $r     Parsed args used for the avatar query.
@@ -3768,7 +3768,7 @@ function bp_group_member_avatar( $args = '' ) {
 /**
  * Output the group member avatar while in the groups members loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param array|string $args {@see bp_core_fetch_avatar()}.
  */
@@ -3778,7 +3778,7 @@ function bp_group_member_avatar_thumb( $args = '' ) {
 	/**
 	 * Return the group member avatar while in the groups members loop.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param array|string $args {@see bp_core_fetch_avatar()}.
 	 * @return string
@@ -3796,7 +3796,7 @@ function bp_group_member_avatar_thumb( $args = '' ) {
 		/**
 		 * Filters the group member avatar thumb while in the groups members loop.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $value HTML markup for group member avatar thumb.
 		 * @param array  $r     Parsed args used for the avatar query.
@@ -3807,7 +3807,7 @@ function bp_group_member_avatar_thumb( $args = '' ) {
 /**
  * Output the group member avatar while in the groups members loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $width  Width of avatar to fetch.
  * @param int $height Height of avatar to fetch.
@@ -3818,7 +3818,7 @@ function bp_group_member_avatar_mini( $width = 30, $height = 30 ) {
 	/**
 	 * Output the group member avatar while in the groups members loop.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $width  Width of avatar to fetch.
 	 * @param int $height Height of avatar to fetch.
@@ -3839,7 +3839,7 @@ function bp_group_member_avatar_mini( $width = 30, $height = 30 ) {
 		/**
 		 * Filters the group member avatar mini while in the groups members loop.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $value HTML markup for group member avatar mini.
 		 * @param array  $r     Parsed args used for the avatar query.
@@ -3848,14 +3848,14 @@ function bp_group_member_avatar_mini( $width = 30, $height = 30 ) {
 	}
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_member_name() {
 	echo bp_get_group_member_name();
 }
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return mixed|void
 	 */
@@ -3865,7 +3865,7 @@ function bp_group_member_name() {
 		/**
 		 * Filters the group member display name of the current user in the loop.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $display_name Display name of the current user.
 		 */
@@ -3873,14 +3873,14 @@ function bp_group_member_name() {
 	}
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_member_url() {
 	echo bp_get_group_member_url();
 }
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return mixed|void
 	 */
@@ -3890,7 +3890,7 @@ function bp_group_member_url() {
 		/**
 		 * Filters the group member url for the current user in the loop.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $value URL for the current user.
 		 */
@@ -3898,14 +3898,14 @@ function bp_group_member_url() {
 	}
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_member_link() {
 	echo bp_get_group_member_link();
 }
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return mixed|void
 	 */
@@ -3915,7 +3915,7 @@ function bp_group_member_link() {
 		/**
 		 * Filters the group member HTML link for the current user in the loop.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $value HTML link for the current user.
 		 */
@@ -3923,14 +3923,14 @@ function bp_group_member_link() {
 	}
 
 /**
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 function bp_group_member_domain() {
 	echo bp_get_group_member_domain();
 }
 
 	/**
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @return mixed|void
 	 */
@@ -3940,7 +3940,7 @@ function bp_group_member_domain() {
 		/**
 		 * Filters the group member domain for the current user in the loop.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @param string $value Domain for the current user.
 		 */
@@ -3948,14 +3948,14 @@ function bp_group_member_domain() {
 	}
 
 /**
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 function bp_group_member_is_friend() {
 	echo bp_get_group_member_is_friend();
 }
 
 	/**
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @return mixed|void
 	 */
@@ -3973,7 +3973,7 @@ function bp_group_member_is_friend() {
 		/**
 		 * Filters the friendship status between current user and displayed user in group member loop.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @param string $friend_status Current status of the friendship.
 		 */
@@ -3981,14 +3981,14 @@ function bp_group_member_is_friend() {
 	}
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_member_is_banned() {
 	echo bp_get_group_member_is_banned();
 }
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return mixed|void
 	 */
@@ -3998,7 +3998,7 @@ function bp_group_member_is_banned() {
 		/**
 		 * Filters whether the member is banned from the current group.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param bool $is_banned Whether or not the member is banned.
 		 */
@@ -4006,7 +4006,7 @@ function bp_group_member_is_banned() {
 	}
 
 /**
- * @since 1.2.6
+ * @since BuddyPress 1.2.6
  */
 function bp_group_member_css_class() {
 	global $members_template;
@@ -4016,7 +4016,7 @@ function bp_group_member_css_class() {
 		/**
 		 * Filters the class to add to the HTML if member is banned.
 		 *
-		 * @since 1.2.6
+		 * @since BuddyPress 1.2.6
 		 *
 		 * @param string $value HTML class to add.
 		 */
@@ -4027,8 +4027,8 @@ function bp_group_member_css_class() {
 /**
  * Output the joined date for the current member in the group member loop.
  *
- * @since 1.0.0
- * @since 2.7.0 Added $args as a parameter.
+ * @since BuddyPress 1.0.0
+ * @since BuddyPress 2.7.0 Added $args as a parameter.
  *
  * @param array|string $args {@see bp_get_group_member_joined_since()}
  * @return string|null
@@ -4039,8 +4039,8 @@ function bp_group_member_joined_since( $args = array() ) {
 	/**
 	 * Return the joined date for the current member in the group member loop.
 	 *
-	 * @since 1.0.0
-	 * @since 2.7.0 Added $args as a parameter.
+	 * @since BuddyPress 1.0.0
+	 * @since BuddyPress 2.7.0 Added $args as a parameter.
 	 *
 	 * @param array|string $args {
 	 *     Array of optional parameters.
@@ -4066,7 +4066,7 @@ function bp_group_member_joined_since( $args = array() ) {
 		/**
 		 * Filters the joined since time for the current member in the loop.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $value Joined since time.
 		 */
@@ -4074,14 +4074,14 @@ function bp_group_member_joined_since( $args = array() ) {
 	}
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_member_id() {
 	echo bp_get_group_member_id();
 }
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return mixed|void
 	 */
@@ -4091,7 +4091,7 @@ function bp_group_member_id() {
 		/**
 		 * Filters the member's user ID for group members loop.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param int $user_id User ID of the member.
 		 */
@@ -4099,7 +4099,7 @@ function bp_group_member_id() {
 	}
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return bool
  */
@@ -4114,14 +4114,14 @@ function bp_group_member_needs_pagination() {
 }
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_pag_id() {
 	echo bp_get_group_pag_id();
 }
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return mixed|void
 	 */
@@ -4130,7 +4130,7 @@ function bp_group_pag_id() {
 		/**
 		 * Filters the string to be used as the group pag id.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $value Value to use for the pag id.
 		 */
@@ -4138,7 +4138,7 @@ function bp_group_pag_id() {
 	}
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_member_pagination() {
 	echo bp_get_group_member_pagination();
@@ -4146,7 +4146,7 @@ function bp_group_member_pagination() {
 }
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return mixed|void
 	 */
@@ -4156,7 +4156,7 @@ function bp_group_member_pagination() {
 		/**
 		 * Filters the HTML markup to be used for group member listing pagination.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $pag_links HTML markup for the pagination.
 		 */
@@ -4164,14 +4164,14 @@ function bp_group_member_pagination() {
 	}
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_member_pagination_count() {
 	echo bp_get_group_member_pagination_count();
 }
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return mixed|void
 	 */
@@ -4192,7 +4192,7 @@ function bp_group_member_pagination_count() {
 		/**
 		 * Filters the "Viewing x-y of z members" pagination message.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $value    "Viewing x-y of z members" text.
 		 * @param string $from_num Total amount for the low value in the range.
@@ -4203,7 +4203,7 @@ function bp_group_member_pagination_count() {
 	}
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_member_admin_pagination() {
 	echo bp_get_group_member_admin_pagination();
@@ -4211,7 +4211,7 @@ function bp_group_member_admin_pagination() {
 }
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return mixed
 	 */
@@ -4226,7 +4226,7 @@ function bp_group_member_admin_pagination() {
  *
  * You should only use this when on a single group page.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  */
 function bp_groups_front_template_part() {
 	$located = bp_groups_get_front_template();
@@ -4257,8 +4257,8 @@ function bp_groups_front_template_part() {
 /**
  * Locate a custom group front template if it exists.
  *
- * @since 2.4.0
- * @since 2.6.0 Adds the Group Type to the front template hierarchy.
+ * @since BuddyPress 2.4.0
+ * @since BuddyPress 2.6.0 Adds the Group Type to the front template hierarchy.
  *
  * @param  BP_Groups_Group|null $group Optional. Falls back to current group if not passed.
  * @return string|bool                 Path to front template on success; boolean false on failure.
@@ -4298,8 +4298,8 @@ function bp_groups_get_front_template( $group = null ) {
 	/**
 	 * Filters the hierarchy of group front templates corresponding to a specific group.
 	 *
-	 * @since 2.4.0
-	 * @since 2.5.0 Added the `$group` parameter.
+	 * @since BuddyPress 2.4.0
+	 * @since BuddyPress 2.5.0 Added the `$group` parameter.
 	 *
 	 * @param array  $template_names Array of template paths.
 	 * @param object $group          Group object.
@@ -4310,7 +4310,7 @@ function bp_groups_get_front_template( $group = null ) {
 /**
  * Output the Group members template
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 function bp_groups_members_template_part() {
 	?>
@@ -4328,7 +4328,7 @@ function bp_groups_members_template_part() {
 			 *
 			 * Part of bp_groups_members_template_part().
 			 *
-			 * @since 1.5.0
+			 * @since BuddyPress 1.5.0
 			 */
 			do_action( 'bp_members_directory_member_sub_types' ); ?>
 
@@ -4351,7 +4351,7 @@ function bp_groups_members_template_part() {
 /**
  * Output the Group members filters
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 function bp_groups_members_filter() {
 	?>
@@ -4374,7 +4374,7 @@ function bp_groups_members_filter() {
 			 *
 			 * Useful for plugins to add more filter options.
 			 *
-			 * @since 2.0.0
+			 * @since BuddyPress 2.0.0
 			 */
 			do_action( 'bp_groups_members_order_options' ); ?>
 
@@ -4390,7 +4390,7 @@ function bp_groups_members_filter() {
 /**
  * Determine if the current logged in user can create groups.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return bool True if user can create groups. False otherwise.
  */
@@ -4415,7 +4415,7 @@ function bp_user_can_create_groups() {
 	/**
 	 * Filters if the current logged in user can create groups.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param bool $can_create Whether the person can create groups.
 	 * @param int  $restricted Whether or not group creation is restricted.
@@ -4424,7 +4424,7 @@ function bp_user_can_create_groups() {
 }
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return bool
  */
@@ -4454,13 +4454,13 @@ function bp_group_creation_tabs() {
 	/**
 	 * Fires at the end of the creation of the group tabs.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	do_action( 'groups_creation_tabs' );
 }
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_creation_stage_title() {
 	$bp = buddypress();
@@ -4468,7 +4468,7 @@ function bp_group_creation_stage_title() {
 	/**
 	 * Filters the group creation stage title.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param string $value HTML markup for the group creation stage title.
 	 */
@@ -4476,14 +4476,14 @@ function bp_group_creation_stage_title() {
 }
 
 /**
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_group_creation_form_action() {
 	echo bp_get_group_creation_form_action();
 }
 
 /**
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return mixed|void
  */
@@ -4498,7 +4498,7 @@ function bp_group_creation_form_action() {
 		/**
 		 * Filters the group creation form action.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $value Action to be used with group creation form.
 		 */
@@ -4506,7 +4506,7 @@ function bp_group_creation_form_action() {
 	}
 
 /**
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param string $step_slug
  *
@@ -4544,7 +4544,7 @@ function bp_is_group_creation_step( $step_slug ) {
 }
 
 /**
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param array $step_slugs
  *
@@ -4575,7 +4575,7 @@ function bp_is_group_creation_step_complete( $step_slugs ) {
 }
 
 /**
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param string $step_slug
  *
@@ -4607,14 +4607,14 @@ function bp_are_previous_group_creation_steps_complete( $step_slug ) {
 }
 
 /**
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_new_group_id() {
 	echo bp_get_new_group_id();
 }
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return int
 	 */
@@ -4627,7 +4627,7 @@ function bp_new_group_id() {
 		/**
 		 * Filters the new group ID.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param int $new_group_id ID of the new group.
 		 */
@@ -4635,14 +4635,14 @@ function bp_new_group_id() {
 	}
 
 /**
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_new_group_name() {
 	echo bp_get_new_group_name();
 }
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return mixed|void
 	 */
@@ -4655,7 +4655,7 @@ function bp_new_group_name() {
 		/**
 		 * Filters the new group name.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $name Name of the new group.
 		 */
@@ -4663,14 +4663,14 @@ function bp_new_group_name() {
 	}
 
 /**
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_new_group_description() {
 	echo bp_get_new_group_description();
 }
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return mixed|void
 	 */
@@ -4683,7 +4683,7 @@ function bp_new_group_description() {
 		/**
 		 * Filters the new group description.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $name Description of the new group.
 		 */
@@ -4691,14 +4691,14 @@ function bp_new_group_description() {
 	}
 
 /**
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_new_group_enable_forum() {
 	echo bp_get_new_group_enable_forum();
 }
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return int
 	 */
@@ -4711,7 +4711,7 @@ function bp_new_group_enable_forum() {
 		/**
 		 * Filters whether or not to enable forums for the new group.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param int $forum Whether or not to enable forums.
 		 */
@@ -4719,14 +4719,14 @@ function bp_new_group_enable_forum() {
 	}
 
 /**
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_new_group_status() {
 	echo bp_get_new_group_status();
 }
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return mixed|void
 	 */
@@ -4739,7 +4739,7 @@ function bp_new_group_status() {
 		/**
 		 * Filters the new group status.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $status Status for the new group.
 		 */
@@ -4749,7 +4749,7 @@ function bp_new_group_status() {
 /**
  * Output the avatar for the group currently being created
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @see bp_core_fetch_avatar() For more information on accepted arguments
  *
@@ -4761,7 +4761,7 @@ function bp_new_group_avatar( $args = '' ) {
 	/**
 	 * Return the avatar for the group currently being created
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @see bp_core_fetch_avatar() For a description of arguments and return values.
 	 *
@@ -4803,7 +4803,7 @@ function bp_new_group_avatar( $args = '' ) {
 		/**
 		 * Filters the new group avatar.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $avatar HTML markup for the new group avatar.
 		 * @param array  $r      Array of parsed arguments for the group avatar.
@@ -4815,7 +4815,7 @@ function bp_new_group_avatar( $args = '' ) {
 /**
  * Escape & output the URL to the previous group creation step
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_group_creation_previous_link() {
 	echo esc_url( bp_get_group_creation_previous_link() );
@@ -4823,7 +4823,7 @@ function bp_group_creation_previous_link() {
 	/**
 	 * Return the URL to the previous group creation step
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return string
 	 */
@@ -4852,7 +4852,7 @@ function bp_group_creation_previous_link() {
 		/**
 		 * Filters the permalink for the previous step with the group creation process.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $url Permalink for the previous step.
 		 */
@@ -4862,7 +4862,7 @@ function bp_group_creation_previous_link() {
 /**
  * Echoes the current group creation step.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_groups_current_create_step() {
 	echo bp_get_groups_current_create_step();
@@ -4870,7 +4870,7 @@ function bp_groups_current_create_step() {
 	/**
 	 * Returns the current group creation step. If none is found, returns an empty string.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 *
 	 * @return string $current_create_step
@@ -4889,7 +4889,7 @@ function bp_groups_current_create_step() {
 		 *
 		 * If none is found, returns an empty string.
 		 *
-		 * @since 1.6.0
+		 * @since BuddyPress 1.6.0
 		 *
 		 * @param string $current_create_step Current step in the group creation process.
 		 */
@@ -4899,7 +4899,7 @@ function bp_groups_current_create_step() {
 /**
  * Is the user looking at the last step in the group creation process.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param string $step Step to compare.
  * @return bool True if yes, False if no
@@ -4922,7 +4922,7 @@ function bp_is_last_group_creation_step( $step = '' ) {
 	/**
 	 * Filters whether or not user is looking at last step in group creation process.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param bool   $retval Whether or not we are looking at last step.
 	 * @param array  $steps  Array of steps from the group creation process.
@@ -4934,7 +4934,7 @@ function bp_is_last_group_creation_step( $step = '' ) {
 /**
  * Is the user looking at the first step in the group creation process
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param string $step Step to compare.
  * @return bool True if yes, False if no
@@ -4957,7 +4957,7 @@ function bp_is_first_group_creation_step( $step = '' ) {
 	/**
 	 * Filters whether or not user is looking at first step in group creation process.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param bool   $retval Whether or not we are looking at first step.
 	 * @param array  $steps  Array of steps from the group creation process.
@@ -4969,7 +4969,7 @@ function bp_is_first_group_creation_step( $step = '' ) {
 /**
  * Output a list of friends who can be invited to a group
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param array $args Array of arguments for friends list output.
  */
@@ -4979,7 +4979,7 @@ function bp_new_group_invite_friend_list( $args = array() ) {
 	/**
 	 * Return a list of friends who can be invited to a group
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param array $args Array of arguments for friends list output.
 	 * @return false|string HTML list of checkboxes, or false
@@ -5039,7 +5039,7 @@ function bp_new_group_invite_friend_list( $args = array() ) {
 		/**
 		 * Filters the array of friends who can be invited to a group.
 		 *
-		 * @since 2.4.0
+		 * @since BuddyPress 2.4.0
 		 *
 		 * @param array $items Array of friends.
 		 * @param array $r     Parsed arguments from bp_get_new_group_invite_friend_list()
@@ -5057,7 +5057,7 @@ function bp_new_group_invite_friend_list( $args = array() ) {
 	}
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_directory_groups_search_form() {
 
@@ -5077,7 +5077,7 @@ function bp_directory_groups_search_form() {
 	/**
 	 * Filters the HTML markup for the groups search form.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @param string $search_form_html HTML markup for the search form.
 	 */
@@ -5088,7 +5088,7 @@ function bp_directory_groups_search_form() {
 /**
  * Displays group header tabs.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @todo Deprecate?
  */
@@ -5109,7 +5109,7 @@ function bp_groups_header_tabs() {
 /**
  * Displays group filter titles.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @todo Deprecate?
  */
@@ -5142,7 +5142,7 @@ function bp_groups_filter_title() {
 /**
  * Echo the current group type message.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  */
 function bp_current_group_directory_type_message() {
 	echo bp_get_current_group_directory_type_message();
@@ -5150,7 +5150,7 @@ function bp_current_group_directory_type_message() {
 	/**
 	 * Generate the current group type message.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @return string
 	 */
@@ -5162,7 +5162,7 @@ function bp_current_group_directory_type_message() {
 		/**
 		 * Filters the current group type message.
 		 *
-		 * @since 2.7.0
+		 * @since BuddyPress 2.7.0
 		 *
 		 * @param string $message Message to filter.
 		 */
@@ -5172,7 +5172,7 @@ function bp_current_group_directory_type_message() {
 /**
  * Is the current page a specific group admin screen?
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param string $slug Admin screen slug.
  * @return bool
@@ -5184,7 +5184,7 @@ function bp_is_group_admin_screen( $slug = '' ) {
 /**
  * Echoes the current group admin tab slug.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_group_current_admin_tab() {
 	echo bp_get_group_current_admin_tab();
@@ -5192,7 +5192,7 @@ function bp_group_current_admin_tab() {
 	/**
 	 * Returns the current group admin tab slug.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 *
 	 * @return string $tab The current tab's slug.
@@ -5207,7 +5207,7 @@ function bp_group_current_admin_tab() {
 		/**
 		 * Filters the current group admin tab slug.
 		 *
-		 * @since 1.6.0
+		 * @since BuddyPress 1.6.0
 		 *
 		 * @param string $tab Current group admin tab slug.
 		 */
@@ -5219,7 +5219,7 @@ function bp_group_current_admin_tab() {
 /**
  * Outputs the current group avatar.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param string $type Thumb or full.
  */
@@ -5229,7 +5229,7 @@ function bp_group_current_avatar( $type = 'thumb' ) {
 	/**
 	 * Returns the current group avatar.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param string $type Thumb or full.
 	 * @return string $tab The current tab's slug.
@@ -5248,7 +5248,7 @@ function bp_group_current_avatar( $type = 'thumb' ) {
 		/**
 		 * Filters the current group avatar.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param string $group_avatar HTML markup for current group avatar.
 		 */
@@ -5258,7 +5258,7 @@ function bp_group_current_avatar( $type = 'thumb' ) {
 /**
  * Return whether a group has an avatar.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param int|bool $group_id Group ID to check.
  * @return boolean
@@ -5287,14 +5287,14 @@ function bp_get_group_has_avatar( $group_id = false ) {
 }
 
 /**
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_group_avatar_delete_link() {
 	echo bp_get_group_avatar_delete_link();
 }
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return mixed|void
 	 */
@@ -5304,7 +5304,7 @@ function bp_group_avatar_delete_link() {
 		/**
 		 * Filters the URL to delete the group avatar.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $value URL to delete the group avatar.
 		 */
@@ -5312,28 +5312,28 @@ function bp_group_avatar_delete_link() {
 	}
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_custom_group_boxes() {
 	do_action( 'groups_custom_group_boxes' );
 }
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_custom_group_admin_tabs() {
 	do_action( 'groups_custom_group_admin_tabs' );
 }
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_custom_group_fields_editable() {
 	do_action( 'groups_custom_group_fields_editable' );
 }
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_custom_group_fields() {
 	do_action( 'groups_custom_group_fields' );
@@ -5344,7 +5344,7 @@ function bp_custom_group_fields() {
 /**
  * Initialize a group membership request template loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param array|string $args {
  *     @type int $group_id ID of the group. Defaults to current group.
@@ -5369,7 +5369,7 @@ function bp_group_has_membership_requests( $args = '' ) {
 	/**
 	 * Filters whether or not a group membership query has requests to display.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param bool                                   $value             Whether there are requests to display.
 	 * @param BP_Groups_Membership_Requests_Template $requests_template Object holding the requests query results.
@@ -5378,7 +5378,7 @@ function bp_group_has_membership_requests( $args = '' ) {
 }
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return mixed
  */
@@ -5389,7 +5389,7 @@ function bp_group_membership_requests() {
 }
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return mixed
  */
@@ -5400,7 +5400,7 @@ function bp_group_the_membership_request() {
 }
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_request_user_avatar_thumb() {
 	global $requests_template;
@@ -5408,7 +5408,7 @@ function bp_group_request_user_avatar_thumb() {
 	/**
 	 * Filters the requesting user's avatar thumbnail.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $value HTML markup for the user's avatar thumbnail.
 	 */
@@ -5416,14 +5416,14 @@ function bp_group_request_user_avatar_thumb() {
 }
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_request_reject_link() {
 	echo bp_get_group_request_reject_link();
 }
 
 	/**
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 *
 	 * @return mixed|void
 	 */
@@ -5433,7 +5433,7 @@ function bp_group_request_reject_link() {
 		/**
 		 * Filters the URL to use to reject a membership request.
 		 *
-		 * @since 1.2.6
+		 * @since BuddyPress 1.2.6
 		 *
 		 * @param string $value URL to use to reject a membership request.
 		 */
@@ -5441,14 +5441,14 @@ function bp_group_request_reject_link() {
 	}
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_request_accept_link() {
 	echo bp_get_group_request_accept_link();
 }
 
 	/**
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 * @return mixed|void
 	 */
 	function bp_get_group_request_accept_link() {
@@ -5457,7 +5457,7 @@ function bp_group_request_accept_link() {
 		/**
 		 * Filters the URL to use to accept a membership request.
 		 *
-		 * @since 1.2.6
+		 * @since BuddyPress 1.2.6
 		 *
 		 * @param string $value URL to use to accept a membership request.
 		 */
@@ -5465,14 +5465,14 @@ function bp_group_request_accept_link() {
 	}
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_request_user_link() {
 	echo bp_get_group_request_user_link();
 }
 
 	/**
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 *
 	 * @return mixed|void
 	 */
@@ -5482,7 +5482,7 @@ function bp_group_request_user_link() {
 		/**
 		 * Filters the URL for the user requesting membership.
 		 *
-		 * @since 1.2.6
+		 * @since BuddyPress 1.2.6
 		 *
 		 * @param string $value URL for the user requestion membership.
 		 */
@@ -5490,7 +5490,7 @@ function bp_group_request_user_link() {
 	}
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_request_time_since_requested() {
 	global $requests_template;
@@ -5498,7 +5498,7 @@ function bp_group_request_time_since_requested() {
 	/**
 	 * Filters the formatted time since membership was requested.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $value Formatted time since membership was requested.
 	 */
@@ -5506,7 +5506,7 @@ function bp_group_request_time_since_requested() {
 }
 
 /**
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_group_request_comment() {
 	global $requests_template;
@@ -5514,7 +5514,7 @@ function bp_group_request_comment() {
 	/**
 	 * Filters the membership request comment left by user.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $value Membership request comment left by user.
 	 */
@@ -5524,7 +5524,7 @@ function bp_group_request_comment() {
 /**
  * Output pagination links for group membership requests.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 function bp_group_requests_pagination_links() {
 	echo bp_get_group_requests_pagination_links();
@@ -5532,7 +5532,7 @@ function bp_group_requests_pagination_links() {
 	/**
 	 * Get pagination links for group membership requests.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @return string
 	 */
@@ -5542,7 +5542,7 @@ function bp_group_requests_pagination_links() {
 		/**
 		 * Filters pagination links for group membership requests.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param string $value Pagination links for group membership requests.
 		 */
@@ -5552,7 +5552,7 @@ function bp_group_requests_pagination_links() {
 /**
  * Output pagination count text for group membership requests.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 function bp_group_requests_pagination_count() {
 	echo bp_get_group_requests_pagination_count();
@@ -5560,7 +5560,7 @@ function bp_group_requests_pagination_count() {
 	/**
 	 * Get pagination count text for group membership requests.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @return string
 	 */
@@ -5581,7 +5581,7 @@ function bp_group_requests_pagination_count() {
 		/**
 		 * Filters pagination count text for group membership requests.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param string $message  Pagination count text for group membership requests.
 		 * @param string $from_num Total amount for the low value in the range.
@@ -5596,7 +5596,7 @@ function bp_group_requests_pagination_count() {
 /**
  * Whether or not there are invites.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param string $args
  * @return bool|mixed|void
@@ -5633,7 +5633,7 @@ function bp_group_has_invites( $args = '' ) {
 	/**
 	 * Filters whether or not a group invites query has invites to display.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param bool                      $value            Whether there are requests to display.
 	 * @param BP_Groups_Invite_Template $invites_template Object holding the invites query results.
@@ -5642,7 +5642,7 @@ function bp_group_has_invites( $args = '' ) {
 }
 
 /**
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return mixed
  */
@@ -5653,7 +5653,7 @@ function bp_group_invites() {
 }
 
 /**
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return mixed
  */
@@ -5664,14 +5664,14 @@ function bp_group_the_invite() {
 }
 
 /**
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_group_invite_item_id() {
 	echo bp_get_group_invite_item_id();
 }
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return mixed|void
 	 */
@@ -5681,7 +5681,7 @@ function bp_group_invite_item_id() {
 		/**
 		 * Filters the group invite item ID.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $value Group invite item ID.
 		 */
@@ -5689,14 +5689,14 @@ function bp_group_invite_item_id() {
 	}
 
 /**
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_group_invite_user_avatar() {
 	echo bp_get_group_invite_user_avatar();
 }
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return mixed|void
 	 */
@@ -5706,7 +5706,7 @@ function bp_group_invite_user_avatar() {
 		/**
 		 * Filters the group invite user avatar.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $value Group invite user avatar.
 		 */
@@ -5714,14 +5714,14 @@ function bp_group_invite_user_avatar() {
 	}
 
 /**
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_group_invite_user_link() {
 	echo bp_get_group_invite_user_link();
 }
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return mixed|void
 	 */
@@ -5731,7 +5731,7 @@ function bp_group_invite_user_link() {
 		/**
 		 * Filters the group invite user link.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $value Group invite user link.
 		 */
@@ -5739,14 +5739,14 @@ function bp_group_invite_user_link() {
 	}
 
 /**
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_group_invite_user_last_active() {
 	echo bp_get_group_invite_user_last_active();
 }
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return mixed|void
 	 */
@@ -5756,7 +5756,7 @@ function bp_group_invite_user_last_active() {
 		/**
 		 * Filters the group invite user's last active time.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $value Group invite user's last active time.
 		 */
@@ -5764,14 +5764,14 @@ function bp_group_invite_user_last_active() {
 	}
 
 /**
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_group_invite_user_remove_invite_url() {
 	echo bp_get_group_invite_user_remove_invite_url();
 }
 
 	/**
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return string
 	 */
@@ -5792,7 +5792,7 @@ function bp_group_invite_user_remove_invite_url() {
 /**
  * Output pagination links for group invitations.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 function bp_group_invite_pagination_links() {
 	echo bp_get_group_invite_pagination_links();
@@ -5801,7 +5801,7 @@ function bp_group_invite_pagination_links() {
 	/**
 	 * Get pagination links for group invitations.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @return string
 	 */
@@ -5811,7 +5811,7 @@ function bp_group_invite_pagination_links() {
 		/**
 		 * Filters the pagination links for group invitations.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param string $value Pagination links for group invitations.
 		 */
@@ -5821,7 +5821,7 @@ function bp_group_invite_pagination_links() {
 /**
  * Output pagination count text for group invitations.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 function bp_group_invite_pagination_count() {
 	echo bp_get_group_invite_pagination_count();
@@ -5829,7 +5829,7 @@ function bp_group_invite_pagination_count() {
 	/**
 	 * Get pagination count text for group invitations.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @return string
 	 */
@@ -5856,7 +5856,7 @@ function bp_group_invite_pagination_count() {
 /**
  * Hook group activity feed to <head>.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_groups_activity_feed() {
 
@@ -5874,7 +5874,7 @@ add_action( 'bp_head', 'bp_groups_activity_feed' );
 /**
  * Output the current group activity-stream RSS URL.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_group_activity_feed_link() {
 	echo bp_get_group_activity_feed_link();
@@ -5882,7 +5882,7 @@ function bp_group_activity_feed_link() {
 	/**
 	 * Return the current group activity-stream RSS URL.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @return string
 	 */
@@ -5894,7 +5894,7 @@ function bp_group_activity_feed_link() {
 		/**
 		 * Filters the current group activity-stream RSS URL.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @param string $feed_link Current group activity-stream RSS URL.
 		 */
@@ -5906,7 +5906,7 @@ function bp_group_activity_feed_link() {
 /**
  * Echoes the output of bp_get_current_group_id().
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_current_group_id() {
 	echo bp_get_current_group_id();
@@ -5914,7 +5914,7 @@ function bp_current_group_id() {
 	/**
 	 * Returns the ID of the current group.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @return int $current_group_id The id of the current group, if there is one.
 	 */
@@ -5925,7 +5925,7 @@ function bp_current_group_id() {
 		/**
 		 * Filters the ID of the current group.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param int    $current_group_id ID of the current group.
 		 * @param object $current_group    Instance holding the current group.
@@ -5936,7 +5936,7 @@ function bp_current_group_id() {
 /**
  * Echoes the output of bp_get_current_group_slug().
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_current_group_slug() {
 	echo bp_get_current_group_slug();
@@ -5944,7 +5944,7 @@ function bp_current_group_slug() {
 	/**
 	 * Returns the slug of the current group.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @return string $current_group_slug The slug of the current group, if there is one.
 	 */
@@ -5955,7 +5955,7 @@ function bp_current_group_slug() {
 		/**
 		 * Filters the slug of the current group.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param string $current_group_slug Slug of the current group.
 		 * @param object $current_group      Instance holding the current group.
@@ -5966,7 +5966,7 @@ function bp_current_group_slug() {
 /**
  * Echoes the output of bp_get_current_group_name().
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_current_group_name() {
 	echo bp_get_current_group_name();
@@ -5974,7 +5974,7 @@ function bp_current_group_name() {
 	/**
 	 * Returns the name of the current group.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @return string The name of the current group, if there is one.
 	 */
@@ -5985,7 +5985,7 @@ function bp_current_group_name() {
 		/**
 		 * Filters the name of the current group.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @param string $current_name  Name of the current group.
 		 * @param object $current_group Instance holding the current group.
@@ -5996,7 +5996,7 @@ function bp_current_group_name() {
 /**
  * Echoes the output of bp_get_current_group_description().
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  */
 function bp_current_group_description() {
 	echo bp_get_current_group_description();
@@ -6004,7 +6004,7 @@ function bp_current_group_description() {
 	/**
 	 * Returns the description of the current group.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *                       this output.
 	 *
 	 * @return string The description of the current group, if there is one.
@@ -6018,7 +6018,7 @@ function bp_current_group_description() {
 		 *
 		 * This filter is used to apply extra filters related to formatting.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $current_group_desc Description of the current group.
 		 */
@@ -6027,7 +6027,7 @@ function bp_current_group_description() {
 		/**
 		 * Filters the description of the current group.
 		 *
-		 * @since 2.1.0
+		 * @since BuddyPress 2.1.0
 		 *
 		 * @param string $desc Description of the current group.
 		 */
@@ -6037,7 +6037,7 @@ function bp_current_group_description() {
 /**
  * Output a URL for a group component action.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @param string $action
  * @param string $query_args
@@ -6050,7 +6050,7 @@ function bp_groups_action_link( $action = '', $query_args = '', $nonce = false )
 	/**
 	 * Get a URL for a group component action.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param string $action
 	 * @param string $query_args
@@ -6091,7 +6091,7 @@ function bp_groups_action_link( $action = '', $query_args = '', $nonce = false )
 		/**
 		 * Filters a URL for a group component action.
 		 *
-		 * @since 2.1.0
+		 * @since BuddyPress 2.1.0
 		 *
 		 * @param string $url        URL for a group component action.
 		 * @param string $action     Action being taken for the group.
@@ -6106,7 +6106,7 @@ function bp_groups_action_link( $action = '', $query_args = '', $nonce = false )
 /**
  * Display the number of groups in user's profile.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param array|string $args before|after|user_id
  *
@@ -6119,7 +6119,7 @@ add_action( 'bp_members_admin_user_stats', 'bp_groups_profile_stats', 8, 1 );
 /**
  * Return the number of groups in user's profile.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param array|string $args before|after|user_id
  * @return string HTML for stats output.
@@ -6154,7 +6154,7 @@ function bp_groups_get_profile_stats( $args = '' ) {
 	/**
 	 * Filters the number of groups in user's profile.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param string $value HTML for stats output.
 	 * @param array  $r     Array of parsed arguments for query.

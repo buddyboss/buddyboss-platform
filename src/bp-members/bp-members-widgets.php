@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage MembersWidgets
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Previously, these widgets were registered in bp-core.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  */
 function bp_members_register_widgets() {
 	add_action( 'widgets_init', function() { return register_widget( 'BP_Core_Members_Widget' );         } );
@@ -27,7 +27,7 @@ add_action( 'bp_register_widgets', 'bp_members_register_widgets' );
 /**
  * AJAX request handler for Members widgets.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @see BP_Core_Members_Widget
  */

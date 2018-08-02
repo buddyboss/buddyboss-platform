@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage BlogsScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Load the "My Blogs" screen.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_blogs_screen_my_blogs() {
 	if ( !is_multisite() )
@@ -19,7 +19,7 @@ function bp_blogs_screen_my_blogs() {
 	/**
 	 * Fires right before the loading of the My Blogs screen template file.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	do_action( 'bp_blogs_screen_my_blogs' );
 

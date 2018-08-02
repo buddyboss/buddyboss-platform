@@ -6,7 +6,7 @@ use WP_CLI;
 /**
  * Manage BuddyPress group invites.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 class Group_Invite extends BuddypressCommand {
 

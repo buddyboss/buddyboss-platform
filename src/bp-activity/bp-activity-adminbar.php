@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Add the Activity top-level menu link when viewing single activity item.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @return null Null if user does not have access to editing functionality.
  */

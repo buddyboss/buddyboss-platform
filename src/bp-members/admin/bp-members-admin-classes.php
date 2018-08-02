@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage MembersAdminClasses
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 
 // Exit if accessed directly.

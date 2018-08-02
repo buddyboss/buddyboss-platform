@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage ActivityCache
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * in $activity_ids and adds it to the WP cache. This improves efficiency when
  * using querying activitymeta inline.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param int|string|array|bool $activity_ids Accepts a single activity ID, or a comma-
  *                                            separated list or array of activity ids.
@@ -40,7 +40,7 @@ function bp_activity_update_meta_cache( $activity_ids = false ) {
 /**
  * Clear a cached activity item when that item is updated.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param BP_Activity_Activity $activity Activity object.
  */
@@ -53,7 +53,7 @@ add_action( 'bp_activity_after_save', 'bp_activity_clear_cache_for_activity' );
 /**
  * Clear cached data for deleted activity items.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param array $deleted_ids IDs of deleted activity items.
  */
@@ -70,7 +70,7 @@ add_action( 'bp_activity_deleted_activities', 'bp_activity_clear_cache_for_delet
  * Called whenever an activity item is created, updated, or deleted, this
  * function effectively invalidates all cached results of activity queries.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @return bool True on success, false on failure.
  */

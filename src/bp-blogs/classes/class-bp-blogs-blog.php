@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage BlogsClasses
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * A BP_Blogs_Object represents a link between a specific WordPress blog on a
  * network and a specific user on that blog.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 class BP_Blogs_Blog {
 
@@ -78,7 +78,7 @@ class BP_Blogs_Blog {
 		/**
 		 * Filters the blog user ID before save.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param int $value User ID.
 		 * @param int $value Site ID.
@@ -88,7 +88,7 @@ class BP_Blogs_Blog {
 		/**
 		 * Filters the blog blog ID before save.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param int $value Blog ID.
 		 * @param int $value Site ID.
@@ -100,7 +100,7 @@ class BP_Blogs_Blog {
 		 *
 		 * Please use this hook to filter the properties above. Each part will be passed in.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param BP_Blogs_Blog $this Current instance of the blog item being saved. Passed by reference.
 		 */
@@ -132,7 +132,7 @@ class BP_Blogs_Blog {
 		 *
 		 * Please use this hook to filter the properties above. Each part will be passed in.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param BP_Blogs_Blog $this Current instance of the blog item being saved. Passed by reference.
 		 */

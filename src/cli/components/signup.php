@@ -6,7 +6,7 @@ use WP_CLI;
 /**
  * Manage BuddyPress Signups.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 class Signup extends BuddypressCommand {
 
@@ -327,7 +327,7 @@ class Signup extends BuddypressCommand {
 	/**
 	 * Look up a signup by the provided identifier.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	protected function get_signup_by_identifier( $identifier, $assoc_args ) {
 		if ( isset( $assoc_args['match-field'] ) ) {

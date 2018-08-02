@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage GroupActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Protect access to single groups.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  */
 function bp_groups_group_access_protection() {
 	if ( ! bp_is_group() ) {
@@ -55,7 +55,7 @@ function bp_groups_group_access_protection() {
 	 * want to change the $no_access_args, to avoid problems such as
 	 * logged-in users being redirected to wp-login.php.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param bool  $user_has_access True if the user has access to the
 	 *                               content, otherwise false.

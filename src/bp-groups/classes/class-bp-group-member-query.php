@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsClasses
- * @since 1.8.0
+ * @since BuddyPress 1.8.0
  */
 
 // Exit if accessed directly.
@@ -23,8 +23,8 @@ defined( 'ABSPATH' ) || exit;
  * - *Membership requests* are entries with is_confirmed = 0 and
  *   inviter_id = 0 (and invite_sent = 0).
  *
- * @since 1.8.0
- * @since 3.0.0 $group_id now supports multiple values.
+ * @since BuddyPress 1.8.0
+ * @since BuddyPress 3.0.0 $group_id now supports multiple values.
  *
  * @param array $args  {
  *     Array of arguments. Accepts all arguments from
@@ -44,7 +44,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 	/**
 	 * Array of group member ids, cached to prevent redundant lookups.
 	 *
-	 * @since 1.8.1
+	 * @since BuddyPress 1.8.1
 	 * @var null|array Null if not yet defined, otherwise an array of ints.
 	 */
 	protected $group_member_ids;
@@ -52,7 +52,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 	/**
 	 * Set up action hooks.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	public function setup_hooks() {
 		// Take this early opportunity to set the default 'type' param
@@ -75,7 +75,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 	 * Overrides BP_User_Query::get_include_ids(), adding our additional
 	 * group-member logic.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param array $include Existing group IDs in the $include parameter,
 	 *                       as calculated in BP_User_Query.
@@ -114,7 +114,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 	/**
 	 * Get the members of the queried group.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @return array $ids User IDs of relevant group member ids.
 	 */
@@ -239,7 +239,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 		 * Use this filter to build a custom query (such as when you've
 		 * defined a custom 'type').
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param array                 $group_member_ids Array of associated member IDs.
 		 * @param BP_Group_Member_Query $this             Current BP_Group_Member_Query instance.
@@ -255,7 +255,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 	 * We only override BP_User_Query's native ordering in case of the
 	 * 'last_joined' and 'first_joined' $type parameters.
 	 *
-	 * @since 1.8.1
+	 * @since BuddyPress 1.8.1
 	 *
 	 * @param BP_User_Query $query BP_User_Query object.
 	 */
@@ -299,7 +299,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 	 *      - is_banned
 	 *      - date_modified
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param BP_User_Query $query        BP_User_Query object. Because we're
 	 *                                    filtering the current object, we use
@@ -337,7 +337,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 	/**
 	 * Sort user IDs by how recently they have generated activity within a given group.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param BP_User_Query $query  BP_User_Query object.
 	 * @param array         $gm_ids array of group member ids.

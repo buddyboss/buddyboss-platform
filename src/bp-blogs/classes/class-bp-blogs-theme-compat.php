@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage BlogsScreens
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -16,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
  * This class sets up the necessary theme compatibility actions to safely output
  * group template parts to the_title and the_content areas of a theme.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 class BP_Blogs_Theme_Compat {
 
 	/**
 	 * Set up theme compatibility for the Blogs component.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function __construct() {
 		add_action( 'bp_setup_theme_compat', array( $this, 'is_blogs' ) );
@@ -32,7 +32,7 @@ class BP_Blogs_Theme_Compat {
 	/**
 	 * Are we looking at something that needs Blogs theme compatibility?
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function is_blogs() {
 
@@ -52,7 +52,7 @@ class BP_Blogs_Theme_Compat {
 			 * Fires if in the blog directory and BuddyPress needs Blog theme compatibility,
 			 * before the actions and filters are added.
 			 *
-			 * @since 1.5.0
+			 * @since BuddyPress 1.5.0
 			 */
 			do_action( 'bp_blogs_screen_index' );
 
@@ -76,7 +76,7 @@ class BP_Blogs_Theme_Compat {
 	 * This is to mirror how WordPress has
 	 * {@link https://codex.wordpress.org/Template_Hierarchy template hierarchy}.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $templates The templates from bp_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
@@ -86,7 +86,7 @@ class BP_Blogs_Theme_Compat {
 		/**
 		 * Filters the custom templates used for theme compat with the blog directory page.
 		 *
-		 * @since 1.8.0
+		 * @since BuddyPress 1.8.0
 		 *
 		 * @param array $value Array of template paths to add to template list to look for.
 		 */
@@ -104,7 +104,7 @@ class BP_Blogs_Theme_Compat {
 	/**
 	 * Update the global $post with directory data.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function directory_dummy_post() {
 
@@ -124,7 +124,7 @@ class BP_Blogs_Theme_Compat {
 	/**
 	 * Filter the_content with the groups index template part.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function directory_content() {
 		return bp_buffer_template_part( 'blogs/index', null, false );
@@ -138,7 +138,7 @@ class BP_Blogs_Theme_Compat {
 	 * This is to mirror how WordPress has
 	 * {@link https://codex.wordpress.org/Template_Hierarchy template hierarchy}.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $templates The templates from bp_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
@@ -148,7 +148,7 @@ class BP_Blogs_Theme_Compat {
 		/**
 		 * Filters the custom templates used for theme compat with the blog create page.
 		 *
-		 * @since 1.8.0
+		 * @since BuddyPress 1.8.0
 		 *
 		 * @param array $value Array of template paths to add to template list to look for.
 		 */
@@ -166,7 +166,7 @@ class BP_Blogs_Theme_Compat {
 	/**
 	 * Update the global $post with create screen data.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function create_dummy_post() {
 
@@ -193,7 +193,7 @@ class BP_Blogs_Theme_Compat {
 	/**
 	 * Filter the_content with the create screen template part.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function create_content() {
 		return bp_buffer_template_part( 'blogs/create', null, false );

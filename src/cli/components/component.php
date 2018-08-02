@@ -27,7 +27,7 @@ use WP_CLI;
  *     |        |         |        |                        | torno de seus membros.                     |
  *     +--------+---------+--------+------------------------------------------+--------------------------+
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 class Components extends BuddypressCommand {
 
@@ -274,7 +274,7 @@ class Components extends BuddypressCommand {
 	/**
 	 * Verify Component Status.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $id Component id.
 	 *
@@ -293,7 +293,7 @@ class Components extends BuddypressCommand {
 	/**
 	 * Component Types.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @return array An array of valid component types.
 	 */
@@ -304,7 +304,7 @@ class Components extends BuddypressCommand {
 	/**
 	 * Component Status.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @return array An array of valid component status.
 	 */

@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileLoader
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -16,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Creates our XProfile component.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 class BP_XProfile_Component extends BP_Component {
 
 	/**
 	 * Profile field types.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var array
 	 */
 	public $field_types;
@@ -33,7 +33,7 @@ class BP_XProfile_Component extends BP_Component {
 	 *
 	 * @see bp_xprofile_get_visibility_levels()
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var array
 	 */
 	public $visibility_levels = array();
@@ -41,7 +41,7 @@ class BP_XProfile_Component extends BP_Component {
 	/**
 	 * Start the xprofile component creation process.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	public function __construct() {
 		parent::start(
@@ -59,7 +59,7 @@ class BP_XProfile_Component extends BP_Component {
 	/**
 	 * Include files.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param array $includes Array of files to include.
 	 */
@@ -95,7 +95,7 @@ class BP_XProfile_Component extends BP_Component {
 	 *
 	 * Only load up certain code when on specific pages.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function late_includes() {
 		// Bail if PHPUnit is running.
@@ -137,7 +137,7 @@ class BP_XProfile_Component extends BP_Component {
 	 * The BP_XPROFILE_SLUG constant is deprecated, and only used here for
 	 * backwards compatibility.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param array $args Array of globals to set up.
 	 */
@@ -163,7 +163,7 @@ class BP_XProfile_Component extends BP_Component {
 		/**
 		 * Filters the supported field type IDs.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param array $value Array of IDs for the supported field types.
 		 */
@@ -225,7 +225,7 @@ class BP_XProfile_Component extends BP_Component {
 	/**
 	 * Set up navigation.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @global BuddyPress $bp The one true BuddyPress instance
 	 *
@@ -317,7 +317,7 @@ class BP_XProfile_Component extends BP_Component {
 	 * Loaded in a separate method because the Settings component may not
 	 * be loaded in time for BP_XProfile_Component::setup_nav().
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 */
 	public function setup_settings_nav() {
 		if ( ! bp_is_active( 'settings' ) ) {
@@ -350,7 +350,7 @@ class BP_XProfile_Component extends BP_Component {
 	/**
 	 * Set up the Admin Bar.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param array $wp_admin_nav Admin Bar items.
 	 */
@@ -416,7 +416,7 @@ class BP_XProfile_Component extends BP_Component {
 	/**
 	 * Add custom hooks.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 */
 	public function setup_hooks() {
 		add_filter( 'bp_settings_admin_nav', array( $this, 'setup_settings_admin_nav' ), 2 );
@@ -425,7 +425,7 @@ class BP_XProfile_Component extends BP_Component {
 	/**
 	 * Sets up the title for pages and <title>.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	public function setup_title() {
 
@@ -450,7 +450,7 @@ class BP_XProfile_Component extends BP_Component {
 	/**
 	 * Setup cache groups.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 */
 	public function setup_cache_groups() {
 
@@ -469,7 +469,7 @@ class BP_XProfile_Component extends BP_Component {
 	/**
 	 * Adds "Settings > Profile" subnav item under the "Settings" adminbar menu.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $wp_admin_nav The settings adminbar nav array.
 	 * @return array

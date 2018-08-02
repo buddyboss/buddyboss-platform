@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileScripts
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Enqueue the CSS for XProfile admin styling.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function xprofile_add_admin_css() {
 	if ( !empty( $_GET['page'] ) && strpos( $_GET['page'], 'bp-profile-setup' ) !== false ) {
@@ -32,7 +32,7 @@ add_action( 'bp_admin_enqueue_scripts', 'xprofile_add_admin_css' );
 /**
  * Enqueue the jQuery libraries for handling drag/drop/sort.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function xprofile_add_admin_js() {
 	if ( !empty( $_GET['page'] ) && strpos( $_GET['page'], 'bp-profile-setup' ) !== false ) {

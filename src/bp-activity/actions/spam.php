@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage ActivityActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Mark specific activity item as spam and redirect to previous page.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param int $activity_id Activity id to be deleted. Defaults to 0.
  * @return bool False on failure.
@@ -44,7 +44,7 @@ function bp_activity_action_spam_activity( $activity_id = 0 ) {
 	/**
 	 * Fires before the marking activity as spam so plugins can modify things if they want to.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int    $activity_id Activity ID to be marked as spam.
 	 * @param object $activity    Activity object for the ID to be marked as spam.
@@ -61,7 +61,7 @@ function bp_activity_action_spam_activity( $activity_id = 0 ) {
 	/**
 	 * Fires after the marking activity as spam so plugins can act afterwards based on the activity.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $activity_id Activity ID that was marked as spam.
 	 * @param int $user_id     User ID associated with activity.

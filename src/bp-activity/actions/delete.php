@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage ActivityActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Delete specific activity item and redirect to previous page.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param int $activity_id Activity id to be deleted. Defaults to 0.
  * @return bool False on failure.
@@ -40,7 +40,7 @@ function bp_activity_action_delete_activity( $activity_id = 0 ) {
 	/**
 	 * Fires before the deletion so plugins can still fetch information about it.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param int $activity_id The activity ID.
 	 * @param int $user_id     The user associated with the activity.
@@ -56,7 +56,7 @@ function bp_activity_action_delete_activity( $activity_id = 0 ) {
 	/**
 	 * Fires after the deletion so plugins can act afterwards based on the activity.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param int $activity_id The activity ID.
 	 * @param int $user_id     The user associated with the activity.

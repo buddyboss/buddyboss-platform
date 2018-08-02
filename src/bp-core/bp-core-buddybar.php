@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @todo Deprecate BuddyBar functions.
  */
@@ -15,8 +15,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Add an item to the primary navigation of the specified component.
  *
- * @since 1.1.0
- * @since 2.6.0 Introduced the `$component` parameter.
+ * @since BuddyPress 1.1.0
+ * @since BuddyPress 2.6.0 Introduced the `$component` parameter.
  *
  * @param array|string $args {
  *     Array describing the new nav item.
@@ -77,7 +77,7 @@ function bp_core_new_nav_item( $args, $component = 'members' ) {
 	 * `bp_core_create_nav_link` or `bp_core_register_nav_screen_function`
 	 * should be used.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param array $r        Parsed arguments for the nav item.
 	 * @param array $args     Originally passed in arguments for the nav item.
@@ -89,8 +89,8 @@ function bp_core_new_nav_item( $args, $component = 'members' ) {
 /**
  * Add a link to the main BuddyPress navigation.
  *
- * @since 2.4.0
- * @since 2.6.0 Introduced the `$component` parameter. Began returning a BP_Core_Nav_Item object on success.
+ * @since BuddyPress 2.4.0
+ * @since BuddyPress 2.6.0 Introduced the `$component` parameter. Began returning a BP_Core_Nav_Item object on success.
  *
  * @param array|string $args {
  *     Array describing the new nav item.
@@ -157,8 +157,8 @@ function bp_core_create_nav_link( $args = '', $component = 'members' ) {
 	/**
 	 * Fires after a link is added to the main BuddyPress nav.
 	 *
-	 * @since 2.4.0
-	 * @since 2.6.0 Added `$component` parameter.
+	 * @since BuddyPress 2.4.0
+	 * @since BuddyPress 2.6.0 Added `$component` parameter.
 	 *
 	 * @param array  $r         Parsed arguments for the nav item.
 	 * @param array  $args      Originally passed in arguments for the nav item.
@@ -173,7 +173,7 @@ function bp_core_create_nav_link( $args = '', $component = 'members' ) {
 /**
  * Register a screen function for an item in the main nav array.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @param array|string $args {
  *     Array describing the new nav item.
@@ -259,7 +259,7 @@ function bp_core_register_nav_screen_function( $args = '' ) {
 				/**
 				 * Filters the default component subnav item.
 				 *
-				 * @since 1.5.0
+				 * @since BuddyPress 1.5.0
 				 *
 				 * @param string $value The slug of the default subnav item
 				 *                      to select when clicked.
@@ -274,7 +274,7 @@ function bp_core_register_nav_screen_function( $args = '' ) {
 	 * Fires after the screen function for an item in the BuddyPress main
 	 * navigation is registered.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param array $r        Parsed arguments for the nav item.
 	 * @param array $args     Originally passed in arguments for the nav item.
@@ -286,7 +286,7 @@ function bp_core_register_nav_screen_function( $args = '' ) {
 /**
  * Modify the default subnav item that loads when a top level nav item is clicked.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param array|string $args {
  *     @type string   $parent_slug     The slug of the nav item whose default is being changed.
@@ -369,8 +369,8 @@ function bp_core_new_nav_default( $args = '' ) {
 /**
  * Add an item to secondary navigation of the specified component.
  *
- * @since 1.1.0
- * @since 2.6.0 Introduced the `$component` parameter.
+ * @since BuddyPress 1.1.0
+ * @since BuddyPress 2.6.0 Introduced the `$component` parameter.
  *
  * @param array|string $args {
  *     Array describing the new subnav item.
@@ -445,8 +445,8 @@ function bp_core_new_subnav_item( $args, $component = null ) {
 /**
  * Add a subnav link to the BuddyPress navigation.
  *
- * @since 2.4.0
- * @since 2.6.0 Introduced the `$component` parameter. Began returning a BP_Core_Nav_Item object on success.
+ * @since BuddyPress 2.4.0
+ * @since BuddyPress 2.6.0 Introduced the `$component` parameter. Began returning a BP_Core_Nav_Item object on success.
  *
  * @param array|string $args {
  *     Array describing the new subnav item.
@@ -544,8 +544,8 @@ function bp_core_create_subnav_link( $args = '', $component = 'members' ) {
 /**
  * Register a screen function, whether or not a related subnav link exists.
  *
- * @since 2.4.0
- * @since 2.6.0 Introduced the `$component` parameter.
+ * @since BuddyPress 2.4.0
+ * @since BuddyPress 2.6.0 Introduced the `$component` parameter.
  *
  * @param array|string $args {
  *     Array describing the new subnav item.
@@ -634,8 +634,8 @@ function bp_core_register_subnav_screen_function( $args = '', $component = 'memb
 /**
  * For a given subnav item, either hook the screen function or generate redirect arguments, as necessary.
  *
- * @since 2.1.0
- * @since 2.6.0 Introduced the `$component` parameter.
+ * @since BuddyPress 2.1.0
+ * @since BuddyPress 2.6.0 Introduced the `$component` parameter.
  *
  * @param array  $subnav_item The subnav array added to the secondary navigation of
  *                            the component in bp_core_new_subnav_item().
@@ -738,8 +738,8 @@ function bp_core_maybe_hook_new_subnav_screen_function( $subnav_item, $component
 /**
  * Check whether a given nav item has subnav items.
  *
- * @since 1.5.0
- * @since 2.6.0 Introduced the `$component` parameter.
+ * @since BuddyPress 1.5.0
+ * @since BuddyPress 2.6.0 Introduced the `$component` parameter.
  *
  * @param string $nav_item  The slug of the top-level nav item whose subnav items you're checking.
  *                          Default: the current component slug.
@@ -766,7 +766,7 @@ function bp_nav_item_has_subnav( $nav_item = '', $component = 'members' ) {
 	/**
 	 * Filters whether or not a given nav item has subnav items.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param bool   $has_subnav Whether or not there is any subnav items.
 	 * @param string $nav_item   The slug of the top-level nav item whose subnav items you're checking.
@@ -777,8 +777,8 @@ function bp_nav_item_has_subnav( $nav_item = '', $component = 'members' ) {
 /**
  * Deletes an item from the primary navigation of the specified component.
  *
- * @since 1.0.0
- * @since 2.6.0 Introduced the `$component` parameter.
+ * @since BuddyPress 1.0.0
+ * @since BuddyPress 2.6.0 Introduced the `$component` parameter.
  *
  * @param string      $slug      The slug of the primary navigation item.
  * @param string|null $component The component the navigation is attached to. Defaults to 'members'.
@@ -825,8 +825,8 @@ function bp_core_remove_nav_item( $slug, $component = null ) {
 /**
  * Deletes an item from the secondary navigation of the specified component.
  *
- * @since 1.0.0
- * @since 2.6.0 Introduced the `$component` parameter.
+ * @since BuddyPress 1.0.0
+ * @since BuddyPress 2.6.0 Introduced the `$component` parameter.
  *
  * @param string      $parent_slug The slug of the primary navigation item.
  * @param string      $slug        The slug of the secondary item to be removed.
@@ -874,8 +874,8 @@ function bp_core_remove_subnav_item( $parent_slug, $slug, $component = null ) {
 /**
  * Clear all subnav items from a specific nav item.
  *
- * @since 1.0.0
- * @since 2.6.0 Introduced the `$component` parameter.
+ * @since BuddyPress 1.0.0
+ * @since BuddyPress 2.6.0 Introduced the `$component` parameter.
  *
  * @param string $parent_slug The slug of the parent navigation item.
  * @param string $component   The component the navigation is attached to. Defaults to 'members'.
@@ -904,7 +904,7 @@ function bp_core_reset_subnav_items( $parent_slug, $component = 'members' ) {
  *
  * This is a direct copy of WP's private _get_admin_bar_pref()
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param string $context Context of this preference check. 'admin' or 'front'.
  * @param int    $user    Optional. ID of the user to check. Default: 0 (which falls back to the logged-in user's ID).

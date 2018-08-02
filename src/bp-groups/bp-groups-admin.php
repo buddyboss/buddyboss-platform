@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss
  * @subpackage Groups
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 
 // Exit if accessed directly.
@@ -23,7 +23,7 @@ if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-groups' == $_REQUEST['pag
 /**
  * Register the Groups component admin screen.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 function bp_groups_add_admin_menu() {
 
@@ -48,7 +48,7 @@ add_action( bp_core_admin_hook(), 'bp_groups_add_admin_menu' );
  * This ensures that the Groups menu item appears in the proper order on the
  * main Dashboard menu.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param array $custom_menus Array of BP top-level menu items.
  * @return array Menu item array, with Groups added.
@@ -66,7 +66,7 @@ add_filter( 'bp_admin_menu_order', 'bp_groups_admin_menu_order' );
  * including: processing form requests, registering contextual help, and
  * setting up screen options.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @global BP_Groups_List_Table $bp_groups_list_table Groups screen list table.
  */
@@ -82,7 +82,7 @@ function bp_groups_admin_load() {
 	/**
 	 * Fires at top of groups admin page.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $doaction Current $_GET action being performed in admin screen.
 	 */
@@ -146,7 +146,7 @@ function bp_groups_admin_load() {
 		/**
 		 * Fires after the registration of all of the default group meta boxes.
 		 *
-		 * @since 1.7.0
+		 * @since BuddyPress 1.7.0
 		 */
 		do_action( 'bp_groups_admin_meta_boxes' );
 
@@ -265,7 +265,7 @@ function bp_groups_admin_load() {
 		/**
 		 * Filters the allowed status values for the group.
 		 *
-		 * @since 1.0.2
+		 * @since BuddyPress 1.0.2
 		 *
 		 * @param array $value Array of allowed group statuses.
 		 */
@@ -275,7 +275,7 @@ function bp_groups_admin_load() {
 		/**
 		 * Filters the allowed invite status values for the group.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param array $value Array of allowed invite statuses.
 		 */
@@ -401,7 +401,7 @@ function bp_groups_admin_load() {
 		/**
 		 * Fires before redirect so plugins can do something first on save action.
 		 *
-		 * @since 1.6.0
+		 * @since BuddyPress 1.6.0
 		 *
 		 * @param int $group_id ID of the group being edited.
 		 */
@@ -439,7 +439,7 @@ function bp_groups_admin_load() {
 		/**
 		 * Filters the URL to redirect to after successfully editing a group.
 		 *
-		 * @since 1.7.0
+		 * @since BuddyPress 1.7.0
 		 *
 		 * @param string $redirect_to URL to redirect user to.
 		 */
@@ -457,7 +457,7 @@ function bp_groups_admin_load() {
 /**
  * Handle save/update of screen options for the Groups component admin screen.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param string $value     Will always be false unless another plugin filters it first.
  * @param string $option    Screen option name.
@@ -479,7 +479,7 @@ function bp_groups_admin_screen_options( $value, $option, $new_value ) {
 /**
  * Select the appropriate Groups admin screen, and output it.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 function bp_groups_admin() {
 	// Decide whether to load the index or edit screen.
@@ -502,7 +502,7 @@ function bp_groups_admin() {
 /**
  * Display the single groups edit screen.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 function bp_groups_admin_edit() {
 
@@ -571,7 +571,7 @@ function bp_groups_admin_edit() {
 	 *
 	 * Useful for plugins to modify the group before display.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param BP_Groups_Group $this Instance of the current group being edited. Passed by reference.
 	 */
@@ -679,7 +679,7 @@ function bp_groups_admin_edit() {
  * We include a separate confirmation because group deletion is truly
  * irreversible.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 function bp_groups_admin_delete() {
 
@@ -730,7 +730,7 @@ function bp_groups_admin_delete() {
  *
  * This screen contains a list of all BuddyBoss groups.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @global BP_Groups_List_Table $bp_groups_list_table Group screen list table.
  * @global string $plugin_page Currently viewed plugin page.
@@ -757,7 +757,7 @@ function bp_groups_admin_index() {
 	 *
 	 * Useful for plugins to modify the messages before display.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param array $messages Array of messages to be displayed.
 	 */
@@ -816,7 +816,7 @@ function bp_groups_admin_index() {
 /**
  * Markup for the single group's Settings metabox.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param object $item Information about the current group.
  */
@@ -856,7 +856,7 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 /**
  * Output the markup for a single group's Add New Members metabox.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param BP_Groups_Group $item The BP_Groups_Group object for the current group.
  */
@@ -875,7 +875,7 @@ function bp_groups_admin_edit_metabox_add_new_members( $item ) {
 /**
  * Renders the Members metabox on single group pages.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param BP_Groups_Group $item The BP_Groups_Group object for the current group.
  */
@@ -908,7 +908,7 @@ function bp_groups_admin_edit_metabox_members( $item ) {
 			/**
 			 * Filters the admin members type per page value.
 			 *
-			 * @since 2.8.0
+			 * @since BuddyPress 2.8.0
 			 *
 			 * @param int    $value Member types per page. Default 10.
 			 * @param string $type  Member type.
@@ -1009,7 +1009,7 @@ function bp_groups_admin_edit_metabox_members( $item ) {
 								/**
 								 * Fires after the listing of a single row for members in a group on the group edit screen.
 								 *
-								 * @since 1.8.0
+								 * @since BuddyPress 1.8.0
 								 *
 								 * @param int             $ID   ID of the user being rendered.
 								 * @param BP_Groups_Group $item Object for the current group.
@@ -1038,7 +1038,7 @@ function bp_groups_admin_edit_metabox_members( $item ) {
 /**
  * Renders the Status metabox for the Groups admin edit screen.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param object $item Information about the currently displayed group.
  */
@@ -1067,7 +1067,7 @@ function bp_groups_admin_edit_metabox_status( $item ) {
 /**
  * Render the Group Type metabox.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param BP_Groups_Group|null $group The BP_Groups_Group object corresponding to the group being edited.
  */
@@ -1114,7 +1114,7 @@ function bp_groups_admin_edit_metabox_group_type( BP_Groups_Group $group = null 
 /**
  * Process changes from the Group Type metabox.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param int $group_id Group ID.
  */
@@ -1151,7 +1151,7 @@ add_action( 'bp_group_admin_edit_after', 'bp_groups_process_group_type_update' )
  * Plugin authors should not use this function, as it is likely to be
  * deprecated soon.
  *
- * @since 1.8.0
+ * @since BuddyPress 1.8.0
  *
  * @param BP_Group_Member_Query $query       A BP_Group_Member_Query object.
  * @param string                $member_type member|mod|admin|banned.
@@ -1173,7 +1173,7 @@ function bp_groups_admin_create_pagination_links( BP_Group_Member_Query $query, 
 	/**
 	 * Filters the number of members per member type that is displayed in group editing admin area.
 	 *
-	 * @since 2.8.0
+	 * @since BuddyPress 2.8.0
 	 *
 	 * @param string $member_type Member type, which is a group role (admin, mod etc).
 	 */
@@ -1216,7 +1216,7 @@ function bp_groups_admin_create_pagination_links( BP_Group_Member_Query $query, 
 /**
  * Get a set of usernames corresponding to a set of user IDs.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param array $user_ids Array of user IDs.
  * @return array Array of user_logins corresponding to $user_ids.
@@ -1236,7 +1236,7 @@ function bp_groups_admin_get_usernames_from_ids( $user_ids = array() ) {
 /**
  * AJAX handler for group member autocomplete requests.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 function bp_groups_admin_autocomplete_handler() {
 
@@ -1279,7 +1279,7 @@ add_action( 'wp_ajax_bp_group_admin_member_autocomplete', 'bp_groups_admin_autoc
 /**
  * Process input from the Group Type bulk change select.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @param string $doaction Current $_GET action being performed in admin screen.
  */
@@ -1353,7 +1353,7 @@ add_action( 'bp_groups_admin_load', 'bp_groups_admin_process_group_type_bulk_cha
 /**
  * Display an admin notice upon group type bulk update.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  */
 function bp_groups_admin_groups_type_change_notice() {
 	$updated = isset( $_REQUEST['updated'] ) ? $_REQUEST['updated'] : false;

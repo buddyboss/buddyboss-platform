@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Messages
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 // Exit if accessed directly.

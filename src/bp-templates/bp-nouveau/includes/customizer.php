@@ -2,14 +2,14 @@
 /**
  * Code to hook into the WP Customizer
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
 
 /**
  * Add a specific panel for the BP Nouveau Template Pack.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param WP_Customize_Manager $wp_customize WordPress customizer.
  */
@@ -31,7 +31,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	/**
 	 * Filters the BuddyPress Nouveau customizer sections and their arguments.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $value Array of Customizer sections.
 	 */
@@ -76,7 +76,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	/**
 	 * Filters the BuddyPress Nouveau customizer settings and their arguments.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $value Array of Customizer settings.
 	 */
@@ -277,7 +277,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	/**
 	 * Filters the BuddyPress Nouveau customizer controls and their arguments.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $value Array of Customizer controls.
 	 */
@@ -297,7 +297,7 @@ add_action( 'bp_customize_register', 'bp_nouveau_customize_register', 10, 1 );
 /**
  * Enqueue needed JS for our customizer Settings & Controls
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_customizer_enqueue_scripts() {
 	$min = bp_core_get_minified_asset_suffix();
@@ -313,7 +313,7 @@ function bp_nouveau_customizer_enqueue_scripts() {
 	/**
 	 * Fires after Nouveau enqueues its required javascript.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	do_action( 'bp_nouveau_customizer_enqueue_scripts' );
 }

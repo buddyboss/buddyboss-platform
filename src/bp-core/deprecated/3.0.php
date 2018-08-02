@@ -11,8 +11,8 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Check whether bbPress plugin-powered Group Forums are enabled.
  *
- * @since 1.6.0
- * @since 3.0.0 $default argument's default value changed from true to false.
+ * @since BuddyPress 1.6.0
+ * @since BuddyPress 3.0.0 $default argument's default value changed from true to false.
  * @deprecated 3.0.0 No longer used in core, but supported for third-party code.
  *
  * @param bool $default Optional. Fallback value if not found in the database.
@@ -27,7 +27,7 @@ function bp_is_group_forums_active( $default = false ) {
 	/**
 	 * Filters whether or not bbPress plugin-powered Group Forums are enabled.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @deprecated 3.0.0 No longer used in core, but supported for third-party code.
 	 *
 	 * @param bool $value Whether or not bbPress plugin-powered Group Forums are enabled.
@@ -40,7 +40,7 @@ function bp_is_group_forums_active( $default = false ) {
  *
  * Eg http://example.com/members/joe/forums/ (or a subpage thereof).
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  * @deprecated 3.0.0 No longer used in core, but supported for third-party code.
  *
  * @return false
@@ -53,8 +53,8 @@ function bp_is_user_forums() {
 /**
  * Is the current page a group's (legacy bbPress) forum page?
  *
- * @since 1.1.0
- * @since 3.0.0 Always returns false.
+ * @since BuddyPress 1.1.0
+ * @since BuddyPress 3.0.0 Always returns false.
  * @deprecated 3.0.0 No longer used in core, but supported for custom theme templates.
  *
  * @return bool
@@ -68,7 +68,7 @@ function bp_is_group_forum() {
 /**
  * Output a 'New Topic' button for a group.
  *
- * @since 1.2.7
+ * @since BuddyPress 1.2.7
  * @deprecated 3.0.0 No longer used in core, but supported for third-party code.
  *
  * @param BP_Groups_Group|bool $group The BP Groups_Group object if passed, boolean false if not passed.
@@ -80,7 +80,7 @@ function bp_group_new_topic_button( $group = false ) {
 	/**
 	 * Return a 'New Topic' button for a group.
 	 *
-	 * @since 1.2.7
+	 * @since BuddyPress 1.2.7
 	 * @deprecated 3.0.0 No longer used in core, but supported for third-party code.
 	 *
 	 * @param BP_Groups_Group|bool $group The BP Groups_Group object if passed, boolean false if not passed.
@@ -101,9 +101,9 @@ function bp_group_new_topic_button( $group = false ) {
  *
  * Note: no longer used in the current state. See the Settings component.
  *
- * @since 1.1.0
- * @since 1.6.0 No longer used, unhooked.
- * @since 3.0.0 Formally marked as deprecated.
+ * @since BuddyPress 1.1.0
+ * @since BuddyPress 1.6.0 No longer used, unhooked.
+ * @since BuddyPress 3.0.0 Formally marked as deprecated.
  *
  * @param int $user_id Optional. User ID to mark as spam. Defaults to displayed user.
  */
@@ -152,9 +152,9 @@ function bp_core_action_set_spammer_status( $user_id = 0 ) {
  *
  * Note: no longer used in the current state. See the Settings component.
  *
- * @since 1.1.0
- * @since 1.6.0 No longer used, unhooked.
- * @since 3.0.0 Formally marked as deprecated.
+ * @since BuddyPress 1.1.0
+ * @since BuddyPress 1.6.0 No longer used, unhooked.
+ * @since BuddyPress 3.0.0 Formally marked as deprecated.
  */
 function bp_core_action_delete_user() {
 	_deprecated_function( __FUNCTION__, '3.0' );

@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileTemplate
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Query for XProfile groups and fields.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @global object $profile_template
  * @see BP_XProfile_Group::get() for full description of `$args` array.
@@ -73,8 +73,8 @@ function bp_has_profile( $args = '' ) {
 	/**
 	 * Filters whether or not a group has a profile to display.
 	 *
-	 * @since 1.1.0
-	 * @since 2.6.0 Added the `$r` parameter.
+	 * @since BuddyPress 1.1.0
+	 * @since BuddyPress 2.6.0 Added the `$r` parameter.
 	 *
 	 * @param bool   $has_groups       Whether or not there are group profiles to display.
 	 * @param string $profile_template Current profile template being used.
@@ -86,7 +86,7 @@ function bp_has_profile( $args = '' ) {
 /**
  * Start off the profile groups.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return mixed
  */
@@ -98,7 +98,7 @@ function bp_profile_groups() {
 /**
  * Set up the profile groups.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return mixed
  */
@@ -110,7 +110,7 @@ function bp_the_profile_group() {
 /**
  * Whether or not the group has fields to display.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return mixed
  */
@@ -122,7 +122,7 @@ function bp_profile_group_has_fields() {
 /**
  * Output the class attribute for a field.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param mixed $class Extra classes to append to class attribute.
  *                     Pass mutiple class names as an array or
@@ -135,7 +135,7 @@ function bp_field_css_class( $class = false ) {
 	/**
 	 * Return the class attribute for a field.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param string|bool $class Extra classes to append to class attribute.
 	 * @return string
@@ -177,7 +177,7 @@ function bp_field_css_class( $class = false ) {
 		/**
 		 * Filters the field classes to be applied to a field.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param array $css_classes Array of classes to be applied to field. Passed by reference.
 		 */
@@ -186,7 +186,7 @@ function bp_field_css_class( $class = false ) {
 		/**
 		 * Filters the class HTML attribute to be used on a field.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $value class HTML attribute with imploded classes.
 		 */
@@ -196,7 +196,7 @@ function bp_field_css_class( $class = false ) {
 /**
  * Whether or not the XProfile field has data to display.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @global object $profile_template
  *
@@ -208,7 +208,7 @@ function bp_field_has_data() {
 	/**
 	 * Filters whether or not the XProfile field has data to display.
 	 *
-	 * @since 2.8.0
+	 * @since BuddyPress 2.8.0
 	 *
 	 * @param bool   $value            Whether or not there is data to display.
 	 * @param object $profile_template Profile template object.
@@ -221,7 +221,7 @@ function bp_field_has_data() {
 /**
  * Whether or not the XProfile field has public data to display.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @global object $profile_template
  *
@@ -233,7 +233,7 @@ function bp_field_has_public_data() {
 	/**
 	 * Filters whether or not the XProfile field has public data to display.
 	 *
-	 * @since 2.8.0
+	 * @since BuddyPress 2.8.0
 	 *
 	 * @param bool   $value            Whether or not there is public data to display.
 	 * @param object $profile_template Profile template object.
@@ -246,7 +246,7 @@ function bp_field_has_public_data() {
 /**
  * Output the XProfile group ID.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_the_profile_group_id() {
 	echo bp_get_the_profile_group_id();
@@ -255,7 +255,7 @@ function bp_the_profile_group_id() {
 	/**
 	 * Return the XProfile group ID.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return int
 	 */
@@ -265,7 +265,7 @@ function bp_the_profile_group_id() {
 		/**
 		 * Filters the XProfile group ID.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param int $id ID for the profile group.
 		 */
@@ -275,7 +275,7 @@ function bp_the_profile_group_id() {
 /**
  * Output the XProfile group name.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_the_profile_group_name() {
 	echo bp_get_the_profile_group_name();
@@ -284,7 +284,7 @@ function bp_the_profile_group_name() {
 	/**
 	 * Return the XProfile group name.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return string
 	 */
@@ -294,7 +294,7 @@ function bp_the_profile_group_name() {
 		/**
 		 * Filters the XProfile group name.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $name Name for the profile group.
 		 */
@@ -304,7 +304,7 @@ function bp_the_profile_group_name() {
 /**
  * Output the XProfile group slug.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_the_profile_group_slug() {
 	echo bp_get_the_profile_group_slug();
@@ -313,7 +313,7 @@ function bp_the_profile_group_slug() {
 	/**
 	 * Return the XProfile group slug.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return string
 	 */
@@ -323,7 +323,7 @@ function bp_the_profile_group_slug() {
 		/**
 		 * Filters the XProfile group slug.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $value Slug for the profile group.
 		 */
@@ -333,7 +333,7 @@ function bp_the_profile_group_slug() {
 /**
  * Output the XProfile group description.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_the_profile_group_description() {
 	echo bp_get_the_profile_group_description();
@@ -342,7 +342,7 @@ function bp_the_profile_group_description() {
 	/**
 	 * Return the XProfile group description.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return string
 	 */
@@ -352,7 +352,7 @@ function bp_the_profile_group_description() {
 		/**
 		 * Filters the XProfile group description.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $description Description for the profile group.
 		 */
@@ -362,7 +362,7 @@ function bp_the_profile_group_description() {
 /**
  * Output the XProfile group edit form action.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_the_profile_group_edit_form_action() {
 	echo bp_get_the_profile_group_edit_form_action();
@@ -371,7 +371,7 @@ function bp_the_profile_group_edit_form_action() {
 	/**
 	 * Return the XProfile group edit form action.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return string
 	 */
@@ -384,7 +384,7 @@ function bp_the_profile_group_edit_form_action() {
 		/**
 		 * Filters the action for the XProfile group edit form.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $value URL for the action attribute on the
 		 *                      profile group edit form.
@@ -395,7 +395,7 @@ function bp_the_profile_group_edit_form_action() {
 /**
  * Output the XProfile group field IDs.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_the_profile_group_field_ids() {
 	echo bp_get_the_profile_group_field_ids();
@@ -404,7 +404,7 @@ function bp_the_profile_group_field_ids() {
 	/**
 	 * Return the XProfile group field IDs.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return string
 	 */
@@ -425,7 +425,7 @@ function bp_the_profile_group_field_ids() {
 /**
  * Output a comma-separated list of field IDs that are to be submitted on profile edit.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  */
 function bp_the_profile_field_ids() {
 	echo bp_get_the_profile_field_ids();
@@ -433,7 +433,7 @@ function bp_the_profile_field_ids() {
 	/**
 	 * Generate a comma-separated list of field IDs that are to be submitted on profile edit.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @return string
 	 */
@@ -452,7 +452,7 @@ function bp_the_profile_field_ids() {
 		/**
 		 * Filters the comma-separated list of field IDs.
 		 *
-		 * @since 2.1.0
+		 * @since BuddyPress 2.1.0
 		 *
 		 * @param string $field_ids Comma-separated field IDs.
 		 */
@@ -462,7 +462,7 @@ function bp_the_profile_field_ids() {
 /**
  * Return the XProfile fields.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return mixed
  */
@@ -474,7 +474,7 @@ function bp_profile_fields() {
 /**
  * Sets up the XProfile field.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return mixed
  */
@@ -486,7 +486,7 @@ function bp_the_profile_field() {
 /**
  * Output the XProfile field ID.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_the_profile_field_id() {
 	echo bp_get_the_profile_field_id();
@@ -495,7 +495,7 @@ function bp_the_profile_field_id() {
 	/**
 	 * Return the XProfile field ID.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return int
 	 */
@@ -505,7 +505,7 @@ function bp_the_profile_field_id() {
 		/**
 		 * Filters the XProfile field ID.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param int $id ID for the profile field.
 		 */
@@ -515,7 +515,7 @@ function bp_the_profile_field_id() {
 /**
  * Outputs the XProfile field name.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_the_profile_field_name() {
 	echo bp_get_the_profile_field_name();
@@ -524,7 +524,7 @@ function bp_the_profile_field_name() {
 	/**
 	 * Returns the XProfile field name.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return string
 	 */
@@ -534,7 +534,7 @@ function bp_the_profile_field_name() {
 		/**
 		 * Filters the XProfile field name.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $name Name for the profile field.
 		 */
@@ -544,7 +544,7 @@ function bp_the_profile_field_name() {
 /**
  * Outputs the XProfile field value.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_the_profile_field_value() {
 	echo bp_get_the_profile_field_value();
@@ -553,7 +553,7 @@ function bp_the_profile_field_value() {
 	/**
 	 * Returns the XProfile field value.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return string
 	 */
@@ -565,7 +565,7 @@ function bp_the_profile_field_value() {
 		/**
 		 * Filters the XProfile field value.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $value Value for the profile field.
 		 * @param string $type  Type for the profile field.
@@ -577,7 +577,7 @@ function bp_the_profile_field_value() {
 /**
  * Outputs the XProfile field edit value.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_the_profile_field_edit_value() {
 	echo bp_get_the_profile_field_edit_value();
@@ -586,7 +586,7 @@ function bp_the_profile_field_edit_value() {
 	/**
 	 * Returns the XProfile field edit value.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return string
 	 */
@@ -613,7 +613,7 @@ function bp_the_profile_field_edit_value() {
 		/**
 		 * Filters the XProfile field edit value.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $field_value Current field edit value.
 		 * @param string $type        Type for the profile field.
@@ -625,7 +625,7 @@ function bp_the_profile_field_edit_value() {
 /**
  * Outputs the XProfile field type.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_the_profile_field_type() {
 	echo bp_get_the_profile_field_type();
@@ -634,7 +634,7 @@ function bp_the_profile_field_type() {
 	/**
 	 * Returns the XProfile field type.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return string
 	 */
@@ -644,7 +644,7 @@ function bp_the_profile_field_type() {
 		/**
 		 * Filters the XProfile field type.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $type Type for the profile field.
 		 */
@@ -654,7 +654,7 @@ function bp_the_profile_field_type() {
 /**
  * Outputs the XProfile field description.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_the_profile_field_description() {
 	echo bp_get_the_profile_field_description();
@@ -663,7 +663,7 @@ function bp_the_profile_field_description() {
 	/**
 	 * Returns the XProfile field description.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return string
 	 */
@@ -673,7 +673,7 @@ function bp_the_profile_field_description() {
 		/**
 		 * Filters the XProfile field description.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $description Description for the profile field.
 		 */
@@ -683,7 +683,7 @@ function bp_the_profile_field_description() {
 /**
  * Outputs the XProfile field input name.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_the_profile_field_input_name() {
 	echo bp_get_the_profile_field_input_name();
@@ -692,7 +692,7 @@ function bp_the_profile_field_input_name() {
 	/**
 	 * Retursn the XProfile field input name.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return string
 	 */
@@ -702,7 +702,7 @@ function bp_the_profile_field_input_name() {
 		/**
 		 * Filters the profile field input name.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $value Value used for the name attribute on an input.
 		 */
@@ -718,7 +718,7 @@ function bp_the_profile_field_input_name() {
  * following fashion:
  *   do_action( bp_get_the_profile_field_errors_action() );
  *
- * @since 1.8.0
+ * @since BuddyPress 1.8.0
  *
  * @return string The _errors action name corresponding to this profile field.
  */
@@ -731,7 +731,7 @@ function bp_get_the_profile_field_errors_action() {
  * Displays field options HTML for field types of 'selectbox', 'multiselectbox',
  * 'radio', 'checkbox', and 'datebox'.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param array $args Specify type for datebox. Allowed 'day', 'month', 'year'.
  */
@@ -741,7 +741,7 @@ function bp_the_profile_field_options( $args = array() ) {
 	/**
 	 * Retrieves field options HTML for field types of 'selectbox', 'multiselectbox', 'radio', 'checkbox', and 'datebox'.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 *
 	 * @param array $args {
@@ -789,7 +789,7 @@ function bp_the_profile_field_options( $args = array() ) {
 /**
  * Render whether or not a profile field is required.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_the_profile_field_is_required() {
 	echo bp_get_the_profile_field_is_required();
@@ -798,7 +798,7 @@ function bp_the_profile_field_is_required() {
 	/**
 	 * Return whether or not a profile field is required.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return bool
 	 */
@@ -814,8 +814,8 @@ function bp_the_profile_field_is_required() {
 		/**
 		 * Filters whether or not a profile field is required.
 		 *
-		 * @since 1.1.0
-		 * @since 2.8.0 Added field ID.
+		 * @since BuddyPress 1.1.0
+		 * @since BuddyPress 2.8.0 Added field ID.
 		 *
 		 * @param bool   $retval Whether or not the field is required.
 		 * @param string $value  Field ID that may be required.
@@ -826,7 +826,7 @@ function bp_the_profile_field_is_required() {
 /**
  * Output the visibility level of this field.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_the_profile_field_visibility_level() {
 	echo bp_get_the_profile_field_visibility_level();
@@ -835,7 +835,7 @@ function bp_the_profile_field_visibility_level() {
 	/**
 	 * Return the visibility level of this field.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @return string
 	 */
@@ -854,7 +854,7 @@ function bp_the_profile_field_visibility_level() {
 		/**
 		 * Filters the profile field visibility level.
 		 *
-		 * @since 1.6.0
+		 * @since BuddyPress 1.6.0
 		 *
 		 * @param string $retval Field visibility level.
 		 */
@@ -864,7 +864,7 @@ function bp_the_profile_field_visibility_level() {
 /**
  * Echo the visibility level label of this field.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_the_profile_field_visibility_level_label() {
 	echo bp_get_the_profile_field_visibility_level_label();
@@ -873,7 +873,7 @@ function bp_the_profile_field_visibility_level_label() {
 	/**
 	 * Return the visibility level label of this field.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @return string
 	 */
@@ -894,8 +894,8 @@ function bp_the_profile_field_visibility_level_label() {
 		/**
 		 * Filters the profile field visibility level label.
 		 *
-		 * @since 1.6.0
-		 * @since 2.6.0 Added the `$level` parameter.
+		 * @since BuddyPress 1.6.0
+		 * @since BuddyPress 2.6.0 Added the `$level` parameter.
 		 *
 		 * @param string $retval Field visibility level label.
 		 * @param string $level  Field visibility level.
@@ -907,7 +907,7 @@ function bp_the_profile_field_visibility_level_label() {
  * Return unserialized profile field data, and combine any array items into a
  * comma-separated string.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param string $value Content to maybe unserialize.
  * @return string
@@ -925,7 +925,7 @@ function bp_unserialize_profile_field( $value ) {
 /**
  * Output XProfile field data.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @param string|array $args Array of arguments for field data. See {@link bp_get_profile_field_data}
  */
@@ -936,7 +936,7 @@ function bp_profile_field_data( $args = '' ) {
 	/**
 	 * Return XProfile field data.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param string|array $args {
 	 *    Array of arguments for field data.
@@ -956,8 +956,8 @@ function bp_profile_field_data( $args = '' ) {
 		/**
 		 * Filters the profile field data.
 		 *
-		 * @since 1.2.0
-		 * @since 2.6.0 Added the `$r` parameter.
+		 * @since BuddyPress 1.2.0
+		 * @since BuddyPress 2.6.0 Added the `$r` parameter.
 		 *
 		 * @param mixed $value Profile data for a specific field for the user.
 		 * @param array $r     Array of parsed arguments.
@@ -968,7 +968,7 @@ function bp_profile_field_data( $args = '' ) {
 /**
  * Get all profile field groups.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  *
  * @return array $groups
  */
@@ -983,7 +983,7 @@ function bp_profile_get_field_groups() {
 	/**
 	 * Filters all profile field groups.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param array $groups Array of available profile field groups.
 	 */
@@ -993,7 +993,7 @@ function bp_profile_get_field_groups() {
 /**
  * Check if there is more than one group of fields for the profile being edited.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  *
  * @return bool True if there is more than one profile field group.
  */
@@ -1003,7 +1003,7 @@ function bp_profile_has_multiple_groups() {
 	/**
 	 * Filters if there is more than one group of fields for the profile being edited.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param bool $has_multiple_groups Whether or not there are multiple groups.
 	 */
@@ -1013,7 +1013,7 @@ function bp_profile_has_multiple_groups() {
 /**
  * Output the tabs to switch between profile field groups.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_profile_group_tabs() {
 	echo bp_get_profile_group_tabs();
@@ -1022,7 +1022,7 @@ function bp_profile_group_tabs() {
 	 * Fires at the end of the tab output for switching between profile field
 	 * groups. This action is in a strange place for legacy reasons.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	do_action( 'xprofile_profile_group_tabs' );
 }
@@ -1030,7 +1030,7 @@ function bp_profile_group_tabs() {
 /**
  * Return the XProfile group tabs.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  *
  * @return string
  */
@@ -1070,7 +1070,7 @@ function bp_get_profile_group_tabs() {
 	/**
 	 * Filters the tabs to display for profile field groups.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param array  $tabs       Array of tabs to display.
 	 * @param array  $groups     Array of profile groups.
@@ -1084,7 +1084,7 @@ function bp_get_profile_group_tabs() {
 /**
  * Output the XProfile group name.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param bool $deprecated Deprecated boolean parameter.
  *
@@ -1101,7 +1101,7 @@ function bp_profile_group_name( $deprecated = true ) {
 	/**
 	 * Return the XProfile group name.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return string
 	 */
@@ -1119,8 +1119,8 @@ function bp_profile_group_name( $deprecated = true ) {
 		/**
 		 * Filters the profile group name.
 		 *
-		 * @since 1.0.0
-		 * @since 2.6.0 Added the `$group_id` parameter
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.6.0 Added the `$group_id` parameter
 		 *
 		 * @param string $name     Name of the profile group.
 		 * @param int    $group_id ID of the profile group.
@@ -1131,7 +1131,7 @@ function bp_profile_group_name( $deprecated = true ) {
 /**
  * Render a formatted string displaying when a profile was last updated.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_profile_last_updated() {
 
@@ -1147,7 +1147,7 @@ function bp_profile_last_updated() {
 	/**
 	 * Return a formatted string displaying when a profile was last updated.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return bool|string
 	 */
@@ -1160,7 +1160,7 @@ function bp_profile_last_updated() {
 			/**
 			 * Filters the formatted string used to display when a profile was last updated.
 			 *
-			 * @since 1.0.0
+			 * @since BuddyPress 1.0.0
 			 *
 			 * @param string $value Formatted last updated indicator string.
 			 */
@@ -1173,7 +1173,7 @@ function bp_profile_last_updated() {
 /**
  * Display the current profile group ID.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_current_profile_group_id() {
 	echo bp_get_current_profile_group_id();
@@ -1182,7 +1182,7 @@ function bp_current_profile_group_id() {
 	/**
 	 * Return the current profile group ID.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return int
 	 */
@@ -1197,7 +1197,7 @@ function bp_current_profile_group_id() {
 		 *
 		 * Possible values are admin/profile/edit/[group-id].
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param int $profile_group_id Current profile group ID.
 		 */
@@ -1207,7 +1207,7 @@ function bp_current_profile_group_id() {
 /**
  * Render an avatar delete link.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_avatar_delete_link() {
 	echo bp_get_avatar_delete_link();
@@ -1216,7 +1216,7 @@ function bp_avatar_delete_link() {
 	/**
 	 * Return an avatar delete link.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return string
 	 */
@@ -1225,7 +1225,7 @@ function bp_avatar_delete_link() {
 		/**
 		 * Filters the link used for deleting an avatar.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $value Nonced URL used for deleting an avatar.
 		 */
@@ -1235,7 +1235,7 @@ function bp_avatar_delete_link() {
 /**
  * Render an edit profile button.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_edit_profile_button() {
 	bp_button( array(
@@ -1254,7 +1254,7 @@ function bp_edit_profile_button() {
 /**
  * Echo the field visibility radio buttons.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param array|string $args Args for the radio buttons. See {@link bp_profile_get_visibility_radio_buttons}
  */
@@ -1264,7 +1264,7 @@ function bp_profile_visibility_radio_buttons( $args = '' ) {
 	/**
 	 * Return the field visibility radio buttons.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param array|string $args {
 	 *    Args for the radio buttons.
@@ -1329,7 +1329,7 @@ function bp_profile_visibility_radio_buttons( $args = '' ) {
 		/**
 		 * Filters the radio buttons for setting visibility.
 		 *
-		 * @since 1.6.0
+		 * @since BuddyPress 1.6.0
 		 *
 		 * @param string $retval HTML output for the visibility radio buttons.
 		 * @param array  $r      Parsed arguments to be used with display.
@@ -1341,7 +1341,7 @@ function bp_profile_visibility_radio_buttons( $args = '' ) {
 /**
  * Output the XProfile field visibility select list for settings.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param array|string $args Args for the select list. See {@link bp_profile_get_settings_visibility_select}
  */
@@ -1351,7 +1351,7 @@ function bp_profile_settings_visibility_select( $args = '' ) {
 	/**
 	 * Return the XProfile field visibility select list for settings.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array|string $args {
 	 *    Args for the select list.
@@ -1431,7 +1431,7 @@ function bp_profile_settings_visibility_select( $args = '' ) {
 		/**
 		 * Filters the dropdown list for setting visibility.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param string $retval HTML output for the visibility dropdown list.
 		 * @param array  $r      Parsed arguments to be used with display.
@@ -1443,7 +1443,7 @@ function bp_profile_settings_visibility_select( $args = '' ) {
 /**
  * Output the 'required' markup in extended profile field labels.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  */
 function bp_the_profile_field_required_label() {
 	echo bp_get_the_profile_field_required_label();
@@ -1452,7 +1452,7 @@ function bp_the_profile_field_required_label() {
 	/**
 	 * Return the 'required' markup in extended profile field labels.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @return string HTML for the required label.
 	 */

@@ -6,7 +6,7 @@
  *  1.618 = golden mean.
  *  1.35  = default body_text_size multipler. Gives default heading of 20px.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  * @version 3.1.0
  *
  * @package BuddyBoss
@@ -161,7 +161,7 @@ $settings = bp_email_get_appearance_settings();
 						/**
 						 * Fires before the display of the email template header.
 						 *
-						 * @since 2.5.0
+						 * @since BuddyPress 2.5.0
 						 */
 						do_action( 'bp_before_email_header' );
 
@@ -170,7 +170,7 @@ $settings = bp_email_get_appearance_settings();
 						/**
 						 * Fires after the display of the email template header.
 						 *
-						 * @since 2.5.0
+						 * @since BuddyPress 2.5.0
 						 */
 						do_action( 'bp_after_email_header' );
 						?>
@@ -210,7 +210,7 @@ $settings = bp_email_get_appearance_settings();
 						/**
 						 * Fires before the display of the email template footer.
 						 *
-						 * @since 2.5.0
+						 * @since BuddyPress 2.5.0
 						 */
 						do_action( 'bp_before_email_footer' );
 						?>
@@ -223,7 +223,7 @@ $settings = bp_email_get_appearance_settings();
 						/**
 						 * Fires after the display of the email template footer.
 						 *
-						 * @since 2.5.0
+						 * @since BuddyPress 2.5.0
 						 */
 						do_action( 'bp_after_email_footer' );
 						?>

@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * BuddyPress Login Widget.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 class BP_Core_Login_Widget extends WP_Widget {
 
 	/**
 	 * Constructor method.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 */
 	public function __construct() {
 		parent::__construct(
@@ -37,7 +37,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 	/**
 	 * Display the login widget.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @see WP_Widget::widget() for description of parameters.
 	 *
@@ -50,8 +50,8 @@ class BP_Core_Login_Widget extends WP_Widget {
 		/**
 		 * Filters the title of the Login widget.
 		 *
-		 * @since 1.9.0
-		 * @since 2.3.0 Added 'instance' and 'id_base' to arguments passed to filter.
+		 * @since BuddyPress 1.9.0
+		 * @since BuddyPress 2.3.0 Added 'instance' and 'id_base' to arguments passed to filter.
 		 *
 		 * @param string $title    The widget title.
 		 * @param array  $instance The settings for the particular instance of the widget.
@@ -69,7 +69,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 			/**
 			 * Fires before the display of widget content if logged in.
 			 *
-			 * @since 1.9.0
+			 * @since BuddyPress 1.9.0
 			 */
 			do_action( 'bp_before_login_widget_loggedin' ); ?>
 
@@ -89,7 +89,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 			/**
 			 * Fires after the display of widget content if logged in.
 			 *
-			 * @since 1.9.0
+			 * @since BuddyPress 1.9.0
 			 */
 			do_action( 'bp_after_login_widget_loggedin' ); ?>
 
@@ -100,7 +100,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 			/**
 			 * Fires before the display of widget content if logged out.
 			 *
-			 * @since 1.9.0
+			 * @since BuddyPress 1.9.0
 			 */
 			do_action( 'bp_before_login_widget_loggedout' ); ?>
 
@@ -126,7 +126,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 				/**
 				 * Fires inside the display of the login widget form.
 				 *
-				 * @since 2.4.0
+				 * @since BuddyPress 2.4.0
 				 */
 				do_action( 'bp_login_widget_form' ); ?>
 
@@ -137,7 +137,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 			/**
 			 * Fires after the display of widget content if logged out.
 			 *
-			 * @since 1.9.0
+			 * @since BuddyPress 1.9.0
 			 */
 			do_action( 'bp_after_login_widget_loggedout' ); ?>
 
@@ -149,7 +149,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 	/**
 	 * Update the login widget options.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @param array $new_instance The new instance options.
 	 * @param array $old_instance The old instance options.
@@ -165,7 +165,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 	/**
 	 * Output the login widget options form.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @param array $instance Settings for this widget.
 	 * @return void

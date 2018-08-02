@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage TemplateFunctions
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  * The function will also analyze the current action for the current component
  * to determine whether or not to highlight a particular sub nav item.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  *       viewed user.
  *
@@ -96,7 +96,7 @@ function bp_get_options_nav( $parent_slug = '' ) {
 		 *
 		 * This is a dynamic filter that is dependent on the provided css_id value.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $value         HTML list item for the submenu item.
 		 * @param array  $subnav_item   Submenu array item being displayed.
@@ -129,7 +129,7 @@ function bp_get_options_title() {
  * Used for the <title> element and the page header on the component directory
  * page.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param string $component Component to get directory title for.
  * @return string
@@ -149,7 +149,7 @@ function bp_get_directory_title( $component = '' ) {
 	/**
 	 * Filters the directory title for a component.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param string $title     Text to be used in <title> tag.
 	 * @param string $component Current componet being displayed.
@@ -225,7 +225,7 @@ function bp_post_author_avatar() {
 /**
  * Output the current avatar upload step.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_avatar_admin_step() {
 	echo bp_get_avatar_admin_step();
@@ -233,7 +233,7 @@ function bp_avatar_admin_step() {
 	/**
 	 * Return the current avatar upload step.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return string The current avatar upload step. Returns 'upload-image'
 	 *         if none is found.
@@ -247,7 +247,7 @@ function bp_avatar_admin_step() {
 		/**
 		 * Filters the current avatar upload step.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $step The current avatar upload step.
 		 */
@@ -257,7 +257,7 @@ function bp_avatar_admin_step() {
 /**
  * Output the URL of the avatar to crop.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_avatar_to_crop() {
 	echo bp_get_avatar_to_crop();
@@ -265,7 +265,7 @@ function bp_avatar_to_crop() {
 	/**
 	 * Return the URL of the avatar to crop.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return string URL of the avatar awaiting cropping.
 	 */
@@ -278,7 +278,7 @@ function bp_avatar_to_crop() {
 		/**
 		 * Filters the URL of the avatar to crop.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $url URL for the avatar.
 		 */
@@ -288,7 +288,7 @@ function bp_avatar_to_crop() {
 /**
  * Output the relative file path to the avatar to crop.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_avatar_to_crop_src() {
 	echo bp_get_avatar_to_crop_src();
@@ -296,7 +296,7 @@ function bp_avatar_to_crop_src() {
 	/**
 	 * Return the relative file path to the avatar to crop.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return string Relative file path to the avatar.
 	 */
@@ -309,7 +309,7 @@ function bp_avatar_to_crop_src() {
 		/**
 		 * Filters the relative file path to the avatar to crop.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $src Relative file path for the avatar.
 		 */
@@ -332,7 +332,7 @@ function bp_avatar_cropper() {
 /**
  * Output the name of the BP site. Used in RSS headers.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_site_name() {
 	echo bp_get_site_name();
@@ -340,7 +340,7 @@ function bp_site_name() {
 	/**
 	 * Returns the name of the BP site. Used in RSS headers.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @return string
 	 */
@@ -349,7 +349,7 @@ function bp_site_name() {
 		/**
 		 * Filters the name of the BP site. Used in RSS headers.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $value Current BP site name.
 		 */
@@ -370,7 +370,7 @@ function bp_site_name() {
  * hardly used and adds an additional layer of complexity to calculating dates
  * and times together with timezone offsets and i18n.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param int|string $time         The UNIX timestamp to be formatted.
  * @param bool       $exclude_time Optional. True to return only the month + day, false
@@ -429,7 +429,7 @@ function bp_format_time( $time = '', $exclude_time = false, $gmt = true ) {
 	/**
 	 * Filters the date based on a UNIX timestamp.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $formatted_date Formatted date from the timestamp.
 	 */
@@ -445,7 +445,7 @@ function bp_format_time( $time = '', $exclude_time = false, $gmt = true ) {
  * of the phrase, and bp_word_or_name() will detect which is appropriate, and
  * do the necessary argument swapping for dynamic phrases.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param string $youtext    The "you" version of the phrase (eg "Your Connections").
  * @param string $nametext   The other-user version of the phrase. Should be in
@@ -468,7 +468,7 @@ function bp_word_or_name( $youtext, $nametext, $capitalize = true, $echo = true 
 			/**
 			 * Filters the text used based on context of own profile or someone else's profile.
 			 *
-			 * @since 1.0.0
+			 * @since BuddyPress 1.0.0
 			 *
 			 * @param string $youtext Context-determined string to display.
 			 */
@@ -511,7 +511,7 @@ function bp_styles() {
 /**
  * Return the "action" attribute for search forms.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return string URL action attribute for search forms, eg example.com/search/.
  */
@@ -520,7 +520,7 @@ function bp_search_form_action() {
 	/**
 	 * Filters the "action" attribute for search forms.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $value Search form action url.
 	 */
@@ -530,7 +530,7 @@ function bp_search_form_action() {
 /**
  * Generate the basic search form as used in BP-Default's header.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return string HTML <select> element.
  */
@@ -559,7 +559,7 @@ function bp_search_form_type_select() {
 	/**
 	 * Filters all of the component options available for search scope.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param array $options Array of options to add to select field.
 	 */
@@ -573,7 +573,7 @@ function bp_search_form_type_select() {
 	/**
 	 * Filters the complete <select> input used for search scope.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $selection_box <select> input for selecting search scope.
 	 */
@@ -583,7 +583,7 @@ function bp_search_form_type_select() {
 /**
  * Output the 'name' attribute for search form input element.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @param string $component See bp_get_search_input_name().
  */
@@ -594,7 +594,7 @@ function bp_search_input_name( $component = '' ) {
 /**
  * Get the 'name' attribute for the search form input element.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @param string $component Component name. Defaults to current component.
  * @return string Text for the 'name' attribute.
@@ -617,7 +617,7 @@ function bp_get_search_input_name( $component = '' ) {
 /**
  * Output the placeholder text for the search box for a given component.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @param string $component See bp_get_search_placeholder().
  */
@@ -628,7 +628,7 @@ function bp_search_placeholder( $component = '' ) {
 /**
  * Get the placeholder text for the search box for a given component.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @param string $component Component name. Defaults to current component.
  * @return string Placeholder text for the search field.
@@ -648,7 +648,7 @@ function bp_get_search_placeholder( $component = '' ) {
 /**
  * Output the default text for the search box for a given component.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @see bp_get_search_default_text()
  *
@@ -660,7 +660,7 @@ function bp_search_default_text( $component = '' ) {
 	/**
 	 * Return the default text for the search box for a given component.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param string $component Component name. Default: current component.
 	 * @return string Placeholder text for search field.
@@ -694,7 +694,7 @@ function bp_search_default_text( $component = '' ) {
 		/**
 		 * Filters the default text for the search box for a given component.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param string $default_text Default text for search box.
 		 * @param string $component    Current component displayed.
@@ -727,7 +727,7 @@ function bp_custom_profile_sidebar_boxes() {
 /**
  * Output the attributes for a form field.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param string $name       The field name to output attributes for.
  * @param array  $attributes Array of existing attributes to add.
@@ -742,7 +742,7 @@ function bp_form_field_attributes( $name = '', $attributes = array() ) {
 	 * can use the 'bp_get_form_field_extra_attributes' filter for further
 	 * manipulation.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @param string $name       The field name to get attributes for.
 	 * @param array  $attributes Array of existing attributes to add.
@@ -784,7 +784,7 @@ function bp_form_field_attributes( $name = '', $attributes = array() ) {
 		/**
 		 * Filter the attributes for a field before rendering output.
 		 *
-		 * @since 2.2.0
+		 * @since BuddyPress 2.2.0
 		 *
 		 * @param array  $attributes The field attributes.
 		 * @param string $name       The field name.
@@ -808,7 +808,7 @@ function bp_form_field_attributes( $name = '', $attributes = array() ) {
 /**
  * Create and output a button.
  *
- * @since 1.2.6
+ * @since BuddyPress 1.2.6
  *
  * @see bp_get_button()
  *
@@ -820,7 +820,7 @@ function bp_button( $args = '' ) {
 	/**
 	 * Create and return a button.
 	 *
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 *
 	 * @see BP_Button for a description of arguments and return value.
 	 *
@@ -833,7 +833,7 @@ function bp_button( $args = '' ) {
 		/**
 		 * Filters the requested button output.
 		 *
-		 * @since 1.2.6
+		 * @since BuddyPress 1.2.6
 		 *
 		 * @param string    $contents  Button context to be used.
 		 * @param array     $args      Array of args for the button.
@@ -851,8 +851,8 @@ function bp_button( $args = '' ) {
  * This function is borrowed from CakePHP v2.0, under the MIT license. See
  * http://book.cakephp.org/view/1469/Text#truncate-1625
  *
- * @since 1.0.0
- * @since 2.6.0 Added 'strip_tags' and 'remove_links' as $options args.
+ * @since BuddyPress 1.0.0
+ * @since BuddyPress 2.6.0 Added 'strip_tags' and 'remove_links' as $options args.
  *
  * @param string $text   String to truncate.
  * @param int    $length Optional. Length of returned string, including ellipsis.
@@ -894,7 +894,7 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 	/**
 	 * Filters the excerpt length to trim text to.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param int $length Length of returned string, including ellipsis.
 	 */
@@ -903,7 +903,7 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 	/**
 	 * Filters the excerpt appended text value.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param string $value Text to append to the end of the excerpt.
 	 */
@@ -985,7 +985,7 @@ function bp_create_excerpt( $text, $length = 225, $options = array() ) {
 			/**
 			 * Filters the final generated excerpt.
 			 *
-			 * @since 1.1.0
+			 * @since BuddyPress 1.1.0
 			 *
 			 * @param string $truncate      Generated excerpt.
 			 * @param string $original_text Original text provided.
@@ -1082,7 +1082,7 @@ add_filter( 'bp_create_excerpt', 'force_balance_tags' );
 /**
  * Output the total member count for the site.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 function bp_total_member_count() {
 	echo bp_get_total_member_count();
@@ -1099,7 +1099,7 @@ function bp_total_member_count() {
 	 * which did not take into account last_activity, and thus often
 	 * resulted in higher counts than shown by member directory pagination.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @return int Member count.
 	 */
@@ -1108,7 +1108,7 @@ function bp_total_member_count() {
 		/**
 		 * Filters the total member count in your BP instance.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @param int $value Member count.
 		 */
@@ -1130,7 +1130,7 @@ function bp_blog_signup_allowed() {
 	 * Returns true if is_multisite() and blog creation is enabled at
 	 * Network Admin > Settings.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @return bool True if blog signup is allowed, otherwise false.
 	 */
@@ -1151,7 +1151,7 @@ function bp_blog_signup_allowed() {
 /**
  * Check whether an activation has just been completed.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the activation_complete global flag has been set,
  *              otherwise false.
@@ -1169,7 +1169,7 @@ function bp_account_was_activated() {
  * activation. This filter exists so that customizations that omit activation
  * can remove certain notification text from the registration screen.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @return bool True by default.
  */
@@ -1178,7 +1178,7 @@ function bp_registration_needs_activation() {
 	/**
 	 * Filters whether registrations require activation on this installation.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param bool $value Whether registrations require activation. Default true.
 	 */
@@ -1191,8 +1191,8 @@ function bp_registration_needs_activation() {
  * The blogname option is escaped with esc_html on the way into the database in
  * sanitize_option, we want to reverse this for the plain text arena of emails.
  *
- * @since 1.7.0
- * @since 2.5.0 No longer used by BuddyPress, but not deprecated in case any existing plugins use it.
+ * @since BuddyPress 1.7.0
+ * @since BuddyPress 2.5.0 No longer used by BuddyPress, but not deprecated in case any existing plugins use it.
  *
  * @see https://buddypress.trac.wordpress.org/ticket/4401
  *
@@ -1223,7 +1223,7 @@ function bp_get_email_subject( $args = array() ) {
 	/**
 	 * Filters a client friendly version of the root blog name.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $subject Client friendy version of the root blog name.
 	 * @param array  $r       Array of arguments for the email subject.
@@ -1241,7 +1241,7 @@ function bp_get_email_subject( $args = array() ) {
  * errors if someone copies the templates from the default theme into another
  * WordPress theme without coping the functions from functions.php.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @param string|bool $object Current template component.
  * @return string The AJAX querystring.
@@ -1258,7 +1258,7 @@ function bp_ajax_querystring( $object = false ) {
 	 *
 	 * Allows templates to pass parameters into the template loops via AJAX.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param string $ajax_querystring Current query string.
 	 * @param string $object           Current template component.
@@ -1271,7 +1271,7 @@ function bp_ajax_querystring( $object = false ) {
 /**
  * Return the name of the current component.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return string Component name.
  */
@@ -1284,7 +1284,7 @@ function bp_current_component() {
 	/**
 	 * Filters the name of the current component.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string|bool $current_component Current component if available or false.
 	 */
@@ -1294,7 +1294,7 @@ function bp_current_component() {
 /**
  * Return the name of the current action.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return string Action name.
  */
@@ -1307,7 +1307,7 @@ function bp_current_action() {
 	/**
 	 * Filters the name of the current action.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $current_action Current action.
 	 */
@@ -1317,7 +1317,7 @@ function bp_current_action() {
 /**
  * Return the name of the current item.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return string|bool
  */
@@ -1330,7 +1330,7 @@ function bp_current_item() {
 	/**
 	 * Filters the name of the current item.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param string|bool $current_item Current item if available or false.
 	 */
@@ -1340,7 +1340,7 @@ function bp_current_item() {
 /**
  * Return the value of $bp->action_variables.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return array|bool $action_variables The action variables array, or false
  *                                      if the array is empty.
@@ -1354,7 +1354,7 @@ function bp_action_variables() {
 	/**
 	 * Filters the value of $bp->action_variables.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param array|bool $action_variables Available action variables.
 	 */
@@ -1364,7 +1364,7 @@ function bp_action_variables() {
 /**
  * Return the value of a given action variable.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param int $position The key of the action_variables array that you want.
  * @return string|bool $action_variable The value of that position in the
@@ -1379,7 +1379,7 @@ function bp_action_variable( $position = 0 ) {
 	/**
 	 * Filters the value of a given action variable.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param string|bool $action_variable Requested action variable based on position.
 	 * @param int         $position        The key of the action variable requested.
@@ -1390,7 +1390,7 @@ function bp_action_variable( $position = 0 ) {
 /**
  * Output the "root domain", the URL of the BP root blog.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_root_domain() {
 	echo bp_get_root_domain();
@@ -1398,7 +1398,7 @@ function bp_root_domain() {
 	/**
 	 * Return the "root domain", the URL of the BP root blog.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @return string URL of the BP root blog.
 	 */
@@ -1415,7 +1415,7 @@ function bp_root_domain() {
 		/**
 		 * Filters the "root domain", the URL of the BP root blog.
 		 *
-		 * @since 1.2.4
+		 * @since BuddyPress 1.2.4
 		 *
 		 * @param string $domain URL of the BP root blog.
 		 */
@@ -1425,7 +1425,7 @@ function bp_root_domain() {
 /**
  * Output the root slug for a given component.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param string $component The component name.
  */
@@ -1457,7 +1457,7 @@ function bp_root_slug( $component = '' ) {
 	 * $bp->active_components. Then it uses 'groups' to get the root slug,
 	 * from $bp->groups->root_slug.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param string $component Optional. Defaults to the current component.
 	 * @return string $root_slug The root slug.
@@ -1494,7 +1494,7 @@ function bp_root_slug( $component = '' ) {
 		/**
 		 * Filters the root slug for given component.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param string $root_slug Root slug for given component.
 		 * @param string $component Current component.
@@ -1505,7 +1505,7 @@ function bp_root_slug( $component = '' ) {
 /**
  * Return the component name based on a root slug.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param string $root_slug Needle to our active component haystack.
  * @return mixed False if none found, component name if found.
@@ -1536,7 +1536,7 @@ function bp_get_name_from_root_slug( $root_slug = '' ) {
 /**
  * Returns whether or not a user has access.
  *
- * @since 1.2.4
+ * @since BuddyPress 1.2.4
  *
  * @return bool
  */
@@ -1546,7 +1546,7 @@ function bp_user_has_access() {
 	/**
 	 * Filters whether or not a user has access.
 	 *
-	 * @since 1.2.4
+	 * @since BuddyPress 1.2.4
 	 *
 	 * @param bool $has_access Whether or not user has access.
 	 */
@@ -1556,7 +1556,7 @@ function bp_user_has_access() {
 /**
  * Output the search slug.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  */
 function bp_search_slug() {
@@ -1565,7 +1565,7 @@ function bp_search_slug() {
 	/**
 	 * Return the search slug.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @return string The search slug. Default: 'search'.
 	 */
@@ -1574,7 +1574,7 @@ function bp_search_slug() {
 		/**
 		 * Filters the search slug.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @const string BP_SEARCH_SLUG The search slug. Default "search".
 		 */
@@ -1584,7 +1584,7 @@ function bp_search_slug() {
 /**
  * Get the ID of the currently displayed user.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return int $id ID of the currently displayed user.
  */
@@ -1597,7 +1597,7 @@ function bp_displayed_user_id() {
 	/**
 	 * Filters the ID of the currently displayed user.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $id ID of the currently displayed user.
 	 */
@@ -1607,7 +1607,7 @@ function bp_displayed_user_id() {
 /**
  * Get the ID of the currently logged-in user.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return int ID of the logged-in user.
  */
@@ -1620,7 +1620,7 @@ function bp_loggedin_user_id() {
 	/**
 	 * Filters the ID of the currently logged-in user.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $id ID of the currently logged-in user.
 	 */
@@ -1638,7 +1638,7 @@ function bp_loggedin_user_id() {
  * - the component's regular slug.
  * - the component's id, or 'canonical' name.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param string $component Name of the component being checked.
  * @return bool Returns true if the component matches, or else false.
@@ -1706,7 +1706,7 @@ function bp_is_current_component( $component = '' ) {
 	/**
 	 * Filters whether the current page belongs to the specified component.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param bool   $is_current_component Whether or not the current page belongs to specified component.
 	 * @param string $component            Name of the component being checked.
@@ -1726,7 +1726,7 @@ function bp_is_current_component( $component = '' ) {
  *   http://example.com/groups/my-group/members
  * the current_action is 'members'.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param string $action The action being tested against.
  * @return bool True if the current action matches $action.
@@ -1747,7 +1747,7 @@ function bp_is_current_action( $action = '' ) {
  *   http://example.com/groups/my-group/admin/group-settings
  * $action_variables[0] is 'group-settings'.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param string   $action_variable The action_variable being tested against.
  * @param int|bool $position        Optional. The array key you're testing against. If you
@@ -1775,7 +1775,7 @@ function bp_is_action_variable( $action_variable = '', $position = false ) {
 	/**
 	 * Filters whether the current page matches a given action_variable.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param bool   $is_action_variable Whether the current page matches a given action_variable.
 	 * @param string $action_variable    The action_variable being tested against.
@@ -1787,7 +1787,7 @@ function bp_is_action_variable( $action_variable = '', $position = false ) {
 /**
  * Check against the current_item.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param string $item The item being checked.
  * @return bool True if $item is the current item.
@@ -1798,7 +1798,7 @@ function bp_is_current_item( $item = '' ) {
 	/**
 	 * Filters whether or not an item is the current item.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param bool   $retval Whether or not an item is the current item.
 	 * @param string $item   The item being checked.
@@ -1809,7 +1809,7 @@ function bp_is_current_item( $item = '' ) {
 /**
  * Are we looking at a single item? (group, user, etc).
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if looking at a single item, otherwise false.
  */
@@ -1824,7 +1824,7 @@ function bp_is_single_item() {
 	/**
 	 * Filters whether or not an item is the a single item. (group, user, etc)
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param bool $retval Whether or not an item is a single item.
 	 */
@@ -1834,7 +1834,7 @@ function bp_is_single_item() {
 /**
  * Is the logged-in user an admin for the current item?
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return bool True if the current user is an admin for the current item,
  *              otherwise false.
@@ -1850,7 +1850,7 @@ function bp_is_item_admin() {
 	/**
 	 * Filters whether or not the logged-in user is an admin for the current item.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param bool $retval Whether or not the logged-in user is an admin.
 	 */
@@ -1860,7 +1860,7 @@ function bp_is_item_admin() {
 /**
  * Is the logged-in user a mod for the current item?
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return bool True if the current user is a mod for the current item,
  *              otherwise false.
@@ -1876,7 +1876,7 @@ function bp_is_item_mod() {
 	/**
 	 * Filters whether or not the logged-in user is a mod for the current item.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param bool $retval Whether or not the logged-in user is a mod.
 	 */
@@ -1886,7 +1886,7 @@ function bp_is_item_mod() {
 /**
  * Is this a component directory page?
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return bool True if the current page is a component directory, otherwise false.
  */
@@ -1901,7 +1901,7 @@ function bp_is_directory() {
 	/**
 	 * Filters whether or not user is on a component directory page.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param bool $retval Whether or not user is on a component directory page.
 	 */
@@ -1917,7 +1917,7 @@ function bp_is_directory() {
  * This function is on the chopping block. It's currently only used by a few
  * already deprecated functions.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param string $component_name Component name to check.
  *
@@ -1945,7 +1945,7 @@ function bp_is_root_component( $component_name = '' ) {
 	/**
 	 * Filters whether or not a component's URL should be in the root, not under a member page.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param bool $retval Whether or not URL should be in the root.
 	 */
@@ -1957,7 +1957,7 @@ function bp_is_root_component( $component_name = '' ) {
  *
  * Corresponds to the setting in wp-admin's Settings > Reading screen.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @global int $current_blog WordPress global for the current blog.
  *
@@ -1992,7 +1992,7 @@ function bp_is_component_front_page( $component = '' ) {
 	/**
 	 * Filters whether or not the specified BuddyPress component directory is set to be the front page.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param bool   $value     Whether or not the specified component directory is set as front page.
 	 * @param string $component Current component being checked.
@@ -2006,7 +2006,7 @@ function bp_is_component_front_page( $component = '' ) {
  * You can tell if a page is displaying BP content by whether the
  * current_component has been defined.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return bool True if it's a non-BP page, false otherwise.
  */
@@ -2024,7 +2024,7 @@ function bp_is_blog_page() {
 	/**
 	 * Filters whether or not current page is a blog page or not.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param bool $is_blog_page Whether or not current page is a blog page.
 	 */
@@ -2041,7 +2041,7 @@ function bp_is_blog_page() {
  * The one exception is single user home tabs, where $bp->current_component
  * is unset. Thus the addition of the bp_is_user() check.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @return bool True if it's a BuddyPress page, false otherwise.
  */
@@ -2051,7 +2051,7 @@ function is_buddypress() {
 	/**
 	 * Filters whether or not this is a BuddyPress component.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param bool $retval Whether or not this is a BuddyPress component.
 	 */
@@ -2063,8 +2063,8 @@ function is_buddypress() {
 /**
  * Check whether a given component (or feature of a component) is active.
  *
- * @since 1.2.0 See r2539.
- * @since 2.3.0 Added $feature as a parameter.
+ * @since BuddyPress 1.2.0 See r2539.
+ * @since BuddyPress 2.3.0 Added $feature as a parameter.
  *
  * @param string $component The component name.
  * @param string $feature   The feature name.
@@ -2099,7 +2099,7 @@ function bp_is_active( $component = '', $feature = '' ) {
 			 * This is a variable filter that is based on the component and feature
 			 * that you are checking of active status of.
 			 *
-			 * @since 2.3.0
+			 * @since BuddyPress 2.3.0
 			 *
 			 * @param bool $retval
 			 */
@@ -2110,7 +2110,7 @@ function bp_is_active( $component = '', $feature = '' ) {
 	/**
 	 * Filters whether or not a given component has been activated by the admin.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param bool   $retval    Whether or not a given component has been activated by the admin.
 	 * @param string $component Current component being checked.
@@ -2121,7 +2121,7 @@ function bp_is_active( $component = '', $feature = '' ) {
 /**
  * Check whether the current page is part of the Members component.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return bool True if the current page is part of the Members component.
  */
@@ -2132,7 +2132,7 @@ function bp_is_members_component() {
 /**
  * Check whether the current page is part of the Profile component.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is part of the Profile component.
  */
@@ -2143,7 +2143,7 @@ function bp_is_profile_component() {
 /**
  * Check whether the current page is part of the Activity component.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is part of the Activity component.
  */
@@ -2154,7 +2154,7 @@ function bp_is_activity_component() {
 /**
  * Check whether the current page is part of the Blogs component.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is part of the Blogs component.
  */
@@ -2165,7 +2165,7 @@ function bp_is_blogs_component() {
 /**
  * Check whether the current page is part of the Messages component.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is part of the Messages component.
  */
@@ -2176,7 +2176,7 @@ function bp_is_messages_component() {
 /**
  * Check whether the current page is part of the Connections component.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is part of the Connections component.
  */
@@ -2187,7 +2187,7 @@ function bp_is_friends_component() {
 /**
  * Check whether the current page is part of the Groups component.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is part of the Groups component.
  */
@@ -2198,8 +2198,8 @@ function bp_is_groups_component() {
 /**
  * Check whether the current page is part of the Forums component.
  *
- * @since 1.5.0
- * @since 3.0.0 Required for bbPress 2 integration.
+ * @since BuddyPress 1.5.0
+ * @since BuddyPress 3.0.0 Required for bbPress 2 integration.
  *
  * @return bool True if the current page is part of the Forums component.
  */
@@ -2210,7 +2210,7 @@ function bp_is_forums_component() {
 /**
  * Check whether the current page is part of the Notifications component.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @return bool True if the current page is part of the Notifications component.
  */
@@ -2221,7 +2221,7 @@ function bp_is_notifications_component() {
 /**
  * Check whether the current page is part of the Settings component.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is part of the Settings component.
  */
@@ -2238,7 +2238,7 @@ function bp_is_settings_component() {
  * it will return false. If the current component is active, and is part of
  * BuddyPress core, it will return true.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @return bool True if the current component is active and is one of BP's
  *              packaged components.
@@ -2261,7 +2261,7 @@ function bp_is_current_component_core() {
 /**
  * Is the current page the activity directory?
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @return bool True if the current page is the activity directory.
  */
@@ -2276,7 +2276,7 @@ function bp_is_activity_directory() {
 /**
  * Is the current page a single activity item permalink?
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return bool True if the current page is a single activity item permalink.
  */
@@ -2289,7 +2289,7 @@ function bp_is_single_activity() {
 /**
  * Is the current page the members directory?
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @return bool True if the current page is the members directory.
  */
@@ -2307,7 +2307,7 @@ function bp_is_members_directory() {
  * Will return true for any subpage of the logged-in user's profile, eg
  * http://example.com/members/joe/friends/.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @return bool True if the current page is part of the profile of the logged-in user.
  */
@@ -2321,7 +2321,7 @@ function bp_is_my_profile() {
 	/**
 	 * Filters whether or not current page is part of the profile for the logged-in user.
 	 *
-	 * @since 1.2.4
+	 * @since BuddyPress 1.2.4
 	 *
 	 * @param bool $my_profile Whether or not current page is part of the profile for the logged-in user.
 	 */
@@ -2333,7 +2333,7 @@ function bp_is_my_profile() {
  *
  * Will return true anytime there is a displayed user.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return bool True if the current page is a user page.
  */
@@ -2346,7 +2346,7 @@ function bp_is_user() {
  *
  * Will return true anytime there is a custom front page for the displayed user.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @return bool True if the current page is a user custom front page.
  */
@@ -2359,7 +2359,7 @@ function bp_is_user_front() {
  *
  * Eg http://example.com/members/joe/activity/ (or any subpages thereof).
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is a user's activity feed page.
  */
@@ -2372,7 +2372,7 @@ function bp_is_user_activity() {
  *
  * Eg http://example.com/members/joe/friends/
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is a user's Connections activity feed.
  */
@@ -2400,7 +2400,7 @@ function bp_is_user_friends_activity() {
  *
  * Eg http://example.com/members/joe/groups/
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return bool True if the current page is a user's Groups activity feed.
  */
@@ -2426,7 +2426,7 @@ function bp_is_user_groups_activity() {
  *
  * Eg http://example.com/members/joe/profile/ (or a subpage thereof).
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is part of a user's extended profile.
  */
@@ -2439,7 +2439,7 @@ function bp_is_user_profile() {
  *
  * Eg http://example.com/members/joe/profile/edit/ (or a subpage thereof).
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return bool True if the current page is a user's profile edit page.
  */
@@ -2452,7 +2452,7 @@ function bp_is_user_profile_edit() {
  *
  * Eg http://example.com/members/joe/profile/change-avatar/ (or a subpage thereof).
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return bool True if the current page is the user's avatar edit page.
  */
@@ -2465,7 +2465,7 @@ function bp_is_user_change_avatar() {
  *
  * Eg http://example.com/members/joe/profile/change-cover-image/ (or a subpage thereof).
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @return bool True if the current page is a user's profile edit cover image page.
  */
@@ -2478,7 +2478,7 @@ function bp_is_user_change_cover_image() {
  *
  * Eg http://example.com/members/joe/groups/ (or a subpage thereof).
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is a user's Groups page.
  */
@@ -2491,7 +2491,7 @@ function bp_is_user_groups() {
  *
  * Eg http://example.com/members/joe/blogs/ (or a subpage thereof).
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is a user's Blogs page.
  */
@@ -2504,7 +2504,7 @@ function bp_is_user_blogs() {
  *
  * Eg http://example.com/members/joe/blogs/recent-posts/.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is a user's Recent Blog Posts page.
  */
@@ -2517,7 +2517,7 @@ function bp_is_user_recent_posts() {
  *
  * Eg http://example.com/members/joe/blogs/recent-comments/.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is a user's Recent Blog Comments page.
  */
@@ -2530,7 +2530,7 @@ function bp_is_user_recent_commments() {
  *
  * Eg http://example.com/members/joe/blogs/friends/ (or a subpage thereof).
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is a user's Connections page.
  */
@@ -2543,7 +2543,7 @@ function bp_is_user_friends() {
  *
  * Eg http://example.com/members/joe/friends/requests/.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return bool True if the current page is a user's Connections Requests page.
  */
@@ -2556,7 +2556,7 @@ function bp_is_user_friend_requests() {
  *
  * Eg http://example.com/members/joe/notifications/ (or a subpage thereof).
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @return bool True if the current page is a user's Notifications page.
  */
@@ -2569,7 +2569,7 @@ function bp_is_user_notifications() {
  *
  * Eg http://example.com/members/joe/settings/ (or a subpage thereof).
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return bool True if the current page is a user's Settings page.
  */
@@ -2582,7 +2582,7 @@ function bp_is_user_settings() {
  *
  * Eg http://example.com/members/joe/settings/general/.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return bool True if the current page is a user's General Settings page.
  */
@@ -2595,7 +2595,7 @@ function bp_is_user_settings_general() {
  *
  * Eg http://example.com/members/joe/settings/notifications/.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return bool True if the current page is a user's Notification Settings page.
  */
@@ -2608,7 +2608,7 @@ function bp_is_user_settings_notifications() {
  *
  * Eg http://example.com/members/joe/settings/delete-account/.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return bool True if the current page is a user's Delete Account page.
  */
@@ -2621,7 +2621,7 @@ function bp_is_user_settings_account_delete() {
  *
  * Eg http://example.com/members/joe/settings/profile/.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @return bool True if the current page is a user's Profile Settings page.
  */
@@ -2634,7 +2634,7 @@ function bp_is_user_settings_profile() {
 /**
  * Is the current page the groups directory?
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @return bool True if the current page is the groups directory.
  */
@@ -2651,7 +2651,7 @@ function bp_is_groups_directory() {
  *
  * Will return true for any subpage of a single group.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @return bool True if the current page is part of a single group.
  */
@@ -2671,7 +2671,7 @@ function bp_is_group() {
  * URL will vary depending on which group tab is set to be the "home". By
  * default, it's the group's recent activity.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is a single group's home page.
  */
@@ -2686,7 +2686,7 @@ function bp_is_group_home() {
 /**
  * Is the current page part of the group creation process?
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is part of the group creation process.
  */
@@ -2699,7 +2699,7 @@ function bp_is_group_create() {
  *
  * Eg http://example.com/groups/mygroup/admin/settings/.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is part of a single group's admin.
  */
@@ -2710,7 +2710,7 @@ function bp_is_group_admin_page() {
 /**
  * Is the current page a group's activity page?
  *
- * @since 1.2.1
+ * @since BuddyPress 1.2.1
  *
  * @return bool True if the current page is a group's activity page.
  */
@@ -2731,8 +2731,8 @@ function bp_is_group_activity() {
 /**
  * Is the current page a group forum topic?
  *
- * @since 1.1.0
- * @since 3.0.0 Required for bbPress 2 integration.
+ * @since BuddyPress 1.1.0
+ * @since BuddyPress 3.0.0 Required for bbPress 2 integration.
  *
  * @return bool True if the current page is part of a group forum topic.
  */
@@ -2743,8 +2743,8 @@ function bp_is_group_forum_topic() {
 /**
  * Is the current page a group forum topic edit page?
  *
- * @since 1.2.0
- * @since 3.0.0 Required for bbPress 2 integration.
+ * @since BuddyPress 1.2.0
+ * @since BuddyPress 3.0.0 Required for bbPress 2 integration.
  *
  * @return bool True if the current page is part of a group forum topic edit page.
  */
@@ -2757,7 +2757,7 @@ function bp_is_group_forum_topic_edit() {
  *
  * Eg http://example.com/groups/mygroup/members/.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is part of a group's Members page.
  */
@@ -2780,7 +2780,7 @@ function bp_is_group_members() {
  *
  * Eg http://example.com/groups/mygroup/send-invites/.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is a group's Send Invites page.
  */
@@ -2793,7 +2793,7 @@ function bp_is_group_invites() {
  *
  * Eg http://example.com/groups/mygroup/request-membership/.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @return bool True if the current page is a group's Request Membership page.
  */
@@ -2804,7 +2804,7 @@ function bp_is_group_membership_request() {
 /**
  * Is the current page a leave group attempt?
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is a Leave Group attempt.
  */
@@ -2828,7 +2828,7 @@ function bp_is_group_single() {
 /**
  * Is the current group page a custom front?
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @return bool True if the current group page is a custom front.
  */
@@ -2842,7 +2842,7 @@ function bp_is_group_custom_front() {
  *
  * Eg http://example.com/sites/create/.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is the Create a Blog page.
  */
@@ -2853,7 +2853,7 @@ function bp_is_create_blog() {
 /**
  * Is the current page the blogs directory ?
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @return bool True if the current page is the blogs directory.
  */
@@ -2872,7 +2872,7 @@ function bp_is_blogs_directory() {
  *
  * Eg http://example.com/members/joe/messages/ (or a subpage thereof).
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @return bool True if the current page is part of a user's Messages pages.
  */
@@ -2885,7 +2885,7 @@ function bp_is_user_messages() {
  *
  * Eg http://example.com/members/joe/messages/inbox/.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is a user's Messages Inbox.
  */
@@ -2902,7 +2902,7 @@ function bp_is_messages_inbox() {
  *
  * Eg http://example.com/members/joe/messages/sentbox/.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is a user's Messages Sentbox.
  */
@@ -2915,7 +2915,7 @@ function bp_is_messages_sentbox() {
  *
  * Eg http://example.com/members/joe/messages/compose/.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is a user's Messages Compose screen.
  */
@@ -2928,7 +2928,7 @@ function bp_is_messages_compose_screen() {
  *
  * Eg http://example.com/members/joe/messages/notices/.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is the Notices screen.
  */
@@ -2939,7 +2939,7 @@ function bp_is_notices() {
 /**
  * Is the current page a single Messages conversation thread?
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @return bool True if the current page a single Messages conversation thread?
  */
@@ -2965,7 +2965,7 @@ function bp_is_single( $component, $callback ) {
  *
  * Eg http://example.com/activate/.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is the Activate page.
  */
@@ -2978,7 +2978,7 @@ function bp_is_activation_page() {
  *
  * Eg http://example.com/register/.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return bool True if the current page is the Register page.
  */
@@ -2989,7 +2989,7 @@ function bp_is_register_page() {
 /**
  * Get the title parts of the BuddyPress displayed page
  *
- * @since 2.4.3
+ * @since BuddyPress 2.4.3
  *
  * @param string $seplocation Location for the separator.
  * @return array the title parts
@@ -3142,7 +3142,7 @@ function bp_get_title_parts( $seplocation = 'right' ) {
 	/**
 	 * Filter BuddyPress title parts before joining.
 	 *
-	 * @since 2.4.3
+	 * @since BuddyPress 2.4.3
 	 *
 	 * @param array $bp_title_parts Current BuddyPress title parts.
 	 * @return array
@@ -3153,7 +3153,7 @@ function bp_get_title_parts( $seplocation = 'right' ) {
 /**
  * Customize the body class, according to the currently displayed BP content.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_the_body_class() {
 	echo bp_get_the_body_class();
@@ -3163,7 +3163,7 @@ function bp_the_body_class() {
 	 *
 	 * Uses the above is_() functions to output a body class for each scenario.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param array      $wp_classes     The body classes coming from WP.
 	 * @param array|bool $custom_classes Classes that were passed to get_body_class().
@@ -3392,7 +3392,7 @@ function bp_the_body_class() {
 		/**
 		 * Filters the BuddyPress classes to be added to body_class()
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param array $classes        Array of body classes to add.
 		 * @param array $bp_classes     Array of BuddyPress-based classes.
@@ -3408,7 +3408,7 @@ function bp_the_body_class() {
  *
  * Hooked to the 'post_class' filter.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  *
  * @param array $wp_classes The post classes coming from WordPress.
  * @return array
@@ -3461,7 +3461,7 @@ add_filter( 'post_class', 'bp_get_the_post_class' );
  * a later release. Do not use.
  *
  * @access private
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param array $a First item.
  * @param array $b Second item.
@@ -3482,8 +3482,8 @@ function _bp_nav_menu_sort( $a, $b ) {
 /**
  * Get the items registered in the primary and secondary BuddyPress navigation menus.
  *
- * @since 1.7.0
- * @since 2.6.0 Introduced the `$component` parameter.
+ * @since BuddyPress 1.7.0
+ * @since BuddyPress 2.6.0 Introduced the `$component` parameter.
  *
  * @param string $component Optional. Component whose nav items are being fetched.
  * @return array A multidimensional array of all navigation items.
@@ -3540,7 +3540,7 @@ function bp_get_nav_menu_items( $component = 'members' ) {
 	/**
 	 * Filters the items registered in the primary and secondary BuddyPress navigation menus.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param array $menus Array of items registered in the primary and secondary BuddyPress navigation.
 	 */
@@ -3550,7 +3550,7 @@ function bp_get_nav_menu_items( $component = 'members' ) {
 /**
  * Display a navigation menu.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param string|array $args {
  *     An array of optional arguments.
@@ -3608,7 +3608,7 @@ function bp_nav_menu( $args = array() ) {
 	/**
 	 * Filters the parsed bp_nav_menu arguments.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param array $args Array of parsed arguments.
 	 */
@@ -3633,7 +3633,7 @@ function bp_nav_menu( $args = array() ) {
 		/**
 		 * Filters the allowed tags for the wp_nav_menu_container.
 		 *
-		 * @since 1.7.0
+		 * @since BuddyPress 1.7.0
 		 *
 		 * @param array $value Array of allowed tags. Default 'div' and 'nav'.
 		 */
@@ -3651,7 +3651,7 @@ function bp_nav_menu( $args = array() ) {
 	/**
 	 * Filters the BuddyPress menu objects.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param array $value Array of nav menu objects.
 	 * @param array $args  Array of arguments for the menu.
@@ -3683,7 +3683,7 @@ function bp_nav_menu( $args = array() ) {
 	 *
 	 * Allow plugins to hook into the menu to add their own <li>'s
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param array $items Array of nav menu items.
 	 * @param array $args  Array of arguments for the menu.
@@ -3703,7 +3703,7 @@ function bp_nav_menu( $args = array() ) {
 	/**
 	 * Filters the final BuddyPress menu output.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $nav_menu Final nav menu output.
 	 * @param array  $args     Array of arguments for the menu.
@@ -3720,7 +3720,7 @@ function bp_nav_menu( $args = array() ) {
 /**
  * Prints the Recipient Salutation.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  *
  * @param array $settings Email Settings.
  */
@@ -3731,7 +3731,7 @@ function bp_email_the_salutation( $settings = array() ) {
 	/**
 	 * Gets the Recipient Salutation.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @param array $settings Email Settings.
 	 * @return string The Recipient Salutation.
@@ -3742,7 +3742,7 @@ function bp_email_the_salutation( $settings = array() ) {
 		/**
 		 * Filters The Recipient Salutation inside the Email Template.
 		 *
-		 * @since 2.5.0
+		 * @since BuddyPress 2.5.0
 		 *
 		 * @param string $value    The Recipient Salutation.
 		 * @param array  $settings Email Settings.

@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileCache
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Determine which xprofile fields do not have cached values for a user.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param int   $user_id   User ID to check.
  * @param array $field_ids XProfile field IDs.
@@ -48,7 +48,7 @@ function bp_xprofile_get_non_cached_field_ids( $user_id = 0, $field_ids = array(
  *
  * This function is called within a bp_has_profile() loop.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param array $object_ids Multi-dimensional array of object_ids, keyed by
  *                          object type ('group', 'field', 'data').
@@ -178,7 +178,7 @@ function bp_xprofile_update_meta_cache( $object_ids = array() ) {
 /**
  * Clear cached XProfile field group data.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  *
  * @param object $group_obj Groub object to clear.
  */
@@ -192,7 +192,7 @@ add_action( 'xprofile_group_after_save',   'xprofile_clear_profile_groups_object
 /**
  * Clear caches when a field object is modified.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param BP_XProfile_Field $field_obj Field object cache to delete.
  */
@@ -213,7 +213,7 @@ add_action( 'xprofile_fields_deleted_field', 'xprofile_clear_profile_field_objec
 /**
  * Clears member_type cache when a field's member types are updated.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  */
 function bp_xprofile_clear_member_type_cache() {
 	wp_cache_delete( 'field_member_types', 'bp_xprofile' );
@@ -223,7 +223,7 @@ add_action( 'bp_xprofile_field_set_member_type', 'bp_xprofile_clear_member_type_
 /**
  * Clear caches when a user's updates a field data object.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param BP_XProfile_ProfileData $data_obj Field data object to delete.
  */
@@ -246,7 +246,7 @@ add_action( 'xprofile_data_after_delete', 'xprofile_clear_profiledata_object_cac
  * presence of the non-hardcoded versions (and thus this bit of cache
  * invalidation) is thus for backward compatibility only.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 function xprofile_clear_fullname_field_id_cache() {
 	wp_cache_delete( 'fullname_field_id', 'bp_xprofile' );
@@ -256,7 +256,7 @@ add_action( 'update_option_bp-xprofile-fullname-field-name', 'xprofile_clear_ful
 /**
  * Clear a field's caches.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @param int|BP_XProfile_Field $field A field ID or a field object.
  * @return bool False on failure.
@@ -280,7 +280,7 @@ add_action( 'xprofile_field_after_save', 'bp_xprofile_clear_field_cache' );
 /**
  * Clear the field-name cache.
  *
- * @since 2.8.0
+ * @since BuddyPress 2.8.0
  */
 function bp_xprofile_reset_fields_by_name_cache_incrementor() {
 	bp_core_reset_incrementor( 'bp_xprofile_fields_by_name' );

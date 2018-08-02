@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage GroupActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
@@ -16,7 +16,7 @@
  * Note: When leaving a group from the group directory, AJAX is used and
  * another function handles this. See {@link bp_legacy_theme_ajax_joinleave_group()}.
  *
- * @since 1.2.4
+ * @since BuddyPress 1.2.4
  *
  * @return bool
  */

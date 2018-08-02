@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Navigation item.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  */
 class BP_Core_Nav_Item extends ArrayObject {
 	public function __construct( $data ) {

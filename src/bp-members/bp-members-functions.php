@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss
  * @subpackage MembersFunctions
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Check for the existence of a Members directory page.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return bool True if found, otherwise false.
  */
@@ -36,7 +36,7 @@ function bp_members_has_directory() {
  * In general, fallback values are only used during initial BP page creation,
  * when no slugs have been explicitly defined.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_core_define_slugs() {
 	$bp = buddypress();
@@ -77,7 +77,7 @@ add_action( 'bp_setup_globals', 'bp_core_define_slugs', 11 );
  * need backward compatibility with BP_Core_User::get_users(), filter the
  * bp_use_legacy_user_query value, returning true.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @param array|string $args {
  *     Array of arguments. All are optional. See {@link BP_User_Query} for
@@ -151,7 +151,7 @@ function bp_core_get_users( $args = '' ) {
 	/**
 	 * Filters the results of the user query.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param array $retval Array of users for the current query.
 	 * @param array $r      Array of parsed query arguments.
@@ -162,7 +162,7 @@ function bp_core_get_users( $args = '' ) {
 /**
  * Return the domain for the passed user: e.g. http://example.com/members/andy/.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int         $user_id       The ID of the user.
  * @param string|bool $user_nicename Optional. user_nicename of the user.
@@ -191,7 +191,7 @@ function bp_core_get_user_domain( $user_id = 0, $user_nicename = false, $user_lo
 	/**
 	 * Filters the domain for the passed user.
 	 *
-	 * @since 1.0.1
+	 * @since BuddyPress 1.0.1
 	 *
 	 * @param string $domain        Domain for the passed user.
 	 * @param int    $user_id       ID of the passed user.
@@ -204,7 +204,7 @@ function bp_core_get_user_domain( $user_id = 0, $user_nicename = false, $user_lo
 /**
  * Fetch everything in the wp_users table for a user, without any usermeta.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @param  int $user_id The ID of the user.
  * @return array|bool Array of data on success, boolean false on failure.
@@ -220,7 +220,7 @@ function bp_core_get_core_userdata( $user_id = 0 ) {
 	/**
 	 * Filters the userdata for a passed user.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param array|bool $userdata Array of user data for a passed user on success, boolean false on failure.
 	 */
@@ -244,7 +244,7 @@ function bp_core_get_displayed_userid( $user_login ) {
 /**
  * Return the user ID based on a user's user_login.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param string $username user_login to check.
  * @return int|null The ID of the matched user on success, null on failure.
@@ -259,7 +259,7 @@ function bp_core_get_userid( $username = '' ) {
 	/**
 	 * Filters the ID of a user, based on user_login.
 	 *
-	 * @since 1.0.1
+	 * @since BuddyPress 1.0.1
 	 *
 	 * @param int|null $value    ID of the user or null.
 	 * @param string   $username User login to check.
@@ -270,7 +270,7 @@ function bp_core_get_userid( $username = '' ) {
 /**
  * Return the user ID based on a user's user_nicename.
  *
- * @since 1.2.3
+ * @since BuddyPress 1.2.3
  *
  * @param string $user_nicename user_nicename to check.
  * @return int|null The ID of the matched user on success, null on failure.
@@ -285,7 +285,7 @@ function bp_core_get_userid_from_nicename( $user_nicename = '' ) {
 	/**
 	 * Filters the user ID based on user_nicename.
 	 *
-	 * @since 1.2.3
+	 * @since BuddyPress 1.2.3
 	 *
 	 * @param int|null $value         ID of the user or null.
 	 * @param string   $user_nicename User nicename to check.
@@ -299,7 +299,7 @@ function bp_core_get_userid_from_nicename( $user_nicename = '' ) {
  * This function is sensitive to the BP_ENABLE_USERNAME_COMPATIBILITY_MODE,
  * so it will return the user_login or user_nicename as appropriate.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int         $user_id       User ID to check.
  * @param string|bool $user_nicename Optional. user_nicename of user being checked.
@@ -322,7 +322,7 @@ function bp_core_get_username( $user_id = 0, $user_nicename = false, $user_login
 	/**
 	 * Filters the username based on originally provided user ID.
 	 *
-	 * @since 1.0.1
+	 * @since BuddyPress 1.0.1
 	 *
 	 * @param string $username Username determined by user ID.
 	 */
@@ -335,7 +335,7 @@ function bp_core_get_username( $user_id = 0, $user_nicename = false, $user_login
  * This should be used for linking to user profiles and anywhere else a
  * sanitized and unique slug to a user is needed.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param int $user_id User ID to check.
  * @return string The username of the matched user or an empty string if no user is found.
@@ -344,7 +344,7 @@ function bp_members_get_user_nicename( $user_id ) {
 	/**
 	 * Filters the user_nicename based on originally provided user ID.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param string $username User nice name determined by user ID.
 	 */
@@ -354,7 +354,7 @@ function bp_members_get_user_nicename( $user_id ) {
 /**
  * Return the email address for the user based on user ID.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $uid User ID to check.
  * @return string The email for the matched user. Empty string if no user
@@ -364,7 +364,7 @@ function bp_core_get_user_email( $user_id ) {
 	/**
 	 * Filters the user email for user based on user ID.
 	 *
-	 * @since 1.0.1
+	 * @since BuddyPress 1.0.1
 	 *
 	 * @param string $email Email determined for the user.
 	 */
@@ -378,7 +378,7 @@ function bp_core_get_user_email( $user_id ) {
  *
  * Optional parameters will return just the name or just the URL.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int  $user_id   User ID to check.
  * @param bool $no_anchor Disable URL and HTML and just return full name.
@@ -410,7 +410,7 @@ function bp_core_get_userlink( $user_id, $no_anchor = false, $just_link = false 
 	/**
 	 * Filters the link text for the passed in user.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param string $value   Link text based on passed parameters.
 	 * @param int    $user_id ID of the user to check.
@@ -424,7 +424,7 @@ function bp_core_get_userlink( $user_id, $no_anchor = false, $just_link = false 
  * Uses the 'Name' field in xprofile if available. Falls back on WP
  * display_name, and then user_nicename.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param array $user_ids Array of user IDs to get display names for.
  * @return array Associative array of the format "id" => "displayname".
@@ -455,7 +455,7 @@ function bp_core_get_user_displaynames( $user_ids ) {
 /**
  * Fetch the display name for a user.
  *
- * @since 1.0.1
+ * @since BuddyPress 1.0.1
  *
  * @param int|string|bool $user_id_or_username User ID or username.
  * @return string|bool The display name for the user in question, or false if
@@ -479,7 +479,7 @@ function bp_core_get_user_displayname( $user_id_or_username ) {
 	/**
 	 * Filters the display name for the passed in user.
 	 *
-	 * @since 1.0.1
+	 * @since BuddyPress 1.0.1
 	 *
 	 * @param string $fullname Display name for the user.
 	 * @param int    $user_id  ID of the user to check.
@@ -494,7 +494,7 @@ add_filter( 'bp_core_get_user_displayname', 'esc_html'      );
 /**
  * Return the user link for the user based on user email address.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param string $email The email address for the user.
  * @return string The link to the users home base. False on no match.
@@ -505,7 +505,7 @@ function bp_core_get_userlink_by_email( $email ) {
 	/**
 	 * Filters the user link for the user based on user email address.
 	 *
-	 * @since 1.0.1
+	 * @since BuddyPress 1.0.1
 	 *
 	 * @param string|bool $value URL for the user if found, otherwise false.
 	 */
@@ -515,7 +515,7 @@ function bp_core_get_userlink_by_email( $email ) {
 /**
  * Return the user link for the user based on the supplied identifier.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param string $username If BP_ENABLE_USERNAME_COMPATIBILITY_MODE is set,
  *                         this should be user_login, otherwise it should
@@ -532,7 +532,7 @@ function bp_core_get_userlink_by_username( $username ) {
 	/**
 	 * Filters the user link for the user based on username.
 	 *
-	 * @since 1.0.1
+	 * @since BuddyPress 1.0.1
 	 *
 	 * @param string|bool $value URL for the user if found, otherwise false.
 	 */
@@ -546,7 +546,7 @@ function bp_core_get_userlink_by_username( $username ) {
  * account for users who have logged activity (last_active). See
  * {@link bp_core_get_active_member_count()}.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @return int The total number of members.
  */
@@ -564,7 +564,7 @@ function bp_core_get_total_member_count() {
 	/**
 	 * Filters the total number of members for the installation.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param int $count Total number of members.
 	 */
@@ -574,7 +574,7 @@ function bp_core_get_total_member_count() {
 /**
  * Return the total number of members, limited to those members with last_activity.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @return int The number of active members.
  */
@@ -602,7 +602,7 @@ function bp_core_get_active_member_count() {
 	/**
 	 * Filters the total number of members for the installation limited to those with last_activity.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $count Total number of active members.
 	 */
@@ -618,7 +618,7 @@ function bp_core_get_active_member_count() {
  * - by bp_core_mark_user_spam_admin()    (from wp-admin)
  * - bp_core_mark_user_ham_admin()        (from wp-admin)
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param int    $user_id       The ID of the user being spammed/hammed.
  * @param string $status        'spam' if being marked as spam, 'ham' otherwise.
@@ -689,7 +689,7 @@ function bp_core_process_spammer_status( $user_id, $status, $do_wp_cleanup = tru
 			/**
 			 * Fires at end of processing spammer in Dashboard if not multisite and user is spam.
 			 *
-			 * @since 1.5.0
+			 * @since BuddyPress 1.5.0
 			 *
 			 * @param int $value user ID.
 			 */
@@ -699,7 +699,7 @@ function bp_core_process_spammer_status( $user_id, $status, $do_wp_cleanup = tru
 			/**
 			 * Fires at end of processing spammer in Dashboard if not multisite and user is not spam.
 			 *
-			 * @since 1.5.0
+			 * @since BuddyPress 1.5.0
 			 *
 			 * @param int $value user ID.
 			 */
@@ -718,7 +718,7 @@ function bp_core_process_spammer_status( $user_id, $status, $do_wp_cleanup = tru
 		/**
 		 * Fires at the end of the process spammer process if the user is spam.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param int $value Displayed user ID.
 		 */
@@ -728,7 +728,7 @@ function bp_core_process_spammer_status( $user_id, $status, $do_wp_cleanup = tru
 		/**
 		 * Fires at the end of the process spammer process if the user is not spam.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param int $value Displayed user ID.
 		 */
@@ -738,7 +738,7 @@ function bp_core_process_spammer_status( $user_id, $status, $do_wp_cleanup = tru
 	/**
 	 * Fires at the end of the process for hanlding spammer status.
 	 *
-	 * @since 1.5.5
+	 * @since BuddyPress 1.5.5
 	 *
 	 * @param int  $user_id ID of the processed user.
 	 * @param bool $is_spam The determined spam status of processed user.
@@ -754,7 +754,7 @@ function bp_core_process_spammer_status( $user_id, $status, $do_wp_cleanup = tru
 /**
  * Hook to WP's make_spam_user and run our custom BP spam functions.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param int $user_id The user ID passed from the make_spam_user hook.
  */
@@ -766,7 +766,7 @@ add_action( 'make_spam_user', 'bp_core_mark_user_spam_admin' );
 /**
  * Hook to WP's make_ham_user and run our custom BP spam functions.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param int $user_id The user ID passed from the make_ham_user hook.
  */
@@ -778,7 +778,7 @@ add_action( 'make_ham_user', 'bp_core_mark_user_ham_admin' );
 /**
  * Check whether a user has been marked as a spammer.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param int $user_id The ID for the user.
  * @return bool True if spammer, otherwise false.
@@ -839,7 +839,7 @@ function bp_is_user_spammer( $user_id = 0 ) {
 	/**
 	 * Filters whether a user is marked as a spammer.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param bool $is_spammer Whether or not user is marked as spammer.
 	 */
@@ -849,7 +849,7 @@ function bp_is_user_spammer( $user_id = 0 ) {
 /**
  * Check whether a user has been marked as deleted.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param int $user_id The ID for the user.
  * @return bool True if deleted, otherwise false.
@@ -905,7 +905,7 @@ function bp_is_user_deleted( $user_id = 0 ) {
 	/**
 	 * Filters whether a user is marked as deleted.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param bool $is_deleted Whether or not user is marked as deleted.
 	 */
@@ -915,7 +915,7 @@ function bp_is_user_deleted( $user_id = 0 ) {
 /**
  * Check whether a user is "active", ie neither deleted nor spammer.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param int $user_id The user ID to check.
  * @return bool True if active, otherwise false.
@@ -949,7 +949,7 @@ function bp_is_user_active( $user_id = 0 ) {
 /**
  * Check whether user is not active.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @todo No need for the user fallback checks, since they're done in
  *       bp_is_user_active().
@@ -976,7 +976,7 @@ function bp_is_user_inactive( $user_id = 0 ) {
 /**
  * Update a user's last activity.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @param int    $user_id ID of the user being updated.
  * @param string $time    Time of last activity, in 'Y-m-d H:i:s' format.
@@ -1019,8 +1019,8 @@ function bp_update_user_last_activity( $user_id = 0, $time = '' ) {
  * serves two purposes: it warns plugin authors of the change, and it returns
  * the data from the proper location.
  *
- * @since 2.0.0
- * @since 2.9.3 Added the `$single` parameter.
+ * @since BuddyPress 2.0.0
+ * @since BuddyPress 2.9.3 Added the `$single` parameter.
  *
  * @access private For internal use only.
  *
@@ -1060,7 +1060,7 @@ add_filter( 'get_user_metadata', '_bp_get_user_meta_last_activity_warning', 10, 
  * serves two purposes: it warns plugin authors of the change, and it updates
  * the data in the proper location.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @access private For internal use only.
  *
@@ -1080,7 +1080,7 @@ add_filter( 'update_user_metadata', '_bp_update_user_meta_last_activity_warning'
 /**
  * Get the last activity for a given user.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @param int $user_id The ID of the user.
  * @return string Time of last activity, in 'Y-m-d H:i:s' format, or an empty
@@ -1097,7 +1097,7 @@ function bp_get_user_last_activity( $user_id = 0 ) {
 	/**
 	 * Filters the last activity for a given user.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @param string $activity Time of last activity, in 'Y-m-d H:i:s' format or
 	 *                         an empty string if none found.
@@ -1112,7 +1112,7 @@ function bp_get_user_last_activity( $user_id = 0 ) {
  * Generally, this function is only run when BP is upgraded to 2.0. It can also
  * be called directly from the BuddyPress Tools panel.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @return bool
  */
@@ -1161,7 +1161,7 @@ function bp_core_get_all_posts_for_user( $user_id = 0 ) {
  *
  * Primarily used for self-deletions, as requested through Settings.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id Optional. ID of the user to be deleted. Default: the
  *                     logged-in user.
@@ -1196,7 +1196,7 @@ function bp_core_delete_account( $user_id = 0 ) {
 	/**
 	 * Fires before the processing of an account deletion.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $user_id ID of the user account being deleted.
 	 */
@@ -1218,7 +1218,7 @@ function bp_core_delete_account( $user_id = 0 ) {
 	/**
 	 * Fires after the deletion of an account.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $user_id ID of the user account that was deleted.
 	 */
@@ -1230,7 +1230,7 @@ function bp_core_delete_account( $user_id = 0 ) {
 /**
  * Delete a user's avatar when the user is deleted.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @param int $user_id ID of the user who is about to be deleted.
  * @return bool True on success, false on failure.
@@ -1249,7 +1249,7 @@ add_action( 'delete_user', 'bp_core_delete_avatar_on_user_delete' );
  *
  * Uses multibyte functions when available on the PHP build.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param string $str String to be upper-cased.
  * @return string
@@ -1269,7 +1269,7 @@ function bp_core_ucfirst( $str ) {
  * When a user logs in, check if they have been marked as a spammer. If yes
  * then simply redirect them to the home page and stop them from logging in.
  *
- * @since 1.1.2
+ * @since BuddyPress 1.1.2
  *
  * @param WP_User|WP_Error $user Either the WP_User object or the WP_Error
  *                               object, as passed to the 'authenticate' filter.
@@ -1297,7 +1297,7 @@ add_filter( 'authenticate', 'bp_core_boot_spammer', 30 );
 /**
  * Delete last_activity data for the user when the user is deleted.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id The user ID for the user to delete usermeta for.
  */
@@ -1316,7 +1316,7 @@ add_action( 'bp_make_spam_user', 'bp_core_remove_data' );
 /**
  * Check whether the logged-in user can edit settings for the displayed user.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return bool True if editing is allowed, otherwise false.
  */
@@ -1334,7 +1334,7 @@ function bp_core_can_edit_settings() {
 	/**
 	 * Filters the status of whether the logged-in user can edit settings for the displayed user or not.
 	 *
-	 * @since 2.8.0
+	 * @since BuddyPress 2.8.0
 	 *
 	 * @param bool True if editing is allowed, otherwise false.
 	 */
@@ -1346,7 +1346,7 @@ function bp_core_can_edit_settings() {
 /**
  * Flush illegal names by getting and setting 'illegal_names' site option.
  *
- * @since 1.2.5
+ * @since BuddyPress 1.2.5
  */
 function bp_core_flush_illegal_names() {
 	$illegal_names = get_site_option( 'illegal_names' );
@@ -1356,7 +1356,7 @@ function bp_core_flush_illegal_names() {
 /**
  * Add BuddyPress-specific items to the illegal_names array.
  *
- * @since 1.2.7
+ * @since BuddyPress 1.2.7
  *
  * @param array|string $value    Illegal names as being saved defined in
  *                               Multisite settings.
@@ -1416,7 +1416,7 @@ function bp_core_get_illegal_names( $value = '', $oldvalue = '' ) {
 	/**
 	 * Filters the array of default illegal usernames.
 	 *
-	 * @since 1.2.2
+	 * @since BuddyPress 1.2.2
 	 *
 	 * @param array $value Merged and unique array of illegal usernames.
 	 */
@@ -1425,7 +1425,7 @@ function bp_core_get_illegal_names( $value = '', $oldvalue = '' ) {
 	/**
 	 * Filters the list of illegal usernames from WordPress.
 	 *
-	 * @since 3.0
+	 * @since BuddyPress 3.0
 	 *
 	 * @param array Array of illegal usernames.
 	 */
@@ -1443,7 +1443,7 @@ function bp_core_get_illegal_names( $value = '', $oldvalue = '' ) {
 	/**
 	 * Filters the array of default illegal names.
 	 *
-	 * @since 1.2.5
+	 * @since BuddyPress 1.2.5
 	 *
 	 * @param array $value Merged and unique array of illegal names.
 	 */
@@ -1460,7 +1460,7 @@ add_filter( 'pre_update_site_option_illegal_names', 'bp_core_get_illegal_names',
  *   - If there's an email domain blacklist, is the current domain on it?
  *   - If there's an email domain whitelest, is the current domain on it?
  *
- * @since 1.6.2
+ * @since BuddyPress 1.6.2
  *
  * @param string $user_email The email being checked.
  * @return bool|array True if the address passes all checks; otherwise an array
@@ -1509,7 +1509,7 @@ function bp_core_validate_email_address( $user_email ) {
  * of error codes. bp_core_add_validation_error_messages() takes this array and
  * parses, adding the appropriate error messages to the WP_Error object.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @see bp_core_validate_email_address()
  *
@@ -1538,7 +1538,7 @@ function bp_core_add_validation_error_messages( WP_Error $errors, $validation_re
 /**
  * Validate a user name and email address when creating a new user.
  *
- * @since 1.2.2
+ * @since BuddyPress 1.2.2
  *
  * @param string $user_name  Username to validate.
  * @param string $user_email Email address to validate.
@@ -1563,7 +1563,7 @@ function bp_core_validate_user_signup( $user_name, $user_email ) {
 		/**
 		 * Filters the username before being validated.
 		 *
-		 * @since 1.5.5
+		 * @since BuddyPress 1.5.5
 		 *
 		 * @param string $user_name Username to validate.
 		 */
@@ -1633,7 +1633,7 @@ function bp_core_validate_user_signup( $user_name, $user_email ) {
 	/**
 	 * Filters the result of the user signup validation.
 	 *
-	 * @since 1.2.2
+	 * @since BuddyPress 1.2.2
 	 *
 	 * @param array $result Results of user validation including errors, if any.
 	 */
@@ -1643,7 +1643,7 @@ function bp_core_validate_user_signup( $user_name, $user_email ) {
 /**
  * Validate blog URL and title provided at signup.
  *
- * @since 1.2.2
+ * @since BuddyPress 1.2.2
  *
  * @todo Why do we have this wrapper?
  *
@@ -1659,7 +1659,7 @@ function bp_core_validate_blog_signup( $blog_url, $blog_title ) {
 	/**
 	 * Filters the validated blog url and title provided at signup.
 	 *
-	 * @since 1.2.2
+	 * @since BuddyPress 1.2.2
 	 *
 	 * @param array $value Array with the new site data and error messages.
 	 */
@@ -1669,7 +1669,7 @@ function bp_core_validate_blog_signup( $blog_url, $blog_title ) {
 /**
  * Process data submitted at user registration and convert to a signup object.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @todo There appears to be a bug in the return value on success.
  *
@@ -1731,7 +1731,7 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 		/**
 		 * Filters if BuddyPress should send an activation key for a new signup.
 		 *
-		 * @since 1.2.3
+		 * @since BuddyPress 1.2.3
 		 *
 		 * @param bool   $value          Whether or not to send the activation key.
 		 * @param int    $user_id        User ID to send activation key to.
@@ -1750,7 +1750,7 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 	/**
 	 * Fires at the end of the process to sign up a user.
 	 *
-	 * @since 1.2.2
+	 * @since BuddyPress 1.2.2
 	 *
 	 * @param bool|WP_Error   $user_id       True on success, WP_Error on failure.
 	 * @param string          $user_login    Login name requested by the user.
@@ -1767,7 +1767,7 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 /**
  * Create a blog and user based on data supplied at user registration.
  *
- * @since 1.2.2
+ * @since BuddyPress 1.2.2
  *
  * @param string $blog_domain Domain requested by user.
  * @param string $blog_path   Path requested by user.
@@ -1788,7 +1788,7 @@ function bp_core_signup_blog( $blog_domain, $blog_path, $blog_title, $user_name,
 	 * This filter provides no value and is retained for
 	 * backwards compatibility.
 	 *
-	 * @since 1.2.2
+	 * @since BuddyPress 1.2.2
 	 *
 	 * @param void $value
 	 */
@@ -1798,7 +1798,7 @@ function bp_core_signup_blog( $blog_domain, $blog_path, $blog_title, $user_name,
 /**
  * Activate a signup, as identified by an activation key.
  *
- * @since 1.2.2
+ * @since BuddyPress 1.2.2
  *
  * @param string $key Activation key.
  * @return int|bool User ID on success, false on failure.
@@ -1891,7 +1891,7 @@ function bp_core_activate_signup( $key ) {
 		/**
 		 * Maybe notify the site admin of a new user registration.
 		 *
-		 * @since 1.2.2
+		 * @since BuddyPress 1.2.2
 		 *
 		 * @param bool $notification Whether to send the notification or not.
 		 */
@@ -1904,7 +1904,7 @@ function bp_core_activate_signup( $key ) {
 			/**
 			 * Fires if the user has already been created.
 			 *
-			 * @since 1.2.2
+			 * @since BuddyPress 1.2.2
 			 *
 			 * @param int    $user_id ID of the user being checked.
 			 * @param string $key     Activation key.
@@ -1967,7 +1967,7 @@ function bp_core_activate_signup( $key ) {
 	/**
 	 * Fires at the end of the user activation process.
 	 *
-	 * @since 1.2.2
+	 * @since BuddyPress 1.2.2
 	 *
 	 * @param int    $user_id ID of the user being checked.
 	 * @param string $key     Activation key.
@@ -1981,7 +1981,7 @@ function bp_core_activate_signup( $key ) {
 /**
  * Add default WordPress role for new signups on the BP root blog.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param int $user_id The user ID to add the default role for.
  */
@@ -2004,7 +2004,7 @@ add_action( 'bp_core_activated_user', 'bp_members_add_role_after_activation', 1 
 /**
  * Migrate signups from pre-2.0 configuration to wp_signups.
  *
- * @since 2.0.1
+ * @since BuddyPress 2.0.1
  */
 function bp_members_migrate_signups() {
 	global $wpdb;
@@ -2088,7 +2088,7 @@ function bp_members_migrate_signups() {
  * This only happens when a user is registered in wp-admin by an administrator;
  * during normal registration, XProfile data is provided directly by the user.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @param int $user_id ID of the user.
  * @return bool
@@ -2118,7 +2118,7 @@ add_action( 'user_register', 'bp_core_map_user_registration' );
 /**
  * Get the avatar storage directory for use during registration.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return string|bool Directory path on success, false on failure.
  */
@@ -2139,7 +2139,7 @@ function bp_core_signup_avatar_upload_dir() {
 	/**
 	 * Filters the avatar storage directory for use during registration.
 	 *
-	 * @since 1.1.1
+	 * @since BuddyPress 1.1.1
 	 *
 	 * @param array $value Array of path and URL values for created storage directory.
 	 */
@@ -2156,8 +2156,8 @@ function bp_core_signup_avatar_upload_dir() {
 /**
  * Send activation email to a newly registered user.
  *
- * @since 1.2.2
- * @since 2.5.0 Add the $user_login parameter.
+ * @since BuddyPress 1.2.2
+ * @since BuddyPress 2.5.0 Add the $user_login parameter.
  *
  * @param int|bool $user_id    ID of the new user, false if BP_SIGNUPS_SKIP_USER_CREATION is true.
  * @param string   $user_email Email address of the new user.
@@ -2186,7 +2186,7 @@ function bp_core_signup_send_validation_email( $user_id, $user_email, $key, $use
 /**
  * Display a "resend email" link when an unregistered user attempts to log in.
  *
- * @since 1.2.2
+ * @since BuddyPress 1.2.2
  *
  * @param WP_User|WP_Error|null $user     Either the WP_User or the WP_Error object.
  * @param string                $username The inputted, attempted username.
@@ -2246,7 +2246,7 @@ add_filter( 'authenticate', 'bp_core_signup_disable_inactive', 30, 3 );
 /**
  * On the login screen, resends the activation email for a user.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @see bp_core_signup_disable_inactive()
  */
@@ -2280,7 +2280,7 @@ add_action( 'login_form_bp-resend-activation', 'bp_members_login_resend_activati
 /**
  * Redirect away from wp-signup.php if BP registration templates are present.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_core_wpsignup_redirect() {
 
@@ -2319,7 +2319,7 @@ add_action( 'bp_init', 'bp_core_wpsignup_redirect' );
  *
  * This is important as the $bp->loggedin_user object is setup at priority 4.
  *
- * @since 1.8.0
+ * @since BuddyPress 1.8.0
  */
 function bp_stop_live_spammer() {
 	// If we're on the login page, stop now to prevent redirect loop.
@@ -2353,7 +2353,7 @@ function bp_stop_live_spammer() {
 		/**
 		 * Filters the url used for redirection for a logged in user marked as spam.
 		 *
-		 * @since 1.8.0
+		 * @since BuddyPress 1.8.0
 		 *
 		 * @param string $value URL to redirect user to.
 		 */
@@ -2369,7 +2369,7 @@ add_action( 'bp_init', 'bp_stop_live_spammer', 5 );
 /**
  * Show a custom error message when a logged-in user is marked as a spammer.
  *
- * @since 1.8.0
+ * @since BuddyPress 1.8.0
  */
 function bp_live_spammer_login_error() {
 	global $error;
@@ -2384,7 +2384,7 @@ add_action( 'login_form_bp-spam', 'bp_live_spammer_login_error' );
 /**
  * Get the displayed user Object
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @return object The displayed user object, null otherwise.
  */
@@ -2399,7 +2399,7 @@ function bp_get_displayed_user() {
 	/**
 	 * Filters the displayed_user object corresponding to the displayed member.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param object $displayed_user The displayed_user object.
 	 */
@@ -2411,7 +2411,7 @@ function bp_get_displayed_user() {
 /**
  * Output the slug of the member type taxonomy.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  */
 function bp_member_type_tax_name() {
 	echo bp_get_member_type_tax_name();
@@ -2420,7 +2420,7 @@ function bp_member_type_tax_name() {
 	/**
 	 * Return the slug of the member type taxonomy.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @return string The unique member taxonomy slug.
 	 */
@@ -2428,7 +2428,7 @@ function bp_member_type_tax_name() {
 		/**
 		 * Filters the slug of the member type taxonomy.
 		 *
-		 * @since 2.7.0
+		 * @since BuddyPress 2.7.0
 		 *
 		 * @param string $value Member type taxonomy slug.
 		 */
@@ -2438,7 +2438,7 @@ function bp_member_type_tax_name() {
 /**
  * Register a member type.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param string $member_type Unique string identifier for the member type.
  * @param array  $args {
@@ -2478,7 +2478,7 @@ function bp_register_member_type( $member_type, $args = array() ) {
 	 * - 'null' is a special pseudo-type, representing users without any type.
 	 * - '_none' is used internally to denote an item that should not apply to any member types.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param array $illegal_names Array of illegal names.
 	 */
@@ -2519,7 +2519,7 @@ function bp_register_member_type( $member_type, $args = array() ) {
 	/**
 	 * Fires after a member type is registered.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @param string $member_type Member type identifier.
 	 * @param object $type        Member type object.
@@ -2532,7 +2532,7 @@ function bp_register_member_type( $member_type, $args = array() ) {
 /**
  * Retrieve a member type object by name.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param string $member_type The name of the member type.
  * @return object A member type object.
@@ -2550,7 +2550,7 @@ function bp_get_member_type_object( $member_type ) {
 /**
  * Get a list of all registered member type objects.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @see bp_register_member_type() for accepted arguments.
  *
@@ -2574,7 +2574,7 @@ function bp_get_member_types( $args = array(), $output = 'names', $operator = 'a
 	 * This filter is run before the $output filter has been applied, so that
 	 * filtering functions have access to the entire member type objects.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @param array  $types     Member type objects, keyed by name.
 	 * @param array  $args      Array of key=>value arguments for filtering.
@@ -2592,7 +2592,7 @@ function bp_get_member_types( $args = array(), $output = 'names', $operator = 'a
 /**
  * Set type for a member.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param int    $user_id     ID of the user.
  * @param string $member_type Member type.
@@ -2615,7 +2615,7 @@ function bp_set_member_type( $user_id, $member_type, $append = false ) {
 		/**
 		 * Fires just after a user's member type has been changed.
 		 *
-		 * @since 2.2.0
+		 * @since BuddyPress 2.2.0
 		 *
 		 * @param int    $user_id     ID of the user whose member type has been updated.
 		 * @param string $member_type Member type.
@@ -2630,7 +2630,7 @@ function bp_set_member_type( $user_id, $member_type, $append = false ) {
 /**
  * Remove type for a member.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  *
  * @param int    $user_id     ID of the user.
  * @param string $member_type Member Type.
@@ -2651,7 +2651,7 @@ function bp_remove_member_type( $user_id, $member_type ) {
 		/**
 		 * Fires just after a user's member type has been removed.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param int    $user_id     ID of the user whose member type has been updated.
 		 * @param string $member_type Member type.
@@ -2665,7 +2665,7 @@ function bp_remove_member_type( $user_id, $member_type ) {
 /**
  * Get type for a member.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param int  $user_id ID of the user.
  * @param bool $single  Optional. Whether to return a single type string. If multiple types are found
@@ -2705,7 +2705,7 @@ function bp_get_member_type( $user_id, $single = true ) {
 	/**
 	 * Filters a user's member type(s).
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @param string $type    Member type.
 	 * @param int    $user_id ID of the user.
@@ -2717,7 +2717,7 @@ function bp_get_member_type( $user_id, $single = true ) {
 /**
  * Check whether the given user has a certain member type.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  *
  * @param int    $user_id     $user_id ID of the user.
  * @param string $member_type Member Type.
@@ -2742,7 +2742,7 @@ function bp_has_member_type( $user_id, $member_type ) {
 /**
  * Delete a user's member type when the user when the user is deleted.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param int $user_id ID of the user.
  * @return false|array $value See {@see bp_set_member_type()}.
@@ -2756,7 +2756,7 @@ add_action( 'delete_user', 'bp_remove_member_type_on_user_delete' );
 /**
  * Get the "current" member type, if one is provided, in member directories.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  *
  * @return string
  */
@@ -2765,7 +2765,7 @@ function bp_get_current_member_type() {
 	/**
 	 * Filters the "current" member type, if one is provided, in member directories.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param string $value "Current" member type.
 	 */

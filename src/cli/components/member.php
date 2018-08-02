@@ -8,7 +8,7 @@ if ( ! class_exists( 'User_Command' ) ) {
 /**
  * Manage BuddyPress Members
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 class Member extends BuddypressCommand {
 
@@ -37,7 +37,7 @@ class Member extends BuddypressCommand {
 	/**
 	 * Update the last user activity with a random date.
 	 *
-	 * @since 1.0
+	 * @since BuddyPress 1.0
 	 *
 	 * @param int $user_id User ID.
 	 */

@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileClasses
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class to help set up XProfile Groups.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 class BP_XProfile_Group {
 
 	/**
 	 * Field group ID.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var int ID of field group.
 	 */
 	public $id = null;
@@ -28,7 +28,7 @@ class BP_XProfile_Group {
 	/**
 	 * Field group name.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var string Name of field group.
 	 */
 	public $name;
@@ -36,7 +36,7 @@ class BP_XProfile_Group {
 	/**
 	 * Field group Description.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var string Description of field group.
 	 */
 	public $description;
@@ -44,7 +44,7 @@ class BP_XProfile_Group {
 	/**
 	 * Group deletion boolean.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var bool Can this group be deleted?
 	 */
 	public $can_delete;
@@ -52,7 +52,7 @@ class BP_XProfile_Group {
 	/**
 	 * Group order.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var int Group order relative to other groups.
 	 */
 	public $group_order;
@@ -60,7 +60,7 @@ class BP_XProfile_Group {
 	/**
 	 * Group fields.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var array Fields of group.
 	 */
 	public $fields;
@@ -68,7 +68,7 @@ class BP_XProfile_Group {
 	/**
 	 * Initialize and/or populate profile field group.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param int|null $id Field group ID.
 	 */
@@ -81,7 +81,7 @@ class BP_XProfile_Group {
 	/**
 	 * Populate a profile field group.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @global $wpdb $wpdb
 	 *
@@ -114,7 +114,7 @@ class BP_XProfile_Group {
 	/**
 	 * Save a profile field group.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @global object $wpdb
 	 *
@@ -132,7 +132,7 @@ class BP_XProfile_Group {
 		 *
 		 * Please use this hook to filter the properties above. Each part will be passed in.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param BP_XProfile_Group $this Current instance of the group being saved. Passed by reference.
 		 */
@@ -163,7 +163,7 @@ class BP_XProfile_Group {
 		/**
 		 * Fires after the current group instance gets saved.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param BP_XProfile_Group $this Current instance of the group being saved. Passed by reference.
 		 */
@@ -175,7 +175,7 @@ class BP_XProfile_Group {
 	/**
 	 * Delete a profile field group
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @global object $wpdb
 	 *
@@ -192,7 +192,7 @@ class BP_XProfile_Group {
 		/**
 		 * Fires before the current group instance gets deleted.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param BP_XProfile_Group $this Current instance of the group being deleted. Passed by reference.
 		 */
@@ -219,7 +219,7 @@ class BP_XProfile_Group {
 		/**
 		 * Fires after the current group instance gets deleted.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param BP_XProfile_Group $this Current instance of the group being deleted. Passed by reference.
 		 */
@@ -234,7 +234,7 @@ class BP_XProfile_Group {
 	 * Populates the BP_XProfile_Group object with profile field groups, fields,
 	 * and field data.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @global object $wpdb WordPress DB access object.
 	 *
@@ -499,7 +499,7 @@ class BP_XProfile_Group {
 	/**
 	 * Get data about a set of groups, based on IDs.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $group_ids Array of IDs.
 	 * @return array
@@ -575,7 +575,7 @@ class BP_XProfile_Group {
 	/**
 	 * Validate field group when form submitted.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @global string $message
 	 *
@@ -596,7 +596,7 @@ class BP_XProfile_Group {
 	/**
 	 * Update field group position.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @global $wpdb $wpdb
 	 *
@@ -622,7 +622,7 @@ class BP_XProfile_Group {
 	/**
 	 * Fetch the field visibility level for the fields returned by the query.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int   $user_id The profile owner's user_id.
 	 * @param array $fields  The database results returned by the get() query.
@@ -650,7 +650,7 @@ class BP_XProfile_Group {
 				/**
 				 * Filters the XProfile default visibility level for a field.
 				 *
-				 * @since 1.6.0
+				 * @since BuddyPress 1.6.0
 				 *
 				 * @param string $value Default visibility value.
 				 */
@@ -668,7 +668,7 @@ class BP_XProfile_Group {
 	/**
 	 * Fetch the admin-set preferences for all fields.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @return array $default_visibility_levels An array, keyed by field_id, of default
 	 *                                          visibility level + allow_custom
@@ -709,7 +709,7 @@ class BP_XProfile_Group {
 	/**
 	 * Output the admin area field group form.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @global string $message
 	 */
@@ -782,7 +782,7 @@ class BP_XProfile_Group {
 							/**
 							 * Fires after the XProfile group description field is rendered in wp-admin.
 							 *
-							 * @since 2.6.0
+							 * @since BuddyPress 2.6.0
 							 *
 							 * @param BP_XProfile_Group $this Current XProfile group.
 							 */
@@ -797,7 +797,7 @@ class BP_XProfile_Group {
 							/**
 							 * Fires before XProfile Group submit metabox.
 							 *
-							 * @since 2.1.0
+							 * @since BuddyPress 2.1.0
 							 *
 							 * @param BP_XProfile_Group $this Current XProfile group.
 							 */
@@ -817,7 +817,7 @@ class BP_XProfile_Group {
 											/**
 											 * Fires at the beginning of the XProfile Group publishing actions section.
 											 *
-											 * @since 2.1.0
+											 * @since BuddyPress 2.1.0
 											 *
 											 * @param BP_XProfile_Group $this Current XProfile group.
 											 */
@@ -841,7 +841,7 @@ class BP_XProfile_Group {
 							/**
 							 * Fires after XProfile Group submit metabox.
 							 *
-							 * @since 2.1.0
+							 * @since BuddyPress 2.1.0
 							 *
 							 * @param BP_XProfile_Group $this Current XProfile group.
 							 */

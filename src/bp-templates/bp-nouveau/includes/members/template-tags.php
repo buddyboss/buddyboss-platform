@@ -2,7 +2,7 @@
 /**
  * Members template tags
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
 
@@ -13,34 +13,34 @@ defined( 'ABSPATH' ) || exit;
  * Template tag to wrap all Legacy actions that was used
  * before the members directory content
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_before_members_directory_content() {
 	/**
 	 * Fires at the begining of the templates BP injected content.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 */
 	do_action( 'bp_before_directory_members_page' );
 
 	/**
 	 * Fires before the display of the members.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'bp_before_directory_members' );
 
 	/**
 	 * Fires before the display of the members content.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'bp_before_directory_members_content' );
 
 	/**
 	 * Fires before the display of the members list tabs.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	do_action( 'bp_before_directory_members_tabs' );
 }
@@ -49,34 +49,34 @@ function bp_nouveau_before_members_directory_content() {
  * Template tag to wrap all Legacy actions that was used
  * after the members directory content
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_after_members_directory_content() {
 	/**
 	 * Fires and displays the members content.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'bp_directory_members_content' );
 
 	/**
 	 * Fires after the display of the members content.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'bp_after_directory_members_content' );
 
 	/**
 	 * Fires after the display of the members.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'bp_after_directory_members' );
 
 	/**
 	 * Fires at the bottom of the members directory template file.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	do_action( 'bp_after_directory_members_page' );
 }
@@ -84,7 +84,7 @@ function bp_nouveau_after_members_directory_content() {
 /**
  * Fire specific hooks into the single members templates
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $when   'before' or 'after'
  * @param string $suffix Use it to add terms at the end of the hook name
@@ -109,13 +109,13 @@ function bp_nouveau_member_hook( $when = '', $suffix = '' ) {
 /**
  * Template tag to wrap the notification settings hook
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_member_email_notice_settings() {
 	/**
 	 * Fires at the top of the member template notification settings form.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	do_action( 'bp_notification_settings' );
 }
@@ -123,7 +123,7 @@ function bp_nouveau_member_email_notice_settings() {
 /**
  * Output the action buttons for the displayed user profile
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $args See bp_nouveau_wrapper() for the description of parameters.
  */
@@ -150,7 +150,7 @@ function bp_nouveau_member_header_buttons( $args = array() ) {
 	/**
 	 * Fires in the member header actions section.
 	 *
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 */
 	do_action( 'bp_member_header_actions' );
 	$output .= ob_get_clean();
@@ -172,7 +172,7 @@ function bp_nouveau_member_header_buttons( $args = array() ) {
 /**
  * Output the action buttons in member loops
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $args See bp_nouveau_wrapper() for the description of parameters.
  */
@@ -200,7 +200,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 	/**
 	 * Fires inside the members action HTML markup to display actions.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( $action );
 	$output .= ob_get_clean();
@@ -215,7 +215,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 	/**
 	 * Get the action buttons for the displayed user profile
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return array
 	 */
@@ -467,7 +467,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 		/**
 		 * Filter to add your buttons, use the position argument to choose where to insert it.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array  $buttons The list of buttons.
 		 * @param int    $user_id The displayed user ID.
@@ -498,7 +498,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 		/**
 		 * Leave a chance to adjust the $return
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array  $return  The list of buttons ordered.
 		 * @param int    $user_id The displayed user ID.
@@ -512,7 +512,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 /**
  * Does the member has meta.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return bool True if the member has meta. False otherwise.
  */
@@ -523,7 +523,7 @@ function bp_nouveau_member_has_meta() {
 /**
  * Display the member meta.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string HTML Output.
  */
@@ -534,7 +534,7 @@ function bp_nouveau_member_meta() {
 	/**
 	 * Get the member meta.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return array The member meta.
 	 */
@@ -577,7 +577,7 @@ function bp_nouveau_member_meta() {
 			/**
 			 * Filter to add/remove Member meta.
 			 *
-			 * @since 3.0.0
+			 * @since BuddyPress 3.0.0
 			 *
 			 * @param array  $meta    The list of meta to output.
 			 * @param object $member  The member object
@@ -592,13 +592,13 @@ function bp_nouveau_member_meta() {
 /**
  * Load the appropriate content for the single member pages
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_member_template_part() {
 	/**
 	 * Fires before the display of member body content.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_before_member_body' );
 
@@ -632,7 +632,7 @@ function bp_nouveau_member_template_part() {
 	/**
 	 * Fires after the display of member body content.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_after_member_body' );
 }
@@ -640,7 +640,7 @@ function bp_nouveau_member_template_part() {
 /**
  * Use the appropriate Member header and enjoy a template hierarchy
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string HTML Output
  */
@@ -654,7 +654,7 @@ function bp_nouveau_member_header_template_part() {
 	/**
 	 * Fires before the display of a member's header.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_before_member_header' );
 
@@ -664,7 +664,7 @@ function bp_nouveau_member_header_template_part() {
 	/**
 	 * Fires after the display of a member's header.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_after_member_header' );
 
@@ -675,7 +675,7 @@ function bp_nouveau_member_header_template_part() {
  * Get a link to set the Member's default front page and directly
  * reach the Customizer section where it's possible to do it.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string HTML Output
  */
@@ -693,7 +693,7 @@ function bp_nouveau_members_get_customizer_option_link() {
  * Get a link to set the Member's front page widgets and directly
  * reach the Customizer section where it's possible to do it.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string HTML Output
  */
@@ -714,42 +714,42 @@ function bp_nouveau_members_get_customizer_widgets_link() {
  * Template tag to wrap all Legacy actions that was used
  * before and after the WP User's Profile.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_wp_profile_hooks( $type = 'before' ) {
 	if ( 'before' === $type ) {
 		/**
 		 * Fires before the display of member profile loop content.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 */
 		do_action( 'bp_before_profile_loop_content' );
 
 		/**
 		 * Fires before the display of member profile field content.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 */
 		do_action( 'bp_before_profile_field_content' );
 	} else {
 		/**
 		 * Fires after the display of member profile field content.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 */
 		do_action( 'bp_after_profile_field_content' );
 
 		/**
 		 * Fires and displays the profile field buttons.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 */
 		do_action( 'bp_profile_field_buttons' );
 
 		/**
 		 * Fires after the display of member profile loop content.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 */
 		do_action( 'bp_after_profile_loop_content' );
 	}
@@ -758,7 +758,7 @@ function bp_nouveau_wp_profile_hooks( $type = 'before' ) {
 /**
  * Does the displayed user has WP profile fields?
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return bool True if user has profile fields. False otherwise.
  */
@@ -803,7 +803,7 @@ function bp_nouveau_has_wp_profile_fields() {
 /**
  * Check if there are still profile fields to output.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return bool True if the profile field exists. False otherwise.
  */
@@ -823,7 +823,7 @@ function bp_nouveau_wp_profile_fields() {
 /**
  * Set the current profile field and iterate into the loop.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_wp_profile_field() {
 	$bp_nouveau = bp_nouveau();
@@ -835,7 +835,7 @@ function bp_nouveau_wp_profile_field() {
 /**
  * Output the WP profile field ID.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_wp_profile_field_id() {
 	echo esc_attr( bp_nouveau_get_wp_profile_field_id() );
@@ -843,7 +843,7 @@ function bp_nouveau_wp_profile_field_id() {
 	/**
 	 * Get the WP profile field ID.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return int the profile field ID.
 	 */
@@ -853,7 +853,7 @@ function bp_nouveau_wp_profile_field_id() {
 		/**
 		 * Filters the WP profile field ID used for BuddyPress Nouveau.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $id Field ID.
 		 */
@@ -863,7 +863,7 @@ function bp_nouveau_wp_profile_field_id() {
 /**
  * Output the WP profile field label.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_wp_profile_field_label() {
 	echo esc_html( bp_nouveau_get_wp_profile_field_label() );
@@ -872,7 +872,7 @@ function bp_nouveau_wp_profile_field_label() {
 	/**
 	 * Get the WP profile label.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return string the profile field label.
 	 */
@@ -882,7 +882,7 @@ function bp_nouveau_wp_profile_field_label() {
 		/**
 		 * Filters the WP profile field label used for BuddyPress Nouveau.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $label Field label.
 		 */
@@ -892,7 +892,7 @@ function bp_nouveau_wp_profile_field_label() {
 /**
  * Output the WP profile field data.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_wp_profile_field_data() {
 	$data = bp_nouveau_get_wp_profile_field_data();
@@ -902,7 +902,7 @@ function bp_nouveau_wp_profile_field_data() {
 		/**
 		 * Filters a WP profile field value.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $data The profile field data value.
 		 */
@@ -919,7 +919,7 @@ function bp_nouveau_wp_profile_field_data() {
 	/**
 	 * Get the WP profile field data.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return string the profile field data.
 	 */

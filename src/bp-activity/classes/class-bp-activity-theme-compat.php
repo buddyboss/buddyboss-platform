@@ -3,7 +3,7 @@
  * BuddyBoss Activity Theme Compatibility.
  *
  * @package BuddyBoss
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 
 // Exit if accessed directly.
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
  * This class sets up the necessary theme compatibility actions to safely output
  * activity template parts to the_title and the_content areas of a theme.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 class BP_Activity_Theme_Compat {
 
 	/**
 	 * Set up the activity component theme compatibility.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function __construct() {
 		add_action( 'bp_setup_theme_compat', array( $this, 'is_activity' ) );
@@ -31,7 +31,7 @@ class BP_Activity_Theme_Compat {
 	/**
 	 * Set up the theme compatibility hooks, if we're looking at an activity page.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function is_activity() {
 
@@ -65,7 +65,7 @@ class BP_Activity_Theme_Compat {
 	 *
 	 * This is to mirror how WordPress has {@link https://codex.wordpress.org/Template_Hierarchy template hierarchy}.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $templates The templates from bp_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
@@ -75,7 +75,7 @@ class BP_Activity_Theme_Compat {
 		/**
 		 * Filters the template hierarchy for the activity directory page.
 		 *
-		 * @since 1.8.0
+		 * @since BuddyPress 1.8.0
 		 *
 		 * @param array $index-directory Array holding template names to be merged into template list.
 		 */
@@ -93,7 +93,7 @@ class BP_Activity_Theme_Compat {
 	/**
 	 * Update the global $post with directory data.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function directory_dummy_post() {
 		bp_theme_compat_reset_post( array(
@@ -112,7 +112,7 @@ class BP_Activity_Theme_Compat {
 	/**
 	 * Filter the_content with the groups index template part.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function directory_content() {
 		return bp_buffer_template_part( 'activity/index', null, false );
@@ -125,7 +125,7 @@ class BP_Activity_Theme_Compat {
 	 *
 	 * This is to mirror how WordPress has {@link https://codex.wordpress.org/Template_Hierarchy template hierarchy}.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $templates The templates from bp_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
@@ -135,7 +135,7 @@ class BP_Activity_Theme_Compat {
 		/**
 		 * Filters the template hierarchy for the activity permalink pages.
 		 *
-		 * @since 1.8.0
+		 * @since BuddyPress 1.8.0
 		 *
 		 * @param array $index Array holding template names to be merged into template list.
 		 */
@@ -153,7 +153,7 @@ class BP_Activity_Theme_Compat {
 	/**
 	 * Update the global $post with the displayed user's data.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function single_dummy_post() {
 		bp_theme_compat_reset_post( array(
@@ -172,7 +172,7 @@ class BP_Activity_Theme_Compat {
 	/**
 	 * Filter the_content with the members' activity permalink template part.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function single_dummy_content() {
 		return bp_buffer_template_part( 'activity/single/home', null, false );

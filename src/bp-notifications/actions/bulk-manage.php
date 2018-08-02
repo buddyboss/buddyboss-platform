@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage NotificationsActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handles bulk management (mark as read/unread, delete) of notifications.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @return bool
  */

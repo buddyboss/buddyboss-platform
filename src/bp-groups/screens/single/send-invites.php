@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handle the display of a group's Send Invites page.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function groups_screen_group_invite() {
 
@@ -37,7 +37,7 @@ function groups_screen_group_invite() {
 		/**
 		 * Fires after the sending of a group invite inside the group's Send Invites page.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param int $id ID of the group whose members are being displayed.
 		 */
@@ -49,7 +49,7 @@ function groups_screen_group_invite() {
 		/**
 		 * Filters the template to load for a group's Send Invites page.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $value Path to a group's Send Invites template.
 		 */
@@ -66,7 +66,7 @@ function groups_screen_group_invite() {
  * Note that this function is only used when JS is disabled. Normally, clicking
  * Remove Invite removes the invitation via AJAX.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 function groups_remove_group_invite() {
 	if ( ! bp_is_group_invites() ) {

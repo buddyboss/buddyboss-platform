@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register scripts commonly used by BuddyPress.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  */
 function bp_core_register_common_scripts() {
 	$min = bp_core_get_minified_asset_suffix();
@@ -82,10 +82,10 @@ function bp_core_register_common_scripts() {
 	 * Default handles include 'bp-confirm', 'bp-widget-members',
 	 * 'bp-jquery-query', 'bp-jquery-cookie', and 'bp-jquery-scroll-to'.
 	 *
-	 * @since 2.1.0 'jquery-caret', 'jquery-atwho' added.
-	 * @since 2.3.0 'bp-plupload', 'bp-avatar', 'bp-webcam' added.
-	 * @since 2.4.0 'bp-cover-image' added.
-	 * @since 2.7.0 'bp-moment', 'bp-livestamp' added.
+	 * @since BuddyPress 2.1.0 'jquery-caret', 'jquery-atwho' added.
+	 * @since BuddyPress 2.3.0 'bp-plupload', 'bp-avatar', 'bp-webcam' added.
+	 * @since BuddyPress 2.4.0 'bp-cover-image' added.
+	 * @since BuddyPress 2.7.0 'bp-moment', 'bp-livestamp' added.
 	 *              'bp-moment-locale' is added conditionally if a moment.js locale file is found.
 	 *
 	 * @param array $value Array of javascript file information to register.
@@ -104,7 +104,7 @@ add_action( 'bp_admin_enqueue_scripts', 'bp_core_register_common_scripts', 1 );
 /**
  * Register styles commonly used by BuddyPress.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  */
 function bp_core_register_common_styles() {
 	$min = bp_core_get_minified_asset_suffix();
@@ -113,7 +113,7 @@ function bp_core_register_common_styles() {
 	/**
 	 * Filters the URL for the Admin Bar stylesheet.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param string $value URL for the Admin Bar stylesheet.
 	 */
@@ -122,7 +122,7 @@ function bp_core_register_common_styles() {
 	/**
 	 * Filters the BuddyBoss Core stylesheet files to register.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param array $value Array of stylesheet file information to register.
 	 */
@@ -152,7 +152,7 @@ add_action( 'bp_admin_enqueue_scripts', 'bp_core_register_common_styles', 1 );
 /**
  * Load the JS for "Are you sure?" confirm links.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_core_confirmation_js() {
 	if ( is_multisite() && ! bp_is_root_blog() ) {
@@ -172,7 +172,7 @@ add_action( 'bp_admin_enqueue_scripts', 'bp_core_confirmation_js' );
 /**
  * Enqueues the css and js required by the Avatar UI.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 function bp_core_avatar_scripts() {
 	if ( ! bp_avatar_is_front_edit() ) {
@@ -192,7 +192,7 @@ add_action( 'bp_enqueue_scripts', 'bp_core_avatar_scripts' );
 /**
  * Enqueues the css and js required by the Cover Image UI.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  */
 function bp_core_cover_image_scripts() {
 	if ( ! bp_attachments_cover_image_is_edit() ) {
@@ -207,7 +207,7 @@ add_action( 'bp_enqueue_scripts', 'bp_core_cover_image_scripts' );
 /**
  * Enqueues jCrop library and hooks BP's custom cropper JS.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_core_add_jquery_cropper() {
 	wp_enqueue_style( 'jcrop' );
@@ -219,14 +219,14 @@ function bp_core_add_jquery_cropper() {
 /**
  * Output the inline JS needed for the cropper to work on a per-page basis.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_core_add_cropper_inline_js() {
 
 	/**
 	 * Filters the return value of getimagesize to determine if an image was uploaded.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param array $value Array of data found by getimagesize.
 	 */
@@ -323,7 +323,7 @@ function bp_core_add_cropper_inline_js() {
 /**
  * Output the inline CSS for the BP image cropper.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_core_add_cropper_inline_css() {
 ?>
@@ -345,7 +345,7 @@ function bp_core_add_cropper_inline_css() {
 /**
  * Define the 'ajaxurl' JS variable, used by themes as an AJAX endpoint.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_core_add_ajax_url_js() {
 ?>
@@ -362,7 +362,7 @@ add_action( 'wp_head', 'bp_core_add_ajax_url_js' );
  * Designed to be sensitive to FORCE_SSL_ADMIN and non-standard multisite
  * configurations.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @return string AJAX endpoint URL.
  */
@@ -371,7 +371,7 @@ function bp_core_ajax_url() {
 	/**
 	 * Filters the proper value for BuddyPress' ajaxurl.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $value Proper ajaxurl value for BuddyPress.
 	 */
@@ -381,7 +381,7 @@ function bp_core_ajax_url() {
 /**
  * Get the JavaScript dependencies for buddypress.js.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @return array The JavaScript dependencies.
  */
@@ -390,7 +390,7 @@ function bp_core_get_js_dependencies() {
 	/**
 	 * Filters the javascript dependencies for buddypress.js.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $value Array of javascript dependencies for buddypress.js.
 	 */
@@ -407,7 +407,7 @@ function bp_core_get_js_dependencies() {
 /**
  * Add inline css to display the component's single item cover image.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @param bool $return True to get the inline css.
  * @return null|array|false The inline css or an associative array containing
@@ -508,7 +508,7 @@ add_action( 'bp_enqueue_scripts', 'bp_add_cover_image_inline_css', 11 );
 /**
  * Enqueues livestamp.js on BuddyPress pages.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  */
 function bp_core_add_livestamp() {
 	if ( ! is_buddypress() ) {
@@ -522,7 +522,7 @@ add_action( 'bp_enqueue_scripts', 'bp_core_add_livestamp' );
 /**
  * Enqueue and localize livestamp.js script.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  */
 function bp_core_enqueue_livestamp() {
 	// If bp-livestamp isn't enqueued, do it now.
@@ -550,7 +550,7 @@ function bp_core_enqueue_livestamp() {
 /**
  * Return moment.js config.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @return string
  */
@@ -574,7 +574,7 @@ EOD;
  *
  * Will be removed once we set our minimum version of WP 4.5.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @access private
  */

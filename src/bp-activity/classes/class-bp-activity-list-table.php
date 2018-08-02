@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss
  * @subpackage ActivityAdmin
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * List table class for the Activity component admin page.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 class BP_Activity_List_Table extends WP_List_Table {
 
@@ -25,7 +25,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	 *
 	 * E.g. "all", "pending", "approved", "spam"...
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var string $view
 	 */
 	public $view = 'all';
@@ -33,7 +33,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	/**
 	 * How many activity items have been marked as spam.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var int $spam_count
 	 */
 	public $spam_count = 0;
@@ -41,7 +41,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	/**
 	 * Store activity-to-user-ID mappings for use in the In Response To column.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var array $activity_user_id
 	 */
 	protected $activity_user_id = array();
@@ -51,7 +51,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	 *
 	 * @link https://buddypress.trac.wordpress.org/ticket/6277
 	 *
-	 * @since 2.2.2
+	 * @since BuddyPress 2.2.2
 	 * @var bool $disable_blogforum_comments
 	 */
 	public $disable_blogforum_comments = false;
@@ -59,7 +59,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	public function __construct() {
 
@@ -78,7 +78,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	/**
 	 * Handle filtering of data, sorting, pagination, and any other data manipulation prior to rendering.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	function prepare_items() {
 
@@ -117,7 +117,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 			/**
 			 * Filter here to override the filter with a filter query
 			 *
-			 * @since  2.5.0
+			 * @since BuddyPress  2.5.0
 			 *
 			 * @param array $filter
 			 */
@@ -200,7 +200,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	/**
 	 * Get an array of all the columns on the page.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @return array Column headers.
 	 */
@@ -218,7 +218,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	/**
 	 * Get name of default primary column
 	 *
-	 * @since 2.3.3
+	 * @since BuddyPress 2.3.3
 	 *
 	 * @return string
 	 */
@@ -229,7 +229,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	/**
 	 * Display a message on screen when no items are found (e.g. no search matches).
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	function no_items() {
 		_e( 'No activities found.', 'buddyboss' );
@@ -238,7 +238,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	/**
 	 * Output the Activity data table.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	function display() {
 		$this->display_tablenav( 'top' ); ?>
@@ -273,7 +273,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	/**
 	 * Generate content for a single row of the table.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param object $item The current item.
 	 */
@@ -302,7 +302,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	/**
 	 * Get the list of views available on this table (e.g. "all", "spam").
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	function get_views() {
 		$url_base = add_query_arg( array( 'page' => 'bp-activity' ), bp_get_admin_url( 'admin.php' ) ); ?>
@@ -321,7 +321,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 			/**
 			 * Fires inside listing of views so plugins can add their own.
 			 *
-			 * @since 1.6.0
+			 * @since BuddyPress 1.6.0
 			 *
 			 * @param string $url_base Current URL base for view.
 			 * @param string $view     Current view being displayed.
@@ -334,7 +334,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	/**
 	 * Get bulk actions.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @return array Key/value pairs for the bulk actions dropdown.
 	 */
@@ -347,7 +347,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 		/**
 		 * Filters the default bulk actions so plugins can add custom actions.
 		 *
-		 * @since 1.6.0
+		 * @since BuddyPress 1.6.0
 		 *
 		 * @param array $actions Default available actions for bulk operations.
 		 */
@@ -357,7 +357,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	/**
 	 * Get the table column titles.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @see WP_List_Table::single_row_columns()
 	 *
@@ -367,7 +367,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 		/**
 		 * Filters the titles for the columns for the activity list table.
 		 *
-		 * @since 2.4.0
+		 * @since BuddyPress 2.4.0
 		 *
 		 * @param array $value Array of slugs and titles for the columns.
 		 */
@@ -385,7 +385,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	 *
 	 * Currently, returns an empty array (no columns are sortable).
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @todo For this to work, BP_Activity_Activity::get() needs updating
 	 *       to support ordering by specific fields.
 	 *
@@ -402,7 +402,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	/**
 	 * Markup for the "filter" part of the form (i.e. which activity type to display).
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string $which 'top' or 'bottom'.
 	 */
@@ -480,8 +480,8 @@ class BP_Activity_List_Table extends WP_List_Table {
 	 * Basically a duplicate of the row_actions() method, but removes the
 	 * unnecessary <button> addition.
 	 *
-	 * @since 2.3.3
-	 * @since 2.3.4 Visibility set to public for compatibility with WP < 4.0.0.
+	 * @since BuddyPress 2.3.3
+	 * @since BuddyPress 2.3.4 Visibility set to public for compatibility with WP < 4.0.0.
 	 *
 	 * @param array $actions The list of actions.
 	 * @param bool  $always_visible Whether the actions should be always visible.
@@ -508,7 +508,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	/**
 	 * Checkbox column markup.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @see WP_List_Table::single_row_columns()
 	 *
@@ -522,7 +522,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	/**
 	 * Author column markup.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @see WP_List_Table::single_row_columns()
 	 *
@@ -535,7 +535,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	/**
 	 * Action column markup.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @see WP_List_Table::single_row_columns()
 	 *
@@ -556,7 +556,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	 *
 	 * Called "comment" in the CSS so we can re-use some WP core CSS.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @see WP_List_Table::single_row_columns()
 	 *
@@ -614,7 +614,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 		/**
 		 * Filters available actions for plugins to alter.
 		 *
-		 * @since 1.6.0
+		 * @since BuddyPress 1.6.0
 		 *
 		 * @param array $actions Array of available actions user could use.
 		 * @param array $item    Current item being added to page.
@@ -649,7 +649,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 			/**
 			 * Filters current activity item action.
 			 *
-			 * @since 1.2.0
+			 * @since BuddyPress 1.2.0
 			 *
 			 * @var array $item Array index holding current activity item action.
 			 */
@@ -659,7 +659,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 		/**
 		 * Filter here to add extra output to the activity content into the Administration.
 		 *
-		 * @since  2.4.0
+		 * @since BuddyPress  2.4.0
 		 *
 		 * @param  string $content The activity content.
 		 * @param  array  $item    The activity object converted into an array.
@@ -670,7 +670,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	/**
 	 * "In response to" column markup.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @see WP_List_Table::single_row_columns()
 	 *
@@ -693,7 +693,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 		/**
 		 * Filters default list of default root activity types.
 		 *
-		 * @since 1.6.0
+		 * @since BuddyPress 1.6.0
 		 *
 		 * @param array $value Array of default activity types.
 		 * @param array $item  Current item being displayed.
@@ -724,7 +724,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	/**
 	 * Allow plugins to add their custom column.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param array  $item        Information about the current row.
 	 * @param string $column_name The column name.
@@ -735,7 +735,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 		/**
 		 * Filters a string to allow plugins to add custom column content.
 		 *
-		 * @since 2.4.0
+		 * @since BuddyPress 2.4.0
 		 *
 		 * @param string $value       Empty string.
 		 * @param string $column_name Name of the column being rendered.
@@ -750,7 +750,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	 * Wraps bp_activity_get_specific(), with some additional logic for
 	 * avoiding duplicate queries.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $activity_id Activity ID to retrieve User ID for.
 	 * @return int User ID of the activity item in question.
@@ -790,8 +790,8 @@ class BP_Activity_List_Table extends WP_List_Table {
 	 * list table doesn't use a BuddyBoss activity loop, which prevents those
 	 * functions from working as intended.
 	 *
-	 * @since 2.0.0
-	 * @since 2.5.0 Include Post type activities types
+	 * @since BuddyPress 2.0.0
+	 * @since BuddyPress 2.5.0 Include Post type activities types
 	 *
 	 * @param array $item An array version of the BP_Activity_Activity object.
 	 * @return bool $can_comment
@@ -820,8 +820,8 @@ class BP_Activity_List_Table extends WP_List_Table {
 		/**
 		 * Filters if an activity item can be commented on or not.
 		 *
-		 * @since 2.0.0
-		 * @since 2.5.0 Add a second parameter to include the activity item into the filter.
+		 * @since BuddyPress 2.0.0
+		 * @since BuddyPress 2.5.0 Add a second parameter to include the activity item into the filter.
 		 *
 		 * @param bool  $can_comment Whether an activity item can be commented on or not.
 		 * @param array $item        An array version of the BP_Activity_Activity object.
@@ -835,7 +835,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 	 * In some cases, BuddyPress gives us a structured tree of activity
 	 * items plus their comments. This method converts it to a flat array.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param array $tree Source array.
 	 * @return array Flattened array.

@@ -6,7 +6,7 @@ use WP_CLI;
 /**
  * Manage BuddyPress Activities.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 class Activity extends BuddypressCommand {
 
@@ -672,7 +672,7 @@ class Activity extends BuddypressCommand {
 	/**
 	 * Pull up a random active component for use in activity items.
 	 *
-	 * @since 1.1
+	 * @since BuddyPress 1.1
 	 *
 	 * @return string
 	 */
@@ -688,7 +688,7 @@ class Activity extends BuddypressCommand {
 	/**
 	 * Get a random type from a component.
 	 *
-	 * @since 1.1
+	 * @since BuddyPress 1.1
 	 *
 	 * @param string $component Component name.
 	 * @return string
@@ -701,7 +701,7 @@ class Activity extends BuddypressCommand {
 	/**
 	 * Get a list of activity components and actions.
 	 *
-	 * @since 1.1
+	 * @since BuddyPress 1.1
 	 *
 	 * @return array
 	 */
@@ -719,7 +719,7 @@ class Activity extends BuddypressCommand {
 	/**
 	 * Generate item details.
 	 *
-	 * @since 1.1
+	 * @since BuddyPress 1.1
 	 */
 	protected function generate_item_details( $r ) {
 		global $wpdb, $bp;

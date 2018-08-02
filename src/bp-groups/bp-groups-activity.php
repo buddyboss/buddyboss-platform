@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsActivity
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register activity actions for the Groups component.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return false|null False on failure.
  */
@@ -57,7 +57,7 @@ function groups_register_activity_actions() {
 	/**
 	 * Fires at end of registration of the default activity actions for the Groups component.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'groups_register_activity_actions' );
 }
@@ -66,7 +66,7 @@ add_action( 'bp_register_activity_actions', 'groups_register_activity_actions' )
 /**
  * Format 'created_group' activity actions.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param string $action   Static activity action.
  * @param object $activity Activity data object.
@@ -83,7 +83,7 @@ function bp_groups_format_activity_action_created_group( $action, $activity ) {
 	/**
 	 * Filters the 'created_group' activity actions.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param string $action   The 'created_group' activity action.
 	 * @param object $activity Activity data object.
@@ -94,7 +94,7 @@ function bp_groups_format_activity_action_created_group( $action, $activity ) {
 /**
  * Format 'joined_group' activity actions.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param string $action   Static activity action.
  * @param object $activity Activity data object.
@@ -122,7 +122,7 @@ function bp_groups_format_activity_action_joined_group( $action, $activity ) {
 	/**
 	 * Filters the 'joined_group' activity actions.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param string $action   The 'joined_group' activity actions.
 	 * @param object $activity Activity data object.
@@ -133,7 +133,7 @@ function bp_groups_format_activity_action_joined_group( $action, $activity ) {
 /**
  * Format 'group_details_updated' activity actions.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param  string $action   Static activity action.
  * @param  object $activity Activity data object.
@@ -175,7 +175,7 @@ function bp_groups_format_activity_action_group_details_updated( $action, $activ
 	/**
 	 * Filters the 'group_details_updated' activity actions.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param string $action   The 'group_details_updated' activity actions.
 	 * @param object $activity Activity data object.
@@ -188,7 +188,7 @@ function bp_groups_format_activity_action_group_details_updated( $action, $activ
  *
  * This reduces database overhead during the activity loop.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param array $activities Array of activity items.
  * @return array
@@ -238,7 +238,7 @@ add_filter( 'bp_activity_prefetch_object_data', 'bp_groups_prefetch_activity_obj
 /**
  * Set up activity arguments for use with the 'groups' scope.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -303,7 +303,7 @@ add_filter( 'bp_activity_set_groups_scope_args', 'bp_groups_filter_activity_scop
  * A wrapper for {@link bp_activity_add()} that provides some Groups-specific
  * defaults.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @see bp_activity_add() for more detailed description of parameters and
  *      return values.
@@ -362,7 +362,7 @@ function groups_record_activity( $args = '' ) {
  *
  * Used as a filter callback to 'bp_activity_can_comment'.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param  bool                      $retval   True if item can receive comments.
  * @param  null|BP_Activity_Activity $activity Null by default. Pass an activity object to check against that instead.
@@ -406,7 +406,7 @@ add_filter( 'bp_activity_can_comment', 'bp_groups_filter_activity_can_comment', 
  *
  * Used as a filter callback to 'bp_activity_can_comment_reply'.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param  bool        $retval  True if activity comment can be replied to.
  * @param  object|bool $comment Current activity comment object. If empty, parameter is boolean false.
@@ -429,7 +429,7 @@ add_filter( 'bp_activity_can_comment_reply', 'bp_groups_filter_activity_can_comm
 /**
  * Add an activity feed item when a member joins a group.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @param int $user_id  ID of the user joining the group.
  * @param int $group_id ID of the group.
@@ -448,7 +448,7 @@ function bp_groups_membership_accepted_add_activity( $user_id, $group_id ) {
 	/**
 	 * Filters the 'membership_accepted' activity actions.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param string $value    The 'membership_accepted' activity action.
 	 * @param int    $user_id  ID of the user joining the group.
@@ -469,7 +469,7 @@ add_action( 'groups_membership_accepted', 'bp_groups_membership_accepted_add_act
 /**
  * Add an activity item when a group's details are updated.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param  int             $group_id       ID of the group.
  * @param  BP_Groups_Group $old_group      Group object before the details had been changed.
@@ -548,7 +548,7 @@ add_action( 'groups_details_updated', 'bp_groups_group_details_updated_add_activ
 /**
  * Delete all activity items related to a specific group.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @param int $group_id ID of the group.
  */
@@ -569,7 +569,7 @@ add_action( 'groups_delete_group', 'bp_groups_delete_group_delete_all_activity',
  * joined_group activity so users cannot flood the activity feed by
  * joining/leaving the group in quick succession.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @param int $group_id ID of the group.
  * @param int $user_id  ID of the user leaving the group.

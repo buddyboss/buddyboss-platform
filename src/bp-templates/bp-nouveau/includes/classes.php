@@ -2,7 +2,7 @@
 /**
  * Common Classes
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Builds a group of BP_Button
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 class BP_Buttons_Group {
 
@@ -26,7 +26,7 @@ class BP_Buttons_Group {
 	/**
 	 * Constructor
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $args Optional array having the following parameters {
 	 *     @type string $id                A string to use as the unique ID for the button. Required.
@@ -88,7 +88,7 @@ class BP_Buttons_Group {
 	/**
 	 * Sort the Buttons of the group according to their position attribute
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array the list of buttons to sort.
 	 *
@@ -123,7 +123,7 @@ class BP_Buttons_Group {
 	/**
 	 * Get the BuddyPress buttons for the group
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param bool $sort whether to sort the buttons or not.
 	 *
@@ -156,7 +156,7 @@ class BP_Buttons_Group {
 	/**
 	 * Update the group of buttons
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $args Optional. See the __constructor for a description of this argument.
 	 */
@@ -174,7 +174,7 @@ class BP_Buttons_Group {
  *
  * Adds a widget to move avatar/item nav into the sidebar
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @uses WP_Widget
  */
@@ -182,7 +182,7 @@ class BP_Nouveau_Object_Nav_Widget extends WP_Widget {
 	/**
 	 * Constructor
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function __construct() {
 		$widget_ops = array(
@@ -200,7 +200,7 @@ class BP_Nouveau_Object_Nav_Widget extends WP_Widget {
 	/**
 	 * Register the widget
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public static function register_widget() {
 		register_widget( 'BP_Nouveau_Object_Nav_Widget' );
@@ -209,7 +209,7 @@ class BP_Nouveau_Object_Nav_Widget extends WP_Widget {
 	/**
 	 * Displays the output, the button to post new support topics
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param mixed   $args     Arguments
 	 * @param unknown $instance
@@ -222,7 +222,7 @@ class BP_Nouveau_Object_Nav_Widget extends WP_Widget {
 		/**
 		 * Filters the nav widget args for the BP_Nouveau_Object_Nav_Widget widget.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array $value Array of arguments {
 		 *     @param bool $bp_nouveau_widget_title Whether or not to assign a title for the widget.
@@ -247,7 +247,7 @@ class BP_Nouveau_Object_Nav_Widget extends WP_Widget {
 		/**
 		 * Filters the BP_Nouveau_Object_Nav_Widget widget title.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $title    The widget title.
 		 * @param array  $instance The settings for the particular instance of the widget.
@@ -275,7 +275,7 @@ class BP_Nouveau_Object_Nav_Widget extends WP_Widget {
 	/**
 	 * Update the new support topic widget options (title)
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $new_instance The new instance options
 	 * @param array $old_instance The old instance options
@@ -292,7 +292,7 @@ class BP_Nouveau_Object_Nav_Widget extends WP_Widget {
 	/**
 	 * Output the new support topic widget options form
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param $instance Instance
 	 *

@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage MembersCache
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Pre-fetch member type data when initializing a Members loop.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param BP_User_Query $bp_user_query BP_User_Query object.
  */
@@ -52,7 +52,7 @@ add_action( 'bp_user_query_populate_extras', 'bp_members_prefetch_member_type' )
  *
  * Called when the user is deleted or marked as spam.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param int $user_id ID of the deleted user.
  */
@@ -65,7 +65,7 @@ add_action( 'delete_user', 'bp_members_clear_member_type_cache' );
 /**
  * Invalidate activity caches when a user's last_activity value is changed.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @return bool True on success, false on failure.
  */

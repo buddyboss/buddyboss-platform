@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage MessageActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handle creating of private messages or sitewide notices
  *
- * @since 2.4.0 This function was split from messages_screen_compose(). See #6505.
+ * @since BuddyPress 2.4.0 This function was split from messages_screen_compose(). See #6505.
  *
  * @return boolean
  */
@@ -71,7 +71,7 @@ function bp_messages_action_create_message() {
 			/**
 			 * Filters the array of recipients to receive the composed message.
 			 *
-			 * @since 1.2.10
+			 * @since BuddyPress 1.2.10
 			 *
 			 * @param array $recipients Array of recipients to receive message.
 			 */

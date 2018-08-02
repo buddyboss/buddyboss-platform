@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss
  * @subpackage Connections
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the bp-friends component.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_setup_friends() {
 	buddypress()->friends = new BP_Friends_Component();

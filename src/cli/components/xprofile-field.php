@@ -6,7 +6,7 @@ use WP_CLI;
 /**
  * Manage XProfile Fields.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 class XProfile_Field extends BuddypressCommand {
 

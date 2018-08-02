@@ -2,7 +2,7 @@
 /**
  * Blogs functions
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
 
@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_get_blogs_directory_nav_items() {
 	$nav_items = array();
@@ -65,7 +65,7 @@ function bp_nouveau_get_blogs_directory_nav_items() {
 	/**
 	 * Use this filter to introduce your custom nav items for the blogs directory.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param  array $nav_items The list of the blogs directory nav items.
 	 */
@@ -75,7 +75,7 @@ function bp_nouveau_get_blogs_directory_nav_items() {
 /**
  * Get Dropdown filters for the blogs component
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $context 'directory' or 'user'
  *
@@ -97,7 +97,7 @@ function bp_nouveau_get_blogs_filters( $context = '' ) {
 	 * Recommended, filter here instead of adding an action to 'bp_member_blog_order_options'
 	 * or 'bp_blogs_directory_order_options'
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array  the blogs filters.
 	 * @param string the context.
@@ -118,7 +118,7 @@ function bp_nouveau_get_blogs_filters( $context = '' ) {
 /**
  * Catch the arguments for buttons
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $buttons The arguments of the button that BuddyPress is about to create.
  *
@@ -135,7 +135,7 @@ function bp_nouveau_blogs_catch_button_args( $button = array() ) {
 /**
  * Add settings to the customizer for the blogs component.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $settings the settings to add.
  *
@@ -156,7 +156,7 @@ function bp_nouveau_blogs_customizer_settings( $settings = array() ) {
 /**
  * Add controls for the settings of the customizer for the blogs component.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $controls the controls to add.
  *
@@ -189,7 +189,7 @@ function bp_nouveau_blogs_customizer_controls( $controls = array() ) {
 /**
  * Inline script to toggle the signup blog form
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string Javascript output
  */
@@ -222,7 +222,7 @@ function bp_nouveau_get_blog_signup_inline_script() {
  * Filter bp_get_blog_class().
  * Adds a class if blog item has a latest post.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_blog_loop_item_has_lastest_post( $classes ) {
 	if ( bp_get_blog_latest_post_title() ) {

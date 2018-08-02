@@ -3,7 +3,7 @@
  * BuddyBoss Groups membership request template loop class.
  *
  * @package BuddyBoss
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -12,30 +12,30 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Membership request template loop class.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 class BP_Groups_Membership_Requests_Template {
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int
 	 */
 	public $current_request = -1;
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int
 	 */
 	public $request_count;
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var array
 	 */
 	public $requests;
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var object
 	 */
 	public $request;
@@ -47,25 +47,25 @@ class BP_Groups_Membership_Requests_Template {
 	public $in_the_loop;
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int
 	 */
 	public $pag_page;
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int
 	 */
 	public $pag_num;
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var array|string|void
 	 */
 	public $pag_links;
 
 	/**
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int
 	 */
 	public $total_request_count;
@@ -73,7 +73,7 @@ class BP_Groups_Membership_Requests_Template {
 	/**
 	 * Constructor method.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param array $args {
 	 *     @type int $group_id ID of the group whose membership requests
@@ -165,7 +165,7 @@ class BP_Groups_Membership_Requests_Template {
 	/**
 	 * Whether or not there are requests to show.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return bool
 	 */
@@ -180,7 +180,7 @@ class BP_Groups_Membership_Requests_Template {
 	/**
 	 * Moves up to the next request.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return object
 	 */
@@ -194,7 +194,7 @@ class BP_Groups_Membership_Requests_Template {
 	/**
 	 * Rewinds the requests to the first in the list.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	public function rewind_requests() {
 		$this->current_request = -1;
@@ -207,7 +207,7 @@ class BP_Groups_Membership_Requests_Template {
 	/**
 	 * Finishes up the requests to display.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return bool
 	 */
@@ -220,7 +220,7 @@ class BP_Groups_Membership_Requests_Template {
 			/**
 			 * Fires right before the rewinding of group membership requests list.
 			 *
-			 * @since 1.5.0
+			 * @since BuddyPress 1.5.0
 			 */
 			do_action( 'group_request_loop_end' );
 			// Do some cleaning up after the loop.
@@ -234,7 +234,7 @@ class BP_Groups_Membership_Requests_Template {
 	/**
 	 * Sets up the request to display.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	public function the_request() {
 		$this->in_the_loop = true;
@@ -246,7 +246,7 @@ class BP_Groups_Membership_Requests_Template {
 			/**
 			 * Fires if the current group membership request item is the first in the loop.
 			 *
-			 * @since 1.1.0
+			 * @since BuddyPress 1.1.0
 			 */
 			do_action( 'group_request_loop_start' );
 		}

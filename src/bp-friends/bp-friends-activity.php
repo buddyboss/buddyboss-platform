@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss
  * @subpackage ConnectionsActivity
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * A wrapper for {@link bp_activity_add()} that provides some Connections-specific
  * defaults.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @see bp_activity_add() for more detailed description of parameters and
  *      return values.
@@ -58,7 +58,7 @@ function friends_record_activity( $args = '' ) {
 /**
  * Delete an activity item related to the Connections component.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param array $args {
  *     An array of arguments for the item to delete.
@@ -87,7 +87,7 @@ function friends_delete_activity( $args ) {
 /**
  * Register the activity actions for bp-friends.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function friends_register_activity_actions() {
 
@@ -122,7 +122,7 @@ function friends_register_activity_actions() {
 	/**
 	 * Fires after all default bp-friends activity actions have been registered.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'friends_register_activity_actions' );
 }
@@ -131,7 +131,7 @@ add_action( 'bp_register_activity_actions', 'friends_register_activity_actions' 
 /**
  * Format 'friendship_accepted' activity actions.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param string $action   Activity action string.
  * @param object $activity Activity data.
@@ -154,7 +154,7 @@ function bp_friends_format_activity_action_friendship_accepted( $action, $activi
 	/**
 	 * Filters the 'friendship_accepted' activity action format.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param string $action   String text for the 'friendship_accepted' action.
 	 * @param object $activity Activity data.
@@ -165,7 +165,7 @@ function bp_friends_format_activity_action_friendship_accepted( $action, $activi
 /**
  * Format 'friendship_created' activity actions.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param string $action   Static activity action.
  * @param object $activity Activity data.
@@ -188,7 +188,7 @@ function bp_friends_format_activity_action_friendship_created( $action, $activit
 	/**
 	 * Filters the 'friendship_created' activity action format.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param string $action   String text for the 'friendship_created' action.
 	 * @param object $activity Activity data.
@@ -201,7 +201,7 @@ function bp_friends_format_activity_action_friendship_created( $action, $activit
  *
  * This reduces database overhead during the activity loop.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param array $activities Array of activity items.
  * @return array
@@ -239,7 +239,7 @@ add_filter( 'bp_activity_prefetch_object_data', 'bp_friends_prefetch_activity_ob
  *
  * For details on the syntax, see {@link BP_Activity_Query}.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -292,7 +292,7 @@ add_filter( 'bp_activity_set_friends_scope_args', 'bp_friends_filter_activity_sc
  *
  * For details on the syntax, see {@link BP_Activity_Query}.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.
@@ -368,7 +368,7 @@ add_filter( 'bp_activity_set_just-me_scope_args', 'bp_friends_filter_activity_ju
  * Add activity feed items when one members accepts another members request
  * for virtual friendship.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @param int         $friendship_id       ID of the friendship.
  * @param int         $initiator_user_id   ID of friendship initiator.
@@ -393,7 +393,7 @@ add_action( 'friends_friendship_accepted', 'bp_friends_friendship_accepted_activ
 /**
  * Deletes friendship activity items when a user is deleted.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  *
  * @param int $user_id The ID of the user being deleted.
  */

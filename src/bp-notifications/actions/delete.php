@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage NotificationsActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handle deleting single notifications.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @return bool
  */

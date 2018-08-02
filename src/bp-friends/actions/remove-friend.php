@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage ConnectionsActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Catch and process Remove Connection requests.
  *
- * @since 1.0.1
+ * @since BuddyPress 1.0.1
  */
 function friends_action_remove_friend() {
 	if ( !bp_is_friends_component() || !bp_is_current_action( 'remove-friend' ) )

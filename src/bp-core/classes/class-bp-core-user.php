@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -119,7 +119,7 @@ class BP_Core_User {
 	/**
 	 * Profile information for the specific user.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 * @var array
 	 */
 	public $profile_data;
@@ -363,7 +363,7 @@ class BP_Core_User {
 		/**
 		 * Filters the SQL used to query for paged users.
 		 *
-		 * @since 1.2.6
+		 * @since BuddyPress 1.2.6
 		 *
 		 * @param string $value Concatenated SQL statement for the query.
 		 * @param array  $sql   Array of SQL statement parts for the query.
@@ -395,7 +395,7 @@ class BP_Core_User {
 		/**
 		 * Filters the SQL used to query for total users.
 		 *
-		 * @since 1.2.6
+		 * @since BuddyPress 1.2.6
 		 *
 		 * @param string $value Concatenated SQL statement for the query.
 		 * @param array  $sql   Array of SQL statement parts for the query.
@@ -470,7 +470,7 @@ class BP_Core_User {
 		/**
 		 * Filters the SQL used to query for total user count by first letter.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $value SQL prepared statement for the user count query.
 		 */
@@ -479,7 +479,7 @@ class BP_Core_User {
 		/**
 		 * Filters the SQL used to query for users by first letter.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $value SQL prepared statement for the user query.
 		 */
@@ -548,7 +548,7 @@ class BP_Core_User {
 		 *
 		 * Use this instead of the deprecated 'bp_core_get_specific_users_count_sql'.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param string   $sql             SQL string.
 		 * @param array    $user_ids        Array of IDs of specific users to fetch.
@@ -575,7 +575,7 @@ class BP_Core_User {
 		 *
 		 * Use this instead of the deprecated 'bp_core_get_specific_users_count_sql'.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param string   $sql             SQL string.
 		 * @param array    $user_ids        Array of IDs of specific users to fetch.
@@ -630,7 +630,7 @@ class BP_Core_User {
 		/**
 		 * Filters the SQL used to query for searched users count.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $value SQL statement for the searched users count query.
 		 */
@@ -639,7 +639,7 @@ class BP_Core_User {
 		/**
 		 * Filters the SQL used to query for searched users.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $value SQL statement for the searched users query.
 		 */
@@ -744,7 +744,7 @@ class BP_Core_User {
 	/**
 	 * Get WordPress user details for a specified user.
 	 *
-	 * @since 3.0.0 Results might be from cache
+	 * @since BuddyPress 3.0.0 Results might be from cache
 	 *
 	 * @param int $user_id User ID.
 	 * @return false|object WP_User if successful, false on failure.
@@ -809,7 +809,7 @@ class BP_Core_User {
 	 * Will create a new entry if it does not exist. Otherwise updates the
 	 * existing entry.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param int    $user_id ID of the user whose last_activity you are updating.
 	 * @param string $time    MySQL-formatted time string.
@@ -895,7 +895,7 @@ class BP_Core_User {
 		/**
 		 * Fires when a user's last_activity value has been updated.
 		 *
-		 * @since 2.7.0
+		 * @since BuddyPress 2.7.0
 		 *
 		 * @param int    $user_id ID of the user.
 		 * @param string $time    Last activity timestamp, in 'Y-m-d H:i:s' format.
@@ -908,7 +908,7 @@ class BP_Core_User {
 	/**
 	 * Delete a user's last_activity value.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param int $user_id ID of the user whose activity should be deleted.
 	 * @return bool True on success, false on failure or if no last_activity

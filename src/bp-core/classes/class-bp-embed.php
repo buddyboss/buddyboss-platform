@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Extends WP_Embed class for use with BuddyPress.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @see WP_Embed
  */
@@ -53,7 +53,7 @@ class BP_Embed extends WP_Embed {
 		/**
 		 * Filters the BuddyBoss Core oEmbed setup.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param BP_Embed $this Current instance of the BP_Embed. Passed by reference.
 		 */
@@ -96,7 +96,7 @@ class BP_Embed extends WP_Embed {
 						/**
 						 * Filters the oEmbed handler result for the provided URL.
 						 *
-						 * @since 1.5.0
+						 * @since BuddyPress 1.5.0
 						 *
 						 * @param string $return Handler callback for the oEmbed.
 						 * @param string $url    URL attempting to be embedded.
@@ -111,7 +111,7 @@ class BP_Embed extends WP_Embed {
 		/**
 		 * Filters the embed object ID.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param int $value Value of zero.
 		 */
@@ -129,8 +129,8 @@ class BP_Embed extends WP_Embed {
 		/**
 		 * Filters whether or not oEmbed discovery is on.
 		 *
-		 * @since 1.5.0
-		 * @since 2.5.0 Default status of oEmbed discovery has been switched
+		 * @since BuddyPress 1.5.0
+		 * @since BuddyPress 2.5.0 Default status of oEmbed discovery has been switched
 		 *              to true to apply changes introduced in WordPress 4.4
 		 *
 		 * @param bool $default_discovery Current status of oEmbed discovery.
@@ -187,7 +187,7 @@ class BP_Embed extends WP_Embed {
 			/**
 			 * Filters the cache value to be used in the oEmbed, if exists.
 			 *
-			 * @since 1.5.0
+			 * @since BuddyPress 1.5.0
 			 *
 			 * @param string $cache    Empty initial cache value.
 			 * @param int    $id       ID that the caching is for.
@@ -204,7 +204,7 @@ class BP_Embed extends WP_Embed {
 				/**
 				 * Filters the found cache for the provided URL.
 				 *
-				 * @since 1.5.0
+				 * @since BuddyPress 1.5.0
 				 *
 				 * @param string $cache   Cached HTML markup for embed.
 				 * @param string $url     The URL being embedded.
@@ -223,7 +223,7 @@ class BP_Embed extends WP_Embed {
 				 *
 				 * Lets components / plugins save their cache.
 				 *
-				 * @since 1.5.0
+				 * @since BuddyPress 1.5.0
 				 *
 				 * @param string $cache    Newly cached HTML markup for embed.
 				 * @param string $cachekey Key to use for the caching in the database.

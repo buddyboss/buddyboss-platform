@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage MessagesClasses
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -118,7 +118,7 @@ class BP_Messages_Message {
 		 *
 		 * Please use this hook to filter the properties above. Each part will be passed in.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param BP_Messages_Message $this Current instance of the message item being saved. Passed by reference.
 		 */
@@ -167,7 +167,7 @@ class BP_Messages_Message {
 		/**
 		 * Fires after the current message item has been saved.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param BP_Messages_Message $this Current instance of the message item being saved. Passed by reference.
 		 */
@@ -218,7 +218,7 @@ class BP_Messages_Message {
 		/**
 		 * Filters the array of recipients IDs.
 		 *
-		 * @since 2.8.0
+		 * @since BuddyPress 2.8.0
 		 *
 		 * @param array $recipient_ids Array of recipients IDs that were retrieved based on submitted usernames.
 		 * @param array $recipient_usernames Array of recipients usernames that were submitted by a user.

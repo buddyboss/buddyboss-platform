@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage GroupActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Catch and process "Join Group" button clicks.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return bool
  */
@@ -48,7 +48,7 @@ function groups_action_join_group() {
 	/**
 	 * Filters the template to load for the single group screen.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $value Path to the single group template to load.
 	 */

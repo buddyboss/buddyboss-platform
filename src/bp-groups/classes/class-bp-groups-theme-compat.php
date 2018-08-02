@@ -3,7 +3,7 @@
  * BuddyBoss Groups Theme Compat.
  *
  * @package BuddyBoss
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 
 // Exit if accessed directly.
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
  * This class sets up the necessary theme compatibility actions to safely output
  * group template parts to the_title and the_content areas of a theme.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 class BP_Groups_Theme_Compat {
 
 	/**
 	 * Set up theme compatibility for the Groups component.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function __construct() {
 		add_action( 'bp_setup_theme_compat', array( $this, 'is_group' ) );
@@ -31,7 +31,7 @@ class BP_Groups_Theme_Compat {
 	/**
 	 * Are we looking at something that needs group theme compatibility?
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function is_group() {
 
@@ -46,7 +46,7 @@ class BP_Groups_Theme_Compat {
 			/**
 			 * Fires at the start of the group theme compatibility setup.
 			 *
-			 * @since 1.1.0
+			 * @since BuddyPress 1.1.0
 			 */
 			do_action( 'groups_directory_groups_setup' );
 
@@ -77,7 +77,7 @@ class BP_Groups_Theme_Compat {
 	 * This is to mirror how WordPress has
 	 * {@link https://codex.wordpress.org/Template_Hierarchy template hierarchy}.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $templates The templates from bp_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
@@ -93,7 +93,7 @@ class BP_Groups_Theme_Compat {
 		/**
 		 * Filters the Groups directory page template hierarchy based on priority.
 		 *
-		 * @since 1.8.0
+		 * @since BuddyPress 1.8.0
 		 *
 		 * @param array $value Array of default template files to use.
 		 */
@@ -109,7 +109,7 @@ class BP_Groups_Theme_Compat {
 	/**
 	 * Update the global $post with directory data.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function directory_dummy_post() {
 		bp_theme_compat_reset_post( array(
@@ -128,7 +128,7 @@ class BP_Groups_Theme_Compat {
 	/**
 	 * Filter the_content with the groups index template part.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function directory_content() {
 		return bp_buffer_template_part( 'groups/index', null, false );
@@ -142,7 +142,7 @@ class BP_Groups_Theme_Compat {
 	 * This is to mirror how WordPress has
 	 * {@link https://codex.wordpress.org/Template_Hierarchy template hierarchy}.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $templates The templates from bp_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
@@ -152,7 +152,7 @@ class BP_Groups_Theme_Compat {
 		/**
 		 * Filters the Groups create page template hierarchy based on priority.
 		 *
-		 * @since 1.8.0
+		 * @since BuddyPress 1.8.0
 		 *
 		 * @param array $value Array of default template files to use.
 		 */
@@ -170,7 +170,7 @@ class BP_Groups_Theme_Compat {
 	/**
 	 * Update the global $post with create screen data.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function create_dummy_post() {
 
@@ -192,7 +192,7 @@ class BP_Groups_Theme_Compat {
 	/**
 	 * Filter the_content with the create screen template part.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function create_content() {
 		return bp_buffer_template_part( 'groups/create', null, false );
@@ -206,7 +206,7 @@ class BP_Groups_Theme_Compat {
 	 * This is to mirror how WordPress has
 	 * {@link https://codex.wordpress.org/Template_Hierarchy template hierarchy}.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $templates The templates from bp_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
@@ -218,7 +218,7 @@ class BP_Groups_Theme_Compat {
 		/**
 		 * Filters the Groups single pages template hierarchy based on priority.
 		 *
-		 * @since 1.8.0
+		 * @since BuddyPress 1.8.0
 		 *
 		 * @param array $value Array of default template files to use.
 		 */
@@ -240,7 +240,7 @@ class BP_Groups_Theme_Compat {
 	/**
 	 * Update the global $post with single group data.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function single_dummy_post() {
 		bp_theme_compat_reset_post( array(
@@ -259,7 +259,7 @@ class BP_Groups_Theme_Compat {
 	/**
 	 * Filter the_content with the single group template part.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function single_content() {
 		return bp_buffer_template_part( 'groups/single/home', null, false );

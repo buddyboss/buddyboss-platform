@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage MessageScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Load the Messages > Compose screen.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function messages_screen_compose() {
 
@@ -25,14 +25,14 @@ function messages_screen_compose() {
 	/**
 	 * Fires right before the loading of the Messages compose screen template file.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	do_action( 'messages_screen_compose' );
 
 	/**
 	 * Filters the template to load for the Messages compose screen.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $template Path to the messages template to load.
 	 */

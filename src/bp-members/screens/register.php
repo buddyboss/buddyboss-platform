@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage MembersScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handle the loading of the signup screen.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_core_screen_signup() {
 	$bp = buddypress();
@@ -31,7 +31,7 @@ function bp_core_screen_signup() {
 		/**
 		 * Filters the URL to redirect logged in users to when visiting registration page.
 		 *
-		 * @since 1.5.1
+		 * @since BuddyPress 1.5.1
 		 *
 		 * @param string $redirect_to URL to redirect user to.
 		 */
@@ -51,7 +51,7 @@ function bp_core_screen_signup() {
 		/**
 		 * Fires before the validation of a new signup.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 */
 		do_action( 'bp_signup_pre_validate' );
 
@@ -128,7 +128,7 @@ function bp_core_screen_signup() {
 		/**
 		 * Fires after the validation of a new signup.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 */
 		do_action( 'bp_signup_validate' );
 
@@ -138,7 +138,7 @@ function bp_core_screen_signup() {
 				/**
 				 * Filters the error message in the loop.
 				 *
-				 * @since 1.5.0
+				 * @since BuddyPress 1.5.0
 				 *
 				 * @param string $value Error message wrapped in html.
 				 */
@@ -187,7 +187,7 @@ function bp_core_screen_signup() {
 				/**
 				 * Filters the user meta used for signup.
 				 *
-				 * @since 1.1.0
+				 * @since BuddyPress 1.1.0
 				 *
 				 * @param array $usermeta Array of user meta to add to signup.
 				 */
@@ -210,7 +210,7 @@ function bp_core_screen_signup() {
 			/**
 			 * Fires after the completion of a new signup.
 			 *
-			 * @since 1.1.0
+			 * @since BuddyPress 1.1.0
 			 */
 			do_action( 'bp_complete_signup' );
 		}
@@ -220,14 +220,14 @@ function bp_core_screen_signup() {
 	/**
 	 * Fires right before the loading of the Member registration screen template file.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	do_action( 'bp_core_screen_signup' );
 
 	/**
 	 * Filters the template to load for the Member registration page screen.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param string $value Path to the Member registration template to load.
 	 */

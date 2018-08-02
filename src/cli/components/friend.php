@@ -6,7 +6,7 @@ use WP_CLI;
 /**
  * Manage BuddyBoss Connections.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 class Friend extends BuddypressCommand {
 

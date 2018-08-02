@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage ActivityScripts
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Enqueue @mentions JS.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  */
 function bp_activity_mentions_script() {
 	if ( ! bp_activity_maybe_load_mentions_scripts() ) {
@@ -50,7 +50,7 @@ function bp_activity_mentions_script() {
 	 * This is the hook where BP components can add their own prefetched results
 	 * friends to the page for quicker @mentions lookups.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 */
 	do_action( 'bp_activity_mentions_prime_results' );
 }
@@ -60,7 +60,7 @@ add_action( 'bp_admin_enqueue_scripts', 'bp_activity_mentions_script' );
 /**
  * Bind the mentions listener to a wp_editor instance when TinyMCE initializes.
  *
- * @since 2.3.3
+ * @since BuddyPress 2.3.3
  *
  * @param array  $settings   An array with TinyMCE config.
  * @param string $editor_id Unique editor identifier, e.g. 'content'.

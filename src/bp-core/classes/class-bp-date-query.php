@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ if ( class_exists( 'WP_Date_Query' ) ) :
  *
  * Extends the {@link WP_Date_Query} class for use with BuddyPress.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  *
  * @param array $date_query {
  *     Date query arguments.  See first parameter of {@link WP_Date_Query::__construct()}.

@@ -8,7 +8,7 @@
  *
  * @package BuddyBoss
  * @subpackage Hooks
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 
 // Exit if accessed directly.

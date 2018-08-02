@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss
  * @supackage Cache
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * When WP Super Cache is installed, this function will clear cached pages
  * so that success/error messages or time-sensitive content are not cached.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @see prune_super_cache()
  *
@@ -33,7 +33,7 @@ function bp_core_clear_cache() {
 		/**
 		 * Fires before the pruning of WP Super Cache.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 */
 		do_action( 'bp_core_clear_cache' );
 		return prune_super_cache( $cache_path, true );
@@ -43,7 +43,7 @@ function bp_core_clear_cache() {
 /**
  * Clear all cached objects for a user, or those that a user is part of.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param string $user_id User ID to delete cache for.
  */
@@ -54,7 +54,7 @@ function bp_core_clear_user_object_cache( $user_id ) {
 /**
  * Clear member count caches and transients.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_core_clear_member_count_caches() {
 	wp_cache_delete( 'bp_total_member_count', 'bp' );
@@ -69,7 +69,7 @@ add_action( 'deleted_user',                   'bp_core_clear_member_count_caches
 /**
  * Clear the directory_pages cache when one of the pages is updated.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param int $post_id ID of the page that was saved.
  */
@@ -99,7 +99,7 @@ add_action( 'save_post', 'bp_core_clear_directory_pages_cache_page_edit' );
 /**
  * Clear the directory_pages cache when the bp-pages option is updated.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param string $option Option name.
  */
@@ -113,7 +113,7 @@ add_action( 'update_option', 'bp_core_clear_directory_pages_cache_settings_edit'
 /**
  * Clear the root_blog_options cache when any of its options are updated.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param string $option Option name.
  */
@@ -150,7 +150,7 @@ add_action( 'add_site_option', 'bp_core_clear_root_options_cache' );
 /**
  * Determine which items from a list do not have cached values.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param array  $item_ids    ID list.
  * @param string $cache_group The cache group to check against.
@@ -178,7 +178,7 @@ function bp_get_non_cached_ids( $item_ids, $cache_group ) {
  * object can lead to dramatic performance improvements when using metadata
  * in the context of template loops.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @global object $wpdb WordPress database object for queries..
  *
@@ -271,7 +271,7 @@ function bp_update_meta_cache( $args = array() ) {
  *
  * A utility function for use by query methods like BP_Activity_Activity::get().
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  * @see bp_core_set_incremented_cache()
  *
  * @param string $key   Unique key for the query. Usually a SQL string.
@@ -294,7 +294,7 @@ function bp_core_get_incremented_cache( $key, $group ) {
  * data related to object queries, which can only reliably cached until the
  * underlying set of objects has been modified. See, eg, BP_Activity_Activity::get().
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @param string $key   Unique key for the query. Usually a SQL string.
  * @param string $group Cache group. Eg 'bp_activity'.
@@ -311,7 +311,7 @@ function bp_core_set_incremented_cache( $key, $group, $ids ) {
  *
  * A utility function for use by query methods like BP_Activity_Activity::get().
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @see bp_core_set_incremented_cache()
  *
  * @param string $key   Unique key for the query. Usually a SQL string.
@@ -329,7 +329,7 @@ function bp_core_delete_incremented_cache( $key, $group ) {
  * The $key is hashed with a component-specific incrementor, which is used to
  * invalidate multiple caches at once.
 
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @param string $key   Unique key for the query. Usually a SQL string.
  * @param string $group Cache group. Eg 'bp_activity'.
@@ -350,7 +350,7 @@ function bp_core_get_incremented_cache_key( $key, $group ) {
  * If an incrementor does not yet exist for the given `$group`, one will
  * be created.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @param string $group Cache group. Eg 'bp_activity'.
  * @return string
@@ -371,7 +371,7 @@ function bp_core_get_incrementor( $group ) {
  * Call this function when all incrementor-based caches associated with a given
  * cache group should be invalidated.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @param string $group Cache group. Eg 'bp_activity'.
  * @return bool True on success, false on failure.

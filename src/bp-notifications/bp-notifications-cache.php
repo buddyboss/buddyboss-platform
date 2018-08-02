@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage NotificationsCache
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * passed in $notification_ids and adds it to WP cache. This improves efficiency
  * when using notification meta within a loop context.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  *
  * @param int|string|array|bool $notification_ids Accepts a single notification_id, or a
  *                                                comma-separated list or array of
@@ -37,7 +37,7 @@ function bp_notifications_update_meta_cache( $notification_ids = false ) {
 /**
  * Clear all notifications cache for a given user ID.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  *
  * @param int $user_id The user ID's cache to clear.
  */
@@ -50,7 +50,7 @@ function bp_notifications_clear_all_for_user_cache( $user_id = 0 ) {
 /**
  * Invalidate 'all_for_user_' cache when saving.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param BP_Notifications_Notification $n Notification object.
  */
@@ -62,7 +62,7 @@ add_action( 'bp_notification_after_save', 'bp_notifications_clear_all_for_user_c
 /**
  * Invalidate the 'all_for_user_' cache when deleting.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param int $args Notification deletion arguments.
  */
@@ -86,7 +86,7 @@ add_action( 'bp_notification_before_delete', 'bp_notifications_clear_all_for_use
 /**
  * Invalidates 'all_for_user_' cache when updating.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  *
  * @param array $update_args See BP_Notifications_Notification::update() for description.
  * @param array $where_args  See BP_Notifications_Notification::update() for description.

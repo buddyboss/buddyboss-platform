@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss
  * @subpackage ActivityCore
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the bp-activity component.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_setup_activity() {
 	buddypress()->activity = new BP_Activity_Component();

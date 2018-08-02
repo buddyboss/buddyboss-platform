@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handle the display of a group's Change Avatar page.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function groups_screen_group_admin_avatar() {
 
@@ -80,7 +80,7 @@ function groups_screen_group_admin_avatar() {
 			/**
 			 * Fires after a group avatar is uploaded.
 			 *
-			 * @since 2.8.0
+			 * @since BuddyPress 2.8.0
 			 *
 			 * @param int    $group_id ID of the group.
 			 * @param string $type     Avatar type. 'crop' or 'full'.
@@ -94,7 +94,7 @@ function groups_screen_group_admin_avatar() {
 	/**
 	 * Fires before the loading of the group Change Avatar page template.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $id ID of the group that is being displayed.
 	 */
@@ -103,7 +103,7 @@ function groups_screen_group_admin_avatar() {
 	/**
 	 * Filters the template to load for a group's Change Avatar page.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $value Path to a group's Change Avatar template.
 	 */

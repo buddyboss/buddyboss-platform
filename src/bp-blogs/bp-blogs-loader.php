@@ -8,7 +8,7 @@
  *
  * @package BuddyBoss
  * @subpackage BlogsCore
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the bp-blogs component.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_setup_blogs() {
 	buddypress()->blogs = new BP_Blogs_Component();

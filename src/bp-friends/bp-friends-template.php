@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage ConnectionsTemplate
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Output the friends component slug.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  */
 function bp_friends_slug() {
@@ -22,7 +22,7 @@ function bp_friends_slug() {
 	/**
 	 * Return the friends component slug.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @return string
 	 */
@@ -31,7 +31,7 @@ function bp_friends_slug() {
 		/**
 		 * Filters the friends component slug.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param string $value Connections component slug.
 		 */
@@ -41,7 +41,7 @@ function bp_friends_slug() {
 /**
  * Output the friends component root slug.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  */
 function bp_friends_root_slug() {
@@ -50,7 +50,7 @@ function bp_friends_root_slug() {
 	/**
 	 * Return the friends component root slug.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @return string
 	 */
@@ -59,7 +59,7 @@ function bp_friends_root_slug() {
 		/**
 		 * Filters the friends component root slug.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param string $value Connections component root slug.
 		 */
@@ -207,7 +207,7 @@ function bp_friend_search_form() {
 /**
  * Output the "Connect" button in the member loop.
  *
- * @since 1.2.6
+ * @since BuddyPress 1.2.6
  */
 function bp_member_add_friend_button() {
 	bp_add_friend_button( bp_get_member_user_id() );
@@ -217,7 +217,7 @@ add_action( 'bp_directory_members_actions', 'bp_member_add_friend_button' );
 /**
  * Output the friend count for the current member in the loop.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 function bp_member_total_friend_count() {
 	echo bp_get_member_total_friend_count();
@@ -227,7 +227,7 @@ function bp_member_total_friend_count() {
 	 *
 	 * Return value is a string of the form "x friends".
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @return string A string of the form "x friends".
 	 */
@@ -239,7 +239,7 @@ function bp_member_total_friend_count() {
 			/**
 			 * Filters text used to denote total friend count.
 			 *
-			 * @since 1.2.0
+			 * @since BuddyPress 1.2.0
 			 *
 			 * @param string $value String of the form "x friends".
 			 * @param int    $value Total friend count for current member in the loop.
@@ -255,7 +255,7 @@ function bp_member_total_friend_count() {
 /**
  * Output the ID of the current user in the friend request loop.
  *
- * @since 1.2.6
+ * @since BuddyPress 1.2.6
  *
  * @see bp_get_potential_friend_id() for a description of arguments.
  *
@@ -267,7 +267,7 @@ function bp_potential_friend_id( $user_id = 0 ) {
 	/**
 	 * Return the ID of current user in the friend request loop.
 	 *
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 *
 	 * @global object $friends_template
 	 *
@@ -286,7 +286,7 @@ function bp_potential_friend_id( $user_id = 0 ) {
 		/**
 		 * Filters the ID of current user in the friend request loop.
 		 *
-		 * @since 1.2.10
+		 * @since BuddyPress 1.2.10
 		 *
 		 * @param int $user_id ID of current user in the friend request loop.
 		 */
@@ -298,7 +298,7 @@ function bp_potential_friend_id( $user_id = 0 ) {
  *
  * Returns - 'is_friend', 'not_friends', 'pending'.
  *
- * @since 1.2.6
+ * @since BuddyPress 1.2.6
  *
  * @param int $user_id ID of the potential friend. Default: the value of
  *                     {@link bp_get_potential_friend_id()}.
@@ -318,7 +318,7 @@ function bp_is_friend( $user_id = 0 ) {
 	/**
 	 * Filters the status of friendship between logged in user and given user.
 	 *
-	 * @since 1.2.10
+	 * @since BuddyPress 1.2.10
 	 *
 	 * @param string $value String status of friendship. Possible values are 'is_friend', 'not_friends', 'pending'.
 	 */
@@ -328,7 +328,7 @@ function bp_is_friend( $user_id = 0 ) {
 /**
  * Output the Connect button.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @see bp_get_add_friend_button() for information on arguments.
  *
@@ -341,7 +341,7 @@ function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false 
 	/**
 	 * Create the Connect button.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param int  $potential_friend_id ID of the user to whom the button
 	 *                                  applies. Default: value of {@link bp_get_potential_friend_id()}.
@@ -427,7 +427,7 @@ function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false 
 		/**
 		 * Filters the HTML for the add friend button.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $button HTML markup for add friend button.
 		 */
@@ -437,7 +437,7 @@ function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false 
 /**
  * Get a comma-separated list of IDs of a user's friends.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @param int $user_id Optional. Default: the displayed user's ID, or the
  *                     logged-in user's ID.
@@ -463,7 +463,7 @@ function bp_get_friend_ids( $user_id = 0 ) {
  * Note that we return a 0 if no pending requests are found. This is necessary
  * because of the structure of the $include parameter in bp_has_members().
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @param int $user_id ID of the user whose requests are being retrieved.
  *                     Defaults to displayed user.
@@ -489,8 +489,8 @@ function bp_get_friendship_requests( $user_id = 0 ) {
 	/**
 	 * Filters the total pending connection requests for a user.
 	 *
-	 * @since 1.2.0
-	 * @since 2.6.0 Added the `$user_id` parameter.
+	 * @since BuddyPress 1.2.0
+	 * @since BuddyPress 2.6.0 Added the `$user_id` parameter.
 	 *
 	 * @param array|int $requests An array of user IDs if found, or a 0 if none are found.
 	 * @param int       $user_id  ID of the queried user.
@@ -501,7 +501,7 @@ function bp_get_friendship_requests( $user_id = 0 ) {
 /**
  * Output the ID of the friendship between the logged-in user and the current user in the loop.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 function bp_friend_friendship_id() {
 	echo bp_get_friend_friendship_id();
@@ -509,7 +509,7 @@ function bp_friend_friendship_id() {
 	/**
 	 * Return the ID of the friendship between the logged-in user and the current user in the loop.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @return int ID of the friendship.
 	 */
@@ -524,7 +524,7 @@ function bp_friend_friendship_id() {
 		/**
 		 * Filters the ID of the friendship between the logged in user and the current user in the loop.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @param int $friendship_id ID of the friendship.
 		 */
@@ -534,7 +534,7 @@ function bp_friend_friendship_id() {
 /**
  * Output the URL for accepting the current friendship request in the loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_friend_accept_request_link() {
 	echo bp_get_friend_accept_request_link();
@@ -542,7 +542,7 @@ function bp_friend_accept_request_link() {
 	/**
 	 * Return the URL for accepting the current friendship request in the loop.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return string accept-friendship URL.
 	 */
@@ -557,8 +557,8 @@ function bp_friend_accept_request_link() {
 		/**
 		 * Filters the URL for accepting the current friendship request in the loop.
 		 *
-		 * @since 1.0.0
-		 * @since 2.6.0 Added the `$friendship_id` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.6.0 Added the `$friendship_id` parameter.
 		 *
 		 * @param string $value         Accept-friendship URL.
 		 * @param int    $friendship_id ID of the friendship.
@@ -569,7 +569,7 @@ function bp_friend_accept_request_link() {
 /**
  * Output the URL for rejecting the current friendship request in the loop.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_friend_reject_request_link() {
 	echo bp_get_friend_reject_request_link();
@@ -577,7 +577,7 @@ function bp_friend_reject_request_link() {
 	/**
 	 * Return the URL for rejecting the current friendship request in the loop.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return string reject-friendship URL.
 	 */
@@ -592,8 +592,8 @@ function bp_friend_reject_request_link() {
 		/**
 		 * Filters the URL for rejecting the current friendship request in the loop.
 		 *
-		 * @since 1.0.0
-		 * @since 2.6.0 Added the `$friendship_id` parameter.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.6.0 Added the `$friendship_id` parameter.
 		 *
 		 * @param string $value         Reject-friendship URL.
 		 * @param int    $friendship_id ID of the friendship.
@@ -604,7 +604,7 @@ function bp_friend_reject_request_link() {
 /**
  * Output the total friend count for a given user.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @param int $user_id See {@link friends_get_total_friend_count()}.
  */
@@ -614,7 +614,7 @@ function bp_total_friend_count( $user_id = 0 ) {
 	/**
 	 * Return the total friend count for a given user.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param int $user_id See {@link friends_get_total_friend_count()}.
 	 * @return int Total friend count.
@@ -624,8 +624,8 @@ function bp_total_friend_count( $user_id = 0 ) {
 		/**
 		 * Filters the total friend count for a given user.
 		 *
-		 * @since 1.2.0
-		 * @since 2.6.0 Added the `$user_id` parameter.
+		 * @since BuddyPress 1.2.0
+		 * @since BuddyPress 2.6.0 Added the `$user_id` parameter.
 		 *
 		 * @param int $value   Total friend count.
 		 * @param int $user_id ID of the queried user.
@@ -637,7 +637,7 @@ function bp_total_friend_count( $user_id = 0 ) {
 /**
  * Output the total friendship request count for a given user.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @see bp_friend_get_total_requests_count() for description of arguments.
  *
@@ -649,7 +649,7 @@ function bp_friend_total_requests_count( $user_id = 0 ) {
 	/**
 	 * Return the total friendship request count for a given user.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param int $user_id ID of the user whose requests are being counted.
 	 *                     Default: ID of the logged-in user.
@@ -662,8 +662,8 @@ function bp_friend_total_requests_count( $user_id = 0 ) {
 		/**
 		 * Filters the total friendship request count for a given user.
 		 *
-		 * @since 1.2.0
-		 * @since 2.6.0 Added the `$user_id` parameter.
+		 * @since BuddyPress 1.2.0
+		 * @since BuddyPress 2.6.0 Added the `$user_id` parameter.
 		 *
 		 * @param int $value   Friendship request count.
 		 * @param int $user_id ID of the queried user.
@@ -676,7 +676,7 @@ function bp_friend_total_requests_count( $user_id = 0 ) {
 /**
  * Display the number of friends in user's profile.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param array|string $args before|after|user_id.
  */
@@ -688,7 +688,7 @@ add_action( 'bp_members_admin_user_stats', 'bp_friends_profile_stats', 7, 1 );
 /**
  * Return the number of friends in user's profile.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param array|string $args before|after|user_id.
  * @return string HTML for stats output.
@@ -723,7 +723,7 @@ function bp_friends_get_profile_stats( $args = '' ) {
 	/**
 	 * Filters the number of friends in user's profile.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param string $value Formatted string displaying total friends count.
 	 * @param array  $r     Array of arguments for string formatting and output.

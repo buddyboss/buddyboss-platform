@@ -2,7 +2,7 @@
 /**
  * Backward compatibility for the $bp->bp_options_nav global.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  */
 
 // Exit if accessed directly.
@@ -14,13 +14,13 @@ defined( 'ABSPATH' ) || exit;
  * This class is used to provide backward compatibility for extensions that access and modify
  * the $bp->bp_options_nav global.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  */
 class BP_Core_BP_Options_Nav_BackCompat extends BP_Core_BP_Nav_BackCompat {
 	/**
 	 * Parent slug of the current nav item.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 * @access protected
 	 * @var string
 	 */
@@ -29,7 +29,7 @@ class BP_Core_BP_Options_Nav_BackCompat extends BP_Core_BP_Nav_BackCompat {
 	/**
 	 * Get a value of the nav array at the specified offset.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param mixed $offset Array offset.
 	 * @return BP_Core_BP_Nav_BackCompat
@@ -70,7 +70,7 @@ class BP_Core_BP_Options_Nav_BackCompat extends BP_Core_BP_Nav_BackCompat {
 	/**
 	 * Unset a nav array value at the specified offset.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param mixed $offset Array offset.
 	 */
@@ -90,7 +90,7 @@ class BP_Core_BP_Options_Nav_BackCompat extends BP_Core_BP_Nav_BackCompat {
 	/**
 	 * Get the parent slug of the current nav item.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @return string
 	 */
@@ -101,7 +101,7 @@ class BP_Core_BP_Options_Nav_BackCompat extends BP_Core_BP_Nav_BackCompat {
 	/**
 	 * Set the parent slug of the current nav item.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 */
 	public function set_parent_slug( $slug ) {
 		$this->parent_slug = $slug;
@@ -110,7 +110,7 @@ class BP_Core_BP_Options_Nav_BackCompat extends BP_Core_BP_Nav_BackCompat {
 	/**
 	 * Get the nav object corresponding to the specified offset.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param mixed $offset Array offset.
 	 * @return bool|array

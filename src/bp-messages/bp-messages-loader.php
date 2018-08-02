@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss
  * @subpackage MessagesLoader
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the bp-messages component.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_setup_messages() {
 	buddypress()->messages = new BP_Messages_Component();

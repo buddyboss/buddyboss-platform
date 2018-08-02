@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss
  * @subpackage MembersScreens
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 
 // Exit if accessed directly.
@@ -18,14 +18,14 @@ defined( 'ABSPATH' ) || exit;
  * This class sets up the necessary theme compatibility actions to safely output
  * registration template parts to the_title and the_content areas of a theme.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 class BP_Registration_Theme_Compat {
 
 	/**
 	 * Setup the groups component theme compatibility.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function __construct() {
 		add_action( 'bp_setup_theme_compat', array( $this, 'is_registration' ) );
@@ -34,7 +34,7 @@ class BP_Registration_Theme_Compat {
 	/**
 	 * Are we looking at either the registration or activation pages?
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function is_registration() {
 
@@ -60,7 +60,7 @@ class BP_Registration_Theme_Compat {
 	 * This is to mirror how WordPress has
 	 * {@link https://codex.wordpress.org/Template_Hierarchy template hierarchy}.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $templates The templates from bp_get_theme_compat_templates().
 	 * @return array $templates Array of custom templates to look for.
@@ -74,7 +74,7 @@ class BP_Registration_Theme_Compat {
 		 * This filter is a variable filter that depends on the current component
 		 * being used.
 		 *
-		 * @since 1.8.0
+		 * @since BuddyPress 1.8.0
 		 *
 		 * @param array $value Array of template paths to add to hierarchy.
 		 */
@@ -92,7 +92,7 @@ class BP_Registration_Theme_Compat {
 	/**
 	 * Update the global $post with dummy data.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function dummy_post() {
 		// Registration page.
@@ -128,7 +128,7 @@ class BP_Registration_Theme_Compat {
 	/**
 	 * Filter the_content with either the register or activate templates.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function dummy_content() {
 		if ( bp_is_register_page() ) {

@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsFilters
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -77,7 +77,7 @@ add_filter( 'bp_core_avatar_default_thumb', 'bp_groups_default_avatar', 10, 3 );
 /**
  * Filter output of Group Description through WordPress's KSES API.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param string $content Content to filter.
  * @return string
@@ -108,7 +108,7 @@ function bp_groups_filter_kses( $content = '' ) {
 	/**
 	 * Filters the HTML elements allowed for a given context.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param string $allowed_tags Allowed tags, attributes, and/or entities.
 	 */
@@ -122,7 +122,7 @@ function bp_groups_filter_kses( $content = '' ) {
  * Should BuddyPress load the mentions scripts and related assets, including results to prime the
  * mentions suggestions?
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param bool $load_mentions    True to load mentions assets, false otherwise.
  * @param bool $mentions_enabled True if mentions are enabled.
@@ -144,7 +144,7 @@ add_filter( 'bp_activity_maybe_load_mentions_scripts', 'bp_groups_maybe_load_men
 /**
  * Disable at-mention notifications for users who are not a member of the non-public group where the activity appears.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  *
  * @param bool                 $send      Whether to send the notification.
  * @param array                $usernames Array of all usernames being notified.
@@ -168,7 +168,7 @@ function bp_groups_disable_at_mention_notification_for_non_public_groups( $send,
 /**
  * Use the mystery group avatar for groups.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param string $avatar Current avatar src.
  * @param array  $params Avatar params.
@@ -192,7 +192,7 @@ function bp_groups_default_avatar( $avatar, $params ) {
  * Filter the bp_user_can value to determine what the user can do
  * with regards to a specific group.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param bool   $retval     Whether or not the current user has the capability.
  * @param int    $user_id

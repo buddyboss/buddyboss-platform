@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage ActivityActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Post new activity comment.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @return bool False on failure.
  */
@@ -24,7 +24,7 @@ function bp_activity_action_post_comment() {
 	/**
 	 * Filters the activity ID a comment will be in reply to.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param string $value ID of the activity being replied to.
 	 */
@@ -33,7 +33,7 @@ function bp_activity_action_post_comment() {
 	/**
 	 * Filters the comment content for a comment reply.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param string $value Comment content being posted.
 	 */

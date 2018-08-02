@@ -7,7 +7,7 @@
  *
  * It's also used to create the common Backbone views.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  * @version 3.1.0
  */
 
@@ -39,7 +39,7 @@
 			/**
 			 * Fires inside the cover image delete frontend template markup if no other data.object condition is met.
 			 *
-			 * @since 3.0.0
+			 * @since BuddyPress 3.0.0
 			 */
 			do_action( 'bp_attachments_cover_image_delete_template' ); ?>
 	<# } #>
@@ -49,6 +49,6 @@
 	/**
 	 * Fires after the cover image main frontend template markup.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	do_action( 'bp_attachments_cover_image_main_template' ); ?>

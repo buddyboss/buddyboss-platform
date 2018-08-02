@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Extend it to manage your component's uploads.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 abstract class BP_Attachment {
 
@@ -48,8 +48,8 @@ abstract class BP_Attachment {
 	/**
 	 * Construct Upload parameters.
 	 *
-	 * @since 2.3.0
-	 * @since 2.4.0 Add the $upload_dir_filter_args argument to the $arguments array
+	 * @since BuddyPress 2.3.0
+	 * @since BuddyPress 2.4.0 Add the $upload_dir_filter_args argument to the $arguments array
 	 *
 	 * @param array|string $args {
 	 *     @type int    $original_max_filesize  Maximum file size in kilobytes. Defaults to php.ini settings.
@@ -108,7 +108,7 @@ abstract class BP_Attachment {
 	/**
 	 * Set upload path and url for the component.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 */
 	public function set_upload_dir() {
@@ -146,7 +146,7 @@ abstract class BP_Attachment {
 	 *
 	 * Used into the $overrides argument of BP_Attachment->upload()
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param array $param A list of error messages to add to BuddyPress core ones.
 	 * @return array $upload_errors The list of upload errors.
@@ -180,7 +180,7 @@ abstract class BP_Attachment {
 	/**
 	 * Include the WordPress core needed files.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 */
 	public function includes() {
 		foreach ( array_unique( $this->required_wp_files ) as $wp_file ) {
@@ -195,7 +195,7 @@ abstract class BP_Attachment {
 	/**
 	 * Upload the attachment.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param array       $file              The appropriate entry the from $_FILES superglobal.
 	 * @param string      $upload_dir_filter A specific filter to be applied to 'upload_dir' (optional).
@@ -281,7 +281,7 @@ abstract class BP_Attachment {
 	/**
 	 * Helper to convert utf-8 characters in filenames to their ASCII equivalent.
 	 *
-	 * @since 2.9.0
+	 * @since BuddyPress 2.9.0
 	 *
 	 * @param  string $retval Filename.
 	 * @return string
@@ -313,7 +313,7 @@ abstract class BP_Attachment {
 	 *
 	 * @see check_upload_mimes()
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 */
 	protected function validate_mime_types() {
@@ -340,7 +340,7 @@ abstract class BP_Attachment {
 	 *
 	 * @see BP_Attachment_Avatar->validate_upload() for an example of use
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param array $file The temporary file attributes (before it has been moved).
 	 * @return array The file.
@@ -362,8 +362,8 @@ abstract class BP_Attachment {
 	/**
 	 * Default filter to save the attachments.
 	 *
-	 * @since 2.3.0
-	 * @since 2.4.0 Add the $upload_dir parameter to the method
+	 * @since BuddyPress 2.3.0
+	 * @since BuddyPress 2.4.0 Add the $upload_dir parameter to the method
 	 *
 	 *       regarding to context
 	 *
@@ -375,8 +375,8 @@ abstract class BP_Attachment {
 		/**
 		 * Filters the component's upload directory.
 		 *
-		 * @since 2.3.0
-		 * @since 2.4.0 Include the original Upload directory as the second parameter of the filter.
+		 * @since BuddyPress 2.3.0
+		 * @since BuddyPress 2.4.0 Include the original Upload directory as the second parameter of the filter.
 		 *
 		 * @param array $value          Array containing the path, URL, and other helpful settings.
 		 * @param array $upload_dir     The original Uploads dir.
@@ -397,7 +397,7 @@ abstract class BP_Attachment {
 	 * Override this function in your child class to run specific actions.
 	 * (eg: add an .htaccess file)
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 */
 	public function create_dir() {
@@ -422,7 +422,7 @@ abstract class BP_Attachment {
 	/**
 	 * Crop an image file.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param array $args {
 	 *     @type string $original_file The source file (absolute path) for the Attachment.
@@ -523,7 +523,7 @@ abstract class BP_Attachment {
 	 *
 	 * Override this method from your child class to build the script datas.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @return array The javascript localization data.
 	 */
@@ -544,7 +544,7 @@ abstract class BP_Attachment {
 	/**
 	 * Get full data for an image
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param string $file Absolute path to the uploaded image.
 	 * @return bool|array   An associate array containing the width, height and metadatas.
@@ -582,7 +582,7 @@ abstract class BP_Attachment {
 		/**
 		 * Filter here to add/remove/edit data to the image full data
 		 *
-		 * @since 2.4.0
+		 * @since BuddyPress 2.4.0
 		 *
 		 * @param array $image_data An associate array containing the width, height and metadatas.
 		 */
@@ -592,7 +592,7 @@ abstract class BP_Attachment {
 	/**
 	 * Edit an image file to resize it or rotate it
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param string $attachment_type The attachment type (eg: avatar or cover_image). Required.
 	 * @param array  $args {

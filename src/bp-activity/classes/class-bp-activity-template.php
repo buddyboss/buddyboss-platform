@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage ActivityTemplate
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * This is responsible for loading a group of activity items and displaying them.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 class BP_Activity_Template {
 
 	/**
 	 * The loop iterator.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int
 	 */
 	public $current_activity = -1;
@@ -30,7 +30,7 @@ class BP_Activity_Template {
 	/**
 	 * The activity count.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int
 	 */
 	public $activity_count;
@@ -38,7 +38,7 @@ class BP_Activity_Template {
 	/**
 	 * The total activity count.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int
 	 */
 	public $total_activity_count;
@@ -46,7 +46,7 @@ class BP_Activity_Template {
 	/**
 	 * Array of activities located by the query.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var array
 	 */
 	public $activities;
@@ -54,7 +54,7 @@ class BP_Activity_Template {
 	/**
 	 * The activity object currently being iterated on.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var object
 	 */
 	public $activity;
@@ -62,7 +62,7 @@ class BP_Activity_Template {
 	/**
 	 * A flag for whether the loop is currently being iterated.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var bool
 	 */
 	public $in_the_loop;
@@ -70,7 +70,7 @@ class BP_Activity_Template {
 	/**
 	 * URL parameter key for activity pagination. Default: 'acpage'.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 * @var string
 	 */
 	public $pag_arg;
@@ -78,7 +78,7 @@ class BP_Activity_Template {
 	/**
 	 * The page number being requested.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int
 	 */
 	public $pag_page;
@@ -86,7 +86,7 @@ class BP_Activity_Template {
 	/**
 	 * The number of items being requested per page.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int
 	 */
 	public $pag_num;
@@ -94,7 +94,7 @@ class BP_Activity_Template {
 	/**
 	 * An HTML string containing pagination links.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var string
 	 */
 	public $pag_links;
@@ -102,7 +102,7 @@ class BP_Activity_Template {
 	/**
 	 * The displayed user's full name.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var string
 	 */
 	public $full_name;
@@ -113,7 +113,7 @@ class BP_Activity_Template {
 	 * The arguments passed to this class constructor are of the same
 	 * format as {@link BP_Activity_Activity::get()}.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @see BP_Activity_Activity::get() for a description of the argument
 	 *      structure, as well as default values.
@@ -299,7 +299,7 @@ class BP_Activity_Template {
 	/**
 	 * Whether there are activity items available in the loop.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @see bp_has_activities()
 	 *
@@ -316,7 +316,7 @@ class BP_Activity_Template {
 	/**
 	 * Set up the next activity item and iterate index.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return object The next activity item to iterate over.
 	 */
@@ -330,7 +330,7 @@ class BP_Activity_Template {
 	/**
 	 * Rewind the posts and reset post index.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	public function rewind_activities() {
 		$this->current_activity = -1;
@@ -346,7 +346,7 @@ class BP_Activity_Template {
 	 * that controls iteration inside the activities loop, eg:
 	 *     while ( bp_activities() ) { ...
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @see bp_activities()
 	 *
@@ -361,7 +361,7 @@ class BP_Activity_Template {
 			/**
 			 * Fires right before the rewinding of activity posts.
 			 *
-			 * @since 1.1.0
+			 * @since BuddyPress 1.1.0
 			 */
 			do_action( 'activity_loop_end' );
 
@@ -381,7 +381,7 @@ class BP_Activity_Template {
 	 * data while looping, so that template tags used during that iteration
 	 * make reference to the current activity item.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @see bp_the_activity()
 	 */
@@ -400,7 +400,7 @@ class BP_Activity_Template {
 			/**
 			 * Fires if the current activity item is the first in the activity loop.
 			 *
-			 * @since 1.1.0
+			 * @since BuddyPress 1.1.0
 			 */
 			do_action('activity_loop_start');
 		}

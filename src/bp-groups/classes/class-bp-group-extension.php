@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsClasses
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 
 // Exit if accessed directly.
@@ -84,7 +84,7 @@ defined( 'ABSPATH' ) || exit;
  * Prior to BuddyPress 1.7, group extension configurations were set slightly
  * differently. The legacy method is still supported, though deprecated.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 class BP_Group_Extension {
 
@@ -93,7 +93,7 @@ class BP_Group_Extension {
 	/**
 	 * Information about this extension's screens.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 * @var array
 	 */
 	public $screens = array();
@@ -101,7 +101,7 @@ class BP_Group_Extension {
 	/**
 	 * The name of the extending class.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 * @var string
 	 */
 	public $class_name = '';
@@ -109,7 +109,7 @@ class BP_Group_Extension {
 	/**
 	 * A ReflectionClass object of the current extension.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 * @var ReflectionClass
 	 */
 	public $class_reflection = null;
@@ -117,7 +117,7 @@ class BP_Group_Extension {
 	/**
 	 * Parsed configuration parameters for the extension.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 * @var array
 	 */
 	public $params = array();
@@ -125,7 +125,7 @@ class BP_Group_Extension {
 	/**
 	 * Raw config params, as passed by the extending class.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 * @var array
 	 */
 	public $params_raw = array();
@@ -133,7 +133,7 @@ class BP_Group_Extension {
 	/**
 	 * The ID of the current group.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 * @var int
 	 */
 	public $group_id = 0;
@@ -141,7 +141,7 @@ class BP_Group_Extension {
 	/**
 	 * The slug of the current extension.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var string
 	 */
 	public $slug = '';
@@ -149,7 +149,7 @@ class BP_Group_Extension {
 	/**
 	 * The translatable name of the current extension.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var string
 	 */
 	public $name = '';
@@ -157,7 +157,7 @@ class BP_Group_Extension {
 	/**
 	 * The visibility of the extension tab. 'public' or 'private'.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var string
 	 */
 	public $visibility = 'public';
@@ -165,7 +165,7 @@ class BP_Group_Extension {
 	/**
 	 * The numeric position of the main nav item.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var int
 	 */
 	public $nav_item_position = 81;
@@ -173,7 +173,7 @@ class BP_Group_Extension {
 	/**
 	 * Whether to show the nav item.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var bool
 	 */
 	public $enable_nav_item = true;
@@ -181,7 +181,7 @@ class BP_Group_Extension {
 	/**
 	 * Whether the current user should see the navigation item.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 * @var bool
 	 */
 	public $user_can_see_nav_item;
@@ -189,7 +189,7 @@ class BP_Group_Extension {
 	/**
 	 * Whether the current user can visit the tab.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 * @var bool
 	 */
 	public $user_can_visit;
@@ -197,7 +197,7 @@ class BP_Group_Extension {
 	/**
 	 * The text of the nav item. Defaults to self::name.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var string
 	 */
 	public $nav_item_name = '';
@@ -207,7 +207,7 @@ class BP_Group_Extension {
 	 *
 	 * Default: 'groups_custom_group_boxes'.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var string
 	 */
 	public $display_hook = 'groups_custom_group_boxes';
@@ -217,7 +217,7 @@ class BP_Group_Extension {
 	 *
 	 * Default: 'groups/single/plugins'.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var string
 	 */
 	public $template_file = 'groups/single/plugins';
@@ -227,7 +227,7 @@ class BP_Group_Extension {
 	/**
 	 * Has the extension been initialized?
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 * @var bool
 	 */
 	protected $initialized = false;
@@ -235,7 +235,7 @@ class BP_Group_Extension {
 	/**
 	 * Extension properties as set by legacy extensions.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 * @var array
 	 */
 	protected $legacy_properties = array();
@@ -246,7 +246,7 @@ class BP_Group_Extension {
 	 * These are the extension properties as set by legacy extensions, but
 	 * then converted to match the new format for params.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 * @var array
 	 */
 	protected $legacy_properties_converted = array();
@@ -254,7 +254,7 @@ class BP_Group_Extension {
 	/**
 	 * Redirect location as defined by post-edit save callback.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 * @var string
 	 */
 	protected $post_save_redirect;
@@ -262,7 +262,7 @@ class BP_Group_Extension {
 	/**
 	 * Miscellaneous data as set by the __set() magic method.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 * @var array
 	 */
 	protected $data = array();
@@ -278,7 +278,7 @@ class BP_Group_Extension {
 	/**
 	 * The content of the group tab.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param int|null $group_id ID of the group to display.
 	 */
@@ -287,7 +287,7 @@ class BP_Group_Extension {
 	/**
 	 * Content displayed in a widget sidebar, if applicable.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	public function widget_display() {}
 
@@ -325,8 +325,8 @@ class BP_Group_Extension {
 	 *       parent::init( $args );
 	 *   }
 	 *
-	 * @since 1.8.0
-	 * @since 2.1.0 Added 'access' and 'show_tab' arguments to `$args`.
+	 * @since BuddyPress 1.8.0
+	 * @since BuddyPress 2.1.0 Added 'access' and 'show_tab' arguments to `$args`.
 	 *
 	 * @param array $args {
 	 *     Array of initialization arguments.
@@ -407,7 +407,7 @@ class BP_Group_Extension {
 	 * is called automatically at the right point in the load order by
 	 * bp_register_group_extension().
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	public function _register() {
 
@@ -454,7 +454,7 @@ class BP_Group_Extension {
 	 * ReflectionClass that is used in get_screen_callback() to determine
 	 * whether your extension overrides certain callback methods.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	protected function setup_class_info() {
 		if ( empty( $this->class_name ) ) {
@@ -474,7 +474,7 @@ class BP_Group_Extension {
 	 *   - new group
 	 *   - group admin
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @return int
 	 */
@@ -507,7 +507,7 @@ class BP_Group_Extension {
 	/**
 	 * Gather configuration data about your screens.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @return array
 	 */
@@ -542,7 +542,7 @@ class BP_Group_Extension {
 	/**
 	 * Set up screens array based on params.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	protected function setup_screens() {
 		foreach ( (array) $this->params['screens'] as $context => $screen ) {
@@ -561,7 +561,7 @@ class BP_Group_Extension {
 	/**
 	 * Set up access-related settings for this extension.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 */
 	protected function setup_access_settings() {
 
@@ -660,7 +660,7 @@ class BP_Group_Extension {
 	/**
 	 * Check whether the current user meets an access condition.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param string $access_condition 'anyone', 'loggedin', 'member',
 	 *                                 'mod', 'admin' or 'noone'.
@@ -703,7 +703,7 @@ class BP_Group_Extension {
 	/**
 	 * Hook this extension's group tab into BuddyPress, if necessary.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	protected function setup_display_hooks() {
 
@@ -773,7 +773,7 @@ class BP_Group_Extension {
 	/**
 	 * Hook the main display method, and loads the template file.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	public function _display_hook() {
 		add_action( 'bp_template_content', array( &$this, 'call_display' ) );
@@ -781,7 +781,7 @@ class BP_Group_Extension {
 		/**
 		 * Filters the template to load for the main display method.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $template_file Path to the template to load.
 		 */
@@ -794,7 +794,7 @@ class BP_Group_Extension {
 	 * We use this wrapper so that we can pass the group_id to the
 	 * display() callback.
 	 *
-	 * @since 2.1.1
+	 * @since BuddyPress 2.1.1
 	 */
 	public function call_display() {
 		$this->display( $this->group_id );
@@ -806,7 +806,7 @@ class BP_Group_Extension {
 	 * Note that this controls only the display of the navigation item.
 	 * Access to the tab is controlled by the user_can_visit() check.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param bool $user_can_see_nav_item Whether or not the user can see the nav item.
 	 * @return bool
@@ -827,7 +827,7 @@ class BP_Group_Extension {
 	 * Note that this controls the ability of a user to access a tab.
 	 * Display of the navigation item is controlled by user_can_see_nav_item().
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param bool $user_can_visit Whether or not the user can visit the tab.
 	 * @return bool
@@ -849,7 +849,7 @@ class BP_Group_Extension {
 	 * circumstances where the bp_core_no_access() arguments need to be
 	 * modified before the redirect takes place.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param bool  $user_can_visit Whether or not the user can visit the tab.
 	 * @param array $no_access_args Array of args to help determine access.
@@ -875,7 +875,7 @@ class BP_Group_Extension {
 	/**
 	 * Hook this extension's Create step into BuddyPress, if necessary.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	protected function setup_create_hooks() {
 		if ( ! $this->is_screen_enabled( 'create' ) ) {
@@ -903,7 +903,7 @@ class BP_Group_Extension {
 	/**
 	 * Call the create_screen() method, if we're on the right page.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	public function maybe_create_screen() {
 		if ( ! bp_is_group_creation_step( $this->screens['create']['slug'] ) ) {
@@ -921,7 +921,7 @@ class BP_Group_Extension {
 	/**
 	 * Call the create_screen_save() method, if we're on the right page.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	public function maybe_create_screen_save() {
 		if ( ! bp_is_group_creation_step( $this->screens['create']['slug'] ) ) {
@@ -937,7 +937,7 @@ class BP_Group_Extension {
 	/**
 	 * Hook this extension's Edit panel into BuddyPress, if necessary.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	protected function setup_edit_hooks() {
 		// Bail if not in a group.
@@ -1015,7 +1015,7 @@ class BP_Group_Extension {
 	 * button, as would be present in legacy plugins; if one is found, we
 	 * do not auto-add our own button.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	public function call_edit_screen() {
 		ob_start();
@@ -1031,7 +1031,7 @@ class BP_Group_Extension {
 	/**
 	 * Check the nonce, and call the edit_screen_save() method.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	public function call_edit_screen_save() {
 		if ( empty( $_POST ) ) {
@@ -1064,7 +1064,7 @@ class BP_Group_Extension {
 			 *
 			 * Only runs if a redirect has not already occurred.
 			 *
-			 * @since 2.1.0
+			 * @since BuddyPress 2.1.0
 			 *
 			 * @param string $value URL to redirect to.
 			 */
@@ -1084,7 +1084,7 @@ class BP_Group_Extension {
 	 *
 	 * Hooked to 'bp_screens'.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @see BP_Group_Extension::setup_edit_hooks()
 	 */
@@ -1102,7 +1102,7 @@ class BP_Group_Extension {
 	 * use on both the Create and Edit screens - BP will provide the button
 	 * if one is not found.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $screen The screen markup, captured in the output
 	 *                       buffer.
@@ -1124,7 +1124,7 @@ class BP_Group_Extension {
 	/**
 	 * Does the given markup have a submit button?
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $screen The markup to check.
 	 * @return bool True if a Submit button is found, otherwise false.
@@ -1138,7 +1138,7 @@ class BP_Group_Extension {
 	/**
 	 * Detect redirects hardcoded into edit_screen_save() callbacks.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param string $redirect Redirect string.
 	 * @return string
@@ -1156,7 +1156,7 @@ class BP_Group_Extension {
 	/**
 	 * Hook this extension's Admin metabox into BuddyPress, if necessary.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	protected function setup_admin_hooks() {
 		if ( ! $this->is_screen_enabled( 'admin' ) || ! is_admin() ) {
@@ -1176,7 +1176,7 @@ class BP_Group_Extension {
 	/**
 	 * Call the admin_screen() method, and add a nonce field.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	public function call_admin_screen() {
 		call_user_func( $this->screens['admin']['screen_callback'], $this->group_id );
@@ -1186,7 +1186,7 @@ class BP_Group_Extension {
 	/**
 	 * Check the nonce, and call the admin_screen_save() method.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	public function call_admin_screen_save() {
 		$this->check_nonce( 'admin' );
@@ -1196,7 +1196,7 @@ class BP_Group_Extension {
 	/**
 	 * Create the Dashboard meta box for this extension.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function _meta_box_display_callback() {
 		$group_id = isset( $_GET['gid'] ) ? (int) $_GET['gid'] : 0;
@@ -1229,7 +1229,7 @@ class BP_Group_Extension {
 	 * more than one extension may generate nonces on the same page, and we
 	 * must avoid name clashes.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $context Screen context. 'create', 'edit', or 'admin'.
 	 */
@@ -1240,7 +1240,7 @@ class BP_Group_Extension {
 	/**
 	 * Check the nonce on a submitted settings form.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $context Screen context. 'create', 'edit', or 'admin'.
 	 */
@@ -1255,7 +1255,7 @@ class BP_Group_Extension {
 	 * (legacy: $this->enable_create_step, etc), and its screen_callback
 	 * must also exist and be callable.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $context Screen context. 'create', 'edit', or 'admin'.
 	 * @return bool True if the screen is enabled, otherwise false.
@@ -1302,7 +1302,7 @@ class BP_Group_Extension {
 	 * The get_screen_callback() method uses a ReflectionClass object to
 	 * determine whether your extension has provided a given callback.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $context Screen context. 'create', 'edit', or 'admin'.
 	 * @param string $type    Screen type. 'screen' or 'screen_save'. Default:
@@ -1352,7 +1352,7 @@ class BP_Group_Extension {
 	 * in unexpected results when used with data in the wild. See, eg,
 	 * https://core.trac.wordpress.org/ticket/19888
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param array $a First set of arguments.
 	 * @param array $b Second set of arguments.
@@ -1396,7 +1396,7 @@ class BP_Group_Extension {
 	 * The legacy_properties array is set up in
 	 * self::setup_legacy_properties().
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $key Property name.
 	 * @return mixed The value if found, otherwise null.
@@ -1420,7 +1420,7 @@ class BP_Group_Extension {
 	 * class needs to check whether any legacy keys have been put into the
 	 * $this->data array.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $key Property name.
 	 * @return bool True if the value is set, otherwise false.
@@ -1443,7 +1443,7 @@ class BP_Group_Extension {
 	 * a value to an object property that no longer exists, such as
 	 * $this->enable_create_step.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param string $key Property name.
 	 * @param mixed  $value Property value.
@@ -1508,7 +1508,7 @@ class BP_Group_Extension {
 	 * The legacy implementation of BP_Group_Extension used all of these
 	 * object properties for configuration. Some have been moved.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @return array List of legacy property keys.
 	 */
@@ -1544,7 +1544,7 @@ class BP_Group_Extension {
 	 * legacy plugins, we slurp up legacy properties, and later on we'll
 	 * parse them into the new init() array.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	protected function parse_legacy_properties() {
 
@@ -1625,7 +1625,7 @@ class BP_Group_Extension {
 	 * they remain available to plugins that reference the variables at
 	 * their old locations.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @see BP_Group_Extension::__get()
 	 */
@@ -1699,7 +1699,7 @@ class BP_Group_Extension {
 /**
  * Register a new Group Extension.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param string $group_extension_class Name of the Extension class.
  * @return false|null Returns false on failure, otherwise null.

@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handle the display of a group's Request Membership page.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function groups_screen_group_request_membership() {
 
@@ -49,7 +49,7 @@ function groups_screen_group_request_membership() {
 	/**
 	 * Fires before the loading of a group's Request Memebership page.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $id ID of the group currently being displayed.
 	 */
@@ -58,7 +58,7 @@ function groups_screen_group_request_membership() {
 	/**
 	 * Filters the template to load for a group's Request Membership page.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $value Path to a group's Request Membership template.
 	 */

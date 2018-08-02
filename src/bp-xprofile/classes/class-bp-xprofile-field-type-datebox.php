@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileClasses
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Datebox xprofile field type.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 
 	/**
 	 * Constructor for the datebox field type.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -35,7 +35,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 		/**
 		 * Fires inside __construct() method for BP_XProfile_Field_Type_Datebox class.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param BP_XProfile_Field_Type_Datebox $this Current instance of
 		 *                                             the field type datebox.
@@ -48,7 +48,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 	 *
 	 * Must be used inside the {@link bp_profile_fields()} template loop.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $raw_properties Optional key/value array of
 	 *                              {@link http://dev.w3.org/html5/markup/input.html permitted attributes}
@@ -101,7 +101,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 				 * where the 12 is the field ID. Simply replace the 12 with
 				 * your needed target ID.
 				 *
-				 * @since 1.8.0
+				 * @since BuddyPress 1.8.0
 				 */
 				do_action( bp_get_the_profile_field_errors_action() ); ?>
 
@@ -151,7 +151,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 	 *
 	 * Must be used inside the {@link bp_profile_fields()} template loop.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $args Optional. The arguments passed to {@link bp_the_profile_field_options()}.
 	 */
@@ -258,7 +258,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 		/**
 		 * Filters the output for the profile field datebox.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $html  HTML output for the field.
 		 * @param string $value Which date type is being rendered for.
@@ -276,7 +276,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 	 *
 	 * Must be used inside the {@link bp_profile_fields()} template loop.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $raw_properties Optional key/value array of permitted attributes that you want to add.
 	 */
@@ -324,7 +324,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 	/**
 	 * Get settings for a given date field.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param int $field_id ID of the field.
 	 * @return array
@@ -359,7 +359,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 	/**
 	 * Validate date field settings.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param array $settings Raw settings.
 	 * @return array Validated settings.
@@ -435,7 +435,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 	/**
 	 * Generate the settings markup for Date fields.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param BP_XProfile_Field $current_field The current profile field on the add/edit screen.
 	 * @param string            $control_type  Optional. HTML input type used to render the current
@@ -576,8 +576,8 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 	/**
 	 * Format Date values for display.
 	 *
-	 * @since 2.1.0
-	 * @since 2.4.0 Added the `$field_id` parameter.
+	 * @since BuddyPress 2.1.0
+	 * @since BuddyPress 2.4.0 Added the `$field_id` parameter.
 	 *
 	 * @param string     $field_value The date value, as saved in the database. Typically, this is a MySQL-formatted
 	 *                                date string (Y-m-d H:i:s).
@@ -616,7 +616,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 	/**
 	 * Gets the default date formats available when configuring a Date field.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @return array
 	 */
@@ -627,7 +627,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 		/**
 		 * Filters the available date formats for XProfile date fields.
 		 *
-		 * @since 2.7.0
+		 * @since BuddyPress 2.7.0
 		 *
 		 * @param array $date_formats
 		 */

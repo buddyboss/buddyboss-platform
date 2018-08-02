@@ -8,7 +8,7 @@
  *
  * @package BuddyBoss
  * @subpackage TemplateFunctions
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Get a BuddyPress template part for display in a theme.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param string      $slug Template part slug. Used to generate filenames,
  *                          eg 'friends' for 'friends.php'.
@@ -32,7 +32,7 @@ function bp_get_template_part( $slug, $name = null ) {
 	 *
 	 * This is a variable hook that is dependent on the slug passed in.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $slug Template part slug requested.
 	 * @param string $name Template part name requested.
@@ -49,7 +49,7 @@ function bp_get_template_part( $slug, $name = null ) {
 	/**
 	 * Filters the template parts to be loaded.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param array  $templates Array of templates located.
 	 * @param string $slug      Template part slug requested.
@@ -67,7 +67,7 @@ function bp_get_template_part( $slug, $name = null ) {
  * Basically the same as {@link bp_get_template_part()}, but with 'assets/'
  * prepended to the slug.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @see bp_get_template_part() for full documentation.
  *
@@ -86,7 +86,7 @@ function bp_get_asset_template_part( $slug, $name = null ) {
  * inherit from a parent theme can just overload one file. If the template is
  * not found in either of those, it looks in the theme-compat folder last.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param string|array $template_names Template file(s) to search for, in order.
  * @param bool         $load           Optional. If true, the template file will be loaded when
@@ -145,7 +145,7 @@ function bp_locate_template( $template_names, $load = false, $require_once = tru
 	/**
 	 * Filter here to allow/disallow template loading.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @param bool $value True to load the template, false otherwise.
 	 */
@@ -163,7 +163,7 @@ function bp_locate_template( $template_names, $load = false, $require_once = tru
  *
  * Similar to {@link bp_locate_template()}, but for files like CSS and JS.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param string $filename Relative filename to search for.
  * @return false|array Array of asset data if one is located (includes absolute filepath and URI).
@@ -208,7 +208,7 @@ function bp_locate_template_asset( $filename ) {
  * relationship, to allow for custom template locations. Used in conjunction
  * with bp_locate_template(), this allows for easy template overrides.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param string $location_callback Callback function that returns the stack location.
  * @param int    $priority          Optional. The priority parameter as passed to
@@ -229,7 +229,7 @@ function bp_register_template_stack( $location_callback = '', $priority = 10 ) {
 /**
  * Deregister a previously registered template stack location.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @see bp_register_template_stack()
  *
@@ -255,7 +255,7 @@ function bp_deregister_template_stack( $location_callback = '', $priority = 10 )
  * Calls the functions added to the 'bp_template_stack' filter hook, and return
  * an array of the template locations.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @see bp_register_template_stack()
  *
@@ -309,7 +309,7 @@ function bp_get_template_stack() {
 	/**
 	 * Filters the "template stack" list of registered directories where templates can be found.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param array $stack Array of registered directories for template locations.
 	 */
@@ -319,7 +319,7 @@ function bp_get_template_stack() {
 /**
  * Put a template part into an output buffer, and return it.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @see bp_get_template_part() for a description of $slug and $name params.
  *
@@ -359,7 +359,7 @@ function bp_buffer_template_part( $slug, $name = null, $echo = true ) {
  * the use of {@link bp_locate_template()}. Allows for more generic template
  * locations without the use of the other get_*_template() functions.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param string $type      Filename without extension.
  * @param array  $templates An optional list of template candidates.
@@ -378,7 +378,7 @@ function bp_get_query_template( $type, $templates = array() ) {
 	 * This is a variable filter based on the type passed into
 	 * bp_get_query_template.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param array $templates Array of template files already prepared.
 	 */
@@ -396,7 +396,7 @@ function bp_get_query_template( $type, $templates = array() ) {
 	 * This is a variable filter based on the type passed into
 	 * bp_get_query_template.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $template Path to the most appropriate found template file.
 	 */
@@ -406,7 +406,7 @@ function bp_get_query_template( $type, $templates = array() ) {
 /**
  * Get the possible subdirectories to check for templates in.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param array $templates Templates we are looking for.
  * @return array Possible subfolders to look in.
@@ -421,7 +421,7 @@ function bp_get_template_locations( $templates = array() ) {
 	/**
 	 * Filters the possible subdirectories to check for templates in.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param array $locations Array of subfolders to look in.
 	 * @param array $templates Array of templates we are looking for.
@@ -432,7 +432,7 @@ function bp_get_template_locations( $templates = array() ) {
 /**
  * Add template locations to template files being searched for.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param array $stacks Array of template locations.
  * @return array Array of all template locations registered so far.
@@ -453,7 +453,7 @@ function bp_add_template_stack_locations( $stacks = array() ) {
 	/**
 	 * Filters the template locations to template files being searched for.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param array $value  Array of all template locations registered so far.
 	 * @param array $stacks Array of template locations.
@@ -464,7 +464,7 @@ function bp_add_template_stack_locations( $stacks = array() ) {
 /**
  * Add checks for BuddyPress conditions to 'parse_query' action.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param WP_Query $posts_query WP_Query object.
  */
@@ -490,7 +490,7 @@ function bp_parse_query( $posts_query ) {
 	 *
 	 * Allow BuddyPress components to parse the main query.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param WP_Query $posts_query WP_Query instance. Passed by reference.
 	 */
@@ -507,7 +507,7 @@ function bp_parse_query( $posts_query ) {
  * Note that the _edit() checks are ahead of their counterparts, to prevent them
  * from being stomped on accident.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param string $template The path to the template file that is being used.
  * @return string The path to the template file that is being used.
@@ -517,7 +517,7 @@ function bp_template_include_theme_supports( $template = '' ) {
 	/**
 	 * Filters whether or not to override the template being loaded in parent/child themes.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param bool   $value    Whether or not there is a file override. Default false.
 	 * @param string $template The path to the template file that is being used.
@@ -533,7 +533,7 @@ function bp_template_include_theme_supports( $template = '' ) {
 	/**
 	 * Filters the final template being loaded in parent/child themes.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $template The path to the template file that is being used.
 	 */
@@ -543,7 +543,7 @@ function bp_template_include_theme_supports( $template = '' ) {
 /**
  * Set the included template.
  *
- * @since 1.8.0
+ * @since BuddyPress 1.8.0
  *
  * @param mixed $template Default: false.
  * @return mixed False if empty. Template name if template included.
@@ -557,7 +557,7 @@ function bp_set_template_included( $template = false ) {
 /**
  * Is a BuddyPress template being included?
  *
- * @since 1.8.0
+ * @since BuddyPress 1.8.0
  *
  * @return bool True if yes, false if no.
  */
@@ -568,7 +568,7 @@ function bp_is_template_included() {
 /**
  * Attempt to load a custom BP functions file, similar to each themes functions.php file.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @global string $pagenow
  */
@@ -602,8 +602,8 @@ function bp_load_theme_functions() {
 /**
  * Get the templates to use as the endpoint for BuddyPress template parts.
  *
- * @since 1.7.0
- * @since 2.4.0 Added singular.php to stack
+ * @since BuddyPress 1.7.0
+ * @since BuddyPress 2.4.0 Added singular.php to stack
  *
  * @return string Possible root level wrapper template files.
  */

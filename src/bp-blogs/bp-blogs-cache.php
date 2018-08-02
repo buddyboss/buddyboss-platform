@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss
  * @subpackage BlogsCache
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -37,7 +37,7 @@ function bp_blogs_update_meta_cache( $blog_ids = false ) {
 /**
  * Clear the blog object cache.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $blog_id ID of the current blog.
  * @param int $user_id ID of the user whose blog cache should be cleared.

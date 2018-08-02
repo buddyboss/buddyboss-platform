@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsWidgets
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register widgets for groups component.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function groups_register_widgets() {
 	add_action( 'widgets_init', function() { register_widget( 'BP_Groups_Widget' ); } );
@@ -23,7 +23,7 @@ add_action( 'bp_register_widgets', 'groups_register_widgets' );
 /**
  * AJAX callback for the Groups List widget.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function groups_ajax_widget_groups_list() {
 

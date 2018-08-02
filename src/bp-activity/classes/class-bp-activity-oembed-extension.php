@@ -12,13 +12,13 @@ defined( 'ABSPATH' ) || exit;
 /**
  * oEmbed handler to respond and render single activity items.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  */
 class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	/**
 	 * Custom oEmbed slug endpoint.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @var string
 	 */
@@ -27,7 +27,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	/**
 	 * Custom hooks.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 */
 	protected function custom_hooks() {
 		add_action( 'oembed_dataparse',   array( $this, 'use_custom_iframe_sandbox_attribute' ), 20, 3 );
@@ -42,7 +42,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 *
 	 * Currently, includes 'hide_media'.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @return array
 	 */
@@ -58,7 +58,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	/**
 	 * Output our custom embed template part.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 */
 	protected function content() {
 		bp_get_asset_template_part( 'embeds/activity' );
@@ -67,7 +67,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	/**
 	 * Check if we're on our single activity page.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @return bool
 	 */
@@ -78,7 +78,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	/**
 	 * Validates the URL to determine if the activity item is valid.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param  string   $url The URL to check.
 	 * @return int|bool Activity ID on success; boolean false on failure.
@@ -125,7 +125,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	/**
 	 * Sets the oEmbed response data for our activity item.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param  int $item_id The activity ID.
 	 * @return array
@@ -147,7 +147,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	/**
 	 * Sets a custom <blockquote> for our oEmbed fallback HTML.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param  int $item_id The activity ID.
 	 * @return string
@@ -174,7 +174,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 		/**
 		 * Filters the fallback HTML used when embedding a BP activity item.
 		 *
-		 * @since 2.6.0
+		 * @since BuddyPress 2.6.0
 		 *
 		 * @param string               $blockquote Current fallback HTML
 		 * @param BP_Activity_Activity $activity   Activity object
@@ -185,7 +185,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	/**
 	 * Sets a custom <iframe> title for our oEmbed item.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param  int $item_id The activity ID
 	 * @return string
@@ -201,7 +201,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 * of whatever the oEmbed response is in {@link wp_filter_oembed_result()}. We
 	 * need to add back our custom sandbox value so links will work.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @see BP_Activity_Component::modify_iframe() where our custom sandbox value is set.
 	 *
@@ -242,7 +242,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 *  - Remove IFRAME height restriction of 1000px. Fixes long embed items being
 	 *    truncated.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param  string $retval Current embed HTML.
 	 * @return string
@@ -269,7 +269,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 *
 	 * Currently, removes wpautop() from the bp_activity_action() function.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param string $slug Template part slug requested.
 	 * @param string $name Template part name requested.
@@ -288,7 +288,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 * Basically a copy of {@link print_embed_comments_button()}, but modified for
 	 * the BP activity component.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 */
 	public function embed_comments_button() {
 		if ( ! did_action( 'bp_embed_content' ) || ! bp_is_single_activity() ) {

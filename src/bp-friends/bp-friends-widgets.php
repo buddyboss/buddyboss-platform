@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Connections
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register the friends widget.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 function bp_friends_register_widgets() {
 	if ( ! bp_is_active( 'friends' ) ) {
@@ -36,7 +36,7 @@ add_action( 'bp_register_widgets', 'bp_friends_register_widgets' );
 /**
  * Process AJAX pagination or filtering for the Connections widget.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 function bp_core_ajax_widget_friends() {
 

@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Messages
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 // Exit if accessed directly.
@@ -20,7 +20,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 	/**
 	 * Constructor
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function __construct( $args = array() ) {
 		parent::__construct(
@@ -36,7 +36,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 	/**
 	 * Checks the current user's permissions
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function ajax_user_can() {
 		return bp_current_user_can( 'bp_moderate' );
@@ -48,7 +48,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 	 * Handles filtering of data, sorting, pagination, and any other data
 	 * manipulation required prior to rendering.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function prepare_items() {
 		$page     = $this->get_pagenum();
@@ -69,7 +69,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 	 * Get a list of columns. The format is:
 	 * 'internal-name' => 'Title'
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return array
 	 */
@@ -84,7 +84,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 	/**
 	 * Generates content for a single row of the table
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param object $item The current item
 	 */
@@ -103,7 +103,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 	/**
 	 * Generates content for the "subject" column.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param object $item The current item
 	 */
@@ -145,7 +145,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 	/**
 	 * Generates content for the "message" column.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param object $item The current item
 	 */
@@ -156,7 +156,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 	/**
 	 * Generates content for the "date_sent" column.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param object $item The current item
 	 */

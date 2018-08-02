@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileClasses
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Represents a type of XProfile field and holds meta information about the type of value that it accepts.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 abstract class BP_XProfile_Field_Type {
 
 	/**
 	 * Validation regex rules for field type.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 * @var array Field type validation regexes.
 	 */
 	protected $validation_regex = array();
@@ -28,7 +28,7 @@ abstract class BP_XProfile_Field_Type {
 	/**
 	 * Whitelisted values for field type.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 * @var array Field type whitelisted values.
 	 */
 	protected $validation_whitelist = array();
@@ -36,7 +36,7 @@ abstract class BP_XProfile_Field_Type {
 	/**
 	 * Name for field type.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 * @var string The name of this field type.
 	 */
 	public $name = '';
@@ -44,7 +44,7 @@ abstract class BP_XProfile_Field_Type {
 	/**
 	 * The name of the category that this field type should be grouped with. Used on the [Users > Profile Fields] screen in wp-admin.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 * @var string
 	 */
 	public $category = '';
@@ -52,7 +52,7 @@ abstract class BP_XProfile_Field_Type {
 	/**
 	 * If allowed to store null/empty values.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 * @var bool If this is set, allow BP to store null/empty values for this field type.
 	 */
 	public $accepts_null_value = false;
@@ -60,7 +60,7 @@ abstract class BP_XProfile_Field_Type {
 	/**
 	 * If this is set, BP will set this field type's validation whitelist from the field's options (e.g checkbox, selectbox).
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 * @var bool Does this field support options? e.g. selectbox, radio buttons, etc.
 	 */
 	public $supports_options = false;
@@ -68,7 +68,7 @@ abstract class BP_XProfile_Field_Type {
 	/**
 	 * If allowed to support multiple options as default.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 * @var bool Does this field type support multiple options being set as default values? e.g. multiselectbox, checkbox.
 	 */
 	public $supports_multiple_defaults = false;
@@ -76,7 +76,7 @@ abstract class BP_XProfile_Field_Type {
 	/**
 	 * If the field type supports rich text by default.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 * @var bool
 	 */
 	public $supports_richtext = false;
@@ -84,7 +84,7 @@ abstract class BP_XProfile_Field_Type {
 	/**
 	 * If the field type has a type-specific settings section on the Edit Field panel.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 * @var bool|null Boolean if set explicitly by the type object, otherwise null.
 	 */
 	protected $do_settings_section = null;
@@ -92,7 +92,7 @@ abstract class BP_XProfile_Field_Type {
 	/**
 	 * If object is created by an BP_XProfile_Field object.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 * @var BP_XProfile_Field If this object is created by instantiating a {@link BP_XProfile_Field},
 	 *                        this is a reference back to that object.
 	 */
@@ -101,14 +101,14 @@ abstract class BP_XProfile_Field_Type {
 	/**
 	 * Constructor.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 */
 	public function __construct() {
 
 		/**
 		 * Fires inside __construct() method for BP_XProfile_Field_Type class.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param BP_XProfile_Field_Type $this Current instance of
 		 *                                     the field type class.
@@ -122,7 +122,7 @@ abstract class BP_XProfile_Field_Type {
 	 * You can call this method multiple times to set multiple formats. When validation is performed,
 	 * it's successful as long as the new value matches any one of the registered formats.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param string $format         Regex string.
 	 * @param string $replace_format Optional; if 'replace', replaces the format instead of adding to it.
@@ -134,7 +134,7 @@ abstract class BP_XProfile_Field_Type {
 		/**
 		 * Filters the regex format for the field type.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param string                 $format         Regex string.
 		 * @param string                 $replace_format Optional replace format If "replace", replaces the
@@ -158,7 +158,7 @@ abstract class BP_XProfile_Field_Type {
 	 * You can call this method multiple times to set multiple formats. When validation is performed,
 	 * it's successful as long as the new value matches any one of the registered formats.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param string|array $values Whitelisted values.
 	 * @return BP_XProfile_Field_Type
@@ -169,7 +169,7 @@ abstract class BP_XProfile_Field_Type {
 			/**
 			 * Filters values for field type's whitelist that profile data will be asserted against.
 			 *
-			 * @since 2.0.0
+			 * @since BuddyPress 2.0.0
 			 *
 			 * @param string                 $value  Field value.
 			 * @param array                  $values Original array of values.
@@ -186,7 +186,7 @@ abstract class BP_XProfile_Field_Type {
 	 *
 	 * This method doesn't support chaining.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param string|array $values Value to check against the registered formats.
 	 * @return bool True if the value validates
@@ -227,7 +227,7 @@ abstract class BP_XProfile_Field_Type {
 		/**
 		 * Filters whether or not field type is a valid format.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param bool                   $validated Whether or not the field type is valid.
 		 * @param string|array           $values    Value to check against the registered formats.
@@ -241,7 +241,7 @@ abstract class BP_XProfile_Field_Type {
 	 *
 	 * Falls back on `supports_options` if no value is set by the field type.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @return bool
 	 */
@@ -258,7 +258,7 @@ abstract class BP_XProfile_Field_Type {
 	 *
 	 * Must be used inside the {@link bp_profile_fields()} template loop.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $raw_properties Optional key/value array of permitted attributes that you want to add.
 	 * @return void
@@ -270,7 +270,7 @@ abstract class BP_XProfile_Field_Type {
 	 *
 	 * Must be used inside the {@link bp_profile_fields()} template loop.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $raw_properties Optional key/value array of permitted attributes that you want to add.
 	 * @return void
@@ -289,7 +289,7 @@ abstract class BP_XProfile_Field_Type {
 	 *
 	 * Must be used inside the {@link bp_profile_fields()} template loop.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $args Optional. The arguments passed to {@link bp_the_profile_field_options()}.
 	 */
@@ -304,7 +304,7 @@ abstract class BP_XProfile_Field_Type {
 	 *
 	 * Must be used inside the {@link bp_profile_fields()} template loop.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param BP_XProfile_Field $current_field The current profile field on the add/edit screen.
 	 * @param string            $control_type  Optional. HTML input type used to render the current
@@ -421,7 +421,7 @@ abstract class BP_XProfile_Field_Type {
 				/**
 				 * Fires at the end of the new field additional settings area.
 				 *
-				 * @since 2.3.0
+				 * @since BuddyPress 2.3.0
 				 *
 				 * @param BP_XProfile_Field $current_field Current field being rendered.
 				 */
@@ -447,8 +447,8 @@ abstract class BP_XProfile_Field_Type {
 	 * override in your own field type if you need this kind of pre-
 	 * validation filtering.
 	 *
-	 * @since 2.1.0
-	 * @since 2.4.0 Added the `$field_id` parameter.
+	 * @since BuddyPress 2.1.0
+	 * @since BuddyPress 2.4.0 Added the `$field_id` parameter.
 	 *
 	 * @param mixed      $field_value Submitted field value.
 	 * @param string|int $field_id    Optional. ID of the field.
@@ -465,8 +465,8 @@ abstract class BP_XProfile_Field_Type {
 	 * override in your own field type if you need to provide custom
 	 * filtering for output values.
 	 *
-	 * @since 2.1.0
-	 * @since 2.4.0 Added `$field_id` parameter.
+	 * @since BuddyPress 2.1.0
+	 * @since BuddyPress 2.4.0 Added `$field_id` parameter.
 	 *
 	 * @param mixed      $field_value Field value.
 	 * @param string|int $field_id    ID of the field.
@@ -481,7 +481,7 @@ abstract class BP_XProfile_Field_Type {
 	 *
 	 * Override in a specific field type if it requires an admin save routine.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param int   $field_id Field ID.
 	 * @param array $settings Array of settings.
@@ -496,7 +496,7 @@ abstract class BP_XProfile_Field_Type {
 	 * Must be used inside the {@link bp_profile_fields()} template loop.
 	 * This method was intended to be static but couldn't be because php.net/lsb/ requires PHP >= 5.3.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $properties Optional key/value array of attributes for this edit field.
 	 * @return string
@@ -520,7 +520,7 @@ abstract class BP_XProfile_Field_Type {
 		/**
 		 * Filters the edit html elements and attributes.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param array  $r     Array of parsed arguments.
 		 * @param string $value Class name for the current class instance.

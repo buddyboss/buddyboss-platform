@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage CoreAdministration
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Main settings section description for the settings page.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_admin_setting_callback_main_section() { }
 
 /**
  * Admin bar for logged out users setting field.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  */
 function bp_admin_setting_callback_admin_bar() {
@@ -35,7 +35,7 @@ function bp_admin_setting_callback_admin_bar() {
 /**
  * Allow members to delete their accounts setting field.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  */
 function bp_admin_setting_callback_account_deletion() {
@@ -84,14 +84,14 @@ function bp_admin_setting_callback_theme_package_id() {
 /**
  * Groups settings section description for the settings page.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_admin_setting_callback_activity_section() { }
 
 /**
  * Allow Akismet setting field.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  */
 function bp_admin_setting_callback_activity_akismet() {
@@ -106,7 +106,7 @@ function bp_admin_setting_callback_activity_akismet() {
 /**
  * Allow activity comments on posts and comments.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_admin_setting_callback_blogforum_comments() {
 ?>
@@ -120,7 +120,7 @@ function bp_admin_setting_callback_blogforum_comments() {
 /**
  * Allow Heartbeat to refresh activity feed.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 function bp_admin_setting_callback_heartbeat() {
 ?>
@@ -138,7 +138,7 @@ function bp_admin_setting_callback_heartbeat() {
  * legacy reasons, the option that we store is 1 if these comments are *disabled*. So we use this
  * function to flip the boolean before saving the intval.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param bool $value Whether or not to sanitize.
  * @return bool
@@ -152,14 +152,14 @@ function bp_admin_sanitize_callback_blogforum_comments( $value = false ) {
 /**
  * Profile settings section description for the settings page.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_admin_setting_callback_xprofile_section() { }
 
 /**
  * Enable BP->WP profile syncing field.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  */
 function bp_admin_setting_callback_profile_sync() {
@@ -174,7 +174,7 @@ function bp_admin_setting_callback_profile_sync() {
 /**
  * Allow members to upload avatars field.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  */
 function bp_admin_setting_callback_avatar_uploads() {
@@ -189,7 +189,7 @@ function bp_admin_setting_callback_avatar_uploads() {
 /**
  * Allow members to upload cover images field.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  */
 function bp_admin_setting_callback_cover_image_uploads() {
 ?>
@@ -203,14 +203,14 @@ function bp_admin_setting_callback_cover_image_uploads() {
 /**
  * Groups settings section description for the settings page.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_admin_setting_callback_groups_section() { }
 
 /**
  * Allow all users to create groups field.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  */
 function bp_admin_setting_callback_group_creation() {
@@ -226,7 +226,7 @@ function bp_admin_setting_callback_group_creation() {
 /**
  * 'Enable group avatars' field markup.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 function bp_admin_setting_callback_group_avatar_uploads() {
 ?>
@@ -238,7 +238,7 @@ function bp_admin_setting_callback_group_avatar_uploads() {
 /**
  * 'Enable group cover images' field markup.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  */
 function bp_admin_setting_callback_group_cover_image_uploads() {
 ?>
@@ -252,7 +252,7 @@ function bp_admin_setting_callback_group_cover_image_uploads() {
 /**
  * The main settings page
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  */
 function bp_core_admin_settings() {
@@ -286,7 +286,7 @@ function bp_core_admin_settings() {
 /**
  * Save our settings.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_core_admin_settings_save() {
 	global $wp_settings_fields;
@@ -335,7 +335,7 @@ add_action( 'bp_admin_init', 'bp_core_admin_settings_save', 100 );
 /**
  * Output settings API option.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param string $option  Form option to echo.
  * @param string $default Form option default.
@@ -347,7 +347,7 @@ function bp_form_option( $option, $default = '' , $slug = false ) {
 	/**
 	 * Return settings API option
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 *
 	 * @param string $option  Form option to return.
@@ -366,7 +366,7 @@ function bp_form_option( $option, $default = '' , $slug = false ) {
 			/**
 			 * Filters the slug value in the form field.
 			 *
-			 * @since 1.6.0
+			 * @since BuddyPress 1.6.0
 			 *
 			 * @param string $value Value being returned for the requested option.
 			 */
@@ -382,7 +382,7 @@ function bp_form_option( $option, $default = '' , $slug = false ) {
 		/**
 		 * Filters the settings API option.
 		 *
-		 * @since 1.6.0
+		 * @since BuddyPress 1.6.0
 		 *
 		 * @param string $value  Value being returned for the requested option.
 		 * @param string $option Option whose value is being requested.

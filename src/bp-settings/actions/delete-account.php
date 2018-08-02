@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage SettingsActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handles the deleting of a user.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_settings_action_delete_account() {
 	if ( ! bp_is_post_request() ) {

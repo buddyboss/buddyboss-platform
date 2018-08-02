@@ -10,7 +10,7 @@
  *
  * @package BuddyBoss
  * @subpackage WPAbstraction
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 
 // Exit if accessed directly.
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Parse the WordPress core version number into the major release.
  *
- * @since 1.5.2
+ * @since BuddyPress 1.5.2
  *
  * @global string $wp_version
  *
@@ -45,7 +45,7 @@ if ( !is_multisite() ) {
 		/**
 		 * Retrieve blog option.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @see get_blog_option()
 		 *
@@ -64,7 +64,7 @@ if ( !is_multisite() ) {
 		/**
 		 * Add blog option.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @see add_blog_option()
 		 *
@@ -83,7 +83,7 @@ if ( !is_multisite() ) {
 		/**
 		 * Update blog option.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @see update_blog_option()
 		 *
@@ -102,7 +102,7 @@ if ( !is_multisite() ) {
 		/**
 		 * Delete blog option.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @see delete_blog_option()
 		 *
@@ -120,7 +120,7 @@ if ( !is_multisite() ) {
 		/**
 		 * Switch to specified blog.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @see switch_to_blog()
 		 *
@@ -138,7 +138,7 @@ if ( !is_multisite() ) {
 		/**
 		 * Restore current blog.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @see restore_current_blog()
 		 *
@@ -154,7 +154,7 @@ if ( !is_multisite() ) {
 		/**
 		 * Retrive blogs associated with user.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @see get_blogs_of_user()
 		 *
@@ -172,7 +172,7 @@ if ( !is_multisite() ) {
 		/**
 		 * Whether or not to update blog status.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 *
 		 * @see update_blog_status()
 		 *
@@ -192,7 +192,7 @@ if ( !is_multisite() ) {
 		/**
 		 * Whether or not if subdomain install.
 		 *
-		 * @since 1.2.5.1
+		 * @since BuddyPress 1.2.5.1
 		 *
 		 * @see is_subdomain_install()
 		 *

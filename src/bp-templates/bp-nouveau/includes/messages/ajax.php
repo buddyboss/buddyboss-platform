@@ -2,7 +2,7 @@
 /**
  * Messages Ajax functions
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
 
@@ -36,7 +36,7 @@ add_action( 'admin_init', function() {
 }, 12 );
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_messages_send_message() {
 	$response = array(
@@ -71,7 +71,7 @@ function bp_nouveau_ajax_messages_send_message() {
 	/**
 	 * Filters the results of trimming of `@` characters from usernames for who is set to receive a message.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $value Array of trimmed usernames.
 	 * @param array $value Array of un-trimmed usernames submitted.
@@ -104,7 +104,7 @@ function bp_nouveau_ajax_messages_send_message() {
 }
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_messages_send_reply() {
 	$response = array(
@@ -213,7 +213,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 }
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_get_user_message_threads() {
 	global $messages_template;
@@ -358,7 +358,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 }
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_messages_thread_read() {
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
@@ -388,7 +388,7 @@ function bp_nouveau_ajax_messages_thread_read() {
 }
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_get_thread_messages() {
 	global $thread_template;
@@ -506,7 +506,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 }
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_delete_thread_messages() {
 	$response = array(
@@ -539,7 +539,7 @@ function bp_nouveau_ajax_delete_thread_messages() {
 }
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_star_thread_messages() {
 	if ( empty( $_POST['action'] ) ) {
@@ -638,7 +638,7 @@ function bp_nouveau_ajax_star_thread_messages() {
 }
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_readunread_thread_messages() {
 	if ( empty( $_POST['action'] ) ) {
@@ -701,7 +701,7 @@ function bp_nouveau_ajax_readunread_thread_messages() {
 }
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_dismiss_sitewide_notice() {
 	if ( empty( $_POST['action'] ) ) {

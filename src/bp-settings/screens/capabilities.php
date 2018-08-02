@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage SettingsScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Show the capabilities settings template.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_settings_screen_capabilities() {
 
@@ -22,7 +22,7 @@ function bp_settings_screen_capabilities() {
 	/**
 	 * Filters the template file path to use for the capabilities settings screen.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string $value Directory path to look in for the template file.
 	 */

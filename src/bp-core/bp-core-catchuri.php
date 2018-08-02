@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -30,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
  *    - $bp->current_action: string 'edit'
  *    - $bp->action_variables: array ['group', 5]
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_core_set_uri_globals() {
 	global $current_blog, $wp_rewrite;
@@ -58,7 +58,7 @@ function bp_core_set_uri_globals() {
 	/**
 	 * Filters the BuddyPress global URI path.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $path Path to set.
 	 */
@@ -223,7 +223,7 @@ function bp_core_set_uri_globals() {
 		 *
 		 * ADMIN would be the displayed user's slug.
 		 *
-		 * @since 2.6.0
+		 * @since BuddyPress 2.6.0
 		 *
 		 * @param string $member_slug
 		 */
@@ -383,7 +383,7 @@ function bp_core_set_uri_globals() {
 /**
  * Are root profiles enabled and allowed?
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @return bool True if yes, false if no.
  */
@@ -397,7 +397,7 @@ function bp_core_enable_root_profiles() {
 	/**
 	 * Filters whether or not root profiles are enabled and allowed.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param bool $retval Whether or not root profiles are available.
 	 */
@@ -412,7 +412,7 @@ function bp_core_enable_root_profiles() {
  * Loads:
  *   wp-content/themes/[activated_theme]/members/index.php
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param array $templates Array of templates to attempt to load.
  */
@@ -450,7 +450,7 @@ function bp_core_load_template( $templates ) {
 	 *
 	 * Allows plugins to alter where the template files are located.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param string $template           Located template path.
 	 * @param array  $filtered_templates Array of templates to attempt to load.
@@ -477,7 +477,7 @@ function bp_core_load_template( $templates ) {
 		/**
 		 * Fires before the loading of a located template file.
 		 *
-		 * @since 1.6.0
+		 * @since BuddyPress 1.6.0
 		 *
 		 * @param string $located_template Template found to be loaded.
 		 */
@@ -486,7 +486,7 @@ function bp_core_load_template( $templates ) {
 		/**
 		 * Filters the selected template right before loading.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $located_template Template found to be loaded.
 		 */
@@ -495,7 +495,7 @@ function bp_core_load_template( $templates ) {
 		/**
 		 * Fires after the loading of a located template file.
 		 *
-		 * @since 1.6.0
+		 * @since BuddyPress 1.6.0
 		 *
 		 * @param string $located_template Template found that was loaded.
 		 */
@@ -520,7 +520,7 @@ function bp_core_load_template( $templates ) {
 		/**
 		 * Fires if there are no found templates to load and theme compat is needed.
 		 *
-		 * @since 1.7.0
+		 * @since BuddyPress 1.7.0
 		 */
 		do_action( 'bp_setup_theme_compat' );
 	}
@@ -529,7 +529,7 @@ function bp_core_load_template( $templates ) {
 /**
  * Redirect away from /profile URIs if XProfile is not enabled.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_core_catch_profile_uri() {
 	if ( !bp_is_active( 'xprofile' ) ) {
@@ -537,7 +537,7 @@ function bp_core_catch_profile_uri() {
 		/**
 		 * Filters the path to redirect users to if XProfile is not enabled.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $value Path to redirect users to.
 		 */
@@ -550,7 +550,7 @@ function bp_core_catch_profile_uri() {
  *
  * Redirects x.com/members/me/* to x.com/members/{LOGGED_IN_USER_SLUG}/*
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param string $member_slug The current member slug.
  * @return string $member_slug The current member slug.
@@ -562,7 +562,7 @@ function bp_core_members_shortlink_redirector( $member_slug ) {
 	 *
 	 * The x.com/members/me/* url will redirect to x.com/members/{LOGGED_IN_USER_SLUG}/*
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param string $slug Defaults to 'me'.
 	 */
@@ -590,7 +590,7 @@ add_filter( 'bp_core_set_uri_globals_member_slug', 'bp_core_members_shortlink_re
 /**
  * Catch unauthorized access to certain BuddyPress pages and redirect accordingly.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_core_catch_no_access() {
 	global $wp_query;
@@ -615,7 +615,7 @@ add_action( 'bp_template_redirect', 'bp_core_catch_no_access', 1 );
  *
  * If authenticated, redirects user back to requested content by default.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param array|string $args {
  *     @type int    $mode     Specifies the destination of the redirect. 1 will
@@ -648,7 +648,7 @@ function bp_core_no_access( $args = '' ) {
 	/**
 	 * Filters the arguments used for user redirecting when visiting access controlled areas.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param array $r Array of parsed arguments for redirect determination.
 	 */
@@ -710,7 +710,7 @@ function bp_core_no_access( $args = '' ) {
  * to redirect the user to the authorized content instead of forcing the user
  * to re-authenticate.
  *
- * @since 2.9.0
+ * @since BuddyPress 2.9.0
  */
 function bp_login_redirector() {
 	// Redirect links must include the `redirect_to` and `bp-auth` parameters.
@@ -732,8 +732,8 @@ add_action( 'login_init', 'bp_login_redirector', 1 );
 /**
  * Add a custom BuddyPress no access error message to wp-login.php.
  *
- * @since 1.5.0
- * @since 2.7.0 Hook moved to 'wp_login_errors' made available since WP 3.6.0.
+ * @since BuddyPress 1.5.0
+ * @since BuddyPress 2.7.0 Hook moved to 'wp_login_errors' made available since WP 3.6.0.
  *
  * @param  WP_Error $errors Current error container.
  * @return WP_Error
@@ -746,7 +746,7 @@ function bp_core_no_access_wp_login_error( $errors ) {
 	/**
 	 * Filters the error message for wp-login.php when needing to log in before accessing.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param string $value Error message to display.
 	 * @param string $value URL to redirect user to after successful login.
@@ -762,7 +762,7 @@ add_filter( 'wp_login_errors', 'bp_core_no_access_wp_login_error' );
 /**
  * Add our custom error code to WP login's shake error codes.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @param  array $codes Array of WP error codes.
  * @return array
@@ -782,7 +782,7 @@ add_filter( 'shake_error_codes', 'bp_core_login_filter_shake_codes' );
  * URL - eg, example.com/groups/mygroup/ instead of
  * example.com/groups/mygroup/home/.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @see BP_Members_Component::setup_globals() where
  *      $bp->canonical_stack['base_url'] and ['component'] may be set.
@@ -793,7 +793,7 @@ function bp_redirect_canonical() {
 	/**
 	 * Filters whether or not to do canonical redirects on BuddyPress URLs.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param bool $value Whether or not to do canonical redirects. Default true.
 	 */
@@ -842,7 +842,7 @@ function bp_redirect_canonical() {
 /**
  * Output rel=canonical header tag for BuddyPress content.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_rel_canonical() {
 	$canonical_url = bp_get_canonical_url();
@@ -854,7 +854,7 @@ function bp_rel_canonical() {
 /**
  * Get the canonical URL of the current page.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param array $args {
  *     Optional array of arguments.
@@ -902,7 +902,7 @@ function bp_get_canonical_url( $args = array() ) {
 			/**
 			 * Filters the logged in register page redirect URL.
 			 *
-			 * @since 1.5.1
+			 * @since BuddyPress 1.5.1
 			 *
 			 * @param string $value URL to redirect logged in members to.
 			 */
@@ -950,7 +950,7 @@ function bp_get_canonical_url( $args = array() ) {
 	/**
 	 * Filters the canonical url of the current page.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string $canonical_url Canonical URL of the current page.
 	 * @param array  $args          Array of arguments to help determine canonical URL.
@@ -961,7 +961,7 @@ function bp_get_canonical_url( $args = array() ) {
 /**
  * Return the URL as requested on the current page load by the user agent.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @return string Requested URL string.
  */
@@ -976,7 +976,7 @@ function bp_get_requested_url() {
 	/**
 	 * Filters the URL as requested on the current page load by the user agent.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $value Requested URL string.
 	 */
@@ -992,7 +992,7 @@ function bp_get_requested_url() {
  * This function should be considered temporary, and may be removed without
  * notice in future versions of BuddyPress.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function _bp_maybe_remove_redirect_canonical() {
 	if ( ! bp_is_blog_page() )
@@ -1022,7 +1022,7 @@ add_action( 'bp_init', '_bp_maybe_remove_redirect_canonical' );
  * This function will be removed in a later version of BuddyPress. Plugins
  * (and plugin authors!) should ignore it.
  *
- * @since 1.6.1
+ * @since BuddyPress 1.6.1
  *
  * @link https://buddypress.trac.wordpress.org/ticket/4329
  * @link https://buddypress.trac.wordpress.org/ticket/4415
@@ -1041,7 +1041,7 @@ add_action( 'template_redirect', '_bp_rehook_maybe_redirect_404', 1 );
  * This function should be considered temporary, and may be removed without
  * notice in future versions of BuddyPress.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function _bp_maybe_remove_rel_canonical() {
 	if ( ! bp_is_blog_page() && ! is_404() ) {
@@ -1057,7 +1057,7 @@ add_action( 'wp_head', '_bp_maybe_remove_rel_canonical', 8 );
  * As of WordPress 4.6, it is possible to bypass the main WP_Query entirely.
  * This saves us one unnecessary database query! :)
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @param  null     $retval Current return value for filter.
  * @param  WP_Query $query  Current WordPress query object.

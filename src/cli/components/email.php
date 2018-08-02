@@ -6,7 +6,7 @@ use WP_CLI;
 /**
  * Manage BuddyPress Email Post Types.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 class Email extends BuddypressCommand {
 

@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage GroupActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Catch and process group creation form submissions.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @return bool
  */
@@ -114,7 +114,7 @@ function groups_action_create_group() {
 			/**
 			 * Filters the allowed invite statuses.
 			 *
-			 * @since 1.5.0
+			 * @since BuddyPress 1.5.0
 			 *
 			 * @param array $value Array of statuses allowed.
 			 *                     Possible values are 'members,
@@ -145,7 +145,7 @@ function groups_action_create_group() {
 		 * This hook is a variable hook dependent on the current step
 		 * in the creation process.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 */
 		do_action( 'groups_create_group_step_save_' . bp_get_groups_current_create_step() );
 
@@ -154,7 +154,7 @@ function groups_action_create_group() {
 		 *
 		 * Mostly for clearing cache on a generic action name.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 */
 		do_action( 'groups_create_group_step_complete' );
 
@@ -192,7 +192,7 @@ function groups_action_create_group() {
 			/**
 			 * Fires after the group has been successfully created.
 			 *
-			 * @since 1.1.0
+			 * @since BuddyPress 1.1.0
 			 *
 			 * @param int $new_group_id ID of the newly created group.
 			 */
@@ -276,7 +276,7 @@ function groups_action_create_group() {
 				/**
 				 * Fires after a group avatar is uploaded.
 				 *
-				 * @since 2.8.0
+				 * @since BuddyPress 2.8.0
 				 *
 				 * @param int    $group_id ID of the group.
 				 * @param string $type     Avatar type. 'crop' or 'full'.
@@ -292,7 +292,7 @@ function groups_action_create_group() {
 	/**
 	 * Filters the template to load for the group creation screen.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $value Path to the group creation template to load.
 	 */
@@ -303,7 +303,7 @@ add_action( 'bp_actions', 'groups_action_create_group' );
 /**
  * Sort the group creation steps.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @return false|null False on failure.
  */
@@ -334,7 +334,7 @@ function groups_action_sort_creation_steps() {
 	/**
 	 * Fires after group creation sets have been sorted.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 */
 	do_action( 'groups_action_sort_creation_steps' );
 }

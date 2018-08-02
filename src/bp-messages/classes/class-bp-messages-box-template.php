@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage MessagesTemplate
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -276,7 +276,7 @@ class BP_Messages_Box_Template {
 			/**
 			 * Fires when at the end of threads to iterate over.
 			 *
-			 * @since 1.5.0
+			 * @since BuddyPress 1.5.0
 			 */
 			do_action( 'messages_box_loop_end' );
 			// Do some cleaning up after the loop.
@@ -338,7 +338,7 @@ class BP_Messages_Box_Template {
 			/**
 			 * Fires if at the start of the message thread loop.
 			 *
-			 * @since 1.5.0
+			 * @since BuddyPress 1.5.0
 			 */
 			do_action( 'messages_box_loop_start' );
 		}

@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss
  * @subpackage Groups
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Add the Group Admin top-level menu when viewing group pages.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @todo Add dynamic menu items for group extensions.
  *
@@ -85,7 +85,7 @@ add_action( 'admin_bar_menu', 'bp_groups_group_admin_menu', 99 );
 /**
  * Remove rogue WP core Edit menu when viewing a single group.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_groups_remove_edit_page_menu() {
 	if ( bp_is_group() ) {

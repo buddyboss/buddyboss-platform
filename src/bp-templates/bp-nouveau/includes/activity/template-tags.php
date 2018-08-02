@@ -2,7 +2,7 @@
 /**
  * Activity Template tags
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
 
@@ -12,20 +12,20 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Before Activity's directory content legacy do_action hooks wrapper
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_before_activity_directory_content() {
 	/**
 	 * Fires at the begining of the templates BP injected content.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 */
 	do_action( 'bp_before_directory_activity' );
 
 	/**
 	 * Fires before the activity directory display content.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_before_directory_activity_content' );
 }
@@ -33,13 +33,13 @@ function bp_nouveau_before_activity_directory_content() {
 /**
  * After Activity's directory content legacy do_action hooks wrapper
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_after_activity_directory_content() {
 	/**
 	 * Fires after the display of the activity list.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	do_action( 'bp_after_directory_activity_list' );
 
@@ -51,14 +51,14 @@ function bp_nouveau_after_activity_directory_content() {
 	/**
 	 * Fires after the activity directory display content.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_after_directory_activity_content' );
 
 	/**
 	 * Fires after the activity directory listing.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	do_action( 'bp_after_directory_activity' );
 }
@@ -66,7 +66,7 @@ function bp_nouveau_after_activity_directory_content() {
 /**
  * Enqueue needed scripts for the Activity Post Form
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_before_activity_post_form() {
 	if ( bp_nouveau_current_user_can( 'publish_activity' ) ) {
@@ -76,7 +76,7 @@ function bp_nouveau_before_activity_post_form() {
 	/**
 	 * Fires before the activity post form.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_before_activity_post_form' );
 }
@@ -84,7 +84,7 @@ function bp_nouveau_before_activity_post_form() {
 /**
  * Load JS Templates for the Activity Post Form
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_after_activity_post_form() {
 	if ( bp_nouveau_current_user_can( 'publish_activity' ) ) {
@@ -94,7 +94,7 @@ function bp_nouveau_after_activity_post_form() {
 	/**
 	 * Fires after the activity post form.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_after_activity_post_form' );
 }
@@ -102,7 +102,7 @@ function bp_nouveau_after_activity_post_form() {
 /**
  * Display the displayed user activity post form if needed
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string HTML.
  */
@@ -111,7 +111,7 @@ function bp_nouveau_activity_member_post_form() {
 	/**
 	 * Fires before the display of the member activity post form.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_before_member_activity_post_form' );
 
@@ -122,7 +122,7 @@ function bp_nouveau_activity_member_post_form() {
 	/**
 	 * Fires after the display of the member activity post form.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_after_member_activity_post_form' );
 }
@@ -130,7 +130,7 @@ function bp_nouveau_activity_member_post_form() {
 /**
  * Fire specific hooks into the activity entry template
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $when   Optional. Either 'before' or 'after'.
  * @param string $suffix Optional. Use it to add terms at the end of the hook name.
@@ -155,7 +155,7 @@ function bp_nouveau_activity_hook( $when = '', $suffix = '' ) {
 /**
  * Checks if an activity of the loop has some content.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return bool True if the activity has some content. False Otherwise.
  */
@@ -166,7 +166,7 @@ function bp_nouveau_activity_has_content() {
 /**
  * Output the Activity content into the loop.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_content() {
 	if ( bp_activity_has_content() ) {
@@ -176,7 +176,7 @@ function bp_nouveau_activity_content() {
 	/**
 	 * Fires after the display of an activity entry content.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_activity_entry_content' );
 }
@@ -184,7 +184,7 @@ function bp_nouveau_activity_content() {
 /**
  * Output the Activity timestamp into the bp-timestamp attribute.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_timestamp() {
 	echo esc_attr( bp_nouveau_get_activity_timestamp() );
@@ -193,7 +193,7 @@ function bp_nouveau_activity_timestamp() {
 	/**
 	 * Get the Activity timestamp.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return integer The Activity timestamp.
 	 */
@@ -201,7 +201,7 @@ function bp_nouveau_activity_timestamp() {
 		/**
 		 * Filter here to edit the activity timestamp.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param integer $value The Activity timestamp.
 		 */
@@ -211,7 +211,7 @@ function bp_nouveau_activity_timestamp() {
 /**
  * Output the action buttons inside an Activity Loop.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $args See bp_nouveau_wrapper() for the description of parameters.
  */
@@ -223,7 +223,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 	/**
 	 * Fires at the end of the activity entry meta data area.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_activity_entry_meta' );
 
@@ -245,7 +245,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 	 * Get the action buttons inside an Activity Loop,
 	 *
 	 * @todo This function is too large and needs refactoring and reviewing.
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	function bp_nouveau_get_activity_entry_buttons( $args ) {
 		$buttons = array();
@@ -524,7 +524,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 		/**
 		 * Filter to add your buttons, use the position argument to choose where to insert it.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array $buttons     The list of buttons.
 		 * @param int   $activity_id The current activity ID.
@@ -569,7 +569,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 		/**
 		 * Leave a chance to adjust the $return
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array $return      The list of buttons ordered.
 		 * @param int   $activity_id The current activity ID.
@@ -582,7 +582,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 /**
  * Output Activity Comments if any
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_comments() {
 	global $activities_template;
@@ -599,7 +599,7 @@ function bp_nouveau_activity_comments() {
  *
  * Note: This is an adaptation of the bp_activity_recurse_comments() BuddyPress core function
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param object $comment The activity object currently being recursed.
  */
@@ -613,7 +613,7 @@ function bp_nouveau_activity_recurse_comments( $comment ) {
 	/**
 	 * Filters the opening tag for the template that lists activity comments.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string $value Opening tag for the HTML markup to use.
 	 */
@@ -627,7 +627,7 @@ function bp_nouveau_activity_recurse_comments( $comment ) {
 		/**
 		 * Fires before the display of an activity comment.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 */
 		do_action( 'bp_before_activity_comment' );
 
@@ -636,7 +636,7 @@ function bp_nouveau_activity_recurse_comments( $comment ) {
 		/**
 		 * Fires after the display of an activity comment.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 */
 		do_action( 'bp_after_activity_comment' );
 
@@ -646,7 +646,7 @@ function bp_nouveau_activity_recurse_comments( $comment ) {
 	/**
 	 * Filters the closing tag for the template that list activity comments.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string $value Closing tag for the HTML markup to use.
 	 */
@@ -656,7 +656,7 @@ function bp_nouveau_activity_recurse_comments( $comment ) {
 /**
  * Ouptut the Activity comment action string
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_comment_action() {
 	echo bp_nouveau_get_activity_comment_action();
@@ -665,14 +665,14 @@ function bp_nouveau_activity_comment_action() {
 	/**
 	 * Get the Activity comment action string
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	function bp_nouveau_get_activity_comment_action() {
 
 		/**
 		 * Filter to edit the activity comment action.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $value HTML Output
 		 */
@@ -691,7 +691,7 @@ function bp_nouveau_activity_comment_action() {
 /**
  * Load the Activity comment form
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_comment_form() {
 	bp_get_template_part( 'activity/comment-form' );
@@ -700,7 +700,7 @@ function bp_nouveau_activity_comment_form() {
 /**
  * Output the action buttons for the activity comments
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
  */
@@ -711,7 +711,7 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 	/**
 	 * Fires after the defualt comment action options display.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	do_action( 'bp_activity_comment_options' );
 
@@ -731,7 +731,7 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 	/**
 	 * Get the action buttons for the activity comments
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
 	 *
@@ -852,7 +852,7 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 		/**
 		 * Filter to add your buttons, use the position argument to choose where to insert it.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array $buttons             The list of buttons.
 		 * @param int   $activity_comment_id The current activity comment ID.
@@ -904,7 +904,7 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 		/**
 		 * Leave a chance to adjust the $return
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array $return              The list of buttons ordered.
 		 * @param int   $activity_comment_id The current activity comment ID.

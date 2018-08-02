@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage ActivityNotifications
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Format notifications related to activity.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param string $action            The type of activity item. Just 'new_at_mention' for now.
  * @param int    $item_id           The activity ID.
@@ -85,8 +85,8 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 		 * need notified about. The two possible hooks are bp_activity_single_at_mentions_notification
 		 * or bp_activity_multiple_at_mentions_notification.
 		 *
-		 * @since 1.5.0
-		 * @since 2.6.0 use the $action_filter as a new dynamic portion of the filter name.
+		 * @since BuddyPress 1.5.0
+		 * @since BuddyPress 2.6.0 use the $action_filter as a new dynamic portion of the filter name.
 		 *
 		 * @param string $string          HTML anchor tag for the interaction.
 		 * @param string $link            The permalink for the interaction.
@@ -104,8 +104,8 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 		 * The two possible hooks are bp_activity_single_at_mentions_notification
 		 * or bp_activity_multiple_at_mentions_notification.
 		 *
-		 * @since 1.5.0
-		 * @since 2.6.0 use the $action_filter as a new dynamic portion of the filter name.
+		 * @since BuddyPress 1.5.0
+		 * @since BuddyPress 2.6.0 use the $action_filter as a new dynamic portion of the filter name.
 		 *
 		 * @param array  $array           Array holding the content and permalink for the interaction notification.
 		 * @param string $link            The permalink for the interaction.
@@ -122,7 +122,7 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 	/**
 	 * Fires right before returning the formatted activity notifications.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param string $action            The type of activity item.
 	 * @param int    $item_id           The activity ID.
@@ -142,7 +142,7 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
  * future when we separate emails from Notifications, this will need its own
  * 'bp_activity_at_name_send_emails' equivalent helper function.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @param object $activity           Activity object.
  * @param string $subject (not used) Notification subject.
@@ -166,7 +166,7 @@ add_action( 'bp_activity_sent_mention_email', 'bp_activity_at_mention_add_notifi
 /**
  * Notify a member one of their activity received a reply.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param BP_Activity_Activity $activity     The original activity.
  * @param int                  $comment_id   ID for the newly received comment.
@@ -188,7 +188,7 @@ add_action( 'bp_activity_sent_reply_to_update_notification', 'bp_activity_update
 /**
  * Notify a member one of their activity comment received a reply.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param BP_Activity_Activity $activity_comment The parent activity.
  * @param int                  $comment_id       ID for the newly received comment.
@@ -210,8 +210,8 @@ add_action( 'bp_activity_sent_reply_to_reply_notification', 'bp_activity_comment
 /**
  * Mark at-mention notifications as read when users visit their Mentions page.
  *
- * @since 1.5.0
- * @since 2.5.0 Add the $user_id parameter
+ * @since BuddyPress 1.5.0
+ * @since BuddyPress 2.5.0 Add the $user_id parameter
  *
  * @param int $user_id The id of the user whose notifications are marked as read.
  */
@@ -228,7 +228,7 @@ add_action( 'bp_activity_clear_new_mentions', 'bp_activity_remove_screen_notific
 /**
  * Mark at-mention notification as read when user visits the activity with the mention.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param BP_Activity_Activity $activity Activity object.
  */
@@ -248,7 +248,7 @@ add_action( 'bp_activity_screen_single_activity_permalink', 'bp_activity_remove_
  * In particular, 'update_reply' and 'comment_reply' notifications are handled
  * here. See {@link bp_activity_format_notifications()} for more info.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  */
 function bp_activity_remove_screen_notifications_for_non_mentions() {
 	if ( false === is_singular() || false === is_user_logged_in() || empty( $_GET['nid'] ) ) {
@@ -271,7 +271,7 @@ add_action( 'bp_screens', 'bp_activity_remove_screen_notifications_for_non_menti
 /**
  * Delete at-mention notifications when the corresponding activity item is deleted.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param array $activity_ids_deleted IDs of deleted activity items.
  */
@@ -291,7 +291,7 @@ add_action( 'bp_activity_deleted_activities', 'bp_activity_at_mention_delete_not
  *
  * Requires "activity feed commenting on posts and comments" to be enabled.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param int        $activity_id          The activity comment ID.
  * @param WP_Comment $post_type_comment    WP Comment object.
@@ -343,7 +343,7 @@ add_action( 'bp_blogs_comment_sync_activity_comment', 'bp_activity_add_notificat
 /**
  * Add activity notifications settings to the notifications settings page.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 function bp_activity_screen_notification_settings() {
 	if ( bp_activity_do_mentions() ) {
@@ -402,7 +402,7 @@ function bp_activity_screen_notification_settings() {
 			/**
 			 * Fires inside the closing </tbody> tag for activity screen notification settings.
 			 *
-			 * @since 1.2.0
+			 * @since BuddyPress 1.2.0
 			 */
 			do_action( 'bp_activity_screen_notification_settings' ) ?>
 		</tbody>

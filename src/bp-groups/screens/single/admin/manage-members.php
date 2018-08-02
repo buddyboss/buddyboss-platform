@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * This function handles actions related to member management on the group admin.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function groups_screen_group_admin_manage_members() {
 
@@ -40,7 +40,7 @@ function groups_screen_group_admin_manage_members() {
 			/**
 			 * Fires before the redirect after a group member has been promoted.
 			 *
-			 * @since 1.0.0
+			 * @since BuddyPress 1.0.0
 			 *
 			 * @param int $user_id ID of the user being promoted.
 			 * @param int $id      ID of the group user is promoted within.
@@ -73,7 +73,7 @@ function groups_screen_group_admin_manage_members() {
 			/**
 			 * Fires before the redirect after a group member has been demoted.
 			 *
-			 * @since 1.0.0
+			 * @since BuddyPress 1.0.0
 			 *
 			 * @param int $user_id ID of the user being demoted.
 			 * @param int $id      ID of the group user is demoted within.
@@ -99,7 +99,7 @@ function groups_screen_group_admin_manage_members() {
 			/**
 			 * Fires before the redirect after a group member has been banned.
 			 *
-			 * @since 1.0.0
+			 * @since BuddyPress 1.0.0
 			 *
 			 * @param int $user_id ID of the user being banned.
 			 * @param int $id      ID of the group user is banned from.
@@ -125,7 +125,7 @@ function groups_screen_group_admin_manage_members() {
 			/**
 			 * Fires before the redirect after a group member has been unbanned.
 			 *
-			 * @since 1.0.0
+			 * @since BuddyPress 1.0.0
 			 *
 			 * @param int $user_id ID of the user being unbanned.
 			 * @param int $id      ID of the group user is unbanned from.
@@ -151,7 +151,7 @@ function groups_screen_group_admin_manage_members() {
 			/**
 			 * Fires before the redirect after a group member has been removed.
 			 *
-			 * @since 1.2.6
+			 * @since BuddyPress 1.2.6
 			 *
 			 * @param int $user_id ID of the user being removed.
 			 * @param int $id      ID of the group the user is removed from.
@@ -165,7 +165,7 @@ function groups_screen_group_admin_manage_members() {
 	/**
 	 * Fires before the loading of a group's manage members template.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $id ID of the group whose manage members page is being displayed.
 	 */
@@ -174,7 +174,7 @@ function groups_screen_group_admin_manage_members() {
 	/**
 	 * Filters the template to load for a group's manage members page.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $value Path to a group's manage members template.
 	 */

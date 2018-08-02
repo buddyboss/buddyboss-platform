@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage MessageActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
@@ -57,7 +57,7 @@ function messages_action_conversation() {
 	/**
 	 * Fires after processing a view request for a single message thread.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	do_action( 'messages_action_conversation' );
 }

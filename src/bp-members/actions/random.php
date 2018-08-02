@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage MembersActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Redirect to a random member page when visiting a ?random-member URL.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function bp_core_get_random_member() {
 	if ( ! isset( $_GET['random-member'] ) )

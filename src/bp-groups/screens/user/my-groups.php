@@ -4,27 +4,27 @@
  *
  * @package BuddyBoss
  * @subpackage GroupScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handle the loading of the My Groups page.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function groups_screen_my_groups() {
 
 	/**
 	 * Fires before the loading of the My Groups page.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'groups_screen_my_groups' );
 
 	/**
 	 * Filters the template to load for the My Groups page.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $value Path to the My Groups page template to load.
 	 */

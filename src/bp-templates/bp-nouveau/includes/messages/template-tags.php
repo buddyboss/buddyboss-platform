@@ -2,7 +2,7 @@
 /**
  * Messages template tags
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.0.0
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Fire specific hooks into the private messages template.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $when   Optional. Either 'before' or 'after'.
  * @param string $suffix Optional. Use it to add terms at the end of the hook name.
@@ -41,13 +41,13 @@ function bp_nouveau_messages_hook( $when = '', $suffix = '' ) {
 /**
  * Load the new Messages User Interface
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_messages_member_interface() {
 	/**
 	 * Fires before the member messages content.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_before_member_messages_content' );
 
@@ -57,7 +57,7 @@ function bp_nouveau_messages_member_interface() {
 	/**
 	 * Fires after the member messages content.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_after_member_messages_content' );
 }

@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage MessageActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Bulk manage handler to set the star status for multiple messages.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 function bp_messages_star_bulk_manage_handler() {
 	if ( empty( $_POST['messages_bulk_nonce' ] ) ) {

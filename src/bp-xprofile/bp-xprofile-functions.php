@@ -9,7 +9,7 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileFunctions
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Procedural wrapper for BP_XProfile_Group::get() method.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  *
  * @param array $args See {@link BP_XProfile_Group::get()} for description of arguments.
  * @return array $groups
@@ -34,7 +34,7 @@ function bp_xprofile_get_groups( $args = array() ) {
 	/**
 	 * Filters a set of field groups, populated with fields and field data.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param array $groups Array of field groups and field data.
 	 * @param array $args   Array of arguments used to query for groups.
@@ -45,7 +45,7 @@ function bp_xprofile_get_groups( $args = array() ) {
 /**
  * Insert a new profile field group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param array|string $args {
  *    Array of arguments for field group insertion.
@@ -84,7 +84,7 @@ function xprofile_insert_field_group( $args = '' ) {
 /**
  * Get a specific profile field group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $field_group_id Field group ID to fetch.
  * @return false|BP_XProfile_Group
@@ -106,7 +106,7 @@ function xprofile_get_field_group( $field_group_id = 0 ) {
 /**
  * Delete a specific profile field group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $field_group_id Field group ID to delete.
  * @return boolean
@@ -128,7 +128,7 @@ function xprofile_delete_field_group( $field_group_id = 0 ) {
 /**
  * Update the position of a specific profile field group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $field_group_id Field group ID to update.
  * @param int $position       Field group position to update to.
@@ -143,7 +143,7 @@ function xprofile_update_field_group_position( $field_group_id = 0, $position = 
 /**
  * Get details of all xprofile field types.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @return array Key/value pairs (field type => class name).
  */
@@ -166,7 +166,7 @@ function bp_xprofile_get_field_types() {
 	 *
 	 * If you've added a custom field type in a plugin, register it with this filter.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $fields Array of field type/class name pairings.
 	 */
@@ -176,7 +176,7 @@ function bp_xprofile_get_field_types() {
 /**
  * Creates the specified field type object; used for validation and templating.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param string $type Type of profile field to create. See {@link bp_xprofile_get_field_types()} for default core values.
  * @return object $value If field type unknown, returns BP_XProfile_Field_Type_Textarea.
@@ -200,7 +200,7 @@ function bp_xprofile_create_field_type( $type ) {
 /**
  * Insert or update an xprofile field.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param array|string $args {
  *     Array of arguments.
@@ -282,8 +282,8 @@ function xprofile_insert_field( $args = '' ) {
 /**
  * Get a profile field object.
  *
- * @since 1.1.0
- * @since 2.8.0 Added `$user_id` and `$get_data` parameters.
+ * @since BuddyPress 1.1.0
+ * @since BuddyPress 2.8.0 Added `$user_id` and `$get_data` parameters.
  *
  * @param int|object $field    ID of the field or object representing field data.
  * @param int|null   $user_id  Optional. ID of the user associated with the field.
@@ -313,7 +313,7 @@ function xprofile_get_field( $field, $user_id = null, $get_data = true ) {
 /**
  * Delete a profile field object.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param int|object $field_id ID of the field or object representing field data.
  * @return bool Whether or not the field was deleted.
@@ -332,7 +332,7 @@ function xprofile_delete_field( $field_id ) {
  * When the field value is serialized, this function unserializes and filters
  * each item in the array.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param mixed  $field        The ID of the field, or the $name of the field.
  * @param int    $user_id      The ID of the user.
@@ -369,7 +369,7 @@ function xprofile_get_field_data( $field, $user_id = 0, $multi_format = 'array' 
 			/**
 			 * Filters the field data value for a specific field for the user.
 			 *
-			 * @since 1.0.0
+			 * @since BuddyPress 1.0.0
 			 *
 			 * @param string $value    Value saved for the field.
 			 * @param int    $field_id ID of the field being displayed.
@@ -392,7 +392,7 @@ function xprofile_get_field_data( $field, $user_id = 0, $multi_format = 'array' 
 /**
  * A simple function to set profile data for a specific field for a specific user.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int|string $field       The ID of the field, or the $name of the field.
  * @param int        $user_id     The ID of the user.
@@ -422,7 +422,7 @@ function xprofile_set_field_data( $field, $user_id, $value, $is_required = false
 	 * Use this filter to modify the values submitted by users before
 	 * doing field-type-specific validation.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param mixed                  $value          Value passed to xprofile_set_field_data().
 	 * @param BP_XProfile_Field      $field          Field object.
@@ -475,7 +475,7 @@ function xprofile_set_field_data( $field, $user_id, $value, $is_required = false
 /**
  * Set the visibility level for this field.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param int    $field_id         The ID of the xprofile field.
  * @param int    $user_id          The ID of the user to whom the data belongs.
@@ -508,7 +508,7 @@ function xprofile_set_field_visibility_level( $field_id = 0, $user_id = 0, $visi
 /**
  * Get the visibility level for a field.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param int $field_id The ID of the xprofile field.
  * @param int $user_id The ID of the user to whom the data belongs.
@@ -542,7 +542,7 @@ function xprofile_get_field_visibility_level( $field_id = 0, $user_id = 0 ) {
 /**
  * Delete XProfile field data.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param string $field   Field to delete.
  * @param int    $user_id User ID to delete field from.
@@ -572,7 +572,7 @@ function xprofile_delete_field_data( $field = '', $user_id = 0 ) {
 /**
  * Check if field is a required field.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param int $field_id ID of the field to check for.
  * @return bool Whether or not field is required.
@@ -591,7 +591,7 @@ function xprofile_check_is_required_field( $field_id ) {
 /**
  * Returns the ID for the field based on the field name.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param string $field_name The name of the field to get the ID for.
  * @return int|null $field_id on success, false on failure.
@@ -603,7 +603,7 @@ function xprofile_get_field_id_from_name( $field_name ) {
 /**
  * Fetches a random piece of profile data for the user.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @global BuddyPress $bp           The one true BuddyPress instance.
  * @global object     $wpdb         WordPress DB access object.
@@ -630,7 +630,7 @@ function xprofile_get_random_profile_data( $user_id, $exclude_fullname = true ) 
 	/**
 	 * Filters a random piece of profile data for the user.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param array $field_data Array holding random profile data.
 	 */
@@ -640,7 +640,7 @@ function xprofile_get_random_profile_data( $user_id, $exclude_fullname = true ) 
 /**
  * Formats a profile field according to its type. [ TODO: Should really be moved to filters ]
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param string $field_type  The type of field: datebox, selectbox, textbox etc.
  * @param string $field_value The actual value.
@@ -665,7 +665,7 @@ function xprofile_format_profile_field( $field_type, $field_value ) {
 /**
  * Update the field position for a provided field.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param int $field_id       ID of the field to update.
  * @param int $position       Position to update the field to.
@@ -687,7 +687,7 @@ function xprofile_update_field_position( $field_id, $position, $field_group_id )
  * Runs at bp_setup_globals:100 to ensure that all components have loaded their
  * globals before attempting any overrides.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 function xprofile_override_user_fullnames() {
 	// If sync is enabled, the two names will match. No need to continue.
@@ -708,7 +708,7 @@ add_action( 'bp_setup_globals', 'xprofile_override_user_fullnames', 100 );
 /**
  * Setup the avatar upload directory for a user.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @package BuddyBoss Core
  *
@@ -737,7 +737,7 @@ function xprofile_avatar_upload_dir( $directory = 'avatars', $user_id = 0 ) {
 	/**
 	 * Filters the avatar upload directory for a user.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param array $value Array containing the path, URL, and other helpful settings.
 	 */
@@ -754,7 +754,7 @@ function xprofile_avatar_upload_dir( $directory = 'avatars', $user_id = 0 ) {
 /**
  * When search_terms are passed to BP_User_Query, search against xprofile fields.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param array         $sql   Clauses in the user_id SQL query.
  * @param BP_User_Query $query User query object.
@@ -803,7 +803,7 @@ add_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10,
 /**
  * Syncs Xprofile data to the standard built in WordPress profile data.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id ID of the user to sync.
  * @return bool
@@ -846,7 +846,7 @@ add_action( 'bp_core_activated_user',   'xprofile_sync_wp_profile' );
 /**
  * Syncs the standard built in WordPress profile data to XProfile.
  *
- * @since 1.2.4
+ * @since BuddyPress 1.2.4
  *
  * @param object $errors Array of errors. Passed by reference.
  * @param bool   $update Whether or not being upated.
@@ -866,7 +866,7 @@ add_action( 'user_profile_update_errors', 'xprofile_sync_bp_profile', 10, 3 );
 /**
  * Update the WP display, last, and first name fields when the xprofile display name field is updated.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param BP_XProfile_ProfileData $data Current instance of the profile data being saved.
  */
@@ -885,7 +885,7 @@ add_action( 'xprofile_data_after_save', 'xprofile_sync_wp_profile_on_single_fiel
  * profile data from each table. Also we need to clean anything up in the
  * usermeta table that this component uses.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id The ID of the deleted user.
  */
@@ -901,7 +901,7 @@ add_action( 'bp_make_spam_user', 'xprofile_remove_data' );
 /**
  * Delete a piece of xprofile metadata.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param int         $object_id   ID of the object the metadata belongs to.
  * @param string      $object_type Type of object. 'group', 'field', or 'data'.
@@ -955,7 +955,7 @@ function bp_xprofile_delete_meta( $object_id, $object_type, $meta_key = false, $
  * Note that the default value of $single is true, unlike in the case of the
  * underlying get_metadata() function. This is for backward compatibility.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param int    $object_id   ID of the object the metadata belongs to.
  * @param string $object_type Type of object. 'group', 'field', or 'data'.
@@ -984,7 +984,7 @@ function bp_xprofile_get_meta( $object_id, $object_type, $meta_key = '', $single
 /**
  * Update a piece of xprofile metadata.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param int    $object_id   ID of the object the metadata belongs to.
  * @param string $object_type Type of object. 'group', 'field', or 'data'.
@@ -1010,7 +1010,7 @@ function bp_xprofile_update_meta( $object_id, $object_type, $meta_key, $meta_val
 /**
  * Add a piece of xprofile metadata.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param int    $object_id   ID of the object the metadata belongs to.
  * @param string $object_type Type of object. 'group', 'field', or 'data'.
@@ -1035,7 +1035,7 @@ function bp_xprofile_add_meta( $object_id, $object_type, $meta_key, $meta_value,
 /**
  * Updates the fieldgroup metadata.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param int    $field_group_id Group ID for the group field belongs to.
  * @param string $meta_key       Meta key to update.
@@ -1049,7 +1049,7 @@ function bp_xprofile_update_fieldgroup_meta( $field_group_id, $meta_key, $meta_v
 /**
  * Updates the field metadata.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param int    $field_id   Field ID to update.
  * @param string $meta_key   Meta key to update.
@@ -1063,7 +1063,7 @@ function bp_xprofile_update_field_meta( $field_id, $meta_key, $meta_value ) {
 /**
  * Updates the fielddata metadata.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param int    $field_data_id Field ID to update.
  * @param string $meta_key      Meta key to update.
@@ -1077,7 +1077,7 @@ function bp_xprofile_update_fielddata_meta( $field_data_id, $meta_key, $meta_val
 /**
  * Return the field ID for the Full Name xprofile field.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @return int Field ID.
  */
@@ -1099,7 +1099,7 @@ function bp_xprofile_fullname_field_id() {
 /**
  * Return the field name for the Full Name xprofile field.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return string The field name.
  */
@@ -1108,7 +1108,7 @@ function bp_xprofile_fullname_field_name() {
 	/**
 	 * Filters the field name for the Full Name xprofile field.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param string $value BP_XPROFILE_FULLNAME_FIELD_NAME Full name field constant.
 	 */
@@ -1120,7 +1120,7 @@ function bp_xprofile_fullname_field_name() {
  *
  * By default, rich text is enabled for textarea fields and disabled for all other field types.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  *
  * @param int|null $field_id Optional. Default current field ID.
  * @return bool
@@ -1140,7 +1140,7 @@ function bp_xprofile_is_richtext_enabled_for_field( $field_id = null ) {
 	/**
 	 * Filters whether richtext is enabled for the given field.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param bool $enabled  True if richtext is enabled for the field, otherwise false.
 	 * @param int  $field_id ID of the field.
@@ -1151,7 +1151,7 @@ function bp_xprofile_is_richtext_enabled_for_field( $field_id = null ) {
 /**
  * Get visibility levels out of the $bp global.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @return array
  */
@@ -1160,7 +1160,7 @@ function bp_xprofile_get_visibility_levels() {
 	/**
 	 * Filters the visibility levels out of the $bp global.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param array $visibility_levels Array of visibility levels.
 	 */
@@ -1175,7 +1175,7 @@ function bp_xprofile_get_visibility_levels() {
  * profile viewer). Then, based on that relationship, we query for the set of fields that should
  * be excluded from the profile loop.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @see BP_XProfile_Group::get()
  *   or if you have added your own custom levels.
@@ -1204,7 +1204,7 @@ function bp_xprofile_get_hidden_fields_for_user( $displayed_user_id = 0, $curren
 	/**
 	 * Filters the ids of fields that are hidden for this displayed/loggedin user pair.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param array $hidden_fields     Array of hidden fields for the displayed/logged in user.
 	 * @param int   $displayed_user_id ID of the displayed user.
@@ -1222,7 +1222,7 @@ function bp_xprofile_get_hidden_fields_for_user( $displayed_user_id = 0, $curren
  * utility function speeds up this matching by fetching the visibility levels
  * that should be hidden for the current user pair.
  *
- * @since 1.8.2
+ * @since BuddyPress 1.8.2
  *
  * @see bp_xprofile_get_hidden_fields_for_user()
  *
@@ -1257,7 +1257,7 @@ function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $c
 	/**
 	 * Filters the visibility levels that should be hidden for this user pair.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $hidden_fields     Array of hidden fields for the displayed/logged in user.
 	 * @param int   $displayed_user_id ID of the displayed user.
@@ -1269,7 +1269,7 @@ function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $c
 /**
  * Fetch an array of the xprofile fields that a given user has marked with certain visibility levels.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @see bp_xprofile_get_hidden_fields_for_user()
  *
@@ -1316,7 +1316,7 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 /**
  * Formats datebox field values passed through a POST request.
  *
- * @since 2.8.0
+ * @since BuddyPress 2.8.0
  *
  * @param int $field_id The id of the current field being looped through.
  * @return void This function only changes the global $_POST that should contain

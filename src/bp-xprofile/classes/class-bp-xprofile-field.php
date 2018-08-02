@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileClasses
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class to help set up XProfile fields.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 class BP_XProfile_Field {
 
 	/**
 	 * Field ID.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int ID of field.
 	 */
 	public $id;
@@ -28,7 +28,7 @@ class BP_XProfile_Field {
 	/**
 	 * Field group ID.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int Field group ID for field.
 	 */
 	public $group_id;
@@ -36,7 +36,7 @@ class BP_XProfile_Field {
 	/**
 	 * Field parent ID.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int Parent ID of field.
 	 */
 	public $parent_id;
@@ -44,7 +44,7 @@ class BP_XProfile_Field {
 	/**
 	 * Field type.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var string Field type.
 	 */
 	public $type;
@@ -52,7 +52,7 @@ class BP_XProfile_Field {
 	/**
 	 * Field name.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var string Field name.
 	 */
 	public $name;
@@ -60,7 +60,7 @@ class BP_XProfile_Field {
 	/**
 	 * Field description.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var string Field description.
 	 */
 	public $description;
@@ -68,7 +68,7 @@ class BP_XProfile_Field {
 	/**
 	 * Required field?
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var bool Is field required to be filled out?
 	 */
 	public $is_required;
@@ -76,7 +76,7 @@ class BP_XProfile_Field {
 	/**
 	 * Deletable field?
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int Can field be deleted?
 	 */
 	public $can_delete = '1';
@@ -84,7 +84,7 @@ class BP_XProfile_Field {
 	/**
 	 * Field position.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int Field position.
 	 */
 	public $field_order;
@@ -92,7 +92,7 @@ class BP_XProfile_Field {
 	/**
 	 * Option order.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int Option order.
 	 */
 	public $option_order;
@@ -100,7 +100,7 @@ class BP_XProfile_Field {
 	/**
 	 * Order child fields.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var string Order child fields by.
 	 */
 	public $order_by;
@@ -108,7 +108,7 @@ class BP_XProfile_Field {
 	/**
 	 * Is this the default option?
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var bool Is this the default option for this field?
 	 */
 	public $is_default_option;
@@ -116,8 +116,8 @@ class BP_XProfile_Field {
 	/**
 	 * Field data visibility.
 	 *
-	 * @since 1.9.0
-	 * @since 2.4.0 Property marked protected. Now accessible by magic method or by `get_default_visibility()`.
+	 * @since BuddyPress 1.9.0
+	 * @since BuddyPress 2.4.0 Property marked protected. Now accessible by magic method or by `get_default_visibility()`.
 	 * @var string Default field data visibility.
 	 */
 	protected $default_visibility;
@@ -125,8 +125,8 @@ class BP_XProfile_Field {
 	/**
 	 * Is the visibility able to be modified?
 	 *
-	 * @since 2.3.0
-	 * @since 2.4.0 Property marked protected. Now accessible by magic method or by `get_allow_custom_visibility()`.
+	 * @since BuddyPress 2.3.0
+	 * @since BuddyPress 2.4.0 Property marked protected. Now accessible by magic method or by `get_allow_custom_visibility()`.
 	 * @var string Members are allowed/disallowed to modify data visibility.
 	 */
 	protected $allow_custom_visibility;
@@ -134,7 +134,7 @@ class BP_XProfile_Field {
 	/**
 	 * Whether values from this field are autolinked to directory searches.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 * @var bool
 	 */
 	public $do_autolink;
@@ -142,7 +142,7 @@ class BP_XProfile_Field {
 	/**
 	 * Field type option.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 * @var BP_XProfile_Field_Type Field type object used for validation.
 	 */
 	public $type_obj = null;
@@ -150,7 +150,7 @@ class BP_XProfile_Field {
 	/**
 	 * Field data for user ID.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 * @var BP_XProfile_ProfileData Field data for user ID.
 	 */
 	public $data;
@@ -158,7 +158,7 @@ class BP_XProfile_Field {
 	/**
 	 * Member types to which the profile field should be applied.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 * @var array Array of member types.
 	 */
 	protected $member_types;
@@ -166,7 +166,7 @@ class BP_XProfile_Field {
 	/**
 	 * Initialize and/or populate profile field.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param int|null $id Field ID.
 	 * @param int|null $user_id User ID.
@@ -187,7 +187,7 @@ class BP_XProfile_Field {
 	/**
 	 * Populate a profile field object.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @global object $wpdb
 	 * @global object $userdata
@@ -226,8 +226,8 @@ class BP_XProfile_Field {
 	/**
 	 * Retrieve a `BP_XProfile_Field` instance.
 	 *
-	 * @since 2.4.0
-	 * @since 2.8.0 Added `$user_id` and `$get_data` parameters.
+	 * @since BuddyPress 2.4.0
+	 * @since BuddyPress 2.8.0 Added `$user_id` and `$get_data` parameters.
 	 *
 	 * @static
 	 *
@@ -253,7 +253,7 @@ class BP_XProfile_Field {
 	/**
 	 * Fill object vars based on data passed to the method.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param array|object $args Array or object representing the `BP_XProfile_Field` properties.
 	 *                           Generally, this is a row from the fields database table.
@@ -289,7 +289,7 @@ class BP_XProfile_Field {
 	/**
 	 * Magic getter.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param string $key Property name.
 	 * @return string|null
@@ -309,7 +309,7 @@ class BP_XProfile_Field {
 	/**
 	 * Magic issetter.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param string $key Property name.
 	 * @return bool
@@ -327,7 +327,7 @@ class BP_XProfile_Field {
 	/**
 	 * Delete a profile field.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @global object $wpdb
 	 *
@@ -347,7 +347,7 @@ class BP_XProfile_Field {
 		/**
 		 * Fires before the current field instance gets deleted.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param BP_XProfile_Field $this        Current instance of the field being deleted. Passed by reference.
 		 * @param bool              $delete_data Whether or not to delete data.
@@ -372,7 +372,7 @@ class BP_XProfile_Field {
 		/**
 		 * Fires after the current field instance gets deleted.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param BP_XProfile_Field $this        Current instance of the field being deleted. Passed by reference.
 		 * @param bool              $delete_data Whether or not to delete data.
@@ -385,7 +385,7 @@ class BP_XProfile_Field {
 	/**
 	 * Save a profile field.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @global object $wpdb
 	 *
@@ -413,7 +413,7 @@ class BP_XProfile_Field {
 		 *
 		 * Please use this hook to filter the properties above. Each part will be passed in.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param BP_XProfile_Field $this Current instance of the field being saved.
 		 */
@@ -464,7 +464,7 @@ class BP_XProfile_Field {
 				/**
 				 * Filters the submitted field option value before saved.
 				 *
-				 * @since 1.5.0
+				 * @since BuddyPress 1.5.0
 				 *
 				 * @param string            $post_option Submitted option value.
 				 * @param BP_XProfile_Field $type        Current field type being saved for.
@@ -474,7 +474,7 @@ class BP_XProfile_Field {
 				/**
 				 * Filters the default field option value before saved.
 				 *
-				 * @since 1.5.0
+				 * @since BuddyPress 1.5.0
 				 *
 				 * @param string            $post_default Default option value.
 				 * @param BP_XProfile_Field $type         Current field type being saved for.
@@ -511,7 +511,7 @@ class BP_XProfile_Field {
 			/**
 			 * Fires after the current field instance gets saved.
 			 *
-			 * @since 1.0.0
+			 * @since BuddyPress 1.0.0
 			 *
 			 * @param BP_XProfile_Field $this Current instance of the field being saved.
 			 */
@@ -530,7 +530,7 @@ class BP_XProfile_Field {
 	/**
 	 * Get field data for a user ID.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param int $user_id ID of the user to get field data for.
 	 * @return BP_XProfile_ProfileData
@@ -542,7 +542,7 @@ class BP_XProfile_Field {
 	/**
 	 * Get all child fields for this field ID.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @global object $wpdb
 	 *
@@ -577,8 +577,8 @@ class BP_XProfile_Field {
 		/**
 		 * Filters the found children for a field.
 		 *
-		 * @since 1.2.5
-		 * @since 3.0.0 Added the `$this` parameter.
+		 * @since BuddyPress 1.2.5
+		 * @since BuddyPress 3.0.0 Added the `$this` parameter.
 		 *
 		 * @param object            $children    Found children for a field.
 		 * @param bool              $for_editing Whether or not the field is for editing.
@@ -590,7 +590,7 @@ class BP_XProfile_Field {
 	/**
 	 * Delete all field children for this field.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @global object $wpdb
 	 */
@@ -610,7 +610,7 @@ class BP_XProfile_Field {
 	 *
 	 * 'null' is a special pseudo-type, which represents users that do not have a member type.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @return array Array of member type names.
 	 */
@@ -651,7 +651,7 @@ class BP_XProfile_Field {
 		/**
 		 * Filters the member types to which an XProfile object should be applied.
 		 *
-		 * @since 2.4.0
+		 * @since BuddyPress 2.4.0
 		 *
 		 * @param array             $types Member types.
 		 * @param BP_XProfile_Field $field Field object.
@@ -664,7 +664,7 @@ class BP_XProfile_Field {
 	/**
 	 * Sets the member types for this field.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param array $member_types Array of member types. Can include 'null' (users with no type) in addition to any
 	 *                            registered types.
@@ -722,7 +722,7 @@ class BP_XProfile_Field {
 		/**
 		 * Fires after a field's member types have been updated.
 		 *
-		 * @since 2.4.0
+		 * @since BuddyPress 2.4.0
 		 *
 		 * @param BP_XProfile_Field $this Field object.
 		 */
@@ -737,7 +737,7 @@ class BP_XProfile_Field {
 	 *
 	 * This label is displayed alongside the field's name on the Profile Fields Dashboard panel.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @return string
 	 */
@@ -799,7 +799,7 @@ class BP_XProfile_Field {
 	 *
 	 * Defaults to 'public' if no visibility setting is found in the database.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @return string
 	 */
@@ -822,7 +822,7 @@ class BP_XProfile_Field {
 	 *
 	 * Defaults to 'allowed'.
 	 *
-	 * @since 4.4.0
+	 * @since BuddyPress 4.4.0
 	 *
 	 * @return string 'disabled' or 'allowed'.
 	 */
@@ -847,7 +847,7 @@ class BP_XProfile_Field {
 	 *
 	 * Defaults to true for multi and default fields, false for single fields.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @return bool
 	 */
@@ -896,7 +896,7 @@ class BP_XProfile_Field {
 	/**
 	 * Delete all fields in a field group.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @global object $wpdb
 	 *
@@ -926,7 +926,7 @@ class BP_XProfile_Field {
 	/**
 	 * Get field ID from field name.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @global object $wpdb
 	 *
@@ -955,7 +955,7 @@ class BP_XProfile_Field {
 	/**
 	 * Update field position and/or field group when relocating.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @global object $wpdb
 	 *
@@ -996,7 +996,7 @@ class BP_XProfile_Field {
 	/**
 	 * Gets the IDs of fields applicable for a given member type or array of member types.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param string|array $member_types Member type or array of member types. Use 'any' to return unrestricted
 	 *                                   fields (those available for anyone, regardless of member type).
@@ -1070,7 +1070,7 @@ class BP_XProfile_Field {
 	/**
 	 * Validate form field data on sumbission.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @global $message
 	 *
@@ -1144,7 +1144,7 @@ class BP_XProfile_Field {
 	 *
 	 * Some field types have type-specific settings, which are saved here.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param array $settings Array of settings.
 	 */
@@ -1165,7 +1165,7 @@ class BP_XProfile_Field {
 	/**
 	 * Oupput the admin form for this field.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @param string $message Message to display.
 	 */
@@ -1255,7 +1255,7 @@ class BP_XProfile_Field {
 							/**
 							 * Fires after XProfile Field sidebar metabox.
 							 *
-							 * @since 2.2.0
+							 * @since BuddyPress 2.2.0
 							 *
 							 * @param BP_XProfile_Field $this Current XProfile field.
 							 */
@@ -1270,7 +1270,7 @@ class BP_XProfile_Field {
 							/**
 							 * Fires before XProfile Field content metabox.
 							 *
-							 * @since 2.3.0
+							 * @since BuddyPress 2.3.0
 							 *
 							 * @param BP_XProfile_Field $this Current XProfile field.
 							 */
@@ -1285,7 +1285,7 @@ class BP_XProfile_Field {
 							/**
 							 * Fires after XProfile Field content metabox.
 							 *
-							 * @since 2.2.0
+							 * @since BuddyPress 2.2.0
 							 *
 							 * @param BP_XProfile_Field $this Current XProfile field.
 							 */
@@ -1303,7 +1303,7 @@ class BP_XProfile_Field {
 	/**
 	 * Private method used to display the submit metabox.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param string $button_text Text to put on button.
 	 */
@@ -1318,7 +1318,7 @@ class BP_XProfile_Field {
 		/**
 		 * Fires before XProfile Field submit metabox.
 		 *
-		 * @since 2.1.0
+		 * @since BuddyPress 2.1.0
 		 *
 		 * @param BP_XProfile_Field $this Current XProfile field.
 		 */
@@ -1335,7 +1335,7 @@ class BP_XProfile_Field {
 						/**
 						 * Fires at the beginning of the XProfile Field publishing actions section.
 						 *
-						 * @since 2.1.0
+						 * @since BuddyPress 2.1.0
 						 *
 						 * @param BP_XProfile_Field $this Current XProfile field.
 						 */
@@ -1368,7 +1368,7 @@ class BP_XProfile_Field {
 		/**
 		 * Fires after XProfile Field submit metabox.
 		 *
-		 * @since 2.1.0
+		 * @since BuddyPress 2.1.0
 		 *
 		 * @param BP_XProfile_Field $this Current XProfile field.
 		 */
@@ -1378,7 +1378,7 @@ class BP_XProfile_Field {
 	/**
 	 * Private method used to output field name and description fields.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 */
 	private function name_and_description() {
 	?>
@@ -1419,7 +1419,7 @@ class BP_XProfile_Field {
 	/**
 	 * Private method used to output field Member Type metabox.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 */
 	private function member_type_metabox() {
 
@@ -1472,7 +1472,7 @@ class BP_XProfile_Field {
 	/**
 	 * Private method used to output field visibility metaboxes.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @return void If default field id 1.
 	 */
@@ -1521,7 +1521,7 @@ class BP_XProfile_Field {
 	/**
 	 * Output the metabox for setting if field is required or not.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @return void If default field.
 	 */
@@ -1548,7 +1548,7 @@ class BP_XProfile_Field {
 	/**
 	 * Private method used to output autolink metabox.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @return void If default field id 1.
 	 */
@@ -1579,7 +1579,7 @@ class BP_XProfile_Field {
 	/**
 	 * Output the metabox for setting what type of field this is.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @return void If default field.
 	 */
@@ -1615,7 +1615,7 @@ class BP_XProfile_Field {
 	/**
 	 * Output hidden fields used by default field.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @return void If not default field.
 	 */
@@ -1638,7 +1638,7 @@ class BP_XProfile_Field {
 	/**
 	 * Return if a field ID is the default field.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param int $field_id ID of field to check.
 	 * @return bool

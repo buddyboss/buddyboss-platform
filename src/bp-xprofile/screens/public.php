@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handles the display of the profile page by loading the correct template file.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  */
 function xprofile_screen_display_profile() {
@@ -19,7 +19,7 @@ function xprofile_screen_display_profile() {
 	/**
 	 * Fires right before the loading of the XProfile screen template file.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $new $_GET parameter holding the "new" parameter.
 	 */
@@ -28,7 +28,7 @@ function xprofile_screen_display_profile() {
 	/**
 	 * Filters the template to load for the XProfile screen.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $template Path to the XProfile template to load.
 	 */

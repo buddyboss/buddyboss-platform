@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage CoreAdministration
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Renders the page mapping admin panel.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  * @todo Use settings API
  */
 function bp_core_admin_slugs_settings() {
@@ -43,7 +43,7 @@ function bp_core_admin_slugs_settings() {
 /**
  * Generate a list of directory pages, for use when building Components panel markup.
  *
- * @since 2.4.1
+ * @since BuddyPress 2.4.1
  *
  * @return array
  */
@@ -69,7 +69,7 @@ function bp_core_admin_get_directory_pages() {
 	/**
 	 * Filters the loaded components needing directory page association to a WordPress page.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param array $directory_pages Array of available components to set associations for.
 	 */
@@ -81,7 +81,7 @@ function bp_core_admin_get_directory_pages() {
  *
  * By default, this list contains 'register' and 'activate'.
  *
- * @since 2.4.1
+ * @since BuddyPress 2.4.1
  *
  * @return array
  */
@@ -94,7 +94,7 @@ function bp_core_admin_get_static_pages() {
 	/**
 	 * Filters the default static pages for BuddyPress setup.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param array $static_pages Array of static default static pages.
 	 */
@@ -105,7 +105,7 @@ function bp_core_admin_get_static_pages() {
  * Creates reusable markup for page setup on the Components and Pages dashboard panel.
  *
  * @package BuddyBoss
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  * @todo Use settings API
  */
 function bp_core_admin_slugs_options() {
@@ -164,7 +164,7 @@ function bp_core_admin_slugs_options() {
 				 *
 				 * Allows plugins to add their own directory associations.
 				 *
-				 * @since 1.5.0
+				 * @since BuddyPress 1.5.0
 				 */
 				do_action( 'bp_active_external_directories' ); ?>
 
@@ -232,7 +232,7 @@ function bp_core_admin_slugs_options() {
 				/**
 				 * Fires after the display of default static pages for BuddyPress setup.
 				 *
-				 * @since 1.5.0
+				 * @since BuddyPress 1.5.0
 				 */
 				do_action( 'bp_active_external_pages' ); ?>
 
@@ -246,7 +246,7 @@ function bp_core_admin_slugs_options() {
 /**
  * Handle saving of the BuddyPress slugs.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  * @todo Use settings API
  */
 function bp_core_admin_slugs_setup_handler() {

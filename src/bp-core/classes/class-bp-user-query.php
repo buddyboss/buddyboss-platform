@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * Used for querying users in a BuddyPress context, in situations where WP_User_Query won't do the trick:
  * Member directories, the Connections component, etc.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param array $query {
  *     Query arguments. All items are optional.
@@ -66,7 +66,7 @@ class BP_User_Query {
 	/**
 	 * Unaltered params as passed to the constructor.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 * @var array
 	 */
 	public $query_vars_raw = array();
@@ -74,7 +74,7 @@ class BP_User_Query {
 	/**
 	 * Array of variables to query with.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 * @var array
 	 */
 	public $query_vars = array();
@@ -82,7 +82,7 @@ class BP_User_Query {
 	/**
 	 * List of found users and their respective data.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 * @var array
 	 */
 	public $results = array();
@@ -90,7 +90,7 @@ class BP_User_Query {
 	/**
 	 * Total number of found users for the current query.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 * @var int
 	 */
 	public $total_users = 0;
@@ -98,7 +98,7 @@ class BP_User_Query {
 	/**
 	 * List of found user IDs.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 * @var array
 	 */
 	public $user_ids = array();
@@ -106,7 +106,7 @@ class BP_User_Query {
 	/**
 	 * SQL clauses for the user ID query.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 * @var array
 	 */
 	public $uid_clauses = array();
@@ -114,7 +114,7 @@ class BP_User_Query {
 	/**
 	 * SQL table where the user ID is being fetched from.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 * @var string
 	 */
 	public $uid_table = '';
@@ -122,7 +122,7 @@ class BP_User_Query {
 	/**
 	 * SQL database column name to order by.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 * @var string
 	 */
 	public $uid_name = '';
@@ -130,7 +130,7 @@ class BP_User_Query {
 	/**
 	 * Standard response when the query should not return any rows.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 * @var string
 	 */
 	protected $no_results = array( 'join' => '', 'where' => '0 = 1' );
@@ -141,7 +141,7 @@ class BP_User_Query {
 	/**
 	 * Constructor.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string|array|null $query See {@link BP_User_Query}.
 	 */
@@ -177,7 +177,7 @@ class BP_User_Query {
 			/**
 			 * Fires before the construction of the BP_User_Query query.
 			 *
-			 * @since 1.7.0
+			 * @since BuddyPress 1.7.0
 			 *
 			 * @param BP_User_Query $this Current instance of the BP_User_Query. Passed by reference.
 			 */
@@ -217,14 +217,14 @@ class BP_User_Query {
 	 * add its hooks early in the query-building process. See
 	 * {@link BP_Group_Member_Query::setup_hooks()} for an example.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	public function setup_hooks() {}
 
 	/**
 	 * Prepare the query for user_ids.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function prepare_user_ids_query() {
 		global $wpdb;
@@ -271,7 +271,7 @@ class BP_User_Query {
 				/**
 				 * Filters the threshold for activity timestamp minutes since to indicate online status.
 				 *
-				 * @since 1.8.0
+				 * @since BuddyPress 1.8.0
 				 *
 				 * @param int $value Amount of minutes for threshold. Default 15.
 				 */
@@ -471,7 +471,7 @@ class BP_User_Query {
 		/**
 		 * Filters the clauses for the user query.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param array         $sql  Array of SQL clauses to be used in the query.
 		 * @param BP_User_Query $this Current BP_User_Query instance.
@@ -488,7 +488,7 @@ class BP_User_Query {
 		/**
 		 * Fires before the BP_User_Query query is made.
 		 *
-		 * @since 1.7.0
+		 * @since BuddyPress 1.7.0
 		 *
 		 * @param BP_User_Query $this Current BP_User_Query instance. Passed by reference.
 		 */
@@ -503,7 +503,7 @@ class BP_User_Query {
 	 *
 	 * Also used to quickly perform user total counts.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function do_user_ids_query() {
 		global $wpdb;
@@ -526,7 +526,7 @@ class BP_User_Query {
 			 * then the value will be "SELECT FOUND_ROWS()". Otherwise it will
 			 * use a "SELECT COUNT()" query statement.
 			 *
-			 * @since 1.7.0
+			 * @since BuddyPress 1.7.0
 			 *
 			 * @param string        $value SQL statement to select FOUND_ROWS().
 			 * @param BP_User_Query $this  Current BP_User_Query instance.
@@ -543,7 +543,7 @@ class BP_User_Query {
 	/**
 	 * Use WP_User_Query() to pull data for the user IDs retrieved in the main query.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function do_wp_user_query() {
 		$fields = array( 'ID', 'user_login', 'user_pass', 'user_nicename', 'user_email', 'user_url', 'user_registered', 'user_activation_key', 'user_status', 'display_name' );
@@ -556,7 +556,7 @@ class BP_User_Query {
 		/**
 		 * Filters the WP User Query arguments before passing into the class.
 		 *
-		 * @since 1.7.0
+		 * @since BuddyPress 1.7.0
 		 *
 		 * @param array         $value Array of arguments for the user query.
 		 * @param BP_User_Query $this  Current BP_User_Query instance.
@@ -616,7 +616,7 @@ class BP_User_Query {
 	 * ids passed to the class constructor. See {@link BP_Group_Member_Query}
 	 * for an example.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param array $include Sanitized array of user IDs, as passed to the 'include'
 	 *                       parameter of the class constructor.
@@ -633,7 +633,7 @@ class BP_User_Query {
 	 * Different components will hook into the 'bp_user_query_populate_extras'
 	 * action to loop in the things they want.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @global WPDB $wpdb Global WordPress database access object.
 	 */
@@ -672,7 +672,7 @@ class BP_User_Query {
 		 * @see bp_xprofile_filter_user_query_populate_extras()
 		 * @see bp_friends_filter_user_query_populate_extras()
 		 *
-		 * @since 1.7.0
+		 * @since BuddyPress 1.7.0
 		 *
 		 * @param BP_User_Query $this         Current BP_User_Query instance.
 		 * @param string        $user_ids_sql Comma-separated string of user IDs.
@@ -754,7 +754,7 @@ class BP_User_Query {
 	/**
 	 * Get a SQL clause representing member_type include/exclusion.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param string|array $member_types Array or comma-separated list of member types.
 	 * @param string       $operator     'IN' or 'NOT IN'.

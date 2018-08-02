@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage CoreAdministration
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ if ( !class_exists( 'BP_Admin' ) ) :
  *
  * @todo Break this apart into each applicable Component.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 class BP_Admin {
 
@@ -26,7 +26,7 @@ class BP_Admin {
 	/**
 	 * Path to the BuddyPress admin directory.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var string $admin_dir
 	 */
 	public $admin_dir = '';
@@ -36,7 +36,7 @@ class BP_Admin {
 	/**
 	 * URL to the BuddyPress admin directory.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var string $admin_url
 	 */
 	public $admin_url = '';
@@ -44,7 +44,7 @@ class BP_Admin {
 	/**
 	 * URL to the BuddyPress images directory.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var string $images_url
 	 */
 	public $images_url = '';
@@ -52,7 +52,7 @@ class BP_Admin {
 	/**
 	 * URL to the BuddyPress admin CSS directory.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var string $css_url
 	 */
 	public $css_url = '';
@@ -60,7 +60,7 @@ class BP_Admin {
 	/**
 	 * URL to the BuddyPress admin JS directory.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var string
 	 */
 	public $js_url = '';
@@ -70,7 +70,7 @@ class BP_Admin {
 	/**
 	 * Notices used for user feedback, like saving settings.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 * @var array()
 	 */
 	public $notices = array();
@@ -80,7 +80,7 @@ class BP_Admin {
 	/**
 	 * The main BuddyPress admin loader.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 */
 	public function __construct() {
@@ -92,7 +92,7 @@ class BP_Admin {
 	/**
 	 * Set admin-related globals.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	private function setup_globals() {
 		$bp = buddypress();
@@ -114,7 +114,7 @@ class BP_Admin {
 	/**
 	 * Include required files.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	private function includes() {
 		require( $this->admin_dir . 'bp-core-admin-actions.php'    );
@@ -128,7 +128,7 @@ class BP_Admin {
 	/**
 	 * Set up the admin hooks, actions, and filters.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 */
 	private function setup_actions() {
@@ -191,7 +191,7 @@ class BP_Admin {
 	 *
 	 * Contextually hooked to site or network-admin depending on current configuration.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	public function admin_menus() {
 
@@ -322,7 +322,7 @@ class BP_Admin {
 	/**
 	 * Register site-admin nav menu elements.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 */
 	public function site_admin_menus() {
 		if ( ! bp_current_user_can( 'manage_options' ) ) {
@@ -358,7 +358,7 @@ class BP_Admin {
 	/**
 	 * Register the settings.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 */
 	public function register_admin_settings() {
@@ -461,8 +461,8 @@ class BP_Admin {
 	/**
 	 * Add a link to BuddyPress Hello to the admin bar.
 	 *
-	 * @since 1.9.0
-	 * @since 3.0.0 Hooked at priority 100 (was 15).
+	 * @since BuddyPress 1.9.0
+	 * @since BuddyPress 3.0.0 Hooked at priority 100 (was 15).
 	 *
 	 * @param WP_Admin_Bar $wp_admin_bar
 	 */
@@ -485,7 +485,7 @@ class BP_Admin {
 	/**
 	 * Add Settings link to plugins area.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param array  $links Links array in which we would prepend our link.
 	 * @param string $file  Current plugin basename.
@@ -508,7 +508,7 @@ class BP_Admin {
 	/**
 	 * Add some general styling to the admin area.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	public function admin_head() {
 
@@ -528,7 +528,7 @@ class BP_Admin {
 	/**
 	 * Add some general styling to the admin area.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	public function enqueue_scripts() {
 		wp_enqueue_style( 'bp-admin-common-css' );
@@ -545,8 +545,8 @@ class BP_Admin {
 	/**
 	 * Output the BuddyPress Hello template.
 	 *
-	 * @since 1.7.0 Screen content.
-	 * @since 3.0.0 Now outputs BuddyPress Hello template.
+	 * @since BuddyPress 1.7.0 Screen content.
+	 * @since BuddyPress 3.0.0 Now outputs BuddyPress Hello template.
 	 */
 	public function about_screen() {
 		if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'buddypress' ) {
@@ -650,7 +650,7 @@ class BP_Admin {
 	 * Hardcoding this in here is pretty janky. It's fine for now, but we'll
 	 * want to leverage api.wordpress.org eventually.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function credits_screen() {
 	?>
@@ -769,7 +769,7 @@ class BP_Admin {
 	/**
 	 * Registers 'Situations' column on Emails dashboard page.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param array $columns Current column data.
 	 * @return array
@@ -786,7 +786,7 @@ class BP_Admin {
 	/**
 	 * Output column data for our custom 'Situations' column.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param string $column  Current column name.
 	 * @param int    $post_id Current post ID.
@@ -812,7 +812,7 @@ class BP_Admin {
 	 *
 	 * @see bp_do_activation_redirect()
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @return bool
 	 */
@@ -823,7 +823,7 @@ class BP_Admin {
 	/**
 	 * Return a user-friendly version-number string, for use in translations.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @return string
 	 */
@@ -858,7 +858,7 @@ class BP_Admin {
 	 * which all appear together in the middle of the Dashboard menu. This function
 	 * adds the Emails screen to the array of these menu items.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param array $custom_menus The list of top-level BP menu items.
 	 * @return array $custom_menus List of top-level BP menu items, with Emails added.
@@ -879,7 +879,7 @@ class BP_Admin {
 	/**
 	 * Register styles commonly used by BuddyPress wp-admin screens.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 */
 	public function admin_register_styles() {
 		$min = bp_core_get_minified_asset_suffix();
@@ -888,7 +888,7 @@ class BP_Admin {
 		/**
 		 * Filters the BuddyBoss Core Admin CSS file path.
 		 *
-		 * @since 1.6.0
+		 * @since BuddyPress 1.6.0
 		 *
 		 * @param string $file File path for the admin CSS.
 		 */
@@ -897,7 +897,7 @@ class BP_Admin {
 		/**
 		 * Filters the BuddyPress admin stylesheet files to register.
 		 *
-		 * @since 2.5.0
+		 * @since BuddyPress 2.5.0
 		 *
 		 * @param array $value Array of admin stylesheet file information to register.
 		 */
@@ -936,7 +936,7 @@ class BP_Admin {
 	/**
 	 * Register JS commonly used by BuddyPress wp-admin screens.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 */
 	public function admin_register_scripts() {
 		$min = bp_core_get_minified_asset_suffix();
@@ -945,7 +945,7 @@ class BP_Admin {
 		/**
 		 * Filters the BuddyPress admin JS files to register.
 		 *
-		 * @since 2.5.0
+		 * @since BuddyPress 2.5.0
 		 *
 		 * @param array $value Array of admin JS file information to register.
 		 */

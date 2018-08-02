@@ -3,7 +3,7 @@
  * BuddyPress XProfile Admin Class.
  *
  * @package BuddyBoss
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 
 // Exit if accessed directly.
@@ -14,14 +14,14 @@ if ( ! class_exists( 'BP_XProfile_User_Admin' ) ) :
 /**
  * Load xProfile Profile admin area.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 class BP_XProfile_User_Admin {
 
 	/**
 	 * Setup xProfile User Admin.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @return BP_XProfile_User_Admin
 	 */
@@ -44,7 +44,7 @@ class BP_XProfile_User_Admin {
 	/**
 	 * Constructor method.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 */
 	public function __construct() {
 		$this->setup_actions();
@@ -53,7 +53,7 @@ class BP_XProfile_User_Admin {
 	/**
 	 * Set admin-related actions and filters.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 */
 	private function setup_actions() {
 		// Enqueue scripts.
@@ -69,7 +69,7 @@ class BP_XProfile_User_Admin {
 	/**
 	 * Enqueue needed scripts.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param int $screen_id Screen ID being displayed.
 	 */
@@ -100,7 +100,7 @@ class BP_XProfile_User_Admin {
 	/**
 	 * Register the xProfile metabox on Community Profile admin page.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param int         $user_id       ID of the user being edited.
 	 * @param string      $screen_id     Screen ID to load the metabox in.
@@ -175,7 +175,7 @@ class BP_XProfile_User_Admin {
 	 * Loaded before the page is rendered, this function is processing form
 	 * requests.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param string $doaction    Action being run.
 	 * @param int    $user_id     ID for the user whose profile is being saved.
@@ -279,7 +279,7 @@ class BP_XProfile_User_Admin {
 					/**
 					 * Fires after the saving of each profile field, if successful.
 					 *
-					 * @since 1.1.0
+					 * @since BuddyPress 1.1.0
 					 *
 					 * @param int    $field_id ID of the field being updated.
 					 * @param string $value    Value that was saved to the field.
@@ -291,8 +291,8 @@ class BP_XProfile_User_Admin {
 			/**
 			 * Fires after all XProfile fields have been saved for the current profile.
 			 *
-			 * @since 1.0.0
-			 * @since 2.6.0 Added $old_values and $new_values parameters.
+			 * @since BuddyPress 1.0.0
+			 * @since BuddyPress 2.6.0 Added $old_values and $new_values parameters.
 			 *
 			 * @param int   $user_id          ID for the user whose profile is being saved.
 			 * @param array $posted_field_ids Array of field IDs that were edited.
@@ -316,7 +316,7 @@ class BP_XProfile_User_Admin {
 	/**
 	 * Render the xprofile metabox for Community Profile screen.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param WP_User|null $user The WP_User object for the user being edited.
 	 * @param array        $args Aray of arguments for metaboxes.
@@ -367,7 +367,7 @@ class BP_XProfile_User_Admin {
 					/**
 					 * Fires before display of visibility form elements for profile metaboxes.
 					 *
-					 * @since 1.7.0
+					 * @since BuddyPress 1.7.0
 					 */
 					do_action( 'bp_custom_profile_edit_fields_pre_visibility' );
 
@@ -409,7 +409,7 @@ class BP_XProfile_User_Admin {
 					/**
 					 * Fires at end of custom profile field items on your xprofile screen tab.
 					 *
-					 * @since 1.1.0
+					 * @since BuddyPress 1.1.0
 					 */
 					do_action( 'bp_custom_profile_edit_fields' ); ?>
 
@@ -424,7 +424,7 @@ class BP_XProfile_User_Admin {
 	/**
 	 * Render the fallback metabox in case a user has been marked as a spammer.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param WP_User|null $user The WP_User object for the user being edited.
 	 */
@@ -437,7 +437,7 @@ class BP_XProfile_User_Admin {
 	/**
 	 * Render the Avatar metabox to moderate inappropriate images.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param WP_User|null $user The WP_User object for the user being edited.
 	 */

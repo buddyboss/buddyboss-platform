@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Activity templates
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  * @version 3.0.0
  */
 ?>

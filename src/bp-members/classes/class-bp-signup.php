@@ -4,20 +4,20 @@
  *
  * @package BuddyBoss
  * @subpackage coreClasses
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 
 /**
  * Class used to handle Signups.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 class BP_Signup {
 
 	/**
 	 * ID of the signup which the object relates to.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 * @var integer
 	 */
 	public $id;
@@ -25,7 +25,7 @@ class BP_Signup {
 	/**
 	 * The URL to the full size of the avatar for the user.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 * @var string
 	 */
 	public $avatar;
@@ -33,7 +33,7 @@ class BP_Signup {
 	/**
 	 * The username for the user.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 * @var string
 	 */
 	public $user_login;
@@ -41,7 +41,7 @@ class BP_Signup {
 	/**
 	 * The email for the user.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 * @var string
 	 */
 	public $user_email;
@@ -49,7 +49,7 @@ class BP_Signup {
 	/**
 	 * The full name of the user.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 * @var string
 	 */
 	public $user_name;
@@ -57,7 +57,7 @@ class BP_Signup {
 	/**
 	 * Metadata associated with the signup.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 * @var array
 	 */
 	public $meta;
@@ -65,7 +65,7 @@ class BP_Signup {
 	/**
 	 * The registered date for the user.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 * @var string
 	 */
 	public $registered;
@@ -73,7 +73,7 @@ class BP_Signup {
 	/**
 	 * The activation key for the user.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 * @var string
 	 */
 	public $activation_key;
@@ -84,7 +84,7 @@ class BP_Signup {
 	/**
 	 * Class constructor.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param integer $signup_id The ID for the signup being queried.
 	 */
@@ -98,7 +98,7 @@ class BP_Signup {
 	/**
 	 * Populate the instantiated class with data based on the signup_id provided.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 */
 	public function populate() {
 		global $wpdb;
@@ -120,7 +120,7 @@ class BP_Signup {
 	/**
 	 * Fetch signups based on parameters.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $args {
 	 *     The argument to retrieve desired signups.
@@ -203,7 +203,7 @@ class BP_Signup {
 		/**
 		 * Filters the Signups paged query.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param string $value SQL statement.
 		 * @param array  $sql   Array of SQL statement parts.
@@ -270,7 +270,7 @@ class BP_Signup {
 		/**
 		 * Filters the Signups count query.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param string $value SQL statement.
 		 * @param array  $sql   Array of SQL statement parts.
@@ -285,7 +285,7 @@ class BP_Signup {
 	/**
 	 * Add a signup.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $args {
 	 *     Array of arguments for signup addition.
@@ -334,7 +334,7 @@ class BP_Signup {
 		/**
 		 * Filters the result of a signup addition.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param int|bool $retval Newly added user ID on success, false on failure.
 		 */
@@ -351,7 +351,7 @@ class BP_Signup {
 	 * mirror signups there by creating "phantom" users, mimicking WP's
 	 * default behavior.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param string $user_login    User login string.
 	 * @param string $user_password User password.
@@ -417,7 +417,7 @@ class BP_Signup {
 		/**
 		 * Filters the user ID for the backcompat functionality.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param int $user_id User ID being registered.
 		 */
@@ -427,7 +427,7 @@ class BP_Signup {
 	/**
 	 * Check a user status (from wp_users) on a non-multisite config.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param int $user_id ID of the user being checked.
 	 * @return int|bool The status if found, otherwise false.
@@ -444,7 +444,7 @@ class BP_Signup {
 		/**
 		 * Filters the user status of a provided user ID.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param int $value User status of the provided user ID.
 		 */
@@ -454,7 +454,7 @@ class BP_Signup {
 	/**
 	 * Activate a signup.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param string $key Activation key.
 	 * @return bool True on success, false on failure.
@@ -490,7 +490,7 @@ class BP_Signup {
 		/**
 		 * Filters the status of the activated user.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param bool $activated Whether or not the activation was successful.
 		 */
@@ -500,7 +500,7 @@ class BP_Signup {
 	/**
 	 * How many inactive signups do we have?
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @return int The number of signups.
 	 */
@@ -513,7 +513,7 @@ class BP_Signup {
 		/**
 		 * Filters the total inactive signups.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param int $count_signups How many total signups there are.
 		 */
@@ -526,7 +526,7 @@ class BP_Signup {
 	 * This is the way we use to "trace" the last date an activation
 	 * email was sent and how many times activation was sent.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $args {
 	 *     Array of arguments for the signup update.
@@ -574,7 +574,7 @@ class BP_Signup {
 		/**
 		 * Filters the signup ID which received a meta update.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param int $value The signup ID.
 		 */
@@ -584,7 +584,7 @@ class BP_Signup {
 	/**
 	 * Resend an activation email.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $signup_ids Single ID or list of IDs to resend.
 	 * @return array
@@ -607,7 +607,7 @@ class BP_Signup {
 		/**
 		 * Fires before activation emails are resent.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param array $signup_ids Array of IDs to resend activation emails to.
 		 */
@@ -653,7 +653,7 @@ class BP_Signup {
 		/**
 		 * Fires after activation emails are resent.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param array $signup_ids Array of IDs to resend activation emails to.
 		 * @param array $result     Updated metadata related to activation emails.
@@ -663,7 +663,7 @@ class BP_Signup {
 		/**
 		 * Filters the result of the metadata for signup activation email resends.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param array $result Updated metadata related to activation emails.
 		 */
@@ -673,7 +673,7 @@ class BP_Signup {
 	/**
 	 * Activate a pending account.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $signup_ids Single ID or list of IDs to activate.
 	 * @return array
@@ -696,7 +696,7 @@ class BP_Signup {
 		/**
 		 * Fires before activation of user accounts.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param array $signup_ids Array of IDs to activate.
 		 */
@@ -735,7 +735,7 @@ class BP_Signup {
 		/**
 		 * Fires after activation of user accounts.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param array $signup_ids Array of IDs activated activate.
 		 * @param array $result     Array of data for activated accounts.
@@ -745,7 +745,7 @@ class BP_Signup {
 		/**
 		 * Filters the result of the metadata after user activation.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param array $result Updated metadata related to user activation.
 		 */
@@ -755,7 +755,7 @@ class BP_Signup {
 	/**
 	 * Delete a pending account.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $signup_ids Single ID or list of IDs to delete.
 	 * @return array
@@ -780,7 +780,7 @@ class BP_Signup {
 		/**
 		 * Fires before deletion of pending accounts.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param array $signup_ids Array of pending IDs to delete.
 		 */
@@ -822,7 +822,7 @@ class BP_Signup {
 		/**
 		 * Fires after deletion of pending accounts.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param array $signup_ids Array of pending IDs to delete.
 		 * @param array $result     Array of data for deleted accounts.
@@ -832,7 +832,7 @@ class BP_Signup {
 		/**
 		 * Filters the result of the metadata for deleted pending accounts.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param array $result Updated metadata related to deleted pending accounts.
 		 */

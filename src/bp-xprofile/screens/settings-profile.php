@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Show the xprofile settings template.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 function bp_xprofile_screen_settings() {
 
@@ -23,7 +23,7 @@ function bp_xprofile_screen_settings() {
 	/**
 	 * Filters the template to load for the XProfile settings screen.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param string $template Path to the XProfile change avatar template to load.
 	 */
@@ -33,7 +33,7 @@ function bp_xprofile_screen_settings() {
 /**
  * Handles the saving of xprofile field visibilities.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 function bp_xprofile_action_settings() {
 
@@ -64,7 +64,7 @@ function bp_xprofile_action_settings() {
 	/**
 	 * Fires before saving xprofile field visibilities.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 */
 	do_action( 'bp_xprofile_settings_before_save' );
 
@@ -105,7 +105,7 @@ function bp_xprofile_action_settings() {
 	/**
 	 * Fires after saving xprofile field visibilities.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 */
 	do_action( 'bp_xprofile_settings_after_save' );
 

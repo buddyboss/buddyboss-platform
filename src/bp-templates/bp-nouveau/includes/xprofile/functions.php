@@ -2,7 +2,7 @@
 /**
  * xProfile functions
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.0.0
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Scripts for the xProfile component
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $scripts The array of scripts to register
  *
@@ -35,7 +35,7 @@ function bp_nouveau_xprofile_register_scripts( $scripts = array() ) {
 /**
  * Enqueue the xprofile scripts
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_xprofile_enqueue_scripts() {
 	if ( ! bp_is_user_profile_edit() && ! bp_is_register_page() ) {

@@ -2,7 +2,7 @@
 /**
  * BuddyBoss - Members Profile Change Avatar
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
 ?>
@@ -67,7 +67,7 @@
 	/**
 	 * Load the Avatar UI templates
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 */
 	bp_avatar_get_templates();
 	?>

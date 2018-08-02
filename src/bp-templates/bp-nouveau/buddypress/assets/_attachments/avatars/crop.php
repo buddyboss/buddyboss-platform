@@ -4,7 +4,7 @@
  *
  * This template is used to create the crop Backbone views.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  * @version 3.1.0
  */
 

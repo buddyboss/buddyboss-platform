@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 
 // Exit if accessed directly.
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * Check to make sure that a user is not making too many posts in a short amount
  * of time.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param int $user_id User id to check for flood.
  * @return bool True if there is no flooding, false if there is.
@@ -46,8 +46,8 @@ function bp_core_check_for_flood( $user_id = 0 ) {
 /**
  * Check for moderation keys and too many links.
  *
- * @since 1.6.0
- * @since 2.6.0 Added $error_type parameter.
+ * @since BuddyPress 1.6.0
+ * @since BuddyPress 2.6.0 Added $error_type parameter.
  *
  * @param int    $user_id    User ID.
  * @param string $title      The title of the content.
@@ -60,7 +60,7 @@ function bp_core_check_for_moderation( $user_id = 0, $title = '', $content = '',
 	/**
 	 * Filters whether or not to bypass checking for moderation keys and too many links.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @param bool   $value   Whether or not to bypass checking. Default false.
 	 * @param int    $user_id Topic of reply author ID.
@@ -119,7 +119,7 @@ function bp_core_check_for_moderation( $user_id = 0, $title = '', $content = '',
 			/**
 			 * Filters the maximum amount of links allowed to include the user's URL.
 			 *
-			 * @since 1.6.0
+			 * @since BuddyPress 1.6.0
 			 *
 			 * @param string $num_links How many links found.
 			 * @param string $value     User's url.
@@ -187,8 +187,8 @@ function bp_core_check_for_moderation( $user_id = 0, $title = '', $content = '',
 /**
  * Check for blocked keys.
  *
- * @since 1.6.0
- * @since 2.6.0 Added $error_type parameter.
+ * @since BuddyPress 1.6.0
+ * @since BuddyPress 2.6.0 Added $error_type parameter.
  *
  * @todo Why don't we use wp_blacklist_check() for this?
  *
@@ -203,7 +203,7 @@ function bp_core_check_for_blacklist( $user_id = 0, $title = '', $content = '', 
 	/**
 	 * Filters whether or not to bypass checking for blocked keys.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @param bool   $value   Whether or not to bypass checking. Default false.
 	 * @param int    $user_id Topic of reply author ID.
@@ -299,7 +299,7 @@ function bp_core_check_for_blacklist( $user_id = 0, $title = '', $content = '', 
 /**
  * Get the current user's IP address.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @return string IP address.
  */
@@ -309,7 +309,7 @@ function bp_core_current_user_ip() {
 	/**
 	 * Filters the current user's IP address.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string $retval Current user's IP Address.
 	 */
@@ -319,7 +319,7 @@ function bp_core_current_user_ip() {
 /**
  * Get the current user's user-agent.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @return string User agent string.
  */
@@ -335,7 +335,7 @@ function bp_core_current_user_ua() {
 	/**
 	 * Filters the current user's user-agent.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string $retval Current user's user-agent.
 	 */

@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss
  * @subpackage ActivityCore
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Main Activity Class.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 class BP_Activity_Component extends BP_Component {
 
 	/**
 	 * Start the activity component setup process.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	public function __construct() {
 		parent::start(
@@ -40,7 +40,7 @@ class BP_Activity_Component extends BP_Component {
 	/**
 	 * Include component files.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @see BP_Component::includes() for a description of arguments.
 	 *
@@ -88,7 +88,7 @@ class BP_Activity_Component extends BP_Component {
 	 *
 	 * Only load up certain code when on specific pages.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function late_includes() {
 		// Bail if PHPUnit is running.
@@ -145,7 +145,7 @@ class BP_Activity_Component extends BP_Component {
 	 * The BP_ACTIVITY_SLUG constant is deprecated, and only used here for
 	 * backwards compatibility.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @see BP_Component::setup_globals() for a description of arguments.
 	 *
@@ -193,7 +193,7 @@ class BP_Activity_Component extends BP_Component {
 	/**
 	 * Set up component navigation.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @see BP_Component::setup_nav() for a description of arguments.
 	 *
@@ -297,7 +297,7 @@ class BP_Activity_Component extends BP_Component {
 	/**
 	 * Set up the component entries in the WordPress Admin Bar.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @see BP_Component::setup_nav() for a description of the $wp_admin_nav
 	 *      parameter array.
@@ -362,7 +362,7 @@ class BP_Activity_Component extends BP_Component {
 	/**
 	 * Set up the title for pages and <title>.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 */
 	public function setup_title() {
@@ -389,7 +389,7 @@ class BP_Activity_Component extends BP_Component {
 	/**
 	 * Setup cache groups.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 */
 	public function setup_cache_groups() {
 

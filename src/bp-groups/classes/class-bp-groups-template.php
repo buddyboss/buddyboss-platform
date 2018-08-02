@@ -3,7 +3,7 @@
  * BuddyBoss Groups Template loop class.
  *
  * @package BuddyBoss
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Responsible for loading a group of groups into a loop for display.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 class BP_Groups_Template {
 
@@ -22,7 +22,7 @@ class BP_Groups_Template {
 	 * The loop iterator.
 	 *
 	 * @var int
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	public $current_group = -1;
 
@@ -30,7 +30,7 @@ class BP_Groups_Template {
 	 * The number of groups returned by the paged query.
 	 *
 	 * @var int
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	public $group_count;
 
@@ -38,7 +38,7 @@ class BP_Groups_Template {
 	 * Array of groups located by the query.
 	 *
 	 * @var array
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	public $groups;
 
@@ -46,7 +46,7 @@ class BP_Groups_Template {
 	 * The group object currently being iterated on.
 	 *
 	 * @var object
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	public $group;
 
@@ -54,7 +54,7 @@ class BP_Groups_Template {
 	 * A flag for whether the loop is currently being iterated.
 	 *
 	 * @var bool
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	public $in_the_loop;
 
@@ -62,7 +62,7 @@ class BP_Groups_Template {
 	 * The page number being requested.
 	 *
 	 * @var string
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	public $pag_page;
 
@@ -70,7 +70,7 @@ class BP_Groups_Template {
 	 * The number of items being requested per page.
 	 *
 	 * @var string
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	public $pag_num;
 
@@ -78,7 +78,7 @@ class BP_Groups_Template {
 	 * An HTML string containing pagination links.
 	 *
 	 * @var string
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	public $pag_links;
 
@@ -86,7 +86,7 @@ class BP_Groups_Template {
 	 * The total number of groups matching the query parameters.
 	 *
 	 * @var int
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	public $total_group_count;
 
@@ -94,7 +94,7 @@ class BP_Groups_Template {
 	 * Whether the template loop is for a single group page.
 	 *
 	 * @var bool
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	public $single_group = false;
 
@@ -102,7 +102,7 @@ class BP_Groups_Template {
 	 * Field to sort by.
 	 *
 	 * @var string
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	public $sort_by;
 
@@ -110,7 +110,7 @@ class BP_Groups_Template {
 	 * Sort order.
 	 *
 	 * @var string
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	public $order;
 
@@ -303,7 +303,7 @@ class BP_Groups_Template {
 	/**
 	 * Whether there are groups available in the loop.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @see bp_has_groups()
 	 *
@@ -320,7 +320,7 @@ class BP_Groups_Template {
 	/**
 	 * Set up the next group and iterate index.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @return object The next group to iterate over.
 	 */
@@ -334,7 +334,7 @@ class BP_Groups_Template {
 	/**
 	 * Rewind the groups and reset member index.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	function rewind_groups() {
 		$this->current_group = -1;
@@ -350,7 +350,7 @@ class BP_Groups_Template {
 	 * that controls iteration inside the groups loop, eg:
 	 *     while ( bp_groups() ) { ...
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @see bp_groups()
 	 *
@@ -364,7 +364,7 @@ class BP_Groups_Template {
 			/**
 			 * Fires right before the rewinding of groups list.
 			 *
-			 * @since 1.5.0
+			 * @since BuddyPress 1.5.0
 			 */
 			do_action('group_loop_end');
 			// Do some cleaning up after the loop.
@@ -382,7 +382,7 @@ class BP_Groups_Template {
 	 * while looping, so that template tags used during that iteration make
 	 * reference to the current member.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @see bp_the_group()
 	 */
@@ -395,7 +395,7 @@ class BP_Groups_Template {
 			/**
 			 * Fires if the current group item is the first in the loop.
 			 *
-			 * @since 1.1.0
+			 * @since BuddyPress 1.1.0
 			 */
 			do_action( 'group_loop_start' );
 		}

@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage TonificationsTemplate
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 
 // Exit if accessed directly.
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * Responsible for loading a group of notifications into a loop for display.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 class BP_Notifications_Template {
 
 	/**
 	 * The loop iterator.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 * @var int
 	 */
 	public $current_notification = -1;
@@ -30,7 +30,7 @@ class BP_Notifications_Template {
 	/**
 	 * The number of notifications returned by the paged query.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 * @var int
 	 */
 	public $current_notification_count;
@@ -38,7 +38,7 @@ class BP_Notifications_Template {
 	/**
 	 * Total number of notifications matching the query.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 * @var int
 	 */
 	public $total_notification_count;
@@ -46,7 +46,7 @@ class BP_Notifications_Template {
 	/**
 	 * Array of notifications located by the query.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 * @var array
 	 */
 	public $notifications;
@@ -54,7 +54,7 @@ class BP_Notifications_Template {
 	/**
 	 * The notification object currently being iterated on.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 * @var object
 	 */
 	public $notification;
@@ -62,7 +62,7 @@ class BP_Notifications_Template {
 	/**
 	 * A flag for whether the loop is currently being iterated.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 * @var bool
 	 */
 	public $in_the_loop;
@@ -70,7 +70,7 @@ class BP_Notifications_Template {
 	/**
 	 * The ID of the user to whom the displayed notifications belong.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 * @var int
 	 */
 	public $user_id;
@@ -78,7 +78,7 @@ class BP_Notifications_Template {
 	/**
 	 * The page number being requested.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 * @var int
 	 */
 	public $pag_page;
@@ -86,7 +86,7 @@ class BP_Notifications_Template {
 	/**
 	 * The $_GET argument used in URLs for determining pagination.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 * @var int
 	 */
 	public $pag_arg;
@@ -94,7 +94,7 @@ class BP_Notifications_Template {
 	/**
 	 * The number of items to display per page of results.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 * @var int
 	 */
 	public $pag_num;
@@ -102,7 +102,7 @@ class BP_Notifications_Template {
 	/**
 	 * An HTML string containing pagination links.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 * @var string
 	 */
 	public $pag_links;
@@ -110,7 +110,7 @@ class BP_Notifications_Template {
 	/**
 	 * A string to match against.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 * @var string
 	 */
 	public $search_terms;
@@ -118,7 +118,7 @@ class BP_Notifications_Template {
 	/**
 	 * A database column to order the results by.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 * @var string
 	 */
 	public $order_by;
@@ -126,7 +126,7 @@ class BP_Notifications_Template {
 	/**
 	 * The direction to sort the results (ASC or DESC).
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 * @var string
 	 */
 	public $sort_order;
@@ -134,7 +134,7 @@ class BP_Notifications_Template {
 	/**
 	 * Array of variables used in this notification query.
 	 *
-	 * @since 2.2.2
+	 * @since BuddyPress 2.2.2
 	 * @var array
 	 */
 	public $query_vars;
@@ -144,7 +144,7 @@ class BP_Notifications_Template {
 	 *
 	 * @see bp_has_notifications() For information on the array format.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @param array $args {
 	 *     An array of arguments. See {@link bp_has_notifications()}
@@ -248,7 +248,7 @@ class BP_Notifications_Template {
 	/**
 	 * Whether there are notifications available in the loop.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @see bp_has_notifications()
 	 *
@@ -265,7 +265,7 @@ class BP_Notifications_Template {
 	/**
 	 * Set up the next notification and iterate index.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @return object The next notification to iterate over.
 	 */
@@ -281,7 +281,7 @@ class BP_Notifications_Template {
 	/**
 	 * Rewind the blogs and reset blog index.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 */
 	public function rewind_notifications() {
 
@@ -299,7 +299,7 @@ class BP_Notifications_Template {
 	 * while loop that controls iteration inside the notifications loop, eg:
 	 *     while ( bp_notifications() ) { ...
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @see bp_notifications()
 	 *
@@ -316,7 +316,7 @@ class BP_Notifications_Template {
 			/**
 			 * Fires right before the rewinding of notification posts.
 			 *
-			 * @since 1.9.0
+			 * @since BuddyPress 1.9.0
 			 */
 			do_action( 'notifications_loop_end');
 
@@ -334,7 +334,7 @@ class BP_Notifications_Template {
 	 * notification data while looping, so that template tags used during
 	 * that iteration make reference to the current notification.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @see bp_the_notification()
 	 */
@@ -348,7 +348,7 @@ class BP_Notifications_Template {
 			/**
 			 * Fires if the current notification item is the first in the notification loop.
 			 *
-			 * @since 1.9.0
+			 * @since BuddyPress 1.9.0
 			 */
 			do_action( 'notifications_loop_start' );
 		}

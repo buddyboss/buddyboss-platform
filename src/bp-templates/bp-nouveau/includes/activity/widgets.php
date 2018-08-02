@@ -2,7 +2,7 @@
 /**
  * BP Nouveau Activity widgets
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
 
@@ -12,20 +12,20 @@ defined( 'ABSPATH' ) || exit;
 /**
  * A widget to display the latest activities of your community!
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 class BP_Latest_Activities extends WP_Widget {
 	/**
 	 * Construct the widget.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function __construct() {
 
 		/**
 		 * Filters the widget options for the BP_Latest_Activities widget.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array $value Array of widget options.
 		 */
@@ -43,7 +43,7 @@ class BP_Latest_Activities extends WP_Widget {
 	/**
 	 * Register the widget.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public static function register_widget() {
 		register_widget( 'BP_Latest_Activities' );
@@ -52,7 +52,7 @@ class BP_Latest_Activities extends WP_Widget {
 	/**
 	 * Display the widget content.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $args     Widget arguments.
 	 * @param array $instance Widget settings, as saved by the user.
@@ -72,7 +72,7 @@ class BP_Latest_Activities extends WP_Widget {
 		/**
 		 * Filters the BP_Latest_Activities widget title.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $title    The widget title.
 		 * @param array  $instance The settings for the particular instance of the widget.
@@ -131,7 +131,7 @@ class BP_Latest_Activities extends WP_Widget {
 	/**
 	 * Update the widget settings.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $new_instance The new instance settings.
 	 * @param array $old_instance The old instance settings.
@@ -158,7 +158,7 @@ class BP_Latest_Activities extends WP_Widget {
 	/**
 	 * Display the form to set the widget settings.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $instance Settings for this widget.
 	 *

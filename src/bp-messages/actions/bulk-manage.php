@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage MessageActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handle bulk management (mark as read/unread, delete) of message threads.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @return bool Returns false on failure. Otherwise redirects back to the
  *              message box URL.

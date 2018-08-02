@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileClasses
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 
 // Exit if accessed directly.
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * metadata, by generating `JOIN` and `WHERE` subclauses to be attached
  * to the primary SQL query string.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 class BP_XProfile_Meta_Query extends WP_Meta_Query {
 
@@ -29,7 +29,7 @@ class BP_XProfile_Meta_Query extends WP_Meta_Query {
 	 * A first-order meta query clause is one that has either a 'key', 'value',
 	 * or 'object' array key.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param array $query Meta query arguments.
 	 * @return bool Whether the query clause is a first-order clause.
@@ -41,7 +41,7 @@ class BP_XProfile_Meta_Query extends WP_Meta_Query {
 	/**
 	 * Constructs a meta query based on 'meta_*' query vars.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param array $qv The query variables.
 	 */
@@ -93,7 +93,7 @@ class BP_XProfile_Meta_Query extends WP_Meta_Query {
 	/**
 	 * Generates SQL clauses to be appended to a main query.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param string      $type              Type of meta, eg 'user', 'post'.
 	 * @param string      $primary_table     Database table where the object being filtered is stored (eg wp_users).
@@ -130,7 +130,7 @@ class BP_XProfile_Meta_Query extends WP_Meta_Query {
 		/**
 		 * Filter the meta query's generated SQL.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param array $args {
 		 *     An array of meta query SQL arguments.
@@ -151,7 +151,7 @@ class BP_XProfile_Meta_Query extends WP_Meta_Query {
 	 *
 	 * "First-order" means that it's an array with a 'key' or 'value'.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param array  $clause       Query clause, passed by reference.
 	 * @param array  $parent_query Parent query array.

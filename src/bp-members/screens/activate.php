@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage MembersScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handle the loading of the Activate screen.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  */
 function bp_core_screen_activation() {
 
@@ -34,7 +34,7 @@ function bp_core_screen_activation() {
 		/**
 		 * Filters the URL to redirect logged in users to when visiting activation page.
 		 *
-		 * @since 1.9.0
+		 * @since BuddyPress 1.9.0
 		 *
 		 * @param string $redirect_to URL to redirect user to.
 		 */
@@ -50,7 +50,7 @@ function bp_core_screen_activation() {
 	/**
 	 * Filters the template to load for the Member activation page screen.
 	 *
-	 * @since 1.1.1
+	 * @since BuddyPress 1.1.1
 	 *
 	 * @param string $value Path to the Member activation template to load.
 	 */
@@ -62,7 +62,7 @@ add_action( 'bp_screens', 'bp_core_screen_activation' );
 /**
  * Catches and processes account activation requests.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_members_action_activate_account() {
 	if ( ! bp_is_current_component( 'activate' ) ) {
@@ -90,7 +90,7 @@ function bp_members_action_activate_account() {
 	/**
 	 * Filters the activation signup.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param bool|int $value Value returned by activation.
 	 *                        Integer on success, boolean on failure.

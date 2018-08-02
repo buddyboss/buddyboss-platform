@@ -6,7 +6,7 @@
  * instead of term name, and makes it work for non-hierarchical taxonomys. Some lines have undergone
  * slight adjustment to meet modern coding standards, but any improvements should be contributed upstream.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  */
 class BP_Walker_Category_Checklist extends Walker {
 	public $tree_type = 'category';
@@ -15,7 +15,7 @@ class BP_Walker_Category_Checklist extends Walker {
 	/**
 	 * Starts the list before the elements are added.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @param string $output Passed by reference. Used to append additional content.
 	 * @param int    $depth  Depth of category. Used for tab indentation.
@@ -29,7 +29,7 @@ class BP_Walker_Category_Checklist extends Walker {
 	/**
 	 * Ends the list of after the elements are added.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @param string $output Passed by reference. Used to append additional content.
 	 * @param int    $depth  Depth of category. Used for tab indentation.
@@ -96,7 +96,7 @@ class BP_Walker_Category_Checklist extends Walker {
 	 *
 	 * @see Walker::end_el()
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @param string $output   Passed by reference. Used to append additional content.
 	 * @param object $category The current term object.

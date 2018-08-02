@@ -9,7 +9,7 @@
  *
  * @package BuddyBoss
  * @subpackage MessagesFunctions
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Create a new message.
  *
- * @since 2.4.0 Added 'error_type' as an additional $args parameter.
+ * @since BuddyPress 2.4.0 Added 'error_type' as an additional $args parameter.
  *
  * @param array|string $args {
  *     Array of arguments.
@@ -192,7 +192,7 @@ function messages_new_message( $args = '' ) {
 	/**
 	 * Fires after a message has been successfully sent.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param BP_Messages_Message $message Message object. Passed by reference.
 	 */
@@ -225,7 +225,7 @@ function messages_send_notice( $subject, $message ) {
 		/**
 		 * Fires after a notice has been successfully sent.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $subject Subject of the notice.
 		 * @param string $message Content of the notice.
@@ -243,7 +243,7 @@ function messages_send_notice( $subject, $message ) {
  * message boxes. A thread is not deleted from the database until it's been
  * "deleted" by all recipients.
  *
- * @since 2.7.0 The $user_id parameter was added. Previously the current user
+ * @since BuddyPress 2.7.0 The $user_id parameter was added. Previously the current user
  *              was always assumed.
  *
  * @param int|array $thread_ids Thread ID or array of thread IDs.
@@ -263,8 +263,8 @@ function messages_delete_thread( $thread_ids, $user_id = 0 ) {
 	/**
 	 * Fires before specified thread IDs have been deleted.
 	 *
-	 * @since 1.5.0
-	 * @since 2.7.0 The $user_id parameter was added.
+	 * @since BuddyPress 1.5.0
+	 * @since BuddyPress 2.7.0 The $user_id parameter was added.
 	 *
 	 * @param int|array $thread_ids Thread ID or array of thread IDs to be deleted.
 	 * @param int       $user_id    ID of the user the threads are being deleted for.
@@ -286,8 +286,8 @@ function messages_delete_thread( $thread_ids, $user_id = 0 ) {
 		/**
 		 * Fires after specified thread IDs have been deleted.
 		 *
-		 * @since 1.0.0
-		 * @since 2.7.0 The $user_id parameter was added.
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.7.0 The $user_id parameter was added.
 		 *
 		 * @param int|array Thread ID or array of thread IDs that were deleted.
 		 * @param int       ID of the user that the threads were deleted for.
@@ -417,7 +417,7 @@ function messages_is_valid_thread( $thread_id ) {
 /**
  * Get the thread ID from a message ID.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  *
  * @param  int $message_id ID of the message.
  * @return int The ID of the thread if found, otherwise 0.
@@ -437,7 +437,7 @@ function messages_get_message_thread_id( $message_id = 0 ) {
  *
  * If $meta_key is false, this will delete all meta for the message ID.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @see delete_metadata() for full documentation excluding $meta_type variable.
  *
@@ -482,7 +482,7 @@ function bp_messages_delete_meta( $message_id, $meta_key = false, $meta_value = 
 /**
  * Get a piece of message metadata.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @see get_metadata() for full documentation excluding $meta_type variable.
  *
@@ -502,7 +502,7 @@ function bp_messages_get_meta( $message_id, $meta_key = '', $single = true ) {
 /**
  * Update a piece of message metadata.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @see update_metadata() for full documentation excluding $meta_type variable.
  *
@@ -524,7 +524,7 @@ function bp_messages_update_meta( $message_id, $meta_key, $meta_value, $prev_val
 /**
  * Add a piece of message metadata.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @see add_metadata() for full documentation excluding $meta_type variable.
  *
@@ -550,7 +550,7 @@ function bp_messages_add_meta( $message_id, $meta_key, $meta_value, $unique = fa
 /**
  * Email message recipients to alert them of a new unread private message.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param array|BP_Messages_Message $raw_args {
  *     Array of arguments. Also accepts a BP_Messages_Message object.
@@ -618,7 +618,7 @@ function messages_notification_new_message( $raw_args = array() ) {
 	/**
 	 * Fires after the sending of a new message email notification.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @deprecated 2.5.0 Use the filters in BP_Email.
 	 *                   $email_subject and $email_content arguments unset and deprecated.
 	 *

@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsClasses
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Adds support for user at-mentions (for users in a specific Group) to the Suggestions API.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  */
 class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 
 	/**
 	 * Default arguments for this suggestions service.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 * @var array $args {
 	 *     @type int    $group_id     Positive integers will restrict the search to members in that group.
 	 *                                Negative integers will restrict the search to members in every other group.
@@ -42,7 +42,7 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 	/**
 	 * Validate and sanitise the parameters for the suggestion service query.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @return true|WP_Error If validation fails, return a WP_Error object. On success, return true (bool).
 	 */
@@ -52,7 +52,7 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 		/**
 		 * Filters the arguments used to validate and sanitize suggestion service query.
 		 *
-		 * @since 2.1.0
+		 * @since BuddyPress 2.1.0
 		 *
 		 * @param array                        $args  Array of arguments for the suggestion service query.
 		 * @param BP_Groups_Member_Suggestions $this  Instance of the current suggestion class.
@@ -74,7 +74,7 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 		/**
 		 * Filters the validation results for the suggestion service query.
 		 *
-		 * @since 2.1.0
+		 * @since BuddyPress 2.1.0
 		 *
 		 * @param bool|WP_Error                $value True if valid, WP_Error if not.
 		 * @param BP_Groups_Member_Suggestions $this  Instance of the current suggestion class.
@@ -85,7 +85,7 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 	/**
 	 * Find and return a list of username suggestions that match the query.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @return array|WP_Error Array of results. If there were problems, returns a WP_Error object.
 	 */
@@ -132,7 +132,7 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 		/**
 		 * Filters the arguments for the user query for the Suggestion API.
 		 *
-		 * @since 2.1.0
+		 * @since BuddyPress 2.1.0
 		 *
 		 * @param array                        $user_query Array of arguments for the query.
 		 * @param BP_Groups_Member_Suggestions $this       Instance of the current suggestion class.
@@ -163,7 +163,7 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 		/**
 		 * Filters the results of the member suggestions user query.
 		 *
-		 * @since 2.1.0
+		 * @since BuddyPress 2.1.0
 		 *
 		 * @param array                        $results Array of member suggestions.
 		 * @param BP_Groups_Member_Suggestions $this    Instance of the current suggestion class.

@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Base class for creating query classes that generate SQL fragments for filtering results based on recursive query params.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  */
 abstract class BP_Recursive_Query {
 
 	/**
 	 * Query arguments passed to the constructor.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 * @var array
 	 */
 	public $queries = array();
@@ -34,7 +34,7 @@ abstract class BP_Recursive_Query {
 	 * get_sql_clauses(), while {@link BP_Activity_Query::get_sql()} discards
 	 * the empty 'join' clause, and only passes the 'where' clause.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @return array
 	 */
@@ -57,7 +57,7 @@ abstract class BP_Recursive_Query {
 	 * Subclasses generally do not need to call this method. It is invoked
 	 * automatically from get_sql_clauses().
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @param  array $query Query to parse.
 	 * @param  int   $depth Optional. Number of tree levels deep we
@@ -136,7 +136,7 @@ abstract class BP_Recursive_Query {
 	 *
 	 * Extend this method if your class uses different sanitizing logic.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @param array $queries Array of query clauses.
 	 *
@@ -203,7 +203,7 @@ abstract class BP_Recursive_Query {
 	 *
 	 * Must be overridden in a subclass.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @param array $clause       Array of arguments belonging to the clause.
 	 * @param array $parent_query Parent query to which the clause belongs.
@@ -220,7 +220,7 @@ abstract class BP_Recursive_Query {
 	 *
 	 * Must be overridden in a subclass.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @param array $query Clause to check.
 	 *

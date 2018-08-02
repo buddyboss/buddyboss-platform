@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss
  * @subpackage MessagesCache
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  * $message_ids and adds it to WP cache. This improves efficiency when using
  * message meta within a loop context.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param int|string|array|bool $message_ids Accepts a single message_id, or a
  *                                           comma-separated list or array of message ids.
@@ -49,7 +49,7 @@ add_action( 'messages_screen_inbox',   'bp_core_clear_cache' );
 /**
  * Clear message cache after a message is saved.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param BP_Messages_Message $message Message being saved.
  */
@@ -70,7 +70,7 @@ add_action( 'messages_message_after_save', 'bp_messages_clear_cache_on_message_s
 /**
  * Clear message cache after a message thread is deleted.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param int|array $thread_ids If single thread, the thread ID.
  *                              Otherwise, an array of thread IDs.
@@ -93,7 +93,7 @@ add_action( 'messages_delete_thread', 'bp_messages_clear_cache_on_message_delete
  *
  * Currently, invalidates active notice cache.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param BP_Messages_Notice $notice Notice that was saved.
  */

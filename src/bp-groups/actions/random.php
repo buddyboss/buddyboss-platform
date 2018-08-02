@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage GroupActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Catch requests for a random group page (example.com/groups/?random-group) and redirect.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 function groups_action_redirect_to_random_group() {
 

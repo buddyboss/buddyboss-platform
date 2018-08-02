@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handle the display of a group's Change cover image page.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  */
 function groups_screen_group_admin_cover_image() {
 	if ( 'group-cover-image' != bp_get_group_current_admin_tab() ) {
@@ -25,7 +25,7 @@ function groups_screen_group_admin_cover_image() {
 	/**
 	 * Fires before the loading of the group Change cover image page template.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param int $id ID of the group that is being displayed.
 	 */
@@ -34,7 +34,7 @@ function groups_screen_group_admin_cover_image() {
 	/**
 	 * Filters the template to load for a group's Change cover image page.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param string $value Path to a group's Change cover image template.
 	 */

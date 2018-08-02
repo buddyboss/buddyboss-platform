@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsWidgets
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Groups widget.
  *
- * @since 1.0.3
+ * @since BuddyPress 1.0.3
  */
 class BP_Groups_Widget extends WP_Widget {
 
 	/**
 	 * Working as a group, we get things done better.
 	 *
-	 * @since 1.0.3
+	 * @since BuddyPress 1.0.3
 	 */
 	public function __construct() {
 		$widget_ops = array(
@@ -38,7 +38,7 @@ class BP_Groups_Widget extends WP_Widget {
 	/**
 	 * Enqueue scripts.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 */
 	public function enqueue_scripts() {
 		$min = bp_core_get_minified_asset_suffix();
@@ -48,7 +48,7 @@ class BP_Groups_Widget extends WP_Widget {
 	/**
 	 * Extends our front-end output method.
 	 *
-	 * @since 1.0.3
+	 * @since BuddyPress 1.0.3
 	 *
 	 * @param array $args     Array of arguments for the widget.
 	 * @param array $instance Widget instance data.
@@ -59,7 +59,7 @@ class BP_Groups_Widget extends WP_Widget {
 		/**
 		 * Filters the user ID to use with the widget instance.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param string $value Empty user ID.
 		 */
@@ -78,8 +78,8 @@ class BP_Groups_Widget extends WP_Widget {
 		/**
 		 * Filters the title of the Groups widget.
 		 *
-		 * @since 1.8.0
-		 * @since 2.3.0 Added 'instance' and 'id_base' to arguments passed to filter.
+		 * @since BuddyPress 1.8.0
+		 * @since BuddyPress 2.3.0 Added 'instance' and 'id_base' to arguments passed to filter.
 		 *
 		 * @param string $title    The widget title.
 		 * @param array  $instance The settings for the particular instance of the widget.
@@ -90,7 +90,7 @@ class BP_Groups_Widget extends WP_Widget {
 		/**
 		 * Filters the separator of the group widget links.
 		 *
-		 * @since 2.4.0
+		 * @since BuddyPress 2.4.0
 		 *
 		 * @param string $separator Separator string. Default '|'.
 		 */
@@ -174,7 +174,7 @@ class BP_Groups_Widget extends WP_Widget {
 	/**
 	 * Extends our update method.
 	 *
-	 * @since 1.0.3
+	 * @since BuddyPress 1.0.3
 	 *
 	 * @param array $new_instance New instance data.
 	 * @param array $old_instance Original instance data.
@@ -194,7 +194,7 @@ class BP_Groups_Widget extends WP_Widget {
 	/**
 	 * Extends our form method.
 	 *
-	 * @since 1.0.3
+	 * @since BuddyPress 1.0.3
 	 *
 	 * @param array $instance Current instance.
 	 * @return mixed

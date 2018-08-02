@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage SettingsActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handles the changing and saving of user notification settings.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_settings_action_notifications() {
 	if ( ! bp_is_post_request() ) {
@@ -47,7 +47,7 @@ function bp_settings_action_notifications() {
 	/**
 	 * Fires after the notification settings have been saved, and before redirect.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	do_action( 'bp_core_notification_settings_after_save' );
 

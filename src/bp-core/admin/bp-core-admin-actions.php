@@ -13,7 +13,7 @@
  *
  * @package BuddyBoss
  * @subpackage Admin
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  * @see bp-core-actions.php
  * @see bp-core-filters.php
  */
@@ -63,7 +63,7 @@ add_action( 'bp_admin_menu', 'bp_admin_separator' );
  * When a new site is created in a multisite installation, run the activation
  * routine on that site.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param int    $blog_id ID of the blog being installed to.
  * @param int    $user_id ID of the user the install is for.
@@ -84,7 +84,7 @@ function bp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
 	/**
 	 * Fires the activation routine for a new site created in a multisite installation.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param int    $blog_id ID of the blog being installed to.
 	 * @param int    $user_id ID of the user the install is for.
@@ -104,7 +104,7 @@ function bp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
 /**
  * Piggy back admin_init action.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  */
 function bp_admin_init() {
@@ -112,7 +112,7 @@ function bp_admin_init() {
 	/**
 	 * Fires inside the bp_admin_init function.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	do_action( 'bp_admin_init' );
 }
@@ -120,7 +120,7 @@ function bp_admin_init() {
 /**
  * Piggy back admin_menu action.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  */
 function bp_admin_menu() {
@@ -128,7 +128,7 @@ function bp_admin_menu() {
 	/**
 	 * Fires inside the bp_admin_menu function.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	do_action( 'bp_admin_menu' );
 }
@@ -136,7 +136,7 @@ function bp_admin_menu() {
 /**
  * Piggy back admin_head action.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  */
 function bp_admin_head() {
@@ -144,7 +144,7 @@ function bp_admin_head() {
 	/**
 	 * Fires inside the bp_admin_head function.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	do_action( 'bp_admin_head' );
 }
@@ -152,7 +152,7 @@ function bp_admin_head() {
 /**
  * Piggy back admin_notices action.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  */
 function bp_admin_notices() {
@@ -160,7 +160,7 @@ function bp_admin_notices() {
 	/**
 	 * Fires inside the bp_admin_notices function.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	do_action( 'bp_admin_notices' );
 }
@@ -168,7 +168,7 @@ function bp_admin_notices() {
 /**
  * Piggy back admin_enqueue_scripts action.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param string $hook_suffix The current admin page, passed to
  *                            'admin_enqueue_scripts'.
@@ -178,7 +178,7 @@ function bp_admin_enqueue_scripts( $hook_suffix = '' ) {
 	/**
 	 * Fires inside the bp_admin_enqueue_scripts function.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $hook_suffix The current admin page, passed to admin_enqueue_scripts.
 	 */
@@ -188,7 +188,7 @@ function bp_admin_enqueue_scripts( $hook_suffix = '' ) {
 /**
  * Dedicated action to register BuddyPress importers.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  */
 function bp_register_importers() {
@@ -198,7 +198,7 @@ function bp_register_importers() {
 	 *
 	 * Used to register a BuddyPress importer.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	do_action( 'bp_register_importers' );
 }
@@ -206,7 +206,7 @@ function bp_register_importers() {
 /**
  * Dedicated action to register admin styles.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  */
 function bp_register_admin_style() {
@@ -214,7 +214,7 @@ function bp_register_admin_style() {
 	/**
 	 * Fires inside the bp_register_admin_style function.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	do_action( 'bp_register_admin_style' );
 }
@@ -222,7 +222,7 @@ function bp_register_admin_style() {
 /**
  * Dedicated action to register admin settings.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  */
 function bp_register_admin_settings() {
@@ -230,7 +230,7 @@ function bp_register_admin_settings() {
 	/**
 	 * Fires inside the bp_register_admin_settings function.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	do_action( 'bp_register_admin_settings' );
 }

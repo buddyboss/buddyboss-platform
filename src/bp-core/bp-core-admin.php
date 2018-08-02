@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage CoreAdministration
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Setup BuddyPress Admin.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  */
 function bp_admin() {

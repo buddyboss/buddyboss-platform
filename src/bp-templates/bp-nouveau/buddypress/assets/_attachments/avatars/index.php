@@ -7,7 +7,7 @@
  *
  * It's also used to create the common Backbone views.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  * @version 3.1.0
  */
 
@@ -42,7 +42,7 @@ do_action( 'bp_attachments_avatar_check_template' );
 			/**
 			 * Fires inside the avatar delete frontend template markup if no other data.object condition is met.
 			 *
-			 * @since 3.0.0
+			 * @since BuddyPress 3.0.0
 			 */
 			do_action( 'bp_attachments_avatar_delete_template' ); ?>
 	<# } #>
@@ -52,6 +52,6 @@ do_action( 'bp_attachments_avatar_check_template' );
 	/**
 	 * Fires after the avatar main frontend template markup.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	do_action( 'bp_attachments_avatar_main_template' ); ?>

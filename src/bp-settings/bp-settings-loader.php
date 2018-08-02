@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage SettingsLoader
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the bp-settings component.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_setup_settings() {
 	buddypress()->settings = new BP_Settings_Component();

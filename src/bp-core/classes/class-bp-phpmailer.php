@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Email delivery implementation using PHPMailer.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  */
 class BP_PHPMailer implements BP_Email_Delivery {
 
 	/**
 	 * Send email(s).
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @param BP_Email $email Email to send.
 	 * @return bool|WP_Error Returns true if email send, else a descriptive WP_Error.
@@ -32,7 +32,7 @@ class BP_PHPMailer implements BP_Email_Delivery {
 		 *
 		 * Specify an alternative version of PHPMailer to use instead of WordPress' default.
 		 *
-		 * @since 2.8.0
+		 * @since BuddyPress 2.8.0
 		 *
 		 * @param null|PHPMailer $phpmailer The phpmailer class.
 		 */
@@ -128,7 +128,7 @@ class BP_PHPMailer implements BP_Email_Delivery {
 		/**
 		 * Fires after PHPMailer is initialised.
 		 *
-		 * @since 2.5.0
+		 * @since BuddyPress 2.5.0
 		 *
 		 * @param PHPMailer $phpmailer The PHPMailer instance.
 		 */
@@ -152,7 +152,7 @@ class BP_PHPMailer implements BP_Email_Delivery {
 	/**
 	 * Get an appropriate hostname for the email. Varies depending on site configuration.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 * @deprecated 2.5.3 No longer used.
 	 *
 	 * @return string

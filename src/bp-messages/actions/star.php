@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage MessageActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Action handler to set a message's star status for those not using JS.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 function bp_messages_star_action_handler() {
 	if ( ! bp_is_user_messages() ) {

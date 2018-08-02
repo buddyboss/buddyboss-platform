@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage ActivityActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Load the sitewide activity feed.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return bool False on failure.
  */
@@ -37,7 +37,7 @@ add_action( 'bp_actions', 'bp_activity_action_sitewide_feed' );
 /**
  * Load a user's personal activity feed.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return bool False on failure.
  */
@@ -63,7 +63,7 @@ add_action( 'bp_actions', 'bp_activity_action_personal_feed' );
 /**
  * Load a user's friends' activity feed.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return bool False on failure.
  */
@@ -89,7 +89,7 @@ add_action( 'bp_actions', 'bp_activity_action_friends_feed' );
 /**
  * Load the activity feed for a user's groups.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @return bool False on failure.
  */
@@ -123,7 +123,7 @@ add_action( 'bp_actions', 'bp_activity_action_my_groups_feed' );
 /**
  * Load a user's @mentions feed.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @return bool False on failure.
  */
@@ -155,7 +155,7 @@ add_action( 'bp_actions', 'bp_activity_action_mentions_feed' );
 /**
  * Load a user's favorites feed.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @return bool False on failure.
  */

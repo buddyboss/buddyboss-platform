@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage ActivityAkismet
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Loads Akismet filtering for activity.
  *
- * @since 1.6.0
- * @since 2.3.0 We only support Akismet 3+.
+ * @since BuddyPress 1.6.0
+ * @since BuddyPress 2.3.0 We only support Akismet 3+.
  */
 function bp_activity_setup_akismet() {
 	/**
 	 * Filters if BuddyBoss Activity Akismet support has been disabled by another plugin.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param bool $value Return value of bp_is_akismet_active boolean function.
 	 */
@@ -39,7 +39,7 @@ add_action( 'bp_activity_setup_globals', 'bp_activity_setup_akismet' );
  * This is done as a clean-up mechanism, as _bp_akismet_submission meta can
  * grow to be quite large.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @global wpdb $wpdb WordPress database object.
  */
@@ -51,7 +51,7 @@ function bp_activity_akismet_delete_old_metadata() {
 	/**
 	 * Filters the threshold for how many days old Akismet metadata needs to be before being automatically deleted.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param integer 15 How many days old metadata needs to be.
 	 */

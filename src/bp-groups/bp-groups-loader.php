@@ -8,7 +8,7 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsLoader
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the bp-groups component.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_setup_groups() {
 	buddypress()->groups = new BP_Groups_Component();

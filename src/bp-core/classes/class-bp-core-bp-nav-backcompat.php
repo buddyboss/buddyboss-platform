@@ -2,7 +2,7 @@
 /**
  * Backward compatibility for the $bp->bp_nav global.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  */
 
 // Exit if accessed directly.
@@ -14,13 +14,13 @@ defined( 'ABSPATH' ) || exit;
  * This class is used to provide backward compatibility for extensions that access and modify
  * the $bp->bp_nav global.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  */
 class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	/**
 	 * Nav items.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 * @access public
 	 * @var array
 	 */
@@ -29,7 +29,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	/**
 	 * Component to which nav items belong.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 * @access public
 	 * @var array
 	 */
@@ -38,7 +38,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	/**
 	 * Constructor.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param array $backcompat_nav Optional. Array of nav items.
 	 */
@@ -55,7 +55,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	/**
 	 * Assign a value to the nav array at the specified offset.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param mixed $offset Array offset.
 	 * @param array $value  Nav item.
@@ -89,7 +89,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	/**
 	 * Get a value of the nav array at the specified offset.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param mixed $offset Array offset.
 	 * @return BP_Core_BP_Nav_BackCompat
@@ -114,7 +114,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	/**
 	 * Check whether nav array has a value at the specified offset.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param mixed $offset Array offset.
 	 * @return bool
@@ -141,7 +141,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	/**
 	 * Unset a nav array value at the specified offset.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param mixed $offset Array offset.
 	 */
@@ -162,7 +162,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	/**
 	 * Set the component to which the nav belongs.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param string $component
 	 */
@@ -177,7 +177,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	 *   - If this is a group, and the offset is the same as the current group's slug, it's a group nav item.
 	 *   - Otherwise, it's a member nav item.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param mixed $offset Array offset.
 	 * @return string|array
@@ -199,7 +199,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	 *
 	 * Called when the nav API removes items from the nav array.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 */
 	public function reset() {
 		$this->backcompat_nav = array();
@@ -208,7 +208,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	/**
 	 * Get the nav object corresponding to the specified offset.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param mixed $offset Array offset.
 	 * @return bool|array
@@ -241,7 +241,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	 *     group, we assume that the proper component nav is 'groups'.
 	 *   - Otherwise, fall back on 'members'.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param string $offset Nav item name.
 	 * @return BP_Core_Nav
@@ -260,7 +260,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	/**
 	 * Get the nav data, formatted as a flat array.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @return array
 	 */

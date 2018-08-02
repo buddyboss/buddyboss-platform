@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Connections
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * The User Connections widget class.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 class BP_Core_Friends_Widget extends WP_Widget {
 
 	/**
 	 * Class constructor.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 */
 	function __construct() {
 		$widget_ops = array(
@@ -38,7 +38,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 	/**
 	 * Enqueue scripts.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 */
 	public function enqueue_scripts() {
 		$min = bp_core_get_minified_asset_suffix();
@@ -48,7 +48,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 	/**
 	 * Display the widget.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @param array $args Widget arguments.
 	 * @param array $instance The widget settings, as saved by the user.
@@ -73,8 +73,8 @@ class BP_Core_Friends_Widget extends WP_Widget {
 		/**
 		 * Filters the Connections widget title.
 		 *
-		 * @since 1.8.0
-		 * @since 2.3.0 Added 'instance' and 'id_base' to arguments passed to filter.
+		 * @since BuddyPress 1.8.0
+		 * @since BuddyPress 2.3.0 Added 'instance' and 'id_base' to arguments passed to filter.
 		 *
 		 * @param string $title    The widget title.
 		 * @param array  $instance The settings for the particular instance of the widget.
@@ -150,7 +150,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 	/**
 	 * Process a widget save.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @param array $new_instance The parameters saved by the user.
 	 * @param array $old_instance The parameters as previously saved to the database.
@@ -169,7 +169,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 	/**
 	 * Render the widget edit form.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @param array $instance The saved widget settings.
 	 * @return void

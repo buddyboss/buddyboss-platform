@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage MessageActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handle marking a single message thread as unread.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @return false|null Returns false on failure. Otherwise redirects back to the
  *                   message box URL.

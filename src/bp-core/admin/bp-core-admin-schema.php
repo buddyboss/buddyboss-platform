@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage CoreAdministration
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * Can be passed an optional array of components to explicitly run installation
  * routines on, typically the first time a component is activated in Settings.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param array|bool $active_components Components to install.
  */
@@ -71,7 +71,7 @@ function bp_core_install( $active_components = false ) {
 /**
  * Install database tables for the Notifications component.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  */
 function bp_core_install_notifications() {
@@ -112,7 +112,7 @@ function bp_core_install_notifications() {
 /**
  * Install database tables for the Activity component.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  */
 function bp_core_install_activity_streams() {
@@ -162,7 +162,7 @@ function bp_core_install_activity_streams() {
 /**
  * Install database tables for the Notifications component.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  */
 function bp_core_install_friends() {
@@ -187,7 +187,7 @@ function bp_core_install_friends() {
 /**
  * Install database tables for the Groups component.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  */
 function bp_core_install_groups() {
@@ -246,7 +246,7 @@ function bp_core_install_groups() {
 /**
  * Install database tables for the Messages component.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  */
 function bp_core_install_private_messaging() {
@@ -303,7 +303,7 @@ function bp_core_install_private_messaging() {
 /**
  * Install database tables for the Profiles component.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  */
 function bp_core_install_extended_profiles() {
@@ -390,7 +390,7 @@ function bp_core_install_extended_profiles() {
 /**
  * Install database tables for the Sites component.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  */
 function bp_core_install_blog_tracking() {
@@ -423,7 +423,7 @@ function bp_core_install_blog_tracking() {
 /**
  * Install the signups table.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @global $wpdb
  */
@@ -466,7 +466,7 @@ function bp_core_install_signups() {
  * table ALTER's in multisite checks, and other plugins may have installed their
  * own sign-ups table; Eg: Gravity Forms User Registration Add On.
  *
- * @since 2.0.1
+ * @since BuddyPress 2.0.1
  *
  * @see pre_schema_upgrade()
  * @link https://core.trac.wordpress.org/ticket/27855 WordPress Trac Ticket
@@ -493,7 +493,7 @@ function bp_core_upgrade_signups() {
 /**
  * Add default emails.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  */
 function bp_core_install_emails() {
 	$defaults = array(
@@ -531,7 +531,7 @@ function bp_core_install_emails() {
 	/**
 	 * Fires after BuddyPress adds the posts for its emails.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 */
 	do_action( 'bp_core_install_emails' );
 }

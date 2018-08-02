@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage CoreAdministration
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Renders the Component Setup admin panel.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  */
 function bp_core_admin_components_settings() {
@@ -43,7 +43,7 @@ function bp_core_admin_components_settings() {
 /**
  * Creates reusable markup for component setup on the Components and Pages dashboard panel.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @todo Use settings API
  */
@@ -55,7 +55,7 @@ function bp_core_admin_components_options() {
 	/**
 	 * Filters the array of available components.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param mixed $value Active components.
 	 */
@@ -248,7 +248,7 @@ function bp_core_admin_components_options() {
 /**
  * Handle saving the Component settings.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @todo Use settings API when it supports saving network settings
  */
@@ -309,7 +309,7 @@ add_action( 'bp_admin_init', 'bp_core_admin_components_settings_handler' );
  *   is not present, before merging the submitted components with the active
  *   ones.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param array $submitted This is the array of component settings coming from the POST
  *                         global. You should stripslashes_deep() before passing to this function.
@@ -354,7 +354,7 @@ function bp_core_admin_get_active_components_from_submitted_settings( $submitted
  * We use this information both to build the markup for the admin screens, as
  * well as to do some processing on settings data submitted from those screens.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param string $type Optional; component type to fetch. Default value is 'all', or 'optional', 'retired', 'required'.
  * @return array Requested components' data.
@@ -365,7 +365,7 @@ function bp_core_admin_get_components( $type = 'all' ) {
 	/**
 	 * Filters the list of component information.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array  $components Array of component information.
 	 * @param string $type       Type of component list requested.

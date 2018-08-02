@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss
  * @subpackage ConnectionsNotifications
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Notification formatting callback for bp-friends notifications.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param string $action            The kind of notification being rendered.
  * @param int    $item_id           The primary item ID.
@@ -77,7 +77,7 @@ function friends_format_notifications( $action, $item_id, $secondary_item_id, $t
 		 *   - bp_friends_single_friendship_request_notification
 		 *   - bp_friends_multiple_friendship_request_notification
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string|array $value       Depending on format, an HTML link to new requests profile
 		 *                                  tab or array with link and text.
@@ -97,7 +97,7 @@ function friends_format_notifications( $action, $item_id, $secondary_item_id, $t
 	/**
 	 * Fires at the end of the bp-friends notification format callback.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string       $action            The kind of notification being rendered.
 	 * @param int          $item_id           The primary item ID.
@@ -114,7 +114,7 @@ function friends_format_notifications( $action, $item_id, $secondary_item_id, $t
 /**
  * Clear friend-related notifications when ?new=1
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 function friends_clear_friend_notifications() {
 	if ( isset( $_GET['new'] ) ) {
@@ -126,7 +126,7 @@ add_action( 'bp_activity_screen_my_activity', 'friends_clear_friend_notification
 /**
  * Delete any friendship request notifications for the logged in user.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 function bp_friends_mark_friendship_request_notifications_by_type() {
 	if ( isset( $_GET['new'] ) ) {
@@ -138,7 +138,7 @@ add_action( 'friends_screen_requests', 'bp_friends_mark_friendship_request_notif
 /**
  * Delete any friendship acceptance notifications for the logged in user.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 function bp_friends_mark_friendship_accepted_notifications_by_type() {
 	bp_notifications_mark_notifications_by_type( bp_loggedin_user_id(), buddypress()->friends->id, 'friendship_accepted' );
@@ -148,7 +148,7 @@ add_action( 'friends_screen_my_friends', 'bp_friends_mark_friendship_accepted_no
 /**
  * Notify one use that another user has requested their virtual friendship.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @param int $friendship_id     The unique ID of the friendship.
  * @param int $initiator_user_id The friendship initiator user ID.
@@ -170,7 +170,7 @@ add_action( 'friends_friendship_requested', 'bp_friends_friendship_requested_not
 /**
  * Remove friend request notice when a member rejects another members
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @param int    $friendship_id Friendship ID (not used).
  * @param object $friendship    Friendship object.
@@ -183,7 +183,7 @@ add_action( 'friends_friendship_rejected', 'bp_friends_mark_friendship_rejected_
 /**
  * Notify a member when another member accepts their virtual friendship request.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @param int $friendship_id     The unique ID of the friendship.
  * @param int $initiator_user_id The friendship initiator user ID.
@@ -209,7 +209,7 @@ add_action( 'friends_friendship_accepted', 'bp_friends_add_friendship_accepted_n
 /**
  * Remove friend request notice when a member withdraws their friend request.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @param int    $friendship_id Friendship ID (not used).
  * @param object $friendship    Friendship Object.
@@ -222,7 +222,7 @@ add_action( 'friends_friendship_withdrawn', 'bp_friends_mark_friendship_withdraw
 /**
  * Remove connection requests FROM user, used primarily when a user is deleted.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @param int $user_id ID of the user whose notifications are removed.
  */
@@ -234,7 +234,7 @@ add_action( 'friends_remove_data', 'bp_friends_remove_notifications_data', 10, 1
 /**
  * Add Connections-related settings to the Settings > Notifications page.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function friends_screen_notification_settings() {
 
@@ -285,7 +285,7 @@ function friends_screen_notification_settings() {
 			/**
 			 * Fires after the last table row on the friends notification screen.
 			 *
-			 * @since 1.0.0
+			 * @since BuddyPress 1.0.0
 			 */
 			do_action( 'friends_screen_notification_settings' ); ?>
 

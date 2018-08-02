@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Activity
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * Instance methods are available for creating/editing an activity,
  * static methods for querying activities.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 class BP_Activity_Activity {
 
@@ -24,7 +24,7 @@ class BP_Activity_Activity {
 	/**
 	 * ID of the activity item.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int
 	 */
 	var $id;
@@ -32,7 +32,7 @@ class BP_Activity_Activity {
 	/**
 	 * ID of the associated item.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int
 	 */
 	var $item_id;
@@ -40,7 +40,7 @@ class BP_Activity_Activity {
 	/**
 	 * ID of the associated secondary item.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int
 	 */
 	var $secondary_item_id;
@@ -48,7 +48,7 @@ class BP_Activity_Activity {
 	/**
 	 * ID of user associated with the activity item.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var int
 	 */
 	var $user_id;
@@ -56,7 +56,7 @@ class BP_Activity_Activity {
 	/**
 	 * The primary URL for the activity in RSS feeds.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var string
 	 */
 	var $primary_link;
@@ -64,7 +64,7 @@ class BP_Activity_Activity {
 	/**
 	 * BuddyPress component the activity item relates to.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 * @var string
 	 */
 	var $component;
@@ -72,7 +72,7 @@ class BP_Activity_Activity {
 	/**
 	 * Activity type, eg 'new_blog_post'.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 * @var string
 	 */
 	var $type;
@@ -80,7 +80,7 @@ class BP_Activity_Activity {
 	/**
 	 * Description of the activity, eg 'Alex updated his profile.'.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 * @var string
 	 */
 	var $action;
@@ -88,7 +88,7 @@ class BP_Activity_Activity {
 	/**
 	 * The content of the activity item.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 * @var string
 	 */
 	var $content;
@@ -96,7 +96,7 @@ class BP_Activity_Activity {
 	/**
 	 * The date the activity item was recorded, in 'Y-m-d h:i:s' format.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var string
 	 */
 	var $date_recorded;
@@ -104,7 +104,7 @@ class BP_Activity_Activity {
 	/**
 	 * Whether the item should be hidden in sitewide streams.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 * @var int
 	 */
 	var $hide_sitewide = 0;
@@ -112,7 +112,7 @@ class BP_Activity_Activity {
 	/**
 	 * Node boundary start for activity or activity comment.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var int
 	 */
 	var $mptt_left;
@@ -120,7 +120,7 @@ class BP_Activity_Activity {
 	/**
 	 * Node boundary end for activity or activity comment.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var int
 	 */
 	var $mptt_right;
@@ -128,7 +128,7 @@ class BP_Activity_Activity {
 	/**
 	 * Whether this item is marked as spam.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var int
 	 */
 	var $is_spam;
@@ -136,7 +136,7 @@ class BP_Activity_Activity {
 	/**
 	 * Error holder.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @var WP_Error
 	 */
@@ -145,7 +145,7 @@ class BP_Activity_Activity {
 	/**
 	 * Error type to return. Either 'bool' or 'wp_error'.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @var string
 	 */
@@ -154,7 +154,7 @@ class BP_Activity_Activity {
 	/**
 	 * Constructor method.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param int|bool $id Optional. The ID of a specific activity item.
 	 */
@@ -171,7 +171,7 @@ class BP_Activity_Activity {
 	/**
 	 * Populate the object with data about the specific activity item.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	public function populate() {
 		global $wpdb;
@@ -224,7 +224,7 @@ class BP_Activity_Activity {
 	/**
 	 * Save the activity item to the database.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return WP_Error|bool True on success.
 	 */
@@ -253,7 +253,7 @@ class BP_Activity_Activity {
 		 *
 		 * Please use this hook to filter the properties above. Each part will be passed in.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param BP_Activity_Activity $this Current instance of the activity item being saved. Passed by reference.
 		 */
@@ -304,7 +304,7 @@ class BP_Activity_Activity {
 		/**
 		 * Fires after an activity item has been saved to the database.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param BP_Activity_Activity $this Current instance of activity item being saved. Passed by reference.
 		 */
@@ -318,9 +318,9 @@ class BP_Activity_Activity {
 	/**
 	 * Get activity items, as specified by parameters.
 	 *
-	 * @since 1.2.0
-	 * @since 2.4.0 Introduced the `$fields` parameter.
-	 * @since 2.9.0 Introduced the `$order_by` parameter.
+	 * @since BuddyPress 1.2.0
+	 * @since BuddyPress 2.4.0 Introduced the `$fields` parameter.
+	 * @since BuddyPress 2.9.0 Introduced the `$order_by` parameter.
 	 *
 	 * @see BP_Activity_Activity::get_filter_sql() for a description of the
 	 *      'filter' parameter.
@@ -460,7 +460,7 @@ class BP_Activity_Activity {
 			/**
 			 * Filters whether or not to include users for search parameters.
 			 *
-			 * @since 3.0.0
+			 * @since BuddyPress 3.0.0
 			 *
 			 * @param bool $value Whether or not to include user search. Default false.
 			 */
@@ -559,7 +559,7 @@ class BP_Activity_Activity {
 		/**
 		 * Filters the MySQL WHERE conditions for the Activity items get method.
 		 *
-		 * @since 1.9.0
+		 * @since BuddyPress 1.9.0
 		 *
 		 * @param array  $where_conditions Current conditions for MySQL WHERE statement.
 		 * @param array  $r                Parsed arguments passed into method.
@@ -575,7 +575,7 @@ class BP_Activity_Activity {
 		/**
 		 * Filter the MySQL JOIN clause for the main activity query.
 		 *
-		 * @since 2.5.0
+		 * @since BuddyPress 2.5.0
 		 *
 		 * @param string $join_sql   JOIN clause.
 		 * @param array  $r          Method parameters.
@@ -600,7 +600,7 @@ class BP_Activity_Activity {
 		 *
 		 * It is not recommended to use the legacy structure, but allowed to if needed.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param bool                 $value Whether to use legacy structure or not.
 		 * @param BP_Activity_Activity $value Current method being called.
@@ -623,7 +623,7 @@ class BP_Activity_Activity {
 				/**
 				 * Filters the legacy MySQL query statement so plugins can alter before results are fetched.
 				 *
-				 * @since 1.5.0
+				 * @since BuddyPress 1.5.0
 				 *
 				 * @param string $value      Concatenated MySQL statement pieces to be query results with for legacy query.
 				 * @param string $select_sql Final SELECT MySQL statement portion for legacy query.
@@ -671,7 +671,7 @@ class BP_Activity_Activity {
 			/**
 			 * Filters the paged activities MySQL statement.
 			 *
-			 * @since 2.0.0
+			 * @since BuddyPress 2.0.0
 			 *
 			 * @param string $activity_ids_sql MySQL statement used to query for Activity IDs.
 			 * @param array  $r                Array of arguments passed into method.
@@ -744,7 +744,7 @@ class BP_Activity_Activity {
 			/**
 			 * Filters the total activities MySQL statement.
 			 *
-			 * @since 1.5.0
+			 * @since BuddyPress 1.5.0
 			 *
 			 * @param string $value     MySQL statement used to query for total activities.
 			 * @param string $where_sql MySQL WHERE statement portion.
@@ -774,7 +774,7 @@ class BP_Activity_Activity {
 	/**
 	 * Convert activity IDs to activity objects, as expected in template loop.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $activity_ids Array of activity IDs.
 	 * @return array
@@ -851,7 +851,7 @@ class BP_Activity_Activity {
 	/**
 	 * Append xProfile fullnames to an activity array.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $activities Activities array.
 	 * @return array
@@ -891,7 +891,7 @@ class BP_Activity_Activity {
 	 * components, such as bp-friends and bp-groups, to hook in and prime
 	 * their own caches at the beginning of an activity loop.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $activities Array of activities.
 	 * @return array $activities Array of activities.
@@ -901,7 +901,7 @@ class BP_Activity_Activity {
 		/**
 		 * Filters inside prefetch_object_data method to aid in pre-fetching object data associated with activity item.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param array $activities Array of activities.
 		 */
@@ -916,7 +916,7 @@ class BP_Activity_Activity {
 	 * registered), the static 'action' value pulled from the database will
 	 * be left in place.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array $activities Array of activities.
 	 * @return array
@@ -943,7 +943,7 @@ class BP_Activity_Activity {
 	 * WP_Query, we have to alter the return value (stripping the leading
 	 * AND keyword from the 'where' clause).
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param array $meta_query An array of meta_query filters. See the
 	 *                          documentation for WP_Meta_Query for details.
@@ -983,7 +983,7 @@ class BP_Activity_Activity {
 	 * WP_Query, we have to alter the return value (stripping the leading AND
 	 * keyword from the query).
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param array $date_query An array of date_query parameters. See the
 	 *                          documentation for the first parameter of WP_Date_Query.
@@ -1009,7 +1009,7 @@ class BP_Activity_Activity {
 	 *
 	 * Can handle multiple scopes.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @param  mixed $scope  The activity scope. Accepts string or array of scopes.
 	 * @param  array $r      Current activity arguments. Same as those of BP_Activity_Activity::get(),
@@ -1057,7 +1057,7 @@ class BP_Activity_Activity {
 			 *   - bp_groups_filter_activity_scope() - used for 'groups' scope
 			 *   - bp_friends_filter_activity_scope() - used for 'friends' scope
 			 *
-			 * @since 2.2.0
+			 * @since BuddyPress 2.2.0
 			 *
 			 * @param array {
 			 *     Activity query clauses.
@@ -1110,7 +1110,7 @@ class BP_Activity_Activity {
 	 *
 	 * As of 1.5.x, use BP_Activity_Activity::get() with an 'in' parameter instead.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @deprecated 1.5
 	 * @deprecated Use BP_Activity_Activity::get() with an 'in' parameter instead.
@@ -1131,7 +1131,7 @@ class BP_Activity_Activity {
 	/**
 	 * Get the first activity ID that matches a set of criteria.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @todo Should parameters be optional?
 	 *
@@ -1200,7 +1200,7 @@ class BP_Activity_Activity {
 	 * To delete a specific activity item, pass an 'id' parameter.
 	 * Otherwise use the filters.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param array $args {
 	 *     @int    $id                Optional. The ID of a specific item to delete.
@@ -1307,7 +1307,7 @@ class BP_Activity_Activity {
 		/**
 		 * Action to allow intercepting activity items to be deleted.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param array $activities Array of activities.
 		 * @param array $r          Array of parsed arguments.
@@ -1325,7 +1325,7 @@ class BP_Activity_Activity {
 		/**
 		 * Action to allow intercepting activity items just deleted.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param array $activities Array of activities.
 		 * @param array $r          Array of parsed arguments.
@@ -1374,7 +1374,7 @@ class BP_Activity_Activity {
 	 * This method is no longer used by BuddyPress, and it is recommended not to
 	 * use it going forward, and use BP_Activity_Activity::delete() instead.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @deprecated 2.3.0
 	 *
@@ -1405,7 +1405,7 @@ class BP_Activity_Activity {
 	/**
 	 * Delete the meta entries associated with a set of activity items.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param array $activity_ids Activity IDs whose meta should be deleted.
 	 * @return bool True on success.
@@ -1423,7 +1423,7 @@ class BP_Activity_Activity {
 	/**
 	 * Append activity comments to their associated activity items.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @global wpdb $wpdb WordPress database object.
 	 *
@@ -1453,7 +1453,7 @@ class BP_Activity_Activity {
 	/**
 	 * Get activity comments that are associated with a specific activity ID.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @global wpdb $wpdb WordPress database object.
 	 *
@@ -1508,7 +1508,7 @@ class BP_Activity_Activity {
 			/**
 			 * Filters if BuddyPress should use the legacy activity query.
 			 *
-			 * @since 2.0.0
+			 * @since BuddyPress 2.0.0
 			 *
 			 * @param bool                 $value     Whether or not to use the legacy query.
 			 * @param BP_Activity_Activity $value     Magic method referring to currently called method.
@@ -1519,7 +1519,7 @@ class BP_Activity_Activity {
 				/**
 				 * Filters the MySQL prepared statement for the legacy activity query.
 				 *
-				 * @since 1.5.0
+				 * @since BuddyPress 1.5.0
 				 *
 				 * @param string $value       Prepared statement for the activity query.
 				 * @param int    $activity_id Activity ID to fetch comments for.
@@ -1611,7 +1611,7 @@ class BP_Activity_Activity {
 	/**
 	 * Rebuild nested comment tree under an activity or activity comment.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @global wpdb $wpdb WordPress database object.
 	 *
@@ -1651,7 +1651,7 @@ class BP_Activity_Activity {
 	/**
 	 * Get child comments of an activity or activity comment.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @global wpdb $wpdb WordPress database object.
 	 *
@@ -1669,7 +1669,7 @@ class BP_Activity_Activity {
 	/**
 	 * Get a list of components that have recorded activity associated with them.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param bool $skip_last_activity If true, components will not be
 	 *                                 included if the only activity type associated with them is
@@ -1695,7 +1695,7 @@ class BP_Activity_Activity {
 	/**
 	 * Get sitewide activity items for use in an RSS feed.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $limit Optional. Number of items to fetch. Default: 35.
 	 * @return array $activity_feed List of activity items, with RSS data added.
@@ -1718,7 +1718,7 @@ class BP_Activity_Activity {
 	/**
 	 * Create SQL IN clause for filter queries.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @see BP_Activity_Activity::get_filter_sql()
 	 *
@@ -1755,7 +1755,7 @@ class BP_Activity_Activity {
 	/**
 	 * Create filter SQL clauses.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param array $filter_array {
 	 *     Fields and values to filter by.
@@ -1834,7 +1834,7 @@ class BP_Activity_Activity {
 	/**
 	 * Get the date/time of last recorded activity.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @return string ISO timestamp.
 	 */
@@ -1849,7 +1849,7 @@ class BP_Activity_Activity {
 	/**
 	 * Get favorite count for a given user.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param int $user_id The ID of the user whose favorites you're counting.
 	 * @return int $value A count of the user's favorites.
@@ -1869,7 +1869,7 @@ class BP_Activity_Activity {
 	/**
 	 * Check whether an activity item exists with a given string content.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param string $content The content to filter by.
 	 * @return int|false The ID of the first matching item if found, otherwise false.
@@ -1887,7 +1887,7 @@ class BP_Activity_Activity {
 	/**
 	 * Hide all activity for a given user.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param int $user_id The ID of the user whose activity you want to mark hidden.
 	 * @return mixed

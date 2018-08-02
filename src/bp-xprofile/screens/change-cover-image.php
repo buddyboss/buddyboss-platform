@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Displays the change cover image page.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  */
 function xprofile_screen_change_cover_image() {
 
@@ -22,14 +22,14 @@ function xprofile_screen_change_cover_image() {
 	/**
 	 * Fires right before the loading of the XProfile change cover image screen template file.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 */
 	do_action( 'xprofile_screen_change_cover_image' );
 
 	/**
 	 * Filters the template to load for the XProfile cover image screen.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param string $template Path to the XProfile cover image template to load.
 	 */

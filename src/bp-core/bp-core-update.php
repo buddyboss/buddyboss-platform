@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Updater
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * If there is no raw DB version, we infer that this is the first installation.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @return bool True if this is a fresh BP install, otherwise false.
  */
@@ -30,7 +30,7 @@ function bp_is_install() {
  * number stored in the database. If the registered version is greater, it's
  * an update.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @return bool True if update, otherwise false.
  */
@@ -50,7 +50,7 @@ function bp_is_update() {
 /**
  * Determine whether BuddyPress is in the process of being activated.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param string $basename BuddyPress basename.
  * @return bool True if activating BuddyPress, false if not.
@@ -94,7 +94,7 @@ function bp_is_activation( $basename = '' ) {
 /**
  * Determine whether BuddyPress is in the process of being deactivated.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param string $basename BuddyPress basename.
  * @return bool True if deactivating BuddyPress, false if not.
@@ -138,7 +138,7 @@ function bp_is_deactivation( $basename = '' ) {
 /**
  * Update the BP version stored in the database to the current version.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_version_bump() {
 	bp_update_option( '_bp_db_version', bp_get_db_version() );
@@ -147,7 +147,7 @@ function bp_version_bump() {
 /**
  * Set up the BuddyPress updater.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_setup_updater() {
 
@@ -169,7 +169,7 @@ function bp_setup_updater() {
  * This is most often used when the data schema changes, but should also be used
  * to correct issues with BuddyPress metadata silently on software update.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 function bp_version_updater() {
 
@@ -179,7 +179,7 @@ function bp_version_updater() {
 	/**
 	 * Filters the default components to activate for a new install.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param array $value Array of default components to activate.
 	 */
@@ -285,7 +285,7 @@ function bp_version_updater() {
  *
  * `dbDelta()` cannot handle certain operations - like changing indexes - so we do it here instead.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 function bp_pre_schema_upgrade() {
 	global $wpdb;
@@ -322,7 +322,7 @@ function bp_pre_schema_upgrade() {
  *
  * Database update methods based on version numbers.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 function bp_update_to_1_5() {
 
@@ -340,7 +340,7 @@ function bp_update_to_1_5() {
  *
  * Database update methods based on version numbers.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 function bp_update_to_1_6() {
 
@@ -364,7 +364,7 @@ function bp_update_to_1_6() {
  * have the core notifications API active. We need to add the new Notifications
  * component to the active components option to retain existing functionality.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 function bp_update_to_1_9() {
 
@@ -399,7 +399,7 @@ function bp_update_to_1_9() {
  * deactivated temporarily. Thus, new installations will not see bp-default,
  * but legacy installations using the theme will continue to see it.
  *
- * @since 1.9.2
+ * @since BuddyPress 1.9.2
  */
 function bp_update_to_1_9_2() {
 	if ( 'bp-default' === get_stylesheet() || 'bp-default' === get_template() ) {
@@ -414,7 +414,7 @@ function bp_update_to_1_9_2() {
  * - Migrate last_activity data from usermeta to activity table.
  * - Add values for all BuddyPress options to the options table.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 function bp_update_to_2_0() {
 
@@ -445,7 +445,7 @@ function bp_update_to_2_0() {
 /**
  * 2.0.1 database upgrade routine.
  *
- * @since 2.0.1
+ * @since BuddyPress 2.0.1
  */
 function bp_update_to_2_0_1() {
 
@@ -461,7 +461,7 @@ function bp_update_to_2_0_1() {
  * - Update the component field of the 'new members' activity type.
  * - Clean up hidden friendship activities.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  */
 function bp_update_to_2_2() {
 
@@ -484,7 +484,7 @@ function bp_update_to_2_2() {
  *
  * - Add notifications meta table.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 function bp_update_to_2_3() {
 
@@ -499,7 +499,7 @@ function bp_update_to_2_3() {
  *
  * - Add emails.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  */
 function bp_update_to_2_5() {
 	bp_core_install_emails();
@@ -512,7 +512,7 @@ function bp_update_to_2_5() {
  * - Save legacy directory titles to the corresponding WP pages.
  * - Add ignore deprecated code option (false for updates).
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  */
 function bp_update_to_2_7() {
 	bp_add_option( 'bp-emails-unsubscribe-salt', base64_encode( wp_generate_password( 64, true, true ) ) );
@@ -545,7 +545,7 @@ function bp_update_to_2_7() {
 /**
  * Updates the component field for new_members type.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @global $wpdb
  */
@@ -579,7 +579,7 @@ function bp_migrate_new_member_activity_component() {
 /**
  * Remove all hidden friendship activities.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  */
 function bp_cleanup_friendship_activities() {
 	bp_activity_delete( array(
@@ -596,7 +596,7 @@ function bp_cleanup_friendship_activities() {
  * instead of being hardcoded. To ensure that directory titles don't change for existing installations, we update these
  * WP posts with the formerly hardcoded titles.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  */
 function bp_migrate_directory_page_titles() {
 	$bp_pages = bp_core_get_directory_page_ids( 'all' );
@@ -641,7 +641,7 @@ function bp_migrate_directory_page_titles() {
 /**
  * Redirect user to BP's What's New page on first page load after activation.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @internal Used internally to redirect BuddyPress to the about page on activation.
  */
@@ -667,7 +667,7 @@ function bp_add_activation_redirect() {
 /**
  * Check if the signups table needs to be created or upgraded.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @global WPDB $wpdb
  */
@@ -711,7 +711,7 @@ function bp_core_maybe_install_signups() {
  *
  * Runs on BuddyPress activation.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_activation() {
 
@@ -726,7 +726,7 @@ function bp_activation() {
 	 *
 	 * Use as of 1.6.0.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	do_action( 'bp_activation' );
 
@@ -739,7 +739,7 @@ function bp_activation() {
  *
  * Runs on BuddyPress deactivation.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_deactivation() {
 
@@ -759,7 +759,7 @@ function bp_deactivation() {
 	 *
 	 * Use as of 1.6.0.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	do_action( 'bp_deactivation' );
 
@@ -772,14 +772,14 @@ function bp_deactivation() {
  *
  * Runs when uninstalling BuddyPress.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_uninstall() {
 
 	/**
 	 * Fires during the uninstallation of BuddyPress.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	do_action( 'bp_uninstall' );
 }

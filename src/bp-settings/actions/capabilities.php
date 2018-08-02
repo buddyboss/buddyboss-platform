@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage SettingsActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handles the setting of user capabilities, spamming, hamming, role, etc...
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_settings_action_capabilities() {
 	if ( ! bp_is_post_request() ) {
@@ -45,7 +45,7 @@ function bp_settings_action_capabilities() {
 	/**
 	 * Fires before the capabilities settings have been saved.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	do_action( 'bp_settings_capabilities_before_save' );
 
@@ -60,7 +60,7 @@ function bp_settings_action_capabilities() {
 		/**
 		 * Fires after processing a user as a spammer.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param int    $value  ID of the currently displayed user.
 		 * @param string $status Determined status of "spam" or "ham" for the displayed user.
@@ -73,7 +73,7 @@ function bp_settings_action_capabilities() {
 	/**
 	 * Fires after the capabilities settings have been saved and before redirect.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	do_action( 'bp_settings_capabilities_after_save' );
 

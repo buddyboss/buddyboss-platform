@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss
  * @subpackage Groups
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * List table class for the Groups component admin page.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 class BP_Groups_List_Table extends WP_List_Table {
 
@@ -25,7 +25,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	 *
 	 * E.g. "All", "Pending", "Approved", "Spam"...
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 * @var string
 	 */
 	public $view = 'all';
@@ -33,7 +33,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Group counts for each group type.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 * @var int
 	 */
 	public $group_counts = 0;
@@ -49,7 +49,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Constructor
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function __construct() {
 
@@ -76,7 +76,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	 * Handles filtering of data, sorting, pagination, and any other data
 	 * manipulation required prior to rendering.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function prepare_items() {
 		global $groups_template;
@@ -191,7 +191,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Get an array of all the columns on the page.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @return array Array of column headers.
 	 */
@@ -209,7 +209,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Get name of default primary column
 	 *
-	 * @since 2.3.3
+	 * @since BuddyPress 2.3.3
 	 *
 	 * @return string
 	 */
@@ -221,7 +221,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Display a message on screen when no items are found ("No groups found").
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function no_items() {
 		_e( 'No groups found.', 'buddyboss' );
@@ -230,7 +230,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Output the Groups data table.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function display() {
 		$this->display_tablenav( 'top' ); ?>
@@ -265,7 +265,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Extra controls to be displayed between bulk actions and pagination
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 * @access protected
 	 *
 	 * @param string $which
@@ -274,7 +274,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 		/**
 		 * Fires just after the bulk action controls in the WP Admin groups list table.
 		 *
-		 * @since 2.7.0
+		 * @since BuddyPress 2.7.0
 		 *
 		 * @param string $which The location of the extra table nav markup: 'top' or 'bottom'.
 		 */
@@ -284,7 +284,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Generate content for a single row of the table.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param object|array $item The current group item in the loop.
 	 */
@@ -302,7 +302,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 		/**
 		 * Filters the classes applied to a single row in the groups list table.
 		 *
-		 * @since 1.9.0
+		 * @since BuddyPress 1.9.0
 		 *
 		 * @param array  $row_classes Array of classes to apply to the row.
 		 * @param string $value       ID of the current group being displayed.
@@ -320,7 +320,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Get the list of views available on this table (e.g. "all", "public").
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function get_views() {
 		$url_base = bp_get_admin_url( 'admin.php?page=bp-groups' ); ?>
@@ -341,7 +341,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 			/**
 			 * Fires inside listing of views so plugins can add their own.
 			 *
-			 * @since 1.7.0
+			 * @since BuddyPress 1.7.0
 			 *
 			 * @param string $url_base Current URL base for view.
 			 * @param string $view     Current view being displayed.
@@ -354,7 +354,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Get bulk actions for single group row.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @return array Key/value pairs for the bulk actions dropdown.
 	 */
@@ -363,7 +363,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 		/**
 		 * Filters the list of bulk actions to display on a single group row.
 		 *
-		 * @since 1.7.0
+		 * @since BuddyPress 1.7.0
 		 *
 		 * @param array $value Array of bulk actions to display.
 		 */
@@ -375,7 +375,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Get the table column titles.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @see WP_List_Table::single_row_columns()
 	 *
@@ -386,7 +386,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 		/**
 		 * Filters the titles for the columns for the groups list table.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param array $value Array of slugs and titles for the columns.
 		 */
@@ -412,7 +412,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	 * the sort order - ie, to make it ASC. Thus last_active is set to
 	 * $desc_first = false.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @return array Array of sortable column names.
 	 */
@@ -431,8 +431,8 @@ class BP_Groups_List_Table extends WP_List_Table {
 	 * Basically a duplicate of the row_actions() method, but removes the
 	 * unnecessary <button> addition.
 	 *
-	 * @since 2.3.3
-	 * @since 2.3.4 Visibility set to public for compatibility with WP < 4.0.0.
+	 * @since BuddyPress 2.3.3
+	 * @since BuddyPress 2.3.4 Visibility set to public for compatibility with WP < 4.0.0.
 	 *
 	 * @param array $actions        The list of actions.
 	 * @param bool  $always_visible Whether the actions should be always visible.
@@ -459,7 +459,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Markup for the Checkbox column.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @see WP_List_Table::single_row_columns()
 	 *
@@ -473,7 +473,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Markup for the Group ID column.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @see WP_List_Table::single_row_columns()
 	 *
@@ -488,7 +488,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	 *
 	 * Called "comment" in the CSS so we can re-use some WP core CSS.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @see WP_List_Table::single_row_columns()
 	 *
@@ -515,7 +515,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 		/**
 		 * Filters the group name for a group's column content.
 		 *
-		 * @since 1.7.0
+		 * @since BuddyPress 1.7.0
 		 *
 		 * @param string $value Name of the group being rendered.
 		 * @param array  $item  Array for the current group item.
@@ -535,7 +535,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 		/**
 		 * Filters the actions that will be shown for the column content.
 		 *
-		 * @since 1.7.0
+		 * @since BuddyPress 1.7.0
 		 *
 		 * @param array $value Array of actions to be displayed for the column content.
 		 * @param array $item  The current group item in the loop.
@@ -566,7 +566,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Markup for the Description column.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param array $item Information about the current row.
 	 */
@@ -575,7 +575,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 		/**
 		 * Filters the markup for the Description column.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param string $value Markup for the Description column.
 		 * @param array  $item  The current group item in the loop.
@@ -586,7 +586,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Markup for the Status column.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param array $item Information about the current row.
 	 */
@@ -611,7 +611,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 		/**
 		 * Filters the markup for the Status column.
 		 *
-		 * @since 1.7.0
+		 * @since BuddyPress 1.7.0
 		 *
 		 * @param string $status_desc Markup for the Status column.
 		 * @parma array  $item        The current group item in the loop.
@@ -622,7 +622,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Markup for the Number of Members column.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param array $item Information about the current row.
 	 */
@@ -632,7 +632,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 		/**
 		 * Filters the markup for the number of Members column.
 		 *
-		 * @since 1.7.0
+		 * @since BuddyPress 1.7.0
 		 *
 		 * @param int   $count Markup for the number of Members column.
 		 * @parma array $item  The current group item in the loop.
@@ -643,7 +643,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Markup for the Last Active column.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param array $item Information about the current row.
 	 */
@@ -653,7 +653,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 		/**
 		 * Filters the markup for the Last Active column.
 		 *
-		 * @since 1.7.0
+		 * @since BuddyPress 1.7.0
 		 *
 		 * @param string $last_active Markup for the Last Active column.
 		 * @parma array  $item        The current group item in the loop.
@@ -664,7 +664,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Allow plugins to add their custom column.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param array  $item        Information about the current row.
 	 * @param string $column_name The column name.
@@ -675,7 +675,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 		/**
 		 * Filters a string to allow plugins to add custom column content.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 *
 		 * @param string $value       Empty string.
 		 * @param string $column_name Name of the column being rendered.
@@ -689,7 +689,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Add group type column to the WordPress admin groups list table.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param array $columns Groups table columns.
 	 *
@@ -704,7 +704,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Markup for the Group Type column.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param string $retval      Empty string.
 	 * @param string $column_name Name of the column being rendered.
@@ -728,7 +728,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 		/**
 		 * Filters the markup for the Group Type column.
 		 *
-		 * @since 2.7.0
+		 * @since BuddyPress 2.7.0
 		 *
 		 * @param string $retval Markup for the Group Type column.
 		 * @parma array  $item   The current group item in the loop.
@@ -741,7 +741,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	 *
 	 * Changes the group type permalink to use the admin URL.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param  string $retval Current group type permalink.
 	 * @param  object $type   Group type object.
@@ -754,7 +754,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	/**
 	 * Markup for the Group Type bulk change select.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param string $which The location of the extra table nav markup: 'top' or 'bottom'.
 	 */

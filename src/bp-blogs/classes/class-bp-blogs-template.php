@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage BlogsTemplate
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -207,7 +207,7 @@ class BP_Blogs_Template {
 			/**
 			 * Fires right before the rewinding of blogs listing after all are shown.
 			 *
-			 * @since 1.5.0
+			 * @since BuddyPress 1.5.0
 			 */
 			do_action( 'blog_loop_end' );
 			// Do some cleaning up after the loop.
@@ -238,7 +238,7 @@ class BP_Blogs_Template {
 			/**
 			 * Fires if on the first blog in the loop.
 			 *
-			 * @since 1.5.0
+			 * @since BuddyPress 1.5.0
 			 */
 			do_action( 'blog_loop_start' );
 		}

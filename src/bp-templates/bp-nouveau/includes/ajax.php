@@ -2,7 +2,7 @@
 /**
  * Common functions only loaded on AJAX requests.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.0.0
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Load the template loop for the current object.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string Template loop for the specified object
  */
@@ -79,7 +79,7 @@ function bp_nouveau_ajax_object_template_loader() {
 		/**
 		 * Filters the browser URL for the template loader.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $feed_url Template feed url.
 		 * @param string $scope    Current component scope.
@@ -126,7 +126,7 @@ function bp_nouveau_ajax_object_template_loader() {
 	/**
 	 * Filters the server path for the template loader.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param string Template file path.
 	 */

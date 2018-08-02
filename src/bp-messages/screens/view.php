@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage MessageScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Load an individual conversation screen.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @return false|null False on failure.
  */
@@ -61,14 +61,14 @@ function messages_screen_conversation() {
 	/**
 	 * Fires right before the loading of the Messages view screen template file.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	do_action( 'messages_screen_conversation' );
 
 	/**
 	 * Filters the template to load for the Messages view screen.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $template Path to the messages template to load.
 	 */

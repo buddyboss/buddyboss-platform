@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss
  * @subpackage Connections
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Defines the BuddyBoss Connections Component.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 class BP_Friends_Component extends BP_Component {
 
 	/**
 	 * Start the friends component creation process.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	public function __construct() {
 		parent::start(
@@ -38,7 +38,7 @@ class BP_Friends_Component extends BP_Component {
 	/**
 	 * Include bp-friends files.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @see BP_Component::includes() for description of parameters.
 	 *
@@ -69,7 +69,7 @@ class BP_Friends_Component extends BP_Component {
 	 *
 	 * Only load up certain code when on specific pages.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function late_includes() {
 		// Bail if PHPUnit is running.
@@ -100,7 +100,7 @@ class BP_Friends_Component extends BP_Component {
 	 * The BP_FRIENDS_SLUG constant is deprecated, and only used here for
 	 * backwards compatibility.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @see BP_Component::setup_globals() for description of parameters.
 	 *
@@ -142,7 +142,7 @@ class BP_Friends_Component extends BP_Component {
 	/**
 	 * Set up component navigation.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @see BP_Component::setup_nav() for a description of arguments.
 	 *
@@ -216,7 +216,7 @@ class BP_Friends_Component extends BP_Component {
 	/**
 	 * Set up bp-friends integration with the WordPress admin bar.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @see BP_Component::setup_admin_bar() for a description of arguments.
 	 *
@@ -282,7 +282,7 @@ class BP_Friends_Component extends BP_Component {
 	/**
 	 * Set up the title for pages and <title>.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	public function setup_title() {
 
@@ -308,7 +308,7 @@ class BP_Friends_Component extends BP_Component {
 	/**
 	 * Setup cache groups.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 */
 	public function setup_cache_groups() {
 

@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage BlogFilters
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 
 /** Display Filters **********************************************************/
@@ -23,7 +23,7 @@ add_filter( 'bp_blog_latest_post_content', 'prepend_attachment' );
 /**
  * Ensure that the 'Create a new site' link at wp-admin/my-sites.php points to the BP blog signup.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  *       returned value.
  *
@@ -35,7 +35,7 @@ function bp_blogs_creation_location( $url ) {
 	/**
 	 * Filters the 'Create a new site' link URL.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string $value URL for the 'Create a new site' signup page.
 	 */
@@ -46,7 +46,7 @@ add_filter( 'wp_signup_location', 'bp_blogs_creation_location' );
 /**
  * Only select comments by ID instead of all fields when using get_comments().
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  *
  * @see bp_blogs_update_post_activity_meta()
  *
@@ -64,7 +64,7 @@ function bp_blogs_comments_clauses_select_by_id( $retval ) {
  *
  * Abstracted from the deprecated `bp_blogs_record_post()`.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param bool $return  Whether the post should be published.
  * @param int  $blog_id ID of the blog.
@@ -96,7 +96,7 @@ function bp_blogs_post_pre_publish( $return = true, $blog_id = 0, $post_id = 0, 
 	/**
 	 * Filters whether or not BuddyPress should block sitewide tags activity.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @param bool $value Current status of the sitewide tags activity.
 	 */
@@ -107,7 +107,7 @@ function bp_blogs_post_pre_publish( $return = true, $blog_id = 0, $post_id = 0, 
 	/**
 	 * Filters whether or not the current blog is public.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @param int $value Value from the blog_public option for the current blog.
 	 */
@@ -125,7 +125,7 @@ add_filter( 'bp_activity_post_pre_comment', 'bp_blogs_post_pre_publish', 10, 4 )
 /**
  * Registers our custom thumb size with WP's Site Icon feature.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @param  array $sizes Current array of custom site icon sizes.
  * @return array

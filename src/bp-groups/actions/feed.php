@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage GroupActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Load the activity feed for the current group.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @return false|null False on failure.
  */

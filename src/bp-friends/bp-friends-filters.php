@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage ConnectionsFilters
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * Each member in the user query is checked for confirmed friendship status
  * against the logged-in user.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @global WPDB $wpdb WordPress database access object.
  *

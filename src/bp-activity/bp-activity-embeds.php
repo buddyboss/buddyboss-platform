@@ -4,7 +4,7 @@
  *
  * Relies on WordPress 4.5.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @package BuddyBoss
  * @subpackage ActivityEmbeds
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Loads our activity oEmbed component.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  */
 function bp_activity_setup_oembed() {
 	buddypress()->activity->oembed = new BP_Activity_oEmbed_Extension;
@@ -29,7 +29,7 @@ add_action( 'bp_loaded', 'bp_activity_setup_oembed' );
  * Due to <iframe sandbox="allow-top-navigation">, links in embeds can only be
  * clicked if invoked with top.location.href via JS.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param  string $text Embed excerpt
  * @return string
@@ -40,7 +40,7 @@ function bp_activity_embed_excerpt_onclick_location_filter( $text ) {
 	/**
 	 * Add onclick="top.location.href" to a link.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param  array $matches Items matched by bp_activity_embed_excerpt_onclick_location_filter().
 	 * @return string
@@ -52,7 +52,7 @@ function bp_activity_embed_excerpt_onclick_location_filter( $text ) {
 /**
  * Add inline styles for BP activity embeds.
  *
- * @since  2.6.0
+ * @since BuddyPress  2.6.0
  */
 function bp_activity_embed_add_inline_styles() {
 	if ( false === bp_is_single_activity() ) {
@@ -86,7 +86,7 @@ add_action( 'embed_head', 'bp_activity_embed_add_inline_styles', 20 );
  * Basically a wrapper for {@link bp_has_activities()}, but allows us to
  * use the activity loop without requerying for it again.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param  int $activity_id The activity ID.
  * @return bool
@@ -118,7 +118,7 @@ function bp_activity_embed_has_activity( $activity_id = 0 ) {
 /**
  * Outputs excerpt for an activity embed item.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  */
 function bp_activity_embed_excerpt( $content = '' ) {
 	echo bp_activity_get_embed_excerpt( $content );
@@ -127,7 +127,7 @@ function bp_activity_embed_excerpt( $content = '' ) {
 	/**
 	 * Generates excerpt for an activity embed item.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param  string $content The content to generate an excerpt for.
 	 * @return string
@@ -152,7 +152,7 @@ function bp_activity_embed_excerpt( $content = '' ) {
 		/**
 		 * Filter the activity embed excerpt.
 		 *
-		 * @since 2.6.0
+		 * @since BuddyPress 2.6.0
 		 *
 		 * @var string $content Embed Excerpt.
 		 * @var string $unmodified_content Unmodified activity content.
@@ -163,7 +163,7 @@ function bp_activity_embed_excerpt( $content = '' ) {
 /**
  * Outputs the first embedded item in the activity oEmbed template.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  */
 function bp_activity_embed_media() {
 	// Bail if oEmbed request explicitly hides media.
@@ -171,7 +171,7 @@ function bp_activity_embed_media() {
 		/**
 		 * Do something after media is rendered for an activity oEmbed item.
 		 *
-		 * @since 2.6.0
+		 * @since BuddyPress 2.6.0
 		 */
 		do_action( 'bp_activity_embed_after_media' );
 
@@ -181,7 +181,7 @@ function bp_activity_embed_media() {
 	/**
 	 * Should we display media in the oEmbed template?
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param bool $retval Defaults to true.
 	 */
@@ -223,7 +223,7 @@ function bp_activity_embed_media() {
 		 *
 		 * This is used if the oEmbed response does not return a thumbnail width.
 		 *
-		 * @since 2.6.0
+		 * @since BuddyPress 2.6.0
 		 *
 		 * @param int $width.
 		 */

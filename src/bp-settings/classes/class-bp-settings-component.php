@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage SettingsLoader
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Creates our Settings component.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 class BP_Settings_Component extends BP_Component {
 
 	/**
 	 * Start the settings component creation process.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	public function __construct() {
 		parent::start(
@@ -36,7 +36,7 @@ class BP_Settings_Component extends BP_Component {
 	/**
 	 * Include files.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param array $includes Array of values to include. Not used.
 	 */
@@ -52,7 +52,7 @@ class BP_Settings_Component extends BP_Component {
 	 *
 	 * Only load up certain code when on specific pages.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function late_includes() {
 		// Bail if PHPUnit is running.
@@ -95,7 +95,7 @@ class BP_Settings_Component extends BP_Component {
 	 * The BP_SETTINGS_SLUG constant is deprecated, and only used here for
 	 * backwards compatibility.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param array $args Array of arguments.
 	 */
@@ -116,7 +116,7 @@ class BP_Settings_Component extends BP_Component {
 	/**
 	 * Set up navigation.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param array $main_nav Array of main nav items.
 	 * @param array $sub_nav  Array of sub nav items.
@@ -201,7 +201,7 @@ class BP_Settings_Component extends BP_Component {
 	/**
 	 * Set up the Toolbar.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param array $wp_admin_nav Array of Admin Bar items.
 	 */

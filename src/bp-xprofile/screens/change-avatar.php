@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handles the uploading and cropping of a user avatar. Displays the change avatar page.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  */
 function xprofile_screen_change_avatar() {
@@ -70,8 +70,8 @@ function xprofile_screen_change_avatar() {
 			/**
 			 * Fires right before the redirect, after processing a new avatar.
 			 *
-			 * @since 1.1.0
-			 * @since 2.3.4 Add two new parameters to inform about the user id and
+			 * @since BuddyPress 1.1.0
+			 * @since BuddyPress 2.3.4 Add two new parameters to inform about the user id and
 			 *              about the way the avatar was set (eg: 'crop' or 'camera').
 			 *
 			 * @param string $item_id Inform about the user id the avatar was set for.
@@ -86,14 +86,14 @@ function xprofile_screen_change_avatar() {
 	/**
 	 * Fires right before the loading of the XProfile change avatar screen template file.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	do_action( 'xprofile_screen_change_avatar' );
 
 	/**
 	 * Filters the template to load for the XProfile change avatar screen.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $template Path to the XProfile change avatar template to load.
 	 */

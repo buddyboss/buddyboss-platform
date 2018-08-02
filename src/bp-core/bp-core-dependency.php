@@ -15,20 +15,20 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 
 /**
  * Fire the 'bp_include' action, where plugins should include files.
  *
- * @since 1.2.5
+ * @since BuddyPress 1.2.5
  */
 function bp_include() {
 
 	/**
 	 * Fires inside the 'bp_include' function, where plugins should include files.
 	 *
-	 * @since 1.2.5
+	 * @since BuddyPress 1.2.5
 	 */
 	do_action( 'bp_include' );
 }
@@ -36,7 +36,7 @@ function bp_include() {
 /**
  * Fire the 'bp_late_include' action for loading conditional files.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_late_include() {
 
@@ -45,7 +45,7 @@ function bp_late_include() {
 	 *
 	 * Allow for conditional includes on certain pages.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	do_action( 'bp_late_include' );
 }
@@ -53,14 +53,14 @@ function bp_late_include() {
 /**
  * Fire the 'bp_setup_components' action, where plugins should initialize components.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_setup_components() {
 
 	/**
 	 * Fires inside the 'bp_setup_components' function, where plugins should initialize components.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	do_action( 'bp_setup_components' );
 }
@@ -68,14 +68,14 @@ function bp_setup_components() {
 /**
  * Fire the 'bp_setup_canonical_stack' action, where plugins should set up their canonical URL.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  */
 function bp_setup_canonical_stack() {
 
 	/**
 	 * Fires inside the 'bp_setup_canonical_stack' function, where plugins should set up their canonical URL.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 */
 	do_action( 'bp_setup_canonical_stack' );
 }
@@ -83,14 +83,14 @@ function bp_setup_canonical_stack() {
 /**
  * Fire the 'bp_register_taxonomies' action, where plugins should register taxonomies.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  */
 function bp_register_taxonomies() {
 
 	/**
 	 * Fires inside the 'bp_register_taxonomies' function, where plugins should register taxonomies.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 */
 	do_action( 'bp_register_taxonomies' );
 }
@@ -98,14 +98,14 @@ function bp_register_taxonomies() {
 /**
  * Fire the 'bp_register_post_types' action, where plugins should register post types.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  */
 function bp_register_post_types() {
 
 	/**
 	 * Fires inside the 'bp_register_post_types' function, where plugins should register post types.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 */
 	do_action( 'bp_register_post_types' );
 }
@@ -113,14 +113,14 @@ function bp_register_post_types() {
 /**
  * Fire the 'bp_setup_globals' action, where plugins should initialize global settings.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 function bp_setup_globals() {
 
 	/**
 	 * Fires inside the 'bp_setup_globals' function, where plugins should initialize global settings.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_setup_globals' );
 }
@@ -128,14 +128,14 @@ function bp_setup_globals() {
 /**
  * Fire the 'bp_setup_nav' action, where plugins should register their navigation items.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 function bp_setup_nav() {
 
 	/**
 	 * Fires inside the 'bp_setup_nav' function, where plugins should register their navigation items.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_setup_nav' );
 }
@@ -143,7 +143,7 @@ function bp_setup_nav() {
 /**
  * Fire the 'bp_setup_admin_bar' action, where plugins should add items to the WP admin bar.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_setup_admin_bar() {
 	if ( bp_use_wp_admin_bar() ) {
@@ -153,7 +153,7 @@ function bp_setup_admin_bar() {
 		 *
 		 * This hook will only fire if bp_use_wp_admin_bar() returns true.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 */
 		do_action( 'bp_setup_admin_bar', array() );
 	}
@@ -162,14 +162,14 @@ function bp_setup_admin_bar() {
 /**
  * Fire the 'bp_setup_title' action, where plugins should modify the page title.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_setup_title() {
 
 	/**
 	 * Fires inside the 'bp_setup_title' function, where plugins should modify the page title.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	do_action( 'bp_setup_title' );
 }
@@ -177,14 +177,14 @@ function bp_setup_title() {
 /**
  * Fire the 'bp_register_widgets' action, where plugins should register widgets.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 function bp_setup_widgets() {
 
 	/**
 	 * Fires inside the 'bp_register_widgets' function, where plugins should register widgets.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_register_widgets' );
 }
@@ -192,14 +192,14 @@ function bp_setup_widgets() {
 /**
  * Fire the 'bp_register_member_types' action, where plugins should register member types.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 function bp_register_member_types() {
 
 	/**
 	 * Fires inside bp_register_member_types(), so plugins can register member types.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 */
 	do_action( 'bp_register_member_types' );
 }
@@ -207,14 +207,14 @@ function bp_register_member_types() {
 /**
  * Fire the 'bp_setup_cache_groups' action, where cache groups are registered.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  */
 function bp_setup_cache_groups() {
 
 	/**
 	 * Fires inside the 'bp_setup_cache_groups' function, where cache groups are registered.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 */
 	do_action( 'bp_setup_cache_groups' );
 }
@@ -222,7 +222,7 @@ function bp_setup_cache_groups() {
 /**
  * Set up the currently logged-in user.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @link https://buddypress.trac.wordpress.org/ticket/6046
  * @link https://core.trac.wordpress.org/ticket/24169
@@ -232,7 +232,7 @@ function bp_setup_current_user() {
 	/**
 	 * Fires to set up the current user setup process.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	do_action( 'bp_setup_current_user' );
 }
@@ -240,14 +240,14 @@ function bp_setup_current_user() {
 /**
  * Fire the 'bp_init' action, BuddyPress's main initialization hook.
  *
- * @since 1.2.5
+ * @since BuddyPress 1.2.5
  */
 function bp_init() {
 
 	/**
 	 * Fires inside the 'bp_init' function, BuddyPress' main initialization hook.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_init' );
 }
@@ -255,14 +255,14 @@ function bp_init() {
 /**
  * Fire the 'bp_rest_api_init' action, where BuddyPress registers REST API endpoints.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  */
 function bp_rest_api_init() {
 
 	/**
 	 * Fires the 'bp_rest_api_init' function, where BuddyPress registers REST API endpoints.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 */
 	do_action( 'bp_rest_api_init' );
 }
@@ -271,7 +271,7 @@ function bp_rest_api_init() {
  * Fire the 'bp_customize_register' action when the Customizer has loaded,
  * allowing scripts and styles to be initialized.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  *
  * @param WP_Customize_Manager $customizer Customizer instance.
  */
@@ -280,7 +280,7 @@ function bp_customize_register( WP_Customize_Manager $customizer ) {
 	/**
 	 * Fires once the Customizer has loaded, allow scripts and styles to be initialized.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @param WP_Customize_Manager $customizer Customizer instance.
 	 */
@@ -292,14 +292,14 @@ function bp_customize_register( WP_Customize_Manager $customizer ) {
  *
  * Attached to 'plugins_loaded'.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 function bp_loaded() {
 
 	/**
 	 * Fires inside the 'bp_loaded' function, which fires after BP's core plugin files have been loaded.
 	 *
-	 * @since 1.2.5
+	 * @since BuddyPress 1.2.5
 	 */
 	do_action( 'bp_loaded' );
 }
@@ -309,14 +309,14 @@ function bp_loaded() {
  *
  * Attached to 'wp'.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_ready() {
 
 	/**
 	 * Fires inside the 'bp_ready' function, which runs after BP is set up and the page is about to render.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	do_action( 'bp_ready' );
 }
@@ -327,14 +327,14 @@ function bp_ready() {
  * Attach potential template actions, such as catching form requests or routing
  * custom URLs.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_actions() {
 
 	/**
 	 * Fires inside the 'bp_actions' function, which runs just before rendering.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	do_action( 'bp_actions' );
 }
@@ -345,7 +345,7 @@ function bp_actions() {
  * Runs just after 'bp_actions'. Use this hook to attach your template
  * loaders.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_screens() {
 
@@ -354,7 +354,7 @@ function bp_screens() {
 	 *
 	 * Runs just after 'bp_actions'. Use this hook to attach your template loaders.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	do_action( 'bp_screens' );
 }
@@ -364,7 +364,7 @@ function bp_screens() {
  *
  * Hooked to 'widgets_init'.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_widgets_init() {
 
@@ -373,7 +373,7 @@ function bp_widgets_init() {
 	 *
 	 * Hooked to 'widgets_init'.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	do_action( 'bp_widgets_init' );
 }
@@ -383,14 +383,14 @@ function bp_widgets_init() {
  *
  * Hooked to 'wp_head'.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_head() {
 
 	/**
 	 * Fires inside the 'bp_head' function, which runs on 'wp_head'.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	do_action( 'bp_head' );
 }
@@ -404,14 +404,14 @@ function bp_head() {
  * template. The main purpose of this hook in BuddyPress is to redirect users
  * who do not have the proper permission to access certain content.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_template_redirect() {
 
 	/**
 	 * Fires inside the 'bp_template_redirect' function.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	do_action( 'bp_template_redirect' );
 }
@@ -423,14 +423,14 @@ function bp_template_redirect() {
  *
  * The main action used registering theme packages.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  */
 function bp_register_theme_packages() {
 
 	/**
 	 * Fires inside the 'bp_register_theme_packages' function.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	do_action( 'bp_register_theme_packages' );
 }
@@ -438,14 +438,14 @@ function bp_register_theme_packages() {
 /**
  * Fire the 'bp_enqueue_scripts' action, where BP enqueues its CSS and JS.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_enqueue_scripts() {
 
 	/**
 	 * Fires inside the 'bp_enqueue_scripts' function, where BP enqueues its CSS and JS.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	do_action( 'bp_enqueue_scripts' );
 }
@@ -453,7 +453,7 @@ function bp_enqueue_scripts() {
 /**
  * Fires the 'bp_enqueue_embed_scripts' action in the <head> for BP oEmbeds.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  */
 function bp_enqueue_embed_scripts() {
 	if ( ! is_buddypress() ) {
@@ -463,7 +463,7 @@ function bp_enqueue_embed_scripts() {
 	/**
 	 * Enqueue CSS and JS files for BuddyPress embeds.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 */
 	do_action( 'bp_enqueue_embed_scripts' );
 }
@@ -471,14 +471,14 @@ function bp_enqueue_embed_scripts() {
 /**
  * Fire the 'bp_add_rewrite_tag' action, where BP adds its custom rewrite tags.
  *
- * @since 1.8.0
+ * @since BuddyPress 1.8.0
  */
 function bp_add_rewrite_tags() {
 
 	/**
 	 * Fires inside the 'bp_add_rewrite_tags' function, where BP adds its custom rewrite tags.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 */
 	do_action( 'bp_add_rewrite_tags' );
 }
@@ -486,14 +486,14 @@ function bp_add_rewrite_tags() {
 /**
  * Fire the 'bp_add_rewrite_rules' action, where BP adds its custom rewrite rules.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 function bp_add_rewrite_rules() {
 
 	/**
 	 * Fires inside the 'bp_add_rewrite_rules' function, where BP adds its custom rewrite rules.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 */
 	do_action( 'bp_add_rewrite_rules' );
 }
@@ -501,14 +501,14 @@ function bp_add_rewrite_rules() {
 /**
  * Fire the 'bp_add_permastructs' action, where BP adds its BP-specific permalink structure.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 function bp_add_permastructs() {
 
 	/**
 	 * Fires inside the 'bp_add_permastructs' function, where BP adds its BP-specific permalink structure.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 */
 	do_action( 'bp_add_permastructs' );
 }
@@ -519,14 +519,14 @@ function bp_add_permastructs() {
  * The main purpose of 'bp_setup_theme' is give themes a place to load their
  * BuddyPress-specific functionality.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_setup_theme() {
 
 	/**
 	 * Fires inside the 'bp_setup_theme' function.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	do_action( 'bp_setup_theme' );
 }
@@ -541,14 +541,14 @@ function bp_setup_theme() {
  * time for other themes to load their features, such as BuddyPress support,
  * before our theme compatibility layer kicks in.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_after_setup_theme() {
 
 	/**
 	 * Fires inside the 'bp_after_setup_theme' function.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	do_action( 'bp_after_setup_theme' );
 }
@@ -558,7 +558,7 @@ function bp_after_setup_theme() {
 /**
  * Fire the 'bp_request' filter, a piggy-back of WP's 'request'.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @see WP::parse_request() for a description of parameters.
  *
@@ -570,7 +570,7 @@ function bp_request( $query_vars = array() ) {
 	/**
 	 * Filters the query_vars for the current request.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param array $query_vars Array of query variables.
 	 */
@@ -580,7 +580,7 @@ function bp_request( $query_vars = array() ) {
 /**
  * Fire the 'bp_login_redirect' filter, a piggy-back of WP's 'login_redirect'.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param string $redirect_to     See 'login_redirect'.
  * @param string $redirect_to_raw See 'login_redirect'.
@@ -592,7 +592,7 @@ function bp_login_redirect( $redirect_to = '', $redirect_to_raw = '', $user = fa
 	/**
 	 * Filters the URL to redirect to after login.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string           $redirect_to     The redirect destination URL.
 	 * @param string           $redirect_to_raw The requested redirect destination URL passed as a parameter.
@@ -606,7 +606,7 @@ function bp_login_redirect( $redirect_to = '', $redirect_to_raw = '', $user = fa
  *
  * Hooked to 'template_include'.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param string $template See 'template_include'.
  * @return string Template file to use.
@@ -616,7 +616,7 @@ function bp_template_include( $template = '' ) {
 	/**
 	 * Filters the template to use with template_include.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string $template The path of the template to include.
 	 */
@@ -626,7 +626,7 @@ function bp_template_include( $template = '' ) {
 /**
  * Fire the 'bp_generate_rewrite_rules' action, where BP generates its rewrite rules.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param WP_Rewrite $wp_rewrite See 'generate_rewrite_rules'.
  */
@@ -635,7 +635,7 @@ function bp_generate_rewrite_rules( $wp_rewrite ) {
 	/**
 	 * Fires inside the 'bp_generate_rewrite_rules' function.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param WP_Rewrite $wp_rewrite WP_Rewrite object. Passed by reference.
 	 */
@@ -647,7 +647,7 @@ function bp_generate_rewrite_rules( $wp_rewrite ) {
  *
  * Filter the allowed themes list for BuddyPress-specific themes.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param array $themes The path of the template to include.
  * @return array
@@ -657,7 +657,7 @@ function bp_allowed_themes( $themes ) {
 	/**
 	 * Filters the allowed themes list for BuddyPress-specific themes.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $template The path of the template to include.
 	 */
@@ -669,7 +669,7 @@ function bp_allowed_themes( $themes ) {
 /**
  * The main action used for handling theme-side POST requests.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 function bp_post_request() {
 
@@ -692,7 +692,7 @@ function bp_post_request() {
 	 * This dynamic action is probably the one you want to use. It narrows down
 	 * the scope of the 'action' without needing to check it in your function.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 */
 	do_action( 'bp_post_request_' . $action );
 
@@ -701,7 +701,7 @@ function bp_post_request() {
 	 *
 	 * Use this static action if you don't mind checking the 'action' yourself.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @param string $action The action being run.
 	 */
@@ -711,7 +711,7 @@ function bp_post_request() {
 /**
  * The main action used for handling theme-side GET requests.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 function bp_get_request() {
 
@@ -734,7 +734,7 @@ function bp_get_request() {
 	 * This dynamic action is probably the one you want to use. It narrows down
 	 * the scope of the 'action' without needing to check it in your function.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 */
 	do_action( 'bp_get_request_' . $action );
 
@@ -743,7 +743,7 @@ function bp_get_request() {
 	 *
 	 * Use this static action if you don't mind checking the 'action' yourself.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @param string $action The action being run.
 	 */

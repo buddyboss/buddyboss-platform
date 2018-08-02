@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage XPRofileCaps
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Maps XProfile caps to built in WordPress caps.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param array  $caps    Capabilities for meta capability.
  * @param string $cap     Capability name.
@@ -61,7 +61,7 @@ function bp_xprofile_map_meta_caps( $caps, $cap, $user_id, $args ) {
 	/**
 	 * Filters the XProfile caps to built in WordPress caps.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param array  $caps    Capabilities for meta capability.
 	 * @param string $cap     Capability name.
@@ -75,7 +75,7 @@ add_filter( 'bp_map_meta_caps', 'bp_xprofile_map_meta_caps', 10, 4 );
 /**
  * Grant the 'bp_xprofile_change_field_visibility' cap to logged-out users.
  *
- * @since 2.7.1
+ * @since BuddyPress 2.7.1
  *
  * @param bool   $user_can
  * @param int    $user_id

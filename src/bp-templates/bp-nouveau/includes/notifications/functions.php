@@ -2,7 +2,7 @@
 /**
  * Notifications functions
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
 
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register Scripts for the Notifications component
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param  array  $scripts  The array of scripts to register
  * @return array  The same array with the specific notifications scripts.
@@ -35,7 +35,7 @@ function bp_nouveau_notifications_register_scripts( $scripts = array() ) {
 /**
  * Enqueue the notifications scripts
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_notifications_enqueue_scripts() {
 
@@ -50,7 +50,7 @@ function bp_nouveau_notifications_enqueue_scripts() {
  * Init Notifications filters and fire a hook to let
  * plugins/components register their filters.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_notifications_init_filters() {
 	if ( ! bp_is_user_notifications() ) {
@@ -62,7 +62,7 @@ function bp_nouveau_notifications_init_filters() {
 	/**
 	 * Hook here to register your custom notification filters
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	do_action( 'bp_nouveau_notifications_init_filters' );
 }
@@ -70,7 +70,7 @@ function bp_nouveau_notifications_init_filters() {
 /**
  * Register new filters for the notifications screens.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param  array  $args {
  *     Array of arguments.
@@ -105,7 +105,7 @@ function bp_nouveau_notifications_register_filter( $args = array() ) {
 /**
  * Get one or all notifications filters.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param  string $id  The notificication component action to get the filter of.
  *                     Leave empty to get all notifications filters.
@@ -130,7 +130,7 @@ function bp_nouveau_notifications_get_filters( $id = '' ) {
 /**
  * Sort Notifications according to their position arguments.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param  array  $filters The notifications filters to order.
  * @return array  The sorted filters.
@@ -168,7 +168,7 @@ function bp_nouveau_notifications_sort( $filters = array() ) {
 /**
  * Add a dashicon to Notifications action links
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param  string $link        The action link.
  * @param  string $bp_tooltip  The data-bp-attribute of the link.
@@ -198,7 +198,7 @@ function bp_nouveau_notifications_dashiconified_link( $link = '', $bp_tooltip = 
 /**
  * Edit the Mark Unread action link to include a dashicon
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $link Optional. The Mark Unread action link.
  *
@@ -215,7 +215,7 @@ function bp_nouveau_notifications_mark_unread_link( $link = '' ) {
 /**
  * Edit the Mark Read action link to include a dashicon
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $link Optional. The Mark Read action link.
  *
@@ -232,7 +232,7 @@ function bp_nouveau_notifications_mark_read_link( $link = '' ) {
 /**
  * Edit the Delete action link to include a dashicon
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $link Optional. The Delete action link.
  *

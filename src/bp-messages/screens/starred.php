@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage MessageScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Screen handler to display a user's "Starred" private messages page.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 function bp_messages_star_screen() {
 	add_action( 'bp_template_content', 'bp_messages_star_content' );
@@ -18,7 +18,7 @@ function bp_messages_star_screen() {
 	/**
 	 * Fires right before the loading of the "Starred" messages box.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 */
 	do_action( 'bp_messages_screen_star' );
 
@@ -28,7 +28,7 @@ function bp_messages_star_screen() {
 /**
  * Screen content callback to display a user's "Starred" messages page.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 function bp_messages_star_content() {
 	// Add our message thread filter.

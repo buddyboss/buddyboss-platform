@@ -7,14 +7,14 @@ use WP_CLI\CommandWithDBObject;
 /**
  * Base component class.
  *
- * @since 1.0
+ * @since BuddyPress 1.0
  */
 abstract class BuddypressCommand extends CommandWithDBObject {
 
 	/**
 	 * Get a random user id.
 	 *
-	 * @since 1.1
+	 * @since BuddyPress 1.1
 	 *
 	 * @return int
 	 */
@@ -26,7 +26,7 @@ abstract class BuddypressCommand extends CommandWithDBObject {
 	/**
 	 * Get a group ID from its identifier (ID or slug).
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param int|string $group_id Group ID or slug.
 	 * @return int|bool
@@ -52,7 +52,7 @@ abstract class BuddypressCommand extends CommandWithDBObject {
 	/**
 	 * Verify a user ID by the passed identifier.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param mixed $i User ID, email or login.
 	 * @return WP_User|false
@@ -76,7 +76,7 @@ abstract class BuddypressCommand extends CommandWithDBObject {
 	/**
 	 * Generate random text
 	 *
-	 * @since 1.1
+	 * @since BuddyPress 1.1
 	 */
 	protected function generate_random_text() {
 		return 'Here is some random text';
@@ -85,7 +85,7 @@ abstract class BuddypressCommand extends CommandWithDBObject {
 	/**
 	 * Get field ID.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param  int $field_id Field ID.
 	 * @return int
@@ -101,7 +101,7 @@ abstract class BuddypressCommand extends CommandWithDBObject {
 	/**
 	 * String Sanitization.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param  string $type String to sanitize.
 	 * @return string Sanitized string.

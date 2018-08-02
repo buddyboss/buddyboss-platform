@@ -16,7 +16,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @see bp-core-actions.php
  */
@@ -81,7 +81,7 @@ add_filter( 'posts_pre_query', 'bp_core_filter_wp_query', 10, 2 );
 /**
  * Prevent specific pages (eg 'Activate') from showing on page listings.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param array $pages List of excluded page IDs, as passed to the
  *                     'wp_list_pages_excludes' filter.
@@ -104,7 +104,7 @@ function bp_core_exclude_pages( $pages = array() ) {
 	/**
 	 * Filters specific pages that shouldn't show up on page listings.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param array $pages Array of pages to exclude.
 	 */
@@ -115,7 +115,7 @@ add_filter( 'wp_list_pages_excludes', 'bp_core_exclude_pages' );
 /**
  * Prevent specific pages (eg 'Activate') from showing in the Pages meta box of the Menu Administration screen.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param object|null $object The post type object used in the meta box.
  * @return object|null The $object, with a query argument to remove register and activate pages id.
@@ -158,7 +158,7 @@ add_filter( 'nav_menu_meta_box_object', 'bp_core_exclude_pages_from_nav_menu_adm
  * current BP component against the current page in the WP menu to see if we
  * should highlight the WP page.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param array   $retval CSS classes for the current menu page in the menu.
  * @param WP_Post $page   The page properties for the current menu item.
@@ -215,7 +215,7 @@ add_filter( 'page_css_class', 'bp_core_menu_highlight_parent_page', 10, 2 );
  * When {@link wp_nav_menu()} is used, this function helps to highlight the
  * current BP parent page during nav menu generation.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param array   $retval CSS classes for the current nav menu item in the menu.
  * @param WP_Post $item   The properties for the current nav menu item.
@@ -240,7 +240,7 @@ add_filter( 'nav_menu_css_class', 'bp_core_menu_highlight_nav_menu_item', 10, 2 
 /**
  * Filter the blog post comments array and insert BuddyPress URLs for users.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @param array $comments The array of comments supplied to the comments template.
  * @param int   $post_id  The post ID.
@@ -279,7 +279,7 @@ add_filter( 'comments_array', 'bp_core_filter_comments', 10, 2 );
 /**
  * When a user logs in, redirect him in a logical way.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  *       are redirected to on login.
  *
@@ -306,7 +306,7 @@ function bp_core_login_redirect( $redirect_to, $redirect_to_raw, $user ) {
 	 *
 	 * Allows plugins to have finer grained control of redirect upon login.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param bool    $value           Whether or not to redirect.
 	 * @param string  $redirect_to     Sanitized URL to be redirected to.
@@ -333,7 +333,7 @@ function bp_core_login_redirect( $redirect_to, $redirect_to_raw, $user ) {
 	/**
 	 * Filters the URL to redirect users to upon successful login.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @param string $value URL to redirect to.
 	 */
@@ -344,7 +344,7 @@ add_filter( 'bp_login_redirect', 'bp_core_login_redirect', 10, 3 );
 /**
  * Decode HTML entities for plain-text emails.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  *
  * @param string $retval    Current email content.
  * @param string $prop      Email property to check against.
@@ -379,7 +379,7 @@ add_filter( 'bp_email_get_property', 'bp_email_plaintext_entity_decode', 10, 3 )
  *
  * This filter will not fire when a user is registered by the site admin.
  *
- * @since 1.2.1
+ * @since BuddyPress 1.2.1
  *
  * @param string $welcome_email Complete email passed through WordPress.
  * @return string Filtered $welcome_email with the password replaced
@@ -415,7 +415,7 @@ add_filter( 'update_welcome_user_email', 'bp_core_filter_user_welcome_email' );
  *
  * This filter will not fire when a user is registered by the site admin.
  *
- * @since 1.2.1
+ * @since BuddyPress 1.2.1
  *
  * @param string $welcome_email Complete email passed through WordPress.
  * @param int    $blog_id       ID of the blog user is joining.
@@ -445,7 +445,7 @@ add_filter( 'update_welcome_email', 'bp_core_filter_blog_welcome_email', 10, 4 )
  * This function filter's WP's 'wpmu_signup_blog_notification', and replaces
  * WP's default welcome email with a BuddyPress-specific message.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @see wpmu_signup_blog_notification() for a description of parameters.
  *
@@ -479,7 +479,7 @@ add_filter( 'wpmu_signup_blog_notification', 'bp_core_activation_signup_blog_not
 /**
  * Notify new users of a successful registration (without blog).
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @see wpmu_signup_user_notification() for a full description of params.
  *
@@ -541,7 +541,7 @@ add_filter( 'wpmu_signup_user_notification', 'bp_core_activation_signup_user_not
 /**
  * Filter the page title for BuddyPress pages.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @see wp_title()
  * @global object $bp BuddyPress global settings.
@@ -596,7 +596,7 @@ function bp_modify_page_title( $title = '', $sep = '&raquo;', $seplocation = 'ri
 	/**
 	 * Filters the older 'wp_title' page title for BuddyPress pages.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param string $new_title   The BuddyPress page title.
 	 * @param string $title       The original WordPress page title.
@@ -613,7 +613,7 @@ add_filter( 'bp_modify_page_title', 'esc_html'                    );
 /**
  * Filter the document title for BuddyPress pages.
  *
- * @since 2.4.3
+ * @since BuddyPress 2.4.3
  *
  * @param array $title The WordPress document title parts.
  * @return array the unchanged title parts or the BuddyPress ones
@@ -649,7 +649,7 @@ function bp_modify_document_title_parts( $title = array() ) {
 	/**
 	 * Filters BuddyPress title parts that will be used into the document title.
 	 *
-	 * @since 2.4.3
+	 * @since BuddyPress 2.4.3
 	 *
 	 * @param array $bp_title The BuddyPress page title parts.
 	 * @param array $title    The original WordPress title parts.
@@ -661,7 +661,7 @@ add_filter( 'document_title_parts', 'bp_modify_document_title_parts', 20, 1 );
 /**
  * Add BuddyPress-specific items to the wp_nav_menu.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @param WP_Post $menu_item The menu item.
  * @return WP_Post The modified WP_Post object.
@@ -750,7 +750,7 @@ add_filter( 'wp_setup_nav_menu_item', 'bp_setup_nav_menu_item', 10, 1 );
 /**
  * Populate BuddyPress user nav items for the customizer.
  *
- * @since 2.3.3
+ * @since BuddyPress 2.3.3
  *
  * @param array   $items  The array of menu items.
  * @param string  $type   The requested type.
@@ -787,7 +787,7 @@ add_filter( 'customize_nav_menu_available_items', 'bp_customizer_nav_menus_get_i
 /**
  * Set BuddyPress item navs for the customizer.
  *
- * @since 2.3.3
+ * @since BuddyPress 2.3.3
  *
  * @param array $item_types An associative array structured for the customizer.
  * @return array $item_types An associative array structured for the customizer.
@@ -819,7 +819,7 @@ add_filter( 'customize_nav_menu_available_item_types', 'bp_customizer_nav_menus_
  * usable for BuddyPress, we use this just-in-time filter on 'query' to swap
  * 'meta_id' with 'id.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @access private Do not use.
  *
@@ -851,7 +851,7 @@ function bp_filter_metaid_column_name( $q ) {
 /**
  * Filter the edit post link to avoid its display in BuddyPress pages.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  *
  * @param string $edit_link The edit link.
  * @param int    $post_id   Post ID.
@@ -870,7 +870,7 @@ function bp_core_filter_edit_post_link( $edit_link = '', $post_id = 0 ) {
  * Should BuddyPress load the mentions scripts and related assets, including results to prime the
  * mentions suggestions?
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param bool $load_mentions    True to load mentions assets, false otherwise.
  * @param bool $mentions_enabled True if mentions are enabled.
@@ -896,7 +896,7 @@ add_filter( 'bp_activity_maybe_load_mentions_scripts', 'bp_maybe_load_mentions_s
  * does not use dynamic CSS classes in their widget sidebar's 'before_widget'
  * call.
  *
- * @since 2.4.0
+ * @since BuddyPress 2.4.0
  * @access private
  *
  * @global array $wp_registered_widgets Current registered widgets.
@@ -951,7 +951,7 @@ add_filter( 'dynamic_sidebar_params', '_bp_core_inject_bp_widget_css_class' );
  *
  * This is only used when the email content has been merged into the email template.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  *
  * @param string $value         Property value.
  * @param string $property_name Email template property name.
@@ -990,7 +990,7 @@ add_filter( 'bp_email_get_property', 'bp_email_add_link_color_to_template', 6, 3
 /**
  * Add custom headers to outgoing emails.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  *
  * @param array    $headers   Array of email headers.
  * @param string   $property  Name of property. Unused.
@@ -1025,7 +1025,7 @@ add_filter( 'bp_email_get_headers', 'bp_email_set_default_headers', 6, 4 );
 /**
  * Add default email tokens.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  *
  * @param array    $tokens        Email tokens.
  * @param string   $property_name Unused.
@@ -1098,7 +1098,7 @@ add_filter( 'bp_email_get_tokens', 'bp_email_set_default_tokens', 6, 4 );
  *
  * The function returns an empty string to prevent WordPress rendering another template.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  *
  * @param string $template Path to template (probably single.php).
  * @return string
@@ -1111,7 +1111,7 @@ function bp_core_render_email_template( $template ) {
 	/**
 	 * Filter template used to display Email posts.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @param string $template Path to current template (probably single.php).
 	 */

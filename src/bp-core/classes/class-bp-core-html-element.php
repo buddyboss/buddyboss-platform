@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  */
 
 /**
  * Generate markup for an HTML element.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  */
 class BP_Core_HTML_Element {
 	/**
@@ -18,7 +18,7 @@ class BP_Core_HTML_Element {
 	 *
 	 * This would include attributes if applicable. eg. '<a href="" class="">'
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @var string
 	 */
@@ -29,7 +29,7 @@ class BP_Core_HTML_Element {
 	 *
 	 * For example, this could be anchor text within an <a> element.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @var string
 	 */
@@ -40,7 +40,7 @@ class BP_Core_HTML_Element {
 	 *
 	 * For example, "</a>".
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @var string
 	 */
@@ -49,7 +49,7 @@ class BP_Core_HTML_Element {
 	/**
 	 * Constructor.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param array $r {
 	 *     An array of arguments.
@@ -101,7 +101,7 @@ class BP_Core_HTML_Element {
 	/**
 	 * Returns a property from this class.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param  string $prop Property name. Either 'open_tag', 'inner_html', 'close_tag'.
 	 * @return string
@@ -117,7 +117,7 @@ class BP_Core_HTML_Element {
 	/**
 	 * Returns full contents of HTML element.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @return string
 	 */

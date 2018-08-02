@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register (not enqueue) scripts that used to be used by BuddyPress.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  */
 function bp_core_register_deprecated_scripts() {
 	// Scripts undeprecated as of 2.5.0.
@@ -22,7 +22,7 @@ function bp_core_register_deprecated_scripts() {
 /**
  * Register (not enqueue) styles that used to be used by BuddyPress.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  */
 function bp_core_register_deprecated_styles() {
 	// Scripts undeprecated as of 2.5.0.
@@ -33,7 +33,7 @@ function bp_core_register_deprecated_styles() {
 /**
  * Add a Sites menu to the BuddyBar.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  * @deprecated 2.1.0
  *
  * @return false|null Returns false on failure. Otherwise echoes the menu item.
@@ -100,7 +100,7 @@ function bp_adminbar_blogs_menu() {
  * If user has upgraded to 1.6 and chose to retain their BuddyBar, offer then a switch to change over
  * to the WP Toolbar.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  * @deprecated 2.1.0
  */
 function bp_admin_setting_callback_force_buddybar() {
@@ -120,7 +120,7 @@ function bp_admin_setting_callback_force_buddybar() {
  * the WP Toolbar. The option we store is 1 if the BuddyBar is forced on, so we use this function
  * to flip the boolean before saving the intval.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  * @deprecated 2.1.0
  * @access Private
  */
@@ -344,7 +344,7 @@ add_action( 'bp_init', 'bp_core_load_buddybar_css' );
 /**
  * Add menu items to the BuddyBar.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @deprecated 2.1.0
  */
@@ -517,7 +517,7 @@ add_action( 'bp_adminbar_menus', 'bp_members_adminbar_admin_menu', 20 );
 /**
  * Create the Notifications menu for the BuddyBar.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  * @deprecated 2.1.0
  */
 function bp_notifications_buddybar_menu() {
@@ -564,7 +564,7 @@ add_action( 'bp_adminbar_menus', 'bp_adminbar_notifications_menu', 8 );
 /**
  * Output the base URL for subdomain installations of WordPress Multisite.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @deprecated 2.1.0
  */
@@ -576,7 +576,7 @@ function bp_blogs_subdomain_base() {
 /**
  * Return the base URL for subdomain installations of WordPress Multisite.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @return string The base URL - eg, 'example.com' for site_url() example.com or www.example.com.
  *
@@ -590,7 +590,7 @@ function bp_blogs_get_subdomain_base() {
 /**
  * Allegedly output an avatar upload form, but it hasn't done that since 2009.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  * @deprecated 2.1.0
  */
 function bp_avatar_upload_form() {

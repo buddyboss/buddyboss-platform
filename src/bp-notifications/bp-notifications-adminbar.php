@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss
  * @subpackage NotificationsToolbar
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Build the "Notifications" dropdown.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @return bool
  */

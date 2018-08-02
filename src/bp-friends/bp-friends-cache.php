@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss
  * @subpackage ConnectionsCaching
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Clear friends-related cache for members of a specific friendship.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $friendship_id ID of the friendship whose two members should
  *                           have their friends cache busted.
@@ -37,7 +37,7 @@ add_action( 'friends_friendship_deleted',  'friends_clear_friend_object_cache' )
 /**
  * Clear friendship caches on friendship changes.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @param int $friendship_id     ID of the friendship that has changed.
  * @param int $initiator_user_id ID of the first user.
@@ -65,7 +65,7 @@ add_action( 'friends_friendship_deleted',   'bp_friends_clear_bp_friends_friends
 /**
  * Clear friendship caches on friendship changes.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @param int                   $friendship_id The friendship ID.
  * @param BP_Friends_Friendship $friendship Friendship object.
@@ -87,7 +87,7 @@ add_action( 'friends_friendship_rejected',  'bp_friends_clear_bp_friends_friends
 /**
  * Clear the friend request cache for the user not initiating the friendship.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param int $friend_user_id The user ID not initiating the friendship.
  */
@@ -100,7 +100,7 @@ function bp_friends_clear_request_cache( $friend_user_id ) {
  *
  * A friendship is deemed saved when a friendship is requested or accepted.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param int $friendship_id     The friendship ID.
  * @param int $initiator_user_id The user ID initiating the friendship.
@@ -117,7 +117,7 @@ add_action( 'friends_friendship_accepted',  'bp_friends_clear_request_cache_on_s
  *
  * A friendship is deemed removed when a friendship is withdrawn or rejected.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param int                   $friendship_id The friendship ID.
  * @param BP_Friends_Friendship $friendship Friendship object.
@@ -131,7 +131,7 @@ add_action( 'friends_friendship_rejected',  'bp_friends_clear_request_cache_on_r
 /**
  * Delete individual friendships from the cache when they are changed.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param BP_Friends_Friendship $friendship Friendship object.
  */

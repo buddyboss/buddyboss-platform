@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage SettingsActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
@@ -18,7 +18,7 @@
  * Special considerations are made for super admins that are able to edit any
  * users accounts already, without knowing their existing password.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @global BuddyPress $bp
  */
@@ -241,7 +241,7 @@ function bp_settings_action_general() {
 	/**
 	 * Fires after the general settings have been saved, and before redirect.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	do_action( 'bp_core_general_settings_after_save' );
 
@@ -253,7 +253,7 @@ add_action( 'bp_actions', 'bp_settings_action_general' );
 /**
  * Process email change verification or cancel requests.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  */
 function bp_settings_verify_email_change() {
 	if ( ! bp_is_settings_component() ) {

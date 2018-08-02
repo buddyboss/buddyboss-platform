@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Tap tap tap... Is this thing on?
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 class BuddyPress {
 
@@ -80,7 +80,7 @@ class BuddyPress {
 	/**
 	 * Whether autoload is in use.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 * @var bool
 	 */
 	public $do_autoload = true;
@@ -104,7 +104,7 @@ class BuddyPress {
 	 * Insures that only one instance of BuddyPress exists in memory at any
 	 * one time. Also prevents needing to define globals all over the place.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @static object $instance
 	 * @see buddypress()
@@ -137,7 +137,7 @@ class BuddyPress {
 	/**
 	 * A dummy constructor to prevent BuddyPress from being loaded more than once.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 * @see BuddyPress::instance()
 	 * @see buddypress()
 	 */
@@ -146,21 +146,21 @@ class BuddyPress {
 	/**
 	 * A dummy magic method to prevent BuddyPress from being cloned.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function __clone() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddyboss' ), '1.7' ); }
 
 	/**
 	 * A dummy magic method to prevent BuddyPress from being unserialized.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function __wakeup() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddyboss' ), '1.7' ); }
 
 	/**
 	 * Magic method for checking the existence of a certain custom field.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $key Key to check the set status for.
 	 *
@@ -171,7 +171,7 @@ class BuddyPress {
 	/**
 	 * Magic method for getting BuddyPress variables.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $key Key to return the value for.
 	 *
@@ -182,7 +182,7 @@ class BuddyPress {
 	/**
 	 * Magic method for setting BuddyPress variables.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $key   Key to set a value for.
 	 * @param mixed  $value Value to set.
@@ -192,7 +192,7 @@ class BuddyPress {
 	/**
 	 * Magic method for unsetting BuddyPress variables.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $key Key to unset a value for.
 	 */
@@ -201,7 +201,7 @@ class BuddyPress {
 	/**
 	 * Magic method to prevent notices and errors from invalid method calls.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param string $name
 	 * @param array  $args
@@ -215,7 +215,7 @@ class BuddyPress {
 	/**
 	 * Bootstrap constants.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 */
 	private function constants() {
@@ -296,7 +296,7 @@ class BuddyPress {
 	/**
 	 * Component global variables.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 */
 	private function setup_globals() {
@@ -311,8 +311,8 @@ class BuddyPress {
 		/**
 		 * Should deprecated code be loaded?
 		 *
-		 * @since 2.0.0 Defaults to false always
-		 * @since 2.8.0 Defaults to true on upgrades, false for new installs.
+		 * @since BuddyPress 2.0.0 Defaults to false always
+		 * @since BuddyPress 2.8.0 Defaults to true on upgrades, false for new installs.
 		 */
 		$this->load_deprecated = false;
 
@@ -363,7 +363,7 @@ class BuddyPress {
 		/**
 		 * Filters the BuddyPress Root blog ID.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @const constant BP_ROOT_BLOG BuddyPress Root blog ID.
 		 */
@@ -408,7 +408,7 @@ class BuddyPress {
 		/**
 		 * Filters the taxonomy slug for the email type component.
 		 *
-		 * @since 2.5.0
+		 * @since BuddyPress 2.5.0
 		 *
 		 * @param string $value Email type taxonomy slug.
 		 */
@@ -421,7 +421,7 @@ class BuddyPress {
 	 * Try to avoid using these. Their values have been moved into variables
 	 * in the instance, and have matching functions to get/set their values.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	private function legacy_constants() {
 
@@ -444,7 +444,7 @@ class BuddyPress {
 	/**
 	 * Include required files.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 */
 	private function includes() {
@@ -512,7 +512,7 @@ class BuddyPress {
 	/**
 	 * Autoload classes.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @param string $class
 	 */
@@ -619,7 +619,7 @@ class BuddyPress {
 	/**
 	 * Set up the default hooks and actions.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 */
 	private function setup_actions() {
@@ -659,7 +659,7 @@ class BuddyPress {
 		 *
 		 * Includes bbp-core-hooks.php.
 		 *
-		 * @since 1.7.0
+		 * @since BuddyPress 1.7.0
 		 *
 		 * @param BuddyPress $this. Current BuddyPress instance. Passed by reference.
 		 */
@@ -669,7 +669,7 @@ class BuddyPress {
 	/**
 	 * Private method to align the active and database versions.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	private function versions() {
 
@@ -699,7 +699,7 @@ class BuddyPress {
 	/**
 	 * Register bundled theme packages.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function register_theme_packages() {
 
@@ -721,7 +721,7 @@ class BuddyPress {
 	/**
 	 * Set up the default BuddyPress theme compatibility location.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 */
 	public function setup_theme() {
 

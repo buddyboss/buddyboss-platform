@@ -4,14 +4,14 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handles the display of the profile edit page by loading the correct template file.
  * Also checks to make sure this can only be accessed for the logged in users profile.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  */
 function xprofile_screen_edit_profile() {
@@ -104,7 +104,7 @@ function xprofile_screen_edit_profile() {
 					/**
 					 * Fires on each iteration of an XProfile field being saved with no error.
 					 *
-					 * @since 1.1.0
+					 * @since BuddyPress 1.1.0
 					 *
 					 * @param int    $field_id ID of the field that was saved.
 					 * @param string $value    Value that was saved to the field.
@@ -116,7 +116,7 @@ function xprofile_screen_edit_profile() {
 			/**
 			 * Fires after all XProfile fields have been saved for the current profile.
 			 *
-			 * @since 1.0.0
+			 * @since BuddyPress 1.0.0
 			 *
 			 * @param int   $value            Displayed user ID.
 			 * @param array $posted_field_ids Array of field IDs that were edited.
@@ -141,14 +141,14 @@ function xprofile_screen_edit_profile() {
 	/**
 	 * Fires right before the loading of the XProfile edit screen template file.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	do_action( 'xprofile_screen_edit_profile' );
 
 	/**
 	 * Filters the template to load for the XProfile edit screen.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $template Path to the XProfile edit template to load.
 	 */

@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage CoreAdministration
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 
 // Exit if accessed directly.
@@ -31,7 +31,7 @@ function bp_core_admin_menu_init() {
  * @global array $_registered_pages
  * @global array $submenu
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_core_admin_backpat_menu() {
 	global $_parent_pages, $_registered_pages, $submenu;
@@ -71,7 +71,7 @@ add_action( bp_core_admin_hook(), 'bp_core_admin_backpat_menu', 999 );
  * @global string $plugin_page
  * @global array $submenu
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_core_modify_admin_menu_highlight() {
 	global $plugin_page, $submenu_file;
@@ -94,7 +94,7 @@ function bp_core_modify_admin_menu_highlight() {
  *
  * @see bp_core_admin_backpat_menu()
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @todo Add convenience links into the markup once new positions are finalised.
  */
@@ -120,7 +120,7 @@ function bp_core_admin_backpat_page() {
  * BuddyPress combines all its messages into a single notice, to avoid a preponderance of yellow
  * boxes.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  */
 function bp_core_print_admin_notices() {
@@ -163,7 +163,7 @@ add_action( 'network_admin_notices', 'bp_core_print_admin_notices' );
  * box. It is recommended that you hook this function to admin_init, so that your messages are
  * loaded in time.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param string $notice The notice you are adding to the queue.
  * @param string $type   The notice type; optional. Usually either "updated" or "error".
@@ -199,7 +199,7 @@ function bp_core_add_admin_notice( $notice = '', $type = 'updated' ) {
  * @global WPDB $wpdb WordPress DB object
  * @global WP_Rewrite $wp_rewrite
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 function bp_core_activation_notice() {
 	global $wp_rewrite, $wpdb;
@@ -337,7 +337,7 @@ function bp_core_activation_notice() {
 /**
  * Redirect user to BuddyPress's What's New page on activation.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @internal Used internally to redirect BuddyPress to the about page on activation.
  *
@@ -372,7 +372,7 @@ function bp_do_activation_redirect() {
 /**
  * Output the tabs in the admin area.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @param string $active_tab Name of the tab that is active. Optional.
  */
@@ -384,7 +384,7 @@ function bp_core_admin_tabs( $active_tab = '' ) {
 	/**
 	 * Filters the admin tabs to be displayed.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @param array $value Array of tabs to output to the admin area.
 	 */
@@ -402,7 +402,7 @@ function bp_core_admin_tabs( $active_tab = '' ) {
 	/**
 	 * Fires after the output of tabs for the admin area.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	do_action( 'bp_admin_tabs' );
 }
@@ -410,7 +410,7 @@ function bp_core_admin_tabs( $active_tab = '' ) {
 /**
  * Get the data for the tabs in the admin area.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param string $active_tab Name of the tab that is active. Optional.
  * @return string
@@ -438,7 +438,7 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 	/**
 	 * Filters the tab data used in our wp-admin screens.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @param array $tabs Tab data.
 	 */
@@ -450,7 +450,7 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 /**
  * Adds contextual help to BuddyPress admin pages.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  * @todo Make this part of the BP_Component class and split into each component.
  *
  * @param string $screen Current screen.
@@ -545,7 +545,7 @@ add_action( 'load-users_page_bp-profile-setup', 'bp_core_add_contextual_help' );
 /**
  * Renders contextual help content to contextual help tabs.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param string $tab Current help content tab.
  * @return string
@@ -587,7 +587,7 @@ function bp_core_add_contextual_help_content( $tab = '' ) {
 /**
  * Add a separator to the WordPress admin menus.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  */
 function bp_admin_separator() {
@@ -621,7 +621,7 @@ function bp_admin_separator() {
 /**
  * Tell WordPress we have a custom menu order.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param bool $menu_order Menu order.
  * @return bool Always true.
@@ -639,7 +639,7 @@ function bp_admin_custom_menu_order( $menu_order = false ) {
 /**
  * Move our custom separator above our custom post types.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param array $menu_order Menu Order.
  * @return array Modified menu order.
@@ -660,7 +660,7 @@ function bp_admin_menu_order( $menu_order = array() ) {
 	/**
 	 * Filters the custom admin menus.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param array $value Empty array.
 	 */
@@ -709,7 +709,7 @@ function bp_admin_menu_order( $menu_order = array() ) {
  * and the inputs have different keys in the $_REQUEST array. This function
  * reconciles the two values and returns a single action being performed.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @return string
  */
@@ -730,7 +730,7 @@ function bp_admin_list_table_current_bulk_action() {
 /**
  * Register meta box and associated JS for BuddyPress WP Nav Menu.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 function bp_admin_wp_nav_menu_meta_box() {
 	if ( ! bp_is_root_blog() ) {
@@ -745,7 +745,7 @@ function bp_admin_wp_nav_menu_meta_box() {
 /**
  * Build and populate the BuddyPress accordion on Appearance > Menus.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @global $nav_menu_selected_id
  */
@@ -825,7 +825,7 @@ function bp_admin_do_wp_nav_menu_meta_box() {
  * If BuddyPress installs before its translations are in place, tell people how to reinstall
  * the emails so they have their contents in their site's language.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  */
 function bp_admin_email_maybe_add_translation_notice() {
 	if ( get_current_screen()->post_type !== bp_get_email_post_type() || get_locale() === 'en_US' ) {
@@ -856,7 +856,7 @@ add_action( 'admin_head-edit.php', 'bp_admin_email_maybe_add_translation_notice'
 /**
  * In emails editor, add notice linking to token documentation on Codex.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  */
 function bp_admin_email_add_codex_notice() {
 	if ( get_current_screen()->post_type !== bp_get_email_post_type() ) {
@@ -878,7 +878,7 @@ add_action( 'admin_head-post.php', 'bp_admin_email_add_codex_notice' );
  *
  * Shows the term description in a list, rather than the term name itself.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  *
  * @param WP_Post $post Post object.
  * @param array   $box {
@@ -916,7 +916,7 @@ function bp_email_tax_type_metabox( $post, $box ) {
 /**
  * Custom metaboxes used by our 'bp-email' post type.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  */
 function bp_email_custom_metaboxes() {
 	// Remove default 'Excerpt' metabox and replace with our own.
@@ -930,7 +930,7 @@ add_action( 'add_meta_boxes_' . bp_get_email_post_type(), 'bp_email_custom_metab
  *
  * We are using the 'Excerpt' metabox as our plain-text email content editor.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  *
  * @param WP_Post $post
  */
@@ -961,7 +961,7 @@ function bp_email_plaintext_metabox( $post ) {
  *
  * Note: These restrictions are only enforced if JavaScript is enabled.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 function bp_admin_wp_nav_menu_restrict_items() {
 ?>
@@ -982,7 +982,7 @@ function bp_admin_wp_nav_menu_restrict_items() {
 /**
  * Add "Mark as Spam/Ham" button to user row actions.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param array  $actions     User row action links.
  * @param object $user_object Current user information.
@@ -1027,7 +1027,7 @@ function bp_core_admin_user_row_actions( $actions, $user_object ) {
 /**
  * Catch requests to mark individual users as spam/ham from users.php.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 function bp_core_admin_user_manage_spammers() {
 
@@ -1082,7 +1082,7 @@ function bp_core_admin_user_manage_spammers() {
 /**
  * Inline script that adds the 'site-spammed' class to spammed users.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  */
 function bp_core_admin_user_spammed_js() {
 	?>
@@ -1099,7 +1099,7 @@ function bp_core_admin_user_spammed_js() {
 /**
  * Catch and process an admin notice dismissal.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  */
 function bp_core_admin_notice_dismiss_callback() {
 	if ( ! current_user_can( 'install_plugins' ) ) {
@@ -1125,7 +1125,7 @@ add_action( 'wp_ajax_bp_dismiss_notice', 'bp_core_admin_notice_dismiss_callback'
 /**
  * Add a "buddypress" class to body element of wp-admin.
  *
- * @since 2.8.0
+ * @since BuddyPress 2.8.0
  *
  * @param string $classes CSS classes for the body tag in the admin, a comma separated string.
  *

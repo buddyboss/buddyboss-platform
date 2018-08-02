@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Handle the display of the Delete Group page.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 function groups_screen_group_admin_delete_group() {
 
@@ -32,7 +32,7 @@ function groups_screen_group_admin_delete_group() {
 		/**
 		 * Fires before the deletion of a group from the Delete Group page.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param int $id ID of the group being deleted.
 		 */
@@ -47,7 +47,7 @@ function groups_screen_group_admin_delete_group() {
 			/**
 			 * Fires after the deletion of a group from the Delete Group page.
 			 *
-			 * @since 1.0.0
+			 * @since BuddyPress 1.0.0
 			 *
 			 * @param int $id ID of the group being deleted.
 			 */
@@ -62,7 +62,7 @@ function groups_screen_group_admin_delete_group() {
 	/**
 	 * Fires before the loading of the Delete Group page template.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $id ID of the group that is being displayed.
 	 */
@@ -71,7 +71,7 @@ function groups_screen_group_admin_delete_group() {
 	/**
 	 * Filters the template to load for the Delete Group page.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $value Path to the Delete Group template.
 	 */

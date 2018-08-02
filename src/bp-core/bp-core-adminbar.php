@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Add the secondary BuddyPress area to the my-account menu.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @global WP_Admin_Bar $wp_admin_bar.
  */
@@ -46,7 +46,7 @@ add_action( 'admin_bar_menu', 'bp_admin_bar_my_account_root', 100 );
 /**
  * Handle the Toolbar/BuddyBar business.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  */
 function bp_core_load_admin_bar() {
 
@@ -88,7 +88,7 @@ add_action( 'init', 'bp_core_load_admin_bar', 9 );
  * previously unhooking this function can continue to do so. It's hooked to
  * the `bp_init` action in `bp-core-actions.php`.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_core_load_admin_bar_css() {
 	add_action( 'bp_enqueue_scripts',       'bp_core_enqueue_admin_bar_css', 1 );
@@ -98,7 +98,7 @@ function bp_core_load_admin_bar_css() {
 /**
  * Enqueue supplemental WordPress Toolbar styling.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  *
  * @see bp_core_register_common_styles()
  * @see bp_core_load_admin_bar_css()
@@ -119,7 +119,7 @@ function bp_core_enqueue_admin_bar_css() {
 /**
  * Replace admin bar "Howdy" text
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyPress BuddyBoss 1.0.0
  */
 function bp_core_replace_howdy( $wp_admin_bar ) {
 

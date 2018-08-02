@@ -2,7 +2,7 @@
 /**
  * Activity Ajax functions
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
 
@@ -87,7 +87,7 @@ add_action( 'admin_init', function() {
 /**
  * Mark an activity as a favourite via a POST request.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string JSON reply
  */
@@ -127,7 +127,7 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 /**
  * Un-favourite an activity via a POST request.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string JSON reply
  */
@@ -163,7 +163,7 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 /**
  * Clear mentions if the directory tab is clicked
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string JSON reply
  */
@@ -184,7 +184,7 @@ function bp_nouveau_ajax_clear_new_mentions() {
 /**
  * Deletes an Activity item/Activity comment item received via a POST request.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string JSON reply.
  */
@@ -256,7 +256,7 @@ function bp_nouveau_ajax_delete_activity() {
  * Fetches an activity's full, non-excerpted content via a POST request.
  * Used for the 'Read More' link on long activity items.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string JSON reply
  */
@@ -294,7 +294,7 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	/**
 	 * Fires before the return of an activity's full, non-excerpted content via a POST request.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param string $activity Activity content. Passed by reference.
 	 */
@@ -312,7 +312,7 @@ function bp_nouveau_ajax_get_single_activity_content() {
 /**
  * Posts new Activity comments received via a POST request.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @global BP_Activity_Template $activities_template
  *
@@ -416,7 +416,7 @@ function bp_nouveau_ajax_new_activity_comment() {
  *
  * This is used within the activity post form autocomplete field.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string JSON reply
  */
@@ -443,7 +443,7 @@ function bp_nouveau_ajax_get_activity_objects() {
 		/**
 		 * Filters the response for custom activity objects.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array $response Array of custom response objects to send to AJAX return.
 		 * @param array $value    Activity object type from $_POST global.
@@ -461,7 +461,7 @@ function bp_nouveau_ajax_get_activity_objects() {
 /**
  * Processes Activity updates received via a POST request.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string JSON reply
  */
@@ -557,7 +557,7 @@ function bp_nouveau_ajax_post_update() {
 		/**
 		 * Filters whether or not an AJAX post update is private.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string/bool $is_private Privacy status for the update.
 		 */
@@ -569,7 +569,7 @@ function bp_nouveau_ajax_post_update() {
 /**
  * AJAX spam an activity item or comment.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string JSON reply.
  */

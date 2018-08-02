@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Creates the Core component.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 class BP_Core extends BP_Component {
 
 	/**
 	 * Start the members component creation process.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 */
 	public function __construct() {
@@ -41,7 +41,7 @@ class BP_Core extends BP_Component {
 	 * This involves figuring out the currently required, activated, deactivated,
 	 * and optional components.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	private function bootstrap() {
 		$bp = buddypress();
@@ -51,7 +51,7 @@ class BP_Core extends BP_Component {
 		 *
 		 * Allows plugins to run code ahead of the other components.
 		 *
-		 * @since 1.2.0
+		 * @since BuddyPress 1.2.0
 		 */
 		do_action( 'bp_core_loaded' );
 
@@ -61,7 +61,7 @@ class BP_Core extends BP_Component {
 		/**
 		 * Filters the included and optional components.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param array $value Array of included and optional components.
 		 */
@@ -70,7 +70,7 @@ class BP_Core extends BP_Component {
 		/**
 		 * Filters the required components.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param array $value Array of required components.
 		 */
@@ -85,7 +85,7 @@ class BP_Core extends BP_Component {
 			/**
 			 * Filters the deactivated components.
 			 *
-			 * @since 1.0.0
+			 * @since BuddyPress 1.0.0
 			 *
 			 * @param array $value Array of deactivated components.
 			 */
@@ -141,7 +141,7 @@ class BP_Core extends BP_Component {
 		/**
 		 * Fires after the loading of individual components.
 		 *
-		 * @since 2.0.0
+		 * @since BuddyPress 2.0.0
 		 */
 		do_action( 'bp_core_components_included' );
 	}
@@ -149,7 +149,7 @@ class BP_Core extends BP_Component {
 	/**
 	 * Include bp-core files.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @see BP_Component::includes() for description of parameters.
 	 *
@@ -174,7 +174,7 @@ class BP_Core extends BP_Component {
 	 * Sets up a majority of the BuddyPress globals that require a minimal
 	 * amount of processing, meaning they cannot be set in the BuddyPress class.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @see BP_Component::setup_globals() for description of parameters.
 	 *
@@ -225,7 +225,7 @@ class BP_Core extends BP_Component {
 		/**
 		 * Filters the default user Gravatar.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $value Default user Gravatar.
 		 */
@@ -234,7 +234,7 @@ class BP_Core extends BP_Component {
 		/**
 		 * Filters the default group Gravatar.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $value Default group Gravatar.
 		 */
@@ -243,7 +243,7 @@ class BP_Core extends BP_Component {
 		/**
 		 * Filters the default blog Gravatar.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 *
 		 * @param string $value Default blog Gravatar.
 		 */
@@ -273,7 +273,7 @@ class BP_Core extends BP_Component {
 		/**
 		 * Fires at the end of the setup of bp-core globals setting.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 */
 		do_action( 'bp_core_setup_globals' );
 	}
@@ -281,7 +281,7 @@ class BP_Core extends BP_Component {
 	/**
 	 * Setup cache groups
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 */
 	public function setup_cache_groups() {
 
@@ -296,7 +296,7 @@ class BP_Core extends BP_Component {
 	/**
 	 * Set up post types.
 	 *
-	 * @since BuddyPress (2.4.0)
+	 * @since BuddyPress BuddyPress (2.4.0)
 	 */
 	public function register_post_types() {
 

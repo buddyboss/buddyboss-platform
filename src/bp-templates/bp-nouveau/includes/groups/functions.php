@@ -2,7 +2,7 @@
 /**
  * Groups functions
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
 
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string
  *
- * @since 3.0
+ * @since BuddyPress 3.0
  */
 function bp_nouveau_message_markup_wrapper( $message, $type ) {
 	if ( ! $message ) {
@@ -32,7 +32,7 @@ function bp_nouveau_message_markup_wrapper( $message, $type ) {
 /**
  * Register Scripts for the Groups component
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $scripts Optional. The array of scripts to register.
  *
@@ -55,7 +55,7 @@ function bp_nouveau_groups_register_scripts( $scripts = array() ) {
 /**
  * Enqueue the groups scripts
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_groups_enqueue_scripts() {
 	// Neutralize Ajax when using BuddyBoss Groups & member widgets on default front page
@@ -78,7 +78,7 @@ function bp_nouveau_groups_enqueue_scripts() {
 /**
  * Can all members be invited to join any group?
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param bool $default False to allow. True to disallow.
  *
@@ -88,7 +88,7 @@ function bp_nouveau_groups_disallow_all_members_invites( $default = false ) {
 	/**
 	 * Filter to remove the All members nav, returning true
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param bool $default True to disable the nav. False otherwise.
 	 */
@@ -98,7 +98,7 @@ function bp_nouveau_groups_disallow_all_members_invites( $default = false ) {
 /**
  * Localize the strings needed for the Group's Invite UI
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $params Associative array containing the JS Strings needed by scripts
  *
@@ -164,7 +164,7 @@ function bp_nouveau_groups_localize_scripts( $params = array() ) {
 }
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_groups_get_inviter_ids( $user_id, $group_id ) {
 	if ( empty( $user_id ) || empty( $group_id ) ) {
@@ -175,7 +175,7 @@ function bp_nouveau_groups_get_inviter_ids( $user_id, $group_id ) {
 }
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 	$bp = buddypress();
@@ -231,7 +231,7 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 	/**
 	 * Filters the response value for potential group invite data for use with javascript.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array   $response Array of invite data.
 	 * @param WP_User $user User object.
@@ -240,7 +240,7 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 }
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_get_group_potential_invites( $args = array() ) {
 	$r = bp_parse_args( $args, array(
@@ -293,7 +293,7 @@ function bp_nouveau_get_group_potential_invites( $args = array() ) {
 }
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_group_invites_create_steps( $steps = array() ) {
 	if ( bp_is_active( 'friends' ) && isset( $steps['group-invites'] ) ) {
@@ -312,7 +312,7 @@ function bp_nouveau_group_invites_create_steps( $steps = array() ) {
 }
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_group_setup_nav() {
 	if ( ! bp_is_group() || ! bp_groups_user_can_send_invites() ) {
@@ -349,7 +349,7 @@ function bp_nouveau_group_setup_nav() {
 }
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_groups_invites_custom_message( $message = '' ) {
 	if ( empty( $message ) ) {
@@ -374,7 +374,7 @@ function bp_nouveau_groups_invites_custom_message( $message = '' ) {
 /**
  * Format a Group for a json reply
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_prepare_group_for_js( $item ) {
 	if ( empty( $item->id ) ) {
@@ -400,7 +400,7 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 /**
  * Group invites restriction settings navigation.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_groups_invites_restriction_nav() {
 	$slug        = bp_get_settings_slug();
@@ -425,7 +425,7 @@ function bp_nouveau_groups_invites_restriction_nav() {
 /**
  * Group invites restriction settings Admin Bar navigation.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $wp_admin_nav The list of settings admin subnav items.
  *
@@ -449,7 +449,7 @@ function bp_nouveau_groups_invites_restriction_admin_nav( $wp_admin_nav ) {
 /**
  * Group invites restriction screen.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_groups_screen_invites_restriction() {
 	// Redirect if no invites restriction settings page is accessible.
@@ -480,7 +480,7 @@ function bp_nouveau_groups_screen_invites_restriction() {
 	/**
 	 * Filters the template to load for the Group Invites settings screen.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param string $template Path to the Group Invites settings screen template to load.
 	 */
@@ -488,7 +488,7 @@ function bp_nouveau_groups_screen_invites_restriction() {
 }
 
 /**
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_get_groups_directory_nav_items() {
 	$nav_items = array();
@@ -544,7 +544,7 @@ function bp_nouveau_get_groups_directory_nav_items() {
 	/**
 	 * Use this filter to introduce your custom nav items for the groups directory.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param  array $nav_items The list of the groups directory nav items.
 	 */
@@ -554,7 +554,7 @@ function bp_nouveau_get_groups_directory_nav_items() {
 /**
  * Get Dropdown filters for the groups component
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $context 'directory' or 'user'
  *
@@ -576,7 +576,7 @@ function bp_nouveau_get_groups_filters( $context = '' ) {
 	 * Recommended, filter here instead of adding an action to 'bp_member_group_order_options'
 	 * or 'bp_groups_directory_order_options'
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array  the members filters.
 	 * @param string the context.
@@ -598,7 +598,7 @@ function bp_nouveau_get_groups_filters( $context = '' ) {
 /**
  * Catch the arguments for buttons
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $button The arguments of the button that BuddyPress is about to create.
  *
@@ -618,7 +618,7 @@ function bp_nouveau_groups_catch_button_args( $button = array() ) {
 /**
  * Catch the content hooked to the 'bp_group_header_meta' action
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string|bool HTML Output if hooked. False otherwise.
  */
@@ -628,7 +628,7 @@ function bp_nouveau_get_hooked_group_meta() {
 	/**
 	 * Fires after inside the group header item meta section.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_group_header_meta' );
 
@@ -644,7 +644,7 @@ function bp_nouveau_get_hooked_group_meta() {
 /**
  * Display the Widgets of Group extensions into the default front page?
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return bool True to display. False otherwise.
  */
@@ -657,7 +657,7 @@ function bp_nouveau_groups_do_group_boxes() {
 /**
  * Display description of the Group into the default front page?
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return bool True to display. False otherwise.
  */
@@ -674,7 +674,7 @@ function bp_nouveau_groups_front_page_description() {
 /**
  * Add sections to the customizer for the groups component.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $sections the Customizer sections to add.
  *
@@ -700,7 +700,7 @@ function bp_nouveau_groups_customizer_sections( $sections = array() ) {
 /**
  * Add settings to the customizer for the groups component.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $settings Optional. The settings to add.
  *
@@ -784,7 +784,7 @@ function bp_nouveau_groups_customizer_settings( $settings = array() ) {
 /**
  * Add controls for the settings of the customizer for the groups component.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $controls Optional. The controls to add.
  *
@@ -873,7 +873,7 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 /**
  * Add the default group front template to the front template hierarchy.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array           $templates Optional. The list of templates for the front.php template part.
  * @param BP_Groups_Group $group Optional. The group object.
@@ -899,7 +899,7 @@ function bp_nouveau_group_reset_front_template( $templates = array(), $group = n
 	/**
 	 * Filters the BuddyPress Nouveau template hierarchy after resetting front template for groups.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $templates Array of templates.
 	 */
@@ -909,7 +909,7 @@ function bp_nouveau_group_reset_front_template( $templates = array(), $group = n
 /**
  * Locate a single group template into a specific hierarchy.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $template Optional. The template part to get (eg: activity, members...).
  *
@@ -959,7 +959,7 @@ function bp_nouveau_group_locate_template_part( $template = '' ) {
 	/**
 	 * Filters the found template parts for the group template part locating functionality.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $templates Array of found templates.
 	 */
@@ -969,7 +969,7 @@ function bp_nouveau_group_locate_template_part( $template = '' ) {
 /**
  * Load a single group template part
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $template Optional. The template part to get (eg: activity, members...).
  *
@@ -987,7 +987,7 @@ function bp_nouveau_group_get_template_part( $template = '' ) {
 		 *
 		 * This is a variable hook that is dependent on the template part slug.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param string $slug Template part slug requested.
 		 * @param string $name Template part name requested.
@@ -1003,7 +1003,7 @@ function bp_nouveau_group_get_template_part( $template = '' ) {
 /**
  * Are we inside the Current group's default front page sidebar?
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return bool True if in the group's home sidebar. False otherwise.
  */
@@ -1014,7 +1014,7 @@ function bp_nouveau_group_is_home_widgets() {
 /**
  * Filter the Latest activities Widget to only keep the one of the group displayed
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $args Optional. The Activities Template arguments.
  *
@@ -1030,7 +1030,7 @@ function bp_nouveau_group_activity_widget_overrides( $args = array() ) {
 /**
  * Filter the Groups widget to only keep the displayed group.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $args Optional. The Groups Template arguments.
  *
@@ -1045,7 +1045,7 @@ function bp_nouveau_group_groups_widget_overrides( $args = array() ) {
 /**
  * Filter the Members widgets to only keep members of the displayed group.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $args Optional. The Members Template arguments.
  *
@@ -1066,7 +1066,7 @@ function bp_nouveau_group_members_widget_overrides( $args = array() ) {
 /**
  * Init the Group's default front page filters as we're in the sidebar
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_groups_add_home_widget_filters() {
 	add_filter( 'bp_nouveau_activity_widget_query', 'bp_nouveau_group_activity_widget_overrides', 10, 1 );
@@ -1076,7 +1076,7 @@ function bp_nouveau_groups_add_home_widget_filters() {
 	/**
 	 * Fires after BuddyPress Nouveau groups have added their home widget filters.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	do_action( 'bp_nouveau_groups_add_home_widget_filters' );
 }
@@ -1084,7 +1084,7 @@ function bp_nouveau_groups_add_home_widget_filters() {
 /**
  * Remove the Group's default front page filters as we're no more in the sidebar
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_groups_remove_home_widget_filters() {
 	remove_filter( 'bp_nouveau_activity_widget_query', 'bp_nouveau_group_activity_widget_overrides', 10, 1 );
@@ -1094,7 +1094,7 @@ function bp_nouveau_groups_remove_home_widget_filters() {
 	/**
 	 * Fires after BuddyPress Nouveau groups have removed their home widget filters.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	do_action( 'bp_nouveau_groups_remove_home_widget_filters' );
 }
@@ -1102,7 +1102,7 @@ function bp_nouveau_groups_remove_home_widget_filters() {
 /**
  * Get the hook, nonce, and eventually a specific template for Core Group's create screens.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $id Optional. The screen id
  *
@@ -1146,7 +1146,7 @@ function bp_nouveau_group_get_core_create_screens( $id = '' ) {
 /**
  * Get the hook and nonce for Core Group's manage screens.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $id Optional. The screen id
  *
@@ -1175,7 +1175,7 @@ function bp_nouveau_group_get_core_manage_screens( $id = '' ) {
 /**
  * Register notifications filters for the groups component.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_groups_notification_filters() {
 	$notifications = array(

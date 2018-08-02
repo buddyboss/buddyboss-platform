@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage SettingsFunctions
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Update email notification settings for a specific user.
  *
- * @since 2.3.5
+ * @since BuddyPress 2.3.5
  *
  * @param int   $user_id  ID of the user whose settings are being updated.
  * @param array $settings Settings array.
@@ -30,7 +30,7 @@ function bp_settings_update_notification_settings( $user_id, $settings ) {
 /**
  * Sanitize email notification settings as submitted by a user.
  *
- * @since 2.3.5
+ * @since BuddyPress 2.3.5
  *
  * @param array $settings Array of settings.
  * @return array Sanitized settings.
@@ -83,7 +83,7 @@ function bp_settings_sanitize_notification_settings( $settings = array() ) {
 /**
  * Build a dynamic whitelist of notification keys, based on what's hooked to 'bp_notification_settings'.
  *
- * @since 2.3.5
+ * @since BuddyPress 2.3.5
  *
  * @return array
  */
@@ -93,7 +93,7 @@ function bp_settings_get_registered_notification_keys() {
 	/**
 	 * Fires at the start of the notification keys whitelisting.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	do_action( 'bp_notification_settings' );
 	$screen = ob_get_clean();

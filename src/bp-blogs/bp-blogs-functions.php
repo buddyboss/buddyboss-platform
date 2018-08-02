@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage BlogsFunctions
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Check whether the $bp global lists an activity directory page.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return bool True if set, false if empty.
  */
@@ -68,7 +68,7 @@ function bp_blogs_get_blogs( $args = '' ) {
 	/**
 	 * Filters a set of blogs.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param array $blogs Array of blog data.
 	 * @param array $r     Parsed query arguments.
@@ -82,8 +82,8 @@ function bp_blogs_get_blogs( $args = '' ) {
  * Warning: By default, this will remove all existing records from the BP
  * blogs and blogmeta tables before re-populating the tables.
  *
- * @since 1.0.0
- * @since 2.6.0 Accepts $args as a parameter.
+ * @since BuddyPress 1.0.0
+ * @since BuddyPress 2.6.0 Accepts $args as a parameter.
  *
  * @param array $args {
  *     Array of arguments.
@@ -231,7 +231,7 @@ function bp_blogs_record_existing_blogs( $args = array() ) {
 	/**
 	 * Fires after the BP blogs tables have been populated with existing blogs.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 */
 	do_action( 'bp_blogs_recorded_existing_blogs' );
 
@@ -245,7 +245,7 @@ function bp_blogs_record_existing_blogs( $args = array() ) {
  * If $user_id is provided, you can restrict site from being recordable
  * only to particular users.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param int $blog_id ID of the blog being checked.
  * @param int $user_id Optional. ID of the user for whom access is being checked.
@@ -256,7 +256,7 @@ function bp_blogs_is_blog_recordable( $blog_id, $user_id = 0 ) {
 	/**
 	 * Filters whether or not a blog is globally activity feed recordable.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param bool $value   Whether or not recordable. Default true.
 	 * @param int  $blog_id Current blog ID.
@@ -267,7 +267,7 @@ function bp_blogs_is_blog_recordable( $blog_id, $user_id = 0 ) {
 		/**
 		 * Filters whether or not a blog is globally activity feed recordable for user.
 		 *
-		 * @since 1.7.0
+		 * @since BuddyPress 1.7.0
 		 *
 		 * @param bool $recordable_globally Whether or not recordable.
 		 * @param int  $blog_id             Current blog ID.
@@ -291,7 +291,7 @@ function bp_blogs_is_blog_recordable( $blog_id, $user_id = 0 ) {
  * If $user_id is provided, the developer can restrict site from
  * being trackable only to particular users.
  *
- * @since 1.7.0
+ * @since BuddyPress 1.7.0
  *
  * @param int $blog_id ID of the blog being checked.
  * @param int $user_id Optional. ID of the user for whom access is being checked.
@@ -302,7 +302,7 @@ function bp_blogs_is_blog_trackable( $blog_id, $user_id = 0 ) {
 	/**
 	 * Filters whether or not a blog is globally trackable.
 	 *
-	 * @since 1.7.0
+	 * @since BuddyPress 1.7.0
 	 *
 	 * @param bool $value Whether or not trackable.
 	 * @param int  $blog_id Current blog ID.
@@ -314,7 +314,7 @@ function bp_blogs_is_blog_trackable( $blog_id, $user_id = 0 ) {
 		/**
 		 * Filters whether or not a blog is globally trackable for user.
 		 *
-		 * @since 1.7.0
+		 * @since BuddyPress 1.7.0
 		 *
 		 * @param bool $value   Whether or not trackable.
 		 * @param int  $blog_id Current blog ID.
@@ -335,7 +335,7 @@ function bp_blogs_is_blog_trackable( $blog_id, $user_id = 0 ) {
 /**
  * Make BuddyPress aware of a new site so that it can track its activity.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int  $blog_id     ID of the blog being recorded.
  * @param int  $user_id     ID of the user for whom the blog is being recorded.
@@ -392,7 +392,7 @@ function bp_blogs_record_blog( $blog_id, $user_id, $no_activity = false ) {
 	/**
 	 * Filters whether or not a new blog is public.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param bool $is_private Whether or not blog is public.
 	 */
@@ -401,8 +401,8 @@ function bp_blogs_record_blog( $blog_id, $user_id, $no_activity = false ) {
 	/**
 	 * Fires after BuddyPress has been made aware of a new site for activity tracking.
 	 *
-	 * @since 1.0.0
-	 * @since 2.6.0 Added $no_activity as a parameter.
+	 * @since BuddyPress 1.0.0
+	 * @since BuddyPress 2.6.0 Added $no_activity as a parameter.
 	 *
 	 * @param BP_Blogs_Blog $recorded_blog Current blog being recorded. Passed by reference.
 	 * @param bool          $is_private    Whether or not the current blog being recorded is private.
@@ -448,7 +448,7 @@ add_action( 'update_option_blogdescription', 'bp_blogs_update_option_blogdescrip
 /**
  * Update "Close comments for old posts" option in BuddyPress blogmeta table.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @global object $wpdb DB Layer.
  *
@@ -466,7 +466,7 @@ add_action( 'update_option_close_comments_for_old_posts', 'bp_blogs_update_optio
 /**
  * Update "Close comments after days old" option in BuddyPress blogmeta table.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @global object $wpdb DB Layer.
  *
@@ -484,7 +484,7 @@ add_action( 'update_option_close_comments_days_old', 'bp_blogs_update_option_clo
 /**
  * When toggling threaded comments, update thread depth in blogmeta table.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @global object $wpdb DB Layer.
  *
@@ -508,7 +508,7 @@ add_action( 'update_option_thread_comments', 'bp_blogs_update_option_thread_comm
 /**
  * When updating comment depth, update thread depth in blogmeta table.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @global object $wpdb DB Layer.
  *
@@ -530,7 +530,7 @@ add_action( 'update_option_thread_comments_depth', 'bp_blogs_update_option_threa
 /**
  * When updating comment moderation, mirror value in blogmeta table.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $oldvalue Value before save. Passed by do_action() but unused here.
  * @param string $newvalue Value to change meta to.
@@ -543,7 +543,7 @@ add_action( 'update_option_comment_moderation', 'bp_blogs_update_option_comment_
 /**
  * Syncs site icon URLs to blogmeta.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @param int|string $old_value Old value
  * @param int|string $new_value New value
@@ -567,7 +567,7 @@ add_action( 'update_option_site_icon', 'bp_blogs_update_option_site_icon', 10, 2
  * editing a site under "Network Admin > Sites". Prior to WP 4.9, the
  * correct hook was 'refresh_blog_details'; afterward, 'clean_site_cache'.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  *
  * @param int $site_id The site ID.
  */
@@ -584,7 +584,7 @@ if ( function_exists( 'wp_switch_roles_and_user' ) ) {
 /**
  * Record activity metadata about a published blog post.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param int     $activity_id ID of the activity item.
  * @param WP_Post $post        Post object.
@@ -611,7 +611,7 @@ function bp_blogs_publish_post_activity_meta( $activity_id, $post, $args ) {
 	/**
 	 * Fires after BuddyPress has recorded metadata about a published blog post.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int     $ID    ID of the blog post being recorded.
 	 * @param WP_Post $post  WP_Post object for the current blog post.
@@ -624,8 +624,8 @@ add_action( 'bp_activity_post_type_published', 'bp_blogs_publish_post_activity_m
 /**
  * Updates a blog post's activity meta entry during a post edit.
  *
- * @since 2.2.0
- * @since 2.5.0 Add the post type tracking args object parameter
+ * @since BuddyPress 2.2.0
+ * @since BuddyPress 2.5.0 Add the post type tracking args object parameter
  *
  * @param WP_Post              $post                 Post object.
  * @param BP_Activity_Activity $activity             Activity object.
@@ -709,7 +709,7 @@ add_action( 'bp_activity_post_type_updated', 'bp_blogs_update_post_activity_meta
 /**
  * Update Activity and blogs meta and eventually sync comment with activity comment
  *
- * @since  2.5.0
+ * @since BuddyPress  2.5.0
  *
  * @param  int|bool        $activity_id          ID of recorded activity, or false if sync is active.
  * @param  WP_Comment|null $comment              The comment object.
@@ -810,7 +810,7 @@ function bp_blogs_comment_sync_activity_comment( &$activity_id, $comment = null,
 			/**
 			 * Fires after an activity comment is added from a WP post comment.
 			 *
-			 * @since 2.6.0
+			 * @since BuddyPress 2.6.0
 			 *
 			 * @param int        $activity_id          The activity comment ID.
 			 * @param WP_Comment $post_type_comment    WP Comment object.
@@ -828,7 +828,7 @@ function bp_blogs_comment_sync_activity_comment( &$activity_id, $comment = null,
 		/**
 		 * Fires after BuddyPress has recorded metadata about a published blog post comment.
 		 *
-		 * @since 2.5.0
+		 * @since BuddyPress 2.5.0
 		 *
 		 * @param int     $value    Comment ID of the blog post comment being recorded.
 		 * @param WP_Post $post  WP_Comment object for the current blog post.
@@ -910,7 +910,7 @@ add_action( 'user_register',    'bp_blogs_add_user_to_blog'        );
  * This added and was made filterable in BuddyPress 2.1.0 to make it easier
  * to extend the functionality of the Blogs component.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  *
  * @return string
  */
@@ -919,7 +919,7 @@ function bp_blogs_get_allowed_roles() {
 	/**
 	 * Filters the allowed roles a member must have to be recorded into bp_user_blogs pointer table.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @param array $value Array of potential roles user needs.
 	 */
@@ -951,7 +951,7 @@ add_action( 'remove_user_from_blog', 'bp_blogs_remove_user_from_blog', 10, 2 );
  * core function, so that we can be sure that the Blogs component is loaded
  * first. See https://buddypress.trac.wordpress.org/ticket/3916.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 function bp_blogs_maybe_add_user_to_blog() {
 	if ( ! is_multisite() )
@@ -975,7 +975,7 @@ function bp_blogs_remove_blog( $blog_id ) {
 	 * Fires before a "blog created" item is removed from blogs
 	 * tracker and activity feed.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param int $blog_id ID of the blog having its item removed.
 	 */
@@ -987,7 +987,7 @@ function bp_blogs_remove_blog( $blog_id ) {
 	 * Fires after a "blog created" item has been removed from blogs
 	 * tracker and activity feed.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $blog_id ID of the blog who had its item removed.
 	 */
@@ -1009,7 +1009,7 @@ function bp_blogs_remove_blog_for_user( $user_id, $blog_id ) {
 	/**
 	 * Fires before a blog is removed from the tracker for a specific user.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param int $blog_id ID of the blog being removed.
 	 * @param int $user_id ID of the user having the blog removed for.
@@ -1021,7 +1021,7 @@ function bp_blogs_remove_blog_for_user( $user_id, $blog_id ) {
 	/**
 	 * Fires after a blog has been removed from the tracker for a specific user.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $blog_id ID of the blog that was removed.
 	 * @param int $user_id ID of the user having the blog removed for.
@@ -1033,7 +1033,7 @@ add_action( 'remove_user_from_blog', 'bp_blogs_remove_blog_for_user', 10, 2 );
 /**
  * Remove a synced activity comment from the activity feed.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  *
  * @param bool   $deleted              True when a comment post type activity was successfully removed.
  * @param int    $comment_id           ID of the comment to be removed.
@@ -1089,7 +1089,7 @@ function bp_blogs_post_type_remove_comment( $deleted, $comment_id, $activity_pos
 		/**
 		 * Fires after a blog comment activity item was removed from activity feed.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param int $value      ID for the blog associated with the removed comment.
 		 * @param int $comment_id ID of the comment being removed.
@@ -1105,7 +1105,7 @@ add_action( 'bp_activity_post_type_remove_comment', 'bp_blogs_post_type_remove_c
 /**
  * Removes blog comments that are associated with activity comments.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @see bp_blogs_remove_synced_comment()
  * @see bp_blogs_sync_delete_from_activity_comment()
@@ -1162,7 +1162,7 @@ function bp_blogs_total_blogs() {
 /**
  * Get the total number of blogs being tracked by BP for a specific user.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @param int $user_id ID of the user being queried. Default: on a user page,
  *                     the displayed user. Otherwise, the logged-in user.
@@ -1198,7 +1198,7 @@ function bp_blogs_remove_data_for_blog( $blog_id ) {
 	 * Fires before all data related to a given blog is removed from blogs tracker
 	 * and activity feed.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param int $blog_id ID of the blog whose data is being removed.
 	 */
@@ -1211,7 +1211,7 @@ function bp_blogs_remove_data_for_blog( $blog_id ) {
 	 * Fires after all data related to a given blog has been removed from blogs tracker
 	 * and activity feed.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $blog_id ID of the blog whose data is being removed.
 	 */
@@ -1323,7 +1323,7 @@ function bp_blogs_delete_blogmeta( $blog_id, $meta_key = false, $meta_value = fa
 /**
  * Get metadata for a given blog.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @global object $wpdb WordPress database access object.
  *
@@ -1370,7 +1370,7 @@ function bp_blogs_update_blogmeta( $blog_id, $meta_key, $meta_value, $prev_value
 /**
  * Add a piece of blog metadata.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param int    $blog_id    ID of the blog.
  * @param string $meta_key   Metadata key.
@@ -1400,7 +1400,7 @@ function bp_blogs_remove_data( $user_id ) {
 	/**
 	 * Fires before all blog associations are removed for a given user.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param int $user_id ID of the user whose blog associations are being removed.
 	 */
@@ -1412,7 +1412,7 @@ function bp_blogs_remove_data( $user_id ) {
 	/**
 	 * Fires after all blog associations are removed for a given user.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $user_id ID of the user whose blog associations were removed.
 	 */
@@ -1425,7 +1425,7 @@ add_action( 'bp_make_spam_user', 'bp_blogs_remove_data' );
 /**
  * Restore all blog associations for a given user.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @param int $user_id ID whose blog data should be restored.
  */

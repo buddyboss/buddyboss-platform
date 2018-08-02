@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss
  * @subpackage MembersFilters
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -29,7 +29,7 @@ add_filter( 'register_url', 'bp_get_signup_page' );
  * however, it is highly recommended that you leave these in place for the
  * safety of your network.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_members_signup_sanitization() {
 
@@ -64,7 +64,7 @@ add_action( 'bp_loaded', 'bp_members_signup_sanitization' );
  * is not reachable, instead the blog is displayed. This filter makes sure the signup username
  * is not the same than the blog slug for this particular config.
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  *
  * @param array $illegal_names Array of illiegal names.
  * @return array $illegal_names
@@ -97,7 +97,7 @@ add_filter( 'subdirectory_reserved_names', 'bp_members_signup_with_subdirectory_
 /**
  * Filter the user profile URL to point to BuddyPress profile edit.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param string $url     WP profile edit URL.
  * @param int    $user_id ID of the user.
@@ -118,7 +118,7 @@ function bp_members_edit_profile_url( $url, $user_id, $scheme = 'admin' ) {
 	/**
 	 * Filters the user profile URL to point to BuddyPress profile edit.
 	 *
-	 * @since 1.5.2
+	 * @since BuddyPress 1.5.2
 	 *
 	 * @param string $url WP profile edit URL.
 	 * @param int    $user_id ID of the user.

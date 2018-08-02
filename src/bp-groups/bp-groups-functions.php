@@ -9,7 +9,7 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsFunctions
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 
 // Exit if accessed directly.
@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Check whether there is a Groups directory page in the $bp global.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return bool True if set, False if empty.
  */
@@ -35,8 +35,8 @@ function bp_groups_has_directory() {
  * of instantiating BP_Groups_Group directly, so that you will inherit cache
  * support and pass through the groups_get_group filter.
  *
- * @since 1.2.0
- * @since 2.7.0 The function signature was changed to accept a group ID only,
+ * @since BuddyPress 1.2.0
+ * @since BuddyPress 2.7.0 The function signature was changed to accept a group ID only,
  *              instead of an array containing the group ID.
  *
  * @param int $group_id ID of the group.
@@ -62,7 +62,7 @@ function groups_get_group( $group_id ) {
 	/**
 	 * Filters a single group object.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param BP_Groups_Group $group Single group object.
 	 */
@@ -74,7 +74,7 @@ function groups_get_group( $group_id ) {
 /**
  * Create a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param array|string $args {
  *     An array of arguments.
@@ -184,7 +184,7 @@ function groups_create_group( $args = '' ) {
 		/**
 		 * Fires after the creation of a new group and a group creator needs to be made.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param int              $id     ID of the newly created group.
 		 * @param BP_Groups_Member $member Instance of the member who is assigned
@@ -198,7 +198,7 @@ function groups_create_group( $args = '' ) {
 		/**
 		 * Fires after the update of a group.
 		 *
-		 * @since 1.5.0
+		 * @since BuddyPress 1.5.0
 		 *
 		 * @param int             $id    ID of the updated group.
 		 * @param BP_Groups_Group $group Instance of the group being updated.
@@ -209,7 +209,7 @@ function groups_create_group( $args = '' ) {
 	/**
 	 * Fires after the creation or update of a group.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int             $id    ID of the newly created group.
 	 * @param BP_Groups_Group $group Instance of the group being updated.
@@ -225,7 +225,7 @@ function groups_create_group( $args = '' ) {
  * These are the settings that appear on the first page of the group's Admin
  * section (Name, Description, and "Notify members...").
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param array $args {
  *     An array of optional arguments.
@@ -303,7 +303,7 @@ function groups_edit_base_group_details( $args = array() ) {
 	/**
 	 * Fired after a group's details are updated.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @param int             $value          ID of the group.
 	 * @param BP_Groups_Group $old_group      Group object, before being modified.
@@ -320,7 +320,7 @@ function groups_edit_base_group_details( $args = array() ) {
  * These are the settings that appear on the Settings page of the group's Admin
  * section (privacy settings, "enable forum", invitation status).
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int         $group_id      ID of the group.
  * @param bool        $enable_forum  Whether to enable a forum for the group.
@@ -362,7 +362,7 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 	/**
 	 * Fires after the update of a groups settings.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $id ID of the group that was updated.
 	 */
@@ -374,7 +374,7 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 /**
  * Delete a group and all of its associated metadata.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $group_id ID of the group to delete.
  * @return bool True on success, false on failure.
@@ -384,7 +384,7 @@ function groups_delete_group( $group_id ) {
 	/**
 	 * Fires before the deletion of a group.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param int $group_id ID of the group to be deleted.
 	 */
@@ -404,7 +404,7 @@ function groups_delete_group( $group_id ) {
 	/**
 	 * Fires after the deletion of a group.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $group_id ID of the group that was deleted.
 	 */
@@ -416,7 +416,7 @@ function groups_delete_group( $group_id ) {
 /**
  * Check a group status (eg 'private') against the whitelist of registered statuses.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param string $status Status to check.
  * @return bool True if status is allowed, otherwise false.
@@ -430,7 +430,7 @@ function groups_is_valid_status( $status ) {
 /**
  * Provide a unique, sanitized version of a group slug.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param string $slug Group slug to check.
  * @return string $slug A unique and sanitized slug.
@@ -460,7 +460,7 @@ function groups_check_slug( $slug ) {
 /**
  * Get a group slug by its ID.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $group_id The numeric ID of the group.
  * @return string The group's slug.
@@ -473,7 +473,7 @@ function groups_get_slug( $group_id ) {
 /**
  * Get a group ID by its slug.
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  *
  * @param string $group_slug The group's slug.
  * @return int|null The group ID on success; null on failure.
@@ -485,7 +485,7 @@ function groups_get_id( $group_slug ) {
 /**
  * Get a group ID by checking against old (not currently active) slugs.
  *
- * @since 2.9.0
+ * @since BuddyPress 2.9.0
  *
  * @param string $group_slug The group's slug.
  * @return int|null The group ID on success; null on failure.
@@ -499,7 +499,7 @@ function groups_get_id_by_previous_slug( $group_slug ) {
 /**
  * Remove a user from a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $group_id ID of the group.
  * @param int $user_id  Optional. ID of the user. Defaults to the currently
@@ -528,7 +528,7 @@ function groups_leave_group( $group_id, $user_id = 0 ) {
 	/**
 	 * Fires after a user leaves a group.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $group_id ID of the group.
 	 * @param int $user_id  ID of the user leaving the group.
@@ -541,7 +541,7 @@ function groups_leave_group( $group_id, $user_id = 0 ) {
 /**
  * Add a user to a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $group_id ID of the group.
  * @param int $user_id  Optional. ID of the user. Defaults to the currently
@@ -596,7 +596,7 @@ function groups_join_group( $group_id, $user_id = 0 ) {
 	/**
 	 * Fires after a user joins a group.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $group_id ID of the group.
 	 * @param int $user_id  ID of the user joining the group.
@@ -609,7 +609,7 @@ function groups_join_group( $group_id, $user_id = 0 ) {
 /**
  * Update the last_activity meta value for a given group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $group_id Optional. The ID of the group whose last_activity is
  *                      being updated. Default: the current group's ID.
@@ -636,7 +636,7 @@ add_action( 'groups_created_group',        'groups_update_last_activity' );
 /**
  * Get a list of group administrators.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $group_id ID of the group.
  * @return array Info about group admins (user_id + date_modified).
@@ -648,7 +648,7 @@ function groups_get_group_admins( $group_id ) {
 /**
  * Get a list of group moderators.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $group_id ID of the group.
  * @return array Info about group admins (user_id + date_modified).
@@ -666,8 +666,8 @@ function groups_get_group_mods( $group_id ) {
  * To use the legacy query, filter 'bp_use_legacy_group_member_query',
  * returning true.
  *
- * @since 1.0.0
- * @since 3.0.0 $group_id now supports multiple values. Only works if legacy query is not
+ * @since BuddyPress 1.0.0
+ * @since BuddyPress 3.0.0 $group_id now supports multiple values. Only works if legacy query is not
  *              in use.
  *
  * @param array $args {
@@ -763,7 +763,7 @@ function groups_get_group_members( $args = array() ) {
 /**
  * Get the member count for a group.
  *
- * @since 1.2.3
+ * @since BuddyPress 1.2.3
  *
  * @param int $group_id Group ID.
  * @return int Count of confirmed members for the group.
@@ -777,9 +777,9 @@ function groups_get_total_member_count( $group_id ) {
 /**
  * Get a collection of groups, based on the parameters passed.
  *
- * @since 1.2.0
- * @since 2.6.0 Added `$group_type`, `$group_type__in`, and `$group_type__not_in` parameters.
- * @since 2.7.0 Added `$update_admin_cache` and `$parent_id` parameters.
+ * @since BuddyPress 1.2.0
+ * @since BuddyPress 2.6.0 Added `$group_type`, `$group_type__in`, and `$group_type__not_in` parameters.
+ * @since BuddyPress 2.7.0 Added `$update_admin_cache` and `$parent_id` parameters.
  *
  * @param array|string $args {
  *     Array of arguments. Supports all arguments of
@@ -845,7 +845,7 @@ function groups_get_groups( $args = '' ) {
 	/**
 	 * Filters the collection of groups based on parsed parameters.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param BP_Groups_Group $groups Object of found groups based on parameters.
 	 *                                Passed by reference.
@@ -858,7 +858,7 @@ function groups_get_groups( $args = '' ) {
 /**
  * Get the total group count for the site.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @return int
  */
@@ -876,7 +876,7 @@ function groups_get_total_group_count() {
 /**
  * Get the IDs of the groups of which a specified user is a member.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id  ID of the user.
  * @param int $pag_num  Optional. Max number of results to return.
@@ -915,7 +915,7 @@ function groups_get_user_groups( $user_id = 0, $pag_num = 0, $pag_page = 0 ) {
  *        'is_mod' => null,
  *    ) );
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param int $user_id ID of the user.
  * @param array $args {
@@ -1025,7 +1025,7 @@ function bp_get_user_groups( $user_id, $args = array() ) {
 /**
  * Get the count of groups of which the specified user is a member.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id Optional. Default: ID of the displayed user.
  * @return int Group count.
@@ -1048,7 +1048,7 @@ function groups_total_groups_for_user( $user_id = 0 ) {
 /**
  * Get the BP_Groups_Group object corresponding to the current group.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  *
  * @return BP_Groups_Group The current group object.
  */
@@ -1062,7 +1062,7 @@ function groups_get_current_group() {
 	/**
 	 * Filters the BP_Groups_Group object corresponding to the current group.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 *
 	 * @param BP_Groups_Group $current_group Current BP_Groups_Group object.
 	 */
@@ -1074,7 +1074,7 @@ function groups_get_current_group() {
 /**
  * Generate the avatar upload directory path for a given group.
  *
- * @since 1.1.0
+ * @since BuddyPress 1.1.0
  *
  * @param int $group_id Optional. ID of the group. Default: ID of the current group.
  * @return string
@@ -1095,7 +1095,7 @@ function groups_avatar_upload_dir( $group_id = 0 ) {
 	/**
 	 * Filters the avatar upload directory path for a given group.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param array $value Array of parts related to the groups avatar upload directory.
 	 */
@@ -1114,7 +1114,7 @@ function groups_avatar_upload_dir( $group_id = 0 ) {
 /**
  * Check whether a user is an admin of a given group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id ID of the user.
  * @param int $group_id ID of the group.
@@ -1137,7 +1137,7 @@ function groups_is_user_admin( $user_id, $group_id ) {
 /**
  * Check whether a user is a mod of a given group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id ID of the user.
  * @param int $group_id ID of the group.
@@ -1160,7 +1160,7 @@ function groups_is_user_mod( $user_id, $group_id ) {
 /**
  * Check whether a user is a member of a given group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id ID of the user.
  * @param int $group_id ID of the group.
@@ -1184,7 +1184,7 @@ function groups_is_user_member( $user_id, $group_id ) {
 /**
  * Check whether a user is banned from a given group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id  ID of the user.
  * @param int $group_id ID of the group.
@@ -1208,7 +1208,7 @@ function groups_is_user_banned( $user_id, $group_id ) {
 /**
  * Check whether a user has an outstanding invitation to a group.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param int $user_id ID of the user.
  * @param int $group_id ID of the group.
@@ -1232,7 +1232,7 @@ function groups_is_user_invited( $user_id, $group_id ) {
 /**
  * Check whether a user has a pending membership request for a group.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param int $user_id ID of the user.
  * @param int $group_id ID of the group.
@@ -1256,7 +1256,7 @@ function groups_is_user_pending( $user_id, $group_id ) {
 /**
  * Is the specified user the creator of the group?
  *
- * @since 1.2.6
+ * @since BuddyPress 1.2.6
  *
  * @param int $user_id ID of the user.
  * @param int $group_id ID of the group.
@@ -1271,8 +1271,8 @@ function groups_is_user_creator( $user_id, $group_id ) {
 /**
  * Post an Activity status update affiliated with a group.
  *
- * @since 1.2.0
- * @since 2.6.0 Added 'error_type' parameter to $args.
+ * @since BuddyPress 1.2.0
+ * @since BuddyPress 2.6.0 Added 'error_type' parameter to $args.
  *
  * @param array|string $args {
  *     Array of arguments.
@@ -1318,7 +1318,7 @@ function groups_post_update( $args = '' ) {
 	/**
 	 * Filters the action for the new group activity update.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param string $activity_action The new group activity update.
 	 */
@@ -1327,7 +1327,7 @@ function groups_post_update( $args = '' ) {
 	/**
 	 * Filters the content for the new group activity update.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param string $activity_content The content of the update.
 	 */
@@ -1347,7 +1347,7 @@ function groups_post_update( $args = '' ) {
 	/**
 	 * Fires after posting of an Activity status update affiliated with a group.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 *
 	 * @param string $content     The content of the update.
 	 * @param int    $user_id     ID of the user posting the update.
@@ -1364,7 +1364,7 @@ function groups_post_update( $args = '' ) {
 /**
  * Get IDs of users with outstanding invites to a given group from a specified user.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int               $user_id ID of the inviting user.
  * @param int|bool          $limit   Limit to restrict to.
@@ -1385,7 +1385,7 @@ function groups_get_invites_for_user( $user_id = 0, $limit = false, $page = fals
 /**
  * Get the total group invite count for a user.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param int $user_id The user ID.
  * @return int
@@ -1401,7 +1401,7 @@ function groups_get_invite_count_for_user( $user_id = 0 ) {
 /**
  * Invite a user to a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param array|string $args {
  *     Array of arguments.
@@ -1450,7 +1450,7 @@ function groups_invite_user( $args = '' ) {
 		/**
 		 * Fires after the creation of a new group invite.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param array $args Array of parsed arguments for the group invite.
 		 */
@@ -1465,7 +1465,7 @@ function groups_invite_user( $args = '' ) {
  *
  * Functionally, this is equivalent to removing a user from a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id  ID of the user.
  * @param int $group_id ID of the group.
@@ -1479,7 +1479,7 @@ function groups_uninvite_user( $user_id, $group_id ) {
 	/**
 	 * Fires after uninviting a user from a group.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $group_id ID of the group being uninvited from.
 	 * @param int $user_id  ID of the user being uninvited.
@@ -1494,7 +1494,7 @@ function groups_uninvite_user( $user_id, $group_id ) {
  *
  * Returns true if a user is already a member of the group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id  ID of the user.
  * @param int $group_id ID of the group.
@@ -1538,8 +1538,8 @@ function groups_accept_invite( $user_id, $group_id ) {
 	/**
 	 * Fires after a user has accepted a group invite.
 	 *
-	 * @since 1.0.0
-	 * @since 2.8.0 The $inviter_id arg was added.
+	 * @since BuddyPress 1.0.0
+	 * @since BuddyPress 2.8.0 The $inviter_id arg was added.
 	 *
 	 * @param int $user_id    ID of the user who accepted the group invite.
 	 * @param int $group_id   ID of the group being accepted to.
@@ -1553,7 +1553,7 @@ function groups_accept_invite( $user_id, $group_id ) {
 /**
  * Reject a group invitation.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id  ID of the user.
  * @param int $group_id ID of the group.
@@ -1566,7 +1566,7 @@ function groups_reject_invite( $user_id, $group_id ) {
 	/**
 	 * Fires after a user rejects a group invitation.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $user_id  ID of the user rejecting the invite.
 	 * @param int $group_id ID of the group being rejected.
@@ -1579,7 +1579,7 @@ function groups_reject_invite( $user_id, $group_id ) {
 /**
  * Delete a group invitation.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id  ID of the invited user.
  * @param int $group_id ID of the group.
@@ -1592,7 +1592,7 @@ function groups_delete_invite( $user_id, $group_id ) {
 	/**
 	 * Fires after the deletion of a group invitation.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @param int $user_id  ID of the user whose invitation is being deleted.
 	 * @param int $group_id ID of the group whose invitation is being deleted.
@@ -1605,7 +1605,7 @@ function groups_delete_invite( $user_id, $group_id ) {
 /**
  * Send all pending invites by a single user to a specific group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id  ID of the inviting user.
  * @param int $group_id ID of the group.
@@ -1637,8 +1637,8 @@ function groups_send_invites( $user_id, $group_id ) {
 	/**
 	 * Fires after the sending of invites for a group.
 	 *
-	 * @since 1.0.0
-	 * @since 2.5.0 Added $user_id to passed parameters.
+	 * @since BuddyPress 1.0.0
+	 * @since BuddyPress 2.5.0 Added $user_id to passed parameters.
 	 *
 	 * @param int   $group_id      ID of the group who's being invited to.
 	 * @param array $invited_users Array of users being invited to the group.
@@ -1650,8 +1650,8 @@ function groups_send_invites( $user_id, $group_id ) {
 /**
  * Get IDs of users with outstanding invites to a given group from a specified user.
  *
- * @since 1.0.0
- * @since 2.9.0 Added $sent as a parameter.
+ * @since BuddyPress 1.0.0
+ * @since BuddyPress 2.9.0 Added $sent as a parameter.
  *
  * @param  int      $user_id  ID of the inviting user.
  * @param  int      $group_id ID of the group.
@@ -1673,7 +1673,7 @@ function groups_get_invites_for_group( $user_id, $group_id, $sent = null ) {
  * Entering 'all' as the $type parameter will return unsent invitations as
  * well (useful to make sure AJAX requests are not duplicated).
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int    $user_id  ID of potential group member.
  * @param int    $group_id ID of potential group.
@@ -1707,7 +1707,7 @@ function groups_check_user_has_invite( $user_id, $group_id, $type = 'sent' ) {
 /**
  * Delete all invitations to a given group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $group_id ID of the group whose invitations are being deleted.
  * @return int|null Number of rows records deleted on success, null on failure.
@@ -1721,7 +1721,7 @@ function groups_delete_all_group_invites( $group_id ) {
 /**
  * Promote a member to a new status within a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int    $user_id  ID of the user.
  * @param int    $group_id ID of the group.
@@ -1741,7 +1741,7 @@ function groups_promote_member( $user_id, $group_id, $status ) {
 	/**
 	 * Fires before the promotion of a user to a new status.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int    $group_id ID of the group being promoted in.
 	 * @param int    $user_id  ID of the user being promoted.
@@ -1755,7 +1755,7 @@ function groups_promote_member( $user_id, $group_id, $status ) {
 /**
  * Demote a user to 'member' status within a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id  ID of the user.
  * @param int $group_id ID of the group.
@@ -1771,7 +1771,7 @@ function groups_demote_member( $user_id, $group_id ) {
 	/**
 	 * Fires before the demotion of a user to 'member'.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $group_id ID of the group being demoted in.
 	 * @param int $user_id  ID of the user being demoted.
@@ -1784,7 +1784,7 @@ function groups_demote_member( $user_id, $group_id ) {
 /**
  * Ban a member from a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id  ID of the user.
  * @param int $group_id ID of the group.
@@ -1800,7 +1800,7 @@ function groups_ban_member( $user_id, $group_id ) {
 	/**
 	 * Fires before the banning of a member from a group.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $group_id ID of the group being banned from.
 	 * @param int $user_id  ID of the user being banned.
@@ -1813,7 +1813,7 @@ function groups_ban_member( $user_id, $group_id ) {
 /**
  * Unban a member from a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id  ID of the user.
  * @param int $group_id ID of the group.
@@ -1829,7 +1829,7 @@ function groups_unban_member( $user_id, $group_id ) {
 	/**
 	 * Fires before the unbanning of a member from a group.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $group_id ID of the group being unbanned from.
 	 * @param int $user_id  ID of the user being unbanned.
@@ -1844,7 +1844,7 @@ function groups_unban_member( $user_id, $group_id ) {
 /**
  * Remove a member from a group.
  *
- * @since 1.2.6
+ * @since BuddyPress 1.2.6
  *
  * @param int $user_id  ID of the user.
  * @param int $group_id ID of the group.
@@ -1861,7 +1861,7 @@ function groups_remove_member( $user_id, $group_id ) {
 	/**
 	 * Fires before the removal of a member from a group.
 	 *
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 *
 	 * @param int $group_id ID of the group being removed from.
 	 * @param int $user_id  ID of the user being removed.
@@ -1876,7 +1876,7 @@ function groups_remove_member( $user_id, $group_id ) {
 /**
  * Create a group membership request.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $requesting_user_id ID of the user requesting membership.
  * @param int $group_id           ID of the group.
@@ -1918,7 +1918,7 @@ function groups_send_membership_request( $requesting_user_id, $group_id ) {
 		/**
 		 * Fires after the creation of a new membership request.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param int   $requesting_user_id  ID of the user requesting membership.
 		 * @param array $admins              Array of group admins.
@@ -1936,7 +1936,7 @@ function groups_send_membership_request( $requesting_user_id, $group_id ) {
 /**
  * Accept a pending group membership request.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $membership_id ID of the membership object.
  * @param int $user_id       Optional. ID of the user who requested membership.
@@ -1969,7 +1969,7 @@ function groups_accept_membership_request( $membership_id, $user_id = 0, $group_
 	/**
 	 * Fires after a group membership request has been accepted.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int  $user_id  ID of the user who accepted membership.
 	 * @param int  $group_id ID of the group that was accepted membership to.
@@ -1983,7 +1983,7 @@ function groups_accept_membership_request( $membership_id, $user_id = 0, $group_
 /**
  * Reject a pending group membership request.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $membership_id ID of the membership object.
  * @param int $user_id       Optional. ID of the user who requested membership.
@@ -2002,7 +2002,7 @@ function groups_reject_membership_request( $membership_id, $user_id = 0, $group_
 	/**
 	 * Fires after a group membership request has been rejected.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int  $user_id  ID of the user who rejected membership.
 	 * @param int  $group_id ID of the group that was rejected membership to.
@@ -2016,7 +2016,7 @@ function groups_reject_membership_request( $membership_id, $user_id = 0, $group_
 /**
  * Delete a pending group membership request.
  *
- * @since 1.2.0
+ * @since BuddyPress 1.2.0
  *
  * @param int $membership_id ID of the membership object.
  * @param int $user_id       Optional. ID of the user who requested membership.
@@ -2042,7 +2042,7 @@ function groups_delete_membership_request( $membership_id, $user_id = 0, $group_
 /**
  * Check whether a user has an outstanding membership request for a given group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id  ID of the user.
  * @param int $group_id ID of the group.
@@ -2068,7 +2068,7 @@ function groups_check_for_membership_request( $user_id, $group_id ) {
 /**
  * Accept all pending membership requests to a group.
  *
- * @since 1.0.2
+ * @since BuddyPress 1.0.2
  *
  * @param int $group_id ID of the group.
  * @return bool True on success, false on failure.
@@ -2085,7 +2085,7 @@ function groups_accept_all_pending_membership_requests( $group_id ) {
 	/**
 	 * Fires after the acceptance of all pending membership requests to a group.
 	 *
-	 * @since 1.0.2
+	 * @since BuddyPress 1.0.2
 	 *
 	 * @param int $group_id ID of the group whose pending memberships were accepted.
 	 */
@@ -2099,7 +2099,7 @@ function groups_accept_all_pending_membership_requests( $group_id ) {
 /**
  * Delete metadata for a group.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int         $group_id   ID of the group.
  * @param string|bool $meta_key   The key of the row to delete.
@@ -2139,7 +2139,7 @@ function groups_delete_groupmeta( $group_id, $meta_key = false, $meta_value = fa
 /**
  * Get a piece of group metadata.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int    $group_id ID of the group.
  * @param string $meta_key Metadata key.
@@ -2159,7 +2159,7 @@ function groups_get_groupmeta( $group_id, $meta_key = '', $single = true ) {
 /**
  * Update a piece of group metadata.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int    $group_id   ID of the group.
  * @param string $meta_key   Metadata key.
@@ -2182,7 +2182,7 @@ function groups_update_groupmeta( $group_id, $meta_key, $meta_value, $prev_value
 /**
  * Add a piece of group metadata.
  *
- * @since 2.0.0
+ * @since BuddyPress 2.0.0
  *
  * @param int    $group_id   ID of the group.
  * @param string $meta_key   Metadata key.
@@ -2206,7 +2206,7 @@ function groups_add_groupmeta( $group_id, $meta_key, $meta_value, $unique = fals
 /**
  * Delete all group membership information for the specified user.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  * @param int $user_id ID of the user.
  */
@@ -2216,7 +2216,7 @@ function groups_remove_data_for_user( $user_id ) {
 	/**
 	 * Fires after the deletion of all data for a user.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 *
 	 * @param int $user_id ID of the user whose data is being deleted.
 	 */
@@ -2229,7 +2229,7 @@ add_action( 'bp_make_spam_user', 'groups_remove_data_for_user' );
 /**
  * Update orphaned child groups when the parent is deleted.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @param BP_Groups_Group $group Instance of the group item being deleted.
  */
@@ -2257,13 +2257,13 @@ add_action( 'bp_groups_delete_group', 'bp_groups_update_orphaned_groups_on_group
 /**
  * Fire the 'bp_groups_register_group_types' action.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  */
 function bp_groups_register_group_types() {
 	/**
 	 * Fires when it's appropriate to register group types.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 */
 	do_action( 'bp_groups_register_group_types' );
 }
@@ -2272,8 +2272,8 @@ add_action( 'bp_register_taxonomies', 'bp_groups_register_group_types' );
 /**
  * Register a group type.
  *
- * @since 2.6.0
- * @since 2.7.0 Introduce $has_directory, $show_in_create_screen, $show_in_list, and
+ * @since BuddyPress 2.6.0
+ * @since BuddyPress 2.7.0 Introduce $has_directory, $show_in_create_screen, $show_in_list, and
  *              $description, $create_screen_checked as $args parameters.
  *
  * @param string $group_type Unique string identifier for the group type.
@@ -2327,7 +2327,7 @@ function bp_groups_register_group_type( $group_type, $args = array() ) {
 	 * - 'null' is a special pseudo-type, representing users without any type.
 	 * - '_none' is used internally to denote an item that should not apply to any group types.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param array $illegal_names Array of illegal names.
 	 */
@@ -2377,7 +2377,7 @@ function bp_groups_register_group_type( $group_type, $args = array() ) {
 	/**
 	 * Fires after a group type is registered.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param string $group_type Group type identifier.
 	 * @param object $type       Group type object.
@@ -2390,7 +2390,7 @@ function bp_groups_register_group_type( $group_type, $args = array() ) {
 /**
  * Get a list of all registered group type objects.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @see bp_groups_register_group_type() for accepted arguments.
  *
@@ -2414,7 +2414,7 @@ function bp_groups_get_group_types( $args = array(), $output = 'names', $operato
 	 * This filter is run before the $output filter has been applied, so that
 	 * filtering functions have access to the entire group type objects.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param array  $types     group type objects, keyed by name.
 	 * @param array  $args      Array of key=>value arguments for filtering.
@@ -2432,7 +2432,7 @@ function bp_groups_get_group_types( $args = array(), $output = 'names', $operato
 /**
  * Retrieve a group type object by name.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param string $group_type The name of the group type.
  * @return object A group type object.
@@ -2450,8 +2450,8 @@ function bp_groups_get_group_type_object( $group_type ) {
 /**
  * Set type for a group.
  *
- * @since 2.6.0
- * @since 2.7.0 $group_type parameter also accepts an array of group types now.
+ * @since BuddyPress 2.6.0
+ * @since BuddyPress 2.7.0 $group_type parameter also accepts an array of group types now.
  *
  * @param int          $group_id   ID of the group.
  * @param string|array $group_type Group type or array of group types to set.
@@ -2485,7 +2485,7 @@ function bp_groups_set_group_type( $group_id, $group_type, $append = false ) {
 		/**
 		 * Fires just after a group type has been changed.
 		 *
-		 * @since 2.6.0
+		 * @since BuddyPress 2.6.0
 		 *
 		 * @param int          $group_id   ID of the group whose group type has been updated.
 		 * @param string|array $group_type Group type or array of group types.
@@ -2500,7 +2500,7 @@ function bp_groups_set_group_type( $group_id, $group_type, $append = false ) {
 /**
  * Get type for a group.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param int  $group_id ID of the group.
  * @param bool $single   Optional. Whether to return a single type string. If multiple types are found
@@ -2540,7 +2540,7 @@ function bp_groups_get_group_type( $group_id, $single = true ) {
 	/**
 	 * Filters a groups's group type(s).
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param string|array $type     Group type.
 	 * @param int          $group_id ID of the group.
@@ -2552,7 +2552,7 @@ function bp_groups_get_group_type( $group_id, $single = true ) {
 /**
  * Remove type for a group.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param int            $group_id   ID of the user.
  * @param string         $group_type Group type.
@@ -2572,7 +2572,7 @@ function bp_groups_remove_group_type( $group_id, $group_type ) {
 		/**
 		 * Fires just after a group's group type has been removed.
 		 *
-		 * @since 2.6.0
+		 * @since BuddyPress 2.6.0
 		 *
 		 * @param int    $group      ID of the group whose group type has been removed.
 		 * @param string $group_type Group type.
@@ -2586,7 +2586,7 @@ function bp_groups_remove_group_type( $group_id, $group_type ) {
 /**
  * Check whether the given group has a certain group type.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param  int    $group_id   ID of the group.
  * @param  string $group_type Group type.
@@ -2610,7 +2610,7 @@ function bp_groups_has_group_type( $group_id, $group_type ) {
 /**
  * Get the "current" group type, if one is provided, in group directories.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @return string
  */
@@ -2619,7 +2619,7 @@ function bp_get_current_group_directory_type() {
 	/**
 	 * Filters the "current" group type, if one is provided, in group directories.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param string $value "Current" group type.
 	 */
@@ -2629,7 +2629,7 @@ function bp_get_current_group_directory_type() {
 /**
  * Delete a group's type when the group is deleted.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param  int   $group_id ID of the group.
  * @return array|null $value    See {@see bp_groups_set_group_type()}.

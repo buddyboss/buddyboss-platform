@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileActions
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
@@ -13,7 +13,7 @@
  *
  * The function will delete the active avatar for a user.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  *
  */
 function xprofile_action_delete_avatar() {

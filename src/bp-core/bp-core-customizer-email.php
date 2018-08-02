@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Initialize the Customizer for emails.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  *
  * @param WP_Customize_Manager $wp_customize The Customizer object.
  */
@@ -40,7 +40,7 @@ function bp_email_init_customizer( WP_Customize_Manager $wp_customize ) {
 	/**
 	 * Fires to let plugins register extra Customizer controls for emails.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @param WP_Customize_Manager $wp_customize The Customizer object.
 	 */
@@ -84,7 +84,7 @@ add_action( 'bp_customize_register', 'bp_email_init_customizer' );
 /**
  * Are we looking at the email customizer?
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  *
  * @return bool
  */
@@ -95,7 +95,7 @@ function bp_is_email_customizer() {
 /**
  * Only show email sections in the Customizer.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  *
  * @param bool                 $active  Whether the Customizer section is active.
  * @param WP_Customize_Section $section {@see WP_Customize_Section} instance.
@@ -112,7 +112,7 @@ function bp_email_customizer_hide_sections( $active, $section ) {
 /**
  * Get Customizer sections for emails.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  *
  * @return array
  */
@@ -121,7 +121,7 @@ function bp_email_get_customizer_sections() {
 	/**
 	 * Filter Customizer sections for emails.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @param array $sections Email Customizer sections to add.
 	 */
@@ -147,7 +147,7 @@ function bp_email_get_customizer_sections() {
 /**
  * Get Customizer settings for emails.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  *
  * @return array
  */
@@ -157,7 +157,7 @@ function bp_email_get_customizer_settings() {
 	/**
 	 * Filter Customizer settings for emails.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @param array $settings Email Customizer settings to add.
 	 */
@@ -252,7 +252,7 @@ function bp_email_get_customizer_settings() {
 /**
  * Get Customizer controls for emails.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  *
  * @return array
  */
@@ -261,7 +261,7 @@ function bp_email_get_customizer_controls() {
 	/**
 	 * Filter Customizer controls for emails.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @param array $controls Email Customizer controls to add.
 	 */
@@ -379,7 +379,7 @@ function bp_email_get_customizer_controls() {
 /**
  * Implements a JS redirect to the Customizer, previewing a randomly selected email.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  */
 function bp_email_redirect_to_customizer() {
 	$switched = false;

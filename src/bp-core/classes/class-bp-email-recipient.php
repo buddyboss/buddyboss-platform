@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Represents a recipient that an email will be sent to.
  *
- * @since 2.5.0
+ * @since BuddyPress 2.5.0
  */
 class BP_Email_Recipient {
 
 	/**
 	 * Recipient's email address.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @var string
 	 */
@@ -28,7 +28,7 @@ class BP_Email_Recipient {
 	/**
 	 * Recipient's name.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @var string
 	 */
@@ -37,7 +37,7 @@ class BP_Email_Recipient {
 	/**
 	 * Optional. A `WP_User` object relating to this recipient.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @var WP_User
 	 */
@@ -46,7 +46,7 @@ class BP_Email_Recipient {
 	/**
 	 * Constructor.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @param string|array|int|WP_User $email_or_user Either a email address, user ID, WP_User object,
 	 *                                                or an array containing any combination of the above.
@@ -114,7 +114,7 @@ class BP_Email_Recipient {
 		/**
 		 * Fires inside __construct() method for BP_Email_Recipient class.
 		 *
-		 * @since 2.5.0
+		 * @since BuddyPress 2.5.0
 		 *
 		 * @param string|array|int|WP_User $email_or_user Either a email address, user ID, WP_User object,
 		 *                                                or an array containing any combination of the above.
@@ -127,7 +127,7 @@ class BP_Email_Recipient {
 	/**
 	 * Get recipient's address.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @return string
 	 */
@@ -136,7 +136,7 @@ class BP_Email_Recipient {
 		/**
 		 * Filters the recipient's address before it's returned.
 		 *
-		 * @since 2.5.0
+		 * @since BuddyPress 2.5.0
 		 *
 		 * @param string $address Recipient's address.
 		 * @param BP_Email $recipient $this Current instance of the email recipient class.
@@ -147,7 +147,7 @@ class BP_Email_Recipient {
 	/**
 	 * Get recipient's name.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @return string
 	 */
@@ -156,7 +156,7 @@ class BP_Email_Recipient {
 		/**
 		 * Filters the recipient's name before it's returned.
 		 *
-		 * @since 2.5.0
+		 * @since BuddyPress 2.5.0
 		 *
 		 * @param string $name Recipient's name.
 		 * @param BP_Email $recipient $this Current instance of the email recipient class.
@@ -167,7 +167,7 @@ class BP_Email_Recipient {
 	/**
 	 * Get WP_User object for this recipient.
 	 *
-	 * @since 2.5.0
+	 * @since BuddyPress 2.5.0
 	 *
 	 * @param string $transform Optional. How to transform the return value.
 	 *                          Accepts 'raw' (default) or 'search-email'.
@@ -183,7 +183,7 @@ class BP_Email_Recipient {
 		/**
 		 * Filters the WP_User object for this recipient before it's returned.
 		 *
-		 * @since 2.5.0
+		 * @since BuddyPress 2.5.0
 		 *
 		 * @param WP_User $name WP_User object for this recipient, or null if not set.
 		 * @param string $transform Optional. How the return value was transformed.

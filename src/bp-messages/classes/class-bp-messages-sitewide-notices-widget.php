@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Messages
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * A widget that displays sitewide notices.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 
@@ -59,8 +59,8 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 		/**
 		 * Filters the title of the Messages widget.
 		 *
-		 * @since 1.9.0
-		 * @since 2.3.0 Added 'instance' and 'id_base' to arguments passed to filter.
+		 * @since BuddyPress 1.9.0
+		 * @since BuddyPress 2.3.0 Added 'instance' and 'id_base' to arguments passed to filter.
 		 *
 		 * @param string $title    The widget title.
 		 * @param array  $instance The settings for the particular instance of the widget.

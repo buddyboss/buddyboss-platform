@@ -3,7 +3,7 @@
  * BuddyPress XProfile Template Loop Class.
  *
  * @package BuddyBoss
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -14,14 +14,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * This is responsible for loading profile field, group, and data and displaying it.
  *
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 class BP_XProfile_Data_Template {
 
 	/**
 	 * The loop iterator.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var int
 	 */
 	public $current_group = -1;
@@ -29,7 +29,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * The number of groups returned by the paged query.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var int
 	 */
 	public $group_count;
@@ -37,7 +37,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * Array of groups located by the query.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var array
 	 */
 	public $groups;
@@ -45,7 +45,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * The group object currently being iterated on.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var object
 	 */
 	public $group;
@@ -53,7 +53,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * The current field.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var int
 	 */
 	public $current_field = -1;
@@ -61,7 +61,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * The field count.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var int
 	 */
 	public $field_count;
@@ -69,7 +69,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * Field has data.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var bool
 	 */
 	public $field_has_data;
@@ -77,7 +77,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * The field.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var int
 	 */
 	public $field;
@@ -85,7 +85,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * A flag for whether the loop is currently being iterated.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var bool
 	 */
 	public $in_the_loop;
@@ -93,7 +93,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * The user ID.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 * @var int
 	 */
 	public $user_id;
@@ -103,8 +103,8 @@ class BP_XProfile_Data_Template {
 	 *
 	 * @see BP_XProfile_Group::get() for more details about parameters.
 	 *
-	 * @since 1.5.0
-	 * @since 2.4.0 Introduced `$member_type` argument.
+	 * @since BuddyPress 1.5.0
+	 * @since BuddyPress 2.4.0 Introduced `$member_type` argument.
 	 *
 	 * @param array|string $args {
 	 *     An array of arguments. All items are optional.
@@ -166,7 +166,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * Whether or not the loop has field groups.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return bool
 	 */
@@ -181,7 +181,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * Increments to the next group of fields.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return object
 	 */
@@ -196,7 +196,7 @@ class BP_XProfile_Data_Template {
 			/**
 			 * Filters the group fields for the next_group method.
 			 *
-			 * @since 1.1.0
+			 * @since BuddyPress 1.1.0
 			 *
 			 * @param array $fields Array of fields for the group.
 			 * @param int   $id     ID of the field group.
@@ -211,7 +211,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * Rewinds to the start of the groups list.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	public function rewind_groups() {
 		$this->current_group = -1;
@@ -223,7 +223,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * Kicks off the profile groups.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return bool
 	 */
@@ -235,7 +235,7 @@ class BP_XProfile_Data_Template {
 			/**
 			 * Fires right before the rewinding of profile groups.
 			 *
-			 * @since 1.1.0
+			 * @since BuddyPress 1.1.0
 			 */
 			do_action( 'xprofile_template_loop_end' );
 
@@ -250,7 +250,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * Sets up the profile group.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	public function the_profile_group() {
 		global $group;
@@ -264,7 +264,7 @@ class BP_XProfile_Data_Template {
 			/**
 			 * Fires if the current group is the first in the loop.
 			 *
-			 * @since 1.1.0
+			 * @since BuddyPress 1.1.0
 			 */
 			do_action( 'xprofile_template_loop_start' );
 		}
@@ -275,7 +275,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * Increments to the next field.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return int
 	 */
@@ -290,7 +290,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * Rewinds to the start of the fields.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	public function rewind_fields() {
 		$this->current_field = -1;
@@ -302,7 +302,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * Whether or not the loop has fields.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return bool
 	 */
@@ -323,7 +323,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * Kick off the profile fields.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @return bool
 	 */
@@ -341,7 +341,7 @@ class BP_XProfile_Data_Template {
 	/**
 	 * Set up the profile fields.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	public function the_profile_field() {
 		global $field;

@@ -2,7 +2,7 @@
 /**
  * BP Nouveau Groups
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.0.0
  */
 
@@ -12,13 +12,13 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Groups Loader class
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 class BP_Nouveau_Groups {
 	/**
 	 * Constructor
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public function __construct() {
 		$this->setup_globals();
@@ -30,7 +30,7 @@ class BP_Nouveau_Groups {
 	/**
 	 * Globals
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_globals() {
 		$this->dir                   = trailingslashit( dirname( __FILE__ ) );
@@ -40,7 +40,7 @@ class BP_Nouveau_Groups {
 	/**
 	 * Include needed files
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	protected function includes() {
 		require $this->dir . 'functions.php';
@@ -64,7 +64,7 @@ class BP_Nouveau_Groups {
 	/**
 	 * Register do_action() hooks
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_actions() {
 		if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
@@ -92,7 +92,7 @@ class BP_Nouveau_Groups {
 	/**
 	 * Register add_filter() hooks
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_filters() {
 		add_filter( 'bp_nouveau_register_scripts', 'bp_nouveau_groups_register_scripts', 10, 1 );
@@ -135,7 +135,7 @@ class BP_Nouveau_Groups {
 	 * Add filters to be sure the (BuddyBoss) widgets display will be consistent
 	 * with the current group's default front page.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param string $sidebar_index The Sidebar identifier.
 	 */
@@ -154,7 +154,7 @@ class BP_Nouveau_Groups {
 	 * Remove filters to be sure the (BuddyBoss) widgets display will no more take
 	 * the current group displayed in account.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param string $sidebar_index The Sidebar identifier.
 	 */
@@ -173,7 +173,7 @@ class BP_Nouveau_Groups {
 /**
  * Launch the Groups loader class.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_groups( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {

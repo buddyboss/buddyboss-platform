@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsClasses
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  */
 
 // Exit if accessed directly.
@@ -18,7 +18,7 @@ class BP_Groups_Member {
 	/**
 	 * ID of the membership.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var int
 	 */
 	var $id;
@@ -26,7 +26,7 @@ class BP_Groups_Member {
 	/**
 	 * ID of the group associated with the membership.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var int
 	 */
 	var $group_id;
@@ -34,7 +34,7 @@ class BP_Groups_Member {
 	/**
 	 * ID of the user associated with the membership.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var int
 	 */
 	var $user_id;
@@ -42,7 +42,7 @@ class BP_Groups_Member {
 	/**
 	 * ID of the user whose invitation initiated the membership.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var int
 	 */
 	var $inviter_id;
@@ -50,7 +50,7 @@ class BP_Groups_Member {
 	/**
 	 * Whether the member is an admin of the group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var int
 	 */
 	var $is_admin;
@@ -58,7 +58,7 @@ class BP_Groups_Member {
 	/**
 	 * Whether the member is a mod of the group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var int
 	 */
 	var $is_mod;
@@ -66,7 +66,7 @@ class BP_Groups_Member {
 	/**
 	 * Whether the member is banned from the group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var int
 	 */
 	var $is_banned;
@@ -76,7 +76,7 @@ class BP_Groups_Member {
 	 *
 	 * Eg, 'Group Admin'.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var int
 	 */
 	var $user_title;
@@ -86,7 +86,7 @@ class BP_Groups_Member {
 	 *
 	 * This value is updated when, eg, invitations are accepted.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var string
 	 */
 	var $date_modified;
@@ -94,7 +94,7 @@ class BP_Groups_Member {
 	/**
 	 * Whether the membership has been confirmed.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var int
 	 */
 	var $is_confirmed;
@@ -105,7 +105,7 @@ class BP_Groups_Member {
 	 * In BP core, these are limited to the optional message users can
 	 * include when requesting membership to a private group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var string
 	 */
 	var $comments;
@@ -118,7 +118,7 @@ class BP_Groups_Member {
 	 * Invites), but the Send button has not been pressed, so the
 	 * invitee has not yet been notified.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var int
 	 */
 	var $invite_sent;
@@ -126,7 +126,7 @@ class BP_Groups_Member {
 	/**
 	 * WP_User object representing the membership's user.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @var WP_User
 	 */
 	protected $user;
@@ -134,7 +134,7 @@ class BP_Groups_Member {
 	/**
 	 * Constructor method.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int      $user_id  Optional. Along with $group_id, can be used to
 	 *                           look up a membership.
@@ -169,7 +169,7 @@ class BP_Groups_Member {
 	/**
 	 * Populate the object's properties.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	public function populate() {
 		global $wpdb;
@@ -203,7 +203,7 @@ class BP_Groups_Member {
 	/**
 	 * Magic getter.
 	 *
-	 * @since 2.8.0
+	 * @since BuddyPress 2.8.0
 	 *
 	 * @param string $key Key.
 	 * @return BP_Core_User|null
@@ -218,7 +218,7 @@ class BP_Groups_Member {
 	/**
 	 * Magic issetter.
 	 *
-	 * @since 2.8.0
+	 * @since BuddyPress 2.8.0
 	 *
 	 * @param string $key Key.
 	 * @return bool
@@ -238,7 +238,7 @@ class BP_Groups_Member {
 	 *
 	 * Used for lazyloading the protected `user` property.
 	 *
-	 * @since 2.8.0
+	 * @since BuddyPress 2.8.0
 	 *
 	 * @return BP_Core_User
 	 */
@@ -253,7 +253,7 @@ class BP_Groups_Member {
 	/**
 	 * Save the membership data to the database.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @return bool True on success, false on failure.
 	 */
@@ -279,7 +279,7 @@ class BP_Groups_Member {
 		 *
 		 * Please use this hook to filter the properties above. Each part will be passed in.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param BP_Groups_Member $this Current instance of the group membership item being saved. Passed by reference.
 		 */
@@ -317,7 +317,7 @@ class BP_Groups_Member {
 		 *
 		 * Please use this hook to filter the properties above. Each part will be passed in.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param BP_Groups_Member $this Current instance of the group membership item has been saved. Passed by reference.
 		 */
@@ -329,7 +329,7 @@ class BP_Groups_Member {
 	/**
 	 * Promote a member to a new status.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string $status The new status. 'mod' or 'admin'.
 	 * @return bool True on success, false on failure.
@@ -353,7 +353,7 @@ class BP_Groups_Member {
 	/**
 	 * Demote membership to Member status (non-admin, non-mod).
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @return bool True on success, false on failure.
 	 */
@@ -368,7 +368,7 @@ class BP_Groups_Member {
 	/**
 	 * Ban the user from the group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @return bool True on success, false on failure.
 	 */
@@ -385,7 +385,7 @@ class BP_Groups_Member {
 	/**
 	 * Unban the user from the group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @return bool True on success, false on failure.
 	 */
@@ -401,7 +401,7 @@ class BP_Groups_Member {
 	/**
 	 * Mark a pending invitation as accepted.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	public function accept_invite() {
 		$this->inviter_id    = 0;
@@ -412,7 +412,7 @@ class BP_Groups_Member {
 	/**
 	 * Confirm a membership request.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 */
 	public function accept_request() {
 		$this->is_confirmed = 1;
@@ -422,7 +422,7 @@ class BP_Groups_Member {
 	/**
 	 * Remove the current membership.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @return bool True on success, false on failure.
 	 */
@@ -432,7 +432,7 @@ class BP_Groups_Member {
 		/**
 		 * Fires before a member is removed from a group.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param BP_Groups_Member $this Current group membership object.
 		 */
@@ -453,7 +453,7 @@ class BP_Groups_Member {
 		/**
 		 * Fires after a member is removed from a group.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param BP_Groups_Member $this Current group membership object.
 		 */
@@ -467,7 +467,7 @@ class BP_Groups_Member {
 	/**
 	 * Refresh the total_group_count for a user.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param int $user_id ID of the user.
 	 * @return bool True on success, false on failure.
@@ -479,7 +479,7 @@ class BP_Groups_Member {
 	/**
 	 * Refresh the total_member_count for a group.
 	 *
-	 * @since 1.8.0
+	 * @since BuddyPress 1.8.0
 	 *
 	 * @param int $group_id ID of the group.
 	 * @return bool|int True on success, false on failure.
@@ -491,7 +491,7 @@ class BP_Groups_Member {
 	/**
 	 * Delete a membership, based on user + group IDs.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $user_id  ID of the user.
 	 * @param int $group_id ID of the group.
@@ -503,7 +503,7 @@ class BP_Groups_Member {
 		/**
 		 * Fires before a group membership is deleted.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param int $user_id  ID of the user.
 		 * @param int $group_id ID of the group.
@@ -522,7 +522,7 @@ class BP_Groups_Member {
 		/**
 		 * Fires after a member is removed from a group.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param int $user_id  ID of the user.
 		 * @param int $group_id ID of the group.
@@ -535,7 +535,7 @@ class BP_Groups_Member {
 	/**
 	 * Get the IDs of the groups of which a specified user is a member.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int      $user_id ID of the user.
 	 * @param int|bool $limit   Optional. Max number of results to return.
@@ -573,7 +573,7 @@ class BP_Groups_Member {
 	/**
 	 * Get the IDs of the groups of which a specified user is a member, sorted by the date joined.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int         $user_id ID of the user.
 	 * @param int|bool    $limit   Optional. Max number of results to return.
@@ -616,7 +616,7 @@ class BP_Groups_Member {
 	/**
 	 * Get the IDs of the groups of which a specified user is an admin.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int         $user_id ID of the user.
 	 * @param int|bool    $limit   Optional. Max number of results to return.
@@ -659,7 +659,7 @@ class BP_Groups_Member {
 	/**
 	 * Get the IDs of the groups of which a specified user is a moderator.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int         $user_id ID of the user.
 	 * @param int|bool    $limit   Optional. Max number of results to return.
@@ -702,7 +702,7 @@ class BP_Groups_Member {
 	/**
 	 * Get the groups of which a specified user is banned from.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param int         $user_id ID of the user.
 	 * @param int|bool    $limit   Optional. Max number of results to return.
@@ -746,7 +746,7 @@ class BP_Groups_Member {
 	/**
 	 * Get the count of groups of which the specified user is a member.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $user_id Optional. Default: ID of the displayed user.
 	 * @return int Group count.
@@ -769,7 +769,7 @@ class BP_Groups_Member {
 	/**
 	 * Get a user's outstanding group invitations.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int               $user_id ID of the invitee.
 	 * @param int|bool          $limit   Optional. Max number of results to return.
@@ -805,7 +805,7 @@ class BP_Groups_Member {
 	/**
 	 * Gets the total group invite count for a user.
 	 *
-	 * @since 2.0.0
+	 * @since BuddyPress 2.0.0
 	 *
 	 * @param int $user_id The user ID.
 	 * @return int
@@ -828,7 +828,7 @@ class BP_Groups_Member {
 	/**
 	 * Check whether a user has an outstanding invitation to a given group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int    $user_id  ID of the potential invitee.
 	 * @param int    $group_id ID of the group.
@@ -856,7 +856,7 @@ class BP_Groups_Member {
 	/**
 	 * Delete an invitation, by specifying user ID and group ID.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @global WPDB $wpdb
 	 *
@@ -874,7 +874,7 @@ class BP_Groups_Member {
 		/**
 		 * Fires before a group invitation is deleted.
 		 *
-		 * @since 2.6.0
+		 * @since BuddyPress 2.6.0
 		 *
 		 * @param int $user_id  ID of the user.
 		 * @param int $group_id ID of the group.
@@ -897,7 +897,7 @@ class BP_Groups_Member {
 	/**
 	 * Delete an unconfirmed membership request, by user ID and group ID.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $user_id  ID of the user.
 	 * @param int $group_id ID of the group.
@@ -917,7 +917,7 @@ class BP_Groups_Member {
 	/**
 	 * Check whether a user is an admin of a given group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $user_id  ID of the user.
 	 * @param int $group_id ID of the group.
@@ -937,7 +937,7 @@ class BP_Groups_Member {
 	/**
 	 * Check whether a user is a mod of a given group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $user_id  ID of the user.
 	 * @param int $group_id ID of the group.
@@ -957,7 +957,7 @@ class BP_Groups_Member {
 	/**
 	 * Check whether a user is a member of a given group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $user_id  ID of the user.
 	 * @param int $group_id ID of the group.
@@ -977,7 +977,7 @@ class BP_Groups_Member {
 	/**
 	 * Check whether a user is banned from a given group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $user_id  ID of the user.
 	 * @param int $group_id ID of the group.
@@ -1000,7 +1000,7 @@ class BP_Groups_Member {
 	/**
 	 * Is the specified user the creator of the group?
 	 *
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 *
 	 * @param int $user_id  ID of the user.
 	 * @param int $group_id ID of the group.
@@ -1022,7 +1022,7 @@ class BP_Groups_Member {
 	/**
 	 * Check whether a user has an outstanding membership request for a given group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $user_id  ID of the user.
 	 * @param int $group_id ID of the group.
@@ -1042,7 +1042,7 @@ class BP_Groups_Member {
 	/**
 	 * Get a list of randomly selected IDs of groups that the member belongs to.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $user_id      ID of the user.
 	 * @param int $total_groups Max number of group IDs to return. Default: 5.
@@ -1064,7 +1064,7 @@ class BP_Groups_Member {
 	/**
 	 * Get the IDs of all a given group's members.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $group_id ID of the group.
 	 * @return array IDs of all group members.
@@ -1080,7 +1080,7 @@ class BP_Groups_Member {
 	/**
 	 * Get a list of all a given group's admins.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $group_id ID of the group.
 	 * @return array Info about group admins (user_id + date_modified).
@@ -1115,7 +1115,7 @@ class BP_Groups_Member {
 	/**
 	 * Prime the bp_group_admins cache for one or more groups.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param array $group_ids IDs of the groups.
 	 * @return bool True on success.
@@ -1159,7 +1159,7 @@ class BP_Groups_Member {
 	/**
 	 * Get a list of all a given group's moderators.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $group_id ID of the group.
 	 * @return array Info about group mods (user_id + date_modified).
@@ -1194,7 +1194,7 @@ class BP_Groups_Member {
 	/**
 	 * Get group membership objects by ID (or an array of IDs).
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param int|string|array $membership_ids Single membership ID or comma-separated/array list of membership IDs.
 	 * @return array
@@ -1211,7 +1211,7 @@ class BP_Groups_Member {
 	/**
 	 * Get the IDs users with outstanding membership requests to the group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $group_id ID of the group.
 	 * @return array IDs of users with outstanding membership requests.
@@ -1267,7 +1267,7 @@ class BP_Groups_Member {
 			/**
 			 * Filters the SQL prepared statement used to fetch group members.
 			 *
-			 * @since 1.5.0
+			 * @since BuddyPress 1.5.0
 			 *
 			 * @param string $value SQL prepared statement for fetching group members.
 			 */
@@ -1289,7 +1289,7 @@ class BP_Groups_Member {
 			/**
 			 * Filters the SQL prepared statement used to fetch group members total count.
 			 *
-			 * @since 1.5.0
+			 * @since BuddyPress 1.5.0
 			 *
 			 * @param string $value SQL prepared statement for fetching group member count.
 			 */
@@ -1319,7 +1319,7 @@ class BP_Groups_Member {
 	/**
 	 * Get all membership IDs for a user.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param int $user_id ID of the user.
 	 * @return array
@@ -1337,7 +1337,7 @@ class BP_Groups_Member {
 	/**
 	 * Delete all memberships for a given group.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param int $group_id ID of the group.
 	 * @return int Number of records deleted.
@@ -1353,7 +1353,7 @@ class BP_Groups_Member {
 	/**
 	 * Delete all group membership information for the specified user.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $user_id ID of the user.
 	 * @return mixed

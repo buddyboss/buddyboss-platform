@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss
  * @subpackage MessagesFilters
- * @since 1.0.0
+ * @since BuddyPress 1.0.0
  */
 
 // Exit if accessed directly.
@@ -82,7 +82,7 @@ add_filter( 'bp_get_message_thread_content',          'stripslashes_deep', 1 );
 /**
  * Enforce limitations on viewing private message contents
  *
- * @since 2.3.2
+ * @since BuddyPress 2.3.2
  *
  * @see bp_has_message_threads() for description of parameters
  *
@@ -107,7 +107,7 @@ add_filter( 'bp_after_has_message_threads_parse_args', 'bp_messages_enforce_curr
 /**
  * Custom kses filtering for message content.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $content The message content.
  * @return string         The filtered message content.
@@ -119,7 +119,7 @@ function bp_messages_filter_kses( $content ) {
 	/**
 	 * Filters the allowed HTML tags for BuddyBoss Messages content.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $value Array of allowed HTML tags and attributes.
 	 */

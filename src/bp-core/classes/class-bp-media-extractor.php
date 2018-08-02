@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Extracts media from text. Use {@link extract()}.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  *
  * The supported types are links, mentions, images, shortcodes, embeds, audio, video, and "all".
  * This is what each type extracts:
@@ -42,7 +42,7 @@ class BP_Media_Extractor {
 	/**
 	 * Media type.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 * @var int
 	 */
 	const ALL        = 255;
@@ -58,7 +58,7 @@ class BP_Media_Extractor {
 	/**
 	 * Extract media from text.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param string|WP_Post $richtext        Content to parse.
 	 * @param int            $what_to_extract Media type to extract (optional).
@@ -170,7 +170,7 @@ class BP_Media_Extractor {
 		/**
 		 * Filters media extracted from text.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param array  $media           Extracted media. See {@link BP_Media_Extractor::extract()} for format.
 		 * @param string $richtext        Content to parse.
@@ -191,7 +191,7 @@ class BP_Media_Extractor {
 	/**
 	 * Extract `<a href>` tags from text.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param string $richtext   Content to parse.
 	 * @param string $plaintext  Sanitized version of the content.
@@ -232,7 +232,7 @@ class BP_Media_Extractor {
 		/**
 		 * Filters links extracted from text.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param array  $data       Extracted links. See {@link BP_Media_Extractor::extract_links()} for format.
 		 * @param string $richtext   Content to parse.
@@ -250,7 +250,7 @@ class BP_Media_Extractor {
 	 *
 	 * If the Activity component is disabled, any @mentions are extracted.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param string $richtext   Content to parse.
 	 * @param string $plaintext  Sanitized version of the content.
@@ -306,7 +306,7 @@ class BP_Media_Extractor {
 		/**
 		 * Filters @mentions extracted from text.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param array  $data       Extracted @mentions. See {@link BP_Media_Extractor::extract_mentions()} for format.
 		 * @param string $richtext   Content to parse.
@@ -321,7 +321,7 @@ class BP_Media_Extractor {
 	 *
 	 * If an image is in the Media Library, then its resolution is included in the results.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param string $richtext   Content to parse.
 	 * @param string $plaintext  Sanitized version of the content.
@@ -424,7 +424,7 @@ class BP_Media_Extractor {
 		/**
 		 * Filters images extracted from text.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param array  $media      Extracted images. See {@link BP_Media_Extractor::extract_images()} for format.
 		 * @param string $richtext   Content to parse.
@@ -440,7 +440,7 @@ class BP_Media_Extractor {
 	 * This includes any shortcodes indirectly used by other media extraction types.
 	 * For example, [gallery] and [audio].
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param string $richtext   Content to parse.
 	 * @param string $plaintext  Sanitized version of the content.
@@ -487,7 +487,7 @@ class BP_Media_Extractor {
 		/**
 		 * Filters shortcodes extracted from text.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param array  $data       Extracted shortcodes.
 		 *                           See {@link BP_Media_Extractor::extract_shortcodes()} for format.
@@ -501,7 +501,7 @@ class BP_Media_Extractor {
 	/**
 	 * Extract any URL, matching a registered oEmbed endpoint, from text.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param string $richtext   Content to parse.
 	 * @param string $plaintext  Sanitized version of the content.
@@ -565,7 +565,7 @@ class BP_Media_Extractor {
 		/**
 		 * Filters embeds extracted from text.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param array  $data       Extracted embeds. See {@link BP_Media_Extractor::extract_embeds()} for format.
 		 * @param string $richtext   Content to parse.
@@ -578,7 +578,7 @@ class BP_Media_Extractor {
 	/**
 	 * Extract [audio] shortcodes and `<a href="*.mp3">` tags, from text.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @see wp_get_audio_extensions() for supported audio formats.
 	 *
@@ -662,7 +662,7 @@ class BP_Media_Extractor {
 		/**
 		 * Filters audio extracted from text.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param array  $data       Extracted audio. See {@link BP_Media_Extractor::extract_audio()} for format.
 		 * @param string $richtext   Content to parse.
@@ -675,7 +675,7 @@ class BP_Media_Extractor {
 	/**
 	 * Extract [video] shortcodes from text.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @see wp_get_video_extensions() for supported video formats.
 	 *
@@ -737,7 +737,7 @@ class BP_Media_Extractor {
 		/**
 		 * Filters videos extracted from text.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param array  $data       Extracted videos. See {@link BP_Media_Extractor::extract_videos()} for format.
 		 * @param string $richtext   Content to parse.
@@ -755,7 +755,7 @@ class BP_Media_Extractor {
 	/**
 	 * Extract images in [galleries] shortcodes from text.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param string $richtext   Content to parse.
 	 * @param string $plaintext  Sanitized version of the content.
@@ -841,7 +841,7 @@ class BP_Media_Extractor {
 		/**
 		 * Filters image galleries extracted from text.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param array  $galleries_data Galleries. See {@link BP_Media_Extractor::extract_images_from_galleries()}.
 		 * @param string $richtext       Content to parse.
@@ -854,7 +854,7 @@ class BP_Media_Extractor {
 	/**
 	 * Extract the featured image from a Post.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param string $richtext   Content to parse.
 	 * @param string $plaintext  Sanitized version of the content.
@@ -892,7 +892,7 @@ class BP_Media_Extractor {
 		/**
 		 * Filters featured images extracted from a WordPress Post.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param array  $image      Extracted images. See {@link BP_Media_Extractor_Post::extract_images()} for format.
 		 * @param string $richtext   Content to parse.
@@ -907,7 +907,7 @@ class BP_Media_Extractor {
 	 *
 	 * HTML tags and shortcodes are removed, and HTML entities are decoded.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 *
 	 * @param string $richtext Content to sanitize.
 	 * @return string
@@ -918,7 +918,7 @@ class BP_Media_Extractor {
 		/**
 		 * Filters the generated plain text version of the content passed to the extractor.
 		 *
-		 * @since 2.3.0
+		 * @since BuddyPress 2.3.0
 		 *
 		 * @param array  $plaintext Generated plain text.
 		 * @param string $richtext  Original content.

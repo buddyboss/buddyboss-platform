@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Output the BuddyPress maintenance mode
  *
- * @since 1.6.0
+ * @since BuddyPress 1.6.0
  * @deprecated 1.7.0
  */
 function bp_maintenance_mode() {
@@ -22,7 +22,7 @@ function bp_maintenance_mode() {
 	/**
 	 * Return the BuddyPress maintenance mode
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 * @deprecated 1.7.0
 	 * @return string The BuddyPress maintenance mode
 	 */

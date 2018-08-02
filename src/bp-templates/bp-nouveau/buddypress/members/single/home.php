@@ -2,7 +2,7 @@
 /**
  * BuddyBoss - Members Home
  *
- * @since   1.0.0
+ * @since BuddyPress   1.0.0
  * @version 3.0.0
  */
 ?>

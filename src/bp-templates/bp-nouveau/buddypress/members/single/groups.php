@@ -2,7 +2,7 @@
 /**
  * BuddyBoss - Users Groups
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.0.0
  */
 ?>

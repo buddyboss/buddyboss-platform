@@ -2,7 +2,7 @@
 /**
  * Connections Ajax functions
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.0.0
  */
 
@@ -57,7 +57,7 @@ add_action( 'admin_init', function() {
 /**
  * Friend/un-friend a user via a POST request.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string HTML
  */

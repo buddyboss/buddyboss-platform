@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  */
 
 // Exit if accessed directly.
@@ -16,14 +16,14 @@ defined( 'ABSPATH' ) || exit;
  * This class is in the Core component because it's required by a class in the Groups component,
  * and Groups is loaded before Members (alphabetical order).
  *
- * @since 2.1.0
+ * @since BuddyPress 2.1.0
  */
 class BP_Members_Suggestions extends BP_Suggestions {
 
 	/**
 	 * Default arguments for this suggestions service.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 * @var array $args {
 	 *     @type int    $limit        Maximum number of results to display. Default: 16.
 	 *     @type bool   $only_friends If true, only match the current user's friends. Default: false.
@@ -42,7 +42,7 @@ class BP_Members_Suggestions extends BP_Suggestions {
 	/**
 	 * Validate and sanitise the parameters for the suggestion service query.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @return true|WP_Error If validation fails, return a WP_Error object. On success, return true (bool).
 	 */
@@ -52,7 +52,7 @@ class BP_Members_Suggestions extends BP_Suggestions {
 		/**
 		 * Filters the members suggestions args for the current user.
 		 *
-		 * @since 2.1.0
+		 * @since BuddyPress 2.1.0
 		 *
 		 * @param array                  $args Array of arguments for the member suggestions.
 		 * @param BP_Members_Suggestions $this Current BP_Members_Suggestions instance.
@@ -67,7 +67,7 @@ class BP_Members_Suggestions extends BP_Suggestions {
 		/**
 		 * Filters the validation status for the suggestion service query.
 		 *
-		 * @since 2.1.0
+		 * @since BuddyPress 2.1.0
 		 *
 		 * @param bool|WP_Error          $value Results of validation check.
 		 * @param BP_Members_Suggestions $this  Current BP_Members_Suggestions instance.
@@ -78,7 +78,7 @@ class BP_Members_Suggestions extends BP_Suggestions {
 	/**
 	 * Find and return a list of username suggestions that match the query.
 	 *
-	 * @since 2.1.0
+	 * @since BuddyPress 2.1.0
 	 *
 	 * @return array|WP_Error Array of results. If there were problems, returns a WP_Error object.
 	 */
@@ -102,7 +102,7 @@ class BP_Members_Suggestions extends BP_Suggestions {
 		/**
 		 * Filters the members suggestions query args.
 		 *
-		 * @since 2.1.0
+		 * @since BuddyPress 2.1.0
 		 *
 		 * @param array                  $user_query Array of query arguments.
 		 * @param BP_Members_Suggestions $this       Current BP_Members_Suggestions instance.
@@ -129,7 +129,7 @@ class BP_Members_Suggestions extends BP_Suggestions {
 		/**
 		 * Filters the members suggestions results.
 		 *
-		 * @since 2.1.0
+		 * @since BuddyPress 2.1.0
 		 *
 		 * @param array                  $results Array of users to suggest.
 		 * @param BP_Members_Suggestions $this    Current BP_Members_Suggestions instance.

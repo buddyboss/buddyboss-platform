@@ -4,27 +4,27 @@
  *
  * @package BuddyBoss
  * @subpackage NotificationsScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Catch and route the 'unread' notifications screen.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  */
 function bp_notifications_screen_unread() {
 
 	/**
 	 * Fires right before the loading of the notifications unread screen template file.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 */
 	do_action( 'bp_notifications_screen_unread' );
 
 	/**
 	 * Filters the template to load for the notifications unread screen.
 	 *
-	 * @since 1.9.0
+	 * @since BuddyPress 1.9.0
 	 *
 	 * @param string $template Path to the notifications unread template to load.
 	 */
@@ -34,7 +34,7 @@ function bp_notifications_screen_unread() {
 /**
  * Handle marking single notifications as read.
  *
- * @since 1.9.0
+ * @since BuddyPress 1.9.0
  *
  * @return bool
  */

@@ -2,7 +2,7 @@
 /**
  * Groups Template tags
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  * @version 3.0.0
  */
 
@@ -13,27 +13,27 @@ defined( 'ABSPATH' ) || exit;
  * Template tag to wrap all Legacy actions that was used
  * before the groups directory content
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_before_groups_directory_content() {
 	/**
 	 * Fires at the begining of the templates BP injected content.
 	 *
-	 * @since 2.3.0
+	 * @since BuddyPress 2.3.0
 	 */
 	do_action( 'bp_before_directory_groups_page' );
 
 	/**
 	 * Fires before the display of the groups.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'bp_before_directory_groups' );
 
 	/**
 	 * Fires before the display of the groups content.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'bp_before_directory_groups_content' );
 }
@@ -42,34 +42,34 @@ function bp_nouveau_before_groups_directory_content() {
  * Template tag to wrap all Legacy actions that was used
  * after the groups directory content
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_after_groups_directory_content() {
 	/**
 	 * Fires and displays the group content.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'bp_directory_groups_content' );
 
 	/**
 	 * Fires after the display of the groups content.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'bp_after_directory_groups_content' );
 
 	/**
 	 * Fires after the display of the groups.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'bp_after_directory_groups' );
 
 	/**
 	 * Fires at the bottom of the groups directory template file.
 	 *
-	 * @since 1.5.0
+	 * @since BuddyPress 1.5.0
 	 */
 	do_action( 'bp_after_directory_groups_page' );
 }
@@ -77,7 +77,7 @@ function bp_nouveau_after_groups_directory_content() {
 /**
  * Fire specific hooks into the groups create template.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $when   Optional. Either 'before' or 'after'.
  * @param string $suffix Optional. Use it to add terms at the end of the hook name.
@@ -102,7 +102,7 @@ function bp_nouveau_groups_create_hook( $when = '', $suffix = '' ) {
 /**
  * Fire specific hooks into the single groups templates.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param string $when   Optional. Either 'before' or 'after'.
  * @param string $suffix Optional. Use it to add terms at the end of the hook name.
@@ -127,13 +127,13 @@ function bp_nouveau_group_hook( $when = '', $suffix = '' ) {
 /**
  * Fire an isolated hook inside the groups loop
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_groups_loop_item() {
 	/**
 	 * Fires inside the listing of an individual group listing item.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'bp_directory_groups_item' );
 }
@@ -141,13 +141,13 @@ function bp_nouveau_groups_loop_item() {
 /**
  * Display the current group activity post form if needed
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_groups_activity_post_form() {
 	/**
 	 * Fires before the display of the group activity post form.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_before_group_activity_post_form' );
 
@@ -158,7 +158,7 @@ function bp_nouveau_groups_activity_post_form() {
 	/**
 	 * Fires after the display of the group activity post form.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_after_group_activity_post_form' );
 }
@@ -166,7 +166,7 @@ function bp_nouveau_groups_activity_post_form() {
 /**
  * Load the Group Invites UI.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string HTML Output.
  */
@@ -174,7 +174,7 @@ function bp_nouveau_group_invites_interface() {
 	/**
 	 * Fires before the send invites content.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'bp_before_group_send_invites_content' );
 
@@ -183,7 +183,7 @@ function bp_nouveau_group_invites_interface() {
 	/**
 	 * Fires after the send invites content.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_after_group_send_invites_content' );
 }
@@ -191,7 +191,7 @@ function bp_nouveau_group_invites_interface() {
 /**
  * Gets the displayed user group invites preferences
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return int Returns 1 if user chose to restrict to friends, 0 otherwise.
  */
@@ -202,7 +202,7 @@ function bp_nouveau_groups_get_group_invites_setting() {
 /**
  * Outputs the group creation numbered steps navbar
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @todo This output isn't localised correctly.
  */
@@ -241,7 +241,7 @@ function bp_nouveau_group_creation_tabs() {
 	/**
 	 * Fires at the end of the creation of the group tabs.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 */
 	do_action( 'groups_creation_tabs' );
 }
@@ -249,7 +249,7 @@ function bp_nouveau_group_creation_tabs() {
 /**
  * Load the requested Create Screen for the new group.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_group_creation_screen() {
 	return bp_nouveau_group_manage_screen();
@@ -258,7 +258,7 @@ function bp_nouveau_group_creation_screen() {
 /**
  * Load the requested Manage Screen for the current group.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 function bp_nouveau_group_manage_screen() {
@@ -279,7 +279,7 @@ function bp_nouveau_group_manage_screen() {
 		/**
 		 * Fires inside the group admin form and before the content.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 */
 		do_action( 'bp_before_group_admin_content' );
 
@@ -297,7 +297,7 @@ function bp_nouveau_group_manage_screen() {
 			 *
 			 * Allows plugins to add custom group edit screens.
 			 *
-			 * @since 1.1.0
+			 * @since BuddyPress 1.1.0
 			 */
 			do_action( 'groups_custom_edit_steps' );
 
@@ -308,7 +308,7 @@ function bp_nouveau_group_manage_screen() {
 			 *
 			 * Allows plugins to add custom group creation steps.
 			 *
-			 * @since 1.1.0
+			 * @since BuddyPress 1.1.0
 			 */
 			do_action( 'groups_custom_create_steps' );
 		}
@@ -319,8 +319,8 @@ function bp_nouveau_group_manage_screen() {
 			/**
 			 * Fires before the display of group delete admin.
 			 *
-			 * @since 1.1.0 For most hooks.
-			 * @since 2.4.0 For the cover image hook.
+			 * @since BuddyPress 1.1.0 For most hooks.
+			 * @since BuddyPress 2.4.0 For the cover image hook.
 			 */
 			do_action( 'bp_before_' . $core_screen['hook'] );
 		}
@@ -337,8 +337,8 @@ function bp_nouveau_group_manage_screen() {
 			/**
 			 * Fires before the display of group delete admin.
 			 *
-			 * @since 1.1.0 For most hooks.
-			 * @since 2.4.0 For the cover image hook.
+			 * @since BuddyPress 1.1.0 For most hooks.
+			 * @since BuddyPress 2.4.0 For the cover image hook.
 			 */
 			do_action( 'bp_after_' . $core_screen['hook'] );
 		}
@@ -364,7 +364,7 @@ function bp_nouveau_group_manage_screen() {
 		/**
 		 * Fires before the display of the group creation step buttons.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 */
 		do_action( 'bp_before_group_creation_step_buttons' );
 
@@ -407,7 +407,7 @@ function bp_nouveau_group_manage_screen() {
 		/**
 		 * Fires after the display of the group creation step buttons.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 */
 		do_action( 'bp_after_group_creation_step_buttons' );
 	}
@@ -438,7 +438,7 @@ function bp_nouveau_group_manage_screen() {
 		/**
 		 * Fires inside the group admin form and after the content.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 */
 		do_action( 'bp_after_group_admin_content' );
 
@@ -446,7 +446,7 @@ function bp_nouveau_group_manage_screen() {
 		/**
 		 * Fires and displays the groups directory content.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 */
 		do_action( 'bp_directory_groups_content' );
 	}
@@ -462,7 +462,7 @@ function bp_nouveau_group_manage_screen() {
 /**
  * Output the action buttons for the displayed group
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
  */
@@ -480,7 +480,7 @@ function bp_nouveau_group_header_buttons( $args = array() ) {
 	/**
 	 * Fires in the group header actions section.
 	 *
-	 * @since 1.2.6
+	 * @since BuddyPress 1.2.6
 	 */
 	do_action( 'bp_group_header_actions' );
 	$output .= ob_get_clean();
@@ -499,7 +499,7 @@ function bp_nouveau_group_header_buttons( $args = array() ) {
 /**
  * Output the action buttons inside the groups loop.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
  */
@@ -516,7 +516,7 @@ function bp_nouveau_groups_loop_buttons( $args = array() ) {
 	/**
 	 * Fires inside the action section of an individual group listing item.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'bp_directory_groups_actions' );
 	$output .= ob_get_clean();
@@ -531,7 +531,7 @@ function bp_nouveau_groups_loop_buttons( $args = array() ) {
 /**
  * Output the action buttons inside the invites loop of the displayed user.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
  */
@@ -548,7 +548,7 @@ function bp_nouveau_groups_invite_buttons( $args = array() ) {
 	/**
 	 * Fires inside the member group item action markup.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'bp_group_invites_item_action' );
 	$output .= ob_get_clean();
@@ -563,7 +563,7 @@ function bp_nouveau_groups_invite_buttons( $args = array() ) {
 /**
  * Output the action buttons inside the requests loop of the group's manage screen.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
  */
@@ -580,7 +580,7 @@ function bp_nouveau_groups_request_buttons( $args = array() ) {
 	/**
 	 * Fires inside the list of membership request actions.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'bp_group_membership_requests_admin_item_action' );
 	$output .= ob_get_clean();
@@ -595,7 +595,7 @@ function bp_nouveau_groups_request_buttons( $args = array() ) {
 /**
  * Output the action buttons inside the manage members loop of the group's manage screen.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
  */
@@ -612,7 +612,7 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
 	/**
 	 * Fires inside the display of a member admin item in group management area.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyPress 1.1.0
 	 */
 	do_action( 'bp_group_manage_members_admin_item' );
 	$output .= ob_get_clean();
@@ -635,7 +635,7 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
 	 * Get the action buttons for the current group in the loop,
 	 * or the current displayed group.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
 	 */
@@ -995,7 +995,7 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
 		/**
 		 * Filter to add your buttons, use the position argument to choose where to insert it.
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array  $buttons The list of buttons.
 		 * @param int    $group   The current group object.
@@ -1036,7 +1036,7 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
 		/**
 		 * Leave a chance to adjust the $return
 		 *
-		 * @since 3.0.0
+		 * @since BuddyPress 3.0.0
 		 *
 		 * @param array  $return  The list of buttons.
 		 * @param int    $group   The current group object.
@@ -1050,7 +1050,7 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
 /**
  * Does the group has meta.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return bool True if the group has meta. False otherwise.
  */
@@ -1061,7 +1061,7 @@ function bp_nouveau_group_has_meta() {
 /**
  * Does the group have extra meta?
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return bool True if the group has meta. False otherwise.
  */
@@ -1072,7 +1072,7 @@ function bp_nouveau_group_has_meta_extra() {
 /**
  * Display the group meta.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string HTML Output.
  */
@@ -1097,7 +1097,7 @@ function bp_nouveau_group_meta() {
 	/**
 	 * Get the group meta.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return array The group meta.
 	 */
@@ -1145,7 +1145,7 @@ function bp_nouveau_group_meta() {
 			/**
 			 * Filter to add/remove Group meta.
 			 *
-			 * @since 3.0.0
+			 * @since BuddyPress 3.0.0
 			 *
 			 * @param array  $meta     The list of meta to output.
 			 * @param object $group    The current Group of the loop object.
@@ -1160,13 +1160,13 @@ function bp_nouveau_group_meta() {
 /**
  * Load the appropriate content for the single group pages
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_group_template_part() {
 	/**
 	 * Fires before the display of the group home body.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_before_group_body' );
 
@@ -1176,7 +1176,7 @@ function bp_nouveau_group_template_part() {
 		/**
 		 * Fires before the display of the group status message.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 */
 		do_action( 'bp_before_group_status_message' );
 		?>
@@ -1190,7 +1190,7 @@ function bp_nouveau_group_template_part() {
 		/**
 		 * Fires after the display of the group status message.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyPress 1.1.0
 		 */
 		do_action( 'bp_after_group_status_message' );
 
@@ -1229,7 +1229,7 @@ function bp_nouveau_group_template_part() {
 	/**
 	 * Fires after the display of the group home body.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_after_group_body' );
 }
@@ -1237,7 +1237,7 @@ function bp_nouveau_group_template_part() {
 /**
  * Use the appropriate Group header and enjoy a template hierarchy
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 function bp_nouveau_group_header_template_part() {
 	$template = 'group-header';
@@ -1249,7 +1249,7 @@ function bp_nouveau_group_header_template_part() {
 	/**
 	 * Fires before the display of a group's header.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_before_group_header' );
 
@@ -1259,7 +1259,7 @@ function bp_nouveau_group_header_template_part() {
 	/**
 	 * Fires after the display of a group's header.
 	 *
-	 * @since 1.2.0
+	 * @since BuddyPress 1.2.0
 	 */
 	do_action( 'bp_after_group_header' );
 
@@ -1270,7 +1270,7 @@ function bp_nouveau_group_header_template_part() {
  * Get a link to set the Group's default front page and directly
  * reach the Customizer section where it's possible to do it.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string HTML Output
  */
@@ -1288,7 +1288,7 @@ function bp_nouveau_groups_get_customizer_option_link() {
  * Get a link to set the Group's front page widgets and directly
  * reach the Customizer section where it's possible to do it.
  *
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  *
  * @return string HTML Output
  */

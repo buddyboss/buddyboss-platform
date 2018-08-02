@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage SettingsScreens
- * @since 3.0.0
+ * @since BuddyPress 3.0.0
  */
 
 /**
  * Show the notifications settings template.
  *
- * @since 1.5.0
+ * @since BuddyPress 1.5.0
  */
 function bp_settings_screen_notification() {
 
@@ -22,7 +22,7 @@ function bp_settings_screen_notification() {
 	/**
 	 * Filters the template file path to use for the notification settings screen.
 	 *
-	 * @since 1.6.0
+	 * @since BuddyPress 1.6.0
 	 *
 	 * @param string $value Directory path to look in for the template file.
 	 */

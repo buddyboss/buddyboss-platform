@@ -8,7 +8,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register our default taxonomies.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  */
 function bp_register_default_taxonomies() {
 	// Member Type.
@@ -49,7 +49,7 @@ add_action( 'bp_register_taxonomies', 'bp_register_default_taxonomies' );
  *
  * Defaults to the root blog ID.
  *
- * @since 2.6.0
+ * @since BuddyPress 2.6.0
  *
  * @param string $taxonomy Taxonomy slug to check for.
  * @return int
@@ -60,7 +60,7 @@ function bp_get_taxonomy_term_site_id( $taxonomy = '' ) {
 	/**
 	 * Filters the ID of the site where BP should store taxonomy terms.
 	 *
-	 * @since 2.6.0
+	 * @since BuddyPress 2.6.0
 	 *
 	 * @param int    $site_id  Site ID to cehck for.
 	 * @param string $taxonomy Taxonomy slug to check for.
@@ -71,7 +71,7 @@ function bp_get_taxonomy_term_site_id( $taxonomy = '' ) {
 /**
  * Set taxonomy terms on a BuddyPress object.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @see wp_set_object_terms() for a full description of function and parameters.
  *
@@ -100,7 +100,7 @@ function bp_set_object_terms( $object_id, $terms, $taxonomy, $append = false ) {
 	/**
 	 * Fires when taxonomy terms have been set on BuddyPress objects.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param int    $object_id Object ID.
 	 * @param array  $terms     Term or terms to remove.
@@ -115,7 +115,7 @@ function bp_set_object_terms( $object_id, $terms, $taxonomy, $append = false ) {
 /**
  * Get taxonomy terms for a BuddyPress object.
  *
- * @since 2.2.0
+ * @since BuddyPress 2.2.0
  *
  * @see wp_get_object_terms() for a full description of function and parameters.
  *
@@ -155,7 +155,7 @@ function bp_get_object_terms( $object_ids, $taxonomies, $args = array() ) {
 /**
  * Remove taxonomy terms on a BuddyPress object.
  *
- * @since 2.3.0
+ * @since BuddyPress 2.3.0
  *
  * @see wp_remove_object_terms() for a full description of function and parameters.
  *
@@ -183,7 +183,7 @@ function bp_remove_object_terms( $object_id, $terms, $taxonomy ) {
 	/**
 	 * Fires when taxonomy terms have been removed from BuddyPress objects.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param int    $object_id Object ID.
 	 * @param array  $terms     Term or terms to remove.
@@ -200,7 +200,7 @@ function bp_remove_object_terms( $object_id, $terms, $taxonomy ) {
  * Note that object IDs are from the `bp_get_taxonomy_term_site_id()`, which on some
  * multisite configurations may not be the same as the current site.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @see get_objects_in_term() for a full description of function and parameters.
  *
@@ -246,7 +246,7 @@ function bp_get_objects_in_term( $term_ids, $taxonomies, $args = array() ) {
  * Note that term data is from the `bp_get_taxonomy_term_site_id()`, which on some
  * multisite configurations may not be the same as the current site.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @see get_term_by() for a full description of function and parameters.
  *
