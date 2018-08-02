@@ -119,7 +119,7 @@ function bp_core_enqueue_admin_bar_css() {
 /**
  * Replace admin bar "Howdy" text
  *
- * @since BuddyPress BuddyBoss 1.0.0
+ * @since BuddyBoss 3.1.1
  */
 function bp_core_replace_howdy( $wp_admin_bar ) {
 
