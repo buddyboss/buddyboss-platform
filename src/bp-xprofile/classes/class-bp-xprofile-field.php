@@ -1392,9 +1392,15 @@ class BP_XProfile_Field {
 
 		<div class="postbox">
 			<h2><?php echo esc_html_x( 'Help Text', 'XProfile admin edit field', 'buddyboss' ); ?></h2>
-			<div class="inside">
-				
-				<?php /* alternate title while editing */ ?>
+			<div class="inside">		
+				<?php 
+					/**
+					 * Alternate title for when user edits their profile field.
+					 * Reverts to primary title if nothing is entered.
+					 * 
+					 * @since BuddyBoss 3.1.1
+					 */
+				?>
 				<label for="title_secondary" class="screen-reader-text"><?php
 					/* translators: accessibility text */
 					esc_html_e( 'Alternate Title', 'buddyboss' );
