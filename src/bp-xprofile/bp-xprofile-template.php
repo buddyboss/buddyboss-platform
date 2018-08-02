@@ -542,6 +542,31 @@ function bp_the_profile_field_name() {
 	}
 
 /**
+ * Returns the XProfile field's alternate name, if added, empty otherwise.
+ * 
+ * @global \BP_XProfile_Field_Type $field
+ * @since BuddyBoss 3.1.1
+ * 
+ * @param \BP_XProfile_Field_Type $the_field field object. Optional. Defaults to global $field object.
+ * @return string 
+ */
+function bp_get_the_profile_field_alternate_name( $the_field = false ) {
+    if ( !$the_field ) {
+        global $field;
+        $the_field = $field;
+    }
+    
+    /**
+     * Filters the XProfile field's alternate name.
+     *
+     * @since BuddyBoss 3.1.1
+     *
+     * @param string Alternate name for the profile field.
+     */
+    return apply_filters( 'bp_get_the_profile_field_alternate_name', $the_field->get_alternate_name() );
+}
+
+/**
  * Outputs the XProfile field value.
  *
  * @since BuddyPress 1.0.0

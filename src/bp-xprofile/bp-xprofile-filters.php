@@ -77,6 +77,8 @@ add_filter( 'xprofile_field_can_delete_before_save',   'absint' );
 add_filter( 'xprofile_field_options_before_save', 'bp_xprofile_sanitize_field_options' );
 add_filter( 'xprofile_field_default_before_save', 'bp_xprofile_sanitize_field_default' );
 
+add_filter( 'bp_get_the_profile_field_name', 'xprofile_filter_field_edit_name' );
+
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -622,4 +624,43 @@ function bp_xprofile_filter_meta_query( $q ) {
 	}
 
 	return $q;
+}
+
+/**
+ * Conditionally filters 'bp_get_the_profile_field_name' to return alternate name if available.
+ * Filter is only applied if:
+ *  1. If we are on profile > edit screens
+ * 
+ * @since BuddyBoss 3.1.1
+ * 
+ * @global \BP_XProfile_Field_Type $field\
+ * 
+ * @param string $field_name
+ * @return string
+ */
+function xprofile_filter_field_edit_name ( $field_name ) {
+    $is_field_edit_mode = false;
+    
+    $current_field = false;
+    
+    if ( bp_is_profile_component() && 'edit' == bp_current_action() ) {
+        //we are on profile > edit screens, we should display alternate name, if available, instead of main name.
+        $is_field_edit_mode = true;
+        
+        //we can use global $field variable here
+        global $field;
+        $current_field = $field;
+    }
+    
+    //@todo : Should we do it if an admin is editing user profiles in backend ( wp-admin/edit-user.php... ) ?
+    
+    if ( $is_field_edit_mode ) {
+        $alternate_name = bp_get_the_profile_field_alternate_name( $current_field );
+        
+        if ( !empty( $alternate_name ) ) {
+            $field_name = $alternate_name;
+        }
+    }
+    
+    return $field_name;
 }
