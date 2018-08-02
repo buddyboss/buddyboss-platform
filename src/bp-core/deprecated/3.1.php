@@ -349,29 +349,29 @@ function bp_do_register_theme_directory() {
 	// This ensures that the version of bp-default in the regular themes
 	// directory will always take precedence, as part of a migration away
 	// from the version packaged with BuddyPress.
-	foreach ( array_values( (array) $GLOBALS['wp_theme_directories'] ) as $directory ) {
-		if ( is_dir( $directory . '/bp-default' ) ) {
-			return false;
-		}
-	}
+	// foreach ( array_values( (array) $GLOBALS['wp_theme_directories'] ) as $directory ) {
+	// 	if ( is_dir( $directory . '/bp-default' ) ) {
+	// 		return false;
+	// 	}
+	// }
 
-	// If the current theme is bp-default (or a bp-default child), BP
-	// should register its directory.
-	$register = 'bp-default' === get_stylesheet() || 'bp-default' === get_template();
+	// // If the current theme is bp-default (or a bp-default child), BP
+	// // should register its directory.
+	// $register = 'bp-default' === get_stylesheet() || 'bp-default' === get_template();
 
-	// Legacy sites continue to have the theme registered.
-	if ( empty( $register ) && ( 1 == get_site_option( '_bp_retain_bp_default' ) ) ) {
-		$register = true;
-	}
+	// // Legacy sites continue to have the theme registered.
+	// if ( empty( $register ) && ( 1 == get_site_option( '_bp_retain_bp_default' ) ) ) {
+	// 	$register = true;
+	// }
 
-	/**
-	 * Filters whether BuddyPress should register the bp-themes directory.
-	 *
-	 * @since 1.9.0
-	 *
-	 * @param bool $register If bp-themes should be registered.
-	 */
-	return apply_filters( 'bp_do_register_theme_directory', $register );
+	// /**
+	//  * Filters whether BuddyPress should register the bp-themes directory.
+	//  *
+	//  * @since 1.9.0
+	//  *
+	//  * @param bool $register If bp-themes should be registered.
+	//  */
+	// return apply_filters( 'bp_do_register_theme_directory', $register );
 }
 
 
