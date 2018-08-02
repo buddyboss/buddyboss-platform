@@ -339,6 +339,8 @@ function bp_xprofile_escape_field_data( $value, $field_type, $field_id ) {
  * To disable for a single field, use the 'Autolink' settings in Dashboard > Users > Profile Fields.
  *
  * @since BuddyPress 1.1.0
+ * @since BuddyBoss 3.1.1 Removed checking autolink, as autolinking is disabled on all fields now. 
+ * All this function does now is make links clickable.
  *
  * @param string $field_value Profile field data value.
  * @param string $field_type  Profile field type.
@@ -346,10 +348,6 @@ function bp_xprofile_escape_field_data( $value, $field_type, $field_id ) {
  */
 function xprofile_filter_link_profile_data( $field_value, $field_type = 'textbox' ) {
 	global $field;
-
-	if ( ! $field->get_do_autolink() ) {
-		return $field_value;
-	}
 
 	if ( 'datebox' === $field_type ) {
 		return $field_value;
@@ -359,62 +357,12 @@ function xprofile_filter_link_profile_data( $field_value, $field_type = 'textbox
 		return $field_value;
 	}
 
-	if ( strpos( $field_value, ',' ) !== false ) {
-		// Comma-separated lists.
-		$list_type = 'comma';
-		$values    = explode( ',', $field_value );
-	} else {
-		/*
-		 * Semicolon-separated lists.
-		 *
-		 * bp_xprofile_escape_field_data() runs before this function, which often runs esc_html().
-		 * In turn, that encodes HTML entities in the string (";" becomes "&#039;").
-		 *
-		 * Before splitting on the ";" character, decode the HTML entities, and re-encode after.
-		 * This prevents input like "O'Hara" rendering as "O&#039; Hara" (with each of those parts
-		 * having a seperate HTML link).
-		 */
-		$list_type   = 'semicolon';
-		$field_value = wp_specialchars_decode( $field_value, ENT_QUOTES );
-		$values      = explode( ';', $field_value );
-
-		array_walk( $values, function( &$value, $key ) use ( $field_type, $field ) {
-			$value = bp_xprofile_escape_field_data( $value, $field_type, $field->id );
-		} );
-	}
-
-	if ( ! empty( $values ) ) {
-		foreach ( (array) $values as $value ) {
-			$value = trim( $value );
-
-			// If the value is a URL, skip it and just make it clickable.
-			if ( preg_match( '@(https?://([-\w\.]+)+(:\d+)?(/([\w/_\.]*(\?\S+)?)?)?)@', $value ) ) {
-				$new_values[] = make_clickable( $value );
-
-			// Is not clickable.
-			} else {
-
-				// More than 5 spaces.
-				if ( count( explode( ' ', $value ) ) > 5 ) {
-					$new_values[] = $value;
-
-				// Less than 5 spaces.
-				} else {
-					$query_arg    = bp_core_get_component_search_query_arg( 'members' );
-					$search_url   = add_query_arg( array( $query_arg => urlencode( $value ) ), bp_get_members_directory_permalink() );
-					$new_values[] = '<a href="' . esc_url( $search_url ) . '" rel="nofollow">' . $value . '</a>';
-				}
-			}
-		}
-
-		if ( 'comma' === $list_type ) {
-			$values = implode( ', ', $new_values );
-		} else {
-			$values = implode( '; ', $new_values );
-		}
-	}
-
-	return $values;
+    // If the value is a URL, make it clickable.
+    if ( preg_match( '@(https?://([-\w\.]+)+(:\d+)?(/([\w/_\.]*(\?\S+)?)?)?)@', $field_value ) ) {
+        $field_value = make_clickable( $field_value );
+    }
+    
+    return $field_value;
 }
 
 /**

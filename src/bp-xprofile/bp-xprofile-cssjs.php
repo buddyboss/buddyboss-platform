@@ -33,6 +33,7 @@ add_action( 'bp_admin_enqueue_scripts', 'xprofile_add_admin_css' );
  * Enqueue the jQuery libraries for handling drag/drop/sort.
  *
  * @since BuddyPress 1.5.0
+ * @since BuddyBoss 3.1.1 Removed autolink strings as autolink functionality is no longer used.
  */
 function xprofile_add_admin_js() {
 	if ( !empty( $_GET['page'] ) && strpos( $_GET['page'], 'bp-profile-setup' ) !== false ) {
@@ -52,7 +53,6 @@ function xprofile_add_admin_js() {
 		// "please enter options for this field" section.
 		$strings = array(
 			'do_settings_section_field_types' => array(),
-			'do_autolink' => '',
 		);
 
 		foreach ( bp_xprofile_get_field_types() as $field_type => $field_type_class ) {
@@ -65,9 +65,6 @@ function xprofile_add_admin_js() {
 		// Load 'autolink' setting into JS so that we can provide smart defaults when switching field type.
 		if ( ! empty( $_GET['field_id'] ) ) {
 			$field_id = intval( $_GET['field_id'] );
-
-			// Pull the raw data from the DB so we can tell whether the admin has saved a value yet.
-			$strings['do_autolink'] = bp_xprofile_get_meta( $field_id, 'field', 'do_autolink' );
 		}
 
 		wp_localize_script( 'xprofile-admin-js', 'XProfileAdmin', $strings );

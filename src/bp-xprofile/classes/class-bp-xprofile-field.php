@@ -147,6 +147,7 @@ class BP_XProfile_Field {
 	 * Whether values from this field are autolinked to directory searches.
 	 *
 	 * @since BuddyPress 2.5.0
+     * @deprecated BuddyBoss 3.1.1 No longer used. Will be removed in future.
 	 * @var bool
 	 */
 	public $do_autolink;
@@ -881,21 +882,15 @@ class BP_XProfile_Field {
 	 * Defaults to true for multi and default fields, false for single fields.
 	 *
 	 * @since BuddyPress 2.5.0
+     * @since BuddyBoss 3.1.1 Always returns false.
+     * @deprecated BuddyBoss 3.1.1 Autolink functionality is no longer used. Keeping the function here for legacy purposes. Will be removed in future.
 	 *
 	 * @return bool
 	 */
 	public function get_do_autolink() {
-		if ( ! isset( $this->do_autolink ) ) {
-			$do_autolink = bp_xprofile_get_meta( $this->id, 'field', 'do_autolink' );
-
-			if ( '' === $do_autolink ) {
-				$this->do_autolink = $this->type_obj->supports_options;
-			} else {
-				$this->do_autolink = 'on' === $do_autolink;
-			}
-		}
-
-		return $this->do_autolink;
+        _deprecated_function( __FUNCTION__, '3.1.1(BuddyBoss)' );
+        
+        return false;
 	}
 
 	/* Static Methods ********************************************************/
@@ -1281,10 +1276,6 @@ class BP_XProfile_Field {
 							// Output the field visibility metaboxes.
 							$this->visibility_metabox();
 
-							// Output the autolink metabox.
-							$this->autolink_metabox();
-
-
 							/**
 							 * Fires after XProfile Field sidebar metabox.
 							 *
@@ -1582,37 +1573,6 @@ class BP_XProfile_Field {
 		</div>
 
 	<?php
-	}
-
-	/**
-	 * Private method used to output autolink metabox.
-	 *
-	 * @since BuddyPress 2.5.0
-	 *
-	 * @return void If default field id 1.
-	 */
-	private function autolink_metabox() {
-		?>
-
-		<div class="postbox">
-			<h2><?php esc_html_e( 'Autolink', 'buddyboss' ); ?></h2>
-			<div class="inside">
-				<p class="description"><?php esc_html_e( 'On user profiles, link this field to a search of the Members directory, using the field value as a search term.', 'buddyboss' ); ?></p>
-
-				<p>
-					<label for="do-autolink" class="screen-reader-text"><?php
-						/* translators: accessibility text */
-						esc_html_e( 'Autolink status for this field', 'buddyboss' );
-					?></label>
-					<select name="do_autolink" id="do-autolink">
-						<option value="on" <?php selected( $this->get_do_autolink() ); ?>><?php esc_html_e( 'Enabled', 'buddyboss' ); ?></option>
-						<option value="" <?php selected( $this->get_do_autolink(), false ); ?>><?php esc_html_e( 'Disabled', 'buddyboss' ); ?></option>
-					</select>
-				</p>
-			</div>
-		</div>
-
-		<?php
 	}
 
 	/**
