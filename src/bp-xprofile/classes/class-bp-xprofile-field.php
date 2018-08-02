@@ -132,16 +132,16 @@ class BP_XProfile_Field {
 	protected $allow_custom_visibility;
 
 	/**
-	 * Field's alternate title.
+	 * Field's alternate name.
 	 *
      * Field is marked protected as it is not supposed to be accessed directly.
-     * Use the method get_alternate_title instead.
+     * Use the method get_alternate_name instead.
      * 
 	 * @since BuddyBoss 3.1.1
      * 
-	 * @var string alternate title of the field.
+	 * @var string alternate name of the field.
 	 */
-	protected $alternate_title;
+	protected $alternate_name;
 
 	/**
 	 * Whether values from this field are autolinked to directory searches.
@@ -316,8 +316,8 @@ class BP_XProfile_Field {
 				return $this->get_allow_custom_visibility();
 				break;
             
-            case 'alternate_title':
-                return $this->get_alternate_title();
+            case 'alternate_name' :
+                return $this->get_alternate_name();
                 break;
 		}
 	}
@@ -857,7 +857,7 @@ class BP_XProfile_Field {
 	}
     
 	/**
-	 * Get alternate title of the field.
+	 * Get alternate name of the field.
      * 
      * Lazy-loaded to reduce overhead.
 	 *
@@ -865,12 +865,12 @@ class BP_XProfile_Field {
 	 *
 	 * @return string 
 	 */
-	public function get_alternate_title() {
-		if ( ! isset( $this->alternate_title ) ) {
-			$this->alternate_title = bp_xprofile_get_meta( $this->id, 'field', 'alternate_title' );
+	public function get_alternate_name() {
+		if ( ! isset( $this->alternate_name ) ) {
+			$this->alternate_name = bp_xprofile_get_meta( $this->id, 'field', 'alternate_name' );
 		}
 
-		return $this->alternate_title;
+		return $this->alternate_name;
 	}
 
 	/**
@@ -1439,7 +1439,7 @@ class BP_XProfile_Field {
 					esc_html_e( 'Alternate Title', 'buddyboss' );
 				?></label>
 				<p class="description"><?php _e( 'Alternate Title (optional)', 'buddyboss' ); ?></p>
-                <input type="text" name="title_secondary" id="title_secondary" value="<?php echo esc_attr( $this->get_alternate_title() ) ;?>" autocomplete="off" />
+                <input type="text" name="title_secondary" id="title_secondary" value="<?php echo esc_attr( $this->get_alternate_name() ) ;?>" autocomplete="off" />
 				
 				<?php /* description while editing */ ?>
 				<label for="description" class="screen-reader-text"><?php

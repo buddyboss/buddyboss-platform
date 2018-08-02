@@ -508,9 +508,9 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 					bp_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', $_POST['allow-custom-visibility'] );
 				}
                 
-				// Update alternate title.
-                $alternate_title = isset( $_POST['title_secondary'] ) ? $_POST['title_secondary'] : '';
-                bp_xprofile_update_field_meta( $field_id, 'alternate_title', $alternate_title );
+				// Update alternate name.
+                $alternate_name = isset( $_POST['title_secondary'] ) ? $_POST['title_secondary'] : '';
+                bp_xprofile_update_field_meta( $field_id, 'alternate_name', $alternate_name );
 
 				// Validate signup.
 				if ( ! empty( $_POST['signup-position'] ) ) {
