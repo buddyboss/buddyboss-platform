@@ -30,10 +30,12 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Make sure buddypress isn't activated.
+ * Make sure BuddyPress and bbPress are not activated.
  * 
- * We're not using is_plugin_active... functions b/c you need to include the 
+ * We're not using 'is_plugin_active' functions because you need to include the 
  * /wp-admin/includes/plugin.php file in order to use that function.
+ * 
+ * @since BuddyBoss 3.1.1
  */
 
 $is_bp_active = false;
@@ -71,9 +73,9 @@ if ( !$is_bp_active ) {
 if ( $is_bp_active ) {
     
     /**
-     * Displays an admin notice when buddypress plugin is also active.
+     * Displays an admin notice when BuddyPress plugin is also active.
      * 
-     * @since BuddyPress 1.0.0
+     * @since BuddyBoss 3.1.1
      * @return void
      */
     function bp_duplicate_buddypress_notice() {
@@ -94,7 +96,7 @@ if ( $is_bp_active ) {
     }
     
     /**
-     * You can't have buddypress and buddyboss, both active at the same time!
+     * You can't have BuddyPress and BuddyBoss both active at the same time!
      */
     add_action( 'admin_notices',            'bp_duplicate_buddypress_notice' );
 	add_action( 'network_admin_notices',    'bp_duplicate_buddypress_notice' );
@@ -104,9 +106,9 @@ if ( $is_bp_active ) {
 if ( $is_bb_active ) {
     
     /**
-     * Displays an admin notice when bbpress plugin is also active.
+     * Displays an admin notice when bbPress plugin is also active.
      * 
-     * @since BuddyPress 1.0.0
+     * @since BuddyBoss 3.1.1
      * @return void
      */
     function bp_duplicate_bbpress_notice() {
@@ -127,7 +129,7 @@ if ( $is_bb_active ) {
     }
     
     /**
-     * You can't have buddypress and buddyboss, both active at the same time!
+     * You can't have BuddyPress and BuddyBoss both active at the same time!
      */
     add_action( 'admin_notices',            'bp_duplicate_bbpress_notice' );
 	add_action( 'network_admin_notices',    'bp_duplicate_bbpress_notice' );
@@ -135,18 +137,18 @@ if ( $is_bb_active ) {
 }
 
 /**
- * Buddyboss platform's code is already loaded when buddypress is being activated. And buddypress doesn't have function checks to avoid 
- * duplicate function declarations. This leads to a fatal error.
- * To avoid that, we prevent buddypress from activating and show a nicer notice, instead of the dirty fatal error.
+ * BuddyBoss Platform's code is already loaded when BuddyPress is being activated. And BuddyPress doesn't have function
+ * checks to avoid duplicate function declarations. This leads to a fatal error.
+ * To avoid that, we prevent BuddyPress from activating and we show a nicer notice, instead of the dirty fatal error.
  */
 if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
 
     add_action( 'admin_init', 'bp_prevent_activating_buddypress' );
 
     /**
-     * Check if the current request is to activate buddypress plugins and redirect if so.
+     * Check if the current request is to activate BuddyPress plugins and redirect if so.
      * 
-     * @since BuddyPress 1.0.0
+     * @since BuddyBoss 3.1.1
      * 
      * @global string $pagenow
      */
@@ -172,9 +174,9 @@ if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
     }
 
     /**
-     * Show a notice that an attempt to activate buddypres plugin was blocked.
+     * Show a notice that an attempt to activate BuddyPress plugin was blocked.
      * 
-     * @since BuddyPress 1.0.0
+     * @since BuddyBoss 3.1.1
      */
     function bp_prevented_activating_buddypress_notice () {
         ?>
@@ -203,7 +205,7 @@ if ( !$is_bp_active && !$is_bb_active ) {
      *
      * Example: <?php $bp = buddypress(); ?>
      *
-     * @return BuddyBoss|null The one true BuddyBoss Instance.
+     * @return BuddyPress|null The one true BuddyPress Instance.
      */
     function buddypress() {
         return BuddyPress::instance();
@@ -239,11 +241,11 @@ if ( !$is_bp_active && !$is_bb_active ) {
         require dirname( __FILE__ ) . '/class-buddypress.php';
 
         /*
-         * Hook BuddyBoss early onto the 'plugins_loaded' action.
+         * Hook BuddyPress early onto the 'plugins_loaded' action.
          *
-         * This gives all other plugins the chance to load before BuddyBoss,
+         * This gives all other plugins the chance to load before BuddyPress,
          * to get their actions, filters, and overrides setup without
-         * BuddyBoss being in the way.
+         * BuddyPress being in the way.
          */
         if ( defined( 'BUDDYPRESS_LATE_LOAD' ) ) {
             add_action( 'plugins_loaded', 'buddypress', (int) BUDDYPRESS_LATE_LOAD );
