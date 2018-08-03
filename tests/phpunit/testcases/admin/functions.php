@@ -244,4 +244,22 @@ class BP_Tests_Admin_Functions extends BP_UnitTestCase {
 			$this->assertSame( $correct_description, $d_term->description );
 		}
 	}
+
+	/**
+	 * Buddyboss Trello #61
+	 */
+	public function test_legacy_theme_pack_notices() {
+		$this->set_permalink_structure('/%postname%/');
+
+		update_option('_bp_theme_package_id', 'legacy');
+		do_action('bp_admin_init');
+
+		$this->assertTrue(!! has_filter('admin_notices', 'bp_print_legacy_theme_deprecated_notice'));
+
+		remove_all_filters('admin_notices');
+		update_option('_bp_theme_package_id', 'nouveau');
+		do_action('bp_admin_init');
+
+		$this->assertFalse(!! has_filter('admin_notices', 'bp_print_legacy_theme_deprecated_notice'));
+	}
 }

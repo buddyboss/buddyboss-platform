@@ -36,7 +36,7 @@ function bp_setup_theme_compat( $theme = '' ) {
 
 	// Make sure theme package is available, set to default if not.
 	if ( ! isset( $bp->theme_compat->packages[$theme] ) || ! is_a( $bp->theme_compat->packages[$theme], 'BP_Theme_Compat' ) ) {
-		$theme = 'legacy';
+		$theme = 'nouveau';
 	}
 
 	// Set the active theme compat theme.

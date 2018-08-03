@@ -55,6 +55,7 @@ add_action( 'bp_admin_init', 'bp_register_importers'           );
 add_action( 'bp_admin_init', 'bp_register_admin_style'         );
 add_action( 'bp_admin_init', 'bp_register_admin_settings'      );
 add_action( 'bp_admin_init', 'bp_do_activation_redirect', 1    );
+add_action( 'bp_admin_init', 'bp_check_for_legacy_theme');
 
 // Add a new separator.
 add_action( 'bp_admin_menu', 'bp_admin_separator' );

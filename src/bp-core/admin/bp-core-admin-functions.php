@@ -367,6 +367,39 @@ function bp_do_activation_redirect() {
 	wp_safe_redirect( add_query_arg( $query_args, bp_get_admin_url( '?hello=buddypress' ) ) );
 }
 
+/**
+ * Check if currently using legacy theme
+ *
+ * @since Buddyboss 3.1.1
+ */
+function bp_check_for_legacy_theme() {
+	if (bp_get_theme_package_id() != 'legacy') {
+		return;
+	}
+
+	add_action('admin_notices', 'bp_print_legacy_theme_deprecated_notice');
+}
+
+/**
+ * Print the notice warnning in admin pages
+ *
+ * @since buddyboss 3.1.1
+ */
+function bp_print_legacy_theme_deprecated_notice() {
+	$message = sprintf(
+		__('You are using a theme that relies on the older %s templates, and some things may not work properly. Consider switching to our *new* BuddyBoss Theme, a generic WordPress theme, or any newer theme that is compatible with the %s template pack.', 'buddyboss'),
+		'<a href="https://wptavern.com/buddypress-contributors-are-building-a-new-template-pack" target="_blank" rel="noopener">BuddyPress Legacy</a>',
+		'<a href="https://wptavern.com/buddypress-contributors-are-building-a-new-template-pack" target="_blank" rel="noopener">BuddyPress Nouveau</a>'
+	);
+
+	printf(
+		'<div class="notice notice-error">
+	        <p>%s</p>
+	    </div>',
+	    $message
+	);
+}
+
 /** UI/Styling ****************************************************************/
 
 /**
