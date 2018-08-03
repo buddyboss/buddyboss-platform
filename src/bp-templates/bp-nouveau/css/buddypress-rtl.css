@@ -2787,7 +2787,7 @@ body.no-js .buddypress-wrap .field-visibility-settings {
 
 .buddypress-wrap .current-visibility-level {
 	font-style: normal;
-	font-weight: 700;
+	color: #333;
 }
 
 .buddypress-wrap .field-visibility-settings,
@@ -2813,8 +2813,13 @@ body.no-js .buddypress-wrap .field-visibility-settings {
 	margin-bottom: 0;
 }
 
-.buddypress-wrap .standard-form .field-visibility-settings .field-visibility-settings-close {
+.buddypress-wrap .standard-form .field-visibility-settings .field-visibility-settings-close,
+.buddypress-wrap .standard-form button.visibility-toggle-link.button {
 	font-size: 12px;
+}
+
+.buddypress-wrap .standard-form button.visibility-toggle-link.button {
+	margin: 5px;
 }
 
 .buddypress-wrap .standard-form .wp-editor-container {

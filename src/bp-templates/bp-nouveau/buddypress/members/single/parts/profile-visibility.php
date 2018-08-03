@@ -21,7 +21,7 @@ if ( empty( $GLOBALS['profile_template'] ) ) {
 			'<span class="current-visibility-level">' . bp_get_the_profile_field_visibility_level_label() . '</span>'
 		);
 		?>
-		<button class="visibility-toggle-link text-button" type="button"><?php echo esc_html_x( 'Change', 'button', 'buddyboss' ); ?></button>
+		<button class="visibility-toggle-link button" type="button"><?php echo esc_html_x( 'Change', 'button', 'buddyboss' ); ?></button>
 
 	</p>
 
