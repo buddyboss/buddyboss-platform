@@ -138,21 +138,17 @@
 
 	<# if ( ! data.recipientsCount ) { #>
 		<div class="thread-from">
-			<a class="user-link" href="{{data.sender_link}}">
-				<img class="avatar" src="{{data.sender_avatar}}" alt="" />
-				<span class="bp-screen-reader-text"><?php esc_html_e( 'From:', 'buddyboss' ); ?></span>
-				<span class="user-name">{{data.sender_name}}</span>
-			</a>
+			<img class="avatar" src="{{data.sender_avatar}}" alt="" />
+			<span class="bp-screen-reader-text"><?php esc_html_e( 'From:', 'buddyboss' ); ?></span>
+			<span class="user-name">{{data.sender_name}}</span>
 		</div>
 	<# } else {
 		var recipient = _.first( data.recipients );
 		#>
 		<div class="thread-to">
-			<a class="user-link" href="{{recipient.user_link}}">
-				<img class="avatar" src="{{recipient.avatar}}" alt="" />
-				<span class="bp-screen-reader-text"><?php esc_html_e( 'To:', 'buddyboss' ); ?></span>
-				<span class="user-name">{{recipient.user_name}}</span>
-			</a>
+			<img class="avatar" src="{{recipient.avatar}}" alt="" />
+			<span class="bp-screen-reader-text"><?php esc_html_e( 'To:', 'buddyboss' ); ?></span>
+			<span class="user-name">{{recipient.user_name}}</span>
 
 			<# if ( data.toOthers ) { #>
 				<span class="num-recipients">{{data.toOthers}}</span>
@@ -162,8 +158,8 @@
 
 	<div class="thread-content" data-thread-id="{{data.id}}">
 		<div class="thread-subject">
-			<span class="thread-count">({{data.count}})</span>
 			<a class="subject" href="../view/{{data.id}}/">{{data.subject}}</a>
+			<span class="thread-count">({{data.count}})</span>
 		</div>
 		<p class="excerpt">{{data.excerpt}}</p>
 	</div>
