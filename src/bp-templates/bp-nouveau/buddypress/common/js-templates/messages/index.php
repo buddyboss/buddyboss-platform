@@ -153,6 +153,7 @@
 			<div class="thread-from">
 				<span class="bp-screen-reader-text"><?php esc_html_e( 'From:', 'buddyboss' ); ?></span>
 				<span class="user-name">{{data.sender_name}}</span>
+				<span class="thread-count">({{data.count}})</span>
 			</div>
 		<# } else {
 			var recipient = _.first( data.recipients );
@@ -163,12 +164,13 @@
 				<# if ( data.toOthers ) { #>
 					<span class="num-recipients">{{data.toOthers}}</span>
 				<# } #>
+
+				<span class="thread-count">({{data.count}})</span>
 			</div>
 		<# } #>
 
 		<div class="thread-subject">
 			<a class="subject" href="../view/{{data.id}}/">{{data.excerpt}}</a>
-			<span class="thread-count">({{data.count}})</span>
 		</div>
 	</div>
 	<div class="thread-date">
@@ -188,7 +190,7 @@
 						<dd>
 							<ul class="participants-list">
 								<# for ( i in data.recipients ) { #>
-									<li><a href="{{data.recipients[i].user_link}}" class="bp-tooltip" data-bp-tooltip="{{data.recipients[i].user_name}}"><img class="avatar mini" src="{{data.recipients[i].avatar}}" alt="{{data.recipients[i].user_name}}" /></a></li>
+									<li><a href="{{data.recipients[i].user_link}}">{{data.recipients[i].user_name}}</a></li>
 								<# } #>
 							</ul>
 						</dd>
@@ -250,7 +252,7 @@
 				<dd>
 					<ul class="participants-list">
 						<# for ( i in data.recipients ) { #>
-							<li><a href="{{data.recipients[i].user_link}}" class="bp-tooltip" data-bp-tooltip="{{data.recipients[i].user_name}}"><img class="avatar mini" src="{{data.recipients[i].avatar}}" alt="{{data.recipients[i].user_name}}" /></a></li>
+							<li><a href="{{data.recipients[i].user_link}}">{{data.recipients[i].user_name}}</a></li>
 						<# } #>
 					</ul>
 				</dd>
