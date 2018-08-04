@@ -3048,12 +3048,6 @@ body.register .buddypress-wrap .page ul {
 	font-weight: 700;
 }
 
-#message-threads li .thread-content .excerpt {
-	color: #737373;
-	font-size: 12px;
-	margin: 0;
-}
-
 #message-threads li .thread-content .thread-from,
 #message-threads li .thread-content .thread-to,
 #message-threads li .thread-content .thread-subject {
@@ -3062,9 +3056,11 @@ body.register .buddypress-wrap .page ul {
 
 @media screen and (min-width: 46.8em) {
 	#message-threads li .thread-content .thread-from,
-	#message-threads li .thread-content .thread-to,
-	#message-threads li .thread-content .thread-subject {
+	#message-threads li .thread-content .thread-to {
 		font-size: 16px;
+	}
+	#message-threads li .thread-content .thread-subject {
+		font-size: 14px;
 	}
 }
 
@@ -3271,10 +3267,10 @@ body.register .buddypress-wrap .page ul {
 	padding: 0.5em;
 }
 
-.bp-messages-content #message-threads .thread-content a,
-.bp-messages-content #bp-message-thread-list li a.user-link {
+.bp-messages-content #message-threads .thread-content a {
 	border: 0;
 	text-decoration: none;
+	color: #737373;
 }
 
 .bp-messages-content .standard-form #subject {
