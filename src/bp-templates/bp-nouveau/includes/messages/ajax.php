@@ -300,7 +300,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 						'html'    => false,
 					) ) ),
 					'user_link' => bp_core_get_userlink( $recipient->user_id, false, true ),
-					'user_name' => bp_core_get_username( $recipient->user_id ),
+					'user_name' => bp_core_get_user_displayname( $recipient->user_id ),
 				);
 			}
 		}
@@ -444,7 +444,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 						'html'    => false,
 					) ) ),
 					'user_link' => bp_core_get_userlink( $recipient->user_id, false, true ),
-					'user_name' => bp_core_get_username( $recipient->user_id ),
+					'user_name' => bp_core_get_user_displayname( $recipient->user_id ),
 				);
 			}
 		}
