@@ -110,7 +110,7 @@
 
 <script type="text/html" id="tmpl-bp-bulk-actions">
 	<input type="checkbox" id="user_messages_select_all" value="1"/>
-	<label for="user_messages_select_all"><?php esc_html_e( 'All Messages', 'buddyboss' ); ?></label>
+	<label for="user_messages_select_all"><?php esc_html_e( 'Bulk Actions', 'buddyboss' ); ?></label>
 	<div class="bulk-actions-wrap bp-hide">
 		<div class="bulk-actions select-wrap">
 			<label for="user-messages-bulk-actions" class="bp-screen-reader-text">

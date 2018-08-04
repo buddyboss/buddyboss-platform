@@ -28,7 +28,7 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 	$total_items = (int) $total_items;
 	$text        = '';
 	$link        = trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() . '/inbox' );
-	$title       = __( 'Inbox', 'buddyboss' );
+	$title       = __( 'Messages', 'buddyboss' );
 	$amount      = 'single';
 
 	if ( 'new_message' === $action ) {

@@ -236,7 +236,7 @@ class BP_Messages_Component extends BP_Component {
 
 		// Add the subnav items to the profile.
 		$sub_nav[] = array(
-			'name'            => __( 'Inbox', 'buddyboss' ),
+			'name'            => __( 'Messages', 'buddyboss' ),
 			'slug'            => 'inbox',
 			'parent_url'      => $messages_link,
 			'parent_slug'     => $slug,
@@ -324,12 +324,12 @@ class BP_Messages_Component extends BP_Component {
 				);
 				$inbox = sprintf(
 					/* translators: %s: Unread message count for the current user */
-					__( 'Inbox %s', 'buddyboss' ),
+					__( 'Messages %s', 'buddyboss' ),
 					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 				);
 			} else {
 				$title = __( 'Messages', 'buddyboss' );
-				$inbox = __( 'Inbox',    'buddypress' );
+				$inbox = __( 'Messages',    'buddypress' );
 			}
 
 			// Add main Messages menu.
