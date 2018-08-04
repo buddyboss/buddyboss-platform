@@ -2995,11 +2995,11 @@ body.register .buddypress-wrap .page ul {
 
 #message-threads li .thread-from,
 #message-threads li .thread-to {
-	-webkit-flex: 1 2 20%;
-	-moz-flex: 1 2 20%;
-	-ms-flex: 1 2 20%;
-	-o-flex: 1 2 20%;
-	flex: 1 2 20%;
+	-webkit-flex: 1 2 10%;
+	-moz-flex: 1 2 10%;
+	-ms-flex: 1 2 10%;
+	-o-flex: 1 2 10%;
+	flex: 1 2 10%;
 }
 
 #message-threads li .thread-from img.avatar,
@@ -3023,11 +3023,11 @@ body.register .buddypress-wrap .page ul {
 }
 
 #message-threads li .thread-content {
-	-webkit-flex: 1 2 60%;
-	-moz-flex: 1 2 60%;
-	-ms-flex: 1 2 60%;
-	-o-flex: 1 2 60%;
-	flex: 1 2 60%;
+	-webkit-flex: 1 2 70%;
+	-moz-flex: 1 2 70%;
+	-ms-flex: 1 2 70%;
+	-o-flex: 1 2 70%;
+	flex: 1 2 70%;
 }
 
 #message-threads li .thread-date {
