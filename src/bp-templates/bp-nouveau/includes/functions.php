@@ -316,9 +316,9 @@ function bp_nouveau_register_sidebars() {
 	$sidebars = array();
 	if ( $default_user_front ) {
 		$sidebars[] = array(
-			'name'          => __( 'BuddyPress Member\'s Home', 'buddyboss' ),
+			'name'          => __( 'Member Dashboard', 'buddyboss' ),
 			'id'            => 'sidebar-buddypress-members',
-			'description'   => __( 'Add widgets here to appear in the front page of each member of your community.', 'buddyboss' ),
+			'description'   => __( 'Add widgets here to appear in the dashboard of each member of your community.', 'buddyboss' ),
 			'before_widget' => '<div id="%1$s" class="widget %2$s">',
 			'after_widget'  => '</div>',
 			'before_title'  => '<h2 class="widget-title">',
