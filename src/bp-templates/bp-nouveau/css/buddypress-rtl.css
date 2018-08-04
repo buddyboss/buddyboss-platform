@@ -2843,6 +2843,7 @@ body.no-js .buddypress-wrap .field-visibility-settings {
 
 .buddypress-wrap .standard-form .field-visibility-settings-header {
 	font-size: 14px;
+	margin: 5px 0;
 }
 
 .buddypress-wrap .standard-form .field-visibility-settings legend,
