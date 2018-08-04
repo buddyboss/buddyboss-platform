@@ -3131,7 +3131,7 @@ body.register .buddypress-wrap .page ul {
 }
 
 .bp-messages-content #bp-message-thread-list .message-metadata {
-	border-bottom: 1px solid #ccc;
+	border: 1px solid #b7b7b7;
 	-webkit-box-shadow: -2px 1px 9px 0 #eee;
 	-moz-box-shadow: -2px 1px 9px 0 #eee;
 	box-shadow: -2px 1px 9px 0 #eee;
