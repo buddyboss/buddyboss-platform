@@ -248,13 +248,13 @@
 	<header class="single-message-thread-header">
 		<# if ( undefined !== data.recipients ) { #>
 			<dl class="thread-participants">
-				<dt><?php esc_html_e( 'Participants', 'buddyboss' ); ?></dt>
+				<dt>
+					<# for ( i in data.recipients ) { #>
+						<span><a href="{{data.recipients[i].user_link}}">{{data.recipients[i].user_name}}</a></span>
+					<# } #>
+				</dt>
 				<dd>
-					<ul class="participants-list">
-						<# for ( i in data.recipients ) { #>
-							<li><a href="{{data.recipients[i].user_link}}">{{data.recipients[i].user_name}}</a></li>
-						<# } #>
-					</ul>
+					<span class="thread-date">Started [Month Day, Year]</span>
 				</dd>
 			</dl>
 		<# } #>

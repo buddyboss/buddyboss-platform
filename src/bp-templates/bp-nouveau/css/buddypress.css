@@ -3195,33 +3195,13 @@ body.register .buddypress-wrap .page ul {
 	width: 70%;
 }
 
-.bp-messages-content .thread-participants dd,
-.bp-messages-content .thread-participants ul {
+.bp-messages-content .thread-participants dd {
 	margin-bottom: 10px;
 }
 
-.bp-messages-content .thread-participants ul {
-	list-style: none;
-}
-
-.bp-messages-content .thread-participants ul:after {
-	clear: both;
-	content: "";
-	display: table;
-}
-
-.bp-messages-content .thread-participants li {
-	float: left;
-	margin-right: 5px;
-}
-
-.bp-messages-content .thread-participants li a {
+.bp-messages-content .thread-participants .thread-date {
     color: #737373;
-    font-size: 14px;
-}
-
-.bp-messages-content .thread-participants img {
-	width: 30px;
+    font-size: 13px;
 }
 
 .bp-messages-content #bp-message-thread-list li .message-content ul,
@@ -4759,8 +4739,7 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 
 .activity-list .bp-tooltip:after,
 .activity-meta-action .bp-tooltip:after,
-.notification-actions .bp-tooltip:after,
-.participants-list .bp-tooltip:after {
+.notification-actions .bp-tooltip:after {
 	left: 0;
 	-webkit-transform: translate(0, 0);
 	-ms-transform: translate(0, 0);
