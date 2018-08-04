@@ -167,10 +167,9 @@
 		<# } #>
 
 		<div class="thread-subject">
-			<a class="subject" href="../view/{{data.id}}/">{{data.subject}}</a>
+			<a class="subject" href="../view/{{data.id}}/">{{data.excerpt}}</a>
 			<span class="thread-count">({{data.count}})</span>
 		</div>
-		<p class="excerpt">{{data.excerpt}}</p>
 	</div>
 	<div class="thread-date">
 		<time datetime="{{data.date.toISOString()}}">{{data.display_date}}</time>
@@ -180,7 +179,6 @@
 <script type="text/html" id="tmpl-bp-messages-preview">
 	<# if ( undefined !== data.content ) { #>
 
-		<h2 class="message-title preview-thread-title"><?php esc_html_e( 'Active conversation:', 'buddyboss' ); ?><span class="messages-title">{{{data.subject}}}</span></h2>
 		<div class="preview-content">
 			<header class="preview-pane-header">
 
@@ -245,7 +243,6 @@
 </script>
 
 <script type="text/html" id="tmpl-bp-messages-single-header">
-	<h2 id="message-subject" class="message-title single-thread-title">{{{data.subject}}}</h2>
 	<header class="single-message-thread-header">
 		<# if ( undefined !== data.recipients ) { #>
 			<dl class="thread-participants">
