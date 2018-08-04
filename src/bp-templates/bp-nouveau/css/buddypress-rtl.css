@@ -3003,7 +3003,7 @@ body.register .buddypress-wrap .page ul {
 
 #message-threads li .thread-avatar img.avatar {
 	float: right;
-	margin: 0 0 0 10px;
+	margin: 5px 0 0 10px;
 }
 
 #message-threads li .thread-from .user-name,
