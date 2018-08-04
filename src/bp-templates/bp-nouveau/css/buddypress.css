@@ -3116,10 +3116,10 @@ body.register .buddypress-wrap .page ul {
 }
 
 .bp-messages-content #bp-message-thread-list {
-	border-top: 1px solid #eaeaea;
+	background: #fafafa;
 	clear: both;
 	list-style: none;
-	padding: 1em 0 0.3em;
+	padding: 1em 1em 0.3em;
 }
 
 .bp-messages-content #bp-message-thread-list li {
@@ -3132,6 +3132,7 @@ body.register .buddypress-wrap .page ul {
 
 .bp-messages-content #bp-message-thread-list .message-metadata {
 	border: 1px solid #b7b7b7;
+	background: #fff;
 	-webkit-box-shadow: -2px 1px 9px 0 #eee;
 	-moz-box-shadow: -2px 1px 9px 0 #eee;
 	box-shadow: -2px 1px 9px 0 #eee;
@@ -3234,7 +3235,12 @@ body.register .buddypress-wrap .page ul {
 
 .bp-messages-content .thread-participants li {
 	float: left;
-	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.bp-messages-content .thread-participants li a {
+    color: #737373;
+    font-size: 14px;
 }
 
 .bp-messages-content .thread-participants img {

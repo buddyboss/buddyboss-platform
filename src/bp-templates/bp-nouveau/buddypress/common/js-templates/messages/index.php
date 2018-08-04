@@ -186,7 +186,7 @@
 
 				<# if ( undefined !== data.recipients ) { #>
 					<dl class="thread-participants">
-						<dt><?php esc_html_e( 'Participants:', 'buddyboss' ); ?></dt>
+						<dt><?php esc_html_e( 'Participants', 'buddyboss' ); ?></dt>
 						<dd>
 							<ul class="participants-list">
 								<# for ( i in data.recipients ) { #>
@@ -249,7 +249,7 @@
 	<header class="single-message-thread-header">
 		<# if ( undefined !== data.recipients ) { #>
 			<dl class="thread-participants">
-				<dt><?php esc_html_e( 'Participants:', 'buddyboss' ); ?></dt>
+				<dt><?php esc_html_e( 'Participants', 'buddyboss' ); ?></dt>
 				<dd>
 					<ul class="participants-list">
 						<# for ( i in data.recipients ) { #>
@@ -332,8 +332,6 @@
 				<?php bp_nouveau_messages_hook( 'before', 'reply_meta' ); ?>
 
 				<div class="avatar-box">
-					<?php bp_loggedin_user_avatar( 'type=thumb&height=30&width=30' ); ?>
-
 					<strong><?php esc_html_e( 'Send a Reply', 'buddyboss' ); ?></strong>
 				</div>
 
