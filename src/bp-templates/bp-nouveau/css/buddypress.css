@@ -2993,8 +2993,7 @@ body.register .buddypress-wrap .page ul {
 	flex: 1 2 5%;
 }
 
-#message-threads li .thread-from,
-#message-threads li .thread-to {
+#message-threads li .thread-avatar {
 	-webkit-flex: 1 2 10%;
 	-moz-flex: 1 2 10%;
 	-ms-flex: 1 2 10%;
@@ -3002,8 +3001,7 @@ body.register .buddypress-wrap .page ul {
 	flex: 1 2 10%;
 }
 
-#message-threads li .thread-from img.avatar,
-#message-threads li .thread-to img.avatar {
+#message-threads li .thread-avatar img.avatar {
 	float: left;
 	margin: 0 10px 0 0;
 }
