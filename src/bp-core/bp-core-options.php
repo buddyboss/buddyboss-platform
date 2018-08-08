@@ -736,10 +736,10 @@ function bp_is_activity_heartbeat_active( $default = true ) {
  * @since BuddyPress 1.7.0
  *
  * @param string $default Optional. Fallback value if not found in the database.
- *                        Default: 'legacy'.
+ *                        Default: 'nouveau'.
  * @return string ID of the theme package.
  */
-function bp_get_theme_package_id( $default = 'legacy' ) {
+function bp_get_theme_package_id( $default = 'nouveau' ) {
 
 	/**
 	 * Filters the current theme package ID.
