@@ -729,7 +729,7 @@ Bar!';
 
 		$a_obj = new BP_Activity_Activity( $a );
 
-		$expected = sprintf( '%s posted an update', bp_core_get_userlink( $u ) );
+		$expected = sprintf( '%s', bp_core_get_userlink( $u ) );
 
 		$this->assertSame( $expected, $a_obj->action );
 	}

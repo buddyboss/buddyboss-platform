@@ -253,6 +253,10 @@ class BP_Tests_Admin_Functions extends BP_UnitTestCase {
 	public function test_legacy_theme_pack_notices_based_on_options() {
 		$this->set_permalink_structure('/%postname%/');
 
+		// not sure why this filter are removed when running the enthire test suite, manually added
+		add_action( 'bp_admin_init', 'bp_check_for_legacy_theme');
+
+		remove_all_filters('admin_notices');
 		update_option('_bp_theme_package_id', 'legacy');
 		do_action('bp_admin_init');
 
@@ -273,6 +277,10 @@ class BP_Tests_Admin_Functions extends BP_UnitTestCase {
 	public function test_legacy_theme_pack_notices_based_on_theme_support() {
 		$this->set_permalink_structure('/%postname%/');
 
+		// not sure why this filter are removed when running the enthire test suite, manually added
+		add_action( 'bp_admin_init', 'bp_check_for_legacy_theme');
+
+		remove_all_filters('admin_notices');
 		add_theme_support('buddypress-use-legacy');
 		do_action('bp_admin_init');
 

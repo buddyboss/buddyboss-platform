@@ -1045,33 +1045,35 @@ Bar!';
 
 	/**
 	 * @group xprofile_filter_link_profile_data
+	 * @version  bossyboss 3.1.1 Autolink features is removed
 	 */
-	public function test_field_comma_seperated_values_are_autolinked() {
-		$field_group_id = self::factory()->xprofile_group->create();
-		$field_id = self::factory()->xprofile_field->create( array( 'field_group_id' => $field_group_id ) );
-		$GLOBALS['field'] = new BP_XProfile_Field( $field_id );
-		$GLOBALS['field']->do_autolink = true;
+	// public function test_field_comma_seperated_values_are_autolinked() {
+	// 	$field_group_id = self::factory()->xprofile_group->create();
+	// 	$field_id = self::factory()->xprofile_field->create( array( 'field_group_id' => $field_group_id ) );
+	// 	$GLOBALS['field'] = new BP_XProfile_Field( $field_id );
+	// 	$GLOBALS['field']->do_autolink = true;
 
-		$output = xprofile_filter_link_profile_data( 'Hello world this is a test; with, some, words', 'textbox' );
-		$regex = '#^Hello world this is a test; with, <a href="([^"]+)" rel="nofollow">some</a>, <a href="([^"]+)" rel="nofollow">words</a>$#i';
+	// 	$output = xprofile_filter_link_profile_data( 'Hello world this is a test; with, some, words', 'textbox' );
+	// 	$regex = '#^Hello world this is a test; with, <a href="([^"]+)" rel="nofollow">some</a>, <a href="([^"]+)" rel="nofollow">words</a>$#i';
 
-		$this->assertRegExp( $regex, $output );
-		unset( $GLOBALS['field'] );
-	}
+	// 	$this->assertRegExp( $regex, $output );
+	// 	unset( $GLOBALS['field'] );
+	// }
 
 	/**
 	 * @group xprofile_filter_link_profile_data
+	 * @version  bossyboss 3.1.1 Autolink features is removed
 	 */
-	public function test_field_semicolon_seperated_values_are_autolinked() {
-		$field_group_id = self::factory()->xprofile_group->create();
-		$field_id = self::factory()->xprofile_field->create( array( 'field_group_id' => $field_group_id ) );
-		$GLOBALS['field'] = new BP_XProfile_Field( $field_id );
-		$GLOBALS['field']->do_autolink = true;
+	// public function test_field_semicolon_seperated_values_are_autolinked() {
+	// 	$field_group_id = self::factory()->xprofile_group->create();
+	// 	$field_id = self::factory()->xprofile_field->create( array( 'field_group_id' => $field_group_id ) );
+	// 	$GLOBALS['field'] = new BP_XProfile_Field( $field_id );
+	// 	$GLOBALS['field']->do_autolink = true;
 
-		$output = xprofile_filter_link_profile_data( 'Hello world this is a test with; some; words', 'textbox' );
-		$regex = '#^Hello world this is a test with; <a href="([^"]+)" rel="nofollow">some</a>; <a href="([^"]+)" rel="nofollow">words</a>$#i';
+	// 	$output = xprofile_filter_link_profile_data( 'Hello world this is a test with; some; words', 'textbox' );
+	// 	$regex = '#^Hello world this is a test with; <a href="([^"]+)" rel="nofollow">some</a>; <a href="([^"]+)" rel="nofollow">words</a>$#i';
 
-		$this->assertRegExp( $regex, $output );
-		unset( $GLOBALS['field'] );
-	}
+	// 	$this->assertRegExp( $regex, $output );
+	// 	unset( $GLOBALS['field'] );
+	// }
 }
