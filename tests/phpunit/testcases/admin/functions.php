@@ -246,9 +246,11 @@ class BP_Tests_Admin_Functions extends BP_UnitTestCase {
 	}
 
 	/**
-	 * Buddyboss Trello #61
+	 * Buddyboss T#61
+	 *
+	 * Print admin notice if lagecy theme are used
 	 */
-	public function test_legacy_theme_pack_notices() {
+	public function test_legacy_theme_pack_notices_based_on_options() {
 		$this->set_permalink_structure('/%postname%/');
 
 		update_option('_bp_theme_package_id', 'legacy');
@@ -258,6 +260,26 @@ class BP_Tests_Admin_Functions extends BP_UnitTestCase {
 
 		remove_all_filters('admin_notices');
 		update_option('_bp_theme_package_id', 'nouveau');
+		do_action('bp_admin_init');
+
+		$this->assertFalse(!! has_filter('admin_notices', 'bp_print_legacy_theme_deprecated_notice'));
+	}
+
+	/**
+	 * Buddyboss T#61
+	 *
+	 * Print admin notice if legacy theme are used
+	 */
+	public function test_legacy_theme_pack_notices_based_on_theme_support() {
+		$this->set_permalink_structure('/%postname%/');
+
+		add_theme_support('buddypress-use-legacy');
+		do_action('bp_admin_init');
+
+		$this->assertTrue(!! has_filter('admin_notices', 'bp_print_legacy_theme_deprecated_notice'));
+
+		remove_all_filters('admin_notices');
+		remove_theme_support('buddypress-use-legacy');
 		do_action('bp_admin_init');
 
 		$this->assertFalse(!! has_filter('admin_notices', 'bp_print_legacy_theme_deprecated_notice'));

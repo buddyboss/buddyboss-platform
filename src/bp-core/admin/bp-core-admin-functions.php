@@ -373,11 +373,19 @@ function bp_do_activation_redirect() {
  * @since Buddyboss 3.1.1
  */
 function bp_check_for_legacy_theme() {
-	if (bp_get_theme_package_id() != 'legacy') {
-		return;
+	$using_lagecy = false;
+
+	if (current_theme_supports('buddypress-use-legacy')) {
+		$using_lagecy = true;
 	}
 
-	add_action('admin_notices', 'bp_print_legacy_theme_deprecated_notice');
+	if (bp_get_theme_package_id() == 'legacy') {
+		$using_lagecy = true;
+	}
+
+	if ($using_lagecy) {
+		add_action('admin_notices', 'bp_print_legacy_theme_deprecated_notice');
+	}
 }
 
 /**
