@@ -978,7 +978,7 @@ function bp_attachments_get_template_part( $slug ) {
 
 	// Load the attachment template in WP Administration screens.
 	if ( is_admin() && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) ) {
-		$attachment_admin_template_part = buddypress()->themes_dir . '/bp-legacy/buddypress/' . $attachment_template_part . '.php';
+		$attachment_admin_template_part = buddypress()->themes_dir . '/bp-nouveau/buddypress/' . $attachment_template_part . '.php';
 
 		// Check whether the template part exists.
 		if ( ! file_exists( $attachment_admin_template_part ) ) {
