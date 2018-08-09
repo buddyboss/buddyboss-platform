@@ -1045,7 +1045,7 @@ Bar!';
 
 	/**
 	 * @group xprofile_filter_link_profile_data
-	 * @version  bossyboss 3.1.1 Autolink features is removed
+	 * @version BuddyBoss 3.1.1 Autolink features is removed
 	 */
 	// public function test_field_comma_seperated_values_are_autolinked() {
 	// 	$field_group_id = self::factory()->xprofile_group->create();
@@ -1062,7 +1062,7 @@ Bar!';
 
 	/**
 	 * @group xprofile_filter_link_profile_data
-	 * @version  bossyboss 3.1.1 Autolink features is removed
+	 * @version BuddyBoss 3.1.1 Autolink features is removed
 	 */
 	// public function test_field_semicolon_seperated_values_are_autolinked() {
 	// 	$field_group_id = self::factory()->xprofile_group->create();
