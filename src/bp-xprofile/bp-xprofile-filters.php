@@ -577,11 +577,12 @@ function bp_xprofile_filter_meta_query( $q ) {
 /**
  * Conditionally filters 'bp_get_the_profile_field_name' to return alternate name if available.
  * Filter is only applied if:
- *  1. If we are on profile > edit screens
+ *  1. we are on profile > edit screens
+ *  2. we are on registration page
  * 
  * @since BuddyBoss 3.1.1
  * 
- * @global \BP_XProfile_Field_Type $field\
+ * @global \BP_XProfile_Field_Type $field
  * 
  * @param string $field_name
  * @return string
@@ -593,6 +594,15 @@ function xprofile_filter_field_edit_name ( $field_name ) {
     
     if ( bp_is_profile_component() && 'edit' == bp_current_action() ) {
         //we are on profile > edit screens, we should display alternate name, if available, instead of main name.
+        $is_field_edit_mode = true;
+        
+        //we can use global $field variable here
+        global $field;
+        $current_field = $field;
+    }
+    
+    if ( !$is_field_edit_mode && bp_is_register_page() ) {
+        //We are on registration page/form. We should display alternate name, if available, instead of main name.
         $is_field_edit_mode = true;
         
         //we can use global $field variable here
