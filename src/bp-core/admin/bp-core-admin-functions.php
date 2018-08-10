@@ -395,7 +395,7 @@ function bp_check_for_legacy_theme() {
  */
 function bp_print_legacy_theme_deprecated_notice() {
 	$message = sprintf(
-		__('You are using a theme that relies on the older %s templates, and some things may not work properly. Consider switching to our *new* BuddyBoss Theme, a generic WordPress theme, or any newer theme that is compatible with the %s template pack.', 'buddyboss'),
+		__('You are using a theme that relies on the older %s templates, and some things may not work properly. Consider switching to our <em>new</em> BuddyBoss Theme, a generic WordPress theme, or any newer theme that is compatible with the %s template pack.', 'buddyboss'),
 		'<a href="https://wptavern.com/buddypress-contributors-are-building-a-new-template-pack" target="_blank" rel="noopener">BuddyPress Legacy</a>',
 		'<a href="https://wptavern.com/buddypress-contributors-are-building-a-new-template-pack" target="_blank" rel="noopener">BuddyPress Nouveau</a>'
 	);
