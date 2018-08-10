@@ -748,5 +748,5 @@ function bp_get_theme_package_id( $default = 'nouveau' ) {
 	 *
 	 * @param string $value The current theme package ID.
 	 */
-	return apply_filters( 'bp_get_theme_package_id', bp_get_option( '_bp_theme_package_id', $default ) );
+	return apply_filters( 'bp_get_theme_package_id', $default );
 }

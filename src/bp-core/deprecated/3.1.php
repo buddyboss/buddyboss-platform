@@ -459,3 +459,38 @@ function bp_register_theme_compat_default_features() {
 	// 	),
 	// ) );
 }
+
+/**
+ * Form element to change the active template pack.
+ *
+ * @deprecated 3.1.1
+ */
+function bp_admin_setting_callback_theme_package_id() {
+	_deprecated_function( __FUNCTION__, '3.1.1' );
+	// $options = '';
+
+	// /*
+	//  * Note: This should never be empty. /bp-templates/ is the
+	//  * canonical backup if no other packages exist. If there's an error here,
+	//  * something else is wrong.
+	//  *
+	//  * See BuddyPress::register_theme_packages()
+	//  */
+	// foreach ( (array) buddypress()->theme_compat->packages as $id => $theme ) {
+	// 	$options .= sprintf(
+	// 		'<option value="%1$s" %2$s>%3$s</option>',
+	// 		esc_attr( $id ),
+	// 		selected( $theme->id, bp_get_theme_package_id(), false ),
+	// 		esc_html( $theme->name )
+	// 	);
+	// }
+
+	// if ( $options ) : ?>
+		<!-- <select name="_bp_theme_package_id" id="_bp_theme_package_id" aria-describedby="_bp_theme_package_description"><?php echo $options; ?></select>
+		<p id="_bp_theme_package_description" class="description"><?php esc_html_e( 'The selected Template Pack will serve all BuddyBoss templates.', 'buddyboss' ); ?></p> -->
+
+	<?php // else : ?>
+		<!-- <p><?php esc_html_e( 'No template packages available.', 'buddyboss' ); ?></p> -->
+
+	<?php // endif;
+}

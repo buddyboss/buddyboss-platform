@@ -250,20 +250,20 @@ class BP_Tests_Admin_Functions extends BP_UnitTestCase {
 	 *
 	 * Print admin notice if lagecy theme are used
 	 */
-	public function test_legacy_theme_pack_notices_based_on_options() {
+	public function test_legacy_theme_pack_notices_based_on_filter() {
 		$this->set_permalink_structure('/%postname%/');
 
 		// not sure why this filter are removed when running the enthire test suite, manually added
 		add_action( 'bp_admin_init', 'bp_check_for_legacy_theme');
 
 		remove_all_filters('admin_notices');
-		update_option('_bp_theme_package_id', 'legacy');
+		add_filter('bp_get_theme_package_id', function() { return 'legacy'; });
 		do_action('bp_admin_init');
 
 		$this->assertTrue(!! has_filter('admin_notices', 'bp_print_legacy_theme_deprecated_notice'));
 
 		remove_all_filters('admin_notices');
-		update_option('_bp_theme_package_id', 'nouveau');
+		remove_all_filters('bp_get_theme_package_id');
 		do_action('bp_admin_init');
 
 		$this->assertFalse(!! has_filter('admin_notices', 'bp_print_legacy_theme_deprecated_notice'));
