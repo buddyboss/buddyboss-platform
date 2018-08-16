@@ -429,6 +429,7 @@ function xprofile_admin_delete_group( $group_id ) {
  * Handles the adding or editing of profile field data for a user.
  *
  * @since BuddyPress 1.0.0
+ * @since BuddyBoss 3.1.1 Updated to continue showing the field-edit form, after field is saved/updated.
  *
  * @param int      $group_id ID of the group.
  * @param int|null $field_id ID of the field being managed.
@@ -481,7 +482,7 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 				$type    = 'error';
 			} else {
 				$message = __( 'The field was saved successfully.', 'buddyboss' );
-				$type    = 'success';
+				$type    = 'updated';
 
 				// @todo remove these old options
 				if ( 1 == $field_id ) {
@@ -536,7 +537,7 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 				$groups = bp_xprofile_get_groups();
 			}
 
-			xprofile_admin_screen( $message, $type );
+			$field->render_admin_form( $message, $type );
 
 		} else {
 			$field->render_admin_form( $message );

@@ -1194,10 +1194,12 @@ class BP_XProfile_Field {
 	 * Oupput the admin form for this field.
 	 *
 	 * @since BuddyPress 1.9.0
+     * @since BuddyBoss 3.1.1 Added the paramter $message_type 
 	 *
 	 * @param string $message Message to display.
+     * @param string $message_type error or udpated
 	 */
-	public function render_admin_form( $message = '' ) {
+	public function render_admin_form( $message = '', $message_type = 'error' ) {
 
 		// Users Admin URL
 		$users_url = bp_get_admin_url( 'users.php' );
@@ -1242,7 +1244,7 @@ class BP_XProfile_Field {
 
 			<?php if ( !empty( $message ) ) : ?>
 
-				<div id="message" class="error fade">
+				<div id="message" class="<?php echo $message_type;?> fade">
 					<p><?php echo esc_html( $message ); ?></p>
 				</div>
 
