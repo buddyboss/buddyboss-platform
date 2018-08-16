@@ -515,9 +515,9 @@ function bp_core_add_contextual_help( $screen = '' ) {
 			// Help panel - sidebar links.
 			$screen->set_help_sidebar(
 				'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-				'<p>' . __( '<a href="https://codex.buddypress.org/getting-started/configure-components/">Managing Components</a>', 'buddyboss' ) . '</p>' .
-				'<p>' . __( '<a href="https://buddypress.org/support/">Support Forums</a>', 'buddyboss' ) . '</p>'
+				'<p>' . __( '<a href="https://www.buddyboss.com/">BuddyBoss</a>', 'buddyboss' ) . '</p>'
 			);
+			
 			break;
 
 		// Pages page.
@@ -533,8 +533,7 @@ function bp_core_add_contextual_help( $screen = '' ) {
 			// Help panel - sidebar links.
 			$screen->set_help_sidebar(
 				'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-				'<p>' . __( '<a href="https://codex.buddypress.org/getting-started/configure-components/#settings-buddypress-pages">Managing Pages</a>', 'buddyboss' ) . '</p>' .
-				'<p>' . __( '<a href="https://buddypress.org/support/">Support Forums</a>', 'buddyboss' ) . '</p>'
+				'<p>' . __( '<a href="https://www.buddyboss.com/">BuddyBoss</a>', 'buddyboss' ) . '</p>'
 			);
 
 			break;
@@ -552,8 +551,7 @@ function bp_core_add_contextual_help( $screen = '' ) {
 			// Help panel - sidebar links.
 			$screen->set_help_sidebar(
 				'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-				'<p>' . __( '<a href="https://codex.buddypress.org/getting-started/configure-components/#settings-buddypress-settings">Managing Settings</a>', 'buddyboss' ) . '</p>' .
-				'<p>' . __( '<a href="https://buddypress.org/support/">Support Forums</a>', 'buddyboss' ) . '</p>'
+				'<p>' . __( '<a href="https://www.buddyboss.com/">BuddyBoss</a>', 'buddyboss' ) . '</p>'
 			);
 
 			break;
@@ -571,8 +569,7 @@ function bp_core_add_contextual_help( $screen = '' ) {
 			// Help panel - sidebar links.
 			$screen->set_help_sidebar(
 				'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-				'<p>' . __( '<a href="https://codex.buddypress.org/administrator-guide/extended-profiles/">Managing Profile Fields</a>', 'buddyboss' ) . '</p>' .
-				'<p>' . __( '<a href="https://buddypress.org/support/">Support Forums</a>', 'buddyboss' ) . '</p>'
+				'<p>' . __( '<a href="https://www.buddyboss.com/">BuddyBoss</a>', 'buddyboss' ) . '</p>'
 			);
 
 			break;
