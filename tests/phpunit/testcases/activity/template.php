@@ -194,6 +194,61 @@ class BP_Tests_Activity_Template extends BP_UnitTestCase {
 	 * @group scope
 	 * @group filter_query
 	 * @group BP_Activity_Query
+	 */
+	function test_bp_has_activities_just_me_scope_will_include_groups_mentions_and_friends() {
+		$u1 = self::factory()->user->create();
+		$u2 = self::factory()->user->create();
+
+		$g1 = self::factory()->group->create( array( 'creator_id' => $u1 ) );
+
+		$now = time();
+		$collector = [];
+		$asdf = friends_add_friend( $u1, $u2, true );
+
+		// mentioned activity item
+		$mention_username = '@' . bp_activity_get_user_mentionname( $u1 );
+		$collector[] = self::factory()->activity->create( array(
+			'user_id' => $u2,
+			'type'    => 'activity_update',
+			'content' => "{$mention_username} - You rule, dude!",
+			'recorded_time' => date( 'Y-m-d H:i:s', $now ),
+		) );
+
+		// friend activity update
+		$collector[] = self::factory()->activity->create( array(
+			'user_id' => $u2,
+			'type' => 'activity_update',
+			'recorded_time' => date( 'Y-m-d H:i:s', $now ),
+		) );
+
+		// Joining groups
+		$collector[] = self::factory()->activity->create( array(
+			'user_id'   => $u2,
+			'component' => 'groups',
+			'item_id'   => $g1,
+			'type'      => 'joined_group',
+			'recorded_time' => date( 'Y-m-d H:i:s', $now ),
+		) );
+
+		global $activities_template;
+
+		bp_has_activities( array(
+			'user_id' => $u1,
+			'scope' => 'just-me',
+		) );
+
+		// assert!
+		$all_activities_ids = wp_list_pluck( $activities_template->activities, 'id' );
+		$this->assertTrue(count(array_intersect($collector, $all_activities_ids)) == count($collector));
+
+		// clean up!
+		$activities_template = null;
+	}
+
+	/**
+	 * @group scope
+	 * @group filter_query
+	 * @group BP_Activity_Query
 	 *
 	 * @deprecated Buddyboss 3.1.1 - mentions tab is removed
 	 */
