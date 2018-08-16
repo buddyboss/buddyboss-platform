@@ -1191,7 +1191,7 @@ class BP_XProfile_Field {
 	}
 
 	/**
-	 * Oupput the admin form for this field.
+	 * Output the admin form for this field.
 	 *
 	 * @since BuddyPress 1.9.0
      * @since BuddyBoss 3.1.1 Added the paramter $message_type 
