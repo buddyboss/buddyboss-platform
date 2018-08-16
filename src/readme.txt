@@ -37,14 +37,6 @@ WordPress.org is home to some amazing extensions for BuddyPress, including:
 
 Search WordPress.org for "BuddyPress" to find them all!
 
-= Join our community =
-
-If you're interested in contributing to BuddyPress, we'd love to have you. Head over to the [BuddyPress Documentation](https://codex.buddypress.org/participate-and-contribute/) site to find out how you can pitch in.
-
-BuddyPress is available in many languages thanks to the volunteer efforts of individuals all around the world. Check out our <a href="https://codex.buddypress.org/translations/">translations page</a> on the BuddyPress Documentation site for more details. If you are a polygot, please <a href="https://translate.wordpress.org/projects/wp-plugins/buddypress">consider helping translate BuddyPress</a> into your language.
-
-Growing the BuddyPress community means better software for everyone!
-
 == Installation ==
 
 = Requirements =
@@ -81,26 +73,8 @@ Furthermore, BuddyPress can be activated and operate in just about any scope you
 
 * Activate at the site level to only load BuddyPress on that site.
 * Activate at the network level for full integration with all sites in your network. (This is the most common multisite installation type.)
-* Enable <a href="https://codex.buddypress.org/getting-started/customizing/bp_enable_multiblog/">multiblog</a> mode to allow your BuddyPress content to be displayed on any site in your WordPress Multisite network, using the same central data.
+* Enable multiblog mode to allow your BuddyPress content to be displayed on any site in your WordPress Multisite network, using the same central data.
 * Extend BuddyPress with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
-
-Read <a href="https://codex.buddypress.org/getting-started/installation-in-wordpress-multisite/">custom BuddyPress activations </a> for more information.
-
-= Where can I get support? =
-
-Our community provides free support at <a href="https://buddypress.org/support/">https://buddypress.org/support/</a>.
-
-= Where can I find documentation? =
-
-Our documentation site can be found at <a href="https://codex.buddypress.org/">https://codex.buddypress.org/</a>.
-
-= Where can I report a bug? =
-
-Report bugs, suggest ideas, and participate in development at <a href="https://buddypress.trac.wordpress.org/">https://buddypress.trac.wordpress.org</a>.
-
-= Where can I get the bleeding edge version of BuddyPress? =
-
-Check out the development trunk of BuddyPress from Subversion at <a href="https://buddypress.svn.wordpress.org/trunk/">https://buddypress.svn.wordpress.org/trunk/</a>, or clone from Git at git://buddypress.git.wordpress.org/.
 
 = Who builds BuddyPress? =
 

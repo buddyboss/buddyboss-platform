@@ -240,8 +240,7 @@ function bp_activity_admin_load() {
 		// Help panel - sidebar links.
 		get_current_screen()->set_help_sidebar(
 			'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-			'<p>' . __( '<a href="https://codex.buddypress.org/administrator-guide/activity-stream-management-panels/">Managing Activity</a>', 'buddyboss' ) . '</p>' .
-			'<p>' . __( '<a href="https://buddypress.org/support/">Support Forums</a>', 'buddyboss' ) . '</p>'
+			'<p>' . __( '<a href="https://www.buddyboss.com/">BuddyBoss</a>', 'buddyboss' ) . '</p>'
 		);
 
 		// Register metaboxes for the edit screen.
@@ -292,7 +291,7 @@ function bp_activity_admin_load() {
 		// Help panel - sidebar links.
 		get_current_screen()->set_help_sidebar(
 			'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-			'<p>' . __( '<a href="https://buddypress.org/support/">Support Forums</a>', 'buddyboss' ) . '</p>'
+			'<p>' . __( '<a href="https://www.buddyboss.com/">BuddyBoss</a>', 'buddyboss' ) . '</p>'
 		);
 
 		// Add accessible hidden heading and text for Activity screen pagination.
