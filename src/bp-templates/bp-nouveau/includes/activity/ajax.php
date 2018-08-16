@@ -502,7 +502,13 @@ function bp_nouveau_ajax_post_update() {
 	}
 
 	if ( 'user' === $object && bp_is_active( 'activity' ) ) {
-		$activity_id = bp_activity_post_update( array( 'content' => $_POST['content'] ) );
+		$content = $_POST['content'];
+
+        if ( ! empty( $_POST['user_id'] ) && $_POST['user_id'] != bp_get_displayed_user()->id ) {
+			$content = sprintf('@%s %s', bp_get_displayed_user_mentionname(), $content);
+        }
+
+        $activity_id = bp_activity_post_update( array( 'content' => $content ) );
 
 	} elseif ( 'group' === $object ) {
 		if ( $item_id && bp_is_active( 'groups' ) ) {

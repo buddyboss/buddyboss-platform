@@ -116,7 +116,7 @@ function bp_nouveau_activity_member_post_form() {
 	do_action( 'bp_before_member_activity_post_form' );
 
 	$is_main_tab = ! bp_current_action() || strpos( bp_current_action(), 'just-me' ) !== false;
-	if ( is_user_logged_in() && bp_is_my_profile() && $is_main_tab ) {
+	if ( is_user_logged_in() && $is_main_tab ) {
 		bp_get_template_part( 'activity/post-form' );
 	}
 
