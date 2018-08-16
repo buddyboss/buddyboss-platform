@@ -23,8 +23,8 @@ function bp_email_init_customizer( WP_Customize_Manager $wp_customize ) {
 	}
 
 	$wp_customize->add_panel( 'bp_mailtpl', array(
-		'description' => __( 'Customize the appearance of emails sent by BuddyPress.', 'buddyboss' ),
-		'title'       => _x( 'BuddyPress Emails', 'screen heading', 'buddyboss' ),
+		'description' => __( 'Customize the appearance of emails sent by BuddyBoss.', 'buddyboss' ),
+		'title'       => _x( 'BuddyBoss Emails', 'screen heading', 'buddyboss' ),
 	) );
 
 	$sections = bp_email_get_customizer_sections();
