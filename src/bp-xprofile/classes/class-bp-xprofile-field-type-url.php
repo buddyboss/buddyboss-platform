@@ -164,6 +164,7 @@ class BP_XProfile_Field_Type_URL extends BP_XProfile_Field_Type {
 	 *
 	 * @since BuddyPress 2.1.0
 	 * @since BuddyPress 2.4.0 Added the `$field_id` parameter.
+     * @since BuddyBoss 3.1.1 Added target="_blank" attribute to anchor tag and consequently added noopener to rel attribute
 	 *
 	 * @param string     $field_value The URL value, as saved in the database.
 	 * @param string|int $field_id    Optional. ID of the field.
@@ -173,6 +174,6 @@ class BP_XProfile_Field_Type_URL extends BP_XProfile_Field_Type {
 		$link      = strip_tags( $field_value );
 		$no_scheme = preg_replace( '#^https?://#', '', rtrim( $link, '/' ) );
 		$url_text  = str_replace( $link, $no_scheme, $field_value );
-		return '<a href="' . esc_url( $field_value ) . '" rel="nofollow">' . esc_html( $url_text ) . '</a>';
+		return '<a href="' . esc_url( $field_value ) . '" rel="nofollow noopener" target="_blank">' . esc_html( $url_text ) . '</a>';
 	}
 }
