@@ -96,7 +96,7 @@ if ( $is_bp_active ) {
     }
     
     /**
-     * You can't have BuddyPress and BuddyBoss both active at the same time!
+     * You can't have BuddyPress and BuddyBoss Platform both active at the same time!
      */
     add_action( 'admin_notices',            'bp_duplicate_buddypress_notice' );
 	add_action( 'network_admin_notices',    'bp_duplicate_buddypress_notice' );
@@ -129,7 +129,7 @@ if ( $is_bb_active ) {
     }
     
     /**
-     * You can't have BuddyPress and BuddyBoss both active at the same time!
+     * You can't have BuddyPress and BuddyBoss Platform both active at the same time!
      */
     add_action( 'admin_notices',            'bp_duplicate_bbpress_notice' );
 	add_action( 'network_admin_notices',    'bp_duplicate_bbpress_notice' );
