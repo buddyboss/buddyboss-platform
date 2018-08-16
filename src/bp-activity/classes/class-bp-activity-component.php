@@ -219,13 +219,19 @@ class BP_Activity_Component extends BP_Component {
 		$slug          = bp_get_activity_slug();
 		$activity_link = trailingslashit( $user_domain . $slug );
 
+		$main_slug = ['just-me'];
+		if ( bp_activity_do_mentions() )   $main_slug[] = 'mentions';
+		if ( bp_is_active( 'friends' ) )   $main_slug[] = 'friends';
+		if ( bp_is_active( 'groups' ) )    $main_slug[] = 'groups';
+
+
 		// Add 'Activity' to the main navigation.
 		$main_nav = array(
 			'name'                => _x( 'Timeline', 'Profile activity screen nav', 'buddyboss' ),
 			'slug'                => $slug,
 			'position'            => 20,
 			'screen_function'     => 'bp_activity_screen_my_activity',
-			'default_subnav_slug' => 'just-me',
+			'default_subnav_slug' => implode( ',', $main_slug ),
 			'item_css_id'         => $this->id
 		);
 
@@ -253,43 +259,43 @@ class BP_Activity_Component extends BP_Component {
 		}
 
 		// Check @mentions.
-		if ( bp_activity_do_mentions() ) {
-			$sub_nav[] = array(
-				'name'            => _x( 'Mentions', 'Profile activity screen sub nav', 'buddyboss' ),
-				'slug'            => 'mentions',
-				'parent_url'      => $activity_link,
-				'parent_slug'     => $slug,
-				'screen_function' => 'bp_activity_screen_mentions',
-				'position'        => 30,
-				'item_css_id'     => 'activity-mentions'
-			);
-		}
+		// if ( bp_activity_do_mentions() ) {
+		// 	$sub_nav[] = array(
+		// 		'name'            => _x( 'Mentions', 'Profile activity screen sub nav', 'buddyboss' ),
+		// 		'slug'            => 'mentions',
+		// 		'parent_url'      => $activity_link,
+		// 		'parent_slug'     => $slug,
+		// 		'screen_function' => 'bp_activity_screen_mentions',
+		// 		'position'        => 30,
+		// 		'item_css_id'     => 'activity-mentions'
+		// 	);
+		// }
 
 		// Additional menu if friends is active.
-		if ( bp_is_active( 'friends' ) ) {
-			$sub_nav[] = array(
-				'name'            => _x( 'Connections', 'Profile activity screen sub nav', 'buddyboss' ),
-				'slug'            => bp_get_friends_slug(),
-				'parent_url'      => $activity_link,
-				'parent_slug'     => $slug,
-				'screen_function' => 'bp_activity_screen_friends',
-				'position'        => 40,
-				'item_css_id'     => 'activity-friends'
-			) ;
-		}
+		// if ( bp_is_active( 'friends' ) ) {
+		// 	$sub_nav[] = array(
+		// 		'name'            => _x( 'Connections', 'Profile activity screen sub nav', 'buddyboss' ),
+		// 		'slug'            => bp_get_friends_slug(),
+		// 		'parent_url'      => $activity_link,
+		// 		'parent_slug'     => $slug,
+		// 		'screen_function' => 'bp_activity_screen_friends',
+		// 		'position'        => 40,
+		// 		'item_css_id'     => 'activity-friends'
+		// 	) ;
+		// }
 
 		// Additional menu if groups is active.
-		if ( bp_is_active( 'groups' ) ) {
-			$sub_nav[] = array(
-				'name'            => _x( 'Groups', 'Profile activity screen sub nav', 'buddyboss' ),
-				'slug'            => bp_get_groups_slug(),
-				'parent_url'      => $activity_link,
-				'parent_slug'     => $slug,
-				'screen_function' => 'bp_activity_screen_groups',
-				'position'        => 50,
-				'item_css_id'     => 'activity-groups'
-			);
-		}
+		// if ( bp_is_active( 'groups' ) ) {
+		// 	$sub_nav[] = array(
+		// 		'name'            => _x( 'Groups', 'Profile activity screen sub nav', 'buddyboss' ),
+		// 		'slug'            => bp_get_groups_slug(),
+		// 		'parent_url'      => $activity_link,
+		// 		'parent_slug'     => $slug,
+		// 		'screen_function' => 'bp_activity_screen_groups',
+		// 		'position'        => 50,
+		// 		'item_css_id'     => 'activity-groups'
+		// 	);
+		// }
 
 		parent::setup_nav( $main_nav, $sub_nav );
 	}

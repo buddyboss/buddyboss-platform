@@ -123,27 +123,29 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 	/**
 	 * @group bp_activity_remove_screen_notifications
 	 * @group mentions
+	 *
+	 * @deprecated Buddyboss 3.1.1 - mentions tab is removed
 	 */
-	public function test_bp_activity_remove_screen_notifications_on_mentions() {
-		$this->create_notifications();
+	// public function test_bp_activity_remove_screen_notifications_on_mentions() {
+	// 	$this->create_notifications();
 
-		$notifications = BP_Notifications_Notification::get( array(
-			'user_id' => $this->u1,
-		) );
+	// 	$notifications = BP_Notifications_Notification::get( array(
+	// 		'user_id' => $this->u1,
+	// 	) );
 
-		// Double check it's there
-		$this->assertEquals( array( $this->a1 ), wp_list_pluck( $notifications, 'item_id' ) );
+	// 	// Double check it's there
+	// 	$this->assertEquals( array( $this->a1 ), wp_list_pluck( $notifications, 'item_id' ) );
 
-		// Go to the My Activity page
-		$this->go_to( bp_core_get_user_domain( $this->u1 ) . bp_get_activity_slug() . '/mentions/' );
+	// 	// Go to the My Activity page
+	// 	$this->go_to( bp_core_get_user_domain( $this->u1 ) . bp_get_activity_slug() . '/mentions/' );
 
-		$notifications = BP_Notifications_Notification::get( array(
-			'user_id' => $this->u1,
-		) );
+	// 	$notifications = BP_Notifications_Notification::get( array(
+	// 		'user_id' => $this->u1,
+	// 	) );
 
-		// Should be empty
-		$this->assertEquals( array(), $notifications );
-	}
+	// 	// Should be empty
+	// 	$this->assertEquals( array(), $notifications );
+	// }
 
 	/**
 	 * @group bp_activity_remove_screen_notifications

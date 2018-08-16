@@ -194,236 +194,244 @@ class BP_Tests_Activity_Template extends BP_UnitTestCase {
 	 * @group scope
 	 * @group filter_query
 	 * @group BP_Activity_Query
+	 *
+	 * @deprecated Buddyboss 3.1.1 - mentions tab is removed
 	 */
-	function test_bp_has_activities_mentions_scope() {
-		$u1 = self::factory()->user->create();
-		$u2 = self::factory()->user->create();
+	// function test_bp_has_activities_mentions_scope() {
+	// 	$u1 = self::factory()->user->create();
+	// 	$u2 = self::factory()->user->create();
 
-		$now = time();
+	// 	$now = time();
 
-		// mentioned activity item
-		$mention_username = '@' . bp_activity_get_user_mentionname( $u1 );
-		$a1 = self::factory()->activity->create( array(
-			'user_id' => $u2,
-			'type'    => 'activity_update',
-			'content' => "{$mention_username} - You rule, dude!",
-			'recorded_time' => date( 'Y-m-d H:i:s', $now ),
-		) );
+	// 	// mentioned activity item
+	// 	$mention_username = '@' . bp_activity_get_user_mentionname( $u1 );
+	// 	$a1 = self::factory()->activity->create( array(
+	// 		'user_id' => $u2,
+	// 		'type'    => 'activity_update',
+	// 		'content' => "{$mention_username} - You rule, dude!",
+	// 		'recorded_time' => date( 'Y-m-d H:i:s', $now ),
+	// 	) );
 
-		// misc activity items
-		self::factory()->activity->create( array(
-			'user_id'   => $u1,
-			'component' => 'blogs',
-			'item_id'   => 1,
-			'type'      => 'new_blog_post',
-			'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
-		) );
-		self::factory()->activity->create( array(
-			'user_id'   => $u2,
-			'component' => 'activity',
-			'type'      => 'activity_update',
-			'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
-		) );
-		self::factory()->activity->create( array(
-			'user_id'   => $u2,
-			'component' => 'groups',
-			'item_id'   => 324,
-			'type'      => 'activity_update',
-			'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
-		) );
+	// 	// misc activity items
+	// 	self::factory()->activity->create( array(
+	// 		'user_id'   => $u1,
+	// 		'component' => 'blogs',
+	// 		'item_id'   => 1,
+	// 		'type'      => 'new_blog_post',
+	// 		'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
+	// 	) );
+	// 	self::factory()->activity->create( array(
+	// 		'user_id'   => $u2,
+	// 		'component' => 'activity',
+	// 		'type'      => 'activity_update',
+	// 		'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
+	// 	) );
+	// 	self::factory()->activity->create( array(
+	// 		'user_id'   => $u2,
+	// 		'component' => 'groups',
+	// 		'item_id'   => 324,
+	// 		'type'      => 'activity_update',
+	// 		'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
+	// 	) );
 
-		global $activities_template;
+	// 	global $activities_template;
 
-		// grab activities from multiple scopes
-		bp_has_activities( array(
-			'user_id' => $u1,
-			'scope' => 'mentions',
-		) );
+	// 	// grab activities from multiple scopes
+	// 	bp_has_activities( array(
+	// 		'user_id' => $u1,
+	// 		'scope' => 'mentions',
+	// 	) );
 
-		// assert!
-		$this->assertEqualSets( array( $a1 ), wp_list_pluck( $activities_template->activities, 'id' ) );
+	// 	// assert!
+	// 	$this->assertEqualSets( array( $a1 ), wp_list_pluck( $activities_template->activities, 'id' ) );
 
-		// clean up!
-		$activities_template = null;
-	}
+	// 	// clean up!
+	// 	$activities_template = null;
+	// }
 
 	/**
 	 * @group scope
 	 * @group filter_query
 	 * @group BP_Activity_Query
+	 *
+	 * @deprecated Buddyboss 3.1.1 - mentions and friends tabs are removed
 	 */
-	function test_bp_has_activities_friends_and_mentions_scope() {
-		$u1 = self::factory()->user->create();
-		$u2 = self::factory()->user->create();
-		$u3 = self::factory()->user->create();
+	// function test_bp_has_activities_friends_and_mentions_scope() {
+	// 	$u1 = self::factory()->user->create();
+	// 	$u2 = self::factory()->user->create();
+	// 	$u3 = self::factory()->user->create();
 
-		// user 1 becomes friends with user 2
-		friends_add_friend( $u1, $u2, true );
+	// 	// user 1 becomes friends with user 2
+	// 	friends_add_friend( $u1, $u2, true );
 
-		$now = time();
+	// 	$now = time();
 
-		// friend status update
-		$a1 = self::factory()->activity->create( array(
-			'user_id' => $u2,
-			'type' => 'activity_update',
-			'recorded_time' => date( 'Y-m-d H:i:s', $now ),
-		) );
+	// 	// friend status update
+	// 	$a1 = self::factory()->activity->create( array(
+	// 		'user_id' => $u2,
+	// 		'type' => 'activity_update',
+	// 		'recorded_time' => date( 'Y-m-d H:i:s', $now ),
+	// 	) );
 
-		// mentioned item by non-friend
-		$mention_username = '@' . bp_activity_get_user_mentionname( $u1 );
-		$a2 = self::factory()->activity->create( array(
-			'user_id'   => $u3,
-			'component' => 'activity',
-			'type'      => 'activity_update',
-			'content'   => "{$mention_username} - Oy!",
-			'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
-		) );
+	// 	// mentioned item by non-friend
+	// 	$mention_username = '@' . bp_activity_get_user_mentionname( $u1 );
+	// 	$a2 = self::factory()->activity->create( array(
+	// 		'user_id'   => $u3,
+	// 		'component' => 'activity',
+	// 		'type'      => 'activity_update',
+	// 		'content'   => "{$mention_username} - Oy!",
+	// 		'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
+	// 	) );
 
-		// misc activity items
-		self::factory()->activity->create( array(
-			'user_id'   => $u1,
-			'component' => 'blogs',
-			'item_id'   => 1,
-			'type'      => 'new_blog_post',
-			'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
-		) );
-		self::factory()->activity->create( array(
-			'user_id'   => $u3,
-			'component' => 'activity',
-			'type'      => 'activity_update',
-			'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
-		) );
-		self::factory()->activity->create( array(
-			'user_id'   => $u3,
-			'component' => 'groups',
-			'item_id'   => 324,
-			'type'      => 'activity_update',
-			'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
-		) );
+	// 	// misc activity items
+	// 	self::factory()->activity->create( array(
+	// 		'user_id'   => $u1,
+	// 		'component' => 'blogs',
+	// 		'item_id'   => 1,
+	// 		'type'      => 'new_blog_post',
+	// 		'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
+	// 	) );
+	// 	self::factory()->activity->create( array(
+	// 		'user_id'   => $u3,
+	// 		'component' => 'activity',
+	// 		'type'      => 'activity_update',
+	// 		'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
+	// 	) );
+	// 	self::factory()->activity->create( array(
+	// 		'user_id'   => $u3,
+	// 		'component' => 'groups',
+	// 		'item_id'   => 324,
+	// 		'type'      => 'activity_update',
+	// 		'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
+	// 	) );
 
-		global $activities_template;
+	// 	global $activities_template;
 
-		// grab activities from multiple scopes
-		bp_has_activities( array(
-			'user_id' => $u1,
-			'scope' => 'mentions,friends',
-		) );
+	// 	// grab activities from multiple scopes
+	// 	bp_has_activities( array(
+	// 		'user_id' => $u1,
+	// 		'scope' => 'mentions,friends',
+	// 	) );
 
-		// assert!
-		$this->assertEqualSets( array( $a1, $a2 ), wp_list_pluck( $activities_template->activities, 'id' ) );
+	// 	// assert!
+	// 	$this->assertEqualSets( array( $a1, $a2 ), wp_list_pluck( $activities_template->activities, 'id' ) );
 
-		// clean up!
-		$activities_template = null;
-	}
+	// 	// clean up!
+	// 	$activities_template = null;
+	// }
 
 	/**
 	 * @group scope
 	 * @group filter_query
 	 * @group BP_Activity_Query
+	 *
+	 * @deprecated Buddyboss 3.1.1 - groups and friends tabs are removed
 	 */
-	function test_bp_has_activities_groups_and_friends_scope() {
-		$u1 = self::factory()->user->create();
-		$u2 = self::factory()->user->create();
-		$u3 = self::factory()->user->create();
+	// function test_bp_has_activities_groups_and_friends_scope() {
+	// 	$u1 = self::factory()->user->create();
+	// 	$u2 = self::factory()->user->create();
+	// 	$u3 = self::factory()->user->create();
 
-		// user 1 becomes friends with user 2
-		friends_add_friend( $u1, $u2, true );
+	// 	// user 1 becomes friends with user 2
+	// 	friends_add_friend( $u1, $u2, true );
 
-		// user 1 joins a group
-		$g1 = self::factory()->group->create( array( 'creator_id' => $u1 ) );
-		$g2 = self::factory()->group->create( array( 'creator_id' => $u1 ) );
+	// 	// user 1 joins a group
+	// 	$g1 = self::factory()->group->create( array( 'creator_id' => $u1 ) );
+	// 	$g2 = self::factory()->group->create( array( 'creator_id' => $u1 ) );
 
-		$now = time();
+	// 	$now = time();
 
-		// friend status update
-		$a1 = self::factory()->activity->create( array(
-			'user_id' => $u2,
-			'type' => 'activity_update',
-			'recorded_time' => date( 'Y-m-d H:i:s', $now ),
-		) );
+	// 	// friend status update
+	// 	$a1 = self::factory()->activity->create( array(
+	// 		'user_id' => $u2,
+	// 		'type' => 'activity_update',
+	// 		'recorded_time' => date( 'Y-m-d H:i:s', $now ),
+	// 	) );
 
-		// group activity
-		$a2 = self::factory()->activity->create( array(
-			'user_id'   => $u3,
-			'component' => 'groups',
-			'item_id'   => $g1,
-			'type'      => 'joined_group',
-			'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
-		) );
+	// 	// group activity
+	// 	$a2 = self::factory()->activity->create( array(
+	// 		'user_id'   => $u3,
+	// 		'component' => 'groups',
+	// 		'item_id'   => $g1,
+	// 		'type'      => 'joined_group',
+	// 		'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
+	// 	) );
 
-		// misc activity items
-		self::factory()->activity->create( array(
-			'user_id'   => $u3,
-			'component' => 'blogs',
-			'item_id'   => 1,
-			'type'      => 'new_blog_post',
-			'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
-		) );
-		self::factory()->activity->create( array(
-			'user_id'   => $u3,
-			'component' => 'activity',
-			'type'      => 'activity_update',
-			'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
-		) );
+	// 	// misc activity items
+	// 	self::factory()->activity->create( array(
+	// 		'user_id'   => $u3,
+	// 		'component' => 'blogs',
+	// 		'item_id'   => 1,
+	// 		'type'      => 'new_blog_post',
+	// 		'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
+	// 	) );
+	// 	self::factory()->activity->create( array(
+	// 		'user_id'   => $u3,
+	// 		'component' => 'activity',
+	// 		'type'      => 'activity_update',
+	// 		'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
+	// 	) );
 
-		// Make sure we get a fake group ID.
-		global $wpdb, $bp;
-		$max_group_id = $wpdb->get_var( "SELECT id FROM {$bp->groups->table_name} ORDER BY id DESC LIMIT 1" );
-		self::factory()->activity->create( array(
-			'user_id'   => $u3,
-			'component' => 'groups',
-			'item_id'   => $max_group_id + 1,
-			'type'      => 'activity_update',
-			'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
-		) );
+	// 	// Make sure we get a fake group ID.
+	// 	global $wpdb, $bp;
+	// 	$max_group_id = $wpdb->get_var( "SELECT id FROM {$bp->groups->table_name} ORDER BY id DESC LIMIT 1" );
+	// 	self::factory()->activity->create( array(
+	// 		'user_id'   => $u3,
+	// 		'component' => 'groups',
+	// 		'item_id'   => $max_group_id + 1,
+	// 		'type'      => 'activity_update',
+	// 		'recorded_time' => date( 'Y-m-d H:i:s', $now - 100 ),
+	// 	) );
 
-		global $activities_template;
+	// 	global $activities_template;
 
-		// grab activities from multiple scopes
-		bp_has_activities( array(
-			'user_id' => $u1,
-			'scope' => 'groups,friends',
-		) );
+	// 	// grab activities from multiple scopes
+	// 	bp_has_activities( array(
+	// 		'user_id' => $u1,
+	// 		'scope' => 'groups,friends',
+	// 	) );
 
-		// assert!
-		$this->assertEqualSets( array( $a1, $a2 ), wp_list_pluck( $activities_template->activities, 'id' ) );
+	// 	// assert!
+	// 	$this->assertEqualSets( array( $a1, $a2 ), wp_list_pluck( $activities_template->activities, 'id' ) );
 
-		// clean up!
-		$activities_template = null;
-	}
+	// 	// clean up!
+	// 	$activities_template = null;
+	// }
 
 	/**
 	 * @group scope
 	 * @group filter_query
 	 * @group BP_Activity_Query
+	 *
+	 * @deprecated Buddyboss 3.1.1 - Freids tab is removed
 	 */
-	function test_bp_has_activities_scope_friends_no_items() {
-		$u1 = self::factory()->user->create();
+	// function test_bp_has_activities_scope_friends_no_items() {
+	// 	$u1 = self::factory()->user->create();
 
-		$now = time();
+	// 	$now = time();
 
-		// Create a random activity
-		self::factory()->activity->create( array(
-			'user_id' => $u1,
-			'type' => 'activity_update',
-			'recorded_time' => date( 'Y-m-d H:i:s', $now ),
-		) );
+	// 	// Create a random activity
+	// 	self::factory()->activity->create( array(
+	// 		'user_id' => $u1,
+	// 		'type' => 'activity_update',
+	// 		'recorded_time' => date( 'Y-m-d H:i:s', $now ),
+	// 	) );
 
-		global $activities_template;
-		$reset_activities_template = $activities_template;
+	// 	global $activities_template;
+	// 	$reset_activities_template = $activities_template;
 
-		// grab activities from friends scope
-		bp_has_activities( array(
-			'user_id' => $u1,
-			'scope' => 'friends',
-		) );
+	// 	// grab activities from friends scope
+	// 	bp_has_activities( array(
+	// 		'user_id' => $u1,
+	// 		'scope' => 'friends',
+	// 	) );
 
-		// assert!
-		$this->assertEmpty( $activities_template->activities, 'When a user does not have any friendship, no activities should be fetched when on friends scope' );
+	// 	// assert!
+	// 	$this->assertEmpty( $activities_template->activities, 'When a user does not have any friendship, no activities should be fetched when on friends scope' );
 
-		// clean up!
-		$activities_template = $reset_activities_template;
-	}
+	// 	// clean up!
+	// 	$activities_template = $reset_activities_template;
+	// }
 
 	/**
 	 * @group scope
@@ -462,106 +470,112 @@ class BP_Tests_Activity_Template extends BP_UnitTestCase {
 	 * @group scope
 	 * @group filter_query
 	 * @group BP_Activity_Query
+	 *
+	 * @deprecated Buddyboss 3.1.1 - groups tab is removed
 	 */
-	function test_bp_has_activities_scope_groups_no_items() {
-		$u1 = self::factory()->user->create();
+	// function test_bp_has_activities_scope_groups_no_items() {
+	// 	$u1 = self::factory()->user->create();
 
-		$now = time();
+	// 	$now = time();
 
-		// Create a random activity
-		self::factory()->activity->create( array(
-			'user_id' => $u1,
-			'type' => 'activity_update',
-			'recorded_time' => date( 'Y-m-d H:i:s', $now ),
-		) );
+	// 	// Create a random activity
+	// 	self::factory()->activity->create( array(
+	// 		'user_id' => $u1,
+	// 		'type' => 'activity_update',
+	// 		'recorded_time' => date( 'Y-m-d H:i:s', $now ),
+	// 	) );
 
-		global $activities_template;
-		$reset_activities_template = $activities_template;
+	// 	global $activities_template;
+	// 	$reset_activities_template = $activities_template;
 
-		// grab activities from groups scope
-		bp_has_activities( array(
-			'user_id' => $u1,
-			'scope' => 'groups',
-		) );
+	// 	// grab activities from groups scope
+	// 	bp_has_activities( array(
+	// 		'user_id' => $u1,
+	// 		'scope' => 'groups',
+	// 	) );
 
-		// assert!
-		$this->assertEmpty( $activities_template->activities, 'When a user is not a member of any group, no activities should be fetched when on groups scope' );
+	// 	// assert!
+	// 	$this->assertEmpty( $activities_template->activities, 'When a user is not a member of any group, no activities should be fetched when on groups scope' );
 
-		// clean up!
-		$activities_template = $reset_activities_template;
-	}
+	// 	// clean up!
+	// 	$activities_template = $reset_activities_template;
+	// }
 
 	/**
 	 * @group scope
 	 * @group filter_query
 	 * @group BP_Activity_Query
+	 *
+	 * @deprecated Buddyboss 3.1.1 - mentions tab is removed
 	 */
-	function test_bp_has_activities_scope_mentions_no_items() {
-		$u1 = self::factory()->user->create();
+	// function test_bp_has_activities_scope_mentions_no_items() {
+	// 	$u1 = self::factory()->user->create();
 
-		$now = time();
+	// 	$now = time();
 
-		// Create a random activity
-		self::factory()->activity->create( array(
-			'user_id' => $u1,
-			'type' => 'activity_update',
-			'recorded_time' => date( 'Y-m-d H:i:s', $now ),
-		) );
+	// 	// Create a random activity
+	// 	self::factory()->activity->create( array(
+	// 		'user_id' => $u1,
+	// 		'type' => 'activity_update',
+	// 		'recorded_time' => date( 'Y-m-d H:i:s', $now ),
+	// 	) );
 
-		global $activities_template;
-		$reset_activities_template = $activities_template;
+	// 	global $activities_template;
+	// 	$reset_activities_template = $activities_template;
 
-		// grab activities from mentions scope
-		bp_has_activities( array(
-			'user_id' => $u1,
-			'scope' => 'mentions',
-		) );
+	// 	// grab activities from mentions scope
+	// 	bp_has_activities( array(
+	// 		'user_id' => $u1,
+	// 		'scope' => 'mentions',
+	// 	) );
 
-		// assert!
-		$this->assertEmpty( $activities_template->activities, 'When a user has no mention, no activities should be fetched when on the mentions scope' );
+	// 	// assert!
+	// 	$this->assertEmpty( $activities_template->activities, 'When a user has no mention, no activities should be fetched when on the mentions scope' );
 
-		// clean up!
-		$activities_template = $reset_activities_template;
-	}
+	// 	// clean up!
+	// 	$activities_template = $reset_activities_template;
+	// }
 
 	/**
 	 * @group scope
 	 * @ticket BP6720
+	 *
+	 * @deprecated Buddyboss 3.1.1 - friends tab is removed
 	 */
-	public function test_bp_has_activities_scope_friends_should_respect_id_order_when_record_dates_are_same() {
-		$u1 = self::factory()->user->create();
-		$u2 = self::factory()->user->create();
+	// public function test_bp_has_activities_scope_friends_should_respect_id_order_when_record_dates_are_same() {
+	// 	$u1 = self::factory()->user->create();
+	// 	$u2 = self::factory()->user->create();
 
-		friends_add_friend( $u1, $u2, true );
+	// 	friends_add_friend( $u1, $u2, true );
 
-		// Friend's very fast status updates.
-		$a1 = self::factory()->activity->create( array(
-			'user_id' => $u2,
-			'type' => 'activity_update',
-			'recorded_time' => date( 'Y-m-d H:i:s', 1451944920 ),
-		) );
-		$a2 = self::factory()->activity->create( array(
-			'user_id' => $u2,
-			'type' => 'activity_update',
-			'recorded_time' => date( 'Y-m-d H:i:s', 1451944920 ),
-		) );
+	// 	// Friend's very fast status updates.
+	// 	$a1 = self::factory()->activity->create( array(
+	// 		'user_id' => $u2,
+	// 		'type' => 'activity_update',
+	// 		'recorded_time' => date( 'Y-m-d H:i:s', 1451944920 ),
+	// 	) );
+	// 	$a2 = self::factory()->activity->create( array(
+	// 		'user_id' => $u2,
+	// 		'type' => 'activity_update',
+	// 		'recorded_time' => date( 'Y-m-d H:i:s', 1451944920 ),
+	// 	) );
 
-		global $activities_template;
-		$reset_activities_template = $activities_template;
+	// 	global $activities_template;
+	// 	$reset_activities_template = $activities_template;
 
-		// Get activities in 'friends' scope
-		bp_has_activities( array(
-			'user_id' => $u1,
-			'scope' => 'friends',
-		) );
+	// 	// Get activities in 'friends' scope
+	// 	bp_has_activities( array(
+	// 		'user_id' => $u1,
+	// 		'scope' => 'friends',
+	// 	) );
 
-		$found = $activities_template->activities;
+	// 	$found = $activities_template->activities;
 
-		// Clean up!
-		$activities_template = $reset_activities_template;
+	// 	// Clean up!
+	// 	$activities_template = $reset_activities_template;
 
-		$this->assertEquals( array( $a2, $a1 ), wp_list_pluck( $found, 'id' ) );
-	}
+	// 	$this->assertEquals( array( $a2, $a1 ), wp_list_pluck( $found, 'id' ) );
+	// }
 
 	/**
 	 * @group scope

@@ -108,6 +108,7 @@ add_filter( 'bp_get_total_favorite_count_for_user', 'bp_core_number_format' );
 add_filter( 'bp_get_total_mention_count_for_user',  'bp_core_number_format' );
 
 add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_embed_excerpt_onclick_location_filter', 9 );
+add_filter( 'bp_after_has_activities_parse_args', 'bp_activity_display_all_types_on_just_me' );
 
 /* Actions *******************************************************************/
 
@@ -489,6 +490,30 @@ function bp_activity_newest_class( $classes = '' ) {
 
 	$classes .= ' just-posted';
 	return $classes;
+}
+
+function bp_activity_display_all_types_on_just_me($args) {
+	if ( ! isset( $args['scope'] ) ) {
+		return $args;
+	}
+
+	if ( ! $args['scope'] ) {
+		return $args;
+	}
+
+	// fallback
+	if ( 'just-me' !== $args['scope'] ) {
+		return $args;
+	}
+
+	$scope = ['just-me'];
+	if ( bp_activity_do_mentions() )   $scope[] = 'mentions';
+	if ( bp_is_active( 'friends' ) )   $scope[] = 'friends';
+	if ( bp_is_active( 'groups' ) )    $scope[] = 'groups';
+
+	$args['scope'] = implode(',', $scope);
+
+	return $args;
 }
 
 /**
