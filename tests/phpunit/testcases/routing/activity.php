@@ -24,10 +24,10 @@ class BP_Tests_Routing_Activity extends BP_UnitTestCase {
         $root_slug = bp_get_activity_root_slug();
         
         /**
-         * Since 'community-feed' is the default slug now, instead of 'activity', this will never evaluate to be same as current component, which is still 'activity'.
+         * Since 'news-feed' is the default slug now, instead of 'activity', this will never evaluate to be same as current component, which is still 'activity'.
          * So, we'll need to factor that 
          */
-        if ( 'community-feed' == $root_slug ) {
+        if ( 'news-feed' == $root_slug ) {
             $root_slug = 'activity';
         }
         

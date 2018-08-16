@@ -27,7 +27,7 @@ class BP_Activity_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'activity',
-			__( 'Global Activity Feed', 'buddyboss' ),
+			__( 'Activity Feed', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 20,

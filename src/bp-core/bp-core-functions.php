@@ -750,7 +750,7 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
  */
 function bp_core_get_directory_page_default_titles() {
 	$page_default_titles = array(
-		'activity' => _x( 'Community Feed', 'Page title for the Activity directory.', 'buddypress' ),
+		'activity' => _x( 'News Feed', 'Page title for the Activity directory.', 'buddypress' ),
 		'groups'   => _x( 'Groups',   'Page title for the Groups directory.',         'buddypress' ),
 		'blogs'    => _x( 'Sites',    'Page title for the Sites directory.',          'buddypress' ),
 		'members'  => _x( 'Members',  'Page title for the Members directory.',        'buddypress' ),
