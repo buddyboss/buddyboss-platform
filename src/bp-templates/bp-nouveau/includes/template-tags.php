@@ -923,7 +923,7 @@ function bp_nouveau_nav_classes() {
 				$classes  = array( 'bp-' . $bp_nouveau->displayed_nav . '-sub-tab' );
 			}
 
-			if ( $nav_item->slug === $selected ) {
+			if ( $nav_item->slug === $selected || ( $nav_item->slug == 'just-me' && strpos( $selected, 'just-me' ) !== false ) ) {
 				$classes = array_merge( $classes, array( 'current', 'selected' ) );
 			}
 		}
