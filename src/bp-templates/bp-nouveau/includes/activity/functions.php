@@ -196,7 +196,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
 		'li_class'  => array( 'dynamic' ),
 		'link'      => bp_get_activity_directory_permalink(),
-		'text'      => __( 'All Members', 'buddyboss' ),
+		'text'      => __( 'All Updates', 'buddyboss' ),
 		'count'     => '',
 		'position'  => 5,
 	);
