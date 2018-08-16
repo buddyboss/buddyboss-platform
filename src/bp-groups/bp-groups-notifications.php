@@ -1114,7 +1114,7 @@ function groups_screen_notification_settings() {
 			</tr>
 			<tr id="groups-notification-settings-promoted">
 				<td></td>
-				<td><?php _ex( 'You are promoted to a group administrator or moderator', 'group settings on notification settings page', 'buddyboss' ) ?></td>
+				<td><?php _ex( 'You are promoted to a group organizer or moderator', 'group settings on notification settings page', 'buddyboss' ) ?></td>
 				<td class="yes"><input type="radio" name="notifications[notification_groups_admin_promotion]" id="notification-groups-admin-promotion-yes" value="yes" <?php checked( $group_promo, 'yes', true ) ?>/><label for="notification-groups-admin-promotion-yes" class="bp-screen-reader-text"><?php
 					/* translators: accessibility text */
 					_e( 'Yes, send email', 'buddyboss' );
@@ -1126,7 +1126,7 @@ function groups_screen_notification_settings() {
 			</tr>
 			<tr id="groups-notification-settings-request">
 				<td></td>
-				<td><?php _ex( 'A member requests to join a private group for which you are an admin', 'group settings on notification settings page', 'buddyboss' ) ?></td>
+				<td><?php _ex( 'A member requests to join a private group for which you are an organizer', 'group settings on notification settings page', 'buddyboss' ) ?></td>
 				<td class="yes"><input type="radio" name="notifications[notification_groups_membership_request]" id="notification-groups-membership-request-yes" value="yes" <?php checked( $group_request, 'yes', true ) ?>/><label for="notification-groups-membership-request-yes" class="bp-screen-reader-text"><?php
 					/* translators: accessibility text */
 					_e( 'Yes, send email', 'buddyboss' );
