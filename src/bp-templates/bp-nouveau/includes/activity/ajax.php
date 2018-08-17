@@ -504,7 +504,7 @@ function bp_nouveau_ajax_post_update() {
 	if ( 'user' === $object && bp_is_active( 'activity' ) ) {
 		$content = $_POST['content'];
 
-        if ( ! empty( $_POST['user_id'] ) && $_POST['user_id'] != bp_get_displayed_user()->id ) {
+        if ( ! empty( $_POST['user_id'] ) && bp_get_displayed_user() && $_POST['user_id'] != bp_get_displayed_user()->id ) {
 			$content = sprintf('@%s %s', bp_get_displayed_user_mentionname(), $content);
         }
 
