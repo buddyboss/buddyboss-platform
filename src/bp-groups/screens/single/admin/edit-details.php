@@ -30,7 +30,7 @@ function groups_screen_group_admin_edit_details() {
 			$group_notify_members = isset( $_POST['group-notify-members'] ) ? (int) $_POST['group-notify-members'] : 0;
 
 			// Name and description are required and may not be empty.
-			if ( empty( $_POST['group-name'] ) || empty( $_POST['group-desc'] ) ) {
+			if ( empty( $_POST['group-name'] ) ) {
 				bp_core_add_message( __( 'Groups must have a name and a description. Please try again.', 'buddyboss' ), 'error' );
 			} elseif ( ! groups_edit_base_group_details( array(
 				'group_id'       => $_POST['group-id'],

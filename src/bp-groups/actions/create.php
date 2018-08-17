@@ -75,7 +75,7 @@ function groups_action_create_group() {
 		check_admin_referer( 'groups_create_save_' . bp_get_groups_current_create_step() );
 
 		if ( 'group-details' == bp_get_groups_current_create_step() ) {
-			if ( empty( $_POST['group-name'] ) || empty( $_POST['group-desc'] ) || !strlen( trim( $_POST['group-name'] ) ) || !strlen( trim( $_POST['group-desc'] ) ) ) {
+			if ( empty( $_POST['group-name'] ) || !strlen( trim( $_POST['group-name'] ) ) ) {
 				bp_core_add_message( __( 'Please fill in all of the required fields', 'buddyboss' ), 'error' );
 				bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create/step/' . bp_get_groups_current_create_step() ) );
 			}

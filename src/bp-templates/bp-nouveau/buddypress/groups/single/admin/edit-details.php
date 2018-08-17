@@ -24,7 +24,7 @@
 <label for="group-name"><?php esc_html_e( 'Group Name (required)', 'buddyboss' ); ?></label>
 <input type="text" name="group-name" id="group-name" value="<?php bp_is_group_create() ? bp_new_group_name() : bp_group_name(); ?>" aria-required="true" />
 
-<label for="group-desc"><?php esc_html_e( 'Group Description (required)', 'buddyboss' ); ?></label>
+<label for="group-desc"><?php esc_html_e( 'Group Description', 'buddyboss' ); ?></label>
 <textarea name="group-desc" id="group-desc" aria-required="true"><?php bp_is_group_create() ? bp_new_group_description() : bp_group_description_editable(); ?></textarea>
 
 <?php if ( ! bp_is_group_create() ) : ?>
