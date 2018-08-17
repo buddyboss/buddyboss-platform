@@ -168,7 +168,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	);
 
     if ( ! bp_is_my_profile() ) {
-        $activity_strings['whatsnewPlaceholder'] = sprintf( __( "Write something to %s?", 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
+        $activity_strings['whatsnewPlaceholder'] = sprintf( __( "Write something to %s...", 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
     }
 
 	if ( bp_is_group() ) {
