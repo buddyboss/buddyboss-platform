@@ -148,7 +148,7 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 
 		if ( 0 === $fav_count && ! bp_is_single_activity() ) {
 			$response['no_favorite'] = '<li><div class="bp-feedback bp-messages info">
-				' . __( 'Sorry, there was no activity found. Please try a different filter.', 'buddyboss' ) . '
+				' . __( 'Sorry, there was no activity found.', 'buddyboss' ) . '
 			</div></li>';
 		} else {
 			$response['fav_count'] = $fav_count;

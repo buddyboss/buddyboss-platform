@@ -945,7 +945,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		),
 		'activity-loop-none' => array(
 			'type'    => 'info',
-			'message' => __( 'Sorry, there was no activity found. Please try a different filter.', 'buddyboss' ),
+			'message' => __( 'Sorry, there was no activity found.', 'buddyboss' ),
 		),
 		'blogs-loop-none' => array(
 			'type'    => 'info',
