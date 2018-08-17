@@ -1691,6 +1691,75 @@ Bar!';
 		$this->assertFalse( bp_activity_user_can_read( $o, $u ) );
 	}
 
+	/**
+	 * @group update
+	 */
+	public function test_bp_activity_template_action_should_include_mentioned_user_if_found() {
+		$u = self::factory()->user->create();
+		$u2 = self::factory()->user->create();
+
+		$this->set_current_user($u);
+		$mention = bp_activity_get_user_mentionname($u2);
+
+
+		$activity_id = bp_activity_post_update([
+			'content' => "@{$mention} hi."
+		]);
+
+		$activity = new BP_Activity_Activity( $activity_id );
+		$display_name = bp_core_get_user_displayname($u2);
+		$nicename = bp_core_get_core_userdata( $u2 )->user_nicename;
+
+		$this->assertRegExp("#{$display_name}#", $activity->action);
+		$this->assertRegExp("#/members/{$nicename}#", $activity->action);
+	}
+
+	/**
+	 * @group update
+	 */
+	public function test_bp_activity_template_action_should_include_use_and_if_mentioned_users_are_less_than_3() {
+		$u = self::factory()->user->create();
+		$u2 = self::factory()->user->create();
+		$u3 = self::factory()->user->create();
+
+		$this->set_current_user($u);
+		$mention = bp_activity_get_user_mentionname($u2);
+		$mention2 = bp_activity_get_user_mentionname($u3);
+
+		$activity_id = bp_activity_post_update([
+			'content' => "@{$mention} hi. @{$mention2}"
+		]);
+
+		$activity = new BP_Activity_Activity( $activity_id );
+
+		$this->assertNotRegExp("# , #", $activity->action);
+		$this->assertRegExp("# and #", $activity->action);
+	}
+
+	/**
+	 * @group update
+	 */
+	public function test_bp_activity_template_action_should_include_use_comman_and_and_if_mentioned_users_are_more_than_2() {
+		$u = self::factory()->user->create();
+		$u2 = self::factory()->user->create();
+		$u3 = self::factory()->user->create();
+		$u4 = self::factory()->user->create();
+
+		$this->set_current_user($u);
+		$mention = bp_activity_get_user_mentionname($u2);
+		$mention2 = bp_activity_get_user_mentionname($u3);
+		$mention3 = bp_activity_get_user_mentionname($u4);
+
+		$activity_id = bp_activity_post_update([
+			'content' => "@{$mention} hi. @{$mention2}, asdfads @{$mention3}"
+		]);
+
+		$activity = new BP_Activity_Activity( $activity_id );
+
+		$this->assertRegExp("#, #", $activity->action);
+		$this->assertRegExp("# and #", $activity->action);
+	}
+
 	public function check_activity_caches() {
 		foreach ( $this->acaches as $k => $v ) {
 			$this->acaches[ $k ] = wp_cache_get( $k, 'bp_activity' );

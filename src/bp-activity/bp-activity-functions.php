@@ -1523,7 +1523,27 @@ function bp_activity_generate_action_string( $activity ) {
  * @return string $action
  */
 function bp_activity_format_activity_action_activity_update( $action, $activity ) {
-	$action = sprintf( __( '%s', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ) );
+	if ( bp_activity_do_mentions() && $usernames = bp_activity_find_mentions( $activity->content ) ) {
+		$mentioned_users = array_filter( array_map( function ($username) {
+			return get_user_by( 'slug', $username );
+		}, $usernames ) );
+
+		$mentioned_users_link = array_map( function($mentioned_user) {
+			return bp_core_get_userlink( $mentioned_user->ID );
+		}, $mentioned_users);
+
+		$last_user_link = array_pop($mentioned_users_link);
+
+		$action = sprintf(
+			__( '%s > %s%s%s', 'buddyboss'),
+			bp_core_get_userlink( $activity->user_id ),
+			$mentioned_users_link? implode(', ', $mentioned_users_link) : '',
+			$mentioned_users_link? __(' and ', 'buddyboss') : '',
+			$last_user_link
+		);
+	} else {
+		$action = sprintf( __( '%s', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ) );
+	}
 
 	/**
 	 * Filters the formatted activity action update string.
