@@ -7,23 +7,36 @@
  */
 ?>
 
-<?php if ( bp_nouveau_has_nav( array( 'type' => 'secondary' ) ) ) : ?>
+<?php
+	$bp_nouveau = bp_nouveau();
+	$has_nav    = bp_nouveau_has_nav( array( 'type' => 'secondary' ) );
+	$nav_count  = count( $bp_nouveau->sorted_nav );
 
-	<?php
-	while ( bp_nouveau_nav_items() ) :
-		bp_nouveau_nav_item();
-	?>
+	if ( ! $has_nav || $nav_count <= 1 ) {
+		unset( $bp_nouveau->sorted_nav, $bp_nouveau->displayed_nav, $bp_nouveau->object_nav );
+		return;
+	}
+?>
 
-		<li id="<?php bp_nouveau_nav_id(); ?>" class="<?php bp_nouveau_nav_classes(); ?>" <?php bp_nouveau_nav_scope(); ?>>
-			<a href="<?php bp_nouveau_nav_link(); ?>" id="<?php bp_nouveau_nav_link_id(); ?>">
-				<?php bp_nouveau_nav_link_text(); ?>
+<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Activity menu', 'buddyboss' ); ?>">
+	<ul class="subnav">
 
-				<?php if ( bp_nouveau_nav_has_count() ) : ?>
-					<span class="count"><?php bp_nouveau_nav_count(); ?></span>
-				<?php endif; ?>
-			</a>
-		</li>
+		<?php
+		while ( bp_nouveau_nav_items() ) :
+			bp_nouveau_nav_item();
+		?>
 
-	<?php endwhile; ?>
+			<li id="<?php bp_nouveau_nav_id(); ?>" class="<?php bp_nouveau_nav_classes(); ?>" <?php bp_nouveau_nav_scope(); ?>>
+				<a href="<?php bp_nouveau_nav_link(); ?>" id="<?php bp_nouveau_nav_link_id(); ?>">
+					<?php bp_nouveau_nav_link_text(); ?>
 
-<?php endif; ?>
+					<?php if ( bp_nouveau_nav_has_count() ) : ?>
+						<span class="count"><?php bp_nouveau_nav_count(); ?></span>
+					<?php endif; ?>
+				</a>
+			</li>
+
+		<?php endwhile; ?>
+
+	</ul>
+</nav><!-- .item-list-tabs#subnav -->
