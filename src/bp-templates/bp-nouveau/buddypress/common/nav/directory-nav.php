@@ -7,31 +7,38 @@
  */
 ?>
 
+<?php
+	$bp_nouveau = bp_nouveau();
+	$has_nav = bp_nouveau_has_nav( array( 'object' => 'directory' ) );
+	$nav_count  = count( $bp_nouveau->sorted_nav );
+
+	if ( ! $has_nav || $nav_count <= 1 ) {
+		unset( $bp_nouveau->sorted_nav, $bp_nouveau->displayed_nav, $bp_nouveau->object_nav );
+		return;
+	}
+?>
+
 <nav class="<?php bp_nouveau_directory_type_navs_class(); ?>" role="navigation" aria-label="<?php esc_attr_e( 'Directory menu', 'buddyboss' ); ?>">
 
-	<?php if ( bp_nouveau_has_nav( array( 'object' => 'directory' ) ) ) : ?>
+	<ul class="component-navigation <?php bp_nouveau_directory_list_class(); ?>">
 
-		<ul class="component-navigation <?php bp_nouveau_directory_list_class(); ?>">
+		<?php
+		while ( bp_nouveau_nav_items() ) :
+			bp_nouveau_nav_item();
+		?>
 
-			<?php
-			while ( bp_nouveau_nav_items() ) :
-				bp_nouveau_nav_item();
-			?>
+			<li id="<?php bp_nouveau_nav_id(); ?>" class="<?php bp_nouveau_nav_classes(); ?>" <?php bp_nouveau_nav_scope(); ?> data-bp-object="<?php bp_nouveau_directory_nav_object(); ?>">
+				<a href="<?php bp_nouveau_nav_link(); ?>">
+					<?php bp_nouveau_nav_link_text(); ?>
 
-				<li id="<?php bp_nouveau_nav_id(); ?>" class="<?php bp_nouveau_nav_classes(); ?>" <?php bp_nouveau_nav_scope(); ?> data-bp-object="<?php bp_nouveau_directory_nav_object(); ?>">
-					<a href="<?php bp_nouveau_nav_link(); ?>">
-						<?php bp_nouveau_nav_link_text(); ?>
+					<?php if ( bp_nouveau_nav_has_count() ) : ?>
+						<span class="count"><?php bp_nouveau_nav_count(); ?></span>
+					<?php endif; ?>
+				</a>
+			</li>
 
-						<?php if ( bp_nouveau_nav_has_count() ) : ?>
-							<span class="count"><?php bp_nouveau_nav_count(); ?></span>
-						<?php endif; ?>
-					</a>
-				</li>
+		<?php endwhile; ?>
 
-			<?php endwhile; ?>
-
-		</ul><!-- .component-navigation -->
-
-	<?php endif; ?>
+	</ul><!-- .component-navigation -->
 
 </nav><!-- .bp-navs -->
