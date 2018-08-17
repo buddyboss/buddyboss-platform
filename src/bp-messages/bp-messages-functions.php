@@ -173,6 +173,18 @@ function messages_new_message( $args = '' ) {
 			$message->recipients[ $i ]          = new stdClass;
 			$message->recipients[ $i ]->user_id = $recipient_id;
 		}
+
+		if ( $previous_thread = BP_Messages_Message::get_existing_thread( $recipient_ids, $r['sender_id'] ) ) {
+			$message->thread_id = $r['sender_id'] = (int) $previous_thread;
+
+			// Set a default reply subject if none was sent.
+			if ( empty( $message->subject ) ) {
+				$message->subject = sprintf(
+					__( '%s', 'buddyboss' ),
+					wp_trim_words($thread->messages[0]->subject , messages_get_default_subject_length())
+				);
+			}
+		}
 	}
 
 	// Bail if message failed to send.
@@ -428,6 +440,10 @@ function messages_get_message_thread_id( $message_id = 0 ) {
 	$bp = buddypress();
 
 	return (int) $wpdb->get_var( $wpdb->prepare( "SELECT thread_id FROM {$bp->messages->table_name_messages} WHERE id = %d", $message_id ) );
+}
+
+function messages_get_default_subject_length() {
+	return apply_filters('bp_messages_get_default_subject_length', 30);
 }
 
 /** Messages Meta *******************************************************/

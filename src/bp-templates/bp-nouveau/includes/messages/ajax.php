@@ -79,7 +79,7 @@ function bp_nouveau_ajax_messages_send_message() {
 	// Attempt to send the message.
 	$send = messages_new_message( array(
 		'recipients' => $recipients,
-		'subject'    => wp_trim_words($_POST['message_content'], 30),
+		'subject'    => wp_trim_words($_POST['message_content'], messages_get_default_subject_length()),
 		'content'    => $_POST['message_content'],
 		'error_type' => 'wp_error',
 	) );

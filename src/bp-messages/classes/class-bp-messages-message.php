@@ -278,4 +278,30 @@ class BP_Messages_Message {
 
 		return is_numeric( $query ) ? (int) $query : $query;
 	}
+
+	public static function get_existing_thread( $recipient_ids, $sender = 0 ) {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		// add the sender into the recipient list and order by id ascending
+		$recipient_ids[] = $sender;
+		$recipient_ids = array_filter(array_unique(array_values($recipient_ids)));
+		sort($recipient_ids);
+
+		$results = $wpdb->get_results( $wpdb->prepare(
+			"SELECT
+				thread_id,
+				GROUP_CONCAT(user_id ORDER BY user_id separator ',') as recipient_list
+			FROM {$bp->messages->table_name_recipients}
+			GROUP BY thread_id
+			HAVING recipient_list = %s
+			ORDER BY id DESC
+			LIMIT 1
+			",
+			implode(',', $recipient_ids)
+		) );
+
+		return $results? $results[0]->thread_id : null;
+	}
 }
