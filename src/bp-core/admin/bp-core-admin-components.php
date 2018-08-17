@@ -64,7 +64,7 @@ function bp_core_admin_components_options() {
 	// The default components (if none are previously selected).
 	$default_components = array(
 		'xprofile' => array(
-			'title'       => __( 'Profiles Fields', 'buddyboss' ),
+			'title'       => __( 'Profile Fields', 'buddyboss' ),
 			'description' => __( 'Customize your community with fully editable profile fields that allow your users to describe themselves.', 'buddyboss' )
 		),
 		'settings' => array(

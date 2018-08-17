@@ -168,7 +168,7 @@ function xprofile_delete_activity( $args = '' ) {
 }
 
 /**
- * Register an activity action for the Profiles Fields component.
+ * Register an activity action for the Profile Fields component.
  *
  * @since BuddyPress 1.0.0
  *

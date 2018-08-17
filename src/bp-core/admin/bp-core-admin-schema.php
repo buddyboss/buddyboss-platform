@@ -57,7 +57,7 @@ function bp_core_install( $active_components = false ) {
 		bp_core_install_private_messaging();
 	}
 
-	// Profiles Fields.
+	// Profile Fields.
 	if ( !empty( $active_components['xprofile'] ) ) {
 		bp_core_install_extended_profiles();
 	}
