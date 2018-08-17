@@ -2932,6 +2932,10 @@ body.register .buddypress-wrap .page ul {
 	margin: 15px 0;
 }
 
+#bp-message-content {
+	margin-top: 15px;
+}
+
 .bp-messages-content .avatar {
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;

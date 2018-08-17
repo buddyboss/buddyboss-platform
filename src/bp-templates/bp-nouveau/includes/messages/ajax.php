@@ -50,12 +50,8 @@ function bp_nouveau_ajax_messages_send_message() {
 	}
 
 	// Validate subject and message content
-	if ( empty( $_POST['subject'] ) || empty( $_POST['message_content'] ) ) {
-		if ( empty( $_POST['subject'] ) ) {
-			$response['feedback'] = __( 'Your message was not sent. Please enter a subject line.', 'buddyboss' );
-		} else {
-			$response['feedback'] = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
-		}
+	if ( empty( $_POST['message_content'] ) ) {
+		$response['feedback'] = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
 
 		wp_send_json_error( $response );
 	}
@@ -83,7 +79,7 @@ function bp_nouveau_ajax_messages_send_message() {
 	// Attempt to send the message.
 	$send = messages_new_message( array(
 		'recipients' => $recipients,
-		'subject'    => $_POST['subject'],
+		'subject'    => wp_trim_words($_POST['message_content'], 30),
 		'content'    => $_POST['message_content'],
 		'error_type' => 'wp_error',
 	) );

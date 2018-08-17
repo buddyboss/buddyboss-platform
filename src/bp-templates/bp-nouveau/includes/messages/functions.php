@@ -93,7 +93,6 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 	$params['messages'] = array(
 		'errors' => array(
 			'send_to'         => __( 'Please add at least one recipient.', 'buddyboss' ),
-			'subject'         => __( 'Please add a subject to your message.', 'buddyboss' ),
 			'message_content' => __( 'Please add some content to your message.', 'buddyboss' ),
 		),
 		'nonces' => array(

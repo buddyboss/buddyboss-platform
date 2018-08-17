@@ -567,7 +567,7 @@ window.bp = window.bp || {};
 				pair.name = pair.name.replace( '[]', '' );
 
 				// Group extra fields in meta
-				if ( -1 === _.indexOf( ['send_to', 'subject', 'message_content'], pair.name ) ) {
+				if ( -1 === _.indexOf( ['send_to', 'message_content'], pair.name ) ) {
 					if ( _.isUndefined( meta[ pair.name ] ) ) {
 						meta[ pair.name ] = pair.value;
 					} else {
