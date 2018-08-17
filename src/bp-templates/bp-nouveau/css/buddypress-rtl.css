@@ -2331,9 +2331,6 @@ body.no-js .single-item-header .js-self-profile-button {
 
 .groups-header .desc-wrap .group-description {
 	background: #fafafa;
-	-webkit-box-shadow: inset 0 0 9px #ccc;
-	-moz-box-shadow: inset 0 0 9px #ccc;
-	box-shadow: inset 0 0 9px #ccc;
 	padding: 1em;
 	text-align: right;
 }
