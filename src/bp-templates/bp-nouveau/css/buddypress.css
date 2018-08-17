@@ -1357,6 +1357,12 @@ body.buddypress article.page > .entry-header .entry-title {
 	vertical-align: bottom;
 }
 
+.activity-list .activity-item .activity-header .activity-time-since:before {
+	content: "\00b7 ";
+	color: #767676;
+	margin-right: 3px;
+}
+
 .activity-list .activity-item .activity-header .time-since {
 	font-size: 14px;
 	color: #767676;
