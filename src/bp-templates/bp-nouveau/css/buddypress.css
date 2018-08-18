@@ -1351,6 +1351,25 @@ body.buddypress article.page > .entry-header .entry-title {
 	display: inline;
 }
 
+.activity-list .activity-item .activity-header .activity-to {
+	visibility: hidden;
+    display: inline-block;
+    white-space: nowrap;
+    width: 1em;
+}
+.activity-list .activity-item .activity-header .activity-to:before  { 
+    font-family: 'dashicons'; 
+    vertical-align: middle; 
+    content: '\f344';
+    visibility: visible;
+}
+
+@media screen and (min-width: 46.8em) {
+	.activity-list .activity-item .activity-header .activity-to:before {
+		font-size: 15px;
+	}
+}
+
 .activity-list .activity-item .activity-header .avatar {
 	display: inline-block;
 	margin: 0 5px;

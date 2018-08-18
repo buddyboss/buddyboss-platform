@@ -1535,7 +1535,7 @@ function bp_activity_format_activity_action_activity_update( $action, $activity 
 		$last_user_link = array_pop($mentioned_users_link);
 
 		$action = sprintf(
-			__( '%s > %s%s%s', 'buddyboss'),
+			__( '%s <span class="activity-to">to</span> %s%s%s', 'buddyboss'),
 			bp_core_get_userlink( $activity->user_id ),
 			$mentioned_users_link? implode(', ', $mentioned_users_link) : '',
 			$mentioned_users_link? __(' and ', 'buddyboss') : '',
