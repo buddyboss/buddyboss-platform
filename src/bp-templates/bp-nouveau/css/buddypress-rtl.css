@@ -1360,7 +1360,7 @@ body.buddypress article.page > .entry-header .entry-title {
 .activity-list .activity-item .activity-header .activity-time-since:before {
 	content: "\00b7 ";
 	color: #767676;
-	margin-left: 3px;
+	margin-right: 3px;
 }
 
 .activity-list .activity-item .activity-header .time-since {
