@@ -80,7 +80,3 @@ li.friend-tab span.p {
 	font-size: 0.8em;
 	cursor: pointer;
 }
-
-input#send-to-input {
-	width: 275px;
-}

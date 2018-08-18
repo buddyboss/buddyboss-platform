@@ -3233,7 +3233,7 @@ body.register .buddypress-wrap .page ul {
 	color: #737373;
 }
 
-.bp-messages-content .standard-form #subject {
+.bp-messages-content .standard-form #send-to-input {
 	margin-bottom: 20px;
 }
 

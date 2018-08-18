@@ -2952,10 +2952,6 @@ body.register .buddypress-wrap .page ul {
 	margin: 15px 0;
 }
 
-#bp-message-content {
-	margin-top: 15px;
-}
-
 .bp-messages-content .avatar {
 	-moz-box-shadow: none;
 	-webkit-box-shadow: none;
@@ -3256,7 +3252,7 @@ body.register .buddypress-wrap .page ul {
 	color: #737373;
 }
 
-.bp-messages-content .standard-form #subject {
+.bp-messages-content .standard-form #send-to-input {
 	margin-bottom: 20px;
 }
 
