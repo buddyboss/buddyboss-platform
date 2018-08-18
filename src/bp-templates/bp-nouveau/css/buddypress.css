@@ -1380,6 +1380,7 @@ body.buddypress article.page > .entry-header .entry-title {
 	content: "\00b7 ";
 	color: #767676;
 	margin-right: 3px;
+	vertical-align: middle;
 }
 
 .activity-list .activity-item .activity-header .time-since {
