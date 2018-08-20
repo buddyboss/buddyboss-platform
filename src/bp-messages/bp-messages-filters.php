@@ -79,6 +79,9 @@ add_filter( 'bp_get_the_thread_message_content',      'stripslashes_deep'    );
 add_filter( 'bp_get_the_thread_subject',              'stripslashes_deep'    );
 add_filter( 'bp_get_message_thread_content',          'stripslashes_deep', 1 );
 
+// Actions
+add_action( 'messages_screen_compose', 'maybe_redirects_to_previous_thread_message');
+
 /**
  * Enforce limitations on viewing private message contents
  *
@@ -125,4 +128,18 @@ function bp_messages_filter_kses( $content ) {
 	 */
 	$messages_allowedtags = apply_filters( 'bp_messages_allowed_tags', $messages_allowedtags );
 	return wp_kses( $content, $messages_allowedtags );
+}
+
+function maybe_redirects_to_previous_thread_message() {
+	$recipient = bp_get_messages_username_value();
+	$user_id = bp_core_get_userid_from_nicename( $recipient );
+
+	if ( ! $thread_id = BP_Messages_Message::get_existing_thread( [$user_id], bp_loggedin_user_id() ) ) {
+		return;
+	}
+
+	$thread_url = esc_url( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' );
+
+	wp_redirect($thread_url);
+	exit();
 }
