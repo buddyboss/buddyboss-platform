@@ -106,6 +106,7 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 			'star'   => __( 'Starring messages. Please wait.', 'buddyboss' ),
 			'unstar' => __( 'Unstarring messages. Please wait.', 'buddyboss' ),
 		),
+		'delete_confirmation'  => __( 'Are you sure you want to delete this conversation?', 'buddyboss' ),
 		'bulk_actions'  => bp_nouveau_messages_get_bulk_actions(),
 		'howtoBulk'     => __( 'Use the select box to define your bulk action and click on the &#10003; button to apply.', 'buddyboss' ),
 		'toOthers'      => array(

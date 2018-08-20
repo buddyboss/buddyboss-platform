@@ -1066,6 +1066,13 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.displayFeedback( feedback[ action ], 'loading' );
 			}
 
+			if ( 'delete' === action ) {
+				if (! confirm(BP_Nouveau.messages.delete_confirmation) ) {
+					bp.Nouveau.Messages.removeFeedback();
+					return;
+				}
+			}
+
 			bp.Nouveau.Messages.threads.doAction( action, this.model.get( 'id' ), options ).done( function( response ) {
 				// Remove all views
 				if ( 'delete' === action ) {
