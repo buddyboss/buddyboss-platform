@@ -164,6 +164,10 @@ window.bp = window.bp || {};
 				model: new bp.Models.Message()
 			} );
 
+			// Activate the appropriate nav
+			$( '#subnav ul li' ).removeClass( 'current selected' );
+			$( '#subnav a#compose' ).closest( 'li' ).addClass( 'current selected' );
+
 			this.views.add( { id: 'compose', view: form } );
 
 			form.inject( '.bp-messages-content' );
@@ -171,9 +175,7 @@ window.bp = window.bp || {};
 
 		threadsView: function() {
 			// Activate the appropriate nav
-			$( '#subnav ul li' ).each( function( l, li ) {
-				$( li ).removeClass( 'current selected' );
-			} );
+			$( '#subnav ul li' ).removeClass( 'current selected' );
 			$( '#subnav a#' + this.box ).closest( 'li' ).addClass( 'current selected' );
 
 			// Create the loop view
