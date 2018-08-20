@@ -15,7 +15,7 @@
 
 	<p class="bp-feedback info">
 		<span class="bp-icon" aria-hidden="true"></span>
-		<span class="bp-help-text"><?php esc_html_e( 'Your profile photo will be used on your profile and throughout the site. If there is a <a href="https://gravatar.com">Gravatar</a> associated with your account email we will use that, or you can upload an image from your computer.', 'buddyboss' ); ?></span>
+		<span class="bp-help-text"><?php esc_html_e( 'Your profile photo will be used on your profile and throughout the site.', 'buddyboss' ); ?></span>
 	</p>
 
 	<form action="" method="post" id="avatar-upload-form" class="standard-form" enctype="multipart/form-data">
