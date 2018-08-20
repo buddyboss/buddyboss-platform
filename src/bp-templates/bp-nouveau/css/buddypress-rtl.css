@@ -3203,6 +3203,15 @@ body.register .buddypress-wrap .page ul {
 	margin-bottom: 10px;
 }
 
+.bp-messages-content .thread-participants span:before {
+	content: ", ";
+	margin-left: 5px;
+}
+
+.bp-messages-content .thread-participants span:first-child:before {
+	content: none;
+}
+
 .bp-messages-content .thread-participants .thread-date {
     color: #737373;
     font-size: 13px;

@@ -251,7 +251,7 @@
 					<# } #>
 				</dt>
 				<dd>
-					<span class="thread-date">Started [Month Day, Year]</span>
+					<span class="thread-date">Started {{data.started_date}}</span>
 				</dd>
 			</dl>
 		<# } #>

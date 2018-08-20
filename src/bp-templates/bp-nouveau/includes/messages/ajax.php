@@ -426,10 +426,16 @@ function bp_nouveau_ajax_get_thread_messages() {
 		$thread->thread = array(
 			'id'      => bp_get_the_thread_id(),
 			'subject' => html_entity_decode( bp_get_the_thread_subject() ),
+			'started_date' => date(
+				get_option('date_format'),
+				strtotime($thread_template->thread->first_message_date)
+			)
 		);
 
 		if ( is_array( $thread_template->thread->recipients ) ) {
 			foreach ( $thread_template->thread->recipients as $recipient ) {
+				if ( $recipient->user_id == bp_loggedin_user_id() ) continue;
+
 				$thread->thread['recipients'][] = array(
 					'avatar' => htmlspecialchars_decode( bp_core_fetch_avatar( array(
 						'item_id' => $recipient->user_id,

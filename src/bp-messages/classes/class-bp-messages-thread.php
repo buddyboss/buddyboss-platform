@@ -177,6 +177,9 @@ class BP_Messages_Thread {
 		$this->last_message_subject = $this->messages[ $last_message_index ]->subject;
 		$this->last_message_content = $this->messages[ $last_message_index ]->message;
 
+		$this->first_message_id     = $this->messages[ 0 ]->id;
+		$this->first_message_date   = $this->messages[ 0 ]->date_sent;
+
 		foreach ( (array) $this->messages as $key => $message ) {
 			$this->sender_ids[ $message->sender_id ] = $message->sender_id;
 		}
