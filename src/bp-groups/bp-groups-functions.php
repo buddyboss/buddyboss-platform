@@ -269,16 +269,15 @@ function groups_edit_base_group_details( $args = array() ) {
 	$group     = groups_get_group( $r['group_id'] );
 	$old_group = clone $group;
 
-	// Group name, slug and description can never be empty. Update only if provided.
+	// Group name, slug can never be empty. Update only if provided.
 	if ( $r['name'] ) {
 		$group->name = $r['name'];
 	}
 	if ( $r['slug'] && $r['slug'] != $group->slug ) {
 		$group->slug = groups_check_slug( $r['slug'] );
 	}
-	if ( $r['description'] ) {
-		$group->description = $r['description'];
-	}
+
+	$group->description = $r['description'];
 
 	if ( ! $group->save() ) {
 		return false;
