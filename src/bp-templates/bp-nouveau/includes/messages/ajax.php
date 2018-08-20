@@ -286,6 +286,8 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 		if ( is_array( $messages_template->thread->recipients ) ) {
 			foreach ( $messages_template->thread->recipients as $recipient ) {
+				if ( $recipient->user_id == bp_loggedin_user_id() ) continue;
+
 				$threads->threads[ $i ]['recipients'][] = array(
 					'avatar' => htmlspecialchars_decode( bp_core_fetch_avatar( array(
 						'item_id' => $recipient->user_id,
