@@ -669,7 +669,6 @@ window.bp = window.bp || {};
 		initialize: function() {
 			var Views = [
 				new bp.Nouveau.Messages.View( { tagName: 'ul', id: 'message-threads', className: 'message-lists' } ),
-				new bp.Views.previewThread( { collection: this.collection } )
 			];
 
 			_.each( Views, function( view ) {
@@ -707,9 +706,6 @@ window.bp = window.bp || {};
 			if ( this.collection.options.beforeLoop ) {
 				this.views.add( new bp.Views.Hook( { extraContent: this.collection.options.beforeLoop, className: 'before-messages-loop' } ), { at: 0 } );
 			}
-
-			// Inform the user about how to use the UI.
-			bp.Nouveau.Messages.displayFeedback( BP_Nouveau.messages.howto, 'info' );
 		},
 
 		threadsFetchError: function( collection, response ) {
@@ -723,27 +719,7 @@ window.bp = window.bp || {};
 		},
 
 		addThread: function( thread ) {
-			var selected = this.collection.findWhere( { active: true } );
-
-			if ( _.isUndefined( selected ) ) {
-				thread.set( 'active', true );
-			}
-
 			this.views.add( '#message-threads', new bp.Views.userThread( { model: thread } ) );
-		},
-
-		setActiveThread: function( active ) {
-			if ( ! active ) {
-				return;
-			}
-
-			_.each( this.collection.models, function( thread ) {
-				if ( thread.id === active ) {
-					thread.set( 'active', true );
-				} else {
-					thread.unset( 'active' );
-				}
-			}, this );
 		},
 
 		changePreview: function( event ) {
@@ -752,19 +728,10 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			bp.Nouveau.Messages.removeFeedback();
 
-			// If the click is done on an active conversation, open it.
-			if ( target.closest( '.thread-item' ).hasClass( 'selected' ) ) {
-				bp.Nouveau.Messages.router.navigate(
-					'view/' + target.closest( '.thread-content' ).data( 'thread-id' ) + '/',
-					{ trigger: true }
-				);
-
-			// Otherwise activate the conversation and display its preview.
-			} else {
-				this.setActiveThread( target.closest( '.thread-content' ).data( 'thread-id' ) );
-
-				$( '.message-action-view' ).focus();
-			}
+			bp.Nouveau.Messages.router.navigate(
+				'view/' + target.closest( '.thread-content' ).data( 'thread-id' ) + '/',
+				{ trigger: true }
+			);
 		}
 	} );
 
@@ -859,128 +826,6 @@ window.bp = window.bp || {};
 
 		cleanView: function() {
 			this.views.view.remove();
-		}
-	} );
-
-	bp.Views.previewThread = bp.Nouveau.Messages.View.extend( {
-		tagName: 'div',
-		id: 'thread-preview',
-		template  : bp.template( 'bp-messages-preview' ),
-
-		events: {
-			'click .actions button' : 'doAction',
-			'click .actions a'      : 'doAction'
-		},
-
-		initialize: function() {
-			this.collection.on( 'change:active', this.setPreview, this );
-			this.collection.on( 'change:is_starred', this.updatePreview, this );
-			this.collection.on( 'reset', this.emptyPreview, this );
-			this.collection.on( 'remove', this.emptyPreview, this );
-		},
-
-		render: function() {
-			// Only render if we have some content to render
-			if ( _.isUndefined( this.model ) || true !== this.model.get( 'active' ) ) {
-				return;
-			}
-
-			bp.Nouveau.Messages.View.prototype.render.apply( this, arguments );
-		},
-
-		setPreview: function( model ) {
-			var self = this;
-
-			this.model = model;
-
-			if ( true === model.get( 'unread' ) ) {
-				this.model.updateReadState().done( function() {
-					self.model.set( 'unread', false );
-				} );
-			}
-
-			this.render();
-		},
-
-		updatePreview: function( model ) {
-			if ( true === model.get( 'active' ) ) {
-				this.render();
-			}
-		},
-
-		emptyPreview: function() {
-			$( this.el ).html( '' );
-		},
-
-		doAction: function( event ) {
-			var action = $( event.currentTarget ).data( 'bp-action' ), self = this, options = {}, mid,
-			    feedback = BP_Nouveau.messages.doingAction;
-
-			if ( ! action ) {
-				return event;
-			}
-
-			event.preventDefault();
-
-			var model = this.collection.findWhere( { active: true } );
-
-			if ( ! model.get( 'id' ) ) {
-				return;
-			}
-
-			mid = model.get( 'id' );
-
-			// Open the full conversation
-			if ( 'view' === action ) {
-				bp.Nouveau.Messages.router.navigate(
-					'view/' + mid + '/',
-					{ trigger: true }
-				);
-
-				return;
-
-			// Star/Unstar actions needs to use a specific id and nonce.
-			} else if ( 'star' === action || 'unstar' === action ) {
-				options.data = {
-					'star_nonce' : model.get( 'star_nonce' )
-				};
-
-				mid = model.get( 'starred_id' );
-			}
-
-			if ( ! _.isUndefined( feedback[ action ] ) ) {
-				bp.Nouveau.Messages.displayFeedback( feedback[ action ], 'loading' );
-			}
-
-			this.collection.doAction( action, mid, options ).done( function( response ) {
-				// Remove previous feedback.
-				bp.Nouveau.Messages.removeFeedback();
-
-				bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
-
-				if ( 'delete' === action || ( 'starred' === self.collection.options.box && 'unstar' === action ) ) {
-					// Remove from the list of messages
-					self.collection.remove( model.get( 'id' ) );
-
-					// And Requery
-					self.collection.fetch( {
-						data : _.pick( self.collection.options, ['box', 'search_terms', 'page'] )
-					} );
-				} else if ( 'unstar' === action || 'star' === action ) {
-					// Update the model attributes--updates the star icon.
-					_.each( response.messages, function( updated ) {
-						model.set( updated );
-					} );
-					model.set( _.first( response.messages ) );
-				} else if ( response.messages ) {
-					model.set( _.first( response.messages ) );
-				}
-			} ).fail( function( response ) {
-				// Remove previous feedback.
-				bp.Nouveau.Messages.removeFeedback();
-
-				bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
-			} );
 		}
 	} );
 
