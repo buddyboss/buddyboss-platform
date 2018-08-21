@@ -2045,7 +2045,7 @@ function bp_the_thread_message_time_since() {
 		 *
 		 * @param string $value Default text of 'Sent x hours ago'.
 		 */
-		return apply_filters( 'bp_get_the_thread_message_time_since', sprintf( __( 'Sent %s', 'buddyboss' ), bp_core_time_since( bp_get_the_thread_message_date_sent() ) ) );
+		return apply_filters( 'bp_get_the_thread_message_time_since', sprintf( __( '%s', 'buddyboss' ), bp_core_time_since( bp_get_the_thread_message_date_sent() ) ) );
 	}
 
 /**
