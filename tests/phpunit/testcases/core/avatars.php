@@ -13,7 +13,25 @@ class BP_Tests_Avatars extends BP_UnitTestCase {
 			$avatar_dir = 'group-avatars';
 		}
 
+		if ( is_dir( bp_core_avatar_upload_path() . '/' . $avatar_dir ) ) {
+			rename( bp_core_avatar_upload_path() . '/' . $avatar_dir, bp_core_avatar_upload_path() . '/' . $avatar_dir . '-bak' );
+		}
+
 		$this->rrmdir( bp_core_avatar_upload_path() . '/' . $avatar_dir );
+	}
+
+	private function restore_existing_avatars( $type = 'user' ) {
+		if ( 'user' === $type ) {
+			$avatar_dir = 'avatars';
+		} elseif ( 'group' === $object ) {
+			$avatar_dir = 'group-avatars';
+		}
+
+		$this->rrmdir( bp_core_avatar_upload_path() . '/' . $avatar_dir );
+
+		if ( is_dir( bp_core_avatar_upload_path() . '/' . $avatar_dir . '-bak' ) ) {
+			rename( bp_core_avatar_upload_path() . '/' . $avatar_dir . '-bak', bp_core_avatar_upload_path() . '/' . $avatar_dir );
+		}
 	}
 
 	/**
@@ -55,6 +73,7 @@ class BP_Tests_Avatars extends BP_UnitTestCase {
 
 		$u = self::factory()->user->create();
 		$this->assertFalse( bp_get_user_has_avatar( $u ) );
+		$this->restore_existing_avatars();
 	}
 
 	/**

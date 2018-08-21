@@ -133,34 +133,38 @@
 		<label for="bp-message-thread-{{data.id}}" class="bp-screen-reader-text"><?php esc_html_e( 'Select message:', 'buddyboss' ); ?> {{data.subject}}</label>
 	</div>
 
-	<# if ( ! data.recipientsCount ) { #>
-		<div class="thread-avatar">
-			<img class="avatar" src="{{data.sender_avatar}}" alt="" />
-		</div>
-	<# } else {
-		var recipient = _.first( data.recipients );
-		#>
-		<div class="thread-avatar">
-			<img class="avatar" src="{{recipient.avatar}}" alt="" />
-		</div>
-	<# } #>
+	<div class="thread-avatar">
+		<# if ( data.recipients.length > 1 ) { #>
+			<img class="avatar" src="{{data.sender_avatar}}" alt="{{data.sender_name}}" />
+		<# } else { #>
+			<# var recipient = _.first(data.recipients); #>
+			<img class="avatar" src="{{recipient.avatar}}" alt="{{recipient.user_name}}" />
+		<# } #>
+	</div>
 
 	<div class="thread-content" data-thread-id="{{data.id}}">
-			<#
-			var recipient = _.first( data.recipients );
-			#>
-			<div class="thread-to">
-				<span class="user-name">{{recipient.user_name}}</span>
+		<div class="thread-to">
+			<# for ( i in _.first(data.recipients, 3) ) { #>
+				<span class="user-name">{{data.recipients[i].user_name}}</span>
+			<# } #>
 
-				<# if ( data.toOthers ) { #>
-					<span class="num-recipients">{{data.toOthers}}</span>
-				<# } #>
-
-				<span class="thread-count">({{data.count}})</span>
-			</div>
+			<# if ( data.toOthers ) { #>
+				<span class="num-name">{{data.toOthers}}</span>
+			<# } #>
+		</div>
 
 		<div class="thread-subject">
-			<a class="subject" href="../view/{{data.id}}/">{{data.excerpt}}</a>
+			<a class="subject" href="../view/{{data.id}}/">
+				<span class="last-message-sender">
+					<# if ( data.sender_is_you ) { #>
+						<?php _e('You', 'buddyboss'); ?>:
+					<# } else { #>
+						{{ data.sender_name }}:
+					<# } #>
+				</span>
+
+				{{data.excerpt}}
+			</a>
 		</div>
 	</div>
 	<div class="thread-date">

@@ -270,6 +270,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'content'       => html_entity_decode( do_shortcode( bp_get_message_thread_content() ) ),
 			'unread'        => bp_message_thread_has_unread(),
 			'sender_name'   => bp_core_get_user_displayname( $messages_template->thread->last_sender_id ),
+			'sender_is_you' => $messages_template->thread->last_sender_id == bp_loggedin_user_id(),
 			'sender_link'   => bp_core_get_userlink( $messages_template->thread->last_sender_id, false, true ),
 			'sender_avatar' => htmlspecialchars_decode( bp_core_fetch_avatar( array(
 				'item_id' => $messages_template->thread->last_sender_id,

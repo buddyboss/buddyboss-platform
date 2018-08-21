@@ -721,7 +721,27 @@ window.bp = window.bp || {};
 		},
 
 		addThread: function( thread ) {
+			var selected = this.collection.findWhere( { active: true } );
+
+			if ( _.isUndefined( selected ) ) {
+				thread.set( 'active', true );
+			}
+
 			this.views.add( '#message-threads', new bp.Views.userThread( { model: thread } ) );
+		},
+
+		setActiveThread: function( active ) {
+			if ( ! active ) {
+				return;
+			}
+
+			_.each( this.collection.models, function( thread ) {
+				if ( thread.id === active ) {
+					thread.set( 'active', true );
+				} else {
+					thread.unset( 'active' );
+				}
+			}, this );
 		},
 
 		changePreview: function( event ) {
@@ -730,10 +750,26 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			bp.Nouveau.Messages.removeFeedback();
 
-			bp.Nouveau.Messages.router.navigate(
-				'view/' + target.closest( '.thread-content' ).data( 'thread-id' ) + '/',
-				{ trigger: true }
-			);
+			this.setActiveThread( target.closest( '.thread-content' ).data( 'thread-id' ) );
+			var selected = this.collection.findWhere( { active: true } );
+
+			// selected.updateReadState();
+			if ( selected.get('unread') ) {
+				selected.updateReadState().done( function() {
+					selected.set( 'unread', false );
+
+					bp.Nouveau.Messages.router.navigate(
+						'view/' + target.closest( '.thread-content' ).data( 'thread-id' ) + '/',
+						{ trigger: true }
+					);
+				} );
+			} else {
+				bp.Nouveau.Messages.router.navigate(
+					'view/' + target.closest( '.thread-content' ).data( 'thread-id' ) + '/',
+					{ trigger: true }
+				);
+			}
+
 		}
 	} );
 
@@ -747,20 +783,14 @@ window.bp = window.bp || {};
 		},
 
 		initialize: function() {
-			if ( this.model.get( 'active' ) ) {
-				this.el.className += ' selected';
-			}
-
 			if ( this.model.get( 'unread' ) ) {
 				this.el.className += ' unread';
 			}
 
 			var recipientsCount = this.model.get( 'recipients' ).length, toOthers = '';
 
-			if ( 2 === recipientsCount ) {
-				toOthers = BP_Nouveau.messages.toOthers.one;
-			} else if ( 2 < recipientsCount ) {
-				toOthers = BP_Nouveau.messages.toOthers.more.replace( '%d', Number( recipientsCount - 1 ) );
+			if ( recipientsCount > 3 ) {
+				toOthers = BP_Nouveau.messages.toOthers.more.replace( '%d', Number( recipientsCount - 3 ) );
 			}
 
 			this.model.set( {
@@ -768,18 +798,9 @@ window.bp = window.bp || {};
 				toOthers: toOthers
 			}, { silent: true } );
 
-			this.model.on( 'change:active', this.toggleClass, this );
 			this.model.on( 'change:unread', this.updateReadState, this );
 			this.model.on( 'change:checked', this.bulkSelect, this );
 			this.model.on( 'remove', this.cleanView, this );
-		},
-
-		toggleClass: function( model ) {
-			if ( true === model.get( 'active' ) ) {
-				$( this.el ).addClass( 'selected' );
-			} else {
-				$( this.el ).removeClass( 'selected' );
-			}
 		},
 
 		updateReadState: function( model, state ) {
