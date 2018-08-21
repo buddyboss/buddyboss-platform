@@ -501,14 +501,8 @@ class BP_Messages_Thread {
 		$deleted_sql = 'r.is_deleted = 0';
 
 		switch ( $r['box'] ) {
-			case 'sentbox' :
-				$user_id_sql = 'AND ' . $wpdb->prepare( 'm.sender_id = %d', $r['user_id'] );
-				$sender_sql  = 'AND m.sender_id = r.user_id';
-				break;
-
 			case 'inbox' :
-				$user_id_sql = 'AND ' . $wpdb->prepare( 'r.user_id = %d', $r['user_id'] );
-				$sender_sql  = 'AND r.sender_only = 0';
+				$user_id_sql = 'AND (' . $wpdb->prepare( 'r.user_id = %d', $r['user_id'] ) . ' OR ' . $wpdb->prepare( 'm.sender_id = %d', $r['user_id'] ) . ')';
 				break;
 
 			default :
@@ -695,9 +689,7 @@ class BP_Messages_Thread {
 		global $wpdb;
 
 		$exclude_sender = $type_sql = '';
-		if ( $box !== 'sentbox' ) {
-			$exclude_sender = 'AND sender_only != 1';
-		}
+		$exclude_sender = 'AND sender_only != 1';
 
 		if ( $type === 'unread' ) {
 			$type_sql = 'AND unread_count != 0';

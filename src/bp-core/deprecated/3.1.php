@@ -494,3 +494,50 @@ function bp_admin_setting_callback_theme_package_id() {
 
 	<?php // endif;
 }
+
+
+/**
+ * Load the Messages > Sent screen.
+ *
+ * @since BuddyPress 1.0.0
+ * @deprecated 3.1.1
+ */
+function messages_screen_sentbox() {
+	_deprecated_function( __FUNCTION__, '3.1.1' );
+	// if ( bp_action_variables() ) {
+	// 	bp_do_404();
+	// 	return;
+	// }
+
+	/**
+	 * Fires right before the loading of the Messages sentbox screen template file.
+	 *
+	 * @since BuddyPress 1.0.0
+	 */
+	// do_action( 'messages_screen_sentbox' );
+
+	/**
+	 * Filters the template to load for the Messages sentbox screen.
+	 *
+	 * @since BuddyPress 1.0.0
+	 *
+	 * @param string $template Path to the messages template to load.
+	 */
+	// bp_core_load_template( apply_filters( 'messages_template_sentbox', 'members/single/home' ) );
+}
+
+/**
+ * Is the current page a user's Messages Sentbox?
+ *
+ * Eg http://example.com/members/joe/messages/sentbox/.
+ *
+ * @since BuddyPress 1.1.0
+ * @deprecated 3.1.1
+ *
+ * @return bool True if the current page is a user's Messages Sentbox.
+ */
+function bp_is_messages_sentbox() {
+	_deprecated_function( __FUNCTION__, '3.1.1' );
+	return false;
+	// return (bool) ( bp_is_user_messages() && bp_is_current_action( 'sentbox' ) );
+}

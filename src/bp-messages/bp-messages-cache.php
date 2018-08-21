@@ -43,7 +43,6 @@ add_action( 'messages_message_sent',   'bp_core_clear_cache' );
 
 // Don't cache message inbox/sentbox/compose as it's too problematic.
 add_action( 'messages_screen_compose', 'bp_core_clear_cache' );
-add_action( 'messages_screen_sentbox', 'bp_core_clear_cache' );
 add_action( 'messages_screen_inbox',   'bp_core_clear_cache' );
 
 /**

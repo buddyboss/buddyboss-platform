@@ -2898,19 +2898,6 @@ function bp_is_messages_inbox() {
 }
 
 /**
- * Is the current page a user's Messages Sentbox?
- *
- * Eg http://example.com/members/joe/messages/sentbox/.
- *
- * @since BuddyPress 1.1.0
- *
- * @return bool True if the current page is a user's Messages Sentbox.
- */
-function bp_is_messages_sentbox() {
-	return (bool) ( bp_is_user_messages() && bp_is_current_action( 'sentbox' ) );
-}
-
-/**
  * Is the current page a user's Messages Compose screen??
  *
  * Eg http://example.com/members/joe/messages/compose/.
@@ -3294,10 +3281,6 @@ function bp_the_body_class() {
 
 		if ( bp_is_messages_inbox() ) {
 			$bp_classes[] = 'inbox';
-		}
-
-		if ( bp_is_messages_sentbox() ) {
-			$bp_classes[] = 'sentbox';
 		}
 
 		if ( bp_is_messages_compose_screen() ) {

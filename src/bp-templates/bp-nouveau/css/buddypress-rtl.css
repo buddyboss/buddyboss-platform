@@ -3501,7 +3501,6 @@ body.no-js .buddypress #notifications-bulk-management #select-all-notifications,
 body.no-js .buddypress label[for="message-type-select"],
 body.no-js .buddypress #message-type-select,
 body.no-js .buddypress #delete_inbox_messages,
-body.no-js .buddypress #delete_sentbox_messages,
 body.no-js .buddypress #messages-bulk-management #select-all-messages {
 	display: none;
 }

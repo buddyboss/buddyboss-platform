@@ -646,7 +646,7 @@ window.bp = window.bp || {};
 				form.get( 'view' ).remove();
 				bp.Nouveau.Messages.views.remove( { id: 'compose', view: form } );
 
-				bp.Nouveau.Messages.router.navigate( 'sentbox/', { trigger: true } );
+				bp.Nouveau.Messages.router.navigate( '/', { trigger: true } );
 			} ).fail( function( response ) {
 				if ( response.feedback ) {
 					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
@@ -755,22 +755,18 @@ window.bp = window.bp || {};
 				this.el.className += ' unread';
 			}
 
-			if ( 'sentbox' === bp.Nouveau.Messages.box ) {
-				var recipientsCount = this.model.get( 'recipients' ).length, toOthers = '';
+			var recipientsCount = this.model.get( 'recipients' ).length, toOthers = '';
 
-				if ( 2 === recipientsCount ) {
-					toOthers = BP_Nouveau.messages.toOthers.one;
-				} else if ( 2 < recipientsCount ) {
-					toOthers = BP_Nouveau.messages.toOthers.more.replace( '%d', Number( recipientsCount - 1 ) );
-				}
-
-				this.model.set( {
-					recipientsCount: recipientsCount,
-					toOthers: toOthers
-				}, { silent: true } );
-			} else if ( this.model.get( 'recipientsCount' )  ) {
-				this.model.unset( 'recipientsCount', { silent: true } );
+			if ( 2 === recipientsCount ) {
+				toOthers = BP_Nouveau.messages.toOthers.one;
+			} else if ( 2 < recipientsCount ) {
+				toOthers = BP_Nouveau.messages.toOthers.more.replace( '%d', Number( recipientsCount - 1 ) );
 			}
+
+			this.model.set( {
+				recipientsCount: recipientsCount,
+				toOthers: toOthers
+			}, { silent: true } );
 
 			this.model.on( 'change:active', this.toggleClass, this );
 			this.model.on( 'change:unread', this.updateReadState, this );
@@ -1224,7 +1220,6 @@ window.bp = window.bp || {};
 		routes: {
 			'compose/' : 'composeMessage',
 			'view/:id/': 'viewMessage',
-			'sentbox/' : 'sentboxView',
 			'starred/' : 'starredView',
 			'inbox/'   : 'inboxView',
 			''        : 'inboxView'
@@ -1248,11 +1243,6 @@ window.bp = window.bp || {};
 			}
 
 			bp.Nouveau.Messages.singleView( thread );
-		},
-
-		sentboxView: function() {
-			bp.Nouveau.Messages.box = 'sentbox';
-			bp.Nouveau.Messages.threadsView();
 		},
 
 		starredView: function() {

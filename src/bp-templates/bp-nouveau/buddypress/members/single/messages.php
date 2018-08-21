@@ -15,7 +15,7 @@
 </nav><!-- .bp-navs -->
 
 <?php
-if ( ! in_array( bp_current_action(), array( 'inbox', 'sentbox', 'starred', 'view', 'compose', 'notices' ), true ) ) :
+if ( ! in_array( bp_current_action(), array( 'inbox', 'starred', 'view', 'compose', 'notices' ), true ) ) :
 
 	bp_get_template_part( 'members/single/plugins' );
 

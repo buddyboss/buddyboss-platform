@@ -314,14 +314,6 @@ class BP_Messages_Box_Template {
 							break;
 						}
 					}
-
-				} elseif ( 'sentbox' == $this->box ) {
-					foreach ( (array) $this->thread->messages as $key => $message ) {
-						if ( bp_loggedin_user_id() == $message->sender_id ) {
-							$last_message_index = $key;
-							break;
-						}
-					}
 				}
 			}
 

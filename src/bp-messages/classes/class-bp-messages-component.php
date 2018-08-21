@@ -128,7 +128,7 @@ class BP_Messages_Component extends BP_Component {
 				 *
 				 * 'view' is not a registered nav item, but we add a screen handler manually.
 				 */
-				if ( bp_is_user_messages() && in_array( bp_current_action(), array( 'sentbox', 'compose', 'notices', 'view' ), true ) ) {
+				if ( bp_is_user_messages() && in_array( bp_current_action(), array( 'compose', 'notices', 'view' ), true ) ) {
 					require $this->path . 'bp-messages/screens/' . bp_current_action() . '.php';
 				}
 
@@ -257,16 +257,6 @@ class BP_Messages_Component extends BP_Component {
 			);
 		}
 
-		$sub_nav[] = array(
-			'name'            => __( 'Sent', 'buddyboss' ),
-			'slug'            => 'sentbox',
-			'parent_url'      => $messages_link,
-			'parent_slug'     => $slug,
-			'screen_function' => 'messages_screen_sentbox',
-			'position'        => 20,
-			'user_has_access' => $access
-		);
-
 		// Show certain screens only if the current user is the displayed user.
 		if ( bp_is_my_profile() ) {
 
@@ -359,15 +349,6 @@ class BP_Messages_Component extends BP_Component {
 					'position' => 11
 				);
 			}
-
-			// Sent Messages.
-			$wp_admin_nav[] = array(
-				'parent'   => 'my-account-' . $this->id,
-				'id'       => 'my-account-' . $this->id . '-sentbox',
-				'title'    => __( 'Sent', 'buddyboss' ),
-				'href'     => trailingslashit( $messages_link . 'sentbox' ),
-				'position' => 20
-			);
 
 			// Compose Message.
 			$wp_admin_nav[] = array(
