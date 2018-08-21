@@ -302,20 +302,8 @@ class BP_Messages_Box_Template {
 		$this->thread      = $this->next_thread();
 
 		if ( ! bp_is_current_action( 'notices' ) ) {
-			$last_message_index     = count( $this->thread->messages ) - 1;
+			$last_message_index     = 0;
 			$this->thread->messages = array_reverse( (array) $this->thread->messages );
-
-			// Set up the last message data.
-			if ( count($this->thread->messages) > 1 ) {
-				if ( 'inbox' == $this->box ) {
-					foreach ( (array) $this->thread->messages as $key => $message ) {
-						if ( bp_loggedin_user_id() != $message->sender_id ) {
-							$last_message_index = $key;
-							break;
-						}
-					}
-				}
-			}
 
 			$this->thread->last_message_id      = $this->thread->messages[ $last_message_index ]->id;
 			$this->thread->last_message_date    = $this->thread->messages[ $last_message_index ]->date_sent;
