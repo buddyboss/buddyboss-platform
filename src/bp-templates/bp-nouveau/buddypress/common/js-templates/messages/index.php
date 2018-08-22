@@ -157,13 +157,15 @@
 
 		<div class="thread-subject">
 			<a class="subject" href="../view/{{data.id}}/">
-				<span class="last-message-sender">
-					<# if ( data.sender_is_you ) { #>
-						<?php _e('You', 'buddyboss'); ?>:
-					<# } else { #>
-						{{ data.sender_name }}:
-					<# } #>
-				</span>
+				<# if ( data.recipients.length > 1 ) { #>
+					<span class="last-message-sender">
+						<# if ( data.sender_is_you ) { #>
+							<?php _e('You', 'buddyboss'); ?>:
+						<# } else { #>
+							{{ data.sender_name }}:
+						<# } #>
+					</span>
+				<# } #>
 
 				{{data.excerpt}}
 			</a>
