@@ -293,8 +293,6 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 		if ( is_array( $messages_template->thread->recipients ) ) {
 			foreach ( $messages_template->thread->recipients as $recipient ) {
-				if ( $recipient->user_id == bp_loggedin_user_id() ) continue;
-
 				$threads->threads[ $i ]['recipients'][] = array(
 					'avatar' => htmlspecialchars_decode( bp_core_fetch_avatar( array(
 						'item_id' => $recipient->user_id,
@@ -306,6 +304,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					) ) ),
 					'user_link' => bp_core_get_userlink( $recipient->user_id, false, true ),
 					'user_name' => bp_core_get_user_displayname( $recipient->user_id ),
+					'is_you' => $recipient->user_id == bp_loggedin_user_id()
 				);
 			}
 		}
@@ -443,8 +442,6 @@ function bp_nouveau_ajax_get_thread_messages() {
 
 		if ( is_array( $thread_template->thread->recipients ) ) {
 			foreach ( $thread_template->thread->recipients as $recipient ) {
-				if ( $recipient->user_id == bp_loggedin_user_id() ) continue;
-
 				$thread->thread['recipients'][] = array(
 					'avatar' => htmlspecialchars_decode( bp_core_fetch_avatar( array(
 						'item_id' => $recipient->user_id,
@@ -456,6 +453,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 					) ) ),
 					'user_link' => bp_core_get_userlink( $recipient->user_id, false, true ),
 					'user_name' => bp_core_get_user_displayname( $recipient->user_id ),
+					'is_you' => $recipient->user_id == bp_loggedin_user_id()
 				);
 			}
 		}

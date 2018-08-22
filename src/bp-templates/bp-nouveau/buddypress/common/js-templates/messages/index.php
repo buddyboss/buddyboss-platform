@@ -128,16 +128,25 @@
 </script>
 
 <script type="text/html" id="tmpl-bp-messages-thread">
+	<#
+		var other_recipients = _.reject(data.recipients, function(item) {
+			return item.is_you;
+		});
+
+		var current_user = _.find(data.recipients, function(item) {
+			return item.is_you;
+		});
+	#>
 	<div class="thread-cb">
 		<input class="message-check" type="checkbox" name="message_ids[]" id="bp-message-thread-{{data.id}}" value="{{data.id}}">
 		<label for="bp-message-thread-{{data.id}}" class="bp-screen-reader-text"><?php esc_html_e( 'Select message:', 'buddyboss' ); ?> {{data.subject}}</label>
 	</div>
 
 	<div class="thread-avatar">
-		<# if ( data.recipients.length > 1 ) { #>
+		<# if ( other_recipients.length > 1 ) { #>
 			<img class="avatar" src="{{data.sender_avatar}}" alt="{{data.sender_name}}" />
 		<# } else { #>
-			<# var recipient = _.first(data.recipients); #>
+			<# var recipient = _.first(other_recipients); #>
 			<img class="avatar" src="{{recipient.avatar}}" alt="{{recipient.user_name}}" />
 		<# } #>
 	</div>
@@ -145,8 +154,8 @@
 	<div class="thread-content" data-thread-id="{{data.id}}">
 		<div class="thread-to">
 			<a class="subject" href="../view/{{data.id}}/">
-				<# for ( i in _.first(data.recipients, 3) ) { #>
-					<span class="user-name">{{data.recipients[i].user_name}}</span>
+				<# for ( i in _.first(other_recipients, 3) ) { #>
+					<span class="user-name">{{other_recipients[i].user_name}}</span>
 					<span class="user-comma"><?php _e(',', 'buddyboss'); ?></span>
 				<# } #>
 
@@ -161,7 +170,7 @@
 
 		<div class="thread-subject">
 			<a class="subject" href="../view/{{data.id}}/">
-				<# if ( data.recipients.length > 1 ) { #>
+				<# if ( other_recipients.length > 1 ) { #>
 					<span class="last-message-sender">
 						<# if ( data.sender_is_you ) { #>
 							<?php _e('You', 'buddyboss'); ?>:
@@ -181,17 +190,26 @@
 </script>
 
 <script type="text/html" id="tmpl-bp-messages-single-header">
+	<#
+		var other_recipients = _.reject(data.recipients, function(item) {
+			return item.is_you;
+		});
+
+		var current_user = _.find(data.recipients, function(item) {
+			return item.is_you == true;
+		});
+	#>
+
 	<header class="single-message-thread-header">
-		<# if ( undefined !== data.recipients ) { #>
+		<# if ( undefined !== other_recipients ) { #>
 			<dl class="thread-participants">
 				<dt>
-					<# for ( i in data.recipients ) { #>
-						<span class="participants-name"><a href="{{data.recipients[i].user_link}}">{{data.recipients[i].user_name}}</a></span>
-
-						<# if ( i != data.recipients.length - 1) { #>
-							<span class="participants-comma"><?php _e(',', 'buddyboss'); ?></span>
-						<# } #>
+					<# for ( i in other_recipients ) { #>
+						<span class="participants-name"><a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a></span>
+						<span class="participants-comma"><?php _e(',', 'buddyboss'); ?></span>
 					<# } #>
+
+					<span class="participants-name"><a href="{{current_user.user_link}}">You</a></span>
 				</dt>
 				<dd>
 					<span class="thread-date">Started {{data.started_date}}</span>
