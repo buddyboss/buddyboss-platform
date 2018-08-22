@@ -144,13 +144,15 @@
 
 	<div class="thread-content" data-thread-id="{{data.id}}">
 		<div class="thread-to">
-			<# for ( i in _.first(data.recipients, 3) ) { #>
-				<span class="user-name">{{data.recipients[i].user_name}}</span>
-			<# } #>
+			<a class="subject" href="../view/{{data.id}}/">
+				<# for ( i in _.first(data.recipients, 3) ) { #>
+					<span class="user-name">{{data.recipients[i].user_name}}</span>
+				<# } #>
 
-			<# if ( data.toOthers ) { #>
-				<span class="num-name">{{data.toOthers}}</span>
-			<# } #>
+				<# if ( data.toOthers ) { #>
+					<span class="num-name">{{data.toOthers}}</span>
+				<# } #>
+			</a>
 		</div>
 
 		<div class="thread-subject">

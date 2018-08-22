@@ -3231,6 +3231,9 @@ body.register .buddypress-wrap .page ul {
 .bp-messages-content #message-threads .thread-content a {
 	border: 0;
 	text-decoration: none;
+}
+
+.bp-messages-content #message-threads .thread-content .thread-subject a {
 	color: #737373;
 }
 
