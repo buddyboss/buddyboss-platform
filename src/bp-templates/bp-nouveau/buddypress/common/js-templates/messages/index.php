@@ -186,8 +186,11 @@
 			<dl class="thread-participants">
 				<dt>
 					<# for ( i in data.recipients ) { #>
-						<span><a href="{{data.recipients[i].user_link}}">{{data.recipients[i].user_name}}</a></span>
+						<span class="participants-name"><a href="{{data.recipients[i].user_link}}">{{data.recipients[i].user_name}}</a></span>
+						<span class="participants-comma"><?php _e(',', 'buddyboss'); ?></span>
 					<# } #>
+
+					<span class="participants-name">You</span>
 				</dt>
 				<dd>
 					<span class="thread-date">Started {{data.started_date}}</span>
