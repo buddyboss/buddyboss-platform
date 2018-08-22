@@ -214,7 +214,11 @@
 
 		<a href="{{data.sender_link}}" class="user-link">
 			<img class="avatar" src="{{data.sender_avatar}}" alt="" />
-			<strong>{{data.sender_name}}</strong>
+			<# if ( data.sender_is_you ) { #>
+				<strong><?php _e( 'You', 'buddyboss' ); ?></strong>
+			<# } else { #>
+				<strong>{{data.sender_name}}</strong>
+			<# } #>
 		</a>
 
 		<time datetime="{{data.date.toISOString()}}" class="activity">{{data.display_date}}</time>

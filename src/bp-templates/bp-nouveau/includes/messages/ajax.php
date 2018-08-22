@@ -163,6 +163,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		'sender_id'     => bp_get_the_thread_message_sender_id(),
 		'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
 		'sender_link'   => bp_get_the_thread_message_sender_link(),
+		'sender_is_you' => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
 		'sender_avatar' => htmlspecialchars_decode( bp_core_fetch_avatar( array(
 			'item_id' => bp_get_the_thread_message_sender_id(),
 			'object'  => 'user',
@@ -470,6 +471,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 			'sender_id'     => bp_get_the_thread_message_sender_id(),
 			'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
 			'sender_link'   => bp_get_the_thread_message_sender_link(),
+			'sender_is_you' => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
 			'sender_avatar' => htmlspecialchars_decode( bp_core_fetch_avatar( array(
 				'item_id' => bp_get_the_thread_message_sender_id(),
 				'object'  => 'user',
