@@ -187,10 +187,11 @@
 				<dt>
 					<# for ( i in data.recipients ) { #>
 						<span class="participants-name"><a href="{{data.recipients[i].user_link}}">{{data.recipients[i].user_name}}</a></span>
-						<span class="participants-comma"><?php _e(',', 'buddyboss'); ?></span>
-					<# } #>
 
-					<span class="participants-name">You</span>
+						<# if ( i != data.recipients.length - 1) { #>
+							<span class="participants-comma"><?php _e(',', 'buddyboss'); ?></span>
+						<# } #>
+					<# } #>
 				</dt>
 				<dd>
 					<span class="thread-date">Started {{data.started_date}}</span>
