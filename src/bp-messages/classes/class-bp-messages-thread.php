@@ -448,6 +448,8 @@ class BP_Messages_Thread {
 	public static function get_current_threads_for_user( $args = array() ) {
 		global $wpdb;
 
+		$bp = buddypress();
+
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args ) || func_num_args() > 1 ) {
 			_deprecated_argument( __METHOD__, '2.2.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
@@ -492,7 +494,26 @@ class BP_Messages_Thread {
 
 		if ( ! empty( $r['search_terms'] ) ) {
 			$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$search_sql        = $wpdb->prepare( "AND ( subject LIKE %s OR message LIKE %s )", $search_terms_like, $search_terms_like );
+
+			$current_user_participants = $wpdb->get_results( $wpdb->prepare( "
+				SELECT DISTINCT(r.user_id), u.display_name
+				FROM {$bp->messages->table_name_recipients} r
+				LEFT JOIN {$wpdb->users} u ON r.user_id = u.ID
+				WHERE r.thread_id IN (
+					SELECT DISTINCT(thread_id)
+					FROM {$bp->messages->table_name_recipients}
+					WHERE user_id = %d
+				) AND
+				( u.display_name LIKE %s OR u.user_login LIKE %s )
+			", bp_loggedin_user_id(), $search_terms_like, $search_terms_like ) );
+
+			if ( $current_user_participants_id = array_map( 'intval', wp_list_pluck($current_user_participants, 'user_id') ) ) {
+				$current_user_participants_id = array_diff( $current_user_participants_id, [ bp_loggedin_user_id() ] );
+				$current_user_participants_ids = implode( ',', $current_user_participants_id );
+				$search_sql = $wpdb->prepare( "AND ( message LIKE %s OR r.user_id IN ({$current_user_participants_ids}) )", $search_terms_like );
+			} else {
+				$search_sql = $wpdb->prepare( "AND ( message LIKE %s )", $search_terms_like);
+			}
 		}
 
 		$r['user_id'] = (int) $r['user_id'];
@@ -519,8 +540,6 @@ class BP_Messages_Thread {
 		if ( ! empty( $meta_query['where'] ) ) {
 			$meta_query_sql['where'] = $meta_query['where'];
 		}
-
-		$bp = buddypress();
 
 		// Set up SQL array.
 		$sql = array();
