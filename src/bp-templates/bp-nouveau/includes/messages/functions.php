@@ -373,12 +373,15 @@ function bp_nouveau_get_message_date( $date ) {
 	// Calculate time based on the offset
 	$calculated_time = $date + ( $timezone_offset * HOUR_IN_SECONDS );
 
-	if ( empty( $compare['mday'] ) && empty( $compare['mon'] ) && empty( $compare['year'] ) ) {
-		$date_format = 'H:i';
+	// use M j for all, will revisit this later
+	// if ( empty( $compare['mday'] ) && empty( $compare['mon'] ) && empty( $compare['year'] ) ) {
+	// 	$date_format = 'H:i';
 
-	} elseif ( empty( $compare['mon'] ) || empty( $compare['year'] ) ) {
-		$date_format = 'M j';
-	}
+	// } elseif ( empty( $compare['mon'] ) || empty( $compare['year'] ) ) {
+	// 	$date_format = 'M j';
+	// }
+
+	$date_format = 'M j';
 
 	/**
 	 * Filters the message date for BuddyPress Nouveau display.
