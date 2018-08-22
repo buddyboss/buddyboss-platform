@@ -3035,14 +3035,6 @@ body.register .buddypress-wrap .page ul {
 	line-height: 1.1;
 }
 
-#message-threads li .thread-to .user-name:after {
-	content: ", ";
-}
-
-#message-threads li .thread-to .user-name:last-child:after {
-	content: none;
-}
-
 #message-threads li .thread-to .num-recipients {
 	color: #737373;
 	font-weight: 400;

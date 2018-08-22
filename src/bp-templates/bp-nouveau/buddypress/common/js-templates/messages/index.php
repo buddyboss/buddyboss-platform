@@ -147,9 +147,13 @@
 			<a class="subject" href="../view/{{data.id}}/">
 				<# for ( i in _.first(data.recipients, 3) ) { #>
 					<span class="user-name">{{data.recipients[i].user_name}}</span>
+					<span class="user-comma"><?php _e(',', 'buddyboss'); ?></span>
 				<# } #>
 
+				<span class="user-name"><?php _e('You', 'buddyboss'); ?></span>
+
 				<# if ( data.toOthers ) { #>
+					<span class="user-comma"><?php _e(',', 'buddyboss'); ?></span>
 					<span class="num-name">{{data.toOthers}}</span>
 				<# } #>
 			</a>

@@ -789,7 +789,9 @@ window.bp = window.bp || {};
 
 			var recipientsCount = this.model.get( 'recipients' ).length, toOthers = '';
 
-			if ( recipientsCount > 3 ) {
+			if ( recipientsCount === 4 ) {
+				toOthers = BP_Nouveau.messages.toOthers.one;
+			} else if ( recipientsCount > 3 ) {
 				toOthers = BP_Nouveau.messages.toOthers.more.replace( '%d', Number( recipientsCount - 3 ) );
 			}
 
