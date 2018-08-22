@@ -507,8 +507,10 @@ class BP_Messages_Thread {
 				( u.display_name LIKE %s OR u.user_login LIKE %s )
 			", bp_loggedin_user_id(), $search_terms_like, $search_terms_like ) );
 
-			if ( $current_user_participants_id = array_map( 'intval', wp_list_pluck($current_user_participants, 'user_id') ) ) {
-				$current_user_participants_id = array_diff( $current_user_participants_id, [ bp_loggedin_user_id() ] );
+			$current_user_participants_id = array_map( 'intval', wp_list_pluck($current_user_participants, 'user_id') );
+			$current_user_participants_id = array_diff( $current_user_participants_id, [ bp_loggedin_user_id() ] );
+
+			if ( $current_user_participants_id ) {
 				$current_user_participants_ids = implode( ',', $current_user_participants_id );
 				$search_sql = $wpdb->prepare( "AND ( message LIKE %s OR r.user_id IN ({$current_user_participants_ids}) )", $search_terms_like );
 			} else {
