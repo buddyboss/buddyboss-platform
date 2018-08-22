@@ -33,8 +33,8 @@
 <script type="text/html" id="tmpl-bp-messages-form">
 	<?php bp_nouveau_messages_hook( 'before', 'compose_content' ); ?>
 
-	<label for="send-to-input"><?php esc_html_e( 'Send @Username', 'buddyboss' ); ?></label>
-	<input type="text" name="send_to" class="send-to-input" id="send-to-input" value="<?php if ( isset( $_GET['r'] ) ) : ?>@<?php echo esc_textarea( $_GET['r'] ); ?> <?php endif; ?>"/>
+	<label for="send-to-input"><?php esc_html_e( 'New Message', 'buddyboss' ); ?></label>
+	<input type="text" name="send_to" class="send-to-input" id="send-to-input" placeholder="<?php esc_html_e( 'Type @ to add one or more recipients', 'buddyboss' ); ?>" value="<?php if ( isset( $_GET['r'] ) ) : ?>@<?php echo esc_textarea( $_GET['r'] ); ?> <?php endif; ?>"/>
 
 	<div id="bp-message-content"></div>
 
