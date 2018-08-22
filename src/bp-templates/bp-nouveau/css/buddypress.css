@@ -2981,9 +2981,6 @@ body.register .buddypress-wrap .page ul {
 	clear: both;
 	list-style: none;
 	margin: 0;
-	max-height: 220px;
-	overflow-x: hidden;
-	overflow-y: auto;
 	padding: 0;
 	width: 100%;
 }
