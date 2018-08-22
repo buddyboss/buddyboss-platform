@@ -89,6 +89,7 @@ function bp_nouveau_ajax_messages_send_message() {
 		wp_send_json_success( array(
 			'feedback' => __( 'Message successfully sent.', 'buddyboss' ),
 			'type'     => 'success',
+			'thread_id' => $send
 		) );
 
 	// Message could not be sent.
