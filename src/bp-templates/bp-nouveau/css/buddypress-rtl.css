@@ -3010,7 +3010,6 @@ body.register .buddypress-wrap .page ul {
 
 #message-threads li .thread-to .user-name:after {
 	content: ", ";
-	margin-left: 5px;
 }
 
 #message-threads li .thread-to .user-name:last-child:after {
@@ -3199,7 +3198,6 @@ body.register .buddypress-wrap .page ul {
 
 .bp-messages-content .thread-participants span:before {
 	content: ", ";
-	margin-left: 5px;
 }
 
 .bp-messages-content .thread-participants span:first-child:before {
