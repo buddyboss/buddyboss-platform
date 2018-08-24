@@ -28,8 +28,6 @@
 
 					<?php /***** Basic Account Details ******/ ?>
 
-					<h2 class="bp-heading"><?php esc_html_e( 'Account Details', 'buddyboss' ); ?></h2>
-
 					<?php bp_nouveau_signup_form(); ?>
 
 				</div><!-- #basic-details-section -->
@@ -43,8 +41,6 @@
 					<?php bp_nouveau_signup_hook( 'before', 'signup_profile' ); ?>
 
 					<div class="register-section extended-profile" id="profile-details-section">
-
-						<h2 class="bp-heading"><?php esc_html_e( 'Profile Details', 'buddyboss' ); ?></h2>
 
 						<?php /* Use the profile field loop to render input fields for the 'base' profile field group */ ?>
 						<?php while ( bp_profile_groups() ) : bp_the_profile_group(); ?>
