@@ -155,8 +155,7 @@
 		<div class="thread-to">
 			<a class="subject" href="../view/{{data.id}}/">
 				<# for ( i in _.first(other_recipients, 3) ) { #>
-					<span class="user-name">{{other_recipients[i].user_name}}</span>
-					<span class="user-comma"><?php _e(',', 'buddyboss'); ?></span>
+					<span class="user-name">{{other_recipients[i].user_name}}<?php _e(',', 'buddyboss'); ?></span>
 				<# } #>
 
 				<span class="user-name"><?php _e('You', 'buddyboss'); ?></span>
@@ -205,8 +204,7 @@
 			<dl class="thread-participants">
 				<dt>
 					<# for ( i in other_recipients ) { #>
-						<span class="participants-name"><a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a></span>
-						<span class="participants-comma"><?php _e(',', 'buddyboss'); ?></span>
+						<span class="participants-name"><a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a><?php _e(',', 'buddyboss'); ?></span>
 					<# } #>
 
 					<span class="participants-name"><a href="{{current_user.user_link}}">You</a></span>
