@@ -153,7 +153,7 @@
 
 	<div class="thread-content" data-thread-id="{{data.id}}">
 		<div class="thread-to">
-			<a class="recipient" href="../view/{{data.id}}/">
+			<a class="subject" href="../view/{{data.id}}/">
 				<# for ( i in _.first(other_recipients, 3) ) { #>
 					<span class="user-name">{{other_recipients[i].user_name}}<?php _e(',', 'buddyboss'); ?></span>
 				<# } #>

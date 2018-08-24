@@ -3049,7 +3049,7 @@ body.register .buddypress-wrap .page ul {
 	background-color: #fafafa;
 }
 
-#message-threads li.unread .thread-to .recipient {
+#message-threads li.unread .thread-to .subject {
 	color: #5087e5;
 }
 
