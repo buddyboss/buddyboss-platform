@@ -476,7 +476,7 @@ class BP_Messages_Thread {
 			'meta_query'   => array()
 		) );
 
-		$pag_sql = $type_sql = $search_sql = $user_id_sql = $sender_sql = '';
+		$pag_sql = $type_sql = $search_sql = $user_id_sql = $sender_sql = $participants_sql = '';
 		$meta_query_sql = array(
 			'join'  => '',
 			'where' => ''
@@ -512,10 +512,13 @@ class BP_Messages_Thread {
 
 			if ( $current_user_participants_id ) {
 				$current_user_participants_ids = implode( ',', $current_user_participants_id );
-				$search_sql = $wpdb->prepare( "AND ( message LIKE %s OR r.user_id IN ({$current_user_participants_ids}) )", $search_terms_like );
-			} else {
-				$search_sql = $wpdb->prepare( "AND ( message LIKE %s )", $search_terms_like);
+				$participants_sql = $wpdb->prepare(
+					"r.user_id IN ({$current_user_participants_ids})",
+					$r['user_id']
+				);
 			}
+
+			$search_sql = $wpdb->prepare( "AND ( message LIKE %s )", $search_terms_like);
 		}
 
 		$r['user_id'] = (int) $r['user_id'];
@@ -525,7 +528,14 @@ class BP_Messages_Thread {
 
 		switch ( $r['box'] ) {
 			case 'inbox' :
-				$user_id_sql = 'AND (' . $wpdb->prepare( 'r.user_id = %d', $r['user_id'] ) . ' OR ' . $wpdb->prepare( 'm.sender_id = %d', $r['user_id'] ) . ')';
+				$user_id_sql = $wpdb->prepare( 'r.user_id = %d', $r['user_id'] ) . ' OR ' . $wpdb->prepare( 'm.sender_id = %d', $r['user_id'] );
+
+				if ( $participants_sql ) {
+					$user_id_sql = sprintf( 'AND (((%s) %s) OR (%s))', $user_id_sql, $search_sql, $participants_sql );
+					$search_sql = '';
+				} else {
+					$user_id_sql = sprintf('AND (%s)', $user_id_sql);
+				}
 				break;
 
 			default :
@@ -547,11 +557,11 @@ class BP_Messages_Thread {
 		$sql = array();
 		$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent';
 		$sql['from']   = "FROM {$bp->messages->table_name_recipients} r INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id {$meta_query_sql['join']}";
-		$sql['where']  = "WHERE {$deleted_sql} {$user_id_sql} {$sender_sql} {$type_sql} {$search_sql} {$meta_query_sql['where']}";
+		$sql['where']  = "WHERE {$deleted_sql} {$sender_sql} {$type_sql} {$user_id_sql} {$search_sql} {$meta_query_sql['where']}";
 		$sql['misc']   = "GROUP BY m.thread_id ORDER BY date_sent DESC {$pag_sql}";
 
 		// Get thread IDs.
-		$thread_ids = $wpdb->get_results( implode( ' ', $sql ) );
+		$thread_ids = $wpdb->get_results( $qq = implode( ' ', $sql ) );
 		if ( empty( $thread_ids ) ) {
 			return false;
 		}
