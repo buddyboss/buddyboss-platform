@@ -242,6 +242,6 @@ function bp_nouveau_notifications_delete_link( $link = '' ) {
 	return bp_nouveau_notifications_dashiconified_link(
 		$link,
 		_x( 'Delete', 'link', 'buddyboss' ),
-		'dashicons-dismiss'
+		'dashicons-trash'
 	);
 }
