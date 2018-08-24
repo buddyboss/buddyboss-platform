@@ -1141,7 +1141,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 				'class'          => '',
 			),
 			'signup_email' => array(
-				'label'          => __( 'Email Address', 'buddyboss' ),
+				'label'          => __( 'Email', 'buddyboss' ),
 				'required'       => true,
 				'value'          => 'bp_get_signup_email_value',
 				'attribute_type' => 'email',
@@ -1149,7 +1149,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 				'class'          => '',
 			),
 			'signup_password' => array(
-				'label'          => __( 'Choose a Password', 'buddyboss' ),
+				'label'          => __( 'Password', 'buddyboss' ),
 				'required'       => true,
 				'value'          => '',
 				'attribute_type' => 'password',
@@ -1244,7 +1244,7 @@ function bp_nouveau_get_submit_button( $action = '' ) {
 			'attributes' => array(
 				'name'  => 'signup_submit',
 				'id'    => 'signup_submit',
-				'value' => __( 'Complete Sign Up', 'buddyboss' ),
+				'value' => __( 'Create Account', 'buddyboss' ),
 			),
 		),
 		'member-profile-edit' => array(
