@@ -2941,7 +2941,7 @@ body.register .buddypress-wrap .page ul {
 }
 
 .message-action-delete:before {
-	content: "\f153";
+	content: "\f182";
 }
 
 .message-action-delete:hover:before {
