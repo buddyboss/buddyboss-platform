@@ -741,6 +741,10 @@ body.buddypress article.page > .entry-header .entry-title {
 	float: left;
 }
 
+.buddypress-wrap .subnav-filters .user-messages-bulk-actions input {
+	margin-left: 0.5em;
+}
+
 .buddypress-wrap .subnav-filters .user-messages-bulk-actions label {
 	display: inline-block;
 	font-weight: 300;
@@ -2990,7 +2994,7 @@ body.register .buddypress-wrap .page ul {
 	flex-flow: row nowrap;
 	margin: 0;
 	overflow: hidden;
-	padding: 0.5em 0;
+	padding: 0.5em;
 }
 
 #message-threads li .thread-cb {
@@ -3050,16 +3054,12 @@ body.register .buddypress-wrap .page ul {
 	flex: 1 2 15%;
 }
 
-#message-threads li.selected {
+#message-threads li.unread {
 	background-color: #fafafa;
 }
 
-#message-threads li.selected .thread-subject .subject {
+#message-threads li.unread .thread-to .recipient {
 	color: #5087e5;
-}
-
-#message-threads li.unread {
-	font-weight: 700;
 }
 
 #message-threads li .thread-content .thread-to,
