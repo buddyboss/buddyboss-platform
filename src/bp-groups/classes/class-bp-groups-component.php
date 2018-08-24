@@ -600,9 +600,9 @@ class BP_Groups_Component extends BP_Component {
 
 			$group_link = bp_get_group_permalink( $this->current_group );
 
-			// Add the "About" subnav item, as this will always be present.
+			// Add the "Home" subnav item, as this will always be present.
 			$sub_nav[] = array(
-				'name'            =>  _x( 'About', 'Group screen navigation title', 'buddyboss' ),
+				'name'            =>  _x( 'Home', 'Group screen navigation title', 'buddyboss' ),
 				'slug'            => 'home',
 				'parent_url'      => $group_link,
 				'parent_slug'     => $this->current_group->slug,
