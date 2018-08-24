@@ -3039,11 +3039,21 @@ body.register .buddypress-wrap .page ul {
 }
 
 #message-threads li .thread-content {
-	-webkit-flex: 1 2 70%;
-	-moz-flex: 1 2 70%;
-	-ms-flex: 1 2 70%;
-	-o-flex: 1 2 70%;
-	flex: 1 2 70%;
+	-webkit-flex: 1 2 50%;
+	-moz-flex: 1 2 50%;
+	-ms-flex: 1 2 50%;
+	-o-flex: 1 2 50%;
+	flex: 1 2 50%;
+}
+
+@media screen and (min-width: 55em) {
+	#message-threads li .thread-content {
+		-webkit-flex: 1 2 70%;
+		-moz-flex: 1 2 70%;
+		-ms-flex: 1 2 70%;
+		-o-flex: 1 2 70%;
+		flex: 1 2 70%;
+	}
 }
 
 #message-threads li .thread-date {
