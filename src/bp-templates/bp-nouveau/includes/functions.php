@@ -923,12 +923,6 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'before'  => 'bp_before_registration_disabled',
 			'after'   => 'bp_after_registration_disabled'
 		),
-		'request-details' => array(
-			'type'    => 'info',
-			'message' => __( 'Registering for this site is easy. Just fill in the fields below, and we\'ll get a new account set up for you in no time.', 'buddyboss' ),
-			'before'  => false,
-			'after'   => false,
-		),
 		'completed-confirmation' => array(
 			'type'    => 'info',
 			'message' => __( 'You have successfully created your account! Please log in using the username and password you have just created.', 'buddyboss' ),
