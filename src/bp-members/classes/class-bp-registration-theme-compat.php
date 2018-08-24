@@ -100,7 +100,7 @@ class BP_Registration_Theme_Compat {
 			$title = __( 'Create an Account', 'buddyboss' );
 
 			if ( 'completed-confirmation' == bp_get_current_signup_step() ) {
-				$title = __( 'Check Your Email To Activate Your Account!', 'buddyboss' );
+				$title = __( 'We\'re almost there!', 'buddyboss' );
 			}
 
 		// Activation page.
