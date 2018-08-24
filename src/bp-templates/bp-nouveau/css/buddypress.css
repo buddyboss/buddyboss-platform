@@ -3342,12 +3342,6 @@ div.bp-navs#subsubnav.bp-messages-filters .user-messages-bulk-actions {
 	border-color: #b71717;
 }
 
-.buddypress-wrap .standard-form input[required]:valid,
-.buddypress-wrap .standard-form textarea[required]:valid,
-.buddypress-wrap .standard-form select[required]:valid {
-	border-color: #91cc2c;
-}
-
 .buddypress-wrap .standard-form input[required]:focus,
 .buddypress-wrap .standard-form textarea[required]:focus,
 .buddypress-wrap .standard-form select[required]:focus {
