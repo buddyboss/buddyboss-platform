@@ -2411,7 +2411,7 @@ function bp_core_get_components( $type = 'all' ) {
 	$required_components = array(
 		'members' => array(
 			'title'       => __( 'Community Members', 'buddyboss' ),
-			'description' => __( 'Everything in a BuddyBoss community revolves around its members.', 'buddyboss' )
+			'description' => __( 'Everything in a community website revolves around its members.', 'buddyboss' )
 		),
 	);
 
@@ -2441,11 +2441,11 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'notifications' => array(
 			'title'       => __( 'Notifications', 'buddyboss' ),
-			'description' => __( 'Notify members of relevant activity with a toolbar bubble and/or via email, and allow them to customize their notification settings.', 'buddyboss' )
+			'description' => __( 'Notify users of relevant activity with a toolbar bubble and/or via email, and allow them to customize their notification settings.', 'buddyboss' )
 		),
 		'groups'   => array(
 			'title'       => __( 'User Groups', 'buddyboss' ),
-			'description' => __( 'Groups allow your users to organize themselves into specific public, private or hidden sections with separate activity feeds and member listings.', 'buddyboss' )
+			'description' => __( 'Groups allow your users to organize themselves into specific public, private or hidden social areas with separate activity feeds and member listings.', 'buddyboss' )
 		),
 		'blogs'    => array(
 			'title'       => __( 'Site Tracking', 'buddyboss' ),
