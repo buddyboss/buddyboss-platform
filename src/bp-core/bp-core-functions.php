@@ -2439,6 +2439,10 @@ function bp_core_get_components( $type = 'all' ) {
 			'title'       => __( 'Activity Feeds', 'buddyboss' ),
 			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, and @mentions, all with email notification support.', 'buddyboss' )
 		),
+		'blogs'    => array(
+			'title'       => __( 'Blog Feeds', 'buddyboss' ),
+			'description' => __( 'Publish new blog posts and comments from your site into the activity feed. Make sure to enable Activity Feeds first.', 'buddyboss' )
+		),
 		'notifications' => array(
 			'title'       => __( 'Notifications', 'buddyboss' ),
 			'description' => __( 'Notify users of relevant activity with a toolbar bubble and/or via email, and allow them to customize their notification settings.', 'buddyboss' )
@@ -2446,10 +2450,6 @@ function bp_core_get_components( $type = 'all' ) {
 		'groups'   => array(
 			'title'       => __( 'User Groups', 'buddyboss' ),
 			'description' => __( 'Groups allow your users to organize themselves into specific public, private or hidden social areas with separate activity feeds and member listings.', 'buddyboss' )
-		),
-		'blogs'    => array(
-			'title'       => __( 'Site Tracking', 'buddyboss' ),
-			'description' => __( 'Record activity for new posts and comments from your site.', 'buddyboss' )
 		)
 	);
 
