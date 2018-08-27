@@ -230,6 +230,45 @@ function bp_admin_setting_callback_group_cover_image_uploads() {
 <?php
 }
 
+/* Connection Settings */
+
+/**
+ * Connection settings section description for the settings page.
+ *
+ * @since BuddyPress 3.1.1
+ */
+function bp_admin_setting_callback_connection_section() { }
+
+/**
+ * Force users to be connected for messaging.
+ *
+ * @since BuddyPress 3.1.1
+ */
+function bp_admin_setting_callback_force_connection_to_message() {
+	?>
+
+    <input id="bp-force-connection-to-message" name="bp-force-connection-to-message" type="checkbox" value="1" <?php checked( !bp_force_connection_to_message( false ) ); ?> />
+    <label for="bp-force-connection-to-message"><?php _e( 'Force users to be connected for messaging each other', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
+ * Sanitization for bp-force-connection-to-message setting.
+ *
+ * In the UI, a checkbox asks whether you'd like to *enable* force users to be connected for messaging. For
+ * legacy reasons, the option that we store is 1 if these friends or messaging is *disabled*. So we use this
+ * function to flip the boolean before saving the intval.
+ *
+ * @since BuddyPress 3.1.1
+ *
+ * @param bool $value Whether or not to sanitize.
+ * @return bool
+ */
+function bp_admin_sanitize_callback_force_connection_to_message( $value = false ) {
+	return $value ? 0 : 1;
+}
+
 /** Settings Page *************************************************************/
 
 /**
