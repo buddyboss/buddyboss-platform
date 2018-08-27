@@ -124,14 +124,14 @@ body.buddypress .buddypress-wrap h6 {
 	border-radius: 50%;
 }
 
-div,
-dl,
-li,
-textarea,
-select,
-input[type="search"],
-input[type="submit"],
-input[type="reset"] {
+#buddypress div,
+#buddypress dl,
+#buddypress li,
+#buddypress textarea,
+#buddypress select,
+#buddypress input[type="search"],
+#buddypress input[type="submit"],
+#buddypress input[type="reset"] {
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	-ms-border-radius: 2px;
@@ -739,6 +739,10 @@ body.buddypress article.page > .entry-header .entry-title {
 
 .buddypress-wrap .subnav-filters .user-messages-bulk-actions .bulk-actions {
 	float: right;
+}
+
+.buddypress-wrap .subnav-filters .user-messages-bulk-actions input {
+	margin-right: 0.5em;
 }
 
 .buddypress-wrap .subnav-filters .user-messages-bulk-actions label {
@@ -1949,14 +1953,24 @@ form.ac-form .ac-reply-content input {
 * @section 4.0 - Directories
 *-------------------------------------------------------------------------------
 */
+
+body.register #page #primary .entry-header {
+	text-align: center;
+}
+
+@media screen and (min-width: 55em) {
+	body.register #page #primary .entry-header,
+	body.register .buddypress-wrap {
+		max-width: 460px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+}
+
 .register-page .register-section {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
-}
-
-.register-page .signup-form {
-	margin-top: 20px;
 }
 
 .register-page .signup-form .default-profile input {
@@ -1999,37 +2013,8 @@ form.ac-form .ac-reply-content input {
 	border: 1px solid #eee;
 }
 
-@media screen and (min-width: 46.8em) {
-	.buddypress-wrap .register-page .layout-wrap {
-		display: flex;
-		flex-flow: row wrap;
-		justify-content: space-around;
-	}
-	.buddypress-wrap .register-page .layout-wrap .default-profile {
-		flex: 1;
-		padding-left: 2em;
-	}
-	.buddypress-wrap .register-page .layout-wrap .blog-details {
-		flex: 1;
-		padding-right: 2em;
-	}
-	.buddypress-wrap .register-page .submit {
-		clear: both;
-	}
-}
-
-@media screen and (min-width: 46.8em) {
-	.buddypress-wrap.extended-default-reg .register-page .default-profile {
-		flex: 1;
-		padding-left: 1em;
-	}
-	.buddypress-wrap.extended-default-reg .register-page .extended-profile {
-		flex: 2;
-		padding-right: 1em;
-	}
-	.buddypress-wrap.extended-default-reg .register-page .blog-details {
-		flex: 1 100%;
-	}
+.buddypress-wrap .register-page .submit {
+	clear: both;
 }
 
 /**
@@ -2836,7 +2821,6 @@ body.no-js .buddypress-wrap .field-visibility-settings {
 }
 
 .buddypress-wrap .standard-form .description {
-	background: #fafafa;
 	font-size: inherit;
 }
 
@@ -2918,7 +2902,7 @@ body.register .buddypress-wrap .page ul {
 }
 
 .message-action-delete:before {
-	content: "\f153";
+	content: "\f182";
 }
 
 .message-action-delete:hover:before {
@@ -2971,7 +2955,7 @@ body.register .buddypress-wrap .page ul {
 	flex-flow: row nowrap;
 	margin: 0;
 	overflow: hidden;
-	padding: 0.5em 0;
+	padding: 0.5em;
 }
 
 #message-threads li .thread-cb {
@@ -3016,11 +3000,21 @@ body.register .buddypress-wrap .page ul {
 }
 
 #message-threads li .thread-content {
-	-webkit-flex: 1 2 70%;
-	-moz-flex: 1 2 70%;
-	-ms-flex: 1 2 70%;
-	-o-flex: 1 2 70%;
-	flex: 1 2 70%;
+	-webkit-flex: 1 2 50%;
+	-moz-flex: 1 2 50%;
+	-ms-flex: 1 2 50%;
+	-o-flex: 1 2 50%;
+	flex: 1 2 50%;
+}
+
+@media screen and (min-width: 55em) {
+	#message-threads li .thread-content {
+		-webkit-flex: 1 2 70%;
+		-moz-flex: 1 2 70%;
+		-ms-flex: 1 2 70%;
+		-o-flex: 1 2 70%;
+		flex: 1 2 70%;
+	}
 }
 
 #message-threads li .thread-date {
@@ -3031,16 +3025,12 @@ body.register .buddypress-wrap .page ul {
 	flex: 1 2 15%;
 }
 
-#message-threads li.selected {
+#message-threads li.unread {
 	background-color: #fafafa;
 }
 
-#message-threads li.selected .thread-subject .subject {
+#message-threads li.unread .thread-to .subject {
 	color: #5087e5;
-}
-
-#message-threads li.unread {
-	font-weight: 700;
 }
 
 #message-threads li .thread-content .thread-to,
@@ -3324,7 +3314,6 @@ div.bp-navs#subsubnav.bp-messages-filters .user-messages-bulk-actions {
 .buddypress-wrap .standard-form textarea[required],
 .buddypress-wrap .standard-form select[required] {
 	box-shadow: none;
-	border-width: 2px;
 	outline: 0;
 }
 
@@ -3334,16 +3323,10 @@ div.bp-navs#subsubnav.bp-messages-filters .user-messages-bulk-actions {
 	border-color: #b71717;
 }
 
-.buddypress-wrap .standard-form input[required]:valid,
-.buddypress-wrap .standard-form textarea[required]:valid,
-.buddypress-wrap .standard-form select[required]:valid {
-	border-color: #91cc2c;
-}
-
 .buddypress-wrap .standard-form input[required]:focus,
 .buddypress-wrap .standard-form textarea[required]:focus,
 .buddypress-wrap .standard-form select[required]:focus {
-	border-color: #d6d6d6;
+	border-color: #0b80a4;
 	border-width: 1px;
 }
 

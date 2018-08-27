@@ -670,7 +670,7 @@ window.bp = window.bp || {};
 
 		initialize: function() {
 			var Views = [
-				new bp.Nouveau.Messages.View( { tagName: 'ul', id: 'message-threads', className: 'message-lists' } ),
+				new bp.Nouveau.Messages.View( { tagName: 'ul', id: 'message-threads', className: 'message-lists' } )
 			];
 
 			_.each( Views, function( view ) {

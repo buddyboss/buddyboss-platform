@@ -50,11 +50,11 @@ div#community-profile-page li.bp-members-profile-stats:before {
 }
 
 div#community-profile-page li.bp-friends-profile-stats:before {
-	content: "\f454";
+	content: "\f325";
 }
 
 div#community-profile-page li.bp-groups-profile-stats:before {
-	content: "\f456";
+	content: "\f307";
 }
 
 div#community-profile-page li.bp-blogs-profile-stats:before {

@@ -131,14 +131,14 @@ body.buddypress { // add weight
 
 // 'Boxes' i.e display:block when given definition with borders
 // look nice if corners subtly rounded by a couple of pixels
-div,
-dl,
-li,
-textarea,
-select,
-input[type="search"],
-input[type="submit"],
-input[type="reset"] {
+#buddypress div,
+#buddypress dl,
+#buddypress li,
+#buddypress textarea,
+#buddypress select,
+#buddypress input[type="search"],
+#buddypress input[type="submit"],
+#buddypress input[type="reset"] {
 
 	@include border-radius(2px);
 }

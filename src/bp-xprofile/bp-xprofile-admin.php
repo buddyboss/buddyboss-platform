@@ -146,7 +146,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
 			<h1 class="wp-heading-inline"><?php _ex( 'Profile Fields', 'Settings page header', 'buddypress'); ?></h1>
 
-				<a id="add_group" class="page-title-action" href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'Add New Field Group', 'buddyboss' ); ?></a>
+				<a id="add_group" class="page-title-action" href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'Add New Field Set', 'buddyboss' ); ?></a>
 
 			<hr class="wp-header-end">
 
@@ -154,7 +154,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
 			<h1>
 				<?php _ex( 'Profile Fields', 'Settings page header', 'buddypress'); ?>
-				<a id="add_group" class="add-new-h2" href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'Add New Field Group', 'buddyboss' ); ?></a>
+				<a id="add_group" class="add-new-h2" href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'Add New Field Set', 'buddyboss' ); ?></a>
 			</h1>
 
 		<?php endif; ?>
@@ -232,12 +232,12 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 						<div class="tab-toolbar">
 							<div class="tab-toolbar-left">
 								<a class="button-primary" href="<?php echo esc_url( $add_field_url ); ?>"><?php _e( 'Add New Field', 'buddyboss' ); ?></a>
-								<a class="button edit" href="<?php echo esc_url( $edit_group_url ); ?>"><?php _ex( 'Edit Group', 'Edit Profile Fields Group', 'buddyboss' ); ?></a>
+								<a class="button edit" href="<?php echo esc_url( $edit_group_url ); ?>"><?php _ex( 'Edit Field Set', 'Edit Profile Field Set', 'buddyboss' ); ?></a>
 
 								<?php if ( $group->can_delete ) : ?>
 
 									<div class="delete-button">
-										<a class="confirm submitdelete deletion ajax-option-delete" href="<?php echo esc_url( $delete_group_url ); ?>"><?php _ex( 'Delete Group', 'Delete Profile Fields Group', 'buddyboss' ); ?></a>
+										<a class="confirm submitdelete deletion ajax-option-delete" href="<?php echo esc_url( $delete_group_url ); ?>"><?php _ex( 'Delete Field Set', 'Delete Profile Field Set', 'buddyboss' ); ?></a>
 									</div>
 
 								<?php endif; ?>
@@ -270,7 +270,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 							<legend class="screen-reader-text"><?php
 							/** This filter is documented in bp-xprofile/bp-xprofile-template.php */
 							/* translators: accessibility text */
-							printf( esc_html__( 'Fields for "%s" Group', 'buddyboss' ), apply_filters( 'bp_get_the_profile_group_name', $group->name ) );
+							printf( esc_html__( 'Fields for "%s" Field Set', 'buddyboss' ), apply_filters( 'bp_get_the_profile_group_name', $group->name ) );
 							?></legend>
 
 							<?php
@@ -296,7 +296,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
 							else : // !$group->fields ?>
 
-								<p class="nodrag nofields"><?php _e( 'There are no fields in this group.', 'buddyboss' ); ?></p>
+								<p class="nodrag nofields"><?php _e( 'There are no fields in this field set.', 'buddyboss' ); ?></p>
 
 							<?php endif; // End $group->fields. ?>
 
@@ -304,7 +304,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
 						<?php if ( empty( $group->can_delete ) ) : ?>
 
-							<p><?php esc_html_e( '* Fields in this group appear on the signup page.', 'buddyboss' ); ?></p>
+							<p><?php esc_html_e( '* Fields in this set appear on the signup page.', 'buddyboss' ); ?></p>
 
 						<?php endif; ?>
 
@@ -312,8 +312,8 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
 				<?php endforeach; else : ?>
 
-					<div id="message" class="error"><p><?php _ex( 'You have no groups.', 'You have no profile fields groups.', 'buddyboss' ); ?></p></div>
-					<p><a href="<?php echo esc_url( $add_group_url ); ?>"><?php _ex( 'Add New Group', 'Add New Profile Fields Group', 'buddyboss' ); ?></a></p>
+					<div id="message" class="error"><p><?php _ex( 'You have no field sets.', 'You have no profile field sets.', 'buddyboss' ); ?></p></div>
+					<p><a href="<?php echo esc_url( $add_group_url ); ?>"><?php _ex( 'Add New Field Set', 'Add New Profile Field Set', 'buddyboss' ); ?></a></p>
 
 				<?php endif; ?>
 
@@ -358,12 +358,12 @@ function xprofile_admin_manage_group( $group_id = null ) {
 
 			// Attempt to save the field group.
 			if ( false === $group->save() ) {
-				$message = __( 'There was an error saving the group. Please try again.', 'buddyboss' );
+				$message = __( 'There was an error saving the field set. Please try again.', 'buddyboss' );
 				$type    = 'error';
 
 			// Save successful.
 			} else {
-				$message = __( 'The group was saved successfully.', 'buddyboss' );
+				$message = __( 'The field set was saved successfully.', 'buddyboss' );
 				$type    = 'success';
 
 				// @todo remove these old options
@@ -406,10 +406,10 @@ function xprofile_admin_delete_group( $group_id ) {
 	$group = new BP_XProfile_Group( $group_id );
 
 	if ( !$group->delete() ) {
-		$message = _x( 'There was an error deleting the group. Please try again.', 'Error when deleting profile fields group', 'buddyboss' );
+		$message = _x( 'There was an error deleting the field set. Please try again.', 'Error when deleting profile field set', 'buddyboss' );
 		$type    = 'error';
 	} else {
-		$message = _x( 'The group was deleted successfully.', 'Profile fields group was deleted successfully', 'buddyboss' );
+		$message = _x( 'The field set was deleted successfully.', 'Profile field set was deleted successfully', 'buddyboss' );
 		$type    = 'success';
 
 		/**

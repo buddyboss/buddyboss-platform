@@ -136,6 +136,9 @@
 		var current_user = _.find(data.recipients, function(item) {
 			return item.is_you;
 		});
+
+		var include_you = other_recipients.length > 2;
+		var first_three = _.first(other_recipients, 3);
 	#>
 	<div class="thread-cb">
 		<input class="message-check" type="checkbox" name="message_ids[]" id="bp-message-thread-{{data.id}}" value="{{data.id}}">
@@ -154,15 +157,21 @@
 	<div class="thread-content" data-thread-id="{{data.id}}">
 		<div class="thread-to">
 			<a class="subject" href="../view/{{data.id}}/">
-				<# for ( i in _.first(other_recipients, 3) ) { #>
-					<span class="user-name">{{other_recipients[i].user_name}}</span>
-					<span class="user-comma"><?php _e(',', 'buddyboss'); ?></span>
+				<# for ( i in first_three ) { #>
+					<span class="user-name">
+						{{other_recipients[i].user_name}}
+						<# if ( i != first_three.length - 1  || ( i == first_three.length -1 && include_you ) ) { #>
+							<?php _e(',', 'buddyboss'); ?>
+						<# } #>
+					</span>
 				<# } #>
 
-				<span class="user-name"><?php _e('You', 'buddyboss'); ?></span>
+				<# if ( include_you ) { #>
+					<span class="user-name"><?php _e('You', 'buddyboss'); ?></span>
+				<# } #>
 
 				<# if ( data.toOthers ) { #>
-					<span class="user-comma"><?php _e(',', 'buddyboss'); ?></span>
+					<?php _e(',', 'buddyboss'); ?>
 					<span class="num-name">{{data.toOthers}}</span>
 				<# } #>
 			</a>
@@ -198,6 +207,8 @@
 		var current_user = _.find(data.recipients, function(item) {
 			return item.is_you == true;
 		});
+
+		var include_you = other_recipients.length > 2;
 	#>
 
 	<header class="single-message-thread-header">
@@ -205,11 +216,17 @@
 			<dl class="thread-participants">
 				<dt>
 					<# for ( i in other_recipients ) { #>
-						<span class="participants-name"><a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a></span>
-						<span class="participants-comma"><?php _e(',', 'buddyboss'); ?></span>
+						<span class="participants-name">
+							<a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a>
+							<# if ( i != other_recipients.length -1 || ( i == other_recipients.length -1 && include_you ) ) { #>
+								<?php _e(',', 'buddyboss'); ?>
+							<# } #>
+						</span>
 					<# } #>
 
-					<span class="participants-name"><a href="{{current_user.user_link}}">You</a></span>
+					<# if ( include_you ) { #>
+						<span class="participants-name"><a href="{{current_user.user_link}}">You</a></span>
+					<# } #>
 				</dt>
 				<dd>
 					<span class="thread-date">Started {{data.started_date}}</span>

@@ -923,12 +923,6 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'before'  => 'bp_before_registration_disabled',
 			'after'   => 'bp_after_registration_disabled'
 		),
-		'request-details' => array(
-			'type'    => 'info',
-			'message' => __( 'Registering for this site is easy. Just fill in the fields below, and we\'ll get a new account set up for you in no time.', 'buddyboss' ),
-			'before'  => false,
-			'after'   => false,
-		),
 		'completed-confirmation' => array(
 			'type'    => 'info',
 			'message' => __( 'You have successfully created your account! Please log in using the username and password you have just created.', 'buddyboss' ),
@@ -1069,7 +1063,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 	 * Adjust some messages to the context.
 	 */
 	if ( 'completed-confirmation' === $feedback_id && bp_registration_needs_activation() ) {
-		$feedback_messages['completed-confirmation']['message'] = __( 'You have successfully created your account! To begin using this site you will need to activate your account via the email we have just sent to your address.', 'buddyboss' );
+		$feedback_messages['completed-confirmation']['message'] = __( 'Before you can login, we just need you to confirm your email address via the email we just sent to you.', 'buddyboss' );
 	} elseif ( 'member-notifications-none' === $feedback_id ) {
 		$is_myprofile = bp_is_my_profile();
 
@@ -1141,7 +1135,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 				'class'          => '',
 			),
 			'signup_email' => array(
-				'label'          => __( 'Email Address', 'buddyboss' ),
+				'label'          => __( 'Email', 'buddyboss' ),
 				'required'       => true,
 				'value'          => 'bp_get_signup_email_value',
 				'attribute_type' => 'email',
@@ -1149,7 +1143,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 				'class'          => '',
 			),
 			'signup_password' => array(
-				'label'          => __( 'Choose a Password', 'buddyboss' ),
+				'label'          => __( 'Password', 'buddyboss' ),
 				'required'       => true,
 				'value'          => '',
 				'attribute_type' => 'password',
@@ -1244,7 +1238,7 @@ function bp_nouveau_get_submit_button( $action = '' ) {
 			'attributes' => array(
 				'name'  => 'signup_submit',
 				'id'    => 'signup_submit',
-				'value' => __( 'Complete Sign Up', 'buddyboss' ),
+				'value' => __( 'Create Account', 'buddyboss' ),
 			),
 		),
 		'member-profile-edit' => array(
