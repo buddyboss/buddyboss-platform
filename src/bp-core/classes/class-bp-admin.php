@@ -407,6 +407,10 @@ class BP_Admin {
 			// Profile sync setting.
 			add_settings_field( 'bp-disable-profile-sync',   __( 'Profile Syncing',  'buddyboss' ), 'bp_admin_setting_callback_profile_sync', 'buddypress', 'bp_xprofile' );
 			register_setting  ( 'buddypress', 'bp-disable-profile-sync', 'intval' );
+            
+            // Enable/Disable member dashboard.
+			add_settings_field( 'bp-enable-member-dashboard',   __( 'Member Dashboard',  'buddyboss' ), 'bp_admin_setting_callback_member_dashboard', 'buddypress', 'bp_xprofile' );
+			register_setting  ( 'buddypress', 'bp-enable-member-dashboard', 'intval' );
 		}
 
 		/* Groups Section ****************************************************/

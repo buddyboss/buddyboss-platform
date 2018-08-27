@@ -140,6 +140,21 @@ function bp_admin_setting_callback_profile_sync() {
 }
 
 /**
+ * Enable member dashboard/front-page template.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ */
+function bp_admin_setting_callback_member_dashboard () {
+?>
+
+	<input id="bp-enable-member-dashboard" name="bp-enable-member-dashboard" type="checkbox" value="1" <?php checked( bp_nouveau_get_appearance_settings( 'user_front_page' ) ); ?> />
+	<label for="bp-enable-member-dashboard"><?php _e( 'Enable dashboard for member profiles', 'buddyboss' ); ?></label>
+
+<?php
+}
+
+/**
  * Allow members to upload avatars field.
  *
  * @since BuddyPress 1.6.0
@@ -294,6 +309,14 @@ function bp_core_admin_settings_save() {
 			$value = isset( $_POST[$legacy_option] ) ? '' : 1;
 			bp_update_option( $legacy_option, $value );
 		}
+        
+        /**
+         * sync bp-enable-member-dashboard with cutomizer settings.
+         * @since BuddyBoss 3.1.1
+         */
+        $bp_nouveau_appearance = bp_get_option( 'bp_nouveau_appearance', array() );
+        $bp_nouveau_appearance[ 'user_front_page' ] = isset( $_POST[ 'bp-enable-member-dashboard' ] ) ? $_POST[ 'bp-enable-member-dashboard' ] : 0;
+        bp_update_option( 'bp_nouveau_appearance', $bp_nouveau_appearance );
 
 		bp_core_redirect( add_query_arg( array( 'page' => 'bp-settings', 'updated' => 'true' ), bp_get_admin_url( 'admin.php' ) ) );
 	}
