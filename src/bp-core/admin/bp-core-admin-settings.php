@@ -247,7 +247,7 @@ function bp_admin_setting_callback_connection_section() { }
 function bp_admin_setting_callback_force_connection_to_message() {
 	?>
 
-    <input id="bp-force-connection-to-message" name="bp-force-connection-to-message" type="checkbox" value="1" <?php checked( !bp_force_connection_to_message( false ) ); ?> />
+    <input id="bp-force-connection-to-message" name="bp-force-connection-to-message" type="checkbox" value="1" <?php checked( bp_force_connection_to_message( false ) ); ?> />
     <label for="bp-force-connection-to-message"><?php _e( 'Force users to be connected for messaging each other', 'buddyboss' ); ?></label>
 
 	<?php
@@ -266,7 +266,7 @@ function bp_admin_setting_callback_force_connection_to_message() {
  * @return bool
  */
 function bp_admin_sanitize_callback_force_connection_to_message( $value = false ) {
-	return $value ? 0 : 1;
+	return $value ? 1 : 0;
 }
 
 /** Settings Page *************************************************************/
