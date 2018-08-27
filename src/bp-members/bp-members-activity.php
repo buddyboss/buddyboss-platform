@@ -102,3 +102,12 @@ function bp_core_new_user_activity( $user ) {
     bp_core_update_user_last_activity( $user_id );
 }
 add_action( 'bp_core_activated_user', 'bp_core_new_user_activity' );
+
+/**
+ * After a user account is added from wp-admin,
+ * update it's last activity time.
+ * Otherwise the user doesn't show up in list of active members untill he/she logs in.
+ * 
+ * @since BuddyBoss 3.1.1
+ */
+add_action( 'edit_user_created_user', 'bp_core_update_user_last_activity', 10, 1 );
