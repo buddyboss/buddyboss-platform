@@ -1522,6 +1522,51 @@ function bp_core_record_activity() {
 add_action( 'wp_head', 'bp_core_record_activity' );
 
 /**
+ * Update the last activity time for user.
+ * 
+ * @since BuddyBoss 3.1.1
+ * 
+ * @param int $user_id
+ * @param int|string $new_activity_time
+ * @return boolean
+ */
+function bp_core_update_user_last_activity ( $user_id = '', $new_activity_time = '' ) {
+    if ( !$user_id ) {
+        $user_id = bp_loggedin_user_id();
+    }
+    
+    if ( !$user_id ) {
+        return false;
+    }
+    
+    if ( $new_activity_time ) {
+        if ( !is_numeric( $new_activity_time ) ) {
+            $new_activity_time = strtotime( $new_activity_time );
+        }
+    } else {
+        $new_activity_time = bp_core_current_time( true, 'timestamp' );
+    }
+    
+    // Get the user's last activity.
+	$last_activity_time = bp_get_user_last_activity( $user_id );
+    
+    if ( empty( $last_activity_time ) ) {
+        /**
+		 * Fires inside the recording of an activity item.
+		 *
+		 * Use this action to detect the very first activity for a given member.
+		 *
+		 * @since BuddyPress 1.6.0
+		 *
+		 * @param int $user_id ID of the user whose activity is recorded.
+		 */
+		do_action( 'bp_first_activity_for_member', $user_id );
+    }
+    
+    bp_update_user_last_activity( $user_id, date( 'Y-m-d H:i:s', $new_activity_time ) );
+}
+
+/**
  * Format last activity string based on time since date given.
  *
  * @since BuddyPress 1.0.0
