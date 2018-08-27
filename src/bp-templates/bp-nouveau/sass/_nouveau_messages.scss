@@ -235,12 +235,18 @@
         list-style: none;
         padding: 0 $pad-med;
 
+        &:after {
+            content: '';
+            clear: both;
+            display: table;
+        }
+
         li {
             background: $white;
             border: 1px solid $bp-border-dark;
             @include box-shadow(-2px 1px 9px 0 #eee);
             padding: $pad-sml;
-            margin: $mar-med 0;
+            margin: 1em 0;
             width: 100%;
         }
 
@@ -259,10 +265,15 @@
             }
 
             .user-link {
-                display: block;
+                //display: block; default
+                display: inline-block;
 
-                @include responsive-font(16);
-                float: left;
+                @include responsive-font(15);
+                //float: left;
+
+                strong {
+                    font-weight: 600;
+                }
             }
 
             time {
@@ -277,15 +288,24 @@
             }
 
             button:before {
-
-                @include font-size(20);
+                @include font-size(16);
             }
         }
 
         .message-content {
+            clear: both;
+            @include font-size(14);
             overflow: hidden;
-            margin: 1em auto 0;
-            width: 90%;
+            margin: 0 auto;
+            padding-left: 40px;
+
+            p {
+                margin-bottom: 1em;
+            }
+
+            p:last-child {
+                margin-bottom: 0;
+            }
         }
 
         img.avatar {

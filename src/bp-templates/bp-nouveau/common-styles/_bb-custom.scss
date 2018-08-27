@@ -48,6 +48,10 @@ body.register #page #primary .entry-header {
     margin: 5px 10px 0 0;
 }
 
+div#subsubnav:empty {
+    display: none;
+}
+
 #message-threads li .thread-avatar {
     -webkit-flex: 1 2 10%;
     -moz-flex: 1 2 10%;
