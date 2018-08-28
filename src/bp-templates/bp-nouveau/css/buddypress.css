@@ -1992,11 +1992,15 @@ form.ac-form .ac-reply-content input {
 }
 
 .register-page .signup-form .editfield .field-visibility-settings {
-  padding: 0.7em;
+  padding: 0.7em 0;
 }
 
 .register-page .signup-form .editfield .field-visibility-settings fieldset {
-  margin: 0 0 10px;
+  margin: 10px 0;
+}
+
+.register-page .signup-form p.field-visibility-settings-header {
+  margin: 10px 0;
 }
 
 .register-page .signup-form #signup-avatar img {
@@ -2015,12 +2019,10 @@ form.ac-form .ac-reply-content input {
     justify-content: space-around;
   }
   .buddypress-wrap .register-page .layout-wrap .default-profile {
-    flex: 1;
-    padding-right: 2em;
+    flex: 1 100%;
   }
   .buddypress-wrap .register-page .layout-wrap .blog-details {
-    flex: 1;
-    padding-left: 2em;
+    flex: 1 100%;
   }
   .buddypress-wrap .register-page .submit {
     clear: both;
@@ -2029,12 +2031,10 @@ form.ac-form .ac-reply-content input {
 
 @media screen and (min-width: 46.8em) {
   .buddypress-wrap.extended-default-reg .register-page .default-profile {
-    flex: 1;
-    padding-right: 1em;
+    flex: 1 100%;
   }
   .buddypress-wrap.extended-default-reg .register-page .extended-profile {
-    flex: 2;
-    padding-left: 1em;
+    flex: 1 100%;
   }
   .buddypress-wrap.extended-default-reg .register-page .blog-details {
     flex: 1 100%;
@@ -3403,12 +3403,6 @@ div#subsubnav:empty {
 .buddypress-wrap .standard-form select[required] {
   box-shadow: none;
   outline: 0;
-}
-
-.buddypress-wrap .standard-form input[required]:invalid,
-.buddypress-wrap .standard-form textarea[required]:invalid,
-.buddypress-wrap .standard-form select[required]:invalid {
-  border-color: #b71717;
 }
 
 .buddypress-wrap .standard-form input[required]:focus,

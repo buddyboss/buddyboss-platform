@@ -39,13 +39,17 @@
 			}
 
 			.field-visibility-settings {
-				padding: $pad-sml;
+				padding: $pad-sml 0;
 
 				fieldset {
-					margin: 0 0 $marg-sml;
+					margin: $marg-sml 0;
 				}
 			}
 		} // editfield
+
+                p.field-visibility-settings-header {
+                        margin: 10px 0;
+                }
 
 		#signup-avatar img {
 			margin: 0 $marg-med $marg-sml 0;
@@ -73,13 +77,13 @@
 				justify-content: space-around;
 
 				.default-profile {
-					flex: 1;
-					padding-right: $pad-lrg;
+					flex: 1 100%;
+					//padding-right: $pad-lrg;
 				}
 
 				.blog-details {
-					flex: 1;
-					padding-left: $pad-lrg;
+					flex: 1 100%;
+					//padding-left: $pad-lrg;
 				}
 			}
 
@@ -101,13 +105,13 @@
 		.register-page {
 
 			.default-profile {
-				flex: 1;
-				padding-right: $pad-med;
+				flex: 1 100%;
+				//padding-right: $pad-med;
 			}
 
 			.extended-profile {
-				flex: 2;
-				padding-left: $pad-med;
+				flex: 1 100%;
+				//padding-left: $pad-med;
 			}
 
 			.blog-details {

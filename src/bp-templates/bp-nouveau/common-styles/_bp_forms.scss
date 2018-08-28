@@ -112,7 +112,7 @@
                                 // Sadly this does mean all inputs are considered to be
                                 // invalid from page load & bordered.
                                 &:invalid {
-                                        border-color: $warn;
+                                        //border-color: $warn;
                                 }
 
                                 &:valid {
