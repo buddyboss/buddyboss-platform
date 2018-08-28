@@ -123,8 +123,14 @@ function bp_nouveau_ajax_messages_send_reply() {
 	$new_reply = messages_new_message( array(
 		'thread_id' => (int) $_POST['thread_id'],
 		'subject'   => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false,
-		'content'   => $_POST['content']
+		'content'   => $_POST['content'],
+		'error_type' => 'wp_error',
 	) );
+
+	if ( is_wp_error( $new_reply ) ) {
+		$response['feedback'] = $new_reply->get_error_message();
+		wp_send_json_error( $response );
+	}
 
 	// Send the reply.
 	if ( empty( $new_reply ) ) {
