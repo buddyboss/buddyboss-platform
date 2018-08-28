@@ -116,3 +116,19 @@
 		}
 	}
 }
+
+
+body.register {
+        #page #primary .entry-header {
+                text-align: center;       
+        }
+
+        #page #primary .entry-header,
+        .buddypress-wrap {
+                @include medium-lrg-up() {
+                        max-width: 460px;
+                        margin-left: auto;
+                        margin-right: auto;
+                }
+        }
+}
