@@ -11,11 +11,6 @@
 
 <?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
 
-
-<h2 class="bp-screen-title<?php echo ( bp_displayed_user_has_front_template() ) ? ' bp-screen-reader-text' : ''; ?>">
-	<?php esc_html_e( 'Member Activities', 'buddyboss' ); ?>
-</h2>
-
 <?php bp_nouveau_activity_member_post_form(); ?>
 
 <?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
