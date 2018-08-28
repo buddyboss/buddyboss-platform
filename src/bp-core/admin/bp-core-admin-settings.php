@@ -149,7 +149,7 @@ function bp_admin_setting_callback_member_dashboard () {
 ?>
 
 	<input id="bp-enable-member-dashboard" name="bp-enable-member-dashboard" type="checkbox" value="1" <?php checked( bp_nouveau_get_appearance_settings( 'user_front_page' ) ); ?> />
-	<label for="bp-enable-member-dashboard"><?php _e( 'Enable dashboard for member profiles', 'buddyboss' ); ?></label>
+	<label for="bp-enable-member-dashboard"><?php _e( 'Enable Dashboard for member profiles', 'buddyboss' ); ?></label>
 
 <?php
 }
