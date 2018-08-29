@@ -462,11 +462,11 @@ class BP_Admin {
 		if ( bp_is_active( 'friends' ) ) {
 
 			// Add the main section.
-			add_settings_section( 'bp_friends', __( 'Connection Settings', 'buddyboss' ), 'bp_admin_setting_callback_connection_section', 'buddypress' );
+			add_settings_section( 'bp_friends', __( 'Connection Settings', 'buddyboss' ), 'bp_admin_setting_callback_friendship_section', 'buddypress' );
 
-			// Connected for messaging each other.
-			add_settings_field( 'bp-force-connection-to-message', __( 'Messaging', 'buddyboss' ), 'bp_admin_setting_callback_force_connection_to_message', 'buddypress', 'bp_friends' );
-			register_setting( 'buddypress', 'bp-force-connection-to-message', 'bp_admin_sanitize_callback_force_connection_to_message' );
+			// Friends for messaging each other.
+			add_settings_field( 'bp-force-friendship-to-message', __( 'Messaging', 'buddyboss' ), 'bp_admin_setting_callback_force_friendship_to_message', 'buddypress', 'bp_friends' );
+			register_setting( 'buddypress', 'bp-force-friendship-to-message', 'bp_admin_sanitize_callback_force_friendship_to_message' );
 		}
 	}
 

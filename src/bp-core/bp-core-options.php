@@ -752,22 +752,22 @@ function bp_get_theme_package_id( $default = 'nouveau' ) {
 }
 
 /**
- * Is force connection to message disabled?
+ * Is force friendship to message disabled?
  *
  * @since BuddyPress 3.1.1
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
- * @return bool True if connection is forced to message, otherwise false.
+ * @return bool True if friendship is forced to message, otherwise false.
  */
-function bp_force_connection_to_message( $default = false ) {
+function bp_force_friendship_to_message( $default = false ) {
 
 	/**
-	 * Filters whether or not connection is forced to message each other.
+	 * Filters whether or not friendship is forced to message each other.
 	 *
 	 * @since BuddyPress 3.1.1
 	 *
-	 * @param bool $value Whether or not connection is forced to message each other.
+	 * @param bool $value Whether or not friendship is forced to message each other.
 	 */
-	return (bool) apply_filters( 'bp_force_connection_to_message', (bool) bp_get_option( 'bp-force-connection-to-message', $default ) );
+	return (bool) apply_filters( 'bp_force_friendship_to_message', (bool) bp_get_option( 'bp-force-friendship-to-message', $default ) );
 }

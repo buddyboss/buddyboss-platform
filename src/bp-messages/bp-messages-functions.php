@@ -187,15 +187,15 @@ function messages_new_message( $args = '' ) {
 		}
 	}
 
-	// check if force connection is enabled and check recipients
-	if ( bp_force_connection_to_message() && bp_is_active( 'friends' ) ) {
+	// check if force friendship is enabled and check recipients
+	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
 		foreach ( (array) $message->recipients as $i => $recipient_id ) {
 			if ( ! friends_check_friendship( $message->sender_id, $i ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
 					if ( ! empty( $r['thread_id'] ) ) {
-						return new WP_Error( 'message_invalid_recipients', __( 'Message could not be sent because you need to be connected with the members in order to continue this conversation.', 'buddyboss' ) );
+						return new WP_Error( 'message_invalid_recipients', __( 'You need to be connected with the member in order to continue this conversation.', 'buddyboss' ) );
 					}
-					return new WP_Error( 'message_invalid_recipients', __( 'Message could not be sent because you need to be connected with the members in order to send them a message.', 'buddyboss' ) );
+					return new WP_Error( 'message_invalid_recipients', __( 'You need to be connected with the member in order to send them a message.', 'buddyboss' ) );
 				} else {
 					return false;
 				}

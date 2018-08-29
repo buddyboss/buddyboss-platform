@@ -239,24 +239,24 @@ function bp_admin_setting_callback_group_cover_image_uploads() {
  *
  * @since BuddyPress 3.1.1
  */
-function bp_admin_setting_callback_connection_section() { }
+function bp_admin_setting_callback_friendship_section() { }
 
 /**
  * Force users to be friends for messaging.
  *
  * @since BuddyPress 3.1.1
  */
-function bp_admin_setting_callback_force_connection_to_message() {
+function bp_admin_setting_callback_force_friendship_to_message() {
 	?>
 
-    <input id="bp-force-connection-to-message" name="bp-force-connection-to-message" type="checkbox" value="1" <?php checked( bp_force_connection_to_message( false ) ); ?> />
-    <label for="bp-force-connection-to-message"><?php _e( 'Require users to be connected before they can message each other', 'buddyboss' ); ?></label>
+    <input id="bp-force-friendship-to-message" name="bp-force-friendship-to-message" type="checkbox" value="1" <?php checked( bp_force_friendship_to_message( false ) ); ?> />
+    <label for="bp-force-friendship-to-message"><?php _e( 'Force users to be connected for messaging each other', 'buddyboss' ); ?></label>
 
 	<?php
 }
 
 /**
- * Sanitization for bp-force-connection-to-message setting.
+ * Sanitization for bp-force-friendship-to-message setting.
  *
  * In the UI, a checkbox asks whether you'd like to *enable* forceing users to be friends for messaging. For
  * legacy reasons, the option that we store is 1 if these friends or messaging is *disabled*. So we use this
@@ -267,7 +267,7 @@ function bp_admin_setting_callback_force_connection_to_message() {
  * @param bool $value Whether or not to sanitize.
  * @return bool
  */
-function bp_admin_sanitize_callback_force_connection_to_message( $value = false ) {
+function bp_admin_sanitize_callback_force_friendship_to_message( $value = false ) {
 	return $value ? 1 : 0;
 }
 
