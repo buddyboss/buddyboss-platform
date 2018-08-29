@@ -248,7 +248,7 @@ function bp_admin_setting_callback_force_connection_to_message() {
 	?>
 
     <input id="bp-force-connection-to-message" name="bp-force-connection-to-message" type="checkbox" value="1" <?php checked( bp_force_connection_to_message( false ) ); ?> />
-    <label for="bp-force-connection-to-message"><?php _e( 'Force users to be connected for messaging each other', 'buddyboss' ); ?></label>
+    <label for="bp-force-connection-to-message"><?php _e( 'Require users to be connected before they can message each other', 'buddyboss' ); ?></label>
 
 	<?php
 }
