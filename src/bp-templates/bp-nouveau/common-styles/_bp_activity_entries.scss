@@ -54,7 +54,7 @@
 			position: relative;
 
 			.activity-avatar {
-				margin-left: 0 auto;
+				margin-left: auto;
 				text-align: center;
 				width: auto;
 
@@ -364,90 +364,6 @@
 				@include box-shadow(0 0 6px 0 $light-grey);
 			}
 		}
-
-	}
-}
-
-// Single Activity Entry View
-body.activity-permalink {
-
-	.activity-list {
-
-		li {
-			border-width: 1px;
-			padding: $pad-med 0 0 0;
-
-			&:first-child {
-				padding-top: 0;
-			}
-
-			&.has-comments {
-				padding-bottom: 0;
-			}
-
-		} // close li
-
-		.activity-avatar {
-			width: auto;
-
-			a {
-				display: block;
-			}
-
-			img {
-				max-width: 100%;
-			}
-		}
-
-		.activity-content {
-			border: 0;
-			font-size: 100%;
-			line-height: 1.5;
-			padding: 0;
-
-			.activity-header {
-				margin: 0;
-				padding: $pad-sml 0 0 0;
-				text-align: center;
-				width: 100%;
-			}
-
-			.activity-inner,
-			blockquote {
-				margin-left: 0;
-				margin-top: $marg-sml;
-			}
-		}
-
-		.activity-meta {
-			margin: $marg-sml 0 $marg-sml;
-		}
-
-		.activity-comments {
-			margin-bottom: $marg-sml;
-		}
-
-		@include medium-up() {
-
-			.activity-avatar {
-				left: -20px;
-				margin-right: 0;
-				position: relative;
-				top: -20px;
-			}
-
-			.activity-content {
-				margin-right: $marg-sml;
-
-				.activity-header {
-
-					p {
-						text-align: left;
-					}
-				}
-			}
-
-		} // close @media
 
 	}
 }

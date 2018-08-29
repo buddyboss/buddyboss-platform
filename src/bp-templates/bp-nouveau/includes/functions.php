@@ -799,6 +799,11 @@ function bp_nouveau_theme_cover_image( $params = array() ) {
 			margin-left: ' . $left_offset . 'px;
 			margin-top: -' . $top_offset . 'px;
 			width:auto;
+			padding-left: 2em;
+		}
+
+		#item-header-avatar img.avatar {
+			margin-left: 0;
 		}
 
 		body.single-item.groups #buddypress div#item-header #item-header-cover-image #item-header-content,

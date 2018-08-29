@@ -1276,7 +1276,7 @@ body.buddypress article.page > .entry-header .entry-title {
 }
 
 .activity-list .activity-item.mini .activity-avatar {
-  margin-left: 0 auto;
+  margin-left: auto;
   text-align: center;
   width: auto;
 }
@@ -1539,74 +1539,6 @@ body.buddypress article.page > .entry-header .entry-title {
   -webkit-box-shadow: 0 0 6px 0 #eaeaea;
   -moz-box-shadow: 0 0 6px 0 #eaeaea;
   box-shadow: 0 0 6px 0 #eaeaea;
-}
-
-body.activity-permalink .activity-list li {
-  border-width: 1px;
-  padding: 1em 0 0 0;
-}
-
-body.activity-permalink .activity-list li:first-child {
-  padding-top: 0;
-}
-
-body.activity-permalink .activity-list li.has-comments {
-  padding-bottom: 0;
-}
-
-body.activity-permalink .activity-list .activity-avatar {
-  width: auto;
-}
-
-body.activity-permalink .activity-list .activity-avatar a {
-  display: block;
-}
-
-body.activity-permalink .activity-list .activity-avatar img {
-  max-width: 100%;
-}
-
-body.activity-permalink .activity-list .activity-content {
-  border: 0;
-  font-size: 100%;
-  line-height: 1.5;
-  padding: 0;
-}
-
-body.activity-permalink .activity-list .activity-content .activity-header {
-  margin: 0;
-  padding: 0.7em 0 0 0;
-  text-align: center;
-  width: 100%;
-}
-
-body.activity-permalink .activity-list .activity-content .activity-inner,
-body.activity-permalink .activity-list .activity-content blockquote {
-  margin-left: 0;
-  margin-top: 10px;
-}
-
-body.activity-permalink .activity-list .activity-meta {
-  margin: 10px 0 10px;
-}
-
-body.activity-permalink .activity-list .activity-comments {
-  margin-bottom: 10px;
-}
-
-@media screen and (min-width: 46.8em) {
-  body.activity-permalink .activity-list .activity-avatar {
-    left: -20px;
-    margin-right: 0;
-    position: relative;
-    top: -20px;
-  }
-  body.activity-permalink .activity-list .activity-content {
-    margin-right: 10px;
-  }
-  body.activity-permalink .activity-list .activity-content .activity-header p {
-    text-align: left;
-  }
 }
 
 /**
