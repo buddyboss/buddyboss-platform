@@ -2970,7 +2970,7 @@ body.register .buddypress-wrap .page ul {
 
 .bp-messages-content .thread-date {
   color: #737373;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 #message-threads {
@@ -3174,21 +3174,22 @@ body.register .buddypress-wrap .page ul {
 }
 
 .bp-messages-content #bp-message-thread-list .message-metadata .user-link strong {
-  font-weight: 400;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .bp-messages-content #bp-message-thread-list .message-metadata .user-link strong:after {
   content: "\00b7";
-  color: #222;
+  color: #767676;
   font-size: 20px;
-  margin-right: 4px;
+  margin-right: 6px;
   vertical-align: middle;
   display: inline-block;
 }
 
 .bp-messages-content #bp-message-thread-list .message-metadata time {
-  color: #222;
-  font-size: 12px;
+  color: #767676;
+  font-size: 14px;
   padding: 0 2px;
 }
 
@@ -3202,8 +3203,7 @@ body.register .buddypress-wrap .page ul {
 
 .bp-messages-content #bp-message-thread-list .message-content {
   clear: both;
-  color: #737373;
-  font-size: 13px;
+  font-size: 14px;
   overflow: hidden;
   margin: 0 auto;
   padding-right: 40px;
@@ -3211,10 +3211,6 @@ body.register .buddypress-wrap .page ul {
 
 .bp-messages-content #bp-message-thread-list .message-content p {
   margin-bottom: 8px;
-}
-
-.bp-messages-content #bp-message-thread-list .message-content p:last-child {
-  margin-bottom: 0;
 }
 
 .bp-messages-content #bp-message-thread-list img.avatar {
@@ -3308,6 +3304,14 @@ div#subsubnav:empty {
   display: none;
 }
 
+input#send-to-input {
+  margin-bottom: 20px;
+}
+
+#compose-personal-li a {
+  margin-top: 0;
+}
+
 /**
 *------------------------------------------
 * @subsection 5.2.2.6 - Settings
@@ -3329,7 +3333,7 @@ div#subsubnav:empty {
 */
 .buddypress-wrap .filter select,
 .buddypress-wrap #whats-new-post-in-box select {
-  border: 1px solid #0b80a4;
+  border: 1px solid #d6d6d6;
 }
 
 .buddypress-wrap input.action[disabled] {
@@ -3391,7 +3395,7 @@ div#subsubnav:empty {
 .buddypress-wrap .standard-form .groups-members-search input[type="search"],
 .buddypress-wrap .standard-form .groups-members-search input[type="text"] {
   background: #fafafa;
-  border: 1px solid #0b80a4;
+  border: 1px solid #d6d6d6;
   border-radius: 0;
   font: inherit;
   font-size: 100%;
@@ -3408,7 +3412,7 @@ div#subsubnav:empty {
 .buddypress-wrap .standard-form input[required]:focus,
 .buddypress-wrap .standard-form textarea[required]:focus,
 .buddypress-wrap .standard-form select[required]:focus {
-  border-color: #0b80a4;
+  border-color: #d6d6d6;
   border-width: 1px;
 }
 

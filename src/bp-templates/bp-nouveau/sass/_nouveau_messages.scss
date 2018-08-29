@@ -69,7 +69,7 @@
         .thread-date {
                 color: $light-text-plus;
 
-                @include font-size(13);
+                @include font-size(14);
         }
 }
 
@@ -292,23 +292,25 @@
                                 //float: left;
 
                                 strong {
-                                        font-weight: 400;
+                                        
+                                        @include font-size(16);
+                                        font-weight: 600;
                                 }
                                 
                                 strong:after {
                                         content: "\00b7";
-                                        color: $meta-text-dark;
+                                        color: $light-text;
                                         font-size: 20px;
-                                        margin-left: 4px;
+                                        margin-left: 6px;
                                         vertical-align: middle;
                                         display: inline-block;
                                 }
                         }
 
                         time {
-                                color: $meta-text-dark;
+                                color: $light-text;
 
-                                @include font-size(12);
+                                @include font-size(14);
                                 padding: 0 2px;
                         }
 
@@ -323,9 +325,9 @@
 
                 .message-content {
                         clear: both;
-                        color: $light-text-plus;
+                        //color: $light-text-plus;
 
-                        @include font-size(13);
+                        @include font-size(14);
                         overflow: hidden;
                         margin: 0 auto;
                         padding-left: 40px;
@@ -335,7 +337,7 @@
                         }
 
                         p:last-child {
-                                margin-bottom: 0;
+                                //margin-bottom: 0;
                         }
                 }
 
@@ -465,4 +467,14 @@ div.bp-navs#subsubnav.bp-messages-filters {
 // Hide empty div to fix spacing issue
 div#subsubnav:empty {
         display: none;
+}
+
+input#send-to-input {
+        margin-bottom: 20px;
+}
+
+#compose-personal-li {
+    a {
+            margin-top: 0;
+    }
 }
