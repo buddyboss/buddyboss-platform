@@ -800,6 +800,7 @@ function bp_nouveau_theme_cover_image( $params = array() ) {
 			margin-top: -' . $top_offset . 'px;
 			width:auto;
 			padding-left: 2em;
+			padding-right: 0;
 		}
 
 		#item-header-avatar img.avatar {
