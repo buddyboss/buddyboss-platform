@@ -109,16 +109,6 @@
                                 // IE Edge uses outline for invalid controls, remove
                                 outline: 0;
 
-                                // Sadly this does mean all inputs are considered to be
-                                // invalid from page load & bordered.
-                                &:invalid {
-                                        //border-color: $warn;
-                                }
-
-                                &:valid {
-                                        //border-color: $valid;
-                                }
-
                                 &:focus {
                                         border-color: $form-border-color;
                                         border-width: 1px;
