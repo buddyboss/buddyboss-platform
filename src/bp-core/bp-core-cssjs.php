@@ -69,6 +69,9 @@ function bp_core_register_common_scripts() {
 		// Version 2.7.
 		'bp-moment'    => array( 'file' => "{$url}vendor/moment-js/moment{$min}.js", 'dependencies' => array(), 'footer' => true ),
 		'bp-livestamp' => array( 'file' => "{$url}vendor/livestamp{$min}.js", 'dependencies' => array( 'jquery', 'bp-moment' ), 'footer' => true ),
+		
+		// Version 3.1.1
+		'bp-jquery-validate' => array( 'file' => "{$url}vendor/jquery.validate{$min}.js", 'dependencies' => array( 'jquery' ), 'footer' => true ),
 	);
 
 	// Version 2.7 - Add Moment.js locale to our $scripts array if we found one.
@@ -136,7 +139,7 @@ function bp_core_register_common_styles() {
 			'dependencies' => array( 'jcrop' )
 		),
 	) );
-
+			
 	foreach ( $styles as $id => $style ) {
 		wp_register_style( $id, $style['file'], $style['dependencies'], bp_get_version() );
 
@@ -584,4 +587,39 @@ function _bp_core_moment_js_config_footer() {
 	}
 
 	printf( '<script>%s</script>', bp_core_moment_js_config() );
+}
+
+/**
+ * Enqueues the jQuery validate js.
+ *
+ * @since BuddyPress 3.1.1
+ */
+function bp_core_jquery_validate_scripts() {
+
+	wp_enqueue_script( 'bp-jquery-validate' );
+	add_action( 'wp_head', 'bp_core_add_jquery_validate_inline_js' );
+
+}
+add_action( 'bp_enqueue_scripts', 'bp_core_jquery_validate_scripts' );
+
+
+/**
+ * Output the inline JS needed for the jQuery validate
+ *
+ * @since BuddyPress 3.1.1
+ */
+function bp_core_add_jquery_validate_inline_js() {
+	?>
+
+	<script type="text/javascript">
+		jQuery(document).ready(function(){
+			jQuery('#buddypress #signup-form').validate({
+				submitHandler: function(form) {
+				  jQuery(form).submit();
+				}
+			});
+		});
+	</script>
+
+<?php
 }

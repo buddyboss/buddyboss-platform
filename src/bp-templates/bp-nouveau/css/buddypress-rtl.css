@@ -2054,6 +2054,18 @@ body.register #page #primary .entry-header {
   }
 }
 
+#buddypress #signup-form input.error {
+  border-color: #b71717;
+}
+
+#buddypress #signup-form input:focus {
+  border-color: #0b80a4;
+}
+
+#buddypress #signup-form label.error {
+  display: none !important;
+}
+
 /**
 *----------------------------------------------------------
 * @section 4.1 - Groups Creation Steps

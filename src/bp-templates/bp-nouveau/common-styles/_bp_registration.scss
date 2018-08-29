@@ -136,3 +136,18 @@ body.register {
                 }
         }
 }
+
+
+#buddypress #signup-form {
+    input.error {
+            border-color: $warn;
+    }
+    
+    input:focus {
+        border-color: $form-border-focus;
+    }
+    
+    label.error {
+            display: none !important;
+    }
+}
