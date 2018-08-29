@@ -230,17 +230,19 @@ function bp_admin_setting_callback_group_cover_image_uploads() {
 <?php
 }
 
-/* Connection Settings */
+/** Friends Section ************************************************************/
+
+/* Friends Settings */
 
 /**
- * Connection settings section description for the settings page.
+ * Friends settings section description for the settings page.
  *
  * @since BuddyPress 3.1.1
  */
 function bp_admin_setting_callback_connection_section() { }
 
 /**
- * Force users to be connected for messaging.
+ * Force users to be friends for messaging.
  *
  * @since BuddyPress 3.1.1
  */
@@ -256,7 +258,7 @@ function bp_admin_setting_callback_force_connection_to_message() {
 /**
  * Sanitization for bp-force-connection-to-message setting.
  *
- * In the UI, a checkbox asks whether you'd like to *enable* force users to be connected for messaging. For
+ * In the UI, a checkbox asks whether you'd like to *enable* forceing users to be friends for messaging. For
  * legacy reasons, the option that we store is 1 if these friends or messaging is *disabled*. So we use this
  * function to flip the boolean before saving the intval.
  *
