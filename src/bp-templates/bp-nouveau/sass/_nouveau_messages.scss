@@ -2,192 +2,184 @@
 // @version 3.0.0
 // Icon additions to default action star
 
+
 .message-action-star:before,
 .message-action-unstar:before,
 .message-action-view:before,
 .message-action-delete:before {
-        font-family: dashicons;
-        font-size: 18px;
+	font-family: dashicons;
+	font-size: 18px;
 }
 
 .message-action-star:before {
-        color: #aaa;
-        content: "\f154";
+	color: #aaa;
+	content: "\f154";
 }
 
 .message-action-unstar:before {
-        color: #fcdd77;
-        content: "\f155";
+	color: #fcdd77;
+	content: "\f155";
 }
 
 .message-action-view:before {
-        content: "\f473";
+	content: "\f473";
 }
 
 .message-action-delete:before {
-        content: "\f182";
+	content: "\f182";
 }
 
 .message-action-delete:hover:before {
-        color: #a00;
+	color: #a00;
 }
 
 .preview-content {
 
-        .actions {
+	.actions {
 
-                a {
-                        text-decoration: none;
-                }
-        }
+		a {
+			text-decoration: none;
+		}
+	}
 }
 
 // Visual message threads & preview pane styles
 
 .bp-messages-content {
-        margin: $marg-med 0;
+	margin: $marg-med 0;
 
-        .avatar {
+	.avatar {
 
-                @include box-shadow-none();
-        }
+		@include box-shadow-none();
+	}
 
-        .thread-participants {
-                list-style: none;
+	.thread-participants {
+		list-style: none;
 
-                dd {
-                        margin-left: 0;
-                }
-        }
+		dd {
+			margin-left: 0;
+		}
+	}
 
-        time {
-                color: $meta-text;
+	time {
+		color: $meta-text;
 
-                @include font-size(12);
-        }
-        
-        .thread-date {
-                color: $light-text-plus;
+		@include font-size(12);
+	}
 
-                @include font-size(14);
-        }
+	.thread-date {
+		color: $light-text-plus;
+
+		@include font-size(14);
+	}
 }
 
 // The actual messages list
 #message-threads {
-        border-top: 1px solid $light-grey;
-        clear: both;
-        list-style: none;
-        margin: 0;
-        //max-height: 220px;
-        //overflow-x: hidden;
-        //overflow-y: auto;
-        padding: 0;
-        width: 100%;
+	border-top: 1px solid $light-grey;
+	clear: both;
+	list-style: none;
+	margin: 0;
+	//max-height: 220px;
+	//overflow-x: hidden;
+	//overflow-y: auto;
+	padding: 0;
+	width: 100%;
 
-        // The primary list elements
-        li {
-                border-bottom: 1px solid $light-grey;
+	// The primary list elements
+	li {
+		border-bottom: 1px solid $light-grey;
 
-                @include flex-box-dir();
-                margin: 0;
-                overflow: hidden;
-                padding: $pad-sml;
+		@include flex-box-dir();
+		margin: 0;
+		overflow: hidden;
+		padding: $pad-sml;
 
-                // the child items
-                .thread-cb {
+		// the child items
+		.thread-cb {
 
-                        @include center-vert();
-                        @include box-item-size(1, 2, 5%);
-                }
+			@include center-vert();
+			@include box-item-size(1, 2, 5%);
+		}
 
-                //.thread-from,
-                .thread-to {
+		//.thread-from,
+		.thread-to {
 
-                        @include box-item-size(1, 2, 10%);
+			@include box-item-size(1, 2, 10%);
 
-                        img.avatar {
-                                float: left;
-                                margin: 5px $marg-sml 0 0;
+			img.avatar {
+				float: left;
+				margin: 5px $marg-sml 0 0;
+			}
+
+			.user-name {
+				display: inline-block;
+				line-height: 1.1;
+			}
+
+			.num-recipients {
+				color: $meta-text;
+				font-weight: 400;
+
+				@include font-size(12);
+				margin: 0;
+			}
+		}
+
+		.thread-date {
+
+			@include box-item-size(1, 2, 15%);
+		}
+
+		// the unread parent li
+		&.unread {
+			background-color: $off-white;
+
+			.thread-subject {
+
+				.subject {
+					color: $blue;
+				}
+			}
+		}
+
+
+		.thread-content {
+
+                        @include box-item-size(1, 2, 50%);
+
+                        @include medium-lrg-up() {
+                                @include box-item-size(1, 2, 70%);
                         }
 
-                        .user-name {
-                                display: inline-block;
-                                line-height: 1.1;
-                        }
+			.excerpt {
+				color: $meta-text;
 
-                        .num-recipients {
-                                color: $meta-text;
-                                font-weight: 400;
+				@include font-size(12);
+				margin: 0;
+			}
 
-                                @include font-size(12);
-                                margin: 0;
-                        }
-                }
+			.thread-from,
+                        .thread-to {
 
-            .thread-date {
+				@include responsive-font(16);
+			}
 
-                    @include box-item-size(1, 2, 15%);
-            }
+			.thread-subject {
 
-            // the selected parent li elements & message details
-            &.selected {
-                    //background-color: $off-white;
+                                @include font-size(14);
+				vertical-align: top;
 
-                    //.thread-subject {
+                                a {
+                                        color: $light-text-plus;
+                                }
 
-                    //.subject {
-                    //color: $blue;
-                    //}
-                    //}
-            }
+				.excerpt {
+					font-weight: 400;
+				}
 
-            // the unread parent li
-            &.unread {
-                    background-color: $off-white;
-
-                    .thread-subject {
-
-                            .subject {
-                                color: $blue;
-                            }
-                    }
-            }
-
-            .thread-content {
-                    @include box-item-size(1, 2, 50%);
-                
-                    @include medium-lrg-up() {
-                            @include box-item-size(1, 2, 70%);
-                    }
-
-                    .excerpt {
-                            color: $meta-text;
-
-                            @include font-size(12);
-                            margin: 0;
-                    }
-
-                    .thread-from,
-                    .thread-to {
-
-                            @include responsive-font(16);
-                    }
-
-                .thread-subject {
-                        @include font-size(14);
-                        vertical-align: top;
-
-                        a {
-                                color: $light-text-plus;
-                        }
-
-                        .excerpt {
-                                font-weight: 400;
-                        }
-
-                }
-            } // close thread-content
+			}
+		} // close thread-content
 
             .thread-date {
                     padding-right: 5px;
@@ -474,7 +466,8 @@ input#send-to-input {
 }
 
 #compose-personal-li {
-    a {
-            margin-top: 0;
-    }
+
+        a {
+                margin-top: 0;
+        }
 }
