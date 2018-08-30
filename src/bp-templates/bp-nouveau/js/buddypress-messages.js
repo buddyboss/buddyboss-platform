@@ -1185,6 +1185,12 @@ window.bp = window.bp || {};
 
 			bp.Nouveau.Messages.removeFeedback();
 
+			if ( response.feedback_error && response.feedback_error.feedback && response.feedback_error.type ) {
+				bp.Nouveau.Messages.displayFeedback( response.feedback_error.feedback, response.feedback_error.type );
+				//hide reply form
+				this.$('#send-reply').hide();
+			}
+
 			this.views.add( '#bp-message-thread-header', new bp.Views.userMessagesHeader( { model: this.options.thread } ) );
 		},
 

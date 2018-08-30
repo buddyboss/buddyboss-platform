@@ -123,8 +123,14 @@ function bp_nouveau_ajax_messages_send_reply() {
 	$new_reply = messages_new_message( array(
 		'thread_id' => (int) $_POST['thread_id'],
 		'subject'   => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false,
-		'content'   => $_POST['content']
+		'content'   => $_POST['content'],
+		'error_type' => 'wp_error',
 	) );
+
+	if ( is_wp_error( $new_reply ) ) {
+		$response['feedback'] = $new_reply->get_error_message();
+		wp_send_json_error( $response );
+	}
 
 	// Send the reply.
 	if ( empty( $new_reply ) ) {
@@ -420,15 +426,37 @@ function bp_nouveau_ajax_get_thread_messages() {
 	// Override bp_current_action().
 	$bp->current_action = 'view';
 
+	bp_get_thread( array( 'thread_id' => $thread_id ) );
+
+	$thread = new stdClass;
+
+	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+		foreach ( (array) $thread_template->thread->recipients as $recipient ) {
+			if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
+
+
+				$thread->feedback_error = array( 'feedback' => __( 'You need to be connected with the member in order to continue this conversation.', 'buddyboss' ), 'type' => 'error' );
+				break;
+				// Remove the bp_current_action() override.
+//				$bp->current_action = $reset_action;
+//
+//				$response = array(
+//					'feedback' => __( 'You need to be connected with the member in order to continue this conversation.', 'buddyboss' ),
+//					'type'     => 'error'
+//				);
+//
+//				wp_send_json_error( $response );
+			}
+		}
+	}
+
 	// Simulate the loop.
-	if ( ! bp_thread_has_messages( array( 'thread_id' => $thread_id ) ) ) {
+	if ( ! $thread_template->has_messages() ) {
 		// Remove the bp_current_action() override.
 		$bp->current_action = $reset_action;
 
 		wp_send_json_error( $response );
 	}
-
-	$thread = new stdClass;
 
 	if ( empty( $_POST['js_thread'] ) ) {
 		$thread->thread = array(

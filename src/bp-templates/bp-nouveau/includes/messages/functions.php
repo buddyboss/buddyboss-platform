@@ -133,6 +133,11 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 		) );
 	}
 
+	// Friends active for force friendship to message.
+	if ( bp_is_active( 'friends' ) ) {
+		$params['messages']['force_friendship_to_message'] = bp_force_friendship_to_message();
+	}
+
 	return $params;
 }
 
