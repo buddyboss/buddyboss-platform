@@ -459,7 +459,7 @@ class BP_Admin {
 
 		/* Connection Section **************************************************/
 
-		if ( bp_is_active( 'friends' ) ) {
+		if ( bp_is_active( 'friends' ) && bp_is_active( 'messages' ) ) { // todo: here we only have one setting field for message component. so we have checked this on main condition but when we have more then we need to change this.
 
 			// Add the main section.
 			add_settings_section( 'bp_friends', __( 'Connection Settings', 'buddyboss' ), 'bp_admin_setting_callback_friendship_section', 'buddypress' );
