@@ -147,10 +147,10 @@
 
 	<div class="thread-avatar">
 		<# if ( other_recipients.length > 1 ) { #>
-			<img class="avatar sagar" src="{{data.sender_avatar}}" alt="{{data.sender_name}}" />
+			<img class="avatar" src="{{data.sender_avatar}}" alt="{{data.sender_name}}" />
 		<# } else { #>
 			<# var recipient = _.first(other_recipients); #>
-			<img class="avatar jadhav" src="{{recipient.avatar}}" alt="{{recipient.user_name}}" />
+			<img class="avatar" src="{{recipient.avatar}}" alt="{{recipient.user_name}}" />
 		<# } #>
 	</div>
 
