@@ -3092,7 +3092,7 @@ body.register .buddypress-wrap .page ul {
 }
 
 .bp-messages-content #bp-message-thread-list:after {
-  content: '';
+  content: " ";
   clear: both;
   display: table;
 }
@@ -3113,9 +3113,9 @@ body.register .buddypress-wrap .page ul {
 }
 
 .bp-messages-content #bp-message-thread-list .message-metadata .user-link {
+  font-size: 12px;
   display: inline-block;
   color: #222;
-  font-size: 12px;
 }
 
 .bp-messages-content #bp-message-thread-list .message-metadata .user-link strong {
@@ -3147,8 +3147,8 @@ body.register .buddypress-wrap .page ul {
 }
 
 .bp-messages-content #bp-message-thread-list .message-content {
-  clear: both;
   font-size: 14px;
+  clear: both;
   overflow: hidden;
   margin: 0 auto;
   padding-left: 40px;

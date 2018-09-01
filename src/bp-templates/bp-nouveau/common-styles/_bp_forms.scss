@@ -10,282 +10,281 @@
 
 .buddypress-wrap {
 
-        .filter,
-        #whats-new-post-in-box {
-            // has no form element and can't hold rules below.
+	.filter,
+	#whats-new-post-in-box { // has no form element and can't hold rules below.
 
-                select {
-                    border: 1px solid $form-border-color;
-                }
-        }
+		select {
+			border: 1px solid $form-border-color;
+		}
+	}
 
-        input.action[disabled] {
-                cursor: pointer;
-                opacity: 0.4;
-        }
+	input.action[disabled] {
+		cursor: pointer;
+		opacity: 0.4;
+	}
 
-        #notification-bulk-manage[disabled] {
-                display: none;
-        }
+	#notification-bulk-manage[disabled] {
+		display: none;
+	}
 
-        fieldset {
+	fieldset {
 
-                legend {
-                        font-size: inherit;
-                        font-weight: 600;
-                }
-        }
+		legend {
+			font-size: inherit;
+			font-weight: 600;
+		}
+	}
 
-        textarea,
-        input[type="text"],
-        input[type="email"],
-        input[type="url"],
-        input[type="tel"],
-        input[type="password"] {
+	textarea,
+	input[type="text"],
+	input[type="email"],
+	input[type="url"],
+	input[type="tel"],
+	input[type="password"] {
 
-                &:focus {
+		&:focus {
 
-                        @include box-shadow(0 0 8px $light-grey);
-                }
-        }
+			@include box-shadow(0 0 8px $light-grey);
+		}
+	}
 
-        // Ensure select elements aren't given a relative/fixed height.
+	// Ensure select elements aren't given a relative/fixed height.
 
-        select {
-                height: auto;
-        }
+	select {
+		height: auto;
+	}
 
-        // Preserve fluid widths, prevent horizontal resize of textareas.
-        textarea {
-                resize: vertical;
-        }
+	// Preserve fluid widths, prevent horizontal resize of textareas.
+	textarea {
+		resize: vertical;
+	}
 
-        .standard-form {
+	.standard-form {
 
-                .bp-controls-wrap {
-                        margin: 1em 0;
-                }
+		.bp-controls-wrap {
+			margin: 1em 0;
+		}
 
-                textarea,
-                input[type="text"],
-                input[type="color"],
-                input[type="date"],
-                input[type="datetime"],
-                input[type="datetime-local"],
-                input[type="email"],
-                input[type="month"],
-                input[type="number"],
-                input[type="range"],
-                input[type="search"],
-                input[type="tel"],
-                input[type="time"],
-                input[type="url"],
-                input[type="week"],
-                select,
-                input[type="password"],
-                [data-bp-search] input[type="search"],
-                [data-bp-search] input[type="text"],
-                .groups-members-search input[type="search"],
-                .groups-members-search input[type="text"] {
-                        background: $off-white;
-                        border: 1px solid $form-border-color;
-                        border-radius: 0;
-                        font: inherit;
-                        font-size: 100%;
-                        padding: $pad-sml;
-                }
+		textarea,
+		input[type="text"],
+		input[type="color"],
+		input[type="date"],
+		input[type="datetime"],
+		input[type="datetime-local"],
+		input[type="email"],
+		input[type="month"],
+		input[type="number"],
+		input[type="range"],
+		input[type="search"],
+		input[type="tel"],
+		input[type="time"],
+		input[type="url"],
+		input[type="week"],
+		select,
+		input[type="password"],
+		[data-bp-search] input[type="search"],
+		[data-bp-search] input[type="text"],
+		.groups-members-search input[type="search"],
+		.groups-members-search input[type="text"] {
+			background: $off-white;
+			border: 1px solid $form-border-color;
+			border-radius: 0;
+			font: inherit;
+			font-size: 100%;
+			padding: $pad-sml;
+		}
 
-                // Manage browser pseudo class validation states & static 'invalid' class
-                input,
-                textarea,
-                select {
+		// Manage browser pseudo class validation states & static 'invalid' class
+		input,
+		textarea,
+		select {
 
-                        &[required] {
+			&[required] {
 
-                                // FF adds red shadow on password inputs, remove!
-                                box-shadow: none;
-                                //border-width: 2px;
+				// FF adds red shadow on password inputs, remove!
+				box-shadow: none;
 
-                                // IE Edge uses outline for invalid controls, remove
-                                outline: 0;
+				// IE Edge uses outline for invalid controls, remove
+				outline: 0;
 
-                                &:focus {
-                                        border-color: $form-border-color;
-                                        border-width: 1px;
-                                }
-                        }
+				&:focus {
+					border-color: $form-border-color;
+					border-width: 1px;
+				}
+			}
 
-                        // Class set when BP global signup errors exist.
-                        // This needs to be stated after the  pseudo :valid
-                        // as technically the input has a valid value.
-                        &.invalid[required] {
-                                border-color: $warn;
-                        }
-                }
+			// Class set when BP global signup errors exist.
+			// This needs to be stated after the  pseudo :valid
+			// as technically the input has a valid value.
+			&.invalid[required] {
+				border-color: $warn;
+			}
+		}
 
-                input:not(.button-small),
-                textarea {
-                        width: 100%;
-                }
+		input:not(.button-small),
+		textarea {
+			width: 100%;
+		}
 
-                input[type="radio"],
-                input[type="checkbox"] {
-                        margin-right: $marg-xsml;
-                        width: auto;
-                }
+		input[type="radio"],
+		input[type="checkbox"] {
+			margin-right: $marg-xsml;
+			width: auto;
+		}
 
-                select {
-                        padding: 3px;
-                }
+		select {
+			padding: 3px;
+		}
 
-                textarea {
-                        height: 120px; // bad rule! ?
-                }
+		textarea {
+			height: 120px; // bad rule! ?
+		}
 
-                textarea#message_content {
-                        height: 200px; // bad rule! ?
-                }
+		textarea#message_content {
+			height: 200px; // bad rule! ?
+		}
 
-                input[type="password"] {
-                        margin-bottom: $marg-xsml;
-                }
+		input[type="password"] {
+			margin-bottom: $marg-xsml;
+		}
 
-                input:focus,
-                        textarea:focus,
-                        select:focus {
-                        background: $off-white;
-                        color: $bp-text;
-                        outline: 0;
-                }
+		input:focus,
+		textarea:focus,
+		select:focus {
+			background: $off-white;
+			color: $bp-text;
+			outline: 0;
+		}
 
-                label,
-                span.label {
-                        display: block;
-                        font-weight: 600;
-                        margin: $marg-med 0 $marg-xsml;
-                        width: auto;
-                }
+		label,
+		span.label {
+			display: block;
+			font-weight: 600;
+			margin: $marg-med 0 $marg-xsml;
+			width: auto;
+		}
 
-                a.clear-value {
-                        display: block;
-                        margin-top: $marg-xsml;
-                        outline: none;
-                }
+		a.clear-value {
+			display: block;
+			margin-top: $marg-xsml;
+			outline: none;
+		}
 
-                .submit {
-                        clear: both;
-                        padding: $marg-med 0 0;
-                }
+		.submit {
+			clear: both;
+			padding: $marg-med 0 0;
+		}
 
-                p.submit {
-                        margin-bottom: 0;
-                }
+		p.submit {
+			margin-bottom: 0;
+		}
 
-                div.submit input {
-                        margin-right: $marg-med;
-                }
+		div.submit input {
+			margin-right: $marg-med;
+		}
 
-                p label,
-                #invite-list label {
-                        font-weight: 400;
-                        margin: auto;
-                }
+		p label,
+		#invite-list label {
+			font-weight: 400;
+			margin: auto;
+		}
 
-                p.description {
-                        color: $form-text;
-                        margin: $marg-xsml 0;
-                }
+		p.description {
+			color: $form-text;
+			margin: $marg-xsml 0;
+		}
 
-                div.checkbox label:nth-child(n+2),
-                div.radio div label {
-                        color: $form-text;
-                        font-size: 100%;
-                        font-weight: 400;
-                        margin: $marg-xsml 0 0;
-                }
+		div.checkbox label:nth-child(n+2),
+		div.radio div label {
+			color: $form-text;
+			font-size: 100%;
+			font-weight: 400;
+			margin: $marg-xsml 0 0;
+		}
 
-                &#send-reply {
+		&#send-reply {
 
-                        textarea {
-                                width: 97.5%;
-                        }
-                }
+			textarea {
+				width: 97.5%;
+			}
+		}
 
-                &#sidebar-login-form {
+		&#sidebar-login-form {
 
-                        label {
-                                margin-top: $marg-xsml;
-                        }
+			label {
+				margin-top: $marg-xsml;
+			}
 
-                        input[type="text"],
-                        input[type="password"] {
-                                padding: 4px;
-                                width: 95%;
-                        }
-                } // close &#sidebar-login-form
+			input[type="text"],
+			input[type="password"] {
+				padding: 4px;
+				width: 95%;
+			}
+		} // close &#sidebar-login-form
 
-                &.profile-edit {
+		&.profile-edit {
 
-                        input:focus {
-                                background: $white;
-                        }
-                }
+			input:focus {
+				background: $white;
+			}
+		}
 
-                @include medium-up() {
+		@include medium-up() {
 
-                        // The Group invites form lists (not required if Ajax templates in use)
-                        .left-menu {
-                                float: left;
-                        }
+			// The Group invites form lists (not required if Ajax templates in use)
+			.left-menu {
+				float: left;
+			}
 
-                        #invite-list ul {
-                                list-style: none;
-                                margin: 1%;
+			#invite-list ul {
+				list-style: none;
+				margin: 1%;
 
-                                li {
-                                        margin: 0 0 0 1%;
-                                }
-                        }
+				li {
+					margin: 0 0 0 1%;
+				}
+			}
 
-                        .main-column {
-                                margin-left: 190px;
+			.main-column {
+				margin-left: 190px;
 
-                                ul#friend-list {
-                                        clear: none;
-                                        float: left;
-                                }
+				ul#friend-list {
+					clear: none;
+					float: left;
+				}
 
-                                ul#friend-list h4 {
-                                        clear: none;
-                                }
-                        }
+				ul#friend-list h4 {
+					clear: none;
+				}
+			}
 
-                } // close @media
+		} // close @media
 
-                // In tables elements like checkboxes best aligned to middle
-                // remove margins in these cases.
-                .bp-tables-user {
+		// In tables elements like checkboxes best aligned to middle
+		// remove margins in these cases.
+		.bp-tables-user {
 
-                        label {
-                                margin: 0;
-                        }
-                }
+			label {
+				margin: 0;
+			}
+		}
 
-                button.visibility-toggle-link {
-                        @include font-size(12);
-                        margin: 5px;
-                }
+		button.visibility-toggle-link {
 
-        } // close .standard-form
+			@include font-size(12);
+			margin: 5px;
+		}
 
-        // Register page
-        .signup-form {
+	} // close .standard-form
 
-                label,
-                legend {
-                        font-weight: 400;
-                }
-        }
+	// Register page
+	.signup-form {
+
+		label,
+		legend {
+			font-weight: 400;
+		}
+	}
 
 } // close .buddypress-wrap
 
@@ -293,31 +292,31 @@
 // where original styles placed them
 body.no-js {
 
-        .buddypress {
+	.buddypress {
 
-                #notifications-bulk-management #select-all-notifications,
-                label[for="message-type-select"],
-                #message-type-select,
-                #delete_inbox_messages,
-                #messages-bulk-management #select-all-messages {
-                        display: none;
-                }
-        }
+		#notifications-bulk-management #select-all-notifications,
+		label[for="message-type-select"],
+		#message-type-select,
+		#delete_inbox_messages,
+		#messages-bulk-management #select-all-messages {
+			display: none;
+		}
+	}
 }
 
 /* Overrides for embedded WP editors */
 .buddypress-wrap {
 
-        .wp-editor-wrap {
+	.wp-editor-wrap {
 
-                a.button,
-                .wp-editor-wrap button,
-                .wp-editor-wrap input[type="submit"],
-                .wp-editor-wrap input[type="button"],
-                input[type="reset"] {
-                        padding: 0 8px 1px;
-                }
-        }
+		a.button,
+		.wp-editor-wrap button,
+		.wp-editor-wrap input[type="submit"],
+		.wp-editor-wrap input[type="button"],
+		input[type="reset"] {
+			padding: 0 8px 1px;
+		}
+	}
 }
 
 // Style the select element  - generic sitewide styling
@@ -325,79 +324,78 @@ body.no-js {
 
 .buddypress-wrap {
 
-        .select-wrap {
-                border: 1px solid $bp-border-color;
+	.select-wrap {
+		border: 1px solid $bp-border-color;
 
-                label {
-                        display: inline;
-                }
+		label {
+			display: inline;
+		}
 
-                select::-ms-expand {
-                        display: none;
-                }
+		select::-ms-expand {
+			display: none;
+		}
 
-                select {
-                        -moz-appearance: none;
-                        -webkit-appearance: none;
-                        -o-appearance: none;
-                        appearance: none;
-                        border: 0;
-                        cursor: pointer;
-                        margin-right: -25px;
-                        padding: 6px 25px 6px $marg-sml;
-                        position: relative;
-                        //text-indent: -2px;
-                        z-index: 1;
-                        width: 100%;
-                }
+		select {
+			-moz-appearance: none;
+			-webkit-appearance: none;
+			-o-appearance: none;
+			appearance: none;
+			border: 0;
+			cursor: pointer;
+			margin-right: -25px;
+			padding: 6px 25px 6px $marg-sml;
+			position: relative;
+			z-index: 1;
+			width: 100%;
+		}
 
-                select,
-                select:focus,
-                select:active {
-                        background: transparent;
-                }
+		select,
+		select:focus,
+		select:active {
+			background: transparent;
+		}
 
-                span.select-arrow {
-                        display: inline-block;
-                        position: relative;
-                        z-index: 0;
+		span.select-arrow {
+			display: inline-block;
+			position: relative;
+			z-index: 0;
 
-                        &:before {
-                                color: $primary-grey;
-                                content: "\25BC";
-                        }
-                }
+			&:before {
+				color: $primary-grey;
+				content: "\25BC";
+			}
+		}
 
-                &:focus,
-                &:hover {
+		&:focus,
+		&:hover {
 
-                        .select-arrow:before {
-                                color: darken($primary-grey, 15%);
-                        }
-                }
-        } // close .select-wrap
+			.select-arrow:before {
+				color: darken($primary-grey, 15%);
+			}
+		}
+	} // close .select-wrap
 
-        // Add a little on hover inset shadow for  subnav search & filters
-        .select-wrap,
-        .bp-search form {
+	// Add a little on hover inset shadow for  subnav search & filters
+	.select-wrap,
+	.bp-search form {
 
-                &:focus,
-                &:hover {
-                        border: 1px solid darken($bp-border-color, 10%);
-                        box-shadow: inset 0 0 3px #eee;
-                }
-        }
+		&:focus,
+		&:hover {
+			border: 1px solid darken($bp-border-color, 10%);
+			box-shadow: inset 0 0 3px #eee;
+		}
+	}
 
-        // Manage select wrap for notification actions, wide screens
-        // ensures a shrink wrap width.
+	// Manage select wrap for notification actions, wide screens
+	// ensures a shrink wrap width.
 
-        @include medium-small-up() {
+	@include medium-small-up() {
 
-                .notifications-options-nav {
+		.notifications-options-nav {
 
-                        .select-wrap {
-                                float: left;
-                        }
-                }
-        }
+			.select-wrap {
+				float: left;
+			}
+		}
+	}
 }

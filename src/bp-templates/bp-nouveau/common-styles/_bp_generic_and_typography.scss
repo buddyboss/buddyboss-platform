@@ -4,89 +4,88 @@
 // ========= Generic Sitewide elements ========
 body {
 
-    #buddypress { // needs the weight of the id here
+	#buddypress { // needs the weight of the id here
 
-                  * {
-                      // some WP themes add anchor border bottom :(
-                      a {
-                          box-shadow: none;
-                          text-decoration: none;
-                      }
-                  } // close * the kitchen sink of elements
+		* {
+			// some WP themes add anchor border bottom :(
+			a {
+				box-shadow: none;
+				text-decoration: none;
+			}
+		} // close * the kitchen sink of elements
 
-                  // Some themes have a negative left margin on the blockquote element??
-                  #item-body,
-                  .bp-lists {
+		// Some themes have a negative left margin on the blockquote element??
+		#item-body,
+		.bp-lists {
 
-                      blockquote {
-                          margin-left: $marg-sml;
-                      }
-                  }
+			blockquote {
+				margin-left: $marg-sml;
+			}
+		}
 
-                  // CSS Box Model - some themes will set all blocks to border box
-                  // some will cherry pick - we will set elements as we need to,
-                  // ( setting a global change might be better)
-                  // box-modal() defaults to 'border-box' if no param passed
-                  .bp-list .action {
+		// CSS Box Model - some themes will set all blocks to border box
+		// some will cherry pick - we will set elements as we need to,
+		// ( setting a global change might be better)
+		// box-modal() defaults to 'border-box' if no param passed
+		.bp-list .action {
 
-                      @include box-model();
-                  }
-    }
+			@include box-model();
+		}
+	}
 }
 
 // Some themes have very restricted content widths for pages
 // or entry-content (2013, 2014, 2017) Lets adjust these restrictions
 body.buddypress {
 
-    @include medium-up() {
+	@include medium-up() {
 
-        .entry-header,
-        .site-content .entry-header,
-        .entry-content {
-            max-width: none;
-        }
+		.entry-header,
+		.site-content .entry-header,
+		.entry-content {
+			max-width: none;
+		}
 
-        .entry-header {
-            float: none;
-            max-width: none;
-        }
+		.entry-header {
+			float: none;
+			max-width: none;
+		}
 
-        .entry-content {
-            float: none;
-            max-width: none;
-            //padding: 0 $pad-xlrg;
-        }
+		.entry-content {
+			float: none;
+			max-width: none;
+			//padding: 0 $pad-xlrg;
+		}
 
-        // 2017 has a very large top padding we'll reduce that for bp screens
-        .site-content {
-            padding-top: 2.5em;
-        }
+		// 2017 has a very large top padding we'll reduce that for bp screens
+		.site-content {
+			padding-top: 2.5em;
+		}
 
-        // Some themes are styling on ID's making it hard to override
-        // Adding a commononly used ID for site here to add weight '#page'
-        // In part this will help with 2017 floats & narrow widths
-
-
-        #page {
-
-            // If 2017 page choice is 'One Column' #primary is a narrow width
-            // Current RC has removed the customizer column switch !!
-            // remove width to allow BP screens to mirror post layout widths
-            // The .wrap element will serve still to provide a max width @ 1000px
-
-            #primary {
-                max-width: none;
-
-                .entry-header,
-                .entry-content {
-                    float: none;
-                    width: auto;
-                }
-            }
-        }
+		// Some themes are styling on ID's making it hard to override
+		// Adding a commononly used ID for site here to add weight '#page'
+		// In part this will help with 2017 floats & narrow widths
 
 
-    } // @media
+		#page {
+
+			// If 2017 page choice is 'One Column' #primary is a narrow width
+			// Current RC has removed the customizer column switch !!
+			// remove width to allow BP screens to mirror post layout widths
+			// The .wrap element will serve still to provide a max width @ 1000px
+
+			#primary {
+				max-width: none;
+
+				.entry-header,
+				.entry-content {
+					float: none;
+					width: auto;
+				}
+			}
+		}
+
+	} // @media
 }
 
 // BP Theme Compatibility isn't technically a theme and has to
@@ -96,21 +95,21 @@ body.buddypress {
 // Ensure themes can't cause issues with headings.
 body.buddypress { // add weight
 
-                  .buddypress-wrap {
+	.buddypress-wrap {
 
-                      h1,
-                      h2,
-                      h3,
-                      h4,
-                      h5,
-                      h6 {
-                          clear: none;
-                          // some themes set massive margins ensure we avoid these in bp elements
-                          margin: 1em 0;
-                          // some themes add padding top lets manage that generically sitewide
-                          padding: 0;
-                      }
-                  }
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			clear: none;
+			// some themes set massive margins ensure we avoid these in bp elements
+			margin: 1em 0;
+			// some themes add padding top lets manage that generically sitewide
+			padding: 0;
+		}
+	}
 }
 
 // Ensure the .bp-wrap element always contains it's children,
@@ -124,23 +123,9 @@ body.buddypress { // add weight
 // User set
 .buddypress-wrap.round-avatars {
 
-    .avatar {
-        border-radius: 50%;
-    }
-}
-
-// 'Boxes' i.e display:block when given definition with borders
-// look nice if corners subtly rounded by a couple of pixels
-#buddypress div,
-#buddypress dl,
-#buddypress li,
-#buddypress textarea,
-#buddypress select,
-#buddypress input[type="search"],
-#buddypress input[type="submit"],
-#buddypress input[type="reset"] {
-
-    //@include border-radius(2px);
+	.avatar {
+		border-radius: 50%;
+	}
 }
 
 // ====== BP Typographic Elements ======
@@ -156,20 +141,20 @@ body.buddypress { // add weight
 
 body.buddypress {
 
-    article.page {
+	article.page {
 
-        > .entry-header {
-            margin-bottom: 2em;
-            padding: 0;
+		> .entry-header {
+			margin-bottom: 2em;
+			padding: 0;
 
-            .entry-title {
+			.entry-title {
 
-                @include responsive-font(34);
-                font-weight: inherit;
-                color: $primary-headings;
-            }
-        }
-    }
+				@include responsive-font(34);
+				font-weight: inherit;
+				color: $primary-headings;
+			}
+		}
+	}
 }
 
 // wrap block in bp content region class,
@@ -177,79 +162,79 @@ body.buddypress {
 // to site areas such as sidebars/footers etc.
 .buddypress-wrap {
 
-    dt.section-title {
+	dt.section-title {
 
-        @include responsive-font(22);
-    }
+		@include responsive-font(22);
+	}
 
-    .bp-label-text,
-    .message-threads {
+	.bp-label-text,
+	.message-threads {
 
-        @include responsive-font(16);
-    }
+		@include responsive-font(16);
+	}
 
-    .activity-header {
+	.activity-header {
 
-        @include responsive-font(16);
-    }
+		@include responsive-font(16);
+	}
 
-    .activity-inner {
+	.activity-inner {
 
-        @include responsive-font(18);
-    }
+		@include responsive-font(18);
+	}
 
-    #whats-new-post-in {
+	#whats-new-post-in {
 
-        @include font-size(16);
-    }
+		@include font-size(16);
+	}
 
-    .mini .activity-header,
-    .acomment-meta {
+	.mini .activity-header,
+	.acomment-meta {
 
-        @include font-size(16);
-    }
+		@include font-size(16);
+	}
 
-    .dir-component-filters {
+	.dir-component-filters {
 
-        #activity-filter-by {
+		#activity-filter-by {
 
-            @include responsive-font(16);
-        }
-    }
+			@include responsive-font(16);
+		}
+	}
 
-    $search-element-size: 15;
-    $search-element-button-size: $search-element-size + 5;
+	$search-element-size: 15;
+	$search-element-button-size: $search-element-size + 5;
 
-    .bp-tables-user {
+	.bp-tables-user {
 
-        th {
+		th {
 
-            @include responsive-font(16);
-        }
+			@include responsive-font(16);
+		}
 
-        td {
+		td {
 
-            @include responsive-font(14);
-        }
-    }
+			@include responsive-font(14);
+		}
+	}
 
-    // Setting the profile fields to be a larger
-    // font than all general user tables is open for review.
-    .profile-fields {
+	// Setting the profile fields to be a larger
+	// font than all general user tables is open for review.
+	.profile-fields {
 
-        th {
+		th {
 
-            @include responsive-font(18);
-        }
+			@include responsive-font(18);
+		}
 
-        td {
+		td {
 
-            @include responsive-font(16);
-        }
-    }
+			@include responsive-font(16);
+		}
+	}
 
-    #notification-select {
+	#notification-select {
 
-        @include responsive-font(14);
-    }
+		@include responsive-font(14);
+	}
 }

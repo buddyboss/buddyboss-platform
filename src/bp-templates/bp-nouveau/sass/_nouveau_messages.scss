@@ -146,11 +146,12 @@
 
 		.thread-content {
 
-                        @include box-item-size(1, 2, 50%);
+			@include box-item-size(1, 2, 50%);
 
-                        @include medium-lrg-up() {
-                                @include box-item-size(1, 2, 70%);
-                        }
+			@include medium-lrg-up() {
+
+				@include box-item-size(1, 2, 70%);
+			}
 
 			.excerpt {
 				color: $meta-text;
@@ -160,289 +161,242 @@
 			}
 
 			.thread-from,
-                        .thread-to {
+			.thread-to {
 
 				@include responsive-font(16);
 			}
 
 			.thread-subject {
 
-                                @include font-size(14);
+				@include font-size(14);
 				vertical-align: top;
 
-                                a {
-                                        color: $light-text-plus;
-                                }
+				a {
+					color: $light-text-plus;
+				}
 
 				.excerpt {
 					font-weight: 400;
 				}
-
 			}
 		} // close thread-content
 
-            .thread-date {
-                    padding-right: 5px;
-                    text-align: right;
-            }
+		.thread-date {
+			padding-right: 5px;
+			text-align: right;
+		}
 
-            .thread-avatar {
-                    @include box-item-size(1, 2, 10%);
-                
-                    img.avatar {
-                            float: left;
-                            margin: 5px 10px 0 0;
-                    }
-            }
+		.thread-avatar {
 
-        } // close li
+			@include box-item-size(1, 2, 10%);
+
+			img.avatar {
+				float: left;
+				margin: 5px 10px 0 0;
+			}
+		}
+
+	} // close li
 
 } // close message-threads
 
 .bp-messages-content {
 
-        .actions {
-                float: right;
-                max-width: 30%;
+	.actions {
+		float: right;
+		max-width: 30%;
 
-                .bp-icons:not(.bp-hide) {
-                        display: inline-block;
-                        margin: 0;
-                        padding: $pad-xsml $pad-sml;
+		.bp-icons:not(.bp-hide) {
+			display: inline-block;
+			margin: 0;
+			padding: $pad-xsml $pad-sml;
 
-                        &:before {
+			&:before {
 
-                                @include font-size(26);
-                        }
-                }
-        }
+				@include font-size(26);
+			}
+		}
+	}
 
-        // preview pane on main inbox view all message entries
-        #thread-preview {
-                //border: 1px solid $light-grey;
-                //margin-top: $marg-lrg;
+	// The single view of messages in a conversation thread
+	#bp-message-thread-list {
+		background: #fafafa;
+		border-top: 1px solid $light-grey;
+		clear: both;
+		list-style: none;
+		padding: 0 $pad-med;
 
-                .preview-message {
-                        //overflow: hidden;
-                }
+		&:after {
+			content: " ";
+			clear: both;
+			display: table;
+		}
 
-                .preview-content {
-                        //margin: 0.5em;
+		li {
+			background: $white;
+			border: 1px solid $bp-border-dark;
 
-                        .preview-message {
-                                //background: $off-white;
-                                //margin: $marg-sml 0;
-                                //padding: $pad-med $pad-xsml $pad-xsml;
-                        }
+			@include box-shadow(-2px 1px 9px 0 #eee);
+			padding: $pad-sml;
+			margin: 1em 0;
+			width: 100%;
+		}
 
-                } // close .preview-content
+		.message-metadata {
 
-        } // close .thread-preview
+			.avatar {
+				width: 30px;
+			}
 
-        // The single view of messages in a conversation thread
-        #bp-message-thread-list {
-                background: #fafafa;
-                border-top: 1px solid $light-grey;
-                clear: both;
-                list-style: none;
-                padding: 0 $pad-med;
+			.user-link {
 
-                &:after {
-                        content: '';
-                        clear: both;
-                        display: table;
-                }
+				@include font-size(12);
+				display: inline-block;
+				color: $meta-text-dark;
 
-                li {
-                        background: $white;
-                        border: 1px solid $bp-border-dark;
-                        @include box-shadow(-2px 1px 9px 0 #eee);
-                        padding: $pad-sml;
-                        margin: 1em 0;
-                        width: 100%;
-                }
+				strong {
 
-                li:nth-child(2n) {
+					@include font-size(16);
+					font-weight: 600;
+				}
 
-                        .message-content {
-                                //background: $off-white;
-                        }
-                }
+				strong:after {
+					content: "\00b7";
+					color: $light-text;
+					font-size: 20px;
+					margin-left: 6px;
+					vertical-align: middle;
+					display: inline-block;
+				}
+			}
 
-                .message-metadata {
+			time {
+				color: $light-text;
 
-                        .avatar {
-                                width: 30px;
-                        }
+				@include font-size(14);
+				padding: 0 2px;
+			}
 
-                        .user-link {
-                                //display: block; default
-                                display: inline-block;
-                                color: $meta-text-dark;
+			button {
+				padding: 0 $pad-xsml;
+			}
 
-                                @include font-size(12);
-                                //float: left;
+			button:before {
 
-                                strong {
-                                        
-                                        @include font-size(16);
-                                        font-weight: 600;
-                                }
-                                
-                                strong:after {
-                                        content: "\00b7";
-                                        color: $light-text;
-                                        font-size: 20px;
-                                        margin-left: 6px;
-                                        vertical-align: middle;
-                                        display: inline-block;
-                                }
-                        }
+				@include font-size(16);
+			}
+		}
 
-                        time {
-                                color: $light-text;
+		.message-content {
 
-                                @include font-size(14);
-                                padding: 0 2px;
-                        }
+			@include font-size(14);
+			clear: both;
+			overflow: hidden;
+			margin: 0 auto;
+			padding-left: 40px;
 
-                        button {
-                                padding: 0 $pad-xsml;
-                        }
+			p {
+				margin-bottom: 8px;
+			}
+		}
 
-                        button:before {
-                                @include font-size(16);
-                        }
-                }
+		img.avatar {
+			float: left;
+			margin: 0 $marg-sml 0 0;
+		}
 
-                .message-content {
-                        clear: both;
-                        //color: $light-text-plus;
+		.actions {
 
-                        @include font-size(14);
-                        overflow: hidden;
-                        margin: 0 auto;
-                        padding-left: 40px;
+			a:before {
+				font-size: 18px;
+			}
+		}
+	} // close #bp-message-thread-list
 
-                        p {
-                                margin-bottom: 8px;
-                        }
+	form.send-reply {
 
-                        p:last-child {
-                                //margin-bottom: 0;
-                        }
-                }
+		.avatar-box {
+			padding: $pad-sml 0;
+		}
+	}
 
-                img.avatar {
-                        float: left;
-                        margin: 0 $marg-sml 0 0;
-                }
+	// Grouped rules for both inbox all messages lists &
+	// for single view conversation thread
 
-                .actions {
+	.single-message-thread-header {
+		border-bottom: 1px solid $light-grey;
 
-                        a:before {
-                                font-size: 18px;
-                        }
-                }
-        } // close #bp-message-thread-list
+		&:after {
+			clear: both;
+			content: "";
+			display: table;
+		}
+	}
 
-        form.send-reply {
+	.single-thread-title {
 
-                .avatar-box {
-                        padding: $pad-sml 0;
-                }
-        }
+		@include font-size(16);
 
-        // Grouped rules for both inbox all messages lists &
-        // for single view conversation thread
+		.messages-title {
+			padding-left: $pad-lrg;
+		}
+	}
 
-        //.preview-pane-header,
-        .single-message-thread-header {
-                border-bottom: 1px solid $light-grey;
+	.thread-participants {
+		float: left;
+		margin: $marg-xsml 0;
+		width: 70%;
 
-                &:after {
-                        clear: both;
-                        content: "";
-                        display: table;
-                }
-        }
+		dd {
+			margin-bottom: $marg-sml;
+		}
 
-        //.preview-thread-title,
-        .single-thread-title {
+		li {
+			float: left;
+			margin-left: 5px;
+		}
 
-                @include font-size(16);
+		img {
+			width: 30px;
+		}
+	}
 
-                .messages-title {
-                        padding-left: $pad-lrg;
-                }
-        }
+	#thread-preview .preview-message,
+	#bp-message-thread-list li .message-content {
 
-        .thread-participants {
-                float: left;
-                margin: $marg-xsml 0;
-                width: 70%;
+		ul,
+		ol,
+		blockquote {
+			list-style-position: inside;
+			margin-left: 0;
+		}
+	}
 
-                dd {
-                        margin-bottom: $marg-sml;
-                }
+	ul#message-threads:empty {
+		display: none;
+	}
 
-                //ul {
-                        //list-style: none;
+	#thread-preview h2:first-child,
+	#bp-message-thread-header h2:first-child {
+		background-color: $light-grey;
+		color: $bp-text;
+		font-weight: 700;
+		margin: 0;
+		padding: 0.5em;
+	}
 
-                        //&:after {
+	#message-threads .thread-content a {
+		border: 0;
+		text-decoration: none;
+	}
 
-                                //clear: both;
-                                //content: "";
-                                //display: table;
-                        //}
-                //}
+	// The general form elements for composing messages
+	.standard-form {
 
-            li {
-                    float: left;
-                    margin-left: 5px;
-            }
-
-            img {
-                    width: 30px;
-            }
-        }
-
-        #thread-preview .preview-message,
-        #bp-message-thread-list li .message-content {
-
-                ul,
-                ol,
-                blockquote {
-                        list-style-position: inside;
-                        margin-left: 0;
-                }
-        }
-
-        ul#message-threads:empty {
-                display: none;
-        }
-
-        #thread-preview h2:first-child,
-        #bp-message-thread-header h2:first-child {
-                background-color: $light-grey;
-                color: $bp-text;
-                font-weight: 700;
-                margin: 0;
-                padding: 0.5em;
-        }
-
-        #message-threads .thread-content a {
-                border: 0;
-                text-decoration: none;
-        }
-
-        // The general form elements for composing messages
-        .standard-form {
-
-                #subject {
-                        margin-bottom: $marg-lrg;
-                }
-        }
+		#subject {
+			margin-bottom: $marg-lrg;
+		}
+	}
 
 } // close .bp-messages-content
 
@@ -450,24 +404,23 @@
 
 div.bp-navs#subsubnav.bp-messages-filters {
 
-        .user-messages-bulk-actions {
-                margin-right: 15px;
-                max-width: 42.5%;
-        }
+	.user-messages-bulk-actions {
+		margin-right: 15px;
+		max-width: 42.5%;
+	}
 }
 
-// Hide empty div to fix spacing issue
 div#subsubnav:empty {
-        display: none;
+	display: none;
 }
 
 input#send-to-input {
-        margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 #compose-personal-li {
 
-        a {
-                margin-top: 0;
-        }
+	a {
+		margin-top: 0;
+	}
 }

@@ -149,30 +149,30 @@
 				}
 			}
 
-                        .activity-to {
-                                visibility: hidden;
-                                display: inline-block;
-                                white-space: nowrap;
-                                width: 1em;
-                        }
+			.activity-to {
+				visibility: hidden;
+				display: inline-block;
+				white-space: nowrap;
+				width: 1em;
+			}
 
-                        .activity-to:before {
-                                font-family: dashicons;
-                                vertical-align: middle;
-                                content: "\f344";
-                                visibility: visible;
+			.activity-to:before {
+				font-family: dashicons;
+				vertical-align: middle;
+				content: "\f344";
+				visibility: visible;
 
-                                @include medium-lrg-up() {
-                                        font-size: 15px;
-                                }
-                        }
+				@include medium-lrg-up() {
+					font-size: 15px;
+				}
+			}
 
-                        .activity-time-since:before {
-                                    content: "\00b7 ";
-                                    color: $light-text;
-                                    margin-right: 3px;
-                                    vertical-align: middle;
-                        }
+			.activity-time-since:before {
+				content: "\00b7 ";
+				color: $light-text;
+				margin-right: 3px;
+				vertical-align: middle;
+			}
 
 		} // close .activity-header
 
