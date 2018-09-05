@@ -1986,13 +1986,13 @@ body.register #page #primary .entry-header {
   }
 }
 
+#buddypress #signup-form input:focus {
+  border-color: #aaa;
+}
+
 #buddypress #signup-form input.error {
   border-color: #b71717;
   border-width: 2px;
-}
-
-#buddypress #signup-form input:focus {
-  border-color: #0b80a4;
 }
 
 #buddypress #signup-form label.error {
