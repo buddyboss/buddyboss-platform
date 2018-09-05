@@ -93,7 +93,13 @@ function messages_new_message( $args = '' ) {
 
 		// Set a default reply subject if none was sent.
 		if ( empty( $message->subject ) ) {
-			$message->subject = sprintf( __( 'Re: %s', 'buddyboss' ), $thread->messages[0]->subject );
+			$re = __( 'Re: ', 'buddyboss' );
+
+			if ( strpos($thread->messages[0]->subject, $re) === 0 ) {
+				$message->subject = $thread->messages[0]->subject;
+			} else {
+				$message->subject = $re . $thread->messages[0]->subject;
+			}
 		}
 
 	// ...otherwise use the recipients passed
@@ -175,7 +181,7 @@ function messages_new_message( $args = '' ) {
 		}
 
 		if ( $previous_thread = BP_Messages_Message::get_existing_thread( $recipient_ids, $r['sender_id'] ) ) {
-			$message->thread_id = $r['sender_id'] = (int) $previous_thread;
+			$message->thread_id = $r['thread_id'] = (int) $previous_thread;
 
 			// Set a default reply subject if none was sent.
 			if ( empty( $message->subject ) ) {
@@ -186,6 +192,9 @@ function messages_new_message( $args = '' ) {
 			}
 		}
 	}
+
+	// preapre to upadte the deleted user's last message if message sending successfull
+	$last_message_data = BP_Messages_Thread::prepare_last_message_status( $message->thread_id );
 
 	// Bail if message failed to send.
 	$send = $message->send();
@@ -200,6 +209,9 @@ function messages_new_message( $args = '' ) {
 
 		return false;
 	}
+
+	// only update after the send()
+	BP_Messages_Thread::update_last_message_status( $last_message_data );
 
 	/**
 	 * Fires after a message has been successfully sent.

@@ -1540,7 +1540,7 @@ function bp_thread_has_messages( $args = '' ) {
 
 	$r = bp_parse_args( $args, array(
 		'thread_id'         => false,
-		'order'             => 'ASC',
+		'order'             => 'DESC',
 		'update_meta_cache' => true,
 	), 'thread_has_messages' );
 

@@ -140,14 +140,17 @@ function bp_nouveau_ajax_messages_send_reply() {
 	// Override bp_current_action().
 	$bp->current_action = 'view';
 
+	BP_Messages_Thread::$noCache = true;
+
 	bp_thread_has_messages( array( 'thread_id' => (int) $_POST['thread_id'] ) );
 
 	// Set the current message to the 2nd last.
-	$thread_template->message = end( $thread_template->thread->messages );
-	$thread_template->message = prev( $thread_template->thread->messages );
+	// $thread_template->message = first( $thread_template->thread->messages );
+	// $thread_template->message = prev( $thread_template->thread->messages );
 
 	// Set current message to current key.
-	$thread_template->current_message = key( $thread_template->thread->messages );
+	// $thread_template->current_message = key( $thread_template->thread->messages );
+	$thread_template->current_message = -1;
 
 	// Now manually iterate message like we're in the loop.
 	bp_thread_the_message();
@@ -202,6 +205,9 @@ function bp_nouveau_ajax_messages_send_reply() {
 
 	// Remove the bp_current_action() override.
 	$bp->current_action = $reset_action;
+
+	// set a flag
+	$reply['is_new'] = true;
 
 	wp_send_json_success( array(
 		'messages' => array( $reply ),
@@ -409,6 +415,11 @@ function bp_nouveau_ajax_get_thread_messages() {
 		'type'     => 'info'
 	);
 
+	$response_no_more = array(
+		'feedback' => __( 'Sorry, no more messages can be loaded.', 'buddyboss' ),
+		'type'     => 'info'
+	);
+
 	if ( empty( $_POST['id'] ) ) {
 		wp_send_json_error( $response );
 	}
@@ -421,11 +432,17 @@ function bp_nouveau_ajax_get_thread_messages() {
 	$bp->current_action = 'view';
 
 	// Simulate the loop.
-	if ( ! bp_thread_has_messages( array( 'thread_id' => $thread_id ) ) ) {
+	$args = [
+		'thread_id' => $thread_id,
+		'per_page' => isset($_POST['per_page']) && $_POST['per_page']? $_POST['per_page'] : 10,
+		'before' => isset($_POST['before']) && $_POST['before']? $_POST['before'] : null,
+	];
+
+	if ( ! bp_thread_has_messages( $args ) ) {
 		// Remove the bp_current_action() override.
 		$bp->current_action = $reset_action;
 
-		wp_send_json_error( $response );
+		wp_send_json_error( $args['before']? $response_no_more : $response );
 	}
 
 	$thread = new stdClass;
@@ -511,6 +528,11 @@ function bp_nouveau_ajax_get_thread_messages() {
 
 	// Remove the bp_current_action() override.
 	$bp->current_action = $reset_action;
+
+	// pagination
+	$thread->per_page = $thread_template->thread->messages_perpage;
+	$thread->messages_count = $thread_template->thread->total_messages;
+	$thread->next_messages_timestamp = $thread_template->thread->messages[count($thread_template->thread->messages) - 1]->date_sent;
 
 	wp_send_json_success( $thread );
 }

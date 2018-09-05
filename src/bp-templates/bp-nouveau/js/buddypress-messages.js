@@ -382,6 +382,7 @@ window.bp = window.bp || {};
 	} );
 
 	bp.Collections.Messages = Backbone.Collection.extend( {
+		before: null,
 		model: bp.Models.messageThread,
 		options: {},
 
@@ -395,7 +396,8 @@ window.bp = window.bp || {};
 
 			if ( 'read' === method ) {
 				options.data = _.extend( options.data, {
-					action: 'messages_get_thread_messages'
+					action: 'messages_get_thread_messages',
+					before: this.before,
 				} );
 
 				return bp.ajax.send( options );
@@ -416,6 +418,8 @@ window.bp = window.bp || {};
 			if ( ! _.isArray( resp.messages ) ) {
 				resp.messages = [resp.messages];
 			}
+
+			this.before = resp.next_messages_timestamp;
 
 			_.each( resp.messages, function( value, index ) {
 				if ( _.isNull( value ) ) {
@@ -1043,6 +1047,37 @@ window.bp = window.bp || {};
 		}
 	} );
 
+	bp.Views.userMessagesLoadMore = bp.Nouveau.Messages.View.extend( {
+		tagName  : 'div',
+		template : bp.template( 'bp-messages-single-load-more' ),
+
+		events: {
+			'click button' : 'loadMoreMessages'
+		},
+
+		loadMoreMessages: function(e) {
+			e.preventDefault();
+
+			var data = {};
+			var self = this;
+
+			bp.Nouveau.Messages.displayFeedback( BP_Nouveau.messages.loading, 'loading' );
+
+			if ( _.isUndefined( this.options.thread.attributes ) ) {
+				data.id = this.options.thread.id;
+			} else {
+				data.id        = this.options.thread.get( 'id' );
+				data.js_thread = ! _.isEmpty( this.options.thread.get( 'subject' ) );
+			}
+
+			this.collection.fetch( {
+				data: data,
+				success: _.bind( this.options.userMessage.messagesFetched, this.options.userMessage ),
+				error: _.bind( this.options.userMessage.messagesFetchError, this.options.userMessage )
+			});
+		},
+	} );
+
 	bp.Views.userMessagesHeader = bp.Nouveau.Messages.View.extend( {
 		tagName  : 'div',
 		template : bp.template( 'bp-messages-single-header' ),
@@ -1150,6 +1185,11 @@ window.bp = window.bp || {};
 
 			// Add the editor view
 			this.views.add( '#bp-message-content', new bp.Views.messageEditor() );
+			this.views.add( '#bp-message-load-more', new bp.Views.userMessagesLoadMore( {
+				collection: this.collection,
+				thread: this.options.thread,
+				userMessage: this
+			} ) );
 		},
 
 		events: {
@@ -1158,8 +1198,9 @@ window.bp = window.bp || {};
 
 		requestMessages: function() {
 			var data = {};
+			this.options.collection.before = null;
 
-			this.collection.reset();
+			// this.collection.reset();
 
 			bp.Nouveau.Messages.displayFeedback( BP_Nouveau.messages.loading, 'loading' );
 
@@ -1174,28 +1215,54 @@ window.bp = window.bp || {};
 			this.collection.fetch( {
 				data: data,
 				success : _.bind( this.messagesFetched, this ),
-				error   : this.messagesFetchError
+				error: _.bind( this.messagesFetchError, this )
 			} );
 		},
 
 		messagesFetched: function( collection, response ) {
+			collection.before = response.next_messages_timestamp;
+
 			if ( ! _.isUndefined( response.thread ) ) {
 				this.options.thread = new Backbone.Model( response.thread );
 			}
 
 			bp.Nouveau.Messages.removeFeedback();
 
-			this.views.add( '#bp-message-thread-header', new bp.Views.userMessagesHeader( { model: this.options.thread } ) );
+			if ( response.messages.length < response.per_page && ! _.isUndefined( this.views.get( '#bp-message-load-more' ) ) ) {
+				var loadMore = this.views.get( '#bp-message-load-more' )[0];
+				loadMore.views.view.remove();
+			}
+
+			if ( ! this.views.get( '#bp-message-thread-header' ) ) {
+				this.views.add( '#bp-message-thread-header', new bp.Views.userMessagesHeader( { model: this.options.thread } ) );
+			}
 		},
 
 		messagesFetchError: function( collection, response ) {
+			if ( ! response.messages ) {
+				collection.hasMore = false;
+			}
+
+			bp.Nouveau.Messages.removeFeedback();
+
+			if ( ! response.messages && ! _.isUndefined( this.views.get( '#bp-message-load-more' ) ) ) {
+				var loadMore = this.views.get( '#bp-message-load-more' )[0];
+				loadMore.views.view.remove();
+			}
+
 			if ( response.feedback && response.type ) {
 				bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 			}
 		},
 
 		addMessage: function( message ) {
-			this.views.add( '#bp-message-thread-list', new bp.Views.userMessagesEntry( { model: message } ) );
+			var options = {};
+
+			if ( ! message.attributes.is_new ) {
+				options.at = 0;
+			}
+
+			this.views.add( '#bp-message-thread-list', new bp.Views.userMessagesEntry( { model: message } ), options );
 		},
 
 		addEditor: function() {

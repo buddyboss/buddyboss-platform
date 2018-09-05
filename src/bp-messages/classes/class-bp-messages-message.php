@@ -155,11 +155,15 @@ class BP_Messages_Message {
 
 			// Add a sender recipient entry if the sender is not in the list of recipients.
 			if ( ! in_array( $this->sender_id, $recipient_ids ) ) {
-				$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id, sender_only ) VALUES ( %d, %d, 1 )", $this->sender_id, $this->thread_id ) );
+				$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id ) VALUES ( %d, %d )", $this->sender_id, $this->thread_id ) );
 			}
 		} else {
 			// Update the unread count for all recipients.
-			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, sender_only = 0, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
+			// $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, sender_only = 0, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
+			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
+
+			// make sure the current user delete is reset
+			// $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_deleted = 0 WHERE thread_id = %d AND user_id = %d", $this->thread_id, $this->sender_id ) );
 		}
 
 		messages_remove_callback_values();
