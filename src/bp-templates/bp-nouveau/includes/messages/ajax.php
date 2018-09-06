@@ -430,22 +430,12 @@ function bp_nouveau_ajax_get_thread_messages() {
 
 	$thread = new stdClass;
 
+	// Check recipients if connected or not
 	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
 		foreach ( (array) $thread_template->thread->recipients as $recipient ) {
-			if ( ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
-
-
-				$thread->feedback_error = array( 'feedback' => __( 'You need to be connected to continue this conversation.', 'buddyboss' ), 'type' => 'error' );
+			if ( bp_loggedin_user_id() != $recipient->user_id && ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
+				$thread->feedback_error = array( 'feedback' => __( 'You need to be connected with the member in order to continue this conversation.', 'buddyboss' ), 'type' => 'error' );
 				break;
-				// Remove the bp_current_action() override.
-//				$bp->current_action = $reset_action;
-//
-//				$response = array(
-//					'feedback' => __( 'You need to be connected to continue this conversation.', 'buddyboss' ),
-//					'type'     => 'error'
-//				);
-//
-//				wp_send_json_error( $response );
 			}
 		}
 	}
