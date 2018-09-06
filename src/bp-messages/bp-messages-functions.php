@@ -193,9 +193,9 @@ function messages_new_message( $args = '' ) {
 			if ( ! friends_check_friendship( $message->sender_id, $i ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
 					if ( ! empty( $r['thread_id'] ) ) {
-						return new WP_Error( 'message_invalid_recipients', __( 'You need to be connected with the member in order to continue this conversation.', 'buddyboss' ) );
+						return new WP_Error( 'message_invalid_recipients', __( 'You need to be connected to continue this conversation.', 'buddyboss' ) );
 					}
-					return new WP_Error( 'message_invalid_recipients', __( 'You need to be connected with the member in order to send them a message.', 'buddyboss' ) );
+					return new WP_Error( 'message_invalid_recipients', __( 'You need to be connected with all recipients in order to send them a message.', 'buddyboss' ) );
 				} else {
 					return false;
 				}
