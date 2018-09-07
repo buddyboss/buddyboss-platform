@@ -54,7 +54,8 @@ add_action( 'messages_screen_inbox',   'bp_core_clear_cache' );
  */
 function bp_messages_clear_cache_on_message_save( BP_Messages_Message $message ) {
 	// Delete thread cache.
-	wp_cache_delete( $message->thread_id, 'bp_messages_threads' );
+	// wp_cache_delete( $message->thread_id, 'bp_messages_threads' );
+	bp_messages_delete_thread_paginated_messages_cache( $message->thread_id );
 
 	// Delete unread count for each recipient.
 	foreach ( (array) $message->recipients as $recipient ) {
@@ -78,7 +79,8 @@ add_action( 'messages_message_after_save', 'bp_messages_clear_cache_on_message_s
 function bp_messages_clear_cache_on_message_delete( $thread_ids, $user_id ) {
 	// Delete thread and thread recipient cache.
 	foreach( (array) $thread_ids as $thread_id ) {
-		wp_cache_delete( $thread_id, 'bp_messages_threads' );
+		// wp_cache_delete( $thread_id, 'bp_messages_threads' );
+		bp_messages_delete_thread_paginated_messages_cache( $thread_id );
 		wp_cache_delete( "thread_recipients_{$thread_id}", 'bp_messages' );
 	}
 
@@ -101,3 +103,18 @@ function bp_notices_clear_cache( $notice ) {
 }
 add_action( 'messages_notice_after_save',    'bp_notices_clear_cache' );
 add_action( 'messages_notice_before_delete', 'bp_notices_clear_cache' );
+
+function bp_messages_delete_thread_paginated_messages_cache( $thread_id ) {
+	BP_Messages_Thread::$noCache = true;
+	$thread_id = $thread_id;
+	$before = null;
+	$perpage = 10;
+
+	while ( wp_cache_get( "{$thread_id}{$before}{$perpage}", 'bp_messages_threads' ) ) {
+		wp_cache_delete( "{$thread_id}{$before}{$perpage}", 'bp_messages_threads' );
+		$messages = BP_Messages_Thread::get_messages( $thread_id, $before, $perpage );
+		$before = end($messages)->date_sent;
+	}
+
+	BP_Messages_Thread::$noCache = false;
+}

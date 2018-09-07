@@ -140,7 +140,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	// Override bp_current_action().
 	$bp->current_action = 'view';
 
-	BP_Messages_Thread::$noCache = true;
+	// BP_Messages_Thread::$noCache = true;
 
 	bp_thread_has_messages( array( 'thread_id' => (int) $_POST['thread_id'] ) );
 

@@ -14,6 +14,8 @@ defined( 'ABSPATH' ) || exit;
  * Single message class.
  */
 class BP_Messages_Message {
+
+	public static $last_inserted_id;
 	/**
 	 * ID of the message.
 	 *
@@ -142,7 +144,7 @@ class BP_Messages_Message {
 			return false;
 		}
 
-		$this->id = $wpdb->insert_id;
+		static::$last_inserted_id = $this->id = $wpdb->insert_id;
 
 		$recipient_ids = array();
 

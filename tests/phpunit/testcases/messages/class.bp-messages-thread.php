@@ -22,9 +22,14 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 		// prime cache
 		new BP_Messages_Thread( $message->thread_id );
 
+		$thread_id = $message->thread_id;
+		$before = null;
+		$perpage = 10;
+		$cache_key = "{$thread_id}{$before}{$perpage}";
+
 		// Cache should exist
 		$this->assertThat(
-			wp_cache_get( $message->thread_id, 'bp_messages_threads' ),
+			wp_cache_get( $cache_key, 'bp_messages_threads' ),
 			$this->logicalNot( $this->equalTo( false ) ),
 			'Message thread cache should exist.'
 		);
@@ -43,7 +48,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 			'recipients' => array( $u2 ),
 			'subject' => 'Foo',
 		) );
-		$m1 = $message_1->id;
+		$m1 = BP_Messages_Message::$last_inserted_id;
 
 		// create reply
 		$message_2 = self::factory()->message->create_and_get( array(
@@ -52,7 +57,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 			'recipients' => array( $u2 ),
 			'content' => 'Bar'
 		) );
-		$m2 = $message_2->id;
+		$m2 = BP_Messages_Message::$last_inserted_id;
 
 		// now get thread by DESC
 		$thread = new BP_Messages_Thread( $message_1->thread_id, 'DESC' );
@@ -66,25 +71,29 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 
 	/**
 	 * @group get_current_threads_for_user
+	 * @version 3.1.1 Search no longer search for subject, only messages
 	 */
 	public function test_get_current_threads_for_user_with_search_terms_inbox() {
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
+		$u3 = self::factory()->user->create();
 
 		$message_1 = self::factory()->message->create_and_get( array(
 			'sender_id' => $u1,
 			'recipients' => array( $u2 ),
 			'subject' => 'Foo',
+			'content' => 'foo'
 		) );
 
 		$message_2 = self::factory()->message->create_and_get( array(
 			'sender_id' => $u1,
-			'recipients' => array( $u2 ),
+			'recipients' => array( $u3 ),
 			'subject' => 'Bar',
+			'content' => 'bar'
 		) );
 
 		$threads = BP_Messages_Thread::get_current_threads_for_user( array(
-			'user_id' => $u2,
+			'user_id' => $u3,
 			'search_terms' => 'ar',
 		) );
 
@@ -96,62 +105,64 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 
 	/**
 	 * @group get_current_threads_for_user
+	 * @deprecated 3.1.1 Nor more sendbox
 	 */
-	public function test_get_current_threads_for_user_with_search_terms_sentbox() {
-		$u1 = self::factory()->user->create();
-		$u2 = self::factory()->user->create();
+	// public function test_get_current_threads_for_user_with_search_terms_sentbox() {
+	// 	$u1 = self::factory()->user->create();
+	// 	$u2 = self::factory()->user->create();
 
-		$message_1 = self::factory()->message->create_and_get( array(
-			'sender_id' => $u1,
-			'recipients' => array( $u2 ),
-			'subject' => 'Foo',
-		) );
+	// 	$message_1 = self::factory()->message->create_and_get( array(
+	// 		'sender_id' => $u1,
+	// 		'recipients' => array( $u2 ),
+	// 		'subject' => 'Foo',
+	// 	) );
 
-		$message_2 = self::factory()->message->create_and_get( array(
-			'sender_id' => $u1,
-			'recipients' => array( $u2 ),
-			'subject' => 'Bar',
-		) );
+	// 	$message_2 = self::factory()->message->create_and_get( array(
+	// 		'sender_id' => $u1,
+	// 		'recipients' => array( $u2 ),
+	// 		'subject' => 'Bar',
+	// 	) );
 
-		$threads = BP_Messages_Thread::get_current_threads_for_user( array(
-			'user_id' => $u1,
-			'box' => 'sentbox',
-			'search_terms' => 'ar',
-		) );
+	// 	$threads = BP_Messages_Thread::get_current_threads_for_user( array(
+	// 		'user_id' => $u1,
+	// 		'box' => 'sentbox',
+	// 		'search_terms' => 'ar',
+	// 	) );
 
-		$expected = array( $message_2->thread_id );
-		$found = wp_parse_id_list( wp_list_pluck( $threads['threads'], 'thread_id' ) );
+	// 	$expected = array( $message_2->thread_id );
+	// 	$found = wp_parse_id_list( wp_list_pluck( $threads['threads'], 'thread_id' ) );
 
-		$this->assertSame( $expected, $found );
-	}
+	// 	$this->assertSame( $expected, $found );
+	// }
 
 	/**
 	 * @group get_current_threads_for_user
 	 * @expectedDeprecated BP_Messages_Thread::get_current_threads_for_user
+	 * @deprecated 3.1.1 no more sendbox
 	 */
-	public function test_get_current_threads_for_user_with_old_args() {
-		$u1 = self::factory()->user->create();
-		$u2 = self::factory()->user->create();
+	// public function test_get_current_threads_for_user_with_old_args() {
+	// 	$u1 = self::factory()->user->create();
+	// 	$u2 = self::factory()->user->create();
 
-		$message_1 = self::factory()->message->create_and_get( array(
-			'sender_id' => $u1,
-			'recipients' => array( $u2 ),
-			'subject' => 'Foo',
-		) );
+	// 	$message_1 = self::factory()->message->create_and_get( array(
+	// 		'sender_id' => $u1,
+	// 		'recipients' => array( $u2 ),
+	// 		'subject' => 'Foo',
+	// 	) );
 
-		$message_2 = self::factory()->message->create_and_get( array(
-			'sender_id' => $u1,
-			'recipients' => array( $u2 ),
-			'subject' => 'Bar',
-		) );
+	// 	$message_2 = self::factory()->message->create_and_get( array(
+	// 		'sender_id' => $u1,
+	// 		'recipients' => array( $u2 ),
+	// 		'subject' => 'Bar',
+	// 	) );
 
-		$threads = BP_Messages_Thread::get_current_threads_for_user( $u1, 'sentbox', 'all', null, null, 'ar' );
+	// 	$threads = BP_Messages_Thread::get_current_threads_for_user( $u1, 'sentbox', 'all', null, null, 'ar' );
 
-		$expected = array( $message_2->thread_id );
-		$found = wp_parse_id_list( wp_list_pluck( $threads['threads'], 'thread_id' ) );
+	// 	$expected = array( $message_2->thread_id );
+	// 	$found = wp_parse_id_list( wp_list_pluck( $threads['threads'], 'thread_id' ) );
 
-		$this->assertSame( $expected, $found );
-	}
+	// 	$this->assertSame( $expected, $found );
+	// }
 
 	/**
 	 * @group get_recipients
