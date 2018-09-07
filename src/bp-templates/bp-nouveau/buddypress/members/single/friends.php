@@ -41,6 +41,14 @@ switch ( bp_current_action() ) :
 		bp_get_template_part( 'members/single/friends/requests' );
 		break;
 
+	case 'followers':
+		bp_get_template_part( 'members/single/friends/followers' );
+		break;
+
+	case 'following':
+		bp_get_template_part( 'members/single/friends/following' );
+		break;
+
 	// Any other
 	default:
 		bp_get_template_part( 'members/single/plugins' );

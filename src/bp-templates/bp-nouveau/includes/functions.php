@@ -167,6 +167,7 @@ function bp_nouveau_ajax_button( $output = '', $button = null, $before = '', $af
 
 	$reset_ids = array(
 		'member_friendship' => true,
+		'member_follow'     => true,
 		'group_membership'  => true,
 	);
 
@@ -185,6 +186,8 @@ function bp_nouveau_ajax_button( $output = '', $button = null, $before = '', $af
 			'accept-invite',
 			'membership-requested',
 			'request-membership',
+			'not_following',
+			'following',
 		) );
 
 		if ( 1 !== count( $find_id ) ) {

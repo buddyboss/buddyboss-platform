@@ -2552,6 +2552,32 @@ function bp_is_user_friend_requests() {
 }
 
 /**
+ * Is the current page a user's followers page?
+ *
+ * Eg http://example.com/members/joe/friends/followers/.
+ *
+ * @since BuddyPress 3.1.1
+ *
+ * @return bool True if the current page is a user's followers page.
+ */
+function bp_is_user_followers() {
+	return (bool) ( bp_is_user_friends() && bp_is_current_action( 'followers' ) );
+}
+
+/**
+ * Is the current page a user's following page?
+ *
+ * Eg http://example.com/members/joe/friends/following/.
+ *
+ * @since BuddyPress 3.1.1
+ *
+ * @return bool True if the current page is a user's following page.
+ */
+function bp_is_user_following() {
+	return (bool) ( bp_is_user_friends() && bp_is_current_action( 'following' ) );
+}
+
+/**
  * Is this a user's notifications page?
  *
  * Eg http://example.com/members/joe/notifications/ (or a subpage thereof).

@@ -659,7 +659,9 @@ window.bp = window.bp || {};
 				not_friends       : 'add_friend',
 				pending           : 'withdraw_friendship',
 				accept_friendship : 'accept_friendship',
-				reject_friendship : 'reject_friendship'
+				reject_friendship : 'reject_friendship',
+				not_following     : 'follow',
+				following         : 'unfollow'
 			};
 
 			if ( 'members' === object && undefined !== friends_actions_map[ action ] ) {

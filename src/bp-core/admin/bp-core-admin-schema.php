@@ -181,6 +181,13 @@ function bp_core_install_friends() {
 				KEY friend_user_id (friend_user_id)
 			) {$charset_collate};";
 
+	$sql[] = "CREATE TABLE IF NOT EXISTS {$bp_prefix}bp_follow (
+			id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+			leader_id bigint(20) NOT NULL,
+			follower_id bigint(20) NOT NULL,
+		        KEY followers (leader_id, follower_id)
+		) {$charset_collate};";
+
 	dbDelta( $sql );
 }
 

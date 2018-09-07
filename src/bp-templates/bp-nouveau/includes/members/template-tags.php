@@ -376,6 +376,61 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 					unset( bp_nouveau()->members->button_args );
 				}
 			}
+
+			// add follow button
+			if ( friends_check_friendship( bp_loggedin_user_id(), $user_id ) ) {
+
+				/*
+				 * This filter workaround is waiting for a core adaptation
+				 * so that we can directly get the follow button arguments
+				 * instead of the button.
+				 *
+				 * See https://buddypress.trac.wordpress.org/ticket/7126
+				 */
+				add_filter( 'bp_follow_get_add_follow_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
+
+				bp_follow_get_add_follow_button( array(
+					'leader_id'     => $user_id,
+					'follower_id'   => bp_loggedin_user_id(),
+				) );
+
+				remove_filter( 'bp_follow_get_add_follow_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
+
+				if ( ! empty( bp_nouveau()->members->button_args ) ) {
+					$button_args = bp_nouveau()->members->button_args;
+
+					$buttons['member_follow'] = array(
+						'id'                => 'member_follow',
+						'position'          => 10,
+						'component'         => $button_args['component'],
+						'must_be_logged_in' => $button_args['must_be_logged_in'],
+						'block_self'        => $button_args['block_self'],
+						'parent_element'    => $parent_element,
+						'link_text'         => $button_args['link_text'],
+						'parent_attr'       => array(
+							'id'    => $button_args['wrapper_id'],
+							'class' => $parent_class . ' ' . $button_args['wrapper_class'],
+						),
+						'button_element'    => $button_element,
+						'button_attr'       => array(
+							'id'    => $button_args['link_id'],
+							'class' => $button_args['link_class'],
+							'rel'   => $button_args['link_rel'],
+							'title' => '',
+						),
+					);
+
+					// If button element set add nonce link to data attr
+					if ( 'button' === $button_element ) {
+						$buttons['member_follow']['button_attr']['data-bp-nonce'] = $button_args['link_href'];
+					} else {
+						$buttons['member_follow']['button_element'] = 'a';
+						$buttons['member_follow']['button_attr']['href'] = $button_args['link_href'];
+					}
+
+					unset( bp_nouveau()->members->button_args );
+				}
+			}
 		}
 
 		// Only add The public and private messages when not in a loop
