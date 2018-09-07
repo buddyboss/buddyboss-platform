@@ -82,11 +82,13 @@ class BP_Tests_Messages_Template extends BP_UnitTestCase {
 			'sender_id'  => $u1,
 			'recipients' => array( $u2 ),
 			'subject'    => 'This is a knive',
+			'append_thread' => false
 		) );
 		$message_2 = self::factory()->message->create_and_get( array(
 			'sender_id'  => $u1,
 			'recipients' => array( $u2 ),
 			'subject'    => 'Oy',
+			'append_thread' => false
 		) );
 
 		// misc threads

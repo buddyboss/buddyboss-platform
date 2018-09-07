@@ -120,16 +120,19 @@ class BP_Tests_Messages_Star_ extends BP_UnitTestCase {
 			'sender_id'  => $u1,
 			'recipients' => array( $u2 ),
 			'subject'    => 'A',
+			'append_thread' => false
 		) );
 		$message_2 = self::factory()->message->create_and_get( array(
 			'sender_id'  => $u1,
 			'recipients' => array( $u2 ),
 			'subject'    => 'B',
+			'append_thread' => false
 		) );
 		$message_3 = self::factory()->message->create_and_get( array(
 			'sender_id'  => $u1,
 			'recipients' => array( $u2 ),
 			'subject'    => 'C',
+			'append_thread' => false
 		) );
 
 		// grab the message ids as individual variables

@@ -23,10 +23,13 @@ class BP_Tests_Routing_Messages extends BP_UnitTestCase {
 		$this->assertTrue( bp_is_messages_inbox() );
 	}
 
-	function test_member_messages_sentbox() {
-		$this->go_to( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_messages_slug() . '/sentbox' );
-		$this->assertTrue( bp_is_messages_sentbox() );
-	}
+	/**
+	 * @deprecated 3.1.1 no more send box
+	 */
+	// function test_member_messages_sentbox() {
+	// 	$this->go_to( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_messages_slug() . '/sentbox' );
+	// 	$this->assertTrue( bp_is_messages_sentbox() );
+	// }
 
 	function test_member_messages_compose() {
 		$this->go_to( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_messages_slug() . '/compose' );
