@@ -448,4 +448,54 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 		$this->assertEquals( $date, $thread->last_message_date );
 		$this->assertEquals( 'Bar and baz.', $thread->last_message_content );
 	}
+
+	/**
+	 * @group messages backward compatibility
+	 */
+	public function test_existing_thread_should_get_the_latest() {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		$u1 = self::factory()->user->create();
+		$u2 = self::factory()->user->create();
+
+		$now = time() + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS ) - 10;
+
+		$message = self::factory()->message->create_and_get( array(
+			'sender_id' => $u1,
+			'recipients' => array( $u2 ),
+			'date_sent' => gmdate( 'Y-m-d H:i:s', $now ),
+		) );
+
+		$message2 = self::factory()->message->create_and_get( array(
+			'sender_id' => $u1,
+			'recipients' => array( $u2 ),
+			'date_sent' => gmdate( 'Y-m-d H:i:s', $now + 2 ),
+			'append_thread' => false
+		) );
+
+		$message3 = self::factory()->message->create_and_get( array(
+			'thread_id' => $message->thread_id,
+			'sender_id' => $u1,
+			'recipients' => array( $u2 ),
+			'date_sent' => gmdate( 'Y-m-d H:i:s', $now + 2 ),
+			'append_thread' => false
+		) );
+
+		// make sure the threads are setup properly first
+		$this->assertTrue($message->thread_id !== $message2->thread_id);
+		$this->assertTrue($message->thread_id === $message3->thread_id);
+
+		$existing_thread_id = BP_Messages_Message::get_existing_thread( [ $u2 ], $u1 );
+		$this->assertEquals($message->thread_id, $existing_thread_id);
+
+		// now add a new message
+		$last_message = self::factory()->message->create_and_get( array(
+			'sender_id' => $u1,
+			'recipients' => array( $u2 ),
+		) );
+
+		$this->assertEquals($message->thread_id, $last_message->thread_id);
+	}
 }

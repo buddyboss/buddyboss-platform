@@ -650,7 +650,8 @@ window.bp = window.bp || {};
 				form.get( 'view' ).remove();
 				bp.Nouveau.Messages.views.remove( { id: 'compose', view: form } );
 
-				bp.Nouveau.Messages.router.navigate( 'view/' + response.thread_id + '/', { trigger: true } );
+				bp.Nouveau.Messages.router.navigate( 'view/' + response.thread_id + '/' );
+				window.location.reload();
 			} ).fail( function( response ) {
 				if ( response.feedback ) {
 					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );

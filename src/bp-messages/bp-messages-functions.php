@@ -43,13 +43,14 @@ function messages_new_message( $args = '' ) {
 
 	// Parse the default arguments.
 	$r = bp_parse_args( $args, array(
-		'sender_id'  => bp_loggedin_user_id(),
-		'thread_id'  => false,   // False for a new message, thread id for a reply to a thread.
-		'recipients' => array(), // Can be an array of usernames, user_ids or mixed.
-		'subject'    => false,
-		'content'    => false,
-		'date_sent'  => bp_core_current_time(),
-		'error_type' => 'bool'
+		'sender_id'     => bp_loggedin_user_id(),
+		'thread_id'     => false,   // False for a new message, thread id for a reply to a thread.
+		'recipients'    => array(), // Can be an array of usernames, user_ids or mixed.
+		'subject'       => false,
+		'content'       => false,
+		'date_sent'     => bp_core_current_time(),
+		'append_thread' => true,
+		'error_type'    => 'bool'
 	), 'messages_new_message' );
 
 	// Bail if no sender or no content.
@@ -180,7 +181,8 @@ function messages_new_message( $args = '' ) {
 			$message->recipients[ $i ]->user_id = $recipient_id;
 		}
 
-		if ( $previous_thread = BP_Messages_Message::get_existing_thread( $recipient_ids, $r['sender_id'] ) ) {
+		$previous_thread = BP_Messages_Message::get_existing_thread( $recipient_ids, $r['sender_id'] );
+		if ( $previous_thread && $r['append_thread'] ) {
 			$message->thread_id = $r['thread_id'] = (int) $previous_thread;
 
 			// Set a default reply subject if none was sent.

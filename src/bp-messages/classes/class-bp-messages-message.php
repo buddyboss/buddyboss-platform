@@ -295,18 +295,22 @@ class BP_Messages_Message {
 		$recipient_ids = array_filter(array_unique(array_values($recipient_ids)));
 		sort($recipient_ids);
 
-		$results = $wpdb->get_results( $wpdb->prepare(
+		$results = $wpdb->get_results( $sql = $wpdb->prepare(
 			"SELECT
-				thread_id,
-				GROUP_CONCAT(user_id ORDER BY user_id separator ',') as recipient_list
-			FROM {$bp->messages->table_name_recipients}
-			GROUP BY thread_id
+				r.thread_id as thread_id,
+				GROUP_CONCAT(DISTINCT user_id ORDER BY user_id separator ',') as recipient_list,
+				MAX(m.date_sent) AS date_sent
+			FROM {$bp->messages->table_name_recipients} r
+			INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id
+			GROUP BY r.thread_id
 			HAVING recipient_list = %s
-			ORDER BY id DESC
+			ORDER BY date_sent DESC
 			LIMIT 1
 			",
 			implode(',', $recipient_ids)
 		) );
+
+		// print_r($sql);die();
 
 		return $results? $results[0]->thread_id : null;
 	}
