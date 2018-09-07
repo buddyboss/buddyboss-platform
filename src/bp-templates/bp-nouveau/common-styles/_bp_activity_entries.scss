@@ -170,6 +170,7 @@
 			.activity-time-since:before {
 				content: "\00b7 ";
 				color: $light-text;
+				display: inline-block;
 				margin-right: 3px;
 				vertical-align: middle;
 			}
