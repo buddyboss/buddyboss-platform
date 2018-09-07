@@ -187,7 +187,7 @@ TABLE OF CONTENTS:
 #adminmenu #toplevel_page_bp-groups .wp-menu-image:before,
 #adminmenu #toplevel_page_bp-groups_user .wp-menu-image:before,
 #adminmenu #toplevel_page_bp-groups_network .wp-menu-image:before {
-	content: "\f456";
+	content: "\f307";
 }
 
 #adminmenu #toplevel_page_bp-notifications .wp-menu-image:before,
@@ -199,13 +199,13 @@ TABLE OF CONTENTS:
 #adminmenu #toplevel_page_bp-messages .wp-menu-image:before,
 #adminmenu #toplevel_page_bp-messages_user .wp-menu-image:before,
 #adminmenu #toplevel_page_bp-messages_network .wp-menu-image:before {
-	content: "\f457";
+	content: "\f465";
 }
 
 #adminmenu #toplevel_page_bp-friends .wp-menu-image:before,
 #adminmenu #toplevel_page_bp-friends_user .wp-menu-image:before,
 #adminmenu #toplevel_page_bp-friends_network .wp-menu-image:before {
-	content: "\f454";
+	content: "\f325";
 }
 
 #adminmenu #toplevel_page_bp-settings .wp-menu-image:before,
@@ -251,7 +251,7 @@ TABLE OF CONTENTS:
 }
 
 .settings_page_bp-components tr.groups td.plugin-title span:before {
-	content: "\f456";
+	content: "\f307";
 }
 
 .settings_page_bp-components tr.messages td.plugin-title span:before {
@@ -259,15 +259,15 @@ TABLE OF CONTENTS:
 }
 
 .settings_page_bp-components tr.blogs td.plugin-title span:before {
-	content: "\f120";
+	content: "\f119";
 }
 
 .settings_page_bp-components tr.friends td.plugin-title span:before {
-	content: "\f454";
+	content: "\f325";
 }
 
 .settings_page_bp-components tr.members td.plugin-title span:before {
-	content: "\f307";
+	content: "\f110";
 }
 
 #bp-admin-component-form .wp-list-table.plugins .plugin-title {

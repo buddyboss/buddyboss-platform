@@ -140,6 +140,21 @@ function bp_admin_setting_callback_profile_sync() {
 }
 
 /**
+ * Enable member dashboard/front-page template.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ */
+function bp_admin_setting_callback_member_dashboard () {
+?>
+
+	<input id="bp-enable-member-dashboard" name="bp-enable-member-dashboard" type="checkbox" value="1" <?php checked( bp_nouveau_get_appearance_settings( 'user_front_page' ) ); ?> />
+	<label for="bp-enable-member-dashboard"><?php _e( 'Enable Dashboard for member profiles', 'buddyboss' ); ?></label>
+
+<?php
+}
+
+/**
  * Allow members to upload avatars field.
  *
  * @since BuddyPress 1.6.0
@@ -213,6 +228,47 @@ function bp_admin_setting_callback_group_cover_image_uploads() {
 	<input id="bp-disable-group-cover-image-uploads" name="bp-disable-group-cover-image-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_group_cover_image_uploads() ); ?> />
 	<label for="bp-disable-group-cover-image-uploads"><?php _e( 'Allow customizable cover images for groups', 'buddyboss' ); ?></label>
 <?php
+}
+
+/** Friends Section ************************************************************/
+
+/* Friends Settings */
+
+/**
+ * Friends settings section description for the settings page.
+ *
+ * @since BuddyPress 3.1.1
+ */
+function bp_admin_setting_callback_friendship_section() { }
+
+/**
+ * Force users to be friends for messaging.
+ *
+ * @since BuddyPress 3.1.1
+ */
+function bp_admin_setting_callback_force_friendship_to_message() {
+	?>
+
+    <input id="bp-force-friendship-to-message" name="bp-force-friendship-to-message" type="checkbox" value="1" <?php checked( bp_force_friendship_to_message( false ) ); ?> />
+    <label for="bp-force-friendship-to-message"><?php _e( 'Require users to be connected before they can message each other', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
+ * Sanitization for bp-force-friendship-to-message setting.
+ *
+ * In the UI, a checkbox asks whether you'd like to *enable* forceing users to be friends for messaging. For
+ * legacy reasons, the option that we store is 1 if these friends or messaging is *disabled*. So we use this
+ * function to flip the boolean before saving the intval.
+ *
+ * @since BuddyPress 3.1.1
+ *
+ * @param bool $value Whether or not to sanitize.
+ * @return bool
+ */
+function bp_admin_sanitize_callback_force_friendship_to_message( $value = false ) {
+	return $value ? 1 : 0;
 }
 
 /** Settings Page *************************************************************/
@@ -294,6 +350,14 @@ function bp_core_admin_settings_save() {
 			$value = isset( $_POST[$legacy_option] ) ? '' : 1;
 			bp_update_option( $legacy_option, $value );
 		}
+        
+        /**
+         * sync bp-enable-member-dashboard with cutomizer settings.
+         * @since BuddyBoss 3.1.1
+         */
+        $bp_nouveau_appearance = bp_get_option( 'bp_nouveau_appearance', array() );
+        $bp_nouveau_appearance[ 'user_front_page' ] = isset( $_POST[ 'bp-enable-member-dashboard' ] ) ? $_POST[ 'bp-enable-member-dashboard' ] : 0;
+        bp_update_option( 'bp_nouveau_appearance', $bp_nouveau_appearance );
 
 		bp_core_redirect( add_query_arg( array( 'page' => 'bp-settings', 'updated' => 'true' ), bp_get_admin_url( 'admin.php' ) ) );
 	}

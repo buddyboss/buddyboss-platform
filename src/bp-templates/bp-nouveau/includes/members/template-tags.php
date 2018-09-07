@@ -276,6 +276,8 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 			$parent_class = $args['parent_attr']['class'];
 		}
 
+		$bp_force_friendship_to_message = bp_force_friendship_to_message();
+
 		if ( bp_is_active( 'friends' ) ) {
 			// It's the member's connection requests screen
 			if ( 'friendship_request' === $type ) {
@@ -417,7 +419,9 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 				}
 			}
 
-			if ( bp_is_active( 'messages' ) ) {
+			if ( ( bp_is_active( 'messages' ) && ! $bp_force_friendship_to_message ) ||
+			     ( $bp_force_friendship_to_message && bp_is_active( 'friends' ) && friends_check_friendship( bp_loggedin_user_id(), $user_id ) )
+			) {
 				/**
 				 * This filter workaround is waiting for a core adaptation
 				 * so that we can directly get the private messages button arguments

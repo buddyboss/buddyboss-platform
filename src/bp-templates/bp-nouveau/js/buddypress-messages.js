@@ -1229,6 +1229,12 @@ window.bp = window.bp || {};
 
 			bp.Nouveau.Messages.removeFeedback();
 
+			if ( response.feedback_error && response.feedback_error.feedback && response.feedback_error.type ) {
+				bp.Nouveau.Messages.displayFeedback( response.feedback_error.feedback, response.feedback_error.type );
+				//hide reply form
+				this.$('#send-reply').hide();
+			}
+
 			if ( response.messages.length < response.per_page && ! _.isUndefined( this.views.get( '#bp-message-load-more' ) ) ) {
 				var loadMore = this.views.get( '#bp-message-load-more' )[0];
 				loadMore.views.view.remove();

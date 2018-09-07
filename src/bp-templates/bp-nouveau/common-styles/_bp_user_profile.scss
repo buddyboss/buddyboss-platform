@@ -110,7 +110,7 @@ body.no-js {
 
 	.current-visibility-level {
 		font-style: normal;
-		font-weight: 700;
+		color: #333;
 	}
 
 	.field-visibility-settings,
@@ -163,7 +163,6 @@ body.no-js {
 
 		// field item description
 		.description {
-			background: $off-white;
 			font-size: inherit;
 		}
 
@@ -175,6 +174,7 @@ body.no-js {
 		.field-visibility-settings-header {
 
 			@include font-size(14);
+			margin: 5px 0;
 		}
 
 		.field-visibility-settings {

@@ -85,7 +85,6 @@ body.buddypress {
 			}
 		}
 
-
 	} // @media
 }
 
@@ -127,20 +126,6 @@ body.buddypress { // add weight
 	.avatar {
 		border-radius: 50%;
 	}
-}
-
-// 'Boxes' i.e display:block when given definition with borders
-// look nice if corners subtly rounded by a couple of pixels
-div,
-dl,
-li,
-textarea,
-select,
-input[type="search"],
-input[type="submit"],
-input[type="reset"] {
-
-	@include border-radius(2px);
 }
 
 // ====== BP Typographic Elements ======

@@ -69,6 +69,7 @@ function bp_members_format_activity_action_new_member( $action, $activity ) {
  * Create a "became a registered user" activity item when a user activates his account.
  *
  * @since BuddyPress 1.2.2
+ * @since BuddyBoss 3.1.1 Immediately update user's last activity time, so that user starts showing up in list of active members.
  *
  * @param array $user Array of userdata passed to bp_core_activated_user hook.
  * @return bool
@@ -93,5 +94,20 @@ function bp_core_new_user_activity( $user ) {
 		'component' => buddypress()->members->id,
 		'type'      => 'new_member'
 	) );
+    
+    /**
+     * Also update user's last activity time.
+     * Otherwise the user doesn't show up in list of active members until he/she logs in
+     */
+    bp_core_update_user_last_activity( $user_id );
 }
 add_action( 'bp_core_activated_user', 'bp_core_new_user_activity' );
+
+/**
+ * After a user account is added from wp-admin,
+ * update it's last activity time.
+ * Otherwise the user doesn't show up in list of active members until he/she logs in.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+add_action( 'edit_user_created_user', 'bp_core_update_user_last_activity', 10, 1 );

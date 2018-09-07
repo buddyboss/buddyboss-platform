@@ -163,10 +163,7 @@
 			<a class="subject" href="../view/{{data.id}}/">
 				<# for ( i in first_three ) { #>
 					<span class="user-name">
-						{{other_recipients[i].user_name}}
-						<# if ( i != first_three.length - 1  || ( i == first_three.length -1 && include_you ) ) { #>
-							<?php _e(',', 'buddyboss'); ?>
-						<# } #>
+						{{other_recipients[i].user_name}}<# if ( i != first_three.length - 1  || ( i == first_three.length -1 && include_you ) ) { #><?php _e(',', 'buddyboss'); ?><# } #>
 					</span>
 				<# } #>
 
@@ -225,10 +222,7 @@
 				<dt>
 					<# for ( i in other_recipients ) { #>
 						<span class="participants-name">
-							<a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a>
-							<# if ( i != other_recipients.length -1 || ( i == other_recipients.length -1 && include_you ) ) { #>
-								<?php _e(',', 'buddyboss'); ?>
-							<# } #>
+							<a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a><# if ( i != other_recipients.length -1 || ( i == other_recipients.length -1 && include_you ) ) { #><?php _e(',', 'buddyboss'); ?><# } #>
 						</span>
 					<# } #>
 

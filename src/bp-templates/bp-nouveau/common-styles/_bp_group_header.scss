@@ -90,8 +90,6 @@
 
 		.group-description {
 			background: $off-white;
-
-			@include box-shadow(inset 0 0 9px $primary-grey);
 			padding: $pad-med;
 			text-align: left;
 		}

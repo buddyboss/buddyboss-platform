@@ -86,9 +86,9 @@ module.exports = function( grunt ) {
 		},
 		sass: {
 			options: {
-				outputStyle: 'expanded',
-				indentType: 'tab',
-				indentWidth: '1'
+				outputStyle: 'expanded'
+				//indentType: 'tab',
+				//indentWidth: '1'
 			},
 			// legacy: {
 			// 	cwd: SOURCE_DIR,

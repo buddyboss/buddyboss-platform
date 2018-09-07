@@ -230,10 +230,12 @@ class BP_Members_Component extends BP_Component {
 
 		/** Default Profile Component ****************************************
 		 */
-		if ( bp_displayed_user_has_front_template() ) {
+		if ( bp_displayed_user_has_front_template() && bp_is_my_profile() ) {
 			$bp->default_component = 'front';
 		} elseif ( defined( 'BP_DEFAULT_COMPONENT' ) && BP_DEFAULT_COMPONENT ) {
 			$bp->default_component = BP_DEFAULT_COMPONENT;
+		} elseif ( bp_is_active( 'xprofile' ) ) {
+			$bp->default_component = ( 'xprofile' === $bp->profile->id ) ? 'profile' : $bp->profile->id;
 		} elseif ( bp_is_active( 'activity' ) && isset( $bp->pages->activity ) ) {
 			$bp->default_component = bp_get_activity_slug();
 		} else {

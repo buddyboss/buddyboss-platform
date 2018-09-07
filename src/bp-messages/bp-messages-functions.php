@@ -195,6 +195,22 @@ function messages_new_message( $args = '' ) {
 		}
 	}
 
+	// check if force friendship is enabled and check recipients
+	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
+		foreach ( (array) $message->recipients as $i => $recipient_id ) {
+			if ( ! friends_check_friendship( $message->sender_id, $i ) ) {
+				if ( 'wp_error' === $r['error_type'] ) {
+					if ( ! empty( $r['thread_id'] ) ) {
+						return new WP_Error( 'message_invalid_recipients', __( 'You need to be connected to continue this conversation.', 'buddyboss' ) );
+					}
+					return new WP_Error( 'message_invalid_recipients', __( 'You need to be connected with all recipients in order to send them a message.', 'buddyboss' ) );
+				} else {
+					return false;
+				}
+			}
+		}
+	}
+
 	// preapre to upadte the deleted user's last message if message sending successfull
 	$last_message_data = BP_Messages_Thread::prepare_last_message_status( $message->thread_id );
 

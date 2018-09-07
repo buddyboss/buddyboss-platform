@@ -103,20 +103,9 @@
 
 				// FF adds red shadow on password inputs, remove!
 				box-shadow: none;
-				border-width: 2px;
 
 				// IE Edge uses outline for invalid controls, remove
 				outline: 0;
-
-				// Sadly this does mean all inputs are considered to be
-				// invalid from page load & bordered.
-				&:invalid {
-					border-color: $warn;
-				}
-
-				&:valid {
-					border-color: $valid;
-				}
 
 				&:focus {
 					border-color: $form-border-color;
@@ -280,6 +269,12 @@
 			}
 		}
 
+		button.visibility-toggle-link {
+
+			@include font-size(12);
+			margin: 5px;
+		}
+
 	} // close .standard-form
 
 	// Register page
@@ -350,7 +345,6 @@ body.no-js {
 			margin-right: -25px;
 			padding: 6px 25px 6px $marg-sml;
 			position: relative;
-			text-indent: -2px;
 			z-index: 1;
 			width: 100%;
 		}

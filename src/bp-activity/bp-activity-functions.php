@@ -3951,6 +3951,10 @@ function bp_ajax_get_suggestions() {
 		'type' => sanitize_text_field( $_GET['type'] ),
 	);
 
+	if ( ! empty( $_GET['only_friends'] ) ) {
+		$args['only_friends'] = absint( $_GET['only_friends'] );
+	}
+
 	// Support per-Group suggestions.
 	if ( ! empty( $_GET['group-id'] ) ) {
 		$args['group_id'] = absint( $_GET['group-id'] );

@@ -1538,6 +1538,28 @@ function bp_message_get_recipient_usernames() {
 function bp_thread_has_messages( $args = '' ) {
 	global $thread_template;
 
+	$thread_template = bp_get_thread( $args );
+
+	return $thread_template->has_messages();
+}
+
+/**
+ * Initialize the messages template loop for a specific thread and sets thread.
+ *
+ * @param array|string $args {
+ *     Array of arguments. All are optional.
+ *     @type int    $thread_id         ID of the thread whose messages you are displaying.
+ *                                     Default: if viewing a thread, the thread ID will be parsed from
+ *                                     the URL (bp_action_variable( 0 )).
+ *     @type string $order             'ASC' or 'DESC'. Default: 'ASC'.
+ *     @type bool   $update_meta_cache Whether to pre-fetch metadata for
+ *                                     queried message items. Default: true.
+ * }
+ * @return object thread template.
+ */
+function bp_get_thread( $args = '' ) {
+	global $thread_template;
+
 	$r = bp_parse_args( $args, array(
 		'thread_id'         => false,
 		'order'             => 'DESC',
@@ -1554,7 +1576,7 @@ function bp_thread_has_messages( $args = '' ) {
 
 	$thread_template = new BP_Messages_Thread_Template( $r['thread_id'], $r['order'], $extra_args );
 
-	return $thread_template->has_messages();
+	return $thread_template;
 }
 
 /**
