@@ -64,6 +64,34 @@ function bp_nouveau_get_members_directory_nav_items() {
 				'position'  => 15,
 			);
 		}
+
+		if ( bp_is_active( 'friends' ) ) {
+			$follow_counts = bp_follow_total_follow_counts( array( 'user_id' => bp_loggedin_user_id() ) );
+
+			if ( ! empty ( $follow_counts ['followers'] ) ) {
+				$nav_items['followers'] = array(
+					'component' => 'members',
+					'slug'      => 'followers', // slug is used because BP_Core_Nav requires it, but it's the scope
+					'li_class'  => array(),
+					'link'      => bp_loggedin_user_domain() . bp_get_friends_slug() . '/followers/',
+					'text'      => __( 'My Followers', 'buddyboss' ),
+					'count'     => $follow_counts ['followers'],
+					'position'  => 20,
+				);
+			}
+
+			if ( ! empty ( $follow_counts ['following'] ) ) {
+				$nav_items['following'] = array(
+					'component' => 'members',
+					'slug'      => 'following', // slug is used because BP_Core_Nav requires it, but it's the scope
+					'li_class'  => array(),
+					'link'      => bp_loggedin_user_domain() . bp_get_friends_slug() . '/following/',
+					'text'      => __( 'My Following', 'buddyboss' ),
+					'count'     => $follow_counts ['following'],
+					'position'  => 25,
+				);
+			}
+		}
 	}
 
 	// Check for the deprecated hook :

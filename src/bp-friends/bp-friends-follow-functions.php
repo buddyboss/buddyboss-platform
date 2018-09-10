@@ -311,3 +311,26 @@ function bp_follow_exclude_unfollow_feed( $args ) {
 }
 
 add_filter( 'bp_after_has_activities_parse_args', 'bp_follow_exclude_unfollow_feed' );
+
+/**
+ * Modify the querystring passed to the members loop to return only users
+ * that the current user is following.
+ *
+ * @since 3.1.1
+ * @uses bp_get_following_ids() Get the user_ids of all users a user is following.
+ * @uses bp_get_follower_ids() Get the user_ids of all followers.
+ */
+function bp_follow_include_members_dir( $args ) {
+
+	if ( ! empty( $args ) && 'followers' == $args['scope'] ) {
+		$args['include'] = bp_get_follower_ids( array( 'user_id' => bp_loggedin_user_id() ) );
+	}
+
+	if ( ! empty( $args ) && 'following' == $args['scope'] ) {
+		$args['include'] = bp_get_following_ids( array( 'user_id' => bp_loggedin_user_id() ) );
+	}
+
+	return $args;
+}
+
+add_filter( 'bp_after_has_members_parse_args', 'bp_follow_include_members_dir' );
