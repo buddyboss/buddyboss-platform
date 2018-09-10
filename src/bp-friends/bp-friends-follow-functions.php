@@ -273,11 +273,29 @@ function bp_follow_exclude_unfollow_feed( $args ) {
 			}
 
 			if ( ! empty( $unfollowing ) ) {
+
 				$filter_query = array(
-					'column'  => 'user_id',
-					'value'   => $unfollowing,
-					'compare' => 'NOT IN'
+					array(
+						'column'  => 'user_id',
+						'value'   => $unfollowing,
+						'compare' => 'NOT IN',
+					)
 				);
+
+				// Are mentions disabled?
+				if ( bp_activity_do_mentions() ) {
+					$filter_query['relation'] = 'OR';
+					$filter_query[] = array(
+						array(
+							'column'  => 'content',
+							'compare' => 'LIKE',
+
+							// Start search at @ symbol and stop search at closing tag delimiter.
+							'value'   => '@' . bp_activity_get_user_mentionname( bp_loggedin_user_id() ) . '<'
+						),
+					);
+				}
+
 				if ( ! empty( $args['filter_query'] ) ) {
 					array_push( $args['filter_query'], $filter_query );
 				} else {
