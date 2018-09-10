@@ -1018,6 +1018,14 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'info',
 			'message' => __( 'You have no pending invitations to connect.', 'buddyboss' ),
 		),
+		'member-followers-none' => array(
+			'type'    => 'info',
+			'message' => __( 'You have no followers.', 'buddyboss' ),
+		),
+		'member-following-none' => array(
+			'type'    => 'info',
+			'message' => __( 'You are not following anyone.', 'buddyboss' ),
+		),
 		'member-invites-none' => array(
 			'type'    => 'info',
 			'message' => __( 'You have no outstanding group invites.', 'buddyboss' ),

@@ -11,7 +11,7 @@
 
 <?php bp_nouveau_member_hook( 'before', 'friend_followers_content' ); ?>
 
-<?php if ( bp_has_members( 'type=alphabetical&include=' . implode( ',', (array) bp_follow_get_followers() ) ) ) : ?>
+<?php if ( bp_has_members( 'type=alphabetical&include=' . bp_get_follower_ids() ) ) : ?>
 
 	<?php bp_nouveau_pagination( 'top' ); ?>
 
