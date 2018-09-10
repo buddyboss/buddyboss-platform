@@ -130,6 +130,10 @@ function bp_messages_filter_kses( $content ) {
 	return wp_kses( $content, $messages_allowedtags );
 }
 
+/**
+ * [maybe_redirects_to_previous_thread_message description]
+ * @return [type] [description]
+ */
 function maybe_redirects_to_previous_thread_message() {
 	$recipient = bp_get_messages_username_value();
 	$user_id = bp_core_get_userid_from_nicename( $recipient );

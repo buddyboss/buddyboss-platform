@@ -176,7 +176,9 @@ class BP_UnitTest_Factory_For_Message extends WP_UnitTest_Factory_For_Thing {
 
 		$thread_id = messages_new_message( $args );
 		$thread = new BP_Messages_Thread( $thread_id );
-		return end( $thread->messages )->id;
+
+		return BP_Messages_Message::$last_inserted_id;
+		// return end( $thread->messages )->id;
 	}
 
 	function update_object( $message_id, $fields ) {

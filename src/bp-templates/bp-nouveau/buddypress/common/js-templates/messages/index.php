@@ -139,6 +139,10 @@
 
 		var include_you = other_recipients.length > 2;
 		var first_three = _.first(other_recipients, 3);
+
+		if (first_three.length == 0) {
+			include_you = true;
+		}
 	#>
 	<div class="thread-cb">
 		<input class="message-check" type="checkbox" name="message_ids[]" id="bp-message-thread-{{data.id}}" value="{{data.id}}">
@@ -149,7 +153,7 @@
 		<# if ( other_recipients.length > 1 ) { #>
 			<img class="avatar" src="{{data.sender_avatar}}" alt="{{data.sender_name}}" />
 		<# } else { #>
-			<# var recipient = _.first(other_recipients); #>
+			<# var recipient = _.first(other_recipients)? _.first(other_recipients) : current_user; #>
 			<img class="avatar" src="{{recipient.avatar}}" alt="{{recipient.user_name}}" />
 		<# } #>
 	</div>
@@ -206,6 +210,10 @@
 		});
 
 		var include_you = other_recipients.length > 2;
+
+		if (other_recipients.length == 0) {
+			include_you = true;
+		}
 	#>
 
 	<header class="single-message-thread-header">
@@ -234,6 +242,10 @@
 			</button>
 		</div>
 	</header>
+</script>
+
+<script type="text/html" id="tmpl-bp-messages-single-load-more">
+	<button type="button" class="button"><?php _e( 'Load previous messages', 'buddyboss' ); ?></button>
 </script>
 
 <script type="text/html" id="tmpl-bp-messages-single-list">
@@ -288,6 +300,7 @@
 	<?php bp_nouveau_messages_hook( 'before', 'thread_content' ); ?>
 
 	<div id="bp-message-thread-header" class="message-thread-header"></div>
+	<div id="bp-message-load-more"></div>
 
 	<?php bp_nouveau_messages_hook( 'before', 'thread_list' ); ?>
 

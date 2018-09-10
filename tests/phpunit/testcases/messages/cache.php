@@ -107,54 +107,56 @@ class BP_Tests_Message_Cache extends BP_UnitTestCase {
 	/**
 	 * @group bp_messages_delete_meta
 	 * @group messages_delete_thread
+	 *
+	 * @deprecated Buddyboss 3.1.1 Messages no loadger perminently deleted
 	 */
-	public function test_bp_messages_delete_metadata_cache_on_thread_delete() {
-		$this->old_current_user = get_current_user_id();
+	// public function test_bp_messages_delete_metadata_cache_on_thread_delete() {
+	// 	$this->old_current_user = get_current_user_id();
 
-		$u1 = self::factory()->user->create();
-		$u2 = self::factory()->user->create();
+	// 	$u1 = self::factory()->user->create();
+	// 	$u2 = self::factory()->user->create();
 
-		// create the thread
-		$message_1 = self::factory()->message->create_and_get( array(
-			'sender_id'  => $u1,
-			'recipients' => array( $u2 ),
-			'subject'    => 'Oy',
-		) );
+	// 	// create the thread
+	// 	$message_1 = self::factory()->message->create_and_get( array(
+	// 		'sender_id'  => $u1,
+	// 		'recipients' => array( $u2 ),
+	// 		'subject'    => 'Oy',
+	// 	) );
 
-		// create a reply
-		$message_2 = self::factory()->message->create_and_get( array(
-			'thread_id'  => $message_1->thread_id,
-			'sender_id'  => $u2,
-			'recipients' => array( $u1 ),
-			'content'    => 'Yo',
-		) );
+	// 	// create a reply
+	// 	$message_2 = self::factory()->message->create_and_get( array(
+	// 		'thread_id'  => $message_1->thread_id,
+	// 		'sender_id'  => $u2,
+	// 		'recipients' => array( $u1 ),
+	// 		'content'    => 'Yo',
+	// 	) );
 
-		$m1 = $message_1->id;
-		$m2 = $message_2->id;
-		$t1 = $message_1->thread_id;
+	// 	$m1 = $message_1->id;
+	// 	$m2 = $message_2->id;
+	// 	$t1 = $message_1->thread_id;
 
-		// add message meta
-		bp_messages_update_meta( $m1, 'yolo', 'gah' );
-		bp_messages_update_meta( $m2, 'yolo', 'bah' );
+	// 	// add message meta
+	// 	bp_messages_update_meta( $m1, 'yolo', 'gah' );
+	// 	bp_messages_update_meta( $m2, 'yolo', 'bah' );
 
-		// prime message meta cache
-		bp_messages_get_meta( $m1, 'yolo' );
-		bp_messages_get_meta( $m2, 'yolo' );
+	// 	// prime message meta cache
+	// 	bp_messages_get_meta( $m1, 'yolo' );
+	// 	bp_messages_get_meta( $m2, 'yolo' );
 
-		// delete thread
-		// to outright delete a thread, both recipients must delete it
-		$this->set_current_user( $u1 );
-		messages_delete_thread( $t1 );
-		$this->set_current_user( $u2 );
-		messages_delete_thread( $t1 );
+	// 	// delete thread
+	// 	// to outright delete a thread, both recipients must delete it
+	// 	$this->set_current_user( $u1 );
+	// 	messages_delete_thread( $t1 );
+	// 	$this->set_current_user( $u2 );
+	// 	messages_delete_thread( $t1 );
 
-		// assert empty meta cache
-		$this->assertEmpty( wp_cache_get( $m1, 'message_meta' ) );
-		$this->assertEmpty( wp_cache_get( $m2, 'message_meta' ) );
+	// 	// assert empty meta cache
+	// 	$this->assertEmpty( wp_cache_get( $m1, 'message_meta' ) );
+	// 	$this->assertEmpty( wp_cache_get( $m2, 'message_meta' ) );
 
-		// cleanup
-		$this->set_current_user( $this->old_current_user );
-	}
+	// 	// cleanup
+	// 	$this->set_current_user( $this->old_current_user );
+	// }
 
 	/**
 	 * Helper method to grab the message IDs from a message thread.

@@ -14,6 +14,8 @@ defined( 'ABSPATH' ) || exit;
  * Single message class.
  */
 class BP_Messages_Message {
+
+	public static $last_inserted_id;
 	/**
 	 * ID of the message.
 	 *
@@ -142,7 +144,7 @@ class BP_Messages_Message {
 			return false;
 		}
 
-		$this->id = $wpdb->insert_id;
+		static::$last_inserted_id = $this->id = $wpdb->insert_id;
 
 		$recipient_ids = array();
 
@@ -155,11 +157,15 @@ class BP_Messages_Message {
 
 			// Add a sender recipient entry if the sender is not in the list of recipients.
 			if ( ! in_array( $this->sender_id, $recipient_ids ) ) {
-				$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id, sender_only ) VALUES ( %d, %d, 1 )", $this->sender_id, $this->thread_id ) );
+				$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id ) VALUES ( %d, %d )", $this->sender_id, $this->thread_id ) );
 			}
 		} else {
 			// Update the unread count for all recipients.
-			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, sender_only = 0, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
+			// $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, sender_only = 0, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
+			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
+
+			// make sure the current user delete is reset
+			// $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_deleted = 0 WHERE thread_id = %d AND user_id = %d", $this->thread_id, $this->sender_id ) );
 		}
 
 		messages_remove_callback_values();
@@ -289,18 +295,22 @@ class BP_Messages_Message {
 		$recipient_ids = array_filter(array_unique(array_values($recipient_ids)));
 		sort($recipient_ids);
 
-		$results = $wpdb->get_results( $wpdb->prepare(
+		$results = $wpdb->get_results( $sql = $wpdb->prepare(
 			"SELECT
-				thread_id,
-				GROUP_CONCAT(user_id ORDER BY user_id separator ',') as recipient_list
-			FROM {$bp->messages->table_name_recipients}
-			GROUP BY thread_id
+				r.thread_id as thread_id,
+				GROUP_CONCAT(DISTINCT user_id ORDER BY user_id separator ',') as recipient_list,
+				MAX(m.date_sent) AS date_sent
+			FROM {$bp->messages->table_name_recipients} r
+			INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id
+			GROUP BY r.thread_id
 			HAVING recipient_list = %s
-			ORDER BY id DESC
+			ORDER BY date_sent DESC
 			LIMIT 1
 			",
 			implode(',', $recipient_ids)
 		) );
+
+		// print_r($sql);die();
 
 		return $results? $results[0]->thread_id : null;
 	}
