@@ -322,11 +322,11 @@ add_filter( 'bp_after_has_activities_parse_args', 'bp_follow_exclude_unfollow_fe
  */
 function bp_follow_include_members_dir( $args ) {
 
-	if ( ! empty( $args ) && 'followers' == $args['scope'] ) {
+	if ( ! empty( $args['scope'] ) && 'followers' == $args['scope'] ) {
 		$args['include'] = bp_get_follower_ids( array( 'user_id' => bp_loggedin_user_id() ) );
 	}
 
-	if ( ! empty( $args ) && 'following' == $args['scope'] ) {
+	if ( ! empty( $args['scope'] ) && 'following' == $args['scope'] ) {
 		$args['include'] = bp_get_following_ids( array( 'user_id' => bp_loggedin_user_id() ) );
 	}
 
