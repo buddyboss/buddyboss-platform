@@ -167,7 +167,6 @@ function bp_nouveau_ajax_button( $output = '', $button = null, $before = '', $af
 
 	$reset_ids = array(
 		'member_friendship' => true,
-		'member_follow'     => true,
 		'group_membership'  => true,
 	);
 
@@ -1017,14 +1016,6 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		'member-requests-none' => array(
 			'type'    => 'info',
 			'message' => __( 'You have no pending invitations to connect.', 'buddyboss' ),
-		),
-		'member-followers-none' => array(
-			'type'    => 'info',
-			'message' => __( 'You have no followers.', 'buddyboss' ),
-		),
-		'member-following-none' => array(
-			'type'    => 'info',
-			'message' => __( 'You are not following anyone.', 'buddyboss' ),
 		),
 		'member-invites-none' => array(
 			'type'    => 'info',
