@@ -637,6 +637,12 @@ window.bp = window.bp || {};
 			// Stop event propagation
 			event.preventDefault();
 
+			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
+				target.text( target.data('title') );
+				target.removeClass('bp-toggle-action-button');
+				return false;
+			}
+
 			if ( ( undefined !== BP_Nouveau[ action + '_confirm'] && false === window.confirm( BP_Nouveau[ action + '_confirm'] ) ) || target.hasClass( 'pending' ) ) {
 				return false;
 			}

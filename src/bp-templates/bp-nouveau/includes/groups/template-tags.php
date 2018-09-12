@@ -980,13 +980,17 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
 					),
 				);
 
-			// If button element set add nonce 'href' link to data-attr attr.
-			if ( 'button' === $button_element ) {
-				$buttons['group_membership']['button_attr']['data-bp-nonce'] = $button_args['link_href'];
-			} else {
-			// Else this is an anchor so use an 'href' attr.
-				$buttons['group_membership']['button_attr']['href'] = $button_args['link_href'];
-			}
+				if ( ! empty( $button_args['toggle_text'] ) ) {
+					$buttons['group_membership']['button_attr']['data-title'] = $button_args['toggle_text'];
+				}
+
+                // If button element set add nonce 'href' link to data-attr attr.
+                if ( 'button' === $button_element ) {
+                    $buttons['group_membership']['button_attr']['data-bp-nonce'] = $button_args['link_href'];
+                } else {
+                // Else this is an anchor so use an 'href' attr.
+                    $buttons['group_membership']['button_attr']['href'] = $button_args['link_href'];
+                }
 
 				unset( bp_nouveau()->groups->button_args );
 			}

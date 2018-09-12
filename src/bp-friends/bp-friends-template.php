@@ -400,10 +400,14 @@ function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false 
 					'wrapper_class'     => 'friendship-button is_friend',
 					'wrapper_id'        => 'friendship-button-' . $potential_friend_id,
 					'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/remove-friend/' . $potential_friend_id . '/', 'friends_remove_friend' ),
-					'link_text'         => __( 'Remove Connection', 'buddyboss' ),
+					'link_text'         => __( 'Connected', 'buddyboss' ),
 					'link_id'           => 'friend-' . $potential_friend_id,
 					'link_rel'          => 'remove',
-					'link_class'        => 'friendship-button is_friend remove'
+					'link_class'        => 'friendship-button is_friend remove bp-toggle-action-button',
+			        'toggle_text'        => __( 'Remove Connection', 'buddyboss' ),
+                    'button_attr'       => array(
+	                    'data-title' => __( 'Remove Connection', 'buddyboss' ),
+                    )
 				);
 				break;
 
@@ -873,7 +877,11 @@ function bp_friends_get_add_follow_button( $args = '' ) {
 			'link_text'         => __( 'Following', 'buddyboss' ),
 			'link_id'           => 'follow-' . $r['leader_id'],
 			'link_rel'          => 'stop',
-			'link_class'        => 'follow-button following stop'
+			'link_class'        => 'follow-button following stop bp-toggle-action-button',
+			'toggle_text'        => __( 'Unfollow', 'buddyboss' ),
+			'button_attr'        => array(
+				'data-title' => __( 'Unfollow', 'buddyboss' )
+			)
 		);
 	}
 

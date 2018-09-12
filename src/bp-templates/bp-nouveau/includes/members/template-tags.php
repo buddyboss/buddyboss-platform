@@ -365,6 +365,10 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 						),
 					);
 
+					if ( ! empty( $button_args['toggle_text'] ) ) {
+						$buttons['member_friendship']['button_attr']['data-title'] = $button_args['toggle_text'];
+					}
+
 					// If button element set add nonce link to data attr
 					if ( 'button' === $button_element && 'awaiting_response' !== $button_args['id'] ) {
 						$buttons['member_friendship']['button_attr']['data-bp-nonce'] = $button_args['link_href'];
@@ -419,6 +423,10 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 							'title' => '',
 						),
 					);
+
+					if ( ! empty( $button_args['toggle_text'] ) ) {
+						$buttons['member_follow']['button_attr']['data-title'] = $button_args['toggle_text'];
+					}
 
 					// If button element set add nonce link to data attr
 					if ( 'button' === $button_element ) {

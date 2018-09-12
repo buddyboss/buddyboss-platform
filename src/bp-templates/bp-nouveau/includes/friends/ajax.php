@@ -239,7 +239,7 @@ function bp_nouveau_ajax_addremove_friend() {
 /**
  * Follow/Unfollow a user via a POST request.
  *
- * @since BuddyPress 3.1.1
+ * @since BuddyBoss 3.1.1
  *
  * @return string HTML
  */
