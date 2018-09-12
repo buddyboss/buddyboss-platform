@@ -754,7 +754,7 @@ function bp_get_theme_package_id( $default = 'nouveau' ) {
 /**
  * Is force friendship to message disabled?
  *
- * @since BuddyPress 3.1.1
+ * @since BuddyBoss 3.1.1
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
