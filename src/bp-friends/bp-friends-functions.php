@@ -1082,16 +1082,16 @@ function bp_friends_total_follow_counts( $args = '' ) {
  *
  * @uses BP_Friends_Follow::delete_all_for_user() Deletes user ID from all following / follower records
  */
-function bp_friends_remove_data( $user_id ) {
-	do_action( 'bp_friends_before_remove_data', $user_id );
+function bp_friends_remove_follow_data( $user_id ) {
+	do_action( 'bp_friends_before_remove_follow_data', $user_id );
 
 	BP_Friends_Follow::delete_all_for_user( $user_id );
 
-	do_action( 'bp_friends_remove_data', $user_id );
+	do_action( 'bp_friends_remove_follow_data', $user_id );
 }
-add_action( 'wpmu_delete_user',	'bp_friends_remove_data' );
-add_action( 'delete_user',	'bp_friends_remove_data' );
-add_action( 'make_spam_user',	'bp_friends_remove_data' );
+add_action( 'wpmu_delete_user',	'bp_friends_remove_follow_data' );
+add_action( 'delete_user',	'bp_friends_remove_follow_data' );
+add_action( 'make_spam_user',	'bp_friends_remove_follow_data' );
 
 /**
  * Auto follow users when they connect with each other
