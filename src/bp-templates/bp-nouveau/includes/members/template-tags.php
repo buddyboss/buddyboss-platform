@@ -387,14 +387,14 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 				 *
 				 * See https://buddypress.trac.wordpress.org/ticket/7126
 				 */
-				add_filter( 'bp_follow_get_add_follow_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
+				add_filter( 'bp_friends_get_add_follow_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
 
-				bp_follow_get_add_follow_button( array(
+				bp_friends_get_add_follow_button( array(
 					'leader_id'     => $user_id,
 					'follower_id'   => bp_loggedin_user_id(),
 				) );
 
-				remove_filter( 'bp_follow_get_add_follow_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
+				remove_filter( 'bp_friends_get_add_follow_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
 
 				if ( ! empty( bp_nouveau()->members->button_args ) ) {
 					$button_args = bp_nouveau()->members->button_args;

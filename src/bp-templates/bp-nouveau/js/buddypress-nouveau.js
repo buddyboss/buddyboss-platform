@@ -715,6 +715,10 @@ window.bp = window.bp || {};
 						$( self.objectNavParent + ' [data-bp-scope="personal"] span' ).html( personal_count );
 					}
 
+					if ( action === 'remove_friend' ) {
+						target.closest('ul').find('.follow-button').remove();
+					}
+
 					target.parent().replaceWith( response.data.contents );
 				}
 			} );

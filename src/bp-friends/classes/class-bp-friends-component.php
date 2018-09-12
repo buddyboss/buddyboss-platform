@@ -50,8 +50,6 @@ class BP_Friends_Component extends BP_Component {
 			'filters',
 			'template',
 			'functions',
-			'follow-functions',
-			'follow-template',
 			'widgets',
 		);
 
@@ -83,7 +81,7 @@ class BP_Friends_Component extends BP_Component {
 		if ( bp_is_user_friends() ) {
 			// Authenticated actions.
 			if ( is_user_logged_in() &&
-				in_array( bp_current_action(), array( 'add-friend', 'remove-friend', 'follow', 'unfollow' ), true )
+				in_array( bp_current_action(), array( 'add-friend', 'remove-friend' ), true )
 			) {
 				require $this->path . 'bp-friends/actions/' . bp_current_action() . '.php';
 			}
@@ -92,14 +90,6 @@ class BP_Friends_Component extends BP_Component {
 			require $this->path . 'bp-friends/screens/my-friends.php';
 			if ( is_user_logged_in() && bp_is_user_friend_requests() ) {
 				require $this->path . 'bp-friends/screens/requests.php';
-			}
-
-			if ( is_user_logged_in() && bp_is_user_followers() ) {
-				require $this->path . 'bp-friends/screens/followers.php';
-			}
-
-			if ( is_user_logged_in() && bp_is_user_following() ) {
-				require $this->path . 'bp-friends/screens/following.php';
 			}
 		}
 	}
@@ -148,20 +138,6 @@ class BP_Friends_Component extends BP_Component {
 		);
 
 		parent::setup_globals( $args );
-
-		// locally cache total count values for logged-in user
-		if ( is_user_logged_in() ) {
-			$bp->loggedin_user->total_follow_counts = bp_follow_total_follow_counts( array(
-				'user_id' => bp_loggedin_user_id()
-			) );
-		}
-
-		// locally cache total count values for displayed user
-		if ( bp_is_user() && ( bp_loggedin_user_id() != bp_displayed_user_id() ) ) {
-			$bp->displayed_user->total_follow_counts = bp_follow_total_follow_counts( array(
-				'user_id' => bp_displayed_user_id()
-			) );
-		}
 	}
 
 	/**
@@ -235,27 +211,6 @@ class BP_Friends_Component extends BP_Component {
 			'user_has_access' => $access
 		);
 
-		$sub_nav[] = array(
-			'name'            => _x( 'Followers', 'Connections screen sub nav', 'buddyboss' ),
-			'slug'            => 'followers',
-			'parent_url'      => $friends_link,
-			'parent_slug'     => $slug,
-			'screen_function' => 'friends_screen_my_followers',
-			'position'        => 30,
-			'item_css_id'     => 'friends-my-followers'
-		);
-
-		$sub_nav[] = array(
-			'name'            => _x( 'Following', 'Connections screen sub nav', 'buddyboss' ),
-			'slug'            => 'following',
-			'parent_url'      => $friends_link,
-			'parent_slug'     => $slug,
-			'screen_function' => 'friends_screen_my_following',
-			'position'        => 40,
-			'user_has_access' => bp_is_my_profile(),
-			'item_css_id'     => 'friends-my-following'
-		);
-
 		parent::setup_nav( $main_nav, $sub_nav );
 	}
 
@@ -319,24 +274,6 @@ class BP_Friends_Component extends BP_Component {
 				'title'    => $pending,
 				'href'     => trailingslashit( $friends_link . 'requests' ),
 				'position' => 20
-			);
-
-			// My Followers.
-			$wp_admin_nav[] = array(
-				'parent'   => 'my-account-' . $this->id,
-				'id'       => 'my-account-' . $this->id . '-followers',
-				'title'    => _x( 'My Followers', 'My Account Connections menu sub nav', 'buddyboss' ),
-				'href'     => trailingslashit( $friends_link . 'followers' ),
-				'position' => 30
-			);
-
-			// My Following.
-			$wp_admin_nav[] = array(
-				'parent'   => 'my-account-' . $this->id,
-				'id'       => 'my-account-' . $this->id . '-following',
-				'title'    => _x( 'My Following', 'My Account Connections menu sub nav', 'buddyboss' ),
-				'href'     => trailingslashit( $friends_link . 'following' ),
-				'position' => 40
 			);
 		}
 
