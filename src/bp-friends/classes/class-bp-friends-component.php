@@ -124,7 +124,6 @@ class BP_Friends_Component extends BP_Component {
 		$global_tables = array(
 			'table_name'      => $bp->table_prefix . 'bp_friends',
 			'table_name_meta' => $bp->table_prefix . 'bp_friends_meta',
-			'table_name_follow' => $bp->table_prefix . 'bp_follow',
 		);
 
 		// All globals for the friends component.

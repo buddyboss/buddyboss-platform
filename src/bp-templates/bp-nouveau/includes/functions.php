@@ -167,7 +167,6 @@ function bp_nouveau_ajax_button( $output = '', $button = null, $before = '', $af
 
 	$reset_ids = array(
 		'member_friendship' => true,
-		'member_follow'     => true,
 		'group_membership'  => true,
 	);
 

@@ -180,8 +180,8 @@ window.bp = window.bp || {};
 
 					if ( typeof window.BP_Nouveau !== 'undefined' &&
 						typeof window.BP_Nouveau.messages !== 'undefined' &&
-						typeof window.BP_Nouveau.messages.force_connection_to_message !== 'undefined' &&
-						window.BP_Nouveau.messages.force_connection_to_message ) {
+						typeof window.BP_Nouveau.messages.force_friendship_to_message !== 'undefined' &&
+						window.BP_Nouveau.messages.force_friendship_to_message ) {
 						params.only_friends = 1;
 					}
 
