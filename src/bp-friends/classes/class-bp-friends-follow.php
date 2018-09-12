@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage FollowClasses
- * @since BuddyPress 3.1.1
+ * @since BuddyBoss 3.1.1
 
  */
 
@@ -12,17 +12,17 @@
 if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
- * BuddyPress Follow Object.
+ * BuddyBoss Follow Object.
  *
  * Handles populating and saving follow relationships.
  *
- * @since 3.1.1
+ * @since BuddyBoss 3.1.1
  */
 class BP_Friends_Follow {
 	/**
 	 * The follow ID.
 	 *
-	 * @since 3.1.1
+	 * @since BuddyBoss 3.1.1
 	 * @var int
 	 */
 	public $id = 0;
@@ -30,7 +30,7 @@ class BP_Friends_Follow {
 	/**
 	 * The user ID of the person we want to follow.
 	 *
-	 * @since 3.1.1
+	 * @since BuddyBoss 3.1.1
 	 * @var int
 	 */
 	public $leader_id;
@@ -38,7 +38,7 @@ class BP_Friends_Follow {
 	/**
 	 * The user ID of the person initiating the follow request.
 	 *
-	 * @since 3.1.1
+	 * @since BuddyBoss 3.1.1
 	 * @var int
 	 */
 	public $follower_id;
@@ -62,7 +62,7 @@ class BP_Friends_Follow {
 	 *
 	 * Used in constructor.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyBoss 3.1.1
 	 */
 	protected function populate() {
 		global $wpdb, $bp;
@@ -75,17 +75,17 @@ class BP_Friends_Follow {
 	/**
 	 * Saves a follow relationship into the database.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyBoss 3.1.1
 	 */
 	public function save() {
 		global $wpdb, $bp;
 
 		// do not use these filters
 		// use the 'bp_follow_before_save' hook instead
-		$this->leader_id   = apply_filters( 'bp_follow_leader_id_before_save',   $this->leader_id,   $this->id );
-		$this->follower_id = apply_filters( 'bp_follow_follower_id_before_save', $this->follower_id, $this->id );
+		$this->leader_id   = apply_filters( 'bp_friends_follow_leader_id_before_save',   $this->leader_id,   $this->id );
+		$this->follower_id = apply_filters( 'bp_friends_follow_follower_id_before_save', $this->follower_id, $this->id );
 
-		do_action_ref_array( 'bp_follow_before_save', array( &$this ) );
+		do_action_ref_array( 'bp_friends_follow_before_save', array( &$this ) );
 
 		// leader ID is required
 		// this allows plugins to bail out of saving a follow relationship
@@ -104,7 +104,7 @@ class BP_Friends_Follow {
 			$this->id = $wpdb->insert_id;
 		}
 
-		do_action_ref_array( 'bp_follow_after_save', array( &$this ) );
+		do_action_ref_array( 'bp_friends_follow_after_save', array( &$this ) );
 
 		return $result;
 	}
@@ -112,7 +112,7 @@ class BP_Friends_Follow {
 	/**
 	 * Deletes a follow relationship from the database.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyBoss 3.1.1
 	 */
 	public function delete() {
 		global $wpdb, $bp;
@@ -125,7 +125,7 @@ class BP_Friends_Follow {
 	/**
 	 * Get the follower IDs for a given user.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyBoss 3.1.1
 	 *
 	 * @param int $user_id The user ID.
 	 * @return array
@@ -138,7 +138,7 @@ class BP_Friends_Follow {
 	/**
 	 * Get the user IDs that a user is following.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyBoss 3.1.1
 	 *
 	 * @param int $user_id The user ID to fetch.
 	 * @return array
@@ -151,7 +151,7 @@ class BP_Friends_Follow {
 	/**
 	 * Get the follower / following counts for a given user.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyBoss 3.1.1
 	 *
 	 * @param int $user_id The user ID to fetch counts for.
 	 * @return array
@@ -168,7 +168,7 @@ class BP_Friends_Follow {
 	/**
 	 * Bulk check the follow status for a user against a list of user IDs.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyBoss 3.1.1
 	 *
 	 * @param array $leader_ids The user IDs to check the follow status for.
 	 * @param int $user_id The user ID to check against the list of leader IDs.
@@ -193,7 +193,7 @@ class BP_Friends_Follow {
 	/**
 	 * Deletes all follow relationships for a given user.
 	 *
-	 * @since 1.1.0
+	 * @since BuddyBoss 3.1.1
 	 *
 	 * @param int $user_id The user ID
 	 */
