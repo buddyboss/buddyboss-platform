@@ -3258,6 +3258,26 @@ input#send-to-input {
   margin-top: 0;
 }
 
+#bp-message-load-more {
+  margin: 15px 0;
+}
+
+#bp-message-load-more .button {
+  background: #fafafa;
+  border: 1px solid #eee;
+  display: block;
+  font-size: 110%;
+  margin: 15px 0;
+  padding: 10px 0;
+  text-align: center;
+  width: 100%;
+}
+
+#bp-message-load-more .button:hover {
+  background: #fff;
+  color: #333;
+}
+
 /**
 *------------------------------------------
 * @subsection 5.2.2.6 - Settings
