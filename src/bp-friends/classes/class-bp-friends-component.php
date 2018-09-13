@@ -91,6 +91,10 @@ class BP_Friends_Component extends BP_Component {
 			if ( is_user_logged_in() && bp_is_user_friend_requests() ) {
 				require $this->path . 'bp-friends/screens/requests.php';
 			}
+
+			if ( is_user_logged_in() ) {
+				require $this->path . 'bp-friends/screens/mutual-friends.php';
+			}
 		}
 	}
 
@@ -192,7 +196,7 @@ class BP_Friends_Component extends BP_Component {
 
 		// Add the subnav items to the friends nav item.
 		$sub_nav[] = array(
-			'name'            => _x( 'Connections', 'Connections screen sub nav', 'buddyboss' ),
+			'name'            => _x( 'All Connections', 'Connections screen sub nav', 'buddyboss' ),
 			'slug'            => 'my-friends',
 			'parent_url'      => $friends_link,
 			'parent_slug'     => $slug,
@@ -202,12 +206,22 @@ class BP_Friends_Component extends BP_Component {
 		);
 
 		$sub_nav[] = array(
+			'name'            => _x( 'Mutual Connections', 'Connections screen sub nav', 'buddyboss' ),
+			'slug'            => 'mutual',
+			'parent_url'      => $friends_link,
+			'parent_slug'     => $slug,
+			'screen_function' => 'friends_screen_mutual_friends',
+			'position'        => 20,
+			'user_has_access' => ! bp_is_my_profile() && bp_loggedin_user_id()
+		);
+
+		$sub_nav[] = array(
 			'name'            => _x( 'Invitations', 'Connections screen sub nav', 'buddyboss' ),
 			'slug'            => 'requests',
 			'parent_url'      => $friends_link,
 			'parent_slug'     => $slug,
 			'screen_function' => 'friends_screen_requests',
-			'position'        => 20,
+			'position'        => 30,
 			'user_has_access' => $access
 		);
 

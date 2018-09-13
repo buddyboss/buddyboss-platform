@@ -503,6 +503,57 @@ function bp_get_friendship_requests( $user_id = 0 ) {
 }
 
 /**
+ * Get a user's mutual connections with logged in user.
+ *
+ * Note that we return a 0 if no mutual connections are found. This is necessary
+ * because of the structure of the $include parameter in bp_has_members().
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param int $user_id ID of the user whose mutual connections are being retrieved.
+ *                     Defaults to displayed user.
+ * @return array|int An array of user IDs if found, or a 0 if none are found.
+ */
+function bp_get_mutual_friendships( $user_id = 0 ) {
+
+    if ( ! bp_loggedin_user_id() ) {
+        return 0;
+    }
+
+	if ( !$user_id ) {
+		$user_id = bp_displayed_user_id();
+	}
+
+	if ( !$user_id ) {
+		return 0;
+	}
+
+	// get displayed user's connections
+	$displayed_user_friends = friends_get_friend_user_ids( $user_id );
+
+	// get logged in user's connections
+	$logged_in_user_friends = friends_get_friend_user_ids( bp_loggedin_user_id() );
+
+	$mutual_friends = array_intersect( $logged_in_user_friends, $displayed_user_friends );
+
+	if ( !empty( $mutual_friends ) ) {
+		$mutual_friends = implode( ',', (array) $mutual_friends );
+	} else {
+		$mutual_friends = 0;
+	}
+
+	/**
+	 * Filters the total mutual connections for a user.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param array|int $requests An array of user IDs if found, or a 0 if none are found.
+	 * @param int       $user_id  ID of the queried user.
+	 */
+	return apply_filters( 'bp_get_mutual_friendships', $mutual_friends, $user_id );
+}
+
+/**
  * Output the ID of the friendship between the logged-in user and the current user in the loop.
  *
  * @since BuddyPress 1.2.0

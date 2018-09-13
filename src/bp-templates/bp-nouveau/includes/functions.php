@@ -1018,13 +1018,9 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'info',
 			'message' => __( 'You have no pending invitations to connect.', 'buddyboss' ),
 		),
-		'member-followers-none' => array(
-			'type'    => 'info',
-			'message' => __( 'You have no followers.', 'buddyboss' ),
-		),
-		'member-following-none' => array(
-			'type'    => 'info',
-			'message' => __( 'You are not following anyone.', 'buddyboss' ),
+		'member-mutual-friends-none' => array(
+			'type'    => 'loading',
+			'message' => __( 'You have no mutual connections with this member.', 'buddyboss' ),
 		),
 		'member-invites-none' => array(
 			'type'    => 'info',
