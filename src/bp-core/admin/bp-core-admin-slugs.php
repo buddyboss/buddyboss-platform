@@ -23,7 +23,6 @@ function bp_core_admin_slugs_settings() {
 
 		<h1><?php _e( 'BuddyBoss Settings', 'buddyboss' ); ?> </h1>
 
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Pages', 'buddyboss' ) ); ?></h2>
 		<form action="" method="post" id="bp-admin-page-form">
 
 			<?php bp_core_admin_slugs_options(); ?>

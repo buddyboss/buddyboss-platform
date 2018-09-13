@@ -105,7 +105,7 @@ class BP_Admin {
 		$this->js_url     = trailingslashit( $this->admin_url . 'js'            ); // Admin css URL.
 
 		// Main settings page.
-		$this->settings_page = bp_core_do_network_admin() ? 'settings.php' : 'options-general.php';
+		$this->settings_page = bp_core_do_network_admin() ? 'settings.php' : 'buddyboss-platform';
 
 		// Main capability.
 		$this->capability = bp_core_do_network_admin() ? 'manage_network_options' : 'manage_options';
@@ -207,7 +207,7 @@ class BP_Admin {
 			__( 'BuddyBoss', 'buddyboss' ),
 			__( 'BuddyBoss', 'buddyboss' ),
 			$this->capability,
-			'bp-general-settings',
+			$this->settings_page,
 			'bp_core_admin_backpat_menu',
 			'div'
 		);
@@ -225,7 +225,7 @@ class BP_Admin {
 		$hooks[] = add_submenu_page(
 			$this->settings_page,
 			__( 'BuddyBoss Components', 'buddyboss' ),
-			__( 'BuddyBoss', 'buddyboss' ),
+			__( 'Components', 'buddyboss' ),
 			$this->capability,
 			'bp-components',
 			'bp_core_admin_components_settings'
@@ -233,30 +233,20 @@ class BP_Admin {
 
 		$hooks[] = add_submenu_page(
 			$this->settings_page,
-			__( 'BuddyBoss Pages', 'buddyboss' ),
-			__( 'BuddyBoss Pages', 'buddyboss' ),
-			$this->capability,
-			'bp-page-settings',
-			'bp_core_admin_slugs_settings'
-		);
-
-		$hooks[] = add_submenu_page(
-			$this->settings_page,
-			__( 'BuddyBoss Options', 'buddyboss' ),
-			__( 'BuddyBoss Options', 'buddyboss' ),
+			__( 'BuddyBoss Settings', 'buddyboss' ),
+			__( 'Settings', 'buddyboss' ),
 			$this->capability,
 			'bp-settings',
 			'bp_core_admin_settings'
 		);
 
-		// Credits.
 		$hooks[] = add_submenu_page(
 			$this->settings_page,
-			__( 'BuddyBoss Credits', 'buddyboss' ),
-			__( 'BuddyBoss Credits', 'buddyboss' ),
+			__( 'BuddyBoss Pages', 'buddyboss' ),
+			__( 'Pages', 'buddyboss' ),
 			$this->capability,
-			'bp-credits',
-			array( $this, 'credits_screen' )
+			'bp-page-settings',
+			'bp_core_admin_slugs_settings'
 		);
 
 		// For consistency with non-Multisite, we add a Tools menu in
@@ -314,9 +304,9 @@ class BP_Admin {
 			$GLOBALS['menu'][26][2] = esc_url_raw( $email_url );
 		}
 
-		foreach( $hooks as $hook ) {
-			add_action( "admin_head-$hook", 'bp_core_modify_admin_menu_highlight' );
-		}
+		// foreach( $hooks as $hook ) {
+		// 	add_action( "admin_head-$hook", 'bp_core_modify_admin_menu_highlight' );
+		// }
 	}
 
 	/**
@@ -407,7 +397,7 @@ class BP_Admin {
 			// Profile sync setting.
 			add_settings_field( 'bp-disable-profile-sync',   __( 'Profile Syncing',  'buddyboss' ), 'bp_admin_setting_callback_profile_sync', 'buddypress', 'bp_xprofile' );
 			register_setting  ( 'buddypress', 'bp-disable-profile-sync', 'intval' );
-            
+
             // Enable/Disable member dashboard.
 			add_settings_field( 'bp-enable-member-dashboard',   __( 'Member Dashboard',  'buddyboss' ), 'bp_admin_setting_callback_member_dashboard', 'buddypress', 'bp_xprofile' );
 			register_setting  ( 'buddypress', 'bp-enable-member-dashboard', 'intval' );
@@ -525,9 +515,11 @@ class BP_Admin {
 	public function admin_head() {
 
 		// Settings pages.
-		remove_submenu_page( $this->settings_page, 'bp-page-settings' );
-		remove_submenu_page( $this->settings_page, 'bp-settings'      );
-		remove_submenu_page( $this->settings_page, 'bp-credits'       );
+		remove_submenu_page( $this->settings_page, $this->settings_page );
+
+		// remove_submenu_page( $this->settings_page, 'bp-page-settings' );
+		// remove_submenu_page( $this->settings_page, 'bp-settings'      );
+		// remove_submenu_page( $this->settings_page, 'bp-credits'       );
 
 		// Network Admin Tools.
 		remove_submenu_page( 'network-tools', 'network-tools' );
@@ -564,216 +556,8 @@ class BP_Admin {
 		if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'buddypress' ) {
 			return;
 		}
-	?>
 
-		<div id="bp-hello-backdrop" style="display: none;">
-		</div>
-
-		<div id="bp-hello-container" role="dialog" aria-labelledby="bp-hello-title" style="display: none;">
-			<div class="bp-hello-header" role="document">
-				<div class="bp-hello-close">
-					<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip="<?php echo esc_attr( 'Close pop-up', 'buddyboss' ); ?>">
-						<span class="screen-reader-text"><?php esc_html_e( 'Close pop-up', 'buddyboss' ); ?></span>
-					</button>
-				</div>
-
-				<div class="bp-hello-title">
-					<h1 id="bp-hello-title" tabindex="-1"><?php esc_html_e( _x( 'New in BuddyBoss', 'section heading', 'buddyboss' ) ); ?></h1>
-				</div>
-			</div>
-
-			<div class="bp-hello-content">
-				<h2><?php echo esc_html( _n( 'Maintenance Release', 'Maintenance Releases', 1, 'buddyboss' ) ); ?></h2>
-				<p>
-					<?php
-					printf(
-						/* translators: 1: BuddyPress version number, 2: plural number of bugs. */
-						_n(
-							'<strong>Version %1$s</strong> addressed %2$s bug.',
-							'<strong>Version %1$s</strong> addressed %2$s bugs.',
-							23,
-							'buddypress'
-						),
-						self::display_version(),
-						number_format_i18n( 23 )
-					);
-					?>
-				</p>
-
-				<hr>
-
-				<h2><?php esc_html_e( __( 'Feature', 'buddyboss' ) ); ?></h2>
-				<p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'buddyboss' ); ?></p>
-
-				<h2><?php esc_html_e( __( "Feature", 'buddyboss' ) ); ?></h2>
-				<p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'buddyboss' ); ?></p>
-
-				<p><?php esc_html_e( 'Thank you for using BuddyBoss!', 'buddyboss' ); ?></p>
-
-				<br /><br />
-			</div>
-
-			<div class="bp-hello-footer">
-				<div class="bp-hello-social-cta">
-					<p>
-						<?php
-						printf(
-							__( 'Built by <a href="%s">BuddyBoss</a>.', 'buddyboss' ),
-							esc_url( 'https://www.buddyboss.com/' )
-						);
-						?>
-					</p>
-				</div>
-
-				<div class="bp-hello-social-links">
-					<ul class="bp-hello-social">
-						<li>
-							<?php
-							printf(
-								'<a class="twitter bp-tooltip" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
-								esc_attr( 'Follow BuddyBoss on Twitter', 'buddyboss' ),
-								esc_url( 'https://twitter.com/BuddyBossWP' ),
-								esc_html( 'Follow BuddyPress on Twitter', 'buddyboss' )
-							);
-							?>
-						</li>
-
-						<li>
-							<?php
-							printf(
-								'<a class="facebook bp-tooltip" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
-								esc_attr( 'Follow BuddyBoss on Facebook', 'buddyboss' ),
-								esc_url( 'https://facebook.com/BuddyBossWP/' ),
-								esc_html( 'Follow BuddyBoss on Facebook', 'buddyboss' )
-							);
-							?>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-
-		<?php
-	}
-
-	/**
-	 * Output the credits screen.
-	 *
-	 * Hardcoding this in here is pretty janky. It's fine for now, but we'll
-	 * want to leverage api.wordpress.org eventually.
-	 *
-	 * @since BuddyPress 1.7.0
-	 */
-	public function credits_screen() {
-	?>
-
-		<div class="wrap bp-about-wrap">
-
-		<h1><?php _e( 'BuddyBoss Settings', 'buddyboss' ); ?> </h1>
-
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Credits', 'buddyboss' ) ); ?></h2>
-
-			<p class="about-description">
-				<?php
-				printf(
-					__( 'The BuddyBoss Platform is a fork of the open source project <a class="web" href="%s">BuddyPress</a>. We cannot thank the core BuddyPress team enough for their many years of contributing to the original platform, for which we are forever grateful.', 'buddyboss' ),
-					esc_url( 'https://buddypress.org/' )
-				);
-				?>
-			</p>
-
-			<h3 class="wp-people-group"><?php _e( 'BuddyPress Team', 'buddyboss' ); ?></h3>
-			<ul class="wp-people-group " id="wp-people-group-core-team">
-				<li class="wp-person" id="wp-person-michaeleisenwasser">
-					<a class="web" href="https://profiles.wordpress.org/johnjamesjacoby"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/7a2644fb53ae2f7bfd7143b504af396c?s=120">
-					John James Jacoby</a>
-					<span class="title"><?php _e( 'Project Lead', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-alanchens">
-					<a class="web" href="https://profiles.wordpress.org/boonebgorges"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/9cf7c4541a582729a5fc7ae484786c0c?s=120">
-					Boone B. Gorges</a>
-					<span class="title"><?php _e( 'Lead Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-chandanca">
-					<a class="web" href="https://profiles.wordpress.org/djpaul"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/3bc9ab796299d67ce83dceb9554f75df?s=120">
-					Paul Gibbs</a>
-					<span class="title"><?php _e( 'Release Lead', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-r-a-y">
-					<a class="web" href="https://profiles.wordpress.org/r-a-y"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/3bfa556a62b5bfac1012b6ba5f42ebfa?s=120">
-					Ray</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-hnla">
-					<a class="web" href="https://profiles.wordpress.org/hnla"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/3860c955aa3f79f13b92826ae47d07fe?s=120">
-					Hugo Ashmore</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-imath">
-					<a class="web" href="https://profiles.wordpress.org/imath"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/8b208ca408dad63888253ee1800d6a03?s=120">
-					Mathieu Viet</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-mercime">
-					<a class="web" href="https://profiles.wordpress.org/mercime"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/fae451be6708241627983570a1a1817a?s=120">
-					Mercime</a>
-					<span class="title"><?php _e( 'Navigator', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-dcavins">
-					<a class="web" href="https://profiles.wordpress.org/dcavins"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/a5fa7e83d59cb45ebb616235a176595a?s=120">
-					David Cavins</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-tw2113">
-					<a class="web" href="https://profiles.wordpress.org/tw2113"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/a5d7c934621fa1c025b83ee79bc62366?s=120">
-					Michael Beckwith</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-henry-wright">
-					<a class="web" href="https://profiles.wordpress.org/henry.wright"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/0da2f1a9340d6af196b870f6c107a248?s=120">
-					Henry Wright</a>
-					<span class="title"><?php _e( 'Community Support', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-danbp">
-					<a class="web" href="https://profiles.wordpress.org/danbp"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/0deae2e7003027fbf153500cd3fa5501?s=120">
-					danbp</a>
-					<span class="title"><?php _e( 'Community Support', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-shanebp">
-					<a class="web" href="https://profiles.wordpress.org/shanebp"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/ffd294ab5833ba14aaf175f9acc71cc4?s=120">
-					shanebp</a>
-					<span class="title"><?php _e( 'Community Support', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-slaffik">
-					<a class="web" href="https://profiles.wordpress.org/r-a-y"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/61fb07ede3247b63f19015f200b3eb2c?s=120">
-					Slava Abakumov</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-offereins">
-					<a class="web" href="https://profiles.wordpress.org/Offereins"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/2404ed0a35bb41aedefd42b0a7be61c1?s=120">
-					Laurens Offereins</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-netweb">
-					<a class="web" href="https://profiles.wordpress.org/netweb"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/97e1620b501da675315ba7cfb740e80f?s=120">
-					Stephen Edgar</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-espellcaste">
-					<a class="web" href="https://profiles.wordpress.org/espellcaste"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/b691e67be0ba5cad6373770656686bc3?s=120">
-					Renato Alves</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-venutius">
-					<a class="web" href="https://profiles.wordpress.org/venutius"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/6a7c42a77fd94b82b217a7a97afdddbc?s=120">
-					Venutius</a>
-					<span class="title"><?php _e( 'Community Support', 'buddyboss' ); ?></span>
-				</li>
-			</ul>
-
-		</div>
-
-		<?php
+		include $this->admin_dir . 'templates/about-screen.php';
 	}
 
 	/** Emails ****************************************************************/

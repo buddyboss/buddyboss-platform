@@ -290,8 +290,6 @@ function bp_core_admin_settings() {
 
 		<h1><?php _e( 'BuddyBoss Settings', 'buddyboss' ); ?> </h1>
 
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Options', 'buddyboss' ) ); ?></h2>
-
 		<form action="<?php echo esc_url( $form_action ) ?>" method="post">
 
 			<?php settings_fields( 'buddypress' ); ?>
@@ -350,7 +348,7 @@ function bp_core_admin_settings_save() {
 			$value = isset( $_POST[$legacy_option] ) ? '' : 1;
 			bp_update_option( $legacy_option, $value );
 		}
-        
+
         /**
          * sync bp-enable-member-dashboard with cutomizer settings.
          * @since BuddyBoss 3.1.1
