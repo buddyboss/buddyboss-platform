@@ -203,7 +203,7 @@ function messages_new_message( $args = '' ) {
 
 		$error_messages = array(
 			'new_message'       => __( 'You need to be connected with this member in order to send them a message.', 'buddyboss' ),
-			'new_reply'         => __( 'You need to be connected to continue this conversation.', 'buddyboss' ),
+			'new_reply'         => __( 'You need to be connected with this member to continue this conversation.', 'buddyboss' ),
 			'new_group_message' => __( 'You need to be connected with all recipients in order to send them a message.', 'buddyboss' ),
 			'new_group_reply'   => __( 'You need to be connected with all recipients to continue this conversation.', 'buddyboss' ),
 		);
