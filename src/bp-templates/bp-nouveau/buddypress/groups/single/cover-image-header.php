@@ -28,7 +28,7 @@
 			<p class="activity">
 				<?php
 				$created_date = date('F Y', strtotime( bp_get_group_date_created() ));
-				printf( __( 'Created %s', 'buddyboss' ), $created_date );
+				echo esc_html( sprintf( __( 'Created %s', 'buddyboss' ), $created_date ) );
 				?>
 			</p>
 

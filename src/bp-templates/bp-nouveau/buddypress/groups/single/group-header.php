@@ -25,13 +25,8 @@
 
 	<p class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_group_last_active( 0, array( 'relative' => false ) ) ); ?>">
 		<?php
-		echo esc_html(
-			sprintf(
-				/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-				__( 'active %s', 'buddyboss' ),
-				bp_get_group_last_active()
-			)
-		);
+		$created_date = date('F Y', strtotime( bp_get_group_date_created() ));
+		echo esc_html( sprintf( __( 'Created %s', 'buddyboss' ), $created_date ) );
 		?>
 	</p>
 
