@@ -25,10 +25,10 @@
 		<div id="item-header-content">
 
 			<p class="highlight group-status"><strong><?php echo esc_html( bp_nouveau_group_meta()->status ); ?></strong></p>
-			<p class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_group_last_active( 0, array( 'relative' => false ) ) ); ?>">
+			<p class="activity">
 				<?php
-				/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-				printf( __( 'active %s', 'buddyboss' ), bp_get_group_last_active() );
+				$created_date = date('F Y', strtotime( bp_get_group_date_created() ));
+				printf( __( 'Created %s', 'buddyboss' ), $created_date );
 				?>
 			</p>
 
