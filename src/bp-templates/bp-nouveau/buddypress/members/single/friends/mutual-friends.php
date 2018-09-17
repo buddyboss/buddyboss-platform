@@ -7,8 +7,6 @@
  */
 ?>
 
-	<h2 class="screen-heading friendship-mutual-friends-screen"><?php esc_html_e( 'Mutual Connections', 'buddyboss' ); ?></h2>
-
 <?php bp_nouveau_member_hook( 'before', 'friend_mutual_friends_content' ); ?>
 
 <?php if ( bp_has_members( 'type=alphabetical&include=' . bp_get_mutual_friendships() ) ) : ?>
@@ -21,20 +19,44 @@
 			bp_the_member();
 			?>
 
-			<li id="friendship-<?php bp_friend_friendship_id(); ?>" <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php bp_friend_friendship_id(); ?>" data-bp-item-component="members">
-				<div class="item-avatar">
-					<a href="<?php bp_member_link(); ?>"><?php bp_member_avatar( array( 'type' => 'full' ) ); ?></a>
-				</div>
+            <li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php bp_member_user_id(); ?>" data-bp-item-component="members">
+                <div class="list-wrap">
 
-				<div class="item">
-					<div class="item-title"><a href="<?php bp_member_link(); ?>"><?php bp_member_name(); ?></a></div>
-					<div class="item-meta"><span class="activity"><?php bp_member_last_active(); ?></span></div>
+                    <div class="item-avatar">
+                        <a href="<?php bp_member_permalink(); ?>"><?php bp_member_avatar( bp_nouveau_avatar_args() ); ?></a>
+                    </div>
 
-					<?php bp_nouveau_friend_hook( 'mutual_friends_item' ); ?>
-				</div>
+                    <div class="item">
 
-				<?php bp_nouveau_members_loop_buttons(); ?>
-			</li>
+                        <div class="item-block">
+
+                            <h2 class="list-title member-name">
+                                <a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a>
+                            </h2>
+
+							<?php if ( bp_nouveau_member_has_meta() ) : ?>
+                                <p class="item-meta last-activity">
+									<?php bp_nouveau_member_meta(); ?>
+                                </p><!-- #item-meta -->
+							<?php endif; ?>
+
+							<?php
+							bp_nouveau_members_loop_buttons(
+								array(
+									'container'      => 'ul',
+									'button_element' => 'button',
+								)
+							);
+							?>
+
+                        </div>
+
+                    </div><!-- // .item -->
+
+
+
+                </div>
+            </li>
 
 		<?php endwhile; ?>
 	</ul>
