@@ -93,6 +93,10 @@
 			padding: $pad-med;
 			text-align: left;
 		}
+
+		.group-description p:last-child {
+			margin-bottom: 0;
+		}
 	}
 } // close groups-header
 
