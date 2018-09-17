@@ -24,10 +24,7 @@
 	<p class="highlight group-status"><strong><?php echo esc_html( bp_nouveau_group_meta()->status ); ?></strong></p>
 
 	<p class="activity">
-		<?php
-		$created_date = date('F Y', strtotime( bp_get_group_date_created() ));
-		echo esc_html( sprintf( __( 'Created %s', 'buddyboss' ), $created_date ) );
-		?>
+		<?php echo esc_html( bp_get_group_member_count() ); ?>
 	</p>
 
 	<?php bp_nouveau_group_hook( 'before', 'header_meta' ); ?>

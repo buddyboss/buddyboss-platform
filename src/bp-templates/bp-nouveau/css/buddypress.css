@@ -2072,14 +2072,13 @@ body.register #page #primary .entry-header {
 }
 
 .single-headers .group-status {
-  font-size: 18px;
-  color: #333;
+  font-size: 14px;
   padding-right: 1em;
 }
 
 .single-headers .activity {
   display: inline-block;
-  font-size: 12px;
+  font-size: 14px;
   padding: 0;
 }
 
