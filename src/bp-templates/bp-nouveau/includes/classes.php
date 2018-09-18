@@ -186,11 +186,9 @@ class BP_Buttons_Group {
 	 * @param array $args Optional. See the __constructor for a description of this argument.
 	 */
 	public function update( $args = array() ) {
+	    $this->group = array();
 		foreach ( $args as $id => $params ) {
-			if ( ! isset( $this->group[ $id ] ) ) {
-			    $this->set( $params );
-            }
-            $this->group[ $id ] = wp_parse_args( $params, $this->group[ $id ] );
+			$this->set( $params );
 		}
 	}
 }

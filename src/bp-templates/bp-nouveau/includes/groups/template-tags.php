@@ -980,8 +980,10 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
 					),
 				);
 
-				if ( ! empty( $button_args['toggle_text'] ) ) {
-					$buttons['group_membership']['button_attr']['data-title'] = $button_args['toggle_text'];
+				if ( ! empty( $button_args['button_attr'] ) ) {
+					foreach ( $button_args['button_attr'] as $title => $value ) {
+						$buttons['group_membership']['button_attr'][$title] = $value;
+					}
 				}
 
                 // If button element set add nonce 'href' link to data-attr attr.

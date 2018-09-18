@@ -426,6 +426,8 @@ window.bp = window.bp || {};
 
 			// Buttons
 			$( '#buddypress [data-bp-list], #buddypress #item-header' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
+			$( '#buddypress [data-bp-list], #buddypress #item-header' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
+			$( document ).on( 'keyup', this, this.keyUp );
 
 			// Close notice
 			$( '#buddypress [data-bp-close]' ).on( 'click', this, this.closeNotice );
@@ -480,6 +482,18 @@ window.bp = window.bp || {};
 		heartbeatTick: function( event, data ) {
 			// Add an heartbeat send event to possibly any BuddyPress pages
 			$( '#buddypress' ).trigger( 'bp_heartbeat_tick', data );
+		},
+
+		/**
+		 * [keyUp description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		keyUp: function( event ) {
+			var self = event.data;
+			if ( event.keyCode === 27 ) { // escape key
+				self.buttonRevertAll();
+			}
 		},
 
 		/**
@@ -640,6 +654,7 @@ window.bp = window.bp || {};
 			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
 				target.text( target.data('title') );
 				target.removeClass('bp-toggle-action-button');
+				target.addClass('bp-toggle-action-button-clicked');
 				return false;
 			}
 
@@ -726,6 +741,36 @@ window.bp = window.bp || {};
 					}
 
 					target.parent().replaceWith( response.data.contents );
+				}
+			} );
+		},
+
+		/**
+		 * [buttonRevert description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		buttonRevert: function( event ) {
+			var target = $( event.currentTarget );
+
+			if ( target.hasClass( 'bp-toggle-action-button-clicked' ) ) {
+				target.text( target.data('title-displayed') ); // change text to displayed context
+				target.removeClass('bp-toggle-action-button-clicked'); // remove class to detect event
+				target.addClass('bp-toggle-action-button'); // add class to detect event to confirm
+			}
+		},
+
+		/**
+		 * [buttonRevertAll description]
+		 * @return {[type]}       [description]
+		 */
+		buttonRevertAll: function() {
+			$.each( $( '#buddypress [data-bp-btn-action]' ), function() {
+				if ( $(this).hasClass( 'bp-toggle-action-button-clicked' ) ) {
+					$(this).text( $(this).data('title-displayed') ); // change text to displayed context
+					$(this).removeClass('bp-toggle-action-button-clicked'); // remove class to detect event
+					$(this).addClass('bp-toggle-action-button'); // add class to detect event to confirm
+					$(this).trigger('blur');
 				}
 			} );
 		},

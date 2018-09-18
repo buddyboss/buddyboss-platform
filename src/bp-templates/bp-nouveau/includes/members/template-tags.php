@@ -365,8 +365,10 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 						),
 					);
 
-					if ( ! empty( $button_args['toggle_text'] ) ) {
-						$buttons['member_friendship']['button_attr']['data-title'] = $button_args['toggle_text'];
+					if ( ! empty( $button_args['button_attr'] ) ) {
+						foreach ( $button_args['button_attr'] as $title => $value ) {
+							$buttons['member_friendship']['button_attr'][$title] = $value;
+						}
 					}
 
 					// If button element set add nonce link to data attr
@@ -424,8 +426,10 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 						),
 					);
 
-					if ( ! empty( $button_args['toggle_text'] ) ) {
-						$buttons['member_follow']['button_attr']['data-title'] = $button_args['toggle_text'];
+					if ( ! empty( $button_args['button_attr'] ) ) {
+						foreach ( $button_args['button_attr'] as $title => $value ) {
+							$buttons['member_follow']['button_attr'][$title] = $value;
+						}
 					}
 
 					// If button element set add nonce link to data attr

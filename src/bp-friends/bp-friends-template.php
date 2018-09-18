@@ -404,10 +404,10 @@ function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false 
 					'link_id'           => 'friend-' . $potential_friend_id,
 					'link_rel'          => 'remove',
 					'link_class'        => 'friendship-button is_friend remove bp-toggle-action-button',
-			        'toggle_text'        => __( 'Remove Connection', 'buddyboss' ),
-                    'button_attr'       => array(
-	                    'data-title' => __( 'Remove Connection', 'buddyboss' ),
-                    )
+					'button_attr' => array(
+						'data-title'           => __( 'Remove Connection', 'buddyboss' ),
+						'data-title-displayed' => __( 'Connected', 'buddyboss' ),
+					)
 				);
 				break;
 
@@ -929,9 +929,9 @@ function bp_friends_get_add_follow_button( $args = '' ) {
 			'link_id'           => 'follow-' . $r['leader_id'],
 			'link_rel'          => 'stop',
 			'link_class'        => 'follow-button following stop bp-toggle-action-button',
-			'toggle_text'        => __( 'Unfollow', 'buddyboss' ),
-			'button_attr'        => array(
-				'data-title' => __( 'Unfollow', 'buddyboss' )
+			'button_attr' => array(
+				'data-title'           => __( 'Unfollow', 'buddyboss' ),
+				'data-title-displayed' => __( 'Following', 'buddyboss' )
 			)
 		);
 	}
