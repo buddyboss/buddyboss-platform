@@ -457,7 +457,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 				if ( sizeof( $recipients ) > 1 ) {
 					$thread->feedback_error = array( 'feedback' => __( 'You need to be connected with all recipients to continue this conversation.', 'buddyboss' ), 'type' => 'error' );
 				} else {
-					$thread->feedback_error = array( 'feedback' => __( 'You need to be connected with the member to continue this conversation.', 'buddyboss' ), 'type' => 'error' );
+					$thread->feedback_error = array( 'feedback' => __( 'You need to be connected with this member to continue this conversation.', 'buddyboss' ), 'type' => 'error' );
 				}
 				break;
 			}
