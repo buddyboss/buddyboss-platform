@@ -24,7 +24,7 @@
 	<p class="highlight group-status"><strong><?php echo esc_html( bp_nouveau_group_meta()->status ); ?></strong></p>
 
 	<p class="activity">
-		<?php echo esc_html( bp_get_group_member_count() ); ?>
+        <a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>"><?php echo esc_html( bp_get_group_member_count() ); ?></a>
 	</p>
 
 	<?php bp_nouveau_group_hook( 'before', 'header_meta' ); ?>
