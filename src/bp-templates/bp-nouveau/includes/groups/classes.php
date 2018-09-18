@@ -232,9 +232,9 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				/** This filter is documented in bp-groups/classes/class-bp-groups-component.php. */
 				'default_subnav_slug' => apply_filters( 'bp_groups_default_extension', defined( 'BP_GROUPS_DEFAULT_EXTENSION' ) ? BP_GROUPS_DEFAULT_EXTENSION : 'home' ),
 			),
-			'home'    => array(
-				'name'        => _x( 'Home', 'Group screen navigation title', 'buddyboss' ),
-				'slug'        => 'home',
+			'members'    => array(
+				'name'        => _x( 'Members', 'Group screen navigation title', 'buddyboss' ),
+				'slug'        => 'members',
 				'parent_slug' => $this->group->slug,
 				'position'    => 10,
 			),
@@ -252,35 +252,12 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 			),
 		);
 
-		// Make sure only global front.php will be checked.
-		add_filter( '_bp_nouveau_group_reset_front_template', array( $this, 'all_groups_fronts' ), 10, 1 );
-
-		$front_template = bp_groups_get_front_template( $this->group );
-
-		remove_filter( '_bp_nouveau_group_reset_front_template', array( $this, 'all_groups_fronts' ), 10, 1 );
-
-		if ( ! $front_template ) {
-			if ( bp_is_active( 'activity' ) ) {
-				$nav_items['home']['name'] = _x( 'Home (Activity)', 'Group screen navigation title', 'buddyboss' );
-			} else {
-				$nav_items['home']['name'] = _x( 'Home (Members)', 'Group screen navigation title', 'buddyboss' );
-			}
-		} else {
-			if ( bp_is_active( 'activity' ) ) {
-				$nav_items['activity'] = array(
-					'name'        => _x( 'Activity', 'My Group screen nav', 'buddyboss' ),
-					'slug'        => 'activity',
-					'parent_slug' => $this->group->slug,
-					'position'    => 11,
-				);
-			}
-
-			// Add the members one
-			$nav_items['members'] = array(
-				'name'        => _x( 'Members', 'My Group screen nav', 'buddyboss' ),
-				'slug'        => 'members',
+		if ( bp_is_active( 'activity' ) ) {
+			$nav_items['activity'] = array(
+				'name'        => _x( 'Activity', 'My Group screen nav', 'buddyboss' ),
+				'slug'        => 'activity',
 				'parent_slug' => $this->group->slug,
-				'position'    => 60,
+				'position'    => 20,
 			);
 		}
 

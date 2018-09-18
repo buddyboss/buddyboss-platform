@@ -24,8 +24,9 @@ function bp_groups_group_access_protection() {
 
 	// The user can know about the group but doesn't have full access.
 	if ( ! $user_has_access && $is_visible ) {
-		// Always allow access to home and request-membership.
-		if ( bp_is_current_action( 'home' ) || bp_is_current_action( 'request-membership' ) ) {
+
+		// Always allow access to request-membership.
+		if ( bp_is_current_action( 'request-membership' ) ) {
 			$user_has_access = true;
 
 		// User doesn't have access, so set up redirect args.
