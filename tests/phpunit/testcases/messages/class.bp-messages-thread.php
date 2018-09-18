@@ -498,4 +498,38 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 
 		$this->assertEquals($message->thread_id, $last_message->thread_id);
 	}
+
+	/**
+	 * @group thread search
+	 */
+	public function test_search_thread_should_not_include_deleted() {
+		$u1 = self::factory()->user->create();
+		$u2 = self::factory()->user->create();
+		$u3 = self::factory()->user->create();
+		$u4 = self::factory()->user->create();
+
+		$message = self::factory()->message->create_and_get( array(
+			'sender_id' => $u1,
+			'recipients' => array( $u2 )
+		) );
+
+		$message2 = self::factory()->message->create_and_get( array(
+			'sender_id' => $u1,
+			'recipients' => array( $u2, $u3 )
+		) );
+
+		$message3 = self::factory()->message->create_and_get( array(
+			'sender_id' => $u1,
+			'recipients' => array( $u2, $u3, $u4 )
+		) );
+
+		messages_delete_thread($message->thread_id);
+
+		$threads = BP_Messages_Thread::get_current_threads_for_user([
+			'user_id' => $u1,
+			'search_terms' => get_user_by('id', $u2)->display_name
+		]);
+
+		var_dump($threads);die();
+	}
 }
