@@ -753,7 +753,7 @@ window.bp = window.bp || {};
 		buttonRevert: function( event ) {
 			var target = $( event.currentTarget );
 
-			if ( target.hasClass( 'bp-toggle-action-button-clicked' ) ) {
+			if ( target.hasClass( 'bp-toggle-action-button-clicked' ) && ! target.hasClass( 'loading' ) ) {
 				target.text( target.data('title-displayed') ); // change text to displayed context
 				target.removeClass('bp-toggle-action-button-clicked'); // remove class to detect event
 				target.addClass('bp-toggle-action-button'); // add class to detect event to confirm
@@ -766,7 +766,7 @@ window.bp = window.bp || {};
 		 */
 		buttonRevertAll: function() {
 			$.each( $( '#buddypress [data-bp-btn-action]' ), function() {
-				if ( $(this).hasClass( 'bp-toggle-action-button-clicked' ) ) {
+				if ( $(this).hasClass( 'bp-toggle-action-button-clicked' ) && ! $(this).hasClass( 'loading' ) ) {
 					$(this).text( $(this).data('title-displayed') ); // change text to displayed context
 					$(this).removeClass('bp-toggle-action-button-clicked'); // remove class to detect event
 					$(this).addClass('bp-toggle-action-button'); // add class to detect event to confirm
