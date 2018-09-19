@@ -432,7 +432,7 @@ class BP_Messages_Thread {
 			LIMIT 1
 		", $thread_id, $last_deleted_timestamp ) );
 
-		return intval( $results[0] );
+		return $results[0];
 	}
 
 	public static function get_user_last_deleted_message( $thread_id ) {
@@ -615,8 +615,8 @@ class BP_Messages_Thread {
 			'meta_query'   => array()
 		) );
 
-		$pag_sql = $type_sql = $search_sql = $user_id_sql = $sender_sql = '';
-		$current_user_participants_ids = '';
+		$pag_sql = $type_sql = $search_sql = $user_id_sql = $sender_sql = $having_sql = '';
+		$current_user_participants_ids = [];
 		$meta_query_sql = array(
 			'join'  => '',
 			'where' => ''
@@ -638,39 +638,56 @@ class BP_Messages_Thread {
 		// Default deleted SQL.
 		// $deleted_sql = 'r.is_deleted = 0';
 		// $user_ids = implode(',', $user_ids);
-		$where_sql = $wpdb->prepare( 'r.user_id = %d AND r.is_deleted = 0', $r['user_id'] );
+		// $where_sql = $wpdb->prepare( 'r.user_id = %d AND r.is_deleted = 0', $r['user_id'] );
+		$where_sql = '1 = 1';
+		// $having_sql = "HAVING FIND_IN_SET('{$r['user_id']}', recipient_list) > 0";
 		// $deleted_sql = "( r.user_id IN ({$user_ids}) AND r.is_deleted = 0 )";
 
 		// if ( $current_user_participants_ids ) {
 		// 	$user_ids = implode(',', $current_user_participants_ids);
 		// 	$deleted_sql = "( r.user_id IN ({$user_ids}) AND r.is_deleted = 0 )";
 		// }
+		$user_threads_query = $wpdb->prepare( "
+			SELECT DISTINCT(thread_id)
+			FROM {$bp->messages->table_name_recipients}
+			WHERE user_id = %d
+			AND is_deleted = 0
+		", bp_loggedin_user_id() );
+
 
 		if ( ! empty( $r['search_terms'] ) ) {
 			$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$where_sql = $wpdb->prepare( "${where_sql} AND message LIKE %s", $search_terms_like );
+			// $where_sql = $wpdb->prepare( "${where_sql} AND message LIKE %s", $search_terms_like );
 
 			$current_user_participants = $wpdb->get_results( $q = $wpdb->prepare( "
 				SELECT DISTINCT(r.user_id), u.display_name
 				FROM {$bp->messages->table_name_recipients} r
 				LEFT JOIN {$wpdb->users} u ON r.user_id = u.ID
-				WHERE r.thread_id IN (
-					SELECT DISTINCT(thread_id)
-					FROM {$bp->messages->table_name_recipients}
-					WHERE user_id = %d
-					AND is_deleted = 0
-				) AND
+				WHERE r.thread_id IN ($user_threads_query) AND
 				( u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_nicename LIKE %s )
-			", bp_loggedin_user_id(), $search_terms_like, $search_terms_like, $search_terms_like ) );
+			", $search_terms_like, $search_terms_like, $search_terms_like ) );
 
 			$current_user_participants_ids = array_map( 'intval', wp_list_pluck( $current_user_participants, 'user_id' ) );
 			$current_user_participants_ids = array_diff( $current_user_participants_ids, [ bp_loggedin_user_id() ] );
 
-			if ( $current_user_participants_ids ) {
-				$user_ids = implode(',', $current_user_participants_ids);
-				$where_sql = "( r.user_id IN ({$user_ids}) AND r.is_deleted = 0 ) OR ({$where_sql})";
-			}
+			// foreach ($current_user_participants_ids as $pid) {
+			// 	$having_sql .= " AND FIND_IN_SET('{$pid}', recipient_list) > 0";
+			// }
+
+			// $current_user_participants_ids[] = bp_loggedin_user_id();
+
+			$user_ids = implode(',', array_unique($current_user_participants_ids));
+			// $where_sql = "( r.user_id IN ({$user_ids}) AND r.is_deleted = 0 ) OR ({$where_sql})";
+			// $where_sql = $wpdb->prepare( "
+			// 	(r.is_deleted = 0 AND r.user_id IN ({$user_ids}) AND m.message LIKE %s) OR
+			// 	(r.is_deleted = 0 AND r.user_id IN ({$user_ids}))
+			// ", $search_terms_like );
+			$where_sql = $wpdb->prepare( "
+				(m.message LIKE %s OR r.user_id IN ({$user_ids}))
+			", $search_terms_like );
 		}
+
+		$where_sql .= " AND r.thread_id IN ($user_threads_query)";
 
 		// switch ( $r['box'] ) {
 		// 	case 'inbox' :
@@ -701,11 +718,11 @@ class BP_Messages_Thread {
 
 		// Set up SQL array.
 		$sql = array();
-		$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent';
+		$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent, GROUP_CONCAT(DISTINCT r.user_id ORDER BY r.user_id separator \',\' ) as recipient_list';
 		$sql['from']   = "FROM {$bp->messages->table_name_recipients} r INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id {$meta_query_sql['join']}";
 		// $sql['where']  = "WHERE {$deleted_sql} {$sender_sql} {$type_sql} {$user_id_sql} {$search_sql} {$meta_query_sql['where']}";
 		$sql['where']  = "WHERE {$where_sql} {$meta_query_sql['where']}";
-		$sql['misc']   = "GROUP BY m.thread_id ORDER BY date_sent DESC {$pag_sql}";
+		$sql['misc']   = "GROUP BY m.thread_id {$having_sql} ORDER BY date_sent DESC {$pag_sql}";
 
 		// Get thread IDs.
 		$thread_ids = $wpdb->get_results( $qq = implode( ' ', $sql ) );
