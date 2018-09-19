@@ -286,19 +286,21 @@ class BP_User_Query {
 			case 'active' :
 			case 'newest' :
 			case 'random' :
-				$this->uid_name = 'user_id';
-				$this->uid_table = $bp->members->table_name_last_activity;
-				$sql['select']  = "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u";
-				$sql['where'][] = $wpdb->prepare( "u.component = %s AND u.type = 'last_activity'", buddypress()->members->id );
+				$this->uid_name = 'ID';
+				$this->uid_table = $wpdb->users;
+				$sql['select']  = $wpdb->prepare( "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u LEFT JOIN {$bp->members->table_name_last_activity} a ON u.ID = a.user_id AND a.component = %s AND a.type = 'last_activity' ", buddypress()->members->id );
+				$sql['where'][] = " u.user_status = 0 ";
 
 				if ( 'newest' == $type ) {
-					$sql['orderby'] = "ORDER BY u.user_id";
+					$sql['orderby'] = "ORDER BY u.ID";
 					$sql['order'] = "DESC";
 				} elseif ( 'random' == $type ) {
 					$sql['orderby'] = "ORDER BY rand()";
 				} else {
-					$sql['orderby'] = "ORDER BY u.date_recorded";
-					$sql['order'] = "DESC";
+					$sql['orderby'] = array( 
+                        array( "COALESCE( a.date_recorded, NULL )", "DESC" ),
+                        array( "u.display_name", "ASC" ),
+                    );
 				}
 
 				break;
@@ -513,10 +515,20 @@ class BP_User_Query {
 			$this->uid_clauses['select'] = str_replace( 'SELECT', 'SELECT SQL_CALC_FOUND_ROWS', $this->uid_clauses['select'] );
 		}
 
+        if ( is_array( $this->uid_clauses['orderby'] ) ) {
+            $orderby_multiple = array();
+            foreach ( $this->uid_clauses['orderby'] as $part ) {
+                $orderby_multiple[] = $part[0] . ' ' . $part[1];//column_name DESC/ASC
+            }
+            
+            $this->uid_clauses['orderby'] = "ORDER BY " . implode( ', ', $orderby_multiple );
+            $this->uid_clauses['order'] = "";
+        }
+        
 		// Get the specific user ids.
 		$this->user_ids = $wpdb->get_col( "{$this->uid_clauses['select']} {$this->uid_clauses['where']} {$this->uid_clauses['orderby']} {$this->uid_clauses['order']} {$this->uid_clauses['limit']}" );
-
-		// Get the total user count.
+        
+        // Get the total user count.
 		if ( 'sql_calc_found_rows' == $this->query_vars['count_total'] ) {
 
 			/**
