@@ -2660,7 +2660,7 @@ function bp_get_user_group_role_title( $user_id = false, $group_id = false ) {
 	}
 
 	/**
-	 * Filters
+	 * Filters member's group role title
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *
