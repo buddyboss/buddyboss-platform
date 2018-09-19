@@ -24,7 +24,7 @@
 <?php	if ( ! bp_nouveau_groups_front_page_description() ) : ?>
 		<div id="item-header-content">
 
-			<p class="highlight group-status"><strong><?php echo esc_html( bp_nouveau_group_meta()->status ); ?></strong></p>
+			<p class="highlight group-status bp-tooltip" data-bp-tooltip="<?php echo esc_html( bp_get_group_status_description() ); ?>"><strong><?php echo esc_html( bp_nouveau_group_meta()->status ); ?></strong></p>
 			<p class="activity">
                 <a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>"><?php echo esc_html( bp_get_group_member_count() ); ?></a>
 			</p>

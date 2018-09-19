@@ -741,6 +741,55 @@ function bp_group_status( $group = false ) {
 	}
 
 /**
+ * Output the status description of the current group in the loop.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param object|bool $group Optional. Group object.
+ *                           Default: current group in loop.
+ */
+function bp_group_status_description( $group = false ) {
+	echo bp_get_group_status_description( $group );
+}
+
+    /**
+     * Get the status description of the current group in the loop.
+     *
+     * @since BuddyBoss 3.1.1
+     *
+     * @param object|bool $group Optional. Group object.
+     *                           Default: current group in loop.
+     * @return string
+     */
+    function bp_get_group_status_description( $group = false ) {
+        global $groups_template;
+
+        if ( empty( $group ) ) {
+            $group =& $groups_template->group;
+        }
+
+        if ( 'public' == $group->status ) {
+            $description = __( 'This group’s content, including its members and activity, are visible to any site member.', 'buddyboss' );
+        } elseif ( 'hidden' == $group->status ) {
+            $description = __( 'Only this group\'s members can find the group and view its content, including its members and activity.', 'buddyboss' );
+        } elseif ( 'private' == $group->status ) {
+            $description = __( 'This group’s content, including its members and activity, are only be visible to members of the group.', 'buddyboss' );
+        } else {
+            $description = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
+        }
+
+        /**
+         * Filters the status description of the current group in the loop.
+         *
+         * @since BuddyBoss 3.1.1
+         *
+         * @param string $description Status description of the current group in the loop.
+         * @param object $group  Group object.
+         */
+        return apply_filters( 'bp_get_group_status_description', $description, $group );
+    }
+
+/**
  * Output the group avatar while in the groups loop.
  *
  * @since BuddyPress 1.0.0
