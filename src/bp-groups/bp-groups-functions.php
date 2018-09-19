@@ -2654,9 +2654,9 @@ function bp_get_user_group_role_title( $user_id = false, $group_id = false ) {
 
 	$role_title = '';
 	if ( groups_is_user_admin( $user_id, $group_id ) ) {
-		$role_title = __( 'Admin', 'buddyboss' );
-	} else if ( groups_is_user_mod( $user_id, $group_id ) ) {
 		$role_title = __( 'Organizer', 'buddyboss' );
+	} else if ( groups_is_user_mod( $user_id, $group_id ) ) {
+		$role_title = __( 'Moderator', 'buddyboss' );
 	}
 
 	/**
