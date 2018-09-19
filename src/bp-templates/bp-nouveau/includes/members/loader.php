@@ -51,6 +51,7 @@ class BP_Nouveau_Members {
 	 * Register do_action() hooks
 	 *
 	 * @since BuddyPress 3.0.0
+     * @since BuddyBoss 3.1.1 Addition: Hooked bp_nouveau_admin_bar_member_dashboard to bp_setup_admin_bar action
 	 */
 	protected function setup_actions() {
 		$ajax_actions = array(
@@ -77,6 +78,9 @@ class BP_Nouveau_Members {
 		// Actions to check whether we are in the member's default front page sidebar
 		add_action( 'dynamic_sidebar_before', array( $this, 'user_home_sidebar_set' ), 10, 1 );
 		add_action( 'dynamic_sidebar_after', array( $this, 'user_home_sidebar_unset' ), 10, 1 );
+        
+        // Add 'Dashboard' link to admin bar
+        add_action( 'bp_setup_admin_bar', 'bp_nouveau_admin_bar_member_dashboard', 11 );
 	}
 
 	/**

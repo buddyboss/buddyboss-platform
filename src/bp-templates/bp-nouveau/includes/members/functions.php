@@ -196,6 +196,75 @@ function bp_nouveau_get_hooked_member_meta() {
 }
 
 /**
+ * Adds a 'Dashbaord' link in admin bar.
+ * 
+ * @global \WP_Admin_Bar $wp_admin_bar
+ * 
+ * @since BuddyBoss 3.1.1
+ * 
+ * @param array $wp_admin_nav
+ * @return void
+ */
+function bp_nouveau_admin_bar_member_dashboard ( $wp_admin_nav = array() ) {
+    if ( !bp_loggedin_user_id() ) {
+        return false;
+    }
+    
+    /**
+     * Front page is disabled if you are viewing someone else's profile.
+     * This is done through filtering the value of setting 'user_front_page'.
+     * Since, we want to display the dashboard menu always, we'll need to temporarily unhook that filter.
+     */
+    $had_filter = false;
+    if ( has_filter( 'bp_after_nouveau_appearance_settings_parse_args', 'bp_hide_front_page_for_others_profile' ) ) {
+        $had_filter = true;
+        remove_filter( 'bp_after_nouveau_appearance_settings_parse_args', 'bp_hide_front_page_for_others_profile' );
+    }
+    
+    $use_default_front = bp_nouveau_get_appearance_settings( 'user_front_page' );
+    
+    if ( $had_filter ) {
+        add_filter( 'bp_after_nouveau_appearance_settings_parse_args', 'bp_hide_front_page_for_others_profile' );
+    }
+
+	// Setting the front template happens too early, so we need this!
+	if ( is_customize_preview() ) {
+		$use_default_front = bp_nouveau_get_temporary_setting( 'user_front_page', $use_default_front );
+	}
+
+	if ( empty( $use_default_front ) ) {
+        return false;
+    }
+    
+    $dashboard_link = bp_loggedin_user_domain();
+    
+    // Add main Dashboard menu.
+    $wp_admin_nav[] = array(
+        'parent' => buddypress()->my_account_menu_id,
+        'id'     => 'my-account-front',
+        'title'  => __( 'Dashboard', 'buddyboss' ),
+        'href'   => $dashboard_link,
+    );
+
+    // View sub menu.
+    $wp_admin_nav[] = array(
+        'parent'   => 'my-account-front',
+        'id'       => 'my-account-front-view',
+        'title'    => __( 'View', 'buddyboss' ),
+        'href'     => $dashboard_link,
+        'position' => 10
+    );
+    
+    // Define the WordPress global.
+    global $wp_admin_bar;
+    
+    // Add each admin menu.
+    foreach ( $wp_admin_nav as $admin_menu ) {
+        $wp_admin_bar->add_menu( $admin_menu );
+    }
+}
+
+/**
  * Add the default user front template to the front template hierarchy
  *
  * @since BuddyPress 3.0.0
