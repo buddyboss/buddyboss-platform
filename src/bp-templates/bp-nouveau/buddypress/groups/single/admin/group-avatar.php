@@ -23,7 +23,7 @@
 
 <?php if ( ! bp_is_group_create() ) : ?>
 	<?php if ( ! bp_get_group_has_avatar() ) : ?>
-		<p class="bp-help-text"><?php esc_html_e( 'Add an image to use as a profile photo for this group. The image will be shown on the main group page, and in search results.', 'buddyboss' ); ?></p>
+		<p class="bp-help-text"><?php esc_html_e( 'Add an image to use as a photo for this group. The image will be shown on the main group page, and in search results.', 'buddyboss' ); ?></p>
 	<?php else : ?>
 		<p class="bp-help-text"><?php esc_html_e( 'Edit or update your avatar image for this group.', 'buddyboss' ); ?></p>
 	<?php endif; ?>
@@ -43,7 +43,7 @@
 		<div class="main-column">
 	<?php endif; ?>
 
-			<p class="bp-help-text"><?php esc_html_e( 'Upload an image to use as a profile photo for this group. The image will be shown on the main group page, and in search results.', 'buddyboss' ); ?></p>
+			<p class="bp-help-text"><?php esc_html_e( 'Upload an image to use as a photo for this group. The image will be shown on the main group page, and in search results.', 'buddyboss' ); ?></p>
 
 			<p>
 				<label for="file" class="bp-screen-reader-text"><?php esc_html_e( 'Select an image', 'buddyboss' ); ?></label>
@@ -53,12 +53,12 @@
 			</p>
 
 	<?php if ( bp_is_group_create() ) : ?>
-			<p class="bp-help-text"><?php esc_html_e( 'To skip the group profile photo upload process, hit the "Next Step" button.', 'buddyboss' ); ?></p>
+			<p class="bp-help-text"><?php esc_html_e( 'To skip the group photo upload process, hit the "Next Step" button.', 'buddyboss' ); ?></p>
 		</div><!-- .main-column -->
 
 	<?php elseif ( bp_get_group_has_avatar() ) : ?>
 
-		<p><?php esc_html_e( "If you'd like to remove the existing group profile photo but not upload a new one, please use the delete group profile photo button.", 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( "If you'd like to remove the existing group photo but not upload a new one, please use the delete group profile photo button.", 'buddyboss' ); ?></p>
 
 		<?php
 		bp_button(
@@ -68,8 +68,8 @@
 				'wrapper_id' => 'delete-group-avatar-button',
 				'link_class' => 'edit',
 				'link_href'  => bp_get_group_avatar_delete_link(),
-				'link_title' => __( 'Delete Group Profile Photo', 'buddyboss' ),
-				'link_text'  => __( 'Delete Group Profile Photo', 'buddyboss' ),
+				'link_title' => __( 'Delete Group Photo', 'buddyboss' ),
+				'link_text'  => __( 'Delete Group Photo', 'buddyboss' ),
 			)
 		);
 		?>
@@ -95,7 +95,7 @@ endif;
 if ( 'crop-image' === bp_get_avatar_admin_step() ) :
 ?>
 
-	<h2><?php esc_html_e( 'Crop Group Profile Photo', 'buddyboss' ); ?></h2>
+	<h2><?php esc_html_e( 'Crop Group Photo', 'buddyboss' ); ?></h2>
 
 	<img src="<?php bp_avatar_to_crop(); ?>" id="avatar-to-crop" class="avatar" alt="<?php esc_attr_e( 'Profile photo to crop', 'buddyboss' ); ?>" />
 
