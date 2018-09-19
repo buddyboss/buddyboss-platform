@@ -52,15 +52,14 @@
 
 	.group-status {
 
-		@include font-size(18);
-		color: $black;
+		@include font-size(14);
 		padding-right: $pad-med;
 	}
 
 	.activity {
 		display: inline-block;
 
-		@include font-size(12);
+		@include font-size(14);
 		padding: 0;
 	}
 

@@ -397,7 +397,7 @@ window.bp = window.bp || {};
 			if ( 'read' === method ) {
 				options.data = _.extend( options.data, {
 					action: 'messages_get_thread_messages',
-					before: this.before,
+					before: this.before
 				} );
 
 				return bp.ajax.send( options );
@@ -1060,7 +1060,6 @@ window.bp = window.bp || {};
 			e.preventDefault();
 
 			var data = {};
-			var self = this;
 
 			bp.Nouveau.Messages.displayFeedback( BP_Nouveau.messages.loading, 'loading' );
 
@@ -1076,7 +1075,7 @@ window.bp = window.bp || {};
 				success: _.bind( this.options.userMessage.messagesFetched, this.options.userMessage ),
 				error: _.bind( this.options.userMessage.messagesFetchError, this.options.userMessage )
 			});
-		},
+		}
 	} );
 
 	bp.Views.userMessagesHeader = bp.Nouveau.Messages.View.extend( {

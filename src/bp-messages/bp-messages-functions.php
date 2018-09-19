@@ -79,6 +79,7 @@ function messages_new_message( $args = '' ) {
 	$message->message   = $r['content'];
 	$message->date_sent = $r['date_sent'];
 
+	$new_reply = false;
 	// If we have a thread ID...
 	if ( ! empty( $r['thread_id'] ) ) {
 
@@ -102,6 +103,8 @@ function messages_new_message( $args = '' ) {
 				$message->subject = $re . $thread->messages[0]->subject;
 			}
 		}
+
+		$new_reply = true;
 
 	// ...otherwise use the recipients passed
 	} else {
@@ -197,13 +200,26 @@ function messages_new_message( $args = '' ) {
 
 	// check if force friendship is enabled and check recipients
 	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
-		foreach ( (array) $message->recipients as $i => $recipient_id ) {
-			if ( ! friends_check_friendship( $message->sender_id, $i ) ) {
+
+		$error_messages = array(
+			'new_message'       => __( 'You need to be connected with this member in order to send a message.', 'buddyboss' ),
+			'new_reply'         => __( 'You need to be connected with this member to continue this conversation.', 'buddyboss' ),
+			'new_group_message' => __( 'You need to be connected with all recipients in order to send them a message.', 'buddyboss' ),
+			'new_group_reply'   => __( 'You need to be connected with all recipients to continue this conversation.', 'buddyboss' ),
+		);
+
+		foreach ( (array) $message->recipients as $i => $recipient ) {
+			if ( ! friends_check_friendship( $message->sender_id, $recipient->user_id ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
-					if ( ! empty( $r['thread_id'] ) ) {
-						return new WP_Error( 'message_invalid_recipients', __( 'You need to be connected with this member in order to send them a message.', 'buddyboss' ) );
+					if ( $new_reply && sizeof( $message->recipients ) == 1 ) {
+						return new WP_Error( 'message_invalid_recipients', $error_messages['new_reply'] );
+					} else if ( $new_reply && sizeof( $message->recipients ) > 1 ) {
+						return new WP_Error( 'message_invalid_recipients', $error_messages['new_group_reply'] );
+					} else if ( sizeof( $message->recipients ) > 1 ) {
+						return new WP_Error( 'message_invalid_recipients', $error_messages['new_group_message'] );
+					} else {
+						return new WP_Error( 'message_invalid_recipients', $error_messages['new_message'] );
 					}
-					return new WP_Error( 'message_invalid_recipients', __( 'You need to be connected with all recipients in order to send them a message.', 'buddyboss' ) );
 				} else {
 					return false;
 				}

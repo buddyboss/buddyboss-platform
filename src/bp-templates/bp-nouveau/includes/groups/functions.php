@@ -682,12 +682,6 @@ function bp_nouveau_groups_front_page_description() {
  */
 function bp_nouveau_groups_customizer_sections( $sections = array() ) {
 	return array_merge( $sections, array(
-		'bp_nouveau_group_front_page' => array(
-			'title'       => __( 'Group front page', 'buddyboss' ),
-			'panel'       => 'bp_nouveau_panel',
-			'priority'    => 20,
-			'description' => __( 'Configure the default front page for groups.', 'buddyboss' ),
-		),
 		'bp_nouveau_group_primary_nav' => array(
 			'title'       => __( 'Group navigation', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
@@ -792,24 +786,6 @@ function bp_nouveau_groups_customizer_settings( $settings = array() ) {
  */
 function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 	return array_merge( $controls, array(
-		'group_front_page' => array(
-			'label'      => __( 'Enable custom front pages for groups.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_group_front_page',
-			'settings'   => 'bp_nouveau_appearance[group_front_page]',
-			'type'       => 'checkbox',
-		),
-		'group_front_boxes' => array(
-			'label'      => __( 'Enable widget region for group homepages. When enabled, the site admin can add widgets to group pages via the Widgets panel.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_group_front_page',
-			'settings'   => 'bp_nouveau_appearance[group_front_boxes]',
-			'type'       => 'checkbox',
-		),
-		'group_front_description' => array(
-			'label'      => __( "Display the group description in the body of the group's front page.", 'buddyboss' ),
-			'section'    => 'bp_nouveau_group_front_page',
-			'settings'   => 'bp_nouveau_appearance[group_front_description]',
-			'type'       => 'checkbox',
-		),
 		'group_nav_display' => array(
 			'label'      => __( 'Display the group navigation vertically.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_group_primary_nav',

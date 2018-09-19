@@ -25,11 +25,8 @@
 		<div id="item-header-content">
 
 			<p class="highlight group-status"><strong><?php echo esc_html( bp_nouveau_group_meta()->status ); ?></strong></p>
-			<p class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_group_last_active( 0, array( 'relative' => false ) ) ); ?>">
-				<?php
-				/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-				printf( __( 'active %s', 'buddyboss' ), bp_get_group_last_active() );
-				?>
+			<p class="activity">
+                <a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>"><?php echo esc_html( bp_get_group_member_count() ); ?></a>
 			</p>
 
 			<?php echo bp_nouveau_group_meta()->group_type_list; ?>

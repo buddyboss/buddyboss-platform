@@ -443,9 +443,22 @@ function bp_nouveau_ajax_get_thread_messages() {
 
 	// Check recipients if connected or not
 	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
-		foreach ( (array) $thread_template->thread->recipients as $recipient ) {
+
+		$recipients = (array) $thread_template->thread->recipients;
+
+		// Strip the sender from the recipient list, and unset them if they are
+		// not alone. If they are alone, let them talk to themselves.
+		if ( isset( $recipients[ bp_loggedin_user_id() ] ) && ( count( $recipients ) > 1 ) ) {
+			unset( $recipients[ bp_loggedin_user_id() ] );
+		}
+
+		foreach ( $recipients as $recipient ) {
 			if ( bp_loggedin_user_id() != $recipient->user_id && ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
-				$thread->feedback_error = array( 'feedback' => __( 'You need to be connected with this member to continue the conversation.', 'buddyboss' ), 'type' => 'error' );
+				if ( sizeof( $recipients ) > 1 ) {
+					$thread->feedback_error = array( 'feedback' => __( 'You need to be connected with all recipients to continue this conversation.', 'buddyboss' ), 'type' => 'error' );
+				} else {
+					$thread->feedback_error = array( 'feedback' => __( 'You need to be connected with this member to continue this conversation.', 'buddyboss' ), 'type' => 'error' );
+				}
 				break;
 			}
 		}
