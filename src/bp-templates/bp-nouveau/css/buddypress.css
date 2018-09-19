@@ -1878,6 +1878,12 @@ form.ac-form .ac-reply-content input {
     clear: left;
     float: none;
   }
+  .buddypress-wrap .members-group-list li .role {
+    clear: left;
+    float: none;
+    font-size: 14px;
+    padding: 5px 0 0;
+  }
 }
 
 @media screen and (min-width: 32em) {

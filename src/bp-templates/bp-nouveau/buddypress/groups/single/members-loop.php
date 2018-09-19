@@ -37,6 +37,10 @@
 						<div class="item-block">
 							<h3 class="list-title member-name"><?php bp_group_member_link(); ?></h3>
 
+                            <p class="role item-meta">
+								<?php echo bp_get_user_group_role_title( bp_get_group_member_id(), bp_get_current_group_id() ); ?>
+                            </p>
+
 							<p class="joined item-meta">
 								<?php bp_group_member_joined_since(); ?>
 							</p>
@@ -64,7 +68,7 @@
 
 <?php else : ?>
 
-		bp_nouveau_user_feedback( 'group-members-none' );
+	<?php bp_nouveau_user_feedback( 'group-members-none' ); ?>
 
 <?php
 endif;
