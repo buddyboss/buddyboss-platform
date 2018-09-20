@@ -161,11 +161,7 @@ class BP_Messages_Message {
 			}
 		} else {
 			// Update the unread count for all recipients.
-			// $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, sender_only = 0, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
 			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
-
-			// make sure the current user delete is reset
-			// $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_deleted = 0 WHERE thread_id = %d AND user_id = %d", $this->thread_id, $this->sender_id ) );
 		}
 
 		messages_remove_callback_values();
@@ -285,6 +281,14 @@ class BP_Messages_Message {
 		return is_numeric( $query ) ? (int) $query : $query;
 	}
 
+	/**
+	 * Get existsing thread which matches the recipients
+	 *
+	 * @since Buddyboss 3.1.1
+	 *
+	 * @param  array  $recipient_ids
+	 * @param  integer $sender
+	 */
 	public static function get_existing_thread( $recipient_ids, $sender = 0 ) {
 		global $wpdb;
 
@@ -309,8 +313,6 @@ class BP_Messages_Message {
 			",
 			implode(',', $recipient_ids)
 		) );
-
-		// print_r($sql);die();
 
 		return $results? $results[0]->thread_id : null;
 	}
