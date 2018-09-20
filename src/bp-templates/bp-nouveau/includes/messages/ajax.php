@@ -146,16 +146,9 @@ function bp_nouveau_ajax_messages_send_reply() {
 	// Override bp_current_action().
 	$bp->current_action = 'view';
 
-	// BP_Messages_Thread::$noCache = true;
-
 	bp_thread_has_messages( array( 'thread_id' => (int) $_POST['thread_id'] ) );
 
-	// Set the current message to the 2nd last.
-	// $thread_template->message = first( $thread_template->thread->messages );
-	// $thread_template->message = prev( $thread_template->thread->messages );
-
 	// Set current message to current key.
-	// $thread_template->current_message = key( $thread_template->thread->messages );
 	$thread_template->current_message = -1;
 
 	// Now manually iterate message like we're in the loop.
