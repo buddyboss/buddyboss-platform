@@ -558,7 +558,7 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 	/**
 	 * @group thread search
 	 */
-	public function test_search_thread_should_not_include_user_or_message() {
+	public function test_search_thread_should_include_user_or_message() {
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
 		$u3 = self::factory()->user->create();
@@ -622,6 +622,41 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 	}
 
 	/**
+	 * @group thread search
+	 */
+	public function test_search_thread_should_include_other_user_message() {
+		$u1 = self::factory()->user->create();
+		$u2 = self::factory()->user->create();
+
+		$current_user = get_current_user_id();
+		$this->set_current_user( $u1 );
+
+		$now = time() + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS ) - 10;
+
+		$message = self::factory()->message->create_and_get( array(
+			'sender_id' => $u1,
+			'recipients' => array( $u2 ),
+			'date_sent' => gmdate( 'Y-m-d H:i:s', $now + 1 ),
+		) );
+
+		$message2 = self::factory()->message->create_and_get( array(
+			'sender_id' => $u2,
+			'recipients' => array( $u1 ),
+			'date_sent' => gmdate( 'Y-m-d H:i:s', $now + 2 ),
+			'content' => 'foo'
+		) );
+
+		$threads = BP_Messages_Thread::get_current_threads_for_user([
+			'user_id' => $u1,
+			'search_terms' => 'foo'
+		]);
+
+		$this->assertEquals([$message->thread_id], wp_list_pluck($threads['threads'], 'thread_id'));
+
+		$this->set_current_user( $current_user );
+	}
+
+	/**
 	 * @group thread
 	 */
 	public function test_thread_started_day_should_be_the_first_message_or_last_deleted_to_current_user()
@@ -669,6 +704,42 @@ class BP_Tests_BP_Messages_Thread extends BP_UnitTestCase {
 		// user 1 should see the first message as start date
 		$this->set_current_user( $u1 );
 		$this->assertEquals( $first_date, BP_Messages_Thread::get_messages_started( $message->thread_id ) );
+
+		$this->set_current_user( $current_user );
+	}
+
+	/**
+	 * @group thread
+	 */
+	public function test_thread_should_not_show_messages_if_user_has_deleted()
+	{
+		$u1 = self::factory()->user->create();
+		$u2 = self::factory()->user->create();
+
+		$current_user = get_current_user_id();
+		$this->set_current_user( $u1 );
+
+		$now = time() + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS ) - 10;
+
+		$message = self::factory()->message->create_and_get( array(
+			'sender_id' => $u1,
+			'recipients' => array( $u2 ),
+			'date_sent' => $first_date = gmdate( 'Y-m-d H:i:s', $now + 1 ),
+		) );
+
+		$message2 = self::factory()->message->create_and_get( array(
+			'sender_id' => $u1,
+			'recipients' => array( $u2 ),
+			'date_sent' => gmdate( 'Y-m-d H:i:s', $now + 2 ),
+		) );
+
+		messages_delete_thread($message->thread_id);
+
+		BP_Messages_Thread::$noCache = true;
+		$thread = new BP_Messages_Thread($message->thread_id);
+
+		$this->assertEmpty( $thread->messages );
+		$this->assertEquals( 0, $thread->total_messages );
 
 		$this->set_current_user( $current_user );
 	}

@@ -113,7 +113,10 @@ function bp_messages_delete_thread_paginated_messages_cache( $thread_id ) {
 	while ( wp_cache_get( "{$thread_id}{$before}{$perpage}", 'bp_messages_threads' ) ) {
 		wp_cache_delete( "{$thread_id}{$before}{$perpage}", 'bp_messages_threads' );
 		$messages = BP_Messages_Thread::get_messages( $thread_id, $before, $perpage );
-		$before = end($messages)->date_sent;
+
+		if ( end($messages) ) {
+			$before = end($messages)->date_sent;
+		}
 	}
 
 	BP_Messages_Thread::$noCache = false;

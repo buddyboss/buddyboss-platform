@@ -175,7 +175,6 @@ class BP_Messages_Thread {
 			return false;
 		}
 
-		$last_message_index         = 0;
 		$this->last_message_id      = $this->last_message->id;
 		$this->last_message_date    = $this->last_message->date_sent;
 		$this->last_sender_id       = $this->last_message->sender_id;
@@ -378,6 +377,12 @@ class BP_Messages_Thread {
 		$messages  = wp_cache_get( $cache_key, 'bp_messages_threads' );
 
 		if ( false === $messages || static::$noCache ) {
+			// if current user isn't the recpient, then return empty array
+			if ( ! static::is_thread_recipient( $thread_id ) ) {
+				wp_cache_set( $cache_key, [], 'bp_messages_threads' );
+				return [];
+			}
+
 			global $wpdb;
 			$bp = buddypress();
 			$last_deleted_message = static::get_user_last_deleted_message( $thread_id );
@@ -425,6 +430,10 @@ class BP_Messages_Thread {
 
 		$bp = buddypress();
 		$thread_id = (int) $thread_id;
+
+		if ( ! static::is_thread_recipient( $thread_id ) ) {
+			return 0;
+		}
 
 		$last_deleted_message = static::get_user_last_deleted_message( $thread_id );
 		$last_deleted_timestamp = $last_deleted_message? $last_deleted_message->date_sent : '0000-00-00 00:00:00';
@@ -502,6 +511,27 @@ class BP_Messages_Thread {
 	public static function get_recipients_for_thread( $thread_id = 0 ) {
 		$thread = new self( false );
 		return $thread->get_recipients( $thread_id );
+	}
+
+	/**
+	 * Check if the current user is in the thread's active recipient list
+	 *
+	 * @since  Buddyboss 3.1.1
+	 *
+	 * @param  int $thread_id
+	 * @param  mix  $user_id
+	 */
+	public static function is_thread_recipient( $thread_id = 0, $user_id = null ) {
+		if ( ! $user_id = $user_id ?: bp_loggedin_user_id() ) {
+			return true;
+		}
+
+		$recipients = self::get_recipients_for_thread( $thread_id );
+		$active_recipients = array_filter( $recipients, function ( $recipient ) {
+			return ! $recipient->is_deleted;
+		});
+
+		return in_array( $user_id, wp_list_pluck( $active_recipients, 'user_id' ));
 	}
 
 	/**
@@ -643,10 +673,11 @@ class BP_Messages_Thread {
 			FROM {$bp->messages->table_name_recipients}
 			WHERE user_id = %d
 			AND is_deleted = 0
-		", bp_loggedin_user_id() );
+		", $r['user_id'] );
 
 		if ( ! empty( $r['search_terms'] ) ) {
 			$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
+			$where_sql = $wpdb->prepare( "m.message LIKE %s", $search_terms_like );
 
 			$current_user_participants = $wpdb->get_results( $q = $wpdb->prepare( "
 				SELECT DISTINCT(r.user_id), u.display_name
@@ -659,10 +690,12 @@ class BP_Messages_Thread {
 			$current_user_participants_ids = array_map( 'intval', wp_list_pluck( $current_user_participants, 'user_id' ) );
 			$current_user_participants_ids = array_diff( $current_user_participants_ids, [ bp_loggedin_user_id() ] );
 
-			$user_ids = implode(',', array_unique($current_user_participants_ids));
-			$where_sql = $wpdb->prepare( "
-				(m.message LIKE %s OR r.user_id IN ({$user_ids}))
-			", $search_terms_like );
+			if( $current_user_participants_ids ) {
+				$user_ids = implode(',', array_unique($current_user_participants_ids));
+				$where_sql = $wpdb->prepare( "
+					(m.message LIKE %s OR r.user_id IN ({$user_ids}))
+				", $search_terms_like );
+			}
 		}
 
 		$where_sql .= " AND r.thread_id IN ($user_threads_query)";
