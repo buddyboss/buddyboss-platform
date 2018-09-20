@@ -37,9 +37,10 @@
 						<div class="item-block">
 							<h3 class="list-title member-name"><?php bp_group_member_link(); ?></h3>
 
-                            <p class="role item-meta">
-								<?php echo bp_get_user_group_role_title( bp_get_group_member_id(), bp_get_current_group_id() ); ?>
-                            </p>
+							<?php $user_group_role_title = bp_get_user_group_role_title( bp_get_group_member_id(), bp_get_current_group_id() ); ?>
+							<?php if( !empty( $user_group_role_title ) ) { ?>
+								<p class="role item-meta"><?php echo $user_group_role_title; ?></p>
+							<?php } ?>
 
 							<p class="joined item-meta">
 								<?php bp_group_member_joined_since(); ?>
