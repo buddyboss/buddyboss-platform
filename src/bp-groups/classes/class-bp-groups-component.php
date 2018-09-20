@@ -197,6 +197,10 @@ class BP_Groups_Component extends BP_Component {
 					require $this->path . 'bp-groups/screens/single/' . bp_current_action() . '.php';
 				}
 
+				if ( in_array( bp_get_group_current_members_tab(), array( 'all-members', 'leaders' ), true ) ) {
+					require $this->path . 'bp-groups/screens/single/members/' . bp_get_group_current_members_tab() . '.php';
+				}
+
 				// Admin nav items.
 				if ( bp_is_item_admin() && is_user_logged_in() ) {
 					require $this->path . 'bp-groups/screens/single/admin.php';
@@ -603,6 +607,29 @@ class BP_Groups_Component extends BP_Component {
 				'position'        => 10,
 				'item_css_id'     => 'members',
 			);
+
+			$members_link = trailingslashit( $group_link . 'members' );
+
+			// Common params to all member sub nav items.
+			$default_params = array(
+				'parent_url'        => $members_link,
+				'parent_slug'       => $this->current_group->slug . '_members',
+				'screen_function'   => 'groups_screen_group_members',
+				'user_has_access'   => $this->current_group->user_has_access,
+				'show_in_admin_bar' => true,
+			);
+
+			$sub_nav[] = array_merge( array(
+				'name'              => __( 'All Members', 'buddyboss' ),
+				'slug'              => 'all-members',
+				'position'          => 0,
+			), $default_params );
+
+			$sub_nav[] = array_merge( array(
+				'name'              => __( 'Leaders', 'buddyboss' ),
+				'slug'              => 'leaders',
+				'position'          => 10,
+			), $default_params );
 
 			if ( bp_is_active( 'activity' ) ) {
 				$sub_nav[] = array(

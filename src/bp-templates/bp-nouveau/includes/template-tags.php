@@ -735,6 +735,8 @@ function bp_nouveau_has_nav( $args = array() ) {
 
 		if ( 'group_manage' === $bp_nouveau->object_nav && bp_is_group_admin_page() ) {
 			$parent_slug .= '_manage';
+		} else if ( 'group_members' === $bp_nouveau->object_nav && bp_is_group_members() ) {
+			$parent_slug .= '_members';
 
 		/**
 		 * If it's not the Admin tabs, reorder the Group's nav according to the
@@ -912,6 +914,11 @@ function bp_nouveau_nav_classes() {
 			// User's primary nav
 			if ( ! empty( $nav_item->primary ) ) {
 				$selected = bp_current_component();
+
+			// Group Member Tabs
+			} elseif ( 'group_members' === $bp_nouveau->object_nav ) {
+				$selected = bp_action_variable( 0 );
+				$classes  = array( 'bp-' . $bp_nouveau->displayed_nav . '-member-tab' );
 
 			// Group Admin Tabs.
 			} elseif ( 'group_manage' === $bp_nouveau->object_nav ) {
@@ -1189,8 +1196,14 @@ function bp_nouveau_nav_has_count() {
 
 	if ( 'directory' === $bp_nouveau->displayed_nav ) {
 		$count = $nav_item->count;
-	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'members' === $nav_item->slug ) {
-		$count = 0 !== (int) groups_get_current_group()->total_member_count;
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && ( 'members' === $nav_item->slug || 'all-members' === $nav_item->slug ) ) {
+	    $count = 0 !== (int) groups_get_current_group()->total_member_count;
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'leaders' === $nav_item->slug ) {
+		$group         = groups_get_current_group();
+		$admins        = groups_get_group_admins( $group->id );
+		$mods          = groups_get_group_mods( $group->id );
+		$total_leaders = sizeof( $admins ) + sizeof( $mods );
+		$count         = 0 !== (int) $total_leaders;
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && ! empty( $nav_item->primary ) ) {
 		$count = (bool) strpos( $nav_item->name, '="count"' );
 	}
@@ -1231,8 +1244,14 @@ function bp_nouveau_nav_count() {
 		if ( 'directory' === $bp_nouveau->displayed_nav ) {
 			$count = (int) $nav_item->count;
 
-		} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'members' === $nav_item->slug ) {
+		} elseif ( 'groups' === $bp_nouveau->displayed_nav && ( 'members' === $nav_item->slug || 'all-members' === $nav_item->slug ) ) {
 			$count = groups_get_current_group()->total_member_count;
+
+		} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'leaders' == $nav_item->slug ) {
+			$group  = groups_get_current_group();
+			$admins = groups_get_group_admins( $group->id );
+			$mods   = groups_get_group_mods( $group->id );
+			$count  = sizeof( $admins ) + sizeof( $mods );
 
 		// @todo imho BuddyPress shouldn't add html tags inside Nav attributes...
 		} elseif ( 'personal' === $bp_nouveau->displayed_nav && ! empty( $nav_item->primary ) ) {

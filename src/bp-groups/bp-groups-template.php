@@ -5262,6 +5262,39 @@ function bp_group_current_admin_tab() {
 		return apply_filters( 'bp_get_current_group_admin_tab', $tab );
 	}
 
+/**
+ * Echoes the current group members tab slug.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_group_current_members_tab() {
+	echo bp_get_group_current_members_tab();
+}
+/**
+ * Returns the current group members tab slug.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ *
+ * @return string $tab The current tab's slug.
+ */
+function bp_get_group_current_members_tab() {
+	if ( bp_is_groups_component() && bp_is_current_action( 'members' ) ) {
+		$tab = bp_action_variable( 0 );
+	} else {
+		$tab = '';
+	}
+
+	/**
+	 * Filters the current group members tab slug.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $tab Current group members tab slug.
+	 */
+	return apply_filters( 'bp_get_current_group_members_tab', $tab );
+}
+
 /** Group Avatar Template Tags ************************************************/
 
 /**
