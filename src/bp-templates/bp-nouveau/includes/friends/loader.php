@@ -82,6 +82,7 @@ class BP_Nouveau_Friends {
 			'friends_member_friendship',
 			'friends_accept_friendship',
 			'friends_reject_friendship',
+			'friends_member_follow',
 		);
 
 		foreach ( $buttons as $button ) {

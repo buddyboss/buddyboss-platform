@@ -167,6 +167,7 @@ function bp_nouveau_ajax_button( $output = '', $button = null, $before = '', $af
 
 	$reset_ids = array(
 		'member_friendship' => true,
+		'member_follow'     => true,
 		'group_membership'  => true,
 	);
 
@@ -300,19 +301,9 @@ function bp_nouveau_register_sidebars() {
 		$default_user_front = $default_fronts['user_front_page'];
 	}
 
-	if ( $is_active_groups ) {
-		if ( isset( $default_fronts['group_front_page'] ) ) {
-			$default_group_front = $default_fronts['group_front_page'];
-		}
-	}
-
 	// Setting the front template happens too early, so we need this!
 	if ( is_customize_preview() ) {
 		$default_user_front = bp_nouveau_get_temporary_setting( 'user_front_page', $default_user_front );
-
-		if ( $is_active_groups ) {
-			$default_group_front = bp_nouveau_get_temporary_setting( 'group_front_page', $default_group_front );
-		}
 	}
 
 	$sidebars = array();
@@ -321,18 +312,6 @@ function bp_nouveau_register_sidebars() {
 			'name'          => __( 'Member Dashboard', 'buddyboss' ),
 			'id'            => 'sidebar-buddypress-members',
 			'description'   => __( 'Add widgets here to appear in the dashboard of each member of your community.', 'buddyboss' ),
-			'before_widget' => '<div id="%1$s" class="widget %2$s">',
-			'after_widget'  => '</div>',
-			'before_title'  => '<h2 class="widget-title">',
-			'after_title'   => '</h2>',
-		);
-	}
-
-	if ( $default_group_front ) {
-		$sidebars[] = array(
-			'name'          => __( 'BuddyPress Group\'s Home', 'buddyboss' ),
-			'id'            => 'sidebar-buddypress-groups',
-			'description'   => __( 'Add widgets here to appear in the front page of each group of your community.', 'buddyboss' ),
 			'before_widget' => '<div id="%1$s" class="widget %2$s">',
 			'after_widget'  => '</div>',
 			'before_title'  => '<h2 class="widget-title">',
@@ -1016,6 +995,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		'member-requests-none' => array(
 			'type'    => 'info',
 			'message' => __( 'You have no pending invitations to connect.', 'buddyboss' ),
+		),
+		'member-mutual-friends-none' => array(
+			'type'    => 'loading',
+			'message' => __( 'You have no mutual connections with this member.', 'buddyboss' ),
 		),
 		'member-invites-none' => array(
 			'type'    => 'info',

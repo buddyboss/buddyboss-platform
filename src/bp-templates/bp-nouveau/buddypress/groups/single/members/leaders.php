@@ -1,13 +1,13 @@
 <?php
 /**
- * Group Members Loop template
+ * BuddyBoss - Group Leaders
  *
- * @since BuddyPress 3.0.0
- * @version 3.0.0
+ * @since BuddyBoss 3.1.1
+ * @version 3.1.1
  */
 ?>
 
-<?php if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) ) ) : ?>
+<?php if ( bp_group_has_members( 'group_role=admin,mod' ) ) : ?>
 
 	<?php bp_nouveau_group_hook( 'before', 'members_content' ); ?>
 
@@ -20,7 +20,7 @@
 		<?php
 		while ( bp_group_members() ) :
 			bp_group_the_member();
-		?>
+			?>
 
 			<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( bp_get_group_member_id() ); ?>" data-bp-item-component="members">
 
@@ -73,3 +73,4 @@
 
 <?php
 endif;
+

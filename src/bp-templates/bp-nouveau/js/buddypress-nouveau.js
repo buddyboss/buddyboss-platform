@@ -426,6 +426,8 @@ window.bp = window.bp || {};
 
 			// Buttons
 			$( '#buddypress [data-bp-list], #buddypress #item-header' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
+			$( '#buddypress [data-bp-list], #buddypress #item-header' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
+			$( document ).on( 'keyup', this, this.keyUp );
 
 			// Close notice
 			$( '#buddypress [data-bp-close]' ).on( 'click', this, this.closeNotice );
@@ -480,6 +482,18 @@ window.bp = window.bp || {};
 		heartbeatTick: function( event, data ) {
 			// Add an heartbeat send event to possibly any BuddyPress pages
 			$( '#buddypress' ).trigger( 'bp_heartbeat_tick', data );
+		},
+
+		/**
+		 * [keyUp description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		keyUp: function( event ) {
+			var self = event.data;
+			if ( event.keyCode === 27 ) { // escape key
+				self.buttonRevertAll();
+			}
 		},
 
 		/**
@@ -637,6 +651,13 @@ window.bp = window.bp || {};
 			// Stop event propagation
 			event.preventDefault();
 
+			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
+				target.text( target.data('title') );
+				target.removeClass('bp-toggle-action-button');
+				target.addClass('bp-toggle-action-button-clicked');
+				return false;
+			}
+
 			if ( ( undefined !== BP_Nouveau[ action + '_confirm'] && false === window.confirm( BP_Nouveau[ action + '_confirm'] ) ) || target.hasClass( 'pending' ) ) {
 				return false;
 			}
@@ -659,7 +680,9 @@ window.bp = window.bp || {};
 				not_friends       : 'add_friend',
 				pending           : 'withdraw_friendship',
 				accept_friendship : 'accept_friendship',
-				reject_friendship : 'reject_friendship'
+				reject_friendship : 'reject_friendship',
+				not_following     : 'follow',
+				following         : 'unfollow'
 			};
 
 			if ( 'members' === object && undefined !== friends_actions_map[ action ] ) {
@@ -713,7 +736,41 @@ window.bp = window.bp || {};
 						$( self.objectNavParent + ' [data-bp-scope="personal"] span' ).html( personal_count );
 					}
 
+					if ( action === 'remove_friend' ) {
+						target.closest('ul').find('.follow-button').remove();
+					}
+
 					target.parent().replaceWith( response.data.contents );
+				}
+			} );
+		},
+
+		/**
+		 * [buttonRevert description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		buttonRevert: function( event ) {
+			var target = $( event.currentTarget );
+
+			if ( target.hasClass( 'bp-toggle-action-button-clicked' ) && ! target.hasClass( 'loading' ) ) {
+				target.text( target.data('title-displayed') ); // change text to displayed context
+				target.removeClass('bp-toggle-action-button-clicked'); // remove class to detect event
+				target.addClass('bp-toggle-action-button'); // add class to detect event to confirm
+			}
+		},
+
+		/**
+		 * [buttonRevertAll description]
+		 * @return {[type]}       [description]
+		 */
+		buttonRevertAll: function() {
+			$.each( $( '#buddypress [data-bp-btn-action]' ), function() {
+				if ( $(this).hasClass( 'bp-toggle-action-button-clicked' ) && ! $(this).hasClass( 'loading' ) ) {
+					$(this).text( $(this).data('title-displayed') ); // change text to displayed context
+					$(this).removeClass('bp-toggle-action-button-clicked'); // remove class to detect event
+					$(this).addClass('bp-toggle-action-button'); // add class to detect event to confirm
+					$(this).trigger('blur');
 				}
 			} );
 		},

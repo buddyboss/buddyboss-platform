@@ -2637,3 +2637,34 @@ function bp_remove_group_type_on_group_delete( $group_id = 0 ) {
 	bp_groups_set_group_type( $group_id, '' );
 }
 add_action( 'groups_delete_group', 'bp_remove_group_type_on_group_delete' );
+
+/**
+ * Get the member's group role
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param  int   $user_id ID of the user.
+ * @param  int   $group_id ID of the group.
+ * @return string
+ */
+function bp_get_user_group_role_title( $user_id = false, $group_id = false ) {
+
+	if ( ! $user_id && ! $group_id )
+		return '';
+
+	$role_title = '';
+	if ( groups_is_user_admin( $user_id, $group_id ) ) {
+		$role_title = __( 'Organizer', 'buddyboss' );
+	} else if ( groups_is_user_mod( $user_id, $group_id ) ) {
+		$role_title = __( 'Moderator', 'buddyboss' );
+	}
+
+	/**
+	 * Filters member's group role title
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $role_title User group role title.
+	 */
+	return apply_filters( 'bp_get_user_group_role_title', $role_title );
+}

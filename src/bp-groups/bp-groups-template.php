@@ -741,6 +741,55 @@ function bp_group_status( $group = false ) {
 	}
 
 /**
+ * Output the status description of the current group in the loop.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param object|bool $group Optional. Group object.
+ *                           Default: current group in loop.
+ */
+function bp_group_status_description( $group = false ) {
+	echo bp_get_group_status_description( $group );
+}
+
+    /**
+     * Get the status description of the current group in the loop.
+     *
+     * @since BuddyBoss 3.1.1
+     *
+     * @param object|bool $group Optional. Group object.
+     *                           Default: current group in loop.
+     * @return string
+     */
+    function bp_get_group_status_description( $group = false ) {
+        global $groups_template;
+
+        if ( empty( $group ) ) {
+            $group =& $groups_template->group;
+        }
+
+        if ( 'public' == $group->status ) {
+            $description = __( 'This group’s content, including its members and activity, are visible to any site member.', 'buddyboss' );
+        } elseif ( 'hidden' == $group->status ) {
+            $description = __( 'Only this group\'s members can find the group and view its content, including its members and activity.', 'buddyboss' );
+        } elseif ( 'private' == $group->status ) {
+            $description = __( 'This group’s content, including its members and activity, are only be visible to members of the group.', 'buddyboss' );
+        } else {
+            $description = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
+        }
+
+        /**
+         * Filters the status description of the current group in the loop.
+         *
+         * @since BuddyBoss 3.1.1
+         *
+         * @param string $description Status description of the current group in the loop.
+         * @param object $group  Group object.
+         */
+        return apply_filters( 'bp_get_group_status_description', $description, $group );
+    }
+
+/**
  * Output the group avatar while in the groups loop.
  *
  * @since BuddyPress 1.0.0
@@ -3274,8 +3323,12 @@ function bp_group_join_button( $group = false ) {
 				'wrapper_class'     => 'group-button ' . $group->status,
 				'wrapper_id'        => 'groupbutton-' . $group->id,
 				'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'leave-group' ), 'groups_leave_group' ),
-				'link_text'         => __( 'Leave this group', 'buddyboss' ),
-				'link_class'        => 'group-button leave-group',
+				'link_text'         => __( 'You\'re a member', 'buddyboss' ),
+				'link_class'        => 'group-button leave-group bp-toggle-action-button',
+				'button_attr' => array(
+					'data-title'           => __( 'Leave this group', 'buddyboss' ),
+					'data-title-displayed' => __( 'You\'re a member', 'buddyboss' )
+				)
 			);
 
 		// Not a member.
@@ -5208,6 +5261,39 @@ function bp_group_current_admin_tab() {
 		 */
 		return apply_filters( 'bp_get_current_group_admin_tab', $tab );
 	}
+
+/**
+ * Echoes the current group members tab slug.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_group_current_members_tab() {
+	echo bp_get_group_current_members_tab();
+}
+/**
+ * Returns the current group members tab slug.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ *
+ * @return string $tab The current tab's slug.
+ */
+function bp_get_group_current_members_tab() {
+	if ( bp_is_groups_component() && bp_is_current_action( 'members' ) ) {
+		$tab = bp_action_variable( 0 );
+	} else {
+		$tab = '';
+	}
+
+	/**
+	 * Filters the current group members tab slug.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $tab Current group members tab slug.
+	 */
+	return apply_filters( 'bp_get_current_group_members_tab', $tab );
+}
 
 /** Group Avatar Template Tags ************************************************/
 

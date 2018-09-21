@@ -1877,6 +1877,13 @@ form.ac-form .ac-reply-content input {
   .buddypress-wrap .members-group-list li .joined {
     clear: left;
     float: none;
+    margin-top: 0;
+  }
+  .buddypress-wrap .members-group-list li .role {
+    clear: left;
+    float: none;
+    font-size: 14px;
+    margin: 0;
   }
 }
 
@@ -2072,14 +2079,13 @@ body.register #page #primary .entry-header {
 }
 
 .single-headers .group-status {
-  font-size: 18px;
-  color: #333;
+  font-size: 14px;
   padding-right: 1em;
 }
 
 .single-headers .activity {
   display: inline-block;
-  font-size: 12px;
+  font-size: 14px;
   padding: 0;
 }
 
@@ -2262,8 +2268,7 @@ body.no-js .single-item-header .js-self-profile-button {
 .groups-header .moderators-lists .user-list li {
   display: inline-block;
   float: none;
-  margin-left: 4px;
-  padding: 4px;
+  margin: 4px 0 0 4px;
 }
 
 .groups-header .moderators-lists img.avatar {
@@ -2308,6 +2313,10 @@ body.no-js .single-item-header .js-self-profile-button {
   background: #fafafa;
   padding: 1em;
   text-align: left;
+}
+
+.groups-header .desc-wrap .group-description p:last-child {
+  margin-bottom: 0;
 }
 
 /**
@@ -4691,6 +4700,7 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 }
 
 [data-bp-tooltip] {
+  cursor: pointer;
   position: relative;
 }
 

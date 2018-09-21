@@ -146,16 +146,9 @@ function bp_nouveau_ajax_messages_send_reply() {
 	// Override bp_current_action().
 	$bp->current_action = 'view';
 
-	// BP_Messages_Thread::$noCache = true;
-
 	bp_thread_has_messages( array( 'thread_id' => (int) $_POST['thread_id'] ) );
 
-	// Set the current message to the 2nd last.
-	// $thread_template->message = first( $thread_template->thread->messages );
-	// $thread_template->message = prev( $thread_template->thread->messages );
-
 	// Set current message to current key.
-	// $thread_template->current_message = key( $thread_template->thread->messages );
 	$thread_template->current_message = -1;
 
 	// Now manually iterate message like we're in the loop.
@@ -443,12 +436,21 @@ function bp_nouveau_ajax_get_thread_messages() {
 
 	// Check recipients if connected or not
 	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {
-		foreach ( (array) $thread_template->thread->recipients as $recipient ) {
+
+		$recipients = (array) $thread_template->thread->recipients;
+
+		// Strip the sender from the recipient list, and unset them if they are
+		// not alone. If they are alone, let them talk to themselves.
+		if ( isset( $recipients[ bp_loggedin_user_id() ] ) && ( count( $recipients ) > 1 ) ) {
+			unset( $recipients[ bp_loggedin_user_id() ] );
+		}
+
+		foreach ( $recipients as $recipient ) {
 			if ( bp_loggedin_user_id() != $recipient->user_id && ! friends_check_friendship( bp_loggedin_user_id(), $recipient->user_id ) ) {
-				if ( sizeof( $thread_template->thread->recipients ) > 1 ) {
+				if ( sizeof( $recipients ) > 1 ) {
 					$thread->feedback_error = array( 'feedback' => __( 'You need to be connected with all recipients to continue this conversation.', 'buddyboss' ), 'type' => 'error' );
 				} else {
-					$thread->feedback_error = array( 'feedback' => __( 'You need to be connected with the member to continue this conversation.', 'buddyboss' ), 'type' => 'error' );
+					$thread->feedback_error = array( 'feedback' => __( 'You need to be connected with this member to continue this conversation.', 'buddyboss' ), 'type' => 'error' );
 				}
 				break;
 			}

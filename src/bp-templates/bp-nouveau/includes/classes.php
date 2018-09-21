@@ -44,44 +44,69 @@ class BP_Buttons_Group {
 	 */
 	public function __construct( $args = array() ) {
 		foreach ( $args as $arg ) {
-			$r = wp_parse_args( (array) $arg, array(
-				'id'                => '',
-				'position'          => 99,
-				'component'         => '',
-				'must_be_logged_in' => true,
-				'block_self'        => false,
-				'parent_element'    => false,
-				'parent_attr'       => array(),
-				'button_element'    => 'a',
-				'button_attr'       => array(),
-				'link_text'         => '',
-			) );
-
-			// Just don't set the button if a param is missing
-			if ( empty( $r['id'] ) || empty( $r['component'] ) || empty( $r['link_text'] ) ) {
-				continue;
-			}
-
-			$r['id'] = sanitize_key( $r['id'] );
-
-			// If the button already exist don't add it
-			if ( isset( $this->group[ $r['id'] ] ) ) {
-				continue;
-			}
-
-			/*
-			 * If, in bp_nouveau_get_*_buttons(), we pass through a false value for 'parent_element'
-			 * but we have attributtes for it in the array, let's default to setting a div.
-			 *
-			 * Otherwise, the original false value will be passed through to BP buttons.
-			 * @todo: this needs review, probably trying to be too clever
-			 */
-			if ( ( ! empty( $r['parent_attr'] ) ) && false === $r['parent_element'] ) {
-				$r['parent_element'] = 'div';
-			}
-
-			$this->group[ $r['id'] ] = $r;
+			$this->set( $arg );
 		}
+	}
+
+	/**
+	 * Set the button
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param array $args Optional array having the following parameters {
+	 *     @type string $id                A string to use as the unique ID for the button. Required.
+	 *     @type int    $position          Where to insert the Button. Defaults to 99.
+	 *     @type string $component         The Component's the button is build for (eg: Activity, Groups..). Required.
+	 *     @type bool   $must_be_logged_in Whether the button should only be displayed to logged in users. Defaults to True.
+	 *     @type bool   $block_self        Optional. True if the button should be hidden when a user is viewing his own profile.
+	 *                                     Defaults to False.
+	 *     @type string $parent_element    Whether to use a wrapper. Defaults to false.
+	 *     @type string $parent_attr       set an array of attributes for the parent element.
+	 *     @type string $button_element    Set this to 'button', 'img', or 'a', defaults to anchor.
+	 *     @type string $button_attr       Any attributes required for the button_element
+	 *     @type string $link_text         The text of the link. Required.
+	 * }
+	 */
+	public function set( $args = array() ) {
+
+		$r = wp_parse_args( (array) $args, array(
+			'id'                => '',
+			'position'          => 99,
+			'component'         => '',
+			'must_be_logged_in' => true,
+			'block_self'        => false,
+			'parent_element'    => false,
+			'parent_attr'       => array(),
+			'button_element'    => 'a',
+			'button_attr'       => array(),
+			'link_text'         => '',
+		) );
+
+		// Just don't set the button if a param is missing
+		if ( empty( $r['id'] ) || empty( $r['component'] ) || empty( $r['link_text'] ) ) {
+			return false;
+		}
+
+		$r['id'] = sanitize_key( $r['id'] );
+
+		// If the button already exist don't add it
+		if ( isset( $this->group[ $r['id'] ] ) ) {
+			return false;
+		}
+
+		/*
+         * If, in bp_nouveau_get_*_buttons(), we pass through a false value for 'parent_element'
+         * but we have attributtes for it in the array, let's default to setting a div.
+         *
+         * Otherwise, the original false value will be passed through to BP buttons.
+         * @todo: this needs review, probably trying to be too clever
+         */
+		if ( ( ! empty( $r['parent_attr'] ) ) && false === $r['parent_element'] ) {
+			$r['parent_element'] = 'div';
+		}
+
+		$this->group[ $r['id'] ] = $r;
+
 	}
 
 
@@ -161,10 +186,9 @@ class BP_Buttons_Group {
 	 * @param array $args Optional. See the __constructor for a description of this argument.
 	 */
 	public function update( $args = array() ) {
+	    $this->group = array();
 		foreach ( $args as $id => $params ) {
-			if ( isset( $this->group[ $id ] ) ) {
-				$this->group[ $id ] = wp_parse_args( $params, $this->group[ $id ] );
-			}
+			$this->set( $params );
 		}
 	}
 }

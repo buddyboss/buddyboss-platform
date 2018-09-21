@@ -48,14 +48,11 @@ bp_nouveau_before_loop(); ?>
 								'button_element' => 'button',
 							)
 						);
-?>
+                        ?>
 
 					</div>
 
 				</div><!-- // .item -->
-
-
-
 			</div>
 		</li>
 

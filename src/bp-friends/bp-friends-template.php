@@ -400,10 +400,14 @@ function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false 
 					'wrapper_class'     => 'friendship-button is_friend',
 					'wrapper_id'        => 'friendship-button-' . $potential_friend_id,
 					'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/remove-friend/' . $potential_friend_id . '/', 'friends_remove_friend' ),
-					'link_text'         => __( 'Remove Connection', 'buddyboss' ),
+					'link_text'         => __( 'Connected', 'buddyboss' ),
 					'link_id'           => 'friend-' . $potential_friend_id,
 					'link_rel'          => 'remove',
-					'link_class'        => 'friendship-button is_friend remove'
+					'link_class'        => 'friendship-button is_friend remove bp-toggle-action-button',
+					'button_attr' => array(
+						'data-title'           => __( 'Remove Connection', 'buddyboss' ),
+						'data-title-displayed' => __( 'Connected', 'buddyboss' ),
+					)
 				);
 				break;
 
@@ -496,6 +500,57 @@ function bp_get_friendship_requests( $user_id = 0 ) {
 	 * @param int       $user_id  ID of the queried user.
 	 */
 	return apply_filters( 'bp_get_friendship_requests', $requests, $user_id );
+}
+
+/**
+ * Get a user's mutual connections with logged in user.
+ *
+ * Note that we return a 0 if no mutual connections are found. This is necessary
+ * because of the structure of the $include parameter in bp_has_members().
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param int $user_id ID of the user whose mutual connections are being retrieved.
+ *                     Defaults to displayed user.
+ * @return array|int An array of user IDs if found, or a 0 if none are found.
+ */
+function bp_get_mutual_friendships( $user_id = 0 ) {
+
+    if ( ! bp_loggedin_user_id() ) {
+        return 0;
+    }
+
+	if ( !$user_id ) {
+		$user_id = bp_displayed_user_id();
+	}
+
+	if ( !$user_id ) {
+		return 0;
+	}
+
+	// get displayed user's connections
+	$displayed_user_friends = friends_get_friend_user_ids( $user_id );
+
+	// get logged in user's connections
+	$logged_in_user_friends = friends_get_friend_user_ids( bp_loggedin_user_id() );
+
+	$mutual_friends = array_intersect( $logged_in_user_friends, $displayed_user_friends );
+
+	if ( !empty( $mutual_friends ) ) {
+		$mutual_friends = implode( ',', (array) $mutual_friends );
+	} else {
+		$mutual_friends = 0;
+	}
+
+	/**
+	 * Filters the total mutual connections for a user.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param array|int $requests An array of user IDs if found, or a 0 if none are found.
+	 * @param int       $user_id  ID of the queried user.
+	 */
+	return apply_filters( 'bp_get_mutual_friendships', $mutual_friends, $user_id );
 }
 
 /**
@@ -729,4 +784,164 @@ function bp_friends_get_profile_stats( $args = '' ) {
 	 * @param array  $r     Array of arguments for string formatting and output.
 	 */
 	return apply_filters( 'bp_friends_get_profile_stats', $r['output'], $r );
+}
+
+/**** Follow Template Functions ****/
+
+/**
+ * Output a comma-separated list of user_ids for a given user's followers.
+ *
+ * @param mixed $args Arguments can be passed as an associative array or as a URL argument string
+ * @global $bp The global BuddyPress settings variable created in bp_core_setup_globals()
+ * @uses bp_get_follower_ids() Returns comma-seperated string of user IDs on success. Integer zero on failure.
+ */
+function bp_friends_follower_ids( $args = '' ) {
+	echo bp_friends_get_follower_ids( $args );
+}
+/**
+ * Returns a comma separated list of user_ids for a given user's followers.
+ *
+ * This can then be passed directly into the members loop querystring.
+ * On failure, returns an integer of zero. Needed when used in a members loop to prevent SQL errors.
+ *
+ * Arguments include:
+ * 	'user_id' - The user ID you want to check for followers
+ *
+ * @param mixed $args Arguments can be passed as an associative array or as a URL argument string
+ * @global $bp The global BuddyPress settings variable created in bp_core_setup_globals()
+ * @return Mixed Comma-seperated string of user IDs on success. Integer zero on failure.
+ */
+function bp_friends_get_follower_ids( $args = '' ) {
+
+	$r = wp_parse_args( $args, array(
+		'user_id' => bp_displayed_user_id()
+	) );
+
+	$ids = implode( ',', (array) bp_friends_get_followers( array( 'user_id' => $r['user_id'] ) ) );
+
+	$ids = empty( $ids ) ? 0 : $ids;
+
+	return apply_filters( 'bp_friends_get_follower_ids', $ids, $r['user_id'] );
+}
+
+/**
+ * Output a comma-separated list of user_ids for a given user's following.
+ *
+ * @param mixed $args Arguments can be passed as an associative array or as a URL argument string
+ * @global $bp The global BuddyPress settings variable created in bp_core_setup_globals()
+ * @uses bp_get_following_ids() Returns comma-seperated string of user IDs on success. Integer zero on failure.
+ */
+function bp_friends_following_ids( $args = '' ) {
+	echo bp_friends_get_following_ids( $args );
+}
+/**
+ * Returns a comma separated list of user_ids for a given user's following.
+ *
+ * This can then be passed directly into the members loop querystring.
+ * On failure, returns an integer of zero. Needed when used in a members loop to prevent SQL errors.
+ *
+ * Arguments include:
+ * 	'user_id' - The user ID you want to check for a following
+ *
+ * @param mixed $args Arguments can be passed as an associative array or as a URL argument string
+ * @global $bp The global BuddyPress settings variable created in bp_core_setup_globals()
+ * @return Mixed Comma-seperated string of user IDs on success. Integer zero on failure.
+ */
+function bp_friends_get_following_ids( $args = '' ) {
+
+	$r = wp_parse_args( $args, array(
+		'user_id' => bp_displayed_user_id()
+	) );
+
+	$ids = implode( ',', (array)bp_friends_get_following( array( 'user_id' => $r['user_id'] ) ) );
+
+	$ids = empty( $ids ) ? 0 : $ids;
+
+	return apply_filters( 'bp_friends_get_following_ids', $ids, $r['user_id'] );
+}
+
+/**
+ * Output the Follow button.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @see bp_friends_add_follow_button() for information on arguments.
+ *
+ * @param mixed $args See {@link bp_friends_get_add_follow_button()}.
+ */
+function bp_friends_add_follow_button( $args = '' ) {
+	echo bp_friends_get_add_follow_button( $args );
+}
+/**
+ * Returns a follow / unfollow button for a given user depending on the follower status.
+ *
+ * Checks to see if the follower is already following the leader.  If is following, returns
+ * "Stop following" button; if not following, returns "Follow" button.
+ *
+ * @param array $args {
+ *     Array of arguments.
+ *     @type int $leader_id The user ID of the person we want to follow.
+ *     @type int $follower_id The user ID initiating the follow request.
+ * }
+ * @return mixed String of the button on success.  Boolean false on failure.
+ * @uses bp_get_button() Renders a button using the BP Button API
+ * @since Buddyboss 3.1.1
+ */
+function bp_friends_get_add_follow_button( $args = '' ) {
+
+	$r = wp_parse_args( $args, array(
+		'leader_id'     => bp_displayed_user_id(),
+		'follower_id'   => bp_loggedin_user_id(),
+	) );
+
+	if ( ! $r['leader_id'] || ! $r['follower_id'] )
+		return false;
+
+	$is_following = bp_friends_is_following( array(
+		'leader_id'   => $r['leader_id'],
+		'follower_id' => $r['follower_id']
+	) );
+
+	if ( ! $is_following ) {
+		$button = array(
+			'id'                => 'member_follow',
+			'component'         => 'friends',
+			'must_be_logged_in' => true,
+			'block_self'        => true,
+			'wrapper_class'     => 'follow-button not_following',
+			'wrapper_id'        => 'follow-button-' . $r['leader_id'],
+			'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/start-following/' . $r['leader_id'] . '/', 'friends_follow' ),
+			'link_text'         => __( 'Follow', 'buddyboss' ),
+			'link_id'           => 'follow-' . $r['leader_id'],
+			'link_rel'          => 'start',
+			'link_class'        => 'follow-button not_following start'
+		);
+	} else {
+		$button = array(
+			'id'                => 'member_follow',
+			'component'         => 'friends',
+			'must_be_logged_in' => true,
+			'block_self'        => true,
+			'wrapper_class'     => 'follow-button following',
+			'wrapper_id'        => 'follow-button-' . $r['leader_id'],
+			'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/stop-following/' . $r['leader_id'] . '/', 'friends_unfollow' ),
+			'link_text'         => __( 'Following', 'buddyboss' ),
+			'link_id'           => 'follow-' . $r['leader_id'],
+			'link_rel'          => 'stop',
+			'link_class'        => 'follow-button following stop bp-toggle-action-button',
+			'button_attr' => array(
+				'data-title'           => __( 'Unfollow', 'buddyboss' ),
+				'data-title-displayed' => __( 'Following', 'buddyboss' )
+			)
+		);
+	}
+
+	/**
+	 * Filters the HTML for the follow button.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $button HTML markup for follow button.
+	 */
+	return bp_get_button( apply_filters( 'bp_friends_get_add_follow_button', $button ) );
 }

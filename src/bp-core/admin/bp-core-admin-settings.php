@@ -237,14 +237,14 @@ function bp_admin_setting_callback_group_cover_image_uploads() {
 /**
  * Friends settings section description for the settings page.
  *
- * @since BuddyPress 3.1.1
+ * @since BuddyBoss 3.1.1
  */
 function bp_admin_setting_callback_friendship_section() { }
 
 /**
  * Force users to be friends for messaging.
  *
- * @since BuddyPress 3.1.1
+ * @since BuddyBoss 3.1.1
  */
 function bp_admin_setting_callback_force_friendship_to_message() {
 	?>
@@ -262,7 +262,7 @@ function bp_admin_setting_callback_force_friendship_to_message() {
  * legacy reasons, the option that we store is 1 if these friends or messaging is *disabled*. So we use this
  * function to flip the boolean before saving the intval.
  *
- * @since BuddyPress 3.1.1
+ * @since BuddyBoss 3.1.1
  *
  * @param bool $value Whether or not to sanitize.
  * @return bool

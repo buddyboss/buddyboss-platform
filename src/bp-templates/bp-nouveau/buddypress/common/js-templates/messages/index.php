@@ -137,7 +137,7 @@
 			return item.is_you;
 		});
 
-		var include_you = other_recipients.length > 2;
+		var include_you = other_recipients.length >= 2;
 		var first_three = _.first(other_recipients, 3);
 
 		if (first_three.length == 0) {
@@ -209,7 +209,7 @@
 			return item.is_you == true;
 		});
 
-		var include_you = other_recipients.length > 2;
+		var include_you = other_recipients.length >= 2;
 
 		if (other_recipients.length == 0) {
 			include_you = true;
