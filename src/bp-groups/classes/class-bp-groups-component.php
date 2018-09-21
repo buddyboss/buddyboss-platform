@@ -620,13 +620,13 @@ class BP_Groups_Component extends BP_Component {
 			);
 
 			$sub_nav[] = array_merge( array(
-				'name'              => __( 'All Members', 'buddyboss' ),
+				'name'              => __( 'Group Members', 'buddyboss' ),
 				'slug'              => 'all-members',
 				'position'          => 0,
 			), $default_params );
 
 			$sub_nav[] = array_merge( array(
-				'name'              => __( 'Leaders', 'buddyboss' ),
+				'name'              => __( 'Group Leaders', 'buddyboss' ),
 				'slug'              => 'leaders',
 				'position'          => 10,
 			), $default_params );
