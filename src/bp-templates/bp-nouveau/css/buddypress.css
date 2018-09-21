@@ -1877,12 +1877,13 @@ form.ac-form .ac-reply-content input {
   .buddypress-wrap .members-group-list li .joined {
     clear: left;
     float: none;
+    margin-top: 0;
   }
   .buddypress-wrap .members-group-list li .role {
     clear: left;
     float: none;
     font-size: 14px;
-    padding: 5px 0 0;
+    margin: 0;
   }
 }
 
@@ -4699,6 +4700,7 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 }
 
 [data-bp-tooltip] {
+  cursor: pointer;
   position: relative;
 }
 
