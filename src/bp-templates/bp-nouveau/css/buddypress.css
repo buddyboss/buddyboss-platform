@@ -4709,6 +4709,7 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
   display: none;
   opacity: 0;
   position: absolute;
+  text-align: center;
   -webkit-transform: translate3d(0, 0, 0);
   -ms-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
@@ -4726,7 +4727,6 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
   font-weight: 400;
   letter-spacing: normal;
   line-height: 1.25;
-  max-width: 200px;
   padding: 5px 8px;
   pointer-events: none;
   text-shadow: none;
@@ -4801,6 +4801,38 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 .bp-invites-content #send-invites-editor .bp-tooltip:after {
   left: 0;
   right: auto;
+}
+
+[data-tooltip-length="small"]:after {
+  white-space: normal;
+  width: 100px;
+}
+
+[data-tooltip-length="medium"]:after {
+  white-space: normal;
+  width: 180px;
+}
+
+[data-tooltip-length="large"]:after {
+  white-space: normal;
+  width: 260px;
+}
+
+[data-tooltip-length="xlarge"]:after {
+  white-space: normal;
+  width: 360px;
+}
+
+@media screen and (max-width: 768px) {
+  [data-tooltip-length="xlarge"]:after {
+    white-space: normal;
+    width: 90vw;
+  }
+}
+
+[data-tooltip-length="fit"]:after {
+  white-space: normal;
+  width: 100%;
 }
 
 /**
