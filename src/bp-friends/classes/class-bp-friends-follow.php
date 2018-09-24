@@ -67,7 +67,7 @@ class BP_Friends_Follow {
 	protected function populate() {
 		global $wpdb, $bp;
 
-		if ( $follow_id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->friends->table_name_follow} WHERE leader_id = %d AND follower_id = %d", $this->leader_id, $this->follower_id ) ) ) {
+		if ( $follow_id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->friends->table_name_unfollow} WHERE leader_id = %d AND follower_id = %d", $this->leader_id, $this->follower_id ) ) ) {
 			$this->id = $follow_id;
 		}
 	}
@@ -96,11 +96,11 @@ class BP_Friends_Follow {
 
 		// update existing entry
 		if ( $this->id ) {
-			$result = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->friends->table_name_follow} SET leader_id = %d, follower_id = %d WHERE id = %d", $this->leader_id, $this->follower_id, $this->id ) );
+			$result = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->friends->table_name_unfollow} SET leader_id = %d, follower_id = %d WHERE id = %d", $this->leader_id, $this->follower_id, $this->id ) );
 
 			// add new entry
 		} else {
-			$result = $wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->friends->table_name_follow} ( leader_id, follower_id ) VALUES ( %d, %d )", $this->leader_id, $this->follower_id ) );
+			$result = $wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->friends->table_name_unfollow} ( leader_id, follower_id ) VALUES ( %d, %d )", $this->leader_id, $this->follower_id ) );
 			$this->id = $wpdb->insert_id;
 		}
 
@@ -117,35 +117,35 @@ class BP_Friends_Follow {
 	public function delete() {
 		global $wpdb, $bp;
 
-		return $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->friends->table_name_follow} WHERE id = %d", $this->id ) );
+		return $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->friends->table_name_unfollow} WHERE id = %d", $this->id ) );
 	}
 
 	/** STATIC METHODS *****************************************************/
 
 	/**
-	 * Get the follower IDs for a given user.
+	 * Get the unfollower IDs for a given user.
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *
 	 * @param int $user_id The user ID.
 	 * @return array
 	 */
-	public static function get_followers( $user_id ) {
+	public static function get_unfollowers( $user_id ) {
 		global $bp, $wpdb;
-		return $wpdb->get_col( $wpdb->prepare( "SELECT follower_id FROM {$bp->friends->table_name_follow} WHERE leader_id = %d", $user_id ) );
+		return $wpdb->get_col( $wpdb->prepare( "SELECT follower_id FROM {$bp->friends->table_name_unfollow} WHERE leader_id = %d", $user_id ) );
 	}
 
 	/**
-	 * Get the user IDs that a user is following.
+	 * Get the user IDs that a user is unfollowing.
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *
 	 * @param int $user_id The user ID to fetch.
 	 * @return array
 	 */
-	public static function get_following( $user_id ) {
+	public static function get_unfollowing( $user_id ) {
 		global $bp, $wpdb;
-		return $wpdb->get_col( $wpdb->prepare( "SELECT leader_id FROM {$bp->friends->table_name_follow} WHERE follower_id = %d", $user_id ) );
+		return $wpdb->get_col( $wpdb->prepare( "SELECT leader_id FROM {$bp->friends->table_name_unfollow} WHERE follower_id = %d", $user_id ) );
 	}
 
 	/**
@@ -159,8 +159,8 @@ class BP_Friends_Follow {
 	public static function get_counts( $user_id ) {
 		global $bp, $wpdb;
 
-		$followers = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->friends->table_name_follow} WHERE leader_id = %d", $user_id ) );
-		$following = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->friends->table_name_follow} WHERE follower_id = %d", $user_id ) );
+		$followers = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->friends->table_name_unfollow} WHERE leader_id = %d", $user_id ) );
+		$following = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->friends->table_name_unfollow} WHERE follower_id = %d", $user_id ) );
 
 		return array( 'followers' => $followers, 'following' => $following );
 	}
@@ -187,7 +187,7 @@ class BP_Friends_Follow {
 
 		$leader_ids = implode( ',', wp_parse_id_list( (array) $leader_ids ) );
 
-		return $wpdb->get_results( $wpdb->prepare( "SELECT leader_id, id FROM {$bp->friends->table_name_follow} WHERE follower_id = %d AND leader_id IN ($leader_ids)", $user_id ) );
+		return $wpdb->get_results( $wpdb->prepare( "SELECT leader_id, id FROM {$bp->friends->table_name_unfollow} WHERE follower_id = %d AND leader_id IN ($leader_ids)", $user_id ) );
 	}
 
 	/**
@@ -200,6 +200,6 @@ class BP_Friends_Follow {
 	public static function delete_all_for_user( $user_id ) {
 		global $bp, $wpdb;
 
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->friends->table_name_follow} WHERE leader_id = %d OR follower_id = %d", $user_id, $user_id ) );
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->friends->table_name_unfollow} WHERE leader_id = %d OR follower_id = %d", $user_id, $user_id ) );
 	}
 }

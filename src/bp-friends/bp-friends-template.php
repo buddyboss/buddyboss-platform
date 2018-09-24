@@ -789,75 +789,75 @@ function bp_friends_get_profile_stats( $args = '' ) {
 /**** Follow Template Functions ****/
 
 /**
- * Output a comma-separated list of user_ids for a given user's followers.
+ * Output a comma-separated list of user_ids for a given user's unfollowers.
  *
  * @param mixed $args Arguments can be passed as an associative array or as a URL argument string
  * @global $bp The global BuddyPress settings variable created in bp_core_setup_globals()
  * @uses bp_get_follower_ids() Returns comma-seperated string of user IDs on success. Integer zero on failure.
  */
-function bp_friends_follower_ids( $args = '' ) {
-	echo bp_friends_get_follower_ids( $args );
+function bp_friends_unfollower_ids( $args = '' ) {
+	echo bp_friends_get_unfollower_ids( $args );
 }
 /**
- * Returns a comma separated list of user_ids for a given user's followers.
+ * Returns a comma separated list of user_ids for a given user's unfollowers.
  *
  * This can then be passed directly into the members loop querystring.
  * On failure, returns an integer of zero. Needed when used in a members loop to prevent SQL errors.
  *
  * Arguments include:
- * 	'user_id' - The user ID you want to check for followers
+ * 	'user_id' - The user ID you want to check for unfollowers
  *
  * @param mixed $args Arguments can be passed as an associative array or as a URL argument string
  * @global $bp The global BuddyPress settings variable created in bp_core_setup_globals()
  * @return Mixed Comma-seperated string of user IDs on success. Integer zero on failure.
  */
-function bp_friends_get_follower_ids( $args = '' ) {
+function bp_friends_get_unfollower_ids( $args = '' ) {
 
 	$r = wp_parse_args( $args, array(
 		'user_id' => bp_displayed_user_id()
 	) );
 
-	$ids = implode( ',', (array) bp_friends_get_followers( array( 'user_id' => $r['user_id'] ) ) );
+	$ids = implode( ',', (array) bp_friends_get_unfollowers( array( 'user_id' => $r['user_id'] ) ) );
 
 	$ids = empty( $ids ) ? 0 : $ids;
 
-	return apply_filters( 'bp_friends_get_follower_ids', $ids, $r['user_id'] );
+	return apply_filters( 'bp_friends_get_unfollower_ids', $ids, $r['user_id'] );
 }
 
 /**
- * Output a comma-separated list of user_ids for a given user's following.
+ * Output a comma-separated list of user_ids for a given user's unfollowing.
  *
  * @param mixed $args Arguments can be passed as an associative array or as a URL argument string
  * @global $bp The global BuddyPress settings variable created in bp_core_setup_globals()
  * @uses bp_get_following_ids() Returns comma-seperated string of user IDs on success. Integer zero on failure.
  */
-function bp_friends_following_ids( $args = '' ) {
-	echo bp_friends_get_following_ids( $args );
+function bp_friends_unfollowing_ids( $args = '' ) {
+	echo bp_friends_get_unfollowing_ids( $args );
 }
 /**
- * Returns a comma separated list of user_ids for a given user's following.
+ * Returns a comma separated list of user_ids for a given user's unfollowing.
  *
  * This can then be passed directly into the members loop querystring.
  * On failure, returns an integer of zero. Needed when used in a members loop to prevent SQL errors.
  *
  * Arguments include:
- * 	'user_id' - The user ID you want to check for a following
+ * 	'user_id' - The user ID you want to check for a unfollowing
  *
  * @param mixed $args Arguments can be passed as an associative array or as a URL argument string
  * @global $bp The global BuddyPress settings variable created in bp_core_setup_globals()
  * @return Mixed Comma-seperated string of user IDs on success. Integer zero on failure.
  */
-function bp_friends_get_following_ids( $args = '' ) {
+function bp_friends_get_unfollowing_ids( $args = '' ) {
 
 	$r = wp_parse_args( $args, array(
 		'user_id' => bp_displayed_user_id()
 	) );
 
-	$ids = implode( ',', (array)bp_friends_get_following( array( 'user_id' => $r['user_id'] ) ) );
+	$ids = implode( ',', (array)bp_friends_get_unfollowing( array( 'user_id' => $r['user_id'] ) ) );
 
 	$ids = empty( $ids ) ? 0 : $ids;
 
-	return apply_filters( 'bp_friends_get_following_ids', $ids, $r['user_id'] );
+	return apply_filters( 'bp_friends_get_unfollowing_ids', $ids, $r['user_id'] );
 }
 
 /**
@@ -897,26 +897,12 @@ function bp_friends_get_add_follow_button( $args = '' ) {
 	if ( ! $r['leader_id'] || ! $r['follower_id'] )
 		return false;
 
-	$is_following = bp_friends_is_following( array(
+	$is_unfollowing = bp_friends_is_unfollowing( array(
 		'leader_id'   => $r['leader_id'],
 		'follower_id' => $r['follower_id']
 	) );
 
-	if ( ! $is_following ) {
-		$button = array(
-			'id'                => 'member_follow',
-			'component'         => 'friends',
-			'must_be_logged_in' => true,
-			'block_self'        => true,
-			'wrapper_class'     => 'follow-button not_following',
-			'wrapper_id'        => 'follow-button-' . $r['leader_id'],
-			'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/start-following/' . $r['leader_id'] . '/', 'friends_follow' ),
-			'link_text'         => __( 'Follow', 'buddyboss' ),
-			'link_id'           => 'follow-' . $r['leader_id'],
-			'link_rel'          => 'start',
-			'link_class'        => 'follow-button not_following start'
-		);
-	} else {
+	if ( ! $is_unfollowing ) {
 		$button = array(
 			'id'                => 'member_follow',
 			'component'         => 'friends',
@@ -933,6 +919,20 @@ function bp_friends_get_add_follow_button( $args = '' ) {
 				'data-title'           => __( 'Unfollow', 'buddyboss' ),
 				'data-title-displayed' => __( 'Following', 'buddyboss' )
 			)
+		);
+	} else {
+		$button = array(
+			'id'                => 'member_follow',
+			'component'         => 'friends',
+			'must_be_logged_in' => true,
+			'block_self'        => true,
+			'wrapper_class'     => 'follow-button not_following',
+			'wrapper_id'        => 'follow-button-' . $r['leader_id'],
+			'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/start-following/' . $r['leader_id'] . '/', 'friends_follow' ),
+			'link_text'         => __( 'Follow', 'buddyboss' ),
+			'link_id'           => 'follow-' . $r['leader_id'],
+			'link_rel'          => 'start',
+			'link_class'        => 'follow-button not_following start'
 		);
 	}
 

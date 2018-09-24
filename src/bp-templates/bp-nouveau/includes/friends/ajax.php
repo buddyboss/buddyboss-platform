@@ -304,10 +304,10 @@ function bp_nouveau_ajax_followunfollow_friend() {
 		);
 	}
 
-	$follow_status = bp_friends_is_following( array( 'leader_id' => $leader_id, 'follower_id' => bp_loggedin_user_id() ) );
+	$is_unfollowing = bp_friends_is_unfollowing( array( 'leader_id' => $leader_id, 'follower_id' => bp_loggedin_user_id() ) );
 
 	// Trying to unfollow.
-	if ( $follow_status ) {
+	if ( ! $is_unfollowing ) {
 		if ( ! bp_friends_stop_following( array( 'leader_id' => $leader_id, 'follower_id' => bp_loggedin_user_id() ) ) ) {
 
 			$response['feedback'] = sprintf(
@@ -324,7 +324,7 @@ function bp_nouveau_ajax_followunfollow_friend() {
 		}
 
 		// Trying to follow.
-	} elseif ( ! $follow_status ) {
+	} elseif ( $is_unfollowing ) {
 		if ( ! bp_friends_start_following( array( 'leader_id' => $leader_id, 'follower_id' => bp_loggedin_user_id() ) ) ) {
 
 			$response['feedback'] = sprintf(
