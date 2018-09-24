@@ -2497,6 +2497,10 @@ body.no-js .single-item-header .js-self-profile-button {
   }
 }
 
+#avatar-crop-actions {
+  margin-top: 15px;
+}
+
 /**
 *-----------------------------------------
 * @subsection 5.2.1.2 - Group Members List
