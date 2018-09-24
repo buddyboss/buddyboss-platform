@@ -1148,7 +1148,7 @@ add_action( 'friends_friendship_deleted', 'bp_friends_auto_unfollow_users', 10, 
  */
 function bp_friends_exclude_unfollow_feed( $args ) {
 
-	if ( bp_loggedin_user_id() ) {
+	if ( bp_loggedin_user_id() && bp_is_activity_directory() ) {
 		$friends = friends_get_friend_user_ids( bp_loggedin_user_id() );
 
 		if ( ! empty( $friends ) ) {
@@ -1164,7 +1164,7 @@ function bp_friends_exclude_unfollow_feed( $args ) {
 				}
 			}
 
-			// add current user id to friends
+			// add current user id to friends if on news feed
 			$friends[] = bp_loggedin_user_id();
 
 			$filter_query = array();
