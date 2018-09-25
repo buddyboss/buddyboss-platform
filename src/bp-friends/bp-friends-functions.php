@@ -1098,18 +1098,18 @@ add_action( 'make_spam_user',	'bp_friends_remove_follow_data' );
  *
  * @since BuddyBoss 3.1.1
  *
- * @uses bp_friends_stop_following()
+ * @uses bp_friends_start_following()
  */
 function bp_friends_auto_follow_users( $friendship_id, $initiator_user_id, $friend_user_id ) {
 
 	// initiator user follows friend
-	bp_friends_stop_following( array(
+	bp_friends_start_following( array(
 		'leader_id'   => $initiator_user_id,
 		'follower_id' => $friend_user_id
 	) );
 
 	// friend user follows initiator
-	bp_friends_stop_following( array(
+	bp_friends_start_following( array(
 		'leader_id'   => $friend_user_id,
 		'follower_id' => $initiator_user_id
 	) );
@@ -1122,18 +1122,18 @@ add_action( 'friends_friendship_accepted', 'bp_friends_auto_follow_users', 10, 3
  *
  * @since BuddyBoss 3.1.1
  *
- * @uses bp_friends_start_following()
+ * @uses bp_friends_stop_following()
  */
 function bp_friends_auto_unfollow_users( $friendship_id, $initiator_user_id, $friend_user_id ) {
 
 	// initiator user unfollows friend
-	bp_friends_start_following( array(
+	bp_friends_stop_following( array(
 		'leader_id'   => $initiator_user_id,
 		'follower_id' => $friend_user_id
 	) );
 
 	// friend user unfollows initiator
-	bp_friends_start_following( array(
+	bp_friends_stop_following( array(
 		'leader_id'   => $friend_user_id,
 		'follower_id' => $initiator_user_id
 	) );
