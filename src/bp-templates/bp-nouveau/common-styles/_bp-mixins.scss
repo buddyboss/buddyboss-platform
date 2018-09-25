@@ -555,6 +555,8 @@
 
 	&:after {
 		left: 0;
+		margin-top: $tooltip-tip-area;
+		top: 110%;
 		-webkit-transform: translate(0, 0);
 		-ms-transform: translate(0, 0);
 		transform: translate(0, 0);
@@ -568,7 +570,9 @@
 
 	&:after {
 		left: auto;
+		margin-top: $tooltip-tip-area;
 		right: 0;
+		top: 110%;
 		-webkit-transform: translate(0, 0);
 		-ms-transform: translate(0, 0);
 		transform: translate(0, 0);

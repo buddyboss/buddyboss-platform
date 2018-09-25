@@ -639,7 +639,7 @@ body.buddypress article.page > .entry-header .entry-title {
 .buddypress-wrap .subnav-filters {
   background: none;
   list-style: none;
-  margin: 15px 0 0;
+  margin: 15px 0;
   padding: 0;
 }
 
@@ -4709,7 +4709,6 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
   display: none;
   opacity: 0;
   position: absolute;
-  text-align: center;
   -webkit-transform: translate3d(0, 0, 0);
   -ms-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
@@ -4753,16 +4752,18 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 }
 
 .bp-tooltip:after {
-  left: 50%;
+  left: 0;
   margin-top: 7px;
   top: 110%;
-  -webkit-transform: translate(-50%, 0);
-  -ms-transform: translate(-50%, 0);
-  transform: translate(-50%, 0);
+  -webkit-transform: translate(0, 0);
+  -ms-transform: translate(0, 0);
+  transform: translate(0, 0);
 }
 
 .user-list .bp-tooltip:after {
   left: 0;
+  margin-top: 7px;
+  top: 110%;
   -webkit-transform: translate(0, 0);
   -ms-transform: translate(0, 0);
   transform: translate(0, 0);
@@ -4771,7 +4772,9 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 @media screen and (min-width: 46.8em) {
   .user-list .bp-tooltip:after {
     left: auto;
+    margin-top: 7px;
     right: 0;
+    top: 110%;
     -webkit-transform: translate(0, 0);
     -ms-transform: translate(0, 0);
     transform: translate(0, 0);
@@ -4783,6 +4786,8 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 .notification-actions .bp-tooltip:after,
 .participants-list .bp-tooltip:after {
   left: 0;
+  margin-top: 7px;
+  top: 110%;
   -webkit-transform: translate(0, 0);
   -ms-transform: translate(0, 0);
   transform: translate(0, 0);
@@ -4792,7 +4797,9 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 .message-metadata .actions .bp-tooltip:after,
 .single-message-thread-header .actions .bp-tooltip:after {
   left: auto;
+  margin-top: 7px;
   right: 0;
+  top: 110%;
   -webkit-transform: translate(0, 0);
   -ms-transform: translate(0, 0);
   transform: translate(0, 0);
@@ -4814,11 +4821,17 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 }
 
 [data-tooltip-length="large"]:after {
+  font-size: 14px;
+  line-height: 1.4;
+  padding: 10px;
   white-space: normal;
   width: 260px;
 }
 
 [data-tooltip-length="xlarge"]:after {
+  font-size: 14px;
+  line-height: 1.4;
+  padding: 12px;
   white-space: normal;
   width: 360px;
 }
@@ -5225,7 +5238,6 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
   .bp-single-vert-nav .item-body:not(#group-create-body) #subnav:not(.tabbed-links) li.current a {
     background: none;
     color: #333;
-    text-decoration: underline;
   }
   .bp-single-vert-nav .item-body:not(#group-create-body) #subnav:not(.tabbed-links) li:last-child a {
     border: none;
