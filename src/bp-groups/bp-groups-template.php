@@ -773,7 +773,7 @@ function bp_group_status_description( $group = false ) {
         } elseif ( 'hidden' == $group->status ) {
             $description = __( 'Only this group\'s members can find the group and view its content, including its members and activity.', 'buddyboss' );
         } elseif ( 'private' == $group->status ) {
-            $description = __( 'This group’s content, including its members and activity, are only be visible to members of the group.', 'buddyboss' );
+            $description = __( 'This group’s content, including its members and activity, are only visible to members of the group.', 'buddyboss' );
         } else {
             $description = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
         }
