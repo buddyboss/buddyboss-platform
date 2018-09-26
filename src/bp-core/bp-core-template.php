@@ -1089,6 +1089,9 @@ function bp_total_member_count() {
 }
 	/**
 	 * Return the total member count in your BP instance.
+     * 
+     * Since BuddyBoss 3.1.1, members directory lists all members, even if they have never been active.
+     * So, this function also uses bp_core_get_total_member_count, again.
 	 *
 	 * Since BuddyPress 1.6, this function has used bp_core_get_active_member_count(),
 	 * which counts non-spam, non-deleted users who have last_activity.
@@ -1100,6 +1103,7 @@ function bp_total_member_count() {
 	 * resulted in higher counts than shown by member directory pagination.
 	 *
 	 * @since BuddyPress 1.2.0
+     * @since BuddyBoss 3.1.1 Uses bp_core_get_total_member_count instead of bp_core_get_active_member_count
 	 *
 	 * @return int Member count.
 	 */
@@ -1112,7 +1116,7 @@ function bp_total_member_count() {
 		 *
 		 * @param int $value Member count.
 		 */
-		return apply_filters( 'bp_get_total_member_count', bp_core_get_active_member_count() );
+		return apply_filters( 'bp_get_total_member_count', bp_core_get_total_member_count() );
 	}
 	add_filter( 'bp_get_total_member_count', 'bp_core_number_format' );
 
