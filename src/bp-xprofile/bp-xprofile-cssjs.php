@@ -70,5 +70,10 @@ function xprofile_add_admin_js() {
 
 		wp_localize_script( 'xprofile-admin-js', 'XProfileAdmin', $strings );
 	}
+    
+    if ( !empty( $_GET['page'] ) && strpos( $_GET['page'], 'bp-profile-edit' ) !== false ) {
+        $min = bp_core_get_minified_asset_suffix();
+		wp_enqueue_script( 'jquery-mask', buddypress()->plugin_url . "bp-core/js/vendor/jquery.mask{$min}.js", array( 'jquery' ), '1.14.15' );
+    }
 }
 add_action( 'bp_admin_enqueue_scripts', 'xprofile_add_admin_js', 1 );

@@ -72,6 +72,7 @@ function bp_core_register_common_scripts() {
 		
 		// Version 3.1.1
 		'bp-jquery-validate' => array( 'file' => "{$url}vendor/jquery.validate{$min}.js", 'dependencies' => array( 'jquery' ), 'footer' => true ),
+        'jquery-mask'        => array( 'file' => "{$url}vendor/jquery.mask{$min}.js", 'dependencies' => array( 'jquery' ), 'footer' => true ),
 	);
 
 	// Version 2.7 - Add Moment.js locale to our $scripts array if we found one.
@@ -623,3 +624,25 @@ function bp_core_add_jquery_validate_inline_js() {
 
 <?php
 }
+
+/**
+ * Enqueues jquery.mask.js on BuddyPress pages.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_core_add_jquery_mask() {
+	if ( ! is_buddypress() ) {
+		return;
+	}
+    
+    if ( 'profile' != bp_current_component() || 'edit' != bp_current_action() ) {
+        return;//we need this script only on profile edit screens
+    }
+    
+	if ( wp_script_is( 'jquery-mask' ) ) {
+		return;
+	}
+
+	wp_enqueue_script( 'jquery-mask' );
+}
+add_action( 'bp_enqueue_scripts', 'bp_core_add_jquery_mask' );

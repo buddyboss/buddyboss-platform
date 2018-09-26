@@ -29,6 +29,8 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 		$this->name     = _x( 'Phone Number', 'xprofile field type', 'buddyboss' );
 
 		$this->set_format( '/^.*$/', 'replace' );
+        
+        $this->do_settings_section = true;
 
 		/**
 		 * Fires inside __construct() method for BP_XProfile_Field_Type_Telephone class.
@@ -60,9 +62,20 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 			unset( $raw_properties['user_id'] );
 		}
 
+        $selected_format = bp_xprofile_get_meta( bp_get_the_profile_field_id(), 'field', 'phone_format', true );
+        if ( empty( $selected_format ) ) {
+            $selected_format = 'international';
+        }
+        
+        $all_formats                = $this->get_phone_formats();
+        $selected_format_details    = isset( $all_formats[ $selected_format ] ) ? $all_formats[ $selected_format ] : array();
+
+        $placeholder = isset ( $selected_format_details[ 'placeholder' ] ) && !empty( $selected_format_details[ 'placeholder' ] ) ? $selected_format_details[ 'placeholder' ] : '';
+        
 		$r = bp_parse_args( $raw_properties, array(
 			'type'  => 'tel',
 			'value' => bp_get_the_profile_field_edit_value(),
+            'placeholder' => $placeholder,
 		) ); ?>
 
 		<legend id="<?php bp_the_profile_field_input_name(); ?>-1">
@@ -82,6 +95,8 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 		<?php endif; ?>
 
 		<?php
+        global $field;
+        $this->input_mask_script( $field );
 	}
 
 	/**
@@ -105,6 +120,8 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 		<input <?php echo $this->get_edit_field_html_elements( $r ); ?>>
 
 		<?php
+        global $field;
+        $this->input_mask_script( $field );
 	}
 
 	/**
@@ -117,8 +134,163 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 	 * @param string            $control_type  Optional. HTML input type used to render the
 	 *                                         current field's child options.
 	 */
-	public function admin_new_field_html( BP_XProfile_Field $current_field, $control_type = '' ) {}
+	public function admin_new_field_html( BP_XProfile_Field $current_field, $control_type = '' ) {
+        $type = array_search( get_class( $this ), bp_xprofile_get_field_types() );
 
+		if ( false === $type ) {
+			return;
+		}
+
+		$class = $current_field->type != $type ? 'display: none;' : '';
+
+		$settings = $this->get_field_settings( $current_field );
+        ?>
+        <div id="<?php echo esc_attr( $type ); ?>" class="postbox bp-options-box <?php echo $current_field->type;?>" style="<?php echo esc_attr( $class ); ?> margin-top: 15px;">
+            <table class="form-table bp-date-options">
+                <tr>
+                    <th scope="row">
+                        <label for="phone-format-elapsed"><?php _e( 'Phone Format', 'buddyboss' );?></label>
+                    </th>
+
+                    <td>
+                        <select name="field-settings[phone_format]" id="phone-format" >
+                            <?php 
+                            foreach ( $this->get_phone_formats() as $format => $details ) {
+                                printf( 
+                                    "<option value='%s' %s >%s</option>",
+                                    $format,
+                                    selected( $settings['phone_format'], $format, false ),
+                                    $details['label']
+                                );
+                            }
+                            ?>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <?php 
+    }
+
+    /**
+     * Returns an array of phone formats
+     * 
+     * @since BuddyBoss 3.1.1
+     * 
+     * @return array
+     */
+    public function get_phone_formats () {
+        $phone_formats = array(
+			'standard'      => array(
+				'label'       => '(###) ###-####',
+				'mask'        => '(999) 999-9999',
+                'placeholder' => '(###) ###-####',
+			),
+			'international' => array(
+				'label'       => __( 'International', 'buddyboss' ),
+				'mask'        => false,
+                'placeholder' => '',
+			),
+		);
+        
+        return $phone_formats;
+    }
+    
+    /**
+     * Get all settings for field.
+     * 
+     * @since BuddyBoss 3.1.1
+     * 
+     * @param BP_XProfile_Field $field
+     * @return array
+     */
+    public function get_field_settings ( BP_XProfile_Field $field ) {
+        $defaults = array(
+			'phone_format'  => 'international',
+		);
+
+		$settings = array();
+		foreach ( $defaults as $key => $value ) {
+			$saved = bp_xprofile_get_meta( $field->id, 'field', $key, true );
+
+			if ( $saved ) {
+				$settings[ $key ] = $saved;
+			} else {
+				$settings[ $key ] = $value;
+			}
+		}
+        
+        return $settings;
+    }
+    
+    /**
+	 * Save settings from the field edit screen in the Dashboard.
+	 *
+     * @since BuddyBoss 3.1.1
+     * 
+	 * @param int   $field_id ID of the field.
+	 * @param array $settings Array of settings.
+	 * @return bool True on success.
+	 */
+	public function admin_save_settings ( $field_id, $settings ) {
+		$saved_settings = array();
+		foreach ( $settings as $setting => $setting_val ) {
+			switch ( $setting ) {
+				case 'phone_format' :
+					$allowed_formats = $this->get_phone_formats();
+                    
+					if ( ! isset( $allowed_formats[ $setting_val ] ) ) {
+						$setting_val = 'international';//default
+					}
+
+					$saved_settings[ $setting ] = $setting_val;
+				break;
+
+				default :
+					if ( isset( $settings[ $setting ] ) ) {
+						$saved_settings[ $setting ] = $settings[ $setting ];
+					}
+				break;
+			}
+		}
+
+		foreach ( $saved_settings as $setting_key => $setting_value ) {
+			bp_xprofile_update_meta( $field_id, 'field', $setting_key, $setting_value );
+		}
+
+		return true;
+	}
+    
+    /**
+     * Prints the jquery input mask script
+     * 
+     * @since BuddyBoss 3.1.1 
+     * @param BP_XProfile_Field $current_field
+     * @return void
+     */
+    public function input_mask_script ( BP_XProfile_Field $current_field ) {
+		$script   = '';
+        
+		$selected_format = bp_xprofile_get_meta( $current_field->id, 'field', 'phone_format', true );
+        if ( empty( $selected_format ) ) {
+            $selected_format = 'international';
+        }
+        
+        $all_formats                = $this->get_phone_formats();
+        $selected_format_details    = isset( $all_formats[ $selected_format ] ) ? $all_formats[ $selected_format ] : array();
+
+		if ( isset ( $selected_format_details[ 'mask' ] ) && !empty( $selected_format_details[ 'mask' ] ) ) {
+            ?>
+            <script type='text/javascript'>
+                jQuery(document).ready(function($){
+                    jQuery('#field_<?php echo $current_field->id;?>').mask('<?php echo $selected_format_details['mask'];?>').bind('keypress', function(e){if(e.which == 13){jQuery(this).blur();} } );
+                })
+            </script>
+            <?php 
+            echo ob_get_clean();
+		}
+	}
+    
 	/**
 	 * Format URL values for display.
 	 *
