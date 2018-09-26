@@ -1785,14 +1785,15 @@ function bp_core_avatar_original_max_filesize() {
  *
  * @since BuddyPress 1.5.0
  * @since BuddyPress 2.6.0 Introduced `$params` and `$object_type` parameters.
+ * @since BuddyBoss 3.1.1 Changed the default value for $type parameter from 'gravatar' to 'local'.
  *
  * @param string $type   'local' if the fallback should be the locally-hosted version
  *                       of the mystery person, 'gravatar' if the fallback should be
- *                       Gravatar's version. Default: 'gravatar'.
+ *                       Gravatar's version. Default: 'local'.
  * @param array  $params Parameters passed to bp_core_fetch_avatar().
  * @return string The URL of the default avatar.
  */
-function bp_core_avatar_default( $type = 'gravatar', $params = array() ) {
+function bp_core_avatar_default( $type = 'local', $params = array() ) {
 	// Local override.
 	if ( defined( 'BP_AVATAR_DEFAULT' ) ) {
 		$avatar = BP_AVATAR_DEFAULT;
@@ -1841,14 +1842,15 @@ function bp_core_avatar_default( $type = 'gravatar', $params = array() ) {
  *
  * @since BuddyPress 1.5.0
  * @since BuddyPress 2.6.0 Introduced `$object_type` parameter.
+ * @since BuddyBoss 3.1.1 Changed the default value for $type parameter from 'gravatar' to 'local'.
  *
  * @param string $type   'local' if the fallback should be the locally-hosted version
  *                       of the mystery person, 'gravatar' if the fallback should be
- *                       Gravatar's version. Default: 'gravatar'.
+ *                       Gravatar's version. Default: 'local'.
  * @param array  $params Parameters passed to bp_core_fetch_avatar().
  * @return string The URL of the default avatar thumb.
  */
-function bp_core_avatar_default_thumb( $type = 'gravatar', $params = array() ) {
+function bp_core_avatar_default_thumb( $type = 'local', $params = array() ) {
 	// Local override.
 	if ( defined( 'BP_AVATAR_DEFAULT_THUMB' ) ) {
 		$avatar = BP_AVATAR_DEFAULT_THUMB;
