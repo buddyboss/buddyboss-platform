@@ -23,7 +23,7 @@ function bp_admin_setting_callback_main_section() { }
  * @since BuddyPress 1.6.0
  *
  */
-function bp_admin_setting_callback_admin_bar() {
+function _____bp_admin_setting_callback_admin_bar() {
 ?>
 
 	<input id="hide-loggedout-adminbar" name="hide-loggedout-adminbar" type="checkbox" value="1" <?php checked( !bp_hide_loggedout_adminbar( false ) ); ?> />
@@ -38,7 +38,7 @@ function bp_admin_setting_callback_admin_bar() {
  * @since BuddyPress 1.6.0
  *
  */
-function bp_admin_setting_callback_account_deletion() {
+function _____bp_admin_setting_callback_account_deletion() {
 ?>
 
 	<input id="bp-disable-account-deletion" name="bp-disable-account-deletion" type="checkbox" value="1" <?php checked( !bp_disable_account_deletion( false ) ); ?> />
@@ -62,7 +62,7 @@ function bp_admin_setting_callback_activity_section() { }
  * @since BuddyPress 1.6.0
  *
  */
-function bp_admin_setting_callback_activity_akismet() {
+function _____bp_admin_setting_callback_activity_akismet() {
 ?>
 
 	<input id="_bp_enable_akismet" name="_bp_enable_akismet" type="checkbox" value="1" <?php checked( bp_is_akismet_active( true ) ); ?> />
@@ -76,7 +76,7 @@ function bp_admin_setting_callback_activity_akismet() {
  *
  * @since BuddyPress 1.6.0
  */
-function bp_admin_setting_callback_blogforum_comments() {
+function ____bp_admin_setting_callback_blogforum_comments() {
 ?>
 
 	<input id="bp-disable-blogforum-comments" name="bp-disable-blogforum-comments" type="checkbox" value="1" <?php checked( !bp_disable_blogforum_comments( false ) ); ?> />
@@ -90,7 +90,7 @@ function bp_admin_setting_callback_blogforum_comments() {
  *
  * @since BuddyPress 2.0.0
  */
-function bp_admin_setting_callback_heartbeat() {
+function _____bp_admin_setting_callback_heartbeat() {
 ?>
 
 	<input id="_bp_enable_heartbeat_refresh" name="_bp_enable_heartbeat_refresh" type="checkbox" value="1" <?php checked( bp_is_activity_heartbeat_active( true ) ); ?> />
@@ -130,7 +130,7 @@ function bp_admin_setting_callback_xprofile_section() { }
  * @since BuddyPress 1.6.0
  *
  */
-function bp_admin_setting_callback_profile_sync() {
+function _____bp_admin_setting_callback_profile_sync() {
 ?>
 
 	<input id="bp-disable-profile-sync" name="bp-disable-profile-sync" type="checkbox" value="1" <?php checked( !bp_disable_profile_sync( false ) ); ?> />
@@ -145,7 +145,7 @@ function bp_admin_setting_callback_profile_sync() {
  * @since BuddyBoss 3.1.1
  *
  */
-function bp_admin_setting_callback_member_dashboard () {
+function ___bp_admin_setting_callback_member_dashboard () {
 ?>
 
 	<input id="bp-enable-member-dashboard" name="bp-enable-member-dashboard" type="checkbox" value="1" <?php checked( bp_nouveau_get_appearance_settings( 'user_front_page' ) ); ?> />
@@ -160,7 +160,7 @@ function bp_admin_setting_callback_member_dashboard () {
  * @since BuddyPress 1.6.0
  *
  */
-function bp_admin_setting_callback_avatar_uploads() {
+function _____bp_admin_setting_callback_avatar_uploads() {
 ?>
 
 	<input id="bp-disable-avatar-uploads" name="bp-disable-avatar-uploads" type="checkbox" value="1" <?php checked( !bp_disable_avatar_uploads( false ) ); ?> />
@@ -174,7 +174,7 @@ function bp_admin_setting_callback_avatar_uploads() {
  *
  * @since BuddyPress 2.4.0
  */
-function bp_admin_setting_callback_cover_image_uploads() {
+function _____bp_admin_setting_callback_cover_image_uploads() {
 ?>
 	<input id="bp-disable-cover-image-uploads" name="bp-disable-cover-image-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_cover_image_uploads() ); ?> />
 	<label for="bp-disable-cover-image-uploads"><?php _e( 'Allow registered members to upload cover images', 'buddyboss' ); ?></label>
@@ -196,7 +196,7 @@ function bp_admin_setting_callback_groups_section() { }
  * @since BuddyPress 1.6.0
  *
  */
-function bp_admin_setting_callback_group_creation() {
+function _____bp_admin_setting_callback_group_creation() {
 ?>
 
 	<input id="bp_restrict_group_creation" name="bp_restrict_group_creation" type="checkbox" aria-describedby="bp_group_creation_description" value="1" <?php checked( !bp_restrict_group_creation( false ) ); ?> />
@@ -211,7 +211,7 @@ function bp_admin_setting_callback_group_creation() {
  *
  * @since BuddyPress 2.3.0
  */
-function bp_admin_setting_callback_group_avatar_uploads() {
+function _____bp_admin_setting_callback_group_avatar_uploads() {
 ?>
 	<input id="bp-disable-group-avatar-uploads" name="bp-disable-group-avatar-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_group_avatar_uploads() ); ?> />
 	<label for="bp-disable-group-avatar-uploads"><?php _e( 'Allow customizable avatars for groups', 'buddyboss' ); ?></label>
@@ -223,7 +223,7 @@ function bp_admin_setting_callback_group_avatar_uploads() {
  *
  * @since BuddyPress 2.4.0
  */
-function bp_admin_setting_callback_group_cover_image_uploads() {
+function _____bp_admin_setting_callback_group_cover_image_uploads() {
 ?>
 	<input id="bp-disable-group-cover-image-uploads" name="bp-disable-group-cover-image-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_group_cover_image_uploads() ); ?> />
 	<label for="bp-disable-group-cover-image-uploads"><?php _e( 'Allow customizable cover images for groups', 'buddyboss' ); ?></label>
@@ -246,7 +246,7 @@ function bp_admin_setting_callback_friendship_section() { }
  *
  * @since BuddyBoss 3.1.1
  */
-function bp_admin_setting_callback_force_friendship_to_message() {
+function _____bp_admin_setting_callback_force_friendship_to_message() {
 	?>
 
     <input id="bp-force-friendship-to-message" name="bp-force-friendship-to-message" type="checkbox" value="1" <?php checked( bp_force_friendship_to_message( false ) ); ?> />
