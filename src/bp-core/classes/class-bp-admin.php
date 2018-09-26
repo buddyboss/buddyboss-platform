@@ -240,14 +240,14 @@ class BP_Admin {
 			'bp_core_admin_settings'
 		);
 
-		$hooks[] = add_submenu_page(
-			$this->settings_page,
-			__( 'BuddyBoss Pages', 'buddyboss' ),
-			__( 'Pages', 'buddyboss' ),
-			$this->capability,
-			'bp-page-settings',
-			'bp_core_admin_slugs_settings'
-		);
+		// $hooks[] = add_submenu_page(
+		// 	$this->settings_page,
+		// 	__( 'BuddyBoss Pages', 'buddyboss' ),
+		// 	__( 'Pages', 'buddyboss' ),
+		// 	$this->capability,
+		// 	'bp-page-settings',
+		// 	'bp_core_admin_slugs_settings'
+		// );
 
 		// For consistency with non-Multisite, we add a Tools menu in
 		// the Network Admin as a home for our Tools panel.
@@ -355,11 +355,13 @@ class BP_Admin {
 		$bp = buddypress();
 		require trailingslashit( $bp->plugin_dir  . 'bp-core/classes' ) . '/class-bp-admin-setting-tab.php';
 		require $this->admin_dir . '/settings/bp-admin-setting-general.php';
+		require $this->admin_dir . '/settings/bp-admin-setting-pages.php';
 		require $this->admin_dir . '/settings/bp-admin-setting-xprofile.php';
-		require $this->admin_dir . '/settings/bp-admin-setting-groups.php';
 		require $this->admin_dir . '/settings/bp-admin-setting-activity.php';
+		require $this->admin_dir . '/settings/bp-admin-setting-groups.php';
 		require $this->admin_dir . '/settings/bp-admin-setting-friends.php';
 		require $this->admin_dir . '/settings/bp-admin-setting-messages.php';
+		require $this->admin_dir . '/settings/bp-admin-setting-registration.php';
 	}
 
 	/**
