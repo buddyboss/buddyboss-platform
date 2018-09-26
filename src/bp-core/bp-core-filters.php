@@ -59,6 +59,13 @@ add_filter( 'bp_email_set_content_html', 'stripslashes', 8 );
 add_filter( 'bp_email_set_content_plaintext', 'wp_strip_all_tags', 6 );
 add_filter( 'bp_email_set_subject', 'sanitize_text_field', 6 );
 
+// Avatars
+/**
+ * Disable gravatars fallback for member avatars.
+ * @since BuddyBoss 3.1.1
+ */
+add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
+
 /**
  * Template Compatibility.
  *
