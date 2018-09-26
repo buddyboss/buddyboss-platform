@@ -26,6 +26,12 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		}
 	}
 
+	/**
+	 * Allow all users to create groups field.
+	 *
+	 * @since BuddyPress 1.6.0
+	 *
+	 */
 	public function bp_admin_setting_callback_group_creation() {
 	?>
 		<input id="bp_restrict_group_creation" name="bp_restrict_group_creation" type="checkbox" aria-describedby="bp_group_creation_description" value="1" <?php checked( !bp_restrict_group_creation( false ) ); ?> />
@@ -34,10 +40,20 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 	<?php
 	}
 
+	/**
+	 * 'Enable group avatars' field markup.
+	 *
+	 * @since BuddyPress 2.3.0
+	 */
 	public function bp_admin_setting_callback_group_avatar_uploads() {
 		$this->checkbox('bp-disable-group-avatar-uploads', __( 'Allow customizable avatars for groups', 'buddyboss' ), 'bp_disable_group_avatar_uploads');
 	}
 
+	/**
+	 * 'Enable group cover images' field markup.
+	 *
+	 * @since BuddyPress 2.4.0
+	 */
 	public function bp_admin_setting_callback_group_cover_image_uploads() {
 		$this->checkbox('bp-disable-group-cover-image-uploads', __( 'Allow customizable cover images for groups', 'buddyboss' ), 'bp_disable_group_cover_image_uploads');
 	}

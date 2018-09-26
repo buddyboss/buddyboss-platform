@@ -14,10 +14,22 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		$this->add_field( 'bp-disable-account-deletion', __( 'Account Deletion', 'buddyboss' ), 'bp_admin_setting_callback_account_deletion', 'intval' );
 	}
 
+	/**
+	 * Admin bar for logged out users setting field.
+	 *
+	 * @since BuddyPress 1.6.0
+	 *
+	 */
 	public function bp_admin_setting_callback_admin_bar() {
 		$this->checkbox('hide-loggedout-adminbar', __( 'Show the Toolbar for logged out users', 'buddyboss' ), 'bp_hide_loggedout_adminbar');
 	}
 
+	/**
+	 * Allow members to delete their accounts setting field.
+	 *
+	 * @since BuddyPress 1.6.0
+	 *
+	 */
 	public function bp_admin_setting_callback_account_deletion() {
 		$this->checkbox('bp-disable-account-deletion', __( 'Allow registered members to delete their own accounts', 'buddyboss' ), 'bp_disable_account_deletion');
 	}
