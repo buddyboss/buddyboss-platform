@@ -53,6 +53,7 @@ function xprofile_add_admin_js() {
 		// "please enter options for this field" section.
 		$strings = array(
 			'do_settings_section_field_types' => array(),
+            'confirm_delete_field_group'      => __( 'Are you sure you want to delete this field set and all of its included fields?', 'buddyboss' ),
 		);
 
 		foreach ( bp_xprofile_get_field_types() as $field_type => $field_type_class ) {
