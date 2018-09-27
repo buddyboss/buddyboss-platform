@@ -644,5 +644,32 @@ function bp_core_add_jquery_mask() {
 	}
 
 	wp_enqueue_script( 'jquery-mask' );
+    
+    add_action( 'wp_footer', 'bp_core_add_jquery_mask_inline_js' );
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_add_jquery_mask' );
+
+/**
+ * Prints script to add input mask to all telephone fields.
+ * 
+ * @since BuddyBoss 3.1.1
+ */
+function bp_core_add_jquery_mask_inline_js () {
+    ?>
+    
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            jQuery(".field_type_telephone").each(function(){
+                var $this = jQuery(this),
+                    field_id = $this.find('.input_mask_details').data('field_id'),
+                    pmask = $this.find('.input_mask_details').data('val');
+                    
+                if ( field_id && pmask ) {
+                    jQuery( '#' + field_id ).mask( pmask ).bind('keypress', function(e){if(e.which == 13){jQuery(this).blur();} } );
+                }
+            });
+        });
+    </script>
+        
+    <?php 
+}

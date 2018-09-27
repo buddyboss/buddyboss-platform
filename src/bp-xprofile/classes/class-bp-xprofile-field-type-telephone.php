@@ -71,6 +71,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
         $selected_format_details    = isset( $all_formats[ $selected_format ] ) ? $all_formats[ $selected_format ] : array();
 
         $placeholder = isset ( $selected_format_details[ 'placeholder' ] ) && !empty( $selected_format_details[ 'placeholder' ] ) ? $selected_format_details[ 'placeholder' ] : '';
+        $mask = isset ( $selected_format_details[ 'mask' ] ) && !empty( $selected_format_details[ 'mask' ] ) ? $selected_format_details[ 'mask' ] : '';
         
 		$r = bp_parse_args( $raw_properties, array(
 			'type'  => 'tel',
@@ -94,9 +95,10 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
 		<?php endif; ?>
 
+        <span class="input_mask_details" data-field_id="<?php echo esc_attr( bp_get_the_profile_field_input_name() );?>" data-val="<?php echo esc_attr( $mask );?>"></span>
+            
 		<?php
-        global $field;
-        $this->input_mask_script( $field );
+        
 	}
 
 	/**
@@ -269,8 +271,6 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
      * @return void
      */
     public function input_mask_script ( BP_XProfile_Field $current_field ) {
-		$script   = '';
-        
 		$selected_format = bp_xprofile_get_meta( $current_field->id, 'field', 'phone_format', true );
         if ( empty( $selected_format ) ) {
             $selected_format = 'international';
@@ -284,7 +284,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
             <script type='text/javascript'>
                 jQuery(document).ready(function($){
                     jQuery('#field_<?php echo $current_field->id;?>').mask('<?php echo $selected_format_details['mask'];?>').bind('keypress', function(e){if(e.which == 13){jQuery(this).blur();} } );
-                })
+                });
             </script>
             <?php 
             echo ob_get_clean();
