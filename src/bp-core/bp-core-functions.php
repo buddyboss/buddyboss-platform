@@ -3195,7 +3195,7 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 function bp_email_get_appearance_settings() {
 	$default_args = array(
 		'body_bg'           => '#FFFFFF',
-		'body_text_color'   => '#7f868f',
+		'body_text_color'   => '#444444',
 		'body_text_size'    => 16,
 		'email_bg'          => '#fafbfd',
 		'footer_bg'         => '#fafbfd',
