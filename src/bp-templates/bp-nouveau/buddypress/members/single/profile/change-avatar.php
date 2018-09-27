@@ -74,7 +74,7 @@
 
 <?php else : ?>
 
-	<p class="bp-help-text"><?php esc_html_e( 'Your profile photo will be used on your profile and throughout the site. To change your profile photo, create an account with <a href="https://gravatar.com">Gravatar</a> using the same email address as you used to register with this site.', 'buddyboss' ); ?></p>
+	<p class="bp-help-text"><?php esc_html_e( 'Your profile photo will be used on your profile and throughout the site.', 'buddyboss' ); ?></p>
 
 <?php endif; ?>
 
