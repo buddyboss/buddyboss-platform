@@ -13,6 +13,18 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		return bp_is_active( 'xprofile' );
 	}
 
+	public function setting_save() {
+		parent::setting_save();
+
+        /**
+         * sync bp-enable-member-dashboard with cutomizer settings.
+         * @since BuddyBoss 3.1.1
+         */
+        $bp_nouveau_appearance = bp_get_option( 'bp_nouveau_appearance', array() );
+        $bp_nouveau_appearance[ 'user_front_page' ] = isset( $_POST[ 'bp-enable-member-dashboard' ] ) ? $_POST[ 'bp-enable-member-dashboard' ] : 0;
+        bp_update_option( 'bp_nouveau_appearance', $bp_nouveau_appearance );
+	}
+
 	public function register_fields() {
 		// Avatars.
 		$this->add_field( 'bp-disable-avatar-uploads', __( 'Profile Photo Uploads', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval' );

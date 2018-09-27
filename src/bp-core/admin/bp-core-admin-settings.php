@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
 function bp_core_admin_settings() {
 
 	// We're saving our own options, until the WP Settings API is updated to work with Multisite.
-	$form_action = add_query_arg( 'page', 'bp-settings', bp_get_admin_url( 'admin.php' ) );
+	$form_action = add_query_arg( [ 'page' => 'bp-settings', 'tab' => bp_core_get_admin_active_tab() ], bp_get_admin_url( 'admin.php' ) );
 
 	?>
 
@@ -29,11 +29,12 @@ function bp_core_admin_settings() {
 
 		<h1><?php _e( 'BuddyBoss Settings', 'buddyboss' ); ?> </h1>
 
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs(); ?></h2>
 		<form action="<?php echo esc_url( $form_action ) ?>" method="post">
 
-			<?php settings_fields( 'buddypress' ); ?>
+			<?php settings_fields( bp_core_get_admin_active_tab() ); ?>
 
-			<?php do_settings_sections( 'buddypress' ); ?>
+			<?php do_settings_sections( bp_core_get_admin_active_tab() ); ?>
 
 			<p class="submit">
 				<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
@@ -49,57 +50,59 @@ function bp_core_admin_settings() {
  *
  * @since BuddyPress 1.6.0
  */
-function bp_core_admin_settings_save() {
-	global $wp_settings_fields;
+// function bp_core_admin_settings_save() {
+// 	global $wp_settings_fields;
 
-	if ( isset( $_GET['page'] ) && 'bp-settings' == $_GET['page'] && !empty( $_POST['submit'] ) ) {
-		check_admin_referer( 'buddypress-options' );
 
-		// Because many settings are saved with checkboxes, and thus will have no values
-		// in the $_POST array when unchecked, we loop through the registered settings.
-		if ( isset( $wp_settings_fields['buddypress'] ) ) {
-			foreach( (array) $wp_settings_fields['buddypress'] as $section => $settings ) {
-				foreach( $settings as $setting_name => $setting ) {
-					$value = isset( $_POST[$setting_name] ) ? $_POST[$setting_name] : '';
+// 	if ( isset( $_GET['page'] ) && 'bp-settings' == $_GET['page'] && !empty( $_POST['submit'] ) ) {
+// 		check_admin_referer( bp_core_get_admin_active_tab() . '-options' );
 
-					bp_update_option( $setting_name, $value );
-				}
-			}
-		}
+// 		// Because many settings are saved with checkboxes, and thus will have no values
+// 		// in the $_POST array when unchecked, we loop through the registered settings.
+// 		if ( isset( $wp_settings_fields[bp_core_get_admin_active_tab()] ) ) {
+// 			foreach( (array) $wp_settings_fields[bp_core_get_admin_active_tab()] as $section => $settings ) {
+// 				foreach( $settings as $setting_name => $setting ) {
+// 					$value = isset( $_POST[$setting_name] ) ? $_POST[$setting_name] : '';
+// 					var_dump($setting_name, $value);
+// 					var_dump('--');
+// 					// bp_update_option( $setting_name, $value );
+// 				}
+// 			}
+// 		}
 
-		// Some legacy options are not registered with the Settings API, or are reversed in the UI.
-		$legacy_options = array(
-			'bp-disable-account-deletion',
-			'bp-disable-avatar-uploads',
-			'bp-disable-cover-image-uploads',
-			'bp-disable-group-avatar-uploads',
-			'bp-disable-group-cover-image-uploads',
-			'bp_disable_blogforum_comments',
-			'bp-disable-profile-sync',
-			'bp_restrict_group_creation',
-			'hide-loggedout-adminbar',
-		);
+// 		// Some legacy options are not registered with the Settings API, or are reversed in the UI.
+// 		$legacy_options = array(
+// 			'bp-disable-account-deletion',
+// 			'bp-disable-avatar-uploads',
+// 			'bp-disable-cover-image-uploads',
+// 			'bp-disable-group-avatar-uploads',
+// 			'bp-disable-group-cover-image-uploads',
+// 			'bp_disable_blogforum_comments',
+// 			'bp-disable-profile-sync',
+// 			'bp_restrict_group_creation',
+// 			'hide-loggedout-adminbar',
+// 		);
 
-		foreach( $legacy_options as $legacy_option ) {
-			// Note: Each of these options is represented by its opposite in the UI
-			// Ie, the Profile Syncing option reads "Enable Sync", so when it's checked,
-			// the corresponding option should be unset.
-			$value = isset( $_POST[$legacy_option] ) ? '' : 1;
-			bp_update_option( $legacy_option, $value );
-		}
+// 		foreach( $legacy_options as $legacy_option ) {
+// 			// Note: Each of these options is represented by its opposite in the UI
+// 			// Ie, the Profile Syncing option reads "Enable Sync", so when it's checked,
+// 			// the corresponding option should be unset.
+// 			$value = isset( $_POST[$legacy_option] ) ? '' : 1;
+// 			bp_update_option( $legacy_option, $value );
+// 		}
 
-        /**
-         * sync bp-enable-member-dashboard with cutomizer settings.
-         * @since BuddyBoss 3.1.1
-         */
-        $bp_nouveau_appearance = bp_get_option( 'bp_nouveau_appearance', array() );
-        $bp_nouveau_appearance[ 'user_front_page' ] = isset( $_POST[ 'bp-enable-member-dashboard' ] ) ? $_POST[ 'bp-enable-member-dashboard' ] : 0;
-        bp_update_option( 'bp_nouveau_appearance', $bp_nouveau_appearance );
+//         /**
+//          * sync bp-enable-member-dashboard with cutomizer settings.
+//          * @since BuddyBoss 3.1.1
+//          */
+//         $bp_nouveau_appearance = bp_get_option( 'bp_nouveau_appearance', array() );
+//         $bp_nouveau_appearance[ 'user_front_page' ] = isset( $_POST[ 'bp-enable-member-dashboard' ] ) ? $_POST[ 'bp-enable-member-dashboard' ] : 0;
+//         bp_update_option( 'bp_nouveau_appearance', $bp_nouveau_appearance );
 
-		bp_core_redirect( add_query_arg( array( 'page' => 'bp-settings', 'updated' => 'true' ), bp_get_admin_url( 'admin.php' ) ) );
-	}
-}
-add_action( 'bp_admin_init', 'bp_core_admin_settings_save', 100 );
+// 		bp_core_redirect( add_query_arg( array( 'page' => 'bp-settings', 'updated' => 'true' ), bp_get_admin_url( 'admin.php' ) ) );
+// 	}
+// }
+// add_action( 'bp_admin_init', 'bp_core_admin_settings_save', 100 );
 
 /**
  * Output settings API option.

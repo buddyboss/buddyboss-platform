@@ -4,7 +4,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 	public function initialize() {
 		$this->tab_name      = 'General';
-		$this->tab_slug      = 'bp-general';
+		$this->tab_slug      = 'buddypress';
 		$this->section_name  = 'bp_main';
 		$this->section_label = __( 'Main Settings', 'buddyboss' );
 	}

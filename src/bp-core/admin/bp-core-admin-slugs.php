@@ -77,28 +77,28 @@ function bp_core_admin_get_static_pages() {
  * @since BuddyPress 1.6.0
  * @todo Use settings API
  */
-function bp_core_admin_slugs_setup_handler() {
+// function bp_core_admin_slugs_setup_handler() {
 
-	if ( isset( $_POST['bp-admin-pages-submit'] ) ) {
-		if ( !check_admin_referer( 'bp-admin-pages-setup' ) )
-			return false;
+// 	if ( isset( $_POST['bp-admin-pages-submit'] ) ) {
+// 		if ( !check_admin_referer( 'bp-admin-pages-setup' ) )
+// 			return false;
 
-		// Then, update the directory pages.
-		if ( isset( $_POST['bp_pages'] ) ) {
-			$valid_pages = array_merge( bp_core_admin_get_directory_pages(), bp_core_admin_get_static_pages() );
+// 		// Then, update the directory pages.
+// 		if ( isset( $_POST['bp_pages'] ) ) {
+// 			$valid_pages = array_merge( bp_core_admin_get_directory_pages(), bp_core_admin_get_static_pages() );
 
-			$new_directory_pages = array();
-			foreach ( (array) $_POST['bp_pages'] as $key => $value ) {
-				if ( isset( $valid_pages[ $key ] ) ) {
-					$new_directory_pages[ $key ] = (int) $value;
-				}
-			}
-			bp_core_update_directory_page_ids( $new_directory_pages );
-		}
+// 			$new_directory_pages = array();
+// 			foreach ( (array) $_POST['bp_pages'] as $key => $value ) {
+// 				if ( isset( $valid_pages[ $key ] ) ) {
+// 					$new_directory_pages[ $key ] = (int) $value;
+// 				}
+// 			}
+// 			bp_core_update_directory_page_ids( $new_directory_pages );
+// 		}
 
-		$base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-page-settings', 'updated' => 'true' ), 'admin.php' ) );
+// 		$base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-page-settings', 'updated' => 'true' ), 'admin.php' ) );
 
-		wp_redirect( $base_url );
-	}
-}
-add_action( 'bp_admin_init', 'bp_core_admin_slugs_setup_handler' );
+// 		wp_redirect( $base_url );
+// 	}
+// }
+// add_action( 'bp_admin_init', 'bp_core_admin_slugs_setup_handler' );

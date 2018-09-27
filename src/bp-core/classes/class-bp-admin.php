@@ -353,15 +353,15 @@ class BP_Admin {
 	 */
 	public function register_admin_settings() {
 		$bp = buddypress();
-		require trailingslashit( $bp->plugin_dir  . 'bp-core/classes' ) . '/class-bp-admin-setting-tab.php';
-		require $this->admin_dir . '/settings/bp-admin-setting-general.php';
-		require $this->admin_dir . '/settings/bp-admin-setting-pages.php';
-		require $this->admin_dir . '/settings/bp-admin-setting-xprofile.php';
-		require $this->admin_dir . '/settings/bp-admin-setting-activity.php';
-		require $this->admin_dir . '/settings/bp-admin-setting-groups.php';
-		require $this->admin_dir . '/settings/bp-admin-setting-friends.php';
-		require $this->admin_dir . '/settings/bp-admin-setting-messages.php';
-		require $this->admin_dir . '/settings/bp-admin-setting-registration.php';
+		require_once trailingslashit( $bp->plugin_dir  . 'bp-core/classes' ) . '/class-bp-admin-setting-tab.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-general.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-pages.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-xprofile.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-activity.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-groups.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-friends.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-messages.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-registration.php';
 	}
 
 	/**
