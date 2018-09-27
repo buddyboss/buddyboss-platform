@@ -3195,16 +3195,16 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 function bp_email_get_appearance_settings() {
 	$default_args = array(
 		'body_bg'           => '#FFFFFF',
-		'body_text_color'   => '#555555',
-		'body_text_size'    => 15,
-		'email_bg'          => '#F7F3F0',
-		'footer_bg'         => '#F7F3F0',
-		'footer_text_color' => '#525252',
+		'body_text_color'   => '#7f868f',
+		'body_text_size'    => 16,
+		'email_bg'          => '#fafbfd',
+		'footer_bg'         => '#fafbfd',
+		'footer_text_color' => '#7f868f',
 		'footer_text_size'  => 12,
-		'header_bg'         => '#F7F3F0',
-		'highlight_color'   => '#D84800',
-		'header_text_color' => '#000000',
-		'header_text_size'  => 30,
+		'header_bg'         => '#fafbfd',
+		'highlight_color'   => '#007cff',
+		'header_text_color' => '#RRGGBB',
+		'header_text_size'  => 26,
 		'direction'         => is_rtl() ? 'right' : 'left',
 
 		'footer_text' => sprintf(
