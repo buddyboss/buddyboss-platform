@@ -181,6 +181,9 @@ function bp_core_install_friends() {
 				KEY friend_user_id (friend_user_id)
 			) {$charset_collate};";
 
+	//install follow when activated friends components
+	bp_core_install_follow();
+
 	dbDelta( $sql );
 }
 
