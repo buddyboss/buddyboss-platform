@@ -17,26 +17,34 @@
 		});
 	});
 
-	wp.customize( 'bp_email_options[header_bg]', function( value ) {
+	wp.customize( 'bp_email_options[site_title_text_size]', function( value ) {
 		value.bind(function( newval ) {
 			if ( newval.length ) {
-				$( '.header_bg' ).attr( 'bgcolor', newval );
+				$( '.site_title_text_size' ).css( 'font-size', newval + 'px' );
 			}
 		});
 	});
 
-	wp.customize( 'bp_email_options[header_text_size]', function( value ) {
+	wp.customize( 'bp_email_options[recipient_text_size]', function( value ) {
 		value.bind(function( newval ) {
 			if ( newval.length ) {
-				$( '.header_text_size' ).css( 'font-size', newval + 'px' );
+				$( '.recipient_text_size' ).css( 'font-size', newval + 'px' );
 			}
 		});
 	});
 
-	wp.customize( 'bp_email_options[header_text_color]', function( value ) {
+	wp.customize( 'bp_email_options[site_title_text_color]', function( value ) {
 		value.bind(function( newval ) {
 			if ( newval.length ) {
-				$( '.header_text_color' ).css( 'color', newval );
+				$( '.site_title_text_color' ).css( 'color', newval );
+			}
+		});
+	});
+
+	wp.customize( 'bp_email_options[recipient_text_color]', function( value ) {
+		value.bind(function( newval ) {
+			if ( newval.length ) {
+				$( '.recipient_text_color' ).css( 'color', newval );
 			}
 		});
 	});
@@ -44,7 +52,6 @@
 	wp.customize( 'bp_email_options[highlight_color]', function( value ) {
 		value.bind(function( newval ) {
 			if ( newval.length ) {
-				$( '.header_bg' ).css( 'border-top-color', newval );
 				$( 'a' ).css( 'color', newval );
 				$( 'hr' ).attr( 'color', newval );
 			}
@@ -55,6 +62,14 @@
 		value.bind(function( newval ) {
 			if ( newval.length ) {
 				$( '.body_bg' ).attr( 'bgcolor', newval );
+			}
+		});
+	});
+
+	wp.customize( 'bp_email_options[body_border_color]', function( value ) {
+		value.bind(function( newval ) {
+			if ( newval.length ) {
+				$( '.body_bg' ).css( 'border-color', newval );
 			}
 		});
 	});
@@ -77,14 +92,6 @@
 		value.bind(function( newval ) {
 			if ( newval.length ) {
 				$( '.body_text_color' ).css( 'color', newval );
-			}
-		});
-	});
-
-	wp.customize( 'bp_email_options[footer_bg]', function( value ) {
-		value.bind(function( newval ) {
-			if ( newval.length ) {
-				$( '.footer_bg' ).attr( 'bgcolor', newval );
 			}
 		});
 	});

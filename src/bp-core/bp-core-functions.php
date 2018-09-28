@@ -3195,17 +3195,18 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 function bp_email_get_appearance_settings() {
 	$default_args = array(
 		'body_bg'           => '#FFFFFF',
+		'body_border_color' => '#E7E9EC',
 		'body_text_color'   => '#444444',
 		'body_text_size'    => 16,
-		'email_bg'          => '#fafbfd',
-		'footer_bg'         => '#fafbfd',
-		'footer_text_color' => '#7f868f',
+		'email_bg'          => '#FAFBFD',
+		'footer_text_color' => '#7F868F',
 		'footer_text_size'  => 12,
-		'header_bg'         => '#fafbfd',
-		'highlight_color'   => '#007cff',
-		'header_text_color' => '#RRGGBB',
-		'header_text_size'  => 26,
-		'direction'         => is_rtl() ? 'right' : 'left',
+		'highlight_color'   => '#007CFF',
+		'site_title_text_color' => '#122B46',
+		'site_title_text_size'  => 	26,
+		'recipient_text_color'	=> '#7F868F',
+		'recipient_text_size'	=> 	14,
+		'direction'				=> is_rtl() ? 'right' : 'left',
 
 		'footer_text' => sprintf(
 			/* translators: email disclaimer, e.g. "© 2016 Site Name". */

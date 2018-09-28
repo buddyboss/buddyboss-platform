@@ -3735,5 +3735,5 @@ function bp_email_the_salutation( $settings = array() ) {
 		 * @param array  $settings Email Settings.
 		 * @param string $token    The Recipient token.
 		 */
-		return apply_filters( 'bp_email_get_salutation', sprintf( _x( 'Hi %s,', 'recipient salutation', 'buddyboss' ), $token ), $settings, $token );
+		return apply_filters( 'bp_email_get_salutation', sprintf( _x( '%s', 'recipient salutation', 'buddyboss' ), $token ), $settings, $token );
 	}
