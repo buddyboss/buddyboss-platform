@@ -251,7 +251,7 @@ $settings = bp_email_get_appearance_settings();
 						?>
 
 						<span class="footer_text"><?php echo nl2br( stripslashes( $settings['footer_text'] ) ); ?></span>
-						<a href="{{{unsubscribe}}}" style="text-decoration: none;"><?php echo esc_html_x( 'unsubscribe', 'email', 'buddyboss' ); ?></a>
+						<p style="margin: 5px 0;"><?php _e( "If you don't want to receive these emails in the future, please ", 'buddyboss' ); ?><a href="{{{unsubscribe}}}" style="text-decoration: none;"><?php echo esc_html_x( 'unsubscribe', 'email', 'buddyboss' ); ?></a></p>
 
 						<?php
 						/**
