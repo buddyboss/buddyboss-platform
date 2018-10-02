@@ -321,15 +321,18 @@ function groups_edit_base_group_details( $args = array() ) {
  *
  * @since BuddyPress 1.0.0
  *
- * @param int         $group_id      ID of the group.
- * @param bool        $enable_forum  Whether to enable a forum for the group.
- * @param string      $status        Group status. 'public', 'private', 'hidden'.
+ * @param int $group_id ID of the group.
+ * @param bool $enable_forum Whether to enable a forum for the group.
+ * @param string $status Group status. 'public', 'private', 'hidden'.
  * @param string|bool $invite_status Optional. Who is allowed to send invitations
  *                                   to the group. 'members', 'mods', or 'admins'.
- * @param int|bool    $parent_id     Parent group ID.
+ * @param string|bool $activity_feed_status Optional. Who is allowed to send invitations
+ *                                   to the group. 'members', 'mods', or 'admins'.
+ * @param int|bool $parent_id Parent group ID.
+ *
  * @return bool True on success, false on failure.
  */
-function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status = false, $parent_id = false ) {
+function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status = false, $activity_feed_status = false, $parent_id = false ) {
 
 	$group = groups_get_group( $group_id );
 	$group->enable_forum = $enable_forum;
@@ -355,6 +358,10 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 	// Set the invite status.
 	if ( $invite_status )
 		groups_update_groupmeta( $group->id, 'invite_status', $invite_status );
+
+	// Set the activity feed status.
+	if ( $activity_feed_status )
+		groups_update_groupmeta( $group->id, 'activity_feed_status', $activity_feed_status );
 
 	groups_update_groupmeta( $group->id, 'last_activity', bp_core_current_time() );
 
@@ -1181,6 +1188,47 @@ function groups_is_user_member( $user_id, $group_id ) {
 }
 
 /**
+ * Check whether a user is allowed to post in a given group.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param int $user_id ID of the user.
+ * @param int $group_id ID of the group.
+ * @return int|bool ID of the membership if the user is member, otherwise false.
+ */
+function groups_is_user_allowed_posting( $user_id, $group_id ) {
+	$is_allowed = false;
+
+	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
+	// Site admins always have access.
+	if ( bp_current_user_can( 'bp_moderate' ) ) {
+		return true;
+	}
+
+	if ( ! groups_is_user_member( $user_id, $group_id ) ) {
+		return false;
+	}
+
+	$status = bp_group_get_activity_feed_status( $group_id );
+	$is_admin = groups_is_user_admin( $user_id, $group_id );
+	$is_mod = groups_is_user_mod( $user_id, $group_id );
+	$is_member = true;
+
+	if ( 'members' == $status && $is_member ) {
+		$is_allowed = true;
+	} else if ( 'mods' == $status && $is_mod ) {
+		$is_allowed = true;
+	} else if ( 'admins' == $status && $is_admin ) {
+		$is_allowed = true;
+	}
+
+	return $is_allowed;
+}
+
+/**
  * Check whether a user is banned from a given group.
  *
  * @since BuddyPress 1.0.0
@@ -1307,7 +1355,7 @@ function groups_post_update( $args = '' ) {
 	$bp->groups->current_group = groups_get_group( $group_id );
 
 	// Be sure the user is a member of the group before posting.
-	if ( !bp_current_user_can( 'bp_moderate' ) && !groups_is_user_member( $user_id, $group_id ) )
+	if ( !bp_current_user_can( 'bp_moderate' ) && !groups_is_user_member( $user_id, $group_id ) && ! groups_is_user_allowed_posting( $user_id, $group_id ) )
 		return false;
 
 	// Record this in activity feeds.

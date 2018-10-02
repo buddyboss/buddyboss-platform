@@ -36,6 +36,11 @@ function groups_screen_group_admin_settings() {
 		$allowed_invite_status = apply_filters( 'groups_allowed_invite_status', array( 'members', 'mods', 'admins' ) );
 		$invite_status	       = isset( $_POST['group-invite-status'] ) && in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : 'members';
 
+		// Checked against a whitelist for security.
+		/** This filter is documented in bp-groups/bp-groups-admin.php */
+		$allowed_activity_feed_status = apply_filters( 'groups_allowed_activity_feed_status', array( 'members', 'mods', 'admins' ) );
+		$activity_feed_status	       = isset( $_POST['group-activity-feed-status'] ) && in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? $_POST['group-activity-feed-status'] : 'members';
+
 		// Check the nonce.
 		if ( !check_admin_referer( 'groups_edit_group_settings' ) )
 			return false;
@@ -66,7 +71,7 @@ function groups_screen_group_admin_settings() {
 			bp_groups_set_group_type( bp_get_current_group_id(), $current_types );
 		}
 
-		if ( !groups_edit_group_settings( $_POST['group-id'], $enable_forum, $status, $invite_status ) ) {
+		if ( !groups_edit_group_settings( $_POST['group-id'], $enable_forum, $status, $invite_status, $activity_feed_status ) ) {
 			bp_core_add_message( __( 'There was an error updating group settings. Please try again.', 'buddyboss' ), 'error' );
 		} else {
 			bp_core_add_message( __( 'Group settings were successfully updated.', 'buddyboss' ) );

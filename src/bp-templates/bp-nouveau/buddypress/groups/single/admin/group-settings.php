@@ -108,4 +108,26 @@ if ( $group_types ) : ?>
 
 	</fieldset>
 
+    <fieldset class="radio group-post-form">
+        <legend><?php esc_html_e( 'Activity Feeds', 'buddyboss' ); ?></legend>
+
+        <p tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to post into the activity feed?', 'buddyboss' ); ?></p>
+
+        <label for="group-activity-feed-status-members">
+            <input type="radio" name="group-activity-feed-status" id="group-activity-feed-status-members" value="members"<?php bp_group_show_activity_feed_status_setting( 'members' ); ?> />
+			<?php esc_html_e( 'All group members', 'buddyboss' ); ?>
+        </label>
+
+        <label for="group-activity-feed-status-mods">
+            <input type="radio" name="group-activity-feed-status" id="group-activity-feed-status-mods" value="mods"<?php bp_group_show_activity_feed_status_setting( 'mods' ); ?> />
+			<?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?>
+        </label>
+
+        <label for="group-activity-feed-status-admins">
+            <input type="radio" name="group-activity-feed-status" id="group-activity-feed-status-admins" value="admins"<?php bp_group_show_activity_feed_status_setting( 'admins' ); ?> />
+			<?php esc_html_e( 'Organizers only', 'buddyboss' ); ?>
+        </label>
+
+    </fieldset>
+
 </div><!-- // .group-settings-selections -->

@@ -282,7 +282,17 @@ function bp_groups_admin_load() {
 		$allowed_invite_status = apply_filters( 'groups_allowed_invite_status', array( 'members', 'mods', 'admins' ) );
 		$invite_status	       = in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : 'members';
 
-		if ( !groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status ) ) {
+		/**
+		 * Filters the allowed activity feed status values for the group.
+		 *
+		 * @since BuddyBoss 3.1.1
+		 *
+		 * @param array $value Array of allowed activity feed statuses.
+		 */
+		$allowed_activity_feed_status = apply_filters( 'groups_allowed_activity_feed_status', array( 'members', 'mods', 'admins' ) );
+		$activity_feed_status	       = in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? $_POST['group-activity-feed-status'] : 'members';
+
+		if ( !groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status ) ) {
 			$error = $group_id;
 		}
 
@@ -822,7 +832,8 @@ function bp_groups_admin_index() {
  */
 function bp_groups_admin_edit_metabox_settings( $item ) {
 
-	$invite_status = bp_group_get_invite_status( $item->id ); ?>
+	$invite_status = bp_group_get_invite_status( $item->id );
+	$activity_feed_status = bp_group_get_activity_feed_status( $item->id ); ?>
 
 	<?php if ( bp_is_active( 'forums' ) ) : ?>
 		<div class="bp-groups-settings-section" id="bp-groups-settings-section-forum">
@@ -849,6 +860,16 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 			<label for="bp-group-invite-status-admins"><input type="radio" name="group-invite-status" id="bp-group-invite-status-admins" value="admins" <?php checked( $invite_status, 'admins' ) ?> /><?php _e( 'Organizers only', 'buddyboss' ) ?></label>
 		</fieldset>
 	</div>
+
+    <div class="bp-groups-settings-section" id="bp-groups-settings-section-activity-feed-status">
+        <fieldset>
+            <legend><?php _e( 'Who can post into this group?', 'buddyboss' ); ?></legend>
+
+            <label for="bp-group-activity-feed-status-members"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-members" value="members" <?php checked( $activity_feed_status, 'members' ) ?> /><?php _e( 'All group members', 'buddyboss' ) ?></label>
+            <label for="bp-group-activity-feed-status-mods"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-mods" value="mods" <?php checked( $activity_feed_status, 'mods' ) ?> /><?php _e( 'Organizers and Moderators only', 'buddyboss' ) ?></label>
+            <label for="bp-group-activity-feed-status-admins"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-admins" value="admins" <?php checked( $activity_feed_status, 'admins' ) ?> /><?php _e( 'Organizers only', 'buddyboss' ) ?></label>
+        </fieldset>
+    </div>
 
 <?php
 }

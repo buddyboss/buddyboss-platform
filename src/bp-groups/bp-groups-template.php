@@ -2246,6 +2246,76 @@ function bp_group_get_invite_status( $group_id = false ) {
 }
 
 /**
+ * Output the 'checked' value, if needed, for a given activity_feed_status on the group create/admin screens
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param string      $setting The setting you want to check against ('members',
+ *                             'mods', or 'admins').
+ * @param object|bool $group   Optional. Group object. Default: current group in loop.
+ */
+function bp_group_show_activity_feed_status_setting( $setting, $group = false ) {
+	$group_id = isset( $group->id ) ? $group->id : false;
+
+	$activity_feed_status = bp_group_get_activity_feed_status( $group_id );
+
+	if ( $setting == $activity_feed_status ) {
+		echo ' checked="checked"';
+	}
+}
+
+/**
+ * Get the activity feed status of a group.
+ *
+ * This function can be used either in or out of the loop.
+ *
+ * @since BuddyBos 3.1.1
+ *
+ * @param int|bool $group_id Optional. The ID of the group whose activity feed status you want to
+ *                           check. Default: the displayed group, or the current group
+ *                           in the loop.
+ * @return bool|string Returns false when no group can be found. Otherwise
+ *                     returns the group invite status, from among 'members',
+ *                     'mods', and 'admins'.
+ */
+function bp_group_get_activity_feed_status( $group_id = false ) {
+	global $groups_template;
+
+	if ( !$group_id ) {
+		$bp = buddypress();
+
+		if ( isset( $bp->groups->current_group->id ) ) {
+			// Default to the current group first.
+			$group_id = $bp->groups->current_group->id;
+		} elseif ( isset( $groups_template->group->id ) ) {
+			// Then see if we're in the loop.
+			$group_id = $groups_template->group->id;
+		} else {
+			return false;
+		}
+	}
+
+	$activity_feed_status = groups_get_groupmeta( $group_id, 'activity_feed_status' );
+
+	// Backward compatibility. When 'invite_status' is not set, fall back to a default value.
+	if ( !$activity_feed_status ) {
+		$activity_feed_status = apply_filters( 'bp_group_activity_feed_status_fallback', 'members' );
+	}
+
+	/**
+	 * Filters the invite status of a group.
+	 *
+	 * Activity feed status in this case means who from the group can send invites.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $activity_feed_status Membership level needed to send an invite.
+	 * @param int    $group_id      ID of the group whose status is being checked.
+	 */
+	return apply_filters( 'bp_group_get_activity_feed_status', $activity_feed_status, $group_id );
+}
+
+/**
  * Can a user send invitations in the specified group?
  *
  * @since BuddyPress 1.5.0
@@ -2964,6 +3034,53 @@ function bp_group_is_member( $group = false ) {
 	 * @param object $group     Group object.
 	 */
 	return apply_filters( 'bp_group_is_member', ! empty( $group->is_member ), $group );
+}
+
+/**
+ * Check if current user is allowed to post in a group.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @global object $groups_template
+ *
+ * @param object|bool $group Optional. Group to check is_member.
+ *                           Default: current group in the loop.
+ * @return bool If user is member of group or not.
+ */
+function bp_group_is_member_allowed_posting( $group = false ) {
+	global $groups_template;
+
+	if ( ! is_user_logged_in() ) {
+	    return false;
+    }
+
+	// Site admins always have access.
+	if ( bp_current_user_can( 'bp_moderate' ) ) {
+		return true;
+	}
+
+	if ( empty( $group ) ) {
+		$group =& $groups_template->group;
+	}
+
+	$status = bp_group_get_activity_feed_status( $group->id );
+	$is_mod = groups_is_user_mod( bp_loggedin_user_id(), $group->id );
+
+	if ( 'members' == $status && $group->is_member ) {
+		$is_allowed = true;
+	} else if ( 'mods' == $status && $is_mod ) {
+		$is_allowed = true;
+	}
+
+	/**
+	 * Filters whether current user is allowed posting into a group.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param bool   $is_allowed If user is a allowed posting into a group or not.
+	 * @param object $group     Group object.
+	 */
+	return apply_filters( 'bp_group_is_member_allowed_posting', $is_allowed, $group );
 }
 
 /**

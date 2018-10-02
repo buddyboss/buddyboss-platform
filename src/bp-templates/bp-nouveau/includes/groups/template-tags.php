@@ -151,7 +151,7 @@ function bp_nouveau_groups_activity_post_form() {
 	 */
 	do_action( 'bp_before_group_activity_post_form' );
 
-	if ( is_user_logged_in() && bp_group_is_member() ) {
+	if ( is_user_logged_in() && bp_group_is_member() && bp_group_is_member_allowed_posting() ) {
 		bp_get_template_part( 'activity/post-form' );
 	}
 
