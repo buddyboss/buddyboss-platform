@@ -35,6 +35,15 @@ class BP_Email_Recipient {
 	protected $name = '';
 
 	/**
+	 * Recipient's avatar.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @var string
+	 */
+	protected $avatar = '';
+
+	/**
 	 * Optional. A `WP_User` object relating to this recipient.
 	 *
 	 * @since BuddyPress 2.5.0
@@ -103,7 +112,10 @@ class BP_Email_Recipient {
 
 			$this->address = $this->user_object->user_email;
 			$this->name    = sanitize_text_field( $wp_name );
-
+			$this->avatar  = bp_core_fetch_avatar( array(
+				'item_id' => $this->user_object->ID,
+				'object'  => 'user'
+			) );
 		}
 
 		// Custom name override.
@@ -162,6 +174,26 @@ class BP_Email_Recipient {
 		 * @param BP_Email $recipient $this Current instance of the email recipient class.
 		 */
 		return apply_filters( 'bp_email_recipient_get_name', $this->name, $this );
+	}
+
+	/**
+	 * Get recipient's avatar.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @return string
+	 */
+	public function get_avatar() {
+
+		/**
+		 * Filters the recipient's avatar before it's returned.
+		 *
+		 * @since BuddyBoss 3.1.1
+		 *
+		 * @param string $name Recipient's avatar.
+		 * @param BP_Email $recipient $this Current instance of the email recipient class.
+		 */
+		return apply_filters( 'bp_email_recipient_get_avatar', $this->avatar, $this );
 	}
 
 	/**
