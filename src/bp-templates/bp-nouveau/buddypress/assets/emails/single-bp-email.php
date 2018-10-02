@@ -171,7 +171,7 @@ $settings = bp_email_get_appearance_settings();
 						do_action( 'bp_before_email_header' );
 
 						$blogname = bp_get_option( 'blogname' );
-						$attachment_id = $settings[ 'logo' ];
+						$attachment_id = isset( $settings[ 'logo' ] ) ? $settings[ 'logo' ] : '';
 
 						if ( !empty( $attachment_id ) ) {
 							$image_src = wp_get_attachment_image_src( $attachment_id, array( 180, 41 ) );
