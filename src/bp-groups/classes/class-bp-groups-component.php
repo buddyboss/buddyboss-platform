@@ -626,7 +626,7 @@ class BP_Groups_Component extends BP_Component {
 			), $default_params );
 
 			$sub_nav[] = array_merge( array(
-				'name'              => __( 'Group Leaders', 'buddyboss' ),
+				'name'              => __( 'Organizers', 'buddyboss' ),
 				'slug'              => 'leaders',
 				'position'          => 10,
 			), $default_params );

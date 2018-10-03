@@ -1201,8 +1201,7 @@ function bp_nouveau_nav_has_count() {
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'leaders' === $nav_item->slug ) {
 		$group         = groups_get_current_group();
 		$admins        = groups_get_group_admins( $group->id );
-		$mods          = groups_get_group_mods( $group->id );
-		$total_leaders = sizeof( $admins ) + sizeof( $mods );
+		$total_leaders = sizeof( $admins );
 		$count         = 0 !== (int) $total_leaders;
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && ! empty( $nav_item->primary ) ) {
 		$count = (bool) strpos( $nav_item->name, '="count"' );
@@ -1250,8 +1249,7 @@ function bp_nouveau_nav_count() {
 		} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'leaders' == $nav_item->slug ) {
 			$group  = groups_get_current_group();
 			$admins = groups_get_group_admins( $group->id );
-			$mods   = groups_get_group_mods( $group->id );
-			$count  = sizeof( $admins ) + sizeof( $mods );
+			$count  = sizeof( $admins );
 
 		// @todo imho BuddyPress shouldn't add html tags inside Nav attributes...
 		} elseif ( 'personal' === $bp_nouveau->displayed_nav && ! empty( $nav_item->primary ) ) {
