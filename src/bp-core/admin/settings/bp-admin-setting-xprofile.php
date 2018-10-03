@@ -3,7 +3,7 @@
 class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 	public function initialize() {
-		$this->tab_name      = 'Xprofile';
+		$this->tab_name      = 'Profiles';
 		$this->tab_slug      = 'bp-xprofile';
 		$this->section_name  = 'bp_xprofile';
 		$this->section_label = __( 'Profile Settings', 'buddyboss' );

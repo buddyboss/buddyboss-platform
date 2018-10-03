@@ -3,7 +3,7 @@
 class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 
 	public function initialize() {
-		$this->tab_name      = 'Friends';
+		$this->tab_name      = 'Connections';
 		$this->tab_slug      = 'bp-friends';
 		$this->section_name  = 'bp_friends';
 		$this->section_label = __( 'Connection Settings', 'buddyboss' );
