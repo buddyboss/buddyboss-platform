@@ -1219,7 +1219,7 @@ function groups_is_user_allowed_posting( $user_id, $group_id ) {
 
 	if ( 'members' == $status && $is_member ) {
 		$is_allowed = true;
-	} else if ( 'mods' == $status && $is_mod ) {
+	} else if ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
 		$is_allowed = true;
 	} else if ( 'admins' == $status && $is_admin ) {
 		$is_allowed = true;
