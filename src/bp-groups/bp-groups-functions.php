@@ -1215,9 +1215,8 @@ function groups_is_user_allowed_posting( $user_id, $group_id ) {
 	$status    = bp_group_get_activity_feed_status( $group_id );
 	$is_admin  = groups_is_user_admin( $user_id, $group_id );
 	$is_mod    = groups_is_user_mod( $user_id, $group_id );
-	$is_member = true;
 
-	if ( 'members' == $status && $is_member ) {
+	if ( 'members' == $status ) {
 		$is_allowed = true;
 	} else if ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
 		$is_allowed = true;
