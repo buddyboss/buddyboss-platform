@@ -1053,6 +1053,7 @@ function bp_email_set_default_tokens( $tokens, $property_name, $transform, $emai
 	$tokens['email.preheader']     = '';
 	$tokens['recipient.email']     = '';
 	$tokens['recipient.name']      = '';
+	$tokens['recipient.avatar']    = '';
 	$tokens['recipient.username']  = '';
 
 	// Who is the email going to?
@@ -1061,8 +1062,11 @@ function bp_email_set_default_tokens( $tokens, $property_name, $transform, $emai
 		$recipient = array_shift( $recipient );
 		$user_obj  = $recipient->get_user( 'search-email' );
 
-		$tokens['recipient.email'] = $recipient->get_address();
-		$tokens['recipient.name']  = $recipient->get_name();
+		$tokens['recipient.email']  = $recipient->get_address();
+		$tokens['recipient.name']   = $recipient->get_name();
+		$tokens['recipient.avatar'] = $recipient->get_avatar();
+
+		error_log(print_r($tokens,1));
 
 		if ( ! $user_obj && $tokens['recipient.email'] ) {
 			$user_obj = get_user_by( 'email', $tokens['recipient.email'] );

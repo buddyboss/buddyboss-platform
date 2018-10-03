@@ -202,7 +202,15 @@ $settings = bp_email_get_appearance_settings();
 						do_action( 'bp_before_email_recipient' );
 
 						//echo bp_get_option( 'blogname' );
-						bp_email_the_salutation( $settings );
+						if ( bp_is_email_customizer() ) {
+							echo '{{recipient.name}} <img src="' . bp_core_fetch_avatar( array(
+									'item_id'       => bp_loggedin_user_id(),
+									'force_default' => true,
+									'html'          => false
+								) ) . '" style="border-radius: 50%;margin-left: 10px;vertical-align: middle;" />';
+						} else {
+							bp_email_the_salutation( $settings );
+						}
 
 						/**
 						 * Fires after the display of the email recipient.
