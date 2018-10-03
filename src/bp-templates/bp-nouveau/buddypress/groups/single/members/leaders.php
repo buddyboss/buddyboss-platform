@@ -1,13 +1,13 @@
 <?php
 /**
- * BuddyBoss - Group Organizers
+ * BuddyBoss - Group Leaders
  *
  * @since BuddyBoss 3.1.1
  * @version 3.1.1
  */
 ?>
 
-<?php if ( bp_group_has_members( 'group_role=admin' ) ) : ?>
+<?php if ( bp_group_has_members( 'group_role=admin,mod' ) ) : ?>
 
 	<?php bp_nouveau_group_hook( 'before', 'members_content' ); ?>
 
