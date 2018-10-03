@@ -1194,7 +1194,7 @@ function groups_is_user_member( $user_id, $group_id ) {
  *
  * @param int $user_id ID of the user.
  * @param int $group_id ID of the group.
- * @return int|bool ID of the membership if the user is member, otherwise false.
+ * @return bool true if the user is allowed, otherwise false.
  */
 function groups_is_user_allowed_posting( $user_id, $group_id ) {
 	$is_allowed = false;
@@ -1212,9 +1212,9 @@ function groups_is_user_allowed_posting( $user_id, $group_id ) {
 		return false;
 	}
 
-	$status = bp_group_get_activity_feed_status( $group_id );
-	$is_admin = groups_is_user_admin( $user_id, $group_id );
-	$is_mod = groups_is_user_mod( $user_id, $group_id );
+	$status    = bp_group_get_activity_feed_status( $group_id );
+	$is_admin  = groups_is_user_admin( $user_id, $group_id );
+	$is_mod    = groups_is_user_mod( $user_id, $group_id );
 	$is_member = true;
 
 	if ( 'members' == $status && $is_member ) {

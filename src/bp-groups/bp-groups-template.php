@@ -3045,7 +3045,7 @@ function bp_group_is_member( $group = false ) {
  *
  * @param object|bool $group Optional. Group to check is_member.
  *                           Default: current group in the loop.
- * @return bool If user is member of group or not.
+ * @return bool true if the user is allowed, otherwise false.
  */
 function bp_group_is_member_allowed_posting( $group = false ) {
 	global $groups_template;
@@ -3054,37 +3054,11 @@ function bp_group_is_member_allowed_posting( $group = false ) {
 	    return false;
     }
 
-	// Site admins always have access.
-	if ( bp_current_user_can( 'bp_moderate' ) ) {
-		return true;
-	}
-
 	if ( empty( $group ) ) {
 		$group =& $groups_template->group;
 	}
 
-	$status   = bp_group_get_activity_feed_status( $group->id );
-	$is_mod   = groups_is_user_mod( bp_loggedin_user_id(), $group->id );
-	$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $group->id );
-
-	$is_allowed = false;
-	if ( 'members' == $status && $group->is_member ) {
-		$is_allowed = true;
-	} else if ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
-		$is_allowed = true;
-	} else if ( 'admins' == $status && $is_admin ) {
-		$is_allowed = true;
-	}
-
-	/**
-	 * Filters whether current user is allowed posting into a group.
-	 *
-	 * @since BuddyBoss 3.1.1
-	 *
-	 * @param bool   $is_allowed If user is a allowed posting into a group or not.
-	 * @param object $group     Group object.
-	 */
-	return apply_filters( 'bp_group_is_member_allowed_posting', $is_allowed, $group );
+	return groups_is_user_allowed_posting( bp_loggedin_user_id(), $group->id );
 }
 
 /**
