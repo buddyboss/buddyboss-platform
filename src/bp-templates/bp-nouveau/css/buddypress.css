@@ -962,7 +962,7 @@ body.buddypress article.page > .entry-header .entry-title {
   }
   .bp-list li .item .list-title,
   .bp-list li .item .item-meta {
-    float: left;
+    float: none;
     text-align: left;
   }
   .bp-list li .item .group-details,
