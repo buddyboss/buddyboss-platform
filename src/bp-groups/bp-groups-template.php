@@ -3065,10 +3065,13 @@ function bp_group_is_member_allowed_posting( $group = false ) {
 
 	$status = bp_group_get_activity_feed_status( $group->id );
 	$is_mod = groups_is_user_mod( bp_loggedin_user_id(), $group->id );
+	$is_admin = groups_is_user_admin( bp_loggedin_user_id(), $group->id );
 
 	if ( 'members' == $status && $group->is_member ) {
 		$is_allowed = true;
 	} else if ( 'mods' == $status && $is_mod ) {
+		$is_allowed = true;
+	} else if ( 'admins' == $status && $is_admin ) {
 		$is_allowed = true;
 	}
 
