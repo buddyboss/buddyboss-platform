@@ -1196,14 +1196,8 @@ function bp_nouveau_nav_has_count() {
 
 	if ( 'directory' === $bp_nouveau->displayed_nav ) {
 		$count = $nav_item->count;
-	} elseif ( 'groups' === $bp_nouveau->displayed_nav && ( 'members' === $nav_item->slug || 'all-members' === $nav_item->slug ) ) {
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'members' === $nav_item->slug ) {
 	    $count = 0 !== (int) groups_get_current_group()->total_member_count;
-	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'leaders' === $nav_item->slug ) {
-		$group         = groups_get_current_group();
-		$admins        = groups_get_group_admins( $group->id );
-		$mods          = groups_get_group_mods( $group->id );
-		$total_leaders = sizeof( $admins ) + sizeof( $mods );
-		$count         = 0 !== (int) $total_leaders;
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && ! empty( $nav_item->primary ) ) {
 		$count = (bool) strpos( $nav_item->name, '="count"' );
 	}
