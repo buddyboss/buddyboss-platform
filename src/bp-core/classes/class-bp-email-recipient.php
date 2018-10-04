@@ -112,10 +112,10 @@ class BP_Email_Recipient {
 
 			$this->address = $this->user_object->user_email;
 			$this->name    = sanitize_text_field( $wp_name );
-			$this->avatar  = '<img src="' . bp_core_fetch_avatar( array(
-					'item_id' => $this->user_object->ID,
-					'html'    => false
-				) ) . '" style="border-radius: 50%;margin-left: 10px;vertical-align: middle;" />';
+			$this->avatar  = bp_core_fetch_avatar( array(
+				'item_id' => $this->user_object->ID,
+				'html'    => false
+			) );
 		}
 
 		// Custom name override.

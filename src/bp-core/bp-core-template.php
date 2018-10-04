@@ -3724,7 +3724,7 @@ function bp_email_the_salutation( $settings = array() ) {
 	 * @return string The Recipient Salutation.
 	 */
 	function bp_email_get_salutation( $settings = array() ) {
-		$token = '{{recipient.name}}{{recipient.avatar}}';
+		$token = '{{recipient.name}}<img src="{{recipient.avatar}}" style="border-radius: 50%;margin-left: 10px;vertical-align: middle;" />';
 
 		/**
 		 * Filters The Recipient Salutation inside the Email Template.
