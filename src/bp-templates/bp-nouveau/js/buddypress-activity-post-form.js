@@ -350,7 +350,8 @@ window.bp = window.bp || {};
 				'avatar_width',
 				'avatar_height',
 				'avatar_alt',
-				'user_domain'
+				'user_domain',
+				'user_display_name'
 			] ) );
 
 			if ( this.model.has( 'avatar_url' ) ) {
