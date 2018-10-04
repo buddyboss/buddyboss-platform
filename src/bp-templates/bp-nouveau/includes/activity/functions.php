@@ -77,16 +77,17 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		$width  = bp_core_avatar_thumb_width();
 		$height = bp_core_avatar_thumb_height();
 		$activity_params = array_merge( $activity_params, array(
-			'avatar_url'    => bp_get_loggedin_user_avatar( array(
+			'avatar_url'        => bp_get_loggedin_user_avatar( array(
 				'width'  => $width,
 				'height' => $height,
 				'html'   => false,
 			) ),
-			'avatar_width'  => $width,
-			'avatar_height' => $height,
-			'user_domain'   => bp_loggedin_user_domain(),
-			'avatar_alt'    => sprintf(
-				/* translators: %s = member name */
+			'avatar_width'      => $width,
+			'avatar_height'     => $height,
+			'user_display_name' => bp_get_loggedin_user_fullname(),
+			'user_domain'       => bp_loggedin_user_domain(),
+			'avatar_alt'        => sprintf(
+			/* translators: %s = member name */
 				__( 'Profile photo of %s', 'buddyboss' ),
 				$user_displayname
 			),
