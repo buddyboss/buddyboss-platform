@@ -638,7 +638,7 @@ class BP_Groups_Component extends BP_Component {
 					'parent_url'      => $group_link,
 					'parent_slug'     => $this->current_group->slug,
 					'screen_function' => 'groups_screen_group_activity',
-					'position'        => 20,
+					'position'        => 11,
 					'user_has_access' => $this->current_group->user_has_access,
 					'item_css_id'     => 'activity',
 					'no_access_url'   => $group_link,
