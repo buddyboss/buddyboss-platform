@@ -132,7 +132,7 @@ body.buddypress article.page > .entry-header {
 body.buddypress article.page > .entry-header .entry-title {
   font-size: 28px;
   font-weight: inherit;
-  color: #122B46;
+  color: #767676;
 }
 
 @media screen and (min-width: 46.8em) {
@@ -2529,7 +2529,8 @@ body.no-js .single-item-header .js-self-profile-button {
 }
 
 .buddypress .bp-invites-content ul.item-list li .list-title {
-  margin: 0 auto;
+  font-size: 22px;
+  margin: 10px 0 0;
   width: 80%;
 }
 
@@ -2561,7 +2562,6 @@ body.no-js .single-item-header .js-self-profile-button {
 .buddypress .bp-invites-content li ul.group-inviters {
   clear: both;
   margin: 0;
-  overflow: hidden;
 }
 
 .buddypress .bp-invites-content li ul.group-inviters li {
