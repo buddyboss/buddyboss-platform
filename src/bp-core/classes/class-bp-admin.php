@@ -679,13 +679,13 @@ class BP_Admin {
 			<h3 class="wp-people-group"><?php _e( 'Meet the BuddyBoss Team', 'buddyboss' ); ?></h3>
 			<ul class="wp-people-group " id="wp-people-group-core-team">
 				<li class="wp-person" id="wp-person-michaeleisenwasser">
-					<a class="web" href="#"><?php echo '<img alt="" class="gravatar" src="' . buddypress()->plugin_url . "bp-core/images/admin/gravatar-michael.png" . '" />'; ?>
+					<a class="web" href="https://profiles.wordpress.org/eisenwasser"><?php echo '<img alt="" class="gravatar" src="' . buddypress()->plugin_url . "bp-core/images/admin/gravatar-michael.png" . '" />'; ?>
 					Michael Eisenwasser</a>
 					<span class="title"><?php _e( 'Software Development', 'buddyboss' ); ?></span>
 
 				</li>
 				<li class="wp-person" id="wp-person-tomcheddadi">
-					<a class="web" href="#"><?php echo '<img alt="" class="gravatar" src="' . buddypress()->plugin_url . "bp-core/images/admin/gravatar-tom.png" . '" />'; ?>
+					<a class="web" href="https://profiles.wordpress.org/tomchedd"><?php echo '<img alt="" class="gravatar" src="' . buddypress()->plugin_url . "bp-core/images/admin/gravatar-tom.png" . '" />'; ?>
 					Tom Cheddadi</a>
 					<span class="title"><?php _e( 'Marketing and Strategy', 'buddyboss' ); ?></span>
 				</li>
