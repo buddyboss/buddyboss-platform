@@ -2746,7 +2746,7 @@ function bp_groups_get_invited_by( $user_id = false, $group_id = false ) {
 
 	$inviter = array(
 		'id'   => $member->inviter_id,
-		'name' => bp_core_get_userlink( $member->inviter_id, true, false, true ),
+		'name' => bp_core_get_user_displayname( $member->inviter_id ),
 		'url'  => bp_core_get_user_domain( $member->inviter_id ),
 	);
 
