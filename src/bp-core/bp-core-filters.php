@@ -1066,8 +1066,6 @@ function bp_email_set_default_tokens( $tokens, $property_name, $transform, $emai
 		$tokens['recipient.name']   = $recipient->get_name();
 		$tokens['recipient.avatar'] = $recipient->get_avatar();
 
-		error_log(print_r($tokens,1));
-
 		if ( ! $user_obj && $tokens['recipient.email'] ) {
 			$user_obj = get_user_by( 'email', $tokens['recipient.email'] );
 		}
