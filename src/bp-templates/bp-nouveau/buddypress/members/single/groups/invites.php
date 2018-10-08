@@ -37,7 +37,7 @@
                             <?php if ( ! empty( $inviter ) ) : ?>
                                 <span class="small">
                                 <?php $member = new BP_Groups_Member( bp_displayed_user_id(), bp_get_group_id() );
-                                printf( __( 'Invited by <a href="%s">%s</a> <span class="last-activity">%s</span>' ), $inviter['url'], $inviter['name'], bp_core_time_since( $member->date_modified ) );
+                                printf( __( 'Invited by <a href="%s">%s</a> <span class="last-activity">%s</span>', 'buddyboss' ), $inviter['url'], $inviter['name'], bp_core_time_since( $member->date_modified ) );
                                 ?>
                                 </span>
                             <?php endif; ?>
