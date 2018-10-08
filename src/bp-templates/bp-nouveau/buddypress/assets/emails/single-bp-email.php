@@ -203,7 +203,7 @@ $settings = bp_email_get_appearance_settings();
 
 						//echo bp_get_option( 'blogname' );
 						if ( bp_is_email_customizer() ) {
-							echo '{{recipient.name}} <img src="' . buddypress()->plugin_url . "bp-core/images/mystery-man.jpg" . '" width="50" height="50" style="border-radius: 50%;margin-left: 10px;vertical-align: middle;" />';
+							echo '{{recipient.name}} <img src="' . buddypress()->plugin_url . "bp-core/images/mystery-man.jpg" . '" width="42" height="42" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 10px; vertical-align: middle;" />';
 						} else {
 							bp_email_the_salutation( $settings );
 						}
