@@ -11,7 +11,7 @@
 
 <?php bp_nouveau_group_hook( 'before', 'invites_content' ); ?>
 
-<?php if ( bp_has_groups( 'type=invites&user_id=' . bp_loggedin_user_id() ) ) : ?>
+<?php if ( bp_has_groups( 'type=invites&user_id=' . bp_displayed_user_id() ) ) : ?>
 
 	<ul id="group-list" class="invites item-list bp-list" data-bp-list="groups_invites">
 
@@ -33,20 +33,14 @@
 					<div class="item">
 						<h2 class="list-title groups-title"><?php bp_group_link(); ?></h2>
 						<p class="meta group-details">
-							<span class="small">
-							<?php
-							printf(
-								/* translators: %s = number of members */
-								_n(
-									'%s member',
-									'%s members',
-									bp_get_group_total_members( false ),
-									'buddypress'
-								),
-								number_format_i18n( bp_get_group_total_members( false ) )
-							);
-							?>
-							</span>
+                            <?php $inviter = bp_groups_get_invited_by(); ?>
+                            <?php if ( ! empty( $inviter ) ) : ?>
+                                <span class="small">
+                                <?php $member = new BP_Groups_Member( bp_displayed_user_id(), bp_get_group_id() );
+                                printf( __( 'Invited by <a href="%s">%s</a> <span class="last-activity">%s</span>', 'buddyboss' ), $inviter['url'], $inviter['name'], bp_core_time_since( $member->date_modified ) );
+                                ?>
+                                </span>
+                            <?php endif; ?>
 						</p>
 
 						<p class="desc">

@@ -2715,3 +2715,40 @@ function bp_get_user_group_role_title( $user_id = false, $group_id = false ) {
 	 */
 	return apply_filters( 'bp_get_user_group_role_title', $role_title );
 }
+
+/**
+ * Get inviter for member's group invitation
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param  int   $user_id ID of the user.
+ * @param  int   $group_id ID of the group.
+ * @return array
+ */
+function bp_groups_get_invited_by( $user_id = false, $group_id = false ) {
+	global $groups_template;
+
+	if ( empty( $user_id ) && bp_displayed_user_id() ) {
+		$user_id = bp_displayed_user_id();
+	}
+
+	if ( empty( $group_id ) ) {
+		$group =& $groups_template->group;
+	} else {
+		$group = groups_get_group( $group_id );
+	}
+
+	if ( empty( $user_id ) || empty( $group ) ) {
+		return false;
+	}
+
+	$member = new BP_Groups_Member( $user_id, $group->id );
+
+	$inviter = array(
+		'id'   => $member->inviter_id,
+		'name' => bp_core_get_user_displayname( $member->inviter_id ),
+		'url'  => bp_core_get_user_domain( $member->inviter_id ),
+	);
+
+	return apply_filters( 'bp_groups_get_invited_by', $inviter, $group->id );
+}

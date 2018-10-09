@@ -676,103 +676,73 @@ class BP_Admin {
 
 		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Credits', 'buddyboss' ) ); ?></h2>
 
-			<p class="about-description">
+			<h3 class="wp-people-group"><?php _e( 'Meet the BuddyBoss Team', 'buddyboss' ); ?></h3>
+			<ul class="wp-people-group " id="wp-people-group-core-team">
+				<li class="wp-person" id="wp-person-michaeleisenwasser">
+					<a class="web" href="https://profiles.wordpress.org/eisenwasser"><?php echo '<img alt="" class="gravatar" src="' . buddypress()->plugin_url . "bp-core/images/admin/gravatar-michael.png" . '" />'; ?>
+					Michael Eisenwasser</a>
+					<span class="title"><?php _e( 'Software Development', 'buddyboss' ); ?></span>
+
+				</li>
+				<li class="wp-person" id="wp-person-tomcheddadi">
+					<a class="web" href="https://profiles.wordpress.org/tomchedd"><?php echo '<img alt="" class="gravatar" src="' . buddypress()->plugin_url . "bp-core/images/admin/gravatar-tom.png" . '" />'; ?>
+					Tom Cheddadi</a>
+					<span class="title"><?php _e( 'Marketing and Strategy', 'buddyboss' ); ?></span>
+				</li>
+				<li class="wp-person" id="wp-person-buddyboss">
+					<a class="web" href="https://www.buddyboss.com/careers/"><?php echo '<img alt="" class="gravatar" src="' . buddypress()->plugin_url . "bp-core/images/admin/gravatar-buddyboss.png" . '" />'; ?>
+					BuddyBoss Team</a>
+					<span class="title"><?php _e( '45 People and Growing!', 'buddyboss' ); ?></span>
+				</li>
+			</ul>
+
+			<h3 class="wp-people-group"><?php _e( 'Special thanks to the BuddyPress contributors', 'buddyboss' ); ?></h3>
+			<p class="wp-about-description">
 				<?php
 				printf(
-					__( 'The BuddyBoss Platform is a fork of the open source project <a class="web" href="%s">BuddyPress</a>. We cannot thank the core BuddyPress team enough for their many years of contributing to the original platform, for which we are forever grateful.', 'buddyboss' ),
+					__( 'The "BuddyBoss Platform" is a fork of the open source project <strong><a class="web" href="%s">BuddyPress</a></strong>. We cannot thank the core BuddyPress team enough for their many years of contributing to the original plugin:', 'buddyboss' ),
 					esc_url( 'https://buddypress.org/' )
 				);
 				?>
+				<a class="web" href="https://profiles.wordpress.org/johnjamesjacoby">John James Jacoby</a>,
+				<a class="web" href="https://profiles.wordpress.org/boonebgorges">Boone B. Gorges</a>,
+				<a class="web" href="https://profiles.wordpress.org/djpaul">Paul Gibbs</a>,
+				<a class="web" href="https://profiles.wordpress.org/r-a-y">Ray</a>,
+				<a class="web" href="https://profiles.wordpress.org/hnla">Hugo Ashmore</a>,
+				<a class="web" href="https://profiles.wordpress.org/imath">Mathieu Viet</a>,
+				<a class="web" href="https://profiles.wordpress.org/mercime">Mercime</a>,
+				<a class="web" href="https://profiles.wordpress.org/dcavins">David Cavins</a>,
+				<a class="web" href="https://profiles.wordpress.org/tw2113">Michael Beckwith</a>,
+				<a class="web" href="https://profiles.wordpress.org/henry.wright">Henry Wright</a>,
+				<a class="web" href="https://profiles.wordpress.org/danbp">danbp</a>,
+				<a class="web" href="https://profiles.wordpress.org/shanebp">shanebp</a>,
+				<a class="web" href="https://profiles.wordpress.org/r-a-y">Slava Abakumov</a>,
+				<a class="web" href="https://profiles.wordpress.org/Offereins">Laurens Offereins</a>,
+				<a class="web" href="https://profiles.wordpress.org/netweb">Stephen Edgar</a>,
+				<a class="web" href="https://profiles.wordpress.org/espellcaste">Renato Alves</a>,
+				<a class="web" href="https://profiles.wordpress.org/venutius">Venutius</a>,
+				<a class="web" href="https://profiles.wordpress.org/apeatling/">Andy Peatling</a>,
+				<a class="web" href="https://profiles.wordpress.org/burtadsit">Burt Adsit</a>,
+				<a class="web" href="https://profiles.wordpress.org/jeffsayre">Jeff Sayre</a>,
+				<a class="web" href="https://profiles.wordpress.org/karmatosed">Tammie Lister</a>,
+				<a class="web" href="https://profiles.wordpress.org/modemlooper">modemlooper</a>
 			</p>
 
-			<h3 class="wp-people-group"><?php _e( 'BuddyPress Team', 'buddyboss' ); ?></h3>
-			<ul class="wp-people-group " id="wp-people-group-core-team">
-				<li class="wp-person" id="wp-person-michaeleisenwasser">
-					<a class="web" href="https://profiles.wordpress.org/johnjamesjacoby"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/7a2644fb53ae2f7bfd7143b504af396c?s=120">
-					John James Jacoby</a>
-					<span class="title"><?php _e( 'Project Lead', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-alanchens">
-					<a class="web" href="https://profiles.wordpress.org/boonebgorges"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/9cf7c4541a582729a5fc7ae484786c0c?s=120">
-					Boone B. Gorges</a>
-					<span class="title"><?php _e( 'Lead Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-chandanca">
-					<a class="web" href="https://profiles.wordpress.org/djpaul"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/3bc9ab796299d67ce83dceb9554f75df?s=120">
-					Paul Gibbs</a>
-					<span class="title"><?php _e( 'Release Lead', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-r-a-y">
-					<a class="web" href="https://profiles.wordpress.org/r-a-y"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/3bfa556a62b5bfac1012b6ba5f42ebfa?s=120">
-					Ray</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-hnla">
-					<a class="web" href="https://profiles.wordpress.org/hnla"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/3860c955aa3f79f13b92826ae47d07fe?s=120">
-					Hugo Ashmore</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-imath">
-					<a class="web" href="https://profiles.wordpress.org/imath"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/8b208ca408dad63888253ee1800d6a03?s=120">
-					Mathieu Viet</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-mercime">
-					<a class="web" href="https://profiles.wordpress.org/mercime"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/fae451be6708241627983570a1a1817a?s=120">
-					Mercime</a>
-					<span class="title"><?php _e( 'Navigator', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-dcavins">
-					<a class="web" href="https://profiles.wordpress.org/dcavins"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/a5fa7e83d59cb45ebb616235a176595a?s=120">
-					David Cavins</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-tw2113">
-					<a class="web" href="https://profiles.wordpress.org/tw2113"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/a5d7c934621fa1c025b83ee79bc62366?s=120">
-					Michael Beckwith</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-henry-wright">
-					<a class="web" href="https://profiles.wordpress.org/henry.wright"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/0da2f1a9340d6af196b870f6c107a248?s=120">
-					Henry Wright</a>
-					<span class="title"><?php _e( 'Community Support', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-danbp">
-					<a class="web" href="https://profiles.wordpress.org/danbp"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/0deae2e7003027fbf153500cd3fa5501?s=120">
-					danbp</a>
-					<span class="title"><?php _e( 'Community Support', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-shanebp">
-					<a class="web" href="https://profiles.wordpress.org/shanebp"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/ffd294ab5833ba14aaf175f9acc71cc4?s=120">
-					shanebp</a>
-					<span class="title"><?php _e( 'Community Support', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-slaffik">
-					<a class="web" href="https://profiles.wordpress.org/r-a-y"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/61fb07ede3247b63f19015f200b3eb2c?s=120">
-					Slava Abakumov</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-offereins">
-					<a class="web" href="https://profiles.wordpress.org/Offereins"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/2404ed0a35bb41aedefd42b0a7be61c1?s=120">
-					Laurens Offereins</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-netweb">
-					<a class="web" href="https://profiles.wordpress.org/netweb"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/97e1620b501da675315ba7cfb740e80f?s=120">
-					Stephen Edgar</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-espellcaste">
-					<a class="web" href="https://profiles.wordpress.org/espellcaste"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/b691e67be0ba5cad6373770656686bc3?s=120">
-					Renato Alves</a>
-					<span class="title"><?php _e( 'Core Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-venutius">
-					<a class="web" href="https://profiles.wordpress.org/venutius"><img alt="" class="gravatar" src="//www.gravatar.com/avatar/6a7c42a77fd94b82b217a7a97afdddbc?s=120">
-					Venutius</a>
-					<span class="title"><?php _e( 'Community Support', 'buddyboss' ); ?></span>
-				</li>
-			</ul>
+			<h3 class="wp-people-group"><?php _e( 'Special thanks to these open source projects', 'buddyboss' ); ?></h3>
+			<p class="wp-credits-list">
+				<a href="https://github.com/ichord/At.js">At.js</a>,
+				<a href="https://bbpress.org">bbPress</a>,
+				<a href="https://wordpress.org/plugins/bp-profile-search/">BP Profile Search</a>,
+				<a href="https://buddypress.org">BuddyPress</a>,
+				<a href="https://github.com/ichord/Caret.js">Caret.js</a>,
+				<a href="https://tedgoas.github.io/Cerberus/">Cerberus</a>,
+				<a href="https://ionicons.com/">Ionicons</a>,
+				<a href="https://github.com/carhartl/jquery-cookie">jquery.cookie</a>,
+				<a href="https://mattbradley.github.io/livestampjs/">Livestamp.js</a>,
+				<a href="https://www.mediawiki.org/wiki/MediaWiki">MediaWiki</a>,
+				<a href="https://momentjs.com/">Moment.js</a>,
+				<a href="https://wordpress.org">WordPress</a>.
+			</p>
 
 		</div>
 
