@@ -630,6 +630,8 @@ window.bp = window.bp || {};
 				this.views.add( new bp.Views.FormTarget( { model: this.model } ) );
 			}
 
+			$('#whats-new-form').addClass('focus-in'); // add some class to form so that DOM knows about focus
+
 			this.views.add( new bp.Views.FormSubmit( { model: this.model } ) );
 		},
 
@@ -644,6 +646,8 @@ window.bp = window.bp || {};
 				resize : 'none',
 				height : '50px'
 			} );
+
+			$('#whats-new-form').removeClass('focus-in'); // remove class when reset
 
 			// Reset the model
 			this.model.clear();
