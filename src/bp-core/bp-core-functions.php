@@ -3203,7 +3203,7 @@ function bp_email_get_appearance_settings() {
 		'footer_text_size'  => 12,
 		'highlight_color'   => '#007CFF',
 		'site_title_text_color' => '#122B46',
-		'site_title_text_size'  => 	26,
+		'site_title_text_size'  => 	20,
 		'recipient_text_color'	=> '#7F868F',
 		'recipient_text_size'	=> 	14,
 		'direction'				=> is_rtl() ? 'right' : 'left',
