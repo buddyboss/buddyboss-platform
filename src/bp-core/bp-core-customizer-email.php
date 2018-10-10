@@ -374,14 +374,14 @@ function bp_email_get_customizer_controls() {
 
 		'bp_mailtpl_highlight_color' => array(
 			'class'       => 'WP_Customize_Color_Control',
-			'label'       => __( 'Link color', 'buddyboss' ),
+			'label'       => __( 'Links and buttons color', 'buddyboss' ),
 			'section'     => 'section_bp_mailtpl_body',
 			'settings'    => 'bp_email_options[highlight_color]',
 		),
 
 		'bp_mailtpl_footer_text' => array(
 			'class'       => 'WP_Customize_Control',
-			'description' => __('Change the email footer here', 'buddyboss' ),
+			'description' => __('Change the email footer content here.', 'buddyboss' ),
 			'label'       => __( 'Footer text', 'buddyboss' ),
 			'section'     => 'section_bp_mailtpl_footer',
 			'settings'    => 'bp_email_options[footer_text]',
