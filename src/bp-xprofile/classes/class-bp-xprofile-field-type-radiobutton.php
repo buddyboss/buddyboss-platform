@@ -67,7 +67,7 @@ class BP_XProfile_Field_Type_Radiobutton extends BP_XProfile_Field_Type {
 
 			<legend>
 				<?php bp_the_profile_field_name(); ?>
-				<?php bp_the_profile_field_required_label(); ?>
+				<?php bp_the_profile_field_optional_label(); ?>
 			</legend>
 
 			<?php if ( bp_get_the_profile_field_description() ) : ?>

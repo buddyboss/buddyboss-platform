@@ -2269,7 +2269,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 		// Output the label for regular fields
 		if ( 'radio' !== $type ) {
 			if ( $required ) {
-				printf( $label_output, esc_attr( $name ), esc_html( $label ), __( '(required)', 'buddyboss' ) );
+				printf( $label_output, esc_attr( $name ), esc_html( $label ), '' );
 			} else {
 				printf( $label_output, esc_attr( $name ), esc_html( $label ) );
 			}
