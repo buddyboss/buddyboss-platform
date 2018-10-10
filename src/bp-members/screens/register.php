@@ -66,12 +66,8 @@ function bp_core_screen_signup() {
 			$bp->signup->errors['signup_email'] = $account_details['errors']->errors['user_email'][0];
 
 		// Check that both password fields are filled in.
-		if ( empty( $_POST['signup_password'] ) || empty( $_POST['signup_password_confirm'] ) )
-			$bp->signup->errors['signup_password'] = __( 'Please make sure you enter your password twice', 'buddyboss' );
-
-		// Check that the passwords match.
-		if ( ( !empty( $_POST['signup_password'] ) && !empty( $_POST['signup_password_confirm'] ) ) && $_POST['signup_password'] != $_POST['signup_password_confirm'] )
-			$bp->signup->errors['signup_password'] = __( 'The passwords you entered do not match.', 'buddyboss' );
+		if ( empty( $_POST['signup_password'] ) )
+			$bp->signup->errors['signup_password'] = __( 'Please make sure you enter your password', 'buddyboss' );
 
 		$bp->signup->username = $_POST['signup_username'];
 		$bp->signup->email = $_POST['signup_email'];
