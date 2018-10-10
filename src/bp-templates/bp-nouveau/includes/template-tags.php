@@ -2408,6 +2408,47 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 }
 
 /**
+ * Output a terms of service and privacy policy pages if activated
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_nouveau_signup_terms_privacy() {
+
+	$page_ids = bp_core_get_directory_page_ids();
+
+	$terms   = isset( $page_ids['terms'] ) ? $page_ids['terms'] : false;
+	$privacy = isset( $page_ids['privacy'] ) ? $page_ids['privacy'] : false;
+
+	if ( ! $terms && ! $privacy ) {
+	    return false;
+    }
+
+	if ( $terms && ! $privacy ) {
+		?>
+        <span>
+            <?php printf( __( 'By creating an account, you agree to our <a href="%s" target="_blank">Terms of Service</a>.', 'buddyboss' ), get_permalink( $terms ) ); ?>
+        </span>
+		<?php
+	}
+
+	if ( ! $terms && $privacy ) {
+		?>
+        <span>
+            <?php printf( __( 'By creating an account, you agree to our <a href="%s" target="_blank">Privacy Policy</a>.', 'buddyboss' ), get_permalink( $privacy ) ); ?>
+        </span>
+		<?php
+	}
+
+	if ( $terms && $privacy ) {
+		?>
+        <span>
+            <?php printf( __( 'By creating an account, you agree to our <a href="%s" target="_blank">Terms of Service</a> and <a href="%s" target="_blank">Privacy Policy</a>.', 'buddyboss' ), get_permalink( $terms ), get_permalink( $privacy ) ); ?>
+        </span>
+		<?php
+	}
+}
+
+/**
  * Output a submit button and the nonce for the requested action.
  *
  * @since BuddyPress 3.0.0

@@ -99,6 +99,8 @@
 
 				</div><!-- //.layout-wrap -->
 
+                <?php bp_nouveau_signup_terms_privacy(); ?>
+
 				<?php bp_nouveau_submit_button( 'register' ); ?>
 
 			<?php endif; // request-details signup step ?>
