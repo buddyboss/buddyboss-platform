@@ -9,7 +9,7 @@
 bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 
 <h2 class="screen-heading general-settings-screen">
-	<?php _e( 'Email & Password', 'buddyboss' ); ?>
+	<?php _e( 'Login Information', 'buddyboss' ); ?>
 </h2>
 
 <p class="info email-pwd-info">
