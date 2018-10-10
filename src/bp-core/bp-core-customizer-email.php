@@ -354,7 +354,7 @@ function bp_email_get_customizer_controls() {
 
 		'bp_mailtpl_body_text_color' => array(
 			'class'    => 'WP_Customize_Color_Control',
-			'label'    => __( 'Body text color', 'buddyboss' ),
+			'label'    => __( 'Body primary text color', 'buddyboss' ),
 			'section'  => 'section_bp_mailtpl_body',
 			'settings' => 'bp_email_options[body_text_color]',
 		),
