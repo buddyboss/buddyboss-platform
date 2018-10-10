@@ -3196,7 +3196,7 @@ function bp_email_get_appearance_settings() {
 	$default_args = array(
 		'body_bg'           => '#FFFFFF',
 		'body_border_color' => '#E7E9EC',
-		'body_text_color'   => '#444444',
+		'body_text_color'   => '#7F868F',
 		'body_text_size'    => 16,
 		'email_bg'          => '#FAFBFD',
 		'footer_text_color' => '#7F868F',
