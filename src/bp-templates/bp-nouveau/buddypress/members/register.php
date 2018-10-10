@@ -54,7 +54,6 @@
 									$field_type = bp_xprofile_create_field_type( bp_get_the_profile_field_type() );
 									$field_type->edit_field_html();
 
-									bp_nouveau_xprofile_edit_visibilty();
 									?>
 
 									</fieldset>
