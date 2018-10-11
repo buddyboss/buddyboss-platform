@@ -221,6 +221,13 @@ function bp_email_get_customizer_settings() {
 			'transport'         => 'postMessage',
 			'type'              => 'option',
 		),
+		'bp_email_options[quote_bg]' => array(
+			'capability'        => 'bp_moderate',
+			'default'           => $defaults['quote_bg'],
+			'sanitize_callback' => 'sanitize_hex_color',
+			'transport'         => 'postMessage',
+			'type'              => 'option',
+		),
 		'bp_email_options[body_border_color]' => array(
 			'capability'        => 'bp_moderate',
 			'default'           => $defaults['body_border_color'],
@@ -238,6 +245,13 @@ function bp_email_get_customizer_settings() {
 		'bp_email_options[body_text_color]' => array(
 			'capability'        => 'bp_moderate',
 			'default'           => $defaults['body_text_color'],
+			'sanitize_callback' => 'sanitize_hex_color',
+			'transport'         => 'postMessage',
+			'type'              => 'option',
+		),
+		'bp_email_options[body_secondary_text_color]' => array(
+			'capability'        => 'bp_moderate',
+			'default'           => $defaults['body_secondary_text_color'],
 			'sanitize_callback' => 'sanitize_hex_color',
 			'transport'         => 'postMessage',
 			'type'              => 'option',
@@ -362,6 +376,13 @@ function bp_email_get_customizer_controls() {
 			'settings' => 'bp_email_options[body_text_color]',
 		),
 
+		'bp_mailtpl_body_secondary_text_color' => array(
+			'class'    => 'WP_Customize_Color_Control',
+			'label'    => __( 'Body secondary text color', 'buddyboss' ),
+			'section'  => 'section_bp_mailtpl_body',
+			'settings' => 'bp_email_options[body_secondary_text_color]',
+		),
+
 		'bp_mailtpl_body_text_size' => array(
 			'class'    => 'BP_Customizer_Control_Range',
 			'label'    => __( 'Body text size', 'buddyboss' ),
@@ -373,6 +394,13 @@ function bp_email_get_customizer_controls() {
 				'min'  => 8,
 				'step' => 1,
 			),
+		),
+
+		'bp_mailtpl_quote_bg' => array(
+			'class'    => 'WP_Customize_Color_Control',
+			'label'    => __( 'Quote background color', 'buddyboss' ),
+			'section'  => 'section_bp_mailtpl_body',
+			'settings' => 'bp_email_options[quote_bg]',
 		),
 
 		'bp_mailtpl_highlight_color' => array(
@@ -429,7 +457,7 @@ function bp_email_redirect_to_customizer() {
 
 	$email = get_posts( array(
 		'fields'           => 'ids',
-		'orderby'          => 'rand',
+		// 'orderby'          => 'rand',
 		'post_status'      => 'publish',
 		'post_type'        => bp_get_email_post_type(),
 		'posts_per_page'   => 1,

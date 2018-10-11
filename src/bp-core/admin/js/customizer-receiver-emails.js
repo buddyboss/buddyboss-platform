@@ -54,6 +54,7 @@
 			if ( newval.length ) {
 				$( 'a' ).css( 'color', newval );
 				$( 'hr' ).attr( 'color', newval );
+				$( '.button_outline' ).css( 'border-color', newval );
 			}
 		});
 	});
@@ -66,10 +67,18 @@
 		});
 	});
 
+	wp.customize( 'bp_email_options[quote_bg]', function( value ) {
+		value.bind(function( newval ) {
+			if ( newval.length ) {
+				$( '.quote_bg' ).attr( 'bgcolor', newval );
+			}
+		});
+	});
+
 	wp.customize( 'bp_email_options[body_border_color]', function( value ) {
 		value.bind(function( newval ) {
 			if ( newval.length ) {
-				$( '.body_bg' ).css( 'border-color', newval );
+				$( '.body_border_color' ).css( 'border-color', newval );
 			}
 		});
 	});
@@ -81,6 +90,11 @@
 				$( '.body_text_size' )
 					.css( 'font-size', newval + 'px' )
 					.css( 'line-height', Math.floor( newval * 1.618 ) + 'px' );
+				
+				$( '.button_outline' )
+					.css( 'width', Math.floor( newval * 5.25 ) + 'px' )
+					.css( 'height', Math.floor( newval * 2.125 ) + 'px' )
+					.css( 'line-height', Math.floor( newval * 2.125 ) + 'px' );
 
 				// 1.35 = default body_text_size multipler. Gives default heading of 20px.
 				$( '.welcome' ).css( 'font-size', Math.floor( newval * 1.35 ) + 'px' );
@@ -92,6 +106,14 @@
 		value.bind(function( newval ) {
 			if ( newval.length ) {
 				$( '.body_text_color' ).css( 'color', newval );
+			}
+		});
+	});
+
+	wp.customize( 'bp_email_options[body_secondary_text_color]', function( value ) {
+		value.bind(function( newval ) {
+			if ( newval.length ) {
+				$( '.body_secondary_text_color' ).css( 'color', newval );
 			}
 		});
 	});
