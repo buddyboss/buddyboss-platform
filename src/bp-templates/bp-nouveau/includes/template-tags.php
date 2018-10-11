@@ -2425,25 +2425,25 @@ function bp_nouveau_signup_terms_privacy() {
 
 	if ( $terms && ! $privacy ) {
 		?>
-        <span>
+        <p class="register-privacy-info">
             <?php printf( __( 'By creating an account, you agree to our <a href="%s" target="_blank">Terms of Service</a>.', 'buddyboss' ), get_permalink( $terms ) ); ?>
-        </span>
+        </p>
 		<?php
 	}
 
 	if ( ! $terms && $privacy ) {
 		?>
-        <span>
+        <p class="register-privacy-info">
             <?php printf( __( 'By creating an account, you agree to our <a href="%s" target="_blank">Privacy Policy</a>.', 'buddyboss' ), get_permalink( $privacy ) ); ?>
-        </span>
+        </p>
 		<?php
 	}
 
 	if ( $terms && $privacy ) {
 		?>
-        <span>
+        <p class="register-privacy-info">
             <?php printf( __( 'By creating an account, you agree to our <a href="%s" target="_blank">Terms of Service</a> and <a href="%s" target="_blank">Privacy Policy</a>.', 'buddyboss' ), get_permalink( $terms ), get_permalink( $privacy ) ); ?>
-        </span>
+        </p>
 		<?php
 	}
 }

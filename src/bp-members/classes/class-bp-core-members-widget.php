@@ -99,6 +99,10 @@ class BP_Core_Members_Widget extends WP_Widget {
 			'populate_extras' => true,
 			'search_terms'    => false,
 		);
+        
+        if ( empty($members_args['max']) ) {
+            $members_args['max'] = 5;
+        }
 
 		// Back up the global.
 		$old_members_template = $members_template;
@@ -126,7 +130,14 @@ class BP_Core_Members_Widget extends WP_Widget {
 
 					<li class="vcard">
 						<div class="item-avatar">
-							<a href="<?php bp_member_permalink() ?>" class="bp-tooltip" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?></a>
+							<a href="<?php bp_member_permalink() ?>" class="bp-tooltip" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?>
+                            <?php
+                            $current_time = current_time( 'mysql', 1 );
+                            $diff =  strtotime( $current_time ) - strtotime( $members_template->member->last_activity );
+                            if ( $diff < 300 ) { // 5 minutes  =  5 * 60
+                                ?> <span class="member-status online"></span></a> <?php
+                            }
+                            ?>                            
 						</div>
 
 						<div class="item">
@@ -150,6 +161,8 @@ class BP_Core_Members_Widget extends WP_Widget {
 			<?php wp_nonce_field( 'bp_core_widget_members', '_wpnonce-members', false ); ?>
 
 			<input type="hidden" name="members_widget_max" id="members_widget_max" value="<?php echo esc_attr( $settings['max_members'] ); ?>" />
+            
+            <div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more">More<i class="bb-icon-angle-right"></i></a></div>
 
 		<?php else: ?>
 

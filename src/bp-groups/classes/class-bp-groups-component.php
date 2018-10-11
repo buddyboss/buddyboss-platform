@@ -793,7 +793,7 @@ class BP_Groups_Component extends BP_Component {
 			$title   = _x( 'Groups', 'My Account Groups', 'buddyboss' );
 			$pending = _x( 'No Pending Invites', 'My Account Groups sub nav', 'buddyboss' );
 
-			if ( ! empty( $count['total'] ) ) {
+			if ( ! empty( $count ) ) {
 				$title = sprintf(
 					/* translators: %s: Group invitation count for the current user */
 					_x( 'Groups %s', 'My Account Groups nav', 'buddyboss' ),
