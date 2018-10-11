@@ -22,6 +22,9 @@ function bp_email_init_customizer( WP_Customize_Manager $wp_customize ) {
 		return;
 	}
 
+	// Removed widget panel
+	$wp_customize->remove_panel( 'widgets' );
+
 	$wp_customize->add_panel( 'bp_mailtpl', array(
 		'description' => __( 'Customize the appearance of emails sent by BuddyBoss.', 'buddyboss' ),
 		'title'       => _x( 'BuddyBoss Emails', 'screen heading', 'buddyboss' ),
