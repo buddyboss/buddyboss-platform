@@ -3403,10 +3403,11 @@ function bp_group_join_button( $group = false ) {
 		// Already a member.
 		if ( ! empty( $group->is_member ) ) {
 
+		    $is_only_admin = false;
 			// Stop sole admins from abandoning their group.
 			$group_admins = groups_get_group_admins( $group->id );
 			if ( ( 1 == count( $group_admins ) ) && ( bp_loggedin_user_id() === (int) $group_admins[0]->user_id ) ) {
-				return false;
+				$is_only_admin = true;
 			}
 
 			// Setup button attributes.
@@ -3425,6 +3426,10 @@ function bp_group_join_button( $group = false ) {
 					'data-title-displayed' => __( 'You\'re a member', 'buddyboss' )
 				)
 			);
+
+			if ( $is_only_admin ) {
+			    $button['button_attr']['data-only-admin'] = '1';
+            }
 
 		// Not a member.
 		} else {
