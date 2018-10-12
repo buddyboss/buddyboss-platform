@@ -235,7 +235,7 @@ $settings = bp_email_get_appearance_settings();
 							<tr>
 								<td>
 									<div class="body_text_color body_text_size" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;">
-										<a href="#" target="_blank" style="text-decoration: none">{{sender.name}}</a> sent you a new message
+										<a href="#" target="_blank" style="text-decoration: none">{{sender.name}}</a> <?php _e('sent you a new message', 'buddypress'); ?>
 									</div>
 								</td>
 							</tr>
@@ -247,7 +247,7 @@ $settings = bp_email_get_appearance_settings();
 									<a href="#" target="_blank">
 										<img alt="Avatar" src="<?php echo buddypress()->plugin_url; ?>bp-core/images/mystery-man.jpg" width="45" height="45" style="border: 1px solid #b9babc; border-radius: 50%; vertical-align: middle;" />
 									</a>
-									<span class="body_secondary_text_color body_text_size" style="border-left: 10px solid #fff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; letter-spacing: -0.24px;">{{sender.name}}</span>
+									<span class="body_secondary_text_color body_text_size" style="margin-left: 10px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; letter-spacing: -0.24px;">{{sender.name}}</span>
 								</td>
 							</tr>
 							<tr>
@@ -283,7 +283,7 @@ $settings = bp_email_get_appearance_settings();
 							</tr>
 							<tr>
 								<td>
-									<a class="body_text_size highlight_color button_outline" href="#" target="_blank" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-decoration: none; display: block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; width: <?php echo esc_attr( floor( $settings['body_text_size'] * 5.25 ) . 'px' ); ?>; text-align: center; height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2.125 ) . 'px' ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2.125 ) . 'px' ); ?>; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>;">Reply</a>
+									<a class="body_text_size highlight_color button_outline" href="#" target="_blank" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-decoration: none; display: block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; width: <?php echo esc_attr( floor( $settings['body_text_size'] * 5.25 ) . 'px' ); ?>; text-align: center; height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2.125 ) . 'px' ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2.125 ) . 'px' ); ?>; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>;"><?php _e('Reply', 'buddypress'); ?></a>
 								</td>
 							</tr>
 						</table>
