@@ -22,9 +22,6 @@ function bp_email_init_customizer( WP_Customize_Manager $wp_customize ) {
 		return;
 	}
 
-	// Removed widget panel
-	//$wp_customize->remove_panel( 'widgets' );
-
 	$wp_customize->add_panel( 'bp_mailtpl', array(
 		'description' => __( 'Customize the appearance of emails sent by BuddyBoss.', 'buddyboss' ),
 		'title'       => _x( 'BuddyBoss Emails', 'screen heading', 'buddyboss' ),
@@ -491,3 +488,23 @@ function bp_email_redirect_to_customizer() {
 
 	exit;
 }
+
+/**
+ * Removes the core 'Widgets' panel from the Email Customizer.
+ *
+ * @param array $components Core Customizer components list.
+ * @return array (Maybe) modified components list.
+ * 
+ * @since BuddyBoss 3.1.1
+ */
+function bp_email_remove_widgets_panel( $components ) {
+    $i = array_search( 'widgets', $components );
+
+	if ( bp_is_email_customizer() && false !== $i ) {
+        unset( $components[ $i ] );
+	}
+
+    return $components;
+}
+
+add_filter( 'customize_loaded_components', 'bp_email_remove_widgets_panel' );
