@@ -658,6 +658,14 @@ window.bp = window.bp || {};
 				return false;
 			}
 
+			// check if only admin trying to leave the group
+			if ( typeof target.data('only-admin') !== 'undefined' ) {
+				if ( undefined !== BP_Nouveau.only_admin_notice ) {
+					window.alert( BP_Nouveau.only_admin_notice );
+				}
+				return false;
+			}
+
 			if ( ( undefined !== BP_Nouveau[ action + '_confirm'] && false === window.confirm( BP_Nouveau[ action + '_confirm'] ) ) || target.hasClass( 'pending' ) ) {
 				return false;
 			}

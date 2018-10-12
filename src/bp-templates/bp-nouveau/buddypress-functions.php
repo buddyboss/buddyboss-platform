@@ -413,6 +413,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'close'               => __( 'Close', 'buddyboss' ),
 			'comments'            => __( 'comments', 'buddyboss' ),
 			'leave_group_confirm' => __( 'Are you sure you want to leave this group?', 'buddyboss' ),
+			'only_admin_notice'   => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group, or promote another member to be an organizer first and then leave the group.', 'buddyboss' ),
 			'is_friend_confirm'   => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss' ),
 			'confirm'             => __( 'Are you sure?', 'buddyboss' ),
 			'my_favs'             => __( 'Saved', 'buddyboss' ),
