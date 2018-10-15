@@ -714,16 +714,6 @@ class BP_Email_Tokens {
                 </tr>
 			<?php endif; ?>
 
-			<?php if ( $tokens['usersubject'] ): ?>
-                <tr>
-                    <td width="100%"><?php echo $tokens['usersubject']; ?></td>
-                </tr>
-
-                <tr>
-                    <td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
-                </tr>
-			<?php endif; ?>
-
             <tr>
                 <td>
                     <table cellspacing="0" cellpadding="0" border="0" width="100%"
