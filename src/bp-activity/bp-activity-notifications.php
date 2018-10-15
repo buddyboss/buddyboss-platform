@@ -33,7 +33,7 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 	switch ( $action ) {
 		case 'new_at_mention':
 			$action_filter = 'at_mentions';
-			$link          = bp_activity_get_permalink($item_id);
+			$link          = bp_loggedin_user_domain() . bp_get_activity_slug() . '/mentions/';
 			$title         = sprintf( __( '@%s Mentions', 'buddyboss' ), bp_get_loggedin_user_username() );
 			$amount        = 'single';
 
