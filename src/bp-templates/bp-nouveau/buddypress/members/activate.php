@@ -22,12 +22,10 @@
 			<?php else : ?>
 				<p>
 					<?php
-					echo esc_html(
-						sprintf(
+					echo sprintf(
 							__( 'Your account was activated successfully! You can now <a href="%s">log in</a> with the username and password you provided when you signed up.', 'buddyboss' ),
 							wp_login_url( bp_get_root_domain() )
-						)
-					);
+						);
 					?>
 				</p>
 			<?php endif; ?>

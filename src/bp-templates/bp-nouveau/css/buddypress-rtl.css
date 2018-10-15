@@ -3297,6 +3297,10 @@ input#send-to-input {
   width: 100%;
 }
 
+#activate-page .bp-messages {
+  margin-bottom: 20px;
+}
+
 /*__ General __*/
 /*__ Email notifications __*/
 /*__ Profile visibility __*/
