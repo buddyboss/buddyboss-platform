@@ -203,7 +203,7 @@ $settings = bp_email_get_appearance_settings();
 
 						//echo bp_get_option( 'blogname' );
 						if ( bp_is_email_customizer() ) {
-							echo '{{recipient.name}} <img src="' . buddypress()->plugin_url . "bp-core/images/mystery-man.jpg" . '" width="32" height="32" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 7px; vertical-align: middle;" />';
+							echo '{{recipient.name}} <img src="' . buddypress()->plugin_url . "bp-core/images/mystery-man.jpg" . '" width="38" height="38" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
 						} else {
 							bp_email_the_salutation( $settings );
 						}
@@ -342,6 +342,9 @@ $settings = bp_email_get_appearance_settings();
 						do_action( 'bp_after_email_footer' );
 						?>
 					</td>
+				</tr>
+				<tr>
+					<td height="45px" style="font-size: 45px; line-height: 45px;">&nbsp;</td>
 				</tr>
 			</table>
 			<!-- Email Footer : END -->
