@@ -808,7 +808,7 @@ class BP_Email_Tokens {
 		?>
 
         <table class="member-details" cellspacing="0" cellpadding="0" border="0" width="100%"
-               style="background: #ffffff; border: 1px solid #E7E9EC; border-radius: 4px; border-collapse: separate !important">
+               style="background: #ffffff; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
             <tr>
                 <td align="center">
                     <table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%;">
