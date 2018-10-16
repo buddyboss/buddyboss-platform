@@ -185,6 +185,30 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 	}
 }
 
+if ( ! function_exists( 'bp_get_total_online_member_count' ) ) {
+	function bp_get_total_online_member_count() {
+
+		global $members_template;
+
+		$total = 0;
+
+		$members_args = array(
+			'user_id'         => 0,
+			'type'            => 'online',
+			'max'             => 999,
+			'populate_extras' => false,
+			'search_terms'    => false,
+		);
+
+		$old_members_template = $members_template;
+		if ( bp_has_members( $members_args ) ){
+			$total = $members_template->total_member_count;
+		}
+		$members_template = $old_members_template;
+		return $total;
+	}
+}
+
 function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $data = array()  ){
 	global $members_template;
 
