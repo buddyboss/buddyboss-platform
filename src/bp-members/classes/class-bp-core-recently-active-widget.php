@@ -219,7 +219,7 @@ function buddyboss_theme_recently_active_widget_heartbeat( $response = array(), 
 	<?php else: ?>
 
         <div class="widget-error">
-			<?php esc_html_e( 'There are no recently active members', 'buddyboss-theme' ); ?>
+			<?php esc_html_e( 'There are no recently active members', 'buddyboss' ); ?>
         </div>
 
 	<?php endif; ?>

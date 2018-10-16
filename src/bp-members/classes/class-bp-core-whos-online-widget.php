@@ -237,7 +237,7 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 	<?php else: ?>
 
         <div class="widget-error">
-			<?php esc_html_e( 'There are no users currently online', 'buddyboss-theme' ); ?>
+			<?php esc_html_e( 'There are no users currently online', 'buddyboss' ); ?>
         </div>
 
 	<?php endif; ?>
