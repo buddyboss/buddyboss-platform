@@ -670,6 +670,9 @@ class BP_Email_Tokens {
 	public function token__message( $bp_email, $formatted_tokens, $tokens ) {
 		$output = '';
 
+		if ( 'messages-unread' != $bp_email->get( 'type' ) )
+		    return $output;
+
 		$settings = bp_email_get_appearance_settings();
 		ob_start();
 		?>
