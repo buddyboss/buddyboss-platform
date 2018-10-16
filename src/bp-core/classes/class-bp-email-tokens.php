@@ -806,12 +806,9 @@ class BP_Email_Tokens {
 
 		ob_start();
 		?>
-
+		<div class="spacer" style="font-size: 10px; line-height: 10px; height: 10px;">&nbsp;</div>
         <table class="member-details" cellspacing="0" cellpadding="0" border="0" width="100%"
                style="background: #ffffff; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
-			<tr>
-				<td height="10px" style="font-size: 10px; line-height: 10px;">&nbsp;</td>
-			</tr>
             <tr>
                 <td align="center">
                     <table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%;">
@@ -895,10 +892,8 @@ class BP_Email_Tokens {
                     </table>
                 </td>
             </tr>
-			<tr>
-				<td height="15px" style="font-size: 15px; line-height: 15px;">&nbsp;</td>
-			</tr>
         </table>
+		<div class="spacer" style="font-size: 15px; line-height: 15px; height: 15px;">&nbsp;</div>
 		<?php
 		$output = str_replace( array( "\r", "\n" ), '', ob_get_clean() );
 
