@@ -496,28 +496,28 @@ class BP_Email_Tokens {
                            style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
                         <tbody>
                         <tr>
-                            <td height="25px" style="font-size: 25px; line-height: 25px;">&nbsp;</td>
+                            <td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
                         </tr>
                         <tr>
                             <td align="center">
-                                <table cellpadding="0" cellspacing="0" border="0" width="86%" style="width: 86%;">
+                                <table cellpadding="0" cellspacing="0" border="0" width="88%" style="width: 88%;">
                                     <tbody>
-                                    <tr>
-                                        <td>
-                                            <div style="font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;">
-												<?php echo apply_filters_ref_array( 'bp_get_activity_content_body', array(
-													$activity->content,
-													&$activity
-												) ); ?>
-                                            </div>
-                                        </td>
-                                    </tr>
+										<tr>
+											<td>
+												<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;">
+													<?php echo apply_filters_ref_array( 'bp_get_activity_content_body', array(
+														$activity->content,
+														&$activity
+													) ); ?>
+												</div>
+											</td>
+										</tr>
                                     </tbody>
                                 </table>
                             </td>
                         </tr>
                         <tr>
-                            <td height="25px" style="font-size: 25px; line-height: 25px;">&nbsp;</td>
+                            <td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
                         </tr>
                         </tbody>
                     </table>
@@ -535,7 +535,7 @@ class BP_Email_Tokens {
                 </td>
             </tr>
         </table>
-		<div class="spacer" style="font-size: 10px; line-height: 10px; height: 10px;">&nbsp;</div>
+		<div class="spacer" style="font-size: 20px; line-height: 20px; height: 20px;">&nbsp;</div>
 		<?php
 		$output = str_replace( array( "\r", "\n" ), '', ob_get_clean() );
 
