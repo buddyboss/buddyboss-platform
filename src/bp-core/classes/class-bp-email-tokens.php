@@ -894,7 +894,6 @@ class BP_Email_Tokens {
                 </td>
             </tr>
         </table>
-        <br/>
 		<?php
 		$output = str_replace( array( "\r", "\n" ), '', ob_get_clean() );
 
