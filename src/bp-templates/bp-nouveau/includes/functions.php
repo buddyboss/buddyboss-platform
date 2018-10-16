@@ -972,6 +972,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'info',
 			'message' => __( 'There are no pending membership requests.', 'buddyboss' ),
 		),
+		'group-requested-membership' => array(
+			'type'    => 'info',
+			'message' => __( 'You have already requested to join this group.', 'buddyboss' ),
+		),
 		'group-requests-loading' => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading the members who requested to join the group. Please wait.', 'buddyboss' ),

@@ -34,7 +34,7 @@ bp_nouveau_group_hook( 'before', 'request_membership_content' ); ?>
 
 <?php else : ?>
     <p>
-		<?php esc_html_e( 'You have already requested to join this group.', 'BuddyBoss' ); ?>
+		<?php bp_nouveau_user_feedback( 'group-requested-membership' ); ?>
     </p>
 <?php endif; ?>
 
