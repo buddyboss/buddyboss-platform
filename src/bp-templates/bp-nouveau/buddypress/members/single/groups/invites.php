@@ -44,7 +44,7 @@
 						</p>
 
 						<p class="desc">
-							<?php bp_group_description_excerpt(); ?>
+							<?php echo bp_groups_get_invite_messsage_for_user( bp_displayed_user_id(), bp_get_group_id() ); ?>
 						</p>
 
 						<?php bp_nouveau_group_hook( '', 'invites_item' ); ?>

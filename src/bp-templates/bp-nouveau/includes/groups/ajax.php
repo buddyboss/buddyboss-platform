@@ -375,6 +375,12 @@ function bp_nouveau_ajax_send_group_invites() {
 		wp_send_json_error( $response );
 	}
 
+	if ( ! empty( $_POST['message'] ) ) {
+		$bp->groups->invites_message = wp_kses( wp_unslash( $_POST['message'] ), array() );
+
+		add_filter( 'groups_notification_group_invites_message', 'bp_nouveau_groups_invites_custom_message', 10, 1 );
+	}
+
 	// For feedback
 	$invited = array();
 
@@ -385,12 +391,6 @@ function bp_nouveau_ajax_send_group_invites() {
 				'group_id' => $group_id,
 			)
 		);
-	}
-
-	if ( ! empty( $_POST['message'] ) ) {
-		$bp->groups->invites_message = wp_kses( wp_unslash( $_POST['message'] ), array() );
-
-		add_filter( 'groups_notification_group_invites_message', 'bp_nouveau_groups_invites_custom_message', 10, 1 );
 	}
 
 	// Send the invites.

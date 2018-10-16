@@ -1463,6 +1463,7 @@ function groups_get_invite_count_for_user( $user_id = 0 ) {
  * @return bool True on success, false on failure.
  */
 function groups_invite_user( $args = '' ) {
+	$bp = buddypress();
 
 	$args = bp_parse_args( $args, array(
 		'user_id'       => false,
@@ -1492,6 +1493,11 @@ function groups_invite_user( $args = '' ) {
 
 		if ( !$invite->save() )
 			return false;
+
+		// update user meta with invite message for a group
+		if ( ! empty( $bp->groups->invites_message ) ) {
+			update_user_meta( $user_id, 'bp_group_invite_message_' . $group_id, $bp->groups->invites_message );
+		}
 
 		/**
 		 * Fires after the creation of a new group invite.
@@ -2752,3 +2758,46 @@ function bp_groups_get_invited_by( $user_id = false, $group_id = false ) {
 
 	return apply_filters( 'bp_groups_get_invited_by', $inviter, $group->id );
 }
+
+/**
+ * Get a user's invite message.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param int $user_id The user ID.
+ * @param int $group_id The group ID.
+ */
+function bp_groups_get_invite_messsage_for_user( $user_id, $group_id ) {
+	return get_user_meta( $user_id, 'bp_group_invite_message_' . $group_id, true );
+}
+
+/**
+ * Clear a user's invite message.
+ *
+ * Message is cleared when an invite is accepted, rejected or deleted.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param int $user_id The user ID.
+ * @param int $group_id The group ID.
+ */
+function bp_groups_clear_invite_message_for_user( $user_id, $group_id ) {
+	delete_user_meta( $user_id, 'bp_group_invite_message_' . $group_id );
+}
+add_action( 'groups_accept_invite', 'bp_groups_clear_invite_message_for_user', 10, 2 );
+add_action( 'groups_reject_invite', 'bp_groups_clear_invite_message_for_user', 10, 2 );
+add_action( 'groups_delete_invite', 'bp_groups_clear_invite_message_for_user', 10, 2 );
+
+/**
+ * Clear a user's invite message on uninvite.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param int $group_id The group ID.
+ * @param int $user_id The user ID.
+ */
+function bp_groups_clear_invite_message_on_uninvite( $group_id, $user_id ) {
+	bp_groups_clear_invite_message_for_user( $user_id, $group_id );
+}
+add_action( 'groups_uninvite_user', 'bp_groups_clear_invite_message_on_uninvite', 10, 2 );
+add_action( 'groups_remove_member', 'bp_groups_clear_invite_message_on_uninvite', 10, 2 );
