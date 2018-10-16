@@ -683,7 +683,7 @@ class BP_Email_Tokens {
                         <table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%">
                             <tbody>
                             <tr>
-                                <td valign="middle" width="10%" style="vertical-align: middle;">
+                                <td valign="middle" width="12%" style="vertical-align: middle;">
                                     <a href="<?php echo esc_attr( bp_core_get_user_domain( $this->_message_sender_id ) ); ?>"
                                        target="_blank" rel="nofollow">
 										<?php $avatar_url = bp_core_fetch_avatar( array(
@@ -697,8 +697,8 @@ class BP_Email_Tokens {
                                              border="0">
                                     </a>
                                 </td>
-                                <td width="90%" style="vertical-align: middle;">
-                                    <div style="border-left: 10px solid #fff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
+                                <td width="88%" style="vertical-align: middle;">
+                                    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
                                         <a href="<?php echo esc_attr( bp_core_get_user_domain( $this->_message_sender_id ) ); ?>"
                                            target="_blank" rel="nofollow"
                                            style="text-decoration: none; color: #122B46;">
