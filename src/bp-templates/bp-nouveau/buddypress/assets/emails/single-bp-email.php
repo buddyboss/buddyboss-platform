@@ -136,7 +136,7 @@ $settings = bp_email_get_appearance_settings();
 		}
 
 		/* Remove links underline */
-		a {
+		a, .ii a[href] {
 			color: <?php echo esc_attr( $settings['highlight_color'] ); ?>;
 			text-decoration: none !important;
 		}

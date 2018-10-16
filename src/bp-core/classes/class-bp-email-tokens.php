@@ -149,7 +149,7 @@ class BP_Email_Tokens {
 		ob_start();
 		?>
         <table cellspacing="0" cellpadding="0" border="0" width="100%"
-               style="background: #ffffff; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+               style="background: <?php echo esc_attr( $settings['body_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
             <tbody>
             <tr>
                 <td height="16px" style="font-size: 16px; line-height: 16px;">&nbsp;</td>
@@ -165,7 +165,7 @@ class BP_Email_Tokens {
                                     <tr>
                                         <td width="20%">
                                             <a href="<?php echo bp_get_group_permalink( $group ); ?>"
-                                               style="background: #FFFFFF; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display: block; border-radius: 3px; width: 100px;">
+                                               style="border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display: block; border-radius: 3px; width: 100px;">
                                                 <img alt="" src="<?php echo bp_core_fetch_avatar( array(
 													'item_id'    => $group->id,
 													'avatar_dir' => 'group-avatars',
@@ -174,7 +174,7 @@ class BP_Email_Tokens {
 													'height'     => 200,
 													'html'       => false
 												) ); ?>" width="100" height="100"
-                                                     style="margin:0; padding:0; box-sizing: border-box; border-radius: 3px; border: 3px solid #FFFFFF; display:block;"
+                                                     style="margin:0; padding:0; box-sizing: border-box; border-radius: 3px; border: 3px solid <?php echo esc_attr( $settings['body_bg'] ); ?>; display:block;"
                                                      border="0"/>
                                             </a>
                                         </td>
@@ -315,7 +315,7 @@ class BP_Email_Tokens {
                 <tr>
                     <td>
                         <a href="<?php echo bp_get_group_permalink( $group ); ?>"
-                           style="background: #FFFFFF; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display: block; border-radius: 3px; width: 100px;">
+                           style="border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display: block; border-radius: 3px; width: 100px;">
                             <img alt="" src="<?php echo bp_core_fetch_avatar( array(
 								'item_id'    => $group->id,
 								'avatar_dir' => 'group-avatars',
@@ -324,7 +324,7 @@ class BP_Email_Tokens {
 								'height'     => 200,
 								'html'       => false
 							) ); ?>" width="100" height="100"
-                                 style="margin:0; padding:0; box-sizing: border-box; border-radius: 3px; border:3px solid #FFFFFF; display:block;"
+                                 style="margin:0; padding:0; box-sizing: border-box; border-radius: 3px; border:3px solid <?php echo esc_attr( $settings['body_bg'] ); ?>; display:block;"
                                  border="0"/>
                         </a>
                     </td>
@@ -807,7 +807,7 @@ class BP_Email_Tokens {
 		ob_start();
 		?>
         <table class="member-details" cellspacing="0" cellpadding="0" border="0" width="100%"
-               style="background: #ffffff; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+               style="background: <?php echo esc_attr( $settings['body_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
             <tr>
                 <td align="center">
                     <table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%;">
