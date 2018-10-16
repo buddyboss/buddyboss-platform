@@ -146,12 +146,6 @@ $settings = bp_email_get_appearance_settings();
 			width: 100%;
 		}
 
-		h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, ul, ol, dd, p, address, pre, hr {
-			margin: 0 0 1.5rem;
-			padding: 0;
-			line-height: 1.5em;
-		}
-
 		.bb-content-body p {
 			margin-bottom: 0;
 		}
