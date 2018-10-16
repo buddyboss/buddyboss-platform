@@ -504,7 +504,7 @@ class BP_Email_Tokens {
                                     <tbody>
 										<tr>
 											<td>
-												<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;">
+												<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;">
 													<?php echo apply_filters_ref_array( 'bp_get_activity_content_body', array(
 														$activity->content,
 														&$activity
@@ -575,19 +575,16 @@ class BP_Email_Tokens {
         <table cellspacing="0" cellpadding="0" border="0" width="100%">
             <tr>
                 <td>
-                    <div style="margin: 0 0 20px; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ) ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.375 ) . 'px' ) ?>;"><?php
-						$content   = apply_filters_ref_array( 'bp_get_activity_content_body', array(
-							$activity_original->content,
-							&$activity_original
-						) );
+                    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0 0 25px; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ) ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.375 ) . 'px' ) ?>;"><?php
+						$content   = apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity_original->content, &$activity_original ) );
 						$limit     = 200;
 						$t_content = substr( $content, 0, $limit );
 						if ( strlen( $content ) > $limit ) {
 							$t_content .= " ...";
 						}
 						echo $t_content;
-						//echo force_balance_tags( $t_content );
-						?></div>
+						?>
+					</div>
                 </td>
             </tr>
 
@@ -600,29 +597,27 @@ class BP_Email_Tokens {
                     <table cellspacing="0" cellpadding="0" border="0" width="100%"
                            style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
                         <tbody>
-                        <tr>
-                            <td height="25px" style="font-size: 25px; line-height: 25px;">&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td align="center">
-                                <table cellpadding="0" cellspacing="0" border="0" width="86%" style="width: 86%;">
-                                    <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="bb-content-body"
-                                                 style="font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;">
-												<?php echo apply_filters_ref_array( 'bp_get_activity_content_body', array(
-													$activity_comment->content,
-													&$activity_comment
-												) ); ?>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        <!--<tr><td height="25px" style="font-size: 25px; line-height: 25px;">&nbsp;</td></tr>-->
+							<tr>
+								<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
+							</tr>
+							<tr>
+								<td align="center">
+									<table cellpadding="0" cellspacing="0" border="0" width="88%" style="width: 88%;">
+										<tbody>
+											<tr>
+												<td>
+													<div class="bb-content-body" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;">
+														<?php echo apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity_comment->content, &$activity_comment ) ); ?>
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
+							</tr>
                         </tbody>
                     </table>
                 </td>
@@ -634,7 +629,7 @@ class BP_Email_Tokens {
 
             <tr>
                 <td><a href="<?php echo esc_attr( $tokens['thread.url'] ); ?>" target="_blank" rel="nofollow"
-                       style="font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 84px; text-align: center; height: 32px; line-height: 32px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
+                       style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 84px; text-align: center; height: 32px; line-height: 32px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
                 </td>
             </tr>
         </table>
@@ -682,31 +677,31 @@ class BP_Email_Tokens {
                     <td>
                         <table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%">
                             <tbody>
-                            <tr>
-                                <td valign="middle" width="12%" style="vertical-align: middle;">
-                                    <a href="<?php echo esc_attr( bp_core_get_user_domain( $this->_message_sender_id ) ); ?>"
-                                       target="_blank" rel="nofollow">
-										<?php $avatar_url = bp_core_fetch_avatar( array(
-											'item_id' => $this->_message_sender_id,
-											'width'   => 100,
-											'height'  => 100,
-											'html'    => false,
-										) ); ?>
-                                        <img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47"
-                                             style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"
-                                             border="0">
-                                    </a>
-                                </td>
-                                <td width="88%" style="vertical-align: middle;">
-                                    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
-                                        <a href="<?php echo esc_attr( bp_core_get_user_domain( $this->_message_sender_id ) ); ?>"
-                                           target="_blank" rel="nofollow"
-                                           style="text-decoration: none; color: #122B46;">
-											<?php echo $tokens['sender.name']; ?>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
+								<tr>
+									<td valign="middle" width="12%" style="vertical-align: middle;">
+										<a href="<?php echo esc_attr( bp_core_get_user_domain( $this->_message_sender_id ) ); ?>"
+										   target="_blank" rel="nofollow">
+											<?php $avatar_url = bp_core_fetch_avatar( array(
+												'item_id' => $this->_message_sender_id,
+												'width'   => 100,
+												'height'  => 100,
+												'html'    => false,
+											) ); ?>
+											<img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47"
+												 style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"
+												 border="0">
+										</a>
+									</td>
+									<td width="88%" style="vertical-align: middle;">
+										<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
+											<a href="<?php echo esc_attr( bp_core_get_user_domain( $this->_message_sender_id ) ); ?>"
+											   target="_blank" rel="nofollow"
+											   style="text-decoration: none; color: #122B46;">
+												<?php echo $tokens['sender.name']; ?>
+											</a>
+										</div>
+									</td>
+								</tr>
                             </tbody>
                         </table>
                     </td>
@@ -722,27 +717,27 @@ class BP_Email_Tokens {
                     <table cellspacing="0" cellpadding="0" border="0" width="100%"
                            style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
                         <tbody>
-                        <tr>
-                            <td height="25px" style="font-size: 25px; line-height: 25px;">&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td align="center">
-                                <table cellpadding="0" cellspacing="0" border="0" width="86%" style="width: 86%;">
-                                    <tbody>
-                                    <tr>
-                                        <td>
-                                            <div style="font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;"><?php
-												echo nl2br( $tokens['usermessage'] );
-												?></div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td height="25px" style="font-size: 25px; line-height: 25px;">&nbsp;</td>
-                        </tr>
+							<tr>
+								<td height="25px" style="font-size: 25px; line-height: 25px;">&nbsp;</td>
+							</tr>
+							<tr>
+								<td align="center">
+									<table cellpadding="0" cellspacing="0" border="0" width="86%" style="width: 86%;">
+										<tbody>
+											<tr>
+												<td>
+													<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;">
+														<?php echo nl2br( $tokens['usermessage'] ); ?>
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td height="25px" style="font-size: 25px; line-height: 25px;">&nbsp;</td>
+							</tr>
                         </tbody>
                     </table>
                 </td>
