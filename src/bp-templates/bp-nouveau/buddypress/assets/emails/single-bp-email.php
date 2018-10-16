@@ -89,8 +89,9 @@ $settings = bp_email_get_appearance_settings();
 			border-spacing: 0 !important;
 			border-collapse: collapse !important;
 			table-layout: fixed !important;
-			Margin: 0 auto !important;
+			margin: 0 auto !important;
 		}
+
 		table table table {
 			table-layout: auto;
 		}
@@ -135,8 +136,56 @@ $settings = bp_email_get_appearance_settings();
 		}
 
 		/* Remove links underline */
-		a {
+		a, .ii a[href] {
+			color: <?php echo esc_attr( $settings['highlight_color'] ); ?> !important;
 			text-decoration: none !important;
+		}
+
+		/* What it does: Forces Outlook.com to display emails full width. */
+		.ExternalClass {
+			width: 100%;
+		}
+
+		.bb-content-body p {
+			margin-bottom: 0;
+		}
+
+		/* MOBILE STYLES */
+		@media screen and (max-width: 525px) {
+			/* ALLOWS FOR FLUID TABLES */
+			.wrapper {
+				width: 100% !important;
+				max-width: 100% !important;
+			}
+
+			/* ADJUSTS LAYOUT OF LOGO IMAGE */
+			.logo img {
+				margin: 0 auto !important;
+			}
+
+			/* USE THESE CLASSES TO HIDE CONTENT ON MOBILE */
+			.mobile-hide {
+				display: none !important;
+			}
+
+			.img-max {
+				max-width: 100% !important;
+				width: 100% !important;
+				height: auto !important;
+			}
+
+			/* FULL-WIDTH TABLES */
+			.responsive-table {
+				width: 100% !important;
+			}
+
+			.mobile-text-center {
+				text-align: center !important;
+			}
+
+			.mobile-text-left {
+				text-align: left !important;
+			}
 		}
 	</style>
 
@@ -161,7 +210,7 @@ $settings = bp_email_get_appearance_settings();
 			<!-- Email Header : BEGIN -->
 			<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 600px;">
 				<tr>
-					<td style="text-align: left; padding: 50px 0 35px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: bold; color: <?php echo esc_attr( $settings['site_title_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['site_title_text_size'] . 'px' ); ?>" class="site_title_text_color site_title_text_size">
+					<td style="text-align: left; padding: 50px 0 30px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: bold; color: <?php echo esc_attr( $settings['site_title_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['site_title_text_size'] . 'px' ); ?>" class="site_title_text_color site_title_text_size">
 						<?php
 						/**
 						 * Fires before the display of the email template header.
@@ -192,7 +241,7 @@ $settings = bp_email_get_appearance_settings();
 						do_action( 'bp_after_email_header' );
 						?>
 					</td>
-					<td style="text-align: right; padding: 50px 0 35px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: normal; color: <?php echo esc_attr( $settings['recipient_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['recipient_text_size'] . 'px' ); ?>" class="recipient_text_color recipient_text_size">
+					<td style="text-align: right; padding: 50px 0 30px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: normal; color: <?php echo esc_attr( $settings['recipient_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['recipient_text_size'] . 'px' ); ?>" class="recipient_text_color recipient_text_size">
 						<?php
 						/**
 						 * Fires before the display of the email recipient.
