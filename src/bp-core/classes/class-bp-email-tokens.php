@@ -815,7 +815,7 @@ class BP_Email_Tokens {
                                     <tr>
                                         <td width="20%">
                                             <a href="<?php echo bp_core_get_user_domain( $member_id ); ?>"
-                                               style="background: #FFFFFF; display: block; border-radius: 3px; width: 140px;">
+                                               style="display: block; border-radius: 3px; width: 140px;">
                                                 <img alt="" src="<?php echo bp_core_fetch_avatar( array(
 													'item_id' => $member_id,
 													'width'   => 280,
@@ -838,11 +838,11 @@ class BP_Email_Tokens {
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.25 ) . 'px' ) ?>; color: #122B46; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.75 ) . 'px' ) ?>;"><?php echo bp_core_get_user_displayname( $member_id ); ?></div>
-                                                        <div class="spacer"
-                                                             style="font-size: 6px; line-height: 6px; height: 6px;">
-                                                            &nbsp;
-                                                        </div>
+                                                        <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.25 ) . 'px' ) ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.75 ) . 'px' ) ?>;"><?php echo bp_core_get_user_displayname( $member_id ); ?></div>
+                                                        <div class="spacer" style="font-size: 6px; line-height: 6px; height: 6px;">&nbsp;</div>
+														<p style="opacity: 0.7; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 0.8125 ) . 'px' ) ?>; color : <?php echo esc_attr( $settings[ 'body_text_color' ] ); ?>; margin: 0;">
+															@<?php echo bp_activity_get_user_mentionname( $member_id ); ?>
+														</p>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -850,6 +850,36 @@ class BP_Email_Tokens {
                                                         &nbsp;
                                                     </td>
                                                 </tr>
+												<tr>
+													<td>
+														<table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%;">
+															<tr>
+																<td>
+																	<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="left" class="responsive-table">
+																		<tr>
+																			<td height="34px" style="vertical-align: middle;">
+																				<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 0.8125 ) . 'px' ) ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>;">
+																					<span style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; opacity: 0.85;"><?php echo friends_get_total_friend_count( $member_id ); ?></span> <?php _e( 'connections', 'buddypress' ); ?>
+																				</div>
+																			</td>
+																		</tr>
+																	</table>
+																	<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="responsive-table">
+																		<tr>
+																			<td height="34px" align="right" style="vertical-align: middle;" class="mobile-text-left">
+																				<?php if ( isset( $tokens[ 'friend-requests.url' ] ) ): ?>
+																					<a href="<?php echo esc_attr( $tokens[ 'friend-requests.url' ] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2.125 ) . 'px' ) ?>;line-height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2 ) . 'px' ) ?>;"><?php _e( 'Accept', 'buddypress' ); ?></a>
+																				<?php else : ?>
+																					<a href="<?php echo bp_core_get_user_domain( $member_id ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2.125 ) . 'px' ) ?>;line-height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2 ) . 'px' ) ?>;"><?php _e( 'View Profile', 'buddypress' ); ?></a>
+																				<?php endif; ?>
+																			</td>
+																		</tr>
+																	</table>
+																</td>
+															</tr>
+														</table>
+													</td>
+												</tr>
                                             </table>
                                         </td>
                                         <td width="4%">&nbsp;</td>

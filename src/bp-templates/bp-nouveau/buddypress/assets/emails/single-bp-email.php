@@ -89,8 +89,9 @@ $settings = bp_email_get_appearance_settings();
 			border-spacing: 0 !important;
 			border-collapse: collapse !important;
 			table-layout: fixed !important;
-			Margin: 0 auto !important;
+			margin: 0 auto !important;
 		}
+
 		table table table {
 			table-layout: auto;
 		}
@@ -136,7 +137,61 @@ $settings = bp_email_get_appearance_settings();
 
 		/* Remove links underline */
 		a {
+			color: <?php echo esc_attr( $settings['highlight_color'] ); ?>;
 			text-decoration: none !important;
+		}
+
+		/* What it does: Forces Outlook.com to display emails full width. */
+		.ExternalClass {
+			width: 100%;
+		}
+
+		h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, ul, ol, dd, p, address, pre, hr {
+			margin: 0 0 1.5rem;
+			padding: 0;
+			line-height: 1.5em;
+		}
+
+		.bb-content-body p {
+			margin-bottom: 0;
+		}
+
+		/* MOBILE STYLES */
+		@media screen and (max-width: 525px) {
+			/* ALLOWS FOR FLUID TABLES */
+			.wrapper {
+				width: 100% !important;
+				max-width: 100% !important;
+			}
+
+			/* ADJUSTS LAYOUT OF LOGO IMAGE */
+			.logo img {
+				margin: 0 auto !important;
+			}
+
+			/* USE THESE CLASSES TO HIDE CONTENT ON MOBILE */
+			.mobile-hide {
+				display: none !important;
+			}
+
+			.img-max {
+				max-width: 100% !important;
+				width: 100% !important;
+				height: auto !important;
+			}
+
+			/* FULL-WIDTH TABLES */
+			.responsive-table {
+				width: 100% !important;
+			}
+
+			.mobile-text-center {
+				text-align: center !important;
+			}
+
+			.mobile-text-left {
+				text-align: left !important;
+			}
 		}
 	</style>
 
