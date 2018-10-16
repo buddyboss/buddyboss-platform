@@ -243,12 +243,11 @@ function bp_groups_user_can_filter( $retval, $user_id, $capability, $site_id, $a
 
 			/*
 			* The group must accept membership requests, and the user should not
-			* currently be a member, have an active request, or be banned.
+			* currently be a member or be banned.
 			*/
 			$group = groups_get_group( $group_id );
 			if ( 'private' === bp_get_group_status( $group )
 				&& ! groups_is_user_member( $user_id, $group->id )
-				&& ! groups_check_for_membership_request( $user_id, $group->id )
 				&& ! groups_is_user_banned( $user_id, $group->id )
 			) {
 				$retval = true;

@@ -31,6 +31,11 @@ bp_nouveau_group_hook( 'before', 'request_membership_content' ); ?>
 
 		<?php wp_nonce_field( 'groups_request_membership' ); ?>
 	</form><!-- #request-membership-form -->
+
+<?php else : ?>
+    <p>
+		<?php esc_html_e( 'You have already requested to join this group.', 'BuddyBoss' ); ?>
+    </p>
 <?php endif; ?>
 
 <?php
