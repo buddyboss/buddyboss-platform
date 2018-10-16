@@ -52,12 +52,10 @@
 
 </div><!-- #cover-image-container -->
 
-<?php if ( ! bp_nouveau_groups_front_page_description() ) : ?>
-	<?php if ( ! empty( bp_nouveau_group_meta()->description ) ) : ?>
-		<div class="desc-wrap">
-			<div class="group-description">
-			<?php echo bp_nouveau_group_meta()->description; ?>
+<?php if ( ! bp_nouveau_groups_front_page_description() && bp_nouveau_group_has_meta( 'description' ) ) : ?>
+	<div class="desc-wrap">
+		<div class="group-description">
+			<?php bp_group_description(); ?>
 		</div><!-- //.group_description -->
 	</div>
-	<?php endif; ?>
 <?php endif; ?>

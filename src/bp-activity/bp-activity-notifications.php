@@ -70,8 +70,8 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 				$text   = sprintf( __( 'You have %1$d new comment replies', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
-				$link = add_query_arg( 'nid', (int) $id, bp_activity_get_permalink( $activity_id ) );
-				$text = sprintf( __( '%1$s replied to one your activity comments', 'buddyboss' ), $user_fullname );
+				$link = add_query_arg( 'crid', (int) $id, bp_activity_get_permalink( $activity_id ) );
+				$text = sprintf( __( '%1$s replied to one of your activity comments', 'buddyboss' ), $user_fullname );
 			}
 		break;
 	}
@@ -226,7 +226,7 @@ function bp_activity_remove_screen_notifications( $user_id = 0 ) {
 add_action( 'bp_activity_clear_new_mentions', 'bp_activity_remove_screen_notifications', 10, 1 );
 
 /**
- * Mark at-mention notification as read when user visits the activity with the mention.
+ * Mark notifications as read when a user visits an activity permalink.
  *
  * @since BuddyPress 2.0.0
  * @since 3.2.0 Marks replies to parent update and replies to an activity comment as read.

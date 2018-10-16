@@ -1054,14 +1054,20 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
 	}
 
 /**
- * Does the group has meta.
+ * Does the group has metas or a specific meta value.
  *
  * @since BuddyPress 3.0.0
  *
  * @return bool True if the group has meta. False otherwise.
  */
-function bp_nouveau_group_has_meta() {
-	return (bool) bp_nouveau_get_group_meta();
+function bp_nouveau_group_has_meta( $meta_key = '' ) {
+    $group_meta = bp_nouveau_get_group_meta();
+
+    if ( ! $meta_key ) {
+        return (bool) $group_meta;
+    }
+
+    return ! empty( $group_meta[ $meta_key ] );
 }
 
 /**
@@ -1307,3 +1313,23 @@ function bp_nouveau_groups_get_customizer_widgets_link() {
 		)
 	);
 }
+
+ /**
+  * Output "checked" attribute to determine if the group type should be checked.
+  *
+  * @since 3.2.0
+  *
+  * @param object $type Group type object. See bp_groups_get_group_type_object().
+  */
+ function bp_nouveau_group_type_checked( $type = null ) {
+     if ( ! is_object( $type ) ) {
+         return;
+     }
+
+     // Group creation screen requires a different check.
+     if ( bp_is_group_create() ) {
+         checked( true, ! empty( $type->create_screen_checked ) );
+     } elseif ( bp_is_group() ) {
+         checked( bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) );
+     }
+ }

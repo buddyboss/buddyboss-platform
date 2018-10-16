@@ -573,6 +573,10 @@ function bp_nouveau_loop_classes() {
 					) );
 				}
 
+				if ( ! isset( $bp_nouveau->{$component} ) ) {
+				    $bp_nouveau->{$component} = new stdClass;
+				}
+
 				// Set the global for a later use.
 				$bp_nouveau->{$component}->loop_layout = $layout_prefs;
 			}
@@ -905,8 +909,14 @@ function bp_nouveau_nav_classes() {
 		$nav_item   = $bp_nouveau->current_nav_item;
 		$classes    = array();
 
-		if ( 'directory' === $bp_nouveau->displayed_nav && ! empty( $nav_item->li_class ) ) {
+		if ( 'directory' === $bp_nouveau->displayed_nav ) {
+			if ( ! empty( $nav_item->li_class ) ) {
 			$classes = (array) $nav_item->li_class;
+			}
+
+			if ( bp_get_current_member_type() || ( bp_is_groups_directory() && bp_get_current_group_directory_type() ) ) {
+				$classes[] = 'no-ajax';
+			}
 		} elseif ( 'groups' === $bp_nouveau->displayed_nav || 'personal' === $bp_nouveau->displayed_nav ) {
 			$classes  = array( 'bp-' . $bp_nouveau->displayed_nav . '-tab' );
 			$selected = bp_current_action();
@@ -1858,14 +1868,29 @@ function bp_nouveau_search_default_text( $text = '', $is_attr = true ) {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_search_form() {
-	bp_get_template_part( 'common/search/search-form' );
+	$search_form_html = bp_buffer_template_part( 'common/search/search-form', null, false );
 
 	$objects = bp_nouveau_get_search_objects();
 	if ( empty( $objects['primary'] ) || empty( $objects['secondary'] ) ) {
+		echo $search_form_html;
 		return;
 	}
 
 	if ( 'dir' === $objects['primary'] ) {
+		/**
+	     * Filter here to edit the HTML output of the directory search form.
+	     *
+	     * NB: This will take in charge the following BP Core Components filters
+	     *     - bp_directory_members_search_form
+	     *     - bp_directory_blogs_search_form
+	     *     - bp_directory_groups_search_form
+	     *
+	     * @since 1.9.0
+	     *
+	     * @param string $search_form_html The HTML output for the directory search form.
+	     */
+	    echo apply_filters( "bp_directory_{$objects['secondary']}_search_form", $search_form_html );
+
 		if ( 'activity' === $objects['secondary'] ) {
 			/**
 			 * Fires before the display of the activity syndication options.
@@ -1898,13 +1923,46 @@ function bp_nouveau_search_form() {
 			 */
 			do_action( 'bp_members_directory_member_sub_types' );
 		}
-	} elseif ( 'group' === $objects['primary'] && 'activity' === $objects['secondary'] ) {
-		/**
-		 * Fires inside the syndication options list, after the RSS option.
-		 *
-		 * @since BuddyPress 1.2.0
-		 */
-		do_action( 'bp_group_activity_syndication_options' );
+	} elseif ( 'group' === $objects['primary'] ) {
+		if ( 'members' !== $objects['secondary'] ) {
+			/**
+			 * Filter here to edit the HTML output of the displayed group search form.
+			 *
+			 * @since 3.2.0
+			 *
+			 * @param string $search_form_html The HTML output for the directory search form.
+			 */
+			echo apply_filters( "bp_group_{$objects['secondary']}_search_form", $search_form_html );
+
+		} else {
+			/**
+			 * Filters the Members component search form.
+			 *
+			 * @since 1.9.0
+			 *
+			 * @param string $search_form_html HTML markup for the member search form.
+			 */
+			echo apply_filters( 'bp_directory_members_search_form', $search_form_html );
+		}
+
+		if ( 'members' === $objects['secondary'] ) {
+			/**
+			 * Fires at the end of the group members search unordered list.
+			 *
+			 * Part of bp_groups_members_template_part().
+			 *
+			 * @since 1.5.0
+			 */
+			do_action( 'bp_members_directory_member_sub_types' );
+
+		} elseif ( 'activity' === $objects['secondary'] ) {
+			/**
+			 * Fires inside the syndication options list, after the RSS option.
+			 *
+			 * @since 1.2.0
+			 */
+			do_action( 'bp_group_activity_syndication_options' );
+		}
 	}
 }
 

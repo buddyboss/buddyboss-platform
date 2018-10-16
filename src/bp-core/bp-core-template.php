@@ -1089,7 +1089,7 @@ function bp_total_member_count() {
 }
 	/**
 	 * Return the total member count in your BP instance.
-     * 
+     *
      * Since BuddyBoss 3.1.1, members directory lists all members, even if they have never been active.
      * So, this function also uses bp_core_get_total_member_count, again.
 	 *
@@ -3236,7 +3236,7 @@ function bp_the_body_class() {
 				$bp_classes[] = 'my-activity';
 			}
 		} else {
-			if ( bp_get_current_member_type() ) {
+			if ( bp_get_current_member_type() || ( bp_is_groups_directory() && bp_get_current_group_directory_type() ) ) {
 				$bp_classes[] = 'type';
 			}
 		}

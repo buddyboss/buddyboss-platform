@@ -410,7 +410,7 @@ class BP_Admin {
 			// Profile sync setting.
 			add_settings_field( 'bp-disable-profile-sync',   __( 'Profile Syncing',  'buddyboss' ), 'bp_admin_setting_callback_profile_sync', 'buddypress', 'bp_xprofile' );
 			register_setting  ( 'buddypress', 'bp-disable-profile-sync', 'intval' );
-            
+
             // Enable/Disable member dashboard.
 			add_settings_field( 'bp-enable-member-dashboard',   __( 'Member Dashboard',  'buddyboss' ), 'bp_admin_setting_callback_member_dashboard', 'buddypress', 'bp_xprofile' );
 			register_setting  ( 'buddypress', 'bp-enable-member-dashboard', 'intval' );
@@ -597,7 +597,23 @@ class BP_Admin {
 							23,
 							'buddypress'
 						),
-						self::display_version(),
+						'3.2.0',
+						number_format_i18n( 25 )
+					);
+					?>
+				</p>
+
+				<p>
+					<?php
+					printf(
+						/* translators: 1: BuddyPress version number, 2: plural number of bugs. */
+						_n(
+							'<strong>Version %1$s</strong> addressed %2$s bug.',
+							'<strong>Version %1$s</strong> addressed %2$s bugs.',
+							23,
+							'buddypress'
+						),
+						'3.1.0',
 						number_format_i18n( 23 )
 					);
 					?>
