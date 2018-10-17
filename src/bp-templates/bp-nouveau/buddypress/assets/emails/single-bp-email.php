@@ -146,10 +146,6 @@ $settings = bp_email_get_appearance_settings();
 			width: 100%;
 		}
 
-		.bb-content-body p {
-			margin-bottom: 0;
-		}
-
 		/* MOBILE STYLES */
 		@media screen and (max-width: 525px) {
 			/* ALLOWS FOR FLUID TABLES */
