@@ -1146,70 +1146,9 @@ add_action( 'friends_friendship_deleted', 'bp_friends_auto_unfollow_users', 10, 
 function bp_friends_exclude_unfollow_feed( $args ) {
 
 	if ( bp_loggedin_user_id() && bp_is_activity_directory() ) {
-		$friends = friends_get_friend_user_ids( bp_loggedin_user_id() );
-
-		if ( ! empty( $friends ) ) {
-			$unfollowing = array();
-
-			foreach ( $friends as $i => $friend ) {
-				if ( bp_friends_is_unfollowing( array(
-					'leader_id'   => $friend,
-					'follower_id' => bp_loggedin_user_id()
-				) ) ) {
-					array_push( $unfollowing, $friend );
-					unset($friends[$i]);
-				}
-			}
-
-			// add current user id to friends if on news feed
-			$friends[] = bp_loggedin_user_id();
-
-			$filter_query = array();
-
-			// Are mentions disabled?
-			if ( bp_activity_do_mentions() ) {
-				$filter_query['relation'] = 'OR';
-				$filter_query[] = array(
-					array(
-						'column'  => 'content',
-						'compare' => 'LIKE',
-
-						// Start search at @ symbol and stop search at closing tag delimiter.
-						'value'   => '@' . bp_activity_get_user_mentionname( bp_loggedin_user_id() ) . '<'
-					),
-				);
-			}
-
-			$filter_query_follow_friends = array(
-				array(
-					'column'  => 'user_id',
-					'value'   => $friends,
-					'compare' => 'IN',
-				)
-			);
-
-			if ( ! empty( $unfollowing ) ) {
-
-				$filter_query_follow_friends[] = array(
-					'column'  => 'user_id',
-					'value'   => $unfollowing,
-					'compare' => 'NOT IN',
-				);
-			}
-
-			$filter_query[] = $filter_query_follow_friends;
-
-			if ( ! empty( $args['filter_query'] ) ) {
-				array_push( $args['filter_query'], $filter_query );
-			} else {
-				$args['filter_query'] = array(
-					$filter_query
-				);
-			}
-		}
+		$args['scope'] = 'friends,mentions';
 	}
 
 	return $args;
 }
-
 add_filter( 'bp_after_has_activities_parse_args', 'bp_friends_exclude_unfollow_feed' );

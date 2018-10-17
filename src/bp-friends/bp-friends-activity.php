@@ -258,6 +258,19 @@ function bp_friends_filter_activity_scope( $retval = array(), $filter = array() 
 
 	// Determine friends of user.
 	$friends = friends_get_friend_user_ids( $user_id );
+
+	if ( ! empty( $friends ) ) {
+		foreach ( $friends as $i => $friend ) {
+			// check if user is following the friend or not
+			if ( bp_friends_is_unfollowing( array(
+				'leader_id'   => $friend,
+				'follower_id' => $user_id
+			) ) ) {
+				unset( $friends[ $i ] );
+			}
+		}
+	}
+
 	if ( empty( $friends ) ) {
 		$friends = array( 0 );
 	}
