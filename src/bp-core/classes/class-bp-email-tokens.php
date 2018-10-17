@@ -227,11 +227,11 @@ class BP_Email_Tokens {
 																					<?php if ( isset( $tokens['invites.url'] ) ): ?>
 																						<a href="<?php echo $tokens['invites.url']; ?>"
 																						   target="_blank" rel="nofollow"
-																						   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;border: 1px solid <?php echo $settings['highlight_color']; ?>;border-radius: 100px;text-align: center; height: 32px;line-height: 32px;background: <?php echo $settings['highlight_color']; ?>;color: #fff !important;width: 125px;"><?php _e( 'Accept Invitation', 'buddyboss' ); ?></a>
+																						   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;border: 1px solid <?php echo $settings['highlight_color']; ?>;border-radius: 100px;text-align: center; height: 32px;line-height: 32px;background: <?php echo $settings['highlight_color']; ?>;color: #fff !important;width: 150px;"><?php _e( 'Accept Invitation', 'buddyboss' ); ?></a>
 																					<?php else: ?>
 																						<a href="<?php echo bp_get_group_permalink( $group ); ?>"
 																						   target="_blank" rel="nofollow"
-																						   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;border: 1px solid <?php echo $settings['highlight_color']; ?>;border-radius: 100px;text-align: center; height: 32px;line-height: 32px;background: <?php echo $settings['highlight_color']; ?>;color: #fff !important;width: 125px;"><?php _e( 'Visit Group', 'buddyboss' ); ?></a>
+																						   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;border: 1px solid <?php echo $settings['highlight_color']; ?>;border-radius: 100px;text-align: center; height: 32px;line-height: 32px;background: <?php echo $settings['highlight_color']; ?>;color: #fff !important;width: 130px;"><?php _e( 'Visit Group', 'buddyboss' ); ?></a>
 																					<?php endif; ?>
 																				</td>
 																			</tr>
