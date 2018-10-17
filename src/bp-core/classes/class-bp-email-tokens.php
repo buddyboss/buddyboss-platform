@@ -177,7 +177,7 @@ class BP_Email_Tokens {
 												) );
 												$group_avatar_url = !empty( $group_avatar ) ? $group_avatar : buddypress()->plugin_url . 'bp-core/images/mystery-group.jpg';
 												?>
-                                                <img alt="" src="<?php echo $group_avatar_url; ?>" width="100" height="100" border="0"
+                                                <img alt="" src="<?php echo $group_avatar; ?>" width="100" height="100" border="0"
                                                      style="margin:0; padding:0; box-sizing: border-box; border-radius: 3px; border: 3px solid <?php echo esc_attr( $settings['body_bg'] ); ?>; display:block;" />
                                             </a>
                                         </td>
