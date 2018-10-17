@@ -557,6 +557,7 @@ class BP_Email_Tokens {
 		$output = '';
 
 		$settings = bp_email_get_appearance_settings();
+		$activity = isset( $tokens['activity'] ) ? $tokens['activity'] : false;
 
 		$comment_id       = isset( $tokens['comment.id'] ) ? $tokens['comment.id'] : false;
 		$activity_comment = new BP_Activity_Activity( $comment_id );
@@ -572,19 +573,34 @@ class BP_Email_Tokens {
 
 		ob_start();
 		?>
-        <table cellspacing="0" cellpadding="0" border="0" width="100%">
-            <tr>
-                <td>
-                    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; margin: 0 0 25px; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ) ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.375 ) . 'px' ) ?>;"><?php
-						$content   = apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity_original->content, &$activity_original ) );
-						$limit     = 200;
-						$t_content = substr( $content, 0, $limit );
-						if ( strlen( $content ) > $limit ) {
-							$t_content .= " ...";
-						}
-						echo $t_content;
-						?>
-					</div>
+        <table cellspacing="0" cellpadding="0" border="0" width="100%">			
+			<tr>
+                <td align="center">
+                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                        <tbody>
+                        <tr>
+                            <td valign="middle" width="12%" style="vertical-align: middle;">
+                                <a href="<?php echo esc_attr( bp_core_get_user_domain( $activity->user_id ) ); ?>"
+                                   target="_blank" rel="nofollow">
+									<?php
+									$avatar_url = bp_core_fetch_avatar( array(
+										'item_id' => $activity->user_id,
+										'width'   => 100,
+										'height'  => 100,
+										'html'    => false,
+									) );
+									?>
+                                    <img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47"
+                                         style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"
+                                         border="0">
+                                </a>
+                            </td>
+                            <td width="88%" style="vertical-align: middle;">
+                                <div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bp_core_get_user_displayname( $activity->user_id ); ?></div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </td>
             </tr>
 
