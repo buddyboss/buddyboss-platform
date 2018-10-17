@@ -1028,7 +1028,7 @@ class BP_Email_Tokens {
 
 		ob_start();
 		?>
-		<div class="spacer" style="font-size: 20px; line-height: 20px; height: 20px;">&nbsp;</div>
+		<div class="spacer" style="font-size: 5px; line-height: 5px; height: 5px;">&nbsp;</div>
 		<table cellspacing="0" cellpadding="0" border="0" width="100%"
 				style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
 			 <tbody>
