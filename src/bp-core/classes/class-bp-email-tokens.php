@@ -589,13 +589,12 @@ class BP_Email_Tokens {
 										'html'    => false,
 									) );
 									?>
-                                    <img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47"
-                                         style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"
-                                         border="0">
+                                    <img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47" border="0"
+                                         style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
                                 </a>
                             </td>
                             <td width="88%" style="vertical-align: middle;">
-                                <div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bp_core_get_user_displayname( $activity->user_id ); ?></div>
+                                <div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;"><?php echo bp_core_get_user_displayname( $activity_comment->user_id ); ?></div>
                             </td>
                         </tr>
                         </tbody>
@@ -603,8 +602,8 @@ class BP_Email_Tokens {
                 </td>
             </tr>
 
-            <tr>
-                <td height="4px" style="font-size: 4px; line-height: 4px;">&nbsp;</td>
+			<tr>
+                <td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
             </tr>
 
             <tr>
