@@ -166,16 +166,19 @@ class BP_Email_Tokens {
                                         <td width="20%">
                                             <a href="<?php echo bp_get_group_permalink( $group ); ?>"
                                                style="border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display: block; border-radius: 3px; width: 100px;">
-                                                <img alt="" src="<?php echo bp_core_fetch_avatar( array(
+												<?php
+												$group_avatar =  bp_core_fetch_avatar( array(
 													'item_id'    => $group->id,
 													'avatar_dir' => 'group-avatars',
 													'object'     => 'group',
 													'width'      => 200,
 													'height'     => 200,
 													'html'       => false
-												) ); ?>" width="100" height="100"
-                                                     style="margin:0; padding:0; box-sizing: border-box; border-radius: 3px; border: 3px solid <?php echo esc_attr( $settings['body_bg'] ); ?>; display:block;"
-                                                     border="0"/>
+												) );
+												$group_avatar_url = !empty( $group_avatar ) ? $group_avatar : buddypress()->plugin_url . 'bp-core/images/mystery-group.jpg';
+												?>
+                                                <img alt="" src="<?php echo $group_avatar_url; ?>" width="100" height="100" border="0"
+                                                     style="margin:0; padding:0; box-sizing: border-box; border-radius: 3px; border: 3px solid <?php echo esc_attr( $settings['body_bg'] ); ?>; display:block;" />
                                             </a>
                                         </td>
                                         <td width="4%">&nbsp;</td>
@@ -185,10 +188,7 @@ class BP_Email_Tokens {
                                                 <tr>
                                                     <td>
                                                         <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;"><?php echo $group->name; ?></div>
-                                                        <div class="spacer"
-                                                             style="font-size: 7px; line-height: 7px; height: 7px;">
-                                                            &nbsp;
-                                                        </div>
+                                                        <div class="spacer" style="font-size: 3px; line-height: 3px; height: 3px;">&nbsp;</div>
                                                         <p style="opacity: 0.7; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ) ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; margin: 0;"><?php echo ucfirst( $group->status ) . " " . __( 'Group', 'buddyboss' ); ?></p>
                                                     </td>
                                                 </tr>
@@ -203,41 +203,34 @@ class BP_Email_Tokens {
                                                             <tbody>
                                                             <tr>
                                                                 <td>
-                                                                    <!-- LEFT COLUMN -->
-                                                                    <table cellpadding="0" cellspacing="0" border="0"
-                                                                           width="47%" style="width: 47%;" align="left"
-                                                                           class="responsive-table">
+                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="left" class="responsive-table">
                                                                         <tbody>
-                                                                        <tr>
-                                                                            <td height="34px"
-                                                                                style="vertical-align: middle;">
-                                                                                <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ) ?>; color: #939597;">
-                                                                                    <span style="color: #4D5C6D;"><?php echo bp_get_group_total_members( $group ); ?></span> <?php _e( 'members', 'buddyboss' ); ?>
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>
+																			<tr>
+																				<td height="34px" style="vertical-align: middle;">
+																					<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ) ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;">
+																						<span style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; opacity: 0.85;"><?php echo bp_get_group_total_members( $group ); ?></span> <?php _e( 'connections', 'buddyboss' ); ?>
+																					</div>
+																				</td>
+																			</tr>
                                                                         </tbody>
                                                                     </table>
-                                                                    <!-- RIGHT COLUMN -->
-                                                                    <table cellpadding="0" cellspacing="0" border="0"
-                                                                           width="47%" style="width: 47%;" align="right"
-                                                                           class="responsive-table">
+                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="responsive-table">
                                                                         <tbody>
-                                                                        <tr>
-                                                                            <td height="34px" align="right"
-                                                                                style="vertical-align: middle;"
-                                                                                class="mobile-text-left">
-																				<?php if ( isset( $tokens['invites.url'] ) ): ?>
-                                                                                    <a href="<?php echo $tokens['invites.url']; ?>"
-                                                                                       target="_blank" rel="nofollow"
-                                                                                       style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;border: 1px solid <?php echo $settings['highlight_color']; ?>;border-radius: 100px;text-align: center; height: 32px;line-height: 32px;background: <?php echo $settings['highlight_color']; ?>;color: #fff;width: 125px;"><?php _e( 'Accept Invitation', 'buddyboss' ); ?></a>
-																				<?php else: ?>
-                                                                                    <a href="<?php echo bp_get_group_permalink( $group ); ?>"
-                                                                                       target="_blank" rel="nofollow"
-                                                                                       style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;border: 1px solid <?php echo $settings['highlight_color']; ?>;border-radius: 100px;text-align: center; height: 32px;line-height: 32px;background: <?php echo $settings['highlight_color']; ?>;color: #fff;width: 125px;"><?php _e( 'Visit Group', 'buddyboss' ); ?></a>
-																				<?php endif; ?>
-                                                                            </td>
-                                                                        </tr>
+																			<tr>
+																				<td height="34px" align="right"
+																					style="vertical-align: middle;"
+																					class="mobile-text-left">
+																					<?php if ( isset( $tokens['invites.url'] ) ): ?>
+																						<a href="<?php echo $tokens['invites.url']; ?>"
+																						   target="_blank" rel="nofollow"
+																						   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;border: 1px solid <?php echo $settings['highlight_color']; ?>;border-radius: 100px;text-align: center; height: 32px;line-height: 32px;background: <?php echo $settings['highlight_color']; ?>;color: #fff !important;width: 125px;"><?php _e( 'Accept Invitation', 'buddyboss' ); ?></a>
+																					<?php else: ?>
+																						<a href="<?php echo bp_get_group_permalink( $group ); ?>"
+																						   target="_blank" rel="nofollow"
+																						   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;border: 1px solid <?php echo $settings['highlight_color']; ?>;border-radius: 100px;text-align: center; height: 32px;line-height: 32px;background: <?php echo $settings['highlight_color']; ?>;color: #fff !important;width: 125px;"><?php _e( 'Visit Group', 'buddyboss' ); ?></a>
+																					<?php endif; ?>
+																				</td>
+																			</tr>
                                                                         </tbody>
                                                                     </table>
                                                                 </td>
