@@ -557,7 +557,6 @@ class BP_Email_Tokens {
 		$output = '';
 
 		$settings = bp_email_get_appearance_settings();
-		$activity = isset( $tokens['activity'] ) ? $tokens['activity'] : false;
 
 		$comment_id       = isset( $tokens['comment.id'] ) ? $tokens['comment.id'] : false;
 		$activity_comment = new BP_Activity_Activity( $comment_id );
@@ -580,11 +579,11 @@ class BP_Email_Tokens {
                         <tbody>
                         <tr>
                             <td valign="middle" width="12%" style="vertical-align: middle;">
-                                <a href="<?php echo esc_attr( bp_core_get_user_domain( $activity->user_id ) ); ?>"
+                                <a href="<?php echo esc_attr( bp_core_get_user_domain( $activity_comment->user_id ) ); ?>"
                                    target="_blank" rel="nofollow">
 									<?php
 									$avatar_url = bp_core_fetch_avatar( array(
-										'item_id' => $activity->user_id,
+										'item_id' => $activity_comment->user_id,
 										'width'   => 100,
 										'height'  => 100,
 										'html'    => false,
