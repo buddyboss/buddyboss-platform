@@ -165,7 +165,7 @@ class BP_Email_Tokens {
                                     <tr>
                                         <td width="20%">
                                             <a href="<?php echo bp_get_group_permalink( $group ); ?>"
-                                               style="border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display: block; border-radius: 3px; width: 100px;">
+                                               style="border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display: block; border-radius: 3px; width: 104px;">
 												<?php
 												$group_avatar =  bp_core_fetch_avatar( array(
 													'item_id'    => $group->id,
@@ -178,7 +178,7 @@ class BP_Email_Tokens {
 												) );
 												?>
                                                 <img alt="" src="<?php echo $group_avatar; ?>" width="100" height="100" border="0"
-                                                     style="margin:0; padding:0; box-sizing: border-box; border-radius: 3px; border: 3px solid <?php echo esc_attr( $settings['body_bg'] ); ?>; display:block;" />
+                                                     style="margin: 2px; padding:0; box-sizing: border-box; border-radius: 3px; border: 3px solid <?php echo esc_attr( $settings['body_bg'] ); ?>; display:block;" />
                                             </a>
                                         </td>
                                         <td width="4%">&nbsp;</td>
