@@ -87,6 +87,10 @@ class BP_Email_Tokens {
 				'function'    => array( $this, 'token__group_url' ),
 				'description' => __( 'Outputs the link to the group.', 'buddyboss' ),
 			),
+			'group.description' => array(
+				'function'    => array( $this, 'token__group_description' ),
+				'description' => __( 'Outputs the description excerpt of the group.', 'buddyboss' ),
+			),
 			'message'          => array(
 				'function'    => array( $this, 'token__message' ),
 				'description' => __( 'Display the sent message, along with sender\'s picture and name.', 'buddyboss' ),
@@ -904,7 +908,7 @@ class BP_Email_Tokens {
 	}
 
 	/**
-	 * Generate the output for toke boss.poster.url
+	 * Generate the output for toke poster.url
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *
@@ -931,7 +935,7 @@ class BP_Email_Tokens {
 	}
 
 	/**
-	 * Generate the output for toke boss.sender.url
+	 * Generate the output for toke sender.url
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *
@@ -950,7 +954,7 @@ class BP_Email_Tokens {
 	}
 
 	/**
-	 * Generate the output for toke boss.group.url
+	 * Generate the output for toke group.url
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *
@@ -984,5 +988,79 @@ class BP_Email_Tokens {
 		}
 
 		return bp_get_group_permalink( $group );
+	}
+	
+	
+	/**
+	 * Generate the output for toke group.description
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param \BP_Email $bp_email
+	 * @param array $formatted_tokens
+	 * @param array $tokens
+	 *
+	 * @return string html for the output
+	 */
+	public function token__group_description( $bp_email, $formatted_tokens, $tokens ) {
+		$group_id = false;
+		$output = '';
+
+		if ( ! bp_is_active( 'groups' ) ) {
+			return '';
+		}
+
+		$email_type = $bp_email->get( 'type' );
+		switch ( $email_type ) {
+			case 'groups-at-message':
+				$group_id = bp_get_current_group_id();
+				break;
+		}
+
+		if ( empty( $group_id ) ) {
+			return '';
+		}
+
+		$group = groups_get_group( $group_id );
+
+		if ( empty( $group ) ) {
+			return '';
+		}
+
+		$settings = bp_email_get_appearance_settings();
+
+		ob_start();
+		?>
+		<table cellspacing="0" cellpadding="0" border="0" width="100%"
+				style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+			 <tbody>
+				<tr>
+					<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
+				</tr>
+				<tr>
+					<td align="center">
+						<table cellpadding="0" cellspacing="0" border="0" width="88%" style="width: 88%;">
+							<tbody>
+								<tr>
+									<td>
+										<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;">
+											<?php echo bp_get_group_description_excerpt( $group ); ?>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
+				</tr>
+			 </tbody>
+		</table>
+		<?php
+		$output = str_replace( array( "\r", "\n" ), '', ob_get_clean() );
+
+		return $output;
+
 	}
 }
