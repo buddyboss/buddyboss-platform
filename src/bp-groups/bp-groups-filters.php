@@ -248,6 +248,7 @@ function bp_groups_user_can_filter( $retval, $user_id, $capability, $site_id, $a
 			$group = groups_get_group( $group_id );
 			if ( 'private' === bp_get_group_status( $group )
 				&& ! groups_is_user_member( $user_id, $group->id )
+			    && ! groups_check_for_membership_request( $user_id, $group->id )
 				&& ! groups_is_user_banned( $user_id, $group->id )
 			) {
 				$retval = true;

@@ -648,7 +648,7 @@ class BP_Groups_Component extends BP_Component {
 			// If this is a private group, and the user is not a
 			// member and does not have an outstanding invitation,
 			// show a "Request Membership" nav item.
-			if ( bp_current_user_can( 'groups_request_membership', array( 'group_id' => $this->current_group->id ) ) ) {
+			if ( groups_check_for_membership_request( bp_loggedin_user_id(), $this->current_group->id ) || bp_current_user_can( 'groups_request_membership', array( 'group_id' => $this->current_group->id ) ) ) {
 
 				$sub_nav[] = array(
 					'name'            => _x( 'Request Membership','Group screen nav', 'buddyboss' ),
