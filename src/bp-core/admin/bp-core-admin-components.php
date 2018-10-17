@@ -109,8 +109,6 @@ function bp_core_admin_components_options() {
 		$active_components = $default_components;
 	}
 
-	// Core component is always active.
-	$active_components['core'] = $all_components['core'];
 	$inactive_components       = array_diff( array_keys( $all_components ) , array_keys( $active_components ) );
 
 	/** Display **************************************************************

@@ -59,6 +59,13 @@ add_filter( 'bp_email_set_content_html', 'stripslashes', 8 );
 add_filter( 'bp_email_set_content_plaintext', 'wp_strip_all_tags', 6 );
 add_filter( 'bp_email_set_subject', 'sanitize_text_field', 6 );
 
+// Avatars
+/**
+ * Disable gravatars fallback for member avatars.
+ * @since BuddyBoss 3.1.1
+ */
+add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
+
 /**
  * Template Compatibility.
  *
@@ -1046,6 +1053,7 @@ function bp_email_set_default_tokens( $tokens, $property_name, $transform, $emai
 	$tokens['email.preheader']     = '';
 	$tokens['recipient.email']     = '';
 	$tokens['recipient.name']      = '';
+	$tokens['recipient.avatar']    = '';
 	$tokens['recipient.username']  = '';
 
 	// Who is the email going to?
@@ -1054,8 +1062,9 @@ function bp_email_set_default_tokens( $tokens, $property_name, $transform, $emai
 		$recipient = array_shift( $recipient );
 		$user_obj  = $recipient->get_user( 'search-email' );
 
-		$tokens['recipient.email'] = $recipient->get_address();
-		$tokens['recipient.name']  = $recipient->get_name();
+		$tokens['recipient.email']  = $recipient->get_address();
+		$tokens['recipient.name']   = $recipient->get_name();
+		$tokens['recipient.avatar'] = $recipient->get_avatar();
 
 		if ( ! $user_obj && $tokens['recipient.email'] ) {
 			$user_obj = get_user_by( 'email', $tokens['recipient.email'] );

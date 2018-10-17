@@ -32,7 +32,7 @@ add_action( 'bp_register_widgets', 'bp_members_register_widgets' );
  * @see BP_Core_Members_Widget
  */
 function bp_core_ajax_widget_members() {
-
+    global $members_template;
 	check_ajax_referer( 'bp_core_widget_members' );
 
 	// Setup some variables to check.
@@ -78,20 +78,30 @@ function bp_core_ajax_widget_members() {
 		<?php echo '0[[SPLIT]]'; // Return valid result. TODO: remove this. ?>
 		<?php while ( bp_members() ) : bp_the_member(); ?>
 			<li class="vcard">
-				<div class="item-avatar">
-					<a href="<?php bp_member_permalink(); ?>"><?php bp_member_avatar(); ?></a>
-				</div>
+                <div class="item-avatar">
+                    <a href="<?php bp_member_permalink() ?>" class="bp-tooltip" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?>
+						<?php
+						$current_time = current_time( 'mysql', 1 );
+						$diff =  strtotime( $current_time ) - strtotime( $members_template->member->last_activity );
+						if ( $diff < 300 ) { // 5 minutes  =  5 * 60
+						?> <span class="member-status online"></span></a> <?php
+					}
+					?>
+                </div>
 
-				<div class="item">
-					<div class="item-title fn"><a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a></div>
-					<?php if ( 'active' === $type ) : ?>
-						<div class="item-meta"><span class="activity"><?php bp_member_last_active(); ?></span></div>
-					<?php elseif ( 'newest' === $type ) : ?>
-						<div class="item-meta"><span class="activity"><?php bp_member_registered(); ?></span></div>
-					<?php elseif ( bp_is_active( 'friends' ) ) : ?>
-						<div class="item-meta"><span class="activity"><?php bp_member_total_friend_count(); ?></span></div>
-					<?php endif; ?>
-				</div>
+                <div class="item">
+                    <div class="item-title fn"><a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a></div>
+                    <div class="item-meta">
+						<?php if ( 'newest' == $settings['member_default'] ) : ?>
+                            <span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_registered( array( 'relative' => false ) ) ); ?>"><?php bp_member_registered(); ?></span>
+						<?php elseif ( 'active' == $settings['member_default'] ) : ?>
+                            <span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bp_member_last_active(); ?></span>
+						<?php else : ?>
+                            <span class="activity"><?php bp_member_total_friend_count(); ?></span>
+						<?php endif; ?>
+                    </div>
+                </div>
+                <div class="member_last_visit"></div>
 			</li>
 
 		<?php endwhile; ?>

@@ -29,7 +29,6 @@
 		font-weight: $tooltip-font-weight;
 		letter-spacing: normal;
 		line-height: 1.25;
-		max-width: $tooltip-max-width;
 		padding: $tooltip-padding-vert $tooltip-padding-hor;
 		pointer-events: none;
 		text-shadow: none;
@@ -69,7 +68,7 @@
 
 .bp-tooltip {
 
-	@include bp-tooltip-default;
+	@include bp-tooltip-bottom-left;
 }
 
 // Bottom Left Tooltip for mobile and Bottom Right Tooltip for tablet/desktop
@@ -109,5 +108,56 @@
 	&:after {
 		left: 0;
 		right: auto;
+	}
+}
+
+[data-tooltip-length="small"] {
+
+	&:after {
+		white-space: normal;
+		width: $tooltip-small-width;
+	}
+}
+
+[data-tooltip-length="medium"] {
+
+	&:after {
+		white-space: normal;
+		width: $tooltip-medium-width;
+	}
+}
+
+[data-tooltip-length="large"] {
+
+	&:after {
+		font-size: 14px;
+		line-height: 1.4;
+		padding: 10px;
+		white-space: normal;
+		width: $tooltip-large-width;
+	}
+}
+
+[data-tooltip-length="xlarge"] {
+
+	&:after {
+		font-size: 14px;
+		line-height: 1.4;
+		padding: 12px;
+		white-space: normal;
+		width: $tooltip-xlarge-width;
+
+		@media screen and (max-width: 768px) {
+			white-space: normal;
+			width: 90vw;
+		}
+	}
+}
+
+[data-tooltip-length="fit"] {
+
+	&:after {
+		white-space: normal;
+		width: $tooltip-fit-width;
 	}
 }

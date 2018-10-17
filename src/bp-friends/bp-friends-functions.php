@@ -115,9 +115,6 @@ function friends_remove_friend( $initiator_userid, $friend_userid ) {
 	 */
 	do_action( 'friends_before_friendship_delete', $friendship_id, $initiator_userid, $friend_userid );
 
-	// Remove the activity feed items about the friendship id.
-	friends_delete_activity( array( 'item_id' => $friendship_id, 'type' => 'friendship_created', 'user_id' => 0 ) );
-
 	/**
 	 * Fires before the friendship connection is removed.
 	 *
@@ -901,18 +898,18 @@ add_action( 'friends_friendship_accepted', 'friends_notification_accepted_reques
 /**** Follow Functions ****/
 
 /**
- * Start following a user's activity.
+ * Stop following a user's activity.
  *
  * @since BuddyBoss 3.1.1
  *
  * @param array $args {
  *     Array of arguments.
- *     @type int $leader_id The user ID of the person we want to follow.
- *     @type int $follower_id The user ID initiating the follow request.
+ *     @type int $leader_id The user ID of the person we want to stop following.
+ *     @type int $follower_id The user ID initiating the unfollow request.
  * }
  * @return bool
  */
-function bp_friends_start_following( $args = '' ) {
+function bp_friends_stop_following( $args = '' ) {
 
 	$r = wp_parse_args( $args, array(
 		'leader_id'   => bp_displayed_user_id(),
@@ -936,18 +933,18 @@ function bp_friends_start_following( $args = '' ) {
 }
 
 /**
- * Stop following a user's activity.
+ * Start following a user's activity.
  *
  * @since BuddyBoss 3.1.1
  *
  * @param array $args {
  *     Array of arguments.
- *     @type int $leader_id The user ID of the person we want to stop following.
- *     @type int $follower_id The user ID initiating the unfollow request.
+ *     @type int $leader_id The user ID of the person we want to follow.
+ *     @type int $follower_id The user ID initiating the follow request.
  * }
  * @return bool
  */
-function bp_friends_stop_following( $args = '' ) {
+function bp_friends_start_following( $args = '' ) {
 
 	$r = wp_parse_args( $args, array(
 		'leader_id'   => bp_displayed_user_id(),
@@ -966,7 +963,7 @@ function bp_friends_stop_following( $args = '' ) {
 }
 
 /**
- * Check if a user is already following another user.
+ * Check if a user is already unfollowing another user.
  *
  * @since BuddyBoss 3.1.1
  *
@@ -977,7 +974,7 @@ function bp_friends_stop_following( $args = '' ) {
  * }
  * @return bool
  */
-function bp_friends_is_following( $args = '' ) {
+function bp_friends_is_unfollowing( $args = '' ) {
 
 	$r = wp_parse_args( $args, array(
 		'leader_id'   => bp_displayed_user_id(),
@@ -986,47 +983,47 @@ function bp_friends_is_following( $args = '' ) {
 
 	$follow = new BP_Friends_Follow( $r['leader_id'], $r['follower_id'] );
 
-	return apply_filters( 'bp_friends_is_following', (int)$follow->id, $follow );
+	return apply_filters( 'bp_friends_is_unfollowing', (int)$follow->id, $follow );
 }
 
 /**
- * Fetch the user IDs of all the followers of a particular user.
+ * Fetch the user IDs of all the unfollowers of a particular user.
  *
  * @since 3.1.1
  *
  * @param array $args {
  *     Array of arguments.
- *     @type int $user_id The user ID to get followers for.
+ *     @type int $user_id The user ID to get unfollowers for.
  * }
  * @return array
  */
-function bp_friends_get_followers( $args = '' ) {
+function bp_friends_get_unfollowers( $args = '' ) {
 
 	$r = wp_parse_args( $args, array(
 		'user_id' => bp_displayed_user_id()
 	) );
 
-	return apply_filters( 'bp_friends_get_followers', BP_Friends_Follow::get_followers( $r['user_id'] ) );
+	return apply_filters( 'bp_friends_get_unfollowers', BP_Friends_Follow::get_unfollowers( $r['user_id'] ) );
 }
 
 /**
- * Fetch the user IDs of all the users a particular user is following.
+ * Fetch the user IDs of all the users a particular user is unfollowing.
  *
  * @since BuddyBoss 3.1.1
  *
  * @param array $args {
  *     Array of arguments.
- *     @type int $user_id The user ID to fetch following user IDs for.
+ *     @type int $user_id The user ID to fetch unfollowing user IDs for.
  * }
  * @return array
  */
-function bp_friends_get_following( $args = '' ) {
+function bp_friends_get_unfollowing( $args = '' ) {
 
 	$r = wp_parse_args( $args, array(
 		'user_id' => bp_displayed_user_id()
 	) );
 
-	return apply_filters( 'bp_friends_get_following', BP_Friends_Follow::get_following( $r['user_id'] ) );
+	return apply_filters( 'bp_friends_get_unfollowing', BP_Friends_Follow::get_unfollowing( $r['user_id'] ) );
 }
 
 /**
@@ -1118,7 +1115,7 @@ function bp_friends_auto_follow_users( $friendship_id, $initiator_user_id, $frie
 add_action( 'friends_friendship_accepted', 'bp_friends_auto_follow_users', 10, 3 );
 
 /**
- * Auto unfollow users when they connect with each other
+ * Auto follow users when they connect with each other
  *
  * @since BuddyBoss 3.1.1
  *
@@ -1148,57 +1145,10 @@ add_action( 'friends_friendship_deleted', 'bp_friends_auto_unfollow_users', 10, 
  */
 function bp_friends_exclude_unfollow_feed( $args ) {
 
-	if ( bp_loggedin_user_id() ) {
-		$friends = friends_get_friend_user_ids( bp_loggedin_user_id() );
-
-		if ( ! empty( $friends ) ) {
-			$unfollowing = array();
-
-			foreach ( $friends as $friend ) {
-				if ( ! bp_friends_is_following( array(
-					'leader_id'   => $friend,
-					'follower_id' => bp_loggedin_user_id()
-				) ) ) {
-					array_push( $unfollowing, $friend );
-				}
-			}
-
-			if ( ! empty( $unfollowing ) ) {
-
-				$filter_query = array(
-					array(
-						'column'  => 'user_id',
-						'value'   => $unfollowing,
-						'compare' => 'NOT IN',
-					)
-				);
-
-				// Are mentions disabled?
-				if ( bp_activity_do_mentions() ) {
-					$filter_query['relation'] = 'OR';
-					$filter_query[] = array(
-						array(
-							'column'  => 'content',
-							'compare' => 'LIKE',
-
-							// Start search at @ symbol and stop search at closing tag delimiter.
-							'value'   => '@' . bp_activity_get_user_mentionname( bp_loggedin_user_id() ) . '<'
-						),
-					);
-				}
-
-				if ( ! empty( $args['filter_query'] ) ) {
-					array_push( $args['filter_query'], $filter_query );
-				} else {
-					$args['filter_query'] = array(
-						$filter_query
-					);
-				}
-			}
-		}
+	if ( bp_loggedin_user_id() && bp_is_activity_directory() ) {
+		$args['scope'] = 'friends,mentions';
 	}
 
 	return $args;
 }
-
 add_filter( 'bp_after_has_activities_parse_args', 'bp_friends_exclude_unfollow_feed' );

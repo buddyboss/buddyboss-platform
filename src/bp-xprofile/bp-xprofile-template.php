@@ -1495,3 +1495,34 @@ function bp_the_profile_field_required_label() {
 
 		return $retval;
 	}
+
+/**
+ * Output the 'optional' markup in extended profile field labels.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_the_profile_field_optional_label() {
+	echo bp_get_the_profile_field_optional_label();
+}
+
+/**
+ * Return the 'optional' markup in extended profile field labels.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return string HTML for the optional label.
+ */
+function bp_get_the_profile_field_optional_label() {
+	$retval = '';
+
+	if ( ! bp_get_the_profile_field_is_required() ) {
+		$translated_string = __( '(optional)', 'buddyboss' );
+
+		$retval = ' <span class="bp-optional-field-label">';
+		$retval .= apply_filters( 'bp_get_the_profile_field_optional_label', $translated_string, bp_get_the_profile_field_id() );
+		$retval .= '</span>';
+
+	}
+
+	return $retval;
+}

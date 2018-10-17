@@ -237,7 +237,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 								<?php if ( $group->can_delete ) : ?>
 
 									<div class="delete-button">
-										<a class="confirm submitdelete deletion ajax-option-delete" href="<?php echo esc_url( $delete_group_url ); ?>"><?php _ex( 'Delete Field Set', 'Delete Profile Field Set', 'buddyboss' ); ?></a>
+										<a class="confirm submitdelete deletion ajax-option-delete delete-profile-field-group" href="<?php echo esc_url( $delete_group_url ); ?>"><?php _ex( 'Delete Field Set', 'Delete Profile Field Set', 'buddyboss' ); ?></a>
 									</div>
 
 								<?php endif; ?>

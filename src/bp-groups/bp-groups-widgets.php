@@ -57,21 +57,25 @@ function groups_ajax_widget_groups_list() {
 		<?php echo "0[[SPLIT]]"; ?>
 		<?php while ( bp_groups() ) : bp_the_group(); ?>
 			<li <?php bp_group_class(); ?>>
-				<div class="item-avatar">
-					<a href="<?php bp_group_permalink() ?>"><?php bp_group_avatar_thumb() ?></a>
-				</div>
+                <div class="item-avatar">
+                    <a href="<?php bp_group_permalink() ?>"><?php bp_group_avatar_thumb() ?></a>
+                </div>
 
 				<div class="item">
 					<div class="item-title"><?php bp_group_link(); ?></div>
-					<div class="item-meta">
-						<?php if ( 'newest-groups' === $_POST['filter'] ) : ?>
-							<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_group_date_created( 0, array( 'relative' => false ) ) ); ?>"><?php printf( __( 'created %s', 'buddyboss' ), bp_get_group_date_created() ); ?></span>
-						<?php elseif ( 'popular-groups' === $_POST['filter'] ) : ?>
-							<span class="activity"><?php bp_group_member_count(); ?></span>
-						<?php else : ?>
-							<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_group_last_active( 0, array( 'relative' => false ) ) ); ?>"><?php printf( __( 'active %s', 'buddyboss' ), bp_get_group_last_active() ); ?></span>
-						<?php endif; ?>
-					</div>
+                    <div class="item-meta">
+                        <span class="activity">
+                        <?php
+                        if ( 'newest' == $type ) {
+                            printf( __( 'created %s', 'buddyboss' ), bp_get_group_date_created() );
+                        } elseif ( 'popular' == $type ) {
+                            bp_group_member_count();
+                        } else {
+                            printf( __( 'active %s', 'buddyboss' ), bp_get_group_last_active() );
+                        }
+                        ?>
+                        </span>
+                    </div>
 				</div>
 			</li>
 		<?php endwhile; ?>

@@ -160,7 +160,7 @@ function bp_core_install_activity_streams() {
 }
 
 /**
- * Install database tables for the Notifications component.
+ * Install database tables for the Friends component.
  *
  * @since BuddyPress 1.0.0
  *
@@ -181,7 +181,24 @@ function bp_core_install_friends() {
 				KEY friend_user_id (friend_user_id)
 			) {$charset_collate};";
 
-	$sql[] = "CREATE TABLE IF NOT EXISTS {$bp_prefix}bp_follow (
+	// Install Follow when activating Friends component.
+	bp_core_install_follow();
+
+	dbDelta( $sql );
+}
+
+/**
+ * Install database tables for the Follow feature.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ */
+function bp_core_install_follow() {
+	$sql             = array();
+	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
+	$bp_prefix       = bp_core_get_table_prefix();
+
+	$sql[] = "CREATE TABLE IF NOT EXISTS {$bp_prefix}bp_unfollow (
 			id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 			leader_id bigint(20) NOT NULL,
 			follower_id bigint(20) NOT NULL,

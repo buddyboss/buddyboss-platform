@@ -52,7 +52,7 @@ function bp_members_admin_bar_my_account_menu() {
 		// Create the main 'My Account' menu.
 		$wp_admin_bar->add_menu( array(
 			'id'    => 'bp-login',
-			'title' => __( 'Log in', 'buddyboss' ),
+			'title' => __( 'Log In', 'buddyboss' ),
 			'href'  => wp_login_url( bp_get_requested_url() )
 		) );
 

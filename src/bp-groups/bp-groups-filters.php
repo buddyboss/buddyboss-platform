@@ -243,12 +243,12 @@ function bp_groups_user_can_filter( $retval, $user_id, $capability, $site_id, $a
 
 			/*
 			* The group must accept membership requests, and the user should not
-			* currently be a member, have an active request, or be banned.
+			* currently be a member or be banned.
 			*/
 			$group = groups_get_group( $group_id );
 			if ( 'private' === bp_get_group_status( $group )
 				&& ! groups_is_user_member( $user_id, $group->id )
-				&& ! groups_check_for_membership_request( $user_id, $group->id )
+			    && ! groups_check_for_membership_request( $user_id, $group->id )
 				&& ! groups_is_user_banned( $user_id, $group->id )
 			) {
 				$retval = true;
@@ -362,3 +362,31 @@ function bp_groups_user_can_filter( $retval, $user_id, $capability, $site_id, $a
 
 }
 add_filter( 'bp_user_can', 'bp_groups_user_can_filter', 10, 5 );
+
+/**
+ * Filter the bp_activity_user_can_delete value to allow moderators to delete activities of a group.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param bool   $can_delete     Whether or not the current user has the capability.
+ * @param false|BP_Activity_Activity $activity
+ *
+ * @return bool
+ */
+function bp_groups_allow_mods_to_delete_activity ( $can_delete, $activity ) {
+
+	// Allow Mods to delete activity of group
+	if ( ! $can_delete && is_user_logged_in() && 'groups' == $activity->component ) {
+		$group = groups_get_group( $activity->item_id );
+
+		if ( ! empty( $group ) &&
+		     ! groups_is_user_admin( $activity->user_id, $activity->item_id ) &&
+		     groups_is_user_mod( apply_filters( 'bp_loggedin_user_id', get_current_user_id() ), $activity->item_id )
+		) {
+			$can_delete = true;
+		}
+	}
+
+	return $can_delete;
+}
+add_filter( 'bp_activity_user_can_delete', 'bp_groups_allow_mods_to_delete_activity', 10, 2 );

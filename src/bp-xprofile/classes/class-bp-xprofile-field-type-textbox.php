@@ -66,7 +66,11 @@ class BP_XProfile_Field_Type_Textbox extends BP_XProfile_Field_Type {
 
 		<legend id="<?php bp_the_profile_field_input_name(); ?>-1">
 			<?php bp_the_profile_field_name(); ?>
-			<?php bp_the_profile_field_required_label(); ?>
+			<?php if ( bp_is_register_page() ) : ?>
+				<?php bp_the_profile_field_optional_label(); ?>
+			<?php else: ?>
+				<?php bp_the_profile_field_required_label(); ?>
+			<?php endif; ?>
 		</legend>
 
 		<?php

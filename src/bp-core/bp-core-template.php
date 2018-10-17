@@ -1089,6 +1089,9 @@ function bp_total_member_count() {
 }
 	/**
 	 * Return the total member count in your BP instance.
+     *
+     * Since BuddyBoss 3.1.1, members directory lists all members, even if they have never been active.
+     * So, this function also uses bp_core_get_total_member_count, again.
 	 *
 	 * Since BuddyPress 1.6, this function has used bp_core_get_active_member_count(),
 	 * which counts non-spam, non-deleted users who have last_activity.
@@ -1100,6 +1103,7 @@ function bp_total_member_count() {
 	 * resulted in higher counts than shown by member directory pagination.
 	 *
 	 * @since BuddyPress 1.2.0
+     * @since BuddyBoss 3.1.1 Uses bp_core_get_total_member_count instead of bp_core_get_active_member_count
 	 *
 	 * @return int Member count.
 	 */
@@ -1112,7 +1116,7 @@ function bp_total_member_count() {
 		 *
 		 * @param int $value Member count.
 		 */
-		return apply_filters( 'bp_get_total_member_count', bp_core_get_active_member_count() );
+		return apply_filters( 'bp_get_total_member_count', bp_core_get_total_member_count() );
 	}
 	add_filter( 'bp_get_total_member_count', 'bp_core_number_format' );
 
@@ -3232,7 +3236,7 @@ function bp_the_body_class() {
 				$bp_classes[] = 'my-activity';
 			}
 		} else {
-			if ( bp_get_current_member_type() ) {
+			if ( bp_get_current_member_type() || ( bp_is_groups_directory() && bp_get_current_group_directory_type() ) ) {
 				$bp_classes[] = 'type';
 			}
 		}
@@ -3720,7 +3724,7 @@ function bp_email_the_salutation( $settings = array() ) {
 	 * @return string The Recipient Salutation.
 	 */
 	function bp_email_get_salutation( $settings = array() ) {
-		$token = '{{recipient.name}}';
+		$token = '{{recipient.name}}<img src="{{recipient.avatar}}" style="border: 1px solid #b9babc;border-radius: 50%;margin-left: 12px;width: 34px;max-width: 34px;height: 34px;vertical-align: middle;" />';
 
 		/**
 		 * Filters The Recipient Salutation inside the Email Template.
@@ -3731,5 +3735,5 @@ function bp_email_the_salutation( $settings = array() ) {
 		 * @param array  $settings Email Settings.
 		 * @param string $token    The Recipient token.
 		 */
-		return apply_filters( 'bp_email_get_salutation', sprintf( _x( 'Hi %s,', 'recipient salutation', 'buddyboss' ), $token ), $settings, $token );
+		return apply_filters( 'bp_email_get_salutation', sprintf( _x( '%s', 'recipient salutation', 'buddyboss' ), $token ), $settings, $token );
 	}

@@ -53,6 +53,7 @@ function xprofile_add_admin_js() {
 		// "please enter options for this field" section.
 		$strings = array(
 			'do_settings_section_field_types' => array(),
+            'confirm_delete_field_group'      => __( 'Are you sure you want to delete this field set and all of its included fields?', 'buddyboss' ),
 		);
 
 		foreach ( bp_xprofile_get_field_types() as $field_type => $field_type_class ) {
@@ -69,5 +70,10 @@ function xprofile_add_admin_js() {
 
 		wp_localize_script( 'xprofile-admin-js', 'XProfileAdmin', $strings );
 	}
+    
+    if ( !empty( $_GET['page'] ) && strpos( $_GET['page'], 'bp-profile-edit' ) !== false ) {
+        $min = bp_core_get_minified_asset_suffix();
+		wp_enqueue_script( 'jquery-mask', buddypress()->plugin_url . "bp-core/js/vendor/jquery.mask{$min}.js", array( 'jquery' ), '1.14.15' );
+    }
 }
 add_action( 'bp_admin_enqueue_scripts', 'xprofile_add_admin_js', 1 );

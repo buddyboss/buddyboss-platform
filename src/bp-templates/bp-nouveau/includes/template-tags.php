@@ -573,6 +573,10 @@ function bp_nouveau_loop_classes() {
 					) );
 				}
 
+				if ( ! isset( $bp_nouveau->{$component} ) ) {
+				    $bp_nouveau->{$component} = new stdClass;
+				}
+
 				// Set the global for a later use.
 				$bp_nouveau->{$component}->loop_layout = $layout_prefs;
 			}
@@ -905,8 +909,14 @@ function bp_nouveau_nav_classes() {
 		$nav_item   = $bp_nouveau->current_nav_item;
 		$classes    = array();
 
-		if ( 'directory' === $bp_nouveau->displayed_nav && ! empty( $nav_item->li_class ) ) {
+		if ( 'directory' === $bp_nouveau->displayed_nav ) {
+			if ( ! empty( $nav_item->li_class ) ) {
 			$classes = (array) $nav_item->li_class;
+			}
+
+			if ( bp_get_current_member_type() || ( bp_is_groups_directory() && bp_get_current_group_directory_type() ) ) {
+				$classes[] = 'no-ajax';
+			}
 		} elseif ( 'groups' === $bp_nouveau->displayed_nav || 'personal' === $bp_nouveau->displayed_nav ) {
 			$classes  = array( 'bp-' . $bp_nouveau->displayed_nav . '-tab' );
 			$selected = bp_current_action();
@@ -1196,14 +1206,8 @@ function bp_nouveau_nav_has_count() {
 
 	if ( 'directory' === $bp_nouveau->displayed_nav ) {
 		$count = $nav_item->count;
-	} elseif ( 'groups' === $bp_nouveau->displayed_nav && ( 'members' === $nav_item->slug || 'all-members' === $nav_item->slug ) ) {
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'members' === $nav_item->slug ) {
 	    $count = 0 !== (int) groups_get_current_group()->total_member_count;
-	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'leaders' === $nav_item->slug ) {
-		$group         = groups_get_current_group();
-		$admins        = groups_get_group_admins( $group->id );
-		$mods          = groups_get_group_mods( $group->id );
-		$total_leaders = sizeof( $admins ) + sizeof( $mods );
-		$count         = 0 !== (int) $total_leaders;
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && ! empty( $nav_item->primary ) ) {
 		$count = (bool) strpos( $nav_item->name, '="count"' );
 	}
@@ -1864,14 +1868,29 @@ function bp_nouveau_search_default_text( $text = '', $is_attr = true ) {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_search_form() {
-	bp_get_template_part( 'common/search/search-form' );
+	$search_form_html = bp_buffer_template_part( 'common/search/search-form', null, false );
 
 	$objects = bp_nouveau_get_search_objects();
 	if ( empty( $objects['primary'] ) || empty( $objects['secondary'] ) ) {
+		echo $search_form_html;
 		return;
 	}
 
 	if ( 'dir' === $objects['primary'] ) {
+		/**
+	     * Filter here to edit the HTML output of the directory search form.
+	     *
+	     * NB: This will take in charge the following BP Core Components filters
+	     *     - bp_directory_members_search_form
+	     *     - bp_directory_blogs_search_form
+	     *     - bp_directory_groups_search_form
+	     *
+	     * @since 1.9.0
+	     *
+	     * @param string $search_form_html The HTML output for the directory search form.
+	     */
+	    echo apply_filters( "bp_directory_{$objects['secondary']}_search_form", $search_form_html );
+
 		if ( 'activity' === $objects['secondary'] ) {
 			/**
 			 * Fires before the display of the activity syndication options.
@@ -1904,13 +1923,46 @@ function bp_nouveau_search_form() {
 			 */
 			do_action( 'bp_members_directory_member_sub_types' );
 		}
-	} elseif ( 'group' === $objects['primary'] && 'activity' === $objects['secondary'] ) {
-		/**
-		 * Fires inside the syndication options list, after the RSS option.
-		 *
-		 * @since BuddyPress 1.2.0
-		 */
-		do_action( 'bp_group_activity_syndication_options' );
+	} elseif ( 'group' === $objects['primary'] ) {
+		if ( 'members' !== $objects['secondary'] ) {
+			/**
+			 * Filter here to edit the HTML output of the displayed group search form.
+			 *
+			 * @since 3.2.0
+			 *
+			 * @param string $search_form_html The HTML output for the directory search form.
+			 */
+			echo apply_filters( "bp_group_{$objects['secondary']}_search_form", $search_form_html );
+
+		} else {
+			/**
+			 * Filters the Members component search form.
+			 *
+			 * @since 1.9.0
+			 *
+			 * @param string $search_form_html HTML markup for the member search form.
+			 */
+			echo apply_filters( 'bp_directory_members_search_form', $search_form_html );
+		}
+
+		if ( 'members' === $objects['secondary'] ) {
+			/**
+			 * Fires at the end of the group members search unordered list.
+			 *
+			 * Part of bp_groups_members_template_part().
+			 *
+			 * @since 1.5.0
+			 */
+			do_action( 'bp_members_directory_member_sub_types' );
+
+		} elseif ( 'activity' === $objects['secondary'] ) {
+			/**
+			 * Fires inside the syndication options list, after the RSS option.
+			 *
+			 * @since 1.2.0
+			 */
+			do_action( 'bp_group_activity_syndication_options' );
+		}
 	}
 }
 
@@ -2275,7 +2327,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 		// Output the label for regular fields
 		if ( 'radio' !== $type ) {
 			if ( $required ) {
-				printf( $label_output, esc_attr( $name ), esc_html( $label ), __( '(required)', 'buddyboss' ) );
+				printf( $label_output, esc_attr( $name ), esc_html( $label ), '' );
 			} else {
 				printf( $label_output, esc_attr( $name ), esc_html( $label ) );
 			}
@@ -2411,6 +2463,47 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 	 * @since BuddyPress 1.9.0
 	 */
 	do_action( "bp_{$section}_fields" );
+}
+
+/**
+ * Output a terms of service and privacy policy pages if activated
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_nouveau_signup_terms_privacy() {
+
+	$page_ids = bp_core_get_directory_page_ids();
+
+	$terms   = isset( $page_ids['terms'] ) ? $page_ids['terms'] : false;
+	$privacy = isset( $page_ids['privacy'] ) ? $page_ids['privacy'] : false;
+
+	if ( ! $terms && ! $privacy ) {
+	    return false;
+    }
+
+	if ( $terms && ! $privacy ) {
+		?>
+        <p class="register-privacy-info">
+            <?php printf( __( 'By creating an account, you agree to our <a href="%s" target="_blank">Terms of Service</a>.', 'buddyboss' ), get_permalink( $terms ) ); ?>
+        </p>
+		<?php
+	}
+
+	if ( ! $terms && $privacy ) {
+		?>
+        <p class="register-privacy-info">
+            <?php printf( __( 'By creating an account, you agree to our <a href="%s" target="_blank">Privacy Policy</a>.', 'buddyboss' ), get_permalink( $privacy ) ); ?>
+        </p>
+		<?php
+	}
+
+	if ( $terms && $privacy ) {
+		?>
+        <p class="register-privacy-info">
+            <?php printf( __( 'By creating an account, you agree to our <a href="%s" target="_blank">Terms of Service</a> and <a href="%s" target="_blank">Privacy Policy</a>.', 'buddyboss' ), get_permalink( $terms ), get_permalink( $privacy ) ); ?>
+        </p>
+		<?php
+	}
 }
 
 /**

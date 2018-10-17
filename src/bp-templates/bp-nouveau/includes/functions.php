@@ -972,6 +972,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'info',
 			'message' => __( 'There are no pending membership requests.', 'buddyboss' ),
 		),
+		'group-requested-membership' => array(
+			'type'    => 'info',
+			'message' => __( 'You have already requested to join this group.', 'buddyboss' ),
+		),
 		'group-requests-loading' => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading the members who requested to join the group. Please wait.', 'buddyboss' ),
@@ -1140,15 +1144,7 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 				'attribute_type' => 'password',
 				'type'           => 'password',
 				'class'          => 'password-entry',
-			),
-			'signup_password_confirm' => array(
-				'label'          => __( 'Confirm Password', 'buddyboss' ),
-				'required'       => true,
-				'value'          => '',
-				'attribute_type' => 'password',
-				'type'           => 'password',
-				'class'          => 'password-entry-confirm',
-			),
+			)
 		),
 		'blog_details' => array(
 			'signup_blog_url' => array(

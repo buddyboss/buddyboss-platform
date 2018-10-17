@@ -131,7 +131,7 @@ class BP_Groups_Widget extends WP_Widget {
 				<?php while ( bp_groups() ) : bp_the_group(); ?>
 					<li <?php bp_group_class(); ?>>
 						<div class="item-avatar">
-							<a href="<?php bp_group_permalink() ?>" class="bp-tooltip" data-bp-tooltip="<?php bp_group_name() ?>"><?php bp_group_avatar_thumb() ?></a>
+							<a href="<?php bp_group_permalink() ?>"><?php bp_group_avatar_thumb() ?></a>
 						</div>
 
 						<div class="item">
@@ -156,6 +156,8 @@ class BP_Groups_Widget extends WP_Widget {
 			</ul>
 			<?php wp_nonce_field( 'groups_widget_groups_list', '_wpnonce-groups' ); ?>
 			<input type="hidden" name="groups_widget_max" id="groups_widget_max" value="<?php echo esc_attr( $max_groups ); ?>" />
+            
+            <div class="more-block"><a href="<?php bp_groups_directory_permalink(); ?>" class="count-more">More<i class="bb-icon-angle-right"></i></a></div>
 
 		<?php else: ?>
 

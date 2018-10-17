@@ -184,6 +184,9 @@ class BP_Admin {
 
 		// Emails
 		add_filter( 'bp_admin_menu_order', array( $this, 'emails_admin_menu_order' ), 20 );
+
+		//Install Follow
+        add_action( 'admin_init', array( $this, 'install_follow' ) );
 	}
 
 	/**
@@ -352,6 +355,7 @@ class BP_Admin {
 	 *
 	 */
 	public function register_admin_settings() {
+
 		$bp = buddypress();
 		require_once trailingslashit( $bp->plugin_dir  . 'bp-core/classes' ) . '/class-bp-admin-setting-tab.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-general.php';
@@ -461,6 +465,18 @@ class BP_Admin {
 			return;
 		}
 
+		include $this->admin_dir . 'templates/about-screen.php';
+	}
+
+	/**
+	 * Output the credits screen.
+	 *
+	 * Hardcoding this in here is pretty janky. It's fine for now, but we'll
+	 * want to leverage api.wordpress.org eventually.
+	 *
+	 * @since BuddyPress 1.7.0
+	 */
+	public function credits_screen() {
 		include $this->admin_dir . 'templates/about-screen.php';
 	}
 
@@ -671,5 +687,20 @@ class BP_Admin {
 			wp_register_script( $id, $script['file'], $script['dependencies'], $version, $script['footer'] );
 		}
 	}
+
+	/**
+	 * Install Follow if Friends component is active
+     *
+     * @since BuddyBoss 3.1.1
+	 */
+	public function install_follow() {
+
+	    if ( bp_is_active( 'friends' ) ) {
+		    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		    require_once( buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
+		    bp_core_install_follow();
+        }
+
+    }
 }
 endif; // End class_exists check.

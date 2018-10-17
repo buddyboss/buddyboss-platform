@@ -72,6 +72,7 @@ function bp_core_register_common_scripts() {
 		
 		// Version 3.1.1
 		'bp-jquery-validate' => array( 'file' => "{$url}vendor/jquery.validate{$min}.js", 'dependencies' => array( 'jquery' ), 'footer' => true ),
+        'jquery-mask'        => array( 'file' => "{$url}vendor/jquery.mask{$min}.js", 'dependencies' => array( 'jquery' ), 'footer' => true ),
 	);
 
 	// Version 2.7 - Add Moment.js locale to our $scripts array if we found one.
@@ -622,4 +623,53 @@ function bp_core_add_jquery_validate_inline_js() {
 	</script>
 
 <?php
+}
+
+/**
+ * Enqueues jquery.mask.js on BuddyPress pages.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_core_add_jquery_mask() {
+	if ( ! is_buddypress() ) {
+		return;
+	}
+    
+    if ( 'profile' != bp_current_component() || 'edit' != bp_current_action() ) {
+        return;//we need this script only on profile edit screens
+    }
+    
+	if ( wp_script_is( 'jquery-mask' ) ) {
+		return;
+	}
+
+	wp_enqueue_script( 'jquery-mask' );
+    
+    add_action( 'wp_footer', 'bp_core_add_jquery_mask_inline_js' );
+}
+add_action( 'bp_enqueue_scripts', 'bp_core_add_jquery_mask' );
+
+/**
+ * Prints script to add input mask to all telephone fields.
+ * 
+ * @since BuddyBoss 3.1.1
+ */
+function bp_core_add_jquery_mask_inline_js () {
+    ?>
+    
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            jQuery(".field_type_telephone").each(function(){
+                var $this = jQuery(this),
+                    field_id = $this.find('.input_mask_details').data('field_id'),
+                    pmask = $this.find('.input_mask_details').data('val');
+                    
+                if ( field_id && pmask ) {
+                    jQuery( '#' + field_id ).mask( pmask ).bind('keypress', function(e){if(e.which == 13){jQuery(this).blur();} } );
+                }
+            });
+        });
+    </script>
+        
+    <?php 
 }

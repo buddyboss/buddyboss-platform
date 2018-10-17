@@ -53,7 +53,7 @@
 
 		<dd class="moderator-listing">
 
-			<p><?php esc_html_e( 'When a group member is promoted to be a moderator of the group, it means that the member gets the ability to edit, close, and delete any forum discussion in the group (if the group has a forum).', 'buddyboss' ); ?></p>
+			<p><?php esc_html_e( 'When a group member is promoted to be a moderator of the group, it means the member gets the ability to edit and delete any forum discussion in the group, and delete any activity feed items excluding those posted by organizers.', 'buddyboss' ); ?></p>
 
 			<?php if ( bp_has_members( '&include=' . bp_group_mod_ids() ) ) : ?>
 			<ul id="mods-list" class="item-list single-line">

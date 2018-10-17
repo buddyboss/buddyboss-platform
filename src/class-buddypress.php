@@ -483,6 +483,7 @@ class BuddyPress {
 		require( $this->plugin_dir . 'bp-core/bp-core-moderation.php'       );
 		require( $this->plugin_dir . 'bp-core/bp-core-loader.php'           );
 		require( $this->plugin_dir . 'bp-core/bp-core-customizer-email.php' );
+		require( $this->plugin_dir . 'bp-core/bp-core-email-tokens.php'     );
 
 		// Maybe load deprecated functionality (this double negative is proof positive!)
 		if ( ! bp_get_option( '_bp_ignore_deprecated_code', ! $this->load_deprecated ) ) {
@@ -549,6 +550,7 @@ class BuddyPress {
 			'BP_Component'                 => 'core',
 			'BP_Customizer_Control_Range'  => 'core',
 			'BP_Date_Query'                => 'core',
+			'BP_Email_Tokens'              => 'core',
 			'BP_Email_Delivery'            => 'core',
 			'BP_Email_Recipient'           => 'core',
 			'BP_Email'                     => 'core',

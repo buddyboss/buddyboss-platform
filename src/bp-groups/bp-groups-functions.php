@@ -321,15 +321,18 @@ function groups_edit_base_group_details( $args = array() ) {
  *
  * @since BuddyPress 1.0.0
  *
- * @param int         $group_id      ID of the group.
- * @param bool        $enable_forum  Whether to enable a forum for the group.
- * @param string      $status        Group status. 'public', 'private', 'hidden'.
+ * @param int $group_id ID of the group.
+ * @param bool $enable_forum Whether to enable a forum for the group.
+ * @param string $status Group status. 'public', 'private', 'hidden'.
  * @param string|bool $invite_status Optional. Who is allowed to send invitations
  *                                   to the group. 'members', 'mods', or 'admins'.
- * @param int|bool    $parent_id     Parent group ID.
+ * @param string|bool $activity_feed_status Optional. Who is allowed to send invitations
+ *                                   to the group. 'members', 'mods', or 'admins'.
+ * @param int|bool $parent_id Parent group ID.
+ *
  * @return bool True on success, false on failure.
  */
-function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status = false, $parent_id = false ) {
+function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status = false, $activity_feed_status = false, $parent_id = false ) {
 
 	$group = groups_get_group( $group_id );
 	$group->enable_forum = $enable_forum;
@@ -355,6 +358,10 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 	// Set the invite status.
 	if ( $invite_status )
 		groups_update_groupmeta( $group->id, 'invite_status', $invite_status );
+
+	// Set the activity feed status.
+	if ( $activity_feed_status )
+		groups_update_groupmeta( $group->id, 'activity_feed_status', $activity_feed_status );
 
 	groups_update_groupmeta( $group->id, 'last_activity', bp_core_current_time() );
 
@@ -1181,6 +1188,46 @@ function groups_is_user_member( $user_id, $group_id ) {
 }
 
 /**
+ * Check whether a user is allowed to post in a given group.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param int $user_id ID of the user.
+ * @param int $group_id ID of the group.
+ * @return bool true if the user is allowed, otherwise false.
+ */
+function groups_is_user_allowed_posting( $user_id, $group_id ) {
+	$is_allowed = false;
+
+	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
+	// Site admins always have access.
+	if ( bp_current_user_can( 'bp_moderate' ) ) {
+		return true;
+	}
+
+	if ( ! groups_is_user_member( $user_id, $group_id ) ) {
+		return false;
+	}
+
+	$status    = bp_group_get_activity_feed_status( $group_id );
+	$is_admin  = groups_is_user_admin( $user_id, $group_id );
+	$is_mod    = groups_is_user_mod( $user_id, $group_id );
+
+	if ( 'members' == $status ) {
+		$is_allowed = true;
+	} else if ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+		$is_allowed = true;
+	} else if ( 'admins' == $status && $is_admin ) {
+		$is_allowed = true;
+	}
+
+	return $is_allowed;
+}
+
+/**
  * Check whether a user is banned from a given group.
  *
  * @since BuddyPress 1.0.0
@@ -1307,7 +1354,7 @@ function groups_post_update( $args = '' ) {
 	$bp->groups->current_group = groups_get_group( $group_id );
 
 	// Be sure the user is a member of the group before posting.
-	if ( !bp_current_user_can( 'bp_moderate' ) && !groups_is_user_member( $user_id, $group_id ) )
+	if ( !bp_current_user_can( 'bp_moderate' ) && !groups_is_user_member( $user_id, $group_id ) && ! groups_is_user_allowed_posting( $user_id, $group_id ) )
 		return false;
 
 	// Record this in activity feeds.
@@ -1416,6 +1463,7 @@ function groups_get_invite_count_for_user( $user_id = 0 ) {
  * @return bool True on success, false on failure.
  */
 function groups_invite_user( $args = '' ) {
+	$bp = buddypress();
 
 	$args = bp_parse_args( $args, array(
 		'user_id'       => false,
@@ -1445,6 +1493,11 @@ function groups_invite_user( $args = '' ) {
 
 		if ( !$invite->save() )
 			return false;
+
+		// update user meta with invite message for a group
+		if ( ! empty( $bp->groups->invites_message ) ) {
+			update_user_meta( $user_id, 'bp_group_invite_message_' . $group_id, $bp->groups->invites_message );
+		}
 
 		/**
 		 * Fires after the creation of a new group invite.
@@ -2668,3 +2721,83 @@ function bp_get_user_group_role_title( $user_id = false, $group_id = false ) {
 	 */
 	return apply_filters( 'bp_get_user_group_role_title', $role_title );
 }
+
+/**
+ * Get inviter for member's group invitation
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param  int   $user_id ID of the user.
+ * @param  int   $group_id ID of the group.
+ * @return array
+ */
+function bp_groups_get_invited_by( $user_id = false, $group_id = false ) {
+	global $groups_template;
+
+	if ( empty( $user_id ) && bp_displayed_user_id() ) {
+		$user_id = bp_displayed_user_id();
+	}
+
+	if ( empty( $group_id ) ) {
+		$group =& $groups_template->group;
+	} else {
+		$group = groups_get_group( $group_id );
+	}
+
+	if ( empty( $user_id ) || empty( $group ) ) {
+		return false;
+	}
+
+	$member = new BP_Groups_Member( $user_id, $group->id );
+
+	$inviter = array(
+		'id'   => $member->inviter_id,
+		'name' => bp_core_get_user_displayname( $member->inviter_id ),
+		'url'  => bp_core_get_user_domain( $member->inviter_id ),
+	);
+
+	return apply_filters( 'bp_groups_get_invited_by', $inviter, $group->id );
+}
+
+/**
+ * Get a user's invite message.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param int $user_id The user ID.
+ * @param int $group_id The group ID.
+ */
+function bp_groups_get_invite_messsage_for_user( $user_id, $group_id ) {
+	return get_user_meta( $user_id, 'bp_group_invite_message_' . $group_id, true );
+}
+
+/**
+ * Clear a user's invite message.
+ *
+ * Message is cleared when an invite is accepted, rejected or deleted.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param int $user_id The user ID.
+ * @param int $group_id The group ID.
+ */
+function bp_groups_clear_invite_message_for_user( $user_id, $group_id ) {
+	delete_user_meta( $user_id, 'bp_group_invite_message_' . $group_id );
+}
+add_action( 'groups_accept_invite', 'bp_groups_clear_invite_message_for_user', 10, 2 );
+add_action( 'groups_reject_invite', 'bp_groups_clear_invite_message_for_user', 10, 2 );
+add_action( 'groups_delete_invite', 'bp_groups_clear_invite_message_for_user', 10, 2 );
+
+/**
+ * Clear a user's invite message on uninvite.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param int $group_id The group ID.
+ * @param int $user_id The user ID.
+ */
+function bp_groups_clear_invite_message_on_uninvite( $group_id, $user_id ) {
+	bp_groups_clear_invite_message_for_user( $user_id, $group_id );
+}
+add_action( 'groups_uninvite_user', 'bp_groups_clear_invite_message_on_uninvite', 10, 2 );
+add_action( 'groups_remove_member', 'bp_groups_clear_invite_message_on_uninvite', 10, 2 );

@@ -89,8 +89,9 @@ $settings = bp_email_get_appearance_settings();
 			border-spacing: 0 !important;
 			border-collapse: collapse !important;
 			table-layout: fixed !important;
-			Margin: 0 auto !important;
+			margin: 0 auto !important;
 		}
+
 		table table table {
 			table-layout: auto;
 		}
@@ -133,6 +134,55 @@ $settings = bp_email_get_appearance_settings();
 		.button-link {
 			text-decoration: none !important;
 		}
+
+		/* Remove links underline */
+		a, .ii a[href] {
+			color: <?php echo esc_attr( $settings['highlight_color'] ); ?> !important;
+			text-decoration: none !important;
+		}
+
+		/* What it does: Forces Outlook.com to display emails full width. */
+		.ExternalClass {
+			width: 100%;
+		}
+
+		/* MOBILE STYLES */
+		@media screen and (max-width: 525px) {
+			/* ALLOWS FOR FLUID TABLES */
+			.wrapper {
+				width: 100% !important;
+				max-width: 100% !important;
+			}
+
+			/* ADJUSTS LAYOUT OF LOGO IMAGE */
+			.logo img {
+				margin: 0 auto !important;
+			}
+
+			/* USE THESE CLASSES TO HIDE CONTENT ON MOBILE */
+			.mobile-hide {
+				display: none !important;
+			}
+
+			.img-max {
+				max-width: 100% !important;
+				width: 100% !important;
+				height: auto !important;
+			}
+
+			/* FULL-WIDTH TABLES */
+			.responsive-table {
+				width: 100% !important;
+			}
+
+			.mobile-text-center {
+				text-align: center !important;
+			}
+
+			.mobile-text-left {
+				text-align: left !important;
+			}
+		}
 	</style>
 
 </head>
@@ -146,7 +196,7 @@ $settings = bp_email_get_appearance_settings();
 		</div>
 		<!-- Visually Hidden Preheader Text : END -->
 
-		<div style="max-width: 600px; margin: auto;" class="email-container">
+		<div style="max-width: 600px; margin: auto; padding: 10px;" class="email-container">
 			<!--[if mso]>
 			<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" align="center">
 			<tr>
@@ -154,9 +204,9 @@ $settings = bp_email_get_appearance_settings();
 			<![endif]-->
 
 			<!-- Email Header : BEGIN -->
-			<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 600px; border-top: 7px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>" bgcolor="<?php echo esc_attr( $settings['header_bg'] ); ?>" class="header_bg">
+			<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 600px;">
 				<tr>
-					<td style="text-align: center; padding: 15px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: bold; color: <?php echo esc_attr( $settings['header_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['header_text_size'] . 'px' ); ?>" class="header_text_color header_text_size">
+					<td style="text-align: left; padding: 50px 0 30px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: bold; color: <?php echo esc_attr( $settings['site_title_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['site_title_text_size'] . 'px' ); ?>" class="site_title_text_color site_title_text_size">
 						<?php
 						/**
 						 * Fires before the display of the email template header.
@@ -165,7 +215,19 @@ $settings = bp_email_get_appearance_settings();
 						 */
 						do_action( 'bp_before_email_header' );
 
-						echo bp_get_option( 'blogname' );
+						$blogname = bp_get_option( 'blogname' );
+						$attachment_id = isset( $settings[ 'logo' ] ) ? $settings[ 'logo' ] : '';
+
+						if ( !empty( $attachment_id ) ) {
+							$image_src = wp_get_attachment_image_src( $attachment_id, array( 180, 41 ) );
+							if ( !empty( $image_src ) ) {
+								echo "<img src='" . esc_attr( $image_src[ 0 ] ) . "' alt='" . esc_attr( $blogname ) . "' style='margin:0; padding:0; border:none; display:block; max-height: 41px; width: auto;' border='0'>";
+							} else {
+								echo $blogname;
+							}
+						} else {
+							echo $blogname;
+						}
 
 						/**
 						 * Fires after the display of the email template header.
@@ -175,37 +237,135 @@ $settings = bp_email_get_appearance_settings();
 						do_action( 'bp_after_email_header' );
 						?>
 					</td>
+					<td style="text-align: right; padding: 50px 0 30px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: normal; color: <?php echo esc_attr( $settings['recipient_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['recipient_text_size'] . 'px' ); ?>" class="recipient_text_color recipient_text_size">
+						<?php
+						/**
+						 * Fires before the display of the email recipient.
+						 *
+						 * @since BuddyPress 3.1.1
+						 */
+						do_action( 'bp_before_email_recipient' );
+
+						//echo bp_get_option( 'blogname' );
+						if ( bp_is_email_customizer() ) {
+							echo '{{recipient.name}} <img src="' . buddypress()->plugin_url . "bp-core/images/mystery-man.jpg" . '" width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
+						} else {
+							bp_email_the_salutation( $settings );
+						}
+
+						/**
+						 * Fires after the display of the email recipient.
+						 *
+						 * @since BuddyPress 3.1.1
+						 */
+						do_action( 'bp_after_email_recipient' );
+						?>
+					</td>
 				</tr>
 			</table>
 			<!-- Email Header : END -->
 
 			<!-- Email Body : BEGIN -->
-			<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" bgcolor="<?php echo esc_attr( $settings['body_bg'] ); ?>" width="100%" style="max-width: 600px; border-radius: 5px;" class="body_bg">
+			<?php if ( bp_is_email_customizer() ) { ?>
 
-				<!-- 1 Column Text : BEGIN -->
+			<!-- Start Table -->
+			<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" bgcolor="<?php echo esc_attr( $settings['body_bg'] ); ?>" width="100%" style="border-collapse: separate !important; max-width: 600px; border-radius: 5px; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>" class="body_bg body_border_color">
 				<tr>
-					<td>
-						<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+					<td height="40px" style="font-size: 40px; line-height: 40px;">&nbsp;</td>
+				</tr>
+				<tr>
+					<td align="center">
+						<!-- LEFT COLUMN -->
+						<table cellpadding="0" cellspacing="0" border="0" width="86%" style="width: 86%;">
 							<tr>
-								<td style="padding: 20px; font-family: sans-serif; mso-height-rule: exactly; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>" class="body_text_color body_text_size">
-									<span style="font-weight: bold; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.35 ) . 'px' ); ?>" class="welcome"><?php bp_email_the_salutation( $settings ); ?></span>
-									<hr color="<?php echo esc_attr( $settings['email_bg'] ); ?>"><br>
-									{{{content}}}
+								<td>
+									<div class="body_text_color body_text_size" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;">
+										<a href="#" target="_blank" style="text-decoration: none">{{sender.name}}</a> <?php _e('sent you a new message', 'buddypress'); ?>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td height="25px" style="font-size: 25px; line-height: 25px;">&nbsp;</td>
+							</tr>
+							<tr>
+								<td valign="middle" width="10%" style="vertical-align: middle;">
+									<a href="#" target="_blank">
+										<img alt="Avatar" src="<?php echo buddypress()->plugin_url; ?>bp-core/images/mystery-man.jpg" width="45" height="45" style="border: 1px solid #b9babc; border-radius: 50%; vertical-align: middle;" />
+									</a>
+									<span class="body_secondary_text_color body_text_size" style="margin-left: 10px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; letter-spacing: -0.24px;">{{sender.name}}</span>
+								</td>
+							</tr>
+							<tr>
+								<td height="25px" style="font-size: 25px; line-height: 25px;">&nbsp;</td>
+							</tr>
+							<tr>
+								<td>
+									<table class="quote_bg body_border_color" cellspacing="0" cellpadding="0" border="0" width="100%" bgcolor="<?php echo esc_attr( $settings['quote_bg'] ); ?>" style="border-radius: 4px; border-collapse: separate !important; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>">
+										<tr>
+											<td height="25px" style="font-size: 25px; line-height: 25px;">&nbsp;</td>
+										</tr>
+										<tr>
+											<td align="center">
+												<table cellpadding="0" cellspacing="0" border="0" width="88%" style="width: 88%;">
+													<tr>
+														<td>
+															<div class="body_text_color body_text_size" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;">
+																{{usermessage}}
+															</div>
+														</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+										<tr>
+											<td height="25px" style="font-size: 25px; line-height: 25px;">&nbsp;</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td height="25px" style="font-size: 25px; line-height: 25px;">&nbsp;</td>
+							</tr>
+							<tr>
+								<td>
+									<a class="body_text_size highlight_color button_outline" href="#" target="_blank" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; text-decoration: none; display: block; border: 1px solid <?php echo esc_attr( $settings['highlight_color'] ); ?>; border-radius: 100px; width: <?php echo esc_attr( floor( $settings['body_text_size'] * 5.25 ) . 'px' ); ?>; text-align: center; height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2.125 ) . 'px' ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 2.125 ) . 'px' ); ?>; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['highlight_color'] ); ?>;"><?php _e('Reply', 'buddypress'); ?></a>
 								</td>
 							</tr>
 						</table>
 					</td>
 				</tr>
-				<!-- 1 Column Text : BEGIN -->
-
+				<tr>
+					<td height="45px" style="font-size: 45px; line-height: 45px;">&nbsp;</td>
+				</tr>
 			</table>
+			<!-- End Table -->
+
+			<?php } else { ?>
+				<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" bgcolor="<?php echo esc_attr( $settings['body_bg'] ); ?>" width="100%" style="border-collapse: separate !important; max-width: 600px; border-radius: 5px; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>" class="body_bg body_border_color">
+
+					<!-- 1 Column Text : BEGIN -->
+					<tr>
+						<td>
+							<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+								<tr>
+									<td style="padding: 20px 40px; font-family: sans-serif; mso-height-rule: exactly; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>" class="body_text_color body_text_size">
+										{{{content}}}
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<!-- 1 Column Text : BEGIN -->
+
+				</table>
+			<?php } ?>
 			<!-- Email Body : END -->
 
 			<!-- Email Footer : BEGIN -->
 			<br>
-			<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="<?php echo esc_attr( $settings['direction'] ); ?>" width="100%" style="max-width: 600px; border-radius: 5px;" bgcolor="<?php echo esc_attr( $settings['footer_bg'] ); ?>" class="footer_bg">
+			<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="<?php echo esc_attr( $settings['direction'] ); ?>" width="100%" style="max-width: 600px; border-radius: 5px;">
 				<tr>
-					<td style="padding: 20px; width: 100%; font-size: <?php echo esc_attr( $settings['footer_text_size'] . 'px' ); ?>; font-family: sans-serif; mso-height-rule: exactly; line-height: <?php echo esc_attr( floor( $settings['footer_text_size'] * 1.618 ) . 'px' ); ?>; text-align: <?php echo esc_attr( $settings['direction'] ); ?>; color: <?php echo esc_attr( $settings['footer_text_color'] ); ?>;" class="footer_text_color footer_text_size">
+					<td style="padding: 20px 40px; width: 100%; font-size: <?php echo esc_attr( $settings['footer_text_size'] . 'px' ); ?>; font-family: sans-serif; mso-height-rule: exactly; line-height: <?php echo esc_attr( floor( $settings['footer_text_size'] * 1.618 ) . 'px' ); ?>; text-align: center; color: <?php echo esc_attr( $settings['footer_text_color'] ); ?>;" class="footer_text_color footer_text_size">
 						<?php
 						/**
 						 * Fires before the display of the email template footer.
@@ -216,8 +376,7 @@ $settings = bp_email_get_appearance_settings();
 						?>
 
 						<span class="footer_text"><?php echo nl2br( stripslashes( $settings['footer_text'] ) ); ?></span>
-						<br><br>
-						<a href="{{{unsubscribe}}}" style="text-decoration: underline;"><?php echo esc_html_x( 'unsubscribe', 'email', 'buddyboss' ); ?></a>
+						<p style="margin: 5px 0;"><?php _e( "If you don't want to receive these emails in the future, please ", 'buddyboss' ); ?><a href="{{{unsubscribe}}}" style="text-decoration: none;"><?php echo esc_html_x( 'unsubscribe', 'email', 'buddyboss' ); ?></a>.</p>
 
 						<?php
 						/**
@@ -228,6 +387,9 @@ $settings = bp_email_get_appearance_settings();
 						do_action( 'bp_after_email_footer' );
 						?>
 					</td>
+				</tr>
+				<tr>
+					<td height="45px" style="font-size: 45px; line-height: 45px;">&nbsp;</td>
 				</tr>
 			</table>
 			<!-- Email Footer : END -->

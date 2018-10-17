@@ -10,7 +10,7 @@
 
 	<?php if ( bp_current_user_can( 'groups_access_group' ) ) : ?>
 
-		<h2 class="bp-screen-reader-text"><?php esc_html_e( 'Group Leadership', 'buddyboss' ); ?></h2>
+		<h2 class="bp-screen-reader-text"><?php esc_html_e( 'Group Organizers', 'buddyboss' ); ?></h2>
 
 		<dl class="moderators-lists">
 			<dt class="moderators-title"><?php esc_html_e( 'Organized by', 'buddyboss' ); ?></dt>

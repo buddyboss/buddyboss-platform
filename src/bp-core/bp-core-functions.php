@@ -518,8 +518,8 @@ function bp_core_get_directory_page_ids( $status = 'active' ) {
 			unset( $page_ids[ $component_name ] );
 		}
 
-		// 'register' and 'activate' do not have components, but should be whitelisted.
-		if ( in_array( $component_name, array( 'register', 'activate' ), true ) ) {
+		// 'register', 'activate', 'terms' and 'privacy' do not have components, but should be whitelisted.
+		if ( in_array( $component_name, array( 'register', 'activate', 'terms', 'privacy' ), true ) ) {
 			continue;
 		}
 
@@ -3195,17 +3195,20 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 function bp_email_get_appearance_settings() {
 	$default_args = array(
 		'body_bg'           => '#FFFFFF',
-		'body_text_color'   => '#555555',
-		'body_text_size'    => 15,
-		'email_bg'          => '#F7F3F0',
-		'footer_bg'         => '#F7F3F0',
-		'footer_text_color' => '#525252',
+		'quote_bg'          => '#F7FAFE',
+		'body_border_color' => '#E7E9EC',
+		'body_text_color'   => '#7F868F',
+		'body_secondary_text_color' => '#122B46',
+		'body_text_size'    => 16,
+		'email_bg'          => '#FAFBFD',
+		'footer_text_color' => '#7F868F',
 		'footer_text_size'  => 12,
-		'header_bg'         => '#F7F3F0',
-		'highlight_color'   => '#D84800',
-		'header_text_color' => '#000000',
-		'header_text_size'  => 30,
-		'direction'         => is_rtl() ? 'right' : 'left',
+		'highlight_color'   => '#007CFF',
+		'site_title_text_color' => '#122B46',
+		'site_title_text_size'  => 	20,
+		'recipient_text_color'	=> '#7F868F',
+		'recipient_text_size'	=> 	14,
+		'direction'				=> is_rtl() ? 'right' : 'left',
 
 		'footer_text' => sprintf(
 			/* translators: email disclaimer, e.g. "© 2016 Site Name". */
@@ -3344,9 +3347,9 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] Activate your account', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: <a href=\"{{{activate.url}}}\">{{{activate.url}}}</a>", 'buddyboss' ),
+			'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link and click on the <strong>Activate</strong> button:\n<a href=\"{{{activate.url}}}\">{{{activate.url}}}</a>\n\nIf the 'Activation Key' field is empty, copy and paste the following into the field - {{key}}", 'buddypress' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: {{{activate.url}}}", 'buddyboss' )
+			'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link and click on the 'Activate' button: {{{activate.url}}}\n\nIf the 'Activation Key' field is empty, copy and paste the following into the field - {{key}}", 'buddypress' )
 		),
 		'core-user-registration-with-blog' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3411,9 +3414,9 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] New message from {{sender.name}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "{{sender.name}} sent you a new message: &quot;{{usersubject}}&quot;\n\n<blockquote>&quot;{{usermessage}}&quot;</blockquote>\n\n<a href=\"{{{message.url}}}\">Go to the discussion</a> to reply or catch up on the conversation.", 'buddyboss' ),
+			'post_content' => __( "{{sender.name}} sent you a new message\n\n<blockquote>&quot;{{usermessage}}&quot;</blockquote>\n\n<a href=\"{{{message.url}}}\">Go to the discussion</a> to reply or catch up on the conversation.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{sender.name}} sent you a new message: \"{{usersubject}}\"\n\n\"{{usermessage}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
+			'post_excerpt' => __( "{{sender.name}} sent you a new message\n\n\"{{usermessage}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 		),
 		'settings-verify-email-change' => array(
 			/* translators: do not remove {} brackets or translate its contents. */

@@ -49,7 +49,7 @@ function bp_core_admin_get_directory_pages() {
 /**
  * Generate a list of static pages, for use when building Components panel markup.
  *
- * By default, this list contains 'register' and 'activate'.
+ * By default, this list contains 'register', 'activate', 'terms' & 'privacy'.
  *
  * @since BuddyPress 2.4.1
  *
@@ -58,6 +58,8 @@ function bp_core_admin_get_directory_pages() {
 function bp_core_admin_get_static_pages() {
 	$static_pages = array(
 		'register' => __( 'Register Form', 'buddyboss' ),
+		'terms'    => __( 'Terms of Service', 'buddyboss' ),
+		'privacy'  => __( 'Privacy Policy', 'buddyboss' ),
 		'activate' => __( 'Activation', 'buddyboss' ),
 	);
 

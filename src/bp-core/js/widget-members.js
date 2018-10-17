@@ -7,6 +7,34 @@ jQuery(document).ready( function() {
 			member_widget_click_handler();
 		} );
 	}
+    
+    // Set the interval and the namespace event
+    if ( typeof wp !== 'undefined' && typeof wp.heartbeat !== 'undefined' ) {
+        jQuery( document ).on( 'heartbeat-send', function ( event, data ) {
+            if ( jQuery( '#boss_whos_online_widget_heartbeat' ).length ) {
+                data.boss_whos_online_widget = jQuery( '#boss_whos_online_widget_heartbeat' ).data( 'max' );
+            }
+            if ( jQuery( '#boss_recently_active_widget_heartbeat' ).length ) {
+                data.boss_recently_active_widget = jQuery( '#boss_recently_active_widget_heartbeat' ).data( 'max' );
+            }
+            jQuery( '.bs-heartbeat-reload' ).removeClass( 'hide' );
+        } );
+
+        jQuery( document ).on( 'heartbeat-tick', function ( event, data ) {
+            // Check for our data, and use it.
+            if ( jQuery( '#boss_whos_online_widget_total_heartbeat' ).length ) {
+                jQuery( '#boss_whos_online_widget_total_heartbeat' ).html( data.boss_whos_online_widget_total );
+            }
+            if ( jQuery( '#boss_whos_online_widget_heartbeat' ).length ) {
+                jQuery( '#boss_whos_online_widget_heartbeat' ).html( data.boss_whos_online_widget );
+            }
+            if ( jQuery( '#boss_recently_active_widget_heartbeat' ).length ) {
+                jQuery( '#boss_recently_active_widget_heartbeat' ).html( data.boss_recently_active_widget );
+            }
+            jQuery( '.bs-heartbeat-reload' ).addClass( 'hide' );
+        } );
+
+    }
 });
 
 function member_widget_click_handler() {

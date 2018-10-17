@@ -639,7 +639,7 @@ body.buddypress article.page > .entry-header .entry-title {
 .buddypress-wrap .subnav-filters {
   background: none;
   list-style: none;
-  margin: 15px 0 0;
+  margin: 15px 0;
   padding: 0;
 }
 
@@ -962,7 +962,7 @@ body.buddypress article.page > .entry-header .entry-title {
   }
   .bp-list li .item .list-title,
   .bp-list li .item .item-meta {
-    float: left;
+    float: none;
     text-align: left;
   }
   .bp-list li .item .group-details,
@@ -2372,10 +2372,6 @@ body.no-js .single-item-header .js-self-profile-button {
   padding-top: 1em;
 }
 
-.single-item.group-members .item-body .filters {
-  margin-top: 0;
-}
-
 /**
 *-----------------------------------------
 * @subsection 5.2.1.1 - Management Settings Screens
@@ -2501,6 +2497,10 @@ body.no-js .single-item-header .js-self-profile-button {
   }
 }
 
+#avatar-crop-actions {
+  margin-top: 15px;
+}
+
 /**
 *-----------------------------------------
 * @subsection 5.2.1.2 - Group Members List
@@ -2529,7 +2529,8 @@ body.no-js .single-item-header .js-self-profile-button {
 }
 
 .buddypress .bp-invites-content ul.item-list li .list-title {
-  margin: 0 auto;
+  font-size: 22px;
+  margin: 10px 0 0;
   width: 80%;
 }
 
@@ -2561,7 +2562,6 @@ body.no-js .single-item-header .js-self-profile-button {
 .buddypress .bp-invites-content li ul.group-inviters {
   clear: both;
   margin: 0;
-  overflow: hidden;
 }
 
 .buddypress .bp-invites-content li ul.group-inviters li {
@@ -3295,6 +3295,10 @@ input#send-to-input {
 /*__ Settings Global __*/
 .buddypress.settings .profile-settings.bp-tables-user select {
   width: 100%;
+}
+
+#activate-page .bp-messages {
+  margin-bottom: 20px;
 }
 
 /*__ General __*/
@@ -4726,7 +4730,6 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
   font-weight: 400;
   letter-spacing: normal;
   line-height: 1.25;
-  max-width: 200px;
   padding: 5px 8px;
   pointer-events: none;
   text-shadow: none;
@@ -4753,16 +4756,18 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 }
 
 .bp-tooltip:after {
-  left: 50%;
+  left: 0;
   margin-top: 7px;
   top: 110%;
-  -webkit-transform: translate(-50%, 0);
-  -ms-transform: translate(-50%, 0);
-  transform: translate(-50%, 0);
+  -webkit-transform: translate(0, 0);
+  -ms-transform: translate(0, 0);
+  transform: translate(0, 0);
 }
 
 .user-list .bp-tooltip:after {
   left: 0;
+  margin-top: 7px;
+  top: 110%;
   -webkit-transform: translate(0, 0);
   -ms-transform: translate(0, 0);
   transform: translate(0, 0);
@@ -4771,7 +4776,9 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 @media screen and (min-width: 46.8em) {
   .user-list .bp-tooltip:after {
     left: auto;
+    margin-top: 7px;
     right: 0;
+    top: 110%;
     -webkit-transform: translate(0, 0);
     -ms-transform: translate(0, 0);
     transform: translate(0, 0);
@@ -4783,6 +4790,8 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 .notification-actions .bp-tooltip:after,
 .participants-list .bp-tooltip:after {
   left: 0;
+  margin-top: 7px;
+  top: 110%;
   -webkit-transform: translate(0, 0);
   -ms-transform: translate(0, 0);
   transform: translate(0, 0);
@@ -4792,7 +4801,9 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 .message-metadata .actions .bp-tooltip:after,
 .single-message-thread-header .actions .bp-tooltip:after {
   left: auto;
+  margin-top: 7px;
   right: 0;
+  top: 110%;
   -webkit-transform: translate(0, 0);
   -ms-transform: translate(0, 0);
   transform: translate(0, 0);
@@ -4801,6 +4812,44 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 .bp-invites-content #send-invites-editor .bp-tooltip:after {
   left: 0;
   right: auto;
+}
+
+[data-tooltip-length="small"]:after {
+  white-space: normal;
+  width: 100px;
+}
+
+[data-tooltip-length="medium"]:after {
+  white-space: normal;
+  width: 180px;
+}
+
+[data-tooltip-length="large"]:after {
+  font-size: 14px;
+  line-height: 1.4;
+  padding: 10px;
+  white-space: normal;
+  width: 260px;
+}
+
+[data-tooltip-length="xlarge"]:after {
+  font-size: 14px;
+  line-height: 1.4;
+  padding: 12px;
+  white-space: normal;
+  width: 360px;
+}
+
+@media screen and (max-width: 768px) {
+  [data-tooltip-length="xlarge"]:after {
+    white-space: normal;
+    width: 90vw;
+  }
+}
+
+[data-tooltip-length="fit"]:after {
+  white-space: normal;
+  width: 100%;
 }
 
 /**
@@ -5193,7 +5242,6 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
   .bp-single-vert-nav .item-body:not(#group-create-body) #subnav:not(.tabbed-links) li.current a {
     background: none;
     color: #333;
-    text-decoration: underline;
   }
   .bp-single-vert-nav .item-body:not(#group-create-body) #subnav:not(.tabbed-links) li:last-child a {
     border: none;

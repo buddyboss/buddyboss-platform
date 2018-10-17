@@ -17,26 +17,34 @@
 		});
 	});
 
-	wp.customize( 'bp_email_options[header_bg]', function( value ) {
+	wp.customize( 'bp_email_options[site_title_text_size]', function( value ) {
 		value.bind(function( newval ) {
 			if ( newval.length ) {
-				$( '.header_bg' ).attr( 'bgcolor', newval );
+				$( '.site_title_text_size' ).css( 'font-size', newval + 'px' );
 			}
 		});
 	});
 
-	wp.customize( 'bp_email_options[header_text_size]', function( value ) {
+	wp.customize( 'bp_email_options[recipient_text_size]', function( value ) {
 		value.bind(function( newval ) {
 			if ( newval.length ) {
-				$( '.header_text_size' ).css( 'font-size', newval + 'px' );
+				$( '.recipient_text_size' ).css( 'font-size', newval + 'px' );
 			}
 		});
 	});
 
-	wp.customize( 'bp_email_options[header_text_color]', function( value ) {
+	wp.customize( 'bp_email_options[site_title_text_color]', function( value ) {
 		value.bind(function( newval ) {
 			if ( newval.length ) {
-				$( '.header_text_color' ).css( 'color', newval );
+				$( '.site_title_text_color' ).css( 'color', newval );
+			}
+		});
+	});
+
+	wp.customize( 'bp_email_options[recipient_text_color]', function( value ) {
+		value.bind(function( newval ) {
+			if ( newval.length ) {
+				$( '.recipient_text_color' ).css( 'color', newval );
 			}
 		});
 	});
@@ -44,9 +52,9 @@
 	wp.customize( 'bp_email_options[highlight_color]', function( value ) {
 		value.bind(function( newval ) {
 			if ( newval.length ) {
-				$( '.header_bg' ).css( 'border-top-color', newval );
 				$( 'a' ).css( 'color', newval );
 				$( 'hr' ).attr( 'color', newval );
+				$( '.button_outline' ).css( 'border-color', newval );
 			}
 		});
 	});
@@ -59,6 +67,22 @@
 		});
 	});
 
+	wp.customize( 'bp_email_options[quote_bg]', function( value ) {
+		value.bind(function( newval ) {
+			if ( newval.length ) {
+				$( '.quote_bg' ).attr( 'bgcolor', newval );
+			}
+		});
+	});
+
+	wp.customize( 'bp_email_options[body_border_color]', function( value ) {
+		value.bind(function( newval ) {
+			if ( newval.length ) {
+				$( '.body_border_color' ).css( 'border-color', newval );
+			}
+		});
+	});
+
 	wp.customize( 'bp_email_options[body_text_size]', function( value ) {
 		value.bind(function( newval ) {
 			if ( newval.length ) {
@@ -66,6 +90,11 @@
 				$( '.body_text_size' )
 					.css( 'font-size', newval + 'px' )
 					.css( 'line-height', Math.floor( newval * 1.618 ) + 'px' );
+				
+				$( '.button_outline' )
+					.css( 'width', Math.floor( newval * 5.25 ) + 'px' )
+					.css( 'height', Math.floor( newval * 2.125 ) + 'px' )
+					.css( 'line-height', Math.floor( newval * 2.125 ) + 'px' );
 
 				// 1.35 = default body_text_size multipler. Gives default heading of 20px.
 				$( '.welcome' ).css( 'font-size', Math.floor( newval * 1.35 ) + 'px' );
@@ -81,10 +110,10 @@
 		});
 	});
 
-	wp.customize( 'bp_email_options[footer_bg]', function( value ) {
+	wp.customize( 'bp_email_options[body_secondary_text_color]', function( value ) {
 		value.bind(function( newval ) {
 			if ( newval.length ) {
-				$( '.footer_bg' ).attr( 'bgcolor', newval );
+				$( '.body_secondary_text_color' ).css( 'color', newval );
 			}
 		});
 	});

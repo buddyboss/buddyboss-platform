@@ -620,7 +620,7 @@ class BP_Groups_Component extends BP_Component {
 			);
 
 			$sub_nav[] = array_merge( array(
-				'name'              => __( 'Group Members', 'buddyboss' ),
+				'name'              => __( 'All Members', 'buddyboss' ),
 				'slug'              => 'all-members',
 				'position'          => 0,
 			), $default_params );
@@ -638,7 +638,7 @@ class BP_Groups_Component extends BP_Component {
 					'parent_url'      => $group_link,
 					'parent_slug'     => $this->current_group->slug,
 					'screen_function' => 'groups_screen_group_activity',
-					'position'        => 20,
+					'position'        => 11,
 					'user_has_access' => $this->current_group->user_has_access,
 					'item_css_id'     => 'activity',
 					'no_access_url'   => $group_link,
@@ -648,7 +648,7 @@ class BP_Groups_Component extends BP_Component {
 			// If this is a private group, and the user is not a
 			// member and does not have an outstanding invitation,
 			// show a "Request Membership" nav item.
-			if ( bp_current_user_can( 'groups_request_membership', array( 'group_id' => $this->current_group->id ) ) ) {
+			if ( groups_check_for_membership_request( bp_loggedin_user_id(), $this->current_group->id ) || bp_current_user_can( 'groups_request_membership', array( 'group_id' => $this->current_group->id ) ) ) {
 
 				$sub_nav[] = array(
 					'name'            => _x( 'Request Membership','Group screen nav', 'buddyboss' ),
@@ -793,7 +793,7 @@ class BP_Groups_Component extends BP_Component {
 			$title   = _x( 'Groups', 'My Account Groups', 'buddyboss' );
 			$pending = _x( 'No Pending Invites', 'My Account Groups sub nav', 'buddyboss' );
 
-			if ( ! empty( $count['total'] ) ) {
+			if ( ! empty( $count ) ) {
 				$title = sprintf(
 					/* translators: %s: Group invitation count for the current user */
 					_x( 'Groups %s', 'My Account Groups nav', 'buddyboss' ),

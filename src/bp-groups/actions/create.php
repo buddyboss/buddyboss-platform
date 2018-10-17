@@ -124,6 +124,20 @@ function groups_action_create_group() {
 			$invite_status	       = !empty( $_POST['group-invite-status'] ) && in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : 'members';
 
 			groups_update_groupmeta( $bp->groups->new_group_id, 'invite_status', $invite_status );
+
+			/**
+			 * Filters the allowed activity feed statuses.
+			 *
+			 * @since BuddyBoss 3.1.1
+			 *
+			 * @param array $value Array of statuses allowed.
+			 *                     Possible values are 'members,
+			 *                     'mods', and 'admins'.
+			 */
+			$allowed_activity_feed_status = apply_filters( 'groups_allowed_activity_feed_status', array( 'members', 'mods', 'admins' ) );
+			$activity_feed_status	       = !empty( $_POST['group-activity-feed-status'] ) && in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? $_POST['group-activity-feed-status'] : 'members';
+
+			groups_update_groupmeta( $bp->groups->new_group_id, 'activity_feed_status', $activity_feed_status );
 		}
 
 		if ( 'group-invites' === bp_get_groups_current_create_step() ) {
