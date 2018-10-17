@@ -170,12 +170,12 @@ class BP_Email_Tokens {
 												$group_avatar =  bp_core_fetch_avatar( array(
 													'item_id'    => $group->id,
 													'avatar_dir' => 'group-avatars',
+													'type'       => 'full',
 													'object'     => 'group',
 													'width'      => 200,
 													'height'     => 200,
 													'html'       => false
 												) );
-												$group_avatar_url = !empty( $group_avatar ) ? $group_avatar : buddypress()->plugin_url . 'bp-core/images/mystery-group.jpg';
 												?>
                                                 <img alt="" src="<?php echo $group_avatar; ?>" width="100" height="100" border="0"
                                                      style="margin:0; padding:0; box-sizing: border-box; border-radius: 3px; border: 3px solid <?php echo esc_attr( $settings['body_bg'] ); ?>; display:block;" />
@@ -313,6 +313,7 @@ class BP_Email_Tokens {
 								'item_id'    => $group->id,
 								'avatar_dir' => 'group-avatars',
 								'object'     => 'group',
+								'type'       => 'full',
 								'width'      => 200,
 								'height'     => 200,
 								'html'       => false
@@ -362,7 +363,7 @@ class BP_Email_Tokens {
 												'item_id'    => $user_id,
 												'avatar_dir' => 'avatars',
 												'object'     => 'user',
-												'type'       => 'thumb',
+												'type'       => 'full',
 												'html'       => false
 											) );
 
@@ -462,6 +463,7 @@ class BP_Email_Tokens {
 										'item_id' => $activity->user_id,
 										'width'   => 100,
 										'height'  => 100,
+										'type'    => 'full',
 										'html'    => false,
 									) );
 									?>
@@ -579,6 +581,7 @@ class BP_Email_Tokens {
 										'item_id' => $activity_comment->user_id,
 										'width'   => 100,
 										'height'  => 100,
+										'type'    => 'full',
 										'html'    => false,
 									) );
 									?>
@@ -692,6 +695,7 @@ class BP_Email_Tokens {
 												'item_id' => $this->_message_sender_id,
 												'width'   => 100,
 												'height'  => 100,
+												'type'    => 'full',
 												'html'    => false,
 											) ); ?>
 											<img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47" border="0" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" />
