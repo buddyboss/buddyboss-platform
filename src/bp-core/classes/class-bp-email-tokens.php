@@ -1010,21 +1010,18 @@ class BP_Email_Tokens {
 			return '';
 		}
 
-		$email_type = $bp_email->get( 'type' );
-		switch ( $email_type ) {
-			case 'groups-at-message':
-				$group_id = bp_get_current_group_id();
-				break;
-		}
+		$group = isset( $tokens['group'] ) ? $tokens['group'] : false;
+		if ( empty( $group ) ) {
+			$group_id = isset( $tokens['group.id'] ) ? $tokens['group.id'] : false;
+			if ( empty( $group_id ) ) {
+				return $output;
+			}
 
-		if ( empty( $group_id ) ) {
-			return '';
+			$group = groups_get_group( $group_id );
 		}
-
-		$group = groups_get_group( $group_id );
 
 		if ( empty( $group ) ) {
-			return '';
+			return $output;
 		}
 
 		$settings = bp_email_get_appearance_settings();
