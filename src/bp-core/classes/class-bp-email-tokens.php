@@ -1020,7 +1020,9 @@ class BP_Email_Tokens {
 			$group = groups_get_group( $group_id );
 		}
 
-		if ( empty( $group ) ) {
+		$group_excerpt = bp_get_group_description_excerpt( $group );
+
+		if ( empty( $group ) || empty( $group_excerpt ) ) {
 			return $output;
 		}
 
@@ -1042,7 +1044,7 @@ class BP_Email_Tokens {
 								<tr>
 									<td>
 										<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;">
-											<?php echo bp_get_group_description_excerpt( $group ); ?>
+											<?php echo $group_excerpt; ?>
 										</div>
 									</td>
 								</tr>
