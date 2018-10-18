@@ -184,9 +184,6 @@ class BP_Admin {
 
 		// Emails
 		add_filter( 'bp_admin_menu_order', array( $this, 'emails_admin_menu_order' ), 20 );
-
-		//Install Follow
-        add_action( 'admin_init', array( $this, 'install_follow' ) );
 	}
 
 	/**
@@ -972,20 +969,5 @@ class BP_Admin {
 			wp_register_script( $id, $script['file'], $script['dependencies'], $version, $script['footer'] );
 		}
 	}
-
-	/**
-	 * Install Follow if Friends component is active
-     *
-     * @since BuddyBoss 3.1.1
-	 */
-	public function install_follow() {
-
-	    if ( bp_is_active( 'friends' ) ) {
-		    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		    require_once( buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
-		    bp_core_install_follow();
-        }
-
-    }
 }
 endif; // End class_exists check.

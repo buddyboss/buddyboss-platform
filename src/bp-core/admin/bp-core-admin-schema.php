@@ -45,6 +45,7 @@ function bp_core_install( $active_components = false ) {
 	// Connections.
 	if ( !empty( $active_components['friends'] ) ) {
 		bp_core_install_friends();
+		bp_core_install_follow(); // follow depends on connection
 	}
 
 	// Extensible Groups.
@@ -181,9 +182,6 @@ function bp_core_install_friends() {
 				KEY friend_user_id (friend_user_id)
 			) {$charset_collate};";
 
-	// Install Follow when activating Friends component.
-	bp_core_install_follow();
-
 	dbDelta( $sql );
 }
 
@@ -198,7 +196,7 @@ function bp_core_install_follow() {
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
 	$bp_prefix       = bp_core_get_table_prefix();
 
-	$sql[] = "CREATE TABLE IF NOT EXISTS {$bp_prefix}bp_unfollow (
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_unfollow (
 			id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 			leader_id bigint(20) NOT NULL,
 			follower_id bigint(20) NOT NULL,
