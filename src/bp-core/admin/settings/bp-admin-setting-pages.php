@@ -31,6 +31,17 @@ class BP_Admin_Setting_Pages extends BP_Admin_Setting_tab {
 		foreach ($directory_pages as $name => $label) {
 			$this->add_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', [], compact('existing_pages', 'name', 'label') );
 		}
+
+		if (! bp_get_signup_allowed()) {
+			return;
+		}
+
+		$existing_pages = bp_core_get_directory_page_ids();
+		$static_pages = bp_core_admin_get_static_pages();
+
+		foreach ($static_pages as $name => $label) {
+			$this->add_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', [], compact('existing_pages', 'name', 'label') );
+		}
 	}
 }
 

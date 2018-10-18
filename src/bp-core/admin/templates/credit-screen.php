@@ -2,10 +2,6 @@
 
 <div class="wrap bp-about-wrap">
 
-<h1><?php _e( 'BuddyBoss Settings', 'buddyboss' ); ?> </h1>
-
-<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Credits', 'buddyboss' ) ); ?></h2>
-
 	<h3 class="wp-people-group"><?php _e( 'Meet the BuddyBoss Team', 'buddyboss' ); ?></h3>
 	<ul class="wp-people-group " id="wp-people-group-core-team">
 		<li class="wp-person" id="wp-person-michaeleisenwasser">

@@ -212,7 +212,8 @@ class BP_Admin {
 			$this->capability,
 			$this->settings_page,
 			'bp_core_admin_backpat_menu',
-			'div'
+			buddypress()->plugin_url . 'bp-core/images/admin/logo.svg',
+			64.99
 		);
 
 		$hooks[] = add_submenu_page(
@@ -242,6 +243,15 @@ class BP_Admin {
 			'bp-settings',
 			'bp_core_admin_settings'
 		);
+
+		// $hooks[] = add_submenu_page(
+		// 	$this->settings_page,
+		// 	__( 'BuddyBoss Integrations', 'buddyboss' ),
+		// 	__( 'Integrations', 'buddyboss' ),
+		// 	$this->capability,
+		// 	'bp-integrations',
+		// 	'bp_core_admin_integrations'
+		// );
 
 		// $hooks[] = add_submenu_page(
 		// 	$this->settings_page,
@@ -366,6 +376,7 @@ class BP_Admin {
 		require_once $this->admin_dir . '/settings/bp-admin-setting-friends.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-messages.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-registration.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-credit.php';
 	}
 
 	/**

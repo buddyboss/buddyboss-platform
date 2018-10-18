@@ -13,13 +13,14 @@ defined( 'ABSPATH' ) || exit;
 if ( !class_exists( 'BP_Admin_Setting_tab' ) ) :
 
 class BP_Admin_Setting_tab {
-	public $tab_name = '';
-	public $tab_slug = '';
-	public $tab_order = 10;
-	public $tab_description = '';
-	public $setting_page = 'bp-settings';
-	public $section_name = '';
-	public $section_label = '';
+	public $tab_name         = '';
+	public $tab_slug         = '';
+	public $tab_order        = 10;
+	public $tab_description  = '';
+	public $setting_page     = 'bp-settings';
+	public $section_name     = '';
+	public $section_label    = '';
+	public $section_callback = '__return_null';
 
 	public function __construct() {
 		$this->initialize();
@@ -41,6 +42,10 @@ class BP_Admin_Setting_tab {
 		check_admin_referer( $this->tab_slug . '-options' );
 		$this->settings_save();
 		$this->settings_saved();
+	}
+
+	public function show_tab() {
+		return $this->has_fields();
 	}
 
 	public function has_fields() {
@@ -116,6 +121,14 @@ class BP_Admin_Setting_tab {
 		if ( ! bp_is_root_blog() ) restore_current_blog();
 	}
 
+	public function section_output()
+	{
+		if ($this->tab_description) {
+			echo wpautop($this->tab_description);
+		}
+		call_user_func($this->section_callback);
+	}
+
 	protected function is_saving() {
 		if ( ! isset( $_GET['page'] ) || ! isset( $_POST['submit'] ) ) {
 			return false;
@@ -145,7 +158,7 @@ class BP_Admin_Setting_tab {
 	}
 
 	protected function register_section() {
-		add_settings_section( $this->section_name, $this->section_label, '__return_null', $this->tab_slug );
+		add_settings_section( $this->section_name, $this->section_label, [$this, 'section_output'], $this->tab_slug );
 	}
 
 	protected function register_fields() {}

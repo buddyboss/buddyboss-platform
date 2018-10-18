@@ -46,6 +46,42 @@ function bp_core_admin_settings() {
 }
 
 /**
+ * The main settings page
+ *
+ * @since BuddyPress 1.6.0
+ *
+ */
+function bp_core_admin_integrations() {
+
+	// We're saving our own options, until the WP Settings API is updated to work with Multisite.
+	$form_action = add_query_arg( [
+		'page' => 'bp-integration',
+		'tab' => bp_core_get_admin_integration_active_tab()
+	], bp_get_admin_url( 'admin.php' ) );
+
+	?>
+
+	<div class="wrap">
+
+		<h1><?php _e( 'BuddyBoss Settings', 'buddyboss' ); ?> </h1>
+
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_integrations_tabs(); ?></h2>
+		<form action="<?php echo esc_url( $form_action ) ?>" method="post">
+
+			<?php settings_fields( bp_core_get_admin_integration_active_tab() ); ?>
+
+			<?php do_settings_sections( bp_core_get_admin_integration_active_tab() ); ?>
+
+			<p class="submit">
+				<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
+			</p>
+		</form>
+	</div>
+
+<?php
+}
+
+/**
  * Save our settings.
  *
  * @since BuddyPress 1.6.0

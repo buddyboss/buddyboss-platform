@@ -465,7 +465,7 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 	});
 
 	$tabs = array_filter($bp_admin_setting_tabs, function($tab) {
-		return $tab->has_fields();
+		return $tab->show_tab();
 	});
 
 	$tabs = array_map(function($tab) {
