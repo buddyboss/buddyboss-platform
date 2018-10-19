@@ -263,6 +263,10 @@ function bp_core_admin_integrations() {
 <?php
 }
 
+function bp_core_admin_appboss() {
+	require buddypress()->plugin_dir . 'bp-core/admin/templates/appboss-screen.php';
+}
+
 /**
  * Output settings API option.
  *

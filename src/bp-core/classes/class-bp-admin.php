@@ -256,14 +256,16 @@ class BP_Admin {
 			'bp_core_admin_integrations'
 		);
 
-		// $hooks[] = add_submenu_page(
-		// 	$this->settings_page,
-		// 	__( 'BuddyBoss Pages', 'buddyboss' ),
-		// 	__( 'Pages', 'buddyboss' ),
-		// 	$this->capability,
-		// 	'bp-page-settings',
-		// 	'bp_core_admin_slugs_settings'
-		// );
+		if ( ! is_plugin_active( 'appboss/appboss.php' ) ) {
+			$hooks[] = add_submenu_page(
+				$this->settings_page,
+				__( 'Mobile App', 'buddyboss' ),
+				__( 'Mobile App', 'buddyboss' ),
+				$this->capability,
+				'bp-appboss',
+				'bp_core_admin_appboss'
+			);
+		}
 
 		// For consistency with non-Multisite, we add a Tools menu in
 		// the Network Admin as a home for our Tools panel.
