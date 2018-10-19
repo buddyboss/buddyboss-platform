@@ -78,6 +78,16 @@ class BuddyPress {
 	public $active_components = array();
 
 	/**
+	 * @var array Integrations.
+	 */
+	public $available_integrations = array();
+
+	/**
+	 * @var array Integrations.
+	 */
+	public $integrations = array();
+
+	/**
 	 * Whether autoload is in use.
 	 *
 	 * @since BuddyPress 2.5.0

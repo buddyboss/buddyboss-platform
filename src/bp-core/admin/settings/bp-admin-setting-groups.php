@@ -3,17 +3,19 @@
 class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 	public function initialize() {
-		$this->tab_name      = 'Groups';
-		$this->tab_slug      = 'bp-groups';
-		$this->section_name  = 'bp_groups';
-		$this->section_label = __( 'Groups Settings', 'buddyboss' );
+		$this->tab_label = __( 'Groups', 'buddyboss' );
+		$this->tab_name  = 'bp-groups';
+
+		$this->register_fields();
 	}
 
-	protected function is_active() {
+	public function is_active() {
 		return bp_is_active( 'groups' );
 	}
 
 	public function register_fields() {
+		$this->add_section( 'bp_groups', __( 'Groups Settings', 'buddyboss' ) );
+
 		// Allow subscriptions setting.
 		$this->add_field( 'bp_restrict_group_creation', __( 'Group Creation', 'buddyboss' ), 'bp_admin_setting_callback_group_creation', 'intval' );
 
@@ -24,38 +26,6 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		if ( bp_is_active( 'groups', 'cover_image' ) ) {
 			$this->add_field( 'bp-disable-group-cover-image-uploads', __( 'Group Cover Image Uploads', 'buddyboss' ), 'bp_admin_setting_callback_group_cover_image_uploads', 'intval' );
 		}
-	}
-
-	/**
-	 * Allow all users to create groups field.
-	 *
-	 * @since BuddyPress 1.6.0
-	 *
-	 */
-	public function bp_admin_setting_callback_group_creation() {
-	?>
-		<input id="bp_restrict_group_creation" name="bp_restrict_group_creation" type="checkbox" aria-describedby="bp_group_creation_description" value="1" <?php checked( !bp_restrict_group_creation( false ) ); ?> />
-		<label for="bp_restrict_group_creation"><?php _e( 'Enable group creation for all users', 'buddyboss' ); ?></label>
-		<p class="description" id="bp_group_creation_description"><?php _e( 'Administrators can always create groups, regardless of this setting.', 'buddyboss' ); ?></p>
-	<?php
-	}
-
-	/**
-	 * 'Enable group avatars' field markup.
-	 *
-	 * @since BuddyPress 2.3.0
-	 */
-	public function bp_admin_setting_callback_group_avatar_uploads() {
-		$this->checkbox('bp-disable-group-avatar-uploads', __( 'Allow customizable avatars for groups', 'buddyboss' ), 'bp_disable_group_avatar_uploads');
-	}
-
-	/**
-	 * 'Enable group cover images' field markup.
-	 *
-	 * @since BuddyPress 2.4.0
-	 */
-	public function bp_admin_setting_callback_group_cover_image_uploads() {
-		$this->checkbox('bp-disable-group-cover-image-uploads', __( 'Allow customizable cover images for groups', 'buddyboss' ), 'bp_disable_group_cover_image_uploads');
 	}
 }
 

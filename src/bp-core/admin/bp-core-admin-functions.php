@@ -460,19 +460,23 @@ function bp_core_admin_tabs( $active_tab = '' ) {
 function bp_core_get_admin_tabs( $active_tab = '' ) {
 	global $bp_admin_setting_tabs;
 
-	usort($bp_admin_setting_tabs, function($a, $b) {
+	if ( ! $bp_admin_setting_tabs ) {
+		$bp_admin_setting_tabs = [];
+	}
+
+	uasort($bp_admin_setting_tabs, function($a, $b) {
 		return strcmp($a->tab_order, $b->tab_order);
 	});
 
 	$tabs = array_filter($bp_admin_setting_tabs, function($tab) {
-		return $tab->show_tab();
+		return $tab->is_tab_visible();
 	});
 
 	$tabs = array_map(function($tab) {
 		return [
-			'href' => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => $tab->tab_slug ), 'admin.php' ) ),
-			'name' => $tab->tab_name,
-			'slug' => $tab->tab_slug
+			'href' => bp_core_admin_setting_url( $tab->tab_name ),
+			'name' => $tab->tab_label,
+			'slug' => $tab->tab_name
 		];
 	}, $tabs);
 
@@ -489,6 +493,121 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 function bp_core_get_admin_active_tab() {
 	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'buddypress' );
 	return isset($_GET['tab'])? $_GET['tab'] : $default_tab;
+}
+
+function bp_core_get_admin_active_tab_object() {
+	global $bp_admin_setting_tabs;
+
+	return $bp_admin_setting_tabs[bp_core_get_admin_active_tab()];
+}
+
+function bp_core_admin_setting_url($tab, $args = []) {
+	$args = wp_parse_args( $args, array(
+		'page' => 'bp-settings',
+		'tab' => $tab
+	) );
+
+	return bp_get_admin_url( add_query_arg( $args , 'admin.php' ) );
+}
+
+/**
+ * Output the integration tabs in the admin area.
+ *
+ * @since Buddyboss 3.1.1
+ *
+ * @param string $active_tab Name of the tab that is active. Optional.
+ */
+function bp_core_admin_integration_tabs( $active_tab = '' ) {
+	$tabs_html    = '';
+	$idle_class   = 'nav-tab';
+	$active_class = 'nav-tab nav-tab-active';
+	$active_tab = $active_tab ?: bp_core_get_admin_integration_active_tab();
+
+	/**
+	 * Filters the admin tabs to be displayed.
+	 *
+	 * @since BuddyPress 1.9.0
+	 *
+	 * @param array $value Array of tabs to output to the admin area.
+	 */
+	$tabs         = apply_filters( 'bp_core_admin_integration_tabs', bp_core_get_admin_integrations_tabs( $active_tab ) );
+
+	// Loop through tabs and build navigation.
+	foreach ( array_values( $tabs ) as $tab_data ) {
+		$is_current = (bool) ( $tab_data['slug'] == $active_tab );
+		$tab_class  = $is_current ? $active_class : $idle_class;
+		$tabs_html .= '<a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a>';
+	}
+
+	echo $tabs_html;
+
+	/**
+	 * Fires after the output of tabs for the admin area.
+	 *
+	 * @since BuddyPress 1.5.0
+	 */
+	do_action( 'bp_admin_integration_tabs' );
+}
+
+/**
+ * Get the data for the tabs in the admin area.
+ *
+ * @since BuddyPress 2.2.0
+ *
+ * @param string $active_tab Name of the tab that is active. Optional.
+ * @return string
+ */
+function bp_core_get_admin_integrations_tabs( $active_tab = '' ) {
+	global $bp_admin_integration_tabs;
+
+	if ( ! $bp_admin_integration_tabs ) {
+		$bp_admin_integration_tabs = [];
+	}
+
+	uasort($bp_admin_integration_tabs, function($a, $b) {
+		return strcmp($a->tab_order, $b->tab_order);
+	});
+
+	$tabs = array_filter($bp_admin_integration_tabs, function($tab) {
+		return $tab->is_tab_visible();
+	});
+
+	$tabs = array_map(function($tab) {
+		return [
+			'href' => bp_core_admin_integrations_url($tab->tab_name),
+			'name' => $tab->tab_label,
+			'slug' => $tab->tab_name
+		];
+	}, $tabs);
+
+	/**
+	 * Filters the tab data used in our wp-admin screens.
+	 *
+	 * @since BuddyPress 2.2.0
+	 *
+	 * @param array $tabs Tab data.
+	 */
+	return apply_filters( 'bp_core_get_admin_tabs', $tabs );
+}
+
+function bp_core_get_admin_integration_active_tab() {
+	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-learndash' );
+	return isset($_GET['tab'])? $_GET['tab'] : $default_tab;
+}
+
+function bp_core_get_admin_integration_active_tab_object() {
+	global $bp_admin_integration_tabs;
+
+	return $bp_admin_integration_tabs[bp_core_get_admin_integration_active_tab()];
+}
+
+function bp_core_admin_integrations_url($tab, $args = []) {
+	$args = wp_parse_args( $args, array(
+		'page' => 'bp-integrations',
+		'tab' => $tab
+	) );
+
+	return bp_get_admin_url( add_query_arg( $args , 'admin.php' ) );
 }
 
 /** Help **********************************************************************/

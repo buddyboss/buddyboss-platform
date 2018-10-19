@@ -44,8 +44,6 @@ class BP_Core extends BP_Component {
 	 * @since BuddyPress 1.5.0
 	 */
 	private function bootstrap() {
-		$bp = buddypress();
-
 		/**
 		 * Fires before the loading of individual components and after BuddyBoss Core.
 		 *
@@ -55,8 +53,12 @@ class BP_Core extends BP_Component {
 		 */
 		do_action( 'bp_core_loaded' );
 
-		/** Components *******************************************************
-		 */
+		$this->load_components();
+		$this->load_integrations();
+	}
+
+	private function load_components() {
+		$bp = buddypress();
 
 		/**
 		 * Filters the included and optional components.
@@ -144,6 +146,37 @@ class BP_Core extends BP_Component {
 		 * @since BuddyPress 2.0.0
 		 */
 		do_action( 'bp_core_components_included' );
+	}
+
+	private function load_integrations() {
+		$bp = buddypress();
+
+		/**
+		 * Filters the included and optional inetegrations.
+		 *
+		 * @since Buddyboss 3.1.1
+		 *
+		 * @param array $value Array of included and optional inetegrations.
+		 */
+		$bp->available_integrations = apply_filters( 'bp_integrations', array(
+			'learndash', 'memberpress', 'eventscalendar', 'wpjobmanager'
+		) );
+
+		$integration_dir = $bp->plugin_dir . '/bp-integrations/';
+
+		foreach( $bp->available_integrations as $integration ) {
+			$file = "{$integration_dir}{$integration}/bp-{$integration}-loader.php";
+			if ( file_exists( $file ) ) {
+				include( $file );
+			}
+		}
+
+		/**
+		 * Fires after the loading of individual inetegrations.
+		 *
+		 * @since Buddyboss 3.1.1
+		 */
+		do_action( 'bp_core_inetegrations_included' );
 	}
 
 	/**

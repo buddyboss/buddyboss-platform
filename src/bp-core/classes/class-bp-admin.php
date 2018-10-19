@@ -153,7 +153,10 @@ class BP_Admin {
 		add_action( 'load-nav-menus.php', 'bp_admin_wp_nav_menu_meta_box' );
 
 		// Add settings.
-		add_action( 'bp_register_admin_settings', array( $this, 'register_admin_settings' ) );
+		add_action( 'bp_register_admin_settings', array( $this, 'register_admin_settings' ), 5 );
+
+		// Add integrations
+		add_action( 'bp_register_admin_integrations', array( $this, 'register_admin_integrations' ), 5 );
 
 		// Add a link to BuddyPress Hello in the admin bar.
 		add_action( 'admin_bar_menu', array( $this, 'admin_bar_about_link' ), 100 );
@@ -244,14 +247,14 @@ class BP_Admin {
 			'bp_core_admin_settings'
 		);
 
-		// $hooks[] = add_submenu_page(
-		// 	$this->settings_page,
-		// 	__( 'BuddyBoss Integrations', 'buddyboss' ),
-		// 	__( 'Integrations', 'buddyboss' ),
-		// 	$this->capability,
-		// 	'bp-integrations',
-		// 	'bp_core_admin_integrations'
-		// );
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( 'BuddyBoss Integrations', 'buddyboss' ),
+			__( 'Integrations', 'buddyboss' ),
+			$this->capability,
+			'bp-integrations',
+			'bp_core_admin_integrations'
+		);
 
 		// $hooks[] = add_submenu_page(
 		// 	$this->settings_page,
@@ -367,6 +370,7 @@ class BP_Admin {
 	public function register_admin_settings() {
 
 		$bp = buddypress();
+		require_once trailingslashit( $bp->plugin_dir  . 'bp-core/classes' ) . '/class-bp-admin-tab.php';
 		require_once trailingslashit( $bp->plugin_dir  . 'bp-core/classes' ) . '/class-bp-admin-setting-tab.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-general.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-pages.php';
@@ -377,6 +381,21 @@ class BP_Admin {
 		require_once $this->admin_dir . '/settings/bp-admin-setting-messages.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-registration.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-credit.php';
+	}
+
+	/**
+	 * Register the integrations.
+	 *
+	 * @since BuddyPress 1.6.0
+	 *
+	 */
+	public function register_admin_integrations() {
+
+		$bp = buddypress();
+		require_once trailingslashit( $bp->plugin_dir  . 'bp-core/classes' ) . '/class-bp-admin-tab.php';
+		require_once trailingslashit( $bp->plugin_dir  . 'bp-core/classes' ) . '/class-bp-admin-integration-tab.php';
+
+		// integrations should be loaded in its loader file
 	}
 
 	/**

@@ -3,19 +3,21 @@
 class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 
 	public function initialize() {
-		$this->tab_name      = 'Connections';
-		$this->tab_slug      = 'bp-friends';
-		$this->section_name  = 'bp_friends';
-		$this->section_label = __( 'Connection Settings', 'buddyboss' );
+		$this->tab_label = __( 'Connections', 'buddyboss' );
+		$this->tab_name  = 'bp-friends';
+
+		$this->register_fields();
 	}
 
-	protected function is_active() {
+	public function is_active() {
 		return bp_is_active( 'friends' );
 	}
 
 	public function register_fields() {
+		$this->add_section( 'bp_friends', __( 'Connection Settings', 'buddyboss' ) );
+
 		if ( bp_is_active( 'messages' ) ) {
-			$this->add_field( 'bp-force-friendship-to-message', __( 'Messaging', 'buddyboss' ), 'bp_admin_setting_callback_force_friendship_to_message', [$this, 'bp_admin_sanitize_callback_force_friendship_to_message'] );
+			$this->add_field( 'bp-force-friendship-to-message', __( 'Messaging', 'buddyboss' ), [$this, 'bp_admin_setting_callback_force_friendship_to_message'], [$this, 'bp_admin_sanitize_callback_force_friendship_to_message'] );
 		}
 	}
 
