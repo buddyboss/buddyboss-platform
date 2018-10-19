@@ -54,10 +54,6 @@ abstract class BP_Admin_Tab {
 	 */
 	public $tab_order        = 10;
 
-	public $section_name     = '';
-	public $section_label    = '';
-	public $section_callback = '__return_null';
-
 	public function __construct() {
 		$this->initialize();
 		$this->register_tab();
@@ -261,7 +257,6 @@ abstract class BP_Admin_Tab {
 		$callback = [$this, 'render_checkbox_field_html'];
 
 		$callback_args = wp_parse_args( $callback_args, [
-			'input_type'        => 'text',
 			'input_name'        => $name,
 			'input_id'          => $name,
 			'input_text'        => '',
@@ -302,7 +297,7 @@ abstract class BP_Admin_Tab {
 			'
 				<input id="%1$s" name="%2$s" type="checkbox" value="1" %3$s />
 				<label for="%1$s">%4$s</label>
-				%s
+				%5$s
 			',
 			$args['input_id'],
 			$args['input_name'],
