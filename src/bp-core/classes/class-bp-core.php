@@ -57,6 +57,11 @@ class BP_Core extends BP_Component {
 		$this->load_integrations();
 	}
 
+	/**
+	 * Load components files
+	 *
+	 * @since Buddyboss 3.1.1
+	 */
 	private function load_components() {
 		$bp = buddypress();
 
@@ -148,6 +153,11 @@ class BP_Core extends BP_Component {
 		do_action( 'bp_core_components_included' );
 	}
 
+	/**
+	 * Load integrations files
+	 *
+	 * @since Buddyboss 3.1.1
+	 */
 	private function load_integrations() {
 		$bp = buddypress();
 

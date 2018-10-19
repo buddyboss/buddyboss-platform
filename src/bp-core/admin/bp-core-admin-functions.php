@@ -490,17 +490,32 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 	return apply_filters( 'bp_core_get_admin_tabs', $tabs );
 }
 
+/**
+ * Get the slug of the current setting tab
+ *
+ * @since Buddyboss 3.1.1
+ */
 function bp_core_get_admin_active_tab() {
 	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'buddypress' );
 	return isset($_GET['tab'])? $_GET['tab'] : $default_tab;
 }
 
+/**
+ * Get the object of the current setting tab
+ *
+ * @since Buddyboss 3.1.1
+ */
 function bp_core_get_admin_active_tab_object() {
 	global $bp_admin_setting_tabs;
 
 	return $bp_admin_setting_tabs[bp_core_get_admin_active_tab()];
 }
 
+/**
+ * Return the admin url with the tab selected
+ *
+ * @since Buddyboss 3.1.1
+ */
 function bp_core_admin_setting_url($tab, $args = []) {
 	$args = wp_parse_args( $args, array(
 		'page' => 'bp-settings',
@@ -590,17 +605,32 @@ function bp_core_get_admin_integrations_tabs( $active_tab = '' ) {
 	return apply_filters( 'bp_core_get_admin_tabs', $tabs );
 }
 
+/**
+ * Get the slug of the current integration tab
+ *
+ * @since Buddyboss 3.1.1
+ */
 function bp_core_get_admin_integration_active_tab() {
 	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-learndash' );
 	return isset($_GET['tab'])? $_GET['tab'] : $default_tab;
 }
 
+/**
+ * Get the object of the current integration tab
+ *
+ * @since Buddyboss 3.1.1
+ */
 function bp_core_get_admin_integration_active_tab_object() {
 	global $bp_admin_integration_tabs;
 
 	return $bp_admin_integration_tabs[bp_core_get_admin_integration_active_tab()];
 }
 
+/**
+ * Return the admin url with the tab selected
+ *
+ * @since Buddyboss 3.1.1
+ */
 function bp_core_admin_integrations_url($tab, $args = []) {
 	$args = wp_parse_args( $args, array(
 		'page' => 'bp-integrations',
