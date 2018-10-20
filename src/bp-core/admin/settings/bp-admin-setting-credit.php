@@ -4,7 +4,7 @@ class BP_Admin_Setting_Credit extends BP_Admin_Setting_tab {
 	public $tab_order = 100;
 
 	public function initialize() {
-		$this->tab_label = __( 'Credit', 'buddyboss' );
+		$this->tab_label = __( 'Credits', 'buddyboss' );
 		$this->tab_name  = 'bp-credit';
 	}
 
