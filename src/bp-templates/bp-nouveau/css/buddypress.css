@@ -1952,6 +1952,10 @@ form.ac-form .ac-reply-content input {
   border: 1px solid #eee;
 }
 
+.register-page .register-privacy-info {
+  margin: 15px 0 0;
+}
+
 @media screen and (min-width: 46.8em) {
   .buddypress-wrap .register-page .layout-wrap {
     display: flex;
