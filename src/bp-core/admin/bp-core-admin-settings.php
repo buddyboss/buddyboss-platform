@@ -252,7 +252,7 @@ function bp_core_admin_integrations() {
     ?>
 
     <div class="wrap">
-        <h1><?php _e( 'BuddyBoss Integrations', 'buddyboss' ); ?> </h1>
+        <h1><?php _e( 'Plugin Integrations', 'buddyboss' ); ?> </h1>
         <h2 class="nav-tab-wrapper"><?php bp_core_admin_integration_tabs(); ?></h2>
 
         <form action="<?php echo esc_url( $form_action ) ?>" method="post">

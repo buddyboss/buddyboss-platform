@@ -249,7 +249,7 @@ class BP_Admin {
 
 		$hooks[] = add_submenu_page(
 			$this->settings_page,
-			__( 'BuddyBoss Integrations', 'buddyboss' ),
+			__( 'Plugin Integrations', 'buddyboss' ),
 			__( 'Integrations', 'buddyboss' ),
 			$this->capability,
 			'bp-integrations',

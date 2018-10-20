@@ -21,7 +21,7 @@ function bp_core_admin_components_settings() {
 
 	<div class="wrap">
 
-		<h1><?php _e( 'BuddyBoss Settings', 'buddyboss' ); ?> </h1>
+		<h1><?php _e( 'BuddyBoss Components', 'buddyboss' ); ?> </h1>
 
 		<form action="" method="post" id="bp-admin-component-form">
 
