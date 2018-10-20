@@ -148,7 +148,7 @@ class BP_Settings_Component extends BP_Component {
 
 		// Add General Settings nav item.
 		$sub_nav[] = array(
-			'name'            => __( 'Your Account', 'buddyboss' ),
+			'name'            => __( 'My Account', 'buddyboss' ),
 			'slug'            => 'general',
 			'parent_url'      => $settings_link,
 			'parent_slug'     => $slug,
@@ -225,7 +225,7 @@ class BP_Settings_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-general',
-				'title'    => __( 'Your Account', 'buddyboss' ),
+				'title'    => __( 'My Account', 'buddyboss' ),
 				'href'     => $settings_link,
 				'position' => 10
 			);
