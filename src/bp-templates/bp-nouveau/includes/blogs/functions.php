@@ -103,7 +103,7 @@ function bp_nouveau_get_blogs_filters( $context = '' ) {
 	 * @param string the context.
 	 */
 	$filters = apply_filters( 'bp_nouveau_get_blogs_filters', array(
-		'active'       => __( 'Last Active', 'buddyboss' ),
+		'active'       => __( 'Recently Active', 'buddyboss' ),
 		'newest'       => __( 'Newest', 'buddyboss' ),
 		'alphabetical' => __( 'Alphabetical', 'buddyboss' ),
 	), $context );
