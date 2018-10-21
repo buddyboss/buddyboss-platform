@@ -6,13 +6,12 @@
 		<div class="welcome-panel-content">
 		
 			<h2><?php _e( 'AppBoss', 'buddyboss' ); ?></h2>
-			<p class="about-description"><?php _e( 'Consider extending your community into your own native mobile app via AppBoss', 'buddyboss' ); ?></p>
+			<p class="about-description"><?php _e( 'Consider extending your community into your own native mobile app via AppBoss.', 'buddyboss' ); ?></p>
 			
 			<div class="welcome-panel-column-container">			
 				<div class="welcome-panel-column">
 					<h3><?php _e( 'Get Started', 'buddyboss' ); ?></h3>
-					<a class="button button-primary button-hero load-customize hide-if-no-customize" href="http://localhost:8888/buddyboss/wp-admin/customize.php"><?php _e( 'Call to Action', 'buddyboss' ); ?></a>
-					<a class="button button-primary button-hero hide-if-customize" href="#"><?php _e( 'Call to Action', 'buddyboss' ); ?></a>
+					<a class="button button-primary button-hero" href="#"><?php _e( 'Call to Action', 'buddyboss' ); ?></a>
 					<p class="hide-if-no-customize"><?php _e( 'or, ', 'buddyboss' ); ?><a href="#"><?php _e( 'do this other thing', 'buddyboss' ); ?></a></p>
 				</div>
 				
@@ -37,5 +36,14 @@
 
 		</div>
 	</div>
+
+	<h2 class="nav-tab-wrapper wp-clearfix">
+		<a href="#" class="nav-tab nav-tab-active"><?php _e( 'Install Plugin', 'buddyboss' ); ?></a>
+		<a href="#" class="nav-tab"><?php _e( 'Setup Checklist', 'buddyboss' ); ?></a>
+		<a href="#" class="nav-tab"><?php _e( 'App Branding', 'buddyboss' ); ?></a>
+		<a href="#" class="nav-tab"><?php _e( 'Build', 'buddyboss' ); ?></a>
+		<a href="#" class="nav-tab"><?php _e( 'Publish', 'buddyboss' ); ?></a>
+		<a href="#" class="nav-tab"><?php _e( 'Debug', 'buddyboss' ); ?></a>
+	</h2>
 
 </div>
