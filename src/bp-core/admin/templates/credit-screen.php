@@ -66,6 +66,7 @@
 		<a href="https://github.com/carhartl/jquery-cookie">jquery.cookie</a>,
 		<a href="https://mattbradley.github.io/livestampjs/">Livestamp.js</a>,
 		<a href="https://www.mediawiki.org/wiki/MediaWiki">MediaWiki</a>,
+		<a href="https://wordpress.org/plugins/menu-icons/">Menu Icons</a>,
 		<a href="https://momentjs.com/">Moment.js</a>,
 		<a href="https://wordpress.org">WordPress</a>.
 	</p>
