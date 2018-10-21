@@ -1,9 +1,9 @@
 <?php
 
 /**
- * The BuddyPress Plugin
+ * The BuddyBoss Platform
  *
- * BuddyPress is social networking software with a twist from the creators of WordPress.
+ * BuddyBoss Platform adds community features to WordPress.
  *
  * @package BuddyPress
  * @subpackage Main
