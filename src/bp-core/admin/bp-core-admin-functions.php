@@ -465,7 +465,7 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 	}
 
 	uasort($bp_admin_setting_tabs, function($a, $b) {
-		return strcmp($a->tab_order, $b->tab_order);
+		return $a->tab_order - $b->tab_order;
 	});
 
 	$tabs = array_filter($bp_admin_setting_tabs, function($tab) {
@@ -580,7 +580,7 @@ function bp_core_get_admin_integrations_tabs( $active_tab = '' ) {
 	}
 
 	uasort($bp_admin_integration_tabs, function($a, $b) {
-		return strcmp($a->tab_order, $b->tab_order);
+		return $a->tab_order - $b->tab_order;
 	});
 
 	$tabs = array_filter($bp_admin_integration_tabs, function($tab) {
