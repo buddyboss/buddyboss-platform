@@ -52,13 +52,14 @@ abstract class BP_Admin_Tab {
 	 * @since  buddyboss 3.1.1
 	 * @var integer
 	 */
-	public $tab_order        = 10;
+	public $tab_order        = 50;
 
 	public function __construct() {
 		$this->initialize();
 		$this->register_tab();
 
 		if ( $this->is_active() ) {
+			$this->register_fields();
 			add_action( 'bp_admin_init', [$this, 'maybe_save_admin_settings'], 100 );
 		}
 	}
@@ -90,6 +91,15 @@ abstract class BP_Admin_Tab {
 		global ${$this->global_tabs_var};
 
 		${$this->global_tabs_var}[$this->tab_name] = $this;
+	}
+
+	/**
+	 * Register setting fields belong to this group
+	 *
+	 * @since  buddyboss 3.1.1
+	 */
+	public function register_fields() {
+		// nothing
 	}
 
 	/**
@@ -241,7 +251,7 @@ abstract class BP_Admin_Tab {
 			'input_name'        => $name,
 			'input_id'          => $name,
 			'input_description' => '',
-			'input_value'       => '',
+			'input_value'       => bp_get_option($name),
 			'input_placeholder' => ''
 		] );
 
@@ -261,7 +271,7 @@ abstract class BP_Admin_Tab {
 			'input_id'          => $name,
 			'input_text'        => '',
 			'input_description' => '',
-			'input_value'       => null,
+			'input_value'       => bp_get_option($name, null),
 			'input_default'     => 0,
 		] );
 

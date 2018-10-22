@@ -5,8 +5,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 	public function initialize() {
 		$this->tab_label = __( 'Groups', 'buddyboss' );
 		$this->tab_name  = 'bp-groups';
-
-		$this->register_fields();
+		$this->tab_order = 20;
 	}
 
 	public function is_active() {

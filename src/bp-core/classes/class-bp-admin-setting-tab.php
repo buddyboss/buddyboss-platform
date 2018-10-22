@@ -16,7 +16,7 @@ class BP_Admin_Setting_tab extends BP_Admin_Tab {
 	public $global_tabs_var = 'bp_admin_setting_tabs';
 	public $menu_page       = 'bp-settings';
 
-	public  function settings_save() {
+	public function settings_save() {
 		parent::settings_save();
 		$this->settings_save_lagecy();
 	}

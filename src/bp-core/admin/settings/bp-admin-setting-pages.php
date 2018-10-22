@@ -5,6 +5,7 @@ class BP_Admin_Setting_Pages extends BP_Admin_Setting_tab {
 	public function initialize() {
 		$this->tab_label = __( 'Pages', 'buddyboss' );
 		$this->tab_name  = 'bp-pages';
+		$this->tab_order = 5;
 
 		$this->register_page_fields();
 		$this->register_registration_page_fields();

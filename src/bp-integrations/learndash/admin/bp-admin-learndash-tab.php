@@ -11,10 +11,8 @@ class BP_Admin_Integration_Learndash extends BP_Admin_Integration_tab {
 		$this->add_section('bp_ld_section_1', 'Integration Setting', [$this, 'integration_description']);
 		$this->add_input_field('bp_ld_boo', __('What?'), [
 			'input_description' => 'some optoinal descriptin',
-			'input_value' => bp_get_option('bp_ld_boo')
 		]);
 		$this->add_checkbox_field('bp_ld_yeah', __('Oh Yeah?'), [
-			'input_value' => bp_get_option('bp_ld_yeah'),
 			'input_text' => 'just click it',
 		]);
 

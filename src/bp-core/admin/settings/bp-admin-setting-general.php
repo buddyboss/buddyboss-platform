@@ -5,8 +5,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 	public function initialize() {
 		$this->tab_label = __( 'General', 'buddyboss' );
 		$this->tab_name  = 'buddypress';
-
-		$this->register_fields();
+		$this->tab_order = 0;
 	}
 
 	public function register_fields() {
