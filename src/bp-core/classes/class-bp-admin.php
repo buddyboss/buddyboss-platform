@@ -141,6 +141,7 @@ class BP_Admin {
 		// Add menu item to settings menu.
 		add_action( 'admin_menu',               array( $this, 'site_admin_menus' ), 5 );
 		add_action( bp_core_admin_hook(),       array( $this, 'admin_menus' ), 5 );
+		add_action( bp_core_admin_hook(),       array( $this, 'adjust_buddyboss_menus' ), 100 );
 
 		// Enqueue all admin JS and CSS.
 		add_action( 'bp_admin_enqueue_scripts', array( $this, 'admin_register_styles' ), 1 );
@@ -213,7 +214,7 @@ class BP_Admin {
 			$this->settings_page,
 			'bp_core_admin_backpat_menu',
 			buddypress()->plugin_url . 'bp-core/images/admin/logo.svg',
-			64.99
+			62
 		);
 
 		$hooks[] = add_submenu_page(
@@ -322,6 +323,25 @@ class BP_Admin {
 		// foreach( $hooks as $hook ) {
 		// 	add_action( "admin_head-$hook", 'bp_core_modify_admin_menu_highlight' );
 		// }
+	}
+
+	public function adjust_buddyboss_menus() {
+		global $menu, $submenu;
+
+		// if there's no buddyboss plugin, don't do anything
+		if (! array_key_exists('buddyboss-settings', $submenu)) {
+			return;
+		}
+
+		add_submenu_page( $this->settings_page, '', '', $this->capability, 'bp-plugin-seperator' );
+
+		$submenu['buddyboss-platform'] = array_merge(
+			$submenu['buddyboss-platform'],
+			$submenu['buddyboss-settings']
+		);
+
+		remove_menu_page( 'buddyboss-settings' );
+		unset( $submenu['buddyboss-settings'] );
 	}
 
 	/**
