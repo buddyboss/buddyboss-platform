@@ -178,11 +178,15 @@ function bp_core_admin_components_options() {
 
 				<?php foreach ( $current_components as $name => $labels ) : ?>
 
-					<?php if ( !in_array( $name, array( 'core', 'members' ) ) ) :
-						$class = isset( $active_components[esc_attr( $name )] ) ? 'active' : 'inactive';
-					else :
-						$class = 'active';
-					endif; ?>
+					<?php
+						if ( in_array( $name, array( 'blogs' ) ) ) :
+							$class = isset( $active_components[esc_attr( $name )] ) ? 'active hidden' : 'inactive hidden';
+						elseif ( !in_array( $name, array( 'core', 'members' ) ) ) :
+							$class = isset( $active_components[esc_attr( $name )] ) ? 'active' : 'inactive';
+						else :
+							$class = 'active';
+						endif;
+					?>
 
 					<tr id="<?php echo esc_attr( $name ); ?>" class="<?php echo esc_attr( $name ) . ' ' . esc_attr( $class ); ?>">
 						<th scope="row" class="check-column">
