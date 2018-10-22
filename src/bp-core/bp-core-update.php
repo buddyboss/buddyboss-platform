@@ -268,6 +268,11 @@ function bp_version_updater() {
 		if ( $raw_db_version < 11105 ) {
 			bp_update_to_2_7();
 		}
+
+		// Version 3.1.1
+		if ( $raw_db_version < 12307 ) {
+			bp_update_to_3_1_1();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -540,6 +545,18 @@ function bp_update_to_2_7() {
 
 	// Do not ignore deprecated code for existing installs.
 	bp_add_option( '_bp_ignore_deprecated_code', false );
+}
+
+/**
+ * 3.1.1 update routine.
+ *
+ * - Add unfollow table.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_update_to_3_1_1() {
+
+	bp_core_install_follow();
 }
 
 /**
