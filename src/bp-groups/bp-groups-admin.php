@@ -238,9 +238,7 @@ function bp_groups_admin_load() {
 		if ( empty( $_POST['bp-groups-name'] ) ) {
 			$error = $error - 1;
 		}
-		if ( empty( $_POST['bp-groups-description'] ) ) {
-			$error = $error - 2;
-		}
+
 		if ( empty( $_POST['bp-groups-slug'] ) ) {
 			$error = $error - 4;
 		}
