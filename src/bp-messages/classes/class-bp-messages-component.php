@@ -114,9 +114,9 @@ class BP_Messages_Component extends BP_Component {
 				}
 
 				// Bulk-manage.
-				if ( bp_is_action_variable( 'bulk-manage' ) ) {
-					require $this->path . 'bp-messages/actions/bulk-manage-star.php';
-				}
+				// if ( bp_is_action_variable( 'bulk-manage' ) ) {
+				// 	require $this->path . 'bp-messages/actions/bulk-manage-star.php';
+				// }
 			}
 
 			// Screens - User profile integration.
@@ -245,17 +245,17 @@ class BP_Messages_Component extends BP_Component {
 			'user_has_access' => $access
 		);
 
-		if ( bp_is_active( $this->id, 'star' ) ) {
-			$sub_nav[] = array(
-				'name'            => __( 'Starred', 'buddyboss' ),
-				'slug'            => bp_get_messages_starred_slug(),
-				'parent_url'      => $messages_link,
-				'parent_slug'     => $slug,
-				'screen_function' => 'bp_messages_star_screen',
-				'position'        => 11,
-				'user_has_access' => $access
-			);
-		}
+		// if ( bp_is_active( $this->id, 'star' ) ) {
+		// 	$sub_nav[] = array(
+		// 		'name'            => __( 'Starred', 'buddyboss' ),
+		// 		'slug'            => bp_get_messages_starred_slug(),
+		// 		'parent_url'      => $messages_link,
+		// 		'parent_slug'     => $slug,
+		// 		'screen_function' => 'bp_messages_star_screen',
+		// 		'position'        => 11,
+		// 		'user_has_access' => $access
+		// 	);
+		// }
 
 		// Show certain screens only if the current user is the displayed user.
 		if ( bp_is_my_profile() ) {
@@ -340,15 +340,15 @@ class BP_Messages_Component extends BP_Component {
 			);
 
 			// Starred.
-			if ( bp_is_active( $this->id, 'star' ) ) {
-				$wp_admin_nav[] = array(
-					'parent'   => 'my-account-' . $this->id,
-					'id'       => 'my-account-' . $this->id . '-starred',
-					'title'    => __( 'Starred', 'buddyboss' ),
-					'href'     => trailingslashit( $messages_link . bp_get_messages_starred_slug() ),
-					'position' => 11
-				);
-			}
+			// if ( bp_is_active( $this->id, 'star' ) ) {
+			// 	$wp_admin_nav[] = array(
+			// 		'parent'   => 'my-account-' . $this->id,
+			// 		'id'       => 'my-account-' . $this->id . '-starred',
+			// 		'title'    => __( 'Starred', 'buddyboss' ),
+			// 		'href'     => trailingslashit( $messages_link . bp_get_messages_starred_slug() ),
+			// 		'position' => 11
+			// 	);
+			// }
 
 			// Compose Message.
 			$wp_admin_nav[] = array(

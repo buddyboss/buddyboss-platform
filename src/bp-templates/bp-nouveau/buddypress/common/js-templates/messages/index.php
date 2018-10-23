@@ -96,28 +96,6 @@
 	<li class="user-messages-bulk-actions"></li>
 </script>
 
-<script type="text/html" id="tmpl-bp-bulk-actions">
-	<input type="checkbox" id="user_messages_select_all" value="1"/>
-	<label for="user_messages_select_all"><?php esc_html_e( 'Bulk Actions', 'buddyboss' ); ?></label>
-	<div class="bulk-actions-wrap bp-hide">
-		<div class="bulk-actions select-wrap">
-			<label for="user-messages-bulk-actions" class="bp-screen-reader-text">
-				<?php esc_html_e( 'Select bulk action', 'buddyboss' ); ?>
-			</label>
-			<select id="user-messages-bulk-actions">
-				<# for ( i in data ) { #>
-					<option value="{{data[i].value}}">{{data[i].label}}</option>
-				<# } #>
-			</select>
-			<span class="select-arrow" aria-hidden="true"></span>
-		</div>
-		<button class="messages-button bulk-apply bp-tooltip" type="submit" data-bp-tooltip="<?php echo esc_attr_x( 'Apply', 'button', 'buddyboss' ); ?>">
-			<span class="dashicons dashicons-yes" aria-hidden="true"></span>
-			<span class="bp-screen-reader-text"><?php echo esc_html_x( 'Apply', 'button', 'buddyboss' ); ?></span>
-		</button>
-	</div>
-</script>
-
 <script type="text/html" id="tmpl-bp-messages-thread">
 	<#
 		var other_recipients = _.reject(data.recipients, function(item) {
@@ -135,10 +113,6 @@
 			include_you = true;
 		}
 	#>
-	<div class="thread-cb">
-		<input class="message-check" type="checkbox" name="message_ids[]" id="bp-message-thread-{{data.id}}" value="{{data.id}}">
-		<label for="bp-message-thread-{{data.id}}" class="bp-screen-reader-text"><?php esc_html_e( 'Select message:', 'buddyboss' ); ?> {{data.subject}}</label>
-	</div>
 
 	<div class="thread-avatar">
 		<# if ( other_recipients.length > 1 ) { #>
@@ -253,20 +227,6 @@
 		</a>
 
 		<time datetime="{{data.date.toISOString()}}" class="activity">{{data.display_date}}</time>
-
-		<div class="actions">
-			<# if ( undefined !== data.star_link ) { #>
-
-				<button type="button" class="message-action-unstar bp-tooltip bp-icons <# if ( false === data.is_starred ) { #>bp-hide<# } #>" data-bp-star-link="{{data.star_link}}" data-bp-action="unstar" data-bp-tooltip="<?php esc_attr_e( 'Unstar Message', 'buddyboss' ); ?>">
-					<span class="bp-screen-reader-text"><?php esc_html_e( 'Unstar Message', 'buddyboss' ); ?></span>
-				</button>
-
-				<button type="button" class="message-action-star bp-tooltip bp-icons <# if ( false !== data.is_starred ) { #>bp-hide<# } #>" data-bp-star-link="{{data.star_link}}" data-bp-action="star" data-bp-tooltip="<?php esc_attr_e( 'Star Message', 'buddyboss' ); ?>">
-					<span class="bp-screen-reader-text"><?php esc_html_e( 'Star Message', 'buddyboss' ); ?></span>
-				</button>
-
-			<# } #>
-		</div>
 
 		<# if ( data.afterMeta ) { #>
 			<div class="bp-messages-hook after-message-meta">{{{data.afterMeta}}}</div>

@@ -73,7 +73,7 @@ class BP_Notifications_Component extends BP_Component {
 
 		// Actions.
 		if ( bp_is_post_request() ) {
-			require $this->path . 'bp-notifications/actions/bulk-manage.php';
+			// require $this->path . 'bp-notifications/actions/bulk-manage.php';
 		} elseif ( bp_is_get_request() ) {
 			require $this->path . 'bp-notifications/actions/delete.php';
 		}
