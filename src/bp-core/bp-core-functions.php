@@ -750,11 +750,11 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
  */
 function bp_core_get_directory_page_default_titles() {
 	$page_default_titles = array(
-		'activity' => _x( 'News Feed', 'Page title for the Activity directory.', 'buddypress' ),
-		'groups'   => _x( 'Groups',   'Page title for the Groups directory.',         'buddypress' ),
-		'blogs'    => _x( 'Sites',    'Page title for the Sites directory.',          'buddypress' ),
-		'members'  => _x( 'Members',  'Page title for the Members directory.',        'buddypress' ),
-		'activate' => _x( 'Activate', 'Page title for the user activation screen.',   'buddypress' ),
+		'activity' => _x( 'News Feed', 'Page title for the Activity directory.', 'buddyboss' ),
+		'groups'   => _x( 'Groups',   'Page title for the Groups directory.',         'buddyboss' ),
+		'blogs'    => _x( 'Sites',    'Page title for the Sites directory.',          'buddyboss' ),
+		'members'  => _x( 'Members',  'Page title for the Members directory.',        'buddyboss' ),
+		'activate' => _x( 'Activate', 'Page title for the user activation screen.',   'buddyboss' ),
 		'register' => _x( 'Register', 'Page title for the user registration screen.', 'buddyboss' ),
 	);
 
@@ -1146,7 +1146,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$unknown_text   = apply_filters( 'bp_core_time_since_unknown_text',   __( 'sometime',  'buddypress' ) );
+	$unknown_text   = apply_filters( 'bp_core_time_since_unknown_text',   __( 'sometime',  'buddyboss' ) );
 
 	/**
 	 * Filters the value to use if the time since is right now.
@@ -1164,7 +1164,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$ago_text       = apply_filters( 'bp_core_time_since_ago_text',       __( '%s ago',    'buddypress' ) );
+	$ago_text       = apply_filters( 'bp_core_time_since_ago_text',       __( '%s ago',    'buddyboss' ) );
 
 	// Array of time period chunks.
 	$chunks = array(
@@ -3347,9 +3347,9 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] Activate your account', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link and click on the <strong>Activate</strong> button:\n<a href=\"{{{activate.url}}}\">{{{activate.url}}}</a>\n\nIf the 'Activation Key' field is empty, copy and paste the following into the field - {{key}}", 'buddypress' ),
+			'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link and click on the <strong>Activate</strong> button:\n<a href=\"{{{activate.url}}}\">{{{activate.url}}}</a>\n\nIf the 'Activation Key' field is empty, copy and paste the following into the field - {{key}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link and click on the 'Activate' button: {{{activate.url}}}\n\nIf the 'Activation Key' field is empty, copy and paste the following into the field - {{key}}", 'buddypress' )
+			'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link and click on the 'Activate' button: {{{activate.url}}}\n\nIf the 'Activation Key' field is empty, copy and paste the following into the field - {{key}}", 'buddyboss' )
 		),
 		'core-user-registration-with-blog' => array(
 			/* translators: do not remove {} brackets or translate its contents. */

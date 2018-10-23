@@ -219,18 +219,18 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 
 			case 'month':
 				$months = array(
-					__( 'January',   'buddypress' ),
-					__( 'February',  'buddypress' ),
-					__( 'March',     'buddypress' ),
-					__( 'April',     'buddypress' ),
-					__( 'May',       'buddypress' ),
-					__( 'June',      'buddypress' ),
-					__( 'July',      'buddypress' ),
-					__( 'August',    'buddypress' ),
+					__( 'January',   'buddyboss' ),
+					__( 'February',  'buddyboss' ),
+					__( 'March',     'buddyboss' ),
+					__( 'April',     'buddyboss' ),
+					__( 'May',       'buddyboss' ),
+					__( 'June',      'buddyboss' ),
+					__( 'July',      'buddyboss' ),
+					__( 'August',    'buddyboss' ),
 					__( 'September', 'buddyboss' ),
-					__( 'October',   'buddypress' ),
-					__( 'November',  'buddypress' ),
-					__( 'December',  'buddypress' )
+					__( 'October',   'buddyboss' ),
+					__( 'November',  'buddyboss' ),
+					__( 'December',  'buddyboss' )
 				);
 
 				$html = sprintf( '<option value="" %1$s>%2$s</option>', selected( $month, 0, false ), /* translators: no option picked in select box */ __( '----', 'buddyboss' ) );

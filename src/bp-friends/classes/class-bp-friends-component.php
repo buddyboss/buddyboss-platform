@@ -260,7 +260,7 @@ class BP_Friends_Component extends BP_Component {
 					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 				);
 			} else {
-				$title   = _x( 'Connections',            'My Account Connections menu',         'buddypress' );
+				$title   = _x( 'Connections',            'My Account Connections menu',         'buddyboss' );
 				$pending = _x( 'No Pending Invites','My Account Connections menu sub nav', 'buddyboss' );
 			}
 

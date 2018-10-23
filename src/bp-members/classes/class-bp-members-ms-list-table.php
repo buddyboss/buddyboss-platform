@@ -134,11 +134,11 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 		 */
 		return apply_filters( 'bp_members_ms_signup_columns', array(
 			'cb'         => '<input type="checkbox" />',
-			'username'   => __( 'Username',    'buddypress' ),
-			'name'       => __( 'Name',        'buddypress' ),
-			'email'      => __( 'Email',       'buddypress' ),
-			'registered' => __( 'Registered',  'buddypress' ),
-			'date_sent'  => __( 'Last Sent',   'buddypress' ),
+			'username'   => __( 'Username',    'buddyboss' ),
+			'name'       => __( 'Name',        'buddyboss' ),
+			'email'      => __( 'Email',       'buddyboss' ),
+			'registered' => __( 'Registered',  'buddyboss' ),
+			'date_sent'  => __( 'Last Sent',   'buddyboss' ),
 			'count_sent' => __( 'Emails Sent', 'buddyboss' )
 		) );
 	}
@@ -306,7 +306,7 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 		$actions = array();
 
 		$actions['activate'] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $activate_link ), __( 'Activate', 'buddyboss' ) );
-		$actions['resend']   = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $email_link    ), __( 'Email',    'buddypress' ) );
+		$actions['resend']   = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $email_link    ), __( 'Email',    'buddyboss' ) );
 
 		if ( current_user_can( 'delete_users' ) ) {
 			$actions['delete'] = sprintf( '<a href="%1$s" class="delete">%2$s</a>', esc_url( $delete_link ), __( 'Delete', 'buddyboss' ) );

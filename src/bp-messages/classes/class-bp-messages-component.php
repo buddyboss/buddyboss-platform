@@ -319,7 +319,7 @@ class BP_Messages_Component extends BP_Component {
 				);
 			} else {
 				$title = __( 'Messages', 'buddyboss' );
-				$inbox = __( 'Messages',    'buddypress' );
+				$inbox = __( 'Messages',    'buddyboss' );
 			}
 
 			// Add main Messages menu.

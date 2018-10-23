@@ -59,19 +59,19 @@ class BP_Admin_Setting_Pages extends BP_Admin_Setting_tab {
 
 	public function registration_pages_description() {
 		if ( bp_get_signup_allowed() ) :
-			echo wpautop( __( 'Associate WordPress Pages with the following BuddyPress Registration pages.', 'buddypress' ) );
+			echo wpautop( __( 'Associate WordPress Pages with the following BuddyPress Registration pages.', 'buddyboss' ) );
 		else :
 			if ( is_multisite() ) :
 				echo wpautop(
 					sprintf(
-						__( 'Registration is currently disabled.  Before associating a page is allowed, please enable registration by selecting either the "User accounts may be registered" or "Both sites and user accounts can be registered" option on <a href="%s">this page</a>.', 'buddypress' ),
+						__( 'Registration is currently disabled.  Before associating a page is allowed, please enable registration by selecting either the "User accounts may be registered" or "Both sites and user accounts can be registered" option on <a href="%s">this page</a>.', 'buddyboss' ),
 						network_admin_url( 'settings.php' )
 					)
 				);
 			else :
 				echo wpautop(
 					sprintf(
-						__( 'Registration is currently disabled.  Before associating a page is allowed, please enable registration by clicking on the "Anyone can register" checkbox on <a href="%s">this page</a>.', 'buddypress' ),
+						__( 'Registration is currently disabled.  Before associating a page is allowed, please enable registration by clicking on the "Anyone can register" checkbox on <a href="%s">this page</a>.', 'buddyboss' ),
 						network_admin_url( 'options-general.php' )
 					)
 				);

@@ -104,12 +104,12 @@ function bp_the_message_star_action_link( $args = array() ) {
 			'thread_id'           => 0,
 			'message_id'          => (int) bp_get_the_thread_message_id(),
 			'url_only'            => false,
-			'text_unstar'         => __( 'Unstar',      'buddypress' ),
-			'text_star'           => __( 'Star',        'buddypress' ),
-			'title_unstar'        => __( 'Starred',     'buddypress' ),
+			'text_unstar'         => __( 'Unstar',      'buddyboss' ),
+			'text_star'           => __( 'Star',        'buddyboss' ),
+			'title_unstar'        => __( 'Starred',     'buddyboss' ),
 			'title_star'          => __( 'Not starred', 'buddyboss' ),
 			'title_unstar_thread' => __( 'Remove all starred messages in this thread', 'buddyboss' ),
-			'title_star_thread'   => __( 'Star the first message in this thread',      'buddypress' ),
+			'title_star_thread'   => __( 'Star the first message in this thread',      'buddyboss' ),
 		), 'messages_star_action_link' );
 
 		// Check user ID and determine base user URL.

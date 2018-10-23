@@ -1090,7 +1090,7 @@ function groups_screen_notification_settings() {
 		<tbody>
 			<tr id="groups-notification-settings-invitation">
 				<td></td>
-				<td><?php _ex( 'A member invites you to join a group', 'group settings on notification settings page','buddypress' ) ?></td>
+				<td><?php _ex( 'A member invites you to join a group', 'group settings on notification settings page','buddyboss' ) ?></td>
 				<td class="yes"><input type="radio" name="notifications[notification_groups_invite]" id="notification-groups-invite-yes" value="yes" <?php checked( $group_invite, 'yes', true ) ?>/><label for="notification-groups-invite-yes" class="bp-screen-reader-text"><?php
 					/* translators: accessibility text */
 					_e( 'Yes, send email', 'buddyboss' );

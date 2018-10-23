@@ -868,7 +868,7 @@ class BP_Email_Tokens {
 																		<tr>
 																			<td height="34px" style="vertical-align: middle;">
 																				<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 0.8125 ) . 'px' ) ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;">
-																					<span style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; opacity: 0.85;"><?php echo friends_get_total_friend_count( $member_id ); ?></span> <?php _e( 'connections', 'buddypress' ); ?>
+																					<span style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; opacity: 0.85;"><?php echo friends_get_total_friend_count( $member_id ); ?></span> <?php _e( 'connections', 'buddyboss' ); ?>
 																				</div>
 																			</td>
 																		</tr>
@@ -877,9 +877,9 @@ class BP_Email_Tokens {
 																		<tr>
 																			<td height="34px" align="right" style="vertical-align: middle;" class="mobile-text-left">
 																				<?php if ( isset( $tokens[ 'friend-requests.url' ] ) ): ?>
-																					<a href="<?php echo esc_attr( $tokens[ 'friend-requests.url' ] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2.125 ) . 'px' ) ?>;line-height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2 ) . 'px' ) ?>;"><?php _e( 'Accept', 'buddypress' ); ?></a>
+																					<a href="<?php echo esc_attr( $tokens[ 'friend-requests.url' ] ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2.125 ) . 'px' ) ?>;line-height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2 ) . 'px' ) ?>;"><?php _e( 'Accept', 'buddyboss' ); ?></a>
 																				<?php else : ?>
-																					<a href="<?php echo bp_core_get_user_domain( $member_id ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2.125 ) . 'px' ) ?>;line-height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2 ) . 'px' ) ?>;"><?php _e( 'View Profile', 'buddypress' ); ?></a>
+																					<a href="<?php echo bp_core_get_user_domain( $member_id ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2.125 ) . 'px' ) ?>;line-height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2 ) . 'px' ) ?>;"><?php _e( 'View Profile', 'buddyboss' ); ?></a>
 																				<?php endif; ?>
 																			</td>
 																		</tr>
