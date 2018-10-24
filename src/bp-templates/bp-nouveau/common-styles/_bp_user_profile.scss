@@ -236,3 +236,26 @@ body.register .buddypress-wrap .page ul {
 		}
 	}
 }
+
+#item-header-avatar .icon-wrap {
+	position: absolute;
+	bottom: 20px;
+	top: auto;
+	left: 50%;
+	margin-left: -15px;
+}
+
+#item-header-avatar:hover .icon-wrap {
+	opacity: 1;
+}
+
+@media screen and (max-width: 782px) {
+
+	.member-header-actions.action {
+		margin-top: 15px;
+	}
+
+	.single-headers li.generic-button {
+		float: none;
+	}
+}

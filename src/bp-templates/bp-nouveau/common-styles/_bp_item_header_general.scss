@@ -4,6 +4,8 @@
 @include clearfix-element(".single-headers");
 
 .single-headers {
+	display: flex;
+	flex-flow: row wrap;
 	margin-bottom: $marg-med;
 
 	// Breakpoint element positioning
@@ -12,34 +14,8 @@
 
 		a {
 			display: block;
+			position: relative;
 			text-align: center;
-
-			img {
-				float: none;
-			}
-		}
-	}
-
-	div#item-header-content {
-		float: none;
-	}
-
-	@include medium-up() {
-
-		#item-header-avatar { // todo: this ought to be a class!
-
-			a {
-				text-align: left;
-
-				img {
-					float: left;
-
-				}
-			}
-		}
-
-		#item-header-content {
-			padding-left: $pad-lrg;
 		}
 	}
 
@@ -112,7 +88,7 @@
 	} // close h2
 
 	img.avatar {
-		float: left;
+		//float: left;
 		margin: 0 15px 19px 0;
 	}
 
@@ -175,3 +151,13 @@ body.no-js  .single-item-header .js-self-profile-button {
 	display: none;
 }
 
+@media screen and (max-width: 782px) {
+
+	.single-headers {
+		flex-flow: column;
+	}
+
+	#item-header-content {
+		text-align: center;
+	}
+}

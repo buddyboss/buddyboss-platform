@@ -60,12 +60,9 @@
 
 	@include medium-up {
 
-		div#item-header-content {
-			float: left;
-			margin-left: 10%;
-			text-align: left;
+		#item-header-content {
+			flex: 1;
 			padding-top: $marg-med;
-			width: 42%;
 		}
 
 		.group-item-actions {

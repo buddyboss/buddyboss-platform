@@ -8,15 +8,24 @@
 ?>
 
 <div id="cover-image-container">
-	<div id="header-cover-image"></div>
+	<div id="header-cover-image">
+		<?php if ( bp_is_my_profile() ) { ?>
+			<a href="<?php echo bp_get_members_component_link( 'profile', 'change-cover-image' ); ?>" class="link-change-cover-image">
+				<span class="bp-tooltip icon-wrap" data-bp-tooltip="<?php _e('Change Cover Image', 'buddypress'); ?>"><span class="dashicons dashicons-camera"></span></span>
+			</a>
+		<?php } ?>
+	</div>
 
 	<div id="item-header-cover-image">
 		<div id="item-header-avatar">
-			<a href="<?php bp_displayed_user_link(); ?>">
-
-				<?php bp_displayed_user_avatar( 'type=full' ); ?>
-
-			</a>
+			<?php if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) { ?>
+				<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image">
+					<span class="bp-tooltip icon-wrap" data-bp-tooltip="<?php _e('Change Profile Photo', 'buddypress'); ?>"><span class="dashicons dashicons-camera"></span></span>
+					<?php bp_displayed_user_avatar( 'type=full' ); ?>
+				</a>
+			<?php } else {
+				bp_displayed_user_avatar( 'type=full' );
+			} ?>
 		</div><!-- #item-header-avatar -->
 
 		<div id="item-header-content">
@@ -33,7 +42,7 @@
 					'container_classes' => array( 'member-header-actions' ),
 				)
 			);
-?>
+			?>
 
 			<?php bp_nouveau_member_hook( 'before', 'header_meta' ); ?>
 

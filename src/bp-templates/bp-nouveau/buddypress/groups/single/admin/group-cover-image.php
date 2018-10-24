@@ -5,6 +5,11 @@
  * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
+
+$group_link = bp_get_group_permalink();
+$admin_link = trailingslashit( $group_link . 'admin' );
+$group_avatar = trailingslashit( $admin_link . 'group-avatar' );
+$group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 ?>
 
 <?php if ( bp_is_group_create() ) : ?>
@@ -13,7 +18,13 @@
 		<?php esc_html_e( 'Upload Cover Image', 'buddyboss' ); ?>
 	</h2>
 
-	<div id="header-cover-image"></div>
+	<div id="header-cover-image">
+		<?php if ( bp_is_item_admin() && bp_group_use_cover_image_header() ) { ?>
+			<a href="<?php echo $group_cover_link; ?>" class="link-change-cover-image">
+				<span class="bp-tooltip icon-wrap" data-bp-tooltip="<?php _e('Change Cover Image', 'buddypress'); ?>"><span class="dashicons dashicons-camera"></span></span>
+			</a>
+		<?php } ?>
+	</div>
 
 <?php else : ?>
 

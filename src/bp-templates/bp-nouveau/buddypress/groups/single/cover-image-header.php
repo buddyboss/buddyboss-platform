@@ -5,18 +5,33 @@
  * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
+
+$group_link = bp_get_group_permalink();
+$admin_link = trailingslashit( $group_link . 'admin' );
+$group_avatar = trailingslashit( $admin_link . 'group-avatar' );
+$group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 ?>
 
 <div id="cover-image-container">
-	<div id="header-cover-image"></div>
+	<div id="header-cover-image">
+		<?php if ( bp_is_item_admin() && bp_group_use_cover_image_header() ) { ?>
+			<a href="<?php echo $group_cover_link; ?>" class="link-change-cover-image">
+				<span class="bp-tooltip icon-wrap" data-bp-tooltip="<?php _e('Change Cover Image', 'buddypress'); ?>"><span class="dashicons dashicons-camera"></span></span>
+			</a>
+		<?php } ?>
+	</div>
 
 	<div id="item-header-cover-image">
 		<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
 			<div id="item-header-avatar">
-				<a href="<?php echo esc_url( bp_get_group_permalink() ); ?>" title="<?php echo esc_attr( bp_get_group_name() ); ?>">
-
-					<?php bp_group_avatar(); ?>
-
+				<?php if ( bp_is_item_admin() ) { ?>
+					<a href="<?php echo $group_avatar; ?>" class="link-change-profile-image">
+						<span class="bp-tooltip icon-wrap" data-bp-tooltip="<?php _e('Change Group Photo', 'buddypress'); ?>"><span class="dashicons dashicons-camera"></span></span>
+						<?php bp_group_avatar(); ?>
+					</a>
+				<?php } else {
+					bp_group_avatar();
+				} ?>
 				</a>
 			</div><!-- #item-header-avatar -->
 		<?php endif; ?>
