@@ -2049,15 +2049,15 @@ body.register #page #primary .entry-header {
 }
 
 .single-headers {
-  display: flex;
-  flex-flow: row wrap;
   margin-bottom: 15px;
 }
 
 .single-headers #item-header-avatar a {
+  border: 0;
   display: block;
   position: relative;
   text-align: center;
+  text-decoration: none;
 }
 
 .single-headers .group-status,
@@ -2118,6 +2118,11 @@ body.register #page #primary .entry-header {
   vertical-align: middle;
 }
 
+.single-headers .item-header-wrap {
+  display: flex;
+  flex-flow: row wrap;
+}
+
 .single-headers img.avatar {
   margin: 0 0 19px 15px;
 }
@@ -2130,20 +2135,23 @@ body.register #page #primary .entry-header {
 }
 
 .single-headers ul {
-  margin-bottom: 15px;
+  list-style: none;
+  margin: 0;
 }
 
-.single-headers ul li {
-  float: left;
-  list-style: none;
+.single-headers ul > .generic-button {
+  display: inline-block;
+  text-align: center;
+  margin: 5px 0 10px 10px;
+}
+
+.single-headers .member-header-actions > .generic-button {
+  display: inline-block;
+  text-align: center;
+  margin: 5px 0 10px 10px;
 }
 
 .single-headers div.generic-button {
-  text-align: center;
-}
-
-.single-headers li.generic-button {
-  display: inline-block;
   text-align: center;
 }
 
@@ -2155,19 +2163,6 @@ body.register #page #primary .entry-header {
   }
 }
 
-.single-headers div.generic-button,
-.single-headers a.button {
-  margin: 10px 0 0 10px;
-}
-
-.single-headers li.generic-button {
-  margin: 2px 10px;
-}
-
-.single-headers li.generic-button:first-child {
-  margin-right: 0;
-}
-
 .single-headers div#message.info {
   line-height: 0.8;
 }
@@ -2176,8 +2171,18 @@ body.no-js .single-item-header .js-self-profile-button {
   display: none;
 }
 
+#create-group-form #header-cover-image {
+  margin-bottom: 15px;
+}
+
+@media screen and (min-width: 783px) {
+  #item-header-avatar {
+    padding-left: 1em;
+  }
+}
+
 @media screen and (max-width: 782px) {
-  .single-headers {
+  .single-headers .item-header-wrap {
     flex-flow: column;
   }
   #item-header-content {
@@ -2189,7 +2194,7 @@ body.no-js .single-item-header .js-self-profile-button {
 * Default required cover image rules
 */
 #cover-image-container {
-  flex: 1;
+  flex: 0 0 100%;
   position: relative;
 }
 
@@ -2210,8 +2215,6 @@ body.no-js .single-item-header .js-self-profile-button {
 }
 
 #item-header-cover-image {
-  display: flex;
-  flex-flow: row wrap;
   margin-bottom: 1em;
   position: relative;
   z-index: 2;
@@ -2223,12 +2226,15 @@ body.no-js .single-item-header .js-self-profile-button {
 }
 
 #item-header-avatar img {
+  border: solid 2px #fff;
+  background: rgba(255, 255, 255, 0.8);
   box-shadow: none;
   display: block;
   margin: 0 auto;
 }
 
-.users-header #item-header-content {
+.users-header #item-header-cover-image #item-header-content {
+  flex: 1;
   margin-top: -50px;
 }
 
@@ -2284,13 +2290,6 @@ body.no-js .single-item-header .js-self-profile-button {
   clear: both;
 }
 
-.groups-header .group-item-actions {
-  float: right;
-  margin: 0 15px 15px 0;
-  padding-top: 0;
-  width: 100%;
-}
-
 .groups-header .moderators-lists {
   margin-top: 0;
 }
@@ -2326,22 +2325,6 @@ body.no-js .single-item-header .js-self-profile-button {
   width: 30px;
 }
 
-@media screen and (min-width: 46.8em) {
-  .groups-header #item-header-content {
-    flex: 1;
-    padding-top: 15px;
-  }
-  .groups-header .group-item-actions {
-    float: left;
-    margin: 0 15px 15px 0;
-    text-align: left;
-    width: 20%;
-  }
-  .groups-header .groups-meta {
-    clear: both;
-  }
-}
-
 .groups-header .desc-wrap {
   background: #eaeaea;
   border: 1px solid #d6d6d6;
@@ -2358,6 +2341,32 @@ body.no-js .single-item-header .js-self-profile-button {
 
 .groups-header .desc-wrap .group-description p:last-child {
   margin-bottom: 0;
+}
+
+@media screen and (min-width: 783px) {
+  .groups-header #item-header-content {
+    flex: 1;
+  }
+  .groups-header #item-header-cover-image #item-actions,
+  .groups-header #item-header-cover-image #item-header-content {
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+  .groups-header .group-item-actions {
+    margin-right: 15px;
+    text-align: left;
+    max-width: 25%;
+  }
+  .groups-header .groups-meta {
+    clear: both;
+  }
+}
+
+@media screen and (max-width: 782px) {
+  .groups-header #item-header-cover-image #item-actions,
+  .groups-header #item-header-cover-image #item-header-content {
+    padding-bottom: 15px;
+  }
 }
 
 /**

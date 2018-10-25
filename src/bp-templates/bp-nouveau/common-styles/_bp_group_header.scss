@@ -11,15 +11,6 @@
 		clear: both;
 	}
 
-	// groups admin/mod wrapper block
-	.group-item-actions {
-		float: left;
-		margin: 0 0 15px 15px;
-		padding-top: 0;
-		width: 100%;
-	}
-
-
 	// The admin & mod list display for a group.
 	// 'moderators-lists' is used to refer to
 	// generic members with elevated access.
@@ -58,25 +49,6 @@
 		}
 	} // close moderators-lists
 
-	@include medium-up {
-
-		#item-header-content {
-			flex: 1;
-			padding-top: $marg-med;
-		}
-
-		.group-item-actions {
-			float: right;
-			margin: 0 0 15px 15px;
-			text-align: right;
-			width: 20%;
-		}
-
-		.groups-meta {
-			clear: both;
-		}
-	}
-
 	.desc-wrap {
 		background: $light-grey;
 		border: 1px solid $med-light-grey;
@@ -94,5 +66,42 @@
 			margin-bottom: 0;
 		}
 	}
-} // close groups-header
 
+	@media screen and (min-width: 783px) {
+
+		#item-header-content {
+			flex: 1;
+		}
+
+		#item-header-cover-image {
+
+			#item-actions,
+			#item-header-content {
+				padding-top: $marg-med;
+				padding-bottom: $marg-med;
+			}
+		}
+
+		.group-item-actions {
+			margin-left: 15px;
+			text-align: right;
+			max-width: 25%;
+		}
+
+		.groups-meta {
+			clear: both;
+		}
+	}
+
+	@media screen and (max-width: 782px) {
+
+		#item-header-cover-image {
+
+			#item-actions,
+			#item-header-content {
+				padding-bottom: $marg-med;
+			}
+		}
+	}
+
+} // close groups-header

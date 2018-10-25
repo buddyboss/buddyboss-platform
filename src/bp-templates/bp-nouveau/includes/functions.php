@@ -742,25 +742,9 @@ function bp_nouveau_theme_cover_image( $params = array() ) {
 
 	return '
 		/* Cover image */
-		#buddypress #item-header-cover-image:after {
-			clear: both;
-			content: "";
-			display: table;
-		}
-
 		#buddypress #header-cover-image {
 			height: ' . $params['height'] . 'px;
 			' . $cover_image . '
-		}
-
-		#buddypress #create-group-form #header-cover-image {
-			position: relative;
-			margin: 1em 0;
-		}
-
-		body.single-item.groups #buddypress div#item-header #item-header-cover-image #item-actions {
-			padding-top: 20px;
-			max-width: 20%;
 		}
 
 		' . $hide_avatar_style . '
@@ -772,16 +756,6 @@ function bp_nouveau_theme_cover_image( $params = array() ) {
 			text-shadow: 0px 0px 3px rgba( 0, 0, 0, 0.8 );
 			margin: 0 0 .6em;
 			font-size:200%;
-		}
-
-		#buddypress #item-header-cover-image #item-header-avatar img.avatar {
-			border: solid 2px #FFF;
-			background: rgba( 255, 255, 255, 0.8 );
-		}
-
-		#buddypress #item-header-cover-image #item-header-avatar a {
-			border: none;
-			text-decoration: none;
 		}
 
 		#buddypress #item-header-cover-image #item-buttons {

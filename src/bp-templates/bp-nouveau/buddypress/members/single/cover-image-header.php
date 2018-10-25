@@ -8,6 +8,7 @@
 ?>
 
 <div id="cover-image-container">
+
 	<div id="header-cover-image">
 		<?php if ( bp_is_my_profile() ) { ?>
 			<a href="<?php echo bp_get_members_component_link( 'profile', 'change-cover-image' ); ?>" class="link-change-cover-image">
@@ -16,7 +17,7 @@
 		<?php } ?>
 	</div>
 
-	<div id="item-header-cover-image">
+	<div id="item-header-cover-image" class="item-header-wrap">
 		<div id="item-header-avatar">
 			<?php if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) { ?>
 				<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image">
@@ -57,4 +58,5 @@
 		</div><!-- #item-header-content -->
 
 	</div><!-- #item-header-cover-image -->
+
 </div><!-- #cover-image-container -->
