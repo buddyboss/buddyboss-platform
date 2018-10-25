@@ -25,10 +25,10 @@ class BP_Settings_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'settings',
-			__( 'Settings', 'buddyboss' ),
+			__( 'Account', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
-				'adminbar_myaccount_order' => 100
+				'adminbar_myaccount_order' => 21
 			)
 		);
 	}
@@ -138,9 +138,9 @@ class BP_Settings_Component extends BP_Component {
 
 		// Add the settings navigation item.
 		$main_nav = array(
-			'name'                    => __( 'Settings', 'buddyboss' ),
+			'name'                    => __( 'Account', 'buddyboss' ),
 			'slug'                    => $slug,
-			'position'                => 100,
+			'position'                => 21,
 			'show_for_displayed_user' => $access,
 			'screen_function'         => 'bp_settings_screen_general',
 			'default_subnav_slug'     => 'general'
@@ -148,7 +148,7 @@ class BP_Settings_Component extends BP_Component {
 
 		// Add General Settings nav item.
 		$sub_nav[] = array(
-			'name'            => __( 'My Account', 'buddyboss' ),
+			'name'            => __( 'Login Information', 'buddyboss' ),
 			'slug'            => 'general',
 			'parent_url'      => $settings_link,
 			'parent_slug'     => $slug,
@@ -217,7 +217,7 @@ class BP_Settings_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
-				'title'  => __( 'Settings', 'buddyboss' ),
+				'title'  => __( 'Account', 'buddyboss' ),
 				'href'   => $settings_link
 			);
 
@@ -225,7 +225,7 @@ class BP_Settings_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-general',
-				'title'    => __( 'My Account', 'buddyboss' ),
+				'title'    => __( 'Login Information', 'buddyboss' ),
 				'href'     => $settings_link,
 				'position' => 10
 			);
