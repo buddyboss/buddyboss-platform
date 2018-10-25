@@ -2240,16 +2240,19 @@ body.no-js .single-item-header .js-self-profile-button {
 
 #item-header .icon-wrap {
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.71);
+  background: rgba(255, 255, 255, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  right: 10px;
-  top: 10px;
-  opacity: 0.15;
+  width: 30px;
+  height: 30px;
+  right: 12px;
+  top: 12px;
+  opacity: 0;
   transition: all 0.2s;
+  -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
 }
 
 #header-cover-image .link-change-cover-image {
@@ -2896,7 +2899,7 @@ body.register .buddypress-wrap .page ul {
 
 #item-header-avatar .icon-wrap {
   position: absolute;
-  bottom: 20px;
+  bottom: 12px;
   top: auto;
   right: 50%;
   margin-right: -15px;

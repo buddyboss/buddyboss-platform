@@ -16,7 +16,7 @@ $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 	<div id="item-header-avatar">
 		<?php if ( bp_is_item_admin() ) { ?>
 			<a href="<?php echo $group_avatar; ?>" class="link-change-profile-image">
-				<span class="bp-tooltip icon-wrap" data-bp-tooltip="<?php _e('Change Group Photo', 'buddypress'); ?>"><span class="dashicons dashicons-camera"></span></span>
+				<span class="bp-tooltip icon-wrap" data-bp-tooltip="<?php _e('Change Group Photo', 'buddypress'); ?>"><span class="dashicons dashicons-edit"></span></span>
 				<?php bp_group_avatar(); ?>
 			</a>
 		<?php } else {
