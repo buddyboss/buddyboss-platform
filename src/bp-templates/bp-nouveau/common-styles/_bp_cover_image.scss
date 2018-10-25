@@ -60,16 +60,18 @@
 
 #item-header .icon-wrap {
 	border-radius: 50%;
-	background: rgba(255, 255, 255, 0.71);
+	background: rgba(255, 255, 255, 0.8);
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 28px;
-	height: 28px;
-	left: 10px;
-	top: 10px;
-	opacity: 0.15;
+	width: 30px;
+	height: 30px;
+	left: 12px;
+	top: 12px;
+	opacity: 0;
 	transition: all 0.2s;
+
+	@include box-shadow( 0 0 3px 0 rgba(0, 0, 0, 0.2) );
 }
 
 #header-cover-image .link-change-cover-image {
