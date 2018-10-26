@@ -7,17 +7,9 @@
  */
 ?>
 
-<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Groups menu', 'buddyboss' ); ?>">
-	<ul class="subnav">
-
-		<?php if ( bp_is_my_profile() ) : ?>
-
-			<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
-
-		<?php endif; ?>
-
-	</ul>
-</nav><!-- .bp-navs -->
+<?php if ( bp_is_my_profile() ) : ?>
+	<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
+<?php endif; ?>
 
 <?php if ( ! bp_is_current_action( 'invites' ) ) : ?>
 

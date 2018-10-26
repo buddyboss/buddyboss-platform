@@ -7,13 +7,7 @@
  */
 ?>
 
-<nav class="<?php bp_nouveau_single_item_subnav_classes(); ?>" id="subnav" role="navigation" aria-label="<?php esc_attr_e( 'Notifications menu', 'buddyboss' ); ?>">
-	<ul class="subnav">
-
-		<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
-
-	</ul>
-</nav>
+<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
 
 <?php
 switch ( bp_current_action() ) :
