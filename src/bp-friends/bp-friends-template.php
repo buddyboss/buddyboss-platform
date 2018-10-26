@@ -334,9 +334,10 @@ function bp_is_friend( $user_id = 0 ) {
  *
  * @param int      $potential_friend_id See {@link bp_get_add_friend_button()}.
  * @param int|bool $friend_status       See {@link bp_get_add_friend_button()}.
+ * @param array    $button_args         See {@link BP_Button class}.
  */
-function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false ) {
-	echo bp_get_add_friend_button( $potential_friend_id, $friend_status );
+function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false, $button_args = array() ) {
+	echo bp_get_add_friend_button( $potential_friend_id, $friend_status, $button_args );
 }
 	/**
 	 * Create the Connect button.
@@ -346,9 +347,10 @@ function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false 
 	 * @param int  $potential_friend_id ID of the user to whom the button
 	 *                                  applies. Default: value of {@link bp_get_potential_friend_id()}.
 	 * @param bool $friend_status       Not currently used.
+	 * @param array $button_args       See {@link BP_Button class}.
 	 * @return false|string HTML for the Connect button.
 	 */
-	function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = false ) {
+	function bp_get_add_friend_button( $potential_friend_id = 0, $friend_status = false, $button_args = array() ) {
 
 		if ( empty( $potential_friend_id ) )
 			$potential_friend_id = bp_get_potential_friend_id( $potential_friend_id );
@@ -358,73 +360,79 @@ function bp_add_friend_button( $potential_friend_id = 0, $friend_status = false 
 		if ( empty( $is_friend ) )
 			return false;
 
+		$button_args = wp_parse_args( $button_args, get_class_vars( 'BP_Button' ) );
+
 		switch ( $is_friend ) {
 			case 'pending' :
-				$button = array(
-					'id'                => 'pending',
-					'component'         => 'friends',
-					'must_be_logged_in' => true,
-					'block_self'        => true,
-					'wrapper_class'     => 'friendship-button pending_friend',
-					'wrapper_id'        => 'friendship-button-' . $potential_friend_id,
-					'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/requests/cancel/' . $potential_friend_id . '/', 'friends_withdraw_friendship' ),
-					'link_text'         => __( 'Cancel Connect Request', 'buddyboss' ),
-					'link_id'           => 'friend-' . $potential_friend_id,
-					'link_rel'          => 'remove',
-					'link_class'        => 'friendship-button pending_friend requested'
-				);
+				$button = wp_parse_args(
+					array(
+						'id'                => 'pending',
+						'component'         => 'friends',
+						'must_be_logged_in' => true,
+						'block_self'        => true,
+						'wrapper_class'     => 'friendship-button pending_friend',
+						'wrapper_id'        => 'friendship-button-' . $potential_friend_id,
+						'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/requests/cancel/' . $potential_friend_id . '/', 'friends_withdraw_friendship' ),
+						'link_text'         => __( 'Cancel Connect Request', 'buddyboss' ),
+						'link_id'           => 'friend-' . $potential_friend_id,
+						'link_rel'          => 'remove',
+						'link_class'        => 'friendship-button pending_friend requested'
+					), $button_args );
 				break;
 
 			case 'awaiting_response' :
-				$button = array(
-					'id'                => 'awaiting_response',
-					'component'         => 'friends',
-					'must_be_logged_in' => true,
-					'block_self'        => true,
-					'wrapper_class'     => 'friendship-button awaiting_response_friend',
-					'wrapper_id'        => 'friendship-button-' . $potential_friend_id,
-					'link_href'         => bp_loggedin_user_domain() . bp_get_friends_slug() . '/requests/',
-					'link_text'         => __( 'Connect Requested', 'buddyboss' ),
-					'link_id'           => 'friend-' . $potential_friend_id,
-					'link_rel'          => 'remove',
-					'link_class'        => 'friendship-button awaiting_response_friend requested'
-				);
+				$button = wp_parse_args(
+					array(
+						'id'                => 'awaiting_response',
+						'component'         => 'friends',
+						'must_be_logged_in' => true,
+						'block_self'        => true,
+						'wrapper_class'     => 'friendship-button awaiting_response_friend',
+						'wrapper_id'        => 'friendship-button-' . $potential_friend_id,
+						'link_href'         => bp_loggedin_user_domain() . bp_get_friends_slug() . '/requests/',
+						'link_text'         => __( 'Connect Requested', 'buddyboss' ),
+						'link_id'           => 'friend-' . $potential_friend_id,
+						'link_rel'          => 'remove',
+						'link_class'        => 'friendship-button awaiting_response_friend requested'
+					), $button_args );
 				break;
 
 			case 'is_friend' :
-				$button = array(
-					'id'                => 'is_friend',
-					'component'         => 'friends',
-					'must_be_logged_in' => true,
-					'block_self'        => false,
-					'wrapper_class'     => 'friendship-button is_friend',
-					'wrapper_id'        => 'friendship-button-' . $potential_friend_id,
-					'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/remove-friend/' . $potential_friend_id . '/', 'friends_remove_friend' ),
-					'link_text'         => __( 'Connected', 'buddyboss' ),
-					'link_id'           => 'friend-' . $potential_friend_id,
-					'link_rel'          => 'remove',
-					'link_class'        => 'friendship-button is_friend remove bp-toggle-action-button',
-					'button_attr' => array(
-						'data-title'           => __( 'Remove Connection', 'buddyboss' ),
-						'data-title-displayed' => __( 'Connected', 'buddyboss' ),
-					)
-				);
+				$button = wp_parse_args(
+					array(
+						'id'                => 'is_friend',
+						'component'         => 'friends',
+						'must_be_logged_in' => true,
+						'block_self'        => false,
+						'wrapper_class'     => 'friendship-button is_friend',
+						'wrapper_id'        => 'friendship-button-' . $potential_friend_id,
+						'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/remove-friend/' . $potential_friend_id . '/', 'friends_remove_friend' ),
+						'link_text'         => __( 'Connected', 'buddyboss' ),
+						'link_id'           => 'friend-' . $potential_friend_id,
+						'link_rel'          => 'remove',
+						'link_class'        => 'friendship-button is_friend remove bp-toggle-action-button',
+						'button_attr'       => array(
+							'data-title'           => __( 'Remove Connection', 'buddyboss' ),
+							'data-title-displayed' => __( 'Connected', 'buddyboss' ),
+						)
+					), $button_args );
 				break;
 
 			default:
-				$button = array(
-					'id'                => 'not_friends',
-					'component'         => 'friends',
-					'must_be_logged_in' => true,
-					'block_self'        => true,
-					'wrapper_class'     => 'friendship-button not_friends',
-					'wrapper_id'        => 'friendship-button-' . $potential_friend_id,
-					'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/add-friend/' . $potential_friend_id . '/', 'friends_add_friend' ),
-					'link_text'         => __( 'Connect', 'buddyboss' ),
-					'link_id'           => 'friend-' . $potential_friend_id,
-					'link_rel'          => 'add',
-					'link_class'        => 'friendship-button not_friends add'
-				);
+				$button = wp_parse_args(
+					array(
+						'id'                => 'not_friends',
+						'component'         => 'friends',
+						'must_be_logged_in' => true,
+						'block_self'        => true,
+						'wrapper_class'     => 'friendship-button not_friends',
+						'wrapper_id'        => 'friendship-button-' . $potential_friend_id,
+						'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/add-friend/' . $potential_friend_id . '/', 'friends_add_friend' ),
+						'link_text'         => __( 'Connect', 'buddyboss' ),
+						'link_id'           => 'friend-' . $potential_friend_id,
+						'link_rel'          => 'add',
+						'link_class'        => 'friendship-button not_friends add'
+					), $button_args );
 				break;
 		}
 
@@ -867,10 +875,12 @@ function bp_friends_get_unfollowing_ids( $args = '' ) {
  *
  * @see bp_friends_add_follow_button() for information on arguments.
  *
- * @param mixed $args See {@link bp_friends_get_add_follow_button()}.
+ * @param int $leader_id The user ID of the person we want to follow.
+ * @param int $follower_id The user ID initiating the follow request.
+ * @param array $button_args See BP_Button class for more information.
  */
-function bp_friends_add_follow_button( $args = '' ) {
-	echo bp_friends_get_add_follow_button( $args );
+function bp_friends_add_follow_button( $leader_id = false, $follower_id = false, $button_args = array() ) {
+	echo bp_friends_get_add_follow_button( $leader_id, $follower_id, $button_args );
 }
 /**
  * Returns a follow / unfollow button for a given user depending on the follower status.
@@ -878,62 +888,62 @@ function bp_friends_add_follow_button( $args = '' ) {
  * Checks to see if the follower is already following the leader.  If is following, returns
  * "Stop following" button; if not following, returns "Follow" button.
  *
- * @param array $args {
- *     Array of arguments.
- *     @type int $leader_id The user ID of the person we want to follow.
- *     @type int $follower_id The user ID initiating the follow request.
- * }
+ * @param int $leader_id The user ID of the person we want to follow.
+ * @param int $follower_id The user ID initiating the follow request.
+ * @param array $button_args See BP_Button class for more information.
+ *
  * @return mixed String of the button on success.  Boolean false on failure.
  * @uses bp_get_button() Renders a button using the BP Button API
  * @since Buddyboss 3.1.1
  */
-function bp_friends_get_add_follow_button( $args = '' ) {
+function bp_friends_get_add_follow_button( $leader_id = false, $follower_id = false, $button_args = array() ) {
 
-	$r = wp_parse_args( $args, array(
-		'leader_id'     => bp_displayed_user_id(),
-		'follower_id'   => bp_loggedin_user_id(),
-	) );
-
-	if ( ! $r['leader_id'] || ! $r['follower_id'] )
+	if ( ! $leader_id || ! $follower_id )
 		return false;
 
 	$is_unfollowing = bp_friends_is_unfollowing( array(
-		'leader_id'   => $r['leader_id'],
-		'follower_id' => $r['follower_id']
+		'leader_id'   => $leader_id,
+		'follower_id' => $follower_id
 	) );
 
+	$button_args = wp_parse_args( $button_args, get_class_vars( 'BP_Button' ) );
+
 	if ( ! $is_unfollowing ) {
-		$button = array(
-			'id'                => 'member_follow',
-			'component'         => 'friends',
-			'must_be_logged_in' => true,
-			'block_self'        => true,
-			'wrapper_class'     => 'follow-button following',
-			'wrapper_id'        => 'follow-button-' . $r['leader_id'],
-			'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/stop-following/' . $r['leader_id'] . '/', 'friends_unfollow' ),
-			'link_text'         => __( 'Following', 'buddyboss' ),
-			'link_id'           => 'follow-' . $r['leader_id'],
-			'link_rel'          => 'stop',
-			'link_class'        => 'follow-button following stop bp-toggle-action-button',
-			'button_attr' => array(
-				'data-title'           => __( 'Unfollow', 'buddyboss' ),
-				'data-title-displayed' => __( 'Following', 'buddyboss' )
+		$button = wp_parse_args(
+			array(
+				'id'                => 'member_follow',
+				'component'         => 'friends',
+				'must_be_logged_in' => true,
+				'block_self'        => true,
+				'wrapper_class'     => 'follow-button following',
+				'wrapper_id'        => 'follow-button-' . $leader_id,
+				'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/stop-following/' . $leader_id . '/', 'friends_unfollow' ),
+				'link_text'         => __( 'Following', 'buddyboss' ),
+				'link_id'           => 'follow-' . $leader_id,
+				'link_rel'          => 'stop',
+				'link_class'        => 'follow-button following stop bp-toggle-action-button',
+				'button_attr'       => array(
+					'data-title'           => __( 'Unfollow', 'buddyboss' ),
+					'data-title-displayed' => __( 'Following', 'buddyboss' )
+				)
 			)
-		);
+			, $button_args );
 	} else {
-		$button = array(
-			'id'                => 'member_follow',
-			'component'         => 'friends',
-			'must_be_logged_in' => true,
-			'block_self'        => true,
-			'wrapper_class'     => 'follow-button not_following',
-			'wrapper_id'        => 'follow-button-' . $r['leader_id'],
-			'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/start-following/' . $r['leader_id'] . '/', 'friends_follow' ),
-			'link_text'         => __( 'Follow', 'buddyboss' ),
-			'link_id'           => 'follow-' . $r['leader_id'],
-			'link_rel'          => 'start',
-			'link_class'        => 'follow-button not_following start'
-		);
+		$button = wp_parse_args(
+			array(
+				'id'                => 'member_follow',
+				'component'         => 'friends',
+				'must_be_logged_in' => true,
+				'block_self'        => true,
+				'wrapper_class'     => 'follow-button not_following',
+				'wrapper_id'        => 'follow-button-' . $leader_id,
+				'link_href'         => wp_nonce_url( bp_loggedin_user_domain() . bp_get_friends_slug() . '/start-following/' . $leader_id . '/', 'friends_follow' ),
+				'link_text'         => __( 'Follow', 'buddyboss' ),
+				'link_id'           => 'follow-' . $leader_id,
+				'link_rel'          => 'start',
+				'link_class'        => 'follow-button not_following start'
+			)
+			, $button_args );
 	}
 
 	/**

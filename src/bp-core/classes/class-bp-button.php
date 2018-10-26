@@ -285,15 +285,6 @@ class BP_Button {
 			}
 		}
 
-		// for member buttons we need li and button element as loop has this elements in this function `bp_nouveau_members_loop_buttons`
-		if ( bp_get_member_user_id() && ! bp_is_group() ) {
-			$r['parent_element'] = 'li';
-			$r['button_element'] = 'button';
-		} else if ( bp_is_group() && bp_get_member_user_id() ) { // `bp_nouveau_members_loop_buttons` in groups/single/members-loop.php & groups/single/members/leaders.php
-			$r['parent_element'] = 'div';
-			$r['button_element'] = 'button';
-		}
-
 		// Should we use a parent element?
 		if ( ! empty( $r['parent_element'] ) ) {
 			if ( ! isset( $r['parent_attr']['class'] ) ) {
