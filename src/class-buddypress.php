@@ -546,6 +546,7 @@ class BuddyPress {
 			'notifications',
 			'settings',
 			'xprofile',
+			'forums',
 		);
 
 		// These classes don't have a name that matches their component.
