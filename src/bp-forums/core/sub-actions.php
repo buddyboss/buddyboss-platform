@@ -158,16 +158,6 @@ function bbp_setup_current_user() {
 /** Supplemental Actions ******************************************************/
 
 /**
- * Load translations for current language
- *
- * @since bbPress (r2599)
- * @uses do_action() Calls 'bbp_load_textdomain'
- */
-function bbp_load_textdomain() {
-	do_action( 'bbp_load_textdomain' );
-}
-
-/**
  * Setup the post types
  *
  * @since bbPress (r2464)

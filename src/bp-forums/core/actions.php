@@ -77,7 +77,6 @@ add_action( 'bbp_loaded', 'bbp_filter_user_roles_option',  16 );
  * The load order helps to execute code at the correct time.
  *                                               v---Load order
  */
-add_action( 'bbp_init', 'bbp_load_textdomain',   0   );
 add_action( 'bbp_init', 'bbp_register',          0   );
 add_action( 'bbp_init', 'bbp_add_rewrite_tags',  20  );
 add_action( 'bbp_init', 'bbp_add_rewrite_rules', 30  );
