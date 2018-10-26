@@ -24,7 +24,6 @@ $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 			<?php } else {
 				bp_group_avatar();
 			} ?>
-			</a>
 		</div><!-- #item-header-avatar -->
 	<?php endif; ?>
 
