@@ -116,14 +116,14 @@ final class bbPress {
 	 *
 	 * @since bbPress (r2464)
 	 */
-	public function __clone() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'bbpress' ), '2.1' ); }
+	public function __clone() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddyboss' ), '2.1' ); }
 
 	/**
 	 * A dummy magic method to prevent bbPress from being unserialized
 	 *
 	 * @since bbPress (r2464)
 	 */
-	public function __wakeup() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'bbpress' ), '2.1' ); }
+	public function __wakeup() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddyboss' ), '2.1' ); }
 
 	/**
 	 * Magic method for checking the existence of a certain custom field
@@ -249,7 +249,7 @@ final class bbPress {
 
 		/** Misc **************************************************************/
 
-		$this->domain         = 'bbpress';      // Unique identifier for retrieving translated strings
+		$this->domain         = 'buddyboss';      // Unique identifier for retrieving translated strings
 		$this->extend         = new stdClass(); // Plugins add data here
 		$this->errors         = new WP_Error(); // Feedback
 		$this->tab_index      = apply_filters( 'bbp_default_tab_index', 100 );
@@ -384,7 +384,7 @@ final class bbPress {
 		// Register the default theme compatibility package
 		bbp_register_theme_package( array(
 			'id'      => 'default',
-			'name'    => __( 'bbPress Default', 'bbpress' ),
+			'name'    => __( 'bbPress Default', 'buddyboss' ),
 			'version' => bbp_get_version(),
 			'dir'     => trailingslashit( $this->themes_dir . 'default' ),
 			'url'     => trailingslashit( $this->themes_url . 'default' )
@@ -430,7 +430,7 @@ final class bbPress {
 				'labels'              => bbp_get_forum_post_type_labels(),
 				'rewrite'             => bbp_get_forum_post_type_rewrite(),
 				'supports'            => bbp_get_forum_post_type_supports(),
-				'description'         => __( 'bbPress Forums', 'bbpress' ),
+				'description'         => __( 'bbPress Forums', 'buddyboss' ),
 				'capabilities'        => bbp_get_forum_caps(),
 				'capability_type'     => array( 'forum', 'forums' ),
 				'menu_position'       => 555555,
@@ -455,7 +455,7 @@ final class bbPress {
 				'labels'              => bbp_get_topic_post_type_labels(),
 				'rewrite'             => bbp_get_topic_post_type_rewrite(),
 				'supports'            => bbp_get_topic_post_type_supports(),
-				'description'         => __( 'bbPress Topics', 'bbpress' ),
+				'description'         => __( 'bbPress Topics', 'buddyboss' ),
 				'capabilities'        => bbp_get_topic_caps(),
 				'capability_type'     => array( 'topic', 'topics' ),
 				'menu_position'       => 555555,
@@ -480,7 +480,7 @@ final class bbPress {
 				'labels'              => bbp_get_reply_post_type_labels(),
 				'rewrite'             => bbp_get_reply_post_type_rewrite(),
 				'supports'            => bbp_get_reply_post_type_supports(),
-				'description'         => __( 'bbPress Replies', 'bbpress' ),
+				'description'         => __( 'bbPress Replies', 'buddyboss' ),
 				'capabilities'        => bbp_get_reply_caps(),
 				'capability_type'     => array( 'reply', 'replies' ),
 				'menu_position'       => 555555,
@@ -515,8 +515,8 @@ final class bbPress {
 		register_post_status(
 			bbp_get_closed_status_id(),
 			apply_filters( 'bbp_register_closed_post_status', array(
-				'label'             => _x( 'Closed', 'post', 'bbpress' ),
-				'label_count'       => _nx_noop( 'Closed <span class="count">(%s)</span>', 'Closed <span class="count">(%s)</span>', 'post', 'bbpress' ),
+				'label'             => _x( 'Closed', 'post', 'buddyboss' ),
+				'label_count'       => _nx_noop( 'Closed <span class="count">(%s)</span>', 'Closed <span class="count">(%s)</span>', 'post', 'buddyboss' ),
 				'public'            => true,
 				'show_in_admin_all' => true
 			) )
@@ -526,8 +526,8 @@ final class bbPress {
 		register_post_status(
 			bbp_get_spam_status_id(),
 			apply_filters( 'bbp_register_spam_post_status', array(
-				'label'                     => _x( 'Spam', 'post', 'bbpress' ),
-				'label_count'               => _nx_noop( 'Spam <span class="count">(%s)</span>', 'Spam <span class="count">(%s)</span>', 'post', 'bbpress' ),
+				'label'                     => _x( 'Spam', 'post', 'buddyboss' ),
+				'label_count'               => _nx_noop( 'Spam <span class="count">(%s)</span>', 'Spam <span class="count">(%s)</span>', 'post', 'buddyboss' ),
 				'protected'                 => true,
 				'exclude_from_search'       => true,
 				'show_in_admin_status_list' => true,
@@ -539,8 +539,8 @@ final class bbPress {
 		register_post_status(
 			bbp_get_orphan_status_id(),
 			apply_filters( 'bbp_register_orphan_post_status', array(
-				'label'                     => _x( 'Orphan', 'post', 'bbpress' ),
-				'label_count'               => _nx_noop( 'Orphan <span class="count">(%s)</span>', 'Orphans <span class="count">(%s)</span>', 'post', 'bbpress' ),
+				'label'                     => _x( 'Orphan', 'post', 'buddyboss' ),
+				'label_count'               => _nx_noop( 'Orphan <span class="count">(%s)</span>', 'Orphans <span class="count">(%s)</span>', 'post', 'buddyboss' ),
 				'protected'                 => true,
 				'exclude_from_search'       => true,
 				'show_in_admin_status_list' => true,
@@ -552,8 +552,8 @@ final class bbPress {
 		register_post_status(
 			bbp_get_hidden_status_id(),
 			apply_filters( 'bbp_register_hidden_post_status', array(
-				'label'                     => _x( 'Hidden', 'post', 'bbpress' ),
-				'label_count'               => _nx_noop( 'Hidden <span class="count">(%s)</span>', 'Hidden <span class="count">(%s)</span>', 'post', 'bbpress' ),
+				'label'                     => _x( 'Hidden', 'post', 'buddyboss' ),
+				'label_count'               => _nx_noop( 'Hidden <span class="count">(%s)</span>', 'Hidden <span class="count">(%s)</span>', 'post', 'buddyboss' ),
 				'private'                   => true,
 				'exclude_from_search'       => true,
 				'show_in_admin_status_list' => true,
@@ -623,7 +623,7 @@ final class bbPress {
 		// Popular topics
 		bbp_register_view(
 			'popular',
-			__( 'Most popular topics', 'bbpress' ),
+			__( 'Most popular topics', 'buddyboss' ),
 			apply_filters( 'bbp_register_view_popular', array(
 				'meta_key'      => '_bbp_reply_count',
 				'max_num_pages' => 1,
@@ -635,7 +635,7 @@ final class bbPress {
 		// Topics with no replies
 		bbp_register_view(
 			'no-replies',
-			__( 'Topics with no replies', 'bbpress' ),
+			__( 'Topics with no replies', 'buddyboss' ),
 			apply_filters( 'bbp_register_view_no_replies', array(
 				'meta_key'      => '_bbp_reply_count',
 				'meta_value'    => 1,

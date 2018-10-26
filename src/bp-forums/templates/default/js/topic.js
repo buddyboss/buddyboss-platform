@@ -7,6 +7,7 @@ jQuery( document ).ready( function ( $ ) {
 			nonce  : nonce
 		};
 
+		/*globals bbpTopicJS:false */
 		$.post( bbpTopicJS.bbp_ajaxurl, $data, function ( response ) {
 			if ( response.success ) {
 				$( update_selector ).html( response.content );

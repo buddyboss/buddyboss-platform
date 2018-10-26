@@ -2452,7 +2452,7 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Groups allow your users to organize themselves into specific public, private or hidden social areas with separate activity feeds and member listings.', 'buddyboss' )
 		),
 		'forums'   => array(
-			'title'       => __( 'Forums', 'buddyboss' ),
+			'title'       => __( 'Discussion Forums', 'buddyboss' ),
 			'description' => __( '{{ SOME FORUM DESCRIPTION }}.', 'buddyboss' )
 		)
 	);

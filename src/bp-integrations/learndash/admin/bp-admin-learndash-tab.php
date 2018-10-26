@@ -9,10 +9,10 @@ class BP_Admin_Integration_Learndash extends BP_Admin_Integration_tab {
 		$this->intro_template  = buddypress()->plugin_dir . '/bp-integrations/learndash/admin/templates/tab-intro.php';
 
 		$this->add_section('bp_ld_section_1', 'Integration Setting', [$this, 'integration_description']);
-		$this->add_input_field('bp_ld_boo', __('What?'), [
+		$this->add_input_field('bp_ld_boo', __('What?', 'buddyboss'), [
 			'input_description' => 'some optoinal descriptin',
 		]);
-		$this->add_checkbox_field('bp_ld_yeah', __('Oh Yeah?'), [
+		$this->add_checkbox_field('bp_ld_yeah', __('Oh Yeah?', 'buddyboss'), [
 			'input_text' => 'just click it',
 		]);
 
@@ -22,7 +22,7 @@ class BP_Admin_Integration_Learndash extends BP_Admin_Integration_tab {
 	}
 
 	public function integration_description() {
-		echo wpautop(__('Lorem ipsum dolor sit amet, consectetur adipiscing elit. In condimentum mollis ornare.'));
+		echo wpautop(__('Lorem ipsum dolor sit amet, consectetur adipiscing elit. In condimentum mollis ornare.', 'buddyboss'));
 	}
 
 	public function fake_dropdown() {

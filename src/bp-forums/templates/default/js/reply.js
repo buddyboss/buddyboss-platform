@@ -1,9 +1,10 @@
-addReply = {
+var addReply = {
 	moveForm : function(replyId, parentId, respondId, postId) {
 		var t = this, div, reply = t.I(replyId), respond = t.I(respondId), cancel = t.I('bbp-cancel-reply-to-link'), parent = t.I('bbp_reply_to'), post = t.I('bbp_topic_id');
 
-		if ( ! reply || ! respond || ! cancel || ! parent )
+		if ( ! reply || ! respond || ! cancel || ! parent ) {
 			return;
+		}
 
 		t.respondId = respondId;
 		postId = postId || false;
@@ -16,16 +17,18 @@ addReply = {
 		}
 
 		reply.parentNode.insertBefore(respond);
-		if ( post && postId )
+		if ( post && postId ) {
 			post.value = postId;
+		}
 		parent.value = parentId;
 		cancel.style.display = '';
 
 		cancel.onclick = function() {
 			var t = addReply, temp = t.I('bbp-temp-form-div'), respond = t.I(t.respondId);
 
-			if ( ! temp || ! respond )
+			if ( ! temp || ! respond ) {
 				return;
+			}
 
 			t.I('bbp_reply_to').value = '0';
 			temp.parentNode.insertBefore(respond, temp);
@@ -33,7 +36,7 @@ addReply = {
 			this.style.display = 'none';
 			this.onclick = null;
 			return false;
-		}
+		};
 
 		try { t.I('bbp_reply_content').focus(); }
 		catch(e) {}
@@ -44,4 +47,4 @@ addReply = {
 	I : function(e) {
 		return document.getElementById(e);
 	}
-}
+};

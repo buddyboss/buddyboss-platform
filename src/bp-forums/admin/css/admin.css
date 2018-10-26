@@ -13,11 +13,11 @@
 	height: 50px;
 	width: 173px;
 	color: #fafafa;
-	font-weight: bold;
+	font-weight: 400;
 	font-size: 14px;
 	text-align: center;
 	margin: 0 -5px;
-	background: url('../images/badge.png') no-repeat;
+	background: url(../images/badge.png) no-repeat;
 }
 
 .about-wrap .bbp-badge {
@@ -25,10 +25,11 @@
 	top: 0;
 	right: 0;
 }
-	body.rtl .about-wrap .bbp-badge {
-		right: auto;
-		left: 0;
-	}
+
+body.rtl .about-wrap .bbp-badge {
+	right: auto;
+	left: 0;
+}
 
 #bbp-dashboard-right-now p.sub,
 #bbp-dashboard-right-now .table,
@@ -50,10 +51,11 @@
 	top: -17px;
 	left: 15px;
 }
-	body.rtl #bbp-dashboard-right-now p.sub {
-		right: 15px;
-		left: 0;
-	}
+
+body.rtl #bbp-dashboard-right-now p.sub {
+	right: 15px;
+	left: 0;
+}
 
 #bbp-dashboard-right-now .table {
 	margin: 0;
@@ -66,18 +68,20 @@
 	border-top: #ececec 1px solid;
 	width: 45%;
 }
-	body.rtl #bbp-dashboard-right-now .table_content {
-		float: right;
-	}
+
+body.rtl #bbp-dashboard-right-now .table_content {
+	float: right;
+}
 
 #bbp-dashboard-right-now .table_discussion {
 	float: right;
 	border-top: #ececec 1px solid;
 	width: 45%;
 }
-	body.rtl #bbp-dashboard-right-now .table_discussion {
-		float: left;
-	}
+
+body.rtl #bbp-dashboard-right-now .table_discussion {
+	float: left;
+}
 
 #bbp-dashboard-right-now table td {
 	padding: 3px 0;
@@ -95,10 +99,11 @@
 	font-size: 14px;
 	width: 1%;
 }
-	body.rtl #bbp-dashboard-right-now td.b {
-		padding-left: 6px;
-		padding-right: 0;
-	}
+
+body.rtl #bbp-dashboard-right-now td.b {
+	padding-left: 6px;
+	padding-right: 0;
+}
 
 #bbp-dashboard-right-now td.b a {
 	font-size: 18px;
@@ -114,17 +119,18 @@
 	padding-top: 6px;
 	color: #777;
 }
-	body.rtl #bbp-dashboard-right-now .t {
-		padding-left: 12px;
-		padding-right: 0;
-	}
+
+body.rtl #bbp-dashboard-right-now .t {
+	padding-left: 12px;
+	padding-right: 0;
+}
 
 #bbp-dashboard-right-now .t a {
 	white-space: nowrap;
 }
 
 #bbp-dashboard-right-now .spam {
-	color: red;
+	color: #f00;
 }
 
 #bbp-dashboard-right-now .waiting {
@@ -132,7 +138,7 @@
 }
 
 #bbp-dashboard-right-now .approved {
-	color: green;
+	color: #0f0;
 }
 
 #bbp-dashboard-right-now .versions {
@@ -141,7 +147,7 @@
 }
 
 #bbp-dashboard-right-now .versions .b {
-	font-weight: bold;
+	font-weight: 400;
 }
 
 #bbp-dashboard-right-now a.button {
@@ -150,10 +156,11 @@
 	position: relative;
 	top: -5px;
 }
-	body.rtl #bbp-dashboard-right-now a.button {
-		float: left;
-		clear: left;
-	}
+
+body.rtl #bbp-dashboard-right-now a.button {
+	float: left;
+	clear: left;
+}
 
 /* Dashicons */
 #adminmenu #menu-posts-forum .wp-menu-image:before {
@@ -170,8 +177,9 @@
 
 /* Ratio 2x */
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5) {
+
 	.bbp-badge {
-		background-image: url('../images/badge-2x.png');
+		background-image: url(../images/badge-2x.png);
 		background-size: 173px 194px;
 	}
 }
