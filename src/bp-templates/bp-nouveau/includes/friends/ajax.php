@@ -184,7 +184,10 @@ function bp_nouveau_ajax_addremove_friend() {
 			$is_user = bp_is_my_profile();
 
 			if ( ! $is_user ) {
-				$response = array( 'contents' => bp_get_add_friend_button( $friend_id ) );
+				$response = array( 'contents' => bp_get_add_friend_button( $friend_id, false, array(
+					'parent_element' => 'li',
+					'button_element' => 'button'
+				) ) );
 			} else {
 				$response = array(
 					'feedback' => sprintf(
@@ -209,13 +212,19 @@ function bp_nouveau_ajax_addremove_friend() {
 
 			wp_send_json_error( $response );
 		} else {
-			wp_send_json_success( array( 'contents' => bp_get_add_friend_button( $friend_id ) ) );
+			wp_send_json_success( array( 'contents' => bp_get_add_friend_button( $friend_id, false, array(
+				'parent_element' => 'li',
+				'button_element' => 'button'
+			) ) ) );
 		}
 
 	// Trying to cancel pending request.
 	} elseif ( 'pending' === BP_Friends_Friendship::check_is_friend( bp_loggedin_user_id(), $friend_id ) ) {
 		if ( friends_withdraw_friendship( bp_loggedin_user_id(), $friend_id ) ) {
-			wp_send_json_success( array( 'contents' => bp_get_add_friend_button( $friend_id ) ) );
+			wp_send_json_success( array( 'contents' => bp_get_add_friend_button( $friend_id, false, array(
+				'parent_element' => 'li',
+				'button_element' => 'button'
+			) ) ) );
 		} else {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error">%s</div>',
@@ -321,10 +330,12 @@ function bp_nouveau_ajax_followunfollow_friend() {
 			if ( bp_has_members( 'include=' . $leader_id ) ) {
 				while ( bp_members() ) {
 					bp_the_member();
-					wp_send_json_success( array( 'contents' => bp_friends_get_add_follow_button( array(
-						'leader_id'     => $leader_id,
-						'follower_id'   => bp_loggedin_user_id(),
-					) ) ) );
+					wp_send_json_success( array(
+						'contents' => bp_friends_get_add_follow_button( $leader_id, bp_loggedin_user_id(), array(
+							'parent_element' => 'li',
+							'button_element' => 'button'
+						) )
+					) );
 				}
 			} else {
 				wp_send_json_success( array( 'contents' => '' ) );
@@ -345,10 +356,12 @@ function bp_nouveau_ajax_followunfollow_friend() {
 			if ( bp_has_members( 'include=' . $leader_id ) ) {
 				while ( bp_members() ) {
 					bp_the_member();
-					wp_send_json_success( array( 'contents' => bp_friends_get_add_follow_button( array(
-						'leader_id'     => $leader_id,
-						'follower_id'   => bp_loggedin_user_id(),
-					) ) ) );
+					wp_send_json_success( array(
+						'contents' => bp_friends_get_add_follow_button( $leader_id, bp_loggedin_user_id(), array(
+							'parent_element' => 'li',
+							'button_element' => 'button'
+						) )
+					) );
 				}
 			} else {
 				wp_send_json_success( array( 'contents' => '' ) );
