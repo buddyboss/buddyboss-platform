@@ -2448,7 +2448,7 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Notify users of relevant activity with a toolbar bubble and/or via email, and allow them to customize their notification settings.', 'buddyboss' )
 		),
 		'groups'   => array(
-			'title'       => __( 'User Groups', 'buddyboss' ),
+			'title'       => __( 'Social Groups', 'buddyboss' ),
 			'description' => __( 'Groups allow your users to organize themselves into specific public, private or hidden social areas with separate activity feeds and member listings.', 'buddyboss' )
 		)
 	);

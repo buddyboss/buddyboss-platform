@@ -3,7 +3,7 @@
 class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 	public function initialize() {
-		$this->tab_label = __( 'Groups', 'buddyboss' );
+		$this->tab_label = __( 'Social Groups', 'buddyboss' );
 		$this->tab_name  = 'bp-groups';
 		$this->tab_order = 20;
 	}
@@ -13,7 +13,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 	}
 
 	public function register_fields() {
-		$this->add_section( 'bp_groups', __( 'Groups Settings', 'buddyboss' ) );
+		$this->add_section( 'bp_groups', __( 'Group Settings', 'buddyboss' ) );
 
 		// Allow subscriptions setting.
 		$this->add_field( 'bp_restrict_group_creation', __( 'Group Creation', 'buddyboss' ), 'bp_admin_setting_callback_group_creation', 'intval' );

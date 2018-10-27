@@ -3,7 +3,7 @@
 class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 	public function initialize() {
-		$this->tab_label = __( 'Activity', 'buddyboss' );
+		$this->tab_label = __( 'Activity Feeds', 'buddyboss' );
 		$this->tab_name  = 'bp-activity';
 		$this->tab_order = 15;
 	}
