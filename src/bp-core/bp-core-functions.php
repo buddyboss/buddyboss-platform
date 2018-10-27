@@ -2453,7 +2453,7 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'forums'   => array(
 			'title'       => __( 'Discussion Forums', 'buddyboss' ),
-			'description' => __( '{{ SOME FORUM DESCRIPTION }}.', 'buddyboss' )
+			'description' => __( 'Forums allow your users to have discussions within Q&A style message boards. Forums can be standalone or connected to social groups.', 'buddyboss' )
 		)
 	);
 
