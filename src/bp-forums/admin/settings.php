@@ -1013,7 +1013,7 @@ function bbp_admin_setting_callback_search_slug() {
 function bbp_admin_setting_callback_buddypress_section() {
 ?>
 
-	<p><?php esc_html_e( 'Forum settings for user groups.', 'buddyboss' ); ?></p>
+	<p><?php esc_html_e( 'Forum settings for social groups.', 'buddyboss' ); ?></p>
 
 <?php
 }
@@ -1029,7 +1029,7 @@ function bbp_admin_setting_callback_group_forums() {
 ?>
 
 	<input name="_bbp_enable_group_forums" id="_bbp_enable_group_forums" type="checkbox" value="1" <?php checked( bbp_is_group_forums_active( true ) );  bbp_maybe_admin_setting_disabled( '_bbp_enable_group_forums' ); ?> />
-	<label for="_bbp_enable_group_forums"><?php esc_html_e( 'Allow User Groups to have their own forums', 'buddyboss' ); ?></label>
+	<label for="_bbp_enable_group_forums"><?php esc_html_e( 'Allow Social Groups to have their own forums', 'buddyboss' ); ?></label>
 
 <?php
 }
