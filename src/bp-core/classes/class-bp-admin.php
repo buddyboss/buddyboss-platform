@@ -328,6 +328,22 @@ class BP_Admin {
 	public function adjust_buddyboss_menus() {
 		global $menu, $submenu;
 
+		// make sure app integration is last
+		$app_menu = '';
+		foreach ( $submenu[ 'buddyboss-platform' ] as $index => $pmenu ) {
+			if ( $pmenu[2] == 'bp-appboss' ) {
+				$app_menu = $pmenu;
+				unset( $submenu[ 'buddyboss-platform' ][ $index ] );
+				break;
+			}
+		}
+
+		$submenu[ 'buddyboss-platform' ] = array_values( $submenu[ 'buddyboss-platform' ] );
+
+		if ( $app_menu ) {
+			$submenu[ 'buddyboss-platform' ][] = $app_menu;
+		}
+
 		// if there's no buddyboss plugin, don't do anything
 		if (! array_key_exists('buddyboss-settings', $submenu)) {
 			return;
