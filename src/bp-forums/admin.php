@@ -122,7 +122,7 @@ add_filter( 'submenu_file', 'bp_forums_highlight_topic_tag_submenu' );
  *
  * @since BuddyBoss 3.1.1
  */
-function bp_forums_highlight_topic_edit_parent_menu( $parent_file ) {
+function bp_forums_highlight_forums_new_parent_menu( $parent_file ) {
 	global $pagenow;
 
 	$post_type = isset( $_GET['post_type'] )? $_GET['post_type'] : '';
@@ -134,14 +134,14 @@ function bp_forums_highlight_topic_edit_parent_menu( $parent_file ) {
 
 	return $parent_file;
 }
-add_filter( 'parent_file', 'bp_forums_highlight_topic_edit_parent_menu' );
+add_filter( 'parent_file', 'bp_forums_highlight_forums_new_parent_menu' );
 
 /**
  * Make submenu highlight when on editing/creating topic
  *
  * @since BuddyBoss 3.1.1
  */
-function bp_forums_highlight_topic_edit_submenu( $submenu_file ) {
+function bp_forums_highlight_forums_new_submenu( $submenu_file ) {
 	global $pagenow;
 
 	$post_type = isset( $_GET['post_type'] )? $_GET['post_type'] : '';
@@ -153,4 +153,42 @@ function bp_forums_highlight_topic_edit_submenu( $submenu_file ) {
 
 	return $submenu_file;
 }
-add_filter( 'submenu_file', 'bp_forums_highlight_topic_edit_submenu' );
+add_filter( 'submenu_file', 'bp_forums_highlight_forums_new_submenu' );
+
+/**
+ * Make paretn menu highlight when on editing/creating topic
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_forums_highlight_forums_view_parent_menu( $parent_file ) {
+	global $pagenow;
+
+	$post_type = get_post_type();
+	$forums_post_types = [ bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ];
+
+	if ( $pagenow && 'post.php' == $pagenow && in_array( $post_type, $forums_post_types ) ) {
+		return 'bp-forums';
+	}
+
+	return $parent_file;
+}
+add_filter( 'parent_file', 'bp_forums_highlight_forums_view_parent_menu' );
+
+/**
+ * Make submenu highlight when on editing/creating topic
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_forums_highlight_forums_view_submenu( $submenu_file ) {
+	global $pagenow;
+
+	$post_type = get_post_type();
+	$forums_post_types = [ bbp_get_forum_post_type(), bbp_get_topic_post_type(), bbp_get_reply_post_type() ];
+
+	if ( $pagenow && 'post.php' == $pagenow && in_array( $post_type, $forums_post_types ) ) {
+		return 'edit.php?post_type=' . $post_type;
+	}
+
+	return $submenu_file;
+}
+add_filter( 'submenu_file', 'bp_forums_highlight_forums_view_submenu' );
