@@ -54,7 +54,6 @@ add_action( 'bbp_admin_init', 'bbp_setup_updater',          999 );
 add_action( 'bbp_admin_init', 'bbp_register_importers'          );
 add_action( 'bbp_admin_init', 'bbp_register_admin_style'        );
 add_action( 'bbp_admin_init', 'bbp_register_admin_settings'     );
-add_action( 'bbp_admin_init', 'bbp_do_activation_redirect', 1   );
 
 // Initialize the admin area
 add_action( 'bbp_init', 'bbp_admin' );

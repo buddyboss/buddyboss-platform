@@ -270,7 +270,6 @@ add_action( 'bbp_template_redirect', 'bbp_forum_enforce_hidden',  1  );
 add_action( 'bbp_template_redirect', 'bbp_forum_enforce_private', 1  );
 add_action( 'bbp_template_redirect', 'bbp_post_request',          10 );
 add_action( 'bbp_template_redirect', 'bbp_get_request',           10 );
-add_action( 'bbp_template_redirect', 'bbp_check_user_edit',       10 );
 add_action( 'bbp_template_redirect', 'bbp_check_forum_edit',      10 );
 add_action( 'bbp_template_redirect', 'bbp_check_topic_edit',      10 );
 add_action( 'bbp_template_redirect', 'bbp_check_reply_edit',      10 );
@@ -299,5 +298,3 @@ add_action( 'bbp_get_request', 'bbp_search_results_redirect',     10 );
 
 // Maybe convert the users password
 add_action( 'bbp_login_form_login', 'bbp_user_maybe_convert_pass' );
-
-add_action( 'bbp_activation', 'bbp_add_activation_redirect' );

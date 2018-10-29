@@ -295,28 +295,6 @@ function bbp_version_updater() {
 }
 
 /**
- * Redirect user to Forums' What's New page on activation
- *
- * @since bbPress (r4389)
- *
- * @internal Used internally to redirect Forums to the about page on activation
- *
- * @uses is_network_admin() To bail if being network activated
- * @uses set_transient() To drop the activation transient for 30 seconds
- *
- * @return If network admin or bulk activation
- */
-function bbp_add_activation_redirect() {
-
-	// Bail if activating from network, or bulk
-	if ( is_network_admin() || isset( $_GET['activate-multi'] ) )
-		return;
-
-	// Add the transient to redirect
-    set_transient( '_bbp_activation_redirect', true, 30 );
-}
-
-/**
  * Hooked to the 'bbp_activate' action, this helper function automatically makes
  * the current user a Key Master in the forums if they just activated Forums,
  * regardless of the bbp_allow_global_access() setting.

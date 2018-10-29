@@ -184,16 +184,13 @@ final class bbPress {
 
         // Setup some base path and URL information
         $this->file       = __FILE__;
-        $this->basename   = apply_filters( 'bbp_plugin_basename', plugin_basename( $this->file ) );
-        $this->plugin_dir = apply_filters( 'bbp_plugin_dir_path', plugin_dir_path( $this->file ) );
-        $this->plugin_url = apply_filters( 'bbp_plugin_dir_url',  plugin_dir_url ( $this->file ) );
+		$this->basename   = apply_filters( 'bbp_plugin_basename', plugin_basename( buddypress()->file ) );
+		$this->plugin_dir = apply_filters( 'bbp_plugin_dir_path', buddypress()->plugin_dir . '/bp-forums/' );
+		$this->plugin_url = apply_filters( 'bbp_plugin_dir_url',  buddypress()->plugin_url . '/bp-forums/' );
 
         // Includes
-        $this->includes_dir = apply_filters( 'bbp_includes_dir', trailingslashit( $this->plugin_dir . 'includes'  ) );
-        $this->includes_url = apply_filters( 'bbp_includes_url', trailingslashit( $this->plugin_url . 'includes'  ) );
-
-        // Languages
-        $this->lang_dir     = apply_filters( 'bbp_lang_dir',     trailingslashit( $this->plugin_dir . 'languages' ) );
+        $this->includes_dir = apply_filters( 'bbp_includes_dir', trailingslashit( $this->plugin_dir ) );
+        $this->includes_url = apply_filters( 'bbp_includes_url', trailingslashit( $this->plugin_url ) );
 
         // Templates
         $this->themes_dir   = apply_filters( 'bbp_themes_dir',   trailingslashit( $this->plugin_dir . 'templates' ) );
