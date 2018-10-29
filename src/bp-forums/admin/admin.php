@@ -140,7 +140,6 @@ class BBP_Admin {
 		add_action( 'bbp_admin_head',              array( $this, 'admin_head'                 )     ); // Add some general styling to the admin area
 		add_action( 'bbp_admin_notices',           array( $this, 'activation_notice'          )     ); // Add notice if not using a Forums theme
 		add_action( 'bbp_register_admin_style',    array( $this, 'register_admin_style'       )     ); // Add green admin style
-		add_action( 'bbp_register_admin_settings', array( $this, 'register_admin_settings'    )     ); // Add settings
 		add_action( 'bbp_activation',              array( $this, 'new_install'                )     ); // Add menu item to settings menu
 		add_action( 'admin_enqueue_scripts',       array( $this, 'enqueue_styles'             )     ); // Add enqueued CSS
 		add_action( 'admin_enqueue_scripts',       array( $this, 'enqueue_scripts'            )     ); // Add enqueued JS
@@ -238,17 +237,6 @@ class BBP_Admin {
 			);
 		}
 
-		// Are settings enabled?
-		if ( ! bbp_settings_integration() && current_user_can( 'bbp_settings_page' ) ) {
-			add_options_page(
-				__( 'Forums',  'buddyboss' ),
-				__( 'Forums',  'buddyboss' ),
-				$this->minimum_capability,
-				'bbpress',
-				'bbp_admin_settings'
-			);
-		}
-
 		// These are later removed in admin_head
 		if ( current_user_can( 'bbp_about_page' ) ) {
 
@@ -318,62 +306,6 @@ class BBP_Admin {
 			return;
 
 		bbp_create_initial_content();
-	}
-
-	/**
-	 * Register the settings
-	 *
-	 * @since bbPress (r2737)
-	 *
-	 * @uses add_settings_section() To add our own settings section
-	 * @uses add_settings_field() To add various settings fields
-	 * @uses register_setting() To register various settings
-	 * @todo Put fields into multidimensional array
-	 */
-	public static function register_admin_settings() {
-
-		// Bail if no sections available
-		$sections = bbp_admin_get_settings_sections();
-		if ( empty( $sections ) )
-			return false;
-
-		// Are we using settings integration?
-		$settings_integration = bbp_settings_integration();
-
-		// Loop through sections
-		foreach ( (array) $sections as $section_id => $section ) {
-
-			// Only proceed if current user can see this section
-			if ( ! current_user_can( $section_id ) )
-				continue;
-
-			// Only add section and fields if section has fields
-			$fields = bbp_admin_get_settings_fields_for_section( $section_id );
-			if ( empty( $fields ) )
-				continue;
-
-			// Toggle the section if core integration is on
-			if ( ( true === $settings_integration ) && !empty( $section['page'] ) ) {
-				$page = $section['page'];
-			} else {
-				$page = 'bbpress';
-			}
-
-			// Add the section
-			add_settings_section( $section_id, $section['title'], $section['callback'], $page );
-
-			// Loop through fields for this section
-			foreach ( (array) $fields as $field_id => $field ) {
-
-				// Add the field
-				if ( ! empty( $field['callback'] ) && !empty( $field['title'] ) ) {
-					add_settings_field( $field_id, $field['title'], $field['callback'], $page, $section_id, $field['args'] );
-				}
-
-				// Register the setting
-				register_setting( $page, $field_id, $field['sanitize_callback'] );
-			}
-		}
 	}
 
 	/**
