@@ -478,7 +478,8 @@ final class bbPress {
                 'can_export'          => true,
                 'hierarchical'        => true,
                 'query_var'           => true,
-                'menu_icon'           => ''
+                'menu_icon'           => '',
+                'show_in_menu'        => false,
             ) )
         );
 
@@ -503,7 +504,8 @@ final class bbPress {
                 'can_export'          => true,
                 'hierarchical'        => false,
                 'query_var'           => true,
-                'menu_icon'           => ''
+                'menu_icon'           => '',
+                'show_in_menu'        => false,
             )
         ) );
 
@@ -528,7 +530,8 @@ final class bbPress {
                 'can_export'          => true,
                 'hierarchical'        => false,
                 'query_var'           => true,
-                'menu_icon'           => ''
+                'menu_icon'           => '',
+                'show_in_menu'        => false,
             ) )
         );
     }
@@ -643,7 +646,8 @@ final class bbPress {
                 'hierarchical'          => false,
                 'show_in_nav_menus'     => false,
                 'public'                => true,
-                'show_ui'               => bbp_allow_topic_tags() && current_user_can( 'bbp_topic_tags_admin' )
+                'show_ui'               => bbp_allow_topic_tags() && current_user_can( 'bbp_topic_tags_admin' ),
+                'show_in_menu'          => false,
             )
         ) );
     }

@@ -55,6 +55,9 @@ class BP_Forums_Component extends BP_Component {
         $includes = $includes ?: [];
 
         // Helper BuddyBoss functions
+        $includes[] = 'admin.php';
+
+        // Helper BuddyBoss functions
         $includes[] = 'functions.php';
 
         // Members modifications
