@@ -1,8 +1,4 @@
 {
-	"author": "The BuddyPress Contributors",
-	"bugs": {
-		"url": "https://buddypress.trac.wordpress.org/"
-	},
 	"description": "BuddyPress adds community features to WordPress. Member Profiles, Activity Streams, Direct Messaging, Notifications, and more!",
 	"devDependencies": {
 		"grunt": "^1.0.2",
@@ -31,23 +27,7 @@
 	"engines": {
 		"node": ">=6.9.1"
 	},
-	"keywords": [
-		"activity",
-		"community",
-		"friends",
-		"groups",
-		"messaging",
-		"notifications",
-		"profiles",
-		"social network"
-	],
-	"homepage": "https://buddypress.org",
 	"license": "GPL-2.0-or-later",
-	"name": "buddypress",
-	"repository": {
-		"type": "svn",
-		"url": "https://buddypress.svn.wordpress.org/trunk/"
-	},
 	"version": "3.1.0",
 	"dependencies": {}
 }

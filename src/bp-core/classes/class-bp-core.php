@@ -72,7 +72,7 @@ class BP_Core extends BP_Component {
 		 *
 		 * @param array $value Array of included and optional components.
 		 */
-		$bp->optional_components = apply_filters( 'bp_optional_components', array( 'activity', 'blogs', 'friends', 'groups', 'messages', 'notifications', 'settings', 'xprofile' ) );
+		$bp->optional_components = apply_filters( 'bp_optional_components', array_keys( bp_core_get_components( 'optional' ) ) );
 
 		/**
 		 * Filters the required components.

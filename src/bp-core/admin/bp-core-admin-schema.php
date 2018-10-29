@@ -67,6 +67,11 @@ function bp_core_install( $active_components = false ) {
 	if ( !empty( $active_components['blogs'] ) ) {
 		bp_core_install_blog_tracking();
 	}
+
+	// Discussiom forums
+	if ( !empty( $active_components['forums'] ) ) {
+		bp_core_install_discussion_forums();
+	}
 }
 
 /**
@@ -438,6 +443,20 @@ function bp_core_install_blog_tracking() {
 			) {$charset_collate};";
 
 	dbDelta( $sql );
+}
+
+/** Discussion Forums *********************************************************/
+
+/**
+ * Run the bbpress activation,
+ *
+ * @since Buddyboss 3.1.1
+ */
+function bp_core_install_discussion_forums() {
+	require_once buddypress()->plugin_dir . 'bp-forums/classes/class-bbpress.php';
+	bbpress();
+
+	bbp_activation();
 }
 
 /** Signups *******************************************************************/
