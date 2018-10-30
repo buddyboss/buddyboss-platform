@@ -2452,8 +2452,8 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Groups allow your users to organize themselves into specific public, private or hidden social areas with separate activity feeds and member listings.', 'buddyboss' )
 		),
 		'forums'   => array(
-			'title'       => __( 'Discussion Forums', 'buddyboss' ),
-			'description' => __( 'Forums allow your users to have discussions within Q&A style message boards. Forums can be standalone or connected to social groups.', 'buddyboss' )
+			'title'       => __( 'Forum Discussions', 'buddyboss' ),
+			'description' => __( 'Forums allow your users to have discussions using Q&A style message boards. Forums can be standalone or connected to social groups.', 'buddyboss' )
 		)
 	);
 
