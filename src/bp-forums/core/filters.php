@@ -44,8 +44,6 @@ add_filter( 'body_class',              'bbp_body_class',         10, 2 );
 add_filter( 'map_meta_cap',            'bbp_map_meta_caps',      10, 4 );
 add_filter( 'allowed_themes',          'bbp_allowed_themes',     10    );
 add_filter( 'redirect_canonical',      'bbp_redirect_canonical', 10    );
-// add_filter( 'login_redirect',          'bbp_redirect_login',     2,  3 );
-// add_filter( 'logout_url',              'bbp_logout_url',         2,  2 );
 add_filter( 'plugin_locale',           'bbp_plugin_locale',      10, 2 );
 
 // Fix post author id for anonymous posts (set it back to 0) when the post status is changed

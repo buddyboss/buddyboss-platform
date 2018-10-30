@@ -1355,38 +1355,6 @@ function bbp_notify_subscribers( $reply_id = 0, $topic_id = 0, $forum_id = 0, $a
 	return bbp_notify_topic_subscribers( $reply_id, $topic_id, $forum_id, $anonymous_data, $reply_author );
 }
 
-/** Login *********************************************************************/
-
-/**
- * Return a clean and reliable logout URL
- *
- * @param string $url URL
- * @param string $redirect_to Where to redirect to?
- * @uses add_query_arg() To add args to the url
- * @uses apply_filters() Calls 'bbp_logout_url' with the url and redirect to
- * @return string The url
- */
-function bbp_logout_url( $url = '', $redirect_to = '' ) {
-
-	// Make sure we are directing somewhere
-	if ( empty( $redirect_to ) && !strstr( $url, 'redirect_to' ) ) {
-
-		// Rejig the $redirect_to
-		if ( !isset( $_SERVER['REDIRECT_URL'] ) || ( $redirect_to !== home_url( $_SERVER['REDIRECT_URL'] ) ) ) {
-			$redirect_to = isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '';
-		}
-
-		$redirect_to = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-
-		// Sanitize $redirect_to and add it to full $url
-		$redirect_to = add_query_arg( array( 'loggedout'   => 'true'                    ), esc_url( $redirect_to ) );
-		$url         = add_query_arg( array( 'redirect_to' => urlencode( $redirect_to ) ), $url                    );
-	}
-
-	// Filter and return
-	return apply_filters( 'bbp_logout_url', $url, $redirect_to );
-}
-
 /** Queries *******************************************************************/
 
 /**

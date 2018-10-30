@@ -11,37 +11,6 @@
 if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
- * Redirect back to $url when attempting to use the login page
- *
- * @since bbPress (r2815)
- *
- * @param string $url The url
- * @param string $raw_url Raw url
- * @param object $user User object
- * @uses is_wp_error() To check if the user param is a {@link WP_Error}
- * @uses admin_url() To get the admin url
- * @uses home_url() To get the home url
- * @uses esc_url() To escape the url
- * @uses wp_safe_redirect() To redirect
- */
-function bbp_redirect_login( $url = '', $raw_url = '', $user = '' ) {
-
-	// Raw redirect_to was passed, so use it
-	if ( !empty( $raw_url ) )
-		$url = $raw_url;
-
-	// $url was manually set in wp-login.php to redirect to admin
-	elseif ( admin_url() === $url )
-		$url = home_url();
-
-	// $url is empty
-	elseif ( empty( $url ) )
-		$url = home_url();
-
-	return apply_filters( 'bbp_redirect_login', $url, $raw_url, $user );
-}
-
-/**
  * Is an anonymous topic/reply being made?
  *
  * @since bbPress (r2688)
