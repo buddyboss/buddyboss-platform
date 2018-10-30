@@ -599,13 +599,13 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 		'user_nav_tabs'      => 0,
 		'user_subnav_tabs'   => 0,
 		'user_nav_order'     => array(),
-		'members_layout'     => 1,
+		'members_layout'     => 4,
 		'members_dir_tabs'   => 0,
 		'members_dir_layout' => 0,
 	);
 
 	if ( bp_is_active( 'friends' ) ) {
-		$default_args['members_friends_layout'] = 1;
+		$default_args['members_friends_layout'] = 4;
 	}
 
 	if ( bp_is_active( 'activity' ) ) {
@@ -623,8 +623,8 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 			'group_nav_tabs'          => 0,
 			'group_subnav_tabs'       => 0,
 			'groups_create_tabs'      => 1,
-			'groups_layout'           => 1,
-			'members_group_layout'    => 1,
+			'groups_layout'           => 4,
+			'members_group_layout'    => 4,
 			'groups_dir_layout'       => 0,
 			'groups_dir_tabs'         => 0,
 		) );
@@ -666,10 +666,9 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
  */
 function bp_nouveau_customizer_grid_choices( $type = 'option' ) {
 	$columns = array(
-		array( 'key' => '1', 'label' => __( 'One column', 'buddypress'    ), 'class' => ''      ),
-		array( 'key' => '2', 'label' => __( 'Two columns', 'buddypress'   ), 'class' => 'two'   ),
+		array( 'key' => '2', 'label' => __( 'Two columns', 'buddyboss'   ), 'class' => 'two'   ),
 		array( 'key' => '3', 'label' => __( 'Three columns', 'buddyboss' ), 'class' => 'three' ),
-		array( 'key' => '4', 'label' => __( 'Four columns', 'buddypress'  ), 'class' => 'four'  ),
+		array( 'key' => '4', 'label' => __( 'Four columns', 'buddyboss'  ), 'class' => 'four'  ),
 	);
 
 	if ( 'option' === $type ) {
