@@ -27,7 +27,7 @@ function bp_forums_add_admin_menu() {
 		'bp_moderate',
 		'bp-forums',
 		'__return_null',
-		'dashicons-editor-ul'
+		'dashicons-testimonial'
 	);
 
 	// Hook into early actions to load custom CSS and our init handler.
