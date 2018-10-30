@@ -356,7 +356,6 @@ final class bbPress {
             'register_shortcodes',      // Register shortcodes (bbp-login)
             'register_views',           // Register the views (no-replies)
             'register_theme_packages',  // Register bundled theme packages (bbp-theme-compat/bbp-themes)
-            'load_textdomain',          // Load textdomain (buddyboss)
             'add_rewrite_tags',         // Add rewrite tags (view|user|edit|search)
             'add_rewrite_rules',        // Generate rewrite rules (view|edit|paged|search)
             'add_permastructs'          // Add permalink structures (view|user|search)
@@ -411,40 +410,6 @@ final class bbPress {
 
         // Setup the theme package to use for compatibility
         bbp_setup_theme_compat( bbp_get_theme_package_id() );
-    }
-
-    /**
-     * Load the translation file for current language. Checks the languages
-     * folder inside the Forums plugin first, and then the default WordPress
-     * languages folder.
-     *
-     * Note that custom translation files inside the Forums plugin folder
-     * will be removed on Forums updates. If you're creating custom
-     * translation files, please use the global language folder.
-     *
-     * @since bbPress (r2596)
-     *
-     * @uses apply_filters() Calls 'plugin_locale' with {@link get_locale()} value
-     * @uses load_textdomain() To load the textdomain
-     */
-    public function load_textdomain() {
-
-        // Traditional WordPress plugin locale filter
-        $locale        = apply_filters( 'plugin_locale', get_locale(), $this->domain );
-        $mofile        = sprintf( '%1$s-%2$s.mo', $this->domain, $locale );
-
-        // Setup paths to current locale file
-        $mofile_local  = $this->lang_dir . $mofile;
-        $mofile_global = WP_LANG_DIR . '/buddyboss/' . $mofile;
-
-        // Look in global /wp-content/languages/buddyboss folder
-        load_textdomain( $this->domain, $mofile_global );
-
-        // Look in local /wp-content/plugins/buddyboss/bbp-languages/ folder
-        load_textdomain( $this->domain, $mofile_local );
-
-        // Look in global /wp-content/languages/plugins/
-        load_plugin_textdomain( $this->domain );
     }
 
     /**
