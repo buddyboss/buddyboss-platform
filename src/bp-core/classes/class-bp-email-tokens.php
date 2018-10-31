@@ -83,10 +83,6 @@ class BP_Email_Tokens {
 				'function'    => array( $this, 'token__group_card' ),
 				'description' => __( 'Display the group card, with more details like group cover photo etc.', 'buddyboss' ),
 			),
-			'group.url'        => array(
-				'function'    => array( $this, 'token__group_url' ),
-				'description' => __( 'Outputs the link to the group.', 'buddyboss' ),
-			),
 			'group.description' => array(
 				'function'    => array( $this, 'token__group_description' ),
 				'description' => __( 'Outputs the description excerpt of the group.', 'buddyboss' ),
@@ -937,43 +933,6 @@ class BP_Email_Tokens {
 		}
 
 		return bp_core_get_user_domain( $this->_message_sender_id );
-	}
-
-	/**
-	 * Generate the output for toke group.url
-	 *
-	 * @since BuddyBoss 3.1.1
-	 *
-	 * @param \BP_Email $bp_email
-	 * @param array $formatted_tokens
-	 * @param array $tokens
-	 *
-	 * @return string html for the output
-	 */
-	public function token__group_url( $bp_email, $formatted_tokens, $tokens ) {
-		$group_id = false;
-
-		if ( ! bp_is_active( 'groups' ) ) {
-			return '';
-		}
-
-		$email_type = $bp_email->get( 'type' );
-		switch ( $email_type ) {
-			case 'groups-at-message':
-				$group_id = bp_get_current_group_id();
-				break;
-		}
-
-		if ( empty( $group_id ) ) {
-			return '';
-		}
-
-		$group = groups_get_group( $group_id );
-		if ( empty( $group ) ) {
-			return '';
-		}
-
-		return bp_get_group_permalink( $group );
 	}
 	
 	
