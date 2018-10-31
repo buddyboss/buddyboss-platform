@@ -241,7 +241,7 @@ function groups_notification_promoted_member( $user_id = 0, $group_id = 0 ) {
 
 	// What type of promotion is this?
 	if ( groups_is_user_admin( $user_id, $group_id ) ) {
-		$promoted_to = __( 'an administrator', 'buddyboss' );
+		$promoted_to = __( 'organizer', 'buddyboss' );
 		$type        = 'member_promoted_to_admin';
 	} else {
 		$promoted_to = __( 'a moderator', 'buddyboss' );
