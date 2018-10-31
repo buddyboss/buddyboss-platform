@@ -67,6 +67,7 @@ add_action( 'bbp_activation', 'bbp_make_current_user_keymaster' );
 
 // Deactivation
 add_action( 'bbp_deactivation', 'bbp_remove_caps'          );
+add_action( 'bbp_deactivation', 'bbp_remove_roles'         );
 add_action( 'bbp_deactivation', 'bbp_delete_rewrite_rules' );
 
 // New Site

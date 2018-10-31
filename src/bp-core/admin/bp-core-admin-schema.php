@@ -75,7 +75,10 @@ function bp_core_install( $active_components = false ) {
 }
 
 function bp_core_uninstall( $uninstalled_components ) {
-	// nothing to do yet...
+	// Discussiom forums
+	if ( !empty( $uninstalled_components['forums'] ) ) {
+		bp_core_uninstall_discussion_forums();
+	}
 }
 
 /**
@@ -462,6 +465,15 @@ function bp_core_install_discussion_forums() {
 
 	bbp_activation();
 	bbp_map_caps_to_wp_roles();
+}
+
+/**
+ * Run the bbpress deactivation,
+ *
+ * @since Buddyboss 3.1.1
+ */
+function bp_core_uninstall_discussion_forums() {
+	bbp_deactivation();
 }
 
 /** Signups *******************************************************************/

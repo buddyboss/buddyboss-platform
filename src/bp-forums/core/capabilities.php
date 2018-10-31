@@ -242,6 +242,16 @@ function bbp_remove_caps() {
 	do_action( 'bbp_remove_caps' );
 }
 
+function bbp_remove_roles() {
+
+	// Loop through dynamic roles and remove caps
+	foreach (bbp_get_dynamic_roles() as $role => $props) {
+		remove_role($role);
+	}
+
+	do_action( 'bbp_remove_roles' );
+}
+
 /**
  * Get the $wp_roles global without needing to declare it everywhere
  *
