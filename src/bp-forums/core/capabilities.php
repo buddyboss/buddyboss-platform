@@ -242,16 +242,6 @@ function bbp_remove_caps() {
 	do_action( 'bbp_remove_caps' );
 }
 
-function bbp_remove_roles() {
-
-	// Loop through dynamic roles and remove caps
-	foreach (bbp_get_dynamic_roles() as $role => $props) {
-		remove_role($role);
-	}
-
-	do_action( 'bbp_remove_roles' );
-}
-
 /**
  * Get the $wp_roles global without needing to declare it everywhere
  *
@@ -545,7 +535,7 @@ function bbp_add_roles() {
  * Removes Forums-specific user roles.
  *
  * @since bbPress (r2741)
- * @deprecated since version 2.2
+ * @version BuddyBoss 3.1.1
  */
 function bbp_remove_roles() {
 
