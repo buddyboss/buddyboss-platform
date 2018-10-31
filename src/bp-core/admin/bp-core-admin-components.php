@@ -273,12 +273,16 @@ function bp_core_admin_components_settings_handler() {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		require_once( $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
 
+		$current_components = $bp->active_components;
 		$submitted = stripslashes_deep( $_POST['bp_components'] );
 		$bp->active_components = bp_core_admin_get_active_components_from_submitted_settings( $submitted );
+		$uninstalled_components = array_diff_key($current_components, $bp->active_components);
 
 		bp_core_install( $bp->active_components );
 		bp_core_add_page_mappings( $bp->active_components );
 		bp_update_option( 'bp-active-components', $bp->active_components );
+
+		bp_core_uninstall( $uninstalled_components );
 	}
 
 	// Where are we redirecting to?

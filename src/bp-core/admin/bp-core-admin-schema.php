@@ -74,6 +74,10 @@ function bp_core_install( $active_components = false ) {
 	}
 }
 
+function bp_core_uninstall( $uninstalled_components ) {
+	// nothing to do yet...
+}
+
 /**
  * Install database tables for the Notifications component.
  *
