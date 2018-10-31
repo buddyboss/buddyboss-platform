@@ -77,23 +77,23 @@ class BP_Email_Tokens {
 		$tokens = array(
 			'group.small_card' => array(
 				'function'    => array( $this, 'token__group_card_small' ),
-				'description' => __( 'Display the group card, with minimum details about the group.', 'buddypress' ),
+				'description' => __( 'Display the group card, with minimum details about the group.', 'buddyboss' ),
 			),
 			'group.card'       => array(
 				'function'    => array( $this, 'token__group_card' ),
-				'description' => __( 'Display the group card, with more details like group cover photo etc.', 'buddypress' ),
+				'description' => __( 'Display the group card, with more details like group cover photo etc.', 'buddyboss' ),
 			),
 			'group.url'        => array(
 				'function'    => array( $this, 'token__group_url' ),
-				'description' => __( 'Outputs the link to the group.', 'buddypress' ),
+				'description' => __( 'Outputs the link to the group.', 'buddyboss' ),
 			),
 			'group.description' => array(
 				'function'    => array( $this, 'token__group_description' ),
-				'description' => __( 'Outputs the description excerpt of the group.', 'buddypress' ),
+				'description' => __( 'Outputs the description excerpt of the group.', 'buddyboss' ),
 			),
 			'message'          => array(
 				'function'    => array( $this, 'token__message' ),
-				'description' => __( 'Display the sent message, along with sender\'s picture and name.', 'buddypress' ),
+				'description' => __( 'Display the sent message, along with sender\'s picture and name.', 'buddyboss' ),
 			),
 			'sender.url'       => array(
 				'function'    => array( $this, 'token__sender_url' ),
@@ -101,19 +101,19 @@ class BP_Email_Tokens {
 			),
 			'member.card'      => array(
 				'function'    => array( $this, 'token__member_card_small' ),
-				'description' => __( 'Display the member card, with minimum details about the member.', 'buddypress' ),
+				'description' => __( 'Display the member card, with minimum details about the member.', 'buddyboss' ),
 			),
 			'status_update'    => array(
 				'function'    => array( $this, 'token__status_update' ),
-				'description' => __( 'Display the status update, along with member\'s picture and name.', 'buddypress' ),
+				'description' => __( 'Display the status update, along with member\'s picture and name.', 'buddyboss' ),
 			),
 			'activity_reply'   => array(
 				'function'    => array( $this, 'token__activity_reply' ),
-				'description' => __( 'Display the reply to  update, along with member\'s picture and name.', 'buddypress' ),
+				'description' => __( 'Display the reply to  update, along with member\'s picture and name.', 'buddyboss' ),
 			),
 			'poster.url'       => array(
 				'function'    => array( $this, 'token__poster_url' ),
-				'description' => __( 'Outputs the link to the profile of member who has posted the update.', 'buddypress' ),
+				'description' => __( 'Outputs the link to the profile of member who has posted the update.', 'buddyboss' ),
 			),
 		);
 
@@ -193,7 +193,7 @@ class BP_Email_Tokens {
                                                     <td>
                                                         <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;"><?php echo $group->name; ?></div>
                                                         <div class="spacer" style="font-size: 3px; line-height: 3px; height: 3px;">&nbsp;</div>
-                                                        <p style="opacity: 0.7; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ) ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; margin: 0;"><?php echo ucfirst( $group->status ) . " " . __( 'Group', 'buddypress' ); ?></p>
+                                                        <p style="opacity: 0.7; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ) ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; margin: 0;"><?php echo ucfirst( $group->status ) . " " . __( 'Group', 'buddyboss' ); ?></p>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -213,7 +213,7 @@ class BP_Email_Tokens {
 																				<td height="34px" style="vertical-align: middle;">
 																					<?php
 																					$group_members_count = bp_get_group_total_members( $group );
-																					$member_text = ( $group_members_count > 1 ) ? __('members', 'buddypress') : __('member', 'buddypress');
+																					$member_text = ( $group_members_count > 1 ) ? __('members', 'buddyboss') : __('member', 'buddyboss');
 																					?>
 																					<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ) ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;">
 																						<span style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; opacity: 0.85;"><?php echo $group_members_count; ?></span> <?php echo $member_text; ?>
@@ -226,7 +226,7 @@ class BP_Email_Tokens {
                                                                         <tbody>
 																			<tr>
 																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-text-left">
-																					<a href="<?php echo bp_get_group_permalink( $group ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;border: 1px solid <?php echo $settings['highlight_color']; ?>;border-radius: 100px;text-align: center; height: 32px;line-height: 32px;background: <?php echo $settings['highlight_color']; ?>;color: #fff !important;width: 130px;"><?php _e( 'Visit Group', 'buddypress' ); ?></a>
+																					<a href="<?php echo bp_get_group_permalink( $group ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;border: 1px solid <?php echo $settings['highlight_color']; ?>;border-radius: 100px;text-align: center; height: 32px;line-height: 32px;background: <?php echo $settings['highlight_color']; ?>;color: #fff !important;width: 130px;"><?php _e( 'Visit Group', 'buddyboss' ); ?></a>
 																				</td>
 																			</tr>
                                                                         </tbody>
@@ -323,7 +323,7 @@ class BP_Email_Tokens {
                     <td>
                         <h3><?php echo $group->name; ?></h3>
                         <div class="spacer" style="font-size: 7px; line-height: 7px; height: 7px;">&nbsp;</div>
-						<?php echo ucfirst( $group->status ) . " " . __( 'Group', 'buddypress' ); ?><br>
+						<?php echo ucfirst( $group->status ) . " " . __( 'Group', 'buddyboss' ); ?><br>
                         <table cellspacing="0" cellpadding="0" border="0" width="100%">
                             <tr>
                                 <td align="left">
@@ -371,7 +371,7 @@ class BP_Email_Tokens {
 										}
 										$output .= "</span>";
 
-										$output .= "<span class='members'>" . groups_get_total_member_count( $group->id ) . " " . __( 'Members', 'buddypress' ) . "</span>";
+										$output .= "<span class='members'>" . groups_get_total_member_count( $group->id ) . " " . __( 'Members', 'buddyboss' ) . "</span>";
 										echo $output;
 									}
 									?>
@@ -397,13 +397,13 @@ class BP_Email_Tokens {
 
 										switch ( $joined_status ) {
 											case 'joined':
-												_e( 'Leave Group', 'buddypress' );
+												_e( 'Leave Group', 'buddyboss' );
 												break;
 											case 'not-joined':
-												_e( 'Join Group', 'buddypress' );
+												_e( 'Join Group', 'buddyboss' );
 												break;
 											default:
-												_e( 'Visit Group', 'buddypress' );
+												_e( 'Visit Group', 'buddyboss' );
 												break;
 										}
 										?>
@@ -524,7 +524,7 @@ class BP_Email_Tokens {
             <tr>
                 <td>
                     <a href="<?php echo esc_attr( $tokens['mentioned.url'] ); ?>" target="_blank" rel="nofollow"
-                       style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 84px; text-align: center; height: 32px; line-height: 32px;"><?php _e( 'Reply', 'buddypress' ); ?></a>
+                       style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 84px; text-align: center; height: 32px; line-height: 32px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
                 </td>
             </tr>
         </table>
@@ -637,7 +637,7 @@ class BP_Email_Tokens {
 
             <tr>
                 <td><a href="<?php echo esc_attr( $tokens['thread.url'] ); ?>" target="_blank" rel="nofollow"
-                       style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 84px; text-align: center; height: 32px; line-height: 32px;"><?php _e( 'Reply', 'buddypress' ); ?></a>
+                       style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 84px; text-align: center; height: 32px; line-height: 32px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
                 </td>
             </tr>
         </table>
@@ -756,7 +756,7 @@ class BP_Email_Tokens {
             <tr>
                 <td>
                     <a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" target="_blank" rel="nofollow"
-                       style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 84px; text-align: center; height: 32px; line-height: 32px;"><?php _e( 'Reply', 'buddypress' ); ?></a>
+                       style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 84px; text-align: center; height: 32px; line-height: 32px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
                 </td>
             </tr>
         </table>
@@ -863,7 +863,7 @@ class BP_Email_Tokens {
 																			<td height="34px" style="vertical-align: middle;">
 																				<?php
 																				$friend_count = friends_get_total_friend_count( $member_id );
-																				$connection_text = ( $friend_count > 1 ) ? __('connections', 'buddypress') : __('connection', 'buddypress');
+																				$connection_text = ( $friend_count > 1 ) ? __('connections', 'buddyboss') : __('connection', 'buddyboss');
 																				?>
 																				<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 0.8125 ) . 'px' ) ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;">
 																					<span style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; opacity: 0.85;"><?php echo $friend_count; ?></span> <?php echo $connection_text; ?>
@@ -874,7 +874,7 @@ class BP_Email_Tokens {
 																	<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="responsive-table">
 																		<tr>
 																			<td height="34px" align="right" style="vertical-align: middle;" class="mobile-text-left">
-																				<a href="<?php echo bp_core_get_user_domain( $member_id ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2.125 ) . 'px' ) ?>;line-height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2 ) . 'px' ) ?>;"><?php _e( 'View Profile', 'buddypress' ); ?></a>
+																				<a href="<?php echo bp_core_get_user_domain( $member_id ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2.125 ) . 'px' ) ?>;line-height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2 ) . 'px' ) ?>;"><?php _e( 'View Profile', 'buddyboss' ); ?></a>
 																			</td>
 																		</tr>
 																	</table>
