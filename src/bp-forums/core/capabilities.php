@@ -439,7 +439,7 @@ function bbp_get_dynamic_role_name( $role_id = '' ) {
  * @since bbPress (r4303)
  *
  * @param array $all_roles All registered roles
- * @return array 
+ * @return array
  */
 function bbp_filter_blog_editable_roles( $all_roles = array() ) {
 
@@ -547,4 +547,36 @@ function bbp_remove_roles() {
 	// Some early adopters may have a deprecated visitor role. It was later
 	// replaced by the Spectator role.
 	remove_role( 'bbp_visitor' );
+}
+
+function bbp_map_caps_to_wp_roles() {
+	$wp_bbp_role_map = [
+		'administrator' => 'bbp_keymaster',
+		'editor'        => 'bbp_moderator',
+	];
+
+	foreach ( $wp_bbp_role_map as $wp_role => $bbp_role ) {
+		$wp_role_object = get_role( $wp_role );
+		$bbp_caps = bbp_get_caps_for_role( $bbp_role );
+
+		foreach ( array_keys( $bbp_caps ) as $cap) {
+			$wp_role_object->add_cap($cap);
+		}
+	}
+}
+
+function bbp_restore_caps_from_wp_roles() {
+	$wp_bbp_role_map = [
+		'administrator' => 'bbp_keymaster',
+		'editor'        => 'bbp_moderator',
+	];
+
+	foreach ( $wp_bbp_role_map as $wp_role => $bbp_role ) {
+		$wp_role_object = get_role( $wp_role );
+		$bbp_caps = bbp_get_caps_for_role( $bbp_role );
+
+		foreach ( array_keys( $bbp_caps ) as $cap) {
+			$wp_role_object->remove_cap($cap);
+		}
+	}
 }

@@ -457,6 +457,7 @@ function bp_core_install_discussion_forums() {
 	bbpress();
 
 	bbp_activation();
+	bbp_map_caps_to_wp_roles();
 }
 
 /** Signups *******************************************************************/

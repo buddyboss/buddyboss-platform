@@ -172,7 +172,8 @@ function bbp_admin_repair_list() {
 		70 => array( 'bbp-user-favorites',           __( 'Remove trashed discussions from user favorites',         'buddyboss' ), 'bbp_admin_repair_user_favorites'           ),
 		75 => array( 'bbp-user-topic-subscriptions', __( 'Remove trashed discussions from user subscriptions',     'buddyboss' ), 'bbp_admin_repair_user_topic_subscriptions' ),
 		80 => array( 'bbp-user-forum-subscriptions', __( 'Remove trashed forums from user subscriptions',     'buddyboss' ), 'bbp_admin_repair_user_forum_subscriptions' ),
-		85 => array( 'bbp-user-role-map',            __( 'Remap existing users to default forum roles',       'buddyboss' ), 'bbp_admin_repair_user_roles'               )
+		85 => array( 'bbp-user-role-map',            __( 'Remap existing users to default forum roles',       'buddyboss' ), 'bbp_admin_repair_user_roles'               ),
+		90 => array( 'bbp-wp-role-restore',          __( 'Remove and restore Wordpress default role capabilities', 'buddyboss' ), 'bbp_restore_caps_from_wp_roles' )
 	);
 	ksort( $repair_list );
 
