@@ -235,6 +235,16 @@ class BP_XProfile_User_Admin {
 					$redirect_to = add_query_arg( 'error', '2', $redirect_to );
 					bp_core_redirect( $redirect_to );
 				}
+
+				// Validate xprofile
+				if ( $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], $user_id ) ) {
+					$redirect_to = add_query_arg( [
+						'error' => '4',
+						'message' => urlencode($message)
+					], $redirect_to );
+
+					bp_core_redirect( $redirect_to );
+				}
 			}
 
 			// Set the errors var.

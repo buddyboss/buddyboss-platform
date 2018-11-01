@@ -79,6 +79,9 @@ add_filter( 'xprofile_field_default_before_save', 'bp_xprofile_sanitize_field_de
 
 add_filter( 'bp_get_the_profile_field_name', 'xprofile_filter_field_edit_name' );
 
+// Saving field value
+add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_nickname_value', 10, 4 );
+
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -339,7 +342,7 @@ function bp_xprofile_escape_field_data( $value, $field_type, $field_id ) {
  * To disable for a single field, use the 'Autolink' settings in Dashboard > Users > Profile Fields.
  *
  * @since BuddyPress 1.1.0
- * @since BuddyBoss 3.1.1 Removed checking autolink, as autolinking is disabled on all fields now. 
+ * @since BuddyBoss 3.1.1 Removed checking autolink, as autolinking is disabled on all fields now.
  * All this function does now is make links clickable.
  *
  * @param string $field_value Profile field data value.
@@ -361,7 +364,7 @@ function xprofile_filter_link_profile_data( $field_value, $field_type = 'textbox
     if ( preg_match( '@(https?://([-\w\.]+)+(:\d+)?(/([\w/_\.]*(\?\S+)?)?)?)@', $field_value ) ) {
         $field_value = make_clickable( $field_value );
     }
-    
+
     return $field_value;
 }
 
@@ -579,46 +582,100 @@ function bp_xprofile_filter_meta_query( $q ) {
  * Filter is only applied if:
  *  1. we are on profile > edit screens
  *  2. we are on registration page
- * 
+ *
  * @since BuddyBoss 3.1.1
- * 
+ *
  * @global \BP_XProfile_Field_Type $field
- * 
+ *
  * @param string $field_name
  * @return string
  */
 function xprofile_filter_field_edit_name ( $field_name ) {
     $is_field_edit_mode = false;
-    
+
     $current_field = false;
-    
+
     if ( bp_is_profile_component() && 'edit' == bp_current_action() ) {
         //we are on profile > edit screens, we should display alternate name, if available, instead of main name.
         $is_field_edit_mode = true;
-        
+
         //we can use global $field variable here
         global $field;
         $current_field = $field;
     }
-    
+
     if ( !$is_field_edit_mode && bp_is_register_page() ) {
         //We are on registration page/form. We should display alternate name, if available, instead of main name.
         $is_field_edit_mode = true;
-        
+
         //we can use global $field variable here
         global $field;
         $current_field = $field;
     }
-    
+
     //@todo : Should we do it if an admin is editing user profiles in backend ( wp-admin/edit-user.php... ) ?
-    
+
     if ( $is_field_edit_mode ) {
         $alternate_name = bp_get_the_profile_field_alternate_name( $current_field );
-        
+
         if ( !empty( $alternate_name ) ) {
             $field_name = $alternate_name;
         }
     }
-    
+
     return $field_name;
+}
+
+function bp_xprofile_validate_nickname_value( $retval, $field_id, $vlaue, $user_id = null ) {
+	if ( $field_id != bp_xprofile_nickname_field_id() ) {
+		return $retval;
+	}
+
+	if ( $retval ) {
+		return $retval;
+	}
+
+	$value = strtolower( $vlaue );
+
+	// only alpha numeric, underscore, dash
+	if ( ! preg_match( '/^([A-Za-z0-9-_\.]+)$/', $vlaue ) ) {
+		return __( 'Invalid nickname. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' );
+	}
+
+	// cannot have 2 continued special characters
+	if ( preg_match( '/([-_\.]{2})/', $vlaue ) ) {
+		return __( '"-", "_" and "." cannot be repeat twice in nickname.', 'buddyboss' );
+	}
+
+	// must be longer then 6 characters
+	// if ( strlen( $value ) < 6 ) {
+	// 	return __( 'Nickname must be at least 6 characters.', 'buddyboss' );
+	// }
+
+	// must be shorter then 20 characters
+	if ( strlen( $value ) > 20 ) {
+		return __( 'Nickname must be shorter than 20 characters.', 'buddyboss' );
+	}
+
+	global $wpdb;
+	$where = [
+		'meta_key = "nickname"',
+		'meta_value = "' . $value . '"'
+	];
+
+	if ( $user_id ) {
+		$where[] = 'user_id != ' . $user_id;
+	}
+
+	$sql = sprintf(
+		'SELECT count(*) FROM %s WHERE %s',
+		$wpdb->usermeta,
+		implode( ' AND ', $where )
+	);
+
+	if ( $asdf = $wpdb->get_var( $sql ) > 0 ) {
+		return __( 'Nickname has already been taken.', 'buddyboss' );
+	}
+
+	return $retval;
 }

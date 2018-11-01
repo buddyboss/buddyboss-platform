@@ -588,8 +588,8 @@ function xprofile_check_is_required_field( $field_id ) {
 	return (bool) $retval;
 }
 
-function xprofile_validate_field( $field_id, $value ) {
-	return apply_filters('xprofile_validate_field', '', $field_id, $value );
+function xprofile_validate_field( $field_id, $value, $UserId ) {
+	return apply_filters('xprofile_validate_field', '', $field_id, $value, $UserId );
 }
 
 /**

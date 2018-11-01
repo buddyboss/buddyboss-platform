@@ -413,6 +413,12 @@ class BP_Members_Admin {
 					'message' => __( 'There was a problem updating some of your profile information. Please try again.', 'buddyboss' )
 				);
 				break;
+			case 4:
+				$notice = array(
+					'class'   => 'error',
+					'message' => stripcslashes( $_REQUEST['message'] )
+				);
+				break;
 			}
 		}
 
