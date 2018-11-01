@@ -22,6 +22,10 @@ add_action( 'bp_init', 'bp_setup_core_email_tokens', 0 );
 /**
  * All generic email notifications for the WP
  */
+function bp_email_set_content_type(){
+	return "text/html";
+}
+
 if ( ! function_exists('wp_notify_postauthor') ) :
 	/**
 	 * Notify an author (and/or others) of a comment/trackback/pingback on a post.
@@ -212,9 +216,13 @@ if ( ! function_exists('wp_notify_postauthor') ) :
 		 */
 		$message_headers = apply_filters( 'comment_notification_headers', $message_headers, $comment->comment_ID );
 
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
+
 		foreach ( $emails as $email ) {
 			@wp_mail( $email, wp_specialchars_decode( $subject ), $notify_message, $message_headers );
 		}
+
+		remove_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
 
 		if ( $switched_locale ) {
 			restore_previous_locale();
@@ -376,9 +384,13 @@ if ( !function_exists('wp_notify_moderator') ) :
 		 */
 		$message_headers = apply_filters( 'comment_moderation_headers', $message_headers, $comment_id );
 
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
+
 		foreach ( $emails as $email ) {
 			@wp_mail( $email, wp_specialchars_decode( $subject ), $notify_message, $message_headers );
 		}
+
+		remove_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
 
 		if ( $switched_locale ) {
 			restore_previous_locale();
@@ -433,12 +445,16 @@ if ( !function_exists('wp_password_change_notification') ) :
 			 */
 			$wp_password_change_notification_email = apply_filters( 'wp_password_change_notification_email', $wp_password_change_notification_email, $user, $blogname );
 
+			add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
+
 			wp_mail(
 				$wp_password_change_notification_email['to'],
 				wp_specialchars_decode( sprintf( $wp_password_change_notification_email['subject'], $blogname ) ),
 				$wp_password_change_notification_email['message'],
 				$wp_password_change_notification_email['headers']
 			);
+
+			remove_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
 		}
 	}
 endif;
@@ -510,12 +526,16 @@ if ( !function_exists('wp_new_user_notification') ) :
 			 */
 			$wp_new_user_notification_email_admin = apply_filters( 'wp_new_user_notification_email_admin', $wp_new_user_notification_email_admin, $user, $blogname );
 
+			add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
+
 			@wp_mail(
 				$wp_new_user_notification_email_admin['to'],
 				wp_specialchars_decode( sprintf( $wp_new_user_notification_email_admin['subject'], $blogname ) ),
 				$wp_new_user_notification_email_admin['message'],
 				$wp_new_user_notification_email_admin['headers']
 			);
+
+			remove_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
 
 			if ( $switched_locale ) {
 				restore_previous_locale();
@@ -576,6 +596,8 @@ if ( !function_exists('wp_new_user_notification') ) :
 		 */
 		$wp_new_user_notification_email = apply_filters( 'wp_new_user_notification_email', $wp_new_user_notification_email, $user, $blogname );
 
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
+
 		wp_mail(
 			$wp_new_user_notification_email['to'],
 			wp_specialchars_decode( sprintf( $wp_new_user_notification_email['subject'], $blogname ) ),
@@ -583,8 +605,36 @@ if ( !function_exists('wp_new_user_notification') ) :
 			$wp_new_user_notification_email['headers']
 		);
 
+		remove_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
+
 		if ( $switched_locale ) {
 			restore_previous_locale();
 		}
 	}
 endif;
+
+if ( ! function_exists( 'bp_email_retrieve_password_message' ) ) {
+	/**
+	 * Filters the message body of the password reset mail.
+	 *
+	 * If the filtered message is empty, the password reset email will not be sent.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string  $message    Default mail message.
+	 * @param string  $key        The activation key.
+	 * @param string  $user_login The username for the user.
+	 * @param WP_User $user_data  WP_User object.
+	 */
+	function bp_email_retrieve_password_message( $message, $key, $user_login, $user_data ) {
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		/**
+		 * @todo here add all related html template for the message before and after.
+		 */
+
+		return $message;
+	}
+}
+add_filter( 'retrieve_password_message', 'bp_email_retrieve_password_message', 10, 4 );
