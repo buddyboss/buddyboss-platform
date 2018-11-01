@@ -1633,6 +1633,83 @@ function bbp_get_forum_visibilities() {
 	) );
 }
 
+/**
+ * Check if given forum has thumbnail available
+ *
+ * @since  BuddyBoss 3.1.1
+ */
+function bbp_has_forum_thumbnail( $forum_id = null ) {
+	return !! bbp_get_forum_thumbnail_src( $forum_id );
+}
+
+/**
+ * Get the forum thumbnail's image source
+ *
+ * @since  BuddyBoss 3.1.1
+ */
+function bbp_get_forum_thumbnail_src( $forum_id = null, $size = null, $type = null ) {
+	if ( $thumbnail_id = get_post_thumbnail_id( $forum_id ) ) {
+		return wp_get_attachment_image_url( $thumbnail_id, $size );
+	}
+
+	if ( $group_ids = bbp_get_forum_group_ids( $forum_id ) ) {
+		$group_id = $group_ids[0];
+
+		$group_avatar_url = bp_core_fetch_avatar([
+			'item_id'       => $group_id,
+			'object'        => 'group',
+			'type'          => $type,
+			'html'          => false,
+			'force_default' => false,
+		]);
+
+		$group_default_avatar = bp_groups_default_avatar( '', [ 'object' => 'group', 'type' => $type ] );
+
+		if ( $group_avatar_url != $group_default_avatar ) {
+			return $group_avatar_url;
+		}
+	}
+
+	return '';
+}
+
+/**
+ * Get the forum thumbnail's image tag
+ *
+ * @since  BuddyBoss 3.1.1
+ */
+function bbp_get_forum_thumbnail_image( $forum_id = null, $size = null, $type = null ) {
+	if ( $thumbnail_id = get_post_thumbnail_id( $forum_id ) ) {
+		return wp_get_attachment_image( $thumbnail_id, $size );
+	}
+
+	if ( $group_ids = bbp_get_forum_group_ids( $forum_id ) ) {
+		$group_id = $group_ids[0];
+
+		$group_avatar_url = bp_core_fetch_avatar([
+			'item_id'       => $group_id,
+			'object'        => 'group',
+			'type'          => $type,
+			'html'          => false,
+			'force_default' => false,
+		]);
+
+		$group_default_avatar = bp_groups_default_avatar( '', [ 'object' => 'group', 'type' => $type ] );
+
+		if ( $group_avatar_url != $group_default_avatar ) {
+			return bp_core_fetch_avatar([
+				'item_id'       => $group_id,
+				'object'        => 'group',
+				'type'          => $type,
+				'force_default' => false,
+			]);
+		}
+	}
+
+	return '';
+}
+
+
 /** Queries *******************************************************************/
 
 /**

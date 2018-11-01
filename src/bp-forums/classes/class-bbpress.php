@@ -448,6 +448,8 @@ final class bbPress {
             ) )
         );
 
+        add_post_type_support( bbp_get_forum_post_type(), 'thumbnail' );
+
         /** Topics ************************************************************/
 
         // Register Topic content type
