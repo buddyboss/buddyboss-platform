@@ -2094,8 +2094,16 @@ function bp_signup_username_value() {
 	 */
 	function bp_get_signup_username_value() {
 		$value = '';
-		if ( isset( $_POST['signup_username'] ) )
+
+		// grab the nickname field first
+		$nickname_field = 'field_' . bp_xprofile_nickname_field_id();
+		if ( isset( $_POST[ $nickname_field ] ) ) {
+			$value = $_POST[ $nickname_field ];
+		}
+		// fallback to grab the username
+		else if ( isset( $_POST['signup_username'] ) ) {
 			$value = $_POST['signup_username'];
+		}
 
 		/**
 		 * Filters the username submitted during signup.

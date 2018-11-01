@@ -1052,14 +1052,6 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 	 */
 	$fields = apply_filters( 'bp_nouveau_get_signup_fields', array(
 		'account_details' => array(
-			'signup_username' => array(
-				'label'          => __( 'Username', 'buddyboss' ),
-				'required'       => true,
-				'value'          => 'bp_get_signup_username_value',
-				'attribute_type' => 'username',
-				'type'           => 'text',
-				'class'          => '',
-			),
 			'signup_email' => array(
 				'label'          => __( 'Email', 'buddyboss' ),
 				'required'       => true,

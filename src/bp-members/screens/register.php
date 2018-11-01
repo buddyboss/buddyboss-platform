@@ -56,7 +56,7 @@ function bp_core_screen_signup() {
 		do_action( 'bp_signup_pre_validate' );
 
 		// Check the base account details for problems.
-		$account_details = bp_core_validate_user_signup( $_POST['signup_username'], $_POST['signup_email'] );
+		$account_details = bp_core_validate_user_signup( bp_get_signup_username_value(), bp_get_signup_email_value() );
 
 		// If there are errors with account details, set them for display.
 		if ( !empty( $account_details['errors']->errors['user_name'] ) )
@@ -69,8 +69,8 @@ function bp_core_screen_signup() {
 		if ( empty( $_POST['signup_password'] ) )
 			$bp->signup->errors['signup_password'] = __( 'Please make sure you enter your password', 'buddyboss' );
 
-		$bp->signup->username = $_POST['signup_username'];
-		$bp->signup->email = $_POST['signup_email'];
+		$bp->signup->username = bp_get_signup_username_value();
+		$bp->signup->email = bp_get_signup_email_value();
 
 		// Now we've checked account details, we can check profile information.
 		if ( bp_is_active( 'xprofile' ) ) {
@@ -202,9 +202,20 @@ function bp_core_screen_signup() {
 
 				// Finally, sign up the user and/or blog.
 				if ( isset( $_POST['signup_with_blog'] ) && is_multisite() )
-					$wp_user_id = bp_core_signup_blog( $blog_details['domain'], $blog_details['path'], $blog_details['blog_title'], $_POST['signup_username'], $_POST['signup_email'], $usermeta );
+					$wp_user_id = bp_core_signup_blog(
+						$blog_details['domain'],
+						$blog_details['path'],
+						$blog_details['blog_title'],
+						bp_get_signup_username_value(),
+						bp_get_signup_email_value(), $usermeta
+					);
 				else
-					$wp_user_id = bp_core_signup_user( $_POST['signup_username'], $_POST['signup_password'], $_POST['signup_email'], $usermeta );
+					$wp_user_id = bp_core_signup_user(
+						bp_get_signup_username_value(),
+						$_POST['signup_password'],
+						bp_get_signup_email_value(),
+						$usermeta
+					);
 
 				if ( is_wp_error( $wp_user_id ) ) {
 					$bp->signup->step = 'request-details';
