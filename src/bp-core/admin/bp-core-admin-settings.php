@@ -125,21 +125,6 @@ function bp_admin_sanitize_callback_blogforum_comments( $value = false ) {
 function bp_admin_setting_callback_xprofile_section() { }
 
 /**
- * Enable BP->WP profile syncing field.
- *
- * @since BuddyPress 1.6.0
- *
- */
-function bp_admin_setting_callback_profile_sync() {
-?>
-
-	<input id="bp-disable-profile-sync" name="bp-disable-profile-sync" type="checkbox" value="1" <?php checked( !bp_disable_profile_sync( false ) ); ?> />
-	<label for="bp-disable-profile-sync"><?php _e( 'Enable BuddyBoss to WordPress profile syncing', 'buddyboss' ); ?></label>
-
-<?php
-}
-
-/**
  * Allow members to upload avatars field.
  *
  * @since BuddyPress 1.6.0

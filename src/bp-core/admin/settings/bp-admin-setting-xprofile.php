@@ -35,9 +35,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-disable-cover-image-uploads', __( 'Cover Image Uploads', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'intval' );
 		}
 
-		// Profile sync setting.
-		$this->add_field( 'bp-disable-profile-sync', __( 'Profile Syncing', 'buddyboss' ), 'bp_admin_setting_callback_profile_sync', 'intval' );
-
 		// Enable/Disable member dashboard.
 		$this->add_field( 'bp-enable-member-dashboard', __( 'Member Dashboard', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_dashboard'], 'intval' );
 	}
