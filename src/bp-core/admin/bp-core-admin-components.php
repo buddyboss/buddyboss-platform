@@ -181,7 +181,7 @@ function bp_core_admin_components_options() {
 					<?php
 						if ( in_array( $name, array( 'blogs' ) ) ) :
 							$class = isset( $active_components[esc_attr( $name )] ) ? 'active hidden' : 'inactive hidden';
-						elseif ( !in_array( $name, array( 'core', 'members' ) ) ) :
+						elseif ( !in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) :
 							$class = isset( $active_components[esc_attr( $name )] ) ? 'active' : 'inactive';
 						else :
 							$class = 'active';
@@ -191,7 +191,7 @@ function bp_core_admin_components_options() {
 					<tr id="<?php echo esc_attr( $name ); ?>" class="<?php echo esc_attr( $name ) . ' ' . esc_attr( $class ); ?>">
 						<th scope="row" class="check-column">
 
-							<?php if ( !in_array( $name, array( 'core', 'members' ) ) ) : ?>
+							<?php if ( !in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
 
 								<input type="checkbox" id="<?php echo esc_attr( "bp_components[$name]" ); ?>" name="<?php echo esc_attr( "bp_components[$name]" ); ?>" value="1"<?php checked( isset( $active_components[esc_attr( $name )] ) ); ?> /><label for="<?php echo esc_attr( "bp_components[$name]" ); ?>" class="screen-reader-text"><?php
 									/* translators: accessibility text */

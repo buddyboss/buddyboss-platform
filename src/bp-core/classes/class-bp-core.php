@@ -81,7 +81,7 @@ class BP_Core extends BP_Component {
 		 *
 		 * @param array $value Array of required components.
 		 */
-		$bp->required_components = apply_filters( 'bp_required_components', array( 'members' ) );
+		$bp->required_components = apply_filters( 'bp_required_components', array( 'members', 'xprofile' ) );
 
 		// Get a list of activated components.
 		if ( $active_components = bp_get_option( 'bp-active-components' ) ) {

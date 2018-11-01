@@ -2413,16 +2413,16 @@ function bp_core_get_components( $type = 'all' ) {
 			'title'       => __( 'Community Members', 'buddyboss' ),
 			'description' => __( 'Everything in a community website revolves around its members.', 'buddyboss' )
 		),
+		'xprofile' => array(
+			'title'       => __( 'Profile Fields', 'buddyboss' ),
+			'description' => __( 'Customize your community with fully editable profile fields that allow your users to describe themselves.', 'buddyboss' )
+		),
 	);
 
 	$retired_components = array(
 	);
 
 	$optional_components = array(
-		'xprofile' => array(
-			'title'       => __( 'Profile Fields', 'buddyboss' ),
-			'description' => __( 'Customize your community with fully editable profile fields that allow your users to describe themselves.', 'buddyboss' )
-		),
 		'settings' => array(
 			'title'       => __( 'Account Settings', 'buddyboss' ),
 			'description' => __( 'Allow your users to modify their account and notification settings directly from within their profiles.', 'buddyboss' )
