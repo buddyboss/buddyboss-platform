@@ -653,8 +653,9 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $vlaue, $user_
 	// }
 
 	// must be shorter then 20 characters
-	if ( strlen( $value ) > 20 ) {
-		return __( 'Nickname must be shorter than 20 characters.', 'buddyboss' );
+	$nickname_length = apply_filters( 'xprofile_nickname_max_length', 32 );
+	if ( strlen( $value ) > $nickname_length ) {
+		return sprintf( __( 'Nickname must be shorter than %d characters.', 'buddyboss' ), $nickname_length );
 	}
 
 	global $wpdb;
