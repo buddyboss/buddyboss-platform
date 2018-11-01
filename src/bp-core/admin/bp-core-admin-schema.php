@@ -68,14 +68,14 @@ function bp_core_install( $active_components = false ) {
 		bp_core_install_blog_tracking();
 	}
 
-	// Discussiom forums
+	// Discussion forums
 	if ( !empty( $active_components['forums'] ) ) {
 		bp_core_install_discussion_forums();
 	}
 }
 
 function bp_core_uninstall( $uninstalled_components ) {
-	// Discussiom forums
+	// Discussion forums
 	if ( !empty( $uninstalled_components['forums'] ) ) {
 		bp_core_uninstall_discussion_forums();
 	}
