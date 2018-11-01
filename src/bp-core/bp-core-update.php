@@ -557,6 +557,8 @@ function bp_update_to_2_7() {
 function bp_update_to_3_1_1() {
 
 	bp_core_install_follow();
+	bp_core_install_default_profiles_fields();
+
 }
 
 /**

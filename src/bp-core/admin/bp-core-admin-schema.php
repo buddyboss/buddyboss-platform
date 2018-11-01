@@ -341,20 +341,9 @@ function bp_core_install_private_messaging() {
  *
  */
 function bp_core_install_extended_profiles() {
-	global $wpdb;
-
 	$sql             = array();
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
 	$bp_prefix       = bp_core_get_table_prefix();
-
-	// These values should only be updated if they are not already present.
-	if ( ! bp_get_option( 'bp-xprofile-base-group-name' ) ) {
-		bp_update_option( 'bp-xprofile-base-group-name', _x( 'General', 'First field-group name', 'buddyboss' ) );
-	}
-
-	if ( ! bp_get_option( 'bp-xprofile-fullname-field-name' ) ) {
-		bp_update_option( 'bp-xprofile-fullname-field-name', _x( 'Display Name', 'Display name field', 'buddyboss' ) );
-	}
 
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_xprofile_groups (
 				id bigint(20) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -407,18 +396,97 @@ function bp_core_install_extended_profiles() {
 
 	dbDelta( $sql );
 
+	bp_core_install_default_profiles_fields();
+}
+
+function bp_core_install_default_profiles_fields() {
+	global $wpdb;
+
+	$bp_prefix       = bp_core_get_table_prefix();
+
+	// These values should only be updated if they are not already present.
+	if ( ! bp_get_option( 'bp-xprofile-base-group-name' ) ) {
+		bp_update_option( 'bp-xprofile-base-group-name', _x( 'General', 'First field-group name', 'buddyboss' ) );
+	}
+
+	if ( ! bp_get_option( 'bp-xprofile-firstname-field-name' ) ) {
+		bp_update_option( 'bp-xprofile-firstname-field-name', _x( 'First Name', 'First name field', 'buddyboss' ) );
+	}
+
+	if ( ! bp_get_option( 'bp-xprofile-lastname-field-name' ) ) {
+		bp_update_option( 'bp-xprofile-lastname-field-name', _x( 'Last Name', 'Last name field', 'buddyboss' ) );
+	}
+
+	if ( ! bp_get_option( 'bp-xprofile-nickname-field-name' ) ) {
+		bp_update_option( 'bp-xprofile-nickname-field-name', _x( 'Nickname', 'Nickname field', 'buddyboss' ) );
+	}
+
 	// Insert the default group and fields.
 	$insert_sql = array();
 
-	if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_groups WHERE id = 1" ) ) {
-		$insert_sql[] = "INSERT INTO {$bp_prefix}bp_xprofile_groups ( name, description, can_delete ) VALUES ( " . $wpdb->prepare( '%s', stripslashes( bp_get_option( 'bp-xprofile-base-group-name' ) ) ) . ", '', 0 );";
+	$base_group_id = (int) bp_get_option( 'bp-xprofile-base-group-id', 1 );
+	if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_groups WHERE id = {$base_group_id}" ) ) {
+
+		$re = $wpdb->insert( "{$bp_prefix}bp_xprofile_groups", [
+			'name'        => bp_get_option( 'bp-xprofile-base-group-name' ),
+			'description' => '',
+			'can_delete'  => 0,
+		] );
+
+		$base_group_id = $wpdb->insert_id;
+		bp_update_option( 'bp-xprofile-base-group-id', $base_group_id );
 	}
 
-	if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = 1" ) ) {
-		$insert_sql[] = "INSERT INTO {$bp_prefix}bp_xprofile_fields ( group_id, parent_id, type, name, description, is_required, can_delete ) VALUES ( 1, 0, 'textbox', " . $wpdb->prepare( '%s', stripslashes( bp_get_option( 'bp-xprofile-fullname-field-name' ) ) ) . ", '', 1, 0 );";
+	// First name
+	$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id', 1 );
+	if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$first_name_id}" ) ) {
+
+		$re = $wpdb->insert( "{$bp_prefix}bp_xprofile_fields", [
+			'group_id'    => $base_group_id,
+			'parent_id'   => 0,
+			'type'        => 'textbox',
+			'name'        => bp_get_option( 'bp-xprofile-firstname-field-name' ),
+			'description' => '',
+			'is_required' => 1,
+			'can_delete'  => 0,
+		] );
+
+		bp_update_option( 'bp-xprofile-firstname-field-id', $wpdb->insert_id );
 	}
 
-	dbDelta( $insert_sql );
+	// Last name
+	$last_name_id = (int) bp_get_option( 'bp-xprofile-lastname-field-id' );
+	if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$last_name_id}" ) ) {
+
+		$re = $wpdb->insert( "{$bp_prefix}bp_xprofile_fields", [
+			'group_id'    => $base_group_id,
+			'parent_id'   => 0,
+			'type'        => 'textbox',
+			'name'        => bp_get_option( 'bp-xprofile-lastname-field-name' ),
+			'description' => '',
+			'is_required' => 1,
+			'can_delete'  => 0,
+		] );
+
+		bp_update_option( 'bp-xprofile-lastname-field-id', $wpdb->insert_id );
+	}
+
+	// Nickname
+	$nickname_id = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
+	if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$nickname_id}" ) ) {
+
+		$re = $wpdb->insert( "{$bp_prefix}bp_xprofile_fields", [
+			'group_id'    => $base_group_id,
+			'parent_id'   => 0,
+			'type'        => 'textbox',
+			'name'        => bp_get_option( 'bp-xprofile-nickname-field-name' ),
+			'description' => '',
+			'is_required' => 1,
+			'can_delete'  => 0,
+		] );
+
+		bp_update_option( 'bp-xprofile-nickname-field-id', $wpdb->insert_id );
+	}
 }
 
 /**

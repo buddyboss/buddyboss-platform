@@ -136,9 +136,9 @@ class BP_XProfile_Field {
 	 *
      * Field is marked protected as it is not supposed to be accessed directly.
      * Use the method get_alternate_name instead.
-     * 
+     *
 	 * @since BuddyBoss 3.1.1
-     * 
+     *
 	 * @var string alternate name of the field.
 	 */
 	protected $alternate_name;
@@ -316,7 +316,7 @@ class BP_XProfile_Field {
 			case 'allow_custom_visibility' :
 				return $this->get_allow_custom_visibility();
 				break;
-            
+
             case 'alternate_name' :
                 return $this->get_alternate_name();
                 break;
@@ -856,15 +856,15 @@ class BP_XProfile_Field {
 
 		return $this->allow_custom_visibility;
 	}
-    
+
 	/**
 	 * Get alternate name of the field.
-     * 
+     *
      * Lazy-loaded to reduce overhead.
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *
-	 * @return string 
+	 * @return string
 	 */
 	public function get_alternate_name() {
 		if ( ! isset( $this->alternate_name ) ) {
@@ -889,7 +889,7 @@ class BP_XProfile_Field {
 	 */
 	public function get_do_autolink() {
         _deprecated_function( __FUNCTION__, '3.1.1(BuddyBoss)' );
-        
+
         return false;
 	}
 
@@ -1194,7 +1194,7 @@ class BP_XProfile_Field {
 	 * Output the admin form for this field.
 	 *
 	 * @since BuddyPress 1.9.0
-     * @since BuddyBoss 3.1.1 Added the paramter $message_type 
+     * @since BuddyBoss 3.1.1 Added the paramter $message_type
 	 *
 	 * @param string $message Message to display.
      * @param string $message_type error or udpated
@@ -1418,12 +1418,12 @@ class BP_XProfile_Field {
 
 		<div class="postbox">
 			<h2><?php echo esc_html_x( 'Help Text', 'XProfile admin edit field', 'buddyboss' ); ?></h2>
-			<div class="inside">		
-				<?php 
+			<div class="inside">
+				<?php
 					/**
 					 * Alternate title for when user edits their profile field.
 					 * Reverts to primary title if nothing is entered.
-					 * 
+					 *
 					 * @since BuddyBoss 3.1.1
 					 */
 				?>
@@ -1433,7 +1433,7 @@ class BP_XProfile_Field {
 				?></label>
 				<p class="description"><?php _e( 'Alternate Title (optional)', 'buddyboss' ); ?></p>
                 <input type="text" name="title_secondary" id="title_secondary" value="<?php echo esc_attr( $this->get_alternate_name() ) ;?>" autocomplete="off" />
-				
+
 				<?php /* description while editing */ ?>
 				<label for="description" class="screen-reader-text"><?php
 					/* translators: accessibility text */
@@ -1509,11 +1509,7 @@ class BP_XProfile_Field {
 	 * @return void If default field id 1.
 	 */
 	private function visibility_metabox() {
-
-		// Default field cannot have custom visibility.
-		if ( true === $this->is_default_field() ) {
-			return;
-		} ?>
+		?>
 
 		<div class="postbox">
 			<h2><label for="default-visibility"><?php esc_html_e( 'Visibility', 'buddyboss' ); ?></label></h2>
@@ -1651,7 +1647,13 @@ class BP_XProfile_Field {
 			$field_id = $this->id;
 		}
 
+		$synced_fields = array_filter( [
+			bp_xprofile_firstname_field_id(),
+			bp_xprofile_lastname_field_id(),
+			bp_xprofile_nickname_field_id()
+		] );
+
 		// Compare & return.
-		return (bool) ( 1 === (int) $field_id );
+		return in_array( $field_id, $synced_fields );
 	}
 }

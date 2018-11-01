@@ -588,6 +588,10 @@ function xprofile_check_is_required_field( $field_id ) {
 	return (bool) $retval;
 }
 
+function xprofile_validate_field( $field_id, $value ) {
+	return apply_filters('xprofile_validate_field', '', $field_id, $value );
+}
+
 /**
  * Returns the ID for the field based on the field name.
  *
@@ -808,7 +812,7 @@ add_action( 'bp_user_query_uid_clauses', 'bp_xprofile_bp_user_query_search', 10,
  * @param int $user_id ID of the user to sync.
  * @return bool
  */
-function xprofile_sync_wp_profile( $user_id = 0 ) {
+function xprofile_sync_wp_profile( $user_id = 0, $field_id = null ) {
 
 	// Bail if profile syncing is disabled.
 	if ( bp_disable_profile_sync() ) {
@@ -823,22 +827,25 @@ function xprofile_sync_wp_profile( $user_id = 0 ) {
 		return false;
 	}
 
-	$fullname = xprofile_get_field_data( bp_xprofile_fullname_field_id(), $user_id );
-	$space    = strpos( $fullname, ' ' );
+	$firstname_id = bp_xprofile_firstname_field_id();
+	$lastname_id  = bp_xprofile_lastname_field_id();
+	$nickname_id  = bp_xprofile_nickname_field_id();
 
-	if ( false === $space ) {
-		$firstname = $fullname;
-		$lastname = '';
-	} else {
-		$firstname = substr( $fullname, 0, $space );
-		$lastname = trim( substr( $fullname, $space, strlen( $fullname ) ) );
+	if ( ! $field_id || $field_id == $firstname_id ) {
+		$firstname = xprofile_get_field_data( bp_xprofile_firstname_field_id(), $user_id );
+		bp_update_user_meta( $user_id, 'first_name', $firstname );
 	}
 
-	bp_update_user_meta( $user_id, 'nickname',   $fullname  );
-	bp_update_user_meta( $user_id, 'first_name', $firstname );
-	bp_update_user_meta( $user_id, 'last_name',  $lastname  );
+	if ( ! $field_id || $field_id == $lastname_id ) {
+		$lastname = xprofile_get_field_data( bp_xprofile_lastname_field_id(), $user_id );
+		bp_update_user_meta( $user_id, 'last_name', $lastname );
+	}
 
-	wp_update_user( array( 'ID' => $user_id, 'display_name' => $fullname ) );
+	if ( ! $field_id || $field_id == $nickname_id ) {
+		$nickname = xprofile_get_field_data( bp_xprofile_nickname_field_id(), $user_id );
+		bp_update_user_meta( $user_id, 'nickname', $nickname );
+		wp_update_user( array( 'ID' => $user_id, 'display_name' => $nickname ) );
+	}
 }
 add_action( 'bp_core_signup_user',      'xprofile_sync_wp_profile' );
 add_action( 'bp_core_activated_user',   'xprofile_sync_wp_profile' );
@@ -859,9 +866,29 @@ function xprofile_sync_bp_profile( &$errors, $update, &$user ) {
 		return;
 	}
 
-	xprofile_set_field_data( bp_xprofile_fullname_field_id(), $user->ID, $user->display_name );
+	xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user->ID, $user->first_name );
+	xprofile_set_field_data( bp_xprofile_lastname_field_id(),  $user->ID, $user->last_name );
+	xprofile_set_field_data( bp_xprofile_nickname_field_id(),  $user->ID, $user->nickname );
 }
-add_action( 'user_profile_update_errors', 'xprofile_sync_bp_profile', 10, 3 );
+add_action( 'user_profile_update_errors', 'xprofile_sync_bp_profile', 20, 3 );
+
+function user_profile_update_validate_nickname( &$errors, $update, &$user ) {
+	// Bail if not updating or already has error
+	if ( ! $update || $errors->get_error_codes() ) {
+		return;
+	}
+
+	$invalid = bp_xprofile_validate_nickname_value( '', bp_xprofile_nickname_field_id(), $user->nickname, $user->ID );
+
+	if ( $invalid ) {
+		$errors->add(
+			'nickname_invalid',
+			$invalid,
+			array( 'form-field' => 'nickname' )
+		);
+	}
+}
+add_action( 'user_profile_update_errors', 'user_profile_update_validate_nickname', 10, 3 );
 
 /**
  * Update the WP display, last, and first name fields when the xprofile display name field is updated.
@@ -871,12 +898,17 @@ add_action( 'user_profile_update_errors', 'xprofile_sync_bp_profile', 10, 3 );
  * @param BP_XProfile_ProfileData $data Current instance of the profile data being saved.
  */
 function xprofile_sync_wp_profile_on_single_field_set( $data ) {
+	$synced_fields = array_filter( [
+		bp_xprofile_firstname_field_id(),
+		bp_xprofile_lastname_field_id(),
+		bp_xprofile_nickname_field_id()
+	] );
 
-	if ( bp_xprofile_fullname_field_id() !== $data->field_id ) {
+	if ( ! in_array( $data->field_id, $synced_fields ) ) {
 		return;
 	}
 
-	xprofile_sync_wp_profile( $data->user_id );
+	xprofile_sync_wp_profile( $data->user_id, $data->field_id );
 }
 add_action( 'xprofile_data_after_save', 'xprofile_sync_wp_profile_on_single_field_set' );
 
@@ -1094,6 +1126,18 @@ function bp_xprofile_fullname_field_id() {
 	}
 
 	return absint( $id );
+}
+
+function bp_xprofile_firstname_field_id() {
+	return absint( bp_get_option( 'bp-xprofile-firstname-field-id' ) );
+}
+
+function bp_xprofile_lastname_field_id() {
+	return absint( bp_get_option( 'bp-xprofile-lastname-field-id' ) );
+}
+
+function bp_xprofile_nickname_field_id() {
+	return absint( bp_get_option( 'bp-xprofile-nickname-field-id', bp_xprofile_fullname_field_id() ) );
 }
 
 /**

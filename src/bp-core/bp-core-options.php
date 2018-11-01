@@ -35,6 +35,15 @@ function bp_get_default_options() {
 		'bp-xprofile-base-group-name'          => 'Details',
 
 		// Default fullname field name.
+		'bp-xprofile-firstname-field-name'     => 'First Name',
+
+		// Default fullname field name.
+		'bp-xprofile-lastname-field-name'      => 'Last Name',
+
+		// Default fullname field name.
+		'bp-xprofile-nickname-field-name'      => 'Nickname',
+
+		// Default fullname field name. (for backward compat)
 		'bp-xprofile-fullname-field-name'      => 'Name',
 
 		/* Blogs *************************************************************/

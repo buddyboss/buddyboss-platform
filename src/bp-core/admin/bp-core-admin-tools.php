@@ -109,6 +109,14 @@ function bp_admin_repair_list() {
 		'bp_admin_repair_last_activity',
 	);
 
+	// Xprofile:
+	// - default xprofile groups/fields
+	$repair_list[35] = array(
+		'bp-xprofile-fields',
+		__( 'Repair default xprofile group and fields.', 'buddyboss' ),
+		'repare_default_profiles_fields',
+	);
+
 	// Connections:
 	// - user friend count.
 	if ( bp_is_active( 'friends' ) ) {
@@ -318,6 +326,16 @@ function bp_admin_repair_count_members() {
 function bp_admin_repair_last_activity() {
 	$statement = __( 'Determining last activity dates for each user&hellip; %s', 'buddyboss' );
 	bp_last_activity_migrate();
+	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+}
+
+function repare_default_profiles_fields() {
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+	require_once( buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
+
+	bp_core_install_default_profiles_fields();
+
+	$statement = __( 'Repair default xprofile group and fields&hellip; %s', 'buddyboss' );
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
