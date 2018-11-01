@@ -638,3 +638,411 @@ if ( ! function_exists( 'bp_email_retrieve_password_message' ) ) {
 	}
 }
 add_filter( 'retrieve_password_message', 'bp_email_retrieve_password_message', 10, 4 );
+
+if ( ! function_exists( 'bp_email_wpmu_signup_blog_notification_email' ) ) {
+	/**
+	 * Filters the message content of the new blog notification email.
+	 *
+	 * Content should be formatted for transmission via wp_mail().
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $content    Content of the notification email.
+	 * @param string $domain     Site domain.
+	 * @param string $path       Site path.
+	 * @param string $title      Site title.
+	 * @param string $user_login User login name.
+	 * @param string $user_email User email address.
+	 * @param string $key        Activation key created in wpmu_signup_blog().
+	 * @param array  $meta       Signup meta data. By default, contains the requested privacy setting and lang_id.
+	 */
+	function bp_email_wpmu_signup_blog_notification_email( $content, $domain, $path, $title, $user_login, $user_email, $key, $meta ) {
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		/**
+		 * @todo here add all related html template for the message before and after.
+		 */
+
+		return $content;
+	}
+}
+add_filter( 'wpmu_signup_blog_notification_email', 'bp_email_wpmu_signup_blog_notification_email', 10, 8 );
+
+if ( ! function_exists( 'bp_email_wpmu_signup_user_notification_email' ) ) {
+	/**
+	 * Filters the content of the notification email for new user sign-up.
+	 *
+	 * Content should be formatted for transmission via wp_mail().
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $content    Content of the notification email.
+	 * @param string $user_login User login name.
+	 * @param string $user_email User email address.
+	 * @param string $key        Activation key created in wpmu_signup_user().
+	 * @param array  $meta       Signup meta data. Default empty array.
+	 */
+	function bp_email_wpmu_signup_user_notification_email( $content, $user_login, $user_email, $key, $meta ) {
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		/**
+		 * @todo here add all related html template for the message before and after.
+		 */
+
+		return $content;
+	}
+}
+add_filter( 'wpmu_signup_user_notification_email', 'bp_email_wpmu_signup_user_notification_email', 10, 5 );
+
+if ( ! function_exists( 'bp_email_newblog_notify_siteadmin' ) ) {
+	/**
+	 * Filters the message body of the new site activation email sent
+	 * to the network administrator.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $msg Email body.
+	 */
+	function bp_email_newblog_notify_siteadmin( $msg ) {
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		/**
+		 * @todo here add all related html template for the message before and after.
+		 */
+
+		return $msg;
+	}
+}
+add_filter( 'newblog_notify_siteadmin', 'bp_email_newblog_notify_siteadmin', 10 );
+
+if ( ! function_exists( 'bp_email_newuser_notify_siteadmin' ) ) {
+	/**
+	 * Filters the message body of the new user activation email sent
+	 * to the network administrator.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string  $msg  Email body.
+	 * @param WP_User $user WP_User instance of the new user.
+	 */
+	function bp_email_newuser_notify_siteadmin( $msg, $user ) {
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		/**
+		 * @todo here add all related html template for the message before and after.
+		 */
+
+		return $msg;
+	}
+}
+add_filter( 'newuser_notify_siteadmin', 'bp_email_newuser_notify_siteadmin', 10, 2 );
+
+if ( ! function_exists( 'bp_email_update_welcome_email' ) ) {
+	/**
+	 * Filters the content of the welcome email after site activation.
+	 *
+	 * Content should be formatted for transmission via wp_mail().
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $welcome_email Message body of the email.
+	 * @param int    $blog_id       Blog ID.
+	 * @param int    $user_id       User ID.
+	 * @param string $password      User password.
+	 * @param string $title         Site title.
+	 * @param array  $meta          Signup meta data. By default, contains the requested privacy setting and lang_id.
+	 */
+	function bp_email_update_welcome_email( $welcome_email, $blog_id, $user_id, $password, $title, $meta ) {
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		/**
+		 * @todo here add all related html template for the message before and after.
+		 */
+
+		return $welcome_email;
+	}
+}
+add_filter( 'update_welcome_email', 'bp_email_update_welcome_email', 10, 6 );
+
+if ( ! function_exists( 'bp_email_update_welcome_user_email' ) ) {
+	/**
+	 * Filters the content of the welcome email after user activation.
+	 *
+	 * Content should be formatted for transmission via wp_mail().
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $welcome_email The message body of the account activation success email.
+	 * @param int    $user_id       User ID.
+	 * @param string $password      User password.
+	 * @param array  $meta          Signup meta data. Default empty array.
+	 */
+	function bp_email_update_welcome_user_email( $welcome_email, $user_id, $password, $meta ) {
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		/**
+		 * @todo here add all related html template for the message before and after.
+		 */
+
+		return $welcome_email;
+	}
+}
+add_filter( 'update_welcome_user_email', 'bp_email_update_welcome_user_email', 10, 4 );
+
+if ( ! function_exists( 'bp_email_new_network_admin_email_content' ) ) {
+	/**
+	 * Filters the text of the email sent when a change of network admin email address is attempted.
+	 *
+	 * The following strings have a special meaning and will get replaced dynamically:
+	 * ###USERNAME###  The current user's username.
+	 * ###ADMIN_URL### The link to click on to confirm the email change.
+	 * ###EMAIL###     The proposed new network admin email address.
+	 * ###SITENAME###  The name of the network.
+	 * ###SITEURL###   The URL to the network.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $email_text      Text in the email.
+	 * @param array  $new_admin_email {
+	 *     Data relating to the new network admin email address.
+	 *
+	 *     @type string $hash     The secure hash used in the confirmation link URL.
+	 *     @type string $newemail The proposed new network admin email address.
+	 * }
+	 */
+	function bp_email_new_network_admin_email_content( $email_text, $new_admin_email ) {
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		/**
+		 * @todo here add all related html template for the message before and after.
+		 */
+
+		return $email_text;
+	}
+}
+add_filter( 'new_network_admin_email_content', 'bp_email_new_network_admin_email_content', 10, 2 );
+
+if ( ! function_exists( 'bp_email_network_admin_email_change_email' ) ) {
+	/**
+	 * Filters the contents of the email notification sent when the network admin email address is changed.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param array $email_change_email {
+	 *            Used to build wp_mail().
+	 *
+	 *            @type string $to      The intended recipient.
+	 *            @type string $subject The subject of the email.
+	 *            @type string $message The content of the email.
+	 *                The following strings have a special meaning and will get replaced dynamically:
+	 *                - ###OLD_EMAIL### The old network admin email address.
+	 *                - ###NEW_EMAIL### The new network admin email address.
+	 *                - ###SITENAME###  The name of the network.
+	 *                - ###SITEURL###   The URL to the site.
+	 *            @type string $headers Headers.
+	 *        }
+	 * @param string $old_email  The old network admin email address.
+	 * @param string $new_email  The new network admin email address.
+	 * @param int    $network_id ID of the network.
+	 */
+	function bp_email_network_admin_email_change_email( $email_change_email, $old_email, $new_email, $network_id ) {
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		/**
+		 * @todo here add all related html template for the message before and after.
+		 */
+
+		return $email_change_email;
+	}
+}
+add_filter( 'network_admin_email_change_email', 'bp_email_network_admin_email_change_email', 10, 4 );
+
+if ( ! function_exists( 'bp_email_site_admin_email_change_email' ) ) {
+	/**
+	 * Filters the contents of the email notification sent when the site admin email address is changed.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param array $email_change_email {
+	 *            Used to build wp_mail().
+	 *
+	 *            @type string $to      The intended recipient.
+	 *            @type string $subject The subject of the email.
+	 *            @type string $message The content of the email.
+	 *                The following strings have a special meaning and will get replaced dynamically:
+	 *                - ###OLD_EMAIL### The old site admin email address.
+	 *                - ###NEW_EMAIL### The new site admin email address.
+	 *                - ###SITENAME###  The name of the site.
+	 *                - ###SITEURL###   The URL to the site.
+	 *            @type string $headers Headers.
+	 *        }
+	 * @param string $old_email The old site admin email address.
+	 * @param string $new_email The new site admin email address.
+	 */
+	function bp_email_site_admin_email_change_email( $email_change_email, $old_email, $new_email ) {
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		/**
+		 * @todo here add all related html template for the message before and after.
+		 */
+
+		return $email_change_email;
+	}
+}
+add_filter( 'site_admin_email_change_email', 'bp_email_site_admin_email_change_email', 10, 3 );
+
+if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
+	/**
+	 * Filters the contents of the email sent when the user's password is changed.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param array $pass_change_email {
+	 *            Used to build wp_mail().
+	 *            @type string $to      The intended recipients. Add emails in a comma separated string.
+	 *            @type string $subject The subject of the email.
+	 *            @type string $message The content of the email.
+	 *                The following strings have a special meaning and will get replaced dynamically:
+	 *                - ###USERNAME###    The current user's username.
+	 *                - ###ADMIN_EMAIL### The admin email in case this was unexpected.
+	 *                - ###EMAIL###       The user's email address.
+	 *                - ###SITENAME###    The name of the site.
+	 *                - ###SITEURL###     The URL to the site.
+	 *            @type string $headers Headers. Add headers in a newline (\r\n) separated string.
+	 *        }
+	 * @param array $user     The original user array.
+	 * @param array $userdata The updated user array.
+	 *
+	 */
+	function bp_email_wp_password_change_email( $pass_change_email, $user, $userdata ) {
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		/**
+		 * @todo here add all related html template for the message before and after.
+		 */
+
+		return $pass_change_email;
+	}
+}
+add_filter( 'password_change_email', 'bp_email_wp_password_change_email', 10, 3 );
+
+if ( ! function_exists( 'bp_email_wp_email_change_email' ) ) {
+	/**
+	 * Filters the contents of the email sent when the user's email is changed.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param array $email_change_email {
+	 *            Used to build wp_mail().
+	 *            @type string $to      The intended recipients.
+	 *            @type string $subject The subject of the email.
+	 *            @type string $message The content of the email.
+	 *                The following strings have a special meaning and will get replaced dynamically:
+	 *                - ###USERNAME###    The current user's username.
+	 *                - ###ADMIN_EMAIL### The admin email in case this was unexpected.
+	 *                - ###NEW_EMAIL###   The new email address.
+	 *                - ###EMAIL###       The old email address.
+	 *                - ###SITENAME###    The name of the site.
+	 *                - ###SITEURL###     The URL to the site.
+	 *            @type string $headers Headers.
+	 *        }
+	 * @param array $user The original user array.
+	 * @param array $userdata The updated user array.
+	 */
+	function bp_email_wp_email_change_email( $email_change_email, $user, $userdata ) {
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		/**
+		 * @todo here add all related html template for the message before and after.
+		 */
+
+		return $email_change_email;
+	}
+}
+add_filter( 'email_change_email', 'bp_email_wp_email_change_email', 10, 3 );
+
+if ( ! function_exists( 'bp_email_wp_new_user_email_content' ) ) {
+	/**
+	 * Filters the text of the email sent when a change of user email address is attempted.
+	 *
+	 * The following strings have a special meaning and will get replaced dynamically:
+	 * ###USERNAME###  The current user's username.
+	 * ###ADMIN_URL### The link to click on to confirm the email change.
+	 * ###EMAIL###     The new email.
+	 * ###SITENAME###  The name of the site.
+	 * ###SITEURL###   The URL to the site.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $email_text     Text in the email.
+	 * @param array  $new_user_email {
+	 *     Data relating to the new user email address.
+	 *
+	 *     @type string $hash     The secure hash used in the confirmation link URL.
+	 *     @type string $newemail The proposed new email address.
+	 * }
+	 */
+	function bp_email_wp_new_user_email_content( $email_text, $new_user_email ) {
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		/**
+		 * @todo here add all related html template for the message before and after.
+		 */
+
+		return $email_text;
+	}
+}
+add_filter( 'new_user_email_content', 'bp_email_wp_new_user_email_content', 10, 2 );
+
+if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
+	/**
+	 * Filters the body of the user request confirmation email.
+	 *
+	 * The email is sent to an administrator when an user request is confirmed.
+	 * The following strings have a special meaning and will get replaced dynamically:
+	 *
+	 * ###SITENAME###    The name of the site.
+	 * ###USER_EMAIL###  The user email for the request.
+	 * ###DESCRIPTION### Description of the action being performed so the user knows what the email is for.
+	 * ###MANAGE_URL###  The URL to manage requests.
+	 * ###SITEURL###     The URL to the site.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $email_text Text in the email.
+	 * @param array  $email_data {
+	 *     Data relating to the account action email.
+	 *
+	 *     @type WP_User_Request $request     User request object.
+	 *     @type string          $user_email  The email address confirming a request
+	 *     @type string          $description Description of the action being performed so the user knows what the email is for.
+	 *     @type string          $manage_url  The link to click manage privacy requests of this type.
+	 *     @type string          $sitename    The site name sending the mail.
+	 *     @type string          $siteurl     The site URL sending the mail.
+	 *     @type string          $admin_email The administrator email receiving the mail.
+	 * }
+	 */
+	function bp_email_wp_user_confirmed_action_email_content( $email_text, $email_data ) {
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		/**
+		 * @todo here add all related html template for the message before and after.
+		 */
+
+		return $email_text;
+	}
+}
+add_filter( 'user_confirmed_action_email_content', 'bp_email_wp_user_confirmed_action_email_content', 10, 2 );
