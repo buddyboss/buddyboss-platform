@@ -487,7 +487,7 @@ if ( !function_exists('wp_password_change_notification') ) :
 	}
 endif;
 
-if ( !function_exists('wp_new_user_notification') ) :
+if ( !function_exists('wp_new_user_notification') ) {
 	/**
 	 * Email login credentials to a newly-registered user.
 	 *
@@ -643,7 +643,7 @@ if ( !function_exists('wp_new_user_notification') ) :
 			restore_previous_locale();
 		}
 	}
-endif;
+}
 
 if ( ! function_exists( 'bp_email_retrieve_password_message' ) ) {
 	/**
@@ -684,9 +684,9 @@ if ( ! function_exists( 'bp_email_retrieve_password_message' ) ) {
 
 		return $message;
 	}
-}
 
-add_filter( 'retrieve_password_message', 'bp_email_retrieve_password_message', 10, 4 );
+	add_filter( 'retrieve_password_message', 'bp_email_retrieve_password_message', 10, 4 );
+}
 
 
 if ( ! function_exists( 'bp_email_wpmu_signup_blog_notification_email' ) ) {
@@ -714,8 +714,9 @@ if ( ! function_exists( 'bp_email_wpmu_signup_blog_notification_email' ) ) {
 
 		return $content;
 	}
+
+	add_filter( 'wpmu_signup_blog_notification_email', 'bp_email_wpmu_signup_blog_notification_email', 10, 8 );
 }
-add_filter( 'wpmu_signup_blog_notification_email', 'bp_email_wpmu_signup_blog_notification_email', 10, 8 );
 
 if ( ! function_exists( 'bp_email_wpmu_signup_user_notification_email' ) ) {
 	/**
@@ -739,8 +740,9 @@ if ( ! function_exists( 'bp_email_wpmu_signup_user_notification_email' ) ) {
 
 		return $content;
 	}
+
+	add_filter( 'wpmu_signup_user_notification_email', 'bp_email_wpmu_signup_user_notification_email', 10, 5 );
 }
-add_filter( 'wpmu_signup_user_notification_email', 'bp_email_wpmu_signup_user_notification_email', 10, 5 );
 
 if ( ! function_exists( 'bp_email_newblog_notify_siteadmin' ) ) {
 	/**
@@ -763,8 +765,9 @@ if ( ! function_exists( 'bp_email_newblog_notify_siteadmin' ) ) {
 
 		return $msg;
 	}
+
+	add_filter( 'newblog_notify_siteadmin', 'bp_email_newblog_notify_siteadmin', 10 );
 }
-add_filter( 'newblog_notify_siteadmin', 'bp_email_newblog_notify_siteadmin', 10 );
 
 if ( ! function_exists( 'bp_email_newuser_notify_siteadmin' ) ) {
 	/**
@@ -784,8 +787,9 @@ if ( ! function_exists( 'bp_email_newuser_notify_siteadmin' ) ) {
 
 		return $msg;
 	}
+
+	add_filter( 'newuser_notify_siteadmin', 'bp_email_newuser_notify_siteadmin', 10, 2 );
 }
-add_filter( 'newuser_notify_siteadmin', 'bp_email_newuser_notify_siteadmin', 10, 2 );
 
 if ( ! function_exists( 'bp_email_update_welcome_email' ) ) {
 	/**
@@ -810,8 +814,9 @@ if ( ! function_exists( 'bp_email_update_welcome_email' ) ) {
 
 		return $welcome_email;
 	}
+
+	add_filter( 'update_welcome_email', 'bp_email_update_welcome_email', 10, 6 );
 }
-add_filter( 'update_welcome_email', 'bp_email_update_welcome_email', 10, 6 );
 
 if ( ! function_exists( 'bp_email_update_welcome_user_email' ) ) {
 	/**
@@ -834,8 +839,9 @@ if ( ! function_exists( 'bp_email_update_welcome_user_email' ) ) {
 
 		return $welcome_email;
 	}
+
+	add_filter( 'update_welcome_user_email', 'bp_email_update_welcome_user_email', 10, 4 );
 }
-add_filter( 'update_welcome_user_email', 'bp_email_update_welcome_user_email', 10, 4 );
 
 if ( ! function_exists( 'bp_email_new_network_admin_email_content' ) ) {
 	/**
@@ -871,8 +877,9 @@ if ( ! function_exists( 'bp_email_new_network_admin_email_content' ) ) {
 
 		return $email_text;
 	}
+
+	add_filter( 'new_network_admin_email_content', 'bp_email_new_network_admin_email_content', 10, 2 );
 }
-add_filter( 'new_network_admin_email_content', 'bp_email_new_network_admin_email_content', 10, 2 );
 
 if ( ! function_exists( 'bp_email_network_admin_email_change_email' ) ) {
 	/**
@@ -905,8 +912,9 @@ if ( ! function_exists( 'bp_email_network_admin_email_change_email' ) ) {
 
 		return $email_change_email;
 	}
+
+	add_filter( 'network_admin_email_change_email', 'bp_email_network_admin_email_change_email', 10, 4 );
 }
-add_filter( 'network_admin_email_change_email', 'bp_email_network_admin_email_change_email', 10, 4 );
 
 if ( ! function_exists( 'bp_email_site_admin_email_change_email' ) ) {
 	/**
@@ -938,8 +946,9 @@ if ( ! function_exists( 'bp_email_site_admin_email_change_email' ) ) {
 
 		return $email_change_email;
 	}
+
+	add_filter( 'site_admin_email_change_email', 'bp_email_site_admin_email_change_email', 10, 3 );
 }
-add_filter( 'site_admin_email_change_email', 'bp_email_site_admin_email_change_email', 10, 3 );
 
 if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
 	/**
@@ -972,8 +981,9 @@ if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
 
 		return $pass_change_email;
 	}
+
+	add_filter( 'password_change_email', 'bp_email_wp_password_change_email', 10, 3 );
 }
-add_filter( 'password_change_email', 'bp_email_wp_password_change_email', 10, 3 );
 
 if ( ! function_exists( 'bp_email_wp_email_change_email' ) ) {
 	/**
@@ -1006,8 +1016,9 @@ if ( ! function_exists( 'bp_email_wp_email_change_email' ) ) {
 
 		return $email_change_email;
 	}
+	
+	add_filter( 'email_change_email', 'bp_email_wp_email_change_email', 10, 3 );
 }
-add_filter( 'email_change_email', 'bp_email_wp_email_change_email', 10, 3 );
 
 if ( ! function_exists( 'bp_email_wp_new_user_email_content' ) ) {
 	/**
@@ -1044,8 +1055,9 @@ if ( ! function_exists( 'bp_email_wp_new_user_email_content' ) ) {
 
 		return $email_text;
 	}
+
+	add_filter( 'new_user_email_content', 'bp_email_wp_new_user_email_content', 10, 2 );
 }
-add_filter( 'new_user_email_content', 'bp_email_wp_new_user_email_content', 10, 2 );
 
 if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
 	/**
@@ -1079,9 +1091,48 @@ if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
-		$email_text = bp_email_core_wp_get_template( $email_text, $email_data['admin_email'] );
+		$email_text = bp_email_core_wp_get_template( $email_text, get_user_by( 'email', $email_data['admin_email'] ) );
 
 		return $email_text;
 	}
+	
+	add_filter( 'user_confirmed_action_email_content', 'bp_email_wp_user_confirmed_action_email_content', 10, 2 );
 }
-add_filter( 'user_confirmed_action_email_content', 'bp_email_wp_user_confirmed_action_email_content', 10, 2 );
+
+
+if ( ! function_exists( 'bp_email_wp_new_admin_email_content' ) ) {
+	/**
+	 * Filters the text of the email sent when a change of site admin email address is attempted.
+	 *
+	 * The following strings have a special meaning and will get replaced dynamically:
+	 * ###USERNAME###  The current user's username.
+	 * ###ADMIN_URL### The link to click on to confirm the email change.
+	 * ###EMAIL###     The proposed new site admin email address.
+	 * ###SITENAME###  The name of the site.
+	 * ###SITEURL###   The URL to the site.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $email_text      Text in the email.
+	 * @param array  $new_admin_email {
+	 *     Data relating to the new site admin email address.
+	 *
+	 *     @type string $hash     The secure hash used in the confirmation link URL.
+	 *     @type string $newemail The proposed new site admin email address.
+	 * }
+	 */
+	function bp_email_wp_new_admin_email_content( $email_text, $new_admin_email ) {
+
+		if ( $admin_email == get_option( 'admin_email' ) || ! is_email( $admin_email ) ) {
+			return $email_text;
+		}
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		$email_text = bp_email_core_wp_get_template( $email_text, get_user_by( 'email', $admin_email ) );
+
+		return $email_text;
+	}
+
+	add_filter( 'new_admin_email_content', 'bp_email_wp_new_admin_email_content', 10, 2 );
+}
