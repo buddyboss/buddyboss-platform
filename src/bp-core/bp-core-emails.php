@@ -1050,9 +1050,9 @@ if ( ! function_exists( 'bp_email_wp_new_user_email_content' ) ) {
 		}
 
 		/* translators: Do not translate USERNAME, ADMIN_URL, EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$email_text = __( '<p>Howdy ###USERNAME###</p>,
+		$email_text = __( '<p>Howdy ###USERNAME###,</p>
 <p>You recently requested to have the email address on your account changed.</p>
-<p>If this is correct, please <a href="###ADMIN_URL###">click here<a> to change it.</p>
+<p>If this is correct, please <a href="###ADMIN_URL###">click here</a> to change it.</p>
 <p>You can safely ignore and delete this email if you do not want to take this action.</p>
 <p>This email has been sent to ###EMAIL###</p>
 <p>Regards,<br />
@@ -1139,9 +1139,9 @@ if ( ! function_exists( 'bp_email_wp_new_admin_email_content' ) ) {
         }
 
 		/* translators: Do not translate USERNAME, ADMIN_URL, EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$email_text = __( '<p>Howdy ###USERNAME###</p>,
+		$email_text = __( '<p>Howdy ###USERNAME###,</p>
 <p>You recently requested to have the administration email address on your site changed.</p>
-<p>If this is correct, please <a href="###ADMIN_URL###">click here<a> to change it.</p>
+<p>If this is correct, please <a href="###ADMIN_URL###">click here</a> to change it.</p>
 <p>You can safely ignore and delete this email if you do not want to take this action.</p>
 <p>This email has been sent to ###EMAIL###</p>
 <p>Regards,<br />
