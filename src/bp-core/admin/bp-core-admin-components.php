@@ -276,6 +276,7 @@ function bp_core_admin_components_settings_handler() {
 		$current_components = $bp->active_components;
 		$submitted = stripslashes_deep( $_POST['bp_components'] );
 		$bp->active_components = bp_core_admin_get_active_components_from_submitted_settings( $submitted );
+		$bp->active_components['xprofile'] = 1;
 		$uninstalled_components = array_diff_key($current_components, $bp->active_components);
 
 		bp_core_install( $bp->active_components );
