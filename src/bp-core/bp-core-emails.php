@@ -522,11 +522,11 @@ if ( !function_exists('wp_new_user_notification') ) {
 			$switched_locale = switch_to_locale( get_locale() );
 
 			/* translators: %s: site title */
-			$message  = sprintf( __( 'New user registration on your site %s:' ), $blogname ) . "\r\n\r\n";
+			$message  = sprintf( __( '<p>New user registration on your site %s:</p>' ), $blogname );
 			/* translators: %s: user login */
-			$message .= sprintf( __( 'Username: %s' ), $user->user_login ) . "\r\n\r\n";
+			$message .= sprintf( __( '<p>Username: <b>%s</b><p>' ), $user->user_login );
 			/* translators: %s: user email address */
-			$message .= sprintf( __( 'Email: %s' ), $user->user_email ) . "\r\n";
+			$message .= sprintf( __( '<p>Email: <b>%s</b></p>' ), $user->user_email );
 
 			$wp_new_user_notification_email_admin = array(
 				'to'      => get_option( 'admin_email' ),
