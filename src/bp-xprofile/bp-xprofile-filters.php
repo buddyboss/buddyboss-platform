@@ -82,6 +82,11 @@ add_filter( 'bp_get_the_profile_field_name', 'xprofile_filter_field_edit_name' )
 // Saving field value
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_nickname_value', 10, 4 );
 
+// Display name adjustment
+add_filter( 'set_current_user', 'bp_xprofile_adjust_current_user_display_name' );
+add_filter( 'get_user_metadata', 'bp_xprofile_adjust_display_name', 10, 3 );
+add_filter( 'bp_core_get_core_userdata', 'bp_xprofile_adjust_display_user_display_name' );
+
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -679,4 +684,23 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $vlaue, $user_
 	}
 
 	return $retval;
+}
+
+function bp_xprofile_adjust_current_user_display_name() {
+	global $current_user;
+
+	$current_user->data->display_name = bp_custom_display_name_format( $current_user->data->display_name, $current_user->ID );
+}
+
+function bp_xprofile_adjust_display_name( $null, $object_id, $meta_key ) {
+	if ( $meta_key != 'display_name' ) {
+		return $null;
+	}
+
+	return bp_custom_display_name_format( $null, $object_id );
+}
+
+function bp_xprofile_adjust_display_user_display_name( $userdata ) {
+	$userdata->display_name = bp_custom_display_name_format( $userdata->display_name, $userdata->ID );
+	return $userdata;
 }

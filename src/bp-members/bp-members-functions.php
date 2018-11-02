@@ -490,6 +490,7 @@ add_filter( 'bp_core_get_user_displayname', 'strip_tags', 1 );
 add_filter( 'bp_core_get_user_displayname', 'trim'          );
 add_filter( 'bp_core_get_user_displayname', 'stripslashes'  );
 add_filter( 'bp_core_get_user_displayname', 'esc_html'      );
+add_filter( 'bp_core_get_user_displayname', 'bp_custom_display_name_format', 15, 2 );
 
 /**
  * Return the user link for the user based on user email address.
@@ -2770,4 +2771,25 @@ function bp_get_current_member_type() {
 	 * @param string $value "Current" member type.
 	 */
 	return apply_filters( 'bp_get_current_member_type', buddypress()->current_member_type );
+}
+
+function bp_custom_display_name_format( $display_name, $user_id ) {
+	$format = bp_get_option( 'bp-display-name-format' );
+
+	switch ( $format ) {
+		case 'first_name':
+			$display_name = get_user_meta( $user_id, 'first_name', true );
+			break;
+		case 'first_last_name':
+			$display_name = implode( ' ', [
+				get_user_meta( $user_id, 'first_name',true ),
+				get_user_meta( $user_id, 'last_name', true )
+			]);
+			break;
+		case 'nickname':
+			$display_name = get_user_meta( $user_id, 'nickname', true );
+			break;
+	}
+
+	return $display_name;
 }

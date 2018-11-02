@@ -23,6 +23,13 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function register_fields() {
 		$this->add_section( 'bp_xprofile', __( 'Profile Settings', 'buddyboss' ) );
 
+		// Display name format.
+		$this->add_field(
+			'bp-display-name-format',
+			__( 'Display Name Format', 'buddyboss' ),
+			[ $this, 'callback_display_name_format']
+		);
+
 		// Avatars.
 		$this->add_field( 'bp-disable-avatar-uploads', __( 'Profile Photo Uploads', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval' );
 
@@ -46,6 +53,32 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			<input id="bp-enable-member-dashboard" name="bp-enable-member-dashboard" type="checkbox" value="1" <?php checked( bp_nouveau_get_appearance_settings( 'user_front_page' ) ); ?> />
 			<label for="bp-enable-member-dashboard"><?php _e( 'Enable Dashboard for member profiles', 'buddyboss' ); ?></label>
 		<?php
+	}
+
+	public function callback_display_name_format() {
+		$options = [
+			'first_name'      => __( 'First Name', 'buddyboss' ),
+			'first_last_name' => __( 'First Name and Last Name', 'buddyboss' ),
+			'nickname'        => __( 'Nickame', 'buddyboss' ),
+		];
+
+		$current_value = bp_get_option( 'bp-display-name-format' );
+
+		printf( '<select name="%1$s" for="%1$s">', 'bp-display-name-format' );
+			foreach ( $options as $key => $value ) {
+				printf(
+					'<option value="%s" %s>%s</option>',
+					$key,
+					$key == $current_value? 'selected' : '',
+					$value
+				);
+			}
+		printf( '</select>' );
+
+		printf(
+			'<p class="description">%s</p>',
+			__( '', 'buddyboss' )
+		);
 	}
 }
 
