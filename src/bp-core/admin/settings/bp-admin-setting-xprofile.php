@@ -8,10 +8,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$this->tab_order = 10;
 	}
 
-	public function is_active() {
-		return bp_is_active( 'xprofile' );
-	}
-
 	public function setting_save() {
 		parent::setting_save();
 
