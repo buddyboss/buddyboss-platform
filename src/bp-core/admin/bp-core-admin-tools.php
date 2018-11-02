@@ -129,6 +129,12 @@ function bp_admin_repair_list() {
 		'resync_wordpress_xprofile_fields',
 	);
 
+	$repair_list[38] = array(
+		'bp-wordpress-update-display-name',
+		__( 'Update display name to selected format in profile setting.', 'buddyboss' ),
+		'xprofile_update_display_names',
+	);
+
 	// Connections:
 	// - user friend count.
 	if ( bp_is_active( 'friends' ) ) {
@@ -386,6 +392,24 @@ function resync_wordpress_xprofile_fields() {
 	}
 
 	$statement = __( 'Re-sync user Wordpress data to Xprofiles; %s', 'buddyboss' );
+	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+}
+
+function xprofile_update_display_names() {
+	$users = get_users( [
+		'fields' => [ 'ID', 'display_name' ]
+	]);
+
+	foreach ( $users as $user ) {
+		$display_name = bp_custom_display_name_format( $user->display_name, $user->ID );
+
+		wp_update_user( $args = [
+			'ID' => $user->ID,
+			'display_name' => $display_name
+		] );
+	}
+
+	$statement = __( 'Update wp user display names; %s', 'buddyboss' );
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 

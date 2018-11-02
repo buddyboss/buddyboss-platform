@@ -844,7 +844,6 @@ function xprofile_sync_wp_profile( $user_id = 0, $field_id = null ) {
 	if ( ! $field_id || $field_id == $nickname_id ) {
 		$nickname = xprofile_get_field_data( bp_xprofile_nickname_field_id(), $user_id );
 		bp_update_user_meta( $user_id, 'nickname', $nickname );
-		wp_update_user( array( 'ID' => $user_id, 'display_name' => $nickname ) );
 	}
 }
 add_action( 'bp_core_signup_user',      'xprofile_sync_wp_profile' );
@@ -871,6 +870,13 @@ function xprofile_sync_bp_profile( &$errors, $update, &$user ) {
 	xprofile_set_field_data( bp_xprofile_nickname_field_id(),  $user->ID, $user->nickname );
 }
 add_action( 'user_profile_update_errors', 'xprofile_sync_bp_profile', 20, 3 );
+
+function bp_xprofile_update_display_name( $user_id ) {
+	wp_update_user( array(
+		'ID' => $user_id,
+		'display_name' => bp_custom_display_name_format( '', $user_id )
+	) );
+}
 
 function user_profile_update_validate_nickname( &$errors, $update, &$user ) {
 	// Bail if not updating or already has error
