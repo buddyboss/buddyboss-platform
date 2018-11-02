@@ -117,6 +117,18 @@ function bp_admin_repair_list() {
 		'repare_default_profiles_fields',
 	);
 
+	$repair_list[36] = array(
+		'bp-xprofile-wordpress-resync',
+		__( 'Re-sync Xprofile fields with Wordpress profile fields.', 'buddyboss' ),
+		'resync_xprofile_wordpress_fields',
+	);
+
+	$repair_list[37] = array(
+		'bp-wordpress-xprofile-resync',
+		__( 'Re-sync Wordpress profile fields with Xprofile fields.', 'buddyboss' ),
+		'resync_wordpress_xprofile_fields',
+	);
+
 	// Connections:
 	// - user friend count.
 	if ( bp_is_active( 'friends' ) ) {
@@ -336,6 +348,44 @@ function repare_default_profiles_fields() {
 	bp_core_install_default_profiles_fields();
 
 	$statement = __( 'Repair default xprofile group and fields&hellip; %s', 'buddyboss' );
+	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+}
+
+function resync_xprofile_wordpress_fields() {
+	$users = get_users( [
+		'fields' => [ 'ID' ]
+	]);
+
+	array_map( 'xprofile_sync_wp_profile', wp_list_pluck( $users, 'ID' ) );
+
+	$statement = __( 'Re-sync user Xprofiles data to Wordpress; %s', 'buddyboss' );
+	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+}
+
+function resync_wordpress_xprofile_fields() {
+	$users = get_users( [
+		'fields' => [ 'ID', 'user_nicename' ]
+	]);
+
+	foreach ( $users as $user ) {
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user->ID, get_user_meta( $user->ID, 'first_name', true ) );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(),  $user->ID, get_user_meta( $user->ID, 'last_name', true ) );
+
+		// make sure nickname is valid
+		$nickname = get_user_meta( $user->ID, 'nickname', true );
+		$nickname = sanitize_title( $nickname );
+		$invalid = bp_xprofile_validate_nickname_value( '', bp_xprofile_nickname_field_id(), $nickname, $user->ID );
+
+		// or use the user_nicename
+		if ( ! $nickname || $invalid ) {
+			$nickname = $user->user_nicename;
+		}
+
+		bp_update_user_meta( $user->ID, 'nickname', $nickname );
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(),  $user->ID, $nickname );
+	}
+
+	$statement = __( 'Re-sync user Wordpress data to Xprofiles; %s', 'buddyboss' );
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
