@@ -240,10 +240,12 @@ $settings = bp_email_get_appearance_settings();
 								 */
 								do_action( 'bp_before_email_recipient' );
 
-								echo $email_user->display_name . ' <img src="' . bp_core_fetch_avatar( array(
-										'item_id' => $email_user->ID,
-										'html'    => false
-									) ) . '" " width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
+								if ( ! empty( $email_user->ID ) ) {
+									echo $email_user->display_name . ' <img src="' . bp_core_fetch_avatar( array(
+											'item_id' => $email_user->ID,
+											'html'    => false
+										) ) . '" " width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
+								}
 
 								/**
 								 * Fires after the display of the email recipient.

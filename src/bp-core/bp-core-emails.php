@@ -27,11 +27,6 @@ function bp_email_set_content_type(){
 }
 
 function bp_email_core_wp_get_template( $content = '', $user = false ) {
-
-	if ( ! $user ) {
-		return $content;
-	}
-
 	ob_start();
 
 	// Remove 'bp_replace_the_content' filter to prevent infinite loops.
