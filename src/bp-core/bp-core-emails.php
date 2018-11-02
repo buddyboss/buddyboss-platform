@@ -1049,6 +1049,16 @@ if ( ! function_exists( 'bp_email_wp_new_user_email_content' ) ) {
 			return $email_text;
 		}
 
+		/* translators: Do not translate USERNAME, ADMIN_URL, EMAIL, SITENAME, SITEURL: those are placeholders. */
+		$email_text = __( '<p>Howdy ###USERNAME###</p>,
+<p>You recently requested to have the email address on your account changed.</p>
+<p>If this is correct, please <a href="###ADMIN_URL###">click here<a> to change it.</p>
+<p>You can safely ignore and delete this email if you do not want to take this action.</p>
+<p>This email has been sent to ###EMAIL###</p>
+<p>Regards,<br />
+All at ###SITENAME###<br />
+###SITEURL###</p>' );
+
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
 		$email_text = bp_email_core_wp_get_template( $email_text, $current_user );
@@ -1095,7 +1105,7 @@ if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
 
 		return $email_text;
 	}
-	
+
 	add_filter( 'user_confirmed_action_email_content', 'bp_email_wp_user_confirmed_action_email_content', 10, 2 );
 }
 
@@ -1127,6 +1137,16 @@ if ( ! function_exists( 'bp_email_wp_new_admin_email_content' ) ) {
         if ( ! is_email( $admin_email ) ) {
             return $email_text;
         }
+
+		/* translators: Do not translate USERNAME, ADMIN_URL, EMAIL, SITENAME, SITEURL: those are placeholders. */
+		$email_text = __( '<p>Howdy ###USERNAME###</p>,
+<p>You recently requested to have the administration email address on your site changed.</p>
+<p>If this is correct, please <a href="###ADMIN_URL###">click here<a> to change it.</p>
+<p>You can safely ignore and delete this email if you do not want to take this action.</p>
+<p>This email has been sent to ###EMAIL###</p>
+<p>Regards,<br />
+All at ###SITENAME###<br />
+###SITEURL###</p>' );
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
