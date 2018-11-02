@@ -776,10 +776,6 @@ function bp_nouveau_theme_cover_image( $params = array() ) {
 				text-align:center;
 			}
 
-			#buddypress #item-header-cover-image #item-header-avatar a {
-				display:inline-block;
-			}
-
 			#buddypress div#item-header #item-header-cover-image #item-header-content,
 			body.single-item.groups #buddypress div#item-header #item-header-cover-image #item-header-content,
 			body.single-item.groups #buddypress div#item-header #item-header-cover-image #item-actions {
