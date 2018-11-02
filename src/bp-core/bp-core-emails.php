@@ -660,14 +660,34 @@ if ( ! function_exists( 'bp_email_retrieve_password_message' ) ) {
 	 */
 	function bp_email_retrieve_password_message( $message, $key, $user_login, $user_data ) {
 
-		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+		if ( is_multisite() ) {
+			$site_name = get_network()->site_name;
+		} else {
+			/*
+			 * The blogname option is escaped with esc_html on the way into the database
+			 * in sanitize_option we want to reverse this for the plain text arena of emails.
+			 */
+			$site_name = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+		}
+
+		$message = __( '<p>Someone has requested a password reset for the following account:</p>', 'buddyboss' );
+		/* translators: %s: site name */
+		$message .= sprintf( __( '<p>Site Name: <b>%s</b></p>', 'buddyboss' ), $site_name );
+		/* translators: %s: user login */
+		$message .= sprintf( __( '<p>Username: <b>%s</b></p>', 'buddyboss' ), $user_login );
+		$message .= __( '<p>If this was a mistake, just ignore this email and nothing will happen.</p>', 'buddyboss'  );
+		$message .= sprintf( __( '<p>To reset your password <a href="%s">Click here</a></p>', 'buddyboss' ), network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user_login ), 'login' ) );
 
 		$message = bp_email_core_wp_get_template( $message, $user_data );
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
 		return $message;
 	}
 }
+
 add_filter( 'retrieve_password_message', 'bp_email_retrieve_password_message', 10, 4 );
+
 
 if ( ! function_exists( 'bp_email_wpmu_signup_blog_notification_email' ) ) {
 	/**
