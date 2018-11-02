@@ -1099,7 +1099,6 @@ if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
 	add_filter( 'user_confirmed_action_email_content', 'bp_email_wp_user_confirmed_action_email_content', 10, 2 );
 }
 
-
 if ( ! function_exists( 'bp_email_wp_new_admin_email_content' ) ) {
 	/**
 	 * Filters the text of the email sent when a change of site admin email address is attempted.
@@ -1123,9 +1122,11 @@ if ( ! function_exists( 'bp_email_wp_new_admin_email_content' ) ) {
 	 */
 	function bp_email_wp_new_admin_email_content( $email_text, $new_admin_email ) {
 
-		if ( $admin_email == get_option( 'admin_email' ) || ! is_email( $admin_email ) ) {
-			return $email_text;
-		}
+		$admin_email = get_option( 'admin_email' );
+
+        if ( ! is_email( $admin_email ) ) {
+            return $email_text;
+        }
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
