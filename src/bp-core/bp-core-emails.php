@@ -26,6 +26,30 @@ function bp_email_set_content_type(){
 	return "text/html";
 }
 
+function bp_email_core_wp_get_template( $content = '', $user = false ) {
+
+	if ( ! $user ) {
+		return $content;
+	}
+
+	ob_start();
+
+	// Remove 'bp_replace_the_content' filter to prevent infinite loops.
+	remove_filter( 'the_content', 'bp_replace_the_content' );
+
+	set_query_var( 'email_content', $content );
+	set_query_var( 'email_user', $user );
+	bp_get_template_part( 'assets/emails/wp/email-template' );
+
+	// Remove 'bp_replace_the_content' filter to prevent infinite loops.
+	add_filter( 'the_content', 'bp_replace_the_content' );
+
+	// Get the output buffer contents.
+	$output = ob_get_clean();
+
+	return $output;
+}
+
 if ( ! function_exists('wp_notify_postauthor') ) :
 	/**
 	 * Notify an author (and/or others) of a comment/trackback/pingback on a post.
@@ -219,6 +243,7 @@ if ( ! function_exists('wp_notify_postauthor') ) :
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
 
 		foreach ( $emails as $email ) {
+			$notify_message = bp_email_core_wp_get_template( $notify_message, get_user_by( 'email', $email ) );
 			@wp_mail( $email, wp_specialchars_decode( $subject ), $notify_message, $message_headers );
 		}
 
@@ -308,37 +333,37 @@ if ( !function_exists('wp_notify_moderator') ) :
 				break;
 			default: // Comments
 				/* translators: 1: Post title */
-				$notify_message  = sprintf( __('A new comment on the post "%s" is waiting for your approval'), $post->post_title ) . "\r\n";
-				$notify_message .= get_permalink($comment->comment_post_ID) . "\r\n\r\n";
+				$notify_message  = sprintf( __('A new comment on the post "%s" is waiting for your approval'), $post->post_title ) . "<br/>";
+				$notify_message .= get_permalink($comment->comment_post_ID) . "<br/>";
 				/* translators: 1: Comment author name, 2: comment author's IP address, 3: comment author's hostname */
-				$notify_message .= sprintf( __( 'Author: %1$s (IP address: %2$s, %3$s)' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "\r\n";
+				$notify_message .= sprintf( __( 'Author: %1$s (IP address: %2$s, %3$s)' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . "<br/>";
 				/* translators: 1: Comment author URL */
-				$notify_message .= sprintf( __( 'Email: %s' ), $comment->comment_author_email ) . "\r\n";
+				$notify_message .= sprintf( __( 'Email: %s' ), $comment->comment_author_email ) . "<br/>";
 				/* translators: 1: Trackback/pingback/comment author URL */
-				$notify_message .= sprintf( __( 'URL: %s' ), $comment->comment_author_url ) . "\r\n";
+				$notify_message .= sprintf( __( 'URL: %s' ), $comment->comment_author_url ) . "<br/>";
 				/* translators: 1: Comment text */
-				$notify_message .= sprintf( __( 'Comment: %s' ), "\r\n" . $comment_content ) . "\r\n\r\n";
+				$notify_message .= sprintf( __( 'Comment: %s' ), "\r\n" . $comment_content ) . "<br/>";
 				break;
 		}
 
 		/* translators: Comment moderation. 1: Comment action URL */
-		$notify_message .= sprintf( __( 'Approve it: %s' ), admin_url( "comment.php?action=approve&c={$comment_id}#wpbody-content" ) ) . "\r\n";
+		$notify_message .= sprintf( __( 'Approve it: %s' ), admin_url( "comment.php?action=approve&c={$comment_id}#wpbody-content" ) ) . "<br/>";
 
 		if ( EMPTY_TRASH_DAYS ) {
 			/* translators: Comment moderation. 1: Comment action URL */
-			$notify_message .= sprintf( __( 'Trash it: %s' ), admin_url( "comment.php?action=trash&c={$comment_id}#wpbody-content" ) ) . "\r\n";
+			$notify_message .= sprintf( __( 'Trash it: %s' ), admin_url( "comment.php?action=trash&c={$comment_id}#wpbody-content" ) ) . "<br/>";
 		} else {
 			/* translators: Comment moderation. 1: Comment action URL */
-			$notify_message .= sprintf( __( 'Delete it: %s' ), admin_url( "comment.php?action=delete&c={$comment_id}#wpbody-content" ) ) . "\r\n";
+			$notify_message .= sprintf( __( 'Delete it: %s' ), admin_url( "comment.php?action=delete&c={$comment_id}#wpbody-content" ) ) . "<br/>";
 		}
 
 		/* translators: Comment moderation. 1: Comment action URL */
-		$notify_message .= sprintf( __( 'Spam it: %s' ), admin_url( "comment.php?action=spam&c={$comment_id}#wpbody-content" ) ) . "\r\n";
+		$notify_message .= sprintf( __( 'Spam it: %s' ), admin_url( "comment.php?action=spam&c={$comment_id}#wpbody-content" ) ) . "<br/>";
 
 		/* translators: Comment moderation. 1: Number of comments awaiting approval */
 		$notify_message .= sprintf( _n('Currently %s comment is waiting for approval. Please visit the moderation panel:',
-				'Currently %s comments are waiting for approval. Please visit the moderation panel:', $comments_waiting), number_format_i18n($comments_waiting) ) . "\r\n";
-		$notify_message .= admin_url( "edit-comments.php?comment_status=moderated#wpbody-content" ) . "\r\n";
+				'Currently %s comments are waiting for approval. Please visit the moderation panel:', $comments_waiting), number_format_i18n($comments_waiting) ) . "<br/>";
+		$notify_message .= admin_url( "edit-comments.php?comment_status=moderated#wpbody-content" ) . "<br/>";
 
 		/* translators: Comment moderation notification email subject. 1: Site name, 2: Post title */
 		$subject = sprintf( __('[%1$s] Please moderate: "%2$s"'), $blogname, $post->post_title );
@@ -387,6 +412,7 @@ if ( !function_exists('wp_notify_moderator') ) :
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
 
 		foreach ( $emails as $email ) {
+			$notify_message = bp_email_core_wp_get_template( $notify_message, get_user_by( 'email', $email ) );
 			@wp_mail( $email, wp_specialchars_decode( $subject ), $notify_message, $message_headers );
 		}
 
@@ -446,6 +472,8 @@ if ( !function_exists('wp_password_change_notification') ) :
 			$wp_password_change_notification_email = apply_filters( 'wp_password_change_notification_email', $wp_password_change_notification_email, $user, $blogname );
 
 			add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
+
+			$wp_password_change_notification_email['message'] = bp_email_core_wp_get_template( $wp_password_change_notification_email['message'], $user );
 
 			wp_mail(
 				$wp_password_change_notification_email['to'],
@@ -528,6 +556,8 @@ if ( !function_exists('wp_new_user_notification') ) :
 
 			add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
 
+			$wp_new_user_notification_email_admin['message'] = bp_email_core_wp_get_template( $wp_new_user_notification_email_admin['message'], $user );
+
 			@wp_mail(
 				$wp_new_user_notification_email_admin['to'],
 				wp_specialchars_decode( sprintf( $wp_new_user_notification_email_admin['subject'], $blogname ) ),
@@ -598,6 +628,8 @@ if ( !function_exists('wp_new_user_notification') ) :
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
 
+		$wp_new_user_notification_email['message'] = bp_email_core_wp_get_template( $wp_new_user_notification_email['message'], $user );
+
 		wp_mail(
 			$wp_new_user_notification_email['to'],
 			wp_specialchars_decode( sprintf( $wp_new_user_notification_email['subject'], $blogname ) ),
@@ -630,9 +662,7 @@ if ( ! function_exists( 'bp_email_retrieve_password_message' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
-		/**
-		 * @todo here add all related html template for the message before and after.
-		 */
+		$message = bp_email_core_wp_get_template( $message, $user_data );
 
 		return $message;
 	}
@@ -660,9 +690,7 @@ if ( ! function_exists( 'bp_email_wpmu_signup_blog_notification_email' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
-		/**
-		 * @todo here add all related html template for the message before and after.
-		 */
+		$content = bp_email_core_wp_get_template( $content, get_user_by( 'email', $user_email ) );
 
 		return $content;
 	}
@@ -687,9 +715,7 @@ if ( ! function_exists( 'bp_email_wpmu_signup_user_notification_email' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
-		/**
-		 * @todo here add all related html template for the message before and after.
-		 */
+		$content = bp_email_core_wp_get_template( $content, get_user_by( 'email', $user_email ) );
 
 		return $content;
 	}
@@ -707,11 +733,13 @@ if ( ! function_exists( 'bp_email_newblog_notify_siteadmin' ) ) {
 	 */
 	function bp_email_newblog_notify_siteadmin( $msg ) {
 
+		$email = get_site_option( 'admin_email' );
+		if ( is_email($email) == false )
+			return $msg;
+
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
-		/**
-		 * @todo here add all related html template for the message before and after.
-		 */
+		$msg = bp_email_core_wp_get_template( $msg, get_user_by( 'email', $email ) );
 
 		return $msg;
 	}
@@ -732,9 +760,7 @@ if ( ! function_exists( 'bp_email_newuser_notify_siteadmin' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
-		/**
-		 * @todo here add all related html template for the message before and after.
-		 */
+		$msg = bp_email_core_wp_get_template( $msg, $user );
 
 		return $msg;
 	}
@@ -760,9 +786,7 @@ if ( ! function_exists( 'bp_email_update_welcome_email' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
-		/**
-		 * @todo here add all related html template for the message before and after.
-		 */
+		$welcome_email = bp_email_core_wp_get_template( $welcome_email, get_userdata( $user_id ) );
 
 		return $welcome_email;
 	}
@@ -786,9 +810,7 @@ if ( ! function_exists( 'bp_email_update_welcome_user_email' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
-		/**
-		 * @todo here add all related html template for the message before and after.
-		 */
+		$welcome_email = bp_email_core_wp_get_template( $welcome_email, get_userdata( $user_id ) );
 
 		return $welcome_email;
 	}
@@ -818,11 +840,14 @@ if ( ! function_exists( 'bp_email_new_network_admin_email_content' ) ) {
 	 */
 	function bp_email_new_network_admin_email_content( $email_text, $new_admin_email ) {
 
+		$current_user = wp_get_current_user();
+		if ( empty( $current_user->ID ) ) {
+			return $email_text;
+		}
+
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
-		/**
-		 * @todo here add all related html template for the message before and after.
-		 */
+		$email_text = bp_email_core_wp_get_template( $email_text, $current_user );
 
 		return $email_text;
 	}
@@ -856,9 +881,7 @@ if ( ! function_exists( 'bp_email_network_admin_email_change_email' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
-		/**
-		 * @todo here add all related html template for the message before and after.
-		 */
+		$email_change_email = bp_email_core_wp_get_template( $email_change_email, get_user_by( 'email', $new_email ) );
 
 		return $email_change_email;
 	}
@@ -891,9 +914,7 @@ if ( ! function_exists( 'bp_email_site_admin_email_change_email' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
-		/**
-		 * @todo here add all related html template for the message before and after.
-		 */
+		$email_change_email = bp_email_core_wp_get_template( $email_change_email, get_user_by( 'email', $new_email ) );
 
 		return $email_change_email;
 	}
@@ -927,9 +948,7 @@ if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
-		/**
-		 * @todo here add all related html template for the message before and after.
-		 */
+		$pass_change_email = bp_email_core_wp_get_template( $pass_change_email, $user );
 
 		return $pass_change_email;
 	}
@@ -963,9 +982,7 @@ if ( ! function_exists( 'bp_email_wp_email_change_email' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
-		/**
-		 * @todo here add all related html template for the message before and after.
-		 */
+		$email_change_email = bp_email_core_wp_get_template( $email_change_email, $user );
 
 		return $email_change_email;
 	}
@@ -995,11 +1012,15 @@ if ( ! function_exists( 'bp_email_wp_new_user_email_content' ) ) {
 	 */
 	function bp_email_wp_new_user_email_content( $email_text, $new_user_email ) {
 
+		$current_user = wp_get_current_user();
+
+		if ( empty( $current_user->ID ) ) {
+			return $email_text;
+		}
+
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
-		/**
-		 * @todo here add all related html template for the message before and after.
-		 */
+		$email_text = bp_email_core_wp_get_template( $email_text, $current_user );
 
 		return $email_text;
 	}
@@ -1038,9 +1059,7 @@ if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
-		/**
-		 * @todo here add all related html template for the message before and after.
-		 */
+		$email_text = bp_email_core_wp_get_template( $email_text, $email_data['admin_email'] );
 
 		return $email_text;
 	}
