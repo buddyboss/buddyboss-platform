@@ -58,7 +58,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function callback_display_name_format() {
 		$options = [
 			'first_name'      => __( 'First Name', 'buddyboss' ),
-			'first_last_name' => __( 'First Name and Last Name', 'buddyboss' ),
+			'first_last_name' => __( 'First Name &amp; Last Name', 'buddyboss' ),
 			'nickname'        => __( 'Nickame', 'buddyboss' ),
 		];
 
