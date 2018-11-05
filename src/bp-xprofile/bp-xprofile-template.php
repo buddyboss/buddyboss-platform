@@ -483,16 +483,6 @@ function bp_the_profile_field() {
 	return $profile_template->the_profile_field();
 }
 
-function bp_profile_field_sets () {
-    global $profile_template;
-    return $profile_template->profile_field_sets();
-}
-
-function bp_the_profile_field_set() {
-	global $profile_template;
-	return $profile_template->next_profile_field_set();
-}
-
 /**
  * Output the XProfile field ID.
  *
