@@ -2980,7 +2980,7 @@ function bbp_forum_pagination_count() {
 
 		// Several topics in a forum with several pages
 		} else {
-			$retstr = sprintf( _n( 'Viewing discussion %2$s (of %4$s total)', 'Viewing %1$s discussions - %2$s through %3$s (of %4$s total)', $total_int, 'buddyboss' ), $bbp->topic_query->post_count, $from_num, $to_num, $total );
+			$retstr = sprintf( _n( 'Viewing %2$s of %4$s discussions', 'Viewing %2$s - %3$s of %4$s discussions', $total_int, 'buddyboss' ), $bbp->topic_query->post_count, $from_num, $to_num, $total );
 		}
 
 		// Filter and return

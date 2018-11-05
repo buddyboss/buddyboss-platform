@@ -2353,7 +2353,7 @@ function bbp_topic_pagination_count() {
 
 			// Several replies in a topic with several pages
 			} else {
-				$retstr = sprintf( _n( 'Viewing %2$s replies (of %4$s total)', 'Viewing %1$s replies - %2$s through %3$s (of %4$s total)', $bbp->reply_query->post_count, 'buddyboss' ), $bbp->reply_query->post_count, $from_num, $to_num, $total );
+				$retstr = sprintf( _n( 'Viewing %2$s of %4$s replies', 'Viewing %2$s - %3$s of %4$s replies', $bbp->reply_query->post_count, 'buddyboss' ), $bbp->reply_query->post_count, $from_num, $to_num, $total );
 			}
 
 		// We are including the lead topic
@@ -2365,7 +2365,7 @@ function bbp_topic_pagination_count() {
 
 			// Several posts in a topic with several pages
 			} else {
-				$retstr = sprintf( _n( 'Viewing %2$s post (of %4$s total)', 'Viewing %1$s posts - %2$s through %3$s (of %4$s total)', $bbp->reply_query->post_count, 'buddyboss' ), $bbp->reply_query->post_count, $from_num, $to_num, $total );
+				$retstr = sprintf( _n( 'Viewing %2$s of %4$s posts', 'Viewing %2$s - %3$s of %4$s posts', $bbp->reply_query->post_count, 'buddyboss' ), $bbp->reply_query->post_count, $from_num, $to_num, $total );
 			}
 		}
 
