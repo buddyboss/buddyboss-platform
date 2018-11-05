@@ -60,6 +60,7 @@
 		<a href="https://bbpress.org">bbPress</a>,
 		<a href="https://wordpress.org/plugins/bp-profile-search/">BP Profile Search</a>,
 		<a href="https://buddypress.org">BuddyPress</a>,
+		<a href="https://wordpress.org/plugins/buddypress-followers/">BuddyPress Follow</a>,
 		<a href="https://github.com/ichord/Caret.js">Caret.js</a>,
 		<a href="https://tedgoas.github.io/Cerberus/">Cerberus</a>,
 		<a href="https://ionicons.com/">Ionicons</a>,
