@@ -98,6 +98,22 @@ class BP_XProfile_Data_Template {
 	 */
 	public $user_id;
 
+    /**
+	 * The current fie.ld set
+	 *
+	 * @since BuddyBoss 1.5.0
+	 * @var int
+	 */
+	public $current_field_set = -1;
+
+	/**
+	 * The field count.
+	 *
+	 * @since BuddyPress 1.5.0
+	 * @var int
+	 */
+	public $field_set_count;
+    
 	/**
 	 * Get activity items, as specified by parameters.
 	 *
@@ -204,6 +220,12 @@ class BP_XProfile_Data_Template {
 			$this->group->fields = apply_filters( 'xprofile_group_fields', $this->group->fields, $this->group->id );
 			$this->field_count   = count( $this->group->fields );
 		}
+        
+        $this->field_set_count = 0;
+        $is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $this->group->id, 'is_repeater_enabled' ) ? true : false;
+        if ( $is_repeater_enabled ) {
+            $this->field_set_count = bp_get_profile_field_set_count ( $this->group->id, $this->user_id );
+        }
 
 		return $this->group;
 	}
@@ -360,5 +382,35 @@ class BP_XProfile_Data_Template {
 		} else {
 			$this->field_has_data = false;
 		}
+	}
+    
+    /** Field Sets ************************************************************/
+    
+    /**
+	 * Kick off the profile field sets loop.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @return bool
+	 */
+	public function profile_field_sets () {
+		if ( $this->current_field_set + 1 < $this->field_set_count ) {
+			return true;
+		} elseif ( $this->current_field_set + 1 == $this->field_set_count ) {
+			$this->current_field_set = -1;
+            $this->field_set_count = 0;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Set up the profile fields.
+	 *
+	 * @since BuddyPress 1.0.0
+	 */
+	public function next_profile_field_set () {
+        echo "<br>current_field_set is $this->current_field_set and field_set_count is $this->field_set_count<br>";
+		$this->current_field_set++;
 	}
 }
