@@ -37,6 +37,9 @@ window.bp = window.bp || {};
 
 			// Listen to events ("Add hooks!")
 			this.addListeners();
+            
+            // Toggle Grid/List View
+			this.switchGridList();
 		},
 
 		/**
@@ -460,6 +463,26 @@ window.bp = window.bp || {};
 
 			// Pagination
 			$( '#buddypress [data-bp-list]' ).on( 'click', '[data-bp-pagination] a', this, this.paginateAction );
+		},
+        
+        /**
+		 * [switchGridList description]
+		 * @return {[type]} [description]
+		 */
+		switchGridList: function() {
+			$('.layout-list-view').on('click', function(e) {
+                e.preventDefault();
+                $( '.layout-grid-view' ).removeClass('active');
+                $( this ).addClass('active');
+                $('#members-list').removeClass('grid');
+            });
+
+            $('.layout-grid-view').on('click', function(e) {
+                e.preventDefault();
+                $('.layout-list-view').removeClass('active');
+                $( this ).addClass('active');
+                $('#members-list').addClass('grid');
+            });
 		},
 
 		/** Event Callbacks ***********************************************************/
