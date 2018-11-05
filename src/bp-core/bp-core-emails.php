@@ -681,7 +681,251 @@ if ( ! function_exists( 'bp_email_retrieve_password_message' ) ) {
 	add_filter( 'retrieve_password_message', 'bp_email_retrieve_password_message', 10, 4 );
 }
 
+if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
+	/**
+	 * Filters the contents of the email sent when the user's password is changed.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param array $pass_change_email {
+	 *            Used to build wp_mail().
+	 *            @type string $to      The intended recipients. Add emails in a comma separated string.
+	 *            @type string $subject The subject of the email.
+	 *            @type string $message The content of the email.
+	 *                The following strings have a special meaning and will get replaced dynamically:
+	 *                - ###USERNAME###    The current user's username.
+	 *                - ###ADMIN_EMAIL### The admin email in case this was unexpected.
+	 *                - ###EMAIL###       The user's email address.
+	 *                - ###SITENAME###    The name of the site.
+	 *                - ###SITEURL###     The URL to the site.
+	 *            @type string $headers Headers. Add headers in a newline (\r\n) separated string.
+	 *        }
+	 * @param array $user     The original user array.
+	 * @param array $userdata The updated user array.
+	 *
+	 */
+	function bp_email_wp_password_change_email( $pass_change_email, $user, $userdata ) {
 
+		/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
+		$pass_change_text = __( '<p>Hi ###USERNAME###,</p>
+<p>This notice confirms that your password was changed on ###SITENAME###.</p>
+<p>If you did not change your password, please contact the Site Administrator at <br />###ADMIN_EMAIL###</p>
+<p>This email has been sent to ###EMAIL###</p>
+<p>Regards,<br />
+All at ###SITENAME###<br />
+###SITEURL###</p>' );
+
+		$pass_change_email = array(
+			'to'      => $user['user_email'],
+			/* translators: User password change notification email subject. 1: Site name */
+			'subject' => __( '[%s] Notice of Password Change' ),
+			'message' => $pass_change_text,
+			'headers' => '',
+		);
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		$pass_change_email = bp_email_core_wp_get_template( $pass_change_email, $user );
+
+		return $pass_change_email;
+	}
+
+	add_filter( 'password_change_email', 'bp_email_wp_password_change_email', 10, 3 );
+}
+
+if ( ! function_exists( 'bp_email_wp_email_change_email' ) ) {
+	/**
+	 * Filters the contents of the email sent when the user's email is changed.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param array $email_change_email {
+	 *            Used to build wp_mail().
+	 *            @type string $to      The intended recipients.
+	 *            @type string $subject The subject of the email.
+	 *            @type string $message The content of the email.
+	 *                The following strings have a special meaning and will get replaced dynamically:
+	 *                - ###USERNAME###    The current user's username.
+	 *                - ###ADMIN_EMAIL### The admin email in case this was unexpected.
+	 *                - ###NEW_EMAIL###   The new email address.
+	 *                - ###EMAIL###       The old email address.
+	 *                - ###SITENAME###    The name of the site.
+	 *                - ###SITEURL###     The URL to the site.
+	 *            @type string $headers Headers.
+	 *        }
+	 * @param array $user The original user array.
+	 * @param array $userdata The updated user array.
+	 */
+	function bp_email_wp_email_change_email( $email_change_email, $user, $userdata ) {
+
+		/* translators: Do not translate USERNAME, ADMIN_EMAIL, NEW_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
+		$email_change_text = __( '<p>Hi ###USERNAME###,</p>
+<p>This notice confirms that your email address on ###SITENAME### was changed to ###NEW_EMAIL###.</p>
+<p>If you did not change your email, please contact the Site Administrator at <br/>###ADMIN_EMAIL###</p>
+<p>This email has been sent to ###EMAIL###</p>
+<p>Regards,<br />
+All at ###SITENAME###<br />
+###SITEURL###</p>' );
+
+		$email_change_email = array(
+			'to'      => $user['user_email'],
+			/* translators: User email change notification email subject. 1: Site name */
+			'subject' => __( '[%s] Notice of Email Change' ),
+			'message' => $email_change_text,
+			'headers' => '',
+		);
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		$email_change_email = bp_email_core_wp_get_template( $email_change_email, $user );
+
+		return $email_change_email;
+	}
+
+	add_filter( 'email_change_email', 'bp_email_wp_email_change_email', 10, 3 );
+}
+
+if ( ! function_exists( 'bp_email_wp_new_user_email_content' ) ) {
+	/**
+	 * Filters the text of the email sent when a change of user email address is attempted.
+	 *
+	 * The following strings have a special meaning and will get replaced dynamically:
+	 * ###USERNAME###  The current user's username.
+	 * ###ADMIN_URL### The link to click on to confirm the email change.
+	 * ###EMAIL###     The new email.
+	 * ###SITENAME###  The name of the site.
+	 * ###SITEURL###   The URL to the site.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $email_text     Text in the email.
+	 * @param array  $new_user_email {
+	 *     Data relating to the new user email address.
+	 *
+	 *     @type string $hash     The secure hash used in the confirmation link URL.
+	 *     @type string $newemail The proposed new email address.
+	 * }
+	 */
+	function bp_email_wp_new_user_email_content( $email_text, $new_user_email ) {
+
+		$current_user = wp_get_current_user();
+
+		if ( empty( $current_user->ID ) ) {
+			return $email_text;
+		}
+
+		/* translators: Do not translate USERNAME, ADMIN_URL, EMAIL, SITENAME, SITEURL: those are placeholders. */
+		$email_text = __( '<p>Howdy ###USERNAME###,</p>
+<p>You recently requested to have the email address on your account changed.</p>
+<p>If this is correct, please <a href="###ADMIN_URL###">click here</a> to change it.</p>
+<p>You can safely ignore and delete this email if you do not want to take this action.</p>
+<p>This email has been sent to ###EMAIL###</p>
+<p>Regards,<br />
+All at ###SITENAME###<br />
+###SITEURL###</p>' );
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		$email_text = bp_email_core_wp_get_template( $email_text, $current_user );
+
+		return $email_text;
+	}
+
+	add_filter( 'new_user_email_content', 'bp_email_wp_new_user_email_content', 10, 2 );
+}
+
+if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
+	/**
+	 * Filters the body of the user request confirmation email.
+	 *
+	 * The email is sent to an administrator when an user request is confirmed.
+	 * The following strings have a special meaning and will get replaced dynamically:
+	 *
+	 * ###SITENAME###    The name of the site.
+	 * ###USER_EMAIL###  The user email for the request.
+	 * ###DESCRIPTION### Description of the action being performed so the user knows what the email is for.
+	 * ###MANAGE_URL###  The URL to manage requests.
+	 * ###SITEURL###     The URL to the site.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $email_text Text in the email.
+	 * @param array  $email_data {
+	 *     Data relating to the account action email.
+	 *
+	 *     @type WP_User_Request $request     User request object.
+	 *     @type string          $user_email  The email address confirming a request
+	 *     @type string          $description Description of the action being performed so the user knows what the email is for.
+	 *     @type string          $manage_url  The link to click manage privacy requests of this type.
+	 *     @type string          $sitename    The site name sending the mail.
+	 *     @type string          $siteurl     The site URL sending the mail.
+	 *     @type string          $admin_email The administrator email receiving the mail.
+	 * }
+	 */
+	function bp_email_wp_user_confirmed_action_email_content( $email_text, $email_data ) {
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		$email_text = bp_email_core_wp_get_template( $email_text, get_user_by( 'email', $email_data['admin_email'] ) );
+
+		return $email_text;
+	}
+
+	add_filter( 'user_confirmed_action_email_content', 'bp_email_wp_user_confirmed_action_email_content', 10, 2 );
+}
+
+if ( ! function_exists( 'bp_email_wp_new_admin_email_content' ) ) {
+	/**
+	 * Filters the text of the email sent when a change of site admin email address is attempted.
+	 *
+	 * The following strings have a special meaning and will get replaced dynamically:
+	 * ###USERNAME###  The current user's username.
+	 * ###ADMIN_URL### The link to click on to confirm the email change.
+	 * ###EMAIL###     The proposed new site admin email address.
+	 * ###SITENAME###  The name of the site.
+	 * ###SITEURL###   The URL to the site.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $email_text      Text in the email.
+	 * @param array  $new_admin_email {
+	 *     Data relating to the new site admin email address.
+	 *
+	 *     @type string $hash     The secure hash used in the confirmation link URL.
+	 *     @type string $newemail The proposed new site admin email address.
+	 * }
+	 */
+	function bp_email_wp_new_admin_email_content( $email_text, $new_admin_email ) {
+
+		$admin_email = get_option( 'admin_email' );
+
+        if ( ! is_email( $admin_email ) ) {
+            return $email_text;
+        }
+
+		/* translators: Do not translate USERNAME, ADMIN_URL, EMAIL, SITENAME, SITEURL: those are placeholders. */
+		$email_text = __( '<p>Howdy ###USERNAME###,</p>
+<p>You recently requested to have the administration email address on your site changed.</p>
+<p>If this is correct, please <a href="###ADMIN_URL###">click here</a> to change it.</p>
+<p>You can safely ignore and delete this email if you do not want to take this action.</p>
+<p>This email has been sent to ###EMAIL###</p>
+<p>Regards,<br />
+All at ###SITENAME###<br />
+###SITEURL###</p>' );
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		$email_text = bp_email_core_wp_get_template( $email_text, get_user_by( 'email', $admin_email ) );
+
+		return $email_text;
+	}
+
+	add_filter( 'new_admin_email_content', 'bp_email_wp_new_admin_email_content', 10, 2 );
+}
+
+/**
+ * WPMU Emails Strat Here
+ */
 if ( ! function_exists( 'bp_email_wpmu_signup_blog_notification_email' ) ) {
 	/**
 	 * Filters the message content of the new blog notification email.
@@ -1009,246 +1253,4 @@ All at ###SITENAME### <br />
 	}
 
 	add_filter( 'site_admin_email_change_email', 'bp_email_site_admin_email_change_email', 10, 3 );
-}
-
-if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
-	/**
-	 * Filters the contents of the email sent when the user's password is changed.
-	 *
-	 * @since BuddyBoss 3.1.1
-	 *
-	 * @param array $pass_change_email {
-	 *            Used to build wp_mail().
-	 *            @type string $to      The intended recipients. Add emails in a comma separated string.
-	 *            @type string $subject The subject of the email.
-	 *            @type string $message The content of the email.
-	 *                The following strings have a special meaning and will get replaced dynamically:
-	 *                - ###USERNAME###    The current user's username.
-	 *                - ###ADMIN_EMAIL### The admin email in case this was unexpected.
-	 *                - ###EMAIL###       The user's email address.
-	 *                - ###SITENAME###    The name of the site.
-	 *                - ###SITEURL###     The URL to the site.
-	 *            @type string $headers Headers. Add headers in a newline (\r\n) separated string.
-	 *        }
-	 * @param array $user     The original user array.
-	 * @param array $userdata The updated user array.
-	 *
-	 */
-	function bp_email_wp_password_change_email( $pass_change_email, $user, $userdata ) {
-
-		/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$pass_change_text = __( '<p>Hi ###USERNAME###,</p>
-<p>This notice confirms that your password was changed on ###SITENAME###.</p>
-<p>If you did not change your password, please contact the Site Administrator at <br />###ADMIN_EMAIL###</p>
-<p>This email has been sent to ###EMAIL###</p>
-<p>Regards,<br />
-All at ###SITENAME###<br />
-###SITEURL###</p>' );
-
-		$pass_change_email = array(
-			'to'      => $user['user_email'],
-			/* translators: User password change notification email subject. 1: Site name */
-			'subject' => __( '[%s] Notice of Password Change' ),
-			'message' => $pass_change_text,
-			'headers' => '',
-		);
-
-		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
-
-		$pass_change_email = bp_email_core_wp_get_template( $pass_change_email, $user );
-
-		return $pass_change_email;
-	}
-
-	add_filter( 'password_change_email', 'bp_email_wp_password_change_email', 10, 3 );
-}
-
-if ( ! function_exists( 'bp_email_wp_email_change_email' ) ) {
-	/**
-	 * Filters the contents of the email sent when the user's email is changed.
-	 *
-	 * @since BuddyBoss 3.1.1
-	 *
-	 * @param array $email_change_email {
-	 *            Used to build wp_mail().
-	 *            @type string $to      The intended recipients.
-	 *            @type string $subject The subject of the email.
-	 *            @type string $message The content of the email.
-	 *                The following strings have a special meaning and will get replaced dynamically:
-	 *                - ###USERNAME###    The current user's username.
-	 *                - ###ADMIN_EMAIL### The admin email in case this was unexpected.
-	 *                - ###NEW_EMAIL###   The new email address.
-	 *                - ###EMAIL###       The old email address.
-	 *                - ###SITENAME###    The name of the site.
-	 *                - ###SITEURL###     The URL to the site.
-	 *            @type string $headers Headers.
-	 *        }
-	 * @param array $user The original user array.
-	 * @param array $userdata The updated user array.
-	 */
-	function bp_email_wp_email_change_email( $email_change_email, $user, $userdata ) {
-
-		/* translators: Do not translate USERNAME, ADMIN_EMAIL, NEW_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$email_change_text = __( '<p>Hi ###USERNAME###,</p>
-<p>This notice confirms that your email address on ###SITENAME### was changed to ###NEW_EMAIL###.</p>
-<p>If you did not change your email, please contact the Site Administrator at <br/>###ADMIN_EMAIL###</p>
-<p>This email has been sent to ###EMAIL###</p>
-<p>Regards,<br />
-All at ###SITENAME###<br />
-###SITEURL###</p>' );
-
-		$email_change_email = array(
-			'to'      => $user['user_email'],
-			/* translators: User email change notification email subject. 1: Site name */
-			'subject' => __( '[%s] Notice of Email Change' ),
-			'message' => $email_change_text,
-			'headers' => '',
-		);
-
-		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
-
-		$email_change_email = bp_email_core_wp_get_template( $email_change_email, $user );
-
-		return $email_change_email;
-	}
-
-	add_filter( 'email_change_email', 'bp_email_wp_email_change_email', 10, 3 );
-}
-
-if ( ! function_exists( 'bp_email_wp_new_user_email_content' ) ) {
-	/**
-	 * Filters the text of the email sent when a change of user email address is attempted.
-	 *
-	 * The following strings have a special meaning and will get replaced dynamically:
-	 * ###USERNAME###  The current user's username.
-	 * ###ADMIN_URL### The link to click on to confirm the email change.
-	 * ###EMAIL###     The new email.
-	 * ###SITENAME###  The name of the site.
-	 * ###SITEURL###   The URL to the site.
-	 *
-	 * @since BuddyBoss 3.1.1
-	 *
-	 * @param string $email_text     Text in the email.
-	 * @param array  $new_user_email {
-	 *     Data relating to the new user email address.
-	 *
-	 *     @type string $hash     The secure hash used in the confirmation link URL.
-	 *     @type string $newemail The proposed new email address.
-	 * }
-	 */
-	function bp_email_wp_new_user_email_content( $email_text, $new_user_email ) {
-
-		$current_user = wp_get_current_user();
-
-		if ( empty( $current_user->ID ) ) {
-			return $email_text;
-		}
-
-		/* translators: Do not translate USERNAME, ADMIN_URL, EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$email_text = __( '<p>Howdy ###USERNAME###,</p>
-<p>You recently requested to have the email address on your account changed.</p>
-<p>If this is correct, please <a href="###ADMIN_URL###">click here</a> to change it.</p>
-<p>You can safely ignore and delete this email if you do not want to take this action.</p>
-<p>This email has been sent to ###EMAIL###</p>
-<p>Regards,<br />
-All at ###SITENAME###<br />
-###SITEURL###</p>' );
-
-		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
-
-		$email_text = bp_email_core_wp_get_template( $email_text, $current_user );
-
-		return $email_text;
-	}
-
-	add_filter( 'new_user_email_content', 'bp_email_wp_new_user_email_content', 10, 2 );
-}
-
-if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
-	/**
-	 * Filters the body of the user request confirmation email.
-	 *
-	 * The email is sent to an administrator when an user request is confirmed.
-	 * The following strings have a special meaning and will get replaced dynamically:
-	 *
-	 * ###SITENAME###    The name of the site.
-	 * ###USER_EMAIL###  The user email for the request.
-	 * ###DESCRIPTION### Description of the action being performed so the user knows what the email is for.
-	 * ###MANAGE_URL###  The URL to manage requests.
-	 * ###SITEURL###     The URL to the site.
-	 *
-	 * @since BuddyBoss 3.1.1
-	 *
-	 * @param string $email_text Text in the email.
-	 * @param array  $email_data {
-	 *     Data relating to the account action email.
-	 *
-	 *     @type WP_User_Request $request     User request object.
-	 *     @type string          $user_email  The email address confirming a request
-	 *     @type string          $description Description of the action being performed so the user knows what the email is for.
-	 *     @type string          $manage_url  The link to click manage privacy requests of this type.
-	 *     @type string          $sitename    The site name sending the mail.
-	 *     @type string          $siteurl     The site URL sending the mail.
-	 *     @type string          $admin_email The administrator email receiving the mail.
-	 * }
-	 */
-	function bp_email_wp_user_confirmed_action_email_content( $email_text, $email_data ) {
-
-		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
-
-		$email_text = bp_email_core_wp_get_template( $email_text, get_user_by( 'email', $email_data['admin_email'] ) );
-
-		return $email_text;
-	}
-
-	add_filter( 'user_confirmed_action_email_content', 'bp_email_wp_user_confirmed_action_email_content', 10, 2 );
-}
-
-if ( ! function_exists( 'bp_email_wp_new_admin_email_content' ) ) {
-	/**
-	 * Filters the text of the email sent when a change of site admin email address is attempted.
-	 *
-	 * The following strings have a special meaning and will get replaced dynamically:
-	 * ###USERNAME###  The current user's username.
-	 * ###ADMIN_URL### The link to click on to confirm the email change.
-	 * ###EMAIL###     The proposed new site admin email address.
-	 * ###SITENAME###  The name of the site.
-	 * ###SITEURL###   The URL to the site.
-	 *
-	 * @since BuddyBoss 3.1.1
-	 *
-	 * @param string $email_text      Text in the email.
-	 * @param array  $new_admin_email {
-	 *     Data relating to the new site admin email address.
-	 *
-	 *     @type string $hash     The secure hash used in the confirmation link URL.
-	 *     @type string $newemail The proposed new site admin email address.
-	 * }
-	 */
-	function bp_email_wp_new_admin_email_content( $email_text, $new_admin_email ) {
-
-		$admin_email = get_option( 'admin_email' );
-
-        if ( ! is_email( $admin_email ) ) {
-            return $email_text;
-        }
-
-		/* translators: Do not translate USERNAME, ADMIN_URL, EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$email_text = __( '<p>Howdy ###USERNAME###,</p>
-<p>You recently requested to have the administration email address on your site changed.</p>
-<p>If this is correct, please <a href="###ADMIN_URL###">click here</a> to change it.</p>
-<p>You can safely ignore and delete this email if you do not want to take this action.</p>
-<p>This email has been sent to ###EMAIL###</p>
-<p>Regards,<br />
-All at ###SITENAME###<br />
-###SITEURL###</p>' );
-
-		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
-
-		$email_text = bp_email_core_wp_get_template( $email_text, get_user_by( 'email', $admin_email ) );
-
-		return $email_text;
-	}
-
-	add_filter( 'new_admin_email_content', 'bp_email_wp_new_admin_email_content', 10, 2 );
 }
