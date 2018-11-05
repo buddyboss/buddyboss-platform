@@ -2,7 +2,7 @@
 /**
  * Deprecated functions.
  *
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  */
 
 // Exit if accessed directly.
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  * Output the latest update of the current member in the loop.
  *
  * @since BuddyPress 1.2.0
- * @deprecated 3.1.1 No longer updaeting member's last activity
+ * @deprecated BuddyBoss 3.1.1 No longer updaeting member's last activity
  *
  * @param array|string $args {@see bp_get_member_latest_update()}.
  */
@@ -108,7 +108,7 @@ function bp_nouveau_group_description_excerpt( $group = null, $length = null ) {
  * Checks if the group loop is set as a 'Grid' layout and returns a reduced excerpt.
  *
  * @since BuddyPress 3.0.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  *
  * @param object $group Optional. The group being referenced. Defaults to the group currently being
  *                      iterated on in the groups loop.
@@ -154,7 +154,7 @@ function bp_nouveau_get_group_description_excerpt( $group = null, $length = null
  * Display the User's WordPress bio info into the default front page?
  *
  * @since BuddyPress 3.0.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  *
  * @return bool True to display. False otherwise.
  */
@@ -172,7 +172,7 @@ function bp_nouveau_members_wp_bio_info() {
  * Display the Member description making sure linefeeds are taking in account
  *
  * @since BuddyPress 3.0.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  *
  * @param int $user_id Optional.
  *
@@ -211,7 +211,7 @@ function bp_nouveau_member_description( $user_id = 0 ) {
  * Display the Edit profile link (temporary).
  *
  * @since BuddyPress 3.0.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  *
  * @todo replace with Ajax feature
  *
@@ -227,7 +227,7 @@ function bp_nouveau_member_description_edit_link() {
 	 * @todo  replace with Ajax featur
 	 *
 	 * @since BuddyPress 3.0.0
-	 * @deprecated 3.1.1
+	 * @deprecated BuddyBoss 3.1.1
 	 *
 	 * @return string HTML Output
 	 */
@@ -254,7 +254,7 @@ function bp_nouveau_member_description_edit_link() {
  * Output button for sending a public message (an @-mention).
  *
  * @since BuddyPress 1.2.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  *
  * @see bp_get_send_public_message_button() for description of parameters.
  *
@@ -270,7 +270,7 @@ function bp_send_public_message_button( $args = '' ) {
 	 * Return button for sending a public message (an @-mention).
 	 *
 	 * @since BuddyPress 1.2.0
-	 * @deprecated 3.1.1
+	 * @deprecated BuddyBoss 3.1.1
 	 *
 	 * @param array|string $args {
 	 *     All arguments are optional. See {@link BP_Button} for complete
@@ -318,7 +318,7 @@ function bp_send_public_message_button( $args = '' ) {
  * The main action used registering theme directories.
  *
  * @since BuddyPress 1.5.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  */
 function bp_register_theme_directory() {
 	_deprecated_function( __FUNCTION__, '3.1.1' );
@@ -329,7 +329,7 @@ function bp_register_theme_directory() {
 	 * The main action used registering theme directories.
 	 *
 	 * @since BuddyPress 1.7.0
-	 * @deprecated 3.1.1
+	 * @deprecated BuddyBoss 3.1.1
 	 */
 	do_action( 'bp_register_theme_directory' );
 }
@@ -338,7 +338,7 @@ function bp_register_theme_directory() {
  * Determine whether BuddyPress should register the bp-themes directory.
  *
  * @since BuddyPress 1.9.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  *
  * @return bool True if bp-themes should be registered, false otherwise.
  */
@@ -382,7 +382,7 @@ function bp_do_register_theme_directory() {
  * as it's loaded using bp_locate_template(). That's why this function is here.
  *
  * @since BuddyPress 2.4.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  *
  * @global string $content_width the content width of the theme
  */
@@ -463,7 +463,7 @@ function bp_register_theme_compat_default_features() {
 /**
  * Form element to change the active template pack.
  *
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  */
 function bp_admin_setting_callback_theme_package_id() {
 	_deprecated_function( __FUNCTION__, '3.1.1' );
@@ -500,7 +500,7 @@ function bp_admin_setting_callback_theme_package_id() {
  * Load the Messages > Sent screen.
  *
  * @since BuddyPress 1.0.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  */
 function messages_screen_sentbox() {
 	_deprecated_function( __FUNCTION__, '3.1.1' );
@@ -532,7 +532,7 @@ function messages_screen_sentbox() {
  * Eg http://example.com/members/joe/messages/sentbox/.
  *
  * @since BuddyPress 1.1.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  *
  * @return bool True if the current page is a user's Messages Sentbox.
  */
@@ -549,7 +549,7 @@ function bp_is_messages_sentbox() {
  * total replies, and last activity.
  *
  * @since bbPress (r2860)
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  *
  * @param array $args See {@link bbp_get_single_topic_description()}
  * @uses bbp_get_single_topic_description() Return the eventual output
