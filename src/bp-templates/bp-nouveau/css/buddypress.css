@@ -2913,6 +2913,17 @@ body.register .buddypress-wrap .page ul {
   }
 }
 
+.buddypress-wrap .profile.edit .repeater_group_outer {
+    margin: 0 0 15px;
+    padding: 15px 15px 0;
+    border: 1px solid #ddd;
+}
+
+.buddypress-wrap .profile.edit .repeater_group_outer .repeater_tools{
+    cursor: move;
+    text-align: right;
+}
+
 /**
 *-------------------------------------------
 * @subsection 5.2.2.3 - Groups
