@@ -277,7 +277,7 @@ function bp_admin_repair_blog_records() {
 	$statement = __( 'Repopulating Blogs records&hellip; %s', 'buddyboss' );
 
 	// Default to failure text.
-	$result    = __( 'Failed!',   'buddypress' );
+	$result    = __( 'Failed!',   'buddyboss' );
 
 	// Default to unrepaired.
 	$repair    = false;

@@ -66,7 +66,7 @@ function bp_admin_setting_callback_activity_akismet() {
 ?>
 
 	<input id="_bp_enable_akismet" name="_bp_enable_akismet" type="checkbox" value="1" <?php checked( bp_is_akismet_active( true ) ); ?> />
-	<label for="_bp_enable_akismet"><?php _e( 'Allow Akismet to scan for activity feed spam', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_akismet"><?php _e( 'Allow Akismet to scan for activity stream spam', 'buddyboss' ); ?></label>
 
 <?php
 }
@@ -80,13 +80,13 @@ function bp_admin_setting_callback_blogforum_comments() {
 ?>
 
 	<input id="bp-disable-blogforum-comments" name="bp-disable-blogforum-comments" type="checkbox" value="1" <?php checked( !bp_disable_blogforum_comments( false ) ); ?> />
-	<label for="bp-disable-blogforum-comments"><?php _e( 'Allow activity feed commenting on posts and comments', 'buddyboss' ); ?></label>
+	<label for="bp-disable-blogforum-comments"><?php _e( 'Allow activity stream commenting on posts and comments', 'buddyboss' ); ?></label>
 
 <?php
 }
 
 /**
- * Allow Heartbeat to refresh activity feed.
+ * Allow Heartbeat to refresh activity stream.
  *
  * @since BuddyPress 2.0.0
  */
@@ -94,7 +94,7 @@ function bp_admin_setting_callback_heartbeat() {
 ?>
 
 	<input id="_bp_enable_heartbeat_refresh" name="_bp_enable_heartbeat_refresh" type="checkbox" value="1" <?php checked( bp_is_activity_heartbeat_active( true ) ); ?> />
-	<label for="_bp_enable_heartbeat_refresh"><?php _e( 'Automatically check for new items while viewing the activity feed', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_heartbeat_refresh"><?php _e( 'Automatically check for new items while viewing the activity stream', 'buddyboss' ); ?></label>
 
 <?php
 }
@@ -135,21 +135,6 @@ function bp_admin_setting_callback_profile_sync() {
 
 	<input id="bp-disable-profile-sync" name="bp-disable-profile-sync" type="checkbox" value="1" <?php checked( !bp_disable_profile_sync( false ) ); ?> />
 	<label for="bp-disable-profile-sync"><?php _e( 'Enable BuddyBoss to WordPress profile syncing', 'buddyboss' ); ?></label>
-
-<?php
-}
-
-/**
- * Enable member dashboard/front-page template.
- *
- * @since BuddyBoss 3.1.1
- *
- */
-function bp_admin_setting_callback_member_dashboard () {
-?>
-
-	<input id="bp-enable-member-dashboard" name="bp-enable-member-dashboard" type="checkbox" value="1" <?php checked( bp_nouveau_get_appearance_settings( 'user_front_page' ) ); ?> />
-	<label for="bp-enable-member-dashboard"><?php _e( 'Enable Dashboard for member profiles', 'buddyboss' ); ?></label>
 
 <?php
 }
@@ -230,47 +215,6 @@ function bp_admin_setting_callback_group_cover_image_uploads() {
 <?php
 }
 
-/** Friends Section ************************************************************/
-
-/* Friends Settings */
-
-/**
- * Friends settings section description for the settings page.
- *
- * @since BuddyBoss 3.1.1
- */
-function bp_admin_setting_callback_friendship_section() { }
-
-/**
- * Force users to be friends for messaging.
- *
- * @since BuddyBoss 3.1.1
- */
-function bp_admin_setting_callback_force_friendship_to_message() {
-	?>
-
-    <input id="bp-force-friendship-to-message" name="bp-force-friendship-to-message" type="checkbox" value="1" <?php checked( bp_force_friendship_to_message( false ) ); ?> />
-    <label for="bp-force-friendship-to-message"><?php _e( 'Require users to be connected before they can message each other', 'buddyboss' ); ?></label>
-
-	<?php
-}
-
-/**
- * Sanitization for bp-force-friendship-to-message setting.
- *
- * In the UI, a checkbox asks whether you'd like to *enable* forceing users to be friends for messaging. For
- * legacy reasons, the option that we store is 1 if these friends or messaging is *disabled*. So we use this
- * function to flip the boolean before saving the intval.
- *
- * @since BuddyBoss 3.1.1
- *
- * @param bool $value Whether or not to sanitize.
- * @return bool
- */
-function bp_admin_sanitize_callback_force_friendship_to_message( $value = false ) {
-	return $value ? 1 : 0;
-}
-
 /** Settings Page *************************************************************/
 
 /**
@@ -280,27 +224,16 @@ function bp_admin_sanitize_callback_force_friendship_to_message( $value = false 
  *
  */
 function bp_core_admin_settings() {
-
-	// We're saving our own options, until the WP Settings API is updated to work with Multisite.
-	$form_action = add_query_arg( 'page', 'bp-settings', bp_get_admin_url( 'admin.php' ) );
-
+    $active_tab = bp_core_get_admin_active_tab();
+    $form_action = bp_core_admin_setting_url( $active_tab );
 	?>
 
 	<div class="wrap">
-
 		<h1><?php _e( 'BuddyBoss Settings', 'buddyboss' ); ?> </h1>
-
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Options', 'buddyboss' ) ); ?></h2>
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs(); ?></h2>
 
 		<form action="<?php echo esc_url( $form_action ) ?>" method="post">
-
-			<?php settings_fields( 'buddypress' ); ?>
-
-			<?php do_settings_sections( 'buddypress' ); ?>
-
-			<p class="submit">
-				<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>" />
-			</p>
+            <?php bp_core_get_admin_active_tab_object()->form_html(); ?>
 		</form>
 	</div>
 
@@ -308,61 +241,31 @@ function bp_core_admin_settings() {
 }
 
 /**
- * Save our settings.
+ * The main settings page
  *
  * @since BuddyPress 1.6.0
+ *
  */
-function bp_core_admin_settings_save() {
-	global $wp_settings_fields;
+function bp_core_admin_integrations() {
+    $active_tab = bp_core_get_admin_integration_active_tab();
+    $form_action = bp_core_admin_integrations_url( $active_tab );
+    ?>
 
-	if ( isset( $_GET['page'] ) && 'bp-settings' == $_GET['page'] && !empty( $_POST['submit'] ) ) {
-		check_admin_referer( 'buddypress-options' );
+    <div class="wrap">
+        <h1><?php _e( 'Plugin Integrations', 'buddyboss' ); ?> </h1>
+        <h2 class="nav-tab-wrapper"><?php bp_core_admin_integration_tabs(); ?></h2>
 
-		// Because many settings are saved with checkboxes, and thus will have no values
-		// in the $_POST array when unchecked, we loop through the registered settings.
-		if ( isset( $wp_settings_fields['buddypress'] ) ) {
-			foreach( (array) $wp_settings_fields['buddypress'] as $section => $settings ) {
-				foreach( $settings as $setting_name => $setting ) {
-					$value = isset( $_POST[$setting_name] ) ? $_POST[$setting_name] : '';
+        <form action="<?php echo esc_url( $form_action ) ?>" method="post">
+            <?php bp_core_get_admin_integration_active_tab_object()->form_html(); ?>
+        </form>
+    </div>
 
-					bp_update_option( $setting_name, $value );
-				}
-			}
-		}
-
-		// Some legacy options are not registered with the Settings API, or are reversed in the UI.
-		$legacy_options = array(
-			'bp-disable-account-deletion',
-			'bp-disable-avatar-uploads',
-			'bp-disable-cover-image-uploads',
-			'bp-disable-group-avatar-uploads',
-			'bp-disable-group-cover-image-uploads',
-			'bp_disable_blogforum_comments',
-			'bp-disable-profile-sync',
-			'bp_restrict_group_creation',
-			'hide-loggedout-adminbar',
-		);
-
-		foreach( $legacy_options as $legacy_option ) {
-			// Note: Each of these options is represented by its opposite in the UI
-			// Ie, the Profile Syncing option reads "Enable Sync", so when it's checked,
-			// the corresponding option should be unset.
-			$value = isset( $_POST[$legacy_option] ) ? '' : 1;
-			bp_update_option( $legacy_option, $value );
-		}
-        
-        /**
-         * sync bp-enable-member-dashboard with cutomizer settings.
-         * @since BuddyBoss 3.1.1
-         */
-        $bp_nouveau_appearance = bp_get_option( 'bp_nouveau_appearance', array() );
-        $bp_nouveau_appearance[ 'user_front_page' ] = isset( $_POST[ 'bp-enable-member-dashboard' ] ) ? $_POST[ 'bp-enable-member-dashboard' ] : 0;
-        bp_update_option( 'bp_nouveau_appearance', $bp_nouveau_appearance );
-
-		bp_core_redirect( add_query_arg( array( 'page' => 'bp-settings', 'updated' => 'true' ), bp_get_admin_url( 'admin.php' ) ) );
-	}
+<?php
 }
-add_action( 'bp_admin_init', 'bp_core_admin_settings_save', 100 );
+
+function bp_core_admin_appboss() {
+	require buddypress()->plugin_dir . 'bp-core/admin/templates/appboss-screen.php';
+}
 
 /**
  * Output settings API option.

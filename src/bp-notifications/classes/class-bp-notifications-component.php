@@ -239,7 +239,7 @@ class BP_Notifications_Component extends BP_Component {
 					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 				);
 			} else {
-				$title  = _x( 'Notifications', 'My Account Notification',         'buddypress' );
+				$title  = _x( 'Notifications', 'My Account Notification',         'buddyboss' );
 				$unread = _x( 'Unread',        'My Account Notification sub nav', 'buddyboss' );
 			}
 

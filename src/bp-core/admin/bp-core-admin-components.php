@@ -21,9 +21,8 @@ function bp_core_admin_components_settings() {
 
 	<div class="wrap">
 
-		<h1><?php _e( 'BuddyBoss Settings', 'buddyboss' ); ?> </h1>
+		<h1><?php _e( 'BuddyBoss Components', 'buddyboss' ); ?> </h1>
 
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Components', 'buddyboss' ) ); ?></h2>
 		<form action="" method="post" id="bp-admin-component-form">
 
 			<?php bp_core_admin_components_options(); ?>
@@ -117,7 +116,7 @@ function bp_core_admin_components_options() {
 
 	// Get the total count of all plugins.
 	$all_count = count( $all_components );
-	$page      = bp_core_do_network_admin()  ? 'settings.php' : 'options-general.php';
+	$page      = bp_core_do_network_admin()  ? 'settings.php' : 'admin.php';
 	$action    = !empty( $_GET['action'] ) ? $_GET['action'] : 'all';
 
 	switch( $action ) {
@@ -152,7 +151,7 @@ function bp_core_admin_components_options() {
 		<li><a href="<?php echo esc_url( add_query_arg( array( 'page' => 'bp-components', 'action' => 'active'   ), bp_get_admin_url( $page ) ) ); ?>" <?php if ( $action === 'active'   ) : ?>class="current"<?php endif; ?>><?php printf( _n(  'Active <span class="count">(%s)</span>',   'Active <span class="count">(%s)</span>',   count( $active_components   ), 'buddyboss' ), number_format_i18n( count( $active_components   ) ) ); ?></a> | </li>
 		<li><a href="<?php echo esc_url( add_query_arg( array( 'page' => 'bp-components', 'action' => 'inactive' ), bp_get_admin_url( $page ) ) ); ?>" <?php if ( $action === 'inactive' ) : ?>class="current"<?php endif; ?>><?php printf( _n(  'Inactive <span class="count">(%s)</span>', 'Inactive <span class="count">(%s)</span>', count( $inactive_components ), 'buddyboss' ), number_format_i18n( count( $inactive_components ) ) ); ?></a> | </li>
 		<li><a href="<?php echo esc_url( add_query_arg( array( 'page' => 'bp-components', 'action' => 'mustuse'  ), bp_get_admin_url( $page ) ) ); ?>" <?php if ( $action === 'mustuse'  ) : ?>class="current"<?php endif; ?>><?php printf( _n(  'Must-Use <span class="count">(%s)</span>', 'Must-Use <span class="count">(%s)</span>', count( $required_components ), 'buddyboss' ), number_format_i18n( count( $required_components ) ) ); ?></a> | </li>
-		<li><a href="<?php echo esc_url( add_query_arg( array( 'page' => 'bp-components', 'action' => 'retired'  ), bp_get_admin_url( $page ) ) ); ?>" <?php if ( $action === 'retired'  ) : ?>class="current"<?php endif; ?>><?php printf( _n(  'Retired <span class="count">(%s)</span>',  'Retired <span class="count">(%s)</span>',  count( $retired_components ),  'buddypress' ), number_format_i18n( count( $retired_components  ) ) ); ?></a></li>
+		<li><a href="<?php echo esc_url( add_query_arg( array( 'page' => 'bp-components', 'action' => 'retired'  ), bp_get_admin_url( $page ) ) ); ?>" <?php if ( $action === 'retired'  ) : ?>class="current"<?php endif; ?>><?php printf( _n(  'Retired <span class="count">(%s)</span>',  'Retired <span class="count">(%s)</span>',  count( $retired_components ),  'buddyboss' ), number_format_i18n( count( $retired_components  ) ) ); ?></a></li>
 	</ul>
 
 	<h3 class="screen-reader-text"><?php
@@ -179,11 +178,15 @@ function bp_core_admin_components_options() {
 
 				<?php foreach ( $current_components as $name => $labels ) : ?>
 
-					<?php if ( !in_array( $name, array( 'core', 'members' ) ) ) :
-						$class = isset( $active_components[esc_attr( $name )] ) ? 'active' : 'inactive';
-					else :
-						$class = 'active';
-					endif; ?>
+					<?php
+						if ( in_array( $name, array( 'blogs' ) ) ) :
+							$class = isset( $active_components[esc_attr( $name )] ) ? 'active hidden' : 'inactive hidden';
+						elseif ( !in_array( $name, array( 'core', 'members' ) ) ) :
+							$class = isset( $active_components[esc_attr( $name )] ) ? 'active' : 'inactive';
+						else :
+							$class = 'active';
+						endif;
+					?>
 
 					<tr id="<?php echo esc_attr( $name ); ?>" class="<?php echo esc_attr( $name ) . ' ' . esc_attr( $class ); ?>">
 						<th scope="row" class="check-column">
@@ -270,12 +273,16 @@ function bp_core_admin_components_settings_handler() {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		require_once( $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
 
+		$current_components = $bp->active_components;
 		$submitted = stripslashes_deep( $_POST['bp_components'] );
 		$bp->active_components = bp_core_admin_get_active_components_from_submitted_settings( $submitted );
+		$uninstalled_components = array_diff_key($current_components, $bp->active_components);
 
 		bp_core_install( $bp->active_components );
 		bp_core_add_page_mappings( $bp->active_components );
 		bp_update_option( 'bp-active-components', $bp->active_components );
+
+		bp_core_uninstall( $uninstalled_components );
 	}
 
 	// Where are we redirecting to?

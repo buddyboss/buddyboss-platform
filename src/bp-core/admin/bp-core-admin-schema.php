@@ -67,6 +67,18 @@ function bp_core_install( $active_components = false ) {
 	if ( !empty( $active_components['blogs'] ) ) {
 		bp_core_install_blog_tracking();
 	}
+
+	// Discussion forums
+	if ( !empty( $active_components['forums'] ) ) {
+		bp_core_install_discussion_forums();
+	}
+}
+
+function bp_core_uninstall( $uninstalled_components ) {
+	// Discussion forums
+	if ( !empty( $uninstalled_components['forums'] ) ) {
+		bp_core_uninstall_discussion_forums();
+	}
 }
 
 /**
@@ -438,6 +450,30 @@ function bp_core_install_blog_tracking() {
 			) {$charset_collate};";
 
 	dbDelta( $sql );
+}
+
+/** Discussion Forums *********************************************************/
+
+/**
+ * Run the bbpress activation,
+ *
+ * @since Buddyboss 3.1.1
+ */
+function bp_core_install_discussion_forums() {
+	require_once buddypress()->plugin_dir . 'bp-forums/classes/class-bbpress.php';
+	bbpress();
+
+	bbp_activation();
+	bbp_map_caps_to_wp_roles();
+}
+
+/**
+ * Run the bbpress deactivation,
+ *
+ * @since Buddyboss 3.1.1
+ */
+function bp_core_uninstall_discussion_forums() {
+	bbp_deactivation();
 }
 
 /** Signups *******************************************************************/

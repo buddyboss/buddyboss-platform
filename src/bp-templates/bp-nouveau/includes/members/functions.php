@@ -94,8 +94,8 @@ function bp_nouveau_get_members_directory_nav_items() {
 function bp_nouveau_get_members_filters( $context = '' ) {
 	if ( 'group' !== $context ) {
 		$filters = array(
-			'active' => __( 'Last Active', 'buddyboss' ),
-			'newest' => __( 'Newest Registered', 'buddyboss' ),
+			'active' => __( 'Recently Active', 'buddyboss' ),
+			'newest' => __( 'Newest Members', 'buddyboss' ),
 		);
 
 		if ( bp_is_active( 'xprofile' ) ) {

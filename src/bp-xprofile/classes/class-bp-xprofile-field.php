@@ -1207,7 +1207,7 @@ class BP_XProfile_Field {
 		// Add New
 		if ( empty( $this->id ) ) {
 			$title  = __( 'Add New Field', 'buddyboss' );
-			$button	= __( 'Save',          'buddypress' );
+			$button	= __( 'Save',          'buddyboss' );
 			$action = add_query_arg( array(
 				'page'     => 'bp-profile-setup',
 				'mode'     => 'add_field',
@@ -1229,7 +1229,7 @@ class BP_XProfile_Field {
 		// Edit
 		} else {
 			$title  = __( 'Edit Field', 'buddyboss' );
-			$button	= __( 'Update',     'buddypress' );
+			$button	= __( 'Update',     'buddyboss' );
 			$action = add_query_arg( array(
 				'page'     => 'bp-profile-setup',
 				'mode'     => 'edit_field',
@@ -1569,7 +1569,7 @@ class BP_XProfile_Field {
 			<div class="inside">
 				<select name="required" id="required">
 					<option value="0"<?php selected( $this->is_required, '0' ); ?>><?php esc_html_e( 'Optional', 'buddyboss' ); ?></option>
-					<option value="1"<?php selected( $this->is_required, '1' ); ?>><?php esc_html_e( 'Required',     'buddypress' ); ?></option>
+					<option value="1"<?php selected( $this->is_required, '1' ); ?>><?php esc_html_e( 'Required',     'buddyboss' ); ?></option>
 				</select>
 			</div>
 		</div>

@@ -267,10 +267,6 @@ TABLE OF CONTENTS:
   max-width: 100%;
 }
 
-.bp-hello-content iframe {
-  width: 100%;
-}
-
 /*------------------------------------------------------------------------------
  * 6.0 - Media Queries
  *----------------------------------------------------------------------------*/
@@ -320,9 +316,6 @@ TABLE OF CONTENTS:
   }
   .bp-hello-content p {
     font-size: 14px;
-  }
-  .bp-hello-content iframe {
-    height: 100%;
   }
 }
 

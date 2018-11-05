@@ -271,6 +271,11 @@ function bp_friends_filter_activity_scope( $retval = array(), $filter = array() 
 		}
 	}
 
+	// add self to show activities of own
+	if ( bp_loggedin_user_id() ) {
+		array_push( $friends, bp_loggedin_user_id() );
+	}
+
 	if ( empty( $friends ) ) {
 		$friends = array( 0 );
 	}

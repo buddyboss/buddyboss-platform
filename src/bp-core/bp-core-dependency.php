@@ -66,6 +66,21 @@ function bp_setup_components() {
 }
 
 /**
+ * Fire the 'bp_setup_components' action, where plugins should initialize components.
+ *
+ * @since BuddyPress 1.6.0
+ */
+function bp_setup_integrations() {
+
+	/**
+	 * Fires inside the 'bp_setup_integrations' function, where plugins should initialize components.
+	 *
+	 * @since Buddyboss 3.1.1
+	 */
+	do_action( 'bp_setup_integrations' );
+}
+
+/**
  * Fire the 'bp_setup_canonical_stack' action, where plugins should set up their canonical URL.
  *
  * @since BuddyPress 2.1.0

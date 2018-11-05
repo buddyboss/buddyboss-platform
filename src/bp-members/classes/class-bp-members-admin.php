@@ -433,8 +433,8 @@ class BP_Members_Admin {
 		// Add the faux "Edit Profile" submenu page.
 		$hooks['user'] = $this->user_page = add_submenu_page(
 			'profile.php',
-			__( 'Edit Profile',  'buddypress' ),
-			__( 'Edit Profile',  'buddypress' ),
+			__( 'Edit Profile',  'buddyboss' ),
+			__( 'Edit Profile',  'buddyboss' ),
 			'exist',
 			'bp-profile-edit',
 			array( $this, 'user_admin' )
@@ -470,8 +470,8 @@ class BP_Members_Admin {
 		// Manage user's profile.
 		$hooks['user'] = $this->user_page = add_submenu_page(
 			$this->user_profile . '.php',
-			__( 'Edit Profile',  'buddypress' ),
-			__( 'Edit Profile',  'buddypress' ),
+			__( 'Edit Profile',  'buddyboss' ),
+			__( 'Edit Profile',  'buddyboss' ),
 			'read',
 			'bp-profile-edit',
 			array( $this, 'user_admin' )
@@ -482,8 +482,8 @@ class BP_Members_Admin {
 
 			// Manage signups.
 			$hooks['signups'] = $this->signups_page = add_users_page(
-				__( 'Manage Signups',  'buddypress' ),
-				__( 'Manage Signups',  'buddypress' ),
+				__( 'Manage Signups',  'buddyboss' ),
+				__( 'Manage Signups',  'buddyboss' ),
 				$this->capability,
 				'bp-signups',
 				array( $this, 'signups_admin' )
@@ -910,7 +910,7 @@ class BP_Members_Admin {
 
 		// Construct title.
 		if ( true === $this->is_self_profile ) {
-			$title = __( 'Profile',   'buddypress' );
+			$title = __( 'Profile',   'buddyboss' );
 		} else {
 			$title = __( 'Edit User', 'buddyboss' );
 		}

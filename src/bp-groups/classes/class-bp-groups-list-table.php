@@ -392,11 +392,11 @@ class BP_Groups_List_Table extends WP_List_Table {
 		 */
 		return apply_filters( 'bp_groups_list_table_get_columns', array(
 			'cb'          => '<input name type="checkbox" />',
-			'comment'     => _x( 'Name', 'Groups admin Group Name column header',               'buddypress' ),
+			'comment'     => _x( 'Name', 'Groups admin Group Name column header',               'buddyboss' ),
 			'description' => _x( 'Description', 'Groups admin Group Description column header', 'buddyboss' ),
-			'status'      => _x( 'Status', 'Groups admin Privacy Status column header',         'buddypress' ),
-			'members'     => _x( 'Members', 'Groups admin Members column header',               'buddypress' ),
-			'last_active' => _x( 'Last Active', 'Groups admin Last Active column header',       'buddypress' )
+			'status'      => _x( 'Status', 'Groups admin Privacy Status column header',         'buddyboss' ),
+			'members'     => _x( 'Members', 'Groups admin Members column header',               'buddyboss' ),
+			'last_active' => _x( 'Last Active', 'Groups admin Last Active column header',       'buddyboss' )
 		) );
 	}
 
@@ -524,13 +524,13 @@ class BP_Groups_List_Table extends WP_List_Table {
 
 		// Rollover actions.
 		// Edit.
-		$actions['edit']   = sprintf( '<a href="%s">%s</a>', esc_url( $edit_url   ), __( 'Edit',   'buddypress' ) );
+		$actions['edit']   = sprintf( '<a href="%s">%s</a>', esc_url( $edit_url   ), __( 'Edit',   'buddyboss' ) );
 
 		// Delete.
 		$actions['delete'] = sprintf( '<a href="%s">%s</a>', esc_url( $delete_url ), __( 'Delete', 'buddyboss' ) );
 
 		// Visit.
-		$actions['view']   = sprintf( '<a href="%s">%s</a>', esc_url( $view_url   ), __( 'View',   'buddypress' ) );
+		$actions['view']   = sprintf( '<a href="%s">%s</a>', esc_url( $view_url   ), __( 'View',   'buddyboss' ) );
 
 		/**
 		 * Filters the actions that will be shown for the column content.

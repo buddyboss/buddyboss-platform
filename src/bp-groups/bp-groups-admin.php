@@ -238,9 +238,7 @@ function bp_groups_admin_load() {
 		if ( empty( $_POST['bp-groups-name'] ) ) {
 			$error = $error - 1;
 		}
-		if ( empty( $_POST['bp-groups-description'] ) ) {
-			$error = $error - 2;
-		}
+
 		if ( empty( $_POST['bp-groups-slug'] ) ) {
 			$error = $error - 4;
 		}
@@ -952,8 +950,8 @@ function bp_groups_admin_edit_metabox_members( $item ) {
 
 			<h3><?php switch ( $member_type ) :
 					case 'admin'  : esc_html_e( 'Organizers', 'buddyboss' ); break;
-					case 'mod'    : esc_html_e( 'Moderators',     'buddypress' ); break;
-					case 'member' : esc_html_e( 'Members',        'buddypress' ); break;
+					case 'mod'    : esc_html_e( 'Moderators',     'buddyboss' ); break;
+					case 'member' : esc_html_e( 'Members',        'buddyboss' ); break;
 					case 'banned' : esc_html_e( 'Banned Members', 'buddyboss' ); break;
 			endswitch; ?></h3>
 
@@ -996,10 +994,10 @@ function bp_groups_admin_edit_metabox_members( $item ) {
 							<select class="bp-groups-role" id="bp-groups-role-<?php echo esc_attr( $type_user->ID ); ?>" name="bp-groups-role[<?php echo esc_attr( $type_user->ID ); ?>]">
 								<optgroup label="<?php esc_attr_e( 'Roles', 'buddyboss' ); ?>">
 									<option class="admin"  value="admin"  <?php selected( 'admin',  $member_type ); ?>><?php esc_html_e( 'Organizer', 'buddyboss' ); ?></option>
-									<option class="mod"    value="mod"    <?php selected( 'mod',    $member_type ); ?>><?php esc_html_e( 'Moderator',     'buddypress' ); ?></option>
-									<option class="member" value="member" <?php selected( 'member', $member_type ); ?>><?php esc_html_e( 'Member',        'buddypress' ); ?></option>
+									<option class="mod"    value="mod"    <?php selected( 'mod',    $member_type ); ?>><?php esc_html_e( 'Moderator',     'buddyboss' ); ?></option>
+									<option class="member" value="member" <?php selected( 'member', $member_type ); ?>><?php esc_html_e( 'Member',        'buddyboss' ); ?></option>
 									<?php if ( 'banned' === $member_type ) : ?>
-									<option class="banned" value="banned" <?php selected( 'banned', $member_type ); ?>><?php esc_html_e( 'Banned',        'buddypress' ); ?></option>
+									<option class="banned" value="banned" <?php selected( 'banned', $member_type ); ?>><?php esc_html_e( 'Banned',        'buddyboss' ); ?></option>
 									<?php endif; ?>
 								</optgroup>
 								<optgroup label="<?php esc_attr_e( 'Actions', 'buddyboss' ); ?>">

@@ -78,6 +78,16 @@ class BuddyPress {
 	public $active_components = array();
 
 	/**
+	 * @var array Integrations.
+	 */
+	public $available_integrations = array();
+
+	/**
+	 * @var array Integrations.
+	 */
+	public $integrations = array();
+
+	/**
 	 * Whether autoload is in use.
 	 *
 	 * @since BuddyPress 2.5.0
@@ -483,7 +493,7 @@ class BuddyPress {
 		require( $this->plugin_dir . 'bp-core/bp-core-moderation.php'       );
 		require( $this->plugin_dir . 'bp-core/bp-core-loader.php'           );
 		require( $this->plugin_dir . 'bp-core/bp-core-customizer-email.php' );
-		require( $this->plugin_dir . 'bp-core/bp-core-email-tokens.php'     );
+		require( $this->plugin_dir . 'bp-core/bp-core-emails.php'           );
 
 		// Maybe load deprecated functionality (this double negative is proof positive!)
 		if ( ! bp_get_option( '_bp_ignore_deprecated_code', ! $this->load_deprecated ) ) {
@@ -536,6 +546,7 @@ class BuddyPress {
 			'notifications',
 			'settings',
 			'xprofile',
+			'forums',
 		);
 
 		// These classes don't have a name that matches their component.

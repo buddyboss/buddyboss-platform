@@ -599,13 +599,13 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 		'user_nav_tabs'      => 0,
 		'user_subnav_tabs'   => 0,
 		'user_nav_order'     => array(),
-		'members_layout'     => 1,
+		'members_layout'     => 4,
 		'members_dir_tabs'   => 0,
 		'members_dir_layout' => 0,
 	);
 
 	if ( bp_is_active( 'friends' ) ) {
-		$default_args['members_friends_layout'] = 1;
+		$default_args['members_friends_layout'] = 4;
 	}
 
 	if ( bp_is_active( 'activity' ) ) {
@@ -623,8 +623,8 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 			'group_nav_tabs'          => 0,
 			'group_subnav_tabs'       => 0,
 			'groups_create_tabs'      => 1,
-			'groups_layout'           => 1,
-			'members_group_layout'    => 1,
+			'groups_layout'           => 4,
+			'members_group_layout'    => 4,
 			'groups_dir_layout'       => 0,
 			'groups_dir_tabs'         => 0,
 		) );
@@ -666,10 +666,9 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
  */
 function bp_nouveau_customizer_grid_choices( $type = 'option' ) {
 	$columns = array(
-		array( 'key' => '1', 'label' => __( 'One column', 'buddypress'    ), 'class' => ''      ),
-		array( 'key' => '2', 'label' => __( 'Two columns', 'buddypress'   ), 'class' => 'two'   ),
+		array( 'key' => '2', 'label' => __( 'Two columns', 'buddyboss'   ), 'class' => 'two'   ),
 		array( 'key' => '3', 'label' => __( 'Three columns', 'buddyboss' ), 'class' => 'three' ),
-		array( 'key' => '4', 'label' => __( 'Four columns', 'buddypress'  ), 'class' => 'four'  ),
+		array( 'key' => '4', 'label' => __( 'Four columns', 'buddyboss'  ), 'class' => 'four'  ),
 	);
 
 	if ( 'option' === $type ) {
@@ -742,63 +741,9 @@ function bp_nouveau_theme_cover_image( $params = array() ) {
 
 	return '
 		/* Cover image */
-		#buddypress #item-header-cover-image {
-			min-height: ' . $params['height'] . 'px;
-			margin-bottom: 1em;
-		}
-
-		#buddypress #item-header-cover-image:after {
-			clear: both;
-			content: "";
-			display: table;
-		}
-
 		#buddypress #header-cover-image {
 			height: ' . $params['height'] . 'px;
 			' . $cover_image . '
-		}
-
-		#buddypress #create-group-form #header-cover-image {
-			position: relative;
-			margin: 1em 0;
-		}
-
-		.bp-user #buddypress #item-header {
-			padding-top: 0;
-		}
-
-		#buddypress #item-header-cover-image #item-header-avatar {
-			margin-top: ' . $avatar_offset . 'px;
-			float: left;
-			overflow: visible;
-			width:auto;
-		}
-
-		#buddypress div#item-header #item-header-cover-image #item-header-content {
-			clear: both;
-			float: left;
-			margin-left: ' . $left_offset . 'px;
-			margin-top: -' . $top_offset . 'px;
-			width:auto;
-			padding-left: 2em;
-			padding-right: 0;
-		}
-
-		#item-header-avatar img.avatar {
-			margin-left: 0;
-		}
-
-		body.single-item.groups #buddypress div#item-header #item-header-cover-image #item-header-content,
-		body.single-item.groups #buddypress div#item-header #item-header-cover-image #item-actions {
-			margin-top: ' . $params['height'] . 'px;
-			margin-left: 0;
-			clear: none;
-			max-width: 50%;
-		}
-
-		body.single-item.groups #buddypress div#item-header #item-header-cover-image #item-actions {
-			padding-top: 20px;
-			max-width: 20%;
 		}
 
 		' . $hide_avatar_style . '
@@ -810,16 +755,6 @@ function bp_nouveau_theme_cover_image( $params = array() ) {
 			text-shadow: 0px 0px 3px rgba( 0, 0, 0, 0.8 );
 			margin: 0 0 .6em;
 			font-size:200%;
-		}
-
-		#buddypress #item-header-cover-image #item-header-avatar img.avatar {
-			border: solid 2px #FFF;
-			background: rgba( 255, 255, 255, 0.8 );
-		}
-
-		#buddypress #item-header-cover-image #item-header-avatar a {
-			border: none;
-			text-decoration: none;
 		}
 
 		#buddypress #item-header-cover-image #item-buttons {
@@ -839,14 +774,6 @@ function bp_nouveau_theme_cover_image( $params = array() ) {
 			#buddypress div#item-header #item-header-cover-image #item-header-content {
 				width:100%;
 				text-align:center;
-			}
-
-			#buddypress #item-header-cover-image #item-header-avatar a {
-				display:inline-block;
-			}
-
-			#buddypress #item-header-cover-image #item-header-avatar img {
-				margin:0;
 			}
 
 			#buddypress div#item-header #item-header-cover-image #item-header-content,

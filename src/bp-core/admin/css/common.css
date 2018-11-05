@@ -219,54 +219,69 @@ TABLE OF CONTENTS:
 	content: "\f448";
 }
 
+#adminmenu li.toplevel_page_buddyboss-platform a[href="bp-plugin-seperator"] {
+	pointer-events: none;
+	cursor: default;
+	padding-bottom: 0;
+	margin-right: 16px;
+	margin-left: 14px;
+	margin-bottom: 5px;
+	border-bottom: 1px solid #555;
+}
+
+
 /*
  * 2.2 Settings - Components
  */
-.settings_page_bp-components td.plugin-title span {
+.buddyboss_page_bp-components td.plugin-title span {
 	float: left;
 	width: 18px;
 	height: 18px;
 	margin-right: 5px;
 }
 
-.settings_page_bp-components td.plugin-title span:before {
+.buddyboss_page_bp-components td.plugin-title span:before {
 	font-family: dashicons;
 	font-size: 18px;
 }
 
-.settings_page_bp-components tr.activity td.plugin-title span:before {
+.buddyboss_page_bp-components tr.activity td.plugin-title span:before {
 	content: "\f303";
 }
 
-.settings_page_bp-components tr.notifications td.plugin-title span:before {
+.buddyboss_page_bp-components tr.notifications td.plugin-title span:before {
 	content: "\f339";
 }
 
-.settings_page_bp-components tr.xprofile td.plugin-title span:before {
+.buddyboss_page_bp-components tr.xprofile td.plugin-title span:before {
 	content: "\f336";
 }
 
-.settings_page_bp-components tr.settings td.plugin-title span:before {
+.buddyboss_page_bp-components tr.settings td.plugin-title span:before {
 	content: "\f108";
 }
 
-.settings_page_bp-components tr.groups td.plugin-title span:before {
+.buddyboss_page_bp-components tr.groups td.plugin-title span:before {
 	content: "\f307";
 }
 
-.settings_page_bp-components tr.messages td.plugin-title span:before {
+.buddyboss_page_bp-components tr.messages td.plugin-title span:before {
 	content: "\f457";
 }
 
-.settings_page_bp-components tr.blogs td.plugin-title span:before {
+.buddyboss_page_bp-components tr.blogs td.plugin-title span:before {
 	content: "\f119";
 }
 
-.settings_page_bp-components tr.friends td.plugin-title span:before {
+.buddyboss_page_bp-components tr.friends td.plugin-title span:before {
 	content: "\f325";
 }
 
-.settings_page_bp-components tr.members td.plugin-title span:before {
+.buddyboss_page_bp-components tr.forums td.plugin-title span:before {
+	content: "\f175";
+}
+
+.buddyboss_page_bp-components tr.members td.plugin-title span:before {
 	content: "\f110";
 }
 
@@ -276,7 +291,7 @@ TABLE OF CONTENTS:
 
 @media screen and ( max-width: 782px ) {
 
-	.settings_page_bp-components td.plugin-title span {
+	.buddyboss_page_bp-components td.plugin-title span {
 		margin-top: 5px;
 	}
 

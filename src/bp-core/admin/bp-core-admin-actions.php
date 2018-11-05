@@ -54,6 +54,7 @@ add_action( 'bp_admin_init', 'bp_core_activation_notice', 1010 );
 add_action( 'bp_admin_init', 'bp_register_importers'           );
 add_action( 'bp_admin_init', 'bp_register_admin_style'         );
 add_action( 'bp_admin_init', 'bp_register_admin_settings'      );
+add_action( 'bp_admin_init', 'bp_register_admin_integrations'  );
 add_action( 'bp_admin_init', 'bp_do_activation_redirect', 1    );
 add_action( 'bp_admin_init', 'bp_check_for_legacy_theme');
 
@@ -234,4 +235,20 @@ function bp_register_admin_settings() {
 	 * @since BuddyPress 1.6.0
 	 */
 	do_action( 'bp_register_admin_settings' );
+}
+
+/**
+ * Dedicated action to register admin integrations.
+ *
+ * @since Buddyboss 3.1.1
+ *
+ */
+function bp_register_admin_integrations() {
+
+	/**
+	 * Fires inside the bp_register_admin_integrations function.
+	 *
+	 * @since BuddyPress 1.6.0
+	 */
+	do_action( 'bp_register_admin_integrations' );
 }

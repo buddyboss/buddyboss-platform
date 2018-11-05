@@ -704,7 +704,7 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 
 		// Overrides.
 		'override' => array(
-			'display_comments' => 'stream',
+			'display_comments' => bp_show_streamed_activity_comment()? 'stream' : 'threaded',
 			'filter'           => array( 'user_id' => 0 ),
 			'show_hidden'      => true
 		),
@@ -818,7 +818,7 @@ function bp_activity_filter_mentions_scope( $retval = array(), $filter = array()
 
 		// Overrides.
 		'override' => array(
-			'display_comments' => 'stream',
+			'display_comments' => bp_show_streamed_activity_comment()? 'stream' : 'threaded',
 			'filter'           => array( 'user_id' => 0 ),
 			'show_hidden'      => true
 		),

@@ -236,3 +236,44 @@ body.register .buddypress-wrap .page ul {
 		}
 	}
 }
+
+#item-header a.link-change-cover-image,
+#item-header a.link-change-profile-image {
+	background: rgba(255, 255, 255, 0.9);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	width: 30px;
+	height: 30px;
+	left: 12px;
+	top: 12px;
+	z-index: 3;
+	opacity: 0;
+	transition: all 0.2s;
+
+	@include box-shadow( 0 0 3px 0 rgba(0, 0, 0, 0.2) );
+}
+
+#item-header-avatar a.link-change-profile-image {
+	top: 100px;
+	left: 50%;
+	margin-left: -15px;
+}
+
+#header-cover-image:hover a.link-change-cover-image,
+#item-header-avatar:hover a.link-change-profile-image {
+	opacity: 1;
+}
+
+@media screen and (max-width: 782px) {
+
+	.member-header-actions.action {
+		margin-top: 15px;
+	}
+
+	.single-headers li.generic-button {
+		float: none;
+	}
+}

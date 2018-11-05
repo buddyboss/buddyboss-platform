@@ -395,10 +395,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 				 */
 				add_filter( 'bp_friends_get_add_follow_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
 
-				bp_friends_get_add_follow_button( array(
-					'leader_id'     => $user_id,
-					'follower_id'   => bp_loggedin_user_id(),
-				) );
+				bp_friends_get_add_follow_button( $user_id, bp_loggedin_user_id() );
 
 				remove_filter( 'bp_friends_get_add_follow_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
 

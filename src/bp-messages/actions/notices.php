@@ -52,7 +52,7 @@ function bp_messages_action_edit_notice() {
 		case 'deactivate' :
 			$success  = $notice->deactivate();
 			$feedback = true === $success
-				? __( 'Notice deactivated successfully.',              'buddypress' )
+				? __( 'Notice deactivated successfully.',              'buddyboss' )
 				: __( 'There was a problem deactivating that notice.', 'buddyboss' );
 			break;
 
@@ -60,7 +60,7 @@ function bp_messages_action_edit_notice() {
 		case 'activate' :
 			$success  = $notice->activate();
 			$feedback = true === $success
-				? __( 'Notice activated successfully.',              'buddypress' )
+				? __( 'Notice activated successfully.',              'buddyboss' )
 				: __( 'There was a problem activating that notice.', 'buddyboss' );
 			break;
 
@@ -68,7 +68,7 @@ function bp_messages_action_edit_notice() {
 		case 'delete' :
 			$success  = $notice->delete();
 			$feedback = true === $success
-				? __( 'Notice deleted successfully.',              'buddypress' )
+				? __( 'Notice deleted successfully.',              'buddyboss' )
 				: __( 'There was a problem deleting that notice.', 'buddyboss' );
 			break;
 	}

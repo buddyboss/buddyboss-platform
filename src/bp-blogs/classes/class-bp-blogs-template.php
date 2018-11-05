@@ -148,7 +148,7 @@ class BP_Blogs_Template {
 				'total'     => ceil( (int) $this->total_blog_count / (int) $this->pag_num ),
 				'current'   => (int) $this->pag_page,
 				'prev_text' => _x( '&larr;', 'Blog pagination previous text', 'buddyboss' ),
-				'next_text' => _x( '&rarr;', 'Blog pagination next text',     'buddypress' ),
+				'next_text' => _x( '&rarr;', 'Blog pagination next text',     'buddyboss' ),
 				'mid_size'  => 1,
 				'add_args'  => array(),
 			) );

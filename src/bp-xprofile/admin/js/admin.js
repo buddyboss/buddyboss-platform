@@ -367,8 +367,8 @@ jQuery( document ).ready( function() {
 			}
 		});
 	}
-    
-    jQuery( '.delete-profile-field-group' ).click( function( e ){
+
+    jQuery( '.delete-profile-field-group' ).click( function( ){
         return confirm( XProfileAdmin.confirm_delete_field_group );
     } );
 });

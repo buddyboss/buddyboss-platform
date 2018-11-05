@@ -479,9 +479,9 @@ function bp_members_pagination_count() {
 
 		if ( 'active' == $members_template->type ) {
 			if ( 1 == $members_template->total_member_count ) {
-				$pag = __( 'Viewing 1 active member', 'buddyboss' );
+				$pag = __( 'Viewing 1 member', 'buddyboss' );
 			} else {
-				$pag = sprintf( _n( 'Viewing %1$s - %2$s of %3$s active member', 'Viewing %1$s - %2$s of %3$s active members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
+				$pag = sprintf( _n( 'Viewing %1$s - %2$s of %3$s member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
 			}
 		} elseif ( 'popular' == $members_template->type ) {
 			if ( 1 == $members_template->total_member_count ) {

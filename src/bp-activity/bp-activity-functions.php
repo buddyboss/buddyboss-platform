@@ -3758,6 +3758,15 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 }
 
 /**
+ * Return if the activity stream should show activty comments as streamed or threaded
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_show_streamed_activity_comment() {
+	return apply_filters( 'bp_show_streamed_activity_comment', bp_get_option('show_streamed_activity_comment', false) );
+}
+
+/**
  * Helper method to map action arguments to function parameters.
  *
  * @since BuddyPress 1.9.0

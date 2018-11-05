@@ -147,11 +147,11 @@ class BP_Members_List_Table extends WP_Users_List_Table {
 		 */
 		return apply_filters( 'bp_members_signup_columns', array(
 			'cb'         => '<input type="checkbox" />',
-			'username'   => __( 'Username',    'buddypress' ),
-			'name'       => __( 'Name',        'buddypress' ),
-			'email'      => __( 'Email',       'buddypress' ),
-			'registered' => __( 'Registered',  'buddypress' ),
-			'date_sent'  => __( 'Last Sent',   'buddypress' ),
+			'username'   => __( 'Username',    'buddyboss' ),
+			'name'       => __( 'Name',        'buddyboss' ),
+			'email'      => __( 'Email',       'buddyboss' ),
+			'registered' => __( 'Registered',  'buddyboss' ),
+			'date_sent'  => __( 'Last Sent',   'buddyboss' ),
 			'count_sent' => __( 'Emails Sent', 'buddyboss' )
 		) );
 	}

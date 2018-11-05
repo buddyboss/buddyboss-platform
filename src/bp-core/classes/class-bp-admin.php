@@ -105,7 +105,7 @@ class BP_Admin {
 		$this->js_url     = trailingslashit( $this->admin_url . 'js'            ); // Admin css URL.
 
 		// Main settings page.
-		$this->settings_page = bp_core_do_network_admin() ? 'settings.php' : 'options-general.php';
+		$this->settings_page = bp_core_do_network_admin() ? 'settings.php' : 'buddyboss-platform';
 
 		// Main capability.
 		$this->capability = bp_core_do_network_admin() ? 'manage_network_options' : 'manage_options';
@@ -141,6 +141,7 @@ class BP_Admin {
 		// Add menu item to settings menu.
 		add_action( 'admin_menu',               array( $this, 'site_admin_menus' ), 5 );
 		add_action( bp_core_admin_hook(),       array( $this, 'admin_menus' ), 5 );
+		add_action( bp_core_admin_hook(),       array( $this, 'adjust_buddyboss_menus' ), 100 );
 
 		// Enqueue all admin JS and CSS.
 		add_action( 'bp_admin_enqueue_scripts', array( $this, 'admin_register_styles' ), 1 );
@@ -153,7 +154,10 @@ class BP_Admin {
 		add_action( 'load-nav-menus.php', 'bp_admin_wp_nav_menu_meta_box' );
 
 		// Add settings.
-		add_action( 'bp_register_admin_settings', array( $this, 'register_admin_settings' ) );
+		add_action( 'bp_register_admin_settings', array( $this, 'register_admin_settings' ), 5 );
+
+		// Add integrations
+		add_action( 'bp_register_admin_integrations', array( $this, 'register_admin_integrations' ), 5 );
 
 		// Add a link to BuddyPress Hello in the admin bar.
 		add_action( 'admin_bar_menu', array( $this, 'admin_bar_about_link' ), 100 );
@@ -207,9 +211,10 @@ class BP_Admin {
 			__( 'BuddyBoss', 'buddyboss' ),
 			__( 'BuddyBoss', 'buddyboss' ),
 			$this->capability,
-			'bp-general-settings',
+			$this->settings_page,
 			'bp_core_admin_backpat_menu',
-			'div'
+			buddypress()->plugin_url . 'bp-core/images/admin/logo.svg',
+			62
 		);
 
 		$hooks[] = add_submenu_page(
@@ -225,7 +230,7 @@ class BP_Admin {
 		$hooks[] = add_submenu_page(
 			$this->settings_page,
 			__( 'BuddyBoss Components', 'buddyboss' ),
-			__( 'BuddyBoss', 'buddyboss' ),
+			__( 'Components', 'buddyboss' ),
 			$this->capability,
 			'bp-components',
 			'bp_core_admin_components_settings'
@@ -233,31 +238,32 @@ class BP_Admin {
 
 		$hooks[] = add_submenu_page(
 			$this->settings_page,
-			__( 'BuddyBoss Pages', 'buddyboss' ),
-			__( 'BuddyBoss Pages', 'buddyboss' ),
-			$this->capability,
-			'bp-page-settings',
-			'bp_core_admin_slugs_settings'
-		);
-
-		$hooks[] = add_submenu_page(
-			$this->settings_page,
-			__( 'BuddyBoss Options', 'buddyboss' ),
-			__( 'BuddyBoss Options', 'buddyboss' ),
+			__( 'BuddyBoss Settings', 'buddyboss' ),
+			__( 'Settings', 'buddyboss' ),
 			$this->capability,
 			'bp-settings',
 			'bp_core_admin_settings'
 		);
 
-		// Credits.
 		$hooks[] = add_submenu_page(
 			$this->settings_page,
-			__( 'BuddyBoss Credits', 'buddyboss' ),
-			__( 'BuddyBoss Credits', 'buddyboss' ),
+			__( 'Plugin Integrations', 'buddyboss' ),
+			__( 'Integrations', 'buddyboss' ),
 			$this->capability,
-			'bp-credits',
-			array( $this, 'credits_screen' )
+			'bp-integrations',
+			'bp_core_admin_integrations'
 		);
+
+		if ( ! is_plugin_active( 'appboss/appboss.php' ) ) {
+			$hooks[] = add_submenu_page(
+				$this->settings_page,
+				__( 'Mobile App', 'buddyboss' ),
+				__( 'Mobile App', 'buddyboss' ),
+				$this->capability,
+				'bp-appboss',
+				'bp_core_admin_appboss'
+			);
+		}
 
 		// For consistency with non-Multisite, we add a Tools menu in
 		// the Network Admin as a home for our Tools panel.
@@ -314,9 +320,44 @@ class BP_Admin {
 			$GLOBALS['menu'][26][2] = esc_url_raw( $email_url );
 		}
 
-		foreach( $hooks as $hook ) {
-			add_action( "admin_head-$hook", 'bp_core_modify_admin_menu_highlight' );
+		// foreach( $hooks as $hook ) {
+		// 	add_action( "admin_head-$hook", 'bp_core_modify_admin_menu_highlight' );
+		// }
+	}
+
+	public function adjust_buddyboss_menus() {
+		global $menu, $submenu;
+
+		// make sure app integration is last
+		$app_menu = '';
+		foreach ( $submenu[ 'buddyboss-platform' ] as $index => $pmenu ) {
+			if ( $pmenu[2] == 'bp-appboss' ) {
+				$app_menu = $pmenu;
+				unset( $submenu[ 'buddyboss-platform' ][ $index ] );
+				break;
+			}
 		}
+
+		$submenu[ 'buddyboss-platform' ] = array_values( $submenu[ 'buddyboss-platform' ] );
+
+		if ( $app_menu ) {
+			$submenu[ 'buddyboss-platform' ][] = $app_menu;
+		}
+
+		// if there's no buddyboss plugin, don't do anything
+		if (! array_key_exists('buddyboss-settings', $submenu)) {
+			return;
+		}
+
+		add_submenu_page( $this->settings_page, '', '', $this->capability, 'bp-plugin-seperator' );
+
+		$submenu['buddyboss-platform'] = array_merge(
+			$submenu['buddyboss-platform'],
+			$submenu['buddyboss-settings']
+		);
+
+		remove_menu_page( 'buddyboss-settings' );
+		unset( $submenu['buddyboss-settings'] );
 	}
 
 	/**
@@ -363,111 +404,34 @@ class BP_Admin {
 	 */
 	public function register_admin_settings() {
 
-		/* Main Section ******************************************************/
+		$bp = buddypress();
+		require_once trailingslashit( $bp->plugin_dir  . 'bp-core/classes' ) . '/class-bp-admin-tab.php';
+		require_once trailingslashit( $bp->plugin_dir  . 'bp-core/classes' ) . '/class-bp-admin-setting-tab.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-general.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-pages.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-xprofile.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-activity.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-groups.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-friends.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-messages.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-registration.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-forums.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-credit.php';
+	}
 
-		// Add the main section.
-		add_settings_section( 'bp_main', __( 'Main Settings', 'buddyboss' ), 'bp_admin_setting_callback_main_section', 'buddypress' );
+	/**
+	 * Register the integrations.
+	 *
+	 * @since BuddyPress 1.6.0
+	 *
+	 */
+	public function register_admin_integrations() {
 
-		// Hide toolbar for logged out users setting.
-		add_settings_field( 'hide-loggedout-adminbar', __( 'Toolbar', 'buddyboss' ), 'bp_admin_setting_callback_admin_bar', 'buddypress', 'bp_main' );
-		register_setting( 'buddypress', 'hide-loggedout-adminbar', 'intval' );
+		$bp = buddypress();
+		require_once trailingslashit( $bp->plugin_dir  . 'bp-core/classes' ) . '/class-bp-admin-tab.php';
+		require_once trailingslashit( $bp->plugin_dir  . 'bp-core/classes' ) . '/class-bp-admin-integration-tab.php';
 
-		// Only show 'switch to Toolbar' option if the user chose to retain the BuddyBar during the 1.6 upgrade.
-		if ( (bool) bp_get_option( '_bp_force_buddybar', false ) ) {
-			// Load deprecated code if not available.
-			if ( ! function_exists( 'bp_admin_setting_callback_force_buddybar' ) ) {
-				require buddypress()->plugin_dir . 'bp-core/deprecated/2.1.php';
-			}
-
-			add_settings_field( '_bp_force_buddybar', __( 'Toolbar', 'buddyboss' ), 'bp_admin_setting_callback_force_buddybar', 'buddypress', 'bp_main' );
-			register_setting( 'buddypress', '_bp_force_buddybar', 'bp_admin_sanitize_callback_force_buddybar' );
-		}
-
-		// Allow account deletion.
-		add_settings_field( 'bp-disable-account-deletion', __( 'Account Deletion', 'buddyboss' ), 'bp_admin_setting_callback_account_deletion', 'buddypress', 'bp_main' );
-		register_setting( 'buddypress', 'bp-disable-account-deletion', 'intval' );
-
-		/* XProfile Section **************************************************/
-
-		if ( bp_is_active( 'xprofile' ) ) {
-
-			// Add the main section.
-			add_settings_section( 'bp_xprofile', _x( 'Profile Settings', 'BuddyPress setting tab', 'buddyboss' ), 'bp_admin_setting_callback_xprofile_section', 'buddypress' );
-
-			// Avatars.
-			add_settings_field( 'bp-disable-avatar-uploads', __( 'Profile Photo Uploads', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'buddypress', 'bp_xprofile' );
-			register_setting( 'buddypress', 'bp-disable-avatar-uploads', 'intval' );
-
-			// Cover images.
-			if ( bp_is_active( 'xprofile', 'cover_image' ) ) {
-				add_settings_field( 'bp-disable-cover-image-uploads', __( 'Cover Image Uploads', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'buddypress', 'bp_xprofile' );
-				register_setting( 'buddypress', 'bp-disable-cover-image-uploads', 'intval' );
-			}
-
-			// Profile sync setting.
-			add_settings_field( 'bp-disable-profile-sync',   __( 'Profile Syncing',  'buddyboss' ), 'bp_admin_setting_callback_profile_sync', 'buddypress', 'bp_xprofile' );
-			register_setting  ( 'buddypress', 'bp-disable-profile-sync', 'intval' );
-
-            // Enable/Disable member dashboard.
-			add_settings_field( 'bp-enable-member-dashboard',   __( 'Member Dashboard',  'buddyboss' ), 'bp_admin_setting_callback_member_dashboard', 'buddypress', 'bp_xprofile' );
-			register_setting  ( 'buddypress', 'bp-enable-member-dashboard', 'intval' );
-		}
-
-		/* Groups Section ****************************************************/
-
-		if ( bp_is_active( 'groups' ) ) {
-
-			// Add the main section.
-			add_settings_section( 'bp_groups', __( 'Groups Settings',  'buddyboss' ), 'bp_admin_setting_callback_groups_section', 'buddypress' );
-
-			// Allow subscriptions setting.
-			add_settings_field( 'bp_restrict_group_creation', __( 'Group Creation', 'buddyboss' ), 'bp_admin_setting_callback_group_creation',   'buddypress', 'bp_groups' );
-			register_setting( 'buddypress', 'bp_restrict_group_creation', 'intval' );
-
-			// Allow group avatars.
-			add_settings_field( 'bp-disable-group-avatar-uploads', __( 'Group Photo Uploads', 'buddyboss' ), 'bp_admin_setting_callback_group_avatar_uploads', 'buddypress', 'bp_groups' );
-			register_setting( 'buddypress', 'bp-disable-group-avatar-uploads', 'intval' );
-
-			// Allow group cover images.
-			if ( bp_is_active( 'groups', 'cover_image' ) ) {
-				add_settings_field( 'bp-disable-group-cover-image-uploads', __( 'Group Cover Image Uploads', 'buddyboss' ), 'bp_admin_setting_callback_group_cover_image_uploads', 'buddypress', 'bp_groups' );
-				register_setting( 'buddypress', 'bp-disable-group-cover-image-uploads', 'intval' );
-			}
-		}
-
-		/* Activity Section **************************************************/
-
-		if ( bp_is_active( 'activity' ) ) {
-
-			// Add the main section.
-			add_settings_section( 'bp_activity', __( 'Activity Settings', 'buddyboss' ), 'bp_admin_setting_callback_activity_section', 'buddypress' );
-
-			// Activity commenting on post and comments.
-			add_settings_field( 'bp-disable-blogforum-comments', __( 'Post Comments', 'buddyboss' ), 'bp_admin_setting_callback_blogforum_comments', 'buddypress', 'bp_activity' );
-			register_setting( 'buddypress', 'bp-disable-blogforum-comments', 'bp_admin_sanitize_callback_blogforum_comments' );
-
-			// Activity Heartbeat refresh.
-			add_settings_field( '_bp_enable_heartbeat_refresh', __( 'Activity auto-refresh', 'buddyboss' ), 'bp_admin_setting_callback_heartbeat', 'buddypress', 'bp_activity' );
-			register_setting( 'buddypress', '_bp_enable_heartbeat_refresh', 'intval' );
-
-			// Allow activity akismet.
-			if ( is_plugin_active( 'akismet/akismet.php' ) && defined( 'AKISMET_VERSION' ) ) {
-				add_settings_field( '_bp_enable_akismet', __( 'Akismet', 'buddyboss' ), 'bp_admin_setting_callback_activity_akismet', 'buddypress', 'bp_activity' );
-				register_setting( 'buddypress', '_bp_enable_akismet', 'intval' );
-			}
-		}
-
-		/* Connection Section **************************************************/
-
-		if ( bp_is_active( 'friends' ) && bp_is_active( 'messages' ) ) { // todo: here we only have one setting field for message component. so we have checked this on main condition but when we have more then we need to change this.
-
-			// Add the main section.
-			add_settings_section( 'bp_friends', __( 'Connection Settings', 'buddyboss' ), 'bp_admin_setting_callback_friendship_section', 'buddypress' );
-
-			// Friends for messaging each other.
-			add_settings_field( 'bp-force-friendship-to-message', __( 'Messaging', 'buddyboss' ), 'bp_admin_setting_callback_force_friendship_to_message', 'buddypress', 'bp_friends' );
-			register_setting( 'buddypress', 'bp-force-friendship-to-message', 'bp_admin_sanitize_callback_force_friendship_to_message' );
-		}
+		// integrations should be loaded in its loader file
 	}
 
 	/**
@@ -525,9 +489,11 @@ class BP_Admin {
 	public function admin_head() {
 
 		// Settings pages.
-		remove_submenu_page( $this->settings_page, 'bp-page-settings' );
-		remove_submenu_page( $this->settings_page, 'bp-settings'      );
-		remove_submenu_page( $this->settings_page, 'bp-credits'       );
+		remove_submenu_page( $this->settings_page, $this->settings_page );
+
+		// remove_submenu_page( $this->settings_page, 'bp-page-settings' );
+		// remove_submenu_page( $this->settings_page, 'bp-settings'      );
+		// remove_submenu_page( $this->settings_page, 'bp-credits'       );
 
 		// Network Admin Tools.
 		remove_submenu_page( 'network-tools', 'network-tools' );
@@ -564,112 +530,8 @@ class BP_Admin {
 		if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'buddypress' ) {
 			return;
 		}
-	?>
 
-		<div id="bp-hello-backdrop" style="display: none;">
-		</div>
-
-		<div id="bp-hello-container" role="dialog" aria-labelledby="bp-hello-title" style="display: none;">
-			<div class="bp-hello-header" role="document">
-				<div class="bp-hello-close">
-					<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip="<?php echo esc_attr( 'Close pop-up', 'buddyboss' ); ?>">
-						<span class="screen-reader-text"><?php esc_html_e( 'Close pop-up', 'buddyboss' ); ?></span>
-					</button>
-				</div>
-
-				<div class="bp-hello-title">
-					<h1 id="bp-hello-title" tabindex="-1"><?php esc_html_e( _x( 'New in BuddyBoss', 'section heading', 'buddyboss' ) ); ?></h1>
-				</div>
-			</div>
-
-			<div class="bp-hello-content">
-				<h2><?php echo esc_html( _n( 'Maintenance Release', 'Maintenance Releases', 1, 'buddyboss' ) ); ?></h2>
-				<p>
-					<?php
-					printf(
-						/* translators: 1: BuddyPress version number, 2: plural number of bugs. */
-						_n(
-							'<strong>Version %1$s</strong> addressed %2$s bug.',
-							'<strong>Version %1$s</strong> addressed %2$s bugs.',
-							23,
-							'buddypress'
-						),
-						'3.2.0',
-						number_format_i18n( 25 )
-					);
-					?>
-				</p>
-
-				<p>
-					<?php
-					printf(
-						/* translators: 1: BuddyPress version number, 2: plural number of bugs. */
-						_n(
-							'<strong>Version %1$s</strong> addressed %2$s bug.',
-							'<strong>Version %1$s</strong> addressed %2$s bugs.',
-							23,
-							'buddypress'
-						),
-						'3.1.0',
-						number_format_i18n( 23 )
-					);
-					?>
-				</p>
-
-				<hr>
-
-				<h2><?php esc_html_e( __( 'Feature', 'buddyboss' ) ); ?></h2>
-				<p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'buddyboss' ); ?></p>
-
-				<h2><?php esc_html_e( __( "Feature", 'buddyboss' ) ); ?></h2>
-				<p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'buddyboss' ); ?></p>
-
-				<p><?php esc_html_e( 'Thank you for using BuddyBoss!', 'buddyboss' ); ?></p>
-
-				<br /><br />
-			</div>
-
-			<div class="bp-hello-footer">
-				<div class="bp-hello-social-cta">
-					<p>
-						<?php
-						printf(
-							__( 'Built by <a href="%s">BuddyBoss</a>.', 'buddyboss' ),
-							esc_url( 'https://www.buddyboss.com/' )
-						);
-						?>
-					</p>
-				</div>
-
-				<div class="bp-hello-social-links">
-					<ul class="bp-hello-social">
-						<li>
-							<?php
-							printf(
-								'<a class="twitter bp-tooltip" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
-								esc_attr( 'Follow BuddyBoss on Twitter', 'buddyboss' ),
-								esc_url( 'https://twitter.com/BuddyBossWP' ),
-								esc_html( 'Follow BuddyPress on Twitter', 'buddyboss' )
-							);
-							?>
-						</li>
-
-						<li>
-							<?php
-							printf(
-								'<a class="facebook bp-tooltip" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
-								esc_attr( 'Follow BuddyBoss on Facebook', 'buddyboss' ),
-								esc_url( 'https://facebook.com/BuddyBossWP/' ),
-								esc_html( 'Follow BuddyBoss on Facebook', 'buddyboss' )
-							);
-							?>
-						</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-
-		<?php
+		include $this->admin_dir . 'templates/about-screen.php';
 	}
 
 	/**
@@ -681,85 +543,7 @@ class BP_Admin {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function credits_screen() {
-	?>
-
-		<div class="wrap bp-about-wrap">
-
-		<h1><?php _e( 'BuddyBoss Settings', 'buddyboss' ); ?> </h1>
-
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Credits', 'buddyboss' ) ); ?></h2>
-
-			<h3 class="wp-people-group"><?php _e( 'Meet the BuddyBoss Team', 'buddyboss' ); ?></h3>
-			<ul class="wp-people-group " id="wp-people-group-core-team">
-				<li class="wp-person" id="wp-person-michaeleisenwasser">
-					<a class="web" href="https://profiles.wordpress.org/eisenwasser"><?php echo '<img alt="" class="gravatar" src="' . buddypress()->plugin_url . "bp-core/images/admin/gravatar-michael.png" . '" />'; ?>
-					Michael Eisenwasser</a>
-					<span class="title"><?php _e( 'Software Development', 'buddyboss' ); ?></span>
-
-				</li>
-				<li class="wp-person" id="wp-person-tomcheddadi">
-					<a class="web" href="https://profiles.wordpress.org/tomchedd"><?php echo '<img alt="" class="gravatar" src="' . buddypress()->plugin_url . "bp-core/images/admin/gravatar-tom.png" . '" />'; ?>
-					Tom Cheddadi</a>
-					<span class="title"><?php _e( 'Marketing and Strategy', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-buddyboss">
-					<a class="web" href="https://www.buddyboss.com/careers/"><?php echo '<img alt="" class="gravatar" src="' . buddypress()->plugin_url . "bp-core/images/admin/gravatar-buddyboss.png" . '" />'; ?>
-					BuddyBoss Team</a>
-					<span class="title"><?php _e( '45 People and Growing!', 'buddyboss' ); ?></span>
-				</li>
-			</ul>
-
-			<h3 class="wp-people-group"><?php _e( 'Special thanks to the BuddyPress contributors', 'buddyboss' ); ?></h3>
-			<p class="wp-about-description">
-				<?php
-				printf(
-					__( 'The "BuddyBoss Platform" is a fork of the open source project <strong><a class="web" href="%s">BuddyPress</a></strong>. We cannot thank the core BuddyPress team enough for their many years of contributing to the original plugin:', 'buddyboss' ),
-					esc_url( 'https://buddypress.org/' )
-				);
-				?>
-				<a class="web" href="https://profiles.wordpress.org/johnjamesjacoby">John James Jacoby</a>,
-				<a class="web" href="https://profiles.wordpress.org/boonebgorges">Boone B. Gorges</a>,
-				<a class="web" href="https://profiles.wordpress.org/djpaul">Paul Gibbs</a>,
-				<a class="web" href="https://profiles.wordpress.org/r-a-y">Ray</a>,
-				<a class="web" href="https://profiles.wordpress.org/hnla">Hugo Ashmore</a>,
-				<a class="web" href="https://profiles.wordpress.org/imath">Mathieu Viet</a>,
-				<a class="web" href="https://profiles.wordpress.org/mercime">Mercime</a>,
-				<a class="web" href="https://profiles.wordpress.org/dcavins">David Cavins</a>,
-				<a class="web" href="https://profiles.wordpress.org/tw2113">Michael Beckwith</a>,
-				<a class="web" href="https://profiles.wordpress.org/henry.wright">Henry Wright</a>,
-				<a class="web" href="https://profiles.wordpress.org/danbp">danbp</a>,
-				<a class="web" href="https://profiles.wordpress.org/shanebp">shanebp</a>,
-				<a class="web" href="https://profiles.wordpress.org/r-a-y">Slava Abakumov</a>,
-				<a class="web" href="https://profiles.wordpress.org/Offereins">Laurens Offereins</a>,
-				<a class="web" href="https://profiles.wordpress.org/netweb">Stephen Edgar</a>,
-				<a class="web" href="https://profiles.wordpress.org/espellcaste">Renato Alves</a>,
-				<a class="web" href="https://profiles.wordpress.org/venutius">Venutius</a>,
-				<a class="web" href="https://profiles.wordpress.org/apeatling/">Andy Peatling</a>,
-				<a class="web" href="https://profiles.wordpress.org/burtadsit">Burt Adsit</a>,
-				<a class="web" href="https://profiles.wordpress.org/jeffsayre">Jeff Sayre</a>,
-				<a class="web" href="https://profiles.wordpress.org/karmatosed">Tammie Lister</a>,
-				<a class="web" href="https://profiles.wordpress.org/modemlooper">modemlooper</a>
-			</p>
-
-			<h3 class="wp-people-group"><?php _e( 'Special thanks to these open source projects', 'buddyboss' ); ?></h3>
-			<p class="wp-credits-list">
-				<a href="https://github.com/ichord/At.js">At.js</a>,
-				<a href="https://bbpress.org">bbPress</a>,
-				<a href="https://wordpress.org/plugins/bp-profile-search/">BP Profile Search</a>,
-				<a href="https://buddypress.org">BuddyPress</a>,
-				<a href="https://github.com/ichord/Caret.js">Caret.js</a>,
-				<a href="https://tedgoas.github.io/Cerberus/">Cerberus</a>,
-				<a href="https://ionicons.com/">Ionicons</a>,
-				<a href="https://github.com/carhartl/jquery-cookie">jquery.cookie</a>,
-				<a href="https://mattbradley.github.io/livestampjs/">Livestamp.js</a>,
-				<a href="https://www.mediawiki.org/wiki/MediaWiki">MediaWiki</a>,
-				<a href="https://momentjs.com/">Moment.js</a>,
-				<a href="https://wordpress.org">WordPress</a>.
-			</p>
-
-		</div>
-
-		<?php
+		include $this->admin_dir . 'templates/about-screen.php';
 	}
 
 	/** Emails ****************************************************************/
