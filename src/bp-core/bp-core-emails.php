@@ -314,7 +314,7 @@ if ( !function_exists('wp_notify_moderator') ) :
 				$notify_message .= sprintf( __( '<p>Website: %1$s (IP address: %2$s, %3$s)</p>' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain );
 				/* translators: 1: Trackback/pingback/comment author URL */
 				$notify_message .= sprintf( __( '<p>URL: %s</p>' ), $comment->comment_author_url );
-				$notify_message .= sprintf( __( '<p>Trackback excerpt: </p> <br />%s' ), $comment_content );
+				$notify_message .= sprintf( __( '<p>Trackback excerpt: </p><br />%s' ), $comment_content );
 				break;
 			case 'pingback':
 				/* translators: 1: Post title */
@@ -519,7 +519,7 @@ if ( !function_exists('wp_new_user_notification') ) {
 			/* translators: %s: site title */
 			$message  = sprintf( __( '<p>New user registration on your site %s:</p>' ), $blogname );
 			/* translators: %s: user login */
-			$message .= sprintf( __( '<p>Username: <b>%s</b><p>' ), $user->user_login );
+			$message .= sprintf( __( '<p>Username: <b>%s</b></p>' ), $user->user_login );
 			/* translators: %s: user email address */
 			$message .= sprintf( __( '<p>Email: <b>%s</b></p>' ), $user->user_email );
 
@@ -864,6 +864,25 @@ if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
 	 */
 	function bp_email_wp_user_confirmed_action_email_content( $email_text, $email_data ) {
 
+		if ( empty( $email_data['privacy_policy_url'] ) ) {
+			/* translators: Do not translate SITENAME, SITEURL; those are placeholders. */
+			$email_text = __('<p>Howdy,</p>
+<p>Your request to erase your personal data on ###SITENAME### has been completed.</p>
+<p>If you have any follow-up questions or concerns, please contact the site administrator.</p>
+<p>Regards, <br />
+All at ###SITENAME### <br />
+###SITEURL###</p>');
+		} else {
+		/* translators: Do not translate SITENAME, SITEURL, PRIVACY_POLICY_URL; those are placeholders. */
+		$email_text = __('<p>Howdy</p>,
+<p>Your request to erase your personal data on ###SITENAME### has been completed.</p>
+<p>If you have any follow-up questions or concerns, please contact the site administrator.</p>
+<p>For more information, you can also read our privacy policy: ###PRIVACY_POLICY_URL###</p>
+<p>Regards, <br />
+All at ###SITENAME### <br />
+###SITEURL###</p>');
+		}
+
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
 		$email_text = bp_email_core_wp_get_template( $email_text, get_user_by( 'email', $email_data['admin_email'] ) );
@@ -872,6 +891,52 @@ if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
 	}
 
 	add_filter( 'user_confirmed_action_email_content', 'bp_email_wp_user_confirmed_action_email_content', 10, 2 );
+}
+
+if ( ! function_exists( 'bp_email_wp_user_request_action_email_content' ) ) {
+	/**
+	 * Filters the text of the email sent when an account action is attempted.
+	 *
+	 * The following strings have a special meaning and will get replaced dynamically:
+	 *
+	 * ###DESCRIPTION### Description of the action being performed so the user knows what the email is for.
+	 * ###CONFIRM_URL### The link to click on to confirm the account action.
+	 * ###SITENAME###    The name of the site.
+	 * ###SITEURL###     The URL to the site.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $email_text Text in the email.
+	 * @param array  $email_data {
+	 *     Data relating to the account action email.
+	 *
+	 *     @type WP_User_Request $request     User request object.
+	 *     @type string          $email       The email address this is being sent to.
+	 *     @type string          $description Description of the action being performed so the user knows what the email is for.
+	 *     @type string          $confirm_url The link to click on to confirm the account action.
+	 *     @type string          $sitename    The site name sending the mail.
+	 *     @type string          $siteurl     The site URL sending the mail.
+	 * }
+	 */
+	function bp_email_wp_user_request_action_email_content( $email_text, $email_data ) {
+
+		/* translators: Do not translate DESCRIPTION, CONFIRM_URL, SITENAME, SITEURL: those are placeholders. */
+		$email_text = __('<p>Howdy,</p>
+<p>A request has been made to perform the following action on your account: <br />###DESCRIPTION###</p>
+<p>To confirm this, please click on the following link: <br />###CONFIRM_URL###</p>
+<p>You can safely ignore and delete this email if you do not want to take this action.</p>
+<p>Regards, <br />
+All at ###SITENAME### <br />
+###SITEURL###</p>');
+
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
+
+		$email_text = bp_email_core_wp_get_template( $email_text, get_user_by( 'email', $email_data['admin_email'] ) );
+
+		return $email_text;
+	}
+
+	add_filter( 'user_request_action_email_content', 'bp_email_wp_user_request_action_email_content', 10, 2 );
 }
 
 if ( ! function_exists( 'bp_email_wp_new_admin_email_content' ) ) {
@@ -1140,7 +1205,7 @@ if ( ! function_exists( 'bp_email_new_network_admin_email_content' ) ) {
 <p>This email has been sent to ###EMAIL###</p>
 <p>Regards, <br />
 All at ###SITENAME### <br />
-###SITEURL###<p>' );
+###SITEURL###</p>' );
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
@@ -1184,7 +1249,7 @@ if ( ! function_exists( 'bp_email_network_admin_email_change_email' ) ) {
 <p>This email has been sent to ###OLD_EMAIL###</p>
 <p>Regards, <br />
 All at ###SITENAME### <br />
-###SITEURL###<p>' );
+###SITEURL###</p>' );
 
 		$email_change_email = array(
 			'to'      => $old_email,
