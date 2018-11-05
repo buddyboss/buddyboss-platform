@@ -79,6 +79,10 @@ add_filter( 'xprofile_field_default_before_save', 'bp_xprofile_sanitize_field_de
 
 add_filter( 'bp_get_the_profile_field_name', 'xprofile_filter_field_edit_name' );
 
+// Field Sets / Repeaters
+add_filter( 'bp_field_css_classes',                 'bp_xprofile_repeater_get_field_css_class' );
+//add_filter( 'bp_get_the_profile_field_input_name',  'bp_xprofile_repeater_field_get_the_input_name' );
+
 /**
  * Sanitize each field option name for saving to the database.
  *
@@ -621,4 +625,31 @@ function xprofile_filter_field_edit_name ( $field_name ) {
     }
     
     return $field_name;
+}
+
+
+/* Field sets - repeaters --------------------------------------- */
+function bp_xprofile_repeater_get_field_css_class ( $classes = array() ) {
+    /*
+     * Is the current field under a repeater set?
+     */
+    global $profile_template;
+    if ( $profile_template->field_set_count > 0 ) {
+        $current_field_set = $profile_template->current_field_set;
+        $classes[] = 'field_set_' . $current_field_set;
+    }
+    
+    return $classes;
+}
+
+function bp_xprofile_repeater_field_get_the_input_name ( $name ) {
+    /*
+     * Is the current field under a repeater set?
+     */
+    global $profile_template;
+    if ( $profile_template->field_set_count > 0 ) {
+        $name .= "[]";
+    }
+    
+    return $name;
 }

@@ -9,6 +9,22 @@ window.bp = window.bp || {};
 		return;
 	}
 
+    //Add repeater set button, on edit profile screens
+    $( '#profile-edit-form #btn_add_repeater_set' ).click( function(e){
+        $.ajax({
+            'url' : ajaxurl,
+            'method' : 'POST',
+            'data' : {
+                'action' : 'bp_xprofile_add_repeater_set',
+                '_wpnonce' : $(this).data('nonce'),
+                'group' : $(this).data('group'),
+            },
+            'done' : function() {
+                $(this).closest('form').submit();
+            }
+        });
+    });
+
 	/**
 	 * This an ugly copy from Legacy's buddypress.js for now
 	 *

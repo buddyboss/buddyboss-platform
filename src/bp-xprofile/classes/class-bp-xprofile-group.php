@@ -160,6 +160,10 @@ class BP_XProfile_Group {
 			$this->id = $wpdb->insert_id;
 		}
 
+        // Save metadata
+        $repeater_enabled = isset( $_POST['group_is_repeater'] ) && 'on' == $_POST['group_is_repeater'] ? 'on' : 'off';
+        self::update_group_meta( $this->id, 'is_repeater_enabled', $repeater_enabled );
+        
 		/**
 		 * Fires after the current group instance gets saved.
 		 *
@@ -279,6 +283,7 @@ class BP_XProfile_Group {
 			'exclude_groups'         => false,
 			'exclude_fields'         => false,
 			'update_meta_cache'      => true,
+            'repeater_show_main_fields_only' => false,
 		) );
 
 		// Keep track of object IDs for cache-priming.
@@ -325,12 +330,42 @@ class BP_XProfile_Group {
 		if ( empty( $group_ids ) ) {
 			return $groups;
 		}
-
+        
 		// Setup IN query from group IDs.
 		$group_ids_in = implode( ',', (array) $group_ids );
 
 		// Support arrays and comma-separated strings.
 		$exclude_fields_cs = wp_parse_id_list( $r['exclude_fields'] );
+        
+        /**
+         * For each group, check if it is a repeater set.
+         * If so,
+         *  - get the number of sets, user has created.
+         *  - create as many set of clones for each such field in the group, if not created already
+         *  - include those field ids in loop
+         */
+        foreach ( $group_ids as $group_id ) {
+            $is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
+            if ( $is_repeater_enabled ) {
+                $clone_field_ids_all = bp_get_repeater_clone_field_ids_all( $group_id );
+                
+                if ( $r['repeater_show_main_fields_only'] ) {
+                    //exclude clones
+                    $exclude_fields_cs  = array_merge( $exclude_fields_cs, $clone_field_ids_all );
+                } else {
+                    //exclude template fields
+                    $template_field_ids = bp_get_repeater_template_field_ids( $group_id );
+                    $exclude_fields_cs  = array_merge( $exclude_fields_cs, $template_field_ids );
+                    
+                    //include only the subset of clones the current user has data in
+                    $user_field_set_count = bp_get_profile_field_set_count( $group_id, $r['user_id'] );
+                    $clone_field_ids_has_data = bp_get_repeater_clone_field_ids_subset( $group_id, $user_field_set_count );
+                    $clones_to_exclude = array_diff( $clone_field_ids_all, $clone_field_ids_has_data );
+                    
+                    $exclude_fields_cs  = array_merge( $exclude_fields_cs, $clones_to_exclude );
+                }
+            }
+        }
 
 		// Visibility - Handled here so as not to be overridden by sloppy use of the
 		// exclude_fields parameter. See bp_xprofile_get_hidden_fields_for_user().
@@ -573,6 +608,14 @@ class BP_XProfile_Group {
 		// Reset indexes & return.
 		return array_values( $groups );
 	}
+    
+    public static function get_group_meta ( $group_id, $meta_key = '', $single = true ) {
+        return bp_xprofile_get_meta( $group_id, 'group', $meta_key, $single );
+    }
+    
+    public static function update_group_meta ( $group_id, $meta_key, $meta_value, $prev_value = '' ) {
+        return bp_xprofile_update_meta( $group_id, 'group', $meta_key, $meta_value, $prev_value );
+    }
 
 	/**
 	 * Validate field group when form submitted.
@@ -840,6 +883,8 @@ class BP_XProfile_Group {
 
 							<?php
 
+                            $enabled = 'on' == self::get_group_meta( $this->id, 'is_repeater_enabled' ) ? 'on' : 'off';
+                            
 							/**
 							 * Fires after XProfile Group submit metabox.
 							 *
@@ -848,7 +893,19 @@ class BP_XProfile_Group {
 							 * @param BP_XProfile_Group $this Current XProfile group.
 							 */
 							do_action( 'xprofile_group_after_submitbox', $this ); ?>
-
+                            
+                            
+                            <div id="repeatersetdiv" class="postbox">
+								<h2><?php _e( 'Repeater Set', 'buddyboss' ); ?></h2>
+								<div class="inside">
+                                    <label for="group_is_repeater"><?php _e( 'Allow the fields in this group to be repeated again and again, together as a set, so the user can add more than one instance of their data.', 'buddyboss' );?></label>
+                                    <select name="group_is_repeater" id="group_is_repeater" >
+                                        <option value="off" <?php selected( $enabled, 'off' );?>><?php _e( 'Disabled', 'buddyboss' );?></option>
+                                        <option value="on" <?php selected( $enabled, 'on' );?>><?php _e( 'Enabled', 'buddyboss' );?></option>
+                                    </select>
+								</div>
+							</div>
+                            
 						</div>
 					</div>
 				</div>
