@@ -24,6 +24,140 @@ window.bp = window.bp || {};
             }
         });
     });
+    
+    //collapse repeater sets on page load, all but the last one
+    var repeater_set_count = $( '#profile-edit-form .repeater_group_outer' ).length;
+    var counter = 1;
+    
+    if ( repeater_set_count > 0 ) {
+        var repeater_set_sequence = [];
+        $( '#profile-edit-form .repeater_group_outer' ).each( function(){
+            var $set = $(this);
+            repeater_set_sequence.push( $set.data('set_no') );
+            
+            if ( counter < repeater_set_count ) {
+                $set.find( '.repeater_group_inner' ).hide();
+            }
+            
+            var title = '';
+            $set.find('.editfield').each( function(){
+                var field_val = $(this).find( 'input[type=text],input[type=number],input[type=email],input[type=phone],input:checked,textarea,select' ).val();
+                if ( $.trim( field_val ) !== '' ) {
+                    title = $.trim( field_val );
+                    return false;
+                }
+            });
+            
+            $set.find('.set_title').html( title );
+            counter++;
+        });
+        
+        $( '#profile-edit-form' ).append( "<input type='hidden' name='repeater_set_sequence' value='"+ repeater_set_sequence.join(',') +"'>" );
+        
+        //sortable
+        $( ".repeater_sets_sortable" ).sortable({
+            items: ".repeater_group_outer",
+            update: function( event, ui ) {
+                var repeater_set_sequence = [];
+                $( '#profile-edit-form .repeater_group_outer' ).each( function(){
+                    repeater_set_sequence.push( $(this).data('set_no') );
+                });
+                $( '#profile-edit-form [name="repeater_set_sequence"]' ).val( repeater_set_sequence.join(',') );
+            }
+        });
+    }
+    
+    //toggle button
+    $( '#profile-edit-form .repeater_group_outer .set_toggle' ).click( function(e){
+        e.preventDefault();
+        $(this).closest('.repeater_group_outer').find('.repeater_group_inner').slideToggle();
+    });
+    
+    //edit button
+    $( '#profile-edit-form .repeater_group_outer .set_edit' ).click( function(e){
+        e.preventDefault();
+        $(this).closest('.repeater_group_outer').find('.repeater_group_inner').slideDown();
+    });
+    
+    //delete button
+    $( '#profile-edit-form .repeater_group_outer .set_delete' ).click( function(e){
+        var $delete_button = $(this);
+        e.preventDefault();
+        if ( $delete_button.hasClass( 'disabled' ) ) {
+            return;
+        }
+        
+        var r = confirm( BP_Nouveau.confirm );
+        if ( r ) {
+            var deleted_field_ids = [];
+            
+            $delete_button.closest( '.repeater_group_outer' ).find( '.editfield' ).each( function(){
+                $field = $(this);
+                var field_id = $field.find( 'input,textarea,select' ).attr( 'name' );
+                field_id = field_id.replace( 'field_', '' );
+                field_id = field_id.replace( '[]', '' );
+                deleted_field_ids.push( field_id );
+            });
+            
+            //remvoe field set
+            $delete_button.closest( '.repeater_group_outer' ).remove();
+            
+            //update sorting order
+            var repeater_set_sequence = [];
+            $( '#profile-edit-form .repeater_group_outer' ).each( function(){
+                repeater_set_sequence.push( $(this).data('set_no') );
+            });
+            $( '#profile-edit-form [name="repeater_set_sequence"]' ).val( repeater_set_sequence.join(',') );
+            
+            //remove the deleted field ids, so that it doesn't generate validation errors
+            var all_field_ids = $( '#profile-edit-form [name="field_ids"]' ).val().split( ',' );
+            var remaining_field_ids = [];
+            for ( var i =0; i < all_field_ids.length; i++ ) {
+                var is_deleted = false;
+                for ( var j = 0; j < deleted_field_ids.length; j++ ) {
+                    if ( all_field_ids[ i ] === deleted_field_ids[ j ] ) {
+                        is_deleted = true;
+                        break;
+                    }
+                }
+                
+                if ( !is_deleted ) {
+                    remaining_field_ids.push( all_field_ids[ i ] );
+                }
+            }
+            
+            remaining_field_ids = remaining_field_ids.join( ',' );
+            
+            $( '#profile-edit-form [name="field_ids"]' ).val( remaining_field_ids );
+            
+            //disable the delete button if it's the only set remaining
+            if ( $( '#profile-edit-form .repeater_group_outer' ).length === 1 ) {
+                $( '#profile-edit-form .repeater_group_outer .set_delete' ).addClass( 'disabled' );
+            }
+        }
+    });
+    
+    //disable the delete button if it's the only set
+    if ( repeater_set_count === 1 ) {
+        $( '#profile-edit-form .repeater_group_outer .set_delete' ).addClass( 'disabled' );
+    }
+    
+    $( '#profile-edit-form #btn_add_repeater_set' ).click( function(e){
+        e.preventDefault();
+        
+        $.ajax({
+            'url' : ajaxurl,
+            'method' : 'POST',
+            'data' : {
+                'action' : 'bp_xprofile_add_repeater_set',
+                '_wpnonce' : $(this).data('nonce'),
+                'group' : $(this).data('group'),
+            },
+            'done' : function() {
+                $(this).closest('form').submit();
+            }
+        });
+    });
 
 	/**
 	 * This an ugly copy from Legacy's buddypress.js for now

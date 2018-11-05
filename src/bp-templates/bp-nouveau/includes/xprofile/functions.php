@@ -26,7 +26,7 @@ function bp_nouveau_xprofile_register_scripts( $scripts = array() ) {
 	return array_merge( $scripts, array(
 		'bp-nouveau-xprofile' => array(
 			'file'         => 'js/buddypress-xprofile%s.js',
-			'dependencies' => array( 'bp-nouveau' ),
+			'dependencies' => array( 'bp-nouveau', 'jquery-ui-sortable' ),
 			'footer'       => true,
 		),
 	) );
