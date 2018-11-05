@@ -143,60 +143,63 @@ if ( ! function_exists('wp_notify_postauthor') ) :
 		switch ( $comment->comment_type ) {
 			case 'trackback':
 				/* translators: 1: Post title */
-				$notify_message  = sprintf( __( '<p>New trackback on your post "%s"</p>' ), $post->post_title );
+				$notify_message  = '<p>' . sprintf( __( 'New trackback on your post "%s"', 'buddyboss' ), $post->post_title ) . '</p>';
 				/* translators: 1: Trackback/pingback website name, 2: website IP address, 3: website hostname */
-				$notify_message .= sprintf( __('<p>Website: %1$s (IP address: %2$s, %3$s)</p>'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain );
+				$notify_message .= '<p>' . sprintf( __('Website: %1$s (IP address: %2$s, %3$s)', 'buddyboss' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . '</p>';
 
 				if( !empty($comment->comment_author_url) ) {
-					$notify_message .= sprintf( __( '<p>URL: %s</p>' ), $comment->comment_author_url );
+					$notify_message .= '<p>' . sprintf( __( 'URL: %s', 'buddyboss' ), $comment->comment_author_url ) . '</p>';
 				}
 
-				$notify_message .= sprintf( __( '<p>Comment: %s</p>' ), "<br />" . $comment_content );
-				$notify_message .= __( '<p>You can see all trackbacks on this post here:</p>' );
+				$notify_message .= '<p>' . __( 'Comment:', 'buddyboss' ) . '</p>';
+				$notify_message .= '<div>' . $comment_content . '</div><br />';
+				$notify_message .= '<p>' . __( 'You can see all trackbacks on this post here:', 'buddyboss' ) . '</p>';
 				/* translators: 1: blog name, 2: post title */
-				$subject = sprintf( __('[%1$s] Trackback: "%2$s"'), $blogname, $post->post_title );
+				$subject = sprintf( __( '[%1$s] Trackback: "%2$s"', 'buddyboss' ), $blogname, $post->post_title );
 				break;
 			case 'pingback':
 				/* translators: 1: Post title */
-				$notify_message  = sprintf( __( '<p>New pingback on your post "%s"</p>' ), $post->post_title );
+				$notify_message  = '<p>' . sprintf( __( 'New pingback on your post "%s"', 'buddyboss' ), $post->post_title ) . '</p>';
 				/* translators: 1: Trackback/pingback website name, 2: website IP address, 3: website hostname */
-				$notify_message .= sprintf( __('<p>Website: %1$s (IP address: %2$s, %3$s)</p>'), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain );
+				$notify_message .= '<p>' . sprintf( __( 'Website: %1$s (IP address: %2$s, %3$s)', 'buddyboss' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . '</p>';
 
 				if( !empty($comment->comment_author_url) ) {
-					$notify_message .= sprintf( __( '<p>URL: %s</p>' ), $comment->comment_author_url );
+					$notify_message .= '<p>' . sprintf( __( 'URL: %s', 'buddyboss' ), $comment->comment_author_url ) . '</p>';
 				}
 
-				$notify_message .= sprintf( __( '<p>Comment: %s</p>' ), $comment_content );
-				$notify_message .= __( '<p>You can see all pingbacks on this post here:</p>' );
+				$notify_message .= '<p>' . __( 'Comment:', 'buddyboss' ) . '</p>';
+				$notify_message .= '<div>' . $comment_content . '</div><br />';
+				$notify_message .= '<p>' . __( 'You can see all pingbacks on this post here:', 'buddyboss' ) . '</p>';
 				/* translators: 1: blog name, 2: post title */
-				$subject = sprintf( __('[%1$s] Pingback: "%2$s"'), $blogname, $post->post_title );
+				$subject = sprintf( __( '[%1$s] Pingback: "%2$s"', 'buddyboss' ), $blogname, $post->post_title );
 				break;
 			default: // Comments
-				$notify_message  = sprintf( __( '<p>New comment on your post "%s"</p>' ), $post->post_title );
+				$notify_message  = '<p>' . sprintf( __( 'New comment on your post "%s"', 'buddyboss' ), $post->post_title ) . '</p>';
 				/* translators: 1: comment author, 2: comment author's IP address, 3: comment author's hostname */
-				$notify_message .= sprintf( __( '<p>Author: %1$s (IP address: %2$s, %3$s)</p>' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain );
-				$notify_message .= sprintf( __( '<p>Email: %s</p>' ), $comment->comment_author_email );
+				$notify_message .= '<p>' . sprintf( __( 'Author: %1$s (IP address: %2$s, %3$s)', 'buddyboss' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . '</p>';
+				$notify_message .= '<p>' . sprintf( __( 'Email: %s', 'buddyboss' ), $comment->comment_author_email ) . '</p>';
 
 				if( !empty($comment->comment_author_url) ) {
-					$notify_message .= sprintf( __( '<p>URL: %s</p>' ), $comment->comment_author_url );
+					$notify_message .= '<p>' . sprintf( __( 'URL: %s', 'buddyboss' ), $comment->comment_author_url ) . '</p>';
 				}
 
-				$notify_message .= sprintf( __('<p>Comment: %s</p>' ), '<br />' . $comment_content );
-				$notify_message .= __( '<p><a class="%s#comments">Click here<a> to see all comments on this post</p>', get_permalink( $comment->comment_post_ID ) );
+				$notify_message .= '<div>' . sprintf( __( 'Comment: <br />%s', 'buddyboss' ), $comment_content ) . '</div><br />';
+				$notify_message .= '<p>' . sprintf( __('<a href="%s">Click here</a> to see all comments on this post.', 'buddyboss' ), get_permalink( $comment->comment_post_ID ) . '#comments' ) . '</p>';
 				/* translators: 1: blog name, 2: post title */
-				$subject = sprintf( __('[%1$s] Comment: "%2$s"'), $blogname, $post->post_title );
+				$subject = sprintf( __( '[%1$s] Comment: "%2$s"', 'buddyboss' ), $blogname, $post->post_title );
 				break;
 		}
+
 		$notify_message .= get_permalink($comment->comment_post_ID) . "#comments <br />";
-		$notify_message .= sprintf( __('<p>Permalink: %s</p>'), get_comment_link( $comment ) );
+		$notify_message .= '<p>' . sprintf( __( 'Permalink: %s', 'buddyboss' ), get_comment_link( $comment ) ) . '</p>';
 
 		if ( user_can( $post->post_author, 'edit_comment', $comment->comment_ID ) ) {
 			if ( EMPTY_TRASH_DAYS ) {
-				$notify_message .= sprintf( __( '<p>Trash it: %s</p>' ), admin_url( "comment.php?action=trash&c={$comment->comment_ID}#wpbody-content" ) );
+				$notify_message .= '<p>' . sprintf( __( 'Trash it: %s', 'buddyboss' ), admin_url( "comment.php?action=trash&c={$comment->comment_ID}#wpbody-content" ) ) . '</p>';
 			} else {
-				$notify_message .= sprintf( __( '<p>Delete it: %s</p>' ), admin_url( "comment.php?action=delete&c={$comment->comment_ID}#wpbody-content" ) );
+				$notify_message .= '<p>' . sprintf( __( 'Delete it: %s', 'buddyboss' ), admin_url( "comment.php?action=delete&c={$comment->comment_ID}#wpbody-content" ) ) . '</p>';
 			}
-			$notify_message .= sprintf( __( '<p>Spam it: %s</p>' ), admin_url( "comment.php?action=spam&c={$comment->comment_ID}#wpbody-content" ) );
+			$notify_message .= '<p>' . sprintf( __( 'Spam it: %s', 'buddyboss' ), admin_url( "comment.php?action=spam&c={$comment->comment_ID}#wpbody-content" ) ) . '</p>';
 		}
 
 		$wp_email = 'wordpress@' . preg_replace('#^www\.#', '', strtolower($_SERVER['SERVER_NAME']));
@@ -250,8 +253,8 @@ if ( ! function_exists('wp_notify_postauthor') ) :
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
 
 		foreach ( $emails as $email ) {
-			$notify_message = bp_email_core_wp_get_template( $notify_message, get_user_by( 'email', $email ) );
-			@wp_mail( $email, wp_specialchars_decode( $subject ), $notify_message, $message_headers );
+			$email_notify_message = bp_email_core_wp_get_template( $notify_message, get_user_by( 'email', $email ) );
+			@wp_mail( $email, wp_specialchars_decode( $subject ), $email_notify_message, $message_headers );
 		}
 
 		remove_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
@@ -320,60 +323,73 @@ if ( !function_exists('wp_notify_moderator') ) :
 		switch ( $comment->comment_type ) {
 			case 'trackback':
 				/* translators: 1: Post title */
-				$notify_message  = sprintf( __('<p>A new trackback on the post "%s" is waiting for your approval</p>'), $post->post_title );
-				$notify_message .= get_permalink($comment->comment_post_ID) . "<br />";
+				$notify_message  = '<p>' . sprintf( __( 'A new trackback on the post "%s" is waiting for your approval', 'buddyboss' ), $post->post_title ) . '</p>';
+				$notify_message .= get_permalink($comment->comment_post_ID) . '<br />';
 				/* translators: 1: Trackback/pingback website name, 2: website IP address, 3: website hostname */
-				$notify_message .= sprintf( __( '<p>Website: %1$s (IP address: %2$s, %3$s)</p>' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain );
+				$notify_message .= '<p>' . sprintf( __( 'Website: %1$s (IP address: %2$s, %3$s)', 'buddyboss' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . '</p>';
 				/* translators: 1: Trackback/pingback/comment author URL */
-				$notify_message .= sprintf( __( '<p>URL: %s</p>' ), $comment->comment_author_url );
-				$notify_message .= sprintf( __( '<p>Trackback excerpt: </p><br />%s' ), $comment_content );
+
+				if( !empty( $comment->comment_author_url ) ) {
+					$notify_message .= '<p>' . sprintf( __( 'URL: %s', 'buddyboss' ), $comment->comment_author_url ) . '</p>';
+				}
+
+				$notify_message .= '<p>' . sprintf( __( 'Trackback excerpt: <br />%s', 'buddyboss' ), $comment_content ) . '</p>';
 				break;
 			case 'pingback':
 				/* translators: 1: Post title */
-				$notify_message  = sprintf( __('<p>A new pingback on the post "%s" is waiting for your approval</p>'), $post->post_title );
-				$notify_message .= get_permalink($comment->comment_post_ID) . "<br />";
+				$notify_message  = '<p>' . sprintf( __( 'A new pingback on the post "%s" is waiting for your approval', 'buddyboss' ), $post->post_title ) . '</p>';
+				$notify_message .= get_permalink($comment->comment_post_ID) . '<br />';
 				/* translators: 1: Trackback/pingback website name, 2: website IP address, 3: website hostname */
-				$notify_message .= sprintf( __( '<p>Website: %1$s (IP address: %2$s, %3$s)</p>' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain );
+				$notify_message .= '<p>' . sprintf( __( 'Website: %1$s (IP address: %2$s, %3$s)', 'buddyboss' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . '</p>';
 				/* translators: 1: Trackback/pingback/comment author URL */
-				$notify_message .= sprintf( __( '<p>URL: %s</p>' ), $comment->comment_author_url );
-				$notify_message .= __('Pingback excerpt: ') . "<br />" . $comment_content . "<br />";
+
+				if( !empty( $comment->comment_author_url ) ) {
+					$notify_message .= '<p>' . sprintf( __( 'URL: %s', 'buddyboss' ), $comment->comment_author_url ) . '</p>';
+				}
+
+				$notify_message .= __( 'Pingback excerpt:', 'buddyboss' ) . '<br />' . $comment_content . '<br />';
 				break;
 			default: // Comments
 				/* translators: 1: Post title */
-				$notify_message  = sprintf( __('<p>A new comment on the post "%s" is waiting for your approval</p>'), $post->post_title );
-				$notify_message .= get_permalink($comment->comment_post_ID) . "<br/>";
+				$notify_message  = '<p>' . sprintf( __( 'A new comment on the post "%s" is waiting for your approval', 'buddyboss' ), $post->post_title ) . '</p>';
+				$notify_message .= get_permalink($comment->comment_post_ID) . '<br />';
 				/* translators: 1: Comment author name, 2: comment author's IP address, 3: comment author's hostname */
-				$notify_message .= sprintf( __( '<p>Author: %1$s (IP address: %2$s, %3$s)</p>' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain );
+				$notify_message .= '<p>' . sprintf( __( 'Author: %1$s (IP address: %2$s, %3$s)', 'buddyboss' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . '</p>';
 				/* translators: 1: Comment author URL */
-				$notify_message .= sprintf( __( '<p>Email: %s</p>' ), $comment->comment_author_email );
+				$notify_message .= '<p>' . sprintf( __( 'Email: %s', 'buddyboss' ), $comment->comment_author_email ) . '</p>';
 				/* translators: 1: Trackback/pingback/comment author URL */
-				$notify_message .= sprintf( __( '<p>URL: %s</p>' ), $comment->comment_author_url );
+
+				if( !empty( $comment->comment_author_url ) ) {
+					$notify_message .= '<p>' . sprintf( __( 'URL: %s', 'buddyboss' ), $comment->comment_author_url ) . '</p>';
+				}
+
 				/* translators: 1: Comment text */
-				$notify_message .= sprintf( __( 'Comment: %s' ), "<br />" . $comment_content ) . "<br/>";
+				$notify_message .= '<div>' . sprintf( __( 'Comment: <br />%s', 'buddyboss' ), $comment_content ) . '</div><br />';
 				break;
 		}
 
 		/* translators: Comment moderation. 1: Comment action URL */
-		$notify_message .= sprintf( __( '<p>Approve it: %s</p>' ), admin_url( "comment.php?action=approve&c={$comment_id}#wpbody-content" ) );
+		$notify_message .= '<p>' . sprintf( __( 'Approve it: %s', 'buddyboss' ), admin_url( "comment.php?action=approve&c={$comment_id}#wpbody-content" ) ) . '</p>';
 
 		if ( EMPTY_TRASH_DAYS ) {
 			/* translators: Comment moderation. 1: Comment action URL */
-			$notify_message .= sprintf( __( '<p>Trash it: %s</p>' ), admin_url( "comment.php?action=trash&c={$comment_id}#wpbody-content" ) );
+			$notify_message .= '<p>' . sprintf( __( 'Trash it: %s', 'buddyboss' ), admin_url( "comment.php?action=trash&c={$comment_id}#wpbody-content" ) ) . '</p>';
 		} else {
 			/* translators: Comment moderation. 1: Comment action URL */
-			$notify_message .= sprintf( __( '<p>Delete it: %s</p>' ), admin_url( "comment.php?action=delete&c={$comment_id}#wpbody-content" ) );
+			$notify_message .= '<p>' . sprintf( __( 'Delete it: %s', 'buddyboss' ), admin_url( "comment.php?action=delete&c={$comment_id}#wpbody-content" ) ) . '</p>';
 		}
 
 		/* translators: Comment moderation. 1: Comment action URL */
-		$notify_message .= sprintf( __( '<p>Spam it: %s</p>' ), admin_url( "comment.php?action=spam&c={$comment_id}#wpbody-content" ) );
+		$notify_message .= '<p>' . sprintf( __( 'Spam it: %s', 'buddyboss' ), admin_url( "comment.php?action=spam&c={$comment_id}#wpbody-content" ) ) . '</p>';
 
 		/* translators: Comment moderation. 1: Number of comments awaiting approval */
-		$notify_message .= sprintf( _n('Currently %s comment is waiting for approval. Please visit the moderation panel:',
-				'Currently %s comments are waiting for approval. Please visit the moderation panel:', $comments_waiting), number_format_i18n($comments_waiting) ) . "<br/>";
-		$notify_message .= admin_url( "edit-comments.php?comment_status=moderated#wpbody-content" ) . "<br/>";
+		$notify_message .= '<p>' . sprintf( _n('Currently %s comment is waiting for approval. Please visit the moderation panel:',
+				'Currently %s comments are waiting for approval. Please visit the moderation panel:', $comments_waiting, 'buddyboss'), number_format_i18n($comments_waiting) ) . '</p>';
+
+		$notify_message .= admin_url( 'edit-comments.php?comment_status=moderated#wpbody-content' ) . '<br />';
 
 		/* translators: Comment moderation notification email subject. 1: Site name, 2: Post title */
-		$subject = sprintf( __('[%1$s] Please moderate: "%2$s"'), $blogname, $post->post_title );
+		$subject = sprintf( __( '[%1$s] Please moderate: "%2$s"', 'buddyboss' ), $blogname, $post->post_title );
 		$message_headers = '';
 
 		/**
@@ -419,8 +435,8 @@ if ( !function_exists('wp_notify_moderator') ) :
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
 
 		foreach ( $emails as $email ) {
-			$notify_message = bp_email_core_wp_get_template( $notify_message, get_user_by( 'email', $email ) );
-			@wp_mail( $email, wp_specialchars_decode( $subject ), $notify_message, $message_headers );
+			$email_notify_message = bp_email_core_wp_get_template( $notify_message, get_user_by( 'email', $email ) );
+			@wp_mail( $email, wp_specialchars_decode( $subject ), $email_notify_message, $message_headers );
 		}
 
 		remove_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
@@ -432,7 +448,6 @@ if ( !function_exists('wp_notify_moderator') ) :
 		return true;
 	}
 endif;
-
 
 if ( !function_exists('wp_password_change_notification') ) :
 	/**
@@ -447,7 +462,7 @@ if ( !function_exists('wp_password_change_notification') ) :
 		// but check to see if it's the admin whose password we're changing, and skip this
 		if ( 0 !== strcasecmp( $user->user_email, get_option( 'admin_email' ) ) ) {
 			/* translators: %s: user name */
-			$message = sprintf( __( '<p>Password changed for user: %s</p>' ), $user->user_login );
+			$message = '<p>' . sprintf( __( 'Password changed for user: %s', 'buddyboss' ), $user->user_login ) . '</p>';
 			// The blogname option is escaped with esc_html on the way into the database in sanitize_option
 			// we want to reverse this for the plain text arena of emails.
 			$blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
@@ -455,7 +470,7 @@ if ( !function_exists('wp_password_change_notification') ) :
 			$wp_password_change_notification_email = array(
 				'to'      => get_option( 'admin_email' ),
 				/* translators: Password change notification email subject. %s: Site title */
-				'subject' => __( '[%s] Password Changed' ),
+				'subject' => __( '[%s] Password Changed', 'buddyboss' ),
 				'message' => $message,
 				'headers' => '',
 			);
@@ -529,16 +544,16 @@ if ( !function_exists('wp_new_user_notification') ) {
 			$switched_locale = switch_to_locale( get_locale() );
 
 			/* translators: %s: site title */
-			$message  = sprintf( __( '<p>New user registration on your site %s:</p>' ), $blogname );
+			$message  = '<p>' . sprintf( __( 'New user registration on your site %s:', 'buddyboss' ), $blogname ) . '</p>';
 			/* translators: %s: user login */
-			$message .= sprintf( __( '<p>Username: <b>%s</b></p>' ), $user->user_login );
+			$message .= '<p>' . sprintf( __( 'Username: <b>%s</b>', 'buddyboss' ), $user->user_login ) . '</p>';
 			/* translators: %s: user email address */
-			$message .= sprintf( __( '<p>Email: <b>%s</b></p>' ), $user->user_email );
+			$message .= '<p>' . sprintf( __( 'Email: <b>%s</b>', 'buddyboss' ), $user->user_email ) . '</p>';
 
 			$wp_new_user_notification_email_admin = array(
 				'to'      => get_option( 'admin_email' ),
 				/* translators: Password change notification email subject. %s: Site title */
-				'subject' => __( '[%s] New User Registration' ),
+				'subject' => __( '[%s] New User Registration', 'buddyboss' ),
 				'message' => $message,
 				'headers' => '',
 			);
@@ -601,14 +616,14 @@ if ( !function_exists('wp_new_user_notification') ) {
 		$switched_locale = switch_to_locale( get_user_locale( $user ) );
 
 		/* translators: %s: user login */
-		$message = sprintf(__('<p>Username: %s</p>'), $user->user_login);
-		$message .= __('<p>To set your password <a href="%s">Click here</a></p>', network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login') );
+		$message = '<p>' . sprintf( __('Username: %s', 'buddyboss' ), $user->user_login ) . '</p>';
+		$message .= '<p>' . sprintf( __( 'To set your password <a href="%s">Click here</a>.', 'buddyboss' ), network_site_url("wp-login.php?action=rp&key=$key&login=" . rawurlencode($user->user_login), 'login') ) . '</p>';
 		$message .= wp_login_url();
 
 		$wp_new_user_notification_email = array(
 			'to'      => $user->user_email,
 			/* translators: Password change notification email subject. %s: Site title */
-			'subject' => __( '[%s] Your username and password info' ),
+			'subject' => __( '[%s] Your username and password info', 'buddyboss' ),
 			'message' => $message,
 			'headers' => '',
 		);
@@ -675,13 +690,13 @@ if ( ! function_exists( 'bp_email_retrieve_password_message' ) ) {
 			$site_name = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 		}
 
-		$message = __( '<p>Someone has requested a password reset for the following account:</p>', 'buddyboss' );
+		$message = '<p>' . __( 'Someone has requested a password reset for the following account:', 'buddyboss' ) . '</p>';
 		/* translators: %s: site name */
-		$message .= sprintf( __( '<p>Site Name: <b>%s</b></p>', 'buddyboss' ), $site_name );
+		$message .= '<p>' . sprintf( __( 'Site Name: <b>%s</b>', 'buddyboss' ), $site_name ) . '</p>';
 		/* translators: %s: user login */
-		$message .= sprintf( __( '<p>Username: <b>%s</b></p>', 'buddyboss' ), $user_login );
-		$message .= __( '<p>If this was a mistake, just ignore this email and nothing will happen.</p>', 'buddyboss'  );
-		$message .= sprintf( __( '<p>To reset your password <a href="%s">Click here</a></p>', 'buddyboss' ), network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user_login ), 'login' ) );
+		$message .= '<p>' . sprintf( __( 'Username: <b>%s</b>', 'buddyboss' ), $user_login ) . '</p>';
+		$message .= '<p>' . __( 'If this was a mistake, just ignore this email and nothing will happen.', 'buddyboss'  ) . '</p>';
+		$message .= '<p>' . sprintf( __( 'To reset your password <a href="%s">Click here</a>.', 'buddyboss' ), network_site_url( "wp-login.php?action=rp&key=$key&login=" . rawurlencode( $user_login ), 'login' ) ) . '</p>';
 
 		$message = bp_email_core_wp_get_template( $message, $user_data );
 
@@ -718,19 +733,17 @@ if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
 	 */
 	function bp_email_wp_password_change_email( $pass_change_email, $user, $userdata ) {
 
-		/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$pass_change_text = __( '<p>Hi ###USERNAME###,</p>
-<p>This notice confirms that your password was changed on ###SITENAME###.</p>
-<p>If you did not change your password, please contact the Site Administrator at <br />###ADMIN_EMAIL###</p>
-<p>This email has been sent to ###EMAIL###</p>
-<p>Regards,<br />
-All at ###SITENAME###<br />
-###SITEURL###</p>' );
+		/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */		
+		$pass_change_text = '<p>' . __( 'Hi ###USERNAME###,', 'buddyboss' ) . '</p>';
+		$pass_change_text .= '<p>' . __( 'This notice confirms that your password was changed on ###SITENAME###.', 'buddyboss' ) . '</p>';
+		$pass_change_text .= '<p>' . __( 'If you did not change your password, please contact the Site Administrator at <br />###ADMIN_EMAIL###', 'buddyboss' ) . '</p>';
+		$pass_change_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss' ) . '</p>';
+		$pass_change_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss' ) . '</p>';
 
 		$pass_change_email = array(
 			'to'      => $user['user_email'],
 			/* translators: User password change notification email subject. 1: Site name */
-			'subject' => __( '[%s] Notice of Password Change' ),
+			'subject' => __( '[%s] Notice of Password Change', 'buddyboss' ),
 			'message' => $pass_change_text,
 			'headers' => '',
 		);
@@ -769,20 +782,18 @@ if ( ! function_exists( 'bp_email_wp_email_change_email' ) ) {
 	 * @param array $userdata The updated user array.
 	 */
 	function bp_email_wp_email_change_email( $email_change_email, $user, $userdata ) {
-
-		/* translators: Do not translate USERNAME, ADMIN_EMAIL, NEW_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$email_change_text = __( '<p>Hi ###USERNAME###,</p>
-<p>This notice confirms that your email address on ###SITENAME### was changed to ###NEW_EMAIL###.</p>
-<p>If you did not change your email, please contact the Site Administrator at <br/>###ADMIN_EMAIL###</p>
-<p>This email has been sent to ###EMAIL###</p>
-<p>Regards,<br />
-All at ###SITENAME###<br />
-###SITEURL###</p>' );
+		
+		/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */		
+		$email_change_text = '<p>' . __( 'Hi ###USERNAME###,', 'buddyboss' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'This notice confirms that your email address on ###SITENAME### was changed to ###NEW_EMAIL###.', 'buddyboss' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'If you did not change your email, please contact the Site Administrator at <br/>###ADMIN_EMAIL###', 'buddyboss' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss' ) . '</p>';
 
 		$email_change_email = array(
 			'to'      => $user['user_email'],
 			/* translators: User email change notification email subject. 1: Site name */
-			'subject' => __( '[%s] Notice of Email Change' ),
+			'subject' => __( '[%s] Notice of Email Change', 'buddyboss' ),
 			'message' => $email_change_text,
 			'headers' => '',
 		);
@@ -825,16 +836,14 @@ if ( ! function_exists( 'bp_email_wp_new_user_email_content' ) ) {
 		if ( empty( $current_user->ID ) ) {
 			return $email_text;
 		}
-
-		/* translators: Do not translate USERNAME, ADMIN_URL, EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$email_text = __( '<p>Howdy ###USERNAME###,</p>
-<p>You recently requested to have the email address on your account changed.</p>
-<p>If this is correct, please <a href="###ADMIN_URL###">click here</a> to change it.</p>
-<p>You can safely ignore and delete this email if you do not want to take this action.</p>
-<p>This email has been sent to ###EMAIL###</p>
-<p>Regards,<br />
-All at ###SITENAME###<br />
-###SITEURL###</p>' );
+		
+		/* translators: Do not translate USERNAME, ADMIN_EMAIL, EMAIL, SITENAME, SITEURL: those are placeholders. */		
+		$email_text = '<p>' . __( 'Howdy ###USERNAME###,', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'You recently requested to have the email address on your account changed.', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'If this is correct, please <a href="###ADMIN_URL###">click here</a> to change it.', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'You can safely ignore and delete this email if you do not want to take this action.', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss' ) . '</p>';
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
@@ -877,22 +886,18 @@ if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
 	function bp_email_wp_user_confirmed_action_email_content( $email_text, $email_data ) {
 
 		if ( empty( $email_data['privacy_policy_url'] ) ) {
-			/* translators: Do not translate SITENAME, SITEURL; those are placeholders. */
-			$email_text = __('<p>Howdy,</p>
-<p>Your request to erase your personal data on ###SITENAME### has been completed.</p>
-<p>If you have any follow-up questions or concerns, please contact the site administrator.</p>
-<p>Regards, <br />
-All at ###SITENAME### <br />
-###SITEURL###</p>');
+			/* translators: Do not translate SITENAME, SITEURL; those are placeholders. */			
+			$email_text = '<p>' . __( 'Howdy,', 'buddyboss' ) . '</p>';
+			$email_text .= '<p>' . __( 'Your request to erase your personal data on ###SITENAME### has been completed.', 'buddyboss' ) . '</p>';
+			$email_text .= '<p>' . __( 'If you have any follow-up questions or concerns, please contact the site administrator.', 'buddyboss' ) . '</p>';
+			$email_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss' ) . '</p>';
 		} else {
-		/* translators: Do not translate SITENAME, SITEURL, PRIVACY_POLICY_URL; those are placeholders. */
-		$email_text = __('<p>Howdy</p>,
-<p>Your request to erase your personal data on ###SITENAME### has been completed.</p>
-<p>If you have any follow-up questions or concerns, please contact the site administrator.</p>
-<p>For more information, you can also read our privacy policy: ###PRIVACY_POLICY_URL###</p>
-<p>Regards, <br />
-All at ###SITENAME### <br />
-###SITEURL###</p>');
+			/* translators: Do not translate SITENAME, SITEURL, PRIVACY_POLICY_URL; those are placeholders. */
+			$email_text = '<p>' . __( 'Howdy,', 'buddyboss' ) . '</p>';
+			$email_text .= '<p>' . __( 'Your request to erase your personal data on ###SITENAME### has been completed.', 'buddyboss' ) . '</p>';
+			$email_text .= '<p>' . __( 'If you have any follow-up questions or concerns, please contact the site administrator.', 'buddyboss' ) . '</p>';
+			$email_text .= '<p>' . __( 'For more information, you can also read our privacy policy: ###PRIVACY_POLICY_URL###', 'buddyboss' ) . '</p>';
+			$email_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss' ) . '</p>';
 		}
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
@@ -933,13 +938,11 @@ if ( ! function_exists( 'bp_email_wp_user_request_action_email_content' ) ) {
 	function bp_email_wp_user_request_action_email_content( $email_text, $email_data ) {
 
 		/* translators: Do not translate DESCRIPTION, CONFIRM_URL, SITENAME, SITEURL: those are placeholders. */
-		$email_text = __('<p>Howdy,</p>
-<p>A request has been made to perform the following action on your account: <br />###DESCRIPTION###</p>
-<p>To confirm this, please click on the following link: <br />###CONFIRM_URL###</p>
-<p>You can safely ignore and delete this email if you do not want to take this action.</p>
-<p>Regards, <br />
-All at ###SITENAME### <br />
-###SITEURL###</p>');
+		$email_text = '<p>' . __( 'Howdy,', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'A request has been made to perform the following action on your account: <br />###DESCRIPTION###', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'To confirm this, please click on the following link: <br />###CONFIRM_URL###', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'You can safely ignore and delete this email if you do not want to take this action.', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss' ) . '</p>';
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
@@ -981,14 +984,12 @@ if ( ! function_exists( 'bp_email_wp_new_admin_email_content' ) ) {
         }
 
 		/* translators: Do not translate USERNAME, ADMIN_URL, EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$email_text = __( '<p>Howdy ###USERNAME###,</p>
-<p>You recently requested to have the administration email address on your site changed.</p>
-<p>If this is correct, please <a href="###ADMIN_URL###">click here</a> to change it.</p>
-<p>You can safely ignore and delete this email if you do not want to take this action.</p>
-<p>This email has been sent to ###EMAIL###</p>
-<p>Regards,<br />
-All at ###SITENAME###<br />
-###SITEURL###</p>' );
+		$email_text = '<p>' . __( 'Howdy ###USERNAME###,', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'You recently requested to have the administration email address on your site changed.', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'If this is correct, please <a href="###ADMIN_URL###">click here</a> to change it.', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'You can safely ignore and delete this email if you do not want to take this action.', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss' ) . '</p>';
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
@@ -1080,10 +1081,10 @@ if ( ! function_exists( 'bp_email_newblog_notify_siteadmin' ) ) {
 		restore_current_blog();
 
 		/* translators: New site notification email. 1: Site URL, 2: User IP address, 3: Settings screen URL */
-		$msg = sprintf( __( '<p>New Site: %1$s</p>
-			<p>URL: %2$s</p>
-			<p>Remote IP address: %3$s</p>
-			<p>Disable these notifications: %4$s</p>' ), $blogname, $siteurl, wp_unslash( $_SERVER['REMOTE_ADDR'] ), $options_site_url);
+		$msg = '<p>' . sprintf( __( 'New Site: %1$s', 'buddyboss' ), $blogname ) . '</p>';
+		$msg .= '<p>' . sprintf( __( 'URL: %2$s', 'buddyboss' ), $siteurl ) . '</p>';
+		$msg .= '<p>' . sprintf( __( 'Remote IP address: %3$s', 'buddyboss' ), wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) . '</p>';
+		$msg .= '<p>' . sprintf( __( 'Disable these notifications: %4$s', 'buddyboss' ), $options_site_url ) . '</p>';
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
@@ -1136,14 +1137,13 @@ if ( ! function_exists( 'bp_email_update_welcome_email' ) ) {
 
 		if ( $welcome_email == false ) {
 			/* translators: Do not translate USERNAME, SITE_NAME, BLOG_URL, PASSWORD: those are placeholders. */
-			$welcome_email = __( '<p>Howdy USERNAME,</p>
-<p>Your new SITE_NAME site has been successfully set up at: <br />BLOG_URL</p>
-<p>You can log in to the administrator account with the following information:</p>
-<p>Username: USERNAME</p>
-<p>Password: PASSWORD</p>
-<p>Log in here: BLOG_URLwp-login.php</p>
-<p>We hope you enjoy your new site. Thanks!<br />
---The Team @ SITE_NAME</p>' );
+			$welcome_email = '<p>' . __( 'Howdy USERNAME,', 'buddyboss' ) . '</p>';
+			$welcome_email .= '<p>' . __( 'Your new SITE_NAME site has been successfully set up at: <br />BLOG_URL', 'buddyboss' ) . '</p>';
+			$welcome_email .= '<p>' . __( 'You can log in to the administrator account with the following information:', 'buddyboss' ) . '</p>';
+			$welcome_email .= '<p>' . __( 'Username: USERNAME', 'buddyboss' ) . '</p>';
+			$welcome_email .= '<p>' . __( 'Password: PASSWORD', 'buddyboss' ) . '</p>';
+			$welcome_email .= '<p>' . __( 'Log in here: BLOG_URLwp-login.php', 'buddyboss' ) . '</p>';
+			$welcome_email .= '<p>' . __( 'We hope you enjoy your new site. Thanks! <br />--The Team @ SITE_NAME', 'buddyboss' ) . '</p>';
 		}
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
@@ -1210,14 +1210,12 @@ if ( ! function_exists( 'bp_email_new_network_admin_email_content' ) ) {
 		}
 
 		/* translators: Do not translate USERNAME, ADMIN_URL, EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$email_text = __( '<p>Howdy ###USERNAME###,</p>
-<p>You recently requested to have the network admin email address on your network changed.</p>
-<p>If this is correct, please click on the following link to change it: <br />###ADMIN_URL###</p>
-<p>You can safely ignore and delete this email if you do not want to take this action.</p>
-<p>This email has been sent to ###EMAIL###</p>
-<p>Regards, <br />
-All at ###SITENAME### <br />
-###SITEURL###</p>' );
+		$email_text = '<p>' . __( 'Howdy ###USERNAME###,', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'You recently requested to have the network admin email address on your network changed.', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'If this is correct, please click on the following link to change it: <br />###ADMIN_URL###', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'You can safely ignore and delete this email if you do not want to take this action.', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'This email has been sent to ###EMAIL###', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'Regards, <br /> All at ###SITENAME### <br /> ###SITEURL###', 'buddyboss' ) . '</p>';
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
@@ -1254,14 +1252,12 @@ if ( ! function_exists( 'bp_email_network_admin_email_change_email' ) ) {
 	 */
 	function bp_email_network_admin_email_change_email( $email_change_email, $old_email, $new_email, $network_id ) {
 
-		/* translators: Do not translate OLD_EMAIL, NEW_EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$email_change_text = __( '<p>Hi,</p>
-<p>This notice confirms that the network admin email address was changed on ###SITENAME###.</p>
-<p>The new network admin email address is ###NEW_EMAIL###.</p>
-<p>This email has been sent to ###OLD_EMAIL###</p>
-<p>Regards, <br />
-All at ###SITENAME### <br />
-###SITEURL###</p>' );
+		/* translators: Do not translate OLD_EMAIL, NEW_EMAIL, SITENAME, SITEURL: those are placeholders. */		
+		$email_change_text = '<p>' . __( 'Hi,', 'buddyboss' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'This notice confirms that the network admin email address was changed on ###SITENAME###.', 'buddyboss' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'The new network admin email address is ###NEW_EMAIL###.', 'buddyboss' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'This email has been sent to ###OLD_EMAIL###', 'buddyboss' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'Regards, <br /> All at ###SITENAME### <br /> ###SITEURL###', 'buddyboss' ) . '</p>';
 
 		$email_change_email = array(
 			'to'      => $old_email,
@@ -1306,13 +1302,11 @@ if ( ! function_exists( 'bp_email_site_admin_email_change_email' ) ) {
 	function bp_email_site_admin_email_change_email( $email_change_email, $old_email, $new_email ) {
 
 		/* translators: Do not translate OLD_EMAIL, NEW_EMAIL, SITENAME, SITEURL: those are placeholders. */
-		$email_change_text = __( '<p>Hi,</p>
-<p>This notice confirms that the admin email address was changed on ###SITENAME###.</p>
-<p>The new admin email address is ###NEW_EMAIL###.</p>
-<p>This email has been sent to ###OLD_EMAIL###</p>
-<p>Regards,<br />
-All at ###SITENAME### <br />
-###SITEURL###</p>' );
+		$email_change_text = '<p>' . __( 'Hi,', 'buddyboss' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'This notice confirms that the admin email address was changed on ###SITENAME###.', 'buddyboss' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'The new admin email address is ###NEW_EMAIL###.', 'buddyboss' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'This email has been sent to ###OLD_EMAIL###', 'buddyboss' ) . '</p>';
+		$email_change_text .= '<p>' . __( 'Regards, <br /> All at ###SITENAME### <br /> ###SITEURL###', 'buddyboss' ) . '</p>';
 
 		$email_change_email = array(
 			'to'      => $old_email,
