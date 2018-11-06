@@ -135,13 +135,13 @@ function bp_get_followers( $args = '' ) {
  * }
  * @return array
  */
-function bp_get_unfollowing( $args = '' ) {
+function bp_get_following( $args = '' ) {
 
 	$r = wp_parse_args( $args, array(
 		'user_id' => bp_displayed_user_id()
 	) );
 
-	return apply_filters( 'bp_get_unfollowing', BP_Follow::get_following( $r['user_id'] ) );
+	return apply_filters( 'bp_get_following', BP_Follow::get_following( $r['user_id'] ) );
 }
 
 /**

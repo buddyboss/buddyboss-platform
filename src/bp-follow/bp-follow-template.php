@@ -103,7 +103,7 @@ function bp_get_following_ids( $args = '' ) {
 		'user_id' => bp_displayed_user_id()
 	) );
 
-	$ids = implode( ',', (array)bp_get_following( array( 'user_id' => $r['user_id'] ) ) );
+	$ids = implode( ',', (array) bp_get_following( array( 'user_id' => $r['user_id'] ) ) );
 
 	$ids = empty( $ids ) ? 0 : $ids;
 
