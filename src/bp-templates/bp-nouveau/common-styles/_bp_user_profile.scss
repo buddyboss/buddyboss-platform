@@ -67,6 +67,28 @@
 			}
 		}
 
+		// Repeater sets
+		.repeater_group_outer {
+		    margin: 0 0 15px;
+		    padding: 15px;
+		    cursor: move;
+		    background: $white;
+		    border: 1px solid $bp-border-color;
+		    
+		    .repeater_tools {
+		        text-align: right;
+
+			    .repeater_set_title {
+			    	float: left;
+			    	display: inline-block;
+			    }
+		        .repeater_set_edit,
+		        .repeater_set_delete {
+		        	cursor: pointer;
+		        }
+		    }
+		}
+
 		// The visual layout of the form controls and group description
 		.editfield {
 			display: flex;
@@ -276,15 +298,4 @@ body.register .buddypress-wrap .page ul {
 	.single-headers li.generic-button {
 		float: none;
 	}
-}
-
-.buddypress-wrap .profile.edit .repeater_group_outer {
-    margin: 0 0 15px;
-    padding: 15px;
-    border: 1px solid #ddd;
-    
-    .repeater_tools {
-        cursor: move;
-        text-align: right;
-    }
 }

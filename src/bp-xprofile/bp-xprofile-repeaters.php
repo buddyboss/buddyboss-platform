@@ -580,12 +580,12 @@ function bp_profile_repeaters_print_group_html_start () {
             <div class='repeater_group_outer' data-set_no='<?php echo $current_set_number;?>'>
                 
                 <div class='repeater_tools'>
-                    <span style='display: inline-block; float: left;' class='set_title'></span>
-                    <a class='set_edit'>
+                    <span class='repeater_set_title'></span>
+                    <a class='repeater_set_edit'>
                         <i class="dashicons dashicons-edit"></i>
                         <span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
                     </a> 
-                    <a class='set_delete'>
+                    <a class='repeater_set_delete'>
                         <i class="dashicons dashicons-trash"></i>
                         <span class="bp-screen-reader-text">Delete</span>
                     </a>
@@ -602,12 +602,12 @@ function bp_profile_repeaters_print_group_html_start () {
             <div class='repeater_group_outer' data-set_no='<?php echo $current_set_number;?>'>
 
                 <div class='repeater_tools'>
-                    <span style='display: inline-block; float: left;' class='set_title'></span>
-                    <a class='set_edit'>
+                    <span class='repeater_set_title'></span>
+                    <a class='repeater_set_edit'>
                         <i class="dashicons dashicons-edit"></i>
                         <span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
                     </a> 
-                    <a class='set_delete'>
+                    <a class='repeater_set_delete'>
                         <i class="dashicons dashicons-trash"></i>
                         <span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
                     </a>                    
