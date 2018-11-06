@@ -2920,7 +2920,7 @@ body.register .buddypress-wrap .page ul {
 
 .buddypress-wrap .profile.edit .repeater_group_outer {
   margin: 0 0 15px;
-  padding: 15px 15px 0;
+  padding: 15px;
   border: 1px solid #ddd;
 }
 
