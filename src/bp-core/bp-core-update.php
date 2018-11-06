@@ -270,7 +270,7 @@ function bp_version_updater() {
 		}
 
 		// Version 3.1.1
-		if ( $raw_db_version < 12307 ) {
+		if ( $raw_db_version < 12310 ) {
 			bp_update_to_3_1_1();
 		}
 	}
@@ -550,7 +550,7 @@ function bp_update_to_2_7() {
 /**
  * 3.1.1 update routine.
  *
- * - Add unfollow table.
+ * - Add follow table.
  *
  * @since BuddyBoss 3.1.1
  */
