@@ -27,11 +27,8 @@ class BP_Follow_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'follow',
-			_x( 'User Following', 'Follow screen page <title>', 'buddyboss' ),
-			buddypress()->plugin_dir,
-			array(
-				'adminbar_myaccount_order' => 65
-			)
+			_x( 'User Followings', 'Follow screen page <title>', 'buddyboss' ),
+			buddypress()->plugin_dir
 		);
 	}
 
@@ -94,7 +91,7 @@ class BP_Follow_Component extends BP_Component {
 			define( 'BP_FOLLOW_SLUG', $this->id );
 		}
 
-		// Global tables for the friends component.
+		// Global tables for the follow component.
 		$global_tables = array(
 			'table_name_follow' => $bp->table_prefix . 'bp_follow',
 		);
