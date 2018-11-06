@@ -1246,11 +1246,11 @@ function bbp_reply_author_link( $args = '' ) {
 					$author_link[] = bbp_get_reply_author_role( array( 'reply_id' => $reply_id ) );
 				}
 
-				$author_link = implode( $r['sep'], $author_link );
+				$author_link = implode( $r['sep'], array_filter( $author_link ) );
 
 			// No links if anonymous
 			} else {
-				$author_link = implode( $r['sep'], $author_links );
+				$author_link = implode( $r['sep'], array_filter( $author_links ) );
 			}
 
 		// No replies so link is empty
