@@ -144,7 +144,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 	<div class="wrap">
 		<?php if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) : ?>
 
-			<h1 class="wp-heading-inline"><?php _ex( 'Profile Fields', 'Settings page header', 'buddypress'); ?></h1>
+			<h1 class="wp-heading-inline"><?php _ex( 'Profile Fields', 'Settings page header', 'buddyboss'); ?></h1>
 
 				<a id="add_group" class="page-title-action" href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'Add New Field Set', 'buddyboss' ); ?></a>
 
@@ -153,7 +153,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 		<?php else : ?>
 
 			<h1>
-				<?php _ex( 'Profile Fields', 'Settings page header', 'buddypress'); ?>
+				<?php _ex( 'Profile Fields', 'Settings page header', 'buddyboss'); ?>
 				<a id="add_group" class="add-new-h2" href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'Add New Field Set', 'buddyboss' ); ?></a>
 			</h1>
 
@@ -188,7 +188,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 								?>
 
 								<?php if ( !$group->can_delete ) : ?>
-									<?php _e( '(Signup)', 'buddypress'); ?>
+									<?php _e( '(Signup)', 'buddyboss'); ?>
 								<?php endif; ?>
 
 							</a>

@@ -32,7 +32,7 @@ function groups_screen_group_invite() {
 
 		// Send the invites.
 		groups_send_invites( bp_loggedin_user_id(), $bp->groups->current_group->id );
-		bp_core_add_message( __('Group invites sent.', 'buddypress') );
+		bp_core_add_message( __('Group invites sent.', 'buddyboss') );
 
 		/**
 		 * Fires after the sending of a group invite inside the group's Send Invites page.

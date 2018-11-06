@@ -1858,7 +1858,7 @@ function bp_group_all_members_permalink() {
 function bp_group_search_form() {
 
 	$action = bp_displayed_user_domain() . bp_get_groups_slug() . '/my-groups/search/';
-	$label = __('Filter Groups', 'buddypress');
+	$label = __('Filter Groups', 'buddyboss');
 	$name = 'group-filter-box';
 
 	$search_form_html = '<form action="' . $action . '" id="group-search-form" method="post">
@@ -2409,7 +2409,7 @@ function bp_group_admin_memberlist( $admin_list = false, $group = false ) {
 
 				<h5><?php echo bp_core_get_userlink( $admin->user_id ) ?></h5>
 				<span class="activity">
-					<?php echo bp_core_get_last_activity( strtotime( $admin->date_modified ), __( 'joined %s', 'buddypress') ); ?>
+					<?php echo bp_core_get_last_activity( strtotime( $admin->date_modified ), __( 'joined %s', 'buddyboss') ); ?>
 				</span>
 
 				<?php if ( bp_is_active( 'friends' ) ) : ?>
@@ -2485,7 +2485,7 @@ function bp_group_mod_memberlist( $admin_list = false, $group = false ) {
 
 				<h5><?php echo bp_core_get_userlink( $mod->user_id ) ?></h5>
 
-				<span class="activity"><?php echo bp_core_get_last_activity( strtotime( $mod->date_modified ), __( 'joined %s', 'buddypress') ); ?></span>
+				<span class="activity"><?php echo bp_core_get_last_activity( strtotime( $mod->date_modified ), __( 'joined %s', 'buddyboss') ); ?></span>
 
 				<?php if ( bp_is_active( 'friends' ) ) : ?>
 
@@ -4218,7 +4218,7 @@ function bp_group_member_joined_since( $args = array() ) {
 		 *
 		 * @param string $value Joined since time.
 		 */
-		return apply_filters( 'bp_get_group_member_joined_since', bp_core_get_last_activity( $members_template->member->date_modified, __( 'joined %s', 'buddypress') ) );
+		return apply_filters( 'bp_get_group_member_joined_since', bp_core_get_last_activity( $members_template->member->date_modified, __( 'joined %s', 'buddyboss') ) );
 	}
 
 /**
