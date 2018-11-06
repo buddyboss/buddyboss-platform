@@ -185,8 +185,8 @@ final class bbPress {
         // Setup some base path and URL information
         $this->file       = __FILE__;
 		$this->basename   = apply_filters( 'bbp_plugin_basename', plugin_basename( buddypress()->file ) );
-		$this->plugin_dir = apply_filters( 'bbp_plugin_dir_path', buddypress()->plugin_dir . '/bp-forums/' );
-		$this->plugin_url = apply_filters( 'bbp_plugin_dir_url',  buddypress()->plugin_url . '/bp-forums/' );
+		$this->plugin_dir = apply_filters( 'bbp_plugin_dir_path', buddypress()->plugin_dir . 'bp-forums/' );
+		$this->plugin_url = apply_filters( 'bbp_plugin_dir_url',  buddypress()->plugin_url . 'bp-forums/' );
 
         // Includes
         $this->includes_dir = apply_filters( 'bbp_includes_dir', trailingslashit( $this->plugin_dir ) );
