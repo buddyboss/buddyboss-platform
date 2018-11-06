@@ -578,12 +578,9 @@ function bp_profile_repeaters_print_group_html_start () {
             ?>
             <div class="repeater_sets_sortable">
             <div class='repeater_group_outer' data-set_no='<?php echo $current_set_number;?>'>
+                
                 <div class='repeater_tools'>
                     <span style='display: inline-block; float: left;' class='set_title'></span>
-                    <a class='set_toggle'>
-                        <i class="dashicons dashicons-move"></i>
-                        <span class="bp-screen-reader-text"><?php esc_html_e( 'Reorder', 'buddyboss' ); ?></span>
-                    </a>
                     <a class='set_edit'>
                         <i class="dashicons dashicons-edit"></i>
                         <span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
@@ -594,6 +591,7 @@ function bp_profile_repeaters_print_group_html_start () {
                     </a>
                 </div>
                 <div class='repeater_group_inner'>
+
             <?php 
         } else {
             if ( $first_xpfield_in_repeater == $template_field_id ) {
@@ -602,12 +600,9 @@ function bp_profile_repeaters_print_group_html_start () {
                 </div>
             </div><!-- .repeater_group_outer -->
             <div class='repeater_group_outer' data-set_no='<?php echo $current_set_number;?>'>
+
                 <div class='repeater_tools'>
                     <span style='display: inline-block; float: left;' class='set_title'></span>
-                    <a class='set_toggle'>
-                        <i class="dashicons dashicons-move"></i>
-                        <span class="bp-screen-reader-text"><?php esc_html_e( 'Reorder', 'buddyboss' ); ?></span>
-                    </a>
                     <a class='set_edit'>
                         <i class="dashicons dashicons-edit"></i>
                         <span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
@@ -618,6 +613,7 @@ function bp_profile_repeaters_print_group_html_start () {
                     </a>                    
                 </div>
                 <div class='repeater_group_inner'>
+
                 <?php 
             }
         }

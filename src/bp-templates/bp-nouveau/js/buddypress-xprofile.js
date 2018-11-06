@@ -51,16 +51,10 @@ window.bp = window.bp || {};
         });
     }
     
-    //toggle button
-    $( '#profile-edit-form .repeater_group_outer .set_toggle' ).click( function(e){
-        e.preventDefault();
-        $(this).closest('.repeater_group_outer').find('.repeater_group_inner').slideToggle();
-    });
-    
     //edit button
     $( '#profile-edit-form .repeater_group_outer .set_edit' ).click( function(e){
         e.preventDefault();
-        $(this).closest('.repeater_group_outer').find('.repeater_group_inner').slideDown();
+        $(this).closest('.repeater_group_outer').find('.repeater_group_inner').slideToggle();
     });
     
     //delete button
