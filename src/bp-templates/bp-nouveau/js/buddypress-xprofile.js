@@ -9,9 +9,8 @@ window.bp = window.bp || {};
 		return;
 	}
     
-    //collapse repeater sets on page load, all but the last one
+    // Collapse repeater sets on page load, if there are more than one sets
     var repeater_set_count = $( '#profile-edit-form .repeater_group_outer' ).length;
-    var counter = 1;
     
     if ( repeater_set_count > 0 ) {
         var repeater_set_sequence = [];
@@ -19,7 +18,7 @@ window.bp = window.bp || {};
             var $set = $(this);
             repeater_set_sequence.push( $set.data('set_no') );
             
-            if ( counter < repeater_set_count ) {
+            if ( repeater_set_count > 1 ) {
                 $set.find( '.repeater_group_inner' ).hide();
             }
             
@@ -32,15 +31,14 @@ window.bp = window.bp || {};
                 }
             });
             
-            $set.find('.set_title').html( title );
-            counter++;
+            $set.find('.repeater_set_title').html( title );
         });
         
-        $( '#profile-edit-form' ).append( "<input type='hidden' name='repeater_set_sequence' value='"+ repeater_set_sequence.join(',') +"'>" );
+        $( '#profile-edit-form' ).append( '<input type="hidden" name="repeater_set_sequence" value="'+ repeater_set_sequence.join(',') +'">' );
         
-        //sortable
-        $( ".repeater_sets_sortable" ).sortable({
-            items: ".repeater_group_outer",
+        // Sortable
+        $( '.repeater_sets_sortable' ).sortable({
+            items: '.repeater_group_outer',
             update: function( event, ui ) {
                 var repeater_set_sequence = [];
                 $( '#profile-edit-form .repeater_group_outer' ).each( function(){
@@ -51,27 +49,21 @@ window.bp = window.bp || {};
         });
     }
     
-    //toggle button
-    $( '#profile-edit-form .repeater_group_outer .set_toggle' ).click( function(e){
+    // Edit button
+    $( '#profile-edit-form .repeater_group_outer .repeater_set_edit' ).click( function(e){
         e.preventDefault();
         $(this).closest('.repeater_group_outer').find('.repeater_group_inner').slideToggle();
     });
     
-    //edit button
-    $( '#profile-edit-form .repeater_group_outer .set_edit' ).click( function(e){
-        e.preventDefault();
-        $(this).closest('.repeater_group_outer').find('.repeater_group_inner').slideDown();
-    });
-    
-    //delete button
-    $( '#profile-edit-form .repeater_group_outer .set_delete' ).click( function(e){
+    // Delete button
+    $( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).click( function(e){
         var $delete_button = $(this);
         e.preventDefault();
         if ( $delete_button.hasClass( 'disabled' ) ) {
             return;
         }
         
-        var r = confirm( BP_Nouveau.confirm );
+        var r = confirm( BP_Nouveau.confirm_delete_set );
         if ( r ) {
             var deleted_field_ids = [];
             
@@ -83,17 +75,17 @@ window.bp = window.bp || {};
                 deleted_field_ids.push( field_id );
             });
             
-            //remvoe field set
+            // Remove field set
             $delete_button.closest( '.repeater_group_outer' ).remove();
             
-            //update sorting order
+            // Update sorting order
             var repeater_set_sequence = [];
             $( '#profile-edit-form .repeater_group_outer' ).each( function(){
                 repeater_set_sequence.push( $(this).data('set_no') );
             });
             $( '#profile-edit-form [name="repeater_set_sequence"]' ).val( repeater_set_sequence.join(',') );
             
-            //remove the deleted field ids, so that it doesn't generate validation errors
+            // Remove the deleted field ids, so that it doesn't generate validation errors
             var all_field_ids = $( '#profile-edit-form [name="field_ids"]' ).val().split( ',' );
             var remaining_field_ids = [];
             for ( var i =0; i < all_field_ids.length; i++ ) {
@@ -114,19 +106,25 @@ window.bp = window.bp || {};
             
             $( '#profile-edit-form [name="field_ids"]' ).val( remaining_field_ids );
             
-            //disable the delete button if it's the only set remaining
+            //keep a record of deleted fields
+            if ( $( '#profile-edit-form [name="deleted_field_ids"]' ).length == 0 ) {
+                $( '#profile-edit-form' ).append( "<input type='hidden' name='deleted_field_ids' >" );
+            }
+            $( '#profile-edit-form [name="deleted_field_ids"]' ).val( deleted_field_ids.join( ',' ) );
+            
+            // Disable the delete button if it's the only set remaining
             if ( $( '#profile-edit-form .repeater_group_outer' ).length === 1 ) {
-                $( '#profile-edit-form .repeater_group_outer .set_delete' ).addClass( 'disabled' );
+                $( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).addClass( 'disabled' );
             }
         }
     });
     
-    //disable the delete button if it's the only set
+    // Disable the delete button if it's the only set
     if ( repeater_set_count === 1 ) {
-        $( '#profile-edit-form .repeater_group_outer .set_delete' ).addClass( 'disabled' );
+        $( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).addClass( 'disabled' );
     }
     
-    //Add repeater set button, on edit profile screens
+    // Add repeater set button, on edit profile screens
     $( '#profile-edit-form #btn_add_repeater_set' ).click( function(e){
         e.preventDefault();
         $button = $(this);
@@ -143,7 +141,7 @@ window.bp = window.bp || {};
             'data' : {
                 'action' : 'bp_xprofile_add_repeater_set',
                 '_wpnonce' : $button.data('nonce'),
-                'group' : $button.data('group'),
+                'group' : $button.data('group')
             },
             'success' : function() {
                 //$button.closest('form').submit();
