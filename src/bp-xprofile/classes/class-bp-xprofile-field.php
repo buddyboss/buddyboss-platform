@@ -1015,6 +1015,8 @@ class BP_XProfile_Field {
 			// Invalidate profile field cache.
 			wp_cache_delete( $field_id, 'bp_xprofile_fields' );
 
+            do_action( 'xprofile_updated_field_position', $field_id, $position, $field_group_id );
+            
 			return $parent;
 		}
 

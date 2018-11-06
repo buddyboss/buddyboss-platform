@@ -430,6 +430,7 @@ function xprofile_admin_delete_group( $group_id ) {
  *
  * @since BuddyPress 1.0.0
  * @since BuddyBoss 3.1.1 Updated to continue showing the field-edit form, after field is saved/updated.
+ * @since BuddyBoss 3.1.1 Updated to exclude repeater field ids while determining field_order for new field.
  *
  * @param int      $group_id ID of the group.
  * @param int|null $field_id ID of the field being managed.
@@ -469,7 +470,18 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 
 			$field->field_order = $wpdb->get_var( $wpdb->prepare( "SELECT field_order FROM {$bp->profile->table_name_fields} WHERE id = %d", $field_id ) );
 			if ( ! is_numeric( $field->field_order ) || is_wp_error( $field->field_order ) ) {
-				$field->field_order = (int) $wpdb->get_var( $wpdb->prepare( "SELECT max(field_order) FROM {$bp->profile->table_name_fields} WHERE group_id = %d", $group_id ) );
+                //cloned fields should not be considered when determining the max order of fields in given group
+                $cloned_field_ids = $wpdb->get_col( $wpdb->prepare( 
+                    "SELECT f.id FROM {$bp->profile->table_name_fields} AS f JOIN {$bp->profile->table_name_meta} AS fm ON f.id = fm.object_id "
+                    . " WHERE f.group_id = %d AND fm.meta_key = '_is_repeater_clone' AND fm.meta_value = 1 ",
+                    $group_id
+                ) );
+                
+                if ( !empty( $cloned_field_ids ) ) {
+                    $field->field_order = (int) $wpdb->get_var( $wpdb->prepare( "SELECT max(field_order) FROM {$bp->profile->table_name_fields} WHERE group_id = %d AND id NOT IN ( ". implode( ',', $cloned_field_ids ) ." )", $group_id ) );
+                } else {
+                    $field->field_order = (int) $wpdb->get_var( $wpdb->prepare( "SELECT max(field_order) FROM {$bp->profile->table_name_fields} WHERE group_id = %d", $group_id ) );
+                }
 				$field->field_order++;
 			}
 

@@ -270,13 +270,13 @@ function bp_clone_field_for_repeater_sets ( $field_id ) {
     return false;
 }
 
-add_action( 'xprofile_fields_saved_field', 'bp_repeaters_update_clones_on_template_update' );
+add_action( 'xprofile_fields_saved_field', 'xprofile_update_clones_on_template_update' );
 /**
  * Update repeater/clone fields when the main/template field is updated.
  * 
  * @param \BP_XProfile_Field $field Description
  */
-function bp_repeaters_update_clones_on_template_update ( $field ) {
+function xprofile_update_clones_on_template_update ( $field ) {
     global $wpdb;
     $bp = buddypress();
     
@@ -297,10 +297,10 @@ function bp_repeaters_update_clones_on_template_update ( $field ) {
         $sql = $wpdb->prepare(
             "UPDATE {$bp->profile->table_name_fields} SET "
             . " group_id = %d, parent_id = %d, type = %s, name = %s, description = %s, is_required = %d, "
-            . " is_default_option = %d, field_order = %d, option_order = %d, order_by = %d, can_delete = %d "
+            . " is_default_option = %d, option_order = %d, order_by = %d, can_delete = %d "
             . " WHERE id IN ( ". implode( ',', $clone_ids ) ." )",
             $db_row[ 'group_id' ], $db_row[ 'parent_id' ], $db_row[ 'type' ], $db_row[ 'name' ], $db_row[ 'description' ], $db_row[ 'is_required' ],
-            $db_row[ 'is_default_option' ], $db_row[ 'field_order' ], $db_row[ 'option_order' ], $db_row[ 'order_by' ], $db_row[ 'can_delete' ]
+            $db_row[ 'is_default_option' ], $db_row[ 'option_order' ], $db_row[ 'order_by' ], $db_row[ 'can_delete' ]
         );
             
         $wpdb->query( $sql );
@@ -313,6 +313,101 @@ function bp_repeaters_update_clones_on_template_update ( $field ) {
                     bp_xprofile_update_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );
                 }
             }
+        }
+    }
+}
+
+add_action( 'xprofile_fields_deleted_field', 'xprofile_delete_clones_on_template_delete' );
+/**
+ * Delete repeater/clone fields when the main/template field is deleted.
+ * 
+ * @param \BP_XProfile_Field $field Description
+ */
+function xprofile_delete_clones_on_template_delete ( $field ) {
+    global $wpdb;
+    $bp = buddypress();
+    
+    //get all clone field ids
+    $clone_ids = $wpdb->get_col( $wpdb->prepare(
+        "SELECT f.id FROM {$bp->profile->table_name_fields} AS f JOIN {$bp->profile->table_name_meta} AS fm ON f.id = fm.object_id "
+        . " WHERE f.parent_id = 0 AND fm.meta_key = '_cloned_from' AND fm.meta_value = %d ",
+        $field->id
+    ) );
+        
+    if ( empty( $clone_ids ) || is_wp_error( $clone_ids ) ) {
+        return;
+    }
+    
+    foreach ( $clone_ids as $clone_id ) {
+        $clone_field       = xprofile_get_field( $clone_id );
+        $clone_field->delete( true );
+    }
+}
+
+add_action( 'xprofile_updated_field_position', 'xprofile_update_clone_positions_on_template_position_update', 10, 3 );
+function xprofile_update_clone_positions_on_template_position_update ( $template_field_id, $new_position, $template_field_group_id ) {
+    /**
+     * Check if template field is now moved to another field set
+     * If so
+     *  - If the new field set is also a repeater
+     *      - Update clone fields, update their group id and sorting numbers
+     * If not
+     *  - Update clone fields, update their sorting numbers
+     */
+    
+    global $wpdb;
+    $bp = buddypress();
+    
+    $clone_field_ids = $wpdb->get_col( $wpdb->prepare( 
+        "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE object_type = 'field' AND meta_key = '_cloned_from' AND meta_value = %d",
+        $template_field_id
+    ) );
+        
+    if ( empty( $clone_field_ids ) || is_wp_error( $clone_field_ids ) ) {
+        return;
+    }
+    
+    //get the old group id
+    //since all clone fields have same group id, we can simply get the group id for the first one
+    $old_group_id = $wpdb->get_var( $wpdb->prepare( "SELECT group_id FROM {$bp->profile->table_name_fields} WHERE id = %d", $clone_field_ids[ 0 ] ) );
+    if ( empty( $old_group_id ) || is_wp_error( $old_group_id ) ) {
+        return;//something's not right
+    }
+    
+    $update_field_orders = false;
+    
+    if ( $old_group_id != $template_field_group_id ) {
+        //tempalte field has been moved to a new field group
+        $is_repeater_enabled = 'on' == bp_xprofile_get_meta( $template_field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
+        if ( $is_repeater_enabled ) {
+            //update group id for all clone fields
+            $sql = $wpdb->prepare( 
+                "UPDATE {$bp->profile->table_name_fields} SET group_id = %d WHERE id IN ( ". implode( ',', $clone_field_ids ) ." )", 
+                $template_field_group_id 
+            );
+            
+            $wpdb->query( $sql );
+                
+            $update_field_orders = true;
+        }
+    } else {
+        //tempalte field is still in same field group
+        $update_field_orders = true;
+    }
+    
+    if ( $update_field_orders ) {
+        $max_cap = bp_profile_field_set_max_cap();
+        
+        foreach ( $clone_field_ids as $clone_field_id ) {
+            $clone_number = (int) bp_xprofile_get_meta( $clone_field_id, 'field', '_clone_number', true );
+            $field_order = ( $clone_number * $max_cap ) + $new_position;
+            $wpdb->update(
+                $bp->profile->table_name_fields,
+                array( 'field_order' => $field_order ),
+                array( 'id' => $clone_field_id ),
+                array( '%d' ),
+                array( '%d' )
+            );
         }
     }
 }
