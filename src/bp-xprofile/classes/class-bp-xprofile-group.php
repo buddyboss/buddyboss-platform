@@ -882,8 +882,6 @@ class BP_XProfile_Group {
 							</div>
 
 							<?php
-
-                            $enabled = 'on' == self::get_group_meta( $this->id, 'is_repeater_enabled' ) ? 'on' : 'off';
                             
 							/**
 							 * Fires after XProfile Group submit metabox.
@@ -894,17 +892,27 @@ class BP_XProfile_Group {
 							 */
 							do_action( 'xprofile_group_after_submitbox', $this ); ?>
                             
+                            <?php 
+                            /**
+                             * The main profile field group, used in registration form,
+                             * can not be a repeater.
+                             */
+                            if ( $this->can_delete ) : ?>
                             
-                            <div id="repeatersetdiv" class="postbox">
-								<h2><?php _e( 'Repeater Set', 'buddyboss' ); ?></h2>
-								<div class="inside">
-                                    <label for="group_is_repeater"><?php _e( 'Allow the fields in this group to be repeated again and again, together as a set, so the user can add more than one instance of their data.', 'buddyboss' );?></label>
-                                    <select name="group_is_repeater" id="group_is_repeater" >
-                                        <option value="off" <?php selected( $enabled, 'off' );?>><?php _e( 'Disabled', 'buddyboss' );?></option>
-                                        <option value="on" <?php selected( $enabled, 'on' );?>><?php _e( 'Enabled', 'buddyboss' );?></option>
-                                    </select>
-								</div>
-							</div>
+                                <?php $enabled = 'on' == self::get_group_meta( $this->id, 'is_repeater_enabled' ) ? 'on' : 'off'; ?>
+                            
+                                <div id="repeatersetdiv" class="postbox">
+                                    <h2><?php _e( 'Repeater Set', 'buddyboss' ); ?></h2>
+                                    <div class="inside">
+                                        <label for="group_is_repeater"><?php _e( 'Allow the fields in this group to be repeated again and again, together as a set, so the user can add more than one instance of their data.', 'buddyboss' );?></label>
+                                        <select name="group_is_repeater" id="group_is_repeater" >
+                                            <option value="off" <?php selected( $enabled, 'off' );?>><?php _e( 'Disabled', 'buddyboss' );?></option>
+                                            <option value="on" <?php selected( $enabled, 'on' );?>><?php _e( 'Enabled', 'buddyboss' );?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            
+                            <?php endif; ?>
                             
 						</div>
 					</div>

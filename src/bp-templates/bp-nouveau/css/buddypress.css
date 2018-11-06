@@ -801,6 +801,11 @@ body.buddypress article.page > .entry-header .entry-title {
   text-align: center;
 }
 
+.buddypress-wrap .subnav-filters .grid-filters {
+  float: right;
+  padding: 8px 0 8px 10px;
+}
+
 /**
 *----------------------------------------------------------
 * @section 2.2 - Pagination
@@ -2914,14 +2919,14 @@ body.register .buddypress-wrap .page ul {
 }
 
 .buddypress-wrap .profile.edit .repeater_group_outer {
-    margin: 0 0 15px;
-    padding: 15px 15px 0;
-    border: 1px solid #ddd;
+  margin: 0 0 15px;
+  padding: 15px 15px 0;
+  border: 1px solid #ddd;
 }
 
-.buddypress-wrap .profile.edit .repeater_group_outer .repeater_tools{
-    cursor: move;
-    text-align: right;
+.buddypress-wrap .profile.edit .repeater_group_outer .repeater_tools {
+  cursor: move;
+  text-align: right;
 }
 
 /**
