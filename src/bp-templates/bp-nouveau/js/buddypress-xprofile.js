@@ -9,9 +9,8 @@ window.bp = window.bp || {};
 		return;
 	}
     
-    // Collapse repeater sets on page load, all but the last one
+    // Collapse repeater sets on page load, if there are more than one sets
     var repeater_set_count = $( '#profile-edit-form .repeater_group_outer' ).length;
-    var counter = 1;
     
     if ( repeater_set_count > 0 ) {
         var repeater_set_sequence = [];
@@ -19,7 +18,7 @@ window.bp = window.bp || {};
             var $set = $(this);
             repeater_set_sequence.push( $set.data('set_no') );
             
-            if ( counter < repeater_set_count ) {
+            if ( repeater_set_count > 1 ) {
                 $set.find( '.repeater_group_inner' ).hide();
             }
             
@@ -33,7 +32,6 @@ window.bp = window.bp || {};
             });
             
             $set.find('.repeater_set_title').html( title );
-            counter++;
         });
         
         $( '#profile-edit-form' ).append( '<input type="hidden" name="repeater_set_sequence" value="'+ repeater_set_sequence.join(',') +'">' );
@@ -65,7 +63,7 @@ window.bp = window.bp || {};
             return;
         }
         
-        var r = confirm( BP_Nouveau.confirm );
+        var r = confirm( BP_Nouveau.confirm_delete_set );
         if ( r ) {
             var deleted_field_ids = [];
             
@@ -107,6 +105,12 @@ window.bp = window.bp || {};
             remaining_field_ids = remaining_field_ids.join( ',' );
             
             $( '#profile-edit-form [name="field_ids"]' ).val( remaining_field_ids );
+            
+            //keep a record of deleted fields
+            if ( $( '#profile-edit-form [name="deleted_field_ids"]' ).length == 0 ) {
+                $( '#profile-edit-form' ).append( "<input type='hidden' name='deleted_field_ids' >" );
+            }
+            $( '#profile-edit-form [name="deleted_field_ids"]' ).val( deleted_field_ids.join( ',' ) );
             
             // Disable the delete button if it's the only set remaining
             if ( $( '#profile-edit-form .repeater_group_outer' ).length === 1 ) {

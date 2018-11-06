@@ -154,6 +154,14 @@ function bp_profile_repeaters_update_field_data ( $user_id, $posted_field_ids, $
         return;
     }
     
+    // First, clear the data for deleted fields, if any
+    if ( isset( $_POST['deleted_field_ids'] ) && !empty( $_POST['deleted_field_ids'] ) ) {
+        $deleted_field_ids = wp_parse_id_list( $_POST['deleted_field_ids'] );
+        foreach ( $deleted_field_ids as $deleted_field_id ) {
+            xprofile_delete_field_data( $deleted_field_id, $user_id );
+        }
+    }
+    
     $field_set_sequence = wp_parse_id_list( $_POST['repeater_set_sequence'] );
     
     /**
