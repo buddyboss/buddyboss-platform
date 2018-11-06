@@ -38,8 +38,8 @@ function bp_xprofile_get_groups( $args = array() ) {
     if ( !isset( $args[ 'repeater_show_main_fields_only' ] ) ) {
         $repeater_show_main_fields_only = true;
         
-        //If editing your profile in front end
-        if ( 'profile' == bp_current_component() && 'edit' == bp_current_action() ) {
+        //If on a user profile
+        if ( 'profile' == bp_current_component() ) {
             $repeater_show_main_fields_only = false;
         }
         

@@ -8,22 +8,6 @@ window.bp = window.bp || {};
 	if ( typeof BP_Nouveau === 'undefined' ) {
 		return;
 	}
-
-    //Add repeater set button, on edit profile screens
-    $( '#profile-edit-form #btn_add_repeater_set' ).click( function(e){
-        $.ajax({
-            'url' : ajaxurl,
-            'method' : 'POST',
-            'data' : {
-                'action' : 'bp_xprofile_add_repeater_set',
-                '_wpnonce' : $(this).data('nonce'),
-                'group' : $(this).data('group'),
-            },
-            'done' : function() {
-                $(this).closest('form').submit();
-            }
-        });
-    });
     
     //collapse repeater sets on page load, all but the last one
     var repeater_set_count = $( '#profile-edit-form .repeater_group_outer' ).length;
@@ -142,19 +126,28 @@ window.bp = window.bp || {};
         $( '#profile-edit-form .repeater_group_outer .set_delete' ).addClass( 'disabled' );
     }
     
+    //Add repeater set button, on edit profile screens
     $( '#profile-edit-form #btn_add_repeater_set' ).click( function(e){
         e.preventDefault();
+        $button = $(this);
+        
+        if ( $button.hasClass( 'disabled' ) ) {
+            return;
+        }
+        
+        $button.addClass('disabled');
         
         $.ajax({
             'url' : ajaxurl,
             'method' : 'POST',
             'data' : {
                 'action' : 'bp_xprofile_add_repeater_set',
-                '_wpnonce' : $(this).data('nonce'),
-                'group' : $(this).data('group'),
+                '_wpnonce' : $button.data('nonce'),
+                'group' : $button.data('group'),
             },
-            'done' : function() {
-                $(this).closest('form').submit();
+            'success' : function() {
+                //$button.closest('form').submit();
+                window.location.reload();
             }
         });
     });
@@ -197,9 +190,11 @@ window.bp = window.bp || {};
 
 	$( '#profile-edit-form input:not(:submit), #profile-edit-form textarea, #profile-edit-form select, #signup_form input:not(:submit), #signup_form textarea, #signup_form select' ).change( function() {
 		var shouldconfirm = true;
+        $( '#profile-edit-form #btn_add_repeater_set' ).addClass('disabled');
 
 		$( '#profile-edit-form input:submit, #signup_form input:submit' ).on( 'click', function() {
 			shouldconfirm = false;
+            $( '#profile-edit-form #btn_add_repeater_set' ).removeClass('disabled');
 		} );
 
 		window.onbeforeunload = function() {
