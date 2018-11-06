@@ -156,6 +156,12 @@ function bp_profile_repeaters_update_field_data ( $user_id, $posted_field_ids, $
     
     $field_set_sequence = wp_parse_id_list( $_POST['repeater_set_sequence'] );
     
+    /**
+     * We'll take the data from all clone fields and dump it into the main/template field.
+     * This is done to ensure that search etc, work smoothly.
+     */
+    $main_field_data = array();
+    
     $counter = 1;
     foreach( (array) $field_set_sequence as $field_set_number ) {
         /**
@@ -180,11 +186,24 @@ function bp_profile_repeaters_update_field_data ( $user_id, $posted_field_ids, $
                     $new_visibility_level = isset( $new_values[ $field_of_current_set ][ 'visibility' ] ) ? $new_values[ $field_of_current_set ][ 'visibility' ] : '';
                     xprofile_set_field_visibility_level( $corresponding_field_id, $user_id, $new_visibility_level );
                     xprofile_set_field_data( $corresponding_field_id, $user_id, $new_data );
+                    
+                    if ( !isset( $main_field_data[ $cloned_from ] ) ) {
+                        $main_field_data[ $cloned_from ] = array();
+                    }
+
+                    $main_field_data[ $cloned_from ][] = is_array( $new_values[ $field_of_current_set ][ 'value' ] ) ? implode( ' ', $new_values[ $field_of_current_set ][ 'value' ] ) : $new_values[ $field_of_current_set ][ 'value' ];
                 }
             }
         }
     
         $counter++;
+    }
+    
+    if ( !empty( $main_field_data ) ) {
+        foreach ( $main_field_data as $main_field_id => $values ) {
+            $values_str = implode( ' ', $values );
+            xprofile_set_field_data( $main_field_id, $user_id, $values_str );
+        }
     }
     
     bp_set_profile_field_set_count( $field_group_id, $user_id, count( $field_set_sequence ) );
