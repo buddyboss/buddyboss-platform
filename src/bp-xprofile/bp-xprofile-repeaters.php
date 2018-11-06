@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress XProfile Repeater Fields and field sets. Tags.
+ * BuddyPress XProfile Repeater Fields and field sets.
  * 
  * @package BuddyBoss
  * @since BuddyPress 3.1.1
@@ -547,7 +547,7 @@ function bp_print_add_repeater_set_button () {
         echo "<button id='btn_add_repeater_set' data-nonce='". wp_create_nonce( 'bp_xprofile_add_repeater_set' ) ."' data-group='{$group_id}'>";
         printf(
             /* translators: %s = profile field group name */
-            __( 'Add %s Set', 'buddyboss' ),
+            __( 'Add Another', 'buddyboss' ),
             bp_get_the_profile_group_name()
         );
         echo "</button>";
@@ -597,11 +597,20 @@ function bp_profile_repeaters_print_group_html_start () {
             ?>
             <div class="repeater_sets_sortable">
             <div class='repeater_group_outer' data-set_no='<?php echo $current_set_number;?>'>
+                
                 <div class='repeater_tools'>
-                    <span style='display: inline-block;' class='set_title'></span>
-                    <a class='button set_toggle'>&uarr;&darr;</a><a class='button set_edit'>Edit</a><a class='button set_delete'>Delete</a>
+                    <span class='repeater_set_title'></span>
+                    <a class='repeater_set_edit'>
+                        <i class="dashicons dashicons-edit"></i>
+                        <span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
+                    </a> 
+                    <a class='repeater_set_delete'>
+                        <i class="dashicons dashicons-trash"></i>
+                        <span class="bp-screen-reader-text">Delete</span>
+                    </a>
                 </div>
                 <div class='repeater_group_inner'>
+
             <?php 
         } else {
             if ( $first_xpfield_in_repeater == $template_field_id ) {
@@ -610,11 +619,20 @@ function bp_profile_repeaters_print_group_html_start () {
                 </div>
             </div><!-- .repeater_group_outer -->
             <div class='repeater_group_outer' data-set_no='<?php echo $current_set_number;?>'>
+
                 <div class='repeater_tools'>
-                    <span style='display: inline-block;' class='set_title'></span>
-                    <a class='button set_toggle'>&uarr;&darr;</a><a class='button set_edit'>Edit</a><a class='button set_delete'>Delete</a>
+                    <span class='repeater_set_title'></span>
+                    <a class='repeater_set_edit'>
+                        <i class="dashicons dashicons-edit"></i>
+                        <span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
+                    </a> 
+                    <a class='repeater_set_delete'>
+                        <i class="dashicons dashicons-trash"></i>
+                        <span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
+                    </a>                    
                 </div>
                 <div class='repeater_group_inner'>
+
                 <?php 
             }
         }

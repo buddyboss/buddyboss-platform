@@ -140,7 +140,7 @@ module.exports = function( grunt ) {
 		checktextdomain: {
 			options: {
 				correct_domain: false,
-				text_domain: ['buddypress', 'buddyboss'],
+				text_domain: ['buddyboss'],
 				keywords: [
 					'__:1,2d',
 					'_e:1,2d',

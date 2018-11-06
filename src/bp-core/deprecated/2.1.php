@@ -439,7 +439,7 @@ function bp_adminbar_authors_menu() {
 	if ( !empty( $authors ) ) {
 		// This is a blog, render a menu with links to all authors
 		echo '<li id="bp-adminbar-authors-menu"><a href="/">';
-		_e('Blog Authors', 'buddypress');
+		_e('Blog Authors', 'buddyboss');
 		echo '</a>';
 
 		echo '<ul class="author-list">';

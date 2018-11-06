@@ -48,7 +48,7 @@ class BP_Tests_Groups_Template_BpGroupStatusMessage extends BP_UnitTestCase {
 			}
 		}
 
-		$expected = __( 'This is a private group and you must request group membership in order to join.', 'buddypress' );
+		$expected = __( 'This is a private group and you must request group membership in order to join.', 'buddyboss' );
 		$this->assertSame( $expected, $found );
 	}
 
@@ -68,7 +68,7 @@ class BP_Tests_Groups_Template_BpGroupStatusMessage extends BP_UnitTestCase {
 			}
 		}
 
-		$expected = __( 'This is a private group and you must request group membership in order to join.', 'buddypress' );
+		$expected = __( 'This is a private group and you must request group membership in order to join.', 'buddyboss' );
 		$this->assertSame( $expected, $found );
 	}
 
@@ -85,7 +85,7 @@ class BP_Tests_Groups_Template_BpGroupStatusMessage extends BP_UnitTestCase {
 			}
 		}
 
-		$expected = __( 'This is a private group. To join you must be a registered site member and request group membership.', 'buddypress' );
+		$expected = __( 'This is a private group. To join you must be a registered site member and request group membership.', 'buddyboss' );
 		$this->assertSame( $expected, $found );
 	}
 
@@ -107,7 +107,7 @@ class BP_Tests_Groups_Template_BpGroupStatusMessage extends BP_UnitTestCase {
 			}
 		}
 
-		$expected = __( 'This is a private group. Your membership request is awaiting approval from the group administrator.', 'buddypress' );
+		$expected = __( 'This is a private group. Your membership request is awaiting approval from the group administrator.', 'buddyboss' );
 		$this->assertSame( $expected, $found );
 	}
 
@@ -124,7 +124,7 @@ class BP_Tests_Groups_Template_BpGroupStatusMessage extends BP_UnitTestCase {
 
 		$found = get_echo( 'bp_group_status_message', array( $group ) );
 
-		$expected = __( 'This is a hidden group and only invited members can join.', 'buddypress' );
+		$expected = __( 'This is a hidden group and only invited members can join.', 'buddyboss' );
 		$this->assertSame( $expected, $found );
 	}
 
@@ -150,7 +150,7 @@ class BP_Tests_Groups_Template_BpGroupStatusMessage extends BP_UnitTestCase {
 
 		$found = get_echo( 'bp_group_status_message', array( $group1 ) );
 
-		$expected = __( 'This is a private group. Your membership request is awaiting approval from the group administrator.', 'buddypress' );
+		$expected = __( 'This is a private group. Your membership request is awaiting approval from the group administrator.', 'buddyboss' );
 		$this->assertSame( $expected, $found );
 	}
 }

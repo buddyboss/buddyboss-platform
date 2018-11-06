@@ -1262,7 +1262,7 @@ if ( ! function_exists( 'bp_email_network_admin_email_change_email' ) ) {
 		$email_change_email = array(
 			'to'      => $old_email,
 			/* translators: Network admin email change notification email subject. %s: Network title */
-			'subject' => __( '[%s] Notice of Network Admin Email Change' ),
+			'subject' => __( '[%s] Notice of Network Admin Email Change', 'buddyboss' ),
 			'message' => $email_change_text,
 			'headers' => '',
 		);
@@ -1311,7 +1311,7 @@ if ( ! function_exists( 'bp_email_site_admin_email_change_email' ) ) {
 		$email_change_email = array(
 			'to'      => $old_email,
 			/* translators: Site admin email change notification email subject. %s: Site title */
-			'subject' => __( '[%s] Notice of Admin Email Change' ),
+			'subject' => __( '[%s] Notice of Admin Email Change', 'buddyboss' ),
 			'message' => $email_change_text,
 			'headers' => '',
 		);

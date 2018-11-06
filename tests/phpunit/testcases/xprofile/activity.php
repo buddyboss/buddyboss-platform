@@ -284,7 +284,7 @@ class BP_Tests_XProfile_Activity extends BP_UnitTestCase {
 			'user_id' => $u,
 		) );
 
-		$expected = sprintf( __( '%s changed their profile picture', 'buddypress' ), bp_core_get_userlink( $u ) );
+		$expected = sprintf( __( '%s changed their profile picture', 'buddyboss' ), bp_core_get_userlink( $u ) );
 
 		$a_obj = new BP_Activity_Activity( $a );
 
@@ -303,7 +303,7 @@ class BP_Tests_XProfile_Activity extends BP_UnitTestCase {
 			'user_id' => $u,
 		) );
 
-		$expected = sprintf( __( "%s updated their profile", 'buddypress' ), '<a href="' . bp_core_get_user_domain( $u ) . bp_get_profile_slug() . '/">' . bp_core_get_user_displayname( $u ) . '</a>' );
+		$expected = sprintf( __( "%s updated their profile", 'buddyboss' ), '<a href="' . bp_core_get_user_domain( $u ) . bp_get_profile_slug() . '/">' . bp_core_get_user_displayname( $u ) . '</a>' );
 
 		$a_obj = new BP_Activity_Activity( $a );
 
