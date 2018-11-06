@@ -345,6 +345,16 @@ function xprofile_delete_clones_on_template_delete ( $field ) {
 }
 
 add_action( 'xprofile_updated_field_position', 'xprofile_update_clone_positions_on_template_position_update', 10, 3 );
+/**
+ * Update position and group_id for all clone fields when a template/main field's order is changed.
+ * @since BuddyBoss 3.1.1
+ * 
+ * @global type $wpdb
+ * @param int $template_field_id
+ * @param int $new_position
+ * @param int $template_field_group_id
+ * @return type
+ */
 function xprofile_update_clone_positions_on_template_position_update ( $template_field_id, $new_position, $template_field_group_id ) {
     /**
      * Check if template field is now moved to another field set
@@ -410,6 +420,73 @@ function xprofile_update_clone_positions_on_template_position_update ( $template
             );
         }
     }
+}
+
+add_filter( 'bp_xprofile_field_get_children', 'bp_xprofile_repeater_field_get_children', 10, 3 );
+/**
+ * @since BuddyBoss 3.1.1
+ * @param array $children
+ * @param boolean $for_editing
+ * @param \BP_XProfile_Field $field
+ */
+function bp_xprofile_repeater_field_get_children ( $children, $for_editing, $field ) {
+    global $wpdb;
+    $bp = buddypress();
+    
+    if ( ! bp_xprofile_get_meta( $field->id, 'field', '_is_repeater_clone', true ) ) {
+        return $children;
+    }
+    
+    /*
+     * If the current field is a clone,
+     * we'll query template field for children/field-options
+     */
+    $template_field_id = bp_xprofile_get_meta( $field->id, 'field', '_cloned_from', true );
+    if ( empty( $template_field_id ) ) {
+        return $children;
+    }
+    
+    $template_field = xprofile_get_field( $template_field_id );
+    if ( $template_field == null ) {
+        return $children;
+    }
+    
+    if ( ! ( $template_children = wp_cache_get( $template_field_id, 'field_children_options' ) ) ) {
+        // This is done here so we don't have problems with sql injection.
+        if ( empty( $for_editing ) && ( 'asc' === $template_field->order_by ) ) {
+            $sort_sql = 'ORDER BY name ASC';
+        } elseif ( empty( $for_editing ) && ( 'desc' === $template_field->order_by ) ) {
+            $sort_sql = 'ORDER BY name DESC';
+        } else {
+            $sort_sql = 'ORDER BY option_order ASC';
+        }
+
+        $parent_id = $template_field_id;
+
+        $bp  = buddypress();
+        $sql = $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE parent_id = %d AND group_id = %d {$sort_sql}", $parent_id, $template_field->group_id );
+
+        $template_children = $wpdb->get_results( $sql );
+        
+        wp_cache_set( $template_field_id, $template_children, 'field_children_options' );
+    }
+    
+    if ( !empty( $template_children ) ) {
+        
+        //Since same children will be shared in all clones of a kind,
+        //there are duplicate radiobutton/checkbox ids and hence associated labels behave incorreclty.
+        //we'll need to manipuate children ids
+        $temp = array();
+        $clone_number = (int) bp_xprofile_get_meta( $field->id, 'field', '_clone_number', true );
+        foreach ( $template_children as $child ) {
+            $child->id .= '_' . $clone_number;
+            $temp[] = $child;
+        }
+        
+        $children = $temp;
+    }
+    
+    return $children;
 }
 /* ----------- User Profiles ------------------- */
 
