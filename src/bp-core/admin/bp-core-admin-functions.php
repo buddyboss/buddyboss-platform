@@ -1037,7 +1037,7 @@ function bp_admin_email_maybe_add_translation_notice() {
 
 	bp_core_add_admin_notice(
 		sprintf(
-			__( 'Are these emails not written in your site\'s language? Go to <a href="%s">BuddyPress Tools and try the "reinstall emails"</a> tool.', 'buddyboss' ),
+			__( 'Are these emails not written in your site\'s language? Go to <a href="%s">BuddyBoss Tools and try the "reinstall emails"</a> tool.', 'buddyboss' ),
 			esc_url( add_query_arg( 'page', 'bp-tools', bp_get_admin_url( $admin_page ) ) )
 		),
 		'updated'

@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Tools panel.
+ * BuddyBoss Tools panel.
  *
  * @package BuddyBoss
  * @subpackage Core
@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Render the BuddyPress Tools page.
+ * Render the BuddyBoss Tools page.
  *
  * @since BuddyPress 2.0.0
  */
@@ -19,9 +19,9 @@ function bp_core_admin_tools() {
 	?>
 	<div class="wrap">
 
-		<h1><?php esc_html_e( 'BuddyPress Tools', 'buddyboss' ) ?></h1>
+		<h1><?php esc_html_e( 'BuddyBoss Tools', 'buddyboss' ) ?></h1>
 
-		<p><?php esc_html_e( 'BuddyPress keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration.', 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( 'BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration.', 'buddyboss' ); ?></p>
 		<p><?php esc_html_e( 'Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?>
 		</p>
 		<p class="description"><?php esc_html_e( 'Some of these tools create substantial database overhead. Avoid running more than one repair job at a time.', 'buddyboss' ); ?></p>
@@ -404,10 +404,10 @@ function bp_core_admin_available_tools_intro() {
 	$url  = add_query_arg( $query_arg, bp_get_admin_url( $page ) );
 	?>
 	<div class="card tool-box">
-		<h2><?php esc_html_e( 'BuddyPress Tools', 'buddyboss' ) ?></h2>
+		<h2><?php esc_html_e( 'BuddyBoss Tools', 'buddyboss' ) ?></h2>
 		<p>
-			<?php esc_html_e( 'BuddyPress keeps track of various relationships between users, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration.', 'buddyboss' ); ?>
-			<?php printf( esc_html_x( 'Use the %s to repair these relationships.', 'buddypress tools intro', 'buddyboss' ), '<a href="' . esc_url( $url ) . '">' . esc_html__( 'BuddyPress Tools', 'buddyboss' ) . '</a>' ); ?>
+			<?php esc_html_e( 'BuddyBoss keeps track of various relationships between users, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration.', 'buddyboss' ); ?>
+			<?php printf( esc_html_x( 'Use the %s to repair these relationships.', 'buddypress tools intro', 'buddyboss' ), '<a href="' . esc_url( $url ) . '">' . esc_html__( 'BuddyBoss Tools', 'buddyboss' ) . '</a>' ); ?>
 		</p>
 	</div>
 	<?php

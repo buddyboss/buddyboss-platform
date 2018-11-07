@@ -1110,7 +1110,7 @@ function bp_get_user_last_activity( $user_id = 0 ) {
  * Migrate last_activity data from the usermeta table to the activity table.
  *
  * Generally, this function is only run when BP is upgraded to 2.0. It can also
- * be called directly from the BuddyPress Tools panel.
+ * be called directly from the BuddyBoss Tools panel.
  *
  * @since BuddyPress 2.0.0
  *
