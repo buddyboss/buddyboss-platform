@@ -549,6 +549,10 @@ add_action( 'bp_after_profile_field_content', 'bp_print_add_repeater_set_button'
  * @since BuddyBoss 3.1.1
  */
 function bp_print_add_repeater_set_button () {
+    if ( 'edit' !== bp_current_action() ) {
+        return false;
+    }
+    
     $group_id = bp_get_current_profile_group_id();
     $is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
     if ( $is_repeater_enabled ) {
@@ -587,6 +591,7 @@ function bp_xprofile_ajax_add_repeater_set () {
 
 add_action( 'bp_before_profile_field_html', 'bp_profile_repeaters_print_group_html_start' );
 /**
+ * Open wrapper of repeater set - on edit profile screen
  * @since BuddyBoss 3.1.1
  * @global type $first_xpfield_in_repeater
  */
@@ -649,6 +654,7 @@ function bp_profile_repeaters_print_group_html_start () {
 
 add_action( 'bp_after_profile_field_content', 'bp_profile_repeaters_print_group_html_end', 4 );
 /**
+ * Close wrapper of repeater set - on edit profile screen
  * @since BuddyBoss 3.1.1
  * @global boolean $first_xpfield_in_repeater
  */
@@ -661,3 +667,49 @@ function bp_profile_repeaters_print_group_html_end () {
     }
 }
 
+
+add_action( 'bp_before_profile_field_item', 'bp_view_profile_repeaters_print_group_html_start' );
+/**
+ * Open wrapper of repeater set - on View profile screen
+ * @since BuddyBoss 3.1.1
+ * @global type $first_xpfield_in_repeater
+ */
+function bp_view_profile_repeaters_print_group_html_start () {
+    $group_id = bp_get_the_profile_group_id();
+    $is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
+    if ( $is_repeater_enabled ) {
+        global $repeater_set_being_displayed;
+        
+        $current_field_id = bp_get_the_profile_field_id();
+        $current_set_number = bp_xprofile_get_meta( $current_field_id, 'field', '_clone_number', true );
+        
+        if ( empty( $repeater_set_being_displayed ) ) {
+            //start of first set
+            //echo "<tr class='repeater-separator-top'><td colspan='2'><hr></td></tr>";
+        } else if ( $repeater_set_being_displayed != $current_set_number  ) {
+            //end of previous set
+            echo "<tr class='repeater-separator-bottom'><td colspan='2'><hr></td></tr>";
+            
+            //start of a new set
+            //echo "<tr class='repeater-separator-top'><td colspan='2'><hr></td></tr>";
+        }
+        
+        $repeater_set_being_displayed = $current_set_number;
+    }
+}
+
+add_action( 'bp_after_profile_field_items', 'bp_view_profile_repeaters_print_group_html_end', 4 );
+/**
+ * Close wrapper of repeater set - on edit profile screen
+ * @since BuddyBoss 3.1.1
+ * @global boolean $first_xpfield_in_repeater
+ */
+function bp_view_profile_repeaters_print_group_html_end () {
+    global $repeater_set_being_displayed;
+    if ( !empty( $repeater_set_being_displayed ) ) {
+        //end of previous set
+        echo "<tr class='repeater-separator-bottom'><td colspan='2'><hr></td></tr>";
+        
+        $repeater_set_being_displayed = false;
+    }
+}

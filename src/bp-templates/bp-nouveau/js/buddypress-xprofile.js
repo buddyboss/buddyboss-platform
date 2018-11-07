@@ -39,7 +39,7 @@ window.bp = window.bp || {};
         // Sortable
         $( '.repeater_sets_sortable' ).sortable({
             items: '.repeater_group_outer',
-            update: function( event, ui ) {
+            update: function( ) {
                 var repeater_set_sequence = [];
                 $( '#profile-edit-form .repeater_group_outer' ).each( function(){
                     repeater_set_sequence.push( $(this).data('set_no') );
@@ -68,7 +68,7 @@ window.bp = window.bp || {};
             var deleted_field_ids = [];
             
             $delete_button.closest( '.repeater_group_outer' ).find( '.editfield' ).each( function(){
-                $field = $(this);
+                var $field = $(this);
                 var field_id = $field.find( 'input,textarea,select' ).attr( 'name' );
                 field_id = field_id.replace( 'field_', '' );
                 field_id = field_id.replace( '[]', '' );
@@ -107,8 +107,8 @@ window.bp = window.bp || {};
             $( '#profile-edit-form [name="field_ids"]' ).val( remaining_field_ids );
             
             //keep a record of deleted fields
-            if ( $( '#profile-edit-form [name="deleted_field_ids"]' ).length == 0 ) {
-                $( '#profile-edit-form' ).append( "<input type='hidden' name='deleted_field_ids' >" );
+            if ( ! $( '#profile-edit-form [name="deleted_field_ids"]' ).length ) {
+                $( '#profile-edit-form' ).append( '<input type="hidden" name="deleted_field_ids" >' );
             }
             $( '#profile-edit-form [name="deleted_field_ids"]' ).val( deleted_field_ids.join( ',' ) );
             
@@ -127,7 +127,7 @@ window.bp = window.bp || {};
     // Add repeater set button, on edit profile screens
     $( '#profile-edit-form #btn_add_repeater_set' ).click( function(e){
         e.preventDefault();
-        $button = $(this);
+        var $button = $(this);
         
         if ( $button.hasClass( 'disabled' ) ) {
             return;
