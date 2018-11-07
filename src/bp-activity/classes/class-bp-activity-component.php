@@ -248,7 +248,7 @@ class BP_Activity_Component extends BP_Component {
 		// Favorite activity items.
 		if ( bp_activity_can_favorite() && bp_is_my_profile() ) {
 			$sub_nav[] = array(
-				'name'            => _x( 'Saved', 'Profile activity screen sub nav', 'buddyboss' ),
+				'name'            => _x( 'Liked', 'Profile activity screen sub nav', 'buddyboss' ),
 				'slug'            => 'favorites',
 				'parent_url'      => $activity_link,
 				'parent_slug'     => $slug,
@@ -355,7 +355,7 @@ class BP_Activity_Component extends BP_Component {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-favorites',
-					'title'    => _x( 'Saved', 'My Account Activity sub nav', 'buddyboss' ),
+					'title'    => _x( 'Liked', 'My Account Activity sub nav', 'buddyboss' ),
 					'href'     => trailingslashit( $activity_link . 'favorites' ),
 					'position' => 30
 				);

@@ -139,7 +139,7 @@ function bbp_admin_get_settings_fields() {
 
 			// Allow favorites setting
 			'_bbp_enable_favorites' => array(
-				'title'             => __( 'Saved', 'buddyboss' ),
+				'title'             => __( 'Liked', 'buddyboss' ),
 				'callback'          => 'bbp_admin_setting_callback_favorites',
 				'sanitize_callback' => 'intval',
 				'args'              => array()

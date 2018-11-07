@@ -229,7 +229,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 				'slug'      => 'favorites', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array(),
 				'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/',
-				'text'      => __( 'Saved', 'buddyboss' ),
+				'text'      => __( 'Liked', 'buddyboss' ),
 				'count'     => false,
 				'position'  => 35,
 			);
