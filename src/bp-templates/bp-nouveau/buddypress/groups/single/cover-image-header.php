@@ -16,7 +16,7 @@ $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 
 	<div id="header-cover-image">
 		<?php if ( bp_is_item_admin() && bp_group_use_cover_image_header() ) { ?>
-			<a href="<?php echo $group_cover_link; ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip="<?php _e('Change Cover Image', 'buddypress'); ?>">
+			<a href="<?php echo $group_cover_link; ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip="<?php _e('Change Cover Image', 'buddyboss'); ?>">
 				<span class="dashicons dashicons-edit"></span>
 			</a>
 		<?php } ?>
@@ -26,7 +26,7 @@ $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 		<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
 			<div id="item-header-avatar">
 				<?php if ( bp_is_item_admin() ) { ?>
-					<a href="<?php echo $group_avatar; ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip="<?php _e('Change Group Photo', 'buddypress'); ?>">
+					<a href="<?php echo $group_avatar; ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip="<?php _e('Change Group Photo', 'buddyboss'); ?>">
 						<span class="dashicons dashicons-edit"></span>
 					</a>
 				<?php } ?>

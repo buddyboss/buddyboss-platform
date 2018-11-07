@@ -308,7 +308,7 @@ class BP_Tests_Activity_Notifications extends BP_UnitTestCase {
 		remove_filter( 'bp_activity_single_at_mentions_notification', array( $this, 'format_notification_filter' ), 10 );
 		remove_filter( 'bp_activity_multiple_at_mentions_notification', array( $this, 'format_notification_filter' ), 10 );
 
-		$single = sprintf( __( '%1$s mentioned you', 'buddypress' ), bp_core_get_user_displayname( $this->u2 ) );
+		$single = sprintf( __( '%1$s mentioned you', 'buddyboss' ), bp_core_get_user_displayname( $this->u2 ) );
 		$multiple = 'You have 2 new mentions';
 
 		$this->assertContains( $single, $format_tests['string_single'] );

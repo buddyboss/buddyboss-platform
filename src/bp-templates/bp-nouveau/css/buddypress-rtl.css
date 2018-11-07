@@ -801,6 +801,11 @@ body.buddypress article.page > .entry-header .entry-title {
   text-align: center;
 }
 
+.buddypress-wrap .subnav-filters .grid-filters {
+  float: left;
+  padding: 8px 10px 8px 0;
+}
+
 /**
 *----------------------------------------------------------
 * @section 2.2 - Pagination
@@ -1464,11 +1469,12 @@ body.buddypress article.page > .entry-header .entry-title {
 }
 
 .activity-list .activity-item .activity-meta.action .fav:before {
-  content: "\f154";
+  content: "\f529";
 }
 
 .activity-list .activity-item .activity-meta.action .unfav:before {
-  content: "\f155";
+  content: "\f529";
+  color: #0061ac;
 }
 
 .activity-list .activity-item .activity-meta.action .delete-activity:before {
@@ -2749,6 +2755,28 @@ body.no-js .single-item-header .js-self-profile-button {
 
 .buddypress-wrap .profile.edit .editfield fieldset label.xprofile-field-label {
   display: inline;
+}
+
+.buddypress-wrap .profile.edit .repeater_group_outer {
+  margin: 0 0 15px;
+  padding: 15px;
+  cursor: move;
+  background: #fff;
+  border: 1px solid #eee;
+}
+
+.buddypress-wrap .profile.edit .repeater_group_outer .repeater_tools {
+  text-align: left;
+}
+
+.buddypress-wrap .profile.edit .repeater_group_outer .repeater_tools .repeater_set_title {
+  float: right;
+  display: inline-block;
+}
+
+.buddypress-wrap .profile.edit .repeater_group_outer .repeater_tools .repeater_set_edit,
+.buddypress-wrap .profile.edit .repeater_group_outer .repeater_tools .repeater_set_delete {
+  cursor: pointer;
 }
 
 .buddypress-wrap .profile.edit .editfield {

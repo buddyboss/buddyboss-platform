@@ -1023,12 +1023,12 @@ function bp_show_blog_signup_form($blogname = '', $blog_title = '', $errors = ''
 		$errors = $filtered_results['errors'];
 
 		if ( $errors->get_error_code() ) {
-			echo "<p>" . __('There was a problem; please correct the form below and try again.', 'buddypress') . "</p>";
+			echo "<p>" . __('There was a problem; please correct the form below and try again.', 'buddyboss') . "</p>";
 		}
 		?>
-		<p><?php printf(__("By filling out the form below, you can <strong>add a site to your account</strong>. There is no limit to the number of sites that you can have, so create to your heart's content, but blog responsibly!", 'buddypress'), $current_user->display_name) ?></p>
+		<p><?php printf(__("By filling out the form below, you can <strong>add a site to your account</strong>. There is no limit to the number of sites that you can have, so create to your heart's content, but blog responsibly!", 'buddyboss'), $current_user->display_name) ?></p>
 
-		<p><?php _e("If you&#8217;re not going to use a great domain, leave it for a new user. Now have at it!", 'buddypress') ?></p>
+		<p><?php _e("If you&#8217;re not going to use a great domain, leave it for a new user. Now have at it!", 'buddyboss') ?></p>
 
 		<form class="standard-form" id="setupform" method="post" action="">
 
@@ -1044,7 +1044,7 @@ function bp_show_blog_signup_form($blogname = '', $blog_title = '', $errors = ''
 
 			<?php bp_blogs_signup_blog($blogname, $blog_title, $errors); ?>
 			<p>
-				<input id="submit" type="submit" name="submit" class="submit" value="<?php esc_attr_e('Create Site', 'buddypress') ?>" />
+				<input id="submit" type="submit" name="submit" class="submit" value="<?php esc_attr_e('Create Site', 'buddyboss') ?>" />
 			</p>
 
 			<?php wp_nonce_field( 'bp_blog_signup_form' ) ?>
@@ -1066,9 +1066,9 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 
 	// Blog name.
 	if( !is_subdomain_install() )
-		echo '<label for="blogname">' . __('Site Name:', 'buddypress') . '</label>';
+		echo '<label for="blogname">' . __('Site Name:', 'buddyboss') . '</label>';
 	else
-		echo '<label for="blogname">' . __('Site Domain:', 'buddypress') . '</label>';
+		echo '<label for="blogname">' . __('Site Domain:', 'buddyboss') . '</label>';
 
 	if ( $errmsg = $errors->get_error_message('blogname') ) { ?>
 
@@ -1082,21 +1082,21 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 		echo '<input name="blogname" type="text" id="blogname" value="'.$blogname.'" maxlength="63" ' . bp_get_form_field_attributes( 'blogname' ) . '/> <span class="suffix_address">.' . bp_signup_get_subdomain_base() . '</span><br />';
 
 	if ( !is_user_logged_in() ) {
-		print '(<strong>' . __( 'Your address will be ' , 'buddypress');
+		print '(<strong>' . __( 'Your address will be ' , 'buddyboss');
 
 		if ( !is_subdomain_install() ) {
-			print $current_site->domain . $current_site->path . __( 'blogname' , 'buddypress');
+			print $current_site->domain . $current_site->path . __( 'blogname' , 'buddyboss');
 		} else {
-			print __( 'domain.' , 'buddypress') . $current_site->domain . $current_site->path;
+			print __( 'domain.' , 'buddyboss') . $current_site->domain . $current_site->path;
 		}
 
-		echo '.</strong> ' . __( 'Must be at least 4 characters, letters and numbers only. It cannot be changed so choose carefully!)' , 'buddypress') . '</p>';
+		echo '.</strong> ' . __( 'Must be at least 4 characters, letters and numbers only. It cannot be changed so choose carefully!)' , 'buddyboss') . '</p>';
 	}
 
 	// Blog Title.
 	?>
 
-	<label for="blog_title"><?php _e('Site Title:', 'buddypress') ?></label>
+	<label for="blog_title"><?php _e('Site Title:', 'buddyboss') ?></label>
 
 	<?php if ( $errmsg = $errors->get_error_message('blog_title') ) { ?>
 
@@ -1107,15 +1107,15 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 	?>
 
 	<fieldset class="create-site">
-		<legend class="label"><?php _e('Privacy: I would like my site to appear in search engines, and in public listings around this network', 'buddypress') ?></legend>
+		<legend class="label"><?php _e('Privacy: I would like my site to appear in search engines, and in public listings around this network', 'buddyboss') ?></legend>
 
 		<label class="checkbox" for="blog_public_on">
 			<input type="radio" id="blog_public_on" name="blog_public" value="1" <?php if( !isset( $_POST['blog_public'] ) || '1' == $_POST['blog_public'] ) { ?>checked="checked"<?php } ?> />
-			<strong><?php _e( 'Yes' , 'buddypress'); ?></strong>
+			<strong><?php _e( 'Yes' , 'buddyboss'); ?></strong>
 		</label>
 		<label class="checkbox" for="blog_public_off">
 			<input type="radio" id="blog_public_off" name="blog_public" value="0" <?php if( isset( $_POST['blog_public'] ) && '0' == $_POST['blog_public'] ) { ?>checked="checked"<?php } ?> />
-			<strong><?php _e( 'No' , 'buddypress'); ?></strong>
+			<strong><?php _e( 'No' , 'buddyboss'); ?></strong>
 		</label>
 	</fieldset>
 

@@ -474,14 +474,14 @@ window.bp = window.bp || {};
                 e.preventDefault();
                 $( '.layout-grid-view' ).removeClass('active');
                 $( this ).addClass('active');
-                $('#members-list').removeClass('grid');
+                $('.bp-list').removeClass('grid');
             });
 
             $('.layout-grid-view').on('click', function(e) {
                 e.preventDefault();
                 $('.layout-list-view').removeClass('active');
                 $( this ).addClass('active');
-                $('#members-list').addClass('grid');
+                $('.bp-list').addClass('grid');
             });
 		},
 

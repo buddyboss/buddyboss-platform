@@ -1066,8 +1066,8 @@ Bar!';
 		$labels = array(
 			'name'                       => 'bars',
 			'singular_name'              => 'bar',
-			'bp_activity_new_comment'    => __( '%1$s commented on the <a href="%2$s">bar</a>', 'buddypress' ),
-			'bp_activity_new_comment_ms' => __( '%1$s commented on the <a href="%2$s">bar</a>, on the site %3$s', 'buddypress' ),
+			'bp_activity_new_comment'    => __( '%1$s commented on the <a href="%2$s">bar</a>', 'buddyboss' ),
+			'bp_activity_new_comment_ms' => __( '%1$s commented on the <a href="%2$s">bar</a>, on the site %3$s', 'buddyboss' ),
 		);
 
 		register_post_type( 'foo', array(

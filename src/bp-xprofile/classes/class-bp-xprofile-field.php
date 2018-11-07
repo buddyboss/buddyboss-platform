@@ -1594,7 +1594,7 @@ class BP_XProfile_Field {
 		} ?>
 
 		<div class="postbox">
-			<h2><label for="fieldtype"><?php esc_html_e( 'Type', 'buddypress'); ?></label></h2>
+			<h2><label for="fieldtype"><?php esc_html_e( 'Type', 'buddyboss'); ?></label></h2>
 			<div class="inside" aria-live="polite" aria-atomic="true" aria-relevant="all">
 				<select name="fieldtype" id="fieldtype" onchange="show_options(this.value)">
 

@@ -783,7 +783,7 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 
 			// Set warning messages.
 			$strings['camera_warnings'] = array(
-				'requesting'  => __( 'Please allow us to access to your camera.', 'buddypress'),
+				'requesting'  => __( 'Please allow us to access to your camera.', 'buddyboss'),
 				'loading'     => __( 'Please wait as we access your camera.', 'buddyboss' ),
 				'loaded'      => __( 'Camera loaded. Click on the "Capture" button to take your photo.', 'buddyboss' ),
 				'noaccess'    => __( 'It looks like you do not have a webcam or we were unable to get permission to use your webcam. Please upload a photo instead.', 'buddyboss' ),

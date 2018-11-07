@@ -24,7 +24,7 @@
 					'<strong>Version %1$s</strong> addressed %2$s bug.',
 					'<strong>Version %1$s</strong> addressed %2$s bugs.',
 					23,
-					'buddypress'
+					'buddyboss'
 				),
 				self::display_version(),
 				number_format_i18n( 23 )

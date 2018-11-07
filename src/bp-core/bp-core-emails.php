@@ -140,67 +140,161 @@ if ( ! function_exists('wp_notify_postauthor') ) :
 		$blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
 		$comment_content = wp_specialchars_decode( $comment->comment_content );
 
+		// Get customizer setting options
+		$settings = bp_email_get_appearance_settings();
+
 		switch ( $comment->comment_type ) {
 			case 'trackback':
-				/* translators: 1: Post title */
-				$notify_message  = '<p>' . sprintf( __( 'New trackback on your post "%s"', 'buddyboss' ), $post->post_title ) . '</p>';
-				/* translators: 1: Trackback/pingback website name, 2: website IP address, 3: website hostname */
-				$notify_message .= '<p>' . sprintf( __('Website: %1$s (IP address: %2$s, %3$s)', 'buddyboss' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . '</p>';
+				$title = __( 'added trackback on your post', 'buddyboss' );
+				$footer_message = sprintf( __('<a href="%s">Click here</a> to see all trackbacks on this post.', 'buddyboss' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
+				$moderate_text = __('Moderate this trackback: ', 'buddyboss' );
 
-				if( !empty($comment->comment_author_url) ) {
-					$notify_message .= '<p>' . sprintf( __( 'URL: %s', 'buddyboss' ), $comment->comment_author_url ) . '</p>';
-				}
-
-				$notify_message .= '<p>' . __( 'Comment:', 'buddyboss' ) . '</p>';
-				$notify_message .= '<div>' . $comment_content . '</div><br />';
-				$notify_message .= '<p>' . __( 'You can see all trackbacks on this post here:', 'buddyboss' ) . '</p>';
 				/* translators: 1: blog name, 2: post title */
 				$subject = sprintf( __( '[%1$s] Trackback: "%2$s"', 'buddyboss' ), $blogname, $post->post_title );
 				break;
 			case 'pingback':
-				/* translators: 1: Post title */
-				$notify_message  = '<p>' . sprintf( __( 'New pingback on your post "%s"', 'buddyboss' ), $post->post_title ) . '</p>';
-				/* translators: 1: Trackback/pingback website name, 2: website IP address, 3: website hostname */
-				$notify_message .= '<p>' . sprintf( __( 'Website: %1$s (IP address: %2$s, %3$s)', 'buddyboss' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . '</p>';
+				$title = __( 'added pingback on your post', 'buddyboss' );
+				$footer_message = sprintf( __('<a href="%s">Click here</a> to see all pingbacks on this post.', 'buddyboss' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
+				$moderate_text = __('Moderate this pingback: ', 'buddyboss' );
 
-				if( !empty($comment->comment_author_url) ) {
-					$notify_message .= '<p>' . sprintf( __( 'URL: %s', 'buddyboss' ), $comment->comment_author_url ) . '</p>';
-				}
-
-				$notify_message .= '<p>' . __( 'Comment:', 'buddyboss' ) . '</p>';
-				$notify_message .= '<div>' . $comment_content . '</div><br />';
-				$notify_message .= '<p>' . __( 'You can see all pingbacks on this post here:', 'buddyboss' ) . '</p>';
 				/* translators: 1: blog name, 2: post title */
 				$subject = sprintf( __( '[%1$s] Pingback: "%2$s"', 'buddyboss' ), $blogname, $post->post_title );
 				break;
 			default: // Comments
-				$notify_message  = '<p>' . sprintf( __( 'New comment on your post "%s"', 'buddyboss' ), $post->post_title ) . '</p>';
-				/* translators: 1: comment author, 2: comment author's IP address, 3: comment author's hostname */
-				$notify_message .= '<p>' . sprintf( __( 'Author: %1$s (IP address: %2$s, %3$s)', 'buddyboss' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . '</p>';
-				$notify_message .= '<p>' . sprintf( __( 'Email: %s', 'buddyboss' ), $comment->comment_author_email ) . '</p>';
+				$title = __( 'added comment on your post', 'buddyboss' );
+				$footer_message = sprintf( __('<a href="%s">Click here</a> to see all comments on this post.', 'buddyboss' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
+				$moderate_text = __('Moderate this comment: ', 'buddyboss' );
 
-				if( !empty($comment->comment_author_url) ) {
-					$notify_message .= '<p>' . sprintf( __( 'URL: %s', 'buddyboss' ), $comment->comment_author_url ) . '</p>';
-				}
-
-				$notify_message .= '<div>' . sprintf( __( 'Comment: <br />%s', 'buddyboss' ), $comment_content ) . '</div><br />';
-				$notify_message .= '<p>' . sprintf( __('<a href="%s">Click here</a> to see all comments on this post.', 'buddyboss' ), get_permalink( $comment->comment_post_ID ) . '#comments' ) . '</p>';
 				/* translators: 1: blog name, 2: post title */
 				$subject = sprintf( __( '[%1$s] Comment: "%2$s"', 'buddyboss' ), $blogname, $post->post_title );
 				break;
 		}
 
-		$notify_message .= get_permalink($comment->comment_post_ID) . "#comments <br />";
-		$notify_message .= '<p>' . sprintf( __( 'Permalink: %s', 'buddyboss' ), get_comment_link( $comment ) ) . '</p>';
+		ob_start();
+		?>
+		<p>
+			<?php if ( !empty( $comment->user_id ) ) { ?>
+				<a href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>">
+					<?php echo $comment->comment_author; ?>
+				</a>
+			<?php } else {
+				echo $comment->comment_author;
+			} ?>
+			<?php echo $title; ?>
+			<a href="<?php echo get_permalink($comment->comment_post_ID); ?>"><?php echo $post->post_title; ?></a>
+		</p>
+		<table cellspacing="0" cellpadding="0" border="0" width="100%">
+			<?php if ( !empty( $comment->user_id ) ) { ?>
+				<tr>
+					<td align="center">
+						<table cellpadding="0" cellspacing="0" border="0" width="100%">
+							<tbody>
+							<tr>
+								<td valign="middle" width="12%" style="vertical-align: middle;">
+									<a href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>"
+									   target="_blank" rel="nofollow">
+										<?php
+										$avatar_url = bp_core_fetch_avatar( array(
+											'item_id' => $comment->user_id,
+											'width'   => 100,
+											'height'  => 100,
+											'type'    => 'full',
+											'html'    => false,
+										) );
+										?>
+										<img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47"
+											 style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"
+											 border="0">
+									</a>
+								</td>
+								<td width="88%" style="vertical-align: middle;">
+									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
+										<?php echo bp_core_get_user_displayname( $comment->user_id ); ?>
+									</div>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
 
-		if ( user_can( $post->post_author, 'edit_comment', $comment->comment_ID ) ) {
-			if ( EMPTY_TRASH_DAYS ) {
-				$notify_message .= '<p>' . sprintf( __( 'Trash it: %s', 'buddyboss' ), admin_url( "comment.php?action=trash&c={$comment->comment_ID}#wpbody-content" ) ) . '</p>';
-			} else {
-				$notify_message .= '<p>' . sprintf( __( 'Delete it: %s', 'buddyboss' ), admin_url( "comment.php?action=delete&c={$comment->comment_ID}#wpbody-content" ) ) . '</p>';
-			}
-			$notify_message .= '<p>' . sprintf( __( 'Spam it: %s', 'buddyboss' ), admin_url( "comment.php?action=spam&c={$comment->comment_ID}#wpbody-content" ) ) . '</p>';
-		}
+				<tr>
+					<td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
+				</tr>
+			<?php } ?>
+
+			<tr>
+				<td>
+					<table cellspacing="0" cellpadding="0" border="0" width="100%"
+						   style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+						<tbody>
+						<tr>
+							<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
+						</tr>
+						<tr>
+							<td align="center">
+								<table cellpadding="0" cellspacing="0" border="0" width="88%" style="width: 88%;">
+									<tbody>
+										<tr>
+											<td>
+												<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;">
+													<?php echo wpautop($comment_content); ?>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
+						</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
+			</tr>
+
+			<tr>
+				<td>
+					<a href="<?php echo get_comment_link( $comment ); ?>" target="_blank" rel="nofollow"
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 84px; text-align: center; height: 32px; line-height: 32px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;">
+						<p><?php echo $footer_message; ?></p>
+						<?php
+						$approve_comment = sprintf( __( '<a href="%s">Approve</a>', 'buddyboss' ), admin_url( "comment.php?action=approve&c={$comment_id}#wpbody-content" ) );
+						$trash_comment = '';
+						$delete_comment = '';
+						$spam_comment = '';
+
+						if ( user_can( $post->post_author, 'edit_comment', $comment->comment_ID ) ) {
+							if ( EMPTY_TRASH_DAYS ) {
+								/* translators: Comment moderation. 1: Comment action URL */
+								$trash_comment = sprintf( __( '<a href="%s">Trash</a>', 'buddyboss' ), admin_url( "comment.php?action=trash&c={$comment_id}#wpbody-content" ) );
+							} else {
+								/* translators: Comment moderation. 1: Comment action URL */
+								$delete_comment = sprintf( __( '<a href="%s">Delete</a>', 'buddyboss' ), admin_url( "comment.php?action=delete&c={$comment_id}#wpbody-content" ) );
+							}
+
+							/* translators: Comment moderation. 1: Comment action URL */
+							$spam_comment = sprintf( __( '<a href="%s">Spam</a>', 'buddyboss' ), admin_url( "comment.php?action=spam&c={$comment_id}#wpbody-content" ) );
+						}
+						?>
+						<p><?php echo $moderate_text; ?><?php echo $approve_comment; ?><?php if( !empty( $trash_comment ) ) { echo ', '.$trash_comment; } ?><?php if( !empty( $delete_comment ) ) { echo ', '.$delete_comment; } ?><?php if( !empty( $spam_comment ) ) { echo ', '.$spam_comment; } ?></p>
+					</div>
+				</td>
+			</tr>
+		</table>
+
+		<?php $notify_message = ob_get_clean();
 
 		$wp_email = 'wordpress@' . preg_replace('#^www\.#', '', strtolower($_SERVER['SERVER_NAME']));
 
@@ -320,73 +414,151 @@ if ( !function_exists('wp_notify_moderator') ) :
 		$blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
 		$comment_content = wp_specialchars_decode( $comment->comment_content );
 
+		// Get customizer setting options
+		$settings = bp_email_get_appearance_settings();
+
 		switch ( $comment->comment_type ) {
 			case 'trackback':
-				/* translators: 1: Post title */
-				$notify_message  = '<p>' . sprintf( __( 'A new trackback on the post "%s" is waiting for your approval', 'buddyboss' ), $post->post_title ) . '</p>';
-				$notify_message .= get_permalink($comment->comment_post_ID) . '<br />';
-				/* translators: 1: Trackback/pingback website name, 2: website IP address, 3: website hostname */
-				$notify_message .= '<p>' . sprintf( __( 'Website: %1$s (IP address: %2$s, %3$s)', 'buddyboss' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . '</p>';
-				/* translators: 1: Trackback/pingback/comment author URL */
+				$title = sprintf( __( 'added new trackback on the post <a href="%s">"%s"</a> is waiting for your approval.', 'buddyboss' ), get_permalink($comment->comment_post_ID), $post->post_title );
+				$footer_message = sprintf( __('<a href="%s">Click here</a> to see all trackbacks on this post.', 'buddyboss' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
+				$moderate_text = __('Moderate this trackback: ', 'buddyboss' );
 
-				if( !empty( $comment->comment_author_url ) ) {
-					$notify_message .= '<p>' . sprintf( __( 'URL: %s', 'buddyboss' ), $comment->comment_author_url ) . '</p>';
-				}
-
-				$notify_message .= '<p>' . sprintf( __( 'Trackback excerpt: <br />%s', 'buddyboss' ), $comment_content ) . '</p>';
 				break;
 			case 'pingback':
-				/* translators: 1: Post title */
-				$notify_message  = '<p>' . sprintf( __( 'A new pingback on the post "%s" is waiting for your approval', 'buddyboss' ), $post->post_title ) . '</p>';
-				$notify_message .= get_permalink($comment->comment_post_ID) . '<br />';
-				/* translators: 1: Trackback/pingback website name, 2: website IP address, 3: website hostname */
-				$notify_message .= '<p>' . sprintf( __( 'Website: %1$s (IP address: %2$s, %3$s)', 'buddyboss' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . '</p>';
-				/* translators: 1: Trackback/pingback/comment author URL */
+				$title = sprintf( __( 'added new pingback on the post <a href="%s">"%s"</a> is waiting for your approval.', 'buddyboss' ), get_permalink($comment->comment_post_ID), $post->post_title );
+				$footer_message = sprintf( __('<a href="%s">Click here</a> to see all pingbacks on this post.', 'buddyboss' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
+				$moderate_text = __('Moderate this pingback: ', 'buddyboss' );
 
-				if( !empty( $comment->comment_author_url ) ) {
-					$notify_message .= '<p>' . sprintf( __( 'URL: %s', 'buddyboss' ), $comment->comment_author_url ) . '</p>';
-				}
-
-				$notify_message .= __( 'Pingback excerpt:', 'buddyboss' ) . '<br />' . $comment_content . '<br />';
 				break;
 			default: // Comments
-				/* translators: 1: Post title */
-				$notify_message  = '<p>' . sprintf( __( 'A new comment on the post "%s" is waiting for your approval', 'buddyboss' ), $post->post_title ) . '</p>';
-				$notify_message .= get_permalink($comment->comment_post_ID) . '<br />';
-				/* translators: 1: Comment author name, 2: comment author's IP address, 3: comment author's hostname */
-				$notify_message .= '<p>' . sprintf( __( 'Author: %1$s (IP address: %2$s, %3$s)', 'buddyboss' ), $comment->comment_author, $comment->comment_author_IP, $comment_author_domain ) . '</p>';
-				/* translators: 1: Comment author URL */
-				$notify_message .= '<p>' . sprintf( __( 'Email: %s', 'buddyboss' ), $comment->comment_author_email ) . '</p>';
-				/* translators: 1: Trackback/pingback/comment author URL */
+				$title = sprintf( __( 'added new comment on the post <a href="%s">"%s"</a> is waiting for your approval.', 'buddyboss' ), get_permalink($comment->comment_post_ID), $post->post_title );
+				$footer_message = sprintf( __('<a href="%s">Click here</a> to see all comments on this post.', 'buddyboss' ), get_permalink( $comment->comment_post_ID ) . '#comments' );
+				$moderate_text = __('Moderate this comment: ', 'buddyboss' );
 
-				if( !empty( $comment->comment_author_url ) ) {
-					$notify_message .= '<p>' . sprintf( __( 'URL: %s', 'buddyboss' ), $comment->comment_author_url ) . '</p>';
-				}
-
-				/* translators: 1: Comment text */
-				$notify_message .= '<div>' . sprintf( __( 'Comment: <br />%s', 'buddyboss' ), $comment_content ) . '</div><br />';
 				break;
 		}
 
-		/* translators: Comment moderation. 1: Comment action URL */
-		$notify_message .= '<p>' . sprintf( __( 'Approve it: %s', 'buddyboss' ), admin_url( "comment.php?action=approve&c={$comment_id}#wpbody-content" ) ) . '</p>';
+		ob_start();
+		?>
+		<p>
+			<?php if ( !empty( $comment->user_id ) ) { ?>
+				<a href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>">
+					<?php echo $comment->comment_author; ?>
+				</a>
+			<?php } else {
+				echo $comment->comment_author;
+			} ?>
+			<?php echo $title; ?>
+		</p>
+		<table cellspacing="0" cellpadding="0" border="0" width="100%">
+			<?php if ( !empty( $comment->user_id ) ) { ?>
+				<tr>
+					<td align="center">
+						<table cellpadding="0" cellspacing="0" border="0" width="100%">
+							<tbody>
+							<tr>
+								<td valign="middle" width="12%" style="vertical-align: middle;">
+									<a href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>"
+									   target="_blank" rel="nofollow">
+										<?php
+										$avatar_url = bp_core_fetch_avatar( array(
+											'item_id' => $comment->user_id,
+											'width'   => 100,
+											'height'  => 100,
+											'type'    => 'full',
+											'html'    => false,
+										) );
+										?>
+										<img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47"
+											 style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"
+											 border="0">
+									</a>
+								</td>
+								<td width="88%" style="vertical-align: middle;">
+									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
+										<?php echo bp_core_get_user_displayname( $comment->user_id ); ?>
+									</div>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
 
-		if ( EMPTY_TRASH_DAYS ) {
-			/* translators: Comment moderation. 1: Comment action URL */
-			$notify_message .= '<p>' . sprintf( __( 'Trash it: %s', 'buddyboss' ), admin_url( "comment.php?action=trash&c={$comment_id}#wpbody-content" ) ) . '</p>';
-		} else {
-			/* translators: Comment moderation. 1: Comment action URL */
-			$notify_message .= '<p>' . sprintf( __( 'Delete it: %s', 'buddyboss' ), admin_url( "comment.php?action=delete&c={$comment_id}#wpbody-content" ) ) . '</p>';
-		}
+				<tr>
+					<td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
+				</tr>
+			<?php } ?>
 
-		/* translators: Comment moderation. 1: Comment action URL */
-		$notify_message .= '<p>' . sprintf( __( 'Spam it: %s', 'buddyboss' ), admin_url( "comment.php?action=spam&c={$comment_id}#wpbody-content" ) ) . '</p>';
+			<tr>
+				<td>
+					<table cellspacing="0" cellpadding="0" border="0" width="100%"
+						   style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+						<tbody>
+						<tr>
+							<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
+						</tr>
+						<tr>
+							<td align="center">
+								<table cellpadding="0" cellspacing="0" border="0" width="88%" style="width: 88%;">
+									<tbody>
+										<tr>
+											<td>
+												<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;">
+													<?php echo wpautop($comment_content); ?>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
+						</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
 
-		/* translators: Comment moderation. 1: Number of comments awaiting approval */
-		$notify_message .= '<p>' . sprintf( _n('Currently %s comment is waiting for approval. Please visit the moderation panel:',
-				'Currently %s comments are waiting for approval. Please visit the moderation panel:', $comments_waiting, 'buddyboss'), number_format_i18n($comments_waiting) ) . '</p>';
+			<tr>
+				<td height="24px" style="font-size: 24px; line-height: 24px;">&nbsp;</td>
+			</tr>
 
-		$notify_message .= admin_url( 'edit-comments.php?comment_status=moderated#wpbody-content' ) . '<br />';
+			<tr>
+				<td>
+					<a href="<?php echo get_comment_link( $comment ); ?>" target="_blank" rel="nofollow"
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 84px; text-align: center; height: 32px; line-height: 32px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;">
+						<p><?php echo $footer_message; ?></p>
+						<?php
+						$approve_comment = sprintf( __( '<a href="%s">Approve</a>', 'buddyboss' ), admin_url( "comment.php?action=approve&c={$comment_id}#wpbody-content" ) );
+						$trash_comment = '';
+						$delete_comment = '';
+
+						if ( EMPTY_TRASH_DAYS ) {
+							/* translators: Comment moderation. 1: Comment action URL */
+							$trash_comment = sprintf( __( '<a href="%s">Trash</a>', 'buddyboss' ), admin_url( "comment.php?action=trash&c={$comment_id}#wpbody-content" ) );
+						} else {
+							/* translators: Comment moderation. 1: Comment action URL */
+							$delete_comment = sprintf( __( '<a href="%s">Delete</a>', 'buddyboss' ), admin_url( "comment.php?action=delete&c={$comment_id}#wpbody-content" ) );
+						}
+
+						/* translators: Comment moderation. 1: Comment action URL */
+						$spam_comment = sprintf( __( '<a href="%s">Spam</a>', 'buddyboss' ), admin_url( "comment.php?action=spam&c={$comment_id}#wpbody-content" ) );
+						?>
+						<p><?php echo $moderate_text; ?><?php echo $approve_comment; ?><?php if( !empty( $trash_comment ) ) { echo ', '.$trash_comment; } ?><?php if( !empty( $delete_comment ) ) { echo ', '.$delete_comment; } ?><?php echo ', '.$spam_comment; ?></p>
+					</div>
+				</td>
+			</tr>
+		</table>
+
+		<?php $notify_message = ob_get_clean();
 
 		/* translators: Comment moderation notification email subject. 1: Site name, 2: Post title */
 		$subject = sprintf( __( '[%1$s] Please moderate: "%2$s"', 'buddyboss' ), $blogname, $post->post_title );
@@ -1262,7 +1434,7 @@ if ( ! function_exists( 'bp_email_network_admin_email_change_email' ) ) {
 		$email_change_email = array(
 			'to'      => $old_email,
 			/* translators: Network admin email change notification email subject. %s: Network title */
-			'subject' => __( '[%s] Notice of Network Admin Email Change' ),
+			'subject' => __( '[%s] Notice of Network Admin Email Change', 'buddyboss' ),
 			'message' => $email_change_text,
 			'headers' => '',
 		);
@@ -1311,7 +1483,7 @@ if ( ! function_exists( 'bp_email_site_admin_email_change_email' ) ) {
 		$email_change_email = array(
 			'to'      => $old_email,
 			/* translators: Site admin email change notification email subject. %s: Site title */
-			'subject' => __( '[%s] Notice of Admin Email Change' ),
+			'subject' => __( '[%s] Notice of Admin Email Change', 'buddyboss' ),
 			'message' => $email_change_text,
 			'headers' => '',
 		);

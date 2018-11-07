@@ -21,6 +21,8 @@ switch ( bp_action_variable( 0 ) ) :
 			<?php bp_nouveau_search_form(); ?>
 
 			<?php bp_get_template_part( 'common/filters/groups-screens-filters' ); ?>
+            
+            <?php bp_get_template_part( 'common/filters/grid-filters' ); ?>
 
         </div>
 

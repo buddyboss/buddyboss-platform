@@ -49,7 +49,7 @@ function groups_action_create_group() {
 
 	// If this is a creation step that is not recognized, just redirect them back to the first screen.
 	if ( bp_get_groups_current_create_step() && empty( $bp->groups->group_creation_steps[bp_get_groups_current_create_step()] ) ) {
-		bp_core_add_message( __('There was an error saving group details. Please try again.', 'buddypress'), 'error' );
+		bp_core_add_message( __('There was an error saving group details. Please try again.', 'buddyboss'), 'error' );
 		bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create' ) );
 	}
 

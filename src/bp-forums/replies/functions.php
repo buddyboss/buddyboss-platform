@@ -2247,3 +2247,49 @@ function bbp_validate_reply_to( $reply_to = 0, $reply_id = 0 ) {
 
 	return (int) $reply_to;
 }
+
+/**
+ * Adjust forum labels that make more sense
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bbp_adjust_forum_role_labels( $author_role, $args ) {
+	$display_role = __( 'Member', 'buddyboss' );
+	$reply_id     = bbp_get_reply_id( $args['reply_id'] );
+	$author_id    = bbp_get_reply_author_id( $reply_id );
+
+	// if group forum
+	if ( bbp_is_forum_group_forum( bbp_get_reply_forum_id( $args['reply_id'] ) ) ) {
+		$current_group = bp_get_current_group_id();
+
+		if ( groups_is_user_member( $author_id, $current_group ) ) {
+			$display_role = __( 'Member', 'buddyboss' );
+		}
+
+		if ( groups_is_user_mod( $author_id, $current_group ) ) {
+			$display_role = __( 'Moderator', 'buddyboss' );
+		}
+
+		if ( groups_is_user_admin( $author_id, $current_group ) ) {
+			$display_role = __( 'Organizer', 'buddyboss' );
+		}
+	} else {
+		$user_roles = array_values( get_userdata( $author_id )->roles );
+
+		if ( array_intersect( $user_roles, [ bbp_get_keymaster_role(), 'administrator' ] ) ) {
+			$display_role = __( 'Administrator', 'buddyboss' );
+		}
+
+		if ( array_intersect( $user_roles, [ bbp_get_moderator_role(), 'editor' ] ) ) {
+			$display_role = __( 'Moderator', 'buddyboss' );
+		}
+	}
+
+	return sprintf(
+		'%1$s<div class="%2$s">%3$s</div>%4$s',
+		$args['before'],
+		esc_attr( $args['class'] ),
+		esc_html( $display_role ),
+		$args['after']
+	);
+}

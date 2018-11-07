@@ -411,7 +411,7 @@ function bp_nouveau_ajax_send_group_invites() {
 			_n(
 				'Invitation failed for %s user.',
 				'Invitation failed for %s users.',
-				$error_count, 'buddypress'
+				$error_count, 'buddyboss'
 			),
 			number_format_i18n( $error_count )
 		);

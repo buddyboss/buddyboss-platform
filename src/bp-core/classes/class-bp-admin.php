@@ -328,6 +328,11 @@ class BP_Admin {
 	public function adjust_buddyboss_menus() {
 		global $menu, $submenu;
 
+		// only if login user has access to menu
+		if ( ! isset( $submenu[ 'buddyboss-platform' ] ) ) {
+			return;
+		}
+
 		// make sure app integration is last
 		$app_menu = '';
 		foreach ( $submenu[ 'buddyboss-platform' ] as $index => $pmenu ) {

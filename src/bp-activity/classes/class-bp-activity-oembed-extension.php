@@ -316,7 +316,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 						/* translators: accessibility text */
 						'%s <span class="screen-reader-text">Comments</span>',
 						$count,
-						'buddypress'
+						'buddyboss'
 					),
 					number_format_i18n( $count )
 				);

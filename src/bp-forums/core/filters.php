@@ -131,6 +131,7 @@ add_filter( 'bbp_get_user_profile_link',      'bbp_rel_nofollow' );
 add_filter( 'bbp_get_user_profile_link',      'stripslashes'     );
 add_filter( 'bbp_get_user_profile_edit_link', 'bbp_rel_nofollow' );
 add_filter( 'bbp_get_user_profile_edit_link', 'stripslashes'     );
+add_filter( 'bbp_get_reply_author_role',      'bbp_adjust_forum_role_labels', 10, 2 );
 
 // Run filters on reply content
 add_filter( 'bbp_get_reply_content', 'bbp_make_clickable', 4    );

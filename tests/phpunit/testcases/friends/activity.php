@@ -20,7 +20,7 @@ class BP_Tests_Friends_Activity extends BP_UnitTestCase {
 			'secondary_item_id' => $u2,
 		) );
 
-		$expected = sprintf( __( '%1$s and %2$s are now connected', 'buddypress' ), bp_core_get_userlink( $u1 ), bp_core_get_userlink( $u2 ) );
+		$expected = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss' ), bp_core_get_userlink( $u1 ), bp_core_get_userlink( $u2 ) );
 
 		$a_obj = new BP_Activity_Activity( $a );
 
@@ -42,7 +42,7 @@ class BP_Tests_Friends_Activity extends BP_UnitTestCase {
 			'secondary_item_id' => $u2,
 		) );
 
-		$expected = sprintf( __( '%1$s and %2$s are now connected', 'buddypress' ), bp_core_get_userlink( $u1 ), bp_core_get_userlink( $u2 ) );
+		$expected = sprintf( __( '%1$s and %2$s are now connected', 'buddyboss' ), bp_core_get_userlink( $u1 ), bp_core_get_userlink( $u2 ) );
 
 		$a_obj = new BP_Activity_Activity( $a );
 
