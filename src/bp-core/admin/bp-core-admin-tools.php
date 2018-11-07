@@ -113,19 +113,19 @@ function bp_admin_repair_list() {
 	// - default xprofile groups/fields
 	$repair_list[35] = array(
 		'bp-xprofile-fields',
-		__( 'Repair default xprofile group and fields.', 'buddyboss' ),
+		__( 'Repair default profile set and fields.', 'buddyboss' ),
 		'repare_default_profiles_fields',
 	);
 
 	$repair_list[36] = array(
 		'bp-xprofile-wordpress-resync',
-		__( 'Re-sync Xprofile fields with Wordpress profile fields.', 'buddyboss' ),
+		__( 'Re-sync BuddyBoss profile fields to WordPress profile fields.', 'buddyboss' ),
 		'resync_xprofile_wordpress_fields',
 	);
 
 	$repair_list[37] = array(
 		'bp-wordpress-xprofile-resync',
-		__( 'Re-sync Wordpress profile fields with Xprofile fields.', 'buddyboss' ),
+		__( 'Re-sync WordPress profile fields to BuddyBoss profile fields.', 'buddyboss' ),
 		'resync_wordpress_xprofile_fields',
 	);
 
@@ -364,7 +364,7 @@ function resync_xprofile_wordpress_fields() {
 
 	array_map( 'xprofile_sync_wp_profile', wp_list_pluck( $users, 'ID' ) );
 
-	$statement = __( 'Re-sync user Xprofiles data to Wordpress; %s', 'buddyboss' );
+	$statement = __( 'Re-sync user Xprofiles data to WordPress; %s', 'buddyboss' );
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
@@ -391,7 +391,7 @@ function resync_wordpress_xprofile_fields() {
 		xprofile_set_field_data( bp_xprofile_nickname_field_id(),  $user->ID, $nickname );
 	}
 
-	$statement = __( 'Re-sync user Wordpress data to Xprofiles; %s', 'buddyboss' );
+	$statement = __( 'Re-sync user WordPress data to Xprofiles; %s', 'buddyboss' );
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
