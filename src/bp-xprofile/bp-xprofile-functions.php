@@ -1134,16 +1134,37 @@ function bp_xprofile_fullname_field_id() {
 	return absint( $id );
 }
 
+/**
+ * Get the field id of the first name field
+ *
+ * @since BuddyBoss 3.1.1
+ */
 function bp_xprofile_firstname_field_id() {
-	return absint( bp_get_option( 'bp-xprofile-firstname-field-id' ) );
+	$field_id = apply_filters( 'bp_xprofile_firstname_field_id', bp_get_option( 'bp-xprofile-firstname-field-id' ) );
+	return absint( $field_id );
 }
 
+/**
+ * Get the field id of the last name field
+ *
+ * @since BuddyBoss 3.1.1
+ */
 function bp_xprofile_lastname_field_id() {
-	return absint( bp_get_option( 'bp-xprofile-lastname-field-id' ) );
+	$field_id = apply_filters( 'bp_xprofile_lastname_field_id', bp_get_option( 'bp-xprofile-lastname-field-id' ) );
+	return absint( $field_id );
 }
 
+/**
+ * Get the field id of the nick name field, fallback to default fullname field
+ *
+ * @since BuddyBoss 3.1.1
+ */
 function bp_xprofile_nickname_field_id() {
-	return absint( bp_get_option( 'bp-xprofile-nickname-field-id', bp_xprofile_fullname_field_id() ) );
+	$field_id = apply_filters(
+		'bp_xprofile_nickname_field_id',
+		bp_get_option( 'bp-xprofile-nickname-field-id', bp_xprofile_fullname_field_id() )
+	);
+	return absint( $field_id );
 }
 
 /**
