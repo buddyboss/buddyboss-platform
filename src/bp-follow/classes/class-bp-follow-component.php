@@ -27,7 +27,7 @@ class BP_Follow_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'follow',
-			_x( 'User Followings', 'Follow screen page <title>', 'buddyboss' ),
+			_x( 'User Following', 'Follow screen page <title>', 'buddyboss' ),
 			buddypress()->plugin_dir
 		);
 	}
