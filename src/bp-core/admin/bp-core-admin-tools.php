@@ -353,7 +353,7 @@ function repare_default_profiles_fields() {
 
 	bp_core_install_default_profiles_fields();
 
-	$statement = __( 'Repair default xprofile group and fields&hellip; %s', 'buddyboss' );
+	$statement = __( 'Repair default profile set and fields&hellip; %s', 'buddyboss' );
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
@@ -364,7 +364,7 @@ function resync_xprofile_wordpress_fields() {
 
 	array_map( 'xprofile_sync_wp_profile', wp_list_pluck( $users, 'ID' ) );
 
-	$statement = __( 'Re-sync user Xprofiles data to WordPress; %s', 'buddyboss' );
+	$statement = __( 'Re-sync user profile data to WordPress; %s', 'buddyboss' );
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
@@ -391,7 +391,7 @@ function resync_wordpress_xprofile_fields() {
 		xprofile_set_field_data( bp_xprofile_nickname_field_id(),  $user->ID, $nickname );
 	}
 
-	$statement = __( 'Re-sync user WordPress data to Xprofiles; %s', 'buddyboss' );
+	$statement = __( 'Re-sync user WordPress data to BuddyBoss profile fields; %s', 'buddyboss' );
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
@@ -409,7 +409,7 @@ function xprofile_update_display_names() {
 		] );
 	}
 
-	$statement = __( 'Update wp user display names; %s', 'buddyboss' );
+	$statement = __( 'Update WordPress user display names; %s', 'buddyboss' );
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
