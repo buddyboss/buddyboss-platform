@@ -845,6 +845,8 @@ function xprofile_sync_wp_profile( $user_id = 0, $field_id = null ) {
 		$nickname = xprofile_get_field_data( bp_xprofile_nickname_field_id(), $user_id );
 		bp_update_user_meta( $user_id, 'nickname', $nickname );
 	}
+
+	bp_xprofile_update_display_name( $user_id );
 }
 add_action( 'bp_core_signup_user',      'xprofile_sync_wp_profile' );
 add_action( 'bp_core_activated_user',   'xprofile_sync_wp_profile' );
@@ -868,6 +870,8 @@ function xprofile_sync_bp_profile( &$errors, $update, &$user ) {
 	xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user->ID, $user->first_name );
 	xprofile_set_field_data( bp_xprofile_lastname_field_id(),  $user->ID, $user->last_name );
 	xprofile_set_field_data( bp_xprofile_nickname_field_id(),  $user->ID, $user->nickname );
+
+	$user->display_name = bp_custom_display_name_format( $user->display_name, $user->ID );
 }
 add_action( 'user_profile_update_errors', 'xprofile_sync_bp_profile', 20, 3 );
 
