@@ -102,7 +102,7 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 	}
 
 	if ( bp_activity_add_user_favorite( $_POST['id'] ) ) {
-		$response = array( 'content' => __( 'Unsave', 'buddyboss' ) );
+		$response = array( 'content' => __( 'Unlike', 'buddyboss' ) );
 
 		if ( ! bp_is_user() ) {
 			$fav_count = (int) bp_get_total_favorite_count_for_user( bp_loggedin_user_id() );
