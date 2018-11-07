@@ -219,7 +219,7 @@ class BP_Forums_Component extends BP_Component {
 
         // Favorite topics
         $sub_nav[] = array(
-            'name'            => __( 'Liked', 'buddyboss' ),
+            'name'            => __( 'My Likes', 'buddyboss' ),
             'slug'            => bbp_get_user_favorites_slug(),
             'parent_url'      => $forums_link,
             'parent_slug'     => $this->slug,
@@ -286,7 +286,7 @@ class BP_Forums_Component extends BP_Component {
             $wp_admin_nav[] = array(
                 'parent' => 'my-account-' . $this->id,
                 'id'     => 'my-account-' . $this->id . '-favorites',
-                'title'  => __( 'Liked', 'buddyboss' ),
+                'title'  => __( 'My Likes', 'buddyboss' ),
                 'href'   => trailingslashit( $forums_link . bbp_get_user_favorites_slug() )
             );
 
