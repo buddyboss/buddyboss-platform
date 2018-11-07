@@ -255,18 +255,3 @@ function bp_auto_unfollow_users( $friendship_id, $initiator_user_id, $friend_use
 
 }
 add_action( 'friends_friendship_deleted', 'bp_auto_unfollow_users', 10, 3 );
-
-/**
- * Exclude unfollowed user's feeds
- *
- * @since BuddyBoss 3.1.1
- */
-function bp_exclude_unfollow_feed( $args ) {
-
-	if ( bp_loggedin_user_id() && bp_is_activity_directory() ) {
-		$args['scope'] = 'friends,mentions';
-	}
-
-	return $args;
-}
-//add_filter( 'bp_after_has_activities_parse_args', 'bp_exclude_unfollow_feed' );

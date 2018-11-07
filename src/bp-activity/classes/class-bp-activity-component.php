@@ -223,6 +223,7 @@ class BP_Activity_Component extends BP_Component {
 		if ( bp_activity_do_mentions() )   $main_slug[] = 'mentions';
 		if ( bp_is_active( 'friends' ) && bp_is_my_profile() )   $main_slug[] = 'friends';
 		if ( bp_is_active( 'groups' ) && bp_is_my_profile() )    $main_slug[] = 'groups';
+		if ( bp_is_active( 'follow' ) && bp_is_my_profile() )    $main_slug[] = 'following';
 
 
 		// Add 'Activity' to the main navigation.

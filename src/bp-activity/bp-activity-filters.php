@@ -510,6 +510,7 @@ function bp_activity_display_all_types_on_just_me($args) {
 	if ( bp_activity_do_mentions() )   $scope[] = 'mentions';
 	if ( bp_is_active( 'friends' ) && bp_is_my_profile() )   $scope[] = 'friends';
 	if ( bp_is_active( 'groups' ) && bp_is_my_profile() )    $scope[] = 'groups';
+	if ( bp_is_active( 'follow' ) && bp_is_my_profile() )    $scope[] = 'following';
 
 	$args['scope'] = implode(',', $scope);
 
