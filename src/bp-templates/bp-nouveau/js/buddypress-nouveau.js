@@ -737,14 +737,22 @@ window.bp = window.bp || {};
 				not_friends       : 'add_friend',
 				pending           : 'withdraw_friendship',
 				accept_friendship : 'accept_friendship',
-				reject_friendship : 'reject_friendship',
-				not_following     : 'follow',
-				following         : 'unfollow'
+				reject_friendship : 'reject_friendship'
 			};
 
 			if ( 'members' === object && undefined !== friends_actions_map[ action ] ) {
 				action = friends_actions_map[ action ];
 				object = 'friends';
+			}
+
+			var follow_actions_map = {
+				not_following     : 'follow',
+				following         : 'unfollow'
+			};
+
+			if ( 'members' === object && undefined !== follow_actions_map[ action ] ) {
+				action = follow_actions_map[ action ];
+				object = 'follow';
 			}
 
 			// Add a pending class to prevent queries while we're processing the action
@@ -791,10 +799,6 @@ window.bp = window.bp || {};
 						}
 
 						$( self.objectNavParent + ' [data-bp-scope="personal"] span' ).html( personal_count );
-					}
-
-					if ( action === 'remove_friend' ) {
-						target.closest('ul').find('.follow-button').remove();
 					}
 
 					target.parent().replaceWith( response.data.contents );

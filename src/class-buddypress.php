@@ -540,6 +540,7 @@ class BuddyPress {
 			'blogs',
 			'core',
 			'friends',
+			'follow',
 			'groups',
 			'members',
 			'messages',

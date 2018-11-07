@@ -1890,8 +1890,8 @@ function bbp_topic_favorite_link( $args = array() ) {
 			'topic_id'  => 0,
 			'before'    => '',
 			'after'     => '',
-			'favorite'  => __( 'Save',   'buddyboss' ),
-			'favorited' => __( 'Unsave', 'buddyboss' )
+			'favorite'  => __( 'Like',   'buddyboss' ),
+			'favorited' => __( 'Unlike', 'buddyboss' )
 		), 'get_forum_favorite_link' );
 
 		// Get the link
