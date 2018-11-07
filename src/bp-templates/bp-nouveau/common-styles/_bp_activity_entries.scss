@@ -270,11 +270,12 @@
 			}
 
 			.fav:before {
-				content: "\f154";
+				content: "\f529";
 			}
 
 			.unfav:before {
-				content: "\f155";
+				content: "\f529";
+				color: #0061ac;
 			}
 
 			.delete-activity:before {
