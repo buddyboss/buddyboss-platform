@@ -508,7 +508,7 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 				if ( ! empty( $_POST['allow-custom-visibility'] ) && in_array( $_POST['allow-custom-visibility'], array( 'allowed', 'disabled' ) ) ) {
 					bp_xprofile_update_field_meta( $field_id, 'allow_custom_visibility', $_POST['allow-custom-visibility'] );
 				}
-                
+
 				// Update alternate name.
                 $alternate_name = isset( $_POST['title_secondary'] ) ? $_POST['title_secondary'] : '';
                 bp_xprofile_update_field_meta( $field_id, 'alternate_name', $alternate_name );
@@ -665,9 +665,22 @@ function xprofile_admin_field( $admin_field, $admin_group, $class = '' ) {
 			'mode'     => 'delete_field',
 			'field_id' => (int) $field->id
 		), $url . '#tabs-' . (int) $field->group_id );
-	} ?>
+	}
 
-	<fieldset id="draggable_field_<?php echo esc_attr( $field->id ); ?>" class="sortable<?php echo ' ' . $field->type; if ( !empty( $class ) ) echo ' ' . $class; ?>">
+	$fieldset_class = [ $field->type ];
+
+	// sortable class
+	$fieldset_class[] = in_array( $field->id, array_filter( [
+		bp_xprofile_firstname_field_id(),
+		bp_xprofile_lastname_field_id(),
+		bp_xprofile_nickname_field_id()
+	] ) )? '' : 'sortable';
+
+	$fieldset_class[] = ! empty( $class )? $class : '';
+	$fieldset_class = array_filter( $fieldset_class );
+	?>
+
+	<fieldset id="draggable_field_<?php echo esc_attr( $field->id ); ?>" class="<?php echo implode( ' ', $fieldset_class ); ?>">
 		<legend>
 			<span>
 				<?php bp_the_profile_field_name(); ?>

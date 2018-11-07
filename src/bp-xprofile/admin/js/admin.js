@@ -248,7 +248,7 @@ jQuery( document ).ready( function() {
 	jQuery( 'fieldset.field-group' ).sortable({
 		cursor: 'move',
 		opacity: 0.7,
-		items: 'fieldset',
+		items: 'fieldset.sortable',
 		tolerance: 'pointer',
 
 		update: function() {
