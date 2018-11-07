@@ -3890,6 +3890,10 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
   padding: 0.7em 1em;
 }
 
+.buddypress-wrap table.profile-fields .repeater-separator {
+  background: transparent;
+}
+
 .buddypress-wrap table.profile-fields tr:last-child {
   border-bottom: none;
 }

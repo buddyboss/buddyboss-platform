@@ -685,13 +685,9 @@ function bp_view_profile_repeaters_print_group_html_start () {
         
         if ( empty( $repeater_set_being_displayed ) ) {
             //start of first set
-            //echo "<tr class='repeater-separator-top'><td colspan='2'><hr></td></tr>";
         } else if ( $repeater_set_being_displayed != $current_set_number  ) {
             //end of previous set
-            echo "<tr class='repeater-separator-bottom'><td colspan='2'><hr></td></tr>";
-            
-            //start of a new set
-            //echo "<tr class='repeater-separator-top'><td colspan='2'><hr></td></tr>";
+            echo "<tr class='repeater-separator'><td colspan='2'></td></tr>";
         }
         
         $repeater_set_being_displayed = $current_set_number;
@@ -708,7 +704,7 @@ function bp_view_profile_repeaters_print_group_html_end () {
     global $repeater_set_being_displayed;
     if ( !empty( $repeater_set_being_displayed ) ) {
         //end of previous set
-        echo "<tr class='repeater-separator-bottom'><td colspan='2'><hr></td></tr>";
+        echo "<tr class='repeater-separator'><td colspan='2'></td></tr>";
         
         $repeater_set_being_displayed = false;
     }
