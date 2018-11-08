@@ -130,9 +130,9 @@ add_filter( 'edit_profile_url', 'bp_members_edit_profile_url', 10, 3 );
 
 /**
  * Disables the front page template if you are looking at someone else's profile.
- * 
+ *
  * @since BuddyBoss 3.1.1
- * 
+ *
  * @param array $settings
  * @return array
  */
@@ -140,13 +140,35 @@ function bp_hide_front_page_for_others_profile ( $settings ) {
     if ( !bp_displayed_user_id() ) {
         return $settings;
     }
-    
+
     if ( $settings['user_front_page'] && bp_is_my_profile() ) {
         $settings['user_front_page'] = 1;
     } else {
         $settings['user_front_page'] = 0;
     }
-    
+
     return $settings;
 }
 add_filter( 'bp_after_nouveau_appearance_settings_parse_args', 'bp_hide_front_page_for_others_profile' );
+
+function bp_overwrite_login_form_email_field_label( $defaults ) {
+	$defaults['label_username'] = __( 'Email Address', 'bussyboss' );
+
+	return $defaults;
+}
+add_filter( 'login_form_defaults', 'bp_overwrite_login_form_email_field_label' );
+
+function bp_overwrite_login_email_field_label( $translated_text, $text, $domain ) {
+	if ( 'Username or Email Address' == $text && 'default' == $domain ) {
+		remove_filter( 'gettext', 'bp_overwrite_login_email_field_label' );
+		return __( 'Email Address', 'buddyboss' );
+	}
+
+	return $translated_text;
+}
+
+function bp_overwrite_login_email_field_label_hook() {
+	add_filter( 'gettext', 'bp_overwrite_login_email_field_label', 10, 3 );
+}
+add_action( 'login_form_retrievepassword', 'bp_overwrite_login_email_field_label_hook' );
+add_action( 'login_form_login', 'bp_overwrite_login_email_field_label_hook' );
