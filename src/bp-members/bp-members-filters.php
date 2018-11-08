@@ -171,4 +171,5 @@ function bp_overwrite_login_email_field_label_hook() {
 	add_filter( 'gettext', 'bp_overwrite_login_email_field_label', 10, 3 );
 }
 add_action( 'login_form_retrievepassword', 'bp_overwrite_login_email_field_label_hook' );
+add_action( 'login_form_lostpassword', 'bp_overwrite_login_email_field_label_hook' );
 add_action( 'login_form_login', 'bp_overwrite_login_email_field_label_hook' );
