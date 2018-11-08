@@ -1163,10 +1163,10 @@ function bp_xprofile_lastname_field_id() {
  *
  * @since BuddyBoss 3.1.1
  */
-function bp_xprofile_nickname_field_id() {
+function bp_xprofile_nickname_field_id( $no_fallback = false ) {
 	$field_id = apply_filters(
 		'bp_xprofile_nickname_field_id',
-		bp_get_option( 'bp-xprofile-nickname-field-id', bp_xprofile_fullname_field_id() )
+		bp_get_option( 'bp-xprofile-nickname-field-id', $no_fallback? null : bp_xprofile_fullname_field_id() )
 	);
 	return absint( $field_id );
 }
@@ -1179,6 +1179,16 @@ function bp_xprofile_nickname_field_id() {
  * @return string The field name.
  */
 function bp_xprofile_fullname_field_name() {
+	$field_name = BP_XPROFILE_FULLNAME_FIELD_NAME;
+
+	/**
+	 * Get the nickname field if is set
+	 *
+	 * @since BuddyBoss 3.1.1
+	 */
+	if ( $nickname_field_id = bp_xprofile_nickname_field_id( true) ) {
+		$field_name = xprofile_get_field( $nickname_field_id )->name;
+	}
 
 	/**
 	 * Filters the field name for the Full Name xprofile field.
@@ -1187,7 +1197,7 @@ function bp_xprofile_fullname_field_name() {
 	 *
 	 * @param string $value BP_XPROFILE_FULLNAME_FIELD_NAME Full name field constant.
 	 */
-	return apply_filters( 'bp_xprofile_fullname_field_name', BP_XPROFILE_FULLNAME_FIELD_NAME );
+	return apply_filters( 'bp_xprofile_fullname_field_name', $field_name );
 }
 
 /**

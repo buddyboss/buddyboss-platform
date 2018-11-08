@@ -85,7 +85,16 @@ add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_nickname_value', 10
 // Display name adjustment
 add_filter( 'set_current_user', 'bp_xprofile_adjust_current_user_display_name' );
 add_filter( 'get_user_metadata', 'bp_xprofile_adjust_display_name', 10, 3 );
+add_filter( 'get_the_author_display_name', 'bp_xprofile_adjust_author_display_name', 10, 2 );
 add_filter( 'bp_core_get_core_userdata', 'bp_xprofile_adjust_display_user_display_name' );
+
+// Email Username
+add_filter( 'new_admin_email_content', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
+add_filter( 'delete_site_email_content', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
+add_filter( 'new_network_admin_email_content', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
+add_filter( 'password_change_email', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
+add_filter( 'email_change_email', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
+add_filter( 'new_user_email_content', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
 
 /**
  * Sanitize each field option name for saving to the database.
@@ -700,7 +709,27 @@ function bp_xprofile_adjust_display_name( $null, $object_id, $meta_key ) {
 	return bp_custom_display_name_format( $null, $object_id );
 }
 
+function bp_xprofile_adjust_author_display_name( $display_name, $user_id ) {
+	return bp_custom_display_name_format( $display_name, $user_id );
+}
+
 function bp_xprofile_adjust_display_user_display_name( $userdata ) {
 	$userdata->display_name = bp_custom_display_name_format( $userdata->display_name, $userdata->ID );
 	return $userdata;
+}
+
+function bp_xprofile_replace_username_to_display_name( $email_content, $user = null ) {
+	if ( ! $user || ! is_a( $user, 'WP_User' ) ) {
+		$user = wp_get_current_user()->to_array();
+	}
+
+	if ( ! isset( $user['ID'] ) || ! isset( $user['display_name'] ) ) {
+		return $email_content;
+	}
+
+	return str_replace(
+		'###USERNAME###',
+		bp_custom_display_name_format( $user['display_name'], $user['ID'] ),
+		$email_content
+	);
 }
