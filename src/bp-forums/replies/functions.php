@@ -2274,6 +2274,10 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 			$display_role = __( 'Organizer', 'buddyboss' );
 		}
 	} else {
+		if ( ! $author_id ) {
+			return __( 'Guest', 'buddyboss' );
+		}
+
 		$user_roles = array_values( get_userdata( $author_id )->roles );
 
 		if ( array_intersect( $user_roles, [ bbp_get_keymaster_role(), 'administrator' ] ) ) {
