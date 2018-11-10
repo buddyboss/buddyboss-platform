@@ -2275,18 +2275,18 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 		}
 	} else {
 		if ( ! $author_id ) {
-			return __( 'Guest', 'buddyboss' );
-		}
+			$display_role = __( 'Guest', 'buddyboss' );
+		} else {
+            $user_roles = array_values( get_userdata( $author_id )->roles );
 
-		$user_roles = array_values( get_userdata( $author_id )->roles );
+            if ( array_intersect( $user_roles, [ bbp_get_keymaster_role(), 'administrator' ] ) ) {
+                $display_role = __( 'Administrator', 'buddyboss' );
+            }
 
-		if ( array_intersect( $user_roles, [ bbp_get_keymaster_role(), 'administrator' ] ) ) {
-			$display_role = __( 'Administrator', 'buddyboss' );
-		}
-
-		if ( array_intersect( $user_roles, [ bbp_get_moderator_role(), 'editor' ] ) ) {
-			$display_role = __( 'Moderator', 'buddyboss' );
-		}
+            if ( array_intersect( $user_roles, [ bbp_get_moderator_role(), 'editor' ] ) ) {
+                $display_role = __( 'Moderator', 'buddyboss' );
+            }
+        }
 	}
 
 	return sprintf(
