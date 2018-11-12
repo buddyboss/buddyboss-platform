@@ -644,7 +644,6 @@ class BuddyPress {
 			return;
 		}
 
-		//var_dump($path);
 		require $path;
 	}
 
