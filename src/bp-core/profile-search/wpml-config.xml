@@ -1,0 +1,10 @@
+<wpml-config>
+    <custom-types>
+        <custom-type translate="0">bps_form</custom-type>
+    </custom-types>    
+    <custom-fields>
+        <custom-field action="ignore">bps_options</custom-field>
+    </custom-fields>
+</wpml-config>
+
+

@@ -480,6 +480,27 @@ function bp_disable_profile_sync( $default = false ) {
 }
 
 /**
+ * Is advacned profile search disabled?
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if profile search is enabled, otherwise false.
+ */
+function bp_disable_advanced_profile_search( $default = false ) {
+
+	/**
+	 * Filters whether or not profile search is disabled.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param bool $value Whether or not profile search is disabled.
+	 */
+	return (bool) apply_filters( 'bp_disable_advanced_profile_search', ! (bool) bp_get_option( 'bp-enable-profile-search', $default ) );
+}
+
+/**
  * Is the Toolbar hidden for logged out users?
  *
  * @since BuddyPress 1.6.0

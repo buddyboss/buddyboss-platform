@@ -40,6 +40,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		// Enable/Disable member dashboard.
 		$this->add_field( 'bp-enable-member-dashboard', __( 'Member Dashboard', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_dashboard'], 'intval' );
+		
+        // Enable/Disable profile search.
+		$this->add_field( 'bp-enable-profile-search', __( 'Advanced Search', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_search'], 'intval' );
 	}
 
 	/**
@@ -52,6 +55,19 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 			<input id="bp-enable-member-dashboard" name="bp-enable-member-dashboard" type="checkbox" value="1" <?php checked( bp_nouveau_get_appearance_settings( 'user_front_page' ) ); ?> />
 			<label for="bp-enable-member-dashboard"><?php _e( 'Enable Dashboard for member profiles', 'buddyboss' ); ?></label>
+		<?php
+	}
+
+	/**
+	 * Enable member profile search.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 */
+	public function bp_admin_setting_callback_profile_search() {
+		?>
+			<input id="bp-enable-profile-search" name="bp-enable-profile-search" type="checkbox" value="1" <?php checked( ! bp_disable_advanced_profile_search() ); ?> />
+			<label for="bp-enable-profile-search"><?php _e( 'Enable advanced profile search on the members directory.', 'buddyboss' ); ?></label>
 		<?php
 	}
 }

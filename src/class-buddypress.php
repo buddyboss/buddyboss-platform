@@ -494,6 +494,7 @@ class BuddyPress {
 		require( $this->plugin_dir . 'bp-core/bp-core-loader.php'           );
 		require( $this->plugin_dir . 'bp-core/bp-core-customizer-email.php' );
 		require( $this->plugin_dir . 'bp-core/bp-core-emails.php'           );
+		require( $this->plugin_dir . 'bp-core/bp-core-profile-search.php'           );
 
 		// Maybe load deprecated functionality (this double negative is proof positive!)
 		if ( ! bp_get_option( '_bp_ignore_deprecated_code', ! $this->load_deprecated ) ) {
