@@ -328,14 +328,15 @@ function groups_notification_group_invites( &$group, &$member, $inviter_user_id 
 
 	$args         = array(
 		'tokens' => array(
-			'group'        => $group,
-			'group.url'    => bp_get_group_permalink( $group ),
-			'group.name'   => $group->name,
-			'inviter.name' => bp_core_get_userlink( $inviter_user_id, true, false, true ),
-			'inviter.url'  => bp_core_get_user_domain( $inviter_user_id ),
-			'inviter.id'   => $inviter_user_id,
-			'invites.url'  => esc_url( $invited_link . '/invites/' ),
-			'unsubscribe'  => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+			'group'           => $group,
+			'group.url'       => bp_get_group_permalink( $group ),
+			'group.name'      => $group->name,
+			'inviter.name'    => bp_core_get_userlink( $inviter_user_id, true, false, true ),
+			'inviter.url'     => bp_core_get_user_domain( $inviter_user_id ),
+			'inviter.id'      => $inviter_user_id,
+			'invites.url'     => esc_url( $invited_link . '/invites/' ),
+			'invites.message' => bp_groups_get_invite_messsage_for_user( $invited_user_id, $group->id ),
+			'unsubscribe'     => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
 		),
 	);
 	bp_send_email( 'groups-invitation', (int) $invited_user_id, $args );
