@@ -2,8 +2,8 @@
 /**
  * BuddyBoss - Members Settings ( Export Data )
  *
- * @since BuddyPress 3.0.0
- * @version 3.0.0
+ * @since BuddyBoss 3.1.1
+ * @version 3.1.1
  */
 ?>
 
