@@ -586,7 +586,6 @@ class BuddyPress {
 			'BP_Message_Export'              => 'gdpr',
 			'BP_Notification_Export'         => 'gdpr',
 			'BP_Settings_Export'             => 'gdpr',
-			'BP_User_Settings'               => 'gdpr',
 			'BP_Xprofile_Export'             => 'gdpr',
 			'BP_Bbp_Gdpr_Forums'             => 'gdpr',
 			'BP_Bbp_Gdpr_Replies'            => 'gdpr',

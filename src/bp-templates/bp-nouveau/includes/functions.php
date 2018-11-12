@@ -975,6 +975,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'info',
 			'message' => __( 'Currently only your friends can invite you to groups. Uncheck the box to allow any member to send invites.', 'buddyboss' ),
 		),
+		'member-data-export' => array(
+			'type'    => 'info',
+			'message' => __( 'You can download a copy of all data you have shared on this platform. Click the button below to get started. An email will be sent to you to verify the request. Then the site admin will review your request and if approved, an export file will be generated and emailed to you.', 'buddyboss' ),
+		),
 	) );
 
 	if ( ! isset( $feedback_messages[ $feedback_id ] ) ) {
@@ -1236,6 +1240,15 @@ function bp_nouveau_get_submit_button( $action = '' ) {
 			'attributes' => array(
 				'name'  => 'ac_form_submit',
 				'value' => _x( 'Post', 'button', 'buddyboss' ),
+			),
+		),
+		'member-data-export' => array(
+			'nonce'  => 'buddyboss_data_export_request',
+			'attributes' => array(
+				'name'  => 'member-data-export-submit',
+				'id'    => 'submit',
+				'value' => __( 'Request Data Export', 'buddyboss' ),
+				'class' => 'auto',
 			),
 		),
 	) );

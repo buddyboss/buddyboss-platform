@@ -47,7 +47,6 @@ class BP_Core_Gdpr {
 		}
 		if ( bp_is_active( "settings" ) ) {
 			BP_Settings_Export::instance();
-			BP_User_Settings::instance();
 		}
 		if ( bp_is_active( "forums" ) ) {
 			new BP_Bbp_Gdpr_Forums();
