@@ -494,6 +494,7 @@ class BuddyPress {
 		require( $this->plugin_dir . 'bp-core/bp-core-loader.php'           );
 		require( $this->plugin_dir . 'bp-core/bp-core-customizer-email.php' );
 		require( $this->plugin_dir . 'bp-core/bp-core-emails.php'           );
+		require( $this->plugin_dir . 'bp-core/bp-core-gdpr.php'             );
 
 		// Maybe load deprecated functionality (this double negative is proof positive!)
 		if ( ! bp_get_option( '_bp_ignore_deprecated_code', ! $this->load_deprecated ) ) {
@@ -547,41 +548,52 @@ class BuddyPress {
 			'settings',
 			'xprofile',
 			'forums',
+			'gdpr',
 		);
 
 		// These classes don't have a name that matches their component.
 		$irregular_map = array(
-			'BP_Akismet' => 'activity',
-
-			'BP_Admin'                     => 'core',
-			'BP_Attachment_Avatar'         => 'core',
-			'BP_Attachment_Cover_Image'    => 'core',
-			'BP_Attachment'                => 'core',
-			'BP_Button'                    => 'core',
-			'BP_Component'                 => 'core',
-			'BP_Customizer_Control_Range'  => 'core',
-			'BP_Date_Query'                => 'core',
-			'BP_Email_Tokens'              => 'core',
-			'BP_Email_Delivery'            => 'core',
-			'BP_Email_Recipient'           => 'core',
-			'BP_Email'                     => 'core',
-			'BP_Embed'                     => 'core',
-			'BP_Media_Extractor'           => 'core',
-			'BP_Members_Suggestions'       => 'core',
-			'BP_PHPMailer'                 => 'core',
-			'BP_Recursive_Query'           => 'core',
-			'BP_Suggestions'               => 'core',
-			'BP_Theme_Compat'              => 'core',
-			'BP_User_Query'                => 'core',
-			'BP_Walker_Category_Checklist' => 'core',
-			'BP_Walker_Nav_Menu_Checklist' => 'core',
-			'BP_Walker_Nav_Menu'           => 'core',
-
-			'BP_Core_Friends_Widget' => 'friends',
-
-			'BP_Group_Extension'    => 'groups',
-			'BP_Group_Member_Query' => 'groups',
-
+			'BP_Akismet'                     => 'activity',
+			'BP_Admin'                       => 'core',
+			'BP_Attachment_Avatar'           => 'core',
+			'BP_Attachment_Cover_Image'      => 'core',
+			'BP_Attachment'                  => 'core',
+			'BP_Button'                      => 'core',
+			'BP_Component'                   => 'core',
+			'BP_Customizer_Control_Range'    => 'core',
+			'BP_Date_Query'                  => 'core',
+			'BP_Email_Tokens'                => 'core',
+			'BP_Email_Delivery'              => 'core',
+			'BP_Email_Recipient'             => 'core',
+			'BP_Email'                       => 'core',
+			'BP_Embed'                       => 'core',
+			'BP_Media_Extractor'             => 'core',
+			'BP_Members_Suggestions'         => 'core',
+			'BP_PHPMailer'                   => 'core',
+			'BP_Recursive_Query'             => 'core',
+			'BP_Suggestions'                 => 'core',
+			'BP_Theme_Compat'                => 'core',
+			'BP_User_Query'                  => 'core',
+			'BP_Walker_Category_Checklist'   => 'core',
+			'BP_Walker_Nav_Menu_Checklist'   => 'core',
+			'BP_Walker_Nav_Menu'             => 'core',
+			'BP_Core_Gdpr'                   => 'gdpr',
+			'BP_Activity_Export'             => 'gdpr',
+			'BP_Export'                      => 'gdpr',
+			'BP_Friendship_Export'           => 'gdpr',
+			'BP_Group_Export'                => 'gdpr',
+			'BP_Group_Membership_Export'     => 'gdpr',
+			'BP_Message_Export'              => 'gdpr',
+			'BP_Notification_Export'         => 'gdpr',
+			'BP_Settings_Export'             => 'gdpr',
+			'BP_User_Settings'               => 'gdpr',
+			'BP_Xprofile_Export'             => 'gdpr',
+			'BP_Bbp_Gdpr_Forums'             => 'gdpr',
+			'BP_Bbp_Gdpr_Replies'            => 'gdpr',
+			'BP_Bbp_Gdpr_Topics'             => 'gdpr',
+			'BP_Core_Friends_Widget'         => 'friends',
+			'BP_Group_Extension'             => 'groups',
+			'BP_Group_Member_Query'          => 'groups',
 			'BP_Core_Members_Template'       => 'members',
 			'BP_Core_Members_Widget'         => 'members',
 			'BP_Core_Recently_Active_Widget' => 'members',
@@ -607,11 +619,16 @@ class BuddyPress {
 
 		// Sanitize class name.
 		$class = strtolower( str_replace( '_', '-', $class ) );
+		if ( 'gdpr' === $component ) {
+			$path = dirname( __FILE__ ) . "/bp-core/gdpr/class-{$class}.php";
+		} else {
+			$path = dirname( __FILE__ ) . "/bp-{$component}/classes/class-{$class}.php";
+		}
 
-		$path = dirname( __FILE__ ) . "/bp-{$component}/classes/class-{$class}.php";
 
 		// Sanity check.
 		if ( ! file_exists( $path ) ) {
+
 			return;
 		}
 
@@ -620,13 +637,14 @@ class BuddyPress {
 		 * Skip if PHPUnit is running, or BuddyPress is installing for the first time.
 		 */
 		if (
-			! in_array( $component, array( 'core', 'members' ), true ) &&
+			! in_array( $component, array( 'core', 'members','gdpr' ), true ) &&
 			! bp_is_active( $component ) &&
 			! function_exists( 'tests_add_filter' )
 		) {
 			return;
 		}
 
+		//var_dump($path);
 		require $path;
 	}
 
