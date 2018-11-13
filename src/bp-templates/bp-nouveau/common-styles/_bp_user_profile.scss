@@ -69,25 +69,30 @@
 
 		// Repeater sets
 		.repeater_group_outer {
-		    margin: 0 0 15px;
-		    padding: 15px;
-		    cursor: move;
-		    background: $white;
-		    border: 1px solid $bp-border-color;
-		    
-		    .repeater_tools {
-		        text-align: right;
+			margin: 0 0 15px;
+			padding: 15px;
+			cursor: move;
+			background: $white;
+			border: 1px solid $bp-border-color;
 
-			    .repeater_set_title {
-			    	float: left;
-			    	display: inline-block;
-			    }
-                
-		        .repeater_set_edit,
-		        .repeater_set_delete {
-		        	cursor: pointer;
-		        }
-		    }
+			.repeater_tools {
+				display: flex;
+				flex-flow: row wrap;
+
+				a {
+					align-items: center;
+					display: flex;
+				}
+			}
+
+			.repeater_set_title {
+				flex: 1;
+			}
+
+			.repeater_set_edit {
+				margin-left: auto;
+				margin-right: 5px;
+			}
 		}
 
 		// The visual layout of the form controls and group description
@@ -112,6 +117,16 @@
 
 	} // .profile
 } // close .buddypress-wrap
+
+#btn_add_repeater_set {
+	align-items: center;
+	display: flex;
+	float: right;
+
+	.dashicons {
+		margin-right: 5px;
+	}
+}
 
 body.no-js {
 
