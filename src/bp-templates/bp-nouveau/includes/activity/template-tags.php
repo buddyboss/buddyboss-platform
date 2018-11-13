@@ -402,7 +402,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				'parent_attr'       => $parent_attr,
 				'must_be_logged_in' => true,
 				'button_element'    => $fav_args['button_element'],
-				'link_text'         => sprintf( '<span class="bp-screen-reader-text">%1$s</span>', esc_html( $fav_args['link_text'] ) ),
+				'link_text'         => sprintf( '<span class="bp-screen-reader-text">%1$s</span>  <span class="like-count">%2$s</span>', esc_html( $fav_args['link_text'] ), esc_html( bp_activity_get_meta( bp_get_activity_id(), 'favorite_count' ) ) ),
 				'button_attr'       => array(
 					$key              => $fav_args['link_attr'],
 					'class'           => $fav_args['link_class'],
