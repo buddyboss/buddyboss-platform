@@ -323,7 +323,7 @@ function bp_core_activation_notice() {
 		$notice    = sprintf(
 			'%1$s <a href="%2$s">%3$s</a>',
 			sprintf(
-				__( 'Each BuddyPress Component needs its own WordPress page. The following WordPress Pages have more than one component associated with them: %s.', 'buddyboss' ),
+				__( 'Each BuddyBoss Component needs its own WordPress page. The following WordPress Pages have more than one component associated with them: %s.', 'buddyboss' ),
 				'<strong>' . implode( '</strong>, <strong>', array_map( 'esc_html', $dupe_names ) ) . '</strong>'
 			),
 			esc_url( $admin_url ),
