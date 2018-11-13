@@ -65,7 +65,7 @@ function bp_get_default_options() {
 		// Allow users to delete their own accounts.
 		'bp-disable-account-deletion'          => false,
 
-		// Allow users to delete their own accounts.
+		// Allow site owner to enable private network.
 		'bp-enable-private-network'          => true,
 
 		// Allow comments on post and comment activity items.
@@ -645,9 +645,9 @@ function bp_disable_account_deletion( $default = false ) {
 }
 
 /**
- * Are members able to delete their own accounts?
+ * Enable private network for site owner.
  *
- * @since BuddyPress 1.6.0
+ * @since BuddyBoss 3.1.1
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
@@ -659,9 +659,9 @@ function bp_enable_private_network( $default = false ) {
 	/**
 	 * Filters whether or not members are able to delete their own accounts.
 	 *
-	 * @since BuddyPress 1.6.0
+	 * @since BuddyBoss 3.1.1
 	 *
-	 * @param bool $value Whether or not members are able to delete their own accounts.
+	 * @param bool $value Whether site owner uses private network.
 	 */
 	return apply_filters( 'bp_enable_private_network', (bool) bp_get_option( 'bp-enable-private-network', $default ) );
 }

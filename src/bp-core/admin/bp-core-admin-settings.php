@@ -48,7 +48,7 @@ function bp_admin_setting_callback_account_deletion() {
 }
 
 /**
- * Allow admin to make the site private
+ * Allow admin to make the site private network.
  *
  * @since BuddyBoss 3.1.1
  *
