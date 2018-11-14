@@ -48,13 +48,14 @@ window.bp = window.bp || {};
             }
         });
     }
-    
+
     // Edit button
     $( '#profile-edit-form .repeater_group_outer .repeater_set_edit' ).click( function(e){
         e.preventDefault();
         $(this).closest('.repeater_group_outer').find('.repeater_group_inner').slideToggle();
+        $(this).parents('.repeater_group_outer').toggleClass('active');
     });
-    
+
     // Delete button
     $( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).click( function(e){
         var $delete_button = $(this);
