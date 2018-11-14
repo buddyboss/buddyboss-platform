@@ -12,6 +12,26 @@ class BP_Admin_Setting_Forums extends BP_Admin_Setting_tab {
 		return bp_is_active( 'forums' );
 	}
 
+	public function settings_save() {
+		$sections = bbp_admin_get_settings_sections();
+
+		foreach ( (array) $sections as $section_id => $section ) {
+			$fields = bbp_admin_get_settings_fields_for_section( $section_id );
+
+			foreach ( (array) $fields as $field_id => $field ) {
+				$value = isset( $_POST[$field_id] ) ? $_POST[$field_id] : '';
+
+				if ( is_callable( $field['sanitize_callback'] ) ) {
+					$value = $field['sanitize_callback']($value);
+				}
+
+				bp_update_option( $field_id, $value );
+			}
+		}
+
+		flush_rewrite_rules();
+	}
+
 	public function register_fields() {
 		$sections = bbp_admin_get_settings_sections();
 		$fields = bbp_admin_get_settings_fields();
