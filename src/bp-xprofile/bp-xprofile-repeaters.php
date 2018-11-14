@@ -637,7 +637,8 @@ function bp_print_add_repeater_set_button () {
     $group_id = bp_get_current_profile_group_id();
     $is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
     if ( $is_repeater_enabled ) {
-        echo "<button id='btn_add_repeater_set' data-nonce='". wp_create_nonce( 'bp_xprofile_add_repeater_set' ) ."' data-group='{$group_id}'>";
+        echo "<button id='btn_add_repeater_set' class='button outline' data-nonce='". wp_create_nonce( 'bp_xprofile_add_repeater_set' ) ."' data-group='{$group_id}'>";
+        echo '<span class="dashicons dashicons-plus-alt"></span>';
         printf(
             /* translators: %s = profile field group name */
             __( 'Add Another', 'buddyboss' ),
@@ -690,17 +691,17 @@ function bp_profile_repeaters_print_group_html_start () {
             //start of first set
             ?>
             <div class="repeater_sets_sortable">
-            <div class='repeater_group_outer' data-set_no='<?php echo $current_set_number;?>'>
+            <div class="repeater_group_outer" data-set_no="<?php echo $current_set_number;?>">
                 
-                <div class='repeater_tools'>
-                    <span class='repeater_set_title'></span>
-                    <a class='repeater_set_edit'>
+                <div class="repeater_tools">
+                    <span class="repeater_set_title"></span>
+                    <a class="repeater_set_edit bp-tooltip" data-bp-tooltip="<?php _e( 'Edit', 'buddyboss' ); ?>">
                         <i class="dashicons dashicons-edit"></i>
-                        <span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
+                        <span class="bp-screen-reader-text"><?php _e( 'Edit', 'buddyboss' ); ?></span>
                     </a> 
-                    <a class='repeater_set_delete'>
+                    <a class="repeater_set_delete bp-tooltip" data-bp-tooltip="<?php _e( 'Delete', 'buddyboss' ); ?>">
                         <i class="dashicons dashicons-trash"></i>
-                        <span class="bp-screen-reader-text">Delete</span>
+                        <span class="bp-screen-reader-text"><?php _e( 'Delete', 'buddyboss' ); ?></span>
                     </a>
                 </div>
                 <div class='repeater_group_inner'>
@@ -712,17 +713,17 @@ function bp_profile_repeaters_print_group_html_start () {
                 ?>
                 </div>
             </div><!-- .repeater_group_outer -->
-            <div class='repeater_group_outer' data-set_no='<?php echo $current_set_number;?>'>
+            <div class="repeater_group_outer" data-set_no="<?php echo $current_set_number;?>">
 
-                <div class='repeater_tools'>
-                    <span class='repeater_set_title'></span>
-                    <a class='repeater_set_edit'>
+                <div class="repeater_tools">
+                    <span class="repeater_set_title"></span>
+                    <a class="repeater_set_edit bp-tooltip" data-bp-tooltip="<?php _e( 'Edit', 'buddyboss' ); ?>">
                         <i class="dashicons dashicons-edit"></i>
-                        <span class="bp-screen-reader-text"><?php esc_html_e( 'Edit', 'buddyboss' ); ?></span>
+                        <span class="bp-screen-reader-text"><?php _e( 'Edit', 'buddyboss' ); ?></span>
                     </a> 
-                    <a class='repeater_set_delete'>
+                    <a class="repeater_set_delete bp-tooltip" data-bp-tooltip="<?php _e( 'Delete', 'buddyboss' ); ?>">
                         <i class="dashicons dashicons-trash"></i>
-                        <span class="bp-screen-reader-text"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></span>
+                        <span class="bp-screen-reader-text"><?php _e( 'Delete', 'buddyboss' ); ?></span>
                     </a>                    
                 </div>
                 <div class='repeater_group_inner'>

@@ -65,7 +65,7 @@ class BP_Settings_Component extends BP_Component {
 			return;
 		}
 
-		$actions = array( 'notifications', 'capabilities', 'delete-account' );
+		$actions = array( 'notifications', 'capabilities', 'delete-account', 'export' );
 
 		// Authenticated actions.
 		if ( is_user_logged_in() ) {
@@ -169,6 +169,16 @@ class BP_Settings_Component extends BP_Component {
 			'user_has_access' => $access
 		);
 
+		$sub_nav[] = array(
+			'name'            => __( 'Export Data', 'buddyboss' ),
+			'slug'            => 'export',
+			'parent_url'      => $settings_link,
+			'parent_slug'     => $slug,
+			'screen_function' => 'bp_settings_screen_export_data',
+			'position'        => 80,
+			'user_has_access' => $access
+		);
+
 		// Add Spam Account nav item.
 		if ( bp_current_user_can( 'bp_moderate' ) ) {
 			$sub_nav[] = array(
@@ -228,6 +238,14 @@ class BP_Settings_Component extends BP_Component {
 				'title'    => __( 'Login Information', 'buddyboss' ),
 				'href'     => $settings_link,
 				'position' => 10
+			);
+
+			$wp_admin_nav[] = array(
+				'parent' => 'my-account-' . $this->id,
+				'id'     => 'my-account-' . $this->id . '-export',
+				'title'  => __( 'Export Data', 'buddyboss' ),
+				'href'   => trailingslashit( $settings_link . 'export/' ),
+				'position' => 50
 			);
 
 			// Notifications - only add the tab when there is something to display there.

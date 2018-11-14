@@ -2766,17 +2766,22 @@ body.no-js .single-item-header .js-self-profile-button {
 }
 
 .buddypress-wrap .profile.edit .repeater_group_outer .repeater_tools {
-  text-align: right;
+  display: flex;
+  flex-flow: row wrap;
 }
 
-.buddypress-wrap .profile.edit .repeater_group_outer .repeater_tools .repeater_set_title {
-  float: left;
-  display: inline-block;
+.buddypress-wrap .profile.edit .repeater_group_outer .repeater_tools a {
+  align-items: center;
+  display: flex;
 }
 
-.buddypress-wrap .profile.edit .repeater_group_outer .repeater_tools .repeater_set_edit,
-.buddypress-wrap .profile.edit .repeater_group_outer .repeater_tools .repeater_set_delete {
-  cursor: pointer;
+.buddypress-wrap .profile.edit .repeater_group_outer .repeater_set_title {
+  flex: 1;
+}
+
+.buddypress-wrap .profile.edit .repeater_group_outer .repeater_set_edit {
+  margin-left: auto;
+  margin-right: 5px;
 }
 
 .buddypress-wrap .profile.edit .editfield {
@@ -2796,6 +2801,16 @@ body.no-js .single-item-header .js-self-profile-button {
 .buddypress-wrap .profile.edit .editfield .field-visibility-settings-toggle,
 .buddypress-wrap .profile.edit .editfield .field-visibility-settings {
   order: 3;
+}
+
+#btn_add_repeater_set {
+  align-items: center;
+  display: flex;
+  float: right;
+}
+
+#btn_add_repeater_set .dashicons {
+  margin-right: 5px;
 }
 
 body.no-js .buddypress-wrap .field-visibility-settings-toggle,
@@ -4058,6 +4073,7 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
   font-size: inherit;
   font-weight: 400;
   outline: none;
+  line-height: 1.3;
   padding: 0.3em 0.7em;
   text-align: center;
   text-decoration: none;

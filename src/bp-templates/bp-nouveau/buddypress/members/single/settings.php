@@ -33,6 +33,9 @@ switch ( bp_current_action() ) :
 	case 'invites':
 		bp_get_template_part( 'members/single/settings/group-invites' );
 		break;
+	case 'export':
+		bp_get_template_part( 'members/single/settings/export-data' );
+		break;
 	default:
 		bp_get_template_part( 'members/single/plugins' );
 		break;

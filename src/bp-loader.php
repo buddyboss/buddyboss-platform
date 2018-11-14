@@ -243,7 +243,7 @@ if ( !$is_bp_active && !$is_bb_active ) {
         // a lot of action in bbpress requires before component init,
         // hence we grab the pure db value and load the class
         // so all the hook prior to bp_init can be hook in
-	    if ( $bp_forum_active = array_key_exists( 'forums', get_option( 'bp-active-components' ) ) ) {
+	    if ( $bp_forum_active = array_key_exists( 'forums', get_option( 'bp-active-components' ) ?: [] ) ) {
 	        require dirname( __FILE__ ) . '/bp-forums/classes/class-bbpress.php';
 	    }
 

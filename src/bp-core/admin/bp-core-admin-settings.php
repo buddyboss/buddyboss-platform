@@ -47,6 +47,21 @@ function bp_admin_setting_callback_account_deletion() {
 <?php
 }
 
+/**
+ * Allow admin to make the site private network.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ */
+function bp_admin_setting_callback_private_network() {
+	?>
+
+	<input id="bp-enable-private-network" name="bp-enable-private-network" type="checkbox" value="1" <?php checked( !bp_enable_private_network( false ) ); ?> />
+	<label for="bp-enable-private-network"><?php _e( 'Block entire website from logged out users (but allow Login and Register)', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
 /** Activity *******************************************************************/
 
 /**

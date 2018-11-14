@@ -469,6 +469,12 @@ window.bp = window.bp || {};
 								$( this ).attr('aria-pressed', 'false');
 							}
 
+							if ( $( this ).find( '.like-count' ).length ) {
+								$(this).find('.like-count').html(response.data.like_count);
+							}
+
+							target.attr( 'data-bp-tooltip', response.data.content );
+
 							$( this ).fadeIn( 200 );
 						} );
 					}
