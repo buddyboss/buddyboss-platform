@@ -1,7 +1,7 @@
 <?php
 
-add_action ('wp', 'bps_set_request');
-function bps_set_request ()
+add_action ('wp', 'bp_ps_set_request');
+function bp_ps_set_request ()
 {
 	global $post;
 	global $shortcode_tags;
@@ -10,36 +10,36 @@ function bps_set_request ()
 	{
 		$saved_shortcodes = $shortcode_tags;
 		$shortcode_tags = array ();
-		add_shortcode ('bps_directory', 'bps_save_hidden_filters');
+		add_shortcode ('bp_ps_directory', 'bp_ps_save_hidden_filters');
 		do_shortcode ($post->post_content);
 		$shortcode_tags = $saved_shortcodes;
 	}
 
-	$filters = bps_hidden_filters ();
+	$filters = bp_ps_hidden_filters ();
 	if (!empty ($filters))
 	{
-		$cookie = apply_filters ('bps_cookie_name', 'bps_filters');
+		$cookie = apply_filters ('bp_ps_cookie_name', 'bp_ps_filters');
 		setcookie ($cookie, http_build_query ($filters), 0, COOKIEPATH);
 	}
 
-	if (isset ($_REQUEST['bps_debug']))
+	if (isset ($_REQUEST['bp_ps_debug']))
 	{
-		$cookie = apply_filters ('bps_cookie_name', 'bps_debug');
+		$cookie = apply_filters ('bp_ps_cookie_name', 'bp_ps_debug');
 		setcookie ($cookie, 1, 0, COOKIEPATH);
 	}
 
-	$persistent = bps_get_option ('persistent', '1');
+	$persistent = bp_ps_get_option ('persistent', '1');
 	$new_search = isset ($_REQUEST[bp_core_get_component_search_query_arg ('members')]);
 
 	if ($new_search || !$persistent)
-		if (!isset ($_REQUEST[BPS_FORM]))  $_REQUEST[BPS_FORM] = 'clear';
+		if (!isset ($_REQUEST[BP_PS_FORM]))  $_REQUEST[BP_PS_FORM] = 'clear';
 
-	if (isset ($_REQUEST[BPS_FORM]))
+	if (isset ($_REQUEST[BP_PS_FORM]))
 	{
-		$cookie = apply_filters ('bps_cookie_name', 'bps_request');
-		if ($_REQUEST[BPS_FORM] != 'clear')
+		$cookie = apply_filters ('bp_ps_cookie_name', 'bp_ps_request');
+		if ($_REQUEST[BP_PS_FORM] != 'clear')
 		{
-			$_REQUEST['bps_directory'] = bps_current_page ();
+			$_REQUEST['bp_ps_directory'] = bp_ps_current_page ();
 			setcookie ($cookie, http_build_query ($_REQUEST), 0, COOKIEPATH);
 		}
 		else
@@ -49,57 +49,57 @@ function bps_set_request ()
 	}
 }
 
-function bps_get_request ($type, $form=0)
+function bp_ps_get_request ($type, $form=0)
 {
-	$current = bps_current_page ();
+	$current = bp_ps_current_page ();
 
-	$cookie = apply_filters ('bps_cookie_name', 'bps_request');
-	$request = isset ($_REQUEST[BPS_FORM])? $_REQUEST: array ();
+	$cookie = apply_filters ('bp_ps_cookie_name', 'bp_ps_request');
+	$request = isset ($_REQUEST[BP_PS_FORM])? $_REQUEST: array ();
 	if (empty ($request) && isset ($_COOKIE[$cookie]))
 		parse_str (stripslashes ($_COOKIE[$cookie]), $request);
 
-	$cookie = apply_filters ('bps_cookie_name', 'bps_filters');
-	$filters = bps_hidden_filters ();
+	$cookie = apply_filters ('bp_ps_cookie_name', 'bp_ps_filters');
+	$filters = bp_ps_hidden_filters ();
 	if (empty ($filters) && isset ($_COOKIE[$cookie]))
 		parse_str (stripslashes ($_COOKIE[$cookie]), $filters);
 
 	switch ($type)
 	{
 	case 'form':
-		if (isset ($request[BPS_FORM]) && $request[BPS_FORM] != $form)  $request = array ();
+		if (isset ($request[BP_PS_FORM]) && $request[BP_PS_FORM] != $form)  $request = array ();
 		break;
 
 	case 'filters':
-		if (isset ($request['bps_directory']) && $request['bps_directory'] != $current)  $request = array ();
+		if (isset ($request['bp_ps_directory']) && $request['bp_ps_directory'] != $current)  $request = array ();
 		break;
 
 	case 'search':
-		if (isset ($request['bps_directory']) && $request['bps_directory'] != $current)  $request = array ();
-		if (isset ($filters['bps_directory']) && $filters['bps_directory'] != $current)  $filters = array ();
+		if (isset ($request['bp_ps_directory']) && $request['bp_ps_directory'] != $current)  $request = array ();
+		if (isset ($filters['bp_ps_directory']) && $filters['bp_ps_directory'] != $current)  $filters = array ();
 		foreach ($filters as $key => $value)  $request[$key] = $value;
 		break;
 	}
 
-	return apply_filters ('bps_request', $request, $type, $form);
+	return apply_filters ('bp_ps_request', $request, $type, $form);
 }
 
-function bps_save_hidden_filters ($attr, $content)
+function bp_ps_save_hidden_filters ($attr, $content)
 {
-	global $bps_hidden_filters;
+	global $bp_ps_hidden_filters;
 
-	$bps_hidden_filters = array ('bps_directory' => bps_current_page ());
+	$bp_ps_hidden_filters = array ('bp_ps_directory' => bp_ps_current_page ());
 
-	list (, $fields) = bps_get_fields ();
+	list (, $fields) = bp_ps_get_fields ();
 	$split = isset ($attr['split'])? $attr['split']: ',';
 
 	if (is_array ($attr))  foreach ($attr as $key => $value)
 	{
-		$k = bps_match_key ($key, $fields);
+		$k = bp_ps_match_key ($key, $fields);
 		if ($k === false)  continue;
 
 		$f = $fields[$k];
 		$filter = ($key == $f->code)? '': substr ($key, strlen ($f->code) + 1);
-		if (!bps_Fields::is_filter ($f, $filter))  continue;
+		if (!bp_ps_Fields::is_filter ($f, $filter))  continue;
 
 		$selector = $filter. (count ($f->options)? '/e': '');
 		switch ($selector)
@@ -108,7 +108,7 @@ function bps_save_hidden_filters ($attr, $content)
 		case '':
 		case 'like':
 			$value = trim (addslashes ($value));
-			if ($value !== '')  $bps_hidden_filters[$key] = $value;
+			if ($value !== '')  $bp_ps_hidden_filters[$key] = $value;
 			break;
 
 		case 'range':
@@ -117,7 +117,7 @@ function bps_save_hidden_filters ($attr, $content)
 			$values = array ();
 			if (($min = trim ($min)) !== '')  $values['min'] = $min;
 			if (($max = trim ($max)) !== '')  $values['max'] = $max;
-			if (!empty ($values))  $bps_hidden_filters[$key] = $values;
+			if (!empty ($values))  $bp_ps_hidden_filters[$key] = $values;
 			break;
 
 		case 'match_any/e':
@@ -132,7 +132,7 @@ function bps_save_hidden_filters ($attr, $content)
 				$value = trim ($value);
 				if (isset ($flipped[$value]))  $keys[] = addslashes ($flipped[$value]);
 			}
-			if (!empty ($keys))  $bps_hidden_filters[$key] = $keys;
+			if (!empty ($keys))  $bp_ps_hidden_filters[$key] = $keys;
 			break;
 		}
 	}
@@ -140,15 +140,15 @@ function bps_save_hidden_filters ($attr, $content)
 	add_filter ('body_class', function ($classes) {return array_merge (array ('directory', 'members', 'buddypress'), $classes);});
 }
 
-function bps_hidden_filters ()
+function bp_ps_hidden_filters ()
 {
-	global $bps_hidden_filters;
+	global $bp_ps_hidden_filters;
 
-	$filters = isset ($bps_hidden_filters)? $bps_hidden_filters: array ();
-	return apply_filters ('bps_hidden_filters', $filters);
+	$filters = isset ($bp_ps_hidden_filters)? $bp_ps_hidden_filters: array ();
+	return apply_filters ('bp_ps_hidden_filters', $filters);
 }
 
-function bps_current_page ()
+function bp_ps_current_page ()
 {
 	$current = defined ('DOING_AJAX')?
 		parse_url ($_SERVER['HTTP_REFERER'], PHP_URL_PATH):
@@ -157,29 +157,29 @@ function bps_current_page ()
 	return $current;
 }
 
-function bps_debug ()
+function bp_ps_debug ()
 {
-	$cookie = apply_filters ('bps_cookie_name', 'bps_debug');
-	return isset ($_REQUEST['bps_debug'])? true: isset ($_COOKIE[$cookie])? true: false;
+	$cookie = apply_filters ('bp_ps_cookie_name', 'bp_ps_debug');
+	return isset ($_REQUEST['bp_ps_debug'])? true: isset ($_COOKIE[$cookie])? true: false;
 }
 
-add_action ('bp_before_directory_members_content', 'bps_display_filters');
-function bps_display_filters ()
+//add_action ('bp_before_directory_members_content', 'bp_ps_display_filters');
+function bp_ps_display_filters ()
 {
-	$request = bps_get_request ('filters');
+	$request = bp_ps_get_request ('filters');
 	if (!empty ($request))
-		bps_call_template ('members/bps-filters', array ($request, true));
+		bp_ps_call_template ('members/bp-ps-filters', array ($request, true));
 }
 
-add_filter ('bp_ajax_querystring', 'bps_filter_members', 99, 2);
-function bps_filter_members ($qs, $object)
+add_filter ('bp_ajax_querystring', 'bp_ps_filter_members', 99, 2);
+function bp_ps_filter_members ($qs, $object)
 {
 	if (!in_array ($object, array ('members', 'group_members')))  return $qs;
 
-	$request = bps_get_request ('search');
+	$request = bp_ps_get_request ('search');
 	if (empty ($request))  return $qs;
 
-	$results = bps_search ($request);
+	$results = bp_ps_search ($request);
 	if ($results['validated'])
 	{
 		$args = wp_parse_args ($qs);
@@ -192,7 +192,7 @@ function bps_filter_members ($qs, $object)
 			if (count ($users) == 0)  $users = array (0);
 		}
 
-		$users = apply_filters ('bps_search_results', $users);
+		$users = apply_filters ('bp_ps_search_results', $users);
 		$args['include'] = implode (',', $users);
 		$qs = build_query ($args);
 	}
@@ -200,21 +200,22 @@ function bps_filter_members ($qs, $object)
 	return $qs;
 }
 
-function bps_search ($request, $users=null)
+function bp_ps_search ($request, $users=null)
 {
 	$results = array ('users' => array (0), 'validated' => true);
 
-	$fields = bps_parse_request ($request);
+	$fields = bp_ps_parse_request ($request);
 	foreach ($fields as $f)
 	{
 		if (!isset ($f->filter))  continue;
 		if (!is_callable ($f->search))  continue;
 
-		do_action ('bps_field_before_query', $f);
-		$found = call_user_func ($f->search, $f);
-		$found = apply_filters ('bps_field_search_results', $found, $f);
+		$f = apply_filters( 'bp_ps_field_before_query', $f );
 
-		$match_all = apply_filters ('bps_match_all', true);
+		$found = call_user_func ($f->search, $f);
+		$found = apply_filters ('bp_ps_field_search_results', $found, $f);
+
+		$match_all = apply_filters ('bp_ps_match_all', true);
 		if ($match_all)
 		{
 			$users = isset ($users)? array_intersect ($users, $found): $found;
@@ -234,7 +235,7 @@ function bps_search ($request, $users=null)
 	return $results;
 }
 
-function bps_esc_like ($text)
+function bp_ps_esc_like ($text)
 {
     return addcslashes ($text, '_%\\');
 }

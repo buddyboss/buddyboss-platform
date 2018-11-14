@@ -1,6 +1,6 @@
 <?php
 
-function bps_directories ()
+function bp_ps_directories ()
 {
 	static $dirs = array ();
 
@@ -10,7 +10,6 @@ function bps_directories ()
 	if (isset ($bp_pages['members']))
 	{
 		$members = $bp_pages['members'];
-		$members = bps_wpml_id ($members);
 		$dirs[$members] = new stdClass;
 		$dirs[$members]->label = get_the_title ($members);
 		$dirs[$members]->link = parse_url (get_page_link ($members), PHP_URL_PATH);
@@ -24,10 +23,10 @@ function bps_directories ()
 		}
 	}
 
-	if (!shortcode_exists ('bps_directory'))  return $dirs;
+	if (!shortcode_exists ('bp_ps_directory'))  return $dirs;
 
 	$pages = get_pages ();
-	foreach ($pages as $page)  if (has_shortcode ($page->post_content, 'bps_directory'))
+	foreach ($pages as $page)  if (has_shortcode ($page->post_content, 'bp_ps_directory'))
 	{
 		$dirs[$page->ID] = new stdClass;
 		$dirs[$page->ID]->label = $page->post_title;
@@ -37,19 +36,19 @@ function bps_directories ()
 	return $dirs;
 }
 
-add_action ('wp_enqueue_scripts', 'bps_clear_directory', 1);
-function bps_clear_directory ()
+add_action ('wp_enqueue_scripts', 'bp_ps_clear_directory', 1);
+function bp_ps_clear_directory ()
 {
 	global $bp;
 
-	$dirs = bps_directories ();
+	$dirs = bp_ps_directories ();
 	$current = parse_url ($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 	foreach ($dirs as $dir) {
 		if ($dir->link == $current) {
 			add_filter ('bp_directory_members_search_form', function ($text) {return $text;});
 
-			wp_enqueue_script ('bps-directory', plugins_url ('bps-directory.js', __FILE__), array ('bp-jquery-cookie'), BPS_VERSION);
+			wp_enqueue_script ('bp-ps-directory', plugins_url ('bp-ps-directory.js', __FILE__), array ('bp-jquery-cookie'), bp_get_version() );
 			$_COOKIE['bp-members-scope'] = 'all';
 			unset ($_COOKIE['bp-members-filter']);
 			break;
@@ -57,40 +56,40 @@ function bps_clear_directory ()
 	}
 }
 
-add_shortcode ('bps_directory', 'bps_show_directory');
-function bps_show_directory ($attr, $content)
+add_shortcode ('bp_ps_directory', 'bp_ps_show_directory');
+function bp_ps_show_directory ($attr, $content)
 {
 	ob_start ();
 
-	if (bps_debug ())
+	if (bp_ps_debug ())
 	{
 		echo "<!--\n";
 		print_r ($attr);
-		print_r (bps_hidden_filters ());
+		print_r (bp_ps_hidden_filters ());
 		echo "-->\n";
 	}
 
 	if (isset ($attr['order_by']))
-		bps_set_sort_options ($attr['order_by']);
+		bp_ps_set_sort_options ($attr['order_by']);
 
 	$template = isset ($attr['template'])? $attr['template']: 'members/index';
-	bps_call_template ($template);
+	bp_ps_call_template ($template);
 
 	if (bp_get_theme_package_id () == 'nouveau')
 	{
-		printf ('<p class="bps-error">'. __('%s: The shortcode [bps_directory] is not working with the BuddyPress Nouveau template pack.', 'buddyboss'). '</p>',
-			'<strong>BP Profile Search '. BPS_VERSION. '</strong>');
+		printf ('<p class="bp-ps-error">'. __('%s: The shortcode [bp_ps_directory] is not working with the BuddyPress Nouveau template pack.', 'buddyboss'). '</p>',
+			'<strong>BP Profile Search '. bp_get_version(). '</strong>');
 	}
 
 	return ob_get_clean ();
 }
 
-function bps_set_sort_options ($options)
+function bp_ps_set_sort_options ($options)
 {
-	global $bps_sort_options;
+	global $bp_ps_sort_options;
 
-	if (!isset ($bps_sort_options))  $bps_sort_options = array ();
-	list (, $fields) = bps_get_fields ();
+	if (!isset ($bp_ps_sort_options))  $bp_ps_sort_options = array ();
+	list (, $fields) = bp_ps_get_fields ();
 
 	$options = explode (',', $options);
 	foreach ($options as $option)
@@ -107,30 +106,30 @@ function bps_set_sort_options ($options)
 
 		if ($order == 'asc')
 		{
-			$bps_sort_options[$code] = $fields[$code]->name;
+			$bp_ps_sort_options[$code] = $fields[$code]->name;
 		}
 		else if ($order == 'desc')
 		{
-			$bps_sort_options['-'. $code] = $fields[$code]->name;
+			$bp_ps_sort_options['-'. $code] = $fields[$code]->name;
 		}
 		else if ($order == 'both')
 		{
-			$bps_sort_options[$code] = $fields[$code]->name. " &#x21E1;";
-			$bps_sort_options['-'. $code] = $fields[$code]->name. " &#x21E3;";
+			$bp_ps_sort_options[$code] = $fields[$code]->name. " &#x21E1;";
+			$bp_ps_sort_options['-'. $code] = $fields[$code]->name. " &#x21E3;";
 		}
 	}
 
-	add_action ('bp_members_directory_order_options', 'bps_display_sort_options');
+	add_action ('bp_members_directory_order_options', 'bp_ps_display_sort_options');
 }
 
-function bps_display_sort_options ()
+function bp_ps_display_sort_options ()
 {
-	global $bps_sort_options;
+	global $bp_ps_sort_options;
 
-	$version = BPS_VERSION;
+	$version = bp_get_version();
 	echo "\n<!-- BP Profile Search $version -->\n";
 
-	$sort_options = apply_filters ('bps_sort_options', $bps_sort_options);
+	$sort_options = apply_filters ('bp_ps_sort_options', $bp_ps_sort_options);
 	foreach ($sort_options as $code => $name)
 	{
 ?>
@@ -141,8 +140,8 @@ function bps_display_sort_options ()
 	echo "\n<!-- BP Profile Search end -->\n";
 }
 
-add_filter ('bp_user_query_uid_clauses', 'bps_uid_clauses', 99, 2);
-function bps_uid_clauses ($sql, $object)
+add_filter ('bp_user_query_uid_clauses', 'bp_ps_uid_clauses', 99, 2);
+function bp_ps_uid_clauses ($sql, $object)
 {
 	$code = $object->query_vars['type']; 
 	$order = 'ASC';
@@ -152,30 +151,30 @@ function bps_uid_clauses ($sql, $object)
 		$order = 'DESC';
 	}
 
-	list (, $fields) = bps_get_fields ();
+	list (, $fields) = bp_ps_get_fields ();
 	if (isset ($fields[$code]->sort_directory) && is_callable ($fields[$code]->sort_directory))
 	{
 		$f = $fields[$code];
 		$sql = call_user_func ($f->sort_directory, $sql, $object, $f, $order);
-		add_action ('bp_directory_members_item', 'bps_directory_members_item');
+		add_action ('bp_directory_members_item', 'bp_ps_directory_members_item');
 	}
 
 	return $sql;
 }
 
-function bps_directory_members_item ()
+function bp_ps_directory_members_item ()
 {
 	global $members_template;
 
 	$code = $members_template->type;
 	if ($code[0] == '-')  $code = substr ($code, 1);
 
-	list (, $fields) = bps_get_fields ();
+	list (, $fields) = bp_ps_get_fields ();
 	if (isset ($fields[$code]->get_value) && is_callable ($fields[$code]->get_value))
 	{
 		$f = $fields[$code];
 		$name = $f->name;
 		$value = call_user_func ($f->get_value, $f);
-		bps_call_template ('members/bps-field-value', array ($name, $value));
+		bp_ps_call_template ('members/bps-field-value', array ($name, $value));
 	}
 }

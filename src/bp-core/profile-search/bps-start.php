@@ -1,31 +1,16 @@
 <?php
 
-define ('BPS_FORM', 'bp_profile_search');
+define ('BP_PS_FORM', 'bp_profile_search');
 
 include 'bps-admin.php';
 include 'bps-directory.php';
-include 'bps-external.php';
 include 'bps-fields.php';
 include 'bps-form.php';
-include 'bps-help.php';
 include 'bps-search.php';
-include 'bps-template.php';
 include 'bps-templates47.php';
-include 'bps-templates48.php';
-include 'bps-widget.php';
 include 'bps-xprofile.php';
 
-
-//add_filter ('plugin_action_links_'. 'bp-profile-search/bps-main.php', 'bps_action_links');
-function bps_action_links ($links)
-{
-	$settings_link = '<a href="'. admin_url ('edit.php?post_type=bps_form'). '">'. __('Settings'). '</a>';
-	array_unshift ($links, $settings_link);
-
-	return $links;
-}
-
-function bps_meta ( $form ) {
+function bp_ps_meta ( $form ) {
 	static $options;
 	if (isset ($options[$form]))  return $options[$form];
 
@@ -37,11 +22,9 @@ function bps_meta ( $form ) {
 	$default['method'] = 'POST';
 	$default['action'] = 0;
 	$default['directory'] = 'No';
-	$default['template'] = bps_default_template ();
-	$default['template_options'][$default['template']] = array ();
 
 	$meta = get_post_meta ($form);
-	$options[$form] = isset ($meta['bps_options'])? unserialize ($meta['bps_options'][0]): $default;
+	$options[$form] = isset ($meta['bp_ps_options'])? unserialize ($meta['bp_ps_options'][0]): $default;
 
 	return $options[$form];
 }
@@ -72,13 +55,9 @@ function bp_profile_search_register_post_type (){
 
 	$form_caps = array (
 		'administrator' => array (
-			/*'delete_bp_ps_forms',
-			'delete_others_bp_ps_forms',
-			'delete_published_bp_ps_forms',*/
 			'edit_bp_ps_forms',
 			'edit_others_bp_ps_forms',
 			'edit_published_bp_ps_forms',
-			/*'publish_bp_ps_forms',*/
 		)
 	);
 
@@ -102,20 +81,6 @@ function bp_profile_search_prevent_delete () {
 }
 
 add_action( 'init', 'bp_profile_search_prevent_delete' );
-
-/******* edit.php */
-
-function _bps_get_widget ($form)
-{
-	$widgets = get_option ('widget_bps_widget');
-	if ($widgets == false)  return __('unused', 'buddyboss');
-
-	$titles = array ();
-	foreach ($widgets as $key => $widget)
-		if (isset ($widget['form']) && $widget['form'] == $form)  $titles[] = !empty ($widget['title'])? $widget['title']: __('(no title)');
-		
-	return count ($titles)? implode ('<br/>', $titles): __('unused', 'buddyboss');
-}
 
 /******* post.php, post-new.php */
 
@@ -149,7 +114,6 @@ function bp_profile_search_admin_head () {
 	global $current_screen;
 	if ( !bp_profile_search_screen () )  return;
 
-	bps_help ();
 	if ( $current_screen->id == 'bp_ps_form')  _bp_profile_search_admin_js ();
     ?>
 	<style type="text/css">
@@ -162,11 +126,11 @@ function bp_profile_search_admin_head () {
 		.fixed .column-directory {width: 12%;}
 		.fixed .column-widget {width: 12%;}
 		.fixed .column-shortcode {width: 15%;}
-		.bps_col1 {display: inline-block; width: 2%; cursor: move;}
-		.bps_col2 {display: inline-block; width: 20%;}
-		.bps_col3 {display: inline-block; width: 16%;}
-		.bps_col4 {display: inline-block; width: 32%;}
-		.bps_col5 {display: inline-block; width: 16%;}
+		.bp_ps_col1 {display: inline-block; width: 2%; cursor: move;}
+		.bp_ps_col2 {display: inline-block; width: 20%;}
+		.bp_ps_col3 {display: inline-block; width: 16%;}
+		.bp_ps_col4 {display: inline-block; width: 32%;}
+		.bp_ps_col5 {display: inline-block; width: 16%;}
 		a.delete {color: #aa0000;}
 		a.delete:hover {color: #ff0000;}
 	</style>
@@ -179,8 +143,8 @@ function _bp_profile_search_admin_js () {
 		'field' => __('select field', 'buddyboss'),
 		'remove' => __('Remove', 'buddyboss'),
 	);
-	wp_enqueue_script ( 'bp-profile-search-admin', buddypress()->plugin_url . 'bp-core/profile-search/bps-admin.js', array ('jquery-ui-sortable'), bp_get_version() );
-	wp_localize_script ( 'bp-profile-search-admin', 'bps_strings', $translations );
+	wp_enqueue_script ( 'bp-profile-search-admin', buddypress()->plugin_url . 'bp-core/profile-search/bp-ps-admin.js', array ('jquery-ui-sortable'), bp_get_version() );
+	wp_localize_script ( 'bp-profile-search-admin', 'bp_ps_strings', $translations );
 }
 
 

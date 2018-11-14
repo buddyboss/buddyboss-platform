@@ -1,63 +1,21 @@
 <?php 
-! defined( 'ABSPATH' ) ? exit() : '';
-
-// 1st section: set the default value of the template options
-
-if (!isset ($options['theme']))  $options['theme'] = 'base';
-if (!isset ($options['collapsible']))  $options['collapsible'] = 'Yes';
-
-// 2nd section: display the form to select the template options
-
-if (is_admin ())
-{
-?>
-	<p><strong><?php _e('jQuery UI Theme', 'buddyboss'); ?></strong></p>
-	<select name="options[theme]">
-	<?php foreach (bp_ps_jquery_ui_themes() as $theme => $name) { ?>
-		<option value="<?php echo $theme; ?>" <?php selected ($options['theme'], $theme); ?>><?php echo $name; ?></option>
-	<?php } ?>
-	</select>
-
-	<p><strong><?php _e('Collapsible Form', 'buddyboss'); ?></strong></p>
-	<select name="options[collapsible]">
-		<option value='Yes' <?php selected ($options['collapsible'], 'Yes'); ?>><?php _e('Yes', 'buddyboss'); ?></option>
-		<option value='No' <?php selected ($options['collapsible'], 'No'); ?>><?php _e('No', 'buddyboss'); ?></option>
-	</select>
-<?php
-	return 'end_of_options';
-}
+$options = array(
+    'theme' => 'base',
+);
 
 // 3rd section: display the search form
 
-$F = bp_ps_escaped_form_data ($version = '4.9');
-
-if (!empty ($options['theme']))
-{
-	$accordion = 'bp_ps_accordion_'. $F->unique_id;
-	wp_enqueue_script ('jquery-ui-accordion');
-	wp_enqueue_style ('jquery-ui-theme', 'https://code.jquery.com/ui/1.12.1/themes/'. $options['theme']. '/jquery-ui.min.css');
+$F = bp_profile_search_escaped_form_data ( $form_id );
 ?>
-<script>
-	jQuery(function($) {
-		$('#<?php echo $accordion; ?>').accordion({
-			icons: {"header": "ui-icon-plus", "activeHeader": "<?php echo ($options['collapsible'] == 'Yes')? 'ui-icon-minus': 'ui-icon-blank'; ?>"},
-			active: false,
-			collapsible: <?php echo ($options['collapsible'] == 'Yes')? 'true': 'false'; ?>,
-		});
-	});
-</script>
-
 <style>
-	.bp-ps-form label {display: inline;}
-	.bp-ps-form input {display: inline;}
+	.bps-form label {display: inline;}
+	.bps-form input {display: inline;}
 </style>
 
-<div id="<?php echo $accordion; ?>">
-	<span class="bp-ps-form-title"> <?php echo $F->title; ?></span>
-<?php
-}
-?>
-	<form action="<?php echo $F->action; ?>" method="<?php echo $F->method; ?>" id="<?php echo $F->unique_id; ?>" class="bp-ps-form">
+<div id="bp-profile-search-form-outer">
+	<span class="bps-form-title"><?php echo $F->title; ?></span>
+
+	<form action="<?php echo $F->action; ?>" method="<?php echo $F->method; ?>" id="<?php echo $F->unique_id; ?>" class="bps-form">
 
 <?php
 	foreach ($F->fields as $f)
@@ -76,8 +34,8 @@ if (!empty ($options['theme']))
 			continue;
 		}
 ?>
-		<div id="<?php echo $id; ?>_wrap" class="bp-ps-<?php echo $display; ?>">
-			<label for="<?php echo $id; ?>" class="bp-ps-label"><?php echo $f->full_label; ?></label><br>
+		<div id="<?php echo $id; ?>_wrap" class="bps-<?php echo $display; ?>">
+			<label for="<?php echo $id; ?>" class="bps-label"><?php echo $f->full_label; ?></label><br>
 <?php
 		switch ($display)
 		{
@@ -140,9 +98,9 @@ if (!empty ($options['theme']))
 
 			<script>
 				jQuery(function($) {
-					bp_ps_autocomplete('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng');
+					bps_autocomplete('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng');
 					$('#<?php echo $id; ?>_icon').click(function () {
-						bp_ps_locate('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng')
+						bps_locate('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng')
 					});
 				});
 			</script>
@@ -175,7 +133,7 @@ if (!empty ($options['theme']))
 				<label><input type="radio" <?php if ($key == $value) echo 'checked="checked"'; ?>
 					name="<?php echo $name; ?>" value="<?php echo $key; ?>"> <?php echo $label; ?></label><br>
 			<?php } ?>
-			<a href="javascript:bp_ps_clear_radio('<?php echo $id; ?>_wrap')"><?php echo __('Clear', 'buddypress'); ?></a><br>
+			<a href="javascript:bps_clear_radio('<?php echo $id; ?>_wrap')"><?php echo __('Clear', 'buddypress'); ?></a><br>
 <?php
 			break;
 
@@ -190,12 +148,12 @@ if (!empty ($options['theme']))
 
 		default:
 ?>
-			<p class="bp-ps-error"><?php echo "BP Profile Search: unknown display <em>$display</em> for field <em>$f->name</em>."; ?></p>
+			<p class="bps-error"><?php echo "BP Profile Search: unknown display <em>$display</em> for field <em>$f->name</em>."; ?></p>
 <?php
 			break;
 		}
 ?>
-			<em class="bp-ps-description"><?php echo $f->description; ?></em>
+			<em class="bps-description"><?php echo $f->description; ?></em>
 		</div><br>
 <?php
 	}

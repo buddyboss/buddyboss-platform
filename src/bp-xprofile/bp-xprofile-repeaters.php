@@ -217,6 +217,87 @@ function bp_profile_repeaters_update_field_data ( $user_id, $posted_field_ids, $
     bp_set_profile_field_set_count( $field_group_id, $user_id, count( $field_set_sequence ) );
 }
 
+add_filter( 'bp_xprofile_set_field_data_pre_validate', 'bp_repeater_set_field_data_pre_validate', 10, 2 );
+/**
+ * bp_xprofile_field_type_is_valid filter doesn't pass the $field object.
+ * So we hook into bp_xprofile_set_field_data_pre_validate filter and save the $field object in a global variable.
+ * We then use this global variable later, in bp_xprofile_field_type_is_valid hook.
+ * 
+ * @since BuddyBoss 3.1.1
+ * 
+ * @global \BP_XProfile_Field $bp_profile_repeater_last_field
+ * @param mixed $value
+ * @param \BP_XProfile_Field $field
+ * 
+ * @return mixed
+ */
+function bp_repeater_set_field_data_pre_validate ( $value, $field ) {
+    global $bp_profile_repeater_last_field;
+    $bp_profile_repeater_last_field = $field;
+    return $value;
+}
+
+add_filter( 'bp_xprofile_field_type_is_valid', 'bp_profile_repeater_is_data_valid_for_template_fields', 10, 3 );
+
+/**
+ * @global \BP_XProfile_Field $bp_profile_repeater_last_field
+ * 
+ * @param boolean $validated
+ * @param array $values
+ * @param \BP_XProfile_Field_Type $field_type_obj
+ */
+function bp_profile_repeater_is_data_valid_for_template_fields ( $validated, $values, $field_type_obj ) {
+    global $bp_profile_repeater_last_field;
+    
+    if ( empty( $bp_profile_repeater_last_field ) ) {
+        return $validated;
+    }
+    
+    if ( $validated ) {
+        $bp_profile_repeater_last_field = false;//reset
+        return $validated;
+    }
+    
+    $field_id = $bp_profile_repeater_last_field->id;
+    
+    $field_group_id = $bp_profile_repeater_last_field->group_id;
+    $is_repeater_enabled = 'on' == bp_xprofile_get_meta( $field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
+    
+    if ( !$is_repeater_enabled ) {
+        $bp_profile_repeater_last_field = false;//reset
+        return $validated;
+    }
+    
+    $cloned_from = bp_xprofile_get_meta( $field_id, 'field', '_cloned_from', true );
+    if ( !empty( $cloned_from ) ) {
+        //This is a clone field. We needn't do anything
+        $bp_profile_repeater_last_field = false;//reset
+        return $validated;
+    }
+    
+    //This is a template field
+    $values_arr = explode( ' ', $values );
+    
+    // If there's a whitelist set, make sure that each value is a whitelisted value.
+    $validation_whitelist = $field_type_obj->get_whitelist_values();
+    
+    if ( ! empty( $validation_whitelist ) ) {
+        $values_valid = true;
+        
+        foreach ( (array) $values_arr as $value ) {
+            if ( ! in_array( $value, $validation_whitelist ) ) {    
+                $values_valid = false;
+                break;
+            }
+        }
+        
+        $validated = $values_valid;
+    }
+    
+    $bp_profile_repeater_last_field = false;//reset
+    return $validated;
+}
+
 /**
  * @since BuddyBoss 3.1.1
  * @global type $wpdb
@@ -708,4 +789,37 @@ function bp_view_profile_repeaters_print_group_html_end () {
         
         $repeater_set_being_displayed = false;
     }
+}
+
+/* ----------- Profile Search ------------------ */
+add_filter( 'bp_ps_field_before_query', 'bp_profile_repeaters_search_change_filter' );
+/**
+ * If the field is a main/template field for a repeater set,
+ * search should have a like '%s keyword %s' query.
+ * 
+ * @param object $f Passed by reference
+ */
+function bp_profile_repeaters_search_change_filter ( $f ) {
+    $field_id = (int) $f->id;
+    
+    global $wpdb;
+    $bp = buddypress();
+    
+    $field_group_id = $wpdb->get_var( "SELECT group_id FROM {$bp->profile->table_name_fields} WHERE id = {$field_id} AND type != 'option' " );
+    $is_repeater_enabled = 'on' == bp_xprofile_get_meta( $field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
+    
+    if ( !$is_repeater_enabled ) {
+        return $f;
+    }
+    
+    $cloned_from = bp_xprofile_get_meta( $field_id, 'field', '_cloned_from', true );
+    if ( !empty( $cloned_from ) ) {
+        //This is a clone field. We needn't do anything
+        return $f;
+    }
+    
+    //this is a template field
+    $f->format = 'text';
+    $f->filter = 'contains';
+    return $f;
 }

@@ -1,17 +1,17 @@
 <?php
 
-function bps_get_fields ()
+function bp_ps_get_fields ()
 {
 	static $groups = array ();
 	static $fields = array ();
 
 	if (!empty ($groups))  return array ($groups, $fields);
 
-	$field_list = apply_filters ('bps_add_fields', array ());
+	$field_list = apply_filters ('bp_ps_add_fields', array ());
 	foreach ($field_list as $f)
 	{
-		do_action ('bps_edit_field', $f);
-		if (!bps_Fields::set_filters ($f))  continue;
+		do_action ('bp_ps_edit_field', $f);
+		if (!bp_ps_Fields::set_filters ($f))  continue;
 
 		$groups[$f->group][] = array ('id' => $f->code, 'name' => $f->name);
 		$fields[$f->code] = $f;
@@ -20,7 +20,7 @@ function bps_get_fields ()
 	return array ($groups, $fields);
 }
 
-class bps_Fields
+class bp_ps_Fields
 {
 	private static $display = array
 	(
@@ -92,19 +92,19 @@ class bps_Fields
 		else
 		{
 			$default = (isset ($f->type) && in_array ($f->type, $display))? $f->type: $display[0];
-			$choice = apply_filters ('bps_field_display', $default, $f);
+			$choice = apply_filters ('bp_ps_field_display', $default, $f);
 			$f->display = in_array ($choice, $display)? $choice: $default;
 		}
 		return true;
 	}
 }
 
-function bps_parse_request ($request)
+function bp_ps_parse_request ($request)
 {
 	$j = 1;
 
 	$parsed = array ();
-	list (, $fields) = bps_get_fields ();
+	list (, $fields) = bp_ps_get_fields ();
 	foreach ($fields as $key => $value)
 		$parsed[$key] = clone $fields[$key];
 
@@ -112,12 +112,12 @@ function bps_parse_request ($request)
 	{
 		if ($value === '')  continue;
 
-		$k = bps_match_key ($key, $parsed);
+		$k = bp_ps_match_key ($key, $parsed);
 		if ($k === false)  continue;
 
 		$f = $parsed[$k];
 		$filter = ($key == $f->code)? '': substr ($key, strlen ($f->code) + 1);
-		if (!bps_is_filter ($filter, $f))  continue;
+		if (!bp_ps_is_filter ($filter, $f))  continue;
 
 		switch ($filter)
 		{
@@ -174,7 +174,7 @@ function bps_parse_request ($request)
 	return $parsed;
 }
 
-function bps_match_key ($key, $fields)
+function bp_ps_match_key ($key, $fields)
 {
 	foreach ($fields as $k => $f)
 		if ($key == $f->code || strpos ($key, $f->code. '_') === 0)  return $k;
@@ -182,41 +182,41 @@ function bps_match_key ($key, $fields)
 	return false;
 }
 
-function bps_is_filter ($filter, $f)
+function bp_ps_is_filter ($filter, $f)
 {
 	if ($filter == 'range_min' || $filter == 'range_max')  $filter = 'range';
 	if ($filter == 'age_range_min' || $filter == 'age_range_max')  $filter = 'age_range';
 	if ($filter == 'label')  return true;
 
-	return bps_Fields::is_filter ($f, $filter);
+	return bp_ps_Fields::is_filter ($f, $filter);
 }
 
-function bps_escaped_form_data ($version = '')
+function bp_ps_escaped_form_data ($version = '')
 {
-	return bps_escaped_form_data47 ($version);
+	return bp_ps_escaped_form_data47 ($version);
 }
 
-function bps_escaped_filters_data ($version = '4.7')
+function bp_ps_escaped_filters_data ($version = '4.7')
 {
-	if ($version == '4.7')	return bps_escaped_filters_data47 ();
-	if ($version == '4.8')	return bps_escaped_filters_data48 ();
+	if ($version == '4.7')	return bp_ps_escaped_filters_data47 ();
+	if ($version == '4.8')	return bp_ps_escaped_filters_data48 ();
 
 	return false;
 }
 
-function bps_set_hidden_field ($name, $value)
+function bp_ps_set_hidden_field ($name, $value)
 {
 	$new = new stdClass;
 	$new->display = 'hidden';
 	$new->code = $name;		// to be removed
 	$new->html_name = $name;
 	$new->value = $value;
-	$new->unique_id = bps_unique_id ($name);
+	$new->unique_id = bp_ps_unique_id ($name);
 
 	return $new;
 }
 
-function bps_sort_fields ($a, $b)
+function bp_ps_sort_fields ($a, $b)
 {
 	return ($a->order <= $b->order)? -1: 1;
 }

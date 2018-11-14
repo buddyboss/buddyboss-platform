@@ -1,150 +1,129 @@
 <?php
 
-add_action ('bp_before_directory_members_tabs', 'bps_add_form');
-function bps_add_form ()
-{
-	global $post;
-
-	$page = $post->ID;
-	if ($page == 0)
-	{
-		$bp_pages = bp_core_get_directory_page_ids ();
-		$page = $bp_pages['members'];
-	}
-
-	$page = bps_wpml_id ($page, 'default');
-	if (bp_get_current_member_type ())  $page = bp_get_current_member_type ();
-	$len = strlen ((string)$page);
-
-	$args = array (
-		'post_type' => 'bps_form',
-		'orderby' => 'ID',
-		'order' => 'ASC',
-		'nopaging' => true,
-		'meta_query' => array (
-			array (
-				'key' => 'bps_options',
-				'value' => 's:9:"directory";s:3:"Yes";',
-				'compare' => 'LIKE',
-			),
-			array (
-				'key' => 'bps_options',
-				'value' => "s:6:\"action\";s:$len:\"$page\";",
-				'compare' => 'LIKE',
-			),
-		)
-	);
-
-	$args = apply_filters ('bps_form_order', $args);
-	$posts = get_posts ($args);
-
-	foreach ($posts as $post)
-	{
-		$meta = bps_meta ($post->ID);
-		bps_display_form ($post->ID, 'directory');
-	}
+add_action ( 'bp_after_directory_members_content', 'bp_profile_search_show_form');
+function bp_profile_search_show_form () {
+    if ( bp_disable_advanced_profile_search() ) {
+        return false;
+    }
+    
+    $form_id = bp_profile_search_main_form();
+    
+    $template = bp_locate_template( 'common/search/profile-search.php', false, false );
+    include $template;
 }
 
-add_action ('bps_display_form', 'bps_display_form', 10, 2);
-function bps_display_form ($form, $location='')
-{
-	$meta = bps_meta ($form);
+function bp_profile_search_escaped_form_data ( $form = false ) {
+    if ( empty( $form ) ) {
+        $form = bp_profile_search_main_form();
+    }
+    
+    $location  ='directory';
+    
+	$meta = bp_ps_meta ( $form );
+	$fields = bp_ps_parse_request ( bp_ps_get_request ( 'form', $form ) );
+	wp_register_script ('bp-ps-template', plugins_url ('bp-profile-search/bp-ps-template.js'), array (), bp_get_version());
 
-	if (empty ($meta['field_code']))
-		return bps_error ('form_empty_or_nonexistent', $form);
+	$F = new stdClass;
+	$F->id = $form;
+	$F->title = get_the_title ( $form );
+	$F->location = $location;
+	$F->unique_id = bp_ps_unique_id ('form_'. $form);
+	$F->page = parse_url ($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-	bps_call_form_template ($meta['template'], array ($form, $location));
-}
+	$F->action = parse_url ( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 
-add_shortcode ('bps_form', 'bps_show_form');
-function bps_show_form ($attr, $content)
-{
-	ob_start ();
+	if (defined ('DOING_AJAX'))
+		$F->action = parse_url ($_SERVER['HTTP_REFERER'], PHP_URL_PATH);
 
-	if (isset ($attr['id']))
-		bps_display_form ($attr['id'], 'shortcode');
+	$F->method = 'POST';
+	$F->fields = array ();
 
-	return ob_get_clean ();
-}
+	foreach ( $meta['field_code'] as $k => $code ) {
+		if (empty ($fields[$code]))  continue;
 
-add_shortcode ('bps_display', 'bps_show_form0');
-function bps_show_form0 ($attr, $content)
-{
-	ob_start ();
+		$f = $fields[$code];
+		$mode = $meta['field_mode'][$k];
+		if ( !bp_ps_Fields::set_display ($f, $mode))  continue;
 
-	if (isset ($attr['form']))
-		bps_display_form ($attr['form'], 'shortcode');
-
-	return ob_get_clean ();
-}
-
-function bps_error ($code, $data = array ())
-{
-	$formats = array
-	(
-		'template_not_found'			=> __('%1$s error: Template "%2$s" not found.', 'buddyboss'),
-		'form_empty_or_nonexistent'		=> __('%1$s error: Form ID "%2$d" is empty or nonexistent.', 'buddyboss'),
-	);
-
-	$data = (array)$data;
-	$plugin = '<strong>BP Profile Search '. BPS_VERSION. '</strong>';
-	array_unshift ($data, $plugin);
-?>
-	<p class="bps-error"><?php vprintf ($formats[$code], $data); ?></p>
-<?php
-	return false;
-}
-
-function bps_set_wpml ($form, $code, $key, $value)
-{
-	if (!class_exists ('BPML_XProfile'))  return false;
-	if (empty ($value))  return false;
-
-	do_action ('wpml_register_single_string', 'Profile Search', "form {$form} {$code} {$key}", $value);
-}
-
-function bps_wpml ($form, $code, $key, $value)
-{
-	if (empty ($value))  return $value;
-
-	if (class_exists ('BPML_XProfile'))
-	{
-		switch ($key)
+		$f->label = $f->name;
+		$custom_label = $meta['field_label'][$k];
+		if (!empty ($custom_label))
 		{
-		case 'name':
-			return apply_filters ('wpml_translate_single_string', $value, 'Buddypress Multilingual', "profile field {$code} name");
-		case 'label':
-			return apply_filters ('wpml_translate_single_string', $value, 'Profile Search', "form {$form} {$code} label");
-		case 'description':
-			return apply_filters ('wpml_translate_single_string', $value, 'Buddypress Multilingual', "profile field {$code} description");
-		case 'comment':
-			return apply_filters ('wpml_translate_single_string', $value, 'Profile Search', "form {$form} {$code} comment");
-		case 'option':
-			$option = bpml_sanitize_string_name ($value, 30);
-			return apply_filters ('wpml_translate_single_string', $value, 'Buddypress Multilingual', "profile field {$code} - option '{$option}' name");
-		case 'header':
-			return apply_filters ('wpml_translate_single_string', $value, 'Profile Search', "form {$form} - header");
-		case 'toggle form':
-			return apply_filters ('wpml_translate_single_string', $value, 'Profile Search', "form {$form} - toggle form");
-		case 'title':
-			return apply_filters ('wpml_translate_single_string', $value, 'Profile Search', "form {$form} - title");
+			$f->label = $custom_label;
+			$F->fields[] = bp_ps_set_hidden_field ($f->code. '_label', $f->label);
 		}
+
+		$custom_desc = $meta['field_desc'][$k];
+		if ($custom_desc == '-')
+			$f->description = '';
+		else if (!empty ($custom_desc))
+			$f->description = $custom_desc;
+
+		switch ($f->display) {
+            case 'range':
+            case 'range-select':
+                if (!isset ($f->value['min']))  $f->value['min'] = '';
+                if (!isset ($f->value['max']))  $f->value['max'] = '';
+                $f->min = $f->value['min'];
+                $f->max = $f->value['max'];
+                break;
+
+            case 'textbox':
+            case 'number':
+                if (!isset ($f->value))  $f->value = '';
+                break;
+
+            case 'distance':
+                if (!isset ($f->value['location']))
+                    $f->value['distance'] = $f->value['units'] = $f->value['location'] = $f->value['lat'] = $f->value['lng'] = '';
+                wp_enqueue_script ($f->script_handle);
+                wp_enqueue_script ('bp-ps-template');
+                break;
+
+            case 'selectbox':
+                if (!isset ($f->value))  $f->value = '';
+                if ($version == '4.9')
+                    $f->options = array ('' => '') + $f->options;
+                break;
+
+            case 'radio':
+                if (!isset ($f->value))  $f->value = '';
+                wp_enqueue_script ('bp-ps-template');
+                break;
+
+            case 'multiselectbox':
+            case 'checkbox':
+                if (!isset ($f->value))  $f->value = '';
+                break;
+		}
+
+		$f->values = (array)$f->value;
+
+		$f->html_name = ($mode == '')? $f->code: $f->code. '_'. $mode;
+		$f->unique_id = bp_ps_unique_id ($f->html_name);
+		$f->mode = $mode;
+		$f->full_label = bp_ps_full_label ($f);
+
+		do_action ('bp_ps_field_before_search_form', $f);
+		$f->code = ($mode == '')? $f->code: $f->code. '_'. $mode;		// to be removed
+		$F->fields[] = $f;
 	}
-	else if (class_exists ('WPGlobus_Core'))
+
+	$F->fields[] = bp_ps_set_hidden_field ( BP_PS_FORM, $form);
+	do_action ('bp_ps_before_search_form', $F);
+
+	foreach ($F->fields as $f)
 	{
-		return WPGlobus_Core::text_filter ($value, WPGlobus::Config()->language);	
+		if (!is_array ($f->value))  $f->value = esc_attr (stripslashes ($f->value));
+		if ($f->display == 'hidden')  continue;
+
+		$f->label = esc_attr ($f->label);
+		$f->description = esc_attr ($f->description);
+		foreach ($f->values as $k => $value)  $f->values[$k] = esc_attr (stripslashes ($value));
+		$options = array ();
+		foreach ($f->options as $key => $label)  $options[esc_attr ($key)] = esc_attr ($label);
+		$f->options = $options;
 	}
 
-	return $value;
-}
-
-function bps_wpml_id ($id, $lang='current')
-{
-	if (class_exists ('BPML_XProfile'))
-	{
-		$language = $lang == 'current'? apply_filters ('wpml_current_language', null): apply_filters ('wpml_default_language', null);
-		$id = apply_filters ('wpml_object_id', $id, 'page', true, $language);
-	}
-
-	return $id;
+	return $F;
 }

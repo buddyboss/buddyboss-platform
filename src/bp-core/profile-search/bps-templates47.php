@@ -1,32 +1,28 @@
 <?php
 
-function bps_escaped_form_data47 ($version)
-{
-	list ($form, $location) = bps_template_args ();
+function bp_ps_escaped_form_data47 ( $version ) {
+	list ($form, $location) = bp_ps_template_args ();
 
-	$meta = bps_meta ($form);
-	$fields = bps_parse_request (bps_get_request ('form', $form));
-	wp_register_script ('bps-template', plugins_url ('bp-profile-search/bps-template.js'), array (), BPS_VERSION);
+	$meta = bp_ps_meta ($form);
+	$fields = bp_ps_parse_request (bp_ps_get_request ('form', $form));
+	wp_register_script ('bp-ps-template', plugins_url ('bp-profile-search/bp-ps-template.js'), array (), bp_get_version());
 
 	$F = new stdClass;
 	$F->id = $form;
-	$F->title = bps_wpml ($form, '-', 'title', get_the_title ($form));
+	$F->title = get_the_title ($form);
 	$F->location = $location;
-	$F->unique_id = bps_unique_id ('form_'. $form);
+	$F->unique_id = bp_ps_unique_id ('form_'. $form);
 	$F->page = parse_url ($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 	$template_options = $meta['template_options'][$meta['template']];
 	if (isset ($template_options['header']))
-		$F->header = bps_wpml ($form, '-', 'header', $template_options['header']);
+		$F->header = $template_options['header'];
 	if (isset ($template_options['toggle']))
 		$F->toggle = ($template_options['toggle'] == 'Enabled');
 	if (isset ($template_options['button']))
-		$F->toggle_text = esc_attr (bps_wpml ($form, '-', 'toggle form', $template_options['button']));
+		$F->toggle_text = $template_options['button'];
 
-	$dirs = bps_directories ();
-	$F->action = $location == 'directory'?
-		parse_url ($_SERVER['REQUEST_URI'], PHP_URL_PATH):
-		$dirs[bps_wpml_id ($meta['action'])]->link;
+	$F->action = parse_url ($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 	if (defined ('DOING_AJAX'))
 		$F->action = parse_url ($_SERVER['HTTP_REFERER'], PHP_URL_PATH);
@@ -40,17 +36,17 @@ function bps_escaped_form_data47 ($version)
 
 		$f = $fields[$code];
 		$mode = $meta['field_mode'][$k];
-		if (!bps_Fields::set_display ($f, $mode))  continue;
+		if (!bp_ps_Fields::set_display ($f, $mode))  continue;
 
 		$f->label = $f->name;
-		$custom_label = bps_wpml ($form, $f->code, 'label', $meta['field_label'][$k]);
+		$custom_label = $meta['field_label'][$k];
 		if (!empty ($custom_label))
 		{
 			$f->label = $custom_label;
-			$F->fields[] = bps_set_hidden_field ($f->code. '_label', $f->label);
+			$F->fields[] = bp_ps_set_hidden_field ($f->code. '_label', $f->label);
 		}
 
-		$custom_desc = bps_wpml ($form, $f->code, 'comment', $meta['field_desc'][$k]);
+		$custom_desc = $meta['field_desc'][$k];
 		if ($custom_desc == '-')
 			$f->description = '';
 		else if (!empty ($custom_desc))
@@ -75,7 +71,7 @@ function bps_escaped_form_data47 ($version)
 			if (!isset ($f->value['location']))
 				$f->value['distance'] = $f->value['units'] = $f->value['location'] = $f->value['lat'] = $f->value['lng'] = '';
 			wp_enqueue_script ($f->script_handle);
-			wp_enqueue_script ('bps-template');
+			wp_enqueue_script ('bp-ps-template');
 			break;
 
 		case 'selectbox':
@@ -86,7 +82,7 @@ function bps_escaped_form_data47 ($version)
 
 		case 'radio':
 			if (!isset ($f->value))  $f->value = '';
-			wp_enqueue_script ('bps-template');
+			wp_enqueue_script ('bp-ps-template');
 			break;
 
 		case 'multiselectbox':
@@ -98,17 +94,17 @@ function bps_escaped_form_data47 ($version)
 		$f->values = (array)$f->value;
 
 		$f->html_name = ($mode == '')? $f->code: $f->code. '_'. $mode;
-		$f->unique_id = bps_unique_id ($f->html_name);
+		$f->unique_id = bp_ps_unique_id ($f->html_name);
 		$f->mode = $mode;
-		$f->full_label = bps_full_label ($f);
+		$f->full_label = bp_ps_full_label ($f);
 
-		do_action ('bps_field_before_search_form', $f);
+		do_action ('bp_ps_field_before_search_form', $f);
 		$f->code = ($mode == '')? $f->code: $f->code. '_'. $mode;		// to be removed
 		$F->fields[] = $f;
 	}
 
-	$F->fields[] = bps_set_hidden_field (BPS_FORM, $form);
-	do_action ('bps_before_search_form', $F);
+	$F->fields[] = bp_ps_set_hidden_field (BP_PS_FORM, $form);
+	do_action ('bp_ps_before_search_form', $F);
 
 	foreach ($F->fields as $f)
 	{
@@ -126,21 +122,21 @@ function bps_escaped_form_data47 ($version)
 	return $F;
 }
 
-function bps_escaped_filters_data47 ()
+function bp_ps_escaped_filters_data47 ()
 {
-	list ($request, $full) = bps_template_args ();
+	list ($request, $full) = bp_ps_template_args ();
 
 	$F = new stdClass;
 	$action = parse_url ($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-	$action = add_query_arg (BPS_FORM, 'clear', $action);
+	$action = add_query_arg (BP_PS_FORM, 'clear', $action);
 	$F->action = $full? esc_url ($action): '';
 	$F->fields = array ();
 
-	$fields = bps_parse_request ($request);
+	$fields = bp_ps_parse_request ($request);
 	foreach ($fields as $f)
 	{
 		if (!isset ($f->filter))  continue;
-		if (!bps_Fields::set_display ($f, $f->filter))  continue;
+		if (!bp_ps_Fields::set_display ($f, $f->filter))  continue;
 
 		if (empty ($f->label))  $f->label = $f->name;
 
@@ -148,12 +144,12 @@ function bps_escaped_filters_data47 ()
 		$f->max = isset ($f->value['max'])? $f->value['max']: '';
 		$f->values = (array)$f->value;
 
-		do_action ('bps_field_before_filters', $f);
+		do_action ('bp_ps_field_before_filters', $f);
 		$F->fields[] = $f;
 	}
 
-	do_action ('bps_before_filters', $F);
-	usort ($F->fields, 'bps_sort_fields');
+	do_action ('bp_ps_before_filters', $F);
+	usort ($F->fields, 'bp_ps_sort_fields');
 
 	foreach ($F->fields as $f)
 	{
@@ -167,7 +163,7 @@ function bps_escaped_filters_data47 ()
 	return $F;
 }
 
-function bps_full_label ($f)
+function bp_ps_full_label ($f)
 {
 	$labels = array
 	(
@@ -186,10 +182,10 @@ function bps_full_label ($f)
 	$mode = isset ($labels[$f->mode])? $f->mode: 'unknown';
 	$label = sprintf ($labels[$mode], $f->label);
 
-	return apply_filters ('bps_full_label', $label, $f);
+	return apply_filters ('bp_ps_full_label', $label, $f);
 }
 
-function bps_print_filter ($f)
+function bp_ps_print_filter ($f)
 {
 	if (!empty ($f->options))
 	{
@@ -198,57 +194,58 @@ function bps_print_filter ($f)
 			if (in_array ($key, $f->values))  $values[] = $label;
 	}
 
-	switch ($f->filter)
-	{
-	case 'range':
-	case 'age_range':
-		if (!isset ($f->value['max']))
-			return sprintf (esc_html__('min: %1$s', 'buddyboss'), $f->value['min']);
-		if (!isset ($f->value['min']))
-			return sprintf (esc_html__('max: %1$s', 'buddyboss'), $f->value['max']);
-		return sprintf (esc_html__('min: %1$s, max: %2$s', 'buddyboss'), $f->value['min'], $f->value['max']);
+    if ( isset( $f->filter ) ) {
+        switch ($f->filter) {
+            case 'range':
+            case 'age_range':
+                if (!isset ($f->value['max']))
+                    return sprintf (esc_html__('min: %1$s', 'buddyboss'), $f->value['min']);
+                if (!isset ($f->value['min']))
+                    return sprintf (esc_html__('max: %1$s', 'buddyboss'), $f->value['max']);
+                return sprintf (esc_html__('min: %1$s, max: %2$s', 'buddyboss'), $f->value['min'], $f->value['max']);
 
-	case '':
-		if (isset ($values))
-			return sprintf (esc_html__('is: %1$s', 'buddyboss'), $values[0]);
-		return sprintf (esc_html__('is: %1$s', 'buddyboss'), $f->value);
+            case '':
+                if (isset ($values))
+                    return sprintf (esc_html__('is: %1$s', 'buddyboss'), $values[0]);
+                return sprintf (esc_html__('is: %1$s', 'buddyboss'), $f->value);
 
-	case 'contains':
-		return sprintf (esc_html__('contains: %1$s', 'buddyboss'), $f->value);
+            case 'contains':
+                return sprintf (esc_html__('contains: %1$s', 'buddyboss'), $f->value);
 
-	case 'like':
-		return sprintf (esc_html__('is like: %1$s', 'buddyboss'), $f->value);
+            case 'like':
+                return sprintf (esc_html__('is like: %1$s', 'buddyboss'), $f->value);
 
-	case 'one_of':
-		if (count ($values) == 1)
-			return sprintf (esc_html__('is: %1$s', 'buddyboss'), $values[0]);
-		return sprintf (esc_html__('is one of: %1$s', 'buddyboss'), implode (', ', $values));
+            case 'one_of':
+                if (count ($values) == 1)
+                    return sprintf (esc_html__('is: %1$s', 'buddyboss'), $values[0]);
+                return sprintf (esc_html__('is one of: %1$s', 'buddyboss'), implode (', ', $values));
 
-	case 'match_any':
-		if (count ($values) == 1)
-			return sprintf (esc_html__('match: %1$s', 'buddyboss'), $values[0]);
-		return sprintf (esc_html__('match any: %1$s', 'buddyboss'), implode (', ', $values));
+            case 'match_any':
+                if (count ($values) == 1)
+                    return sprintf (esc_html__('match: %1$s', 'buddyboss'), $values[0]);
+                return sprintf (esc_html__('match any: %1$s', 'buddyboss'), implode (', ', $values));
 
-	case 'match_all':
-		if (count ($values) == 1)
-			return sprintf (esc_html__('match: %1$s', 'buddyboss'), $values[0]);
-		return sprintf (esc_html__('match all: %1$s', 'buddyboss'), implode (', ', $values));
+            case 'match_all':
+                if (count ($values) == 1)
+                    return sprintf (esc_html__('match: %1$s', 'buddyboss'), $values[0]);
+                return sprintf (esc_html__('match all: %1$s', 'buddyboss'), implode (', ', $values));
 
-	case 'distance':
-		if ($f->value['units'] == 'km')
-			return sprintf (esc_html__('is within: %1$s km of %2$s', 'buddyboss'), $f->value['distance'], $f->value['location']);
-		return sprintf (esc_html__('is within: %1$s miles of %2$s', 'buddyboss'), $f->value['distance'], $f->value['location']);
+            case 'distance':
+                if ($f->value['units'] == 'km')
+                    return sprintf (esc_html__('is within: %1$s km of %2$s', 'buddyboss'), $f->value['distance'], $f->value['location']);
+                return sprintf (esc_html__('is within: %1$s miles of %2$s', 'buddyboss'), $f->value['distance'], $f->value['location']);
 
-	default:
-		return "BP Profile Search: undefined filter <em>$f->filter</em>";
-	}
+            default:
+                return "BP Profile Search: undefined filter <em>$f->filter</em>";
+        }
+    }
 }
 
-function bps_autocomplete_script ($f)
+function bp_ps_autocomplete_script ($f)
 {
 	wp_enqueue_script ($f->script_handle);
-	$autocomplete_options = apply_filters ('bps_autocomplete_options', "{types: ['geocode']}", $f);
-	$geolocation_options = apply_filters ('bps_geolocation_options', "{timeout: 5000}", $f);
+	$autocomplete_options = apply_filters ('bp_ps_autocomplete_options', "{types: ['geocode']}", $f);
+	$geolocation_options = apply_filters ('bp_ps_geolocation_options', "{timeout: 5000}", $f);
 ?>
 	<input type="hidden" id="Lat_<?php echo $f->unique_id; ?>"
 		name="<?php echo $f->code. '[lat]'; ?>"
@@ -258,7 +255,7 @@ function bps_autocomplete_script ($f)
 		value="<?php echo $f->value['lng']; ?>">
 
 	<script type="text/javascript">
-		function bps_<?php echo $f->unique_id; ?>() {
+		function bp_ps_<?php echo $f->unique_id; ?>() {
 			var input = document.getElementById('<?php echo $f->unique_id; ?>');
 			var options = <?php echo $autocomplete_options; ?>;
 			var autocomplete = new google.maps.places.Autocomplete(input, options);
@@ -268,15 +265,15 @@ function bps_autocomplete_script ($f)
 				document.getElementById('Lng_<?php echo $f->unique_id; ?>').value = place.geometry.location.lng();
 			});
 		}
-		jQuery(document).ready (bps_<?php echo $f->unique_id; ?>);
+		jQuery(document).ready (bp_ps_<?php echo $f->unique_id; ?>);
 
-		function bps_locate_<?php echo $f->unique_id; ?>() {
+		function bp_ps_locate_<?php echo $f->unique_id; ?>() {
 			if (navigator.geolocation) {
 				var options = <?php echo $geolocation_options; ?>;
 				navigator.geolocation.getCurrentPosition(function(position) {
 					document.getElementById('Lat_<?php echo $f->unique_id; ?>').value = position.coords.latitude;
 					document.getElementById('Lng_<?php echo $f->unique_id; ?>').value = position.coords.longitude;
-					bps_address_<?php echo $f->unique_id; ?>(position);
+					bp_ps_address_<?php echo $f->unique_id; ?>(position);
 				}, function(error) {
 					alert('ERROR ' + error.code + ': ' + error.message);
 				}, options);
@@ -284,9 +281,9 @@ function bps_autocomplete_script ($f)
 				alert('ERROR: Geolocation is not supported by this browser');
 			}
 		}
-		jQuery('#Btn_<?php echo $f->unique_id; ?>').click (bps_locate_<?php echo $f->unique_id; ?>);
+		jQuery('#Btn_<?php echo $f->unique_id; ?>').click (bp_ps_locate_<?php echo $f->unique_id; ?>);
 
-		function bps_address_<?php echo $f->unique_id; ?>(position) {
+		function bp_ps_address_<?php echo $f->unique_id; ?>(position) {
 			var geocoder = new google.maps.Geocoder;
 			var latlng = {lat: position.coords.latitude, lng: position.coords.longitude};
 			geocoder.geocode({'location': latlng}, function(results, status) {
@@ -305,7 +302,7 @@ function bps_autocomplete_script ($f)
 <?php
 }
 
-function bps_unique_id ($id)
+function bp_ps_unique_id ($id)
 {
 	static $k = array ();
 

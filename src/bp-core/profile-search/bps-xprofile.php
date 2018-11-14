@@ -1,7 +1,7 @@
 <?php
 
-add_filter ('bps_add_fields', 'bps_xprofile_setup');
-function bps_xprofile_setup ($fields)
+add_filter ('bp_ps_add_fields', 'bp_ps_xprofile_setup');
+function bp_ps_xprofile_setup ($fields)
 {
 	global $group, $field;
 
@@ -22,22 +22,22 @@ function bps_xprofile_setup ($fields)
 				$f->id = $field->id;
 				$f->code = 'field_'. $field->id;
 				$f->name = str_replace ('&amp;', '&', stripslashes ($field->name));
-				$f->name = bps_wpml (0, $f->id, 'name', $f->name);
+				$f->name = $f->name;
 				$f->description = str_replace ('&amp;', '&', stripslashes ($field->description));
-				$f->description = bps_wpml (0, $f->id, 'description', $f->description);
+				$f->description = $f->description;
 				$f->type = $field->type;
 
-				$f->format = bps_xprofile_format ($field->type, $field->id);
-				$f->search = 'bps_xprofile_search';
-				$f->sort_directory = 'bps_xprofile_sort_directory';
-				$f->get_value = 'bps_xprofile_get_value';
+				$f->format = bp_ps_xprofile_format ($field->type, $field->id);
+				$f->search = 'bp_ps_xprofile_search';
+				$f->sort_directory = 'bp_ps_xprofile_sort_directory';
+				$f->get_value = 'bp_ps_xprofile_get_value';
 
-				$f->options = bps_xprofile_options ($field->id);
+				$f->options = bp_ps_xprofile_options ($field->id);
 				foreach ($f->options as $key => $label)
-					$f->options[$key] = bps_wpml (0, $f->id, 'option', $label);
+					$f->options[$key] = $label;
 
 				if ($f->format == 'custom')
-					do_action ('bps_custom_field', $f);
+					do_action ('bp_ps_custom_field', $f);
 
 				if ($f->format == 'set')
 					unset ($f->sort_directory, $f->get_value);
@@ -50,13 +50,13 @@ function bps_xprofile_setup ($fields)
 	return $fields;
 }
 
-function bps_xprofile_search ($f)
+function bp_ps_xprofile_search ($f)
 {
 	global $bp, $wpdb;
 
 	$value = $f->value;
 	$filter = $f->format. '_'.  ($f->filter == ''? 'is': $f->filter);
-
+    
 	$sql = array ('select' => '', 'where' => array ());
 	$sql['select'] = "SELECT user_id FROM {$bp->profile->table_name_data}";
 	$sql['where']['field_id'] = $wpdb->prepare ("field_id = %d", $f->id);
@@ -97,9 +97,21 @@ function bps_xprofile_search ($f)
 
 	case 'text_contains':
 	case 'location_contains':
-		$value = str_replace ('&', '&amp;', $value);
-		$escaped = '%'. bps_esc_like ($value). '%';
-		$sql['where'][$filter] = $wpdb->prepare ("value LIKE %s", $escaped);
+        if ( is_array( $value ) ) {
+            $values = (array)$value;
+            $parts = array ();
+            foreach ( $values as $v ) {
+                $v = str_replace ( '&', '&amp;', $v );
+                $escaped = '%'. bp_ps_esc_like ( $v ). '%';
+                $parts[] = $wpdb->prepare ( "value LIKE %s", $escaped);
+            }
+            $match = ' OR ';
+            $sql['where'][$filter] = '('. implode ($match, $parts). ')';
+        } else {
+            $value = str_replace ('&', '&amp;', $value);
+            $escaped = '%'. bp_ps_esc_like ($value). '%';
+            $sql['where'][$filter] = $wpdb->prepare ("value LIKE %s", $escaped);
+        }
 		break;
 
 	case 'text_like':
@@ -146,7 +158,7 @@ function bps_xprofile_search ($f)
 		foreach ($values as $value)
 		{
 			$value = str_replace ('&', '&amp;', $value);
-			$escaped = '%:"'. bps_esc_like ($value). '";%';
+			$escaped = '%:"'. bp_ps_esc_like ($value). '";%';
 			$parts[] = $wpdb->prepare ("value LIKE %s", $escaped);
 		}
 		$match = ($filter == 'set_match_any')? ' OR ': ' AND ';
@@ -157,14 +169,14 @@ function bps_xprofile_search ($f)
 		return array ();
 	}
 
-	$sql = apply_filters ('bps_field_sql', $sql, $f);
+	$sql = apply_filters ('bp_ps_field_sql', $sql, $f);
 	$query = $sql['select']. ' WHERE '. implode (' AND ', $sql['where']);
-
+    
 	$results = $wpdb->get_col ($query);
 	return $results;
 }
 
-function bps_xprofile_sort_directory ($sql, $object, $f, $order)
+function bp_ps_xprofile_sort_directory ($sql, $object, $f, $order)
 {
 	global $bp, $wpdb;
 
@@ -181,7 +193,7 @@ function bps_xprofile_sort_directory ($sql, $object, $f, $order)
 	return $sql;
 }
 
-function bps_xprofile_get_value ($f)
+function bp_ps_xprofile_get_value ($f)
 {
 	global $members_template;
 
@@ -195,7 +207,7 @@ function bps_xprofile_get_value ($f)
 	return stripslashes ($value);
 }
 
-function bps_xprofile_format ($type, $field_id)
+function bp_ps_xprofile_format ($type, $field_id)
 {
 	$formats = array
 	(
@@ -215,12 +227,12 @@ function bps_xprofile_format ($type, $field_id)
 
 	$formats = $formats[$type];
 	$default = $formats[0];
-	$format = apply_filters ('bps_xprofile_format', $default, $field_id);
+	$format = apply_filters ('bp_ps_xprofile_format', $default, $field_id);
 
 	return in_array ($format, $formats)? $format: $default;
 }
 
-function bps_xprofile_options ($field_id)
+function bp_ps_xprofile_options ($field_id)
 {
 	$field = new BP_XProfile_Field ($field_id);
 	if (empty ($field->id))  return array ();
@@ -234,24 +246,24 @@ function bps_xprofile_options ($field_id)
 	return $options;
 }
 
-add_filter ('bps_add_fields', 'bps_anyfield_setup');
-function bps_anyfield_setup ($fields)
+add_filter ('bp_ps_add_fields', 'bp_ps_anyfield_setup');
+function bp_ps_anyfield_setup ($fields)
 {
 	$f = new stdClass;
-	$f->group = __('Any field', 'buddyboss');
+	$f->group = __('Keyword', 'buddyboss');
 	$f->code = 'field_any';
 	$f->name = __('Any profile field', 'buddyboss');
 	$f->description = __('Search every profile field', 'buddyboss');
 
 	$f->format = 'text';
 	$f->options = array ();
-	$f->search = 'bps_anyfield_search';
+	$f->search = 'bp_ps_anyfield_search';
 
 	$fields[] = $f;
 	return $fields;
 }
 
-function bps_anyfield_search ($f)
+function bp_ps_anyfield_search ($f)
 {
 	global $bp, $wpdb;
 
@@ -264,7 +276,7 @@ function bps_anyfield_search ($f)
 	switch ($filter)
 	{
 	case 'contains':
-		$escaped = '%'. bps_esc_like ($value). '%';
+		$escaped = '%'. bp_ps_esc_like ($value). '%';
 		$sql['where'][$filter] = $wpdb->prepare ("value LIKE %s", $escaped);
 		break;
 
@@ -279,7 +291,7 @@ function bps_anyfield_search ($f)
 		break;
 	}
 
-	$sql = apply_filters ('bps_field_sql', $sql, $f);
+	$sql = apply_filters ('bp_ps_field_sql', $sql, $f);
 	$query = $sql['select']. ' WHERE '. implode (' AND ', $sql['where']);
 
 	$results = $wpdb->get_col ($query);

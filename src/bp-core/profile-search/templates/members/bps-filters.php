@@ -1,23 +1,20 @@
 <?php
-/*
- * BP Profile Search - filters template 'bps-filters'
- *
- * See http://dontdream.it/bp-profile-search/form-templates/ if you wish to modify this template or develop a new one.
- * A new or modified template should be moved to the 'buddypress/members' directory in your theme's root, otherwise it
- * will be overwritten during the next plugin update.
- *
- */
+! defined( 'ABSPATH' ) ? exit() : '';
 
-	$F = bps_escaped_filters_data ();
+	$F = bp_profile_search_escaped_form_data();
 	if (empty ($F->fields))  return false;
 ?>
-	<p class='bps_filters'>
+	<p class='bp_ps_filters'>
 
 <?php
 	foreach ($F->fields as $f)
 	{
-		$filter = bps_print_filter ($f);
-		$filter = apply_filters ('bps_print_filter', $filter, $f);
+        if ( 'hidden' == $f->display ) {
+            continue;
+        }
+        
+		$filter = bp_ps_print_filter ($f);
+		$filter = apply_filters ('bp_ps_print_filter', $filter, $f);
 
 ?>
 		<strong><?php echo $f->label; ?></strong> <span><?php echo $filter; ?></span><br>
