@@ -237,27 +237,12 @@ function bbp_user_profile_link( $user_id = 0 ) {
 	/**
 	 * Return link to the profile page of a user
 	 *
-	 * @since bbPress (r2688)
+	 * @since BuddyBoss 3.1.1
 	 *
-	 * @param int $user_id Optional. User id
-	 * @uses bbp_get_user_id() To get user id
-	 * @uses get_userdata() To get user data
-	 * @uses bbp_get_user_profile_url() To get user profile url
-	 * @uses apply_filters() Calls 'bbp_get_user_profile_link' with the user
-	 *                        profile link and user id
 	 * @return string User profile link
 	 */
 	function bbp_get_user_profile_link( $user_id = 0 ) {
-
-		// Validate user id
-		$user_id = bbp_get_user_id( $user_id );
-		if ( empty( $user_id ) )
-			return false;
-
-		$user      = get_userdata( $user_id );
-		$user_link = '<a href="' . esc_url( bbp_get_user_profile_url( $user_id ) ) . '">' . esc_html( $user->display_name ) . '</a>';
-
-		return apply_filters( 'bbp_get_user_profile_link', $user_link, $user_id );
+		return apply_filters( 'bbp_get_user_profile_link', bp_core_get_userlink( $user_id ), $user_id );
 	}
 
 /**
@@ -1660,7 +1645,7 @@ function bbp_author_link( $args = '' ) {
 
 			$anonymous = bbp_is_reply_anonymous( $r['post_id'] );
 
-			// Declare empty array 
+			// Declare empty array
 			$author_links = array();
 
 			// Get avatar
