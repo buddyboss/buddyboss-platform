@@ -394,6 +394,9 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				);
 			}
 
+			$like_count = bp_activity_get_meta( bp_get_activity_id(), 'favorite_count' );
+			$like_count = ( isset( $like_count ) &&  !empty( $like_count ) ) ? $like_count : 0;
+
 			$buttons['activity_favorite'] =  array(
 				'id'                => 'activity_favorite',
 				'position'          => 15,
@@ -402,7 +405,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				'parent_attr'       => $parent_attr,
 				'must_be_logged_in' => true,
 				'button_element'    => $fav_args['button_element'],
-				'link_text'         => sprintf( '<span class="bp-screen-reader-text">%1$s</span>  <span class="like-count">%2$s</span>', esc_html( $fav_args['link_text'] ), esc_html( bp_activity_get_meta( bp_get_activity_id(), 'favorite_count' ) ) ),
+				'link_text'         => sprintf( '<span class="bp-screen-reader-text">%1$s</span>  <span class="like-count">%2$s</span>', esc_html( $fav_args['link_text'] ), esc_html( $like_count ) ),
 				'button_attr'       => array(
 					$key              => $fav_args['link_attr'],
 					'class'           => $fav_args['link_class'],
