@@ -563,15 +563,25 @@ function bp_nouveau_loop_classes() {
 				bp_nouveau_get_appearance_settings( $customizer_option )
 			);
 
+			// check for layout options in browsers storage
+			$list = false;
+			if ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) && 'list' == $_POST['extras']['layout'] ) {
+				$list = true;
+            }
+
 			if ( $layout_prefs && (int) $layout_prefs > 1 ) {
 				$grid_classes = bp_nouveau_customizer_grid_choices( 'classes' );
 
-				if ( isset( $grid_classes[ $layout_prefs ] ) ) {
+				if ( isset( $grid_classes[ $layout_prefs ] ) && ! $list ) {
 					$classes = array_merge( $classes, array(
 						'grid',
 						$grid_classes[ $layout_prefs ],
 					) );
-				}
+				} else {
+					$classes = array_merge( $classes, array(
+						$grid_classes[ $layout_prefs ],
+					) );
+                }
 
 				if ( ! isset( $bp_nouveau->{$component} ) ) {
 				    $bp_nouveau->{$component} = new stdClass;
