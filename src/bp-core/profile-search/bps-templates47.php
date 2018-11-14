@@ -167,7 +167,7 @@ function bp_ps_full_label ($f)
 {
 	$labels = array
 	(
-		'contains'		=> __('<strong>%1$s</strong><span> contains:</span>', 'buddyboss'),
+		'contains'		=> __('<strong>%1$s</strong><span></span>', 'buddyboss'),
 		''				=> __('<strong>%1$s</strong><span> is:<span>', 'buddyboss'),
 		'like'			=> __('<strong>%1$s</strong><span> is like:<span>', 'buddyboss'),
 		'range'			=> __('<strong>%1$s</strong><span> range:<span>', 'buddyboss'),
