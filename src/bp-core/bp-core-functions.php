@@ -3451,6 +3451,22 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "Your membership request for the group \"{{group.name}}\" has been rejected.\n\n{{{group.small_card}}}", 'buddyboss' ),
 		),
+		'bbp-new-forum-topic' => array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'   => __( '[{{{site.name}}}] New discussion: {{discussion.title}}', 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content' => __( "{{poster.name}} started a new discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n<blockquote>{{discussion.content}}</blockquote>", 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt' => __( "{{poster.name}} started a new discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{discussion.content}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
+		),
+		'bbp-new-forum-reply' => array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your forum discussions', 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content' => __( "{{poster.name}} replied to the discussion <a href=\"{{discussion.url}}\">{{discussion.title}}</a> in the forum <a href=\"{{forum.url}}\">{{forum.title}}</a>:\n\n<blockquote>{{reply.content}}</blockquote>", 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt' => __( "{{poster.name}} replied to the discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{reply.content}}\n\nPost Link: {{reply.url}}", 'buddyboss' ),
+		),
 	);
 }
 
@@ -3592,6 +3608,22 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		),
 	);
 
+	$bbp_new_forum_topic = array(
+		'description'	=> __( 'A member has created a new forum discussion.', 'buddyboss' ),
+		'unsubscribe'	=> array(
+			'meta_key'	=> 'notification_bbp_new_forum_topic',
+			'message'	=> __( 'You will no longer receive emails when a member will create a new forum discussion.', 'buddyboss' ),
+		),
+	);
+
+	$bbp_new_forum_reply = array(
+		'description'	=> __( 'A member has replied to a forum discussion that the participant is following.', 'buddyboss' ),
+		'unsubscribe'	=> array(
+			'meta_key'	=> 'notification_bbp_new_forum_reply',
+			'message'	=> __( 'You will no longer receive emails when a member will reply to one of your forum discussions.', 'buddyboss' ),
+		),
+	);
+
 	$types = array(
 		'activity-comment'                   => $activity_comment,
 		'activity-comment-author'            => $activity_comment_author,
@@ -3609,6 +3641,8 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'settings-verify-email-change'       => $settings_verify_email_change,
 		'groups-membership-request-accepted' => $groups_membership_request_accepted,
 		'groups-membership-request-rejected' => $groups_membership_request_rejected,
+		'bbp-new-forum-topic'                => $bbp_new_forum_topic,
+		'bbp-new-forum-reply'                => $bbp_new_forum_reply,
 	);
 
 	if ( $field !== 'all' ) {
