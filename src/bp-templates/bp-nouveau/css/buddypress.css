@@ -803,7 +803,37 @@ body.buddypress article.page > .entry-header .entry-title {
 
 .buddypress-wrap .subnav-filters .grid-filters {
   float: right;
-  padding: 8px 0 8px 10px;
+  padding: 0;
+  margin-left: 10px;
+}
+
+.grid-filters {
+  display: flex;
+  align-items: center;
+  border: 1px solid #eee;
+  height: 36px;
+}
+
+.grid-filters a {
+  color: #ccc;
+  padding: 0 6px;
+  line-height: 36px;
+}
+
+.grid-filters a, .grid-filters a:active, .grid-filters a:focus {
+  outline: none;
+}
+
+.grid-filters a i {
+  vertical-align: middle;
+}
+
+.grid-filters a.active {
+  color: #222;
+}
+
+a.layout-grid-view {
+  border-right: 1px solid #eee;
 }
 
 /**
@@ -3714,7 +3744,7 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
   border: 0;
   cursor: pointer;
   margin-right: -25px;
-  padding: 6px 25px 6px 10px;
+  padding: 5px 25px 5px 10px;
   position: relative;
   z-index: 1;
   width: 100%;
