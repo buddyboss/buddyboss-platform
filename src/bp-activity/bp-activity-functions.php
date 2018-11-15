@@ -302,7 +302,7 @@ function bp_activity_get_userid_from_mentionname( $mentionname ) {
 	// When username compatibility mode is disabled, the mentionname is
 	// the same as the nicename.
 	} else {
-		$user_id = bp_core_get_userid_from_nicename( $mentionname );
+		$user_id = bp_core_get_userid_from_nickname( $mentionname );
 	}
 
 
@@ -4196,3 +4196,11 @@ function bp_activity_transition_post_type_comment_status( $new_status, $old_stat
 	remove_filter( 'bp_akismet_get_activity_types', $comment_akismet_history );
 }
 add_action( 'transition_comment_status', 'bp_activity_transition_post_type_comment_status', 10, 3 );
+
+function bp_at_mention_default_options() {
+	return apply_filters( 'bp_at_mention_js_options', [
+		'selectors' => [ '.bp-suggestions', '#comments form textarea', '.wp-editor-area' ],
+		'insert_tpl' => '@${ID}',
+		'display_tpl' => '<li data-value="@${ID}"><img src="${image}" /><span class="username">@${ID}</span><small>${name}</small></li>'
+	] );
+}

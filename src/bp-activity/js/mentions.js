@@ -19,18 +19,26 @@ window.bp = window.bp || {};
 	 * @param {array|object} options If array, becomes the suggestions' data source. If object, passed as config to $.atwho().
 	 * @since BuddyPress 2.1.0
 	 */
-	$.fn.bp_mentions = function( options ) {
+	$.fn.bp_mentions = function( options, suggestions, mentions ) {
 		if ( $.isArray( options ) ) {
 			options = { data: options };
+		}
+
+		if ( ! suggestions ) {
+			suggestions = {};
+		}
+
+		if ( ! mentions ) {
+			mentions = {};
 		}
 
 		/**
 		 * Default options for at.js; see https://github.com/ichord/At.js/.
 		 */
-		var suggestionsDefaults = {
+		var suggestionsDefaults = $.extend( true, {}, {
 			delay:             200,
 			hideWithoutSuffix: true,
-			insertTpl:         '@${ID}',
+			insertTpl:         BP_Mentions_Options.insert_tpl,
 			limit:             10,
 			startWithSpace:    false,
 			suffix:            '',
@@ -147,12 +155,12 @@ window.bp = window.bp || {};
 					return '' + content + suffix;
 				}
 			}
-		},
+		}, suggestions );
 
 		/**
 		 * Default options for our @mentions; see https://github.com/ichord/At.js/.
 		 */
-		mentionsDefaults = {
+		mentionsDefaults = $.extend( true, {}, {
 			callbacks: {
 				/**
 				 * If there are no matches for the query in this.data, then query BuddyPress.
@@ -239,16 +247,26 @@ window.bp = window.bp || {};
 
 			at:         '@',
 			searchKey:  'search',
-			displayTpl: '<li data-value="@${ID}"><img src="${image}" /><span class="username">@${ID}</span><small>${name}</small></li>'
-		},
+			displayTpl: BP_Mentions_Options.display_tpl
+		}, mentions );
 
 		opts = $.extend( true, {}, suggestionsDefaults, mentionsDefaults, options );
 		return $.fn.atwho.call( this, opts );
 	};
 
 	$( document ).ready(function() {
-		// Activity/reply, post comments, dashboard post 'text' editor.
-		$( '.bp-suggestions, #comments form textarea, .wp-editor-area' ).bp_mentions( bp.mentions.users );
+        $(document).on("focus", BP_Mentions_Options.selectors.join(',') , function() {
+            if ( $(this).data( "bp_mentions_activated" ) ) {
+                return;
+            }
+
+            if ( typeof( bp ) === "undefined" ) {
+                return;
+            }
+
+            $(this).bp_mentions( bp.mentions.users );
+            $(this).data( "bp_mentions_activated", true );
+        });
 	});
 
 	bp.mentions.tinyMCEinit = function() {

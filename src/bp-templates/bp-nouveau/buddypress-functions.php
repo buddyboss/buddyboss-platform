@@ -353,6 +353,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 			wp_register_script( $handle, $file, $data['dependencies'], $data['version'], $data['footer'] );
 		}
+
+		wp_localize_script( 'bp-nouveau-messages-at', 'BP_Mentions_Options', bp_at_mention_default_options() );
 	}
 
 	/**

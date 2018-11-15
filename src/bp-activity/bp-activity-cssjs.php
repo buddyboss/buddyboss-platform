@@ -41,6 +41,8 @@ function bp_activity_mentions_script() {
 		wp_style_add_data( 'bp-mentions-css', 'suffix', $min );
 	}
 
+	wp_localize_script( 'bp-mentions', 'BP_Mentions_Options', bp_at_mention_default_options() );
+
 	// If the script has been enqueued, let's attach our mentions TinyMCE init callback.
 	add_filter( 'tiny_mce_before_init', 'bp_add_mentions_on_tinymce_init', 10, 2 );
 

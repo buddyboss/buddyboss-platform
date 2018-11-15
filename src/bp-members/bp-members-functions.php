@@ -293,6 +293,23 @@ function bp_core_get_userid_from_nicename( $user_nicename = '' ) {
 	return apply_filters( 'bp_core_get_userid_from_nicename', ! empty( $user->ID ) ? $user->ID : NULL, $user_nicename );
 }
 
+function bp_core_get_userid_from_nickname( $nickname ) {
+	if ( empty( $nickname ) ) {
+		return false;
+	}
+
+	$users = get_users( [
+		'meta_key'    => 'nickname',
+		'meta_value'  => $nickname,
+		'number'      => 1,
+		'count_total' => false
+	] );
+
+	$user = $users? $users[0] : null;
+
+	return apply_filters( 'bp_core_get_userid_from_nickname', ! empty( $user->ID ) ? $user->ID : NULL, $nickname );
+}
+
 /**
  * Return the username for a user based on their user id.
  *

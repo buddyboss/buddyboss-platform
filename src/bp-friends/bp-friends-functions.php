@@ -801,12 +801,12 @@ function bp_friends_prime_mentions_results() {
 	$results       = array();
 
 	foreach ( $friends_query->results as $user ) {
-		$result        = new stdClass();
-		$result->ID    = $user->user_nicename;
-		$result->image = bp_core_fetch_avatar( array( 'html' => false, 'item_id' => $user->ID ) );
+		$result         = new stdClass();
+		$result->ID     = get_user_meta( $user->ID, 'nickname', true ) ?: $user->user_nicename;
+		$result->image  = bp_core_fetch_avatar( array( 'html' => false, 'item_id' => $user->ID ) );
 
 		if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
-			$result->name = $user->display_name;
+			$result->name = bp_custom_display_name_format( $user->display_name, $user->ID );
 		} else {
 			$result->name = bp_core_get_user_displayname( $user->ID );
 		}
