@@ -453,7 +453,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
 		$this->assertEquals( 1, count( $uppercase ) );
 
 		$this->assertSame( $lowercase[0]->ID, $uppercase[0]->ID );
-		$this->assertSame( 'lisa-smithy', $lowercase[0]->ID );
+		$this->assertSame( 'zoom', $lowercase[0]->ID );
 	}
 
 	public function test_suggestions_response_property_types() {

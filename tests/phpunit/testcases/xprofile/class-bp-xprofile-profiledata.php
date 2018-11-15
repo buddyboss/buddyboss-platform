@@ -362,8 +362,8 @@ class BP_Tests_BP_XProfile_ProfileData_TestCases extends BP_UnitTestCase {
 		$time = bp_core_current_time();
 
 		$g0 = new BP_XProfile_Group( 1 );
-		$f0 = new BP_XProfile_Field( 1 );
-		$d0 = new BP_XProfile_ProfileData( 1, $u );
+		$f0 = new BP_XProfile_Field( bp_xprofile_nickname_field_id() );
+		$d0 = new BP_XProfile_ProfileData( bp_xprofile_nickname_field_id(), $u );
 
 		$d1 = new stdClass;
 		$d1->user_id = $u;

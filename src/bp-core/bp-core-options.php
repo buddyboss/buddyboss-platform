@@ -46,6 +46,8 @@ function bp_get_default_options() {
 		// Default fullname field name. (for backward compat)
 		'bp-xprofile-fullname-field-name'      => 'Name',
 
+		'bp-display-name-format'			   => 'nickname',
+
 		/* Blogs *************************************************************/
 
 		// Used to decide if blogs need indexing.

@@ -383,14 +383,11 @@ class BP_Tests_Friends_Functions extends BP_UnitTestCase {
 		friends_add_friend( $u1, $u2, true );
 		friends_add_friend( $u1, $u3, true );
 
-		$field_id = bp_xprofile_fullname_field_id();
-		xprofile_set_field_data( $field_id, $u2, 'Dave Lister' );
-		xprofile_set_field_data( $field_id, $u3, 'Arnold Rimmer' );
-		xprofile_sync_wp_profile( $u2 );
-		xprofile_sync_wp_profile( $u3 );
+		$field_id = bp_xprofile_nickname_field_id();
+		xprofile_set_field_data( $field_id, $u2, 'dave-lister' );
+		xprofile_set_field_data( $field_id, $u3, 'arnold-rimmer' );
 
 		$alpha = friends_get_alphabetically( $u1 );
-
 		$this->assertEquals( $alpha['users'][0]->id, $u3 );
 		$this->assertEquals( $alpha['users'][1]->id, $u2 );
 	}
