@@ -270,7 +270,7 @@ function bp_version_updater() {
 		}
 
 		// Version 3.1.1
-		if ( $raw_db_version < 12310 ) {
+		if ( $raw_db_version < 12510 ) {
 			bp_update_to_3_1_1();
 		}
 	}
@@ -557,6 +557,7 @@ function bp_update_to_2_7() {
 function bp_update_to_3_1_1() {
 
 	bp_core_install_follow();
+	bp_core_install_bbp_emails();
 }
 
 /**
