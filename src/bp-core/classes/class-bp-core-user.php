@@ -294,7 +294,7 @@ class BP_Core_User {
 		}
 
 		if ( 'alphabetical' == $type ) {
-			$sql['where_alpha'] = "AND pd.field_id = 1";
+			$sql['where_alpha'] = "AND pd.field_id = " . bp_xprofile_nickname_field_id();
 		}
 
 		if ( !empty( $exclude ) ) {

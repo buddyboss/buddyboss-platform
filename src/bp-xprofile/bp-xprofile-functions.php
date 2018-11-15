@@ -878,7 +878,7 @@ add_action( 'user_profile_update_errors', 'xprofile_sync_bp_profile', 20, 3 );
 function bp_xprofile_update_display_name( $user_id ) {
 	wp_update_user( array(
 		'ID' => $user_id,
-		'display_name' => bp_custom_display_name_format( '', $user_id )
+		'display_name' => bp_custom_display_name_format( get_user_by( 'ID', $user_id )->display_name, $user_id )
 	) );
 }
 

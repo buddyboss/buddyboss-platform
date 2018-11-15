@@ -698,6 +698,10 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $vlaue, $user_
 function bp_xprofile_adjust_current_user_display_name() {
 	global $current_user;
 
+	if ( ! $current_user->ID ) {
+		return;
+	}
+
 	$current_user->data->display_name = bp_custom_display_name_format( $current_user->data->display_name, $current_user->ID );
 }
 

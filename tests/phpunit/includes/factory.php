@@ -41,7 +41,9 @@ class BP_UnitTest_Factory_For_User extends WP_UnitTest_Factory_For_User {
 
 		if ( bp_is_active( 'xprofile' ) ) {
 			$user = new WP_User( $user_id );
-			xprofile_set_field_data( 1, $user_id, $user->display_name );
+			xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, get_user_meta( $user->ID, 'first_name', true ) );
+			xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user_id, get_user_meta( $user->ID, 'last_name', true ) );
+			xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user_id, preg_replace('[^a-zA-z0-9\-_@]', '', $user->display_name ) );
 		}
 
 		return $user_id;

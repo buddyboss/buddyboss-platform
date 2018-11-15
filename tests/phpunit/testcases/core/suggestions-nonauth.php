@@ -145,15 +145,17 @@ class BP_Tests_Suggestions_Non_Authenticated extends BP_UnitTestCase {
 			'term'     => 'smith',
 		) );
 		$this->assertFalse( is_wp_error( $suggestions ) );
-		$this->assertEquals( 2, count( $suggestions ) );  // aardvark, smith.
+		// shouldn't search for user nicename, but nickname meta instead
+		$this->assertEquals( 1, count( $suggestions ) );  // aardvark
 
 		$suggestions = bp_core_get_suggestions( array(
 			'group_id' => -self::$group_ids['public'],
 			'type'     => 'members',
 			'term'     => 'smith',
 		) );
+
 		$this->assertFalse( is_wp_error( $suggestions ) );
-		$this->assertEquals( 1, count( $suggestions ) );  // zoom
+		$this->assertEquals( 0, count( $suggestions ) );  // zoom
 	}
 
 	public function test_suggestions_with_type_groupmembers_private_and_exclude_group_from_results() {

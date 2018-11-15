@@ -107,9 +107,18 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		buddypress()->active_components['xprofile'] = '1';
 
 		$u = self::factory()->user->create();
-		xprofile_set_field_data( 1, $u, 'Foo Foo' );
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $u, 'Foo' );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $u, 'Bar' );
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $u, 'Baz' );
 
-		$this->assertSame( 'Foo Foo', bp_core_get_user_displayname( $u ) );
+		bp_update_option( 'bp-display-name-format', 'first_name' );
+		$this->assertSame( 'Foo', bp_core_get_user_displayname( $u ) );
+
+		bp_update_option( 'bp-display-name-format', 'first_last_name' );
+		$this->assertSame( 'Foo Bar', bp_core_get_user_displayname( $u ) );
+
+		bp_update_option( 'bp-display-name-format', 'nickname' );
+		$this->assertSame( 'Baz', bp_core_get_user_displayname( $u ) );
 
 		if ( ! $xprofile_is_active ) {
 			unset( buddypress()->active_components['xprofile'] );
@@ -129,9 +138,10 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 	public function test_bp_core_get_user_displaynames_all_uncached() {
 		$u1 = self::factory()->user->create();
 		$u2 = self::factory()->user->create();
-		xprofile_set_field_data( 1, $u1, 'Foo' );
-		xprofile_set_field_data( 1, $u2, 'Bar' );
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $u1, 'Foo' );
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $u2, 'Bar' );
 
+		bp_update_option( 'bp-display-name-format', 'first_name' );
 		$expected = array(
 			$u1 => 'Foo',
 			$u2 => 'Bar',
@@ -148,8 +158,9 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		$u2 = self::factory()->user->create( array(
 			'display_name' => 'Bar',
 		) );
-		xprofile_set_field_data( 1, $u1, 'Foo' );
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $u1, 'Foo' );
 
+		bp_update_option( 'bp-display-name-format', 'nickname' );
 		$expected = array(
 			$u1 => 'Foo',
 			$u2 => 'Bar',

@@ -2790,7 +2790,12 @@ function bp_get_current_member_type() {
 	return apply_filters( 'bp_get_current_member_type', buddypress()->current_member_type );
 }
 
-function bp_custom_display_name_format( $display_name, $user_id ) {
+function bp_custom_display_name_format( $display_name, $user_id = null ) {
+	// some cases it calls the filter directly, therefore no user id is passed
+	if ( ! $user_id ) {
+		return $display_name;
+	}
+
 	$format = bp_get_option( 'bp-display-name-format' );
 
 	switch ( $format ) {
