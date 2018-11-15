@@ -30,24 +30,24 @@ defined( 'ABSPATH' ) || exit;
 function bp_xprofile_get_groups( $args = array() ) {
 
     /**
-     * For repeaters, automatically set the parameter value 
+     * For repeaters, automatically set the parameter value
      * to determine if we should display only the template fields
      * or only the clone fields
      */
-    
+
     if ( !isset( $args[ 'repeater_show_main_fields_only' ] ) ) {
         $repeater_show_main_fields_only = true;
-        
+
         //If on a user profile
         if ( 'profile' == bp_current_component() ) {
             $repeater_show_main_fields_only = false;
         }
-        
+
         $args[ 'repeater_show_main_fields_only' ] = apply_filters( 'bp_xprofile_get_groups_repeater_show_main_fields_only', $repeater_show_main_fields_only );
     }
-    
+
 	$groups = BP_XProfile_Group::get( $args );
-    
+
 	/**
 	 * Filters a set of field groups, populated with fields and field data.
 	 *
@@ -884,9 +884,17 @@ function xprofile_sync_bp_profile( &$errors, $update, &$user ) {
 		return;
 	}
 
-	xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user->ID, $user->first_name );
-	xprofile_set_field_data( bp_xprofile_lastname_field_id(),  $user->ID, $user->last_name );
-	xprofile_set_field_data( bp_xprofile_nickname_field_id(),  $user->ID, $user->nickname );
+	if ( isset( $user->first_name ) ) {
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user->ID, $user->first_name );
+	}
+
+	if ( isset( $user->last_name ) ) {
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(),  $user->ID, $user->last_name );
+	}
+
+	if ( isset( $user->nickname ) ) {
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(),  $user->ID, $user->nickname );
+	}
 
 	$user->display_name = bp_custom_display_name_format( $user->display_name, $user->ID );
 }

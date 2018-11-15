@@ -600,10 +600,8 @@ Bar!';
 
 		$id = add_user();
 
-		$display_name = 'Bar Foo';
-
 		$_POST = array(
-			'display_name' => $display_name,
+			'display_name' => 'Bar Foo',
 			'email' => 'foo@bar.com',
 			'nickname' => 'foobar',
 		);
@@ -613,7 +611,7 @@ Bar!';
 		// clean up post vars
 		$_POST = $post_vars;
 
-		$this->assertEquals( $display_name, xprofile_get_field_data( bp_xprofile_fullname_field_id(), $id ) );
+		$this->assertEquals( 'foobar', xprofile_get_field_data( bp_xprofile_nickname_field_id(), $id ) );
 	}
 
 	/**

@@ -307,7 +307,12 @@ function bp_core_get_userid_from_nickname( $nickname ) {
 
 	$user = $users? $users[0] : null;
 
-	return apply_filters( 'bp_core_get_userid_from_nickname', ! empty( $user->ID ) ? $user->ID : NULL, $nickname );
+	return apply_filters( 'bp_core_get_userid_from_nickname', ! empty( $user->ID ) ? $user->ID : null, $nickname );
+}
+
+function bp_get_user_by_nickname( $nickname ) {
+	$user_id = bp_core_get_userid_from_nickname( $nickname );
+	return $user_id? get_user_by( 'ID', $user_id ) : null;
 }
 
 /**

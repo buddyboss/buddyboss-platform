@@ -37,14 +37,14 @@ class BP_Email_Recipient_Tests extends BP_UnitTestCase {
 		$recipient = new BP_Email_Recipient( $this->u1 );
 
 		$this->assertSame( 'test@example.com', $recipient->get_address() );
-		$this->assertSame( 'Unit Test', $recipient->get_name() );
+		$this->assertSame( 'UnitTest', $recipient->get_name() );
 	}
 
 	public function test_return_with_wp_user_object() {
 		$recipient = new BP_Email_Recipient( get_user_by( 'id', $this->u1 ) );
 
 		$this->assertSame( 'test@example.com', $recipient->get_address() );
-		$this->assertSame( 'Unit Test', $recipient->get_name() );
+		$this->assertSame( 'UnitTest', $recipient->get_name() );
 	}
 
 	public function test_return_with_known_address_and_optional_name() {
@@ -63,7 +63,7 @@ class BP_Email_Recipient_Tests extends BP_UnitTestCase {
 		$this->assertSame( 'test@example.com', $recipient->get_address() );
 
 		// Should fallback to WP user name.
-		$this->assertSame( 'Unit Test', $recipient->get_name() );
+		$this->assertSame( 'UnitTest', $recipient->get_name() );
 	}
 
 	public function test_return_with_unknown_address_and_optional_name() {
@@ -112,11 +112,10 @@ class BP_Email_Recipient_Tests extends BP_UnitTestCase {
 	public function test_return_with_known_array_and_empty_name() {
 		$email     = 'test@example.com';
 		$recipient = new BP_Email_Recipient( array( $email ) );
-
 		$this->assertSame( $email, $recipient->get_address() );
 
 		// Should fallback to WP user name.
-		$this->assertSame( 'Unit Test', $recipient->get_name() );
+		$this->assertSame( 'UnitTest', $recipient->get_name() );
 	}
 
 	public function test_should_return_empty_string_if_user_id_id_invalid() {

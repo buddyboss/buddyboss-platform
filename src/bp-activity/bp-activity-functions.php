@@ -1524,9 +1524,7 @@ function bp_activity_generate_action_string( $activity ) {
  */
 function bp_activity_format_activity_action_activity_update( $action, $activity ) {
 	if ( bp_activity_do_mentions() && $usernames = bp_activity_find_mentions( $activity->content ) ) {
-		$mentioned_users = array_filter( array_map( function ($username) {
-			return get_user_by( 'slug', $username );
-		}, $usernames ) );
+		$mentioned_users = array_filter( array_map( 'bp_get_user_by_nickname', $usernames ) );
 
 		$mentioned_users_link = array_map( function($mentioned_user) {
 			return bp_core_get_userlink( $mentioned_user->ID );

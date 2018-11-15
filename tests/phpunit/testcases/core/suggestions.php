@@ -126,7 +126,8 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
         ) );
 
         $this->assertFalse( is_wp_error( $suggestions ) );
-        $this->assertEquals( 3, count( $suggestions ) );  // aardvark, smith, zoom.
+        // shouldn't search for user nicename, but nickname meta instead
+        $this->assertEquals( 1, count( $suggestions ) );  // aardvark
     }
 
     public function test_suggestions_with_type_members_and_limit() {
@@ -137,7 +138,8 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
         ) );
 
         $this->assertFalse( is_wp_error( $suggestions ) );
-        $this->assertEquals( 2, count( $suggestions ) );  // two of: aardvark, smith, zoom.
+        // shouldn't search for user nicename, but nickname meta instead
+        $this->assertEquals( 1, count( $suggestions ) );  // aardvark.
     }
 
     public function test_suggestions_with_type_members_and_only_friends() {
@@ -147,7 +149,8 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
             'term'         => 'smith',
         ) );
         $this->assertFalse( is_wp_error( $suggestions ) );
-        $this->assertEquals( 1, count( $suggestions ) );  // aardvark.
+        // shouldn't search for user nicename, but nickname meta instead
+        $this->assertEquals( 0, count( $suggestions ) );
 
         $suggestions = bp_core_get_suggestions( array(
             'only_friends' => true,
@@ -186,7 +189,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
 
         $this->assertFalse( is_wp_error( $suggestions ) );
         $this->assertEquals( 1, count( $suggestions ) );
-        $this->assertSame( 'katie', $suggestions[0]->ID );
+        $this->assertSame( 'KatieParker', $suggestions[0]->ID );
     }
 
 
@@ -198,7 +201,8 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
         ) );
 
         $this->assertFalse( is_wp_error( $suggestions ) );
-        $this->assertEquals( 2, count( $suggestions ) );  // aardvark, smith.
+        // shouldn't search for user nicename, but nickname meta instead
+        $this->assertEquals( 1, count( $suggestions ) );  // aardvark.
     }
 
     public function test_suggestions_with_type_groupmembers_public_and_limit() {
@@ -222,7 +226,8 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
         ) );
 
         $this->assertFalse( is_wp_error( $suggestions ) );
-        $this->assertEquals( 1, count( $suggestions ) );  // aardvark.
+        // shouldn't search for user nicename, but nickname meta instead
+        $this->assertEquals( 0, count( $suggestions ) );  // aardvark.
     }
 
     public function test_suggestions_with_type_groupmembers_public_and_term_as_displayname() {
@@ -255,7 +260,8 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
         ) );
 
         $this->assertFalse( is_wp_error( $suggestions ) );
-        $this->assertEquals( 2, count( $suggestions ) );  // aardvark, smith.
+        // shouldn't search for user nicename, but nickname meta instead
+        $this->assertEquals( 1, count( $suggestions ) );  // aardvark
     }
 
     public function test_suggestions_with_type_groupmembers_hidden() {
@@ -306,7 +312,8 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
             'term'     => 'smith',
         ) );
         $this->assertFalse( is_wp_error( $suggestions ) );
-        $this->assertEquals( 2, count( $suggestions ) );  // aardvark, smith.
+        // shouldn't search for user nicename, but nickname meta instead
+        $this->assertEquals( 1, count( $suggestions ) );  // aardvark.
 
         $suggestions = bp_core_get_suggestions( array(
             'group_id' => -self::$group_ids['public'],
@@ -314,7 +321,8 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
             'term'     => 'smith',
         ) );
         $this->assertFalse( is_wp_error( $suggestions ) );
-        $this->assertEquals( 1, count( $suggestions ) );  // zoom
+        // shouldn't search for user nicename, but nickname meta instead
+        $this->assertEquals( 0, count( $suggestions ) );  // zoom
     }
 
     public function test_suggestions_with_type_groupmembers_private_and_exclude_group_from_results() {
@@ -447,7 +455,7 @@ class BP_Tests_Suggestions_Authenticated extends BP_UnitTestCase {
         $this->assertEquals( 1, count( $uppercase ) );
 
         $this->assertSame( $lowercase[0]->ID, $uppercase[0]->ID );
-        $this->assertSame( 'zoom', $lowercase[0]->ID );
+        $this->assertSame( 'LisaSmithy', $lowercase[0]->ID );
     }
 
     public function test_suggestions_response_property_types() {

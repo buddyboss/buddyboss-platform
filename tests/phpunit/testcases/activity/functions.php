@@ -635,7 +635,9 @@ Bar!';
 			'user_nicename' => 'foo-bar-baz',
 		) );
 
-		$this->assertEquals( 'foo-bar-baz', bp_activity_get_user_mentionname( $u ) );
+		update_user_meta( $u, 'nickname', 'foobarbaz' );
+
+		$this->assertEquals( 'foobarbaz', bp_activity_get_user_mentionname( $u ) );
 
 		remove_filter( 'bp_is_username_compatibility_mode', '__return_false' );
 	}
@@ -673,7 +675,9 @@ Bar!';
 			'user_nicename' => 'foo-bar-baz',
 		) );
 
-		$this->assertEquals( $u, bp_activity_get_userid_from_mentionname( 'foo-bar-baz' ) );
+		update_user_meta( $u, 'nickname', 'foobarbaz' );
+
+		$this->assertEquals( $u, bp_activity_get_userid_from_mentionname( 'foobarbaz' ) );
 
 		remove_filter( 'bp_is_username_compatibility_mode', '__return_false' );
 	}

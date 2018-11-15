@@ -150,12 +150,12 @@ class BP_Tests_Core_Nav_BpCoreNewNavItem extends BP_UnitTestCase {
 		$this->go_to( bp_core_get_user_domain( $u ) );
 
 		$expected = array(
-			'name'                    => 'Settings',
+			'name'                    => 'Account',
 			'slug'                    => 'settings',
 			'link'                    => trailingslashit( bp_loggedin_user_domain() . 'settings' ),
 			'css_id'                  => 'settings',
 			'show_for_displayed_user' => false,
-			'position'                => 100,
+			'position'                => 21,
 			'screen_function'         => 'bp_settings_screen_general',
 			'default_subnav_slug'     => 'general'
 		);
