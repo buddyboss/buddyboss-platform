@@ -353,6 +353,14 @@ function repare_default_profiles_fields() {
 
 	bp_core_install_default_profiles_fields();
 
+	if ( false === bp_get_option( 'bp-xprofile-base-group-id' ) ) {
+		bp_update_option( 'bp-xprofile-firstname-field-id', 1 );
+	}
+
+	if ( false === bp_get_option( 'bp-xprofile-firstname-field-id' ) ) {
+		bp_update_option( 'bp-xprofile-firstname-field-id', 1 );
+	}
+
 	$statement = __( 'Repair default profile set and fields&hellip; %s', 'buddyboss' );
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
