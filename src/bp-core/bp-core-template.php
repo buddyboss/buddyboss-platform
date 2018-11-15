@@ -3360,7 +3360,7 @@ function bp_the_body_class() {
 
 		if ( ! bp_is_blog_page() ) {
 			$bp_classes[] = bp_current_component();
-			$bp_classes[] = bp_current_action();
+			$bp_classes[] = str_replace(',', ' ', bp_current_action());
 		}
 
 		/* Clean up ***********************************************************/

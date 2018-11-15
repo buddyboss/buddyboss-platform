@@ -87,6 +87,10 @@ class BP_Email_Tokens {
 				'function'    => array( $this, 'token__group_description' ),
 				'description' => __( 'Outputs the description excerpt of the group.', 'buddyboss' ),
 			),
+			'group.invite_message' => array(
+				'function'    => array( $this, 'token__group_invite_message' ),
+				'description' => __( 'Outputs the invite message for the user.', 'buddyboss' ),
+			),
 			'message'          => array(
 				'function'    => array( $this, 'token__message' ),
 				'description' => __( 'Display the sent message, along with sender\'s picture and name.', 'buddyboss' ),
@@ -1010,6 +1014,66 @@ class BP_Email_Tokens {
 			 </tbody>
 		</table>
 		<div class="spacer" style="font-size: 30px; line-height: 30px; height: 30px;">&nbsp;</div>
+		<?php
+		$output = str_replace( array( "\r", "\n" ), '', ob_get_clean() );
+
+		return $output;
+	}
+
+	/**
+	 * Generate the output for token group.invite_message
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param \BP_Email $bp_email
+	 * @param array $formatted_tokens
+	 * @param array $tokens
+	 *
+	 * @return string html for the output
+	 */
+	public function token__group_invite_message( $bp_email, $formatted_tokens, $tokens ) {
+		$output = '';
+
+		if ( ! bp_is_active( 'groups' ) ) {
+			return '';
+		}
+
+		if ( empty( $formatted_tokens['invites.message'] ) ) {
+			return $output;
+		}
+
+		$settings = bp_email_get_appearance_settings();
+
+		ob_start();
+		?>
+        <div class="spacer" style="font-size: 5px; line-height: 5px; height: 5px;">&nbsp;</div>
+        <table cellspacing="0" cellpadding="0" border="0" width="100%"
+               style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+            <tbody>
+            <tr>
+                <td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
+            </tr>
+            <tr>
+                <td align="center">
+                    <table cellpadding="0" cellspacing="0" border="0" width="88%" style="width: 88%;">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <div style="color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;">
+									<?php echo wpautop( $formatted_tokens['invites.message'] ); ?>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="spacer" style="font-size: 30px; line-height: 30px; height: 30px;">&nbsp;</div>
 		<?php
 		$output = str_replace( array( "\r", "\n" ), '', ob_get_clean() );
 

@@ -1097,49 +1097,24 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 
 	// Strip tags from text and setup mail data
 	$topic_title   = strip_tags( bbp_get_topic_title( $topic_id ) );
+	$topic_url     = get_permalink( $topic_id );
 	$reply_content = strip_tags( bbp_get_reply_content( $reply_id ) );
 	$reply_url     = bbp_get_reply_url( $reply_id );
-	$blog_name     = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
 
-	// For plugins to filter messages per reply/topic/user
-	$message = sprintf( __( '%1$s wrote:
+	$forum_title   = wp_strip_all_tags( get_post_field( 'post_title', $forum_id ) );
+	$forum_url     = esc_url( bbp_get_forum_permalink( $forum_id ) );
 
-%2$s
-
-Post Link: %3$s
-
------------
-
-You are receiving this email because you subscribed to a forum discussion.
-
-Login and visit the discussion to unsubscribe from these emails.', 'buddyboss' ),
-
-		$reply_author_name,
-		$reply_content,
-		$reply_url
+	$args = array(
+		'tokens' => array(
+			'forum.title'      => $forum_title,
+			'forum.url'        => $forum_url,
+			'discussion.title' => $topic_title,
+			'discussion.url'   => $topic_url,
+			'reply.url'        => $reply_url,
+			'reply.content'    => $reply_content,
+			'poster.name'      => $reply_author_name,
+		),
 	);
-
-	$message = apply_filters( 'bbp_subscription_mail_message', $message, $reply_id, $topic_id );
-	if ( empty( $message ) ) {
-		return;
-	}
-
-	// For plugins to filter titles per reply/topic/user
-	$subject = apply_filters( 'bbp_subscription_mail_title', '[' . $blog_name . '] ' . $topic_title, $reply_id, $topic_id );
-	if ( empty( $subject ) ) {
-		return;
-	}
-
-	/** Users *****************************************************************/
-
-	// Get the noreply@ address
-	$no_reply   = bbp_get_do_not_reply_address();
-
-	// Setup "From" email address
-	$from_email = apply_filters( 'bbp_subscription_from_email', $no_reply );
-
-	// Setup the From header
-	$headers = array( 'From: ' . get_bloginfo( 'name' ) . ' <' . $from_email . '>' );
 
 	// Get topic subscribers and bail if empty
 	$user_ids = bbp_get_topic_subscribers( $topic_id, true );
@@ -1150,6 +1125,10 @@ Login and visit the discussion to unsubscribe from these emails.', 'buddyboss' )
 		return false;
 	}
 
+	/** Send it ***************************************************************/
+
+	do_action( 'bbp_pre_notify_subscribers', $reply_id, $topic_id, $user_ids );
+
 	// Loop through users
 	foreach ( (array) $user_ids as $user_id ) {
 
@@ -1158,20 +1137,9 @@ Login and visit the discussion to unsubscribe from these emails.', 'buddyboss' )
 			continue;
 		}
 
-		// Get email address of subscribed user
-		$headers[] = 'Bcc: ' . get_userdata( $user_id )->user_email;
+		// Send notification email.
+		bp_send_email( 'bbp-new-forum-reply', (int) $user_id, $args );
 	}
-
-	/** Send it ***************************************************************/
-
-	// Custom headers
-	$headers  = apply_filters( 'bbp_subscription_mail_headers', $headers  );
- 	$to_email = apply_filters( 'bbp_subscription_to_email',     $no_reply );
-
-	do_action( 'bbp_pre_notify_subscribers', $reply_id, $topic_id, $user_ids );
-
-	// Send notification email
-	wp_mail( $to_email, $subject, $message, $headers );
 
 	do_action( 'bbp_post_notify_subscribers', $reply_id, $topic_id, $user_ids );
 
@@ -1256,47 +1224,19 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 	$topic_title   = strip_tags( bbp_get_topic_title( $topic_id ) );
 	$topic_content = strip_tags( bbp_get_topic_content( $topic_id ) );
 	$topic_url     = get_permalink( $topic_id );
-	$blog_name     = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+	$forum_title   = wp_strip_all_tags( get_post_field( 'post_title', $forum_id ) );
+	$forum_url     = esc_url( bbp_get_forum_permalink( $forum_id ) );
 
-	// For plugins to filter messages per reply/topic/user
-	$message = sprintf( __( '%1$s wrote:
-
-%2$s
-
-Topic Link: %3$s
-
------------
-
-You are receiving this email because you subscribed to a forum.
-
-Login and visit the discussion to unsubscribe from these emails.', 'buddyboss' ),
-
-		$topic_author_name,
-		$topic_content,
-		$topic_url
+	$args = array(
+		'tokens' => array(
+			'forum.title'        => $forum_title,
+			'forum.url'          => $forum_url,
+			'discussion.title'   => $topic_title,
+			'discussion.url'     => $topic_url,
+			'discussion.content' => $topic_content,
+			'poster.name'        => $topic_author_name,
+		),
 	);
-
-	$message = apply_filters( 'bbp_forum_subscription_mail_message', $message, $topic_id, $forum_id, $user_id );
-	if ( empty( $message ) ) {
-		return;
-	}
-
-	// For plugins to filter titles per reply/topic/user
-	$subject = apply_filters( 'bbp_forum_subscription_mail_title', '[' . $blog_name . '] ' . $topic_title, $topic_id, $forum_id, $user_id );
-	if ( empty( $subject ) ) {
-		return;
-	}
-
-	/** User ******************************************************************/
-
-	// Get the noreply@ address
-	$no_reply   = bbp_get_do_not_reply_address();
-
-	// Setup "From" email address
-	$from_email = apply_filters( 'bbp_subscription_from_email', $no_reply );
-
-	// Setup the From header
-	$headers = array( 'From: ' . get_bloginfo( 'name' ) . ' <' . $from_email . '>' );
 
 	// Get topic subscribers and bail if empty
 	$user_ids = bbp_get_forum_subscribers( $forum_id, true );
@@ -1307,6 +1247,10 @@ Login and visit the discussion to unsubscribe from these emails.', 'buddyboss' )
 		return false;
 	}
 
+	/** Send it ***************************************************************/
+
+	do_action( 'bbp_pre_notify_forum_subscribers', $topic_id, $forum_id, $user_ids );
+
 	// Loop through users
 	foreach ( (array) $user_ids as $user_id ) {
 
@@ -1315,20 +1259,9 @@ Login and visit the discussion to unsubscribe from these emails.', 'buddyboss' )
 			continue;
 		}
 
-		// Get email address of subscribed user
-		$headers[] = 'Bcc: ' . get_userdata( $user_id )->user_email;
+		// Send notification email.
+		bp_send_email( 'bbp-new-forum-topic', (int) $user_id, $args );
 	}
-
-	/** Send it ***************************************************************/
-
-	// Custom headers
-	$headers  = apply_filters( 'bbp_subscription_mail_headers', $headers  );
-	$to_email = apply_filters( 'bbp_subscription_to_email',     $no_reply );
-
-	do_action( 'bbp_pre_notify_forum_subscribers', $topic_id, $forum_id, $user_ids );
-
-	// Send notification email
-	wp_mail( $to_email, $subject, $message, $headers );
 
 	do_action( 'bbp_post_notify_forum_subscribers', $topic_id, $forum_id, $user_ids );
 
@@ -1676,8 +1609,8 @@ function bbp_verify_nonce_request( $action = '', $query_arg = '_wpnonce' ) {
 
 	/** Requested URL *********************************************************/
 
-	// Maybe include the port, if it's included in home_url()
-	if ( isset( $parsed_home['port'] ) ) {
+	// Maybe include the port, if it's included in home_url().
+	if ( isset( $parsed_home['port'] ) && false === strpos( $_SERVER['HTTP_HOST'], ':' ) ) {
 		$request_host = $_SERVER['HTTP_HOST'] . ':' . $_SERVER['SERVER_PORT'];
 	} else {
 		$request_host = $_SERVER['HTTP_HOST'];

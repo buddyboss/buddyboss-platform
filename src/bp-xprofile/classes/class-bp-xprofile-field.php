@@ -1015,6 +1015,8 @@ class BP_XProfile_Field {
 			// Invalidate profile field cache.
 			wp_cache_delete( $field_id, 'bp_xprofile_fields' );
 
+            do_action( 'xprofile_updated_field_position', $field_id, $position, $field_group_id );
+            
 			return $parent;
 		}
 
@@ -1588,7 +1590,7 @@ class BP_XProfile_Field {
 		} ?>
 
 		<div class="postbox">
-			<h2><label for="fieldtype"><?php esc_html_e( 'Type', 'buddypress'); ?></label></h2>
+			<h2><label for="fieldtype"><?php esc_html_e( 'Type', 'buddyboss'); ?></label></h2>
 			<div class="inside" aria-live="polite" aria-atomic="true" aria-relevant="all">
 				<select name="fieldtype" id="fieldtype" onchange="show_options(this.value)">
 

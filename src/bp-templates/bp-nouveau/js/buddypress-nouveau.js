@@ -37,6 +37,9 @@ window.bp = window.bp || {};
 
 			// Listen to events ("Add hooks!")
 			this.addListeners();
+            
+            // Toggle Grid/List View
+			this.switchGridList();
 		},
 
 		/**
@@ -461,6 +464,64 @@ window.bp = window.bp || {};
 			// Pagination
 			$( '#buddypress [data-bp-list]' ).on( 'click', '[data-bp-pagination] a', this, this.paginateAction );
 		},
+        
+        /**
+		 * [switchGridList description]
+		 * @return {[type]} [description]
+		 */
+		switchGridList: function() {
+			var _this = this;
+
+			$('.layout-list-view').on('click', function(e) {
+                e.preventDefault();
+
+				var object = $(this).data('object');
+				if ( 'friends' === object || 'group_members' === object ) {
+					object   = 'members';
+				} else if ( 'group_requests' === object ) {
+					object = 'groups';
+				} else if ( 'notifications' === object ) {
+					object = 'members';
+				}
+
+				var objectData = _this.getStorage( 'bp-' + object );
+				var extras = {};
+				if ( undefined !== objectData.extras ) {
+					extras = objectData.extras;
+				}
+
+                $( '.layout-grid-view' ).removeClass('active');
+                $( this ).addClass('active');
+                $('.bp-list').removeClass('grid');
+                extras.layout = 'list';
+				_this.setStorage( 'bp-' + object, 'extras', extras );
+            });
+
+            $('.layout-grid-view').on('click', function(e) {
+                e.preventDefault();
+
+	            var object = $(this).data('object');
+	            if ( 'friends' === object || 'group_members' === object ) {
+		            object   = 'members';
+	            } else if ( 'group_requests' === object ) {
+		            object = 'groups';
+	            } else if ( 'notifications' === object ) {
+		            object = 'members';
+	            }
+
+	            var objectData = _this.getStorage( 'bp-' + object );
+	            var extras = {};
+	            if ( undefined !== objectData.extras ) {
+		            extras = objectData.extras;
+	            }
+
+                $('.layout-list-view').removeClass('active');
+                $( this ).addClass('active');
+                $('.bp-list').addClass('grid');
+	            extras.layout = 'grid';
+	            _this.setStorage( 'bp-' + object, 'extras', extras );
+            });
+		},
 
 		/** Event Callbacks ***********************************************************/
 
@@ -714,14 +775,22 @@ window.bp = window.bp || {};
 				not_friends       : 'add_friend',
 				pending           : 'withdraw_friendship',
 				accept_friendship : 'accept_friendship',
-				reject_friendship : 'reject_friendship',
-				not_following     : 'follow',
-				following         : 'unfollow'
+				reject_friendship : 'reject_friendship'
 			};
 
 			if ( 'members' === object && undefined !== friends_actions_map[ action ] ) {
 				action = friends_actions_map[ action ];
 				object = 'friends';
+			}
+
+			var follow_actions_map = {
+				not_following     : 'follow',
+				following         : 'unfollow'
+			};
+
+			if ( 'members' === object && undefined !== follow_actions_map[ action ] ) {
+				action = follow_actions_map[ action ];
+				object = 'follow';
 			}
 
 			// Add a pending class to prevent queries while we're processing the action
@@ -768,10 +837,6 @@ window.bp = window.bp || {};
 						}
 
 						$( self.objectNavParent + ' [data-bp-scope="personal"] span' ).html( personal_count );
-					}
-
-					if ( action === 'remove_friend' ) {
-						target.closest('ul').find('.follow-button').remove();
 					}
 
 					target.parent().replaceWith( response.data.contents );

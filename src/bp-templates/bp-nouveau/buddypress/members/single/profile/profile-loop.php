@@ -36,6 +36,8 @@
 						bp_the_profile_field();
 					?>
 
+                        <?php bp_nouveau_xprofile_hook( 'before', 'field_item' ); ?>
+                    
 						<?php if ( bp_field_has_data() ) : ?>
 
 							<tr<?php bp_field_css_class(); ?>>
@@ -52,6 +54,8 @@
 
 					<?php endwhile; ?>
 
+                    <?php bp_nouveau_xprofile_hook( 'after', 'field_items' ); ?>
+                            
 				</table>
 			</div>
 

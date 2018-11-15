@@ -64,6 +64,23 @@ function bp_nouveau_get_members_directory_nav_items() {
 				'position'  => 15,
 			);
 		}
+
+		// If follow component is active and the user is following
+		if ( bp_is_active( 'follow' ) ) {
+			$counts = bp_total_follow_counts();
+
+			if ( ! empty( $counts['following'] ) ) {
+				$nav_items['following'] = array(
+					'component' => 'members',
+					'slug'      => 'following', // slug is used because BP_Core_Nav requires it, but it's the scope
+					'li_class'  => array(),
+					'link'      => bp_loggedin_user_domain() . bp_get_follow_slug() . '/my-following/',
+					'text'      => __( 'Following', 'buddyboss' ),
+					'count'     => $counts['following'],
+					'position'  => 16,
+				);
+			}
+		}
 	}
 
 	// Check for the deprecated hook :

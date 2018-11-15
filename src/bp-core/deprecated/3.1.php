@@ -2,7 +2,7 @@
 /**
  * Deprecated functions.
  *
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  */
 
 // Exit if accessed directly.
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  * Output the latest update of the current member in the loop.
  *
  * @since BuddyPress 1.2.0
- * @deprecated 3.1.1 No longer updaeting member's last activity
+ * @deprecated BuddyBoss 3.1.1 No longer updaeting member's last activity
  *
  * @param array|string $args {@see bp_get_member_latest_update()}.
  */
@@ -108,7 +108,7 @@ function bp_nouveau_group_description_excerpt( $group = null, $length = null ) {
  * Checks if the group loop is set as a 'Grid' layout and returns a reduced excerpt.
  *
  * @since BuddyPress 3.0.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  *
  * @param object $group Optional. The group being referenced. Defaults to the group currently being
  *                      iterated on in the groups loop.
@@ -154,7 +154,7 @@ function bp_nouveau_get_group_description_excerpt( $group = null, $length = null
  * Display the User's WordPress bio info into the default front page?
  *
  * @since BuddyPress 3.0.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  *
  * @return bool True to display. False otherwise.
  */
@@ -172,7 +172,7 @@ function bp_nouveau_members_wp_bio_info() {
  * Display the Member description making sure linefeeds are taking in account
  *
  * @since BuddyPress 3.0.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  *
  * @param int $user_id Optional.
  *
@@ -211,7 +211,7 @@ function bp_nouveau_member_description( $user_id = 0 ) {
  * Display the Edit profile link (temporary).
  *
  * @since BuddyPress 3.0.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  *
  * @todo replace with Ajax feature
  *
@@ -227,7 +227,7 @@ function bp_nouveau_member_description_edit_link() {
 	 * @todo  replace with Ajax featur
 	 *
 	 * @since BuddyPress 3.0.0
-	 * @deprecated 3.1.1
+	 * @deprecated BuddyBoss 3.1.1
 	 *
 	 * @return string HTML Output
 	 */
@@ -254,7 +254,7 @@ function bp_nouveau_member_description_edit_link() {
  * Output button for sending a public message (an @-mention).
  *
  * @since BuddyPress 1.2.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  *
  * @see bp_get_send_public_message_button() for description of parameters.
  *
@@ -270,7 +270,7 @@ function bp_send_public_message_button( $args = '' ) {
 	 * Return button for sending a public message (an @-mention).
 	 *
 	 * @since BuddyPress 1.2.0
-	 * @deprecated 3.1.1
+	 * @deprecated BuddyBoss 3.1.1
 	 *
 	 * @param array|string $args {
 	 *     All arguments are optional. See {@link BP_Button} for complete
@@ -318,7 +318,7 @@ function bp_send_public_message_button( $args = '' ) {
  * The main action used registering theme directories.
  *
  * @since BuddyPress 1.5.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  */
 function bp_register_theme_directory() {
 	_deprecated_function( __FUNCTION__, '3.1.1' );
@@ -329,7 +329,7 @@ function bp_register_theme_directory() {
 	 * The main action used registering theme directories.
 	 *
 	 * @since BuddyPress 1.7.0
-	 * @deprecated 3.1.1
+	 * @deprecated BuddyBoss 3.1.1
 	 */
 	do_action( 'bp_register_theme_directory' );
 }
@@ -338,7 +338,7 @@ function bp_register_theme_directory() {
  * Determine whether BuddyPress should register the bp-themes directory.
  *
  * @since BuddyPress 1.9.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  *
  * @return bool True if bp-themes should be registered, false otherwise.
  */
@@ -382,7 +382,7 @@ function bp_do_register_theme_directory() {
  * as it's loaded using bp_locate_template(). That's why this function is here.
  *
  * @since BuddyPress 2.4.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  *
  * @global string $content_width the content width of the theme
  */
@@ -463,7 +463,7 @@ function bp_register_theme_compat_default_features() {
 /**
  * Form element to change the active template pack.
  *
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  */
 function bp_admin_setting_callback_theme_package_id() {
 	_deprecated_function( __FUNCTION__, '3.1.1' );
@@ -500,7 +500,7 @@ function bp_admin_setting_callback_theme_package_id() {
  * Load the Messages > Sent screen.
  *
  * @since BuddyPress 1.0.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  */
 function messages_screen_sentbox() {
 	_deprecated_function( __FUNCTION__, '3.1.1' );
@@ -532,7 +532,7 @@ function messages_screen_sentbox() {
  * Eg http://example.com/members/joe/messages/sentbox/.
  *
  * @since BuddyPress 1.1.0
- * @deprecated 3.1.1
+ * @deprecated BuddyBoss 3.1.1
  *
  * @return bool True if the current page is a user's Messages Sentbox.
  */
@@ -541,3 +541,226 @@ function bp_is_messages_sentbox() {
 	return false;
 	// return (bool) ( bp_is_user_messages() && bp_is_current_action( 'sentbox' ) );
 }
+
+/** Single Topic **************************************************************/
+
+/**
+ * Output a fancy description of the current topic, including total topics,
+ * total replies, and last activity.
+ *
+ * @since bbPress (r2860)
+ * @deprecated BuddyBoss 3.1.1
+ *
+ * @param array $args See {@link bbp_get_single_topic_description()}
+ * @uses bbp_get_single_topic_description() Return the eventual output
+ */
+function bbp_single_topic_description( $args = '' ) {
+	echo bbp_get_single_topic_description( $args );
+}
+	/**
+	 * Return a fancy description of the current topic, including total topics,
+	 * total replies, and last activity.
+	 *
+	 * @since bbPress (r2860)
+	 *
+	 * @param mixed $args This function supports these arguments:
+	 *  - topic_id: Topic id
+	 *  - before: Before the text
+	 *  - after: After the text
+	 *  - size: Size of the avatar
+	 * @uses bbp_get_topic_id() To get the topic id
+	 * @uses bbp_get_topic_voice_count() To get the topic voice count
+	 * @uses bbp_get_topic_reply_count() To get the topic reply count
+	 * @uses bbp_get_topic_freshness_link() To get the topic freshness link
+	 * @uses bbp_get_topic_last_active_id() To get the topic last active id
+	 * @uses bbp_get_reply_author_link() To get the reply author link
+	 * @uses apply_filters() Calls 'bbp_get_single_topic_description' with
+	 *                        the description and args
+	 * @return string Filtered topic description
+	 */
+	function bbp_get_single_topic_description( $args = '' ) {
+
+		// Parse arguments against default values
+		$r = bbp_parse_args( $args, array(
+			'topic_id'  => 0,
+			'before'    => '<div class="bp-feedback info"><span class="bp-icon" aria-hidden="true"></span><p class="bbp-topic-description">',
+			'after'     => '</p></div>',
+			'size'      => 14
+		), 'get_single_topic_description' );
+
+		// Validate topic_id
+		$topic_id = bbp_get_topic_id( $r['topic_id'] );
+
+		// Unhook the 'view all' query var adder
+		remove_filter( 'bbp_get_topic_permalink', 'bbp_add_view_all' );
+
+		// Build the topic description
+		$vc_int      = bbp_get_topic_voice_count   ( $topic_id, true  );
+		$voice_count = bbp_get_topic_voice_count   ( $topic_id, false );
+		$reply_count = bbp_get_topic_replies_link  ( $topic_id        );
+		$time_since  = bbp_get_topic_freshness_link( $topic_id        );
+
+		// Singular/Plural
+		$voice_count = sprintf( _n( '%s member', '%s members', $vc_int, 'buddyboss' ), $voice_count );
+
+		// Topic has replies
+		$last_reply = bbp_get_topic_last_reply_id( $topic_id );
+		if ( !empty( $last_reply ) ) {
+			$last_updated_by = bbp_get_author_link( array( 'post_id' => $last_reply, 'size' => $r['size'] ) );
+			$retstr          = sprintf( esc_html__( 'This discussion contains %1$s, has %2$s, and was last updated by %3$s %4$s.', 'buddyboss' ), $reply_count, $voice_count, $last_updated_by, $time_since );
+
+		// Topic has no replies
+		} elseif ( ! empty( $voice_count ) && ! empty( $reply_count ) ) {
+			$retstr = sprintf( esc_html__( 'This discussion contains %1$s and has %2$s.', 'buddyboss' ), $voice_count, $reply_count );
+
+		// Topic has no replies and no members
+		} elseif ( empty( $voice_count ) && empty( $reply_count ) ) {
+			$retstr = sprintf( esc_html__( 'This discussion has no replies.', 'buddyboss' ), $voice_count, $reply_count );
+		}
+
+		// Add the 'view all' filter back
+		add_filter( 'bbp_get_topic_permalink', 'bbp_add_view_all' );
+
+		// Combine the elements together
+		$retstr = $r['before'] . $retstr . $r['after'];
+
+		// Return filtered result
+		return apply_filters( 'bbp_get_single_topic_description', $retstr, $r );
+	}
+
+/** Single Forum **************************************************************/
+
+/**
+ * Output a fancy description of the current forum, including total topics,
+ * total replies, and last activity.
+ *
+ * @since bbPress (r2860)
+ * @deprecated BuddyBoss 3.1.1
+ *
+ * @param array $args Arguments passed to alter output
+ * @uses bbp_get_single_forum_description() Return the eventual output
+ */
+function bbp_single_forum_description( $args = '' ) {
+	echo bbp_get_single_forum_description( $args );
+}
+	/**
+	 * Return a fancy description of the current forum, including total
+	 * topics, total replies, and last activity.
+	 *
+	 * @since bbPress (r2860)
+	 *
+	 * @param mixed $args This function supports these arguments:
+	 *  - forum_id: Forum id
+	 *  - before: Before the text
+	 *  - after: After the text
+	 *  - size: Size of the avatar
+	 * @uses bbp_get_forum_id() To get the forum id
+	 * @uses bbp_get_forum_topic_count() To get the forum topic count
+	 * @uses bbp_get_forum_reply_count() To get the forum reply count
+	 * @uses bbp_get_forum_freshness_link() To get the forum freshness link
+	 * @uses bbp_get_forum_last_active_id() To get the forum last active id
+	 * @uses bbp_get_author_link() To get the author link
+	 * @uses add_filter() To add the 'view all' filter back
+	 * @uses apply_filters() Calls 'bbp_get_single_forum_description' with
+	 *                        the description and args
+	 * @return string Filtered forum description
+	 */
+	function bbp_get_single_forum_description( $args = '' ) {
+
+		// Parse arguments against default values
+		$r = bbp_parse_args( $args, array(
+			'forum_id'  => 0,
+			'before'    => '<div class="bp-feedback info"><span class="bp-icon" aria-hidden="true"></span><p class="bbp-forum-description">',
+			'after'     => '</p></div>',
+			'size'      => 14,
+			'feed'      => true
+		), 'get_single_forum_description' );
+
+		// Validate forum_id
+		$forum_id = bbp_get_forum_id( $r['forum_id'] );
+
+		// Unhook the 'view all' query var adder
+		remove_filter( 'bbp_get_forum_permalink', 'bbp_add_view_all' );
+
+		// Get some forum data
+		$tc_int      = bbp_get_forum_topic_count( $forum_id, false );
+		$rc_int      = bbp_get_forum_reply_count( $forum_id, false );
+		$topic_count = bbp_get_forum_topic_count( $forum_id );
+		$reply_count = bbp_get_forum_reply_count( $forum_id );
+		$last_active = bbp_get_forum_last_active_id( $forum_id );
+
+		// Has replies
+		if ( !empty( $reply_count ) ) {
+			$reply_text = sprintf( _n( '%s reply', '%s replies', $rc_int, 'buddyboss' ), $reply_count );
+		}
+
+		// Forum has active data
+		if ( !empty( $last_active ) ) {
+			$topic_text      = bbp_get_forum_topics_link( $forum_id );
+			$time_since      = bbp_get_forum_freshness_link( $forum_id );
+			$last_updated_by = bbp_get_author_link( array( 'post_id' => $last_active, 'size' => $r['size'] ) );
+
+		// Forum has no last active data
+		} else {
+			$topic_text      = sprintf( _n( '%s discussion', '%s discussions', $tc_int, 'buddyboss' ), $topic_count );
+		}
+
+		// Forum has active data
+		if ( !empty( $last_active ) ) {
+
+			if ( !empty( $reply_count ) ) {
+
+				if ( bbp_is_forum_category( $forum_id ) ) {
+					$retstr = sprintf( esc_html__( 'This category contains %1$s and %2$s, and was last updated by %3$s %4$s.', 'buddyboss' ), $topic_text, $reply_text, $last_updated_by, $time_since );
+				} else {
+					$retstr = sprintf( esc_html__( 'This forum contains %1$s and %2$s, and was last updated by %3$s %4$s.',    'buddyboss' ), $topic_text, $reply_text, $last_updated_by, $time_since );
+				}
+
+			} else {
+
+				if ( bbp_is_forum_category( $forum_id ) ) {
+					$retstr = sprintf( esc_html__( 'This category contains %1$s, and was last updated by %2$s %3$s.', 'buddyboss' ), $topic_text, $last_updated_by, $time_since );
+				} else {
+					$retstr = sprintf( esc_html__( 'This forum contains %1$s, and was last updated by %2$s %3$s.',    'buddyboss' ), $topic_text, $last_updated_by, $time_since );
+				}
+			}
+
+		// Forum has no last active data
+		} else {
+
+			if ( !empty( $reply_count ) ) {
+
+				if ( bbp_is_forum_category( $forum_id ) ) {
+					$retstr = sprintf( esc_html__( 'This category contains %1$s and %2$s.', 'buddyboss' ), $topic_text, $reply_text );
+				} else {
+					$retstr = sprintf( esc_html__( 'This forum contains %1$s and %2$s.',    'buddyboss' ), $topic_text, $reply_text );
+				}
+
+			} else {
+
+				if ( !empty( $topic_count ) ) {
+
+					if ( bbp_is_forum_category( $forum_id ) ) {
+						$retstr = sprintf( esc_html__( 'This category contains %1$s.', 'buddyboss' ), $topic_text );
+					} else {
+						$retstr = sprintf( esc_html__( 'This forum contains %1$s.',    'buddyboss' ), $topic_text );
+					}
+
+				} else {
+					$retstr = esc_html__( 'This forum is empty.', 'buddyboss' );
+				}
+			}
+		}
+
+		// Add feeds
+		//$feed_links = ( !empty( $r['feed'] ) ) ? bbp_get_forum_topics_feed_link ( $forum_id ) . bbp_get_forum_replies_feed_link( $forum_id ) : '';
+
+		// Add the 'view all' filter back
+		add_filter( 'bbp_get_forum_permalink', 'bbp_add_view_all' );
+
+		// Combine the elements together
+		$retstr = $r['before'] . $retstr . $r['after'];
+
+		// Return filtered result
+		return apply_filters( 'bbp_get_single_forum_description', $retstr, $r );
+	}

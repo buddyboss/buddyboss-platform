@@ -375,8 +375,8 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 					'parent_attr'      => $parent_attr,
 					'button_element'   => $button_element,
 					'link_class'       => 'button fav bp-secondary-action bp-tooltip',
-					'data_bp_tooltip'  => __( 'Save Post', 'buddyboss' ),
-					'link_text'        => __( 'Save Post', 'buddyboss' ),
+					'data_bp_tooltip'  => __( 'Like', 'buddyboss' ),
+					'link_text'        => __( 'Like', 'buddyboss' ),
 					'aria-pressed'     => 'false',
 					'link_attr'        => bp_get_activity_favorite_link(),
 				);
@@ -387,12 +387,15 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 					'parent_attr'     => $parent_attr,
 					'button_element'  => $button_element,
 					'link_class'      => 'button unfav bp-secondary-action bp-tooltip',
-					'data_bp_tooltip' => __( 'Unsave', 'buddyboss' ),
-					'link_text'       => __( 'Unsave', 'buddyboss' ),
+					'data_bp_tooltip' => __( 'Unlike', 'buddyboss' ),
+					'link_text'       => __( 'Unlike', 'buddyboss' ),
 					'aria-pressed'    => 'true',
 					'link_attr'       => bp_get_activity_unfavorite_link(),
 				);
 			}
+
+			$like_count = bp_activity_get_meta( bp_get_activity_id(), 'favorite_count' );
+			$like_count = ( isset( $like_count ) &&  !empty( $like_count ) ) ? $like_count : 0;
 
 			$buttons['activity_favorite'] =  array(
 				'id'                => 'activity_favorite',
@@ -402,7 +405,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				'parent_attr'       => $parent_attr,
 				'must_be_logged_in' => true,
 				'button_element'    => $fav_args['button_element'],
-				'link_text'         => sprintf( '<span class="bp-screen-reader-text">%1$s</span>', esc_html( $fav_args['link_text'] ) ),
+				'link_text'         => sprintf( '<span class="bp-screen-reader-text">%1$s</span>  <span class="like-count">%2$s</span>', esc_html( $fav_args['link_text'] ), esc_html( $like_count ) ),
 				'button_attr'       => array(
 					$key              => $fav_args['link_attr'],
 					'class'           => $fav_args['link_class'],

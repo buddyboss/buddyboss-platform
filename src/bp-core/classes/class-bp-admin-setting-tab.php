@@ -47,6 +47,7 @@ class BP_Admin_Setting_tab extends BP_Admin_Tab {
 
 		// Some legacy options are not registered with the Settings API, or are reversed in the UI.
 		$legacy_options = array(
+			'bp-enable-private-network',
 			'bp-disable-account-deletion',
 			'bp-disable-avatar-uploads',
 			'bp-disable-cover-image-uploads',

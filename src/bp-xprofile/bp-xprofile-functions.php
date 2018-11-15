@@ -29,8 +29,25 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_xprofile_get_groups( $args = array() ) {
 
+    /**
+     * For repeaters, automatically set the parameter value 
+     * to determine if we should display only the template fields
+     * or only the clone fields
+     */
+    
+    if ( !isset( $args[ 'repeater_show_main_fields_only' ] ) ) {
+        $repeater_show_main_fields_only = true;
+        
+        //If on a user profile
+        if ( 'profile' == bp_current_component() ) {
+            $repeater_show_main_fields_only = false;
+        }
+        
+        $args[ 'repeater_show_main_fields_only' ] = apply_filters( 'bp_xprofile_get_groups_repeater_show_main_fields_only', $repeater_show_main_fields_only );
+    }
+    
 	$groups = BP_XProfile_Group::get( $args );
-
+    
 	/**
 	 * Filters a set of field groups, populated with fields and field data.
 	 *

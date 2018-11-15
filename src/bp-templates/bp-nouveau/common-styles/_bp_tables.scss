@@ -75,6 +75,10 @@
 			padding: $pad-sml $pad-med;
 		}
 
+		.repeater-separator {
+			background: transparent;
+		}
+
 		tr:last-child {
 			border-bottom: none;
 		}

@@ -29,9 +29,9 @@ function messages_action_delete_message() {
 
 		// Delete message.
 		if ( !messages_delete_thread( $thread_id ) ) {
-			bp_core_add_message( __('There was an error deleting that message.', 'buddypress'), 'error' );
+			bp_core_add_message( __('There was an error deleting that message.', 'buddyboss'), 'error' );
 		} else {
-			bp_core_add_message( __('Message deleted.', 'buddypress') );
+			bp_core_add_message( __('Message deleted.', 'buddyboss') );
 		}
 		bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() . '/' . bp_current_action() ) );
 	}

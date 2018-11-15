@@ -749,7 +749,7 @@ class Activity extends BuddypressCommand {
 					}
 
 					// stolen from groups_join_group.
-					$r['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddypress'), bp_core_get_userlink( $r['user-id'] ), '<a href="' . bp_get_group_permalink( $group_obj ) . '">' . esc_attr( $group_obj->name ) . '</a>' );
+					$r['action']  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss'), bp_core_get_userlink( $r['user-id'] ), '<a href="' . bp_get_group_permalink( $group_obj ) . '">' . esc_attr( $group_obj->name ) . '</a>' );
 				} else {
 					// old way, for some other kind of update.
 					$r['action'] = sprintf( __( '%s posted an update', 'buddyboss' ), bp_core_get_userlink( $r['user-id'] ) );
@@ -821,7 +821,7 @@ class Activity extends BuddypressCommand {
 					}
 
 					if ( ! $r['action'] ) {
-						$r['action'] = sprintf( __( '%s created the site %s', 'buddypress'), bp_core_get_userlink( $r['user-id'] ), '<a href="' . get_home_url( $r['item-id'] ) . '">' . esc_attr( get_blog_option( $r['item-id'], 'blogname' ) ) . '</a>' );
+						$r['action'] = sprintf( __( '%s created the site %s', 'buddyboss'), bp_core_get_userlink( $r['user-id'] ), '<a href="' . get_home_url( $r['item-id'] ) . '">' . esc_attr( get_blog_option( $r['item-id'], 'blogname' ) ) . '</a>' );
 					}
 
 					if ( ! $r['primary-link'] ) {
@@ -915,7 +915,7 @@ class Activity extends BuddypressCommand {
 				$group_permalink = bp_get_group_permalink( $group );
 
 				if ( empty( $r['action'] ) ) {
-					$r['action'] = sprintf( __( '%1$s created the group %2$s', 'buddypress'), bp_core_get_userlink( $r['user-id'] ), '<a href="' . $group_permalink . '">' . esc_attr( $group->name ) . '</a>' );
+					$r['action'] = sprintf( __( '%1$s created the group %2$s', 'buddyboss'), bp_core_get_userlink( $r['user-id'] ), '<a href="' . $group_permalink . '">' . esc_attr( $group->name ) . '</a>' );
 				}
 
 				if ( empty( $r['primary-link'] ) ) {

@@ -97,7 +97,7 @@ class BP_XProfile_Data_Template {
 	 * @var int
 	 */
 	public $user_id;
-
+    
 	/**
 	 * Get activity items, as specified by parameters.
 	 *

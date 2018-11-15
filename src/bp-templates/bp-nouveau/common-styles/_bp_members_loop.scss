@@ -89,15 +89,46 @@ body:not(.logged-in) {
 }
 
 // Is current user - i.e it's me!
+.members-directory-content {
+	display: flex;
+	flex-flow: row wrap;
 
-//@include medium-small-up() {
-//	.buddypress-wrap {
+	@include medium-up() {
 
-//		.members-list {
+		flex-flow: row-reverse;
 
-//			.is-current-user {
+		.bp-profile-search-wrap {
+			flex: 0 0 220px;
+			margin-left: 20px;
+		}
+	}
 
-//			}
-//		}
-//	}
-//}
+	.members {
+		flex: 1;
+	}
+
+	@include medium-max() {
+
+		.bp-profile-search-wrap {
+			flex: 0 0 100%;
+		}
+	}
+
+	.bp-field-wrap {
+		margin-bottom: $marg-lrg;
+	}
+
+	.bps-description {
+		font-size: 14px;
+		margin: $marg-xsml 0;
+		color: #767676;
+		font-style: italic;
+	}
+}
+
+#bp-profile-search-form-outer {
+
+	.widget-title {
+		margin-top: 0;
+	}
+}

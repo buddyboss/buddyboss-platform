@@ -7,17 +7,16 @@
 
 ?>
 
-	<?php bp_nouveau_before_members_directory_content(); ?>
-
 	<?php if ( ! bp_nouveau_is_object_nav_in_sidebar() ) : ?>
 
 		<?php bp_get_template_part( 'common/nav/directory-nav' ); ?>
 
 	<?php endif; ?>
 
-	<div class="screen-content">
-
 	<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
+
+	<div class="screen-content members-directory-content">
+		<?php bp_nouveau_before_members_directory_content(); ?>
 
 		<div id="members-dir-list" class="members dir-list" data-bp-list="members">
 			<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'directory-members-loading' ); ?></div>

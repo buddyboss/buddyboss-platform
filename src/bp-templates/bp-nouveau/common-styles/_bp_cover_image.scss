@@ -36,6 +36,7 @@
 	#item-header-avatar {
 		margin-top: -80px;
 		padding: 0 1em;
+		position: relative;
 	}
 }
 
@@ -50,33 +51,6 @@
 .users-header #item-header-cover-image #item-header-content {
 	flex: 1;
 	margin-top: -50px;
-}
-
-#item-header .icon-wrap {
-	border-radius: 50%;
-	background: rgba(255, 255, 255, 0.8);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 30px;
-	height: 30px;
-	left: 12px;
-	top: 12px;
-	opacity: 0;
-	transition: all 0.2s;
-
-	@include box-shadow( 0 0 3px 0 rgba(0, 0, 0, 0.2) );
-}
-
-#header-cover-image .link-change-cover-image {
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	z-index: 3;
-}
-
-#header-cover-image:hover .icon-wrap {
-	opacity: 1;
 }
 
 /*

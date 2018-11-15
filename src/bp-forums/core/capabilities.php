@@ -557,6 +557,10 @@ function bbp_map_caps_to_wp_roles() {
 
 	foreach ( $wp_bbp_role_map as $wp_role => $bbp_role ) {
 		$wp_role_object = get_role( $wp_role );
+
+		if ( empty( $wp_role_object ) ) // check if role exists if not then continue
+			continue;
+
 		$bbp_caps = bbp_get_caps_for_role( $bbp_role );
 
 		foreach ( array_keys( $bbp_caps ) as $cap) {
@@ -573,6 +577,10 @@ function bbp_restore_caps_from_wp_roles() {
 
 	foreach ( $wp_bbp_role_map as $wp_role => $bbp_role ) {
 		$wp_role_object = get_role( $wp_role );
+
+		if ( empty( $wp_role_object ) ) // check if role exists if not then continue
+			continue;
+
 		$bbp_caps = bbp_get_caps_for_role( $bbp_role );
 
 		foreach ( array_keys( $bbp_caps ) as $cap) {

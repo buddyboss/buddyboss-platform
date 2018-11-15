@@ -1716,7 +1716,7 @@ class BP_Members_Admin {
 							_nx( '%s activation email successfully sent! ', '%s activation emails successfully sent! ',
 							 absint( $_REQUEST['resent'] ),
 							 'signup resent',
-							 'buddypress'
+							 'buddyboss'
 							),
 							number_format_i18n( absint( $_REQUEST['resent'] ) )
 						);
@@ -1727,7 +1727,7 @@ class BP_Members_Admin {
 							_nx( '%s activation email was not sent.', '%s activation emails were not sent.',
 							 absint( $_REQUEST['notsent'] ),
 							 'signup notsent',
-							 'buddypress'
+							 'buddyboss'
 							),
 							number_format_i18n( absint( $_REQUEST['notsent'] ) )
 						);
@@ -1750,7 +1750,7 @@ class BP_Members_Admin {
 							_nx( '%s account successfully activated! ', '%s accounts successfully activated! ',
 							 absint( $_REQUEST['activated'] ),
 							 'signup resent',
-							 'buddypress'
+							 'buddyboss'
 							),
 							number_format_i18n( absint( $_REQUEST['activated'] ) )
 						);
@@ -1761,7 +1761,7 @@ class BP_Members_Admin {
 							_nx( '%s account was not activated.', '%s accounts were not activated.',
 							 absint( $_REQUEST['notactivated'] ),
 							 'signup notsent',
-							 'buddypress'
+							 'buddyboss'
 							),
 							number_format_i18n( absint( $_REQUEST['notactivated'] ) )
 						);
@@ -1784,7 +1784,7 @@ class BP_Members_Admin {
 							_nx( '%s sign-up successfully deleted!', '%s sign-ups successfully deleted!',
 							 absint( $_REQUEST['deleted'] ),
 							 'signup deleted',
-							 'buddypress'
+							 'buddyboss'
 							),
 							number_format_i18n( absint( $_REQUEST['deleted'] ) )
 						);
@@ -1795,7 +1795,7 @@ class BP_Members_Admin {
 							_nx( '%s sign-up was not deleted.', '%s sign-ups were not deleted.',
 							 absint( $_REQUEST['notdeleted'] ),
 							 'signup notdeleted',
-							 'buddypress'
+							 'buddyboss'
 							),
 							number_format_i18n( absint( $_REQUEST['notdeleted'] ) )
 						);
@@ -2167,7 +2167,7 @@ class BP_Members_Admin {
 					<?php if ( 'resend' == $action ) : ?>
 
 						<p class="description">
-							<?php printf( esc_html__( 'Last notified: %s', 'buddypress'), $last_notified ) ;?>
+							<?php printf( esc_html__( 'Last notified: %s', 'buddyboss'), $last_notified ) ;?>
 
 							<?php if ( ! empty( $signup->recently_sent ) ) : ?>
 

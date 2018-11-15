@@ -45,7 +45,11 @@ function bp_core_install( $active_components = false ) {
 	// Connections.
 	if ( !empty( $active_components['friends'] ) ) {
 		bp_core_install_friends();
-		bp_core_install_follow(); // follow depends on connection
+	}
+
+	// Follow.
+	if ( !empty( $active_components['follow'] ) ) {
+		bp_core_install_follow();
 	}
 
 	// Extensible Groups.
@@ -208,7 +212,7 @@ function bp_core_install_follow() {
 	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
 	$bp_prefix       = bp_core_get_table_prefix();
 
-	$sql[] = "CREATE TABLE {$bp_prefix}bp_unfollow (
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_follow (
 			id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
 			leader_id bigint(20) NOT NULL,
 			follower_id bigint(20) NOT NULL,
@@ -660,4 +664,54 @@ function bp_core_install_emails() {
 	 * @since BuddyPress 2.5.0
 	 */
 	do_action( 'bp_core_install_emails' );
+}
+
+/**
+ * Add default bbp emails.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_core_install_bbp_emails() {
+	$defaults = array(
+		'post_status' => 'publish',
+		'post_type'   => bp_get_email_post_type(),
+	);
+
+	$emails       = bp_email_get_schema();
+	$descriptions = bp_email_get_type_schema( 'description' );
+
+	// Add these emails to the database.
+	foreach ( $emails as $id => $email ) {
+
+		if ( strpos( $id, 'bbp-new-forum-', 0 ) === false ) {
+			continue;
+		}
+
+		// Some emails are multisite-only.
+		if ( ! is_multisite() && isset( $email['args'] ) && ! empty( $email['args']['multisite'] ) ) {
+			continue;
+		}
+
+		$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ) );
+		if ( ! $post_id ) {
+			continue;
+		}
+
+		$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
+		foreach ( $tt_ids as $tt_id ) {
+			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
+			wp_update_term( (int) $term->term_id, bp_get_email_tax_type(), array(
+				'description' => $descriptions[ $id ],
+			) );
+		}
+	}
+
+	bp_update_option( 'bp-emails-unsubscribe-salt', base64_encode( wp_generate_password( 64, true, true ) ) );
+
+	/**
+	 * Fires after BuddyPress adds the posts for its bbp emails.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 */
+	do_action( 'bp_core_install_bbp_emails' );
 }

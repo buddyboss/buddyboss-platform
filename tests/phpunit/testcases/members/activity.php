@@ -18,7 +18,7 @@ class BP_Tests_Members_Activity extends BP_UnitTestCase {
 			'user_id' => $u,
 		) );
 
-		$expected = sprintf( __( '%s became a registered member', 'buddypress' ), bp_core_get_userlink( $u ) );
+		$expected = sprintf( __( '%s became a registered member', 'buddyboss' ), bp_core_get_userlink( $u ) );
 
 		$a_obj = new BP_Activity_Activity( $a );
 

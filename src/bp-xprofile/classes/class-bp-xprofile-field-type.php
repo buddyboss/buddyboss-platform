@@ -180,6 +180,17 @@ abstract class BP_XProfile_Field_Type {
 
 		return $this;
 	}
+    
+    /**
+     * Get the list of whitelisted values.
+     * 
+     * @since BuddyBoss 3.1.1
+     * 
+     * @return array
+     */
+    public function get_whitelist_values () {
+        return $this->validation_whitelist;
+    }
 
 	/**
 	 * Check the given string against the registered formats for this field type.

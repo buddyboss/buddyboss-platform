@@ -55,10 +55,10 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'description' => __( 'Customize the navigation menu for members. In the preview window, navigate to a user to preview your changes.', 'buddyboss' ),
 		),
 		'bp_nouveau_loops_layout' => array(
-			'title'       => __( 'Grid layouts', 'buddyboss' ),
+			'title'       => __( 'Grid views', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 70,
-			'description' => __( 'Set the number of columns to use for BuddyPress loops.', 'buddyboss' ),
+			'description' => __( 'Set the number of columns to use for grid views.', 'buddyboss' ),
 		),
 		'bp_nouveau_dir_layout' => array(
 			'title'       => __( 'Directory layouts', 'buddyboss' ),

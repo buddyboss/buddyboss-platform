@@ -313,7 +313,7 @@ class BP_Tests_Activity_Class extends BP_UnitTestCase {
 
 		// bp_activity_new_comment() doesn't allow date_recorded
 		$a3 = bp_activity_add( array(
-			'action'            => sprintf( __( '%s posted a new activity comment', 'buddypress' ), bp_get_loggedin_user_link() ) ,
+			'action'            => sprintf( __( '%s posted a new activity comment', 'buddyboss' ), bp_get_loggedin_user_link() ) ,
 			'content'           => 'Candy is good',
 			'component'         => buddypress()->activity->id,
 			'type'              => 'activity_comment',

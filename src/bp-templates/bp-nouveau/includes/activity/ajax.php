@@ -102,7 +102,7 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 	}
 
 	if ( bp_activity_add_user_favorite( $_POST['id'] ) ) {
-		$response = array( 'content' => __( 'Unsave', 'buddyboss' ) );
+		$response = array( 'content' => __( 'Unlike', 'buddyboss' ), 'like_count' => bp_activity_get_meta( $_POST['id'], 'favorite_count' ) );
 
 		if ( ! bp_is_user() ) {
 			$fav_count = (int) bp_get_total_favorite_count_for_user( bp_loggedin_user_id() );
@@ -110,7 +110,7 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 			if ( 1 === $fav_count ) {
 				$response['directory_tab'] = '<li id="activity-favorites" data-bp-scope="favorites" data-bp-object="activity">
 					<a href="' . bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/">
-						' . esc_html__( 'Saved', 'buddyboss' ) . '
+						' . esc_html__( 'Liked', 'buddyboss' ) . '
 					</a>
 				</li>';
 			} else {
@@ -142,7 +142,7 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 	}
 
 	if ( bp_activity_remove_user_favorite( $_POST['id'] ) ) {
-		$response = array( 'content' => __( 'Save post', 'buddyboss' ) );
+		$response = array( 'content' => __( 'Like', 'buddyboss' ), 'like_count' => bp_activity_get_meta( $_POST['id'], 'favorite_count' ) );
 
 		$fav_count = (int) bp_get_total_favorite_count_for_user( bp_loggedin_user_id() );
 

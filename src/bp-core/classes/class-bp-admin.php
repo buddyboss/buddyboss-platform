@@ -105,7 +105,7 @@ class BP_Admin {
 		$this->js_url     = trailingslashit( $this->admin_url . 'js'            ); // Admin css URL.
 
 		// Main settings page.
-		$this->settings_page = bp_core_do_network_admin() ? 'settings.php' : 'buddyboss-platform';
+		$this->settings_page = 'buddyboss-platform'; // always use custom menu item, instead of setting page
 
 		// Main capability.
 		$this->capability = bp_core_do_network_admin() ? 'manage_network_options' : 'manage_options';
@@ -327,6 +327,11 @@ class BP_Admin {
 
 	public function adjust_buddyboss_menus() {
 		global $menu, $submenu;
+
+		// only if login user has access to menu
+		if ( ! isset( $submenu[ 'buddyboss-platform' ] ) ) {
+			return;
+		}
 
 		// make sure app integration is last
 		$app_menu = '';

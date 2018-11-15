@@ -461,13 +461,19 @@ window.bp = window.bp || {};
 							} else {
 								$( this ).html( response.data.content );
 							}
-							$( this ).prop( 'title', response.data.content );
+							//$( this ).prop( 'title', response.data.content );
 
 							if ('false' === $(this).attr('aria-pressed') ) {
 								$( this ).attr('aria-pressed', 'true');
 							} else {
 								$( this ).attr('aria-pressed', 'false');
 							}
+
+							if ( $( this ).find( '.like-count' ).length ) {
+								$(this).find('.like-count').html(response.data.like_count);
+							}
+
+							target.attr( 'data-bp-tooltip', response.data.content );
 
 							$( this ).fadeIn( 200 );
 						} );
