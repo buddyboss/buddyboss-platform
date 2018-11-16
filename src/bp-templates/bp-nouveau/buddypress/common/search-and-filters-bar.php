@@ -24,7 +24,7 @@
         <?php bp_get_template_part( 'common/filters/grid-filters' ); ?>
     <?php endif; ?>
 
-	<?php if ( ! ( bp_is_user() && ! bp_is_current_action( 'requests' ) ) && 'groups' !== bp_current_component() ): ?>
+	<?php if ( ! ( bp_is_user() && ! bp_is_current_action( 'requests' ) ) ): ?>
 		<?php bp_get_template_part( 'common/filters/directory-filters' ); ?>
 	<?php endif; ?>
 
