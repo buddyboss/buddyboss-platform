@@ -117,7 +117,7 @@ $F = bp_profile_search_escaped_form_data ( $form_id );
 
 					case 'radio': ?>
 						<?php foreach ($f->options as $key => $label) { ?>
-							<div>
+							<div class="bp-radio-wrap">
 								<label>
 									<input type="radio" <?php if ($key == $value) echo 'checked="checked"'; ?> name="<?php echo $name; ?>" value="<?php echo $key; ?>" />
 									<span><?php echo $label; ?></span>
@@ -130,7 +130,7 @@ $F = bp_profile_search_escaped_form_data ( $form_id );
 
 					case 'checkbox': ?>
 						<?php foreach ($f->options as $key => $label) { ?>
-							<div>
+							<div class="bp-checkbox-wrap">
 								<label>
 									<input type="checkbox" <?php if (in_array ($key, $f->values)) echo 'checked="checked"'; ?> name="<?php echo $name.'[]'; ?>" value="<?php echo $key; ?>" />
 									<span><?php echo $label; ?></span>
