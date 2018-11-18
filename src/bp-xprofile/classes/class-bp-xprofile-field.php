@@ -1472,7 +1472,7 @@ class BP_XProfile_Field {
 		?>
 
 		<div id="member-types-div" class="postbox">
-			<h2><?php _e( 'Member Types', 'buddyboss' ); ?></h2>
+			<h2><?php _e( 'Profile Types', 'buddyboss' ); ?></h2>
 			<div class="inside">
 				<p class="description"><?php _e( 'This field should be available to:', 'buddyboss' ); ?></p>
 
@@ -1489,7 +1489,7 @@ class BP_XProfile_Field {
 					<li>
 						<label for="member-type-none">
 							<input name="member-types[]" id="member-type-none" class="member-type-selector" type="checkbox" value="null" <?php checked( in_array( 'null', $field_member_types ) ); ?>/>
-							<?php _e( 'Users with no member type', 'buddyboss' ); ?>
+							<?php _e( 'Users with no profile type', 'buddyboss' ); ?>
 						</label>
 					</li>
 

@@ -839,7 +839,7 @@ class BP_Members_Admin {
 			if ( ! empty( $member_types ) ) {
 				add_meta_box(
 					'bp_members_admin_member_type',
-					_x( 'Member Type', 'members user-admin edit screen', 'buddyboss' ),
+					_x( 'Profile Type', 'members user-admin edit screen', 'buddyboss' ),
 					array( $this, 'user_admin_member_type_metabox' ),
 					get_current_screen()->id,
 					'side',
@@ -1198,7 +1198,7 @@ class BP_Members_Admin {
 
 		<label for="bp-members-profile-member-type" class="screen-reader-text"><?php
 			/* translators: accessibility text */
-			esc_html_e( 'Select member type', 'buddyboss' );
+			esc_html_e( 'Select profile type', 'buddyboss' );
 		?></label>
 		<select name="bp-members-profile-member-type" id="bp-members-profile-member-type">
 			<option value="" <?php selected( '', $current_type ); ?>><?php
@@ -2223,9 +2223,9 @@ class BP_Members_Admin {
 
 		$types = bp_get_member_types( array(), 'objects' ); ?>
 
-		<label class="screen-reader-text" for="<?php echo $id_name; ?>"><?php _e( 'Change member type to&hellip;', 'buddyboss' ) ?></label>
+		<label class="screen-reader-text" for="<?php echo $id_name; ?>"><?php _e( 'Change profile type to&hellip;', 'buddyboss' ) ?></label>
 		<select name="<?php echo $id_name; ?>" id="<?php echo $id_name; ?>" style="display:inline-block;float:none;">
-			<option value=""><?php _e( 'Change member type to&hellip;', 'buddyboss' ) ?></option>
+			<option value=""><?php _e( 'Change profile type to&hellip;', 'buddyboss' ) ?></option>
 
 			<?php foreach( $types as $type ) : ?>
 
@@ -2233,7 +2233,7 @@ class BP_Members_Admin {
 
 			<?php endforeach; ?>
 
-			<option value="remove_member_type"><?php _e( 'No Member Type', 'buddyboss' ) ?></option>
+			<option value="remove_member_type"><?php _e( 'No Profile Type', 'buddyboss' ) ?></option>
 
 		</select>
 		<?php
@@ -2328,7 +2328,7 @@ class BP_Members_Admin {
 		if ( $updated && in_array( $updated, array( 'member-type-change-error', 'member-type-change-success' ), true ) ) {
 
 			if ( 'member-type-change-error' === $updated ) {
-				$notice = __( 'There was an error while changing member type. Please try again.', 'buddyboss' );
+				$notice = __( 'There was an error while changing the profile type. Please try again.', 'buddyboss' );
 				$type   = 'error';
 			} else {
 				$notice = __( 'Member type was changed successfully.', 'buddyboss' );
@@ -2349,7 +2349,7 @@ class BP_Members_Admin {
 	 * @return array $columns
 	 */
 	public function users_table_add_type_column( $columns = array() ) {
-		$columns[ bp_get_member_type_tax_name() ] = _x( 'Member Type', 'Label for the WP users table member type column', 'buddyboss' );
+		$columns[ bp_get_member_type_tax_name() ] = _x( 'Profile Type', 'Label for the WP users table profile type column', 'buddyboss' );
 
 		return $columns;
 	}
