@@ -9,7 +9,10 @@
 bp_nouveau_before_loop(); ?>
 
 <?php if ( bp_get_current_member_type() ) : ?>
-	<p class="current-member-type"><?php bp_current_member_type_message(); ?></p>
+	<div class="bp-feedback info">
+		<span class="bp-icon" aria-hidden="true"></span>
+		<p><?php bp_current_member_type_message(); ?></p>
+	</div>
 <?php endif; ?>
 
 <?php if ( bp_has_members( bp_ajax_querystring( 'members' ) ) ) : ?>

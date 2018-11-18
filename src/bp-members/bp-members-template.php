@@ -1937,7 +1937,7 @@ function bp_current_member_type_message() {
 	function bp_get_current_member_type_message() {
 		$type_object = bp_get_member_type_object( bp_get_current_member_type() );
 
-		$message = sprintf( __( 'Viewing members of the type: %s', 'buddyboss' ), '<strong>' . $type_object->labels['singular_name'] . '</strong>' );
+		$message = sprintf( __( 'Viewing all members who are "%s"', 'buddyboss' ), '<strong>' . $type_object->labels['name'] . '</strong>' );
 
 		/**
 		 * Filters the current member type message.
