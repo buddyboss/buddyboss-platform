@@ -751,7 +751,7 @@ function bp_nouveau_members_get_customizer_option_link() {
 		array(
 			'object'    => 'user',
 			'autofocus' => 'bp_nouveau_user_front_page',
-			'text'      => __( 'member dashboard', 'buddyboss' ),
+			'text'      => __( 'profile dashboard', 'buddyboss' ),
 		)
 	);
 }

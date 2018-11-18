@@ -38,7 +38,7 @@ function bp_profile_search_register_post_type (){
 			'all_items' => __('Profile Search', 'buddyboss'),
 			'add_new' => __('Add New', 'buddyboss'),
 			'add_new_item' => __('Add New Form', 'buddyboss'),
-			'edit_item' => __('Edit Form', 'buddyboss'),
+			'edit_item' => __('Profile Search', 'buddyboss'),
 			'not_found' => __('No forms found.', 'buddyboss'),
 			'not_found_in_trash' => __('No forms found in Trash.', 'buddyboss'),
 		),

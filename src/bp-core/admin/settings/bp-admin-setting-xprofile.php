@@ -38,15 +38,15 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-disable-cover-image-uploads', __( 'Cover Image Uploads', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'intval' );
 		}
 
-		// Enable/Disable member dashboard.
-		$this->add_field( 'bp-enable-member-dashboard', __( 'Member Dashboard', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_dashboard'], 'intval' );
+		// Enable/Disable profile dashboard.
+		$this->add_field( 'bp-enable-member-dashboard', __( 'Profile Dashboard', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_dashboard'], 'intval' );
 
         // Enable/Disable profile search.
-		$this->add_field( 'bp-enable-profile-search', __( 'Advanced Search', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_search'], 'intval' );
+		$this->add_field( 'bp-enable-profile-search', __( 'Profile Search', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_search'], 'intval' );
 	}
 
 	/**
-	 * Enable member dashboard/front-page template.
+	 * Enable profile dashboard/front-page template.
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *

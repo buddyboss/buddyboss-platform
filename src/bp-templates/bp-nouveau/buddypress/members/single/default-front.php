@@ -12,7 +12,7 @@
 	<?php if ( ! is_customize_preview() && bp_current_user_can( 'bp_moderate' ) && ! is_active_sidebar( 'sidebar-buddypress-members' ) ) : ?>
 
 		<div class="bp-feedback custom-homepage-info info">
-			<strong><?php esc_html_e( 'Configure the member dashboard', 'buddyboss' ); ?></strong>
+			<strong><?php esc_html_e( 'Configure the profile dashboard', 'buddyboss' ); ?></strong>
 			<button type="button" class="bp-tooltip" data-bp-tooltip="<?php echo esc_attr_x( 'Close', 'button', 'buddyboss' ); ?>" aria-label="<?php esc_attr_e( 'Close this notice', 'buddyboss' ); ?>" data-bp-close="remove"><span class="dashicons dashicons-dismiss" aria-hidden="true"></span></button><br/>
 			<?php
 			printf(

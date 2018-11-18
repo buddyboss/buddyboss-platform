@@ -43,10 +43,10 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'description' => __( 'Configure general BuddyBoss appearance options.', 'buddyboss' ),
 		),
 		'bp_nouveau_user_front_page' => array(
-			'title'       => __( 'Member Dashboard', 'buddyboss' ),
+			'title'       => __( 'Profile Dashboard', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 30,
-			'description' => __( 'Configure the member dashboard.', 'buddyboss' ),
+			'description' => __( 'Configure the profile dashboard.', 'buddyboss' ),
 		),
 		'bp_nouveau_user_primary_nav' => array(
 			'title'       => __( 'Member navigation', 'buddyboss' ),
