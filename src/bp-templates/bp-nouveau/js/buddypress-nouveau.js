@@ -470,59 +470,51 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		switchGridList: function() {
-                    var _this = this;
-                    
-                    $('.layout-list-view').on('click', function(e) {
-                        e.preventDefault();
+            var _this = this;
 
-                        var object = $(this).data('object');
+            var object = $('.grid-filters').data('object');
 
-                        if ( 'friends' === object || 'group_members' === object ) {
-                            object = 'members';
-                        } else if ( 'group_requests' === object ) {
-                            object = 'groups';
-                        } else if ( 'notifications' === object ) {
-                            object = 'members';
-                        }
+            if ( 'friends' === object || 'group_members' === object ) {
+                object = 'members';
+            } else if ( 'group_requests' === object ) {
+                object = 'groups';
+            } else if ( 'notifications' === object ) {
+                object = 'members';
+            }
 
-                        var objectData = _this.getStorage( 'bp-' + object );
+            var objectData = _this.getStorage( 'bp-' + object );
 
-                        var extras = {};
-                        if ( undefined !== objectData.extras ) {
-                            extras = objectData.extras;
-                        }
+            var extras = {};
+            if ( undefined !== objectData.extras ) {
+                extras = objectData.extras;
 
-                        $( '.layout-grid-view' ).removeClass('active');
-                        $( this ).addClass('active');
-                        $('.bp-list').removeClass('grid');
-                        extras.layout = 'list';
-                        _this.setStorage( 'bp-' + object, 'extras', extras );
-                    });
+                if ( undefined !== extras.layout ) {
+	                $('.grid-filters .layout-view').removeClass('active');
+	                if ( extras.layout == 'list' ) {
+		                $('.grid-filters .layout-list-view').addClass('active');
+	                } else {
+		                $('.grid-filters .layout-grid-view').addClass('active');
+	                }
+                }
+            }
 
-                    $('.layout-grid-view').on('click', function(e) {
-                        e.preventDefault();
+            $('.grid-filters').on('click', '.layout-view', function(e) {
+                e.preventDefault();
 
-                        var object = $(this).data('object');
-                        if ( 'friends' === object || 'group_members' === object ) {
-                                object   = 'members';
-                        } else if ( 'group_requests' === object ) {
-                                object = 'groups';
-                        } else if ( 'notifications' === object ) {
-                                object = 'members';
-                        }
+                if ( $(this).hasClass('layout-list-view') ) {
+	                $( '.layout-grid-view' ).removeClass('active');
+	                $( this ).addClass('active');
+	                $('.bp-list').removeClass('grid');
+	                extras.layout = 'list';
+                } else {
+	                $('.layout-list-view').removeClass('active');
+	                $( this ).addClass('active');
+	                $('.bp-list').addClass('grid');
+	                extras.layout = 'grid';
+                }
 
-                        var objectData = _this.getStorage( 'bp-' + object );
-                        var extras = {};
-                        if ( undefined !== objectData.extras ) {
-                                extras = objectData.extras;
-                        }
-
-                        $('.layout-list-view').removeClass('active');
-                        $( this ).addClass('active');
-                        $('.bp-list').addClass('grid');
-                        extras.layout = 'grid';
-                        _this.setStorage( 'bp-' + object, 'extras', extras );
-                    });
+                _this.setStorage( 'bp-' + object, 'extras', extras );
+            });
 		},
 
 		/** Event Callbacks ***********************************************************/
