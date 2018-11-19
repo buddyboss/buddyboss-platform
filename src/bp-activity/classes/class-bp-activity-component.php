@@ -161,8 +161,9 @@ class BP_Activity_Component extends BP_Component {
 
 		// Global tables for activity component.
 		$global_tables = array(
-			'table_name'      => $bp->table_prefix . 'bp_activity',
-			'table_name_meta' => $bp->table_prefix . 'bp_activity_meta',
+			'table_name'        => $bp->table_prefix . 'bp_activity',
+			'table_name_meta'   => $bp->table_prefix . 'bp_activity_meta',
+			'table_name_follow' => $bp->table_prefix . 'bp_follow',
 		);
 
 		// Metadata tables for groups component.
@@ -188,6 +189,20 @@ class BP_Activity_Component extends BP_Component {
 		);
 
 		parent::setup_globals( $args );
+
+		// locally cache total count values for logged-in user
+		if ( is_user_logged_in() ) {
+			$bp->loggedin_user->total_follow_counts = bp_total_follow_counts( array(
+				'user_id' => bp_loggedin_user_id()
+			) );
+		}
+
+		// locally cache total count values for displayed user
+		if ( bp_is_user() && ( bp_loggedin_user_id() != bp_displayed_user_id() ) ) {
+			$bp->displayed_user->total_follow_counts = bp_total_follow_counts( array(
+				'user_id' => bp_displayed_user_id()
+			) );
+		}
 	}
 
 	/**

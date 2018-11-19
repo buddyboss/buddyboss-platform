@@ -48,7 +48,7 @@ function bp_core_install( $active_components = false ) {
 	}
 
 	// Follow.
-	if ( !empty( $active_components['follow'] ) ) {
+	if ( !empty( $active_components['activity'] ) ) {
 		bp_core_install_follow();
 	}
 

@@ -483,7 +483,6 @@ function bp_core_get_packaged_component_ids() {
 		'blogs',
 		'xprofile',
 		'friends',
-		'follow',
 		'messages',
 		'settings',
 		'notifications',
@@ -2431,10 +2430,6 @@ function bp_core_get_components( $type = 'all' ) {
 		'friends'  => array(
 			'title'       => __( 'User Connections', 'buddyboss' ),
 			'description' => __( 'Let your users make connections with each other and focus on the people they care about the most.', 'buddyboss' )
-		),
-		'follow'  => array(
-			'title'       => __( 'User Following', 'buddyboss' ),
-			'description' => __( 'Let your users follow the activity of each other in their timelines.', 'buddyboss' )
 		),
 		'messages' => array(
 			'title'       => __( 'Private Messaging', 'buddyboss' ),

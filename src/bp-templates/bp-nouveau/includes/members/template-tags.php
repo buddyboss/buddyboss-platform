@@ -384,7 +384,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 			}
 		}
 
-		if ( bp_is_active( 'follow' ) ) { // add follow button
+		if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) { // add follow button
 
 			/*
 			 * This filter workaround is waiting for a core adaptation

@@ -66,7 +66,7 @@ function bp_nouveau_get_members_directory_nav_items() {
 		}
 
 		// If follow component is active and the user is following
-		if ( bp_is_active( 'follow' ) ) {
+		if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
 			$counts = bp_total_follow_counts();
 
 			if ( ! empty( $counts['following'] ) ) {

@@ -117,6 +117,14 @@ class BP_Nouveau extends BP_Theme_Compat {
 			require( $component_loader );
 		}
 
+		if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
+			$component_loader = trailingslashit( $this->includes_dir ) . 'follow/loader.php';
+
+			if ( file_exists( $component_loader ) ) {
+				require( $component_loader );
+			}
+		}
+
 		/**
 		 * Fires after all of the BuddyPress Nouveau includes have been loaded. Passed by reference.
 		 *

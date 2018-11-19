@@ -13,13 +13,13 @@ add_action( 'admin_init', function() {
 	$ajax_actions = array(
 		array(
 			'follow_follow' => array(
-				'function' => 'bp_nouveau_ajax_followunfollow_friend',
+				'function' => 'bp_nouveau_ajax_followunfollow_member',
 				'nopriv'   => false,
 			),
 		),
 		array(
 			'follow_unfollow' => array(
-				'function' => 'bp_nouveau_ajax_followunfollow_friend',
+				'function' => 'bp_nouveau_ajax_followunfollow_member',
 				'nopriv'   => false,
 			),
 		),
@@ -43,7 +43,7 @@ add_action( 'admin_init', function() {
  *
  * @return string HTML
  */
-function bp_nouveau_ajax_followunfollow_friend() {
+function bp_nouveau_ajax_followunfollow_member() {
 	$response = array(
 		'feedback' => sprintf(
 			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
@@ -56,12 +56,12 @@ function bp_nouveau_ajax_followunfollow_friend() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['nonce'] ) || empty( $_POST['item_id'] ) || ! bp_is_active( 'friends' ) ) {
+	if ( empty( $_POST['_wpnonce'] ) || empty( $_POST['item_id'] ) ) {
 		wp_send_json_error( $response );
 	}
 
 	// Use default nonce
-	$nonce = $_POST['nonce'];
+	$nonce = $_POST['_wpnonce'];
 	$check = 'bp_nouveau_follow';
 
 	// Use a specific one for actions needed it

@@ -115,6 +115,20 @@ function bp_admin_setting_callback_heartbeat() {
 }
 
 /**
+ * Allow following activity stream.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_admin_setting_callback_enable_activity_follow() {
+	?>
+
+    <input id="_bp_enable_activity_follow" name="_bp_enable_activity_follow" type="checkbox" value="1" <?php checked( bp_is_activity_follow_active( false ) ); ?> />
+    <label for="_bp_enable_activity_follow"><?php _e( 'Allow your users to follow the activity of each other in their timeline', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
  * Sanitization for bp-disable-blogforum-comments setting.
  *
  * In the UI, a checkbox asks whether you'd like to *enable* post/comment activity comments. For
