@@ -225,8 +225,10 @@
 		line-height: 36px;
 	}
 
-	a, a:active, a:focus {
-	   outline: none;
+	a,
+	a:active,
+	a:focus {
+		outline: none;
 	}
 
 	a i {

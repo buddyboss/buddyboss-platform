@@ -70,7 +70,6 @@ class BBP_Default extends BBP_Theme_Compat {
 
 		/** Scripts ***********************************************************/
 
-		add_action( 'bbp_enqueue_scripts',         array( $this, 'enqueue_styles'          ) ); // Enqueue theme CSS
 		add_action( 'bbp_enqueue_scripts',         array( $this, 'enqueue_scripts'         ) ); // Enqueue theme JS
 		add_filter( 'bbp_enqueue_scripts',         array( $this, 'localize_topic_script'   ) ); // Enqueue theme script localization
 		add_action( 'bbp_ajax_favorite',           array( $this, 'ajax_favorite'           ) ); // Handles the topic ajax favorite/unfavorite
@@ -115,41 +114,6 @@ class BBP_Default extends BBP_Theme_Compat {
 		</div><!-- #bbp-container -->
 
 	<?php
-	}
-
-	/**
-	 * Load the theme CSS
-	 *
-	 * @since bbPress (r3732)
-	 *
-	 * @uses wp_enqueue_style() To enqueue the styles
-	 */
-	public function enqueue_styles() {
-
-		// Setup styles array
-		$styles = array();
-
-		// LTR
-		$styles['bbp-default'] = array(
-			'file'         => 'css/bbpress.css',
-			'dependencies' => array()
-		);
-
-		// RTL helpers
-		if ( is_rtl() ) {
-			$styles['bbp-default-rtl'] = array(
-				'file'         => 'css/bbpress-rtl.css',
-				'dependencies' => array( 'bbp-default' )
-			);
-		}
-
-		// Filter the scripts
-		$styles = apply_filters( 'bbp_default_styles', $styles );
-
-		// Enqueue the styles
-		foreach ( $styles as $handle => $attributes ) {
-			bbp_enqueue_style( $handle, $attributes['file'], $attributes['dependencies'], $this->version, 'screen' );
-		}
 	}
 
 	/**
@@ -466,5 +430,6 @@ class BBP_Default extends BBP_Theme_Compat {
 		bbp_ajax_response( true, bbp_get_user_subscribe_link( $attrs, $user_id, false ), 200 );
 	}
 }
+
 new BBP_Default();
 endif;

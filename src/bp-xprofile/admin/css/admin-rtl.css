@@ -163,9 +163,12 @@ div.field-group {
 	position: relative;
 	border: 1px solid #ddd;
 	margin: 20px 0 0;
-	cursor: move;
 	background: #fafafa;
 	padding: 10px 0 0;
+}
+
+.field-group fieldset.sortable {
+	cursor: move;
 }
 
 .field-group fieldset legend {
