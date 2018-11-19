@@ -2,11 +2,9 @@
 /**
  * BP Nouveau Component's  grid filters template.
  *
- * @since BuddyPress 3.0.0
- * @version 3.0.0
+ * @since BuddyBoss 3.1.1
  */
 ?>
-
 
 <div class="grid-filters">
 	<a href="#" class="layout-grid-view active" data-object="<?php echo bp_current_component(); ?>"><i class="dashicons dashicons-screenoptions" aria-hidden="true"></i></a>
