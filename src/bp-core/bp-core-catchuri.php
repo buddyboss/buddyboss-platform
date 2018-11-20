@@ -1140,6 +1140,26 @@ function bp_private_network_template_redirect() {
 
 							}
 
+						} else {
+
+							$redirect_url = is_ssl() ? 'https://' : 'http://';
+							$redirect_url .= $_SERVER['HTTP_HOST'];
+							$redirect_url .= $_SERVER['REQUEST_URI'];
+
+							$defaults = array(
+								'mode'     => 2,
+								// 1 = $root, 2 = wp-login.php.
+								'redirect' => $redirect_url,
+								// the URL you get redirected to when a user successfully logs in.
+								'root'     => bp_get_root_domain(),
+								// the landing page you get redirected to when a user doesn't have access.
+								'message'  => __( 'You must log in to access the page you requested dfdfd.',
+									'buddyboss' ),
+							);
+
+							bp_core_no_access( $defaults );
+							exit();
+
 						}
 
 					}
