@@ -584,7 +584,7 @@ window.bp = window.bp || {};
 		 */
 		scopeQuery: function( event ) {
 			var self = event.data, target = $( event.currentTarget ).parent(),
-				scope = 'all', object, filter = null, search_terms = '';
+				scope = 'all', object, filter = null, search_terms = '', extras = null;
 
 			if ( target.hasClass( 'no-ajax' ) || $( event.currentTarget ).hasClass( 'no-ajax' ) || ! target.attr( 'data-bp-scope' ) ) {
 				return event;
@@ -599,6 +599,13 @@ window.bp = window.bp || {};
 
 			// Stop event propagation
 			event.preventDefault();
+
+			var objectData = self.getStorage( 'bp-' + object );
+
+			// Notifications always need to start with Newest ones
+			if ( undefined !== objectData.extras && 'notifications' !== object ) {
+				extras = objectData.extras;
+			}
 
 			filter = $( '#buddypress' ).find( '[data-bp-filter="' + object + '"]' ).first().val();
 
@@ -616,7 +623,8 @@ window.bp = window.bp || {};
 				scope        : scope,
 				filter       : filter,
 				search_terms : search_terms,
-				page         : 1
+				page         : 1,
+				extras       : extras
 			} );
 		},
 
