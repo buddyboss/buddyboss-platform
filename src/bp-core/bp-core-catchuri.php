@@ -1084,6 +1084,11 @@ function bp_core_filter_wp_query( $retval, $query ) {
 	return array();
 }
 
+/**
+ * Function for redirecting users to wp-login.php if the private network enabled on BuddyBoss General settings page.
+ *
+ * @since BuddyBoss 3.1.1
+ */
 function bp_private_network_template_redirect() {
 
 	global $wp_query;
