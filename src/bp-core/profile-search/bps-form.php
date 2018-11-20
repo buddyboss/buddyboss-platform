@@ -82,8 +82,7 @@ function bp_profile_search_escaped_form_data ( $form = false ) {
 
             case 'selectbox':
                 if (!isset ($f->value))  $f->value = '';
-                if ($version == '4.9')
-                    $f->options = array ('' => '') + $f->options;
+                $f->options = array ('' => '') + $f->options;
                 break;
 
             case 'radio':

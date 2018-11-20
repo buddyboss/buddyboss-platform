@@ -55,7 +55,6 @@ function bp_profile_search_register_post_type (){
 
 	$form_caps = array (
 		'administrator' => array (
-			'edit_bp_ps_forms',
 			'edit_others_bp_ps_forms',
 			'edit_published_bp_ps_forms',
 		)
@@ -75,8 +74,10 @@ function bp_profile_search_register_post_type (){
 function bp_profile_search_prevent_delete () {
     global $wp_roles;
     $wp_roles->remove_cap( 'administrator', 'delete_bp_ps_forms' );
+    $wp_roles->remove_cap( 'administrator', 'edit_bp_ps_forms' );
     $wp_roles->remove_cap( 'administrator', 'delete_published_bp_ps_forms' );
     $wp_roles->remove_cap( 'editor', 'delete_bp_ps_forms' );
+    $wp_roles->remove_cap( 'editor', 'edit_bp_ps_forms' );
     $wp_roles->remove_cap( 'editor', 'delete_published_bp_ps_forms' );
 }
 
