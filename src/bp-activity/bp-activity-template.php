@@ -3961,7 +3961,7 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
 		$button = wp_parse_args(
 			array(
 				'id'                => 'member_follow',
-				'component'         => 'follow',
+				'component'         => 'members',
 				'must_be_logged_in' => true,
 				'block_self'        => true,
 				'wrapper_class'     => 'follow-button following',
@@ -3971,9 +3971,10 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
 				'link_id'           => 'follow-' . $leader_id,
 				'link_rel'          => 'stop',
 				'link_class'        => 'follow-button following stop bp-toggle-action-button',
-				'button_attr'       => array(
+				'button_attr' => array(
 					'data-title'           => __( 'Unfollow', 'buddyboss' ),
-					'data-title-displayed' => __( 'Following', 'buddyboss' )
+					'data-title-displayed' => __( 'Following', 'buddyboss' ),
+					'data-bp-nonce'        => wp_nonce_url( bp_loggedin_user_domain() . bp_get_follow_slug() . '/stop-following/' . $leader_id . '/', 'follow_unfollow' )
 				)
 			)
 			, $button_args );
@@ -3981,7 +3982,7 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
 		$button = wp_parse_args(
 			array(
 				'id'                => 'member_follow',
-				'component'         => 'follow',
+				'component'         => 'members',
 				'must_be_logged_in' => true,
 				'block_self'        => true,
 				'wrapper_class'     => 'follow-button not_following',
@@ -3990,7 +3991,10 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
 				'link_text'         => __( 'Follow', 'buddyboss' ),
 				'link_id'           => 'follow-' . $leader_id,
 				'link_rel'          => 'start',
-				'link_class'        => 'follow-button not_following start'
+				'link_class'        => 'follow-button not_following start',
+				'button_attr' => array(
+					'data-bp-nonce'        => wp_nonce_url( bp_loggedin_user_domain() . bp_get_follow_slug() . '/start-following/' . $leader_id . '/', 'follow_follow' ),
+				)
 			)
 			, $button_args );
 	}

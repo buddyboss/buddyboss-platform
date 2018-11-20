@@ -70,7 +70,7 @@ class BP_Nouveau_Follow {
 	 */
 	protected function setup_filters() {
 		$buttons = array(
-			'follow_member_follow',
+			'members_member_follow',
 		);
 
 		foreach ( $buttons as $button ) {
