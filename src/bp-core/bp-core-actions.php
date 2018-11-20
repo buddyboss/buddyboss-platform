@@ -104,11 +104,12 @@ add_action( 'bp_setup_canonical_stack', 'bp_late_include', 20 );
  * places. This won't always be this way, we promise.
  *                                                           v---Load order
  */
-add_action( 'bp_template_redirect', 'bp_redirect_canonical', 2  );
-add_action( 'bp_template_redirect', 'bp_actions',            4  );
-add_action( 'bp_template_redirect', 'bp_screens',            6  );
-add_action( 'bp_template_redirect', 'bp_post_request',       10 );
-add_action( 'bp_template_redirect', 'bp_get_request',        10 );
+add_action( 'bp_template_redirect', 'bp_redirect_canonical',                       2  );
+add_action( 'bp_template_redirect', 'bp_actions',                                  4  );
+add_action( 'bp_template_redirect', 'bp_screens',                                  6  );
+add_action( 'bp_template_redirect', 'bp_post_request',                             10 );
+add_action( 'bp_template_redirect', 'bp_get_request',                              10 );
+add_action( 'bp_template_redirect', 'bp_private_network_template_redirect',        10 );
 
 /**
  * Add the BuddyPress functions file and the Theme Compat Default features.

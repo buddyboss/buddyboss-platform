@@ -1083,3 +1083,85 @@ function bp_core_filter_wp_query( $retval, $query ) {
 	// Return something other than a null value to bypass WP_Query.
 	return array();
 }
+
+function bp_private_network_template_redirect() {
+
+	global $wp_query;
+
+	if ( ! is_user_logged_in() ) {
+
+		$enable_private_network = bp_get_option( 'bp-enable-private-network' );
+
+		if ( '0' === $enable_private_network ) {
+
+			if ( get_option( 'users_can_register' ) ) {
+
+				$page_ids            = bp_core_get_directory_page_ids();
+				$terms               = isset( $page_ids['terms'] ) ? $page_ids['terms'] : false;
+				$privacy             = isset( $page_ids['privacy'] ) ? $page_ids['privacy'] : false;
+				$current_page_object = $wp_query->get_queried_object();
+
+				if ( isset( $current_page_object->ID ) ) {
+
+					if ( ! bp_is_register_page() && ! bp_is_activation_page() && $terms !== $current_page_object->ID && $privacy !== $current_page_object->ID ) {
+
+						$redirect_url = is_ssl() ? 'https://' : 'http://';
+						$redirect_url .= $_SERVER['HTTP_HOST'];
+						$redirect_url .= $_SERVER['REQUEST_URI'];
+
+						$defaults = array(
+							'mode'     => 2,
+							// 1 = $root, 2 = wp-login.php.
+							'redirect' => $redirect_url,
+							// the URL you get redirected to when a user successfully logs in.
+							'root'     => bp_get_root_domain(),
+							// the landing page you get redirected to when a user doesn't have access.
+							'message'  => __( 'You must log in to access the page you requested dfdfd.', 'buddyboss' ),
+						);
+
+						bp_core_no_access( $defaults );
+						exit();
+
+					}
+
+				} else {
+					$redirect_url = is_ssl() ? 'https://' : 'http://';
+					$redirect_url .= $_SERVER['HTTP_HOST'];
+					$redirect_url .= $_SERVER['REQUEST_URI'];
+
+					$defaults = array(
+						'mode'     => 2,
+						// 1 = $root, 2 = wp-login.php.
+						'redirect' => $redirect_url,
+						// the URL you get redirected to when a user successfully logs in.
+						'root'     => bp_get_root_domain(),
+						// the landing page you get redirected to when a user doesn't have access.
+						'message'  => __( 'You must log in to access the page you requested dfdfd.', 'buddyboss' ),
+					);
+
+					bp_core_no_access( $defaults );
+					exit();
+				}
+
+			} else {
+
+				$redirect_url = is_ssl() ? 'https://' : 'http://';
+				$redirect_url .= $_SERVER['HTTP_HOST'];
+				$redirect_url .= $_SERVER['REQUEST_URI'];
+
+				$defaults = array(
+					'mode'     => 2,
+					// 1 = $root, 2 = wp-login.php.
+					'redirect' => $redirect_url,
+					// the URL you get redirected to when a user successfully logs in.
+					'root'     => bp_get_root_domain(),
+					// the landing page you get redirected to when a user doesn't have access.
+					'message'  => __( 'You must log in to access the page you requested dfdfd.', 'buddyboss' ),
+				);
+
+				bp_core_no_access( $defaults );
+				exit();
+			}
+		}
+	}
+}
