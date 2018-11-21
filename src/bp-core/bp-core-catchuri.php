@@ -1085,7 +1085,7 @@ function bp_core_filter_wp_query( $retval, $query ) {
 }
 
 /**
- * Function for redirecting users to wp-login.php if the private network enabled on BuddyBoss General settings page.
+ * Function for redirecting users to wp-login.php if Private Network is enabled in BuddyBoss settings.
  *
  * @since BuddyBoss 3.1.1
  */
@@ -1097,18 +1097,106 @@ function bp_private_network_template_redirect() {
 
 		$enable_private_network = bp_get_option( 'bp-enable-private-network' );
 
+		$page_ids            = bp_core_get_directory_page_ids();
+		$terms               = isset( $page_ids['terms'] ) ? $page_ids['terms'] : false;
+		$privacy             = isset( $page_ids['privacy'] ) ? $page_ids['privacy'] : false;
+		$current_page_object = $wp_query->get_queried_object();
+		$id                  = isset( $current_page_object->ID ) ? $current_page_object->ID : get_the_ID();
+
 		if ( '0' === $enable_private_network ) {
 
 			if ( get_option( 'users_can_register' ) ) {
 
-				$page_ids            = bp_core_get_directory_page_ids();
-				$terms               = isset( $page_ids['terms'] ) ? $page_ids['terms'] : false;
-				$privacy             = isset( $page_ids['privacy'] ) ? $page_ids['privacy'] : false;
-				$current_page_object = $wp_query->get_queried_object();
+				if ( isset( $id ) ) {
 
-				if ( isset( $current_page_object->ID ) ) {
+					if ( ! bp_is_register_page() && ! bp_is_activation_page() && $terms !== $id && $privacy !== $id ) {
 
-					if ( ! bp_is_register_page() && ! bp_is_activation_page() && $terms !== $current_page_object->ID && $privacy !== $current_page_object->ID ) {
+						if ( class_exists( 'woocommerce' ) ) {
+
+							$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+							if ( $actual_link !== wc_lostpassword_url() ) {
+
+								if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration') && $id !== intval( get_option( 'woocommerce_myaccount_page_id') ) ) {
+
+									$redirect_url = is_ssl() ? 'https://' : 'http://';
+									$redirect_url .= $_SERVER['HTTP_HOST'];
+									$redirect_url .= $_SERVER['REQUEST_URI'];
+
+									$defaults = array(
+										'mode'     => 2,
+										// 1 = $root, 2 = wp-login.php.
+										'redirect' => $redirect_url,
+										// the URL you get redirected to when a user successfully logs in.
+										'root'     => bp_get_root_domain(),
+										// the landing page you get redirected to when a user doesn't have access.
+										'message'  => __( 'You must log in to access the page you requested dfdfd.',
+											'buddyboss' ),
+									);
+
+									bp_core_no_access( $defaults );
+									exit();
+								}
+
+							}
+
+						} else {
+
+							$redirect_url = is_ssl() ? 'https://' : 'http://';
+							$redirect_url .= $_SERVER['HTTP_HOST'];
+							$redirect_url .= $_SERVER['REQUEST_URI'];
+
+							$defaults = array(
+								'mode'     => 2,
+								// 1 = $root, 2 = wp-login.php.
+								'redirect' => $redirect_url,
+								// the URL you get redirected to when a user successfully logs in.
+								'root'     => bp_get_root_domain(),
+								// the landing page you get redirected to when a user doesn't have access.
+								'message'  => __( 'You must log in to access the page you requested dfdfd.',
+									'buddyboss' ),
+							);
+
+							bp_core_no_access( $defaults );
+							exit();
+
+						}
+
+					}
+
+				} else {
+
+					if ( class_exists( 'woocommerce' ) ) {
+
+						$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+						if ( $actual_link !== wc_lostpassword_url() ) {
+
+							if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration') && $id !== intval( get_option( 'woocommerce_myaccount_page_id') ) ) {
+
+								$redirect_url = is_ssl() ? 'https://' : 'http://';
+								$redirect_url .= $_SERVER['HTTP_HOST'];
+								$redirect_url .= $_SERVER['REQUEST_URI'];
+
+								$defaults = array(
+									'mode' => 2,
+									// 1 = $root, 2 = wp-login.php.
+									'redirect' => $redirect_url,
+									// the URL you get redirected to when a user successfully logs in.
+									'root' => bp_get_root_domain(),
+									// the landing page you get redirected to when a user doesn't have access.
+									'message' => __( 'You must log in to access the page you requested dfdfd.',
+										'buddyboss' ),
+								);
+
+								bp_core_no_access( $defaults );
+								exit();
+
+							}
+
+						}
+
+					} else {
 
 						$redirect_url = is_ssl() ? 'https://' : 'http://';
 						$redirect_url .= $_SERVER['HTTP_HOST'];
@@ -1128,8 +1216,42 @@ function bp_private_network_template_redirect() {
 						exit();
 
 					}
+				}
+
+			} else {
+
+				if ( class_exists( 'woocommerce' ) ) {
+
+					$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+					if ( $actual_link !== wc_lostpassword_url() ) {
+
+						if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration') && $id !== intval( get_option( 'woocommerce_myaccount_page_id') ) ) {
+
+							$redirect_url = is_ssl() ? 'https://' : 'http://';
+							$redirect_url .= $_SERVER['HTTP_HOST'];
+							$redirect_url .= $_SERVER['REQUEST_URI'];
+
+							$defaults = array(
+								'mode' => 2,
+								// 1 = $root, 2 = wp-login.php.
+								'redirect' => $redirect_url,
+								// the URL you get redirected to when a user successfully logs in.
+								'root' => bp_get_root_domain(),
+								// the landing page you get redirected to when a user doesn't have access.
+								'message' => __( 'You must log in to access the page you requested dfdfd.',
+									'buddyboss' ),
+							);
+
+							bp_core_no_access( $defaults );
+							exit();
+
+						}
+
+					}
 
 				} else {
+
 					$redirect_url = is_ssl() ? 'https://' : 'http://';
 					$redirect_url .= $_SERVER['HTTP_HOST'];
 					$redirect_url .= $_SERVER['REQUEST_URI'];
@@ -1146,27 +1268,13 @@ function bp_private_network_template_redirect() {
 
 					bp_core_no_access( $defaults );
 					exit();
+
 				}
 
-			} else {
-
-				$redirect_url = is_ssl() ? 'https://' : 'http://';
-				$redirect_url .= $_SERVER['HTTP_HOST'];
-				$redirect_url .= $_SERVER['REQUEST_URI'];
-
-				$defaults = array(
-					'mode'     => 2,
-					// 1 = $root, 2 = wp-login.php.
-					'redirect' => $redirect_url,
-					// the URL you get redirected to when a user successfully logs in.
-					'root'     => bp_get_root_domain(),
-					// the landing page you get redirected to when a user doesn't have access.
-					'message'  => __( 'You must log in to access the page you requested dfdfd.', 'buddyboss' ),
-				);
-
-				bp_core_no_access( $defaults );
-				exit();
 			}
+
 		}
+
 	}
+
 }
