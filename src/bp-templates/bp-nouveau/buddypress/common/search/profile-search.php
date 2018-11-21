@@ -28,7 +28,7 @@ $F = bp_profile_search_escaped_form_data ( $form_id );
 			} ?>
 
 			<div id="<?php echo $id; ?>_wrap" class="bp-field-wrap bps-<?php echo $display; ?>">
-				<label for="<?php echo $id; ?>" class="bps-label"><?php echo $f->full_label; ?></label>
+				<label for="<?php echo $id; ?>" class="bps-label"><?php echo $f->label; ?></label>
 				<?php
 				switch ( $display ) {
 					case 'range': ?>

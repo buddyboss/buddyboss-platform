@@ -8,8 +8,8 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$this->tab_order = 10;
 	}
 
-	public function setting_save() {
-		parent::setting_save();
+	public function settings_save() {
+		parent::settings_save();
 
         /**
          * sync bp-enable-member-dashboard with cutomizer settings.
