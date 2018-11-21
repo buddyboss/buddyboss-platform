@@ -58,7 +58,9 @@ function bp_profile_search_escaped_form_data ( $form = false ) {
 			$f->description = '';
 		else if (!empty ($custom_desc))
 			$f->description = $custom_desc;
-
+        else 
+            $f->description = '';
+        
 		switch ($f->display) {
             case 'range':
             case 'range-select':

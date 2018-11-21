@@ -2,8 +2,17 @@
 
 add_action( 'current_screen', 'bp_profile_search_redirect_admin_screens' );
 function bp_profile_search_redirect_admin_screens () {
+    $redirect_to_main_form = false;
+    
     $current_screen = get_current_screen();
+    
     if ( 'edit-bp_ps_form' == $current_screen->id ) {
+        $redirect_to_main_form = true;
+    } else if ( 'bp_ps_form' == $current_screen->id && 'add' == $current_screen->action ) {
+        $redirect_to_main_form = true;
+    }
+    
+    if ( $redirect_to_main_form ) {
         $main_form = bp_profile_search_main_form();
         //create a form if not created already
         if ( !$main_form ) {
@@ -59,7 +68,7 @@ function bp_ps_fields_box ( $post ) {
 		$showlabel = empty ($label)? "placeholder=\"$default\"": "value=\"$label\"";
 		$desc = esc_attr ($bp_ps_options['field_desc'][$k]);
 		$default = esc_attr ($field->description);
-		$showdesc = empty ($desc)? "placeholder=\"$default\"": "value=\"$desc\"";
+		$showdesc = ! empty( $desc ) ? "value=\"$desc\"" : "";
 ?>
 
 		<div id="field_div<?php echo $k; ?>" class="sortable">

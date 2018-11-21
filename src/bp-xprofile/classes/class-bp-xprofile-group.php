@@ -897,7 +897,7 @@ class BP_XProfile_Group {
                              * The main profile field group, used in registration form,
                              * can not be a repeater.
                              */
-                            if ( $this->can_delete ) : ?>
+                            if ( empty( $this->id ) || $this->can_delete ) : ?>
                             
                                 <?php $enabled = 'on' == self::get_group_meta( $this->id, 'is_repeater_enabled' ) ? 'on' : 'off'; ?>
                             
