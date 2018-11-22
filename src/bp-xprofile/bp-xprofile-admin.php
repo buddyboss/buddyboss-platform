@@ -26,7 +26,7 @@ function xprofile_add_admin_menu() {
 	}
 
 	add_users_page( _x( 'Profile Fields', 'xProfile admin page title', 'buddyboss' ), _x( 'Profile Fields', 'Admin Users menu', 'buddyboss' ), 'manage_options', 'bp-profile-setup', 'xprofile_admin' );
-	add_users_page( _x( 'Profile Types', 'xProfile admin page title', 'buddyboss' ), _x( 'Profile Types', 'Admin Users menu', 'buddyboss' ), 'manage_options', 'edit.php?post_type=bp-profile-type', '' );
+	add_users_page( _x( 'Profile Types', 'Profile Types admin page title', 'buddyboss' ), _x( 'Profile Types', 'Admin Users menu', 'buddyboss' ), 'manage_options', 'edit.php?post_type=bp-profile-type', '' );
 }
 add_action( bp_core_admin_hook(), 'xprofile_add_admin_menu' );
 
