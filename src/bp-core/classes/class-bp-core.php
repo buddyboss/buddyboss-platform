@@ -373,7 +373,7 @@ class BP_Core extends BP_Component {
 				'query_var'         => false,
 				'rewrite'           => false,
 				'show_in_admin_bar' => false,
-				'show_in_menu' 		=> 'users.php',
+				'show_in_menu' 		=> '',
 				'map_meta_cap' 		=> true,
 				'show_in_rest' 		=> true,
 				'show_ui'           => bp_current_user_can( 'bp_moderate' ),
