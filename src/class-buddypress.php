@@ -421,6 +421,15 @@ class BuddyPress {
 		$this->email_post_type     = apply_filters( 'bp_email_post_type', 'bp-email' );
 
 		/**
+		 * Filters the post type slug for the profile type component.
+		 *
+		 * since BuddyBoss 3.1.1
+		 *
+		 * @param string $value Profile Type post type slug.
+		 */
+		$this->profile_type_post_type     = apply_filters( 'bp_profile_type_post_type', 'bp-profile-type' );
+
+		/**
 		 * Filters the taxonomy slug for the email type component.
 		 *
 		 * @since BuddyPress 2.5.0

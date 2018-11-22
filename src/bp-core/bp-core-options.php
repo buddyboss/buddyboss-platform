@@ -58,6 +58,15 @@ function bp_get_default_options() {
 		// Disable the WP to BP profile sync.
 		'bp-disable-profile-sync'              => false,
 
+		// Hide from Registration
+		'bp-profile-type-hide-from-registration'            => false,
+
+		// Default Profile Type
+		'bp-default-profile-type'            => '',
+
+		// Require on Registration
+		'bp-profile-type-require-on-registration'            => false,
+
 		// Hide the Toolbar for logged out users.
 		'hide-loggedout-adminbar'              => false,
 
@@ -512,6 +521,69 @@ function bp_disable_advanced_profile_search( $default = false ) {
 	 * @param bool $value Whether or not profile search is disabled.
 	 */
 	return (bool) apply_filters( 'bp_disable_advanced_profile_search', ! (bool) bp_get_option( 'bp-enable-profile-search', $default ) );
+}
+
+/**
+ * Is Hide from Registration?
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if profile search is enabled, otherwise false.
+ */
+function bp_disable_profile_type_selection_from_registration_from( $default = false ) {
+
+	/**
+	 * Filters whether or not profile search is disabled.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param bool $value Whether Hide from Registration ot not.
+	 */
+	return (bool) apply_filters( 'bp_disable_profile_type_selection_from_registration_from', ! (bool) bp_get_option( 'bp-profile-type-hide-from-registration', $default ) );
+}
+
+/**
+ * Is Profile Type require on Registration?
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if require on Registration is enabled, otherwise false.
+ */
+function bp_profile_type_require_on_registration( $default = false ) {
+
+	/**
+	 * Filters whether or not profile search is disabled.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param bool $value Whether or not profile search is disabled.
+	 */
+	return (bool) apply_filters( 'bp_profile_type_require_on_registration', ! (bool) bp_get_option( 'bp-profile-type-require-on-registration', $default ) );
+}
+
+/**
+ * Default profile type on registration.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param bool $default blank. Fallback value if not found in the database.
+ *                      Default: blank.
+ * @return string if default profile type selected otherwise blank.
+ */
+function bp_profile_type_default_profile_type( $default = '' ) {
+
+	/**
+	 * Filters whether or not profile search is disabled.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param bool $value Whether or not profile search is disabled.
+	 */
+	return apply_filters( 'bp_profile_type_default_profile_type', bp_get_option( 'bp-default-profile-type', $default ) );
 }
 
 /**
