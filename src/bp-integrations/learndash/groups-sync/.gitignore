@@ -1,0 +1,36 @@
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# OS generated files
+.DS_Store
+.DS_Store?
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+# Sublime Text files
+*.sublime-project
+*.sublime-workspace
+
+# Sass Cache remove
+*.sass-cache
+config.rb
+
+# Ignore the Node Modules folder
+node_modules/
+phantomas/
+
+# Php Package Manager
+vendor/
+
+# Preprocessor
+*.codekit
+prepros-6.config
+prepros.cfg
+
+# laravel mix
+mix-manifest.json
