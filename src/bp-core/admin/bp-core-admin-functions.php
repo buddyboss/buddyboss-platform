@@ -1675,7 +1675,7 @@ function bp_register_profile_type_import_submenu_page() {
 		'BuddyBoss Profile Types',
 		'manage_options',
 		'bp-profile-type-import',
-		'my_custom_submenu_page_callback'
+		'bp_profile_type_import_submenu_page'
 	);
 }
 
