@@ -1330,7 +1330,6 @@ add_filter( 'admin_body_class', 'bp_core_admin_body_classes' );
 
 function bp_xprofile_always_active( $components ) {
 	$components['xprofile'] = 1;
-	$components['profiletype'] = 1;
 	return $components;
 }
 add_filter( 'bp_active_components', 'bp_xprofile_always_active' );
