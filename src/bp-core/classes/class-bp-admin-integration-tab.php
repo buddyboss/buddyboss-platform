@@ -17,6 +17,27 @@ class BP_Admin_Integration_tab extends BP_Admin_Tab {
 	public $menu_page       = 'bp-integrations';
 	public $required_plugin = '';
 	public $intro_template  = '';
+	public $root_path       = '';
+
+	public function __construct() {
+		$args = func_get_args();
+
+		if ( isset( $args[0] ) && is_string( $args[0] ) ) {
+			$this->tab_name = $args[0];
+		}
+
+		if ( isset( $args[1] ) && is_string( $args[1] ) ) {
+			$this->tab_label = $args[1];
+		}
+
+		if ( isset( $args[2] ) && is_array( $args[2] ) ) {
+			foreach ($args[2] as $key => $value) {
+				$this->$key = $value;
+			}
+		}
+
+		parent::__construct();
+	}
 
 	public function settings_saved() {
 		bp_core_redirect( bp_core_admin_integrations_url( $this->tab_name, [ 'updated' => 'true' ] ) );
@@ -28,6 +49,10 @@ class BP_Admin_Integration_tab extends BP_Admin_Tab {
 
 	public function is_tab_visible() {
 		return true;
+	}
+
+	public function is_activated() {
+		return $this->required_plugin && ! is_plugin_active( $this->required_plugin );
 	}
 
 	public function form_html() {

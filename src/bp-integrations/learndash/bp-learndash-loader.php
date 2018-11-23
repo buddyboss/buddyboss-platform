@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * @since Buddyboss 3.1.1
  */
 function bp_register_learndash_integration() {
-	require_once dirname( __FILE__ ) . '/admin/bp-admin-learndash-tab.php';
+	require_once dirname( __FILE__ ) . '/classes/bp-learndash-integration.php';
+	buddypress()->integrations['learndash'] = new BP_Learndash_Integration;
 }
-add_action( 'bp_register_admin_integrations', 'bp_register_learndash_integration' );
+add_action( 'bp_setup_integrations', 'bp_register_learndash_integration' );

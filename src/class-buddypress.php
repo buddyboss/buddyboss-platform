@@ -399,6 +399,9 @@ class BuddyPress {
 		$this->themes_dir     = $this->plugin_dir . 'bp-templates';
 		$this->themes_url     = $this->plugin_url . 'bp-templates';
 
+		// Languages
+		$this->integration_dir = $this->plugin_dir . 'bp-integrations';
+
 		/** Theme Compat ******************************************************/
 
 		$this->theme_compat   = new stdClass(); // Base theme compatibility class
@@ -575,6 +578,7 @@ class BuddyPress {
 			'BP_Attachment'                  => 'core',
 			'BP_Button'                      => 'core',
 			'BP_Component'                   => 'core',
+			'BP_Integration'                 => 'core',
 			'BP_Customizer_Control_Range'    => 'core',
 			'BP_Date_Query'                  => 'core',
 			'BP_Email_Tokens'                => 'core',

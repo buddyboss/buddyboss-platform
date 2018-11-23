@@ -1,6 +1,6 @@
 <?php
 
-class BP_Admin_Integration_Learndash extends BP_Admin_Integration_tab {
+class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 	public function initialize() {
 		$this->tab_label       = __( 'LearnDash', 'buddyboss' );
@@ -43,4 +43,3 @@ class BP_Admin_Integration_Learndash extends BP_Admin_Integration_tab {
 	}
 }
 
-return new BP_Admin_Integration_Learndash;
