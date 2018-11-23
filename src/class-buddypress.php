@@ -562,6 +562,7 @@ class BuddyPress {
 			'notifications',
 			'settings',
 			'xprofile',
+			'profiletype',
 			'forums',
 			'gdpr',
 		);
@@ -649,7 +650,7 @@ class BuddyPress {
 		 * Skip if PHPUnit is running, or BuddyPress is installing for the first time.
 		 */
 		if (
-			! in_array( $component, array( 'core', 'members', 'xprofile', 'gdpr' ), true ) &&
+			! in_array( $component, array( 'core', 'members', 'xprofile', 'gdpr', 'profiletype' ), true ) &&
 			! bp_is_active( $component ) &&
 			! function_exists( 'tests_add_filter' )
 		) {

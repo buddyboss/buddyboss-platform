@@ -1330,6 +1330,7 @@ add_filter( 'admin_body_class', 'bp_core_admin_body_classes' );
 
 function bp_xprofile_always_active( $components ) {
 	$components['xprofile'] = 1;
+	$components['profiletype'] = 1;
 	return $components;
 }
 add_filter( 'bp_active_components', 'bp_xprofile_always_active' );
@@ -1420,7 +1421,7 @@ function bp_profile_type_visibility_metabox( $post ) {
 	?>
 	<p>
 		<input type='checkbox' name='bp-member-type[enable_directory]' value='1' <?php checked( $enable_directory, 1 ); ?> tabindex="5" />
-		<strong><?php _e( 'Display tab in Members Directory', 'buddyboss' ); ?></strong>
+		<strong><?php _e( 'Display filter in Members Directory', 'buddyboss' ); ?></strong>
 	</p>
 	<?php
 	$enable_remove = isset( $meta[ '_bp_member_type_enable_remove' ] ) ? $meta[ '_bp_member_type_enable_remove' ][ 0 ] : 0; //enabled by default

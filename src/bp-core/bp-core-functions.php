@@ -4660,7 +4660,7 @@ function bp_add_member_type_field_in_registration_form() {
 }
 
 // action for displaying a users by it's type.
-add_action( 'bp_members_directory_member_types', 'bp_profile_type_directory' );
+//add_action( 'bp_members_directory_member_types', 'bp_profile_type_directory' );
 
 /**
  * Function for displaying a users by it's type.
@@ -4704,7 +4704,8 @@ function bp_profile_type_query( $query ) {
 	global $wpdb;
 
 	$cookie_scope = filter_input( INPUT_COOKIE, 'bp-members-scope', FILTER_VALIDATE_INT );
-	$post_scope   = filter_input( INPUT_POST, 'scope', FILTER_VALIDATE_INT );
+	//$post_scope   = filter_input( INPUT_POST, 'scope', FILTER_VALIDATE_INT );
+	$post_scope   = intval( $_POST['scope'] );
 
 	if ( $post_scope ) {
 		$type_id = $post_scope;

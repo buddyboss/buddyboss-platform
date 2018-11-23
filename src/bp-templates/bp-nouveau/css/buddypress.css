@@ -777,6 +777,7 @@ body.buddypress article.page > .entry-header .entry-title {
     float: right;
     margin-top: 0;
     width: auto;
+	margin-left: 4px;
   }
   .buddypress-wrap .subnav-filters .last select,
   .buddypress-wrap .subnav-filters .component-filters select {
@@ -3745,7 +3746,7 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
   appearance: none;
   border: 0;
   cursor: pointer;
-  margin-right: -25px;
+  margin-right: -22px;
   padding: 5px 25px 5px 10px;
   position: relative;
   z-index: 1;

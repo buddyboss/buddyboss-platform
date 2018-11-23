@@ -44,6 +44,13 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	);
 
 	if ( ! empty( $_POST ) ) {
+
+		if (strpos($_POST['filter'], 'profile_type_') !== false) {
+			$profile_type = explode('profile_type_',$_POST['filter']);
+			$_POST['filter'] = 'active';
+			$_POST['scope'] = intval($profile_type[1]);
+		}
+
 		$post_query = wp_parse_args( $_POST, $post_query );
 
 		// Make sure to transport the scope, filter etc.. in HeartBeat Requests
@@ -132,6 +139,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 
 	// Now pass the querystring to override default values.
 	$query_string = empty( $qs ) ? '' : join( '&', (array) $qs );
+
 
 	// List the variables for the filter
 	list( $filter, $scope, $page, $search_terms, $extras ) = array_values( $post_query );

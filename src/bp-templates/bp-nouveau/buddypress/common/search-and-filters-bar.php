@@ -26,6 +26,7 @@
 
 	<?php if ( ! ( bp_is_user() && ! bp_is_current_action( 'requests' ) ) ): ?>
 		<?php bp_get_template_part( 'common/filters/directory-filters' ); ?>
+		<?php bp_get_template_part( 'common/filters/profile-filters' ); ?>
 	<?php endif; ?>
 
 </div><!-- search & filters -->

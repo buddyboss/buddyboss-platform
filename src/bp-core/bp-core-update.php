@@ -188,6 +188,7 @@ function bp_version_updater() {
 		'members'       => 1,
 		'settings'      => 1,
 		'xprofile'      => 1,
+		'profile_type'      => 1,
 		'notifications' => 1,
 	) );
 
