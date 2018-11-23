@@ -14,6 +14,6 @@ class LearnDash_Settings_Section_BuddyPress_Groups_Sync_Tools extends LearnDash_
 
     public function show_meta_box()
     {
-        require ld_bp_groups_sync()->path('templates/admin/learndash-settings-tools.php');
+        require bp_learndash_path('groups-sync/templates/admin/learndash-settings-tools.php');
     }
 }

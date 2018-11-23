@@ -9,11 +9,13 @@ class LearnDash_BuddyPress_Groups_Sync_LearnDash
 
     public function register_hooks()
     {
-        if (! ld_bp_groups_sync()->requirement->valid()) {
+    	global $bp_learndash_requirement;
+
+        if (! $bp_learndash_requirement->valid()) {
             return;
         }
 
-        ld_bp_groups_sync()->load('includes/class-generator.php');
+        require_once bp_learndash_path('groups-sync/includes/class-generator.php');
 
         // Learndash Setting Page
         add_action('learndash_settings_pages_init', [$this, 'register_custom_settings_page']);
@@ -57,17 +59,17 @@ class LearnDash_BuddyPress_Groups_Sync_LearnDash
 
     public function register_custom_settings_page()
     {
-        ld_bp_groups_sync()->load('includes/settings/class-learndash-settings-page.php');
+        require_once bp_learndash_path('groups-sync/includes/settings/class-learndash-settings-page.php');
 
         LearnDash_Settings_Page_BuddyPress_Groups_Sync::add_page_instance();
     }
 
     public function register_custom_submit_section()
     {
-        ld_bp_groups_sync()->load('includes/settings/class-learndash-section-settings.php');
-        ld_bp_groups_sync()->load('includes/settings/class-learndash-section-tools.php');
-        ld_bp_groups_sync()->load('includes/settings/class-learndash-section-submit.php');
-        ld_bp_groups_sync()->load('includes/settings/class-learndash-section-help.php');
+        require_once bp_learndash_path('groups-sync/includes/settings/class-learndash-section-settings.php');
+        require_once bp_learndash_path('groups-sync/includes/settings/class-learndash-section-tools.php');
+        require_once bp_learndash_path('groups-sync/includes/settings/class-learndash-section-submit.php');
+        require_once bp_learndash_path('groups-sync/includes/settings/class-learndash-section-help.php');
 
         LearnDash_Settings_Section_BuddyPress_Groups_Sync::add_section_instance();
         LearnDash_Settings_Section_BuddyPress_Groups_Sync_Tools::add_section_instance();
@@ -77,7 +79,7 @@ class LearnDash_BuddyPress_Groups_Sync_LearnDash
 
     public function register_custom_toggle_field()
     {
-        ld_bp_groups_sync()->load('includes/fields/class-ld-settings-section-fields-toggle.php');
+        require_once bp_learndash_path('groups-sync/includes/fields/class-ld-settings-section-fields-toggle.php');
 
         LearnDash_Settings_Section_Fields_Toggle::add_field_instance('toggle');
     }
@@ -95,7 +97,7 @@ class LearnDash_BuddyPress_Groups_Sync_LearnDash
         $groups = ld_bp_groups_sync_get_unassociated_ld_groups();
 
         ob_start();
-        require ld_bp_groups_sync()->path('templates/admin/ajax-learndash-group-scan-results.php');
+        require bp_learndash_path('groups-sync/templates/admin/ajax-learndash-group-scan-results.php');
 
         wp_send_json_success(['html' => ob_get_clean()]);
     }
@@ -123,7 +125,7 @@ class LearnDash_BuddyPress_Groups_Sync_LearnDash
         }
 
         ob_start();
-        require ld_bp_groups_sync()->path('templates/admin/ajax-learndash-group-sync-result.php');
+        require bp_learndash_path('groups-sync/templates/admin/ajax-learndash-group-sync-result.php');
 
         wp_send_json_success(['html' => ob_get_clean()]);
     }
@@ -141,7 +143,7 @@ class LearnDash_BuddyPress_Groups_Sync_LearnDash
 
     public function associated_group_metabox_html()
     {
-        require ld_bp_groups_sync()->path('templates/admin/learndash-associated-group-metabox.php');
+        require bp_learndash_path('groups-sync/templates/admin/learndash-associated-group-metabox.php');
     }
 
     public function update_associated_group($post_id, $post, $update)

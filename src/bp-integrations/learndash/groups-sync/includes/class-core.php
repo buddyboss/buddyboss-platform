@@ -3,62 +3,28 @@
 class LearnDash_BuddyPress_Groups_Sync
 {
     protected static $instance;
-    protected $root_file;
-    protected $version;
 
-    protected function __construct($root_file, $version)
+    protected function __construct()
     {
-        $this->root_file = $root_file;
-        $this->version   = $version;
-
-        add_action('plugins_loaded', [$this, 'load_languages']);
-        add_action('plugins_loaded', [$this, 'register_hooks']);
+        $this->register_hooks();
     }
 
-    public static function instance($root_file, $version)
+    public static function instance()
     {
         if (! static::$instance) {
-            static::$instance = new static($root_file, $version);
+            static::$instance = new static;
         }
 
         return static::$instance;
     }
 
     public function register_hooks() {
-        $this->admin        = $this->load('includes/class-admin.php');
-        $this->requirement  = $this->load('includes/class-requirement.php');
-        $this->learndash    = $this->load('includes/class-learndash.php');
-        $this->buddypress   = $this->load('includes/class-buddypress.php');
-        $this->groups       = $this->load('includes/class-groups-courses.php');
-    }
+    	global $bp_learndash_admin, $bp_learndash_requirement, $bp_learndash_learndash, $bp_learndash_buddypress, $bp_learndash_groups;
 
-    public function load_languages()
-    {
-        $domain = 'ld_bp_groups_sync';
-        $locale = apply_filters('plugin_locale', get_locale(), $domain);
-
-        load_textdomain($domain, WP_LANG_DIR . "/plugins/{$domain}-{$locale}.mo");
-
-        load_plugin_textdomain('ld_bp_groups_sync', false, $this->path('languages'));
-    }
-
-    public function file()
-    {
-        return $this->root_file;
-    }
-
-    public function path($path = '')
-    {
-        return plugin_dir_path($this->root_file) . trim($path, '/\\');
-    }
-
-    public function url($uri = '')
-    {
-        return plugin_dir_url($this->root_file) . trim($uri, '/\\');
-    }
-
-    public function load($file)
-    {
-        return require $this->path($file);
+        $bp_learndash_admin        = require_once bp_learndash_path('groups-sync/includes/class-admin.php');
+        $bp_learndash_requirement  = require_once bp_learndash_path('groups-sync/includes/class-requirement.php');
+        $bp_learndash_learndash    = require_once bp_learndash_path('groups-sync/includes/class-learndash.php');
+        $bp_learndash_buddypress   = require_once bp_learndash_path('groups-sync/includes/class-buddypress.php');
+        $bp_learndash_groups       = require_once bp_learndash_path('groups-sync/includes/class-groups-courses.php');
     }
 }

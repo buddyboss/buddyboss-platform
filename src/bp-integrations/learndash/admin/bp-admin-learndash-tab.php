@@ -3,9 +3,6 @@
 class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 	public function initialize() {
-		$this->tab_label       = __( 'LearnDash', 'buddyboss' );
-		$this->tab_name        = 'bp-learndash';
-		$this->required_plugin = 'sfwd-lms/sfwd_lms.php';
 		$this->intro_template  = buddypress()->plugin_dir . '/bp-integrations/learndash/admin/templates/tab-intro.php';
 
 		$this->add_section('bp_ld_section_1', 'Integration Setting', [$this, 'integration_description']);

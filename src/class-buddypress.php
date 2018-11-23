@@ -401,6 +401,7 @@ class BuddyPress {
 
 		// Languages
 		$this->integration_dir = $this->plugin_dir . 'bp-integrations';
+		$this->integration_url = $this->plugin_url . 'bp-integrations';
 
 		/** Theme Compat ******************************************************/
 

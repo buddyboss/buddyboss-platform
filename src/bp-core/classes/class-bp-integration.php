@@ -40,7 +40,8 @@ class BP_Integration {
 		$this->name = $name;
 
 		// Path for includes.
-		$this->path = $path;
+		$this->path = trailingslashit( buddypress()->integration_dir ) . $path;
+		$this->url  = trailingslashit( buddypress()->integration_url ) . $path;
 
 		if ( $params ) {
 			if ( isset( $params['required_plugin'] ) ) {

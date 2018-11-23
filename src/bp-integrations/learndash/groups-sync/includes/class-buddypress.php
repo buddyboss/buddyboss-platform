@@ -9,7 +9,8 @@ class LearnDash_BuddyPress_Groups_Sync_BuddyPress
 
     public function register_hooks()
     {
-        if (! ld_bp_groups_sync()->requirement->valid()) {
+    	global $bp_learndash_requirement;
+        if (! $bp_learndash_requirement->valid()) {
             return;
         }
 
@@ -31,7 +32,7 @@ class LearnDash_BuddyPress_Groups_Sync_BuddyPress
 
     public function associated_group_metabox_html()
     {
-        require ld_bp_groups_sync()->path('templates/admin/buddypress-associated-group-metabox.php');
+        require bp_learndash_path('groups-sync/templates/admin/buddypress-associated-group-metabox.php');
     }
 
     public function dissociate_learndash_group($bp_group_id)

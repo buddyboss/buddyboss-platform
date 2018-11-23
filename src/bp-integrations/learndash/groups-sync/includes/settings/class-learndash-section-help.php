@@ -14,7 +14,7 @@ class LearnDash_Settings_Section_BuddyPress_Groups_Sync_Help extends LearnDash_S
 
     public function show_meta_box()
     {
-        ld_bp_groups_sync()->load('templates/admin/learndash-settings-help.php');
+        require bp_learndash_path('groups-sync/templates/admin/learndash-settings-help.php');
     }
 
     public function load_settings_fields()

@@ -9,7 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( class_exists( 'BP_Group_Extension' ) && ld_bp_groups_sync()->requirement->valid() ) {
+global $bp_learndash_requirement;
+if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() ) {
 	/**
 	 * Class LearnDash_BuddyPress_Groups_Courses_Menu to display courses menu in BuddyPress groups.
 	 *

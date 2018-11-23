@@ -24,9 +24,9 @@ class LearnDash_Settings_Page_BuddyPress_Groups_Sync extends LearnDash_Settings_
 
         wp_enqueue_script(
             'ld_bp_groups_sync-settings',
-            ld_bp_groups_sync()->url('assets/js/admin/ld_bp_groups_sync-settings.js'),
+            bp_learndash_url('groups-sync/assets/js/admin/ld_bp_groups_sync-settings.js'),
             [],
-            filemtime(ld_bp_groups_sync()->path('assets/js/admin/ld_bp_groups_sync-settings.js')),
+            filemtime(bp_learndash_path('groups-sync/assets/js/admin/ld_bp_groups_sync-settings.js')),
             true
         );
     }
