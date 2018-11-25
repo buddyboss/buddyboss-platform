@@ -4106,7 +4106,7 @@ function bp_set_user_member_type( $user_id, $member_type, $append = false ) {
  *
  * @return type int
  */
-function bp_profile_type_type_id( $type_name ) {
+function bp_member_type_type_id( $type_name ) {
 	global $wpdb;
 	$type_name = strtolower($type_name);
 	$type_name = str_replace(array(' ', ','), array('-', '-'), $type_name);
@@ -4142,7 +4142,7 @@ function bp_member_type_term_taxonomy_id( $type_name ) {
  * @param type $member_type
  * @return type array
  */
-function bp_profile_type_post_by_type($member_type) {
+function bp_member_type_post_by_type($member_type) {
 	global $wpdb;
 
 	$query = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
@@ -4157,7 +4157,7 @@ function bp_profile_type_post_by_type($member_type) {
 		$post_id = $wpdb->get_var( $query );
 	}
 
-	return apply_filters( 'bp_profile_type_post_by_type', $post_id );
+	return apply_filters( 'bp_member_type_post_by_type', $post_id );
 }
 
 /**
@@ -4169,7 +4169,7 @@ function bp_profile_type_post_by_type($member_type) {
  * @param type $type_id
  * @return type array
  */
-function bp_profile_type_by_type( $type_id ) {
+function bp_member_type_by_type( $type_id ) {
 	global $wpdb;
 
 	$member_ids = array();
@@ -4192,7 +4192,7 @@ function bp_profile_type_by_type( $type_id ) {
  *
  * @return array
  */
-function bp_active_profile_type_by_type( $type_id ) {
+function bp_active_member_type_by_type( $type_id ) {
 	global $wpdb;
 
 	$member_ids = array();
@@ -4312,8 +4312,8 @@ function bp_get_users_of_removed_member_types(){
 	// get member user ids
 	if( isset($bp_member_type_names) && !empty($bp_member_type_names) ){
 		foreach($bp_member_type_names as $type_name){
-			$type_id = bp_profile_type_type_id($type_name);
-			$mb_users = bp_active_profile_type_by_type($type_id);
+			$type_id = bp_member_type_type_id($type_name);
+			$mb_users = bp_active_member_type_by_type($type_id);
 			if( isset($mb_users) && !empty($mb_users) ){
 				foreach($mb_users as $single){
 					$user_ids[] = $single;
@@ -4371,14 +4371,14 @@ function bp_register_profile_type() {
 add_action( 'bp_register_member_types', 'bp_register_profile_type' );
 
 // action for validating the signup of profile types.
-add_action( 'bp_signup_validate', 'bp_validate_profile_type_type_field' );
+add_action( 'bp_signup_validate', 'bp_validate_member_type_field' );
 
 /**
  * Function for validating the profile fields on registration.
  *
  * @since BuddyBoss 3.1.1
  */
-function bp_validate_profile_type_type_field() {
+function bp_validate_member_type_field() {
 	global $bp;
 
 	$is_registration_required_field = bp_member_type_require_on_registration();
@@ -4402,7 +4402,7 @@ function bp_validate_profile_type_type_field() {
  * @param type $user_email
  * @param type $usermeta
  */
-function bp_profile_type_type_on_registration( $user_id, $user_login, $user_password, $user_email, $usermeta ) {
+function bp_member_type_on_registration( $user_id, $user_login, $user_password, $user_email, $usermeta ) {
 
 	//Set default member type if user has not selected any
 	$bp_member_type_type = is_array( $usermeta ) && ! empty ( $usermeta['bp_member_type_type'] ) ? $usermeta['bp_member_type_type'] : bp_member_type_default_member_type();
@@ -4416,10 +4416,10 @@ function bp_profile_type_type_on_registration( $user_id, $user_login, $user_pass
 }
 
 // Action for setting up a profile type of user while on registrations.
-add_action( 'bp_core_signup_user', 'bp_profile_type_type_on_registration', 10, 5 );
+add_action( 'bp_core_signup_user', 'bp_member_type_on_registration', 10, 5 );
 
 // Action for setting up a profile type of user while on registrations.
-add_action( 'bp_core_activated_user', 'bp_profile_type_type_on_registration_multisite', 10, 3 );
+add_action( 'bp_core_activated_user', 'bp_member_type_on_registration_multisite', 10, 3 );
 
 /**
  * Update member type on multisite.
@@ -4430,7 +4430,7 @@ add_action( 'bp_core_activated_user', 'bp_profile_type_type_on_registration_mult
  * @param type $key
  * @param type $user
  */
-function bp_profile_type_type_on_registration_multisite( $user_id, $key, $user ) {
+function bp_member_type_on_registration_multisite( $user_id, $key, $user ) {
 
 	//Set default member type if user has not selected any
 	$bp_member_type_type = is_array( $user ) && ! empty ( $user['meta']['bp_member_type_type'] ) ? $user['meta']['bp_member_type_type'] : bp_member_type_default_member_type();
@@ -4468,7 +4468,7 @@ function bp_profile_type_alter_usermeta($usermeta) {
 }
 
 //Assign role from member type
-add_action( 'bp_set_member_type','bp_profile_type_assign_wprole',10 ,3 );
+add_action( 'bp_set_member_type','bp_member_type_assign_wprole',10 ,3 );
 
 /**
  * Assign role from member type on Registration.
@@ -4479,9 +4479,9 @@ add_action( 'bp_set_member_type','bp_profile_type_assign_wprole',10 ,3 );
  * @param $member_type
  * @param $append
  */
-function bp_profile_type_assign_wprole($user_id, $member_type, $append) {
+function bp_member_type_assign_wprole($user_id, $member_type, $append) {
 
-	$req_post = bp_profile_type_post_by_type($member_type);
+	$req_post = bp_member_type_post_by_type($member_type);
 
 	if ( !isset($req_post) && !empty($req_post) ) {
 		return;
@@ -4504,7 +4504,7 @@ function bp_profile_type_assign_wprole($user_id, $member_type, $append) {
 }
 
 // remove users of a specific member type from members directory
-add_action( 'bp_ajax_querystring', 'bp_profile_type_exclude_users_from_directory_and_searches', 999, 2 );
+add_action( 'bp_ajax_querystring', 'bp_member_type_exclude_users_from_directory_and_searches', 999, 2 );
 
 /**
  * Function for exclude specific profile types from search and listing.
@@ -4516,7 +4516,7 @@ add_action( 'bp_ajax_querystring', 'bp_profile_type_exclude_users_from_directory
  *
  * @return bool|string
  */
-function bp_profile_type_exclude_users_from_directory_and_searches( $qs=false, $object=false ) {
+function bp_member_type_exclude_users_from_directory_and_searches( $qs=false, $object=false ) {
 
 	$exclude_user_ids = bp_get_users_of_removed_member_types();
 	//print_r($exclude_user_ids);
@@ -4674,7 +4674,7 @@ function bp_profile_type_directory() {
 
 		$type_name = bp_get_member_type_key( $member_type_id );
 		$type_id = bp_member_type_term_taxonomy_id( $type_name );
-		$members_count = count(  bp_profile_type_by_type( $type_id ));
+		$members_count = count(  bp_member_type_by_type( $type_id ));
 		$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
 
 		if ( empty( $type_id ) )
@@ -4802,7 +4802,7 @@ function bp_profile_type_show_data( $column, $post_id  ) {
 			$name = bp_get_member_type_key( $post_id );
 			$type_id = bp_member_type_term_taxonomy_id($name);
 
-			echo count(bp_profile_type_by_type($type_id));
+			echo count(bp_member_type_by_type($type_id));
 
 			break;
 
