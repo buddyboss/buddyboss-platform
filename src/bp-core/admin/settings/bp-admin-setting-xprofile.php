@@ -50,6 +50,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Enable/Disable Hide from Registration
 		$this->add_field( 'bp-profile-type-hide-from-registration', __( 'Hide from Registration', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_type_registration'], 'intval' );
 
+		// Enable/Disable Require on Registration.
+		$this->add_field( 'bp-profile-type-require-on-registration', __( 'Require on Registration', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_type_require_on_registration'], 'intval' );
+
 		// default profile type.
 		$this->add_field(
 			'bp-default-profile-type',
@@ -58,10 +61,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		);
 
 		// Enable/Disable Require on Registration.
-		$this->add_field( 'bp-profile-type-require-on-registration', __( 'Require on Registration', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_type_require_on_registration'], 'intval' );
-
-		// new section for import profile type.
-		$this->add_section( 'bp_profile_type_import', __( 'Import Profile Types', 'buddyboss' ), [$this, 'bp_admin_settings_callback_import_profile_type_description'] );
+		$this->add_field( 'bp-profile-type-import', __( 'Import Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_type_import'], 'intval' );
 	}
 
 	/**
@@ -161,7 +161,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		printf(
 			'<p class="description">%s</p>',
-			__( 'Set default profile type in Registration Form.', 'buddyboss' )
+			__( 'Set default profile type in the Registration Form.', 'buddyboss' )
 		);
 	}
 
@@ -178,11 +178,17 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		<?php
 	}
 
-	public function bp_admin_settings_callback_import_profile_type_description() {
+	/**
+	 * Provide link to access import setting.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 */
+	public function bp_admin_setting_callback_profile_type_import() {
 		$import_url = admin_url().'users.php?page=bp-profile-type-import';
 		//echo '<a href="'. esc_url( $import_url ).'">Click here to go import page.</a>';
 		printf(
-			__( '<a href="%s">Click here to go to import page.</a>', 'buddyboss' ),
+			__( 'Click <a href="%s">here</a> to import "member types" from BuddyPress.', 'buddyboss' ),
 			esc_url( $import_url )
 		);
 	}
