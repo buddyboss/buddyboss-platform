@@ -69,6 +69,7 @@
 
 		.component-filters {
 			margin-top: $marg-sml;
+			margin-left: 10px;
 		}
 
 		.feed {
@@ -166,11 +167,14 @@
 				float: left;
 			}
 
+			.last {
+				margin-left: 0;		
+			}
+
 			.last,
 			.component-filters {
 				float: right;
 				margin-top: 0;
-				margin-left: 0;
 				width: auto;
 
 				select {

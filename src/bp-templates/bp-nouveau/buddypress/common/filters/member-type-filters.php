@@ -1,6 +1,6 @@
 <?php
 /**
- * BP Nouveau Component's  filters template.
+ * BP Nouveau Component's filters template.
  *
  * @since BuddyBoss 3.1.1
  */
@@ -35,7 +35,7 @@ foreach ( $member_types as $member_type_id ) {
 
 if ( isset( $display_arr ) && !empty( $display_arr )) {
 	?>
-	<div id="dir-filters" class="component-filters clearfix">
+	<div id="member-type-filters" class="component-filters clearfix">
 		<div id="member-type-select" class="last filter">
 			<label class="bp-screen-reader-text" for="member-type-order-by">
 				<span ><?php bp_nouveau_filter_label(); ?></span>
