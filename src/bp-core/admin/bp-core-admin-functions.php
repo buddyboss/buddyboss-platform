@@ -1394,7 +1394,7 @@ function bp_profile_type_labels_metabox( $post ) {
 			</td>
 		</tr>
 	</table>
-	<?php wp_nonce_field( 'buddyboss-bmt-edit-member-type', '_buddyboss-bmt-nonce' ); ?>
+	<?php wp_nonce_field( 'bp-member-type-edit-member-type', '_bp-member-type-nonce' ); ?>
 	<?php
 }
 
@@ -1540,11 +1540,11 @@ function bp_save_profile_type_post_metabox_data( $post_id ) {
 	if ( $post->post_type !== bp_get_profile_type_post_type() )
 		return;
 
-	if ( ! isset( $_POST[ '_buddyboss-bmt-nonce' ] ) )
+	if ( ! isset( $_POST[ '_bp-member-type-nonce' ] ) )
 		return;
 
 	//verify nonce
-	if ( ! wp_verify_nonce( $_POST[ '_buddyboss-bmt-nonce' ], 'buddyboss-bmt-edit-member-type' ) )
+	if ( ! wp_verify_nonce( $_POST[ '_bp-member-type-nonce' ], 'bp-member-type-edit-member-type' ) )
 		return;
 
 	//Save data
