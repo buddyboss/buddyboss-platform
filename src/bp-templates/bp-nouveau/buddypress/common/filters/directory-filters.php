@@ -1,6 +1,6 @@
 <?php
 /**
- * BP Nouveau Component's filters template.
+ * BP Nouveau Component's directory filters template.
  *
  * @since BuddyPress 3.0.0
  * @version 3.0.0
