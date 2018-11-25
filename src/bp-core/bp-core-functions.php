@@ -3851,27 +3851,27 @@ function bp_strip_script_and_style_tags( $string ) {
 }
 
 /**
- * Output the name of the profile type post type.
+ * Output the name of the member type post type.
  *
  * @since BuddyBoss 3.1.1
  *
- * @return string   custom post type of profile type.
+ * @return string   custom post type of member type.
  */
 function bp_member_type_post_type() {
 	echo bp_get_member_type_post_type();
 }
 
 /**
- * Returns the name of the profile type post type.
+ * Returns the name of the member type post type.
  *
  * @since BuddyBoss 3.1.1
  *
- * @return string The name of the profile type post type.
+ * @return string The name of the member type post type.
  */
 function bp_get_member_type_post_type() {
 
 	/**
-	 * Filters the name of the profile type post type.
+	 * Filters the name of the member type post type.
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *
@@ -3890,7 +3890,7 @@ function bp_get_member_type_post_type() {
 function bp_get_member_type_post_type_labels() {
 
 	/**
-	 * Filters profile type post type labels.
+	 * Filters member type post type labels.
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *
@@ -3911,7 +3911,7 @@ function bp_get_member_type_post_type_labels() {
 }
 
 /**
- * Return array of features that the profile type post type supports.
+ * Return array of features that the member type post type supports.
  *
  * @since BuddyBoss 3.1.1
  *
@@ -3920,7 +3920,7 @@ function bp_get_member_type_post_type_labels() {
 function bp_get_member_type_post_type_supports() {
 
 	/**
-	 * Filters the features that the profile type post type supports.
+	 * Filters the features that the member type post type supports.
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *
@@ -3934,7 +3934,7 @@ function bp_get_member_type_post_type_supports() {
 }
 
 /**
- * Return profile type key.
+ * Return member type key.
  *
  * @since BuddyBoss 3.1.1
  *
@@ -4002,7 +4002,7 @@ function bp_get_member_type_by_wp_role($role){
 }
 
 /**
- * Function for removing the role from profile type.
+ * Function for removing the role from member type.
  *
  * @since BuddyBoss 3.1.1
  *
@@ -4019,7 +4019,7 @@ function bp_remove_member_type_to_roles($wp_roles, $member_type){
 }
 
 /**
- * Function for setting the profile type to roles.
+ * Function for setting the member type to roles.
  *
  * @since BuddyBoss 3.1.1
  *
@@ -4370,7 +4370,7 @@ function bp_register_profile_type() {
 // action for register member type.
 add_action( 'bp_register_member_types', 'bp_register_profile_type' );
 
-// action for validating the signup of profile types.
+// action for validating the signup of member types.
 add_action( 'bp_signup_validate', 'bp_validate_member_type_field' );
 
 /**
@@ -4415,10 +4415,10 @@ function bp_member_type_on_registration( $user_id, $user_login, $user_password, 
 	}
 }
 
-// Action for setting up a profile type of user while on registrations.
+// Action for setting up a member type of user while on registrations.
 add_action( 'bp_core_signup_user', 'bp_member_type_on_registration', 10, 5 );
 
-// Action for setting up a profile type of user while on registrations.
+// Action for setting up a member type of user while on registrations.
 add_action( 'bp_core_activated_user', 'bp_member_type_on_registration_multisite', 10, 3 );
 
 /**
@@ -4507,7 +4507,7 @@ function bp_member_type_assign_wprole($user_id, $member_type, $append) {
 add_action( 'bp_ajax_querystring', 'bp_member_type_exclude_users_from_directory_and_searches', 999, 2 );
 
 /**
- * Function for exclude specific profile types from search and listing.
+ * Function for excluding specific member types from search and listing.
  *
  * @since BuddyBoss 3.1.1
  *
@@ -4686,7 +4686,7 @@ function bp_member_type_directory() {
 	}
 }
 
-// action for changing bp query of profile types.
+// action for changing bp query of member types.
 add_action( 'bp_pre_user_query',  'bp_member_type_query', 1, 1 );
 
 /**
@@ -4814,7 +4814,7 @@ function bp_member_type_show_data( $column, $post_id  ) {
 add_filter( 'manage_edit-' . bp_get_member_type_post_type() . '_sortable_columns', 'bp_member_type_add_sortable_columns' );
 
 /**
- * Function for setting up a column on admin view on profile type post type.
+ * Function for setting up a column on admin view on member type post type.
  *
  * @since BuddyBoss 3.1.1
  *
@@ -4836,7 +4836,7 @@ function bp_member_type_add_sortable_columns( $columns ) {
 add_action( 'load-edit.php', 'bp_member_type_add_request_filter' );
 
 /**
- * Function adding a filter to profile type sort items.
+ * Function adding a filter to member type sort items.
  *
  * @since BuddyBoss 3.1.1
  *
@@ -4983,7 +4983,7 @@ function bp_member_type_shortcode_callback( $atts ) {
 
 }
 
-// Hook for creating a profile type shortcode.
+// Hook for creating a member type shortcode.
 add_shortcode( 'profile', 'bp_member_type_shortcode_callback' );
 
 /**
@@ -5009,11 +5009,11 @@ function bp_member_type_shortcode_filter( $query_string, $object ){
 	return $query_string;
 }
 
-// action for adding the js for the profile type post type.
+// action for adding the js for the member type post type.
 add_action('admin_enqueue_scripts', 'changing_listing_label');
 
 /**
- * Function for adding the js on profile type post type.
+ * Function for adding the js on member type post type.
  *
  * @since BuddyBoss 3.1.1
  */
@@ -5026,7 +5026,7 @@ function changing_listing_label() {
 		'bp-member-type'
 	);
 
-	// Check to make sure we're on a Member Type's admin page
+	// Check to make sure we're on a member type's admin page
 	if ( isset( $current_screen->id ) && in_array( $current_screen->id, $bp_member_type_pages ) ) {
 
 		wp_enqueue_script('bp-clipboard',$url.'clipboard.js',array(), '3.1.1' );

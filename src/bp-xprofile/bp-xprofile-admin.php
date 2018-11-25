@@ -810,7 +810,7 @@ function bp_xprofile_admin_form_field_types( $select_field_type ) {
 
 	// Loop through each category and output form <options>.
 	foreach ( $categories as $category => $fields ) {
-		printf( '<optgroup label="%1$s">', esc_attr( $category ) );  // Already i18n'd in each profile type class.
+		printf( '<optgroup label="%1$s">', esc_attr( $category ) );  // Already i18n'd in each member type class.
 
 		// Sort these fields types alphabetically.
 		uasort( $fields, function( $a, $b ) { return strnatcmp( $a[1]->name, $b[1]->name ); } );

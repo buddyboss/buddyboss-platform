@@ -44,23 +44,23 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
         // Enable/Disable profile search.
 		$this->add_field( 'bp-enable-profile-search', __( 'Profile Search', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_search'], 'intval' );
 
-		// new section for the profile type.
+		// Section for member types.
 		$this->add_section( 'bp_member_type_settings', __( 'Profile Types', 'buddyboss' ) );
 
-		// Enable/Disable Hide from Registration
+		// Enable/Disable hide from registration
 		$this->add_field( 'bp-member-type-hide-from-registration', __( 'Hide from Registration', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_registration'], 'intval' );
 
-		// Enable/Disable Require on Registration.
+		// Enable/Disable require on registration.
 		$this->add_field( 'bp-member-type-require-on-registration', __( 'Require on Registration', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_require_on_registration'], 'intval' );
 
-		// default profile type.
+		// default member type.
 		$this->add_field(
 			'bp-default-member-type',
 			__( 'Default Profile Type', 'buddyboss' ),
 			[$this, 'bp_admin_setting_callback_default_member_type']
 		);
 
-		// Member Type Import.
+		// Member types import.
 		$this->add_field( 'bp-member-type-import', __( 'Import Member Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_import'], 'intval' );
 	}
 
@@ -117,7 +117,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * Remove profile type selection from Registration Form.
+	 * Remove member type selection from Registration Form.
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *
@@ -130,7 +130,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * Select Member type.
+	 * Select member type.
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *
@@ -166,7 +166,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * Require profile type selection in Registration Form.
+	 * Require member type selection in Registration Form.
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *

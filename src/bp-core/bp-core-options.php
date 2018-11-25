@@ -566,13 +566,13 @@ function bp_member_type_require_on_registration( $default = false ) {
 }
 
 /**
- * Default profile type on registration.
+ * Default member type on registration.
  *
  * @since BuddyBoss 3.1.1
  *
  * @param bool $default blank. Fallback value if not found in the database.
  *                      Default: blank.
- * @return string if default profile type selected otherwise blank.
+ * @return string if default member type selected otherwise blank.
  */
 function bp_member_type_default_member_type( $default = '' ) {
 

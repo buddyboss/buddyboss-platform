@@ -1525,7 +1525,7 @@ function bp_member_type_wprole_metabox( $post ) {
 }
 
 /**
- * Function for saving metaboxes data of profile type post data.
+ * Function for saving metaboxes data of member type post data.
  * @param $post_id
  *
  * @since BuddyBoss 3.1.1
@@ -1659,11 +1659,11 @@ function bp_delete_member_type( $post_id ) {
 //delete post
 add_action( 'before_delete_post', 'bp_delete_member_type' );
 
-// Register submenu page for profile type import.
+// Register submenu page for member type import.
 add_action('admin_menu', 'bp_register_member_type_import_submenu_page');
 
 /**
- * Register submenu page for profile type import.
+ * Register submenu page for member type import.
  *
  * @since BuddyBoss 3.1.1
  *
@@ -1671,8 +1671,8 @@ add_action('admin_menu', 'bp_register_member_type_import_submenu_page');
 function bp_register_member_type_import_submenu_page() {
 	add_submenu_page(
 		null,   //or 'options.php'
-		'BuddyBoss Profile Types',
-		'BuddyBoss Profile Types',
+		'Import Member Types',
+		'Import Member Types',
 		'manage_options',
 		'bp-member-type-import',
 		'bp_member_type_import_submenu_page'
@@ -1680,7 +1680,7 @@ function bp_register_member_type_import_submenu_page() {
 }
 
 /**
- * Function for import a profile type.
+ * Function for importing member types.
  *
  * @since BuddyBoss 3.1.1
  *
