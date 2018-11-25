@@ -4345,11 +4345,11 @@ function bp_register_active_member_types() {
 
 		$key = bp_get_member_type_key( $post_id );
 
-		$enable_filter = get_post_meta( $post_id, '_bp_member_type_enable_filter', true );
+		$enable_directory = get_post_meta( $post_id, '_bp_member_type_enable_directory', true );
 
 		$has_dir = false;
 
-		if ( $enable_filter ) {
+		if ( $enable_directory ) {
 			$has_dir = true;
 		}
 
@@ -4456,7 +4456,7 @@ function bp_member_type_directory() {
 
 	foreach ( $member_types as $member_type_id ) {
 
-		if ( !get_post_meta( $member_type_id, '_bp_member_type_enable_filter', true ) ) {
+		if ( !get_post_meta( $member_type_id, '_bp_member_type_enable_directory', true ) ) {
 			continue;
 		}
 
@@ -4538,8 +4538,7 @@ function bp_member_type_add_column( $columns ) {
 
 	$columns['title'] = __( 'Profile Type', 'buddyboss' );
 	$columns['member_type'] = __( 'Label', 'buddyboss' );
-	$columns['enable_remove'] = __( 'Members Directory', 'buddyboss' );
-	$columns['enable_filter'] = __( 'Members Filter', 'buddyboss' );
+	$columns['enable_directory'] = __( 'Member Filter', 'buddyboss' );
 	$columns['total_users'] = __( 'Users', 'buddyboss' );
 
 	unset( $columns['date'] );
@@ -4567,19 +4566,10 @@ function bp_member_type_show_data( $column, $post_id  ) {
 			echo '<code>'. get_post_meta( $post_id, '_bp_member_type_label_singular_name', true ).'</code>';
 			break;
 
-		case 'enable_remove':
+		case 'enable_directory':
 
-			if( get_post_meta( $post_id, '_bp_member_type_enable_remove', true ) )
-				echo __( 'Hide', 'buddyboss' );
-			else
-				echo __( 'Show', 'buddyboss' );
-
-			break;
-
-		case 'enable_filter':
-
-			if( get_post_meta( $post_id, '_bp_member_type_enable_filter', true ) )
-				echo __( 'Show', 'buddyboss' );
+			if( get_post_meta( $post_id, '_bp_member_type_enable_directory', true ) )
+				echo __( 'Display', 'buddyboss' );
 			else
 				echo __( 'Hide', 'buddyboss' );
 
@@ -4613,8 +4603,7 @@ add_filter( 'manage_edit-' . bp_get_member_type_post_type() . '_sortable_columns
 function bp_member_type_add_sortable_columns( $columns ) {
 
 	$columns['total_users']	= 'total_users';
-	$columns['enable_filter']	= 'enable_filter';
-	$columns['enable_remove']	= 'enable_remove';
+	$columns['enable_directory']	= 'enable_directory';
 	$columns['member_type']			= 'member_type';
 
 	return $columns;
@@ -4660,9 +4649,9 @@ function bp_member_type_sort_items( $qv ) {
 
 			break;
 
-		case 'enable_filter':
+		case 'enable_directory':
 
-			$qv['meta_key'] = '_bp_member_type_enable_filter';
+			$qv['meta_key'] = '_bp_member_type_enable_directory';
 			$qv['orderby'] = 'meta_value_num';
 
 			break;

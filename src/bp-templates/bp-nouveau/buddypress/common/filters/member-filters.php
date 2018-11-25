@@ -11,7 +11,7 @@ $member_types = bp_get_active_member_types();
 $display_arr = array();
 foreach ( $member_types as $member_type_id ) {
 
-	if ( !get_post_meta( $member_type_id, '_bp_member_type_enable_filter', true ) ) {
+	if ( !get_post_meta( $member_type_id, '_bp_member_type_enable_directory', true ) ) {
 		continue;
 	}
 
