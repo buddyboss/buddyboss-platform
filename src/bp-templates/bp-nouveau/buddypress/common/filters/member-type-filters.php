@@ -36,12 +36,12 @@ foreach ( $member_types as $member_type_id ) {
 if ( isset( $display_arr ) && !empty( $display_arr )) {
 	?>
 	<div id="dir-filters" class="component-filters clearfix">
-		<div id="profile-order-select" class="last filter">
-			<label class="bp-screen-reader-text" for="profile-order-by">
+		<div id="member-type-select" class="last filter">
+			<label class="bp-screen-reader-text" for="member-type-order-by">
 				<span ><?php bp_nouveau_filter_label(); ?></span>
 			</label>
 			<div class="select-wrap">
-				<select id="profile-order-by" data-bp-filter="members">
+				<select id="member-type-order-by" data-bp-filter="members">
 					<option value="member_type_all"><?php echo __( 'All Types', 'buddyboss' ); ?></option><?php
 					foreach ( $display_arr as $member ) {
 						?>
