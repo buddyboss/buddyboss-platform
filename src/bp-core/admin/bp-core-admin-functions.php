@@ -1694,7 +1694,7 @@ function bp_profile_type_import_submenu_page() {
 					<h1><?php _e( 'Import Profile Types', 'buddyboss' ); ?></h1>
 					<p><?php _e( 'Import your existing "profile types" from BuddyPress, that were created <strong>manually with code</strong> or from a <strong>plugin</strong> (plugin needs to be active).', 'buddyboss' ); ?></p><br/>
 
-					<input type="submit" value="<?php _e('Run Migration', 'buddyboss'); ?>" id="bmt-import-submit" name="bmt-import-submit" class="button-primary">
+					<input type="submit" value="<?php _e('Run Migration', 'buddyboss'); ?>" id="bp-member-type-import-submit" name="bp-member-type-import-submit" class="button-primary">
 				</div>
 			</form>
 		</div>
@@ -1703,7 +1703,7 @@ function bp_profile_type_import_submenu_page() {
 
 	<?php
 
-	if (isset($_POST['bmt-import-submit'])) {
+	if (isset($_POST['bp-member-type-import-submit'])) {
 
 		$registered_member_types = bp_get_member_types();
 		$created_member_types = bp_get_active_member_types();
