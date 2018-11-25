@@ -776,6 +776,7 @@ body.buddypress article.page > .entry-header .entry-title {
   .buddypress-wrap .subnav-filters .component-filters {
     float: left;
     margin-top: 0;
+    margin-right: 0;
     width: auto;
   }
   .buddypress-wrap .subnav-filters .last select,
