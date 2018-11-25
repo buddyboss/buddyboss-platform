@@ -48,20 +48,20 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$this->add_section( 'bp_profile_type', __( 'Profile Types', 'buddyboss' ) );
 
 		// Enable/Disable Hide from Registration
-		$this->add_field( 'bp-member-type-hide-from-registration', __( 'Hide from Registration', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_type_registration'], 'intval' );
+		$this->add_field( 'bp-member-type-hide-from-registration', __( 'Hide from Registration', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_registration'], 'intval' );
 
 		// Enable/Disable Require on Registration.
-		$this->add_field( 'bp-member-type-require-on-registration', __( 'Require on Registration', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_type_require_on_registration'], 'intval' );
+		$this->add_field( 'bp-member-type-require-on-registration', __( 'Require on Registration', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_require_on_registration'], 'intval' );
 
 		// default profile type.
 		$this->add_field(
 			'bp-default-member-type',
 			__( 'Default Profile Type', 'buddyboss' ),
-			[$this, 'bp_admin_setting_callback_default_profile_type']
+			[$this, 'bp_admin_setting_callback_default_member_type']
 		);
 
 		// Member Type Import.
-		$this->add_field( 'bp-member-type-import', __( 'Import Member Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_type_import'], 'intval' );
+		$this->add_field( 'bp-member-type-import', __( 'Import Member Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_import'], 'intval' );
 	}
 
 	/**
@@ -122,7 +122,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 * @since BuddyBoss 3.1.1
 	 *
 	 */
-	public function bp_admin_setting_callback_profile_type_registration() {
+	public function bp_admin_setting_callback_member_type_registration() {
 		?>
 		<input id="bp-member-type-hide-from-registration" name="bp-member-type-hide-from-registration" type="checkbox" value="1" <?php checked( ! bp_disable_profile_type_selection_from_registration_from() ); ?> />
 		<label for="bp-member-type-hide-from-registration"><?php _e( 'Remove profile type selection from Registration Form.', 'buddyboss' ); ?></label>
@@ -135,9 +135,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 * @since BuddyBoss 3.1.1
 	 *
 	 */
-	public function bp_admin_setting_callback_default_profile_type() {
+	public function bp_admin_setting_callback_default_member_type() {
 
-		$bp_member_type_selected    = bp_profile_type_default_profile_type();
+		$bp_member_type_selected    = bp_profile_type_default_member_type();
 		$post_ids                   = bp_get_active_member_types();
 
 		echo '<select id="enabled_default_member_type" name="bp-default-member-type">';
@@ -171,7 +171,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 * @since BuddyBoss 3.1.1
 	 *
 	 */
-	public function bp_admin_setting_callback_profile_type_require_on_registration() {
+	public function bp_admin_setting_callback_member_type_require_on_registration() {
 		?>
 		<input id="bp-member-type-require-on-registration" name="bp-member-type-require-on-registration" type="checkbox" value="1" <?php checked( ! bp_profile_type_require_on_registration() ); ?> />
 		<label for="bp-member-type-require-on-registration"><?php _e( 'Require profile type selection in Registration Form.', 'buddyboss' ); ?></label>
@@ -184,7 +184,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 * @since BuddyBoss 3.1.1
 	 *
 	 */
-	public function bp_admin_setting_callback_profile_type_import() {
+	public function bp_admin_setting_callback_member_type_import() {
 		$import_url = admin_url().'users.php?page=bp-member-type-import';
 		//echo '<a href="'. esc_url( $import_url ).'">Click here to go import page.</a>';
 		printf(

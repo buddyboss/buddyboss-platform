@@ -574,7 +574,7 @@ function bp_profile_type_require_on_registration( $default = false ) {
  *                      Default: blank.
  * @return string if default profile type selected otherwise blank.
  */
-function bp_profile_type_default_profile_type( $default = '' ) {
+function bp_profile_type_default_member_type( $default = '' ) {
 
 	/**
 	 * Filters whether or not profile search is disabled.
@@ -583,7 +583,7 @@ function bp_profile_type_default_profile_type( $default = '' ) {
 	 *
 	 * @param bool $value Whether or not profile search is disabled.
 	 */
-	return apply_filters( 'bp_profile_type_default_profile_type', bp_get_option( 'bp-default-member-type', $default ) );
+	return apply_filters( 'bp_profile_type_default_member_type', bp_get_option( 'bp-default-member-type', $default ) );
 }
 
 /**

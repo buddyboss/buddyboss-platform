@@ -1660,7 +1660,7 @@ function bp_delete_member_type( $post_id ) {
 add_action( 'before_delete_post', 'bp_delete_member_type' );
 
 // Register submenu page for profile type import.
-add_action('admin_menu', 'bp_register_profile_type_import_submenu_page');
+add_action('admin_menu', 'bp_register_member_type_import_submenu_page');
 
 /**
  * Register submenu page for profile type import.
@@ -1668,14 +1668,14 @@ add_action('admin_menu', 'bp_register_profile_type_import_submenu_page');
  * @since BuddyBoss 3.1.1
  *
  */
-function bp_register_profile_type_import_submenu_page() {
+function bp_register_member_type_import_submenu_page() {
 	add_submenu_page(
 		null,   //or 'options.php'
 		'BuddyBoss Profile Types',
 		'BuddyBoss Profile Types',
 		'manage_options',
 		'bp-member-type-import',
-		'bp_profile_type_import_submenu_page'
+		'bp_member_type_import_submenu_page'
 	);
 }
 
@@ -1685,7 +1685,7 @@ function bp_register_profile_type_import_submenu_page() {
  * @since BuddyBoss 3.1.1
  *
  */
-function bp_profile_type_import_submenu_page() {
+function bp_member_type_import_submenu_page() {
 	?>
 	<div class="wrap">
 		<div class="boss-import-area">
