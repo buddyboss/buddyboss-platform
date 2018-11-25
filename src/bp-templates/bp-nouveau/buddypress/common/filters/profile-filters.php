@@ -45,7 +45,7 @@ if ( isset( $display_arr ) && !empty( $display_arr )) {
 					<option value="member_type_all"><?php echo __( 'All Types', 'buddyboss' ); ?></option><?php
 					foreach ( $display_arr as $member ) {
 						?>
-						<option value="profile_type_<?php echo $member['id']; ?>"><?php echo __( $member['name'], 'buddyboss' ); ?></option><?php
+						<option value="member_type_<?php echo $member['id']; ?>"><?php echo __( $member['name'], 'buddyboss' ); ?></option><?php
 					}
 					?>
 				</select>
