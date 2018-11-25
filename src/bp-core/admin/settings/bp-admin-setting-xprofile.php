@@ -173,7 +173,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 */
 	public function bp_admin_setting_callback_member_type_require_on_registration() {
 		?>
-		<input id="bp-member-type-require-on-registration" name="bp-member-type-require-on-registration" type="checkbox" value="1" <?php checked( ! bp_profile_type_require_on_registration() ); ?> />
+		<input id="bp-member-type-require-on-registration" name="bp-member-type-require-on-registration" type="checkbox" value="1" <?php checked( ! bp_member_type_require_on_registration() ); ?> />
 		<label for="bp-member-type-require-on-registration"><?php _e( 'Require profile type selection in Registration Form.', 'buddyboss' ); ?></label>
 		<?php
 	}

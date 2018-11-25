@@ -20,7 +20,7 @@ foreach ( $member_types as $member_type_id ) {
 	}
 
 	$type_name = bp_get_member_type_key( $member_type_id );
-	$type_id = bp_profile_type_term_taxonomy_id( $type_name );
+	$type_id = bp_member_type_term_taxonomy_id( $type_name );
 	$members_count = count(  bp_profile_type_by_type( $type_id ));
 	$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
 
@@ -42,7 +42,7 @@ if ( isset( $display_arr ) && !empty( $display_arr )) {
 			</label>
 			<div class="select-wrap">
 				<select id="profile-order-by" data-bp-filter="members">
-					<option value="profile_type_all"><?php echo __( 'All Types', 'buddyboss' ); ?></option><?php
+					<option value="member_type_all"><?php echo __( 'All Types', 'buddyboss' ); ?></option><?php
 					foreach ( $display_arr as $member ) {
 						?>
 						<option value="profile_type_<?php echo $member['id']; ?>"><?php echo __( $member['name'], 'buddyboss' ); ?></option><?php

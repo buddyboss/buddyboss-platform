@@ -3877,7 +3877,7 @@ function bp_get_member_type_post_type() {
 	 *
 	 * @param string $value Member Type post type name.
 	 */
-	return apply_filters( 'bp_get_member_type_post_type', buddypress()->profile_type_post_type );
+	return apply_filters( 'bp_get_member_type_post_type', buddypress()->member_type_post_type );
 }
 
 /**
@@ -4124,7 +4124,7 @@ function bp_profile_type_type_id( $type_name ) {
  * @param type $type_name
  * @return type int
  */
-function bp_profile_type_term_taxonomy_id( $type_name ) {
+function bp_member_type_term_taxonomy_id( $type_name ) {
 	global $wpdb;
 	$type_name = strtolower($type_name);
 	$type_name = str_replace(array(' ', ','), array('-', '-'), $type_name);
@@ -4257,7 +4257,7 @@ function bp_plural_labels_array() {
  *
  * @return array
  */
-function bp_get_removed_profile_types(){
+function bp_get_removed_member_types(){
 	$bp_member_type_ids = array();
 	$post_type = bp_get_member_type_post_type();
 	$bp_member_type_args = array(
@@ -4297,10 +4297,10 @@ function bp_get_removed_profile_types(){
  *
  * @return array
  */
-function bp_get_users_of_removed_profile_types(){
+function bp_get_users_of_removed_member_types(){
 	$user_ids = array();
 	// get removed member type post ids
-	$bp_member_type_ids = bp_get_removed_profile_types();
+	$bp_member_type_ids = bp_get_removed_member_types();
 	// get removed member type names/slugs
 	$bp_member_type_names = array();
 	if( isset($bp_member_type_ids) && !empty($bp_member_type_ids) ){
@@ -4381,7 +4381,7 @@ add_action( 'bp_signup_validate', 'bp_validate_profile_type_type_field' );
 function bp_validate_profile_type_type_field() {
 	global $bp;
 
-	$is_registration_required_field = bp_profile_type_require_on_registration();
+	$is_registration_required_field = bp_member_type_require_on_registration();
 
 	if ( false === $is_registration_required_field
 	     && isset( $_REQUEST['bp_member_type_type'] )
@@ -4518,7 +4518,7 @@ add_action( 'bp_ajax_querystring', 'bp_profile_type_exclude_users_from_directory
  */
 function bp_profile_type_exclude_users_from_directory_and_searches( $qs=false, $object=false ) {
 
-	$exclude_user_ids = bp_get_users_of_removed_profile_types();
+	$exclude_user_ids = bp_get_users_of_removed_member_types();
 	//print_r($exclude_user_ids);
 
 	if( $object != 'members' )
@@ -4572,7 +4572,7 @@ add_filter( 'bp_core_get_active_member_count', 'bp_fixed_all_profile_type_count'
  * @return int
  */
 function bp_fixed_all_profile_type_count( $count ){
-	$exclude_user_ids = bp_get_users_of_removed_profile_types();
+	$exclude_user_ids = bp_get_users_of_removed_member_types();
 	if( isset($exclude_user_ids) && !empty($exclude_user_ids) ){
 		$count = $count - count($exclude_user_ids);
 	}
@@ -4673,7 +4673,7 @@ function bp_profile_type_directory() {
 		}
 
 		$type_name = bp_get_member_type_key( $member_type_id );
-		$type_id = bp_profile_type_term_taxonomy_id( $type_name );
+		$type_id = bp_member_type_term_taxonomy_id( $type_name );
 		$members_count = count(  bp_profile_type_by_type( $type_id ));
 		$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
 
@@ -4800,7 +4800,7 @@ function bp_profile_type_show_data( $column, $post_id  ) {
 		case 'total_users':
 
 			$name = bp_get_member_type_key( $post_id );
-			$type_id = bp_profile_type_term_taxonomy_id($name);
+			$type_id = bp_member_type_term_taxonomy_id($name);
 
 			echo count(bp_profile_type_by_type($type_id));
 

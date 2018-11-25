@@ -553,7 +553,7 @@ function bp_disable_member_type_selection_from_registration_form( $default = fal
  *                      Default: true.
  * @return bool True if require on Registration is enabled, otherwise false.
  */
-function bp_profile_type_require_on_registration( $default = false ) {
+function bp_member_type_require_on_registration( $default = false ) {
 
 	/**
 	 * Filters whether or not profile search is disabled.
@@ -562,7 +562,7 @@ function bp_profile_type_require_on_registration( $default = false ) {
 	 *
 	 * @param bool $value Whether or not profile search is disabled.
 	 */
-	return (bool) apply_filters( 'bp_profile_type_require_on_registration', ! (bool) bp_get_option( 'bp-member-type-require-on-registration', $default ) );
+	return (bool) apply_filters( 'bp_member_type_require_on_registration', ! (bool) bp_get_option( 'bp-member-type-require-on-registration', $default ) );
 }
 
 /**

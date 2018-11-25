@@ -365,7 +365,7 @@ class BP_Core extends BP_Component {
 		// Member Types
 		register_post_type(
 			bp_get_member_type_post_type(),
-			apply_filters( 'bp_register_profile_type_post_type', array(
+			apply_filters( 'bp_register_member_type_post_type', array(
 				'description'       => _x( 'BuddyPress profile type', 'profile type post type description', 'buddyboss' ),
 				'labels'            => bp_get_member_type_post_type_labels(),
 				'public'            => false,
