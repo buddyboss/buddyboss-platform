@@ -1706,7 +1706,7 @@ function bp_profile_type_import_submenu_page() {
 	if (isset($_POST['bmt-import-submit'])) {
 
 		$registered_member_types = bp_get_member_types();
-		$created_member_types = bp_get_active_profile_type_types();
+		$created_member_types = bp_get_active_member_types();
 		$active_member_types = array();
 
 		foreach ( $created_member_types as $created_member_type ) {

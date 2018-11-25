@@ -138,7 +138,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function bp_admin_setting_callback_default_profile_type() {
 
 		$bp_member_type_selected    = bp_profile_type_default_profile_type();
-		$post_ids                   = bp_get_active_profile_type_types();
+		$post_ids                   = bp_get_active_member_types();
 
 		echo '<select id="enabled_default_member_type" name="bp-default-profile-type">';
 		echo '<option value="">-- None --</option>';

@@ -11,7 +11,7 @@ if ( bp_current_component() === 'activity' ) {
 	return '';
 }
 
-$member_types = bp_get_active_profile_type_types();
+$member_types = bp_get_active_member_types();
 $display_arr = array();
 foreach ( $member_types as $member_type_id ) {
 

@@ -4223,7 +4223,7 @@ function bp_active_profile_type_by_type( $type_id ) {
  * @global type $wpdb
  * @return type array
  */
-function bp_get_active_profile_type_types() {
+function bp_get_active_member_types() {
 
 	global $wpdb;
 	$query = "SELECT DISTINCT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s ORDER BY menu_order";
@@ -4334,7 +4334,7 @@ function bp_get_users_of_removed_profile_types(){
 function bp_register_profile_type() {
 
 
-	$post_ids = bp_get_active_profile_type_types();
+	$post_ids = bp_get_active_member_types();
 
 	//update meta cache to avoid multiple db calls
 	update_meta_cache( 'post', $post_ids );
@@ -4615,7 +4615,7 @@ if ( true === $is_member_type_field_visible ) {
  */
 function bp_add_member_type_field_in_registration_form() {
 
-	$post_ids = bp_get_active_profile_type_types();
+	$post_ids = bp_get_active_member_types();
 	if ( !empty($post_ids) ) {
 		?>
 		<div class="editfield field_bmt_member_type required-field">
@@ -4664,7 +4664,7 @@ function bp_add_member_type_field_in_registration_form() {
  * @since BuddyBoss 3.1.1
  */
 function bp_profile_type_directory() {
-	$member_types = bp_get_active_profile_type_types();
+	$member_types = bp_get_active_member_types();
 
 	foreach ( $member_types as $member_type_id ) {
 
