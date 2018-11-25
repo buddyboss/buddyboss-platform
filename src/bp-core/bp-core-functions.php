@@ -5041,6 +5041,6 @@ function changing_listing_label() {
 			'copytoclipboard'	=> __( 'Copy to clipboard', 'buddyboss' ),
 		);
 
-		wp_localize_script( 'bp-member-type-admin-screen', '_bmtAdminL10n', $strings );
+		wp_localize_script( 'bp-member-type-admin-screen', '_bpmtAdminL10n', $strings );
 	}
 }

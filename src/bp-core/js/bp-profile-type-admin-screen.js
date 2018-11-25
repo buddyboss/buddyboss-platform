@@ -3,7 +3,7 @@ if (typeof jq == "undefined")
     var jq = jQuery;
 
 // Link any localized strings.
-var l10n        =  window._bmtAdminL10n || {}
+var l10n        =  window._bpmtAdminL10n || {}
     btnChanged  = false;
 
 
