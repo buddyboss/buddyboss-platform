@@ -1346,7 +1346,7 @@ function bp_member_type_custom_metaboxes() {
 	add_meta_box( 'bp-member-type-shortcode', __( 'Shortcode', 'buddyboss' ), 'bp_profile_shortcode_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-wp-role', __( 'WordPress Role', 'buddyboss' ), 'bp_member_type_wprole_metabox', null, 'normal', 'high' );
 }
-add_action( 'add_meta_boxes_' . bp_get_profile_type_post_type(), 'bp_member_type_custom_metaboxes' );
+add_action( 'add_meta_boxes_' . bp_get_member_type_post_type(), 'bp_member_type_custom_metaboxes' );
 
 /**
  * Generate Member Type Key Meta box.
@@ -1537,7 +1537,7 @@ function bp_save_profile_type_post_metabox_data( $post_id ) {
 
 	$post = get_post( $post_id );
 
-	if ( $post->post_type !== bp_get_profile_type_post_type() )
+	if ( $post->post_type !== bp_get_member_type_post_type() )
 		return;
 
 	if ( ! isset( $_POST[ '_bp-member-type-nonce' ] ) )
@@ -1621,7 +1621,7 @@ function bp_profile_type_filter_update_messages( $messages ) {
 
 	$update_message[ 7 ] = __( 'Profile type saved.', 'buddyboss' );
 
-	$messages[ bp_get_profile_type_post_type() ] = $update_message;
+	$messages[ bp_get_member_type_post_type() ] = $update_message;
 
 	return $messages;
 }
@@ -1640,7 +1640,7 @@ function bp_delete_profile_type( $post_id ) {
 	$post = get_post( $post_id );
 
 	//Return if post is not 'bp-member-type' type
-	if ( bp_get_profile_type_post_type() !== $post->post_type ) return;
+	if ( bp_get_member_type_post_type() !== $post->post_type ) return;
 
 	$member_type_name 	= bp_get_member_type_key( $post_id );
 	$type_term 			= get_term_by( 'name', $member_type_name, 'bp_member_type' ); // Get member type term data from database by name field.
@@ -1728,7 +1728,7 @@ function bp_profile_type_import_submenu_page() {
 			$sing_name = ucfirst($import_types_data);
 			// Create post object
 			$my_post = array(
-				'post_type'     => bp_get_profile_type_post_type(),
+				'post_type'     => bp_get_member_type_post_type(),
 				'post_title'    => $sing_name,
 				'post_status'   => 'publish',
 				'post_author'   => get_current_user_id(),

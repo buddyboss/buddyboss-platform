@@ -3858,7 +3858,7 @@ function bp_strip_script_and_style_tags( $string ) {
  * @return string   custom post type of profile type.
  */
 function bp_profile_type_post_type() {
-	echo bp_get_profile_type_post_type();
+	echo bp_get_member_type_post_type();
 }
 
 /**
@@ -3868,7 +3868,7 @@ function bp_profile_type_post_type() {
  *
  * @return string The name of the profile type post type.
  */
-function bp_get_profile_type_post_type() {
+function bp_get_member_type_post_type() {
 
 	/**
 	 * Filters the name of the profile type post type.
@@ -3877,7 +3877,7 @@ function bp_get_profile_type_post_type() {
 	 *
 	 * @param string $value Member Type post type name.
 	 */
-	return apply_filters( 'bp_get_profile_type_post_type', buddypress()->profile_type_post_type );
+	return apply_filters( 'bp_get_member_type_post_type', buddypress()->profile_type_post_type );
 }
 
 /**
@@ -3887,7 +3887,7 @@ function bp_get_profile_type_post_type() {
  *
  * @return array
  */
-function bp_get_profile_type_post_type_labels() {
+function bp_get_member_type_post_type_labels() {
 
 	/**
 	 * Filters profile type post type labels.
@@ -3896,7 +3896,7 @@ function bp_get_profile_type_post_type_labels() {
 	 *
 	 * @param array $value Associative array (name => label).
 	 */
-	return apply_filters( 'bp_get_profile_type_post_type_labels', array(
+	return apply_filters( 'bp_get_member_type_post_type_labels', array(
 		'add_new_item'          => _x( 'New Profile Type', 'profile type post type label', 'buddyboss' ),
 		'all_items'             => _x( 'Profile Types', 'profile type post type label', 'buddyboss' ),
 		'edit_item'             => _x( 'Edit Profile Type', 'profile type post type label', 'buddyboss' ),
@@ -3917,7 +3917,7 @@ function bp_get_profile_type_post_type_labels() {
  *
  * @return array
  */
-function bp_get_profile_type_post_type_supports() {
+function bp_get_member_type_post_type_supports() {
 
 	/**
 	 * Filters the features that the profile type post type supports.
@@ -3926,7 +3926,7 @@ function bp_get_profile_type_post_type_supports() {
 	 *
 	 * @param array $value Supported features.
 	 */
-	return apply_filters( 'bp_get_profile_type_post_type_supports', array(
+	return apply_filters( 'bp_get_member_type_post_type_supports', array(
 		'editor',
 		'page-attributes',
 		'title',
@@ -3970,7 +3970,7 @@ function bp_get_member_type_key( $post_id ) {
  */
 function bp_get_profile_type_by_wp_role($role){
 	$bp_member_type_ids = array();
-	$post_type = bp_get_profile_type_post_type();
+	$post_type = bp_get_member_type_post_type();
 
 	$bp_member_type_args = array(
 		'post_type' => $post_type,
@@ -4228,7 +4228,7 @@ function bp_get_active_member_types() {
 	global $wpdb;
 	$query = "SELECT DISTINCT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s ORDER BY menu_order";
 
-	return $wpdb->get_col( $wpdb->prepare( $query, bp_get_profile_type_post_type(), 'publish' ) );
+	return $wpdb->get_col( $wpdb->prepare( $query, bp_get_member_type_post_type(), 'publish' ) );
 }
 
 /**
@@ -4259,7 +4259,7 @@ function bp_plural_labels_array() {
  */
 function bp_get_removed_profile_types(){
 	$bp_member_type_ids = array();
-	$post_type = bp_get_profile_type_post_type();
+	$post_type = bp_get_member_type_post_type();
 	$bp_member_type_args = array(
 		'post_type' => $post_type,
 		'meta_query' => array(
@@ -4736,7 +4736,7 @@ function bp_remove_profile_type_metabox() {
 }
 
 //add column
-add_filter( 'manage_'. bp_get_profile_type_post_type() . '_posts_columns', 'bp_profile_type_add_column' );
+add_filter( 'manage_'. bp_get_member_type_post_type() . '_posts_columns', 'bp_profile_type_add_column' );
 
 /**
  * Add new columns to the post type list screen.
@@ -4760,7 +4760,7 @@ function bp_profile_type_add_column( $columns ) {
 }
 
 // action for adding a sortable column name.
-add_action( 'manage_'. bp_get_profile_type_post_type() . '_posts_custom_column', 'bp_profile_type_show_data' , 10, 2 );
+add_action( 'manage_'. bp_get_member_type_post_type() . '_posts_custom_column', 'bp_profile_type_show_data' , 10, 2 );
 
 /**
  * display data of columns.
@@ -4811,7 +4811,7 @@ function bp_profile_type_show_data( $column, $post_id  ) {
 }
 
 //sortable columns
-add_filter( 'manage_edit-' . bp_get_profile_type_post_type() . '_sortable_columns', 'bp_profile_type_add_sortable_columns' );
+add_filter( 'manage_edit-' . bp_get_member_type_post_type() . '_sortable_columns', 'bp_profile_type_add_sortable_columns' );
 
 /**
  * Function for setting up a column on admin view on profile type post type.
@@ -4857,7 +4857,7 @@ function bp_profile_type_add_request_filter() {
  */
 function bp_profile_type_sort_items( $qv ) {
 
-	if( ! isset( $qv['post_type'] ) || $qv['post_type'] != bp_get_profile_type_post_type() )
+	if( ! isset( $qv['post_type'] ) || $qv['post_type'] != bp_get_member_type_post_type() )
 		return $qv;
 
 	if( ! isset( $qv['orderby'] ) )
@@ -4909,7 +4909,7 @@ function bp_profile_type_hide_quickedit( $actions, $post ) {
 		global $post;
 	}
 
-	if ( bp_get_profile_type_post_type() == $post->post_type )
+	if ( bp_get_member_type_post_type() == $post->post_type )
 		unset( $actions['inline hide-if-no-js'] );
 
 	return $actions;
