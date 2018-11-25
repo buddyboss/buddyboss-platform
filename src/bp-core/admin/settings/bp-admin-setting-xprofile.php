@@ -182,7 +182,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$import_url = admin_url().'users.php?page=bp-profile-type-import';
 		//echo '<a href="'. esc_url( $import_url ).'">Click here to go import page.</a>';
 		printf(
-			__( '<a href="%s">Click here to go import page.</a>', 'buddyboss' ),
+			__( '<a href="%s">Click here to go to import page.</a>', 'buddyboss' ),
 			esc_url( $import_url )
 		);
 	}
