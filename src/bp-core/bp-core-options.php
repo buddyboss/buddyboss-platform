@@ -532,7 +532,7 @@ function bp_disable_advanced_profile_search( $default = false ) {
  *                      Default: true.
  * @return bool True if profile search is enabled, otherwise false.
  */
-function bp_disable_profile_type_selection_from_registration_from( $default = false ) {
+function bp_disable_member_type_selection_from_registration_form( $default = false ) {
 
 	/**
 	 * Filters whether or not profile search is disabled.
@@ -541,7 +541,7 @@ function bp_disable_profile_type_selection_from_registration_from( $default = fa
 	 *
 	 * @param bool $value Whether Hide from Registration ot not.
 	 */
-	return (bool) apply_filters( 'bp_disable_profile_type_selection_from_registration_from', ! (bool) bp_get_option( 'bp-member-type-hide-from-registration', $default ) );
+	return (bool) apply_filters( 'bp_disable_member_type_selection_from_registration_form', ! (bool) bp_get_option( 'bp-member-type-hide-from-registration', $default ) );
 }
 
 /**
@@ -574,7 +574,7 @@ function bp_profile_type_require_on_registration( $default = false ) {
  *                      Default: blank.
  * @return string if default profile type selected otherwise blank.
  */
-function bp_profile_type_default_member_type( $default = '' ) {
+function bp_member_type_default_member_type( $default = '' ) {
 
 	/**
 	 * Filters whether or not profile search is disabled.
@@ -583,7 +583,7 @@ function bp_profile_type_default_member_type( $default = '' ) {
 	 *
 	 * @param bool $value Whether or not profile search is disabled.
 	 */
-	return apply_filters( 'bp_profile_type_default_member_type', bp_get_option( 'bp-default-member-type', $default ) );
+	return apply_filters( 'bp_member_type_default_member_type', bp_get_option( 'bp-default-member-type', $default ) );
 }
 
 /**

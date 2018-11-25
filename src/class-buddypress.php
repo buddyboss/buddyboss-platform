@@ -427,7 +427,7 @@ class BuddyPress {
 		 *
 		 * @param string $value Member Type post type slug.
 		 */
-		$this->profile_type_post_type     = apply_filters( 'bp_profile_type_post_type', 'bp-member-type' );
+		$this->profile_type_post_type     = apply_filters( 'bp_member_type_post_type', 'bp-member-type' );
 
 		/**
 		 * Filters the taxonomy slug for the email type component.

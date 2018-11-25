@@ -124,7 +124,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 */
 	public function bp_admin_setting_callback_member_type_registration() {
 		?>
-		<input id="bp-member-type-hide-from-registration" name="bp-member-type-hide-from-registration" type="checkbox" value="1" <?php checked( ! bp_disable_profile_type_selection_from_registration_from() ); ?> />
+		<input id="bp-member-type-hide-from-registration" name="bp-member-type-hide-from-registration" type="checkbox" value="1" <?php checked( ! bp_disable_member_type_selection_from_registration_form() ); ?> />
 		<label for="bp-member-type-hide-from-registration"><?php _e( 'Remove profile type selection from Registration Form.', 'buddyboss' ); ?></label>
 		<?php
 	}
@@ -137,7 +137,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 */
 	public function bp_admin_setting_callback_default_member_type() {
 
-		$bp_member_type_selected    = bp_profile_type_default_member_type();
+		$bp_member_type_selected    = bp_member_type_default_member_type();
 		$post_ids                   = bp_get_active_member_types();
 
 		echo '<select id="enabled_default_member_type" name="bp-default-member-type">';

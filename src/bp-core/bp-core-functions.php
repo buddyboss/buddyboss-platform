@@ -3857,7 +3857,7 @@ function bp_strip_script_and_style_tags( $string ) {
  *
  * @return string   custom post type of profile type.
  */
-function bp_profile_type_post_type() {
+function bp_member_type_post_type() {
 	echo bp_get_member_type_post_type();
 }
 
@@ -4030,7 +4030,7 @@ function bp_set_member_type_to_roles($wp_roles, $member_type){
 	$users = bp_get_users_by_roles($wp_roles);
 	if( isset($users) && !empty($users) ){
 		foreach($users as $single){
-			bp_set_profile_type($single, $member_type);
+			bp_set_user_member_type($single, $member_type);
 		}
 	}
 }
@@ -4072,7 +4072,7 @@ function bp_get_users_by_roles($roles) {
  *                            false to replace. Default: false.
  * @return See {@see bp_set_object_terms()}.
  */
-function bp_set_profile_type( $user_id, $member_type, $append = false ) {
+function bp_set_user_member_type( $user_id, $member_type, $append = false ) {
 
 	$retval = bp_set_object_terms( $user_id, $member_type, 'bp_member_type', $append );
 
@@ -4089,7 +4089,7 @@ function bp_set_profile_type( $user_id, $member_type, $append = false ) {
 		 * @param string $member_type Member type.
 		 * @param bool   $append      Whether the type is being appended to existing types.
 		 */
-		do_action( 'bp_set_profile_type', $user_id, $member_type, $append );
+		do_action( 'bp_set_user_member_type', $user_id, $member_type, $append );
 	}
 
 	return $retval;
@@ -4405,7 +4405,7 @@ function bp_validate_profile_type_type_field() {
 function bp_profile_type_type_on_registration( $user_id, $user_login, $user_password, $user_email, $usermeta ) {
 
 	//Set default member type if user has not selected any
-	$bp_member_type_type = is_array( $usermeta ) && ! empty ( $usermeta['bp_member_type_type'] ) ? $usermeta['bp_member_type_type'] : bp_profile_type_default_member_type();
+	$bp_member_type_type = is_array( $usermeta ) && ! empty ( $usermeta['bp_member_type_type'] ) ? $usermeta['bp_member_type_type'] : bp_member_type_default_member_type();
 
 	if ( ! empty( $bp_member_type_type ) ) {
 
@@ -4433,7 +4433,7 @@ add_action( 'bp_core_activated_user', 'bp_profile_type_type_on_registration_mult
 function bp_profile_type_type_on_registration_multisite( $user_id, $key, $user ) {
 
 	//Set default member type if user has not selected any
-	$bp_member_type_type = is_array( $user ) && ! empty ( $user['meta']['bp_member_type_type'] ) ? $user['meta']['bp_member_type_type'] : bp_profile_type_default_member_type();
+	$bp_member_type_type = is_array( $user ) && ! empty ( $user['meta']['bp_member_type_type'] ) ? $user['meta']['bp_member_type_type'] : bp_member_type_default_member_type();
 
 	if ( ! empty( $bp_member_type_type ) ) {
 
@@ -4457,7 +4457,7 @@ add_filter( 'bp_signup_usermeta', 'bp_profile_type_alter_usermeta' );
 function bp_profile_type_alter_usermeta($usermeta) {
 
 	//Set default member type if user has not selected any member type
-	$bp_member_type_type = ! empty ( $_POST['bp_member_type_type'] ) ? $_POST['bp_member_type_type'] : bp_profile_type_default_member_type();
+	$bp_member_type_type = ! empty ( $_POST['bp_member_type_type'] ) ? $_POST['bp_member_type_type'] : bp_member_type_default_member_type();
 
 	if ( !empty( $bp_member_type_type ) ) {
 		$usermeta['bp_member_type_type'] = $bp_member_type_type;
@@ -4602,7 +4602,7 @@ function bp_profile_type_show_all_fields( $args ) {
 }
 
 //Check hide member is not checked in setting
-$is_member_type_field_visible = bp_disable_profile_type_selection_from_registration_from();
+$is_member_type_field_visible = bp_disable_member_type_selection_from_registration_form();
 if ( true === $is_member_type_field_visible ) {
 	add_action( 'bp_account_details_fields',  'bp_add_member_type_field_in_registration_form' );
 }
@@ -4629,7 +4629,7 @@ function bp_add_member_type_field_in_registration_form() {
 			do_action( 'bp_field_bp_member_type_type_errors' );
 
 			//Pre fill member type with default or selected value
-			$bp_member_type_selected = isset( $_REQUEST['bp_member_type_type'] ) ? $_REQUEST['bp_member_type_type'] : bp_profile_type_default_member_type();
+			$bp_member_type_selected = isset( $_REQUEST['bp_member_type_type'] ) ? $_REQUEST['bp_member_type_type'] : bp_member_type_default_member_type();
 
 			?>
 			<select class="bp-member-type-type" name="bp_member_type_type">
