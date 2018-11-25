@@ -1689,7 +1689,7 @@ function bp_profile_type_import_submenu_page() {
 	?>
 	<div class="wrap">
 		<div class="boss-import-area">
-			<form id="bmt-import-form" method="post" action="">
+			<form id="bp-member-type-import-form" method="post" action="">
 				<div class="import-panel-content">
 					<h1><?php _e( 'Import Profile Types', 'buddyboss' ); ?></h1>
 					<p><?php _e( 'Import your existing "profile types" from BuddyPress, that were created <strong>manually with code</strong> or from a <strong>plugin</strong> (plugin needs to be active).', 'buddyboss' ); ?></p><br/>

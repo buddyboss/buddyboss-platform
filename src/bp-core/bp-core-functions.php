@@ -3969,18 +3969,18 @@ function bp_get_profile_type_key( $post_id ) {
  * @return array
  */
 function bp_get_profile_type_by_wp_role($role){
-	$bmt_ids = array();
+	$bp_member_type_ids = array();
 	$post_type = bp_get_profile_type_post_type();
 
-	$bmt_args = array(
+	$bp_member_type_args = array(
 		'post_type' => $post_type,
 		'nopaging' => true,
 	);
 
-	$bmt_query = new WP_Query($bmt_args);
-	if ($bmt_query->have_posts()):
-		while ($bmt_query->have_posts()):
-			$bmt_query->the_post();
+	$bp_member_type_query = new WP_Query($bp_member_type_args);
+	if ($bp_member_type_query->have_posts()):
+		while ($bp_member_type_query->have_posts()):
+			$bp_member_type_query->the_post();
 
 			$post_id = get_the_ID();
 			$selected_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
@@ -3988,7 +3988,7 @@ function bp_get_profile_type_by_wp_role($role){
 			$singular_name = strtolower(get_post_meta( $post_id, '_bp_member_type_label_singular_name', true ));
 			$name = bp_get_profile_type_key( $post_id );
 			if( in_array($role, $selected_roles) ){
-				$bmt_ids[] = array(
+				$bp_member_type_ids[] = array(
 					'ID' => $post_id,
 					'name' => $name,
 					'nice_name' => $singular_name,
@@ -3998,7 +3998,7 @@ function bp_get_profile_type_by_wp_role($role){
 	endif;
 	wp_reset_query();
 	wp_reset_postdata();
-	return $bmt_ids;
+	return $bp_member_type_ids;
 }
 
 /**
@@ -4258,9 +4258,9 @@ function bp_plural_labels_array() {
  * @return array
  */
 function bp_get_removed_profile_types(){
-	$bmt_ids = array();
+	$bp_member_type_ids = array();
 	$post_type = bp_get_profile_type_post_type();
-	$bmt_args = array(
+	$bp_member_type_args = array(
 		'post_type' => $post_type,
 		'meta_query' => array(
 			array(
@@ -4272,14 +4272,14 @@ function bp_get_removed_profile_types(){
 		'nopaging' => true,
 	);
 
-	$bmt_query = new WP_Query($bmt_args);
-	if ($bmt_query->have_posts()):
-		while ($bmt_query->have_posts()):
-			$bmt_query->the_post();
+	$bp_member_type_query = new WP_Query($bp_member_type_args);
+	if ($bp_member_type_query->have_posts()):
+		while ($bp_member_type_query->have_posts()):
+			$bp_member_type_query->the_post();
 
 			$post_id = get_the_ID();
 			$name = bp_get_profile_type_key( $post_id );
-			$bmt_ids[] = array(
+			$bp_member_type_ids[] = array(
 				'ID' => $post_id,
 				'name' => $name,
 			);
@@ -4287,7 +4287,7 @@ function bp_get_removed_profile_types(){
 	endif;
 	wp_reset_query();
 	wp_reset_postdata();
-	return $bmt_ids;
+	return $bp_member_type_ids;
 }
 
 /**
@@ -4300,18 +4300,18 @@ function bp_get_removed_profile_types(){
 function bp_get_users_of_removed_profile_types(){
 	$user_ids = array();
 	// get removed member type post ids
-	$bmt_ids = bp_get_removed_profile_types();
+	$bp_member_type_ids = bp_get_removed_profile_types();
 	// get removed member type names/slugs
-	$bmt_names = array();
-	if( isset($bmt_ids) && !empty($bmt_ids) ){
-		foreach($bmt_ids as $single){
-			$bmt_names[] = $single['name'];
+	$bp_member_type_names = array();
+	if( isset($bp_member_type_ids) && !empty($bp_member_type_ids) ){
+		foreach($bp_member_type_ids as $single){
+			$bp_member_type_names[] = $single['name'];
 		}
 	}
 
 	// get member user ids
-	if( isset($bmt_names) && !empty($bmt_names) ){
-		foreach($bmt_names as $type_name){
+	if( isset($bp_member_type_names) && !empty($bp_member_type_names) ){
+		foreach($bp_member_type_names as $type_name){
 			$type_id = bp_profile_type_type_id($type_name);
 			$mb_users = bp_active_profile_type_by_type($type_id);
 			if( isset($mb_users) && !empty($mb_users) ){
@@ -4384,10 +4384,10 @@ function bp_validate_profile_type_type_field() {
 	$is_registration_required_field = bp_profile_type_require_on_registration();
 
 	if ( false === $is_registration_required_field
-	     && isset( $_REQUEST['bmt_member_type'] )
-	     &&  empty( $_REQUEST['bmt_member_type'] )
+	     && isset( $_REQUEST['bp_member_type_type'] )
+	     &&  empty( $_REQUEST['bp_member_type_type'] )
 	) {
-		$bp->signup->errors['field_bmt_member_type'] = __( 'Please make sure you have selected a profile type', 'buddyboss' );
+		$bp->signup->errors['field_bp_member_type_type'] = __( 'Please make sure you have selected a profile type', 'buddyboss' );
 	}
 }
 
@@ -4405,12 +4405,12 @@ function bp_validate_profile_type_type_field() {
 function bp_profile_type_type_on_registration( $user_id, $user_login, $user_password, $user_email, $usermeta ) {
 
 	//Set default member type if user has not selected any
-	$bmt_member_type = is_array( $usermeta ) && ! empty ( $usermeta['bmt_member_type'] ) ? $usermeta['bmt_member_type'] : bp_profile_type_default_profile_type();
+	$bp_member_type_type = is_array( $usermeta ) && ! empty ( $usermeta['bp_member_type_type'] ) ? $usermeta['bp_member_type_type'] : bp_profile_type_default_profile_type();
 
-	if ( ! empty( $bmt_member_type ) ) {
+	if ( ! empty( $bp_member_type_type ) ) {
 
 		if ( !empty($user_id ) ) { //for multisite $user_id is empty
-			bp_set_member_type($user_id, $bmt_member_type );
+			bp_set_member_type($user_id, $bp_member_type_type );
 		}
 	}
 }
@@ -4433,12 +4433,12 @@ add_action( 'bp_core_activated_user', 'bp_profile_type_type_on_registration_mult
 function bp_profile_type_type_on_registration_multisite( $user_id, $key, $user ) {
 
 	//Set default member type if user has not selected any
-	$bmt_member_type = is_array( $user ) && ! empty ( $user['meta']['bmt_member_type'] ) ? $user['meta']['bmt_member_type'] : bp_profile_type_default_profile_type();
+	$bp_member_type_type = is_array( $user ) && ! empty ( $user['meta']['bp_member_type_type'] ) ? $user['meta']['bp_member_type_type'] : bp_profile_type_default_profile_type();
 
-	if ( ! empty( $bmt_member_type ) ) {
+	if ( ! empty( $bp_member_type_type ) ) {
 
 		if ( ! empty( $user_id ) ) {
-			bp_set_member_type( $user_id, $bmt_member_type );
+			bp_set_member_type( $user_id, $bp_member_type_type );
 		}
 	}
 }
@@ -4457,10 +4457,10 @@ add_filter( 'bp_signup_usermeta', 'bp_profile_type_alter_usermeta' );
 function bp_profile_type_alter_usermeta($usermeta) {
 
 	//Set default member type if user has not selected any member type
-	$bmt_member_type = ! empty ( $_POST['bmt_member_type'] ) ? $_POST['bmt_member_type'] : bp_profile_type_default_profile_type();
+	$bp_member_type_type = ! empty ( $_POST['bp_member_type_type'] ) ? $_POST['bp_member_type_type'] : bp_profile_type_default_profile_type();
 
-	if ( !empty( $bmt_member_type ) ) {
-		$usermeta['bmt_member_type'] = $bmt_member_type;
+	if ( !empty( $bp_member_type_type ) ) {
+		$usermeta['bp_member_type_type'] = $bp_member_type_type;
 	}
 
 	return apply_filters( 'bp_profile_type_alter_usermeta', $usermeta );
@@ -4618,7 +4618,7 @@ function bp_add_member_type_field_in_registration_form() {
 	$post_ids = bp_get_active_member_types();
 	if ( !empty($post_ids) ) {
 		?>
-		<div class="editfield field_bmt_member_type required-field">
+		<div class="editfield field_bp_member_type_type required-field">
 			<label><?php _e('Profile Type','buddyboss'); ?></label>
 			<?php
 			/**
@@ -4626,13 +4626,13 @@ function bp_add_member_type_field_in_registration_form() {
 			 *
 			 * @since 1.1.0
 			 */
-			do_action( 'bp_field_bmt_member_type_errors' );
+			do_action( 'bp_field_bp_member_type_type_errors' );
 
 			//Pre fill member type with default or selected value
-			$bp_member_type_selected = isset( $_REQUEST['bmt_member_type'] ) ? $_REQUEST['bmt_member_type'] : bp_profile_type_default_profile_type();
+			$bp_member_type_selected = isset( $_REQUEST['bp_member_type_type'] ) ? $_REQUEST['bp_member_type_type'] : bp_profile_type_default_profile_type();
 
 			?>
-			<select class="bmt-member-type" name="bmt_member_type">
+			<select class="bmt-member-type" name="bp_member_type_type">
 				<option value=""><?php echo '----'; ?></option>
 				<?php
 				foreach ($post_ids as $pid) {
