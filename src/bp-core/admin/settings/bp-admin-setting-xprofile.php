@@ -55,7 +55,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		// default profile type.
 		$this->add_field(
-			'bp-default-profile-type',
+			'bp-default-member-type',
 			__( 'Default Profile Type', 'buddyboss' ),
 			[$this, 'bp_admin_setting_callback_default_profile_type']
 		);
@@ -140,7 +140,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$bp_member_type_selected    = bp_profile_type_default_profile_type();
 		$post_ids                   = bp_get_active_member_types();
 
-		echo '<select id="enabled_default_member_type" name="bp-default-profile-type">';
+		echo '<select id="enabled_default_member_type" name="bp-default-member-type">';
 		echo '<option value="">-- None --</option>';
 		foreach ($post_ids as $pid) {
 

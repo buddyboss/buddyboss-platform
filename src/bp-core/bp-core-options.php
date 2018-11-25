@@ -62,7 +62,7 @@ function bp_get_default_options() {
 		'bp-member-type-hide-from-registration'            => false,
 
 		// Default Member Type
-		'bp-default-profile-type'            => '',
+		'bp-default-member-type'            => '',
 
 		// Require on Registration
 		'bp-member-type-require-on-registration'            => false,
@@ -583,7 +583,7 @@ function bp_profile_type_default_profile_type( $default = '' ) {
 	 *
 	 * @param bool $value Whether or not profile search is disabled.
 	 */
-	return apply_filters( 'bp_profile_type_default_profile_type', bp_get_option( 'bp-default-profile-type', $default ) );
+	return apply_filters( 'bp_profile_type_default_profile_type', bp_get_option( 'bp-default-member-type', $default ) );
 }
 
 /**
