@@ -26,7 +26,7 @@ function xprofile_add_admin_menu() {
 	}
 
 	add_users_page( _x( 'Profile Fields', 'xProfile admin page title', 'buddyboss' ), _x( 'Profile Fields', 'Admin Users menu', 'buddyboss' ), 'manage_options', 'bp-profile-setup', 'xprofile_admin' );
-	add_users_page( _x( 'Profile Types', 'Profile Types admin page title', 'buddyboss' ), _x( 'Profile Types', 'Admin Users menu', 'buddyboss' ), 'manage_options', 'edit.php?post_type=bp-profile-type', '' );
+	add_users_page( _x( 'Profile Types', 'Profile Types admin page title', 'buddyboss' ), _x( 'Profile Types', 'Admin Users menu', 'buddyboss' ), 'manage_options', 'edit.php?post_type=bp-member-type', '' );
 }
 add_action( bp_core_admin_hook(), 'xprofile_add_admin_menu' );
 
@@ -810,7 +810,7 @@ function bp_xprofile_admin_form_field_types( $select_field_type ) {
 
 	// Loop through each category and output form <options>.
 	foreach ( $categories as $category => $fields ) {
-		printf( '<optgroup label="%1$s">', esc_attr( $category ) );  // Already i18n'd in each profile type class.
+		printf( '<optgroup label="%1$s">', esc_attr( $category ) );  // Already i18n'd in each member type class.
 
 		// Sort these fields types alphabetically.
 		uasort( $fields, function( $a, $b ) { return strnatcmp( $a[1]->name, $b[1]->name ); } );

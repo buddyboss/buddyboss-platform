@@ -362,12 +362,12 @@ class BP_Core extends BP_Component {
 			);
 		}
 
-		// Profile Types
+		// Member Types
 		register_post_type(
-			bp_get_profile_type_post_type(),
-			apply_filters( 'bp_register_profile_type_post_type', array(
+			bp_get_member_type_post_type(),
+			apply_filters( 'bp_register_member_type_post_type', array(
 				'description'       => _x( 'BuddyPress profile type', 'profile type post type description', 'buddyboss' ),
-				'labels'            => bp_get_profile_type_post_type_labels(),
+				'labels'            => bp_get_member_type_post_type_labels(),
 				'public'            => false,
 				'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),
 				'query_var'         => false,
@@ -377,7 +377,7 @@ class BP_Core extends BP_Component {
 				'map_meta_cap' 		=> true,
 				'show_in_rest' 		=> true,
 				'show_ui'           => bp_current_user_can( 'bp_moderate' ),
-				'supports'          => bp_get_profile_type_post_type_supports(),
+				'supports'          => bp_get_member_type_post_type_supports(),
 			) )
 		);
 

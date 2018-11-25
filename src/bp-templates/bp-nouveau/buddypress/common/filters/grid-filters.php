@@ -1,6 +1,6 @@
 <?php
 /**
- * BP Nouveau Component's  grid filters template.
+ * BP Nouveau Component's grid filters template.
  *
  * @since BuddyBoss 3.1.1
  */

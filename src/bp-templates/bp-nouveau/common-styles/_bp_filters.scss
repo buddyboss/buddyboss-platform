@@ -170,6 +170,7 @@
 			.component-filters {
 				float: right;
 				margin-top: 0;
+				margin-left: 0;
 				width: auto;
 
 				select {
@@ -208,7 +209,6 @@
 	.subnav-filters .grid-filters {
 		float: right;
 		padding: 0;
-		margin-left: 10px;
 	}
 
 } // close .buddypress-wrap

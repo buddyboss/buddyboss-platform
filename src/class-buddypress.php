@@ -425,13 +425,13 @@ class BuddyPress {
 		$this->email_post_type     = apply_filters( 'bp_email_post_type', 'bp-email' );
 
 		/**
-		 * Filters the post type slug for the profile type component.
+		 * Filters the post type slug for the member type component.
 		 *
 		 * since BuddyBoss 3.1.1
 		 *
-		 * @param string $value Profile Type post type slug.
+		 * @param string $value Member Type post type slug.
 		 */
-		$this->profile_type_post_type     = apply_filters( 'bp_profile_type_post_type', 'bp-profile-type' );
+		$this->member_type_post_type     = apply_filters( 'bp_member_type_post_type', 'bp-member-type' );
 
 		/**
 		 * Filters the taxonomy slug for the email type component.
@@ -566,6 +566,7 @@ class BuddyPress {
 			'notifications',
 			'settings',
 			'xprofile',
+			'profiletype',
 			'forums',
 			'gdpr',
 		);
@@ -654,7 +655,7 @@ class BuddyPress {
 		 * Skip if PHPUnit is running, or BuddyPress is installing for the first time.
 		 */
 		if (
-			! in_array( $component, array( 'core', 'members', 'xprofile', 'gdpr' ), true ) &&
+			! in_array( $component, array( 'core', 'members', 'xprofile', 'gdpr', 'profiletype' ), true ) &&
 			! bp_is_active( $component ) &&
 			! function_exists( 'tests_add_filter' )
 		) {

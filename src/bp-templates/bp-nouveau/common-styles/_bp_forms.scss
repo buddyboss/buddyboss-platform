@@ -375,6 +375,13 @@ body.no-js {
 		}
 	} // close .select-wrap
 
+	.subnav-filters {
+
+		.select-wrap {
+			margin-right: 12px;
+		}
+	}
+
 	// Add a little on hover inset shadow for  subnav search & filters
 	.select-wrap,
 	.bp-search form {

@@ -44,24 +44,11 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
         // Enable/Disable profile search.
 		$this->add_field( 'bp-enable-profile-search', __( 'Profile Search', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_search'], 'intval' );
 
-		// new section for the profile type.
-		$this->add_section( 'bp_profile_type', __( 'Profile Types', 'buddyboss' ) );
+		// Section for member types.
+		$this->add_section( 'bp_member_type_settings', __( 'Profile Types', 'buddyboss' ) );
 
-		// Enable/Disable Hide from Registration
-		$this->add_field( 'bp-profile-type-hide-from-registration', __( 'Hide from Registration', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_type_registration'], 'intval' );
-
-		// default profile type.
-		$this->add_field(
-			'bp-default-profile-type',
-			__( 'Default Profile Type', 'buddyboss' ),
-			[$this, 'bp_admin_setting_callback_default_profile_type']
-		);
-
-		// Enable/Disable Require on Registration.
-		$this->add_field( 'bp-profile-type-require-on-registration', __( 'Require on Registration', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_type_require_on_registration'], 'intval' );
-
-		// new section for import profile type.
-		$this->add_section( 'bp_profile_type_import', __( 'Import Profile Types', 'buddyboss' ), [$this, 'bp_admin_settings_callback_import_profile_type_description'] );
+		// Member types import.
+		$this->add_field( 'bp-member-type-import', __( 'Import Member Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_import'], 'intval' );
 	}
 
 	/**
@@ -117,72 +104,16 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * Remove profile type selection from Registration Form.
+	 * Provide link to access import setting.
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *
 	 */
-	public function bp_admin_setting_callback_profile_type_registration() {
-		?>
-		<input id="bp-profile-type-hide-from-registration" name="bp-profile-type-hide-from-registration" type="checkbox" value="1" <?php checked( ! bp_disable_profile_type_selection_from_registration_from() ); ?> />
-		<label for="bp-profile-type-hide-from-registration"><?php _e( 'Remove profile type selection from Registration Form.', 'buddyboss' ); ?></label>
-		<?php
-	}
-
-	/**
-	 * Select Member type.
-	 *
-	 * @since BuddyBoss 3.1.1
-	 *
-	 */
-	public function bp_admin_setting_callback_default_profile_type() {
-
-		$bp_member_type_selected    = bp_profile_type_default_profile_type();
-		$post_ids                   = bp_get_active_profile_type_types();
-
-		echo '<select id="enabled_default_member_type" name="bp-default-profile-type">';
-		echo '<option value="">-- None --</option>';
-		foreach ($post_ids as $pid) {
-
-			$enable_register = get_post_meta($pid, '_bp_member_type_enable_registration', true);
-
-			if ( $enable_register ) {
-
-				//Member type label
-				$bp_member_type_label = sanitize_title( get_post_meta( $pid, '_bp_member_type_label_singular_name', true) );
-
-				?>
-				<option value="<?php echo $bp_member_type_label ?>" <?php selected( $bp_member_type_selected, $bp_member_type_label ) ?>><?php echo get_the_title($pid); ?></option>
-				<?php
-			}
-		}
-
-		echo '</select>';
-
-		printf(
-			'<p class="description">%s</p>',
-			__( 'Set default profile type in Registration Form.', 'buddyboss' )
-		);
-	}
-
-	/**
-	 * Require profile type selection in Registration Form.
-	 *
-	 * @since BuddyBoss 3.1.1
-	 *
-	 */
-	public function bp_admin_setting_callback_profile_type_require_on_registration() {
-		?>
-		<input id="bp-profile-type-require-on-registration" name="bp-profile-type-require-on-registration" type="checkbox" value="1" <?php checked( ! bp_profile_type_require_on_registration() ); ?> />
-		<label for="bp-profile-type-require-on-registration"><?php _e( 'Require profile type selection in Registration Form.', 'buddyboss' ); ?></label>
-		<?php
-	}
-
-	public function bp_admin_settings_callback_import_profile_type_description() {
-		$import_url = admin_url().'users.php?page=bp-profile-type-import';
+	public function bp_admin_setting_callback_member_type_import() {
+		$import_url = admin_url().'users.php?page=bp-member-type-import';
 		//echo '<a href="'. esc_url( $import_url ).'">Click here to go import page.</a>';
 		printf(
-			__( '<a href="%s">Click here to go import page.</a>', 'buddyboss' ),
+			__( 'Click <a href="%s">here</a> to import "member types" from BuddyPress.', 'buddyboss' ),
 			esc_url( $import_url )
 		);
 	}

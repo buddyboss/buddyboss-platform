@@ -1335,27 +1335,27 @@ function bp_xprofile_always_active( $components ) {
 add_filter( 'bp_active_components', 'bp_xprofile_always_active' );
 
 /**
- * Custom metaboxes used by our 'bp-profile-type' post type.
+ * Custom metaboxes used by our 'bp-member-type' post type.
  *
  * @since BuddyBoss 3.1.1
  */
-function bp_profile_type_custom_metaboxes() {
-	add_meta_box( 'bp-profile-type-key', __( 'Profile Type Key', 'buddyboss' ), 'bp_profile_type_key_metabox', null, 'normal', 'high' );
-	add_meta_box( 'bp-profile-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_profile_type_labels_metabox', null, 'normal', 'high' );
-	add_meta_box( 'bp-profile-type-visibility', __( 'Visibility', 'buddyboss' ), 'bp_profile_type_visibility_metabox', null, 'normal', 'high' );
-	add_meta_box( 'bp-profile-type-shortcode', __( 'Shortcode', 'buddyboss' ), 'bp_profile_shortcode_metabox', null, 'normal', 'high' );
-	add_meta_box( 'bp-profile-type-wp-role', __( 'WordPress Role', 'buddyboss' ), 'bp_profile_type_wprole_metabox', null, 'normal', 'high' );
+function bp_member_type_custom_metaboxes() {
+	add_meta_box( 'bp-member-type-key', __( 'Profile Type Key', 'buddyboss' ), 'bp_member_type_key_metabox', null, 'normal', 'high' );
+	add_meta_box( 'bp-member-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_member_type_labels_metabox', null, 'normal', 'high' );
+	add_meta_box( 'bp-member-type-visibility', __( 'Visibility', 'buddyboss' ), 'bp_member_type_visibility_metabox', null, 'normal', 'high' );
+	add_meta_box( 'bp-member-type-shortcode', __( 'Shortcode', 'buddyboss' ), 'bp_profile_shortcode_metabox', null, 'normal', 'high' );
+	add_meta_box( 'bp-member-type-wp-role', __( 'WordPress Role', 'buddyboss' ), 'bp_member_type_wprole_metabox', null, 'normal', 'high' );
 }
-add_action( 'add_meta_boxes_' . bp_get_profile_type_post_type(), 'bp_profile_type_custom_metaboxes' );
+add_action( 'add_meta_boxes_' . bp_get_member_type_post_type(), 'bp_member_type_custom_metaboxes' );
 
 /**
- * Generate Profile Type Key Meta box.
+ * Generate Member Type Key Meta box.
  *
  * @since BuddyBoss 3.1.1
  *
  * @param WP_Post $post
  */
-function bp_profile_type_key_metabox( $post ) {
+function bp_member_type_key_metabox( $post ) {
 
 	$key = get_post_meta($post->ID, '_bp_member_type_key', true );
 	?>
@@ -1373,7 +1373,7 @@ function bp_profile_type_key_metabox( $post ) {
  *
  * @param WP_Post $post
  */
-function bp_profile_type_labels_metabox( $post ) {
+function bp_member_type_labels_metabox( $post ) {
 
 	$meta = get_post_custom( $post->ID );
 
@@ -1384,17 +1384,17 @@ function bp_profile_type_labels_metabox( $post ) {
 		<tr valign="top">
 			<th scope="row" style="text-align: left; width: 15%;"><label for="bp-member-type[label_name]"><?php _e( 'Plural Label', 'buddyboss' ); ?></label></th>
 			<td>
-				<input type="text" class="bmt-label-name" name="bp-member-type[label_name]" placeholder="<?php _e( 'e.g. Students', 'buddyboss' ); ?>"  value="<?php echo esc_attr( $label_name ); ?>" tabindex="2" style="width: 100%;" />
+				<input type="text" class="bp-member-type-label-name" name="bp-member-type[label_name]" placeholder="<?php _e( 'e.g. Students', 'buddyboss' ); ?>"  value="<?php echo esc_attr( $label_name ); ?>" tabindex="2" style="width: 100%;" />
 			</td>
 		</tr>
 		<tr valign="top">
 			<th scope="row" style="text-align: left; width: 15%;"><label for="bp-member-type[label_singular_name]"><?php _e( 'Singular Label', 'buddyboss' ); ?></label></th>
 			<td>
-				<input type="text" class="bmt-singular-name" name="bp-member-type[label_singular_name]" placeholder="<?php _e( 'e.g. Student', 'buddyboss' ); ?>" value="<?php echo esc_attr( $label_singular_name ); ?>" tabindex="3" style="width: 100%;" />
+				<input type="text" class="bp-member-type-singular-name" name="bp-member-type[label_singular_name]" placeholder="<?php _e( 'e.g. Student', 'buddyboss' ); ?>" value="<?php echo esc_attr( $label_singular_name ); ?>" tabindex="3" style="width: 100%;" />
 			</td>
 		</tr>
 	</table>
-	<?php wp_nonce_field( 'buddyboss-bmt-edit-member-type', '_buddyboss-bmt-nonce' ); ?>
+	<?php wp_nonce_field( 'bp-member-type-edit-member-type', '_bp-member-type-nonce' ); ?>
 	<?php
 }
 
@@ -1405,29 +1405,23 @@ function bp_profile_type_labels_metabox( $post ) {
  *
  * @param WP_Post $post
  */
-function bp_profile_type_visibility_metabox( $post ) {
+function bp_member_type_visibility_metabox( $post ) {
 
 	$meta = get_post_custom( $post->ID );
-	$enable_registration = isset( $meta[ '_bp_member_type_enable_registration' ] ) ? $meta[ '_bp_member_type_enable_registration' ][ 0 ] : 0; //disabled by default
-	$options_url = admin_url().'admin.php?page=bp-settings&tab=bp-xprofile';
 	?>
-	<p>
-		<input type='checkbox' name='bp-member-type[enable_registration]' value='1' <?php checked( $enable_registration, 1 ); ?> tabindex="4" />
-		<strong><?php _e( 'Display in <a href="'.$options_url.'">Registration Form</a>', 'buddyboss' ); ?></strong>
-	</p>
 	<?php
-	$enable_directory = isset( $meta[ '_bp_member_type_enable_directory' ] ) ? $meta[ '_bp_member_type_enable_directory' ][ 0 ] : 0; //disabled by default
+	$enable_filter = isset( $meta[ '_bp_member_type_enable_filter' ] ) ? $meta[ '_bp_member_type_enable_filter' ][ 0 ] : 0; //disabled by default
 	?>
 	<p>
-		<input type='checkbox' name='bp-member-type[enable_directory]' value='1' <?php checked( $enable_directory, 1 ); ?> tabindex="5" />
-		<strong><?php _e( 'Display tab in Members Directory', 'buddyboss' ); ?></strong>
+		<input type='checkbox' name='bp-member-type[enable_filter]' value='1' <?php checked( $enable_filter, 1 ); ?> tabindex="5" />
+		<strong><?php _e( 'Display in "All Types" filter in Members Directory', 'buddyboss' ); ?></strong>
 	</p>
 	<?php
 	$enable_remove = isset( $meta[ '_bp_member_type_enable_remove' ] ) ? $meta[ '_bp_member_type_enable_remove' ][ 0 ] : 0; //enabled by default
 	?>
 	<p>
 		<input type='checkbox' name='bp-member-type[enable_remove]' value='1' <?php checked( $enable_remove, 1 ); ?> tabindex="6" />
-		<strong><?php _e( 'Hide completely from Members Directory', 'buddyboss' ); ?></strong>
+		<strong><?php _e( 'Hide members of this type from Members Directory', 'buddyboss' ); ?></strong>
 	</p>
 	<?php
 }
@@ -1441,7 +1435,7 @@ function bp_profile_type_visibility_metabox( $post ) {
  */
 function bp_profile_shortcode_metabox( $post ) {
 
-	$key = bp_get_profile_type_key( $post->ID );
+	$key = bp_get_member_type_key( $post->ID );
 
 	?>
 	<p class="member-type-shortcode-wrapper">
@@ -1464,7 +1458,7 @@ function bp_profile_shortcode_metabox( $post ) {
  *
  * @param WP_Post $post
  */
-function bp_profile_type_wprole_metabox( $post ) {
+function bp_member_type_wprole_metabox( $post ) {
 
 	global $wp_roles;
 	$tabindex = 7;
@@ -1496,7 +1490,7 @@ function bp_profile_type_wprole_metabox( $post ) {
 	<?php
 	if( isset($all_roles) && !empty($all_roles) ){
 		foreach($all_roles as $key => $val){
-			$role_member_type = bp_get_profile_type_by_wp_role($key);
+			$role_member_type = bp_get_member_type_by_wp_role($key);
 			$disabled = '';
 			$disabled_style = '';
 			$disable_message = '';
@@ -1525,26 +1519,26 @@ function bp_profile_type_wprole_metabox( $post ) {
 }
 
 /**
- * Function for saving metaboxes data of profile type post data.
+ * Function for saving metaboxes data of member type post data.
  * @param $post_id
  *
  * @since BuddyBoss 3.1.1
  */
-function bp_save_profile_type_post_metabox_data( $post_id ) {
+function bp_save_member_type_post_metabox_data( $post_id ) {
 
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
 		return;
 
 	$post = get_post( $post_id );
 
-	if ( $post->post_type !== bp_get_profile_type_post_type() )
+	if ( $post->post_type !== bp_get_member_type_post_type() )
 		return;
 
-	if ( ! isset( $_POST[ '_buddyboss-bmt-nonce' ] ) )
+	if ( ! isset( $_POST[ '_bp-member-type-nonce' ] ) )
 		return;
 
 	//verify nonce
-	if ( ! wp_verify_nonce( $_POST[ '_buddyboss-bmt-nonce' ], 'buddyboss-bmt-edit-member-type' ) )
+	if ( ! wp_verify_nonce( $_POST[ '_bp-member-type-nonce' ], 'bp-member-type-edit-member-type' ) )
 		return;
 
 	//Save data
@@ -1566,9 +1560,8 @@ function bp_save_profile_type_post_metabox_data( $post_id ) {
 	$label_name     = trim( $label_name );
 	$singular_name  = trim( $singular_name );
 
-	$enable_directory = isset( $data[ 'enable_directory' ] ) ? absint( $data[ 'enable_directory' ] ) : 0; //default inactive
+	$enable_filter = isset( $data[ 'enable_filter' ] ) ? absint( $data[ 'enable_filter' ] ) : 0; //default inactive
 	$enable_remove = isset( $data[ 'enable_remove' ] ) ? absint( $data[ 'enable_remove' ] ) : 0; //default inactive
-	$enable_registration = isset( $data[ 'enable_registration' ] ) ? absint( $data[ 'enable_registration' ] ) : 0; //default inactive
 
 	$data[ 'wp_roles' ] = array_filter( $data[ 'wp_roles' ] ); // Remove empty value from wp_roles array
 	$wp_roles = isset( $data[ 'wp_roles' ] ) ? $data[ 'wp_roles' ] : '';
@@ -1578,27 +1571,26 @@ function bp_save_profile_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_label_name', $label_name );
 	update_post_meta( $post_id, '_bp_member_type_label_singular_name', $singular_name );
 
-	update_post_meta( $post_id, '_bp_member_type_enable_directory', $enable_directory );
+	update_post_meta( $post_id, '_bp_member_type_enable_filter', $enable_filter );
 	update_post_meta( $post_id, '_bp_member_type_enable_remove', $enable_remove );
-	update_post_meta( $post_id, '_bp_member_type_enable_registration', $enable_registration );
 
 	$old_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
 	update_post_meta( $post_id, '_bp_member_type_wp_roles', $wp_roles );
 
 	//set this member type to users with these roles
-	$key = bp_get_profile_type_key( $post_id );
+	$key = bp_get_member_type_key( $post_id );
 
 	if( isset( $key ) && ! empty( $key ) ){
 
 		if ( ! empty( $old_wp_roles ) ) {
-			bp_remove_profile_type_to_roles( $old_wp_roles, $key );
+			bp_remove_member_type_to_roles( $old_wp_roles, $key );
 		}
 		if ( ! empty( $wp_roles ) ){
-			bp_set_profile_type_to_roles( $wp_roles, $key );
+			bp_set_member_type_to_roles( $wp_roles, $key );
 		}
 	}
 }
-add_action( 'save_post', 'bp_save_profile_type_post_metabox_data');
+add_action( 'save_post', 'bp_save_member_type_post_metabox_data');
 
 /**
  * Function setting up a admin action messages.
@@ -1609,7 +1601,7 @@ add_action( 'save_post', 'bp_save_profile_type_post_metabox_data');
  *
  * @return mixed
  */
-function bp_profile_type_filter_update_messages( $messages ) {
+function bp_member_type_filter_update_messages( $messages ) {
 
 	$update_message = $messages[ 'post' ];
 
@@ -1621,11 +1613,11 @@ function bp_profile_type_filter_update_messages( $messages ) {
 
 	$update_message[ 7 ] = __( 'Profile type saved.', 'buddyboss' );
 
-	$messages[ bp_get_profile_type_post_type() ] = $update_message;
+	$messages[ bp_get_member_type_post_type() ] = $update_message;
 
 	return $messages;
 }
-add_filter( 'post_updated_messages', 'bp_profile_type_filter_update_messages' );
+add_filter( 'post_updated_messages', 'bp_member_type_filter_update_messages' );
 
 /**
  * Remove member type from users, when the Member Type is deleted.
@@ -1634,15 +1626,15 @@ add_filter( 'post_updated_messages', 'bp_profile_type_filter_update_messages' );
  *
  * @param $post_id
  */
-function bp_delete_profile_type( $post_id ) {
+function bp_delete_member_type( $post_id ) {
 	global $wpdb;
 
 	$post = get_post( $post_id );
 
-	//Return if post is not 'bmt-member-type' type
-	if ( bp_get_profile_type_post_type() !== $post->post_type ) return;
+	//Return if post is not 'bp-member-type' type
+	if ( bp_get_member_type_post_type() !== $post->post_type ) return;
 
-	$member_type_name 	= bp_get_profile_type_key( $post_id );
+	$member_type_name 	= bp_get_member_type_key( $post_id );
 	$type_term 			= get_term_by( 'name', $member_type_name, 'bp_member_type' ); // Get member type term data from database by name field.
 
 	//term exist
@@ -1657,44 +1649,44 @@ function bp_delete_profile_type( $post_id ) {
 }
 
 //delete post
-add_action( 'before_delete_post', 'bp_delete_profile_type' );
+add_action( 'before_delete_post', 'bp_delete_member_type' );
 
-// Register submenu page for profile type import.
-add_action('admin_menu', 'bp_register_profile_type_import_submenu_page');
+// Register submenu page for member type import.
+add_action('admin_menu', 'bp_register_member_type_import_submenu_page');
 
 /**
- * Register submenu page for profile type import.
+ * Register submenu page for member type import.
  *
  * @since BuddyBoss 3.1.1
  *
  */
-function bp_register_profile_type_import_submenu_page() {
+function bp_register_member_type_import_submenu_page() {
 	add_submenu_page(
 		null,   //or 'options.php'
-		'BuddyBoss Profile Types',
-		'BuddyBoss Profile Types',
+		'Import Member Types',
+		'Import Member Types',
 		'manage_options',
-		'bp-profile-type-import',
-		'bp_profile_type_import_submenu_page'
+		'bp-member-type-import',
+		'bp_member_type_import_submenu_page'
 	);
 }
 
 /**
- * Function for import a profile type.
+ * Function for importing member types.
  *
  * @since BuddyBoss 3.1.1
  *
  */
-function bp_profile_type_import_submenu_page() {
+function bp_member_type_import_submenu_page() {
 	?>
 	<div class="wrap">
 		<div class="boss-import-area">
-			<form id="bmt-import-form" method="post" action="">
+			<form id="bp-member-type-import-form" method="post" action="">
 				<div class="import-panel-content">
 					<h1><?php _e( 'Import Profile Types', 'buddyboss' ); ?></h1>
-					<p><?php _e( 'Import your existing "profile types" from BuddyPress, that were created <strong>manually with code</strong> or from a <strong>plugin</strong> (plugin needs to be active).', 'buddyboss' ); ?></p><br/>
+					<p><?php _e( 'Import your existing "member types" from BuddyPress, that were created <strong>manually with code</strong> or from a <strong>plugin</strong> (plugin needs to be active).', 'buddyboss' ); ?></p><br/>
 
-					<input type="submit" value="<?php _e('Run Migration', 'buddyboss'); ?>" id="bmt-import-submit" name="bmt-import-submit" class="button-primary">
+					<input type="submit" value="<?php _e('Run Migration', 'buddyboss'); ?>" id="bp-member-type-import-submit" name="bp-member-type-import-submit" class="button-primary">
 				</div>
 			</form>
 		</div>
@@ -1703,14 +1695,14 @@ function bp_profile_type_import_submenu_page() {
 
 	<?php
 
-	if (isset($_POST['bmt-import-submit'])) {
+	if (isset($_POST['bp-member-type-import-submit'])) {
 
 		$registered_member_types = bp_get_member_types();
-		$created_member_types = bp_get_active_profile_type_types();
+		$created_member_types = bp_get_active_member_types();
 		$active_member_types = array();
 
 		foreach ( $created_member_types as $created_member_type ) {
-			$name = bp_get_profile_type_key( $created_member_type );
+			$name = bp_get_member_type_key( $created_member_type );
 			array_push($active_member_types, $name);
 		}
 
@@ -1728,7 +1720,7 @@ function bp_profile_type_import_submenu_page() {
 			$sing_name = ucfirst($import_types_data);
 			// Create post object
 			$my_post = array(
-				'post_type'     => bp_get_profile_type_post_type(),
+				'post_type'     => bp_get_member_type_post_type(),
 				'post_title'    => $sing_name,
 				'post_status'   => 'publish',
 				'post_author'   => get_current_user_id(),
