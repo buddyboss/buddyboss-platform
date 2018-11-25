@@ -685,7 +685,6 @@ body.buddypress article.page > .entry-header .entry-title {
 
 .buddypress-wrap .subnav-filters .component-filters {
   margin-top: 10px;
-  margin-left: 10px;
 }
 
 .buddypress-wrap .subnav-filters .feed {
@@ -773,13 +772,11 @@ body.buddypress article.page > .entry-header .entry-title {
   .buddypress-wrap .subnav-filters .group-act-search {
     float: left;
   }
-  .buddypress-wrap .subnav-filters .last {
-    margin-left: 0;
-  }
   .buddypress-wrap .subnav-filters .last,
   .buddypress-wrap .subnav-filters .component-filters {
     float: right;
     margin-top: 0;
+    margin-left: 0;
     width: auto;
   }
   .buddypress-wrap .subnav-filters .last select,
@@ -3775,6 +3772,10 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 
 .buddypress-wrap .select-wrap:focus .select-arrow:before, .buddypress-wrap .select-wrap:hover .select-arrow:before {
   color: #a6a6a6;
+}
+
+.buddypress-wrap .subnav-filters .select-wrap {
+  margin-right: 12px;
 }
 
 .buddypress-wrap .select-wrap:focus, .buddypress-wrap .select-wrap:hover,
