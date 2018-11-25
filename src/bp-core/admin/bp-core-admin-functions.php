@@ -1692,7 +1692,7 @@ function bp_member_type_import_submenu_page() {
 			<form id="bp-member-type-import-form" method="post" action="">
 				<div class="import-panel-content">
 					<h1><?php _e( 'Import Profile Types', 'buddyboss' ); ?></h1>
-					<p><?php _e( 'Import your existing "profile types" from BuddyPress, that were created <strong>manually with code</strong> or from a <strong>plugin</strong> (plugin needs to be active).', 'buddyboss' ); ?></p><br/>
+					<p><?php _e( 'Import your existing "member types" from BuddyPress, that were created <strong>manually with code</strong> or from a <strong>plugin</strong> (plugin needs to be active).', 'buddyboss' ); ?></p><br/>
 
 					<input type="submit" value="<?php _e('Run Migration', 'buddyboss'); ?>" id="bp-member-type-import-submit" name="bp-member-type-import-submit" class="button-primary">
 				</div>

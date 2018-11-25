@@ -4331,7 +4331,7 @@ function bp_get_users_of_removed_member_types(){
  * @since BuddyBoss 3.1.1
  *
  */
-function bp_register_profile_type() {
+function bp_register_active_member_types() {
 
 
 	$post_ids = bp_get_active_member_types();
@@ -4367,8 +4367,8 @@ function bp_register_profile_type() {
 	}
 }
 
-// action for register member type.
-add_action( 'bp_register_member_types', 'bp_register_profile_type' );
+// action for registering active member types.
+add_action( 'bp_register_member_types', 'bp_register_active_member_types' );
 
 // action for validating the signup of member types.
 add_action( 'bp_signup_validate', 'bp_validate_member_type_field' );
