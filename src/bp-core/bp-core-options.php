@@ -503,7 +503,7 @@ function bp_disable_profile_sync( $default = false ) {
 }
 
 /**
- * Is advacned profile search disabled?
+ * Is advanced profile search disabled?
  *
  * @since BuddyBoss 3.1.1
  *
@@ -524,7 +524,7 @@ function bp_disable_advanced_profile_search( $default = false ) {
 }
 
 /**
- * Is Hide from Registration?
+ * Is Profile Type hidden from Registration?
  *
  * @since BuddyBoss 3.1.1
  *
@@ -545,7 +545,7 @@ function bp_disable_profile_type_selection_from_registration_from( $default = fa
 }
 
 /**
- * Is Profile Type require on Registration?
+ * Is Profile Type required on Registration?
  *
  * @since BuddyBoss 3.1.1
  *
