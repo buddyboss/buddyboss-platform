@@ -45,7 +45,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$this->add_field( 'bp-enable-profile-search', __( 'Profile Search', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_search'], 'intval' );
 
 		// new section for the profile type.
-		$this->add_section( 'bp_profile_type', __( 'Profile Types', 'buddyboss' ) );
+		$this->add_section( 'bp_member_type_settings', __( 'Profile Types', 'buddyboss' ) );
 
 		// Enable/Disable Hide from Registration
 		$this->add_field( 'bp-member-type-hide-from-registration', __( 'Hide from Registration', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_registration'], 'intval' );

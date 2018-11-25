@@ -46,9 +46,9 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	if ( ! empty( $_POST ) ) {
 
 		if (strpos($_POST['filter'], 'member_type_') !== false) {
-			$profile_type = explode('member_type_',$_POST['filter']);
+			$member_type = explode('member_type_',$_POST['filter']);
 			$_POST['filter'] = 'active';
-			$_POST['scope'] = intval($profile_type[1]);
+			$_POST['scope'] = intval($member_type[1]);
 		}
 
 		$post_query = wp_parse_args( $_POST, $post_query );
