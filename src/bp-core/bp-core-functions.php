@@ -5022,15 +5022,15 @@ function changing_listing_label() {
 	$url = buddypress()->plugin_url . 'bp-core/js/';
 
 	$bmt_pages = array(
-		'edit-bp-profile-type',
-		'bp-profile-type'
+		'edit-bp-member-type',
+		'bp-member-type'
 	);
 
 	// Check to make sure we're on a Member Type's admin page
 	if ( isset( $current_screen->id ) && in_array( $current_screen->id, $bmt_pages ) ) {
 
 		wp_enqueue_script('bp-clipboard',$url.'clipboard.js',array(), '3.1.1' );
-		wp_enqueue_script('bp-profile-type-admin-screen',$url.'bp-profile-type-admin-screen.js',array('jquery'), '3.1.1' );
+		wp_enqueue_script('bp-member-type-admin-screen',$url.'bp-member-type-admin-screen.js',array('jquery'), '3.1.1' );
 
 		$strings = array(
 			'warnTrash' 		=> __( 'You have {total_users} members with this profile type, are you sure you would like to trash it?', 'buddyboss' ),
@@ -5041,6 +5041,6 @@ function changing_listing_label() {
 			'copytoclipboard'	=> __( 'Copy to clipboard', 'buddyboss' ),
 		);
 
-		wp_localize_script( 'bp-profile-type-admin-screen', '_bmtAdminL10n', $strings );
+		wp_localize_script( 'bp-member-type-admin-screen', '_bmtAdminL10n', $strings );
 	}
 }

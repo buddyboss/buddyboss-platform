@@ -1340,11 +1340,11 @@ add_filter( 'bp_active_components', 'bp_xprofile_always_active' );
  * @since BuddyBoss 3.1.1
  */
 function bp_member_type_custom_metaboxes() {
-	add_meta_box( 'bp-profile-type-key', __( 'Profile Type Key', 'buddyboss' ), 'bp_member_type_key_metabox', null, 'normal', 'high' );
-	add_meta_box( 'bp-profile-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_profile_type_labels_metabox', null, 'normal', 'high' );
-	add_meta_box( 'bp-profile-type-visibility', __( 'Visibility', 'buddyboss' ), 'bp_profile_type_visibility_metabox', null, 'normal', 'high' );
-	add_meta_box( 'bp-profile-type-shortcode', __( 'Shortcode', 'buddyboss' ), 'bp_profile_shortcode_metabox', null, 'normal', 'high' );
-	add_meta_box( 'bp-profile-type-wp-role', __( 'WordPress Role', 'buddyboss' ), 'bp_profile_type_wprole_metabox', null, 'normal', 'high' );
+	add_meta_box( 'bp-member-type-key', __( 'Profile Type Key', 'buddyboss' ), 'bp_member_type_key_metabox', null, 'normal', 'high' );
+	add_meta_box( 'bp-member-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_profile_type_labels_metabox', null, 'normal', 'high' );
+	add_meta_box( 'bp-member-type-visibility', __( 'Visibility', 'buddyboss' ), 'bp_profile_type_visibility_metabox', null, 'normal', 'high' );
+	add_meta_box( 'bp-member-type-shortcode', __( 'Shortcode', 'buddyboss' ), 'bp_profile_shortcode_metabox', null, 'normal', 'high' );
+	add_meta_box( 'bp-member-type-wp-role', __( 'WordPress Role', 'buddyboss' ), 'bp_profile_type_wprole_metabox', null, 'normal', 'high' );
 }
 add_action( 'add_meta_boxes_' . bp_get_profile_type_post_type(), 'bp_member_type_custom_metaboxes' );
 
@@ -1674,7 +1674,7 @@ function bp_register_profile_type_import_submenu_page() {
 		'BuddyBoss Profile Types',
 		'BuddyBoss Profile Types',
 		'manage_options',
-		'bp-profile-type-import',
+		'bp-member-type-import',
 		'bp_profile_type_import_submenu_page'
 	);
 }

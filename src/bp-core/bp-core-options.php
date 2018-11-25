@@ -59,13 +59,13 @@ function bp_get_default_options() {
 		'bp-disable-profile-sync'              => false,
 
 		// Hide from Registration
-		'bp-profile-type-hide-from-registration'            => false,
+		'bp-member-type-hide-from-registration'            => false,
 
 		// Default Member Type
 		'bp-default-profile-type'            => '',
 
 		// Require on Registration
-		'bp-profile-type-require-on-registration'            => false,
+		'bp-member-type-require-on-registration'            => false,
 
 		// Hide the Toolbar for logged out users.
 		'hide-loggedout-adminbar'              => false,
@@ -541,7 +541,7 @@ function bp_disable_profile_type_selection_from_registration_from( $default = fa
 	 *
 	 * @param bool $value Whether Hide from Registration ot not.
 	 */
-	return (bool) apply_filters( 'bp_disable_profile_type_selection_from_registration_from', ! (bool) bp_get_option( 'bp-profile-type-hide-from-registration', $default ) );
+	return (bool) apply_filters( 'bp_disable_profile_type_selection_from_registration_from', ! (bool) bp_get_option( 'bp-member-type-hide-from-registration', $default ) );
 }
 
 /**
@@ -562,7 +562,7 @@ function bp_profile_type_require_on_registration( $default = false ) {
 	 *
 	 * @param bool $value Whether or not profile search is disabled.
 	 */
-	return (bool) apply_filters( 'bp_profile_type_require_on_registration', ! (bool) bp_get_option( 'bp-profile-type-require-on-registration', $default ) );
+	return (bool) apply_filters( 'bp_profile_type_require_on_registration', ! (bool) bp_get_option( 'bp-member-type-require-on-registration', $default ) );
 }
 
 /**
