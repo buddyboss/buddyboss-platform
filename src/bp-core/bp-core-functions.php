@@ -4607,10 +4607,6 @@ if ( true === $is_member_type_field_visible ) {
 	add_action( 'bp_account_details_fields',  'bp_add_member_type_field_in_registration_form' );
 }
 
-// For welcome experince plugin.
-if ( function_exists('bwe_load_admin') ) {
-	add_action( 'bwe_after_signup_profile_fields',  'bp_add_member_type_field_in_registration_form' );
-}
 /**
  * Function for adding a Member type option on registration form.
  *
