@@ -4601,12 +4601,6 @@ function bp_member_type_show_all_fields( $args ) {
 	return $args;
 }
 
-//Check hide member is not checked in setting
-$is_member_type_field_visible = bp_disable_member_type_selection_from_registration_form();
-if ( true === $is_member_type_field_visible ) {
-	add_action( 'bp_account_details_fields',  'bp_add_member_type_field_in_registration_form' );
-}
-
 /**
  * Function for adding a Member type option on registration form.
  *

@@ -47,9 +47,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Section for member types.
 		$this->add_section( 'bp_member_type_settings', __( 'Profile Types', 'buddyboss' ) );
 
-		// Enable/Disable hide from registration
-		$this->add_field( 'bp-member-type-hide-from-registration', __( 'Hide from Registration', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_registration'], 'intval' );
-
 		// Enable/Disable require on registration.
 		$this->add_field( 'bp-member-type-require-on-registration', __( 'Require on Registration', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_require_on_registration'], 'intval' );
 
@@ -113,19 +110,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 			<input id="bp-enable-profile-search" name="bp-enable-profile-search" type="checkbox" value="1" <?php checked( ! bp_disable_advanced_profile_search() ); ?> />
 			<label for="bp-enable-profile-search"><?php _e( 'Enable advanced profile search on the members directory.', 'buddyboss' ); ?></label>
-		<?php
-	}
-
-	/**
-	 * Remove member type selection from Registration Form.
-	 *
-	 * @since BuddyBoss 3.1.1
-	 *
-	 */
-	public function bp_admin_setting_callback_member_type_registration() {
-		?>
-		<input id="bp-member-type-hide-from-registration" name="bp-member-type-hide-from-registration" type="checkbox" value="1" <?php checked( ! bp_disable_member_type_selection_from_registration_form() ); ?> />
-		<label for="bp-member-type-hide-from-registration"><?php _e( 'Remove profile type selection from Registration Form.', 'buddyboss' ); ?></label>
 		<?php
 	}
 

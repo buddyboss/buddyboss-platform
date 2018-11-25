@@ -58,9 +58,6 @@ function bp_get_default_options() {
 		// Disable the WP to BP profile sync.
 		'bp-disable-profile-sync'              => false,
 
-		// Hide from Registration
-		'bp-member-type-hide-from-registration'            => false,
-
 		// Default Member Type
 		'bp-default-member-type'            => '',
 
@@ -521,27 +518,6 @@ function bp_disable_advanced_profile_search( $default = false ) {
 	 * @param bool $value Whether or not profile search is disabled.
 	 */
 	return (bool) apply_filters( 'bp_disable_advanced_profile_search', ! (bool) bp_get_option( 'bp-enable-profile-search', $default ) );
-}
-
-/**
- * Is Member Type hidden from Registration?
- *
- * @since BuddyBoss 3.1.1
- *
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: true.
- * @return bool True if profile search is enabled, otherwise false.
- */
-function bp_disable_member_type_selection_from_registration_form( $default = false ) {
-
-	/**
-	 * Filters whether or not profile search is disabled.
-	 *
-	 * @since BuddyBoss 3.1.1
-	 *
-	 * @param bool $value Whether Hide from Registration ot not.
-	 */
-	return (bool) apply_filters( 'bp_disable_member_type_selection_from_registration_form', ! (bool) bp_get_option( 'bp-member-type-hide-from-registration', $default ) );
 }
 
 /**
