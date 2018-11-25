@@ -1341,10 +1341,10 @@ add_filter( 'bp_active_components', 'bp_xprofile_always_active' );
  */
 function bp_member_type_custom_metaboxes() {
 	add_meta_box( 'bp-member-type-key', __( 'Profile Type Key', 'buddyboss' ), 'bp_member_type_key_metabox', null, 'normal', 'high' );
-	add_meta_box( 'bp-member-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_profile_type_labels_metabox', null, 'normal', 'high' );
-	add_meta_box( 'bp-member-type-visibility', __( 'Visibility', 'buddyboss' ), 'bp_profile_type_visibility_metabox', null, 'normal', 'high' );
+	add_meta_box( 'bp-member-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_member_type_labels_metabox', null, 'normal', 'high' );
+	add_meta_box( 'bp-member-type-visibility', __( 'Visibility', 'buddyboss' ), 'bp_member_type_visibility_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-shortcode', __( 'Shortcode', 'buddyboss' ), 'bp_profile_shortcode_metabox', null, 'normal', 'high' );
-	add_meta_box( 'bp-member-type-wp-role', __( 'WordPress Role', 'buddyboss' ), 'bp_profile_type_wprole_metabox', null, 'normal', 'high' );
+	add_meta_box( 'bp-member-type-wp-role', __( 'WordPress Role', 'buddyboss' ), 'bp_member_type_wprole_metabox', null, 'normal', 'high' );
 }
 add_action( 'add_meta_boxes_' . bp_get_profile_type_post_type(), 'bp_member_type_custom_metaboxes' );
 
@@ -1373,7 +1373,7 @@ function bp_member_type_key_metabox( $post ) {
  *
  * @param WP_Post $post
  */
-function bp_profile_type_labels_metabox( $post ) {
+function bp_member_type_labels_metabox( $post ) {
 
 	$meta = get_post_custom( $post->ID );
 
@@ -1405,7 +1405,7 @@ function bp_profile_type_labels_metabox( $post ) {
  *
  * @param WP_Post $post
  */
-function bp_profile_type_visibility_metabox( $post ) {
+function bp_member_type_visibility_metabox( $post ) {
 
 	$meta = get_post_custom( $post->ID );
 	$enable_registration = isset( $meta[ '_bp_member_type_enable_registration' ] ) ? $meta[ '_bp_member_type_enable_registration' ][ 0 ] : 0; //disabled by default
@@ -1441,7 +1441,7 @@ function bp_profile_type_visibility_metabox( $post ) {
  */
 function bp_profile_shortcode_metabox( $post ) {
 
-	$key = bp_get_profile_type_key( $post->ID );
+	$key = bp_get_member_type_key( $post->ID );
 
 	?>
 	<p class="member-type-shortcode-wrapper">
@@ -1464,7 +1464,7 @@ function bp_profile_shortcode_metabox( $post ) {
  *
  * @param WP_Post $post
  */
-function bp_profile_type_wprole_metabox( $post ) {
+function bp_member_type_wprole_metabox( $post ) {
 
 	global $wp_roles;
 	$tabindex = 7;
@@ -1586,7 +1586,7 @@ function bp_save_profile_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_wp_roles', $wp_roles );
 
 	//set this member type to users with these roles
-	$key = bp_get_profile_type_key( $post_id );
+	$key = bp_get_member_type_key( $post_id );
 
 	if( isset( $key ) && ! empty( $key ) ){
 
@@ -1642,7 +1642,7 @@ function bp_delete_profile_type( $post_id ) {
 	//Return if post is not 'bp-member-type' type
 	if ( bp_get_profile_type_post_type() !== $post->post_type ) return;
 
-	$member_type_name 	= bp_get_profile_type_key( $post_id );
+	$member_type_name 	= bp_get_member_type_key( $post_id );
 	$type_term 			= get_term_by( 'name', $member_type_name, 'bp_member_type' ); // Get member type term data from database by name field.
 
 	//term exist
@@ -1710,7 +1710,7 @@ function bp_profile_type_import_submenu_page() {
 		$active_member_types = array();
 
 		foreach ( $created_member_types as $created_member_type ) {
-			$name = bp_get_profile_type_key( $created_member_type );
+			$name = bp_get_member_type_key( $created_member_type );
 			array_push($active_member_types, $name);
 		}
 

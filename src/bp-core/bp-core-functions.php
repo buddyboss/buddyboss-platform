@@ -3941,7 +3941,7 @@ function bp_get_profile_type_post_type_supports() {
  * @param $post_id
  * @return mixed|string
  */
-function bp_get_profile_type_key( $post_id ) {
+function bp_get_member_type_key( $post_id ) {
 
 	if ( empty( $post_id) ) {
 		return '';
@@ -3956,7 +3956,7 @@ function bp_get_profile_type_key( $post_id ) {
 		$key = str_replace( array( ' ', ',' ), array( '-', '-' ), $key );
 	}
 
-	return apply_filters( 'bp_get_profile_type_key', $key );
+	return apply_filters( 'bp_get_member_type_key', $key );
 }
 
 /**
@@ -3986,7 +3986,7 @@ function bp_get_profile_type_by_wp_role($role){
 			$selected_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
 			$selected_roles = (array) $selected_roles;
 			$singular_name = strtolower(get_post_meta( $post_id, '_bp_member_type_label_singular_name', true ));
-			$name = bp_get_profile_type_key( $post_id );
+			$name = bp_get_member_type_key( $post_id );
 			if( in_array($role, $selected_roles) ){
 				$bp_member_type_ids[] = array(
 					'ID' => $post_id,
@@ -4278,7 +4278,7 @@ function bp_get_removed_profile_types(){
 			$bp_member_type_query->the_post();
 
 			$post_id = get_the_ID();
-			$name = bp_get_profile_type_key( $post_id );
+			$name = bp_get_member_type_key( $post_id );
 			$bp_member_type_ids[] = array(
 				'ID' => $post_id,
 				'name' => $name,
@@ -4343,7 +4343,7 @@ function bp_register_profile_type() {
 
 	foreach ( $post_ids as $post_id ) {
 
-		$key = bp_get_profile_type_key( $post_id );
+		$key = bp_get_member_type_key( $post_id );
 
 		$enable_directory = get_post_meta( $post_id, '_bp_member_type_enable_directory', true );
 
@@ -4640,7 +4640,7 @@ function bp_add_member_type_field_in_registration_form() {
 
 					if ( $enable_register ) {
 
-						$name = bp_get_profile_type_key( $pid );
+						$name = bp_get_member_type_key( $pid );
 						?>
 						<option value="<?php echo $name ?>" <?php selected( $bp_member_type_selected, $name ) ?>><?php echo get_the_title($pid); ?></option>
 						<?php
@@ -4672,7 +4672,7 @@ function bp_profile_type_directory() {
 			continue;
 		}
 
-		$type_name = bp_get_profile_type_key( $member_type_id );
+		$type_name = bp_get_member_type_key( $member_type_id );
 		$type_id = bp_profile_type_term_taxonomy_id( $type_name );
 		$members_count = count(  bp_profile_type_by_type( $type_id ));
 		$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
@@ -4799,7 +4799,7 @@ function bp_profile_type_show_data( $column, $post_id  ) {
 
 		case 'total_users':
 
-			$name = bp_get_profile_type_key( $post_id );
+			$name = bp_get_member_type_key( $post_id );
 			$type_id = bp_profile_type_term_taxonomy_id($name);
 
 			echo count(bp_profile_type_by_type($type_id));

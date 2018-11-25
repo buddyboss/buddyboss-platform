@@ -19,7 +19,7 @@ foreach ( $member_types as $member_type_id ) {
 		continue;
 	}
 
-	$type_name = bp_get_profile_type_key( $member_type_id );
+	$type_name = bp_get_member_type_key( $member_type_id );
 	$type_id = bp_profile_type_term_taxonomy_id( $type_name );
 	$members_count = count(  bp_profile_type_by_type( $type_id ));
 	$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
