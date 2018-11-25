@@ -3881,7 +3881,7 @@ function bp_get_member_type_post_type() {
 }
 
 /**
- * Return labels used by the profile typ post type.
+ * Return labels used by the member type post type.
  *
  * @since BuddyBoss 3.1.1
  *
@@ -4036,7 +4036,7 @@ function bp_set_member_type_to_roles($wp_roles, $member_type){
 }
 
 /**
- * Function for getting a users by their role.
+ * Function for getting a user by their role.
  *
  * @since BuddyBoss 3.1.1
  *
@@ -4061,8 +4061,8 @@ function bp_get_users_by_roles($roles) {
 }
 
 /**
- * Set type for a profile.
- * custom to set member types on save_post
+ * Set type for a member profile.
+ * Set member types on save_post
  *
  * @since BuddyBoss 3.1.1
  *
@@ -4184,7 +4184,7 @@ function bp_member_type_by_type( $type_id ) {
 }
 
 /**
- * Function for getting a active member by type.
+ * Function for getting an active member by type.
  *
  * @since BuddyBoss 3.1.1
  *
@@ -4367,142 +4367,6 @@ function bp_register_active_member_types() {
 	}
 }
 
-// action for registering active member types.
-add_action( 'bp_register_member_types', 'bp_register_active_member_types' );
-
-// action for validating the signup of member types.
-add_action( 'bp_signup_validate', 'bp_validate_member_type_field' );
-
-/**
- * Function for validating the profile fields on registration.
- *
- * @since BuddyBoss 3.1.1
- */
-function bp_validate_member_type_field() {
-	global $bp;
-
-	$is_registration_required_field = bp_member_type_require_on_registration();
-
-	if ( false === $is_registration_required_field
-	     && isset( $_REQUEST['bp_member_type_type'] )
-	     &&  empty( $_REQUEST['bp_member_type_type'] )
-	) {
-		$bp->signup->errors['field_bp_member_type_type'] = __( 'Please make sure you have selected a profile type', 'buddyboss' );
-	}
-}
-
-/**
- * Update Member type on single site.
- *
- * @since BuddyBoss 3.1.1
- *
- * @param type $user_id
- * @param type $user_login
- * @param type $user_password
- * @param type $user_email
- * @param type $usermeta
- */
-function bp_member_type_on_registration( $user_id, $user_login, $user_password, $user_email, $usermeta ) {
-
-	//Set default member type if user has not selected any
-	$bp_member_type_type = is_array( $usermeta ) && ! empty ( $usermeta['bp_member_type_type'] ) ? $usermeta['bp_member_type_type'] : bp_member_type_default_member_type();
-
-	if ( ! empty( $bp_member_type_type ) ) {
-
-		if ( !empty($user_id ) ) { //for multisite $user_id is empty
-			bp_set_member_type($user_id, $bp_member_type_type );
-		}
-	}
-}
-
-// Action for setting up a member type of user while on registrations.
-add_action( 'bp_core_signup_user', 'bp_member_type_on_registration', 10, 5 );
-
-// Action for setting up a member type of user while on registrations.
-add_action( 'bp_core_activated_user', 'bp_member_type_on_registration_multisite', 10, 3 );
-
-/**
- * Update member type on multisite.
- *
- * @since BuddyBoss 3.1.1
- *
- * @param type $user_id
- * @param type $key
- * @param type $user
- */
-function bp_member_type_on_registration_multisite( $user_id, $key, $user ) {
-
-	//Set default member type if user has not selected any
-	$bp_member_type_type = is_array( $user ) && ! empty ( $user['meta']['bp_member_type_type'] ) ? $user['meta']['bp_member_type_type'] : bp_member_type_default_member_type();
-
-	if ( ! empty( $bp_member_type_type ) ) {
-
-		if ( ! empty( $user_id ) ) {
-			bp_set_member_type( $user_id, $bp_member_type_type );
-		}
-	}
-}
-
-// action for adding a member type in usermeta.
-add_filter( 'bp_signup_usermeta', 'bp_member_type_alter_usermeta' );
-
-/**
- * Add member type in $usermeta array.
- *
- * @since BuddyBoss 3.1.1
- *
- * @param type $usermeta
- * @return type array
- */
-function bp_member_type_alter_usermeta($usermeta) {
-
-	//Set default member type if user has not selected any member type
-	$bp_member_type_type = ! empty ( $_POST['bp_member_type_type'] ) ? $_POST['bp_member_type_type'] : bp_member_type_default_member_type();
-
-	if ( !empty( $bp_member_type_type ) ) {
-		$usermeta['bp_member_type_type'] = $bp_member_type_type;
-	}
-
-	return apply_filters( 'bp_member_type_alter_usermeta', $usermeta );
-
-}
-
-//Assign role from member type
-add_action( 'bp_set_member_type','bp_member_type_assign_wprole',10 ,3 );
-
-/**
- * Assign role from member type on Registration.
- *
- * @since BuddyBoss 3.1.1
- *
- * @param $user_id
- * @param $member_type
- * @param $append
- */
-function bp_member_type_assign_wprole($user_id, $member_type, $append) {
-
-	$req_post = bp_member_type_post_by_type($member_type);
-
-	if ( !isset($req_post) && !empty($req_post) ) {
-		return;
-	}
-
-	$selected_roles = get_post_meta( $req_post, '_bp_member_type_wp_roles', true );
-
-	if (is_array($selected_roles) && isset($selected_roles) ) {
-
-		// set member type while update user profile
-		remove_action( 'set_user_role',  'bp_update_user_member_type_type_set', 10, 2 );
-
-		$user = new WP_User( $user_id );
-
-		foreach ($selected_roles as $role) {
-			if ( in_array( $role, $user->roles ) ) continue;
-			$user->set_role($role);
-		}
-	}
-}
-
 // remove users of a specific member type from members directory
 add_action( 'bp_ajax_querystring', 'bp_member_type_exclude_users_from_directory_and_searches', 999, 2 );
 
@@ -4578,79 +4442,6 @@ function bp_fixed_all_member_type_count( $count ){
 	}
 	return $count;
 }
-
-add_filter( 'bp_before_has_profile_parse_args', 'bp_member_type_show_all_fields', 10 , 1 );
-
-/**
- * Show all fields on register page.
- *
- * @since BuddyBoss 3.1.1
- *
- * @param $args
- * @return mixed
- */
-function bp_member_type_show_all_fields( $args ) {
-
-	// BuddyPress by default does not shows all fields, those fields which
-	// has member type assigned/bound to them, so we need to set member_type = false to get
-	// all fields on register page
-
-	if ( ! is_user_logged_in() )
-		$args['member_type'] = false;
-
-	return $args;
-}
-
-/**
- * Function for adding a Member type option on registration form.
- *
- * @since BuddyBoss 3.1.1
- *
- */
-function bp_add_member_type_field_in_registration_form() {
-
-	$post_ids = bp_get_active_member_types();
-	if ( !empty($post_ids) ) {
-		?>
-		<div class="editfield field_bp_member_type_type required-field">
-			<label><?php _e('Profile Type','buddyboss'); ?></label>
-			<?php
-			/**
-			 * Fires and displays Member Type registration validation errors.
-			 *
-			 * @since 1.1.0
-			 */
-			do_action( 'bp_field_bp_member_type_type_errors' );
-
-			//Pre fill member type with default or selected value
-			$bp_member_type_selected = isset( $_REQUEST['bp_member_type_type'] ) ? $_REQUEST['bp_member_type_type'] : bp_member_type_default_member_type();
-
-			?>
-			<select class="bp-member-type-type" name="bp_member_type_type">
-				<option value=""><?php echo '----'; ?></option>
-				<?php
-				foreach ($post_ids as $pid) {
-					$enable_register = get_post_meta($pid, '_bp_member_type_enable_registration', true);
-
-					if ( $enable_register ) {
-
-						$name = bp_get_member_type_key( $pid );
-						?>
-						<option value="<?php echo $name ?>" <?php selected( $bp_member_type_selected, $name ) ?>><?php echo get_the_title($pid); ?></option>
-						<?php
-					}
-
-				} ?>
-			</select>
-		</div>
-
-		<?php
-	}
-
-}
-
-// action for displaying a users by it's type.
-//add_action( 'bp_members_directory_member_types', 'bp_member_type_directory' );
 
 /**
  * Function for displaying a users by it's type.
@@ -4744,8 +4535,7 @@ function bp_member_type_add_column( $columns ) {
 
 	$columns['title'] = __( 'Profile Type', 'buddyboss' );
 	$columns['member_type'] = __( 'Label', 'buddyboss' );
-	$columns['enable_directory'] = __( 'Members Directory', 'buddyboss' );
-	$columns['enable_registration'] = __( 'Registration Form', 'buddyboss' );
+	$columns['enable_directory'] = __( 'Member Filter', 'buddyboss' );
 	$columns['total_users'] = __( 'Users', 'buddyboss' );
 
 	unset( $columns['date'] );
@@ -4782,15 +4572,6 @@ function bp_member_type_show_data( $column, $post_id  ) {
 
 			break;
 
-		case 'enable_registration':
-
-			if( get_post_meta( $post_id, '_bp_member_type_enable_registration', true ) )
-				echo __( 'Display', 'buddyboss' );
-			else
-				echo __( 'Hide', 'buddyboss' );
-
-			break;
-
 		case 'total_users':
 
 			$name = bp_get_member_type_key( $post_id );
@@ -4819,7 +4600,6 @@ add_filter( 'manage_edit-' . bp_get_member_type_post_type() . '_sortable_columns
 function bp_member_type_add_sortable_columns( $columns ) {
 
 	$columns['total_users']	= 'total_users';
-	$columns['enable_registration']	= 'enable_registration';
 	$columns['enable_directory']	= 'enable_directory';
 	$columns['member_type']			= 'member_type';
 
@@ -4863,13 +4643,6 @@ function bp_member_type_sort_items( $qv ) {
 
 			$qv['meta_key'] = '_bp_member_type_name';
 			$qv['orderby'] = 'meta_value';
-
-			break;
-
-		case 'enable_registration':
-
-			$qv['meta_key'] = '_bp_member_type_enable_registration';
-			$qv['orderby'] = 'meta_value_num';
 
 			break;
 

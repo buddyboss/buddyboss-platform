@@ -47,16 +47,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Section for member types.
 		$this->add_section( 'bp_member_type_settings', __( 'Profile Types', 'buddyboss' ) );
 
-		// Enable/Disable require on registration.
-		$this->add_field( 'bp-member-type-require-on-registration', __( 'Require on Registration', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_require_on_registration'], 'intval' );
-
-		// default member type.
-		$this->add_field(
-			'bp-default-member-type',
-			__( 'Default Profile Type', 'buddyboss' ),
-			[$this, 'bp_admin_setting_callback_default_member_type']
-		);
-
 		// Member types import.
 		$this->add_field( 'bp-member-type-import', __( 'Import Member Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_import'], 'intval' );
 	}
@@ -110,55 +100,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 			<input id="bp-enable-profile-search" name="bp-enable-profile-search" type="checkbox" value="1" <?php checked( ! bp_disable_advanced_profile_search() ); ?> />
 			<label for="bp-enable-profile-search"><?php _e( 'Enable advanced profile search on the members directory.', 'buddyboss' ); ?></label>
-		<?php
-	}
-
-	/**
-	 * Select member type.
-	 *
-	 * @since BuddyBoss 3.1.1
-	 *
-	 */
-	public function bp_admin_setting_callback_default_member_type() {
-
-		$bp_member_type_selected    = bp_member_type_default_member_type();
-		$post_ids                   = bp_get_active_member_types();
-
-		echo '<select id="enabled_default_member_type" name="bp-default-member-type">';
-		echo '<option value="">-- None --</option>';
-		foreach ($post_ids as $pid) {
-
-			$enable_register = get_post_meta($pid, '_bp_member_type_enable_registration', true);
-
-			if ( $enable_register ) {
-
-				//Member type label
-				$bp_member_type_label = sanitize_title( get_post_meta( $pid, '_bp_member_type_label_singular_name', true) );
-
-				?>
-				<option value="<?php echo $bp_member_type_label ?>" <?php selected( $bp_member_type_selected, $bp_member_type_label ) ?>><?php echo get_the_title($pid); ?></option>
-				<?php
-			}
-		}
-
-		echo '</select>';
-
-		printf(
-			'<p class="description">%s</p>',
-			__( 'Set default profile type in the Registration Form.', 'buddyboss' )
-		);
-	}
-
-	/**
-	 * Require member type selection in Registration Form.
-	 *
-	 * @since BuddyBoss 3.1.1
-	 *
-	 */
-	public function bp_admin_setting_callback_member_type_require_on_registration() {
-		?>
-		<input id="bp-member-type-require-on-registration" name="bp-member-type-require-on-registration" type="checkbox" value="1" <?php checked( ! bp_member_type_require_on_registration() ); ?> />
-		<label for="bp-member-type-require-on-registration"><?php _e( 'Require profile type selection in Registration Form.', 'buddyboss' ); ?></label>
 		<?php
 	}
 

@@ -1408,26 +1408,20 @@ function bp_member_type_labels_metabox( $post ) {
 function bp_member_type_visibility_metabox( $post ) {
 
 	$meta = get_post_custom( $post->ID );
-	$enable_registration = isset( $meta[ '_bp_member_type_enable_registration' ] ) ? $meta[ '_bp_member_type_enable_registration' ][ 0 ] : 0; //disabled by default
-	$options_url = admin_url().'admin.php?page=bp-settings&tab=bp-xprofile';
 	?>
-	<p>
-		<input type='checkbox' name='bp-member-type[enable_registration]' value='1' <?php checked( $enable_registration, 1 ); ?> tabindex="4" />
-		<strong><?php _e( 'Display in <a href="'.$options_url.'">Registration Form</a>', 'buddyboss' ); ?></strong>
-	</p>
 	<?php
 	$enable_directory = isset( $meta[ '_bp_member_type_enable_directory' ] ) ? $meta[ '_bp_member_type_enable_directory' ][ 0 ] : 0; //disabled by default
 	?>
 	<p>
 		<input type='checkbox' name='bp-member-type[enable_directory]' value='1' <?php checked( $enable_directory, 1 ); ?> tabindex="5" />
-		<strong><?php _e( 'Display filter in Members Directory', 'buddyboss' ); ?></strong>
+		<strong><?php _e( 'Display in "All Types" filter in Members Directory', 'buddyboss' ); ?></strong>
 	</p>
 	<?php
 	$enable_remove = isset( $meta[ '_bp_member_type_enable_remove' ] ) ? $meta[ '_bp_member_type_enable_remove' ][ 0 ] : 0; //enabled by default
 	?>
 	<p>
 		<input type='checkbox' name='bp-member-type[enable_remove]' value='1' <?php checked( $enable_remove, 1 ); ?> tabindex="6" />
-		<strong><?php _e( 'Hide completely from Members Directory', 'buddyboss' ); ?></strong>
+		<strong><?php _e( 'Hide members of this type from Members Directory', 'buddyboss' ); ?></strong>
 	</p>
 	<?php
 }
@@ -1568,7 +1562,6 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 
 	$enable_directory = isset( $data[ 'enable_directory' ] ) ? absint( $data[ 'enable_directory' ] ) : 0; //default inactive
 	$enable_remove = isset( $data[ 'enable_remove' ] ) ? absint( $data[ 'enable_remove' ] ) : 0; //default inactive
-	$enable_registration = isset( $data[ 'enable_registration' ] ) ? absint( $data[ 'enable_registration' ] ) : 0; //default inactive
 
 	$data[ 'wp_roles' ] = array_filter( $data[ 'wp_roles' ] ); // Remove empty value from wp_roles array
 	$wp_roles = isset( $data[ 'wp_roles' ] ) ? $data[ 'wp_roles' ] : '';
@@ -1580,7 +1573,6 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 
 	update_post_meta( $post_id, '_bp_member_type_enable_directory', $enable_directory );
 	update_post_meta( $post_id, '_bp_member_type_enable_remove', $enable_remove );
-	update_post_meta( $post_id, '_bp_member_type_enable_registration', $enable_registration );
 
 	$old_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
 	update_post_meta( $post_id, '_bp_member_type_wp_roles', $wp_roles );

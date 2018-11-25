@@ -74,27 +74,6 @@ jq(document).ready(function () {
 
     });
 
-    if (jq('#enabled_hide_from_registration').is(":checked")) {
-        jq('#enabled_default_member_type').attr('disabled','true');
-        jq('#enabled_require_on_registration').attr('disabled','true');
-    }
-
-    jq('#enabled_hide_from_registration').on('change',function() {
-            if(jq(this).prop("checked") == true){
-
-                jq('#enabled_default_member_type').attr('disabled','true');
-                jq('#enabled_require_on_registration').attr('disabled','true');
-
-            }
-
-            else {
-
-                jq('#enabled_default_member_type').removeAttr('disabled');
-                jq('#enabled_require_on_registration').removeAttr('disabled');
-
-            }
-    });
-
 
     /**
      * Show warning when we delete/trash a member type, that already has users attached to it

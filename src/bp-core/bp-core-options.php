@@ -58,12 +58,6 @@ function bp_get_default_options() {
 		// Disable the WP to BP profile sync.
 		'bp-disable-profile-sync'              => false,
 
-		// Default Member Type
-		'bp-default-member-type'            => '',
-
-		// Require on Registration
-		'bp-member-type-require-on-registration'            => false,
-
 		// Hide the Toolbar for logged out users.
 		'hide-loggedout-adminbar'              => false,
 
@@ -518,48 +512,6 @@ function bp_disable_advanced_profile_search( $default = false ) {
 	 * @param bool $value Whether or not profile search is disabled.
 	 */
 	return (bool) apply_filters( 'bp_disable_advanced_profile_search', ! (bool) bp_get_option( 'bp-enable-profile-search', $default ) );
-}
-
-/**
- * Is Member Type required on Registration?
- *
- * @since BuddyBoss 3.1.1
- *
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: true.
- * @return bool True if require on Registration is enabled, otherwise false.
- */
-function bp_member_type_require_on_registration( $default = false ) {
-
-	/**
-	 * Filters whether or not profile search is disabled.
-	 *
-	 * @since BuddyBoss 3.1.1
-	 *
-	 * @param bool $value Whether or not profile search is disabled.
-	 */
-	return (bool) apply_filters( 'bp_member_type_require_on_registration', ! (bool) bp_get_option( 'bp-member-type-require-on-registration', $default ) );
-}
-
-/**
- * Default member type on registration.
- *
- * @since BuddyBoss 3.1.1
- *
- * @param bool $default blank. Fallback value if not found in the database.
- *                      Default: blank.
- * @return string if default member type selected otherwise blank.
- */
-function bp_member_type_default_member_type( $default = '' ) {
-
-	/**
-	 * Filters whether or not profile search is disabled.
-	 *
-	 * @since BuddyBoss 3.1.1
-	 *
-	 * @param bool $value Whether or not profile search is disabled.
-	 */
-	return apply_filters( 'bp_member_type_default_member_type', bp_get_option( 'bp-default-member-type', $default ) );
 }
 
 /**
