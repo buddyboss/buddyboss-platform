@@ -1639,7 +1639,7 @@ function bp_delete_profile_type( $post_id ) {
 
 	$post = get_post( $post_id );
 
-	//Return if post is not 'bmt-member-type' type
+	//Return if post is not 'bp-member-type' type
 	if ( bp_get_profile_type_post_type() !== $post->post_type ) return;
 
 	$member_type_name 	= bp_get_profile_type_key( $post_id );

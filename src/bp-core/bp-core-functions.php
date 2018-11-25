@@ -4632,7 +4632,7 @@ function bp_add_member_type_field_in_registration_form() {
 			$bp_member_type_selected = isset( $_REQUEST['bp_member_type_type'] ) ? $_REQUEST['bp_member_type_type'] : bp_profile_type_default_profile_type();
 
 			?>
-			<select class="bmt-member-type" name="bp_member_type_type">
+			<select class="bp-member-type-type" name="bp_member_type_type">
 				<option value=""><?php echo '----'; ?></option>
 				<?php
 				foreach ($post_ids as $pid) {
@@ -5021,13 +5021,13 @@ function changing_listing_label() {
 	global $pagenow, $current_screen;
 	$url = buddypress()->plugin_url . 'bp-core/js/';
 
-	$bmt_pages = array(
+	$bp_member_type_pages = array(
 		'edit-bp-member-type',
 		'bp-member-type'
 	);
 
 	// Check to make sure we're on a Member Type's admin page
-	if ( isset( $current_screen->id ) && in_array( $current_screen->id, $bmt_pages ) ) {
+	if ( isset( $current_screen->id ) && in_array( $current_screen->id, $bp_member_type_pages ) ) {
 
 		wp_enqueue_script('bp-clipboard',$url.'clipboard.js',array(), '3.1.1' );
 		wp_enqueue_script('bp-member-type-admin-screen',$url.'bp-member-type-admin-screen.js',array('jquery'), '3.1.1' );
