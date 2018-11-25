@@ -4367,6 +4367,9 @@ function bp_register_active_member_types() {
 	}
 }
 
+// action for registering active member types.
+add_action( 'bp_register_member_types', 'bp_register_active_member_types' );
+
 // remove users of a specific member type from members directory
 add_action( 'bp_ajax_querystring', 'bp_member_type_exclude_users_from_directory_and_searches', 999, 2 );
 
