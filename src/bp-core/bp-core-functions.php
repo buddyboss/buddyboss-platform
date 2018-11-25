@@ -3875,7 +3875,7 @@ function bp_get_profile_type_post_type() {
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *
-	 * @param string $value Profile Type post type name.
+	 * @param string $value Member Type post type name.
 	 */
 	return apply_filters( 'bp_get_profile_type_post_type', buddypress()->profile_type_post_type );
 }

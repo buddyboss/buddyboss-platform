@@ -425,7 +425,7 @@ class BuddyPress {
 		 *
 		 * since BuddyBoss 3.1.1
 		 *
-		 * @param string $value Profile Type post type slug.
+		 * @param string $value Member Type post type slug.
 		 */
 		$this->profile_type_post_type     = apply_filters( 'bp_profile_type_post_type', 'bp-profile-type' );
 

@@ -61,7 +61,7 @@ function bp_get_default_options() {
 		// Hide from Registration
 		'bp-profile-type-hide-from-registration'            => false,
 
-		// Default Profile Type
+		// Default Member Type
 		'bp-default-profile-type'            => '',
 
 		// Require on Registration
@@ -524,7 +524,7 @@ function bp_disable_advanced_profile_search( $default = false ) {
 }
 
 /**
- * Is Profile Type hidden from Registration?
+ * Is Member Type hidden from Registration?
  *
  * @since BuddyBoss 3.1.1
  *
@@ -545,7 +545,7 @@ function bp_disable_profile_type_selection_from_registration_from( $default = fa
 }
 
 /**
- * Is Profile Type required on Registration?
+ * Is Member Type required on Registration?
  *
  * @since BuddyBoss 3.1.1
  *

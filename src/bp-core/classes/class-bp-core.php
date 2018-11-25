@@ -362,7 +362,7 @@ class BP_Core extends BP_Component {
 			);
 		}
 
-		// Profile Types
+		// Member Types
 		register_post_type(
 			bp_get_profile_type_post_type(),
 			apply_filters( 'bp_register_profile_type_post_type', array(

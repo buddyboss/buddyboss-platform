@@ -60,8 +60,8 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			[$this, 'bp_admin_setting_callback_default_profile_type']
 		);
 
-		// Profile Type Import.
-		$this->add_field( 'bp-profile-type-import', __( 'Import Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_type_import'], 'intval' );
+		// Member Type Import.
+		$this->add_field( 'bp-profile-type-import', __( 'Import Member Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_type_import'], 'intval' );
 	}
 
 	/**

@@ -1349,7 +1349,7 @@ function bp_profile_type_custom_metaboxes() {
 add_action( 'add_meta_boxes_' . bp_get_profile_type_post_type(), 'bp_profile_type_custom_metaboxes' );
 
 /**
- * Generate Profile Type Key Meta box.
+ * Generate Member Type Key Meta box.
  *
  * @since BuddyBoss 3.1.1
  *
