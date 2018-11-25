@@ -1496,7 +1496,7 @@ function bp_member_type_wprole_metabox( $post ) {
 	<?php
 	if( isset($all_roles) && !empty($all_roles) ){
 		foreach($all_roles as $key => $val){
-			$role_member_type = bp_get_profile_type_by_wp_role($key);
+			$role_member_type = bp_get_member_type_by_wp_role($key);
 			$disabled = '';
 			$disabled_style = '';
 			$disable_message = '';
@@ -1530,7 +1530,7 @@ function bp_member_type_wprole_metabox( $post ) {
  *
  * @since BuddyBoss 3.1.1
  */
-function bp_save_profile_type_post_metabox_data( $post_id ) {
+function bp_save_member_type_post_metabox_data( $post_id ) {
 
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
 		return;
@@ -1591,14 +1591,14 @@ function bp_save_profile_type_post_metabox_data( $post_id ) {
 	if( isset( $key ) && ! empty( $key ) ){
 
 		if ( ! empty( $old_wp_roles ) ) {
-			bp_remove_profile_type_to_roles( $old_wp_roles, $key );
+			bp_remove_member_type_to_roles( $old_wp_roles, $key );
 		}
 		if ( ! empty( $wp_roles ) ){
-			bp_set_profile_type_to_roles( $wp_roles, $key );
+			bp_set_member_type_to_roles( $wp_roles, $key );
 		}
 	}
 }
-add_action( 'save_post', 'bp_save_profile_type_post_metabox_data');
+add_action( 'save_post', 'bp_save_member_type_post_metabox_data');
 
 /**
  * Function setting up a admin action messages.
@@ -1609,7 +1609,7 @@ add_action( 'save_post', 'bp_save_profile_type_post_metabox_data');
  *
  * @return mixed
  */
-function bp_profile_type_filter_update_messages( $messages ) {
+function bp_member_type_filter_update_messages( $messages ) {
 
 	$update_message = $messages[ 'post' ];
 
@@ -1625,7 +1625,7 @@ function bp_profile_type_filter_update_messages( $messages ) {
 
 	return $messages;
 }
-add_filter( 'post_updated_messages', 'bp_profile_type_filter_update_messages' );
+add_filter( 'post_updated_messages', 'bp_member_type_filter_update_messages' );
 
 /**
  * Remove member type from users, when the Member Type is deleted.
@@ -1634,7 +1634,7 @@ add_filter( 'post_updated_messages', 'bp_profile_type_filter_update_messages' );
  *
  * @param $post_id
  */
-function bp_delete_profile_type( $post_id ) {
+function bp_delete_member_type( $post_id ) {
 	global $wpdb;
 
 	$post = get_post( $post_id );
@@ -1657,7 +1657,7 @@ function bp_delete_profile_type( $post_id ) {
 }
 
 //delete post
-add_action( 'before_delete_post', 'bp_delete_profile_type' );
+add_action( 'before_delete_post', 'bp_delete_member_type' );
 
 // Register submenu page for profile type import.
 add_action('admin_menu', 'bp_register_profile_type_import_submenu_page');

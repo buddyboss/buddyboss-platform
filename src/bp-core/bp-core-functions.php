@@ -3968,7 +3968,7 @@ function bp_get_member_type_key( $post_id ) {
  *
  * @return array
  */
-function bp_get_profile_type_by_wp_role($role){
+function bp_get_member_type_by_wp_role($role){
 	$bp_member_type_ids = array();
 	$post_type = bp_get_member_type_post_type();
 
@@ -4009,7 +4009,7 @@ function bp_get_profile_type_by_wp_role($role){
  * @param $wp_roles
  * @param $member_type
  */
-function bp_remove_profile_type_to_roles($wp_roles, $member_type){
+function bp_remove_member_type_to_roles($wp_roles, $member_type){
 	$users = bp_get_users_by_roles($wp_roles);
 	if( isset($users) && !empty($users) ){
 		foreach($users as $single){
@@ -4026,7 +4026,7 @@ function bp_remove_profile_type_to_roles($wp_roles, $member_type){
  * @param $wp_roles
  * @param $member_type
  */
-function bp_set_profile_type_to_roles($wp_roles, $member_type){
+function bp_set_member_type_to_roles($wp_roles, $member_type){
 	$users = bp_get_users_by_roles($wp_roles);
 	if( isset($users) && !empty($users) ){
 		foreach($users as $single){
@@ -4552,7 +4552,7 @@ add_action( 'set_user_role', 'bp_update_user_profile_type_type_set', 10, 2 );
  */
 function bp_update_user_profile_type_type_set( $user_id, $user_role ) {
 
-	$get_member_type = bp_get_profile_type_by_wp_role($user_role);
+	$get_member_type = bp_get_member_type_by_wp_role($user_role);
 
 	if( isset($get_member_type[0]['name']) && !empty($get_member_type[0]['name']) ){
 		bp_set_member_type($user_id, $get_member_type[0]['name']);
