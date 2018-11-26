@@ -43,7 +43,7 @@ function bp_profile_search_register_post_type (){
 			'not_found_in_trash' => __('No forms found in Trash.', 'buddyboss'),
 		),
 		'show_ui' => true,
-		'show_in_menu' => 'users.php',
+		//'show_in_menu' => 'users.php',
 		'supports' => array ( 'title' ),
 		'rewrite' => false,
 		'map_meta_cap' => true,
