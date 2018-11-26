@@ -51,7 +51,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$this->add_field( 'bp-member-type-enable-disable', __( 'Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_enable_disable'], 'intval' );
 
 		// Member types import.
-		$this->add_field( 'bp-member-type-import', __( 'Import Member Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_import'], 'intval' );
+		$this->add_field( 'bp-member-type-import', __( 'Import Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_import'], 'intval' );
 	}
 
 	/**
@@ -63,7 +63,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function bp_admin_setting_callback_member_dashboard() {
 		?>
 			<input id="bp-enable-member-dashboard" name="bp-enable-member-dashboard" type="checkbox" value="1" <?php checked( bp_nouveau_get_appearance_settings( 'user_front_page' ) ); ?> />
-			<label for="bp-enable-member-dashboard"><?php _e( 'Enable Dashboard for member profiles', 'buddyboss' ); ?></label>
+			<label for="bp-enable-member-dashboard"><?php _e( 'Enable a personal dashboard of widgets on member profiles', 'buddyboss' ); ?></label>
 		<?php
 	}
 
@@ -102,7 +102,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function bp_admin_setting_callback_profile_search() {
 		?>
 			<input id="bp-enable-profile-search" name="bp-enable-profile-search" type="checkbox" value="1" <?php checked( ! bp_disable_advanced_profile_search() ); ?> />
-			<label for="bp-enable-profile-search"><?php _e( 'Enable advanced profile search on the members directory.', 'buddyboss' ); ?></label>
+			<label for="bp-enable-profile-search"><?php _e( 'Enable advanced profile search on the members directory', 'buddyboss' ); ?></label>
 		<?php
 	}
 
@@ -116,7 +116,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$import_url = admin_url().'users.php?page=bp-member-type-import';
 		//echo '<a href="'. esc_url( $import_url ).'">Click here to go import page.</a>';
 		printf(
-			__( 'Click <a href="%s">here</a> to import "member types" from BuddyPress.', 'buddyboss' ),
+			__( 'Click <a href="%s">here</a> to import existing profile types (or "member types" in BuddyPress)', 'buddyboss' ),
 			esc_url( $import_url )
 		);
 	}
@@ -130,7 +130,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function bp_admin_setting_callback_member_type_enable_disable() {
 		?>
 		<input id="bp-member-type-enable-disable" name="bp-member-type-enable-disable" type="checkbox" value="1" <?php checked( bp_member_type_enable_disable() ); ?> />
-		<label for="bp-member-type-enable-disable"><?php _e( 'Enable profile type', 'buddyboss' ); ?></label>
+		<label for="bp-member-type-enable-disable"><?php _e( 'Enable profile types to give members unique profile fields and permissions', 'buddyboss' ); ?></label>
 		<?php
 	}
 }
