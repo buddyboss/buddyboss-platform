@@ -92,7 +92,7 @@ class BP_Bbp_Gdpr_Topics {
 
 				$group_id = 'bbp-topics';
 
-				$group_label = __( 'Forum Discussions' );
+				$group_label = __( 'Forum Discussions', 'buddyboss' );
 
 				$permalink = get_permalink( $topic->ID );
 
