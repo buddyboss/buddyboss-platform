@@ -2853,8 +2853,7 @@ function bp_register_member_type_section() {
 		) )
 	);
 
-	// action for registering active member types.
-	add_action( 'bp_register_member_types', 'bp_register_active_member_types' );
+
 
 	// remove users of a specific member type from members directory
 	add_action( 'bp_ajax_querystring', 'bp_member_type_exclude_users_from_directory_and_searches', 999, 2 );
@@ -2894,10 +2893,14 @@ function bp_register_member_type_section() {
 
 	// action for adding the js for the member type post type.
 	add_action('admin_enqueue_scripts', 'bp_member_type_changing_listing_label');
+
 }
 
 // Register enable/disable member type functionality.
 add_action( 'bp_init', 'bp_register_member_type_section' );
+
+// action for registering active member types.
+add_action( 'bp_register_member_types', 'bp_register_active_member_types' );
 
 /**
  * Output the name of the member type post type.
