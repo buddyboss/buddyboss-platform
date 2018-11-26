@@ -2831,6 +2831,10 @@ function bp_register_member_type_section() {
 	$is_member_type_enabled = bp_member_type_enable_disable();
 
 	if ( false === $is_member_type_enabled ) {
+
+		// action for remove member type metabox.
+		add_action( 'bp_members_admin_user_metaboxes', 'bp_remove_member_type_metabox_globally' );
+
 		return;
 	}
 
@@ -3558,6 +3562,15 @@ function bp_remove_member_type_metabox() {
 }
 
 /**
+ * Function for removing metabox feom extended profile if globally disabled.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_remove_member_type_metabox_globally() {
+	remove_meta_box( 'bp_members_admin_member_type', get_current_screen()->id, 'side' );
+}
+
+/**
  * Add new columns to the post type list screen.
  *
  * @since BuddyBoss 3.1.1
@@ -3764,12 +3777,18 @@ function bp_member_type_shortcode_callback( $atts ) {
 		buddypress()->current_member_type = $name;
 	}
 
+	// exclude settings in shortcode.
+	remove_action( 'bp_ajax_querystring', 'bp_member_type_exclude_users_from_directory_and_searches', 999, 2 );
+
 	add_action( 'bp_ajax_querystring', 'bp_member_type_shortcode_filter', 1, 2 );
 
 	//Get a BuddyPress members-loop template part for display in a theme.
 	bp_get_template_part( 'members/members-loop' );
 
 	remove_action( 'bp_ajax_querystring', 'bp_member_type_shortcode_filter', 1, 2 );
+
+	// add action after the shortcode data display.
+	add_action( 'bp_ajax_querystring', 'bp_member_type_exclude_users_from_directory_and_searches', 999, 2 );
 
 	//echo '</div>';
 	echo '</div>';

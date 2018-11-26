@@ -1240,6 +1240,54 @@ class BP_Members_Admin {
 			return;
 		}
 
+		if ( '' !== $member_type ) {
+
+			// Get post id of selected member type.
+			$post_id = bp_member_type_post_by_type( $member_type );
+
+			// Get selected member type role.
+			$selected_member_type_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
+
+			if ( $user_id === get_current_user_id() ) {
+
+				if ( 'administrator' !== $selected_member_type_wp_roles[0] ) {
+
+					$string        = 'You cannot assign yourself to this profile type as doing so would remove your Administrator role and lock you out of the WordPress admin. You first need to associate this profile type to the Administrator role, and then you can assign it to yourself.';
+					$error_message = apply_filters( 'bp_invalid_role_selection_extended_profile', __( $string, 'buddyboss' ) );
+					// Define the settings error to display
+					add_settings_error( 'bp-invalid-role-selection-extended-profile',
+						'bp-invalid-role-selection-extended-profile',
+						$error_message,
+						'error' );
+					set_transient( 'bp_invalid_role_selection_extended_profile', get_settings_errors(), 30 );
+
+					return;
+
+				} else {
+
+					$bp_current_user = new WP_User( get_current_user_id() );
+
+					// Remove role
+					$bp_current_user->remove_role( $bp_current_user->roles[0] );
+
+					// Add role
+					$bp_current_user->add_role( $selected_member_type_wp_roles[0] );
+				}
+
+			} else {
+
+				$bp_user = new WP_User( $user_id );
+
+				// Remove role
+				$bp_user->remove_role( $bp_user->roles[0] );
+
+				// Add role
+				$bp_user->add_role( $selected_member_type_wp_roles[0] );
+
+			}
+
+		}
+
 		/*
 		 * If an invalid member type is passed, someone's doing something
 		 * fishy with the POST request, so we can fail silently.

@@ -1461,7 +1461,7 @@ function bp_profile_shortcode_metabox( $post ) {
 function bp_member_type_wprole_metabox( $post ) {
 
 	global $wp_roles;
-	$tabindex = 7;
+	$tab_index = 7;
 	$all_roles = $wp_roles->role_names;
 
 	//remove bbPress roles
@@ -1475,7 +1475,7 @@ function bp_member_type_wprole_metabox( $post ) {
 	$selected_roles = (array) $selected_roles;
 	?>
 
-	<p><?php printf( __( 'Users of the %s profile type will be auto-assigned to the following WordPress roles (includes existing users). If a user is in more than one profile type at a time, the highest WordPress role allowed will be assigned.', 'buddyboss' ), $post->post_title )?></p>
+	<p><?php printf( __( 'Users of the %s profile type will be auto-assigned to the following WordPress roles (includes existing users).', 'buddyboss' ), $post->post_title )?></p>
 	<p>
 		<label for="bp-member-type-roles-none">
 			<input
@@ -1490,26 +1490,17 @@ function bp_member_type_wprole_metabox( $post ) {
 	<?php
 	if( isset($all_roles) && !empty($all_roles) ){
 		foreach($all_roles as $key => $val){
-			$role_member_type = bp_get_member_type_by_wp_role($key);
-			$disabled = '';
-			$disabled_style = '';
-			$disable_message = '';
-			if( isset($role_member_type) && !empty($role_member_type) && $post->ID != $role_member_type[0]['ID'] ){
-				$disabled = 'disabled readonly';
-				$disabled_style = 'style="color:#bbb"';
-				$disable_message = ' (Already assigned to "'.$role_member_type[0]['nice_name'].'" profile type)';
-			}
 			?>
-			<p <?php echo $disabled_style;?>>
+			<p>
 				<label for="bp-member-type-wp-roles-<?php echo $key ?>">
 					<input
 						type='radio'
-						name='bp-member-type[wp_roles][]' <?php echo $disabled; ?>
+						name='bp-member-type[wp_roles][]'
 						id="bp-member-type-wp-roles-<?php echo $key ?>"
 						value='<?php echo $key;?>' <?php echo in_array($key, $selected_roles) ? 'checked' : ''; ?>
-						tabindex="<?php echo ++$tabindex ?>"
+						tabindex="<?php echo ++$tab_index ?>"
 					/>
-					<?php echo $val.$disable_message; ?>
+					<?php echo $val; ?>
 				</label>
 			</p>
 
@@ -1525,6 +1516,7 @@ function bp_member_type_wprole_metabox( $post ) {
  * @since BuddyBoss 3.1.1
  */
 function bp_save_member_type_post_metabox_data( $post_id ) {
+	global $wpdb, $error;
 
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
 		return;
@@ -1547,6 +1539,8 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	if ( empty( $data ) )
 		return;
 
+	$error = false;
+
 	$post_title = wp_kses( $_POST[ 'post_title' ], wp_kses_allowed_html( 'strip' ) );
 
 	// key
@@ -1567,30 +1561,104 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	$wp_roles = isset( $data[ 'wp_roles' ] ) ? $data[ 'wp_roles' ] : '';
 
 	update_post_meta( $post_id, '_bp_member_type_key', $key );
-
 	update_post_meta( $post_id, '_bp_member_type_label_name', $label_name );
 	update_post_meta( $post_id, '_bp_member_type_label_singular_name', $singular_name );
-
 	update_post_meta( $post_id, '_bp_member_type_enable_filter', $enable_filter );
 	update_post_meta( $post_id, '_bp_member_type_enable_remove', $enable_remove );
 
+	// Get user previous role.
 	$old_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
-	update_post_meta( $post_id, '_bp_member_type_wp_roles', $wp_roles );
 
-	//set this member type to users with these roles
-	$key = bp_get_member_type_key( $post_id );
+	$member_type_name 	= bp_get_member_type_key( $post_id );
+	$type_term = get_term_by( 'name', $member_type_name, 'bp_member_type' ); // Get member type term data from database by name field.
 
-	if( isset( $key ) && ! empty( $key ) ){
+	// Check logged user role.
+	$user = new WP_User( get_current_user_id() );
+	$current_user_role = $user->roles[0];
 
-		if ( ! empty( $old_wp_roles ) ) {
-			bp_remove_member_type_to_roles( $old_wp_roles, $key );
-		}
-		if ( ! empty( $wp_roles ) ){
-			bp_set_member_type_to_roles( $wp_roles, $key );
+	// flag to check condition.
+	$bp_prevent_data_update = false;
+
+	// Fetch all the users which associated this member type.
+	$get_user_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_term->term_id );
+	if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
+		if ( in_array( get_current_user_id(), $get_user_ids ) ) {
+			$bp_prevent_data_update = true;
 		}
 	}
+
+	if ( true === $bp_prevent_data_update ) {
+
+		if ( 'administrator' === $old_wp_roles[0] ) {
+
+			if ( ! in_array( $current_user_role, $wp_roles ) ) {
+
+				$string        = 'As your profile is currently assigned to this profile type, you cannot change its associated WordPress role. Changing this setting would remove your Administrator role and lock you out of the WordPress admin. You first need to remove yourself from this profile type (at Users > Your Profile > Extended) and then you can come back to this page to update the associated WordPress role.';
+				$error_message = apply_filters( 'bp_member_type_admin_error_message', __( $string, 'buddyboss' ) );
+				// Define the settings error to display
+				add_settings_error( 'bp-invalid-role-selection',
+					'bp-invalid-role-selection',
+					$error_message,
+					'error' );
+				set_transient( 'bp_invalid_role_selection', get_settings_errors(), 30 );
+
+				return;
+			}
+
+		}
+
+	}
+
+	update_post_meta( $post_id, '_bp_member_type_wp_roles', $wp_roles );
+
+	//term exist
+	if ( $type_term ) {
+
+		if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
+			foreach ( $get_user_ids as $single_user ) {
+
+				$bp_user = new WP_User( $single_user );
+
+				// Remove role
+				$bp_user->remove_role( $bp_user->roles[0] );
+
+				// Add role
+				$bp_user->add_role( $wp_roles[0] );
+			}
+		}
+	}
+
 }
 add_action( 'save_post', 'bp_save_member_type_post_metabox_data');
+
+/**
+ * Function for displaying error message on edit profile type page.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_member_type_invalid_role_error_callback() {
+
+	// If there are no errors, then we'll exit the function
+	if ( ! ( $errors = get_transient( 'bp_invalid_role_selection' ) ) ) {
+		return;
+	}
+
+	// Otherwise, build the list of errors that exist in the settings errores
+	$message = '<div id="bp-member-typerole-error-message" style="margin: 37px 0 0 0;width: 97%;" class="error below-h2"><p><ul>';
+	foreach ( $errors as $error ) {
+		$message .= '<li>' . $error['message'] . '</li>';
+	}
+	$message .= '</ul></p></div><!-- #error --><style type="text/css">div#message{display: none;}</style>';
+	// Write them out to the screen
+	echo $message;
+	// Clear and the transient and unhook any other notices so we don't see duplicate messages
+	delete_transient( 'bp_invalid_role_selection' );
+	remove_action( 'admin_notices', 'bp_member_type_invalid_role_error_callback' );
+
+}
+
+// Hook for displaying error message on edit profile type page.
+add_action( 'admin_notices', 'bp_member_type_invalid_role_error_callback' );
 
 /**
  * Function setting up a admin action messages.
@@ -1743,3 +1811,32 @@ function bp_member_type_import_submenu_page() {
 	}
 
 }
+
+/**
+ * Function for display error message on extended profile page in admin.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_member_type_invalid_role_extended_profile_error_callback() {
+
+	// If there are no errors, then we'll exit the function
+	if ( ! ( $errors = get_transient( 'bp_invalid_role_selection_extended_profile' ) ) ) {
+		return;
+	}
+
+	// Otherwise, build the list of errors that exist in the settings errores
+	$message = '<div id="bp-member-typerole-error-message" style="margin: 37px 0 0 0;width: 97%;" class="error below-h2"><p><ul>';
+	foreach ( $errors as $error ) {
+		$message .= '<li>' . $error['message'] . '</li>';
+	}
+	$message .= '</ul></p></div><!-- #error --><style type="text/css">div#message{display: none;}</style>';
+	// Write them out to the screen
+	echo $message;
+	// Clear and the transient and unhook any other notices so we don't see duplicate messages
+	delete_transient( 'bp_invalid_role_selection_extended_profile' );
+	remove_action( 'admin_notices', 'bp_member_type_invalid_role_extended_profile_error_callback' );
+
+}
+
+// Hook for display error message on extended profile page in admin.
+add_action( 'admin_notices', 'bp_member_type_invalid_role_extended_profile_error_callback' );
