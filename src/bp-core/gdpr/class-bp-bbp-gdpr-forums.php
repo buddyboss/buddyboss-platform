@@ -104,7 +104,7 @@ class BP_Bbp_Gdpr_Forums {
 
 				$group_id = 'bbp-forums';
 
-				$group_label = __( 'Forums' );
+				$group_label = __( 'Forums', 'buddyboss' );
 
 				$permalink = get_permalink( $forum->ID );
 

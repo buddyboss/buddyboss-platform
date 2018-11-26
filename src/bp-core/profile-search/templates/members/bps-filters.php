@@ -24,7 +24,7 @@
 	if (!empty ($F->action))
 	{
 ?>
-		<a href='<?php echo $F->action; ?>'><?php _e('Clear', 'buddypress'); ?></a>
+		<a href='<?php echo $F->action; ?>'><?php _e('Clear', 'buddyboss'); ?></a>
 <?php
 	}
 ?>

@@ -45,12 +45,6 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 
 	if ( ! empty( $_POST ) ) {
 
-		if (strpos($_POST['filter'], 'member_type_') !== false) {
-			$member_type = explode('member_type_',$_POST['filter']);
-			$_POST['filter'] = 'active';
-			$_POST['scope'] = intval($member_type[1]);
-		}
-
 		$post_query = wp_parse_args( $_POST, $post_query );
 
 		// Make sure to transport the scope, filter etc.. in HeartBeat Requests
@@ -114,6 +108,12 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	// To get newest activities.
 	if ( ! empty( $post_query['offset'] ) ) {
 		$qs[] = 'offset=' . intval( $post_query['offset'] );
+	}
+
+	if ( isset( $_POST['member_type_id'] ) && '' !== $_POST['member_type_id'] && 'all' !== $_POST['member_type_id'] ) {
+		$member_type_id = $_POST['member_type_id'];
+		$member_type_key= get_post_meta( $member_type_id, '_bp_member_type_key', true);
+		$qs[] = 'member_type=' . $member_type_key;
 	}
 
 	$object_search_text = bp_get_search_default_text( $object );
@@ -601,7 +601,7 @@ function bp_nouveau_get_temporary_setting( $option = '', $retval = false ) {
  */
 function bp_nouveau_get_appearance_settings( $option = '' ) {
 	$default_args = array(
-		'avatar_style'       => 0,
+		'avatar_style'       => 1,
 		'user_front_page'    => 0,
 		'user_nav_display'   => 0, // O is default (horizontally). 1 is vertically.
 		'user_nav_tabs'      => 0,
