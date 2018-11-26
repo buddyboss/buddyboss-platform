@@ -9,17 +9,17 @@
 
 <?php if ($ld_group = ld_bp_groups_sync_get_associated_ld_group($group_id)): ?>
     <p>
-        <b><?php _e('This group is associated with:', 'ld_bp_groups_sync'); ?></b>
+        <b><?php _e('This group is associated with:', 'buddyboss'); ?></b>
     </p>
 
     <a href="<?php echo get_edit_post_link($ld_group); ?>" target="_blank"><?php echo get_the_title($ld_group); ?> (ID: <?php echo $ld_group->ID; ?>)</a>
 <?php else: ?>
     <p>
-        <b><?php _e('Associate with: ', 'ld_bp_groups_sync'); ?></b>
+        <b><?php _e('Associate with: ', 'buddyboss'); ?></b>
     </p>
 
     <select name="ld_bp_groups_sync[learndash_group_id]" style="width: 100%; margin-bottom: 10px;">
-        <option value="0"><?php _e('None', 'ld_bp_groups_sync'); ?></option>
+        <option value="0"><?php _e('None', 'buddyboss'); ?></option>
 
         <?php if (! ld_bp_groups_sync_get_unassociated_ld_groups([], $ld_group)): ?>
             <option disabled><?php _e('No LearnDash group available.'); ?></option>
@@ -40,7 +40,7 @@
         <input type="hidden" name="ld_bp_groups_sync[update_leaders]" value="0" />
         <label>
             <input type="checkbox" name="ld_bp_groups_sync[update_leaders]" value="1" <?php if ($sync_leaders) echo 'checked'; ?> />
-            <?php _e('Update leaders from LearnDash group', 'ld_bp_groups_sync'); ?>
+            <?php _e('Update leaders from LearnDash group', 'buddyboss'); ?>
         </label>
     </div>
 
@@ -48,7 +48,7 @@
         <input type="hidden" name="ld_bp_groups_sync[update_students]" value="0" />
         <label>
             <input type="checkbox" name="ld_bp_groups_sync[update_students]" value="1" <?php if ($sync_users) echo 'checked'; ?> />
-            <?php _e('Update users from LearnDash group', 'ld_bp_groups_sync'); ?>
+            <?php _e('Update users from LearnDash group', 'buddyboss'); ?>
         </label>
     </div>
 <?php endif; ?>

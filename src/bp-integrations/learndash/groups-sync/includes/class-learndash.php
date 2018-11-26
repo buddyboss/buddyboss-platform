@@ -56,7 +56,7 @@ class LearnDash_BuddyPress_Groups_Sync_LearnDash
 
         if (! wp_verify_nonce($nonce, 'ld_bp_groups_sync-scan-ld-groups')) {
             wp_send_json_error([
-                'html' => sprintf('<p>%s</p>', __('Invalid request, please refresh the page and try again.', 'ld_bp_groups_sync'))
+                'html' => sprintf('<p>%s</p>', __('Invalid request, please refresh the page and try again.', 'buddyboss'))
             ]);
         }
 
@@ -78,7 +78,7 @@ class LearnDash_BuddyPress_Groups_Sync_LearnDash
             wp_send_json_error([
                 'html' => sprintf(
                     '<td colspan="5" style="color: #a94442;">%s</td>',
-                    __('Invalid request, please refresh the page and try again.', 'ld_bp_groups_sync')
+                    __('Invalid request, please refresh the page and try again.', 'buddyboss')
                 )
             ]);
         }
@@ -100,7 +100,7 @@ class LearnDash_BuddyPress_Groups_Sync_LearnDash
     {
         add_meta_box(
             'learndash-associated-buddypress-group',
-            __('Associated BuddyPress Group', 'ld_bp_groups_sync'),
+            __('Associated BuddyPress Group', 'buddyboss'),
             [$this, 'associated_group_metabox_html'],
             'groups',
             'side'

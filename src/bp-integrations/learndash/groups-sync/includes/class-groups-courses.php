@@ -27,7 +27,7 @@ if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() 
 
 			$args = array(
 				'slug'              => 'courses',
-				'name'              => __( 'Courses', 'ld_bp_groups_sync' ),
+				'name'              => __( 'Courses', 'buddyboss' ),
 				'nav_item_position' => 105,
 			);
 			parent::init( $args );
@@ -69,7 +69,7 @@ if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() 
 			$sub_menus[] = array(
 				'link'  => $this->group_link,
 				'slug'  => $this->slug,
-				'label' => __( 'Group Courses', 'ld_bp_groups_sync' ),
+				'label' => __( 'Group Courses', 'buddyboss' ),
 			);
 
 			return $sub_menus;
@@ -151,7 +151,7 @@ if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() 
                     <div class="item-avatar">
                         <a href="<?php echo $link; ?>">
                             <img src="<?php echo $thumbnail_url; ?>" class="photo" width="300" height="300"
-                                 alt="<?php _e( 'Course Picture', 'ld_bp_groups_sync' ); ?>">
+                                 alt="<?php _e( 'Course Picture', 'buddyboss' ); ?>">
                         </a>
                     </div>
 
@@ -164,7 +164,7 @@ if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() 
                             </h3>
 
 							<?php
-							$label = __( 'View Course', 'ld_bp_groups_sync' );
+							$label = __( 'View Course', 'buddyboss' );
 							if ( $is_user_member ) {
 
 								$personal_percentage_completed = 0;
@@ -172,21 +172,21 @@ if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() 
 									$personal_percentage_completed = ( 100 * $user_progress ) / $course_step;
 								}
 
-								$this->progress_bar_html( __( 'My Progress', 'ld_bp_groups_sync' ), $personal_percentage_completed );
+								$this->progress_bar_html( __( 'My Progress', 'buddyboss' ), $personal_percentage_completed );
 
 								$course_status = learndash_course_status( $course_id, $is_user_member, true );
 
 //								if ( 'in-progress' === $course_status || ( $personal_percentage_completed > 0 && $personal_percentage_completed < 100 ) ) {
 								if ( 'in-progress' === $course_status ) {
-									$label = __( 'Continue', 'ld_bp_groups_sync' );
+									$label = __( 'Continue', 'buddyboss' );
 								} elseif ( 'completed' === $course_status ) {
-									$label = __( 'View Course', 'ld_bp_groups_sync' );
+									$label = __( 'View Course', 'buddyboss' );
 								} else {
-									$label = __( 'Start Course', 'ld_bp_groups_sync' );
+									$label = __( 'Start Course', 'buddyboss' );
 								}
 							}
 
-							$this->progress_bar_html( __( 'Group Progress', 'ld_bp_groups_sync' ), $group_percentage_completed );
+							$this->progress_bar_html( __( 'Group Progress', 'buddyboss' ), $group_percentage_completed );
 							?>
 
 							<?php

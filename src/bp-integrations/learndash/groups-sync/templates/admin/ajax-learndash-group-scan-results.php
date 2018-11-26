@@ -1,10 +1,10 @@
 <table class="widefat" style="margin-top: 30px;">
     <thead>
         <tr>
-            <th width="10%">Group ID</th>
-            <th >Group Name</th>
-            <th width="30%">Status</th>
-            <th width="170px">Actions</th>
+            <th width="10%"><?php _e('Group ID', 'buddyboss'); ?></th>
+            <th ><?php _e('Group Name', 'buddyboss'); ?></th>
+            <th width="30%"><?php _e('Status', 'buddyboss'); ?></th>
+            <th width="170px"><?php _e('Actions', 'buddyboss'); ?></th>
             <th width="110px"></th>
         </tr>
     </thead>
@@ -12,7 +12,7 @@
     <tbody>
         <?php if (! $groups): ?>
             <tr>
-                <td colspan="5">No Results Found.</td>
+                <td colspan="5"><?php _e('No Results Found.', 'buddyboss'); ?></td>
             </tr>
         <?php endif; ?>
 
@@ -37,13 +37,13 @@
                                     %s <br/>
                                     <ul>%s</ul>
                                 </span>',
-                                __('BuddyPress group with same name found:', 'ld_bp_groups_sync'),
+                                __('BuddyPress group with same name found:', 'buddyboss'),
                                 implode("\n", $list_html)
                             );
                         } else {
                             printf(
                                 '<span style="color: #aeaeae">%s</span>',
-                                __('No assoticated BuddyPress group.', 'ld_bp_groups_sync')
+                                __('No assoticated BuddyPress group.', 'buddyboss')
                             );
                         }
                     ?>
@@ -56,13 +56,13 @@
                 </td>
                 <td>
                     <select name="ld_bp_groups_sync-ajax-asso-group[<?php echo $group->ID; ?>][action]">
-                        <option value="generate"><?php _e('Generate new one', 'ld_bp_groups_sync'); ?></option>
+                        <option value="generate"><?php _e('Generate new one', 'buddyboss'); ?></option>
                         <?php foreach ($bp_groups as $i => $bp_group): ?>
                             <option value="linkup_<?php echo $bp_group->id; ?>" <?php if (! $i) echo 'selected'; ?>>
-                                <?php printf(__('Link up with group ID: %d', 'ld_bp_groups_sync'), $bp_group->id); ?>
+                                <?php printf(__('Link up with group ID: %d', 'buddyboss'), $bp_group->id); ?>
                             </option>
                         <?php endforeach; ?>
-                        <option value="nothing"><?php _e('Do nothing', 'ld_bp_groups_sync'); ?></option>
+                        <option value="nothing"><?php _e('Do nothing', 'buddyboss'); ?></option>
                     </select>
                 </td>
                 <td>
@@ -71,7 +71,7 @@
                         data-nonce="<?php echo wp_create_nonce('ld_bp_groups_sync-sync-' . $group->ID); ?>"
                         data-url="<?php echo admin_url('admin-ajax.php'); ?>"
                         data-id="<?php echo $group->ID; ?>"
-                    ><?php _e('Sync', 'ld_bp_groups_sync'); ?></button>
+                    ><?php _e('Sync', 'buddyboss'); ?></button>
                     <div class="spinner"></div>
                 </td>
             </tr>
@@ -81,8 +81,8 @@
     <tfoot>
         <tr>
             <th colspan="5" style="text-align: right">
-                <button class="ld_bp_groups_sync-bulk-action-button button button-primary" data-stop-text="<?php esc_attr_e('Stop', 'ld_bp_groups_sync'); ?>">
-                    <?php _e('Sync All', 'ld_bp_groups_sync'); ?>
+                <button class="ld_bp_groups_sync-bulk-action-button button button-primary" data-stop-text="<?php esc_attr_e('Stop', 'buddyboss'); ?>">
+                    <?php _e('Sync All', 'buddyboss'); ?>
                 </button>
                 <div class="spinner"></div>
             </th>

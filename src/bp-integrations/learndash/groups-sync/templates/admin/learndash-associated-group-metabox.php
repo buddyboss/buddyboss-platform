@@ -11,7 +11,7 @@
 ?>
 
 <p>
-    <b><?php _e('Associated Group:', 'ld_bp_groups_sync'); ?></b>
+    <b><?php _e('Associated Group:', 'buddyboss'); ?></b>
 
     <?php if ($bp_group): ?>
         <a href="<?php echo bp_get_admin_url("admin.php?page=bp-groups&gid={$bp_group->id}&action=edit"); ?>" target="_blank">
@@ -21,7 +21,7 @@
 </p>
 
 <select name="ld_bp_groups_sync[buddypress_group_id]" style="width: 100%; margin-bottom: 10px;">
-    <option value="0"><?php _e('None', 'ld_bp_groups_sync'); ?></option>
+    <option value="0"><?php _e('None', 'buddyboss'); ?></option>
     <?php foreach (ld_bp_groups_sync_get_unassociated_bp_groups([], get_the_ID()) as $group): ?>
         <?php $selected = $group->id == $bp_group_id? 'selected' : ''; ?>
         <option value="<?php echo $group->id; ?>" <?php echo $selected; ?>>
@@ -40,7 +40,7 @@
             autocomplete="off"
             <?php if (! $bp_group_id && $auto_generate) echo 'checked'; ?>
         />
-        <?php _e('Generate a new BuddyPress group', 'ld_bp_groups_sync'); ?>
+        <?php _e('Generate a new BuddyPress group', 'buddyboss'); ?>
     </label>
 </div>
 
@@ -48,14 +48,14 @@
 <hr />
 
 <p>
-    <b><?php _e('After LearnDash Group Updated:', 'ld_bp_groups_sync'); ?></b>
+    <b><?php _e('After LearnDash Group Updated:', 'buddyboss'); ?></b>
 </p>
 
 <div>
     <input type="hidden" name="ld_bp_groups_sync[update_leaders]" value="0" />
     <label>
         <input type="checkbox" name="ld_bp_groups_sync[update_leaders]" value="1" <?php if ($sync_leaders) echo 'checked'; ?> />
-        <?php _e('Update leaders to BuddyPress group', 'ld_bp_groups_sync'); ?>
+        <?php _e('Update leaders to BuddyPress group', 'buddyboss'); ?>
     </label>
 </div>
 
@@ -63,7 +63,7 @@
     <input type="hidden" name="ld_bp_groups_sync[update_students]" value="0" />
     <label>
         <input type="checkbox" name="ld_bp_groups_sync[update_students]" value="1" <?php if ($sync_users) echo 'checked'; ?> />
-        <?php _e('Update users to BuddyPress group', 'ld_bp_groups_sync'); ?>
+        <?php _e('Update users to BuddyPress group', 'buddyboss'); ?>
     </label>
 </div>
 

@@ -23,7 +23,7 @@ class LearnDash_BuddyPress_Groups_Sync_BuddyPress
     {
         add_meta_box(
             'buddypress-associated-learndash-group',
-            __('Associated LearnDash Group', 'ld_bp_groups_sync'),
+            __('Associated LearnDash Group', 'buddyboss'),
             [$this, 'associated_group_metabox_html'],
             get_current_screen()->id,
             'side'

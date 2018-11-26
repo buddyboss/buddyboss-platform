@@ -60,9 +60,9 @@ class LearnDash_BuddyPress_Groups_Sync_Requirement
         }
 
         return sprintf(
-            __('%s requires the plugin %s to be activated.', 'ld_bp_groups_sync'),
-            '<b>' . __('LearnDash BuddyPress Groups Sync', 'ld_bp_groups_sync') . '</b>',
-            '<b>' . __('LearnDash LMS', 'ld_bp_groups_sync') . '</b>'
+            __('%s requires the plugin %s to be activated.', 'buddyboss'),
+            '<b>' . __('LearnDash BuddyPress Groups Sync', 'buddyboss') . '</b>',
+            '<b>' . __('LearnDash LMS', 'buddyboss') . '</b>'
         );
     }
 
@@ -73,9 +73,9 @@ class LearnDash_BuddyPress_Groups_Sync_Requirement
         }
 
         return sprintf(
-            __('%s requires the plugin %s to be activated.', 'ld_bp_groups_sync'),
-            '<b>' . __('LearnDash BuddyPress Groups Sync', 'ld_bp_groups_sync') . '</b>',
-            '<b>' . __('BuddyPress', 'ld_bp_groups_sync') . '</b>'
+            __('%s requires the plugin %s to be activated.', 'buddyboss'),
+            '<b>' . __('LearnDash BuddyPress Groups Sync', 'buddyboss') . '</b>',
+            '<b>' . __('BuddyPress', 'buddyboss') . '</b>'
         );
     }
 
@@ -86,8 +86,8 @@ class LearnDash_BuddyPress_Groups_Sync_Requirement
         }
 
         return sprintf(
-            __('%s requires the BuddyPress component %s to be enabled.', 'ld_bp_groups_sync'),
-            '<b>' . __('LearnDash BuddyPress Groups Sync', 'ld_bp_groups_sync') . '</b>',
+            __('%s requires the BuddyPress component %s to be enabled.', 'buddyboss'),
+            '<b>' . __('LearnDash BuddyPress Groups Sync', 'buddyboss') . '</b>',
             '<b>' . __('User Groups', 'buddypress') . '</b>'
         );
     }

@@ -9,13 +9,13 @@
 	            data-url="<?php echo admin_url('admin-ajax.php'); ?>"
 	            data-slug=""
 	        >
-	            <?php _e('Scan LearnDash Groups', 'ld_bp_groups_sync'); ?>
+	            <?php _e('Scan LearnDash Groups', 'buddyboss'); ?>
 	        </button>
 
 	        <div class="spinner" style="float: none;"></div>
 	    </div>
 
-        <p><?php _e('Scan for unassociated LearnDash groups. This tool is useful if you already have LearnDash groups on your site and want to link up with new or existing BuddyPress groups.', 'ld_bp_groups_sync'); ?></p>
+        <p><?php _e('Scan for unassociated LearnDash groups. This tool is useful if you already have LearnDash groups on your site and want to link up with new or existing BuddyPress groups.', 'buddyboss'); ?></p>
 	</div>
 
     <div class="ld_bp_groups_sync-scan-results" style="display: none;"></div>
