@@ -40,6 +40,9 @@ window.bp = window.bp || {};
             
             // Toggle Grid/List View
 			this.switchGridList();
+
+			//this.memberPreFilter();
+			$.ajaxPrefilter( this.memberPreFilter );
 		},
 
 		/**
@@ -438,6 +441,7 @@ window.bp = window.bp || {};
 		addListeners: function() {
 			// Disabled inputs
 			$( '[data-bp-disable-input]' ).on( 'change', this.toggleDisabledInput );
+			$( '#member-type-order-by' ).on( 'change', this.memberPreFilter );
 
 			// HeartBeat Send and Receive
 			$( document ).on( 'heartbeat-send.buddypress', this.heartbeatSend );
@@ -977,6 +981,15 @@ window.bp = window.bp || {};
 
 			// Request the page
 			self.objectRequest( queryData );
+		},
+		memberPreFilter: function( options ) {
+			if ( typeof options.data === 'string' && -1 !== options.data.indexOf('action=members_filter') ) {
+				console.log(this);
+				var	member_type_id = $('#member-type-order-by').find(":selected").val();
+
+				options.data += '&member_type_id=' + member_type_id;
+
+			}
 		}
 	};
 

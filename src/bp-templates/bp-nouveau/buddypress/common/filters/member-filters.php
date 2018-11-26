@@ -31,6 +31,7 @@ foreach ( $member_types as $member_type_id ) {
 	if ( !empty( $type_id ) ) {
 		$display_arr[] = array(
 			'id' => $type_id,
+			'member_type_id' => $member_type_id,
 			'name' => $member_type_name,
 		);
 	}
@@ -46,10 +47,10 @@ if ( isset( $display_arr ) && !empty( $display_arr )) {
 			</label>
 			<div class="select-wrap">
 				<select id="member-type-order-by" data-bp-filter="members">
-					<option value="member_type_all"><?php echo __( 'All Types', 'buddyboss' ); ?></option><?php
+					<option value="all"><?php echo __( 'All Types', 'buddyboss' ); ?></option><?php
 					foreach ( $display_arr as $member ) {
 						?>
-						<option value="member_type_<?php echo $member['id']; ?>"><?php echo __( $member['name'], 'buddyboss' ); ?></option><?php
+						<option value="<?php echo $member['member_type_id']; ?>"><?php echo __( $member['name'], 'buddyboss' ); ?></option><?php
 					}
 					?>
 				</select>
