@@ -8,10 +8,10 @@ class BP_Widget_Profile_Search extends WP_Widget {
 	public function __construct() {
 		$widget_ops = array(
 			'classname' => 'bp-profile-search-widget',
-			'description' => __( 'A Profile Search form.', 'buddyboss' ),
+			'description' => __( 'Displays the profile search form.', 'buddyboss' ),
 			'customize_selective_refresh' => true,
 		);
-		parent::__construct( 'bps_widget', __( 'Profile Search', 'buddyboss' ), $widget_ops );
+		parent::__construct( 'bps_widget', __( '(BuddyBoss) Profile Search', 'buddyboss' ), $widget_ops );
 	}
 
 	/**
@@ -37,7 +37,7 @@ class BP_Widget_Profile_Search extends WP_Widget {
 	 */
 	public function form() {
 		?>
-		<p><?php printf( __('<a href="%s">Click here</a> to manage profile search form.', 'buddyboss'), admin_url( 'edit.php?post_type=bp_ps_form' ) ); ?></p>
+		<p><?php printf( __('<a href="%s">Click here</a> to manage the profile search form.', 'buddyboss'), admin_url( 'edit.php?post_type=bp_ps_form' ) ); ?></p>
 		<?php
 	}
 
