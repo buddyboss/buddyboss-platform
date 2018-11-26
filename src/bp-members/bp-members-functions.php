@@ -3569,8 +3569,8 @@ function bp_member_type_add_column( $columns ) {
 
 	$columns['title'] = __( 'Profile Type', 'buddyboss' );
 	$columns['member_type'] = __( 'Label', 'buddyboss' );
-	$columns['enable_remove'] = __( 'Members Directory', 'buddyboss' );
 	$columns['enable_filter'] = __( 'Members Filter', 'buddyboss' );
+	$columns['enable_remove'] = __( 'Members Directory', 'buddyboss' );
 	$columns['total_users'] = __( 'Users', 'buddyboss' );
 
 	unset( $columns['date'] );
@@ -3595,21 +3595,21 @@ function bp_member_type_show_data( $column, $post_id  ) {
 			echo '<code>'. get_post_meta( $post_id, '_bp_member_type_label_singular_name', true ).'</code>';
 			break;
 
-		case 'enable_remove':
-
-			if( get_post_meta( $post_id, '_bp_member_type_enable_remove', true ) )
-				echo __( 'Hide', 'buddyboss' );
-			else
-				echo __( 'Show', 'buddyboss' );
-
-			break;
-
 		case 'enable_filter':
 
 			if( get_post_meta( $post_id, '_bp_member_type_enable_filter', true ) )
 				echo __( 'Show', 'buddyboss' );
 			else
 				echo __( 'Hide', 'buddyboss' );
+
+			break;
+
+		case 'enable_remove':
+
+			if( get_post_meta( $post_id, '_bp_member_type_enable_remove', true ) )
+				echo __( 'Hide', 'buddyboss' );
+			else
+				echo __( 'Show', 'buddyboss' );
 
 			break;
 
