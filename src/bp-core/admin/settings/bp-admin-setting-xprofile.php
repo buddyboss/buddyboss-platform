@@ -47,6 +47,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Section for member types.
 		$this->add_section( 'bp_member_type_settings', __( 'Profile Types', 'buddyboss' ) );
 
+		// Enable/Disable Member types.
+		$this->add_field( 'bp-member-type-enable-disable', __( 'Member Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_enable_disable'], 'intval' );
+
 		// Member types import.
 		$this->add_field( 'bp-member-type-import', __( 'Import Member Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_import'], 'intval' );
 	}
@@ -116,6 +119,19 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			__( 'Click <a href="%s">here</a> to import "member types" from BuddyPress.', 'buddyboss' ),
 			esc_url( $import_url )
 		);
+	}
+
+	/**
+	 * Enable member type.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 */
+	public function bp_admin_setting_callback_member_type_enable_disable() {
+		?>
+		<input id="bp-member-type-enable-disable" name="bp-member-type-enable-disable" type="checkbox" value="1" <?php checked( bp_member_type_enable_disable() ); ?> />
+		<label for="bp-member-type-enable-disable"><?php _e( 'Enable member type', 'buddyboss' ); ?></label>
+		<?php
 	}
 }
 
