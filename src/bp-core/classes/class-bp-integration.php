@@ -56,6 +56,7 @@ class BP_Integration {
 		add_action( 'bp_register_admin_integrations', array( $this, 'setup_admin_integartion_tab' ) );
 
 		if ( $this->is_activated() ) {
+			$this->activation();
 			add_action( 'bp_include',                array( $this, 'includes'               ), 8 );
 			add_action( 'bp_late_include',           array( $this, 'late_includes'          ) );
 		}
@@ -77,6 +78,10 @@ class BP_Integration {
 
 		$plugins = get_site_option( 'active_sitewide_plugins' ) ?: [];
 		return isset( $plugins[$this->required_plugin] );
+	}
+
+	public function activation() {
+		// place to put default value
 	}
 
 	public function setup_admin_integartion_tab() {

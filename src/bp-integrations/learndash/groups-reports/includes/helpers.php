@@ -5,6 +5,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Loads a single instance of LearnDash_BuddyPress_Groups_Reports.
+ *
+ * This follows the PHP singleton design pattern.
+ *
+ * Use this function like you would a global variable, except without needing
+ * to declare the global.
+ *
+ * @example <?php $learndash_bbudypress_groups_reports = learndash_bbudypress_groups_reports(); ?>
+ *
+ * @see     LearnDash_BuddyPress_Groups_Reports::get_instance()
+ *
+ * @return object LearnDash_BuddyPress_Groups_Reports Returns an instance of the  class
+ */
+function learndash_bbudypress_groups_reports() {
+	return LearnDash_BuddyPress_Groups_Reports::get_instance();
+}
+
+/**
  * default setting value
  *
  * @return array

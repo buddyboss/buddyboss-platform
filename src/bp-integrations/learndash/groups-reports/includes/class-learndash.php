@@ -14,9 +14,6 @@ class LearnDash_BuddyPress_Groups_Reports_LearnDash {
 	}
 
 	public function register_hooks() {
-
-		include_once LEARNDASH_BUDDYPRESS_GROUP_REPORTS_PLUGIN_DIR . '/includes/settings/class-ld-settings-section-fields-checkbox.php';
-
 		add_action( 'learndash_settings_pages_init', array( $this, 'register_custom_settings_page' ) );
 		add_action( 'learndash_settings_sections_init', [ $this, 'register_custom_submit_section' ] );
 	}

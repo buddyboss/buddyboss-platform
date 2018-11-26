@@ -138,6 +138,27 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		 * Group Sync Options
 		 */
 		$this->current_section = 'groups_report';
+
+		$this->add_section(
+			'ld-groups-report',
+			__( 'Groups Report Global Settings', 'buddyboss' ),
+			[ $this, 'learndash_groups_report_description' ]
+		);
+
+		$this->add_checkbox_field(
+			'enable_group_reports',
+			__('Group Reports', 'buddyboss'),
+			[
+				'input_text' => __( 'Yes', 'buddyboss' ),
+				'input_description' => __( 'Enable BuddyPress Group Report for LearnDash.', 'buddyboss' )
+			]
+		);
+
+		$this->add_field(
+			'report_access',
+			__('Group Reports', 'buddyboss'),
+			[ $this, 'output_report_access_setting' ]
+		);
 	}
 
 	public function form_html() {
@@ -158,6 +179,36 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		echo wpautop(
 			__( 'Some description about groups sync', 'buddyboss' )
 		);
+	}
+
+	public function learndash_groups_report_description() {
+		echo wpautop(
+			__( 'Some description about groups report', 'buddyboss' )
+		);
+	}
+
+	public function output_report_access_setting() {
+		$input_field = 'report_access';
+		$input_value = $this->get_input_value( $input_field, [] );
+		$input_name = $this->get_input_name( $input_field );
+		$input_options = [
+			'admin'     => __( 'Admin', 'buddyboss' ),
+			'moderator' => __( 'Moderators', 'buddyboss' ),
+			'member'    => __( 'Members', 'buddyboss' )
+		];
+
+        foreach ($input_options as $key => $value) {
+        	$checked = in_array( $key, $input_value )? 'checked' : '';
+        	printf( '
+        		<p>
+	        		<label>
+	        			<input type="checkbox" name="%s[]" value="%s" %s>%s</option>
+	        		</label>
+	        	</p>
+        	', $input_name, $key, $checked, $value );
+        }
+
+		echo $this->render_input_description(__('When a BuddyPress group is generated, set the group privacy to...', 'buddyboss'));
 	}
 
 	public function add_sync_tool_scripts() {

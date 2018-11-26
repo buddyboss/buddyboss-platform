@@ -29,7 +29,8 @@ class BP_Learndash_Integration extends BP_Integration {
 	public function includes( $includes = array() ) {
 		parent::includes([
 			'functions',
-			'groups-sync/loader.php'
+			'groups-sync/loader.php',
+			'groups-reports/loader.php',
 		]);
 	}
 }

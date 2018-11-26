@@ -112,7 +112,7 @@ if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() 
 			$title = $post->post_title;
 
 			$thumbnail     = get_post_meta( $course_id, '_thumbnail_id', true );
-			$thumbnail_url = empty( $thumbnail ) ? ld_bp_groups_sync()->url( 'assets/images/mystery-course.png' ) : wp_get_attachment_image_src( absint( $thumbnail ), 'medium' );
+			$thumbnail_url = empty( $thumbnail ) ? bp_learndash_url( '/groups-sync/assets/images/mystery-course.png' ) : wp_get_attachment_image_src( absint( $thumbnail ), 'medium' );
 
 			if ( is_array( $thumbnail_url ) ) {
 				$thumbnail_url = $thumbnail_url[0];
