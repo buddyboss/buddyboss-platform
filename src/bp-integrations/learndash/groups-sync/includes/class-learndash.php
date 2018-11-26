@@ -17,16 +17,9 @@ class LearnDash_BuddyPress_Groups_Sync_LearnDash
 
         require_once bp_learndash_path('groups-sync/includes/class-generator.php');
 
-        // Learndash Setting Page
-        add_action('learndash_settings_pages_init', [$this, 'register_custom_settings_page']);
-        add_action('learndash_settings_sections_init', [$this, 'register_custom_submit_section']);
-        add_action('learndash_settings_sections_fields_init', [$this, 'register_custom_toggle_field']);
-
         // Learndash Setting Page Ajax
         add_action('wp_ajax_ld_bp_groups_sync/ld-groups-scan', [$this, 'ajax_scan_learndash_groups']);
         add_action('wp_ajax_ld_bp_groups_sync/ld-group-sync', [$this, 'ajax_sync_learndash_groups']);
-
-        // Learndash Groups List Table
 
         // Learndash Group Edit Page
         add_action('add_meta_boxes', [$this, 'add_associated_group_metabox']);
@@ -55,33 +48,6 @@ class LearnDash_BuddyPress_Groups_Sync_LearnDash
         }
 
         $generator->sync_all(true, true);
-    }
-
-    public function register_custom_settings_page()
-    {
-        require_once bp_learndash_path('groups-sync/includes/settings/class-learndash-settings-page.php');
-
-        LearnDash_Settings_Page_BuddyPress_Groups_Sync::add_page_instance();
-    }
-
-    public function register_custom_submit_section()
-    {
-        require_once bp_learndash_path('groups-sync/includes/settings/class-learndash-section-settings.php');
-        require_once bp_learndash_path('groups-sync/includes/settings/class-learndash-section-tools.php');
-        require_once bp_learndash_path('groups-sync/includes/settings/class-learndash-section-submit.php');
-        require_once bp_learndash_path('groups-sync/includes/settings/class-learndash-section-help.php');
-
-        LearnDash_Settings_Section_BuddyPress_Groups_Sync::add_section_instance();
-        LearnDash_Settings_Section_BuddyPress_Groups_Sync_Tools::add_section_instance();
-        LearnDash_Settings_Section_BuddyPress_Groups_Sync_Submit::add_section_instance();
-        LearnDash_Settings_Section_BuddyPress_Groups_Sync_Help::add_section_instance();
-    }
-
-    public function register_custom_toggle_field()
-    {
-        require_once bp_learndash_path('groups-sync/includes/fields/class-ld-settings-section-fields-toggle.php');
-
-        LearnDash_Settings_Section_Fields_Toggle::add_field_instance('toggle');
     }
 
     public function ajax_scan_learndash_groups()
