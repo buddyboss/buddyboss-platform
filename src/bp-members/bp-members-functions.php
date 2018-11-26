@@ -2822,11 +2822,11 @@ function bp_custom_display_name_format( $display_name, $user_id = null ) {
 }
 
 /**
- * Function fgr registering the member post type ui.
+ * Function for enable/disable member type functionality.
  *
  * @since BuddyBoss 3.1.1
  */
-function bp_register_member_post_type_user_section() {
+function bp_register_member_type_section() {
 
 	$is_member_type_enabled = bp_member_type_enable_disable();
 
@@ -2896,8 +2896,8 @@ function bp_register_member_post_type_user_section() {
 	add_action('admin_enqueue_scripts', 'bp_member_type_changing_listing_label');
 }
 
-// Register member type post type.
-add_action( 'bp_init', 'bp_register_member_post_type_user_section' );
+// Register enable/disable member type functionality.
+add_action( 'bp_init', 'bp_register_member_type_section' );
 
 /**
  * Output the name of the member type post type.
