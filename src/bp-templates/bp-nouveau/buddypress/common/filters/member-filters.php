@@ -12,7 +12,7 @@
 $is_member_type_enabled = bp_member_type_enable_disable();
 
 if ( false === $is_member_type_enabled ) {
-	return;
+	return '';
 }
 
 $member_types = bp_get_active_member_types();
