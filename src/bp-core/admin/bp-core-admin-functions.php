@@ -1484,7 +1484,7 @@ function bp_member_type_wprole_metabox( $post ) {
 				id="bp-member-type-roles-none"
 				value='' <?php echo empty( $selected_roles[0] ) ? 'checked' : '';
 			?> />
-			<?php _e( 'None', 'buddyboss' ) ?>
+			<?php _e( '(None)', 'buddyboss' ) ?>
 		</label>
 	</p>
 	<?php
