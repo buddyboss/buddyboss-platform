@@ -983,11 +983,8 @@ window.bp = window.bp || {};
 		},
 		memberPreFilter: function( options ) {
 			if ( typeof options.data === 'string' && -1 !== options.data.indexOf('action=members_filter') ) {
-				console.log(this);
-				var	member_type_id = $('#member-type-order-by').find(":selected").val();
-
+				var	member_type_id = $('#member-type-order-by').find(':selected').val();
 				options.data += '&member_type_id=' + member_type_id;
-
 			}
 		}
 	};
