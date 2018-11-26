@@ -7,6 +7,14 @@
 ?>
 
 <?php
+
+// Check member type enable?
+$is_member_type_enabled = bp_member_type_enable_disable();
+
+if ( false === $is_member_type_enabled ) {
+	return;
+}
+
 $member_types = bp_get_active_member_types();
 $display_arr = array();
 foreach ( $member_types as $member_type_id ) {
