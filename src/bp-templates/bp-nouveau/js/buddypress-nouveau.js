@@ -441,7 +441,6 @@ window.bp = window.bp || {};
 		addListeners: function() {
 			// Disabled inputs
 			$( '[data-bp-disable-input]' ).on( 'change', this.toggleDisabledInput );
-			$( '#member-type-order-by' ).on( 'change', this.memberPreFilter );
 
 			// HeartBeat Send and Receive
 			$( document ).on( 'heartbeat-send.buddypress', this.heartbeatSend );
