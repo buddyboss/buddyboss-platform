@@ -248,10 +248,10 @@ abstract class BP_Admin_Tab {
 
 		$callback_args = wp_parse_args( $callback_args, [
 			'input_type'        => 'text',
-			'input_name'        => $name,
-			'input_id'          => $name,
+			'input_name'        => $this->get_input_name( $name ),
+			'input_id'          => $this->get_input_id( $name ),
 			'input_description' => '',
-			'input_value'       => bp_get_option($name),
+			'input_value'       => $this->get_input_value( $name ),
 			'input_placeholder' => ''
 		] );
 
@@ -267,11 +267,31 @@ abstract class BP_Admin_Tab {
 		$callback = [$this, 'render_checkbox_field_html'];
 
 		$callback_args = wp_parse_args( $callback_args, [
-			'input_name'        => $name,
-			'input_id'          => $name,
+			'input_name'        => $this->get_input_name( $name ),
+			'input_id'          => $this->get_input_id( $name ),
 			'input_text'        => '',
 			'input_description' => '',
-			'input_value'       => bp_get_option($name, null),
+			'input_value'       => $this->get_input_value( $name, null ),
+			'input_default'     => 0,
+		] );
+
+		return $this->add_field( $name, $label, $callback, $field_args, $callback_args, $id );
+	}
+
+	/**
+	 * Alias to add input select field
+	 *
+	 * @since  buddyboss 3.1.1
+	 */
+	public function add_select_field( $name, $label, $callback_args = [], $field_args = 'sanitize_text_field', $id = null ) {
+		$callback = [$this, 'render_select_field_html'];
+
+		$callback_args = wp_parse_args( $callback_args, [
+			'input_name'        => $this->get_input_name( $name ),
+			'input_id'          => $this->get_input_id( $name ),
+			'input_options'     => [],
+			'input_description' => '',
+			'input_value'       => $this->get_input_value( $name, null ),
 			'input_default'     => 0,
 		] );
 
@@ -291,7 +311,7 @@ abstract class BP_Admin_Tab {
 			$args['input_id'],
 			$args['input_value'],
 			$args['input_placeholder'],
-			$args['input_description']? "<p class=\"description\">{$args['input_description']}</p>" : ''
+			$args['input_description']? $this->render_input_description( $args['input_description'] ) : ''
 		);
 	}
 
@@ -313,8 +333,47 @@ abstract class BP_Admin_Tab {
 			$args['input_name'],
 			checked( (bool) $input_value, true, false ),
 			$args['input_text'],
-			$args['input_description']? "<p class=\"description\">{$args['input_description']}</p>" : ''
+			$args['input_description']? $this->render_input_description( $args['input_description'] ) : ''
 		);
+	}
+
+	/**
+	 * Output the select field html based on the arguments
+	 *
+	 * @since  buddyboss 3.1.1
+	 */
+	public function render_select_field_html( $args ) {
+		$input_value = is_null( $args['input_value'] )? $args['input_default'] : $args['input_value'];
+		$input_name = $args['input_name'];
+
+        printf( '<select name="%s" id="%s" autocomplete="off">', $args['input_name'], $args['input_id'] );
+
+        foreach ($args['input_options'] ?: [] as $key => $value) {
+        	$selected = $input_value == $key? 'selected' : '';
+        	printf( '<option value="%s" %s>%s</option>', $key, $selected, $value );
+        }
+
+        echo '</select>';
+
+        if ( $args['input_description'] ) {
+			echo $this->render_input_description($args['input_description']);
+        }
+	}
+
+	protected function render_input_description( $text ) {
+		return "<p class=\"description\">{$text}</p>";
+	}
+
+	protected function get_input_name( $name ) {
+		return $name;
+	}
+
+	protected function get_input_id( $id ) {
+		return sanitize_title( $id );
+	}
+
+	protected function get_input_value( $key, $default = '' ) {
+		return bp_get_option( $key, $default );
 	}
 }
 
