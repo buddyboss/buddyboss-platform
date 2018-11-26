@@ -1593,8 +1593,8 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 
 			if ( ! in_array( $current_user_role, $wp_roles ) ) {
 
-				$string        = 'As your profile is currently assigned to this profile type, you cannot change its associated WordPress role. Changing this setting would remove your Administrator role and lock you out of the WordPress admin. You first need to remove yourself from this profile type (at Users > Your Profile > Extended) and then you can come back to this page to update the associated WordPress role.';
-				$error_message = apply_filters( 'bp_member_type_admin_error_message', __( $string, 'buddyboss' ) );
+				$bp_error_message_string        = 'As your profile is currently assigned to this profile type, you cannot change its associated WordPress role. Changing this setting would remove your Administrator role and lock you out of the WordPress admin. You first need to remove yourself from this profile type (at Users > Your Profile > Extended) and then you can come back to this page to update the associated WordPress role.';
+				$error_message = apply_filters( 'bp_member_type_admin_error_message', __( $bp_error_message_string, 'buddyboss' ) );
 				// Define the settings error to display
 				add_settings_error( 'bp-invalid-role-selection',
 					'bp-invalid-role-selection',

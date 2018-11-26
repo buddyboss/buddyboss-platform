@@ -1252,8 +1252,8 @@ class BP_Members_Admin {
 
 				if ( 'administrator' !== $selected_member_type_wp_roles[0] ) {
 
-					$string        = 'You cannot assign yourself to this profile type as doing so would remove your Administrator role and lock you out of the WordPress admin. You first need to associate this profile type to the Administrator role, and then you can assign it to yourself.';
-					$error_message = apply_filters( 'bp_invalid_role_selection_extended_profile', __( $string, 'buddyboss' ) );
+					$bp_error_message_string        = 'You cannot assign yourself to this profile type as doing so would remove your Administrator role and lock you out of the WordPress admin. You first need to associate this profile type to the Administrator role, and then you can assign it to yourself.';
+					$error_message = apply_filters( 'bp_invalid_role_selection_extended_profile', __( $bp_error_message_string, 'buddyboss' ) );
 					// Define the settings error to display
 					add_settings_error( 'bp-invalid-role-selection-extended-profile',
 						'bp-invalid-role-selection-extended-profile',
