@@ -48,6 +48,9 @@ function bp_get_default_options() {
 
 		'bp-display-name-format'			   => 'nickname',
 
+		// Enable/Disable Member Type
+		'bp-member-type-enable-disable'         => false,
+
 		/* Blogs *************************************************************/
 
 		// Used to decide if blogs need indexing.
@@ -848,4 +851,25 @@ function bp_force_friendship_to_message( $default = false ) {
 	 * @param bool $value Whether or not friendship is forced to message each other.
 	 */
 	return (bool) apply_filters( 'bp_force_friendship_to_message', (bool) bp_get_option( 'bp-force-friendship-to-message', $default ) );
+}
+
+/**
+ * Is member type disabled?
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if member type enabled, otherwise false.
+ */
+function bp_member_type_enable_disable( $default = false ) {
+
+	/**
+	 * Filters whether member type is enabled or not.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param bool $value Whether member type is enabled or not.
+	 */
+	return (bool) apply_filters( 'bp_member_type_enable_disable', (bool) bp_get_option( 'bp-member-type-enable-disable', $default ) );
 }

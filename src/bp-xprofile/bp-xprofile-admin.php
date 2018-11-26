@@ -26,7 +26,26 @@ function xprofile_add_admin_menu() {
 	}
 
 	add_users_page( _x( 'Profile Fields', 'xProfile admin page title', 'buddyboss' ), _x( 'Profile Fields', 'Admin Users menu', 'buddyboss' ), 'manage_options', 'bp-profile-setup', 'xprofile_admin' );
-	add_users_page( _x( 'Profile Types', 'Profile Types admin page title', 'buddyboss' ), _x( 'Profile Types', 'Admin Users menu', 'buddyboss' ), 'manage_options', 'edit.php?post_type=bp-member-type', '' );
+
+	// Check Member Type enabled.
+	$is_member_type_enabled = bp_member_type_enable_disable();
+	$is_profile_search_enabled = bp_disable_advanced_profile_search();
+
+	if ( true === $is_member_type_enabled ) {
+		add_users_page( _x( 'Profile Types', 'Profile Types admin page title', 'buddyboss' ),
+			_x( 'Profile Types', 'Admin Users menu', 'buddyboss' ),
+			'manage_options',
+			'edit.php?post_type=bp-member-type',
+			'' );
+	}
+
+	if ( false === $is_profile_search_enabled ) {
+		add_users_page( _x( 'Profile Search', 'Profile Search admin page title', 'buddyboss' ),
+			_x( 'Profile Search', 'Admin Users menu', 'buddyboss' ),
+			'manage_options',
+			'edit.php?post_type=bp_ps_form',
+			'' );
+	}
 }
 add_action( bp_core_admin_hook(), 'xprofile_add_admin_menu' );
 
