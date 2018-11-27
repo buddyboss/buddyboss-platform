@@ -5,7 +5,7 @@
         <?php
             printf(
                 '<span style="color: #3c763d;">%s %s</span>',
-                __('BuddyPress group associated:', 'buddyboss'),
+                __('BuddyBoss group associated:', 'buddyboss'),
                 sprintf(
                     '<a href="%s" target="_blank">%s (ID: %d)</a>',
                     bp_get_admin_url("admin.php?page=bp-groups&gid={$result->id}&action=edit"),

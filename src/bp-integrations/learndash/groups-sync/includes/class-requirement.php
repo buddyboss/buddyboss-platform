@@ -50,7 +50,7 @@ class LearnDash_BuddyPress_Groups_Sync_Requirement
 
         return sprintf(
             __('%s requires the plugin %s to be activated.', 'buddyboss'),
-            '<b>' . __('LearnDash BuddyPress Groups Sync', 'buddyboss') . '</b>',
+            '<b>' . __('LearnDash BuddyBoss Groups Sync', 'buddyboss') . '</b>',
             '<b>' . __('LearnDash LMS', 'buddyboss') . '</b>'
         );
     }
@@ -63,8 +63,8 @@ class LearnDash_BuddyPress_Groups_Sync_Requirement
 
         return sprintf(
             __('%s requires the plugin %s to be activated.', 'buddyboss'),
-            '<b>' . __('LearnDash BuddyPress Groups Sync', 'buddyboss') . '</b>',
-            '<b>' . __('BuddyPress', 'buddyboss') . '</b>'
+            '<b>' . __('LearnDash BuddyBoss Groups Sync', 'buddyboss') . '</b>',
+            '<b>' . __('BuddyBoss', 'buddyboss') . '</b>'
         );
     }
 
@@ -75,8 +75,8 @@ class LearnDash_BuddyPress_Groups_Sync_Requirement
         }
 
         return sprintf(
-            __('%s requires the BuddyPress component %s to be enabled.', 'buddyboss'),
-            '<b>' . __('LearnDash BuddyPress Groups Sync', 'buddyboss') . '</b>',
+            __('%s requires the BuddyBoss component %s to be enabled.', 'buddyboss'),
+            '<b>' . __('LearnDash BuddyBoss Groups Sync', 'buddyboss') . '</b>',
             '<b>' . __('User Groups', 'buddypress') . '</b>'
         );
     }

@@ -39,16 +39,16 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_checkbox_field(
 			'auto_create_bp_group',
-			__('Generate BuddyPress Group', 'buddyboss'),
+			__('Generate BuddyBoss Group', 'buddyboss'),
 			[
 				'input_text' => __( 'Yes', 'buddyboss' ),
-				'input_description' => __( 'Automatically generate and associate a BuddyPress group upon LearnDash group creation. Uncheck this to create and associate the group manually. This is a global setting and can be overwritten on individual group.', 'buddyboss' )
+				'input_description' => __( 'Automatically generate and associate a BuddyBoss group upon LearnDash group creation. Uncheck this to create and associate the group manually. This is a global setting and can be overwritten on individual group.', 'buddyboss' )
 			]
 		);
 
 		$this->add_select_field(
 			'auto_bp_group_privacy',
-			__('Generated BuddyPress Group Privacy', 'buddyboss'),
+			__('Generated BuddyBoss Group Privacy', 'buddyboss'),
 			[
 				'input_options' => [
 		            'public'  => __( 'Public', 'learndash' ),
@@ -56,13 +56,13 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		            'hidden'  => __( 'Hidden', 'learndash' )
 		        ],
 		        'input_default' => 'private',
-				'input_description' => __( 'When a BuddyPress group is generated, set the group privacy to...', 'buddyboss' )
+				'input_description' => __( 'When a BuddyBoss group is generated, set the group privacy to...', 'buddyboss' )
 			]
 		);
 
 		$this->add_select_field(
 			'auto_bp_group_privacy',
-			__('Generated BuddyPress Group Privacy', 'buddyboss'),
+			__('Generated BuddyBoss Group Privacy', 'buddyboss'),
 			[
 				'input_options' => [
 		            'public'  => __( 'Public', 'learndash' ),
@@ -70,13 +70,13 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		            'hidden'  => __( 'Hidden', 'learndash' )
 		        ],
 		        'input_default' => 'private',
-				'input_description' => __( 'When a BuddyPress group is generated, set the group privacy to...', 'buddyboss' )
+				'input_description' => __( 'When a BuddyBoss group is generated, set the group privacy to...', 'buddyboss' )
 			]
 		);
 
 		$this->add_select_field(
 			'auto_bp_group_invite_status',
-			__('Generated BuddyPress Group Invite Status', 'buddyboss'),
+			__('Generated BuddyBoss Group Invite Status', 'buddyboss'),
 			[
 				'input_options' => [
 	                'members' => __('All group members', 'learndash'),
@@ -84,7 +84,7 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	                'admins'  => __('Group admins only', 'learndash')
 		        ],
 		        'input_default' => 'mods',
-				'input_description' => __( 'When a BuddyPress group is generated, set the group invite status to...', 'buddyboss' )
+				'input_description' => __( 'When a BuddyBoss group is generated, set the group invite status to...', 'buddyboss' )
 			]
 		);
 
@@ -96,7 +96,7 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			[
 				'input_text' => __( 'Yes', 'buddyboss' ),
 				'input_default' => 1,
-				'input_description' => __( 'Automatically sync LearnDash group leaders to BuddyPress group admins/mods when LearnDash group is saved. Uncheck this to associate the BuddyPress group admins/mods manually. This is a global setting and can be overwritten on individual group.', 'buddyboss' )
+				'input_description' => __( 'Automatically sync LearnDash group leaders to BuddyBoss group admins/mods when LearnDash group is saved. Uncheck this to associate the BuddyBoss group admins/mods manually. This is a global setting and can be overwritten on individual group.', 'buddyboss' )
 			]
 		);
 
@@ -109,7 +109,7 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	                'mod'   => __('Moderator', 'learndash'),
 		        ],
 		        'input_default' => 'admin',
-				'input_description' => __( 'When a LearnDash leaders is synced, their role in BuddyPress group should be...', 'buddyboss' )
+				'input_description' => __( 'When a LearnDash leaders is synced, their role in BuddyBoss group should be...', 'buddyboss' )
 			]
 		);
 
@@ -119,7 +119,7 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			[
 				'input_text' => __( 'Yes', 'buddyboss' ),
 				'input_default' => 1,
-				'input_description' => __( 'Automatically sync LearnDash group students to BuddyPress group members when LearnDash group is saved. Uncheck this to associate the BuddyPress group members manually. This is a global setting and can be overwritten on individual group.', 'buddyboss' )
+				'input_description' => __( 'Automatically sync LearnDash group students to BuddyBoss group members when LearnDash group is saved. Uncheck this to associate the BuddyBoss group members manually. This is a global setting and can be overwritten on individual group.', 'buddyboss' )
 			]
 		);
 
@@ -127,10 +127,10 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_checkbox_field(
 			'auto_delete_bp_group',
-			__('Delete BuddyPress Group', 'buddyboss'),
+			__('Delete BuddyBoss Group', 'buddyboss'),
 			[
 				'input_text' => __( 'Yes', 'buddyboss' ),
-				'input_description' => __( 'Automatically delete the associated BuddyPress group upon LearnDash group deletion. Uncheck this to delete the group manually.', 'buddyboss' )
+				'input_description' => __( 'Automatically delete the associated BuddyBoss group upon LearnDash group deletion. Uncheck this to delete the group manually.', 'buddyboss' )
 			]
 		);
 
@@ -150,7 +150,7 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__('Group Reports', 'buddyboss'),
 			[
 				'input_text' => __( 'Yes', 'buddyboss' ),
-				'input_description' => __( 'Enable BuddyPress Group Report for LearnDash.', 'buddyboss' )
+				'input_description' => __( 'Enable BuddyBoss Group Report for LearnDash.', 'buddyboss' )
 			]
 		);
 
@@ -208,7 +208,7 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
         	', $input_name, $key, $checked, $value );
         }
 
-		echo $this->render_input_description(__('When a BuddyPress group is generated, set the group privacy to...', 'buddyboss'));
+		echo $this->render_input_description(__('When a BuddyBoss group is generated, set the group privacy to...', 'buddyboss'));
 	}
 
 	public function add_sync_tool_scripts() {

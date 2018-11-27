@@ -40,7 +40,7 @@
             autocomplete="off"
             <?php if (! $bp_group_id && $auto_generate) echo 'checked'; ?>
         />
-        <?php _e('Generate a new BuddyPress group', 'buddyboss'); ?>
+        <?php _e('Generate a new BuddyBoss group', 'buddyboss'); ?>
     </label>
 </div>
 
@@ -55,7 +55,7 @@
     <input type="hidden" name="ld_bp_groups_sync[update_leaders]" value="0" />
     <label>
         <input type="checkbox" name="ld_bp_groups_sync[update_leaders]" value="1" <?php if ($sync_leaders) echo 'checked'; ?> />
-        <?php _e('Update leaders to BuddyPress group', 'buddyboss'); ?>
+        <?php _e('Update leaders to BuddyBoss group', 'buddyboss'); ?>
     </label>
 </div>
 
@@ -63,7 +63,7 @@
     <input type="hidden" name="ld_bp_groups_sync[update_students]" value="0" />
     <label>
         <input type="checkbox" name="ld_bp_groups_sync[update_students]" value="1" <?php if ($sync_users) echo 'checked'; ?> />
-        <?php _e('Update users to BuddyPress group', 'buddyboss'); ?>
+        <?php _e('Update users to BuddyBoss group', 'buddyboss'); ?>
     </label>
 </div>
 

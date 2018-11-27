@@ -37,13 +37,13 @@
                                     %s <br/>
                                     <ul>%s</ul>
                                 </span>',
-                                __('BuddyPress group with same name found:', 'buddyboss'),
+                                __('BuddyBoss group with same name found:', 'buddyboss'),
                                 implode("\n", $list_html)
                             );
                         } else {
                             printf(
                                 '<span style="color: #aeaeae">%s</span>',
-                                __('No assoticated BuddyPress group.', 'buddyboss')
+                                __('No assoticated BuddyBoss group.', 'buddyboss')
                             );
                         }
                     ?>
