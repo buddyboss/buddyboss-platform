@@ -3632,13 +3632,11 @@ function bp_member_type_show_data( $column, $post_id  ) {
 			$name = bp_get_member_type_key( $post_id );
 			$type_id = bp_member_type_term_taxonomy_id($name);
 
-			$import_url = admin_url().'users.php?bp-member-type='.$name;
+			$member_type_url = admin_url().'users.php?bp-member-type='.$name;
 			printf(
 				__( '<a href="%s">%s</a>', 'buddyboss' ),
-				esc_url( $import_url ), count(bp_member_type_by_type($type_id))
+				esc_url( $member_type_url ), count(bp_member_type_by_type($type_id))
 			);
-
-			//echo ;
 
 			break;
 
