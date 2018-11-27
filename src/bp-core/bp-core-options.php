@@ -48,8 +48,11 @@ function bp_get_default_options() {
 
 		'bp-display-name-format'			   => 'nickname',
 
-		// Enable/Disable Member Type
+		// Enable/Disable Member Type.
 		'bp-member-type-enable-disable'         => false,
+
+		// Enable/Disable Display on profiles.
+		'bp-member-type-display-on-profile'         => false,
 
 		/* Blogs *************************************************************/
 
@@ -872,4 +875,25 @@ function bp_member_type_enable_disable( $default = false ) {
 	 * @param bool $value Whether member type is enabled or not.
 	 */
 	return (bool) apply_filters( 'bp_member_type_enable_disable', (bool) bp_get_option( 'bp-member-type-enable-disable', $default ) );
+}
+
+/**
+ * Is display on profile disabled?
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if member type enabled, otherwise false.
+ */
+function bp_member_type_display_on_profile( $default = false ) {
+
+	/**
+	 * Filters whether member type is enabled or not.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param bool $value Whether member type is enabled or not.
+	 */
+	return (bool) apply_filters( 'bp_member_type_display_on_profile', (bool) bp_get_option( 'bp-member-type-display-on-profile', $default ) );
 }

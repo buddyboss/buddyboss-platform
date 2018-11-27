@@ -1458,7 +1458,7 @@ class BP_XProfile_Field {
 	private function member_type_metabox() {
 
 		// The primary field is for all, so bail.
-		if ( 1 === (int) $this->id ) {
+		if ( 1 === (int) $this->id || 2 === (int) $this->id || 3 === (int) $this->id ) {
 			return;
 		}
 

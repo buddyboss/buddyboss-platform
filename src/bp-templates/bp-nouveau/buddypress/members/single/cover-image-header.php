@@ -45,6 +45,32 @@
 
 			<?php bp_nouveau_member_hook( 'before', 'header_meta' ); ?>
 
+			<?php
+
+			if ( true === bp_member_type_enable_disable() ) {
+				if ( true === bp_member_type_display_on_profile() ) {
+
+					// Get the member type.
+					$type = bp_get_member_type( bp_displayed_user_id() );
+
+					// Output the
+					if ( $type_obj = bp_get_member_type_object( $type ) ) {
+						?>
+						<span class="member-type">
+							<?php echo esc_html( $type_obj->labels['singular_name'] ); ?>
+						</span> &#149;<!-- #item-meta -->
+						<?php
+					} else {
+						?>
+						<span class="member-type">
+							<?php echo esc_html( 'Member' ); ?>
+						</span> &#149;<!-- #item-meta -->
+						<?php
+					}
+				}
+			}
+			?>
+
 			<?php if ( bp_nouveau_member_has_meta() ) : ?>
 				<div class="item-meta">
 

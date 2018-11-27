@@ -50,6 +50,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Enable/Disable Member types.
 		$this->add_field( 'bp-member-type-enable-disable', __( 'Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_enable_disable'], 'intval' );
 
+		// Enable/Disable Display on profiles.
+		$this->add_field( 'bp-member-type-display-on-profile', __( 'Display on Profiles', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_display_on_profile'], 'intval' );
+
 		// Member types import.
 		$this->add_field( 'bp-member-type-import', __( 'Import Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_import'], 'intval' );
 	}
@@ -131,6 +134,19 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 		<input id="bp-member-type-enable-disable" name="bp-member-type-enable-disable" type="checkbox" value="1" <?php checked( bp_member_type_enable_disable() ); ?> />
 		<label for="bp-member-type-enable-disable"><?php _e( 'Enable profile types to give members unique profile fields and permissions', 'buddyboss' ); ?></label>
+		<?php
+	}
+
+	/**
+	 * Enable Display on profile?
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 */
+	public function bp_admin_setting_callback_member_type_display_on_profile() {
+		?>
+		<input id="bp-member-type-display-on-profile" name="bp-member-type-display-on-profile" type="checkbox" value="1" <?php checked( bp_member_type_display_on_profile() ); ?> />
+		<label for="bp-member-type-display-on-profile"><?php _e( 'Display each member\'s profile type on their profile page', 'buddyboss' ); ?></label>
 		<?php
 	}
 }

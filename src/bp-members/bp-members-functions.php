@@ -2863,7 +2863,7 @@ function bp_register_member_type_section() {
 	add_action( 'bp_ajax_querystring', 'bp_member_type_exclude_users_from_directory_and_searches', 999, 2 );
 
 	// set member type while update user profile
-	add_action( 'set_user_role', 'bp_update_user_member_type_type_set', 10, 2 );
+	//add_action( 'set_user_role', 'bp_update_user_member_type_type_set', 10, 2 );
 
 	// fix all member count
 	add_filter( 'bp_core_get_active_member_count', 'bp_fixed_all_member_type_count', 999 );
@@ -3443,8 +3443,9 @@ function bp_member_type_exclude_users_from_directory_and_searches( $qs=false, $o
 
 	$args = wp_parse_args( $qs );
 
-	if( ! empty( $args['user_id'] ) )
-		return $qs;
+	// Removed this condition to add the member type filter works properly do not remove because need to check if this causing anywhere.
+	//if( ! empty( $args['user_id'] ) )
+		//return $qs;
 
 	if( ! empty( $args['exclude'] ) )
 		$args['exclude'] = $args['exclude'] . ',' . implode( ',', $exclude_user_ids );
@@ -3631,7 +3632,11 @@ function bp_member_type_show_data( $column, $post_id  ) {
 			$name = bp_get_member_type_key( $post_id );
 			$type_id = bp_member_type_term_taxonomy_id($name);
 
-			echo count(bp_member_type_by_type($type_id));
+			$member_type_url = admin_url().'users.php?bp-member-type='.$name;
+			printf(
+				__( '<a href="%s">%s</a>', 'buddyboss' ),
+				esc_url( $member_type_url ), count(bp_member_type_by_type($type_id))
+			);
 
 			break;
 

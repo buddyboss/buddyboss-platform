@@ -2309,6 +2309,9 @@ class BP_Members_Admin {
 		// Output the admin notice.
 		$this->users_type_change_notice();
 
+		// Flag for custom error message.
+		$bp_error_message = false;
+
 		// Bail if no users are specified or if this isn't a BuddyPress action.
 		if ( empty( $_REQUEST['users'] )
 			|| ( empty( $_REQUEST['bp_change_type'] ) && empty( $_REQUEST['bp_change_type2'] ) )
@@ -2353,11 +2356,37 @@ class BP_Members_Admin {
 						}
 					}
 				} else {
-					// Set the new member type.
-					if ( $new_type !== $member_type ) {
-						$set = bp_set_member_type( $user_id, $new_type );
-						if ( false === $set || is_wp_error( $set ) ) {
-							$error = true;
+
+					if ( $user_id === get_current_user_id() ) {
+
+						// Set the new member type.
+						if ( $new_type !== $member_type ) {
+
+							// Get post id of selected member type.
+							$post_id = bp_member_type_post_by_type( $new_type );
+
+							// Get selected member type role.
+							$selected_member_type_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
+
+							if ( 'administrator' !== $selected_member_type_wp_roles[0] ) {
+								$bp_error_message = true;
+								$error = true;
+							} else {
+								$set = bp_set_member_type( $user_id, $new_type );
+								if ( false === $set || is_wp_error( $set ) ) {
+									$error = true;
+								}
+							}
+
+						}
+					} else {
+
+						// Set the new member type.
+						if ( $new_type !== $member_type ) {
+							$set = bp_set_member_type( $user_id, $new_type );
+							if ( false === $set || is_wp_error( $set ) ) {
+								$error = true;
+							}
 						}
 					}
 				}
@@ -2366,7 +2395,13 @@ class BP_Members_Admin {
 
 		// If there were any errors, show the error message.
 		if ( $error ) {
-			$redirect = add_query_arg( array( 'updated' => 'member-type-change-error' ), wp_get_referer() );
+
+			if ( true === $bp_error_message ) {
+				$redirect = add_query_arg( array( 'updated' => 'member-type-change-owner-error' ), wp_get_referer() );
+			} else {
+				$redirect = add_query_arg( array( 'updated' => 'member-type-change-error' ), wp_get_referer() );
+			}
+
 		} else {
 			$redirect = add_query_arg( array( 'updated' => 'member-type-change-success' ), wp_get_referer() );
 		}
@@ -2384,10 +2419,13 @@ class BP_Members_Admin {
 		$updated = isset( $_REQUEST['updated'] ) ? $_REQUEST['updated'] : false;
 
 		// Display feedback.
-		if ( $updated && in_array( $updated, array( 'member-type-change-error', 'member-type-change-success' ), true ) ) {
+		if ( $updated && in_array( $updated, array( 'member-type-change-error', 'member-type-change-success', 'member-type-change-owner-error' ), true ) ) {
 
 			if ( 'member-type-change-error' === $updated ) {
 				$notice = __( 'There was an error while changing the profile type. Please try again.', 'buddyboss' );
+				$type   = 'error';
+			} elseif ( 'member-type-change-owner-error' === $updated ) {
+				$notice = __( 'You cannot assign yourself to this profile type as doing so would remove your Administrator role and lock you out of the WordPress admin. You first need to associate this profile type to the Administrator role, and then you can assign it to yourself.', 'buddyboss' );
 				$type   = 'error';
 			} else {
 				$notice = __( 'Member type was changed successfully.', 'buddyboss' );
