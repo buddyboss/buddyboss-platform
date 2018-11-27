@@ -60,6 +60,14 @@ bp_nouveau_before_loop(); ?>
 									</span><!-- #item-meta -->
 									<?php
 								}
+							} else {
+								?>
+								<?php if ( bp_nouveau_member_has_meta() ) : ?>
+									<p class="item-meta last-activity">
+										<?php bp_nouveau_member_meta(); ?>
+									</p><!-- #item-meta -->
+								<?php endif; ?>
+								<?php
 							}
 						} else {
 							?>
