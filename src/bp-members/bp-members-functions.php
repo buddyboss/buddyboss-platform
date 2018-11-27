@@ -2863,7 +2863,7 @@ function bp_register_member_type_section() {
 	add_action( 'bp_ajax_querystring', 'bp_member_type_exclude_users_from_directory_and_searches', 999, 2 );
 
 	// set member type while update user profile
-	add_action( 'set_user_role', 'bp_update_user_member_type_type_set', 10, 2 );
+	//add_action( 'set_user_role', 'bp_update_user_member_type_type_set', 10, 2 );
 
 	// fix all member count
 	add_filter( 'bp_core_get_active_member_count', 'bp_fixed_all_member_type_count', 999 );
