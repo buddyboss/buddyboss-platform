@@ -103,9 +103,10 @@ if ( ! class_exists( 'LearnDash_BuddyPress_Groups_Reports' ) ) :
 
 
 		public function check_settings() {
-			$groups_reports = get_option( 'learndash_settings_buddypress_groups_reports' );
-			if ( empty( $groups_reports ) ) {
-				update_option( 'learndash_settings_buddypress_groups_reports', ld_bp_groups_reports_default_value() );
+			if ( ! get_option( 'learndash_settings_buddypress_groups_report' ) ) {
+				$groups_report = get_option( 'learndash_settings_buddypress_groups_reports' ) ?: ld_bp_groups_reports_default_value();
+				delete_option( 'learndash_settings_buddypress_groups_reports' );
+				update_option( 'learndash_settings_buddypress_groups_report', $groups_report );
 			}
 		}
 

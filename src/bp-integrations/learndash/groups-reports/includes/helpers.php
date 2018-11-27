@@ -50,7 +50,7 @@ function ld_bp_groups_reports_get_settings( $key = null, $get_default_value = tr
 
 	$default_value = ld_bp_groups_reports_default_value();
 
-	$options = get_option( 'learndash_settings_buddypress_groups_reports', $default_value );
+	$options = get_option( 'learndash_settings_buddypress_groups_report', $default_value );
 
 	if ( ! $key ) {
 		return $options;
