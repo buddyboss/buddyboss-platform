@@ -88,20 +88,22 @@ body:not(.logged-in) {
 	}
 }
 
-// Is current user - i.e it's me!
-.members-directory-content {
+// Members Directory with profile search form.
+.members-directory-wrapper {
 	display: flex;
 	flex-flow: row wrap;
 
 	@include medium-up() {
 
+		flex-flow: row-reverse;
+
 		.bp-profile-search-widget {
 			flex: 0 0 220px;
-			margin-left: 20px;
+			margin-left: $marg-xlrg;
 		}
 	}
 
-	.members {
+	.members-directory-container {
 		flex: 1;
 	}
 
@@ -124,23 +126,20 @@ body:not(.logged-in) {
 	}
 }
 
-#bp-profile-search-form-outer {
-
-	.widget-title {
-		margin-top: 0;
-	}
-}
-
 .bp-profile-search-widget {
 
 	.bp-field-wrap {
 		margin-bottom: $marg-lrg;
 	}
 
-	button,
-	input,
-	select,
-	textarea {
-		font-size: 14px;
+	.bps-form-title {
+		font-size: 13px;
+		line-height: 1;
+		margin-top: 0;
+		margin-bottom: 20px;
+	}
+
+	label {
+		font-weight: 600;
 	}
 }

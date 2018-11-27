@@ -8,9 +8,9 @@ $options = array(
 $F = bp_profile_search_escaped_form_data ( $form_id );
 ?>
 
-<aside id="bp-profile-search-form-outer" class="widget bp-profile-search-widget">
+<aside id="bp-profile-search-form-outer" class="bp-profile-search-widget">
 
-	<h2 class="widget-title bps-form-title"><?php echo $F->title; ?></h2>
+	<h2 class="bps-form-title"><?php echo $F->title; ?></h2>
 
 	<form action="<?php echo $F->action; ?>" method="<?php echo $F->method; ?>" id="<?php echo $F->unique_id; ?>" class="bps-form">
 

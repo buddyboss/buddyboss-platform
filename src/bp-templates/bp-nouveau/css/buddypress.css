@@ -98,17 +98,6 @@ body #buddypress .bp-list .action {
   }
 }
 
-body.buddypress .buddypress-wrap h1,
-body.buddypress .buddypress-wrap h2,
-body.buddypress .buddypress-wrap h3,
-body.buddypress .buddypress-wrap h4,
-body.buddypress .buddypress-wrap h5,
-body.buddypress .buddypress-wrap h6 {
-  clear: none;
-  margin: 1em 0;
-  padding: 0;
-}
-
 /* Ensure .bp-wrap encloses it's children */
 .bp-wrap:before,
 .bp-wrap:after {
@@ -807,30 +796,31 @@ body.buddypress article.page > .entry-header .entry-title {
   padding: 0;
 }
 
-.grid-filters {
+.buddypress-wrap .grid-filters {
   display: flex;
   align-items: center;
   border: 1px solid #eee;
   height: 36px;
 }
 
-.grid-filters a {
+.buddypress-wrap .grid-filters a {
+  border-bottom: 0;
   color: #ccc;
   padding: 0 6px;
   line-height: 36px;
 }
 
-.grid-filters a,
-.grid-filters a:active,
-.grid-filters a:focus {
+.buddypress-wrap .grid-filters a,
+.buddypress-wrap .grid-filters a:active,
+.buddypress-wrap .grid-filters a:focus {
   outline: none;
 }
 
-.grid-filters a i {
+.buddypress-wrap .grid-filters a i {
   vertical-align: middle;
 }
 
-.grid-filters a.active {
+.buddypress-wrap .grid-filters a.active {
   color: #222;
 }
 
@@ -1931,52 +1921,55 @@ form.ac-form .ac-reply-content input {
   }
 }
 
-.members-directory-content {
+.members-directory-wrapper {
   display: flex;
   flex-flow: row wrap;
 }
 
 @media screen and (min-width: 46.8em) {
-  .members-directory-content .bp-profile-search-widget {
+  .members-directory-wrapper {
+    flex-flow: row-reverse;
+  }
+  .members-directory-wrapper .bp-profile-search-widget {
     flex: 0 0 220px;
-    margin-left: 20px;
+    margin-left: 30px;
   }
 }
 
-.members-directory-content .members {
+.members-directory-wrapper .members-directory-container {
   flex: 1;
 }
 
 @media screen and (max-width: 46.8em) {
-  .members-directory-content .bp-profile-search-widget {
+  .members-directory-wrapper .bp-profile-search-widget {
     flex: 0 0 100%;
   }
 }
 
-.members-directory-content .bp-field-wrap {
+.members-directory-wrapper .bp-field-wrap {
   margin-bottom: 20px;
 }
 
-.members-directory-content .bps-description {
+.members-directory-wrapper .bps-description {
   font-size: 14px;
   margin: 5px 0;
   color: #767676;
   font-style: italic;
 }
 
-#bp-profile-search-form-outer .widget-title {
-  margin-top: 0;
-}
-
 .bp-profile-search-widget .bp-field-wrap {
   margin-bottom: 20px;
 }
 
-.bp-profile-search-widget button,
-.bp-profile-search-widget input,
-.bp-profile-search-widget select,
-.bp-profile-search-widget textarea {
-  font-size: 14px;
+.bp-profile-search-widget .bps-form-title {
+  font-size: 13px;
+  line-height: 1;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.bp-profile-search-widget label {
+  font-weight: 600;
 }
 
 /**
@@ -3767,6 +3760,7 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 }
 
 .buddypress-wrap .select-wrap span.select-arrow {
+  font-size: 10px;
   display: inline-block;
   position: relative;
   z-index: 0;
