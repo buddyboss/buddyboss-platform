@@ -60,12 +60,10 @@
 								}
 							}
 						}
-
-
 					} elseif ( 'following' === $bp_get_scope ) {
 
 						$args                             = array(
-							'user_id' => bp_loggedin_user_id()
+							'user_id' => bp_loggedin_user_id(),
 						);
 						$following_comma_separated_string = bp_get_following_ids( $args );
 						$following_array                  = explode( ',', $following_comma_separated_string );
@@ -76,9 +74,8 @@
 								continue;
 							}
 
-							$name    = bp_get_member_type_key( $member_type_id );
-							$type_id = bp_member_type_term_taxonomy_id( $name );
-
+							$name         = bp_get_member_type_key( $member_type_id );
+							$type_id      = bp_member_type_term_taxonomy_id( $name );
 							$exclude_user = bp_member_type_by_type( $type_id );
 
 							foreach ( $exclude_user as $exclude ) {
@@ -87,24 +84,17 @@
 								}
 							}
 						}
-
 					} else {
-
 						$member_types = bp_get_active_member_types();
 						foreach ( $member_types as $member_type_id ) {
-
 							if ( ! get_post_meta( $member_type_id, '_bp_member_type_enable_remove', true ) ) {
 								continue;
 							}
-
 							$name    = bp_get_member_type_key( $member_type_id );
 							$type_id = bp_member_type_term_taxonomy_id( $name );
-
-							$count = $count - count( bp_member_type_by_type( $type_id ) );
-
+							$count   = $count - count( bp_member_type_by_type( $type_id ) );
 						}
 					}
-
 				} else {
 					$count = bp_nouveau_get_nav_count();
 				}
