@@ -49,26 +49,26 @@ bp_nouveau_before_loop(); ?>
 								// Output the
 								if ( $type_obj = bp_get_member_type_object( $type ) ) {
 									?>
-									<p class="item-meta member-type">
+									<span class="item-meta member-type">
 										<?php echo esc_html( $type_obj->labels['singular_name'] ); ?>
-									</p><!-- #item-meta -->
+									</span><!-- #item-meta -->
 									<?php
 								} else {
 									?>
-									<p class="item-meta member-type">
+									<span class="item-meta member-type">
 										<?php echo esc_html( 'Member' ); ?>
-									</p><!-- #item-meta -->
+									</span><!-- #item-meta -->
 									<?php
 								}
 							}
 						}
 						?>
 
-						<?php if ( bp_nouveau_member_has_meta() ) : ?>
-							<p class="item-meta last-activity">
-								<?php bp_nouveau_member_meta(); ?>
-							</p><!-- #item-meta -->
-						<?php endif; ?>
+						<?php //if ( bp_nouveau_member_has_meta() ) : ?>
+<!--							<p class="item-meta last-activity">-->
+<!--								--><?php //bp_nouveau_member_meta(); ?>
+<!--							</p><!-- #item-meta -->
+						<?php //endif; ?>
 
 						<?php
 						bp_nouveau_members_loop_buttons(
