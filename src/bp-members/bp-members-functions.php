@@ -3443,8 +3443,9 @@ function bp_member_type_exclude_users_from_directory_and_searches( $qs=false, $o
 
 	$args = wp_parse_args( $qs );
 
-	if( ! empty( $args['user_id'] ) )
-		return $qs;
+	// Removed this condition to add the member type filter works properly do not remove because need to check if this causing anywhere.
+	//if( ! empty( $args['user_id'] ) )
+		//return $qs;
 
 	if( ! empty( $args['exclude'] ) )
 		$args['exclude'] = $args['exclude'] . ',' . implode( ',', $exclude_user_ids );
