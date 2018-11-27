@@ -61,14 +61,16 @@ bp_nouveau_before_loop(); ?>
 									<?php
 								}
 							}
+						} else {
+							?>
+							<?php if ( bp_nouveau_member_has_meta() ) : ?>
+								<p class="item-meta last-activity">
+									<?php bp_nouveau_member_meta(); ?>
+								</p><!-- #item-meta -->
+							<?php endif; ?>
+							<?php
 						}
 						?>
-
-						<?php //if ( bp_nouveau_member_has_meta() ) : ?>
-<!--							<p class="item-meta last-activity">-->
-<!--								--><?php //bp_nouveau_member_meta(); ?>
-<!--							</p><!-- #item-meta -->
-						<?php //endif; ?>
 
 						<?php
 						bp_nouveau_members_loop_buttons(
