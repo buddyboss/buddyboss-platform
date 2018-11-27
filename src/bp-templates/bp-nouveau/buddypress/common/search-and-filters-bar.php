@@ -1,4 +1,3 @@
-
 <?php
 /**
  * BP Nouveau Search & filters bar
@@ -10,9 +9,15 @@
 <div class="subnav-filters filters no-ajax" id="subnav-filters">
 
 	<?php if ( 'friends' !== bp_current_component() ) : ?>
-		<div class="subnav-search clearfix">
-			<?php bp_nouveau_search_form(); ?>
-		</div>
+    
+        <?php if ( 'members' != bp_current_component() || bp_disable_advanced_profile_search() ) : ?>
+            <div class="subnav-search clearfix">
+
+                <?php bp_nouveau_search_form(); ?>
+
+            </div>
+        <?php endif; ?>
+    
 	<?php endif; ?>
     
     <?php if ( 'members' == bp_current_component() || 'groups' == bp_current_component() || 'friends' == bp_current_component() ): ?>

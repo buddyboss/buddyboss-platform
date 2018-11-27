@@ -9,7 +9,6 @@ include 'bps-form.php';
 include 'bps-search.php';
 include 'bps-templates47.php';
 include 'bps-xprofile.php';
-include 'bps-widget.php';
 
 function bp_ps_meta ( $form ) {
 	static $options;

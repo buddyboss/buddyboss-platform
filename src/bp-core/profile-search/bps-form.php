@@ -1,6 +1,6 @@
 <?php
 
-//add_action ( 'bp_before_directory_members_page', 'bp_profile_search_show_form');
+add_action ( 'bp_before_directory_members_content', 'bp_profile_search_show_form');
 
 function bp_profile_search_show_form () {
     if ( bp_disable_advanced_profile_search() ) {

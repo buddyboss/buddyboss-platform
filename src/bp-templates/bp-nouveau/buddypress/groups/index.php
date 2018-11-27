@@ -25,6 +25,6 @@
 			<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'directory-groups-loading' ); ?></div>
 		</div><!-- #groups-dir-list -->
 
-	<?php bp_nouveau_after_groups_directory_content(); ?>
+		<?php bp_nouveau_after_groups_directory_content(); ?>
 
 	</div><!-- // .screen-content -->

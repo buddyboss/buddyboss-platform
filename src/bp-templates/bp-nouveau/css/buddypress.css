@@ -1931,6 +1931,43 @@ form.ac-form .ac-reply-content input {
   }
 }
 
+.members-directory-content {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+@media screen and (min-width: 46.8em) {
+  .members-directory-content .bp-profile-search-widget {
+    flex: 0 0 220px;
+    margin-left: 20px;
+  }
+}
+
+.members-directory-content .members {
+  flex: 1;
+}
+
+@media screen and (max-width: 46.8em) {
+  .members-directory-content .bp-profile-search-widget {
+    flex: 0 0 100%;
+  }
+}
+
+.members-directory-content .bp-field-wrap {
+  margin-bottom: 20px;
+}
+
+.members-directory-content .bps-description {
+  font-size: 14px;
+  margin: 5px 0;
+  color: #767676;
+  font-style: italic;
+}
+
+#bp-profile-search-form-outer .widget-title {
+  margin-top: 0;
+}
+
 .bp-profile-search-widget .bp-field-wrap {
   margin-bottom: 20px;
 }
