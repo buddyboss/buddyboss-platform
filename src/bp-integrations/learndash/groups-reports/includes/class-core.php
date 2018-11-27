@@ -75,11 +75,11 @@ if ( ! class_exists( 'LearnDash_BuddyPress_Groups_Reports' ) ) :
 		 */
 		private function setup_constants() {
 			if ( ! defined( 'LEARNDASH_BUDDYPRESS_GROUP_REPORTS_PLUGIN_DIR' ) ) {
-				define( 'LEARNDASH_BUDDYPRESS_GROUP_REPORTS_PLUGIN_DIR', bp_learndash_path() . '/groups-reports' );
+				define( 'LEARNDASH_BUDDYPRESS_GROUP_REPORTS_PLUGIN_DIR', bp_learndash_path() . 'groups-reports' );
 			}
 
 			if ( ! defined( 'LEARNDASH_BUDDYPRESS_GROUP_REPORTS_PLUGIN_URL' ) ) {
-				define( 'LEARNDASH_BUDDYPRESS_GROUP_REPORTS_PLUGIN_URL', bp_learndash_url() . '/groups-reports' );
+				define( 'LEARNDASH_BUDDYPRESS_GROUP_REPORTS_PLUGIN_URL', bp_learndash_url() . 'groups-reports' );
 			}
 		}
 
@@ -121,7 +121,7 @@ if ( ! class_exists( 'LearnDash_BuddyPress_Groups_Reports' ) ) :
 
 		public function enqueue() {
 
-			wp_register_script( 'ld-bp-courses-reports', LEARNDASH_BUDDYPRESS_GROUP_REPORTS_PLUGIN_URL . 'assests/js/frountend.js', array( 'jquery' ) );
+			wp_register_script( 'ld-bp-courses-reports', LEARNDASH_BUDDYPRESS_GROUP_REPORTS_PLUGIN_URL . '/assests/js/frountend.js', array( 'jquery' ) );
 			// Localize the script with new data
 			$translation_array = array(
 				'export_csv_error' => __( 'Something when wrong kindly try after some time.', 'ld_bp_groups_reports' ),
