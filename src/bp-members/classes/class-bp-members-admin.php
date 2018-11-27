@@ -1252,16 +1252,27 @@ class BP_Members_Admin {
 
 				if ( 'administrator' !== $selected_member_type_wp_roles[0] ) {
 
-					$bp_error_message_string        = 'You cannot assign yourself to this profile type as doing so would remove your Administrator role and lock you out of the WordPress admin. You first need to associate this profile type to the Administrator role, and then you can assign it to yourself.';
-					$error_message = apply_filters( 'bp_invalid_role_selection_extended_profile', __( $bp_error_message_string, 'buddyboss' ) );
-					// Define the settings error to display
-					add_settings_error( 'bp-invalid-role-selection-extended-profile',
-						'bp-invalid-role-selection-extended-profile',
-						$error_message,
-						'error' );
-					set_transient( 'bp_invalid_role_selection_extended_profile', get_settings_errors(), 30 );
+					if ( empty( $selected_member_type_wp_roles  ) ) {
 
-					return;
+						/*
+						 * If an invalid member type is passed, someone's doing something
+						 * fishy with the POST request, so we can fail silently.
+						 */
+						if ( bp_set_member_type( $user_id, $member_type ) ) {
+							// @todo Success messages can't be posted because other stuff happens on the page load.
+						}
+					} else {
+						$bp_error_message_string        = 'You cannot assign yourself to this profile type as doing so would remove your Administrator role and lock you out of the WordPress admin. You first need to associate this profile type to the Administrator role, and then you can assign it to yourself.';
+						$error_message = apply_filters( 'bp_invalid_role_selection_extended_profile', __( $bp_error_message_string, 'buddyboss' ) );
+						// Define the settings error to display
+						add_settings_error( 'bp-invalid-role-selection-extended-profile',
+							'bp-invalid-role-selection-extended-profile',
+							$error_message,
+							'error' );
+						set_transient( 'bp_invalid_role_selection_extended_profile', get_settings_errors(), 30 );
+
+						return;
+					}
 
 				} else {
 
