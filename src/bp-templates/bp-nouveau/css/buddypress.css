@@ -1963,6 +1963,8 @@ form.ac-form .ac-reply-content input {
 
 .bp-profile-search-widget .bps-form-title {
   font-size: 13px;
+  font-weight: 400;
+  color: #767676;
   line-height: 1;
   margin-top: 0;
   margin-bottom: 20px;
@@ -1970,6 +1972,7 @@ form.ac-form .ac-reply-content input {
 
 .bp-profile-search-widget label {
   font-weight: 600;
+  font-size: 15px;
 }
 
 /**
@@ -3545,7 +3548,8 @@ input#send-to-input {
 .buddypress-wrap .standard-form [data-bp-search] input[type="search"],
 .buddypress-wrap .standard-form [data-bp-search] input[type="text"],
 .buddypress-wrap .standard-form .groups-members-search input[type="search"],
-.buddypress-wrap .standard-form .groups-members-search input[type="text"] {
+.buddypress-wrap .standard-form .groups-members-search input[type="text"],
+.buddypress-wrap .standard-form .bp-profile-search-widget input[type="search"] {
   background: #fafafa;
   border: 1px solid #d6d6d6;
   border-radius: 0;

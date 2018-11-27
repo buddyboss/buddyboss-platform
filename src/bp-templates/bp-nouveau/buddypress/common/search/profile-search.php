@@ -12,7 +12,7 @@ $F = bp_profile_search_escaped_form_data ( $form_id );
 
 	<h2 class="bps-form-title"><?php echo $F->title; ?></h2>
 
-	<form action="<?php echo $F->action; ?>" method="<?php echo $F->method; ?>" id="<?php echo $F->unique_id; ?>" class="bps-form">
+	<form action="<?php echo $F->action; ?>" method="<?php echo $F->method; ?>" id="<?php echo $F->unique_id; ?>" class="bps-form standard-form">
 
 	<?php
 		foreach ($F->fields as $f) {
