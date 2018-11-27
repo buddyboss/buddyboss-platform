@@ -337,8 +337,23 @@ function bp_has_members( $args = '' ) {
 	$user_id = 0;
 
 	// User filtering.
-	if ( bp_is_user_friends() && ! bp_is_user_friend_requests() ) {
+	if ( bp_is_user_friends() && ! bp_is_user_friend_requests() && ! bp_is_user_mutual_friends() ) {
 		$user_id = bp_displayed_user_id();
+	}
+
+	$include = false;
+	$type = 'active';
+
+	// Mutual User filtering.
+	if ( bp_is_user_friends() && bp_is_user_mutual_friends() ) {
+		$include = bp_get_mutual_friendships();
+		$type = 'alphabetical';
+	}
+
+	// User requests filtering.
+	if ( bp_is_user_friends() && bp_is_user_friend_requests() ) {
+		$include = bp_get_friendship_requests();
+		$type = 'alphabetical';
 	}
 
 	$member_type = bp_get_current_member_type();
@@ -359,14 +374,14 @@ function bp_has_members( $args = '' ) {
 
 	// Type: active ( default ) | random | newest | popular | online | alphabetical.
 	$r = bp_parse_args( $args, array(
-		'type'                => 'active',
+		'type'                => $type,
 		'page'                => 1,
 		'per_page'            => 20,
 		'max'                 => false,
 
 		'page_arg'            => 'upage',  // See https://buddypress.trac.wordpress.org/ticket/3679.
 
-		'include'             => false,    // Pass a user_id or a list (comma-separated or array) of user_ids to only show these users.
+		'include'             => $include,    // Pass a user_id or a list (comma-separated or array) of user_ids to only show these users.
 		'exclude'             => false,    // Pass a user_id or a list (comma-separated or array) of user_ids to exclude these users.
 
 		'user_id'             => $user_id, // Pass a user_id to only show friends of this user.

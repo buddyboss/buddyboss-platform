@@ -9,22 +9,22 @@
 
 <?php bp_get_template_part( 'groups/single/parts/members-subnav' ); ?>
 
+    <div class="subnav-filters filters clearfix no-subnav">
+
+		<?php bp_nouveau_search_form(); ?>
+
+		<?php bp_get_template_part( 'common/filters/groups-screens-filters' ); ?>
+
+		<?php bp_get_template_part( 'common/filters/grid-filters' ); ?>
+
+    </div>
+
 <?php
 switch ( bp_action_variable( 0 ) ) :
 
 	// Groups/All Members
 	case 'all-members':
 		?>
-
-        <div class="subnav-filters filters clearfix no-subnav">
-
-			<?php bp_nouveau_search_form(); ?>
-
-			<?php bp_get_template_part( 'common/filters/groups-screens-filters' ); ?>
-            
-            <?php bp_get_template_part( 'common/filters/grid-filters' ); ?>
-
-        </div>
 
         <div id="members-group-list" class="group_members dir-list" data-bp-list="group_members">
 
@@ -36,7 +36,15 @@ switch ( bp_action_variable( 0 ) ) :
 		break;
 
 	case 'leaders':
-		bp_get_template_part( 'groups/single/members/leaders' );
+		?>
+
+        <div id="members-group-list" class="group_members dir-list" data-bp-list="group_members">
+
+            <div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'group-leaders-loading' ); ?></div>
+
+        </div><!-- .group_leaders.dir-list -->
+
+		<?php
 		break;
 
 	// Any other
