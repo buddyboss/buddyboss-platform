@@ -1644,11 +1644,11 @@ function bp_member_type_invalid_role_error_callback() {
 	}
 
 	// Otherwise, build the list of errors that exist in the settings errores
-	$message = '<div id="bp-member-typerole-error-message" style="margin: 37px 0 0 0;width: 97%;" class="error below-h2"><p><ul>';
+	$message = '<div id="message" class="error">';
 	foreach ( $errors as $error ) {
-		$message .= '<li>' . $error['message'] . '</li>';
+		$message .= '<p>' . $error['message'] . '</p>';
 	}
-	$message .= '</ul></p></div><!-- #error --><style type="text/css">div#message{display: none;}</style>';
+	$message .= '</div><!-- #error --><style type="text/css">div.updated{display: none;}</style>';
 	// Write them out to the screen
 	echo $message;
 	// Clear and the transient and unhook any other notices so we don't see duplicate messages
@@ -1825,11 +1825,11 @@ function bp_member_type_invalid_role_extended_profile_error_callback() {
 	}
 
 	// Otherwise, build the list of errors that exist in the settings errores
-	$message = '<div id="bp-member-typerole-error-message" style="margin: 37px 0 0 0;width: 97%;" class="error below-h2"><p><ul>';
+	$message = '<div id="message" class="error">';
 	foreach ( $errors as $error ) {
-		$message .= '<li>' . $error['message'] . '</li>';
+		$message .= '<p>' . $error['message'] . '</p>';
 	}
-	$message .= '</ul></p></div><!-- #error --><style type="text/css">div#message{display: none;}</style>';
+	$message .= '</div><!-- #error --><style type="text/css">div.updated{display: none;}</style>';
 	// Write them out to the screen
 	echo $message;
 	// Clear and the transient and unhook any other notices so we don't see duplicate messages
