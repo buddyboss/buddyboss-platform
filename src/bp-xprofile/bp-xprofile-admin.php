@@ -50,6 +50,68 @@ function xprofile_add_admin_menu() {
 add_action( bp_core_admin_hook(), 'xprofile_add_admin_menu' );
 
 /**
+ * Function for opening the users tab while on Profile Types
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_member_type_show_correct_current_menu(){
+	$screen = get_current_screen();
+	if ( $screen->id == 'bp-member-type' || $screen->id == 'edit-bp-member-type' ) {
+		?>
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				$('#menu-users').addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
+				$('#menu-users > a').addClass('wp-has-current-submenu').removeClass('wp-not-current-submenu');
+			});
+		</script>
+		<?php
+	}
+	if ( $screen->id == 'bp-member-type' ) {
+		?>
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				var parent_div = $('li').find('a[href$="bp-profile-setup"]').parent();
+				$(parent_div).closest('li').addClass('bp-profile-setup');
+				$('li.bp-profile-setup').next().addClass('current');
+			});
+		</script>
+		<?php
+	}
+	if ( $screen->id == 'edit-bp-member-type' ) {
+		?>
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				var parent_div = $('li').find('a[href$="bp-profile-setup"]').parent();
+				$(parent_div).closest('li').addClass('bp-profile-setup');
+				$('li.bp-profile-setup').next().addClass('current');
+			});
+		</script>
+		<?php
+	}
+}
+add_action('admin_head', 'bp_member_type_show_correct_current_menu', 50);
+
+/**
+ * Function for opening the users tab while on Profile Search
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_profile_search_show_correct_current_menu(){
+	$screen = get_current_screen();
+	if ( $screen->id == 'bp_ps_form' || $screen->id == 'edit-bp_ps_form' ) {
+		?>
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				$('#menu-users').addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
+				$('#menu-users > a').addClass('wp-has-current-submenu').removeClass('wp-not-current-submenu');
+			});
+		</script>
+		<?php
+	}
+}
+add_action('admin_head', 'bp_profile_search_show_correct_current_menu', 50);
+
+/**
  * Handles all actions for the admin area for creating, editing and deleting
  * profile groups and fields.
  *
