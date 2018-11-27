@@ -252,7 +252,7 @@ function bp_ps_anyfield_setup ($fields)
 	$f = new stdClass;
 	$f->group = __('Keyword', 'buddyboss');
 	$f->code = 'field_any';
-	$f->name = __('Any profile field', 'buddyboss');
+	$f->name = __('Search all fields', 'buddyboss');
 	$f->description = __('Search every profile field', 'buddyboss');
 
 	$f->format = 'text';
