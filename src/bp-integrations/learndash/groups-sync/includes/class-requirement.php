@@ -35,17 +35,6 @@ class LearnDash_BuddyPress_Groups_Sync_Requirement
         if (! is_admin()) {
             return;
         }
-
-        add_action('admin_notices',  [$this, 'print_requirement_admin_notice']);
-    }
-
-    public function print_requirement_admin_notice()
-    {
-        if ($this->valid()) {
-            return;
-        }
-
-        echo $this->error;
     }
 
     public function valid()
