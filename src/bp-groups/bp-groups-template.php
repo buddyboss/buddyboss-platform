@@ -3801,9 +3801,14 @@ function bp_group_has_members( $args = '' ) {
 
 	$exclude_admins_mods = 1;
 
-	if ( bp_is_group_members() ) {
+	if ( bp_is_group_members() || bp_is_group_leaders() ) {
 		$exclude_admins_mods = 0;
 	}
+
+	$group_role = false;
+	if ( bp_is_group_leaders() ) {
+		$group_role = 'admin,mod';
+    }
 
 	/*
 	 * Use false as the search_terms default so that BP_User_Query
@@ -3823,10 +3828,12 @@ function bp_group_has_members( $args = '' ) {
 		'exclude'             => false,
 		'exclude_admins_mods' => $exclude_admins_mods,
 		'exclude_banned'      => 1,
-		'group_role'          => false,
+		'group_role'          => $group_role,
 		'search_terms'        => $search_terms_default,
 		'type'                => 'last_joined',
 	), 'group_has_members' );
+
+	error_log(print_r($r,1));
 
 	/*
 	 * If an empty search_terms string has been passed,
