@@ -680,14 +680,35 @@ function bp_get_group_type( $group = false ) {
 		$group =& $groups_template->group;
 	}
 
-	if ( 'public' == $group->status ) {
-		$type = __( "Public Group", 'buddyboss' );
-	} elseif ( 'hidden' == $group->status ) {
-		$type = __( "Hidden Group", 'buddyboss' );
-	} elseif ( 'private' == $group->status ) {
-		$type = __( "Private Group", 'buddyboss' );
+	if ( true === bp_disable_group_type_creation() ) {
+
+		$group_type = bp_groups_get_group_type( $group->id );
+		$group_type = bp_groups_get_group_type_object( $group_type )->labels['name'];
+
+		if ( 'public' == $group->status ) {
+			$string = isset( $group_type ) ? 'Public / '. $group_type  : 'Public Group';
+			$type = __( $string, 'buddyboss' );
+		} elseif ( 'hidden' == $group->status ) {
+			$string = isset( $group_type ) ? 'Hidden / '. $group_type  : 'Hidden Group';
+			$type = __( $string, 'buddyboss' );
+		} elseif ( 'private' == $group->status ) {
+			$string = isset( $group_type ) ? 'Private / '. $group_type  : 'Private Group';
+			$type = __( $string, 'buddyboss' );
+		} else {
+			$type = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
+		}
+
 	} else {
-		$type = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
+
+		if ( 'public' == $group->status ) {
+			$type = __( "Public Group", 'buddyboss' );
+		} elseif ( 'hidden' == $group->status ) {
+			$type = __( "Hidden Group", 'buddyboss' );
+		} elseif ( 'private' == $group->status ) {
+			$type = __( "Private Group", 'buddyboss' );
+		} else {
+			$type = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
+		}
 	}
 
 	/**
