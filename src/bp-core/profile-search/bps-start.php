@@ -9,7 +9,6 @@ include 'bps-form.php';
 include 'bps-search.php';
 include 'bps-templates47.php';
 include 'bps-xprofile.php';
-include 'bps-widget.php';
 
 function bp_ps_meta ( $form ) {
 	static $options;
@@ -155,7 +154,7 @@ function bp_profile_search_main_form () {
 
 function bp_profile_search_add_main_form () {
     $post_args = array(
-        'post_title'    => __( 'Search Members', 'buddyboss' ),
+        'post_title'    => __( 'Filter Results', 'buddyboss' ),
         'post_type'     => 'bp_ps_form',
         'post_status'   => 'publish',
     );

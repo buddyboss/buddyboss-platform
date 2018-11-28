@@ -442,7 +442,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 		}
 
 		// Only add The public and private messages when not in a loop
-		if ( 'profile' === $type ) {
+		//if ( 'profile' === $type ) {
 			if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) {
 				/*
 				 * This filter workaround is waiting for a core adaptation
@@ -529,7 +529,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 					unset( bp_nouveau()->members->button_args );
 				}
 			}
-		}
+		//}
 
 		/**
 		 * Filter to add your buttons, use the position argument to choose where to insert it.

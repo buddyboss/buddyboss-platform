@@ -88,16 +88,64 @@ body:not(.logged-in) {
 	}
 }
 
+// Members Directory with profile search form.
+.members-directory-wrapper {
+	display: flex;
+	flex-flow: row wrap;
+
+	@include medium-up() {
+
+		flex-flow: row-reverse;
+
+		.bp-profile-search-widget {
+			flex: 0 0 220px;
+			margin-left: $marg-xlrg;
+		}
+	}
+
+	.members-directory-container {
+		flex: 1;
+	}
+
+	@include medium-max() {
+
+		.bp-profile-search-widget {
+			flex: 0 0 100%;
+		}
+	}
+
+	.bp-field-wrap {
+		margin-bottom: $marg-lrg;
+	}
+
+	.bps-description {
+		font-size: 13px;
+		margin: $marg-xsml 0;
+		color: #767676;
+	}
+}
+
 .bp-profile-search-widget {
 
 	.bp-field-wrap {
 		margin-bottom: $marg-lrg;
 	}
 
-	button,
-	input,
-	select,
-	textarea {
-		font-size: 14px;
+	.bps-form-title {
+		font-size: 13px;
+		font-weight: 400;
+		color: $light-text;
+		line-height: 1;
+		margin-top: 0;
+		margin-bottom: 20px;
+	}
+
+	label {
+		font-weight: 600;
+		font-size: 15px;
+	}
+
+	select {
+		width: 100%;
 	}
 }

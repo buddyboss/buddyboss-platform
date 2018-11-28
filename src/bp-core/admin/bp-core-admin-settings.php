@@ -229,6 +229,30 @@ function bp_admin_setting_callback_group_cover_image_uploads() {
 <?php
 }
 
+/**
+ * 'Enable group types' field markup.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_admin_setting_callback_group_type_creation() {
+?>
+	<input id="bp-disable-group-type-creation" name="bp-disable-group-type-creation" type="checkbox" value="1" <?php checked( bp_disable_group_type_creation() ); ?> />
+	<label for="bp-disable-group-type-creation"><?php _e( 'Enable group types to better organize your groups', 'buddyboss' ); ?></label>
+<?php
+}
+
+/**
+ * 'Enable group hierarchies' field markup.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_admin_setting_callback_group_hierarchies() {
+	?>
+	<input id="bp-enable-group-hierarchies" name="bp-enable-group-hierarchies" type="checkbox" value="1" <?php checked( bp_enable_group_hierarchies() ); ?> />
+	<label for="bp-enable-group-hierarchies"><?php _e( 'Allow groups to have parent groups and subgroups', 'buddyboss' ); ?></label>
+	<?php
+}
+
 /** Settings Page *************************************************************/
 
 /**

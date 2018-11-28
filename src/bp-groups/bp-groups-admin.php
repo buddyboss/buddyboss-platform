@@ -27,18 +27,61 @@ if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-groups' == $_REQUEST['pag
  */
 function bp_groups_add_admin_menu() {
 
-	// Add our screen.
-	$hook = add_menu_page(
-		_x( 'Groups', 'Admin Groups page title', 'buddyboss' ),
-		_x( 'Groups', 'Admin Groups menu', 'buddyboss' ),
-		'bp_moderate',
-		'bp-groups',
-		'bp_groups_admin',
-		'div'
-	);
+	if ( true === bp_disable_group_type_creation() ) {
 
-	// Hook into early actions to load custom CSS and our init handler.
-	add_action( "load-$hook", 'bp_groups_admin_load' );
+		// Add our screen.
+		$hooks[] = add_menu_page(
+			_x( 'Groups', 'Admin Groups page title', 'buddyboss' ),
+			_x( 'Groups', 'Admin Groups menu', 'buddyboss' ),
+			'bp_moderate',
+			'bp-groups',
+			'bp_groups_admin',
+			'div'
+		);
+
+		// Register All Groups sub menu.
+		$hooks[] = add_submenu_page( 'bp-groups', 'All Groups', 'All Groups',
+			'bp_moderate', 'bp-groups');
+
+		// Register All Groups Types menu.
+		$hooks[] = add_submenu_page( 'bp-groups', 'Group Types', 'Group Types',
+			'bp_moderate', 'edit.php?post_type=bp-group-type');
+
+		// Register Group Types custom post type.
+		register_post_type(
+			bp_get_group_type_post_type(),
+			apply_filters( 'bp_register_group_type_post_type', array(
+				'description'       => _x( 'BuddyPress group type', 'group type post type description', 'buddyboss' ),
+				'labels'            => bp_get_group_type_post_type_labels(),
+				'public'            => false,
+				'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),
+				'query_var'         => false,
+				'rewrite'           => false,
+				'show_in_admin_bar' => false,
+				'show_in_menu' 		=> '',
+				'map_meta_cap' 		=> true,
+				'show_in_rest' 		=> true,
+				'show_ui'           => bp_current_user_can( 'bp_moderate' ),
+				'supports'          => bp_get_group_type_post_type_supports(),
+			) )
+		);
+
+	} else {
+		// Add our screen.
+		$hooks[] = add_menu_page(
+			_x( 'Groups', 'Admin Groups page title', 'buddyboss' ),
+			_x( 'Groups', 'Admin Groups menu', 'buddyboss' ),
+			'bp_moderate',
+			'bp-groups',
+			'bp_groups_admin',
+			'div'
+		);
+	}
+
+	foreach ( $hooks as $hook ) {
+		// Hook into early actions to load custom CSS and our init handler.
+		add_action( "load-$hook", 'bp_groups_admin_load' );
+	}
 }
 add_action( bp_core_admin_hook(), 'bp_groups_add_admin_menu' );
 
@@ -252,6 +295,7 @@ function bp_groups_admin_load() {
 				'name'           => $_POST['bp-groups-name'],
 				'slug'           => $_POST['bp-groups-slug'],
 				'description'    => $_POST['bp-groups-description'],
+				'parent_id'      => isset( $_POST['bp-groups-parent'] ) ? $_POST['bp-groups-parent'] : 0,
 				'notify_members' => false,
 			) ) ) {
 			$error = $group_id;
@@ -869,6 +913,32 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
         </fieldset>
     </div>
 
+	<?php if ( bp_enable_group_hierarchies() ):
+
+		$current_parent_group_id = bp_get_parent_group_id( $item->id );
+		$possible_parent_groups = bp_get_possible_parent_groups( $item->id, bp_loggedin_user_id() );
+
+		?>
+		<br><hr>
+		<div class="bp-groups-settings-section" id="bp-groups-settings-section-group-hierarchy">
+				<label for="bp-groups-parent" class="for-heading">
+					<?php _e( 'Parent', 'buddyboss' ); ?>:&nbsp;&nbsp;
+				</label>
+				<select id="bp-groups-parent" name="bp-groups-parent" autocomplete="off">
+					<option value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php echo _x( '-- No parent --', 'The option that sets a group to be a top-level group and have no parent.', 'buddyboss' ); ?></option>
+					<?php
+					if ( $possible_parent_groups ) {
+
+						foreach ( $possible_parent_groups as $possible_parent_group ) {
+							?>
+							<option value="<?php echo $possible_parent_group->id; ?>" <?php selected( $current_parent_group_id, $possible_parent_group->id ); ?>><?php echo esc_html( $possible_parent_group->name ); ?></option>
+							<?php
+						}
+					}
+					?>
+				</select>
+		</div>
+	<?php endif; ?>
 <?php
 }
 
@@ -1110,7 +1180,7 @@ function bp_groups_admin_edit_metabox_group_type( BP_Groups_Group $group = null 
 	<ul class="categorychecklist form-no-clear">
 		<?php foreach ( $types as $type ) : ?>
 			<li>
-				<label class="selectit"><input value="<?php echo esc_attr( $type->name ) ?>" name="bp-groups-group-type[]" type="checkbox" <?php checked( true, in_array( $type->name, $current_types ) ); ?>>
+				<label class="selectit"><input value="<?php echo esc_attr( $type->name ) ?>" name="bp-groups-group-type[]" type="radio" <?php checked( true, in_array( $type->name, $current_types ) ); ?>>
 					<?php
 						echo esc_html( $type->labels['singular_name'] );
 						if ( in_array( $type->name, $backend_only ) ) {
@@ -1392,3 +1462,403 @@ function bp_groups_admin_groups_type_change_notice() {
 	}
 }
 add_action( bp_core_admin_hook(), 'bp_groups_admin_groups_type_change_notice' );
+
+// Hook for register the group type admin action and filters.
+add_action( 'bp_loaded', 'bp_register_group_type_sections_filters_actions' );
+
+function bp_register_group_type_sections_filters_actions() {
+
+	if ( true === bp_disable_group_type_creation() ) {
+
+		// Action for opening the groups tab while on group types add/edit page.
+		add_action( 'admin_head', 'bp_group_type_show_correct_current_menu', 50 );
+
+		// Action for register meta boxes for group type post type.
+		add_action( 'add_meta_boxes_' . bp_get_group_type_post_type(), 'bp_group_type_custom_meta_boxes' );
+
+		//add column
+		add_filter( 'manage_' . bp_get_group_type_post_type() . '_posts_columns', 'bp_group_type_add_column' );
+
+		// action for adding a sortable column name.
+		add_action( 'manage_' . bp_get_group_type_post_type() . '_posts_custom_column', 'bp_group_type_show_data', 10, 2 );
+
+		//sortable columns
+		add_filter( 'manage_edit-' . bp_get_group_type_post_type() . '_sortable_columns', 'bp_group_type_add_sortable_columns' );
+
+		//hide quick edit link on the custom post type list screen
+		add_filter( 'post_row_actions', 'bp_group_type_hide_quick_edit', 10, 2 );
+
+		// action for saving meta boxes data of group type post data.
+		add_action( 'save_post', 'bp_save_group_type_post_meta_box_data' );
+
+	}
+}
+
+/**
+ * Function for opening the groups tab while on group types add/edit page.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_group_type_show_correct_current_menu(){
+	$screen = get_current_screen();
+	if ( $screen->id == 'bp-group-type' || $screen->id == 'edit-bp-group-type' ) {
+		?>
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				$('#toplevel_page_bp-groups').addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
+				$('#toplevel_page_bp-groups > a').addClass('wp-has-current-submenu').removeClass('wp-not-current-submenu');
+			});
+		</script>
+		<?php
+	}
+	if ( $screen->id == 'bp-group-type' ) {
+		?>
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				$('li.wp-first-item').next().addClass('current');
+			});
+		</script>
+		<?php
+	}
+	if ( $screen->id == 'edit-bp-group-type' ) {
+		?>
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				$('li.wp-first-item').next().addClass('current');
+			});
+		</script>
+		<?php
+	}
+}
+
+/**
+ * Custom metaboxes used by our 'bp-group-type' post type.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_group_type_custom_meta_boxes() {
+	add_meta_box( 'bp-group-type-key', __( 'Group Type Key', 'buddyboss' ), 'bp_group_type_key_meta_box', null, 'normal', 'high' );
+	add_meta_box( 'bp-group-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_group_type_labels_meta_box', null, 'normal', 'high' );
+	add_meta_box( 'bp-group-type-visibility', __( 'Visibility', 'buddyboss' ), 'bp_group_type_visibility_meta_box', null, 'normal', 'high' );
+	add_meta_box( 'bp-group-type-short-code', __( 'Shortcode', 'buddyboss' ), 'bp_group_short_code_meta_box', null, 'normal', 'high' );
+}
+
+/**
+ * Generate group Type Key Meta box.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param WP_Post $post
+ */
+function bp_group_type_key_meta_box( $post ) {
+
+	$key = get_post_meta($post->ID, '_bp_group_type_key', true );
+	?>
+	<p>
+		<input type="text" name="bp-group-type[group_type_key]" value="<?php echo $key; ?>" placeholder="e.g. teams" />
+	</p>
+	<p><?php _e( 'Group Type Keys are used as internal identifiers. Lowercase alphanumeric characters, dashes and underscores are allowed.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Generate group Type Label Meta box.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param WP_Post $post
+ */
+function bp_group_type_labels_meta_box( $post ) {
+
+	$meta = get_post_custom( $post->ID );
+
+	$label_name = isset( $meta[ '_bp_group_type_label_name' ] ) ? $meta[ '_bp_group_type_label_name' ][ 0 ] : '';
+	$label_singular_name = isset( $meta[ '_bp_group_type_label_singular_name' ] ) ? $meta[ '_bp_group_type_label_singular_name' ][ 0 ] : '';
+	?>
+	<table style="width: 100%;">
+		<tr valign="top">
+			<th scope="row" style="text-align: left; width: 15%;"><label for="bp-group-type[label_name]"><?php _e( 'Plural Label', 'buddyboss' ); ?></label></th>
+			<td>
+				<input type="text" class="bp-group-type-label-name" name="bp-group-type[label_name]" placeholder="<?php _e( 'e.g. Teams', 'buddyboss' ); ?>"  value="<?php echo esc_attr( $label_name ); ?>" tabindex="2" style="width: 100%;" />
+			</td>
+		</tr>
+		<tr valign="top">
+			<th scope="row" style="text-align: left; width: 15%;"><label for="bp-group-type[label_singular_name]"><?php _e( 'Singular Label', 'buddyboss' ); ?></label></th>
+			<td>
+				<input type="text" class="bp-group-type-singular-name" name="bp-group-type[label_singular_name]" placeholder="<?php _e( 'e.g. Team', 'buddyboss' ); ?>" value="<?php echo esc_attr( $label_singular_name ); ?>" tabindex="3" style="width: 100%;" />
+			</td>
+		</tr>
+	</table>
+	<?php wp_nonce_field( 'bp-group-type-edit-group-type', '_bp-group-type-nonce' ); ?>
+	<?php
+}
+
+/**
+ * Generate group Type Directory Meta box.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param WP_Post $post
+ */
+function bp_group_type_visibility_meta_box( $post ) {
+
+	$meta = get_post_custom( $post->ID );
+	?>
+	<?php
+	$enable_filter = isset( $meta[ '_bp_group_type_enable_filter' ] ) ? $meta[ '_bp_group_type_enable_filter' ][ 0 ] : 0; //disabled by default
+	?>
+	<p>
+		<input type='checkbox' name='bp-group-type[enable_filter]' value='1' <?php checked( $enable_filter, 1 ); ?> tabindex="5" />
+		<strong><?php _e( 'Display in "All Types" filter in Groups Directory', 'buddyboss' ); ?></strong>
+	</p>
+	<?php
+	$enable_remove = isset( $meta[ '_bp_group_type_enable_remove' ] ) ? $meta[ '_bp_group_type_enable_remove' ][ 0 ] : 0; //enabled by default
+	?>
+	<p>
+		<input type='checkbox' name='bp-group-type[enable_remove]' value='1' <?php checked( $enable_remove, 1 ); ?> tabindex="6" />
+		<strong><?php _e( 'Hide groups of this type from Groups Directory', 'buddyboss' ); ?></strong>
+	</p>
+	<?php
+}
+
+/**
+ * Shortcode metabox for the group types admin edit screen.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param WP_Post $post
+ */
+function bp_group_short_code_meta_box( $post ) {
+
+	$key = get_post_meta( $post->ID, '_bp_group_type_label_name', true );
+	$key = sanitize_key( $key );
+	?>
+	<p class="group-type-shortcode-wrapper">
+		<!-- Target -->
+		<input id='group-type-shortcode' value='<?php echo '[group type="'. $key .'"]' ?>' style="width: 50%;">
+
+		<button class="copy-to-clipboard button"  data-clipboard-target="#group-type-shortcode">
+			<?php _e('Copy to clipboard', 'buddyboss' ) ?>
+		</button>
+	</p>
+	<p><?php printf( __( 'To display all groups with the %s group type on a dedicated page, add the above shortcode to any WordPress page.', 'buddyboss' ), $post->post_title )?></p>
+
+	<?php
+}
+
+/**
+ * Add new columns to the post type list screen.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param type $columns
+ * @return type
+ */
+function bp_group_type_add_column( $columns ) {
+
+	$columns['title'] = __( 'Group Type', 'buddyboss' );
+	$columns['group_type'] = __( 'Label', 'buddyboss' );
+	$columns['enable_filter'] = __( 'Groups Filter', 'buddyboss' );
+	$columns['enable_remove'] = __( 'Groups Directory', 'buddyboss' );
+	$columns['total_groups'] = __( 'Groups', 'buddyboss' );
+
+	unset( $columns['date'] );
+
+	return $columns;
+}
+
+/**
+ * display data of columns.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $column
+ * @param $post_id
+ */
+function bp_group_type_show_data( $column, $post_id  ) {
+
+	switch( $column ) {
+
+		case 'group_type':
+
+			echo '<code>'. get_post_meta( $post_id, '_bp_group_type_label_singular_name', true ).'</code>';
+			break;
+
+		case 'enable_filter':
+
+			if( get_post_meta( $post_id, '_bp_group_type_enable_filter', true ) )
+				echo __( 'Show', 'buddyboss' );
+			else
+				echo __( 'Hide', 'buddyboss' );
+
+			break;
+
+		case 'enable_remove':
+
+			if( get_post_meta( $post_id, '_bp_group_type_enable_remove', true ) )
+				echo __( 'Hide', 'buddyboss' );
+			else
+				echo __( 'Show', 'buddyboss' );
+
+			break;
+
+		case 'total_groups':
+
+
+			$group_key = get_post_meta( $post_id, '_bp_group_type_label_name', true );
+			$group_key = sanitize_key( $group_key );
+			$group_type_url = admin_url().'admin.php?page=bp-groups&bp-group-type='.$group_key;
+			printf(
+				__( '<a href="%s">%s</a>', 'buddyboss' ),
+				esc_url( $group_type_url ), bp_get_total_count_by_group_types( $group_key )
+			);
+
+			break;
+
+	}
+
+}
+
+/**
+ * Function for setting up a column on admin view on group type post type.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $columns
+ *
+ * @return array
+ */
+function bp_group_type_add_sortable_columns( $columns ) {
+
+	$columns['total_groups']	= 'total_groups';
+	$columns['enable_filter']	= 'enable_filter';
+	$columns['enable_remove']	= 'enable_remove';
+	$columns['group_type']		= 'group_type';
+
+	return $columns;
+}
+
+/**
+ * Function adding a filter to group type sort items.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ */
+function bp_group_type_add_request_filter() {
+
+	add_filter( 'request', 'bp_group_type_sort_items' );
+
+}
+
+/**
+ * Sort list of group type post types.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param type $qv
+ * @return string
+ */
+function bp_group_type_sort_items( $qv ) {
+
+	if( ! isset( $qv['post_type'] ) || $qv['post_type'] != bp_get_group_type_post_type() )
+		return $qv;
+
+	if( ! isset( $qv['orderby'] ) )
+		return $qv;
+
+	switch( $qv['orderby'] ) {
+
+		case 'group_type':
+
+			$qv['meta_key'] = '_bp_group_type_name';
+			$qv['orderby'] = 'meta_value';
+
+			break;
+
+		case 'enable_filter':
+
+			$qv['meta_key'] = '_bp_group_type_enable_filter';
+			$qv['orderby'] = 'meta_value_num';
+
+			break;
+
+	}
+
+	return $qv;
+}
+
+/**
+ * Hide quick edit link.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param type $actions
+ * @param type $post
+ * @return type
+ */
+function bp_group_type_hide_quick_edit( $actions, $post ) {
+
+	if ( empty( $post ) ) {
+		global $post;
+	}
+
+	if ( bp_get_group_type_post_type() == $post->post_type )
+		unset( $actions['inline hide-if-no-js'] );
+
+	return $actions;
+}
+
+/**
+ * Function for saving meta boxes data of group type post data.
+ * @param $post_id
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_save_group_type_post_meta_box_data( $post_id ) {
+	global $wpdb, $error;
+
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+		return;
+
+	$post = get_post( $post_id );
+
+	if ( $post->post_type !== bp_get_group_type_post_type() )
+		return;
+
+	if ( ! isset( $_POST[ '_bp-group-type-nonce' ] ) )
+		return;
+
+	//verify nonce
+	if ( ! wp_verify_nonce( $_POST[ '_bp-group-type-nonce' ], 'bp-group-type-edit-group-type' ) )
+		return;
+
+	//Save data
+	$data = isset( $_POST[ 'bp-group-type' ] ) ? $_POST[ 'bp-group-type' ] : array();
+
+	if ( empty( $data ) )
+		return;
+
+	$error = false;
+
+	$post_title = wp_kses( $_POST[ 'post_title' ], wp_kses_allowed_html( 'strip' ) );
+
+	// key
+	$key = isset( $data['group_type_key'] ) ? sanitize_key( $data['group_type_key'] )  : '';
+
+	//for label
+	$label_name = isset( $data[ 'label_name' ] ) ? wp_kses( $data[ 'label_name' ], wp_kses_allowed_html( 'strip' ) ) : $post_title;
+	$singular_name = isset( $data[ 'label_singular_name' ] ) ? wp_kses( $data[ 'label_singular_name' ], wp_kses_allowed_html( 'strip' ) ) : $post_title;
+
+	//Remove space
+	$label_name     = trim( $label_name );
+	$singular_name  = trim( $singular_name );
+
+	$enable_filter = isset( $data[ 'enable_filter' ] ) ? absint( $data[ 'enable_filter' ] ) : 0; //default inactive
+	$enable_remove = isset( $data[ 'enable_remove' ] ) ? absint( $data[ 'enable_remove' ] ) : 0; //default inactive
+
+	update_post_meta( $post_id, '_bp_group_type_key', $key );
+	update_post_meta( $post_id, '_bp_group_type_label_name', $label_name );
+	update_post_meta( $post_id, '_bp_group_type_label_singular_name', $singular_name );
+	update_post_meta( $post_id, '_bp_group_type_enable_filter', $enable_filter );
+	update_post_meta( $post_id, '_bp_group_type_enable_remove', $enable_remove );
+}

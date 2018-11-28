@@ -38,11 +38,47 @@ bp_nouveau_before_loop(); ?>
 							<a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a>
 						</h2>
 
-						<?php if ( bp_nouveau_member_has_meta() ) : ?>
-							<p class="item-meta last-activity">
-								<?php bp_nouveau_member_meta(); ?>
-							</p><!-- #item-meta -->
-						<?php endif; ?>
+						<?php
+
+						if ( true === bp_member_type_enable_disable() ) {
+							if ( true === bp_member_type_display_on_profile() ) {
+
+								// Get the member type.
+								$type = bp_get_member_type( bp_get_member_user_id() );
+
+								// Output the
+								if ( $type_obj = bp_get_member_type_object( $type ) ) {
+									?>
+									<span class="item-meta member-type">
+										<?php echo esc_html( $type_obj->labels['singular_name'] ); ?>
+									</span><!-- #item-meta -->
+									<?php
+								} else {
+									?>
+									<span class="item-meta member-type">
+										<?php echo esc_html( 'Member' ); ?>
+									</span><!-- #item-meta -->
+									<?php
+								}
+							} else {
+								?>
+								<?php if ( bp_nouveau_member_has_meta() ) : ?>
+									<p class="item-meta last-activity">
+										<?php bp_nouveau_member_meta(); ?>
+									</p><!-- #item-meta -->
+								<?php endif; ?>
+								<?php
+							}
+						} else {
+							?>
+							<?php if ( bp_nouveau_member_has_meta() ) : ?>
+								<p class="item-meta last-activity">
+									<?php bp_nouveau_member_meta(); ?>
+								</p><!-- #item-meta -->
+							<?php endif; ?>
+							<?php
+						}
+						?>
 
 						<?php
 						bp_nouveau_members_loop_buttons(

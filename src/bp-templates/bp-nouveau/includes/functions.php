@@ -891,6 +891,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'loading',
 			'message' => __( 'Requesting the group members. Please wait.', 'buddyboss' ),
 		),
+		'group-leaders-loading' => array(
+			'type'    => 'loading',
+			'message' => __( 'Requesting the group leaders. Please wait.', 'buddyboss' ),
+		),
 		'group-members-none' => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, there were no group members found.', 'buddyboss' ),
@@ -966,6 +970,14 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		'member-friends-loading' => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading the member\'s friends. Please wait.', 'buddyboss' ),
+		),
+		'member-mutual-friends-loading' => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading the member\'s mutual connections. Please wait.', 'buddyboss' ),
+		),
+		'member-friend-requests-loading' => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading the member\'s connection requests. Please wait.', 'buddyboss' ),
 		),
 		'member-groups-loading' => array(
 			'type'    => 'loading',

@@ -101,7 +101,9 @@ function groups_action_create_group() {
 			elseif ( 'hidden' == $_POST['group-status'] )
 				$group_status = 'hidden';
 
-			if ( !$bp->groups->new_group_id = groups_create_group( array( 'group_id' => $bp->groups->new_group_id, 'status' => $group_status, 'enable_forum' => $group_enable_forum ) ) ) {
+			$parent_id = ( isset( $_POST['bp-groups-parent'] ) ) ? $_POST['bp-groups-parent'] : 0;
+
+			if ( !$bp->groups->new_group_id = groups_create_group( array( 'group_id' => $bp->groups->new_group_id, 'status' => $group_status, 'enable_forum' => $group_enable_forum, 'parent_id' => $parent_id ) ) ) {
 				bp_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss' ), 'error' );
 				bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create/step/' . bp_get_groups_current_create_step() ) );
 			}

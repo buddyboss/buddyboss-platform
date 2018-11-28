@@ -210,7 +210,7 @@ class BP_Nouveau_Object_Nav_Widget extends WP_Widget {
 	 */
 	public function __construct() {
 		$widget_ops = array(
-			'description' => __( 'Displays BuddyPress primary nav in the sidebar of your site. Make sure to use it as the first widget of the sidebar and only once.', 'buddyboss' ),
+			'description' => __( 'Displays BuddyBoss primary nav in the sidebar of your site. Make sure to use it as the first widget of the sidebar and only once.', 'buddyboss' ),
 			'classname'   => 'widget_nav_menu buddypress_object_nav',
 		);
 

@@ -680,14 +680,35 @@ function bp_get_group_type( $group = false ) {
 		$group =& $groups_template->group;
 	}
 
-	if ( 'public' == $group->status ) {
-		$type = __( "Public Group", 'buddyboss' );
-	} elseif ( 'hidden' == $group->status ) {
-		$type = __( "Hidden Group", 'buddyboss' );
-	} elseif ( 'private' == $group->status ) {
-		$type = __( "Private Group", 'buddyboss' );
+	if ( true === bp_disable_group_type_creation() ) {
+
+		$group_type = bp_groups_get_group_type( $group->id );
+		$group_type = bp_groups_get_group_type_object( $group_type )->labels['name'];
+
+		if ( 'public' == $group->status ) {
+			$string = isset( $group_type ) ? 'Public / '. $group_type  : 'Public Group';
+			$type = __( $string, 'buddyboss' );
+		} elseif ( 'hidden' == $group->status ) {
+			$string = isset( $group_type ) ? 'Hidden / '. $group_type  : 'Hidden Group';
+			$type = __( $string, 'buddyboss' );
+		} elseif ( 'private' == $group->status ) {
+			$string = isset( $group_type ) ? 'Private / '. $group_type  : 'Private Group';
+			$type = __( $string, 'buddyboss' );
+		} else {
+			$type = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
+		}
+
 	} else {
-		$type = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
+
+		if ( 'public' == $group->status ) {
+			$type = __( "Public Group", 'buddyboss' );
+		} elseif ( 'hidden' == $group->status ) {
+			$type = __( "Hidden Group", 'buddyboss' );
+		} elseif ( 'private' == $group->status ) {
+			$type = __( "Private Group", 'buddyboss' );
+		} else {
+			$type = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
+		}
 	}
 
 	/**
@@ -2315,6 +2336,234 @@ function bp_group_get_activity_feed_status( $group_id = false ) {
 	return apply_filters( 'bp_group_get_activity_feed_status', $activity_feed_status, $group_id );
 }
 
+
+/**
+ * Get the parent group ID for a specific group.
+ *
+ * To return the parent group regardless of visibility, leave the $user_id
+ * parameter empty. To return the parent only when visible to a specific user,
+ * specify a $user_id.
+ *
+ * @since BuddyBos 3.1.1
+ *
+ * @param int|bool    $group_id ID of the group.
+ * @param int|bool    $user_id  ID of a user to check group visibility for.
+ * @param string $context  See bp_include_group_by_context() for description.
+ *
+ * @return int ID of parent group.
+ */
+function bp_get_parent_group_id( $group_id = false, $user_id = false, $context = 'normal' ) {
+	if ( false === $group_id ) {
+		$group_id = bp_get_current_group_id();
+		if ( ! $group_id ) {
+			// If we can't resolve the group_id, don't proceed.
+			return 0;
+		}
+	}
+
+	$group     = groups_get_group( $group_id );
+	$parent_id = $group->parent_id;
+
+	// If the user is specified, is the parent group visible to that user?
+	// @TODO: This could make use of group visibility when available.
+	if ( false !== $user_id && ! bp_user_can( $user_id, 'bp_moderate' ) ) {
+		$parent_group = groups_get_group( $parent_id );
+		if ( ! bp_include_group_by_context( $parent_group, $user_id, $context ) ) {
+			$parent_id = 0;
+		}
+	}
+
+	return (int) $parent_id;
+}
+
+/**
+ * Get an array of possible parent group ids for a specific group and user.
+ *
+ * To be a candidate for group parenthood, the group cannot be a descendent of
+ * this group, and the user must be allowed to create child groups in that group.
+ *
+ * @since BuddyBos 3.1.1
+ *
+ * @param  int|bool   $group_id ID of the group.
+ * @param  int|bool   $user_id  ID of a user to check group visibility for.
+ *
+ * @return array Array of group objects.
+ */
+function bp_get_possible_parent_groups( $group_id = false, $user_id = false ) {
+	/*
+	 * Passing a group id of 0 would find all top-level groups, which could be
+	 * intentional. We only try to find the current group when the $group_id is false.
+	 */
+	if ( false === $group_id ) {
+		$group_id = bp_get_current_group_id();
+		if ( ! $group_id ) {
+			// If we can't resolve the group_id, don't proceed with a zero value.
+			return array();
+		}
+	}
+
+	if ( false === $user_id ) {
+		$user_id = bp_loggedin_user_id();
+		if ( ! $user_id ) {
+			// If we can't resolve the user_id, don't proceed with a zero value.
+			return array();
+		}
+	}
+
+	// First, get a list of descendants (don't pass a user id--we want them all).
+	$descendants = bp_get_descendent_groups( $group_id );
+	$exclude_ids = wp_list_pluck( $descendants, 'id' );
+	// Also exclude the current group.
+	$exclude_ids[] = $group_id;
+
+	$args = array(
+		'orderby'         => 'name',
+		'order'           => 'ASC',
+		'populate_extras' => false,
+		'exclude'         => $exclude_ids, // Exclude descendants and this group.
+		'show_hidden'     => true,
+		'per_page'        => false, // Do not limit the number returned.
+		'page'            => false, // Do not limit the number returned.
+	);
+
+	$possible_parents = groups_get_groups( $args );
+
+	return $possible_parents['groups'];
+}
+
+/**
+ * Get all groups that are descendants of a specific group.
+ *
+ * To return all descendent groups, leave the $user_id parameter empty. To return
+ * only those child groups visible to a specific user, specify a $user_id.
+ *
+ * @since BuddyBos 3.1.1
+ *
+ * @param int|bool    $group_id ID of the group.
+ * @param int|bool    $user_id  ID of a user to check group visibility for.
+ * @param string $context  See bp_include_group_by_context() for description.
+ *
+ * @return array Array of group objects.
+ */
+function bp_get_descendent_groups( $group_id = false, $user_id = false, $context = 'normal' ) {
+	/*
+	 * Passing a group id of 0 would find all top-level groups, which could be
+	 * intentional. We only try to find the current group when the $group_id is false.
+	 */
+	if ( false === $group_id ) {
+		$group_id = bp_get_current_group_id();
+		if ( ! $group_id ) {
+			// If we can't resolve the group_id, don't proceed with a zero value.
+			return array();
+		}
+	}
+
+	// Prepare the return set.
+	$groups = array();
+	// If a user ID has been specified, we filter hidden groups accordingly.
+	$filter = ( false !== $user_id && ! bp_user_can( $user_id, 'bp_moderate' ) );
+
+	// Start from the group specified.
+	$parents = array( $group_id );
+	$descendants = array();
+
+	// We work down the tree until no new children are found.
+	while ( $parents ) {
+		// Fetch all child groups.
+		$child_args = array(
+			'parent_id'   => $parents,
+			'show_hidden' => true,
+			'per_page'    => false,
+			'page'        => false,
+		);
+		$children = groups_get_groups( $child_args );
+
+		// Reset parents array to rebuild for next round.
+		$parents = array();
+		foreach ( $children['groups'] as $group ) {
+			if ( $filter ) {
+				if ( bp_include_group_by_context( $group, $user_id, $context ) ) {
+					$groups[] = $group;
+					$parents[] = $group->id;
+				}
+			} else {
+				$groups[] = $group;
+				$parents[] = $group->id;
+			}
+		}
+	}
+
+	return $groups;
+}
+
+/**
+ * Determine whether a group should be included in results sets for a
+ * user in a specific context.
+ *
+ * @since BuddyBos 3.1.1
+ *
+ * @param object|bool $group   BP_Groups_Group object to check.
+ * @param int|bool    $user_id ID of a user to check group visibility for.
+ * @param string $context 'normal' filters hidden groups only that the user doesn't belong to.
+ *                        'activity' includes only groups for which the user should see
+ *                        the activity streams.
+ *                        'exclude_hidden' filters all hidden groups out (for directories).
+ *
+ * @return bool True if group meets context requirements.
+ */
+function bp_include_group_by_context( $group = false, $user_id = false, $context = 'normal' ) {
+	$include = false;
+	if ( ! isset( $group->id ) ) {
+		return $include;
+	}
+
+	if ( current_user_can( 'bp_moderate' ) ) {
+		$include = true;
+	}
+
+	/*
+	 * 'exclude_hidden' is useful on directories, where hidden groups
+	 * are excluded by BP.
+	 */
+	if ( 'exclude_hidden' == $context ) {
+		if ( 'hidden' != $group->status ) {
+			$include = true;
+		}
+		/*
+		 * 'activity' includes only groups for which the user can view the activity streams.
+		 */
+	} elseif ( 'activity' == $context ) {
+		// For activity stream inclusion, require public status or membership.
+		if ( 'public' == $group->status || groups_is_user_member( $user_id, $group->id ) ) {
+			$include = true;
+		}
+		/*
+		 * 'mygroups' is useful on user-specific directories, where only groups the
+		 * user belongs to are returned, and the group status is irrelevant.
+		 */
+	} elseif ( 'mygroups' == $context ) {
+		if ( groups_is_user_member( $user_id, $group->id ) ) {
+			$include = true;
+		}
+	} elseif ( 'normal' == $context ) {
+		if ( 'hidden' != $group->status || groups_is_user_member( $user_id, $group->id ) ) {
+			$include = true;
+		}
+	}
+
+	/**
+	 * Filters whether this group should be included for this user and context combination.
+	 *
+	 * @since BuddyBos 3.1.1
+	 *
+	 * @param bool            $include Whether to include this group.
+	 * @param BP_Groups_Group $group   The group object in question.
+	 * @param int             $user_id ID of user to check.
+	 * @param string          $user_id Current context.
+	 */
+	return apply_filters( 'bp_include_group_by_context', $include, $group, $user_id, $context );
+}
+
 /**
  * Can a user send invitations in the specified group?
  *
@@ -3801,9 +4050,14 @@ function bp_group_has_members( $args = '' ) {
 
 	$exclude_admins_mods = 1;
 
-	if ( bp_is_group_members() ) {
+	if ( bp_is_group_members() || bp_is_group_leaders() ) {
 		$exclude_admins_mods = 0;
 	}
+
+	$group_role = false;
+	if ( bp_is_group_leaders() ) {
+		$group_role = 'admin,mod';
+    }
 
 	/*
 	 * Use false as the search_terms default so that BP_User_Query
@@ -3823,10 +4077,12 @@ function bp_group_has_members( $args = '' ) {
 		'exclude'             => false,
 		'exclude_admins_mods' => $exclude_admins_mods,
 		'exclude_banned'      => 1,
-		'group_role'          => false,
+		'group_role'          => $group_role,
 		'search_terms'        => $search_terms_default,
 		'type'                => 'last_joined',
 	), 'group_has_members' );
+
+	error_log(print_r($r,1));
 
 	/*
 	 * If an empty search_terms string has been passed,
