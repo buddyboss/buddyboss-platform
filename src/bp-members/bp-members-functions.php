@@ -2125,15 +2125,16 @@ function bp_core_map_user_registration( $user_id ) {
 
 	// Add the user's fullname to Xprofile.
 	if ( bp_is_active( 'xprofile' ) ) {
+		$user = get_user_by( 'ID', $user_id );
 		$firstname = bp_get_user_meta( $user_id, 'first_name', true );
-		$lastname = ' ' . bp_get_user_meta( $user_id, 'last_name', true );
-		$name = $firstname . $lastname;
+		$lastname = bp_get_user_meta( $user_id, 'last_name', true );
+		$nickname = $user->nickname;
 
-		if ( empty( $name ) || ' ' == $name ) {
-			$name = bp_get_user_meta( $user_id, 'nickname', true );
-		}
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, $firstname );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(),  $user_id, $lastname );
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(),  $user_id, $nickname );
 
-		xprofile_set_field_data( 1, $user_id, $name );
+		bp_xprofile_update_display_name( $user_id );
 	}
 }
 add_action( 'user_register', 'bp_core_map_user_registration' );
