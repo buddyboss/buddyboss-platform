@@ -30,11 +30,31 @@ switch ( bp_current_action() ) :
 		break;
 
 	case 'requests':
-		bp_get_template_part( 'members/single/friends/requests' );
+		bp_nouveau_member_hook( 'before', 'friends_content' );
+		?>
+
+        <div class="members requests" data-bp-list="members">
+
+            <div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-friend-requests-loading' ); ?></div>
+
+        </div><!-- .members.friend-requests -->
+
+		<?php
+		bp_nouveau_member_hook( 'after', 'friends_content' );
 		break;
 
 	case 'mutual':
-		bp_get_template_part( 'members/single/friends/mutual-friends' );
+		bp_nouveau_member_hook( 'before', 'friends_content' );
+		?>
+
+        <div class="members mutual-friends" data-bp-list="members">
+
+            <div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-mutual-friends-loading' ); ?></div>
+
+        </div><!-- .members.mutual-friends -->
+
+		<?php
+		bp_nouveau_member_hook( 'after', 'friends_content' );
 		break;
 
 	// Any other

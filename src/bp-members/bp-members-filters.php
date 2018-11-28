@@ -152,7 +152,7 @@ function bp_hide_front_page_for_others_profile ( $settings ) {
 add_filter( 'bp_after_nouveau_appearance_settings_parse_args', 'bp_hide_front_page_for_others_profile' );
 
 function bp_overwrite_login_form_email_field_label( $defaults ) {
-	$defaults['label_username'] = __( 'Email Address', 'bussyboss' );
+	$defaults['label_username'] = __( 'Email Address', 'buddyboss' );
 
 	return $defaults;
 }

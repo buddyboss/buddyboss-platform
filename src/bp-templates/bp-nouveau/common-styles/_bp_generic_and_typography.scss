@@ -103,11 +103,11 @@ body.buddypress { // add weight
 		h4,
 		h5,
 		h6 {
-			clear: none;
+			//clear: none;
 			// some themes set massive margins ensure we avoid these in bp elements
-			margin: 1em 0;
+			//margin: 1em 0;
 			// some themes add padding top lets manage that generically sitewide
-			padding: 0;
+			//padding: 0;
 		}
 	}
 }

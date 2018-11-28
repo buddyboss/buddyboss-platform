@@ -1,6 +1,6 @@
 <?php
 /**
- * BP Nouveau Component's  filters template.
+ * BP Nouveau Component's directory filters template.
  *
  * @since BuddyPress 3.0.0
  * @version 3.0.0
@@ -15,6 +15,7 @@ if ( bp_current_component() === 'activity' ) {
 
 
 <div id="dir-filters" class="component-filters clearfix">
+	
 	<div id="<?php bp_nouveau_filter_container_id(); ?>" class="last filter">
 		<label class="bp-screen-reader-text" for="<?php bp_nouveau_filter_id(); ?>">
 			<span ><?php bp_nouveau_filter_label(); ?></span>

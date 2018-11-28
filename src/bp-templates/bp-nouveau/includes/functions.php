@@ -44,6 +44,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 	);
 
 	if ( ! empty( $_POST ) ) {
+
 		$post_query = wp_parse_args( $_POST, $post_query );
 
 		// Make sure to transport the scope, filter etc.. in HeartBeat Requests
@@ -109,6 +110,12 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 		$qs[] = 'offset=' . intval( $post_query['offset'] );
 	}
 
+	if ( isset( $_POST['member_type_id'] ) && '' !== $_POST['member_type_id'] && 'all' !== $_POST['member_type_id'] ) {
+		$member_type_id = $_POST['member_type_id'];
+		$member_type_key= get_post_meta( $member_type_id, '_bp_member_type_key', true);
+		$qs[] = 'member_type=' . $member_type_key;
+	}
+
 	$object_search_text = bp_get_search_default_text( $object );
 	if ( ! empty( $post_query['search_terms'] ) && $object_search_text != $post_query['search_terms'] && 'false' != $post_query['search_terms'] && 'undefined' != $post_query['search_terms'] ) {
 		$qs[] = 'search_terms=' . urlencode( $_POST['search_terms'] );
@@ -132,6 +139,7 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 
 	// Now pass the querystring to override default values.
 	$query_string = empty( $qs ) ? '' : join( '&', (array) $qs );
+
 
 	// List the variables for the filter
 	list( $filter, $scope, $page, $search_terms, $extras ) = array_values( $post_query );
@@ -593,7 +601,7 @@ function bp_nouveau_get_temporary_setting( $option = '', $retval = false ) {
  */
 function bp_nouveau_get_appearance_settings( $option = '' ) {
 	$default_args = array(
-		'avatar_style'       => 0,
+		'avatar_style'       => 1,
 		'user_front_page'    => 0,
 		'user_nav_display'   => 0, // O is default (horizontally). 1 is vertically.
 		'user_nav_tabs'      => 0,
@@ -883,6 +891,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'loading',
 			'message' => __( 'Requesting the group members. Please wait.', 'buddyboss' ),
 		),
+		'group-leaders-loading' => array(
+			'type'    => 'loading',
+			'message' => __( 'Requesting the group leaders. Please wait.', 'buddyboss' ),
+		),
 		'group-members-none' => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, there were no group members found.', 'buddyboss' ),
@@ -958,6 +970,14 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		'member-friends-loading' => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading the member\'s friends. Please wait.', 'buddyboss' ),
+		),
+		'member-mutual-friends-loading' => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading the member\'s mutual connections. Please wait.', 'buddyboss' ),
+		),
+		'member-friend-requests-loading' => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading the member\'s connection requests. Please wait.', 'buddyboss' ),
 		),
 		'member-groups-loading' => array(
 			'type'    => 'loading',

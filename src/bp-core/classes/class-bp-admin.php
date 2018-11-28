@@ -467,6 +467,7 @@ class BP_Admin {
 	 * Add Settings link to plugins area.
 	 *
 	 * @since BuddyPress 1.6.0
+	 * @since BuddyBoss 3.1.1 Updated the Settings path
 	 *
 	 * @param array  $links Links array in which we would prepend our link.
 	 * @param string $file  Current plugin basename.
@@ -481,8 +482,8 @@ class BP_Admin {
 
 		// Add a few links to the existing links array.
 		return array_merge( $links, array(
-			'settings' => '<a href="' . esc_url( add_query_arg( array( 'page' => 'bp-components' ), bp_get_admin_url( $this->settings_page ) ) ) . '">' . esc_html__( 'Settings', 'buddyboss' ) . '</a>',
-			'about'    => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddypress' ) ) . '">' . esc_html_x( 'About', 'Colloquial alternative to "learn about BuddyBoss"', 'buddyboss' ) . '</a>'
+			'settings'    => '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-components' ) ) . '">' . esc_html_x( 'Settings', 'buddyboss' ) . '</a>',
+			'about'    => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddypress' ) ) . '">' . esc_html_x( 'About', 'buddyboss' ) . '</a>'
 		) );
 	}
 

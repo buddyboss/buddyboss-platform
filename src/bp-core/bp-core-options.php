@@ -48,6 +48,12 @@ function bp_get_default_options() {
 
 		'bp-display-name-format'			   => 'nickname',
 
+		// Enable/Disable Member Type.
+		'bp-member-type-enable-disable'         => false,
+
+		// Enable/Disable Display on profiles.
+		'bp-member-type-display-on-profile'         => false,
+
 		/* Blogs *************************************************************/
 
 		// Used to decide if blogs need indexing.
@@ -72,6 +78,9 @@ function bp_get_default_options() {
 
 		// Group Cover image uploads.
 		'bp-disable-group-cover-image-uploads' => false,
+
+		// Group Types.
+		'bp-disable-group-type-creation' => false,
 
 		// Allow users to delete their own accounts.
 		'bp-disable-account-deletion'          => false,
@@ -494,7 +503,7 @@ function bp_disable_profile_sync( $default = false ) {
 }
 
 /**
- * Is advacned profile search disabled?
+ * Is advanced profile search disabled?
  *
  * @since BuddyBoss 3.1.1
  *
@@ -631,6 +640,27 @@ function bp_disable_group_cover_image_uploads( $default = false ) {
 	 * @param bool $value Whether or not members are able to upload thier groups cover images.
 	 */
 	return (bool) apply_filters( 'bp_disable_group_cover_image_uploads', (bool) bp_get_option( 'bp-disable-group-cover-image-uploads', $default ) );
+}
+
+/**
+ * Are group types disabled?
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if group types are disabled, otherwise false.
+ */
+function bp_disable_group_type_creation( $default = false ) {
+
+	/**
+	 * Filters whether or not members are able to create group types.
+	 *
+	 * @since BuddyPress 2.4.0
+	 *
+	 * @param bool $value Whether or not members are able to create groups types.
+	 */
+	return (bool) apply_filters( 'bp_disable_group_type_creation', (bool) bp_get_option( 'bp-disable-group-type-creation', $default ) );
 }
 
 /**
@@ -848,4 +878,46 @@ function bp_force_friendship_to_message( $default = false ) {
 	 * @param bool $value Whether or not friendship is forced to message each other.
 	 */
 	return (bool) apply_filters( 'bp_force_friendship_to_message', (bool) bp_get_option( 'bp-force-friendship-to-message', $default ) );
+}
+
+/**
+ * Is member type disabled?
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if member type enabled, otherwise false.
+ */
+function bp_member_type_enable_disable( $default = false ) {
+
+	/**
+	 * Filters whether member type is enabled or not.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param bool $value Whether member type is enabled or not.
+	 */
+	return (bool) apply_filters( 'bp_member_type_enable_disable', (bool) bp_get_option( 'bp-member-type-enable-disable', $default ) );
+}
+
+/**
+ * Is display on profile disabled?
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if member type enabled, otherwise false.
+ */
+function bp_member_type_display_on_profile( $default = false ) {
+
+	/**
+	 * Filters whether member type is enabled or not.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param bool $value Whether member type is enabled or not.
+	 */
+	return (bool) apply_filters( 'bp_member_type_display_on_profile', (bool) bp_get_option( 'bp-member-type-display-on-profile', $default ) );
 }

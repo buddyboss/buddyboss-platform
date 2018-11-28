@@ -40,6 +40,9 @@ window.bp = window.bp || {};
             
             // Toggle Grid/List View
 			this.switchGridList();
+
+			//this.memberPreFilter();
+			$.ajaxPrefilter( this.memberPreFilter );
 		},
 
 		/**
@@ -741,7 +744,14 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
-				target.text( target.data('title') );
+
+				//support for buddyboss theme for button actions and icons and texts
+				if ( $(document.body).hasClass('buddyboss-theme') ) {
+					target.attr( 'data-balloon', target.data('title') );
+				} else {
+					target.text( target.data('title') );
+				}
+
 				target.removeClass('bp-toggle-action-button');
 				target.addClass('bp-toggle-action-button-clicked');
 				return false;
@@ -855,7 +865,14 @@ window.bp = window.bp || {};
 			var target = $( event.currentTarget );
 
 			if ( target.hasClass( 'bp-toggle-action-button-clicked' ) && ! target.hasClass( 'loading' ) ) {
-				target.text( target.data('title-displayed') ); // change text to displayed context
+
+				//support for buddyboss theme for button actions and icons and texts
+				if ( $(document.body).hasClass('buddyboss-theme') ) {
+					target.attr( 'data-balloon', target.data('title-displayed') );
+				} else {
+					target.text( target.data('title-displayed') ); // change text to displayed context
+				}
+
 				target.removeClass('bp-toggle-action-button-clicked'); // remove class to detect event
 				target.addClass('bp-toggle-action-button'); // add class to detect event to confirm
 			}
@@ -868,7 +885,14 @@ window.bp = window.bp || {};
 		buttonRevertAll: function() {
 			$.each( $( '#buddypress [data-bp-btn-action]' ), function() {
 				if ( $(this).hasClass( 'bp-toggle-action-button-clicked' ) && ! $(this).hasClass( 'loading' ) ) {
-					$(this).text( $(this).data('title-displayed') ); // change text to displayed context
+
+					//support for buddyboss theme for button actions and icons and texts
+					if ( $(document.body).hasClass('buddyboss-theme') ) {
+						$(this).attr( 'data-balloon', $(this).data('title-displayed') );
+					} else {
+						$(this).text( $(this).data('title-displayed') ); // change text to displayed context
+					}
+
 					$(this).removeClass('bp-toggle-action-button-clicked'); // remove class to detect event
 					$(this).addClass('bp-toggle-action-button'); // add class to detect event to confirm
 					$(this).trigger('blur');
@@ -956,6 +980,12 @@ window.bp = window.bp || {};
 
 			// Request the page
 			self.objectRequest( queryData );
+		},
+		memberPreFilter: function( options ) {
+			if ( typeof options.data === 'string' && -1 !== options.data.indexOf('action=members_filter') ) {
+				var	member_type_id = $('#member-type-order-by').find(':selected').val();
+				options.data += '&member_type_id=' + member_type_id;
+			}
 		}
 	};
 

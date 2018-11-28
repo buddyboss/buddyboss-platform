@@ -170,6 +170,7 @@
 			.component-filters {
 				float: right;
 				margin-top: 0;
+				margin-left: 0;
 				width: auto;
 
 				select {
@@ -208,18 +209,18 @@
 	.subnav-filters .grid-filters {
 		float: right;
 		padding: 0;
-		margin-left: 10px;
 	}
 
 } // close .buddypress-wrap
 
-.grid-filters {
+.buddypress-wrap .grid-filters {
 	display: flex;
 	align-items: center;
 	border: 1px solid #eee;
 	height: 36px;
 
 	a {
+		border-bottom: 0;
 		color: #ccc;
 		padding: 0 6px;
 		line-height: 36px;

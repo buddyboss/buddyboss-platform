@@ -24,8 +24,12 @@
         <?php bp_get_template_part( 'common/filters/grid-filters' ); ?>
     <?php endif; ?>
 
-	<?php if ( ! ( bp_is_user() && ! bp_is_current_action( 'requests' ) ) ): ?>
+	<?php if ( ! bp_is_user() ): ?>
 		<?php bp_get_template_part( 'common/filters/directory-filters' ); ?>
 	<?php endif; ?>
+
+    <?php if ( 'members' == bp_current_component() ): ?>
+        <?php bp_get_template_part( 'common/filters/member-filters' ); ?>
+    <?php endif; ?>
 
 </div><!-- search & filters -->

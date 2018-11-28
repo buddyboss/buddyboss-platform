@@ -26,8 +26,90 @@ function xprofile_add_admin_menu() {
 	}
 
 	add_users_page( _x( 'Profile Fields', 'xProfile admin page title', 'buddyboss' ), _x( 'Profile Fields', 'Admin Users menu', 'buddyboss' ), 'manage_options', 'bp-profile-setup', 'xprofile_admin' );
+
+	// Check Member Type enabled.
+	$is_member_type_enabled = bp_member_type_enable_disable();
+	$is_profile_search_enabled = bp_disable_advanced_profile_search();
+
+	if ( true === $is_member_type_enabled ) {
+		add_users_page( _x( 'Profile Types', 'Profile Types admin page title', 'buddyboss' ),
+			_x( 'Profile Types', 'Admin Users menu', 'buddyboss' ),
+			'manage_options',
+			'edit.php?post_type=bp-member-type',
+			'' );
+	}
+
+	if ( false === $is_profile_search_enabled ) {
+		add_users_page( _x( 'Profile Search', 'Profile Search admin page title', 'buddyboss' ),
+			_x( 'Profile Search', 'Admin Users menu', 'buddyboss' ),
+			'manage_options',
+			'edit.php?post_type=bp_ps_form',
+			'' );
+	}
 }
 add_action( bp_core_admin_hook(), 'xprofile_add_admin_menu' );
+
+/**
+ * Function for opening the users tab while on Profile Types
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_member_type_show_correct_current_menu(){
+	$screen = get_current_screen();
+	if ( $screen->id == 'bp-member-type' || $screen->id == 'edit-bp-member-type' ) {
+		?>
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				$('#menu-users').addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
+				$('#menu-users > a').addClass('wp-has-current-submenu').removeClass('wp-not-current-submenu');
+			});
+		</script>
+		<?php
+	}
+	if ( $screen->id == 'bp-member-type' ) {
+		?>
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				var parent_div = $('li').find('a[href$="bp-profile-setup"]').parent();
+				$(parent_div).closest('li').addClass('bp-profile-setup');
+				$('li.bp-profile-setup').next().addClass('current');
+			});
+		</script>
+		<?php
+	}
+	if ( $screen->id == 'edit-bp-member-type' ) {
+		?>
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				var parent_div = $('li').find('a[href$="bp-profile-setup"]').parent();
+				$(parent_div).closest('li').addClass('bp-profile-setup');
+				$('li.bp-profile-setup').next().addClass('current');
+			});
+		</script>
+		<?php
+	}
+}
+add_action('admin_head', 'bp_member_type_show_correct_current_menu', 50);
+
+/**
+ * Function for opening the users tab while on Profile Search
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_profile_search_show_correct_current_menu(){
+	$screen = get_current_screen();
+	if ( $screen->id == 'bp_ps_form' || $screen->id == 'edit-bp_ps_form' ) {
+		?>
+		<script type="text/javascript">
+			jQuery(document).ready(function($) {
+				$('#menu-users').addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
+				$('#menu-users > a').addClass('wp-has-current-submenu').removeClass('wp-not-current-submenu');
+			});
+		</script>
+		<?php
+	}
+}
+add_action('admin_head', 'bp_profile_search_show_correct_current_menu', 50);
 
 /**
  * Handles all actions for the admin area for creating, editing and deleting
@@ -809,7 +891,7 @@ function bp_xprofile_admin_form_field_types( $select_field_type ) {
 
 	// Loop through each category and output form <options>.
 	foreach ( $categories as $category => $fields ) {
-		printf( '<optgroup label="%1$s">', esc_attr( $category ) );  // Already i18n'd in each profile type class.
+		printf( '<optgroup label="%1$s">', esc_attr( $category ) );  // Already i18n'd in each member type class.
 
 		// Sort these fields types alphabetically.
 		uasort( $fields, function( $a, $b ) { return strnatcmp( $a[1]->name, $b[1]->name ); } );

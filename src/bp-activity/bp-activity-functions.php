@@ -243,30 +243,6 @@ function bp_activity_update_mention_count_for_user( $user_id, $activity_id, $act
 }
 
 /**
- * Determine a user's "mentionname", the name used for that user in @-mentions.
- *
- * @since BuddyPress 1.9.0
- *
- * @param int|string $user_id ID of the user to get @-mention name for.
- * @return string $mentionname User name appropriate for @-mentions.
- */
-function bp_activity_get_user_mentionname( $user_id ) {
-	$mentionname = '';
-
-	$userdata = bp_core_get_core_userdata( $user_id );
-
-	if ( $userdata ) {
-		if ( bp_is_username_compatibility_mode() ) {
-			$mentionname = str_replace( ' ', '-', $userdata->user_login );
-		} else {
-			$mentionname = get_user_meta( $userdata->ID, 'nickname', true );
-		}
-	}
-
-	return $mentionname;
-}
-
-/**
  * Get a user ID from a "mentionname", the name used for a user in @-mentions.
  *
  * @since BuddyPress 1.9.0
@@ -4194,14 +4170,6 @@ function bp_activity_transition_post_type_comment_status( $new_status, $old_stat
 	remove_filter( 'bp_akismet_get_activity_types', $comment_akismet_history );
 }
 add_action( 'transition_comment_status', 'bp_activity_transition_post_type_comment_status', 10, 3 );
-
-function bp_at_mention_default_options() {
-	return apply_filters( 'bp_at_mention_js_options', [
-		'selectors' => [ '.bp-suggestions', '#comments form textarea', '.wp-editor-area' ],
-		'insert_tpl' => '@${ID}',
-		'display_tpl' => '<li data-value="@${ID}"><img src="${image}" /><span class="username">@${ID}</span><small>${name}</small></li>'
-	] );
-}
 
 /**
  * Start following a user's activity.

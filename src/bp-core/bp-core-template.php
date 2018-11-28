@@ -2555,6 +2555,20 @@ function bp_is_user_friend_requests() {
 	return (bool) ( bp_is_user_friends() && bp_is_current_action( 'requests' ) );
 }
 
+
+/**
+ * Is the current page a user's Mutual Connections page?
+ *
+ * Eg http://example.com/members/joe/friends/mutual/.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return bool True if the current page is a user's Mutual Connections page.
+ */
+function bp_is_user_mutual_friends() {
+	return (bool) ( bp_is_user_friends() && bp_is_current_action( 'mutual' ) );
+}
+
 /**
  * Is this a user's notifications page?
  *
@@ -2773,6 +2787,25 @@ function bp_is_group_members() {
 	}
 
 	if ( bp_is_group_home() && ! bp_is_active( 'activity' ) && ! bp_is_group_custom_front() ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+/**
+ * Is the current page a group's Leaders page?
+ *
+ * Eg http://example.com/groups/mygroup/members/leaders.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return bool True if the current page is part of a group's Members page.
+ */
+function bp_is_group_leaders() {
+	$retval = false;
+
+	if ( bp_is_single_item() && bp_is_groups_component() && 'leaders' == bp_action_variable( 0 ) ) {
 		$retval = true;
 	}
 

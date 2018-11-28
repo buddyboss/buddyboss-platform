@@ -8,10 +8,11 @@ $options = array(
 $F = bp_profile_search_escaped_form_data ( $form_id );
 ?>
 
-<aside id="bp-profile-search-form-outer" class="widget bp-profile-search-wrap">
-	<h2 class="widget-title bps-form-title"><?php echo $F->title; ?></h2>
+<aside id="bp-profile-search-form-outer" class="bp-profile-search-widget">
 
-	<form action="<?php echo $F->action; ?>" method="<?php echo $F->method; ?>" id="<?php echo $F->unique_id; ?>" class="bps-form">
+	<h2 class="bps-form-title"><?php echo $F->title; ?></h2>
+
+	<form action="<?php echo $F->action; ?>" method="<?php echo $F->method; ?>" id="<?php echo $F->unique_id; ?>" class="bps-form standard-form">
 
 	<?php
 		foreach ($F->fields as $f) {
@@ -124,7 +125,7 @@ $F = bp_profile_search_escaped_form_data ( $form_id );
 								</label>
 							</div>
 						<?php } ?>
-						<a href="javascript:bps_clear_radio('<?php echo $id; ?>_wrap')"><?php echo __('Clear', 'buddypress'); ?></a>
+						<a href="javascript:bps_clear_radio('<?php echo $id; ?>_wrap')"><?php echo __('Clear', 'buddyboss'); ?></a>
 						<?php
 					break;
 
@@ -154,8 +155,9 @@ $F = bp_profile_search_escaped_form_data ( $form_id );
 		} ?>
 
 		<div class="submit-wrapper">
-			<input type="submit" value="<?php echo __('Search', 'buddypress'); ?>" />
+			<input type="submit" value="<?php echo __('Search', 'buddyboss'); ?>" />
 		</div>
 
 	</form>
+
 </aside>

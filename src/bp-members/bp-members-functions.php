@@ -2125,15 +2125,16 @@ function bp_core_map_user_registration( $user_id ) {
 
 	// Add the user's fullname to Xprofile.
 	if ( bp_is_active( 'xprofile' ) ) {
+		$user = get_user_by( 'ID', $user_id );
 		$firstname = bp_get_user_meta( $user_id, 'first_name', true );
-		$lastname = ' ' . bp_get_user_meta( $user_id, 'last_name', true );
-		$name = $firstname . $lastname;
+		$lastname = bp_get_user_meta( $user_id, 'last_name', true );
+		$nickname = $user->nickname;
 
-		if ( empty( $name ) || ' ' == $name ) {
-			$name = bp_get_user_meta( $user_id, 'nickname', true );
-		}
+		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user_id, $firstname );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(),  $user_id, $lastname );
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(),  $user_id, $nickname );
 
-		xprofile_set_field_data( 1, $user_id, $name );
+		bp_xprofile_update_display_name( $user_id );
 	}
 }
 add_action( 'user_register', 'bp_core_map_user_registration' );
@@ -2819,4 +2820,1043 @@ function bp_custom_display_name_format( $display_name, $user_id = null ) {
 	}
 
 	return $display_name;
+}
+
+/**
+ * Function for enable/disable member type functionality.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_register_member_type_section() {
+
+	$is_member_type_enabled = bp_member_type_enable_disable();
+
+	if ( false === $is_member_type_enabled ) {
+
+		// action for remove member type metabox.
+		add_action( 'bp_members_admin_user_metaboxes', 'bp_remove_member_type_metabox_globally' );
+
+		return;
+	}
+
+	// Member Types
+	register_post_type(
+		bp_get_member_type_post_type(),
+		apply_filters( 'bp_register_member_type_post_type', array(
+			'description'       => _x( 'BuddyPress profile type', 'profile type post type description', 'buddyboss' ),
+			'labels'            => bp_get_member_type_post_type_labels(),
+			'public'            => false,
+			'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),
+			'query_var'         => false,
+			'rewrite'           => false,
+			'show_in_admin_bar' => false,
+			'show_in_menu' 		=> '',
+			'map_meta_cap' 		=> true,
+			'show_in_rest' 		=> true,
+			'show_ui'           => bp_current_user_can( 'bp_moderate' ),
+			'supports'          => bp_get_member_type_post_type_supports(),
+		) )
+	);
+
+
+
+	// remove users of a specific member type from members directory
+	add_action( 'bp_ajax_querystring', 'bp_member_type_exclude_users_from_directory_and_searches', 999, 2 );
+
+	// set member type while update user profile
+	//add_action( 'set_user_role', 'bp_update_user_member_type_type_set', 10, 2 );
+
+	// fix all member count
+	add_filter( 'bp_core_get_active_member_count', 'bp_fixed_all_member_type_count', 999 );
+
+	// action for changing bp query of member types.
+	add_action( 'bp_pre_user_query',  'bp_member_type_query', 1, 1 );
+
+	// action for remove member type metabox.
+	add_action( 'bp_members_admin_user_metaboxes', 'bp_remove_member_type_metabox' );
+
+	//add column
+	add_filter( 'manage_'. bp_get_member_type_post_type() . '_posts_columns', 'bp_member_type_add_column' );
+
+	// action for adding a sortable column name.
+	add_action( 'manage_'. bp_get_member_type_post_type() . '_posts_custom_column', 'bp_member_type_show_data' , 10, 2 );
+
+	//sortable columns
+	add_filter( 'manage_edit-' . bp_get_member_type_post_type() . '_sortable_columns', 'bp_member_type_add_sortable_columns' );
+
+	// request filter.
+	add_action( 'load-edit.php', 'bp_member_type_add_request_filter' );
+
+	//hide quick edit link on the custom post type list screen
+	add_filter( 'post_row_actions', 'bp_member_type_hide_quickedit', 10, 2 );
+
+	// filter for adding body class where the shortcode added.
+	add_filter( 'body_class', 'bp_member_type_shortcode_add_body_class' );
+
+	// Hook for creating a member type shortcode.
+	add_shortcode( 'profile', 'bp_member_type_shortcode_callback' );
+
+	// action for adding the js for the member type post type.
+	add_action('admin_enqueue_scripts', 'bp_member_type_changing_listing_label');
+
+}
+
+// Register enable/disable member type functionality.
+add_action( 'bp_init', 'bp_register_member_type_section' );
+
+// action for registering active member types.
+add_action( 'bp_register_member_types', 'bp_register_active_member_types' );
+
+/**
+ * Output the name of the member type post type.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return string   custom post type of member type.
+ */
+function bp_member_type_post_type() {
+	echo bp_get_member_type_post_type();
+}
+
+/**
+ * Returns the name of the member type post type.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return string The name of the member type post type.
+ */
+function bp_get_member_type_post_type() {
+
+	/**
+	 * Filters the name of the member type post type.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $value Member Type post type name.
+	 */
+	return apply_filters( 'bp_get_member_type_post_type', buddypress()->member_type_post_type );
+}
+
+/**
+ * Return labels used by the member type post type.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return array
+ */
+function bp_get_member_type_post_type_labels() {
+
+	/**
+	 * Filters member type post type labels.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param array $value Associative array (name => label).
+	 */
+	return apply_filters( 'bp_get_member_type_post_type_labels', array(
+		'add_new_item'          => _x( 'New Profile Type', 'profile type post type label', 'buddyboss' ),
+		'all_items'             => _x( 'Profile Types', 'profile type post type label', 'buddyboss' ),
+		'edit_item'             => _x( 'Edit Profile Type', 'profile type post type label', 'buddyboss' ),
+		'menu_name'             => _x( 'Users', 'profile type post type name', 'buddyboss' ),
+		'name'                  => _x( 'Profile Types', 'profile type post type label', 'buddyboss' ),
+		'new_item'              => _x( 'New Profile Type', 'profile type post type label', 'buddyboss' ),
+		'not_found'             => _x( 'No Profile Types found', 'profile type post type label', 'buddyboss' ),
+		'not_found_in_trash'    => _x( 'No Profile Types found in trash', 'profile type post type label', 'buddyboss' ),
+		'search_items'          => _x( 'Search Profile Types', 'profile type post type label', 'buddyboss' ),
+		'singular_name'         => _x( 'Profile Type', 'profile type post type singular name', 'buddyboss' ),
+	) );
+}
+
+/**
+ * Return array of features that the member type post type supports.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return array
+ */
+function bp_get_member_type_post_type_supports() {
+
+	/**
+	 * Filters the features that the member type post type supports.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param array $value Supported features.
+	 */
+	return apply_filters( 'bp_get_member_type_post_type_supports', array(
+		'editor',
+		'page-attributes',
+		'title',
+	) );
+}
+
+/**
+ * Return member type key.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $post_id
+ * @return mixed|string
+ */
+function bp_get_member_type_key( $post_id ) {
+
+	if ( empty( $post_id) ) {
+		return '';
+	}
+
+	$key = get_post_meta( $post_id, '_bp_member_type_key', true );
+
+	// Fallback to legacy way of generating member type key from singular label
+	// if Key is not set by admin user
+	if ( empty( $key ) ) {
+		$key = strtolower( get_post_meta( $post_id, '_bp_member_type_label_singular_name', true ) );
+		$key = str_replace( array( ' ', ',' ), array( '-', '-' ), $key );
+	}
+
+	return apply_filters( 'bp_get_member_type_key', $key );
+}
+
+/**
+ * Function for getting members by role.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $role
+ *
+ * @return array
+ */
+function bp_get_member_type_by_wp_role($role){
+	$bp_member_type_ids = array();
+	$post_type = bp_get_member_type_post_type();
+
+	$bp_member_type_args = array(
+		'post_type' => $post_type,
+		'nopaging' => true,
+	);
+
+	$bp_member_type_query = new WP_Query($bp_member_type_args);
+	if ($bp_member_type_query->have_posts()):
+		while ($bp_member_type_query->have_posts()):
+			$bp_member_type_query->the_post();
+
+			$post_id = get_the_ID();
+			$selected_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
+			$selected_roles = (array) $selected_roles;
+			$singular_name = strtolower(get_post_meta( $post_id, '_bp_member_type_label_singular_name', true ));
+			$name = bp_get_member_type_key( $post_id );
+			if( in_array($role, $selected_roles) ){
+				$bp_member_type_ids[] = array(
+					'ID' => $post_id,
+					'name' => $name,
+					'nice_name' => $singular_name,
+				);
+			}
+		endwhile;
+	endif;
+	wp_reset_query();
+	wp_reset_postdata();
+	return $bp_member_type_ids;
+}
+
+/**
+ * Function for removing the role from member type.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $wp_roles
+ * @param $member_type
+ */
+function bp_remove_member_type_to_roles($wp_roles, $member_type){
+	$users = bp_get_users_by_roles($wp_roles);
+	if( isset($users) && !empty($users) ){
+		foreach($users as $single){
+			bp_remove_member_type($single, $member_type);
+		}
+	}
+}
+
+/**
+ * Function for setting the member type to roles.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $wp_roles
+ * @param $member_type
+ */
+function bp_set_member_type_to_roles($wp_roles, $member_type){
+	$users = bp_get_users_by_roles($wp_roles);
+	if( isset($users) && !empty($users) ){
+		foreach($users as $single){
+			bp_set_user_member_type($single, $member_type);
+		}
+	}
+}
+
+/**
+ * Function for getting a user by their role.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $roles
+ *
+ * @return array
+ */
+function bp_get_users_by_roles($roles) {
+	$roles = (array) $roles;
+	$users = array();
+
+	foreach ($roles as $role) :
+		$users_query = new WP_User_Query( array(
+			'fields' => 'ID',
+			'role' => $role,
+		) );
+		$results = $users_query->get_results();
+		if ($results) $users = array_merge($users, $results);
+	endforeach;
+
+	return $users;
+}
+
+/**
+ * Set type for a member profile.
+ * Set member types on save_post
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param int    $user_id     ID of the user.
+ * @param string $member_type Member type.
+ * @param bool   $append      Optional. True to append this to existing types for user,
+ *                            false to replace. Default: false.
+ * @return See {@see bp_set_object_terms()}.
+ */
+function bp_set_user_member_type( $user_id, $member_type, $append = false ) {
+
+	$retval = bp_set_object_terms( $user_id, $member_type, 'bp_member_type', $append );
+
+	// Bust the cache if the type has been updated.
+	if ( ! is_wp_error( $retval ) ) {
+		wp_cache_delete( $user_id, 'bp_member_member_type' );
+
+		/**
+		 * Fires just after a user's member type has been changed.
+		 *
+		 * @since BuddyPress (2.2.0)
+		 *
+		 * @param int    $user_id     ID of the user whose member type has been updated.
+		 * @param string $member_type Member type.
+		 * @param bool   $append      Whether the type is being appended to existing types.
+		 */
+		do_action( 'bp_set_user_member_type', $user_id, $member_type, $append );
+	}
+
+	return $retval;
+}
+
+/**
+ * Gets member types id.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @global type $wpdb
+ *
+ * @param type $type_name
+ *
+ * @return type int
+ */
+function bp_member_type_type_id( $type_name ) {
+	global $wpdb;
+	$type_name = strtolower($type_name);
+	$type_name = str_replace(array(' ', ','), array('-', '-'), $type_name);
+
+	$type_id = $wpdb->get_col( "SELECT t.term_id FROM {$wpdb->prefix}terms t INNER JOIN {$wpdb->prefix}term_taxonomy tt ON t.term_id = tt.term_id WHERE t.slug = '" . $type_name . "' AND  tt.taxonomy = 'bp_member_type' " );
+	return ! isset( $type_id[ 0 ] ) ? '' : $type_id[ 0 ];
+}
+
+/**
+ * Gets member types term taxonomy id.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @global type $wpdb
+ * @param type $type_name
+ * @return type int
+ */
+function bp_member_type_term_taxonomy_id( $type_name ) {
+	global $wpdb;
+	$type_name = strtolower($type_name);
+	$type_name = str_replace(array(' ', ','), array('-', '-'), $type_name);
+
+	$type_id = $wpdb->get_col( "SELECT tt.term_taxonomy_id FROM {$wpdb->prefix}term_taxonomy tt INNER JOIN {$wpdb->prefix}terms t ON t.term_id = tt.term_id WHERE t.slug = '" . $type_name . "' AND  tt.taxonomy = 'bp_member_type' " );
+	return ! isset( $type_id[ 0 ] ) ? '' : $type_id[ 0 ];
+}
+
+/**
+ * Get Member post by member type.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @global type $wpdb
+ * @param type $member_type
+ * @return type array
+ */
+function bp_member_type_post_by_type($member_type) {
+	global $wpdb;
+
+	$query = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
+	$query = $wpdb->prepare( $query, '_bp_member_type_key', $member_type );
+	$post_id = $wpdb->get_var( $query );
+
+	// Fallback to legacy way to retrieve member type from name by using singular label
+	if ( ! $post_id ) {
+		$name = str_replace( array( '-', '-' ), array( ' ', ',' ), $member_type );
+		$query = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
+		$query = $wpdb->prepare( $query, '_bp_member_type_label_singular_name', $name );
+		$post_id = $wpdb->get_var( $query );
+	}
+
+	return apply_filters( 'bp_member_type_post_by_type', $post_id );
+}
+
+/**
+ * Gets member by type id.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @global type $wpdb
+ * @param type $type_id
+ * @return type array
+ */
+function bp_member_type_by_type( $type_id ) {
+	global $wpdb;
+
+	$member_ids = array();
+
+	if ( empty ( $type_id ) ) {
+		return $member_ids;
+	}
+
+	$member_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
+
+	return $member_ids;
+}
+
+/**
+ * Function for getting an active member by type.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $type_id
+ *
+ * @return array
+ */
+function bp_active_member_type_by_type( $type_id ) {
+	global $wpdb;
+
+	$member_ids = array();
+
+	if ( empty ( $type_id ) ) {
+		return $member_ids;
+	}
+
+	$get_user_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
+
+	if ( isset( $get_user_ids ) && !empty( $get_user_ids ) ) {
+		foreach ( $get_user_ids as $single ) {
+			$member_activity = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}bp_activity a WHERE a.user_id = " . $single );
+			if ( $member_activity > 0 ) {
+				$member_ids[] = $single;
+			}
+		}
+	}
+
+	return $member_ids;
+}
+
+/**
+ * Get all member types.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @global type $wpdb
+ * @return type array
+ */
+function bp_get_active_member_types() {
+
+	global $wpdb;
+	$query = "SELECT DISTINCT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s ORDER BY menu_order";
+
+	return $wpdb->get_col( $wpdb->prepare( $query, bp_get_member_type_post_type(), 'publish' ) );
+}
+
+/**
+ * Get all plural labels.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return type array
+ */
+function bp_plural_labels_array() {
+	$member_types = buddypress()->members->types;
+	$user_ids = array();
+
+	foreach ($member_types as $key=>$member_type) {
+		$user_ids[$key] = $member_type->labels['name'];
+	}
+
+	return $user_ids;
+
+}
+
+/**
+ * Function for removed member type.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return array
+ */
+function bp_get_removed_member_types(){
+	$bp_member_type_ids = array();
+	$post_type = bp_get_member_type_post_type();
+	$bp_member_type_args = array(
+		'post_type' => $post_type,
+		'meta_query' => array(
+			array(
+				'key'     => '_bp_member_type_enable_remove',
+				'value'   => 1,
+				'compare' => '=',
+			),
+		),
+		'nopaging' => true,
+	);
+
+	$bp_member_type_query = new WP_Query($bp_member_type_args);
+	if ($bp_member_type_query->have_posts()):
+		while ($bp_member_type_query->have_posts()):
+			$bp_member_type_query->the_post();
+
+			$post_id = get_the_ID();
+			$name = bp_get_member_type_key( $post_id );
+			$bp_member_type_ids[] = array(
+				'ID' => $post_id,
+				'name' => $name,
+			);
+		endwhile;
+	endif;
+	wp_reset_query();
+	wp_reset_postdata();
+	return $bp_member_type_ids;
+}
+
+/**
+ * Function for get members removed member type.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return array
+ */
+function bp_get_users_of_removed_member_types(){
+	$user_ids = array();
+	// get removed member type post ids
+	$bp_member_type_ids = bp_get_removed_member_types();
+	// get removed member type names/slugs
+	$bp_member_type_names = array();
+	if( isset($bp_member_type_ids) && !empty($bp_member_type_ids) ){
+		foreach($bp_member_type_ids as $single){
+			$bp_member_type_names[] = $single['name'];
+		}
+	}
+
+	// get member user ids
+	if( isset($bp_member_type_names) && !empty($bp_member_type_names) ){
+		foreach($bp_member_type_names as $type_name){
+			$type_id = bp_member_type_type_id($type_name);
+			$mb_users = bp_active_member_type_by_type($type_id);
+			if( isset($mb_users) && !empty($mb_users) ){
+				foreach($mb_users as $single){
+					$user_ids[] = $single;
+				}
+			}
+		}
+	}
+
+	return $user_ids;
+}
+
+/**
+ * Register all active member types.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ */
+function bp_register_active_member_types() {
+
+
+	$post_ids = bp_get_active_member_types();
+
+	//update meta cache to avoid multiple db calls
+	update_meta_cache( 'post', $post_ids );
+	//build to register the memebr type
+	$member_types = array();
+
+	foreach ( $post_ids as $post_id ) {
+
+		$key = bp_get_member_type_key( $post_id );
+
+		$enable_filter = get_post_meta( $post_id, '_bp_member_type_enable_filter', true );
+
+		$has_dir = false;
+
+		if ( $enable_filter ) {
+			$has_dir = true;
+		}
+
+		$member_types[ $key ] = array(
+			'labels' => array(
+				'name' => get_post_meta( $post_id, '_bp_member_type_label_name', true ),
+				'singular_name' => get_post_meta( $post_id, '_bp_member_type_label_singular_name', true ),
+			),
+			'has_directory' => $has_dir
+		);
+	}
+
+	foreach ( $member_types as $member_type => $args ) {
+		bp_register_member_type( $member_type, $args );
+	}
+}
+
+/**
+ * Function for excluding specific member types from search and listing.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param bool $qs
+ * @param bool $object
+ *
+ * @return bool|string
+ */
+function bp_member_type_exclude_users_from_directory_and_searches( $qs=false, $object=false ) {
+
+	$exclude_user_ids = bp_get_users_of_removed_member_types();
+	//print_r($exclude_user_ids);
+
+	if( $object != 'members' )
+		return $qs;
+
+	$args = wp_parse_args( $qs );
+
+	// Removed this condition to add the member type filter works properly do not remove because need to check if this causing anywhere.
+	//if( ! empty( $args['user_id'] ) )
+		//return $qs;
+
+	if( ! empty( $args['exclude'] ) )
+		$args['exclude'] = $args['exclude'] . ',' . implode( ',', $exclude_user_ids );
+	else
+		$args['exclude'] = implode( ',', $exclude_user_ids );
+
+	$qs = build_query( $args );
+
+	return $qs;
+}
+
+/**
+ * set member type while update user profile.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $user_id
+ * @param $user_role
+ */
+function bp_update_user_member_type_type_set( $user_id, $user_role ) {
+
+	$get_member_type = bp_get_member_type_by_wp_role($user_role);
+
+	if( isset($get_member_type[0]['name']) && !empty($get_member_type[0]['name']) ){
+		bp_set_member_type($user_id, $get_member_type[0]['name']);
+	}
+}
+
+/**
+ * fix all member count.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $count
+ *
+ * @return int
+ */
+function bp_fixed_all_member_type_count( $count ){
+	$exclude_user_ids = bp_get_users_of_removed_member_types();
+	if( isset($exclude_user_ids) && !empty($exclude_user_ids) ){
+		$count = $count - count($exclude_user_ids);
+	}
+	return $count;
+}
+
+/**
+ * Function for displaying a users by it's type.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_member_type_directory() {
+	$member_types = bp_get_active_member_types();
+
+	foreach ( $member_types as $member_type_id ) {
+
+		if ( !get_post_meta( $member_type_id, '_bp_member_type_enable_filter', true ) ) {
+			continue;
+		}
+
+		$type_name = bp_get_member_type_key( $member_type_id );
+		$type_id = bp_member_type_term_taxonomy_id( $type_name );
+		$members_count = count(  bp_member_type_by_type( $type_id ));
+		$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
+
+		if ( empty( $type_id ) )
+			$type_id = 0;
+		?>
+	<li id="members-<?php echo $type_id; ?>">
+		<a href="<?php echo bp_member_type_directory_permalink( $type_name ); ?>"><?php printf( __( $member_type_name.' <span>%s</span>', 'buddyboss' ),$members_count ); ?></a>
+		</li><?php
+	}
+}
+
+/**
+ * Member directory tabs content.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $query
+ */
+function bp_member_type_query( $query ) {
+	global $wpdb;
+
+	$cookie_scope = filter_input( INPUT_COOKIE, 'bp-members-scope', FILTER_VALIDATE_INT );
+	//$post_scope   = filter_input( INPUT_POST, 'scope', FILTER_VALIDATE_INT );
+	$post_scope   = isset( $_POST['scope'] )? intval( $_POST['scope'] ) : null;
+
+	if ( $post_scope ) {
+		$type_id = $post_scope;
+	} elseif ( $cookie_scope ) {
+		$type_id = $cookie_scope;
+	}
+
+	if ( isset( $type_id ) ) {
+
+		//Alter SELECT with INNER JOIN
+		$query->uid_clauses['select'] .= " INNER JOIN {$wpdb->prefix}term_relationships r ON u.{$query->uid_name} = r.object_id ";
+
+		//Alter WHERE clause
+		$query_where_glue            = empty( $query->uid_clauses['where'] ) ? ' WHERE ' : ' AND ';
+		$query->uid_clauses['where'] .= $query_where_glue . "r.term_taxonomy_id = {$type_id} ";
+	}
+}
+
+/**
+ * remove member type metabox for users who doesn't have permission to change member types.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ */
+function bp_remove_member_type_metabox() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		remove_meta_box( 'bp_members_admin_member_type', get_current_screen()->id, 'side' );
+	}
+}
+
+/**
+ * Function for removing metabox feom extended profile if globally disabled.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_remove_member_type_metabox_globally() {
+	remove_meta_box( 'bp_members_admin_member_type', get_current_screen()->id, 'side' );
+}
+
+/**
+ * Add new columns to the post type list screen.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param type $columns
+ * @return type
+ */
+function bp_member_type_add_column( $columns ) {
+
+	$columns['title'] = __( 'Profile Type', 'buddyboss' );
+	$columns['member_type'] = __( 'Label', 'buddyboss' );
+	$columns['enable_filter'] = __( 'Members Filter', 'buddyboss' );
+	$columns['enable_remove'] = __( 'Members Directory', 'buddyboss' );
+	$columns['total_users'] = __( 'Users', 'buddyboss' );
+
+	unset( $columns['date'] );
+
+	return $columns;
+}
+
+/**
+ * display data of columns.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $column
+ * @param $post_id
+ */
+function bp_member_type_show_data( $column, $post_id  ) {
+
+	switch( $column ) {
+
+		case 'member_type':
+
+			echo '<code>'. get_post_meta( $post_id, '_bp_member_type_label_singular_name', true ).'</code>';
+			break;
+
+		case 'enable_filter':
+
+			if( get_post_meta( $post_id, '_bp_member_type_enable_filter', true ) )
+				echo __( 'Show', 'buddyboss' );
+			else
+				echo __( 'Hide', 'buddyboss' );
+
+			break;
+
+		case 'enable_remove':
+
+			if( get_post_meta( $post_id, '_bp_member_type_enable_remove', true ) )
+				echo __( 'Hide', 'buddyboss' );
+			else
+				echo __( 'Show', 'buddyboss' );
+
+			break;
+
+		case 'total_users':
+
+			$name = bp_get_member_type_key( $post_id );
+			$type_id = bp_member_type_term_taxonomy_id($name);
+
+			$member_type_url = admin_url().'users.php?bp-member-type='.$name;
+			printf(
+				__( '<a href="%s">%s</a>', 'buddyboss' ),
+				esc_url( $member_type_url ), count(bp_member_type_by_type($type_id))
+			);
+
+			break;
+
+	}
+
+}
+
+/**
+ * Function for setting up a column on admin view on member type post type.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $columns
+ *
+ * @return array
+ */
+function bp_member_type_add_sortable_columns( $columns ) {
+
+	$columns['total_users']	= 'total_users';
+	$columns['enable_filter']	= 'enable_filter';
+	$columns['enable_remove']	= 'enable_remove';
+	$columns['member_type']			= 'member_type';
+
+	return $columns;
+}
+
+/**
+ * Function adding a filter to member type sort items.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ */
+function bp_member_type_add_request_filter() {
+
+	add_filter( 'request', 'bp_member_type_sort_items' );
+
+}
+
+/**
+ * Sort list of member type post types.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param type $qv
+ * @return string
+ */
+function bp_member_type_sort_items( $qv ) {
+
+	if( ! isset( $qv['post_type'] ) || $qv['post_type'] != bp_get_member_type_post_type() )
+		return $qv;
+
+	if( ! isset( $qv['orderby'] ) )
+		return $qv;
+
+	switch( $qv['orderby'] ) {
+
+		case 'member_type':
+
+			$qv['meta_key'] = '_bp_member_type_name';
+			$qv['orderby'] = 'meta_value';
+
+			break;
+
+		case 'enable_filter':
+
+			$qv['meta_key'] = '_bp_member_type_enable_filter';
+			$qv['orderby'] = 'meta_value_num';
+
+			break;
+
+	}
+
+	return $qv;
+}
+
+/**
+ * Hide quick edit link.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param type $actions
+ * @param type $post
+ * @return type
+ */
+function bp_member_type_hide_quickedit( $actions, $post ) {
+
+	if ( empty( $post ) ) {
+		global $post;
+	}
+
+	if ( bp_get_member_type_post_type() == $post->post_type )
+		unset( $actions['inline hide-if-no-js'] );
+
+	return $actions;
+}
+
+/**
+ * Function for adding body class where the shortcode added.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $class
+ *
+ * @return array
+ */
+function bp_member_type_shortcode_add_body_class( $class ) {
+
+	global $post;
+
+	if( isset($post->post_content) && has_shortcode( $post->post_content, 'profile' ) ) {
+		$class[] = 'directory';
+		$class[] = 'members';
+		$class[] = 'buddypress';
+		$class[] = 'buddyboss';
+		$class[] = 'bb-buddypanel';
+	}
+	return $class;
+}
+
+/**
+ * Function for displaying a shortcode data.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $atts
+ *
+ * @return false|string
+ */
+function bp_member_type_shortcode_callback( $atts ) {
+
+	ob_start();
+
+	echo '<div id="buddypress" class="buddypress-wrap bp-dir-hori-nav">';
+	echo '<div class="members">';
+	echo '<div class="screen-content members-directory-content">';
+	echo '<div id="members-dir-list" class="members dir-list" data-bp-list="">';
+
+	if ( ! empty( $atts['type'] ) ) {
+
+		$name = str_replace(array(' ', ','), array('-', '-'), strtolower( $atts['type'] ) );
+
+		// Set the "current" member type, if one is provided, in member directories.
+		buddypress()->current_member_type = $name;
+	}
+
+	// exclude settings in shortcode.
+	remove_action( 'bp_ajax_querystring', 'bp_member_type_exclude_users_from_directory_and_searches', 999, 2 );
+
+	add_action( 'bp_ajax_querystring', 'bp_member_type_shortcode_filter', 1, 2 );
+
+	//Get a BuddyPress members-loop template part for display in a theme.
+	bp_get_template_part( 'members/members-loop' );
+
+	remove_action( 'bp_ajax_querystring', 'bp_member_type_shortcode_filter', 1, 2 );
+
+	// add action after the shortcode data display.
+	add_action( 'bp_ajax_querystring', 'bp_member_type_exclude_users_from_directory_and_searches', 999, 2 );
+
+	//echo '</div>';
+	echo '</div>';
+	echo '</div>';
+	echo '</div>';
+
+	return ob_get_clean();
+
+}
+
+/**
+ * Function for adding a filter on shortcode.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $query_string
+ * @param $object
+ *
+ * @return string
+ */
+function bp_member_type_shortcode_filter( $query_string, $object ){
+
+	if ( empty( $object ) )
+		return '';
+
+	if ( 'members' == $object && bp_current_component() !== 'members' ) {
+		$_COOKIE['bp-members-filter'] = 'alphabetical';
+		$_COOKIE['bp-members-scope'] = 'all';
+	}
+
+	return $query_string;
+}
+
+/**
+ * Function for adding the js on member type post type.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_member_type_changing_listing_label() {
+	global $pagenow, $current_screen;
+	$url = buddypress()->plugin_url . 'bp-core/js/';
+
+	$bp_member_type_pages = array(
+		'edit-bp-member-type',
+		'bp-member-type'
+	);
+
+	// Check to make sure we're on a member type's admin page
+	if ( isset( $current_screen->id ) && in_array( $current_screen->id, $bp_member_type_pages ) ) {
+
+		wp_enqueue_script('bp-clipboard',$url.'clipboard.js',array(), '3.1.1' );
+		wp_enqueue_script('bp-member-type-admin-screen',$url.'bp-member-type-admin-screen.js',array('jquery'), '3.1.1' );
+
+		$strings = array(
+			'warnTrash' 		=> __( 'You have {total_users} members with this profile type, are you sure you would like to trash it?', 'buddyboss' ),
+			'warnDelete' 		=> __( 'You have {total_users} members with this profile type, are you sure you would like to delete it?', 'buddyboss' ),
+			'warnBulkTrash' 	=> __( 'You have members with these profile types, are you sure you would like to trash it?', 'buddyboss' ),
+			'warnBulkDelete'	=> __( 'You have members with these profile types, are you sure you would like to delete it?', 'buddyboss' ),
+			'copied'			=> __( 'Copied', 'buddyboss' ),
+			'copytoclipboard'	=> __( 'Copy to clipboard', 'buddyboss' ),
+		);
+
+		wp_localize_script( 'bp-member-type-admin-screen', '_bpmtAdminL10n', $strings );
+	}
 }

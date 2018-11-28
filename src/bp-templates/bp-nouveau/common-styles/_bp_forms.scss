@@ -85,7 +85,8 @@
 		[data-bp-search] input[type="search"],
 		[data-bp-search] input[type="text"],
 		.groups-members-search input[type="search"],
-		.groups-members-search input[type="text"] {
+		.groups-members-search input[type="text"],
+		.bp-profile-search-widget input[type="search"] {
 			background: $off-white;
 			border: 1px solid $form-border-color;
 			border-radius: 0;
@@ -356,6 +357,7 @@ body.no-js {
 		}
 
 		span.select-arrow {
+			font-size: 10px;
 			display: inline-block;
 			position: relative;
 			z-index: 0;
@@ -374,6 +376,13 @@ body.no-js {
 			}
 		}
 	} // close .select-wrap
+
+	.subnav-filters {
+
+		.select-wrap {
+			margin-right: 12px;
+		}
+	}
 
 	// Add a little on hover inset shadow for  subnav search & filters
 	.select-wrap,

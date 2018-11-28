@@ -43,7 +43,7 @@ function bp_profile_search_register_post_type (){
 			'not_found_in_trash' => __('No forms found in Trash.', 'buddyboss'),
 		),
 		'show_ui' => true,
-		'show_in_menu' => 'users.php',
+		'show_in_menu' => '',
 		'supports' => array ( 'title' ),
 		'rewrite' => false,
 		'map_meta_cap' => true,
@@ -154,7 +154,7 @@ function bp_profile_search_main_form () {
 
 function bp_profile_search_add_main_form () {
     $post_args = array(
-        'post_title'    => __( 'Search Members', 'buddyboss' ),
+        'post_title'    => __( 'Filter Results', 'buddyboss' ),
         'post_type'     => 'bp_ps_form',
         'post_status'   => 'publish',
     );
