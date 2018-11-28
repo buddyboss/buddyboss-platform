@@ -2910,6 +2910,7 @@ function bp_get_group_type_key( $post_id ) {
 	if ( empty( $key ) ) {
 		$key = strtolower( get_post_meta( $post_id, '_bp_group_type_label_singular_name', true ) );
 		$key = str_replace( array( ' ', ',' ), array( '-', '-' ), $key );
+		update_post_meta( $post_id, '_bp_group_type_key', sanitize_key( $key ) );
 	}
 
 	return apply_filters( 'bp_get_group_type_key', $key );
@@ -2963,6 +2964,7 @@ function bp_register_active_group_types() {
 	foreach ( $post_ids as $post_id ) {
 
 		$name    = get_post_meta( $post_id, '_bp_group_type_label_name', true );
+		$key    = get_post_meta( $post_id, '_bp_group_type_key', true );
 		$singular_name    = get_post_meta( $post_id, '_bp_group_type_label_singular_name', true );
 		$group_types       = bp_groups_get_group_types();
 		if ( ! in_array( $singular_name, $group_types, true ) ) {
@@ -2977,7 +2979,7 @@ function bp_register_active_group_types() {
 				'description'           => '',
 				'create_screen_checked' => false,
 			);
-			bp_groups_register_group_type( $name, $temp );
+			bp_groups_register_group_type( $key, $temp );
 		}
 	}
 }

@@ -1630,8 +1630,7 @@ function bp_group_type_visibility_meta_box( $post ) {
  */
 function bp_group_short_code_meta_box( $post ) {
 
-	$key = get_post_meta( $post->ID, '_bp_group_type_label_name', true );
-	$key = sanitize_key( $key );
+	$key = bp_get_group_type_key( $post->ID );
 	?>
 	<p class="group-type-shortcode-wrapper">
 		<!-- Target -->
@@ -1704,9 +1703,7 @@ function bp_group_type_show_data( $column, $post_id  ) {
 
 		case 'total_groups':
 
-
-			$group_key = get_post_meta( $post_id, '_bp_group_type_label_name', true );
-			$group_key = sanitize_key( $group_key );
+			$group_key = bp_get_group_type_key( $post_id );
 			$group_type_url = admin_url().'admin.php?page=bp-groups&bp-group-type='.$group_key;
 			printf(
 				__( '<a href="%s">%s</a>', 'buddyboss' ),
