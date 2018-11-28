@@ -39,7 +39,7 @@ jq(document).ready(function () {
     });
 
     //Member post type validation
-    jq('#post').submit(function () {
+    jq('.post-type-bp-member-type #post').submit(function () {
 
         jq('#title').css({border: "none"});
         jq('.bp-member-type-label-name').css({border: "none"});
@@ -142,13 +142,13 @@ jq(document).ready(function () {
     });
 
     //Set tabindex
-    if ( 'undefined' != typeof jq('#title') ) {
-        jq('#title').attr( 'tabindex', 1 );
+    if ( 'undefined' != typeof jq('.post-type-bp-member-type #title') ) {
+        jq('.post-type-bp-member-type #title').attr( 'tabindex', 1 );
     }
 
     //tabindex
-    if ( 'undefined' != typeof jq('#publish') ) {
-        jq('#publish').attr( 'tabindex', 7 );
+    if ( 'undefined' != typeof jq('.post-type-bp-member-type #publish') ) {
+        jq('.post-type-bp-member-type #publish').attr( 'tabindex', 7 );
     }
 });
 
