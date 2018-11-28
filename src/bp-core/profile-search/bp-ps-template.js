@@ -4,7 +4,7 @@ function bp_ps_clear_radio(container) {
 	container = document.getElementById (container);
 
 	var radioButtons = container.getElementsByTagName ('input');
-	for (i = 0; i < radioButtons.length; i++) {
+	for (var i = 0; i < radioButtons.length; i++) {
 		radioButtons[i].checked = '';
 	}
 }
@@ -36,7 +36,7 @@ function bp_ps_locate(input, lat, lng) {
 }
 
 function bp_ps_address(position, input) {
-	var geocoder = new google.maps.Geocoder;
+	var geocoder = new google.maps.Geocoder();
 	var latlng = {lat: position.coords.latitude, lng: position.coords.longitude};
 	geocoder.geocode({'location': latlng}, function(results, status) {
 		if (status === 'OK') {

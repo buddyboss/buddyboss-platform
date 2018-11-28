@@ -10,36 +10,36 @@ function add_field () {
 
 	var span = document.createElement ('span');
 	span.setAttribute ('class', 'bp_ps_col1');
-	span.setAttribute ('title', bp_ps_strings.drag);
-	span.appendChild (document.createTextNode ("\u00A0\u21C5"));
+	span.setAttribute ('title', window.bp_ps_strings.drag);
+	span.appendChild (document.createTextNode ('\u00A0\u21C5'));
 
-	var $select = jQuery ("<select>", {name: 'bp_ps_options[field_name][' + theId + ']', id: 'field_name' + theId});
+	var $select = jQuery ( '<select>', {name: 'bp_ps_options[field_name][' + theId + ']', id: 'field_name' + theId});
 	$select.addClass ('bp_ps_col2');
-	var $option = jQuery ("<option>", {text: bp_ps_strings.field, value: 0});
+	var $option = jQuery ('<option>', {text: window.bp_ps_strings.field, value: 0});
 	$option.appendTo ($select);
 
-	jQuery.each (bp_ps_groups, function (i, optgroups) {
+	jQuery.each (window.bp_ps_groups, function (i, optgroups) {
 		jQuery.each (optgroups, function (groupName, options) {
-			var $optgroup = jQuery ("<optgroup>", {label: groupName});
+			var $optgroup = jQuery ('<optgroup>', {label: groupName});
 			$optgroup.appendTo ($select);
 
 			jQuery.each (options, function (j, option) {
-				var $option = jQuery ("<option>", {text: option.name, value: option.id});
+				var $option = jQuery ('<option>', {text: option.name, value: option.id});
 				$option.appendTo ($optgroup);
 			});
 		});
 	});
 
 	var toDelete = document.createElement ('a');
-	toDelete.setAttribute ('href', "javascript:remove('field_div" + theId + "')");
+	toDelete.setAttribute ('href', 'javascript:remove(\'field_div' + theId + '\')');
 	toDelete.setAttribute ('class', 'delete');
-	toDelete.appendChild (document.createTextNode (bp_ps_strings.remove));
+	toDelete.appendChild (document.createTextNode (window.bp_ps_strings.remove));
 
 	holder.appendChild (newDiv);
 	newDiv.appendChild (span);
-	newDiv.appendChild (document.createTextNode ("\n"));
-	$select.appendTo ("#field_div" + theId);
-	newDiv.appendChild (document.createTextNode ("\n"));
+	newDiv.appendChild (document.createTextNode ('\n'));
+	$select.appendTo ('#field_div' + theId);
+	newDiv.appendChild (document.createTextNode ('\n'));
 	newDiv.appendChild (toDelete);
 
 	enableSortableFieldOptions ();
