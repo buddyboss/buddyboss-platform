@@ -32,4 +32,8 @@
         <?php bp_get_template_part( 'common/filters/member-filters' ); ?>
     <?php endif; ?>
 
+	<?php if ( 'groups' == bp_current_component() ): ?>
+		<?php bp_get_template_part( 'common/filters/group-filters' ); ?>
+	<?php endif; ?>
+
 </div><!-- search & filters -->

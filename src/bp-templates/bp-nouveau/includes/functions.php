@@ -116,6 +116,11 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 		$qs[] = 'member_type=' . $member_type_key;
 	}
 
+	if ( isset( $_POST['group_type'] ) && '' !== $_POST['group_type'] && 'all' !== $_POST['group_type'] ) {
+		$group_type = $_POST['group_type'];
+		$qs[] = 'group_type=' . $group_type;
+	}
+
 	$object_search_text = bp_get_search_default_text( $object );
 	if ( ! empty( $post_query['search_terms'] ) && $object_search_text != $post_query['search_terms'] && 'false' != $post_query['search_terms'] && 'undefined' != $post_query['search_terms'] ) {
 		$qs[] = 'search_terms=' . urlencode( $_POST['search_terms'] );
