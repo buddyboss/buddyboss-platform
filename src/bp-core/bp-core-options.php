@@ -79,6 +79,9 @@ function bp_get_default_options() {
 		// Group Cover image uploads.
 		'bp-disable-group-cover-image-uploads' => false,
 
+		// Group Types.
+		'bp-disable-group-type-creation' => false,
+
 		// Allow users to delete their own accounts.
 		'bp-disable-account-deletion'          => false,
 
@@ -637,6 +640,27 @@ function bp_disable_group_cover_image_uploads( $default = false ) {
 	 * @param bool $value Whether or not members are able to upload thier groups cover images.
 	 */
 	return (bool) apply_filters( 'bp_disable_group_cover_image_uploads', (bool) bp_get_option( 'bp-disable-group-cover-image-uploads', $default ) );
+}
+
+/**
+ * Are group types disabled?
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if group types are disabled, otherwise false.
+ */
+function bp_disable_group_type_creation( $default = false ) {
+
+	/**
+	 * Filters whether or not members are able to create group types.
+	 *
+	 * @since BuddyPress 2.4.0
+	 *
+	 * @param bool $value Whether or not members are able to create groups types.
+	 */
+	return (bool) apply_filters( 'bp_disable_group_type_creation', (bool) bp_get_option( 'bp-disable-group-type-creation', $default ) );
 }
 
 /**
