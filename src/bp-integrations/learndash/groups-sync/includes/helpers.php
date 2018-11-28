@@ -15,6 +15,7 @@ function ld_bp_groups_sync_get_settings( $key = null, $default = null ) {
 		'auto_sync_leaders_role'      => 'admin',
 		'auto_sync_students'          => true,
 		'auto_delete_bp_group'        => false,
+		'display_bp_group_cources'    => true,
 	] );
 
 	if ( ! $key ) {

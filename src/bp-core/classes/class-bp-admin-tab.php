@@ -325,6 +325,7 @@ abstract class BP_Admin_Tab {
 
 		printf(
 			'
+				<input id="%1$s" name="%2$s" type="hidden" value="0" />
 				<input id="%1$s" name="%2$s" type="checkbox" value="1" %3$s />
 				<label for="%1$s">%4$s</label>
 				%5$s

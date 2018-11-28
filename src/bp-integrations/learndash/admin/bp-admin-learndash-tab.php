@@ -134,6 +134,16 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			]
 		);
 
+		$this->add_checkbox_field(
+			'display_bp_group_cources',
+			__('Display Courses Tab', 'buddyboss'),
+			[
+				'input_text' => __( 'Yes', 'buddyboss' ),
+				'input_default' => 1,
+				'input_description' => __( 'To display courses on a group or not. If checked, "Courses" tab will be added to all groups IF they have a LearnDash group synced to them.', 'buddyboss' )
+			]
+		);
+
 		/**
 		 * Group Sync Options
 		 */

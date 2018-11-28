@@ -145,7 +145,10 @@ if ( ! class_exists( 'LearnDash_BuddyPress_Groups_Reports' ) ) :
 		 */
 		private function includes() {
 			require_once LEARNDASH_BUDDYPRESS_GROUP_REPORTS_PLUGIN_DIR . '/includes/helpers.php';
-			require_once LEARNDASH_BUDDYPRESS_GROUP_REPORTS_PLUGIN_DIR . '/includes/class-groups-reports.php';
+
+			if ( ld_bp_groups_sync_get_settings( 'display_bp_group_cources' ) ) {
+				require_once LEARNDASH_BUDDYPRESS_GROUP_REPORTS_PLUGIN_DIR . '/includes/class-groups-reports.php';
+			}
 		}
 	} //End LearnDash_BuddyPress_Groups_Reports Class.
 endif;

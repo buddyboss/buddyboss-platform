@@ -231,6 +231,10 @@ if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() 
 	 * @since 1.0.1
 	 */
 	function ld_bp_groups_sync_add_courses_menu() {
+		if ( ! ld_bp_groups_sync_get_settings( 'display_bp_group_cources' ) ) {
+			return;
+		}
+
 		if ( function_exists( 'bp_is_group' ) && bp_is_group() ) {
 			$type = ld_bp_groups_sync_check_associated_ld_group( buddypress()->groups->current_group->id );
 			if ( $type ) {
