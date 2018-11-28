@@ -25,6 +25,7 @@ function groups_screen_group_admin_settings() {
 	// If the edit form has been submitted, save the edited details.
 	if ( isset( $_POST['save'] ) ) {
 		$enable_forum   = ( isset($_POST['group-show-forum'] ) ) ? 1 : 0;
+		$parent_id = ( isset($_POST['bp-groups-parent'] ) ) ? $_POST['bp-groups-parent'] : 0;
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
@@ -71,7 +72,7 @@ function groups_screen_group_admin_settings() {
 			bp_groups_set_group_type( bp_get_current_group_id(), $current_types );
 		}
 
-		if ( !groups_edit_group_settings( $_POST['group-id'], $enable_forum, $status, $invite_status, $activity_feed_status ) ) {
+		if ( !groups_edit_group_settings( $_POST['group-id'], $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id ) ) {
 			bp_core_add_message( __( 'There was an error updating group settings. Please try again.', 'buddyboss' ), 'error' );
 		} else {
 			bp_core_add_message( __( 'Group settings were successfully updated.', 'buddyboss' ) );

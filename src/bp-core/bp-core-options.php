@@ -664,6 +664,27 @@ function bp_disable_group_type_creation( $default = false ) {
 }
 
 /**
+ * Are group hierarchies enabled?
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if group hierarchies are enabled, otherwise false.
+ */
+function bp_enable_group_hierarchies( $default = false ) {
+
+	/**
+	 * Filters whether or not groups are able to have a parent and sub groups.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param bool $value whether or not groups are able to have a parent and sub groups.
+	 */
+	return (bool) apply_filters( 'bp_enable_group_hierarchies', (bool) bp_get_option( 'bp-enable-group-hierarchies', $default ) );
+}
+
+/**
  * Are members able to delete their own accounts?
  *
  * @since BuddyPress 1.6.0

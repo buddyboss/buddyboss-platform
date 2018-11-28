@@ -252,6 +252,7 @@ function bp_groups_admin_load() {
 				'name'           => $_POST['bp-groups-name'],
 				'slug'           => $_POST['bp-groups-slug'],
 				'description'    => $_POST['bp-groups-description'],
+				'parent_id'      => isset( $_POST['bp-groups-parent'] ) ? $_POST['bp-groups-parent'] : 0,
 				'notify_members' => false,
 			) ) ) {
 			$error = $group_id;
@@ -869,6 +870,32 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
         </fieldset>
     </div>
 
+	<?php if ( bp_enable_group_hierarchies() ):
+
+		$current_parent_group_id = bp_get_parent_group_id( $item->id );
+		$possible_parent_groups = bp_get_possible_parent_groups( $item->id, bp_loggedin_user_id() );
+
+		?>
+		<br><hr>
+		<div class="bp-groups-settings-section" id="bp-groups-settings-section-group-hierarchy">
+				<label for="bp-groups-parent" class="for-heading">
+					<?php _e( 'Parent', 'buddyboss' ); ?>:&nbsp;&nbsp;
+				</label>
+				<select id="bp-groups-parent" name="bp-groups-parent" autocomplete="off">
+					<option value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php echo _x( '-- No parent --', 'The option that sets a group to be a top-level group and have no parent.', 'buddyboss' ); ?></option>
+					<?php
+					if ( $possible_parent_groups ) {
+
+						foreach ( $possible_parent_groups as $possible_parent_group ) {
+							?>
+							<option value="<?php echo $possible_parent_group->id; ?>" <?php selected( $current_parent_group_id, $possible_parent_group->id ); ?>><?php echo esc_html( $possible_parent_group->name ); ?></option>
+							<?php
+						}
+					}
+					?>
+				</select>
+		</div>
+	<?php endif; ?>
 <?php
 }
 

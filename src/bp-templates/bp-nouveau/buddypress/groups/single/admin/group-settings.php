@@ -130,4 +130,28 @@ if ( $group_types ) : ?>
 
     </fieldset>
 
+	<?php if ( bp_enable_group_hierarchies() ):
+		$current_parent_group_id = bp_get_parent_group_id();
+		$possible_parent_groups = bp_get_possible_parent_groups();
+		?>
+
+		<fieldset>
+			<legend><?php esc_html_e( 'Group Hierarchy', 'buddyboss' ); ?></legend>
+			<p tabindex="0"><?php esc_html_e( 'Optionally select a group to make this group a subgroup of.', 'buddyboss' ); ?></p>
+			<select id="bp-groups-parent" name="bp-groups-parent" autocomplete="off">
+				<option value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php echo _x( '-- No parent --', 'The option that sets a group to be a top-level group and have no parent.', 'buddyboss' ); ?></option>
+				<?php
+				if ( $possible_parent_groups ) {
+
+					foreach ( $possible_parent_groups as $possible_parent_group ) {
+						?>
+						<option value="<?php echo $possible_parent_group->id; ?>" <?php selected( $current_parent_group_id, $possible_parent_group->id ); ?>><?php echo esc_html( $possible_parent_group->name ); ?></option>
+						<?php
+					}
+				}
+				?>
+			</select>
+		</fieldset>
+	<?php endif; ?>
+
 </div><!-- // .group-settings-selections -->

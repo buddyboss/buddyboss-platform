@@ -241,6 +241,18 @@ function bp_admin_setting_callback_group_type_creation() {
 <?php
 }
 
+/**
+ * 'Enable group hierarchies' field markup.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_admin_setting_callback_group_hierarchies() {
+	?>
+	<input id="bp-enable-group-hierarchies" name="bp-enable-group-hierarchies" type="checkbox" value="1" <?php checked( bp_enable_group_hierarchies() ); ?> />
+	<label for="bp-enable-group-hierarchies"><?php _e( 'Allow groups to have parent groups and subgroups', 'buddyboss' ); ?></label>
+	<?php
+}
+
 /** Settings Page *************************************************************/
 
 /**

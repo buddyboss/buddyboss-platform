@@ -32,6 +32,10 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		// enable or disable group types.
 		$this->add_field( 'bp-disable-group-type-creation', __( 'Group Types', 'buddyboss' ), 'bp_admin_setting_callback_group_type_creation', 'intval' );
 
+
+		// enable or disable group types.
+		$this->add_field( 'bp-enable-group-hierarchies', __( 'Group Hierarchies', 'buddyboss' ), 'bp_admin_setting_callback_group_hierarchies', 'intval' );
+
 	}
 }
 

@@ -50,6 +50,14 @@ body.toplevel_page_bp-groups table.groups th#last_active {
 	vertical-align: middle;
 }
 
+.bp-groups-settings-section label.for-heading {
+	font-weight: 700;
+}
+
+.bp-groups-settings-section #parent-id {
+	width: calc(100% - 60px);
+}
+
 #bp-groups-permalink-box {
 	line-height: 24px;
 	color: #666;

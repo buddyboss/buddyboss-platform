@@ -233,6 +233,7 @@ function groups_create_group( $args = '' ) {
  *     @type string $name           Name of the group.
  *     @type string $slug           Slug of the group.
  *     @type string $description    Description of the group.
+ *     @type int $parent_id         Parent id of the group.
  *     @type bool   $notify_members Whether to send an email notification to group
  *                                  members about changes in these details.
  * }
@@ -260,6 +261,7 @@ function groups_edit_base_group_details( $args = array() ) {
 		'slug'           => null,
 		'description'    => null,
 		'notify_members' => false,
+		'parent_id'      => 0,
 	), 'groups_edit_base_group_details' );
 
 	if ( ! $r['group_id'] ) {
@@ -278,6 +280,8 @@ function groups_edit_base_group_details( $args = array() ) {
 	}
 
 	$group->description = $r['description'];
+
+	$group->parent_id =  $r['parent_id'];
 
 	if ( ! $group->save() ) {
 		return false;
