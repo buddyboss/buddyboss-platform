@@ -119,10 +119,9 @@ body:not(.logged-in) {
 	}
 
 	.bps-description {
-		font-size: 14px;
+		font-size: 13px;
 		margin: $marg-xsml 0;
 		color: #767676;
-		font-style: italic;
 	}
 }
 
@@ -144,5 +143,9 @@ body:not(.logged-in) {
 	label {
 		font-weight: 600;
 		font-size: 15px;
+	}
+
+	select {
+		width: 100%;
 	}
 }

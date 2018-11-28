@@ -55,12 +55,12 @@ $F = bp_profile_search_escaped_form_data ( $form_id );
 					break;
 
 					case 'textbox': ?>
-						<input type="search" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $value; ?>">
+						<input type="search" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $value; ?>" />
 						<?php
 					break;
 
 					case 'number': ?>
-						<input type="number" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $value; ?>"><br>
+						<input type="number" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $value; ?>" />
 						<?php
 					break;
 
