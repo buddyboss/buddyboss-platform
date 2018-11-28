@@ -1951,10 +1951,9 @@ form.ac-form .ac-reply-content input {
 }
 
 .members-directory-wrapper .bps-description {
-  font-size: 14px;
+  font-size: 13px;
   margin: 5px 0;
   color: #767676;
-  font-style: italic;
 }
 
 .bp-profile-search-widget .bp-field-wrap {
@@ -1973,6 +1972,10 @@ form.ac-form .ac-reply-content input {
 .bp-profile-search-widget label {
   font-weight: 600;
   font-size: 15px;
+}
+
+.bp-profile-search-widget select {
+  width: 100%;
 }
 
 /**
@@ -3548,8 +3551,7 @@ input#send-to-input {
 .buddypress-wrap .standard-form [data-bp-search] input[type="search"],
 .buddypress-wrap .standard-form [data-bp-search] input[type="text"],
 .buddypress-wrap .standard-form .groups-members-search input[type="search"],
-.buddypress-wrap .standard-form .groups-members-search input[type="text"],
-.buddypress-wrap .standard-form .bp-profile-search-widget input[type="search"] {
+.buddypress-wrap .standard-form .groups-members-search input[type="text"] {
   background: #fafafa;
   border: 1px solid #d6d6d6;
   border-radius: 0;
