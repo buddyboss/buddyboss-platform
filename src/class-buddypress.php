@@ -430,6 +430,15 @@ class BuddyPress {
 		$this->member_type_post_type     = apply_filters( 'bp_member_type_post_type', 'bp-member-type' );
 
 		/**
+		 * Filters the post type slug for the group type component.
+		 *
+		 * since BuddyBoss 3.1.1
+		 *
+		 * @param string $value Group Type post type slug.
+		 */
+		$this->group_type_post_type     = apply_filters( 'bp_group_type_post_type', 'bp-group-type' );
+
+		/**
 		 * Filters the taxonomy slug for the email type component.
 		 *
 		 * @since BuddyPress 2.5.0

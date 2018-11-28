@@ -3839,7 +3839,9 @@ function bp_member_type_changing_listing_label() {
 
 	$bp_member_type_pages = array(
 		'edit-bp-member-type',
-		'bp-member-type'
+		'bp-member-type',
+		'bp-group-type',
+		'edit-bp-group-type'
 	);
 
 	// Check to make sure we're on a member type's admin page

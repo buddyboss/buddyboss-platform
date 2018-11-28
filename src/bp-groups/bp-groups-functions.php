@@ -2805,3 +2805,274 @@ function bp_groups_clear_invite_message_on_uninvite( $group_id, $user_id ) {
 }
 add_action( 'groups_uninvite_user', 'bp_groups_clear_invite_message_on_uninvite', 10, 2 );
 add_action( 'groups_remove_member', 'bp_groups_clear_invite_message_on_uninvite', 10, 2 );
+
+/**
+ * Output the name of the group type post type.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return string   custom post type of group type.
+ */
+function bp_group_type_post_type() {
+	echo bp_get_group_type_post_type();
+}
+
+/**
+ * Returns the name of the group type post type.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return string The name of the group type post type.
+ */
+function bp_get_group_type_post_type() {
+
+	/**
+	 * Filters the name of the group type post type.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $value group Type post type name.
+	 */
+	return apply_filters( 'bp_get_group_type_post_type', buddypress()->group_type_post_type );
+}
+
+/**
+ * Return labels used by the group type post type.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return array
+ */
+function bp_get_group_type_post_type_labels() {
+
+	/**
+	 * Filters group type post type labels.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param array $value Associative array (name => label).
+	 */
+	return apply_filters( 'bp_get_group_type_post_type_labels', array(
+		'add_new_item'          => _x( 'New Group Type', 'group type post type label', 'buddyboss' ),
+		'all_items'             => _x( 'Group Types', 'group type post type label', 'buddyboss' ),
+		'edit_item'             => _x( 'Edit Group Type', 'group type post type label', 'buddyboss' ),
+		'menu_name'             => _x( 'Groups', 'group type post type name', 'buddyboss' ),
+		'name'                  => _x( 'Group Types', 'group type post type label', 'buddyboss' ),
+		'new_item'              => _x( 'New Group Type', 'group type post type label', 'buddyboss' ),
+		'not_found'             => _x( 'No Group Types found', 'group type post type label', 'buddyboss' ),
+		'not_found_in_trash'    => _x( 'No Group Types found in trash', 'group type post type label', 'buddyboss' ),
+		'search_items'          => _x( 'Search Group Types', 'group type post type label', 'buddyboss' ),
+		'singular_name'         => _x( 'Group Type', 'group type post type singular name', 'buddyboss' ),
+	) );
+}
+
+/**
+ * Return array of features that the group type post type supports.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return array
+ */
+function bp_get_group_type_post_type_supports() {
+
+	/**
+	 * Filters the features that the group type post type supports.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param array $value Supported features.
+	 */
+	return apply_filters( 'bp_get_group_type_post_type_supports', array(
+		'editor',
+		'page-attributes',
+		'title',
+	) );
+}
+
+/**
+ * Return group type key.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $post_id
+ * @return mixed|string
+ */
+function bp_get_group_type_key( $post_id ) {
+
+	if ( empty( $post_id) ) {
+		return '';
+	}
+
+	$key = get_post_meta( $post_id, '_bp_group_type_key', true );
+
+	// Fallback to legacy way of generating group type key from singular label
+	// if Key is not set by admin user
+	if ( empty( $key ) ) {
+		$key = strtolower( get_post_meta( $post_id, '_bp_group_type_label_singular_name', true ) );
+		$key = str_replace( array( ' ', ',' ), array( '-', '-' ), $key );
+	}
+
+	return apply_filters( 'bp_get_group_type_key', $key );
+}
+
+/**
+ * Get all active group types.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @global type $wpdb
+ * @return type array
+ */
+function bp_get_active_group_types() {
+
+	global $wpdb;
+	$query = "SELECT DISTINCT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s ORDER BY menu_order";
+
+	return $wpdb->get_col( $wpdb->prepare( $query, bp_get_group_type_post_type(), 'publish' ) );
+}
+
+if ( true === bp_disable_group_type_creation() ) {
+
+	// Hook for registering the group types.
+	add_action( 'bp_groups_register_group_types', 'bp_register_active_group_types' );
+
+	// Hook for creating a group type shortcode.
+	add_shortcode( 'group', 'bp_group_type_short_code_callback' );
+
+	// filter for adding body class where the shortcode added.
+	add_filter( 'body_class', 'bp_group_type_short_code_add_body_class' );
+
+}
+
+/**
+ * Register all active group types.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ */
+function bp_register_active_group_types() {
+
+	$post_ids = bp_get_active_group_types();
+
+	//update meta cache to avoid multiple db calls
+	update_meta_cache( 'post', $post_ids );
+
+	//build to register the group type
+	$group_types = array();
+
+	foreach ( $post_ids as $post_id ) {
+
+		$name    = get_post_meta( $post_id, '_bp_group_type_label_name', true );
+		$singular_name    = get_post_meta( $post_id, '_bp_group_type_label_singular_name', true );
+		$group_types       = bp_groups_get_group_types();
+		if ( ! in_array( $singular_name, $group_types, true ) ) {
+			$temp = array(
+				'labels'                => array(
+					'name'          => $name,
+					'singular_name' => $singular_name,
+				),
+				'has_directory'         => strtolower( $name ),
+				'show_in_create_screen' => true,
+				'show_in_list'          => true,
+				'description'           => '',
+				'create_screen_checked' => false,
+			);
+			bp_groups_register_group_type( $name, $temp );
+		}
+	}
+}
+
+/**
+ * Get group count of group type tabs groups.
+ *
+ * @param string $group_type The group type.
+ * @param string $taxonomy The group taxonomy.
+ */
+function bp_get_total_count_by_group_types( $group_type = '', $taxonomy = 'bp_group_type' ) {
+
+	global $wpdb;
+
+	$group_types = bp_groups_get_group_types();
+
+	if ( empty( $group_type ) || empty( $group_types[ $group_type ] ) ) {
+		return false;
+	}
+
+	$bp_get_group_type_count = wp_cache_get( 'bp_get_total_count_by_group_types', 'bp_group_type_total_count_group' );
+
+	if ( ! $bp_get_group_type_count ) {
+		if ( ! bp_is_root_blog() ) {
+			switch_to_blog( bp_get_root_blog_id() );
+		}
+		$bp_group_type_query         = array(
+			'select' => "SELECT t.slug, tt.count FROM {$wpdb->term_taxonomy} tt LEFT JOIN {$wpdb->terms} t",
+			'on'     => 'ON tt.term_id = t.term_id',
+			'where'  => $wpdb->prepare( 'WHERE tt.taxonomy = %s', $taxonomy ),
+		);
+		$bp_get_group_type_count = $wpdb->get_results( join( ' ', $bp_group_type_query ) );
+		wp_cache_set( 'bp_get_total_count_by_group_types', $bp_get_group_type_count, 'bp_group_type_total_count_group' );
+		restore_current_blog();
+	}
+	$bp_group_type_count = wp_filter_object_list( $bp_get_group_type_count, array( 'slug' => $group_type ), 'and', 'count' );
+	$bp_group_type_count = array_values( $bp_group_type_count );
+	if ( empty( $bp_group_type_count ) ) {
+		return 0;
+	}
+	return (int) $bp_group_type_count[0];
+}
+
+/**
+ * Function for displaying a short code data.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $atts
+ *
+ * @return false|string
+ */
+function bp_group_type_short_code_callback( $atts ) {
+
+	ob_start();
+	if ( ! empty( $atts['type'] ) ) {
+		?>
+		<div id="buddypress" class="buddypress-wrap round-avatars bp-dir-hori-nav">
+			<div class="screen-content">
+				<div id="groups-dir-list" class="groups dir-list" data-bp-list="">
+					<?php
+					$atts['group_type'] = $atts['type'];
+					unset( $atts['type'] );
+					$bp_group_type_query = build_query( $atts );
+					if ( ! empty( $bp_group_type_query ) ) {
+						$bp_group_type_query = '&' . $bp_group_type_query;
+					}
+					update_option( 'bp_group_type_short_code_query_build', $bp_group_type_query );
+
+					add_filter( 'bp_ajax_querystring',
+						function ( $qs ) {
+							return $qs .= get_option( 'bp_group_type_short_code_query_build' );
+						} );
+
+					//Get a BuddyPress groups-loop template part for display in a theme.
+					bp_get_template_part( 'groups/groups-loop' );
+					?>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+	return ob_get_clean();
+}
+
+function bp_group_type_short_code_add_body_class( $class ) {
+
+	global $post;
+
+	if( isset($post->post_content) && has_shortcode( $post->post_content, 'group' ) ) {
+		$class[] = 'directory';
+		$class[] = 'groups';
+		$class[] = 'buddypress';
+		$class[] = 'buddyboss';
+		$class[] = 'bb-buddypanel';
+	}
+	return $class;
+}
