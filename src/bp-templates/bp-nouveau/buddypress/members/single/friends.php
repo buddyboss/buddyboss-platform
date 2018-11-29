@@ -30,17 +30,7 @@ switch ( bp_current_action() ) :
 		break;
 
 	case 'requests':
-		bp_nouveau_member_hook( 'before', 'friends_content' );
-		?>
-
-        <div class="members requests" data-bp-list="members">
-
-            <div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-friend-requests-loading' ); ?></div>
-
-        </div><!-- .members.friend-requests -->
-
-		<?php
-		bp_nouveau_member_hook( 'after', 'friends_content' );
+		bp_get_template_part( 'members/single/friends/requests' );
 		break;
 
 	case 'mutual':
