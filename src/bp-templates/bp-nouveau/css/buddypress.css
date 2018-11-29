@@ -2476,6 +2476,14 @@ body.buddypress.bp-user #page #primary .entry-header {
   padding-top: 1em;
 }
 
+.single-item.subgroups .item-body #subnav-filters .subnav-search {
+  display: none;
+}
+
+.single-item.subgroups .item-body #subnav-filters #dir-filters {
+  display: none;
+}
+
 /**
 *-----------------------------------------
 * @subsection 5.2.1.1 - Management Settings Screens
