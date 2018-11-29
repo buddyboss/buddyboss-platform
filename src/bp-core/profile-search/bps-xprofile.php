@@ -280,14 +280,18 @@ function bp_ps_learndash_course_setup ($fields) {
 	// check for learndash plugin is activated or not.
 	if(in_array('sfwd-lms/sfwd_lms.php', apply_filters('active_plugins', get_option('active_plugins')))){
 
+		$course_query = new WP_Query( array( 'post_type' => 'sfwd-courses', 'posts_per_page' => -1 ) );
 
-		query_posts( array( 'post_type' => 'sfwd-courses', 'posts_per_page' => - 1 ) );
 		$courses = array();
-		while ( have_posts() ) {
-			the_post();
-			$courses[ get_the_ID() ] = get_the_title();
-		}
-		wp_reset_query();
+		if ( $course_query->have_posts() ) :
+
+			while ( $course_query->have_posts() ) : $course_query->the_post();
+				$courses[ get_the_ID() ] = get_the_title();
+			endwhile;
+
+			wp_reset_postdata();
+
+		endif;
 
 		$f = new stdClass;
 		$f->group = __('LearnDash', 'buddyboss');
@@ -317,19 +321,24 @@ function bp_ps_learndash_course_setup ($fields) {
  */
 function bp_ps_learndash_course_users_search( $f ) {
 
-	$course_id = $f->value;
-	if ( isset( $course_id ) && !empty( $course_id ) ) {
-		$course_users = learndash_get_users_for_course( $course_id, '', false );
+	// check for learndash plugin is activated or not.
+	if(in_array('sfwd-lms/sfwd_lms.php', apply_filters('active_plugins', get_option('active_plugins')))) {
 
-		$course_users = $course_users->results;
 
-		if ( isset( $course_users ) && ! empty( $course_users ) ) {
-			return $course_users;
+		$course_id = $f->value;
+		if ( isset( $course_id ) && ! empty( $course_id ) ) {
+			$course_users = learndash_get_users_for_course( $course_id, '', false );
+
+			$course_users = $course_users->results;
+
+			if ( isset( $course_users ) && ! empty( $course_users ) ) {
+				return $course_users;
+			} else {
+				return array();
+			}
 		} else {
 			return array();
 		}
-	} else {
-		return array();
 	}
 }
 
