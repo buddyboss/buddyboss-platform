@@ -980,10 +980,6 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'loading',
 			'message' => __( 'Loading the member\'s mutual connections. Please wait.', 'buddyboss' ),
 		),
-		'member-friend-requests-loading' => array(
-			'type'    => 'loading',
-			'message' => __( 'Loading the member\'s connection requests. Please wait.', 'buddyboss' ),
-		),
 		'member-groups-loading' => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading the member\'s groups. Please wait.', 'buddyboss' ),

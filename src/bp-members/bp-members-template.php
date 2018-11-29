@@ -350,12 +350,6 @@ function bp_has_members( $args = '' ) {
 		$type = 'alphabetical';
 	}
 
-	// User requests filtering.
-	if ( bp_is_user_friends() && bp_is_user_friend_requests() ) {
-		$include = bp_get_friendship_requests();
-		$type = 'alphabetical';
-	}
-
 	$member_type = bp_get_current_member_type();
 	if ( ! $member_type && ! empty( $_GET['member_type'] ) ) {
 		if ( is_array( $_GET['member_type'] ) ) {

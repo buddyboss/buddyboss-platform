@@ -406,8 +406,7 @@ function bp_has_groups( $args = '' ) {
 		'update_admin_cache' => bp_is_groups_directory() || bp_is_user_groups(),
 	), 'has_groups' );
 
-	// Setup the Groups template global.
-	$groups_template = new BP_Groups_Template( array(
+	$args = array(
 		'type'               => $r['type'],
 		'order'              => $r['order'],
 		'orderby'            => $r['orderby'],
@@ -428,7 +427,19 @@ function bp_has_groups( $args = '' ) {
 		'parent_id'          => $r['parent_id'],
 		'update_meta_cache'  => (bool) $r['update_meta_cache'],
 		'update_admin_cache' => (bool) $r['update_admin_cache'],
-	) );
+	);
+
+
+	if ( isset( $_POST['template'] ) && 'group_subgroups' === $_POST['template'] ) {
+		$descendant_groups = bp_get_descendent_groups();
+		$ids               = wp_list_pluck( $descendant_groups, 'id' );
+		$args['include']   = $ids;
+		$args['slug']      = '';
+		$args['type']      = '';
+	}
+
+	// Setup the Groups template global.
+	$groups_template = new BP_Groups_Template( $args );
 
 	/**
 	 * Filters whether or not there are groups to iterate over for the groups loop.

@@ -398,6 +398,10 @@ function bp_nouveau_pagination( $position ) {
 		}
 	}
 
+	if ( 'subgroups' === $pagination_type ) {
+		$pagination_type = 'groups';
+	}
+
 	switch ( $pagination_type ) {
 		case 'blogs':
 			$pag_count   = bp_get_blogs_pagination_count();
@@ -523,7 +527,7 @@ function bp_nouveau_loop_classes() {
 		// The $component is faked if it's the single group member loop
 		if ( ! bp_is_directory() && ( bp_is_group() && 'members' === bp_current_action() ) ) {
 			$component = 'members_group';
-		} elseif ( ! bp_is_directory() && ( bp_is_user() && ( 'my-friends' === bp_current_action() || 'mutual' === bp_current_action() || 'requests' === bp_current_action() ) ) ) {
+		} elseif ( ! bp_is_directory() && ( bp_is_user() && ( 'my-friends' === bp_current_action() || 'mutual' === bp_current_action() ) ) ) {
 			$component = 'members_friends';
 		} else {
 			$component = sanitize_key( bp_current_component() );
@@ -1222,6 +1226,8 @@ function bp_nouveau_nav_has_count() {
 		$count = $nav_item->count;
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'members' === $nav_item->slug ) {
 	    $count = 0 !== (int) groups_get_current_group()->total_member_count;
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'subgroups' === $nav_item->slug ) {
+	    $count = 0 !== (int) count( bp_get_descendent_groups() );
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && ! empty( $nav_item->primary ) ) {
 		$count = (bool) strpos( $nav_item->name, '="count"' );
 	}
@@ -1265,6 +1271,8 @@ function bp_nouveau_nav_count() {
 		} elseif ( 'groups' === $bp_nouveau->displayed_nav && ( 'members' === $nav_item->slug || 'all-members' === $nav_item->slug ) ) {
 			$count = groups_get_current_group()->total_member_count;
 
+		} elseif ( 'groups' === $bp_nouveau->displayed_nav &&  'subgroups' === $nav_item->slug  ) {
+			$count = count( bp_get_descendent_groups() );
 		} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'leaders' == $nav_item->slug ) {
 			$group  = groups_get_current_group();
 			$admins = groups_get_group_admins( $group->id );
@@ -1805,6 +1813,8 @@ function bp_nouveau_search_object_data_attr( $attr = '' ) {
 
 	if ( bp_is_active( 'groups' ) && bp_is_group_members() ) {
 		$attr = join( '_', $objects );
+	} elseif ( bp_is_active( 'groups' ) && bp_is_group_subgroups() ) {
+		$attr = 'group_subgroups';
 	} else {
 		$attr = $objects['secondary'];
 	}
