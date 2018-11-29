@@ -10,7 +10,7 @@
 .bp-list {
 
 	@include box-model();
-	border-top: 1px solid $light-grey;
+	//border-top: 1px solid $light-grey;
 	clear: both;
 	list-style: none;
 	margin: $marg-lrg 0;
@@ -107,9 +107,9 @@
 				overflow: hidden;
 
 				.item-block { // element is a styling div for positional purposes only
-					float: left;
-					margin-right: 2%;
-					width: 50%;
+					// float: left;
+					// margin-right: 2%;
+					// width: 50%;
 				}
 
 				.list-title,

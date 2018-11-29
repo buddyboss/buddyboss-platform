@@ -28,10 +28,7 @@
 		</div><!-- #item-header-avatar -->
 
 		<div id="item-header-content">
-
-			<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) : ?>
-				<h2 class="user-nicename">@<?php bp_displayed_user_mentionname(); ?></h2>
-			<?php endif; ?>
+			<h2 class="user-nicename"><?php echo bp_core_get_user_displayname( bp_displayed_user_id() ); ?></h2>
 
 			<?php
 			bp_nouveau_member_header_buttons(
@@ -43,10 +40,7 @@
 			);
 			?>
 
-			<?php bp_nouveau_member_hook( 'before', 'header_meta' ); ?>
-
 			<?php
-
 			if ( true === bp_member_type_enable_disable() ) {
 				if ( true === bp_member_type_display_on_profile() ) {
 
@@ -71,12 +65,22 @@
 			}
 			?>
 
-			<?php if ( bp_nouveau_member_has_meta() ) : ?>
+			<?php if ( ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) || bp_nouveau_member_has_meta() ) : ?>
 				<div class="item-meta">
+					<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) : ?>
+						<span class="mention-name">@<?php bp_displayed_user_mentionname(); ?></span>
+					<?php endif; ?>
 
-					<?php bp_nouveau_member_meta(); ?>
+					<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && bp_nouveau_member_has_meta() ) : ?>
+						<span class="separator">&bull;</span>
+					<?php endif; ?>
 
-				</div><!-- #item-meta -->
+					<?php bp_nouveau_member_hook( 'before', 'header_meta' ); ?>
+
+					<?php if ( bp_nouveau_member_has_meta() ) : ?>
+						<?php bp_nouveau_member_meta(); ?>
+					<?php endif; ?>
+				</div>	
 			<?php endif; ?>
 
 		</div><!-- #item-header-content -->

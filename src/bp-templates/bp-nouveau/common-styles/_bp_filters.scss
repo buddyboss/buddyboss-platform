@@ -206,9 +206,19 @@
 		}
 	}
 
-	.subnav-filters .grid-filters {
-		float: right;
-		padding: 0;
+	@include medium-small-max() {
+
+		.subnav-filters .grid-filters {
+			margin-top: 10px;
+		}
+	}
+
+	@include medium-small-up() {
+
+		.subnav-filters .grid-filters {
+			float: right;
+			padding: 0;
+		}
 	}
 
 } // close .buddypress-wrap

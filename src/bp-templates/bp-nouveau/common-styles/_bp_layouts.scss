@@ -37,6 +37,7 @@
 			position: relative;
 			overflow: hidden;
 			padding-top: 14px;
+			height: 100%;
 
 			.list-title {
 				padding: $pad-sml;
@@ -68,11 +69,9 @@
 		&.members-list {
 
 			.list-wrap {
-				min-height: 340px;
 
 				.item-block {
 					margin: 0 auto;
-					min-height: 7rem;
 				}
 			}
 		}
@@ -83,7 +82,6 @@
 
 				.item-block {
 					margin: 0 auto;
-					min-height: 7rem;
 				}
 			}
 		}
@@ -91,11 +89,6 @@
 		&.groups-list {
 
 			.list-wrap {
-				min-height: 470px;
-
-				.item-block {
-					min-height: 6rem;
-				}
 
 				.group-desc {
 					margin: $marg-med auto 0;
@@ -118,11 +111,9 @@
 		&.blogs-list {
 
 			.list-wrap {
-				min-height: 350px;
 
 				.item-block {
 					margin: 0 auto;
-					min-height: 7rem;
 				}
 			}
 		}
@@ -162,18 +153,12 @@
 		}
 
 		&.two,
-		&.three {
+		&.three,
+		&.four {
 
 			> li {
-				width: 50%;
-
-				&:nth-child(odd) {
-					padding-right: 10px;
-				}
-
-				&:nth-child(even) {
-					padding-left: 10px;
-				}
+				flex: 0 0 50%;
+				max-width: 50%;
 
 				.item {
 					margin: 1rem auto 0;
@@ -199,24 +184,8 @@
 
 			> li {
 				padding-top: 0;
-				width: 33.333333%;
-				width: calc(100% / 3);
-
-				&:nth-child(1n+1) {
-					padding-left: 5px;
-					padding-right: 5px;
-				}
-
-				&:nth-child(3n+3) {
-					padding-left: 5px;
-					padding-right: 0;
-				}
-
-				&:nth-child(3n+1) {
-					padding-left: 0;
-					padding-right: 5px;
-				}
-
+				flex: 0 0 33.333333%;
+				max-width: 33.333333%;
 			} // close >li
 		}
 	} // .grid
@@ -232,23 +201,8 @@
 		&.four {
 
 			> li {
-				width: 25%;
-
-				&:nth-child(1n+1) {
-					padding-left: 5px;
-					padding-right: 5px;
-				}
-
-				&:nth-child(4n+4) {
-					padding-left: 5px;
-					padding-right: 0;
-				}
-
-				&:nth-child(4n+1) {
-					padding-left: 0;
-					padding-right: 5px;
-				}
-
+				flex: 0 0 25%;
+				max-width: 25%;
 			} // close > li
 		}
 	} // .grid
@@ -264,14 +218,16 @@
 .buddypress-wrap {
 
 	.grid.bp-list {
+		display: flex;
+		flex-flow: row wrap;
 		padding-top: $pad-med;
+		margin-left: -5px;
+		margin-right: -5px;
 
 		> li {
 			border-bottom: none;
-
-			.list-wrap {
-				padding-bottom: 3em;
-			}
+			padding: 0 5px;
+			margin-bottom: $marg-sml;
 
 			.item-avatar {
 				margin: 0;
@@ -302,12 +258,12 @@
 				left: 0;
 				margin: 0 auto;
 				text-align: center;
-				width: 96%;
+				//width: 96%;
 
 				.item-block,
 				.group-desc {
 					float: none;
-					width: 96%;
+					//width: 96%;
 				}
 
 				.item-block {
@@ -333,20 +289,10 @@
 			}
 
 			.action {
-				bottom: 5px;
-				float: none;
-				height: auto;
-				left: 0;
-				margin: 0;
-				padding: 0 5px;
-				position: absolute;
-				text-align: center;
-				top: auto;
-				width: 100%;
 
 				.generic-button {
 					float: none;
-					margin: $marg-xsml 0 0;
+					margin: 0;
 					text-align: center;
 					width: 100%;
 
@@ -383,22 +329,10 @@
 	// narrow widths force the box taller & adjust some padding values.
 	// In addition blogs grid in narrow theme widths need a little more height.
 
-	.grid.three,
-	.grid.four {
-
-		> li {
-
-			.group-desc {
-				min-height: 8em;
-			}
-		}
-	}
-
 	.blogs-list.grid.three,
 	.blogs-list.grid.four {
 
 		> li {
-			min-height: 350px;
 
 			.last-activity {
 				margin-bottom: 0;
@@ -411,40 +345,6 @@
 	}
 
 } // close .buddypress-wrap
-
-// If we're logged out remove additional padding designed to help
-// provide spaces for action button elements & reduce min-heights.
-
-.buddypress:not(.logged-in) {
-
-	.grid.bp-list {
-
-		.list-wrap {
-			padding-bottom: $marg-xsml;
-		}
-	}
-
-	.grid.groups-list {
-
-		.list-wrap {
-			min-height: 430px;
-		}
-	}
-
-	.grid.members-list, {
-
-		.list-wrap {
-			min-height: 300px;
-		}
-	}
-
-	.grid.blogs-list, {
-
-		.list-wrap {
-			min-height: 320px;
-		}
-	}
-}
 
 // ==== Vertical Navigation Classes ====
 
