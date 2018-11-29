@@ -1135,7 +1135,7 @@ function bp_nouveau_group_meta() {
 			if ( $is_group ) {
 					$meta = array(
 						'status'          =>  bp_get_group_type(),
-						'group_type_list' =>  bp_get_group_type_list(),
+						//'group_type_list' =>  bp_get_group_type_list(),
 						'description'     =>  bp_get_group_description(),
 					);
 
