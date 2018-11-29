@@ -110,13 +110,13 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 		$qs[] = 'offset=' . intval( $post_query['offset'] );
 	}
 
-	if ( isset( $_POST['member_type_id'] ) && '' !== $_POST['member_type_id'] && 'all' !== $_POST['member_type_id'] ) {
+	if ( isset( $_POST['member_type_id'] ) && '' !== $_POST['member_type_id'] && 'all' !== $_POST['member_type_id'] && 'undefined' !== $_POST['member_type_id'] ) {
 		$member_type_id = $_POST['member_type_id'];
 		$member_type_key= get_post_meta( $member_type_id, '_bp_member_type_key', true);
 		$qs[] = 'member_type=' . $member_type_key;
 	}
 
-	if ( isset( $_POST['group_type'] ) && '' !== $_POST['group_type'] && 'all' !== $_POST['group_type'] ) {
+	if ( isset( $_POST['group_type'] ) && '' !== $_POST['group_type'] && 'all' !== $_POST['group_type'] && 'undefined' !== $_POST['group_type'] ) {
 		$group_type = $_POST['group_type'];
 		$qs[] = 'group_type=' . $group_type;
 	}
