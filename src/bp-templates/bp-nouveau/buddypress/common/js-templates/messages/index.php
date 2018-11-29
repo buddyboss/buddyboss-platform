@@ -11,6 +11,7 @@
 ?>
 <div class="subnav-filters filters user-subnav bp-messages-filters" id="subsubnav"></div>
 
+<input type="hidden" id="thread-id" value="" />
 <div class="bp-messages-feedback"></div>
 <div class="bp-messages-threads-list"></div>
 <div class="bp-messages-content">

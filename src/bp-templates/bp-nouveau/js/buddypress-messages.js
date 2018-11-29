@@ -791,6 +791,11 @@ window.bp = window.bp || {};
 				);
 			}
 
+			$.each( $( '.thread-content' ), function() {
+				$(this).closest('.thread-item').removeClass('current');
+			} );
+
+			target.closest( '.thread-item' ).addClass('current');
 		}
 	} );
 
@@ -806,6 +811,10 @@ window.bp = window.bp || {};
 		initialize: function() {
 			if ( this.model.get( 'unread' ) ) {
 				this.el.className += ' unread';
+			}
+
+			if ( $('#thread-id').val() == this.model.get('id') ) {
+				this.el.className += ' current';
 			}
 
 			var recipientsCount = this.model.get( 'recipients' ).length, toOthers = '';
@@ -1236,6 +1245,10 @@ window.bp = window.bp || {};
 
 		composeMessage: function() {
 			bp.Nouveau.Messages.composeView();
+
+			document.body.classList.remove('view');
+			document.body.classList.remove('inbox');
+			document.body.classList.add('compose');
 		},
 
 		viewMessage: function( thread_id ) {
@@ -1252,6 +1265,22 @@ window.bp = window.bp || {};
 			}
 
 			bp.Nouveau.Messages.singleView( thread );
+
+			// set current thread id
+			$('#thread-id').val(thread_id);
+
+			$.each( $( '.thread-content' ), function() {
+				var _this = $(this);
+				if ( _this.data('thread-id') == thread_id ) {
+					_this.closest('.thread-item').addClass('current');
+				} else {
+					_this.closest('.thread-item').removeClass('current');
+				}
+			} );
+
+			document.body.classList.add('view');
+			document.body.classList.remove('inbox');
+			document.body.classList.remove('compose');
 		},
 
 		starredView: function() {
@@ -1262,6 +1291,10 @@ window.bp = window.bp || {};
 		inboxView: function() {
 			bp.Nouveau.Messages.box = 'inbox';
 			bp.Nouveau.Messages.threadsView();
+
+			document.body.classList.remove('view');
+			document.body.classList.add('inbox');
+			document.body.classList.remove('compose');
 		}
 	} );
 
