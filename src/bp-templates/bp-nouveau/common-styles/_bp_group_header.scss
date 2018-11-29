@@ -49,6 +49,41 @@
 		}
 	} // close moderators-lists
 
+	.parents-lists {
+		margin: 0 20px 0 0;
+
+		.parents-title {
+
+			@include font-size(14);
+		}
+
+		.group-list {
+			margin: 0 0 $marg-xsml;
+
+			ul:after {
+				clear: both;
+				content: "";
+				display: table;
+			}
+
+			li {
+				display: inline-block;
+				float: none;
+				margin: 4px 0 0 4px;
+			}
+		}
+
+		img.avatar {
+
+			@include box-shadow-none();
+			float: none;
+			height: 30px;
+			margin: 0;
+			max-width: 100%;
+			width: 30px;
+		}
+	}
+
 	.desc-wrap {
 		background: $light-grey;
 		border: 1px solid $med-light-grey;
@@ -86,6 +121,8 @@
 			margin-left: 15px;
 			text-align: right;
 			max-width: 25%;
+			display: flex;
+			justify-content: space-between;
 		}
 
 		.groups-meta {

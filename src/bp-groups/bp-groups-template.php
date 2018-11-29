@@ -1720,6 +1720,32 @@ function bp_group_list_admins( $group = false ) {
 }
 
 /**
+ * Output markup listing group admins.
+ *
+ * @since BuddyPress 1.0.0
+ *
+ * @param object|bool $group Optional. Group object.
+ *                           Default: current group in loop.
+ */
+function bp_group_list_parents( $group = false ) {
+	global $groups_template;
+
+	if ( empty( $group ) ) {
+		$group =& $groups_template->group;
+	}
+
+	if ( ! empty( $group->parent_id ) ) {
+		$parent_group = groups_get_group( $group->parent_id );
+		?>
+		<ul id="group-parents">
+				<li>
+					<a href="<?php bp_group_permalink($parent_group) ?>" class="bp-tooltip" data-bp-tooltip="<?php printf( ('%s'),  bp_get_group_name($parent_group) ) ?>"><?php echo bp_core_fetch_avatar( array( 'item_id' => $parent_group->id, 'object' => 'group', 'alt' => sprintf( __( 'Group picture of %s', 'buddyboss' ), bp_get_group_name($parent_group) ) ) ) ?></a>
+				</li>
+		</ul>
+	<?php }
+}
+
+/**
  * Output markup listing group mod.
  *
  * @since BuddyPress 1.0.0
