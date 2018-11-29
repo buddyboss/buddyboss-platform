@@ -2342,6 +2342,7 @@ body.no-js .single-item-header .js-self-profile-button {
 
 .groups-header .moderators-lists {
   margin-top: 0;
+  display: table-cell;
 }
 
 .groups-header .moderators-lists .moderators-title {
@@ -2376,7 +2377,8 @@ body.no-js .single-item-header .js-self-profile-button {
 }
 
 .groups-header .parents-lists {
-  margin: 0 20px 0 0;
+  padding: 0 1em 0 0;
+  display: table-cell;
 }
 
 .groups-header .parents-lists .parents-title {
@@ -2441,8 +2443,7 @@ body.no-js .single-item-header .js-self-profile-button {
     margin-left: 15px;
     text-align: right;
     max-width: 25%;
-    display: flex;
-    justify-content: space-between;
+    display: table;
   }
   .groups-header .groups-meta {
     clear: both;

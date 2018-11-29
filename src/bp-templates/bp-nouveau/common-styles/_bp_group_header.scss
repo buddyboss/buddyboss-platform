@@ -16,6 +16,7 @@
 	// generic members with elevated access.
 	.moderators-lists {
 		margin-top: 0;
+		display: table-cell;
 
 		.moderators-title {
 
@@ -50,7 +51,8 @@
 	} // close moderators-lists
 
 	.parents-lists {
-		margin: 0 20px 0 0;
+		padding: 0 1em 0 0;
+		display: table-cell;
 
 		.parents-title {
 
@@ -121,8 +123,7 @@
 			margin-left: 15px;
 			text-align: right;
 			max-width: 25%;
-			display: flex;
-			justify-content: space-between;
+			display: table;
 		}
 
 		.groups-meta {
