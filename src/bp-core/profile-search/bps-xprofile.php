@@ -267,7 +267,7 @@ function bp_ps_anyfield_setup ($fields)
 add_filter ('bp_ps_add_fields', 'bp_ps_learndash_course_setup');
 
 /**
- * Function for registering a learndash course field in frontend and backend.
+ * Function for registering a LearnDash course field in frontend and backend.
  *
  * @since BuddyBoss 3.1.1
  *
@@ -277,7 +277,7 @@ add_filter ('bp_ps_add_fields', 'bp_ps_learndash_course_setup');
  */
 function bp_ps_learndash_course_setup ($fields) {
 
-	// check for learndash plugin is activated or not.
+	// check is LearnDash plugin is activated or not.
 	if(in_array('sfwd-lms/sfwd_lms.php', apply_filters('active_plugins', get_option('active_plugins')))){
 
 		$course_query = new WP_Query( array( 'post_type' => 'sfwd-courses', 'posts_per_page' => -1 ) );
