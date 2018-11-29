@@ -1720,9 +1720,9 @@ function bp_group_list_admins( $group = false ) {
 }
 
 /**
- * Output markup listing group admins.
+ * Output markup listing group parents.
  *
- * @since BuddyPress 1.0.0
+ * @since Buddyboss 3.1.1
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -1736,12 +1736,25 @@ function bp_group_list_parents( $group = false ) {
 
 	if ( ! empty( $group->parent_id ) ) {
 		$parent_group = groups_get_group( $group->parent_id );
+		$group_type   = bp_groups_get_group_type( $group->parent_id );
+		$group_type   = bp_groups_get_group_type_object( $group_type )->labels['name'] ?: esc_html__( 'Subgroup of', 'buddyboss' );
 		?>
-		<ul id="group-parents">
-				<li>
-					<a href="<?php bp_group_permalink($parent_group) ?>" class="bp-tooltip" data-bp-tooltip="<?php printf( ('%s'),  bp_get_group_name($parent_group) ) ?>"><?php echo bp_core_fetch_avatar( array( 'item_id' => $parent_group->id, 'object' => 'group', 'alt' => sprintf( __( 'Group picture of %s', 'buddyboss' ), bp_get_group_name($parent_group) ) ) ) ?></a>
-				</li>
-		</ul>
+		<dl class="parents-lists">
+			<dt class="parents-title"><?php echo $group_type; ?></dt>
+			<dd class="group-list parent">
+				<ul id="group-parents">
+					<li>
+						<a href="<?php bp_group_permalink( $parent_group ) ?>" class="bp-tooltip"
+						   data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ) ?>"><?php echo bp_core_fetch_avatar( array(
+								'item_id' => $parent_group->id,
+								'object'  => 'group',
+								'alt'     => sprintf( __( 'Group picture of %s', 'buddyboss' ), bp_get_group_name( $parent_group ) )
+							) ) ?></a>
+					</li>
+				</ul>
+			</dd>
+		</dl>
+
 	<?php }
 }
 

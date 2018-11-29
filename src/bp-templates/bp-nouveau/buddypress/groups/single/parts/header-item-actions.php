@@ -10,11 +10,7 @@
 
 	<?php if ( bp_enable_group_hierarchies() ): ?>
 		<h2 class="bp-screen-reader-text"><?php esc_html_e( 'Group Parents', 'buddyboss' ); ?></h2>
-
-		<dl class="parents-lists">
-			<dt class="parents-title"><?php esc_html_e( 'Subgroup of', 'buddyboss' ); ?></dt>
-			<dd class="group-list parent"><?php bp_group_list_parents(); ?></dd>
-		</dl>
+		<?php bp_group_list_parents(); ?>
 	<?php endif; ?>
 
 	<?php if ( bp_current_user_can( 'groups_access_group' ) ) : ?>
