@@ -12,7 +12,9 @@
 <div class="subnav-filters filters user-subnav bp-messages-filters" id="subsubnav"></div>
 
 <div class="bp-messages-feedback"></div>
-<div class="bp-messages-content"></div>
+<div class="bp-messages-threads-list"></div>
+<div class="bp-messages-content">
+</div>
 
 <script type="text/html" id="tmpl-bp-messages-feedback">
 	<div class="bp-feedback {{data.type}}">

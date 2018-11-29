@@ -183,7 +183,7 @@ window.bp = window.bp || {};
 
 			this.views.add( { id: 'threads', view: threads_list } );
 
-			threads_list.inject( '.bp-messages-content' );
+			threads_list.inject( '.bp-messages-threads-list' );
 
 			// Attach filters
 			this.displayFilters( this.threads );
@@ -209,10 +209,24 @@ window.bp = window.bp || {};
 		},
 
 		singleView: function( thread ) {
-			// Remove all existing views.
-			this.clearViews();
 
 			this.box = 'single';
+
+			var threadView = false;
+			if ( ! _.isUndefined( this.views.models ) ) {
+				_.each( this.views.models, function( model ) {
+					if ( model.get('id') === 'threads' ) {
+						threadView = true;
+					}
+				}, this );
+			}
+
+			if ( ! threadView ) {
+				// Remove all existing views except threads view.
+				this.clearViews();
+
+				this.threadsView();
+			}
 
 			// Create the single thread view
 			var single_thread = new bp.Views.userMessages( { collection: this.messages, thread: thread } );
@@ -702,7 +716,9 @@ window.bp = window.bp || {};
 		},
 
 		threadsFetched: function() {
-			bp.Nouveau.Messages.removeFeedback();
+			if ( bp.Nouveau.Messages.box !== 'single' ) {
+				bp.Nouveau.Messages.removeFeedback();
+			}
 
 			// Display the bp_after_member_messages_loop hook.
 			if ( this.collection.options.afterLoop ) {
@@ -886,10 +902,10 @@ window.bp = window.bp || {};
 
 			this.views.add( new bp.Views.Pagination( { model: new Backbone.Model( collection.options ) } ) );
 
-			this.views.add( '.user-messages-bulk-actions', new bp.Views.BulkActions( {
-				model: new Backbone.Model( BP_Nouveau.messages.bulk_actions ),
-				collection : collection
-			} ) );
+			// this.views.add( '.user-messages-bulk-actions', new bp.Views.BulkActions( {
+			// 	model: new Backbone.Model( BP_Nouveau.messages.bulk_actions ),
+			// 	collection : collection
+			// } ) );
 		},
 
 		filterThreads: function() {
