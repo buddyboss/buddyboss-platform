@@ -3125,7 +3125,7 @@ function bp_get_groups_of_removed_group_types() {
 	// get removed group type post ids
 	$bp_group_type_ids = bp_get_removed_group_types();
 
-	// get removed member type names/slugs
+	// get removed group type names/slugs
 	$bp_group_type_names = array();
 	if( isset($bp_group_type_ids) && !empty($bp_group_type_ids) ){
 		foreach($bp_group_type_ids as $single){
