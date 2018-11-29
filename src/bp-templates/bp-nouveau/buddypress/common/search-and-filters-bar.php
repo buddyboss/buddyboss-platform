@@ -9,7 +9,7 @@
 <div class="subnav-filters filters no-ajax" id="subnav-filters">
 
 	<?php if ( 'friends' !== bp_current_component() ) : ?>
-    
+
         <?php if ( 'members' != bp_current_component() || bp_disable_advanced_profile_search() ) : ?>
             <div class="subnav-search clearfix">
 
@@ -17,9 +17,9 @@
 
             </div>
         <?php endif; ?>
-    
+
 	<?php endif; ?>
-    
+
     <?php if ( 'members' == bp_current_component() || 'groups' == bp_current_component() || 'friends' == bp_current_component() ): ?>
         <?php bp_get_template_part( 'common/filters/grid-filters' ); ?>
     <?php endif; ?>

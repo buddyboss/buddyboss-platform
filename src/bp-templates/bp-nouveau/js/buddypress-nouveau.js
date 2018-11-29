@@ -37,7 +37,7 @@ window.bp = window.bp || {};
 
 			// Listen to events ("Add hooks!")
 			this.addListeners();
-            
+
             // Toggle Grid/List View
 			this.switchGridList();
 
@@ -298,6 +298,9 @@ window.bp = window.bp || {};
 			} else if ( 'group_requests' === data.object ) {
 				data.object = 'groups';
 				data.template = 'group_requests';
+			} else if ( 'group_subgroups' === data.object ) {
+				data.object = 'groups';
+				data.template = 'group_subgroups';
 			} else if ( 'notifications' === data.object ) {
 				data.object = 'members';
 				data.template = 'member_notifications';

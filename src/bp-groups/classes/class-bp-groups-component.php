@@ -193,7 +193,7 @@ class BP_Groups_Component extends BP_Component {
 				require $this->path . 'bp-groups/actions/access.php';
 
 				// Public nav items.
-				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'send-invites' ), true ) ) {
+				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'send-invites', 'subgroups' ), true ) ) {
 					require $this->path . 'bp-groups/screens/single/' . bp_current_action() . '.php';
 				}
 
@@ -643,6 +643,23 @@ class BP_Groups_Component extends BP_Component {
 					'item_css_id'     => 'activity',
 					'no_access_url'   => $group_link,
 				);
+			}
+
+			if ( bp_enable_group_hierarchies() ) {
+				$descendant_groups = bp_get_descendent_groups();
+				if ( $total_descendant = count( $descendant_groups ) ) {
+					$sub_nav[] = array(
+						'name'            => sprintf( _x( 'Subgroups', 'My Group screen nav', 'buddyboss' ), '<span>' . number_format( $total_descendant ) . '</span>' ),
+						'slug'            => 'subgroups',
+						'parent_url'      => $group_link,
+						'parent_slug'     => $this->current_group->slug,
+						'screen_function' => 'groups_screen_group_subgroups',
+						'position'        => 20,
+						'user_has_access' => $this->current_group->user_has_access,
+						'item_css_id'     => 'subgroups',
+						'no_access_url'   => $group_link,
+					);
+				}
 			}
 
 			// If this is a private group, and the user is not a

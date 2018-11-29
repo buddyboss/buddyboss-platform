@@ -2747,6 +2747,17 @@ function bp_is_group_activity() {
 }
 
 /**
+ * Is the current page a group's subgroups page?
+ *
+ * @since Buddyboss 3.1.1
+ *
+ * @return bool True if the current page is a group's subgroups page.
+ */
+function bp_is_group_subgroups() {
+	return (bool) ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'subgroups' ) );
+}
+
+/**
  * Is the current page a group forum topic?
  *
  * @since BuddyPress 1.1.0

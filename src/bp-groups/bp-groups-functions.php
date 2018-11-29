@@ -2683,6 +2683,28 @@ function bp_get_current_group_directory_type() {
 }
 
 /**
+ * Is this a user's "My Groups" view? This can happen on the main directory or
+ * at a user's profile (/members/username/groups/).
+ * @since BuddyBoss 3.1.1
+ *
+ * @return bool True if yes.
+ */
+function bp_is_my_groups_view() {
+	$retval = false;
+
+	// Could be the user profile groups pane.
+	if ( bp_is_user_groups() ) {
+		$retval = true;
+
+		// Could be the "my groups" filter on the main directory?
+	} elseif ( bp_is_groups_directory() && ( isset( $_COOKIE['bp-groups-scope'] ) && 'personal' == $_COOKIE['bp-groups-scope'] ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+/**
  * Delete a group's type when the group is deleted.
  *
  * @since BuddyPress 2.6.0

@@ -1229,6 +1229,8 @@ function bp_nouveau_group_template_part() {
 			$template = 'activity';
 		} elseif ( bp_is_group_members() ) {
 			$template = 'members';
+		} elseif ( bp_is_group_subgroups() ) {
+			$template = 'subgroups';
 		} elseif ( bp_is_group_invites() ) {
 			$template = 'send-invites';
 		} elseif ( bp_is_group_membership_request() ) {
