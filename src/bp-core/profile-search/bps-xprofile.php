@@ -263,7 +263,7 @@ function bp_ps_anyfield_setup ($fields)
 	return $fields;
 }
 
-// Hook for registering a learndash course field in frontend and backend.
+// Hook for registering a LearnDash course field in frontend and backend.
 add_filter ('bp_ps_add_fields', 'bp_ps_learndash_course_setup');
 
 /**
@@ -290,11 +290,11 @@ function bp_ps_learndash_course_setup ($fields) {
 		wp_reset_query();
 
 		$f = new stdClass;
-		$f->group = __('Learndash', 'buddyboss');
+		$f->group = __('LearnDash', 'buddyboss');
 		$f->id = 'learndash_courses';
 		$f->code = 'field_learndash_courses';
-		$f->name = __('Learndash Courses', 'buddyboss');
-		$f->description = __('Learndash Courses', 'buddyboss');
+		$f->name = __('Courses', 'buddyboss');
+		$f->description = __('Courses', 'buddyboss');
 		$f->type = 'selectbox';
 		$f->format = bp_ps_xprofile_format('selectbox','learndash_courses');
 		$f->options = $courses;
