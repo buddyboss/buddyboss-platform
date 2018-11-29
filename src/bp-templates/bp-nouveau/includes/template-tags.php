@@ -527,7 +527,7 @@ function bp_nouveau_loop_classes() {
 		// The $component is faked if it's the single group member loop
 		if ( ! bp_is_directory() && ( bp_is_group() && 'members' === bp_current_action() ) ) {
 			$component = 'members_group';
-		} elseif ( ! bp_is_directory() && ( bp_is_user() && ( 'my-friends' === bp_current_action() || 'mutual' === bp_current_action() || 'requests' === bp_current_action() ) ) ) {
+		} elseif ( ! bp_is_directory() && ( bp_is_user() && ( 'my-friends' === bp_current_action() || 'mutual' === bp_current_action() ) ) ) {
 			$component = 'members_friends';
 		} else {
 			$component = sanitize_key( bp_current_component() );
