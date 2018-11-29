@@ -298,7 +298,7 @@ function bp_ps_learndash_course_setup ($fields) {
 		$f->type = 'selectbox';
 		$f->format = bp_ps_xprofile_format('selectbox','learndash_courses');
 		$f->options = $courses;
-		$f->search = 'bp_ps_learndash_search';
+		$f->search = 'bp_ps_learndash_course_users_search';
 
 		$fields[] = $f;
 
@@ -315,7 +315,7 @@ function bp_ps_learndash_course_setup ($fields) {
  *
  * @return array
  */
-function bp_ps_learndash_search( $f ) {
+function bp_ps_learndash_course_users_search( $f ) {
 
 	$course_id = $f->value;
 	if ( isset( $course_id ) && !empty( $course_id ) ) {
