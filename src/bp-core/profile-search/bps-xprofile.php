@@ -280,16 +280,20 @@ function bp_ps_learndash_course_setup ($fields) {
 	// check is LearnDash plugin is activated or not.
 	if(in_array('sfwd-lms/sfwd_lms.php', apply_filters('active_plugins', get_option('active_plugins')))){
 
-		$course_query = new WP_Query( array( 'post_type' => 'sfwd-courses', 'posts_per_page' => -1 ) );
+		global $wpdb;
+
+		$query = "SELECT DISTINCT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s ORDER BY menu_order";
+
+		$courses_arr = $wpdb->get_col( $wpdb->prepare( $query, 'sfwd-courses', 'publish' ) );
 
 		$courses = array();
-		if ( $course_query->have_posts() ) :
 
-			while ( $course_query->have_posts() ) : $course_query->the_post();
-				$courses[ get_the_ID() ] = get_the_title();
-			endwhile;
+		if ( $courses_arr ) :
 
-			wp_reset_postdata();
+			foreach ( $courses_arr as $course ) {
+				$post = get_post( $course );
+				$courses[ $post->ID ] = get_the_title( $post->ID );
+			}
 
 		endif;
 
