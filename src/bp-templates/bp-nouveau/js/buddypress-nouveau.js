@@ -747,7 +747,7 @@ window.bp = window.bp || {};
 			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
 
 				//support for buddyboss theme for button actions and icons and texts
-				if ( $(document.body).hasClass('buddyboss-theme') ) {
+				if ( $(document.body).hasClass('buddyboss-theme') && typeof target.data('balloon') !== 'undefined' ) {
 					target.attr( 'data-balloon', target.data('title') );
 				} else {
 					target.text( target.data('title') );
@@ -868,7 +868,7 @@ window.bp = window.bp || {};
 			if ( target.hasClass( 'bp-toggle-action-button-clicked' ) && ! target.hasClass( 'loading' ) ) {
 
 				//support for buddyboss theme for button actions and icons and texts
-				if ( $(document.body).hasClass('buddyboss-theme') ) {
+				if ( $(document.body).hasClass('buddyboss-theme') && typeof target.data('balloon') !== 'undefined' ) {
 					target.attr( 'data-balloon', target.data('title-displayed') );
 				} else {
 					target.text( target.data('title-displayed') ); // change text to displayed context
@@ -888,7 +888,7 @@ window.bp = window.bp || {};
 				if ( $(this).hasClass( 'bp-toggle-action-button-clicked' ) && ! $(this).hasClass( 'loading' ) ) {
 
 					//support for buddyboss theme for button actions and icons and texts
-					if ( $(document.body).hasClass('buddyboss-theme') ) {
+					if ( $(document.body).hasClass('buddyboss-theme') && typeof $(this).data('balloon') !== 'undefined' ) {
 						$(this).attr( 'data-balloon', $(this).data('title-displayed') );
 					} else {
 						$(this).text( $(this).data('title-displayed') ); // change text to displayed context
