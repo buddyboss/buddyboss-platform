@@ -135,7 +135,7 @@ if ( $group_types ) : ?>
 		$possible_parent_groups = bp_get_possible_parent_groups();
 		?>
 
-		<fieldset>
+		<fieldset class="select group-parent">
 			<legend><?php esc_html_e( 'Group Hierarchy', 'buddyboss' ); ?></legend>
 			<p tabindex="0"><?php esc_html_e( 'Optionally select a group to make this group a subgroup of.', 'buddyboss' ); ?></p>
 			<select id="bp-groups-parent" name="bp-groups-parent" autocomplete="off">
