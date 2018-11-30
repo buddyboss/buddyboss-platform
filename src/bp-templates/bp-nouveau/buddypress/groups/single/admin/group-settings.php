@@ -64,9 +64,9 @@ $group_types = bp_groups_get_group_types( array( 'show_in_create_screen' => true
 if ( $group_types ) : ?>
 
 	<fieldset class="group-create-types">
-		<legend><?php esc_html_e( 'Group Types', 'buddyboss' ); ?></legend>
+		<legend><?php esc_html_e( 'Group Type', 'buddyboss' ); ?></legend>
 
-		<p tabindex="0"><?php esc_html_e( 'Select the types this group should be a part of.', 'buddyboss' ); ?></p>
+		<p tabindex="0"><?php esc_html_e( 'Select the type this group should be a part of.', 'buddyboss' ); ?></p>
 
 		<?php foreach ( $group_types as $type ) : ?>
 			<div class="checkbox">
