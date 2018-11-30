@@ -831,18 +831,18 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 			'type'       => 'select',
 			'choices'    => bp_nouveau_customizer_grid_choices(),
 		),
-		'group_dir_layout' => array(
-			'label'      => __( 'Use column navigation for the Groups directory.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_dir_layout',
-			'settings'   => 'bp_nouveau_appearance[groups_dir_layout]',
-			'type'       => 'checkbox',
-		),
-		'group_dir_tabs' => array(
-			'label'      => __( 'Use tab styling for Groups directory navigation.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_dir_layout',
-			'settings'   => 'bp_nouveau_appearance[groups_dir_tabs]',
-			'type'       => 'checkbox',
-		),
+//		'group_dir_layout' => array(
+//			'label'      => __( 'Use column navigation for the Groups directory.', 'buddyboss' ),
+//			'section'    => 'bp_nouveau_dir_layout',
+//			'settings'   => 'bp_nouveau_appearance[groups_dir_layout]',
+//			'type'       => 'checkbox',
+//		),
+//		'group_dir_tabs' => array(
+//			'label'      => __( 'Use tab styling for Groups directory navigation.', 'buddyboss' ),
+//			'section'    => 'bp_nouveau_dir_layout',
+//			'settings'   => 'bp_nouveau_appearance[groups_dir_tabs]',
+//			'type'       => 'checkbox',
+//		),
 	) );
 }
 
