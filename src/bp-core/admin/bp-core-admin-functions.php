@@ -1351,7 +1351,7 @@ function bp_member_type_custom_metaboxes() {
 		$get_all_registered_group_types = bp_get_active_group_types();
 
 		// Add meta box if group types is entered.
-		if ( isset( $get_all_registered_group_types ) && !empty( $get_all_registered_group_types ) ) {
+		if ( isset( $get_all_registered_group_types ) && !empty( $get_all_registered_group_types ) && true === bp_restrict_group_creation() ) {
 			add_meta_box( 'bp-member-type-group-create', __( 'Members with this profile type are only allowed to create groups with the following group types. Leave all unchecked to allow members to create any group type.', 'buddyboss' ), 'bp_member_type_group_create_metabox', null, 'normal', 'high' );
 		}
 	}
