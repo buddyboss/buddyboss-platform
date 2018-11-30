@@ -3797,6 +3797,8 @@ function bp_group_join_button( $group = false ) {
 
 							$get_selected_member_type_join = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
 
+							$get_selected_member_type_join = ( isset( $get_selected_member_type_join ) && !empty( $get_selected_member_type_join ) ) ? $get_selected_member_type_join : array();
+
 							$get_requesting_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
 
 							if ( in_array( $get_requesting_user_member_type, $get_selected_member_type_join ) ) {
