@@ -431,11 +431,12 @@ function bp_has_groups( $args = '' ) {
 
 
 	if ( isset( $_POST['template'] ) && 'group_subgroups' === $_POST['template'] ) {
-		$descendant_groups = bp_get_descendent_groups();
-		$ids               = wp_list_pluck( $descendant_groups, 'id' );
-		$args['include']   = $ids;
-		$args['slug']      = '';
-		$args['type']      = '';
+		$descendant_groups   = bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() );
+		$ids                 = wp_list_pluck( $descendant_groups, 'id' );
+		$args['include']     = $ids;
+		$args['slug']        = '';
+		$args['type']        = '';
+		$args['show_hidden'] = true;
 	}
 
 	// Setup the Groups template global.
@@ -2518,7 +2519,7 @@ function bp_get_descendent_groups( $group_id = false, $user_id = false, $context
 	$descendants = array();
 
 	// We work down the tree until no new children are found.
-	while ( $parents ) {
+	//while ( $parents ) {
 		// Fetch all child groups.
 		$child_args = array(
 			'parent_id'   => $parents,
@@ -2541,7 +2542,7 @@ function bp_get_descendent_groups( $group_id = false, $user_id = false, $context
 				$parents[] = $group->id;
 			}
 		}
-	}
+	//}
 
 	return $groups;
 }
