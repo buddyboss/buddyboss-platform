@@ -1541,6 +1541,11 @@ function bp_group_type_custom_meta_boxes() {
 	add_meta_box( 'bp-group-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_group_type_labels_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-visibility', __( 'Visibility', 'buddyboss' ), 'bp_group_type_visibility_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-short-code', __( 'Shortcode', 'buddyboss' ), 'bp_group_short_code_meta_box', null, 'normal', 'high' );
+
+	if ( true === bp_member_type_enable_disable() ) {
+		// Register meta box only if the member type is enabled.
+		add_meta_box( 'bp-group-type-auto-join-member-type', __( 'Auto join Profile Type', 'buddyboss' ), 'bp_group_type_auto_join_member_type_meta_box', null, 'normal', 'high' );
+	}
 }
 
 /**
@@ -1643,6 +1648,33 @@ function bp_group_short_code_meta_box( $post ) {
 	<p><?php printf( __( 'To display all groups with the %s group type on a dedicated page, add the above shortcode to any WordPress page.', 'buddyboss' ), $post->post_title )?></p>
 
 	<?php
+}
+
+/**
+ * Function for displaying all the member types.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $post
+ */
+function bp_group_type_auto_join_member_type_meta_box( $post ) {
+
+	$get_all_registered_member_types = bp_get_active_member_types();
+
+	$get_selected_member_types = get_post_meta( $post->ID, '_bp_group_type_enabled_member_type_join', true );
+
+	foreach ( $get_all_registered_member_types as $member_type ) {
+
+		$member_type_key = bp_get_member_type_key( $member_type );
+		?>
+		<p>
+			<input type='checkbox' name='bp-member-type[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> tabindex="7" />
+			<strong><?php _e( get_the_title( $member_type ), 'buddyboss' ); ?></strong>
+		</p>
+		<?php
+
+	}
+
 }
 
 /**
@@ -1853,9 +1885,12 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 	$enable_filter = isset( $data[ 'enable_filter' ] ) ? absint( $data[ 'enable_filter' ] ) : 0; //default inactive
 	$enable_remove = isset( $data[ 'enable_remove' ] ) ? absint( $data[ 'enable_remove' ] ) : 0; //default inactive
 
+	$member_type = $_POST['bp-member-type'];
+
 	update_post_meta( $post_id, '_bp_group_type_key', $key );
 	update_post_meta( $post_id, '_bp_group_type_label_name', $label_name );
 	update_post_meta( $post_id, '_bp_group_type_label_singular_name', $singular_name );
 	update_post_meta( $post_id, '_bp_group_type_enable_filter', $enable_filter );
 	update_post_meta( $post_id, '_bp_group_type_enable_remove', $enable_remove );
+	update_post_meta( $post_id, '_bp_group_type_enabled_member_type_join', $member_type );
 }

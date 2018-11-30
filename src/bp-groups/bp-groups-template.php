@@ -3787,17 +3787,56 @@ function bp_group_join_button( $group = false ) {
 					// Member has not requested membership yet -
 					// show a "Request Membership" button.
 					} else {
-						$button = array(
-							'id'                => 'request_membership',
-							'component'         => 'groups',
-							'must_be_logged_in' => true,
-							'block_self'        => false,
-							'wrapper_class'     => 'group-button ' . $group->status,
-							'wrapper_id'        => 'groupbutton-' . $group->id,
-							'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
-							'link_text'         => __( 'Request Membership', 'buddyboss' ),
-							'link_class'        => 'group-button request-membership',
-						);
+
+						if ( true === bp_member_type_enable_disable() && true === bp_disable_group_type_creation() ) {
+
+							$group_type = bp_groups_get_group_type( $group->id );
+
+							$group_type_id = bp_get_group_type_post_id( $group_type );
+
+							$get_selected_member_type_join = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
+
+							$get_requesting_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
+
+							if ( in_array( $get_requesting_user_member_type, $get_selected_member_type_join ) ) {
+								$button = array(
+									'id'                => 'request_membership',
+									'component'         => 'groups',
+									'must_be_logged_in' => true,
+									'block_self'        => false,
+									'wrapper_class'     => 'group-button ' . $group->status,
+									'wrapper_id'        => 'groupbutton-' . $group->id,
+									'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
+									'link_text'         => __( 'Join  this group', 'buddyboss' ),
+									'link_class'        => 'group-button request-membership',
+								);
+							} else {
+								$button = array(
+									'id'                => 'request_membership',
+									'component'         => 'groups',
+									'must_be_logged_in' => true,
+									'block_self'        => false,
+									'wrapper_class'     => 'group-button ' . $group->status,
+									'wrapper_id'        => 'groupbutton-' . $group->id,
+									'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
+									'link_text'         => __( 'Request Membership', 'buddyboss' ),
+									'link_class'        => 'group-button request-membership',
+								);
+							}
+
+						} else {
+							$button = array(
+								'id'                => 'request_membership',
+								'component'         => 'groups',
+								'must_be_logged_in' => true,
+								'block_self'        => false,
+								'wrapper_class'     => 'group-button ' . $group->status,
+								'wrapper_id'        => 'groupbutton-' . $group->id,
+								'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
+								'link_text'         => __( 'Request Membership', 'buddyboss' ),
+								'link_class'        => 'group-button request-membership',
+							);
+						}
 					}
 
 					break;

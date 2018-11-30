@@ -1952,6 +1952,24 @@ function groups_send_membership_request( $requesting_user_id, $group_id ) {
 	if ( groups_check_user_has_invite( $requesting_user_id, $group_id ) ) {
 		groups_accept_invite( $requesting_user_id, $group_id );
 		return true;
+	} else {
+
+		if ( true === bp_member_type_enable_disable() && true === bp_disable_group_type_creation() ) {
+
+			$group_type = bp_groups_get_group_type( $group_id );
+
+			$group_type_id = bp_get_group_type_post_id( $group_type );
+
+			$get_selected_member_type_join = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
+
+			$get_requesting_user_member_type = bp_get_member_type( $requesting_user_id );
+
+			if ( in_array( $get_requesting_user_member_type, $get_selected_member_type_join ) ) {
+				groups_accept_invite( $requesting_user_id, $group_id );
+				return true;
+			}
+
+		}
 	}
 
 	$requesting_user                = new BP_Groups_Member;
@@ -3282,4 +3300,31 @@ function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_grou
 	$results = $wpdb->get_results( $query, ARRAY_A );
 
 	return $results;
+}
+
+/**
+ * Function for getting the post id of particular member type.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param string $group_type
+ *
+ * @return mixed
+ */
+function bp_get_group_type_post_id( $group_type = '' ) {
+
+	$args = array(
+		'post_type'		=>	'bp-group-type',
+		'meta_query'	=>	array(
+			array(
+				'key'   => '_bp_group_type_key',
+				'value'	=>	$group_type
+			)
+		)
+	);
+	$group_type_query = new WP_Query( $args );
+
+	$posts = $group_type_query->posts;
+
+	return $posts[0]->ID;
 }
