@@ -1347,7 +1347,7 @@ function bp_member_type_custom_metaboxes() {
 	add_meta_box( 'bp-member-type-wp-role', __( 'WordPress Role', 'buddyboss' ), 'bp_member_type_wprole_metabox', null, 'normal', 'high' );
 
 	if ( true === bp_disable_group_type_creation() ) {
-		add_meta_box( 'bp-member-type-group-create', __( 'Profile Type Group Create', 'buddyboss' ), 'bp_member_type_group_create_metabox', null, 'normal', 'high' );
+		add_meta_box( 'bp-member-type-group-create', __( 'Members with this profile type are only allowed to create groups with the following group types. Leave all unchecked to allow members to create any group type.', 'buddyboss' ), 'bp_member_type_group_create_metabox', null, 'normal', 'high' );
 	}
 }
 add_action( 'add_meta_boxes_' . bp_get_member_type_post_type(), 'bp_member_type_custom_metaboxes' );
