@@ -1542,9 +1542,15 @@ function bp_group_type_custom_meta_boxes() {
 	add_meta_box( 'bp-group-type-visibility', __( 'Visibility', 'buddyboss' ), 'bp_group_type_visibility_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-short-code', __( 'Shortcode', 'buddyboss' ), 'bp_group_short_code_meta_box', null, 'normal', 'high' );
 
+	// Register meta box only if the member type is enabled.
 	if ( true === bp_member_type_enable_disable() ) {
-		// Register meta box only if the member type is enabled.
-		add_meta_box( 'bp-group-type-auto-join-member-type', __( 'Members of the following profile types can always join groups of this group type, even if the group is private.', 'buddyboss' ), 'bp_group_type_auto_join_member_type_meta_box', null, 'normal', 'high' );
+
+
+		$get_all_registered_member_types = bp_get_active_member_types();
+		if ( isset( $get_all_registered_member_types ) && !empty( $get_all_registered_member_types ) ) {
+			// Add meta box if member types is entered.
+			add_meta_box( 'bp-group-type-auto-join-member-type', __( 'Members of the following profile types can always join groups of this group type, even if the group is private.', 'buddyboss' ),'bp_group_type_auto_join_member_type_meta_box',null,'normal','high' );
+		}
 	}
 }
 
