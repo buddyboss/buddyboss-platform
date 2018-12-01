@@ -68,7 +68,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 				),
 				'courses'     => array(
 					'slug'  => 'courses',
-					'label' => $custom_label::get_label( 'courses' ),
+					'label' => __( 'All Steps', 'buddyboss' ),
 					'menu'  => true,
 				),
 				'lesson'      => array(
@@ -1095,7 +1095,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                 </select>
 				<?php
 			} else {
-				_e( 'No Courses associated to the Group', 'buddyboss' );
+				_e( 'No courses associated to the group', 'buddyboss' );
 			}
 
 			$this->bp_learndash_courses_id       = $selected_course;
