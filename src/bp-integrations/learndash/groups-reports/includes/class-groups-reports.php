@@ -435,7 +435,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 					<?php echo $completed_step; ?>
 				</h2>
 
-                <table>
+                <table class="profile-settings bp-tables-user">
 					<?php
 					$this->forums_table_head( $label, true );
 					?>
@@ -453,7 +453,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 					<?php echo $incomplete_step; ?>
 				</h2>
 
-                <table>
+                <table class="profile-settings bp-tables-user">
 					<?php
 					$this->forums_table_head( $label );
 					?>
@@ -598,7 +598,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 					<?php echo $completed_step; ?>
 				</h2>
 
-                <table>
+                <table class="profile-settings bp-tables-user">
 					<?php
 					$this->assignments_table_head( true );
 					?>
@@ -616,7 +616,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 					<?php echo $incomplete_step; ?>
 				</h2>
 
-                <table>
+                <table class="profile-settings bp-tables-user">
 					<?php
 					$this->assignments_table_head();
 					?>
@@ -785,7 +785,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 					<?php echo $completed_step; ?>
 				</h2>
 
-                <table>
+                <table class="profile-settings bp-tables-user">
 					<?php
 					$this->essays_table_head( true );
 					?>
@@ -803,7 +803,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 					<?php echo $incomplete_step; ?>
 				</h2>
 
-                <table>
+                <table class="profile-settings bp-tables-user">
 					<?php
 					$this->essays_table_head();
 					?>
@@ -864,7 +864,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 					<?php echo $this->completed_step_label; ?>
 				</h2>
 
-                <table>
+                <table class="profile-settings bp-tables-user">
 					<?php
 					$this->quizzes_table_head( $new_label, true );
 					?>
@@ -882,7 +882,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 					<?php echo $this->failed_step_label; ?>
 				</h2>
 
-                <table>
+                <table class="profile-settings bp-tables-user">
 					<?php
 					$this->quizzes_table_head( $new_label );
 					?>
@@ -899,8 +899,8 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 				<h2 class="screen-heading quizzes-incomplete-screen">
 					<?php echo $this->incomplete_step_label; ?>
 				</h2>
-				
-                <table>
+
+                <table class="profile-settings bp-tables-user">
 					<?php
 					$this->quizzes_table_head( $new_label );
 					?>
@@ -975,7 +975,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 					<?php echo $this->completed_step_label; ?>
 				</h2>
 
-                <table>
+                <table class="profile-settings bp-tables-user">
 					<?php
 					$this->$table_head( $label, true );
 					?>
@@ -993,7 +993,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 					<?php echo $this->incomplete_step_label; ?>
 				</h2>
 
-                <table>
+                <table class="profile-settings bp-tables-user">
 					<?php
 					$this->$table_head( $label );
 					?>
