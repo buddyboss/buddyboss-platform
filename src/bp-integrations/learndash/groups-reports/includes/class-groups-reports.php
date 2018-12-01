@@ -431,9 +431,10 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
             </div>
 
             <div class="bp-learndash-group-forums-completed-steps">
-				<?php
-				echo $completed_step;
-				?>
+				<h2 class="screen-heading forums-completed-screen">
+					<?php echo $completed_step; ?>
+				</h2>
+
                 <table>
 					<?php
 					$this->forums_table_head( $label, true );
@@ -448,9 +449,10 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
             </div>
 
             <div class="bp-learndash-group-forums-incomplete-steps">
-				<?php
-				echo $incomplete_step;
-				?>
+				<h2 class="screen-heading forums-incomplete-screen">
+					<?php echo $incomplete_step; ?>
+				</h2>
+
                 <table>
 					<?php
 					$this->forums_table_head( $label );
@@ -592,9 +594,10 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
             </div>
 
             <div class="bp-learndash-group-assignments-completed-steps">
-				<?php
-				echo $completed_step;
-				?>
+				<h2 class="screen-heading assignments-completed-screen">
+					<?php echo $completed_step; ?>
+				</h2>
+
                 <table>
 					<?php
 					$this->assignments_table_head( true );
@@ -609,9 +612,10 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
             </div>
 
             <div class="bp-learndash-group-assignments-incomplete-steps">
-				<?php
-				echo $incomplete_step;
-				?>
+				<h2 class="screen-heading assignments-incomplete-screen">
+					<?php echo $incomplete_step; ?>
+				</h2>
+
                 <table>
 					<?php
 					$this->assignments_table_head();
@@ -777,9 +781,10 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
             </div>
 
             <div class="bp-learndash-group-essays-completed-steps">
-				<?php
-				echo $completed_step;
-				?>
+				<h2 class="screen-heading essays-completed-screen">
+					<?php echo $completed_step; ?>
+				</h2>
+
                 <table>
 					<?php
 					$this->essays_table_head( true );
@@ -794,9 +799,10 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
             </div>
 
             <div class="bp-learndash-group-essays-incomplete-steps">
-				<?php
-				echo $incomplete_step;
-				?>
+				<h2 class="screen-heading essays-incomplete-screen">
+					<?php echo $incomplete_step; ?>
+				</h2>
+
                 <table>
 					<?php
 					$this->essays_table_head();
@@ -875,6 +881,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 				<h2 class="screen-heading quizzes-failed-screen">
 					<?php echo $this->failed_step_label; ?>
 				</h2>
+
                 <table>
 					<?php
 					$this->quizzes_table_head( $new_label );
@@ -892,6 +899,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 				<h2 class="screen-heading quizzes-incomplete-screen">
 					<?php echo $this->incomplete_step_label; ?>
 				</h2>
+				
                 <table>
 					<?php
 					$this->quizzes_table_head( $new_label );
@@ -966,7 +974,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 				<h2 class="screen-heading <?php echo $slug; ?>-completed-screen">
 					<?php echo $this->completed_step_label; ?>
 				</h2>
-				
+
                 <table>
 					<?php
 					$this->$table_head( $label, true );
