@@ -1094,13 +1094,13 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$link = $this->group_link . $this->slug;
 
 			?>
-            <nav class="bp-navs ls-bp-courses-menu" id="ls-bp-courses-menu" role="navigation">
+            <nav class="bp-navs bp-subnavs ls-bp-courses-menu" id="ls-bp-courses-menu" role="navigation">
                 <ul class="subnav">
 					<?php
 					foreach ( $this->menus as $menu ) {
 						if ( $menu['menu'] ) {
 
-							$selected = $menu['slug'] === $this->current_tab ? 'selected current' : '';
+							$selected = $menu['slug'] === $this->current_tab ? 'current selected' : '';
 
 							$this->current_tab_slug = $menu['slug'];
 							?>
