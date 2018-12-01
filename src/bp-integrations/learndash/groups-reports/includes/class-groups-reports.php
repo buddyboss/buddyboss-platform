@@ -853,10 +853,11 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                 </div>
             </div>
 
-            <div class="bp-learndash-group-quizzes-completed-steps">
-				<?php
-				echo $this->completed_step_label;
-				?>
+            <div class="bp-learndash-group-quizzes-completed-steps">		
+				<h2 class="screen-heading quizzes-completed-screen">
+					<?php echo $this->completed_step_label; ?>
+				</h2>
+
                 <table>
 					<?php
 					$this->quizzes_table_head( $new_label, true );
@@ -871,9 +872,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
             </div>
 
             <div class="bp-learndash-group-quizzes-failed-steps">
-				<?php
-				echo $this->failed_step_label;
-				?>
+				<h2 class="screen-heading quizzes-failed-screen">
+					<?php echo $this->failed_step_label; ?>
+				</h2>
                 <table>
 					<?php
 					$this->quizzes_table_head( $new_label );
@@ -888,9 +889,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
             </div>
 
             <div class="bp-learndash-group-quizzes-incomplete-steps">
-				<?php
-				echo $this->incomplete_step_label;
-				?>
+				<h2 class="screen-heading quizzes-incomplete-screen">
+					<?php echo $this->incomplete_step_label; ?>
+				</h2>
                 <table>
 					<?php
 					$this->quizzes_table_head( $new_label );
@@ -962,9 +963,10 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
             </div>
 
             <div class="bp-learndash-group-<?php echo $slug; ?>-completed-steps">
-				<?php
-				echo $this->completed_step_label;
-				?>
+				<h2 class="screen-heading <?php echo $slug; ?>-completed-screen">
+					<?php echo $this->completed_step_label; ?>
+				</h2>
+				
                 <table>
 					<?php
 					$this->$table_head( $label, true );
@@ -979,9 +981,10 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
             </div>
 
             <div class="bp-learndash-group-<?php echo $slug; ?>-incomplete-steps">
-				<?php
-				echo $this->incomplete_step_label;
-				?>
+				<h2 class="screen-heading <?php echo $slug; ?>-incomplete-screen">
+					<?php echo $this->incomplete_step_label; ?>
+				</h2>
+
                 <table>
 					<?php
 					$this->$table_head( $label );
