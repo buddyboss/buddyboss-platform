@@ -280,7 +280,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 			?>
 
-            <div class="ls-bp-group-reports">
+            <div id="learndash-report-filters" class="ls-bp-group-reports component-filters clearfix">
 				<?php
 				$this->student_drop_down();
 
