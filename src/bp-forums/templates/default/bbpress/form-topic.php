@@ -63,7 +63,7 @@
 					<?php do_action( 'bbp_theme_before_topic_form_title' ); ?>
 
 					<p>
-						<label for="bbp_topic_title"><?php printf( __( 'Subject (Maximum Length: %d):', 'buddyboss' ), bbp_get_title_max_length() ); ?></label><br />
+						<label for="bbp_topic_title"><?php _e('Discussion Title', 'buddyboss'); ?></label><br />
 						<input type="text" id="bbp_topic_title" value="<?php bbp_form_topic_title(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_title" maxlength="<?php bbp_title_max_length(); ?>" />
 					</p>
 
