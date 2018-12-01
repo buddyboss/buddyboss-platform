@@ -35,7 +35,7 @@ jQuery( document ).ready( function ( $ ) {
 
 					bp_learndash_group_courses_export_csv_download.click();
 				} else {
-					alert( ld_bp_courses_reports.export_csv_error );
+					alert( bp_learndash_courses_reports.export_csv_error );
 				}
 			}
 		} );

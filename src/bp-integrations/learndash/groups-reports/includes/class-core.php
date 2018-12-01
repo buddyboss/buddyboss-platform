@@ -126,7 +126,7 @@ if ( ! class_exists( 'LearnDash_BuddyPress_Groups_Reports' ) ) :
 			$translation_array = array(
 				'export_csv_error' => __( 'Something when wrong kindly try after some time.', 'buddyboss' ),
 			);
-			wp_localize_script( 'ld-bp-courses-reports', 'ld_bp_courses_reports', $translation_array );
+			wp_localize_script( 'ld-bp-courses-reports', 'bp_learndash_courses_reports', $translation_array );
 		}
 
 		/**
