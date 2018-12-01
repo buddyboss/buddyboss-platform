@@ -191,22 +191,26 @@ body.buddypress article.page > .entry-header .entry-title {
   }
 }
 
-.buddypress-wrap .bp-tables-user th {
+.buddypress-wrap .bp-tables-user th,
+.buddypress-wrap .bp-tables-report th {
   font-size: 13px;
 }
 
 @media screen and (min-width: 46.8em) {
-  .buddypress-wrap .bp-tables-user th {
+  .buddypress-wrap .bp-tables-user th,
+  .buddypress-wrap .bp-tables-report th {
     font-size: 16px;
   }
 }
 
-.buddypress-wrap .bp-tables-user td {
+.buddypress-wrap .bp-tables-user td,
+.buddypress-wrap .bp-tables-report td {
   font-size: 12px;
 }
 
 @media screen and (min-width: 46.8em) {
-  .buddypress-wrap .bp-tables-user td {
+  .buddypress-wrap .bp-tables-user td,
+  .buddypress-wrap .bp-tables-report td {
     font-size: 14px;
   }
 }
@@ -3940,12 +3944,14 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 *-------------------------------------------------------------------------------
 */
 .buddypress-wrap .bp-tables-user,
+.buddypress-wrap .bp-tables-report,
 .buddypress-wrap table.wp-profile-fields,
 .buddypress-wrap table.forum {
   width: 100%;
 }
 
 .buddypress-wrap .bp-tables-user thead tr,
+.buddypress-wrap .bp-tables-report thead tr,
 .buddypress-wrap table.wp-profile-fields thead tr,
 .buddypress-wrap table.forum thead tr {
   background: none;
@@ -3953,6 +3959,7 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 }
 
 .buddypress-wrap .bp-tables-user tbody tr,
+.buddypress-wrap .bp-tables-report tbody tr,
 .buddypress-wrap table.wp-profile-fields tbody tr,
 .buddypress-wrap table.forum tbody tr {
   background: #fafafa;
@@ -3960,6 +3967,8 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 
 .buddypress-wrap .bp-tables-user tr th,
 .buddypress-wrap .bp-tables-user tr td,
+.buddypress-wrap .bp-tables-report tr th,
+.buddypress-wrap .bp-tables-report tr td,
 .buddypress-wrap table.wp-profile-fields tr th,
 .buddypress-wrap table.wp-profile-fields tr td,
 .buddypress-wrap table.forum tr th,
@@ -3969,6 +3978,7 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 }
 
 .buddypress-wrap .bp-tables-user tr td.label,
+.buddypress-wrap .bp-tables-report tr td.label,
 .buddypress-wrap table.wp-profile-fields tr td.label,
 .buddypress-wrap table.forum tr td.label {
   border-right: 1px solid #eaeaea;
@@ -3977,6 +3987,7 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 }
 
 .buddypress-wrap .bp-tables-user tr.alt td,
+.buddypress-wrap .bp-tables-report tr.alt td,
 .buddypress-wrap table.wp-profile-fields tr.alt td {
   background: #fafafa;
 }
