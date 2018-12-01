@@ -50,12 +50,12 @@
 
                     <input
                         type="hidden"
-                        name="ld_bp_groups_sync-ajax-asso-group[<?php echo $group->ID; ?>][gid]"
+                        name="bp_learndash_groups_sync-ajax-asso-group[<?php echo $group->ID; ?>][gid]"
                         value="<?php echo $bp_group? $bp_group->id : 0; ?>"
                     />
                 </td>
                 <td>
-                    <select name="ld_bp_groups_sync-ajax-asso-group[<?php echo $group->ID; ?>][action]">
+                    <select name="bp_learndash_groups_sync-ajax-asso-group[<?php echo $group->ID; ?>][action]">
                         <option value="generate"><?php _e('Generate new one', 'buddyboss'); ?></option>
                         <?php foreach ($bp_groups as $i => $bp_group): ?>
                             <option value="linkup_<?php echo $bp_group->id; ?>" <?php if (! $i) echo 'selected'; ?>>

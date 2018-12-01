@@ -25,7 +25,7 @@
         var $row     = $self.closest('tr');
         var $spinner = $self.next();
         var id       = $self.data('id');
-        var todo     = $row.find("[name='ld_bp_groups_sync-ajax-asso-group["+id+"][action]']").val();
+        var todo     = $row.find("[name='bp_learndash_groups_sync-ajax-asso-group["+id+"][action]']").val();
 
         if (todo == 'nothing') {
             $self.trigger('synced');
