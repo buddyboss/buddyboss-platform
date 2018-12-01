@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss Learndash Loader.
+ * BuddyBoss Sample Integration Loader.
  *
  * @package BuddyBoss
  * @subpackage Learndash
