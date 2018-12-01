@@ -131,9 +131,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 			$this->current_tab_label = $this->menus[ $this->current_tab ]['label'];
 
-			$this->ls_bp_member_id = empty( $_GET['student_id'] ) ? 0 : absint( $_GET['student_id'] );
+			$this->bp_learndash_member_id = empty( $_GET['student_id'] ) ? 0 : absint( $_GET['student_id'] );
 
-			$this->ls_bp_courses_id = empty( $_GET['courses_id'] ) ? 0 : absint( $_GET['courses_id'] );
+			$this->bp_learndash_courses_id = empty( $_GET['courses_id'] ) ? 0 : absint( $_GET['courses_id'] );
 
 			$this->not_applicable = __( 'N/A', 'buddyboss' );
 
@@ -142,7 +142,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$this->is_ajax = false;
 
 
-			add_action( 'wp_ajax_ls_bp_group_courses_export_csv', array( $this, 'export_csv' ) );
+			add_action( 'wp_ajax_bp_learndash_group_courses_export_csv', array( $this, 'export_csv' ) );
 		}
 
 		/**
@@ -309,12 +309,12 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
             <div class="ls-bp-group-courses-export-csv">
                 <a href="#" class="export-csv"
                    data-menu="<?php echo $this->current_tab; ?>"
-                   data-member_id="<?php echo $this->ls_bp_member_id; ?>"
-                   data-courses_id="<?php echo $this->ls_bp_courses_id; ?>"
+                   data-member_id="<?php echo $this->bp_learndash_member_id; ?>"
+                   data-courses_id="<?php echo $this->bp_learndash_courses_id; ?>"
                    data-group_id="<?php echo $this->group_id; ?>"
-                   data-filename="<?php printf( '%s-export-member-id-%s--courses-id-%s', $this->current_tab, $this->ls_bp_member_id, $this->ls_bp_courses_id ) ?>">
+                   data-filename="<?php printf( '%s-export-member-id-%s--courses-id-%s', $this->current_tab, $this->bp_learndash_member_id, $this->bp_learndash_courses_id ) ?>">
 					<?php _e( 'Export CSV', 'buddyboss' ); ?>
-                    <a id="ls_bp_group_courses_export_csv_download"></a>
+                    <a id="bp_learndash_group_courses_export_csv_download"></a>
                 </a>
 
 				<?php
@@ -350,7 +350,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 				'post_type'      => 'topic',
 				'post_parent'    => $this->group_forum_ids,
 				'posts_per_page' => - 1,
-				'author'         => $this->ls_bp_member_id,
+				'author'         => $this->bp_learndash_member_id,
 			);
 
 			add_filter( 'bbp_include_all_forums', array( $this, 'bbp_include_all_forums' ) );
@@ -420,7 +420,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 			?>
             <div class="ls-bp-group-forums-report">
-                <div class="ls_bp_step_completed">
+                <div class="bp_learndash_step_completed">
                     <p>
                         <span><?php printf( __( '%s Answered', 'buddyboss' ), $label ); ?></span>
                         <span><?php printf( __( '%s of %s', 'buddyboss' ), $this->user_progress, $this->course_step ); ?></span>
@@ -487,11 +487,11 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$user_assignements_query_args = array(
 				'post_type'  => 'sfwd-assignment',
 				'nopaging'   => true,
-				'author'     => $this->ls_bp_member_id,
+				'author'     => $this->bp_learndash_member_id,
 				'meta_query' => array(
 					array(
 						'key'     => 'course_id',
-						'value'   => $this->ls_bp_courses_id,
+						'value'   => $this->bp_learndash_courses_id,
 						'compare' => '=',
 					),
 				),
@@ -526,7 +526,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 						if ( empty( $lesson_id ) ) {
 							printf( '<td>%s</td>', $lesson_title );
 						} else {
-							printf( '<td><a href="%s">%s</a></td>', learndash_get_step_permalink( $lesson_id, $this->ls_bp_courses_id ), $lesson_title );
+							printf( '<td><a href="%s">%s</a></td>', learndash_get_step_permalink( $lesson_id, $this->bp_learndash_courses_id ), $lesson_title );
 						}
 
 						printf( '<td>%s</td>', $date );
@@ -574,7 +574,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 			?>
             <div class="ls-bp-group-assignments-report">
-                <div class="ls_bp_step_completed">
+                <div class="bp_learndash_step_completed">
                     <p>
                         <span><?php printf( __( '%s Approved', 'buddyboss' ), $label ); ?></span>
                         <span><?php printf( __( '%s of %s', 'buddyboss' ), $this->user_progress, $this->course_step ); ?></span>
@@ -583,7 +583,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                               max="<?php echo $this->course_step; ?>"></progress>
                 </div>
 
-                <div class="ls_bp_point_earn">
+                <div class="bp_learndash_point_earn">
                     <p>
                         <span><?php _e( 'Points Earned', 'buddyboss' ); ?></span>
                         <span><?php echo $this->total_points; ?></span>
@@ -647,11 +647,11 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$user_essays_query_args = array(
 				'post_type'  => 'sfwd-essays',
 				'nopaging'   => true,
-				'author'     => $this->ls_bp_member_id,
+				'author'     => $this->bp_learndash_member_id,
 				'meta_query' => array(
 					array(
 						'key'     => 'course_id',
-						'value'   => $this->ls_bp_courses_id,
+						'value'   => $this->bp_learndash_courses_id,
 						'compare' => '=',
 					),
 				),
@@ -703,13 +703,13 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 
 						if ( $lesson_id ) {
-							printf( '<td><a href="%s">%s</a></td>', learndash_get_step_permalink( $lesson_id, $this->ls_bp_courses_id ), $lesson_title );
+							printf( '<td><a href="%s">%s</a></td>', learndash_get_step_permalink( $lesson_id, $this->bp_learndash_courses_id ), $lesson_title );
 						} else {
 							printf( '<td>%s</td>', $lesson_title );
 						}
 
 						if ( $quiz_post_id ) {
-							printf( '<td><a href="%s">%s</a></td>', learndash_get_step_permalink( $quiz_post_id, $this->ls_bp_courses_id ), $quiz_title );
+							printf( '<td><a href="%s">%s</a></td>', learndash_get_step_permalink( $quiz_post_id, $this->bp_learndash_courses_id ), $quiz_title );
 						} else {
 							printf( '<td>%s</td>', $quiz_title );
 						}
@@ -759,7 +759,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 			?>
             <div class="ls-bp-group-essays-report">
-                <div class="ls_bp_step_completed">
+                <div class="bp_learndash_step_completed">
                     <p>
                         <span><?php printf( __( '%s Approved', 'buddyboss' ), $label ); ?></span>
                         <span><?php printf( __( '%s of %s', 'buddyboss' ), $this->user_progress, $this->course_step ); ?></span>
@@ -768,7 +768,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                               max="<?php echo $this->course_step; ?>"></progress>
                 </div>
 
-                <div class="ls_bp_point_earn">
+                <div class="bp_learndash_point_earn">
                     <p>
                         <span><?php _e( 'Points Earned', 'buddyboss' ); ?></span>
                         <span><?php echo $this->total_points; ?></span>
@@ -836,7 +836,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			?>
 
             <div class="ls-bp-group-quizzes-report">
-                <div class="ls_bp_step_completed">
+                <div class="bp_learndash_step_completed">
                     <p>
                         <span><?php printf( __( '%s Passed', 'buddyboss' ), $label ); ?></span>
                         <span><?php printf( __( '%s of %s', 'buddyboss' ), $this->user_progress, $this->course_step ); ?></span>
@@ -845,7 +845,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                               max="<?php echo $this->course_step; ?>"></progress>
                 </div>
 
-                <div class="ls_bp_point_earn">
+                <div class="bp_learndash_point_earn">
                     <p>
                         <span><?php _e( 'Points Earned', 'buddyboss' ); ?></span>
                         <span><?php echo $this->total_points; ?></span>
@@ -944,7 +944,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$this->courses_table_body( $this->ld_course_steps_object->get_steps(), $display );
 			?>
             <div class="ls-bp-group-<?php echo $slug; ?>-report">
-                <div class="ls_bp_step_completed">
+                <div class="bp_learndash_step_completed">
                     <p>
                         <span><?php printf( __( '%s Completed', 'buddyboss' ), $label ); ?></span>
                         <span><?php printf( __( '%s of %s', 'buddyboss' ), $this->user_progress, $this->course_step ); ?></span>
@@ -953,7 +953,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                               max="<?php echo $this->course_step; ?>"></progress>
                 </div>
 
-                <div class="ls_bp_point_earn">
+                <div class="bp_learndash_point_earn">
                     <p>
                         <span><?php _e( 'Points Earned', 'buddyboss' ); ?></span>
                         <span><?php echo $this->total_points; ?></span>
@@ -998,7 +998,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		}
 
 		function student_drop_down() {
-			$selected_student      = $this->ls_bp_member_id;
+			$selected_student      = $this->bp_learndash_member_id;
 			$selected_student_name = '';
 
 			if ( $this->is_admin_or_mod() ) {
@@ -1009,9 +1009,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 					$style = sprintf( 'style=display:%s;', ( 1 == $this->get_member() ) ? 'none' : 'block' );
 
-					printf( '<label for="ls_bp_member_id" %s>%s</label>', $style, __( 'Select Student', 'buddyboss' ) );
+					printf( '<label for="bp_learndash_member_id" %s>%s</label>', $style, __( 'Select Student', 'buddyboss' ) );
 					?>
-                    <select name="student_id" class="ls_bp_member_id" id="ls_bp_member_id" <?php echo $style; ?>>
+                    <select name="student_id" class="bp_learndash_member_id" id="bp_learndash_member_id" <?php echo $style; ?>>
 						<?php
 						$count = 0;
 						foreach ( $this->get_member() as $member ) {
@@ -1035,18 +1035,18 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 					<?php
 				}
 			} else {
-				printf( '<input type="hidden" value="%s" name="ls_bp_member_id" class="ls_bp_member_id" >', $this->loggedin_user_id );
+				printf( '<input type="hidden" value="%s" name="bp_learndash_member_id" class="bp_learndash_member_id" >', $this->loggedin_user_id );
 				$selected_student      = $this->loggedin_user_id;
 				$selected_student_name = get_user_meta( $this->loggedin_user_id, 'nickname', true );
 			}
 
-			$this->ls_bp_member_id   = $selected_student;
-			$this->ls_bp_member_name = $selected_student_name;
+			$this->bp_learndash_member_id   = $selected_student;
+			$this->bp_learndash_member_name = $selected_student_name;
 		}
 
 		function courses_drop_down() {
 
-			$selected_course = $this->ls_bp_courses_id;
+			$selected_course = $this->bp_learndash_courses_id;
 
 			$selected_course_name = '';
 
@@ -1057,9 +1057,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 				$style = sprintf( 'style=display:%s;', ( 1 === $total_courses ) ? 'none' : 'block' );
 
 				$select_course = sprintf( __( 'Select %s', 'buddyboss' ), $this->menus['course']['label'] );
-				printf( '<label for="ls_bp_courses_id" %s>%s</label>', $style, $select_course );
+				printf( '<label for="bp_learndash_courses_id" %s>%s</label>', $style, $select_course );
 				?>
-                <select name="courses_id" class="ls_bp_courses_id" id="ls_bp_courses_id" <?php echo $style; ?>>
+                <select name="courses_id" class="bp_learndash_courses_id" id="bp_learndash_courses_id" <?php echo $style; ?>>
 					<?php
 					$count = 0;
 					foreach ( $this->courses as $course ) {
@@ -1085,9 +1085,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 				_e( 'No Courses associated to the Group', 'buddyboss' );
 			}
 
-			$this->ls_bp_courses_id       = $selected_course;
-			$this->ls_bp_courses_name     = $selected_course_name;
-			$this->ld_course_steps_object = LDLMS_Factory_Post::course_steps( $this->ls_bp_courses_id );
+			$this->bp_learndash_courses_id       = $selected_course;
+			$this->bp_learndash_courses_name     = $selected_course_name;
+			$this->ld_course_steps_object = LDLMS_Factory_Post::course_steps( $this->bp_learndash_courses_id );
 		}
 
 		function courses_menu() {
@@ -1106,7 +1106,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 							?>
                             <li class="<?php echo $selected; ?>">
 								<?php
-								printf( '<a href="%s?menu=%s&courses_id=%s&student_id=%s" url="%s?menu=%s">%s</a>', $link, $menu['slug'], $this->ls_bp_courses_id, $this->ls_bp_member_id, $link, $menu['slug'], $menu['label'] );
+								printf( '<a href="%s?menu=%s&courses_id=%s&student_id=%s" url="%s?menu=%s">%s</a>', $link, $menu['slug'], $this->bp_learndash_courses_id, $this->bp_learndash_member_id, $link, $menu['slug'], $menu['label'] );
 								?>
                             </li>
 							<?php
@@ -1122,18 +1122,18 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			if ( $this->is_admin_or_mod() ) {
 				printf(
 					'<p><span class="user_link"><a href="%s">%s</a> </span>: <span class="course_link"><a href="%s">%s</a> </span></p>',
-					bp_core_get_userlink( $this->ls_bp_member_id, false, true ),
-					$this->ls_bp_member_name,
-					get_permalink( $this->ls_bp_courses_id ),
-					$this->ls_bp_courses_name
+					bp_core_get_userlink( $this->bp_learndash_member_id, false, true ),
+					$this->bp_learndash_member_name,
+					get_permalink( $this->bp_learndash_courses_id ),
+					$this->bp_learndash_courses_name
 				);
 			} else {
 				printf(
 					'<p><span class="user_link">%s %s</span>: <span class="course_link"><a href="%s">%s</a> </span></p>',
 					$this->current_tab_label,
 					__( 'Progress', 'buddyboss' ),
-					get_permalink( $this->ls_bp_courses_id ),
-					$this->ls_bp_courses_name
+					get_permalink( $this->bp_learndash_courses_id ),
+					$this->bp_learndash_courses_name
 				);
 			}
 		}
@@ -1155,16 +1155,16 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 								// We need to update the activity database records for this quiz_id
 								$activity_query_args = array(
 									'post_ids'      => $steps_id,
-									'user_ids'      => $this->ls_bp_member_id,
-									'course_ids'    => $this->ls_bp_courses_id,
+									'user_ids'      => $this->bp_learndash_member_id,
+									'course_ids'    => $this->bp_learndash_courses_id,
 									'orderby_order' => 'activity_id DESC',
 								);
 
 								$completed = true;
 								if ( 'sfwd-lessons' === $steps_type ) {
-									$completed = learndash_is_lesson_notcomplete( $this->ls_bp_member_id, array( $steps_id ), $this->ls_bp_courses_id );
+									$completed = learndash_is_lesson_notcomplete( $this->bp_learndash_member_id, array( $steps_id ), $this->bp_learndash_courses_id );
 								} elseif ( 'sfwd-quiz' === $steps_type ) {
-									$completed = learndash_is_quiz_complete( $this->ls_bp_member_id, $steps_id, $this->ls_bp_courses_id );
+									$completed = learndash_is_quiz_complete( $this->bp_learndash_member_id, $steps_id, $this->bp_learndash_courses_id );
 								}
 
 								if ( $completed ) {
@@ -1192,7 +1192,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 									&& 'on' == learndash_get_setting( $steps_id, 'lesson_assignment_points_enabled' )
 									&& 0 < absint( learndash_get_setting( $steps_id, 'lesson_assignment_points_amount' ) )
 								) {
-									$assignments = learndash_get_user_assignments( $steps_id, $this->ls_bp_member_id, $this->ls_bp_courses_id );
+									$assignments = learndash_get_user_assignments( $steps_id, $this->bp_learndash_member_id, $this->bp_learndash_courses_id );
 									foreach ( $assignments as $assignment ) {
 										if ( get_post_meta( $assignment->ID, 'approval_status', true ) ) {
 											$point = $point + absint( get_post_meta( $assignment->ID, 'points', true ) );
@@ -1214,7 +1214,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 										$quizzes_count = ( empty( $quizzes_count ) ? $this->not_applicable : $quizzes_count );
 										$percentage    = ( empty( $percentage ) ? $this->not_applicable : sprintf( '%s%s', $percentage, '%' ) );
 
-										printf( '<td><a href="%s">%s</a></td>', learndash_get_step_permalink( $steps_id, $this->ls_bp_courses_id ), $quiz_label );
+										printf( '<td><a href="%s">%s</a></td>', learndash_get_step_permalink( $steps_id, $this->bp_learndash_courses_id ), $quiz_label );
 										printf( '<td>%s</td>', $completed_formatted );
 										printf( '<td>%s</td>', $quizzes_count );
 										printf( '<td>%s</td>', $percentage );
@@ -1238,8 +1238,8 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 									?>
                                     <tr>
 										<?php
-										printf( '<td><a href="%s">%s</a></td>', learndash_get_step_permalink( $steps_id, $this->ls_bp_courses_id ), $topic_label );
-										printf( '<td><a href="%s">%s</a></td>', learndash_get_step_permalink( $this->last_steps_id, $this->ls_bp_courses_id ), $last_steps_id_title );
+										printf( '<td><a href="%s">%s</a></td>', learndash_get_step_permalink( $steps_id, $this->bp_learndash_courses_id ), $topic_label );
+										printf( '<td><a href="%s">%s</a></td>', learndash_get_step_permalink( $this->last_steps_id, $this->bp_learndash_courses_id ), $last_steps_id_title );
 										printf( '<td>%s</td>', $completed_formatted );
 										printf( '<td>%s</td>', $time_diff );
 										printf( '<td>%s</td>', $point )
@@ -1267,7 +1267,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 									?>
                                     <tr>
 										<?php
-										printf( '<td><a href="%s">%s</a></td>', learndash_get_step_permalink( $steps_id, $this->ls_bp_courses_id ), $label );
+										printf( '<td><a href="%s">%s</a></td>', learndash_get_step_permalink( $steps_id, $this->bp_learndash_courses_id ), $label );
 										printf( '<td>%s</td>', $started_formatted );
 										printf( '<td>%s</td>', $completed_formatted );
 										printf( '<td>%s</td>', $time_diff );
