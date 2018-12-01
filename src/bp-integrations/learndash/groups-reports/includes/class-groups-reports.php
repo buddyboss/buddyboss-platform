@@ -272,7 +272,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		 */
 		function display( $group_id = null ) {
 
-			wp_enqueue_script( 'ld-bp-courses-reports' );
+			wp_enqueue_script( 'bp-learndash-courses-reports' );
 
 			ld_bp_groups_sync_courses_sub_menu();
 
