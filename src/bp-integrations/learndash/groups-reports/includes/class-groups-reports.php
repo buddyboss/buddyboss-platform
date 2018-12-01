@@ -1322,18 +1322,18 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		}
 
 		function courses_table_head( $label, $header = false ) {
-			$columns2 = __( 'Star Date', 'ld_bp_groups_reports' );
+			$columns2 = __( 'Start Date', 'ld_bp_groups_reports' );
 			$columns3 = __( 'Completion Date', 'ld_bp_groups_reports' );
-			$columns4 = __( 'Time Spend', 'ld_bp_groups_reports' );
-			$columns5 = __( 'Point Earned', 'ld_bp_groups_reports' );
+			$columns4 = __( 'Time Spent', 'ld_bp_groups_reports' );
+			$columns5 = __( 'Points Earned', 'ld_bp_groups_reports' );
 			?>
             <thead>
             <tr>
                 <th><?php echo $label; ?></th>
-                <th><?php _e( 'Star Date', 'ld_bp_groups_reports' ); ?></th>
+                <th><?php _e( 'Start Date', 'ld_bp_groups_reports' ); ?></th>
                 <th><?php _e( 'Completion Date', 'ld_bp_groups_reports' ); ?></th>
-                <th><?php _e( 'Time Spend', 'ld_bp_groups_reports' ); ?></th>
-                <th><?php _e( 'Point Earned', 'ld_bp_groups_reports' ); ?></th>
+                <th><?php _e( 'Time Spent', 'ld_bp_groups_reports' ); ?></th>
+                <th><?php _e( 'Points Earned', 'ld_bp_groups_reports' ); ?></th>
             </tr>
             </thead>
 			<?php
@@ -1355,8 +1355,8 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		function topic_table_head( $label, $header = false ) {
 			$parent_label = $this->menus['lessons']['label'];
 			$columns3     = __( 'Completion Date', 'ld_bp_groups_reports' );
-			$columns4     = __( 'Time Spend', 'ld_bp_groups_reports' );
-			$columns5     = __( 'Point Earned', 'ld_bp_groups_reports' );
+			$columns4     = __( 'Time Spent', 'ld_bp_groups_reports' );
+			$columns5     = __( 'Points Earned', 'ld_bp_groups_reports' );
 			?>
             <thead>
             <tr>
@@ -1386,8 +1386,8 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$columns2 = __( 'Completion Date', 'ld_bp_groups_reports' );
 			$columns3 = __( 'No. of Attempts', 'ld_bp_groups_reports' );
 			$columns4 = __( 'Score', 'ld_bp_groups_reports' );
-			$columns5 = __( 'Time Spend', 'ld_bp_groups_reports' );
-			$columns6 = __( 'Point Earned', 'ld_bp_groups_reports' );
+			$columns5 = __( 'Time Spent', 'ld_bp_groups_reports' );
+			$columns6 = __( 'Points Earned', 'ld_bp_groups_reports' );
 			?>
             <thead>
             <tr>
@@ -1424,7 +1424,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$columns1 = sprintf( __( '%s Question', 'ld_bp_groups_reports' ), $label );
 			$columns4 = __( 'Date Completed', 'ld_bp_groups_reports' );
 			$columns5 = __( 'Comments', 'ld_bp_groups_reports' );
-			$columns6 = __( 'Point Earned', 'ld_bp_groups_reports' );
+			$columns6 = __( 'Points Earned', 'ld_bp_groups_reports' );
 			?>
             <thead>
             <tr>
@@ -1459,7 +1459,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$lesson_label = $this->menus['lesson']['label'];
 			$columns3     = __( 'Updated', 'ld_bp_groups_reports' );
 			$columns4     = __( 'Comments', 'ld_bp_groups_reports' );
-			$columns5     = __( 'Point Earned', 'ld_bp_groups_reports' );
+			$columns5     = __( 'Points Earned', 'ld_bp_groups_reports' );
 			?>
             <thead>
             <tr>
