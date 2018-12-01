@@ -17,20 +17,20 @@ class LearnDash_BuddyPress_Groups_Sync_LearnDash
 
         require_once bp_learndash_path('groups-sync/includes/class-generator.php');
 
-        // Learndash Setting Page Ajax
+        // LearnDash Setting Page Ajax
         add_action('wp_ajax_bp_learndash_groups_sync/ld-groups-scan', [$this, 'ajax_scan_learndash_groups']);
         add_action('wp_ajax_bp_learndash_groups_sync/ld-group-sync', [$this, 'ajax_sync_learndash_groups']);
 
-        // Learndash Group Edit Page
+        // LearnDash Group Edit Page
         add_action('add_meta_boxes', [$this, 'add_associated_group_metabox']);
         add_action('save_post', [$this, 'update_associated_group'], 15, 3);
 
-        // Learndash Group Delete
+        // LearnDash Group Delete
         add_action('wp_trash_post', [$this, 'preserve_buddypress_group_id_and_dissociate']);
         add_action('untrash_post', [$this, 'maybe_associate_buddypress_group']);
         add_action('before_delete_post', [$this, 'maybe_delete_buddypress_group']);
 
-        // Learndash leader update
+        // LearnDash leader update
         add_action('updated_post_meta', [$this, 'resync_leaders_on_user_changed'], 15, 3);
     }
 
