@@ -280,7 +280,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 			?>
 
-            <div id="learndash-report-filters" class="ls-bp-group-reports component-filters clearfix">
+            <div id="learndash-report-filters" class="bp-learndash-group-reports component-filters clearfix">
 				<?php
 				$this->student_drop_down();
 
@@ -288,13 +288,13 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 				?>
             </div>
 
-            <div class="ls-bp-group-courses-menu">
+            <div class="bp-learndash-group-courses-menu">
 				<?php
 				$this->courses_menu();
 				?>
             </div>
 
-            <div class="ls-bp-group-courses-link">
+            <div class="bp-learndash-group-courses-link">
 				<?php
 				$this->courses_links();
 				?>
@@ -306,7 +306,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			}
 
 			?>
-            <div class="ls-bp-group-courses-export-csv">
+            <div class="bp-learndash-group-courses-export-csv">
                 <a href="#" class="export-csv"
                    data-menu="<?php echo $this->current_tab; ?>"
                    data-member_id="<?php echo $this->bp_learndash_member_id; ?>"
@@ -419,7 +419,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			wp_reset_postdata();
 
 			?>
-            <div class="ls-bp-group-forums-report">
+            <div class="bp-learndash-group-forums-report">
                 <div class="bp_learndash_step_completed">
                     <p>
                         <span><?php printf( __( '%s Answered', 'buddyboss' ), $label ); ?></span>
@@ -430,7 +430,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                 </div>
             </div>
 
-            <div class="ls-bp-group-forums-completed-steps">
+            <div class="bp-learndash-group-forums-completed-steps">
 				<?php
 				echo $completed_step;
 				?>
@@ -447,7 +447,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                 </table>
             </div>
 
-            <div class="ls-bp-group-forums-incomplete-steps">
+            <div class="bp-learndash-group-forums-incomplete-steps">
 				<?php
 				echo $incomplete_step;
 				?>
@@ -573,7 +573,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			wp_reset_postdata();
 
 			?>
-            <div class="ls-bp-group-assignments-report">
+            <div class="bp-learndash-group-assignments-report">
                 <div class="bp_learndash_step_completed">
                     <p>
                         <span><?php printf( __( '%s Approved', 'buddyboss' ), $label ); ?></span>
@@ -591,7 +591,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                 </div>
             </div>
 
-            <div class="ls-bp-group-assignments-completed-steps">
+            <div class="bp-learndash-group-assignments-completed-steps">
 				<?php
 				echo $completed_step;
 				?>
@@ -608,7 +608,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                 </table>
             </div>
 
-            <div class="ls-bp-group-assignments-incomplete-steps">
+            <div class="bp-learndash-group-assignments-incomplete-steps">
 				<?php
 				echo $incomplete_step;
 				?>
@@ -758,7 +758,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			wp_reset_postdata();
 
 			?>
-            <div class="ls-bp-group-essays-report">
+            <div class="bp-learndash-group-essays-report">
                 <div class="bp_learndash_step_completed">
                     <p>
                         <span><?php printf( __( '%s Approved', 'buddyboss' ), $label ); ?></span>
@@ -776,7 +776,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                 </div>
             </div>
 
-            <div class="ls-bp-group-essays-completed-steps">
+            <div class="bp-learndash-group-essays-completed-steps">
 				<?php
 				echo $completed_step;
 				?>
@@ -793,7 +793,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                 </table>
             </div>
 
-            <div class="ls-bp-group-essays-incomplete-steps">
+            <div class="bp-learndash-group-essays-incomplete-steps">
 				<?php
 				echo $incomplete_step;
 				?>
@@ -835,7 +835,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$this->courses_table_body( $this->ld_course_steps_object->get_steps(), 'sfwd-quiz' );
 			?>
 
-            <div class="ls-bp-group-quizzes-report">
+            <div class="bp-learndash-group-quizzes-report">
                 <div class="bp_learndash_step_completed">
                     <p>
                         <span><?php printf( __( '%s Passed', 'buddyboss' ), $label ); ?></span>
@@ -853,7 +853,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                 </div>
             </div>
 
-            <div class="ls-bp-group-quizzes-completed-steps">
+            <div class="bp-learndash-group-quizzes-completed-steps">
 				<?php
 				echo $this->completed_step_label;
 				?>
@@ -870,7 +870,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                 </table>
             </div>
 
-            <div class="ls-bp-group-quizzes-failed-steps">
+            <div class="bp-learndash-group-quizzes-failed-steps">
 				<?php
 				echo $this->failed_step_label;
 				?>
@@ -887,7 +887,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                 </table>
             </div>
 
-            <div class="ls-bp-group-quizzes-incomplete-steps">
+            <div class="bp-learndash-group-quizzes-incomplete-steps">
 				<?php
 				echo $this->incomplete_step_label;
 				?>
@@ -943,7 +943,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 			$this->courses_table_body( $this->ld_course_steps_object->get_steps(), $display );
 			?>
-            <div class="ls-bp-group-<?php echo $slug; ?>-report">
+            <div class="bp-learndash-group-<?php echo $slug; ?>-report">
                 <div class="bp_learndash_step_completed">
                     <p>
                         <span><?php printf( __( '%s Completed', 'buddyboss' ), $label ); ?></span>
@@ -961,7 +961,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                 </div>
             </div>
 
-            <div class="ls-bp-group-<?php echo $slug; ?>-completed-steps">
+            <div class="bp-learndash-group-<?php echo $slug; ?>-completed-steps">
 				<?php
 				echo $this->completed_step_label;
 				?>
@@ -978,7 +978,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                 </table>
             </div>
 
-            <div class="ls-bp-group-<?php echo $slug; ?>-incomplete-steps">
+            <div class="bp-learndash-group-<?php echo $slug; ?>-incomplete-steps">
 				<?php
 				echo $this->incomplete_step_label;
 				?>
@@ -1094,7 +1094,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$link = $this->group_link . $this->slug;
 
 			?>
-            <nav class="bp-navs bp-subnavs ls-bp-courses-menu" id="ls-bp-courses-menu" role="navigation">
+            <nav class="bp-navs bp-subnavs bp-learndash-courses-menu" id="bp-learndash-courses-menu" role="navigation">
                 <ul class="subnav">
 					<?php
 					foreach ( $this->menus as $menu ) {

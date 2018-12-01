@@ -3,7 +3,7 @@ jQuery( document ).ready( function ( $ ) {
 	/**
 	 * Fire when user change the course or member dropdown.
 	 */
-	$( '.ls-bp-group-reports .bp_learndash_member_id, .ls-bp-group-reports .bp_learndash_courses_id' ).change( function () {
+	$( '.bp-learndash-group-reports .bp_learndash_member_id, .bp-learndash-group-reports .bp_learndash_courses_id' ).change( function () {
 		ld_bp_group_courses_report_update_sub_menu();
 	} );
 
@@ -11,7 +11,7 @@ jQuery( document ).ready( function ( $ ) {
 	/**
 	 * Fire when user click on export CSV button
 	 */
-	$( '.ls-bp-group-courses-export-csv a.export-csv' ).click( function () {
+	$( '.bp-learndash-group-courses-export-csv a.export-csv' ).click( function () {
 
 		var $this = this;
 
@@ -20,7 +20,7 @@ jQuery( document ).ready( function ( $ ) {
 			url: ajaxurl,
 			data: {
 				action: 'bp_learndash_group_courses_export_csv',
-				csv: $( this ).closest( '.ls-bp-group-courses-export-csv' ).find( '.csv' ).val()
+				csv: $( this ).closest( '.bp-learndash-group-courses-export-csv' ).find( '.csv' ).val()
 			},
 			success: function ( response ) {
 
@@ -48,12 +48,12 @@ jQuery( document ).ready( function ( $ ) {
 
 function ld_bp_group_courses_report_update_sub_menu() {
 
-	var member_id = $( '.ls-bp-group-reports .bp_learndash_member_id' ).val(),
-		courses_id = $( '.ls-bp-group-reports .bp_learndash_courses_id' ).val();
+	var member_id = $( '.bp-learndash-group-reports .bp_learndash_member_id' ).val(),
+		courses_id = $( '.bp-learndash-group-reports .bp_learndash_courses_id' ).val();
 
-	$( '.ls-bp-courses-menu li.selected a' ).attr( 'href', $( '.ls-bp-courses-menu li.selected a' ).attr( 'url' ) + '&courses_id=' + courses_id + '&student_id=' + member_id );
-	$( '.ls-bp-courses-menu li.selected a' ).trigger( "click" );
-	$( '.ls-bp-courses-menu li.selected a' )[0].click();
+	$( '.bp-learndash-courses-menu li.selected a' ).attr( 'href', $( '.bp-learndash-courses-menu li.selected a' ).attr( 'url' ) + '&courses_id=' + courses_id + '&student_id=' + member_id );
+	$( '.bp-learndash-courses-menu li.selected a' ).trigger( "click" );
+	$( '.bp-learndash-courses-menu li.selected a' )[0].click();
 
 
 }
