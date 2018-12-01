@@ -5,7 +5,7 @@ class BP_Learndash_Integration extends BP_Integration {
 	public function __construct() {
 		$this->start(
 			'learndash',
-			__( 'Learndash', 'buddyboss' ),
+			__( 'LearnDash', 'buddyboss' ),
 			'learndash',
 			[
 				'required_plugin' => 'sfwd-lms/sfwd_lms.php'
