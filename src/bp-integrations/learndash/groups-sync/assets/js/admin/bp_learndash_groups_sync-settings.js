@@ -1,16 +1,16 @@
 (function($) {
-    $(".ld_bp_groups_sync-scan-groups-button").on('click', function(e) {
+    $(".bp_learndash_groups_sync-scan-groups-button").on('click', function(e) {
         e.preventDefault();
 
         var $self = $(this);
         var $spinner = $self.next();
-        var $results = $(".ld_bp_groups_sync-scan-results");
+        var $results = $(".bp_learndash_groups_sync-scan-results");
 
         $spinner.addClass('is-active');
         $results.hide().empty();
 
         $.getJSON($self.data('url'), {
-            action: 'ld_bp_groups_sync/ld-groups-scan',
+            action: 'bp_learndash_groups_sync/ld-groups-scan',
             _wpnonce: $self.data('nonce'),
         }, function(response) {
             $spinner.removeClass('is-active');
@@ -18,7 +18,7 @@
         });
     });
 
-    $('.ld_bp_groups_sync-scan-results').on('click.sync', '.ld_bp_groups_sync-do-action-button', function(e) {
+    $('.bp_learndash_groups_sync-scan-results').on('click.sync', '.bp_learndash_groups_sync-do-action-button', function(e) {
         e.preventDefault();
 
         var $self    = $(this);
@@ -36,7 +36,7 @@
         $self.attr('disabled', true);
 
         $.getJSON($self.data('url'), {
-            action: 'ld_bp_groups_sync/ld-group-sync',
+            action: 'bp_learndash_groups_sync/ld-group-sync',
             _wpnonce: $self.data('nonce'),
             id: id,
             todo: todo
@@ -47,7 +47,7 @@
         });
     });
 
-    $('.ld_bp_groups_sync-scan-results').on('click', '.ld_bp_groups_sync-bulk-action-button', function(e) {
+    $('.bp_learndash_groups_sync-scan-results').on('click', '.bp_learndash_groups_sync-bulk-action-button', function(e) {
         e.preventDefault();
 
         var $self = $(this);
@@ -65,12 +65,12 @@
         $spinner.addClass('is-active');
         $self.text($self.data('stop-text'));
         $self.data('processing', true);
-        $self.data('queue', $('.ld_bp_groups_sync-scan-results .ld_bp_groups_sync-do-action-button').toArray());
+        $self.data('queue', $('.bp_learndash_groups_sync-scan-results .bp_learndash_groups_sync-do-action-button').toArray());
 
         $self.trigger('queue_tick');
     });
 
-    $('.ld_bp_groups_sync-scan-results').on('queue_end', '.ld_bp_groups_sync-bulk-action-button', function() {
+    $('.bp_learndash_groups_sync-scan-results').on('queue_end', '.bp_learndash_groups_sync-bulk-action-button', function() {
         var $self = $(this);
         var $spinner = $self.next();
 
@@ -80,7 +80,7 @@
         $spinner.removeClass('is-active');
     });
 
-    $('.ld_bp_groups_sync-scan-results').on('queue_tick', '.ld_bp_groups_sync-bulk-action-button', function() {
+    $('.bp_learndash_groups_sync-scan-results').on('queue_tick', '.bp_learndash_groups_sync-bulk-action-button', function() {
         var $self = $(this);
 
         if (! $self.data('queue').length) {

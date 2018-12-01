@@ -37,21 +37,21 @@ class LearnDash_BuddyPress_Groups_Sync_BuddyPress
 
     public function dissociate_learndash_group($bp_group_id)
     {
-        $ld_group = ld_bp_groups_sync_get_associated_ld_group($bp_group_id);
+        $ld_group = bp_learndash_groups_sync_get_associated_ld_group($bp_group_id);
         $generator = new LearnDash_BuddyPress_Groups_Sync_Generator($ld_group);
         $generator->dissociate();
     }
 
     public function associate_learndash_group($bp_group_id)
     {
-        $settings = ld_bp_groups_sync_get_settings();
-        $ld_group = ld_bp_groups_sync_get_associated_ld_group($bp_group_id);
+        $settings = bp_learndash_groups_sync_get_settings();
+        $ld_group = bp_learndash_groups_sync_get_associated_ld_group($bp_group_id);
 
-        if (! $this->request_value('ld_bp_groups_sync')) {
+        if (! $this->request_value('bp_learndash_groups_sync')) {
             return;
         }
 
-        $request  = wp_parse_args($this->request_value('ld_bp_groups_sync'), [
+        $request  = wp_parse_args($this->request_value('bp_learndash_groups_sync'), [
             'update_leaders'      => $settings['auto_sync_leaders'],
             'update_students'     => $settings['auto_sync_students'],
             'learndash_group_id' => 0
@@ -61,7 +61,7 @@ class LearnDash_BuddyPress_Groups_Sync_BuddyPress
             return;
         }
 
-        $bp_group = ld_bp_groups_sync_associate_bp_group(
+        $bp_group = bp_learndash_groups_sync_associate_bp_group(
             $request['learndash_group_id'],
             $bp_group_id,
             $request['update_leaders'],

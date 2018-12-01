@@ -22,7 +22,7 @@
                 <td><?php echo get_the_title($group->ID); ?></td>
                 <td>
                     <?php
-                        if ($bp_groups = ld_bp_groups_sync_get_ld_groups_has_match_name($group->ID)) {
+                        if ($bp_groups = bp_learndash_groups_sync_get_ld_groups_has_match_name($group->ID)) {
                             $list_html = array_map(function($bp_group) {
                                 return sprintf(
                                     '<li><a href="%s" target="_blank">%s (ID: %d)</a></li>',
@@ -67,8 +67,8 @@
                 </td>
                 <td>
                     <button
-                        class="ld_bp_groups_sync-do-action-button button button-primary"
-                        data-nonce="<?php echo wp_create_nonce('ld_bp_groups_sync-sync-' . $group->ID); ?>"
+                        class="bp_learndash_groups_sync-do-action-button button button-primary"
+                        data-nonce="<?php echo wp_create_nonce('bp_learndash_groups_sync-sync-' . $group->ID); ?>"
                         data-url="<?php echo admin_url('admin-ajax.php'); ?>"
                         data-id="<?php echo $group->ID; ?>"
                     ><?php _e('Sync', 'buddyboss'); ?></button>
@@ -81,7 +81,7 @@
     <tfoot>
         <tr>
             <th colspan="5" style="text-align: right">
-                <button class="ld_bp_groups_sync-bulk-action-button button button-primary" data-stop-text="<?php esc_attr_e('Stop', 'buddyboss'); ?>">
+                <button class="bp_learndash_groups_sync-bulk-action-button button button-primary" data-stop-text="<?php esc_attr_e('Stop', 'buddyboss'); ?>">
                     <?php _e('Sync All', 'buddyboss'); ?>
                 </button>
                 <div class="spinner"></div>

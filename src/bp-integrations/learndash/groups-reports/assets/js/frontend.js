@@ -4,7 +4,7 @@ jQuery( document ).ready( function ( $ ) {
 	 * Fire when user change the course or member dropdown.
 	 */
 	$( '.bp-learndash-group-reports .bp_learndash_member_id, .bp-learndash-group-reports .bp_learndash_courses_id' ).change( function () {
-		ld_bp_group_courses_report_update_sub_menu();
+		bp_learndash_group_courses_report_update_sub_menu();
 	} );
 
 
@@ -46,7 +46,7 @@ jQuery( document ).ready( function ( $ ) {
 } );
 
 
-function ld_bp_group_courses_report_update_sub_menu() {
+function bp_learndash_group_courses_report_update_sub_menu() {
 
 	var member_id = $( '.bp-learndash-group-reports .bp_learndash_member_id' ).val(),
 		courses_id = $( '.bp-learndash-group-reports .bp_learndash_courses_id' ).val();

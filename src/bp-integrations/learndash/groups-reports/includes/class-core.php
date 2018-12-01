@@ -104,7 +104,7 @@ if ( ! class_exists( 'LearnDash_BuddyPress_Groups_Reports' ) ) :
 
 		public function check_settings() {
 			if ( ! get_option( 'learndash_settings_buddypress_groups_report' ) ) {
-				$groups_report = get_option( 'learndash_settings_buddypress_groups_reports' ) ?: ld_bp_groups_reports_default_value();
+				$groups_report = get_option( 'learndash_settings_buddypress_groups_reports' ) ?: bp_learndash_groups_reports_default_value();
 				delete_option( 'learndash_settings_buddypress_groups_reports' );
 				update_option( 'learndash_settings_buddypress_groups_report', $groups_report );
 			}
@@ -146,7 +146,7 @@ if ( ! class_exists( 'LearnDash_BuddyPress_Groups_Reports' ) ) :
 		private function includes() {
 			require_once LEARNDASH_BUDDYPRESS_GROUP_REPORTS_PLUGIN_DIR . '/includes/helpers.php';
 
-			if ( ld_bp_groups_sync_get_settings( 'display_bp_group_cources' ) ) {
+			if ( bp_learndash_groups_sync_get_settings( 'display_bp_group_cources' ) ) {
 				require_once LEARNDASH_BUDDYPRESS_GROUP_REPORTS_PLUGIN_DIR . '/includes/class-groups-reports.php';
 			}
 		}

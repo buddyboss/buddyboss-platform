@@ -33,7 +33,7 @@ if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() 
 			parent::init( $args );
 
 
-			$this->associated_ld_group = ld_bp_groups_sync_check_associated_ld_group( buddypress()->groups->current_group->id );
+			$this->associated_ld_group = bp_learndash_groups_sync_check_associated_ld_group( buddypress()->groups->current_group->id );
 
 
 			$this->loggedin_user_id = bp_loggedin_user_id();
@@ -43,7 +43,7 @@ if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() 
 			$this->group_link = bp_get_group_permalink( $this->current_group );
 
 
-			add_filter( 'ld_bp_groups_sync_courses_submenu', array( $this, 'sub_menu' ), 10, 1 );
+			add_filter( 'bp_learndash_groups_sync_courses_submenu', array( $this, 'sub_menu' ), 10, 1 );
 
 		}
 
@@ -54,7 +54,7 @@ if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() 
 		 */
 		function display( $group_id = null ) {
 
-			ld_bp_groups_sync_courses_sub_menu();
+			bp_learndash_groups_sync_courses_sub_menu();
 
 			$this->course_html();
 		}
@@ -230,18 +230,18 @@ if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() 
 	 *
 	 * @since 1.0.1
 	 */
-	function ld_bp_groups_sync_add_courses_menu() {
-		if ( ! ld_bp_groups_sync_get_settings( 'display_bp_group_cources' ) ) {
+	function bp_learndash_groups_sync_add_courses_menu() {
+		if ( ! bp_learndash_groups_sync_get_settings( 'display_bp_group_cources' ) ) {
 			return;
 		}
 
 		if ( function_exists( 'bp_is_group' ) && bp_is_group() ) {
-			$type = ld_bp_groups_sync_check_associated_ld_group( buddypress()->groups->current_group->id );
+			$type = bp_learndash_groups_sync_check_associated_ld_group( buddypress()->groups->current_group->id );
 			if ( $type ) {
 				bp_register_group_extension( 'LearnDash_BuddyPress_Groups_Courses_Extension' );
 			}
 		}
 	}
 
-	add_action( 'bp_init', 'ld_bp_groups_sync_add_courses_menu' );
+	add_action( 'bp_init', 'bp_learndash_groups_sync_add_courses_menu' );
 }

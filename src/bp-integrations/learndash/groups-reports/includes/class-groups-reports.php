@@ -40,7 +40,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		 * update all the value in class
 		 */
 		private function setup() {
-			$this->associated_ld_group = ld_bp_groups_sync_check_associated_ld_group( buddypress()->groups->current_group->id );
+			$this->associated_ld_group = bp_learndash_groups_sync_check_associated_ld_group( buddypress()->groups->current_group->id );
 
 			$this->loggedin_user_id = bp_loggedin_user_id();
 
@@ -50,9 +50,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 			$this->group_link = bp_get_group_permalink( $this->current_group );
 
-			$this->associated_ld_group = ld_bp_groups_sync_check_associated_ld_group( $this->group_id );
+			$this->associated_ld_group = bp_learndash_groups_sync_check_associated_ld_group( $this->group_id );
 
-			add_filter( 'ld_bp_groups_sync_courses_submenu', array( $this, 'sub_menu' ), 10, 1 );
+			add_filter( 'bp_learndash_groups_sync_courses_submenu', array( $this, 'sub_menu' ), 10, 1 );
 
 			add_filter( 'bp_nouveau_get_classes', array( $this, 'sub_menu_class' ), 10, 1 );
 
@@ -274,7 +274,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 			wp_enqueue_script( 'bp-learndash-courses-reports' );
 
-			ld_bp_groups_sync_courses_sub_menu();
+			bp_learndash_groups_sync_courses_sub_menu();
 
 			$display = empty( $_GET['menu'] ) ? 'courses' : (string) $_GET['menu'];
 
@@ -1519,14 +1519,14 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 	 *
 	 * @since 1.0.1
 	 */
-	function ld_bp_groups_add_courses_reports_menu() {
+	function bp_learndash_groups_add_courses_reports_menu() {
 		if (
 			function_exists( 'bp_is_group' )
 			&& bp_is_group()
-			&& ld_bp_groups_sync_check_associated_ld_group( buddypress()->groups->current_group->id )
-			&& ld_bp_groups_reports_get_settings( 'enable_group_reports' )
+			&& bp_learndash_groups_sync_check_associated_ld_group( buddypress()->groups->current_group->id )
+			&& bp_learndash_groups_reports_get_settings( 'enable_group_reports' )
 		) {
-			$report_access = ld_bp_groups_reports_get_settings( 'report_access', false );
+			$report_access = bp_learndash_groups_reports_get_settings( 'report_access', false );
 
 			$member_id    = bp_loggedin_user_id();
 			$admin_member = wp_list_pluck( buddypress()->groups->current_group->admins, 'user_id' );
@@ -1543,5 +1543,5 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		}
 	}
 
-	add_action( 'bp_init', 'ld_bp_groups_add_courses_reports_menu' );
+	add_action( 'bp_init', 'bp_learndash_groups_add_courses_reports_menu' );
 }

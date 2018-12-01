@@ -27,7 +27,7 @@ function learndash_bbudypress_groups_reports() {
  *
  * @return array
  */
-function ld_bp_groups_reports_default_value() {
+function bp_learndash_groups_reports_default_value() {
 	return $default_value = array(
 		'enable_group_reports' => false,
 		'report_access'        => array(
@@ -46,9 +46,9 @@ function ld_bp_groups_reports_default_value() {
  *
  * @return array|bool
  */
-function ld_bp_groups_reports_get_settings( $key = null, $get_default_value = true, $default = array() ) {
+function bp_learndash_groups_reports_get_settings( $key = null, $get_default_value = true, $default = array() ) {
 
-	$default_value = ld_bp_groups_reports_default_value();
+	$default_value = bp_learndash_groups_reports_default_value();
 
 	$options = get_option( 'learndash_settings_buddypress_groups_report', $default_value );
 

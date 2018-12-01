@@ -1,12 +1,12 @@
 <?php
 
-function ld_bp_groups_sync() {
+function bp_learndash_groups_sync() {
 	global $learndash_buddypress_groups_sync;
 
 	return $learndash_buddypress_groups_sync;
 }
 
-function ld_bp_groups_sync_get_settings( $key = null, $default = null ) {
+function bp_learndash_groups_sync_get_settings( $key = null, $default = null ) {
 	$options = get_option( 'learndash_settings_buddypress_groups_sync', [
 		'auto_create_bp_group'        => true,
 		'auto_bp_group_privacy'       => 'private',
@@ -25,7 +25,7 @@ function ld_bp_groups_sync_get_settings( $key = null, $default = null ) {
 	return isset( $options[ $key ] ) ? $options[ $key ] : $default;
 }
 
-function ld_bp_groups_sync_get_unassociated_bp_groups( $args = [], $include = 0 ) {
+function bp_learndash_groups_sync_get_unassociated_bp_groups( $args = [], $include = 0 ) {
 	$meta_query = [
 		'relation' => 'OR',
 		[
@@ -53,7 +53,7 @@ function ld_bp_groups_sync_get_unassociated_bp_groups( $args = [], $include = 0 
 	] )['groups'];
 }
 
-function ld_bp_groups_sync_get_unassociated_ld_groups( $args = [] ) {
+function bp_learndash_groups_sync_get_unassociated_ld_groups( $args = [] ) {
 	$query_args = wp_parse_args( $args, [
 		'posts_per_page' => - 1,
 		'post_type'      => 'groups',
@@ -78,7 +78,7 @@ function ld_bp_groups_sync_get_unassociated_ld_groups( $args = [] ) {
 	return get_posts( $query_args );
 }
 
-function ld_bp_groups_sync_get_ld_groups_has_match_name( $ld_group ) {
+function bp_learndash_groups_sync_get_ld_groups_has_match_name( $ld_group ) {
 	global $wpdb;
 
 	$bp    = buddypress();
@@ -99,7 +99,7 @@ function ld_bp_groups_sync_get_ld_groups_has_match_name( $ld_group ) {
 	} );
 }
 
-function ld_bp_groups_sync_generate_bp_group( $ld_group, $sync_leaders = null, $sync_students = null ) {
+function bp_learndash_groups_sync_generate_bp_group( $ld_group, $sync_leaders = null, $sync_students = null ) {
 	$generator = new LearnDash_BuddyPress_Groups_Sync_Generator( $ld_group );
 
 	$generator->generate();
@@ -108,7 +108,7 @@ function ld_bp_groups_sync_generate_bp_group( $ld_group, $sync_leaders = null, $
 	return $generator->get_bp_group();
 }
 
-function ld_bp_groups_sync_associate_bp_group( $ld_group, $bp_group, $sync_leaders = null, $sync_students = null ) {
+function bp_learndash_groups_sync_associate_bp_group( $ld_group, $bp_group, $sync_leaders = null, $sync_students = null ) {
 	$generator = new LearnDash_BuddyPress_Groups_Sync_Generator( $ld_group );
 
 	if ( ! $bp_group ) {
@@ -121,19 +121,19 @@ function ld_bp_groups_sync_associate_bp_group( $ld_group, $bp_group, $sync_leade
 	return $generator->get_bp_group();
 }
 
-function ld_bp_groups_sync_get_associated_bp_group( $ld_group ) {
+function bp_learndash_groups_sync_get_associated_bp_group( $ld_group ) {
 	$bp_group_id = get_post_meta( $ld_group, 'buddypress_group_id', true );
 
 	return $bp_group_id ? groups_get_group( $bp_group_id ) : null;
 }
 
-function ld_bp_groups_sync_get_associated_ld_group( $bp_group ) {
+function bp_learndash_groups_sync_get_associated_ld_group( $bp_group ) {
 	$ld_group_id = groups_get_groupmeta( $bp_group, 'learndash_group_id', true );
 
 	return $ld_group_id ? get_post( $ld_group_id ) : null;
 }
 
-function ld_bp_groups_sync_check_associated_ld_group( $bp_group ) {
+function bp_learndash_groups_sync_check_associated_ld_group( $bp_group ) {
 	$ld_group_id = groups_get_groupmeta( $bp_group, 'learndash_group_id', true );
 
 	return empty( $ld_group_id ) ? false : $ld_group_id;
@@ -143,8 +143,8 @@ function ld_bp_groups_sync_check_associated_ld_group( $bp_group ) {
  * Add Submenu in BuddyPress Group Courses Tab
  *
  */
-function ld_bp_groups_sync_courses_sub_menu() {
-	$sub_menus = (array) apply_filters( 'ld_bp_groups_sync_courses_submenu', array() );
+function bp_learndash_groups_sync_courses_sub_menu() {
+	$sub_menus = (array) apply_filters( 'bp_learndash_groups_sync_courses_submenu', array() );
 
 	if ( count( $sub_menus ) > 1 ) {
 		?>

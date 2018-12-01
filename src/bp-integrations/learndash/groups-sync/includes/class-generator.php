@@ -7,9 +7,9 @@ class LearnDash_BuddyPress_Groups_Sync_Generator {
 
 	public function __construct( $ld_group ) {
 		$this->ld_group = get_post( $ld_group );
-		$this->settings = ld_bp_groups_sync_get_settings();
+		$this->settings = bp_learndash_groups_sync_get_settings();
 
-		$this->bp_group = ld_bp_groups_sync_get_associated_bp_group( $this->ld_group->ID );
+		$this->bp_group = bp_learndash_groups_sync_get_associated_bp_group( $this->ld_group->ID );
 	}
 
 	public function generate() {

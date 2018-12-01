@@ -4,8 +4,8 @@
     <div id="learndash-buddypress-groups-sync-tools">
     	<div>
 			<button
-	            class="ld_bp_groups_sync-scan-groups-button button"
-	            data-nonce="<?php echo wp_create_nonce('ld_bp_groups_sync-scan-ld-groups'); ?>"
+	            class="bp_learndash_groups_sync-scan-groups-button button"
+	            data-nonce="<?php echo wp_create_nonce('bp_learndash_groups_sync-scan-ld-groups'); ?>"
 	            data-url="<?php echo admin_url('admin-ajax.php'); ?>"
 	            data-slug=""
 	        >
@@ -18,5 +18,5 @@
         <p><?php _e('Scan for unassociated LearnDash groups. This tool is useful if you already have LearnDash groups on your site and want to link up with new or existing social groups.', 'buddyboss'); ?></p>
 	</div>
 
-    <div class="ld_bp_groups_sync-scan-results" style="display: none;"></div>
+    <div class="bp_learndash_groups_sync-scan-results" style="display: none;"></div>
 </div>
