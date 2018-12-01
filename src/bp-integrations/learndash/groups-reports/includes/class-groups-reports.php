@@ -434,6 +434,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 				<h2 class="screen-heading forums-completed-screen">
 					<?php echo $completed_step; ?>
 				</h2>
+				<p class="bp-help-text"><?php _e( 'Forum posts from [this student] that have been answered.', 'buddyboss' ); ?></p>
 
                 <table class="profile-settings bp-tables-report">
 					<?php
@@ -452,6 +453,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 				<h2 class="screen-heading forums-incomplete-screen">
 					<?php echo $incomplete_step; ?>
 				</h2>
+				<p class="bp-help-text"><?php _e( 'Forum posts from [this student] that are waiting for a reply.', 'buddyboss' ); ?></p>
 
                 <table class="profile-settings bp-tables-report">
 					<?php
