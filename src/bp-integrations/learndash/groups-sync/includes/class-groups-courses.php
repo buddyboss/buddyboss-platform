@@ -209,13 +209,13 @@ if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() 
 		function progress_bar_html( $lable, $percentage_completed ) {
 			$percentage_completed = round( $percentage_completed );
 			?>
-            <div class="ld-bp-progress-bar">
-                <p class="ld-bp-progress-bar-label"><?php echo $lable; ?></p>
+            <div class="bp-learndash-progress-bar">
+                <p class="bp-learndash-progress-bar-label"><?php echo $lable; ?></p>
                 <progress value="<?php echo $percentage_completed; ?>" max="100"></progress>
 				<?php
 				if ( ! empty( $percentage_completed ) ) {
 					?>
-                    <span class="ld-bp-progress-bar-percentage"><?php echo $percentage_completed; ?></span>
+                    <span class="bp-learndash-progress-bar-percentage"><?php echo $percentage_completed; ?></span>
 					<?php
 				}
 				?>
