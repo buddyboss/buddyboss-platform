@@ -124,7 +124,7 @@ if ( ! class_exists( 'LearnDash_BuddyPress_Groups_Reports' ) ) :
 			wp_register_script( 'ld-bp-courses-reports', LEARNDASH_BUDDYPRESS_GROUP_REPORTS_PLUGIN_URL . '/assests/js/frountend.js', array( 'jquery' ) );
 			// Localize the script with new data
 			$translation_array = array(
-				'export_csv_error' => __( 'Something when wrong kindly try after some time.', 'ld_bp_groups_reports' ),
+				'export_csv_error' => __( 'Something when wrong kindly try after some time.', 'buddyboss' ),
 			);
 			wp_localize_script( 'ld-bp-courses-reports', 'ld_bp_courses_reports', $translation_array );
 		}

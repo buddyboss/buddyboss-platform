@@ -27,7 +27,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 			$args = array(
 				'slug'          => 'course-reports',
-				'name'          => __( 'Reports', 'ld_bp_groups_reports' ),
+				'name'          => __( 'Reports', 'buddyboss' ),
 				'displayed_nav' => false,
 			);
 			parent::init( $args );
@@ -103,12 +103,12 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 				),
 				'essays'      => array(
 					'slug'  => 'essays',
-					'label' => __( 'Essays', 'ld_bp_groups_reports' ),
+					'label' => __( 'Essays', 'buddyboss' ),
 					'menu'  => true,
 				),
 				'assignments' => array(
 					'slug'  => 'assignments',
-					'label' => __( 'Assignments', 'ld_bp_groups_reports' ),
+					'label' => __( 'Assignments', 'buddyboss' ),
 					'menu'  => true,
 				),
 			);
@@ -119,7 +119,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 				if ( ! empty( $this->group_forum_ids ) ) {
 					$menu['forums'] = array(
 						'slug'  => 'forums',
-						'label' => __( 'Forums', 'ld_bp_groups_reports' ),
+						'label' => __( 'Forums', 'buddyboss' ),
 						'menu'  => true,
 					);
 				}
@@ -135,9 +135,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 			$this->ls_bp_courses_id = empty( $_GET['courses_id'] ) ? 0 : absint( $_GET['courses_id'] );
 
-			$this->not_applicable = __( 'N/A', 'ld_bp_groups_reports' );
+			$this->not_applicable = __( 'N/A', 'buddyboss' );
 
-			$this->status = __( 'Status', 'ld_bp_groups_reports' );
+			$this->status = __( 'Status', 'buddyboss' );
 
 			$this->is_ajax = false;
 
@@ -241,7 +241,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$sub_menus[] = array(
 				'link'  => $this->group_link,
 				'slug'  => $this->slug,
-				'label' => __( 'Reports', 'ld_bp_groups_reports' ),
+				'label' => __( 'Reports', 'buddyboss' ),
 			);
 
 			return $sub_menus;
@@ -313,7 +313,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                    data-courses_id="<?php echo $this->ls_bp_courses_id; ?>"
                    data-group_id="<?php echo $this->group_id; ?>"
                    data-filename="<?php printf( '%s-export-member-id-%s--courses-id-%s', $this->current_tab, $this->ls_bp_member_id, $this->ls_bp_courses_id ) ?>">
-					<?php _e( 'Export CSV', 'ld_bp_groups_reports' ); ?>
+					<?php _e( 'Export CSV', 'buddyboss' ); ?>
                     <a id="ls_bp_group_courses_export_csv_download"></a>
                 </a>
 
@@ -342,8 +342,8 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$this->course_step     = 0;
 			$this->user_progress   = 0;
 			$this->csv             = array();
-			$completed_step        = sprintf( __( '%s Answered', 'ld_bp_groups_reports' ), $label );
-			$incomplete_step       = sprintf( __( '%s Unanswered', 'ld_bp_groups_reports' ), $label );
+			$completed_step        = sprintf( __( '%s Answered', 'buddyboss' ), $label );
+			$incomplete_step       = sprintf( __( '%s Unanswered', 'buddyboss' ), $label );
 
 			// Move user uploaded Assignements to Trash.
 			$args = array(
@@ -422,8 +422,8 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
             <div class="ls-bp-group-forums-report">
                 <div class="ls_bp_step_completed">
                     <p>
-                        <span><?php printf( __( '%s Answered', 'ld_bp_groups_reports' ), $label ); ?></span>
-                        <span><?php printf( __( '%s of %s', 'ld_bp_groups_reports' ), $this->user_progress, $this->course_step ); ?></span>
+                        <span><?php printf( __( '%s Answered', 'buddyboss' ), $label ); ?></span>
+                        <span><?php printf( __( '%s of %s', 'buddyboss' ), $this->user_progress, $this->course_step ); ?></span>
                     </p>
                     <progress value="<?php echo $this->user_progress; ?>"
                               max="<?php echo $this->course_step; ?>"></progress>
@@ -480,8 +480,8 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$this->course_step     = 0;
 			$this->user_progress   = 0;
 			$this->csv             = array();
-			$completed_step        = sprintf( __( 'Approved %s', 'ld_bp_groups_reports' ), $label );
-			$incomplete_step       = sprintf( __( 'Submitted %s', 'ld_bp_groups_reports' ), $label );
+			$completed_step        = sprintf( __( 'Approved %s', 'buddyboss' ), $label );
+			$incomplete_step       = sprintf( __( 'Submitted %s', 'buddyboss' ), $label );
 
 			// Move user uploaded Assignements to Trash.
 			$user_assignements_query_args = array(
@@ -576,8 +576,8 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
             <div class="ls-bp-group-assignments-report">
                 <div class="ls_bp_step_completed">
                     <p>
-                        <span><?php printf( __( '%s Approved', 'ld_bp_groups_reports' ), $label ); ?></span>
-                        <span><?php printf( __( '%s of %s', 'ld_bp_groups_reports' ), $this->user_progress, $this->course_step ); ?></span>
+                        <span><?php printf( __( '%s Approved', 'buddyboss' ), $label ); ?></span>
+                        <span><?php printf( __( '%s of %s', 'buddyboss' ), $this->user_progress, $this->course_step ); ?></span>
                     </p>
                     <progress value="<?php echo $this->user_progress; ?>"
                               max="<?php echo $this->course_step; ?>"></progress>
@@ -585,7 +585,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
                 <div class="ls_bp_point_earn">
                     <p>
-                        <span><?php _e( 'Points Earned', 'ld_bp_groups_reports' ); ?></span>
+                        <span><?php _e( 'Points Earned', 'buddyboss' ); ?></span>
                         <span><?php echo $this->total_points; ?></span>
                     </p>
                 </div>
@@ -640,8 +640,8 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$this->course_step     = 0;
 			$this->user_progress   = 0;
 			$this->csv             = array();
-			$completed_step        = sprintf( __( 'Approved %s', 'ld_bp_groups_reports' ), $label );
-			$incomplete_step       = sprintf( __( 'Submitted %s', 'ld_bp_groups_reports' ), $label );
+			$completed_step        = sprintf( __( 'Approved %s', 'buddyboss' ), $label );
+			$incomplete_step       = sprintf( __( 'Submitted %s', 'buddyboss' ), $label );
 
 			// Move user uploaded essays to Trash.
 			$user_essays_query_args = array(
@@ -761,8 +761,8 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
             <div class="ls-bp-group-essays-report">
                 <div class="ls_bp_step_completed">
                     <p>
-                        <span><?php printf( __( '%s Approved', 'ld_bp_groups_reports' ), $label ); ?></span>
-                        <span><?php printf( __( '%s of %s', 'ld_bp_groups_reports' ), $this->user_progress, $this->course_step ); ?></span>
+                        <span><?php printf( __( '%s Approved', 'buddyboss' ), $label ); ?></span>
+                        <span><?php printf( __( '%s of %s', 'buddyboss' ), $this->user_progress, $this->course_step ); ?></span>
                     </p>
                     <progress value="<?php echo $this->user_progress; ?>"
                               max="<?php echo $this->course_step; ?>"></progress>
@@ -770,7 +770,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
                 <div class="ls_bp_point_earn">
                     <p>
-                        <span><?php _e( 'Points Earned', 'ld_bp_groups_reports' ); ?></span>
+                        <span><?php _e( 'Points Earned', 'buddyboss' ); ?></span>
                         <span><?php echo $this->total_points; ?></span>
                     </p>
                 </div>
@@ -828,9 +828,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$this->course_step           = 0;
 			$this->user_progress         = 0;
 			$this->csv                   = array();
-			$this->completed_step_label  = sprintf( __( 'Passed %s', 'ld_bp_groups_reports' ), $label );
-			$this->failed_step_label     = sprintf( __( 'Failed %s', 'ld_bp_groups_reports' ), $label );
-			$this->incomplete_step_label = sprintf( __( 'Incomplete %s', 'ld_bp_groups_reports' ), $label );
+			$this->completed_step_label  = sprintf( __( 'Passed %s', 'buddyboss' ), $label );
+			$this->failed_step_label     = sprintf( __( 'Failed %s', 'buddyboss' ), $label );
+			$this->incomplete_step_label = sprintf( __( 'Incomplete %s', 'buddyboss' ), $label );
 
 			$this->courses_table_body( $this->ld_course_steps_object->get_steps(), 'sfwd-quiz' );
 			?>
@@ -838,8 +838,8 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
             <div class="ls-bp-group-quizzes-report">
                 <div class="ls_bp_step_completed">
                     <p>
-                        <span><?php printf( __( '%s Passed', 'ld_bp_groups_reports' ), $label ); ?></span>
-                        <span><?php printf( __( '%s of %s', 'ld_bp_groups_reports' ), $this->user_progress, $this->course_step ); ?></span>
+                        <span><?php printf( __( '%s Passed', 'buddyboss' ), $label ); ?></span>
+                        <span><?php printf( __( '%s of %s', 'buddyboss' ), $this->user_progress, $this->course_step ); ?></span>
                     </p>
                     <progress value="<?php echo $this->user_progress; ?>"
                               max="<?php echo $this->course_step; ?>"></progress>
@@ -847,7 +847,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
                 <div class="ls_bp_point_earn">
                     <p>
-                        <span><?php _e( 'Points Earned', 'ld_bp_groups_reports' ); ?></span>
+                        <span><?php _e( 'Points Earned', 'buddyboss' ); ?></span>
                         <span><?php echo $this->total_points; ?></span>
                     </p>
                 </div>
@@ -925,7 +925,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		 * Display courses HTML
 		 */
 		public function courses() {
-			$this->basic_html( 'courses', __( 'Steps', 'ld_bp_groups_reports' ) );
+			$this->basic_html( 'courses', __( 'Steps', 'buddyboss' ) );
 		}
 
 		public function basic_html( $slug, $label, $display = 'all', $table_head = 'courses_table_head' ) {
@@ -938,16 +938,16 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$this->user_progress         = 0;
 			$this->total_points          = 0;
 			$this->csv                   = array();
-			$this->completed_step_label  = sprintf( __( 'Completed %s', 'ld_bp_groups_reports' ), $label );
-			$this->incomplete_step_label = sprintf( __( 'Incomplete %s', 'ld_bp_groups_reports' ), $label );
+			$this->completed_step_label  = sprintf( __( 'Completed %s', 'buddyboss' ), $label );
+			$this->incomplete_step_label = sprintf( __( 'Incomplete %s', 'buddyboss' ), $label );
 
 			$this->courses_table_body( $this->ld_course_steps_object->get_steps(), $display );
 			?>
             <div class="ls-bp-group-<?php echo $slug; ?>-report">
                 <div class="ls_bp_step_completed">
                     <p>
-                        <span><?php printf( __( '%s Completed', 'ld_bp_groups_reports' ), $label ); ?></span>
-                        <span><?php printf( __( '%s of %s', 'ld_bp_groups_reports' ), $this->user_progress, $this->course_step ); ?></span>
+                        <span><?php printf( __( '%s Completed', 'buddyboss' ), $label ); ?></span>
+                        <span><?php printf( __( '%s of %s', 'buddyboss' ), $this->user_progress, $this->course_step ); ?></span>
                     </p>
                     <progress value="<?php echo $this->user_progress; ?>"
                               max="<?php echo $this->course_step; ?>"></progress>
@@ -955,7 +955,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
                 <div class="ls_bp_point_earn">
                     <p>
-                        <span><?php _e( 'Points Earned', 'ld_bp_groups_reports' ); ?></span>
+                        <span><?php _e( 'Points Earned', 'buddyboss' ); ?></span>
                         <span><?php echo $this->total_points; ?></span>
                     </p>
                 </div>
@@ -1004,12 +1004,12 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			if ( $this->is_admin_or_mod() ) {
 
 				if ( $this->get_member_count() < 1 ) {
-					_e( 'No Member associated to the Group', 'ld_bp_groups_reports' );
+					_e( 'No Member associated to the Group', 'buddyboss' );
 				} else {
 
 					$style = sprintf( 'style=display:%s;', ( 1 == $this->get_member() ) ? 'none' : 'block' );
 
-					printf( '<label for="ls_bp_member_id" %s>%s</label>', $style, __( 'Select Student', 'ld_bp_groups_reports' ) );
+					printf( '<label for="ls_bp_member_id" %s>%s</label>', $style, __( 'Select Student', 'buddyboss' ) );
 					?>
                     <select name="student_id" class="ls_bp_member_id" id="ls_bp_member_id" <?php echo $style; ?>>
 						<?php
@@ -1056,7 +1056,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			if ( $total_courses > 0 ) {
 				$style = sprintf( 'style=display:%s;', ( 1 === $total_courses ) ? 'none' : 'block' );
 
-				$select_course = sprintf( __( 'Select %s', 'ld_bp_groups_reports' ), $this->menus['course']['label'] );
+				$select_course = sprintf( __( 'Select %s', 'buddyboss' ), $this->menus['course']['label'] );
 				printf( '<label for="ls_bp_courses_id" %s>%s</label>', $style, $select_course );
 				?>
                 <select name="courses_id" class="ls_bp_courses_id" id="ls_bp_courses_id" <?php echo $style; ?>>
@@ -1082,7 +1082,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                 </select>
 				<?php
 			} else {
-				_e( 'No Courses associated to the Group', 'ld_bp_groups_reports' );
+				_e( 'No Courses associated to the Group', 'buddyboss' );
 			}
 
 			$this->ls_bp_courses_id       = $selected_course;
@@ -1131,7 +1131,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 				printf(
 					'<p><span class="user_link">%s %s</span>: <span class="course_link"><a href="%s">%s</a> </span></p>',
 					$this->current_tab_label,
-					__( 'Progress', 'ld_bp_groups_reports' ),
+					__( 'Progress', 'buddyboss' ),
 					get_permalink( $this->ls_bp_courses_id ),
 					$this->ls_bp_courses_name
 				);
@@ -1322,18 +1322,18 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		}
 
 		function courses_table_head( $label, $header = false ) {
-			$columns2 = __( 'Start Date', 'ld_bp_groups_reports' );
-			$columns3 = __( 'Completion Date', 'ld_bp_groups_reports' );
-			$columns4 = __( 'Time Spent', 'ld_bp_groups_reports' );
-			$columns5 = __( 'Points Earned', 'ld_bp_groups_reports' );
+			$columns2 = __( 'Start Date', 'buddyboss' );
+			$columns3 = __( 'Completion Date', 'buddyboss' );
+			$columns4 = __( 'Time Spent', 'buddyboss' );
+			$columns5 = __( 'Points Earned', 'buddyboss' );
 			?>
             <thead>
             <tr>
                 <th><?php echo $label; ?></th>
-                <th><?php _e( 'Start Date', 'ld_bp_groups_reports' ); ?></th>
-                <th><?php _e( 'Completion Date', 'ld_bp_groups_reports' ); ?></th>
-                <th><?php _e( 'Time Spent', 'ld_bp_groups_reports' ); ?></th>
-                <th><?php _e( 'Points Earned', 'ld_bp_groups_reports' ); ?></th>
+                <th><?php _e( 'Start Date', 'buddyboss' ); ?></th>
+                <th><?php _e( 'Completion Date', 'buddyboss' ); ?></th>
+                <th><?php _e( 'Time Spent', 'buddyboss' ); ?></th>
+                <th><?php _e( 'Points Earned', 'buddyboss' ); ?></th>
             </tr>
             </thead>
 			<?php
@@ -1354,9 +1354,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 		function topic_table_head( $label, $header = false ) {
 			$parent_label = $this->menus['lessons']['label'];
-			$columns3     = __( 'Completion Date', 'ld_bp_groups_reports' );
-			$columns4     = __( 'Time Spent', 'ld_bp_groups_reports' );
-			$columns5     = __( 'Points Earned', 'ld_bp_groups_reports' );
+			$columns3     = __( 'Completion Date', 'buddyboss' );
+			$columns4     = __( 'Time Spent', 'buddyboss' );
+			$columns5     = __( 'Points Earned', 'buddyboss' );
 			?>
             <thead>
             <tr>
@@ -1383,11 +1383,11 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		}
 
 		function quizzes_table_head( $label, $header = false ) {
-			$columns2 = __( 'Completion Date', 'ld_bp_groups_reports' );
-			$columns3 = __( 'No. of Attempts', 'ld_bp_groups_reports' );
-			$columns4 = __( 'Score', 'ld_bp_groups_reports' );
-			$columns5 = __( 'Time Spent', 'ld_bp_groups_reports' );
-			$columns6 = __( 'Points Earned', 'ld_bp_groups_reports' );
+			$columns2 = __( 'Completion Date', 'buddyboss' );
+			$columns3 = __( 'No. of Attempts', 'buddyboss' );
+			$columns4 = __( 'Score', 'buddyboss' );
+			$columns5 = __( 'Time Spent', 'buddyboss' );
+			$columns6 = __( 'Points Earned', 'buddyboss' );
 			?>
             <thead>
             <tr>
@@ -1421,10 +1421,10 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$lesson_label = $this->menus['lesson']['label'];
 			$quiz_label   = $this->menus['quiz']['label'];
 
-			$columns1 = sprintf( __( '%s Question', 'ld_bp_groups_reports' ), $label );
-			$columns4 = __( 'Date Completed', 'ld_bp_groups_reports' );
-			$columns5 = __( 'Comments', 'ld_bp_groups_reports' );
-			$columns6 = __( 'Points Earned', 'ld_bp_groups_reports' );
+			$columns1 = sprintf( __( '%s Question', 'buddyboss' ), $label );
+			$columns4 = __( 'Date Completed', 'buddyboss' );
+			$columns5 = __( 'Comments', 'buddyboss' );
+			$columns6 = __( 'Points Earned', 'buddyboss' );
 			?>
             <thead>
             <tr>
@@ -1457,9 +1457,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		function assignments_table_head( $header = false ) {
 			$label        = $this->menus['assignments']['label'];
 			$lesson_label = $this->menus['lesson']['label'];
-			$columns3     = __( 'Updated', 'ld_bp_groups_reports' );
-			$columns4     = __( 'Comments', 'ld_bp_groups_reports' );
-			$columns5     = __( 'Points Earned', 'ld_bp_groups_reports' );
+			$columns3     = __( 'Updated', 'buddyboss' );
+			$columns4     = __( 'Comments', 'buddyboss' );
+			$columns5     = __( 'Points Earned', 'buddyboss' );
 			?>
             <thead>
             <tr>
@@ -1487,9 +1487,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		}
 
 		function forums_table_head( $label, $header = false ) {
-			$columns1 = sprintf( __( '%s Topic', 'ld_bp_groups_reports' ), $label );
-			$columns2 = __( 'Reply', 'ld_bp_groups_reports' );
-			$columns3 = __( 'Date Posted', 'ld_bp_groups_reports' );
+			$columns1 = sprintf( __( '%s Topic', 'buddyboss' ), $label );
+			$columns2 = __( 'Reply', 'buddyboss' );
+			$columns3 = __( 'Date Posted', 'buddyboss' );
 			?>
             <thead>
             <tr>
