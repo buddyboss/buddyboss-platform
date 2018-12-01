@@ -1,5 +1,5 @@
 (function($) {
-    $(".bp_learndash_groups_sync-scan-groups-button").on('click', function(e) {
+    $('.bp_learndash_groups_sync-scan-groups-button').on('click', function(e) {
         e.preventDefault();
 
         var $self = $(this);
