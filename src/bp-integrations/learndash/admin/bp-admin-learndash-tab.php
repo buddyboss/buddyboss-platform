@@ -226,8 +226,8 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			'<script type="text/javascript" src="%s"></script>',
 			add_query_arg(
 				'ver',
-				filemtime(bp_learndash_path('groups-sync/assets/js/admin/ld_bp_groups_sync-settings.js')),
-				bp_learndash_url('groups-sync/assets/js/admin/ld_bp_groups_sync-settings.js')
+				filemtime(bp_learndash_path('groups-sync/assets/js/admin/bp_learndash_groups_sync-settings.js')),
+				bp_learndash_url('groups-sync/assets/js/admin/bp_learndash_groups_sync-settings.js')
 			)
 		);
 	}
