@@ -25,3 +25,22 @@ add_action( 'bp_init', 'bp_setup_core_email_tokens', 0 );
 function bp_email_set_content_type(){
 	return "text/html";
 }
+
+function bp_email_core_wp_get_template( $content = '', $user = false ) {
+	ob_start();
+
+	// Remove 'bp_replace_the_content' filter to prevent infinite loops.
+	remove_filter( 'the_content', 'bp_replace_the_content' );
+
+	set_query_var( 'email_content', $content );
+	set_query_var( 'email_user', $user );
+	bp_get_template_part( 'assets/emails/wp/email-template' );
+
+	// Remove 'bp_replace_the_content' filter to prevent infinite loops.
+	add_filter( 'the_content', 'bp_replace_the_content' );
+
+	// Get the output buffer contents.
+	$output = ob_get_clean();
+
+	return $output;
+}

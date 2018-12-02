@@ -10,25 +10,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-function bp_email_core_wp_get_template( $content = '', $user = false ) {
-	ob_start();
-
-	// Remove 'bp_replace_the_content' filter to prevent infinite loops.
-	remove_filter( 'the_content', 'bp_replace_the_content' );
-
-	set_query_var( 'email_content', $content );
-	set_query_var( 'email_user', $user );
-	bp_get_template_part( 'assets/emails/wp/email-template' );
-
-	// Remove 'bp_replace_the_content' filter to prevent infinite loops.
-	add_filter( 'the_content', 'bp_replace_the_content' );
-
-	// Get the output buffer contents.
-	$output = ob_get_clean();
-
-	return $output;
-}
-
 if ( ! function_exists('wp_notify_postauthor') ) :
 	/**
 	 * Notify an author (and/or others) of a comment/trackback/pingback on a post.
