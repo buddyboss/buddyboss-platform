@@ -3862,3 +3862,44 @@ function bp_member_type_changing_listing_label() {
 		wp_localize_script( 'bp-member-type-admin-screen', '_bpmtAdminL10n', $strings );
 	}
 }
+
+/**
+ * Function which give the member type of particular user.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $user_id
+ *
+ * @return string
+ */
+function bp_get_user_member_type( $user_id ) {
+
+	if ( empty( $user_id ) ) {
+		$user_id = bp_displayed_user_id();
+	}
+
+	$member_type = __('Member', 'buddyboss');
+
+	if ( true === bp_member_type_enable_disable() ) {
+
+		if ( true === bp_member_type_display_on_profile() ) {
+
+			// Get the member type.
+			$type = bp_get_member_type( $user_id );
+
+			// Output the
+			if ( $type_obj = bp_get_member_type_object( $type ) ) {
+				$member_type = $type_obj->labels['singular_name'];
+				$member_type = __( $member_type, 'buddyboss');
+			}
+
+			$string = '<span class="bp-member-type">'.$member_type.'</span>';
+		} else {
+			$string = '<span class="bp-member-type">'.$member_type.'</span>';
+		}
+	} else {
+		$string = '<span class="bp-member-type">'.$member_type.'</span>';
+	}
+
+	return apply_filters('bp_member_type_name_string', $string, $member_type, $user_id );
+}
