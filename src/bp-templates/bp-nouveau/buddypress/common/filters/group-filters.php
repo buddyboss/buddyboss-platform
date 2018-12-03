@@ -43,7 +43,7 @@ if ( isset( $display_arr ) && !empty( $display_arr )) {
 			</label>
 			<div class="select-wrap">
 				<select id="group-type-order-by" data-bp-filter="<?php bp_nouveau_search_object_data_attr() ?>">
-					<option value="all"><?php echo __( 'All Types', 'buddyboss' ); ?></option><?php
+					<option value=""><?php echo __( 'All Types', 'buddyboss' ); ?></option><?php
 					foreach ( $display_arr as $group ) {
 						?>
 						<option value="<?php echo $group['group_type_name']; ?>"><?php echo __( $group['group_type_label'], 'buddyboss' ); ?></option><?php
