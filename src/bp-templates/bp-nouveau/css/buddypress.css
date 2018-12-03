@@ -5125,7 +5125,7 @@ button[data-bp-close]:hover {
 }
 
 .grid > li .list-wrap .list-title {
-  padding: 0.7em;
+  padding: 0.7em 0.7em 0;
 }
 
 .grid > li .list-wrap .update {

@@ -2342,6 +2342,7 @@ body.no-js .single-item-header .js-self-profile-button {
 
 .groups-header .moderators-lists {
   margin-top: 0;
+  display: table-cell;
 }
 
 .groups-header .moderators-lists .moderators-title {
@@ -2365,6 +2366,42 @@ body.no-js .single-item-header .js-self-profile-button {
 }
 
 .groups-header .moderators-lists img.avatar {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  float: none;
+  height: 30px;
+  margin: 0;
+  max-width: 100%;
+  width: 30px;
+}
+
+.groups-header .parents-lists {
+  padding: 0 0 0 1em;
+  display: table-cell;
+}
+
+.groups-header .parents-lists .parents-title {
+  font-size: 14px;
+}
+
+.groups-header .parents-lists .group-list {
+  margin: 0 0 5px;
+}
+
+.groups-header .parents-lists .group-list ul:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.groups-header .parents-lists .group-list li {
+  display: inline-block;
+  float: none;
+  margin: 4px 4px 0 0;
+}
+
+.groups-header .parents-lists img.avatar {
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -2406,6 +2443,7 @@ body.no-js .single-item-header .js-self-profile-button {
     margin-right: 15px;
     text-align: left;
     max-width: 25%;
+    display: table;
   }
   .groups-header .groups-meta {
     clear: both;
@@ -2474,6 +2512,14 @@ body.buddypress.bp-user #page #primary .entry-header {
 .single-item.group-members .item-body .filters:not(.no-subnav) {
   border-top: 5px solid #eaeaea;
   padding-top: 1em;
+}
+
+.single-item.subgroups .item-body #subnav-filters .subnav-search {
+  display: none;
+}
+
+.single-item.subgroups .item-body #subnav-filters #dir-filters {
+  display: none;
 }
 
 /**
@@ -5079,7 +5125,7 @@ button[data-bp-close]:hover {
 }
 
 .grid > li .list-wrap .list-title {
-  padding: 0.7em;
+  padding: 0.7em 0.7em 0;
 }
 
 .grid > li .list-wrap .update {
