@@ -176,6 +176,7 @@ function bp_xprofile_get_field_types() {
 		'textarea'       => 'BP_XProfile_Field_Type_Textarea',
 		'textbox'        => 'BP_XProfile_Field_Type_Textbox',
 		'telephone'      => 'BP_XProfile_Field_Type_Telephone',
+		'gender'         => 'BP_XProfile_Field_Type_Gender',
 	);
 
 	/**

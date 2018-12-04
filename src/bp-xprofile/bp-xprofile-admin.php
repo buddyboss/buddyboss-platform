@@ -889,6 +889,14 @@ function bp_xprofile_admin_form_field_types( $select_field_type ) {
 	// Sort the categories alphabetically. ksort()'s SORT_NATURAL is only in PHP >= 5.4 :((.
 	uksort( $categories, 'strnatcmp' );
 
+	// Disable Gender field if that is already added previously.
+	global $wpdb;
+	$disabled_gender = false;
+	$exists_gender = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
+	if ( $exists_gender > 0 ) {
+		$disabled_gender = true;
+	}
+
 	// Loop through each category and output form <options>.
 	foreach ( $categories as $category => $fields ) {
 		printf( '<optgroup label="%1$s">', esc_attr( $category ) );  // Already i18n'd in each member type class.
@@ -899,8 +907,11 @@ function bp_xprofile_admin_form_field_types( $select_field_type ) {
 		foreach ( $fields as $field_type_obj ) {
 			$field_name     = $field_type_obj[0];
 			$field_type_obj = $field_type_obj[1];
-
-			printf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $field_name ), selected( $select_field_type, $field_name, false ), esc_html( $field_type_obj->name ) );
+			if ( 'gender' === $field_name && true === $disabled_gender ) {
+				printf( '<option disabled value="%1$s" %2$s>%3$s</option>', esc_attr( $field_name ), selected( $select_field_type, $field_name, false ), esc_html( $field_type_obj->name ) );
+			} else {
+				printf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $field_name ), selected( $select_field_type, $field_name, false ), esc_html( $field_type_obj->name ) );
+			}
 		}
 
 		printf( '</optgroup>' );
