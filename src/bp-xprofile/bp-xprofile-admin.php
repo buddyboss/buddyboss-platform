@@ -908,7 +908,7 @@ function bp_xprofile_admin_form_field_types( $select_field_type ) {
 			$field_name     = $field_type_obj[0];
 			$field_type_obj = $field_type_obj[1];
 			if ( 'gender' === $field_name && true === $disabled_gender ) {
-				printf( '<option disabled value="%1$s" %2$s>%3$s</option>', esc_attr( $field_name ), selected( $select_field_type, $field_name, false ), esc_html( $field_type_obj->name ) );
+				printf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $field_name ), selected( $select_field_type, $field_name, false ), esc_html( $field_type_obj->name ) );
 			} else {
 				printf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $field_name ), selected( $select_field_type, $field_name, false ), esc_html( $field_type_obj->name ) );
 			}

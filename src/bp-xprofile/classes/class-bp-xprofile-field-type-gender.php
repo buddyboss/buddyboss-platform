@@ -201,9 +201,9 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 		?>
 
 		<div id="<?php echo esc_attr( $type ); ?>" class="postbox bp-options-box" style="<?php echo esc_attr( $class ); ?> margin-top: 15px;">
-			<h3><?php esc_html_e( 'Please enter options for this Field:', 'buddyboss' ); ?></h3>
+			<h3><?php esc_html_e( 'Male and Female allow us to use "his" and "her" in the activity feed.', 'buddyboss' ); ?></h3>
 			<div class="inside" aria-live="polite" aria-atomic="true" aria-relevant="all">
-				<p>
+				<p style="display: none;">
 					<label for="sort_order_<?php echo esc_attr( $type ); ?>"><?php esc_html_e( 'Sort Order:', 'buddyboss' ); ?></label>
 					<select name="sort_order_<?php echo esc_attr( $type ); ?>" id="sort_order_<?php echo esc_attr( $type ); ?>" >
 						<option value="custom" <?php selected( 'custom', $current_field->order_by ); ?>><?php esc_html_e( 'Custom',     'buddyboss' ); ?></option>
@@ -284,21 +284,44 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 						if ( $current_type_obj->supports_options && $current_type_obj->supports_multiple_defaults ) {
 							$default_name = '[' . $j . ']';
 						}
+
+						if ( 1 === $j || 2 === $j ) {
+							$class = '';
+						} else {
+							$class = 'sortable';
+						}
 						?>
 
-						<div id="<?php echo esc_attr( "{$type}_div{$j}" ); ?>" class="bp-option sortable">
+						<div id="<?php echo esc_attr( "{$type}_div{$j}" ); ?>" class="bp-option <?php echo esc_attr( $class ); ?>">
 							<span class="bp-option-icon grabber"></span>
 							<label for="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" class="screen-reader-text"><?php
 								/* translators: accessibility text */
 								esc_html_e( 'Add an option', 'buddyboss' );
 								?></label>
-							<input type="text" name="<?php echo esc_attr( "{$type}_option[{$j}]" ); ?>" id="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" value="<?php echo esc_attr( stripslashes( $options[$i]->name ) ); ?>" />
+							<?php
+							if ( 1 === $j ) {
+								$key = sanitize_key( 'male' );
+							} elseif ( 2 === $j ) {
+								$key = sanitize_key( 'female' );
+							} else {
+								$key = sanitize_key( 'other' );
+							}
+							?>
+							<input type="text" name="<?php echo esc_attr( "{$type}_option[{$j}_{$key}]" ); ?>" id="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" value="<?php echo esc_attr( stripslashes( $options[$i]->name ) ); ?>" />
 							<label for="<?php echo esc_attr( "{$type}_option{$default_name}" ); ?>">
-								<input type="<?php echo esc_attr( $control_type ); ?>" id="<?php echo esc_attr( "{$type}_option{$default_name}" ); ?>" name="<?php echo esc_attr( "isDefault_{$type}_option{$default_name}" ); ?>" <?php checked( $options[$i]->is_default_option, true ); ?> value="<?php echo esc_attr( $j ); ?>" />
-								<?php _e( 'Default Value', 'buddyboss' ); ?>
+								<?php
+								if ( 1 === $j ) {
+									$name = 'Male';
+								} elseif ( 2 === $j ) {
+									$name = 'Female';
+								} else {
+									$name = 'Other';
+								}
+								?>
+								<?php _e( $name, 'buddyboss' ); ?>
 							</label>
 
-							<?php if ( 1 !== $j && 2 !== $j && 3 !== $j ) : ?>
+							<?php if ( 1 !== $j && 2 !== $j ) : ?>
 								<div class ="delete-button">
 									<a href='javascript:hide("<?php echo esc_attr( "{$type}_div{$j}" ); ?>")' class="delete"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a>
 								</div>
