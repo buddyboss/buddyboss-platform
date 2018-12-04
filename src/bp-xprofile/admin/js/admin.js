@@ -25,19 +25,20 @@ function add_option(forWhat) {
 
 	grabber.setAttribute( 'class', 'bp-option-icon grabber');
 
-	newOption.setAttribute( 'type', 'text' );
-	newOption.setAttribute( 'name', forWhat + '_option[' + theId + ']' );
-	newOption.setAttribute( 'id', forWhat + '_option' + theId );
+	if ( forWhat !== 'gender') {
+		newOption.setAttribute('type', 'text');
+		newOption.setAttribute('name', forWhat + '_option[' + theId + ']');
+		newOption.setAttribute('id', forWhat + '_option' + theId);
+	} else {
+		newOption.setAttribute('type', 'text');
+		newOption.setAttribute('name', forWhat + '_option[' + theId + '_other]');
+		newOption.setAttribute('id', forWhat + '_option' + theId);
+	}
 
 	if ( forWhat === 'checkbox' || forWhat === 'multiselectbox' ) {
 		isDefault.setAttribute( 'type', 'checkbox' );
 		isDefault.setAttribute( 'name', 'isDefault_' + forWhat + '_option[' + theId + ']' );
-	} else {
-		isDefault.setAttribute( 'type', 'radio' );
-		isDefault.setAttribute( 'name', 'isDefault_' + forWhat + '_option' );
 	}
-
-	isDefault.setAttribute( 'value', theId );
 
 	toDelete.setAttribute( 'href', 'javascript:hide("' + forWhat + '_div' + theId + '")' );
 	toDelete.setAttribute( 'class', 'delete' );
@@ -46,11 +47,16 @@ function add_option(forWhat) {
 	toDeleteWrap.setAttribute( 'class', 'delete-button' );
 	toDeleteWrap.appendChild( toDelete );
 
-	label.appendChild( document.createTextNode( ' ' ) );
-	label.appendChild( isDefault );
-	label.appendChild( document.createTextNode( ' ' ) );
-	label.appendChild( txt1 );
-	label.appendChild( document.createTextNode( ' ' ) );
+	if ( forWhat !== 'gender') {
+		label.appendChild(document.createTextNode(' '));
+		label.appendChild(isDefault);
+		label.appendChild(document.createTextNode(' '));
+		label.appendChild(txt1);
+		label.appendChild(document.createTextNode(' '));
+	} else {
+		txt1         = document.createTextNode( ' Other' );
+		label.appendChild(txt1);
+	}
 
 	newDiv.appendChild( grabber );
 	newDiv.appendChild( document.createTextNode( ' ' ) );

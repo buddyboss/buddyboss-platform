@@ -1,11 +1,13 @@
 
 function bp_ps_clear_radio(container) {
+    var event = new Event('change');
 
 	container = document.getElementById (container);
 
 	var radioButtons = container.getElementsByTagName ('input');
 	for (var i = 0; i < radioButtons.length; i++) {
 		radioButtons[i].checked = '';
+        radioButtons[i].dispatchEvent(event);
 	}
 }
 
