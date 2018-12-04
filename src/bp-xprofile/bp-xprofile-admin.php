@@ -728,6 +728,26 @@ function xprofile_ajax_reorder_field_groups() {
 add_action( 'wp_ajax_xprofile_reorder_groups', 'xprofile_ajax_reorder_field_groups' );
 
 /**
+ * Handles the reordering of field groups.
+ *
+ * @since BuddyPress 1.5.0
+ */
+function xprofile_check_gender_added_previously() {
+
+	global $wpdb;
+
+	$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
+	if ( $exists_gender[0]->count > 0 ) {
+		echo 'added';
+	} else {
+		echo 'not_added';
+	}
+
+	wp_die();
+}
+add_action( 'wp_ajax_xprofile_check_gender_added_previously', 'xprofile_check_gender_added_previously' );
+
+/**
  * Handles the WYSIWYG display of each profile field on the edit screen.
  *
  * @since BuddyPress 1.5.0

@@ -85,26 +85,81 @@ function show_options( forWhat ) {
 	var do_autolink;
 
 	if ( forWhat === 'gender' ) {
-	}
 
-	for ( var i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
-		document.getElementById( XProfileAdmin.do_settings_section_field_types[i] ).style.display = 'none';
-	}
+		jQuery.ajax({
+			url : ajaxurl,
+			type : 'post',
+			data : {
+				action : 'xprofile_check_gender_added_previously',
+				type   : 'gender'
+			},
+			success : function( response ) {
 
-	if ( XProfileAdmin.do_settings_section_field_types.indexOf( forWhat ) >= 0 ) {
-		document.getElementById( forWhat ).style.display = '';
-		do_autolink = 'on';
+				if ( 'added' === response ) {
+					alert( 'You have already used the gender profile field previously so you can not use twice.');
+					jQuery('#fieldtype').val('');
+					jQuery('#fieldtype').val('textbox');
+					forWhat = 'textbox';
+					for ( var i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
+						document.getElementById( XProfileAdmin.do_settings_section_field_types[i] ).style.display = 'none';
+					}
+
+					if ( XProfileAdmin.do_settings_section_field_types.indexOf( forWhat ) >= 0 ) {
+						document.getElementById( forWhat ).style.display = '';
+						do_autolink = 'on';
+					} else {
+						jQuery( '#do-autolink' ).val( '' );
+						do_autolink = '';
+					}
+
+					// Only overwrite the do_autolink setting if no setting is saved in the database.
+					if ( '' === XProfileAdmin.do_autolink ) {
+						jQuery( '#do-autolink' ).val( do_autolink );
+					}
+
+					jQuery( document ).trigger( 'bp-xprofile-show-options', forWhat );
+				} else {
+					for ( var i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
+						document.getElementById( XProfileAdmin.do_settings_section_field_types[i] ).style.display = 'none';
+					}
+
+					if ( XProfileAdmin.do_settings_section_field_types.indexOf( forWhat ) >= 0 ) {
+						document.getElementById( forWhat ).style.display = '';
+						do_autolink = 'on';
+					} else {
+						jQuery( '#do-autolink' ).val( '' );
+						do_autolink = '';
+					}
+
+					// Only overwrite the do_autolink setting if no setting is saved in the database.
+					if ( '' === XProfileAdmin.do_autolink ) {
+						jQuery( '#do-autolink' ).val( do_autolink );
+					}
+
+					jQuery( document ).trigger( 'bp-xprofile-show-options', forWhat );
+				}
+			}
+		});
 	} else {
-		jQuery( '#do-autolink' ).val( '' );
-		do_autolink = '';
-	}
+		for ( var i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
+			document.getElementById( XProfileAdmin.do_settings_section_field_types[i] ).style.display = 'none';
+		}
 
-	// Only overwrite the do_autolink setting if no setting is saved in the database.
-	if ( '' === XProfileAdmin.do_autolink ) {
-		jQuery( '#do-autolink' ).val( do_autolink );
-	}
+		if ( XProfileAdmin.do_settings_section_field_types.indexOf( forWhat ) >= 0 ) {
+			document.getElementById( forWhat ).style.display = '';
+			do_autolink = 'on';
+		} else {
+			jQuery( '#do-autolink' ).val( '' );
+			do_autolink = '';
+		}
 
-	jQuery( document ).trigger( 'bp-xprofile-show-options', forWhat );
+		// Only overwrite the do_autolink setting if no setting is saved in the database.
+		if ( '' === XProfileAdmin.do_autolink ) {
+			jQuery( '#do-autolink' ).val( do_autolink );
+		}
+
+		jQuery( document ).trigger( 'bp-xprofile-show-options', forWhat );
+	}
 }
 
 function hide( id ) {
