@@ -1092,7 +1092,7 @@ function bp_nouveau_group_meta() {
 	$meta = bp_nouveau_get_group_meta();
 
 	if ( ! bp_is_group() ) {
-		echo join( ' / ', array_map( 'esc_html', (array) $meta ) );
+		echo join( ' / ', array_map( 'wp_kses', (array) $meta, array( 'span' => array( 'class' => array() ) ) ) );
 	} else {
 
 		/*
