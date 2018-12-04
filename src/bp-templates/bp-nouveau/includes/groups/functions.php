@@ -324,7 +324,7 @@ function bp_nouveau_group_setup_nav() {
 		$bp = buddypress();
 
 		$bp->groups->nav->edit_nav(
-			array( 'name' => _x( 'Invite', 'Group invitations menu title', 'buddyboss' ) ),
+			array( 'name' => _x( 'Send Invites', 'Group invitations menu title', 'buddyboss' ) ),
 			'send-invites',
 			bp_get_current_group_slug()
 		);
@@ -335,7 +335,7 @@ function bp_nouveau_group_setup_nav() {
 		$group_link    = bp_get_group_permalink( $current_group );
 
 		bp_core_new_subnav_item( array(
-			'name'            => _x( 'Invite', 'Group invitations menu title', 'buddyboss' ),
+			'name'            => _x( 'Send Invites', 'Group invitations menu title', 'buddyboss' ),
 			'slug'            => 'send-invites',
 			'parent_url'      => $group_link,
 			'parent_slug'     => $current_group->slug,
