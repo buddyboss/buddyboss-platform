@@ -84,6 +84,9 @@ function add_option(forWhat) {
 function show_options( forWhat ) {
 	var do_autolink;
 
+	if ( forWhat === 'gender' ) {
+	}
+
 	for ( var i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
 		document.getElementById( XProfileAdmin.do_settings_section_field_types[i] ).style.display = 'none';
 	}

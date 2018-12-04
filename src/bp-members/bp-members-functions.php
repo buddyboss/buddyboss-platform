@@ -3903,3 +3903,36 @@ function bp_get_user_member_type( $user_id ) {
 
 	return apply_filters('bp_member_type_name_string', $string, $member_type, $user_id );
 }
+
+/**
+ * Function which will return "his", "her" or "their" based on their gender which we will use in activity.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param string $user_id
+ *
+ * @return string
+ */
+function bp_get_user_gender_pronoun_type( $user_id = '' ) {
+
+	global $wpdb;
+
+	if ( '' === $user_id ) {
+		$gender_pronoun = 'their';
+	} else {
+		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
+		if ( $exists_gender[0]->count > 0 ) {
+			$field_id = $exists_gender[0]->id;
+			$gender = xprofile_get_field_data( $field_id , $user_id );
+			if ( empty( $gender ) ) {
+				$gender_pronoun = 'their';
+			} else {
+				$split_value = explode('_', $gender );
+				$gender_pronoun = $split_value[0];
+			}
+		} else {
+			$gender_pronoun = 'their';
+		}
+	}
+	return $gender_pronoun;
+}
