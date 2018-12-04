@@ -46,7 +46,7 @@ body.toplevel_page_bp-groups table.groups th#last_active {
 .bp-groups-settings-section label {
 	clear: left;
 	display: block;
-	float: left;
+	/*float: left;*/
 	vertical-align: middle;
 }
 
