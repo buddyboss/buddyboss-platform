@@ -3303,6 +3303,8 @@ body.register .buddypress-wrap .page ul {
 #message-threads li .thread-avatar img.avatar {
   float: left;
   margin: 5px 10px 0 0;
+  max-width: 80px;
+  width: 80%;
 }
 
 .bp-messages-content .actions {
