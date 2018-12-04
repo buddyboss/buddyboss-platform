@@ -125,9 +125,17 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 				}
 			}
 
+			if ( '1' === $options[$k]->option_order ) {
+				$option_value = 'his_'. $options[$k]->name;
+			} elseif ( '2' === $options[$k]->option_order ) {
+				$option_value = 'her_'. $options[$k]->name;
+			} else {
+				$option_value = 'their_'. $options[$k]->name;
+			}
+
 			// Run the allowed option name through the before_save filter, so
 			// we'll be sure to get a match.
-			$allowed_options = xprofile_sanitize_data_value_before_save( $options[$k]->name, false, false );
+			$allowed_options = xprofile_sanitize_data_value_before_save( $option_value, false, false );
 
 			// First, check to see whether the user-entered value matches.
 			if ( in_array( $allowed_options, $option_values ) ) {
@@ -138,6 +146,8 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 			if ( ! is_array( $original_option_values ) && empty( $option_values ) && $options[$k]->is_default_option ) {
 				$selected = ' selected="selected"';
 			}
+
+
 
 			/**
 			 * Filters the HTML output for options in a select input.
@@ -150,7 +160,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 			 * @param string $selected Current selected value.
 			 * @param string $k        Current index in the foreach loop.
 			 */
-			$html .= apply_filters( 'bp_get_the_profile_field_options_select_gender', '<option' . $selected . ' value="' . esc_attr( stripslashes( $options[$k]->name ) ) . '">' . esc_html( stripslashes( $options[$k]->name ) ) . '</option>', $options[$k], $this->field_obj->id, $selected, $k );
+			$html .= apply_filters( 'bp_get_the_profile_field_options_select_gender', '<option' . $selected . ' value="' . esc_attr( stripslashes( $option_value ) ) . '">' . esc_html( stripslashes( $options[$k]->name ) ) . '</option>', $options[$k], $this->field_obj->id, $selected, $k );
 		}
 
 		echo $html;
@@ -351,5 +361,38 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 		</div>
 
 		<?php
+	}
+
+	/**
+	 * Check if valid.
+	 *
+	 * @param int $values post id.
+	 *
+	 * @return bool
+	 */
+	public function is_valid( $values = '' ) {
+
+		global $wpdb;
+
+		if ( empty( $values ) ) {
+			return true;
+		}
+
+		$split_value = explode('_', $values );
+
+		if ( 2 === count( $split_value ) ) {
+			if ( '' !== $split_value[1] && '' !== $split_value[0] ) {
+				$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$wpdb->prefix}bp_xprofile_fields WHERE type = %s AND name = %s AND parent_id != '' ", 'option', $split_value[1] ) );
+				if ( '1' === $count ) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
 	}
 }
