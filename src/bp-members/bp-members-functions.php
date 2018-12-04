@@ -1348,6 +1348,8 @@ function bp_core_can_edit_settings() {
 
 	if ( bp_is_my_profile() ) {
 		$status = true;
+	} elseif ( bp_is_user() && ! bp_is_my_profile() ) {
+		$status = false;
 	} elseif ( is_super_admin( bp_displayed_user_id() ) && ! is_super_admin() ) {
 		$status = false;
 	} elseif ( bp_current_user_can( 'bp_moderate' ) || current_user_can( 'edit_users' ) ) {
