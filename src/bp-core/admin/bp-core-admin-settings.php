@@ -253,6 +253,18 @@ function bp_admin_setting_callback_group_hierarchies() {
 	<?php
 }
 
+/**
+ * 'Enable group auto join field markup.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_admin_setting_callback_group_auto_join() {
+	?>
+	<input id="bp-enable-group-auto-join" name="bp-enable-group-auto-join" type="checkbox" value="1" <?php checked( bp_enable_group_auto_join() ); ?> />
+	<label for="bp-enable-group-auto-join"><?php _e( 'Allow specific member type to auto join groups', 'buddyboss' ); ?></label>
+	<?php
+}
+
 /** Settings Page *************************************************************/
 
 /**

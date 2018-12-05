@@ -1355,6 +1355,16 @@ function bp_member_type_custom_metaboxes() {
 			add_meta_box( 'bp-member-type-group-create', __( 'Members with this profile type are only allowed to create groups with the following group types. Leave all unchecked to allow members to create any group type.', 'buddyboss' ), 'bp_member_type_group_create_metabox', null, 'normal', 'high' );
 		}
 	}
+
+	if ( true === bp_disable_group_type_creation() && true === bp_enable_group_auto_join() ) {
+
+		$get_all_registered_group_types = bp_get_active_group_types();
+
+		// Add meta box if group types is entered.
+		if ( true === bp_disable_group_type_creation() && isset( $get_all_registered_group_types ) && !empty( $get_all_registered_group_types ) ) {
+			add_meta_box( 'bp-member-type-group-auto-join', __( 'Members with this profile type are only allowed to auto join groups with the following group types.', 'buddyboss' ), 'bp_member_type_group_auto_join_meta_box', null, 'normal', 'high' );
+		}
+	}
 }
 add_action( 'add_meta_boxes_' . bp_get_member_type_post_type(), 'bp_member_type_custom_metaboxes' );
 
@@ -1547,6 +1557,33 @@ function bp_member_type_group_create_metabox( $post ) {
 }
 
 /**
+ * Function for which type of members type can auto join in groups.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $post
+ */
+function bp_member_type_group_auto_join_meta_box( $post ) {
+
+	$get_all_registered_group_types = bp_get_active_group_types();
+
+	$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_auto_join', true );
+
+	foreach ( $get_all_registered_group_types as $group_type_id ) {
+
+		$group_type_key = get_post_meta( $group_type_id, '_bp_group_type_key', true );
+		$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];
+		?>
+		<p>
+			<input type='checkbox' name='bp-group-type-auto-join[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> tabindex="7" />
+			<strong><?php _e( $group_type_label, 'buddyboss' ); ?></strong>
+		</p>
+		<?php
+
+	}
+}
+
+/**
  * Function for saving metaboxes data of member type post data.
  * @param $post_id
  *
@@ -1603,6 +1640,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_enable_filter', $enable_filter );
 	update_post_meta( $post_id, '_bp_member_type_enable_remove', $enable_remove );
 	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_create', $_POST['bp-group-type'] );
+	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', $_POST['bp-group-type-auto-join'] );
 
 	// Get user previous role.
 	$old_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
