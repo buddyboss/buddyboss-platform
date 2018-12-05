@@ -3938,3 +3938,206 @@ function bp_get_user_gender_pronoun_type( $user_id = '' ) {
 	}
 	return $gender_pronoun;
 }
+
+/**
+ * Sets authorisation cookies containing the originating user information.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param int $old_user_id The ID of the originating user, usually the current logged in user.
+ * @param bool $pop Optional. Pop the latest user off the auth cookie, instead of appending the new one. Default false.
+ * @param string $token Optional. The old user's session token to store for later reuse. Default empty string.
+ */
+function bp_member_switching_set_olduser_cookie( $old_user_id, $pop = false, $token = '' ) {
+	$secure_auth_cookie    = BP_Core_Members_Switching::secure_auth_cookie();
+	$secure_olduser_cookie = BP_Core_Members_Switching::secure_olduser_cookie();
+	$expiration            = time() + 172800; // 48 hours
+	$auth_cookie           = bp_member_switching_get_auth_cookie();
+	$olduser_cookie        = wp_generate_auth_cookie( $old_user_id, $expiration, 'logged_in', $token );
+
+	if ( $secure_auth_cookie ) {
+		$auth_cookie_name = BP_MEMBER_SWITCHING_SECURE_COOKIE;
+		$scheme           = 'secure_auth';
+	} else {
+		$auth_cookie_name = BP_MEMBER_SWITCHING_COOKIE;
+		$scheme           = 'auth';
+	}
+
+	if ( $pop ) {
+		array_pop( $auth_cookie );
+	} else {
+		array_push( $auth_cookie, wp_generate_auth_cookie( $old_user_id, $expiration, $scheme, $token ) );
+	}
+
+	$auth_cookie = json_encode( $auth_cookie );
+
+	/** This filter is documented in wp-includes/pluggable.php */
+	if ( ! apply_filters( 'send_auth_cookies', true ) ) {
+		return;
+	}
+
+	setcookie( $auth_cookie_name, $auth_cookie, $expiration, SITECOOKIEPATH, COOKIE_DOMAIN, $secure_auth_cookie, true );
+	setcookie( BP_MEMBER_SWITCHING_OLDUSER_COOKIE, $olduser_cookie, $expiration, COOKIEPATH, COOKIE_DOMAIN, $secure_olduser_cookie, true );
+}
+
+
+/**
+ * Clears the cookies containing the originating user, or pops the latest item off the end if there's more than one.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param bool $clear_all Optional. Whether to clear the cookies (as opposed to just popping the last user off the end). Default true.
+ */
+function bp_member_switching_clear_olduser_cookie( $clear_all = true ) {
+	$auth_cookie = bp_member_switching_get_auth_cookie();
+	if ( ! empty( $auth_cookie ) ) {
+		array_pop( $auth_cookie );
+	}
+	if ( $clear_all || empty( $auth_cookie ) ) {
+
+		/** This filter is documented in wp-includes/pluggable.php */
+		if ( ! apply_filters( 'send_auth_cookies', true ) ) {
+			return;
+		}
+
+		$expire = time() - 31536000;
+		setcookie( BP_MEMBER_SWITCHING_COOKIE, ' ', $expire, SITECOOKIEPATH, COOKIE_DOMAIN );
+		setcookie( BP_MEMBER_SWITCHING_SECURE_COOKIE, ' ', $expire, SITECOOKIEPATH, COOKIE_DOMAIN );
+		setcookie( BP_MEMBER_SWITCHING_OLDUSER_COOKIE, ' ', $expire, COOKIEPATH, COOKIE_DOMAIN );
+	} else {
+		if ( BP_Core_Members_Switching::secure_auth_cookie() ) {
+			$scheme = 'secure_auth';
+		} else {
+			$scheme = 'auth';
+		}
+
+		$old_cookie = end( $auth_cookie );
+
+		$old_user_id = wp_validate_auth_cookie( $old_cookie, $scheme );
+		if ( $old_user_id ) {
+			$parts = wp_parse_auth_cookie( $old_cookie, $scheme );
+			bp_member_switching_set_olduser_cookie( $old_user_id, true, $parts['token'] );
+		}
+	}
+}
+
+
+/**
+ * Gets the value of the cookie containing the originating user.
+ *
+ * @since BuddyBoss 3.1.1
+ * @return string|false The old user cookie, or boolean false if there isn't one.
+ */
+function bp_member_switching_get_olduser_cookie() {
+	if ( isset( $_COOKIE[ BP_MEMBER_SWITCHING_OLDUSER_COOKIE ] ) ) {
+		return wp_unslash( $_COOKIE[ BP_MEMBER_SWITCHING_OLDUSER_COOKIE ] ); // WPCS: sanitization ok
+	} else {
+		return false;
+	}
+}
+
+
+/**
+ * Gets the value of the auth cookie containing the list of originating users.
+ *
+ * @since BuddyBoss 3.1.1
+ * @return string[] Array of originating user authentication cookie values. Empty array if there are none.
+ */
+function bp_member_switching_get_auth_cookie() {
+	if ( BP_Core_Members_Switching::secure_auth_cookie() ) {
+		$auth_cookie_name = BP_MEMBER_SWITCHING_SECURE_COOKIE;
+	} else {
+		$auth_cookie_name = BP_MEMBER_SWITCHING_COOKIE;
+	}
+
+	if ( isset( $_COOKIE[ $auth_cookie_name ] ) && is_string( $_COOKIE[ $auth_cookie_name ] ) ) {
+		$cookie = json_decode( wp_unslash( $_COOKIE[ $auth_cookie_name ] ) ); // WPCS: sanitization ok
+	}
+	if ( ! isset( $cookie ) || ! is_array( $cookie ) ) {
+		$cookie = array();
+	}
+
+	return $cookie;
+}
+
+
+/**
+ * Switches the current logged in user to the specified user.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param  int $user_id The ID of the user to switch to.
+ * @param  bool $remember Optional. Whether to 'remember' the user in the form of a persistent browser cookie. Default false.
+ * @param  bool $set_old_user Optional. Whether to set the old user cookie. Default true.
+ *
+ * @return false|WP_User WP_User object on success, false on failure.
+ */
+function bp_member_switch_to( $user_id, $remember = false, $set_old_user = true ) {
+	$user = get_userdata( $user_id );
+
+	if ( ! $user ) {
+		return false;
+	}
+
+	$old_user_id  = ( is_user_logged_in() ) ? get_current_user_id() : false;
+	$old_token    = function_exists( 'wp_get_session_token' ) ? wp_get_session_token() : '';
+	$auth_cookie  = bp_member_switching_get_auth_cookie();
+	$cookie_parts = wp_parse_auth_cookie( end( $auth_cookie ) );
+
+	if ( $set_old_user && $old_user_id ) {
+		// Switching to another user
+		$new_token = '';
+		// We'll not override the old user
+		if ( empty( $auth_cookie ) ) {
+			bp_member_switching_set_olduser_cookie( $old_user_id, false, $old_token );
+		}
+	} else {
+		// Switching back, either after being switched off or after being switched to another user
+		$new_token = isset( $cookie_parts['token'] ) ? $cookie_parts['token'] : '';
+		bp_member_switching_clear_olduser_cookie( false );
+	}
+
+	/**
+	 * Attaches the original user ID and session token to the new session when a user switches to another user.
+	 *
+	 * @param array $session Array of extra data.
+	 * @param int $user_id User ID.
+	 *
+	 * @return array Array of extra data.
+	 */
+	$session_filter = function ( array $session, $user_id ) use ( $old_user_id, $old_token ) {
+		$session['switched_from_id']      = $old_user_id;
+		$session['switched_from_session'] = $old_token;
+
+		return $session;
+	};
+
+	add_filter( 'attach_session_information', $session_filter, 99, 2 );
+
+	wp_clear_auth_cookie();
+	wp_set_auth_cookie( $user_id, $remember, '', $new_token );
+	wp_set_current_user( $user_id );
+
+	if ( $old_token && $old_user_id && ! $set_old_user ) {
+		// When switching back, destroy the session for the old user
+		$manager = WP_Session_Tokens::get_instance( $old_user_id );
+		$manager->destroy( $old_token );
+	}
+
+	return $user;
+}
+
+/**
+ * Returns whether or not the current user switched into their account.
+ *
+ * @since BuddyBoss 3.1.1
+ * @return false|WP_User False if the user isn't logged in or they didn't switch in; old user object (which evaluates to
+ *                       true) if the user switched into the current user account.
+ */
+function bp_current_member_switched() {
+	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
+	return BP_Core_Members_Switching::get_old_user();
+}

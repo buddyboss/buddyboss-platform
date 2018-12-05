@@ -2565,3 +2565,94 @@ function bp_members_component_link( $component, $action = '', $query_args = '', 
 		if ( !empty( $url ) )
 			return $url;
 	}
+
+
+/**
+ * Output the Switch button.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param int $user_id The user ID of the person we want to switch to.
+ * @param array $button_args See BP_Button class for more information.
+ */
+function bp_add_switch_button( $user_id, $button_args = array() ) {
+	echo bp_get_add_switch_button( $user_id, $button_args );
+}
+
+/**
+ * Returns a view as/back to button for a given user depending on the switching status.
+ *
+ * Checks to see if the admin user is already switched.  If is switched, returns
+ * "Back To Admin" button; if not switched, returns "View As" button.
+ *
+ * @param int $user_id The user ID of the person we want to switch to.
+ * @param array $button_args See BP_Button class for more information.
+ *
+ * @return mixed String of the button on success.  Boolean false on failure.
+ * @uses bp_get_button() Renders a button using the BP Button API
+ * @since Buddyboss 3.1.1
+ */
+function bp_get_add_switch_button( $user_id, $button_args = array() ) {
+
+	if ( ! $user_id ) {
+		return false;
+	}
+
+	$old_user = bp_current_member_switched();
+
+	$button_args = wp_parse_args( $button_args, get_class_vars( 'BP_Button' ) );
+
+	$user = get_userdata( $user_id );
+	$link = BP_Core_Members_Switching::maybe_switch_url( $user );
+
+	if ( ! $link ) {
+		return;
+	}
+
+	$link = add_query_arg( array(
+		'redirect_to' => urlencode( bp_core_get_user_domain( $user->ID ) ),
+	), $link );
+
+	if ( $old_user && ( $old_user->ID === $user->ID || bp_is_my_profile() ) ) {
+		$button = wp_parse_args(
+			array(
+				'id'                => 'member_switch',
+				'component'         => 'members',
+				'must_be_logged_in' => true,
+				'block_self'        => false,
+				'wrapper_class'     => 'switch-button back-to-admin',
+				'wrapper_id'        => 'switch-button-' . $old_user->ID,
+				'link_href'         => esc_url( $link ),
+				'link_text'         => __( 'Back To Admin', 'buddyboss' ),
+				'link_id'           => 'switch-' . $old_user->ID,
+				'link_rel'          => 'stop',
+				'link_class'        => 'switch-button back-to-admin stop bp-toggle-action-button',
+			)
+			, $button_args );
+	} else {
+		$button = wp_parse_args(
+			array(
+				'id'                => 'member_switch',
+				'component'         => 'members',
+				'must_be_logged_in' => true,
+				'block_self'        => true,
+				'wrapper_class'     => 'switch-button view-as',
+				'wrapper_id'        => 'switch-button-' . $user_id,
+				'link_href'         => esc_url( $link ),
+				'link_text'         => __( 'View As', 'buddyboss' ),
+				'link_id'           => 'switch-' . $user_id,
+				'link_rel'          => 'start',
+				'link_class'        => 'switch-button view-as start',
+			)
+			, $button_args );
+	}
+
+	/**
+	 * Filters the HTML for the follow button.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param string $button HTML markup for follow button.
+	 */
+	return bp_get_button( apply_filters( 'bp_get_add_switch_button', $button ) );
+}

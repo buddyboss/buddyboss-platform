@@ -247,6 +247,9 @@ if ( !$is_bp_active && !$is_bb_active ) {
 	        require dirname( __FILE__ ) . '/bp-forums/classes/class-bbpress.php';
 	    }
 
+	    // load the member switch class so all the hook prior to bp_init can be hook in
+	    require dirname( __FILE__ ) . '/bp-members/classes/class-bp-core-members-switching.php';
+
 	    /*
 	     * Hook BuddyPress early onto the 'plugins_loaded' action.
 	     *

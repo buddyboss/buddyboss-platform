@@ -529,6 +529,63 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 					unset( bp_nouveau()->members->button_args );
 				}
 			}
+
+
+		/*
+	 * This filter workaround is waiting for a core adaptation
+	 * so that we can directly get the follow button arguments
+	 * instead of the button.
+	 *
+	 * See https://buddypress.trac.wordpress.org/ticket/7126
+	 */
+		add_filter( 'bp_get_add_switch_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
+
+		bp_get_add_switch_button( $user_id );
+
+		remove_filter( 'bp_get_add_switch_button', 'bp_nouveau_members_catch_button_args', 100, 1 );
+
+		if ( ! empty( bp_nouveau()->members->button_args ) ) {
+			$button_args = bp_nouveau()->members->button_args;
+
+			$buttons['member_switch'] = array(
+				'id'                => 'member_switch',
+				'position'          => 30,
+				'component'         => $button_args['component'],
+				'must_be_logged_in' => $button_args['must_be_logged_in'],
+				'block_self'        => $button_args['block_self'],
+				'parent_element'    => $parent_element,
+				'link_href'         => $button_args['link_href'],
+				'link_text'         => $button_args['link_text'],
+				'parent_attr'       => array(
+					'id'    => $button_args['wrapper_id'],
+					'class' => $parent_class . ' ' . $button_args['wrapper_class'],
+				),
+				'button_element'    => 'a',
+				'button_attr'       => array(
+					'id'    => $button_args['link_id'],
+					'class' => $button_args['link_class'],
+					'rel'   => $button_args['link_rel'],
+					'title' => '',
+				),
+			);
+
+			if ( ! empty( $button_args['button_attr'] ) ) {
+				foreach ( $button_args['button_attr'] as $title => $value ) {
+					$buttons['member_switch']['button_attr'][ $title ] = $value;
+				}
+			}
+
+			// If button element set add nonce link to data attr
+			if ( 'button' === $button_element ) {
+				$buttons['member_switch']['button_attr']['data-bp-nonce'] = $button_args['link_href'];
+			} else {
+				$buttons['member_switch']['button_element']      = 'a';
+				$buttons['member_switch']['button_attr']['href'] = $button_args['link_href'];
+			}
+
+			unset( bp_nouveau()->members->button_args );
+		}
+
 		//}
 
 		/**
