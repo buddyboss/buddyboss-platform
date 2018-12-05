@@ -9,7 +9,7 @@
 <div id="item-actions" class="group-item-actions">
 
 	<?php if ( bp_enable_group_hierarchies() ): ?>
-		<h2 class="bp-screen-reader-text"><?php esc_html_e( 'Group Parents', 'buddyboss' ); ?></h2>
+		<h2 class="bp-screen-reader-text"><?php esc_html_e( 'Group Parent', 'buddyboss' ); ?></h2>
 		<?php bp_group_list_parents(); ?>
 	<?php endif; ?>
 
