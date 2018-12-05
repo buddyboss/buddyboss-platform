@@ -54,7 +54,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 			add_filter( 'bp_learndash_groups_sync_courses_submenu', array( $this, 'sub_menu' ), 10, 1 );
 
-			add_filter( 'bp_nouveau_get_classes', array( $this, 'sub_menu_class' ), 10, 1 );
+			add_filter( 'bp_nouveau_get_classes', array( $this, 'sub_menu_class' ), 10, 4 );
 
 			$this->members = groups_get_group_members();
 
@@ -143,6 +143,8 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 
 			add_action( 'wp_ajax_bp_learndash_group_courses_export_csv', array( $this, 'export_csv' ) );
+
+			$this->courses = learndash_group_enrolled_courses( $this->associated_ld_group, true );
 		}
 
 		/**
@@ -254,15 +256,18 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		 *
 		 * @return $classes
 		 */
-		function sub_menu_class( $classes ) {
-			$bp_nouveau = bp_nouveau();
-			$nav_item   = $bp_nouveau->current_nav_item;
+		function sub_menu_class( $classes_string, $classes, $nav_item, $displayed_nav ) {
+			global $bp;
 
 			if ( $nav_item['slug'] === $this->slug ) {
-				$classes .= ' bp-hide';
+				$classes_string .= ' bp-hide';
 			}
 
-			return $classes;
+			if ( $bp->current_action == $this->slug && 'courses' == $nav_item['slug'] ) {
+				$classes_string .= ' current selected';
+			}
+
+			return $classes_string;
 		}
 
 		/**
@@ -277,6 +282,11 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			bp_learndash_groups_sync_courses_sub_menu();
 
 			$display = empty( $_GET['menu'] ) ? 'courses' : (string) $_GET['menu'];
+
+			if ( empty( $this->courses ) ) {
+				_e( 'No Course associated to the Group', 'ld_bp_groups_reports' );
+			    return;
+            }
 
 			?>
 
@@ -518,8 +528,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 					$comment_count = empty( $post->comment_count ) ? $this->not_applicable : $post->comment_count;
 
-					$point = absint( get_post_meta( get_the_ID(), 'points', true ) );
-					$point = ( empty( $point ) ? $this->not_applicable : $point );
+					$point        = absint( get_post_meta( get_the_ID(), 'points', true ) );
+					$point_number = ( empty( $point ) ? 0 : $point );
+					$point        = ( empty( $point_number ) ? $this->not_applicable : $point_number );
 
 					ob_start();
 					?>
@@ -553,7 +564,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 					if ( get_post_meta( get_the_ID(), 'approval_status', true ) ) {
 						$this->user_progress ++;
 						$this->completed_step .= $html;
-						$this->total_points   = $this->total_points + $point;
+						$this->total_points   = $this->total_points + $point_number;
 						$status               = $completed_step;
 					} else {
 						$this->incomplete_step .= $html;
@@ -698,7 +709,8 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 					}
 
-					$point         = ( empty( $point ) ? $this->not_applicable : $point );
+					$point_number  = ( empty( $point ) ? 0 : $point );
+					$point         = ( empty( $point_number ) ? $this->not_applicable : $point_number );
 					$date          = date( 'M j, Y ' . get_option( 'time_format' ), strtotime( $post->post_date ) );
 					$comment_count = empty( $post->comment_count ) ? $this->not_applicable : $post->comment_count;
 					ob_start();
@@ -739,7 +751,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 					if ( ! empty( $post->post_status ) && 'graded' === $post->post_status ) {
 						$this->user_progress ++;
 						$this->completed_step .= $html;
-						$this->total_points   = $this->total_points + $point;
+						$this->total_points   = $this->total_points + $point_number;
 						$status               = $completed_step;
 					} else {
 						$this->incomplete_step .= $html;
@@ -861,7 +873,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
                 </div>
             </div>
 
-            <div class="bp-learndash-group-quizzes-completed-steps">		
+            <div class="bp-learndash-group-quizzes-completed-steps">
 				<h2 class="screen-heading quizzes-completed-screen">
 					<?php echo $this->completed_step_label; ?>
 				</h2>
@@ -1063,7 +1075,6 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 			$selected_course_name = '';
 
-			$this->courses = learndash_group_enrolled_courses( $this->associated_ld_group, true );
 			$total_courses = count( $this->courses );
 
 			if ( $total_courses > 0 ) {
@@ -1094,8 +1105,6 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 					?>
                 </select>
 				<?php
-			} else {
-				_e( 'No courses associated to the group', 'buddyboss' );
 			}
 
 			$this->bp_learndash_courses_id       = $selected_course;
@@ -1215,7 +1224,8 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 								$completed_formatted = ( empty( $completed_formatted ) ? $this->not_applicable : $completed_formatted );
 								$started_formatted   = ( empty( $started_formatted ) ? $this->not_applicable : $started_formatted );
-								$point               = ( empty( $point ) ? $this->not_applicable : $point );
+								$point_number        = ( empty( $point ) ? 0 : absint( $point ) );
+								$point               = ( empty( $point_number ) ? $this->not_applicable : $point_number );
 
 								ob_start();
 								if ( 'sfwd-quiz' === $display ) {
@@ -1312,7 +1322,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 								} else {
 									$this->user_progress ++;
 									$this->completed_step .= $html;
-									$this->total_points   = $this->total_points + $point;
+									$this->total_points   = $this->total_points + $point_number;
 									$status               = $this->completed_step_label;
 								}
 							}

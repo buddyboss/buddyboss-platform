@@ -94,7 +94,9 @@ if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() 
 						?>
                     </ul>
 					<?php
-				}
+				} else {
+				    printf( '<p>%s</p>', __( 'No Course associated to this Group', 'buddyboss' ) );
+                }
 				?>
             </div>
 			<?php
@@ -157,7 +159,7 @@ if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() 
 
                     <div class="item">
                         <div class="item-block">
-                            <h3 class="list-title course-name">
+                            <h3 class="course-name">
                                 <a href="<?php echo $link; ?>">
 									<?php echo $title; ?>
                                 </a>
