@@ -1017,6 +1017,12 @@ function bp_update_user_last_activity( $user_id = 0, $time = '' ) {
 		return false;
 	}
 
+	// Bail if this is switched user
+	$old_user = bp_current_member_switched();
+	if ( $old_user instanceof WP_User ) {
+		return false;
+	}
+
 	// Fall back on current time.
 	if ( empty( $time ) ) {
 		$time = bp_core_current_time();

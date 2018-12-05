@@ -43,22 +43,22 @@ class BP_Core_Members_Switching {
 	}
 
 	/**
-	 * Defines the names of the cookies used by User Switching.
+	 * Defines the names of the cookies used by Member Switching.
 	 * @since BuddyBoss 3.1.1
 	 */
 	public function action_plugins_loaded() {
 
-		// User Switching's auth_cookie
+		// Member Switching's auth_cookie
 		if ( ! defined( 'BP_MEMBER_SWITCHING_COOKIE' ) ) {
 			define( 'BP_MEMBER_SWITCHING_COOKIE', 'buddyboss_user_sw_' . COOKIEHASH );
 		}
 
-		// User Switching's secure_auth_cookie
+		// Member Switching's secure_auth_cookie
 		if ( ! defined( 'BP_MEMBER_SWITCHING_SECURE_COOKIE' ) ) {
 			define( 'BP_MEMBER_SWITCHING_SECURE_COOKIE', 'buddyboss_user_sw_secure_' . COOKIEHASH );
 		}
 
-		// User Switching's logged_in_cookie
+		// Member Switching's logged_in_cookie
 		if ( ! defined( 'BP_MEMBER_SWITCHING_OLDUSER_COOKIE' ) ) {
 			define( 'BP_MEMBER_SWITCHING_OLDUSER_COOKIE', 'buddyboss_user_sw_olduser_' . COOKIEHASH );
 		}
@@ -79,7 +79,7 @@ class BP_Core_Members_Switching {
 
 		?>
 		<tr>
-			<th scope="row"><?php echo esc_html_x( 'User Switching', 'User Switching title on user profile screen', 'buddyboss' ); ?></th>
+			<th scope="row"><?php echo esc_html_x( 'Member Switching', 'Member Switching title on user profile screen', 'buddyboss' ); ?></th>
 			<td><a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'Switch&nbsp;To', 'buddyboss' ); ?></a>
 			</td>
 		</tr>
@@ -109,7 +109,6 @@ class BP_Core_Members_Switching {
 	 * @since BuddyBoss 3.1.1
 	 */
 	public function action_init() {
-		load_plugin_textdomain( 'buddyboss', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 
 		if ( ! isset( $_REQUEST['action'] ) ) {
 			return;
@@ -725,7 +724,7 @@ class BP_Core_Members_Switching {
 	}
 
 	/**
-	 * Returns whether or not User Switching's equivalent of the 'logged_in' cookie should be secure.
+	 * Returns whether or not Member Switching's equivalent of the 'logged_in' cookie should be secure.
 	 *
 	 * This is used to set the 'secure' flag on the old user cookie, for enhanced security.
 	 *
@@ -740,7 +739,7 @@ class BP_Core_Members_Switching {
 	}
 
 	/**
-	 * Returns whether or not User Switching's equivalent of the 'auth' cookie should be secure.
+	 * Returns whether or not Member Switching's equivalent of the 'auth' cookie should be secure.
 	 *
 	 * This is used to determine whether to set a secure auth cookie or not.
 	 *
