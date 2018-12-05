@@ -885,7 +885,7 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 
 	<div class="bp-groups-settings-section" id="bp-groups-settings-section-status">
 		<fieldset>
-			<legend><?php _e( 'Privacy', 'buddyboss' ); ?></legend>
+			<legend><?php _e( 'Group Privacy', 'buddyboss' ); ?></legend>
 
 			<label for="bp-group-status-public"><input type="radio" name="group-status" id="bp-group-status-public" value="public" <?php checked( $item->status, 'public' ) ?> /><?php _e( 'Public', 'buddyboss' ) ?></label>
 			<label for="bp-group-status-private"><input type="radio" name="group-status" id="bp-group-status-private" value="private" <?php checked( $item->status, 'private' ) ?> /><?php _e( 'Private', 'buddyboss' ) ?></label>
@@ -922,7 +922,7 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 		<br><hr>
 		<div class="bp-groups-settings-section" id="bp-groups-settings-section-group-hierarchy">
 				<label for="bp-groups-parent" class="for-heading">
-					<?php _e( 'Parent', 'buddyboss' ); ?>:&nbsp;&nbsp;
+					<?php _e( 'Parent Group', 'buddyboss' ); ?>
 				</label>
 				<select id="bp-groups-parent" name="bp-groups-parent" autocomplete="off">
 					<option value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php echo _x( '-- No parent --', 'The option that sets a group to be a top-level group and have no parent.', 'buddyboss' ); ?></option>
