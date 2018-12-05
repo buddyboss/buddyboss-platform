@@ -263,6 +263,89 @@ function bp_ps_anyfield_setup ($fields)
 	return $fields;
 }
 
+// Hook for registering a LearnDash course field in frontend and backend.
+add_filter ('bp_ps_add_fields', 'bp_ps_learndash_course_setup');
+
+/**
+ * Function for registering a LearnDash course field in frontend and backend.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $fields
+ *
+ * @return array
+ */
+function bp_ps_learndash_course_setup ($fields) {
+
+	// check is LearnDash plugin is activated or not.
+	if(in_array('sfwd-lms/sfwd_lms.php', apply_filters('active_plugins', get_option('active_plugins')))){
+
+		global $wpdb;
+
+		$query = "SELECT DISTINCT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s ORDER BY menu_order";
+
+		$courses_arr = $wpdb->get_col( $wpdb->prepare( $query, 'sfwd-courses', 'publish' ) );
+
+		$courses = array();
+
+		if ( $courses_arr ) :
+
+			foreach ( $courses_arr as $course ) {
+				$post = get_post( $course );
+				$courses[ $post->ID ] = get_the_title( $post->ID );
+			}
+
+		endif;
+
+		$f = new stdClass;
+		$f->group = __('LearnDash', 'buddyboss');
+		$f->id = 'learndash_courses';
+		$f->code = 'field_learndash_courses';
+		$f->name = __('Courses', 'buddyboss');
+		$f->description = __('Courses', 'buddyboss');
+		$f->type = 'selectbox';
+		$f->format = bp_ps_xprofile_format('selectbox','learndash_courses');
+		$f->options = $courses;
+		$f->search = 'bp_ps_learndash_course_users_search';
+
+		$fields[] = $f;
+
+	}
+	return $fields;
+}
+
+/**
+ * Function for fetching all the users from selected course.
+ *
+ * @since 3.1.1
+ *
+ * @param $f
+ *
+ * @return array
+ */
+function bp_ps_learndash_course_users_search( $f ) {
+
+	// check for learndash plugin is activated or not.
+	if(in_array('sfwd-lms/sfwd_lms.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+
+
+		$course_id = $f->value;
+		if ( isset( $course_id ) && ! empty( $course_id ) ) {
+			$course_users = learndash_get_users_for_course( $course_id, '', false );
+
+			$course_users = $course_users->results;
+
+			if ( isset( $course_users ) && ! empty( $course_users ) ) {
+				return $course_users;
+			} else {
+				return array();
+			}
+		} else {
+			return array();
+		}
+	}
+}
+
 function bp_ps_anyfield_search ($f)
 {
 	global $bp, $wpdb;

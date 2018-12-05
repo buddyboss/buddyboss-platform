@@ -82,6 +82,9 @@ function bp_get_default_options() {
 		// Group Types.
 		'bp-disable-group-type-creation' => false,
 
+		// Group auto join
+		'bp-enable-group-auto-join' => false,
+
 		// Allow users to delete their own accounts.
 		'bp-disable-account-deletion'          => false,
 
@@ -682,6 +685,27 @@ function bp_enable_group_hierarchies( $default = false ) {
 	 * @param bool $value whether or not groups are able to have a parent and sub groups.
 	 */
 	return (bool) apply_filters( 'bp_enable_group_hierarchies', (bool) bp_get_option( 'bp-enable-group-hierarchies', $default ) );
+}
+
+/**
+ * Are group auto join enabled?
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if group auto join are enabled, otherwise false.
+ */
+function bp_enable_group_auto_join( $default = false ) {
+
+	/**
+	 * Filters whether or not groups auto join.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param bool $value whether or not groups auto join.
+	 */
+	return (bool) apply_filters( 'bp_enable_group_auto_join', (bool) bp_get_option( 'bp-enable-group-auto-join', $default ) );
 }
 
 /**

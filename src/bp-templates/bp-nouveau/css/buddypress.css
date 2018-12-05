@@ -795,9 +795,17 @@ body.buddypress article.page > .entry-header .entry-title {
   text-align: center;
 }
 
-.buddypress-wrap .subnav-filters .grid-filters {
-  float: right;
-  padding: 0;
+@media screen and (max-width: 32em) {
+  .buddypress-wrap .subnav-filters .grid-filters {
+    margin-top: 10px;
+  }
+}
+
+@media screen and (min-width: 32em) {
+  .buddypress-wrap .subnav-filters .grid-filters {
+    float: right;
+    padding: 0;
+  }
 }
 
 .buddypress-wrap .grid-filters {
@@ -892,7 +900,6 @@ a.layout-grid-view {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  border-top: 1px solid #eaeaea;
   clear: both;
   list-style: none;
   margin: 20px 0;
@@ -985,11 +992,6 @@ a.layout-grid-view {
   .bp-list li .item {
     margin: 0;
     overflow: hidden;
-  }
-  .bp-list li .item .item-block {
-    float: left;
-    margin-right: 2%;
-    width: 50%;
   }
   .bp-list li .item .list-title,
   .bp-list li .item .item-meta {
@@ -1768,10 +1770,6 @@ form.ac-form .ac-reply-content input {
 *----------------------------------------------------------
 */
 @media screen and (min-width: 46.8em) {
-  .buddypress-wrap .blogs-list li .item-block {
-    float: none;
-    width: auto;
-  }
   .buddypress-wrap .blogs-list li .item-meta {
     clear: left;
     float: none;
@@ -2348,6 +2346,7 @@ body.no-js .single-item-header .js-self-profile-button {
 
 .groups-header .moderators-lists {
   margin-top: 0;
+  display: table-cell;
 }
 
 .groups-header .moderators-lists .moderators-title {
@@ -2371,6 +2370,42 @@ body.no-js .single-item-header .js-self-profile-button {
 }
 
 .groups-header .moderators-lists img.avatar {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  float: none;
+  height: 30px;
+  margin: 0;
+  max-width: 100%;
+  width: 30px;
+}
+
+.groups-header .parents-lists {
+  padding: 0 1em 0 0;
+  display: table-cell;
+}
+
+.groups-header .parents-lists .parents-title {
+  font-size: 14px;
+}
+
+.groups-header .parents-lists .group-list {
+  margin: 0 0 5px;
+}
+
+.groups-header .parents-lists .group-list ul:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.groups-header .parents-lists .group-list li {
+  display: inline-block;
+  float: none;
+  margin: 4px 0 0 4px;
+}
+
+.groups-header .parents-lists img.avatar {
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -2412,6 +2447,7 @@ body.no-js .single-item-header .js-self-profile-button {
     margin-left: 15px;
     text-align: right;
     max-width: 25%;
+    display: table;
   }
   .groups-header .groups-meta {
     clear: both;
@@ -2442,6 +2478,10 @@ body.no-js .single-item-header .js-self-profile-button {
 
 .bp-user .member-header-actions * > * {
   display: block;
+}
+
+body.buddypress.bp-user #page #primary .entry-header {
+  display: none;
 }
 
 /**
@@ -2476,6 +2516,14 @@ body.no-js .single-item-header .js-self-profile-button {
 .single-item.group-members .item-body .filters:not(.no-subnav) {
   border-top: 5px solid #eaeaea;
   padding-top: 1em;
+}
+
+.single-item.subgroups .item-body #subnav-filters .subnav-search {
+  display: none;
+}
+
+.single-item.subgroups .item-body #subnav-filters #dir-filters {
+  display: none;
 }
 
 /**
@@ -3259,6 +3307,8 @@ body.register .buddypress-wrap .page ul {
 #message-threads li .thread-avatar img.avatar {
   float: left;
   margin: 5px 10px 0 0;
+  max-width: 80px;
+  width: 80%;
 }
 
 .bp-messages-content .actions {
@@ -3756,7 +3806,6 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
   appearance: none;
   border: 0;
   cursor: pointer;
-  margin-right: -25px;
   padding: 5px 25px 5px 10px;
   position: relative;
   z-index: 1;
@@ -3772,7 +3821,9 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 .buddypress-wrap .select-wrap span.select-arrow {
   font-size: 10px;
   display: inline-block;
-  position: relative;
+  position: absolute;
+  right: 8px;
+  top: 10px;
   z-index: 0;
 }
 
@@ -3786,7 +3837,13 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 }
 
 .buddypress-wrap .subnav-filters .select-wrap {
-  margin-right: 12px;
+  position: relative;
+}
+
+@media screen and (min-width: 32em) {
+  .buddypress-wrap .subnav-filters .select-wrap {
+    margin-right: 12px;
+  }
 }
 
 .buddypress-wrap .select-wrap:focus, .buddypress-wrap .select-wrap:hover,
@@ -5077,10 +5134,11 @@ button[data-bp-close]:hover {
   position: relative;
   overflow: hidden;
   padding-top: 14px;
+  height: 100%;
 }
 
 .grid > li .list-wrap .list-title {
-  padding: 0.7em;
+  padding: 0.7em 0.7em 0;
 }
 
 .grid > li .list-wrap .update {
@@ -5099,22 +5157,11 @@ button[data-bp-close]:hover {
 }
 
 @media screen and (min-width: 24em) {
-  .grid.members-list .list-wrap {
-    min-height: 340px;
-  }
   .grid.members-list .list-wrap .item-block {
     margin: 0 auto;
-    min-height: 7rem;
   }
   .grid.members-group-list .list-wrap .item-block {
     margin: 0 auto;
-    min-height: 7rem;
-  }
-  .grid.groups-list .list-wrap {
-    min-height: 470px;
-  }
-  .grid.groups-list .list-wrap .item-block {
-    min-height: 6rem;
   }
   .grid.groups-list .list-wrap .group-desc {
     margin: 15px auto 0;
@@ -5131,12 +5178,8 @@ button[data-bp-close]:hover {
   .grid.groups-list .list-wrap .item-desc p {
     margin-bottom: 0;
   }
-  .grid.blogs-list .list-wrap {
-    min-height: 350px;
-  }
   .grid.blogs-list .list-wrap .item-block {
     margin: 0 auto;
-    min-height: 7rem;
   }
 }
 
@@ -5159,20 +5202,15 @@ button[data-bp-close]:hover {
 }
 
 @media screen and (min-width: 24em) {
-  .grid.two > li, .grid.three > li {
-    width: 50%;
+  .grid.two > li, .grid.three > li, .grid.four > li {
+    flex: 0 0 50%;
+    max-width: 50%;
   }
-  .grid.two > li:nth-child(odd), .grid.three > li:nth-child(odd) {
-    padding-right: 10px;
-  }
-  .grid.two > li:nth-child(even), .grid.three > li:nth-child(even) {
-    padding-left: 10px;
-  }
-  .grid.two > li .item, .grid.three > li .item {
+  .grid.two > li .item, .grid.three > li .item, .grid.four > li .item {
     margin: 1rem auto 0;
     width: 80%;
   }
-  .grid.two > li .item .item-title, .grid.three > li .item .item-title {
+  .grid.two > li .item .item-title, .grid.three > li .item .item-title, .grid.four > li .item .item-title {
     width: auto;
   }
 }
@@ -5181,52 +5219,31 @@ button[data-bp-close]:hover {
 @media screen and (min-width: 46.8em) {
   .grid.three > li {
     padding-top: 0;
-    width: 33.333333%;
-    width: calc(100% / 3);
-  }
-  .grid.three > li:nth-child(1n+1) {
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-  .grid.three > li:nth-child(3n+3) {
-    padding-left: 5px;
-    padding-right: 0;
-  }
-  .grid.three > li:nth-child(3n+1) {
-    padding-left: 0;
-    padding-right: 5px;
+    flex: 0 0 33.333333%;
+    max-width: 33.333333%;
   }
 }
 
 /* Build the four column class medium up */
 @media screen and (min-width: 46.8em) {
   .grid.four > li {
-    width: 25%;
-  }
-  .grid.four > li:nth-child(1n+1) {
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-  .grid.four > li:nth-child(4n+4) {
-    padding-left: 5px;
-    padding-right: 0;
-  }
-  .grid.four > li:nth-child(4n+1) {
-    padding-left: 0;
-    padding-right: 5px;
+    flex: 0 0 25%;
+    max-width: 25%;
   }
 }
 
 .buddypress-wrap .grid.bp-list {
+  display: flex;
+  flex-flow: row wrap;
   padding-top: 1em;
+  margin-left: -5px;
+  margin-right: -5px;
 }
 
 .buddypress-wrap .grid.bp-list > li {
   border-bottom: none;
-}
-
-.buddypress-wrap .grid.bp-list > li .list-wrap {
-  padding-bottom: 3em;
+  padding: 0 5px;
+  margin-bottom: 10px;
 }
 
 .buddypress-wrap .grid.bp-list > li .item-avatar {
@@ -5257,7 +5274,6 @@ button[data-bp-close]:hover {
   left: 0;
   margin: 0 auto;
   text-align: center;
-  width: 96%;
 }
 
 @media screen and (min-width: 46.8em) {
@@ -5269,7 +5285,6 @@ button[data-bp-close]:hover {
 .buddypress-wrap .grid.bp-list > li .item .item-block,
 .buddypress-wrap .grid.bp-list > li .item .group-desc {
   float: none;
-  width: 96%;
 }
 
 .buddypress-wrap .grid.bp-list > li .item .item-block {
@@ -5293,22 +5308,9 @@ button[data-bp-close]:hover {
   display: inline;
 }
 
-.buddypress-wrap .grid.bp-list > li .action {
-  bottom: 5px;
-  float: none;
-  height: auto;
-  left: 0;
-  margin: 0;
-  padding: 0 5px;
-  position: absolute;
-  text-align: center;
-  top: auto;
-  width: 100%;
-}
-
 .buddypress-wrap .grid.bp-list > li .action .generic-button {
   float: none;
-  margin: 5px 0 0;
+  margin: 0;
   text-align: center;
   width: 100%;
 }
@@ -5328,16 +5330,6 @@ button[data-bp-close]:hover {
   min-height: 5em;
 }
 
-.buddypress-wrap .grid.three > li .group-desc,
-.buddypress-wrap .grid.four > li .group-desc {
-  min-height: 8em;
-}
-
-.buddypress-wrap .blogs-list.grid.three > li,
-.buddypress-wrap .blogs-list.grid.four > li {
-  min-height: 350px;
-}
-
 .buddypress-wrap .blogs-list.grid.three > li .last-activity,
 .buddypress-wrap .blogs-list.grid.four > li .last-activity {
   margin-bottom: 0;
@@ -5346,22 +5338,6 @@ button[data-bp-close]:hover {
 .buddypress-wrap .blogs-list.grid.three > li .last-post,
 .buddypress-wrap .blogs-list.grid.four > li .last-post {
   margin-top: 0;
-}
-
-.buddypress:not(.logged-in) .grid.bp-list .list-wrap {
-  padding-bottom: 5px;
-}
-
-.buddypress:not(.logged-in) .grid.groups-list .list-wrap {
-  min-height: 430px;
-}
-
-.buddypress:not(.logged-in) .grid.members-list .list-wrap {
-  min-height: 300px;
-}
-
-.buddypress:not(.logged-in) .grid.blogs-list .list-wrap {
-  min-height: 320px;
 }
 
 @media screen and (min-width: 46.8em) {

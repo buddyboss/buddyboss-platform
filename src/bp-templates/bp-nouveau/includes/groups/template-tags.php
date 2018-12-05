@@ -1092,7 +1092,7 @@ function bp_nouveau_group_meta() {
 	$meta = bp_nouveau_get_group_meta();
 
 	if ( ! bp_is_group() ) {
-		echo join( ' / ', array_map( 'esc_html', (array) $meta ) );
+		echo join( ' / ', array_map( 'wp_kses', (array) $meta, array( 'span' => array( 'class' => array() ) ) ) );
 	} else {
 
 		/*
@@ -1135,7 +1135,7 @@ function bp_nouveau_group_meta() {
 			if ( $is_group ) {
 					$meta = array(
 						'status'          =>  bp_get_group_type(),
-						'group_type_list' =>  bp_get_group_type_list(),
+						//'group_type_list' =>  bp_get_group_type_list(),
 						'description'     =>  bp_get_group_description(),
 					);
 
@@ -1229,6 +1229,8 @@ function bp_nouveau_group_template_part() {
 			$template = 'activity';
 		} elseif ( bp_is_group_members() ) {
 			$template = 'members';
+		} elseif ( bp_is_group_subgroups() ) {
+			$template = 'subgroups';
 		} elseif ( bp_is_group_invites() ) {
 			$template = 'send-invites';
 		} elseif ( bp_is_group_membership_request() ) {

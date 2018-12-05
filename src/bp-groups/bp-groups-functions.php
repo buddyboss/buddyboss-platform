@@ -1952,6 +1952,24 @@ function groups_send_membership_request( $requesting_user_id, $group_id ) {
 	if ( groups_check_user_has_invite( $requesting_user_id, $group_id ) ) {
 		groups_accept_invite( $requesting_user_id, $group_id );
 		return true;
+	} else {
+
+		if ( true === bp_member_type_enable_disable() && true === bp_disable_group_type_creation() ) {
+
+			$group_type = bp_groups_get_group_type( $group_id );
+
+			$group_type_id = bp_get_group_type_post_id( $group_type );
+
+			$get_selected_member_type_join = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
+
+			$get_requesting_user_member_type = bp_get_member_type( $requesting_user_id );
+
+			if ( in_array( $get_requesting_user_member_type, $get_selected_member_type_join ) ) {
+				groups_accept_invite( $requesting_user_id, $group_id );
+				return true;
+			}
+
+		}
 	}
 
 	$requesting_user                = new BP_Groups_Member;
@@ -2683,6 +2701,28 @@ function bp_get_current_group_directory_type() {
 }
 
 /**
+ * Is this a user's "My Groups" view? This can happen on the main directory or
+ * at a user's profile (/members/username/groups/).
+ * @since BuddyBoss 3.1.1
+ *
+ * @return bool True if yes.
+ */
+function bp_is_my_groups_view() {
+	$retval = false;
+
+	// Could be the user profile groups pane.
+	if ( bp_is_user_groups() ) {
+		$retval = true;
+
+		// Could be the "my groups" filter on the main directory?
+	} elseif ( bp_is_groups_directory() && ( isset( $_COOKIE['bp-groups-scope'] ) && 'personal' == $_COOKIE['bp-groups-scope'] ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+/**
  * Delete a group's type when the group is deleted.
  *
  * @since BuddyPress 2.6.0
@@ -2910,6 +2950,7 @@ function bp_get_group_type_key( $post_id ) {
 	if ( empty( $key ) ) {
 		$key = strtolower( get_post_meta( $post_id, '_bp_group_type_label_singular_name', true ) );
 		$key = str_replace( array( ' ', ',' ), array( '-', '-' ), $key );
+		update_post_meta( $post_id, '_bp_group_type_key', sanitize_key( $key ) );
 	}
 
 	return apply_filters( 'bp_get_group_type_key', $key );
@@ -2942,6 +2983,9 @@ if ( true === bp_disable_group_type_creation() ) {
 	// filter for adding body class where the shortcode added.
 	add_filter( 'body_class', 'bp_group_type_short_code_add_body_class' );
 
+	// remove groups of a specific group type from groups directory
+	add_action( 'bp_ajax_querystring', 'bp_group_type_exclude_groups_from_directory_and_searches', 999, 2 );
+
 }
 
 /**
@@ -2963,6 +3007,7 @@ function bp_register_active_group_types() {
 	foreach ( $post_ids as $post_id ) {
 
 		$name    = get_post_meta( $post_id, '_bp_group_type_label_name', true );
+		$key    = get_post_meta( $post_id, '_bp_group_type_key', true );
 		$singular_name    = get_post_meta( $post_id, '_bp_group_type_label_singular_name', true );
 		$group_types       = bp_groups_get_group_types();
 		if ( ! in_array( $singular_name, $group_types, true ) ) {
@@ -2977,7 +3022,7 @@ function bp_register_active_group_types() {
 				'description'           => '',
 				'create_screen_checked' => false,
 			);
-			bp_groups_register_group_type( $name, $temp );
+			bp_groups_register_group_type( $key, $temp );
 		}
 	}
 }
@@ -3075,4 +3120,211 @@ function bp_group_type_short_code_add_body_class( $class ) {
 		$class[] = 'bb-buddypanel';
 	}
 	return $class;
+}
+
+/**
+ * Function for excluding specific group types from search and listing.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param bool $qs
+ * @param bool $object
+ *
+ * @return bool|string
+ */
+function bp_group_type_exclude_groups_from_directory_and_searches( $qs=false, $object=false ) {
+
+	$exclude_group_ids = array_unique( bp_get_groups_of_removed_group_types() );
+
+	if( $object != 'groups' )
+		return $qs;
+
+	$args = wp_parse_args( $qs );
+
+	if( ! empty( $args['exclude'] ) )
+		$args['exclude'] = $args['exclude'] . ',' . implode( ',', $exclude_group_ids );
+	else
+		$args['exclude'] = implode( ',', $exclude_group_ids );
+
+	$qs = build_query( $args );
+
+	return $qs;
+}
+
+/**
+ * Function for get groups removed from group type.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return array
+ */
+function bp_get_groups_of_removed_group_types() {
+
+	$group_id = array();
+
+	// get removed group type post ids
+	$bp_group_type_ids = bp_get_removed_group_types();
+
+	// get removed group type names/slugs
+	$bp_group_type_names = array();
+	if( isset($bp_group_type_ids) && !empty($bp_group_type_ids) ){
+		foreach($bp_group_type_ids as $single){
+			$bp_group_type_names[] = $single['name'];
+		}
+	}
+
+	// get group group ids
+	if( isset($bp_group_type_names) && !empty($bp_group_type_names) ){
+		foreach($bp_group_type_names as $type_name){
+			$group_ids = bp_get_group_ids_by_group_types( $type_name );
+
+			if( isset($group_ids) && !empty($group_ids) ){
+				foreach($group_ids as $single){
+					$group_id[] = $single['id'];
+				}
+			}
+		}
+	}
+
+	return bp_group_ids_array_flatten( $group_id );
+}
+
+/**
+ * Function for making a array flatten.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $array
+ *
+ * @return array|bool
+ */
+function bp_group_ids_array_flatten($array) {
+	if (!is_array($array)) {
+		return FALSE;
+	}
+	$result = array();
+	foreach ($array as $key => $value) {
+		if (is_array($value)) {
+			$result = array_merge($result, bp_group_ids_array_flatten($value));
+		}
+		else {
+			$result[$key] = $value;
+		}
+	}
+	return $result;
+}
+
+/**
+ * Function for removed group type.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return array
+ */
+function bp_get_removed_group_types(){
+
+	$bp_group_type_ids = array();
+	$post_type = bp_get_group_type_post_type();
+	$bp_group_type_args = array(
+		'post_type' => $post_type,
+		'meta_query' => array(
+			array(
+				'key'     => '_bp_group_type_enable_remove',
+				'value'   => 1,
+				'compare' => '=',
+			),
+		),
+		'nopaging' => true,
+	);
+
+	$bp_group_type_query = new WP_Query($bp_group_type_args);
+	if ($bp_group_type_query->have_posts()):
+		while ($bp_group_type_query->have_posts()):
+			$bp_group_type_query->the_post();
+
+			$post_id = get_the_ID();
+			$name = bp_get_group_type_key( $post_id );
+			$bp_group_type_ids[] = array(
+				'ID' => $post_id,
+				'name' => $name,
+			);
+		endwhile;
+	endif;
+	wp_reset_query();
+	wp_reset_postdata();
+	return $bp_group_type_ids;
+}
+
+/**
+ * Get group count of group type tabs groups.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param string $group_type The group type.
+ * @param string $taxonomy The group taxonomy.
+ */
+function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_group_type' ) {
+
+	global $wpdb, $bp;
+
+	$group_types = bp_groups_get_group_types();
+
+	if ( empty( $group_type ) || empty( $group_types[ $group_type ] ) ) {
+		return false;
+	}
+
+
+	if ( ! bp_is_root_blog() ) {
+		switch_to_blog( bp_get_root_blog_id() );
+	}
+	$bp_group_type_query         = array(
+		'select' => "SELECT t.slug, tt.term_id FROM {$wpdb->term_taxonomy} tt LEFT JOIN {$wpdb->terms} t",
+		'on'     => 'ON tt.term_id = t.term_id',
+		'where'  => $wpdb->prepare( 'WHERE tt.taxonomy = %s', $taxonomy ),
+	);
+	$bp_get_group_type_count = $wpdb->get_results( join( ' ', $bp_group_type_query ) );
+	restore_current_blog();
+
+	$bp_group_type_count = wp_filter_object_list( $bp_get_group_type_count, array( 'slug' => $group_type ), 'and', 'term_id' );
+	$bp_group_type_count = array_values( $bp_group_type_count );
+	if ( empty( $bp_group_type_count ) ) {
+		return 0;
+	}
+	$taxonomy_id =  (int) $bp_group_type_count[0];
+
+	$groups = $bp->table_prefix . 'bp_groups';
+	$group_meta = $bp->table_prefix . 'bp_groups_groupmeta';
+	$term_relationships = $wpdb->term_relationships;
+
+	$query = "SELECT g.id as id FROM $groups g JOIN $group_meta gm_last_activity on ( g.id = gm_last_activity.group_id ) WHERE  g.id IN ( SELECT object_id FROM $term_relationships WHERE wp_term_relationships.term_taxonomy_id IN ($taxonomy_id) ) AND gm_last_activity.meta_key = 'last_activity'";
+	$results = $wpdb->get_results( $query, ARRAY_A );
+
+	return $results;
+}
+
+/**
+ * Function for getting the post id of particular member type.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param string $group_type
+ *
+ * @return mixed
+ */
+function bp_get_group_type_post_id( $group_type = '' ) {
+
+	$args = array(
+		'post_type'		=>	'bp-group-type',
+		'meta_query'	=>	array(
+			array(
+				'key'   => '_bp_group_type_key',
+				'value'	=>	$group_type
+			)
+		)
+	);
+	$group_type_query = new WP_Query( $args );
+
+	$posts = $group_type_query->posts;
+
+	return $posts[0]->ID;
 }

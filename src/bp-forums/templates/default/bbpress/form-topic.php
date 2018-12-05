@@ -63,7 +63,7 @@
 					<?php do_action( 'bbp_theme_before_topic_form_title' ); ?>
 
 					<p>
-						<label for="bbp_topic_title"><?php printf( __( 'Subject (Maximum Length: %d):', 'buddyboss' ), bbp_get_title_max_length() ); ?></label><br />
+						<label for="bbp_topic_title"><?php _e('Discussion Title', 'buddyboss'); ?></label><br />
 						<input type="text" id="bbp_topic_title" value="<?php bbp_form_topic_title(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_title" maxlength="<?php bbp_title_max_length(); ?>" />
 					</p>
 
@@ -129,18 +129,6 @@
 
 						<?php do_action( 'bbp_theme_after_topic_form_type' ); ?>
 
-						<?php do_action( 'bbp_theme_before_topic_form_status' ); ?>
-
-						<p>
-
-							<label for="bbp_topic_status"><?php _e( 'Status:', 'buddyboss' ); ?></label><br />
-
-							<?php bbp_form_topic_status_dropdown(); ?>
-
-						</p>
-
-						<?php do_action( 'bbp_theme_after_topic_form_status' ); ?>
-
 					<?php endif; ?>
 
 					<?php if ( bbp_is_subscriptions_active() && !bbp_is_anonymous() && ( !bbp_is_topic_edit() || ( bbp_is_topic_edit() && !bbp_is_topic_anonymous() ) ) ) : ?>
@@ -191,7 +179,7 @@
 
 						<?php do_action( 'bbp_theme_before_topic_form_submit_button' ); ?>
 
-						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_topic_submit" name="bbp_topic_submit" class="button submit"><?php _e( 'Submit', 'buddyboss' ); ?></button>
+						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_topic_submit" name="bbp_topic_submit" class="button submit"><?php _e( 'Post', 'buddyboss' ); ?></button>
 
 						<?php do_action( 'bbp_theme_after_topic_form_submit_button' ); ?>
 

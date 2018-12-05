@@ -47,7 +47,7 @@ if ( isset( $display_arr ) && !empty( $display_arr )) {
 			</label>
 			<div class="select-wrap">
 				<select id="member-type-order-by" data-bp-filter="members">
-					<option value="all"><?php echo __( 'All Types', 'buddyboss' ); ?></option><?php
+					<option value=""><?php echo __( 'All Types', 'buddyboss' ); ?></option><?php
 					foreach ( $display_arr as $member ) {
 						?>
 						<option value="<?php echo $member['member_type_id']; ?>"><?php echo __( $member['name'], 'buddyboss' ); ?></option><?php

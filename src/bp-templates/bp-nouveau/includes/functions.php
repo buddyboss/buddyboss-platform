@@ -110,10 +110,15 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 		$qs[] = 'offset=' . intval( $post_query['offset'] );
 	}
 
-	if ( isset( $_POST['member_type_id'] ) && '' !== $_POST['member_type_id'] && 'all' !== $_POST['member_type_id'] ) {
+	if ( isset( $_POST['member_type_id'] ) && '' !== $_POST['member_type_id'] && 'all' !== $_POST['member_type_id'] && 'undefined' !== $_POST['member_type_id'] ) {
 		$member_type_id = $_POST['member_type_id'];
 		$member_type_key= get_post_meta( $member_type_id, '_bp_member_type_key', true);
 		$qs[] = 'member_type=' . $member_type_key;
+	}
+
+	if ( isset( $_POST['group_type'] ) && '' !== $_POST['group_type'] && 'all' !== $_POST['group_type'] && 'undefined' !== $_POST['group_type'] ) {
+		$group_type = $_POST['group_type'];
+		$qs[] = 'group_type=' . $group_type;
 	}
 
 	$object_search_text = bp_get_search_default_text( $object );
@@ -974,10 +979,6 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		'member-mutual-friends-loading' => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading the member\'s mutual connections. Please wait.', 'buddyboss' ),
-		),
-		'member-friend-requests-loading' => array(
-			'type'    => 'loading',
-			'message' => __( 'Loading the member\'s connection requests. Please wait.', 'buddyboss' ),
 		),
 		'member-groups-loading' => array(
 			'type'    => 'loading',

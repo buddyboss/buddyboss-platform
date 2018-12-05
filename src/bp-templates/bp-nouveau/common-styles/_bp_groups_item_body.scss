@@ -13,3 +13,21 @@
 		}
 	}
 }
+
+//Subgroups list doesn't show searchbar and filter dropdown
+.single-item.subgroups {
+
+	.item-body {
+
+		#subnav-filters {
+
+			.subnav-search {
+				display: none;
+			}
+
+			#dir-filters {
+				display: none;
+			}
+		}
+	}
+}

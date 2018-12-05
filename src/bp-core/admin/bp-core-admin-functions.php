@@ -1345,6 +1345,26 @@ function bp_member_type_custom_metaboxes() {
 	add_meta_box( 'bp-member-type-visibility', __( 'Visibility', 'buddyboss' ), 'bp_member_type_visibility_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-shortcode', __( 'Shortcode', 'buddyboss' ), 'bp_profile_shortcode_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-wp-role', __( 'WordPress Role', 'buddyboss' ), 'bp_member_type_wprole_metabox', null, 'normal', 'high' );
+
+	if ( false === bp_restrict_group_creation() ) {
+
+		$get_all_registered_group_types = bp_get_active_group_types();
+
+		// Add meta box if group types is entered.
+		if ( true === bp_disable_group_type_creation() && isset( $get_all_registered_group_types ) && !empty( $get_all_registered_group_types ) ) {
+			add_meta_box( 'bp-member-type-group-create', __( 'Members with this profile type are only allowed to create groups with the following group types. Leave all unchecked to allow members to create any group type.', 'buddyboss' ), 'bp_member_type_group_create_metabox', null, 'normal', 'high' );
+		}
+	}
+
+	if ( true === bp_disable_group_type_creation() && true === bp_enable_group_auto_join() ) {
+
+		$get_all_registered_group_types = bp_get_active_group_types();
+
+		// Add meta box if group types is entered.
+		if ( true === bp_disable_group_type_creation() && isset( $get_all_registered_group_types ) && !empty( $get_all_registered_group_types ) ) {
+			add_meta_box( 'bp-member-type-group-auto-join', __( 'Members with this profile type are only allowed to auto join groups with the following group types.', 'buddyboss' ), 'bp_member_type_group_auto_join_meta_box', null, 'normal', 'high' );
+		}
+	}
 }
 add_action( 'add_meta_boxes_' . bp_get_member_type_post_type(), 'bp_member_type_custom_metaboxes' );
 
@@ -1510,6 +1530,60 @@ function bp_member_type_wprole_metabox( $post ) {
 }
 
 /**
+ * Function for which type of group member can create.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $post
+ */
+function bp_member_type_group_create_metabox( $post ) {
+
+	$get_all_registered_group_types = bp_get_active_group_types();
+
+	$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_create', true );
+
+	foreach ( $get_all_registered_group_types as $group_type_id ) {
+
+		$group_type_key = get_post_meta( $group_type_id, '_bp_group_type_key', true );
+		$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];
+		?>
+		<p>
+			<input type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> tabindex="7" />
+			<strong><?php _e( $group_type_label, 'buddyboss' ); ?></strong>
+		</p>
+		<?php
+
+	}
+}
+
+/**
+ * Function for which type of members type can auto join in groups.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $post
+ */
+function bp_member_type_group_auto_join_meta_box( $post ) {
+
+	$get_all_registered_group_types = bp_get_active_group_types();
+
+	$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_auto_join', true );
+
+	foreach ( $get_all_registered_group_types as $group_type_id ) {
+
+		$group_type_key = get_post_meta( $group_type_id, '_bp_group_type_key', true );
+		$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];
+		?>
+		<p>
+			<input type='checkbox' name='bp-group-type-auto-join[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> tabindex="7" />
+			<strong><?php _e( $group_type_label, 'buddyboss' ); ?></strong>
+		</p>
+		<?php
+
+	}
+}
+
+/**
  * Function for saving metaboxes data of member type post data.
  * @param $post_id
  *
@@ -1565,65 +1639,65 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_label_singular_name', $singular_name );
 	update_post_meta( $post_id, '_bp_member_type_enable_filter', $enable_filter );
 	update_post_meta( $post_id, '_bp_member_type_enable_remove', $enable_remove );
+	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_create', $_POST['bp-group-type'] );
+	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', $_POST['bp-group-type-auto-join'] );
 
 	// Get user previous role.
 	$old_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
 
-	$member_type_name 	= bp_get_member_type_key( $post_id );
-	$type_term = get_term_by( 'name', $member_type_name, 'bp_member_type' ); // Get member type term data from database by name field.
+	$check_both_old_new_role_same = ( $wp_roles === $old_wp_roles );
 
-	// Check logged user role.
-	$user = new WP_User( get_current_user_id() );
-	$current_user_role = $user->roles[0];
+	if ( false === $check_both_old_new_role_same ) {
+		$member_type_name = bp_get_member_type_key( $post_id );
+		$type_term        = get_term_by( 'name',
+			$member_type_name,
+			'bp_member_type' ); // Get member type term data from database by name field.
 
-	// flag to check condition.
-	$bp_prevent_data_update = false;
+		// Check logged user role.
+		$user = new WP_User( get_current_user_id() );
+		$current_user_role = $user->roles[0];
 
-	// Fetch all the users which associated this member type.
-	$get_user_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_term->term_id );
-	if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
-		if ( in_array( get_current_user_id(), $get_user_ids ) ) {
-			$bp_prevent_data_update = true;
-		}
-	}
+		// flag to check condition.
+		$bp_prevent_data_update = false;
 
-	if ( true === $bp_prevent_data_update ) {
-
-		if ( 'administrator' === $old_wp_roles[0] ) {
-
-			if ( ! in_array( $current_user_role, $wp_roles ) ) {
-
-				$bp_error_message_string        = 'As your profile is currently assigned to this profile type, you cannot change its associated WordPress role. Changing this setting would remove your Administrator role and lock you out of the WordPress admin. You first need to remove yourself from this profile type (at Users > Your Profile > Extended) and then you can come back to this page to update the associated WordPress role.';
-				$error_message = apply_filters( 'bp_member_type_admin_error_message', __( $bp_error_message_string, 'buddyboss' ) );
-				// Define the settings error to display
-				add_settings_error( 'bp-invalid-role-selection',
-					'bp-invalid-role-selection',
-					$error_message,
-					'error' );
-				set_transient( 'bp_invalid_role_selection', get_settings_errors(), 30 );
-
-				return;
-			}
-
-		}
-
-	}
-
-	update_post_meta( $post_id, '_bp_member_type_wp_roles', $wp_roles );
-
-	//term exist
-	if ( $type_term ) {
-
+		// Fetch all the users which associated this member type.
+		$get_user_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_term->term_id );
 		if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
-			foreach ( $get_user_ids as $single_user ) {
+			if ( in_array( get_current_user_id(), $get_user_ids ) ) {
+				$bp_prevent_data_update = true;
+			}
+		}
 
-				$bp_user = new WP_User( $single_user );
+		if ( true === $bp_prevent_data_update ) {
+			if ( 'administrator' === $old_wp_roles[0] ) {
+				if ( ! in_array( $current_user_role, $wp_roles ) ) {
+					$bp_error_message_string = 'As your profile is currently assigned to this profile type, you cannot change its associated WordPress role. Changing this setting would remove your Administrator role and lock you out of the WordPress admin. You first need to remove yourself from this profile type (at Users > Your Profile > Extended) and then you can come back to this page to update the associated WordPress role.';
+					$error_message           = apply_filters( 'bp_member_type_admin_error_message',
+						__( $bp_error_message_string, 'buddyboss' ) );
+					// Define the settings error to display
+					add_settings_error( 'bp-invalid-role-selection',
+						'bp-invalid-role-selection',
+						$error_message,
+						'error' );
+					set_transient( 'bp_invalid_role_selection', get_settings_errors(), 30 );
+					return;
+				}
+			}
+		}
 
-				// Remove role
-				$bp_user->remove_role( $bp_user->roles[0] );
+		update_post_meta( $post_id, '_bp_member_type_wp_roles', $wp_roles );
 
-				// Add role
-				$bp_user->add_role( $wp_roles[0] );
+		//term exist
+		if ( $type_term ) {
+
+			if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
+				foreach ( $get_user_ids as $single_user ) {
+					$bp_user = new WP_User( $single_user );
+					// Remove role
+					$bp_user->remove_role( $bp_user->roles[0] );
+					// Add role
+					$bp_user->add_role( $wp_roles[0] );
+				}
 			}
 		}
 	}

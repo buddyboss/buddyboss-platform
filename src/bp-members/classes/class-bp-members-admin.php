@@ -2367,17 +2367,22 @@ class BP_Members_Admin {
 
 							// Get selected member type role.
 							$selected_member_type_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
-
-							if ( 'administrator' !== $selected_member_type_wp_roles[0] ) {
-								$bp_error_message = true;
-								$error = true;
-							} else {
+							if ( empty( $selected_member_type_wp_roles ) ) {
 								$set = bp_set_member_type( $user_id, $new_type );
 								if ( false === $set || is_wp_error( $set ) ) {
 									$error = true;
 								}
+							} else {
+								if ( 'administrator' !== $selected_member_type_wp_roles[0] ) {
+									$bp_error_message = true;
+									$error = true;
+								} else {
+									$set = bp_set_member_type( $user_id, $new_type );
+									if ( false === $set || is_wp_error( $set ) ) {
+										$error = true;
+									}
+								}
 							}
-
 						}
 					} else {
 

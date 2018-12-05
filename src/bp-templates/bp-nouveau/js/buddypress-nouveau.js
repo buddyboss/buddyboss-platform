@@ -37,12 +37,13 @@ window.bp = window.bp || {};
 
 			// Listen to events ("Add hooks!")
 			this.addListeners();
-            
+
             // Toggle Grid/List View
 			this.switchGridList();
 
 			//this.memberPreFilter();
 			$.ajaxPrefilter( this.memberPreFilter );
+			$.ajaxPrefilter( this.groupPreFilter );
 		},
 
 		/**
@@ -297,6 +298,9 @@ window.bp = window.bp || {};
 			} else if ( 'group_requests' === data.object ) {
 				data.object = 'groups';
 				data.template = 'group_requests';
+			} else if ( 'group_subgroups' === data.object ) {
+				data.object = 'groups';
+				data.template = 'group_subgroups';
 			} else if ( 'notifications' === data.object ) {
 				data.object = 'members';
 				data.template = 'member_notifications';
@@ -746,7 +750,7 @@ window.bp = window.bp || {};
 			if ( target.hasClass( 'bp-toggle-action-button' ) ) {
 
 				//support for buddyboss theme for button actions and icons and texts
-				if ( $(document.body).hasClass('buddyboss-theme') ) {
+				if ( $(document.body).hasClass('buddyboss-theme') && typeof target.data('balloon') !== 'undefined' ) {
 					target.attr( 'data-balloon', target.data('title') );
 				} else {
 					target.text( target.data('title') );
@@ -867,7 +871,7 @@ window.bp = window.bp || {};
 			if ( target.hasClass( 'bp-toggle-action-button-clicked' ) && ! target.hasClass( 'loading' ) ) {
 
 				//support for buddyboss theme for button actions and icons and texts
-				if ( $(document.body).hasClass('buddyboss-theme') ) {
+				if ( $(document.body).hasClass('buddyboss-theme') && typeof target.data('balloon') !== 'undefined' ) {
 					target.attr( 'data-balloon', target.data('title-displayed') );
 				} else {
 					target.text( target.data('title-displayed') ); // change text to displayed context
@@ -887,7 +891,7 @@ window.bp = window.bp || {};
 				if ( $(this).hasClass( 'bp-toggle-action-button-clicked' ) && ! $(this).hasClass( 'loading' ) ) {
 
 					//support for buddyboss theme for button actions and icons and texts
-					if ( $(document.body).hasClass('buddyboss-theme') ) {
+					if ( $(document.body).hasClass('buddyboss-theme') && typeof $(this).data('balloon') !== 'undefined' ) {
 						$(this).attr( 'data-balloon', $(this).data('title-displayed') );
 					} else {
 						$(this).text( $(this).data('title-displayed') ); // change text to displayed context
@@ -985,6 +989,12 @@ window.bp = window.bp || {};
 			if ( typeof options.data === 'string' && -1 !== options.data.indexOf('action=members_filter') ) {
 				var	member_type_id = $('#member-type-order-by').find(':selected').val();
 				options.data += '&member_type_id=' + member_type_id;
+			}
+		},
+		groupPreFilter: function( options ) {
+			if ( typeof options.data === 'string' && -1 !== options.data.indexOf('action=groups_filter') ) {
+				var	group_type = $('#group-type-order-by').find(':selected').val();
+				options.data += '&group_type=' + group_type;
 			}
 		}
 	};

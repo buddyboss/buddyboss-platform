@@ -885,7 +885,7 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 
 	<div class="bp-groups-settings-section" id="bp-groups-settings-section-status">
 		<fieldset>
-			<legend><?php _e( 'Privacy', 'buddyboss' ); ?></legend>
+			<legend><?php _e( 'Group Privacy', 'buddyboss' ); ?></legend>
 
 			<label for="bp-group-status-public"><input type="radio" name="group-status" id="bp-group-status-public" value="public" <?php checked( $item->status, 'public' ) ?> /><?php _e( 'Public', 'buddyboss' ) ?></label>
 			<label for="bp-group-status-private"><input type="radio" name="group-status" id="bp-group-status-private" value="private" <?php checked( $item->status, 'private' ) ?> /><?php _e( 'Private', 'buddyboss' ) ?></label>
@@ -922,7 +922,7 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 		<br><hr>
 		<div class="bp-groups-settings-section" id="bp-groups-settings-section-group-hierarchy">
 				<label for="bp-groups-parent" class="for-heading">
-					<?php _e( 'Parent', 'buddyboss' ); ?>:&nbsp;&nbsp;
+					<?php _e( 'Parent Group', 'buddyboss' ); ?>
 				</label>
 				<select id="bp-groups-parent" name="bp-groups-parent" autocomplete="off">
 					<option value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php echo _x( '-- No parent --', 'The option that sets a group to be a top-level group and have no parent.', 'buddyboss' ); ?></option>
@@ -1541,6 +1541,17 @@ function bp_group_type_custom_meta_boxes() {
 	add_meta_box( 'bp-group-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_group_type_labels_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-visibility', __( 'Visibility', 'buddyboss' ), 'bp_group_type_visibility_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-short-code', __( 'Shortcode', 'buddyboss' ), 'bp_group_short_code_meta_box', null, 'normal', 'high' );
+
+	// Register meta box only if the member type is enabled.
+	if ( true === bp_member_type_enable_disable() ) {
+
+
+		$get_all_registered_member_types = bp_get_active_member_types();
+		if ( isset( $get_all_registered_member_types ) && !empty( $get_all_registered_member_types ) ) {
+			// Add meta box if member types is entered.
+			add_meta_box( 'bp-group-type-auto-join-member-type', __( 'Members of the following profile types can always join groups of this group type, even if the group is private.', 'buddyboss' ),'bp_group_type_auto_join_member_type_meta_box',null,'normal','high' );
+		}
+	}
 }
 
 /**
@@ -1630,8 +1641,7 @@ function bp_group_type_visibility_meta_box( $post ) {
  */
 function bp_group_short_code_meta_box( $post ) {
 
-	$key = get_post_meta( $post->ID, '_bp_group_type_label_name', true );
-	$key = sanitize_key( $key );
+	$key = bp_get_group_type_key( $post->ID );
 	?>
 	<p class="group-type-shortcode-wrapper">
 		<!-- Target -->
@@ -1644,6 +1654,33 @@ function bp_group_short_code_meta_box( $post ) {
 	<p><?php printf( __( 'To display all groups with the %s group type on a dedicated page, add the above shortcode to any WordPress page.', 'buddyboss' ), $post->post_title )?></p>
 
 	<?php
+}
+
+/**
+ * Function for displaying all the member types.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $post
+ */
+function bp_group_type_auto_join_member_type_meta_box( $post ) {
+
+	$get_all_registered_member_types = bp_get_active_member_types();
+
+	$get_selected_member_types = get_post_meta( $post->ID, '_bp_group_type_enabled_member_type_join', true );
+
+	foreach ( $get_all_registered_member_types as $member_type ) {
+
+		$member_type_key = bp_get_member_type_key( $member_type );
+		?>
+		<p>
+			<input type='checkbox' name='bp-member-type[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> tabindex="7" />
+			<strong><?php _e( get_the_title( $member_type ), 'buddyboss' ); ?></strong>
+		</p>
+		<?php
+
+	}
+
 }
 
 /**
@@ -1704,9 +1741,7 @@ function bp_group_type_show_data( $column, $post_id  ) {
 
 		case 'total_groups':
 
-
-			$group_key = get_post_meta( $post_id, '_bp_group_type_label_name', true );
-			$group_key = sanitize_key( $group_key );
+			$group_key = bp_get_group_type_key( $post_id );
 			$group_type_url = admin_url().'admin.php?page=bp-groups&bp-group-type='.$group_key;
 			printf(
 				__( '<a href="%s">%s</a>', 'buddyboss' ),
@@ -1856,9 +1891,12 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 	$enable_filter = isset( $data[ 'enable_filter' ] ) ? absint( $data[ 'enable_filter' ] ) : 0; //default inactive
 	$enable_remove = isset( $data[ 'enable_remove' ] ) ? absint( $data[ 'enable_remove' ] ) : 0; //default inactive
 
+	$member_type = $_POST['bp-member-type'];
+
 	update_post_meta( $post_id, '_bp_group_type_key', $key );
 	update_post_meta( $post_id, '_bp_group_type_label_name', $label_name );
 	update_post_meta( $post_id, '_bp_group_type_label_singular_name', $singular_name );
 	update_post_meta( $post_id, '_bp_group_type_enable_filter', $enable_filter );
 	update_post_meta( $post_id, '_bp_group_type_enable_remove', $enable_remove );
+	update_post_meta( $post_id, '_bp_group_type_enabled_member_type_join', $member_type );
 }

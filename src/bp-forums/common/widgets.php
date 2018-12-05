@@ -559,7 +559,8 @@ class BBP_Forums_Widget extends WP_Widget {
 		// bbp_pre_get_posts_normalize_forum_visibility action and function.
 		$widget_query = new WP_Query( array(
 			'post_type'           => bbp_get_forum_post_type(),
-			'post_parent'         => $settings['parent_forum'],
+			//'post_parent'         => $settings['parent_forum'],
+            'post_parent'         => 0,
 			'post_status'         => bbp_get_public_status_id(),
 			'posts_per_page'      => get_option( '_bbp_forums_per_page', 50 ),
 			'ignore_sticky_posts' => true,
@@ -579,11 +580,35 @@ class BBP_Forums_Widget extends WP_Widget {
 			echo $args['before_title'] . $settings['title'] . $args['after_title'];
 		} ?>
 
-		<ul>
+		<ul class="bb-sidebar-forums">
 
 			<?php while ( $widget_query->have_posts() ) : $widget_query->the_post(); ?>
 
-				<li><a class="bbp-forum-title" href="<?php bbp_forum_permalink( $widget_query->post->ID ); ?>"><?php bbp_forum_title( $widget_query->post->ID ); ?></a></li>
+				<li>
+                    <a class="bbp-forum-title" href="<?php bbp_forum_permalink( $widget_query->post->ID ); ?>"><?php bbp_forum_title( $widget_query->post->ID ); ?></a>
+                    <span class="topics-count">
+                        <?php 
+                        $topics_count = bbp_get_forum_topic_count( $widget_query->post->ID );
+                        echo $topics_count;
+                        ?>
+                    </span>
+                    <?php
+    				$r = array(
+    						'before'              => '<ul class="bb-sidebar-forums">',
+                            'after'               => '</ul>',
+                            'link_before'         => '<li class="bbp-sub-forum">',
+                            'link_after'          => '</li>',
+    						'count_before'      => ' (',
+    						'count_after'       => ')',
+    						'count_sep'         => ', ',
+    						'separator'         => ' ',
+    						'forum_id'          => $widget_query->post->ID,
+    						'show_topic_count'  => false,
+    						'show_reply_count'  => false,
+    					);
+    
+    				bbp_list_forums($r); ?>
+                </li>
 
 			<?php endwhile; ?>
 

@@ -406,8 +406,7 @@ function bp_has_groups( $args = '' ) {
 		'update_admin_cache' => bp_is_groups_directory() || bp_is_user_groups(),
 	), 'has_groups' );
 
-	// Setup the Groups template global.
-	$groups_template = new BP_Groups_Template( array(
+	$args = array(
 		'type'               => $r['type'],
 		'order'              => $r['order'],
 		'orderby'            => $r['orderby'],
@@ -428,7 +427,20 @@ function bp_has_groups( $args = '' ) {
 		'parent_id'          => $r['parent_id'],
 		'update_meta_cache'  => (bool) $r['update_meta_cache'],
 		'update_admin_cache' => (bool) $r['update_admin_cache'],
-	) );
+	);
+
+
+	if ( isset( $_POST['template'] ) && 'group_subgroups' === $_POST['template'] ) {
+		$descendant_groups   = bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() );
+		$ids                 = wp_list_pluck( $descendant_groups, 'id' );
+		$args['include']     = $ids;
+		$args['slug']        = '';
+		$args['type']        = '';
+		$args['show_hidden'] = true;
+	}
+
+	// Setup the Groups template global.
+	$groups_template = new BP_Groups_Template( $args );
 
 	/**
 	 * Filters whether or not there are groups to iterate over for the groups loop.
@@ -686,14 +698,23 @@ function bp_get_group_type( $group = false ) {
 		$group_type = bp_groups_get_group_type_object( $group_type )->labels['name'];
 
 		if ( 'public' == $group->status ) {
-			$string = isset( $group_type ) ? 'Public / '. $group_type  : 'Public Group';
-			$type = __( $string, 'buddyboss' );
+
+			$group_visibility = __( 'Public', 'buddyboss' );
+			$group_type       = __( $group_type, 'buddyboss' );
+			$type = isset( $group_type ) ? '<span class="group-visibility public">'.$group_visibility.'</span> <span class="type-separator">/</span> <span class="group-type">'.$group_type.'</span>'  : '<span class="group-visibility public">Public Group</span>';
+
 		} elseif ( 'hidden' == $group->status ) {
-			$string = isset( $group_type ) ? 'Hidden / '. $group_type  : 'Hidden Group';
-			$type = __( $string, 'buddyboss' );
+
+			$group_visibility = __( 'Hidden', 'buddyboss' );
+			$group_type       = __( $group_type, 'buddyboss' );
+			$type = isset( $group_type ) ? '<span class="group-visibility hidden">'.$group_visibility.'</span> <span class="type-separator">/</span> <span class="group-type">'.$group_type.'</span>'  : '<span class="group-visibility hidden">Hidden Group</span>';
+
 		} elseif ( 'private' == $group->status ) {
-			$string = isset( $group_type ) ? 'Private / '. $group_type  : 'Private Group';
-			$type = __( $string, 'buddyboss' );
+
+			$group_visibility = __( 'Private', 'buddyboss' );
+			$group_type       = __( $group_type, 'buddyboss' );
+			$type = isset( $group_type ) ? '<span class="group-visibility private">'.$group_visibility.'</span> <span class="type-separator">/</span> <span class="group-type">'.$group_type.'</span>'  : '<span class="group-visibility private">Private Group</span>';
+
 		} else {
 			$type = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
 		}
@@ -701,11 +722,11 @@ function bp_get_group_type( $group = false ) {
 	} else {
 
 		if ( 'public' == $group->status ) {
-			$type = __( "Public Group", 'buddyboss' );
+			$type = '<span class="group-visibility public">' . __( "Public Group", 'buddyboss' ) . '</span>';
 		} elseif ( 'hidden' == $group->status ) {
-			$type = __( "Hidden Group", 'buddyboss' );
+			$type = '<span class="group-visibility hidden">' . __( "Hidden Group", 'buddyboss' ) . '</span>';
 		} elseif ( 'private' == $group->status ) {
-			$type = __( "Private Group", 'buddyboss' );
+			$type ='<span class="group-visibility private">' . __( "Private Group", 'buddyboss' ) . '</span>';
 		} else {
 			$type = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
 		}
@@ -1709,6 +1730,45 @@ function bp_group_list_admins( $group = false ) {
 }
 
 /**
+ * Output markup listing group parents.
+ *
+ * @since Buddyboss 3.1.1
+ *
+ * @param object|bool $group Optional. Group object.
+ *                           Default: current group in loop.
+ */
+function bp_group_list_parents( $group = false ) {
+	global $groups_template;
+
+	if ( empty( $group ) ) {
+		$group =& $groups_template->group;
+	}
+
+	if ( ! empty( $group->parent_id ) ) {
+		$parent_group = groups_get_group( $group->parent_id );
+		$group_type   = bp_groups_get_group_type( $group->parent_id );
+		$group_type   = bp_groups_get_group_type_object( $group_type )->labels['name'] ?: esc_html__( 'Subgroup of', 'buddyboss' );
+		?>
+		<dl class="parents-lists">
+			<dt class="parents-title"><?php echo $group_type; ?></dt>
+			<dd class="group-list parent">
+				<ul id="group-parents">
+					<li>
+						<a href="<?php bp_group_permalink( $parent_group ) ?>" class="bp-tooltip"
+						   data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ) ?>"><?php echo bp_core_fetch_avatar( array(
+								'item_id' => $parent_group->id,
+								'object'  => 'group',
+								'alt'     => sprintf( __( 'Group picture of %s', 'buddyboss' ), bp_get_group_name( $parent_group ) )
+							) ) ?></a>
+					</li>
+				</ul>
+			</dd>
+		</dl>
+
+	<?php }
+}
+
+/**
  * Output markup listing group mod.
  *
  * @since BuddyPress 1.0.0
@@ -2468,7 +2528,7 @@ function bp_get_descendent_groups( $group_id = false, $user_id = false, $context
 	$descendants = array();
 
 	// We work down the tree until no new children are found.
-	while ( $parents ) {
+	//while ( $parents ) {
 		// Fetch all child groups.
 		$child_args = array(
 			'parent_id'   => $parents,
@@ -2491,7 +2551,7 @@ function bp_get_descendent_groups( $group_id = false, $user_id = false, $context
 				$parents[] = $group->id;
 			}
 		}
-	}
+	//}
 
 	return $groups;
 }
@@ -3737,17 +3797,58 @@ function bp_group_join_button( $group = false ) {
 					// Member has not requested membership yet -
 					// show a "Request Membership" button.
 					} else {
-						$button = array(
-							'id'                => 'request_membership',
-							'component'         => 'groups',
-							'must_be_logged_in' => true,
-							'block_self'        => false,
-							'wrapper_class'     => 'group-button ' . $group->status,
-							'wrapper_id'        => 'groupbutton-' . $group->id,
-							'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
-							'link_text'         => __( 'Request Membership', 'buddyboss' ),
-							'link_class'        => 'group-button request-membership',
-						);
+
+						if ( true === bp_member_type_enable_disable() && true === bp_disable_group_type_creation() ) {
+
+							$group_type = bp_groups_get_group_type( $group->id );
+
+							$group_type_id = bp_get_group_type_post_id( $group_type );
+
+							$get_selected_member_type_join = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
+
+							$get_selected_member_type_join = ( isset( $get_selected_member_type_join ) && !empty( $get_selected_member_type_join ) ) ? $get_selected_member_type_join : array();
+
+							$get_requesting_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
+
+							if ( in_array( $get_requesting_user_member_type, $get_selected_member_type_join ) ) {
+								$button = array(
+									'id'                => 'request_membership',
+									'component'         => 'groups',
+									'must_be_logged_in' => true,
+									'block_self'        => false,
+									'wrapper_class'     => 'group-button ' . $group->status,
+									'wrapper_id'        => 'groupbutton-' . $group->id,
+									'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
+									'link_text'         => __( 'Join  this group', 'buddyboss' ),
+									'link_class'        => 'group-button request-membership',
+								);
+							} else {
+								$button = array(
+									'id'                => 'request_membership',
+									'component'         => 'groups',
+									'must_be_logged_in' => true,
+									'block_self'        => false,
+									'wrapper_class'     => 'group-button ' . $group->status,
+									'wrapper_id'        => 'groupbutton-' . $group->id,
+									'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
+									'link_text'         => __( 'Request Membership', 'buddyboss' ),
+									'link_class'        => 'group-button request-membership',
+								);
+							}
+
+						} else {
+							$button = array(
+								'id'                => 'request_membership',
+								'component'         => 'groups',
+								'must_be_logged_in' => true,
+								'block_self'        => false,
+								'wrapper_class'     => 'group-button ' . $group->status,
+								'wrapper_id'        => 'groupbutton-' . $group->id,
+								'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
+								'link_text'         => __( 'Request Membership', 'buddyboss' ),
+								'link_class'        => 'group-button request-membership',
+							);
+						}
 					}
 
 					break;

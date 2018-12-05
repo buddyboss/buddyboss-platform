@@ -8,6 +8,11 @@
 ?>
 <div id="item-actions" class="group-item-actions">
 
+	<?php if ( bp_enable_group_hierarchies() ): ?>
+		<h2 class="bp-screen-reader-text"><?php esc_html_e( 'Group Parent', 'buddyboss' ); ?></h2>
+		<?php bp_group_list_parents(); ?>
+	<?php endif; ?>
+
 	<?php if ( bp_current_user_can( 'groups_access_group' ) ) : ?>
 
 		<h2 class="bp-screen-reader-text"><?php esc_html_e( 'Group Organizers', 'buddyboss' ); ?></h2>

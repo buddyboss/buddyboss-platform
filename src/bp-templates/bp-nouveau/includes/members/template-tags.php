@@ -601,7 +601,7 @@ function bp_nouveau_member_meta() {
 	/**
 	 * Get the member meta.
 	 *
-	 * @since BuddyPress 3.0.0
+	 * @since 3.0.0
 	 *
 	 * @return array The member meta.
 	 */
@@ -623,9 +623,12 @@ function bp_nouveau_member_meta() {
 		if ( empty( $member->template_meta ) ) {
 			// It's a single user's header
 			if ( ! $is_loop ) {
-
 				$register_date = date('F Y', strtotime(get_userdata(bp_displayed_user_id( ))->user_registered));
-				echo '<span class="activity">'. sprintf( __( 'Joined %s', 'buddyboss' ), $register_date ).'</span>';
+
+				$meta['last_activity'] = sprintf(
+					'<span class="activity">' . __( 'Joined %s', 'buddyboss' ) . '</span>',
+					esc_html( $register_date )
+				);
 
 			// We're in the members loop
 			} else {
@@ -644,7 +647,7 @@ function bp_nouveau_member_meta() {
 			/**
 			 * Filter to add/remove Member meta.
 			 *
-			 * @since BuddyPress 3.0.0
+			 * @since 3.0.0
 			 *
 			 * @param array  $meta    The list of meta to output.
 			 * @param object $member  The member object

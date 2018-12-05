@@ -450,7 +450,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			}
 
 			if ( 'groups' === $object ) {
-				$supported_objects = array_merge( $supported_objects, array( 'group_members', 'group_requests' ) );
+				$supported_objects = array_merge( $supported_objects, array( 'group_members', 'group_requests', 'group_subgroups' ) );
 			}
 
 			$object_nonces[ $object ] = wp_create_nonce( 'bp_nouveau_' . $object );

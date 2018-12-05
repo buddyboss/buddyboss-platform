@@ -342,7 +342,7 @@ body.no-js {
 			appearance: none;
 			border: 0;
 			cursor: pointer;
-			margin-right: -25px;
+			//margin-right: -25px;
 			padding: 5px 25px 5px $marg-sml;
 			position: relative;
 			z-index: 1;
@@ -358,7 +358,9 @@ body.no-js {
 		span.select-arrow {
 			font-size: 10px;
 			display: inline-block;
-			position: relative;
+			position: absolute;
+			right: 8px;
+			top: 10px;
 			z-index: 0;
 
 			&:before {
@@ -379,7 +381,14 @@ body.no-js {
 	.subnav-filters {
 
 		.select-wrap {
-			margin-right: 12px;
+			position: relative;
+		}
+
+		@include medium-small-up() {
+
+			.select-wrap {
+				margin-right: 12px;
+			}
 		}
 	}
 
