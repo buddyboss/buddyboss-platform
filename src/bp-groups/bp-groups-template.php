@@ -701,19 +701,19 @@ function bp_get_group_type( $group = false ) {
 
 			$group_visibility = __( 'Public', 'buddyboss' );
 			$group_type       = __( $group_type, 'buddyboss' );
-			$type = isset( $group_type ) ? '<span class="group-visibility">'.$group_visibility.'</span> / <span class="group-type">'.$group_type.'</span>'  : '<span class="group-visibility">Public Group</span>';
+			$type = isset( $group_type ) ? '<span class="group-visibility public">'.$group_visibility.'</span> <span class="type-separator">/</span> <span class="group-type">'.$group_type.'</span>'  : '<span class="group-visibility public">Public Group</span>';
 
 		} elseif ( 'hidden' == $group->status ) {
 
 			$group_visibility = __( 'Hidden', 'buddyboss' );
 			$group_type       = __( $group_type, 'buddyboss' );
-			$type = isset( $group_type ) ? '<span class="group-visibility">'.$group_visibility.'</span> / <span class="group-type">'.$group_type.'</span>'  : '<span class="group-visibility">Hidden Group</span>';
+			$type = isset( $group_type ) ? '<span class="group-visibility hidden">'.$group_visibility.'</span> <span class="type-separator">/</span> <span class="group-type">'.$group_type.'</span>'  : '<span class="group-visibility hidden">Hidden Group</span>';
 
 		} elseif ( 'private' == $group->status ) {
 
 			$group_visibility = __( 'Private', 'buddyboss' );
 			$group_type       = __( $group_type, 'buddyboss' );
-			$type = isset( $group_type ) ? '<span class="group-visibility">'.$group_visibility.'</span> / <span class="group-type">'.$group_type.'</span>'  : '<span class="group-visibility">Private Group</span>';
+			$type = isset( $group_type ) ? '<span class="group-visibility private">'.$group_visibility.'</span> <span class="type-separator">/</span> <span class="group-type">'.$group_type.'</span>'  : '<span class="group-visibility private">Private Group</span>';
 
 		} else {
 			$type = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
@@ -722,11 +722,11 @@ function bp_get_group_type( $group = false ) {
 	} else {
 
 		if ( 'public' == $group->status ) {
-			$type = __( "Public Group", 'buddyboss' );
+			$type = '<span class="group-visibility public">' . __( "Public Group", 'buddyboss' ) . '</span>';
 		} elseif ( 'hidden' == $group->status ) {
-			$type = __( "Hidden Group", 'buddyboss' );
+			$type = '<span class="group-visibility hidden">' . __( "Hidden Group", 'buddyboss' ) . '</span>';
 		} elseif ( 'private' == $group->status ) {
-			$type = __( "Private Group", 'buddyboss' );
+			$type ='<span class="group-visibility private">' . __( "Private Group", 'buddyboss' ) . '</span>';
 		} else {
 			$type = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
 		}
