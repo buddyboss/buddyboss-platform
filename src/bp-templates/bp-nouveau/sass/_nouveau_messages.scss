@@ -446,3 +446,11 @@ input#send-to-input {
 		color: #333;
 	}
 }
+
+.single.messages.view {
+
+	.bp-messages-filters,
+	.bp-messages-threads-list {
+		display: none;
+	}
+}

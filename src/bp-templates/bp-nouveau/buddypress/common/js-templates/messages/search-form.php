@@ -10,7 +10,7 @@
 	<label for="user_messages_search" class="bp-screen-reader-text">
 		<?php _e( 'Search Messages', 'buddyboss' ); ?>
 	</label>
-	<input type="search" id="user_messages_search" placeholder="<?php echo esc_attr_x( 'Search', 'search placeholder text', 'buddyboss' ); ?>"/>
+	<input type="search" id="user_messages_search" placeholder="<?php echo esc_attr_x( 'Search Messages', 'search placeholder text', 'buddyboss' ); ?>"/>
 	<button type="submit" id="user_messages_search_submit">
 		<span class="dashicons dashicons-search" aria-hidden="true"></span>
 		<span class="bp-screen-reader-text"><?php echo esc_html_x( 'Search', 'button', 'buddyboss' ); ?></span>
