@@ -240,14 +240,6 @@ class BP_Settings_Component extends BP_Component {
 				'position' => 10
 			);
 
-			$wp_admin_nav[] = array(
-				'parent' => 'my-account-' . $this->id,
-				'id'     => 'my-account-' . $this->id . '-export',
-				'title'  => __( 'Export Data', 'buddyboss' ),
-				'href'   => trailingslashit( $settings_link . 'export/' ),
-				'position' => 50
-			);
-
 			// Notifications - only add the tab when there is something to display there.
 			if ( has_action( 'bp_notification_settings' ) ) {
 				$wp_admin_nav[] = array(
@@ -258,6 +250,14 @@ class BP_Settings_Component extends BP_Component {
 					'position' => 20
 				);
 			}
+
+			$wp_admin_nav[] = array(
+				'parent' => 'my-account-' . $this->id,
+				'id'     => 'my-account-' . $this->id . '-export',
+				'title'  => __( 'Export Data', 'buddyboss' ),
+				'href'   => trailingslashit( $settings_link . 'export/' ),
+				'position' => 50
+			);
 
 			// Delete Account
 			if ( !bp_current_user_can( 'bp_moderate' ) && ! bp_core_get_root_option( 'bp-disable-account-deletion' ) ) {
