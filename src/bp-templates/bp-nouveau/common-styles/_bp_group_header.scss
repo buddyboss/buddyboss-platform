@@ -16,6 +16,7 @@
 	// generic members with elevated access.
 	.moderators-lists {
 		margin-top: 0;
+		display: table-cell;
 
 		.moderators-title {
 
@@ -48,6 +49,42 @@
 			width: 30px;
 		}
 	} // close moderators-lists
+
+	.parent-list {
+		padding: 0 1em 0 0;
+		display: table-cell;
+
+		.parent-title {
+
+			@include font-size(14);
+		}
+
+		.group-list {
+			margin: 0 0 $marg-xsml;
+
+			ul:after {
+				clear: both;
+				content: "";
+				display: table;
+			}
+
+			li {
+				display: inline-block;
+				float: none;
+				margin: 4px 0 0 4px;
+			}
+		}
+
+		img.avatar {
+
+			@include box-shadow-none();
+			float: none;
+			height: 30px;
+			margin: 0;
+			max-width: 100%;
+			width: 30px;
+		}
+	}
 
 	.desc-wrap {
 		background: $light-grey;
@@ -86,6 +123,7 @@
 			margin-left: 15px;
 			text-align: right;
 			max-width: 25%;
+			display: table;
 		}
 
 		.groups-meta {

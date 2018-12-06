@@ -1227,7 +1227,7 @@ function bp_nouveau_nav_has_count() {
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'members' === $nav_item->slug ) {
 	    $count = 0 !== (int) groups_get_current_group()->total_member_count;
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'subgroups' === $nav_item->slug ) {
-	    $count = 0 !== (int) count( bp_get_descendent_groups() );
+		$count = 0 !== (int) count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) );
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && ! empty( $nav_item->primary ) ) {
 		$count = (bool) strpos( $nav_item->name, '="count"' );
 	}
@@ -1272,7 +1272,7 @@ function bp_nouveau_nav_count() {
 			$count = groups_get_current_group()->total_member_count;
 
 		} elseif ( 'groups' === $bp_nouveau->displayed_nav &&  'subgroups' === $nav_item->slug  ) {
-			$count = count( bp_get_descendent_groups() );
+			$count = count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) );
 		} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'leaders' == $nav_item->slug ) {
 			$group  = groups_get_current_group();
 			$admins = groups_get_group_admins( $group->id );

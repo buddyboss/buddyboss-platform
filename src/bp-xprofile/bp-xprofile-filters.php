@@ -658,13 +658,8 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $vlaue, $user_
 
 	// cannot have 2 continued special characters
 	if ( preg_match( '/([-_\.]{2})/', $vlaue ) ) {
-		return __( '"-", "_" and "." cannot be repeat twice in nickname.', 'buddyboss' );
+		return __( '"-", "_" and "." cannot be repeated twice in nickname.', 'buddyboss' );
 	}
-
-	// must be longer then 6 characters
-	// if ( strlen( $value ) < 6 ) {
-	// 	return __( 'Nickname must be at least 6 characters.', 'buddyboss' );
-	// }
 
 	// must be shorter then 20 characters
 	$nickname_length = apply_filters( 'xprofile_nickname_max_length', 32 );

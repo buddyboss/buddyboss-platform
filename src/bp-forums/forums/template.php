@@ -45,7 +45,7 @@ function bbp_forum_post_type() {
 function bbp_get_forum_post_type_labels() {
 	return apply_filters( 'bbp_get_forum_post_type_labels', array(
 		'name'               => __( 'Forums',                   'buddyboss' ),
-		'menu_name'          => __( 'Forums',                   'buddyboss' ),
+		'menu_name'          => __( 'All Forums',               'buddyboss' ),
 		'singular_name'      => __( 'Forum',                    'buddyboss' ),
 		'all_items'          => __( 'All Forums',               'buddyboss' ),
 		'add_new'            => __( 'New Forum',                'buddyboss' ),

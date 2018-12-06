@@ -37,12 +37,12 @@ $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 		<?php if ( ! bp_nouveau_groups_front_page_description() ) : ?>
 			<div id="item-header-content">
 
-				<p class="highlight group-status bp-tooltip" data-tooltip-length="large" data-bp-tooltip="<?php echo esc_html( bp_get_group_status_description() ); ?>"><strong><?php echo esc_html( bp_nouveau_group_meta()->status ); ?></strong></p>
+				<p class="highlight group-status bp-tooltip" data-tooltip-length="large" data-bp-tooltip="<?php echo esc_html( bp_get_group_status_description() ); ?>"><strong><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></strong></p>
 				<p class="activity">
 					<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>"><?php echo esc_html( bp_get_group_member_count() ); ?></a>
 				</p>
 
-				<?php echo bp_nouveau_group_meta()->group_type_list; ?>
+				<?php echo isset( bp_nouveau_group_meta()->group_type_list ) ? bp_nouveau_group_meta()->group_type_list : ''; ?>
 				<?php bp_nouveau_group_hook( 'before', 'header_meta' ); ?>
 
 				<?php if ( bp_nouveau_group_has_meta_extra() ) : ?>

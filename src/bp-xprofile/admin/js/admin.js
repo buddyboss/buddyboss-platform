@@ -25,19 +25,20 @@ function add_option(forWhat) {
 
 	grabber.setAttribute( 'class', 'bp-option-icon grabber');
 
-	newOption.setAttribute( 'type', 'text' );
-	newOption.setAttribute( 'name', forWhat + '_option[' + theId + ']' );
-	newOption.setAttribute( 'id', forWhat + '_option' + theId );
+	if ( forWhat !== 'gender') {
+		newOption.setAttribute('type', 'text');
+		newOption.setAttribute('name', forWhat + '_option[' + theId + ']');
+		newOption.setAttribute('id', forWhat + '_option' + theId);
+	} else {
+		newOption.setAttribute('type', 'text');
+		newOption.setAttribute('name', forWhat + '_option[' + theId + '_other]');
+		newOption.setAttribute('id', forWhat + '_option' + theId);
+	}
 
 	if ( forWhat === 'checkbox' || forWhat === 'multiselectbox' ) {
 		isDefault.setAttribute( 'type', 'checkbox' );
 		isDefault.setAttribute( 'name', 'isDefault_' + forWhat + '_option[' + theId + ']' );
-	} else {
-		isDefault.setAttribute( 'type', 'radio' );
-		isDefault.setAttribute( 'name', 'isDefault_' + forWhat + '_option' );
 	}
-
-	isDefault.setAttribute( 'value', theId );
 
 	toDelete.setAttribute( 'href', 'javascript:hide("' + forWhat + '_div' + theId + '")' );
 	toDelete.setAttribute( 'class', 'delete' );
@@ -46,11 +47,16 @@ function add_option(forWhat) {
 	toDeleteWrap.setAttribute( 'class', 'delete-button' );
 	toDeleteWrap.appendChild( toDelete );
 
-	label.appendChild( document.createTextNode( ' ' ) );
-	label.appendChild( isDefault );
-	label.appendChild( document.createTextNode( ' ' ) );
-	label.appendChild( txt1 );
-	label.appendChild( document.createTextNode( ' ' ) );
+	if ( forWhat !== 'gender') {
+		label.appendChild(document.createTextNode(' '));
+		label.appendChild(isDefault);
+		label.appendChild(document.createTextNode(' '));
+		label.appendChild(txt1);
+		label.appendChild(document.createTextNode(' '));
+	} else {
+		txt1         = document.createTextNode( ' Other' );
+		label.appendChild(txt1);
+	}
 
 	newDiv.appendChild( grabber );
 	newDiv.appendChild( document.createTextNode( ' ' ) );
@@ -78,24 +84,82 @@ function add_option(forWhat) {
 function show_options( forWhat ) {
 	var do_autolink;
 
-	for ( var i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
-		document.getElementById( XProfileAdmin.do_settings_section_field_types[i] ).style.display = 'none';
-	}
+	if ( forWhat === 'gender' ) {
 
-	if ( XProfileAdmin.do_settings_section_field_types.indexOf( forWhat ) >= 0 ) {
-		document.getElementById( forWhat ).style.display = '';
-		do_autolink = 'on';
+		jQuery.ajax({
+			url : ajaxurl,
+			type : 'post',
+			data : {
+				action : 'xprofile_check_gender_added_previously',
+				type   : 'gender'
+			},
+			success : function( response ) {
+
+				if ( 'added' === response ) {
+					alert( 'You can only have one instance of the "Gender" profile field on the website.');
+					jQuery('#fieldtype').val('');
+					jQuery('#fieldtype').val('textbox');
+					forWhat = 'textbox';
+					for ( var i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
+						document.getElementById( XProfileAdmin.do_settings_section_field_types[i] ).style.display = 'none';
+					}
+
+					if ( XProfileAdmin.do_settings_section_field_types.indexOf( forWhat ) >= 0 ) {
+						document.getElementById( forWhat ).style.display = '';
+						do_autolink = 'on';
+					} else {
+						jQuery( '#do-autolink' ).val( '' );
+						do_autolink = '';
+					}
+
+					// Only overwrite the do_autolink setting if no setting is saved in the database.
+					if ( '' === XProfileAdmin.do_autolink ) {
+						jQuery( '#do-autolink' ).val( do_autolink );
+					}
+
+					jQuery( document ).trigger( 'bp-xprofile-show-options', forWhat );
+				} else {
+					for ( var i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
+						document.getElementById( XProfileAdmin.do_settings_section_field_types[i] ).style.display = 'none';
+					}
+
+					if ( XProfileAdmin.do_settings_section_field_types.indexOf( forWhat ) >= 0 ) {
+						document.getElementById( forWhat ).style.display = '';
+						do_autolink = 'on';
+					} else {
+						jQuery( '#do-autolink' ).val( '' );
+						do_autolink = '';
+					}
+
+					// Only overwrite the do_autolink setting if no setting is saved in the database.
+					if ( '' === XProfileAdmin.do_autolink ) {
+						jQuery( '#do-autolink' ).val( do_autolink );
+					}
+
+					jQuery( document ).trigger( 'bp-xprofile-show-options', forWhat );
+				}
+			}
+		});
 	} else {
-		jQuery( '#do-autolink' ).val( '' );
-		do_autolink = '';
-	}
+		for ( var i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
+			document.getElementById( XProfileAdmin.do_settings_section_field_types[i] ).style.display = 'none';
+		}
 
-	// Only overwrite the do_autolink setting if no setting is saved in the database.
-	if ( '' === XProfileAdmin.do_autolink ) {
-		jQuery( '#do-autolink' ).val( do_autolink );
-	}
+		if ( XProfileAdmin.do_settings_section_field_types.indexOf( forWhat ) >= 0 ) {
+			document.getElementById( forWhat ).style.display = '';
+			do_autolink = 'on';
+		} else {
+			jQuery( '#do-autolink' ).val( '' );
+			do_autolink = '';
+		}
 
-	jQuery( document ).trigger( 'bp-xprofile-show-options', forWhat );
+		// Only overwrite the do_autolink setting if no setting is saved in the database.
+		if ( '' === XProfileAdmin.do_autolink ) {
+			jQuery( '#do-autolink' ).val( do_autolink );
+		}
+
+		jQuery( document ).trigger( 'bp-xprofile-show-options', forWhat );
+	}
 }
 
 function hide( id ) {

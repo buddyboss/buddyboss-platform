@@ -92,7 +92,15 @@
 							}
 							$name    = bp_get_member_type_key( $member_type_id );
 							$type_id = bp_member_type_term_taxonomy_id( $name );
-							$count   = $count - count( bp_member_type_by_type( $type_id ) );
+							$exclude_user_list = bp_member_type_by_type( $type_id );
+							$final_exclude_list = array();
+							foreach ($exclude_user_list as $user ) {
+								$last_activity = bp_get_user_last_activity( $user );
+								if ( '' !== $last_activity ) {
+									$final_exclude_list[] = $user;
+								}
+							}
+							$count   = $count - count( $final_exclude_list );
 						}
 					}
 				} else {

@@ -324,7 +324,7 @@ function bp_nouveau_group_setup_nav() {
 		$bp = buddypress();
 
 		$bp->groups->nav->edit_nav(
-			array( 'name' => _x( 'Invite', 'Group invitations menu title', 'buddyboss' ) ),
+			array( 'name' => _x( 'Send Invites', 'Group invitations menu title', 'buddyboss' ) ),
 			'send-invites',
 			bp_get_current_group_slug()
 		);
@@ -335,7 +335,7 @@ function bp_nouveau_group_setup_nav() {
 		$group_link    = bp_get_group_permalink( $current_group );
 
 		bp_core_new_subnav_item( array(
-			'name'            => _x( 'Invite', 'Group invitations menu title', 'buddyboss' ),
+			'name'            => _x( 'Send Invites', 'Group invitations menu title', 'buddyboss' ),
 			'slug'            => 'send-invites',
 			'parent_url'      => $group_link,
 			'parent_slug'     => $current_group->slug,
@@ -831,18 +831,18 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 			'type'       => 'select',
 			'choices'    => bp_nouveau_customizer_grid_choices(),
 		),
-		'group_dir_layout' => array(
-			'label'      => __( 'Use column navigation for the Groups directory.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_dir_layout',
-			'settings'   => 'bp_nouveau_appearance[groups_dir_layout]',
-			'type'       => 'checkbox',
-		),
-		'group_dir_tabs' => array(
-			'label'      => __( 'Use tab styling for Groups directory navigation.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_dir_layout',
-			'settings'   => 'bp_nouveau_appearance[groups_dir_tabs]',
-			'type'       => 'checkbox',
-		),
+//		'group_dir_layout' => array(
+//			'label'      => __( 'Use column navigation for the Groups directory.', 'buddyboss' ),
+//			'section'    => 'bp_nouveau_dir_layout',
+//			'settings'   => 'bp_nouveau_appearance[groups_dir_layout]',
+//			'type'       => 'checkbox',
+//		),
+//		'group_dir_tabs' => array(
+//			'label'      => __( 'Use tab styling for Groups directory navigation.', 'buddyboss' ),
+//			'section'    => 'bp_nouveau_dir_layout',
+//			'settings'   => 'bp_nouveau_appearance[groups_dir_tabs]',
+//			'type'       => 'checkbox',
+//		),
 	) );
 }
 

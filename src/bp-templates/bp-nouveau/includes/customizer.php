@@ -60,12 +60,12 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'priority'    => 70,
 			'description' => __( 'Set the number of columns to use for grid views.', 'buddyboss' ),
 		),
-		'bp_nouveau_dir_layout' => array(
-			'title'       => __( 'Directory layouts', 'buddyboss' ),
-			'panel'       => 'bp_nouveau_panel',
-			'priority'    => 80,
-			'description' => __( 'Select the layout style for directory content &amp; navigation.', 'buddyboss' ),
-		),
+//		'bp_nouveau_dir_layout' => array(
+//			'title'       => __( 'Directory layouts', 'buddyboss' ),
+//			'panel'       => 'bp_nouveau_panel',
+//			'priority'    => 80,
+//			'description' => __( 'Select the layout style for directory content &amp; navigation.', 'buddyboss' ),
+//		),
 	) );
 
 	// Add the sections to the customizer
@@ -260,18 +260,18 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'type'       => 'select',
 			'choices'    => bp_nouveau_customizer_grid_choices(),
 		),
-		'members_dir_layout' => array(
-			'label'      => __( 'Use column navigation for the Members directory.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_dir_layout',
-			'settings'   => 'bp_nouveau_appearance[members_dir_layout]',
-			'type'       => 'checkbox',
-		),
-		'members_dir_tabs' => array(
-			'label'      => __( 'Use tab styling for Members directory navigation.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_dir_layout',
-			'settings'   => 'bp_nouveau_appearance[members_dir_tabs]',
-			'type'       => 'checkbox',
-		),
+//		'members_dir_layout' => array(
+//			'label'      => __( 'Use column navigation for the Members directory.', 'buddyboss' ),
+//			'section'    => 'bp_nouveau_dir_layout',
+//			'settings'   => 'bp_nouveau_appearance[members_dir_layout]',
+//			'type'       => 'checkbox',
+//		),
+//		'members_dir_tabs' => array(
+//			'label'      => __( 'Use tab styling for Members directory navigation.', 'buddyboss' ),
+//			'section'    => 'bp_nouveau_dir_layout',
+//			'settings'   => 'bp_nouveau_appearance[members_dir_tabs]',
+//			'type'       => 'checkbox',
+//		),
 	);
 
 	/**

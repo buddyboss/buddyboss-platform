@@ -646,7 +646,7 @@ class BP_Groups_Component extends BP_Component {
 			}
 
 			if ( bp_enable_group_hierarchies() ) {
-				$descendant_groups = bp_get_descendent_groups();
+				$descendant_groups = bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() );
 				if ( $total_descendant = count( $descendant_groups ) ) {
 					$sub_nav[] = array(
 						'name'            => sprintf( _x( 'Subgroups', 'My Group screen nav', 'buddyboss' ), '<span>' . number_format( $total_descendant ) . '</span>' ),

@@ -191,22 +191,26 @@ body.buddypress article.page > .entry-header .entry-title {
   }
 }
 
-.buddypress-wrap .bp-tables-user th {
+.buddypress-wrap .bp-tables-user th,
+.buddypress-wrap .bp-tables-report th {
   font-size: 13px;
 }
 
 @media screen and (min-width: 46.8em) {
-  .buddypress-wrap .bp-tables-user th {
+  .buddypress-wrap .bp-tables-user th,
+  .buddypress-wrap .bp-tables-report th {
     font-size: 16px;
   }
 }
 
-.buddypress-wrap .bp-tables-user td {
+.buddypress-wrap .bp-tables-user td,
+.buddypress-wrap .bp-tables-report td {
   font-size: 12px;
 }
 
 @media screen and (min-width: 46.8em) {
-  .buddypress-wrap .bp-tables-user td {
+  .buddypress-wrap .bp-tables-user td,
+  .buddypress-wrap .bp-tables-report td {
     font-size: 14px;
   }
 }
@@ -2342,6 +2346,7 @@ body.no-js .single-item-header .js-self-profile-button {
 
 .groups-header .moderators-lists {
   margin-top: 0;
+  display: table-cell;
 }
 
 .groups-header .moderators-lists .moderators-title {
@@ -2365,6 +2370,42 @@ body.no-js .single-item-header .js-self-profile-button {
 }
 
 .groups-header .moderators-lists img.avatar {
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  float: none;
+  height: 30px;
+  margin: 0;
+  max-width: 100%;
+  width: 30px;
+}
+
+.groups-header .parent-list {
+  padding: 0 0 0 1em;
+  display: table-cell;
+}
+
+.groups-header .parent-list .parent-title {
+  font-size: 14px;
+}
+
+.groups-header .parent-list .group-list {
+  margin: 0 0 5px;
+}
+
+.groups-header .parent-list .group-list ul:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.groups-header .parent-list .group-list li {
+  display: inline-block;
+  float: none;
+  margin: 4px 4px 0 0;
+}
+
+.groups-header .parent-list img.avatar {
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -2406,6 +2447,7 @@ body.no-js .single-item-header .js-self-profile-button {
     margin-right: 15px;
     text-align: left;
     max-width: 25%;
+    display: table;
   }
   .groups-header .groups-meta {
     clear: both;
@@ -2474,6 +2516,14 @@ body.buddypress.bp-user #page #primary .entry-header {
 .single-item.group-members .item-body .filters:not(.no-subnav) {
   border-top: 5px solid #eaeaea;
   padding-top: 1em;
+}
+
+.single-item.subgroups .item-body #subnav-filters .subnav-search {
+  display: none;
+}
+
+.single-item.subgroups .item-body #subnav-filters #dir-filters {
+  display: none;
 }
 
 /**
@@ -3257,6 +3307,8 @@ body.register .buddypress-wrap .page ul {
 #message-threads li .thread-avatar img.avatar {
   float: right;
   margin: 5px 0 0 10px;
+  max-width: 80px;
+  width: 80%;
 }
 
 .bp-messages-content .actions {
@@ -3949,12 +4001,14 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 *-------------------------------------------------------------------------------
 */
 .buddypress-wrap .bp-tables-user,
+.buddypress-wrap .bp-tables-report,
 .buddypress-wrap table.wp-profile-fields,
 .buddypress-wrap table.forum {
   width: 100%;
 }
 
 .buddypress-wrap .bp-tables-user thead tr,
+.buddypress-wrap .bp-tables-report thead tr,
 .buddypress-wrap table.wp-profile-fields thead tr,
 .buddypress-wrap table.forum thead tr {
   background: none;
@@ -3962,6 +4016,7 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 }
 
 .buddypress-wrap .bp-tables-user tbody tr,
+.buddypress-wrap .bp-tables-report tbody tr,
 .buddypress-wrap table.wp-profile-fields tbody tr,
 .buddypress-wrap table.forum tbody tr {
   background: #fafafa;
@@ -3969,6 +4024,8 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 
 .buddypress-wrap .bp-tables-user tr th,
 .buddypress-wrap .bp-tables-user tr td,
+.buddypress-wrap .bp-tables-report tr th,
+.buddypress-wrap .bp-tables-report tr td,
 .buddypress-wrap table.wp-profile-fields tr th,
 .buddypress-wrap table.wp-profile-fields tr td,
 .buddypress-wrap table.forum tr th,
@@ -3978,6 +4035,7 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 }
 
 .buddypress-wrap .bp-tables-user tr td.label,
+.buddypress-wrap .bp-tables-report tr td.label,
 .buddypress-wrap table.wp-profile-fields tr td.label,
 .buddypress-wrap table.forum tr td.label {
   border-left: 1px solid #eaeaea;
@@ -3986,6 +4044,7 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 }
 
 .buddypress-wrap .bp-tables-user tr.alt td,
+.buddypress-wrap .bp-tables-report tr.alt td,
 .buddypress-wrap table.wp-profile-fields tr.alt td {
   background: #fafafa;
 }
@@ -5079,7 +5138,7 @@ button[data-bp-close]:hover {
 }
 
 .grid > li .list-wrap .list-title {
-  padding: 0.7em;
+  padding: 0.7em 0.7em 0;
 }
 
 .grid > li .list-wrap .update {

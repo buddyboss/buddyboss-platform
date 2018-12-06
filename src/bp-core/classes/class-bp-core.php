@@ -169,7 +169,7 @@ class BP_Core extends BP_Component {
 		 * @param array $value Array of included and optional inetegrations.
 		 */
 		$bp->available_integrations = apply_filters( 'bp_integrations', array(
-			'learndash', 'memberpress', 'eventscalendar', 'wpjobmanager'
+			'learndash', 'sample'
 		) );
 
 		$integration_dir = $bp->plugin_dir . '/bp-integrations/';

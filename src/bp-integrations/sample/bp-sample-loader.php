@@ -1,9 +1,9 @@
 <?php
 /**
- * BuddyBoss Learndash Loader.
+ * BuddyBoss Sample Integration Loader.
  *
  * @package BuddyBoss
- * @subpackage Learndash
+ * @subpackage LearnDash
  * @since BuddyBoss 3.1.1
  */
 
