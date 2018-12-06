@@ -46,7 +46,7 @@ function bp_get_default_options() {
 		// Default fullname field name. (for backward compat)
 		'bp-xprofile-fullname-field-name'      => 'Name',
 
-		'bp-display-name-format'			   => 'nickname',
+		'bp-display-name-format'			   => 'first_name',
 
 		// Enable/Disable Member Type.
 		'bp-member-type-enable-disable'         => false,
