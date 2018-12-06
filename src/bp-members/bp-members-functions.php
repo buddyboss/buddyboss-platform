@@ -3888,27 +3888,51 @@ function bp_get_user_member_type( $user_id ) {
 		$user_id = bp_displayed_user_id();
 	}
 
-	$member_type = __('Member', 'buddyboss');
+	if ( bp_is_members_directory() ) {
 
-	if ( true === bp_member_type_enable_disable() ) {
+		$member_type = __('Member', 'buddyboss');
 
-		if ( true === bp_member_type_display_on_profile() ) {
+		if ( true === bp_member_type_enable_disable() ) {
+			if ( true === bp_member_type_display_on_profile() ) {
 
-			// Get the member type.
-			$type = bp_get_member_type( $user_id );
+				// Get the member type.
+				$type = bp_get_member_type( $user_id );
 
-			// Output the
-			if ( $type_obj = bp_get_member_type_object( $type ) ) {
-				$member_type = $type_obj->labels['singular_name'];
-				$member_type = __( $member_type, 'buddyboss');
+				// Output the
+				if ( $type_obj = bp_get_member_type_object( $type ) ) {
+					$member_type = $type_obj->labels['singular_name'];
+					$member_type = __( $member_type, 'buddyboss');
+				}
+
+				$string = '<span class="bp-member-type">'.$member_type.'</span>';
+			} else {
+				$string = '<span class="bp-member-type">'.$member_type.'</span>';
 			}
-
-			$string = '<span class="bp-member-type">'.$member_type.'</span>';
 		} else {
 			$string = '<span class="bp-member-type">'.$member_type.'</span>';
 		}
 	} else {
-		$string = '<span class="bp-member-type">'.$member_type.'</span>';
+
+		if ( true === bp_member_type_enable_disable() ) {
+			if ( true === bp_member_type_display_on_profile() ) {
+
+				// Get the member type.
+				$type = bp_get_member_type( $user_id );
+
+				// Output the
+				if ( $type_obj = bp_get_member_type_object( $type ) ) {
+					$member_type = $type_obj->labels['singular_name'];
+					$member_type = __( $member_type, 'buddyboss');
+					$string = '<span class="bp-member-type">'.$member_type.'</span>';
+				} else {
+					$string = '';
+				}
+			} else {
+				$string = '';
+			}
+		} else {
+			$string = '';
+		}
 	}
 
 	return apply_filters('bp_member_type_name_string', $string, $member_type, $user_id );
