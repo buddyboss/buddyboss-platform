@@ -728,9 +728,10 @@ function xprofile_ajax_reorder_field_groups() {
 add_action( 'wp_ajax_xprofile_reorder_groups', 'xprofile_ajax_reorder_field_groups' );
 
 /**
- * Handles the reordering of field groups.
+ * Function which check the gender field previously added or not.
  *
- * @since BuddyPress 1.5.0
+ * @since BuddyBoss 3.1.1
+ *
  */
 function xprofile_check_gender_added_previously() {
 
