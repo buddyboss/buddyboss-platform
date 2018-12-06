@@ -2583,7 +2583,7 @@ function bp_add_switch_button( $user_id, $button_args = array() ) {
  * Returns a view as/back to button for a given user depending on the switching status.
  *
  * Checks to see if the admin user is already switched.  If is switched, returns
- * "Back To Admin" button; if not switched, returns "View As" button.
+ * "Back to Admin" button; if not switched, returns "View As" button.
  *
  * @param int $user_id The user ID of the person we want to switch to.
  * @param array $button_args See BP_Button class for more information.
