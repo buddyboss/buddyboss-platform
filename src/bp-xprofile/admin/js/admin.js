@@ -96,7 +96,7 @@ function show_options( forWhat ) {
 			success : function( response ) {
 
 				if ( 'added' === response ) {
-					alert( 'You have already used the gender profile field previously so you can not use twice.');
+					alert( 'You can only have one instance of the "Gender" profile field on the website.');
 					jQuery('#fieldtype').val('');
 					jQuery('#fieldtype').val('textbox');
 					forWhat = 'textbox';
