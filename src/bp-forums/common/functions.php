@@ -1110,6 +1110,7 @@ function bbp_notify_topic_subscribers( $reply_id = 0, $topic_id = 0, $forum_id =
 			'forum.url'        => $forum_url,
 			'discussion.title' => $topic_title,
 			'discussion.url'   => $topic_url,
+			'reply.id'         => $reply_id,
 			'reply.url'        => $reply_url,
 			'reply.content'    => $reply_content,
 			'poster.name'      => $reply_author_name,
@@ -1231,6 +1232,7 @@ function bbp_notify_forum_subscribers( $topic_id = 0, $forum_id = 0, $anonymous_
 		'tokens' => array(
 			'forum.title'        => $forum_title,
 			'forum.url'          => $forum_url,
+			'discussion.id'		 => $topic_id,
 			'discussion.title'   => $topic_title,
 			'discussion.url'     => $topic_url,
 			'discussion.content' => $topic_content,
