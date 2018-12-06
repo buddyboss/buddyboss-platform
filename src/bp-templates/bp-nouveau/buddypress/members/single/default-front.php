@@ -7,7 +7,7 @@
  */
 ?>
 
-<div class="member-front-page">
+<div class="member-front-page widget-area">
 
 	<?php if ( ! is_customize_preview() && bp_current_user_can( 'bp_moderate' ) && ! is_active_sidebar( 'sidebar-buddypress-members' ) ) : ?>
 
