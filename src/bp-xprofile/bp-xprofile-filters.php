@@ -650,21 +650,22 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $vlaue, $user_
 	}
 
 	$value = strtolower( $vlaue );
+	$field_name = xprofile_get_field( $field_id )->name;
 
 	// only alpha numeric, underscore, dash
 	if ( ! preg_match( '/^([A-Za-z0-9-_\.]+)$/', $vlaue ) ) {
-		return __( 'Invalid nickname. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' );
+		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name );
 	}
 
 	// cannot have 2 continued special characters
 	if ( preg_match( '/([-_\.]{2})/', $vlaue ) ) {
-		return __( '"-", "_" and "." cannot be repeated twice in nickname.', 'buddyboss' );
+		return sprintf( __( '"-", "_" and "." cannot be repeated twice in %s.', 'buddyboss' ), $field_name );
 	}
 
 	// must be shorter then 20 characters
 	$nickname_length = apply_filters( 'xprofile_nickname_max_length', 32 );
 	if ( strlen( $value ) > $nickname_length ) {
-		return sprintf( __( 'Nickname must be shorter than %d characters.', 'buddyboss' ), $nickname_length );
+		return sprintf( __( '%s must be shorter than %d characters.', 'buddyboss' ), $field_name, $nickname_length );
 	}
 
 	global $wpdb;
@@ -684,7 +685,7 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $vlaue, $user_
 	);
 
 	if ( $asdf = $wpdb->get_var( $sql ) > 0 ) {
-		return __( 'Nickname has already been taken.', 'buddyboss' );
+		return sprintf( __( '%s has already been taken.', 'buddyboss' ), $field_name );
 	}
 
 	return $retval;
