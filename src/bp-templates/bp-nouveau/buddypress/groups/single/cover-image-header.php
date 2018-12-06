@@ -42,7 +42,7 @@ $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 					<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>"><?php echo esc_html( bp_get_group_member_count() ); ?></a>
 				</p>
 
-				<?php echo bp_nouveau_group_meta()->group_type_list; ?>
+				<?php echo isset( bp_nouveau_group_meta()->group_type_list ) ? bp_nouveau_group_meta()->group_type_list : ''; ?>
 				<?php bp_nouveau_group_hook( 'before', 'header_meta' ); ?>
 
 				<?php if ( bp_nouveau_group_has_meta_extra() ) : ?>
