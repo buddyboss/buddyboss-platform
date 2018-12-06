@@ -37,9 +37,9 @@ class BP_Core_Members_Switching {
 		add_filter( 'login_message', array( $this, 'filter_login_message' ), 1 );
 		add_filter( 'removable_query_args', array( $this, 'filter_removable_query_args' ) );
 		add_action( 'wp_meta', array( $this, 'action_wp_meta' ) );
-		//add_action( 'wp_footer', array( $this, 'action_wp_footer' ) );
+		add_action( 'admin_footer', array( $this, 'action_admin_footer' ) );
 		add_action( 'personal_options', array( $this, 'action_personal_options' ) );
-		add_action( 'admin_bar_menu',                  array( $this, 'action_admin_bar_menu' ), 100 );
+		add_action( 'admin_bar_menu', array( $this, 'action_admin_bar_menu' ), 100 );
 		add_action( 'bbp_template_after_user_details', array( $this, 'action_bbpress_button' ) );
 	}
 
@@ -69,6 +69,7 @@ class BP_Core_Members_Switching {
 	 * Outputs the 'Switch To' link on the user editing screen if the current user has permission to switch to them.
 	 *
 	 * @since BuddyBoss 3.1.1
+	 *
 	 * @param WP_User $user User object for this screen.
 	 */
 	public function action_personal_options( WP_User $user ) {
@@ -426,24 +427,29 @@ class BP_Core_Members_Switching {
 	 *
 	 * @since BuddyBoss 3.1.1
 	 */
-	public function action_wp_footer() {
-		if ( is_admin_bar_showing() || did_action( 'wp_meta' ) ) {
+	public function action_admin_footer() {
+		if ( ! function_exists( 'is_admin_bar_showing' ) ) {
+			return;
+		}
+		if ( ! is_admin_bar_showing() ) {
 			return;
 		}
 
 		$old_user = self::get_old_user();
 
 		if ( $old_user instanceof WP_User ) {
-			$link = sprintf(
-			/* Translators: 1: user display name; 2: username; */
-				__( 'Switch back to %1$s (%2$s)', 'buddyboss' ),
-				$old_user->display_name,
-				$old_user->user_login
-			);
-			$url  = add_query_arg( array(
-				'redirect_to' => urlencode( self::current_url() ),
-			), self::switch_back_url( $old_user ) );
-			echo '<p id="bp_member_switching_switch_on"><a href="' . esc_url( $url ) . '">' . esc_html( $link ) . '</a></p>';
+			$colors = self::admin_bar_link_color_scheme();
+			if ( isset( $colors['background'] ) && isset( $colors['color'] ) ) {
+				?>
+				<style>
+					/* Member Switching */
+					#wpadminbar #wp-admin-bar-top-secondary li#wp-admin-bar-switch-back a {
+						background: <?php echo $colors['background'] ?>;
+						color: <?php echo  $colors['color'] ?>;;
+					}
+				</style>
+				<?php
+			}
 		}
 	}
 
@@ -721,6 +727,40 @@ class BP_Core_Members_Switching {
 	 */
 	public static function secure_auth_cookie() {
 		return ( is_ssl() && ( 'https' === parse_url( wp_login_url(), PHP_URL_SCHEME ) ) );
+	}
+
+	/**
+	 * Returns background and color value base on current color scheme
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @return array Should the array contain background and text color
+	 */
+	public static function admin_bar_link_color_scheme() {
+		$current_color = get_user_option( 'admin_color' );
+		switch ( $current_color ) {
+			case 'fresh':
+				return [ 'background' => '#0073aa', 'color' => '#fff' ];
+				break;
+			case 'light':
+				return [ 'background' => '#888', 'color' => '#fff' ];
+				break;
+			case 'blue':
+				return [ 'background' => '#096484', 'color' => '#fff' ];
+				break;
+			case 'coffee':
+				return [ 'background' => '#c7a589', 'color' => '#fff' ];
+				break;
+			case 'ectoplasm':
+				return [ 'background' => '#a3b745', 'color' => '#fff' ];
+			case 'midnight':
+				return [ 'background' => '#e14d43', 'color' => '#fff' ];
+			case 'ocean':
+				return [ 'background' => '#9ebaa0', 'color' => '#fff' ];
+			case 'sunrise':
+				return [ 'background' => '#dd823b', 'color' => '#fff' ];
+				break;
+		}
 	}
 
 	/**
