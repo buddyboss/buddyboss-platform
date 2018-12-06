@@ -3634,10 +3634,12 @@ function bp_member_type_show_data( $column, $post_id  ) {
 			$type_id = bp_member_type_term_taxonomy_id($name);
 
 			$member_type_url = admin_url().'users.php?bp-member-type='.$name;
-			printf(
-				__( '<a href="%s">%s</a>', 'buddyboss' ),
-				esc_url( $member_type_url ), count(bp_member_type_by_type($type_id))
-			);
+			$count = count( bp_member_type_by_type( $type_id ) );
+
+			if ( $count > 0 )
+				printf( __( '<a href="%s">%s</a>', 'buddyboss' ), esc_url( $member_type_url ), $count );
+			else
+				echo __( '0', 'buddyboss' );
 
 			break;
 
