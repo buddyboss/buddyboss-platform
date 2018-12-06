@@ -123,8 +123,6 @@ class BP_Groups_Widget extends WP_Widget {
 				<a href="<?php bp_groups_directory_permalink(); ?>" id="recently-active-groups"<?php if ( $instance['group_default'] == 'active' ) : ?> class="selected"<?php endif; ?>><?php _e("Active", 'buddyboss') ?></a>
 				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
 				<a href="<?php bp_groups_directory_permalink(); ?>" id="popular-groups" <?php if ( $instance['group_default'] == 'popular' ) : ?> class="selected"<?php endif; ?>><?php _e("Popular", 'buddyboss') ?></a>
-				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
-				<a href="<?php bp_groups_directory_permalink(); ?>" id="alphabetical-groups" <?php if ( $instance['group_default'] == 'alphabetical' ) : ?> class="selected"<?php endif; ?>><?php _e("Alphabetical", 'buddyboss') ?></a>
 			</div>
 
 			<ul id="groups-list" class="item-list" aria-live="polite" aria-relevant="all" aria-atomic="true">
@@ -228,7 +226,6 @@ class BP_Groups_Widget extends WP_Widget {
 				<option value="newest" <?php selected( $group_default, 'newest' ); ?>><?php _e( 'Newest', 'buddyboss' ) ?></option>
 				<option value="active" <?php selected( $group_default, 'active' ); ?>><?php _e( 'Active', 'buddyboss' ) ?></option>
 				<option value="popular"  <?php selected( $group_default, 'popular' ); ?>><?php _e( 'Popular', 'buddyboss' ) ?></option>
-				<option value="alphabetical" <?php selected( $group_default, 'alphabetical' ); ?>><?php _e( 'Alphabetical', 'buddyboss' ) ?></option>
 			</select>
 		</p>
 	<?php
