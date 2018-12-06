@@ -39,6 +39,7 @@ class BP_Core_Members_Switching {
 		add_action( 'wp_meta', array( $this, 'action_wp_meta' ) );
 		//add_action( 'wp_footer', array( $this, 'action_wp_footer' ) );
 		add_action( 'personal_options', array( $this, 'action_personal_options' ) );
+		add_action( 'admin_bar_menu',                  array( $this, 'action_admin_bar_menu' ), 100 );
 		add_action( 'bbp_template_after_user_details', array( $this, 'action_bbpress_button' ) );
 	}
 
@@ -365,7 +366,7 @@ class BP_Core_Members_Switching {
 	}
 
 	/**
-	 * Adds a 'Switch back to {user}' link to the account menu in WordPress' admin bar.
+	 * Adds a 'Switch back to {user}' link in WordPress' admin bar.
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *
@@ -379,27 +380,14 @@ class BP_Core_Members_Switching {
 			return;
 		}
 
-		if ( method_exists( $wp_admin_bar, 'get_node' ) ) {
-			if ( $wp_admin_bar->get_node( 'user-actions' ) ) {
-				$parent = 'user-actions';
-			} else {
-				return;
-			}
-		} elseif ( get_option( 'show_avatars' ) ) {
-			$parent = 'my-account-with-avatar';
-		} else {
-			$parent = 'my-account';
-		}
-
 		$old_user = self::get_old_user();
 
 		if ( $old_user ) {
 			$wp_admin_bar->add_menu( array(
-				'parent' => $parent,
+				'parent' => 'top-secondary',
 				'id'     => 'switch-back',
 				'title'  => esc_html( sprintf(
-				/* Translators: 1: user display name; 2: username; */
-					__( 'Switch back to %1$s (%2$s)', 'buddyboss' ),
+					__( 'Switch back to Admin', 'buddyboss' ),
 					$old_user->display_name,
 					$old_user->user_login
 				) ),
@@ -409,22 +397,6 @@ class BP_Core_Members_Switching {
 			) );
 		}
 
-		if ( current_user_can( 'switch_off' ) ) {
-			$url = self::switch_off_url( wp_get_current_user() );
-			if ( ! is_admin() ) {
-				$url = add_query_arg( array(
-					'redirect_to' => urlencode( self::current_url() ),
-				), $url );
-			}
-
-			$wp_admin_bar->add_menu( array(
-				'parent' => $parent,
-				'id'     => 'switch-off',
-				/* Translators: "switch off" means to temporarily log out */
-				'title'  => esc_html__( 'Switch Off', 'buddyboss' ),
-				'href'   => $url,
-			) );
-		}
 	}
 
 	/**
