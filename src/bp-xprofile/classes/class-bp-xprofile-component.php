@@ -485,7 +485,8 @@ class BP_XProfile_Component extends BP_Component {
 			'parent' => 'my-account-' . buddypress()->settings->id,
 			'id'     => 'my-account-' . buddypress()->settings->id . '-profile',
 			'title'  => _x( 'Privacy', 'My Account Settings sub nav', 'buddyboss' ),
-			'href'   => trailingslashit( $settings_link . 'profile' )
+			'href'   => trailingslashit( $settings_link . 'profile' ),
+			'position' => 30
 		);
 
 		return $wp_admin_nav;
