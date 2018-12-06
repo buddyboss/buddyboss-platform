@@ -37,7 +37,7 @@ class BP_Core_Members_Switching {
 		add_filter( 'login_message', array( $this, 'filter_login_message' ), 1 );
 		add_filter( 'removable_query_args', array( $this, 'filter_removable_query_args' ) );
 		add_action( 'wp_meta', array( $this, 'action_wp_meta' ) );
-		add_action( 'wp_footer', array( $this, 'action_wp_footer' ) );
+		//add_action( 'wp_footer', array( $this, 'action_wp_footer' ) );
 		add_action( 'personal_options', array( $this, 'action_personal_options' ) );
 		add_action( 'bbp_template_after_user_details', array( $this, 'action_bbpress_button' ) );
 	}
