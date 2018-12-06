@@ -1749,10 +1749,10 @@ function bp_group_list_parents( $group = false ) {
 		$group_type   = bp_groups_get_group_type( $group->parent_id );
 		$group_type   = bp_groups_get_group_type_object( $group_type )->labels['name'] ?: esc_html__( 'Subgroup of', 'buddyboss' );
 		?>
-		<dl class="parents-lists">
-			<dt class="parents-title"><?php echo $group_type; ?></dt>
+		<dl class="parent-list">
+			<dt class="parent-title"><?php echo $group_type; ?></dt>
 			<dd class="group-list parent">
-				<ul id="group-parents">
+				<ul id="group-parent">
 					<li>
 						<a href="<?php bp_group_permalink( $parent_group ) ?>" class="bp-tooltip"
 						   data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ) ?>"><?php echo bp_core_fetch_avatar( array(

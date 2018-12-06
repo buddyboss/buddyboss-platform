@@ -50,11 +50,11 @@
 		}
 	} // close moderators-lists
 
-	.parents-lists {
+	.parent-list {
 		padding: 0 1em 0 0;
 		display: table-cell;
 
-		.parents-title {
+		.parent-title {
 
 			@include font-size(14);
 		}

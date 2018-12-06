@@ -2380,32 +2380,32 @@ body.no-js .single-item-header .js-self-profile-button {
   width: 30px;
 }
 
-.groups-header .parents-lists {
+.groups-header .parent-list {
   padding: 0 1em 0 0;
   display: table-cell;
 }
 
-.groups-header .parents-lists .parents-title {
+.groups-header .parent-list .parent-title {
   font-size: 14px;
 }
 
-.groups-header .parents-lists .group-list {
+.groups-header .parent-list .group-list {
   margin: 0 0 5px;
 }
 
-.groups-header .parents-lists .group-list ul:after {
+.groups-header .parent-list .group-list ul:after {
   clear: both;
   content: "";
   display: table;
 }
 
-.groups-header .parents-lists .group-list li {
+.groups-header .parent-list .group-list li {
   display: inline-block;
   float: none;
   margin: 4px 0 0 4px;
 }
 
-.groups-header .parents-lists img.avatar {
+.groups-header .parent-list img.avatar {
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   box-shadow: none;
