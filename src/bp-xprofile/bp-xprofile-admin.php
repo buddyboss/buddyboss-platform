@@ -736,13 +736,36 @@ function xprofile_check_gender_added_previously() {
 
 	global $wpdb;
 
-	$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
-	if ( $exists_gender[0]->count > 0 ) {
-		echo 'added';
-	} else {
-		echo 'not_added';
-	}
+	$response = array();
+	$response['message'] = __( 'You can only have one instance of the "Gender" profile field on the website.', 'buddyboss');
 
+	$referer = filter_input( INPUT_POST, 'referer', FILTER_SANITIZE_STRING );
+
+	parse_str( $referer, $parsed_array);
+
+	if ( 'edit_field' === $parsed_array['mode'] ) {
+
+		$current_edit_id = intval( $parsed_array['field_id'] );
+
+		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
+		if ( intval( $exists_gender[0]->count ) > 0 ) {
+			if ( $current_edit_id === intval( $exists_gender[0]->id ) ) {
+				$response['status'] = 'not_added';
+			} else {
+				$response['status'] = 'added';
+			}
+		} else {
+			$response['status'] = 'not_added';
+		}
+	} else {
+		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
+		if ( intval( $exists_gender[0]->count ) > 0 ) {
+			$response['status'] = 'added';
+		} else {
+			$response['status'] = 'not_added';
+		}
+	}
+	echo wp_json_encode( $response );
 	wp_die();
 }
 add_action( 'wp_ajax_xprofile_check_gender_added_previously', 'xprofile_check_gender_added_previously' );
