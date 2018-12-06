@@ -31,7 +31,7 @@
 					<span class="mention-name">@<?php bp_displayed_user_mentionname(); ?></span><?php
 				} ?>
 
-				<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && bp_nouveau_member_has_meta() ) : ?>
+				<?php if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() && bp_nouveau_member_has_meta() && '' !== bp_get_user_member_type( bp_displayed_user_id() ) ) : ?>
 					<span class="separator">&bull;</span>
 				<?php endif; ?>
 
