@@ -695,7 +695,7 @@ function bp_get_group_type( $group = false ) {
 	if ( true === bp_disable_group_type_creation() ) {
 
 		$group_type = bp_groups_get_group_type( $group->id );
-		$group_type = bp_groups_get_group_type_object( $group_type )->labels['name'];
+		$group_type = bp_groups_get_group_type_object( $group_type )->labels['singular_name'];
 
 		if ( 'public' == $group->status ) {
 
