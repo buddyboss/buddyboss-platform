@@ -91,12 +91,15 @@ function show_options( forWhat ) {
 			type : 'post',
 			data : {
 				action : 'xprofile_check_gender_added_previously',
-				type   : 'gender'
+				type   : 'gender',
+				referer: jQuery('#bp-xprofile-add-field').find('input[name="_wp_http_referer"]').val()
 			},
 			success : function( response ) {
 
-				if ( 'added' === response ) {
-					alert( 'You can only have one instance of the "Gender" profile field on the website.');
+				var result = jQuery.parseJSON( response );
+
+				if ( 'added' === result.status ) {
+					alert( result.message );
 					jQuery('#fieldtype').val('');
 					jQuery('#fieldtype').val('textbox');
 					forWhat = 'textbox';
