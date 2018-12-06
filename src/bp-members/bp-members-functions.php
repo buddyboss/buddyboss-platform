@@ -3774,6 +3774,12 @@ function bp_member_type_shortcode_callback( $atts ) {
 
 	echo '<div id="buddypress" class="buddypress-wrap bp-dir-hori-nav">';
 	echo '<div class="members">';
+	echo '<div class="subnav-filters filters no-ajax" id="subnav-filters">';
+	echo '<div class="grid-filters" data-object="members">
+			<a href="#" class="layout-view layout-grid-view active"><i class="dashicons dashicons-screenoptions" aria-hidden="true"></i></a>
+			<a href="#" class="layout-view layout-list-view"><i class="dashicons dashicons-menu" aria-hidden="true"></i></a>
+		  </div>';
+	echo '</div>';
 	echo '<div class="screen-content members-directory-content">';
 	echo '<div id="members-dir-list" class="members dir-list" data-bp-list="">';
 
@@ -3783,6 +3789,8 @@ function bp_member_type_shortcode_callback( $atts ) {
 
 		// Set the "current" member type, if one is provided, in member directories.
 		buddypress()->current_member_type = $name;
+		buddypress()->current_component = 'members';
+		buddypress()->is_directory = true;
 	}
 
 	// exclude settings in shortcode.
