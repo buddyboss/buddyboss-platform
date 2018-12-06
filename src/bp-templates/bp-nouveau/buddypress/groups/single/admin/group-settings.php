@@ -58,111 +58,6 @@
 
 	</fieldset>
 
-<?php
-// Group type selection
-$group_types = bp_groups_get_group_types( array( 'show_in_create_screen' => true ), 'objects' );
-if ( $group_types ) : ?>
-
-	<fieldset class="group-create-types">
-		<legend><?php esc_html_e( 'Group Type', 'buddyboss' ); ?></legend>
-
-		<p tabindex="0"><?php esc_html_e( 'Select the type this group should be a part of.', 'buddyboss' ); ?></p>
-
-		<?php foreach ( $group_types as $type ) : ?>
-			<?php
-			if ( false === bp_restrict_group_creation() && true === bp_member_type_enable_disable() ) {
-
-				$get_all_registered_member_types = bp_get_active_member_types();
-
-				if ( isset( $get_all_registered_member_types ) && !empty( $get_all_registered_member_types ) ) {
-
-					$current_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
-
-					if ( '' !== $current_user_member_type ) {
-
-						$member_type_post_id = bp_member_type_post_by_type( $current_user_member_type );
-						$include_group_type = get_post_meta( $member_type_post_id, '_bp_member_type_enabled_group_type_create', true);
-
-						if ( isset( $include_group_type ) && !empty( $include_group_type ) ) {
-							if ( in_array( $type->name, $include_group_type ) ) {
-								?>
-								<div class="checkbox">
-									<label for="<?php printf( 'group-type-%s', $type->name ); ?>">
-										<input type="radio" name="group-types[]" id="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ); ?>" <?php bp_nouveau_group_type_checked( $type ); ?>/> <?php echo esc_html( $type->labels['name'] ); ?>
-										<?php
-										if ( ! empty( $type->description ) ) {
-											printf( '&ndash; %s', '<span class="bp-group-type-desc">' . esc_html( $type->description ) . '</span>' );
-										}
-										?>
-									</label>
-								</div>
-								<?php
-							}
-						} else {
-							?>
-							<div class="checkbox">
-								<label for="<?php printf( 'group-type-%s', $type->name ); ?>">
-									<input type="radio" name="group-types[]" id="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ); ?>" <?php bp_nouveau_group_type_checked( $type ); ?>/> <?php echo esc_html( $type->labels['name'] ); ?>
-									<?php
-									if ( ! empty( $type->description ) ) {
-										printf( '&ndash; %s', '<span class="bp-group-type-desc">' . esc_html( $type->description ) . '</span>' );
-									}
-									?>
-								</label>
-							</div>
-							<?php
-						}
-
-					} else {
-						?>
-						<div class="checkbox">
-							<label for="<?php printf( 'group-type-%s', $type->name ); ?>">
-								<input type="radio" name="group-types[]" id="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ); ?>" <?php bp_nouveau_group_type_checked( $type ); ?>/> <?php echo esc_html( $type->labels['name'] ); ?>
-								<?php
-								if ( ! empty( $type->description ) ) {
-									printf( '&ndash; %s', '<span class="bp-group-type-desc">' . esc_html( $type->description ) . '</span>' );
-								}
-								?>
-							</label>
-						</div>
-						<?php
-					}
-				} else {
-					?>
-					<div class="checkbox">
-						<label for="<?php printf( 'group-type-%s', $type->name ); ?>">
-							<input type="radio" name="group-types[]" id="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ); ?>" <?php bp_nouveau_group_type_checked( $type ); ?>/> <?php echo esc_html( $type->labels['name'] ); ?>
-							<?php
-							if ( ! empty( $type->description ) ) {
-								printf( '&ndash; %s', '<span class="bp-group-type-desc">' . esc_html( $type->description ) . '</span>' );
-							}
-							?>
-						</label>
-					</div>
-					<?php
-				}
-			} else {
-				?>
-				<div class="checkbox">
-					<label for="<?php printf( 'group-type-%s', $type->name ); ?>">
-						<input type="radio" name="group-types[]" id="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ); ?>" <?php bp_nouveau_group_type_checked( $type ); ?>/> <?php echo esc_html( $type->labels['name'] ); ?>
-						<?php
-						if ( ! empty( $type->description ) ) {
-							printf( '&ndash; %s', '<span class="bp-group-type-desc">' . esc_html( $type->description ) . '</span>' );
-						}
-						?>
-					</label>
-				</div>
-				<?php
-			}
-			?>
-
-		<?php endforeach; ?>
-
-	</fieldset>
-
-<?php endif; ?>
-
 	<fieldset class="radio group-invitations">
 		<legend><?php esc_html_e( 'Group Invitations', 'buddyboss' ); ?></legend>
 
@@ -206,6 +101,67 @@ if ( $group_types ) : ?>
         </label>
 
     </fieldset>
+
+	<?php
+	// Group type selection
+	$group_types = bp_groups_get_group_types( array( 'show_in_create_screen' => true ), 'objects' );
+	if ( $group_types ) : ?>
+
+		<fieldset class="group-create-types">
+			<legend><?php esc_html_e( 'Group Type', 'buddyboss' ); ?></legend>
+
+			<p tabindex="0"><?php esc_html_e( 'Select the type this group should be a part of.', 'buddyboss' ); ?></p>
+			<select id="bp-groups-type" name="group-types[]" autocomplete="off">
+				<option value="" <?php selected( '', '' ); ?>><?php echo _x( '-- Select group type --', 'The option that sets a group type.', 'buddyboss' ); ?></option>
+			<?php foreach ( $group_types as $type ) : ?>
+				<?php
+				if ( false === bp_restrict_group_creation() && true === bp_member_type_enable_disable() ) {
+
+					$get_all_registered_member_types = bp_get_active_member_types();
+
+					if ( isset( $get_all_registered_member_types ) && !empty( $get_all_registered_member_types ) ) {
+
+						$current_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
+
+						if ( '' !== $current_user_member_type ) {
+
+							$member_type_post_id = bp_member_type_post_by_type( $current_user_member_type );
+							$include_group_type = get_post_meta( $member_type_post_id, '_bp_member_type_enabled_group_type_create', true);
+
+							if ( isset( $include_group_type ) && !empty( $include_group_type ) ) {
+								if ( in_array( $type->name, $include_group_type ) ) {
+									?>
+									<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
+									<?php
+								}
+							} else {
+								?>
+								<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
+								<?php
+							}
+
+						} else {
+							?>
+							<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '' , $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
+							<?php
+						}
+					} else {
+						?>
+						<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '' , $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
+						<?php
+					}
+				} else {
+					?>
+					<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '' , $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
+					<?php
+				}
+				?>
+
+			<?php endforeach; ?>
+			</select>
+		</fieldset>
+
+	<?php endif; ?>
 
 	<?php if ( bp_enable_group_hierarchies() ):
 		$current_parent_group_id = bp_get_parent_group_id();

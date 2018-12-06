@@ -9,7 +9,10 @@
 bp_nouveau_before_loop(); ?>
 
 <?php if ( bp_get_current_group_directory_type() ) : ?>
+	<div class="bp-feedback info">
+	<span class="bp-icon" aria-hidden="true"></span>
 	<p class="current-group-type"><?php bp_current_group_directory_type_message(); ?></p>
+	</div>
 <?php endif; ?>
 
 <?php if ( bp_has_groups( bp_ajax_querystring( 'groups' ) ) ) : ?>

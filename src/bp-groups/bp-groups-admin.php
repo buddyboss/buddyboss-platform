@@ -1172,28 +1172,25 @@ function bp_groups_admin_edit_metabox_group_type( BP_Groups_Group $group = null 
 	$backend_only  = bp_groups_get_group_types( array( 'show_in_create_screen' => false ) );
 	?>
 
-	<label for="bp-groups-group-type" class="screen-reader-text"><?php
-		/* translators: accessibility text */
-		esc_html_e( 'Select group type', 'buddyboss' );
-	?></label>
+	<div class="bp-groups-settings-section" id="bp-groups-settings-section-group-type">
+		<label for="bp-groups-group-type" class="for-heading"><?php
+			/* translators: accessibility text */
+			esc_html_e( 'Select group type', 'buddyboss' );
+			?></label>
+		<select id="bp-groups-group-type" name="bp-groups-group-type[]" autocomplete="off">
+			<option value="" <?php selected( '', $current_types[0] ); ?>><?php echo _x( '-- Select group type --', 'The option that sets a group type.', 'buddyboss' ); ?></option>
+			<?php
 
-	<ul class="categorychecklist form-no-clear">
-		<?php foreach ( $types as $type ) : ?>
-			<li>
-				<label class="selectit"><input value="<?php echo esc_attr( $type->name ) ?>" name="bp-groups-group-type[]" type="radio" <?php checked( true, in_array( $type->name, $current_types ) ); ?>>
-					<?php
-						echo esc_html( $type->labels['singular_name'] );
-						if ( in_array( $type->name, $backend_only ) ) {
-							printf( ' <span class="description">%s</span>', esc_html__( '(Not available on the front end)', 'buddyboss' ) );
-						}
-					?>
 
-				</label>
-			</li>
+			foreach ( $types as $type ) :
+				?>
+				<option value="<?php echo esc_attr( $type->name ) ?>" <?php selected( $current_types[0], $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
+				<?php
+			endforeach;
 
-		<?php endforeach; ?>
-
-	</ul>
+			?>
+		</select>
+	</div>
 
 	<?php
 

@@ -190,7 +190,7 @@ function bp_group_type_directory_link( $group_type = '' ) {
 			return '';
 		}
 
-		return sprintf( '<a href="%s">%s</a>', esc_url( bp_get_group_type_directory_permalink( $group_type ) ), bp_groups_get_group_type_object( $group_type )->labels['name'] );
+		return sprintf( '<a href="%s">%s</a>', esc_url( bp_get_group_type_directory_permalink( $group_type ) ), bp_groups_get_group_type_object( $group_type )->labels['singular_name'] );
 	}
 
 /**
@@ -5663,7 +5663,7 @@ function bp_current_group_directory_type_message() {
 	function bp_get_current_group_directory_type_message() {
 		$type_object = bp_groups_get_group_type_object( bp_get_current_group_directory_type() );
 
-		$message = sprintf( __( 'Viewing groups of the type: %s', 'buddyboss' ), '<strong>' . $type_object->labels['singular_name'] . '</strong>' );
+		$message = sprintf( __( 'Viewing all groups that are: %s', 'buddyboss' ), '<strong>' . $type_object->labels['name'] . '</strong>' );
 
 		/**
 		 * Filters the current group type message.
