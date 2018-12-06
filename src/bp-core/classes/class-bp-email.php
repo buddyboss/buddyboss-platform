@@ -1,4 +1,4 @@
-<?php
+d<?php
 /**
  * Core component classes.
  *
