@@ -178,13 +178,6 @@ class BP_Invites_Component extends BP_Component {
 
 	}
 
-
-	public function display( $id = 1 ) {
-		echo $id;
-
-		exit;
-	}
-
 	/**
 	 * Set up component navigation.
 	 *
