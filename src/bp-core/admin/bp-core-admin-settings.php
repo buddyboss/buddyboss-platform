@@ -329,6 +329,7 @@ function bp_core_admin_appboss() {
 function bp_form_option( $option, $default = '' , $slug = false ) {
 	echo bp_get_form_option( $option, $default, $slug );
 }
+
 	/**
 	 * Return settings API option
 	 *
@@ -374,3 +375,29 @@ function bp_form_option( $option, $default = '' , $slug = false ) {
 		 */
 		return apply_filters( 'bp_get_form_option', $value, $option );
 	}
+
+/** Invites Section ************************************************************/
+
+/**
+ * 'Enable email subject' field markup.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_admin_setting_callback_member_invite_email_subject() {
+	?>
+	<input id="bp-disable-invite-member-email-subject" name="bp-disable-invite-member-email-subject" type="checkbox" value="1" <?php checked( bp_disable_invite_member_email_subject() ); ?> />
+	<label for="bp-disable-invite-member-email-subject"><?php _e( 'Allow users to customize the invite email subject', 'buddyboss' ); ?></label>
+	<?php
+}
+
+/**
+ * 'Enable email content' field markup.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_admin_setting_callback_member_invite_email_content() {
+	?>
+	<input id="bp-disable-invite-member-email-content" name="bp-disable-invite-member-email-content" type="checkbox" value="1" <?php checked( bp_disable_invite_member_email_content() ); ?> />
+	<label for="bp-disable-invite-member-email-content"><?php _e( 'Allow users to customize the invite email subject', 'buddyboss' ); ?></label>
+	<?php
+}

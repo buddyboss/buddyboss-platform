@@ -2234,6 +2234,17 @@ function bp_is_settings_component() {
 }
 
 /**
+ * Check whether the current page is part of the Invites component.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return bool True if the current page is part of the Invites component.
+ */
+function bp_is_invites_component() {
+	return (bool) bp_is_current_component( 'invites' );
+}
+
+/**
  * Is the current component an active core component?
  *
  * Use this function when you need to check if the current component is an
