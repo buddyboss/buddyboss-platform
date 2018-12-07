@@ -157,7 +157,7 @@ window.bp = window.bp || {};
 
 		composeView: function() {
 			// Remove all existing views.
-			this.clearViews();
+			//this.clearViews();
 
 			// Create the loop view
 			var form = new bp.Views.messageForm( {
