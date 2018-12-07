@@ -2984,7 +2984,6 @@ function bp_get_member_type_post_type_supports() {
 	 * @param array $value Supported features.
 	 */
 	return apply_filters( 'bp_get_member_type_post_type_supports', array(
-		'editor',
 		'page-attributes',
 		'title',
 	) );
