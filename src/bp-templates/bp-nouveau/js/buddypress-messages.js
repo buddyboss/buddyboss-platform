@@ -532,7 +532,7 @@ window.bp = window.bp || {};
 			this.model.on( 'change', this.resetFields, this );
 
 			// Activate bp_mentions
-			this.on( 'ready', this.addMentions, this );
+			this.on( 'ready', this.addSelect2, this );
 		},
 
 		addMentions: function() {
@@ -541,6 +541,31 @@ window.bp = window.bp || {};
 				data: [],
 				suffix: ' '
 			} );
+		},
+
+		addSelect2: function() {
+			var $input = $( this.el ).find( '#send-to-input' );
+
+			$input.select2({
+				placeholder: $input.attr('placeholder'),
+				minimumInputLength: 1,
+				ajax: {
+					url: bp.ajax.settings.url,
+					dataType: 'json',
+					delay: 250,
+					data: function(params) {
+						return $.extend( {}, params, {
+							nonce: BP_Nouveau.messages.nonces.load_recipient,
+							action: 'messages_search_recipients'
+						});
+					},
+					processResults: function( data ) {
+						return {
+							results: data && data.success? data.data.results : []
+						};
+					},
+				}
+			});
 		},
 
 		resetFields: function( model ) {
@@ -602,6 +627,8 @@ window.bp = window.bp || {};
 								errors.push( 'send_to' );
 							}
 
+							var send_to = this.model.get( 'send_to' );
+							usernames = _.union(send_to, usernames);
 							this.model.set( 'send_to', usernames, { silent: true } );
 						}
 
@@ -886,10 +913,10 @@ window.bp = window.bp || {};
 
 			this.views.add( new bp.Views.Pagination( { model: new Backbone.Model( collection.options ) } ) );
 
-			this.views.add( '.user-messages-bulk-actions', new bp.Views.BulkActions( {
-				model: new Backbone.Model( BP_Nouveau.messages.bulk_actions ),
-				collection : collection
-			} ) );
+			// this.views.add( '.user-messages-bulk-actions', new bp.Views.BulkActions( {
+			// 	model: new Backbone.Model( BP_Nouveau.messages.bulk_actions ),
+			// 	collection : collection
+			// } ) );
 		},
 
 		filterThreads: function() {

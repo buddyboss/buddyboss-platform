@@ -34,7 +34,16 @@
 	<?php bp_nouveau_messages_hook( 'before', 'compose_content' ); ?>
 
 	<label for="send-to-input"><?php esc_html_e( 'New Message', 'buddyboss' ); ?></label>
-	<input type="text" name="send_to" class="send-to-input" id="send-to-input" placeholder="<?php esc_html_e( 'Type @ to add one or more recipients', 'buddyboss' ); ?>" value="<?php if ( isset( $_GET['r'] ) ) : ?>@<?php echo esc_textarea( $_GET['r'] ); ?> <?php endif; ?>" autocomplete="off" />
+	<select
+		name="send_to[]"
+		class="send-to-input"
+		id="send-to-input"
+		placeholder="<?php esc_html_e( 'Type to add one or more recipients', 'buddyboss' ); ?>"
+		value="<?php if ( isset( $_GET['r'] ) ) : ?>@<?php echo esc_textarea( $_GET['r'] ); ?> <?php endif; ?>"
+		autocomplete="off"
+		multiple="multiple"
+		style="width: 100%"
+	></select>
 
 	<div id="bp-message-content"></div>
 

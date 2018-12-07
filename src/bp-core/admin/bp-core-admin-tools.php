@@ -33,7 +33,14 @@ function bp_core_admin_tools() {
 
 				<div class="checkbox">
 				<?php foreach ( bp_admin_repair_list() as $item ) : ?>
-					<label for="<?php echo esc_attr( str_replace( '_', '-', $item[0] ) ); ?>"><input type="checkbox" class="checkbox" name="<?php echo esc_attr( $item[0] ) . '" id="' . esc_attr( str_replace( '_', '-', $item[0] ) ); ?>" value="1" /> <?php echo esc_html( $item[1] ); ?></label>
+					<label for="<?php echo esc_attr( str_replace( '_', '-', $item[0] ) ); ?>">
+						<input
+							type="checkbox"
+							class="checkbox"
+							name="<?php echo esc_attr( $item[0] ) . '" id="' . esc_attr( str_replace( '_', '-', $item[0] ) ); ?>"
+							value="1"
+							<?php if ( isset( $_GET['tool'] ) && $_GET['tool'] == esc_attr( str_replace( '_', '-', $item[0] ) )) echo 'checked'; ?>
+						/> <?php echo esc_html( $item[1] ); ?></label>
 				<?php endforeach; ?>
 				</div>
 

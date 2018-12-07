@@ -29,6 +29,10 @@ function bp_nouveau_messages_enqueue_styles( $styles = array() ) {
 			'dependencies' => array( 'bp-nouveau' ),
 			'version'      => bp_get_version(),
 		),
+		'select2' => array(
+			'file'         => 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css',
+			'dependencies' => []
+		),
 	) );
 }
 
@@ -47,6 +51,10 @@ function bp_nouveau_messages_register_scripts( $scripts = array() ) {
 	}
 
 	return array_merge( $scripts, array(
+		'select2' => array(
+			'file'         => 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js',
+			'footer'       => false,
+		),
 		'bp-nouveau-messages-at' => array(
 			'file'         => buddypress()->plugin_url . 'bp-activity/js/mentions%s.js',
 			'dependencies' => array( 'bp-nouveau', 'jquery', 'jquery-atwho' ),
@@ -72,6 +80,7 @@ function bp_nouveau_messages_enqueue_scripts() {
 	}
 
 	wp_enqueue_script( 'bp-nouveau-messages' );
+	wp_enqueue_script( 'select2' );
 
 	// Add The tiny MCE init specific function.
 	add_filter( 'tiny_mce_before_init', 'bp_nouveau_messages_at_on_tinymce_init', 10, 2 );
@@ -97,6 +106,7 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 		),
 		'nonces' => array(
 			'send' => wp_create_nonce( 'messages_send_message' ),
+			'load_recipient' => wp_create_nonce( 'messages_load_recipient' ),
 		),
 		'loading'       => __( 'Loading messages. Please wait.', 'buddyboss' ),
 		'doingAction'   => array(
