@@ -1544,7 +1544,7 @@ function bp_member_type_group_create_metabox( $post ) {
 
 	$get_all_registered_group_types = bp_get_active_group_types();
 
-	$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_create', true );
+	$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_create', true ) ?: [];
 
 	foreach ( $get_all_registered_group_types as $group_type_id ) {
 

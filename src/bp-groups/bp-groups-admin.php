@@ -47,25 +47,6 @@ function bp_groups_add_admin_menu() {
 		$hooks[] = add_submenu_page( 'bp-groups', 'Group Types', 'Group Types',
 			'bp_moderate', 'edit.php?post_type=bp-group-type');
 
-		// Register Group Types custom post type.
-		register_post_type(
-			bp_get_group_type_post_type(),
-			apply_filters( 'bp_register_group_type_post_type', array(
-				'description'       => _x( 'BuddyPress group type', 'group type post type description', 'buddyboss' ),
-				'labels'            => bp_get_group_type_post_type_labels(),
-				'public'            => false,
-				'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),
-				'query_var'         => false,
-				'rewrite'           => false,
-				'show_in_admin_bar' => false,
-				'show_in_menu' 		=> '',
-				'map_meta_cap' 		=> true,
-				'show_in_rest' 		=> true,
-				'show_ui'           => bp_current_user_can( 'bp_moderate' ),
-				'supports'          => bp_get_group_type_post_type_supports(),
-			) )
-		);
-
 	} else {
 		// Add our screen.
 		$hooks[] = add_menu_page(
@@ -1686,7 +1667,7 @@ function bp_group_type_auto_join_member_type_meta_box( $post ) {
 
 	$get_all_registered_member_types = bp_get_active_member_types();
 
-	$get_selected_member_types = get_post_meta( $post->ID, '_bp_group_type_enabled_member_type_join', true );
+	$get_selected_member_types = get_post_meta( $post->ID, '_bp_group_type_enabled_member_type_join', true ) ?: [];
 
 	foreach ( $get_all_registered_member_types as $member_type ) {
 

@@ -362,6 +362,27 @@ class BP_Core extends BP_Component {
 			);
 		}
 
+		if ( true === bp_disable_group_type_creation() ) {
+			// Register Group Types custom post type.
+			register_post_type(
+				bp_get_group_type_post_type(),
+				apply_filters( 'bp_register_group_type_post_type', array(
+					'description'        => _x( 'BuddyPress group type', 'group type post type description', 'buddyboss' ),
+					'labels'             => bp_get_group_type_post_type_labels(),
+					'public'             => true,
+					'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),
+					'query_var'          => false,
+					'rewrite'            => false,
+					'show_in_admin_bar'  => false,
+					'show_in_menu'       => '',
+					'map_meta_cap'       => true,
+					'show_in_rest'       => true,
+					'show_ui'            => bp_current_user_can( 'bp_moderate' ),
+					'supports'           => bp_get_group_type_post_type_supports(),
+				) )
+			);
+		}
+
 		parent::register_post_types();
 	}
 }
