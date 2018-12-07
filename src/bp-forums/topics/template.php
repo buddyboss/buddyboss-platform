@@ -3156,7 +3156,7 @@ function bbp_form_topic_type_dropdown( $args = '' ) {
 
 			<?php foreach ( bbp_get_topic_types() as $key => $label ) : ?>
 
-				<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>><?php echo esc_html( $label ); ?></option>
+				<option value="<?php echo esc_attr( $key ); ?>"<?php selected( $key, $r['selected'] ); ?>><span><?php _e( 'Type: ', 'buddyboss' ) ?></span><?php echo esc_html( $label ); ?></option>
 
 			<?php endforeach; ?>
 
