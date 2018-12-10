@@ -553,12 +553,12 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 			$field->field_order = $wpdb->get_var( $wpdb->prepare( "SELECT field_order FROM {$bp->profile->table_name_fields} WHERE id = %d", $field_id ) );
 			if ( ! is_numeric( $field->field_order ) || is_wp_error( $field->field_order ) ) {
                 //cloned fields should not be considered when determining the max order of fields in given group
-                $cloned_field_ids = $wpdb->get_col( $wpdb->prepare( 
+                $cloned_field_ids = $wpdb->get_col( $wpdb->prepare(
                     "SELECT f.id FROM {$bp->profile->table_name_fields} AS f JOIN {$bp->profile->table_name_meta} AS fm ON f.id = fm.object_id "
                     . " WHERE f.group_id = %d AND fm.meta_key = '_is_repeater_clone' AND fm.meta_value = 1 ",
                     $group_id
                 ) );
-                
+
                 if ( !empty( $cloned_field_ids ) ) {
                     $field->field_order = (int) $wpdb->get_var( $wpdb->prepare( "SELECT max(field_order) FROM {$bp->profile->table_name_fields} WHERE group_id = %d AND id NOT IN ( ". implode( ',', $cloned_field_ids ) ." )", $group_id ) );
                 } else {
@@ -577,11 +577,6 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 			} else {
 				$message = __( 'The field was saved successfully.', 'buddyboss' );
 				$type    = 'updated';
-
-				// @todo remove these old options
-				if ( 1 == $field_id ) {
-					bp_update_option( 'bp-xprofile-fullname-field-name', $field->name );
-				}
 
 				// Set member types.
 				if ( isset( $_POST['has-member-types'] ) ) {
