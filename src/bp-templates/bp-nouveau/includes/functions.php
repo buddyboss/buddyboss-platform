@@ -1264,6 +1264,15 @@ function bp_nouveau_get_submit_button( $action = '' ) {
 				'class' => 'auto',
 			),
 		),
+		'member-invites-submit' => array(
+			'nonce'  => 'bp_member_invite_submit',
+			'attributes' => array(
+				'name'  => 'member-invite-submit',
+				'id'    => 'submit',
+				'value' => __( 'Send Invites', 'buddyboss' ),
+				'class' => 'auto',
+			),
+		),
 	) );
 
 	if ( isset( $actions[ $action ] ) ) {

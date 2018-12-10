@@ -70,6 +70,7 @@ class BP_Invites_Component extends BP_Component {
 				'search_query_arg' => 'groups_search',
 			)
 		);
+
 	}
 
 	/**
@@ -117,6 +118,17 @@ class BP_Invites_Component extends BP_Component {
 		}
 
 		$actions = array( 'invites', 'sent-invites', 'send-invites' );
+
+		// Authenticated actions.
+		if ( is_user_logged_in() ) {
+			if ( ! bp_current_action() || bp_is_current_action( 'invites' ) ) {
+				require $this->path . 'bp-invites/actions/invites.php';
+
+				// Specific to post requests.
+			} elseif ( bp_is_post_request() && in_array( bp_current_action(), $actions, true ) ) {
+				require $this->path . 'bp-invites/actions/' . bp_current_action() . '.php';
+			}
+		}
 
 		// Screens - User profile integration.
 		if ( bp_is_user() ) {
@@ -234,13 +246,14 @@ class BP_Invites_Component extends BP_Component {
 				'slug'            => 'sent-invites',
 				'parent_url'      => $invites_link,
 				'parent_slug'     => $slug,
-				'screen_function' => 'bp_invites_screen_sent_invite',
+					'screen_function' => 'bp_invites_screen_sent_invite',
 				'user_has_access' => $access,
 				'position'        => 30,
 				'item_css_id'     => 'invites-sent-invites'
 			);
 
 			parent::setup_nav( $main_nav, $sub_nav );
+
 		}
 
 	}

@@ -19,7 +19,7 @@ function bp_invites_screen_send_invite() {
 		return;
 	}
 
-	//do_action( 'invites_screen_send_invite' );
+	add_action( 'bp_template_content', 'bp_invites_send_invite_screen' );
 
 	/**
 	 * Filters the template to load for the My Groups page.
@@ -28,5 +28,9 @@ function bp_invites_screen_send_invite() {
 	 *
 	 * @param string $value Path to the My Groups page template to load.
 	 */
-	bp_core_load_template( apply_filters( 'bp_invites_screen_send_invite', 'members/single/invites/send-invites' ) );
+	bp_core_load_template( apply_filters( 'bp_invites_screen_send_invite', 'members/single/plugins' ) );
+}
+
+function bp_invites_send_invite_screen() {
+	bp_get_template_part( 'members/single/invites/send-invites');
 }

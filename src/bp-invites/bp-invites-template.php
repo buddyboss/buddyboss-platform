@@ -63,3 +63,4 @@ function bp_invites_root_slug() {
 		 */
 		return apply_filters( 'bp_get_invites_root_slug', buddypress()->invites->root_slug );
 	}
+

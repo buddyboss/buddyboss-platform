@@ -2658,6 +2658,34 @@ function bp_is_user_settings_profile() {
 	return (bool) ( bp_is_user_settings() && bp_is_current_action( 'profile' ) );
 }
 
+/** Invites ********************************************************************/
+
+/**
+ * Is this a user's send invites page?
+ *
+ * Eg http://example.com/members/joe/invites/ (or a subpage thereof).
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return bool True if the current page is a user's send invites page.
+ */
+function bp_is_user_invites() {
+	return (bool) ( bp_is_user() && bp_is_invites_component() );
+}
+
+/**
+ * Is this a user's send invites?
+ *
+ * Eg http://example.com/members/joe/invites/.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return bool True if the current page is a user's send invites page.
+ */
+function bp_is_user_invites_send_invites() {
+	return (bool) ( bp_is_user_invites() && bp_is_current_action( 'invites' ) );
+}
+
 /** Groups ********************************************************************/
 
 /**
@@ -3262,6 +3290,10 @@ function bp_the_body_class() {
 
 			if ( bp_is_settings_component()  ) {
 				$bp_classes[] = 'settings';
+			}
+
+			if ( bp_is_invites_component() ) {
+				$bp_classes[] = 'invites';
 			}
 		}
 
