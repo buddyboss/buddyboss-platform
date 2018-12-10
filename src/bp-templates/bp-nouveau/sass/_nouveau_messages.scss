@@ -446,3 +446,32 @@ input#send-to-input {
 		color: #333;
 	}
 }
+
+#send_message_form {
+
+	.select2-selection--multiple {
+		border: 0;
+	}
+
+	.select2-selection__rendered {
+		display: flex;
+		flex-flow: row wrap;
+		padding: 0;
+	}
+
+	.select2-search.select2-search--inline {
+		flex: 0 0 100%;
+	}
+
+	.select2-search__field {
+		width: 100% !important;
+	}
+}
+
+.bp-messages-content #bp-message-content {
+	margin-top: $marg-lrg;
+}
+
+.messages .select2-dropdown {
+	border-color: $med-light-grey;
+}
