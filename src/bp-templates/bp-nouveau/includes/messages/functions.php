@@ -51,7 +51,7 @@ function bp_nouveau_messages_register_scripts( $scripts = array() ) {
 	}
 
 	return array_merge( $scripts, array(
-		'select2' => array(
+		'bp-nouveau-select2' => array(
 			'file'         => 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js',
 			'footer'       => false,
 		),
@@ -63,7 +63,7 @@ function bp_nouveau_messages_register_scripts( $scripts = array() ) {
 		),
 		'bp-nouveau-messages' => array(
 			'file'         => 'js/buddypress-messages%s.js',
-			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone', 'bp-nouveau-messages-at' ),
+			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone', 'bp-nouveau-messages-at', 'bp-nouveau-select2' ),
 			'footer'       => true,
 		),
 	) );
