@@ -546,6 +546,11 @@ window.bp = window.bp || {};
 		addSelect2: function() {
 			var $input = $( this.el ).find( '#send-to-input' );
 
+			if ( $input.prop("tagName") != 'SELECT' ) {
+				this.addMentions();
+				return;
+			}
+
 			$input.select2({
 				placeholder: $input.attr('placeholder'),
 				minimumInputLength: 1,
