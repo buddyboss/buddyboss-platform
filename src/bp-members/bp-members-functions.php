@@ -3887,6 +3887,8 @@ function bp_get_user_member_type( $user_id ) {
 		$user_id = bp_displayed_user_id();
 	}
 
+	$member_type = '';
+
 	if ( bp_is_members_directory() ) {
 
 		$member_type = __('Member', 'buddyboss');
