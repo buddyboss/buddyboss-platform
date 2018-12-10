@@ -1352,7 +1352,7 @@ function bp_member_type_custom_metaboxes() {
 
 		// Add meta box if group types is entered.
 		if ( true === bp_disable_group_type_creation() && isset( $get_all_registered_group_types ) && !empty( $get_all_registered_group_types ) ) {
-			add_meta_box( 'bp-member-type-group-create', __( 'Members with this profile type are only allowed to create groups with the following group types. Leave all unchecked to allow members to create any group type.', 'buddyboss' ), 'bp_member_type_group_create_metabox', null, 'normal', 'high' );
+			add_meta_box( 'bp-member-type-group-create', __( 'Allowed Group Types', 'buddyboss' ), 'bp_member_type_group_create_metabox', null, 'normal', 'high' );
 		}
 	}
 
@@ -1538,9 +1538,13 @@ function bp_member_type_wprole_metabox( $post ) {
  */
 function bp_member_type_group_create_metabox( $post ) {
 
+	?>
+	<p><?php printf( __( 'Users of the %s profile type are only allowed to create groups of the following group types. Leave all unchecked to allow them to create any type of group.', 'buddyboss' ), $post->post_title )?></p>
+	<?php
+
 	$get_all_registered_group_types = bp_get_active_group_types();
 
-	$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_create', true );
+	$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_create', true ) ?: [];
 
 	foreach ( $get_all_registered_group_types as $group_type_id ) {
 

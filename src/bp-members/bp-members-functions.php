@@ -2845,7 +2845,7 @@ function bp_register_member_type_section() {
 		apply_filters( 'bp_register_member_type_post_type', array(
 			'description'       => _x( 'BuddyPress profile type', 'profile type post type description', 'buddyboss' ),
 			'labels'            => bp_get_member_type_post_type_labels(),
-			'public'            => false,
+			'public'            => true,
 			'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),
 			'query_var'         => false,
 			'rewrite'           => false,
@@ -2984,7 +2984,6 @@ function bp_get_member_type_post_type_supports() {
 	 * @param array $value Supported features.
 	 */
 	return apply_filters( 'bp_get_member_type_post_type_supports', array(
-		'editor',
 		'page-attributes',
 		'title',
 	) );

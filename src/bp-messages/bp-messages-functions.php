@@ -143,7 +143,7 @@ function messages_new_message( $args = '' ) {
 			if ( bp_is_username_compatibility_mode() ) {
 				$recipient_id = bp_core_get_userid( urldecode( $recipient ) );
 			} else {
-				$recipient_id = bp_core_get_userid_from_nicename( $recipient );
+				$recipient_id = bp_core_get_userid_from_nickname( $recipient );
 			}
 
 			// Check against user ID column if no match and if passed recipient is numeric.
