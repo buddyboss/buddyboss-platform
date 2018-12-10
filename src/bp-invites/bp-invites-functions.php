@@ -142,7 +142,24 @@ function bp_get_invites_register_invite_email_message() {
 		}
 	}
 }
-add_action( 'bp_init', 'bp_get_invites_register_invite_email_message' );
+//add_action( 'bp_init', 'bp_get_invites_register_invite_email_message' );
+
+/**
+ * Is this the 'accept-invitation' page?
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return bool
+ */
+function bp_invites_member_invite_invitation_page() {
+	$retval = false;
+
+	if ( bp_is_register_page() && ! empty( $_GET['bp-invites'] ) && 'accept-member-invitation' === urldecode( $_GET['bp-invites'] ) ) {
+		$retval = true;
+	}
+
+	return apply_filters( 'invite_anyone_is_accept_invitation_page', $retval );
+}
 
 /**
  * Function for unlocking the registration if globally registrations disabled.
@@ -152,6 +169,10 @@ add_action( 'bp_init', 'bp_get_invites_register_invite_email_message' );
  */
 function bp_invites_member_invite_remove_registration_lock() {
 	global $bp;
+
+	if ( ! bp_invites_member_invite_invitation_page() ) {
+		return;
+	}
 
 	if ( false === bp_is_active( 'invites' ) ) {
 		return;
@@ -193,7 +214,156 @@ function bp_invites_member_invite_remove_registration_lock() {
 
 		add_filter( 'bp_get_signup_allowed', '__return_true' );
 	} else {
-		add_filter( 'option_users_can_register', create_function( false, 'return true;' ) );
+		add_filter( 'option_users_can_register', '__return_true' );
 	}
 }
-//add_action( 'wp', 'bp_invites_member_invite_remove_registration_lock', 1 );
+add_action( 'wp', 'bp_invites_member_invite_remove_registration_lock', 1 );
+
+function bp_invites_member_invite_register_screen_message() {
+	global $bp;
+
+	if ( ! bp_invites_member_invite_invitation_page() ) {
+		return;
+	}
+
+	if ( isset( $_GET['email'] ) ) {
+		$email = urldecode( $_GET['email'] );
+	} else {
+		$email = '';
+	}
+
+	?>
+	<?php if ( empty( $email ) ) : ?>
+		<div id="message" class="error"><p><?php _e( "It looks like you're trying to accept an invitation to join the site, but some information is missing. Please try again by clicking on the link in the invitation email.", 'buddyboss' ) ?></p></div>
+	<?php endif; ?>
+
+	<?php if ( $bp->signup->step == 'request-details' && ! empty( $email ) ) : ?>
+
+		<?php do_action( 'accept_email_invite_before' ) ?>
+
+		<script type="text/javascript">
+			jQuery(document).ready( function() {
+				jQuery("input#signup_email").val("<?php echo esc_js( str_replace( ' ', '+', $email ) ) ?>");
+			});
+
+		</script>
+
+
+		<?php
+		$bp_get_invitee_email = bp_invites_member_invite_get_invitations_by_invited_email( $email );
+
+		$inviters = array();
+		if ( $bp_get_invitee_email->have_posts() ) {
+			while ( $bp_get_invitee_email->have_posts() ) {
+				$bp_get_invitee_email->the_post();
+				$inviters[] = get_the_author_meta( 'ID' );
+			}
+		}
+		$inviters = array_unique( $inviters );
+
+		$inviters_names = array();
+		foreach ( $inviters as $inviter ) {
+			$inviters_names[] = bp_core_get_user_displayname( $inviter );
+		}
+
+		if ( ! empty( $inviters_names ) ) {
+			$message = sprintf( _n( 'Welcome! You&#8217;ve been invited to join the site by the following user: %s. Please fill out the information below to create your account.', 'Welcome! You&#8217;ve been invited to join the site by the following users: %s. Please fill out the information below to create your account.', count( $inviters_names ), 'buddyboss' ), implode( ', ', $inviters_names ) );
+		} else {
+			$message = __( 'Welcome! You&#8217;ve been invited to join the site. Please fill out the information below to create your account.', 'buddyboss' );
+		}
+
+		echo '<div id="message" class="success"><p>' . esc_html( $message ) . '</p></div>';
+
+		?>
+
+	<?php endif; ?>
+	<?php
+}
+add_action( 'bp_before_register_page', 'bp_invites_member_invite_register_screen_message' );
+
+
+function bp_invites_member_invite_get_invitations_by_invited_email( $email ) {
+
+	$email = str_replace( ' ', '+', $email );
+
+
+	$email = str_replace( '+', '.PLUSSIGN.', $email );
+
+	$args = array(
+		'post_type'  => bp_get_invite_post_type(),
+		'posts_per_page' => -1,
+		'meta_query' => array(
+			array(
+				'key'     => '_bp_invitee_email',
+				'value'   => $email,
+				'compare' => '=',
+			),
+		),
+	);
+
+	$bp_get_invitee_email = new WP_Query( $args );
+
+	return $bp_get_invitee_email;
+}
+
+function bp_get_member_invitation_subject() {
+	global $bp;
+
+	$site_name = get_bloginfo('name');
+
+	$text = sprintf( __( 'An invitation to join the %s community.', 'buddyboss' ), $site_name );
+
+	return apply_filters( 'bp_get_member_invitation_subject', stripslashes( $text ) );
+}
+
+function bp_get_member_invitation_message() {
+	global $bp;
+
+	$blogname = get_bloginfo('name');
+
+	$text = sprintf( __( 'You have been invited by %%INVITERNAME%% to join the %s community.
+
+Visit %%INVITERNAME%%\'s profile at %%INVITERURL%%.', 'buddyboss' ), $blogname ); /* Do not translate the strings embedded in %% ... %% ! */
+
+	$text = bp_get_member_invites_wildcard_replace( $text );
+
+
+	return apply_filters( 'bp_get_member_invitation_message', stripslashes( $text ) );
+}
+
+function bp_get_invites_member_invite_url() {
+
+	$invite_link = apply_filters( 'bp_get_invites_member_invite_url', __( 'To accept this invitation, please visit %%ACCEPTURL%%', 'buddyboss' ) );
+
+	return stripslashes( $invite_link );
+}
+
+function bp_get_member_invites_wildcard_replace( $text, $email = false ) {
+	global $bp;
+
+	$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id() );
+	$site_name    = get_bloginfo( 'name' );
+	$inviter_url  = bp_loggedin_user_domain();
+
+	$email = urlencode( $email );
+
+	$accept_link  = add_query_arg( array(
+		'bp-invites' => 'accept-member-invitation',
+		'email'    => $email,
+	), bp_get_root_domain() . '/' . bp_get_signup_slug() . '/' );
+	$accept_link  = apply_filters( 'bp_member_invitation_accept_url', $accept_link );
+
+
+	$text = str_replace( '%%INVITERNAME%%', $inviter_name, $text );
+	$text = str_replace( '%%INVITERURL%%', $inviter_url, $text );
+	$text = str_replace( '%%SITENAME%%', $site_name, $text );
+	$text = str_replace( '%%ACCEPTURL%%', $accept_link, $text );
+
+	/* Adding single % replacements because lots of people are making the mistake */
+	$text = str_replace( '%INVITERNAME%', $inviter_name, $text );
+	$text = str_replace( '%INVITERURL%', $inviter_url, $text );
+	$text = str_replace( '%SITENAME%', $site_name, $text );
+	$text = str_replace( '%ACCEPTURL%', $accept_link, $text );
+
+	return $text;
+}

@@ -11,50 +11,50 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 
 <form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_invites_slug() ); ?>" method="post" class="standard-form" id="send-invite-form">
 
-	<?php if ( bp_xprofile_get_settings_fields() ) : ?>
+	<table class="invite-settings bp-tables-user" id="<?php echo esc_attr( 'member-invites-table' ); ?>">
+		<thead>
+		<tr>
+			<th class="title"><?php esc_html_e( 'Name', 'buddyboss' ); ?></th>
+			<th class="title"><?php esc_html_e( 'Email', 'buddyboss' ); ?></th>
+		</tr>
+		</thead>
+
+		<tbody>
 
 		<?php
-		while ( bp_profile_groups() ) :
-			bp_the_profile_group();
+		for ( $i = 0; $i < 5; $i++ ) {
 			?>
 
-			<?php if ( bp_profile_fields() ) : ?>
+			<tr>
+				<td class="field-name">
+					<input type="text" name="invitee[<?php echo $i; ?>][]" id="invitee" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'invitee' ); ?>/>
+				</td>
+				<td class="field-email">
+					<input type="email" name="email[<?php echo $i; ?>][]" id="email" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'email' ); ?>/>
+				</td>
+			</tr>
 
-			<table class="invite-settings bp-tables-user" id="<?php echo esc_attr( 'member-invites-table' ); ?>">
-				<thead>
-				<tr>
-					<th class="title"><?php esc_html_e( 'Name', 'buddyboss' ); ?></th>
-					<th class="title"><?php esc_html_e( 'Email', 'buddyboss' ); ?></th>
-				</tr>
-				</thead>
+		<?php }; ?>
 
-				<tbody>
+		</tbody>
+	</table>
 
-				<?php
-				for ( $i = 0; $i < 5; $i++ ) {
-					?>
+	<?php
 
-					<tr>
-						<td class="field-name">
-							<input type="text" name="invitee[<?php echo $i; ?>][]" id="invitee" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'invitee' ); ?>/>
-						</td>
-						<td class="field-email">
-							<input type="email" name="email[<?php echo $i; ?>][]" id="email" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'email' ); ?>/>
-						</td>
-					</tr>
+	if ( true === bp_disable_invite_member_email_subject() ) {
+		?>
+		<label for="bp-member-invites-custom-subject"><?php _e( '(optional) Customize the subject line of the invitation email.', 'buddyboss' ) ?></label>
+		<textarea name="bp_member_invites_custom_subject" id="bp-member-invites-custom-subject" rows="15" cols="10" ><?php echo esc_textarea( bp_get_member_invitation_subject() ) ?></textarea>
+		<?php
+	}
 
-				<?php }; ?>
-
-				</tbody>
-			</table>
-
-		<?php endif; ?>
-
-		<?php endwhile; ?>
-
-	<?php endif; ?>
-
-
+	if ( true === bp_disable_invite_member_email_content() ) {
+		?>
+		<label for="bp-member-invites-custom-content"><?php _e( '(optional) Customize the message line of the invitation email.', 'buddyboss' ) ?></label>
+		<textarea name="bp_member_invites_custom_content" id="bp-member-invites-custom-content" rows="15" cols="10" ><?php echo esc_textarea( bp_get_member_invitation_message() ) ?></textarea>
+		<?php
+	}
+	?>
 
 	<?php bp_nouveau_submit_button( 'member-invites-submit' ); ?>
 

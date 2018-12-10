@@ -398,6 +398,6 @@ function bp_admin_setting_callback_member_invite_email_subject() {
 function bp_admin_setting_callback_member_invite_email_content() {
 	?>
 	<input id="bp-disable-invite-member-email-content" name="bp-disable-invite-member-email-content" type="checkbox" value="1" <?php checked( bp_disable_invite_member_email_content() ); ?> />
-	<label for="bp-disable-invite-member-email-content"><?php _e( 'Allow users to customize the invite email subject', 'buddyboss' ); ?></label>
+	<label for="bp-disable-invite-member-email-content"><?php _e( 'Allow users to customize the invite email content', 'buddyboss' ); ?></label>
 	<?php
 }
