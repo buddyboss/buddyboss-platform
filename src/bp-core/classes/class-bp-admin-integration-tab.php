@@ -18,6 +18,7 @@ class BP_Admin_Integration_tab extends BP_Admin_Tab {
 	public $required_plugin = '';
 	public $intro_template  = '';
 	public $root_path       = '';
+	public $root_url        = '';
 
 	public function __construct() {
 		$args = func_get_args();

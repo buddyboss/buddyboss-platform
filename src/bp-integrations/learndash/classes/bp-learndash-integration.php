@@ -21,6 +21,7 @@ class BP_Learndash_Integration extends BP_Integration {
 			$this->name,
 			[
 				'root_path' => $this->path,
+				'root_url'  => $this->url,
 				'required_plugin' => $this->required_plugin,
 			]
 		);
