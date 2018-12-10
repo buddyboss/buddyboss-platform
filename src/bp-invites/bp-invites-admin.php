@@ -78,46 +78,32 @@ function bp_invite_show_data( $column, $post_id  ) {
 
 		case 'inviter':
 
-			echo '<code>'. get_post_meta( $post_id, '_bp_group_type_label_singular_name', true ).'</code>';
+			echo __( get_post_meta( $post_id, '_bp_inviter_name', true ), 'buddyboss' );
+
 			break;
 
 		case 'invitee_name':
 
-			if( get_post_meta( $post_id, '_bp_group_type_enable_filter', true ) )
-				echo __( 'Show', 'buddyboss' );
-			else
-				echo __( 'Hide', 'buddyboss' );
+			echo __( get_post_meta( $post_id, '_bp_invitee_name', true ), 'buddyboss' );
 
 			break;
 
 		case 'invitee_email':
 
-			if( get_post_meta( $post_id, '_bp_group_type_enable_remove', true ) )
-				echo __( 'Hide', 'buddyboss' );
-			else
-				echo __( 'Show', 'buddyboss' );
+			echo __( get_post_meta( $post_id, '_bp_invitee_email', true ), 'buddyboss' );
 
 			break;
 
 		case 'date_invited':
 
-			$group_key = bp_get_group_type_key( $post_id );
-			$group_type_url = admin_url().'admin.php?page=bp-groups&bp-group-type='.$group_key;
-			printf(
-				__( '<a href="%s">%s</a>', 'buddyboss' ),
-				esc_url( $group_type_url ), bp_get_total_count_by_group_types( $group_key )
-			);
+			$date = get_the_date( '',$post_id );
+			echo __( $date, 'buddyboss' );
 
 			break;
 
 		case 'status':
 
-			$group_key = bp_get_group_type_key( $post_id );
-			$group_type_url = admin_url().'admin.php?page=bp-groups&bp-group-type='.$group_key;
-			printf(
-				__( '<a href="%s">%s</a>', 'buddyboss' ),
-				esc_url( $group_type_url ), bp_get_total_count_by_group_types( $group_key )
-			);
+			echo __( get_post_meta( $post_id, '_bp_invitee_status', true ), 'buddyboss' );
 
 			break;
 

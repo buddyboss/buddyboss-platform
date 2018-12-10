@@ -82,6 +82,8 @@ function bp_member_invite_submit() {
 		}
 
 		$email = $value['email'];
+		$name = $value['name'];
+		$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id() );
 
 		$message .= '
 
@@ -103,6 +105,9 @@ function bp_member_invite_submit() {
 		// Save a blank bp_ia_accepted post_meta
 		update_post_meta( $post_id, 'bp_member_invites_accepted', '' );
 		update_post_meta( $post_id, '_bp_invitee_email', $email );
+		update_post_meta( $post_id, '_bp_invitee_name', $name );
+		update_post_meta( $post_id, '_bp_inviter_name', $inviter_name );
+		update_post_meta( $post_id, '_bp_invitee_status', 'Revoke Invite' );
 	}
 
 	bp_core_redirect( bp_displayed_user_domain() . 'invites/sent-invites' );
