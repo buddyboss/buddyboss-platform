@@ -28,7 +28,7 @@ if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() 
 			$args = array(
 				'slug'              => 'courses',
 				'name'              => __( 'Courses', 'buddyboss' ),
-				'nav_item_position' => 105,
+				'nav_item_position' => 65,
 			);
 			parent::init( $args );
 
