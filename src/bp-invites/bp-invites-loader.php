@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the bp-invites component.
  *
- * @since BuddyPress 1.5.0
+ * @since BuddyBoss 3.1.1
  */
 function bp_setup_invites() {
 	buddypress()->invites = new BP_Invites_Component();

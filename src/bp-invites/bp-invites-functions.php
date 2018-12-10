@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss Groups Functions.
+ * BuddyBoss Invites Functions.
  *
  * Functions are where all the magic happens in BuddyPress. They will
  * handle the actual saving or manipulation of information. Usually they will
@@ -8,8 +8,8 @@
  * true or false on success or failure.
  *
  * @package BuddyBoss
- * @subpackage GroupsFunctions
- * @since BuddyPress 1.5.0
+ * @subpackage InvitesFunctions
+ * @since BuddyBoss 3.1.1
  */
 
 // Exit if accessed directly.
@@ -18,26 +18,26 @@ defined( 'ABSPATH' ) || exit;
 
 
 /**
- * Returns the name of the group type post type.
+ * Returns the name of the invite post type.
  *
  * @since BuddyBoss 3.1.1
  *
- * @return string The name of the group type post type.
+ * @return string The name of the invite post type.
  */
 function bp_get_invite_post_type() {
 
 	/**
-	 * Filters the name of the group type post type.
+	 * Filters the name of the invite post type.
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *
-	 * @param string $value group Type post type name.
+	 * @param string $value invite post type name.
 	 */
 	return apply_filters( 'bp_get_invite_post_type', buddypress()->invite_post_type );
 }
 
 /**
- * Return labels used by the group type post type.
+ * Return labels used by the invite post type.
  *
  * @since BuddyBoss 3.1.1
  *
@@ -46,7 +46,7 @@ function bp_get_invite_post_type() {
 function bp_get_invite_post_type_labels() {
 
 	/**
-	 * Filters group type post type labels.
+	 * Filters invite post type labels.
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *
@@ -68,7 +68,7 @@ function bp_get_invite_post_type_labels() {
 }
 
 /**
- * Return array of features that the group type post type supports.
+ * Return array of features that the invite post type supports.
  *
  * @since BuddyBoss 3.1.1
  *
@@ -77,7 +77,7 @@ function bp_get_invite_post_type_labels() {
 function bp_get_invite_post_type_supports() {
 
 	/**
-	 * Filters the features that the group type post type supports.
+	 * Filters the features that the invite post type supports.
 	 *
 	 * @since BuddyBoss 3.1.1
 	 *
@@ -90,7 +90,12 @@ function bp_get_invite_post_type_supports() {
 	) );
 }
 
-add_action( 'bp_init', 'bp_get_invites_register_invite_email_message' );
+/**
+ * Function for registering the email when the invite component active.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ */
 function bp_get_invites_register_invite_email_message() {
 
 	if ( bp_is_active( 'invites' ) ) {
@@ -137,7 +142,14 @@ function bp_get_invites_register_invite_email_message() {
 		}
 	}
 }
+add_action( 'bp_init', 'bp_get_invites_register_invite_email_message' );
 
+/**
+ * Function for unlocking the registration if globally registrations disabled.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ */
 function bp_invites_member_invite_remove_registration_lock() {
 	global $bp;
 

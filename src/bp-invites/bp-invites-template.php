@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Output the invites component slug.
  *
- * @since BuddyPress 1.5.0
+ * @since BuddyBoss 3.1.1
  */
 function bp_invites_slug() {
 	echo bp_get_invites_slug();
@@ -21,45 +21,45 @@ function bp_invites_slug() {
 	/**
 	 * Return the invites component slug.
 	 *
-	 * @since BuddyPress 1.5.0
+	 * @since BuddyBoss 3.1.1
 	 *
 	 * @return string
 	 */
 	function bp_get_invites_slug() {
 
 		/**
-		 * Filters the groups component slug.
+		 * Filters the invites component slug.
 		 *
-		 * @since BuddyPress 1.5.0
+		 * @since BuddyBoss 3.1.1
 		 *
-		 * @param string $slug Groups component slug.
+		 * @param string $slug Invites component slug.
 		 */
 		return apply_filters( 'bp_get_invites_slug', buddypress()->invites->slug );
 	}
 
 /**
- * Output the groups component root slug.
+ * Output the invites component root slug.
  *
- * @since BuddyPress 1.5.0
+ * @since BuddyBoss 3.1.1
  */
 function bp_invites_root_slug() {
 	echo bp_get_invites_root_slug();
 }
 	/**
-	 * Return the groups component root slug.
+	 * Return the invites component root slug.
 	 *
-	 * @since BuddyPress 1.5.0
+	 * @since BuddyBoss 3.1.1
 	 *
 	 * @return string
 	 */
 	function bp_get_invites_root_slug() {
 
 		/**
-		 * Filters the groups component root slug.
+		 * Filters the invites component root slug.
 		 *
-		 * @since BuddyPress 1.5.0
+		 * @since BuddyBoss 3.1.1
 		 *
-		 * @param string $root_slug Groups component root slug.
+		 * @param string $root_slug Invites component root slug.
 		 */
 		return apply_filters( 'bp_get_invites_root_slug', buddypress()->invites->root_slug );
 	}

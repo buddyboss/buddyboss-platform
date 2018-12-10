@@ -1,12 +1,12 @@
 <?php
+
 /**
- * Settings: Email address and password action handler
+ * Send Invites: send invitations action handler
  *
  * @package BuddyBoss
  * @subpackage SettingsActions
  * @since BuddyPress 3.0.0
  */
-
 function bp_member_invite_submit() {
 
 	if ( ! bp_is_invites_component() ) {

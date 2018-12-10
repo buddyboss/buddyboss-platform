@@ -1,13 +1,13 @@
 <?php
 /**
- * BuddyBoss Groups component admin screen.
+ * BuddyBoss Invites component admin screen.
  *
  * Props to WordPress core for the Comments admin screen, and its contextual
  * help text, on which this implementation is heavily based.
  *
  * @package BuddyBoss
- * @subpackage Groups
- * @since BuddyPress 1.7.0
+ * @subpackage Invites
+ * @since BuddyBoss 3.1.1
  */
 
 // Exit if accessed directly.
@@ -17,9 +17,15 @@ defined( 'ABSPATH' ) || exit;
 if ( !class_exists( 'WP_List_Table' ) ) require( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
 
 
-// Hook for register the group type admin action and filters.
+// Hook for register the invite admin action and filters.
 add_action( 'bp_loaded', 'bp_register_invite_type_sections_filters_actions' );
 
+/**
+ * Function for register the invite admin action and filters.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ */
 function bp_register_invite_type_sections_filters_actions() {
 
 	//add column
@@ -33,8 +39,6 @@ function bp_register_invite_type_sections_filters_actions() {
 
 	//hide quick edit link on the custom post type list screen
 	add_filter( 'post_row_actions', 'bp_invite_hide_quick_edit', 10, 2 );
-
-
 
 }
 
@@ -122,7 +126,7 @@ function bp_invite_show_data( $column, $post_id  ) {
 }
 
 /**
- * Function for setting up a column on admin view on group type post type.
+ * Function for setting up a column on admin view on invite post type.
  *
  * @since BuddyBoss 3.1.1
  *
@@ -142,7 +146,7 @@ function bp_invite_add_sortable_columns( $columns ) {
 }
 
 /**
- * Function adding a filter to group type sort items.
+ * Function adding a filter to invite sort items.
  *
  * @since BuddyBoss 3.1.1
  *
@@ -154,7 +158,7 @@ function bp_invite_add_request_filter() {
 }
 
 /**
- * Sort list of group type post types.
+ * Sort list of invite post types.
  *
  * @since BuddyBoss 3.1.1
  *

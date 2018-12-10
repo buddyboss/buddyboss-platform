@@ -19,46 +19,34 @@ class BP_Invites_Component extends BP_Component {
 
 
 	/**
-	 * Default group extension.
+	 * Default invite extension.
 	 *
-	 * @since BuddyPress 1.6.0
+	 * @since BuddyBoss 3.1.1
 	 * @todo Is this used anywhere? Is this a duplicate of $default_extension?
 	 * @var string
 	 */
 	var $default_component;
 
 	/**
-	 * Default group extension.
+	 * Default invite extension.
 	 *
-	 * @since BuddyPress 1.6.0
+	 * @since BuddyBoss 3.1.1
 	 * @var string
 	 */
 	public $default_extension;
 
 	/**
-	 * Illegal group names/slugs.
+	 * Illegal invite names/slugs.
 	 *
-	 * @since BuddyPress 1.5.0
+	 * @since BuddyBoss 3.1.1
 	 * @var array
 	 */
 	public $forbidden_names;
 
-
-
 	/**
-	 * Current directory group type.
+	 * Start the invites component creation process.
 	 *
-	 * @see groups_directory_groups_setup()
-	 *
-	 * @since BuddyPress 2.7.0
-	 * @var string
-	 */
-	public $current_directory_type = '';
-
-	/**
-	 * Start the groups component creation process.
-	 *
-	 * @since BuddyPress 1.5.0
+	 * @since BuddyBoss 3.1.1
 	 */
 	public function __construct() {
 		parent::start(
@@ -67,16 +55,16 @@ class BP_Invites_Component extends BP_Component {
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 70,
-				'search_query_arg' => 'groups_search',
+				'search_query_arg' => 'invites_search',
 			)
 		);
 
 	}
 
 	/**
-	 * Include Groups component files.
+	 * Include Invites component files.
 	 *
-	 * @since BuddyPress 1.5.0
+	 * @since BuddyBoss 3.1.1
 	 *
 	 * @see BP_Component::includes() for a description of arguments.
 	 *
@@ -104,7 +92,7 @@ class BP_Invites_Component extends BP_Component {
 	 *
 	 * Only load up certain code when on specific pages.
 	 *
-	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss 3.1.1
 	 */
 	public function late_includes() {
 		// Bail if PHPUnit is running.
@@ -145,10 +133,10 @@ class BP_Invites_Component extends BP_Component {
 	/**
 	 * Set up component global data.
 	 *
-	 * The BP_GROUPS_SLUG constant is deprecated, and only used here for
+	 * The BP_INVITES_SLUG constant is deprecated, and only used here for
 	 * backwards compatibility.
 	 *
-	 * @since BuddyPress 1.5.0
+	 * @since BuddyBoss 3.1.1
 	 *
 	 * @see BP_Component::setup_globals() for a description of arguments.
 	 *
@@ -162,7 +150,7 @@ class BP_Invites_Component extends BP_Component {
 			define( 'BP_INVITES_SLUG', $this->id );
 		}
 
-		// All globals for groups component.
+		// All globals for invites component.
 		// Note that global_tables is included in this array.
 		$args = array(
 			'slug'                  => BP_INVITES_SLUG,
@@ -172,14 +160,14 @@ class BP_Invites_Component extends BP_Component {
 
 		parent::setup_globals( $args );
 
-		/* Single Group Globals **********************************************/
+		/* Single Invite Globals **********************************************/
 
 	}
 
 	/**
 	 * Set up canonical stack for this component.
 	 *
-	 * @since BuddyPress 2.1.0
+	 * @since BuddyBoss 3.1.1
 	 */
 	public function setup_canonical_stack() {
 		if ( ! bp_is_invites_component() ) {
@@ -193,7 +181,7 @@ class BP_Invites_Component extends BP_Component {
 	/**
 	 * Set up component navigation.
 	 *
-	 * @since BuddyPress 1.5.0
+	 * @since BuddyBoss 3.1.1
 	 *
 	 * @see BP_Component::setup_nav() for a description of arguments.
 	 *
@@ -229,7 +217,7 @@ class BP_Invites_Component extends BP_Component {
 			$access      = bp_core_can_edit_settings();
 			$invites_link = trailingslashit( $user_domain . $slug );
 
-			// Add the My Groups nav item.
+			// Add the My Invites nav item.
 			$sub_nav[] = array(
 				'name'            => __( 'Invite by Email', 'buddyboss' ),
 				'slug'            => 'send-invites',
@@ -240,7 +228,7 @@ class BP_Invites_Component extends BP_Component {
 				'item_css_id'     => 'invites-send-invite'
 			);
 
-			// Add the Group Invites nav item.
+			// Add the Invite Invites nav item.
 			$sub_nav[] = array(
 				'name'            => __( 'Sent Invites', 'buddyboss' ),
 				'slug'            => 'sent-invites',
@@ -261,7 +249,7 @@ class BP_Invites_Component extends BP_Component {
 	/**
 	 * Set up the component entries in the WordPress Admin Bar.
 	 *
-	 * @since BuddyPress 1.5.0
+	 * @since BuddyBoss 3.1.1
 	 *
 	 * @see BP_Component::setup_nav() for a description of the $wp_admin_nav
 	 *      parameter array.
@@ -282,7 +270,7 @@ class BP_Invites_Component extends BP_Component {
 	/**
 	 * Set up the title for pages and <title>.
 	 *
-	 * @since BuddyPress 1.5.0
+	 * @since BuddyBoss 3.1.1
 	 */
 	public function setup_title() {
 
