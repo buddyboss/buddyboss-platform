@@ -116,7 +116,7 @@ function bp_invite_show_data( $column, $post_id  ) {
 			} else {
 				$redirect_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 				$revoke_link = bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_invites_slug() . '/revoke-invite-admin/?id=' . $post_id . '&redirect=' .$redirect_link;
-				$confirm_title = __( 'Are you sure you want to revoke invite?', 'buddyboss' );
+				$confirm_title = __( 'Are you sure you want to revoke this invitation?', 'buddyboss' );
 				?>
 				<a onclick="return confirm('<?php echo esc_attr( $confirm_title ) ?>')" href="<?php echo esc_url( $revoke_link ); ?>"><?php echo esc_html( $title ); ?></a>
 				<?php

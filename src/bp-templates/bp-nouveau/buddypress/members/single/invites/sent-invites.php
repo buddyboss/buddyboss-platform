@@ -74,7 +74,7 @@ if ( isset( $_GET['email'] ) ) {
 				<td class="field-email">
 					<?php
 					$class = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? 'registered' : 'revoked-access';
-					$alert_message = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Are you sure you want to revoke invite?', 'buddyboss' );
+					$alert_message = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Are you sure you want to revoke this invitation?', 'buddyboss' );
 					$icon = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? 'dashicons-yes' : 'dashicons-dismiss';
 					$title = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Revoke Invite', 'buddyboss' );
 					$revoke_link = bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_invites_slug() . '/revoke-invite';

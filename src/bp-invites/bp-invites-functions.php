@@ -57,11 +57,11 @@ function bp_get_invite_post_type_labels() {
 		'all_items'             => _x( 'Sent Invites', 'invite post type label', 'buddyboss' ),
 		'edit_item'             => _x( 'Edit Sent Invite', 'invite post type label', 'buddyboss' ),
 		'menu_name'             => _x( 'Invites', 'invite post type name', 'buddyboss' ),
-		'name'                  => _x( 'Sent Invites', 'invite post type label', 'buddyboss' ),
+		'name'                  => _x( 'Invites Sent by Users', 'invite post type label', 'buddyboss' ),
 		'new_item'              => _x( 'New Sent Invite', 'invite post type label', 'buddyboss' ),
 		'not_found'             => _x( 'No Sent Invites found', 'invite post type label', 'buddyboss' ),
 		'not_found_in_trash'    => _x( 'No Sent Invites found in trash', 'invite post type label', 'buddyboss' ),
-		'search_items'          => _x( 'Search Sent Invite', 'invite post type label', 'buddyboss' ),
+		'search_items'          => _x( 'Search Sent Invites', 'invite post type label', 'buddyboss' ),
 		'singular_name'         => _x( 'Sent Invite', 'invite post type singular name', 'buddyboss' ),
 	) );
 
