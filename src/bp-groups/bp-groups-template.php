@@ -2476,8 +2476,8 @@ function bp_get_possible_parent_groups( $group_id = false, $user_id = false ) {
 	$exclude_ids = wp_list_pluck( $descendants, 'id' );
 	// Also exclude the current group.
 	$exclude_ids[] = $group_id;
-
-	$args = array(
+	$args = [];
+	$args = bp_parse_args( $args, array(
 		'orderby'         => 'name',
 		'order'           => 'ASC',
 		'populate_extras' => false,
@@ -2485,7 +2485,7 @@ function bp_get_possible_parent_groups( $group_id = false, $user_id = false ) {
 		'show_hidden'     => true,
 		'per_page'        => false, // Do not limit the number returned.
 		'page'            => false, // Do not limit the number returned.
-	);
+	), 'get_possible_parent_groups'  );
 
 	$possible_parents = groups_get_groups( $args );
 
