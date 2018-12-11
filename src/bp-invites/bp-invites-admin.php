@@ -108,13 +108,21 @@ function bp_invite_show_data( $column, $post_id  ) {
 
 		case 'status':
 			$title = ( '1' === get_post_meta( $post_id, '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Revoke Invite', 'buddyboss' );
-			printf(
-				__( '<a href="javascript:void(0);">%s</a>', 'buddyboss' ),
-				 $title
-			);
+			if ( '1' === get_post_meta( $post_id, '_bp_invitee_status', true ) ) {
+				printf(
+					__( '<a href="javascript:void(0);">%s</a>', 'buddyboss' ),
+					$title
+				);
+			} else {
+				$redirect_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+				$revoke_link = bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_invites_slug() . '/revoke-invite-admin/?id=' . $post_id . '&redirect=' .$redirect_link;
+				$confirm_title = __( 'Are you sure you want to revoke invite?', 'buddyboss' );
+				?>
+				<a onclick="return confirm('<?php echo esc_attr( $confirm_title ) ?>')" href="<?php echo esc_url( $revoke_link ); ?>"><?php echo esc_html( $title ); ?></a>
+				<?php
+			}
 
 			break;
-
 	}
 
 }

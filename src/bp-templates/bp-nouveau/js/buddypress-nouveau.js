@@ -535,8 +535,20 @@ window.bp = window.bp || {};
 					e.preventDefault();
 
 					var alert_message = $(this).attr('data-name');
+					var id = $(this).attr('id');
+					var object = 'invites';
+					var action = $(this).attr('data-revoke-access');
 					if ( confirm( alert_message ) ) {
-						window.location.reload( true );
+						$.ajax( {
+							url : action,
+							type : 'post',
+							data : {
+								item_id  : id
+							},success : function( response ) {
+								window.location.reload( true );
+							}
+						});
+						//
 					} else {
 						return false;
 					}

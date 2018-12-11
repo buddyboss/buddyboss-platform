@@ -116,6 +116,18 @@ class BP_Invites_Component extends BP_Component {
 			} elseif ( bp_is_post_request() && in_array( bp_current_action(), $actions, true ) ) {
 				require $this->path . 'bp-invites/actions/' . bp_current_action() . '.php';
 			}
+
+			if ( is_user_logged_in() &&
+			     in_array( bp_current_action(), array( 'revoke-invite' ), true )
+			) {
+				require $this->path . 'bp-invites/actions/' . bp_current_action() . '.php';
+			}
+
+			if ( is_user_logged_in() &&
+			     in_array( bp_current_action(), array( 'revoke-invite-admin' ), true )
+			) {
+				require $this->path . 'bp-invites/actions/' . bp_current_action() . '.php';
+			}
 		}
 
 		// Screens - User profile integration.
