@@ -89,7 +89,7 @@ if ( isset( $_GET['email'] ) ) {
 		?>
 		<tr>
 			<td colspan="4" class="field-name">
-				<span><?php esc_html_e( 'You have\'t sent any invitations to the people.', 'buddyboss' ); ?></span>
+				<span><?php esc_html_e( 'You haven\'t sent any invitations yet.', 'buddyboss' ); ?></span>
 			</td>
 		</tr>
 		<?php

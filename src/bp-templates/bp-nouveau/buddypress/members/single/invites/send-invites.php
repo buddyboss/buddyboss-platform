@@ -6,7 +6,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 </h2>
 
 <p class="info invite-info">
-	<?php _e( 'Invite non-members to join the network, They will receive an email with a link to register.', 'buddyboss' ); ?>
+	<?php _e( 'Invite non-members to join the network. They will receive an email with a link to register.', 'buddyboss' ); ?>
 </p>
 
 <form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_invites_slug() ); ?>" method="post" class="standard-form" id="send-invite-form">
