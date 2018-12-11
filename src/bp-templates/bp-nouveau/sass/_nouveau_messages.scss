@@ -1,37 +1,5 @@
 // Nouveau Messages styles.
 // @version 3.0.0
-// Icon additions to default action star
-
-
-.message-action-star:before,
-.message-action-unstar:before,
-.message-action-view:before,
-.message-action-delete:before {
-	font-family: dashicons;
-	font-size: 18px;
-}
-
-.message-action-star:before {
-	color: #aaa;
-	content: "\f154";
-}
-
-.message-action-unstar:before {
-	color: #fcdd77;
-	content: "\f155";
-}
-
-.message-action-view:before {
-	content: "\f473";
-}
-
-.message-action-delete:before {
-	content: "\f182";
-}
-
-.message-action-delete:hover:before {
-	color: #a00;
-}
 
 .preview-content {
 
@@ -455,8 +423,12 @@ input#send-to-input {
 	}
 }
 
-.messages.compose .bp-messages-threads-list {
-	display: none;
+.messages.compose {
+
+	.bp-messages-filters,
+	.bp-messages-threads-list {
+		display: none;
+	}
 }
 
 #send_message_form {
