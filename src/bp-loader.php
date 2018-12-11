@@ -227,7 +227,7 @@ if ( ! function_exists( 'bp_global_search_deactivate_notice' ) ) {
 		?>
 		<div id="message" class="error">
 		<p><strong><?php esc_html_e( 'BuddyBoss Platform can\'t be activated.', 'buddyboss' ); ?></strong></p>
-		<p><?php _e( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ); ?></p>
+		<p><?php _e( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ); ?></p>
 		</div><?php
 	}
 }
