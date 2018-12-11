@@ -1,6 +1,26 @@
 <?php
 bp_nouveau_member_hook( 'before', 'invites_sent_template' );
 ?>
+
+<?php
+
+if ( isset( $_GET['email'] ) ) {
+	?>
+	<aside class="bp-feedback bp-send-invites bp-template-notice success">
+		<span class="bp-icon" aria-hidden="true"></span>
+		<p>
+			<?php
+				$text = __( 'Invitations were sent successfully to the following email addresses:', 'buddyboss' );
+				echo trim ($text.' '. filter_input( INPUT_GET, 'email', FILTER_SANITIZE_STRING ) );
+			?>
+		</p>
+		<script>window.history.replaceState(null, null, window.location.pathname);</script>
+	</aside>
+	<?php
+}
+
+?>
+
 <h2 class="screen-heading general-settings-screen">
 	<?php _e( 'Sent Invites', 'buddyboss' ); ?>
 </h2>
@@ -38,25 +58,26 @@ bp_nouveau_member_hook( 'before', 'invites_sent_template' );
 			?>
 			<tr>
 				<td class="field-name">
-					<span><?php echo __( get_post_meta( get_the_ID(), '_bp_invitee_name', true ), 'buddyboss' ); ?></span>
+					<span><?php echo get_post_meta( get_the_ID(), '_bp_invitee_name', true ); ?></span>
 				</td>
 				<td class="field-email">
-					<span><?php echo __( get_post_meta( get_the_ID(), '_bp_invitee_email', true ), 'buddyboss' ); ?></span>
+					<span><?php echo get_post_meta( get_the_ID(), '_bp_invitee_email', true ); ?></span>
 				</td>
 				<td class="field-email">
 					<span>
 						<?php
 						$date = get_the_date( '',get_the_ID() );
-						echo __( $date, 'buddyboss' );
+						echo $date;
 						?>
 					</span>
 				</td>
 				<td class="field-email">
 					<?php
 					$class = ( 1 === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? 'registered' : 'revoked-access';
-					$alert_message = ( 1 === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Are you sure you want to revoked invite?', 'buddyboss' );
+					$alert_message = ( 1 === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Are you sure you want to revoke invite?', 'buddyboss' );
+					$title = ( 1 === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Revoke Invite', 'buddyboss' );
 					?>
-					<span><a data-name="<?php echo esc_attr( $alert_message ); ?>" id="<?php echo esc_attr( get_the_ID() ); ?>" class="<?php echo esc_attr( $class ); ?>" href="javascript:void(0);"><?php echo __( get_post_meta( get_the_ID(), '_bp_invitee_status', true ), 'buddyboss' ); ?></a></span>
+					<span><a data-name="<?php echo esc_attr( $alert_message ); ?>" id="<?php echo esc_attr( get_the_ID() ); ?>" class="<?php echo esc_attr( $class ); ?>" href="javascript:void(0);"><?php echo $title; ?></a></span>
 				</td>
 			</tr>
 			<?php

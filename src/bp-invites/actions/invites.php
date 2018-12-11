@@ -64,7 +64,7 @@ function bp_member_invite_submit() {
 			);
 		}
 	}
-
+	$query_string = array();
 	foreach ( $invite_correct_array as $key => $value ) {
 
 		if ( true === bp_disable_invite_member_email_subject() ) {
@@ -81,6 +81,7 @@ function bp_member_invite_submit() {
 
 		$email = $value['email'];
 		$name = $value['name'];
+		$query_string[] = $email;
 		$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id() );
 
 		$message .= '
@@ -108,7 +109,7 @@ function bp_member_invite_submit() {
 		update_post_meta( $post_id, '_bp_invitee_status', 0 );
 	}
 
-	bp_core_redirect( bp_displayed_user_domain() . 'invites/sent-invites' );
+	bp_core_redirect( bp_displayed_user_domain() . 'invites/sent-invites?email='.implode (", ", $query_string ) );
 
 }
 add_action( 'bp_actions', 'bp_member_invite_submit' );
