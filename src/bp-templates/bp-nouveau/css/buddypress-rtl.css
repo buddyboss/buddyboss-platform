@@ -4524,16 +4524,6 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
   content: "\f153";
 }
 
-.buddypress-wrap .bp-invites-filters ul li #bp-invites-next-page:before,
-.buddypress-wrap .bp-messages-filters ul li #bp-messages-next-page:before {
-  content: "\f345";
-}
-
-.buddypress-wrap .bp-invites-filters ul li #bp-invites-prev-page:before,
-.buddypress-wrap .bp-messages-filters ul li #bp-messages-prev-page:before {
-  content: "\f341";
-}
-
 .warn {
   color: #b71717;
 }

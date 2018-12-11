@@ -393,13 +393,4 @@
 		}
 	} // close ul.item-list
 
-	.bp-invites-filters ul li #bp-invites-next-page:before,
-	.bp-messages-filters ul li #bp-messages-next-page:before {
-		content: "\f345";
-	}
-
-	.bp-invites-filters ul li #bp-invites-prev-page:before,
-	.bp-messages-filters ul li #bp-messages-prev-page:before {
-		content: "\f341";
-	}
 } // close .buddypress-wrap
