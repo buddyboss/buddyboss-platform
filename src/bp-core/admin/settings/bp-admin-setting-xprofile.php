@@ -18,6 +18,16 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
         $bp_nouveau_appearance = bp_get_option( 'bp_nouveau_appearance', array() );
         $bp_nouveau_appearance[ 'user_front_page' ] = isset( $_POST[ 'bp-enable-member-dashboard' ] ) ? $_POST[ 'bp-enable-member-dashboard' ] : 0;
         bp_update_option( 'bp_nouveau_appearance', $bp_nouveau_appearance );
+
+        /**
+         * Set requirement for last name based on display format
+         */
+        if ( isset( $_POST[ 'bp-display-name-format' ] ) && $_POST[ 'bp-display-name-format' ] == 'first_last_name' ) {
+        	if ( $last_name_field = xprofile_get_field( bp_xprofile_lastname_field_id() ) ) {
+        		$last_name_field->is_required = true;
+        		$last_name_field->save();
+        	}
+        }
 	}
 
 	public function register_fields() {
@@ -92,7 +102,13 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		printf(
 			'<p class="description">%s</p>',
-			__( '', 'buddyboss' )
+			sprintf(
+				__( 'After the format has been updated, remember to run the <a href="%s">tool</a> to update all the users.', 'buddyboss' ),
+				add_query_arg([
+					'page' => 'bp-tools',
+					'tool' => 'bp-wordpress-update-display-name'
+				], admin_url( 'tools.php' ) )
+			)
 		);
 	}
 

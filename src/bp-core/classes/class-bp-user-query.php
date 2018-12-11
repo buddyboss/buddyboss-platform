@@ -297,7 +297,7 @@ class BP_User_Query {
 				} elseif ( 'random' == $type ) {
 					$sql['orderby'] = "ORDER BY rand()";
 				} else {
-					$sql['orderby'] = array( 
+					$sql['orderby'] = array(
                         array( "COALESCE( a.date_recorded, NULL )", "DESC" ),
                         array( "u.display_name", "ASC" ),
                     );
@@ -416,9 +416,7 @@ class BP_User_Query {
 			}
 
 			$matched_user_ids = $wpdb->get_col( $wpdb->prepare(
-				"SELECT ID FROM {$wpdb->users} WHERE ( user_login LIKE %s OR user_login LIKE %s OR user_nicename LIKE %s OR user_nicename LIKE %s )",
-				$search_terms_nospace,
-				$search_terms_space,
+				"SELECT ID FROM {$wpdb->users} WHERE (display_name LIKE %s OR display_name LIKE %s)",
 				$search_terms_nospace,
 				$search_terms_space
 			) );
@@ -520,14 +518,14 @@ class BP_User_Query {
             foreach ( $this->uid_clauses['orderby'] as $part ) {
                 $orderby_multiple[] = $part[0] . ' ' . $part[1];//column_name DESC/ASC
             }
-            
+
             $this->uid_clauses['orderby'] = "ORDER BY " . implode( ', ', $orderby_multiple );
             $this->uid_clauses['order'] = "";
         }
-        
+
 		// Get the specific user ids.
 		$this->user_ids = $wpdb->get_col( "{$this->uid_clauses['select']} {$this->uid_clauses['where']} {$this->uid_clauses['orderby']} {$this->uid_clauses['order']} {$this->uid_clauses['limit']}" );
-        
+
         // Get the total user count.
 		if ( 'sql_calc_found_rows' == $this->query_vars['count_total'] ) {
 

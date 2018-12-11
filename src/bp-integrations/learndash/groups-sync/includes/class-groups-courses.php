@@ -28,7 +28,7 @@ if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() 
 			$args = array(
 				'slug'              => 'courses',
 				'name'              => __( 'Courses', 'buddyboss' ),
-				'nav_item_position' => 105,
+				'nav_item_position' => 65,
 			);
 			parent::init( $args );
 
@@ -238,10 +238,24 @@ if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() 
 		}
 
 		if ( function_exists( 'bp_is_group' ) && bp_is_group() ) {
-			$type = bp_learndash_groups_sync_check_associated_ld_group( buddypress()->groups->current_group->id );
-			if ( $type ) {
-				bp_register_group_extension( 'LearnDash_BuddyPress_Groups_Courses_Extension' );
+			// bp groups has no members
+			if ( ! groups_get_group_members( ['exclude_admins_mods' => false ] )['count'] ) {
+				return;
 			}
+
+			$ld_group = bp_learndash_groups_sync_check_associated_ld_group( buddypress()->groups->current_group->id );
+
+			// no synced group
+			if ( ! $ld_group ) {
+				return;
+			}
+
+			// or synced group doesn't have courses
+			if ( ! learndash_group_enrolled_courses($ld_group) ) {
+				return;
+			}
+
+			bp_register_group_extension( 'LearnDash_BuddyPress_Groups_Courses_Extension' );
 		}
 	}
 

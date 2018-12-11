@@ -3306,9 +3306,9 @@ body.register .buddypress-wrap .page ul {
 
 #message-threads li .thread-avatar img.avatar {
   float: left;
-  margin: 5px 10px 0 0;
-  max-width: 80px;
-  width: 80%;
+  margin: 0 10px 0 0;
+  max-width: 50px;
+  width: 100%;
 }
 
 .bp-messages-content .actions {
@@ -3518,6 +3518,52 @@ input#send-to-input {
 #bp-message-load-more .button:hover {
   background: #fff;
   color: #333;
+}
+
+.single.messages.view .bp-messages-filters,
+.single.messages.view .bp-messages-threads-list {
+  display: none;
+}
+
+.messages.compose .bp-messages-threads-list {
+  display: none;
+}
+
+#send_message_form .select2-selection--multiple {
+  border-color: #d6d6d6;
+  padding: 3px 5px;
+}
+
+#send_message_form .select2-selection__rendered {
+  display: flex;
+  align-items: center;
+  flex-flow: row wrap;
+  padding: 0;
+}
+
+#send_message_form .select2-search.select2-search--inline {
+  flex: 1;
+}
+
+#send_message_form .select2-selection__rendered li {
+  margin: 5px;
+}
+
+#send_message_form .select2-search__field {
+  min-width: 120px;
+  height: 30px;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  padding: 0 5px;
+}
+
+.bp-messages-content #bp-message-content {
+  margin-top: 20px;
+}
+
+.messages .select2-dropdown {
+  border-color: #d6d6d6;
 }
 
 /**
@@ -4485,16 +4531,6 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 .buddypress-wrap ul.item-list li.selected .invite-button span.icons:before,
 .buddypress-wrap ul.item-list li .group-remove-invite-button span.icons:before {
   content: "\f153";
-}
-
-.buddypress-wrap .bp-invites-filters ul li #bp-invites-next-page:before,
-.buddypress-wrap .bp-messages-filters ul li #bp-messages-next-page:before {
-  content: "\f345";
-}
-
-.buddypress-wrap .bp-invites-filters ul li #bp-invites-prev-page:before,
-.buddypress-wrap .bp-messages-filters ul li #bp-messages-prev-page:before {
-  content: "\f341";
 }
 
 .warn {

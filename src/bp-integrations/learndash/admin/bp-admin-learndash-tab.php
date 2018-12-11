@@ -6,7 +6,7 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	protected $current_section;
 
 	public function initialize() {
-		$this->intro_template  = buddypress()->integration_dir . '/learndash/admin/templates/tab-intro.php';
+		$this->intro_template  = $this->root_path . '/admin/templates/tab-intro.php';
 		$this->groups_sync_options = get_option( $this->groups_sync_option_key ) ?: [];
 		$this->groups_report_options = get_option( $this->groups_report_option_key ) ?: [];
 
@@ -182,7 +182,7 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		parent::form_html();
 
-		require bp_learndash_path('groups-sync/templates/admin/learndash-settings-tools.php');
+		require $this->root_path . '/groups-sync/templates/admin/learndash-settings-tools.php';
 	}
 
 	public function learndash_groups_sync_description() {
@@ -226,8 +226,8 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			'<script type="text/javascript" src="%s"></script>',
 			add_query_arg(
 				'ver',
-				filemtime(bp_learndash_path('groups-sync/assets/js/admin/bp_learndash_groups_sync-settings.js')),
-				bp_learndash_url('groups-sync/assets/js/admin/bp_learndash_groups_sync-settings.js')
+				filemtime( $this->root_path . '/groups-sync/assets/js/admin/bp_learndash_groups_sync-settings.js' ),
+				$this->root_url . '/groups-sync/assets/js/admin/bp_learndash_groups_sync-settings.js'
 			)
 		);
 	}

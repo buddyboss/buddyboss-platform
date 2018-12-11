@@ -11,8 +11,11 @@
 ?>
 <div class="subnav-filters filters user-subnav bp-messages-filters" id="subsubnav"></div>
 
+<input type="hidden" id="thread-id" value="" />
 <div class="bp-messages-feedback"></div>
-<div class="bp-messages-content"></div>
+<div class="bp-messages-threads-list"></div>
+<div class="bp-messages-content">
+</div>
 
 <script type="text/html" id="tmpl-bp-messages-feedback">
 	<div class="bp-feedback {{data.type}}">
@@ -34,7 +37,16 @@
 	<?php bp_nouveau_messages_hook( 'before', 'compose_content' ); ?>
 
 	<label for="send-to-input"><?php esc_html_e( 'New Message', 'buddyboss' ); ?></label>
-	<input type="text" name="send_to" class="send-to-input" id="send-to-input" placeholder="<?php esc_html_e( 'Type @ to add one or more recipients', 'buddyboss' ); ?>" value="<?php if ( isset( $_GET['r'] ) ) : ?>@<?php echo esc_textarea( $_GET['r'] ); ?> <?php endif; ?>" autocomplete="off" />
+	<select
+		name="send_to[]"
+		class="send-to-input"
+		id="send-to-input"
+		placeholder="<?php esc_html_e( 'Type to add one or more recipients', 'buddyboss' ); ?>"
+		value="<?php if ( isset( $_GET['r'] ) ) : ?>@<?php echo esc_textarea( $_GET['r'] ); ?> <?php endif; ?>"
+		autocomplete="off"
+		multiple="multiple"
+		style="width: 100%"
+	></select>
 
 	<div id="bp-message-content"></div>
 
@@ -208,7 +220,7 @@
 </script>
 
 <script type="text/html" id="tmpl-bp-messages-single-load-more">
-	<button type="button" class="button"><?php _e( 'Load previous messages', 'buddyboss' ); ?></button>
+	<button type="button" class="button" style="display: none;"><?php _e( 'Load previous messages', 'buddyboss' ); ?></button>
 </script>
 
 <script type="text/html" id="tmpl-bp-messages-single-list">

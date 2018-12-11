@@ -53,6 +53,10 @@ window.bp = window.bp || {};
 			$( '#subnav a' ).on( 'click', function( event ) {
 				event.preventDefault();
 
+				if ( $( event.target ).closest('li').hasClass('current') ) {
+					return false;
+				}
+
 				var view_id = $( event.target ).prop( 'id' );
 
 				// Remove the editor to be sure it will be added dynamically later
@@ -157,7 +161,20 @@ window.bp = window.bp || {};
 
 		composeView: function() {
 			// Remove all existing views.
-			this.clearViews();
+			//this.clearViews();
+
+			var threadView = false;
+			if ( ! _.isUndefined( this.views.models ) ) {
+				_.each( this.views.models, function( model ) {
+					if ( model.get('id') === 'threads' ) {
+						threadView = true;
+					}
+				}, this );
+			}
+
+			if ( ! threadView ) {
+				this.threadsView();
+			}
 
 			// Create the loop view
 			var form = new bp.Views.messageForm( {
@@ -183,7 +200,7 @@ window.bp = window.bp || {};
 
 			this.views.add( { id: 'threads', view: threads_list } );
 
-			threads_list.inject( '.bp-messages-content' );
+			threads_list.inject( '.bp-messages-threads-list' );
 
 			// Attach filters
 			this.displayFilters( this.threads );
@@ -209,10 +226,24 @@ window.bp = window.bp || {};
 		},
 
 		singleView: function( thread ) {
-			// Remove all existing views.
-			this.clearViews();
 
 			this.box = 'single';
+
+			var threadView = false;
+			if ( ! _.isUndefined( this.views.models ) ) {
+				_.each( this.views.models, function( model ) {
+					if ( model.get('id') === 'threads' ) {
+						threadView = true;
+					}
+				}, this );
+			}
+
+			if ( ! threadView ) {
+				// Remove all existing views except threads view.
+				this.clearViews();
+
+				this.threadsView();
+			}
 
 			// Create the single thread view
 			var single_thread = new bp.Views.userMessages( { collection: this.messages, thread: thread } );
@@ -532,7 +563,7 @@ window.bp = window.bp || {};
 			this.model.on( 'change', this.resetFields, this );
 
 			// Activate bp_mentions
-			this.on( 'ready', this.addMentions, this );
+			this.on( 'ready', this.addSelect2, this );
 		},
 
 		addMentions: function() {
@@ -541,6 +572,36 @@ window.bp = window.bp || {};
 				data: [],
 				suffix: ' '
 			} );
+		},
+
+		addSelect2: function() {
+			var $input = $( this.el ).find( '#send-to-input' );
+
+			if ( $input.prop("tagName") != 'SELECT' ) {
+				this.addMentions();
+				return;
+			}
+
+			$input.select2({
+				placeholder: $input.attr('placeholder'),
+				minimumInputLength: 1,
+				ajax: {
+					url: bp.ajax.settings.url,
+					dataType: 'json',
+					delay: 250,
+					data: function(params) {
+						return $.extend( {}, params, {
+							nonce: BP_Nouveau.messages.nonces.load_recipient,
+							action: 'messages_search_recipients'
+						});
+					},
+					processResults: function( data ) {
+						return {
+							results: data && data.success? data.data.results : []
+						};
+					},
+				}
+			});
 		},
 
 		resetFields: function( model ) {
@@ -602,6 +663,8 @@ window.bp = window.bp || {};
 								errors.push( 'send_to' );
 							}
 
+							var send_to = this.model.get( 'send_to' );
+							usernames = _.union(send_to, usernames);
 							this.model.set( 'send_to', usernames, { silent: true } );
 						}
 
@@ -702,7 +765,9 @@ window.bp = window.bp || {};
 		},
 
 		threadsFetched: function() {
-			bp.Nouveau.Messages.removeFeedback();
+			if ( bp.Nouveau.Messages.box !== 'single' ) {
+				bp.Nouveau.Messages.removeFeedback();
+			}
 
 			// Display the bp_after_member_messages_loop hook.
 			if ( this.collection.options.afterLoop ) {
@@ -775,6 +840,11 @@ window.bp = window.bp || {};
 				);
 			}
 
+			$.each( $( '.thread-content' ), function() {
+				$(this).closest('.thread-item').removeClass('current');
+			} );
+
+			target.closest( '.thread-item' ).addClass('current');
 		}
 	} );
 
@@ -790,6 +860,10 @@ window.bp = window.bp || {};
 		initialize: function() {
 			if ( this.model.get( 'unread' ) ) {
 				this.el.className += ' unread';
+			}
+
+			if ( $('#thread-id').val() == this.model.get('id') ) {
+				this.el.className += ' current';
 			}
 
 			var recipientsCount = this.model.get( 'recipients' ).length, toOthers = '';
@@ -886,10 +960,10 @@ window.bp = window.bp || {};
 
 			this.views.add( new bp.Views.Pagination( { model: new Backbone.Model( collection.options ) } ) );
 
-			this.views.add( '.user-messages-bulk-actions', new bp.Views.BulkActions( {
-				model: new Backbone.Model( BP_Nouveau.messages.bulk_actions ),
-				collection : collection
-			} ) );
+			// this.views.add( '.user-messages-bulk-actions', new bp.Views.BulkActions( {
+			// 	model: new Backbone.Model( BP_Nouveau.messages.bulk_actions ),
+			// 	collection : collection
+			// } ) );
 		},
 
 		filterThreads: function() {
@@ -1134,6 +1208,9 @@ window.bp = window.bp || {};
 			if ( response.messages.length < response.per_page && ! _.isUndefined( this.views.get( '#bp-message-load-more' ) ) ) {
 				var loadMore = this.views.get( '#bp-message-load-more' )[0];
 				loadMore.views.view.remove();
+			} else {
+				var loadMore = this.views.get( '#bp-message-load-more' )[0];
+				loadMore.views.view.$el.find('button').show();
 			}
 
 			if ( ! this.views.get( '#bp-message-thread-header' ) ) {
@@ -1220,6 +1297,10 @@ window.bp = window.bp || {};
 
 		composeMessage: function() {
 			bp.Nouveau.Messages.composeView();
+
+			document.body.classList.remove('view');
+			document.body.classList.remove('inbox');
+			document.body.classList.add('compose');
 		},
 
 		viewMessage: function( thread_id ) {
@@ -1236,6 +1317,22 @@ window.bp = window.bp || {};
 			}
 
 			bp.Nouveau.Messages.singleView( thread );
+
+			// set current thread id
+			$('#thread-id').val(thread_id);
+
+			$.each( $( '.thread-content' ), function() {
+				var _this = $(this);
+				if ( _this.data('thread-id') == thread_id ) {
+					_this.closest('.thread-item').addClass('current');
+				} else {
+					_this.closest('.thread-item').removeClass('current');
+				}
+			} );
+
+			document.body.classList.add('view');
+			document.body.classList.remove('inbox');
+			document.body.classList.remove('compose');
 		},
 
 		starredView: function() {
@@ -1246,6 +1343,10 @@ window.bp = window.bp || {};
 		inboxView: function() {
 			bp.Nouveau.Messages.box = 'inbox';
 			bp.Nouveau.Messages.threadsView();
+
+			document.body.classList.remove('view');
+			document.body.classList.add('inbox');
+			document.body.classList.remove('compose');
 		}
 	} );
 

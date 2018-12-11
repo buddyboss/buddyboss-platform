@@ -22,6 +22,7 @@ add_action( 'admin_init', function() {
 		array( 'messages_unread'                   => array( 'function' => 'bp_nouveau_ajax_readunread_thread_messages', 'nopriv' => false ) ),
 		array( 'messages_read'                     => array( 'function' => 'bp_nouveau_ajax_readunread_thread_messages', 'nopriv' => false ) ),
 		array( 'messages_dismiss_sitewide_notice'  => array( 'function' => 'bp_nouveau_ajax_dismiss_sitewide_notice', 'nopriv' => false ) ),
+		array( 'messages_search_recipients'        => array( 'function' => 'bp_nouveau_ajax_dsearch_recipients', 'nopriv' => false ) ),
 	);
 
 	foreach ( $ajax_actions as $ajax_action ) {
@@ -804,4 +805,49 @@ function bp_nouveau_ajax_dismiss_sitewide_notice() {
 			'type'     => 'success',
 		) );
 	}
+}
+
+function bp_nouveau_ajax_dsearch_recipients() {
+	if ( empty( $_GET['action'] ) ) {
+		wp_send_json_error();
+	}
+
+	$response = array(
+		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'There was a problem loading recipients. Please try again.', 'buddyboss' ) . '</p></div>',
+		'type'     => 'error',
+	);
+
+	if ( false === bp_is_active( 'messages' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'messages_load_recipient' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	add_filter( 'bp_members_suggestions_query_args', 'bp_nouveau_ajax_search_recipients_exclude_current' );
+
+	$results = bp_core_get_suggestions( [
+		'term' => sanitize_text_field( $_GET['term'] ),
+		'type' => 'members',
+	] );
+
+	wp_send_json_success( [
+		'results' => array_map( function($result) {
+			return [
+				'id' => "@{$result->ID}",
+				'text' => $result->name
+			];
+		}, $results)
+	] );
+}
+
+function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
+	if ( ! $user_query['exclude'] ) {
+		$user_query['exclude'] = [];
+	}
+
+	$user_query['exclude'][] = get_current_user_id();
+
+	return $user_query;
 }

@@ -192,9 +192,9 @@
 
 			img.avatar {
 				float: left;
-				margin: 5px 10px 0 0;
-				max-width: 80px;
-				width: 80%;
+				margin: 0 10px 0 0;
+				max-width: 50px;
+				width: 100%;
 			}
 		}
 
@@ -445,4 +445,56 @@ input#send-to-input {
 		background: #fff;
 		color: #333;
 	}
+}
+
+.single.messages.view {
+
+	.bp-messages-filters,
+	.bp-messages-threads-list {
+		display: none;
+	}
+}
+
+.messages.compose .bp-messages-threads-list {
+	display: none;
+}
+
+#send_message_form {
+
+	.select2-selection--multiple {
+		border-color: $med-light-grey;
+		padding: 3px 5px;
+	}
+
+	.select2-selection__rendered {
+		display: flex;
+		align-items: center;
+		flex-flow: row wrap;
+		padding: 0;
+	}
+
+	.select2-search.select2-search--inline {
+		flex: 1;
+	}
+
+	.select2-selection__rendered li {
+		margin: 5px;
+	}
+
+	.select2-search__field {
+		min-width: 120px;
+		height: 30px;
+		margin: 0;
+		border: 0;
+		background: transparent;
+		padding: 0 5px;
+	}
+}
+
+.bp-messages-content #bp-message-content {
+	margin-top: $marg-lrg;
+}
+
+.messages .select2-dropdown {
+	border-color: $med-light-grey;
 }
