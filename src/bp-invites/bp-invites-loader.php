@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Invites Loader.
  *
- * A invites component, Allow you users to send invites to non-members to join the network.
+ * A invites component, Allow you users to send email invites to non-members to join the network.
  *
  * @package BuddyBoss
  * @subpackage InvitesLoader

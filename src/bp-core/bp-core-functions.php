@@ -2433,7 +2433,7 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'invites'  => array(
 			'title'       => __( 'User Invites', 'buddyboss' ),
-			'description' => __( 'Allow you users to send invites to non-members to join the network.', 'buddyboss' )
+			'description' => __( 'Allow you users to send email invites to non-members to join the network.', 'buddyboss' )
 		),
 		'messages' => array(
 			'title'       => __( 'Private Messaging', 'buddyboss' ),
