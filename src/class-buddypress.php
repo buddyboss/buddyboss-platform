@@ -450,6 +450,15 @@ class BuddyPress {
 		 * @param string $value Email type taxonomy slug.
 		 */
 		$this->email_taxonomy_type = apply_filters( 'bp_email_tax_type', 'bp-email-type' );
+
+		/**
+		 * Filters the post type slug for the invites component.
+		 *
+		 * since BuddyBoss 3.1.1
+		 *
+		 * @param string $value Group Type post type slug.
+		 */
+		$this->invite_post_type     = apply_filters( 'bp_invite_post_type', 'bp-invite' );
 	}
 
 	/**
@@ -581,6 +590,7 @@ class BuddyPress {
 			'profiletype',
 			'forums',
 			'gdpr',
+			'invites',
 		);
 
 		// These classes don't have a name that matches their component.

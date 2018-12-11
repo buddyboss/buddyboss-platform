@@ -129,6 +129,11 @@ function bp_get_default_options() {
 		// Ignore deprecated code.
 		'_bp_ignore_deprecated_code'           => true,
 
+		/* Invites ************************************************************/
+
+		'bp-disable-invite-member-email-subject'         => false,
+		'bp-disable-invite-member-email-content'         => true,
+
 		/* Widgets **************************************************/
 		'widget_bp_core_login_widget'                => false,
 		'widget_bp_core_members_widget'              => false,
@@ -965,4 +970,46 @@ function bp_member_type_display_on_profile( $default = false ) {
 	 * @param bool $value Whether member type is enabled or not.
 	 */
 	return (bool) apply_filters( 'bp_member_type_display_on_profile', (bool) bp_get_option( 'bp-member-type-display-on-profile', $default ) );
+}
+
+/**
+ * Is invite email subject customize disabled?
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if email subject customize enabled, otherwise false.
+ */
+function bp_disable_invite_member_email_subject( $default = false ) {
+
+	/**
+	 * Filters whether email subject customize is enabled or not.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param bool $value Whether email subject customize is enabled or not.
+	 */
+	return (bool) apply_filters( 'bp_disable_invite_member_email_subject', (bool) bp_get_option( 'bp-disable-invite-member-email-subject', $default ) );
+}
+
+/**
+ * Is invite email content customize disabled?
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if email content customize enabled, otherwise false.
+ */
+function bp_disable_invite_member_email_content( $default = true ) {
+
+	/**
+	 * Filters whether email content customize is enabled or not.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param bool $value Whether email content customize is enabled or not.
+	 */
+	return (bool) apply_filters( 'bp_disable_invite_member_email_content', (bool) bp_get_option( 'bp-disable-invite-member-email-content', $default ) );
 }

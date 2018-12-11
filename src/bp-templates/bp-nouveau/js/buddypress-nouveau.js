@@ -41,6 +41,9 @@ window.bp = window.bp || {};
             // Toggle Grid/List View
 			this.switchGridList();
 
+			// Member Invites popup revoke access
+			this.sendInvitesRevokeAccess();
+
 			//this.memberPreFilter();
 			$.ajaxPrefilter( this.memberPreFilter );
 			$.ajaxPrefilter( this.groupPreFilter );
@@ -522,6 +525,35 @@ window.bp = window.bp || {};
 
                 _this.setStorage( 'bp-' + object, 'extras', extras );
             });
+		},
+
+		sendInvitesRevokeAccess: function() {
+
+			if ( $('body.sent-invites #member-invites-table').length ) {
+
+				$( 'body.sent-invites #member-invites-table tr td span a.revoked-access' ).click(function( e ) {
+					e.preventDefault();
+
+					var alert_message = $(this).attr('data-name');
+					var id = $(this).attr('id');
+					var object = 'invites';
+					var action = $(this).attr('data-revoke-access');
+					if ( confirm( alert_message ) ) {
+						$.ajax( {
+							url : action,
+							type : 'post',
+							data : {
+								item_id  : id
+							},success : function( response ) {
+								window.location.reload( true );
+							}
+						});
+						//
+					} else {
+						return false;
+					}
+				});
+			}
 		},
 
 		/** Event Callbacks ***********************************************************/

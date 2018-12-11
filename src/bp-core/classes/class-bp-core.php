@@ -362,7 +362,7 @@ class BP_Core extends BP_Component {
 			);
 		}
 
-		if ( true === bp_disable_group_type_creation() ) {
+		if ( bp_is_active( 'groups' ) && true === bp_disable_group_type_creation() ) {
 			// Register Group Types custom post type.
 			register_post_type(
 				bp_get_group_type_post_type(),

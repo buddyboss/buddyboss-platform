@@ -2234,6 +2234,17 @@ function bp_is_settings_component() {
 }
 
 /**
+ * Check whether the current page is part of the Invites component.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return bool True if the current page is part of the Invites component.
+ */
+function bp_is_invites_component() {
+	return (bool) bp_is_current_component( 'invites' );
+}
+
+/**
  * Is the current component an active core component?
  *
  * Use this function when you need to check if the current component is an
@@ -2645,6 +2656,34 @@ function bp_is_user_settings_account_delete() {
  */
 function bp_is_user_settings_profile() {
 	return (bool) ( bp_is_user_settings() && bp_is_current_action( 'profile' ) );
+}
+
+/** Invites ********************************************************************/
+
+/**
+ * Is this a user's send invites page?
+ *
+ * Eg http://example.com/members/joe/invites/ (or a subpage thereof).
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return bool True if the current page is a user's send invites page.
+ */
+function bp_is_user_invites() {
+	return (bool) ( bp_is_user() && bp_is_invites_component() );
+}
+
+/**
+ * Is this a user's send invites?
+ *
+ * Eg http://example.com/members/joe/invites/.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return bool True if the current page is a user's send invites page.
+ */
+function bp_is_user_invites_send_invites() {
+	return (bool) ( bp_is_user_invites() && bp_is_current_action( 'invites' ) );
 }
 
 /** Groups ********************************************************************/
@@ -3251,6 +3290,10 @@ function bp_the_body_class() {
 
 			if ( bp_is_settings_component()  ) {
 				$bp_classes[] = 'settings';
+			}
+
+			if ( bp_is_invites_component() ) {
+				$bp_classes[] = 'invites';
 			}
 		}
 
