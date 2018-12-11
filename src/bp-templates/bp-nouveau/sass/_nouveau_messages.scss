@@ -450,21 +450,32 @@ input#send-to-input {
 #send_message_form {
 
 	.select2-selection--multiple {
-		border: 0;
+		border-color: $med-light-grey;
+		padding: 3px 5px;
 	}
 
 	.select2-selection__rendered {
 		display: flex;
+		align-items: center;
 		flex-flow: row wrap;
 		padding: 0;
 	}
 
 	.select2-search.select2-search--inline {
-		flex: 0 0 100%;
+		flex: 1;
+	}
+
+	.select2-selection__rendered li {
+		margin: 5px;
 	}
 
 	.select2-search__field {
-		width: 100% !important;
+		min-width: 120px;
+		height: 30px;
+		margin: 0;
+		border: 0;
+		background: transparent;
+		padding: 0 5px;
 	}
 }
 
