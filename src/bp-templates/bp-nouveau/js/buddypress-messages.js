@@ -560,6 +560,11 @@ window.bp = window.bp || {};
 		addSelect2: function() {
 			var $input = $( this.el ).find( '#send-to-input' );
 
+			if ( $input.prop("tagName") != 'SELECT' ) {
+				this.addMentions();
+				return;
+			}
+
 			$input.select2({
 				placeholder: $input.attr('placeholder'),
 				minimumInputLength: 1,
@@ -1186,6 +1191,9 @@ window.bp = window.bp || {};
 			if ( response.messages.length < response.per_page && ! _.isUndefined( this.views.get( '#bp-message-load-more' ) ) ) {
 				var loadMore = this.views.get( '#bp-message-load-more' )[0];
 				loadMore.views.view.remove();
+			} else {
+				var loadMore = this.views.get( '#bp-message-load-more' )[0];
+				loadMore.views.view.$el.find('button').show();
 			}
 
 			if ( ! this.views.get( '#bp-message-thread-header' ) ) {

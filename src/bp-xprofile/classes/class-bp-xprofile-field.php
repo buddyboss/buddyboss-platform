@@ -1016,7 +1016,7 @@ class BP_XProfile_Field {
 			wp_cache_delete( $field_id, 'bp_xprofile_fields' );
 
             do_action( 'xprofile_updated_field_position', $field_id, $position, $field_group_id );
-            
+
 			return $parent;
 		}
 
@@ -1651,13 +1651,16 @@ class BP_XProfile_Field {
 			$field_id = $this->id;
 		}
 
-		$synced_fields = array_filter( [
+		$synced_fields = [
 			bp_xprofile_firstname_field_id(),
-			bp_xprofile_lastname_field_id(),
 			bp_xprofile_nickname_field_id()
-		] );
+		];
+
+		if ( bp_get_option( 'bp-display-name-format' ) == 'first_last_name' ) {
+			$synced_fields[] = bp_xprofile_lastname_field_id();
+		}
 
 		// Compare & return.
-		return in_array( $field_id, $synced_fields );
+		return in_array( $field_id, array_filter( $synced_fields ) );
 	}
 }

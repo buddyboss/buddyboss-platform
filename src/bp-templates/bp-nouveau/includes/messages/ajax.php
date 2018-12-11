@@ -825,6 +825,8 @@ function bp_nouveau_ajax_dsearch_recipients() {
 		wp_send_json_error( $response );
 	}
 
+	add_filter( 'bp_members_suggestions_query_args', 'bp_nouveau_ajax_search_recipients_exclude_current' );
+
 	$results = bp_core_get_suggestions( [
 		'term' => sanitize_text_field( $_GET['term'] ),
 		'type' => 'members',
@@ -838,4 +840,14 @@ function bp_nouveau_ajax_dsearch_recipients() {
 			];
 		}, $results)
 	] );
+}
+
+function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
+	if ( ! $user_query['exclude'] ) {
+		$user_query['exclude'] = [];
+	}
+
+	$user_query['exclude'][] = get_current_user_id();
+
+	return $user_query;
 }
