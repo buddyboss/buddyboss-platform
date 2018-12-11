@@ -64,14 +64,14 @@ class BP_Admin_Setting_Pages extends BP_Admin_Setting_tab {
 			if ( is_multisite() ) :
 				echo wpautop(
 					sprintf(
-						__( 'Registration is currently disabled.  Before associating a page is allowed, please enable registration by selecting either the "User accounts may be registered" or "Both sites and user accounts can be registered" option on <a href="%s">this page</a>.', 'buddyboss' ),
+						__( 'Registration is currently disabled. To enable registration, please select either the "User accounts may be registered" or "Both sites and user accounts can be registered" option on <a href="%s">this page</a>. If "User Invites" is enabled, invited users will still be allowed to register new accounts.', 'buddyboss' ),
 						network_admin_url( 'settings.php' )
 					)
 				);
 			else :
 				echo wpautop(
 					sprintf(
-						__( 'Registration is currently disabled.  Before associating a page is allowed, please enable registration by clicking on the "Anyone can register" checkbox on <a href="%s">this page</a>.', 'buddyboss' ),
+						__( 'Registration is currently disabled. To enable registration, please click on the "Anyone can register" checkbox on <a href="%s">this page</a>. If "User Invites" is enabled, invited users will still be allowed to register new accounts.', 'buddyboss' ),
 						network_admin_url( 'options-general.php' )
 					)
 				);
