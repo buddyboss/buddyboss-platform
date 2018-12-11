@@ -191,6 +191,47 @@ if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
 
 }
 
+/**
+ * Prevent BP Global Search from running at the same time as BuddyBoss Platform.
+ * If BP Global Search  is running. If so, don't let BuddyBoss Platform plugin activate.
+ * and show admin error message.
+ *
+ * @since Buddyboss 3.1.1
+ */
+if ( ! function_exists( 'bp_global_search_active_check' ) ) {
+
+	add_action( 'admin_init', 'bp_global_search_active_check', 0.50 );
+
+	function bp_global_search_active_check() {
+		if ( is_admin() && current_user_can( 'activate_plugins' ) && is_plugin_active( 'buddypress-global-search/buddypress-global-search.php' ) ) {
+
+			add_action( 'admin_notices', 'bp_global_search_deactivate_notice' );
+			remove_action( 'bp_admin_init', 'bp_do_activation_redirect', 1 ); // Prevent activation redirect
+
+			deactivate_plugins( 'buddyboss-platform/bp-loader.php' );
+
+			if ( isset( $_GET['activate'] ) ) {
+				unset( $_GET['activate'] );
+			}
+		}
+	}
+}
+
+/**
+ * Admin Notice for having BuddyPress Global Search and BuddyBoss Platform both active at the same time!
+ *
+ * @since Buddyboss 3.1.1
+ */
+if ( ! function_exists( 'bp_global_search_deactivate_notice' ) ) {
+	function bp_global_search_deactivate_notice() {
+		?>
+		<div id="message" class="error">
+		<p><strong><?php esc_html_e( 'BuddyBoss Platform can\'t be activated.', 'buddyboss' ); ?></strong></p>
+		<p><?php _e( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ); ?></p>
+		</div><?php
+	}
+}
+
 if ( !$is_bp_active && !$is_bb_active ) {
 
 
