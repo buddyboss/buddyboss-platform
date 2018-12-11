@@ -339,7 +339,7 @@ class BP_Invites_Component extends BP_Component {
 				'show_in_admin_bar'  => false,
 				'show_in_menu'       => true,
 				'map_meta_cap'       => true,
-				'menu_icon'          => 'dashicons-email',
+				'menu_icon'          => 'dashicons-email-alt',
 				//'menu_position'      => 27,
 				'show_in_rest'       => true,
 				'capabilities' => array(
