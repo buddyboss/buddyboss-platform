@@ -41,6 +41,7 @@ class BP_Core_Members_Switching {
 		add_action( 'personal_options', array( $this, 'action_personal_options' ) );
 		add_action( 'admin_bar_menu', array( $this, 'action_admin_bar_menu' ), 100 );
 		add_action( 'bbp_template_after_user_details', array( $this, 'action_bbpress_button' ) );
+		add_filter( 'show_admin_bar', array( $this, 'filter_show_admin_bar' ), 999, 1 );
 	}
 
 	/**
@@ -839,6 +840,25 @@ class BP_Core_Members_Switching {
 		}
 
 		return $required_caps;
+	}
+
+	/**
+	 * Filter force show the admin bar while switched to the user
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param $retval
+	 *
+	 * @return bool
+	 */
+	public function filter_show_admin_bar( $retval ) {
+		$old_user = self::get_old_user();
+
+		if ( $old_user instanceof WP_User ) {
+			return true;
+		}
+
+		return $retval;
 	}
 
 	/**
