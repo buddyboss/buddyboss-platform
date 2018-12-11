@@ -852,7 +852,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		),
 		'completed-confirmation' => array(
 			'type'    => 'info',
-			'message' => __( 'You have successfully created your account! Please log in using the username and password you have just created.', 'buddyboss' ),
+			'message' => __( 'You have successfully created your account! Please log in using the email and password you have just created.', 'buddyboss' ),
 			'before'  => 'bp_before_registration_confirmed',
 			'after'   => 'bp_after_registration_confirmed',
 		),
