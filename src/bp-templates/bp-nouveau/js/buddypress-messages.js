@@ -53,6 +53,10 @@ window.bp = window.bp || {};
 			$( '#subnav a' ).on( 'click', function( event ) {
 				event.preventDefault();
 
+				if ( $( event.target ).closest('li').hasClass('current') ) {
+					return false;
+				}
+
 				var view_id = $( event.target ).prop( 'id' );
 
 				// Remove the editor to be sure it will be added dynamically later
