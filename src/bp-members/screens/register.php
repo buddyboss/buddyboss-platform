@@ -67,7 +67,7 @@ function bp_core_screen_signup() {
 
 		// Check that both password fields are filled in.
 		if ( empty( $_POST['signup_password'] ) )
-			$bp->signup->errors['signup_password'] = __( 'Please make sure you enter your password', 'buddyboss' );
+			$bp->signup->errors['signup_password'] = __( 'Please make sure to enter your password.', 'buddyboss' );
 
 		$bp->signup->username = bp_get_signup_username_value();
 		$bp->signup->email = bp_get_signup_email_value();
@@ -96,7 +96,7 @@ function bp_core_screen_signup() {
 
 					// Create errors for required fields without values.
 					if ( xprofile_check_is_required_field( $field_id ) && empty( $_POST[ 'field_' . $field_id ] ) && ! bp_current_user_can( 'bp_moderate' ) ) {
-						$bp->signup->errors['field_' . $field_id] = __( 'This is a required field', 'buddyboss' );
+						$bp->signup->errors['field_' . $field_id] = __( 'This is a required field.', 'buddyboss' );
 					} else
 					// Validate xprofile
 					if ( $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], '' ) ) {
