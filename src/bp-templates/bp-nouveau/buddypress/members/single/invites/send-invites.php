@@ -22,7 +22,8 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 		<tbody>
 
 		<?php
-		for ( $i = 0; $i < 5; $i++ ) {
+		$raw = apply_filters( 'bp_invites_member_default_invitation_raw', 5 );
+		for ( $i = 0; $i < $raw; $i++ ) {
 			?>
 
 			<tr>
