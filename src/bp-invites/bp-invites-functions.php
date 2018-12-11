@@ -367,3 +367,43 @@ function bp_get_member_invites_wildcard_replace( $text, $email = false ) {
 
 	return $text;
 }
+
+function bp_invites_member_invite_activate_user( $user_id, $key, $user ) {
+	global $bp;
+
+	$email = bp_core_get_user_email( $user_id );
+
+	$inviters 	= array();
+
+	$args = array(
+		'post_type'  => bp_get_invite_post_type(),
+		'posts_per_page' => -1,
+		'meta_query' => array(
+			array(
+				'key'     => '_bp_invitee_email',
+				'value'   => $email,
+				'compare' => '=',
+			),
+		),
+	);
+
+	$bp_get_invitee_email = new WP_Query( $args );
+
+	if ( $bp_get_invitee_email->have_posts() ) {
+
+		// From the posts returned by the query, get a list of unique inviters
+		while ( $bp_get_invitee_email->have_posts() ) {
+			$bp_get_invitee_email->the_post();
+
+			$inviter_id	= get_the_author_meta( 'ID' );
+			$inviters[] 	= $inviter_id;
+
+			// Mark as accepted
+			update_post_meta( get_the_ID(), '_bp_invitee_status', 1 );
+			update_post_meta( get_the_ID(), '_bp_invitee_registered_date', date( 'Y-m-d H:i:s' ) );
+		}
+
+	}
+
+}
+add_action( 'bp_core_activated_user', 'bp_invites_member_invite_activate_user', 10, 3 );

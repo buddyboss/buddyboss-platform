@@ -261,6 +261,35 @@ class BP_Invites_Component extends BP_Component {
 		// Menus for logged in user.
 		if ( is_user_logged_in() ) {
 
+			// Setup the logged in user variables.
+			$invites_link = trailingslashit( bp_loggedin_user_domain() . bp_get_invites_slug() );
+
+			$title   = _x( 'Send Invites', 'Sent Invites', 'buddyboss' );
+
+			// Add the "My Account" sub menus.
+			$wp_admin_nav[] = array(
+				'parent' => buddypress()->my_account_menu_id,
+				'id'     => 'my-account-' . $this->id,
+				'title'  => $title,
+				'href'   => $invites_link
+			);
+
+			// My Groups.
+			$wp_admin_nav[] = array(
+				'parent'   => 'my-account-' . $this->id,
+				'id'       => 'my-account-' . $this->id . '-invites',
+				'title'    => _x( 'Invites by Email', 'Invites by Email sub nav', 'buddyboss' ),
+				'href'     => $invites_link,
+				'position' => 10
+			);
+
+			$wp_admin_nav[] = array(
+				'parent'   => 'my-account-' . $this->id,
+				'id'       => 'my-account-' . $this->id . '-sent',
+				'title'    => _x( 'Sent Invites', 'Sent Invites sub nav', 'buddyboss' ),
+				'href'     => $invites_link .'sent-invites',
+				'position' => 20
+			);
 
 		}
 

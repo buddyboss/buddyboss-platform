@@ -23,8 +23,9 @@ bp_nouveau_member_hook( 'before', 'invites_sent_template' );
 
 	<?php
 	$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+	$sent_invites_pagination_count = apply_filters( 'sent_invites_pagination_count', 25 );
 	$args = array(
-		'posts_per_page' => 1,
+		'posts_per_page' => $sent_invites_pagination_count,
 		'post_type'      => bp_get_invite_post_type(),
 		'author'         => bp_loggedin_user_id(),
 		'paged'          => $paged,
@@ -51,7 +52,11 @@ bp_nouveau_member_hook( 'before', 'invites_sent_template' );
 					</span>
 				</td>
 				<td class="field-email">
-					<span><?php echo __( get_post_meta( get_the_ID(), '_bp_invitee_status', true ), 'buddyboss' ); ?></span>
+					<?php
+					$class = ( 1 === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? 'registered' : 'revoked-access';
+					$alert_message = ( 1 === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Are you sure you want to revoked invite?', 'buddyboss' );
+					?>
+					<span><a data-name="<?php echo esc_attr( $alert_message ); ?>" id="<?php echo esc_attr( get_the_ID() ); ?>" class="<?php echo esc_attr( $class ); ?>" href="javascript:void(0);"><?php echo __( get_post_meta( get_the_ID(), '_bp_invitee_status', true ), 'buddyboss' ); ?></a></span>
 				</td>
 			</tr>
 			<?php

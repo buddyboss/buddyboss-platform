@@ -42,8 +42,6 @@ function bp_member_invite_submit() {
 	// Nonce check.
 	check_admin_referer('bp_member_invite_submit');
 
-
-	//print_r( $_POST );
 	if ( empty( $_POST ) ) {
 		bp_core_add_message( __( 'You didn\'t include any email addresses!', 'buddyboss' ), 'error' );
 		bp_core_redirect( $bp->loggedin_user->domain . '/invites' );
@@ -107,7 +105,7 @@ function bp_member_invite_submit() {
 		update_post_meta( $post_id, '_bp_invitee_email', $email );
 		update_post_meta( $post_id, '_bp_invitee_name', $name );
 		update_post_meta( $post_id, '_bp_inviter_name', $inviter_name );
-		update_post_meta( $post_id, '_bp_invitee_status', 'Revoke Invite' );
+		update_post_meta( $post_id, '_bp_invitee_status', 0 );
 	}
 
 	bp_core_redirect( bp_displayed_user_domain() . 'invites/sent-invites' );
