@@ -159,6 +159,19 @@ window.bp = window.bp || {};
 			// Remove all existing views.
 			//this.clearViews();
 
+			var threadView = false;
+			if ( ! _.isUndefined( this.views.models ) ) {
+				_.each( this.views.models, function( model ) {
+					if ( model.get('id') === 'threads' ) {
+						threadView = true;
+					}
+				}, this );
+			}
+
+			if ( ! threadView ) {
+				this.threadsView();
+			}
+
 			// Create the loop view
 			var form = new bp.Views.messageForm( {
 				model: new bp.Models.Message()
