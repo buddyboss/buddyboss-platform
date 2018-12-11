@@ -132,7 +132,7 @@ function bp_get_default_options() {
 		/* Invites ************************************************************/
 
 		'bp-disable-invite-member-email-subject'         => false,
-		'bp-disable-invite-member-email-content'         => false,
+		'bp-disable-invite-member-email-content'         => true,
 
 		/* Widgets **************************************************/
 		'widget_bp_core_login_widget'                => false,
@@ -1002,7 +1002,7 @@ function bp_disable_invite_member_email_subject( $default = false ) {
  *                      Default: false.
  * @return bool True if email content customize enabled, otherwise false.
  */
-function bp_disable_invite_member_email_content( $default = false ) {
+function bp_disable_invite_member_email_content( $default = true ) {
 
 	/**
 	 * Filters whether email content customize is enabled or not.

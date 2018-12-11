@@ -43,14 +43,14 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 
 	if ( true === bp_disable_invite_member_email_subject() ) {
 		?>
-		<label for="bp-member-invites-custom-subject"><?php _e( '(optional) Customize the subject line of the invitation email.', 'buddyboss' ) ?></label>
+		<label for="bp-member-invites-custom-subject"><?php _e( 'Customize the text of the invitation subject.', 'buddyboss' ) ?></label>
 		<textarea name="bp_member_invites_custom_subject" id="bp-member-invites-custom-subject" rows="15" cols="10" ><?php echo esc_textarea( bp_get_member_invitation_subject() ) ?></textarea>
 		<?php
 	}
 
 	if ( true === bp_disable_invite_member_email_content() ) {
 		?>
-		<label for="bp-member-invites-custom-content"><?php _e( '(optional) Customize the message line of the invitation email.', 'buddyboss' ) ?></label>
+		<label for="bp-member-invites-custom-content"><?php _e( 'Customize the text of the invitation email.', 'buddyboss' ) ?></label>
 		<textarea name="bp_member_invites_custom_content" id="bp-member-invites-custom-content" rows="15" cols="10" ><?php echo esc_textarea( bp_get_member_invitation_message() ) ?></textarea>
 		<?php
 	}
