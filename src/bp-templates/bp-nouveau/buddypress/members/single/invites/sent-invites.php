@@ -73,11 +73,12 @@ if ( isset( $_GET['email'] ) ) {
 				</td>
 				<td class="field-email">
 					<?php
-					$class = ( 1 === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? 'registered' : 'revoked-access';
-					$alert_message = ( 1 === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Are you sure you want to revoke invite?', 'buddyboss' );
-					$title = ( 1 === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Revoke Invite', 'buddyboss' );
+					$class = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? 'registered' : 'revoked-access';
+					$alert_message = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Are you sure you want to revoke invite?', 'buddyboss' );
+					$icon = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? 'dashicons-yes' : 'dashicons-dismiss';
+					$title = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Revoke Invite', 'buddyboss' );
 					?>
-					<span><a data-name="<?php echo esc_attr( $alert_message ); ?>" id="<?php echo esc_attr( get_the_ID() ); ?>" class="<?php echo esc_attr( $class ); ?>" href="javascript:void(0);"><?php echo $title; ?></a></span>
+					<span><a data-name="<?php echo esc_attr( $alert_message ); ?>" id="<?php echo esc_attr( get_the_ID() ); ?>" class="<?php echo esc_attr( $class ); ?>" href="javascript:void(0);"><span class="dashicons <?php echo esc_attr( $icon ); ?>"></span><?php echo $title; ?></a></span>
 				</td>
 			</tr>
 			<?php

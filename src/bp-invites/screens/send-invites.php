@@ -32,5 +32,5 @@ function bp_invites_screen_send_invite() {
 }
 
 function bp_invites_send_invite_screen() {
-	bp_get_template_part( 'members/single/invites/send-invites');
+	bp_get_template_part( 'members/single/invites');
 }

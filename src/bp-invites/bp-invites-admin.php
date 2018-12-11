@@ -77,8 +77,13 @@ function bp_invite_show_data( $column, $post_id  ) {
 	switch( $column ) {
 
 		case 'inviter':
-
-			echo __( get_post_meta( $post_id, '_bp_inviter_name', true ), 'buddyboss' );
+			$author_id = get_post_field ('post_author', $post_id );
+			$inviter_link = bp_core_get_user_domain( $author_id );
+			$inviter_name = bp_core_get_user_displayname( $author_id );
+			printf(
+				__( '<a href="%s">%s</a>', 'buddyboss' ),
+				esc_url( $inviter_link ), $inviter_name
+			);
 
 			break;
 
@@ -102,8 +107,11 @@ function bp_invite_show_data( $column, $post_id  ) {
 			break;
 
 		case 'status':
-
-			echo __( get_post_meta( $post_id, '_bp_invitee_status', true ), 'buddyboss' );
+			$title = ( '1' === get_post_meta( $post_id, '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Revoke Invite', 'buddyboss' );
+			printf(
+				__( '<a href="javascript:void(0);">%s</a>', 'buddyboss' ),
+				 $title
+			);
 
 			break;
 
@@ -171,14 +179,14 @@ function bp_invite_sort_items( $qv ) {
 		case 'invitee_name':
 
 			$qv['meta_key'] = '_bp_invites_invitee_name';
-			$qv['orderby'] = 'meta_value_num';
+			$qv['orderby'] = 'meta_value';
 
 			break;
 
 		case 'invitee_email':
 
 			$qv['meta_key'] = '_bp_invites_invitee_email';
-			$qv['orderby'] = 'meta_value_num';
+			$qv['orderby'] = 'meta_value';
 
 			break;
 
