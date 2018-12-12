@@ -53,10 +53,6 @@ window.bp = window.bp || {};
 			$( '#subnav a' ).on( 'click', function( event ) {
 				event.preventDefault();
 
-				if ( $( event.target ).closest('li').hasClass('current') ) {
-					return false;
-				}
-
 				var view_id = $( event.target ).prop( 'id' );
 
 				// Remove the editor to be sure it will be added dynamically later
@@ -191,6 +187,11 @@ window.bp = window.bp || {};
 		},
 
 		threadsView: function() {
+
+			if ( this.box === 'inbox' ) {
+				$('.bp-messages-content').html('');
+			}
+
 			// Activate the appropriate nav
 			$( '#subnav ul li' ).removeClass( 'current selected' );
 			$( '#subnav a#' + this.box ).closest( 'li' ).addClass( 'current selected' );
@@ -228,6 +229,9 @@ window.bp = window.bp || {};
 		singleView: function( thread ) {
 
 			this.box = 'single';
+
+			// Remove the editor to be sure it will be added dynamically later
+			this.removeTinyMCE();
 
 			var threadView = false;
 			if ( ! _.isUndefined( this.views.models ) ) {
@@ -1298,9 +1302,7 @@ window.bp = window.bp || {};
 		composeMessage: function() {
 			bp.Nouveau.Messages.composeView();
 
-			document.body.classList.remove('view');
-			document.body.classList.remove('inbox');
-			document.body.classList.add('compose');
+			$('body').removeClass('view').removeClass('inbox').addClass('compose');
 		},
 
 		viewMessage: function( thread_id ) {
@@ -1330,9 +1332,7 @@ window.bp = window.bp || {};
 				}
 			} );
 
-			document.body.classList.add('view');
-			document.body.classList.remove('inbox');
-			document.body.classList.remove('compose');
+			$('body').removeClass('compose').removeClass('inbox').addClass('view');
 		},
 
 		starredView: function() {
@@ -1344,9 +1344,7 @@ window.bp = window.bp || {};
 			bp.Nouveau.Messages.box = 'inbox';
 			bp.Nouveau.Messages.threadsView();
 
-			document.body.classList.remove('view');
-			document.body.classList.add('inbox');
-			document.body.classList.remove('compose');
+			$('body').removeClass('view').removeClass('compose').addClass('inbox');
 		}
 	} );
 
