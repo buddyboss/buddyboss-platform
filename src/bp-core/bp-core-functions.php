@@ -3466,6 +3466,14 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "{{poster.name}} replied to the discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{reply.content}}}\n\nPost Link: {{reply.url}}", 'buddyboss' ),
 		),
+		'invites-member-invite' => array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'   => __( 'An invitation from {{inviter.name}} join [{{{site.name}}}]', 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content' => __( "You have been invited by {{inviter.name}} to join the <a href=\"{{{site.url}}}\">[{{{site.name}}}]</a> community.\n\nTo accept this invitation, please visit {{invitee.url}}", 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt' => __( "You have been invited by {{inviter.name}} to join the [{{{site.name}}}] community.\n\nTo accept this invitation, please visit {{invitee.url}}", 'buddyboss' ),
+		),
 	);
 }
 
@@ -3623,6 +3631,11 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		),
 	);
 
+	$invites_member_invite = array(
+		'description'	=> __( 'A member has invited to a member', 'buddyboss' ),
+		'unsubscribe'	=> false,
+	);
+
 	$types = array(
 		'activity-comment'                   => $activity_comment,
 		'activity-comment-author'            => $activity_comment_author,
@@ -3642,6 +3655,7 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'groups-membership-request-rejected' => $groups_membership_request_rejected,
 		'bbp-new-forum-topic'                => $bbp_new_forum_topic,
 		'bbp-new-forum-reply'                => $bbp_new_forum_reply,
+		'invites-member-invite'              => $invites_member_invite,
 	);
 
 	if ( $field !== 'all' ) {
