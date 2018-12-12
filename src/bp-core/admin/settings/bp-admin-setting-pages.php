@@ -41,10 +41,6 @@ class BP_Admin_Setting_Pages extends BP_Admin_Setting_tab {
 
 		$this->add_section( 'bp_registration_pages', __( 'Registration', 'buddyboss' ), [$this, 'registration_pages_description'] );
 
-		if (! bp_get_signup_allowed()) {
-			return;
-		}
-
 		$existing_pages = bp_core_get_directory_page_ids();
 		$static_pages = bp_core_admin_get_static_pages();
 
