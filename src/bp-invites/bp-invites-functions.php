@@ -182,6 +182,11 @@ function bp_invites_member_invite_remove_registration_lock() {
 		return;
 	}
 
+	// If the url takes the form register/?bp-invites=accept-member-invitation&email=username+extra%40gmail.com,
+	// urldecode returns a space in place of the +. (This is not typical,
+	// but we can catch it.)
+	$email = str_replace( ' ', '+', $email );
+
 	$args = array(
 		'post_type'  => bp_get_invite_post_type(),
 		'posts_per_page' => -1,
@@ -284,10 +289,10 @@ add_action( 'bp_before_register_page', 'bp_invites_member_invite_register_screen
 
 function bp_invites_member_invite_get_invitations_by_invited_email( $email ) {
 
+	// If the url takes the form register/?bp-invites=accept-member-invitation&email=username+extra%40gmail.com,
+	// urldecode returns a space in place of the +. (This is not typical,
+	// but we can catch it.)
 	$email = str_replace( ' ', '+', $email );
-
-
-	$email = str_replace( '+', '.PLUSSIGN.', $email );
 
 	$args = array(
 		'post_type'  => bp_get_invite_post_type(),
