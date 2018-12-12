@@ -41,7 +41,7 @@
 		name="send_to[]"
 		class="send-to-input"
 		id="send-to-input"
-		placeholder="<?php esc_html_e( 'Type the name of one or more people', 'buddyboss' ); ?>"
+		placeholder="<?php esc_html_e( 'Type the names of one or more people', 'buddyboss' ); ?>"
 		value="<?php if ( isset( $_GET['r'] ) ) : ?>@<?php echo esc_textarea( $_GET['r'] ); ?> <?php endif; ?>"
 		autocomplete="off"
 		multiple="multiple"
