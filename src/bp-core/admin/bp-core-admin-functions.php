@@ -1530,7 +1530,7 @@ function bp_member_type_wprole_metabox( $post ) {
 }
 
 /**
- * Function for which type of group member can create.
+ * Function for which type of groups this member type can create.
  *
  * @since BuddyBoss 3.1.1
  *

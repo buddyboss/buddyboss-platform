@@ -1542,13 +1542,13 @@ function bp_group_type_custom_meta_boxes() {
 		$get_all_registered_member_types = bp_get_active_member_types();
 		if ( isset( $get_all_registered_member_types ) && !empty( $get_all_registered_member_types ) ) {
 			// Add meta box if member types is entered.
-			add_meta_box( 'bp-group-type-auto-join-member-type', __( 'Members of the following profile types can always join groups of this group type, even if the group is private.', 'buddyboss' ),'bp_group_type_auto_join_member_type_meta_box',null,'normal','high' );
+			add_meta_box( 'bp-group-type-auto-join-member-type', __( 'Profile Type Override', 'buddyboss' ),'bp_group_type_auto_join_member_type_meta_box',null,'normal','high' );
 		}
 	}
 }
 
 /**
- * Generate group Type Key Meta box.
+ * Generate Group Type Key Meta box.
  *
  * @since BuddyBoss 3.1.1
  *
@@ -1598,7 +1598,7 @@ function bp_group_type_labels_meta_box( $post ) {
 }
 
 /**
- * Generate group Type Directory Meta box.
+ * Generate Group Type Directory Meta box.
  *
  * @since BuddyBoss 3.1.1
  *
@@ -1657,6 +1657,10 @@ function bp_group_short_code_meta_box( $post ) {
  * @param $post
  */
 function bp_group_type_auto_join_member_type_meta_box( $post ) {
+
+	?>
+	<p><?php printf( __( 'Members of the following profile types can always join groups of this group type, even if the group is private.', 'buddyboss' ), $post->post_title )?></p>
+	<?php
 
 	$get_all_registered_member_types = bp_get_active_member_types();
 
