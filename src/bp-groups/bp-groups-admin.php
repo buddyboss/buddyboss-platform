@@ -171,7 +171,7 @@ function bp_groups_admin_load() {
 		if ( bp_enable_group_hierarchies() ) {
 			add_meta_box(
 				'bp_groups_admin_group_parent',
-				_x( 'Group Hierarchy', 'groups admin edit screen', 'buddyboss' ),
+				_x( 'Group Parent', 'groups admin edit screen', 'buddyboss' ),
 				'bp_groups_admin_edit_metabox_group_parent',
 				get_current_screen()->id,
 				'side',
@@ -922,12 +922,9 @@ function bp_groups_admin_edit_metabox_group_parent( $item ) {
 	$possible_parent_groups  = bp_get_possible_parent_groups( $item->id, bp_loggedin_user_id() ); ?>
 
 	<div class="bp-groups-settings-section" id="bp-groups-settings-section-group-hierarchy">
-		<label for="bp-groups-parent" class="for-heading">
-			<?php _e( 'Select Parent Group', 'buddyboss' ); ?>
-		</label>
 		<select id="bp-groups-parent" name="bp-groups-parent" autocomplete="off">
 			<option
-				value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php echo _x( '-- No parent --', 'The option that sets a group to be a top-level group and have no parent.', 'buddyboss' ); ?></option>
+				value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php echo _x( '----', 'The option that sets a group to be a top-level group and have no parent.', 'buddyboss' ); ?></option>
 			<?php
 			if ( $possible_parent_groups ) {
 
@@ -1176,12 +1173,8 @@ function bp_groups_admin_edit_metabox_group_type( BP_Groups_Group $group = null 
 	?>
 
 	<div class="bp-groups-settings-section" id="bp-groups-settings-section-group-type">
-		<label for="bp-groups-group-type" class="for-heading"><?php
-			/* translators: accessibility text */
-			esc_html_e( 'Select group type', 'buddyboss' );
-			?></label>
 		<select id="bp-groups-group-type" name="bp-groups-group-type[]" autocomplete="off">
-			<option value="" <?php selected( '', $current_types[0] ); ?>><?php echo _x( '-- Select group type --', 'The option that sets a group type.', 'buddyboss' ); ?></option>
+			<option value="" <?php selected( '', $current_types[0] ); ?>><?php echo _x( '----', 'The option that sets a group type.', 'buddyboss' ); ?></option>
 			<?php
 
 

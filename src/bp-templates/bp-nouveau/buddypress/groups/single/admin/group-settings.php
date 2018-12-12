@@ -110,9 +110,9 @@
 		<fieldset class="group-create-types">
 			<legend><?php esc_html_e( 'Group Type', 'buddyboss' ); ?></legend>
 
-			<p tabindex="0"><?php esc_html_e( 'Select the type this group should be a part of.', 'buddyboss' ); ?></p>
+			<p tabindex="0"><?php esc_html_e( 'What type of group is this? (optional)', 'buddyboss' ); ?></p>
 			<select id="bp-groups-type" name="group-types[]" autocomplete="off">
-				<option value="" <?php selected( '', '' ); ?>><?php echo _x( '-- Select group type --', 'The option that sets a group type.', 'buddyboss' ); ?></option>
+				<option value="" <?php selected( '', '' ); ?>><?php echo _x( '----', 'The option that sets a group type.', 'buddyboss' ); ?></option>
 			<?php foreach ( $group_types as $type ) : ?>
 				<?php
 				if ( false === bp_restrict_group_creation() && true === bp_member_type_enable_disable() ) {
@@ -169,10 +169,10 @@
 		?>
 
 		<fieldset class="select group-parent">
-			<legend><?php esc_html_e( 'Group Hierarchy', 'buddyboss' ); ?></legend>
-			<p tabindex="0"><?php esc_html_e( 'Optionally select a group to make this group a subgroup of.', 'buddyboss' ); ?></p>
+			<legend><?php esc_html_e( 'Group Parent', 'buddyboss' ); ?></legend>
+			<p tabindex="0"><?php esc_html_e( 'Which group should be the parent of this group? (optional)', 'buddyboss' ); ?></p>
 			<select id="bp-groups-parent" name="bp-groups-parent" autocomplete="off">
-				<option value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php echo _x( '-- No parent --', 'The option that sets a group to be a top-level group and have no parent.', 'buddyboss' ); ?></option>
+				<option value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php echo _x( '----', 'The option that sets a group to be a top-level group and have no parent.', 'buddyboss' ); ?></option>
 				<?php
 				if ( $possible_parent_groups ) {
 
