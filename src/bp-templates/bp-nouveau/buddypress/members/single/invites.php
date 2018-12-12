@@ -7,6 +7,10 @@
  */
 ?>
 
+<?php if ( bp_is_my_profile() ) : ?>
+	<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
+<?php endif; ?>
+
 <?php
 
 switch ( bp_current_action() ) :
