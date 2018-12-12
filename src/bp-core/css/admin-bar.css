@@ -71,3 +71,9 @@
 		display: block;
 	}
 }
+
+/* Member Switching */
+#wpadminbar #wp-admin-bar-top-secondary li#wp-admin-bar-switch-back a {
+	background: #21759b;
+	color: #fff;
+}

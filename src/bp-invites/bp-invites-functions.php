@@ -170,6 +170,14 @@ function bp_invites_member_invite_remove_registration_lock() {
 }
 add_action( 'wp', 'bp_invites_member_invite_remove_registration_lock', 1 );
 
+/**
+ * Function will check like the email is invited or not
+ * also it will set the auto populate email based on the url
+ * and also it will show the welcome message to register page.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ */
 function bp_invites_member_invite_register_screen_message() {
 	global $bp;
 
@@ -232,7 +240,15 @@ function bp_invites_member_invite_register_screen_message() {
 }
 add_action( 'bp_before_register_page', 'bp_invites_member_invite_register_screen_message' );
 
-
+/**
+ * Function which gives all the invited records from the DB based on email.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $email
+ *
+ * @return WP_Query
+ */
 function bp_invites_member_invite_get_invitations_by_invited_email( $email ) {
 
 	// If the url takes the form register/?bp-invites=accept-member-invitation&email=username+extra%40gmail.com,
@@ -257,27 +273,85 @@ function bp_invites_member_invite_get_invitations_by_invited_email( $email ) {
 	return $bp_get_invitee_email;
 }
 
+/**
+ * Function which return the subject of invites email.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return string
+ */
 function bp_get_member_invitation_subject() {
 	global $bp;
 
-	$site_name = get_bloginfo('name');
+	$term = get_term_by('name', 'invites-member-invite', bp_get_email_tax_type() );
 
-	$text = sprintf( __( 'An invitation to join the %s community.', 'buddyboss' ), $site_name );
+	$args = array(
+		'post_type' => bp_get_email_post_type(),
+		'tax_query' => array(
+			array(
+				'taxonomy' => bp_get_email_tax_type(),
+				'field' => 'term_id',
+				'terms' => $term->term_id
+			)
+		)
+	);
+	$query = new WP_Query( $args );
 
-	return apply_filters( 'bp_get_member_invitation_subject', stripslashes( $text ) );
+	$title = $query->posts[0]->post_title;
+
+	return apply_filters( 'bp_get_member_invitation_subject', stripslashes( $title ) );
 }
 
+/**
+ * Function which return the body content of invites email.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @return string
+ */
 function bp_get_member_invitation_message() {
 	global $bp;
 
-	$blogname = get_bloginfo('name');
+	$term = get_term_by('name', 'invites-member-invite', bp_get_email_tax_type() );
 
-	$text = sprintf( __( 'You have been invited by %%INVITERNAME%% to join the %s community.
+	$args = array(
+		'post_type' => bp_get_email_post_type(),
+		'tax_query' => array(
+			array(
+				'taxonomy' => bp_get_email_tax_type(),
+				'field' => 'term_id',
+				'terms' => $term->term_id
+			)
+		)
+	);
+	$query = new WP_Query( $args );
 
-Visit %%INVITERNAME%%\'s profile at %%INVITERURL%%.', 'buddyboss' ), $blogname ); /* Do not translate the strings embedded in %% ... %% ! */
+	$wp_html_emails    = null;
+	$is_default_wpmail = null;
 
-	$text = bp_get_member_invites_wildcard_replace( $text );
+	// Has wp_mail() been filtered to send HTML emails?
+	if ( is_null( $wp_html_emails ) ) {
+		/** This filter is documented in wp-includes/pluggable.php */
+		$wp_html_emails = apply_filters( 'wp_mail_content_type', 'text/plain' ) === 'text/html';
+	}
 
+	// Since wp_mail() is a pluggable function, has it been re-defined by another plugin?
+	if ( is_null( $is_default_wpmail ) ) {
+		try {
+			$mirror            = new ReflectionFunction( 'wp_mail' );
+			$is_default_wpmail = substr( $mirror->getFileName(), -strlen( 'pluggable.php' ) ) === 'pluggable.php';
+		} catch ( Exception $e ) {
+			$is_default_wpmail = true;
+		}
+	}
+
+	$must_use_wpmail = apply_filters( 'bp_email_use_wp_mail', $wp_html_emails || ! $is_default_wpmail );
+
+	if ( $must_use_wpmail ) {
+		$text =  $query->posts[0]->post_excerpt;
+	} else {
+		$text =  $query->posts[0]->post_content;
+	}
 
 	return apply_filters( 'bp_get_member_invitation_message', stripslashes( $text ) );
 }
@@ -289,6 +363,16 @@ function bp_get_invites_member_invite_url() {
 	return stripslashes( $invite_link );
 }
 
+/**
+ * Function which will replace the token to it's appropriate content dynamically.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $text
+ * @param bool $email
+ *
+ * @return string
+ */
 function bp_get_member_invites_wildcard_replace( $text, $email = false ) {
 	global $bp;
 
@@ -305,6 +389,9 @@ function bp_get_member_invites_wildcard_replace( $text, $email = false ) {
 	$accept_link  = apply_filters( 'bp_member_invitation_accept_url', $accept_link );
 
 
+	$text = str_replace( '{{inviter.name}}', $inviter_name, $text );
+	$text = str_replace( '[{{{site.name}}}]', get_bloginfo('name'), $text );
+	$text = str_replace( '{{{site.url}}}', site_url(), $text );
 	$text = str_replace( '%%INVITERNAME%%', $inviter_name, $text );
 	$text = str_replace( '%%INVITERURL%%', $inviter_url, $text );
 	$text = str_replace( '%%SITENAME%%', $site_name, $text );
@@ -313,12 +400,22 @@ function bp_get_member_invites_wildcard_replace( $text, $email = false ) {
 	/* Adding single % replacements because lots of people are making the mistake */
 	$text = str_replace( '%INVITERNAME%', $inviter_name, $text );
 	$text = str_replace( '%INVITERURL%', $inviter_url, $text );
+	$text = str_replace( '{{invitee.url}}', $accept_link, $text );
 	$text = str_replace( '%SITENAME%', $site_name, $text );
 	$text = str_replace( '%ACCEPTURL%', $accept_link, $text );
 
 	return $text;
 }
 
+/**
+ * Function which will mark the user as registered.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $user_id
+ * @param $key
+ * @param $user
+ */
 function bp_invites_member_invite_activate_user( $user_id, $key, $user ) {
 	global $bp;
 
