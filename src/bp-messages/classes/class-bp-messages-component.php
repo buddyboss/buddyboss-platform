@@ -250,7 +250,7 @@ class BP_Messages_Component extends BP_Component {
 
 			// Show "Compose" on the logged-in user's profile only.
 			$sub_nav[] = array(
-				'name'            => __( 'Compose', 'buddyboss' ),
+				'name'            => __( 'New Message', 'buddyboss' ),
 				'slug'            => 'compose',
 				'parent_url'      => $messages_link,
 				'parent_slug'     => $slug,
@@ -331,7 +331,7 @@ class BP_Messages_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-compose',
-				'title'    => __( 'Compose', 'buddyboss' ),
+				'title'    => __( 'New Message', 'buddyboss' ),
 				'href'     => trailingslashit( $messages_link . 'compose' ),
 				'position' => 30
 			);
