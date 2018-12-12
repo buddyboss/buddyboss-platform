@@ -3082,10 +3082,7 @@ function bp_group_type_short_code_callback( $atts ) {
 		<div id="buddypress" class="buddypress-wrap round-avatars bp-dir-hori-nav">
 			<div class="screen-content">
 				<div class="subnav-filters filters no-ajax" id="subnav-filters">
-					<div class="grid-filters" data-object="groups">
-						<a href="#" class="layout-view layout-grid-view"><i class="dashicons dashicons-screenoptions" aria-hidden="true"></i></a>
-						<a href="#" class="layout-view layout-list-view active"><i class="dashicons dashicons-menu" aria-hidden="true"></i></a>
-					</div>
+					<?php bp_get_template_part( 'common/filters/grid-filters' ); ?>
 				</div>
 				<div id="groups-dir-list" class="groups dir-list" data-bp-list="">
 					<?php

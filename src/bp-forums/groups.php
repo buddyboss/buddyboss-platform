@@ -279,9 +279,9 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
 			<p><?php esc_html_e( 'Create a discussion forum to allow members of this group to communicate in a structured, bulletin-board style fashion.', 'buddyboss' ); ?></p>
 
 			<div class="field-group">
-				<div class="checkbox">
+				<p class="checkbox">
 					<label><input type="checkbox" name="bbp-edit-group-forum" id="bbp-edit-group-forum" value="1"<?php checked( $checked ); ?> /> <?php esc_html_e( 'Yes. I want this group to have a discussion forum.', 'buddyboss' ); ?></label>
-				</div>
+				</p>
 
 				<p class="description"><?php esc_html_e( 'Saying no will not delete existing forum content.', 'buddyboss' ); ?></p>
 			</div>
@@ -479,9 +479,9 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
 
 		<p><?php esc_html_e( 'Create a discussion forum to allow members of this group to communicate in a structured, bulletin-board style fashion.', 'buddyboss' ); ?></p>
 
-		<div class="checkbox">
+		<p class="checkbox">
 			<label><input type="checkbox" name="bbp-create-group-forum" id="bbp-create-group-forum" value="1"<?php checked( $checked ); ?> /> <?php esc_html_e( 'Yes. I want this group to have a discussion forum.', 'buddyboss' ); ?></label>
-		</div>
+		</p>
 
 		<?php
 	}

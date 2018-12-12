@@ -61,7 +61,7 @@
 	<fieldset class="radio group-invitations">
 		<legend><?php esc_html_e( 'Group Invitations', 'buddyboss' ); ?></legend>
 
-		<p tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to invite others?', 'buddyboss' ); ?></p>
+		<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to invite others?', 'buddyboss' ); ?></p>
 
 		<label for="group-invite-status-members">
 			<input type="radio" name="group-invite-status" id="group-invite-status-members" value="members"<?php bp_group_show_invite_status_setting( 'members' ); ?> />
@@ -83,7 +83,7 @@
     <fieldset class="radio group-post-form">
         <legend><?php esc_html_e( 'Activity Feeds', 'buddyboss' ); ?></legend>
 
-        <p tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to post into the activity feed?', 'buddyboss' ); ?></p>
+        <p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to post into the activity feed?', 'buddyboss' ); ?></p>
 
         <label for="group-activity-feed-status-members">
             <input type="radio" name="group-activity-feed-status" id="group-activity-feed-status-members" value="members"<?php bp_group_show_activity_feed_status_setting( 'members' ); ?> />
@@ -110,7 +110,7 @@
 		<fieldset class="group-create-types">
 			<legend><?php esc_html_e( 'Group Type', 'buddyboss' ); ?></legend>
 
-			<p tabindex="0"><?php esc_html_e( 'What type of group is this? (optional)', 'buddyboss' ); ?></p>
+			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'What type of group is this? (optional)', 'buddyboss' ); ?></p>
 			<select id="bp-groups-type" name="group-types[]" autocomplete="off">
 				<option value="" <?php selected( '', '' ); ?>><?php echo _x( '----', 'The option that sets a group type.', 'buddyboss' ); ?></option>
 			<?php foreach ( $group_types as $type ) : ?>
@@ -170,7 +170,7 @@
 
 		<fieldset class="select group-parent">
 			<legend><?php esc_html_e( 'Group Parent', 'buddyboss' ); ?></legend>
-			<p tabindex="0"><?php esc_html_e( 'Which group should be the parent of this group? (optional)', 'buddyboss' ); ?></p>
+			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which group should be the parent of this group? (optional)', 'buddyboss' ); ?></p>
 			<select id="bp-groups-parent" name="bp-groups-parent" autocomplete="off">
 				<option value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php echo _x( '----', 'The option that sets a group to be a top-level group and have no parent.', 'buddyboss' ); ?></option>
 				<?php
