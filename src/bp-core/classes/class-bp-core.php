@@ -350,7 +350,7 @@ class BP_Core extends BP_Component {
 				apply_filters( 'bp_register_email_post_type', array(
 					'description'       => _x( 'BuddyPress emails', 'email post type description', 'buddyboss' ),
 					'labels'            => bp_get_email_post_type_labels(),
-					'menu_icon'         => 'dashicons-email',
+					'menu_icon'         => 'dashicons-email-alt',
 					'public'            => false,
 					'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),
 					'query_var'         => false,

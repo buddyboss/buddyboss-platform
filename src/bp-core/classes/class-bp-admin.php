@@ -312,7 +312,7 @@ class BP_Admin {
 				$this->capability,
 				'',
 				'',
-				'dashicons-email',
+				'dashicons-email-alt',
 				26
 			);
 
