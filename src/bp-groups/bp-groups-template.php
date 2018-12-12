@@ -5663,7 +5663,7 @@ function bp_current_group_directory_type_message() {
 	function bp_get_current_group_directory_type_message() {
 		$type_object = bp_groups_get_group_type_object( bp_get_current_group_directory_type() );
 
-		$message = sprintf( __( 'Viewing all groups that are: %s', 'buddyboss' ), '<strong>' . $type_object->labels['name'] . '</strong>' );
+		$message = sprintf( __( 'Viewing all groups that are %s', 'buddyboss' ), '<strong>' . $type_object->labels['name'] . '</strong>' );
 
 		/**
 		 * Filters the current group type message.
