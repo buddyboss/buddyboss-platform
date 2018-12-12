@@ -3632,7 +3632,7 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	);
 
 	$invites_member_invite = array(
-		'description'	=> __( 'A member has invited to a member', 'buddyboss' ),
+		'description'	=> __( 'Recipient has been invited by a member to join the website.', 'buddyboss' ),
 		'unsubscribe'	=> false,
 	);
 
