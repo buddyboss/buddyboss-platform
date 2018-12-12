@@ -27,7 +27,7 @@ class BP_Core_Members_Switching {
 		add_filter( 'map_meta_cap', array( $this, 'filter_map_meta_cap' ), 10, 4 );
 		add_filter( 'user_row_actions', array( $this, 'filter_user_row_actions' ), 10, 2 );
 		add_action( 'plugins_loaded', array( $this, 'action_plugins_loaded' ) );
-		add_action( 'init', array( $this, 'action_init' ) );
+		add_action( 'init', array( $this, 'action_init' ), 11 );
 		add_action( 'all_admin_notices', array( $this, 'action_admin_notices' ), 1 );
 		add_action( 'wp_logout', 'bp_member_switching_clear_olduser_cookie' );
 		add_action( 'wp_login', 'bp_member_switching_clear_olduser_cookie' );
@@ -217,20 +217,11 @@ class BP_Core_Members_Switching {
 	 * @return string The URL to redirect to.
 	 */
 	protected static function get_redirect( WP_User $new_user = null, WP_User $old_user = null ) {
-		if ( ! empty( $_REQUEST['redirect_to'] ) ) {
-			$redirect_to           = self::remove_query_args( wp_unslash( $_REQUEST['redirect_to'] ) ); // WPCS: sanitization ok
-			$requested_redirect_to = wp_unslash( $_REQUEST['redirect_to'] ); // WPCS: sanitization ok
-		} else {
-			$redirect_to           = '';
-			$requested_redirect_to = '';
-		}
 
 		if ( ! $new_user ) {
-			/** This filter is documented in wp-login.php */
-			$redirect_to = apply_filters( 'logout_redirect', $redirect_to, $requested_redirect_to, $old_user );
+			$redirect_to = bp_core_get_user_domain( $old_user->ID );
 		} else {
-			/** This filter is documented in wp-login.php */
-			$redirect_to = apply_filters( 'login_redirect', $redirect_to, $requested_redirect_to, $new_user );
+			$redirect_to = bp_core_get_user_domain( $new_user->ID );
 		}
 
 		return $redirect_to;
