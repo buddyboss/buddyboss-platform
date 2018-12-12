@@ -761,5 +761,5 @@ function bp_core_install_invites_email() {
 	 *
 	 * @since BuddyBoss 3.1.1
 	 */
-	do_action( 'bp_core_install_bbp_emails' );
+	do_action( 'bp_core_install_invites_email' );
 }
