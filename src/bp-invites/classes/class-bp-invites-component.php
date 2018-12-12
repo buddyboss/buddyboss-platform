@@ -332,7 +332,7 @@ class BP_Invites_Component extends BP_Component {
 			apply_filters( 'bp_invite_post_type', array(
 				'description'        => _x( 'BuddyPress member invite', 'invite post type description', 'buddyboss' ),
 				'labels'             => bp_get_invite_post_type_labels(),
-				'public'             => true,
+				'public'             => false,
 				'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),
 				'query_var'          => false,
 				'rewrite'            => false,

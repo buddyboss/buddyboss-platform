@@ -37,6 +37,9 @@ function bp_register_invite_type_sections_filters_actions() {
 	//sortable columns
 	add_filter( 'manage_edit-' . bp_get_invite_post_type() . '_sortable_columns', 'bp_invite_add_sortable_columns' );
 
+	// remove bulk actions
+	add_filter( 'bulk_actions-edit-' . bp_get_invite_post_type(), 'bp_invites_remove_bulk_actions' );
+
 	//hide quick edit link on the custom post type list screen
 	add_filter( 'post_row_actions', 'bp_invite_hide_quick_edit', 10, 2 );
 
@@ -235,5 +238,44 @@ function bp_invite_hide_quick_edit( $actions, $post ) {
 	if ( bp_get_invite_post_type() == $post->post_type )
 		unset( $actions['inline hide-if-no-js'] );
 
+	if ( bp_get_invite_post_type() == $post->post_type ) {
+
+		// Inviter author id
+		$author_id = get_post_field ('post_author', $post->ID );
+
+		// Build edit links URL.
+		$edit_url = admin_url( 'user-edit.php?user_id=' . $author_id );
+
+		// Maybe put in some extra arguments based on the post status.
+		$edit_link = add_query_arg( array( 'action' => 'edit' ), $edit_url );
+
+		$inviter_link = bp_core_get_user_domain( $author_id );
+
+		$actions = array(
+			'edit' => sprintf( '<a href="%1$s">%2$s</a>',
+				esc_url( $edit_link ),
+				esc_html( __( 'Edit', 'buddyboss' ) ) ),
+			'view' => sprintf( '<a href="%1$s">%2$s</a>',
+			esc_url( $inviter_link ),
+			esc_html( __( 'View', 'buddyboss' ) ) )
+		);
+	}
+
+	return $actions;
+}
+
+/**
+ * Function for removing the bulk actions of bp-invite post type.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $actions
+ *
+ * @return mixed
+ */
+function bp_invites_remove_bulk_actions( $actions ) {
+
+	unset( $actions[ 'edit' ] );
+	unset( $actions[ 'trash' ] );
 	return $actions;
 }
