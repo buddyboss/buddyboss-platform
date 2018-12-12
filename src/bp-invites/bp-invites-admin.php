@@ -43,6 +43,9 @@ function bp_register_invite_type_sections_filters_actions() {
 	//hide quick edit link on the custom post type list screen
 	add_filter( 'post_row_actions', 'bp_invite_hide_quick_edit', 10, 2 );
 
+	// Invites
+	add_filter( 'bp_admin_menu_order', 'invites_admin_menu_order', 20 );
+
 }
 
 /**
@@ -278,4 +281,30 @@ function bp_invites_remove_bulk_actions( $actions ) {
 	unset( $actions[ 'edit' ] );
 	unset( $actions[ 'trash' ] );
 	return $actions;
+}
+
+/**
+ * Add Invites menu item to custom menus array.
+ *
+ * Several BuddyPress components have top-level menu items in the Dashboard,
+ * which all appear together in the middle of the Dashboard menu. This function
+ * adds the Invites screen to the array of these menu items.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param array $custom_menus The list of top-level BP menu items.
+ * @return array $custom_menus List of top-level BP menu items, with Invites added.
+ */
+function invites_admin_menu_order( $custom_menus = array() ) {
+
+	array_push( $custom_menus, 'edit.php?post_type=' . bp_get_invite_post_type() );
+
+	if ( is_network_admin() && bp_is_network_activated() ) {
+		array_push(
+			$custom_menus,
+			get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_invite_post_type() )
+		);
+	}
+
+	return $custom_menus;
 }
