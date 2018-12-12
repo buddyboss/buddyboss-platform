@@ -3468,7 +3468,7 @@ function bp_email_get_schema() {
 		),
 		'invites-member-invite' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( 'An invitation from {{inviter.name}} join [{{{site.name}}}]', 'buddyboss' ),
+			'post_title'   => __( 'An invitation from {{inviter.name}} to join [{{{site.name}}}]', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_content' => __( "You have been invited by {{inviter.name}} to join the <a href=\"{{{site.url}}}\">[{{{site.name}}}]</a> community.\n\nTo accept this invitation, please visit {{invitee.url}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
