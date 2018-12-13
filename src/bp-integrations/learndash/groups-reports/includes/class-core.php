@@ -116,12 +116,11 @@ if ( ! class_exists( 'LearnDash_BuddyPress_Groups_Reports' ) ) :
 		 * @access public
 		 */
 		public function hooks() {
-			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue' ) );
+			add_action( 'bp_enqueue_scripts', array( $this, 'enqueue' ) );
 		}
 
 		public function enqueue() {
-
-			wp_register_script( 'bp-learndash-courses-reports', LEARNDASH_BUDDYPRESS_GROUP_REPORTS_PLUGIN_URL . '/assets/js/frontend.js', array( 'jquery' ) );
+			wp_register_script( 'bp-learndash-courses-reports', LEARNDASH_BUDDYPRESS_GROUP_REPORTS_PLUGIN_URL . '/assets/js/bp-learndash.js', array( 'jquery' ) );
 			// Localize the script with new data
 			$translation_array = array(
 				'export_csv_error' => __( 'Something when wrong kindly try after some time.', 'buddyboss' ),
