@@ -3079,7 +3079,7 @@ function bp_group_type_short_code_callback( $atts ) {
 	ob_start();
 	if ( ! empty( $atts['type'] ) ) {
 		?>
-		<div id="buddypress" class="buddypress-wrap round-avatars bp-dir-hori-nav">
+		<div id="buddypress" class="buddypress-wrap round-avatars bp-dir-hori-nav bp-shortcode-wrap">
 			<div class="screen-content">
 				<div class="subnav-filters filters no-ajax" id="subnav-filters">
 					<?php bp_get_template_part( 'common/filters/grid-filters' ); ?>
