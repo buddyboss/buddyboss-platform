@@ -230,7 +230,7 @@ class BP_Invites_Component extends BP_Component {
 				$access       = bp_core_can_edit_settings();
 				$invites_link = trailingslashit( $user_domain . $slug );
 
-				// Add the My Invites nav item.
+				// Add the Invite by Email nav item.
 				$sub_nav[] = array(
 					'name'            => __( 'Invite by Email', 'buddyboss' ),
 					'slug'            => 'send-invites',
@@ -241,7 +241,7 @@ class BP_Invites_Component extends BP_Component {
 					'item_css_id'     => 'invites-send-invite'
 				);
 
-				// Add the Invite Invites nav item.
+				// Add the Sent Invites nav item.
 				$sub_nav[] = array(
 					'name'            => __( 'Sent Invites', 'buddyboss' ),
 					'slug'            => 'sent-invites',
@@ -287,7 +287,7 @@ class BP_Invites_Component extends BP_Component {
 				'href'   => $invites_link
 			);
 
-			// My Groups.
+			// Invite by Email
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-invites',
@@ -296,6 +296,7 @@ class BP_Invites_Component extends BP_Component {
 				'position' => 10
 			);
 
+			// Sent Invites
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-sent',
