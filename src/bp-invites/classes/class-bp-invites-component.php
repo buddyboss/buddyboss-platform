@@ -54,7 +54,7 @@ class BP_Invites_Component extends BP_Component {
 			_x( 'Sent Invites', 'Invite screen page <title>', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
-				'adminbar_myaccount_order' => 70,
+				'adminbar_myaccount_order' => 100,
 				'search_query_arg' => 'invites_search',
 			)
 		);
@@ -220,7 +220,7 @@ class BP_Invites_Component extends BP_Component {
 			$main_nav = array(
 				'name'                => $nav_name,
 				'slug'                => $slug,
-				'position'            => 70,
+				'position'            => 90,
 				'screen_function'     => 'bp_invites_screen_send_invite',
 				'default_subnav_slug' => 'send-invites',
 				'item_css_id'         => $this->id
