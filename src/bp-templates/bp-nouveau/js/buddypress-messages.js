@@ -782,10 +782,18 @@ window.bp = window.bp || {};
 			if ( this.collection.options.beforeLoop ) {
 				this.views.add( new bp.Views.Hook( { extraContent: this.collection.options.beforeLoop, className: 'before-messages-loop' } ), { at: 0 } );
 			}
+
+			if ( this.collection.length ) {
+				$('.bp-messages-threads-list').removeClass('bp-no-messages');
+			}
 		},
 
 		threadsFetchError: function( collection, response ) {
 			bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+
+			if ( ! collection.length ) {
+				$('.bp-messages-threads-list').addClass('bp-no-messages');
+			}
 		},
 
 		cleanContent: function() {
