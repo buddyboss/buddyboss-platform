@@ -1113,7 +1113,9 @@ window.bp = window.bp || {};
 			bp.Nouveau.Messages.threads.doAction( action, this.model.get( 'id' ), options ).done( function( response ) {
 				// Remove all views
 				if ( 'delete' === action ) {
-					bp.Nouveau.Messages.clearViews();
+					//bp.Nouveau.Messages.clearViews();
+					// Navigate back to current box
+					bp.Nouveau.Messages.router.navigate( 'inbox/', { trigger: true } );
 				} else if ( response.messages ) {
 					self.model.set( _.first( response.messages ) );
 				}
