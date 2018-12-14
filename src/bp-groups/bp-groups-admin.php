@@ -870,12 +870,6 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 	$invite_status = bp_group_get_invite_status( $item->id );
 	$activity_feed_status = bp_group_get_activity_feed_status( $item->id ); ?>
 
-	<?php if ( bp_is_active( 'forums' ) ) : ?>
-		<div class="bp-groups-settings-section" id="bp-groups-settings-section-forum">
-			<label for="group-show-forum"><input type="checkbox" name="group-show-forum" id="group-show-forum" <?php checked( $item->enable_forum ) ?> /> <?php _e( 'Enable discussion forum', 'buddyboss' ) ?></label>
-		</div>
-	<?php endif; ?>
-
 	<div class="bp-groups-settings-section" id="bp-groups-settings-section-status">
 		<fieldset>
 			<legend><?php _e( 'Group Privacy', 'buddyboss' ); ?></legend>
