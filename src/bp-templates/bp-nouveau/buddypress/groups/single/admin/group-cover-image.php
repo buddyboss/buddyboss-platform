@@ -5,11 +5,6 @@
  * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
-
-$group_link = bp_get_group_permalink();
-$admin_link = trailingslashit( $group_link . 'admin' );
-$group_avatar = trailingslashit( $admin_link . 'group-avatar' );
-$group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 ?>
 
 <?php if ( bp_is_group_create() ) : ?>
