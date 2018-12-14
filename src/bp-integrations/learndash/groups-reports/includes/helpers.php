@@ -58,3 +58,7 @@ function bp_learndash_groups_reports_get_settings( $key = null, $get_default_val
 
 	return isset( $options[ $key ] ) ? $options[ $key ] : ( $get_default_value && isset( $default_value[ $key ] ) ? $default_value[ $key ] : $default );
 }
+
+function bp_learndash_reports_path( $path = '' ) {
+	return bp_learndash_path( 'groups-reports/' . trim($path, '/\\') );
+}
