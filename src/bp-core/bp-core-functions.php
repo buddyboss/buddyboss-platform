@@ -2458,6 +2458,10 @@ function bp_core_get_components( $type = 'all' ) {
 		'forums'   => array(
 			'title'       => __( 'Forum Discussions', 'buddyboss' ),
 			'description' => __( 'Forums allow your users to have discussions using Q&A style message boards. Forums can be standalone or connected to social groups.', 'buddyboss' )
+		),
+		'search'   => array(
+			'title'       => __( 'Network Search', 'buddyboss' ),
+			'description' => __( 'Allow your users to search the entire network, along with custom post types of your choice, all in one unified search bar.', 'buddyboss' )
 		)
 	);
 

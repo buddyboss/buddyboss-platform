@@ -286,6 +286,10 @@ TABLE OF CONTENTS:
 	content: "\f175";
 }
 
+.buddyboss_page_bp-components tr.search td.plugin-title span:before {
+	content: "\f179";
+}
+
 .buddyboss_page_bp-components tr.members td.plugin-title span:before {
 	content: "\f110";
 }

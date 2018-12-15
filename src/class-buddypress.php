@@ -589,6 +589,7 @@ class BuddyPress {
 			'xprofile',
 			'profiletype',
 			'forums',
+			'search',
 			'gdpr',
 			'invites',
 		);
