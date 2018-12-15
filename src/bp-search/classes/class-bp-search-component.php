@@ -35,6 +35,12 @@ class BP_Search_Component extends BP_Component {
 	 * Include BuddyBoss classes and functions
 	 */
 	public function includes( $includes = array() ) {
+
+		$includes = [
+			'functions',
+			'settings',
+		];
+
 		parent::includes( $includes );
 	}
 
