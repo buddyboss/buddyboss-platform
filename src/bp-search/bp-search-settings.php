@@ -35,7 +35,7 @@ function bp_search_get_settings_sections() {
 /**
  * Get all of the settings fields.
  *
- * @since bbPress (r4001)
+ * @since BuddyBoss 3.1.1
  * @return array
  */
 function bp_search_get_settings_fields() {
@@ -69,8 +69,33 @@ function bp_search_get_settings_fields() {
 		],
 	];
 
-	if ( bp_is_search_autotcomplete_enable() ) {
+	if ( bp_is_search_members_enable() ) {
+		$groups = bp_xprofile_get_groups( array(
+			'fetch_fields' => true
+		) );
 
+
+		if ( ! empty( $groups ) ) {
+			foreach ( $groups as $group ) {
+				if ( ! empty( $group->fields ) ) {
+
+					$fields['bp_search_settings_community']["bp_search_xprofile_group_{$group->id}"] = [
+						'title'    => '&#65279;',
+						'callback' => 'bp_search_settings_callback_xprofile_group',
+						'args'     => [ $group ]
+					];
+
+					foreach ( $group->fields as $field ) {
+						$fields['bp_search_settings_community']["bp_search_xprofile_{$field->id}"] = [
+							'title'             => '&#65279;',
+							'callback'          => 'bp_search_settings_callback_xprofile',
+							'sanitize_callback' => 'intval',
+							'args'              => [ $field ]
+						];
+					}
+				}
+			}
+		}
 	}
 
 	return (array) apply_filters( 'bp_search_get_settings_fields', $fields );
@@ -81,7 +106,7 @@ function bp_search_get_settings_fields() {
 /**
  * Get settings fields by section.
  *
- * @since bbPress (r4001)
+ * @since BuddyBoss 3.1.1
  *
  * @param string $section_id
  *
@@ -103,9 +128,7 @@ function bp_search_get_settings_fields_for_section( $section_id = '' ) {
 /**
  * Output settings API option
  *
- * @since bbPress (r3203)
- *
- * @uses bbp_get_bbp_form_option()
+ * @since BuddyBoss 3.1.1
  *
  * @param string $option
  * @param string $default
@@ -230,4 +253,55 @@ function bp_search_settings_callback_members() {
  */
 function bp_is_search_members_enable( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_search_members_enable', (bool) get_option( 'bp_search_members', $default ) );
+}
+
+/**
+ * Output Field Group name
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $group
+ */
+function bp_search_settings_callback_xprofile_group( $group ) {
+	$group = current( $group );
+	?>
+	<strong><?php echo $group->name ?></strong>
+	<?php
+}
+
+/**
+ * Allow xProfile field search setting field
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $field object
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_search_settings_callback_xprofile( $field ) {
+	$field       = current( $field );
+	$id          = $field->id;
+	$option_name = 'bp_search_xprofile_' . $id;
+	?>
+
+	<input name="<?php echo $option_name ?>" id="<?php echo $option_name ?>" type="checkbox" value="1"
+		<?php checked( bp_is_search_xprofile_enable( $id ) ) ?> />
+	<label
+		for="<?php echo $option_name ?>"><?php echo $field->name ?></label>
+
+	<?php
+}
+
+/**
+ * Checks if xprofile field search is enabled.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $id integer
+ *
+ * @uses get_option() To get the bp_search_members option
+ * @return bool Is members search enabled or not
+ */
+function bp_is_search_xprofile_enable( $id ) {
+	return (bool) apply_filters( 'bp_is_search_xprofile_enable', (bool) get_option( "bp_search_xprofile_$id" ) );
 }
