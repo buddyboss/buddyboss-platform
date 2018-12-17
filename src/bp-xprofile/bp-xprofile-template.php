@@ -1521,7 +1521,10 @@ function bp_get_the_profile_field_optional_label() {
 	$retval = '';
 
 	if ( ! bp_get_the_profile_field_is_required() ) {
-		$translated_string = __( '(optional)', 'buddyboss' );
+
+		// @note Removed (optional) text from here for the future reference.
+		//$translated_string = __( '(optional)', 'buddyboss' );
+		$translated_string = __( '', 'buddyboss' );
 
 		$retval = ' <span class="bp-optional-field-label">';
 		$retval .= apply_filters( 'bp_get_the_profile_field_optional_label', $translated_string, bp_get_the_profile_field_id() );
