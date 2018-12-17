@@ -683,3 +683,44 @@ function bbp_group_is_creator() {
 	// Return the value
 	return (bool) $bbp->current_user->is_group_creator;
 }
+
+/**
+ * Function for enabling the TinyMce in Forum Topic and reply content.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param array $args
+ *
+ * @return array
+ */
+function bbp_forum_topics_reply_enable_tinymce_editor( $args = array() ) {
+
+	// Filter for removing the visual/text tabs hide.
+	add_filter('wp_editor_settings', 'bbp_forum_topics_reply_tinymce_settings');
+
+	// Enable the tinyMce.
+	$args['tinymce'] = true;
+	$args['tinymce'] = array(
+		'toolbar1' =>'bold, italic, bullist, numlist, blockquote, link, image',
+	);
+
+	return $args;
+}
+add_filter( 'bbp_after_get_the_content_parse_args', 'bbp_forum_topics_reply_enable_tinymce_editor' );
+
+/**
+ * Function for TinyMce settings in Forum Topic and reply content.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $settings
+ *
+ * @return mixed
+ */
+function bbp_forum_topics_reply_tinymce_settings($settings) {
+
+	// visual/text tabs hide.
+	$settings['quicktags'] = false;
+
+	return $settings;
+}
