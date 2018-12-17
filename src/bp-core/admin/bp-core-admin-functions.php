@@ -1734,8 +1734,10 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 			if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
 				foreach ( $get_user_ids as $single_user ) {
 					$bp_user = new WP_User( $single_user );
-					// Remove role
-					$bp_user->remove_role( $bp_user->roles[0] );
+					foreach ( $bp_user->roles as $role ) {
+						// Remove role
+						$bp_user->remove_role( $role );
+					}
 					// Add role
 					$bp_user->add_role( $wp_roles[0] );
 				}
