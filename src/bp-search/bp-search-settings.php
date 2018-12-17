@@ -65,7 +65,9 @@ function bp_search_get_settings_fields() {
 			'title'             => __( 'Community Network', 'buddyboss' ),
 			'callback'          => 'bp_search_settings_callback_members',
 			'sanitize_callback' => 'intval',
-			'args'              => []
+			'args'              => [
+				'class' => 'bp-search-parent-field'
+			]
 		],
 	];
 
@@ -82,7 +84,10 @@ function bp_search_get_settings_fields() {
 					$fields['bp_search_settings_community']["bp_search_xprofile_group_{$group->id}"] = [
 						'title'    => '&#65279;',
 						'callback' => 'bp_search_settings_callback_xprofile_group',
-						'args'     => [ $group, 'class' => 'bp-search-child-field bp-search-subgroup-heading' ]
+						'args'     => [
+							'group' => $group,
+							'class' => 'bp-search-child-field bp-search-subgroup-heading'
+						]
 					];
 
 					foreach ( $group->fields as $field ) {
@@ -90,12 +95,55 @@ function bp_search_get_settings_fields() {
 							'title'             => '&#65279;',
 							'callback'          => 'bp_search_settings_callback_xprofile',
 							'sanitize_callback' => 'intval',
-							'args'              => [ $field, 'class' => 'bp-search-child-field' ]
+							'args'              => [
+								'field' => $field,
+								'class' => 'bp-search-child-field'
+							]
 						];
 					}
 				}
 			}
 		}
+	}
+
+	if ( bp_is_active( 'forums' ) ) {
+		$fields['bp_search_settings_community']["bp_search_post_type_forum"] = [
+			'title'             => '&#65279;',
+			'callback'          => 'bp_search_settings_callback_post_type',
+			'sanitize_callback' => 'intval',
+			'args'              => [
+				'post_type' => 'forum',
+				'class'     => 'bp-search-parent-field'
+			]
+		];
+
+		$fields['bp_search_settings_community']["bp_search_post_type_topic"] = [
+			'title'             => '&#65279;',
+			'callback'          => 'bp_search_settings_callback_post_type',
+			'sanitize_callback' => 'intval',
+			'args'              => [
+				'post_type' => 'topic',
+				'class'     => 'bp-search-child-field'
+			]
+		];
+
+		$fields['bp_search_settings_community']["bp_search_post_type_reply"] = [
+			'title'             => '&#65279;',
+			'callback'          => 'bp_search_settings_callback_post_type',
+			'sanitize_callback' => 'intval',
+			'args'              => [
+				'post_type' => 'reply',
+				'class'     => 'bp-search-child-field'
+			]
+		];
+	}
+
+	if ( bp_is_active( 'groups' ) ) {
+		$fields['bp_search_settings_community']["bp_search_groups"] = [
+			'title'             => '&#65279;',
+			'callback'          => 'bp_search_settings_callback_groups',
+			'sanitize_callback' => 'intval'
+		];
 	}
 
 	return (array) apply_filters( 'bp_search_get_settings_fields', $fields );
@@ -260,10 +308,12 @@ function bp_is_search_members_enable( $default = 1 ) {
  *
  * @since BuddyBoss 3.1.1
  *
+ * @param $args array
+ *
  * @param $group
  */
-function bp_search_settings_callback_xprofile_group( $group ) {
-	$group = current( $group );
+function bp_search_settings_callback_xprofile_group( $args ) {
+	$group = $args['group'];
 	?>
 	<strong><?php echo $group->name ?></strong>
 	<?php
@@ -274,12 +324,12 @@ function bp_search_settings_callback_xprofile_group( $group ) {
  *
  * @since BuddyBoss 3.1.1
  *
- * @param $field object
+ * @param $args array
  *
  * @uses checked() To display the checked attribute
  */
-function bp_search_settings_callback_xprofile( $field ) {
-	$field       = current( $field );
+function bp_search_settings_callback_xprofile( $args ) {
+	$field       = $args['field'];
 	$id          = $field->id;
 	$option_name = 'bp_search_xprofile_' . $id;
 	?>
@@ -304,4 +354,81 @@ function bp_search_settings_callback_xprofile( $field ) {
  */
 function bp_is_search_xprofile_enable( $id ) {
 	return (bool) apply_filters( 'bp_is_search_xprofile_enable', (bool) get_option( "bp_search_xprofile_$id" ) );
+}
+
+/**
+ * Allow Post Type search setting field
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $args array
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_search_settings_callback_post_type( $args ) {
+
+	$post_type   = $args['post_type'];
+	$option_name = 'bp_search_post_type_' . $post_type;
+
+	$post_type_obj = get_post_type_object( $post_type );
+	?>
+	<input
+		name="<?php echo $option_name ?>"
+		id="<?php echo $option_name ?>"
+		type="checkbox"
+		value="1"
+		<?php checked( bp_is_search_post_type_enable( $post_type ) ) ?>
+	/>
+	<label for="<?php echo $option_name ?>">
+		<?php echo $post_type_obj->labels->name ?>
+	</label>
+	<?php
+}
+
+/**
+ * Checks if post type search is enabled.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $post_type string
+ *
+ * @return bool Is members search enabled or not
+ */
+function bp_is_search_post_type_enable( $post_type ) {
+	return (bool) apply_filters( 'bp_is_search_post_type_enable', (bool) get_option( "bp_search_post_type_$post_type" ) );
+}
+
+/**
+ * Allow Post Type search setting field
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_search_settings_callback_groups() { ?>
+	<input
+		name="bp_search_groups"
+		id="bp_search_groups"
+		type="checkbox"
+		value="1"
+		<?php checked( bp_is_search_groups_enable( true ) ) ?>
+	/>
+	<label for="bp_search_groups">
+		<?php esc_html_e( 'Groups', 'buddyboss' ) ?>
+	</label>
+	<?php
+}
+
+/**
+ * Checks if groups search is enabled.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $default integer
+ *
+ * @return bool Is groups search enabled or not
+ */
+function bp_is_search_groups_enable( $default = 1 ) {
+	return (bool) apply_filters( 'bp_is_search_groups_enable', (bool) get_option( 'bp_search_groups', $default ) );
 }

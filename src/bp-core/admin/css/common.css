@@ -406,6 +406,11 @@ tr.bp-search-child-field td {
 	padding: 0.5em 2.5em;
 }
 
+tr.bp-search-parent-field th,
+tr.bp-search-parent-field td {
+	padding: 15px 10px 10px 0px;
+}
+
 	/*------------------------------------------------------------------------------
 	 * 3.0 Users
 	 *----------------------------------------------------------------------------*/
