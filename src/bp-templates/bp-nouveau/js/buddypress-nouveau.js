@@ -590,8 +590,6 @@ window.bp = window.bp || {};
 						alert( alert_message );
 						return false;
 					}
-
-					return false;
 				});
 			}
 		},
