@@ -103,8 +103,25 @@
     </fieldset>
 
 	<?php
-	// Group type selection
 	$group_types = bp_groups_get_group_types( array( 'show_in_create_screen' => true ), 'objects' );
+
+	// Hide Group Types if none is selected in Users > Profile Type > E.g. (Students) > Allowed Group Types meta box.
+	if ( false === bp_restrict_group_creation() && true === bp_member_type_enable_disable() ) {
+		$get_all_registered_member_types = bp_get_active_member_types();
+		if ( isset( $get_all_registered_member_types ) && !empty( $get_all_registered_member_types ) ) {
+
+			$current_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
+			if ( '' !== $current_user_member_type ) {
+				$member_type_post_id = bp_member_type_post_by_type( $current_user_member_type );
+				$include_group_type  = get_post_meta( $member_type_post_id,'_bp_member_type_enabled_group_type_create',true );
+				if ( isset( $include_group_type ) && ! empty( $include_group_type ) && 'none' === $include_group_type[0] ) {
+					$group_types = '';
+				}
+			}
+		}
+	}
+
+	// Group type selection
 	if ( $group_types ) : ?>
 
 		<fieldset class="group-create-types">
