@@ -44,6 +44,8 @@ window.bp = window.bp || {};
 			// Member Invites popup revoke access
 			this.sendInvitesRevokeAccess();
 
+			this.sentInvitesFormValidate();
+
 			//this.memberPreFilter();
 			$.ajaxPrefilter( this.memberPreFilter );
 			$.ajaxPrefilter( this.groupPreFilter );
@@ -525,6 +527,73 @@ window.bp = window.bp || {};
 
                 _this.setStorage( 'bp-' + object, 'extras', extras );
             });
+		},
+
+		sentInvitesFormValidate: function() {
+
+			if ( $('body.send-invites #send-invite-form #member-invites-table').length ) {
+
+				$( 'body.send-invites #send-invite-form' ).submit(function( e ) {
+
+					var prevent = false;
+					var title = '';
+					var id = '';
+					var email = '';
+					var id_lists = [];
+					var all_lists = [];
+					var alert_message = $('body.send-invites #send-invite-form #error-message-required-field').val();
+
+					$('body.send-invites #send-invite-form #member-invites-table > tbody  > tr').each(function() {
+						$(this).find('input[type="text"]').removeAttr('style');
+						$(this).find('input[type="email"]').removeAttr('style');
+					});
+
+					$('body.send-invites #send-invite-form #member-invites-table > tbody  > tr').each(function() {
+
+						title = $(this).find('input[type="text"]').val();
+						id = $(this).find('input').attr('id');
+						email = $(this).find('input[type="email"]').val();
+
+						if ( '' === title && '' === email ) {
+							prevent = false;
+						} else if ( '' !== title && '' === email ) {
+							id = $(this).find('input[type="email"]').attr('id');
+							prevent = true;
+							id_lists.push(id);
+						} else if ( '' === title && '' !== email ) {
+							id = $(this).find('input[type="text"]').attr('id');
+							prevent = true;
+							id_lists.push(id);
+						} else {
+							prevent = false;
+							all_lists.push(1);
+						}
+					});
+
+					if (all_lists.length === 0) {
+						$('#invitee_0_title').attr('style','border:1px solid #ff0000');
+						$('#invitee_0_title').focus();
+						$('#email_0_email').attr('style','border:1px solid #ff0000');
+						alert( alert_message );
+						return false;
+					}
+
+					if (id_lists.length === 0) {
+
+					} else {
+						id_lists.forEach(function(item) {
+							$('#'+item).attr('style','border:1px solid #ff0000');
+						});
+						$('html, body').animate({
+							scrollTop: $('#item-body').offset().top
+						}, 2000);
+						alert( alert_message );
+						return false;
+					}
+
+					return false;
+				});
+			}
 		},
 
 		sendInvitesRevokeAccess: function() {

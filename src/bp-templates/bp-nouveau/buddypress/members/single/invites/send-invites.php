@@ -28,10 +28,10 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 
 			<tr>
 				<td class="field-name">
-					<input type="text" name="invitee[<?php echo $i; ?>][]" id="invitee" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'invitee' ); ?>/>
+					<input type="text" name="invitee[<?php echo $i; ?>][]" id="invitee_<?php echo $i; ?>_title" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'invitee' ); ?>/>
 				</td>
 				<td class="field-email">
-					<input type="email" name="email[<?php echo $i; ?>][]" id="email" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'email' ); ?>/>
+					<input type="email" name="email[<?php echo $i; ?>][]" id="email_<?php echo $i; ?>_email" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'email' ); ?>/>
 				</td>
 			</tr>
 
@@ -56,7 +56,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 		<?php
 	}
 	?>
-
+	<input type="hidden" value="<?php _e('Please fill all the required field to invite member.', 'buddyboss') ?>" name="error-message-required-field" id="error-message-required-field">
 	<?php bp_nouveau_submit_button( 'member-invites-submit' ); ?>
 
 </form>
