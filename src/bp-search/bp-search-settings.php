@@ -82,7 +82,7 @@ function bp_search_get_settings_fields() {
 					$fields['bp_search_settings_community']["bp_search_xprofile_group_{$group->id}"] = [
 						'title'    => '&#65279;',
 						'callback' => 'bp_search_settings_callback_xprofile_group',
-						'args'     => [ $group ]
+						'args'     => [ $group, 'class' => 'bp-search-child-field bp-search-subgroup-heading' ]
 					];
 
 					foreach ( $group->fields as $field ) {
@@ -90,7 +90,7 @@ function bp_search_get_settings_fields() {
 							'title'             => '&#65279;',
 							'callback'          => 'bp_search_settings_callback_xprofile',
 							'sanitize_callback' => 'intval',
-							'args'              => [ $field ]
+							'args'              => [ $field, 'class' => 'bp-search-child-field' ]
 						];
 					}
 				}
