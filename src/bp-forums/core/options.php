@@ -37,7 +37,7 @@ function bbp_get_default_options() {
 		'_bbp_allow_global_access'    => 1,                          // Users from all sites can post
 		'_bbp_allow_revisions'        => 1,                          // Allow revisions
 		'_bbp_allow_topic_tags'       => 1,                          // Allow topic tagging
-		'_bbp_allow_threaded_replies' => 0,                          // Allow threaded replies
+		'_bbp_allow_threaded_replies' => 1,                          // Allow threaded replies
 		'_bbp_allow_search'           => 1,                          // Allow forum-wide search
 		'_bbp_thread_replies_depth'   => 2,                          // Thread replies depth
 		'_bbp_use_wp_editor'          => 1,                          // Use the WordPress editor if available
@@ -261,7 +261,7 @@ function bbp_thread_replies() {
  * @uses get_option() To get the threaded replies setting
  * @return bool Are threaded replies allowed?
  */
-function bbp_allow_threaded_replies( $default = 0 ) {
+function bbp_allow_threaded_replies( $default = 1 ) {
 	return (bool) apply_filters( '_bbp_allow_threaded_replies', (bool) get_option( '_bbp_allow_threaded_replies', $default ) );
 }
 
