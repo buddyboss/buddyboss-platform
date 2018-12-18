@@ -449,6 +449,12 @@ function bp_invites_member_invite_activate_user( $user_id, $key, $user ) {
 			// Mark as accepted
 			update_post_meta( get_the_ID(), '_bp_invitee_status', 1 );
 			update_post_meta( get_the_ID(), '_bp_invitee_registered_date', date( 'Y-m-d H:i:s' ) );
+
+			$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
+			if ( isset( $member_type ) && !empty( $member_type ) ) {
+				bp_set_member_type( $user_id, '' );
+				bp_set_member_type( $user_id, $member_type );
+			}
 		}
 
 	}

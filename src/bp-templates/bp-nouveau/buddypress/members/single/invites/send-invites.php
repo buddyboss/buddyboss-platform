@@ -16,6 +16,13 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 		<tr>
 			<th class="title"><?php esc_html_e( 'Name', 'buddyboss' ); ?></th>
 			<th class="title"><?php esc_html_e( 'Email', 'buddyboss' ); ?></th>
+			<?php
+			if ( true === bp_check_member_send_invites_tab_member_type_allowed() ) {
+				?>
+				<th class="title"><?php esc_html_e( 'Type', 'buddyboss' ); ?></th>
+				<?php
+			}
+			?>
 		</tr>
 		</thead>
 
@@ -33,6 +40,38 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 				<td class="field-email">
 					<input type="email" name="email[<?php echo $i; ?>][]" id="email_<?php echo $i; ?>_email" value="<?php echo esc_attr( '' ); ?>" class="invites-input" <?php bp_form_field_attributes( 'email' ); ?>/>
 				</td>
+				<?php
+				if ( true === bp_check_member_send_invites_tab_member_type_allowed() ) {
+					$current_user = bp_loggedin_user_id();
+					$member_type = bp_get_member_type( $current_user );
+					$member_type_post_id = bp_member_type_post_by_type( $member_type );
+					$get_selected_member_types = get_post_meta( $member_type_post_id, '_bp_member_type_allowed_member_type_invite', true );
+					if ( isset( $get_selected_member_types ) && !empty( $get_selected_member_types ) ) {
+						$member_types = $get_selected_member_types;
+					} else {
+						$member_types = bp_get_active_member_types();
+					}
+					?>
+					<td class="field-member-type">
+						<select name="member-type[<?php echo $i; ?>][]" id="member_type<?php echo $i; ?>_member_type" class="invites-input">
+							<option value=""><?php echo __( '-- Select Type --', 'buddyboss'); ?></option>
+							<?php
+							foreach ( $member_types as $type ) {
+								$name    = bp_get_member_type_key( $type );
+								if ( $type_obj = bp_get_member_type_object( $name ) ) {
+									$member_type = $type_obj->labels['singular_name'];
+									$member_type = __( $member_type, 'buddyboss');
+								}
+								?>
+								<option value="<?php echo esc_attr( $name ); ?>"><?php echo esc_html( $member_type ); ?></option>
+								<?php
+							}
+							?>
+						</select>
+					</td>
+					<?php
+				}
+				?>
 			</tr>
 
 		<?php }; ?>
