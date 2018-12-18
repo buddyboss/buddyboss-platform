@@ -401,3 +401,15 @@ function bp_admin_setting_callback_member_invite_email_content() {
 	<label for="bp-disable-invite-member-email-content"><?php _e( 'Allow users to customize the invite email body content', 'buddyboss' ); ?></label>
 	<?php
 }
+
+/**
+ * 'Enable email content' field markup.
+ *
+ * @since BuddyBoss 3.1.1
+ */
+function bp_admin_setting_callback_member_invite_member_type() {
+	?>
+	<input id="bp-disable-invite-member-type" name="bp-disable-invite-member-type" type="checkbox" value="1" <?php checked( bp_disable_invite_member_type() ); ?> />
+	<label for="bp-disable-invite-member-type"><?php _e( 'Allow users to sign up the profile types to personal inviting', 'buddyboss' ); ?></label>
+	<?php
+}

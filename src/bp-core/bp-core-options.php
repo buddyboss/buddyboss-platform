@@ -133,6 +133,7 @@ function bp_get_default_options() {
 
 		'bp-disable-invite-member-email-subject'         => false,
 		'bp-disable-invite-member-email-content'         => true,
+		'bp-disable-invite-member-type'                  => false,
 
 		/* Widgets **************************************************/
 		'widget_bp_core_login_widget'                => false,
@@ -1012,4 +1013,25 @@ function bp_disable_invite_member_email_content( $default = true ) {
 	 * @param bool $value Whether email content customize is enabled or not.
 	 */
 	return (bool) apply_filters( 'bp_disable_invite_member_email_content', (bool) bp_get_option( 'bp-disable-invite-member-email-content', $default ) );
+}
+
+/**
+ * Is allow users to sign up the profile types to personal inviting?
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if allow users to sign up the profile types to personal inviting enabled, otherwise false.
+ */
+function bp_disable_invite_member_type( $default = false ) {
+
+	/**
+	 * Filters whether allow users to sign up the profile types to personal inviting is enabled or not.
+	 *
+	 * @since BuddyBoss 3.1.1
+	 *
+	 * @param bool $value Whether allow users to sign up the profile types to personal inviting is enabled or not.
+	 */
+	return (bool) apply_filters( 'bp_disable_invite_member_type', (bool) bp_get_option( 'bp-disable-invite-member-type', $default ) );
 }
