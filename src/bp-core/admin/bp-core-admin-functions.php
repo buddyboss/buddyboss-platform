@@ -1365,6 +1365,11 @@ function bp_member_type_custom_metaboxes() {
 			add_meta_box( 'bp-member-type-group-auto-join', __( 'Members with this profile type are only allowed to auto join groups with the following group types.', 'buddyboss' ), 'bp_member_type_group_auto_join_meta_box', null, 'normal', 'high' );
 		}
 	}
+
+	// Metabox for the member type invite.
+	if ( true === bp_disable_invite_member_type() ) {
+		add_meta_box( 'bp-member-type-invite', __( 'Member Invites', 'buddyboss' ), 'bp_member_type_invite_meta_box', null, 'normal', 'high' );
+	}
 }
 add_action( 'add_meta_boxes_' . bp_get_member_type_post_type(), 'bp_member_type_custom_metaboxes' );
 
@@ -1625,6 +1630,44 @@ function bp_member_type_group_auto_join_meta_box( $post ) {
 }
 
 /**
+ * Function for members with this profile type are only allowed to invites following profile types.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $post
+ */
+function bp_member_type_invite_meta_box( $post ) {
+
+
+	$meta = get_post_custom( $post->ID );
+	?>
+	<?php
+	$enable_invite = isset( $meta[ '_bp_member_type_enable_invite' ] ) ? $meta[ '_bp_member_type_enable_invite' ][ 0 ] : 1; //enabled by default
+	?>
+	<p>
+		<input type='checkbox' name='bp-member-type-enabled-invite' value='1' <?php checked( $enable_invite, 1 ); ?> tabindex="8" />
+		<strong><?php _e( 'Enable Invites for this profile type?', 'buddyboss' ); ?></strong>
+	</p>
+	<?php
+
+	$get_all_registered_profile_types = bp_get_active_member_types();
+
+	$get_selected_profile_types = get_post_meta( $post->ID, '_bp_member_type_allowed_member_type_invite', true );
+
+	foreach ( $get_all_registered_profile_types as $member_type_id ) {
+
+		$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
+		?>
+		<p>
+			<input type='checkbox' name='bp-member-type-invite[]' value='<?php echo esc_attr( $member_type_id ); ?>' <?php checked( in_array( $member_type_id, $get_selected_profile_types ) ); ?> tabindex="9" />
+			<strong><?php _e( $member_type_name, 'buddyboss' ); ?></strong>
+		</p>
+		<?php
+
+	}
+}
+
+/**
  * Function for saving metaboxes data of member type post data.
  * @param $post_id
  *
@@ -1682,6 +1725,8 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_enable_remove', $enable_remove );
 	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_create', $_POST['bp-group-type'] );
 	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', $_POST['bp-group-type-auto-join'] );
+	update_post_meta( $post_id, '_bp_member_type_allowed_member_type_invite', $_POST['bp-member-type-invite'] );
+	update_post_meta( $post_id, '_bp_member_type_enable_invite', $_POST['bp-member-type-enabled-invite'] );
 
 	// Get user previous role.
 	$old_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
