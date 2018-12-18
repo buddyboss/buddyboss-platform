@@ -1648,6 +1648,10 @@ function bp_member_type_invite_meta_box( $post ) {
 		<input type='checkbox' name='bp-member-type-enabled-invite' value='1' <?php checked( $enable_invite, 1 ); ?> tabindex="8" />
 		<strong><?php _e( 'Enable Invites for this profile type?', 'buddyboss' ); ?></strong>
 	</p>
+
+
+	<p><?php _e( 'Check Profile Type which you have to allow users to send invitation with following profile types.', 'buddyboss' ); ?></p>
+
 	<?php
 
 	$get_all_registered_profile_types = bp_get_active_member_types();
