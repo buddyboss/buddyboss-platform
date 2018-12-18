@@ -403,7 +403,7 @@ function bp_admin_setting_callback_member_invite_email_content() {
 }
 
 /**
- * 'Enable email content' field markup.
+ * 'Enable member invite' field markup.
  *
  * @since BuddyBoss 3.1.1
  */
