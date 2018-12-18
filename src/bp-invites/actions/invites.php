@@ -56,11 +56,13 @@ function bp_member_invite_submit() {
 			$invite_correct_array[] = array(
 				'name' => $_POST['invitee'][$key][0],
 				'email' => $_POST['email'][$key][0],
+				'member_type' => ( isset( $_POST['member-type'][$key][0] ) && !empty( $_POST['member-type'][$key][0] ) ) ? $_POST['member-type'][$key][0] : '' ,
 			);
 		} else {
 			$invite_wrong_array[] = array(
 				'name' => $_POST['invitee'][$key][0],
 				'email' => $_POST['email'][$key][0],
+				'member_type' => ( isset( $_POST['member-type'][$key][0] ) && !empty( $_POST['member-type'][$key][0] ) ) ? $_POST['member-type'][$key][0] : '' ,
 			);
 		}
 	}
@@ -81,6 +83,7 @@ function bp_member_invite_submit() {
 
 		$email = $value['email'];
 		$name = $value['name'];
+		$member_type = $value['member_type'];
 		$query_string[] = $email;
 		$inviter_name = bp_core_get_user_displayname( bp_loggedin_user_id() );
 
@@ -135,6 +138,7 @@ function bp_member_invite_submit() {
 		update_post_meta( $post_id, '_bp_invitee_name', $name );
 		update_post_meta( $post_id, '_bp_inviter_name', $inviter_name );
 		update_post_meta( $post_id, '_bp_invitee_status', 0 );
+		update_post_meta( $post_id, '_bp_invitee_member_type', $member_type );
 	}
 
 	bp_core_redirect( bp_displayed_user_domain() . 'invites/sent-invites?email='.implode (", ", $query_string ) );

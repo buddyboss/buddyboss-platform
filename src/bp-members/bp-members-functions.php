@@ -4187,7 +4187,7 @@ function bp_current_member_switched() {
  *
  * @param int $user_id The user ID to add the auto join groups.
  */
-function bp_member_add_auto_join_groups( $user_id ) {
+function bp_member_add_auto_join_groups( $user_id, $key, $user ) {
 
 	$user_member_type = bp_get_member_type( $user_id );
 
@@ -4226,4 +4226,4 @@ function bp_member_add_auto_join_groups( $user_id ) {
 		}
 	}
 }
-add_action( 'bp_core_activated_user', 'bp_member_add_auto_join_groups', 1 );
+add_action( 'bp_core_activated_user', 'bp_member_add_auto_join_groups', 99, 3 );

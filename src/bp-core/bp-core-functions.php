@@ -3871,3 +3871,33 @@ function bp_get_allowedtags() {
 function bp_strip_script_and_style_tags( $string ) {
 	return preg_replace( '@<(script|style)[^>]*?>.*?</\\1>@si', '', $string );
 }
+
+function bp_check_member_send_invites_tab_member_type_allowed() {
+
+	// default allowed false
+	$allowed = false;
+
+	// Check BuddyBoss > Settings > Profiles > Enable profile types to give members unique profile fields and permission.
+	if ( true === bp_member_type_enable_disable() ) {
+		// Check BuddyBoss > Settings > User Invites > Allow users to sign up the profile types to personal inviting.
+		if ( true === bp_disable_invite_member_type() ) {
+			$current_user = bp_loggedin_user_id();
+			$member_type = bp_get_member_type( $current_user );
+			// If current user don't have any profile type then we are not allow.
+			if ( false === $member_type ) {
+				$allowed = false;
+			} else {
+				$member_type_post_id = bp_member_type_post_by_type( $member_type );
+				$meta = get_post_custom( $member_type_post_id );
+				$enable_invite = isset( $meta[ '_bp_member_type_enable_invite' ] ) ? intval( $meta[ '_bp_member_type_enable_invite' ][ 0 ] ) : 1; //enabled by default
+				if ( 1 === $enable_invite ) {
+					$get_all_registered_member_types = bp_get_active_member_types();
+					if ( isset( $get_all_registered_member_types ) && !empty( $get_all_registered_member_types ) ) {
+						$allowed = true;
+					}
+				}
+			}
+		}
+	}
+	return $allowed;
+}
