@@ -17,6 +17,7 @@ TABLE OF CONTENTS:
 	2.2 Settings - Components
 	2.3 Tools
 	2.4 Tooltips
+	2.5 Settings - Tabs
 3.0 Users
 	3.1 Users List
 	3.2 Site Notices
@@ -278,8 +279,16 @@ TABLE OF CONTENTS:
 	content: "\f325";
 }
 
+.buddyboss_page_bp-components tr.invites td.plugin-title span:before {
+	content: "\f465";
+}
+
 .buddyboss_page_bp-components tr.forums td.plugin-title span:before {
 	content: "\f175";
+}
+
+.buddyboss_page_bp-components tr.search td.plugin-title span:before {
+	content: "\f179";
 }
 
 .buddyboss_page_bp-components tr.members td.plugin-title span:before {
@@ -385,9 +394,26 @@ TABLE OF CONTENTS:
 	z-index: 999;
 }
 
-/*------------------------------------------------------------------------------
+/*
+ * 2.5 Settings - Tabs
+ */
+tr.bp-search-child-field,
+tr.bp-search-child-field th {
+	padding: 0;
+}
+
+tr.bp-search-child-field td {
+	padding: 0.5em 2.5em;
+}
+
+tr.bp-search-parent-field th,
+tr.bp-search-parent-field td {
+	padding: 15px 0 10px 10px;
+}
+
+/*
  * 3.0 Users
- *----------------------------------------------------------------------------*/
+ */
 
 /*
  * 3.1 Users List
