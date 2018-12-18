@@ -81,6 +81,7 @@ add_filter( 'bp_get_the_profile_field_name', 'xprofile_filter_field_edit_name' )
 
 // Saving field value
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_nickname_value', 10, 4 );
+add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_phone_value', 10, 4 );
 
 // Display name adjustment
 add_filter( 'set_current_user', 'bp_xprofile_adjust_current_user_display_name' );
@@ -689,6 +690,64 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $vlaue, $user_
 	}
 
 	return $retval;
+}
+
+/**
+ * Function which validate the phone number is valid or not.
+ *
+ * @since BuddyBoss 3.1.1
+ *
+ * @param $retval
+ * @param $field_id
+ * @param $value
+ * @param null $user_id
+ *
+ * @return string
+ */
+function bp_xprofile_validate_phone_value( $retval, $field_id, $value, $user_id = null ) {
+
+	if ( 'telephone' !== xprofile_get_field( $field_id)->type ) {
+		return $retval;
+	}
+
+	if ( $retval ) {
+		return $retval;
+	}
+
+	if ( false === xprofile_check_is_required_field( $field_id ) && '' === $value ) {
+		return $retval;
+	}
+
+	$international = false;
+	$selected_format = bp_xprofile_get_meta( $field_id, 'field', 'phone_format', true );
+	if ( empty( $selected_format ) ) {
+		$international = true;
+	}
+
+	$str = trim( $value );
+	$str = preg_replace( '/\s+(#|x|ext(ension)?)\.?:?\s*(\d+)/', ' ext \3', $str );
+
+	$us_number = preg_match( '/^(\+\s*)?((0{0,2}1{1,3}[^\d]+)?\(?\s*([2-9][0-9]{2})\s*[^\d]?\s*([2-9][0-9]{2})\s*[^\d]?\s*([\d]{4})){1}(\s*([[:alpha:]#][^\d]*\d.*))?$/', $str, $matches );
+
+	$field_name = xprofile_get_field( $field_id )->name;
+
+	if ( $us_number ) {
+		return $retval;
+	}
+
+	if ( ! $international ) {
+		/* SET ERROR: The field must be a valid U.S. phone number (e.g. 888-888-8888) */
+		return sprintf( __( 'Invalid %s. Enter valid phone number.', 'buddyboss' ), $field_name );
+	}
+
+	$valid_number = preg_match( '/^(\+\s*)?(?=([.,\s()-]*\d){8})([\d(][\d.,\s()-]*)([[:alpha:]#][^\d]*\d.*)?$/', $str, $matches ) && preg_match( '/\d{2}/', $str );
+
+	if ( $valid_number ) {
+		return $retval;
+	}
+
+	/* SET ERROR: The field must be a valid phone number (e.g. 888-888-8888) */
+	return sprintf( __( 'Invalid %s. Enter valid phone number.', 'buddyboss' ), $field_name );
 }
 
 function bp_xprofile_adjust_current_user_display_name() {
