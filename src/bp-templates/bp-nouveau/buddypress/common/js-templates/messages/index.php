@@ -140,7 +140,7 @@
 			<a class="subject" href="../view/{{data.id}}/">
 				<# for ( i in first_three ) { #>
 					<span class="user-name">
-						{{other_recipients[i].user_name}}<# if ( i != first_three.length - 1  || ( i == first_three.length -1 && include_you ) ){ #><?php _e(',', 'buddyboss'); ?><# } #>
+						{{other_recipients[i].user_name}}<# if ( i != first_three.length - 1  || ( i == first_three.length -1 && include_you ) ) { #><?php _e(',', 'buddyboss'); ?><# } #>
 					</span>
 				<# } #>
 
