@@ -536,25 +536,30 @@ class BuddyPress {
 		require( $this->plugin_dir . 'bp-core/bp-core-profile-search.php'   );
 		require( $this->plugin_dir . 'bp-core/bp-core-gdpr.php'             );
 
-		// Maybe load deprecated functionality (this double negative is proof positive!)
+		// Maybe load deprecated buddypress functionality (this double negative is proof positive!)
 		if ( ! bp_get_option( '_bp_ignore_deprecated_code', ! $this->load_deprecated ) ) {
-			require( $this->plugin_dir . 'bp-core/deprecated/1.2.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/1.5.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/1.6.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/1.7.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/1.9.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/2.0.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/2.1.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/2.2.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/2.3.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/2.4.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/2.5.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/2.6.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/2.7.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/2.8.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/2.9.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/3.0.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/3.1.php' );
+			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/1.2.php' );
+			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/1.5.php' );
+			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/1.6.php' );
+			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/1.7.php' );
+			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/1.9.php' );
+			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/2.0.php' );
+			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/2.1.php' );
+			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/2.2.php' );
+			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/2.3.php' );
+			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/2.4.php' );
+			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/2.5.php' );
+			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/2.6.php' );
+			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/2.7.php' );
+			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/2.8.php' );
+			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/2.9.php' );
+			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/3.0.php' );
+			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/3.1.php' );
+		}
+
+		// Maybe load deprecated buddyboss functionality (this double negative is proof positive!)
+		if ( ! bp_get_option( '_bb_ignore_deprecated_code', ! $this->load_deprecated ) ) {
+			require( $this->plugin_dir . 'bp-core/deprecated/pre-1.0.php' );
 		}
 
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {
