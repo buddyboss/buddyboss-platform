@@ -2817,10 +2817,10 @@ function bp_custom_display_name_format( $display_name, $user_id = null ) {
 			$display_name = get_user_meta( $user_id, 'first_name', true );
 			break;
 		case 'first_last_name':
-			$display_name = implode( ' ', [
+			$display_name = implode( ' ', array_filter( [
 				get_user_meta( $user_id, 'first_name',true ),
 				get_user_meta( $user_id, 'last_name', true )
-			]);
+			] ) );
 			break;
 		case 'nickname':
 			$display_name = get_user_meta( $user_id, 'nickname', true );
