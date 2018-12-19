@@ -2,7 +2,7 @@
 /**
  * BP Nouveau Component's members filters template.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 ?>
 

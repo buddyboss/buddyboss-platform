@@ -545,7 +545,7 @@ function bp_the_profile_field_name() {
  * Returns the XProfile field's alternate name, if added, empty otherwise.
  * 
  * @global \BP_XProfile_Field_Type $field
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * 
  * @param \BP_XProfile_Field_Type $the_field field object. Optional. Defaults to global $field object.
  * @return string 
@@ -559,7 +559,7 @@ function bp_get_the_profile_field_alternate_name( $the_field = false ) {
     /**
      * Filters the XProfile field's alternate name.
      *
-     * @since BuddyBoss 3.1.1
+     * @since BuddyBoss 1.0.0
      *
      * @param string Alternate name for the profile field.
      */
@@ -1504,7 +1504,7 @@ function bp_the_profile_field_required_label() {
 /**
  * Output the 'optional' markup in extended profile field labels.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_the_profile_field_optional_label() {
 	echo bp_get_the_profile_field_optional_label();
@@ -1513,7 +1513,7 @@ function bp_the_profile_field_optional_label() {
 /**
  * Return the 'optional' markup in extended profile field labels.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return string HTML for the optional label.
  */

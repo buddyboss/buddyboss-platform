@@ -3734,7 +3734,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 /**
  * Return if the activity stream should show activty comments as streamed or threaded
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_show_streamed_activity_comment() {
 	return apply_filters( 'bp_show_streamed_activity_comment', bp_get_option('show_streamed_activity_comment', false) );
@@ -4174,7 +4174,7 @@ add_action( 'transition_comment_status', 'bp_activity_transition_post_type_comme
 /**
  * Start following a user's activity.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param array $args {
  *     Array of arguments.
@@ -4209,7 +4209,7 @@ function bp_start_following( $args = '' ) {
 /**
  * Stop following a user's activity.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param array $args {
  *     Array of arguments.
@@ -4239,7 +4239,7 @@ function bp_stop_following( $args = '' ) {
 /**
  * Check if a user is already following another user.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param array $args {
  *     Array of arguments.
@@ -4263,7 +4263,7 @@ function bp_is_following( $args = '' ) {
 /**
  * Fetch the user IDs of all the followers of a particular user.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param array $args {
  *     Array of arguments.
@@ -4283,7 +4283,7 @@ function bp_get_followers( $args = '' ) {
 /**
  * Fetch the user IDs of all the users a particular user is following.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param array $args {
  *     Array of arguments.
@@ -4303,7 +4303,7 @@ function bp_get_following( $args = '' ) {
 /**
  * Get the total followers and total following counts for a user.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param array $args {
  *     Array of arguments.
@@ -4349,7 +4349,7 @@ function bp_total_follow_counts( $args = '' ) {
 /**
  * Removes follow relationships for all users from a user who is deleted or spammed
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @uses BP_Activity_Follow::delete_all_for_user() Deletes user ID from all following / follower records
  */

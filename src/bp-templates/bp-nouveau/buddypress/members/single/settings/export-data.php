@@ -2,7 +2,7 @@
 /**
  * BuddyBoss - Members Settings ( Export Data )
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * @version 3.1.1
  */
 ?>

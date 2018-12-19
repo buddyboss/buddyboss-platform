@@ -1636,7 +1636,7 @@ function bbp_get_forum_visibilities() {
 /**
  * Check if given forum has thumbnail available
  *
- * @since  BuddyBoss 3.1.1
+ * @since  BuddyBoss 1.0.0
  */
 function bbp_has_forum_thumbnail( $forum_id = null ) {
 	return !! bbp_get_forum_thumbnail_src( $forum_id );
@@ -1645,7 +1645,7 @@ function bbp_has_forum_thumbnail( $forum_id = null ) {
 /**
  * Get the forum thumbnail's image source
  *
- * @since  BuddyBoss 3.1.1
+ * @since  BuddyBoss 1.0.0
  */
 function bbp_get_forum_thumbnail_src( $forum_id = null, $size = null, $type = null ) {
 	if ( $thumbnail_id = get_post_thumbnail_id( $forum_id ) ) {
@@ -1676,7 +1676,7 @@ function bbp_get_forum_thumbnail_src( $forum_id = null, $size = null, $type = nu
 /**
  * Get the forum thumbnail's image tag
  *
- * @since  BuddyBoss 3.1.1
+ * @since  BuddyBoss 1.0.0
  */
 function bbp_get_forum_thumbnail_image( $forum_id = null, $size = null, $type = null ) {
 	if ( $thumbnail_id = get_post_thumbnail_id( $forum_id ) ) {

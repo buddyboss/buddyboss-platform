@@ -9,7 +9,7 @@
  *
  * @package BuddyBoss
  * @subpackage InvitesFunctions
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Returns the name of the invite post type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return string The name of the invite post type.
  */
@@ -29,7 +29,7 @@ function bp_get_invite_post_type() {
 	/**
 	 * Filters the name of the invite post type.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $value invite post type name.
 	 */
@@ -39,7 +39,7 @@ function bp_get_invite_post_type() {
 /**
  * Return labels used by the invite post type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return array
  */
@@ -48,7 +48,7 @@ function bp_get_invite_post_type_labels() {
 	/**
 	 * Filters invite post type labels.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param array $value Associative array (name => label).
 	 */
@@ -70,7 +70,7 @@ function bp_get_invite_post_type_labels() {
 /**
  * Return array of features that the invite post type supports.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return array
  */
@@ -79,7 +79,7 @@ function bp_get_invite_post_type_supports() {
 	/**
 	 * Filters the features that the invite post type supports.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param array $value Supported features.
 	 */
@@ -93,7 +93,7 @@ function bp_get_invite_post_type_supports() {
 /**
  * Is this the 'accept-invitation' page?
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return bool
  */
@@ -110,7 +110,7 @@ function bp_invites_member_invite_invitation_page() {
 /**
  * Function for unlocking the registration if globally registrations disabled.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  */
 function bp_invites_member_invite_remove_registration_lock() {
@@ -175,7 +175,7 @@ add_action( 'wp', 'bp_invites_member_invite_remove_registration_lock', 1 );
  * also it will set the auto populate email based on the url
  * and also it will show the welcome message to register page.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  */
 function bp_invites_member_invite_register_screen_message() {
@@ -243,7 +243,7 @@ add_action( 'bp_before_register_page', 'bp_invites_member_invite_register_screen
 /**
  * Function which gives all the invited records from the DB based on email.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $email
  *
@@ -276,7 +276,7 @@ function bp_invites_member_invite_get_invitations_by_invited_email( $email ) {
 /**
  * Function which return the subject of invites email.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return string
  */
@@ -305,7 +305,7 @@ function bp_get_member_invitation_subject() {
 /**
  * Function which return the body content of invites email.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return string
  */
@@ -366,7 +366,7 @@ function bp_get_invites_member_invite_url() {
 /**
  * Function which will replace the token to it's appropriate content dynamically.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $text
  * @param bool $email
@@ -410,7 +410,7 @@ function bp_get_member_invites_wildcard_replace( $text, $email = false ) {
 /**
  * Function which will mark the user as registered.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $user_id
  * @param $key

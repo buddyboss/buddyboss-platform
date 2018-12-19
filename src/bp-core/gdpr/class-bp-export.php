@@ -3,7 +3,7 @@
  * Core component classes.
  *
  * @package BuddyBoss
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * Class BP_Export
  *
  * @package BuddyBoss
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 abstract class BP_Export {
 
@@ -26,7 +26,7 @@ abstract class BP_Export {
 	 * @param $label
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	function setup( $name, $label ) {
 
@@ -46,7 +46,7 @@ abstract class BP_Export {
 	 * Function to register erase and export hook.
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	function hooks() {
 		add_filter( 'wp_privacy_personal_data_exporters', array( $this, 'register_exporter' ), 10 );
@@ -57,7 +57,7 @@ abstract class BP_Export {
 	 * @param $exporters
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return mixed
 	 */
@@ -75,7 +75,7 @@ abstract class BP_Export {
 	 * @param $erasers
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return mixed
 	 */
@@ -94,7 +94,7 @@ abstract class BP_Export {
 	 * @param int $page
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
 	 */
@@ -112,7 +112,7 @@ abstract class BP_Export {
 	 * @param int $page
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return mixed
 	 */
@@ -134,7 +134,7 @@ abstract class BP_Export {
 	 * @param bool $email_address
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
 	 */
@@ -150,7 +150,7 @@ abstract class BP_Export {
 	 * @param bool $email_address
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
 	 */
@@ -163,7 +163,7 @@ abstract class BP_Export {
 	 * @param bool $done
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
 	 */
@@ -181,7 +181,7 @@ abstract class BP_Export {
 	 * @param bool $items_retained
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
 	 */
@@ -198,7 +198,7 @@ abstract class BP_Export {
 	 * @param $value
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return string
 	 */

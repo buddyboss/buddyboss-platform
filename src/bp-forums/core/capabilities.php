@@ -535,7 +535,7 @@ function bbp_add_roles() {
  * Removes Forums-specific user roles.
  *
  * @since bbPress (r2741)
- * @version BuddyBoss 3.1.1
+ * @version BuddyBoss 1.0.0
  */
 function bbp_remove_roles() {
 

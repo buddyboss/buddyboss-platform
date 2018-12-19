@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsScreens
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 /**
  * Handle the loading of a single group's subgroups.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function groups_screen_group_subgroups() {
 
@@ -23,14 +23,14 @@ function groups_screen_group_subgroups() {
 	/**
 	 * Fires before the loading of a single group's subgroups page.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	do_action( 'groups_screen_group_subgroups' );
 
 	/**
 	 * Filters the template to load for a single group's subgroups page.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $value Path to a single group's template to load.
 	 */

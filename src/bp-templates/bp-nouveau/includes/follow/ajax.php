@@ -2,7 +2,7 @@
 /**
  * Follow Ajax functions
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * @version 3.1.1
  */
 
@@ -39,7 +39,7 @@ add_action( 'admin_init', function() {
 /**
  * Follow/Unfollow a user via a POST request.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return string HTML
  */

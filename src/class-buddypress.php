@@ -427,7 +427,7 @@ class BuddyPress {
 		/**
 		 * Filters the post type slug for the member type component.
 		 *
-		 * since BuddyBoss 3.1.1
+		 * since BuddyBoss 1.0.0
 		 *
 		 * @param string $value Member Type post type slug.
 		 */
@@ -436,7 +436,7 @@ class BuddyPress {
 		/**
 		 * Filters the post type slug for the group type component.
 		 *
-		 * since BuddyBoss 3.1.1
+		 * since BuddyBoss 1.0.0
 		 *
 		 * @param string $value Group Type post type slug.
 		 */
@@ -454,7 +454,7 @@ class BuddyPress {
 		/**
 		 * Filters the post type slug for the invites component.
 		 *
-		 * since BuddyBoss 3.1.1
+		 * since BuddyBoss 1.0.0
 		 *
 		 * @param string $value Group Type post type slug.
 		 */

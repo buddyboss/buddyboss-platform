@@ -320,7 +320,7 @@ function bp_groups_admin_load() {
 		/**
 		 * Filters the allowed activity feed status values for the group.
 		 *
-		 * @since BuddyBoss 3.1.1
+		 * @since BuddyBoss 1.0.0
 		 *
 		 * @param array $value Array of allowed activity feed statuses.
 		 */
@@ -1484,7 +1484,7 @@ function bp_register_group_type_sections_filters_actions() {
 /**
  * Function for opening the groups tab while on group types add/edit page.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_group_type_show_correct_current_menu(){
 	$screen = get_current_screen();
@@ -1521,7 +1521,7 @@ function bp_group_type_show_correct_current_menu(){
 /**
  * Custom metaboxes used by our 'bp-group-type' post type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_group_type_custom_meta_boxes() {
 	add_meta_box( 'bp-group-type-key', __( 'Group Type Key', 'buddyboss' ), 'bp_group_type_key_meta_box', null, 'normal', 'high' );
@@ -1544,7 +1544,7 @@ function bp_group_type_custom_meta_boxes() {
 /**
  * Generate Group Type Key Meta box.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param WP_Post $post
  */
@@ -1562,7 +1562,7 @@ function bp_group_type_key_meta_box( $post ) {
 /**
  * Generate group Type Label Meta box.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param WP_Post $post
  */
@@ -1594,7 +1594,7 @@ function bp_group_type_labels_meta_box( $post ) {
 /**
  * Generate Group Type Directory Meta box.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param WP_Post $post
  */
@@ -1622,7 +1622,7 @@ function bp_group_type_visibility_meta_box( $post ) {
 /**
  * Shortcode metabox for the group types admin edit screen.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param WP_Post $post
  */
@@ -1646,7 +1646,7 @@ function bp_group_short_code_meta_box( $post ) {
 /**
  * Function for displaying all the member types.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $post
  */
@@ -1677,7 +1677,7 @@ function bp_group_type_auto_join_member_type_meta_box( $post ) {
 /**
  * Add new columns to the post type list screen.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param type $columns
  * @return type
@@ -1698,7 +1698,7 @@ function bp_group_type_add_column( $columns ) {
 /**
  * display data of columns.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $column
  * @param $post_id
@@ -1748,7 +1748,7 @@ function bp_group_type_show_data( $column, $post_id  ) {
 /**
  * Function for setting up a column on admin view on group type post type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $columns
  *
@@ -1767,7 +1767,7 @@ function bp_group_type_add_sortable_columns( $columns ) {
 /**
  * Function adding a filter to group type sort items.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  */
 function bp_group_type_add_request_filter() {
@@ -1779,7 +1779,7 @@ function bp_group_type_add_request_filter() {
 /**
  * Sort list of group type post types.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param type $qv
  * @return string
@@ -1816,7 +1816,7 @@ function bp_group_type_sort_items( $qv ) {
 /**
  * Hide quick edit link.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param type $actions
  * @param type $post
@@ -1838,7 +1838,7 @@ function bp_group_type_hide_quick_edit( $actions, $post ) {
  * Function for saving meta boxes data of group type post data.
  * @param $post_id
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_save_group_type_post_meta_box_data( $post_id ) {
 	global $wpdb, $error;

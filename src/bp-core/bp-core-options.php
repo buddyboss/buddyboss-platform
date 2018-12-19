@@ -514,7 +514,7 @@ function bp_disable_profile_sync( $default = false ) {
 /**
  * Is advanced profile search disabled?
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
@@ -525,7 +525,7 @@ function bp_disable_advanced_profile_search( $default = false ) {
 	/**
 	 * Filters whether or not profile search is disabled.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value Whether or not profile search is disabled.
 	 */
@@ -654,7 +654,7 @@ function bp_disable_group_cover_image_uploads( $default = false ) {
 /**
  * Are group types disabled?
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -675,7 +675,7 @@ function bp_disable_group_type_creation( $default = false ) {
 /**
  * Are group hierarchies enabled?
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -686,7 +686,7 @@ function bp_enable_group_hierarchies( $default = false ) {
 	/**
 	 * Filters whether or not groups are able to have a parent and sub groups.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value whether or not groups are able to have a parent and sub groups.
 	 */
@@ -696,7 +696,7 @@ function bp_enable_group_hierarchies( $default = false ) {
 /**
  * Are group auto join enabled?
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -707,7 +707,7 @@ function bp_enable_group_auto_join( $default = false ) {
 	/**
 	 * Filters whether or not groups auto join.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value whether or not groups auto join.
 	 */
@@ -739,7 +739,7 @@ function bp_disable_account_deletion( $default = false ) {
 /**
  * Enable private network for site owner.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
@@ -751,7 +751,7 @@ function bp_enable_private_network( $default = false ) {
 	/**
 	 * Filters whether or not members are able to delete their own accounts.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value Whether site owner uses private network.
 	 */
@@ -871,7 +871,7 @@ function bp_is_activity_heartbeat_active( $default = true ) {
 /**
  * Check whether Activity Follow is enabled.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
@@ -882,7 +882,7 @@ function bp_is_activity_follow_active( $default = false ) {
 	/**
 	 * Filters whether or not Activity Follow is enabled.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value Whether or not Activity Follow is enabled.
 	 */
@@ -913,7 +913,7 @@ function bp_get_theme_package_id( $default = 'nouveau' ) {
 /**
  * Is force friendship to message disabled?
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -924,7 +924,7 @@ function bp_force_friendship_to_message( $default = false ) {
 	/**
 	 * Filters whether or not friendship is forced to message each other.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value Whether or not friendship is forced to message each other.
 	 */
@@ -934,7 +934,7 @@ function bp_force_friendship_to_message( $default = false ) {
 /**
  * Is member type disabled?
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -945,7 +945,7 @@ function bp_member_type_enable_disable( $default = false ) {
 	/**
 	 * Filters whether member type is enabled or not.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value Whether member type is enabled or not.
 	 */
@@ -955,7 +955,7 @@ function bp_member_type_enable_disable( $default = false ) {
 /**
  * Is display on profile disabled?
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -966,7 +966,7 @@ function bp_member_type_display_on_profile( $default = false ) {
 	/**
 	 * Filters whether member type is enabled or not.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value Whether member type is enabled or not.
 	 */
@@ -976,7 +976,7 @@ function bp_member_type_display_on_profile( $default = false ) {
 /**
  * Is invite email subject customize disabled?
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -987,7 +987,7 @@ function bp_disable_invite_member_email_subject( $default = false ) {
 	/**
 	 * Filters whether email subject customize is enabled or not.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value Whether email subject customize is enabled or not.
 	 */
@@ -997,7 +997,7 @@ function bp_disable_invite_member_email_subject( $default = false ) {
 /**
  * Is invite email content customize disabled?
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -1008,7 +1008,7 @@ function bp_disable_invite_member_email_content( $default = true ) {
 	/**
 	 * Filters whether email content customize is enabled or not.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value Whether email content customize is enabled or not.
 	 */
@@ -1018,7 +1018,7 @@ function bp_disable_invite_member_email_content( $default = true ) {
 /**
  * Is allow users to sign up the profile types to personal inviting?
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -1029,7 +1029,7 @@ function bp_disable_invite_member_type( $default = false ) {
 	/**
 	 * Filters whether allow users to sign up the profile types to personal inviting is enabled or not.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value Whether allow users to sign up the profile types to personal inviting is enabled or not.
 	 */

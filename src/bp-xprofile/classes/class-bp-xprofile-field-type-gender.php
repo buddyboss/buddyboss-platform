@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage XProfileClasses
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.
@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Gender xprofile field type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 
 	/**
 	 * Constructor for the gender field type.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -35,7 +35,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 		/**
 		 * Fires inside __construct() method for BP_XProfile_Field_Type_Gender class.
 		 *
-		 * @since BuddyBoss 3.1.1
+		 * @since BuddyBoss 1.0.0
 		 *
 		 * @param BP_XProfile_Field_Type_Gender $this Current instance of
 		 *                                               the field type select box.
@@ -48,7 +48,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 	 *
 	 * Must be used inside the {@link bp_profile_fields()} template loop.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param array $raw_properties Optional key/value array of
 	 *                              {@link http://dev.w3.org/html5/markup/select.html permitted attributes}
@@ -97,7 +97,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 	 *
 	 * Must be used inside the {@link bp_profile_fields()} template loop.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param array $args Optional. The arguments passed to {@link bp_the_profile_field_options()}.
 	 */
@@ -152,7 +152,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 			/**
 			 * Filters the HTML output for options in a select input.
 			 *
-			 * @since BuddyBoss 3.1.1
+			 * @since BuddyBoss 1.0.0
 			 *
 			 * @param string $value    Option tag for current value being rendered.
 			 * @param object $value    Current option being rendered for.
@@ -171,7 +171,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 	 *
 	 * Must be used inside the {@link bp_profile_fields()} template loop.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param array $raw_properties Optional key/value array of permitted attributes that you want to add.
 	 */
@@ -194,7 +194,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 	 *
 	 * Must be used inside the {@link bp_profile_fields()} template loop.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param BP_XProfile_Field $current_field The current profile field on the add/edit screen.
 	 * @param string            $control_type  Optional. HTML input type used to render the current
@@ -352,7 +352,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 				/**
 				 * Fires at the end of the new field additional settings area.
 				 *
-				 * @since BuddyBoss 3.1.1
+				 * @since BuddyBoss 1.0.0
 				 *
 				 * @param BP_XProfile_Field $current_field Current field being rendered.
 				 */

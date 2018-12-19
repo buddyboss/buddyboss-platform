@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Register the Forums component admin screen.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_forums_add_admin_menu() {
 
@@ -72,7 +72,7 @@ add_action( bp_core_admin_hook(), 'bp_forums_add_admin_menu' );
 /**
  * Add forums component to custom menus array.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param array $custom_menus The list of top-level BP menu items.
  * @return array $custom_menus List of top-level BP menu items, with Forums added.
@@ -86,7 +86,7 @@ add_filter( 'bp_admin_menu_order', 'bp_forums_admin_menu_order' );
 /**
  * Make parent menu highlight when on topic tag page
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_forums_highlight_topic_tag_parent_menu( $parent_file ) {
 	$taxonomy = isset( $_GET['taxonomy'] )? $_GET['taxonomy'] : '';
@@ -103,7 +103,7 @@ add_filter( 'parent_file', 'bp_forums_highlight_topic_tag_parent_menu' );
 /**
  * Make submenu highlight when on topic tag page
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_forums_highlight_topic_tag_submenu( $submenu_file ) {
 	$taxonomy = isset( $_GET['taxonomy'] )? $_GET['taxonomy'] : '';
@@ -120,7 +120,7 @@ add_filter( 'submenu_file', 'bp_forums_highlight_topic_tag_submenu' );
 /**
  * Make paretn menu highlight when on editing/creating topic
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_forums_highlight_forums_new_parent_menu( $parent_file ) {
 	global $pagenow;
@@ -139,7 +139,7 @@ add_filter( 'parent_file', 'bp_forums_highlight_forums_new_parent_menu' );
 /**
  * Make submenu highlight when on editing/creating topic
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_forums_highlight_forums_new_submenu( $submenu_file ) {
 	global $pagenow;
@@ -158,7 +158,7 @@ add_filter( 'submenu_file', 'bp_forums_highlight_forums_new_submenu' );
 /**
  * Make paretn menu highlight when on editing/creating topic
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_forums_highlight_forums_view_parent_menu( $parent_file ) {
 	global $pagenow;
@@ -177,7 +177,7 @@ add_filter( 'parent_file', 'bp_forums_highlight_forums_view_parent_menu' );
 /**
  * Make submenu highlight when on editing/creating topic
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_forums_highlight_forums_view_submenu( $submenu_file ) {
 	global $pagenow;

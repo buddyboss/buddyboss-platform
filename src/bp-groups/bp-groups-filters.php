@@ -366,7 +366,7 @@ add_filter( 'bp_user_can', 'bp_groups_user_can_filter', 10, 5 );
 /**
  * Filter the bp_activity_user_can_delete value to allow moderators to delete activities of a group.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param bool   $can_delete     Whether or not the current user has the capability.
  * @param false|BP_Activity_Activity $activity

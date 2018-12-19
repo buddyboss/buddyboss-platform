@@ -1167,7 +1167,7 @@ function bp_xprofile_fullname_field_id() {
 /**
  * Get the field id of the first name field
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_xprofile_firstname_field_id() {
 	$field_id = apply_filters( 'bp_xprofile_firstname_field_id', bp_get_option( 'bp-xprofile-firstname-field-id' ) );
@@ -1177,7 +1177,7 @@ function bp_xprofile_firstname_field_id() {
 /**
  * Get the field id of the last name field
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_xprofile_lastname_field_id() {
 	$field_id = apply_filters( 'bp_xprofile_lastname_field_id', bp_get_option( 'bp-xprofile-lastname-field-id' ) );
@@ -1187,7 +1187,7 @@ function bp_xprofile_lastname_field_id() {
 /**
  * Get the field id of the nick name field, fallback to default fullname field
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_xprofile_nickname_field_id( $no_fallback = false ) {
 	$field_id = apply_filters(
@@ -1210,7 +1210,7 @@ function bp_xprofile_fullname_field_name() {
 	/**
 	 * Get the nickname field if is set
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	if ( $nickname_field_id = bp_xprofile_nickname_field_id( true) ) {
 		$field_name = xprofile_get_field( $nickname_field_id )->name;
@@ -1475,7 +1475,7 @@ function bp_activity_get_user_mentionname( $user_id ) {
 /**
  * Options for at mention js script
  *
- * @since  BuddyBoss 3.1.1
+ * @since  BuddyBoss 1.0.0
  */
 function bp_at_mention_default_options() {
 	return apply_filters( 'bp_at_mention_js_options', [

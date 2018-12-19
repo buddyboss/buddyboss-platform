@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss
  * @subpackage Invites
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.
@@ -23,7 +23,7 @@ add_action( 'bp_loaded', 'bp_register_invite_type_sections_filters_actions' );
 /**
  * Function for register the invite admin action and filters.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  */
 function bp_register_invite_type_sections_filters_actions() {
@@ -51,7 +51,7 @@ function bp_register_invite_type_sections_filters_actions() {
 /**
  * Add new columns to the post type list screen.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param type $columns
  * @return type
@@ -73,7 +73,7 @@ function bp_invite_add_column( $columns ) {
 /**
  * display data of columns.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $column
  * @param $post_id
@@ -136,7 +136,7 @@ function bp_invite_show_data( $column, $post_id  ) {
 /**
  * Function for setting up a column on admin view on invite post type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $columns
  *
@@ -156,7 +156,7 @@ function bp_invite_add_sortable_columns( $columns ) {
 /**
  * Function adding a filter to invite sort items.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  */
 function bp_invite_add_request_filter() {
@@ -168,7 +168,7 @@ function bp_invite_add_request_filter() {
 /**
  * Sort list of invite post types.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param type $qv
  * @return string
@@ -226,7 +226,7 @@ function bp_invite_sort_items( $qv ) {
 /**
  * Hide quick edit link.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param type $actions
  * @param type $post
@@ -270,7 +270,7 @@ function bp_invite_hide_quick_edit( $actions, $post ) {
 /**
  * Function for removing the bulk actions of bp-invite post type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $actions
  *
@@ -290,7 +290,7 @@ function bp_invites_remove_bulk_actions( $actions ) {
  * which all appear together in the middle of the Dashboard menu. This function
  * adds the Invites screen to the array of these menu items.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param array $custom_menus The list of top-level BP menu items.
  * @return array $custom_menus List of top-level BP menu items, with Invites added.

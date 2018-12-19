@@ -35,7 +35,7 @@ defined( 'ABSPATH' ) || exit;
  * We're not using 'is_plugin_active' functions because you need to include the
  * /wp-admin/includes/plugin.php file in order to use that function.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 $is_bp_active = false;
@@ -75,7 +75,7 @@ if ( $is_bp_active ) {
     /**
      * Displays an admin notice when BuddyPress plugin is also active.
      *
-     * @since BuddyBoss 3.1.1
+     * @since BuddyBoss 1.0.0
      * @return void
      */
     function bp_duplicate_buddypress_notice() {
@@ -108,7 +108,7 @@ if ( $is_bb_active ) {
     /**
      * Displays an admin notice when bbPress plugin is also active.
      *
-     * @since BuddyBoss 3.1.1
+     * @since BuddyBoss 1.0.0
      * @return void
      */
     function bp_duplicate_bbpress_notice() {
@@ -148,7 +148,7 @@ if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
     /**
      * Check if the current request is to activate BuddyPress plugins and redirect if so.
      *
-     * @since BuddyBoss 3.1.1
+     * @since BuddyBoss 1.0.0
      *
      * @global string $pagenow
      */
@@ -176,7 +176,7 @@ if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
     /**
      * Show a notice that an attempt to activate BuddyPress plugin was blocked.
      *
-     * @since BuddyBoss 3.1.1
+     * @since BuddyBoss 1.0.0
      */
     function bp_prevented_activating_buddypress_notice () {
         ?>
@@ -196,7 +196,7 @@ if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
  * If BP Global Search  is running. If so, don't let BuddyBoss Platform plugin activate.
  * and show admin error message.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 if ( ! function_exists( 'bp_global_search_active_check' ) ) {
 
@@ -220,7 +220,7 @@ if ( ! function_exists( 'bp_global_search_active_check' ) ) {
 /**
  * Admin Notice for having BuddyPress Global Search and BuddyBoss Platform both active at the same time!
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 if ( ! function_exists( 'bp_global_search_deactivate_notice' ) ) {
 	function bp_global_search_deactivate_notice() {

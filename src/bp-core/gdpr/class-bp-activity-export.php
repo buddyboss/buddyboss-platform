@@ -3,7 +3,7 @@
  * Core component classes.
  *
  * @package BuddyBoss
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * Class BP_Activity_Export
  *
  * @package BuddyBoss
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 final class BP_Activity_Export extends BP_Export {
 
@@ -24,7 +24,7 @@ final class BP_Activity_Export extends BP_Export {
 	 * @return BP_Activity_Export|null
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public static function instance() {
 		static $instance = null;
@@ -45,7 +45,7 @@ final class BP_Activity_Export extends BP_Export {
 	 * @param bool $email_address
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
 	 */
@@ -124,7 +124,7 @@ final class BP_Activity_Export extends BP_Export {
 	 * @param bool $email_address
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
 	 */
@@ -160,7 +160,7 @@ final class BP_Activity_Export extends BP_Export {
 	 * @param string $mode
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
 	 */

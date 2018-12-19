@@ -2492,7 +2492,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 /**
  * Output a terms of service and privacy policy pages if activated
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_nouveau_signup_terms_privacy() {
 

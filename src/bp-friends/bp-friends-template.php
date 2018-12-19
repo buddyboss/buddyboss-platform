@@ -516,7 +516,7 @@ function bp_get_friendship_requests( $user_id = 0 ) {
  * Note that we return a 0 if no mutual connections are found. This is necessary
  * because of the structure of the $include parameter in bp_has_members().
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param int $user_id ID of the user whose mutual connections are being retrieved.
  *                     Defaults to displayed user.
@@ -553,7 +553,7 @@ function bp_get_mutual_friendships( $user_id = 0 ) {
 	/**
 	 * Filters the total mutual connections for a user.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param array|int $requests An array of user IDs if found, or a 0 if none are found.
 	 * @param int       $user_id  ID of the queried user.

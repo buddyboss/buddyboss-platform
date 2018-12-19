@@ -269,7 +269,7 @@ add_filter ('bp_ps_add_fields', 'bp_ps_learndash_course_setup');
 /**
  * Function for registering a LearnDash course field in frontend and backend.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $fields
  *
@@ -317,7 +317,7 @@ function bp_ps_learndash_course_setup ($fields) {
 /**
  * Function for fetching all the users from selected course.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $f
  *

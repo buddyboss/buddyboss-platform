@@ -469,7 +469,8 @@ class BP_Admin {
 	 * Add Settings link to plugins area.
 	 *
 	 * @since BuddyPress 1.6.0
-	 * @since BuddyBoss 3.1.1 Updated the Settings path
+	 * @since BuddyBoss 1.0.0 
+	 * Updated the Settings path
 	 *
 	 * @param array  $links Links array in which we would prepend our link.
 	 * @param string $file  Current plugin basename.

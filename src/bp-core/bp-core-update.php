@@ -552,7 +552,7 @@ function bp_update_to_2_7() {
  *
  * - Add follow table.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_update_to_3_1_1() {
 

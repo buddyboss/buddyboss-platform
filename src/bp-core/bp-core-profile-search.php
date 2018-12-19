@@ -4,7 +4,7 @@
  * 
  * @package BuddyBoss
  * @subpackage Core
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ add_action( 'bp_include', 'bp_core_load_profile_search', 11 );
 /**
  * Load main profile search module.
  * 
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_core_load_profile_search () {
     if ( defined( 'BPS_VERSION' ) || function_exists( 'bps_buddypress' ) ) {

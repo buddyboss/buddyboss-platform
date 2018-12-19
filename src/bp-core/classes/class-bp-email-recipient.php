@@ -37,7 +37,7 @@ class BP_Email_Recipient {
 	/**
 	 * Recipient's avatar.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @var string
 	 */
@@ -179,7 +179,7 @@ class BP_Email_Recipient {
 	/**
 	 * Get recipient's avatar.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return string
 	 */
@@ -188,7 +188,7 @@ class BP_Email_Recipient {
 		/**
 		 * Filters the recipient's avatar before it's returned.
 		 *
-		 * @since BuddyBoss 3.1.1
+		 * @since BuddyBoss 1.0.0
 		 *
 		 * @param string $name Recipient's avatar.
 		 * @param BP_Email $recipient $this Current instance of the email recipient class.

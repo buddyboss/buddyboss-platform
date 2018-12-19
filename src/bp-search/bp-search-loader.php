@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss
  * @subpackage Search
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the bp-search component.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_setup_search() {
 	buddypress()->search = new BP_Search_Component();

@@ -217,7 +217,7 @@ function bp_nouveau_get_hooked_member_meta() {
  * 
  * @global \WP_Admin_Bar $wp_admin_bar
  * 
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * 
  * @param array $wp_admin_nav
  * @return void

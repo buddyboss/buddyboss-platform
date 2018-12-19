@@ -13,7 +13,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
         /**
          * sync bp-enable-member-dashboard with cutomizer settings.
-         * @since BuddyBoss 3.1.1
+         * @since BuddyBoss 1.0.0
          */
         $bp_nouveau_appearance = bp_get_option( 'bp_nouveau_appearance', array() );
         $bp_nouveau_appearance[ 'user_front_page' ] = isset( $_POST[ 'bp-enable-member-dashboard' ] ) ? $_POST[ 'bp-enable-member-dashboard' ] : 0;
@@ -70,7 +70,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	/**
 	 * Enable profile dashboard/front-page template.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 */
 	public function bp_admin_setting_callback_member_dashboard() {
@@ -115,7 +115,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	/**
 	 * Enable member profile search.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 */
 	public function bp_admin_setting_callback_profile_search() {
@@ -128,7 +128,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	/**
 	 * Provide link to access import setting.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 */
 	public function bp_admin_setting_callback_member_type_import() {
@@ -143,7 +143,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	/**
 	 * Enable member type.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 */
 	public function bp_admin_setting_callback_member_type_enable_disable() {
@@ -156,7 +156,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	/**
 	 * Enable Display on profile?
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 */
 	public function bp_admin_setting_callback_member_type_display_on_profile() {

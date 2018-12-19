@@ -284,7 +284,7 @@ class BP_Messages_Message {
 	/**
 	 * Get existsing thread which matches the recipients
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param  array  $recipient_ids
 	 * @param  integer $sender

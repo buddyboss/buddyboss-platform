@@ -786,7 +786,7 @@ function bp_group_status( $group = false ) {
 /**
  * Output the status description of the current group in the loop.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -798,7 +798,7 @@ function bp_group_status_description( $group = false ) {
     /**
      * Get the status description of the current group in the loop.
      *
-     * @since BuddyBoss 3.1.1
+     * @since BuddyBoss 1.0.0
      *
      * @param object|bool $group Optional. Group object.
      *                           Default: current group in loop.
@@ -824,7 +824,7 @@ function bp_group_status_description( $group = false ) {
         /**
          * Filters the status description of the current group in the loop.
          *
-         * @since BuddyBoss 3.1.1
+         * @since BuddyBoss 1.0.0
          *
          * @param string $description Status description of the current group in the loop.
          * @param object $group  Group object.
@@ -1733,7 +1733,7 @@ function bp_group_list_admins( $group = false ) {
 /**
  * Output markup listing group parents.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -2330,7 +2330,7 @@ function bp_group_get_invite_status( $group_id = false ) {
 /**
  * Output the 'checked' value, if needed, for a given activity_feed_status on the group create/admin screens
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param string      $setting The setting you want to check against ('members',
  *                             'mods', or 'admins').
@@ -2389,7 +2389,7 @@ function bp_group_get_activity_feed_status( $group_id = false ) {
 	 *
 	 * Activity feed status in this case means who from the group can send invites.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $activity_feed_status Membership level needed to send an invite.
 	 * @param int    $group_id      ID of the group whose status is being checked.
@@ -3349,7 +3349,7 @@ function bp_group_is_member( $group = false ) {
 /**
  * Check if current user is allowed to post in a group.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @global object $groups_template
  *
@@ -5723,7 +5723,7 @@ function bp_group_current_admin_tab() {
 /**
  * Echoes the current group members tab slug.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_group_current_members_tab() {
 	echo bp_get_group_current_members_tab();
@@ -5731,7 +5731,7 @@ function bp_group_current_members_tab() {
 /**
  * Returns the current group members tab slug.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  *
  * @return string $tab The current tab's slug.
@@ -5746,7 +5746,7 @@ function bp_get_group_current_members_tab() {
 	/**
 	 * Filters the current group members tab slug.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $tab Current group members tab slug.
 	 */

@@ -10,21 +10,21 @@
 /**
  * Catch and process the Mutual Connections page.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function friends_screen_mutual_friends() {
 
 	/**
 	 * Fires before the loading of template for the Mutual Connections page.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	do_action( 'friends_screen_mutual_friends' );
 
 	/**
 	 * Filters the template used to display the Mutual Connections page.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $template Path to the mutual connections template to load.
 	 */

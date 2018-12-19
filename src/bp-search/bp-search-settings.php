@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Search
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get the Search settings sections.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * @return array
  */
 function bp_search_get_settings_sections() {
@@ -35,7 +35,7 @@ function bp_search_get_settings_sections() {
 /**
  * Get all of the settings fields.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * @return array
  */
 function bp_search_get_settings_fields() {
@@ -154,7 +154,7 @@ function bp_search_get_settings_fields() {
 /**
  * Get settings fields by section.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param string $section_id
  *
@@ -176,7 +176,7 @@ function bp_search_get_settings_fields_for_section( $section_id = '' ) {
 /**
  * Output settings API option
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param string $option
  * @param string $default
@@ -189,7 +189,7 @@ function bp_search_form_option( $option, $default = '', $slug = false ) {
 /**
  * Return settings API option
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @uses get_option()
  * @uses esc_attr()
@@ -227,7 +227,7 @@ function bp_search_get_form_option( $option, $default = '', $slug = false ) {
 /**
  * Search autocomplete setting field
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @uses checked() To display the checked attribute
  */
@@ -245,7 +245,7 @@ function bp_search_settings_callback_autocomplete() {
 /**
  * Checks if search autocomplete feature is enabled.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $default bool Optional.Default value true
  *
@@ -259,7 +259,7 @@ function bp_is_search_autotcomplete_enable( $default = 1 ) {
 /**
  * Number of results setting field
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_search_settings_callback_number_of_results() {
 	?>
@@ -274,7 +274,7 @@ function bp_search_settings_callback_number_of_results() {
 /**
  * Allow Members search setting field
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @uses checked() To display the checked attribute
  */
@@ -292,7 +292,7 @@ function bp_search_settings_callback_members() {
 /**
  * Checks if members search feature is enabled.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $default bool Optional.Default value true
  *
@@ -306,7 +306,7 @@ function bp_is_search_members_enable( $default = 1 ) {
 /**
  * Output Field Group name
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $args array
  *
@@ -322,7 +322,7 @@ function bp_search_settings_callback_xprofile_group( $args ) {
 /**
  * Allow xProfile field search setting field
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $args array
  *
@@ -345,7 +345,7 @@ function bp_search_settings_callback_xprofile( $args ) {
 /**
  * Checks if xprofile field search is enabled.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $id integer
  *
@@ -359,7 +359,7 @@ function bp_is_search_xprofile_enable( $id ) {
 /**
  * Allow Post Type search setting field
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $args array
  *
@@ -388,7 +388,7 @@ function bp_search_settings_callback_post_type( $args ) {
 /**
  * Checks if post type search is enabled.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $post_type string
  *
@@ -401,7 +401,7 @@ function bp_is_search_post_type_enable( $post_type ) {
 /**
  * Allow Post Type search setting field
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  *
  * @uses checked() To display the checked attribute
@@ -423,7 +423,7 @@ function bp_search_settings_callback_groups() { ?>
 /**
  * Checks if groups search is enabled.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $default integer
  *

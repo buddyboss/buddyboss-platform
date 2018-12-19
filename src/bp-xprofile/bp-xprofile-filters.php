@@ -357,7 +357,8 @@ function bp_xprofile_escape_field_data( $value, $field_type, $field_id ) {
  * To disable for a single field, use the 'Autolink' settings in Dashboard > Users > Profile Fields.
  *
  * @since BuddyPress 1.1.0
- * @since BuddyBoss 3.1.1 Removed checking autolink, as autolinking is disabled on all fields now.
+ * @since BuddyBoss 1.0.0
+ * Removed checking autolink, as autolinking is disabled on all fields now.
  * All this function does now is make links clickable.
  *
  * @param string $field_value Profile field data value.
@@ -598,7 +599,7 @@ function bp_xprofile_filter_meta_query( $q ) {
  *  1. we are on profile > edit screens
  *  2. we are on registration page
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @global \BP_XProfile_Field_Type $field
  *
@@ -695,7 +696,7 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $vlaue, $user_
 /**
  * Function which validate the phone number is valid or not.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $retval
  * @param $field_id

@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage InviteScreens
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 /**
  * Handle the loading of the Invites > Sent Invites page.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_invites_screen_send_invite() {
 
@@ -24,7 +24,7 @@ function bp_invites_screen_send_invite() {
 	/**
 	 * Filters the template to load for the Invites > Sent Invites page.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $value Path to the Invites > Sent Invites page template to load.
 	 */

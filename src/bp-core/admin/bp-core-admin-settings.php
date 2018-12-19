@@ -50,7 +50,7 @@ function bp_admin_setting_callback_account_deletion() {
 /**
  * Allow admin to make the site private network.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  */
 function bp_admin_setting_callback_private_network() {
@@ -117,7 +117,7 @@ function bp_admin_setting_callback_heartbeat() {
 /**
  * Allow following activity stream.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_admin_setting_callback_enable_activity_follow() {
 	?>
@@ -232,7 +232,7 @@ function bp_admin_setting_callback_group_cover_image_uploads() {
 /**
  * 'Enable group types' field markup.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_admin_setting_callback_group_type_creation() {
 ?>
@@ -244,7 +244,7 @@ function bp_admin_setting_callback_group_type_creation() {
 /**
  * 'Enable group hierarchies' field markup.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_admin_setting_callback_group_hierarchies() {
 	?>
@@ -256,7 +256,7 @@ function bp_admin_setting_callback_group_hierarchies() {
 /**
  * 'Enable group auto join field markup.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_admin_setting_callback_group_auto_join() {
 	?>
@@ -381,7 +381,7 @@ function bp_form_option( $option, $default = '' , $slug = false ) {
 /**
  * 'Enable email subject' field markup.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_admin_setting_callback_member_invite_email_subject() {
 	?>
@@ -393,7 +393,7 @@ function bp_admin_setting_callback_member_invite_email_subject() {
 /**
  * 'Enable email content' field markup.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_admin_setting_callback_member_invite_email_content() {
 	?>
@@ -405,7 +405,7 @@ function bp_admin_setting_callback_member_invite_email_content() {
 /**
  * 'Enable member invite' field markup.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_admin_setting_callback_member_invite_member_type() {
 	?>

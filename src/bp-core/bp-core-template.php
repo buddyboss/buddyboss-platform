@@ -1090,7 +1090,7 @@ function bp_total_member_count() {
 	/**
 	 * Return the total member count in your BP instance.
      *
-     * Since BuddyBoss 3.1.1, members directory lists all members, even if they have never been active.
+     * Since BuddyBoss 1.0.0, members directory lists all members, even if they have never been active.
      * So, this function also uses bp_core_get_total_member_count, again.
 	 *
 	 * Since BuddyPress 1.6, this function has used bp_core_get_active_member_count(),
@@ -1103,7 +1103,7 @@ function bp_total_member_count() {
 	 * resulted in higher counts than shown by member directory pagination.
 	 *
 	 * @since BuddyPress 1.2.0
-     * @since BuddyBoss 3.1.1 Uses bp_core_get_total_member_count instead of bp_core_get_active_member_count
+     * @since BuddyBoss 1.0.0 Uses bp_core_get_total_member_count instead of bp_core_get_active_member_count
 	 *
 	 * @return int Member count.
 	 */
@@ -2236,7 +2236,7 @@ function bp_is_settings_component() {
 /**
  * Check whether the current page is part of the Invites component.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return bool True if the current page is part of the Invites component.
  */
@@ -2572,7 +2572,7 @@ function bp_is_user_friend_requests() {
  *
  * Eg http://example.com/members/joe/friends/mutual/.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return bool True if the current page is a user's Mutual Connections page.
  */
@@ -2665,7 +2665,7 @@ function bp_is_user_settings_profile() {
  *
  * Eg http://example.com/members/joe/invites/ (or a subpage thereof).
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return bool True if the current page is a user's send invites page.
  */
@@ -2678,7 +2678,7 @@ function bp_is_user_invites() {
  *
  * Eg http://example.com/members/joe/invites/.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return bool True if the current page is a user's send invites page.
  */
@@ -2788,7 +2788,7 @@ function bp_is_group_activity() {
 /**
  * Is the current page a group's subgroups page?
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return bool True if the current page is a group's subgroups page.
  */
@@ -2848,7 +2848,7 @@ function bp_is_group_members() {
  *
  * Eg http://example.com/groups/mygroup/members/leaders.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return bool True if the current page is part of a group's Members page.
  */

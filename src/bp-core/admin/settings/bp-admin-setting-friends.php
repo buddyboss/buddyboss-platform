@@ -23,7 +23,7 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 	/**
 	 * Force users to be friends for messaging.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function bp_admin_setting_callback_force_friendship_to_message() {
 	?>
@@ -39,7 +39,7 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 	 * legacy reasons, the option that we store is 1 if these friends or messaging is *disabled*. So we use this
 	 * function to flip the boolean before saving the intval.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value Whether or not to sanitize.
 	 * @return bool

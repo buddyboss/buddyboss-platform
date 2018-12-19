@@ -2251,7 +2251,7 @@ function bbp_validate_reply_to( $reply_to = 0, $reply_id = 0 ) {
 /**
  * Adjust forum labels that make more sense
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bbp_adjust_forum_role_labels( $author_role, $args ) {
 	$display_role = __( 'Member', 'buddyboss' );

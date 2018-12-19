@@ -137,7 +137,7 @@ class BP_XProfile_Field {
      * Field is marked protected as it is not supposed to be accessed directly.
      * Use the method get_alternate_name instead.
      *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
      *
 	 * @var string alternate name of the field.
 	 */
@@ -147,7 +147,9 @@ class BP_XProfile_Field {
 	 * Whether values from this field are autolinked to directory searches.
 	 *
 	 * @since BuddyPress 2.5.0
-     * @deprecated BuddyBoss 3.1.1 No longer used. Will be removed in future.
+     * @deprecated BuddyBoss 1.0.0 
+     * No longer used. Will be removed in future.
+     * 
 	 * @var bool
 	 */
 	public $do_autolink;
@@ -862,7 +864,7 @@ class BP_XProfile_Field {
      *
      * Lazy-loaded to reduce overhead.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return string
 	 */
@@ -882,8 +884,8 @@ class BP_XProfile_Field {
 	 * Defaults to true for multi and default fields, false for single fields.
 	 *
 	 * @since BuddyPress 2.5.0
-     * @since BuddyBoss 3.1.1 Always returns false.
-     * @deprecated BuddyBoss 3.1.1 Autolink functionality is no longer used. Keeping the function here for legacy purposes. Will be removed in future.
+     * @since BuddyBoss 1.0.0 Always returns false.
+     * @deprecated BuddyBoss 1.0.0 Autolink functionality is no longer used. Keeping the function here for legacy purposes. Will be removed in future.
 	 *
 	 * @return bool
 	 */
@@ -1196,7 +1198,7 @@ class BP_XProfile_Field {
 	 * Output the admin form for this field.
 	 *
 	 * @since BuddyPress 1.9.0
-     * @since BuddyBoss 3.1.1 Added the paramter $message_type
+     * @since BuddyBoss 1.0.0 Added the paramter $message_type
 	 *
 	 * @param string $message Message to display.
      * @param string $message_type error or udpated
@@ -1426,7 +1428,7 @@ class BP_XProfile_Field {
 					 * Alternate title for when user edits their profile field.
 					 * Reverts to primary title if nothing is entered.
 					 *
-					 * @since BuddyBoss 3.1.1
+					 * @since BuddyBoss 1.0.0
 					 */
 				?>
 				<label for="title_secondary" class="screen-reader-text"><?php

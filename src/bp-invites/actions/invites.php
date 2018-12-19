@@ -149,7 +149,7 @@ add_action( 'bp_actions', 'bp_member_invite_submit' );
 /**
  * Filter for changing the subject based on the user typed.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $subject
  * @param $email
@@ -168,7 +168,7 @@ add_filter( 'bp_email_set_subject', 'bp_invites_member_invite_filter_subject', 9
 /**
  * Filter for changing the content based on the user typed.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $subject
  * @param $email
@@ -187,7 +187,7 @@ add_filter( 'bp_email_set_content_html', 'bp_invites_member_invite_filter_conten
 /**
  * Filter for changing the content based on the user typed.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $subject
  * @param $email
@@ -207,7 +207,7 @@ add_filter( 'bp_email_set_content_plaintext', 'bp_invites_member_invite_filter_c
 /**
  * Filter for pass the invite user avatar.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $avatar
  * @param $data
@@ -226,7 +226,7 @@ add_filter( 'bp_email_recipient_get_avatar', 'bp_invites_member_invite_set_email
 /**
  * Filter for pass the invite user name.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $name
  * @param $data
@@ -245,7 +245,7 @@ add_filter( 'bp_email_recipient_get_name', 'bp_invites_member_invite_set_email_u
 /**
  * Function for allow the html to text area.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $subject
  * @param $email

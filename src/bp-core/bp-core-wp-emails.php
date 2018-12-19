@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage Core
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.
@@ -808,7 +808,7 @@ if ( ! function_exists( 'bp_email_retrieve_password_message' ) ) {
 	 *
 	 * If the filtered message is empty, the password reset email will not be sent.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string  $message    Default mail message.
 	 * @param string  $key        The activation key.
@@ -849,7 +849,7 @@ if ( ! function_exists( 'bp_email_wp_password_change_email' ) ) {
 	/**
 	 * Filters the contents of the email sent when the user's password is changed.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param array $pass_change_email {
 	 *            Used to build wp_mail().
@@ -899,7 +899,7 @@ if ( ! function_exists( 'bp_email_wp_email_change_email' ) ) {
 	/**
 	 * Filters the contents of the email sent when the user's email is changed.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param array $email_change_email {
 	 *            Used to build wp_mail().
@@ -956,7 +956,7 @@ if ( ! function_exists( 'bp_email_wp_new_user_email_content' ) ) {
 	 * ###SITENAME###  The name of the site.
 	 * ###SITEURL###   The URL to the site.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $email_text     Text in the email.
 	 * @param array  $new_user_email {
@@ -1005,7 +1005,7 @@ if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
 	 * ###MANAGE_URL###  The URL to manage requests.
 	 * ###SITEURL###     The URL to the site.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $email_text Text in the email.
 	 * @param array  $email_data {
@@ -1075,7 +1075,7 @@ if ( ! function_exists( 'bp_email_wp_user_request_action_email_content' ) ) {
 	 * ###SITENAME###    The name of the site.
 	 * ###SITEURL###     The URL to the site.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $email_text Text in the email.
 	 * @param array  $email_data {
@@ -1119,7 +1119,7 @@ if ( ! function_exists( 'bp_email_wp_new_admin_email_content' ) ) {
 	 * ###SITENAME###  The name of the site.
 	 * ###SITEURL###   The URL to the site.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $email_text      Text in the email.
 	 * @param array  $new_admin_email {
@@ -1164,7 +1164,7 @@ if ( ! function_exists( 'bp_email_wpmu_signup_blog_notification_email' ) ) {
 	 *
 	 * Content should be formatted for transmission via wp_mail().
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $content    Content of the notification email.
 	 * @param string $domain     Site domain.
@@ -1193,7 +1193,7 @@ if ( ! function_exists( 'bp_email_wpmu_signup_user_notification_email' ) ) {
 	 *
 	 * Content should be formatted for transmission via wp_mail().
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $content    Content of the notification email.
 	 * @param string $user_login User login name.
@@ -1218,7 +1218,7 @@ if ( ! function_exists( 'bp_email_newblog_notify_siteadmin' ) ) {
 	 * Filters the message body of the new site activation email sent
 	 * to the network administrator.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $msg Email body.
 	 */
@@ -1255,7 +1255,7 @@ if ( ! function_exists( 'bp_email_newuser_notify_siteadmin' ) ) {
 	 * Filters the message body of the new user activation email sent
 	 * to the network administrator.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string  $msg  Email body.
 	 * @param WP_User $user WP_User instance of the new user.
@@ -1278,7 +1278,7 @@ if ( ! function_exists( 'bp_email_update_welcome_email' ) ) {
 	 *
 	 * Content should be formatted for transmission via wp_mail().
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $welcome_email Message body of the email.
 	 * @param int    $blog_id       Blog ID.
@@ -1316,7 +1316,7 @@ if ( ! function_exists( 'bp_email_update_welcome_user_email' ) ) {
 	 *
 	 * Content should be formatted for transmission via wp_mail().
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $welcome_email The message body of the account activation success email.
 	 * @param int    $user_id       User ID.
@@ -1346,7 +1346,7 @@ if ( ! function_exists( 'bp_email_new_network_admin_email_content' ) ) {
 	 * ###SITENAME###  The name of the network.
 	 * ###SITEURL###   The URL to the network.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $email_text      Text in the email.
 	 * @param array  $new_admin_email {
@@ -1385,7 +1385,7 @@ if ( ! function_exists( 'bp_email_network_admin_email_change_email' ) ) {
 	/**
 	 * Filters the contents of the email notification sent when the network admin email address is changed.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param array $email_change_email {
 	 *            Used to build wp_mail().
@@ -1435,7 +1435,7 @@ if ( ! function_exists( 'bp_email_site_admin_email_change_email' ) ) {
 	/**
 	 * Filters the contents of the email notification sent when the site admin email address is changed.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param array $email_change_email {
 	 *            Used to build wp_mail().
@@ -1491,7 +1491,7 @@ if ( ! function_exists( 'bp_email_wp_privacy_personal_data_email_content' ) ) {
 	 * ###SITENAME###           The name of the site.
 	 * ###SITEURL###            The URL to the site.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $email_text     Text in the email.
 	 * @param int    $request_id     The request ID for this personal data export.

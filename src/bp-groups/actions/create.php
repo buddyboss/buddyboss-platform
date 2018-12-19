@@ -130,7 +130,7 @@ function groups_action_create_group() {
 			/**
 			 * Filters the allowed activity feed statuses.
 			 *
-			 * @since BuddyBoss 3.1.1
+			 * @since BuddyBoss 1.0.0
 			 *
 			 * @param array $value Array of statuses allowed.
 			 *                     Possible values are 'members,

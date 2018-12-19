@@ -120,7 +120,7 @@ function bp_core_enqueue_admin_bar_css() {
  * Replace admin bar "Howdy" text
  * Use proper display name and mention
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_core_fix_admin_bar_names( $wp_admin_bar ) {
 	$user_id      = get_current_user_id();

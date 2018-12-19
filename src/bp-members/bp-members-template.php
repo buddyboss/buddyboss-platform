@@ -2570,7 +2570,7 @@ function bp_members_component_link( $component, $action = '', $query_args = '', 
 /**
  * Output the Switch button.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param int $user_id The user ID of the person we want to switch to.
  * @param array $button_args See BP_Button class for more information.
@@ -2590,7 +2590,7 @@ function bp_add_switch_button( $user_id, $button_args = array() ) {
  *
  * @return mixed String of the button on success.  Boolean false on failure.
  * @uses bp_get_button() Renders a button using the BP Button API
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 
@@ -2650,7 +2650,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 	/**
 	 * Filters the HTML for the follow button.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $button HTML markup for follow button.
 	 */
