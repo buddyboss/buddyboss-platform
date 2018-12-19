@@ -196,7 +196,7 @@ if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
  * If BP Global Search  is running. If so, don't let BuddyBoss Platform plugin activate.
  * and show admin error message.
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  */
 if ( ! function_exists( 'bp_global_search_active_check' ) ) {
 
@@ -220,7 +220,7 @@ if ( ! function_exists( 'bp_global_search_active_check' ) ) {
 /**
  * Admin Notice for having BuddyPress Global Search and BuddyBoss Platform both active at the same time!
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  */
 if ( ! function_exists( 'bp_global_search_deactivate_notice' ) ) {
 	function bp_global_search_deactivate_notice() {

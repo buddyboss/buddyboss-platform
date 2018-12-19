@@ -516,7 +516,7 @@ class BP_Messages_Thread {
 	/**
 	 * Check if the current user is in the thread's active recipient list
 	 *
-	 * @since  Buddyboss 3.1.1
+	 * @since  BuddyBoss 3.1.1
 	 *
 	 * @param  int $thread_id
 	 * @param  mix  $user_id

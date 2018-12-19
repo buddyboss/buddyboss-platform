@@ -6,7 +6,7 @@
  *
  * @package BuddyBoss
  * @subpackage Search
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  */
 
 // Exit if accessed directly.

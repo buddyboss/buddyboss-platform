@@ -2788,7 +2788,7 @@ function bp_is_group_activity() {
 /**
  * Is the current page a group's subgroups page?
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  *
  * @return bool True if the current page is a group's subgroups page.
  */

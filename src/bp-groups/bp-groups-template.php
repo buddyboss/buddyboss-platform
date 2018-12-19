@@ -1733,7 +1733,7 @@ function bp_group_list_admins( $group = false ) {
 /**
  * Output markup listing group parents.
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.

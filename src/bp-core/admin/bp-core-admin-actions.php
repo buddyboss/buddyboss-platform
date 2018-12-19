@@ -240,7 +240,7 @@ function bp_register_admin_settings() {
 /**
  * Dedicated action to register admin integrations.
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  *
  */
 function bp_register_admin_integrations() {

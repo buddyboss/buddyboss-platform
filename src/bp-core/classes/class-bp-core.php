@@ -60,7 +60,7 @@ class BP_Core extends BP_Component {
 	/**
 	 * Load components files
 	 *
-	 * @since Buddyboss 3.1.1
+	 * @since BuddyBoss 3.1.1
 	 */
 	private function load_components() {
 		$bp = buddypress();
@@ -156,7 +156,7 @@ class BP_Core extends BP_Component {
 	/**
 	 * Load integrations files
 	 *
-	 * @since Buddyboss 3.1.1
+	 * @since BuddyBoss 3.1.1
 	 */
 	private function load_integrations() {
 		$bp = buddypress();
@@ -164,7 +164,7 @@ class BP_Core extends BP_Component {
 		/**
 		 * Filters the included and optional inetegrations.
 		 *
-		 * @since Buddyboss 3.1.1
+		 * @since BuddyBoss 3.1.1
 		 *
 		 * @param array $value Array of included and optional inetegrations.
 		 */
@@ -184,7 +184,7 @@ class BP_Core extends BP_Component {
 		/**
 		 * Fires after the loading of individual inetegrations.
 		 *
-		 * @since Buddyboss 3.1.1
+		 * @since BuddyBoss 3.1.1
 		 */
 		do_action( 'bp_core_inetegrations_included' );
 	}

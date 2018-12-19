@@ -2590,7 +2590,7 @@ function bp_add_switch_button( $user_id, $button_args = array() ) {
  *
  * @return mixed String of the button on success.  Boolean false on failure.
  * @uses bp_get_button() Renders a button using the BP Button API
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  */
 function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 

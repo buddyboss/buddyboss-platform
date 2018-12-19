@@ -370,7 +370,7 @@ function bp_do_activation_redirect() {
 /**
  * Check if currently using legacy theme
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  */
 function bp_check_for_legacy_theme() {
 	$using_lagecy = false;
@@ -391,7 +391,7 @@ function bp_check_for_legacy_theme() {
 /**
  * Print the notice warnning in admin pages
  *
- * @since buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  */
 function bp_print_legacy_theme_deprecated_notice() {
 	$message = sprintf(
@@ -493,7 +493,7 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 /**
  * Get the slug of the current setting tab
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  */
 function bp_core_get_admin_active_tab() {
 	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'buddypress' );
@@ -503,7 +503,7 @@ function bp_core_get_admin_active_tab() {
 /**
  * Get the object of the current setting tab
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  */
 function bp_core_get_admin_active_tab_object() {
 	global $bp_admin_setting_tabs;
@@ -514,7 +514,7 @@ function bp_core_get_admin_active_tab_object() {
 /**
  * Return the admin url with the tab selected
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  */
 function bp_core_admin_setting_url($tab, $args = []) {
 	$args = wp_parse_args( $args, array(
@@ -528,7 +528,7 @@ function bp_core_admin_setting_url($tab, $args = []) {
 /**
  * Output the integration tabs in the admin area.
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  *
  * @param string $active_tab Name of the tab that is active. Optional.
  */
@@ -608,7 +608,7 @@ function bp_core_get_admin_integrations_tabs( $active_tab = '' ) {
 /**
  * Get the slug of the current integration tab
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  */
 function bp_core_get_admin_integration_active_tab() {
 	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-learndash' );
@@ -618,7 +618,7 @@ function bp_core_get_admin_integration_active_tab() {
 /**
  * Get the object of the current integration tab
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  */
 function bp_core_get_admin_integration_active_tab_object() {
 	global $bp_admin_integration_tabs;
@@ -629,7 +629,7 @@ function bp_core_get_admin_integration_active_tab_object() {
 /**
  * Return the admin url with the tab selected
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  */
 function bp_core_admin_integrations_url($tab, $args = []) {
 	$args = wp_parse_args( $args, array(

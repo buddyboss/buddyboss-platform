@@ -3943,7 +3943,7 @@ function bp_add_follow_button( $leader_id = false, $follower_id = false, $button
  *
  * @return mixed String of the button on success.  Boolean false on failure.
  * @uses bp_get_button() Renders a button using the BP Button API
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  */
 function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $button_args = array() ) {
 

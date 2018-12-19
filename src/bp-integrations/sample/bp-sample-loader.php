@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the bp sample integration.
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  */
 function bp_register_sample_integration() {
 	require_once dirname( __FILE__ ) . '/admin/bp-admin-sample-tab.php';

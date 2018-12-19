@@ -317,7 +317,7 @@ function bp_ps_learndash_course_setup ($fields) {
 /**
  * Function for fetching all the users from selected course.
  *
- * @since 3.1.1
+ * @since BuddyBoss 3.1.1
  *
  * @param $f
  *

@@ -529,7 +529,7 @@ function bp_core_install_blog_tracking() {
 /**
  * Run the bbpress activation,
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  */
 function bp_core_install_discussion_forums() {
 	require_once buddypress()->plugin_dir . 'bp-forums/classes/class-bbpress.php';
@@ -542,7 +542,7 @@ function bp_core_install_discussion_forums() {
 /**
  * Run the bbpress deactivation,
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 3.1.1
  */
 function bp_core_uninstall_discussion_forums() {
 	bbp_deactivation();
