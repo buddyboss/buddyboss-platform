@@ -7,7 +7,7 @@
  *
  * @package BuddyBoss
  * @subpackage ForumsAdmin
- * @since BuddyBOss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.

@@ -3,7 +3,7 @@
  * BP Nouveau Follow
  *
  * @since BuddyBoss 1.0.0
- * @version 3.1.1
+ * @version 1.0.0
  */
 
 // Exit if accessed directly.

@@ -890,7 +890,7 @@ class BP_XProfile_Field {
 	 * @return bool
 	 */
 	public function get_do_autolink() {
-        _deprecated_function( __FUNCTION__, '3.1.1(BuddyBoss)' );
+        _deprecated_function( __FUNCTION__, '1.0.0(BuddyBoss)' );
 
         return false;
 	}

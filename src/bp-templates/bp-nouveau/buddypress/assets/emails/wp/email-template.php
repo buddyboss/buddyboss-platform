@@ -236,7 +236,7 @@ $settings = bp_email_get_appearance_settings();
 								/**
 								 * Fires before the display of the email recipient.
 								 *
-								 * @since BuddyPress 3.1.1
+								 * @since BuddyBoss 1.0.0
 								 */
 								do_action( 'bp_before_email_recipient' );
 
@@ -250,7 +250,7 @@ $settings = bp_email_get_appearance_settings();
 								/**
 								 * Fires after the display of the email recipient.
 								 *
-								 * @since BuddyPress 3.1.1
+								 * @since BuddyBoss 1.0.0
 								 */
 								do_action( 'bp_after_email_recipient' );
 								?>

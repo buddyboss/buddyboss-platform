@@ -286,7 +286,7 @@ class BP_Messages_Thread {
 	/**
 	 * Check if the thread contains any deleted recipients and it's last active message
 	 *
-	 * @since BuddyPress 3.1.1
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param  int $thread_id
 	 */
@@ -309,7 +309,7 @@ class BP_Messages_Thread {
 	/**
 	 * Update the thread's deleted recipient and set the message deletion status
 	 *
-	 * @since BuddyPress 3.1.1
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param  int $thread_id
 	 */
@@ -341,9 +341,9 @@ class BP_Messages_Thread {
 	}
 
 	/**
-	 * Get a thread's last messagee
+	 * Get a thread's last message
 	 *
-	 * @since BuddyPress 3.1.1
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param  int $thread_id
 	 */
@@ -421,7 +421,7 @@ class BP_Messages_Thread {
 	/**
 	 * Count the totla message in thread
 	 *
-	 * @since BuddyPress 3.1.1
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param  int $thread_id
 	 */
@@ -451,7 +451,7 @@ class BP_Messages_Thread {
 	 * Get the time of when the message is started, could be the first message
 	 * or the last deleted message of the current user
 	 *
-	 * @since BuddyPress 3.1.1
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param  int $thread_id
 	 */
@@ -478,7 +478,7 @@ class BP_Messages_Thread {
 	/**
 	 * Get the user's last deleted message in thread
 	 *
-	 * @since BuddyPress 3.1.1
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param  int $thread_id
 	 */

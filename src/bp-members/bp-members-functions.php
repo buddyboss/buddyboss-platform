@@ -3861,8 +3861,8 @@ function bp_member_type_changing_listing_label() {
 	// Check to make sure we're on a member type's admin page
 	if ( isset( $current_screen->id ) && in_array( $current_screen->id, $bp_member_type_pages ) ) {
 
-		wp_enqueue_script('bp-clipboard',$url.'clipboard.js',array(), '3.1.1' );
-		wp_enqueue_script('bp-member-type-admin-screen',$url.'bp-member-type-admin-screen.js',array('jquery'), '3.1.1' );
+		wp_enqueue_script('bp-clipboard',$url.'clipboard.js',array(), '1.0.0' );
+		wp_enqueue_script('bp-member-type-admin-screen',$url.'bp-member-type-admin-screen.js',array('jquery'), '1.0.0' );
 
 		$strings = array(
 			'warnTrash' 		=> __( 'You have {total_users} members with this profile type, are you sure you would like to trash it?', 'buddyboss' ),

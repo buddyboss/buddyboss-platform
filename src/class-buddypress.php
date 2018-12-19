@@ -312,13 +312,14 @@ class BuddyPress {
 	 * Component global variables.
 	 *
 	 * @since BuddyPress 1.6.0
+	 * @since BuddyBoss 1.0.0 Now using BuddyBoss version number
 	 *
 	 */
 	private function setup_globals() {
 
 		/** Versions **********************************************************/
 
-		$this->version    = '3.1.1';
+		$this->version    = '1.0.0';
 		$this->db_version = 12710;
 
 		/** Loading ***********************************************************/

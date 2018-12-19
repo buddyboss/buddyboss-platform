@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @param array|string $args {@see bp_get_member_latest_update()}.
  */
 function bp_member_latest_update( $args = '' ) {
-	_deprecated_function( __FUNCTION__, '3.1.1' );
+	_deprecated_function( __FUNCTION__, '1.0.0' );
 
 	// echo bp_get_member_latest_update( $args );
 }
@@ -39,7 +39,7 @@ function bp_member_latest_update( $args = '' ) {
 	function bp_get_member_latest_update( $args = '' ) {
 		global $members_template;
 
-		_deprecated_function( __FUNCTION__, '3.1.1' );
+		_deprecated_function( __FUNCTION__, '1.0.0' );
 
 		// $defaults = array(
 		// 	'length'    => 225,
@@ -99,7 +99,7 @@ function bp_member_latest_update( $args = '' ) {
  * @return string Excerpt.
  */
 function bp_nouveau_group_description_excerpt( $group = null, $length = null ) {
-	_deprecated_function( __FUNCTION__, '3.1.1' );
+	_deprecated_function( __FUNCTION__, '1.0.0' );
 
 	// echo bp_nouveau_get_group_description_excerpt( $group, $length );
 }
@@ -121,7 +121,7 @@ function bp_nouveau_group_description_excerpt( $group = null, $length = null ) {
 function bp_nouveau_get_group_description_excerpt( $group = null, $length = null ) {
 	global $groups_template;
 
-	_deprecated_function( __FUNCTION__, '3.1.1' );
+	_deprecated_function( __FUNCTION__, '1.0.0' );
 
 	// if ( ! $group ) {
 	// 	$group =& $groups_template->group;
@@ -161,7 +161,7 @@ function bp_nouveau_get_group_description_excerpt( $group = null, $length = null
  * @return bool True to display. False otherwise.
  */
 function bp_nouveau_members_wp_bio_info() {
-	_deprecated_function( __FUNCTION__, '3.1.1' );
+	_deprecated_function( __FUNCTION__, '1.0.0' );
 
 	return false;
 
@@ -181,7 +181,7 @@ function bp_nouveau_members_wp_bio_info() {
  * @return string HTML output.
  */
 function bp_nouveau_member_description( $user_id = 0 ) {
-	_deprecated_function( __FUNCTION__, '3.1.1' );
+	_deprecated_function( __FUNCTION__, '1.0.0' );
 
 	// if ( ! $user_id ) {
 	// 	$user_id = bp_loggedin_user_id();
@@ -220,7 +220,7 @@ function bp_nouveau_member_description( $user_id = 0 ) {
  * @return string HTML Output
  */
 function bp_nouveau_member_description_edit_link() {
-	_deprecated_function( __FUNCTION__, '3.1.1' );
+	_deprecated_function( __FUNCTION__, '1.0.0' );
 	// echo bp_nouveau_member_get_description_edit_link();
 }
 
@@ -234,7 +234,7 @@ function bp_nouveau_member_description_edit_link() {
 	 * @return string HTML Output
 	 */
 	function bp_nouveau_member_get_description_edit_link() {
-		_deprecated_function( __FUNCTION__, '3.1.1' );
+		_deprecated_function( __FUNCTION__, '1.0.0' );
 
 		return '';
 
@@ -263,7 +263,7 @@ function bp_nouveau_member_description_edit_link() {
  * @param array|string $args See {@link bp_get_send_public_message_button()}.
  */
 function bp_send_public_message_button( $args = '' ) {
-	_deprecated_function( __FUNCTION__, '3.1.1' );
+	_deprecated_function( __FUNCTION__, '1.0.0' );
 
 	// echo bp_get_send_public_message_button( $args );
 }
@@ -290,7 +290,7 @@ function bp_send_public_message_button( $args = '' ) {
 	 * @return string The button for sending a public message.
 	 */
 	function bp_get_send_public_message_button( $args = '' ) {
-		_deprecated_function( __FUNCTION__, '3.1.1' );
+		_deprecated_function( __FUNCTION__, '1.0.0' );
 
 		return "";
 		// $r = bp_parse_args( $args, array(
@@ -323,7 +323,7 @@ function bp_send_public_message_button( $args = '' ) {
  * @deprecated BuddyBoss 1.0.0
  */
 function bp_register_theme_directory() {
-	_deprecated_function( __FUNCTION__, '3.1.1' );
+	_deprecated_function( __FUNCTION__, '1.0.0' );
 
 	/**
 	 * Fires inside the 'bp_register_theme_directory' function.
@@ -345,7 +345,7 @@ function bp_register_theme_directory() {
  * @return bool True if bp-themes should be registered, false otherwise.
  */
 function bp_do_register_theme_directory() {
-	_deprecated_function( __FUNCTION__, '3.1.1' );
+	_deprecated_function( __FUNCTION__, '1.0.0' );
 
 	// If bp-default exists in another theme directory, bail.
 	// This ensures that the version of bp-default in the regular themes
@@ -389,7 +389,7 @@ function bp_do_register_theme_directory() {
  * @global string $content_width the content width of the theme
  */
 function bp_register_theme_compat_default_features() {
-	_deprecated_function( __FUNCTION__, '3.1.1' );
+	_deprecated_function( __FUNCTION__, '1.0.0' );
 	// global $content_width;
 
 	// // Do not set up default features on deactivation.
@@ -468,7 +468,7 @@ function bp_register_theme_compat_default_features() {
  * @deprecated BuddyBoss 1.0.0
  */
 function bp_admin_setting_callback_theme_package_id() {
-	_deprecated_function( __FUNCTION__, '3.1.1' );
+	_deprecated_function( __FUNCTION__, '1.0.0' );
 	// $options = '';
 
 	// /*
@@ -505,7 +505,7 @@ function bp_admin_setting_callback_theme_package_id() {
  * @deprecated BuddyBoss 1.0.0
  */
 function messages_screen_sentbox() {
-	_deprecated_function( __FUNCTION__, '3.1.1' );
+	_deprecated_function( __FUNCTION__, '1.0.0' );
 	// if ( bp_action_variables() ) {
 	// 	bp_do_404();
 	// 	return;
@@ -539,7 +539,7 @@ function messages_screen_sentbox() {
  * @return bool True if the current page is a user's Messages Sentbox.
  */
 function bp_is_messages_sentbox() {
-	_deprecated_function( __FUNCTION__, '3.1.1' );
+	_deprecated_function( __FUNCTION__, '1.0.0' );
 	return false;
 	// return (bool) ( bp_is_user_messages() && bp_is_current_action( 'sentbox' ) );
 }

@@ -2351,7 +2351,7 @@ function bp_group_show_activity_feed_status_setting( $setting, $group = false ) 
  *
  * This function can be used either in or out of the loop.
  *
- * @since BuddyBos 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param int|bool $group_id Optional. The ID of the group whose activity feed status you want to
  *                           check. Default: the displayed group, or the current group
@@ -2405,7 +2405,7 @@ function bp_group_get_activity_feed_status( $group_id = false ) {
  * parameter empty. To return the parent only when visible to a specific user,
  * specify a $user_id.
  *
- * @since BuddyBos 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param int|bool    $group_id ID of the group.
  * @param int|bool    $user_id  ID of a user to check group visibility for.
@@ -2443,7 +2443,7 @@ function bp_get_parent_group_id( $group_id = false, $user_id = false, $context =
  * To be a candidate for group parenthood, the group cannot be a descendent of
  * this group, and the user must be allowed to create child groups in that group.
  *
- * @since BuddyBos 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param  int|bool   $group_id ID of the group.
  * @param  int|bool   $user_id  ID of a user to check group visibility for.
@@ -2498,7 +2498,7 @@ function bp_get_possible_parent_groups( $group_id = false, $user_id = false ) {
  * To return all descendent groups, leave the $user_id parameter empty. To return
  * only those child groups visible to a specific user, specify a $user_id.
  *
- * @since BuddyBos 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param int|bool    $group_id ID of the group.
  * @param int|bool    $user_id  ID of a user to check group visibility for.
@@ -2561,7 +2561,7 @@ function bp_get_descendent_groups( $group_id = false, $user_id = false, $context
  * Determine whether a group should be included in results sets for a
  * user in a specific context.
  *
- * @since BuddyBos 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param object|bool $group   BP_Groups_Group object to check.
  * @param int|bool    $user_id ID of a user to check group visibility for.
@@ -2615,7 +2615,7 @@ function bp_include_group_by_context( $group = false, $user_id = false, $context
 	/**
 	 * Filters whether this group should be included for this user and context combination.
 	 *
-	 * @since BuddyBos 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool            $include Whether to include this group.
 	 * @param BP_Groups_Group $group   The group object in question.
