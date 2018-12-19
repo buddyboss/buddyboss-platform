@@ -254,6 +254,18 @@ function bp_admin_setting_callback_group_hierarchies() {
 }
 
 /**
+ * 'Enable group restrict invites' field markup.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_admin_setting_callback_group_restrict_invites() {
+	?>
+	<input id="bp-enable-group-restrict-invites" name="bp-enable-group-restrict-invites" type="checkbox" value="1" <?php checked( bp_enable_group_restrict_invites() ); ?> />
+	<label for="bp-enable-group-restrict-invites"><?php _e( 'Restrict group invites to only members of who already exists in parent group', 'buddyboss' ); ?></label>
+	<?php
+}
+
+/**
  * 'Enable group auto join field markup.
  *
  * @since BuddyBoss 1.0.0

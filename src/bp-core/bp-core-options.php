@@ -85,6 +85,9 @@ function bp_get_default_options() {
 		// Group auto join
 		'bp-enable-group-auto-join' => false,
 
+		// Group restrict invites to members who already in specific parent group.
+		'bp-enable-group-restrict-invites' => false,
+
 		// Allow users to delete their own accounts.
 		'bp-disable-account-deletion'          => false,
 
@@ -691,6 +694,27 @@ function bp_enable_group_hierarchies( $default = false ) {
 	 * @param bool $value whether or not groups are able to have a parent and sub groups.
 	 */
 	return (bool) apply_filters( 'bp_enable_group_hierarchies', (bool) bp_get_option( 'bp-enable-group-hierarchies', $default ) );
+}
+
+/**
+ * Are group restrict invites to members who already in specific parent group?
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if group restrict invites to members who already in specific parent group are enabled, otherwise false.
+ */
+function bp_enable_group_restrict_invites( $default = false ) {
+
+	/**
+	 * Filters whether or not groups are able to have a parent and sub groups.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param bool $value whether or not groups are able to have a parent and sub groups.
+	 */
+	return (bool) apply_filters( 'bp_enable_group_restrict_invites', (bool) bp_get_option( 'bp-enable-group-restrict-invites', $default ) );
 }
 
 /**

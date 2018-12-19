@@ -1537,6 +1537,7 @@ function bp_group_type_custom_meta_boxes() {
 		if ( isset( $get_all_registered_member_types ) && !empty( $get_all_registered_member_types ) ) {
 			// Add meta box if member types is entered.
 			add_meta_box( 'bp-group-type-auto-join-member-type', __( 'Profile Type Override', 'buddyboss' ),'bp_group_type_auto_join_member_type_meta_box',null,'normal','high' );
+			add_meta_box( 'bp-group-type-group-invites', __( 'Group Invites', 'buddyboss' ),'bp_group_type_group_invites_meta_box',null,'normal','high' );
 		}
 	}
 }
@@ -1666,6 +1667,44 @@ function bp_group_type_auto_join_member_type_meta_box( $post ) {
 		?>
 		<p>
 			<input type='checkbox' name='bp-member-type[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> tabindex="7" />
+			<strong><?php _e( get_the_title( $member_type ), 'buddyboss' ); ?></strong>
+		</p>
+		<?php
+
+	}
+
+}
+
+/**
+ * Function for displaying all settings of group invites.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $post
+ */
+function bp_group_type_group_invites_meta_box( $post ) {
+
+	$meta = get_post_custom( $post->ID );
+
+	$get_restrict_invites_same_group_types = isset( $meta[ '_bp_group_type_restrict_invites_user_same_group_type' ] ) ? intval( $meta[ '_bp_group_type_restrict_invites_user_same_group_type' ][ 0 ] ) : 0; //disabled by default
+	?>
+	<p>
+		<input type='checkbox' name='bp-group-type-restrict-invites-user-same-group-type' value='<?php echo esc_attr( 1 ); ?>' <?php checked( $get_restrict_invites_same_group_types, 1 ); ?> tabindex="7" />
+		<strong><?php _e( 'Restrict invites if user already in other same group type', 'buddyboss' ); ?></strong>
+	</p>
+	<p><?php printf( __( 'Users who are in this group are allowed to invite other users into the group who are which profile type.', 'buddyboss' ), $post->post_title )?></p>
+	<?php
+
+	$get_all_registered_member_types = bp_get_active_member_types();
+
+	$get_selected_member_types = get_post_meta( $post->ID, '_bp_group_type_enabled_member_type_group_invites', true ) ?: [];
+
+	foreach ( $get_all_registered_member_types as $member_type ) {
+
+		$member_type_key = bp_get_member_type_key( $member_type );
+		?>
+		<p>
+			<input type='checkbox' name='bp-member-type-group-invites[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> tabindex="7" />
 			<strong><?php _e( get_the_title( $member_type ), 'buddyboss' ); ?></strong>
 		</p>
 		<?php
@@ -1883,6 +1922,8 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 	$enable_remove = isset( $data[ 'enable_remove' ] ) ? absint( $data[ 'enable_remove' ] ) : 0; //default inactive
 
 	$member_type = $_POST['bp-member-type'];
+	$member_type_group_invites = $_POST['bp-member-type-group-invites'];
+	$get_restrict_invites_same_group_types = isset( $_POST['bp-group-type-restrict-invites-user-same-group-type'] ) ? absint( $_POST['bp-group-type-restrict-invites-user-same-group-type'] ) : 0;
 
 	update_post_meta( $post_id, '_bp_group_type_key', $key );
 	update_post_meta( $post_id, '_bp_group_type_label_name', $label_name );
@@ -1890,4 +1931,6 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_group_type_enable_filter', $enable_filter );
 	update_post_meta( $post_id, '_bp_group_type_enable_remove', $enable_remove );
 	update_post_meta( $post_id, '_bp_group_type_enabled_member_type_join', $member_type );
+	update_post_meta( $post_id, '_bp_group_type_enabled_member_type_group_invites', $member_type_group_invites );
+	update_post_meta( $post_id, '_bp_group_type_restrict_invites_user_same_group_type', $get_restrict_invites_same_group_types );
 }
