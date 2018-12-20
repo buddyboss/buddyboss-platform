@@ -24,7 +24,7 @@ function bp_search_get_settings_sections() {
 			'page' => 'search'
 		),
 		'bp_search_settings_post_types' => array(
-			'page' => 'search'
+			'page' => 'search',
 		),
 		'bp_search_settings_general'    => array(
 			'page' => 'search'
@@ -142,8 +142,87 @@ function bp_search_get_settings_fields() {
 		$fields['bp_search_settings_community']["bp_search_groups"] = [
 			'title'             => '&#65279;',
 			'callback'          => 'bp_search_settings_callback_groups',
-			'sanitize_callback' => 'intval'
+			'sanitize_callback' => 'intval',
+			'args'              => [
+				'class' => 'bp-search-parent-field'
+			]
 		];
+	}
+
+	if ( bp_is_active( 'activity' ) ) {
+		$fields['bp_search_settings_community']["bp_search_activity"] = [
+			'title'             => '&#65279;',
+			'callback'          => 'bp_search_settings_callback_activity',
+			'sanitize_callback' => 'intval',
+			'args'              => [
+				'class' => 'bp-search-parent-field'
+			]
+		];
+
+		$fields['bp_search_settings_community']["bp_search_activity_comments"] = [
+			'title'             => '&#65279;',
+			'callback'          => 'bp_search_settings_callback_activity_comments',
+			'sanitize_callback' => 'intval',
+			'args'              => [
+				'class' => 'bp-search-child-field'
+			]
+		];
+	}
+
+	$post_types = get_post_types( [ 'public' => true ] );
+
+	$fields['bp_search_settings_post_types']["bp_search_post_type_section_header"] = [
+		'title'    => 'Pages and Post Types:',
+		'callback' => 'bp_search_settings_callback_post_type_section_header',
+		'args'     => [
+			'class' => 'bp-search-parent-field'
+		]
+	];
+
+	foreach ( $post_types as $post_type ) {
+
+		if ( in_array( $post_type, [ 'forum', 'topic', 'reply' ] ) ) {
+			continue;
+		}
+
+		$fields['bp_search_settings_post_types']["bp_search_post_type_$post_type"] = [
+			'title'             => '&#65279;',
+			'callback'          => 'bp_search_settings_callback_post_type',
+			'sanitize_callback' => 'intval',
+			'args'              => [
+				'post_type' => $post_type,
+				'class'     => 'bp-search-parent-field'
+			]
+		];
+
+		$taxonomies = get_object_taxonomies( $post_type );
+
+		foreach ( $taxonomies as $taxonomy ) {
+			$fields['bp_search_settings_post_types']["bp_search_{$post_type}_tax_{$taxonomy}"] = [
+				'title'             => '&#65279;',
+				'callback'          => 'bp_search_settings_callback_post_type_taxonomy',
+				'sanitize_callback' => 'intval',
+				'args'              => [
+					'post_type' => $post_type,
+					'taxonomy'  => $taxonomy,
+					'class'     => 'bp-search-child-field'
+				]
+			];
+		}
+
+
+		if ( in_array( $post_type, [ 'post', 'page' ] ) ) {
+			$fields['bp_search_settings_post_types']["bp_search_post_type_meta_$post_type"] = [
+				'title'             => '&#65279;',
+				'callback'          => 'bp_search_settings_callback_post_type_meta',
+				'sanitize_callback' => 'intval',
+				'args'              => [
+					'post_type' => $post_type,
+					'class'     => 'bp-search-child-field'
+				]
+			];
+		}
+
 	}
 
 	return (array) apply_filters( 'bp_search_get_settings_fields', $fields );
@@ -280,7 +359,7 @@ function bp_search_settings_callback_number_of_results() {
  */
 function bp_search_settings_callback_members() {
 	?>
-
+	<p class="section-header"><?php _e( 'Search the following BuddyBoss components:' ) ?></p>
 	<input name="bp_search_members" id="bp_search_members" type="checkbox" value="1"
 		<?php checked( bp_is_search_members_enable( true ) ) ?> />
 	<label
@@ -380,7 +459,7 @@ function bp_search_settings_callback_post_type( $args ) {
 		<?php checked( bp_is_search_post_type_enable( $post_type ) ) ?>
 	/>
 	<label for="<?php echo $option_name ?>">
-		<?php echo $post_type_obj->labels->name ?>
+		<?php echo $post_type === 'post' ? esc_html__( 'Blog Posts', 'buddyboss' ) : $post_type_obj->labels->name ?>
 	</label>
 	<?php
 }
@@ -396,6 +475,48 @@ function bp_search_settings_callback_post_type( $args ) {
  */
 function bp_is_search_post_type_enable( $post_type ) {
 	return (bool) apply_filters( 'bp_is_search_post_type_enable', (bool) get_option( "bp_search_post_type_$post_type" ) );
+}
+
+/**
+ * Allow Post Type Meta search setting field
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $args array
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_search_settings_callback_post_type_meta( $args ) {
+
+	$post_type   = $args['post_type'];
+	$option_name = 'bp_search_post_type_meta_' . $post_type;
+
+	$post_type_obj = get_post_type_object( $post_type );
+	?>
+	<input
+		name="<?php echo $option_name ?>"
+		id="<?php echo $option_name ?>"
+		type="checkbox"
+		value="1"
+		<?php checked( bp_is_search_post_type_meta_enable( $post_type ) ) ?>
+	/>
+	<label for="<?php echo $option_name ?>">
+		<?php printf( esc_html__( '%s Meta Data', 'buddyboss' ), $post_type_obj->labels->name ) ?>
+	</label>
+	<?php
+}
+
+/**
+ * Checks if post type Meta search is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $post_type string
+ *
+ * @return bool Is post type meta search enabled or not
+ */
+function bp_is_search_post_type_meta_enable( $post_type ) {
+	return (bool) apply_filters( 'bp_is_search_post_type_meta_enable', (bool) get_option( "bp_search_post_type_meta_$post_type" ) );
 }
 
 /**
@@ -431,4 +552,126 @@ function bp_search_settings_callback_groups() { ?>
  */
 function bp_is_search_groups_enable( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_search_groups_enable', (bool) get_option( 'bp_search_groups', $default ) );
+}
+
+/**
+ * Allow Activity search setting field
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_search_settings_callback_activity() { ?>
+	<input
+		name="bp_search_activity"
+		id="bp_search_activity"
+		type="checkbox"
+		value="1"
+		<?php checked( bp_is_search_activity_enable( true ) ) ?>
+	/>
+	<label for="bp_search_activity">
+		<?php esc_html_e( 'Activity', 'buddyboss' ) ?>
+	</label>
+	<?php
+}
+
+/**
+ * Checks if Activity search is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is Activity search enabled or not
+ */
+function bp_is_search_activity_enable( $default = 1 ) {
+	return (bool) apply_filters( 'bp_is_search_activity_enable', (bool) get_option( 'bp_search_activity', $default ) );
+}
+
+/**
+ * Allow Activity Comments search setting field
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_search_settings_callback_activity_comments() { ?>
+	<input
+		name="bp_search_activity_comments"
+		id="bp_search_activity_comments"
+		type="checkbox"
+		value="1"
+		<?php checked( bp_is_search_activity_comments_enable( true ) ) ?>
+	/>
+	<label for="bp_search_activity_comments">
+		<?php esc_html_e( 'Activity Comments', 'buddyboss' ) ?>
+	</label>
+	<?php
+}
+
+/**
+ * Checks if Activity Comments search is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is Activity Comments search enabled or not
+ */
+function bp_is_search_activity_comments_enable( $default = 1 ) {
+	return (bool) apply_filters( 'bp_is_search_activity_comments_enable', (bool) get_option( 'bp_search_activity_comments', $default ) );
+}
+
+function bp_search_settings_callback_post_type_section_header() {
+	?>
+	<p><?php _e( 'Search the following WordPress content and post types:' ) ?></p>
+	<?php
+}
+
+
+/**
+ * Allow Post Type Taxonomy search setting field
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $args array
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_search_settings_callback_post_type_taxonomy( $args ) {
+
+	$post_type   = $args['post_type'];
+	$taxonomy    = $args['taxonomy'];
+	$option_name = "bp_search_{$post_type}_tax_{$taxonomy}";
+
+	$taxonomy_obj  = get_taxonomy( $taxonomy );
+	$post_type_obj = get_post_type( $post_type );
+	?>
+	<input
+		name="<?php echo $option_name ?>"
+		id="<?php echo $option_name ?>"
+		type="checkbox"
+		value="1"
+		<?php checked( bp_is_search_post_type_taxonomy_enable( $taxonomy, $post_type ) ) ?>
+	/>
+	<label for="<?php echo $option_name ?>">
+		<?php printf( esc_html__( '%s %s', 'buddyboss' ), $post_type_obj->labels->name, $taxonomy_obj->labels->name ) ?>
+	</label>
+	<?php
+}
+
+/**
+ * Checks if post type Taxonomy search is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $post_type string post type name
+ * @param $taxonomy string taxonomy name
+ *
+ * @return bool Is post type Taxonomy search enabled or not
+ */
+function bp_is_search_post_type_taxonomy_enable( $taxonomy, $post_type ) {
+	return (bool) apply_filters( 'bp_is_search_post_type_taxonomy_enable', (bool) get_option( "bp_search_{$post_type}_tax_{$taxonomy}" ) );
 }
