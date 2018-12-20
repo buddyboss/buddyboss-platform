@@ -456,7 +456,7 @@ function bp_search_settings_callback_post_type( $args ) {
 		id="<?php echo $option_name ?>"
 		type="checkbox"
 		value="1"
-		<?php checked( bp_is_search_post_type_enable( $post_type ) ) ?>
+		<?php checked( bp_is_search_post_type_enable( $post_type, true ) ) ?>
 	/>
 	<label for="<?php echo $option_name ?>">
 		<?php echo $post_type === 'post' ? esc_html__( 'Blog Posts', 'buddyboss' ) : $post_type_obj->labels->name ?>
@@ -473,8 +473,8 @@ function bp_search_settings_callback_post_type( $args ) {
  *
  * @return bool Is members search enabled or not
  */
-function bp_is_search_post_type_enable( $post_type ) {
-	return (bool) apply_filters( 'bp_is_search_post_type_enable', (bool) get_option( "bp_search_post_type_$post_type" ) );
+function bp_is_search_post_type_enable( $post_type, $default = 1 ) {
+	return (bool) apply_filters( 'bp_is_search_post_type_enable', (bool) get_option( "bp_search_post_type_$post_type", $default ) );
 }
 
 /**
