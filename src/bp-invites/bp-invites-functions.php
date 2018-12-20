@@ -297,7 +297,7 @@ function bp_get_member_invitation_subject() {
 	);
 	$query = new WP_Query( $args );
 
-	$title = $query->posts[0]->post_title;
+	$title = bp_get_member_invites_wildcard_replace( $query->posts[0]->post_title );
 
 	return apply_filters( 'bp_get_member_invitation_subject', stripslashes( $title ) );
 }
@@ -400,7 +400,6 @@ function bp_get_member_invites_wildcard_replace( $text, $email = false ) {
 	/* Adding single % replacements because lots of people are making the mistake */
 	$text = str_replace( '%INVITERNAME%', $inviter_name, $text );
 	$text = str_replace( '%INVITERURL%', $inviter_url, $text );
-	$text = str_replace( '{{invitee.url}}', $accept_link, $text );
 	$text = str_replace( '%SITENAME%', $site_name, $text );
 	$text = str_replace( '%ACCEPTURL%', $accept_link, $text );
 

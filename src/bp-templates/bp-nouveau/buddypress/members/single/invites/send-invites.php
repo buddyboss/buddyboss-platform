@@ -84,15 +84,32 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 	if ( true === bp_disable_invite_member_email_subject() ) {
 		?>
 		<label for="bp-member-invites-custom-subject"><?php _e( 'Customize the text of the invitation subject.', 'buddyboss' ) ?></label>
-		<textarea name="bp_member_invites_custom_subject" id="bp-member-invites-custom-subject" rows="15" cols="10" ><?php echo esc_textarea( bp_get_member_invitation_subject() ) ?></textarea>
+		<textarea name="bp_member_invites_custom_subject" id="bp-member-invites-custom-subject" rows="5" cols="10" ><?php echo esc_textarea( bp_get_member_invitation_subject() ) ?></textarea>
 		<?php
 	}
 
 	if ( true === bp_disable_invite_member_email_content() ) {
+
 		?>
 		<label for="bp-member-invites-custom-content"><?php _e( 'Customize the text of the invitation email.', 'buddyboss' ) ?></label>
-		<textarea name="bp_member_invites_custom_content" id="bp-member-invites-custom-content" rows="15" cols="10" ><?php echo esc_textarea( bp_get_member_invitation_message() ) ?></textarea>
 		<?php
+		add_filter( 'mce_buttons', 'bp_nouveau_invites_mce_buttons', 10, 1 );
+		wp_editor(
+			bp_get_member_invites_wildcard_replace( bp_get_member_invitation_message() ),
+			'bp-member-invites-custom-content',
+			array(
+				'textarea_name' => 'bp_member_invites_custom_content',
+				'teeny'         => false,
+				'media_buttons' => false,
+				'dfw'           => false,
+				'tinymce'       => true,
+				'quicktags'     => false,
+				'tabindex'      => '3',
+				'textarea_rows' => 5,
+			)
+		);
+		// Remove the temporary filter on editor buttons
+		remove_filter( 'mce_buttons', 'bp_nouveau_invites_mce_buttons', 10, 1 );
 	}
 	?>
 	<input type="hidden" value="<?php _e('Please fill all the required field to invite member.', 'buddyboss') ?>" name="error-message-required-field" id="error-message-required-field">
