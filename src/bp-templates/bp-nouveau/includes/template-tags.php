@@ -1266,7 +1266,7 @@ function bp_nouveau_nav_count() {
 		$count      = 0;
 
 		if ( 'directory' === $bp_nouveau->displayed_nav ) {
-			$count = (int) $nav_item->count;
+			$count = (int) str_replace(',', '', $nav_item->count );
 
 		} elseif ( 'groups' === $bp_nouveau->displayed_nav && ( 'members' === $nav_item->slug || 'all-members' === $nav_item->slug ) ) {
 			$count = groups_get_current_group()->total_member_count;
