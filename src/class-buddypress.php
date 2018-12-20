@@ -555,7 +555,6 @@ class BuddyPress {
 			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/2.8.php' );
 			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/2.9.php' );
 			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/3.0.php' );
-			require( $this->plugin_dir . 'bp-core/deprecated/buddypress/3.1.php' );
 		}
 
 		// Maybe load deprecated buddyboss functionality (this double negative is proof positive!)
