@@ -91,7 +91,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 	if ( true === bp_disable_invite_member_email_content() ) {
 
 		?>
-		<label for="bp-member-invites-custom-content"><?php _e( 'Customize the text of the invitation email.', 'buddyboss' ) ?></label>
+		<label for="bp-member-invites-custom-content"><?php _e( 'Customize the text of the invitation email. A link to register will be sent with the email.', 'buddyboss' ) ?></label>
 		<?php
 		add_filter( 'mce_buttons', 'bp_nouveau_invites_mce_buttons', 10, 1 );
 		wp_editor(
