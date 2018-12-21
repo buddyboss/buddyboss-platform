@@ -345,7 +345,7 @@ function bp_has_members( $args = '' ) {
 	$type = 'active';
 
 	// Mutual User filtering.
-	if ( bp_is_user_friends() && bp_is_user_mutual_friends() ) {
+	if ( 'online' != $args['type'] && bp_is_user_friends() && bp_is_user_mutual_friends() ) {
 		$include = bp_get_mutual_friendships();
 		$type = 'alphabetical';
 	}
