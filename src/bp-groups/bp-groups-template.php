@@ -4184,8 +4184,6 @@ function bp_group_has_members( $args = '' ) {
 		'type'                => 'last_joined',
 	), 'group_has_members' );
 
-	error_log(print_r($r,1));
-
 	/*
 	 * If an empty search_terms string has been passed,
 	 * the developer is force-disabling search.
