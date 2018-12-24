@@ -180,6 +180,10 @@ function bp_invites_member_invite_filter_content( $content, $email ) {
 	if ( isset( $_POST['bp_member_invites_custom_content'] ) && '' !== $_POST['bp_member_invites_custom_content'] && 'invites-member-invite' === $email->get( 'type' ) ) {
 		$content = bp_get_member_invites_wildcard_replace ( wp_kses( $_POST['bp_member_invites_custom_content'], bp_invites_kses_allowed_tags() ), $_POST['custom_user_email'] );
 	}
+
+	if ( 'invites-member-invite' === $email->get( 'type' ) ) {
+		$content .= '<br>'.bp_get_member_invites_wildcard_replace ( wp_kses('To accept this invitation, please <a href="{{invitee.url}}">click here</a>.', bp_invites_kses_allowed_tags() ) );
+	}
 	return apply_filters( 'bp_invites_member_invite_filter_content', $content, $email );
 }
 add_filter( 'bp_email_set_content_html', 'bp_invites_member_invite_filter_content', 99, 2 );
@@ -198,6 +202,10 @@ function bp_invites_member_invite_filter_content_plaintext( $content, $email ) {
 
 	if ( isset( $_POST['bp_member_invites_custom_content'] ) && '' !== $_POST['bp_member_invites_custom_content'] && 'invites-member-invite' === $email->get( 'type' ) ) {
 		$content = bp_get_member_invites_wildcard_replace( wp_kses( $_POST['bp_member_invites_custom_content'], bp_invites_kses_allowed_tags() ), $_POST['custom_user_email'] );
+	}
+
+	if ( 'invites-member-invite' === $email->get( 'type' ) ) {
+		$content .= '<br>'.bp_get_member_invites_wildcard_replace ( wp_kses('You have been invited by {{inviter.name}} to join the [{{{site.name}}}] community.', bp_invites_kses_allowed_tags() ) );
 	}
 
 	return apply_filters( 'bp_invites_member_invite_filter_content_plaintext', $content, $email );
