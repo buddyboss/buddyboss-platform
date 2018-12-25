@@ -459,7 +459,7 @@ window.bp = window.bp || {};
 			$( this.objectNavParent + ' .bp-navs' ).on( 'click', 'a', this, this.scopeQuery );
 
 			// Filtering
-			$( '#buddypress [data-bp-filter]' ).on( 'change', this, this.filterQuery );
+			$( document ).on( 'change', '#buddypress [data-bp-filter]', this, this.filterQuery );
 
 			// Searching
 			$( '#buddypress [data-bp-search]' ).on( 'submit', 'form', this, this.searchQuery );
@@ -510,7 +510,7 @@ window.bp = window.bp || {};
                 }
             }
 
-            $('.grid-filters').on('click', '.layout-view', function(e) {
+            $( document ).on('click', '.grid-filters .layout-view', function(e) {
                 e.preventDefault();
 
                 if ( $(this).hasClass('layout-list-view') ) {
