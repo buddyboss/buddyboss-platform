@@ -72,7 +72,7 @@ if ( ! function_exists( 'bp_email_mepr_view_paths_get_string' ) ) {
 	 */
 	function bp_email_mepr_view_paths_get_string( $paths, $slug ) {
 		if ( strpos( $slug, 'emails/' ) !== false ) {
-			array_push( $paths, buddypress()->themes_dir . '/bp-nouveau/buddypress/memberpress' );
+			array_push( $paths, buddypress()->themes_dir . '/bp-nouveau/memberpress' );
 		}
 
 		return $paths;
