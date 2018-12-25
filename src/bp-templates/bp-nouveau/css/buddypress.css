@@ -2344,6 +2344,10 @@ body.no-js .single-item-header .js-self-profile-button {
   clear: both;
 }
 
+.groups-header .action .button {
+  margin-right: 10px;
+}
+
 .groups-header .moderators-lists {
   margin-top: 0;
   display: table-cell;
@@ -3668,10 +3672,6 @@ input#send-to-input {
 
 .buddypress-wrap .standard-form textarea {
   height: 120px;
-}
-
-.buddypress-wrap .standard-form textarea#bp-member-invites-custom-subject {
-	height: 48px;
 }
 
 .buddypress-wrap .standard-form textarea#message_content {

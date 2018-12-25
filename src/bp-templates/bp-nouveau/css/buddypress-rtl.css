@@ -2344,6 +2344,10 @@ body.no-js .single-item-header .js-self-profile-button {
   clear: both;
 }
 
+.groups-header .action .button {
+  margin-left: 10px;
+}
+
 .groups-header .moderators-lists {
   margin-top: 0;
   display: table-cell;
