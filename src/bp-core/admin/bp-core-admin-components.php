@@ -80,6 +80,10 @@ function bp_core_admin_components_options() {
 	$required_components = bp_core_admin_get_components( 'required' );
 	$retired_components  = bp_core_admin_get_components( 'retired'  );
 
+	if ( isset( $optional_components['blogs'] ) ) {
+	    unset( $optional_components['blogs'] );
+    }
+
 	// Merge optional and required together.
 	$all_components = $optional_components + $required_components;
 
@@ -115,7 +119,7 @@ function bp_core_admin_components_options() {
 	 */
 
 	// Get the total count of all plugins.
-	$all_count = count( $all_components ) - 1; // - 1 beacause blog component is explicitely hidden, see $inactive_components count too.
+	$all_count = count( $all_components );
 	$page      = bp_core_do_network_admin()  ? 'settings.php' : 'admin.php';
 	$action    = !empty( $_GET['action'] ) ? $_GET['action'] : 'all';
 
