@@ -218,7 +218,11 @@ if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() 
 				<?php
 				if ( ! empty( $percentage_completed ) ) {
 					?>
-                    <span class="bp-learndash-progress-bar-percentage"><?php echo $percentage_completed; ?></span>
+                    <span class="bp-learndash-progress-bar-percentage"><?php echo $percentage_completed; ?>% <?php _e( 'Complete', 'buddyboss' ); ?></span>
+					<?php
+				} else {
+				    ?>
+                    <span class="bp-learndash-progress-bar-percentage">0% <?php _e( 'Complete', 'buddyboss' ); ?></span>
 					<?php
 				}
 				?>
