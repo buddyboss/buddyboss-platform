@@ -9,7 +9,11 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	}
 
 	public function settings_save() {
+        $if_disabled_before_saving = bp_disable_advanced_profile_search();
+        
 		parent::settings_save();
+        
+        $if_disabled_after_saving = bp_disable_advanced_profile_search();
 
         /**
          * sync bp-enable-member-dashboard with cutomizer settings.
@@ -27,6 +31,19 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
         		$last_name_field->is_required = true;
         		$last_name_field->save();
         	}
+        }
+        
+        if ( $if_disabled_before_saving && ! $if_disabled_after_saving ) {
+            /**
+             * Advanced profile search was disabled before and is now enabled.
+             * So ideally, the new 'profile search' menu should now be visible under users nav.
+             * But that doesn't happen becuase by the time settings are updated, register_post_type hooks have already been executed.
+             * So user doesn't see that untill next reload/request.
+             * 
+             * To avoid that, we'll need to do a force redirect.
+             */
+            wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bp-settings&tab=bp-xprofile' ) );
+            exit();
         }
 	}
 
