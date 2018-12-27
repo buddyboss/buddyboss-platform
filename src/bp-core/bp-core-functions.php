@@ -2411,11 +2411,11 @@ function bp_core_get_components( $type = 'all' ) {
 	$required_components = array(
 		'members' => array(
 			'title'       => __( 'Community Members', 'buddyboss' ),
-			'description' => __( 'Everything in a community website revolves around its members.', 'buddyboss' )
+			'description' => __( 'Everything in a community website revolves around its members. <strong>(required)</strong>', 'buddyboss' )
 		),
 		'xprofile' => array(
 			'title'       => __( 'Profile Fields', 'buddyboss' ),
-			'description' => __( 'Customize your community with fully editable profile fields that allow your users to describe themselves.', 'buddyboss' )
+			'description' => __( 'Customize your community with fully editable profile fields that allow your users to describe themselves. <strong>(required)</strong>', 'buddyboss' )
 		),
 	);
 
