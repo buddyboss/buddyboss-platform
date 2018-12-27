@@ -306,13 +306,6 @@ add_action( 'bp_admin_init', 'bp_core_admin_components_settings_handler' );
  *   active components will not be passed in the $_POST global. Thus, we must
  *   parse the newly activated components with the already active components
  *   saved in the $bp global
- * - When activating a Retired component, the situation is similar to Inactive.
- * - When deactivating a Retired component, no value is passed in the $_POST
- *   global (because the component settings are checkboxes). So, in order to
- *   determine whether a retired component is being deactivated, we retrieve a
- *   list of retired components, and check each one to ensure that its checkbox
- *   is not present, before merging the submitted components with the active
- *   ones.
  *
  * @since BuddyPress 1.7.0
  *
@@ -323,7 +316,7 @@ add_action( 'bp_admin_init', 'bp_core_admin_components_settings_handler' );
 function bp_core_admin_get_active_components_from_submitted_settings( $submitted ) {
 	$current_action = 'all';
 
-	if ( isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'active', 'inactive', 'retired' ) ) ) {
+	if ( isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'active', 'inactive' ) ) ) {
 		$current_action = $_GET['action'];
 	}
 
@@ -352,7 +345,7 @@ function bp_core_admin_get_active_components_from_submitted_settings( $submitted
  *
  * @since BuddyPress 1.7.0
  *
- * @param string $type Optional; component type to fetch. Default value is 'all', or 'optional', 'retired', 'required'.
+ * @param string $type Optional; component type to fetch. Default value is 'all', or 'optional', 'required'.
  * @return array Requested components' data.
  */
 function bp_core_admin_get_components( $type = 'all' ) {
@@ -366,7 +359,7 @@ function bp_core_admin_get_components( $type = 'all' ) {
 	 * @param array  $components Array of component information.
 	 * @param string $type       Type of component list requested.
 	 *                           Possible values include 'all', 'optional',
-	 *                           'retired', 'required'.
+	 *                           'required'.
 	 */
 	return apply_filters( 'bp_core_admin_get_components', $components, $type );
 }

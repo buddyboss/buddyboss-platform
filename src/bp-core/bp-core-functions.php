@@ -2404,7 +2404,7 @@ function bp_core_get_minified_asset_suffix() {
  *
  * @since BuddyPress 2.6.0
  *
- * @param string $type Optional; component type to fetch. Default value is 'all', or 'optional', 'retired', 'required'.
+ * @param string $type Optional; component type to fetch. Default value is 'all', or 'optional', 'required'.
  * @return array Requested components' data.
  */
 function bp_core_get_components( $type = 'all' ) {

@@ -134,7 +134,7 @@ class Components extends BuddypressCommand {
 	 * ## OPTIONS
 	 *
 	 * [--type=<type>]
-	 * : Type of the component (all, optional, retired, required).
+	 * : Type of the component (all, optional, required).
 	 * ---
 	 * default: all
 	 * ---
@@ -298,7 +298,7 @@ class Components extends BuddypressCommand {
 	 * @return array An array of valid component types.
 	 */
 	protected function component_types() {
-		return array( 'all', 'optional', 'retired', 'required' );
+		return array( 'all', 'optional', 'required' );
 	}
 
 	/**
