@@ -2419,9 +2419,6 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 	);
 
-	$retired_components = array(
-	);
-
 	$optional_components = array(
 		'settings' => array(
 			'title'       => __( 'Account Settings', 'buddyboss' ),
@@ -2477,12 +2474,9 @@ function bp_core_get_components( $type = 'all' ) {
 		case 'optional' :
 			$components = $optional_components;
 			break;
-		case 'retired' :
-			$components = $retired_components;
-			break;
 		case 'all' :
 		default :
-			$components = array_merge( $required_components, $optional_components, $retired_components );
+			$components = array_merge( $required_components, $optional_components );
 			break;
 	}
 
@@ -2493,7 +2487,7 @@ function bp_core_get_components( $type = 'all' ) {
 	 *
 	 * @param array  $components Array of component information.
 	 * @param string $type       Type of component list requested.
-	 *                           Possible values are 'all', 'optional', 'retired', 'required'.
+	 *                           Possible values are 'all', 'optional', 'required'.
 	 */
 	return apply_filters( 'bp_core_get_components', $components, $type );
 }
