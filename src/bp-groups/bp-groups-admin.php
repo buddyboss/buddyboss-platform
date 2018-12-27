@@ -36,7 +36,7 @@ function bp_groups_add_admin_menu() {
 			'bp_moderate',
 			'bp-groups',
 			'bp_groups_admin',
-			'div'
+			'dashicons-groups'
 		);
 
 		// Register All Groups sub menu.
@@ -55,7 +55,7 @@ function bp_groups_add_admin_menu() {
 			'bp_moderate',
 			'bp-groups',
 			'bp_groups_admin',
-			'div'
+			'dashicons-groups'
 		);
 	}
 
