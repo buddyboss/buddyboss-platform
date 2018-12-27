@@ -238,6 +238,15 @@ class BP_Admin {
 
 		$hooks[] = add_submenu_page(
 			$this->settings_page,
+			__( 'Pages', 'buddyboss' ),
+			__( 'Pages', 'buddyboss' ),
+			$this->capability,
+			'bp-settings&tab=bp-pages',
+			'bp_core_admin_settings'
+		);
+
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
 			__( 'BuddyBoss Settings', 'buddyboss' ),
 			__( 'Settings', 'buddyboss' ),
 			$this->capability,
