@@ -2,6 +2,14 @@
 
 class BP_Admin_Integration_Sample extends BP_Admin_Integration_tab {
 
+	/**
+	 * Tab order
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @var integer
+	 */
+	public $tab_order        = 500;
+
 	public function initialize() {
 		$this->tab_label = __( 'Sample', 'buddyboss' );
 		$this->tab_name  = 'bp-sample';
