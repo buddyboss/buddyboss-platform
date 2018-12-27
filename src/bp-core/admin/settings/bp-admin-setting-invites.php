@@ -3,7 +3,7 @@
 class BP_Admin_Setting_Invites extends BP_Admin_Setting_tab {
 
 	public function initialize() {
-		$this->tab_label = __( 'User Invites', 'buddyboss' );
+		$this->tab_label = __( 'Invites', 'buddyboss' );
 		$this->tab_name  = 'bp-invites';
 		$this->tab_order = 15;
 	}
