@@ -121,6 +121,7 @@ class BP_Admin {
 		require( $this->admin_dir . 'bp-core-admin-settings.php'   );
 		require( $this->admin_dir . 'bp-core-admin-functions.php'  );
 		require( $this->admin_dir . 'bp-core-admin-components.php' );
+		require( $this->admin_dir . 'bp-core-admin-pages.php'      );
 		require( $this->admin_dir . 'bp-core-admin-slugs.php'      );
 		require( $this->admin_dir . 'bp-core-admin-tools.php'      );
 	}
@@ -241,8 +242,8 @@ class BP_Admin {
 			__( 'Pages', 'buddyboss' ),
 			__( 'Pages', 'buddyboss' ),
 			$this->capability,
-			'bp-settings&tab=bp-pages',
-			'bp_core_admin_settings'
+			'bp-pages',
+			'bp_core_admin_pages_settings'
 		);
 
 		$hooks[] = add_submenu_page(
@@ -422,7 +423,6 @@ class BP_Admin {
 		require_once trailingslashit( $bp->plugin_dir  . 'bp-core/classes' ) . '/class-bp-admin-tab.php';
 		require_once trailingslashit( $bp->plugin_dir  . 'bp-core/classes' ) . '/class-bp-admin-setting-tab.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-general.php';
-		require_once $this->admin_dir . '/settings/bp-admin-setting-pages.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-xprofile.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-activity.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-groups.php';
