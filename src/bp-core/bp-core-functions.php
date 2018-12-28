@@ -2441,7 +2441,7 @@ function bp_core_get_components( $type = 'all' ) {
 			'title'       => __( 'User Invites', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-invites' ) , $page ) ),
 			'view'    	  => __( 'http://localhost:8888/buddyboss-theme/members/admin/invites/', 'buddyboss' ),
-			'description' => __( 'Allow you users to send email invites to non-members to join the network.', 'buddyboss' )
+			'description' => __( 'Allow your users to send email invites to non-members to join the network.', 'buddyboss' )
 		),
 		'messages' => array(
 			'title'       => __( 'Private Messaging', 'buddyboss' ),
