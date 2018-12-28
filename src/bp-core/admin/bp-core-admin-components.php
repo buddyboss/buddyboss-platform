@@ -60,22 +60,7 @@ function bp_core_admin_components_options() {
 	 */
 	$active_components      = apply_filters( 'bp_active_components', bp_get_option( 'bp-active-components' ) );
 
-	// The default components (if none are previously selected).
-	$default_components = array(
-		'xprofile' => array(
-			'title'       => __( 'Profile Fields', 'buddyboss' ),
-			'description' => __( 'Customize your community with fully editable profile fields that allow your users to describe themselves.', 'buddyboss' )
-		),
-		'settings' => array(
-			'title'       => __( 'Account Settings', 'buddyboss' ),
-			'description' => __( 'Allow your users to modify their account and notification settings directly from within their profiles.', 'buddyboss' )
-		),
-		'notifications' => array(
-			'title'       => __( 'Notifications', 'buddyboss' ),
-			'description' => __( 'Notify members of relevant activity with a toolbar bubble and/or via email, and allow them to customize their notification settings.', 'buddyboss' )
-		),
-	);
-
+	$default_components  = bp_core_admin_get_components( 'default' ); // The default components (if none are previously selected).
 	$optional_components = bp_core_admin_get_components( 'optional' );
 	$required_components = bp_core_admin_get_components( 'required' );
 
