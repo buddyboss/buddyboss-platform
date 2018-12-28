@@ -1613,7 +1613,7 @@ function bp_member_type_group_auto_join_meta_box( $post ) {
 
 	$get_all_registered_group_types = bp_get_active_group_types();
 
-	$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_auto_join', true );
+	$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_auto_join', true )?: [];
 
 	foreach ( $get_all_registered_group_types as $group_type_id ) {
 
@@ -1656,7 +1656,7 @@ function bp_member_type_invite_meta_box( $post ) {
 
 	$get_all_registered_profile_types = bp_get_active_member_types();
 
-	$get_selected_profile_types = get_post_meta( $post->ID, '_bp_member_type_allowed_member_type_invite', true );
+	$get_selected_profile_types = get_post_meta( $post->ID, '_bp_member_type_allowed_member_type_invite', true )?: [];
 
 	foreach ( $get_all_registered_profile_types as $member_type_id ) {
 
