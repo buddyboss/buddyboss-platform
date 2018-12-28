@@ -46,7 +46,7 @@ function bbp_admin_get_settings_sections() {
 			'page'     => 'reading',
 		),
 		'bbp_settings_root_slugs' => array(
-			'title'    => __( 'Forum Root Slug', 'buddyboss' ),
+			'title'    => __( 'Forums Directory', 'buddyboss' ),
 			'callback' => 'bbp_admin_setting_callback_root_slug_section',
 			'page'     => 'permalink'
 		),
@@ -261,7 +261,7 @@ function bbp_admin_get_settings_fields() {
 
 			// Root slug setting
 			'_bbp_root_slug' => array(
-				'title'             => __( 'Forum Root', 'buddyboss' ),
+				'title'             => __( 'Forums Directory', 'buddyboss' ),
 				'callback'          => 'bbp_admin_setting_callback_root_slug',
 				'sanitize_callback' => 'bbp_sanitize_slug',
 				'args'              => array()
@@ -269,7 +269,7 @@ function bbp_admin_get_settings_fields() {
 
 			// Include root setting
 			'_bbp_include_root' => array(
-				'title'             => __( 'Forum Prefix', 'buddyboss' ),
+				'title'             => __( 'Forums Prefix', 'buddyboss' ),
 				'callback'          => 'bbp_admin_setting_callback_include_root',
 				'sanitize_callback' => 'intval',
 				'args'              => array()
@@ -277,7 +277,7 @@ function bbp_admin_get_settings_fields() {
 
 			// What to show on Forum Root
 			'_bbp_show_on_root' => array(
-				'title'             => __( 'Forum root should show', 'buddyboss' ),
+				'title'             => __( 'Forums Directory shows', 'buddyboss' ),
 				'callback'          => 'bbp_admin_setting_callback_show_on_root',
 				'sanitize_callback' => 'sanitize_text_field',
 				'args'              => array()
@@ -812,7 +812,7 @@ function bbp_admin_setting_callback_root_slug_section() {
 	if ( isset( $_GET['settings-updated'] ) && isset( $_GET['page'] ) )
 		flush_rewrite_rules(); ?>
 
-	<p><?php esc_html_e( 'Customize your Forums root. Partner with a WordPress Page and use Shortcodes for more flexibility.', 'buddyboss' ); ?></p>
+	<p><?php esc_html_e( 'Customize your Forums directory. Use Shortcodes for more flexibility.', 'buddyboss' ); ?></p>
 
 <?php
 }
@@ -845,7 +845,7 @@ function bbp_admin_setting_callback_include_root() {
 ?>
 
 	<input name="_bbp_include_root" id="_bbp_include_root" type="checkbox" value="1" <?php checked( bbp_include_root_slug() ); bbp_maybe_admin_setting_disabled( '_bbp_include_root' ); ?> />
-	<label for="_bbp_include_root"><?php esc_html_e( 'Prefix all forum content with the Forum Root slug (Recommended)', 'buddyboss' ); ?></label>
+	<label for="_bbp_include_root"><?php esc_html_e( 'Prefix all forum content with the Forums Directory slug (Recommended)', 'buddyboss' ); ?></label>
 
 <?php
 }
@@ -1046,7 +1046,7 @@ function bbp_admin_setting_callback_group_forums_root_id() {
 	// Output the dropdown for all forums
 	bbp_dropdown( array(
 		'selected'           => bbp_get_group_forums_root_id(),
-		'show_none'          => __( '&mdash; Forum root &mdash;', 'buddyboss' ),
+		'show_none'          => __( '&mdash; Forums Directory &mdash;', 'buddyboss' ),
 		'orderby'            => 'title',
 		'order'              => 'ASC',
 		'select_id'          => '_bbp_group_forums_root_id',
@@ -1055,7 +1055,7 @@ function bbp_admin_setting_callback_group_forums_root_id() {
 	) ); ?>
 
 	<label for="_bbp_group_forums_root_id"><?php esc_html_e( 'is the parent for all group forums', 'buddyboss' ); ?></label>
-	<p class="description"><?php esc_html_e( 'Using the Forum Root is not recommended. Changing this does not move existing forums.', 'buddyboss' ); ?></p>
+	<p class="description"><?php esc_html_e( 'Using the Forums Directory is not recommended. Changing this does not move existing forums.', 'buddyboss' ); ?></p>
 
 <?php
 }

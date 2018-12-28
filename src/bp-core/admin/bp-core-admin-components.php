@@ -204,6 +204,43 @@ function bp_core_admin_components_options() {
 								<span aria-hidden="true"></span>
 								<strong><?php echo esc_html( $labels['title'] ); ?></strong>
 							</label>
+                            <div class="row-actions visible">
+								<?php if ( in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
+									<span class="required">
+                                        <?php _e( 'Required', 'buddyboss' ); ?>
+                                    </span>
+								<?php elseif ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
+                                    <?php if ( isset( $active_components[esc_attr( $name )] ) ) : ?>
+                                        <span class="deactivate">
+                                            <a href="<?php echo wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $action, 'bp_component' => $name, 'do_action' => 'deactivate' ) , $page ) ), 'bp-admin-component-activation' ); ?>">
+                                                <?php _e( 'Deactivate', 'buddyboss' ); ?>
+                                            </a>
+                                        </span>
+	                                <?php else: ?>
+                                        <span class="activate">
+                                            <a href="<?php echo wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $action, 'bp_component' => $name, 'do_action' => 'activate' ) , $page ) ), 'bp-admin-component-activation' ); ?>">
+                                                <?php _e( 'Activate', 'buddyboss' ); ?>
+                                            </a>
+                                        </span>
+                                    <?php endif; ?>
+								<?php endif; ?>
+			                    <?php if ( isset( $active_components[esc_attr( $name )] ) && ! empty( $labels['settings'] ) ) : ?>
+			                    	<span><?php _e( '|', 'buddyboss' ); ?></span>
+                                    <span class="settings">
+                                        <a href="<?php echo esc_url( $labels['settings'] ); ?>">
+                                            <?php _e( 'Settings', 'buddyboss' ); ?>
+                                        </a>
+                                    </span>
+			                    <?php endif; ?>
+			                    <?php if ( isset( $active_components[esc_attr( $name )] ) && ! empty( $labels['view'] ) ) : ?>
+                                    <span><?php _e( '|', 'buddyboss' ); ?></span>
+                                    <span class="view">
+                                        <a href="<?php echo esc_url( $labels['view'] ); ?>">
+                                            <?php _e( 'View', 'buddyboss' ); ?>
+                                        </a>
+                                    </span>
+			                    <?php endif; ?>
+                            </div>
 						</td>
 
 						<td class="column-description desc">
@@ -241,6 +278,7 @@ function bp_core_admin_components_options() {
 	</table>
 
 	<input type="hidden" name="bp_components[members]" value="1" />
+	<input type="hidden" name="bp_components[xprofile]" value="1" />
 
 	<?php
 }
@@ -275,7 +313,6 @@ function bp_core_admin_components_settings_handler() {
 		$current_components = $bp->active_components;
 		$submitted = stripslashes_deep( $_POST['bp_components'] );
 		$bp->active_components = bp_core_admin_get_active_components_from_submitted_settings( $submitted );
-		$bp->active_components['xprofile'] = 1;
 		$uninstalled_components = array_diff_key($current_components, $bp->active_components);
 
 		bp_core_install( $bp->active_components );
@@ -285,14 +322,98 @@ function bp_core_admin_components_settings_handler() {
 		bp_core_uninstall( $uninstalled_components );
 	}
 
+	$current_action = 'all';
+	if ( isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'active', 'inactive' ) ) ) {
+		$current_action = $_GET['action'];
+	}
+
+	$page = bp_core_do_network_admin()  ? 'settings.php' : 'admin.php';
+
 	// Where are we redirecting to?
-	$base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'updated' => 'true' ), 'admin.php' ) );
+	$base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $current_action, 'updated' => 'true' ), $page ) );
 
 	// Redirect.
 	wp_redirect( $base_url );
 	die();
 }
 add_action( 'bp_admin_init', 'bp_core_admin_components_settings_handler' );
+
+/**
+ * Handle saving the Component settings.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @todo Use settings API when it supports saving network settings
+ */
+function bp_core_admin_components_activation_handler() {
+
+    if ( ! isset( $_GET['bp_component'] ) ) {
+	    return;
+    }
+
+	// Bail if nonce fails.
+	if ( ! check_admin_referer( 'bp-admin-component-activation' ) )
+		return;
+
+	// Settings form submitted, now save the settings. First, set active components.
+	if ( isset( $_GET['bp_component'] ) ) {
+
+		// Load up BuddyPress.
+		$bp = buddypress();
+
+		// Save settings and upgrade schema.
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		require_once( $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
+
+		$current_action = 'active';
+		if ( isset( $_GET['do_action'] ) && in_array( $_GET['do_action'], array( 'activate', 'deactivate' ) ) ) {
+			$current_action = $_GET['do_action'];
+		}
+
+		$current_components = $bp->active_components;
+
+		$submitted = stripslashes_deep( $_GET['bp_component'] );
+
+		switch ( $current_action ) {
+			case 'deactivate' :
+			    foreach( $current_components as $key => $component ) {
+			        if ( $submitted == $key ) {
+				        unset( $current_components[ $key ] );
+			        }
+                }
+				$bp->active_components = $current_components;
+				break;
+
+			case 'activate' :
+			default :
+			    $bp->active_components = array_merge( array( $submitted => $current_action == 'activate' ? '1' : '0' ), $current_components );
+				break;
+		}
+
+		$uninstalled_components = array_diff_key($current_components, $bp->active_components);
+
+		bp_core_install( $bp->active_components );
+		bp_core_add_page_mappings( $bp->active_components );
+		bp_update_option( 'bp-active-components', $bp->active_components );
+
+		bp_core_uninstall( $uninstalled_components );
+	}
+
+	$current_action = 'all';
+	if ( isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'active', 'inactive' ) ) ) {
+		$current_action = $_GET['action'];
+	}
+
+	$page = bp_core_do_network_admin()  ? 'settings.php' : 'admin.php';
+
+	// Where are we redirecting to?
+	$base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $current_action, 'updated' => 'true' ), $page ) );
+
+	// Redirect.
+	wp_redirect( $base_url );
+	die();
+}
+add_action( 'bp_admin_init', 'bp_core_admin_components_activation_handler' );
 
 /**
  * Calculates the components that should be active after save, based on submitted settings.
