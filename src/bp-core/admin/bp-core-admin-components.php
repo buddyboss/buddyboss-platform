@@ -224,13 +224,19 @@ function bp_core_admin_components_options() {
                                         </span>
                                     <?php endif; ?>
 								<?php endif; ?>
-			                    <?php if ( isset( $active_components[esc_attr( $name )] ) && !in_array( $name ) && ! empty( $labels['settings'] ) ) : ?>
-                                |
-			                    <?php endif; ?>
 			                    <?php if ( isset( $active_components[esc_attr( $name )] ) && ! empty( $labels['settings'] ) ) : ?>
+			                    	<span><?php _e( '|', 'buddyboss' ); ?></span>
                                     <span class="settings">
                                         <a href="<?php echo esc_url( $labels['settings'] ); ?>">
                                             <?php _e( 'Settings', 'buddyboss' ); ?>
+                                        </a>
+                                    </span>
+			                    <?php endif; ?>
+			                    <?php if ( isset( $active_components[esc_attr( $name )] ) && ! empty( $labels['view'] ) ) : ?>
+                                    <span><?php _e( '|', 'buddyboss' ); ?></span>
+                                    <span class="view">
+                                        <a href="<?php echo esc_url( $labels['view'] ); ?>">
+                                            <?php _e( 'View', 'buddyboss' ); ?>
                                         </a>
                                     </span>
 			                    <?php endif; ?>
