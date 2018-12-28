@@ -2451,7 +2451,7 @@ function bp_core_get_components( $type = 'all' ) {
 		'activity' => array(
 			'title'       => __( 'Activity Feeds', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-activity' ) , $page ) ),
-			'view'    	  => __( 'http://localhost:8888/buddyboss-theme/activity/', 'buddyboss' ),
+			'view'    	  => __( 'http://localhost:8888/buddyboss-theme/news-feed/', 'buddyboss' ),
 			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, and @mentions, all with email notification support.', 'buddyboss' )
 		),
 		'blogs'    => array(
