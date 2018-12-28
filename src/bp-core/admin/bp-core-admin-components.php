@@ -209,8 +209,7 @@ function bp_core_admin_components_options() {
 									<span class="required">
                                         <?php _e( 'Required', 'buddyboss' ); ?>
                                     </span>
-								<?php endif; ?>
-								<?php if ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
+								<?php elseif ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
                                     <?php if ( isset( $active_components[esc_attr( $name )] ) ) : ?>
                                         <span class="deactivate">
                                             <a href="<?php echo wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $action, 'bp_component' => $name, 'do_action' => 'deactivate' ) , $page ) ), 'bp-admin-component-activation' ); ?>">
