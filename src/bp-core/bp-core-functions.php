@@ -2412,13 +2412,14 @@ function bp_core_get_components( $type = 'all' ) {
 
 	$required_components = array(
 		'members' => array(
-			'title'       => __( 'Community Members', 'buddyboss' ),
-			'description' => __( 'Everything in a community website revolves around its members. <strong>(required)</strong>', 'buddyboss' )
+			'title'       => __( 'User Profiles', 'buddyboss' ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-xprofile' ) , $page ) ),
+			'description' => __( 'Everything in a community website revolves around its members.', 'buddyboss' )
 		),
 		'xprofile' => array(
 			'title'       => __( 'Profile Fields', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-xprofile' ) , $page ) ),
-			'description' => __( 'Customize your community with fully editable profile fields that allow your users to describe themselves. <strong>(required)</strong>', 'buddyboss' )
+			'settings'    => bp_get_admin_url( 'users.php?page=bp-profile-setup' ),
+			'description' => __( 'Customize your community with fully editable profile fields that allow your users to describe themselves.', 'buddyboss' )
 		),
 	);
 

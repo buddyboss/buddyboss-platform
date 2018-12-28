@@ -204,7 +204,12 @@ function bp_core_admin_components_options() {
 								<span aria-hidden="true"></span>
 								<strong><?php echo esc_html( $labels['title'] ); ?></strong>
 							</label>
-                            <div class="row-actions">
+                            <div class="row-actions visible">
+								<?php if ( in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
+									<span class="required">
+                                        <?php _e( 'Required', 'buddyboss' ); ?>
+                                    </span>
+								<?php endif; ?>
 								<?php if ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
                                     <?php if ( isset( $active_components[esc_attr( $name )] ) ) : ?>
                                         <span class="deactivate">
@@ -220,7 +225,7 @@ function bp_core_admin_components_options() {
                                         </span>
                                     <?php endif; ?>
 								<?php endif; ?>
-			                    <?php if ( isset( $active_components[esc_attr( $name )] ) && !in_array( $name, array( 'core', 'members', 'xprofile' ) ) && ! empty( $labels['settings'] ) ) : ?>
+			                    <?php if ( isset( $active_components[esc_attr( $name )] ) && !in_array( $name ) && ! empty( $labels['settings'] ) ) : ?>
                                 |
 			                    <?php endif; ?>
 			                    <?php if ( isset( $active_components[esc_attr( $name )] ) && ! empty( $labels['settings'] ) ) : ?>

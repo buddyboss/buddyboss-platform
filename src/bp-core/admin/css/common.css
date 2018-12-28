@@ -237,6 +237,15 @@ TABLE OF CONTENTS:
  */
 #bp-admin-component-form .wp-list-table.plugins .plugin-title {
 	width: 25%;
+	padding-bottom: 15px;
+}
+
+#bp-admin-component-form .subsubsub {
+	padding-bottom: 5px;
+}
+
+#bp-admin-component-form span.required {
+	color: #32373c;
 }
 
 @media screen and ( max-width: 782px ) {
