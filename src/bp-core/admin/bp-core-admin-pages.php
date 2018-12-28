@@ -148,7 +148,9 @@ function bp_core_admin_maybe_save_pages_settings() {
 		return false;
 	}
 
-	check_admin_referer( 'bp-pages-options' );
+	if ( ! check_admin_referer( 'bp-pages-options' ) ) {
+		return false;
+    };
 
 	if ( isset( $_POST['bp_pages'] ) ) {
 		$valid_pages = array_merge( bp_core_admin_get_directory_pages(), bp_core_admin_get_static_pages() );
