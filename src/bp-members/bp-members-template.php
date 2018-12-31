@@ -2642,7 +2642,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 				'link_text'         => __( 'View As', 'buddyboss' ),
 				'link_id'           => 'switch-' . $user_id,
 				'link_rel'          => 'start',
-				'link_class'        => 'switch-button view-as start',
+				'link_class'        => 'switch-button view-as start outline',
 			)
 			, $button_args );
 	}
