@@ -217,7 +217,7 @@ $settings = bp_email_get_appearance_settings();
 									if ( !empty( $image_src ) ) {
 										echo apply_filters( 'bp_email_header_blog_image',"<img src='" . esc_attr( $image_src[ 0 ] ) . "' alt='" . esc_attr( $blogname ) . "' style='margin:0; padding:0; border:none; display:block; max-height: 41px; width: auto;' border='0'>" );
 									} else {
-										echo apply_filters( 'bp_email_header_blog_name', $blogname );
+										echo apply_filters( 'bp_email_header_blog_name_with_no_image', $blogname );
 									}
 								} else {
 									echo apply_filters( 'bp_email_header_blog_name', $blogname );
