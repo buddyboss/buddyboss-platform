@@ -145,11 +145,10 @@
 				<# } #>
 
 				<# if ( include_you ) { #>
-					<span class="user-name"><?php _e('You', 'buddyboss'); ?></span>
+					<span class="user-name"><?php _e('You', 'buddyboss'); ?><# if ( data.toOthers ) { #><?php _e(',', 'buddyboss'); ?><# } #></span>
 				<# } #>
 
 				<# if ( data.toOthers ) { #>
-					<?php _e(',', 'buddyboss'); ?>
 					<span class="num-name">{{data.toOthers}}</span>
 				<# } #>
 			</a>

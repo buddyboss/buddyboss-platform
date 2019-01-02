@@ -3,6 +3,7 @@
 class BP_Admin_Integration_Sample extends BP_Admin_Integration_tab {
 
 	public function initialize() {
+		$this->tab_order = 999;
 		$this->tab_label = __( 'Sample', 'buddyboss' );
 		$this->tab_name  = 'bp-sample';
 		$this->required_plugin = 'PLUGIN_ENTRY_POINT';

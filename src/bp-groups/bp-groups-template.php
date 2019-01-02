@@ -786,7 +786,7 @@ function bp_group_status( $group = false ) {
 /**
  * Output the status description of the current group in the loop.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -798,7 +798,7 @@ function bp_group_status_description( $group = false ) {
     /**
      * Get the status description of the current group in the loop.
      *
-     * @since BuddyBoss 3.1.1
+     * @since BuddyBoss 1.0.0
      *
      * @param object|bool $group Optional. Group object.
      *                           Default: current group in loop.
@@ -824,7 +824,7 @@ function bp_group_status_description( $group = false ) {
         /**
          * Filters the status description of the current group in the loop.
          *
-         * @since BuddyBoss 3.1.1
+         * @since BuddyBoss 1.0.0
          *
          * @param string $description Status description of the current group in the loop.
          * @param object $group  Group object.
@@ -1733,7 +1733,7 @@ function bp_group_list_admins( $group = false ) {
 /**
  * Output markup listing group parents.
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
@@ -2330,7 +2330,7 @@ function bp_group_get_invite_status( $group_id = false ) {
 /**
  * Output the 'checked' value, if needed, for a given activity_feed_status on the group create/admin screens
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param string      $setting The setting you want to check against ('members',
  *                             'mods', or 'admins').
@@ -2351,7 +2351,7 @@ function bp_group_show_activity_feed_status_setting( $setting, $group = false ) 
  *
  * This function can be used either in or out of the loop.
  *
- * @since BuddyBos 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param int|bool $group_id Optional. The ID of the group whose activity feed status you want to
  *                           check. Default: the displayed group, or the current group
@@ -2389,7 +2389,7 @@ function bp_group_get_activity_feed_status( $group_id = false ) {
 	 *
 	 * Activity feed status in this case means who from the group can send invites.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $activity_feed_status Membership level needed to send an invite.
 	 * @param int    $group_id      ID of the group whose status is being checked.
@@ -2405,7 +2405,7 @@ function bp_group_get_activity_feed_status( $group_id = false ) {
  * parameter empty. To return the parent only when visible to a specific user,
  * specify a $user_id.
  *
- * @since BuddyBos 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param int|bool    $group_id ID of the group.
  * @param int|bool    $user_id  ID of a user to check group visibility for.
@@ -2443,7 +2443,7 @@ function bp_get_parent_group_id( $group_id = false, $user_id = false, $context =
  * To be a candidate for group parenthood, the group cannot be a descendent of
  * this group, and the user must be allowed to create child groups in that group.
  *
- * @since BuddyBos 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param  int|bool   $group_id ID of the group.
  * @param  int|bool   $user_id  ID of a user to check group visibility for.
@@ -2498,7 +2498,7 @@ function bp_get_possible_parent_groups( $group_id = false, $user_id = false ) {
  * To return all descendent groups, leave the $user_id parameter empty. To return
  * only those child groups visible to a specific user, specify a $user_id.
  *
- * @since BuddyBos 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param int|bool    $group_id ID of the group.
  * @param int|bool    $user_id  ID of a user to check group visibility for.
@@ -2561,7 +2561,7 @@ function bp_get_descendent_groups( $group_id = false, $user_id = false, $context
  * Determine whether a group should be included in results sets for a
  * user in a specific context.
  *
- * @since BuddyBos 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param object|bool $group   BP_Groups_Group object to check.
  * @param int|bool    $user_id ID of a user to check group visibility for.
@@ -2615,7 +2615,7 @@ function bp_include_group_by_context( $group = false, $user_id = false, $context
 	/**
 	 * Filters whether this group should be included for this user and context combination.
 	 *
-	 * @since BuddyBos 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool            $include Whether to include this group.
 	 * @param BP_Groups_Group $group   The group object in question.
@@ -3349,7 +3349,7 @@ function bp_group_is_member( $group = false ) {
 /**
  * Check if current user is allowed to post in a group.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @global object $groups_template
  *
@@ -4183,8 +4183,6 @@ function bp_group_has_members( $args = '' ) {
 		'search_terms'        => $search_terms_default,
 		'type'                => 'last_joined',
 	), 'group_has_members' );
-
-	error_log(print_r($r,1));
 
 	/*
 	 * If an empty search_terms string has been passed,
@@ -5723,7 +5721,7 @@ function bp_group_current_admin_tab() {
 /**
  * Echoes the current group members tab slug.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_group_current_members_tab() {
 	echo bp_get_group_current_members_tab();
@@ -5731,7 +5729,7 @@ function bp_group_current_members_tab() {
 /**
  * Returns the current group members tab slug.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  *
  * @return string $tab The current tab's slug.
@@ -5746,7 +5744,7 @@ function bp_get_group_current_members_tab() {
 	/**
 	 * Filters the current group members tab slug.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $tab Current group members tab slug.
 	 */

@@ -370,7 +370,7 @@ function bp_do_activation_redirect() {
 /**
  * Check if currently using legacy theme
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_check_for_legacy_theme() {
 	$using_lagecy = false;
@@ -391,7 +391,7 @@ function bp_check_for_legacy_theme() {
 /**
  * Print the notice warnning in admin pages
  *
- * @since buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_print_legacy_theme_deprecated_notice() {
 	$message = sprintf(
@@ -493,7 +493,7 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 /**
  * Get the slug of the current setting tab
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_core_get_admin_active_tab() {
 	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'buddypress' );
@@ -503,7 +503,7 @@ function bp_core_get_admin_active_tab() {
 /**
  * Get the object of the current setting tab
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_core_get_admin_active_tab_object() {
 	global $bp_admin_setting_tabs;
@@ -514,7 +514,7 @@ function bp_core_get_admin_active_tab_object() {
 /**
  * Return the admin url with the tab selected
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_setting_url($tab, $args = []) {
 	$args = wp_parse_args( $args, array(
@@ -528,7 +528,7 @@ function bp_core_admin_setting_url($tab, $args = []) {
 /**
  * Output the integration tabs in the admin area.
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param string $active_tab Name of the tab that is active. Optional.
  */
@@ -608,7 +608,7 @@ function bp_core_get_admin_integrations_tabs( $active_tab = '' ) {
 /**
  * Get the slug of the current integration tab
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_core_get_admin_integration_active_tab() {
 	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-learndash' );
@@ -618,7 +618,7 @@ function bp_core_get_admin_integration_active_tab() {
 /**
  * Get the object of the current integration tab
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_core_get_admin_integration_active_tab_object() {
 	global $bp_admin_integration_tabs;
@@ -629,7 +629,7 @@ function bp_core_get_admin_integration_active_tab_object() {
 /**
  * Return the admin url with the tab selected
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_integrations_url($tab, $args = []) {
 	$args = wp_parse_args( $args, array(
@@ -1337,7 +1337,7 @@ add_filter( 'bp_active_components', 'bp_xprofile_always_active' );
 /**
  * Custom metaboxes used by our 'bp-member-type' post type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_member_type_custom_metaboxes() {
 	add_meta_box( 'bp-member-type-key', __( 'Profile Type Key', 'buddyboss' ), 'bp_member_type_key_metabox', null, 'normal', 'high' );
@@ -1365,13 +1365,18 @@ function bp_member_type_custom_metaboxes() {
 			add_meta_box( 'bp-member-type-group-auto-join', __( 'Members with this profile type are only allowed to auto join groups with the following group types.', 'buddyboss' ), 'bp_member_type_group_auto_join_meta_box', null, 'normal', 'high' );
 		}
 	}
+
+	// Metabox for the member type invite.
+	if ( true === bp_disable_invite_member_type() ) {
+		add_meta_box( 'bp-member-type-invite', __( 'Member Invites', 'buddyboss' ), 'bp_member_type_invite_meta_box', null, 'normal', 'high' );
+	}
 }
 add_action( 'add_meta_boxes_' . bp_get_member_type_post_type(), 'bp_member_type_custom_metaboxes' );
 
 /**
  * Generate Member Type Key Meta box.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param WP_Post $post
  */
@@ -1389,7 +1394,7 @@ function bp_member_type_key_metabox( $post ) {
 /**
  * Generate Member Type Label Meta box.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param WP_Post $post
  */
@@ -1421,7 +1426,7 @@ function bp_member_type_labels_metabox( $post ) {
 /**
  * Generate Member Type Directory Meta box.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param WP_Post $post
  */
@@ -1449,7 +1454,7 @@ function bp_member_type_visibility_metabox( $post ) {
 /**
  * Shortcode metabox for the Member types admin edit screen.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param WP_Post $post
  */
@@ -1474,7 +1479,7 @@ function bp_profile_shortcode_metabox( $post ) {
 /**
  * Generate Member Type WP Role Meta box
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param WP_Post $post
  */
@@ -1532,7 +1537,7 @@ function bp_member_type_wprole_metabox( $post ) {
 /**
  * Function for which type of groups this member type can create.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $post
  */
@@ -1546,24 +1551,61 @@ function bp_member_type_group_create_metabox( $post ) {
 
 	$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_create', true ) ?: [];
 
+	?>
+	<p>
+		<input class="group-type-checkboxes" type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( 'none' ); ?>' <?php checked( in_array( 'none', $get_selected_group_types ) ); ?> tabindex="7" />
+		<strong><?php _e( '(None)', 'buddyboss' ); ?></strong>
+	</p>
+	<?php
+
 	foreach ( $get_all_registered_group_types as $group_type_id ) {
 
 		$group_type_key = get_post_meta( $group_type_id, '_bp_group_type_key', true );
 		$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];
 		?>
 		<p>
-			<input type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> tabindex="7" />
+			<input class="group-type-checkboxes"  type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> tabindex="7" />
 			<strong><?php _e( $group_type_label, 'buddyboss' ); ?></strong>
 		</p>
 		<?php
-
 	}
+
+	?>
+	<script type="text/javascript">
+		jQuery( document ).ready(function() {
+			jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').click(function () {
+				var checkValues = jQuery(this).val();
+				if ('none' === checkValues && jQuery(this).is(':checked')) {
+					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('checked', false);
+					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('disabled', true);
+					jQuery(this).attr('checked', true);
+					jQuery(this).attr('disabled', false);
+				} else {
+					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('disabled', false);
+				}
+			});
+
+			jQuery("#bp-member-type-group-create .inside .group-type-checkboxes").each(function () {
+				var checkValues = jQuery(this).val();
+				if ('none' === checkValues && jQuery(this).is(':checked')) {
+					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('checked', false);
+					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('disabled', true);
+					jQuery(this).attr('checked', true);
+					jQuery(this).attr('disabled', false);
+					return false;
+				} else {
+					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('disabled', false);
+				}
+			});
+		});
+	</script>
+	<?php
 }
 
 /**
  * Function for which type of members type can auto join in groups.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $post
  */
@@ -1571,7 +1613,7 @@ function bp_member_type_group_auto_join_meta_box( $post ) {
 
 	$get_all_registered_group_types = bp_get_active_group_types();
 
-	$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_auto_join', true );
+	$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_auto_join', true )?: [];
 
 	foreach ( $get_all_registered_group_types as $group_type_id ) {
 
@@ -1588,10 +1630,52 @@ function bp_member_type_group_auto_join_meta_box( $post ) {
 }
 
 /**
+ * Function for members with this profile type are only allowed to invites following profile types.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $post
+ */
+function bp_member_type_invite_meta_box( $post ) {
+
+
+	$meta = get_post_custom( $post->ID );
+	?>
+	<?php
+	$enable_invite = isset( $meta[ '_bp_member_type_enable_invite' ] ) ? $meta[ '_bp_member_type_enable_invite' ][ 0 ] : 1; //enabled by default
+	?>
+	<p>
+		<input type='checkbox' name='bp-member-type-enabled-invite' value='1' <?php checked( $enable_invite, 1 ); ?> tabindex="8" />
+		<strong><?php _e( 'Enable Invites for this profile type?', 'buddyboss' ); ?></strong>
+	</p>
+
+
+	<p><?php _e( 'Check Profile Type which you have to allow users to send invitation with following profile types.', 'buddyboss' ); ?></p>
+
+	<?php
+
+	$get_all_registered_profile_types = bp_get_active_member_types();
+
+	$get_selected_profile_types = get_post_meta( $post->ID, '_bp_member_type_allowed_member_type_invite', true )?: [];
+
+	foreach ( $get_all_registered_profile_types as $member_type_id ) {
+
+		$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
+		?>
+		<p>
+			<input type='checkbox' name='bp-member-type-invite[]' value='<?php echo esc_attr( $member_type_id ); ?>' <?php checked( in_array( $member_type_id, $get_selected_profile_types ) ); ?> tabindex="9" />
+			<strong><?php _e( $member_type_name, 'buddyboss' ); ?></strong>
+		</p>
+		<?php
+
+	}
+}
+
+/**
  * Function for saving metaboxes data of member type post data.
  * @param $post_id
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_save_member_type_post_metabox_data( $post_id ) {
 	global $wpdb, $error;
@@ -1645,6 +1729,8 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_enable_remove', $enable_remove );
 	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_create', $_POST['bp-group-type'] );
 	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', $_POST['bp-group-type-auto-join'] );
+	update_post_meta( $post_id, '_bp_member_type_allowed_member_type_invite', $_POST['bp-member-type-invite'] );
+	update_post_meta( $post_id, '_bp_member_type_enable_invite', $_POST['bp-member-type-enabled-invite'] );
 
 	// Get user previous role.
 	$old_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
@@ -1697,8 +1783,10 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 			if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
 				foreach ( $get_user_ids as $single_user ) {
 					$bp_user = new WP_User( $single_user );
-					// Remove role
-					$bp_user->remove_role( $bp_user->roles[0] );
+					foreach ( $bp_user->roles as $role ) {
+						// Remove role
+						$bp_user->remove_role( $role );
+					}
 					// Add role
 					$bp_user->add_role( $wp_roles[0] );
 				}
@@ -1712,7 +1800,7 @@ add_action( 'save_post', 'bp_save_member_type_post_metabox_data');
 /**
  * Function for displaying error message on edit profile type page.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_member_type_invalid_role_error_callback() {
 
@@ -1741,7 +1829,7 @@ add_action( 'admin_notices', 'bp_member_type_invalid_role_error_callback' );
 /**
  * Function setting up a admin action messages.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $messages
  *
@@ -1768,7 +1856,7 @@ add_filter( 'post_updated_messages', 'bp_member_type_filter_update_messages' );
 /**
  * Remove member type from users, when the Member Type is deleted.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $post_id
  */
@@ -1803,7 +1891,7 @@ add_action('admin_menu', 'bp_register_member_type_import_submenu_page');
 /**
  * Register submenu page for member type import.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  */
 function bp_register_member_type_import_submenu_page() {
@@ -1820,7 +1908,7 @@ function bp_register_member_type_import_submenu_page() {
 /**
  * Function for importing member types.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  */
 function bp_member_type_import_submenu_page() {
@@ -1893,7 +1981,7 @@ function bp_member_type_import_submenu_page() {
 /**
  * Function for display error message on extended profile page in admin.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_member_type_invalid_role_extended_profile_error_callback() {
 

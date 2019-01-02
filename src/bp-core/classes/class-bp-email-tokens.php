@@ -12,24 +12,24 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Represents an email tokens that will be sent in emails.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 class BP_Email_Tokens {
 
 	/**
 	 * message sender id
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	protected $_message_sender_id = false;
 
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function __construct() {
-		// set new email tokens added in BuddyBoss 3.1.1
+		// set new email tokens added in BuddyBoss 1.0.0
 		add_filter( 'bp_email_set_tokens', array( $this, 'set_tokens' ), 10, 3 );
 
 		//tokens for email after a new message is received, does not contain usable info about sender user
@@ -68,7 +68,7 @@ class BP_Email_Tokens {
 	/**
 	 * Get email tokens
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
 	 */
@@ -131,7 +131,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token group.small_card
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array $formatted_tokens
@@ -272,7 +272,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token group.card
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array $formatted_tokens
@@ -434,7 +434,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token status_update
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array $formatted_tokens
@@ -546,7 +546,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token activity_reply
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array $formatted_tokens
@@ -659,7 +659,7 @@ class BP_Email_Tokens {
 	/**
 	 * set message sender id
      *
-     * @since BuddyBoss 3.1.1
+     * @since BuddyBoss 1.0.0
      *
 	 * @param \BP_Messages_Message $message
 	 */
@@ -670,7 +670,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token message
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array $formatted_tokens
@@ -778,7 +778,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token member.card
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array $formatted_tokens
@@ -912,7 +912,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token poster.url
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array $formatted_tokens
@@ -939,7 +939,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for toke sender.url
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array $formatted_tokens
@@ -958,7 +958,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token group.description
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array $formatted_tokens
@@ -1031,7 +1031,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token group.invite_message
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array $formatted_tokens
@@ -1091,7 +1091,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token reply_content
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array $formatted_tokens
@@ -1187,7 +1187,7 @@ class BP_Email_Tokens {
 	/**
 	 * Generate the output for token discussion.content
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param \BP_Email $bp_email
 	 * @param array $formatted_tokens

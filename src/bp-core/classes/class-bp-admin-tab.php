@@ -1,10 +1,10 @@
 <?php
 /**
- * Main Buddyboss Admin Integration Tab Class.
+ * Main BuddyBoss Admin Integration Tab Class.
  *
  * @package BuddyBoss
  * @subpackage CoreAdministration
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.
@@ -17,7 +17,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Global variable name that store the tab instances
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 * @var string
 	 */
 	public $global_tabs_var  = '';
@@ -25,7 +25,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Admin menu page name
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 * @var string
 	 */
 	public $menu_page = '';
@@ -33,7 +33,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Tab label name
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 * @var string
 	 */
 	public $tab_label         = '';
@@ -41,7 +41,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Tab url slug
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 * @var string
 	 */
 	public $tab_name         = '';
@@ -49,7 +49,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Tab order
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 * @var integer
 	 */
 	public $tab_order        = 50;
@@ -67,7 +67,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Cutom class initialization
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function initialize() {
 		// nothing
@@ -76,7 +76,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Determine whether this tab is active
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function is_active() {
 		return true;
@@ -85,7 +85,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Register the tab to global variable
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function register_tab() {
 		global ${$this->global_tabs_var};
@@ -96,7 +96,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Register setting fields belong to this group
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function register_fields() {
 		// nothing
@@ -105,7 +105,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Save the fields if it's form post request
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function maybe_save_admin_settings() {
 		if ( ! $this->is_saving() ) {
@@ -120,7 +120,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Determine whether current request is saving on the current tab
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function is_saving() {
 		if ( ! isset( $_GET['page'] ) || ! isset( $_POST['submit'] ) ) {
@@ -144,7 +144,7 @@ abstract class BP_Admin_Tab {
 	 * By default it'll loop throught the setting group's fields, but allow
 	 * extended classes to have their own logic if needed
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function settings_save() {
 		global $wp_settings_fields;
@@ -162,21 +162,21 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Method trigger after data are saved
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	abstract public function settings_saved();
 
 	/**
 	 * Method that should return the current active tab
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	abstract public function get_active_tab();
 
 	/**
 	 * Return if the tab should be visible. Default to if there's any setting fields
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function is_tab_visible() {
 		return $this->has_fields();
@@ -185,7 +185,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Return if this tab has setting fields
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function has_fields() {
 		global $wp_settings_fields;
@@ -196,7 +196,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Output the form html on the setting page (not including tab and page title)
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function form_html() {
 		settings_fields( $this->tab_name );
@@ -213,7 +213,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Add a wp setting section into current tab. Chainable
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function add_section( $id, $title, $callback = '__return_null' ) {
 		add_settings_section( $id, $title, $callback, $this->tab_name );
@@ -225,7 +225,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Add a wp setting field to a wp setting section. Chainable
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function add_field( $name, $label, $callback, $field_args = [], $callback_args = [], $id = null ) {
 		if ( !$id ) {
@@ -241,7 +241,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Alias to add input text box field
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function add_input_field( $name, $label, $callback_args = [], $field_args = 'sanitize_text_field', $id = null ) {
 		$callback = [$this, 'render_input_field_html'];
@@ -261,7 +261,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Alias to add input check box field
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function add_checkbox_field( $name, $label, $callback_args = [], $field_args = 'intval', $id = null ) {
 		$callback = [$this, 'render_checkbox_field_html'];
@@ -281,7 +281,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Alias to add input select field
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function add_select_field( $name, $label, $callback_args = [], $field_args = 'sanitize_text_field', $id = null ) {
 		$callback = [$this, 'render_select_field_html'];
@@ -301,7 +301,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Output the input field html based on the arguments
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function render_input_field_html( $args ) {
 		printf(
@@ -318,7 +318,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Output the checkbox field html based on the arguments
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function render_checkbox_field_html( $args ) {
 		$input_value = is_null( $args['input_value'] )? $args['input_default'] : $args['input_value'];
@@ -341,7 +341,7 @@ abstract class BP_Admin_Tab {
 	/**
 	 * Output the select field html based on the arguments
 	 *
-	 * @since  buddyboss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function render_select_field_html( $args ) {
 		$input_value = is_null( $args['input_value'] )? $args['input_default'] : $args['input_value'];

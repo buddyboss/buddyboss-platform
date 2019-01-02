@@ -1194,7 +1194,7 @@ function groups_is_user_member( $user_id, $group_id ) {
 /**
  * Check whether a user is allowed to post in a given group.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param int $user_id ID of the user.
  * @param int $group_id ID of the group.
@@ -2703,7 +2703,7 @@ function bp_get_current_group_directory_type() {
 /**
  * Is this a user's "My Groups" view? This can happen on the main directory or
  * at a user's profile (/members/username/groups/).
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return bool True if yes.
  */
@@ -2738,7 +2738,7 @@ add_action( 'groups_delete_group', 'bp_remove_group_type_on_group_delete' );
 /**
  * Get the member's group role
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param  int   $user_id ID of the user.
  * @param  int   $group_id ID of the group.
@@ -2759,7 +2759,7 @@ function bp_get_user_group_role_title( $user_id = false, $group_id = false ) {
 	/**
 	 * Filters member's group role title
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $role_title User group role title.
 	 */
@@ -2769,7 +2769,7 @@ function bp_get_user_group_role_title( $user_id = false, $group_id = false ) {
 /**
  * Get inviter for member's group invitation
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param  int   $user_id ID of the user.
  * @param  int   $group_id ID of the group.
@@ -2806,7 +2806,7 @@ function bp_groups_get_invited_by( $user_id = false, $group_id = false ) {
 /**
  * Get a user's invite message.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param int $user_id The user ID.
  * @param int $group_id The group ID.
@@ -2820,7 +2820,7 @@ function bp_groups_get_invite_messsage_for_user( $user_id, $group_id ) {
  *
  * Message is cleared when an invite is accepted, rejected or deleted.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param int $user_id The user ID.
  * @param int $group_id The group ID.
@@ -2835,7 +2835,7 @@ add_action( 'groups_delete_invite', 'bp_groups_clear_invite_message_for_user', 1
 /**
  * Clear a user's invite message on uninvite.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param int $group_id The group ID.
  * @param int $user_id The user ID.
@@ -2849,7 +2849,7 @@ add_action( 'groups_remove_member', 'bp_groups_clear_invite_message_on_uninvite'
 /**
  * Output the name of the group type post type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return string   custom post type of group type.
  */
@@ -2860,7 +2860,7 @@ function bp_group_type_post_type() {
 /**
  * Returns the name of the group type post type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return string The name of the group type post type.
  */
@@ -2869,7 +2869,7 @@ function bp_get_group_type_post_type() {
 	/**
 	 * Filters the name of the group type post type.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $value group Type post type name.
 	 */
@@ -2879,7 +2879,7 @@ function bp_get_group_type_post_type() {
 /**
  * Return labels used by the group type post type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return array
  */
@@ -2888,7 +2888,7 @@ function bp_get_group_type_post_type_labels() {
 	/**
 	 * Filters group type post type labels.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param array $value Associative array (name => label).
 	 */
@@ -2909,7 +2909,7 @@ function bp_get_group_type_post_type_labels() {
 /**
  * Return array of features that the group type post type supports.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return array
  */
@@ -2918,7 +2918,7 @@ function bp_get_group_type_post_type_supports() {
 	/**
 	 * Filters the features that the group type post type supports.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param array $value Supported features.
 	 */
@@ -2931,7 +2931,7 @@ function bp_get_group_type_post_type_supports() {
 /**
  * Return group type key.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $post_id
  * @return mixed|string
@@ -2958,7 +2958,7 @@ function bp_get_group_type_key( $post_id ) {
 /**
  * Get all active group types.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @global type $wpdb
  * @return type array
@@ -2990,7 +2990,7 @@ if ( true === bp_disable_group_type_creation() ) {
 /**
  * Register all active group types.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  */
 function bp_register_active_group_types() {
@@ -3068,7 +3068,7 @@ function bp_get_total_count_by_group_types( $group_type = '', $taxonomy = 'bp_gr
 /**
  * Function for displaying a short code data.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $atts
  *
@@ -3138,7 +3138,7 @@ function bp_group_type_short_code_add_body_class( $class ) {
 /**
  * Function for excluding specific group types from search and listing.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param bool $qs
  * @param bool $object
@@ -3167,7 +3167,7 @@ function bp_group_type_exclude_groups_from_directory_and_searches( $qs=false, $o
 /**
  * Function for get groups removed from group type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return array
  */
@@ -3205,7 +3205,7 @@ function bp_get_groups_of_removed_group_types() {
 /**
  * Function for making a array flatten.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $array
  *
@@ -3230,7 +3230,7 @@ function bp_group_ids_array_flatten($array) {
 /**
  * Function for removed group type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return array
  */
@@ -3271,7 +3271,7 @@ function bp_get_removed_group_types(){
 /**
  * Get group count of group type tabs groups.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param string $group_type The group type.
  * @param string $taxonomy The group taxonomy.
@@ -3309,7 +3309,7 @@ function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_grou
 	$group_meta = $bp->table_prefix . 'bp_groups_groupmeta';
 	$term_relationships = $wpdb->term_relationships;
 
-	$query = "SELECT g.id as id FROM $groups g JOIN $group_meta gm_last_activity on ( g.id = gm_last_activity.group_id ) WHERE  g.id IN ( SELECT object_id FROM $term_relationships WHERE wp_term_relationships.term_taxonomy_id IN ($taxonomy_id) ) AND gm_last_activity.meta_key = 'last_activity'";
+	$query = "SELECT g.id as id FROM $groups g JOIN $group_meta gm_last_activity on ( g.id = gm_last_activity.group_id ) WHERE  g.id IN ( SELECT object_id FROM $term_relationships WHERE $term_relationships.term_taxonomy_id IN ($taxonomy_id) ) AND gm_last_activity.meta_key = 'last_activity'";
 	$results = $wpdb->get_results( $query, ARRAY_A );
 
 	return $results;
@@ -3318,7 +3318,7 @@ function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_grou
 /**
  * Function for getting the post id of particular member type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param string $group_type
  *

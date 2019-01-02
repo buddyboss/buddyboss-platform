@@ -34,7 +34,7 @@ function bp_activity_add_admin_menu() {
 		'bp_moderate',
 		'bp-activity',
 		'bp_activity_admin',
-		'div'
+		'dashicons-rss'
 	);
 
 	// Hook into early actions to load custom CSS and our init handler.

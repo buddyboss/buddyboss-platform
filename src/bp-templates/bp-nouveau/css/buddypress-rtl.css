@@ -2344,6 +2344,10 @@ body.no-js .single-item-header .js-self-profile-button {
   clear: both;
 }
 
+.groups-header .action .button {
+  margin-left: 10px;
+}
+
 .groups-header .moderators-lists {
   margin-top: 0;
   display: table-cell;
@@ -4607,18 +4611,25 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
   line-height: inherit;
 }
 
-a[data-bp-close] span:before,
-button[data-bp-close] span:before {
-  font-size: 32px;
+a[data-bp-close] span,
+button[data-bp-close] span {
+  font-size: 24px;
 }
 
-a[data-bp-close],
-button[data-bp-close] {
+.buddypress .buddypress-wrap a[data-bp-close],
+.buddypress .buddypress-wrap button[data-bp-close] {
   border: 0;
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  width: 32px;
+  padding: 0;
+  height: auto;
+  margin-bottom: auto;
+  margin-top: 10px;
+  margin-left: 12px;
+}
+
+.buddypress .buddypress-wrap a[data-bp-close]:hover, .buddypress .buddypress-wrap a[data-bp-close]:focus,
+.buddypress .buddypress-wrap button[data-bp-close]:hover,
+.buddypress .buddypress-wrap button[data-bp-close]:focus {
+  background: transparent;
 }
 
 .bp-feedback.no-icon a[data-bp-close],

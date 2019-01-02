@@ -70,6 +70,13 @@ function bp_profile_search_escaped_form_data ( $form = false ) {
                 $f->min = $f->value['min'];
                 $f->max = $f->value['max'];
                 break;
+                
+            case 'date_range':
+                if (!isset ($f->value['min']))  $f->value['min'] = array( 'day' => '', 'month' => '', 'year' => '' );
+                if (!isset ($f->value['max']))  $f->value['max'] = array( 'day' => '', 'month' => '', 'year' => '' );
+                $f->min = $f->value['min'];
+                $f->max = $f->value['max'];
+                break;
 
             case 'textbox':
             case 'number':
@@ -121,8 +128,19 @@ function bp_profile_search_escaped_form_data ( $form = false ) {
 
 		$f->label = esc_attr ($f->label);
 		$f->description = esc_attr ($f->description);
-		foreach ($f->values as $k => $value)  $f->values[$k] = esc_attr (stripslashes ($value));
-		$options = array ();
+		
+        foreach ( $f->values as $k => $value ) {
+            if ( is_array( $value ) ) {
+                foreach( $value as $sub_k => $sub_value ) {
+                    $f->values[ $k ][ $sub_k ] = esc_attr( stripslashes( $sub_value ) );
+                }
+            } else {
+                $f->values[ $k ] = esc_attr( stripslashes( $value ) );
+            }
+            
+        }
+        
+        $options = array ();
 		foreach ($f->options as $key => $label)  $options[esc_attr ($key)] = esc_attr ($label);
 		$f->options = $options;
 	}

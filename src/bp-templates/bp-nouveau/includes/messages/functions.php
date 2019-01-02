@@ -298,6 +298,35 @@ function bp_nouveau_push_sitewide_notices() {
 }
 
 /**
+ * Disable the WP Editor buttons not allowed in invites content.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param array $buttons The WP Editor buttons list.
+ * @param array          The filtered WP Editor buttons list.
+ */
+function bp_nouveau_invites_mce_buttons( $buttons = array() ) {
+	$remove_buttons = array(
+		'wp_more',
+		'spellchecker',
+		'wp_adv',
+		'fullscreen',
+		'alignleft',
+		'alignright',
+		'aligncenter',
+		'formatselect',
+	);
+
+	// Remove unused buttons
+	$buttons = array_diff( $buttons, $remove_buttons );
+
+	// Add the image button
+	array_push( $buttons, 'image' );
+
+	return $buttons;
+}
+
+/**
  * Disable the WP Editor buttons not allowed in messages content.
  *
  * @since BuddyPress 3.0.0

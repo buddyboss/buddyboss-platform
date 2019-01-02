@@ -836,7 +836,7 @@ add_filter( 'bp_activity_set_mentions_scope_args', 'bp_activity_filter_mentions_
  *   - the current user is following (on a user page or member directory); or
  *   - are following the displayed user on the displayed user's followers page
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param array|string $qs The querystring for the BP loop.
  * @param str $object The current object for the querystring.
@@ -872,7 +872,7 @@ add_filter( 'bp_ajax_querystring', 'bp_add_member_follow_scope_filter', 20, 2 );
  * Only applicable to BuddyPress 2.2+.  Older BP installs uses the code
  * available in /backpat/activity-scope.php.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param array $retval Empty array by default.
  * @param array $filter Current activity arguments.

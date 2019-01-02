@@ -495,7 +495,7 @@ function bp_email_redirect_to_customizer() {
  * @param array $components Core Customizer components list.
  * @return array (Maybe) modified components list.
  * 
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_email_remove_widgets_panel( $components ) {
     $i = array_search( 'widgets', $components );

@@ -9,11 +9,15 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	}
 
 	public function settings_save() {
+        $if_disabled_before_saving = bp_disable_advanced_profile_search();
+        
 		parent::settings_save();
+        
+        $if_disabled_after_saving = bp_disable_advanced_profile_search();
 
         /**
          * sync bp-enable-member-dashboard with cutomizer settings.
-         * @since BuddyBoss 3.1.1
+         * @since BuddyBoss 1.0.0
          */
         $bp_nouveau_appearance = bp_get_option( 'bp_nouveau_appearance', array() );
         $bp_nouveau_appearance[ 'user_front_page' ] = isset( $_POST[ 'bp-enable-member-dashboard' ] ) ? $_POST[ 'bp-enable-member-dashboard' ] : 0;
@@ -27,6 +31,19 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
         		$last_name_field->is_required = true;
         		$last_name_field->save();
         	}
+        }
+        
+        if ( $if_disabled_before_saving && ! $if_disabled_after_saving ) {
+            /**
+             * Advanced profile search was disabled before and is now enabled.
+             * So ideally, the new 'profile search' menu should now be visible under users nav.
+             * But that doesn't happen becuase by the time settings are updated, register_post_type hooks have already been executed.
+             * So user doesn't see that untill next reload/request.
+             * 
+             * To avoid that, we'll need to do a force redirect.
+             */
+            wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bp-settings&tab=bp-xprofile' ) );
+            exit();
         }
 	}
 
@@ -70,7 +87,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	/**
 	 * Enable profile dashboard/front-page template.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 */
 	public function bp_admin_setting_callback_member_dashboard() {
@@ -115,7 +132,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	/**
 	 * Enable member profile search.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 */
 	public function bp_admin_setting_callback_profile_search() {
@@ -128,7 +145,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	/**
 	 * Provide link to access import setting.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 */
 	public function bp_admin_setting_callback_member_type_import() {
@@ -143,7 +160,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	/**
 	 * Enable member type.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 */
 	public function bp_admin_setting_callback_member_type_enable_disable() {
@@ -156,7 +173,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	/**
 	 * Enable Display on profile?
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 */
 	public function bp_admin_setting_callback_member_type_display_on_profile() {

@@ -15,7 +15,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
 /**
  * Custom allowed tags for forum topics and replies
  *
- * Allows all users to post links, quotes, code, formatting, lists, and images
+ * Allows all users to post paragraphs, links, quotes, code, formatting, lists, and images
  *
  * @since bbPress (r4603)
  *
@@ -23,6 +23,9 @@ if ( !defined( 'ABSPATH' ) ) exit;
  */
 function bbp_kses_allowed_tags() {
 	return apply_filters( 'bbp_kses_allowed_tags', array(
+
+		//Paragraph
+		'p' => array(),
 
 		// Links
 		'a' => array(

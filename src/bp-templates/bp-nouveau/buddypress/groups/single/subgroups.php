@@ -2,8 +2,8 @@
 /**
  * BuddyBoss - Groups Subgroups
  *
- * @since Buddyboss 3.1.1
- * @version 3.1.1
+ * @since BuddyBoss 1.0.0
+ * @version 1.0.0
  */
 
 ?>

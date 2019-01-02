@@ -628,7 +628,7 @@ function bp_core_add_jquery_validate_inline_js() {
 /**
  * Enqueues jquery.mask.js on BuddyPress pages.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_core_add_jquery_mask() {
 	if ( ! is_buddypress() ) {
@@ -652,7 +652,7 @@ add_action( 'bp_enqueue_scripts', 'bp_core_add_jquery_mask' );
 /**
  * Prints script to add input mask to all telephone fields.
  * 
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_core_add_jquery_mask_inline_js () {
     ?>

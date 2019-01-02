@@ -2,11 +2,11 @@
 /**
  * BuddyBoss Invites Loader.
  *
- * A invites component, Allow you users to send email invites to non-members to join the network.
+ * A invites component, Allow your users to send email invites to non-members to join the network.
  *
  * @package BuddyBoss
  * @subpackage InvitesLoader
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the bp-invites component.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_setup_invites() {
 	buddypress()->invites = new BP_Invites_Component();

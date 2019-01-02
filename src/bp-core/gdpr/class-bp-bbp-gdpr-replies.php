@@ -3,7 +3,7 @@
  * Core component classes.
  *
  * @package BuddyBoss
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.
@@ -29,7 +29,7 @@ class BP_Bbp_Gdpr_Replies {
 	 * @param $exporters
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return mixed
 	 */
@@ -46,7 +46,7 @@ class BP_Bbp_Gdpr_Replies {
 	 * @param $erasers
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return mixed
 	 */
@@ -64,7 +64,7 @@ class BP_Bbp_Gdpr_Replies {
 	 * @param int $page
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
 	 */
@@ -153,7 +153,7 @@ class BP_Bbp_Gdpr_Replies {
 	 * @param $per_page
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array|bool
 	 */
@@ -179,7 +179,7 @@ class BP_Bbp_Gdpr_Replies {
 	 * @param int $page
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
 	 */

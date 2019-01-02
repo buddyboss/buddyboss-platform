@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage LearnDash
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Set up the bp learndash integration.
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_register_learndash_integration() {
 	require_once dirname( __FILE__ ) . '/classes/bp-learndash-integration.php';

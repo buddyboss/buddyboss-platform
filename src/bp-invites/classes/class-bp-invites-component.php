@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage InvitesLoader
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Creates our Invites component.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 class BP_Invites_Component extends BP_Component {
 
@@ -21,7 +21,7 @@ class BP_Invites_Component extends BP_Component {
 	/**
 	 * Default invite extension.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 * @todo Is this used anywhere? Is this a duplicate of $default_extension?
 	 * @var string
 	 */
@@ -30,7 +30,7 @@ class BP_Invites_Component extends BP_Component {
 	/**
 	 * Default invite extension.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 * @var string
 	 */
 	public $default_extension;
@@ -38,7 +38,7 @@ class BP_Invites_Component extends BP_Component {
 	/**
 	 * Illegal invite names/slugs.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 * @var array
 	 */
 	public $forbidden_names;
@@ -46,7 +46,7 @@ class BP_Invites_Component extends BP_Component {
 	/**
 	 * Start the invites component creation process.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function __construct() {
 		parent::start(
@@ -64,7 +64,7 @@ class BP_Invites_Component extends BP_Component {
 	/**
 	 * Include Invites component files.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @see BP_Component::includes() for a description of arguments.
 	 *
@@ -92,7 +92,7 @@ class BP_Invites_Component extends BP_Component {
 	 *
 	 * Only load up certain code when on specific pages.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function late_includes() {
 		// Bail if PHPUnit is running.
@@ -148,7 +148,7 @@ class BP_Invites_Component extends BP_Component {
 	 * The BP_INVITES_SLUG constant is deprecated, and only used here for
 	 * backwards compatibility.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @see BP_Component::setup_globals() for a description of arguments.
 	 *
@@ -179,7 +179,7 @@ class BP_Invites_Component extends BP_Component {
 	/**
 	 * Set up canonical stack for this component.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function setup_canonical_stack() {
 		if ( ! bp_is_invites_component() ) {
@@ -193,7 +193,7 @@ class BP_Invites_Component extends BP_Component {
 	/**
 	 * Set up component navigation.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @see BP_Component::setup_nav() for a description of arguments.
 	 *
@@ -262,7 +262,7 @@ class BP_Invites_Component extends BP_Component {
 	/**
 	 * Set up the component entries in the WordPress Admin Bar.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @see BP_Component::setup_nav() for a description of the $wp_admin_nav
 	 *      parameter array.
@@ -313,7 +313,7 @@ class BP_Invites_Component extends BP_Component {
 	/**
 	 * Set up the title for pages and <title>.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function setup_title() {
 

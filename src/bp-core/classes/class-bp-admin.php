@@ -121,6 +121,7 @@ class BP_Admin {
 		require( $this->admin_dir . 'bp-core-admin-settings.php'   );
 		require( $this->admin_dir . 'bp-core-admin-functions.php'  );
 		require( $this->admin_dir . 'bp-core-admin-components.php' );
+		require( $this->admin_dir . 'bp-core-admin-pages.php'      );
 		require( $this->admin_dir . 'bp-core-admin-slugs.php'      );
 		require( $this->admin_dir . 'bp-core-admin-tools.php'      );
 	}
@@ -234,6 +235,15 @@ class BP_Admin {
 			$this->capability,
 			'bp-components',
 			'bp_core_admin_components_settings'
+		);
+
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( 'Pages', 'buddyboss' ),
+			__( 'Pages', 'buddyboss' ),
+			$this->capability,
+			'bp-pages',
+			'bp_core_admin_pages_settings'
 		);
 
 		$hooks[] = add_submenu_page(
@@ -413,7 +423,6 @@ class BP_Admin {
 		require_once trailingslashit( $bp->plugin_dir  . 'bp-core/classes' ) . '/class-bp-admin-tab.php';
 		require_once trailingslashit( $bp->plugin_dir  . 'bp-core/classes' ) . '/class-bp-admin-setting-tab.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-general.php';
-		require_once $this->admin_dir . '/settings/bp-admin-setting-pages.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-xprofile.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-activity.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-groups.php';
@@ -421,6 +430,7 @@ class BP_Admin {
 		require_once $this->admin_dir . '/settings/bp-admin-setting-messages.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-registration.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-forums.php';
+		require_once $this->admin_dir . '/settings/bp-admin-setting-search.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-credit.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-invites.php';
 	}
@@ -468,7 +478,8 @@ class BP_Admin {
 	 * Add Settings link to plugins area.
 	 *
 	 * @since BuddyPress 1.6.0
-	 * @since BuddyBoss 3.1.1 Updated the Settings path
+	 * @since BuddyBoss 1.0.0 
+	 * Updated the Settings path
 	 *
 	 * @param array  $links Links array in which we would prepend our link.
 	 * @param string $file  Current plugin basename.

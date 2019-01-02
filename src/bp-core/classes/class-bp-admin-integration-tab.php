@@ -1,10 +1,10 @@
 <?php
 /**
- * Main Buddyboss Admin Integration Tab Class.
+ * Main BuddyBoss Admin Integration Tab Class.
  *
  * @package BuddyBoss
  * @subpackage CoreAdministration
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.

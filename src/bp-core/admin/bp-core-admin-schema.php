@@ -204,7 +204,7 @@ function bp_core_install_friends() {
 /**
  * Install database tables for the Follow feature.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  */
 function bp_core_install_follow() {
@@ -529,7 +529,7 @@ function bp_core_install_blog_tracking() {
 /**
  * Run the bbpress activation,
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_core_install_discussion_forums() {
 	require_once buddypress()->plugin_dir . 'bp-forums/classes/class-bbpress.php';
@@ -542,7 +542,7 @@ function bp_core_install_discussion_forums() {
 /**
  * Run the bbpress deactivation,
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_core_uninstall_discussion_forums() {
 	bbp_deactivation();
@@ -669,7 +669,7 @@ function bp_core_install_emails() {
 /**
  * Add default bbp emails.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_core_install_bbp_emails() {
 	$defaults = array(
@@ -711,7 +711,7 @@ function bp_core_install_bbp_emails() {
 	/**
 	 * Fires after BuddyPress adds the posts for its bbp emails.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	do_action( 'bp_core_install_bbp_emails' );
 }
@@ -719,7 +719,7 @@ function bp_core_install_bbp_emails() {
 /**
  * Add default invites emails.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_core_install_invites_email() {
 	$defaults = array(
@@ -759,7 +759,7 @@ function bp_core_install_invites_email() {
 	/**
 	 * Fires after BuddyPress adds the posts for its bbp emails.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	do_action( 'bp_core_install_invites_email' );
 }

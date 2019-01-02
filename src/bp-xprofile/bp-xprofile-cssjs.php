@@ -33,7 +33,8 @@ add_action( 'bp_admin_enqueue_scripts', 'xprofile_add_admin_css' );
  * Enqueue the jQuery libraries for handling drag/drop/sort.
  *
  * @since BuddyPress 1.5.0
- * @since BuddyBoss 3.1.1 Removed autolink strings as autolink functionality is no longer used.
+ * @since BuddyBoss 1.0.0
+ * Removed autolink strings as autolink functionality is no longer used.
  */
 function xprofile_add_admin_js() {
 	if ( !empty( $_GET['page'] ) && strpos( $_GET['page'], 'bp-profile-setup' ) !== false ) {

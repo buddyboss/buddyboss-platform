@@ -131,7 +131,7 @@ add_filter( 'edit_profile_url', 'bp_members_edit_profile_url', 10, 3 );
 /**
  * Disables the front page template if you are looking at someone else's profile.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param array $settings
  * @return array

@@ -3820,7 +3820,7 @@ function bp_activity_show_filters( $context = '' ) {
 /**
  * Output the follow component slug.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  */
 function bp_follow_slug() {
@@ -3829,7 +3829,7 @@ function bp_follow_slug() {
 /**
  * Return the follow component slug.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return string
  */
@@ -3838,7 +3838,7 @@ function bp_get_follow_slug() {
 	/**
 	 * Filters the follow component slug.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $value Follow component slug.
 	 */
@@ -3920,7 +3920,7 @@ function bp_get_following_ids( $args = '' ) {
 /**
  * Output the Follow button.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @see bp_add_follow_button() for information on arguments.
  *
@@ -3943,7 +3943,7 @@ function bp_add_follow_button( $leader_id = false, $follower_id = false, $button
  *
  * @return mixed String of the button on success.  Boolean false on failure.
  * @uses bp_get_button() Renders a button using the BP Button API
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $button_args = array() ) {
 
@@ -4002,7 +4002,7 @@ function bp_get_add_follow_button( $leader_id = false, $follower_id = false, $bu
 	/**
 	 * Filters the HTML for the follow button.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $button HTML markup for follow button.
 	 */

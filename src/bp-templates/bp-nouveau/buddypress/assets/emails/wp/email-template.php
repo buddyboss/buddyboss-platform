@@ -215,12 +215,12 @@ $settings = bp_email_get_appearance_settings();
 								if ( !empty( $attachment_id ) ) {
 									$image_src = wp_get_attachment_image_src( $attachment_id, array( 180, 41 ) );
 									if ( !empty( $image_src ) ) {
-										echo "<img src='" . esc_attr( $image_src[ 0 ] ) . "' alt='" . esc_attr( $blogname ) . "' style='margin:0; padding:0; border:none; display:block; max-height: 41px; width: auto;' border='0'>";
+										echo apply_filters( 'bp_email_header_blog_image',"<img src='" . esc_attr( $image_src[ 0 ] ) . "' alt='" . esc_attr( $blogname ) . "' style='margin:0; padding:0; border:none; display:block; max-height: 41px; width: auto;' border='0'>" );
 									} else {
-										echo $blogname;
+										echo apply_filters( 'bp_email_header_blog_name_with_no_image', $blogname );
 									}
 								} else {
-									echo $blogname;
+									echo apply_filters( 'bp_email_header_blog_name', $blogname );
 								}
 
 								/**
@@ -236,7 +236,7 @@ $settings = bp_email_get_appearance_settings();
 								/**
 								 * Fires before the display of the email recipient.
 								 *
-								 * @since BuddyPress 3.1.1
+								 * @since BuddyBoss 1.0.0
 								 */
 								do_action( 'bp_before_email_recipient' );
 
@@ -250,7 +250,7 @@ $settings = bp_email_get_appearance_settings();
 								/**
 								 * Fires after the display of the email recipient.
 								 *
-								 * @since BuddyPress 3.1.1
+								 * @since BuddyBoss 1.0.0
 								 */
 								do_action( 'bp_after_email_recipient' );
 								?>
@@ -293,7 +293,7 @@ $settings = bp_email_get_appearance_settings();
 								do_action( 'bp_before_email_footer' );
 								?>
 
-								<span class="footer_text"><?php echo nl2br( stripslashes( $settings['footer_text'] ) ); ?></span>
+								<span class="footer_text"><?php echo apply_filters( 'bp_email_footer_text', nl2br( stripslashes( $settings['footer_text'] ) ) ); ?></span>
 
 								<?php
 								/**

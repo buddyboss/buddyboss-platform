@@ -181,7 +181,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
     /**
      * Returns an array of phone formats
      * 
-     * @since BuddyBoss 3.1.1
+     * @since BuddyBoss 1.0.0
      * 
      * @return array
      */
@@ -205,7 +205,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
     /**
      * Get all settings for field.
      * 
-     * @since BuddyBoss 3.1.1
+     * @since BuddyBoss 1.0.0
      * 
      * @param BP_XProfile_Field $field
      * @return array
@@ -232,7 +232,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
     /**
 	 * Save settings from the field edit screen in the Dashboard.
 	 *
-     * @since BuddyBoss 3.1.1
+     * @since BuddyBoss 1.0.0
      * 
 	 * @param int   $field_id ID of the field.
 	 * @param array $settings Array of settings.
@@ -270,7 +270,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
     /**
      * Prints the jquery input mask script
      * 
-     * @since BuddyBoss 3.1.1 
+     * @since BuddyBoss 1.0.0 
      * @param BP_XProfile_Field $current_field
      * @return void
      */

@@ -17,6 +17,7 @@ TABLE OF CONTENTS:
 	2.2 Settings - Components
 	2.3 Tools
 	2.4 Tooltips
+	2.5 Settings - Tabs
 3.0 Users
 	3.1 Users List
 	3.2 Site Notices
@@ -234,67 +235,20 @@ TABLE OF CONTENTS:
 /*
  * 2.2 Settings - Components
  */
-.buddyboss_page_bp-components td.plugin-title span {
-	float: right;
-	width: 18px;
-	height: 18px;
-	margin-left: 5px;
-}
-
-.buddyboss_page_bp-components td.plugin-title span:before {
-	font-family: dashicons;
-	font-size: 18px;
-}
-
-.buddyboss_page_bp-components tr.activity td.plugin-title span:before {
-	content: "\f303";
-}
-
-.buddyboss_page_bp-components tr.notifications td.plugin-title span:before {
-	content: "\f339";
-}
-
-.buddyboss_page_bp-components tr.xprofile td.plugin-title span:before {
-	content: "\f336";
-}
-
-.buddyboss_page_bp-components tr.settings td.plugin-title span:before {
-	content: "\f108";
-}
-
-.buddyboss_page_bp-components tr.groups td.plugin-title span:before {
-	content: "\f307";
-}
-
-.buddyboss_page_bp-components tr.messages td.plugin-title span:before {
-	content: "\f457";
-}
-
-.buddyboss_page_bp-components tr.blogs td.plugin-title span:before {
-	content: "\f119";
-}
-
-.buddyboss_page_bp-components tr.friends td.plugin-title span:before {
-	content: "\f325";
-}
-
-.buddyboss_page_bp-components tr.forums td.plugin-title span:before {
-	content: "\f175";
-}
-
-.buddyboss_page_bp-components tr.members td.plugin-title span:before {
-	content: "\f110";
-}
-
 #bp-admin-component-form .wp-list-table.plugins .plugin-title {
 	width: 25%;
+	padding-bottom: 15px;
+}
+
+#bp-admin-component-form .subsubsub {
+	padding-bottom: 5px;
+}
+
+#bp-admin-component-form span.required {
+	color: #32373c;
 }
 
 @media screen and ( max-width: 782px ) {
-
-	.buddyboss_page_bp-components td.plugin-title span {
-		margin-top: 5px;
-	}
 
 	#bp-admin-component-form .wp-list-table.plugins .plugin-title {
 		display: block;
@@ -385,9 +339,34 @@ TABLE OF CONTENTS:
 	z-index: 999;
 }
 
-/*------------------------------------------------------------------------------
+/*
+ * 2.5 Settings - Tabs
+ */
+tr.bp-search-child-field,
+tr.bp-search-child-field th {
+	padding: 0;
+}
+
+tr.bp-search-child-field td {
+	padding: 10px 25px;
+}
+
+tr.bp-search-parent-field th,
+tr.bp-search-parent-field td {
+	padding: 15px 0 10px 20px;
+}
+
+tr.bp-search-parent-field td p {
+	margin-top: 0;
+}
+
+tr.bp-search-parent-field td p.section-header {
+	margin: 0 0 20px;
+}
+
+/*
  * 3.0 Users
- *----------------------------------------------------------------------------*/
+ */
 
 /*
  * 3.1 Users List

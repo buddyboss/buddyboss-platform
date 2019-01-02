@@ -62,7 +62,7 @@ add_filter( 'bp_email_set_subject', 'sanitize_text_field', 6 );
 // Avatars
 /**
  * Disable gravatars fallback for member avatars.
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
 

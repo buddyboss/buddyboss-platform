@@ -60,25 +60,13 @@ function bp_core_admin_components_options() {
 	 */
 	$active_components      = apply_filters( 'bp_active_components', bp_get_option( 'bp-active-components' ) );
 
-	// The default components (if none are previously selected).
-	$default_components = array(
-		'xprofile' => array(
-			'title'       => __( 'Profile Fields', 'buddyboss' ),
-			'description' => __( 'Customize your community with fully editable profile fields that allow your users to describe themselves.', 'buddyboss' )
-		),
-		'settings' => array(
-			'title'       => __( 'Account Settings', 'buddyboss' ),
-			'description' => __( 'Allow your users to modify their account and notification settings directly from within their profiles.', 'buddyboss' )
-		),
-		'notifications' => array(
-			'title'       => __( 'Notifications', 'buddyboss' ),
-			'description' => __( 'Notify members of relevant activity with a toolbar bubble and/or via email, and allow them to customize their notification settings.', 'buddyboss' )
-		),
-	);
-
+	$default_components  = bp_core_admin_get_components( 'default' ); // The default components (if none are previously selected).
 	$optional_components = bp_core_admin_get_components( 'optional' );
 	$required_components = bp_core_admin_get_components( 'required' );
-	$retired_components  = bp_core_admin_get_components( 'retired'  );
+
+	if ( isset( $optional_components['blogs'] ) ) {
+	    unset( $optional_components['blogs'] );
+    }
 
 	// Merge optional and required together.
 	$all_components = $optional_components + $required_components;
@@ -136,9 +124,6 @@ function bp_core_admin_components_options() {
 		case 'mustuse' :
 			$current_components = $required_components;
 			break;
-		case 'retired' :
-			$current_components = $retired_components;
-			break;
 	} ?>
 
 	<h3 class="screen-reader-text"><?php
@@ -150,8 +135,7 @@ function bp_core_admin_components_options() {
 		<li><a href="<?php echo esc_url( add_query_arg( array( 'page' => 'bp-components', 'action' => 'all'      ), bp_get_admin_url( $page ) ) ); ?>" <?php if ( $action === 'all'      ) : ?>class="current"<?php endif; ?>><?php printf( _nx( 'All <span class="count">(%s)</span>',      'All <span class="count">(%s)</span>',      $all_count,         'plugins', 'buddyboss' ), number_format_i18n( $all_count                    ) ); ?></a> | </li>
 		<li><a href="<?php echo esc_url( add_query_arg( array( 'page' => 'bp-components', 'action' => 'active'   ), bp_get_admin_url( $page ) ) ); ?>" <?php if ( $action === 'active'   ) : ?>class="current"<?php endif; ?>><?php printf( _n(  'Active <span class="count">(%s)</span>',   'Active <span class="count">(%s)</span>',   count( $active_components   ), 'buddyboss' ), number_format_i18n( count( $active_components   ) ) ); ?></a> | </li>
 		<li><a href="<?php echo esc_url( add_query_arg( array( 'page' => 'bp-components', 'action' => 'inactive' ), bp_get_admin_url( $page ) ) ); ?>" <?php if ( $action === 'inactive' ) : ?>class="current"<?php endif; ?>><?php printf( _n(  'Inactive <span class="count">(%s)</span>', 'Inactive <span class="count">(%s)</span>', count( $inactive_components ), 'buddyboss' ), number_format_i18n( count( $inactive_components ) ) ); ?></a> | </li>
-		<li><a href="<?php echo esc_url( add_query_arg( array( 'page' => 'bp-components', 'action' => 'mustuse'  ), bp_get_admin_url( $page ) ) ); ?>" <?php if ( $action === 'mustuse'  ) : ?>class="current"<?php endif; ?>><?php printf( _n(  'Must-Use <span class="count">(%s)</span>', 'Must-Use <span class="count">(%s)</span>', count( $required_components ), 'buddyboss' ), number_format_i18n( count( $required_components ) ) ); ?></a> | </li>
-		<li><a href="<?php echo esc_url( add_query_arg( array( 'page' => 'bp-components', 'action' => 'retired'  ), bp_get_admin_url( $page ) ) ); ?>" <?php if ( $action === 'retired'  ) : ?>class="current"<?php endif; ?>><?php printf( _n(  'Retired <span class="count">(%s)</span>',  'Retired <span class="count">(%s)</span>',  count( $retired_components ),  'buddyboss' ), number_format_i18n( count( $retired_components  ) ) ); ?></a></li>
+		<li><a href="<?php echo esc_url( add_query_arg( array( 'page' => 'bp-components', 'action' => 'mustuse'  ), bp_get_admin_url( $page ) ) ); ?>" <?php if ( $action === 'mustuse'  ) : ?>class="current"<?php endif; ?>><?php printf( _n(  'Required <span class="count">(%s)</span>', 'Required <span class="count">(%s)</span>', count( $required_components ), 'buddyboss' ), number_format_i18n( count( $required_components ) ) ); ?></a></li>
 	</ul>
 
 	<h3 class="screen-reader-text"><?php
@@ -205,6 +189,35 @@ function bp_core_admin_components_options() {
 								<span aria-hidden="true"></span>
 								<strong><?php echo esc_html( $labels['title'] ); ?></strong>
 							</label>
+                            <div class="row-actions visible">
+								<?php if ( in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
+									<span class="required">
+                                        <?php _e( 'Required', 'buddyboss' ); ?>
+                                    </span>
+								<?php elseif ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
+                                    <?php if ( isset( $active_components[esc_attr( $name )] ) ) : ?>
+                                        <span class="deactivate">
+                                            <a href="<?php echo wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $action, 'bp_component' => $name, 'do_action' => 'deactivate' ) , $page ) ), 'bp-admin-component-activation' ); ?>">
+                                                <?php _e( 'Deactivate', 'buddyboss' ); ?>
+                                            </a>
+                                        </span>
+	                                <?php else: ?>
+                                        <span class="activate">
+                                            <a href="<?php echo wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $action, 'bp_component' => $name, 'do_action' => 'activate' ) , $page ) ), 'bp-admin-component-activation' ); ?>">
+                                                <?php _e( 'Activate', 'buddyboss' ); ?>
+                                            </a>
+                                        </span>
+                                    <?php endif; ?>
+								<?php endif; ?>
+			                    <?php if ( isset( $active_components[esc_attr( $name )] ) && ! empty( $labels['settings'] ) ) : ?>
+			                    	<span><?php _e( '|', 'buddyboss' ); ?></span>
+                                    <span class="settings">
+                                        <a href="<?php echo esc_url( $labels['settings'] ); ?>">
+                                            <?php _e( 'Settings', 'buddyboss' ); ?>
+                                        </a>
+                                    </span>
+			                    <?php endif; ?>
+                            </div>
 						</td>
 
 						<td class="column-description desc">
@@ -242,6 +255,7 @@ function bp_core_admin_components_options() {
 	</table>
 
 	<input type="hidden" name="bp_components[members]" value="1" />
+	<input type="hidden" name="bp_components[xprofile]" value="1" />
 
 	<?php
 }
@@ -276,7 +290,6 @@ function bp_core_admin_components_settings_handler() {
 		$current_components = $bp->active_components;
 		$submitted = stripslashes_deep( $_POST['bp_components'] );
 		$bp->active_components = bp_core_admin_get_active_components_from_submitted_settings( $submitted );
-		$bp->active_components['xprofile'] = 1;
 		$uninstalled_components = array_diff_key($current_components, $bp->active_components);
 
 		bp_core_install( $bp->active_components );
@@ -286,14 +299,94 @@ function bp_core_admin_components_settings_handler() {
 		bp_core_uninstall( $uninstalled_components );
 	}
 
+	$current_action = 'all';
+	if ( isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'active', 'inactive' ) ) ) {
+		$current_action = $_GET['action'];
+	}
+
 	// Where are we redirecting to?
-	$base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'updated' => 'true' ), 'admin.php' ) );
+	$base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $current_action, 'updated' => 'true' ), 'admin.php' ) );
 
 	// Redirect.
 	wp_redirect( $base_url );
 	die();
 }
 add_action( 'bp_admin_init', 'bp_core_admin_components_settings_handler' );
+
+/**
+ * Handle saving the Component settings.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @todo Use settings API when it supports saving network settings
+ */
+function bp_core_admin_components_activation_handler() {
+
+    if ( ! isset( $_GET['bp_component'] ) ) {
+	    return;
+    }
+
+	// Bail if nonce fails.
+	if ( ! check_admin_referer( 'bp-admin-component-activation' ) )
+		return;
+
+	// Settings form submitted, now save the settings. First, set active components.
+	if ( isset( $_GET['bp_component'] ) ) {
+
+		// Load up BuddyPress.
+		$bp = buddypress();
+
+		// Save settings and upgrade schema.
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		require_once( $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
+
+		$current_action = 'active';
+		if ( isset( $_GET['do_action'] ) && in_array( $_GET['do_action'], array( 'activate', 'deactivate' ) ) ) {
+			$current_action = $_GET['do_action'];
+		}
+
+		$current_components = $bp->active_components;
+
+		$submitted = stripslashes_deep( $_GET['bp_component'] );
+
+		switch ( $current_action ) {
+			case 'deactivate' :
+			    foreach( $current_components as $key => $component ) {
+			        if ( $submitted == $key ) {
+				        unset( $current_components[ $key ] );
+			        }
+                }
+				$bp->active_components = $current_components;
+				break;
+
+			case 'activate' :
+			default :
+			    $bp->active_components = array_merge( array( $submitted => $current_action == 'activate' ? '1' : '0' ), $current_components );
+				break;
+		}
+
+		$uninstalled_components = array_diff_key($current_components, $bp->active_components);
+
+		bp_core_install( $bp->active_components );
+		bp_core_add_page_mappings( $bp->active_components );
+		bp_update_option( 'bp-active-components', $bp->active_components );
+
+		bp_core_uninstall( $uninstalled_components );
+	}
+
+	$current_action = 'all';
+	if ( isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'active', 'inactive' ) ) ) {
+		$current_action = $_GET['action'];
+	}
+
+	// Where are we redirecting to?
+	$base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $current_action, 'updated' => 'true' ), 'admin.php' ) );
+
+	// Redirect.
+	wp_redirect( $base_url );
+	die();
+}
+add_action( 'bp_admin_init', 'bp_core_admin_components_activation_handler' );
 
 /**
  * Calculates the components that should be active after save, based on submitted settings.
@@ -307,13 +400,6 @@ add_action( 'bp_admin_init', 'bp_core_admin_components_settings_handler' );
  *   active components will not be passed in the $_POST global. Thus, we must
  *   parse the newly activated components with the already active components
  *   saved in the $bp global
- * - When activating a Retired component, the situation is similar to Inactive.
- * - When deactivating a Retired component, no value is passed in the $_POST
- *   global (because the component settings are checkboxes). So, in order to
- *   determine whether a retired component is being deactivated, we retrieve a
- *   list of retired components, and check each one to ensure that its checkbox
- *   is not present, before merging the submitted components with the active
- *   ones.
  *
  * @since BuddyPress 1.7.0
  *
@@ -324,22 +410,13 @@ add_action( 'bp_admin_init', 'bp_core_admin_components_settings_handler' );
 function bp_core_admin_get_active_components_from_submitted_settings( $submitted ) {
 	$current_action = 'all';
 
-	if ( isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'active', 'inactive', 'retired' ) ) ) {
+	if ( isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'active', 'inactive' ) ) ) {
 		$current_action = $_GET['action'];
 	}
 
 	$current_components = buddypress()->active_components;
 
 	switch ( $current_action ) {
-		case 'retired' :
-			$retired_components = bp_core_admin_get_components( 'retired' );
-			foreach ( array_keys( $retired_components ) as $retired_component ) {
-				if ( ! isset( $submitted[ $retired_component ] ) ) {
-					unset( $current_components[ $retired_component ] );
-				}
-			} // Fall through.
-
-
 		case 'inactive' :
 			$components = array_merge( $submitted, $current_components );
 			break;
@@ -362,7 +439,7 @@ function bp_core_admin_get_active_components_from_submitted_settings( $submitted
  *
  * @since BuddyPress 1.7.0
  *
- * @param string $type Optional; component type to fetch. Default value is 'all', or 'optional', 'retired', 'required'.
+ * @param string $type Optional; component type to fetch. Default value is 'all', or 'optional', 'required'.
  * @return array Requested components' data.
  */
 function bp_core_admin_get_components( $type = 'all' ) {
@@ -376,7 +453,7 @@ function bp_core_admin_get_components( $type = 'all' ) {
 	 * @param array  $components Array of component information.
 	 * @param string $type       Type of component list requested.
 	 *                           Possible values include 'all', 'optional',
-	 *                           'retired', 'required'.
+	 *                           'required'.
 	 */
 	return apply_filters( 'bp_core_admin_get_components', $components, $type );
 }

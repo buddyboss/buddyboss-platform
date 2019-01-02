@@ -36,7 +36,7 @@ function bp_groups_add_admin_menu() {
 			'bp_moderate',
 			'bp-groups',
 			'bp_groups_admin',
-			'div'
+			'dashicons-groups'
 		);
 
 		// Register All Groups sub menu.
@@ -55,7 +55,7 @@ function bp_groups_add_admin_menu() {
 			'bp_moderate',
 			'bp-groups',
 			'bp_groups_admin',
-			'div'
+			'dashicons-groups'
 		);
 	}
 
@@ -320,7 +320,7 @@ function bp_groups_admin_load() {
 		/**
 		 * Filters the allowed activity feed status values for the group.
 		 *
-		 * @since BuddyBoss 3.1.1
+		 * @since BuddyBoss 1.0.0
 		 *
 		 * @param array $value Array of allowed activity feed statuses.
 		 */
@@ -1484,7 +1484,7 @@ function bp_register_group_type_sections_filters_actions() {
 /**
  * Function for opening the groups tab while on group types add/edit page.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_group_type_show_correct_current_menu(){
 	$screen = get_current_screen();
@@ -1521,7 +1521,7 @@ function bp_group_type_show_correct_current_menu(){
 /**
  * Custom metaboxes used by our 'bp-group-type' post type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_group_type_custom_meta_boxes() {
 	add_meta_box( 'bp-group-type-key', __( 'Group Type Key', 'buddyboss' ), 'bp_group_type_key_meta_box', null, 'normal', 'high' );
@@ -1537,6 +1537,7 @@ function bp_group_type_custom_meta_boxes() {
 		if ( isset( $get_all_registered_member_types ) && !empty( $get_all_registered_member_types ) ) {
 			// Add meta box if member types is entered.
 			add_meta_box( 'bp-group-type-auto-join-member-type', __( 'Profile Type Override', 'buddyboss' ),'bp_group_type_auto_join_member_type_meta_box',null,'normal','high' );
+			add_meta_box( 'bp-group-type-group-invites', __( 'Group Invites', 'buddyboss' ),'bp_group_type_group_invites_meta_box',null,'normal','high' );
 		}
 	}
 }
@@ -1544,7 +1545,7 @@ function bp_group_type_custom_meta_boxes() {
 /**
  * Generate Group Type Key Meta box.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param WP_Post $post
  */
@@ -1562,7 +1563,7 @@ function bp_group_type_key_meta_box( $post ) {
 /**
  * Generate group Type Label Meta box.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param WP_Post $post
  */
@@ -1594,7 +1595,7 @@ function bp_group_type_labels_meta_box( $post ) {
 /**
  * Generate Group Type Directory Meta box.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param WP_Post $post
  */
@@ -1622,7 +1623,7 @@ function bp_group_type_visibility_meta_box( $post ) {
 /**
  * Shortcode metabox for the group types admin edit screen.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param WP_Post $post
  */
@@ -1646,7 +1647,7 @@ function bp_group_short_code_meta_box( $post ) {
 /**
  * Function for displaying all the member types.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $post
  */
@@ -1675,9 +1676,47 @@ function bp_group_type_auto_join_member_type_meta_box( $post ) {
 }
 
 /**
+ * Function for displaying all settings of group invites.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $post
+ */
+function bp_group_type_group_invites_meta_box( $post ) {
+
+	$meta = get_post_custom( $post->ID );
+
+	$get_restrict_invites_same_group_types = isset( $meta[ '_bp_group_type_restrict_invites_user_same_group_type' ] ) ? intval( $meta[ '_bp_group_type_restrict_invites_user_same_group_type' ][ 0 ] ) : 0; //disabled by default
+	?>
+	<p>
+		<input type='checkbox' name='bp-group-type-restrict-invites-user-same-group-type' value='<?php echo esc_attr( 1 ); ?>' <?php checked( $get_restrict_invites_same_group_types, 1 ); ?> tabindex="7" />
+		<strong><?php _e( 'Restrict invites if user already in other same group type', 'buddyboss' ); ?></strong>
+	</p>
+	<p><?php printf( __( 'Users who are in this group are allowed to invite other users into the group who are which profile type.', 'buddyboss' ), $post->post_title )?></p>
+	<?php
+
+	$get_all_registered_member_types = bp_get_active_member_types();
+
+	$get_selected_member_types = get_post_meta( $post->ID, '_bp_group_type_enabled_member_type_group_invites', true ) ?: [];
+
+	foreach ( $get_all_registered_member_types as $member_type ) {
+
+		$member_type_key = bp_get_member_type_key( $member_type );
+		?>
+		<p>
+			<input type='checkbox' name='bp-member-type-group-invites[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> tabindex="7" />
+			<strong><?php _e( get_the_title( $member_type ), 'buddyboss' ); ?></strong>
+		</p>
+		<?php
+
+	}
+
+}
+
+/**
  * Add new columns to the post type list screen.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param type $columns
  * @return type
@@ -1698,7 +1737,7 @@ function bp_group_type_add_column( $columns ) {
 /**
  * display data of columns.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $column
  * @param $post_id
@@ -1748,7 +1787,7 @@ function bp_group_type_show_data( $column, $post_id  ) {
 /**
  * Function for setting up a column on admin view on group type post type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $columns
  *
@@ -1767,7 +1806,7 @@ function bp_group_type_add_sortable_columns( $columns ) {
 /**
  * Function adding a filter to group type sort items.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  */
 function bp_group_type_add_request_filter() {
@@ -1779,7 +1818,7 @@ function bp_group_type_add_request_filter() {
 /**
  * Sort list of group type post types.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param type $qv
  * @return string
@@ -1816,7 +1855,7 @@ function bp_group_type_sort_items( $qv ) {
 /**
  * Hide quick edit link.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param type $actions
  * @param type $post
@@ -1838,7 +1877,7 @@ function bp_group_type_hide_quick_edit( $actions, $post ) {
  * Function for saving meta boxes data of group type post data.
  * @param $post_id
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_save_group_type_post_meta_box_data( $post_id ) {
 	global $wpdb, $error;
@@ -1883,6 +1922,8 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 	$enable_remove = isset( $data[ 'enable_remove' ] ) ? absint( $data[ 'enable_remove' ] ) : 0; //default inactive
 
 	$member_type = $_POST['bp-member-type'];
+	$member_type_group_invites = $_POST['bp-member-type-group-invites'];
+	$get_restrict_invites_same_group_types = isset( $_POST['bp-group-type-restrict-invites-user-same-group-type'] ) ? absint( $_POST['bp-group-type-restrict-invites-user-same-group-type'] ) : 0;
 
 	update_post_meta( $post_id, '_bp_group_type_key', $key );
 	update_post_meta( $post_id, '_bp_group_type_label_name', $label_name );
@@ -1890,4 +1931,6 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_group_type_enable_filter', $enable_filter );
 	update_post_meta( $post_id, '_bp_group_type_enable_remove', $enable_remove );
 	update_post_meta( $post_id, '_bp_group_type_enabled_member_type_join', $member_type );
+	update_post_meta( $post_id, '_bp_group_type_enabled_member_type_group_invites', $member_type_group_invites );
+	update_post_meta( $post_id, '_bp_group_type_restrict_invites_user_same_group_type', $get_restrict_invites_same_group_types );
 }

@@ -5,7 +5,7 @@
  *
  * @package BuddyBoss
  * @subpackage Members
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 class BP_Core_Members_Switching {
 
@@ -18,7 +18,7 @@ class BP_Core_Members_Switching {
 
 	/**
 	 * Sets up all the filters and actions.
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function init_hooks() {
 
@@ -46,7 +46,7 @@ class BP_Core_Members_Switching {
 
 	/**
 	 * Defines the names of the cookies used by Member Switching.
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function action_plugins_loaded() {
 
@@ -69,7 +69,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Outputs the 'Switch To' link on the user editing screen if the current user has permission to switch to them.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param WP_User $user User object for this screen.
 	 */
@@ -94,7 +94,7 @@ class BP_Core_Members_Switching {
 	 * (ie. they checked the 'Remember Me' check box when they logged in). This is used to persist the 'remember me'
 	 * value when the user switches to another user.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 * @return bool Whether the current user is being 'remembered' or not.
 	 */
 	public static function remember() {
@@ -109,7 +109,7 @@ class BP_Core_Members_Switching {
 
 	/**
 	 * Loads localisation files and routes actions depending on the 'action' query var.
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function action_init() {
 
@@ -209,7 +209,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Fetches the URL to redirect to for a given user (used after switching).
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param  WP_User $new_user Optional. The new user's WP_User object.
 	 * @param  WP_User $old_user Optional. The old user's WP_User object.
@@ -230,7 +230,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Displays the 'Switched to {user}' and 'Switch back to {user}' messages in the admin area.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function action_admin_notices() {
 		$user     = wp_get_current_user();
@@ -269,7 +269,7 @@ class BP_Core_Members_Switching {
 					/**
 					 * Filters the contents of the message that's displayed to switched users in the admin area.
 					 *
-					 * @since BuddyBoss 3.1.1
+					 * @since BuddyBoss 1.0.0
 					 *
 					 * @param string $message The message displayed to the switched user.
 					 * @param WP_User $user The current user object.
@@ -313,7 +313,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Validates the old user cookie and returns its user data.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return false|WP_User False if there's no old user cookie or it's invalid, WP_User object if it's present and valid.
 	 */
@@ -333,7 +333,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Authenticates an old user by verifying the latest entry in the auth cookie.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param WP_User $user A WP_User object (usually from the logged_in cookie).
 	 *
@@ -361,7 +361,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Adds a 'Switch back to {user}' link in WordPress' admin bar.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param WP_Admin_Bar $wp_admin_bar The admin bar object.
 	 */
@@ -395,7 +395,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Adds a 'Switch back to {user}' link to the Meta sidebar widget.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function action_wp_meta() {
 		$old_user = self::get_old_user();
@@ -417,7 +417,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Adds a 'Switch back to {user}' link to the WordPress footer if the admin toolbar isn't showing.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function action_admin_footer() {
 		if ( ! function_exists( 'is_admin_bar_showing' ) ) {
@@ -448,7 +448,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Adds a 'Switch back to {user}' link to the WordPress login screen.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param  string $message The login screen message.
 	 *
@@ -488,7 +488,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Adds a 'Switch To' link to each list of user actions on the Users screen.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string[] $actions The actions to display for this user row.
 	 * @param WP_User $user The user object displayed in this row.
@@ -510,7 +510,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Adds a 'Switch To' link to each member's profile page and profile listings in BuddyPress.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 */
 	public function action_bp_button() {
@@ -550,7 +550,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Adds a 'Switch To' link to each member's profile page in bbPress.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 */
 	public function action_bbpress_button() {
@@ -583,7 +583,7 @@ class BP_Core_Members_Switching {
 	 *
 	 * @link https://core.trac.wordpress.org/ticket/23367
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string[] $args List of removable query arguments.
 	 *
@@ -619,7 +619,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Returns the nonce-secured URL needed to switch to a given user ID.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param  WP_User $user The user to be switched to.
 	 *
@@ -636,7 +636,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Returns the nonce-secured URL needed to switch back to the originating user.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param  WP_User $user The old user.
 	 *
@@ -652,7 +652,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Returns the nonce-secured URL needed to switch off the current user.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param  WP_User $user The user to be switched off.
 	 *
@@ -668,7 +668,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Returns the current URL.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return string The current URL.
 	 */
@@ -679,7 +679,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Removes a list of common confirmation-style query args from a URL.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param  string $url A URL.
 	 *
@@ -698,7 +698,7 @@ class BP_Core_Members_Switching {
 	 *
 	 * This is used to set the 'secure' flag on the old user cookie, for enhanced security.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @link https://core.trac.wordpress.org/ticket/15330
 	 *
@@ -713,7 +713,7 @@ class BP_Core_Members_Switching {
 	 *
 	 * This is used to determine whether to set a secure auth cookie or not.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return bool Should the auth cookie be secure?
 	 */
@@ -724,7 +724,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Returns background and color value base on current color scheme
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array Should the array contain background and text color
 	 */
@@ -765,7 +765,7 @@ class BP_Core_Members_Switching {
 	 *
 	 * Important: This does not get called for Super Admins. See filter_map_meta_cap() below.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool[] $user_caps Array of key/value pairs where keys represent a capability name and boolean values
 	 *                                represent whether the user has that capability.
@@ -813,7 +813,7 @@ class BP_Core_Members_Switching {
 	 *
 	 * It affects nothing else as Super Admins can do everything by default.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string[] $required_caps Required primitive capabilities for the requested capability.
 	 * @param string $cap Capability or meta capability being checked.
@@ -836,7 +836,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Filter force show the admin bar while switched to the user
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param $retval
 	 *
@@ -855,7 +855,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Singleton instance.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return BP_Core_Members_Switching Member Switching instance.
 	 */
@@ -872,7 +872,7 @@ class BP_Core_Members_Switching {
 	/**
 	 * Private class constructor. Use `get_instance()` to get the instance.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 */
 	final private function __construct() {

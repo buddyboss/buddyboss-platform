@@ -184,7 +184,7 @@ abstract class BP_XProfile_Field_Type {
     /**
      * Get the list of whitelisted values.
      * 
-     * @since BuddyBoss 3.1.1
+     * @since BuddyBoss 1.0.0
      * 
      * @return array
      */

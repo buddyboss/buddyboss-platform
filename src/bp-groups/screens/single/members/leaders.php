@@ -4,13 +4,13 @@
  *
  * @package BuddyBoss
  * @subpackage GroupsScreens
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 /**
  * Handle the display of a group's members/leaders page.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function groups_screen_group_members_leaders() {
 
@@ -22,7 +22,7 @@ function groups_screen_group_members_leaders() {
 	/**
 	 * Fires before the loading of the group members/leaders page template.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param int $id ID of the group that is being displayed.
 	 */
@@ -31,7 +31,7 @@ function groups_screen_group_members_leaders() {
 	/**
 	 * Filters the template to load for a group's members/leaders page.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $value Path to a group's members/leaders template.
 	 */

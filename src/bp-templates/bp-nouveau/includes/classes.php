@@ -51,7 +51,7 @@ class BP_Buttons_Group {
 	/**
 	 * Set the button
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param array $args Optional array having the following parameters {
 	 *     @type string $id                A string to use as the unique ID for the button. Required.

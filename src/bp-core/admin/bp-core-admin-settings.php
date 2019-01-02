@@ -50,7 +50,7 @@ function bp_admin_setting_callback_account_deletion() {
 /**
  * Allow admin to make the site private network.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  */
 function bp_admin_setting_callback_private_network() {
@@ -117,7 +117,7 @@ function bp_admin_setting_callback_heartbeat() {
 /**
  * Allow following activity stream.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_admin_setting_callback_enable_activity_follow() {
 	?>
@@ -232,7 +232,7 @@ function bp_admin_setting_callback_group_cover_image_uploads() {
 /**
  * 'Enable group types' field markup.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_admin_setting_callback_group_type_creation() {
 ?>
@@ -244,7 +244,7 @@ function bp_admin_setting_callback_group_type_creation() {
 /**
  * 'Enable group hierarchies' field markup.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_admin_setting_callback_group_hierarchies() {
 	?>
@@ -254,14 +254,26 @@ function bp_admin_setting_callback_group_hierarchies() {
 }
 
 /**
+ * 'Enable group restrict invites' field markup.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_admin_setting_callback_group_restrict_invites() {
+	?>
+	<input id="bp-enable-group-restrict-invites" name="bp-enable-group-restrict-invites" type="checkbox" value="1" <?php checked( bp_enable_group_restrict_invites() ); ?> />
+	<label for="bp-enable-group-restrict-invites"><?php _e( 'Restrict group invites to only members of who already exists in parent group', 'buddyboss' ); ?></label>
+	<?php
+}
+
+/**
  * 'Enable group auto join field markup.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_admin_setting_callback_group_auto_join() {
 	?>
 	<input id="bp-enable-group-auto-join" name="bp-enable-group-auto-join" type="checkbox" value="1" <?php checked( bp_enable_group_auto_join() ); ?> />
-	<label for="bp-enable-group-auto-join"><?php _e( 'Allow specific member type to auto join groups', 'buddyboss' ); ?></label>
+	<label for="bp-enable-group-auto-join"><?php _e( 'Allow specific profile types to auto join groups', 'buddyboss' ); ?></label>
 	<?php
 }
 
@@ -381,7 +393,7 @@ function bp_form_option( $option, $default = '' , $slug = false ) {
 /**
  * 'Enable email subject' field markup.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_admin_setting_callback_member_invite_email_subject() {
 	?>
@@ -393,11 +405,23 @@ function bp_admin_setting_callback_member_invite_email_subject() {
 /**
  * 'Enable email content' field markup.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_admin_setting_callback_member_invite_email_content() {
 	?>
 	<input id="bp-disable-invite-member-email-content" name="bp-disable-invite-member-email-content" type="checkbox" value="1" <?php checked( bp_disable_invite_member_email_content() ); ?> />
 	<label for="bp-disable-invite-member-email-content"><?php _e( 'Allow users to customize the invite email body content', 'buddyboss' ); ?></label>
+	<?php
+}
+
+/**
+ * 'Enable member invite' field markup.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_admin_setting_callback_member_invite_member_type() {
+	?>
+	<input id="bp-disable-invite-member-type" name="bp-disable-invite-member-type" type="checkbox" value="1" <?php checked( bp_disable_invite_member_type() ); ?> />
+	<label for="bp-disable-invite-member-type"><?php _e( 'Allow users to sign up the profile types to personal inviting', 'buddyboss' ); ?></label>
 	<?php
 }

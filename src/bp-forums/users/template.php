@@ -237,7 +237,7 @@ function bbp_user_profile_link( $user_id = 0 ) {
 	/**
 	 * Return link to the profile page of a user
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return string User profile link
 	 */

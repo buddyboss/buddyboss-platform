@@ -2404,60 +2404,81 @@ function bp_core_get_minified_asset_suffix() {
  *
  * @since BuddyPress 2.6.0
  *
- * @param string $type Optional; component type to fetch. Default value is 'all', or 'optional', 'retired', 'required'.
+ * @param string $type Optional; component type to fetch. Default value is 'all', or 'optional', 'required', 'default'.
  * @return array Requested components' data.
  */
 function bp_core_get_components( $type = 'all' ) {
+
 	$required_components = array(
 		'members' => array(
-			'title'       => __( 'Community Members', 'buddyboss' ),
-			'description' => __( 'Everything in a community website revolves around its members.', 'buddyboss' )
+			'title'       => __( 'User Profiles', 'buddyboss' ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-xprofile' ) , 'admin.php' ) ),
+			'description' => __( 'Everything in a community website revolves around its members.', 'buddyboss' ),
 		),
 		'xprofile' => array(
 			'title'       => __( 'Profile Fields', 'buddyboss' ),
-			'description' => __( 'Customize your community with fully editable profile fields that allow your users to describe themselves.', 'buddyboss' )
+			'settings'    => bp_get_admin_url( 'users.php?page=bp-profile-setup' ),
+			'description' => __( 'Customize your community with fully editable profile fields that allow your users to describe themselves.', 'buddyboss' ),
+			'default'     => true,
 		),
-	);
-
-	$retired_components = array(
 	);
 
 	$optional_components = array(
 		'settings' => array(
 			'title'       => __( 'Account Settings', 'buddyboss' ),
-			'description' => __( 'Allow your users to modify their account and notification settings directly from within their profiles.', 'buddyboss' )
+			'description' => __( 'Allow your users to modify their account and notification settings directly from within their profiles.', 'buddyboss' ),
+			'default'     => true,
 		),
 		'friends'  => array(
 			'title'       => __( 'User Connections', 'buddyboss' ),
-			'description' => __( 'Let your users make connections with each other and focus on the people they care about the most.', 'buddyboss' )
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-friends' ) , 'admin.php' ) ),
+			'description' => __( 'Let your users make connections with each other and focus on the people they care about the most.', 'buddyboss' ),
+			'default'     => false,
 		),
 		'invites'  => array(
 			'title'       => __( 'User Invites', 'buddyboss' ),
-			'description' => __( 'Allow you users to send email invites to non-members to join the network.', 'buddyboss' )
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-invites' ) , 'admin.php' ) ),
+			'description' => __( 'Allow your users to send email invites to non-members to join the network.', 'buddyboss' ),
+			'default'     => false,
 		),
 		'messages' => array(
 			'title'       => __( 'Private Messaging', 'buddyboss' ),
-			'description' => __( 'Allow your users to talk to each other directly and in private. Not just limited to one-on-one discussions, messages can be sent between any number of members.', 'buddyboss' )
+			'description' => __( 'Allow your users to talk to each other directly and in private. Not just limited to one-on-one discussions, messages can be sent between any number of members.', 'buddyboss' ),
+            'default'     => false,
 		),
 		'activity' => array(
 			'title'       => __( 'Activity Feeds', 'buddyboss' ),
-			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, and @mentions, all with email notification support.', 'buddyboss' )
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-activity' ) , 'admin.php' ) ),
+			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, and @mentions, all with email notification support.', 'buddyboss' ),
+			'default'     => false,
 		),
 		'blogs'    => array(
 			'title'       => __( 'Blog Feeds', 'buddyboss' ),
-			'description' => __( 'Publish new blog posts and comments from your site into the activity feed. Make sure to enable Activity Feeds first.', 'buddyboss' )
+			'description' => __( 'Publish new blog posts and comments from your site into the activity feed. Make sure to enable Activity Feeds first.', 'buddyboss' ),
+            'default'     => false,
 		),
 		'notifications' => array(
 			'title'       => __( 'Notifications', 'buddyboss' ),
-			'description' => __( 'Notify users of relevant activity with a toolbar bubble and/or via email, and allow them to customize their notification settings.', 'buddyboss' )
+			'description' => __( 'Notify users of relevant activity with a toolbar bubble and/or via email, and allow them to customize their notification settings.', 'buddyboss' ),
+			'default'     => true,
 		),
 		'groups'   => array(
 			'title'       => __( 'Social Groups', 'buddyboss' ),
-			'description' => __( 'Groups allow your users to organize themselves into specific public, private or hidden social areas with separate activity feeds and member listings.', 'buddyboss' )
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-groups' ) , 'admin.php' ) ),
+			'description' => __( 'Groups allow your users to organize themselves into specific public, private or hidden social areas with separate activity feeds and member listings.', 'buddyboss' ),
+            'default'     => false,
 		),
 		'forums'   => array(
 			'title'       => __( 'Forum Discussions', 'buddyboss' ),
-			'description' => __( 'Forums allow your users to have discussions using Q&A style message boards. Forums can be standalone or connected to social groups.', 'buddyboss' )
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-forums' ) , 'admin.php' ) ),
+			'description' => __( 'Forums allow your users to have discussions using Q&A style message boards. Forums can be standalone or connected to social groups.', 'buddyboss' ),
+            'default'     => false,
+		),
+		'search'   => array(
+			'title'       => __( 'Network Search', 'buddyboss' ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-search' ) , 'admin.php' ) ),
+			'description' => __( 'Allow your users to search the entire network, along with custom post types of your choice, all in one unified search bar.', 'buddyboss' ),
+			'default'     => false,
 		)
 	);
 
@@ -2466,6 +2487,13 @@ function bp_core_get_components( $type = 'all' ) {
 		$optional_components['blogs']['description'] = __( 'Record activity for new sites, posts, and comments across your network.', 'buddyboss' );
 	}
 
+	$default_components = array();
+	foreach( array_merge( $required_components, $optional_components ) as $key => $component ) {
+	    if ( isset( $component['default'] ) && true === $component['default'] ) {
+		    $default_components[ $key ] = $component;
+        }
+    }
+
 	switch ( $type ) {
 		case 'required' :
 			$components = $required_components;
@@ -2473,12 +2501,12 @@ function bp_core_get_components( $type = 'all' ) {
 		case 'optional' :
 			$components = $optional_components;
 			break;
-		case 'retired' :
-			$components = $retired_components;
+		case 'default' :
+			$components = $default_components;
 			break;
 		case 'all' :
 		default :
-			$components = array_merge( $required_components, $optional_components, $retired_components );
+			$components = array_merge( $required_components, $optional_components );
 			break;
 	}
 
@@ -2489,7 +2517,7 @@ function bp_core_get_components( $type = 'all' ) {
 	 *
 	 * @param array  $components Array of component information.
 	 * @param string $type       Type of component list requested.
-	 *                           Possible values are 'all', 'optional', 'retired', 'required'.
+	 *                           Possible values are 'all', 'optional', 'required'.
 	 */
 	return apply_filters( 'bp_core_get_components', $components, $type );
 }
@@ -3470,9 +3498,9 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( 'An invitation from {{inviter.name}} to join [{{{site.name}}}]', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "You have been invited by {{inviter.name}} to join the <a href=\"{{{site.url}}}\">[{{{site.name}}}]</a> community.\n\nTo accept this invitation, please visit {{invitee.url}}", 'buddyboss' ),
+			'post_content' => __( "You have been invited by {{inviter.name}} to join the <a href=\"{{{site.url}}}\">[{{{site.name}}}]</a> community.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "You have been invited by {{inviter.name}} to join the [{{{site.name}}}] community.\n\nTo accept this invitation, please visit {{invitee.url}}", 'buddyboss' ),
+			'post_excerpt' => __( "You have been invited by {{inviter.name}} to join the [{{{site.name}}}] community.", 'buddyboss' ),
 		),
 	);
 }
@@ -3866,4 +3894,34 @@ function bp_get_allowedtags() {
  */
 function bp_strip_script_and_style_tags( $string ) {
 	return preg_replace( '@<(script|style)[^>]*?>.*?</\\1>@si', '', $string );
+}
+
+function bp_check_member_send_invites_tab_member_type_allowed() {
+
+	// default allowed false
+	$allowed = false;
+
+	// Check BuddyBoss > Settings > Profiles > Enable profile types to give members unique profile fields and permission.
+	if ( true === bp_member_type_enable_disable() ) {
+		// Check BuddyBoss > Settings > User Invites > Allow users to sign up the profile types to personal inviting.
+		if ( true === bp_disable_invite_member_type() ) {
+			$current_user = bp_loggedin_user_id();
+			$member_type = bp_get_member_type( $current_user );
+			// If current user don't have any profile type then we are not allow.
+			if ( false === $member_type ) {
+				$allowed = false;
+			} else {
+				$member_type_post_id = bp_member_type_post_by_type( $member_type );
+				$meta = get_post_custom( $member_type_post_id );
+				$enable_invite = isset( $meta[ '_bp_member_type_enable_invite' ] ) ? intval( $meta[ '_bp_member_type_enable_invite' ][ 0 ] ) : 1; //enabled by default
+				if ( 1 === $enable_invite ) {
+					$get_all_registered_member_types = bp_get_active_member_types();
+					if ( isset( $get_all_registered_member_types ) && !empty( $get_all_registered_member_types ) ) {
+						$allowed = true;
+					}
+				}
+			}
+		}
+	}
+	return $allowed;
 }

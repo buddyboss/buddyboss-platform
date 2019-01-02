@@ -330,7 +330,7 @@ function bp_activate_slug() {
  * }
  * @return bool Returns true when blogs are found, otherwise false.
  */
-function bp_has_members( $args = '' ) {
+function bp_has_members( $args = array() ) {
 	global $members_template;
 
 	// Default user ID.
@@ -345,7 +345,7 @@ function bp_has_members( $args = '' ) {
 	$type = 'active';
 
 	// Mutual User filtering.
-	if ( bp_is_user_friends() && bp_is_user_mutual_friends() ) {
+	if ( isset( $args['type'] ) && 'online' != $args['type'] && bp_is_user_friends() && bp_is_user_mutual_friends() ) {
 		$include = bp_get_mutual_friendships();
 		$type = 'alphabetical';
 	}
@@ -2570,7 +2570,7 @@ function bp_members_component_link( $component, $action = '', $query_args = '', 
 /**
  * Output the Switch button.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param int $user_id The user ID of the person we want to switch to.
  * @param array $button_args See BP_Button class for more information.
@@ -2590,7 +2590,7 @@ function bp_add_switch_button( $user_id, $button_args = array() ) {
  *
  * @return mixed String of the button on success.  Boolean false on failure.
  * @uses bp_get_button() Renders a button using the BP Button API
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 
@@ -2626,7 +2626,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 				'link_text'         => __( 'Back to Admin', 'buddyboss' ),
 				'link_id'           => 'switch-' . $old_user->ID,
 				'link_rel'          => 'stop',
-				'link_class'        => 'switch-button back-to-admin stop bp-toggle-action-button',
+				'link_class'        => 'switch-button back-to-admin stop bp-toggle-action-button outline',
 			)
 			, $button_args );
 	} else {
@@ -2642,7 +2642,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 				'link_text'         => __( 'View As', 'buddyboss' ),
 				'link_id'           => 'switch-' . $user_id,
 				'link_rel'          => 'start',
-				'link_class'        => 'switch-button view-as start',
+				'link_class'        => 'switch-button view-as start outline',
 			)
 			, $button_args );
 	}
@@ -2650,7 +2650,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 	/**
 	 * Filters the HTML for the follow button.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $button HTML markup for follow button.
 	 */

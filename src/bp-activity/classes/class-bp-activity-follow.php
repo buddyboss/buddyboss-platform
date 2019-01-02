@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage FollowClasses
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
 
  */
 
@@ -16,13 +16,13 @@ if ( !defined( 'ABSPATH' ) ) exit;
  *
  * Handles populating and saving follow relationships.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 class BP_Activity_Follow {
 	/**
 	 * The follow ID.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 * @var int
 	 */
 	public $id = 0;
@@ -30,7 +30,7 @@ class BP_Activity_Follow {
 	/**
 	 * The user ID of the person we want to follow.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 * @var int
 	 */
 	public $leader_id;
@@ -38,7 +38,7 @@ class BP_Activity_Follow {
 	/**
 	 * The user ID of the person initiating the follow request.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 * @var int
 	 */
 	public $follower_id;
@@ -62,7 +62,7 @@ class BP_Activity_Follow {
 	 *
 	 * Used in constructor.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	protected function populate() {
 		global $wpdb, $bp;
@@ -75,7 +75,7 @@ class BP_Activity_Follow {
 	/**
 	 * Saves a follow relationship into the database.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function save() {
 		global $wpdb, $bp;
@@ -112,7 +112,7 @@ class BP_Activity_Follow {
 	/**
 	 * Deletes a follow relationship from the database.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function delete() {
 		global $wpdb, $bp;
@@ -125,7 +125,7 @@ class BP_Activity_Follow {
 	/**
 	 * Get the follower IDs for a given user.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param int $user_id The user ID.
 	 * @return array
@@ -138,7 +138,7 @@ class BP_Activity_Follow {
 	/**
 	 * Get the user IDs that a user is following.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param int $user_id The user ID to fetch.
 	 * @return array
@@ -151,7 +151,7 @@ class BP_Activity_Follow {
 	/**
 	 * Get the follower / following counts for a given user.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param int $user_id The user ID to fetch counts for.
 	 * @return array
@@ -168,7 +168,7 @@ class BP_Activity_Follow {
 	/**
 	 * Bulk check the follow status for a user against a list of user IDs.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param array $leader_ids The user IDs to check the follow status for.
 	 * @param int $user_id The user ID to check against the list of leader IDs.
@@ -193,7 +193,7 @@ class BP_Activity_Follow {
 	/**
 	 * Deletes all follow relationships for a given user.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param int $user_id The user ID
 	 */

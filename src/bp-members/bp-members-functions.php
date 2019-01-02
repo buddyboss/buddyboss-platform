@@ -2817,10 +2817,10 @@ function bp_custom_display_name_format( $display_name, $user_id = null ) {
 			$display_name = get_user_meta( $user_id, 'first_name', true );
 			break;
 		case 'first_last_name':
-			$display_name = implode( ' ', [
+			$display_name = implode( ' ', array_filter( [
 				get_user_meta( $user_id, 'first_name',true ),
 				get_user_meta( $user_id, 'last_name', true )
-			]);
+			] ) );
 			break;
 		case 'nickname':
 			$display_name = get_user_meta( $user_id, 'nickname', true );
@@ -2833,7 +2833,7 @@ function bp_custom_display_name_format( $display_name, $user_id = null ) {
 /**
  * Function for enable/disable member type functionality.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_register_member_type_section() {
 
@@ -2918,7 +2918,7 @@ add_action( 'bp_register_member_types', 'bp_register_active_member_types' );
 /**
  * Output the name of the member type post type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return string   custom post type of member type.
  */
@@ -2929,7 +2929,7 @@ function bp_member_type_post_type() {
 /**
  * Returns the name of the member type post type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return string The name of the member type post type.
  */
@@ -2938,7 +2938,7 @@ function bp_get_member_type_post_type() {
 	/**
 	 * Filters the name of the member type post type.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $value Member Type post type name.
 	 */
@@ -2948,7 +2948,7 @@ function bp_get_member_type_post_type() {
 /**
  * Return labels used by the member type post type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return array
  */
@@ -2957,7 +2957,7 @@ function bp_get_member_type_post_type_labels() {
 	/**
 	 * Filters member type post type labels.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param array $value Associative array (name => label).
 	 */
@@ -2978,7 +2978,7 @@ function bp_get_member_type_post_type_labels() {
 /**
  * Return array of features that the member type post type supports.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return array
  */
@@ -2987,7 +2987,7 @@ function bp_get_member_type_post_type_supports() {
 	/**
 	 * Filters the features that the member type post type supports.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param array $value Supported features.
 	 */
@@ -3000,7 +3000,7 @@ function bp_get_member_type_post_type_supports() {
 /**
  * Return member type key.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $post_id
  * @return mixed|string
@@ -3026,7 +3026,7 @@ function bp_get_member_type_key( $post_id ) {
 /**
  * Function for getting members by role.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $role
  *
@@ -3068,7 +3068,7 @@ function bp_get_member_type_by_wp_role($role){
 /**
  * Function for removing the role from member type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $wp_roles
  * @param $member_type
@@ -3085,7 +3085,7 @@ function bp_remove_member_type_to_roles($wp_roles, $member_type){
 /**
  * Function for setting the member type to roles.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $wp_roles
  * @param $member_type
@@ -3102,7 +3102,7 @@ function bp_set_member_type_to_roles($wp_roles, $member_type){
 /**
  * Function for getting a user by their role.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $roles
  *
@@ -3128,7 +3128,7 @@ function bp_get_users_by_roles($roles) {
  * Set type for a member profile.
  * Set member types on save_post
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param int    $user_id     ID of the user.
  * @param string $member_type Member type.
@@ -3162,7 +3162,7 @@ function bp_set_user_member_type( $user_id, $member_type, $append = false ) {
 /**
  * Gets member types id.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @global type $wpdb
  *
@@ -3182,7 +3182,7 @@ function bp_member_type_type_id( $type_name ) {
 /**
  * Gets member types term taxonomy id.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @global type $wpdb
  * @param type $type_name
@@ -3200,7 +3200,7 @@ function bp_member_type_term_taxonomy_id( $type_name ) {
 /**
  * Get Member post by member type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @global type $wpdb
  * @param type $member_type
@@ -3227,7 +3227,7 @@ function bp_member_type_post_by_type($member_type) {
 /**
  * Gets member by type id.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @global type $wpdb
  * @param type $type_id
@@ -3250,7 +3250,7 @@ function bp_member_type_by_type( $type_id ) {
 /**
  * Function for getting an active member by type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $type_id
  *
@@ -3282,7 +3282,7 @@ function bp_active_member_type_by_type( $type_id ) {
 /**
  * Get all member types.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @global type $wpdb
  * @return type array
@@ -3298,7 +3298,7 @@ function bp_get_active_member_types() {
 /**
  * Get all plural labels.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return type array
  */
@@ -3317,7 +3317,7 @@ function bp_plural_labels_array() {
 /**
  * Function for removed member type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return array
  */
@@ -3357,7 +3357,7 @@ function bp_get_removed_member_types(){
 /**
  * Function for get members removed member type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @return array
  */
@@ -3392,7 +3392,7 @@ function bp_get_users_of_removed_member_types(){
 /**
  * Register all active member types.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  */
 function bp_register_active_member_types() {
@@ -3434,7 +3434,7 @@ function bp_register_active_member_types() {
 /**
  * Function for excluding specific member types from search and listing.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param bool $qs
  * @param bool $object
@@ -3468,7 +3468,7 @@ function bp_member_type_exclude_users_from_directory_and_searches( $qs=false, $o
 /**
  * set member type while update user profile.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $user_id
  * @param $user_role
@@ -3485,7 +3485,7 @@ function bp_update_user_member_type_type_set( $user_id, $user_role ) {
 /**
  * fix all member count.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $count
  *
@@ -3502,7 +3502,7 @@ function bp_fixed_all_member_type_count( $count ){
 /**
  * Function for displaying a users by it's type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_member_type_directory() {
 	$member_types = bp_get_active_member_types();
@@ -3530,7 +3530,7 @@ function bp_member_type_directory() {
 /**
  * Member directory tabs content.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $query
  */
@@ -3561,7 +3561,7 @@ function bp_member_type_query( $query ) {
 /**
  * remove member type metabox for users who doesn't have permission to change member types.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  */
 function bp_remove_member_type_metabox() {
@@ -3573,7 +3573,7 @@ function bp_remove_member_type_metabox() {
 /**
  * Function for removing metabox feom extended profile if globally disabled.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_remove_member_type_metabox_globally() {
 	remove_meta_box( 'bp_members_admin_member_type', get_current_screen()->id, 'side' );
@@ -3582,7 +3582,7 @@ function bp_remove_member_type_metabox_globally() {
 /**
  * Add new columns to the post type list screen.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param type $columns
  * @return type
@@ -3603,7 +3603,7 @@ function bp_member_type_add_column( $columns ) {
 /**
  * display data of columns.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $column
  * @param $post_id
@@ -3657,7 +3657,7 @@ function bp_member_type_show_data( $column, $post_id  ) {
 /**
  * Function for setting up a column on admin view on member type post type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $columns
  *
@@ -3676,7 +3676,7 @@ function bp_member_type_add_sortable_columns( $columns ) {
 /**
  * Function adding a filter to member type sort items.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  */
 function bp_member_type_add_request_filter() {
@@ -3688,7 +3688,7 @@ function bp_member_type_add_request_filter() {
 /**
  * Sort list of member type post types.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param type $qv
  * @return string
@@ -3725,7 +3725,7 @@ function bp_member_type_sort_items( $qv ) {
 /**
  * Hide quick edit link.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param type $actions
  * @param type $post
@@ -3746,7 +3746,7 @@ function bp_member_type_hide_quickedit( $actions, $post ) {
 /**
  * Function for adding body class where the shortcode added.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $class
  *
@@ -3769,7 +3769,7 @@ function bp_member_type_shortcode_add_body_class( $class ) {
 /**
  * Function for displaying a shortcode data.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $atts
  *
@@ -3822,7 +3822,7 @@ function bp_member_type_shortcode_callback( $atts ) {
 /**
  * Function for adding a filter on shortcode.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $query_string
  * @param $object
@@ -3845,7 +3845,7 @@ function bp_member_type_shortcode_filter( $query_string, $object ){
 /**
  * Function for adding the js on member type post type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_member_type_changing_listing_label() {
 	global $pagenow, $current_screen;
@@ -3861,8 +3861,8 @@ function bp_member_type_changing_listing_label() {
 	// Check to make sure we're on a member type's admin page
 	if ( isset( $current_screen->id ) && in_array( $current_screen->id, $bp_member_type_pages ) ) {
 
-		wp_enqueue_script('bp-clipboard',$url.'clipboard.js',array(), '3.1.1' );
-		wp_enqueue_script('bp-member-type-admin-screen',$url.'bp-member-type-admin-screen.js',array('jquery'), '3.1.1' );
+		wp_enqueue_script('bp-clipboard',$url.'clipboard.js',array(), '1.0.0' );
+		wp_enqueue_script('bp-member-type-admin-screen',$url.'bp-member-type-admin-screen.js',array('jquery'), '1.0.0' );
 
 		$strings = array(
 			'warnTrash' 		=> __( 'You have {total_users} members with this profile type, are you sure you would like to trash it?', 'buddyboss' ),
@@ -3880,7 +3880,7 @@ function bp_member_type_changing_listing_label() {
 /**
  * Function which give the member type of particular user.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param $user_id
  *
@@ -3947,7 +3947,7 @@ function bp_get_user_member_type( $user_id ) {
 /**
  * Function which will return "his", "her" or "their" based on their gender which we will use in activity.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param string $user_id
  *
@@ -3980,7 +3980,7 @@ function bp_get_user_gender_pronoun_type( $user_id = '' ) {
 /**
  * Sets authorisation cookies containing the originating user information.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param int $old_user_id The ID of the originating user, usually the current logged in user.
  * @param bool $pop Optional. Pop the latest user off the auth cookie, instead of appending the new one. Default false.
@@ -4022,7 +4022,7 @@ function bp_member_switching_set_olduser_cookie( $old_user_id, $pop = false, $to
 /**
  * Clears the cookies containing the originating user, or pops the latest item off the end if there's more than one.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param bool $clear_all Optional. Whether to clear the cookies (as opposed to just popping the last user off the end). Default true.
  */
@@ -4063,7 +4063,7 @@ function bp_member_switching_clear_olduser_cookie( $clear_all = true ) {
 /**
  * Gets the value of the cookie containing the originating user.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * @return string|false The old user cookie, or boolean false if there isn't one.
  */
 function bp_member_switching_get_olduser_cookie() {
@@ -4078,7 +4078,7 @@ function bp_member_switching_get_olduser_cookie() {
 /**
  * Gets the value of the auth cookie containing the list of originating users.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * @return string[] Array of originating user authentication cookie values. Empty array if there are none.
  */
 function bp_member_switching_get_auth_cookie() {
@@ -4102,7 +4102,7 @@ function bp_member_switching_get_auth_cookie() {
 /**
  * Switches the current logged in user to the specified user.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param  int $user_id The ID of the user to switch to.
  * @param  bool $remember Optional. Whether to 'remember' the user in the form of a persistent browser cookie. Default false.
@@ -4168,7 +4168,7 @@ function bp_member_switch_to( $user_id, $remember = false, $set_old_user = true 
 /**
  * Returns whether or not the current user switched into their account.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * @return false|WP_User False if the user isn't logged in or they didn't switch in; old user object (which evaluates to
  *                       true) if the user switched into the current user account.
  */
@@ -4183,11 +4183,11 @@ function bp_current_member_switched() {
 /**
  * Add members to auto join groups based on their profile type.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  * @param int $user_id The user ID to add the auto join groups.
  */
-function bp_member_add_auto_join_groups( $user_id ) {
+function bp_member_add_auto_join_groups( $user_id, $key, $user ) {
 
 	$user_member_type = bp_get_member_type( $user_id );
 
@@ -4226,4 +4226,4 @@ function bp_member_add_auto_join_groups( $user_id ) {
 		}
 	}
 }
-add_action( 'bp_core_activated_user', 'bp_member_add_auto_join_groups', 1 );
+add_action( 'bp_core_activated_user', 'bp_member_add_auto_join_groups', 99, 3 );

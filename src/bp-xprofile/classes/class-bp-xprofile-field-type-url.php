@@ -168,7 +168,8 @@ class BP_XProfile_Field_Type_URL extends BP_XProfile_Field_Type {
 	 *
 	 * @since BuddyPress 2.1.0
 	 * @since BuddyPress 2.4.0 Added the `$field_id` parameter.
-     * @since BuddyBoss 3.1.1 Added target="_blank" attribute to anchor tag and consequently added noopener to rel attribute
+     * @since BuddyBoss 1.0.0 
+     * Added target="_blank" attribute to anchor tag and consequently added noopener to rel attribute
 	 *
 	 * @param string     $field_value The URL value, as saved in the database.
 	 * @param string|int $field_id    Optional. ID of the field.

@@ -15,7 +15,7 @@
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     3.1.1
+ * Version:     1.0.0
  * Text Domain: buddyboss
  * Domain Path: /bp-languages/
  * License:     GPLv2 or later (license.txt)
@@ -35,7 +35,7 @@ defined( 'ABSPATH' ) || exit;
  * We're not using 'is_plugin_active' functions because you need to include the
  * /wp-admin/includes/plugin.php file in order to use that function.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 $is_bp_active = false;
@@ -75,7 +75,7 @@ if ( $is_bp_active ) {
     /**
      * Displays an admin notice when BuddyPress plugin is also active.
      *
-     * @since BuddyBoss 3.1.1
+     * @since BuddyBoss 1.0.0
      * @return void
      */
     function bp_duplicate_buddypress_notice() {
@@ -108,7 +108,7 @@ if ( $is_bb_active ) {
     /**
      * Displays an admin notice when bbPress plugin is also active.
      *
-     * @since BuddyBoss 3.1.1
+     * @since BuddyBoss 1.0.0
      * @return void
      */
     function bp_duplicate_bbpress_notice() {
@@ -148,7 +148,7 @@ if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
     /**
      * Check if the current request is to activate BuddyPress plugins and redirect if so.
      *
-     * @since BuddyBoss 3.1.1
+     * @since BuddyBoss 1.0.0
      *
      * @global string $pagenow
      */
@@ -176,7 +176,7 @@ if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
     /**
      * Show a notice that an attempt to activate BuddyPress plugin was blocked.
      *
-     * @since BuddyBoss 3.1.1
+     * @since BuddyBoss 1.0.0
      */
     function bp_prevented_activating_buddypress_notice () {
         ?>
@@ -192,21 +192,41 @@ if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
 }
 
 /**
- * Prevent BP Global Search from running at the same time as BuddyBoss Platform.
- * If BP Global Search  is running. If so, don't let BuddyBoss Platform plugin activate.
- * and show admin error message.
+ * Prevent running BuddyBoss Platform if any incompatible plugins are active.
+ * Show admin error message instead.
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
-if ( ! function_exists( 'bp_global_search_active_check' ) ) {
+if ( ! function_exists( 'bp_check_incompatible_plugins' ) ) {
 
-	add_action( 'admin_init', 'bp_global_search_active_check', 0.50 );
+	add_action( 'admin_init', 'bp_check_incompatible_plugins', 0.50 );
 
-	function bp_global_search_active_check() {
-		if ( is_admin() && current_user_can( 'activate_plugins' ) && is_plugin_active( 'buddypress-global-search/buddypress-global-search.php' ) ) {
+	function bp_check_incompatible_plugins() {
+		if ( is_admin() && current_user_can( 'activate_plugins' ) ) {
 
-			add_action( 'admin_notices', 'bp_global_search_deactivate_notice' );
-			remove_action( 'bp_admin_init', 'bp_do_activation_redirect', 1 ); // Prevent activation redirect
+            $incompatible_plugins = array(
+                'buddypress-global-search/buddypress-global-search.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
+                'buddypress-followers/loader.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Follow plugin is active. Following/followers functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
+            );
+            
+            $incompatible_plugins_messages = array();
+            
+            foreach ( $incompatible_plugins as $incompatible_plugin => $error_message ) {
+                if ( is_plugin_active( $incompatible_plugin ) ) {
+                    $incompatible_plugins_messages[] = $error_message;
+                }
+            }
+            
+            if ( empty( $incompatible_plugins_messages ) ) {
+                return;
+            }
+            
+            global $bp_incompatible_plugins_messages;
+            $bp_incompatible_plugins_messages = $incompatible_plugins_messages;
+            
+			add_action( 'admin_notices', 'bp_incompatible_plugins_deactivate_notice' );
+			
+            remove_action( 'bp_admin_init', 'bp_do_activation_redirect', 1 ); // Prevent activation redirect
 
 			deactivate_plugins( 'buddyboss-platform/bp-loader.php' );
 
@@ -218,16 +238,20 @@ if ( ! function_exists( 'bp_global_search_active_check' ) ) {
 }
 
 /**
- * Admin Notice for having BuddyPress Global Search and BuddyBoss Platform both active at the same time!
+ * Admin Notice for having one or more incompatible plugins activated.
  *
- * @since Buddyboss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
-if ( ! function_exists( 'bp_global_search_deactivate_notice' ) ) {
-	function bp_global_search_deactivate_notice() {
+if ( ! function_exists( 'bp_incompatible_plugins_deactivate_notice' ) ) {
+	function bp_incompatible_plugins_deactivate_notice() {
+        global $bp_incompatible_plugins_messages;
+        if ( empty( $bp_incompatible_plugins_messages ) ) {
+            return;
+        }
 		?>
 		<div id="message" class="error">
 		<p><strong><?php esc_html_e( 'BuddyBoss Platform can\'t be activated.', 'buddyboss' ); ?></strong></p>
-		<p><?php _e( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ); ?></p>
+        <p><?php echo implode( '<br>', $bp_incompatible_plugins_messages );?></p>
 		</div><?php
 	}
 }

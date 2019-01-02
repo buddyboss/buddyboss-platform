@@ -3,7 +3,7 @@
 class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
 	public function initialize() {
-		$this->tab_label = __( 'Social Groups', 'buddyboss' );
+		$this->tab_label = __( 'Groups', 'buddyboss' );
 		$this->tab_name  = 'bp-groups';
 		$this->tab_order = 20;
 	}
@@ -32,12 +32,19 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		// enable or disable group types.
 		$this->add_field( 'bp-disable-group-type-creation', __( 'Group Types', 'buddyboss' ), 'bp_admin_setting_callback_group_type_creation', 'intval' );
 
-		// enable or disable group types.
-		$this->add_field( 'bp-enable-group-hierarchies', __( 'Group Hierarchies', 'buddyboss' ), 'bp_admin_setting_callback_group_hierarchies', 'intval' );
-
-		// enable or disable group types.
+		// enable or disable group auto join.
 		$this->add_field( 'bp-enable-group-auto-join', __( 'Group Auto Join', 'buddyboss' ), 'bp_admin_setting_callback_group_auto_join', 'intval' );
 
+		// Register Group Hierarchies sections.
+		$this->add_section( 'bp_groups_hierarchies', __( 'Group Hierarchies', 'buddyboss' ) );
+
+		// enable or disable group hierarchies.
+		$this->add_field( 'bp-enable-group-hierarchies', __( 'Group Hierarchies', 'buddyboss' ), 'bp_admin_setting_callback_group_hierarchies', 'intval' );
+
+		if ( true === bp_enable_group_hierarchies() ) {
+			// enable or disable restrict invites to members who already in specific parent group.
+			$this->add_field( 'bp-enable-group-restrict-invites', __( 'Group Restrict Invite', 'buddyboss' ), 'bp_admin_setting_callback_group_restrict_invites', 'intval' );
+		}
 	}
 }
 

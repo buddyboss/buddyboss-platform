@@ -2,8 +2,8 @@
 /**
  * BP Nouveau Follow
  *
- * @since BuddyBoss 3.1.1
- * @version 3.1.1
+ * @since BuddyBoss 1.0.0
+ * @version 1.0.0
  */
 
 // Exit if accessed directly.
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Follow Loader class
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 class BP_Nouveau_Follow {
 	/**
@@ -59,7 +59,7 @@ class BP_Nouveau_Follow {
 	/**
 	 * Register do_action() hooks
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	protected function setup_actions() {}
 
@@ -82,7 +82,7 @@ class BP_Nouveau_Follow {
 /**
  * Launch the Follow loader class.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_nouveau_follow( $bp_nouveau = null ) {
 	if ( is_null( $bp_nouveau ) ) {

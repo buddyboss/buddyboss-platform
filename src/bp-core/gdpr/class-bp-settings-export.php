@@ -3,7 +3,7 @@
  * Core component classes.
  *
  * @package BuddyBoss
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.
@@ -18,7 +18,7 @@ final class BP_Settings_Export extends BP_Export {
 	 * Get the instance of this class.
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return Controller|null
 	 */
@@ -40,7 +40,7 @@ final class BP_Settings_Export extends BP_Export {
 	 * @param bool $email_address
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
 	 */
@@ -109,7 +109,7 @@ final class BP_Settings_Export extends BP_Export {
 	 * @param bool $email_address
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
 	 */
@@ -141,7 +141,7 @@ final class BP_Settings_Export extends BP_Export {
 	 * Fetch user settings.
 	 *
 	 * @package BuddyBoss
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
 	 */

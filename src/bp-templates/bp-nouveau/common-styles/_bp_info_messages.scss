@@ -112,18 +112,24 @@
 	line-height: inherit;
 }
 
-a[data-bp-close] span:before,
-button[data-bp-close] span:before {
-	font-size: 32px;
+a[data-bp-close] span,
+button[data-bp-close] span {
+	font-size: 24px;
 }
 
-a[data-bp-close],
-button[data-bp-close] {
+.buddypress .buddypress-wrap  a[data-bp-close],
+.buddypress .buddypress-wrap  button[data-bp-close] {
 	border: 0;
-	position: absolute;
-	top: 10px;
-	right: 10px;
-	width: 32px;
+	padding: 0;
+	height: auto;
+	margin-bottom: auto;
+	margin-top: 10px;
+	margin-right: 12px;
+
+	&:hover,
+	&:focus {
+		background: transparent;
+	}
 }
 
 .bp-feedback.no-icon {

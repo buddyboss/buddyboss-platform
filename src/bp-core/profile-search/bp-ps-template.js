@@ -11,6 +11,36 @@ function bp_ps_clear_radio(container) {
 	}
 }
 
+function bp_ps_clear_form_elements( ele ) {
+    var $form = jQuery(ele).closest('form');
+    var event = new Event('change');
+    
+    $form.find(':input').each(function() {
+        switch(this.type) {
+            case 'password':
+            case 'select-multiple':
+            case 'select-one':
+            case 'text':
+            case 'email':
+            case 'date':
+            case 'url':
+            case 'search':
+            case 'textarea':
+                jQuery(this).val('');
+                break;
+            case 'checkbox':
+            case 'radio':
+                this.checked = false;
+                this.dispatchEvent(event);
+                break;
+        }
+    });
+
+    $form.submit();
+    
+    return false;
+}
+
 function bp_ps_autocomplete(input, lat, lng) {
 	input = document.getElementById(input);
 	var options = {types: ['geocode']};

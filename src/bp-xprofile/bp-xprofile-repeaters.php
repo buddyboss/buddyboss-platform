@@ -3,14 +3,14 @@
  * BuddyPress XProfile Repeater Fields and field sets.
  * 
  * @package BuddyBoss
- * @since BuddyPress 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * @return int
  */
 function bp_profile_field_set_max_cap () {
@@ -19,7 +19,7 @@ function bp_profile_field_set_max_cap () {
 }
 
 /**
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * @global type $wpdb
  * @param type $field_group_id
  * @return type
@@ -47,7 +47,7 @@ function bp_get_repeater_template_field_ids ( $field_group_id ) {
 }
 
 /**
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * @global type $wpdb
  * @param type $field_group_id
  * @param type $count
@@ -102,7 +102,7 @@ function bp_get_repeater_clone_field_ids_subset ( $field_group_id, $count ) {
 }
 
 /**
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * @global type $wpdb
  * @param type $field_group_id
  * @return array
@@ -137,7 +137,7 @@ function bp_get_repeater_clone_field_ids_all ( $field_group_id ) {
 add_action( 'xprofile_updated_profile', 'bp_profile_repeaters_update_field_data', 11, 5 );
 /**
  * Update/Sort repeater fields when profile data is updated.
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_profile_repeaters_update_field_data ( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
     global $wpdb;
@@ -223,7 +223,7 @@ add_filter( 'bp_xprofile_set_field_data_pre_validate', 'bp_repeater_set_field_da
  * So we hook into bp_xprofile_set_field_data_pre_validate filter and save the $field object in a global variable.
  * We then use this global variable later, in bp_xprofile_field_type_is_valid hook.
  * 
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * 
  * @global \BP_XProfile_Field $bp_profile_repeater_last_field
  * @param mixed $value
@@ -299,7 +299,7 @@ function bp_profile_repeater_is_data_valid_for_template_fields ( $validated, $va
 }
 
 /**
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * @global type $wpdb
  * @param type $field_id
  * @return boolean
@@ -455,7 +455,7 @@ function xprofile_delete_clones_on_template_delete ( $field ) {
 add_action( 'xprofile_updated_field_position', 'xprofile_update_clone_positions_on_template_position_update', 10, 3 );
 /**
  * Update position and group_id for all clone fields when a template/main field's order is changed.
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * 
  * @global type $wpdb
  * @param int $template_field_id
@@ -532,7 +532,7 @@ function xprofile_update_clone_positions_on_template_position_update ( $template
 
 add_filter( 'bp_xprofile_field_get_children', 'bp_xprofile_repeater_field_get_children', 10, 3 );
 /**
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * @param array $children
  * @param boolean $for_editing
  * @param \BP_XProfile_Field $field
@@ -602,7 +602,7 @@ function bp_xprofile_repeater_field_get_children ( $children, $for_editing, $fie
  * 
  * @param type $field_group_id
  * @param type $user_id
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * @return type
  */
 function bp_get_profile_field_set_count ( $field_group_id, $user_id ) {
@@ -615,7 +615,7 @@ function bp_get_profile_field_set_count ( $field_group_id, $user_id ) {
  * @param type $field_group_id
  * @param type $user_id
  * @param type $count
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * @return type
  */
 function bp_set_profile_field_set_count ( $field_group_id, $user_id, $count ) {
@@ -627,7 +627,7 @@ function bp_set_profile_field_set_count ( $field_group_id, $user_id, $count ) {
 
 add_action( 'bp_after_profile_field_content', 'bp_print_add_repeater_set_button' );
 /**
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_print_add_repeater_set_button () {
     if ( 'edit' !== bp_current_action() ) {
@@ -650,7 +650,7 @@ function bp_print_add_repeater_set_button () {
 
 add_action( 'wp_ajax_bp_xprofile_add_repeater_set', 'bp_xprofile_ajax_add_repeater_set' );
 /**
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_xprofile_ajax_add_repeater_set () {
     check_ajax_referer( 'bp_xprofile_add_repeater_set', '_wpnonce' );
@@ -674,7 +674,7 @@ function bp_xprofile_ajax_add_repeater_set () {
 add_action( 'bp_before_profile_field_html', 'bp_profile_repeaters_print_group_html_start' );
 /**
  * Open wrapper of repeater set - on edit profile screen
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * @global type $first_xpfield_in_repeater
  */
 function bp_profile_repeaters_print_group_html_start () {
@@ -737,7 +737,7 @@ function bp_profile_repeaters_print_group_html_start () {
 add_action( 'bp_after_profile_field_content', 'bp_profile_repeaters_print_group_html_end', 4 );
 /**
  * Close wrapper of repeater set - on edit profile screen
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * @global boolean $first_xpfield_in_repeater
  */
 function bp_profile_repeaters_print_group_html_end () {
@@ -753,7 +753,7 @@ function bp_profile_repeaters_print_group_html_end () {
 add_action( 'bp_before_profile_field_item', 'bp_view_profile_repeaters_print_group_html_start' );
 /**
  * Open wrapper of repeater set - on View profile screen
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * @global type $first_xpfield_in_repeater
  */
 function bp_view_profile_repeaters_print_group_html_start () {
@@ -779,7 +779,7 @@ function bp_view_profile_repeaters_print_group_html_start () {
 add_action( 'bp_after_profile_field_items', 'bp_view_profile_repeaters_print_group_html_end', 4 );
 /**
  * Close wrapper of repeater set - on edit profile screen
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  * @global boolean $first_xpfield_in_repeater
  */
 function bp_view_profile_repeaters_print_group_html_end () {

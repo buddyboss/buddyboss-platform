@@ -52,7 +52,7 @@ add_action( bp_core_admin_hook(), 'xprofile_add_admin_menu' );
 /**
  * Function for opening the users tab while on Profile Types
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_member_type_show_correct_current_menu(){
 	$screen = get_current_screen();
@@ -94,7 +94,7 @@ add_action('admin_head', 'bp_member_type_show_correct_current_menu', 50);
 /**
  * Function for opening the users tab while on Profile Search
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 function bp_profile_search_show_correct_current_menu(){
 	$screen = get_current_screen();
@@ -511,8 +511,9 @@ function xprofile_admin_delete_group( $group_id ) {
  * Handles the adding or editing of profile field data for a user.
  *
  * @since BuddyPress 1.0.0
- * @since BuddyBoss 3.1.1 Updated to continue showing the field-edit form, after field is saved/updated.
- * @since BuddyBoss 3.1.1 Updated to exclude repeater field ids while determining field_order for new field.
+ * @since BuddyBoss 1.0.0 
+ * Updated to continue showing the field-edit form, after field is saved/updated.
+ * Updated to exclude repeater field IDs while determining field_order for new field.
  *
  * @param int      $group_id ID of the group.
  * @param int|null $field_id ID of the field being managed.
@@ -725,7 +726,7 @@ add_action( 'wp_ajax_xprofile_reorder_groups', 'xprofile_ajax_reorder_field_grou
 /**
  * Function which check the gender field previously added or not.
  *
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  *
  */
 function xprofile_check_gender_added_previously() {

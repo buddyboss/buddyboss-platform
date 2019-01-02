@@ -47,10 +47,6 @@ function bp_ps_clear_directory ()
 	foreach ($dirs as $dir) {
 		if ($dir->link == $current) {
 			add_filter ('bp_directory_members_search_form', function ($text) {return $text;});
-
-			wp_enqueue_script ('bp-ps-directory', plugins_url ('bp-ps-directory.js', __FILE__), array ('bp-jquery-cookie'), bp_get_version() );
-			$_COOKIE['bp-members-scope'] = 'all';
-			unset ($_COOKIE['bp-members-filter']);
 			break;
 		}
 	}

@@ -4,7 +4,7 @@
  *
  * @package BuddyBoss
  * @subpackage SettingsScreens
- * @since BuddyBoss 3.1.1
+ * @since BuddyBoss 1.0.0
  */
 
 /**

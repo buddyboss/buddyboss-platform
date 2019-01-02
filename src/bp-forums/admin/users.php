@@ -53,7 +53,7 @@ class BBP_Users_Admin {
 	/**
 	 * Remove bbp's dynamic roles from user role list
 	 *
-	 * @since BUddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public function remove_forum_roles( $role_list, $user_object ) {
 		$bbp_roles = array_map( '__return_zero', bbp_get_dynamic_roles() );

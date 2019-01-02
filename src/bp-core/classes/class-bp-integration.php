@@ -13,21 +13,21 @@ class BP_Integration {
 	/**
 	 * Unique ID for the integration.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public $id = '';
 
 	/**
 	 * Unique slug for the integration, for use in query strings and URLs.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public $slug = '';
 
 	/**
 	 * The path to the integration's files.
 	 *
-	 * @since BuddyBoss 3.1.1
+	 * @since BuddyBoss 1.0.0
 	 */
 	public $path = '';
 

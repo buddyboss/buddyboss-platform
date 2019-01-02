@@ -204,15 +204,17 @@ class BP_Friends_Component extends BP_Component {
 			'item_css_id'     => 'friends-my-friends'
 		);
 
-		$sub_nav[] = array(
-			'name'            => _x( 'Mutual Connections', 'Connections screen sub nav', 'buddyboss' ),
-			'slug'            => 'mutual',
-			'parent_url'      => $friends_link,
-			'parent_slug'     => $slug,
-			'screen_function' => 'friends_screen_mutual_friends',
-			'position'        => 20,
-			'user_has_access' => ! bp_is_my_profile() && bp_loggedin_user_id()
-		);
+		if ( bp_get_mutual_friendships() ) {
+			$sub_nav[] = array(
+				'name'            => _x( 'Mutual Connections', 'Connections screen sub nav', 'buddyboss' ),
+				'slug'            => 'mutual',
+				'parent_url'      => $friends_link,
+				'parent_slug'     => $slug,
+				'screen_function' => 'friends_screen_mutual_friends',
+				'position'        => 20,
+				'user_has_access' => ! bp_is_my_profile() && bp_loggedin_user_id()
+			);
+		}
 
 		$sub_nav[] = array(
 			'name'            => _x( 'Invitations', 'Connections screen sub nav', 'buddyboss' ),
