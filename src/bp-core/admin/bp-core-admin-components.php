@@ -217,14 +217,6 @@ function bp_core_admin_components_options() {
                                         </a>
                                     </span>
 			                    <?php endif; ?>
-			                    <?php if ( isset( $active_components[esc_attr( $name )] ) && ! empty( $labels['view'] ) ) : ?>
-                                    <span><?php _e( '|', 'buddyboss' ); ?></span>
-                                    <span class="view">
-                                        <a href="<?php echo esc_url( $labels['view'] ); ?>">
-                                            <?php _e( 'View', 'buddyboss' ); ?>
-                                        </a>
-                                    </span>
-			                    <?php endif; ?>
                             </div>
 						</td>
 
