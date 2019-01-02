@@ -304,10 +304,8 @@ function bp_core_admin_components_settings_handler() {
 		$current_action = $_GET['action'];
 	}
 
-	$page = bp_core_do_network_admin()  ? 'settings.php' : 'admin.php';
-
 	// Where are we redirecting to?
-	$base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $current_action, 'updated' => 'true' ), $page ) );
+	$base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $current_action, 'updated' => 'true' ), 'admin.php' ) );
 
 	// Redirect.
 	wp_redirect( $base_url );
@@ -381,10 +379,8 @@ function bp_core_admin_components_activation_handler() {
 		$current_action = $_GET['action'];
 	}
 
-	$page = bp_core_do_network_admin()  ? 'settings.php' : 'admin.php';
-
 	// Where are we redirecting to?
-	$base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $current_action, 'updated' => 'true' ), $page ) );
+	$base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $current_action, 'updated' => 'true' ), 'admin.php' ) );
 
 	// Redirect.
 	wp_redirect( $base_url );

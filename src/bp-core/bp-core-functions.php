@@ -2408,12 +2408,11 @@ function bp_core_get_minified_asset_suffix() {
  * @return array Requested components' data.
  */
 function bp_core_get_components( $type = 'all' ) {
-	$page = bp_core_do_network_admin()  ? 'settings.php' : 'admin.php';
 
 	$required_components = array(
 		'members' => array(
 			'title'       => __( 'User Profiles', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-xprofile' ) , $page ) ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-xprofile' ) , 'admin.php' ) ),
 			'description' => __( 'Everything in a community website revolves around its members.', 'buddyboss' ),
 		),
 		'xprofile' => array(
@@ -2432,13 +2431,13 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'friends'  => array(
 			'title'       => __( 'User Connections', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-friends' ) , $page ) ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-friends' ) , 'admin.php' ) ),
 			'description' => __( 'Let your users make connections with each other and focus on the people they care about the most.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'invites'  => array(
 			'title'       => __( 'User Invites', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-invites' ) , $page ) ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-invites' ) , 'admin.php' ) ),
 			'description' => __( 'Allow your users to send email invites to non-members to join the network.', 'buddyboss' ),
 			'default'     => false,
 		),
@@ -2449,7 +2448,7 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'activity' => array(
 			'title'       => __( 'Activity Feeds', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-activity' ) , $page ) ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-activity' ) , 'admin.php' ) ),
 			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, and @mentions, all with email notification support.', 'buddyboss' ),
 			'default'     => false,
 		),
@@ -2465,19 +2464,19 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'groups'   => array(
 			'title'       => __( 'Social Groups', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-groups' ) , $page ) ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-groups' ) , 'admin.php' ) ),
 			'description' => __( 'Groups allow your users to organize themselves into specific public, private or hidden social areas with separate activity feeds and member listings.', 'buddyboss' ),
             'default'     => false,
 		),
 		'forums'   => array(
 			'title'       => __( 'Forum Discussions', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-forums' ) , $page ) ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-forums' ) , 'admin.php' ) ),
 			'description' => __( 'Forums allow your users to have discussions using Q&A style message boards. Forums can be standalone or connected to social groups.', 'buddyboss' ),
             'default'     => false,
 		),
 		'search'   => array(
 			'title'       => __( 'Network Search', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-search' ) , $page ) ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-search' ) , 'admin.php' ) ),
 			'description' => __( 'Allow your users to search the entire network, along with custom post types of your choice, all in one unified search bar.', 'buddyboss' ),
 			'default'     => false,
 		)
