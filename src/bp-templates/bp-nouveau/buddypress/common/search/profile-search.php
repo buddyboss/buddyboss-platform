@@ -216,7 +216,6 @@ $F = bp_profile_search_escaped_form_data ( $form_id );
 								</label>
 							</div>
 						<?php } ?>
-						<a href="javascript:bp_ps_clear_radio('<?php echo $id; ?>_wrap')"><?php echo __('Clear', 'buddyboss'); ?></a>
 						<?php
 					break;
 
@@ -247,6 +246,7 @@ $F = bp_profile_search_escaped_form_data ( $form_id );
 
 		<div class="submit-wrapper">
 			<input type="submit" value="<?php echo __('Search', 'buddyboss'); ?>" />
+            <a href='#' onclick="return bp_ps_clear_form_elements(this);"><?php _e( 'Reset', 'buddyboss' );?></a>
 		</div>
 
 	</form>
