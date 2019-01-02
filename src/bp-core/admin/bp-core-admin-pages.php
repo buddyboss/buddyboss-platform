@@ -48,7 +48,7 @@ function bp_core_admin_register_page_fields() {
 	$existing_pages = bp_core_get_directory_page_ids();
 	$directory_pages = bp_core_admin_get_directory_pages();
 
-	add_settings_section( 'bp_pages', __( 'Directories', 'buddyboss' ), wpautop( __( 'Associate a WordPress Page with each BuddyPress component directory.', 'buddyboss' ) ), 'bp-pages' );
+	add_settings_section( 'bp_pages', __( 'Directories', 'buddyboss' ), 'bp_core_admin_directory_pages_description', 'bp-pages' );
 	foreach ($directory_pages as $name => $label) {
 		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_pages', compact('existing_pages', 'name', 'label') );
 		register_setting( 'bp-pages', $name, [] );
@@ -74,6 +74,15 @@ function bp_core_admin_register_registration_page_fields() {
 	}
 }
 add_action( 'admin_init', 'bp_core_admin_register_registration_page_fields' );
+
+/**
+ * Directory page settings section description
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_core_admin_directory_pages_description() {
+    echo wpautop( __( 'Associate a WordPress Page with each BuddyPress component directory.', 'buddyboss' ) );
+}
 
 /**
  * Registration page settings section description
@@ -164,8 +173,7 @@ function bp_core_admin_maybe_save_pages_settings() {
 		bp_core_update_directory_page_ids( $new_directory_pages );
 	}
 
-	$page = bp_core_do_network_admin()  ? 'settings.php' : 'admin.php';
-	bp_core_redirect( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages', 'updated' => 'true' ) , $page ) ) );
+	bp_core_redirect( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages', 'updated' => 'true' ) , 'admin.php' ) ) );
 }
 
 add_action( 'bp_admin_init', 'bp_core_admin_maybe_save_pages_settings', 100 );
