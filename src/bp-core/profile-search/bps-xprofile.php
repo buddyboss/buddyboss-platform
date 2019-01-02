@@ -51,9 +51,9 @@ function bp_ps_xprofile_setup ($fields)
 }
 
 function bp_ps_xprofile_search ($f)
-{
-	global $bp, $wpdb;
-
+{   
+    global $bp, $wpdb;
+    
 	$value = $f->value;
 	$filter = $f->format. '_'.  ($f->filter == ''? 'is': $f->filter);
     
@@ -73,9 +73,20 @@ function bp_ps_xprofile_search ($f)
 		if (isset ($value['max']))  $sql['where']['max'] = $wpdb->prepare ("value <= %f", $value['max']);
 		break;
 
-	case 'date_range':
-		if (isset ($value['min']))  $sql['where']['min'] = $wpdb->prepare ("DATE(value) >= %s", $value['min']);
-		if (isset ($value['max']))  $sql['where']['max'] = $wpdb->prepare ("DATE(value) <= %s", $value['max']);
+	case 'date_date_range':
+        $range_types = array( 'min', 'max' );
+        foreach ( $range_types as $range_type ) {
+            if ( isset( $value[ $range_type ]['year'] ) && !empty( $value[ $range_type ]['year'] ) ) {
+                $year = $f->value[ $range_type ]['year'];
+                $month  = !empty( $f->value[ $range_type ]['month'] ) ? $f->value[ $range_type ]['month'] : '00';
+                $day    = !empty( $f->value[ $range_type ]['day'] ) ? $f->value[ $range_type ]['day'] : '00';
+                $date = $year . '-' . $month . '-' . $day;
+                
+                $operator = 'min' == $range_type ? '>=' : '<=';
+                
+                $sql['where'][ $range_type ] = $wpdb->prepare ( "DATE(value) $operator %s", $date );
+            }
+        }
 		break;
 
 	case 'date_age_range':

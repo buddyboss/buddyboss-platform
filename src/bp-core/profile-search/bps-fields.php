@@ -27,7 +27,7 @@ class bp_ps_Fields
 		'text'			=> array ('contains' => 'textbox', '' => 'textbox', 'like' => 'textbox'),
 		'integer'		=> array ('' => 'number', 'range' => 'range'),
 		'decimal'		=> array ('' => 'textbox', 'range' => 'range'),
-		'date'			=> array ('age_range' => 'range'),
+		'date'			=> array ('date_range' => 'date_range'),
 		'location'		=> array ('distance' => 'distance', 'contains' => 'textbox', '' => 'textbox', 'like' => 'textbox'),
 
 		'text/e'		=> array ('' => array ('selectbox', 'radio'), 'one_of' => array ('checkbox', 'multiselectbox')),
@@ -43,7 +43,7 @@ class bp_ps_Fields
 			''				=> __('is', 'buddyboss'),
 			'like'			=> __('is like', 'buddyboss'),
 			'range'			=> __('range', 'buddyboss'),
-			'age_range'		=> __('age range', 'buddyboss'),
+			'date_range'    => __('Date Range', 'buddyboss'),
 			'distance'		=> __('distance', 'buddyboss'),
 			'one_of'		=> __('is one of', 'buddyboss'),
 			'match_any'		=> __('match any', 'buddyboss'),
@@ -141,28 +141,90 @@ function bp_ps_parse_request ($request)
 			if (isset ($f->value))
 				$f->filter = $filter;
 			break;
-		case 'age_range':
-			if (is_numeric ($value['min']))
-				$f->value['min'] = (int)$value['min'];
-			if (is_numeric ($value['max']))
-				$f->value['max'] = (int)$value['max'];
-			if (isset ($f->value))
-				$f->filter = $filter;
+		case 'date_range':
+            $range_types = array( 'min', 'max' );
+            foreach ( $range_types as $range_type ) {
+                if ( isset( $value[ $range_type ] ) && !empty( $value[ $range_type ] ) ) {
+                    $f->value[ $range_type ]['day'] = isset( $value[ $range_type ]['day'] ) ? $value[ $range_type ]['day'] : 0;
+                    $f->value[ $range_type ]['year'] = isset( $value[ $range_type ]['year'] ) ? (int) $value[ $range_type ]['year'] : 0;
+                    $f->value[ $range_type ]['month'] = isset( $value[ $range_type ]['month'] ) ? $value[ $range_type ]['month'] : '';
+
+                    //if year is not set, we reset month and day as well
+                    if ( empty( $f->value[ $range_type ]['year'] ) ) {
+                        $f->value[ $range_type ]['month'] = '';
+                        $f->value[ $range_type ]['day'] = '';
+                    }
+                    
+                    //if month is not set, we reset day
+                    if ( empty( $f->value[ $range_type ]['month'] ) ) {
+                        $f->value[ $range_type ]['day'] = '';
+                    }
+                }
+            }
+            
+            $f->filter = $filter;
 			break;
-		case 'range_min':
-		case 'age_range_min':
+            
+		case 'range_min':		
 			if (!is_numeric ($value))  break;
 			$f->filter = rtrim ($filter, '_min');
 			$f->value['min'] = $value;
-			if ($filter == 'age_range_min')  $f->value['min'] = (int)$f->value['min'];
 			break;
+            
 		case 'range_max':
-		case 'age_range_max':
 			if (!is_numeric ($value))  break;
 			$f->filter = rtrim ($filter, '_max');
 			$f->value['max'] = $value;
-			if ($filter == 'age_range_max')  $f->value['max'] = (int)$f->value['max'];
 			break;
+            
+        case 'date_range_min':
+            $range_types = array( 'min' );
+            foreach ( $range_types as $range_type ) {
+                if ( isset( $value[ $range_type ] ) && !empty( $value[ $range_type ] ) ) {
+                    $f->value[ $range_type ]['day'] = isset( $value[ $range_type ]['day'] ) ? $value[ $range_type ]['day'] : 0;
+                    $f->value[ $range_type ]['year'] = isset( $value[ $range_type ]['year'] ) ? (int) $value[ $range_type ]['year'] : 0;
+                    $f->value[ $range_type ]['month'] = isset( $value[ $range_type ]['month'] ) ? $value[ $range_type ]['month'] : '';
+
+                    //if year is not set, we reset month and day as well
+                    if ( empty( $f->value[ $range_type ]['year'] ) ) {
+                        $f->value[ $range_type ]['month'] = '';
+                        $f->value[ $range_type ]['day'] = '';
+                    }
+                    
+                    //if month is not set, we reset day
+                    if ( empty( $f->value[ $range_type ]['month'] ) ) {
+                        $f->value[ $range_type ]['day'] = '';
+                    }
+                }
+            }
+            
+            $f->filter = $filter;
+			break;
+            
+        case 'date_range_max':
+            $range_types = array( 'max' );
+            foreach ( $range_types as $range_type ) {
+                if ( isset( $value[ $range_type ] ) && !empty( $value[ $range_type ] ) ) {
+                    $f->value[ $range_type ]['day'] = isset( $value[ $range_type ]['day'] ) ? $value[ $range_type ]['day'] : 0;
+                    $f->value[ $range_type ]['year'] = isset( $value[ $range_type ]['year'] ) ? (int) $value[ $range_type ]['year'] : 0;
+                    $f->value[ $range_type ]['month'] = isset( $value[ $range_type ]['month'] ) ? $value[ $range_type ]['month'] : '';
+
+                    //if year is not set, we reset month and day as well
+                    if ( empty( $f->value[ $range_type ]['year'] ) ) {
+                        $f->value[ $range_type ]['month'] = '';
+                        $f->value[ $range_type ]['day'] = '';
+                    }
+                    
+                    //if month is not set, we reset day
+                    if ( empty( $f->value[ $range_type ]['month'] ) ) {
+                        $f->value[ $range_type ]['day'] = '';
+                    }
+                }
+            }
+            
+            $f->filter = $filter;
+			break;
+        
 		case 'label':
 			$f->label = stripslashes ($value);
 			break;
@@ -185,7 +247,7 @@ function bp_ps_match_key ($key, $fields)
 function bp_ps_is_filter ($filter, $f)
 {
 	if ($filter == 'range_min' || $filter == 'range_max')  $filter = 'range';
-	if ($filter == 'age_range_min' || $filter == 'age_range_max')  $filter = 'age_range';
+	if ($filter == 'date_range_min' || $filter == 'date_range_max')  $filter = 'date_range';
 	if ($filter == 'label')  return true;
 
 	return bp_ps_Fields::is_filter ($f, $filter);

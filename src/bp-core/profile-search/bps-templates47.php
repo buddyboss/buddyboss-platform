@@ -171,7 +171,7 @@ function bp_ps_full_label ($f)
 		''				=> __('<strong>%1$s</strong><span> is:<span>', 'buddyboss'),
 		'like'			=> __('<strong>%1$s</strong><span> is like:<span>', 'buddyboss'),
 		'range'			=> __('<strong>%1$s</strong><span> range:<span>', 'buddyboss'),
-		'age_range'		=> __('<strong>%1$s</strong><span> range:<span>', 'buddyboss'),
+		'date_range'    => __('<strong>%1$s</strong><span> range:<span>', 'buddyboss'),
 		'distance'		=> __('<strong>%1$s</strong><span> is within:<span>', 'buddyboss'),
 		'one_of'		=> __('<strong>%1$s</strong><span> is one of:<span>', 'buddyboss'),
 		'match_any'		=> __('<strong>%1$s</strong><span> match any:<span>', 'buddyboss'),
@@ -197,7 +197,7 @@ function bp_ps_print_filter ($f)
     if ( isset( $f->filter ) ) {
         switch ($f->filter) {
             case 'range':
-            case 'age_range':
+            case 'date_range':
                 if (!isset ($f->value['max']))
                     return sprintf (esc_html__('min: %1$s', 'buddyboss'), $f->value['min']);
                 if (!isset ($f->value['min']))

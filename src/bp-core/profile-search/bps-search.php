@@ -119,7 +119,7 @@ function bp_ps_save_hidden_filters ($attr, $content)
 			if (($max = trim ($max)) !== '')  $values['max'] = $max;
 			if (!empty ($values))  $bp_ps_hidden_filters[$key] = $values;
 			break;
-
+            
 		case 'match_any/e':
 		case 'match_all/e':
 		case '/e':
@@ -200,39 +200,39 @@ function bp_ps_filter_members ($qs, $object)
 	return $qs;
 }
 
-function bp_ps_search ($request, $users=null)
-{
-	$results = array ('users' => array (0), 'validated' => true);
+function bp_ps_search ( $request, $users = null ) {
+    $results = array ( 'users' => array ( 0 ), 'validated' => true );
 
-	$fields = bp_ps_parse_request ($request);
-	foreach ($fields as $f)
-	{
-		if (!isset ($f->filter))  continue;
-		if (!is_callable ($f->search))  continue;
+    $fields = bp_ps_parse_request( $request );
 
-		$f = apply_filters( 'bp_ps_field_before_query', $f );
+    foreach ( $fields as $f ) {
+        if ( !isset( $f->filter ) )
+            continue;
+        if ( !is_callable( $f->search ) )
+            continue;
 
-		$found = call_user_func ($f->search, $f);
-		$found = apply_filters ('bp_ps_field_search_results', $found, $f);
+        $f = apply_filters( 'bp_ps_field_before_query', $f );
 
-		$match_all = apply_filters ('bp_ps_match_all', true);
-		if ($match_all)
-		{
-			$users = isset ($users)? array_intersect ($users, $found): $found;
-			if (count ($users) == 0)  return $results;
-		}
-		else
-		{
-			$users = isset ($users)? array_merge ($users, $found): $found;
-		}
-	}
+        $found = call_user_func( $f->search, $f );
+        $found = apply_filters( 'bp_ps_field_search_results', $found, $f );
 
-	if (isset ($users))
-		$results['users'] = $users;
-	else
-		$results['validated'] = false;
+        $match_all = apply_filters( 'bp_ps_match_all', true );
+        if ( $match_all ) {
+            $users = isset( $users ) ? array_intersect( $users, $found ) : $found;
+            if ( count( $users ) == 0 )
+                return $results;
+        }
+        else {
+            $users = isset( $users ) ? array_merge( $users, $found ) : $found;
+        }
+    }
 
-	return $results;
+    if ( isset( $users ) )
+        $results[ 'users' ] = $users;
+    else
+        $results[ 'validated' ] = false;
+
+    return $results;
 }
 
 function bp_ps_esc_like ($text)
