@@ -82,6 +82,21 @@ function bp_ps_fields_box ( $post ) {
 			_bp_ps_filter_select ($field, "bp_ps_options[field_mode][$k]", "field_mode$k", $bp_ps_options['field_mode'][$k]);
 ?>
 			<a href="javascript:remove('field_div<?php echo $k; ?>')" class="delete"><?php _e('Remove', 'buddyboss'); ?></a>
+            
+            <?php 
+            if ( 'date_range' == $bp_ps_options['field_mode'][$k] ) {
+                global $wpdb;
+                $bp = buddypress();
+                $field_group_id = $wpdb->get_var( "SELECT group_id FROM {$bp->profile->table_name_fields} WHERE id = {$field->id} AND type != 'option' " );
+                $is_repeater_enabled = 'on' == bp_xprofile_get_meta( $field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
+
+                if ( $is_repeater_enabled ) {
+                    echo "<br><span class='bp_ps_col1'></span>&nbsp;&nbsp;";//for spacing
+                    echo "<em>". __( 'WARNING', 'buddyboss' ) ."</em>: " . __( 'You are adding a date field which is inside a repeater set. This will not work correctly in search.', 'buddyboss' );
+                    echo "<p></p>";//for spacing
+                }
+            }
+            ?>
 		</div>
 <?php
 	}
