@@ -2626,7 +2626,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 				'link_text'         => __( 'Back to Admin', 'buddyboss' ),
 				'link_id'           => 'switch-' . $old_user->ID,
 				'link_rel'          => 'stop',
-				'link_class'        => 'switch-button back-to-admin stop bp-toggle-action-button',
+				'link_class'        => 'switch-button back-to-admin stop bp-toggle-action-button outline',
 			)
 			, $button_args );
 	} else {
@@ -2642,7 +2642,7 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 				'link_text'         => __( 'View As', 'buddyboss' ),
 				'link_id'           => 'switch-' . $user_id,
 				'link_rel'          => 'start',
-				'link_class'        => 'switch-button view-as start',
+				'link_class'        => 'switch-button view-as start outline',
 			)
 			, $button_args );
 	}
