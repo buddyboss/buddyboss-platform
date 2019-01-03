@@ -125,8 +125,10 @@ if ( is_admin() ) {
 // Activation redirect.
 add_action( 'bp_activation', 'bp_add_activation_redirect' );
 
-// Plugin updater code
-add_action( 'bp_activation', 'bp_platform_plugin_updater' );
+//Add Platform plugin updater code
+if ( is_admin() ) {
+	add_action( 'bp_init', 'bp_platform_plugin_updater' );
+}
 
 // Email unsubscribe.
 add_action( 'bp_get_request_unsubscribe', 'bp_email_unsubscribe_handler' );

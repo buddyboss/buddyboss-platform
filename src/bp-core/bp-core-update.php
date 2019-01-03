@@ -690,7 +690,7 @@ function bp_add_activation_redirect() {
  */
 function bp_platform_plugin_updater() {
 	if ( class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) {
-		new BP_BuddyBoss_Platform_Updater( 'http://update.buddyboss.com/plugin', basename( BP_PLUGIN_DIR ), 847 );
+		new BP_BuddyBoss_Platform_Updater( 'http://update.buddyboss.com/plugin', basename( BP_PLUGIN_DIR ) . '/bp-loader.php', 847 );
 	}
 }
 
