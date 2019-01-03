@@ -808,7 +808,7 @@ function xprofile_admin_field( $admin_field, $admin_group, $class = '' ) {
 		bp_xprofile_firstname_field_id(),
 		bp_xprofile_lastname_field_id(),
 		bp_xprofile_nickname_field_id()
-	] ) )? '' : 'sortable';
+	] ) )? 'primary_field' : 'sortable';
 
 	$fieldset_class[] = ! empty( $class )? $class : '';
 	$fieldset_class = array_filter( $fieldset_class );

@@ -388,7 +388,7 @@ jQuery( document ).ready( function() {
 
 	function set_tab_items( $tabs ) {
 		$tab_items = jQuery( 'ul:first li', $tabs ).droppable({
-			accept: '.connectedSortable fieldset',
+			accept: '.connectedSortable fieldset:not(.primary_field)',
 			hoverClass: 'ui-state-hover',
 			activeClass: 'ui-state-acceptable',
 			touch: 'pointer',
