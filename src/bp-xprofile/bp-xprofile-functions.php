@@ -835,7 +835,6 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 		}
 	}
 
-	//$matched_user_ids = array(2036,4208);
 	if ( ! empty( $matched_user_ids ) ) {
 		$search_core     = $sql['where']['search'];
 		$search_combined = " ( u.{$query->uid_name} IN (" . implode(',', $matched_user_ids) . ") OR {$search_core} )";
