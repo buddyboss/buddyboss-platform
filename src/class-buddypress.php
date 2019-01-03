@@ -649,6 +649,7 @@ class BuddyPress {
 			'BP_Core_Whos_Online_Widget'     => 'members',
 			'BP_Registration_Theme_Compat'   => 'members',
 			'BP_Signup'                      => 'members',
+			'BP_BuddyBoss_Platform_Updater'  => 'core',
 		);
 
 		$component = null;
