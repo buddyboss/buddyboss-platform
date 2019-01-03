@@ -125,7 +125,7 @@ if ( is_admin() ) {
 // Activation redirect.
 add_action( 'bp_activation', 'bp_add_activation_redirect' );
 
-//Add Platform plugin updater code
+// Plugin updater code
 add_action( 'bp_activation', 'bp_platform_plugin_updater' );
 
 // Email unsubscribe.
