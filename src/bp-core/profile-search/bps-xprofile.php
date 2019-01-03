@@ -257,11 +257,11 @@ function bp_ps_xprofile_options ($field_id)
 	return $options;
 }
 
-add_filter ('bp_ps_add_fields', 'bp_ps_anyfield_setup');
+add_filter ('bp_ps_add_fields', 'bp_ps_anyfield_setup', 12 );
 function bp_ps_anyfield_setup ($fields)
 {
 	$f = new stdClass;
-	$f->group = __('Keyword', 'buddyboss');
+	$f->group = __('Others', 'buddyboss');
 	$f->code = 'field_any';
 	$f->name = __('Search all fields', 'buddyboss');
 	$f->description = __('Search every profile field', 'buddyboss');
@@ -390,4 +390,24 @@ function bp_ps_anyfield_search ($f)
 
 	$results = $wpdb->get_col ($query);
 	return $results;
+}
+
+add_filter( 'bp_ps_add_fields', 'bp_ps_heading_field_setup', 11 );
+function bp_ps_heading_field_setup ( $fields ) {
+	$f = new stdClass;
+	$f->group = __('Others', 'buddyboss');
+	$f->code = 'heading';
+	$f->name = __('Heading', 'buddyboss');
+	$f->description = __( 'Used to segregate form into sections', 'buddyboss' );
+
+	$f->format = 'text';
+	$f->options = array ();
+	$f->search = 'bp_ps_search_dummy_fields';
+
+	$fields[] = $f;
+	return $fields;
+}
+
+function bp_ps_search_dummy_fields ( $f ) {
+    return array();
 }
