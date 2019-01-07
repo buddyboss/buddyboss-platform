@@ -394,8 +394,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				);
 			}
 
-			$like_count = bp_activity_get_meta( bp_get_activity_id(), 'favorite_count' );
-			$like_count = ( isset( $like_count ) &&  !empty( $like_count ) ) ? $like_count : 0;
+			$like_count = bp_activity_get_favorite_users_string( bp_get_activity_id() );
 
 			$buttons['activity_favorite'] =  array(
 				'id'                => 'activity_favorite',
