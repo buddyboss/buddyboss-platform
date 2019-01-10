@@ -285,7 +285,7 @@ function bp_nouveau_wrapper( $args = array() ) {
 	$container         = $r['container'];
 	$container_id      = '';
 	$container_classes = '';
-	$output            = $r['output'];
+	$output            = trim($r['output']);
 
 	if ( ! empty( $r['container_id'] ) ) {
 		$container_id = ' id="' . esc_attr( $r['container_id'] ) . '"';
