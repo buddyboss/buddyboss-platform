@@ -1,27 +1,42 @@
-<li class="bboss_search_item bboss_search_item_group">
-    <div class="item-avatar">
-        <a href="<?php bp_group_permalink(); ?>"><?php bp_group_avatar( 'type=full&width=70&height=70' ); ?></a>
-    </div>
+<li <?php bp_group_class( array( 'item-entry bboss_search_item bboss_search_item_group' ) ); ?> data-bp-item-id="<?php bp_group_id(); ?>" data-bp-item-component="groups">
+	<div class="list-wrap">
 
-    <div class="item">
-        <div class="item-title"><a href="<?php bp_group_permalink(); ?>"><?php bp_group_name(); ?></a></div>
-        <div class="item-meta"><span class="activity"><?php printf( __( 'active %s', 'buddypress-global-search' ), bp_get_group_last_active() ); ?></span></div>
+		<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
+			<div class="item-avatar">
+				<a href="<?php bp_group_permalink(); ?>"><?php bp_group_avatar( bp_nouveau_avatar_args() ); ?></a>
+			</div>
+		<?php endif; ?>
 
-        <div class="item-desc"><?php bp_group_description_excerpt(); ?></div>
+		<div class="item">
 
-        <?php do_action( 'bp_directory_groups_item' ); ?>
+			<div class="item-block">
 
-    </div>
+				<h2 class="list-title groups-title"><?php bp_group_link(); ?></h2>
 
-    <div class="action">
+				<?php if ( bp_nouveau_group_has_meta() ) : ?>
 
-        <?php do_action( 'bp_directory_groups_actions' ); ?>
+					<p class="item-meta group-details"><?php bp_nouveau_group_meta(); ?></p>
 
-        <div class="meta">
+				<?php endif; ?>
 
-            <?php bp_group_type(); ?> / <?php bp_group_member_count(); ?>
+				<p class="last-activity item-meta">
+					<?php
+					printf(
+					/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
+						__( 'active %s', 'buddypress' ),
+						bp_get_group_last_active()
+					);
+					?>
+				</p>
 
-        </div>
+			</div>
 
-    </div>
+			<?php bp_nouveau_groups_loop_item(); ?>
+
+			<?php bp_nouveau_groups_loop_buttons(); ?>
+
+		</div>
+
+
+	</div>
 </li>

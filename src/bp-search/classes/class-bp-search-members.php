@@ -60,7 +60,6 @@ if (!class_exists('Bp_Search_Members')):
 		public function sql( $search_term, $only_totalrow_count=false ){
 			global $wpdb, $bp;
 			$query_placeholder = array();
-			$items_to_search = BP_Search::instance()->option('items-to-search');
 
 			$COLUMNS = " SELECT ";
 
@@ -80,18 +79,10 @@ if (!class_exists('Bp_Search_Members')):
 			/* ++++++++++++++++++++++++++++++++
 			 * wp_users table fields
 			 +++++++++++++++++++++++++++++++ */
-			$user_fields = array();
-			foreach( $items_to_search as $item ){
-				//should start with member_field_ prefix
-				//see print_search_options
-				if( strpos( $item, 'member_field_' )===0 ){
-					$user_fields[] = str_replace( 'member_field_', '', $item );
-				}
-			}
-
+			$user_fields = bp_get_search_user_fields();
 			if( !empty( $user_fields ) ){
 				$conditions_wp_user_table = array();
-				foreach ( $user_fields as $user_field ) {
+				foreach ( $user_fields as $user_field => $field_label ) {
 
 					if ( 'user_meta' === $user_field ) {
 						//Search in user meta table for terms
@@ -133,8 +124,7 @@ if (!class_exists('Bp_Search_Members')):
 					foreach ( $groups as $group ){
 						if ( !empty( $group->fields ) ){
 							foreach ( $group->fields as $field ) {
-								$item = 'xprofile_field_' . $field->id;
-								if( !empty( $items_to_search ) && in_array( $item, $items_to_search ) ) {
+								if ( bp_is_search_xprofile_enable( $field->id ) ) {
 
 									if( in_array( $field->type, $word_search_field_type ) ) {
 										$selected_xprofile_fields['word_search'][] = $field->id;
@@ -204,8 +194,6 @@ if (!class_exists('Bp_Search_Members')):
 
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
 
-			//var_dump( $sql );
-
                         return apply_filters(
                             'Bp_Search_Members_sql',
                             $sql,
@@ -218,11 +206,10 @@ if (!class_exists('Bp_Search_Members')):
 
 		protected function generate_html( $template_type='' ){
 			$group_ids = array();
+
 			foreach( $this->search_results['items'] as $item_id => $item ){
 				$group_ids[] = $item_id;
 			}
-
-			$template = 'nouveau' == bp_get_theme_compat_id() ?  'loop/member-nouveau' :  'loop/member';
 
 			//now we have all the posts
 			//lets do a groups loop
@@ -234,7 +221,7 @@ if (!class_exists('Bp_Search_Members')):
 						'id'	=> bp_get_member_user_id(),
 						'type'	=> $this->type,
 						'title'	=> bp_get_member_name(),
-						'html'	=> buddyboss_global_search_buffer_template_part( $template, $template_type, false ),
+						'html'	=> buddyboss_global_search_buffer_template_part( 'loop/member', $template_type, false ),
 					);
 
 					$this->search_results['items'][bp_get_member_user_id()] = $result_item;

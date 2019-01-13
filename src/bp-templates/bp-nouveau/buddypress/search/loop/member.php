@@ -1,41 +1,40 @@
-<li class="bboss_search_item bboss_search_item_member">
-    <div class="item-avatar">
-        <a href="<?php bp_member_permalink(); ?>"><?php bp_member_avatar('type=full&width=70&height=70'); ?></a>
-    </div>
+<li <?php bp_member_class( array( 'item-entry', 'bboss_search_item' ) ); ?> data-bp-item-id="<?php bp_member_user_id(); ?>" data-bp-item-component="members">
+	<div class="list-wrap">
 
-    <div class="item">
-        <div class="item-title">
-            <a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a>
-        </div>
+		<div class="item-avatar">
+			<a href="<?php bp_member_permalink(); ?>"><?php bp_member_avatar( bp_nouveau_avatar_args() ); ?></a>
+		</div>
 
-        <div class="item-meta">
-            <span class="activity">
-                <?php bp_member_last_active(); ?>
-            </span>
-        </div>
+		<div class="item">
 
-        <div class="item-desc">
-            <p>
-                <?php if ( bp_get_member_latest_update() ) : ?>
-                    <?php bp_member_latest_update( array( 'view_link' => true ) ); ?>
-                <?php endif; ?>
-            </p>
-        </div>
+			<div class="item-block">
 
-        <?php
-         /***
-          * If you want to show specific profile fields here you can,
-          * but it'll add an extra query for each member in the loop
-          * (only one regardless of the number of fields you show):
-          *
-          * bp_member_profile_data( 'field=the field name' );
-          */
-        ?>
-    </div>
+				<h2 class="list-title member-name">
+					<a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a>
+				</h2>
 
-    <div class="action">
+				<?php if ( bp_nouveau_member_has_meta() ) : ?>
+					<p class="item-meta last-activity">
+						<?php bp_nouveau_member_meta(); ?>
+					</p><!-- #item-meta -->
+				<?php endif; ?>
 
-        <?php do_action( 'bp_directory_members_actions' ); ?>
+				<div class="members-meta action">
+					<?php
+					bp_nouveau_members_loop_buttons(
+						array(
+							'container'      => 'ul',
+							'button_element' => 'button',
+						)
+					);
+					?>
+				</div>
 
-    </div>
+			</div>
+
+		</div><!-- // .item -->
+
+
+
+	</div>
 </li>

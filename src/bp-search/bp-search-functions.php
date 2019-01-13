@@ -424,3 +424,12 @@ function buddyboss_global_search_body_class( $wp_classes ) {
 
 	return apply_filters( 'buddyboss_global_search_body_class', $wp_classes );
 }
+
+function bp_get_search_user_fields() {
+	return [
+		'user_meta'    => __( 'User Meta', 'buddyboss' ),
+		'display_name' => __( 'Display Name', 'buddyboss' ),
+		'user_email'   => __( 'User Email', 'buddyboss' ),
+		'user_login'   => __( 'Username', 'buddyboss' )
+	];
+}

@@ -26,7 +26,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 		 */
 		private $search_helpers = array();
 
-		private $searchable_items;
+		public $searchable_items;
+
 		/**
 		 * The variable to hold arguments used for search.
 		 * It will be used by other methods later on.
@@ -149,25 +150,43 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 			}
 
 			//Check BuddyPress is active
-
 			if ( bp_is_search_members_enable() ) {
 				require_once( $bp->plugin_dir . 'bp-search/classes/class-bp-search-members.php' );
 				$this->search_helpers['members'] = Bp_Search_Members::instance();
+				$this->searchable_items[]        = 'members';
 			}
 
 			if ( bp_is_active( 'groups' ) && bp_is_search_groups_enable() ) {
 				require_once( $bp->plugin_dir . 'bp-search/classes/class-bp-search-groups.php' );
 				$this->search_helpers['groups'] = Bp_Search_Groups::instance();
+				$this->searchable_items[]       = 'groups';
 			}
 
 			if ( bp_is_active( 'activity' ) && bp_is_search_activity_enable() ) {
 				require_once( $bp->plugin_dir . 'bp-search/classes/class-bp-search-activities.php' );
 				$this->search_helpers['activity'] = Bp_Search_Activities::instance();
+				$this->searchable_items[]         = 'activity';
 
 				if ( bp_is_search_activity_comments_enable() ) {
 					require_once( $bp->plugin_dir . 'bp-search/classes/class-bp-search-activity-comments.php' );
 					$this->search_helpers['activity_comment'] = Bp_Search_Activity_Comment::instance();
+					$this->searchable_items[]                 = 'activity_comment';
 
+				}
+			}
+
+			/**
+			 * Hook to load helper classes for additional search types.
+			 */
+			$additional_search_helpers = apply_filters( 'bboss_global_search_additional_search_helpers', array() );
+			if ( ! empty( $additional_search_helpers ) ) {
+				foreach ( $additional_search_helpers as $search_type => $helper_object ) {
+					/**
+					 * All helper classes must inherit from BBoss_Global_Search_Type
+					 */
+					if ( ! isset( $this->search_helpers[ $search_type ] ) && is_a( $helper_object, 'BP_Search_Type' ) ) {
+						$this->search_helpers[ $search_type ] = $helper_object;
+					}
 				}
 			}
 

@@ -100,8 +100,6 @@ if (!class_exists('Bp_Search_Activities')):
 
 			$post_ids = implode( ',', $post_ids_arr );
 
-			$template = 'nouveau' == bp_get_theme_compat_id() ?  'loop/activity-nouveau' :  'loop/activity';
-
 			if( bp_has_activities( array( 'include'=>$post_ids, 'per_page'=>count($post_ids_arr) ) ) ){
 				while ( bp_activities() ){
 					bp_the_activity();
@@ -110,7 +108,7 @@ if (!class_exists('Bp_Search_Activities')):
 						'id'	=> bp_get_activity_id(),
 						'type'	=> $this->type,
 						'title'	=> $this->search_term,
-						'html'	=> buddyboss_global_search_buffer_template_part( $template, $template_type, false ),
+						'html'	=> buddyboss_global_search_buffer_template_part( 'loop/activity', $template_type, false ),
 					);
 
 					$this->search_results['items'][bp_get_activity_id()] = $result;

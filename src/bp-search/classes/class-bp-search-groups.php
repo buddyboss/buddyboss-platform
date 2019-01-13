@@ -163,8 +163,6 @@ if (!class_exists('Bp_Search_Groups')):
 				$args['search_terms'] = ' ';
 			}
 
-			$template = 'nouveau' == bp_get_theme_compat_id() ?  'loop/group-nouveau' :  'loop/group';
-
 			if( bp_has_groups( $args ) ){
 				while ( bp_groups() ){
 					bp_the_group();
@@ -173,13 +171,11 @@ if (!class_exists('Bp_Search_Groups')):
 						'id'	=> bp_get_group_id(),
 						'type'	=> $this->type,
 						'title'	=> bp_get_group_name(),
-						'html'	=> buddyboss_global_search_buffer_template_part( $template, $template_type, false ),
+						'html'	=> buddyboss_global_search_buffer_template_part( 'loop/group', $template_type, false ),
 					);
 
 					$this->search_results['items'][bp_get_group_id()] = $result;
 				}
-
-				//var_dump( $this->search_results['items'] );
 			}
 		}
 	}
