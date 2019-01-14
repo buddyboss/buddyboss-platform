@@ -11,6 +11,13 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.6.0
  */
 class BuddyPress {
+	/**
+	 * Identify if ths buddypress class is from buddybss platform
+	 *
+	 * @since 1.0.0
+	 * @var boolean
+	 */
+	public $boddyboss = true;
 
 	/** Magic *****************************************************************/
 
