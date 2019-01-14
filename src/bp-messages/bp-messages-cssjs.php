@@ -60,7 +60,7 @@ add_action( 'wp_head', 'messages_add_autocomplete_css' );
 function messages_autocomplete_init_jsblock() {
 ?>
 
-	<script type="text/javascript">
+	<script>
 		jQuery(document).ready(function() {
 			var acfb = jQuery("ul.first").autoCompletefb({urlLookup: ajaxurl});
 

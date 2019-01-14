@@ -287,7 +287,7 @@ function bp_core_add_cropper_inline_js() {
 
 	?>
 
-	<script type="text/javascript">
+	<script>
 		jQuery(window).load( function(){
 			jQuery('#avatar-to-crop').Jcrop({
 				onChange: showPreview,
@@ -354,7 +354,7 @@ function bp_core_add_cropper_inline_css() {
 function bp_core_add_ajax_url_js() {
 ?>
 
-	<script type="text/javascript">var ajaxurl = '<?php echo bp_core_ajax_url(); ?>';</script>
+	<script>var ajaxurl = '<?php echo bp_core_ajax_url(); ?>';</script>
 
 <?php
 }
@@ -612,7 +612,7 @@ add_action( 'bp_enqueue_scripts', 'bp_core_jquery_validate_scripts' );
 function bp_core_add_jquery_validate_inline_js() {
 	?>
 
-	<script type="text/javascript">
+	<script>
 		jQuery(document).ready(function(){
 			jQuery('#buddypress #signup-form').validate({
 				submitHandler: function(form) {
@@ -657,7 +657,7 @@ add_action( 'bp_enqueue_scripts', 'bp_core_add_jquery_mask' );
 function bp_core_add_jquery_mask_inline_js () {
     ?>
     
-    <script type="text/javascript">
+    <script>
         jQuery(document).ready(function(){
             jQuery(".field_type_telephone").each(function(){
                 var $this = jQuery(this),
@@ -670,6 +670,6 @@ function bp_core_add_jquery_mask_inline_js () {
             });
         });
     </script>
-        
+
     <?php 
 }

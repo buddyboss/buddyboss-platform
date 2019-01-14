@@ -58,7 +58,7 @@ function bp_member_type_show_correct_current_menu(){
 	$screen = get_current_screen();
 	if ( $screen->id == 'bp-member-type' || $screen->id == 'edit-bp-member-type' ) {
 		?>
-		<script type="text/javascript">
+		<script>
 			jQuery(document).ready(function($) {
 				$('#menu-users').addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
 				$('#menu-users > a').addClass('wp-has-current-submenu').removeClass('wp-not-current-submenu');
@@ -68,7 +68,7 @@ function bp_member_type_show_correct_current_menu(){
 	}
 	if ( $screen->id == 'bp-member-type' ) {
 		?>
-		<script type="text/javascript">
+		<script>
 			jQuery(document).ready(function($) {
 				var parent_div = $('li').find('a[href$="bp-profile-setup"]').parent();
 				$(parent_div).closest('li').addClass('bp-profile-setup');
@@ -79,7 +79,7 @@ function bp_member_type_show_correct_current_menu(){
 	}
 	if ( $screen->id == 'edit-bp-member-type' ) {
 		?>
-		<script type="text/javascript">
+		<script>
 			jQuery(document).ready(function($) {
 				var parent_div = $('li').find('a[href$="bp-profile-setup"]').parent();
 				$(parent_div).closest('li').addClass('bp-profile-setup');
@@ -100,7 +100,7 @@ function bp_profile_search_show_correct_current_menu(){
 	$screen = get_current_screen();
 	if ( $screen->id == 'bp_ps_form' || $screen->id == 'edit-bp_ps_form' ) {
 		?>
-		<script type="text/javascript">
+		<script>
 			jQuery(document).ready(function($) {
 				$('#menu-users').addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
 				$('#menu-users > a').addClass('wp-has-current-submenu').removeClass('wp-not-current-submenu');

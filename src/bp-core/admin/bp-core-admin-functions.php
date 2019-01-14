@@ -1157,16 +1157,16 @@ function bp_email_plaintext_metabox( $post ) {
  */
 function bp_admin_wp_nav_menu_restrict_items() {
 ?>
-	<script type="text/javascript">
-	jQuery( '#menu-to-edit').on( 'click', 'a.item-edit', function() {
-		var settings  = jQuery(this).closest( '.menu-item-bar' ).next( '.menu-item-settings' );
-		var css_class = settings.find( '.edit-menu-item-classes' );
+	<script>
+		jQuery( '#menu-to-edit').on( 'click', 'a.item-edit', function() {
+			var settings  = jQuery(this).closest( '.menu-item-bar' ).next( '.menu-item-settings' );
+			var css_class = settings.find( '.edit-menu-item-classes' );
 
-		if( css_class.val().indexOf( 'bp-menu' ) === 0 ) {
-			css_class.attr( 'readonly', 'readonly' );
-			settings.find( '.field-url' ).css( 'display', 'none' );
-		}
-	});
+			if( css_class.val().indexOf( 'bp-menu' ) === 0 ) {
+				css_class.attr( 'readonly', 'readonly' );
+				settings.find( '.field-url' ).css( 'display', 'none' );
+			}
+		});
 	</script>
 <?php
 }
@@ -1278,7 +1278,7 @@ function bp_core_admin_user_manage_spammers() {
  */
 function bp_core_admin_user_spammed_js() {
 	?>
-	<script type="text/javascript">
+	<script>
 		jQuery( document ).ready( function($) {
 			$( '.row-actions .ham' ).each( function() {
 				$( this ).closest( 'tr' ).addClass( 'site-spammed' );
@@ -1571,7 +1571,7 @@ function bp_member_type_group_create_metabox( $post ) {
 	}
 
 	?>
-	<script type="text/javascript">
+	<script>
 		jQuery( document ).ready(function() {
 			jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').click(function () {
 				var checkValues = jQuery(this).val();

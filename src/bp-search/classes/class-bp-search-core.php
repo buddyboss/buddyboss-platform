@@ -323,7 +323,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		public function messages_autocomplete_init_jsblock() {
 			?>
 
-			<script type="text/javascript">
+			<script>
 				window.user_profiles = Array();
 				jQuery( document ).ready( function() {
 					var obj = jQuery( '.send-to-input' ).autocomplete( {

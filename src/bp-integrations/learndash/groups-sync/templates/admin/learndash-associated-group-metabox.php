@@ -67,12 +67,12 @@
     </label>
 </div>
 
-<script type="text/javascript">
-jQuery("[name='bp_learndash_groups_sync[buddypress_group_id]']").on('change', function() {
-    if (jQuery(this).val() === '0') {
-        jQuery('.bp_learndash_groups_sync-auto_create_bp_group').show();
-    } else {
-        jQuery('.bp_learndash_groups_sync-auto_create_bp_group').hide();
-    }
-}).trigger('change');
+<script>
+	jQuery("[name='bp_learndash_groups_sync[buddypress_group_id]']").on('change', function() {
+		if (jQuery(this).val() === '0') {
+			jQuery('.bp_learndash_groups_sync-auto_create_bp_group').show();
+		} else {
+			jQuery('.bp_learndash_groups_sync-auto_create_bp_group').hide();
+		}
+	}).trigger('change');
 </script>
