@@ -1814,7 +1814,7 @@ function bp_member_type_invalid_role_error_callback() {
 	foreach ( $errors as $error ) {
 		$message .= '<p>' . $error['message'] . '</p>';
 	}
-	$message .= '</div><!-- #error --><style type="text/css">div.updated{display: none;}</style>';
+	$message .= '</div><!-- #error --><style>div.updated{display: none;}</style>';
 	// Write them out to the screen
 	echo $message;
 	// Clear and the transient and unhook any other notices so we don't see duplicate messages
@@ -1995,7 +1995,7 @@ function bp_member_type_invalid_role_extended_profile_error_callback() {
 	foreach ( $errors as $error ) {
 		$message .= '<p>' . $error['message'] . '</p>';
 	}
-	$message .= '</div><!-- #error --><style type="text/css">div.updated{display: none;}</style>';
+	$message .= '</div><!-- #error --><style>div.updated{display: none;}</style>';
 	// Write them out to the screen
 	echo $message;
 	// Clear and the transient and unhook any other notices so we don't see duplicate messages

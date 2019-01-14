@@ -142,7 +142,7 @@ class BBP_Converter {
 	 */
 	public function admin_head() { ?>
 
-		<style type="text/css" media="screen">
+		<style media="screen">
 			/*<![CDATA[*/
 
 			div.bbp-converter-updated,

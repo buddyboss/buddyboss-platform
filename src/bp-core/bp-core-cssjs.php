@@ -332,7 +332,7 @@ function bp_core_add_cropper_inline_js() {
 function bp_core_add_cropper_inline_css() {
 ?>
 
-	<style type="text/css">
+	<style>
 		.jcrop-holder { float: left; margin: 0 20px 20px 0; text-align: left; }
 		#avatar-crop-pane { width: <?php echo bp_core_avatar_full_width() ?>px; height: <?php echo bp_core_avatar_full_height() ?>px; overflow: hidden; }
 		#avatar-crop-submit { margin: 20px 0; }
@@ -496,7 +496,7 @@ function bp_add_cover_image_inline_css( $return = false ) {
 			// Used to get the css when Ajax setting the cover image.
 			if ( true === $return ) {
 				return array(
-					'css_rules' => '<style type="text/css">' . "\n" . $inline_css . "\n" . '</style>',
+					'css_rules' => '<style>' . "\n" . $inline_css . "\n" . '</style>',
 					'handle'    => $params['theme_handle'],
 				);
 			}
