@@ -240,7 +240,7 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 	protected function get_input_value( $key, $default = '' ) {
 		$options = "{$this->current_section}_options";
-		return isset($this->$options[$key])? $this->$options[$key] : $default;
+		return isset($options[$key]) ? $options[$key] : $default;
 	}
 }
 
