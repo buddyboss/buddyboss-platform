@@ -1045,14 +1045,15 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 							if ( empty( $count ) && empty( $selected_student ) ) {
 								$selected              = 'selected';
 								$selected_student      = $member->ID;
-								$selected_student_name = $member->display_name;
+								$selected_student_name = empty( $member->display_name ) ? $member->user_nicename : $member->display_name;
 								$count ++;
 							} elseif ( ! empty( $selected_student ) && $member->ID == $selected_student ) {
 								$selected              = 'selected';
 								$selected_student      = $member->ID;
-								$selected_student_name = $member->display_name;
+								$selected_student_name = empty( $member->display_name ) ? $member->user_nicename : $member->display_name;
 							}
-							printf( '<option value="%s" %s>%s</option>', $member->ID, $selected, $member->display_name );
+
+							printf( '<option value="%s" %s>%s</option>', $member->ID, $selected, empty( $member->display_name ) ? $member->user_nicename : $member->display_name );
 							$count ++;
 						}
 						?>

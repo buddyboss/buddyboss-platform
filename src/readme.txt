@@ -1,4 +1,4 @@
-=== BuddyBoss ===
+=== BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.5
 Tested up to: 4.9.7
@@ -7,41 +7,41 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-BuddyPress helps site builders & developers add community features to their websites, with user profiles, activity feeds, and more!
+BuddyBoss Platform helps site builders & developers add community features to their websites, with user profiles, activity feeds, and more!
 
 == Description ==
 
-Are you looking for modern, robust, and sophisticated social network software? BuddyPress is a suite of components that are common to a typical social network, and allows for great add-on features through WordPress's extensive plugin system.
+Are you looking for modern, robust, and sophisticated social network software? BuddyBoss Platform is a suite of components that are common to a typical social network, and allows for great add-on features through WordPress's extensive plugin system.
 
-Aimed at site builders & developers, BuddyPress is focused on ease of integration, ease of use, and extensibility. It is deliberately powerful yet unbelievably simple social network software, built by contributors to WordPress.
+Aimed at site builders & developers, BuddyBoss Platform is focused on ease of integration, ease of use, and extensibility. It is deliberately powerful yet unbelievably simple social network software, built by contributors to WordPress.
 
 https://wordpress.tv/2015/08/23/rocio-valdivia-buddypress-much-more-than-a-plugin/
 
-Members can register on your site to create user profiles, have private conversations, make social connections, create and interact in groups, and much more. Truly a social network in a box, BuddyPress helps you build a home for your company, school, sports team, or other niche community.
+Members can register on your site to create user profiles, have private conversations, make social connections, create and interact in groups, and much more. Truly a social network in a box, BuddyBoss Platform helps you build a home for your company, school, sports team, or other niche community.
 
 = Built with developers in mind =
 
-BuddyPress helps site builders & developers add community features to their websites. It comes with a robust theme compatibility API that does its best to make every BuddyPress content page look and feel right with just about any WordPress theme. You will likely need to adjust some styling on your own to make everything look pristine.
+BuddyBoss Platform helps site builders & developers add community features to their websites. It comes with a robust theme compatibility API that does its best to make every BuddyBoss Platform content page look and feel right with just about any WordPress theme. You will likely need to adjust some styling on your own to make everything look pristine.
 
-BuddyPress themes are just WordPress themes with additional templates, and with a little work, you could easily create your own, too! A handful of BuddyPress-specific themes are readily available for download from WordPress.org, and lots more are available from third-party theme authors.
+BuddyBoss Platform themes are just WordPress themes with additional templates, and with a little work, you could easily create your own, too! A handful of BuddyBoss Platform-specific themes are readily available for download from WordPress.org, and lots more are available from third-party theme authors.
 
-BuddyPress also comes with built-in support for Akismet and [bbPress](https://wordpress.org/plugins/bbpress/), two very popular and very powerful WordPress plugins. If you're using either, visit their settings pages and ensure everything is configured to your liking.
+BuddyBoss Platform also comes with built-in support for Akismet and [bbPress](https://wordpress.org/plugins/bbpress/), two very popular and very powerful WordPress plugins. If you're using either, visit their settings pages and ensure everything is configured to your liking.
 
-= The BuddyPress ecosystem =
+= The BuddyBoss Platform ecosystem =
 
-WordPress.org is home to some amazing extensions for BuddyPress, including:
+WordPress.org is home to some amazing extensions for BuddyBoss Platform, including:
 
-- [rtMedia for WordPress, BuddyPress and bbPress](https://wordpress.org/plugins/buddypress-media/)
-- [BuddyPress Docs](https://wordpress.org/plugins/buddypress-docs/)
+- [rtMedia for WordPress, BuddyBoss Platform and bbPress](https://wordpress.org/plugins/buddypress-media/)
+- [BuddyBoss Platform Docs](https://wordpress.org/plugins/buddypress-docs/)
 - [BuddyBoss Activity Plus](https://wordpress.org/plugins/buddypress-activity-plus/)
 
-Search WordPress.org for "BuddyPress" to find them all!
+Search WordPress.org for "BuddyBoss Platform" to find them all!
 
 == Installation ==
 
 = Requirements =
 
-To run BuddyPress, we recommend your host supports:
+To run BuddyBoss Platform, we recommend your host supports:
 
 * PHP version 7.2 or greater.
 * MySQL version 5.6 or greater, or, MariaDB version 10.0 or greater.
@@ -49,38 +49,38 @@ To run BuddyPress, we recommend your host supports:
 
 = Automatic installation =
 
-Automatic installation is the easiest option as WordPress handles everything itself. To do an automatic install of BuddyPress, log in to your WordPress dashboard, navigate to the Plugins menu and click Add New.
+Automatic installation is the easiest option as WordPress handles everything itself. To do an automatic install of BuddyBoss Platform, log in to your WordPress dashboard, navigate to the Plugins menu and click Add New.
 
-In the search field type "BuddyPress" and click Search Plugins. Once you've found it, you can view details about the latest release, such as community reviews, ratings, and description. Install BuddyPress by simply pressing "Install Now".
+In the search field type "BuddyBoss Platform" and click Search Plugins. Once you've found it, you can view details about the latest release, such as community reviews, ratings, and description. Install BuddyBoss Platform by simply pressing "Install Now".
 
 Once activated:
 
-1. Visit 'Settings > BuddyPress > Components' and adjust the active components to match your community. (You can always toggle these later.)
-2. Visit 'Settings > BuddyPress > Pages' and setup your directories and special pages. We create a few automatically, but suggest you customize these to fit the flow and verbiage of your site.
-3. Visit 'Settings > BuddyPress > Settings' and take a moment to match BuddyPress's settings to your expectations. We pick the most common configuration by default, but every community is different.
+1. Visit 'Settings > BuddyBoss Platform > Components' and adjust the active components to match your community. (You can always toggle these later.)
+2. Visit 'Settings > BuddyBoss Platform > Pages' and setup your directories and special pages. We create a few automatically, but suggest you customize these to fit the flow and verbiage of your site.
+3. Visit 'Settings > BuddyBoss Platform > Settings' and take a moment to match BuddyBoss Platform's settings to your expectations. We pick the most common configuration by default, but every community is different.
 
 == Frequently Asked Questions ==
 
 = Can I use my existing WordPress theme? =
 
-Yes! BuddyPress works out-of-the-box with nearly every WordPress theme.
+Yes! BuddyBoss Platform works out-of-the-box with nearly every WordPress theme.
 
 = Will this work on WordPress multisite? =
 
-Yes! If your WordPress installation has multisite enabled, BuddyPress will support the global tracking of blogs, posts, comments, and even custom post types with a little bit of custom code.
+Yes! If your WordPress installation has multisite enabled, BuddyBoss Platform will support the global tracking of blogs, posts, comments, and even custom post types with a little bit of custom code.
 
-Furthermore, BuddyPress can be activated and operate in just about any scope you need for it to:
+Furthermore, BuddyBoss Platform can be activated and operate in just about any scope you need for it to:
 
-* Activate at the site level to only load BuddyPress on that site.
+* Activate at the site level to only load BuddyBoss Platform on that site.
 * Activate at the network level for full integration with all sites in your network. (This is the most common multisite installation type.)
-* Enable multiblog mode to allow your BuddyPress content to be displayed on any site in your WordPress Multisite network, using the same central data.
-* Extend BuddyPress with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
+* Enable multiblog mode to allow your BuddyBoss Platform content to be displayed on any site in your WordPress Multisite network, using the same central data.
+* Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
-= Who builds BuddyPress? =
+= Who builds BuddyBoss Platform? =
 
-BuddyPress is free software, built by an international community of volunteers. Some contributors to BuddyPress are employed by companies that use BuddyPress, while others are consultants who offer BuddyPress-related services for hire. No one is paid by the BuddyPress project for his or her contributions.
+BuddyBoss Platform is free software, built by an international community of volunteers. Some contributors to BuddyBoss Platform are employed by companies that use BuddyBoss Platform, while others are consultants who offer BuddyBoss Platform-related services for hire. No one is paid by the BuddyBoss Platform project for his or her contributions.
 
-If you would like to provide monetary support to BuddyPress, please consider a donation to the <a href="https://wordpressfoundation.org">WordPress Foundation</a>, or ask your favorite contributor how they prefer to have their efforts rewarded.
+If you would like to provide monetary support to BuddyBoss Platform, please consider a donation to the <a href="https://wordpressfoundation.org">WordPress Foundation</a>, or ask your favorite contributor how they prefer to have their efforts rewarded.
 
 = Discussion Forums =
 

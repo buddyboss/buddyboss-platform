@@ -72,6 +72,32 @@ function bp_search_get_settings_fields() {
 	];
 
 	if ( bp_is_search_members_enable() ) {
+
+		$fields['bp_search_settings_community']['bp_search_user_fields_label'] = [
+			'title'    => '&#65279;',
+			'callback' => 'bp_search_settings_callback_user_fields_label',
+			'args'     => [
+				'class' => 'bp-search-child-field'
+			]
+		];
+
+		$user_fields = bp_get_search_user_fields();
+
+		foreach ( $user_fields as $field_key => $field_label ) {
+			$fields['bp_search_settings_community']["bp_search_user_field_{$field_key}"] = [
+				'title'             => '&#65279;',
+				'callback'          => 'bp_search_settings_callback_user_field',
+				'sanitize_callback' => 'intval',
+				'args'              => [
+					'field' => [
+						'field_key'   => $field_key,
+						'field_label' => $field_label
+					],
+					'class' => 'bp-search-child-field'
+				]
+			];
+		}
+
 		$groups = bp_xprofile_get_groups( array(
 			'fetch_fields' => true
 		) );
@@ -104,6 +130,7 @@ function bp_search_get_settings_fields() {
 				}
 			}
 		}
+
 	}
 
 	if ( bp_is_active( 'forums' ) ) {
@@ -436,6 +463,59 @@ function bp_is_search_xprofile_enable( $id ) {
 }
 
 /**
+ * Output Account field label name
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $args array
+ *
+ * @param $group
+ */
+function bp_search_settings_callback_user_fields_label() {
+	?>
+	<strong><?php esc_html_e( 'Account', 'buddyboss' ) ?></strong>
+	<?php
+}
+
+/**
+ * Allow xProfile field search setting field
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $args array
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_search_settings_callback_user_field( $args ) {
+
+	$field       = $args['field'];
+	$id          = $field['field_key'];
+	$option_name = 'bp_search_user_field_' . $id;
+	?>
+
+	<input name="<?php echo $option_name ?>" id="<?php echo $option_name ?>" type="checkbox" value="1"
+		<?php checked( bp_is_search_user_field_enable( $id ) ) ?> />
+	<label
+		for="<?php echo $option_name ?>"><?php echo $field['field_label'] ?></label>
+
+	<?php
+}
+
+/**
+ * Checks if xprofile field search is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $id integer
+ *
+ * @uses get_option() To get the bp_search_members option
+ * @return bool Is members search enabled or not
+ */
+function bp_is_search_user_field_enable( $id ) {
+	return (bool) apply_filters( 'bp_is_search_user_field_enable', (bool) get_option( "bp_search_user_field_$id" ) );
+}
+
+/**
  * Allow Post Type search setting field
  *
  * @since BuddyBoss 1.0.0
@@ -629,7 +709,6 @@ function bp_search_settings_callback_post_type_section_header() {
 	<p><?php _e( 'Search the following WordPress content and post types:' ) ?></p>
 	<?php
 }
-
 
 /**
  * Allow Post Type Taxonomy search setting field

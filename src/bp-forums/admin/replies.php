@@ -370,7 +370,7 @@ class BBP_Replies_Admin {
 
 		?>
 
-		<style type="text/css" media="screen">
+		<style media="screen">
 		/*<![CDATA[*/
 
 			strong.label {

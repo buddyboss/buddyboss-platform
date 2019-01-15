@@ -11,6 +11,13 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.6.0
  */
 class BuddyPress {
+	/**
+	 * Identify if ths buddypress class is from buddybss platform
+	 *
+	 * @since 1.0.0
+	 * @var boolean
+	 */
+	public $boddyboss = true;
 
 	/** Magic *****************************************************************/
 
@@ -320,7 +327,7 @@ class BuddyPress {
 		/** Versions **********************************************************/
 
 		$this->version    = '1.0.0';
-		$this->db_version = 13310;
+		$this->db_version = 13510;
 
 		/** Loading ***********************************************************/
 
@@ -649,6 +656,7 @@ class BuddyPress {
 			'BP_Core_Whos_Online_Widget'     => 'members',
 			'BP_Registration_Theme_Compat'   => 'members',
 			'BP_Signup'                      => 'members',
+			'BP_BuddyBoss_Platform_Updater'  => 'core',
 		);
 
 		$component = null;

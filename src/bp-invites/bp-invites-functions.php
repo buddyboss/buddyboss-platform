@@ -200,11 +200,10 @@ function bp_invites_member_invite_register_screen_message() {
 
 		<?php do_action( 'accept_email_invite_before' ) ?>
 
-		<script type="text/javascript">
+		<script>
 			jQuery(document).ready( function() {
 				jQuery("input#signup_email").val("<?php echo esc_js( str_replace( ' ', '+', $email ) ) ?>");
 			});
-
 		</script>
 
 

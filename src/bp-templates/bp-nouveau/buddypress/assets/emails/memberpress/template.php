@@ -47,7 +47,7 @@ $settings = bp_email_get_appearance_settings();
         /* Beware: It can remove the padding / margin and add a background color to the compose a reply window. */
         html,
         body {
-            Margin: 0 !important;
+            margin: 0 !important;
             padding: 0 !important;
             height: 100% !important;
             width: 100% !important;

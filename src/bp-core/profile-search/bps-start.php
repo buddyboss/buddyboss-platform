@@ -116,7 +116,7 @@ function bp_profile_search_admin_head () {
 
 	if ( $current_screen->id == 'bp_ps_form')  _bp_profile_search_admin_js ();
     ?>
-	<style type="text/css">
+	<style>
 		.search-box, .actions, .view-switch {display: none;}
 		.bulkactions {display: block;}
 		#minor-publishing {display: none;}

@@ -26,7 +26,19 @@ $F = bp_profile_search_escaped_form_data ( $form_id );
 			if ($display == 'hidden') { ?>
 				<input type="hidden" name="<?php echo $name; ?>" value="<?php echo $value; ?>" /><?php
 				continue;
-			} ?>
+			} 
+            
+            if ( 'heading_contains' == $f->code ) {?>
+                <div id="<?php echo $id; ?>_wrap" class="bp-field-wrap bp-heading-field-wrap bps-<?php echo $display; ?>">
+                    <strong><?php echo $f->label; ?></strong><br>
+                    <?php if( !empty( $f->description ) ) : ?>
+                        <p class="bps-description"><?php echo stripslashes( $f->description );?></p>
+                    <?php endif;?>
+                </div>
+                <?php 
+                continue;
+            }
+            ?>
 
 			<div id="<?php echo $id; ?>_wrap" class="bp-field-wrap bps-<?php echo $display; ?>">
 				<label for="<?php echo $id; ?>" class="bps-label"><?php echo $f->label; ?></label>

@@ -1,0 +1,1 @@
+<?php _e( 'Sorry, but nothing matched your search criteria. Please try again with some different keywords.', 'buddypress-global-search' ); ?>

@@ -812,6 +812,29 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 		$search_terms_space
 	) );
 
+	// Checked profile fields based on privacy settings of particular user while searching
+	if ( ! empty( $matched_user_ids ) ) {
+		$matched_user_data = $wpdb->get_results( $wpdb->prepare(
+			"SELECT * FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
+			$search_terms_nospace,
+			$search_terms_space
+		) );
+
+		foreach ( $matched_user_data as $key => $user ) {
+			$field_visibility = xprofile_get_field_visibility_level( $user->field_id, $user->user_id );
+			if ( 'adminsonly' === $field_visibility && !current_user_can('administrator') ) {
+				if (($key = array_search($user->user_id, $matched_user_ids)) !== false) {
+					unset($matched_user_ids[$key]);
+				}
+			}
+			if ( 'friends' === $field_visibility && !current_user_can('administrator') && false === friends_check_friendship( intval($user->user_id), bp_loggedin_user_id() ) ) {
+				if (($key = array_search($user->user_id, $matched_user_ids)) !== false) {
+					unset($matched_user_ids[$key]);
+				}
+			}
+		}
+	}
+
 	if ( ! empty( $matched_user_ids ) ) {
 		$search_core     = $sql['where']['search'];
 		$search_combined = " ( u.{$query->uid_name} IN (" . implode(',', $matched_user_ids) . ") OR {$search_core} )";

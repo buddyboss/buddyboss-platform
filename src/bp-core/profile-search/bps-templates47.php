@@ -254,7 +254,7 @@ function bp_ps_autocomplete_script ($f)
 		name="<?php echo $f->code. '[lng]'; ?>"
 		value="<?php echo $f->value['lng']; ?>">
 
-	<script type="text/javascript">
+	<script>
 		function bp_ps_<?php echo $f->unique_id; ?>() {
 			var input = document.getElementById('<?php echo $f->unique_id; ?>');
 			var options = <?php echo $autocomplete_options; ?>;

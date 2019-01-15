@@ -1,0 +1,276 @@
+/* +++++++++++++++++++++++++++++++++++++++++
+AJAX SEARCH
++++++++++++++++++++++++++++++++++++++++++ */
+.bboss_ajax_search_item { margin: 0; }
+.bboss_ajax_search_item .item-avatar {
+    display: table-cell;
+    vertical-align: middle;
+    padding-right: 10px;
+    padding-left: 1px;
+    box-sizing: border-box;
+    width: 50px;
+}
+.bboss_ajax_search_item .item-avatar img {
+    vertical-align: middle;
+    width: 40px;
+    height: 40px;
+}
+.bboss_ajax_search_item .item {
+    display: table-cell; 
+    vertical-align: middle;
+    overflow: hidden;
+    line-height: 1.3;
+}
+.bboss_ajax_search_item .item .item-desc {
+    margin-top: 5px;
+    font-size: 80%;
+    color: #A9A9A9;
+}
+.ui-menu .ui-menu-item a,
+.ui-menu .ui-menu-item a:hover,
+.ui-menu .ui-menu-item a:active  {
+    text-decoration: none;
+}
+.bb-global-search-ac.ui-autocomplete {
+    border-radius: 0;
+    -webkit-box-shadow: 0px 2px 3px 0px rgba(50, 50, 50, 0.4);
+    -moz-box-shadow:    0px 2px 3px 0px rgba(50, 50, 50, 0.4);
+    box-shadow:         0px 2px 3px 0px rgba(50, 50, 50, 0.4);
+	max-height: 80%;
+    min-width: 280px;
+	overflow-x: hidden;
+	overflow-y: hidden;
+    padding: 0;
+    background-color: #fff;
+}
+.ui-widget-content {
+    border: none;
+}
+
+.bb-global-search-ac .x {
+    display:none!important; /* its just an helper we don't want to show it*/
+}
+
+.bb-global-search-ac li.bbls-category {
+    font-weight: 600;
+    padding: 14px 10px 5px;
+    position: relative;
+    top: -1px;
+    box-sizing: border-box;
+}
+.bb-global-search-ac li.bbls-category a {
+    font-weight: 600;
+}
+.bb-global-search-ac li:not(.bbls-category) {
+    padding: 0 10px;
+}
+.bb-global-search-ac li:not(.bbls-category) .bboss_ajax_search_item {
+    padding: 14px 0 9px;
+}
+.bb-global-search-ac.ui-menu .ui-menu-item:last-child .bboss_ajax_search_item, .bb-global-search-ac .bbls-category + li .bboss_ajax_search_item {
+    padding-top: 9px;
+}
+.bb-global-search-ac .bbls-category:not(:first-child) {
+    border-top: 1px solid #e5e5e5; 
+}
+.bb-global-search-ac.ui-menu .ui-menu-divider {
+    border-width: 0;
+    margin: 0;
+}
+.bb-global-search-ac.ui-menu .ui-menu-item.ui-state-focus{
+    border: none;
+    color: inherit;
+}
+.bb-global-search-ac.ui-menu .ui-menu-item {
+    list-style-image: none;
+    box-sizing: border-box;
+}
+.bb-global-search-ac.ui-menu .ui-menu-item.ui-state-focus, 
+.bb-global-search-ac.ui-menu .ui-menu-item.ui-state-hover, 
+.bb-global-search-ac.ui-menu .ui-menu-item:hover { background: #f4f5f6; }
+.bb-global-search-ac.ui-menu .ui-menu-item:last-child {
+    padding: 0;
+}
+.bb-global-search-ac.ui-menu .ui-menu-item:last-child .bboss_ajax_search_item {
+    padding: 0; 
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 0;
+    position: relative;
+    top: -1px;
+}
+.bb-global-search-ac.ui-menu .ui-menu-item .bboss_ajax_search_item.noresult {
+    padding: 13px 7px 11px;
+}
+.bb-global-search-ac.ui-menu .ui-menu-item:last-child .bboss_ajax_search_item a {
+    padding: 9px 10px;
+    display: block;
+}
+.bb-global-search-ac.ui-menu .ui-state-focus {
+    margin: 0;
+}
+
+@media screen and (max-width:720px) {
+    .bb-global-search-ac.ui-autocomplete {
+        overflow-y: scroll;
+    }
+}
+/* +++++++++++++++++++++++++++++++++++++++
+SEARCH RESULTS PAGE
++++++++++++++++++++++++++++++++++++++++ */
+#buddypress .results-group ul.item-list {
+    border-top: none !important;
+}
+div.search_results h2.results-group-title {
+    text-transform: capitalize;
+}
+.bboss_search_item {
+    margin: 0 0 20px; padding: 0 0 20px;
+    border-bottom: 1px solid #eee;
+}
+#buddypress ul.item-list li.bboss_search_item_member .item {
+    height: 70px;
+}
+.bboss_search_item_post .entry-summary p,
+.bboss_search_item_post .entry-title {
+    margin: 0 0 10px;
+}
+.bboss_search_item img.avatar { 
+    width: 50px;
+    height: 50px;
+}
+#buddypress .results-group .activity-list .activity-content {
+    margin-left: 60px;
+}
+.entry-content p.message_participants {
+    margin-bottom: 10px;
+}
+.bboss_search_item .conversation {
+    display: table;
+}
+.bboss_search_item .conversation .item-avatar {
+    display: table-cell; width: 50px;
+}
+.bboss_search_item .conversation .item {
+    display: table-cell; vertical-align: top;
+    overflow: hidden; padding-left: 10px;
+}
+body.search-results #buddypress #mobile-item-nav ul li a, 
+#buddypress .search_filters.item-list-tabs ul li a {
+    text-transform: capitalize;
+}
+
+/* Classifieds plugin */
+#buddypress .results-group ul.awpcp_ad_listing-list div img {
+    margin-top: 20px;
+}
+
+/* Auto Complete Menu */
+.bb-global-search-ac .loading-msg {
+padding: 20px;
+white-space: nowrap;
+font-size: 12px;
+text-align: center;
+padding-left: 30px;
+}
+.bb-global-search-ac .loading-msg span {
+background: url(images/spinner.png) no-repeat center;
+background-size: 100% 100%;
+width: 19px;
+height: 19px;
+position: absolute;
+margin-left: -20px;
+margin-top: -3px;
+}
+
+
+.bb_global_search_spinner {
+    margin: 20px;
+    width: 100px;
+    height: 100px;
+    background: #f00;
+    -webkit-animation-name: bb_global_srch_spin;
+    -webkit-animation-duration: 4000ms;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-name: bb_global_srch_spin;
+    -moz-animation-duration: 4000ms;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+    -ms-animation-name: bb_global_srch_spin;
+    -ms-animation-duration: 4000ms;
+    -ms-animation-iteration-count: infinite;
+    -ms-animation-timing-function: linear;
+    
+    animation-name: bb_global_srch_spin;
+    animation-duration: 4000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+/*
+ * this will be added when ajax select focus item
+ **/
+.bb-global-search-ac .ui-corner-all {
+display: none;
+}
+
+@-moz-keyframes bb_global_srch_spin {
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes bb_global_srch_spin {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
+}
+@keyframes bb_global_srch_spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}
+
+/** BuddyPress Send To Autocomplete Fix */
+
+.ac_results li.ui-menu-divider {
+    margin: 0;
+    padding: 0;
+}
+.ac_results.ui-menu .ui-menu-item.ui-state-hover, 
+.ac_results.ui-menu .ui-menu-item:hover,
+.ac_results.ui-menu .ui-state-focus, 
+.ac_results.ui-menu .ui-state-active {
+    margin: 0;  
+    background-color: #888;
+}
+.ac_results.ui-menu .ui-menu-item.ui-state-hover a, 
+.ac_results.ui-menu .ui-menu-item:hover a,
+.ac_results.ui-menu .ui-state-focus a, 
+.ac_results.ui-menu .ui-state-active a {
+	color: #fff;
+}
+
+/** BuddyPress Nouveau Template Packs */
+body.bp-nouveau .bboss-results-list > li {
+	border-bottom: 1px solid #eaeaea;
+    padding: 15px 0;
+    margin: 0;
+    position: relative;
+    list-style: none;
+}
+
+body.bp-nouveau .bboss-results-list > li .item-avatar,
+body.bp-nouveau .bboss-results-list > li .activity-avatar {
+	float: left;
+}
+
+body.bp-nouveau .bboss-results-list > li.bboss_search_item_member {
+	overflow: hidden;
+}
+
+body.bp-nouveau .bboss-results-list > li.bboss_search_item_member .item {
+	float: left;
+}
+
+body.bp-nouveau .bboss-results-list > li .item-avatar img.avatar,
+body.bp-nouveau .bboss-results-list > li .activity-avatar img.avatar {
+	margin-bottom: 10px;
+    margin-right: 10px;
+}

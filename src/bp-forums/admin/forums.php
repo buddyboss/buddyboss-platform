@@ -326,7 +326,7 @@ class BBP_Forums_Admin {
 
 		?>
 
-		<style type="text/css" media="screen">
+		<style media="screen">
 		/*<![CDATA[*/
 
 			#misc-publishing-actions,

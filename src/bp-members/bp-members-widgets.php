@@ -79,14 +79,17 @@ function bp_core_ajax_widget_members() {
 		<?php while ( bp_members() ) : bp_the_member(); ?>
 			<li class="vcard">
                 <div class="item-avatar">
-                    <a href="<?php bp_member_permalink() ?>" class="bp-tooltip" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?>
+                    <a href="<?php bp_member_permalink() ?>"
+					   class="bp-tooltip"
+					   data-bp-tooltip="<?php bp_member_name(); ?>">
+						<?php bp_member_avatar(); ?>
 						<?php
 						$current_time = current_time( 'mysql', 1 );
 						$diff =  strtotime( $current_time ) - strtotime( $members_template->member->last_activity );
-						if ( $diff < 300 ) { // 5 minutes  =  5 * 60
-						?> <span class="member-status online"></span></a> <?php
-					}
-					?>
+						if ( $diff < 300 ) { // 5 minutes  =  5 * 60 ?>
+							<span class="member-status online"></span>
+						<?php } ?>
+					</a>
                 </div>
 
                 <div class="item">

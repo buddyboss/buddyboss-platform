@@ -938,8 +938,19 @@ function bp_activity_add_user_favorite( $activity_id, $user_id = 0 ) {
 	$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count' );
 	$fav_count = !empty( $fav_count ) ? (int) $fav_count + 1 : 1;
 
+	// Update the users who have favorited this activity.
+	$users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
+	if ( empty( $users ) || ! is_array( $users ) ) {
+		$users = array();
+	}
+	// Add to activity's favorited users.
+	$users[] = $user_id;
+
 	// Update user meta.
-	bp_update_user_meta( $user_id, 'bp_favorite_activities', $my_favs );
+	bp_update_user_meta( $user_id, 'bp_favorite_activities', array_unique( $my_favs ) );
+
+	// Update activity meta
+	bp_activity_update_meta( $activity_id, 'bp_favorite_users', array_unique( $users ) );
 
 	// Update activity meta counts.
 	if ( bp_activity_update_meta( $activity_id, 'favorite_count', $fav_count ) ) {
@@ -1004,6 +1015,21 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0 ) {
 
 	// Update the total number of users who have favorited this activity.
 	$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count' );
+
+	// Update the users who have favorited this activity.
+	$users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
+	if ( empty( $users ) || ! is_array( $users ) ) {
+		$users = array();
+	}
+
+	if ( in_array( $user_id, $users ) ) {
+		$pos = array_search( $user_id, $users );
+		unset( $users[ $pos ] );
+	}
+
+	// Update activity meta
+	bp_activity_update_meta( $activity_id, 'bp_favorite_users', array_unique( $users ) );
+
 	if ( ! empty( $fav_count ) ) {
 
 		// Deduct from total favorites.
@@ -1040,6 +1066,164 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0 ) {
 		return false;
 	}
 }
+
+/**
+ * Get like count string for activity
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $activity_id
+ *
+ * @return int|string
+ */
+function bp_activity_get_favorite_users_string( $activity_id ) {
+	$like_count      = bp_activity_get_meta( $activity_id, 'favorite_count', true );
+	$like_count      = ( isset( $like_count ) && ! empty( $like_count ) ) ? $like_count : 0;
+	$favorited_users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
+
+	if ( empty( $favorited_users ) || ! is_array( $favorited_users ) ) {
+		return 0;
+	}
+
+	if ( $like_count > sizeof( $favorited_users ) ) {
+		$like_count = sizeof( $favorited_users );
+	}
+
+	$current_user_fav = false;
+	if ( bp_loggedin_user_id() && in_array( bp_loggedin_user_id(), $favorited_users ) ) {
+		$current_user_fav = true;
+		if ( sizeof( $favorited_users ) > 1 ) {
+			$pos = array_search( bp_loggedin_user_id(), $favorited_users );
+			unset( $favorited_users[ $pos ] );
+		}
+	}
+
+	$return_str = '';
+	if ( 1 == $like_count ) {
+		if ( $current_user_fav ) {
+			$return_str = __( 'You liked this.', 'buddyboss' );
+		} else {
+			$user_data         = get_userdata( array_pop( $favorited_users ) );
+			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$return_str        = $user_display_name . ' ' . __( 'liked this.', 'buddyboss' );
+		}
+	} else if ( 2 == $like_count ) {
+		if ( $current_user_fav ) {
+			$return_str .= __( 'You and', 'buddyboss' ) . ' ';
+
+			$user_data         = get_userdata( array_pop( $favorited_users ) );
+			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$return_str        .= $user_display_name . ' ' . __( 'liked this.', 'buddyboss' );
+		} else {
+			$user_data         = get_userdata( array_pop( $favorited_users ) );
+			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$return_str        .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
+
+			$user_data         = get_userdata( array_pop( $favorited_users ) );
+			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$return_str        .= $user_display_name . ' ' . __( 'liked this.', 'buddyboss' );
+		}
+	} else if ( 3 == $like_count ) {
+
+		if ( $current_user_fav ) {
+			$return_str .= __( 'You,', 'buddyboss' ) . ' ';
+
+			$user_data         = get_userdata( array_pop( $favorited_users ) );
+			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$return_str        .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
+
+			$return_str .= ' ' . __( '1 other liked this.', 'buddyboss' );
+		} else {
+
+			$user_data         = get_userdata( array_pop( $favorited_users ) );
+			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$return_str        .= $user_display_name . ', ';
+
+			$user_data         = get_userdata( array_pop( $favorited_users ) );
+			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$return_str        .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
+
+			$return_str .= ' ' . __( '1 other liked this.', 'buddyboss' );
+		}
+	} else if ( 3 < $like_count ) {
+
+		$like_count = ( isset( $like_count ) && ! empty( $like_count ) ) ? (int) $like_count - 2 : 0;
+
+		if ( $current_user_fav ) {
+			$return_str .= __( 'You,', 'buddyboss' ) . ' ';
+
+			$user_data         = get_userdata( array_pop( $favorited_users ) );
+			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$return_str        .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
+		} else {
+			$user_data         = get_userdata( array_pop( $favorited_users ) );
+			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$return_str        .= $user_display_name . ', ';
+
+			$user_data         = get_userdata( array_pop( $favorited_users ) );
+			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$return_str        .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
+		}
+
+		if ( $like_count > 1 ) {
+			$return_str .= $like_count . ' ' . __( 'others liked this.', 'buddyboss' );
+		} else {
+			$return_str .= $like_count . ' ' . __( 'other liked this.', 'buddyboss' );
+		}
+	} else {
+		$return_str = $like_count;
+	}
+
+	return $return_str;
+}
+
+/**
+ * Check if activity favorites data needs upgrade & Update activity favorites data
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_activity_favorites_upgrade_data() {
+	$bp_activity_favorites = bp_get_option( 'bp_activity_favorites', false );
+
+	if ( ! $bp_activity_favorites ) {
+		$args = array(
+			'fields' => 'ID'
+		);
+
+		// The Query
+		$user_query = new WP_User_Query( $args );
+
+		// User Loop
+		if ( ! empty( $user_query->get_results() ) ) {
+			foreach ( $user_query->get_results() as $user_id ) {
+				$my_favs = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
+
+				if ( empty( $my_favs ) || ! is_array( $my_favs ) ) {
+					continue;
+				}
+
+				foreach ( $my_favs as $fav ) {
+
+					// Update the users who have favorited this activity.
+					$users = bp_activity_get_meta( $fav, 'bp_favorite_users', true );
+					if ( empty( $users ) || ! is_array( $users ) ) {
+						$users = array();
+					}
+					// Add to activity's favorited users.
+					$users[] = $user_id;
+
+					// Update activity meta
+					bp_activity_update_meta( $fav, 'bp_favorite_users', array_unique( $users ) );
+
+				}
+			}
+
+			bp_update_option( 'bp_activity_favorites', true );
+		}
+	}
+}
+
+add_action( 'bp_init', 'bp_activity_favorites_upgrade_data' );
 
 /**
  * Check whether an activity item exists with a given content string.

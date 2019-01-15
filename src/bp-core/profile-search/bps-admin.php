@@ -78,9 +78,13 @@ function bp_ps_fields_box ( $post ) {
 ?>
 			<input class="bp_ps_col3" type="text" name="bp_ps_options[field_label][<?php echo $k; ?>]" id="field_label<?php echo $k; ?>" <?php echo $showlabel; ?> />
 			<input class="bp_ps_col4" type="text" name="bp_ps_options[field_desc][<?php echo $k; ?>]" id="field_desc<?php echo $k; ?>" <?php echo $showdesc; ?> />
-<?php
-			_bp_ps_filter_select ($field, "bp_ps_options[field_mode][$k]", "field_mode$k", $bp_ps_options['field_mode'][$k]);
-?>
+            <?php
+			if ( 'heading' != $field->code ) {
+                _bp_ps_filter_select ($field, "bp_ps_options[field_mode][$k]", "field_mode$k", $bp_ps_options['field_mode'][$k]);
+            } else {
+                echo "<span class='bp_ps_col5'>-</span>";
+            }
+            ?>
 			<a href="javascript:remove('field_div<?php echo $k; ?>')" class="delete"><?php _e('Remove', 'buddyboss'); ?></a>
             
             <?php 

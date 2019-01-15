@@ -1005,7 +1005,7 @@ function bp_groups_admin_edit_metabox_members( $item ) {
 	}
 
 	// Echo out the JavaScript variable.
-	echo '<script type="text/javascript">var group_id = "' . esc_js( $item->id ) . '";</script>';
+	echo '<script>var group_id = "' . esc_js( $item->id ) . '";</script>';
 
 	// Loop through each member type.
 	foreach ( $members as $member_type => $type_users ) : ?>
@@ -1490,7 +1490,7 @@ function bp_group_type_show_correct_current_menu(){
 	$screen = get_current_screen();
 	if ( $screen->id == 'bp-group-type' || $screen->id == 'edit-bp-group-type' ) {
 		?>
-		<script type="text/javascript">
+		<script>
 			jQuery(document).ready(function($) {
 				$('#toplevel_page_bp-groups').addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
 				$('#toplevel_page_bp-groups > a').addClass('wp-has-current-submenu').removeClass('wp-not-current-submenu');
@@ -1500,7 +1500,7 @@ function bp_group_type_show_correct_current_menu(){
 	}
 	if ( $screen->id == 'bp-group-type' ) {
 		?>
-		<script type="text/javascript">
+		<script>
 			jQuery(document).ready(function($) {
 				$('li.wp-first-item').next().addClass('current');
 			});
@@ -1509,7 +1509,7 @@ function bp_group_type_show_correct_current_menu(){
 	}
 	if ( $screen->id == 'edit-bp-group-type' ) {
 		?>
-		<script type="text/javascript">
+		<script>
 			jQuery(document).ready(function($) {
 				$('li.wp-first-item').next().addClass('current');
 			});

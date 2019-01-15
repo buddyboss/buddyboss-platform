@@ -482,7 +482,7 @@ function bp_email_redirect_to_customizer() {
 	}
 
 	printf(
-		'<script type="text/javascript">window.location = "%s";</script>',
+		'<script>window.location = "%s";</script>',
 		esc_url_raw( $redirect_url )
 	);
 

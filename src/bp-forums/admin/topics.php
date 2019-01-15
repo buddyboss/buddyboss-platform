@@ -385,7 +385,7 @@ class BBP_Topics_Admin {
 
 		?>
 
-		<style type="text/css" media="screen">
+		<style media="screen">
 		/*<![CDATA[*/
 
 			strong.label {

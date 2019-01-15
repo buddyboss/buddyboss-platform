@@ -76,7 +76,7 @@ function bp_activity_embed_add_inline_styles() {
 	$css = file_get_contents( $css['file'] );
 	$css = wp_kses( $css, array( "\'", '\"' ) );
 
-	printf( '<style type="text/css">%s</style>', $css );
+	printf( '<style>%s</style>', $css );
 }
 add_action( 'embed_head', 'bp_activity_embed_add_inline_styles', 20 );
 
