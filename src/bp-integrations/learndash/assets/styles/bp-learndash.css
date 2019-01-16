@@ -1,0 +1,58 @@
+.bp-learndash-reports-filters-form {
+	text-align: right;
+}
+
+.bp_ld_report_table_wrapper {
+	margin-bottom: 30px;
+}
+
+.bp_ld_report_table_wrapper.no-data {
+	/*display: none;*/
+}
+
+.dataTables_paginate {
+
+}
+
+.dataTables_paginate .button {
+	margin-top: 10px;
+}
+
+.dataTables_paginate .disabled {
+	display: none !important;
+}
+
+/* only have 1 page */
+.dataTables_paginate span .button:first-child:last-child {
+	display: none !important;
+}
+
+.ld-report-user-stats {
+	display: flex;
+	align-items: center;
+	background: white;
+	border: 1px solid #DEDFE2;
+	margin-bottom: 15px;
+}
+
+.ld-report-user-stats > * {
+	padding: 15px;
+}
+
+.ld-report-user-stats p {
+	margin-bottom: 0;
+}
+
+.ld-report-user-stats .user-info {
+	display: flex;
+	align-items: center;
+}
+
+.ld-report-user-stats .avatar {
+	max-width: 50px;
+	margin-right: 5px;
+}
+
+.ld-report-user-stats .user-name h5 {
+	margin-bottom: 0 !important;
+}

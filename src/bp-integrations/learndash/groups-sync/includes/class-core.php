@@ -25,6 +25,6 @@ class LearnDash_BuddyPress_Groups_Sync
         $bp_learndash_requirement  = require_once bp_learndash_path('groups-sync/includes/class-requirement.php');
         $bp_learndash_learndash    = require_once bp_learndash_path('groups-sync/includes/class-learndash.php');
         $bp_learndash_buddypress   = require_once bp_learndash_path('groups-sync/includes/class-buddypress.php');
-        $bp_learndash_groups       = require_once bp_learndash_path('groups-sync/includes/class-groups-courses.php');
+        // $bp_learndash_groups       = require_once bp_learndash_path('groups-sync/includes/class-groups-courses.php');
     }
 }
