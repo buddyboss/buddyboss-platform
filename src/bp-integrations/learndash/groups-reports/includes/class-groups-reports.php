@@ -517,11 +517,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 					$user_assignements_query->the_post();
 					global $post;
 
-					$question_title = get_the_title( get_the_ID() );
-
-
 					$lesson_id = get_post_meta( get_the_ID(), 'lesson_id', true );
-
 					$lesson_title = empty( $lesson_id ) ? $this->not_applicable : get_the_title( $lesson_id );
 
 					$date = date( 'M j, Y ' . get_option( 'time_format' ), strtotime( $post->post_date ) );
@@ -532,11 +528,14 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 					$point_number = ( empty( $point ) ? 0 : $point );
 					$point        = ( empty( $point_number ) ? $this->not_applicable : $point_number );
 
+					$question_title = apply_filters( 'bb_course_report_assignments_title', get_the_title( get_the_ID() ), get_the_ID(), $lesson_id, $this->bp_learndash_courses_id );
+					$permalink = apply_filters( 'bb_course_report_assignments_permalink', get_the_permalink( get_the_ID() ), get_the_ID(), $lesson_id, $this->bp_learndash_courses_id );
+
 					ob_start();
 					?>
                     <tr>
 						<?php
-						printf( '<td><a href="%s">%s</a></td>', get_the_permalink( get_the_ID() ), $question_title );
+						printf( '<td><a href="%s">%s</a></td>', $permalink, $question_title );
 
 						if ( empty( $lesson_id ) ) {
 							printf( '<td>%s</td>', $lesson_title );
