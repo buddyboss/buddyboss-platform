@@ -78,7 +78,7 @@
 }
 
 .ld-report-no-data {
-	display: block;
+	display: none;
 }
 
 .ld-report-no-data.no-data {
