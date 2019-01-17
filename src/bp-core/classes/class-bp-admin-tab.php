@@ -57,6 +57,7 @@ abstract class BP_Admin_Tab {
 	public function __construct() {
 		$this->initialize();
 		$this->register_tab();
+		$this->register_hook();
 
 		if ( $this->is_active() ) {
 			$this->register_fields();
@@ -91,6 +92,20 @@ abstract class BP_Admin_Tab {
 		global ${$this->global_tabs_var};
 
 		${$this->global_tabs_var}[$this->tab_name] = $this;
+	}
+
+	public function register_hook() {
+		add_action('admin_head', [$this, 'register_admin_script']);
+	}
+
+	public function register_admin_script()
+	{
+		wp_enqueue_script('bp-admin',
+			buddypress()->plugin_url . '/bp-core/admin/js/settings-page.js',
+			['jquery'],
+			buddypress()->version,
+			true
+		);
 	}
 
 	/**
@@ -273,6 +288,7 @@ abstract class BP_Admin_Tab {
 			'input_description' => '',
 			'input_value'       => $this->get_input_value( $name, null ),
 			'input_default'     => 0,
+			'input_run_js'      => false,
 		] );
 
 		return $this->add_field( $name, $label, $callback, $field_args, $callback_args, $id );
@@ -326,13 +342,14 @@ abstract class BP_Admin_Tab {
 		printf(
 			'
 				<input id="%1$s" name="%2$s" type="hidden" value="0" />
-				<input id="%1$s" name="%2$s" type="checkbox" value="1" %3$s />
-				<label for="%1$s">%4$s</label>
-				%5$s
+				<input id="%1$s" name="%2$s" type="checkbox" value="1" %3$s %4$s autocomplete="off"/>
+				<label for="%1$s">%5$s</label>
+				%6$s
 			',
 			$args['input_id'],
 			$args['input_name'],
 			checked( (bool) $input_value, true, false ),
+			$args['input_run_js']? 'data-run-js-condition' : '',
 			$args['input_text'],
 			$args['input_description']? $this->render_input_description( $args['input_description'] ) : ''
 		);
@@ -347,7 +364,12 @@ abstract class BP_Admin_Tab {
 		$input_value = is_null( $args['input_value'] )? $args['input_default'] : $args['input_value'];
 		$input_name = $args['input_name'];
 
-        printf( '<select name="%s" id="%s" autocomplete="off">', $args['input_name'], $args['input_id'] );
+        printf(
+        	'<select name="%s" id="%s" autocomplete="off" %s>',
+        	$args['input_name'],
+        	$args['input_id'],
+			$args['input_run_js']? 'data-run-js-condition' : ''
+        );
 
         foreach ($args['input_options'] ?: [] as $key => $value) {
         	$selected = $input_value == $key? 'selected' : '';
