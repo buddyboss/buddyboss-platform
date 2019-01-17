@@ -42,11 +42,16 @@
 		class="send-to-input"
 		id="send-to-input"
 		placeholder="<?php esc_html_e( 'Type the names of one or more people', 'buddyboss' ); ?>"
-		value="<?php if ( isset( $_GET['r'] ) ) : ?>@<?php echo esc_textarea( $_GET['r'] ); ?> <?php endif; ?>"
 		autocomplete="off"
 		multiple="multiple"
 		style="width: 100%"
-	></select>
+	>
+		<?php if ( ! empty( $_GET['r'] ) ): ?>
+			<option value="<?php esc_attr_e( $_GET['r'] ); ?>" selected>
+				<?php echo bp_core_get_user_displayname( get_user_by( 'login', $_GET['r'] )->ID ); ?>
+			</option>
+		<?php endif; ?>
+	</select>
 
 	<div id="bp-message-content"></div>
 
