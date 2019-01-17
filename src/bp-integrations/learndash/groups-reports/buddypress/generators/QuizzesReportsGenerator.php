@@ -9,15 +9,20 @@ class QuizzesReportsGenerator extends ReportsGenerator
 {
 	public function __construct()
 	{
-		parent::__construct();
+		$this->completed_table_title = __('Marked Quizzes', 'buddyboss');
+		$this->incompleted_table_title = __('Unmarked Quizzes', 'buddyboss');
 
 		add_action('bp_ld_sync/ajax/pre_fetch_reports', [$this, 'loadAdditionalFields']);
+
+		parent::__construct();
 	}
 
 	protected function columns()
 	{
 		return [
+			'user_id'         => $this->column('user_id'),
 			'user'            => $this->column('user'),
+			'course_id'       => $this->column('course_id'),
 			'course'          => $this->column('course'),
 			'quiz'            => [
 				'label'     => __( 'Quiz', 'buddyboss' ),
@@ -48,7 +53,9 @@ class QuizzesReportsGenerator extends ReportsGenerator
 	protected function formatData($activity)
 	{
 		return [
+			'user_id'         => $activity->user_id,
 			'user'            => $activity->user_display_name,
+			'course_id'       => $activity->activity_course_id,
 			'course'          => $activity->activity_course_title,
 			'quiz'            => $activity->post_title,
 			'completion_date' => $this->completionDate($activity),

@@ -7,6 +7,14 @@ use WP_Query;
 
 class ForumsReportsGenerator extends ReportsGenerator
 {
+	public function __construct()
+	{
+		$this->completed_table_title = __('Answered Discusssions', 'buddyboss');
+		$this->incompleted_table_title = __('Unanswered Discusssions', 'buddyboss');
+
+		parent::__construct();
+	}
+
 	public function fetch()
 	{
 		$topicQuery = $this->getGroupForumTopics($this->args);
@@ -22,6 +30,7 @@ class ForumsReportsGenerator extends ReportsGenerator
 	protected function columns()
 	{
 		return [
+			'user_id'         => $this->column('user_id'),
 			'user'  => $this->column('user'),
 			'topic' => [
 				'label'     => __( 'Forum Topic', 'buddyboss' ),
@@ -44,6 +53,7 @@ class ForumsReportsGenerator extends ReportsGenerator
 	protected function formatData($activity)
 	{
 		return [
+			'user_id'         => $activity->user_id,
 			'user'      => $activity->user_display_name,
 			'topic'     => $activity->topic_title,
 			'reply'     => wp_trim_words($activity->last_reply_content, 15, '...'),

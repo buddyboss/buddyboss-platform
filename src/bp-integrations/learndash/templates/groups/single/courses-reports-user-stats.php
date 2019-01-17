@@ -31,7 +31,7 @@
 		</div>
 	<?php endif; ?>
 
-	<?php if (bp_is_active('messages')): ?>
+	<?php if (bp_is_active('messages') && $user->ID != bp_loggedin_user_id()): ?>
 		<div class="user-message">
 			<?php
 				$link = apply_filters(

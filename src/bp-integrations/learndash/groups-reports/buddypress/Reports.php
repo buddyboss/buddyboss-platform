@@ -29,12 +29,14 @@ class Reports
 		add_filter('bp_ld_sync/group_tab_subnavs', [$this, 'addReportSubMenu']);
 		add_action('bp_ld_sync/reports', [$this, 'showReportFilters'], 10);
 		add_action('bp_ld_sync/reports', [$this, 'showReportUserStats'], 20);
+		add_action('bp_ld_sync/reports', [$this, 'showReportCourseStats'], 20);
 		add_action('bp_ld_sync/reports', [$this, 'showReportTables'], 30);
 		add_action('bp_ld_sync/reports', [$this, 'showReportExport'], 40);
 
 		add_filter('learndash_user_activity_query_fields', [$this, 'reportAdditionalActivityFields'], 10, 2);
 		add_filter('learndash_user_activity_query_tables', [$this, 'reportAdditionalActivityTables'], 10, 2);
 		add_filter('learndash_user_activity_query_where', [$this, 'reportAdditionalActivityWheres'], 10, 2);
+		add_filter('learndash_user_activity_query_where', [$this, 'reportAdditionalActivityGroups'], 15, 2);
 
 		add_filter('bp_ld_sync/report_columns', [$this, 'removeUserColumnIfSelected'], 10, 2);
 		add_filter('bp_ld_sync/report_columns', [$this, 'removeCourseColumnIfSelected'], 10, 2);
@@ -64,15 +66,16 @@ class Reports
 			'ajax_url'      => admin_url('admin-ajax.php'),
 			'table_columns' => $this->getCurrentTableColumns(),
 			'config' => [
-				'perpage' => 10
+				'perpage' => apply_filters('bp_ld_sync/reports_per_page', 10)
 			],
 			'text' => [
-				'processing'        => __('Loading...', 'bp-ld-sync'),
-				'emptyTable'        => __('No result found...', 'bp-ld-sync'),
-				'paginate_first'    => __('First', 'bp-ld-sync'),
-				'paginate_last'     => __('Last', 'bp-ld-sync'),
-				'paginate_next'     => __('Next', 'bp-ld-sync'),
-				'paginate_previous' => __('Previous', 'bp-ld-sync')
+				'processing'     => __('Loading...', 'buddyboss'),
+				'emptyTable'     => __('No result found...', 'buddyboss'),
+				'paginate_first' => __('First', 'buddyboss'),
+				'paginate_last'  => __('Last', 'buddyboss'),
+				'paginate_next'  => __('Next', 'buddyboss'),
+				'export_failed'  => __('Export failed, please refresh and try again.', 'buddyboss'),
+				'export_ready'   => __('Export is ready.', 'buddyboss'),
 			]
 		]);
 
@@ -114,8 +117,31 @@ class Reports
 		require bp_locate_template('groups/single/courses-reports-user-stats.php', false, false);
 	}
 
+	public function showReportCourseStats()
+	{
+		if (! empty($_GET['user']) || empty($_GET['course'])) {
+			return;
+		}
+
+		$course       = get_post($_GET['course']);
+		$group        = groups_get_current_group();
+		$ldGroupId    = bp_ld_sync('buddypress')->helpers->getLearndashGroupId($group->id);
+		$ldGroup      = get_post($ldGroupId);
+		$ldGroupUsers = learndash_get_groups_users($ldGroupId);
+		$ldGroupUsersCompleted = array_filter($ldGroupUsers, function($user) use ($course) {
+			return learndash_course_completed($user->ID, $course->ID);
+		});
+		$courseHasPoints = !! $coursePoints = get_post_meta($course->ID, 'course_points', true);
+		$averagePoints = $courseHasPoints? count($ldGroupUsersCompleted) * $coursePoints : 0;
+
+		require bp_locate_template('groups/single/courses-reports-course-stats.php', false, false);
+	}
+
 	public function showReportTables()
 	{
+		$generator = $this->getCurrentGenerator();
+		$completed_table_title = $generator->completed_table_title ?: __('Completed', 'buddyboss');
+		$incompleted_table_title = $generator->incompleted_table_title ?: __('Incompleted', 'buddyboss');
 		require bp_locate_template('groups/single/courses-reports-tables.php', false, false);
 	}
 
@@ -143,6 +169,11 @@ class Reports
 	public function reportAdditionalActivityWheres($strWheres, $queryArgs)
 	{
 		return apply_filters('bp_ld_sync/reports/activity_wheres', $strWheres, $queryArgs);
+	}
+
+	public function reportAdditionalActivityGroups($strWheres, $queryArgs)
+	{
+		return apply_filters('bp_ld_sync/reports/activity_groups', $strWheres, $queryArgs);
 	}
 
 	public function removeUserColumnIfSelected($columns, $args)
@@ -285,6 +316,13 @@ class Reports
 	protected function getCurrentTableColumns()
 	{
 		return array_map([$this, 'getGeneratorColumns'], $this->getGenerators());
+	}
+
+	protected function getCurrentGenerator()
+	{
+		$step = bp_ld_sync()->getRequest('step', 'all');
+		$generator = $this->getGenerators()[$step];
+		return new $generator['class'];
 	}
 
 	protected function getGeneratorColumns($generator)

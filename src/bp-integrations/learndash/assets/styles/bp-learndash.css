@@ -7,7 +7,7 @@
 }
 
 .bp_ld_report_table_wrapper.no-data {
-	/*display: none;*/
+	display: none !important;
 }
 
 .dataTables_paginate {
@@ -56,3 +56,36 @@
 .ld-report-user-stats .user-name h5 {
 	margin-bottom: 0 !important;
 }
+
+.ld-report-course-stats {
+	display: flex;
+	align-items: center;
+	background: white;
+	border: 1px solid #DEDFE2;
+	margin-bottom: 15px;
+}
+
+.ld-report-course-stats > * {
+	padding: 15px;
+}
+
+.ld-report-course-stats p {
+	margin-bottom: 0;
+}
+
+.ld-report-export-csv.no-data {
+	display: none !important;
+}
+
+.ld-report-no-data {
+	display: block;
+}
+
+.ld-report-no-data.no-data {
+	display: block !important;
+}
+
+.export-indicator {
+	display: none;
+}
+

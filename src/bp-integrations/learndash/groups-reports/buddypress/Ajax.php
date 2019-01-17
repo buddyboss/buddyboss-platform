@@ -17,6 +17,10 @@ class Ajax
 	public function init()
 	{
 		add_action('wp_ajax_bp_ld_group_get_reports', [$this, 'ajaxGetReports']);
+		add_action('wp_ajax_download_bp_ld_reports', [$this, 'ajaxDownloadReport']);
+		add_action('bp_ld_sync/ajax/post_fetch_reports', [$this, 'ajaxGetExports']);
+		add_action('bp_ld_sync/report_columns', [$this, 'removeIdsOnNonExport'], 10, 2);
+		add_action('bp_ld_sync/reports_generator_args', [$this, 'unsetCompletionOnExport']);
 	}
 
 	public function ajaxGetReports()
@@ -28,6 +32,7 @@ class Ajax
 
 		do_action('bp_ld_sync/ajax/pre_fetch_reports', $generator);
 		$generator->fetch();
+		do_action('bp_ld_sync/ajax/post_fetch_reports', $generator);
 
 		echo json_encode([
 			'draw'            => (int) bp_ld_sync()->getRequest('draw'),
@@ -43,6 +48,60 @@ class Ajax
 		// 'results' => $generator->getData(),
 		// 'pager'   => $generator->getPager(),
 		// ]);
+	}
+
+	public function unsetCompletionOnExport($args)
+	{
+		if (bp_ld_sync()->getRequest('export')) {
+			$args['completed'] = null;
+		}
+
+		return $args;
+	}
+
+	public function removeIdsOnNonExport($column, $args)
+	{
+		if (! isset($args['report'])) {
+			unset($column['user_id']);
+			unset($column['course_id']);
+		}
+
+		return $column;
+	}
+
+	public function ajaxGetExports($generator)
+	{
+		if (! bp_ld_sync()->getRequest('export')) {
+			return;
+		}
+
+		return $generator->export();
+	}
+
+	public function ajaxDownloadReport()
+	{
+		$hash    = bp_ld_sync()->getRequest('hash');
+		$exports = get_transient($hash);
+		$info    = get_transient("{$hash}_info");
+
+        if (! $hash || ! $exports) {
+            wp_die(__('Session has expired, please refresh and try again.', 'buddyboss'));
+        }
+
+		$file = fopen('php://output', 'w');
+    	fputcsv($file, wp_list_pluck($info['columns'], 'label'));
+
+    	foreach ($exports as $export) {
+    		fputcsv($file, $export);
+    	}
+
+		header('Content-Encoding: '. DB_CHARSET);
+		header('Content-type: text/csv; charset='.DB_CHARSET);
+		header('Content-Disposition: attachment; filename='. $info['filename']);
+		header('Pragma: no-cache');
+		header('Expires: 0');
+    	fclose($df);
+	    die();
 	}
 
 	protected function enableDebugOnDev()

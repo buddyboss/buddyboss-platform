@@ -9,6 +9,14 @@ use WpProQuiz_Model_Question;
 
 class EssaysReportsGenerator extends ReportsGenerator
 {
+	public function __construct()
+	{
+		$this->completed_table_title = __('Marked Essays', 'buddyboss');
+		$this->incompleted_table_title = __('Unmarked Essays', 'buddyboss');
+
+		parent::__construct();
+	}
+
 	public function fetch()
 	{
 		$essayQuery = $this->getGroupEssays($this->args);
@@ -24,7 +32,9 @@ class EssaysReportsGenerator extends ReportsGenerator
 	protected function columns()
 	{
 		return [
+			'user_id'         => $this->column('user_id'),
 			'user'            => $this->column('user'),
+			'course_id'       => $this->column('course_id'),
 			'course'          => $this->column('course'),
 			'quiz'            => [
 				'label'     => __( 'Quiz', 'buddyboss' ),
@@ -57,7 +67,9 @@ class EssaysReportsGenerator extends ReportsGenerator
 	protected function formatData($activity)
 	{
 		return [
+			'user_id'         => $activity->user_id,
 			'user'            => $activity->user_display_name,
+			'course_id'       => $activity->activity_course_id,
 			'course'          => $activity->activity_course_title,
 			'quiz'            => $activity->quiz_title,
 			'essay'           => $activity->essay_title,

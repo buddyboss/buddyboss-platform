@@ -4,6 +4,9 @@ namespace Buddyboss\LearndashIntegration\Buddypress;
 
 class ReportsGenerator
 {
+	public $completed_table_title;
+	public $incompleted_table_title;
+
 	protected $activityQuery = null;
 	protected $results  = [];
 	protected $pager    = [];
@@ -22,7 +25,10 @@ class ReportsGenerator
 
 	public function __construct()
 	{
-		$this->args = wp_parse_args(bp_ld_sync()->getRequest(), $this->defaults);
+		$this->args = apply_filters(
+			'bp_ld_sync/reports_generator_args',
+			wp_parse_args(bp_ld_sync()->getRequest(), $this->defaults)
+		);
 		$this->setupParams();
 
 		$this->includeCourseTitle();
@@ -43,6 +49,14 @@ class ReportsGenerator
 	public function getData()
 	{
 		$results = array_map([$this, 'formatData'], $this->results);
+
+		if ($this->hasArg('display') && $this->args['display']) {
+			$results = array_map([$this, 'formatDataForDisplay'], $results, $this->results);
+		}
+
+		if ($this->hasArg('export') && $this->args['export']) {
+			$results = array_map([$this, 'formatDataForExport'], $results, $this->results);
+		}
 
 		$results = array_map(function($result) {
 			$result = apply_filters('bp_ld_sync/report_data', $result, $this->args);
@@ -66,6 +80,40 @@ class ReportsGenerator
 		$this->pager = $this->activityQuery['pager'];
 	}
 
+	public function export()
+	{
+		$hash    = $this->hasArg('hash')? $this->args['hash'] : md5(microtime());
+		$exports = get_transient($hash) ?: [];
+		$columns = $this->columns();
+
+    	foreach ($this->getData() as $result) {
+    		$data = [];
+
+    		foreach (array_keys($columns) as $key) {
+    			$data[$key] = $result[$key];
+    		}
+
+    		$exports[] = $data;
+    	}
+
+		set_transient($hash, $exports, HOUR_IN_SECONDS);
+		set_transient("{$hash}_info", [
+			'filename' => 'learndash-report-export-group-' . $this->args['group'] . '.csv',
+			'columns' => $columns
+		], HOUR_IN_SECONDS);
+
+		wp_send_json_success([
+			'page'     => $this->args['start'] / $this->args['length'] + 1,
+			'total'    => $this->pager['total_pages'],
+			'has_more' => $this->pager['total_pages'] > $this->args['start'] / $this->args['length'] + 1,
+			'url'      => add_query_arg([
+				'hash'   => $hash,
+				'action' => 'download_bp_ld_reports',
+			], admin_url('admin-ajax.php')),
+			'hash'     => $hash
+		]);
+	}
+
 	protected function columns()
 	{
 		return [];
@@ -76,11 +124,30 @@ class ReportsGenerator
 		return $activity;
 	}
 
+	protected function formatDataForDisplay($data, $activity)
+	{
+		return wp_parse_args([
+			'course' => sprintf(
+				'<a href="%s" target="_blank">%s</a>',
+				get_permalink($activity->activity_course_id),
+				$activity->activity_course_title
+			)
+		], $data);
+	}
+
+	protected function formatDataForExport($data, $activity)
+	{
+		return $data;
+	}
+
 	protected function includeCourseTitle()
 	{
 		add_filter('bp_ld_sync/reports/activity_fields', [$this, 'addCourseTitleActivityFields'], 10, 2);
 		add_filter('bp_ld_sync/reports/activity_joins', [$this, 'addCourseTitleActivityTables'], 10, 2);
+		add_filter('bp_ld_sync/reports/activity_wheres', [$this, 'addCourseTitleActivityWhere'], 10, 2);
+		add_filter('bp_ld_sync/reports/activity_groups', [$this, 'addCourseTitleActivityGroup'], 10, 2);
 	}
+
 
 	public function addCourseTitleActivityFields($strFields, $queryArgs)
 	{
@@ -92,6 +159,16 @@ class ReportsGenerator
 		global $wpdb;
 
 		return $strJoins .= " LEFT JOIN {$wpdb->posts} as courses ON courses.ID=ld_user_activity.course_id ";
+	}
+
+	public function addCourseTitleActivityWhere($strWheres, $queryArgs)
+	{
+		return $strWheres .= " AND activity_id IS NOT NULL ";
+	}
+
+	public function addCourseTitleActivityGroup($strWheres, $queryArgs)
+	{
+		return $strWheres .= " GROUP BY activity_id ";
 	}
 
 	protected function includeCourseTimeSpent()
@@ -112,10 +189,20 @@ class ReportsGenerator
 	protected function column($name)
 	{
 		$builtInColumns = [
+			'course_id' => [
+				'label'     => __( 'Course Id', 'buddyboss' ),
+				'sortable'  => false,
+				'order_key' => '',
+			],
 			'course' => [
 				'label'     => __( 'Course', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'activity_course_title',
+			],
+			'user_id' => [
+				'label'     => __( 'User ID', 'buddyboss' ),
+				'sortable'  => false,
+				'order_key' => '',
 			],
 			'user' => [
 				'label'     => __( 'User', 'buddyboss' ),
@@ -170,7 +257,7 @@ class ReportsGenerator
 		}
 
 		if ($this->hasArg('step')) {
-			$this->params['post_types'] = $this->args['step'] == 'all'? '' : $this->args['step'];
+			$this->params['post_types'] = $this->args['step'] == 'all'? $this->allSteps() : $this->args['step'];
 		}
 
 		if ($this->hasArg('user')) {
@@ -198,12 +285,19 @@ class ReportsGenerator
 			$this->params['per_page'] = $this->args['length'];
 		}
 
-		$this->params = apply_filters('bp_ld_sync/reports_generator_args', $this->params, $this->args);
+		$this->params = apply_filters('bp_ld_sync/reports_generator_params', $this->params, $this->args);
 	}
 
 	protected function hasArg($key)
 	{
 		return isset($this->args[$key]) && ! is_null($this->args[$key]);
+	}
+
+	protected function allSteps()
+	{
+		global $learndash_post_types;
+// var_dump(array_diff($learndash_post_types, ['groups']));
+		return array_diff($learndash_post_types, ['groups']);
 	}
 
 	protected function timeSpent($activity)

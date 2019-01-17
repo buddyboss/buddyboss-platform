@@ -14,6 +14,7 @@
 		},
 
 		fetch_data: function( i, table ) {
+			var self = this;
 			var type =  $("[data-report-filter='step']").val();
 			var columns = BP_LD_REPORTS_DATA.table_columns[type];
 
@@ -49,6 +50,7 @@
 						d.action    = 'bp_ld_group_get_reports';
 						d.group     = BP_LD_REPORTS_DATA.current_group;
 						d.completed = $(table).data('completed')? 1 : 0;
+						d.display   = true;
 					}
 				}
 			};
@@ -59,6 +61,21 @@
 						$(e.target).closest('.bp_ld_report_table_wrapper').removeClass('no-data hidden').addClass('has-data');
 					} else {
 						$(e.target).closest('.bp_ld_report_table_wrapper').removeClass('has-data').addClass('no-data hidden');
+					}
+
+					$(e.target).data('data_length', json.data.length);
+
+					var emptyTables = 0;
+					self.$report_tables.each(function() {
+						if ($(this).data('data_length') == 0) {
+							emptyTables ++;
+						}
+					})
+
+					if (emptyTables == self.$report_tables.length) {
+						$(".ld-report-export-csv, .ld-report-no-data").removeClass('has-data').addClass('no-data hidden');
+					} else {
+						$(".ld-report-export-csv, .ld-report-no-data").removeClass('no-data hidden').addClass('has-data');
 					}
 				})
 				.DataTable(args);
@@ -75,12 +92,71 @@
 			});
 
 			return newColumns;
+		},
+
+		prepareExport: function(e) {
+			e.preventDefault();
+			var $target = $(e.target);
+
+			// if it's already fetched, then just download it
+			if ($target.data('exported')) {
+				window.location.href = $target.data('export_url');
+				return false;
+			}
+
+			var export_args = {
+				start   : 0,
+				length : BP_LD_REPORTS_DATA.config.perpage,
+				nonce   : BP_LD_REPORTS_DATA.nonce,
+				action  : 'bp_ld_group_get_reports',
+				group   : BP_LD_REPORTS_DATA.current_group,
+				export  : true
+			};
+
+			$("[data-report-filter]").each(function() {
+				var name = $(this).data('report-filter');
+				export_args[name]  = $(this).val();
+			});
+
+			$target.data('export_args', export_args);
+			BP_LD_Report.startExport($target);
+		},
+
+		startExport: function($target) {
+			var self = this;
+			var export_args = $target.data('export_args');
+			$target.prop('disabled', true);
+
+			$.post(BP_LD_REPORTS_DATA.ajax_url, export_args, function(data) {
+				$target.prop('disabled', false);
+				if (! data.success) {
+					$(".export-indicator").text(BP_LD_REPORTS_DATA.text.export_failed);
+					return;
+				}
+
+				if (data.data.has_more) {
+					export_args.start = export_args.start + export_args.length;
+					export_args.hash = data.data.hash;
+					$target.data('export_args', export_args);
+					$(".export-indicator").show();
+					$(".export-indicator .export-current-step").text(data.data.page);
+					$(".export-indicator .export-total-step").text(data.data.total);
+					self.startExport($target);
+					return;
+				}
+
+				$target.data('exported', true);
+				$target.data('export_url', data.data.url);
+				window.location.href = data.data.url;
+				$(".export-indicator").hide();
+			}, 'json');
 		}
 	}
 
 	$.fn.dataTable.ext.classes.sPageButton = 'button';
 
-	jQuery( document ).ready( function ( $ ) {
+	$(function() {
 		BP_LD_Report.init();
-	} );
+		$(".ld-report-export-csv").on('click', BP_LD_Report.prepareExport);
+	});
 })(jQuery);

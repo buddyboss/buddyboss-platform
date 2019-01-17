@@ -7,6 +7,13 @@ use WP_Query;
 
 class AssignmentsReportsGenerator extends ReportsGenerator
 {
+	public function __construct()
+	{
+		$this->completed_table_title = __('Marked Assignments', 'buddyboss');
+		$this->incompleted_table_title = __('Unmarked Assignments', 'buddyboss');
+
+		parent::__construct();
+	}
 
 	public function fetch()
 	{
@@ -23,7 +30,9 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	protected function columns()
 	{
 		return [
+			'user_id'         => $this->column('user_id'),
 			'user'            => $this->column('user'),
+			'course_id'       => $this->column('course_id'),
 			'course'          => $this->column('course'),
 			'assignment'            => [
 				'label'     => __( 'Assignment', 'buddyboss' ),
@@ -51,7 +60,9 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	protected function formatData($activity)
 	{
 		return [
+			'user_id'         => $activity->user_id,
 			'user'            => $activity->user_display_name,
+			'course_id'       => $activity->activity_course_id,
 			'course'          => $activity->activity_course_title,
 			'assignment'      => $activity->assignment_title,
 			'completion_date' => get_date_from_gmt($activity->assignment_modify_date, $this->args['date_format']),
