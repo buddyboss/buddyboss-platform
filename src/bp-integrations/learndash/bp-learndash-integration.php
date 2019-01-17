@@ -31,7 +31,7 @@ class BP_Learndash_Integration extends BP_Integration {
 		parent::includes([
 			'functions',
 			'groups-sync/loader.php',
-			'groups-reports/core/Core.php',
+			'core/Core.php',
 		]);
 	}
 }

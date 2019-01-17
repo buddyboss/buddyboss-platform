@@ -254,7 +254,9 @@ class Reports
 
 	protected function reportTabIsVisible()
 	{
-		return true;
+		$settings = get_option('learndash_settings_buddypress_groups_report');
+
+		return $settings['enable_group_reports'];
 	}
 
 	protected function getReportFilters()

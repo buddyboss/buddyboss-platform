@@ -80,8 +80,8 @@ class Sync
 
 	public function isSyncEnabled()
 	{
-		$settings = get_option('learndash_settings_buddypress_groups_report');
+		$settings = get_option('learndash_settings_buddypress_groups_sync');
 
-		return $settings['enable_group_reports'];
+		return $settings['auto_create_bp_group'];
 	}
 }

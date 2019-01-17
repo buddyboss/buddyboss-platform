@@ -11,11 +11,8 @@ use Buddyboss\LearndashIntegration\Learndash\Core as LearndashCore;;
 
 class Core
 {
-	protected $file;
-
-	public function __construct($entry)
+	public function __construct()
 	{
-		$this->file = $entry;
 		$this->registerAutoloader();
 
 		$this->admin        = new Admin;
@@ -37,12 +34,12 @@ class Core
 
     public function path($path = '')
     {
-        return bp_learndash_path('groups-reports/' . trim($path, '/\\'));
+        return bp_learndash_path(trim($path, '/\\'));
     }
 
     public function url($uri = '')
     {
-        return bp_learndash_url('groups-reports/' . trim($uri, '/\\'));
+        return bp_learndash_url(trim($uri, '/\\'));
     }
 
     public function template($path = '')
@@ -91,4 +88,4 @@ class Core
 
 
 global $bp_ld_sync;
-$bp_ld_sync = new Core(bp_learndash_path('bp-learndash-loader'));
+$bp_ld_sync = new Core;
