@@ -47,7 +47,7 @@
 		style="width: 100%"
 	>
 		<?php if ( ! empty( $_GET['r'] ) ): ?>
-			<option value="<?php esc_attr_e( $_GET['r'] ); ?>" selected>
+			<option value="@<?php echo esc_attr( $_GET['r'] ); ?>" selected>
 				<?php echo bp_core_get_user_displayname( get_user_by( 'login', $_GET['r'] )->ID ); ?>
 			</option>
 		<?php endif; ?>
