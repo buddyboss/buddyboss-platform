@@ -46,6 +46,11 @@
 		multiple="multiple"
 		style="width: 100%"
 	>
+		<?php if ( ! empty( $_GET['r'] ) ): ?>
+			<option value="<?php esc_attr_e( $_GET['r'] ); ?>" selected>
+				<?php echo bp_core_get_user_displayname( get_user_by( 'login', $_GET['r'] )->ID ); ?>
+			</option>
+		<?php endif; ?>
 	</select>
 
 	<div id="bp-message-content"></div>
@@ -57,15 +62,6 @@
 		<input type="button" id="bp-messages-reset" class="text-button small bp-secondary-action" value="<?php echo esc_attr_x( 'Reset', 'form reset button', 'buddyboss' ); ?>"/>
 	</div>
 </script>
-
-<?php if ( ! empty( $_GET['r'] ) ): ?>
-	<script type="text/javascript">
-		jQuery( document ).ready(function() {
-			var option = new Option( '<?php echo bp_core_get_user_displayname( get_user_by( 'login', $_GET['r'] )->ID ); ?>', '<?php esc_attr_e( '@'.$_GET['r'] ); ?>', true, true);
-			jQuery('#send-to-input').append(option).trigger('change');
-		});
-	</script>
-<?php endif; ?>
 
 <script type="text/html" id="tmpl-bp-messages-editor">
 	<?php
