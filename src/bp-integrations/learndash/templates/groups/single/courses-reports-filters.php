@@ -10,5 +10,5 @@
 		</span>
 	<?php endforeach; ?>
 
-	<button class="button" type="submit"><?php _e('Search', 'buddyboss'); ?></button>
+	<button class="button" type="submit"><?php _e('Filter', 'buddyboss'); ?></button>
 </form>

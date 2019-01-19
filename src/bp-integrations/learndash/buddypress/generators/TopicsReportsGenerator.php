@@ -9,7 +9,7 @@ class TopicsReportsGenerator extends ReportsGenerator
 	public function __construct()
 	{
 		$this->completed_table_title = __('Completed Topics', 'buddyboss');
-		$this->incompleted_table_title = __('Inompleted Topics', 'buddyboss');
+		$this->incompleted_table_title = __('Incomplete Topics', 'buddyboss');
 
 		parent::__construct();
 	}
