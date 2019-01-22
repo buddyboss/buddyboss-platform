@@ -22,7 +22,7 @@ class LearnDash_BuddyPress_Groups_Sync_LearnDash
         add_action('wp_ajax_bp_learndash_groups_sync/ld-group-sync', [$this, 'ajax_sync_learndash_groups']);
 
         // LearnDash Group Edit Page
-        add_action('add_meta_boxes', [$this, 'add_associated_group_metabox']);
+        // add_action('add_meta_boxes', [$this, 'add_associated_group_metabox']);
         // add_action('save_post', [$this, 'update_associated_group'], 15, 3);
 
         // LearnDash Group Delete

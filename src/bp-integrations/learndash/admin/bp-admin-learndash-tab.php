@@ -337,13 +337,13 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	public function output_report_access_setting() {
-		$input_field = 'report_access';
+		$input_field = 'access';
 		$input_value = $this->get_input_value( $input_field, [] );
 		$input_name = $this->get_input_name( $input_field );
 		$input_options = [
-			'admin'     => __( 'Organizers', 'buddyboss' ),
-			'moderator' => __( 'Moderators', 'buddyboss' ),
-			'member'    => __( 'Members', 'buddyboss' )
+			'admin'  => __( 'Organizers', 'buddyboss' ),
+			'mod'    => __( 'Moderators', 'buddyboss' ),
+			'member' => __( 'Members', 'buddyboss' )
 		];
 
         foreach ($input_options as $key => $value) {

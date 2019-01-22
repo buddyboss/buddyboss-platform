@@ -254,9 +254,27 @@ class Reports
 
 	protected function reportTabIsVisible()
 	{
-		$settings = get_option('learndash_settings_buddypress_groups_report');
+		if (! bp_ld_sync('settings')->get('reports.enabled')) {
+			return false;
+		}
 
-		return $settings['enable_group_reports'];
+		if (! $currentGroup = groups_get_current_group()) {
+			return false;
+		}
+
+		// admin can always view
+		if (learndash_is_admin_user()) {
+			return true;
+		}
+
+		foreach (bp_ld_sync('settings')->get('reports.access', []) as $type) {
+			$function = "groups_is_user_{$type}";
+			if (function_exists($function) && call_user_func_array($function, [bp_loggedin_user_id(), $currentGroup->id])) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	protected function getReportFilters()

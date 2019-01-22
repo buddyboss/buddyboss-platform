@@ -14,7 +14,7 @@ class LearnDash_BuddyPress_Groups_Sync_BuddyPress
             return;
         }
 
-        add_action('bp_groups_admin_meta_boxes', [$this, 'add_associated_group_metabox']);
+        // add_action('bp_groups_admin_meta_boxes', [$this, 'add_associated_group_metabox']);
         // add_action('groups_before_delete_group', [$this, 'dissociate_learndash_group']);
         // add_action('groups_details_updated', [$this, 'associate_learndash_group']);
     }

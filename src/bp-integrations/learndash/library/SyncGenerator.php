@@ -136,10 +136,10 @@ class SyncGenerator
 	public function syncBpUsers()
 	{
 		$this->syncingToLearndash(function() {
-			$memberIds = groups_get_group_members($this->bpGroupId);
+			$members = groups_get_group_members($this->bpGroupId)['members'];
 
-			foreach ($memberIds as $member) {
-				$this->syncBpMember($member->user_id, false, false);
+			foreach ($members as $member) {
+				$this->syncBpMember($member->ID, false, false);
 			}
 		});
 

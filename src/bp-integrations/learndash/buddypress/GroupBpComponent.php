@@ -15,9 +15,9 @@ class GroupBpComponent extends BP_Group_Extension
 	{
 		$groupId    = $groupId ?: bp_get_new_group_id();
 		$hasLdGroup = bp_ld_sync('buddypress')->sync->generator($groupId)->hasLdGroup();
-		$ldGroupId = $hasLdGroup? bp_ld_sync('buddypress')->sync->generator($groupId)->getLdGroupId() : 0;
+		$ldGroupId  = $hasLdGroup? bp_ld_sync('buddypress')->sync->generator($groupId)->getLdGroupId() : 0;
 
-		require bp_ld_sync()->template('/groups/single/admin/edit-courses.php');
+		require bp_locate_template('groups/single/admin/edit-courses.php', false);
     }
 
     public function settings_screen_save($groupId = null)
@@ -87,6 +87,11 @@ class GroupBpComponent extends BP_Group_Extension
 					// 'save_callback'   => '', // ??
 					// 'submit_text' => ''
 				],
+
+				'admin'  => array(
+					'metabox_context'  => 'normal',
+					'metabox_priority' => 'core',
+				),
 			]
 		];
     }

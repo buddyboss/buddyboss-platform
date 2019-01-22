@@ -69,8 +69,8 @@ class Settings
 				'delete_bp_on_delete'      => false,
 			],
 			'reports' => [
-				'enabled' => false,
-				'access'  => ['admin', 'mod'],
+				'enabled'    => false,
+				'access'     => ['admin', 'mod'],
 				'cache_time' => 60
 			],
 		];
@@ -80,23 +80,6 @@ class Settings
 			bp_update_option($this->optionKey, $default);
 		}
 
-		$this->options = $this->parseArgsDeep($options, $default);
-	}
-
-	protected function parseArgsDeep(&$a, $b)
-	{
-		$a = (array) $a;
-		$b = (array) $b;
-		$result = $b;
-
-		foreach ($a as $k => &$v) {
-			if (is_array($v) && isset($result[$k])) {
-				$result[$k] = $this->parseArgsDeep($v, $result[$k]);
-			} else {
-				$result[$k] = $v;
-			}
-		}
-
-		return $result;
+		$this->options = $options;
 	}
 }

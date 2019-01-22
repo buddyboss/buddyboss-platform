@@ -10,6 +10,7 @@ use Buddyboss\LearndashIntegration\Buddypress\Forum;
 use Buddyboss\LearndashIntegration\Buddypress\GroupBpComponent;
 use Buddyboss\LearndashIntegration\Buddypress\Helpers;
 use Buddyboss\LearndashIntegration\Buddypress\Reports;
+use Buddyboss\LearndashIntegration\Buddypress\Admin;
 
 class Core
 {
@@ -22,6 +23,7 @@ class Core
 		$this->forum   = new Forum;
 		$this->sync    = new Sync;
 		$this->hooks   = new Hooks;
+		$this->admin   = new Admin;
 
 		add_action('bp_ld_sync/init', [$this, 'init']);
 	}
