@@ -1,5 +1,5 @@
 .bp-learndash-reports-filters-form {
-	text-align: right;
+	text-align: left;
 }
 
 .bp_ld_report_table_wrapper {
@@ -51,7 +51,7 @@
 }
 
 .ld-report-user-stats .user-avatar {
-        margin-right: 15px;
+        margin-left: 15px;
 }
 
 .ld-report-user-stats .avatar {
@@ -59,7 +59,7 @@
 }
 
 .ld-report-user-stats .user-message {
-    margin-left: auto;
+    margin-right: auto;
 }
 
 .ld-report-user-stats .user-name h5 {

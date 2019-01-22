@@ -2,8 +2,8 @@
     <div class="list-wrap">
         <div class="item-avatar">
             <a href="<?php the_permalink(); ?>">
-                <?php if (has_post_thumbnail()): ?>
-                	<?php the_post_thumbnail(); ?>
+                <?php if ( has_post_thumbnail() ): ?>
+                	<?php the_post_thumbnail('post-thumbnail', array('class'=> 'photo')); ?>
                 <?php else: ?>
 					<img src="<?php echo bp_learndash_url('/assets/images/mystery-course.png'); ?>" class="photo" />
                 <?php endif; ?>
