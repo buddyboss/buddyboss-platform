@@ -47,6 +47,7 @@
 .ld-report-user-stats .user-info {
 	display: flex;
 	align-items: center;
+        min-width: 20%;
 }
 
 .ld-report-user-stats .user-avatar {
@@ -55,6 +56,10 @@
 
 .ld-report-user-stats .avatar {
 	max-width: 52px;
+}
+
+.ld-report-user-stats .user-message {
+    margin-right: auto;
 }
 
 .ld-report-user-stats .user-name h5 {
