@@ -5,6 +5,7 @@ namespace Buddyboss\LearndashIntegration\Buddypress;
 use Buddyboss\LearndashIntegration\Buddypress\Ajax;
 use Buddyboss\LearndashIntegration\Buddypress\Courses;
 use Buddyboss\LearndashIntegration\Buddypress\Sync;
+use Buddyboss\LearndashIntegration\Buddypress\Hooks;
 use Buddyboss\LearndashIntegration\Buddypress\Forum;
 use Buddyboss\LearndashIntegration\Buddypress\GroupBpComponent;
 use Buddyboss\LearndashIntegration\Buddypress\Helpers;
@@ -20,6 +21,7 @@ class Core
 		$this->ajax    = new Ajax;
 		$this->forum   = new Forum;
 		$this->sync    = new Sync;
+		$this->hooks   = new Hooks;
 
 		add_action('bp_ld_sync/init', [$this, 'init']);
 	}
@@ -41,7 +43,7 @@ class Core
 			return;
 		}
 
-		if (! $this->sync->isSyncEnabled()) {
+		if (! bp_ld_sync('settings')->get('buddypress.enabled')) {
 			return;
 		}
 

@@ -23,15 +23,15 @@ class LearnDash_BuddyPress_Groups_Sync_LearnDash
 
         // LearnDash Group Edit Page
         add_action('add_meta_boxes', [$this, 'add_associated_group_metabox']);
-        add_action('save_post', [$this, 'update_associated_group'], 15, 3);
+        // add_action('save_post', [$this, 'update_associated_group'], 15, 3);
 
         // LearnDash Group Delete
-        add_action('wp_trash_post', [$this, 'preserve_buddypress_group_id_and_dissociate']);
-        add_action('untrash_post', [$this, 'maybe_associate_buddypress_group']);
-        add_action('before_delete_post', [$this, 'maybe_delete_buddypress_group']);
+        // add_action('wp_trash_post', [$this, 'preserve_buddypress_group_id_and_dissociate']);
+        // add_action('untrash_post', [$this, 'maybe_associate_buddypress_group']);
+        // add_action('before_delete_post', [$this, 'maybe_delete_buddypress_group']);
 
         // LearnDash leader update
-        add_action('updated_post_meta', [$this, 'resync_leaders_on_user_changed'], 15, 3);
+        // add_action('updated_post_meta', [$this, 'resync_leaders_on_user_changed'], 15, 3);
     }
 
     public function resync_leaders_on_user_changed($meta_id, $object_id, $meta_key)

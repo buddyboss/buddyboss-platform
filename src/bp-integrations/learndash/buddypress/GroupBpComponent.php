@@ -13,16 +13,22 @@ class GroupBpComponent extends BP_Group_Extension
 
 	public function settings_screen($groupId = null)
 	{
-		$groupId = $groupId ?: bp_get_new_group_id();
-		$hasLdGroup = bp_ld_sync('buddypress')->helpers->hasLearndashGroup($groupId);
+		$groupId    = $groupId ?: bp_get_new_group_id();
+		$hasLdGroup = bp_ld_sync('buddypress')->sync->generator($groupId)->hasLdGroup();
+		$ldGroupId = $hasLdGroup? bp_ld_sync('buddypress')->sync->generator($groupId)->getLdGroupId() : 0;
+
 		require bp_ld_sync()->template('/groups/single/admin/edit-courses.php');
     }
 
     public function settings_screen_save($groupId = null)
     {
-    	if (! isset($_POST['bp-ld-sync-group-ld-group']) || ! $_POST['bp-ld-sync-group-ld-group']) {
-    		return;
+    	$generator = bp_ld_sync('buddypress')->sync->generator($groupId);
+
+    	if (! bp_ld_sync()->getRequest('bp-ld-sync-enable')) {
+    		return $generator->desyncFromLearndash();
     	}
+
+    	$generator->syncToLearndash()->syncBpAdmins();
     }
 
     public function display($groupId = null)
@@ -39,7 +45,7 @@ class GroupBpComponent extends BP_Group_Extension
     protected function loadSubMenuTemplate($groupId)
     {
 		$groupId     = $groupId ?: bp_get_new_group_id();
-		$hasLdGroup  = bp_ld_sync('buddypress')->helpers->hasLearndashGroup($groupId);
+		$hasLdGroup  = bp_ld_sync('buddypress')->sync->generator($groupId)->hasLdGroup();
 		$currentMenu = bp_action_variable();
 		$subMenus    = array_map(function($menu) {
 			$menu['url'] = bp_ld_sync('buddypress')->subMenuLink($menu['slug']);
@@ -53,25 +59,18 @@ class GroupBpComponent extends BP_Group_Extension
     {
 		$tabName     = apply_filters('bp_ld_sync/group_tab_name', __('Courses', 'buddyboss'));
 		$tabSlug     = apply_filters('bp_ld_sync/group_tab_slug', 'courses');
-		$tabPosition = apply_filters('bp_ld_sync/group_tab_position', 20);
+		$tabPosition = apply_filters('bp_ld_sync/group_tab_position', 15);
 		// learndash_is_group_leader_user
 
     	return [
-			'name' => $tabName, // name (use for acf's location label)
-			'slug' => $tabSlug, // slug (use for acf's location slug)
+			'name' => $tabName,
+			'slug' => $tabSlug,
+			'nav_item_position' => $tabPosition,
+			'access' => $this->showTabOnView(),
 
 			'screens' => [
-				'view' => [
-					'enabled'         => apply_filters('bp_ld_sync/group_tab_enabled/screen=view', true),
-					'name'            => apply_filters('bp_ld_sync/group_tab_name/screen=view', $tabName),
-					'slug'            => apply_filters('bp_ld_sync/group_tab_slug/screen=view', $tabSlug),
-					'position'        => apply_filters('bp_ld_sync/group_tab_position/screen=view', $tabPosition),
-					// 'screen_callback' => '',
-					// 'save_callback'   => '', // ??
-				],
-
 				'create' => [
-					'enabled'         => apply_filters('bp_ld_sync/group_tab_enabled/screen=create', true),
+					'enabled'         => apply_filters('bp_ld_sync/group_tab_enabled/screen=create', $this->showTabOnCreate()),
 					'name'            => apply_filters('bp_ld_sync/group_tab_name/screen=create', $tabName),
 					'slug'            => apply_filters('bp_ld_sync/group_tab_slug/screen=create', $tabSlug),
 					'position'        => apply_filters('bp_ld_sync/group_tab_position/screen=create', $tabPosition),
@@ -90,5 +89,28 @@ class GroupBpComponent extends BP_Group_Extension
 				],
 			]
 		];
+    }
+
+    protected function showTabOnView()
+    {
+    	if (! $currentGroup = groups_get_current_group()) {
+    		return 'noone';
+    	}
+
+    	$generator = bp_ld_sync('buddypress')->sync->generator($currentGroup->id);
+    	if (! $generator->hasLdGroup()) {
+    		return 'noone';
+    	}
+
+    	if (! learndash_group_enrolled_courses($generator->getLdGroupId())) {
+    		return 'noone';
+    	}
+
+    	return bp_ld_sync('settings')->get('buddypress.tab_access', true);
+    }
+
+    protected function showTabOnCreate()
+    {
+    	return bp_ld_sync('settings')->get('buddypress.show_in_bp_create', true);
     }
 }

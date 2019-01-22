@@ -349,7 +349,7 @@ abstract class BP_Admin_Tab {
 			$args['input_id'],
 			$args['input_name'],
 			checked( (bool) $input_value, true, false ),
-			$args['input_run_js']? 'data-run-js-condition' : '',
+			$args['input_run_js']? "data-run-js-condition=\"{$args['input_run_js']}\"" : '',
 			$args['input_text'],
 			$args['input_description']? $this->render_input_description( $args['input_description'] ) : ''
 		);
@@ -368,7 +368,7 @@ abstract class BP_Admin_Tab {
         	'<select name="%s" id="%s" autocomplete="off" %s>',
         	$args['input_name'],
         	$args['input_id'],
-			$args['input_run_js']? 'data-run-js-condition' : ''
+			$args['input_run_js']? "data-run-js-condition=\"{$args['input_run_js']}\"" : ''
         );
 
         foreach ($args['input_options'] ?: [] as $key => $value) {

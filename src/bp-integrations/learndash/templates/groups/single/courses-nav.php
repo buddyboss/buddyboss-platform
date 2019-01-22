@@ -1,4 +1,17 @@
-<?php if (count($subMenus) < 2) return; ?>
+<?php
+/**
+ * Available Variables
+ * @version BuddyBoss 1.0.0
+ *
+ * $groupId - (int) Current social group id
+ * $hasLdGroup - (bool) Current social group has a associated Learndash group
+ * $currentMenu - (str) Current sub menu name
+ * $subMenus - (arr) Array of sub menu objects
+ */
+
+// don't show menu if only 1 item or less
+if (count($subMenus) < 2) return;
+?>
 
 <nav class="bp-navs bp-subnavs no-ajax group-subnav" id="subnav" role="navigation" aria-label="<?php esc_attr_e('Group courses menu', 'buddyboss'); ?>">
 	<ul class="subnav">

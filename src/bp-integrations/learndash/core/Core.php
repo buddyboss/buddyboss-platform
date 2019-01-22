@@ -70,6 +70,7 @@ class Core
 		spl_autoload_register(function($class) {
 			$psr4 = [
 				'Buddyboss\LearndashIntegration\Core'       => 'core',
+				'Buddyboss\LearndashIntegration\Library'    => 'library',
 				'Buddyboss\LearndashIntegration\Buddypress' => 'buddypress',
 				'Buddyboss\LearndashIntegration\Buddypress\Generators' => 'buddypress/generators',
 				'Buddyboss\LearndashIntegration\Learndash'  => 'learndash',
