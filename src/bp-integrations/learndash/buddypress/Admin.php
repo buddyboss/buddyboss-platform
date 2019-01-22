@@ -23,13 +23,14 @@ class Admin
 			return false;
 		}
 
+		$newGroup = bp_ld_sync()->getRequest('bp-ld-sync-id', null);
 		$generator = bp_ld_sync('buddypress')->sync->generator($groupId);
 
-		if ($generator->hasLdGroup()) {
+		if ($generator->hasLdGroup() && $generator->getLdGroupId() == $newGroup) {
 			return false;
 		}
 
-		$generator->syncToLearndash()
+		$generator->associateToLearndash($newGroup)
 			->syncBpAdmins()
 			->syncBpMods()
 			->syncBpUsers();
@@ -53,6 +54,7 @@ class Admin
 		$hasLdGroup = $generator->hasLdGroup();
 		$ldGroupId  = $hasLdGroup? $generator->getLdGroupId() : 0;
 		$ldGroup    = get_post($ldGroupId);
+		$availableLdGroups = bp_ld_sync('learndash')->group->getUnassociatedGroups($groupId);
 
     	require bp_ld_sync()->template('/admin/buddypress/sync-meta-box.php');
     }

@@ -32,6 +32,7 @@ class Admin
 		$hasBpGroup = $generator->hasBpGroup();
 		$bpGroupId  = $hasBpGroup? $generator->getBpGroupId() : 0;
 		$bpGroup    = groups_get_group($bpGroupId);
+		$availableBpGroups = bp_ld_sync('buddypress')->group->getUnassociatedGroups($groupId);
 
     	require bp_ld_sync()->template('/admin/learndash/sync-meta-box.php');
     }

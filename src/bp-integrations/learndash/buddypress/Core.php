@@ -11,6 +11,7 @@ use Buddyboss\LearndashIntegration\Buddypress\GroupBpComponent;
 use Buddyboss\LearndashIntegration\Buddypress\Helpers;
 use Buddyboss\LearndashIntegration\Buddypress\Reports;
 use Buddyboss\LearndashIntegration\Buddypress\Admin;
+use Buddyboss\LearndashIntegration\Buddypress\Group;
 
 class Core
 {
@@ -24,6 +25,7 @@ class Core
 		$this->sync    = new Sync;
 		$this->hooks   = new Hooks;
 		$this->admin   = new Admin;
+		$this->group   = new Group;
 
 		add_action('bp_ld_sync/init', [$this, 'init']);
 	}

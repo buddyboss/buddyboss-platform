@@ -28,7 +28,7 @@ class GroupBpComponent extends BP_Group_Extension
     		return $generator->desyncFromLearndash();
     	}
 
-    	$generator->syncToLearndash()->syncBpAdmins();
+    	$generator->associateToLearndash()->syncBpAdmins();
     }
 
     public function display($groupId = null)

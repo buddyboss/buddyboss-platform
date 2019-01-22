@@ -54,13 +54,14 @@ class Sync
 			return false;
 		}
 
+		$newGroup = bp_ld_sync()->getRequest('bp-ld-sync-id', null);
 		$generator = $this->generator(null, $groupId);
 
-		if ($generator->hasBpGroup()) {
+		if ($generator->hasBpGroup() && $generator->getBpGroupId() == $newGroup) {
 			return false;
 		}
 
-		$generator->syncToBuddypress()
+		$generator->associateToBuddypress($newGroup)
 			->syncLdAdmins()
 			->syncLdUsers();
 	}

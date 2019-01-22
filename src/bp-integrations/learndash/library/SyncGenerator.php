@@ -41,14 +41,23 @@ class SyncGenerator
 		return $this->bpGroupId;
 	}
 
-	public function syncToLearndash()
+	public function associateToLearndash($ldGroupId = null)
 	{
-		if ($this->ldGroupId) {
+		if ($this->ldGroupId && ! $ldGroupId) {
 			return $this;
 		}
 
-		$this->syncingToLearndash(function() {
-			$this->createLearndashGroup();
+		$this->syncingToLearndash(function() use ($ldGroupId) {
+			$ldGroup = get_post($ldGroupId);
+
+			if (! $ldGroupId || ! $ldGroup) {
+				$this->createLearndashGroup();
+			} else {
+				$this->unsetBpGroupMeta(false)->unsetLdGroupMeta(false);
+				$this->ldGroupId = $ldGroupId;
+			}
+
+    		$this->setSyncGropuIds();
 		});
 
 		return $this;
@@ -79,14 +88,23 @@ class SyncGenerator
 		});
 	}
 
-	public function syncToBuddypress()
+	public function associateToBuddypress($bpGroupId = null)
 	{
-		if ($this->bpGroupId) {
+		if ($this->bpGroupId && ! $bpGroupId) {
 			return $this;
 		}
 
-		$this->syncingToBuddypress(function() {
-			$this->createBuddypressGroup();
+		$this->syncingToBuddypress(function() use ($bpGroupId) {
+			$bpGroup = groups_get_group($bpGroupId);
+
+			if (! $bpGroupId || ! $bpGroup->id) {
+				$this->createBuddypressGroup();
+			} else {
+				$this->unsetBpGroupMeta(false)->unsetLdGroupMeta(false);
+				$this->bpGroupId = $bpGroupId;
+			}
+
+    		$this->setSyncGropuIds();
 		});
 
 		return $this;
@@ -321,8 +339,6 @@ class SyncGenerator
 			'post_status'  => 'publish',
 			'post_type'    => learndash_get_post_type_slug('group')
     	]);
-
-    	$this->setSyncGropuIds();
 	}
 
 	protected function createBuddypressGroup()

@@ -62,7 +62,7 @@ class Sync
 
 		// admin is added BEFORE this hook is called, so we need to manually sync admin
 		// src/bp-groups/bp-groups-functions.php:194
-		$this->generator($groupId)->syncToLearndash()->syncBpAdmins();
+		$this->generator($groupId)->associateToLearndash()->syncBpAdmins();
 	}
 
 	public function onGroupDeleting($groupId)
