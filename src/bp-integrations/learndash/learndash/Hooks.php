@@ -30,31 +30,17 @@ class Hooks
 		do_action('bp_ld_sync/learndash_group_updated', $groupId);
 	}
 
-	public function groupCreated($groupId)
+	public function groupDeleting($groupId)
 	{
 		global $wpdb;
 
 		$post = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->posts WHERE ID = %d", $groupId));
 
-		if ($post->post_type == 'groups') {
+		if ($post->post_type != 'groups') {
 			return false;
 		}
 
 		do_action('bp_ld_sync/learndash_group_deleting', $groupId);
-	}
-
-	public function groupCreated($groupId)
-	{
-		global $wpdb;
-
-		$post = $wpdb->get_row($wpdb->prepare("SELECT * FROM $wpdb->posts WHERE ID = %d", $groupId));
-
-		if ($post->post_type == 'groups') {
-			return false;
-		}
-
-		do_action('bp_ld_sync/learndash_group_deleting', $groupId);
-
 		add_action('delete_post', [$this, 'groupDeleted']);
 	}
 
@@ -81,12 +67,12 @@ class Hooks
 	{
 		if ($this->isLearndashLeaderMeta($metaKey)) {
 			$groupId = $this->getLeardashMetaGroupId($metaKey);
-			return do_action('bp_ld_sync/learndash_group_admin_deleted', $groupId, $userId);
+			return do_action('bp_ld_sync/learndash_group_admin_removed', $groupId, $userId);
 		}
 
 		if ($this->isLearndashUserMeta($metaKey)) {
 			$groupId = $this->getLeardashMetaGroupId($metaKey);
-			return do_action('bp_ld_sync/learndash_group_user_deleted', $groupId, $userId);
+			return do_action('bp_ld_sync/learndash_group_user_removed', $groupId, $userId);
 		}
 	}
 

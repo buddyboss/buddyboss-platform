@@ -2,6 +2,8 @@
 
 namespace Buddyboss\LearndashIntegration\Library;
 
+use BP_Groups_Member;
+
 class SyncGenerator
 {
 	protected $syncingToLearndash = false;
@@ -45,7 +47,9 @@ class SyncGenerator
 			return $this;
 		}
 
-		$this->createLearndashGroup();
+		$this->syncingToLearndash(function() {
+			$this->createLearndashGroup();
+		});
 
 		return $this;
 	}
@@ -61,16 +65,31 @@ class SyncGenerator
 		return $this;
 	}
 
+	public function deleteBpGroup($bpGroupId)
+	{
+		$this->syncingToBuddypress(function() use ($bpGroupId) {
+			groups_delete_group($bpGroupId);
+		});
+	}
+
 	public function deleteLdGroup($ldGroupId)
 	{
-		$this->syncingToBuddypress(function() use ($ldGroupId) {
+		$this->syncingToLearndash(function() use ($ldGroupId) {
 			wp_delete_post($ldGroupId, true);
 		});
 	}
 
 	public function syncToBuddypress()
 	{
+		if ($this->bpGroupId) {
+			return $this;
+		}
 
+		$this->syncingToBuddypress(function() {
+			$this->createBuddypressGroup();
+		});
+
+		return $this;
 	}
 
 	public function desyncFromBuddypress()
@@ -90,11 +109,13 @@ class SyncGenerator
 			$adminIds = groups_get_group_admins($this->bpGroupId);
 
 			foreach ($adminIds as $admin) {
-				$this->syncBpAdmin($admin->user_id);
+				$this->syncBpAdmin($admin->user_id, false, false);
 			}
 		});
 
 		$this->clearLdGroupCache();
+
+		return $this;
 	}
 
 	public function syncBpMods()
@@ -103,11 +124,13 @@ class SyncGenerator
 			$modIds = groups_get_group_mods($this->bpGroupId);
 
 			foreach ($modIds as $mod) {
-				$this->syncBpMod($mod->user_id);
+				$this->syncBpMod($mod->user_id, false, false);
 			}
 		});
 
 		$this->clearLdGroupCache();
+
+		return $this;
 	}
 
 	public function syncBpUsers()
@@ -116,52 +139,99 @@ class SyncGenerator
 			$memberIds = groups_get_group_members($this->bpGroupId);
 
 			foreach ($memberIds as $member) {
-				$this->syncBpMember($member->user_id);
+				$this->syncBpMember($member->user_id, false, false);
 			}
 		});
 
 		$this->clearLdGroupCache();
+
+		return $this;
 	}
 
 	public function syncLdAdmins()
 	{
-		// $admins = learndash_get_groups_administrators($groupId);
-		// learndash_set_groups_administrators($groupId, [$bpGroup->creator_id]);
+		$this->syncingToBuddypress(function() {
+			$adminIds = learndash_get_groups_administrator_ids($this->ldGroupId);
+
+			foreach ($adminIds as $adminId) {
+				$this->syncLdAdmin($adminId);
+			}
+		});
+
+		return $this;
 	}
 
 	public function syncLdUsers()
 	{
+		$this->syncingToBuddypress(function() {
+			$userIds = learndash_get_groups_user_ids($this->ldGroupId);
 
+			foreach ($userIds as $userId) {
+				$this->syncLdUser($userId);
+			}
+		});
+
+		return $this;
 	}
 
-	public function syncBpAdmin($userId, $remove = false)
+	public function syncBpAdmin($userId, $remove = false, $clearCache = true)
 	{
 		$this->syncingToLearndash(function() use ($userId, $remove) {
 			call_user_func_array($this->getBpSyncFunction('admin'), [$userId, $this->ldGroupId, $remove]);
 			$this->maybeRemoveAsLdUser('admin', $userId);
 		});
 
-		$this->clearLdGroupCache();
+		if ($clearCache) {
+			$this->clearLdGroupCache();
+		}
+
+		return $this;
 	}
 
-	public function syncBpMod($userId, $remove = false)
+	public function syncBpMod($userId, $remove = false, $clearCache = true)
 	{
 		$this->syncingToLearndash(function() use ($userId, $remove) {
 			call_user_func_array($this->getBpSyncFunction('mod'), [$userId, $this->ldGroupId, $remove]);
 			$this->maybeRemoveAsLdUser('mod', $userId);
 		});
 
-		$this->clearLdGroupCache();
+		if ($clearCache) {
+			$this->clearLdGroupCache();
+		}
+
+		return $this;
 	}
 
-	public function syncBpMember($userId, $remove = false)
+	public function syncBpMember($userId, $remove = false, $clearCache = true)
 	{
 		$this->syncingToLearndash(function() use ($userId, $remove) {
 			call_user_func_array($this->getBpSyncFunction('user'), [$userId, $this->ldGroupId, $remove]);
 			call_user_func_array('ld_update_leader_group_access', [$userId, $this->ldGroupId, true]);
 		});
 
-		$this->clearLdGroupCache();
+		if ($clearCache) {
+			$this->clearLdGroupCache();
+		}
+
+		return $this;
+	}
+
+	public function syncLdAdmin($userId, $remove = false)
+	{
+		$this->syncingToBuddypress(function() use ($userId, $remove) {
+			$this->addUserToBpGroup($userId, 'admin', $remove);
+		});
+
+		return $this;
+	}
+
+	public function syncLdUser($userId, $remove = false)
+	{
+		$this->syncingToBuddypress(function() use ($userId, $remove) {
+			$this->addUserToBpGroup($userId, 'user', $remove);
+		});
+
+		return $this;
 	}
 
 	protected function verifyInputs()
@@ -242,19 +312,32 @@ class SyncGenerator
 
 	protected function createLearndashGroup()
 	{
-		$this->syncingToLearndash(function() {
-			$bpGroup = groups_get_group($this->bpGroupId);
+		$bpGroup = groups_get_group($this->bpGroupId);
 
-	    	$this->ldGroupId = wp_insert_post([
-				'post_title'   => $bpGroup->name,
-				'post_author'  => $bpGroup->creator_id,
-				'post_content' => $bpGroup->description,
-				'post_status'  => 'publish',
-				'post_type'    => learndash_get_post_type_slug('group')
-	    	]);
+    	$this->ldGroupId = wp_insert_post([
+			'post_title'   => $bpGroup->name,
+			'post_author'  => $bpGroup->creator_id,
+			'post_content' => $bpGroup->description,
+			'post_status'  => 'publish',
+			'post_type'    => learndash_get_post_type_slug('group')
+    	]);
 
-	    	$this->setSyncGropuIds();
-		});
+    	$this->setSyncGropuIds();
+	}
+
+	protected function createBuddypressGroup()
+	{
+		$ldGroup = get_post($this->ldGroupId);
+		$settings = bp_ld_sync('settings');
+
+    	$this->bpGroupId = groups_create_group([
+			'name'   => $ldGroup->post_title ?: "For Social Group: {$this->ldGroupId}",
+			'status' => $settings->get('learndash.default_bp_privacy'),
+		]);
+
+		groups_update_groupmeta($this->bpGroupId, 'invite_status', $settings->get('learndash.default_bp_invite_status'));
+
+    	$this->setSyncGropuIds();
 	}
 
 	protected function maybeRemoveAsLdUser($type, $userId)
@@ -280,6 +363,34 @@ class SyncGenerator
 			default:
 				return 'ld_update_group_access';
 		}
+	}
+
+	protected function getLdSyncToRole($type)
+	{
+		return bp_ld_sync('settings')->get("learndash.default_{$type}_sync_to");
+	}
+
+	protected function addUserToBpGroup($userId, $type, $remove)
+	{
+		$groupMember = new BP_Groups_Member($userId, $this->bpGroupId);
+		$syncTo = $this->getLdSyncToRole($type);
+
+		if ($remove) {
+			return $groupMember->remove();
+		}
+
+		$groupMember->group_id     = $this->bpGroupId;
+		$groupMember->user_id      = $userId;
+		$groupMember->is_admin     = 0;
+		$groupMember->is_mod       = 0;
+		$groupMember->is_confirmed = 1;
+
+		if ('user' != $syncTo) {
+			$var = "is_{$syncTo}";
+			$groupMember->$var = 1;
+		}
+
+		$groupMember->save();
 	}
 
 	protected function clearLdGroupCache()

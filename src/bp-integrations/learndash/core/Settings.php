@@ -61,6 +61,7 @@ class Settings
 			],
 			'learndash' => [
 				'enabled'                  => false,
+				'default_auto_sync'        => true,
 				'default_bp_privacy'       => 'private',
 				'default_bp_invite_status' => 'admin',
 				'default_admin_sync_to'    => 'admin',

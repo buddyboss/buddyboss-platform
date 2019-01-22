@@ -101,7 +101,7 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_checkbox_field(
 			'default_auto_sync',
-			__('Generate Social Group', 'buddyboss'),
+			__('Generate Learndash Group', 'buddyboss'),
 			[
 				'input_text' => __( 'Yes', 'buddyboss' ),
 				'input_description' => __( 'Automatically generate and associate a Learndash group on creation. (usually for if the group is created programatically or Course tab is disable on creation)', 'buddyboss' ),
@@ -191,6 +191,16 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'input_text' => __( 'Yes', 'buddyboss' ),
 				'input_description' => __( 'Enable all group sync functionality on Learndash Group', 'buddyboss' ),
 				'input_run_js' => 'learndash_enabled'
+			]
+		);
+
+		$this->add_checkbox_field(
+			'default_auto_sync',
+			__('Generate Learndash Group', 'buddyboss'),
+			[
+				'input_text' => __( 'Yes', 'buddyboss' ),
+				'input_description' => __( 'Automatically generate and associate a social group on creation. (usually for if the group is created programatically)', 'buddyboss' ),
+				'class' => 'js-show-on-learndash_enabled'
 			]
 		);
 
