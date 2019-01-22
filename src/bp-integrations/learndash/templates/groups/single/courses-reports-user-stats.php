@@ -4,11 +4,11 @@
 <div class="ld-report-user-stats">
 	<div class="user-info">
 		<div class="user-avatar">
-			<?php echo bp_core_fetch_avatar( array( 'item_id' => $user->ID ) ); ?>
+			<a href="<?php echo bp_core_get_user_domain( $user->ID ); ?>"><?php echo bp_core_fetch_avatar( array( 'item_id' => $user->ID ) ); ?></a>
 		</div>
 		<div class="user-name">
-			<h5><?php echo $user->display_name; ?></h5>
-			<p><?php echo groups_is_user_admin($user->ID, $group->id)? __('Teacher', 'buddyboss') : __('Student', 'buddyboss'); ?></p>
+			<h5 class="list-title member-name"><a href="<?php echo bp_core_get_user_domain( $user->ID ); ?>"><?php echo $user->display_name; ?></a></h5>
+			<p class="item-meta"><?php echo groups_is_user_admin($user->ID, $group->id)? __('Teacher', 'buddyboss') : __('Student', 'buddyboss'); ?></p>
 		</div>
 	</div>
 

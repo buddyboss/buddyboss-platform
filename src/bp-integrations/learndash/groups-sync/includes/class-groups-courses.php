@@ -81,8 +81,7 @@ if ( class_exists( 'BP_Group_Extension' ) && $bp_learndash_requirement->valid() 
 		function course_html() {
 			$courses = learndash_group_enrolled_courses( $this->associated_ld_group, true );
 			?>
-            <div id="courses-group-list" class="group_courses dir-list" data-bp-list="group_courses"
-                 style="display: block;">
+            <div id="courses-group-list" class="group_courses dir-list" data-bp-list="group_courses">
 				<?php
 				if ( ! empty( $courses ) ) {
 					?>
