@@ -365,22 +365,18 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			'<script src="%s"></script>',
 			add_query_arg(
 				'ver',
-				filemtime( $this->root_path . '/groups-sync/assets/js/admin/bp_learndash_groups_sync-settings.js' ),
-				$this->root_url . '/groups-sync/assets/js/admin/bp_learndash_groups_sync-settings.js'
+				filemtime(bp_learndash_path($filePath = '/assets/scripts/bp_learndash_groups_sync-settings.js')),
+				bp_learndash_url($filePath)
 			)
 		);
 	}
 
 	protected function get_input_name( $name ) {
 		return bp_ld_sync('settings')->getName("{$this->current_section}.{$name}");
-		// $option_key = "{$this->current_section}_option_key";
-		// return "{$this->$option_key}[{$name}]";
 	}
 
 	protected function get_input_value( $key, $default = '' ) {
 		return bp_ld_sync('settings')->get("{$this->current_section}.{$key}", $default);
-		// $options = "{$this->current_section}_options";
-		// return isset($this->$options[$key]) ? $this->$options[$key] : $default;
 	}
 }
 
