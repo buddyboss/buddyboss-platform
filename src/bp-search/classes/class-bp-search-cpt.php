@@ -45,7 +45,7 @@ if (!class_exists('Bp_Search_CPT')):
 
 			$sql .= " FROM {$wpdb->prefix}posts p";
 
-			$items_to_search = BP_Search::instance()->option('items-to-search');
+			$items_to_search = BP_Search::instance()->searchable_items;
 			$tax 			 = array();
 			foreach( $items_to_search as $item ) {
 				if ( strpos( $item, '-tax-' ) ) {
