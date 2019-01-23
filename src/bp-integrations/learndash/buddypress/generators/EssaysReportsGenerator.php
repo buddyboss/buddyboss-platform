@@ -2,7 +2,7 @@
 
 namespace Buddyboss\LearndashIntegration\Buddypress\Generators;
 
-use Buddyboss\LearndashIntegration\Buddypress\ReportsGenerator;
+use Buddyboss\LearndashIntegration\Library\ReportsGenerator;
 use WP_Query;
 use WpProQuiz_Model_QuestionMapper;
 use WpProQuiz_Model_Question;

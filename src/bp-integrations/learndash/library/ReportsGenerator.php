@@ -1,6 +1,6 @@
 <?php
 
-namespace Buddyboss\LearndashIntegration\Buddypress;
+namespace Buddyboss\LearndashIntegration\Library;
 
 class ReportsGenerator
 {
@@ -29,10 +29,13 @@ class ReportsGenerator
 			'bp_ld_sync/reports_generator_args',
 			wp_parse_args(bp_ld_sync()->getRequest(), $this->defaults)
 		);
-		$this->setupParams();
 
-		$this->includeCourseTitle();
-		$this->includeCourseTimeSpent();
+		if ($_POST) {
+			$this->setupParams();
+
+			$this->includeCourseTitle();
+			$this->includeCourseTimeSpent();
+		}
 	}
 
 	public function getColumns()
@@ -246,23 +249,25 @@ class ReportsGenerator
 
 	protected function setupParams()
 	{
-		$this->params['group_ids'] = $this->args['group'];
+		// includes/ld-reports.php:882 learndash_reports_get_activity only allowd leader if group_id is passed
+		// $this->params['group_ids'] = $this->args['group'];
+		$ldGroupId = bp_ld_sync('buddypress')->sync->generator($this->args['group'])->getLdGroupId();
 
 		if ($this->hasArg('date_format')) {
 			$this->params['date_format'] = $this->args['date_format'] ?: 'Y-m-d';
 		}
 
-		if ($this->hasArg('course')) {
-			$this->params['course_ids'] = ! $this->args['course']? '' : $this->args['course'];
-		}
+		// if ($this->hasArg('course')) {
+			$this->params['course_ids'] = $this->args['course'] ?: learndash_group_enrolled_courses($ldGroupId);
+		// }
 
 		if ($this->hasArg('step')) {
 			$this->params['post_types'] = $this->args['step'] == 'all'? $this->allSteps() : $this->args['step'];
 		}
 
-		if ($this->hasArg('user')) {
-			$this->params['user_ids'] = $this->args['user'] == 'all'? '' : $this->args['user'];
-		}
+		// if ($this->hasArg('user')) {
+			$this->params['user_ids'] = $this->args['user'] ?: learndash_get_groups_user_ids($ldGroupId);
+		// }
 
 		if ($this->hasArg('completed')) {
 			$this->params['activity_status'] = $this->args['completed']? 'COMPLETED' : 'IN_PROGRESS';
@@ -284,7 +289,7 @@ class ReportsGenerator
 		if ($this->hasArg('length')) {
 			$this->params['per_page'] = $this->args['length'];
 		}
-
+// print_r($this->params);die();
 		$this->params = apply_filters('bp_ld_sync/reports_generator_params', $this->params, $this->args);
 	}
 

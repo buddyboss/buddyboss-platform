@@ -2,7 +2,7 @@
 
 namespace Buddyboss\LearndashIntegration\Buddypress\Generators;
 
-use Buddyboss\LearndashIntegration\Buddypress\ReportsGenerator;
+use Buddyboss\LearndashIntegration\Library\ReportsGenerator;
 
 class CoursesReportsGenerator extends ReportsGenerator
 {
