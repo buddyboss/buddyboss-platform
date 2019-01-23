@@ -7,7 +7,7 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 	public function initialize() {
 		$this->tab_order             = 10;
-		$this->intro_template        = $this->root_path . '/admin/templates/tab-intro.php';
+		$this->intro_template        = $this->root_path . '/templates/admin/integration-tab-intro.php';
 		$this->groups_sync_options   = get_option( $this->groups_sync_option_key ) ?: [];
 		$this->groups_report_options = get_option( $this->groups_report_option_key ) ?: [];
 

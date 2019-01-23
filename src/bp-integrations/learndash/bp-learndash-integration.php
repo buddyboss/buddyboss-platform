@@ -14,7 +14,7 @@ class BP_Learndash_Integration extends BP_Integration {
 	}
 
 	public function setup_admin_integartion_tab() {
-		require_once trailingslashit( $this->path ) . 'admin/bp-admin-learndash-tab.php';
+		require_once trailingslashit( $this->path ) . 'bp-admin-learndash-tab.php';
 
 		new BP_Learndash_Admin_Integration_Tab(
 			"bp-{$this->id}",
