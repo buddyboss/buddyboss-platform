@@ -31,7 +31,7 @@ class Sync
 		add_action('bp_ld_sync/buddypress_group_admin_removed', [$this, 'onAdminRemoved'], 10, 3);
 		add_action('bp_ld_sync/buddypress_group_mod_removed', [$this, 'onModRemoved'], 10, 3);
 		add_action('bp_ld_sync/buddypress_group_member_removed', [$this, 'onMemberRemoved'], 10, 3);
-		add_action('bp_ld_sync/buddypress_group_member_banned', [$this, 'onMemberRemoved'], 10, 3);
+		// add_action('bp_ld_sync/buddypress_group_member_banned', [$this, 'onMemberRemoved'], 10, 3);
 	}
 
 	public function generator($bpGroupId = null, $ldGroupId = null)
@@ -138,14 +138,14 @@ class Sync
 		$generator->syncBpMod($memberId, true);
 	}
 
-	public function onMemberRemoved($groupId, $memberId, $groupMemberObject)
-	{
-		if (! $generator = $this->groupUserEditCheck('user', $groupId)) {
-			return false;
-		}
+	// public function onMemberRemoved($groupId, $memberId, $groupMemberObject)
+	// {
+	// 	if (! $generator = $this->groupUserEditCheck('user', $groupId)) {
+	// 		return false;
+	// 	}
 
-		$generator->syncBpMember($memberId, true);
-	}
+	// 	$generator->syncBpMember($memberId, true);
+	// }
 
 	protected function groupUserEditCheck($role, $groupId)
 	{

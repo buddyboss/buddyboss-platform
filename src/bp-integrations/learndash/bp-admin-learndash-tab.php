@@ -39,7 +39,7 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		parent::form_html();
 
-		require $this->root_path . '/groups-sync/templates/admin/learndash-settings-tools.php';
+		// require $this->root_path . '/groups-sync/templates/admin/learndash-settings-tools.php';
 	}
 
 	public function registerBuddypressSettings()
@@ -115,16 +115,6 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			[
 				'input_text' => __( 'Yes', 'buddyboss' ),
 				'input_description' => __( 'Automatically delete the associated Learndash group upon social group deletion. Uncheck this to delete the group manually.', 'buddyboss' ),
-				'class' => 'js-show-on-buddypress_enabled'
-			]
-		);
-
-		$this->add_checkbox_field(
-			'default_user_on_ban',
-			__('Delete Banned Members', 'buddyboss'),
-			[
-				'input_text' => __( 'Yes', 'buddyboss' ),
-				'input_description' => __( 'Automatically remove the associated Learndash member when he is banned from the social group. Uncheck this to remove the user manually.', 'buddyboss' ),
 				'class' => 'js-show-on-buddypress_enabled'
 			]
 		);

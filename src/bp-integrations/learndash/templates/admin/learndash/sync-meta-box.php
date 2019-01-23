@@ -6,7 +6,7 @@
         name="bp-ld-sync-enable"
         value="1"
         autocomplete="off"
-        <?php checked($hasBpGroup, true); ?>
+        <?php checked($checked, true); ?>
     />
     <?php _e('Yes. I want this group to have a social group', 'buddyboss'); ?>
 </label>

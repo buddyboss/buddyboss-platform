@@ -54,7 +54,6 @@ class Settings
 				'tab_access'              => 'anyone',
 				'default_auto_sync'       => true,
 				'delete_ld_on_delete'     => false,
-				'default_user_on_ban'     => true,
 				'default_admin_sync_to'   => 'admin',
 				'default_mod_sync_to'     => 'admin',
 				'default_user_sync_to'    => 'user',
