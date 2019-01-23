@@ -297,15 +297,16 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			]
 		);
 
-		$this->add_input_field(
-			'cache_time',
-			__('Reports Cache Time (minute)', 'buddyboss'),
-			[
-				'input_type'        => 'number',
-				'input_description' => __( 'Recommanded. Reports are cached to have better performance and less server load. Here you can adjust how long the cache lives. Organizers and Moderator can refresh report at anytime. Set this to 0 to disable cache.', 'buddyboss' ),
-				'class' => 'js-show-on-reports_enabled'
-			]
-		);
+		// disabled this for now
+		// $this->add_input_field(
+		// 	'cache_time',
+		// 	__('Reports Cache Time (minute)', 'buddyboss'),
+		// 	[
+		// 		'input_type'        => 'number',
+		// 		'input_description' => __( 'Recommanded. Reports are cached to have better performance and less server load. Here you can adjust how long the cache lives. Organizers and Moderator can refresh report at anytime. Set this to 0 to disable cache.', 'buddyboss' ),
+		// 		'class' => 'js-show-on-reports_enabled'
+		// 	]
+		// );
 	}
 
 	public function buddypress_groups_sync_description() {
