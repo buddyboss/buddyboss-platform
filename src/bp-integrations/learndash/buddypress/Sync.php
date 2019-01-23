@@ -149,6 +149,13 @@ class Sync
 
 	protected function groupUserEditCheck($role, $groupId)
 	{
+		global $bp_ld_sync__syncing_to_buddypress;
+
+		// if it's group is created from buddypress sync, don't need to sync back
+		if ($bp_ld_sync__syncing_to_buddypress) {
+			return false;
+		}
+
 		$settings = bp_ld_sync('settings');
 
 		if (! $settings->get('buddypress.enabled')) {

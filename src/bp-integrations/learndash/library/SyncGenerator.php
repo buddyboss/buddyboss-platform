@@ -245,6 +245,13 @@ class SyncGenerator
 
 	public function syncLdUser($userId, $remove = false)
 	{
+		$ldGroupAdmins = learndash_get_groups_administrator_ids($this->ldGroupid);
+
+		// if this user is learndash leader, we don't want to downgrad them (bp only allow 1 user)
+		if (in_array($userId, $ldGroupAdmins)) {
+			return $this;
+		}
+
 		$this->syncingToBuddypress(function() use ($userId, $remove) {
 			$this->addUserToBpGroup($userId, 'user', $remove);
 		});
