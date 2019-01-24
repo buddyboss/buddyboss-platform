@@ -91,8 +91,8 @@
 					?>
 					<div class="appboss-column-block">
 					
-						<h1><?php _e( 'This is placeholder text still', 'buddyboss' ); ?></h1>
-						<p><?php _e( 'This is placeholder text still, need to expand on it.', 'buddyboss' ); ?></p>
+						<h1><?php _e( 'All The Features You Need', 'buddyboss' ); ?></h1>
+						<p><?php _e( 'Our team will customize, build and launch your mobile app, on your own account, on the Apple App Store and Google Play Store.', 'buddyboss' ); ?></p>
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
@@ -170,8 +170,8 @@
 					?>					
 					<div class="appboss-column-block">
 					
-						<h1><?php _e( 'This is placeholder text still', 'buddyboss' ); ?></h1>
-						<p><?php _e( 'This is placeholder text still, need to expand on it.', 'buddyboss' ); ?></p>
+						<h1><?php _e( 'Monetize your Mobile App', 'buddyboss' ); ?></h1>
+						<p><?php _e( 'We\'ve built the integrations to help you earn money from your app.', 'buddyboss' ); ?></p>
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
@@ -189,7 +189,7 @@
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'In-App Registration', 'buddyboss' ); ?></h2>
-								<p><?php _e( 'You can choose to enable or disable users from registering from within your app. AppBoss syncs your WordPress database and mobile app in real-time.', 'buddyboss' ); ?></p>
+								<p><?php _e( 'You can choose to enable registration within the app, or limit logins to your paying members only. AppBoss syncs your WordPress database and mobile app in real-time.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
 
@@ -199,7 +199,7 @@
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'In-App Purchases', 'buddyboss' ); ?></h2>
-								<p><?php _e( 'You can enable both Apple Pay for iOS and Google Pay for Android to let your users easily pay for their courses or membership levels.', 'buddyboss' ); ?></p>
+								<p><?php _e( 'You can enable both Apple Pay for iOS and Google Pay for Android to let your users easily pay for their LearnDash courses and/or membership levels.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
 
