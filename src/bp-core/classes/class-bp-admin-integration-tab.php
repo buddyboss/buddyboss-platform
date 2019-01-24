@@ -52,8 +52,8 @@ class BP_Admin_Integration_tab extends BP_Admin_Tab {
 		return true;
 	}
 
-	public function is_activated() {
-		return $this->required_plugin && ! is_plugin_active( $this->required_plugin );
+	public function is_active() {
+		return $this->required_plugin && is_plugin_active( $this->required_plugin );
 	}
 
 	public function form_html() {
