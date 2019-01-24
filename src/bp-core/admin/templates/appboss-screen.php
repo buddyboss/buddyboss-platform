@@ -1,5 +1,5 @@
 
-<div class="wrap wc_appboss_wrap">
+<div class="wrap bp_appboss_wrap">
     <h1 class="screen-reader-text"><?php _e( 'AppBoss Mobile App', 'buddyboss' ); ?></h1>
 	<div class="appboss-featured">
 

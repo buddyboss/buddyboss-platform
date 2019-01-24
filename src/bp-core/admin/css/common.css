@@ -581,26 +581,26 @@ body.post-type-bp-email .categorydiv label {
 /*------------------------------------------------------------------------------
  * 7.0 AppBoss page
  *----------------------------------------------------------------------------*/
-.wc_appboss_wrap {
+.bp_appboss_wrap {
     max-width: 1200px;
 }
 
-.wc_appboss_wrap .appboss-featured {
+.bp_appboss_wrap .appboss-featured {
     margin: 25px 0 0;
 }
 
-.wc_appboss_wrap .appboss-banner-block, .wc_appboss_wrap .appboss-wcs-banner-block {
+.bp_appboss_wrap .appboss-banner-block, .bp_appboss_wrap .appboss-wcs-banner-block {
     background: #fff;
     border: 1px solid #ddd;
     margin: 0 0 1em 0;
     padding: 2em 2em 1em;
 }
 
-.wc_appboss_wrap .appboss-banner-block p {
+.bp_appboss_wrap .appboss-banner-block p {
     margin: 0 0 20px;
 }
 
-.wc_appboss_wrap .appboss-banner-block-items {
+.bp_appboss_wrap .appboss-banner-block-items {
     display: -webkit-box;
     display: flex;
     -webkit-box-orient: horizontal;
@@ -611,7 +611,7 @@ body.post-type-bp-email .categorydiv label {
     margin: 0 -10px 0 -10px;
 }
 
-.wc_appboss_wrap .appboss-banner-block-item {
+.bp_appboss_wrap .appboss-banner-block-item {
     border: 1px solid #e6e6e6;
     border-radius: 3px;
     -webkit-box-flex: 1;
@@ -621,7 +621,7 @@ body.post-type-bp-email .categorydiv label {
     width: 30%;
 }
 
-.wc_appboss_wrap .appboss-column-block-item {
+.bp_appboss_wrap .appboss-column-block-item {
     border-top: 2px solid #f9f9f9;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
@@ -633,19 +633,19 @@ body.post-type-bp-email .categorydiv label {
     padding: 20px;
 }
 
-.wc_appboss_wrap .appboss-banner-block-item, .wc_appboss_wrap .appboss-column-block-item {
+.bp_appboss_wrap .appboss-banner-block-item, .bp_appboss_wrap .appboss-column-block-item {
     display: none;
 }
 
-.wc_appboss_wrap .appboss-column-block-item:nth-of-type(-n+3) {
+.bp_appboss_wrap .appboss-column-block-item:nth-of-type(-n+3) {
 	display: flex;
 }
 
-.wc_appboss_wrap .appboss-banner-block-item:nth-child(-n+3) {
+.bp_appboss_wrap .appboss-banner-block-item:nth-child(-n+3) {
     display: block;
 }
 
-.wc_appboss_wrap .appboss-banner-block-item-icon, .wc_appboss_wrap .appboss-column-block-item-icon {
+.bp_appboss_wrap .appboss-banner-block-item-icon, .bp_appboss_wrap .appboss-column-block-item-icon {
     -webkit-box-align: center;
     align-items: center;
     display: -webkit-box;
@@ -654,16 +654,16 @@ body.post-type-bp-email .categorydiv label {
     justify-content: center;
 }
 
-.wc_appboss_wrap .appboss-banner-block-item-icon {
+.bp_appboss_wrap .appboss-banner-block-item-icon {
     background: #f7f7f7;
     height: 143px;
 }
 
-.wc_appboss_wrap .appboss-banner-block img {
+.bp_appboss_wrap .appboss-banner-block img {
     height: 62px;
 }
 
-.wc_appboss_wrap .appboss-banner-block-item-content {
+.bp_appboss_wrap .appboss-banner-block-item-content {
     display: -webkit-box;
     display: flex;
     -webkit-box-orient: vertical;
@@ -675,19 +675,19 @@ body.post-type-bp-email .categorydiv label {
     padding: 24px;
 }
 
-.wc_appboss_wrap .appboss-banner-block-item-content h3 {
+.bp_appboss_wrap .appboss-banner-block-item-content h3 {
     margin-top: 0;
 }
 
-.wc_appboss_wrap .appboss-banner-block p {
+.bp_appboss_wrap .appboss-banner-block p {
     margin: 0 0 20px;
 }
 
-.wc_appboss_wrap .appboss-banner-block-item-content p {
+.bp_appboss_wrap .appboss-banner-block-item-content p {
     margin: 0 0 auto;
 }
 
-.wc_appboss_wrap .appboss-column-block-item-icon {
+.bp_appboss_wrap .appboss-column-block-item-icon {
     background: #f7f7f7;
     border: 1px solid #e6e6e6;
     height: 100px;
@@ -695,12 +695,12 @@ body.post-type-bp-email .categorydiv label {
     width: 100px;
 }
 
-.wc_appboss_wrap .appboss-column-block img {
+.bp_appboss_wrap .appboss-column-block img {
     max-height: 50px;
     max-width: 50px;
 }
 
-.wc_appboss_wrap .appboss-column-block-item-content {
+.bp_appboss_wrap .appboss-column-block-item-content {
     display: -webkit-box;
     display: flex;
     -webkit-box-flex: 1;
@@ -712,20 +712,20 @@ body.post-type-bp-email .categorydiv label {
     min-width: 200px;
 }
 
-.wc_appboss_wrap .appboss-column-block-item-content h2 {
+.bp_appboss_wrap .appboss-column-block-item-content h2 {
     float: left;
     margin-top: 8px;
 }
 
-.wc_appboss_wrap .appboss-column-block-item-content a {
+.bp_appboss_wrap .appboss-column-block-item-content a {
     float: right;
 }
 
-.wc_appboss_wrap .appboss-column-block-item-content p {
+.bp_appboss_wrap .appboss-column-block-item-content p {
     float: left;
 }
 
-.wc_appboss_wrap .appboss-button {
+.bp_appboss_wrap .appboss-button {
     border-radius: 3px;
     cursor: pointer;
     display: block;
@@ -736,22 +736,22 @@ body.post-type-bp-email .categorydiv label {
     width: 124px;
 }
 
-.wc_appboss_wrap .appboss-button-solid {
+.bp_appboss_wrap .appboss-button-solid {
     background-color: #00AAE1;
     color: #fff;
 }
 
-.wc_appboss_wrap .appboss-button-outline-dark {
+.bp_appboss_wrap .appboss-button-outline-dark {
     border: 1px solid #00AAE1;
     color: #00AAE1;
 }
 
-.wc_appboss_wrap .appboss-button-outline-light {
+.bp_appboss_wrap .appboss-button-outline-light {
     border: 1px solid #fff;
     color: #fff;
 }
 
-.wc_appboss_wrap .appboss-wcs-banner-block {
+.bp_appboss_wrap .appboss-wcs-banner-block {
     display: -webkit-box;
     display: flex;
     -webkit-box-align: center;
@@ -759,19 +759,19 @@ body.post-type-bp-email .categorydiv label {
     padding: 2em;
 }
 
-.wc_appboss_wrap .appboss-wcs-banner-block-image {
+.bp_appboss_wrap .appboss-wcs-banner-block-image {
     background: #f7f7f7;
     border: 1px solid #e6e6e6;
     margin-right: 2em;
     padding: 4em;
 }
 
-.wc_appboss_wrap .appboss-wcs-banner-block-image .appboss-img {
+.bp_appboss_wrap .appboss-wcs-banner-block-image .appboss-img {
     max-height: 86px;
     max-width: 97px;
 }
 
-.wc_appboss_wrap .appboss-wcs-banner-block-content {
+.bp_appboss_wrap .appboss-wcs-banner-block-content {
     display: -webkit-box;
     display: flex;
     -webkit-box-orient: vertical;
@@ -782,15 +782,15 @@ body.post-type-bp-email .categorydiv label {
     padding: 1em 0;
 }
 
-.wc_appboss_wrap .appboss-wcs-banner-block-content h1 {
+.bp_appboss_wrap .appboss-wcs-banner-block-content h1 {
     padding-bottom: 0;
 }
 
-.wc_appboss_wrap .appboss-wcs-banner-block-content p {
+.bp_appboss_wrap .appboss-wcs-banner-block-content p {
     margin-bottom: 0;
 }
 
-.wc_appboss_wrap .appboss-column-section {
+.bp_appboss_wrap .appboss-column-section {
     display: -webkit-box;
     display: flex;
     -webkit-box-orient: horizontal;
@@ -800,36 +800,36 @@ body.post-type-bp-email .categorydiv label {
     justify-content: space-around;
 }
 
-.wc_appboss_wrap .appboss-column {
+.bp_appboss_wrap .appboss-column {
     -webkit-box-flex: 1;
     flex: 1;
     width: 50%;
     padding: 0 .5em;
 }
 
-.wc_appboss_wrap .appboss-column-block, .wc_appboss_wrap .appboss-small-dark-block, .wc_appboss_wrap .appboss-small-light-block {
+.bp_appboss_wrap .appboss-column-block, .bp_appboss_wrap .appboss-small-dark-block, .bp_appboss_wrap .appboss-small-light-block {
     box-sizing: border-box;
     border: 1px solid #ddd;
     margin: 0 0 1em;
     padding: 20px;
 }
 
-.wc_appboss_wrap .appboss-column-block, .wc_appboss_wrap .appboss-small-light-block {
+.bp_appboss_wrap .appboss-column-block, .bp_appboss_wrap .appboss-small-light-block {
     background: #fff;
 }
 
-.wc_appboss_wrap .appboss-small-light-block {
+.bp_appboss_wrap .appboss-small-light-block {
     display: -webkit-box;
     display: flex;
     flex-wrap: wrap;
 }
 
-.wc_appboss_wrap .appboss-small-light-block img {
+.bp_appboss_wrap .appboss-small-light-block img {
     height: 225px;
     margin: 0 0 0 -20px;
 }
 
-.wc_appboss_wrap .appboss-small-light-block-content {
+.bp_appboss_wrap .appboss-small-light-block-content {
     display: -webkit-box;
     display: flex;
     -webkit-box-flex: 1;
@@ -840,50 +840,50 @@ body.post-type-bp-email .categorydiv label {
     justify-content: space-around;
 }
 
-.wc_appboss_wrap .appboss-small-light-block h1 {
+.bp_appboss_wrap .appboss-small-light-block h1 {
     margin-top: -12px;
 }
 
-.wc_appboss_wrap .appboss-small-light-block p {
+.bp_appboss_wrap .appboss-small-light-block p {
     margin-top: 0;
 }
 
-.wc_appboss_wrap .appboss-small-light-block-buttons {
+.bp_appboss_wrap .appboss-small-light-block-buttons {
     display: -webkit-box;
     display: flex;
     -webkit-box-pack: justify;
     justify-content: space-between;
 }
 
-.wc_appboss_wrap .appboss-small-light-block-content a {
+.bp_appboss_wrap .appboss-small-light-block-content a {
     width: 48%;
 }
 
-.wc_appboss_wrap .appboss-small-dark-block {
+.bp_appboss_wrap .appboss-small-dark-block {
     background-color: #54687d;
     text-align: center;
 }
 
-.wc_appboss_wrap .appboss-small-dark-block h1 {
+.bp_appboss_wrap .appboss-small-dark-block h1 {
     color: #fff;
 }
 
-.wc_appboss_wrap .appboss-small-dark-block p {
+.bp_appboss_wrap .appboss-small-dark-block p {
     color: #fafafa;
 }
 
-.wc_appboss_wrap .appboss-small-dark-items {
+.bp_appboss_wrap .appboss-small-dark-items {
     display: -webkit-box;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
 }
 
-.wc_appboss_wrap .appboss-small-dark-item {
+.bp_appboss_wrap .appboss-small-dark-item {
     margin: 0 0 20px;
 }
 
-.wc_appboss_wrap .appboss-small-dark-item a {
+.bp_appboss_wrap .appboss-small-dark-item a {
     margin: 28px auto 0;
 }
 
