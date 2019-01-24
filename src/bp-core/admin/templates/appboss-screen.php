@@ -159,11 +159,11 @@
 					 */
 					?>
 					<div class="appboss-small-dark-block">
-						<h1><?php _e( 'Square + WooCommerce', 'buddyboss' ); ?></h1>
-						<p><?php _e( 'Keep your WooCommerce and brick-and-mortar stores in sync. Use Square to take payments both online and offline, keep inventory updated between the two and sync product changes.', 'buddyboss' ); ?></p>
+						<h1><?php _e( 'Works with ANY Theme!', 'buddyboss' ); ?></h1>
+						<p><?php _e( 'This is a native app and NOT a "responsive website wrapped in an app" and so it does not matter which theme you are using for your website.', 'buddyboss' ); ?></p>
 						<div class="appboss-small-dark-items">
 							<div class="appboss-small-dark-item">
-								<a class="appboss-button appboss-button-outline-light" href="#"><?php _e( 'Free!', 'buddyboss' ); ?>		</a>
+								<a class="appboss-button appboss-button-outline-light" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?>		</a>
 							</div>
 						</div>
 					</div>
