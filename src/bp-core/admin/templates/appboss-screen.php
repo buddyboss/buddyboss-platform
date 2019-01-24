@@ -160,7 +160,43 @@
 					 */
 					?>					
 					<div class="addons-column-block">
-					yeah
+					
+						<h1><?php _e( 'Get deeper insights', 'buddyboss' ); ?></h1>
+						<p><?php _e( 'Learn how your store is performing with enhanced reporting.', 'buddyboss' ); ?></p>
+
+						<div class="addons-column-block-item">
+							<div class="addons-column-block-item-icon">
+								<img class="addons-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/ga-icon@2x.png" />
+							</div>
+							<div class="addons-column-block-item-content">
+								<h2><?php _e( 'Google Analytics', 'buddyboss' ); ?></h2>
+								<a class="addons-button addons-button-solid" href="#"><?php _e( 'Free', 'buddyboss' ); ?></a>
+								<p><?php _e( 'Understand your customers and increase revenue with the world’s leading analytics platform.', 'buddyboss' ); ?></p>
+							</div>
+						</div>
+
+						<div class="addons-column-block-item">
+							<div class="addons-column-block-item-icon">
+								<img class="addons-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/cart-reports-icon@2x.png" />
+							</div>
+							<div class="addons-column-block-item-content">
+								<h2><?php _e( 'Cart reports', 'buddyboss' ); ?></h2>
+								<a class="addons-button addons-button-solid" href="#"><?php _e( 'From: $79', 'buddyboss' ); ?></a>
+								<p><?php _e( 'Get real-time reports on what customers are leaving in their cart.', 'buddyboss' ); ?></p>
+							</div>
+						</div>
+
+						<div class="addons-column-block-item">
+							<div class="addons-column-block-item-icon">
+								<img class="addons-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/cost-of-goods-icon@2x.png" />
+							</div>
+							<div class="addons-column-block-item-content">
+								<h2><?php _e( 'Cost of Goods', 'buddyboss' ); ?></h2>
+								<a class="addons-button addons-button-solid" href="#"><?php _e( 'From: $79', 'buddyboss' ); ?></a>
+								<p><?php _e( 'Easily track profit by including cost of goods in your reports.', 'buddyboss' ); ?></p>
+							</div>
+						</div>
+
 					</div>
 
 				</div>
