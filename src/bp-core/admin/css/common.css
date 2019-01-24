@@ -730,17 +730,9 @@ body.post-type-bp-email .categorydiv label {
     line-height: 37px;
     text-align: center;
     text-decoration: none;
-    width: 124px;
-}
-
-.bp_appboss_wrap .appboss-button-solid {
     background-color: #00AAE1;
     color: #fff;
-}
-
-.bp_appboss_wrap .appboss-button-outline-dark {
-    border: 1px solid #00AAE1;
-    color: #00AAE1;
+    width: 124px;
 }
 
 .bp_appboss_wrap .appboss-learndash-banner-block {

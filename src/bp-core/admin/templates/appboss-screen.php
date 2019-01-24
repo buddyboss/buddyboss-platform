@@ -10,7 +10,7 @@
 			?>
 			<div class="appboss-banner-block">
 				<h1><?php _e( 'Extend WordPress into your own Native Mobile App', 'buddyboss' ); ?></h1>
-				<p><?php _e( 'We will publish your app on YOUR own Apple App Store and Google Play Store accounts, the largest mobile app search engines in the world.', 'buddyboss' ); ?></p>
+				<p><?php _e( 'We will create and launch your own custom app synced with your WordPress site. No technical knowledge required.', 'buddyboss' ); ?></p>
 				<div class="appboss-banner-block-items">
 					
 					<div class="appboss-banner-block-item">
@@ -60,7 +60,7 @@
 				<div class="appboss-learndash-banner-block-content">
 					<h1><?php _e( 'Your Classroom In Your Student\'s Pocket — Everywhere They Go.', 'buddyboss' ); ?></h1>
 					<p><?php _e( '<strong>Using LearnDash?</strong> A native mobile app allows you to provide <strong>Offline Support</strong> of your courses for your students. This creates an enormous amount of convenience for your students by providing access to your course materials anytime and anywhere, even without an internet connection.', 'buddyboss' ); ?></p>
-					<a class="appboss-button appboss-button-outline-dark" href="https://appboss.com/learnerapp/"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
+					<a class="appboss-button" href="https://appboss.com/learnerapp/"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 				</div>
 
 			</div>
@@ -132,8 +132,8 @@
 							<h1><?php _e( 'Apps for WordPress, from the WordPress experts', 'buddyboss' ); ?></h1>
 							<p><?php _e( 'We know WordPress inside and out. We have invested thousands of hours into building the processes and technology to seamlessy integrate WordPress with your mobile app.', 'buddyboss' ); ?></p>
 							<div class="appboss-small-light-block-buttons">
-								<a class="appboss-button appboss-button-solid" href="https://appboss.com/about/"><?php _e( 'About Us', 'buddyboss' ); ?></a>
-								<a class="appboss-button appboss-button-solid" href="https://appboss.com/contact/"><?php _e( 'Contact Us', 'buddyboss' ); ?></a>
+								<a class="appboss-button" href="https://appboss.com/about/"><?php _e( 'About Us', 'buddyboss' ); ?></a>
+								<a class="appboss-button" href="https://appboss.com/contact/"><?php _e( 'Contact Us', 'buddyboss' ); ?></a>
 							</div>
 						</div>
 					</div>
