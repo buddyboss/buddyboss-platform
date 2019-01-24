@@ -63,7 +63,7 @@
 				<div class="addons-wcs-banner-block-content">
 					<h1><?php _e( 'Buy discounted shipping labels — then print them from your dashboard.', 'buddyboss' ); ?></h1>
 					<p><?php _e( 'Integrate your store with USPS to buy discounted shipping labels, and print them directly from your WooCommerce dashboard. Powered by WooCommerce Services.', 'buddyboss' ); ?></p>
-					<a class="addons-button addons-button-outline" href="#"><?php _e( 'Free - Install now', 'buddyboss' ); ?></a>
+					<a class="addons-button addons-button-outline-dark" href="#"><?php _e( 'Free - Install now', 'buddyboss' ); ?></a>
 				</div>
 
 			</div>
@@ -159,7 +159,13 @@
 					 */
 					?>
 					<div class="addons-small-dark-block">
-						yeah
+						<h1><?php _e( 'Square + WooCommerce', 'buddyboss' ); ?></h1>
+						<p><?php _e( 'Keep your WooCommerce and brick-and-mortar stores in sync. Use Square to take payments both online and offline, keep inventory updated between the two and sync product changes.', 'buddyboss' ); ?></p>
+						<div class="addons-small-dark-items">
+							<div class="addons-small-dark-item">
+								<a class="addons-button addons-button-outline-light" href="#"><?php _e( 'Free!', 'buddyboss' ); ?>		</a>
+							</div>
+						</div>
 					</div>
 
 					<?php
