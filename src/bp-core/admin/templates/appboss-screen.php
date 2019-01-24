@@ -63,9 +63,9 @@
 				</div>
 				
 				<div class="addons-wcs-banner-block-content">
-					<h1>Buy discounted shipping labels — then print them from your dashboard.</h1>
-					<p>Integrate your store with USPS to buy discounted shipping labels, and print them directly from your WooCommerce dashboard. Powered by WooCommerce Services.</p>
-					<a class="addons-button addons-button-outline" href="/buddyboss-theme/wp-admin/admin.php?page=wc-addons&#038;install-addon=woocommerce-services&#038;_wpnonce=6a4ff62439">Free - Install now	</a>
+					<h1><?php _e( 'Buy discounted shipping labels — then print them from your dashboard.', 'buddyboss' ); ?></h1>
+					<p><?php _e( 'Integrate your store with USPS to buy discounted shipping labels, and print them directly from your WooCommerce dashboard. Powered by WooCommerce Services.', 'buddyboss' ); ?></p>
+					<a class="addons-button addons-button-outline" href="#"><?php _e( 'Free - Install now', 'buddyboss' ); ?></a>
 				</div>
 
 			</div>
