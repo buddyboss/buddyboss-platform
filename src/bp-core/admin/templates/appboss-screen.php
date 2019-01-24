@@ -132,7 +132,7 @@
 					 */
 					?>
 					<div class="appboss-small-light-block">
-						<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/storefront-screen@2x.png" />
+						<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/website.png" . '" />'; ?>
 						<div class="appboss-small-light-block-content">
 							<h1><?php _e( 'Say hello to <strong>AppBoss</strong>', 'buddyboss' ); ?></h1>
 							<p><?php _e( 'Brought to you by BuddyBoss, we know WordPress inside and out. We have invested thousands of hours into building the processes and technology to seamlessy integrate WordPress with your mobile app.', 'buddyboss' ); ?></p>

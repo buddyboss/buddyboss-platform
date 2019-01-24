@@ -744,15 +744,13 @@ body.post-type-bp-email .categorydiv label {
 }
 
 .bp_appboss_wrap .appboss-learndash-banner-block-image {
-    background: #f7f7f7;
-    border: 1px solid #e6e6e6;
     margin-right: 2em;
-    padding: 2em;
+    padding: 1em;
 }
 
 .bp_appboss_wrap .appboss-learndash-banner-block-image .appboss-img {
-    max-height: 121px;
-    max-width: 149px;
+    max-height: 130px;
+    max-width: 160px;
 }
 
 .bp_appboss_wrap .appboss-learndash-banner-block-content {
@@ -806,7 +804,7 @@ body.post-type-bp-email .categorydiv label {
 
 .bp_appboss_wrap .appboss-small-light-block img {
     height: 225px;
-    margin: 0 0 0 -20px;
+    margin: 0 22px 0 -20px;
 }
 
 .bp_appboss_wrap .appboss-small-light-block-content {
