@@ -60,7 +60,7 @@
 				<div class="appboss-learndash-banner-block-content">
 					<h1><?php _e( 'Your Classroom In Your Student\'s Pocket — Everywhere They Go.', 'buddyboss' ); ?></h1>
 					<p><?php _e( '<strong>Using LearnDash?</strong> A native mobile app allows you to provide <strong>Offline Support</strong> of your courses for your students. This creates an enormous amount of convenience for your students by providing access to your course materials anytime and anywhere, even without an internet connection.', 'buddyboss' ); ?></p>
-					<a class="appboss-button appboss-button-outline-dark" href="https://appboss.com/learnerapp/"><?php _e( 'learnerApp', 'buddyboss' ); ?></a>
+					<a class="appboss-button appboss-button-outline-dark" href="https://appboss.com/learnerapp/"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 				</div>
 
 			</div>
