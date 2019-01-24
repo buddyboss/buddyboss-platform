@@ -1,49 +1,40 @@
 
 <div class="wrap">
-    <h1><?php _e( 'Mobile App', 'buddyboss' ); ?></h1>
+    <h1><?php _e( 'AppBoss', 'buddyboss' ); ?></h1>
 
 	<div id="welcome-panel" class="welcome-panel">
 		<div class="welcome-panel-content">
 		
-			<h2><?php _e( 'AppBoss', 'buddyboss' ); ?></h2>
-			<p class="about-description"><?php _e( 'Consider extending your community into your own native mobile app via AppBoss.', 'buddyboss' ); ?></p>
+			<h2><?php _e( 'Stand Out With A High-Quality iOS & Android App', 'buddyboss' ); ?></h2>
+			<p class="about-description"><?php _e( 'Create and launch a native mobile app that syncs with your WordPress community. Install our AppBoss plugin to get started, and then contact us to finalize and launch your app. This is a <strong>paid</strong> service.', 'buddyboss' ); ?></p>
 			
 			<div class="welcome-panel-column-container">			
 				<div class="welcome-panel-column">
 					<h3><?php _e( 'Get Started', 'buddyboss' ); ?></h3>
-					<a class="button button-primary button-hero" href="#"><?php _e( 'Call to Action', 'buddyboss' ); ?></a>
-					<p class="hide-if-no-customize"><?php _e( 'or, ', 'buddyboss' ); ?><a href="#"><?php _e( 'do this other thing', 'buddyboss' ); ?></a></p>
+					<a class="button button-primary button-hero" href="#"><?php _e( 'Install Plugin', 'buddyboss' ); ?></a>
+					<p class="hide-if-no-customize"><?php _e( 'or, ', 'buddyboss' ); ?><a class="web" href="https://appboss.com/"><?php _e( 'learn about AppBoss', 'buddyboss' ); ?></a></p>
 				</div>
 				
 				<div class="welcome-panel-column">
-					<h3><?php _e( 'Next Steps', 'buddyboss' ); ?></h3>
+					<h3><?php _e( 'Features', 'buddyboss' ); ?></h3>
 					<ul>
-						<li><a href="#" class="welcome-icon welcome-write-blog"><?php _e( 'Dummy Text', 'buddyboss' ); ?></a></li>
-						<li><a href="#" class="welcome-icon welcome-add-page"><?php _e( 'Dummy Text', 'buddyboss' ); ?></a></li>
-						<li><a href="#" class="welcome-icon welcome-view-site"><?php _e( 'Dummy Text', 'buddyboss' ); ?></a></li>
+						<li><?php _e( 'Push Notifications', 'buddyboss' ); ?></li>
+						<li><?php _e( 'Synchronized with your site', 'buddyboss' ); ?></li>
+						<li><?php _e( 'Social Login', 'buddyboss' ); ?></li>
 					</ul>
 				</div>
 				
 				<div class="welcome-panel-column welcome-panel-last">
-					<h3><?php _e( 'More Actions', 'buddyboss' ); ?></h3>
+					<h3><?php _e( 'Customize', 'buddyboss' ); ?></h3>
 					<ul>
-						<li><a href="#" class="welcome-icon welcome-widgets-menus"><?php _e( 'Dummy Text', 'buddyboss' ); ?></a></li>
-						<li><a href="#" class="welcome-icon welcome-comments"><?php _e( 'Dummy Text', 'buddyboss' ); ?></a></li>
-						<li><a href="#" class="welcome-icon welcome-learn-more"><?php _e( 'Dummy Text', 'buddyboss' ); ?></a></li>
+						<li><?php _e( 'Custom Branding', 'buddyboss' ); ?></li>
+						<li><?php _e( 'Custom Pages', 'buddyboss' ); ?></li>
+						<li><?php _e( 'Custom Menus', 'buddyboss' ); ?></li>
 					</ul>
 				</div>
 			</div>
 
 		</div>
 	</div>
-
-	<h2 class="nav-tab-wrapper wp-clearfix">
-		<a href="#" class="nav-tab nav-tab-active"><?php _e( 'Install Plugin', 'buddyboss' ); ?></a>
-		<a href="#" class="nav-tab"><?php _e( 'Setup Checklist', 'buddyboss' ); ?></a>
-		<a href="#" class="nav-tab"><?php _e( 'App Branding', 'buddyboss' ); ?></a>
-		<a href="#" class="nav-tab"><?php _e( 'Build', 'buddyboss' ); ?></a>
-		<a href="#" class="nav-tab"><?php _e( 'Publish', 'buddyboss' ); ?></a>
-		<a href="#" class="nav-tab"><?php _e( 'Debug', 'buddyboss' ); ?></a>
-	</h2>
 
 </div>

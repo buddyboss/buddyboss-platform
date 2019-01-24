@@ -261,7 +261,7 @@ add_filter ('bp_ps_add_fields', 'bp_ps_anyfield_setup', 12 );
 function bp_ps_anyfield_setup ($fields)
 {
 	$f = new stdClass;
-	$f->group = __('Others', 'buddyboss');
+	$f->group = __('Other', 'buddyboss');
 	$f->code = 'field_any';
 	$f->name = __('Search all fields', 'buddyboss');
 	$f->description = __('Search every profile field', 'buddyboss');
@@ -395,7 +395,7 @@ function bp_ps_anyfield_search ($f)
 add_filter( 'bp_ps_add_fields', 'bp_ps_heading_field_setup', 11 );
 function bp_ps_heading_field_setup ( $fields ) {
 	$f = new stdClass;
-	$f->group = __('Others', 'buddyboss');
+	$f->group = __('Other', 'buddyboss');
 	$f->code = 'heading';
 	$f->name = __('Heading', 'buddyboss');
 	$f->description = __( 'Used to segregate form into sections', 'buddyboss' );
