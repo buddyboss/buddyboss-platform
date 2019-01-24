@@ -48,16 +48,16 @@
 
 			<?php
 			/*
-			 * appboss-wcs-banner-block
+			 * appboss-learndash-banner-block
 			 */
 			?>
-			<div class="appboss-wcs-banner-block">
+			<div class="appboss-learndash-banner-block">
 
-				<div class="appboss-wcs-banner-block-image">
+				<div class="appboss-learndash-banner-block-image">
 					<img class="appboss-img" src="http://localhost:8888/buddyboss-theme/wp-content/plugins/woocommerce/assets/images/wcs-extensions-banner-3x.png" alt="WooCommerce Services" />
 				</div>
 				
-				<div class="appboss-wcs-banner-block-content">
+				<div class="appboss-learndash-banner-block-content">
 					<h1><?php _e( 'Your Classroom In Your Student\'s Pocket — Everywhere They Go.', 'buddyboss' ); ?></h1>
 					<p><?php _e( '<strong>Using LearnDash?</strong> A native mobile app allows you to provide <strong>Offline Support</strong> of your courses for your students. This creates an enormous amount of convenience for your students by providing access to your course materials anytime and anywhere, even without an internet connection.', 'buddyboss' ); ?></p>
 					<a class="appboss-button appboss-button-outline-dark" href="https://appboss.com/learnerapp/"><?php _e( 'learnerApp', 'buddyboss' ); ?></a>
@@ -91,7 +91,7 @@
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
-								<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/product-add-ons-icon@2x.png" />
+								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/feature-offline-support.svg" . '" />'; ?>
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'Offline Support', 'buddyboss' ); ?></h2>
@@ -101,21 +101,21 @@
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
-								<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/product-search-icon@2x.png" />
+								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/feature-notifications.svg" . '" />'; ?>
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'Advanced Push Notifications', 'buddyboss' ); ?></h2>
-								<p><?php _e( 'Create audience segments, automations, and campaigns with AppBoss\' advanced Push Notification system so you can target the right users at the right time.', 'buddyboss' ); ?></p>
+								<p><?php _e( 'Create audience segments, automations, and campaigns with Push Notifications so you can target the right users at the right time.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
-								<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/checkout-add-ons-icon@2x.png" />
+								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/feature-app-pages.svg" . '" />'; ?>
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'Custom Mobile App Pages', 'buddyboss' ); ?></h2>
-								<p><?php _e( 'Need to add a custom page? There\'s no extra fees. You can create and edit pages on your own inside your WordPress dashboard and display them inside your mobile app.', 'buddyboss' ); ?></p>
+								<p><?php _e( 'Need to add a custom page? There\'s no extra fees. Create and edit pages from your WordPress dashboard and display them inside your mobile app.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
 
@@ -174,7 +174,7 @@
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
-								<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/ga-icon@2x.png" />
+								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/feature-admob.svg" . '" />'; ?>
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'Mobile Ads with AdMob', 'buddyboss' ); ?></h2>
@@ -184,21 +184,21 @@
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
-								<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/cart-reports-icon@2x.png" />
+								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/feature-registration.svg" . '" />'; ?>
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'In-App Registration', 'buddyboss' ); ?></h2>
-								<p><?php _e( 'You can choose to enable or disable users from registering for your courses from within your app or have your website\'s student database sync with your app. AppBoss synchronizes your WordPress database and mobile app in real-time.', 'buddyboss' ); ?></p>
+								<p><?php _e( 'You can choose to enable or disable users from registering from within your app. AppBoss syncs your WordPress database and mobile app in real-time.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
-								<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/cost-of-goods-icon@2x.png" />
+								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/feature-purchases.svg" . '" />'; ?>
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'In-App Purchases', 'buddyboss' ); ?></h2>
-								<p><?php _e( 'AppBoss allows you to enable both Apple Pay for iOS and Google Pay for Android to provide your students with convenience and speed to pay for their courses, upgrades, or new promotions.', 'buddyboss' ); ?></p>
+								<p><?php _e( 'You can enable both Apple Pay for iOS and Google Pay for Android to let your users easily pay for their courses or membership levels.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
 

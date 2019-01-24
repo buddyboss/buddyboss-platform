@@ -589,7 +589,7 @@ body.post-type-bp-email .categorydiv label {
     margin: 25px 0 0;
 }
 
-.bp_appboss_wrap .appboss-banner-block, .bp_appboss_wrap .appboss-wcs-banner-block {
+.bp_appboss_wrap .appboss-banner-block, .bp_appboss_wrap .appboss-learndash-banner-block {
     background: #fff;
     border: 1px solid #ddd;
     margin: 0 0 1em 0;
@@ -691,7 +691,7 @@ body.post-type-bp-email .categorydiv label {
     background: #f7f7f7;
     border: 1px solid #e6e6e6;
     height: 100px;
-    margin: 0 10px 10px 0;
+    margin: 0 20px 10px 0;
     width: 100px;
 }
 
@@ -714,11 +714,12 @@ body.post-type-bp-email .categorydiv label {
 
 .bp_appboss_wrap .appboss-column-block-item-content h2 {
     float: left;
-    margin-top: 8px;
+    margin-top: 10px;
 }
 
 .bp_appboss_wrap .appboss-column-block-item-content p {
     float: left;
+    margin-top: 0;
 }
 
 .bp_appboss_wrap .appboss-button {
@@ -747,7 +748,7 @@ body.post-type-bp-email .categorydiv label {
     color: #fff;
 }
 
-.bp_appboss_wrap .appboss-wcs-banner-block {
+.bp_appboss_wrap .appboss-learndash-banner-block {
     display: -webkit-box;
     display: flex;
     -webkit-box-align: center;
@@ -755,19 +756,19 @@ body.post-type-bp-email .categorydiv label {
     padding: 2em;
 }
 
-.bp_appboss_wrap .appboss-wcs-banner-block-image {
+.bp_appboss_wrap .appboss-learndash-banner-block-image {
     background: #f7f7f7;
     border: 1px solid #e6e6e6;
     margin-right: 2em;
     padding: 4em;
 }
 
-.bp_appboss_wrap .appboss-wcs-banner-block-image .appboss-img {
+.bp_appboss_wrap .appboss-learndash-banner-block-image .appboss-img {
     max-height: 86px;
     max-width: 97px;
 }
 
-.bp_appboss_wrap .appboss-wcs-banner-block-content {
+.bp_appboss_wrap .appboss-learndash-banner-block-content {
     display: -webkit-box;
     display: flex;
     -webkit-box-orient: vertical;
@@ -778,7 +779,7 @@ body.post-type-bp-email .categorydiv label {
     padding: 1em 0;
 }
 
-.bp_appboss_wrap .appboss-wcs-banner-block-content h1 {
+.bp_appboss_wrap .appboss-learndash-banner-block-content h1 {
     padding-bottom: 0;
 }
 
