@@ -9,8 +9,8 @@
 			 */
 			?>
 			<div class="appboss-banner-block">
-				<h1><?php _e( 'Take your store beyond the typical - sell anything', 'buddyboss' ); ?></h1>
-				<p><?php _e( 'From services to content, there&#039;s no limit to what you can sell with WooCommerce.', 'buddyboss' ); ?></p>
+				<h1><?php _e( 'Extend WordPress into your own Native Mobile App', 'buddyboss' ); ?></h1>
+				<p><?php _e( 'We will publish your app on YOUR own Apple App Store and Google Play Store accounts, the largest mobile app search engines in the world.', 'buddyboss' ); ?></p>
 				<div class="appboss-banner-block-items">
 					
 					<div class="appboss-banner-block-item">
@@ -18,8 +18,8 @@
 							<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/subscriptions-icon@2x.png" />
 						</div>
 						<div class="appboss-banner-block-item-content">
-							<h3><?php _e( 'Subscriptions', 'buddyboss' ); ?></h3>
-							<p><?php _e( 'Let customers subscribe to your products or services and pay on a weekly, monthly or annual basis.', 'buddyboss' ); ?></p>
+							<h3><?php _e( 'Unlimited Users', 'buddyboss' ); ?></h3>
+							<p><?php _e( 'You can have an unlimited amount of users using your mobile app without any hidden fees! Making it easy for you to scale your community around the globe.', 'buddyboss' ); ?></p>
 						</div>
 					</div>
 
@@ -28,8 +28,8 @@
 							<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/bookings-icon@2x.png" />
 						</div>
 						<div class="appboss-banner-block-item-content">
-							<h3><?php _e( 'Bookings', 'buddyboss' ); ?></h3>
-							<p><?php _e( 'Allow customers to book appointments for services without leaving your site.', 'buddyboss' ); ?></p>
+							<h3><?php _e( 'LearnDash Courses', 'buddyboss' ); ?></h3>
+							<p><?php _e( 'We support all LearnDash features, and allow for an unlimited amount of courses in your mobile app! Your students can access all your courses from a single app.', 'buddyboss' ); ?></p>
 						</div>
 					</div>
 
@@ -38,8 +38,8 @@
 							<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/memberships-icon@2x.png" />
 						</div>
 						<div class="appboss-banner-block-item-content">
-							<h3><?php _e( 'Memberships', 'buddyboss' ); ?></h3>
-							<p><?php _e( 'Give members access to restricted content or products, for a fee or for free.', 'buddyboss' ); ?></p>
+							<h3><?php _e( 'Synchronized Data', 'buddyboss' ); ?></h3>
+							<p><?php _e( 'AppBoss automatically synchronizes data between your website and your mobile app in real-time, so your users can seamlessy switch between desktop and mobile.', 'buddyboss' ); ?></p>
 						</div>
 					</div>
 					
