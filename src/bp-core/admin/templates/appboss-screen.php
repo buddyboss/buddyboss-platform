@@ -133,7 +133,15 @@
 					 */
 					?>
 					<div class="addons-small-light-block">
-						yeah
+						<img class="addons-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/storefront-screen@2x.png" />
+						<div class="addons-small-light-block-content">
+							<h1><?php _e( 'Get the official WooCommerce theme', 'buddyboss' ); ?></h1>
+							<p><?php _e( 'Storefront is the lean, flexible, and free theme, built by the people who make WooCommerce - everything you need to get started.', 'buddyboss' ); ?></p>
+							<div class="addons-small-light-block-buttons">
+								<a class="addons-button addons-button-solid" href="#"><?php _e( 'Install', 'buddyboss' ); ?></a>
+								<a class="addons-button addons-button-solid" href="#"><?php _e( 'Read More', 'buddyboss' ); ?></a>
+							</div>
+						</div>
 					</div>
 
 				</div>

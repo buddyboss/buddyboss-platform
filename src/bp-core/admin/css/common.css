@@ -819,6 +819,41 @@ body.post-type-bp-email .categorydiv label {
     flex-wrap: wrap;
 }
 
+.wc_addons_wrap .addons-small-light-block img {
+    height: 225px;
+    margin: 0 0 0 -20px;
+}
+
+.wc_addons_wrap .addons-small-light-block-content {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-flex: 1;
+    flex: 1 1 100px;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.wc_addons_wrap .addons-small-light-block h1 {
+    margin-top: -12px;
+}
+
+.wc_addons_wrap .addons-small-light-block p {
+    margin-top: 0;
+}
+
+.wc_addons_wrap .addons-small-light-block-buttons {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+}
+
+.wc_addons_wrap .addons-small-light-block-content a {
+    width: 48%;
+}
+
 .wc_addons_wrap .addons-small-dark-block {
     background-color: #54687d;
     text-align: center;
