@@ -687,6 +687,50 @@ body.post-type-bp-email .categorydiv label {
     color: #fff;
 }
 
+.wc_addons_wrap .addons-button-outline {
+    border: 1px solid #00AAE1;
+    color: #00AAE1;
+}
+
+.wc_addons_wrap .addons-wcs-banner-block {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    padding: 2em;
+}
+
+.wc_addons_wrap .addons-wcs-banner-block-image {
+    background: #f7f7f7;
+    border: 1px solid #e6e6e6;
+    margin-right: 2em;
+    padding: 4em;
+}
+
+.wc_addons_wrap .addons-wcs-banner-block-image .addons-img {
+    max-height: 86px;
+    max-width: 97px;
+}
+
+.wc_addons_wrap .addons-wcs-banner-block-content {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+    justify-content: space-around;
+    align-self: stretch;
+    padding: 1em 0;
+}
+
+.wc_addons_wrap .addons-wcs-banner-block-content h1 {
+    padding-bottom: 0;
+}
+
+.wc_addons_wrap .addons-wcs-banner-block-content p {
+    margin-bottom: 0;
+}
+
 /*------------------------------------------------------------------------------
  * 8.0 Miscellaneous
  *----------------------------------------------------------------------------*/

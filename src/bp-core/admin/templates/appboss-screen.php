@@ -1,12 +1,17 @@
 
 <div class="wrap wc_addons_wrap">
     <h1 class="screen-reader-text"><?php _e( 'AppBoss Mobile App', 'buddyboss' ); ?></h1>
+	<div class="addons-featured">
 
-		<div class="addons-featured">
+			<?php
+			/*
+			 * addons-banner-block
+			 */
+			?>
+
 			<div class="addons-banner-block">
 				<h1><?php _e( 'Take your store beyond the typical - sell anything', 'buddyboss' ); ?></h1>
 				<p><?php _e( 'From services to content, there&#039;s no limit to what you can sell with WooCommerce.', 'buddyboss' ); ?></p>
-
 				<div class="addons-banner-block-items">
 					
 					<div class="addons-banner-block-item">
@@ -43,8 +48,33 @@
 					</div>
 					
 				</div>
+			</div>
+
+			<?php
+			/*
+			 * addons-wcs-banner-block
+			 */
+			?>
+
+			<div class="addons-wcs-banner-block">
+
+				<div class="addons-wcs-banner-block-image">
+					<img class="addons-img" src="http://localhost:8888/buddyboss-theme/wp-content/plugins/woocommerce/assets/images/wcs-extensions-banner-3x.png" alt="WooCommerce Services" />
+				</div>
+				
+				<div class="addons-wcs-banner-block-content">
+					<h1>Buy discounted shipping labels — then print them from your dashboard.</h1>
+					<p>Integrate your store with USPS to buy discounted shipping labels, and print them directly from your WooCommerce dashboard. Powered by WooCommerce Services.</p>
+					<a class="addons-button addons-button-outline" href="/buddyboss-theme/wp-admin/admin.php?page=wc-addons&#038;install-addon=woocommerce-services&#038;_wpnonce=6a4ff62439">Free - Install now	</a>
+				</div>
 
 			</div>
-		</div>
 
+			<?php
+			/*
+			 * next...
+			 */
+			?>
+
+	</div>
 </div>
