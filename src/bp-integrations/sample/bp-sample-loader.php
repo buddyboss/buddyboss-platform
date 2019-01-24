@@ -17,5 +17,6 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_register_sample_integration() {
 	require_once dirname( __FILE__ ) . '/admin/bp-admin-sample-tab.php';
+	buddypress()->integrations['sample'] = new BP_Admin_Integration_Sample;
 }
 add_action( 'bp_register_admin_integrations', 'bp_register_sample_integration' );

@@ -1,15 +1,11 @@
 <?php
 
 class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
-	protected $groups_sync_option_key = 'learndash_settings_buddypress_groups_sync';
-	protected $groups_report_option_key = 'learndash_settings_buddypress_groups_report';
 	protected $current_section;
 
 	public function initialize() {
 		$this->tab_order             = 10;
 		$this->intro_template        = $this->root_path . '/templates/admin/integration-tab-intro.php';
-		$this->groups_sync_options   = get_option( $this->groups_sync_option_key ) ?: [];
-		$this->groups_report_options = get_option( $this->groups_report_option_key ) ?: [];
 
 		add_action( 'admin_footer', [ $this, 'add_sync_tool_scripts' ], 20 );
 	}
@@ -29,14 +25,6 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	public function form_html() {
-		if ( $this->required_plugin && ! is_plugin_active( $this->required_plugin ) ) {
-			if ( is_file ( $this->intro_template ) ) {
-				require $this->intro_template;
-			}
-
-			return;
-		}
-
 		parent::form_html();
 
 		// require $this->root_path . '/groups-sync/templates/admin/learndash-settings-tools.php';
@@ -363,18 +351,10 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	protected function get_input_name( $name ) {
-        if (! function_exists('bp_ld_sync')) {
-            return $name;
-        }
-
 		return bp_ld_sync('settings')->getName("{$this->current_section}.{$name}");
 	}
 
 	protected function get_input_value( $key, $default = '' ) {
-        if (! function_exists('bp_ld_sync')) {
-            return $key;
-        }
-
 		return bp_ld_sync('settings')->get("{$this->current_section}.{$key}", $default);
 	}
 }
