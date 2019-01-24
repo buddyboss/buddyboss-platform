@@ -363,10 +363,18 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	protected function get_input_name( $name ) {
+        if (! function_exists('bp_ld_sync')) {
+            return $name;
+        }
+
 		return bp_ld_sync('settings')->getName("{$this->current_section}.{$name}");
 	}
 
 	protected function get_input_value( $key, $default = '' ) {
+        if (! function_exists('bp_ld_sync')) {
+            return $name;
+        }
+
 		return bp_ld_sync('settings')->get("{$this->current_section}.{$key}", $default);
 	}
 }
