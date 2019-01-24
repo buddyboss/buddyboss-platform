@@ -743,11 +743,6 @@ body.post-type-bp-email .categorydiv label {
     color: #00AAE1;
 }
 
-.bp_appboss_wrap .appboss-button-outline-light {
-    border: 1px solid #fff;
-    color: #fff;
-}
-
 .bp_appboss_wrap .appboss-learndash-banner-block {
     display: -webkit-box;
     display: flex;
@@ -865,19 +860,8 @@ body.post-type-bp-email .categorydiv label {
     color: #fafafa;
 }
 
-.bp_appboss_wrap .appboss-small-dark-items {
-    display: -webkit-box;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-
-.bp_appboss_wrap .appboss-small-dark-item {
-    margin: 0 0 20px;
-}
-
-.bp_appboss_wrap .appboss-small-dark-item a {
-    margin: 28px auto 0;
+.bp_appboss_wrap .appboss-small-dark-block img {
+	margin: 10px 0;
 }
 
 /*------------------------------------------------------------------------------

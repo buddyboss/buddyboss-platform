@@ -15,7 +15,7 @@
 					
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/subscriptions-icon@2x.png" />
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/feature-users.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Unlimited Users', 'buddyboss' ); ?></h3>
@@ -25,17 +25,17 @@
 
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/bookings-icon@2x.png" />
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/feature-courses.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'LearnDash Courses', 'buddyboss' ); ?></h3>
-							<p><?php _e( 'We support all LearnDash features, and allow for an unlimited amount of courses in your mobile app! Your students can access all your courses from a single app.', 'buddyboss' ); ?></p>
+							<p><?php _e( 'We support all ', 'buddyboss' ); ?><a href="https://getdpd.com/cart/hoplink/14394?referrer=56whuq1wlakosg0k4"><?php _e( 'LearnDash', 'buddyboss' ); ?></a><?php _e( ' features, and allow for an unlimited amount of courses in your mobile app! Your students can access all your courses from a single app.', 'buddyboss' ); ?></p>
 						</div>
 					</div>
 
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/memberships-icon@2x.png" />
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/feature-sync.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Synchronized Data', 'buddyboss' ); ?></h3>
@@ -153,13 +153,9 @@
 					 */
 					?>
 					<div class="appboss-small-dark-block">
-						<h1><?php _e( 'Works with ANY Theme!', 'buddyboss' ); ?></h1>
-						<p><?php _e( 'This is a native app and NOT a "responsive website wrapped in an app" and so it does not matter which theme you are using for your website.', 'buddyboss' ); ?></p>
-						<div class="appboss-small-dark-items">
-							<div class="appboss-small-dark-item">
-								<a class="appboss-button appboss-button-outline-light" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?>		</a>
-							</div>
-						</div>
+						<h1><?php _e( 'Built with React Native', 'buddyboss' ); ?></h1>
+						<p><?php _e( 'This is a true native app and NOT a "responsive website within an app". It is built with React Native, the app framework created by Facebook and used by Walmart, Airbnb, Instagram, Tesla, and SoundCloud.', 'buddyboss' ); ?></p>
+						<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/react.svg" . '" />'; ?>
 					</div>
 
 					<?php
