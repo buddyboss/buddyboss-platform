@@ -20,7 +20,7 @@
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Subscriptions', 'buddyboss' ); ?></h3>
 							<p><?php _e( 'Let customers subscribe to your products or services and pay on a weekly, monthly or annual basis.', 'buddyboss' ); ?></p>
-							<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'From: $199', 'buddyboss' ); ?></a>
+							<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 						</div>
 					</div>
 
@@ -31,7 +31,7 @@
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Bookings', 'buddyboss' ); ?></h3>
 							<p><?php _e( 'Allow customers to book appointments for services without leaving your site.', 'buddyboss' ); ?></p>
-							<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'From: $249', 'buddyboss' ); ?></a>
+							<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 						</div>
 					</div>
 
@@ -42,7 +42,7 @@
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Memberships', 'buddyboss' ); ?></h3>
 							<p><?php _e( 'Give members access to restricted content or products, for a fee or for free.', 'buddyboss' ); ?></p>
-							<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'From: $149', 'buddyboss' ); ?></a>
+							<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 						</div>
 					</div>
 					
@@ -61,9 +61,9 @@
 				</div>
 				
 				<div class="appboss-wcs-banner-block-content">
-					<h1><?php _e( 'Buy discounted shipping labels — then print them from your dashboard.', 'buddyboss' ); ?></h1>
-					<p><?php _e( 'Integrate your store with USPS to buy discounted shipping labels, and print them directly from your WooCommerce dashboard. Powered by WooCommerce Services.', 'buddyboss' ); ?></p>
-					<a class="appboss-button appboss-button-outline-dark" href="#"><?php _e( 'Free - Install now', 'buddyboss' ); ?></a>
+					<h1><?php _e( 'Your Classroom In Your Student\'s Pocket — Everywhere They Go.', 'buddyboss' ); ?></h1>
+					<p><?php _e( 'A native Mobile App allows you to provide <strong>Offline Support</strong> of your courses for your students. This creates an enormous amount of convenience for your students by providing access to your course materials anytime and anywhere, even without an internet connection.', 'buddyboss' ); ?></p>
+					<a class="appboss-button appboss-button-outline-dark" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 				</div>
 
 			</div>
@@ -98,7 +98,7 @@
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'Product Add-ons', 'buddyboss' ); ?></h2>
-								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'From: $49', 'buddyboss' ); ?></a>
+								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 								<p><?php _e( 'Give your customers the option to customize their purchase or add personalization.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
@@ -109,7 +109,7 @@
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'Product Search', 'buddyboss' ); ?></h2>
-								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'From: $49', 'buddyboss' ); ?></a>
+								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 								<p><?php _e( 'Make sure customers find what they want when they search your site.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
@@ -120,7 +120,7 @@
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'Checkout Add-ons', 'buddyboss' ); ?></h2>
-								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'From: $49', 'buddyboss' ); ?></a>
+								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 								<p><?php _e( 'Highlight relevant products, offers like free shipping and other upsells during checkout.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
@@ -138,8 +138,8 @@
 							<h1><?php _e( 'Get the official WooCommerce theme', 'buddyboss' ); ?></h1>
 							<p><?php _e( 'Storefront is the lean, flexible, and free theme, built by the people who make WooCommerce - everything you need to get started.', 'buddyboss' ); ?></p>
 							<div class="appboss-small-light-block-buttons">
-								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Install', 'buddyboss' ); ?></a>
-								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Read More', 'buddyboss' ); ?></a>
+								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Free', 'buddyboss' ); ?></a>
+								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 							</div>
 						</div>
 					</div>
@@ -184,7 +184,7 @@
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'Google Analytics', 'buddyboss' ); ?></h2>
-								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Free', 'buddyboss' ); ?></a>
+								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 								<p><?php _e( 'Understand your customers and increase revenue with the world’s leading analytics platform.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
@@ -195,7 +195,7 @@
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'Cart reports', 'buddyboss' ); ?></h2>
-								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'From: $79', 'buddyboss' ); ?></a>
+								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 								<p><?php _e( 'Get real-time reports on what customers are leaving in their cart.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
@@ -206,7 +206,7 @@
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'Cost of Goods', 'buddyboss' ); ?></h2>
-								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'From: $79', 'buddyboss' ); ?></a>
+								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 								<p><?php _e( 'Easily track profit by including cost of goods in your reports.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
@@ -234,7 +234,7 @@
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Smart Coupons', 'buddyboss' ); ?></h3>
 							<p><?php _e( 'Enhance your coupon options - create gift certificates, store credit, coupons based on purchases and more.', 'buddyboss' ); ?></p>
-							<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'From: $99', 'buddyboss' ); ?></a>
+							<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 						</div>
 					</div>
 
@@ -245,7 +245,7 @@
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Follow Up Emails', 'buddyboss' ); ?></h3>
 							<p><?php _e( 'Automatically contact customers after purchase - be it everyone, your most loyal or your biggest spenders - and keep your store top-of-mind.', 'buddyboss' ); ?></p>
-							<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'From: $99', 'buddyboss' ); ?></a>
+							<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 						</div>
 					</div>
 
@@ -256,7 +256,7 @@
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Google Product Feed', 'buddyboss' ); ?></h3>
 							<p><?php _e( 'Let customers find you when shopping for products via Google.', 'buddyboss' ); ?></p>
-							<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'From: $79', 'buddyboss' ); ?></a>
+							<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 						</div>
 					</div>
 					

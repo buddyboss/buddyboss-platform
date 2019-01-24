@@ -786,10 +786,6 @@ body.post-type-bp-email .categorydiv label {
     padding-bottom: 0;
 }
 
-.bp_appboss_wrap .appboss-wcs-banner-block-content p {
-    margin-bottom: 0;
-}
-
 .bp_appboss_wrap .appboss-column-section {
     display: -webkit-box;
     display: flex;
