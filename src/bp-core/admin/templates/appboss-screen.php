@@ -97,9 +97,8 @@
 								<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/product-add-ons-icon@2x.png" />
 							</div>
 							<div class="appboss-column-block-item-content">
-								<h2><?php _e( 'Product Add-ons', 'buddyboss' ); ?></h2>
-								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
-								<p><?php _e( 'Give your customers the option to customize their purchase or add personalization.', 'buddyboss' ); ?></p>
+								<h2><?php _e( 'Offline Support', 'buddyboss' ); ?></h2>
+								<p><?php _e( 'Your users can access your content from anywhere, even without an internet connection!', 'buddyboss' ); ?></p>
 							</div>
 						</div>
 
@@ -108,9 +107,8 @@
 								<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/product-search-icon@2x.png" />
 							</div>
 							<div class="appboss-column-block-item-content">
-								<h2><?php _e( 'Product Search', 'buddyboss' ); ?></h2>
-								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
-								<p><?php _e( 'Make sure customers find what they want when they search your site.', 'buddyboss' ); ?></p>
+								<h2><?php _e( 'Advanced Push Notifications', 'buddyboss' ); ?></h2>
+								<p><?php _e( 'Create audience segments, automations, and campaigns with AppBoss\' advanced Push Notification system so you can target the right users at the right time.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
 
@@ -119,9 +117,8 @@
 								<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/checkout-add-ons-icon@2x.png" />
 							</div>
 							<div class="appboss-column-block-item-content">
-								<h2><?php _e( 'Checkout Add-ons', 'buddyboss' ); ?></h2>
-								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
-								<p><?php _e( 'Highlight relevant products, offers like free shipping and other upsells during checkout.', 'buddyboss' ); ?></p>
+								<h2><?php _e( 'Custom Mobile App Pages', 'buddyboss' ); ?></h2>
+								<p><?php _e( 'Need to add a custom page? There\'s no extra fees. You can create and edit pages on your own inside your WordPress dashboard and display them inside your mobile app.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
 
@@ -183,9 +180,8 @@
 								<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/ga-icon@2x.png" />
 							</div>
 							<div class="appboss-column-block-item-content">
-								<h2><?php _e( 'Google Analytics', 'buddyboss' ); ?></h2>
-								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
-								<p><?php _e( 'Understand your customers and increase revenue with the world’s leading analytics platform.', 'buddyboss' ); ?></p>
+								<h2><?php _e( 'Mobile Ads with AdMob', 'buddyboss' ); ?></h2>
+								<p><?php _e( 'AppBoss integrates with Google AdMob, allowing you to place ads in your mobile app. Use another ad service? Let us know, we can help integrate it for you.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
 
@@ -194,9 +190,8 @@
 								<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/cart-reports-icon@2x.png" />
 							</div>
 							<div class="appboss-column-block-item-content">
-								<h2><?php _e( 'Cart reports', 'buddyboss' ); ?></h2>
-								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
-								<p><?php _e( 'Get real-time reports on what customers are leaving in their cart.', 'buddyboss' ); ?></p>
+								<h2><?php _e( 'In-App Registration', 'buddyboss' ); ?></h2>
+								<p><?php _e( 'You can choose to enable or disable users from registering for your courses from within your app or have your website\'s student database sync with your app. AppBoss synchronizes your WordPress database and mobile app in real-time.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
 
@@ -205,9 +200,8 @@
 								<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/cost-of-goods-icon@2x.png" />
 							</div>
 							<div class="appboss-column-block-item-content">
-								<h2><?php _e( 'Cost of Goods', 'buddyboss' ); ?></h2>
-								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
-								<p><?php _e( 'Easily track profit by including cost of goods in your reports.', 'buddyboss' ); ?></p>
+								<h2><?php _e( 'In-App Purchases', 'buddyboss' ); ?></h2>
+								<p><?php _e( 'AppBoss allows you to enable both Apple Pay for iOS and Google Pay for Android to provide your students with convenience and speed to pay for their courses, upgrades, or new promotions.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
 

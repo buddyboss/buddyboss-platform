@@ -717,10 +717,6 @@ body.post-type-bp-email .categorydiv label {
     margin-top: 8px;
 }
 
-.bp_appboss_wrap .appboss-column-block-item-content a {
-    float: right;
-}
-
 .bp_appboss_wrap .appboss-column-block-item-content p {
     float: left;
 }
@@ -856,7 +852,7 @@ body.post-type-bp-email .categorydiv label {
 }
 
 .bp_appboss_wrap .appboss-small-dark-block {
-    background-color: #9041CD;
+    background-color: #00AAE1;
     text-align: center;
 }
 
