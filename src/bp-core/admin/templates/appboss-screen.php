@@ -89,17 +89,39 @@
 					?>
 					<div class="addons-column-block">
 					
-						<h1>Improve the main features of your online store</h1>
-						<p>Sell more by helping customers find the products and options they want.</p>
+						<h1><?php _e( 'Improve the main features of your online store', 'buddyboss' ); ?></h1>
+						<p><?php _e( 'Sell more by helping customers find the products and options they want.', 'buddyboss' ); ?></p>
 
 						<div class="addons-column-block-item">
 							<div class="addons-column-block-item-icon">
 								<img class="addons-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/product-add-ons-icon@2x.png" />
 							</div>
 							<div class="addons-column-block-item-content">
-								<h2>Product Add-ons</h2>
-								<a class="addons-button addons-button-solid" href="https://woocommerce.com/products/product-add-ons/?utm_source=product&#038;utm_medium=upsell&#038;utm_campaign=wcaddons&#038;utm_content=featured">From: $49</a>
-								<p>Give your customers the option to customize their purchase or add personalization.</p>
+								<h2><?php _e( 'Product Add-ons', 'buddyboss' ); ?></h2>
+								<a class="addons-button addons-button-solid" href="#"><?php _e( 'From: $49', 'buddyboss' ); ?></a>
+								<p><?php _e( 'Give your customers the option to customize their purchase or add personalization.', 'buddyboss' ); ?></p>
+							</div>
+						</div>
+
+						<div class="addons-column-block-item">
+							<div class="addons-column-block-item-icon">
+								<img class="addons-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/product-search-icon@2x.png" />
+							</div>
+							<div class="addons-column-block-item-content">
+								<h2><?php _e( 'Product Search', 'buddyboss' ); ?></h2>
+								<a class="addons-button addons-button-solid" href="#"><?php _e( 'From: $49', 'buddyboss' ); ?></a>
+								<p><?php _e( 'Make sure customers find what they want when they search your site.', 'buddyboss' ); ?></p>
+							</div>
+						</div>
+
+						<div class="addons-column-block-item">
+							<div class="addons-column-block-item-icon">
+								<img class="addons-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/checkout-add-ons-icon@2x.png" />
+							</div>
+							<div class="addons-column-block-item-content">
+								<h2><?php _e( 'Checkout Add-ons', 'buddyboss' ); ?></h2>
+								<a class="addons-button addons-button-solid" href="#"><?php _e( 'From: $49', 'buddyboss' ); ?></a>
+								<p><?php _e( 'Highlight relevant products, offers like free shipping and other upsells during checkout.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
 
