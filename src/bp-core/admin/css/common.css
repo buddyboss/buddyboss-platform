@@ -24,7 +24,8 @@ TABLE OF CONTENTS:
 4.0 Emails - Edit page
 5.0 Tools - BuddyPress
 6.0 Plugins page
-7.0 Miscellaneous
+7.0 AppBoss page
+8.0 Miscellaneous
 ------------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------
@@ -578,7 +579,280 @@ body.post-type-bp-email .categorydiv label {
 
 
 /*------------------------------------------------------------------------------
- * 7.0 Miscellaneous
+ * 7.0 AppBoss page
+ *----------------------------------------------------------------------------*/
+.bp_appboss_wrap {
+    max-width: 1200px;
+}
+
+.bp_appboss_wrap .appboss-featured {
+    margin: 25px 0 0;
+}
+
+.bp_appboss_wrap .appboss-banner-block, .bp_appboss_wrap .appboss-learndash-banner-block {
+    background: #fff;
+    border: 1px solid #ddd;
+    margin: 0 0 1em 0;
+    padding: 2em 2em 1em;
+}
+
+.bp_appboss_wrap .appboss-banner-block p {
+    margin: 0 0 20px;
+}
+
+.bp_appboss_wrap .appboss-banner-block-items {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 0 -10px 0 -10px;
+}
+
+.bp_appboss_wrap .appboss-banner-block-item {
+    -webkit-box-flex: 1;
+    flex: 1;
+    margin: 1em;
+    min-width: 200px;
+    width: 30%;
+}
+
+.bp_appboss_wrap .appboss-column-block-item {
+    border-top: 2px solid #f9f9f9;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    flex-direction: row;
+    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    margin: 0 -20px;
+    padding: 20px;
+}
+
+.bp_appboss_wrap .appboss-banner-block-item, .bp_appboss_wrap .appboss-column-block-item {
+    display: none;
+}
+
+.bp_appboss_wrap .appboss-column-block-item:nth-of-type(-n+3) {
+	display: flex;
+}
+
+.bp_appboss_wrap .appboss-banner-block-item:nth-child(-n+3) {
+    display: block;
+}
+
+.bp_appboss_wrap .appboss-banner-block-item-icon, .bp_appboss_wrap .appboss-column-block-item-icon {
+    -webkit-box-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+}
+
+.bp_appboss_wrap .appboss-banner-block-item-icon {
+	justify-content: left;
+}
+
+.bp_appboss_wrap .appboss-banner-block img {
+    height: 62px;
+}
+
+.bp_appboss_wrap .appboss-banner-block-item-content {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+    height: 140px;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    padding: 24px 0 0;
+}
+
+.bp_appboss_wrap .appboss-banner-block-item-content h3 {
+    margin-top: 0;
+}
+
+.bp_appboss_wrap .appboss-banner-block p {
+    margin: 0 0 20px;
+}
+
+.bp_appboss_wrap .appboss-banner-block-item-content p {
+    margin: 0 0 auto;
+}
+
+.bp_appboss_wrap .appboss-column-block-item-icon {
+    background: #f7f7f7;
+    border: 1px solid #e6e6e6;
+    height: 100px;
+    margin: 0 20px 10px 0;
+    width: 100px;
+}
+
+.bp_appboss_wrap .appboss-column-block img {
+    max-height: 50px;
+    max-width: 50px;
+}
+
+.bp_appboss_wrap .appboss-column-block-item-content {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-flex: 1;
+    flex: 1;
+    flex-wrap: wrap;
+    height: 20%;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    min-width: 200px;
+}
+
+.bp_appboss_wrap .appboss-column-block-item-content h2 {
+    float: left;
+    margin-top: 10px;
+}
+
+.bp_appboss_wrap .appboss-column-block-item-content p {
+    float: left;
+    margin-top: 0;
+}
+
+.bp_appboss_wrap .appboss-button {
+    border-radius: 3px;
+    cursor: pointer;
+    display: block;
+    height: 37px;
+    line-height: 37px;
+    text-align: center;
+    text-decoration: none;
+    background-color: #00AAE1;
+    color: #fff;
+    width: 124px;
+}
+
+.bp_appboss_wrap .appboss-learndash-banner-block {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    padding: 2em;
+}
+
+.bp_appboss_wrap .appboss-learndash-banner-block-image {
+    margin-right: 2em;
+    padding: 1em;
+}
+
+.bp_appboss_wrap .appboss-learndash-banner-block-image .appboss-img {
+    max-height: 130px;
+    max-width: 160px;
+}
+
+.bp_appboss_wrap .appboss-learndash-banner-block-content {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+    justify-content: space-around;
+    align-self: stretch;
+    padding: 1em 0;
+}
+
+.bp_appboss_wrap .appboss-learndash-banner-block-content h1 {
+    padding-bottom: 0;
+}
+
+.bp_appboss_wrap .appboss-column-section {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.bp_appboss_wrap .appboss-column {
+    -webkit-box-flex: 1;
+    flex: 1;
+    width: 50%;
+    padding: 0 .5em;
+}
+
+.bp_appboss_wrap .appboss-column-block, .bp_appboss_wrap .appboss-small-dark-block, .bp_appboss_wrap .appboss-small-light-block {
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    margin: 0 0 1em;
+    padding: 20px;
+}
+
+.bp_appboss_wrap .appboss-column-block, .bp_appboss_wrap .appboss-small-light-block {
+    background: #fff;
+}
+
+.bp_appboss_wrap .appboss-small-light-block {
+    display: -webkit-box;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.bp_appboss_wrap .appboss-small-light-block img {
+    height: 225px;
+    margin: 0 22px 0 -20px;
+}
+
+.bp_appboss_wrap .appboss-small-light-block-content {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-flex: 1;
+    flex: 1 1 100px;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.bp_appboss_wrap .appboss-small-light-block h1 {
+    margin-top: -12px;
+}
+
+.bp_appboss_wrap .appboss-small-light-block p {
+    margin-top: 0;
+}
+
+.bp_appboss_wrap .appboss-small-light-block-buttons {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+}
+
+.bp_appboss_wrap .appboss-small-light-block-content a {
+    width: 48%;
+}
+
+.bp_appboss_wrap .appboss-small-dark-block {
+    background-color: #00AAE1;
+    text-align: center;
+}
+
+.bp_appboss_wrap .appboss-small-dark-block h1 {
+    color: #fff;
+}
+
+.bp_appboss_wrap .appboss-small-dark-block p {
+    color: #fafafa;
+}
+
+.bp_appboss_wrap .appboss-small-dark-block img {
+	margin: 10px 0;
+}
+
+/*------------------------------------------------------------------------------
+ * 8.0 Miscellaneous
  *----------------------------------------------------------------------------*/
 body.post-type-bp_ps_form .page-title-action {
 	display: none;
