@@ -386,7 +386,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
 						<?php if ( empty( $group->can_delete ) ) : ?>
 
-							<p><?php esc_html_e( '* Fields in this set appear on the signup page.', 'buddyboss' ); ?></p>
+							<p><?php esc_html_e( '* These fields appear on the signup page. The (Name) fields cannot be removed and must remain in this field set.', 'buddyboss' ); ?></p>
 
 						<?php endif; ?>
 
@@ -819,9 +819,9 @@ function xprofile_admin_field( $admin_field, $admin_group, $class = '' ) {
 			<span>
 				<?php bp_the_profile_field_name(); ?>
 
-				<?php if ( empty( $field->can_delete )                                    ) : ?><?php esc_html_e( '(Primary)', 'buddyboss' ); endif; ?>
+				<?php if ( empty( $field->can_delete )                                    ) : ?><?php esc_html_e( '(Name)', 'buddyboss' ); endif; ?>
 				<?php bp_the_profile_field_required_label(); ?>
-				<?php if ( bp_xprofile_get_meta( $field->id, 'field', 'signup_position' ) ) : ?><?php esc_html_e( '(Sign-up)', 'buddyboss' ); endif; ?>
+				<?php if ( bp_xprofile_get_meta( $field->id, 'field', 'signup_position' ) ) : ?><?php esc_html_e( '(Signup)', 'buddyboss' ); endif; ?>
 				<?php if ( bp_get_member_types() ) : echo $field->get_member_type_label(); endif; ?>
 
 				<?php
