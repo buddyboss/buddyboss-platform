@@ -612,8 +612,6 @@ body.post-type-bp-email .categorydiv label {
 }
 
 .bp_appboss_wrap .appboss-banner-block-item {
-    border: 1px solid #e6e6e6;
-    border-radius: 3px;
     -webkit-box-flex: 1;
     flex: 1;
     margin: 1em;
@@ -655,8 +653,7 @@ body.post-type-bp-email .categorydiv label {
 }
 
 .bp_appboss_wrap .appboss-banner-block-item-icon {
-    background: #f7f7f7;
-    height: 143px;
+	justify-content: left;
 }
 
 .bp_appboss_wrap .appboss-banner-block img {
@@ -669,10 +666,10 @@ body.post-type-bp-email .categorydiv label {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
     flex-direction: column;
-    height: 140;
+    height: 140px;
     -webkit-box-pack: justify;
     justify-content: space-between;
-    padding: 24px;
+    padding: 24px 0 0;
 }
 
 .bp_appboss_wrap .appboss-banner-block-item-content h3 {
