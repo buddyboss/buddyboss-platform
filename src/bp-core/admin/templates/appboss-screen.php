@@ -217,5 +217,51 @@
 
 			</div>
 
+			<?php
+			/*
+			 * addons-banner-block
+			 */
+			?>
+			<div class="addons-banner-block">
+				<h1><?php _e( 'Promote your products and increase sales', 'buddyboss' ); ?></h1>
+				<p><?php _e( 'From coupons to emails, these extensions can power up your marketing efforts.', 'buddyboss' ); ?></p>
+				<div class="addons-banner-block-items">
+					
+					<div class="addons-banner-block-item">
+						<div class="addons-banner-block-item-icon">
+							<img class="addons-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/smart-coupons-icon@2x.png" />
+						</div>
+						<div class="addons-banner-block-item-content">
+							<h3><?php _e( 'Smart Coupons', 'buddyboss' ); ?></h3>
+							<p><?php _e( 'Enhance your coupon options - create gift certificates, store credit, coupons based on purchases and more.', 'buddyboss' ); ?></p>
+							<a class="addons-button addons-button-solid" href="#"><?php _e( 'From: $99', 'buddyboss' ); ?></a>
+						</div>
+					</div>
+
+					<div class="addons-banner-block-item">
+						<div class="addons-banner-block-item-icon">
+							<img class="addons-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/follow-up-emails-icon@2x.png" />
+						</div>
+						<div class="addons-banner-block-item-content">
+							<h3><?php _e( 'Follow Up Emails', 'buddyboss' ); ?></h3>
+							<p><?php _e( 'Automatically contact customers after purchase - be it everyone, your most loyal or your biggest spenders - and keep your store top-of-mind.', 'buddyboss' ); ?></p>
+							<a class="addons-button addons-button-solid" href="#"><?php _e( 'From: $99', 'buddyboss' ); ?></a>
+						</div>
+					</div>
+
+					<div class="addons-banner-block-item">
+						<div class="addons-banner-block-item-icon">
+							<img class="addons-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/google-product-feed-icon@2x.png" />
+						</div>
+						<div class="addons-banner-block-item-content">
+							<h3><?php _e( 'Google Product Feed', 'buddyboss' ); ?></h3>
+							<p><?php _e( 'Let customers find you when shopping for products via Google.', 'buddyboss' ); ?></p>
+							<a class="addons-button addons-button-solid" href="#"><?php _e( 'From: $79', 'buddyboss' ); ?></a>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+
 	</div>
 </div>
