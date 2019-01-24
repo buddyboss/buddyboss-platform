@@ -54,7 +54,7 @@
 			<div class="appboss-learndash-banner-block">
 
 				<div class="appboss-learndash-banner-block-image">
-					<img class="appboss-img" src="http://localhost:8888/buddyboss-theme/wp-content/plugins/woocommerce/assets/images/wcs-extensions-banner-3x.png" alt="WooCommerce Services" />
+					<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/student.svg" . '" />'; ?>
 				</div>
 				
 				<div class="appboss-learndash-banner-block-content">
@@ -129,8 +129,8 @@
 					<div class="appboss-small-light-block">
 						<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/storefront-screen@2x.png" />
 						<div class="appboss-small-light-block-content">
-							<h1><?php _e( 'We are the #1 experts for WordPress mobile apps', 'buddyboss' ); ?></h1>
-							<p><?php _e( 'We know WordPress inside and out. We have invested thousands of hours to build the processes and technology that power the seamless integration between WordPress and your native mobile app.', 'buddyboss' ); ?></p>
+							<h1><?php _e( 'Apps for WordPress, from the WordPress experts', 'buddyboss' ); ?></h1>
+							<p><?php _e( 'We know WordPress inside and out. We have invested thousands of hours into building the processes and technology to seamlessy integrate WordPress with your mobile app.', 'buddyboss' ); ?></p>
 							<div class="appboss-small-light-block-buttons">
 								<a class="appboss-button appboss-button-solid" href="https://appboss.com/about/"><?php _e( 'About Us', 'buddyboss' ); ?></a>
 								<a class="appboss-button appboss-button-solid" href="https://appboss.com/contact/"><?php _e( 'Contact Us', 'buddyboss' ); ?></a>
