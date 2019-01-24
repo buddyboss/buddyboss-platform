@@ -8,7 +8,6 @@
 			 * addons-banner-block
 			 */
 			?>
-
 			<div class="addons-banner-block">
 				<h1><?php _e( 'Take your store beyond the typical - sell anything', 'buddyboss' ); ?></h1>
 				<p><?php _e( 'From services to content, there&#039;s no limit to what you can sell with WooCommerce.', 'buddyboss' ); ?></p>
@@ -55,7 +54,6 @@
 			 * addons-wcs-banner-block
 			 */
 			?>
-
 			<div class="addons-wcs-banner-block">
 
 				<div class="addons-wcs-banner-block-image">
@@ -72,9 +70,80 @@
 
 			<?php
 			/*
-			 * next...
+			 * addons-column-section
 			 */
 			?>
+			<div class="addons-column-section">
+
+				<?php
+				/*
+				 * addons-column
+				 */
+				?>			
+				<div class="addons-column">
+					
+					<?php
+					/*
+					 * addons-column-block
+					 */
+					?>
+					<div class="addons-column-block">
+					
+						<h1>Improve the main features of your online store</h1>
+						<p>Sell more by helping customers find the products and options they want.</p>
+
+						<div class="addons-column-block-item">
+							<div class="addons-column-block-item-icon">
+								<img class="addons-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/product-add-ons-icon@2x.png" />
+							</div>
+							<div class="addons-column-block-item-content">
+								<h2>Product Add-ons</h2>
+								<a class="addons-button addons-button-solid" href="https://woocommerce.com/products/product-add-ons/?utm_source=product&#038;utm_medium=upsell&#038;utm_campaign=wcaddons&#038;utm_content=featured">From: $49</a>
+								<p>Give your customers the option to customize their purchase or add personalization.</p>
+							</div>
+						</div>
+
+					</div>
+
+					<?php
+					/*
+					 * addons-small-light-block
+					 */
+					?>
+					<div class="addons-small-light-block">
+						yeah
+					</div>
+
+				</div>
+
+				<?php
+				/*
+				 * addons-column
+				 */
+				?>
+				<div class="addons-column">
+	
+					<?php
+					/*
+					 * addons-small-dark-block
+					 */
+					?>
+					<div class="addons-small-dark-block">
+						yeah
+					</div>
+
+					<?php
+					/*
+					 * addons-column-block
+					 */
+					?>					
+					<div class="addons-column-block">
+					yeah
+					</div>
+
+				</div>
+
+			</div>
 
 	</div>
 </div>
