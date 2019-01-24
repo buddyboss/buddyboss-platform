@@ -12,12 +12,12 @@ defined( 'ABSPATH' ) || exit;
  */
 class BuddyPress {
 	/**
-	 * Identify if ths buddypress class is from buddybss platform
+	 * Identify if ths BuddyPress class is from BuddyBoss Platform
 	 *
 	 * @since 1.0.0
 	 * @var boolean
 	 */
-	public $boddyboss = true;
+	public $buddyboss = true;
 
 	/** Magic *****************************************************************/
 
