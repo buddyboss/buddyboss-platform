@@ -372,7 +372,7 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 	protected function get_input_value( $key, $default = '' ) {
         if (! function_exists('bp_ld_sync')) {
-            return $name;
+            return $key;
         }
 
 		return bp_ld_sync('settings')->get("{$this->current_section}.{$key}", $default);
