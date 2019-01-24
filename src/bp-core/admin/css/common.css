@@ -669,7 +669,7 @@ body.post-type-bp-email .categorydiv label {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
     flex-direction: column;
-    height: 184px;
+    height: 140;
     -webkit-box-pack: justify;
     justify-content: space-between;
     padding: 24px;

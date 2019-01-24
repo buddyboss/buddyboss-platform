@@ -20,7 +20,6 @@
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Subscriptions', 'buddyboss' ); ?></h3>
 							<p><?php _e( 'Let customers subscribe to your products or services and pay on a weekly, monthly or annual basis.', 'buddyboss' ); ?></p>
-							<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 						</div>
 					</div>
 
@@ -31,7 +30,6 @@
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Bookings', 'buddyboss' ); ?></h3>
 							<p><?php _e( 'Allow customers to book appointments for services without leaving your site.', 'buddyboss' ); ?></p>
-							<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 						</div>
 					</div>
 
@@ -42,7 +40,6 @@
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Memberships', 'buddyboss' ); ?></h3>
 							<p><?php _e( 'Give members access to restricted content or products, for a fee or for free.', 'buddyboss' ); ?></p>
-							<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 						</div>
 					</div>
 					
@@ -62,8 +59,8 @@
 				
 				<div class="appboss-wcs-banner-block-content">
 					<h1><?php _e( 'Your Classroom In Your Student\'s Pocket — Everywhere They Go.', 'buddyboss' ); ?></h1>
-					<p><?php _e( 'A native Mobile App allows you to provide <strong>Offline Support</strong> of your courses for your students. This creates an enormous amount of convenience for your students by providing access to your course materials anytime and anywhere, even without an internet connection.', 'buddyboss' ); ?></p>
-					<a class="appboss-button appboss-button-outline-dark" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
+					<p><?php _e( '<strong>Using LearnDash?</strong> A native mobile app allows you to provide <strong>Offline Support</strong> of your courses for your students. This creates an enormous amount of convenience for your students by providing access to your course materials anytime and anywhere, even without an internet connection.', 'buddyboss' ); ?></p>
+					<a class="appboss-button appboss-button-outline-dark" href="https://appboss.com/learnerapp/"><?php _e( 'learnerApp', 'buddyboss' ); ?></a>
 				</div>
 
 			</div>
@@ -132,11 +129,11 @@
 					<div class="appboss-small-light-block">
 						<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/storefront-screen@2x.png" />
 						<div class="appboss-small-light-block-content">
-							<h1><?php _e( 'Get the official WooCommerce theme', 'buddyboss' ); ?></h1>
-							<p><?php _e( 'Storefront is the lean, flexible, and free theme, built by the people who make WooCommerce - everything you need to get started.', 'buddyboss' ); ?></p>
+							<h1><?php _e( 'We are the #1 experts for WordPress mobile apps', 'buddyboss' ); ?></h1>
+							<p><?php _e( 'We know WordPress inside and out. We have invested thousands of hours to build the processes and technology that power the seamless integration between WordPress and your native mobile app.', 'buddyboss' ); ?></p>
 							<div class="appboss-small-light-block-buttons">
-								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Free', 'buddyboss' ); ?></a>
-								<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
+								<a class="appboss-button appboss-button-solid" href="https://appboss.com/about/"><?php _e( 'About Us', 'buddyboss' ); ?></a>
+								<a class="appboss-button appboss-button-solid" href="https://appboss.com/contact/"><?php _e( 'Contact Us', 'buddyboss' ); ?></a>
 							</div>
 						</div>
 					</div>
@@ -217,7 +214,7 @@
 			 */
 			?>
 			<div class="appboss-banner-block">
-				<h1><?php _e( 'Promote your products and increase sales', 'buddyboss' ); ?></h1>
+				<h1><?php _e( 'We support every LearnDash feature', 'buddyboss' ); ?></h1>
 				<p><?php _e( 'From coupons to emails, these extensions can power up your marketing efforts.', 'buddyboss' ); ?></p>
 				<div class="appboss-banner-block-items">
 					
@@ -226,9 +223,8 @@
 							<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/smart-coupons-icon@2x.png" />
 						</div>
 						<div class="appboss-banner-block-item-content">
-							<h3><?php _e( 'Smart Coupons', 'buddyboss' ); ?></h3>
+							<h3><?php _e( 'Advanced Quizzing', 'buddyboss' ); ?></h3>
 							<p><?php _e( 'Enhance your coupon options - create gift certificates, store credit, coupons based on purchases and more.', 'buddyboss' ); ?></p>
-							<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 						</div>
 					</div>
 
@@ -237,9 +233,8 @@
 							<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/follow-up-emails-icon@2x.png" />
 						</div>
 						<div class="appboss-banner-block-item-content">
-							<h3><?php _e( 'Follow Up Emails', 'buddyboss' ); ?></h3>
+							<h3><?php _e( 'Drip-Feed Content', 'buddyboss' ); ?></h3>
 							<p><?php _e( 'Automatically contact customers after purchase - be it everyone, your most loyal or your biggest spenders - and keep your store top-of-mind.', 'buddyboss' ); ?></p>
-							<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 						</div>
 					</div>
 
@@ -248,9 +243,8 @@
 							<img class="appboss-img" src="https://d3t0oesq8995hv.cloudfront.net/add-ons/google-product-feed-icon@2x.png" />
 						</div>
 						<div class="appboss-banner-block-item-content">
-							<h3><?php _e( 'Google Product Feed', 'buddyboss' ); ?></h3>
+							<h3><?php _e( 'User Profiles', 'buddyboss' ); ?></h3>
 							<p><?php _e( 'Let customers find you when shopping for products via Google.', 'buddyboss' ); ?></p>
-							<a class="appboss-button appboss-button-solid" href="#"><?php _e( 'Learn More', 'buddyboss' ); ?></a>
 						</div>
 					</div>
 					
