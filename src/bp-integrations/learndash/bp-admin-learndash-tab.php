@@ -340,12 +340,18 @@ class BP_Learndash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	public function add_sync_tool_scripts() {
-		if ( function_exists( 'bp_learndash_path') ) {
-			printf( '<script src="%s"></script>',
-				add_query_arg( 'ver',
-					filemtime( bp_learndash_path( $filePath = '/assets/scripts/bp_learndash_groups_sync-settings.js' ) ),
-					bp_learndash_url( $filePath ) ) );
+		if ( ! $this->is_active() ) {
+			return;
 		}
+
+		printf(
+			'<script src="%s"></script>',
+			add_query_arg(
+				'ver',
+				filemtime( bp_learndash_path( $filePath = '/assets/scripts/bp_learndash_groups_sync-settings.js' ) ),
+				bp_learndash_url( $filePath )
+			)
+		);
 	}
 
 	protected function get_input_name( $name ) {

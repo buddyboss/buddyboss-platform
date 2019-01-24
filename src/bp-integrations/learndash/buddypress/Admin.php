@@ -11,6 +11,10 @@ class Admin
 
 	public function init()
 	{
+		if (! bp_ld_sync('settings')->get('buddypress.enabled')) {
+			return;
+		}
+
         add_action('bp_group_admin_edit_after', [$this, 'saveGroupSyncMetaBox']);
         add_action('bp_groups_admin_meta_boxes', [$this, 'addGroupSyncMetaBox']);
 	}

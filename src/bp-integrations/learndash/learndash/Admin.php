@@ -11,6 +11,10 @@ class Admin
 
 	public function init()
 	{
+		if (! bp_ld_sync('settings')->get('learndash.enabled')) {
+			return;
+		}
+
         add_action('add_meta_boxes', [$this, 'addGroupSyncMetaBox']);
 	}
 
