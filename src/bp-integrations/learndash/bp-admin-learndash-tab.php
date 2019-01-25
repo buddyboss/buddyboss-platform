@@ -26,8 +26,6 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 	public function form_html() {
 		parent::form_html();
-
-		// require $this->root_path . '/groups-sync/templates/admin/learndash-settings-tools.php';
 	}
 
 	public function registerBuddypressSettings()
