@@ -229,7 +229,8 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 				<?php
 
 				// Does option have children?
-				$options = $current_field->get_children( true );
+				//$options = $current_field->get_children( true );
+				$options = array();
 
 				if ( empty( $options ) ) {
 					$options[] = (object) array(
