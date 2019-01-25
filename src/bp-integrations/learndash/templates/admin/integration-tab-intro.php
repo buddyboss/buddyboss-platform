@@ -15,7 +15,7 @@
 	<ul class="wp-list">
 		<li>
 			<span class="dashicons dashicons-editor-unlink"></span>
-			<?php _e('Group syncing between groups.', 'buddyboss'); ?>
+			<?php _e('Members syncing between groups.', 'buddyboss'); ?>
 		</li>
 		<li>
 			<span class="dashicons dashicons-analytics"></span>
