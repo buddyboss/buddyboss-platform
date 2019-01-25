@@ -419,14 +419,19 @@ abstract class BP_Admin_Tab {
 			return;
 
 		foreach ( (array) $wp_settings_sections[$page] as $section ) {
-			if ( $section['title'] )
-				echo "<div class='card'><h2>{$section['title']}</h2>\n";
+			echo "<div class='card section-{$section['id']}'>";
+			if ( $section['title'] ) {
+				echo "<h2>{$section['title']}</h2>\n";
+			}
 
-			if ( $section['callback'] )
+			if ( $section['callback'] ) {
 				call_user_func( $section['callback'], $section );
+			}
 
-			if ( ! isset( $wp_settings_fields ) || !isset( $wp_settings_fields[$page] ) || !isset( $wp_settings_fields[$page][$section['id']] ) )
+			if ( ! isset( $wp_settings_fields ) || !isset( $wp_settings_fields[$page] ) || !isset( $wp_settings_fields[$page][$section['id']] ) ) {
 				continue;
+			}
+
 			echo '<table class="form-table">';
 			$this->bp_custom_do_settings_fields( $page, $section['id'] );
 			echo '</table></div>';
