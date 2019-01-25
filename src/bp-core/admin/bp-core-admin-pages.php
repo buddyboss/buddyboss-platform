@@ -46,8 +46,9 @@ function bp_custom_pages_do_settings_sections( $page ) {
 		return;
 
 	foreach ( (array) $wp_settings_sections[$page] as $section ) {
+		echo "<div class='card section-{$section['id']}'>";
 		if ( $section['title'] )
-			echo "<div class='card'><h2>{$section['title']}</h2>\n";
+			echo "<h2>{$section['title']}</h2>\n";
 
 		if ( $section['callback'] )
 			call_user_func( $section['callback'], $section );
