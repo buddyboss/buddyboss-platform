@@ -34,7 +34,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_section(
 			'bp_ld_sync-buddypress',
-			__( 'Sync BuddyBoss group members to LearnDash groups', 'buddyboss' ),
+			__( 'BuddyBoss to LearnDash Sync', 'buddyboss' ),
 			[ $this, 'buddypress_groups_sync_description' ]
 		);
 
@@ -156,7 +156,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_section(
 			'bp_ld_sync-learndash',
-			__( 'Sync LearnDash group users to BuddyBoss groups', 'buddyboss' ),
+			__( 'LearnDash to BuddyBoss Sync', 'buddyboss' ),
 			[ $this, 'learndash_groups_sync_description' ]
 		);
 
@@ -297,13 +297,13 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 	public function buddypress_groups_sync_description() {
 		echo wpautop(
-			__( 'Control the setting for Social Group\'s syncing on create or update.', 'buddyboss' )
+			__( 'Sync BuddyBoss group members to LearnDash groups.', 'buddyboss' )
 		);
 	}
 
 	public function learndash_groups_sync_description() {
 		echo wpautop(
-			__( 'Control the setting for LearnDash Group\'s syncing on create or update.', 'buddyboss' )
+			__( 'Sync LearnDash group users to BuddyBoss groups.', 'buddyboss' )
 		);
 	}
 

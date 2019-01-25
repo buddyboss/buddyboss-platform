@@ -18,6 +18,7 @@ TABLE OF CONTENTS:
 	2.3 Tools
 	2.4 Tooltips
 	2.5 Settings - Tabs
+	2.6 Settings - Cards
 3.0 Users
 	3.1 Users List
 	3.2 Site Notices
@@ -360,6 +361,71 @@ tr.bp-search-parent-field td p {
 
 tr.bp-search-parent-field td p.section-header {
 	margin: 0 0 20px;
+}
+
+/*
+ * 2.6 Settings - Cards
+ */
+.buddyboss_page_bp-settings .card,
+.buddyboss_page_bp-integrations .card {
+	max-width: 100%;
+}
+
+.buddyboss_page_bp-settings .card h2,
+.buddyboss_page_bp-integrations .card h2 {
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: 56px;
+    line-height: 56px;
+    padding-right: 78px;
+    font-size: 23px;
+    font-weight: 400;
+}
+
+.buddyboss_page_bp-settings .section-bp_main h2 {
+    background-image: url('../../images/admin/icon_gear.svg');
+}
+
+.buddyboss_page_bp-settings .section-bp_xprofile h2,
+.buddyboss_page_bp-settings .section-bp_member_type_settings h2 {
+    background-image: url('../../images/admin/icon_user.svg');
+}
+
+.buddyboss_page_bp-settings .section-bp_activity h2 {
+    background-image: url('../../images/admin/icon_bell.svg');
+}
+
+.buddyboss_page_bp-settings .section-bp_invites h2 {
+    background-image: url('../../images/admin/icon_user-plus.svg');
+}
+
+.buddyboss_page_bp-settings .section-bp_groups h2,
+.buddyboss_page_bp-settings .section-bp_groups_types h2,
+.buddyboss_page_bp-settings .section-bp_groups_hierarchies h2 {
+    background-image: url('../../images/admin/icon_users.svg');
+}
+
+.buddyboss_page_bp-settings .section-bp_friends h2 {
+    background-image: url('../../images/admin/icon_loop.svg');
+}
+
+.buddyboss_page_bp-settings .section-bbp_settings_users h2,
+.buddyboss_page_bp-settings .section-bbp_settings_features h2,
+.buddyboss_page_bp-settings .section-bbp_settings_per_page h2,
+.buddyboss_page_bp-settings .section-bbp_settings_per_rss_page h2,
+.buddyboss_page_bp-settings .section-bbp_settings_root_slugs h2,
+.buddyboss_page_bp-settings .section-bbp_settings_single_slugs h2,
+.buddyboss_page_bp-settings .section-bbp_settings_buddypress h2 {
+    background-image: url('../../images/admin/icon_forums.svg');
+}
+
+.buddyboss_page_bp-integrations .section-bp_ld_sync-buddypress h2,
+.buddyboss_page_bp-integrations .section-bp_ld_sync-learndash h2 {
+    background-image: url('../../images/admin/icon_badge.svg');
+}
+
+.buddyboss_page_bp-integrations .section-bp_ld_sync-reports h2 {
+    background-image: url('../../images/admin/icon_calendar.svg');
 }
 
 /*
