@@ -63,6 +63,10 @@ TABLE OF CONTENTS:
 	font-size: 15px;
 }
 
+.bp-about-wrap .card {
+	max-width: 100%;
+}
+
 .bp-about-wrap img {
 	margin: 0;
 	max-width: 100%;
@@ -94,15 +98,8 @@ TABLE OF CONTENTS:
 	font-weight: 400;
 }
 
-.bp-about-wrap .wp-about-description {
-	margin: 1em 0 3em;
-	font-weight: 400;
-	line-height: 1.5;
-	font-size: 14px;
-}
-
 .bp-about-wrap h3.wp-people-group {
-	margin: 2.6em 0 1.33em;
+	margin: 1.33em 0;
 	padding: 0;
 	font-size: 16px;
 	line-height: inherit;
@@ -121,7 +118,7 @@ TABLE OF CONTENTS:
 	display: inline-block;
 	vertical-align: top;
 	margin-left: 10px;
-	padding-bottom: 15px;
+	padding-bottom: 7px;
 	height: 70px;
 	width: 280px;
 }
