@@ -145,7 +145,7 @@ add_action( 'admin_init', 'bp_core_admin_register_registration_page_fields' );
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_directory_pages_description() {
-    echo wpautop( __( 'Associate a WordPress Page with each BuddyPress component directory.', 'buddyboss' ) );
+    echo wpautop( __( 'Associate a WordPress Page with each BuddyBoss component directory.', 'buddyboss' ) );
 }
 
 /**
@@ -155,7 +155,7 @@ function bp_core_admin_directory_pages_description() {
  */
 function bp_core_admin_registration_pages_description() {
 	if ( bp_get_signup_allowed() ) :
-		echo wpautop( __( 'Associate WordPress Pages with the following BuddyPress Registration pages.', 'buddyboss' ) );
+		echo wpautop( __( 'Associate WordPress Pages with the following BuddyBoss Registration pages.', 'buddyboss' ) );
 	else :
 		if ( is_multisite() ) :
 			echo wpautop(
