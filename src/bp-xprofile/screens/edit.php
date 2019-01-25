@@ -55,7 +55,7 @@ function xprofile_screen_edit_profile() {
 		foreach ( (array) $posted_field_ids as $field_id ) {
 			bp_xprofile_maybe_format_datebox_post_data( $field_id );
 
-			$is_required[ $field_id ] = xprofile_check_is_required_field( $field_id ) && ! bp_current_user_can( 'bp_moderate' );
+			$is_required[ $field_id ] = xprofile_check_is_required_field( $field_id );
 			if ( $is_required[$field_id] && empty( $_POST['field_' . $field_id] ) ) {
 				$errors = true;
 			}
