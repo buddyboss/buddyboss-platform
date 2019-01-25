@@ -26,7 +26,7 @@ class BP_Admin_Setting_Search extends BP_Admin_Setting_tab {
 			}
 
 			// Add the section
-			$this->add_section( $section_id, '' );
+			$this->add_section( $section_id, ' ' );
 
 			// Loop through fields for this section
 			foreach ( (array) $fields as $field_id => $field ) {
