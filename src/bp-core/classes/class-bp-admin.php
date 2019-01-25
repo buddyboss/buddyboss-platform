@@ -214,7 +214,7 @@ class BP_Admin {
 			$this->capability,
 			$this->settings_page,
 			'bp_core_admin_backpat_menu',
-			buddypress()->plugin_url . 'bp-core/images/admin/logo.svg',
+			buddypress()->plugin_url . 'bp-core/images/admin/logo-buddyboss.svg',
 			62
 		);
 

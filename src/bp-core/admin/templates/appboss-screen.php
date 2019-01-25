@@ -15,7 +15,7 @@
 					
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/users.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_user.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Unlimited Users', 'buddyboss' ); ?></h3>
@@ -25,7 +25,7 @@
 
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/courses.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_badge.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'LearnDash Courses', 'buddyboss' ); ?></h3>
@@ -40,7 +40,7 @@
 
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/sync.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_gear.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Synchronized Data', 'buddyboss' ); ?></h3>
@@ -59,7 +59,7 @@
 			<div class="appboss-learndash-banner-block">
 
 				<div class="appboss-learndash-banner-block-image">
-					<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/student.svg" . '" />'; ?>
+					<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_man-bench.svg" . '" />'; ?>
 				</div>
 				
 				<div class="appboss-learndash-banner-block-content">
@@ -96,7 +96,7 @@
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
-								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/offline-support.svg" . '" />'; ?>
+								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_offline.svg" . '" />'; ?>
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'Offline Support', 'buddyboss' ); ?></h2>
@@ -106,7 +106,7 @@
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
-								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/notifications.svg" . '" />'; ?>
+								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_notifications.svg" . '" />'; ?>
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'Advanced Push Notifications', 'buddyboss' ); ?></h2>
@@ -116,7 +116,7 @@
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
-								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/app-pages.svg" . '" />'; ?>
+								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_pages.svg" . '" />'; ?>
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'Custom Mobile App Pages', 'buddyboss' ); ?></h2>
@@ -132,7 +132,7 @@
 					 */
 					?>
 					<div class="appboss-small-light-block">
-						<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/website.png" . '" />'; ?>
+						<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/app-website.png" . '" />'; ?>
 						<div class="appboss-small-light-block-content">
 							<h1><?php _e( 'Say hello to <strong>AppBoss</strong>', 'buddyboss' ); ?></h1>
 							<p><?php _e( 'Brought to you by BuddyBoss, we know WordPress inside and out. We have invested thousands of hours into building the processes and technology to seamlessy integrate WordPress with your mobile app.', 'buddyboss' ); ?></p>
@@ -160,7 +160,7 @@
 					<div class="appboss-small-dark-block">
 						<h1><?php _e( 'Built with React Native', 'buddyboss' ); ?></h1>
 						<p><?php _e( 'This is a true native app and NOT a "responsive website within an app". It is built with React Native, the app framework created by Facebook and used by Walmart, Airbnb, Instagram, Tesla, and SoundCloud.', 'buddyboss' ); ?></p>
-						<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/react.svg" . '" />'; ?>
+						<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons_react.svg" . '" />'; ?>
 					</div>
 
 					<?php
@@ -175,7 +175,7 @@
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
-								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/ads.svg" . '" />'; ?>
+								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_ads.svg" . '" />'; ?>
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'Mobile Ads with AdMob', 'buddyboss' ); ?></h2>
@@ -185,7 +185,7 @@
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
-								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/registration.svg" . '" />'; ?>
+								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_user-plus.svg" . '" />'; ?>
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'In-App Registration', 'buddyboss' ); ?></h2>
@@ -195,7 +195,7 @@
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
-								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/purchases.svg" . '" />'; ?>
+								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_money.svg" . '" />'; ?>
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'In-App Purchases', 'buddyboss' ); ?></h2>
@@ -227,7 +227,7 @@
 					
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/quizzing.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_chess.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Advanced Quizzing', 'buddyboss' ); ?></h3>
@@ -237,7 +237,7 @@
 
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/drip-feed.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_locked-content.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Drip-Feed Content', 'buddyboss' ); ?></h3>
@@ -247,7 +247,7 @@
 
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/social-learning.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_users.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Social Learning', 'buddyboss' ); ?></h3>
@@ -260,7 +260,7 @@
 					
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/lesson-timers.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_clock.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Lesson Timers', 'buddyboss' ); ?></h3>
@@ -270,7 +270,7 @@
 
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/expire-access.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_calendar.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Expire Access', 'buddyboss' ); ?></h3>
@@ -280,7 +280,7 @@
 
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/assignments.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_note.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Assignment Management', 'buddyboss' ); ?></h3>
@@ -293,7 +293,7 @@
 					
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/certificates.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_badge.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Certificates &amp; Badges', 'buddyboss' ); ?></h3>
@@ -303,7 +303,7 @@
 
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/forums.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_forums.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Discussion Forums', 'buddyboss' ); ?></h3>
@@ -313,7 +313,7 @@
 
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/appboss/analytics.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_graph.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Google Analytics', 'buddyboss' ); ?></h3>
