@@ -15,10 +15,6 @@ class Sync
 
 	public function init()
 	{
-		if (! bp_ld_sync('settings')->get('buddypress.enabled')) {
-			return;
-		}
-
 		add_action('bp_ld_sync/buddypress_group_created', [$this, 'onGroupCreate']);
 		// add_action('bp_ld_sync/buddypress_group_updated', [$this, 'onGroupUpdate']);
 		add_action('bp_ld_sync/buddypress_group_deleting', [$this, 'onGroupDeleting']);
@@ -48,6 +44,10 @@ class Sync
 			return false;
 		}
 
+		if (! $this->enabled()) {
+			return false;
+		}
+
 		$settings = bp_ld_sync('settings');
 
 		// on the group creation first step, and create tab is enabled, we create sync group in later step
@@ -74,11 +74,19 @@ class Sync
 			return false;
 		}
 
+		if (! $this->enabled()) {
+			return false;
+		}
+
 		$this->deletingSyncedLdGroupId = $this->generator($groupId)->getLdGroupId();
 	}
 
 	public function onGroupDeleted($groupId)
 	{
+		if (! $this->enabled()) {
+			return false;
+		}
+
 		if (! $ldGroupId = $this->deletingSyncedLdGroupId) {
 			return;
 		}
@@ -147,12 +155,21 @@ class Sync
 	// 	$generator->syncBpMember($memberId, true);
 	// }
 
+	protected function enabled()
+	{
+		return bp_ld_sync('settings')->get('buddypress.enabled');
+	}
+
 	protected function groupUserEditCheck($role, $groupId)
 	{
 		global $bp_ld_sync__syncing_to_buddypress;
 
 		// if it's group is created from buddypress sync, don't need to sync back
 		if ($bp_ld_sync__syncing_to_buddypress) {
+			return false;
+		}
+
+		if (! $this->enabled()) {
 			return false;
 		}
 

@@ -224,7 +224,11 @@ class SyncGenerator
 	{
 		$this->syncingToLearndash(function() use ($userId, $remove) {
 			call_user_func_array($this->getBpSyncFunction('user'), [$userId, $this->ldGroupId, $remove]);
-			call_user_func_array('ld_update_leader_group_access', [$userId, $this->ldGroupId, true]);
+
+			// if sync to user, we need to remove previous admin
+			if ('user' == $this->getBpSyncToRole('user')) {
+				call_user_func_array('ld_update_leader_group_access', [$userId, $this->ldGroupId, true]);
+			}
 		});
 
 		if ($clearCache) {

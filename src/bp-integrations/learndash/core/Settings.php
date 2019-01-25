@@ -44,9 +44,9 @@ class Settings
 		return $this;
 	}
 
-	protected function installDefaultSettings()
+	public function defaultOptions()
 	{
-		$default = [
+		return [
 			'buddypress' => [
 				'enabled'                 => false,
 				'show_in_bp_create'       => true,
@@ -73,10 +73,13 @@ class Settings
 				'cache_time' => 60
 			],
 		];
+	}
 
+	protected function installDefaultSettings()
+	{
 		if (! $options = get_option($this->optionKey)) {
-			$options = $default;
-			bp_update_option($this->optionKey, $default);
+			$options = $this->defaultOptions();
+			bp_update_option($this->optionKey, $options);
 		}
 
 		$this->options = $options;
