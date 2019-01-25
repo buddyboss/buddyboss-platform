@@ -614,7 +614,7 @@ body.post-type-bp-email .categorydiv label {
 .bp_appboss_wrap .appboss-banner-block-item {
     -webkit-box-flex: 1;
     flex: 1;
-    margin: 1em;
+    margin: 2em 1em;
     min-width: 200px;
     width: 30%;
 }
@@ -666,7 +666,6 @@ body.post-type-bp-email .categorydiv label {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
     flex-direction: column;
-    height: 140px;
     -webkit-box-pack: justify;
     justify-content: space-between;
     padding: 24px 0 0;
@@ -849,6 +848,7 @@ body.post-type-bp-email .categorydiv label {
 
 .bp_appboss_wrap .appboss-small-dark-block img {
 	margin: 10px 0;
+	max-width: 100%;
 }
 
 /*------------------------------------------------------------------------------
