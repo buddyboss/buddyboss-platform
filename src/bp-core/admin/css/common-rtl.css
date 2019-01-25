@@ -650,7 +650,7 @@ body.post-type-bp-email .categorydiv label {
 }
 
 .bp_appboss_wrap .appboss-banner-block-item-icon {
-	justify-content: right;
+	justify-content: left;
 }
 
 .bp_appboss_wrap .appboss-banner-block img {
@@ -706,12 +706,12 @@ body.post-type-bp-email .categorydiv label {
 }
 
 .bp_appboss_wrap .appboss-column-block-item-content h2 {
-    float: left;
+    float: right;
     margin-top: 10px;
 }
 
 .bp_appboss_wrap .appboss-column-block-item-content p {
-    float: left;
+    float: right;
     margin-top: 0;
 }
 
@@ -796,7 +796,8 @@ body.post-type-bp-email .categorydiv label {
 }
 
 .bp_appboss_wrap .appboss-small-light-block img {
-    display: none;
+    height: 225px;
+    margin: 0 -20px 0 22px;
 }
 
 .bp_appboss_wrap .appboss-small-light-block-content {
