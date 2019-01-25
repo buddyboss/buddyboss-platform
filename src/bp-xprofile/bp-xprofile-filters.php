@@ -654,6 +654,11 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $vlaue, $user_
 	$value = strtolower( $vlaue );
 	$field_name = xprofile_get_field( $field_id )->name;
 
+	// Empty nickname
+	if ( '' === trim( $vlaue ) ) {
+		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
+	}
+
 	// only alpha numeric, underscore, dash
 	if ( ! preg_match( '/^([A-Za-z0-9-_\.]+)$/', $vlaue ) ) {
 		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name );
