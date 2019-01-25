@@ -34,7 +34,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_section(
 			'bp_ld_sync-buddypress',
-			__( 'Sync Social Groups to LearnDash Groups', 'buddyboss' ),
+			__( 'Sync BuddyBoss group members to LearnDash groups', 'buddyboss' ),
 			[ $this, 'buddypress_groups_sync_description' ]
 		);
 
@@ -80,7 +80,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'noone'    => __('No one', 'learndash'),
 		        ],
 		        'input_default' => 'admin',
-				'input_description' => __( 'Who can see the "course" tab in social group...', 'buddyboss' ),
+				'input_description' => __( 'Who can see the "course" tab in social group:', 'buddyboss' ),
 				'class' => 'js-show-on-buddypress_enabled',
 			]
 		);
@@ -115,7 +115,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'none'  => __('None', 'learndash'),
 		        ],
 		        'input_default' => 'admin',
-				'input_description' => __( 'When a organizer is synced, their role in LearnDash group should be...', 'buddyboss' ),
+				'input_description' => __( 'When a organizer is synced, their role in LearnDash group should be:', 'buddyboss' ),
 				'class' => 'js-show-on-buddypress_enabled',
 			]
 		);
@@ -130,7 +130,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'none'  => __('None', 'learndash'),
 		        ],
 		        'input_default' => 'admin',
-				'input_description' => __( 'When a moderator is synced, their role in LearnDash group should be...', 'buddyboss' ),
+				'input_description' => __( 'When a moderator is synced, their role in LearnDash group should be:', 'buddyboss' ),
 				'class' => 'js-show-on-buddypress_enabled',
 			]
 		);
@@ -144,7 +144,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'none'  => __('None', 'learndash'),
 		        ],
 		        'input_default' => 'user',
-				'input_description' => __( 'When a member is synced, their role in LearnDash group should be...', 'buddyboss' ),
+				'input_description' => __( 'When a member is synced, their role in LearnDash group should be:', 'buddyboss' ),
 				'class' => 'js-show-on-buddypress_enabled',
 			]
 		);
@@ -156,7 +156,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_section(
 			'bp_ld_sync-learndash',
-			__( 'Sync LearnDash Groups to Social Groups', 'buddyboss' ),
+			__( 'Sync LearnDash group users to BuddyBoss groups', 'buddyboss' ),
 			[ $this, 'learndash_groups_sync_description' ]
 		);
 
@@ -190,7 +190,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		            'hidden'  => __( 'Hidden', 'learndash' )
 		        ],
 		        'input_default' => 'private',
-				'input_description' => __( 'When a social group is generated, set the group privacy to...', 'buddyboss' ),
+				'input_description' => __( 'When a social group is generated, set the group privacy to:', 'buddyboss' ),
 				'class' => 'js-show-on-learndash_enabled'
 			]
 		);
@@ -205,7 +205,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	                'admins'  => __('Group organizers only', 'learndash')
 		        ],
 		        'input_default' => 'mods',
-				'input_description' => __( 'When a social group is generated, set the group invite status to...', 'buddyboss' ),
+				'input_description' => __( 'When a social group is generated, set the group invite status to:', 'buddyboss' ),
 				'class' => 'js-show-on-learndash_enabled'
 			]
 		);
@@ -231,7 +231,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'none'  => __('None', 'buddyboss'),
 		        ],
 		        'input_default' => 'admin',
-				'input_description' => __( 'When a LearnDash leader is synced, their role in social group should be...', 'buddyboss' ),
+				'input_description' => __( 'When a LearnDash leader is synced, their role in social group should be:', 'buddyboss' ),
 				'class' => 'js-show-on-learndash_enabled',
 			]
 		);
@@ -247,7 +247,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'none'  => __('None', 'buddyboss'),
 		        ],
 		        'input_default' => 'user',
-				'input_description' => __( 'When a LearnDash user is synced, their role in social group should be...', 'buddyboss' ),
+				'input_description' => __( 'When a LearnDash user is synced, their role in social group should be:', 'buddyboss' ),
 				'class' => 'js-show-on-learndash_enabled',
 			]
 		);
@@ -334,7 +334,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
         	', $input_name, $key, $checked, $value );
         }
 
-		echo $this->render_input_description(__('Allowed roles to view the group reports...', 'buddyboss'));
+		echo $this->render_input_description(__('Allowed roles to view the group reports:', 'buddyboss'));
 	}
 
 	public function add_sync_tool_scripts() {
