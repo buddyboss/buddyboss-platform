@@ -6,7 +6,7 @@
 			__('We integrated with %s. Below are the features if the plugin is activated:', 'buddyboss'),
 			sprintf(
 				'<a href="%s" target="_blank">%s</a>',
-				'https://www.learndash.com/',
+				'https://getdpd.com/cart/hoplink/14394?referrer=56whuq1wlakosg0k4',
 				__('LearnDash', 'buddyboss')
 			)
 		)
