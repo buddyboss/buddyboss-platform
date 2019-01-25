@@ -199,7 +199,7 @@ function bp_search_get_settings_fields() {
 	$post_types = get_post_types( [ 'public' => true ] );
 
 	$fields['bp_search_settings_post_types']["bp_search_post_type_section_header"] = [
-		'title'    => 'Pages and Post Types:',
+		'title'    => 'Pages and Post Types',
 		'callback' => 'bp_search_settings_callback_post_type_section_header',
 		'args'     => [
 			'class' => 'bp-search-parent-field'
