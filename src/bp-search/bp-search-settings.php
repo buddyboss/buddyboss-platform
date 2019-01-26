@@ -383,7 +383,7 @@ function bp_search_settings_callback_community_section() {
 
 function bp_search_settings_callback_post_type_section() {
 	?>
-	<p><?php esc_html_e( 'Search the following WordPress content and post types:', 'buddyboss' ) ?></p>
+	<p><?php esc_html_e( 'Search the following WordPress content and custom post types:', 'buddyboss' ) ?></p>
 	<?php
 }
 
