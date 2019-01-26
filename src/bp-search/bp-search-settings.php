@@ -32,7 +32,7 @@ function bp_search_get_settings_sections() {
 		),
 		'bp_search_settings_general'    => array(
 			'page'  => 'search',
-			'title'    => __( 'General Settings', 'buddyboss' ),
+			'title'    => __( 'Autocomplete Settings', 'buddyboss' ),
 			'callback' => 'bp_search_settings_callback_general_section',
 		),
 	) );
@@ -377,19 +377,19 @@ function bp_search_settings_callback_number_of_results() {
 
 function bp_search_settings_callback_community_section() {
 	?>
-	<p><?php esc_html_e( 'Search the following BuddyBoss components', 'buddyboss' ) ?></p>
+	<p><?php esc_html_e( 'Search the following BuddyBoss components:', 'buddyboss' ) ?></p>
 	<?php
 }
 
 function bp_search_settings_callback_post_type_section() {
 	?>
-	<p><?php esc_html_e( 'Search the following WordPress content and post types', 'buddyboss' ) ?></p>
+	<p><?php esc_html_e( 'Search the following WordPress content and post types:', 'buddyboss' ) ?></p>
 	<?php
 }
 
 function bp_search_settings_callback_general_section() {
 	?>
-	<p><?php esc_html_e( 'Search general settings', 'buddyboss' ) ?></p>
+	<p><?php esc_html_e( 'Configure autocomplete dropdown as you type', 'buddyboss' ) ?></p>
 	<?php
 }
 

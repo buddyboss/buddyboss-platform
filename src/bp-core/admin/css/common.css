@@ -396,7 +396,7 @@ tr.bp-search-parent-field td p.section-header {
 }
 
 .buddyboss_page_bp-settings .section-bp_invites h2 {
-    background-image: url('../../images/admin/icon_user-plus.svg');
+    background-image: url('../../images/admin/icon_note.svg');
 }
 
 .buddyboss_page_bp-settings .section-bp_groups h2,
@@ -406,12 +406,9 @@ tr.bp-search-parent-field td p.section-header {
 }
 
 .buddyboss_page_bp-settings .section-bp_friends h2 {
-    background-image: url('../../images/admin/icon_loop.svg');
+    background-image: url('../../images/admin/icon_user-plus.svg');
 }
 
-.buddyboss_page_bp-settings .section-bp_search_settings_community h2,
-.buddyboss_page_bp-settings .section-bp_search_settings_post_types h2,
-.buddyboss_page_bp-settings .section-bp_search_settings_general h2,
 .buddyboss_page_bp-settings .section-bbp_settings_users h2,
 .buddyboss_page_bp-settings .section-bbp_settings_features h2,
 .buddyboss_page_bp-settings .section-bbp_settings_per_page h2,
@@ -431,10 +428,21 @@ tr.bp-search-parent-field td p.section-header {
     background-image: url('../../images/admin/icon_calendar.svg');
 }
 
+.buddyboss_page_bp-settings .section-bp_search_settings_community h2,
+.buddyboss_page_bp-settings .section-bp_search_settings_post_types h2,
+.buddyboss_page_bp-settings .section-bp_search_settings_general h2 {
+    background-image: url('../../images/admin/icon_loop.svg');
+}
+
+.buddyboss_page_bp-settings .section-bp_search_settings_community table,
+.buddyboss_page_bp-settings .section-bp_search_settings_post_types table {
+	margin-bottom: 20px;
+}
 .buddyboss_page_bp-settings .section-bp_search_settings_community th[scope="row"],
 .buddyboss_page_bp-settings .section-bp_search_settings_post_types th[scope="row"] {
-	width: 30px;
+	width: 1px;
 }
+
 /*
  * 3.0 Users
  */
