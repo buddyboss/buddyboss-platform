@@ -3,24 +3,39 @@ bp_nouveau_member_hook( 'before', 'invites_sent_template' );
 ?>
 
 <?php
-
-if ( isset( $_GET['email'] ) ) {
+$email = trim ( filter_input( INPUT_GET, 'email', FILTER_SANITIZE_STRING ) );
+if ( isset( $email ) && '' !== $email ) {
 	?>
 	<aside class="bp-feedback bp-send-invites bp-template-notice success">
 		<span class="bp-icon" aria-hidden="true"></span>
 		<p>
 			<?php
 				$text = __( 'Invitations were sent successfully to the following email addresses:', 'buddyboss' );
-				echo trim ($text.' '. filter_input( INPUT_GET, 'email', FILTER_SANITIZE_STRING ) );
+				echo trim ($text.' '. $email );
 			?>
 		</p>
-		<script>window.history.replaceState(null, null, window.location.pathname);</script>
+	</aside>
+	<?php
+}
+
+$failed = trim ( filter_input( INPUT_GET, 'failed', FILTER_SANITIZE_STRING ) );
+if ( isset( $failed ) && '' !== $failed ) {
+	?>
+	<aside class="bp-feedback bp-send-invites bp-template-notice error">
+		<span class="bp-icon" aria-hidden="true"></span>
+		<p>
+			<?php
+			$text = __( 'Invitations were sent failed to the following email addresses:', 'buddyboss' );
+			echo trim ($text.' '. $failed );
+			?>
+		</p>
+
 	</aside>
 	<?php
 }
 
 ?>
-
+<script>window.history.replaceState(null, null, window.location.pathname);</script>
 <h2 class="screen-heading general-settings-screen">
 	<?php _e( 'Sent Invites', 'buddyboss' ); ?>
 </h2>
