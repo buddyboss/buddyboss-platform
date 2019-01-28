@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="72px" height="72px" viewBox="0 0 72 72" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.6 (67491) - http://www.bohemiancoding.com/sketch -->
+    <title>icon_mail</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="More-icons" transform="translate(-190.000000, -100.000000)">
+            <g id="icon_mail" transform="translate(190.000000, 100.000000)">
+                <rect id="Rectangle" fill="#1FC1C1" opacity="0.1" x="0" y="0" width="72" height="72" rx="26"></rect>
+                <g id="Rectangle-Copy" transform="translate(18.000000, 24.000000)" fill-rule="nonzero">
+                    <path d="M0.591064453,-1.0658141e-14 L35.5355225,-1.0658141e-14 L19.933177,12.4360815 C18.8390988,13.3081328 17.2874881,13.3081328 16.1934099,12.4360815 L0.591064453,-1.0658141e-14 Z" fill="#24DBDB"></path>
+                    <polygon id="Rectangle" fill="#1FC1C1" points="-0.0595 1 14.3781128 12.4711304 -0.0595 24.4309082"></polygon>
+                    <polygon id="Rectangle-Copy-3" fill="#1FC1C1" transform="translate(28.840607, 12.835205) scale(-1, 1) translate(-28.840607, -12.835205) " points="21.6543579 1.1048584 36.0268555 12.5801 21.6543579 24.5655518"></polygon>
+                    <path d="M-1.00537109,12.4690094 L36.8195801,12.4690094 L21.6727905,25.0200348 L20.4215746,24.1079348 C18.9755086,23.0537948 17.0052311,23.0883755 15.5970472,24.192611 L14.3729858,25.1524658 L-1.00537109,12.4690094 Z" id="Rectangle-Copy-2" fill="#24DBDB" transform="translate(17.907104, 18.810738) scale(1, -1) translate(-17.907104, -18.810738) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

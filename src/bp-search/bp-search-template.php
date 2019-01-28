@@ -16,6 +16,7 @@ function buddyboss_global_search_search_page_content( $content ){
 
 	if( !is_admin() && is_search() && 'yes' != $bpgs_main_content_filter_has_run ){
 			remove_filter( 'the_content', 'buddyboss_global_search_search_page_content', 9 );
+			remove_filter( 'the_content', 'wpautop' );
             $bpgs_main_content_filter_has_run = 'yes';
 			//setup search resutls and all..
 			BP_Search::instance()->prepare_search_page();

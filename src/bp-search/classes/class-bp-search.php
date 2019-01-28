@@ -501,14 +501,19 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 						}
 
 						$search_items = buddyboos_global_search_items();
+						$search_url = $this->search_page_search_url();
+
 
 						foreach ( $ordered_items_group as $type => &$items ) {
 							//now prepend html (opening tags) to first item of each
-
-							$label      = isset( $search_items[ $type ] ) ? $search_items[ $type ] : $type;
-							$first_item = reset( $items );
+							$category_search_url = esc_url( add_query_arg( array( 'subset' => $type ), $search_url ) );
+							$label               = isset( $search_items[ $type ] ) ? trim($search_items[ $type ] ): trim( $type );
+							$first_item          = reset( $items );
 							$start_html = "<div class='results-group results-group-{$type} " . apply_filters( 'bboss_global_search_class_search_wrap', 'bboss-results-wrap', $label ) . "'>"
+							              . "<header class='results-group-header clearfix'>"
 							              . "<h2 class='results-group-title'><span>" . apply_filters( 'bboss_global_search_label_search_type', $label ) . "</span></h2>"
+							              . "<a href='". $category_search_url."' class='view-all-link'>". esc_html__( 'View All', 'buddyboss' ) ."</a>"
+							              . "</header>"
 							              . "<ul id='{$type}-stream' class='item-list {$type}-list bp-list " . apply_filters( 'bboss_global_search_class_search_list', 'bboss-results-list', $label ) . "'>";
 
 							$group_start_html = apply_filters( "bboss_global_search_results_group_start_html", $start_html, $type );
@@ -761,6 +766,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 		}
 
 		public function print_results() {
+
 			$current_tab = $this->search_args['search_subset'];
 			if ( isset( $this->search_results[ $current_tab ]['items'] ) && ! empty( $this->search_results[ $current_tab ]['items'] ) ) {
 				foreach ( $this->search_results[ $current_tab ]['items'] as $item_id => $item ) {
