@@ -70,6 +70,7 @@ class Settings
 			'reports' => [
 				'enabled'    => false,
 				'access'     => ['admin', 'mod'],
+				'per_page'   => 20,
 				'cache_time' => 60
 			],
 		];
