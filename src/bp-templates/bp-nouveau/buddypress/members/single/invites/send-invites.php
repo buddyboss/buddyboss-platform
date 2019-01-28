@@ -122,9 +122,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 		<?php
 	}
 	?>
-	<input type="hidden" value="<?php _e('Enter valid email address', 'buddyboss') ?>" name="error-message-invalid-email-address-field" id="error-message-invalid-email-address-field">
-	<input type="hidden" value="<?php _e('Enter name', 'buddyboss') ?>" name="error-message-empty-name-field" id="error-message-empty-name-field">
-	<input type="hidden" value="<?php _e('Please fill out all the required fields to invite a new member.', 'buddyboss') ?>" name="error-message-required-field" id="error-message-required-field">
+	<input type="hidden" value="<?php _e('Please fill out all required fields to invite a new member.', 'buddyboss') ?>" name="error-message-required-field" id="error-message-required-field">
 	<?php bp_nouveau_submit_button( 'member-invites-submit' ); ?>
 
 </form>

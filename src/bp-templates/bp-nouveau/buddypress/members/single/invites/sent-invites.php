@@ -25,7 +25,7 @@ if ( isset( $failed ) && '' !== $failed ) {
 		<span class="bp-icon" aria-hidden="true"></span>
 		<p>
 			<?php
-			$text = __( 'Invitations were sent failed to the following email addresses:', 'buddyboss' );
+			$text = __( 'Invitations did not send as the following email addresses are invalid:', 'buddyboss' );
 			echo trim ($text.' '. $failed );
 			?>
 		</p>
@@ -41,7 +41,7 @@ if ( isset( $failed ) && '' !== $failed ) {
 </h2>
 
 <p class="info invite-info">
-	<?php _e( 'You have sent invitation emails to the following people.', 'buddyboss' ); ?>
+	<?php _e( 'You have sent invitation emails to the following people:', 'buddyboss' ); ?>
 </p>
 
 <table class="invite-settings bp-tables-user" id="<?php echo esc_attr( 'member-invites-table' ); ?>">
