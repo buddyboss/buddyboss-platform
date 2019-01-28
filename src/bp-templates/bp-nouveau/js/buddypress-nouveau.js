@@ -664,20 +664,20 @@ window.bp = window.bp || {};
 						var name = $('#invitee_0_title').val();
 						var emailField = $('#email_0_email').val();
 						if ( '' === name && '' === emailField ) {
-							$('#invitee_0_title').attr('style', 'border:1px solid #ff0000');
+							$('#invitee_0_title').attr('style', 'border:1px solid #ef3e46');
 							$('#invitee_0_title').focus();
-							$('#email_0_email').attr('style','border:1px solid #ff0000');
+							$('#email_0_email').attr('style','border:1px solid #ef3e46');
 							return false;
 						} else if ( '' !== name && '' === emailField ) {
-							$('#email_0_email').attr('style','border:1px solid #ff0000');
+							$('#email_0_email').attr('style','border:1px solid #ef3e46');
 							$('#email_0_email').focus();
 							return false;
 						}
 						if ( ! emailRegex.test( emailField ) ) {
-							$('#email_0_email').attr('style','border:1px solid #ff0000');
+							$('#email_0_email').attr('style','border:1px solid #ef3e46');
 							$('#email_0_email').focus();
 							$('#email_0_email_error').remove();
-							$('#email_0_email').after('<span id="email_0_email_error" style="color:#ff0000">'+invalidEmail+'</span>');
+							$('#email_0_email').after('<span id="email_0_email_error" style="color:#ef3e46">'+invalidEmail+'</span>');
 						}
 						alert( alert_message );
 						return false;
