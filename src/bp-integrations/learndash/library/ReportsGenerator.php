@@ -149,6 +149,7 @@ class ReportsGenerator
 		add_filter('bp_ld_sync/reports/activity_joins', [$this, 'addCourseTitleActivityTables'], 10, 2);
 		add_filter('bp_ld_sync/reports/activity_wheres', [$this, 'addCourseTitleActivityWhere'], 10, 2);
 		add_filter('bp_ld_sync/reports/activity_groups', [$this, 'addCourseTitleActivityGroup'], 10, 2);
+		add_filter('learndash_user_activity_query_str', [$this, 'maybeAddActivityGroupBy'], 10, 2);
 	}
 
 
@@ -171,7 +172,13 @@ class ReportsGenerator
 
 	public function addCourseTitleActivityGroup($strWheres, $queryArgs)
 	{
-		return $strWheres .= " GROUP BY activity_id ";
+		return $strWheres .= " AND 2=2 "; // we gonna conditionaly replace this for group_by
+		// return $strWheres .= " GROUP BY activity_id ";
+	}
+
+	public function maybeAddActivityGroupBy($strSql, $queryArgs)
+	{
+		return str_replace('AND 2=2', 'GROUP BY activity_id', $strSql);
 	}
 
 	protected function includeCourseTimeSpent()
