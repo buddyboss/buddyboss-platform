@@ -635,6 +635,28 @@ window.bp = window.bp || {};
 						}
 					});
 
+
+
+					$('.span_error').remove();
+
+					if (id_lists.length === 0) {
+
+					} else {
+						id_lists.forEach(function(item) {
+							$('#'+item).attr('style','border:1px solid #ff0000');
+							if(item.indexOf('email_') !== -1){
+								$('#'+item).after('<span class="span_error" style="color:#ff0000">'+invalidEmail+'</span>');
+							} else {
+								$('#'+item).after('<span class="span_error" style="color:#ff0000">'+emptyName+'</span>');
+							}
+						});
+						$('html, body').animate({
+							scrollTop: $('#item-body').offset().top
+						}, 2000);
+						alert( alert_message );
+						return false;
+					}
+
 					if (all_lists.length === 0) {
 						var name = $('#invitee_0_title').val();
 						var emailField = $('#email_0_email').val();
@@ -661,26 +683,6 @@ window.bp = window.bp || {};
 
 					if ( $('#email_0_email_error').length ) {
 						$('#email_0_email_error').remove();
-					}
-
-					$('.span_error').remove();
-
-					if (id_lists.length === 0) {
-
-					} else {
-						id_lists.forEach(function(item) {
-							$('#'+item).attr('style','border:1px solid #ff0000');
-							if(item.indexOf('email_') !== -1){
-								$('#'+item).after('<span class="span_error" style="color:#ff0000">'+invalidEmail+'</span>');
-							} else {
-								$('#'+item).after('<span class="span_error" style="color:#ff0000">'+emptyName+'</span>');
-							}
-						});
-						$('html, body').animate({
-							scrollTop: $('#item-body').offset().top
-						}, 2000);
-						alert( alert_message );
-						return false;
 					}
 				});
 			}
