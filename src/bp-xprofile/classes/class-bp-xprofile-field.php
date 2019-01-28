@@ -576,6 +576,10 @@ class BP_XProfile_Field {
 			$sort_sql = 'ORDER BY name ASC';
 		} elseif ( empty( $for_editing ) && ( 'desc' === $this->order_by ) ) {
 			$sort_sql = 'ORDER BY name DESC';
+		} elseif (  $for_editing && ( 'desc' === $this->order_by ) ) {
+			$sort_sql = 'ORDER BY name DESC';
+		} elseif ( $for_editing && ( 'asc' === $this->order_by ) ) {
+			$sort_sql = 'ORDER BY name ASC';
 		} else {
 			$sort_sql = 'ORDER BY option_order ASC';
 		}
