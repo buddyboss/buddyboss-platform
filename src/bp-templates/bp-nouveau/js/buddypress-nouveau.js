@@ -626,9 +626,9 @@ window.bp = window.bp || {};
 					});
 
 					if (all_lists.length === 0) {
-						$('#invitee_0_title').attr('style','border:1px solid #ff0000');
+						$('#invitee_0_title').attr('style','border:1px solid #ef3e46');
 						$('#invitee_0_title').focus();
-						$('#email_0_email').attr('style','border:1px solid #ff0000');
+						$('#email_0_email').attr('style','border:1px solid #ef3e46');
 						alert( alert_message );
 						return false;
 					}
@@ -637,7 +637,7 @@ window.bp = window.bp || {};
 
 					} else {
 						id_lists.forEach(function(item) {
-							$('#'+item).attr('style','border:1px solid #ff0000');
+							$('#'+item).attr('style','border:1px solid #ef3e46');
 						});
 						$('html, body').animate({
 							scrollTop: $('#item-body').offset().top
