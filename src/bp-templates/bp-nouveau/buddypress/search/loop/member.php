@@ -19,17 +19,6 @@
 					</p><!-- #item-meta -->
 				<?php endif; ?>
 
-				<div class="members-meta action">
-					<?php
-					bp_nouveau_members_loop_buttons(
-						array(
-							'container'      => 'ul',
-							'button_element' => 'button',
-						)
-					);
-					?>
-				</div>
-
 			</div>
 
 		</div><!-- // .item -->
