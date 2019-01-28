@@ -396,7 +396,7 @@ tr.bp-search-parent-field td p.section-header {
 }
 
 .buddyboss_page_bp-settings .section-bp_invites h2 {
-    background-image: url('../../images/admin/icon_note.svg');
+    background-image: url('../../images/admin/icon_mail.svg');
 }
 
 .buddyboss_page_bp-settings .section-bp_groups h2,
@@ -431,7 +431,7 @@ tr.bp-search-parent-field td p.section-header {
 .buddyboss_page_bp-settings .section-bp_search_settings_community h2,
 .buddyboss_page_bp-settings .section-bp_search_settings_post_types h2,
 .buddyboss_page_bp-settings .section-bp_search_settings_general h2 {
-    background-image: url('../../images/admin/icon_loop.svg');
+    background-image: url('../../images/admin/icon_search.svg');
 }
 
 .buddyboss_page_bp-settings .section-bp_search_settings_community table,
