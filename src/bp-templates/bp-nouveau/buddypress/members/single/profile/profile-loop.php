@@ -71,7 +71,7 @@
 
 	<p class="info bp-feedback">
 		<span class="bp-icon" aria-hidden="true"></span>
-		<span class="bp-help-text">
+		<p>
 			<?php
 			if ( bp_is_my_profile() ) {
 				esc_html_e( 'You have not yet added details to your profile.', 'buddyboss' );
@@ -79,7 +79,7 @@
 				esc_html_e( 'This member has not yet added details to their profile.', 'buddyboss' );
 			}
 			?>			
-		</span>
+		</p>
 	</p>
 
 <?php endif; ?>
