@@ -24,7 +24,7 @@ function bp_core_admin_pages_settings() {
         <form action="" method="post">
 			<?php
 			settings_fields( 'bp-pages' );
-			do_settings_sections( 'bp-pages' );
+			bp_custom_pages_do_settings_sections( 'bp-pages' );
 
 			printf(
 				'<p class="submit">
@@ -37,6 +37,70 @@ function bp_core_admin_pages_settings() {
     </div>
 
 	<?php
+}
+
+function bp_custom_pages_do_settings_sections( $page ) {
+	global $wp_settings_sections, $wp_settings_fields;
+
+	if ( ! isset( $wp_settings_sections[$page] ) )
+		return;
+
+	foreach ( (array) $wp_settings_sections[$page] as $section ) {
+		echo "<div class='card section-{$section['id']}'>";
+		if ( $section['title'] )
+			echo "<h2>{$section['title']}</h2>\n";
+
+		if ( $section['callback'] )
+			call_user_func( $section['callback'], $section );
+
+		if ( ! isset( $wp_settings_fields ) || !isset( $wp_settings_fields[$page] ) || !isset( $wp_settings_fields[$page][$section['id']] ) )
+			continue;
+		echo '<table class="form-table">';
+		bp_custom_pages_do_settings_fields( $page, $section['id'] );
+		echo '</table></div>';
+	}
+}
+
+/**
+ * Print out the settings fields for a particular settings section
+ *
+ * Part of the Settings API. Use this in a settings page to output
+ * a specific section. Should normally be called by do_settings_sections()
+ * rather than directly.
+ *
+ * @global $wp_settings_fields Storage array of settings fields and their pages/sections
+ *
+ * @since 2.7.0
+ *
+ * @param string $page Slug title of the admin page who's settings fields you want to show.
+ * @param string $section Slug title of the settings section who's fields you want to show.
+ */
+function bp_custom_pages_do_settings_fields($page, $section) {
+	global $wp_settings_fields;
+
+	if ( ! isset( $wp_settings_fields[$page][$section] ) )
+		return;
+
+	foreach ( (array) $wp_settings_fields[$page][$section] as $field ) {
+		$class = '';
+
+		if ( ! empty( $field['args']['class'] ) ) {
+			$class = ' class="' . esc_attr( $field['args']['class'] ) . '"';
+		}
+
+		echo "<tr{$class}>";
+
+		if ( ! empty( $field['args']['label_for'] ) ) {
+			echo '<th scope="row"><label for="' . esc_attr( $field['args']['label_for'] ) . '">' . $field['title'] . '</label></th>';
+		} else {
+			echo '<th scope="row">' . $field['title'] . '</th>';
+		}
+
+		echo '<td>';
+		call_user_func($field['callback'], $field['args']);
+		echo '</td>';
+		echo '</tr>';
+	}
 }
 
 /**
@@ -81,7 +145,7 @@ add_action( 'admin_init', 'bp_core_admin_register_registration_page_fields' );
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_directory_pages_description() {
-    echo wpautop( __( 'Associate a WordPress Page with each BuddyPress component directory.', 'buddyboss' ) );
+    echo wpautop( __( 'Associate a WordPress Page with each BuddyBoss component directory.', 'buddyboss' ) );
 }
 
 /**
@@ -91,19 +155,19 @@ function bp_core_admin_directory_pages_description() {
  */
 function bp_core_admin_registration_pages_description() {
 	if ( bp_get_signup_allowed() ) :
-		echo wpautop( __( 'Associate WordPress Pages with the following BuddyPress Registration pages.', 'buddyboss' ) );
+		echo wpautop( __( 'Associate WordPress Pages with the following BuddyBoss Registration pages.', 'buddyboss' ) );
 	else :
 		if ( is_multisite() ) :
 			echo wpautop(
 				sprintf(
-					__( 'Registration is currently disabled. To enable registration, please select either the "User accounts may be registered" or "Both sites and user accounts can be registered" option on <a href="%s">this page</a>. If "User Invites" is enabled, invited users will still be allowed to register new accounts.', 'buddyboss' ),
+					__( 'Registration is currently disabled. If "User Invites" is enabled, invited users will still be allowed to register new accounts. To enable registration, please select either the "User accounts may be registered" or "Both sites and user accounts can be registered" option on <a href="%s">this page</a>.', 'buddyboss' ),
 					network_admin_url( 'settings.php' )
 				)
 			);
 		else :
 			echo wpautop(
 				sprintf(
-					__( 'Registration is currently disabled. To enable registration, please click on the "Anyone can register" checkbox on <a href="%s">this page</a>. If "User Invites" is enabled, invited users will still be allowed to register new accounts.', 'buddyboss' ),
+					__( 'Registration is currently disabled. If "User Invites" is enabled, invited users will still be allowed to register new accounts. To enable registration, please click on the "Anyone can register" checkbox on <a href="%s">this page</a>.', 'buddyboss' ),
 					network_admin_url( 'options-general.php' )
 				)
 			);

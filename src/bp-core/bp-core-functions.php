@@ -3400,11 +3400,11 @@ function bp_email_get_schema() {
 		),
 		'friends-request' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] New invitation to connect from {{initiator.name}}', 'buddyboss' ),
+			'post_title'   => __( '[{{{site.name}}}] New request to connect from {{initiator.name}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_content' => __( "<a href=\"{{{initiator.url}}}\">{{initiator.name}}</a> wants to add you as a connection.\n\n{{{member.card}}}\n\n<a href=\"{{{friend-requests.url}}}\">Click here</a> to manage this and all other pending requests.", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "{{initiator.name}} wants to add you as a connection.\n\nTo accept this request and manage all of your pending invitations, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddyboss' ),
+			'post_excerpt' => __( "{{initiator.name}} wants to add you as a connection.\n\nTo accept this request and manage all of your pending requests, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddyboss' ),
 		),
 		'friends-request-accepted' => array(
 			/* translators: do not remove {} brackets or translate its contents. */

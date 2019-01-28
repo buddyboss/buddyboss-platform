@@ -25,7 +25,7 @@ function add_option(forWhat) {
 
 	grabber.setAttribute( 'class', 'bp-option-icon grabber');
 
-	if ( forWhat !== 'gender') {
+	if ( 'gender' !== forWhat ) {
 		newOption.setAttribute('type', 'text');
 		newOption.setAttribute('name', forWhat + '_option[' + theId + ']');
 		newOption.setAttribute('id', forWhat + '_option' + theId);
@@ -38,7 +38,12 @@ function add_option(forWhat) {
 	if ( forWhat === 'checkbox' || forWhat === 'multiselectbox' ) {
 		isDefault.setAttribute( 'type', 'checkbox' );
 		isDefault.setAttribute( 'name', 'isDefault_' + forWhat + '_option[' + theId + ']' );
+	} else if ( 'gender' !== forWhat ) {
+		isDefault.setAttribute( 'type', 'radio' );
+		isDefault.setAttribute( 'name', 'isDefault_' + forWhat + '_option' );
 	}
+
+	isDefault.setAttribute( 'value', theId );
 
 	toDelete.setAttribute( 'href', 'javascript:hide("' + forWhat + '_div' + theId + '")' );
 	toDelete.setAttribute( 'class', 'delete' );
@@ -47,7 +52,7 @@ function add_option(forWhat) {
 	toDeleteWrap.setAttribute( 'class', 'delete-button' );
 	toDeleteWrap.appendChild( toDelete );
 
-	if ( forWhat !== 'gender') {
+	if ( 'gender' !== forWhat ) {
 		label.appendChild(document.createTextNode(' '));
 		label.appendChild(isDefault);
 		label.appendChild(document.createTextNode(' '));

@@ -132,7 +132,7 @@ function bp_profile_search_admin_head () {
 		.bp_ps_col4 {display: inline-block; width: 32%;}
 		.bp_ps_col5 {display: inline-block; width: 16%;}
 		a.delete {color: #aa0000;}
-		a.delete:hover {color: #ff0000;}
+		a.delete:hover {color: #ef3e46;}
 	</style>
     <?php
 }

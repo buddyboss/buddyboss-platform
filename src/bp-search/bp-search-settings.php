@@ -21,13 +21,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 function bp_search_get_settings_sections() {
 	return (array) apply_filters( 'bp_search_get_settings_sections', array(
 		'bp_search_settings_community'  => array(
-			'page' => 'search'
+			'page'     => 'search',
+			'title'    => __( 'Community Network', 'buddyboss' ),
+			'callback' => 'bp_search_settings_callback_community_section',
 		),
 		'bp_search_settings_post_types' => array(
-			'page' => 'search',
+			'page'  => 'search',
+			'title'    => __( 'Pages and Post Types', 'buddyboss' ),
+			'callback' => 'bp_search_settings_callback_post_type_section',
 		),
 		'bp_search_settings_general'    => array(
-			'page' => 'search'
+			'page'  => 'search',
+			'title'    => __( 'Autocomplete Settings', 'buddyboss' ),
+			'callback' => 'bp_search_settings_callback_general_section',
 		),
 	) );
 }
@@ -62,7 +68,7 @@ function bp_search_get_settings_fields() {
 
 	$fields['bp_search_settings_community'] = [
 		'bp_search_members' => [
-			'title'             => __( 'Community Network', 'buddyboss' ),
+			'title'             => '&#65279;',
 			'callback'          => 'bp_search_settings_callback_members',
 			'sanitize_callback' => 'intval',
 			'args'              => [
@@ -197,14 +203,6 @@ function bp_search_get_settings_fields() {
 	}
 
 	$post_types = get_post_types( [ 'public' => true ] );
-
-	$fields['bp_search_settings_post_types']["bp_search_post_type_section_header"] = [
-		'title'    => 'Pages and Post Types:',
-		'callback' => 'bp_search_settings_callback_post_type_section_header',
-		'args'     => [
-			'class' => 'bp-search-parent-field'
-		]
-	];
 
 	foreach ( $post_types as $post_type ) {
 
@@ -377,6 +375,24 @@ function bp_search_settings_callback_number_of_results() {
 	<?php
 }
 
+function bp_search_settings_callback_community_section() {
+	?>
+	<p><?php esc_html_e( 'Search the following BuddyBoss components:', 'buddyboss' ) ?></p>
+	<?php
+}
+
+function bp_search_settings_callback_post_type_section() {
+	?>
+	<p><?php esc_html_e( 'Search the following WordPress content and custom post types:', 'buddyboss' ) ?></p>
+	<?php
+}
+
+function bp_search_settings_callback_general_section() {
+	?>
+	<p><?php esc_html_e( 'Configure autocomplete dropdown as you type', 'buddyboss' ) ?></p>
+	<?php
+}
+
 /**
  * Allow Members search setting field
  *
@@ -386,7 +402,6 @@ function bp_search_settings_callback_number_of_results() {
  */
 function bp_search_settings_callback_members() {
 	?>
-	<p class="section-header"><?php _e( 'Search the following BuddyBoss components:' ) ?></p>
 	<input name="bp_search_members" id="bp_search_members" type="checkbox" value="1"
 		<?php checked( bp_is_search_members_enable( true ) ) ?> />
 	<label
@@ -702,12 +717,6 @@ function bp_search_settings_callback_activity_comments() { ?>
  */
 function bp_is_search_activity_comments_enable( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_search_activity_comments_enable', (bool) get_option( 'bp_search_activity_comments', $default ) );
-}
-
-function bp_search_settings_callback_post_type_section_header() {
-	?>
-	<p><?php _e( 'Search the following WordPress content and post types:' ) ?></p>
-	<?php
 }
 
 /**

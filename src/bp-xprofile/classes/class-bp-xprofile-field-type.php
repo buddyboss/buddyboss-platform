@@ -523,9 +523,9 @@ abstract class BP_XProfile_Field_Type {
 			$r['aria-required'] = 'true';
 
 			// Moderators can bypass field requirements.
-			if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+			//if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 				$r[] = 'required';
-			}
+			//}
 		}
 
 		/**

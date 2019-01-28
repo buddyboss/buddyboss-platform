@@ -18,13 +18,15 @@ TABLE OF CONTENTS:
 	2.3 Tools
 	2.4 Tooltips
 	2.5 Settings - Tabs
+	2.6 Settings - Cards
 3.0 Users
 	3.1 Users List
 	3.2 Site Notices
 4.0 Emails - Edit page
 5.0 Tools - BuddyPress
 6.0 Plugins page
-7.0 Miscellaneous
+7.0 AppBoss page
+8.0 Miscellaneous
 ------------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------
@@ -62,6 +64,10 @@ TABLE OF CONTENTS:
 	font-size: 15px;
 }
 
+.bp-about-wrap .card {
+	max-width: 100%;
+}
+
 .bp-about-wrap img {
 	margin: 0;
 	max-width: 100%;
@@ -93,15 +99,8 @@ TABLE OF CONTENTS:
 	font-weight: 400;
 }
 
-.bp-about-wrap .wp-about-description {
-	margin: 1em 0 3em;
-	font-weight: 400;
-	line-height: 1.5;
-	font-size: 14px;
-}
-
 .bp-about-wrap h3.wp-people-group {
-	margin: 2.6em 0 1.33em;
+	margin: 1.33em 0;
 	padding: 0;
 	font-size: 16px;
 	line-height: inherit;
@@ -120,7 +119,7 @@ TABLE OF CONTENTS:
 	display: inline-block;
 	vertical-align: top;
 	margin-left: 10px;
-	padding-bottom: 15px;
+	padding-bottom: 7px;
 	height: 70px;
 	width: 280px;
 }
@@ -348,7 +347,7 @@ tr.bp-search-child-field th {
 }
 
 tr.bp-search-child-field td {
-	padding: 10px 25px;
+	padding: 6px 25px;
 }
 
 tr.bp-search-parent-field th,
@@ -362,6 +361,86 @@ tr.bp-search-parent-field td p {
 
 tr.bp-search-parent-field td p.section-header {
 	margin: 0 0 20px;
+}
+
+/*
+ * 2.6 Settings - Cards
+ */
+.buddyboss_page_bp-settings .card,
+.buddyboss_page_bp-integrations .card {
+	max-width: 100%;
+}
+
+.buddyboss_page_bp-settings .card h2,
+.buddyboss_page_bp-integrations .card h2 {
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: 56px;
+    line-height: 56px;
+    padding-right: 78px;
+    font-size: 23px;
+    font-weight: 400;
+}
+
+.buddyboss_page_bp-settings .section-bp_main h2 {
+    background-image: url('../../images/admin/icon_gear.svg');
+}
+
+.buddyboss_page_bp-settings .section-bp_xprofile h2,
+.buddyboss_page_bp-settings .section-bp_member_type_settings h2 {
+    background-image: url('../../images/admin/icon_user.svg');
+}
+
+.buddyboss_page_bp-settings .section-bp_activity h2 {
+    background-image: url('../../images/admin/icon_bell.svg');
+}
+
+.buddyboss_page_bp-settings .section-bp_invites h2 {
+    background-image: url('../../images/admin/icon_mail.svg');
+}
+
+.buddyboss_page_bp-settings .section-bp_groups h2,
+.buddyboss_page_bp-settings .section-bp_groups_types h2,
+.buddyboss_page_bp-settings .section-bp_groups_hierarchies h2 {
+    background-image: url('../../images/admin/icon_users.svg');
+}
+
+.buddyboss_page_bp-settings .section-bp_friends h2 {
+    background-image: url('../../images/admin/icon_user-plus.svg');
+}
+
+.buddyboss_page_bp-settings .section-bbp_settings_users h2,
+.buddyboss_page_bp-settings .section-bbp_settings_features h2,
+.buddyboss_page_bp-settings .section-bbp_settings_per_page h2,
+.buddyboss_page_bp-settings .section-bbp_settings_per_rss_page h2,
+.buddyboss_page_bp-settings .section-bbp_settings_root_slugs h2,
+.buddyboss_page_bp-settings .section-bbp_settings_single_slugs h2,
+.buddyboss_page_bp-settings .section-bbp_settings_buddypress h2 {
+    background-image: url('../../images/admin/icon_forums.svg');
+}
+
+.buddyboss_page_bp-integrations .section-bp_ld_sync-buddypress h2,
+.buddyboss_page_bp-integrations .section-bp_ld_sync-learndash h2 {
+    background-image: url('../../images/admin/icon_badge.svg');
+}
+
+.buddyboss_page_bp-integrations .section-bp_ld_sync-reports h2 {
+    background-image: url('../../images/admin/icon_calendar.svg');
+}
+
+.buddyboss_page_bp-settings .section-bp_search_settings_community h2,
+.buddyboss_page_bp-settings .section-bp_search_settings_post_types h2,
+.buddyboss_page_bp-settings .section-bp_search_settings_general h2 {
+    background-image: url('../../images/admin/icon_search.svg');
+}
+
+.buddyboss_page_bp-settings .section-bp_search_settings_community table,
+.buddyboss_page_bp-settings .section-bp_search_settings_post_types table {
+	margin-bottom: 20px;
+}
+.buddyboss_page_bp-settings .section-bp_search_settings_community th[scope="row"],
+.buddyboss_page_bp-settings .section-bp_search_settings_post_types th[scope="row"] {
+	width: 1px;
 }
 
 /*
@@ -578,7 +657,280 @@ body.post-type-bp-email .categorydiv label {
 
 
 /*------------------------------------------------------------------------------
- * 7.0 Miscellaneous
+ * 7.0 AppBoss page
+ *----------------------------------------------------------------------------*/
+.bp_appboss_wrap {
+    max-width: 1200px;
+}
+
+.bp_appboss_wrap .appboss-featured {
+    margin: 25px 0 0;
+}
+
+.bp_appboss_wrap .appboss-banner-block, .bp_appboss_wrap .appboss-learndash-banner-block {
+    background: #fff;
+    border: 1px solid #ddd;
+    margin: 0 0 1em 0;
+    padding: 2em 2em 1em;
+}
+
+.bp_appboss_wrap .appboss-banner-block p {
+    margin: 0 0 20px;
+}
+
+.bp_appboss_wrap .appboss-banner-block-items {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 0 -10px 0 -10px;
+}
+
+.bp_appboss_wrap .appboss-banner-block-item {
+    -webkit-box-flex: 1;
+    flex: 1;
+    margin: 2em 1em;
+    min-width: 200px;
+    width: 30%;
+}
+
+.bp_appboss_wrap .appboss-column-block-item {
+    border-top: 2px solid #f9f9f9;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    flex-direction: row;
+    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    margin: 0 -20px;
+    padding: 20px;
+}
+
+.bp_appboss_wrap .appboss-banner-block-item, .bp_appboss_wrap .appboss-column-block-item {
+    display: none;
+}
+
+.bp_appboss_wrap .appboss-column-block-item:nth-of-type(-n+3) {
+	display: flex;
+}
+
+.bp_appboss_wrap .appboss-banner-block-item:nth-child(-n+3) {
+    display: block;
+}
+
+.bp_appboss_wrap .appboss-banner-block-item-icon, .bp_appboss_wrap .appboss-column-block-item-icon {
+    -webkit-box-align: center;
+    align-items: center;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+}
+
+.bp_appboss_wrap .appboss-banner-block-item-icon {
+	justify-content: left;
+}
+
+.bp_appboss_wrap .appboss-banner-block img {
+    height: 62px;
+}
+
+.bp_appboss_wrap .appboss-banner-block-item-content {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    padding: 24px 0 0;
+}
+
+.bp_appboss_wrap .appboss-banner-block-item-content h3 {
+    margin-top: 0;
+}
+
+.bp_appboss_wrap .appboss-banner-block p {
+    margin: 0 0 20px;
+}
+
+.bp_appboss_wrap .appboss-banner-block-item-content p {
+    margin: 0 0 auto;
+}
+
+.bp_appboss_wrap .appboss-column-block-item-icon {
+    background: #f7f7f7;
+    border: 1px solid #e6e6e6;
+    height: 100px;
+    margin: 0 0 10px 20px;
+    width: 100px;
+}
+
+.bp_appboss_wrap .appboss-column-block img {
+    max-height: 50px;
+    max-width: 50px;
+}
+
+.bp_appboss_wrap .appboss-column-block-item-content {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-flex: 1;
+    flex: 1;
+    flex-wrap: wrap;
+    height: 20%;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    min-width: 200px;
+}
+
+.bp_appboss_wrap .appboss-column-block-item-content h2 {
+    float: right;
+    margin-top: 10px;
+}
+
+.bp_appboss_wrap .appboss-column-block-item-content p {
+    float: right;
+    margin-top: 0;
+}
+
+.bp_appboss_wrap .appboss-button {
+    border-radius: 3px;
+    cursor: pointer;
+    display: block;
+    height: 37px;
+    line-height: 37px;
+    text-align: center;
+    text-decoration: none;
+    background-color: #00AAE1;
+    color: #fff;
+    width: 124px;
+}
+
+.bp_appboss_wrap .appboss-learndash-banner-block {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    padding: 2em;
+}
+
+.bp_appboss_wrap .appboss-learndash-banner-block-image {
+    margin-left: 2em;
+    padding: 1em;
+}
+
+.bp_appboss_wrap .appboss-learndash-banner-block-image .appboss-img {
+    max-height: 130px;
+    max-width: 160px;
+}
+
+.bp_appboss_wrap .appboss-learndash-banner-block-content {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+    justify-content: space-around;
+    align-self: stretch;
+    padding: 1em 0;
+}
+
+.bp_appboss_wrap .appboss-learndash-banner-block-content h1 {
+    padding-bottom: 0;
+}
+
+.bp_appboss_wrap .appboss-column-section {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.bp_appboss_wrap .appboss-column {
+    -webkit-box-flex: 1;
+    flex: 1;
+    width: 50%;
+    padding: 0 .5em;
+}
+
+.bp_appboss_wrap .appboss-column-block, .bp_appboss_wrap .appboss-small-dark-block, .bp_appboss_wrap .appboss-small-light-block {
+    box-sizing: border-box;
+    border: 1px solid #ddd;
+    margin: 0 0 1em;
+    padding: 20px;
+}
+
+.bp_appboss_wrap .appboss-column-block, .bp_appboss_wrap .appboss-small-light-block {
+    background: #fff;
+}
+
+.bp_appboss_wrap .appboss-small-light-block {
+    display: -webkit-box;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.bp_appboss_wrap .appboss-small-light-block img {
+    height: 225px;
+    margin: 0 -20px 0 22px;
+}
+
+.bp_appboss_wrap .appboss-small-light-block-content {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-flex: 1;
+    flex: 1 1 100px;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.bp_appboss_wrap .appboss-small-light-block h1 {
+    margin-top: -12px;
+}
+
+.bp_appboss_wrap .appboss-small-light-block p {
+    margin-top: 0;
+}
+
+.bp_appboss_wrap .appboss-small-light-block-buttons {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+}
+
+.bp_appboss_wrap .appboss-small-light-block-content a {
+    width: 48%;
+}
+
+.bp_appboss_wrap .appboss-small-dark-block {
+    background-color: #00AAE1;
+    text-align: center;
+}
+
+.bp_appboss_wrap .appboss-small-dark-block h1 {
+    color: #fff;
+}
+
+.bp_appboss_wrap .appboss-small-dark-block p {
+    color: #fafafa;
+}
+
+.bp_appboss_wrap .appboss-small-dark-block img {
+	margin: 10px 0;
+	max-width: 100%;
+}
+
+/*------------------------------------------------------------------------------
+ * 8.0 Miscellaneous
  *----------------------------------------------------------------------------*/
 body.post-type-bp_ps_form .page-title-action {
 	display: none;

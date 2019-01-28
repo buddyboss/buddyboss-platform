@@ -52,93 +52,94 @@ $F = bp_profile_search_escaped_form_data ( $form_id );
 					break;
                 
                 case 'date_range': ?>
-                        <span><?php _ex( 'From', 'Profile search - date from', 'buddyboss' );?></span>
-                        
-                        <select name="<?php echo $name.'[min][day]'; ?>">
-                            <?php
-                            printf( '<option value="" %1$s>%2$s</option>', selected( $value['min']['day'], 0, false ), /* translators: no option picked in select box */ __( '----', 'buddyboss' ) );
+                        <span class="date-from date-label"><?php _ex( 'From', 'Profile search - date from', 'buddyboss' );?></span>
+                        <div class="date-wrapper">
+							<select name="<?php echo $name.'[min][day]'; ?>">
+								<?php
+								printf( '<option value="" %1$s>%2$s</option>', selected( $value['min']['day'], 0, false ), /* translators: no option picked in select box */ __( '----', 'buddyboss' ) );
 
-                            for ( $i = 1; $i < 32; ++$i ) {
-                                $day = str_pad( $i, 2, '0', STR_PAD_LEFT );
-                                printf( '<option value="%1$s" %2$s>%3$s</option>', $day, selected( $value['min']['day'], $day, false ), $i );
-                            }
-                            ?>
-                        </select>
-						
-                        <select name="<?php echo $name.'[min][month]'; ?>">
-                            <?php
-                            $months = array(
-                                __( 'January',   'buddyboss' ),
-                                __( 'February',  'buddyboss' ),
-                                __( 'March',     'buddyboss' ),
-                                __( 'April',     'buddyboss' ),
-                                __( 'May',       'buddyboss' ),
-                                __( 'June',      'buddyboss' ),
-                                __( 'July',      'buddyboss' ),
-                                __( 'August',    'buddyboss' ),
-                                __( 'September', 'buddyboss' ),
-                                __( 'October',   'buddyboss' ),
-                                __( 'November',  'buddyboss' ),
-                                __( 'December',  'buddyboss' )
-                            );
+								for ( $i = 1; $i < 32; ++$i ) {
+									$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
+									printf( '<option value="%1$s" %2$s>%3$s</option>', $day, selected( $value['min']['day'], $day, false ), $i );
+								}
+								?>
+							</select>
 
-                            printf( '<option value="" %1$s>%2$s</option>', selected( $value['min']['month'], 0, false ), /* translators: no option picked in select box */ __( '----', 'buddyboss' ) );
+							<select name="<?php echo $name.'[min][month]'; ?>">
+								<?php
+								$months = array(
+									__( 'January',   'buddyboss' ),
+									__( 'February',  'buddyboss' ),
+									__( 'March',     'buddyboss' ),
+									__( 'April',     'buddyboss' ),
+									__( 'May',       'buddyboss' ),
+									__( 'June',      'buddyboss' ),
+									__( 'July',      'buddyboss' ),
+									__( 'August',    'buddyboss' ),
+									__( 'September', 'buddyboss' ),
+									__( 'October',   'buddyboss' ),
+									__( 'November',  'buddyboss' ),
+									__( 'December',  'buddyboss' )
+								);
 
-                            for ( $i = 0; $i < 12; ++$i ) {
-                                $month = $i + 1;
-                                $month = str_pad( $month, 2, '0', STR_PAD_LEFT );
-                                printf( '<option value="%1$s" %2$s>%3$s</option>', $month, selected( $value['min']['month'], $month, false ), $months[$i] );
-                            }
-                            ?>
-                        </select>
-                        
-                        <select name="<?php echo $name.'[min][year]'; ?>">
-                            <?php 
-                            printf( '<option value="" %1$s>%2$s</option>', selected( $value['min']['year'], 0, false ), /* translators: no option picked in select box */ __( '----', 'buddyboss' ) );
-                            
-                            $start = date( 'Y' ) - 50;//50 years ago
-                            $end   = date( 'Y' ) + 50;//50 years in future
+								printf( '<option value="" %1$s>%2$s</option>', selected( $value['min']['month'], 0, false ), /* translators: no option picked in select box */ __( '----', 'buddyboss' ) );
 
-                            for ( $i = $end; $i >= $start; $i-- ) {
-                                printf( '<option value="%1$s" %2$s>%3$s</option>', (int) $i, selected( $value['min']['year'], $i, false ), (int) $i );
-                            }
-                            ?>
-                        </select>
-                        
-                        <span><?php _ex( 'To', 'Profile search - date to', 'buddyboss' );?></span>
-                        
-                        <select name="<?php echo $name.'[max][day]'; ?>">
-                            <?php
-                            printf( '<option value="" %1$s>%2$s</option>', selected( $value['max']['day'], 0, false ), /* translators: no option picked in select box */ __( '----', 'buddyboss' ) );
+								for ( $i = 0; $i < 12; ++$i ) {
+									$month = $i + 1;
+									$month = str_pad( $month, 2, '0', STR_PAD_LEFT );
+									printf( '<option value="%1$s" %2$s>%3$s</option>', $month, selected( $value['min']['month'], $month, false ), $months[$i] );
+								}
+								?>
+							</select>
 
-                            for ( $i = 1; $i < 32; ++$i ) {
-                                $day = str_pad( $i, 2, '0', STR_PAD_LEFT );
-                                printf( '<option value="%1$s" %2$s>%3$s</option>', $day, selected( $value['max']['day'], $day, false ), $i );
-                            }
-                            ?>
-                        </select>
-						
-                        <select name="<?php echo $name.'[max][month]'; ?>">
-                            <?php 
-                            printf( '<option value="" %1$s>%2$s</option>', selected( $value['max']['month'], 0, false ), /* translators: no option picked in select box */ __( '----', 'buddyboss' ) );
+							<select name="<?php echo $name.'[min][year]'; ?>">
+								<?php 
+								printf( '<option value="" %1$s>%2$s</option>', selected( $value['min']['year'], 0, false ), /* translators: no option picked in select box */ __( '----', 'buddyboss' ) );
 
-                            for ( $i = 0; $i < 12; ++$i ) {
-                                $month = $i + 1;
-                                $month = str_pad( $month, 2, '0', STR_PAD_LEFT );
-                                printf( '<option value="%1$s" %2$s>%3$s</option>', $month, selected( $value['max']['month'], $month, false ), $months[$i] );
-                            }
-                            ?>
-                        </select>
-                        
-                        <select name="<?php echo $name.'[max][year]'; ?>">
-                            <?php 
-                            printf( '<option value="" %1$s>%2$s</option>', selected( $value['max']['year'], 0, false ), /* translators: no option picked in select box */ __( '----', 'buddyboss' ) );
-                            for ( $i = $end; $i >= $start; $i-- ) {
-                                printf( '<option value="%1$s" %2$s>%3$s</option>', (int) $i, selected( $value['max']['year'], $i, false ), (int) $i );
-                            }
-                            ?>
-                        </select>
-                        
+								$start = date( 'Y' ) - 50;//50 years ago
+								$end   = date( 'Y' ) + 50;//50 years in future
+
+								for ( $i = $end; $i >= $start; $i-- ) {
+									printf( '<option value="%1$s" %2$s>%3$s</option>', (int) $i, selected( $value['min']['year'], $i, false ), (int) $i );
+								}
+								?>
+							</select>
+						</div>
+
+                        <span class="date-to date-label"><?php _ex( 'To', 'Profile search - date to', 'buddyboss' );?></span>
+                        <div class="date-wrapper">
+							<select name="<?php echo $name.'[max][day]'; ?>">
+								<?php
+								printf( '<option value="" %1$s>%2$s</option>', selected( $value['max']['day'], 0, false ), /* translators: no option picked in select box */ __( '----', 'buddyboss' ) );
+
+								for ( $i = 1; $i < 32; ++$i ) {
+									$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
+									printf( '<option value="%1$s" %2$s>%3$s</option>', $day, selected( $value['max']['day'], $day, false ), $i );
+								}
+								?>
+							</select>
+
+							<select name="<?php echo $name.'[max][month]'; ?>">
+								<?php 
+								printf( '<option value="" %1$s>%2$s</option>', selected( $value['max']['month'], 0, false ), /* translators: no option picked in select box */ __( '----', 'buddyboss' ) );
+
+								for ( $i = 0; $i < 12; ++$i ) {
+									$month = $i + 1;
+									$month = str_pad( $month, 2, '0', STR_PAD_LEFT );
+									printf( '<option value="%1$s" %2$s>%3$s</option>', $month, selected( $value['max']['month'], $month, false ), $months[$i] );
+								}
+								?>
+							</select>
+
+							<select name="<?php echo $name.'[max][year]'; ?>">
+								<?php 
+								printf( '<option value="" %1$s>%2$s</option>', selected( $value['max']['year'], 0, false ), /* translators: no option picked in select box */ __( '----', 'buddyboss' ) );
+								for ( $i = $end; $i >= $start; $i-- ) {
+									printf( '<option value="%1$s" %2$s>%3$s</option>', (int) $i, selected( $value['max']['year'], $i, false ), (int) $i );
+								}
+								?>
+							</select>
+                        </div>
 						<?php
 					break;
 
@@ -257,8 +258,8 @@ $F = bp_profile_search_escaped_form_data ( $form_id );
 		} ?>
 
 		<div class="submit-wrapper">
+			<p class="clear-from-wrap"><a href='#' onclick="return bp_ps_clear_form_elements(this);"><?php _e( 'Reset', 'buddyboss' );?></a></p>
 			<input type="submit" value="<?php echo __('Search', 'buddyboss'); ?>" />
-            <a href='#' onclick="return bp_ps_clear_form_elements(this);"><?php _e( 'Reset', 'buddyboss' );?></a>
 		</div>
 
 	</form>

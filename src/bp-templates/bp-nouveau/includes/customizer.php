@@ -210,7 +210,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 
 	$controls = array(
 		'bp_site_avatars' => array(
-			'label'      => __( 'Use the round style for member and group avatars.', 'buddyboss' ),
+			'label'      => __( 'Use the round style for single member and single group avatars.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_general_settings',
 			'settings'   => 'bp_nouveau_appearance[avatar_style]',
 			'type'       => 'checkbox',

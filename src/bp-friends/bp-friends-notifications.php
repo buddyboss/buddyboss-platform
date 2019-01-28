@@ -54,7 +54,7 @@ function friends_format_notifications( $action, $item_id, $secondary_item_id, $t
 
 			// Set up the string and the filter.
 			if ( (int) $total_items > 1 ) {
-				$text = sprintf( __( 'You have %d pending invitations to connect', 'buddyboss' ), (int) $total_items );
+				$text = sprintf( __( 'You have %d pending requests to connect', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
 				$text = sprintf( __( '%s sent you an invitation to connect', 'buddyboss' ),  bp_core_get_user_displayname( $item_id ) );

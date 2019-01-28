@@ -85,6 +85,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 		?>
 		<label for="bp-member-invites-custom-subject"><?php _e( 'Customize the text of the invitation subject.', 'buddyboss' ) ?></label>
 		<textarea name="bp_member_invites_custom_subject" id="bp-member-invites-custom-subject" rows="5" cols="10" ><?php echo esc_textarea( bp_get_member_invitation_subject() ) ?></textarea>
+		<input type="hidden" value="<?php _e('Are you sure you want to send invite without subject?', 'buddyboss') ?>" name="error-message-empty-subject-field" id="error-message-empty-subject-field">
 		<?php
 	}
 
@@ -110,9 +111,20 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 		);
 		// Remove the temporary filter on editor buttons
 		remove_filter( 'mce_buttons', 'bp_nouveau_invites_mce_buttons', 10, 1 );
+		?>
+		<input type="hidden" value="<?php _e('Are you sure you want to send invites without adding a message?', 'buddyboss') ?>" name="error-message-empty-body-field" id="error-message-empty-body-field">
+		<?php
+	}
+
+	if ( true === bp_disable_invite_member_email_subject() && true === bp_disable_invite_member_email_content() ) {
+		?>
+		<input type="hidden" value="<?php _e('Are you sure you want to send invites without adding a subject and message?', 'buddyboss') ?>" name="error-message-empty-subject-body-field" id="error-message-empty-subject-body-field">
+		<?php
 	}
 	?>
-	<input type="hidden" value="<?php _e('Please fill all the required field to invite member.', 'buddyboss') ?>" name="error-message-required-field" id="error-message-required-field">
+	<input type="hidden" value="<?php _e('Enter a valid email address', 'buddyboss') ?>" name="error-message-invalid-email-address-field" id="error-message-invalid-email-address-field">
+	<input type="hidden" value="<?php _e('Enter name', 'buddyboss') ?>" name="error-message-empty-name-field" id="error-message-empty-name-field">
+	<input type="hidden" value="<?php _e('Please fill out all required fields to invite a new member.', 'buddyboss') ?>" name="error-message-required-field" id="error-message-required-field">
 	<?php bp_nouveau_submit_button( 'member-invites-submit' ); ?>
 
 </form>

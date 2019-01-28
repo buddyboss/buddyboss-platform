@@ -350,7 +350,7 @@ function bb_gs_create_searchstring( $user_id, $posted_field_ids, $errors, $old_v
 		return;
 	}
 
-	$items_to_search = BP_Search::instance()->option('items-to-search');
+	$items_to_search = BP_Search::instance()->searchable_items;
 
 	$search_string = '';
 

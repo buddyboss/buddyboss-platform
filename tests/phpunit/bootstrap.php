@@ -9,6 +9,16 @@ if ( ! file_exists( WP_TESTS_DIR . '/includes/functions.php' ) ) {
 require_once WP_TESTS_DIR . '/includes/functions.php';
 
 function _install_and_load_buddypress() {
+	$active_plugins = get_option( 'active_plugins' ) ?: [];
+	$plugin_dir = dirname( dirname( dirname( BP_TESTS_DIR ) ) );
+
+	// activate learndash
+	if ( getenv( 'TEST_LEARNDASH' ) && file_exists( $plugin_dir . '/sfwd-lms/sfwd_lms.php' ) ) {
+		update_option('active_plugins', wp_parse_args( [
+			'sfwd-lms/sfwd_lms.php'
+		] , $active_plugins ) );
+	}
+
 	require BP_TESTS_DIR . '/includes/loader.php';
 }
 tests_add_filter( 'muplugins_loaded', '_install_and_load_buddypress' );

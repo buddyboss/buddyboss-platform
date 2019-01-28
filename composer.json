@@ -32,6 +32,10 @@
 		"phpunit/phpunit": "6.1.0"
 	},
     "scripts": {
-        "test": "vendor/bin/phpunit"
-    }
+        "test": "vendor/bin/phpunit",
+        "test-ld": "TEST_LEARNDASH=yes vendor/bin/phpunit --testsuite=learndash"
+    },
+	"require-dev": {
+		"symfony/var-dumper": "^4.2"
+	}
 }

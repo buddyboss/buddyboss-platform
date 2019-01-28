@@ -141,7 +141,8 @@ function bp_member_invite_submit() {
 		update_post_meta( $post_id, '_bp_invitee_member_type', $member_type );
 	}
 
-	bp_core_redirect( bp_displayed_user_domain() . 'invites/sent-invites?email='.implode (", ", $query_string ) );
+	$failed_invite = wp_list_pluck( array_filter( $invite_wrong_array ), 'email' );
+	bp_core_redirect( bp_displayed_user_domain() . 'invites/sent-invites?email='.implode (", ", $query_string ).'&failed='.implode (",", array_filter( $failed_invite ) ) );
 
 }
 add_action( 'bp_actions', 'bp_member_invite_submit' );
@@ -154,7 +155,7 @@ add_action( 'bp_actions', 'bp_member_invite_submit' );
  * @param $subject
  * @param $email
  *
- * @return mixed|void
+ * @return mixed
  */
 function bp_invites_member_invite_filter_subject( $subject, $email ) {
 
@@ -173,7 +174,7 @@ add_filter( 'bp_email_set_subject', 'bp_invites_member_invite_filter_subject', 9
  * @param $subject
  * @param $email
  *
- * @return mixed|void
+ * @return mixed
  */
 function bp_invites_member_invite_filter_content( $content, $email ) {
 
@@ -196,7 +197,7 @@ add_filter( 'bp_email_set_content_html', 'bp_invites_member_invite_filter_conten
  * @param $subject
  * @param $email
  *
- * @return mixed|void
+ * @return mixed
  */
 function bp_invites_member_invite_filter_content_plaintext( $content, $email ) {
 
