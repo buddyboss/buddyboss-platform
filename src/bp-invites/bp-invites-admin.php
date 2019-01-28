@@ -40,6 +40,12 @@ function bp_register_invite_type_sections_filters_actions() {
 	// remove bulk actions
 	add_filter( 'bulk_actions-edit-' . bp_get_invite_post_type(), 'bp_invites_remove_bulk_actions' );
 
+	add_filter( 'handle_bulk_actions-edit-' . bp_get_invite_post_type(), 'bp_invites_bulk_action_handler', 10, 3 );
+
+	add_action( 'admin_notices', 'bp_invite_bulk_action_notices' );
+
+	add_action('admin_footer-edit.php', 'bp_invites_js_bulk_admin_footer');
+
 	//hide quick edit link on the custom post type list screen
 	add_filter( 'post_row_actions', 'bp_invite_hide_quick_edit', 10, 2 );
 
@@ -280,6 +286,7 @@ function bp_invites_remove_bulk_actions( $actions ) {
 
 	unset( $actions[ 'edit' ] );
 	unset( $actions[ 'trash' ] );
+	$actions['revoke_action'] = 'Revoke Invitations';
 	return $actions;
 }
 
@@ -307,4 +314,90 @@ function invites_admin_menu_order( $custom_menus = array() ) {
 	}
 
 	return $custom_menus;
+}
+
+/**
+ * Function for revoke the bulk invitations.
+ *
+ * @param $redirect
+ * @param $doaction
+ * @param $object_ids
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string
+ */
+function bp_invites_bulk_action_handler( $redirect, $doaction, $object_ids ) {
+
+	$redirect = remove_query_arg( array( 'revoke_action' ), $redirect );
+
+	if ( 'revoke_action' === $doaction ) {
+
+		foreach ( $object_ids as $post_id ) {
+
+			if ( isset( $post_id ) && '' !== $post_id ) {
+				wp_delete_post( $post_id, true );
+			}
+
+		}
+
+		// do not forget to add query args to URL because we will show notices later
+		$redirect = add_query_arg(
+			'revoke_action',
+			count( $object_ids ), // parameter value - how much posts have been affected
+			$redirect );
+
+	}
+
+	return $redirect;
+}
+
+/**
+ * Function for adding a revoke invitations success message.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_invite_bulk_action_notices() {
+
+	if( ! empty( $_REQUEST['revoke_action'] ) ) {
+
+		// depending on ho much posts were changed, make the message different
+		printf( '<div id="message" class="updated notice is-dismissible"><p>' .
+		        _n( 'Invite %s has been revoked.',
+			        'Invites of %s has been revoked..',
+			        intval( $_REQUEST['revoke_action'] )
+		        ) . '</p></div>', intval( $_REQUEST['revoke_action'] ) );
+
+	}
+}
+
+/**
+ * Function for adding a JS popup while bulk revoke invitations.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_invites_js_bulk_admin_footer() {
+
+	global $post_type;
+
+	if( 'bp-invite' === $post_type ) {
+		$confirm_title = __( 'Are you sure you want to revoke all selected invitation?', 'buddyboss' );
+		?>
+		<script type="text/javascript">
+			jQuery(document).ready(function() {
+				var selector = jQuery( '#doaction' );
+				if ( selector.length ) {
+					var confirm_message = '<?php echo $confirm_title; ?>';
+					selector.click(function () {
+						if (!confirm(confirm_message)) {
+							return false;
+						}
+					});
+				}
+			});
+		</script>
+		<?php
+	}
 }
