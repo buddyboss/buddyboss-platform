@@ -644,9 +644,9 @@ window.bp = window.bp || {};
 						id_lists.forEach(function(item) {
 							$('#'+item).attr('style','border:1px solid #ef3e46');
 							if(item.indexOf('email_') !== -1){
-								$('#'+item).after('<span class="span_error" style="color:#ff0000">'+invalidEmail+'</span>');
+								$('#'+item).after('<span class="span_error" style="color:#ef3e46">'+invalidEmail+'</span>');
 							} else {
-								$('#'+item).after('<span class="span_error" style="color:#ff0000">'+emptyName+'</span>');
+								$('#'+item).after('<span class="span_error" style="color:#ef3e46">'+emptyName+'</span>');
 							}
 						});
 						$('html, body').animate({
