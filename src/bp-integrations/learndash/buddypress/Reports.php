@@ -106,13 +106,15 @@ class Reports
 
 	public function showReportUserStats()
 	{
-		if (empty($_GET['user']) || empty($_GET['course'])) {
+		if (empty($_GET['user'])) {
 			return;
 		}
 
-		$course = get_post($_GET['course']);
-		$group  = groups_get_current_group();
-		$user   = get_user_by('ID', $_GET['user']);
+
+		$courseId = bp_ld_sync()->getRequest('course');
+		$course   = $courseId? get_post($courseId) : null;
+		$group    = groups_get_current_group();
+		$user     = get_user_by('ID', $_GET['user']);
 
 		require bp_locate_template('groups/single/courses-reports-user-stats.php', false, false);
 	}

@@ -1,5 +1,7 @@
 
-<h3 class="ld-report-course-name"><?php echo $course->post_title; ?></h3>
+<?php if ($courseId): ?>
+	<h3 class="ld-report-course-name"><?php echo $course->post_title; ?></h3>
+<?php endif; ?>
 
 <div class="ld-report-user-stats">
 	<div class="user-info">
@@ -12,14 +14,16 @@
 		</div>
 	</div>
 
-	<div class="user-steps">
-		<p><?php printf(
-			__('<b>%d out of %d</b> %s completed', 'buddyboss'),
-			learndash_course_get_completed_steps($user->ID, $course->ID),
-			$totalSteps = learndash_get_course_steps_count($course->ID),
-			_n('step', 'steps', $totalSteps, 'buddyboss')
-		); ?></p>
-	</div>
+	<?php if ($courseId): ?>
+		<div class="user-steps">
+			<p><?php printf(
+				__('<b>%d out of %d</b> %s completed', 'buddyboss'),
+				learndash_course_get_completed_steps($user->ID, $course->ID),
+				$totalSteps = learndash_get_course_steps_count($course->ID),
+				_n('step', 'steps', $totalSteps, 'buddyboss')
+			); ?></p>
+		</div>
+	<?php endif; ?>
 
 	<?php if ($points = learndash_get_user_course_points($user->ID)): ?>
 		<div class="user-points">
