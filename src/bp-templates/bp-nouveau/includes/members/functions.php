@@ -10,28 +10,6 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Enqueue the members scripts
- *
- * @since BuddyPress 3.0.0
- */
-function bp_nouveau_members_enqueue_scripts() {
-	// Neutralize Ajax when using BuddyBoss Groups & member widgets on default front page
-	if ( ! bp_is_user_front() || ! bp_nouveau_get_appearance_settings( 'user_front_page' ) ) {
-		return;
-	}
-
-	wp_add_inline_style(
-		'bp-nouveau', '
-		#member-front-widgets #groups-list-options,
-		#member-front-widgets #members-list-options,
-		#member-front-widgets #friends-list-options {
-			display: none;
-		}
-	'
-	);
-}
-
-/**
  * Get the nav items for the Members directory
  *
  * @since BuddyPress 3.0.0
@@ -226,106 +204,42 @@ function bp_nouveau_admin_bar_member_dashboard ( $wp_admin_nav = array() ) {
     if ( !bp_loggedin_user_id() ) {
         return false;
     }
-    
-    /**
-     * Front page is disabled if you are viewing someone else's profile.
-     * This is done through filtering the value of setting 'user_front_page'.
-     * Since, we want to display the dashboard menu always, we'll need to temporarily unhook that filter.
-     */
-    $had_filter = false;
-    if ( has_filter( 'bp_after_nouveau_appearance_settings_parse_args', 'bp_hide_front_page_for_others_profile' ) ) {
-        $had_filter = true;
-        remove_filter( 'bp_after_nouveau_appearance_settings_parse_args', 'bp_hide_front_page_for_others_profile' );
-    }
-    
-    $use_default_front = bp_nouveau_get_appearance_settings( 'user_front_page' );
-    
-    if ( $had_filter ) {
-        add_filter( 'bp_after_nouveau_appearance_settings_parse_args', 'bp_hide_front_page_for_others_profile' );
-    }
 
-	// Setting the front template happens too early, so we need this!
-	if ( is_customize_preview() ) {
-		$use_default_front = bp_nouveau_get_temporary_setting( 'user_front_page', $use_default_front );
+	if ( bp_nouveau_get_appearance_settings( 'user_front_page' ) ) {
+
+		$page_ids = bp_core_get_directory_page_ids();
+
+		$profile_dashboard   = isset( $page_ids['profile_dashboard'] ) ? $page_ids['profile_dashboard'] : false;
+
+		if ( $profile_dashboard > 0 ) {
+			$dashboard_link = get_permalink( $profile_dashboard );
+
+			// Add main Dashboard menu.
+			$wp_admin_nav[] = array(
+				'parent' => buddypress()->my_account_menu_id,
+				'id'     => 'my-account-front',
+				'title'  => __( 'Dashboard', 'buddyboss' ),
+				'href'   => $dashboard_link,
+			);
+
+			// View sub menu.
+			$wp_admin_nav[] = array(
+				'parent'   => 'my-account-front',
+				'id'       => 'my-account-front-view',
+				'title'    => __( 'View', 'buddyboss' ),
+				'href'     => $dashboard_link,
+				'position' => 10
+			);
+
+			// Define the WordPress global.
+			global $wp_admin_bar;
+
+			// Add each admin menu.
+			foreach ( $wp_admin_nav as $admin_menu ) {
+				$wp_admin_bar->add_menu( $admin_menu );
+			}
+		}
 	}
-
-	if ( empty( $use_default_front ) ) {
-        return false;
-    }
-    
-    $dashboard_link = bp_loggedin_user_domain();
-    
-    // Add main Dashboard menu.
-    $wp_admin_nav[] = array(
-        'parent' => buddypress()->my_account_menu_id,
-        'id'     => 'my-account-front',
-        'title'  => __( 'Dashboard', 'buddyboss' ),
-        'href'   => $dashboard_link,
-    );
-
-    // View sub menu.
-    $wp_admin_nav[] = array(
-        'parent'   => 'my-account-front',
-        'id'       => 'my-account-front-view',
-        'title'    => __( 'View', 'buddyboss' ),
-        'href'     => $dashboard_link,
-        'position' => 10
-    );
-    
-    // Define the WordPress global.
-    global $wp_admin_bar;
-    
-    // Add each admin menu.
-    foreach ( $wp_admin_nav as $admin_menu ) {
-        $wp_admin_bar->add_menu( $admin_menu );
-    }
-}
-
-/**
- * Add the default user front template to the front template hierarchy
- *
- * @since BuddyPress 3.0.0
- *
- * @param array $templates The list of templates for the front.php template part.
- *
- * @return array The same list with the default front template if needed.
- */
-function bp_nouveau_member_reset_front_template( $templates = array() ) {
-	$use_default_front = bp_nouveau_get_appearance_settings( 'user_front_page' );
-
-	// Setting the front template happens too early, so we need this!
-	if ( is_customize_preview() ) {
-		$use_default_front = bp_nouveau_get_temporary_setting( 'user_front_page', $use_default_front );
-	}
-
-	if ( ! empty( $use_default_front ) ) {
-		array_push( $templates, 'members/single/default-front.php' );
-	}
-
-	/**
-	 * Filters the BuddyPress Nouveau template hierarchy after resetting front template for members.
-	 *
-	 * @since BuddyPress 3.0.0
-	 *
-	 * @param array $templates Array of templates.
-	 */
-	return apply_filters( '_bp_nouveau_member_reset_front_template', $templates );
-}
-
-/**
- * Only locate global user's front templates
- *
- * @since BuddyPress 3.0.0
- *
- * @param array $templates The User's front template hierarchy.
- *
- * @return array Only the global front templates.
- */
-function bp_nouveau_member_restrict_user_front_templates( $templates = array() ) {
-	return array_intersect( array(
-		'members/single/front.php',
-		'members/single/default-front.php',
-	), $templates );
 }
 
 /**
@@ -556,19 +470,6 @@ function bp_nouveau_get_wp_profile_fields( $user = null ) {
  * @return array The Members single item primary nav ordered.
  */
 function bp_nouveau_member_customizer_nav() {
-	add_filter( '_bp_nouveau_member_reset_front_template', 'bp_nouveau_member_restrict_user_front_templates', 10, 1 );
-
-	if ( bp_displayed_user_get_front_template( buddypress()->loggedin_user ) ) {
-		buddypress()->members->nav->add_nav(
-			array(
-				'name'     => _x( 'Dashboard', 'Member Home page', 'buddyboss' ),
-				'slug'     => 'front',
-				'position' => 5,
-			)
-		);
-	}
-
-	remove_filter( '_bp_nouveau_member_reset_front_template', 'bp_nouveau_member_restrict_user_front_templates', 10, 1 );
 
 	$nav = buddypress()->members->nav;
 

@@ -74,8 +74,6 @@ class BP_Nouveau_Members {
 			}
 		}
 
-		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_members_enqueue_scripts' );
-
 		// Actions to check whether we are in the member's default front page sidebar
 		add_action( 'dynamic_sidebar_before', array( $this, 'user_home_sidebar_set' ), 10, 1 );
 		add_action( 'dynamic_sidebar_after', array( $this, 'user_home_sidebar_unset' ), 10, 1 );
@@ -91,7 +89,6 @@ class BP_Nouveau_Members {
 	 */
 	protected function setup_filters() {
 		// Add the default-front to User's front hierarchy if user enabled it (Enabled by default).
-		add_filter( 'bp_displayed_user_get_front_template', 'bp_nouveau_member_reset_front_template', 10, 1 );
 	}
 
 	/**

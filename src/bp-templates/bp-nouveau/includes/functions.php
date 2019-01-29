@@ -300,49 +300,6 @@ function bp_nouveau_wrapper( $args = array() ) {
 }
 
 /**
- * Register the 2 sidebars for the Group & User default front page
- *
- * @since BuddyPress 3.0.0
- */
-function bp_nouveau_register_sidebars() {
-	$default_fronts      = bp_nouveau_get_appearance_settings();
-	$default_user_front  = 0;
-	$default_group_front = 0;
-	$is_active_groups    = bp_is_active( 'groups' );
-
-	if ( isset( $default_fronts['user_front_page'] ) ) {
-		$default_user_front = $default_fronts['user_front_page'];
-	}
-
-	// Setting the front template happens too early, so we need this!
-	if ( is_customize_preview() ) {
-		$default_user_front = bp_nouveau_get_temporary_setting( 'user_front_page', $default_user_front );
-	}
-
-	$sidebars = array();
-	if ( $default_user_front ) {
-		$sidebars[] = array(
-			'name'          => __( 'Profile Dashboard', 'buddyboss' ),
-			'id'            => 'sidebar-buddypress-members',
-			'description'   => __( 'Add widgets here to appear in the dashboard of each member of your community.', 'buddyboss' ),
-			'before_widget' => '<div id="%1$s" class="widget %2$s">',
-			'after_widget'  => '</div>',
-			'before_title'  => '<h2 class="widget-title">',
-			'after_title'   => '</h2>',
-		);
-	}
-
-	if ( empty( $sidebars ) ) {
-		return;
-	}
-
-	// Register the sidebars if needed.
-	foreach ( $sidebars as $sidebar ) {
-		register_sidebar( $sidebar );
-	}
-}
-
-/**
  * @since BuddyPress 3.0.0
  *
  * @return bool
@@ -607,7 +564,6 @@ function bp_nouveau_get_temporary_setting( $option = '', $retval = false ) {
 function bp_nouveau_get_appearance_settings( $option = '' ) {
 	$default_args = array(
 		'avatar_style'       => 1,
-		'user_front_page'    => 0,
 		'user_nav_display'   => 0, // O is default (horizontally). 1 is vertically.
 		'user_nav_tabs'      => 0,
 		'user_subnav_tabs'   => 0,

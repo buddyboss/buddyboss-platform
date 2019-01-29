@@ -289,7 +289,7 @@ function bp_core_activation_notice() {
 	}
 
 	if ( !empty( $orphaned_components ) ) {
-		$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-registration' ), 'admin.php' ) );
+		$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) );
 		$notice    = sprintf(
 			'%1$s <a href="%2$s">%3$s</a>',
 			sprintf(
@@ -301,6 +301,23 @@ function bp_core_activation_notice() {
 		);
 
 		bp_core_add_admin_notice( $notice );
+	}
+
+	if ( bp_nouveau_get_appearance_settings( 'user_front_page' ) ) {
+		if ( !isset( $bp->pages->profile_dashboard ) ) {
+			$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) );
+			$notice    = sprintf(
+				'%1$s <a href="%2$s">%3$s</a>',
+				sprintf(
+					__( 'The Profile Dashboard Settings do not have associated WordPress Page: %s.', 'buddyboss' ),
+					'<strong>' . implode( '</strong>, <strong>', array_map( 'esc_html', array('Profile Dashboard') ) ) . '</strong>'
+				),
+				esc_url( $admin_url ),
+				__( 'Repair', 'buddyboss' )
+			);
+
+			bp_core_add_admin_notice( $notice, 'error' );
+		}
 	}
 
 	// BP components cannot share a single WP page. Check for duplicate assignments, and post a message if found.

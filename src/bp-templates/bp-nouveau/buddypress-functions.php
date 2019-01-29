@@ -194,9 +194,6 @@ class BP_Nouveau extends BP_Theme_Compat {
 		// Register directory nav items
 		add_action( 'bp_screens', array( $this, 'setup_directory_nav' ), 15 );
 
-		// Register the Default front pages Dynamic Sidebars
-		add_action( 'widgets_init', 'bp_nouveau_register_sidebars', 11 );
-
 		// Register the Primary Object nav widget
 		add_action( 'bp_widgets_init', array( 'BP_Nouveau_Object_Nav_Widget', 'register_widget' ) );
 

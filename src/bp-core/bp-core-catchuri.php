@@ -1278,3 +1278,23 @@ function bp_private_network_template_redirect() {
 	}
 
 }
+
+function bp_core_login_profile_dashboard_redirect( $redirect_to, $redirect_to_raw, $user ) {
+
+	if ( bp_nouveau_get_appearance_settings( 'user_front_page' ) ) {
+
+		if ( bp_nouveau_get_appearance_settings( 'user_front_page_redirect' ) ) {
+
+			$page_ids          = bp_core_get_directory_page_ids();
+			$profile_dashboard = isset( $page_ids['profile_dashboard'] ) ? $page_ids['profile_dashboard'] : false;
+
+			if ( $profile_dashboard > 0 ) {
+				$dashboard_link = get_permalink( $profile_dashboard );
+				$redirect_to    = $dashboard_link;
+			}
+
+		}
+	}
+	return apply_filters( 'bp_core_login_profile_dashboard_redirect', $redirect_to );
+}
+add_filter( 'bp_login_redirect', 'bp_core_login_profile_dashboard_redirect', 10, 3 );

@@ -387,6 +387,8 @@ tr.bp-search-parent-field td p.section-header {
 }
 
 .buddyboss_page_bp-settings .section-bp_xprofile h2,
+.buddyboss_page_bp-settings .section-bp_profile_dashboard_settings h2,
+.buddyboss_page_bp-settings .section-bp_profile_search_settings h2,
 .buddyboss_page_bp-settings .section-bp_member_type_settings h2 {
     background-image: url('../../images/admin/icon_user.svg');
 }
