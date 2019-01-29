@@ -139,7 +139,7 @@ function bbp_admin_get_settings_fields() {
 
 			// Allow favorites setting
 			'_bbp_enable_favorites' => array(
-				'title'             => __( 'Liked', 'buddyboss' ),
+				'title'             => __( 'Likes', 'buddyboss' ),
 				'callback'          => 'bbp_admin_setting_callback_favorites',
 				'sanitize_callback' => 'intval',
 				'args'              => array()
@@ -517,7 +517,7 @@ function bbp_admin_setting_callback_favorites() {
 ?>
 
 	<input name="_bbp_enable_favorites" id="_bbp_enable_favorites" type="checkbox" value="1" <?php checked( bbp_is_favorites_active( true ) ); bbp_maybe_admin_setting_disabled( '_bbp_enable_favorites' ); ?> />
-	<label for="_bbp_enable_favorites"><?php esc_html_e( 'Allow users to mark discussions as favorites', 'buddyboss' ); ?></label>
+	<label for="_bbp_enable_favorites"><?php esc_html_e( 'Allow users to mark discussions as liked', 'buddyboss' ); ?></label>
 
 <?php
 }
