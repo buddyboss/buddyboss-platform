@@ -261,9 +261,9 @@ function titleHint( id ) {
 }
 
 function sortFieldOptions( sortElem ){
-	valArray = [];
-	sortOrder = sortElem.val();
-	parentElem = sortElem.closest( '.bp-options-box' );
+	var valArray = [];
+	var sortOrder = sortElem.val();
+	var parentElem = sortElem.closest( '.bp-options-box' );
 	parentElem.find( 'input[type="text"]' ).each(function( index ){
 		valArray.push(jQuery(this).val());
 	});
