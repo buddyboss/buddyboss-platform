@@ -72,7 +72,11 @@ jQuery(document).ready(function($) {
                     position: ac_position_prop
 				})
 				.data("ui-autocomplete")._renderItem = function(ul, item) {
-					ul.addClass("bb-global-search-ac");
+					ul.addClass( 'bb-global-search-ac' );
+
+					if ( ! ul[0].parentNode.classList.contains('bp-search-autocomplete') ) {
+						ul.wrap( '<div class="bp-search-autocomplete" />' );
+					}
 
 					if (item.type_label != "") {
 						$(ul).data("current_cat", item.type)
