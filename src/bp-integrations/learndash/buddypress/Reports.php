@@ -302,9 +302,8 @@ class Reports
 
 	protected function getGroupUsersList()
 	{
-		$members = groups_get_group_members([
-			'exclude_admins_mods' => false
-		])['members'];
+		$generator = bp_ld_sync('buddypress')->sync->generator(groups_get_current_group()->id);
+		$members = learndash_get_groups_users($generator->getLdGroupId());
 
 		array_unshift($members, (object) [
 			'ID' => '',
