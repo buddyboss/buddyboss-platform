@@ -420,6 +420,7 @@ function buddyboss_global_search_body_class( $wp_classes ) {
 	if ( is_search() ) { //if search page.
 		$wp_classes[] = 'buddypress';
 		$wp_classes[] = 'directory';
+		$wp_classes[] = 'bp-search';
 	}
 
 	return apply_filters( 'buddyboss_global_search_body_class', $wp_classes );
