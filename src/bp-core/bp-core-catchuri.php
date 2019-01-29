@@ -1279,6 +1279,17 @@ function bp_private_network_template_redirect() {
 
 }
 
+/**
+ * Function for redirect to user if profile dashboard enabled and redirect setting enabled.
+ *
+ * @param $redirect_to
+ * @param $redirect_to_raw
+ * @param $user
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return mixed
+ */
 function bp_core_login_profile_dashboard_redirect( $redirect_to, $redirect_to_raw, $user ) {
 
 	if ( bp_nouveau_get_appearance_settings( 'user_front_page' ) ) {
