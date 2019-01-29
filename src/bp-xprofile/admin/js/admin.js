@@ -260,8 +260,26 @@ function titleHint( id ) {
 	});
 }
 
-jQuery( document ).ready( function() {
+function sortFieldOptions( sortElem ){
+	var valArray = [];
+	var sortOrder = sortElem.val();
+	var parentElem = sortElem.closest( '.bp-options-box' );
+	parentElem.find( 'input[type="text"]' ).each(function( index ){
+		valArray.push(jQuery(this).val());
+	});
+	if(sortOrder == 'asc'){
+		valArray.sort();
+	}else if(sortOrder == 'desc'){
+		valArray.sort();
+		valArray.reverse();
+	}
+	parentElem.find( 'input[type="text"]' ).each(function( index ){
+		jQuery(this).val(valArray[index]);
+	});
+}
 
+jQuery( document ).ready( function() {
+	
 	// Set focus in Field Title, if we're on the right page
 	jQuery( '#bp-xprofile-add-field #title' ).focus();
 
@@ -288,7 +306,10 @@ jQuery( document ).ready( function() {
 	// Set up the sort order change actions
 	jQuery( '[id^="sort_order_"]' ).change(function() {
 		if ( jQuery( this ).val() !== 'custom' ) {
-			destroySortableFieldOptions();
+			if(jQuery( '.sortable, .sortable span' ).attr( 'cursor' ) == 'move'){
+				destroySortableFieldOptions();
+			}
+			sortFieldOptions( jQuery( this ) );
 		} else {
 			enableSortableFieldOptions( jQuery('#fieldtype :selected').val() );
 		}

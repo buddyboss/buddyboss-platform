@@ -42,12 +42,6 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'priority'    => 10,
 			'description' => __( 'Configure general BuddyBoss appearance options.', 'buddyboss' ),
 		),
-		'bp_nouveau_user_front_page' => array(
-			'title'       => __( 'Profile Dashboard', 'buddyboss' ),
-			'panel'       => 'bp_nouveau_panel',
-			'priority'    => 30,
-			'description' => __( 'Configure the profile dashboard.', 'buddyboss' ),
-		),
 		'bp_nouveau_user_primary_nav' => array(
 			'title'       => __( 'Member navigation', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
@@ -83,13 +77,6 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	$settings = apply_filters( 'bp_nouveau_customizer_settings', array(
 		'bp_nouveau_appearance[avatar_style]' => array(
 			'index'             => 'avatar_style',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-		'bp_nouveau_appearance[user_front_page]' => array(
-			'index'             => 'user_front_page',
 			'capability'        => 'bp_moderate',
 			'sanitize_callback' => 'absint',
 			'transport'         => 'refresh',
@@ -213,12 +200,6 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'label'      => __( 'Use the round style for single member and single group avatars.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_general_settings',
 			'settings'   => 'bp_nouveau_appearance[avatar_style]',
-			'type'       => 'checkbox',
-		),
-		'user_front_page' => array(
-			'label'      => __( 'Enable the Dashboard for member profiles.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_user_front_page',
-			'settings'   => 'bp_nouveau_appearance[user_front_page]',
 			'type'       => 'checkbox',
 		),
 		'user_nav_display' => array(

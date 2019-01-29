@@ -145,7 +145,7 @@ add_action( 'admin_init', 'bp_core_admin_register_registration_page_fields' );
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_directory_pages_description() {
-    echo wpautop( __( 'Associate a WordPress Page with each BuddyBoss component directory.', 'buddyboss' ) );
+    echo wpautop( __( 'Associate a WordPress Page with each BuddyBoss component.', 'buddyboss' ) );
 }
 
 /**

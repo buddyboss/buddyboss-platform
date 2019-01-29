@@ -72,7 +72,11 @@ jQuery(document).ready(function($) {
                     position: ac_position_prop
 				})
 				.data("ui-autocomplete")._renderItem = function(ul, item) {
-					ul.addClass("bb-global-search-ac");
+					ul.addClass( 'bb-global-search-ac' );
+
+					if ( ! ul[0].parentNode.classList.contains('bp-search-autocomplete') ) {
+						ul.wrap( '<div class="bp-search-autocomplete" />' );
+					}
 
 					if (item.type_label != "") {
 						$(ul).data("current_cat", item.type)
@@ -260,3 +264,33 @@ jQuery(document).ready(function($) {
 	});
 
 });
+
+function bp_ps_clear_form_elements( ele ) {
+    var $form = jQuery(ele).closest('form');
+    var event = new Event('change');
+    
+    $form.find(':input').each(function() {
+        switch(this.type) {
+            case 'password':
+            case 'select-multiple':
+            case 'select-one':
+            case 'text':
+            case 'email':
+            case 'date':
+            case 'url':
+            case 'search':
+            case 'textarea':
+                jQuery(this).val('');
+                break;
+            case 'checkbox':
+            case 'radio':
+                this.checked = false;
+                this.dispatchEvent(event);
+                break;
+        }
+    });
+
+    $form.submit();
+    
+    return false;
+}

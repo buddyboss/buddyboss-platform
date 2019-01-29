@@ -288,8 +288,14 @@ function bp_core_activation_notice() {
 		}
 	}
 
+	if ( bp_nouveau_get_appearance_settings( 'user_front_page' ) ) {
+		if ( ! isset( $bp->pages->profile_dashboard ) ) {
+			$orphaned_components[] = 'Profile Dashboard';
+		}
+	}
+
 	if ( !empty( $orphaned_components ) ) {
-		$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-registration' ), 'admin.php' ) );
+		$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) );
 		$notice    = sprintf(
 			'%1$s <a href="%2$s">%3$s</a>',
 			sprintf(

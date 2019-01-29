@@ -13,12 +13,6 @@
 
 				<h2 class="list-title groups-title"><?php bp_group_link(); ?></h2>
 
-				<?php if ( bp_nouveau_group_has_meta() ) : ?>
-
-					<p class="item-meta group-details"><?php bp_nouveau_group_meta(); ?></p>
-
-				<?php endif; ?>
-
 				<p class="last-activity item-meta">
 					<?php
 					printf(
@@ -31,12 +25,7 @@
 
 			</div>
 
-			<?php bp_nouveau_groups_loop_item(); ?>
-
-			<?php bp_nouveau_groups_loop_buttons(); ?>
-
 		</div>
-
 
 	</div>
 </li>

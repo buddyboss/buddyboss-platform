@@ -66,7 +66,7 @@ class Reports
 			'ajax_url'      => admin_url('admin-ajax.php'),
 			'table_columns' => $this->getCurrentTableColumns(),
 			'config' => [
-				'perpage' => apply_filters('bp_ld_sync/reports_per_page', 10)
+				'perpage' => bp_ld_sync('settings')->get('reports.per_page', 20)
 			],
 			'text' => [
 				'processing'     => __('Loading...', 'buddyboss'),

@@ -519,7 +519,7 @@ function bp_core_get_directory_page_ids( $status = 'active' ) {
 		}
 
 		// 'register', 'activate', 'terms' and 'privacy' do not have components, but should be whitelisted.
-		if ( in_array( $component_name, array( 'register', 'activate', 'terms', 'privacy' ), true ) ) {
+		if ( in_array( $component_name, array( 'register', 'activate', 'terms', 'privacy', 'profile_dashboard' ), true ) ) {
 			continue;
 		}
 

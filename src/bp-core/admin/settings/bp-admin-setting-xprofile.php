@@ -21,6 +21,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
          */
         $bp_nouveau_appearance = bp_get_option( 'bp_nouveau_appearance', array() );
         $bp_nouveau_appearance[ 'user_front_page' ] = isset( $_POST[ 'bp-enable-member-dashboard' ] ) ? $_POST[ 'bp-enable-member-dashboard' ] : 0;
+        $bp_nouveau_appearance[ 'user_front_page_redirect' ] = isset( $_POST[ 'bp-enable-member-dashboard-redirect' ] ) ? $_POST[ 'bp-enable-member-dashboard-redirect' ] : 0;
         bp_update_option( 'bp_nouveau_appearance', $bp_nouveau_appearance );
 
         /**
@@ -65,8 +66,16 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-disable-cover-image-uploads', __( 'Cover Image Uploads', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'intval' );
 		}
 
+		// Section for profile dashboard.
+		$this->add_section( 'bp_profile_dashboard_settings', __( 'Profile Dashboard', 'buddyboss' ) );
+
 		// Enable/Disable profile dashboard.
 		$this->add_field( 'bp-enable-member-dashboard', __( 'Profile Dashboard', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_dashboard'], 'intval' );
+
+		$this->add_field( 'bp-enable-member-dashboard-redirect', __( 'Redirect on Login', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_dashboard_redirect'], 'intval' );
+
+		// Section for profile search.
+		$this->add_section( 'bp_profile_search_settings', __( 'Profile Search', 'buddyboss' ) );
 
         // Enable/Disable profile search.
 		$this->add_field( 'bp-enable-profile-search', __( 'Profile Search', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_search'], 'intval' );
@@ -93,7 +102,20 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function bp_admin_setting_callback_member_dashboard() {
 		?>
 			<input id="bp-enable-member-dashboard" name="bp-enable-member-dashboard" type="checkbox" value="1" <?php checked( bp_nouveau_get_appearance_settings( 'user_front_page' ) ); ?> />
-			<label for="bp-enable-member-dashboard"><?php _e( 'Enable a personal dashboard of widgets on member profiles', 'buddyboss' ); ?></label>
+			<label for="bp-enable-member-dashboard"><?php _e( 'Use a WordPress page as each user\'s personal Profile Dashboard', 'buddyboss' ); ?></label>
+		<?php
+	}
+
+	/**
+	 * Enable profile dashboard/front-page template.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 */
+	public function bp_admin_setting_callback_member_dashboard_redirect() {
+		?>
+		<input id="bp-enable-member-dashboard-redirect" name="bp-enable-member-dashboard-redirect" type="checkbox" value="1" <?php checked( bp_nouveau_get_appearance_settings( 'user_front_page_redirect' ) ); ?> />
+		<label for="bp-enable-member-dashboard-redirect"><?php _e( 'Redirect users to their Profile Dashboard on login', 'buddyboss' ); ?></label>
 		<?php
 	}
 

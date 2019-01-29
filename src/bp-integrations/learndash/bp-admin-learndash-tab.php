@@ -283,6 +283,16 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			]
 		);
 
+		$this->add_input_field(
+			'per_page',
+			__('Report Results Per Page', 'buddyboss'),
+			[
+				'input_type'        => 'number',
+				'input_description' => __( 'How many results should display in the report table per page?', 'buddyboss' ),
+				'class' => 'js-show-on-reports_enabled'
+			]
+		);
+
 		// disabled this for now
 		// $this->add_input_field(
 		// 	'cache_time',
