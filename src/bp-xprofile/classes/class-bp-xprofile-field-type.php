@@ -524,7 +524,7 @@ abstract class BP_XProfile_Field_Type {
 
 			// Moderators can bypass field requirements.
 			//if ( ! bp_current_user_can( 'bp_moderate' ) ) {
-				$r[] = 'required';
+				//$r[] = 'required';
 			//}
 		}
 
