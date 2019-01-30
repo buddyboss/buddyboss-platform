@@ -46,7 +46,7 @@ function bp_ps_fields_box ( $post ) {
 
 	list ($groups, $fields) = bp_ps_get_fields ();
 	echo '<script>var bp_ps_groups = ['. json_encode ($groups). '];</script>';
-?>
+	?>
 
 	<div id="field_box" class="field_box">
 		<p>
@@ -56,55 +56,52 @@ function bp_ps_fields_box ( $post ) {
 			<span class="bp_ps_col4"><strong>&nbsp;<?php _e('Description', 'buddyboss'); ?></strong></span>&nbsp;
 			<span class="bp_ps_col5"><strong>&nbsp;<?php _e('Search Mode', 'buddyboss'); ?></strong></span>
 		</p>
-<?php
+		<input type="hidden" id="empty-box-alert" name="empty-box-alert" value="<?php _e('You can not remove this field you have to keep at least one field or disable the advance search from settings.', 'buddyboss'); ?>">
+		<?php
 
-	foreach ($bp_ps_options['field_code'] as $k => $id)
-	{
-		if (empty ($fields[$id]))  continue;
+		foreach ($bp_ps_options['field_code'] as $k => $id) {
 
-		$field = $fields[$id];
-		$label = esc_attr ($bp_ps_options['field_label'][$k]);
-		$default = esc_attr ($field->name);
-		$showlabel = empty ($label)? "placeholder=\"$default\"": "value=\"$label\"";
-		$desc = esc_attr ($bp_ps_options['field_desc'][$k]);
-		$default = esc_attr ($field->description);
-		$showdesc = ! empty( $desc ) ? "value=\"$desc\"" : "";
-?>
+			if (empty ($fields[$id]))  continue;
 
-		<div id="field_div<?php echo $k; ?>" class="sortable">
-			<span class="bp_ps_col1" title="<?php _e('drag to reorder fields', 'buddyboss'); ?>">&nbsp;&#x21C5;</span>
-<?php
-			_bp_ps_field_select ($groups, "bp_ps_options[field_name][$k]", "field_name$k", $id);
-?>
-			<input class="bp_ps_col3" type="text" name="bp_ps_options[field_label][<?php echo $k; ?>]" id="field_label<?php echo $k; ?>" <?php echo $showlabel; ?> />
-			<input class="bp_ps_col4" type="text" name="bp_ps_options[field_desc][<?php echo $k; ?>]" id="field_desc<?php echo $k; ?>" <?php echo $showdesc; ?> />
-            <?php
-			if ( 'heading' != $field->code ) {
-                _bp_ps_filter_select ($field, "bp_ps_options[field_mode][$k]", "field_mode$k", $bp_ps_options['field_mode'][$k]);
-            } else {
-                echo "<span class='bp_ps_col5'>-</span>";
-            }
-            ?>
-			<a href="javascript:remove('field_div<?php echo $k; ?>')" class="delete"><?php _e('Remove', 'buddyboss'); ?></a>
+			$field = $fields[$id];
+			$label = esc_attr ($bp_ps_options['field_label'][$k]);
+			$default = esc_attr ($field->name);
+			$showlabel = empty ($label)? "placeholder=\"$default\"": "value=\"$label\"";
+			$desc = esc_attr ($bp_ps_options['field_desc'][$k]);
+			$default = esc_attr ($field->description);
+			$showdesc = ! empty( $desc ) ? "value=\"$desc\"" : "";
+			?>
+
+			<div id="field_div<?php echo $k; ?>" class="sortable">
+				<span class="bp_ps_col1" title="<?php _e('drag to reorder fields', 'buddyboss'); ?>">&nbsp;&#x21C5;</span>
+				<?php _bp_ps_field_select ($groups, "bp_ps_options[field_name][$k]", "field_name$k", $id); ?>
+				<input class="bp_ps_col3" type="text" name="bp_ps_options[field_label][<?php echo $k; ?>]" id="field_label<?php echo $k; ?>" <?php echo $showlabel; ?> />
+				<input class="bp_ps_col4" type="text" name="bp_ps_options[field_desc][<?php echo $k; ?>]" id="field_desc<?php echo $k; ?>" <?php echo $showdesc; ?> />
+	            <?php
+				if ( 'heading' != $field->code ) {
+	                _bp_ps_filter_select ($field, "bp_ps_options[field_mode][$k]", "field_mode$k", $bp_ps_options['field_mode'][$k]);
+	            } else {
+	                echo "<span class='bp_ps_col5'>-</span>";
+	            }
+	            ?>
+				<a href="javascript:remove('field_div<?php echo $k; ?>')" class="delete"><?php _e('Remove', 'buddyboss'); ?></a>
             
-            <?php 
-            if ( 'date_range' == $bp_ps_options['field_mode'][$k] ) {
-                global $wpdb;
-                $bp = buddypress();
-                $field_group_id = $wpdb->get_var( "SELECT group_id FROM {$bp->profile->table_name_fields} WHERE id = {$field->id} AND type != 'option' " );
-                $is_repeater_enabled = 'on' == bp_xprofile_get_meta( $field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
+	            <?php
+	            if ( 'date_range' == $bp_ps_options['field_mode'][$k] ) {
+	                global $wpdb;
+	                $bp = buddypress();
+	                $field_group_id = $wpdb->get_var( "SELECT group_id FROM {$bp->profile->table_name_fields} WHERE id = {$field->id} AND type != 'option' " );
+	                $is_repeater_enabled = 'on' == bp_xprofile_get_meta( $field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
 
-                if ( $is_repeater_enabled ) {
-                    echo "<br><span class='bp_ps_col1'></span>&nbsp;&nbsp;";//for spacing
-                    echo "<em>". __( 'WARNING', 'buddyboss' ) ."</em>: " . __( 'You are adding a date field which is inside a repeater set. This will not work correctly in search.', 'buddyboss' );
-                    echo "<p></p>";//for spacing
-                }
-            }
-            ?>
-		</div>
-<?php
-	}
-?>
+	                if ( $is_repeater_enabled ) {
+	                    echo "<br><span class='bp_ps_col1'></span>&nbsp;&nbsp;";//for spacing
+	                    echo "<em>". __( 'WARNING', 'buddyboss' ) ."</em>: " . __( 'You are adding a date field which is inside a repeater set. This will not work correctly in search.', 'buddyboss' );
+	                    echo "<p></p>";//for spacing
+	                }
+	            }
+	            ?>
+			</div> <?php
+		} ?>
 	</div>
 	<input type="hidden" id="field_next" value="<?php echo count ($bp_ps_options['field_code']); ?>" />
 	<p><a href="javascript:add_field()"><?php _e('Add Field', 'buddyboss'); ?></a></p>
@@ -142,8 +139,7 @@ function _bp_ps_filter_select ($f, $name, $id, $value)
 }
 
 add_action ('save_post', 'bp_ps_update_meta', 10, 2);
-function bp_ps_update_meta ($form, $post)
-{
+function bp_ps_update_meta ($form, $post) {
 	if ($post->post_type != 'bp_ps_form' || $post->post_status != 'publish')  return false;
 	if (empty ($_POST['options']) && empty ($_POST['bp_ps_options']))  return false;
 
@@ -155,7 +151,7 @@ function bp_ps_update_meta ($form, $post)
 	$meta['field_desc'] = array ();
 	$meta['field_mode'] = array ();
 
-	list ($x, $fields) = bp_ps_get_fields ();
+	list ($x, $fields) = bp_ps_get_fields();
 
 	$codes = array ();
 	$posted = isset ($_POST['bp_ps_options'])? $_POST['bp_ps_options']: array ();
@@ -191,3 +187,50 @@ function bp_ps_get_option ($name, $default)
 	$settings = get_option ('bp_ps_settings');
 	return isset ($settings->{$name})? $settings->{$name}: $default;
 }
+
+function bp_search_ajax_option() {
+
+	list ($groups, $fields) = bp_ps_get_fields ();
+	$k = (int) $_POST['count'] - 1;
+	$id = $_POST['field_id'];
+	$field = $fields[$id];
+	$label = '';
+	$default = esc_attr ($field->name);
+	$showlabel = empty ($label)? "placeholder=\"$default\"": "value=\"$label\"";
+	$desc = '';
+	$showdesc = ! empty( $desc ) ? "value=\"$desc\"" : "";
+	?>
+
+	<div id="field_div<?php echo $k; ?>" class="sortable">
+		<span class="bp_ps_col1" title="<?php _e('drag to reorder fields', 'buddyboss'); ?>">&nbsp;&#x21C5;</span>
+		<?php _bp_ps_field_select ($groups, "bp_ps_options[field_name][$k]", "field_name$k", $id); ?>
+		<input class="bp_ps_col3" type="text" name="bp_ps_options[field_label][<?php echo $k; ?>]" id="field_label<?php echo $k; ?>" <?php echo $showlabel; ?> />
+		<input class="bp_ps_col4" type="text" name="bp_ps_options[field_desc][<?php echo $k; ?>]" id="field_desc<?php echo $k; ?>" <?php echo $showdesc; ?> />
+		<?php
+		if ( 'heading' != $field->code ) {
+			_bp_ps_filter_select ($field, "bp_ps_options[field_mode][$k]", "field_mode$k", $_POST['field_id']);
+		} else {
+			echo "<span class='bp_ps_col5'>-</span>";
+		}
+		?>
+		<a href="javascript:remove('field_div<?php echo $k; ?>')" class="delete"><?php _e('Remove', 'buddyboss'); ?></a>
+
+		<?php
+		if ( 'date_range' === 'contains' ) {
+			global $wpdb;
+			$bp = buddypress();
+			$field_group_id = $wpdb->get_var( "SELECT group_id FROM {$bp->profile->table_name_fields} WHERE id = {$field->id} AND type != 'option' " );
+			$is_repeater_enabled = 'on' == bp_xprofile_get_meta( $field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
+
+			if ( $is_repeater_enabled ) {
+				echo "<br><span class='bp_ps_col1'></span>&nbsp;&nbsp;";//for spacing
+				echo "<em>". __( 'WARNING', 'buddyboss' ) ."</em>: " . __( 'You are adding a date field which is inside a repeater set. This will not work correctly in search.', 'buddyboss' );
+				echo "<p></p>";//for spacing
+			}
+		}
+		?>
+	</div> <?php
+
+	wp_die();
+}
+add_action( 'wp_ajax_bp_search_ajax_option', 'bp_search_ajax_option');

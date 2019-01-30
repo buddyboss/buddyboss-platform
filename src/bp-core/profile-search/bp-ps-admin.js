@@ -15,6 +15,7 @@ function add_field () {
 
 	var $select = jQuery ('<select>', {name: 'bp_ps_options[field_name][' + theId + ']', id: 'field_name' + theId});
 	$select.addClass ('bp_ps_col2');
+	$select.addClass ('new_field');
 	var $option = jQuery ('<option>', {text: window.bp_ps_strings.field, value: 0});
 	$option.appendTo ($select);
 
@@ -49,6 +50,13 @@ function add_field () {
 
 function remove (id) {
 	var element = document.getElementById (id);
+	var count = document.querySelectorAll('body.post-type-bp_ps_form #postbox-container-2 #normal-sortables #bp_ps_fields_box .inside #field_box .sortable').length;
+	var countAfter = count - 1;
+	if ( 0 === countAfter ) {
+		var message = document.getElementById('empty-box-alert').value;
+		window.alert( message );
+		return false;
+	}
 	element.parentNode.removeChild (element);
 }
 
@@ -82,6 +90,21 @@ jQuery(document).ready(function ($) {
 			$('#template_options').html(new_options);
 			template_spinner.removeClass('is-active');
 			save_button.removeAttr('disabled');
+		});
+	});
+
+	jQuery(document).on('change','body.post-type-bp_ps_form #postbox-container-2 #normal-sortables #bp_ps_fields_box .inside #field_box .sortable .new_field',function () {
+		var field_id = this.value;
+		var count = $('body.post-type-bp_ps_form #postbox-container-2 #normal-sortables #bp_ps_fields_box .inside #field_next').val();
+		var fieldData = {
+			'action': 'bp_search_ajax_option',
+			'field_id': field_id,
+			'count': count
+		};
+		$.post (ajaxurl, fieldData, function (response) {
+			var index = count - 1;
+			$('body.post-type-bp_ps_form #postbox-container-2 #normal-sortables #bp_ps_fields_box .inside #field_box #field_div'+index).remove();
+			$('body.post-type-bp_ps_form #postbox-container-2 #normal-sortables #bp_ps_fields_box .inside #field_box').append(response);
 		});
 	});
 });

@@ -22,8 +22,8 @@ function bp_profile_search_escaped_form_data ( $form = false ) {
     
 	$meta = bp_ps_meta ( $form );
 	$fields = bp_ps_parse_request ( bp_ps_get_request ( 'form', $form ) );
-    wp_register_script ('bp-ps-template', buddypress()->plugin_url . 'bp-core/profile-search/bp-ps-template.js', array (), bp_get_version());
-
+    wp_register_script ('bp-ps-template-form', buddypress()->plugin_url . 'bp-core/profile-search/bp-ps-template.js', array (), bp_get_version());
+	wp_enqueue_script('bp-ps-template-form');
 	$F = new stdClass;
 	$F->id = $form;
 	$F->title = get_the_title ( $form );
