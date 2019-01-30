@@ -50,6 +50,7 @@ function xprofile_screen_edit_profile() {
 		$posted_field_ids = wp_parse_id_list( $_POST['field_ids'] );
 		$is_required      = array();
 		$validations      = array();
+		$is_required_fields_error      = array();
 
 		// Loop through the posted fields formatting any datebox values then validate the field.
 		foreach ( (array) $posted_field_ids as $field_id ) {
@@ -57,7 +58,10 @@ function xprofile_screen_edit_profile() {
 
 			$is_required[ $field_id ] = xprofile_check_is_required_field( $field_id );
 			if ( $is_required[$field_id] && empty( $_POST['field_' . $field_id] ) ) {
-				$errors = true;
+				$errors                     = true;
+				$field                      = new BP_XProfile_Field( $field_id );
+				$field_name                 = $field->name;
+				$is_required_fields_error[] = $field_name;
 			}
 
 			if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], bp_displayed_user_id() ) ) {
@@ -74,7 +78,12 @@ function xprofile_screen_edit_profile() {
 
 		// There are errors.
 		} else if ( !empty( $errors ) ) {
-			bp_core_add_message( __( 'Your changes have not been saved. Please fill in all required fields, and save your changes again.', 'buddyboss' ), 'error' );
+			if ( count( $is_required_fields_error ) > 1 ) {
+				bp_core_add_message( __( 'Your changes have not been saved. Please fill in all required fields, and save your changes again.', 'buddyboss' ),'error' );
+			} else {
+				$message_error = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), implode(', ', $is_required_fields_error ) );
+				bp_core_add_message( $message_error, 'error' );
+			}
 
 		// No errors.
 		} else {
