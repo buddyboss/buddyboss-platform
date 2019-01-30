@@ -288,9 +288,11 @@ function bp_core_activation_notice() {
 		}
 	}
 
-	if ( bp_nouveau_get_appearance_settings( 'user_front_page' ) ) {
-		if ( ! isset( $bp->pages->profile_dashboard ) ) {
-			$orphaned_components[] = 'Profile Dashboard';
+	if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
+		if ( bp_nouveau_get_appearance_settings( 'user_front_page' ) ) {
+			if ( ! isset( $bp->pages->profile_dashboard ) ) {
+				$orphaned_components[] = 'Profile Dashboard';
+			}
 		}
 	}
 

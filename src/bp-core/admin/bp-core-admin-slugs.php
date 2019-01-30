@@ -34,8 +34,10 @@ function bp_core_admin_get_directory_pages() {
 		}
 	}
 
-	if ( bp_nouveau_get_appearance_settings( 'user_front_page' ) ) {
-		$directory_pages['profile_dashboard'] = __( 'Profile Dashboard', 'buddyboss' );
+	if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
+		if ( bp_nouveau_get_appearance_settings( 'user_front_page' ) ) {
+			$directory_pages['profile_dashboard'] = __( 'Profile Dashboard', 'buddyboss' );
+		}
 	}
 
 	/** Directory Display *****************************************************/
