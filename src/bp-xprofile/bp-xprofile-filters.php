@@ -737,13 +737,18 @@ function bp_xprofile_validate_phone_value( $retval, $field_id, $value, $user_id 
 
 	$field_name = xprofile_get_field( $field_id )->name;
 
+	if ( empty( $str) ) {
+		/* SET ERROR: The field must be a valid U.S. phone number (e.g. 888-888-8888) */
+		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
+	}
+
 	if ( $us_number ) {
 		return $retval;
 	}
 
 	if ( ! $international ) {
 		/* SET ERROR: The field must be a valid U.S. phone number (e.g. 888-888-8888) */
-		return sprintf( __( 'Invalid %s. Enter valid phone number.', 'buddyboss' ), $field_name );
+		return sprintf( __( 'Enter valid %s', 'buddyboss' ), $field_name );
 	}
 
 	$valid_number = preg_match( '/^(\+\s*)?(?=([.,\s()-]*\d){8})([\d(][\d.,\s()-]*)([[:alpha:]#][^\d]*\d.*)?$/', $str, $matches ) && preg_match( '/\d{2}/', $str );
@@ -753,7 +758,7 @@ function bp_xprofile_validate_phone_value( $retval, $field_id, $value, $user_id 
 	}
 
 	/* SET ERROR: The field must be a valid phone number (e.g. 888-888-8888) */
-	return sprintf( __( 'Invalid %s. Enter valid phone number.', 'buddyboss' ), $field_name );
+	return sprintf( __( 'Enter valid %s', 'buddyboss' ), $field_name );
 }
 
 function bp_xprofile_adjust_current_user_display_name() {
