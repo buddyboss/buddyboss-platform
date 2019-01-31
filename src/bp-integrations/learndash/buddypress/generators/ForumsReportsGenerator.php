@@ -61,13 +61,25 @@ class ForumsReportsGenerator extends ReportsGenerator
 		];
 	}
 
+	protected function formatDataForDisplay($data, $activity)
+	{
+		return wp_parse_args([
+			'topic' => sprintf(
+				'<a href="%s" target="_blank">%s</a>',
+				get_permalink($activity->topic_id),
+				$activity->topic_title
+			)
+		], $data);
+	}
+
 	protected function getGroupForumTopics()
 	{
 		$args = [
-			'posts_per_page' => $this->args['length'],
-			'page'           => $this->args['start'] / $this->args['length'] + 1,
-			'post_type'      => bbp_get_topic_post_type(),
-			'post_status' => 'publish'
+			'posts_per_page'  => $this->args['length'],
+			'page'            => $this->args['start'] / $this->args['length'] + 1,
+			'post_type'       => bbp_get_topic_post_type(),
+			'post_status'     => 'publish',
+			'post_parent__in' => bbp_get_group_forum_ids($this->args['group']) ?: [-1]
 		];
 
 		if ($this->hasArg('user') && $this->args['user']) {
