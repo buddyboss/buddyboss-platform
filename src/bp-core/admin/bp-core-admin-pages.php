@@ -189,7 +189,7 @@ function bp_admin_setting_callback_page_directory_dropdown($args) {
 	echo wp_dropdown_pages( array(
 		'name'             => 'bp_pages[' . esc_attr( $name ) . ']',
 		'echo'             => false,
-		'show_option_none' => __( '- None -', 'buddyboss' ),
+		'show_option_none' => __( '- Select a page -', 'buddyboss' ),
 		'selected'         => !empty( $existing_pages[$name] ) ? $existing_pages[$name] : false
 	) );
 

@@ -727,6 +727,12 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 		}
 
 		public function print_tabs() {
+
+			// No tabs if 0 results
+			if ( $this->search_results['all']['total_match_count'] < 1 ) {
+				return;
+			}
+
 			$search_url = $this->search_page_search_url();
 
 			//first print the 'all results' tab
@@ -783,7 +789,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 					);
 				}
 			} else {
-				buddyboss_global_search_buffer_template_part( 'no-results', $current_tab );
+				buddyboss_global_search_buffer_template_part( 'no-results' );
 			}
 		}
 

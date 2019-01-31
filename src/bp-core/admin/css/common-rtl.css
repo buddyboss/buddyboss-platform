@@ -375,6 +375,7 @@ tr.bp-search-parent-field td p.section-header {
 .buddyboss_page_bp-integrations .card h2 {
     background-repeat: no-repeat;
     background-position: right center;
+    background-image: url('../../images/admin/icon_gear.svg');
     background-size: 56px;
     line-height: 56px;
     padding-right: 78px;
@@ -422,12 +423,9 @@ tr.bp-search-parent-field td p.section-header {
 }
 
 .buddyboss_page_bp-integrations .section-bp_ld_sync-buddypress h2,
-.buddyboss_page_bp-integrations .section-bp_ld_sync-learndash h2 {
-    background-image: url('../../images/admin/icon_badge.svg');
-}
-
+.buddyboss_page_bp-integrations .section-bp_ld_sync-learndash h2,
 .buddyboss_page_bp-integrations .section-bp_ld_sync-reports h2 {
-    background-image: url('../../images/admin/icon_calendar.svg');
+    background-image: url('../../images/admin/icon_learndash.svg');
 }
 
 .buddyboss_page_bp-settings .section-bp_search_settings_community h2,

@@ -1,10 +1,10 @@
-<?php 
+<?php
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
  * Get the default items to search though, if nothing has been selected in settings.
- * 
+ *
  * @since 1.0.0
  * @param mixed $value
  * @return mixed
@@ -19,7 +19,7 @@ function bb_global_search_default_items_to_search( $value ){
 		 */
 		$value = array( 'posts', 'pages', 'members' );
 	}
-	
+
 	/*
 	 * If member search is turned on, but none of wp_user table fields or xprofile fields are selected,
 	 * we'll force username and nicename fields
@@ -33,21 +33,21 @@ function bb_global_search_default_items_to_search( $value ){
 				break;
 			}
 		}
-		
+
 		//if not, lets add username and nicename to default items to search
 		if( !$field_selected ){
 			$value[] = 'member_field_user_login';
 			$value[] = 'member_field_user_nicename';
 		}
 	}
-	
+
 	return $value;
 }
 add_filter( 'buddyboss_global_search_option_items-to-search', 'bb_global_search_default_items_to_search' );
 
 /**
  * Remove 'messages' and 'notifications' from search, if user is not logged In
- * 
+ *
  * @since 1.0.0
  * @param mixed $value
  * @return mixed
@@ -61,7 +61,7 @@ function bboss_global_search_remove_search_types_for_guests( $search_types ){
 				$filtered_search_types[] = $search_type;
 			}
 		}
-		
+
 		$search_types = $filtered_search_types;
 	}
 	return $search_types;
@@ -80,25 +80,25 @@ add_filter( 'template_include', 'buddyboss_global_search_override_wp_native_resu
  **/
 
 function buddyboss_global_search_override_wp_native_results($template) {
-	
+
 	if ( is_search()  ) { //if search page.
-		
-		
+
+
 		$live_template = locate_template( array( 'buddyboss-global-search.php' ,'page.php','single.php','index.php' ) );
-		
+
 		if ( '' != $live_template ) {
 			return $live_template;
 		}
 
 	}
-	
+
 	return $template;
 }
 
 
 /**
  * Load dummy post for wp native search result. magic starts here.
- * @since 1.0.0 
+ * @since 1.0.0
  * @param mixed $value
  * @return mixed
  **/
@@ -107,11 +107,11 @@ add_filter( 'template_include', 'buddyboss_global_search_result_page_dummy_post_
 
 function buddyboss_global_search_result_page_dummy_post_load($template) {
 	global $wp_query;
-	
+
 	if(!is_search()) { //cancel if not search page.
-		return $template; 
+		return $template;
 	}
-	
+
 	$dummy = array(
                'ID'                    => 0,
                'post_status'           => 'public',
@@ -123,7 +123,7 @@ function buddyboss_global_search_result_page_dummy_post_load($template) {
                'post_modified'         => 0,
                'post_modified_gmt'     => 0,
                'post_content'          => '',
-               'post_title'            => __('Search Results',"buddypress-global-search"),
+               'post_title'            => sprintf( __( 'Showing Results For \'%s\'', "buddypress-global-search" ), strtoupper( $_GET['s'] ) ),
                'post_excerpt'          => '',
                'post_content_filtered' => '',
                'post_mime_type'        => '',
@@ -146,13 +146,13 @@ function buddyboss_global_search_result_page_dummy_post_load($template) {
            );
 	// Set the $post global
 	$post = new WP_Post( (object) $dummy );
-   
+
 	// Copy the new post global into the main $wp_query
 	$wp_query->post       = $post;
 	$wp_query->posts      = array( $post );
 	$wp_query->post_count      = 1;
 	$wp_query->max_num_pages      = 0;
-		
+
 	return $template;
 }
 
@@ -166,12 +166,12 @@ function buddyboss_global_search_result_page_dummy_post_load($template) {
 add_filter('pre_get_posts','buddyboss_global_search_clear_native_search_query');
 
 function buddyboss_global_search_clear_native_search_query($query) {
-	
+
 	if ($query->is_search && !is_admin() ) {
-    
+
 	    remove_filter('pre_get_posts','buddyboss_global_search_clear_native_search_query'); //only do first time
-    
+
 	}
-    
+
 	return $query;
 }

@@ -1,5 +1,5 @@
 <div class="ld-report-no-data">
-	<p><?php _e('No Data to display.', 'buddyboss'); ?></p>
+	<p><?php _e('Sorry, no data was found.', 'buddyboss'); ?></p>
 </div>
 
 <div class="bp_ld_report_table_wrapper">
