@@ -5,15 +5,14 @@
 		</div>
 
 		<div class="item">
-			<div class="item-title">
-				<?php echo wp_strip_all_tags( bp_get_activity_action() ); ?>
-			</div>
-
 			<?php if ( bp_activity_has_content() ) : ?>
 				<div class="item-desc">
 					<?php echo buddyboss_global_search_activity_intro( 30 ); ?>
 				</div>
 			<?php endif; ?>
+			<div class="item-meta activity-header">
+				<?php bp_activity_action(); ?>
+			</div>
 		</div>
 	</a>
 </div>
