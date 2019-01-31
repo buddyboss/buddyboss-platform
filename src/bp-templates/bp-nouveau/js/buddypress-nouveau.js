@@ -292,9 +292,12 @@ window.bp = window.bp || {};
 			/* Set the correct selected nav and filter */
 			$( this.objectNavParent + ' [data-bp-object]' ).each( function() {
 				$( this ).removeClass( 'selected loading' );
+				$( this ).find( 'span' ).hide();
 			} );
 
 			$( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).addClass( 'selected loading' );
+			$( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).find( 'span' ).text('');
+			$( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).find( 'span' ).show();
 			$( '#buddypress [data-bp-filter="' + data.object + '"] option[value="' + data.filter + '"]' ).prop( 'selected', true );
 
 			if ( 'friends' === data.object || 'group_members' === data.object ) {
@@ -321,6 +324,8 @@ window.bp = window.bp || {};
 				}
 
 				$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).removeClass( 'loading' );
+				$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text('');
+				$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text(response.data.count);
 
 				if ( 'reset' !== data.method ) {
 					self.inject( data.target, response.data.contents, data.method );

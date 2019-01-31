@@ -136,6 +136,14 @@ function bp_nouveau_ajax_object_template_loader() {
 	$result['contents'] = ob_get_contents();
 	ob_end_clean();
 
+	if ( 'members' === $object ) {
+		$result['count'] = $GLOBALS["members_template"]->total_member_count;
+	} elseif ( 'groups' === $object ) {
+		$result['count'] = $GLOBALS["groups_template"]->group_count;
+	} elseif ( 'activity' === $object ) {
+		//$result['count'] = $GLOBALS["activities_template"]->activity_count;
+	}
+
 	// Locate the object template.
 	wp_send_json_success( $result );
 }
