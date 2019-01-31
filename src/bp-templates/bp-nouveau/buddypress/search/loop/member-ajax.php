@@ -6,6 +6,13 @@
 
 		<div class="item">
 			<div class="item-title"><?php bp_member_name(); ?></div>
+
+			<?php if ( bp_nouveau_member_has_meta() ) : ?>
+				<p class="item-meta last-activity">
+					<?php bp_nouveau_member_meta(); ?>
+				</p><!-- #item-meta -->
+			<?php endif; ?>
 		</div>
+
 	</a>
 </div>

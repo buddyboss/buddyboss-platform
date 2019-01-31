@@ -6,11 +6,9 @@
 
 		<div class="item">
 			<div class="item-title"><?php bp_group_name(); ?></div>
-            <?php 
-                $content = wp_strip_all_tags(bp_get_group_description());
-                $trimmed_content = wp_trim_words( $content, 9, '...' );
-            ?>
-			<div class="item-desc"><?php echo $trimmed_content ?></div>
+			<?php if ( bp_nouveau_group_has_meta() ) : ?>
+				<p class="item-meta group-details"><?php bp_nouveau_group_meta(); ?></p>
+			<?php endif; ?>
 		</div>
 	</a>
 </div>

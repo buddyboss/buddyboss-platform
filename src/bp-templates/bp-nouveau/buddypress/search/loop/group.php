@@ -8,23 +8,12 @@
 		<?php endif; ?>
 
 		<div class="item">
-
 			<div class="item-block">
-
 				<h2 class="list-title groups-title"><?php bp_group_link(); ?></h2>
-
-				<p class="last-activity item-meta">
-					<?php
-					printf(
-					/* translators: %s = last activity timestamp (e.g. "active 1 hour ago") */
-						__( 'active %s', 'buddypress' ),
-						bp_get_group_last_active()
-					);
-					?>
-				</p>
-
+				<?php if ( bp_nouveau_group_has_meta() ) : ?>
+					<p class="item-meta group-details"><?php bp_nouveau_group_meta(); ?></p>
+				<?php endif; ?>
 			</div>
-
 		</div>
 
 	</div>

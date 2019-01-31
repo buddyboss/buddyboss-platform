@@ -284,16 +284,16 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 						$new_row['label'] = $item['title'];
 					}
 
-					if ( $type_mem != $new_row['type'] ) {
-						$type_mem              = $new_row['type'];
-						$cat_row               = $new_row;
-						$cat_row["type"]       = $item['type'];
-						$cat_row['type_label'] = $type_label;
-						$category_search_url   = esc_url( add_query_arg( array( 'subset' => $item['type'] ), $url ) );
-						$html                  = "<span><a href='" . esc_url( $category_search_url ) . "'>" . $type_label . "</a></span>";
-						$cat_row["value"]      = apply_filters( 'buddypress_gs_autocomplete_category', $html, $item['type'], $url, $type_label );
-						$search_results[]      = $cat_row;
-					}
+//					if ( $type_mem != $new_row['type'] ) {
+//						$type_mem              = $new_row['type'];
+//						$cat_row               = $new_row;
+//						$cat_row["type"]       = $item['type'];
+//						$cat_row['type_label'] = $type_label;
+//						$category_search_url   = esc_url( add_query_arg( array( 'subset' => $item['type'] ), $url ) );
+//						$html                  = "<span><a href='" . esc_url( $category_search_url ) . "'>" . $type_label . "</a></span>";
+//						$cat_row["value"]      = apply_filters( 'buddypress_gs_autocomplete_category', $html, $item['type'], $url, $type_label );
+//						$search_results[]      = $cat_row;
+//					}
 
 					$search_results[] = $new_row;
 				}
