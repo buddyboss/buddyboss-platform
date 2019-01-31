@@ -2,11 +2,11 @@
 	<div class="list-wrap">
 		<div class="item-avatar">
 			<a href="<?php the_permalink(); ?>">
-				<?php if( has_post_thumbnail() ) {
-					the_post_thumbnail();
-				} else {
-					// Image url
-				} ?>
+				<img
+					src="<?php echo get_the_post_thumbnail_url() ?: bp_search_get_post_thumbnail_default(get_post_type()) ?>"
+					class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
+					alt="<?php the_title() ?>"
+				/>
 			</a>
 		</div>
 
