@@ -277,10 +277,10 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		 * @return void
 		 */
 		public function assets() {
-			$min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-			wp_enqueue_style( 'jquery-ui-search', $this->assets_url . '/css/jquery-ui.min.css', array(), '1.11.2' );
+			//$min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+			//wp_enqueue_style( 'jquery-ui-search', $this->assets_url . '/css/jquery-ui.min.css', array(), '1.11.2' );
 //			wp_enqueue_style( 'buddypress-global-search', $this->assets_url . '/css/buddypress-global-search.css', array(), '1.1.2' );
-			wp_enqueue_style( 'bp-search', $this->assets_url . '/css/bp-search.css', array(), bp_get_version() );
+			//wp_enqueue_style( 'bp-search', $this->assets_url . '/css/bp-search.css', array(), bp_get_version() );
 
 
 			wp_enqueue_script( 'jquery-ui-autocomplete' );

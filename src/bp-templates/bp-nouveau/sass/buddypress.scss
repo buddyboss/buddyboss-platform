@@ -450,3 +450,12 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 // Import forums styles
 
 @import "../common-styles/_bp-forums";
+
+/**
+*-------------------------------------------------------------------------------
+* @section 11.0 - Global Search classes
+*-------------------------------------------------------------------------------
+*/
+// Import global search styles
+
+@import "../common-styles/_bp_global_search";

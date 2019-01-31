@@ -76,7 +76,7 @@ jQuery(document).ready(function($) {
 
 					if (item.type_label != "") {
 						$(ul).data("current_cat", item.type)
-						return $("<li>").attr("class", 'bbls-' + item.type + "-type bbls-category").append("<span>" + item.value + "</span>").appendTo(ul);
+						return $("<li>").attr("class", 'bbls-' + item.type + "-type bbls-category").append("<div>" + item.value + "</div>").appendTo(ul);
 					} else {
 						return $("<li>").attr("class", 'bbls-' + item.type + "-type bbls-sub-item").append("<a class='x'>" + item.value + "</a>").appendTo(ul);
 					}
@@ -141,7 +141,7 @@ jQuery(document).ready(function($) {
                             'per_page': 15
                         };
 
-                        response({value: '<div class="loading-msg"><span class="bb_global_search_spinner"></span>' + BP_SEARCH.loading_msg + '</div>'});
+                        response({value: '<div class="loading-msg"><span class="bb_global_search_spinner"></span><span>' + BP_SEARCH.loading_msg + '</span></div>'});
 
                         $.ajax({
                             url:BP_SEARCH.ajaxurl,
@@ -173,7 +173,7 @@ jQuery(document).ready(function($) {
 
                     if (item.type_label != "") {
                         $(ul).data("current_cat", item.type)
-                        return $("<li>").attr("class", 'bbls-' + item.type + "-type bbls-category").append("<span>" + item.value + "</span>").appendTo(ul);
+                        return $("<li>").attr("class", 'bbls-' + item.type + "-type bbls-category").append("<span class='bb-cat-title'>" + item.value + "</span>").appendTo(ul);
                     } else {
                         return $("<li>").attr("class", 'bbls-' + item.type + "-type bbls-sub-item").append("<a class='x'>" + item.value + "</a>").appendTo(ul);
                     }
