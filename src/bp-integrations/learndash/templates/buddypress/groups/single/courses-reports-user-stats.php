@@ -41,7 +41,7 @@
 				$link = apply_filters(
 					'bp_get_send_private_message_link',
 					wp_nonce_url(
-						bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . bp_core_get_username($user->ID)
+						bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . get_the_author_meta('login', $user->ID)
 					)
 				);
 
