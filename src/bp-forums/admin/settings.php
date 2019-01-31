@@ -547,7 +547,6 @@ function bbp_admin_setting_callback_thread_replies_depth() {
 	// Start an output buffer for the select dropdown
 	ob_start(); ?>
 
-	</label>
 	<label for="_bbp_thread_replies_depth">
 		<select name="_bbp_thread_replies_depth" id="_bbp_thread_replies_depth" <?php bbp_maybe_admin_setting_disabled( '_bbp_thread_replies_depth' ); ?>>
 		<?php for ( $i = 2; $i <= $max_depth; $i++ ) : ?>
@@ -556,7 +555,7 @@ function bbp_admin_setting_callback_thread_replies_depth() {
 
 		<?php endfor; ?>
 		</select>
-
+	</label>
 	<?php $select = ob_get_clean(); ?>
 
 	<label for="_bbp_allow_threaded_replies">
