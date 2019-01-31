@@ -7,7 +7,13 @@
 		<div class="item">
 			<div class="item-title"><?php bp_group_name(); ?></div>
 			<?php if ( bp_nouveau_group_has_meta() ) : ?>
-				<p class="item-meta group-details"><?php bp_nouveau_group_meta(); ?></p>
+				<p class="item-meta group-details"><?php
+					$meta = array(
+						'status' => bp_get_group_type(),
+						'count'  => bp_get_group_member_count(),
+					);
+					echo join( ' / ', array_map( 'wp_kses', (array) $meta, array( 'span' => array( 'class' => array() ) ) ) ); ?>
+				</p>
 			<?php endif; ?>
 		</div>
 	</a>
