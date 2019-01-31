@@ -1,6 +1,5 @@
 <li <?php bp_group_class( array( 'item-entry bboss_search_item bboss_search_item_group' ) ); ?> data-bp-item-id="<?php bp_group_id(); ?>" data-bp-item-component="groups">
 	<div class="list-wrap">
-
 		<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
 			<div class="item-avatar">
 				<a href="<?php bp_group_permalink(); ?>"><?php bp_group_avatar( bp_nouveau_avatar_args() ); ?></a>
@@ -15,6 +14,5 @@
 				<?php endif; ?>
 			</div>
 		</div>
-
 	</div>
 </li>

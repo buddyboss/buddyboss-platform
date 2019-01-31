@@ -511,7 +511,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 							$first_item          = reset( $items );
 							$start_html = "<div class='results-group results-group-{$type} " . apply_filters( 'bboss_global_search_class_search_wrap', 'bboss-results-wrap', $label ) . "'>"
 							              . "<header class='results-group-header clearfix'>"
-							              . "<h2 class='results-group-title'><span>" . apply_filters( 'bboss_global_search_label_search_type', $label ) . "</span></h2>"
+							              . "<h3 class='results-group-title'><span>" . apply_filters( 'bboss_global_search_label_search_type', $label ) . "</span></h3>"
 							              . "<a href='". $category_search_url."' class='view-all-link'>". esc_html__( 'View All', 'buddyboss' ) ."</a>"
 							              . "</header>"
 							              . "<ul id='{$type}-stream' class='item-list {$type}-list bp-list " . apply_filters( 'bboss_global_search_class_search_list', 'bboss-results-list', $label ) . "'>";
