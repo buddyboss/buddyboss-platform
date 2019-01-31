@@ -3,9 +3,9 @@ jQuery(document).ready(function($) {
 
 	if (BP_SEARCH.enable_ajax_search == '1') {
         var document_height = $(document).height();
-		$("form[role='search'], form.search-form, form.searchform, form#adminbarsearch").each(function() {
+		$("form[role='search'], form.search-form, form.searchform, form#adminbarsearch, .bp-search>#search-form").each(function() {
 			var $form = $(this);
-			$search_field = $form.find("input[name='s']");
+			$search_field = $form.find("input[name='s'], input[type=search]");
 			if ($search_field.length > 0) {
 				currentType = '';
 
@@ -264,7 +264,7 @@ jQuery(document).ready(function($) {
 function bp_ps_clear_form_elements( ele ) {
     var $form = jQuery(ele).closest('form');
     var event = new Event('change');
-    
+
     $form.find(':input').each(function() {
         switch(this.type) {
             case 'password':
@@ -287,6 +287,6 @@ function bp_ps_clear_form_elements( ele ) {
     });
 
     $form.submit();
-    
+
     return false;
 }

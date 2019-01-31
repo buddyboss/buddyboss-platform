@@ -102,7 +102,9 @@ if (!class_exists('BBoss_Global_Search_CPT')):
 
 			//now we have all the posts
 			//lets do a wp_query and generate html for all posts
-			$qry = new WP_Query( array( 'post_type' => $this->cpt_name, 'post__in'=>$post_ids ) );
+			$qry      = new WP_Query( array( 'post_type' => $this->cpt_name, 'post__in' => $post_ids ) );
+			$template = bp_locate_template( "search/loop/{$this->cpt_name}.php" ) ? "loop/{$this->cpt_name}" : 'loop/post';
+
 			if( $qry->have_posts() ){
 				while( $qry->have_posts() ){
 					$qry->the_post();
@@ -110,7 +112,7 @@ if (!class_exists('BBoss_Global_Search_CPT')):
 						'id'	=> get_the_ID(),
 						'type'	=> $this->search_type,
 						'title'	=> get_the_title(),
-						'html'	=> buddyboss_global_search_buffer_template_part( 'loop/post', $template_type, false ),
+						'html'	=> buddyboss_global_search_buffer_template_part( $template, $template_type, false ),
 					);
 
 					$this->search_results['items'][get_the_ID()] = $result;

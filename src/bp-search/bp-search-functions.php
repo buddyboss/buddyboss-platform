@@ -54,7 +54,7 @@ function buddyboss_global_search_reply_intro( $character_limit=50 ){
 
 	if( $reply_content ){
 		$content = wp_strip_all_tags( $reply_content, true );
-		$search_term = BP_Search::instance()->search->get_search_term();
+		$search_term = BP_Search::instance()->get_search_term();
 
 		$search_term_position = stripos( $content, $search_term );
 		if( $search_term_position !== false ){
