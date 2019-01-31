@@ -6805,6 +6805,10 @@ fieldset div.avatar {
 /* +++++++++++++++++++++++++++++++++++++++++
 AJAX SEARCH
 +++++++++++++++++++++++++++++++++++++++++ */
+body.bp-search.search-results #primary {
+  width: 100%;
+}
+
 .bboss_ajax_search_item {
   margin: 0;
 }
@@ -6998,7 +7002,12 @@ div.search_results .groups-list li .last-activity {
 }
 
 .bboss_search_results_wrapper .bboss_search_form_wrapper {
-  margin: 1.5em 0;
+  float: right;
+  margin: 0 0 20px;
+}
+
+.search_results {
+  clear: both;
 }
 
 .bboss_search_results_wrapper .results-group-members {

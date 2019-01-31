@@ -5,20 +5,24 @@
  */
 ?>
 
+<div class="bboss_search_page buddypress-wrap bp-dir-hori-nav">
 
-<div class="bboss_search_page buddypress-wrap">
+	<div class="bboss_search_results_wrapper dir-form">
 
-		<div class="bboss_search_results_wrapper dir-form">
-			<div class="search_filters item-list-tabs bp-navs no-ajax" role="navigation">
-				<ul>
-					<?php buddyboss_global_search_filters();?>
-				</ul>
-			</div>
-			<div class="bboss_search_form_wrapper dir-search no-ajax">
-				<?php get_search_form();?>
-			</div>
-			<div class="search_results">
-				<?php buddyboss_global_search_results();?>
-			</div>
+		<nav class="search_filters item-list-tabs main-navs dir-navs bp-navs no-ajax" role="navigation">
+			<ul class="component-navigation search-nav">
+				<?php buddyboss_global_search_filters();?>
+			</ul>
+		</nav>
+
+		<div class="bboss_search_form_wrapper dir-search no-ajax">
+			<?php bp_get_template_part('common/search/search-form');?>
 		</div>
+
+		<div class="search_results">
+			<?php buddyboss_global_search_results();?>
+		</div>
+
+	</div>
+
 </div><!-- .bboss_search_page -->

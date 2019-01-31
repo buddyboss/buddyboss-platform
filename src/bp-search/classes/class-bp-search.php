@@ -736,7 +736,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 			$search_url = $this->search_page_search_url();
 
 			//first print the 'all results' tab
-			$class = 'all' == $this->search_args['search_subset'] ? 'active current' : '';
+			$class = 'all' == $this->search_args['search_subset'] ? 'active current selected' : '';
 			//this filter can be used to change display of 'all' to 'Everything' etc..
 			$all_label = __( 'All', 'buddypress-global-search' );
 			$label     = apply_filters( 'bboss_global_search_label_search_type', $all_label );
