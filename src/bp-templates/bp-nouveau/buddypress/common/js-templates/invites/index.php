@@ -150,6 +150,6 @@
 		<a href="#next-page" id="bp-invites-next-page" class="button invite-button bp-tooltip" data-bp-tooltip="<?php echo esc_attr_x( 'Next page', 'link', 'buddyboss' ); ?>">
 			<span class="bp-screen-reader-text"><?php echo esc_html_x( 'Next page', 'link', 'buddyboss' ); ?></span>
 			<span class="dashicons dashicons-arrow-right" aria-hidden="true"></span>
-		</button>
+		</a>
 	<# } #>
 </script>
