@@ -2,7 +2,13 @@
 	<div class="list-wrap">
 		<div class="item-avatar">
 			<a href="<?php bbp_forum_permalink( get_the_ID() ); ?>">
-				<img src="<?php echo bbp_get_forum_thumbnail_src( get_the_ID() ) ?>" alt=""/>
+				<img
+					src="<?php echo bbp_get_forum_thumbnail_src( get_the_ID() ) ?: buddypress()->plugin_url . "bp-core/images/mystery-forum.png"; ?>"
+					class="avatar forum-avatar"
+					height="150"
+					width="150"
+					alt=""
+				/>
 			</a>
 		</div>
 
