@@ -6817,9 +6817,6 @@ body.bp-search.search-results #primary {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .bboss_ajax_search_item .item-avatar {
@@ -6838,6 +6835,7 @@ body.bp-search.search-results #primary {
   flex: 1;
   overflow: hidden;
   line-height: 1.3;
+  align-self: center;
 }
 
 .bboss_ajax_search_item .item .item-desc {
