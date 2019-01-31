@@ -283,7 +283,25 @@ body.bp-nouveau .bboss-results-list > li {
     position: relative;
     list-style: none;
 }
+body.bp-nouveau .bboss_search_page ul#activity-stream {
+	padding: 0;
+	background: transparent;
+	border: 0;
+}
 
+body.bp-nouveau .bboss_search_page ul#activity-stream li.activity_update {
+	border: 0;
+	box-shadow: none;
+}
+
+body.bp-nouveau .bboss_search_page ul#activity-stream .activity-avatar {
+	width: auto;
+}
+body.bp-nouveau .bboss_search_page ul#activity-stream .activity-inner {
+	margin: 0;
+	padding: 0;
+	background: transparent;
+}
 body.bp-nouveau .bboss-results-list > li .item-avatar,
 body.bp-nouveau .bboss-results-list > li .activity-avatar {
 	float: left;
