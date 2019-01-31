@@ -6982,6 +6982,26 @@ SEARCH RESULTS PAGE
   margin-bottom: 0;
 }
 
+.bboss_search_page .results-group ul#activity-stream {
+  argin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.bboss_search_page .results-group ul#activity-stream li.activity-item {
+  border: 0;
+  box-shadow: none;
+  margin: 0;
+}
+
+.bboss_search_page .results-group ul#activity-stream li.activity-item .activity-inner {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
 .bboss_search_page .bp-navs ul li .count {
   margin-left: 6px;
 }
