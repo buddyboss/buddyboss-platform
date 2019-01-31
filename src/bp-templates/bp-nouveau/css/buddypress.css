@@ -7141,7 +7141,6 @@ div.search_results .groups-list li .last-activity {
 
 .bboss-results-list .bboss_search_item .list-wrap {
   display: flex;
-  align-items: center;
 }
 
 .bboss-results-list .bboss_search_item .item-avatar {
@@ -7154,14 +7153,17 @@ div.search_results .groups-list li .last-activity {
 }
 
 .bboss-results-list .bboss_search_item .item {
+  display: block;
   flex: 1;
+  align-self: center;
 }
 
-.bboss-results-list .bboss_search_item h2.list-title {
+.bboss-results-list .bboss_search_item .item-title {
   float: none;
   font-size: 16px;
   color: #122B46;
   letter-spacing: -0.24px;
+  line-height: 1;
   margin-bottom: 4px;
   text-align: left;
 }
@@ -7174,4 +7176,5 @@ div.search_results .groups-list li .last-activity {
 .bboss-results-list .bboss_search_item .item-desc {
   color: #737373;
   font-size: 12px;
+  line-height: 1.4;
 }

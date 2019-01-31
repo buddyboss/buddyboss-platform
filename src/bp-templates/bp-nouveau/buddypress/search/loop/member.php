@@ -5,7 +5,7 @@
 		</div>
 
 		<div class="item">
-			<h2 class="list-title member-name">
+			<h2 class="item-title member-name">
 				<a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a>
 			</h2>
 
