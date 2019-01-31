@@ -129,6 +129,20 @@ function bp_admin_setting_callback_enable_activity_follow() {
 }
 
 /**
+ * Allow like activity stream.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_admin_setting_callback_enable_activity_like() {
+	?>
+
+	<input id="_bp_enable_activity_like" name="_bp_enable_activity_like" type="checkbox" value="1" <?php checked( bp_is_activity_like_active( true ) ); ?> />
+	<label for="_bp_enable_activity_like"><?php _e( 'Enable liking of activity posts', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
  * Sanitization for bp-disable-blogforum-comments setting.
  *
  * In the UI, a checkbox asks whether you'd like to *enable* post/comment activity comments. For

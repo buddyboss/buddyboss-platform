@@ -262,7 +262,7 @@ class BP_Activity_Component extends BP_Component {
 		);
 
 		// Favorite activity items.
-		if ( bp_activity_can_favorite() && bp_is_my_profile() ) {
+		if ( bp_activity_can_favorite() && bp_is_my_profile() && bp_is_activity_like_active() ) {
 			$sub_nav[] = array(
 				'name'            => _x( 'My Likes', 'Profile activity screen sub nav', 'buddyboss' ),
 				'slug'            => 'favorites',
@@ -367,7 +367,7 @@ class BP_Activity_Component extends BP_Component {
 			);
 
 			// Favorite activity items.
-			if ( bp_activity_can_favorite() ) {
+			if ( bp_activity_can_favorite() && bp_is_activity_like_active() ) {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-favorites',

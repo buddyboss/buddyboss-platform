@@ -223,7 +223,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 		);
 
 		// If the user has favorite create a nav item
-		if ( bp_get_total_favorite_count_for_user( bp_loggedin_user_id() ) ) {
+		if ( bp_get_total_favorite_count_for_user( bp_loggedin_user_id() ) && bp_is_activity_like_active() ) {
 			$nav_items['favorites'] = array(
 				'component' => 'activity',
 				'slug'      => 'favorites', // slug is used because BP_Core_Nav requires it, but it's the scope

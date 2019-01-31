@@ -360,7 +360,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 
 		}
 
-		if ( bp_activity_can_favorite() ) {
+		if ( bp_activity_can_favorite() && bp_is_activity_like_active() ) {
 
 			// If button element set attr needs to be data-* else 'href'
 			if ( 'button' === $button_element ) {

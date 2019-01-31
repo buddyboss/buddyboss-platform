@@ -914,6 +914,27 @@ function bp_is_activity_follow_active( $default = false ) {
 }
 
 /**
+ * Check whether Activity Like is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if Like is enabled, otherwise false.
+ */
+function bp_is_activity_like_active( $default = true ) {
+
+	/**
+	 * Filters whether or not Activity Follow is enabled.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param bool $value Whether or not Activity Follow is enabled.
+	 */
+	return (bool) apply_filters( 'bp_is_activity_like_active', (bool) bp_get_option( '_bp_enable_activity_like', $default ) );
+}
+
+/**
  * Get the current theme package ID.
  *
  * @since BuddyPress 1.7.0
