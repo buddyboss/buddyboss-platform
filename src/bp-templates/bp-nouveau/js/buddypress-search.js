@@ -74,6 +74,11 @@ jQuery(document).ready(function($) {
 				.data("ui-autocomplete")._renderItem = function(ul, item) {
 					ul.addClass( 'bb-global-search-ac' );
 
+					// Add .bb-global-search-ac-header if search is made from header area of the site
+					 if ( $form.parents('header').length != 0 ) {
+						 ul.addClass( 'bb-global-search-ac-header' );
+					 }
+
 					if (item.type_label != "") {
 						$(ul).data("current_cat", item.type)
 						return $("<li>").attr("class", 'bbls-' + item.type + "-type bbls-category").append("<div>" + item.value + "</div>").appendTo(ul);
