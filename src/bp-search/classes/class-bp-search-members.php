@@ -30,7 +30,7 @@ if (!class_exists('Bp_Search_Members')):
 			if (null === $instance) {
 				$instance = new Bp_Search_Members();
 
-				add_action( 'bboss_global_search_settings_item_members', array( $instance, 'print_search_options' ) );
+				add_action( 'bp_search_settings_item_members', array( $instance, 'print_search_options' ) );
 			}
 
 			// Always return the instance

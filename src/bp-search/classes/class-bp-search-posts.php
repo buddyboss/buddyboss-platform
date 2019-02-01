@@ -25,7 +25,7 @@ if (!class_exists('Bp_Search_Posts')):
 			$this->pt_name = $pt_name;
 			$this->search_type =$search_type;
 
-			add_action( "bboss_global_search_settings_item_{$this->search_type}", array( $this, 'print_search_options' ) );
+			add_action( "bp_search_settings_item_{$this->search_type}", array( $this, 'print_search_options' ) );
 		}
 
 

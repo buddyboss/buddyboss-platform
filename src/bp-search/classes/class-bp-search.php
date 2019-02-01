@@ -70,8 +70,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 				//create instances of helpers and associate them with types
 				add_action( 'init', array( $instance, 'load_search_helpers' ), 80 );
 
-				add_action( 'wp_ajax_bboss_global_search_ajax', array( $instance, 'ajax_search' ) );
-				add_action( 'wp_ajax_nopriv_bboss_global_search_ajax', array( $instance, 'ajax_search' ) );
+				add_action( 'wp_ajax_bp_search_ajax', array( $instance, 'ajax_search' ) );
+				add_action( 'wp_ajax_nopriv_bp_search_ajax', array( $instance, 'ajax_search' ) );
 			}
 
 			// Always return the instance
@@ -178,11 +178,11 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 			/**
 			 * Hook to load helper classes for additional search types.
 			 */
-			$additional_search_helpers = apply_filters( 'bboss_global_search_additional_search_helpers', array() );
+			$additional_search_helpers = apply_filters( 'bp_search_additional_search_helpers', array() );
 			if ( ! empty( $additional_search_helpers ) ) {
 				foreach ( $additional_search_helpers as $search_type => $helper_object ) {
 					/**
-					 * All helper classes must inherit from BBoss_Global_Search_Type
+					 * All helper classes must inherit from bp_search_Type
 					 */
 					if ( ! isset( $this->search_helpers[ $search_type ] ) && is_a( $helper_object, 'BP_Search_Type' ) ) {
 						$this->search_helpers[ $search_type ] = $helper_object;
@@ -193,7 +193,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 		}
 
 		public function ajax_search() {
-			check_ajax_referer( 'bboss_global_search_ajax', 'nonce' );
+			check_ajax_referer( 'bp_search_ajax', 'nonce' );
 
 			if ( isset( $_POST["view"] ) && $_POST["view"] == "content" ) {
 
@@ -256,7 +256,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 						/*
 						if( !$first_html_changed ){
 							//this filter can be used to change display of 'posts' to 'Blog Posts' etc..
-							$label = apply_filters( 'bboss_global_search_label_search_type', $type );
+							$label = apply_filters( 'bp_search_label_search_type', $type );
 
 							//$item['html'] = "<div class='results-group results-group-{$type}'><span class='results-group-title'>{$label}</span></div>" . $item['html'];
 							$first_html_changed = true;
@@ -276,7 +276,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 				$type_mem = "";
 				foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
 					$new_row               = array( 'value' => $item['html'] );
-					$type_label            = apply_filters( 'bboss_global_search_label_search_type', $item['type'] );
+					$type_label            = apply_filters( 'bp_search_label_search_type', $item['type'] );
 					$new_row['type']       = $item['type'];
 					$new_row['type_label'] = "";
 					$new_row['value']      = $item['html'];
@@ -509,14 +509,14 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 							$category_search_url = esc_url( add_query_arg( array( 'subset' => $type ), $search_url ) );
 							$label               = isset( $search_items[ $type ] ) ? trim($search_items[ $type ] ): trim( $type );
 							$first_item          = reset( $items );
-							$start_html = "<div class='results-group results-group-{$type} " . apply_filters( 'bboss_global_search_class_search_wrap', 'bboss-results-wrap', $label ) . "'>"
+							$start_html = "<div class='results-group results-group-{$type} " . apply_filters( 'bp_search_class_search_wrap', 'bboss-results-wrap', $label ) . "'>"
 							              . "<header class='results-group-header clearfix'>"
-							              . "<h3 class='results-group-title'><span>" . apply_filters( 'bboss_global_search_label_search_type', $label ) . "</span></h3>"
+							              . "<h3 class='results-group-title'><span>" . apply_filters( 'bp_search_label_search_type', $label ) . "</span></h3>"
 							              . "<a href='". $category_search_url."' class='view-all-link'>". esc_html__( 'View All', 'buddyboss' ) ."</a>"
 							              . "</header>"
-							              . "<ul id='{$type}-stream' class='item-list {$type}-list bp-list " . apply_filters( 'bboss_global_search_class_search_list', 'bboss-results-list', $label ) . "'>";
+							              . "<ul id='{$type}-stream' class='item-list {$type}-list bp-list " . apply_filters( 'bp_search_class_search_list', 'bboss-results-list', $label ) . "'>";
 
-							$group_start_html = apply_filters( "bboss_global_search_results_group_start_html", $start_html, $type );
+							$group_start_html = apply_filters( "bp_search_results_group_start_html", $start_html, $type );
 
 							$first_item['html']         = $group_start_html . $first_item['html'];
 							$items[ $first_item['id'] ] = $first_item;
@@ -525,7 +525,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 							$last_item = end( $items );
 							$end_html  = "</ul></div>";
 
-							$group_end_html = apply_filters( "bboss_global_search_results_group_end_html", $end_html, $type );
+							$group_end_html = apply_filters( "bp_search_results_group_end_html", $end_html, $type );
 
 							$last_item['html']         = $last_item['html'] . $group_end_html;
 							$items[ $last_item['id'] ] = $last_item;
@@ -601,10 +601,10 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 
 					//now prepend html (opening tags) to first item of each type
 					$first_item = reset( $this->search_results[ $args['search_subset'] ]['items'] );
-					$start_html = "<div class='results-group results-group-{$args['search_subset']} " . apply_filters( 'bboss_global_search_class_search_wrap', 'bboss-results-wrap', $args['search_subset'] ) . "'>"
-					              . "<ul id='{$args['search_subset']}-stream' class='item-list {$args['search_subset']}-list bp-list " . apply_filters( 'bboss_global_search_class_search_list', 'bboss-results-list', $args['search_subset'] ) . "'>";
+					$start_html = "<div class='results-group results-group-{$args['search_subset']} " . apply_filters( 'bp_search_class_search_wrap', 'bboss-results-wrap', $args['search_subset'] ) . "'>"
+					              . "<ul id='{$args['search_subset']}-stream' class='item-list {$args['search_subset']}-list bp-list " . apply_filters( 'bp_search_class_search_list', 'bboss-results-list', $args['search_subset'] ) . "'>";
 
-					$group_start_html = apply_filters( "bboss_global_search_results_group_start_html", $start_html, $args['search_subset'] );
+					$group_start_html = apply_filters( "bp_search_results_group_start_html", $start_html, $args['search_subset'] );
 
 					$first_item['html']                                                           = $group_start_html . $first_item['html'];
 					$this->search_results[ $args['search_subset'] ]['items'][ $first_item['id'] ] = $first_item;
@@ -613,7 +613,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 					$last_item = end( $this->search_results[ $args['search_subset'] ]['items'] );
 					$end_html  = "</ul></div>";
 
-					$group_end_html = apply_filters( "bboss_global_search_results_group_end_html", $end_html, $args['search_subset'] );
+					$group_end_html = apply_filters( "bp_search_results_group_end_html", $end_html, $args['search_subset'] );
 
 					$last_item['html']                                                           = $last_item['html'] . $group_end_html;
 					$this->search_results[ $args['search_subset'] ]['items'][ $last_item['id'] ] = $last_item;
@@ -660,7 +660,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 				}
 			}
 
-			$args = apply_filters( 'bboss_global_search_search_page_args', $args );
+			$args = apply_filters( 'bp_search_search_page_args', $args );
 			$this->do_search( $args );
 		}
 
@@ -739,7 +739,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 			$class = 'all' == $this->search_args['search_subset'] ? 'active current selected' : '';
 			//this filter can be used to change display of 'all' to 'Everything' etc..
 			$all_label = __( 'All', 'buddypress-global-search' );
-			$label     = apply_filters( 'bboss_global_search_label_search_type', $all_label );
+			$label     = apply_filters( 'bp_search_label_search_type', $all_label );
 
 			if ( $this->search_args['count_total'] && isset( $this->search_results['all'] ) ) {
 				$label .= "<span class='count'>" . $this->search_results['all']['total_match_count'] . "</span>";
@@ -756,7 +756,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 
 				$label = isset ( $search_items[ $item ] ) ? $search_items[ $item ] : $item;
 
-				$label = apply_filters( 'bboss_global_search_label_search_type', $label );
+				$label = apply_filters( 'bp_search_label_search_type', $label );
 
 				if ( empty( $this->search_results[ $item ]['total_match_count'] ) ) {
 					continue; //skip tab
