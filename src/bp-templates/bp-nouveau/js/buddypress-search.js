@@ -58,7 +58,11 @@ jQuery(document).ready(function($) {
 					minLength: 2,
 					delay: 500,
 					select: function(event, ui) {
-						window.location = $(ui.item.value).find("a").attr("href");
+						var newLocation = $( ui.item.value ).find( 'a' ).attr( 'href' );
+						if ( newLocation ) {
+							window.location = newLocation;
+						}
+
 						return false;
 					},
 					focus: function(event, ui) {
