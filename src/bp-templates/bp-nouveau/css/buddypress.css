@@ -6805,10 +6805,6 @@ fieldset div.avatar {
 /* +++++++++++++++++++++++++++++++++++++++++
 AJAX SEARCH
 +++++++++++++++++++++++++++++++++++++++++ */
-body.bp-search.search-results #primary {
-  width: 100%;
-}
-
 .bboss_ajax_search_item {
   margin: 0;
 }
