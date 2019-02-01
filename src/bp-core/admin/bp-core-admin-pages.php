@@ -193,14 +193,15 @@ function bp_admin_setting_callback_page_directory_dropdown($args) {
 		'selected'         => !empty( $existing_pages[$name] ) ? $existing_pages[$name] : false
 	) );
 
-	if ( !empty( $existing_pages[$name] ) ) :
-
-		printf(
-			'<a href="%s" class="button-secondary" target="_bp">%s</a>',
-			get_permalink( $existing_pages[$name] ),
-			__( 'View', 'buddyboss' )
-		);
-	endif;
+	if ( !empty( $existing_pages[$name] ) ) {
+		printf( '<a href="%s" class="button-secondary" target="_bp">%s</a>',
+			get_permalink( $existing_pages[ $name ] ),
+			__( 'View', 'buddyboss' ) );
+	} else {
+		printf( '<a href="%s" class="button-secondary create-background-page" data-name="%s" target="_bp">%s</a>',
+			'javascript:void(0);',esc_attr( $name ),
+			__( 'Create Page', 'buddyboss' ) );
+	}
 
 	if ( ! bp_is_root_blog() ) restore_current_blog();
 }

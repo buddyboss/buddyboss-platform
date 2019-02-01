@@ -101,11 +101,15 @@ abstract class BP_Admin_Tab {
 	public function register_admin_script()
 	{
 		wp_enqueue_script('bp-admin',
-			buddypress()->plugin_url . '/bp-core/admin/js/settings-page.js',
+			buddypress()->plugin_url . 'bp-core/admin/js/settings-page.js',
 			['jquery'],
 			buddypress()->version,
 			true
 		);
+
+		wp_localize_script('bp-admin', 'BP_ADMIN', [
+			'ajax_url'      => admin_url('admin-ajax.php'),
+		]);
 	}
 
 	/**

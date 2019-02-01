@@ -24,5 +24,24 @@
 				}
 			}).trigger('change.run-condition');
 		});
+
+		var bpPages = $('body.buddypress.buddyboss_page_bp-pages .card').length;
+		if ( bpPages > 1 ) {
+			$('.create-background-page').click(function () {
+				var dataPage = $(this).attr('data-name');
+
+				$.ajax({
+					'url' : BP_ADMIN.ajax_url,
+					'method' : 'POST',
+					'data' : {
+						'action' : 'bp_core_admin_create_background_page',
+						'page' : dataPage
+					},
+					'success' : function() {
+						window.location.reload( true );
+					}
+				});
+			});
+		}
 	});
 }());
