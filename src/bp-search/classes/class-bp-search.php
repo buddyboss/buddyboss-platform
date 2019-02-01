@@ -33,7 +33,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 		 * It will be used by other methods later on.
 		 * @var array
 		 */
-		private $search_args = array();
+		public $search_args = array();
 
 		/**
 		 * The variable to hold search results.
