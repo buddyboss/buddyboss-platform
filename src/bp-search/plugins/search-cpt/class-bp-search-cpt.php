@@ -2,7 +2,7 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if (!class_exists('bp_search_CPT')):
+if (!class_exists('BP_Search_CPT')):
 
 	/**
 	 *
@@ -84,7 +84,7 @@ if (!class_exists('bp_search_CPT')):
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
 
             return apply_filters(
-                'bp_search_CPT_sql',
+                'BP_Search_CPT_sql',
                 $sql,
                 array(
                     'post_type'             => $this->cpt_name,
@@ -148,7 +148,7 @@ if (!class_exists('bp_search_CPT')):
 
 	}
 
-// End class bp_search_CPT
+// End class BP_Search_CPT
 
 endif;
 ?>
