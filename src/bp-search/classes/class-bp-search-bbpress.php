@@ -75,7 +75,7 @@ if (!class_exists('Bp_Search_bbPress')):
 						'id'	=> get_the_ID(),
 						'type'	=> $this->type,
 						'title'	=> get_the_title(),
-						'html'	=> buddyboss_global_search_buffer_template_part( 'loop/' . $this->type, $template_type, false ),
+						'html'	=> bp_search_buffer_template_part( 'loop/' . $this->type, $template_type, false ),
 					);
 
 					$this->search_results['items'][get_the_ID()] = $result_item;

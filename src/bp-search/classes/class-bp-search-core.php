@@ -55,7 +55,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		 * plugins from tampering with essential information indirectly, which
 		 * would cause issues later.
 		 *
-		 * @see BuddyBoss_Global_Search_Plugin::setup_globals()
+		 * @see bp_search_Plugin::setup_globals()
 		 * @var array
 		 */
 		private $data;
@@ -73,12 +73,12 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		 * @since 1.0.0
 		 *
 		 * @static object $instance
-		 * @uses BuddyBoss_Global_Search_Plugin::setup_globals() Setup the globals needed.
-		 * @uses BuddyBoss_Global_Search_Plugin::setup_actions() Setup the hooks and actions.
-		 * @uses BuddyBoss_Global_Search_Plugin::setup_textdomain() Setup the plugin's language file.
+		 * @uses bp_search_Plugin::setup_globals() Setup the globals needed.
+		 * @uses bp_search_Plugin::setup_actions() Setup the hooks and actions.
+		 * @uses bp_search_Plugin::setup_textdomain() Setup the plugin's language file.
 		 * @see  BP_Search::instance()
 		 *
-		 * @return object BuddyBoss_Global_Search_Plugin
+		 * @return object bp_search_Plugin
 		 */
 		public static function instance() {
 			// Store the instance locally to avoid private static replication
@@ -103,7 +103,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		 * A dummy constructor to prevent BuddyBoss Global Search from being loaded more than once.
 		 *
 		 * @since BuddyBoss Global Search (1.0.0)
-		 * @see BuddyBoss_Global_Search_Plugin::instance()
+		 * @see bp_search_Plugin::instance()
 		 * @see buddypress()
 		 */
 		private function __construct() { /* Do nothing here */
@@ -244,7 +244,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		private function load_admin() {
 			$this->do_includes( $this->admin_includes );
 
-			$this->admin = BuddyBoss_Global_Search_Admin::instance();
+			$this->admin = bp_search_Admin::instance();
 		}
 
 		/**
@@ -253,7 +253,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		 * @since 1.0.0
 		 * @access private
 		 *
-		 * @uses BuddyBoss_Global_Search_Plugin::do_includes() Loads array of files in the include folder
+		 * @uses bp_search_Plugin::do_includes() Loads array of files in the include folder
 		 */
 		private function load_main() {
 			$this->do_includes( $this->main_includes );
@@ -318,7 +318,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 
 	}
 
-// End class BuddyBoss_Global_Search_Plugin
+// End class bp_search_Plugin
 
 endif;
 

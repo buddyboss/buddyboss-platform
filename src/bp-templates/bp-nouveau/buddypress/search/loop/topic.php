@@ -14,7 +14,7 @@
 
 		<div class="item">
 			<div class="item-title"><a href="<?php bbp_topic_permalink(get_the_ID()); ?>"><?php bbp_topic_title(get_the_ID()); ?></a></div>
-			<div class="item-desc"><?php echo buddyboss_global_search_reply_intro( 100 );?></div>
+			<div class="item-desc"><?php echo bp_search_reply_intro( 100 );?></div>
 		</div>
 	</div>
 </li>

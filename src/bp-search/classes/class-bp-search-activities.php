@@ -108,7 +108,7 @@ if (!class_exists('Bp_Search_Activities')):
 						'id'	=> bp_get_activity_id(),
 						'type'	=> $this->type,
 						'title'	=> $this->search_term,
-						'html'	=> buddyboss_global_search_buffer_template_part( 'loop/activity', $template_type, false ),
+						'html'	=> bp_search_buffer_template_part( 'loop/activity', $template_type, false ),
 					);
 
 					$this->search_results['items'][bp_get_activity_id()] = $result;

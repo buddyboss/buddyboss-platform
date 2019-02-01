@@ -143,7 +143,7 @@ if (!class_exists('Bp_Search_Posts')):
 						'id'	=> get_the_ID(),
 						'type'	=> $this->search_type,
 						'title'	=> get_the_title(),
-						'html'	=> buddyboss_global_search_buffer_template_part( 'loop/post', $template_type, false ),
+						'html'	=> bp_search_buffer_template_part( 'loop/post', $template_type, false ),
 					);
 
 					$this->search_results['items'][get_the_ID()] = $result;
@@ -173,7 +173,7 @@ if (!class_exists('Bp_Search_Posts')):
 			$item 		= 'post_field_' . $this->pt_name.'_meta';
 			$checked 	= ! empty( $items_to_search ) && in_array( $item, $items_to_search ) ? ' checked' : '';
 
-			echo "<label><input type='checkbox' value='{$item}' name='buddyboss_global_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
+			echo "<label><input type='checkbox' value='{$item}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
 
 			/** Post Taxonomies Fields *********************************/
 			$pt_taxonomy = get_object_taxonomies( $this->pt_name ) ;
@@ -184,7 +184,7 @@ if (!class_exists('Bp_Search_Posts')):
 				$value 		= $this->search_type.'-tax-'.$tax;
 				$checked 	= !empty( $items_to_search ) && in_array( $value, $items_to_search ) ? ' checked' : '';
 
-				echo "<label><input type='checkbox' value='{$value}' name='buddyboss_global_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
+				echo "<label><input type='checkbox' value='{$value}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
 			}
 
 			echo "</div><!-- .wp-user-fields -->";

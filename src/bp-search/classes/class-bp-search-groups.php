@@ -171,7 +171,7 @@ if (!class_exists('Bp_Search_Groups')):
 						'id'	=> bp_get_group_id(),
 						'type'	=> $this->type,
 						'title'	=> bp_get_group_name(),
-						'html'	=> buddyboss_global_search_buffer_template_part( 'loop/group', $template_type, false ),
+						'html'	=> bp_search_buffer_template_part( 'loop/group', $template_type, false ),
 					);
 
 					$this->search_results['items'][bp_get_group_id()] = $result;

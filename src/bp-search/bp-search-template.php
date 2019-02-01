@@ -2,9 +2,9 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-add_filter( 'the_content', 'buddyboss_global_search_search_page_content', 9 );
+add_filter( 'the_content', 'bp_search_search_page_content', 9 );
 
-function buddyboss_global_search_search_page_content( $content ){
+function bp_search_search_page_content( $content ){
     /**
      * Reportedly, on some installations, the remove_filter call below, doesn't work and this filter is called over and over again.
      * Possibly due to some other plugin/theme.
@@ -15,7 +15,7 @@ function buddyboss_global_search_search_page_content( $content ){
     global $bpgs_main_content_filter_has_run;
 
 	if( !is_admin() && is_search() && 'yes' != $bpgs_main_content_filter_has_run ){
-			remove_filter( 'the_content', 'buddyboss_global_search_search_page_content', 9 );
+			remove_filter( 'the_content', 'bp_search_search_page_content', 9 );
 			remove_filter( 'the_content', 'wpautop' );
             $bpgs_main_content_filter_has_run = 'yes';
 			//setup search resutls and all..
@@ -28,7 +28,7 @@ function buddyboss_global_search_search_page_content( $content ){
 	return $content;
 }
 
-function buddyboss_global_search_load_template( $template, $variation=false ){
+function bp_search_load_template( $template, $variation=false ){
 	$file = $template;
 
 	if( $variation ){
@@ -38,10 +38,10 @@ function buddyboss_global_search_load_template( $template, $variation=false ){
 	bp_get_template_part( 'search/' . $file );
 }
 
-function buddyboss_global_search_buffer_template_part( $template, $variation='', $echo=true ){
+function bp_search_buffer_template_part( $template, $variation='', $echo=true ){
 	ob_start();
 
-	buddyboss_global_search_load_template( $template, $variation );
+	bp_search_load_template( $template, $variation );
 	// Get the output buffer contents
 	$output = ob_get_clean();
 
@@ -53,10 +53,10 @@ function buddyboss_global_search_buffer_template_part( $template, $variation='',
 	}
 }
 
-function buddyboss_global_search_filters(){
+function bp_search_filters(){
 	BP_Search::instance()->print_tabs();
 }
 
-function buddyboss_global_search_results(){
+function bp_search_results(){
 	BP_Search::instance()->print_results();
 }

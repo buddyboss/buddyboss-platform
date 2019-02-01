@@ -8,7 +8,7 @@
 
 	<div class="item">
 		<a href="<?php comment_link( $current_comment ); ?>">
-			<div class="item-desc"><?php echo buddyboss_global_search_result_intro( $current_comment->comment_content, 100 );?></div>
+			<div class="item-desc"><?php echo bp_search_result_intro( $current_comment->comment_content, 100 );?></div>
 		</a>
 	</div>
 </div>

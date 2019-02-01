@@ -112,7 +112,7 @@ if (!class_exists('BBoss_Global_Search_CPT')):
 						'id'	=> get_the_ID(),
 						'type'	=> $this->search_type,
 						'title'	=> get_the_title(),
-						'html'	=> buddyboss_global_search_buffer_template_part( $template, $template_type, false ),
+						'html'	=> bp_search_buffer_template_part( $template, $template_type, false ),
 					);
 
 					$this->search_results['items'][get_the_ID()] = $result;
@@ -140,7 +140,7 @@ if (!class_exists('BBoss_Global_Search_CPT')):
 				$value 		= $this->search_type.'-tax-'.$tax;
 				$checked 	= !empty( $items_to_search ) && in_array( $value, $items_to_search ) ? ' checked' : '';
 
-				echo "<label><input type='checkbox' value='{$value}' name='buddyboss_global_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
+				echo "<label><input type='checkbox' value='{$value}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
 			}
 
 			echo "</div><!-- .wp-user-fields -->";

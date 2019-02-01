@@ -57,7 +57,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 		 *
 		 * @see BP_Search::instance()
 		 *
-		 * @return object BuddyBoss_Global_Search_Plugin
+		 * @return object bp_search_Plugin
 		 */
 		public static function instance() {
 			// Store the instance locally to avoid private static replication
@@ -209,7 +209,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 				$content = "";
 
 				BP_Search::instance()->prepare_search_page();
-				$content = buddyboss_global_search_buffer_template_part( 'results-page-content', '', false );
+				$content = bp_search_buffer_template_part( 'results-page-content', '', false );
 
 				echo $content;
 
@@ -500,7 +500,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 							$ordered_items_group[ $type ][ $item_id ] = $item;
 						}
 
-						$search_items = buddyboos_global_search_items();
+						$search_items = bp_search_items();
 						$search_url = $this->search_page_search_url();
 
 
@@ -749,7 +749,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 			echo "<li class='{$class}'><a href='" . esc_url( $tab_url ) . "'>{$label}</a></li>";
 
 			//then other tabs
-			$search_items = buddyboos_global_search_items();
+			$search_items = bp_search_items();
 			foreach ( $this->searchable_items as $item ) {
 				$class = $item == $this->search_args['search_subset'] ? 'active current' : '';
 				//this filter can be used to change display of 'posts' to 'Blog Posts' etc..
@@ -789,7 +789,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 					);
 				}
 			} else {
-				buddyboss_global_search_buffer_template_part( 'no-results' );
+				bp_search_buffer_template_part( 'no-results' );
 			}
 		}
 
