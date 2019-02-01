@@ -4,12 +4,13 @@
  * instead create a folder 'buddyboss-global-search' inside your theme, copy this file over there, and make changes there
  */
 
-$no_results_class = '';
 $instance         = BP_Search::instance();
 $current_tab      = $instance->search_args['search_subset'];
-if ( ! isset( $instance->search_results[ $current_tab ]['items'] ) && empty( $instance->search_results[ $current_tab ]['items'] ) ) {
-	$no_results_class = 'bp-search-no-results';
-}
+$no_results_class =
+	! isset( $instance->search_results[ $current_tab ]['items'] ) ||
+	empty( $instance->search_results[ $current_tab ]['items'] ) ?
+		'bp-search-no-results' : '';
+
 ?>
 
 <div class="bboss_search_page buddypress-wrap bp-dir-hori-nav">

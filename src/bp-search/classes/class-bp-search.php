@@ -47,7 +47,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 		 *        'members'    =>
 		 * @var array
 		 */
-		private $search_results = array();
+		public $search_results = array();
 
 		/**
 		 * Insures that only one instance of Class exists in memory at any
