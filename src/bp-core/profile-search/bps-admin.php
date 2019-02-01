@@ -110,7 +110,7 @@ function bp_ps_fields_box ( $post ) {
 
 function _bp_ps_field_select ($groups, $name, $id, $value)
 {
-	echo "<select class='bp_ps_col2' name='$name' id='$id'>\n";
+	echo "<select class='bp_ps_col2 existing' name='$name' id='$id'>\n";
 	foreach ($groups as $group => $fields)
 	{
 		$group = esc_attr ($group);

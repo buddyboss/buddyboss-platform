@@ -93,7 +93,7 @@ jQuery(document).ready(function ($) {
 		});
 	});
 
-	jQuery(document).on('change','body.post-type-bp_ps_form #postbox-container-2 #normal-sortables #bp_ps_fields_box .inside #field_box .sortable .new_field',function () {
+	jQuery(document).on('change','body.post-type-bp_ps_form #postbox-container-2 #normal-sortables #bp_ps_fields_box .inside #field_box .sortable .bp_ps_col2.new_field',function () {
 		var field_id = this.value;
 		var count = $('body.post-type-bp_ps_form #postbox-container-2 #normal-sortables #bp_ps_fields_box .inside #field_next').val();
 		var fieldData = {
@@ -106,5 +106,11 @@ jQuery(document).ready(function ($) {
 			$('body.post-type-bp_ps_form #postbox-container-2 #normal-sortables #bp_ps_fields_box .inside #field_box #field_div'+index).remove();
 			$('body.post-type-bp_ps_form #postbox-container-2 #normal-sortables #bp_ps_fields_box .inside #field_box').append(response);
 		});
+	});
+
+	jQuery(document).on('change','body.post-type-bp_ps_form #postbox-container-2 #normal-sortables #bp_ps_fields_box .inside #field_box .sortable .bp_ps_col2.existing',function () {
+		var field_name = jQuery(this).find('option:selected').text();
+		var parent_div = jQuery(this).parent().closest('div').attr('id');
+		jQuery('#'+parent_div+' .bp_ps_col3').attr('placeholder', field_name);
 	});
 });
