@@ -26,7 +26,7 @@ function bp_core_admin_tools() {
 		</p>
 		<p class="description"><?php esc_html_e( 'Some of these tools create substantial database overhead. Avoid running more than one repair job at a time.', 'buddyboss' ); ?></p>
 
-		<form class="settings" method="post" action="">
+		<form class="settings card" method="post" action="">
 
 			<fieldset>
 				<legend><?php esc_html_e( 'Repair tools', 'buddyboss' ) ?></legend>
