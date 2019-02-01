@@ -239,7 +239,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				'position'    => 10,
 			),
 			'invites' => array(
-				'name'        => _x( 'Invite', 'My Group screen nav', 'buddyboss' ),
+				'name'        => _x( 'Send Invites', 'My Group screen nav', 'buddyboss' ),
 				'slug'        => 'send-invites',
 				'parent_slug' => $this->group->slug,
 				'position'    => 70,
@@ -252,9 +252,18 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 			),
 		);
 
+		if ( bbp_is_group_forums_active() && bp_group_is_forum_enabled( $this->group ) ) {
+			$nav_items['forum'] = array(
+				'name'        => _x( 'Discussions', 'My Group screen nav', 'buddyboss' ),
+				'slug'        => 'forum-single',
+				'parent_slug' => $this->group->slug,
+				'position'    => 30,
+			);
+		}
+
 		if ( bp_is_active( 'activity' ) ) {
 			$nav_items['activity'] = array(
-				'name'        => _x( 'Activity', 'My Group screen nav', 'buddyboss' ),
+				'name'        => _x( 'Feed', 'My Group screen nav', 'buddyboss' ),
 				'slug'        => 'activity',
 				'parent_slug' => $this->group->slug,
 				'position'    => 20,
