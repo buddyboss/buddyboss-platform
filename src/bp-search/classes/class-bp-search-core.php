@@ -282,21 +282,11 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 //			wp_enqueue_style( 'buddypress-global-search', $this->assets_url . '/css/buddypress-global-search.css', array(), '1.1.2' );
 			//wp_enqueue_style( 'bp-search', $this->assets_url . '/css/bp-search.css', array(), bp_get_version() );
 
-
-			wp_enqueue_script( 'jquery-ui-autocomplete' );
 //			wp_enqueue_script( 'bp-search', $this->assets_url . '/js/bp-search.js', array( 'jquery', 'jquery-ui-autocomplete' ), '1.0.4', true );
 //			wp_enqueue_script( 'buddypress-global-search', $this->assets_url . '/js/buddypress-global-search' . $min . '.js', array(
 //				'jquery',
 //				'jquery-ui-autocomplete'
 //			), bp_get_version(), true );
-
-			if ( function_exists( "bp_is_messages_component" ) ) {
-				// Include the autocomplete JS for composing a message.
-				if ( bp_is_messages_component() && bp_is_current_action( 'compose' ) ) {
-					//add_action( 'wp_head', array( $this, 'messages_autocomplete_init_jsblock' ) );
-				}
-			}
-
 
 		}
 
@@ -305,100 +295,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		 * @todo : Why this inline code is not at proper file.
 		 * @clean: This is not working.
 		 */
-		public function messages_autocomplete_init_jsblock() {
-			?>
 
-			<script>
-				window.user_profiles = Array();
-				jQuery( document ).ready( function() {
-					var obj = jQuery( '.send-to-input' ).autocomplete( {
-						source: function( request, response ) {
-							jQuery( 'body' ).data( 'ac-item-p', 'even' );
-							var term = request.term;
-							if ( term in window.user_profiles ) {
-								response( window.user_profiles[term] );
-								return;
-							}
-							var data = {
-								'action': 'messages_autocomplete_results',
-								'search_term': request.term,
-							};
-							jQuery.ajax( {
-								url: ajaxurl + '?q=' + request.term + '&limit=10',
-								data: data,
-								success: function( data ) {
-									var new_data = Array();
-									d = data.split( '\n' );
-									jQuery.each( d, function( i, item ) {
-										new_data[new_data.length] = item;
-									} );
-									if ( data != '' ) {
-										response( new_data );
-									}
-								},
-							} );
-						},
-						minLength: 1,
-						select: function( event, ui ) {
-							sel_item = ui.item;
-							var d = String( sel_item.label ).split( ' (' );
-							var un = d[1].substr( 0, d[1].length - 1 );
-							//check if it already exists;
-							if ( 0 === jQuery( '.acfb-holder' ).find( '#un-' + un ).length ) {
-								var ln = '#link-' + un;
-								var l = jQuery( ln ).attr( 'href' );
-								var v = '<li class="selected-user friend-tab" id="un-' + un + '"><span><a href="' + l + '">' + d[0] + '</a></span> <span class="p">X</span></li>';
-								if ( jQuery( '.acfb-holder' ).find( '.friend-tab' ).length == 0 ) {
-									var x = jQuery( '.acfb-holder' ).prepend( v );
-								} else {
-									var x = jQuery( '.acfb-holder' ).find( '.friend-tab' ).last().after( v );
-								}
-								jQuery( this ).val( '' ); //clear username field after selecting username from autocomplete dropdown
-								jQuery( '#send-to-usernames' ).addClass( un );
-							}
-							return false;
-						},
-						focus: function( event, ui ) {
-							jQuery( '.ui-autocomplete li' ).removeClass( 'ui-state-hover' );
-							jQuery( '.ui-autocomplete' ).find( 'li:has(a.ui-state-focus)' ).addClass( 'ui-state-hover' );
-							return false;
-						},
-					} );
-
-					obj.data( 'ui-autocomplete' )._renderItem = function( ul, item ) {
-						ul.addClass( 'ac_results' );
-						if ( jQuery( 'body' ).data( 'ac-item-p' ) == 'even' ) {
-							c = 'ac_event';
-							jQuery( 'body' ).data( 'ac-item-p', 'odd' );
-						} else {
-							c = 'ac_odd';
-							jQuery( 'body' ).data( 'ac-item-p', 'even' );
-						}
-						return jQuery( '<li class=\'' + c + '\'>' ).append( '<a>' + item.label + '</a>' ).appendTo( ul );
-					};
-
-					obj.data( 'ui-autocomplete' )._resizeMenu = function() {
-						var ul = this.menu.element;
-						ul.outerWidth( this.element.outerWidth() );
-					};
-
-					jQuery( document ).on( 'click', '.selected-user', function() {
-						jQuery( this ).remove();
-					} );
-					jQuery( '#send_message_form' ).submit( function() {
-						tosend = Array();
-						jQuery( '.acfb-holder' ).find( '.friend-tab' ).each( function( i, item ) {
-							un = jQuery( this ).attr( 'id' );
-							un = un.replace( 'un-', '' );
-							tosend[tosend.length] = un;
-						} );
-						document.getElementById( 'send-to-usernames' ).value = tosend.join( ' ' );
-					} );
-				} );
-			</script>
-
-			<?php
-		}
 
 		/* Utility functions
 		 * ===================================================================

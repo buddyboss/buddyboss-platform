@@ -54,6 +54,13 @@ class BP_Nouveau_Search {
 	 */
 	protected function setup_actions() {
 		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_search_enqueue_scripts' );
+
+		if ( function_exists( 'bp_is_messages_component' ) ) {
+			// Include the autocomplete JS for composing a message.
+			if ( bp_is_messages_component() && bp_is_current_action( 'compose' ) ) {
+				add_action( 'wp_head', 'bp_nouveau_search_messages_autocomplete_init_jsblock' );
+			}
+		}
 	}
 
 	/**
