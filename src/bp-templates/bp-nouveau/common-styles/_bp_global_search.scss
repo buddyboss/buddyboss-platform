@@ -579,3 +579,17 @@ div.search_results .groups-list li .last-activity {
         line-height: 1.4;
     }
 }
+
+.bboss_search_results_wrapper.bp-search-no-results {
+    display: flex;
+    flex-flow: column-reverse;
+
+    .search_filters {
+        display: none;
+    }
+
+    .search_results {
+        margin-bottom: 20px;
+        margin-top: -10px;
+    }
+}

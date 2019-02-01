@@ -7194,3 +7194,17 @@ div.search_results .groups-list li .last-activity {
   font-size: 12px;
   line-height: 1.4;
 }
+
+.bboss_search_results_wrapper.bp-search-no-results {
+  display: flex;
+  flex-flow: column-reverse;
+}
+
+.bboss_search_results_wrapper.bp-search-no-results .search_filters {
+  display: none;
+}
+
+.bboss_search_results_wrapper.bp-search-no-results .search_results {
+  margin-bottom: 20px;
+  margin-top: -10px;
+}
