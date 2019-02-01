@@ -7,7 +7,7 @@
 		<div class="item">
 			<?php if ( bp_activity_has_content() ) : ?>
 				<div class="item-desc">
-					<?php echo buddyboss_global_search_activity_intro( 30 ); ?>
+					<?php echo bp_search_activity_intro( 30 ); ?>
 				</div>
 			<?php endif; ?>
 			<div class="item-meta activity-header">

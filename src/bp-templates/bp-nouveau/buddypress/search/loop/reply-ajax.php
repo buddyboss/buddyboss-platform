@@ -13,7 +13,7 @@
             <div class="item-title">
                 <?php echo stripslashes( wp_strip_all_tags( bbp_forum_title( get_the_ID() ) ) );?>
             </div>
-            <div class="item-desc"><?php echo buddyboss_global_search_reply_intro( 30 ); ?></div>
+            <div class="item-desc"><?php echo bp_search_reply_intro( 30 ); ?></div>
 		</div>
 	</a>
 </div>

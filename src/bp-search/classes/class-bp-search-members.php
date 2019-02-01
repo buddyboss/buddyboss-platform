@@ -221,7 +221,7 @@ if (!class_exists('Bp_Search_Members')):
 						'id'	=> bp_get_member_user_id(),
 						'type'	=> $this->type,
 						'title'	=> bp_get_member_name(),
-						'html'	=> buddyboss_global_search_buffer_template_part( 'loop/member', $template_type, false ),
+						'html'	=> bp_search_buffer_template_part( 'loop/member', $template_type, false ),
 					);
 
 					$this->search_results['items'][bp_get_member_user_id()] = $result_item;
@@ -249,7 +249,7 @@ if (!class_exists('Bp_Search_Members')):
 			foreach( $fields as $field=>$label ){
 				$item = 'member_field_' . $field;
 				$checked = !empty( $items_to_search ) && in_array( $item, $items_to_search ) ? ' checked' : '';
-				echo "<label><input type='checkbox' value='{$item}' name='buddyboss_global_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
+				echo "<label><input type='checkbox' value='{$item}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$label}</label><br>";
 			}
 
 			echo "</div><!-- .wp-user-fields -->";
@@ -271,7 +271,7 @@ if (!class_exists('Bp_Search_Members')):
 							//lets save these as xprofile_field_{field_id}
 							$item = 'xprofile_field_' . $field->id;
 							$checked = !empty( $items_to_search ) && in_array( $item, $items_to_search ) ? ' checked' : '';
-							echo "<label><input type='checkbox' value='{$item}' name='buddyboss_global_search_plugin_options[items-to-search][]' {$checked}>{$field->name}</label><br>";
+							echo "<label><input type='checkbox' value='{$item}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$field->name}</label><br>";
 						}
 					}
 				}

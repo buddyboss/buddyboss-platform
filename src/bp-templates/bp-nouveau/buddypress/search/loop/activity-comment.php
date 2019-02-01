@@ -14,7 +14,7 @@
 			<div class="item-desc">
 				<?php if ( bp_activity_has_content() ) : ?>
 					<div class="activity-inner">
-						<?php echo buddyboss_global_search_activity_intro(); ?>
+						<?php echo bp_search_activity_intro(); ?>
 					</div>
 				<?php endif; ?>
 			</div>

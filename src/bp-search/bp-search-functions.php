@@ -5,16 +5,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 //add shortcode support
-add_shortcode( 'BBOSS_AJAX_SEARCH_FORM', 'buddyboss_global_search_ajax_search_form_shortcode' );
-function buddyboss_global_search_ajax_search_form_shortcode( $atts ) {
-	return buddyboss_global_search_buffer_template_part( 'ajax-search-form', '', false );
+add_shortcode( 'BBOSS_AJAX_SEARCH_FORM', 'bp_search_ajax_search_form_shortcode' );
+function bp_search_ajax_search_form_shortcode( $atts ) {
+	return bp_search_buffer_template_part( 'ajax-search-form', '', false );
 }
 
 /**
  * Returns a trimmed activity content string.
  * Must be used while inside activity loop
  */
-function buddyboss_global_search_activity_intro( $character_limit = 50 ) {
+function bp_search_activity_intro( $character_limit = 50 ) {
 	$content = '';
 	if ( bp_activity_has_content() ) {
 		$content = bp_get_activity_content_body();
@@ -31,7 +31,7 @@ function buddyboss_global_search_activity_intro( $character_limit = 50 ) {
 		}
 	}
 
-	return apply_filters( 'buddyboss_global_search_activity_intro', $content );
+	return apply_filters( 'bp_search_activity_intro', $content );
 }
 
 /**
@@ -39,7 +39,7 @@ function buddyboss_global_search_activity_intro( $character_limit = 50 ) {
  * Works for replies as well as topics.
  * Must be used while inside the loop
  */
-function buddyboss_global_search_reply_intro( $character_limit = 50 ) {
+function bp_search_reply_intro( $character_limit = 50 ) {
 	$content = '';
 
 	switch ( get_post_type( get_the_ID() ) ) {
@@ -60,7 +60,7 @@ function buddyboss_global_search_reply_intro( $character_limit = 50 ) {
 
 		$search_term_position = stripos( $content, $search_term );
 		if ( $search_term_position !== false ) {
-			$shortened_content = buddyboss_global_search_result_match( $content, $search_term );
+			$shortened_content = bp_search_result_match( $content, $search_term );
 
 			//highlight search keyword
 
@@ -76,7 +76,7 @@ function buddyboss_global_search_reply_intro( $character_limit = 50 ) {
 		$content = $shortened_content;
 	}
 
-	return apply_filters( 'buddyboss_global_search_reply_intro', $content );
+	return apply_filters( 'bp_search_reply_intro', $content );
 }
 
 /**
@@ -87,7 +87,7 @@ function buddyboss_global_search_reply_intro( $character_limit = 50 ) {
  *
  * @return mixed|void
  */
-function buddyboss_global_search_result_intro( $content, $character_limit = 50 ) {
+function bp_search_result_intro( $content, $character_limit = 50 ) {
 
 	$content     = wp_strip_all_tags( $content, true );
 	$search_term = BP_Search::instance()->search->get_search_term();
@@ -109,7 +109,7 @@ function buddyboss_global_search_result_intro( $content, $character_limit = 50 )
 
 	$content = $shortened_content;
 
-	return apply_filters( 'buddyboss_global_search_result_intro', $content );
+	return apply_filters( 'bp_search_result_intro', $content );
 }
 
 /**
@@ -121,7 +121,7 @@ function buddyboss_global_search_result_intro( $content, $character_limit = 50 )
  *
  * @return string
  */
-function buddyboss_global_search_result_match( $in, $wordToFind, $numWordsToWrap = 10 ) {
+function bp_search_result_match( $in, $wordToFind, $numWordsToWrap = 10 ) {
 
 	$words       = preg_split( '/\s+/', $in );
 	$wordsToFind = preg_split( '/\s+/', $wordToFind );
@@ -306,7 +306,7 @@ endif;
  * Buddyboss global search items options
  * @return mixed|void
  */
-function buddyboos_global_search_items() {
+function bp_search_items() {
 
 	$items = array(
 		'posts'          => __( 'Blog Posts', 'buddypress-global-search' ),
@@ -342,7 +342,7 @@ function buddyboos_global_search_items() {
 		}
 	}
 
-	return apply_filters( 'buddyboos_global_search_items', $items );
+	return apply_filters( 'bp_search_items', $items );
 }
 
 /**
@@ -420,7 +420,7 @@ function bb_gs_create_group_searchstring( $groupid ) {
 add_action( 'groups_create_group_step_save_group-details', 'bb_gs_create_group_searchstring' );
 add_action( 'groups_details_updated', 'bb_gs_create_group_searchstring' );
 
-add_filter( 'body_class', 'buddyboss_global_search_body_class', 10, 1 );
+add_filter( 'body_class', 'bp_search_body_class', 10, 1 );
 
 /**
  * Add 'buddypress' and 'directory' in Body tag classes list
@@ -429,7 +429,7 @@ add_filter( 'body_class', 'buddyboss_global_search_body_class', 10, 1 );
  *
  * @return mixed|void
  */
-function buddyboss_global_search_body_class( $wp_classes ) {
+function bp_search_body_class( $wp_classes ) {
 
 	if ( is_search() ) { //if search page.
 		$wp_classes[] = 'buddypress';
@@ -438,7 +438,7 @@ function buddyboss_global_search_body_class( $wp_classes ) {
 
 	$wp_classes[] = 'bp-search';
 
-	return apply_filters( 'buddyboss_global_search_body_class', $wp_classes );
+	return apply_filters( 'bp_search_body_class', $wp_classes );
 }
 
 function bp_get_search_user_fields() {

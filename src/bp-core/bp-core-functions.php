@@ -486,6 +486,7 @@ function bp_core_get_packaged_component_ids() {
 		'messages',
 		'settings',
 		'notifications',
+		'search'
 	);
 
 	return $components;

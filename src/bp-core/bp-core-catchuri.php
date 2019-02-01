@@ -1309,3 +1309,29 @@ function bp_core_login_profile_dashboard_redirect( $redirect_to, $redirect_to_ra
 	return apply_filters( 'bp_core_login_profile_dashboard_redirect', $redirect_to );
 }
 add_filter( 'bp_login_redirect', 'bp_core_login_profile_dashboard_redirect', 10, 3 );
+
+/**
+ * Function for redirect to user if profile dashboard enabled and user is not logged in.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_core_profile_dashboard_non_logged_redirect() {
+
+	if ( !is_user_logged_in() ) {
+		if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
+			if ( bp_nouveau_get_appearance_settings( 'user_front_page' ) ) {
+				$page_ids          = bp_core_get_directory_page_ids();
+				$profile_dashboard = isset( $page_ids['profile_dashboard'] ) ? $page_ids['profile_dashboard'] : false;
+				if ( $profile_dashboard > 0 ) {
+					if ( is_page( $profile_dashboard ) ) {
+						wp_safe_redirect( site_url() );
+						exit();
+					}
+				}
+			}
+		}
+	}
+
+}
+add_filter( 'bp_template_redirect', 'bp_core_profile_dashboard_non_logged_redirect', 10 );

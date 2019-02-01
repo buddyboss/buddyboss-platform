@@ -11,7 +11,7 @@
 
 		<nav class="search_filters item-list-tabs main-navs dir-navs bp-navs no-ajax" role="navigation">
 			<ul class="component-navigation search-nav">
-				<?php buddyboss_global_search_filters();?>
+				<?php bp_search_filters();?>
 			</ul>
 		</nav>
 
@@ -20,7 +20,7 @@
 		</div>
 
 		<div class="search_results">
-			<?php buddyboss_global_search_results();?>
+			<?php bp_search_results();?>
 		</div>
 
 	</div>

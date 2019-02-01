@@ -25,7 +25,7 @@ function bboss_global_search_option_cpt_search( $items_to_search ){
 	if( !empty( $cpts ) ){
 		foreach( $cpts as $cpt=>$cpt_obj ){
 			$checked = !empty( $items_to_search ) && in_array( 'cpt-' . $cpt, $items_to_search ) ? ' checked' : '';
-			echo "<label><input type='checkbox' value='cpt-{$cpt}' name='buddyboss_global_search_plugin_options[items-to-search][]' {$checked}>{$cpt_obj->label}</label><br>";
+			echo "<label><input type='checkbox' value='cpt-{$cpt}' name='bp_search_plugin_options[items-to-search][]' {$checked}>{$cpt_obj->label}</label><br>";
 			do_action( 'bboss_global_search_settings_item_'.$cpt, $items_to_search );
 		}
 	}
@@ -44,7 +44,7 @@ function bboss_global_search_helpers_cpts( $helpers ) {
 	$post_types = get_post_types( [ 'public' => true ] );
 	foreach ( $post_types as $post_type ) {
 		//if name starts with cpt-
-		if ( bp_is_search_post_type_enable( $post_type, 0 ) ) {
+		if ( $post_type != 'post' && bp_is_search_post_type_enable( $post_type, 0 ) ) {
 			$searchable_type = 'cpt-' . $post_type;
 			$cpt_obj         = get_post_type_object( $post_type );
 			//is cpt still valid?
@@ -75,7 +75,7 @@ function bboss_global_search_label_search_type_cpts( $search_type_label ){
 	 */
 
 	//Return label from admin search items options
-	$items = buddyboos_global_search_items();
+	$items = bp_search_items();
 	if ( isset( $items[$search_type_label] ) ) {
 		return $items[$search_type_label];
 	}
