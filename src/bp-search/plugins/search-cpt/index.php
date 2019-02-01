@@ -44,7 +44,7 @@ function bboss_global_search_helpers_cpts( $helpers ) {
 	$post_types = get_post_types( [ 'public' => true ] );
 	foreach ( $post_types as $post_type ) {
 		//if name starts with cpt-
-		if ( bp_is_search_post_type_enable( $post_type, 0 ) ) {
+		if ( $post_type != 'post' && bp_is_search_post_type_enable( $post_type, 0 ) ) {
 			$searchable_type = 'cpt-' . $post_type;
 			$cpt_obj         = get_post_type_object( $post_type );
 			//is cpt still valid?
