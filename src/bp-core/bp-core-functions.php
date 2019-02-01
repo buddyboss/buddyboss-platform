@@ -751,12 +751,13 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
  */
 function bp_core_get_directory_page_default_titles() {
 	$page_default_titles = array(
-		'activity' => _x( 'News Feed', 'Page title for the Activity directory.', 'buddyboss' ),
-		'groups'   => _x( 'Groups',   'Page title for the Groups directory.',         'buddyboss' ),
-		'blogs'    => _x( 'Sites',    'Page title for the Sites directory.',          'buddyboss' ),
-		'members'  => _x( 'Members',  'Page title for the Members directory.',        'buddyboss' ),
-		'activate' => _x( 'Activate', 'Page title for the user activation screen.',   'buddyboss' ),
-		'register' => _x( 'Register', 'Page title for the user registration screen.', 'buddyboss' ),
+		'activity'          => _x( 'News Feed', 'Page title for the Activity directory.', 'buddyboss' ),
+		'groups'            => _x( 'Groups', 'Page title for the Groups directory.', 'buddyboss' ),
+		'blogs'             => _x( 'Sites', 'Page title for the Sites directory.', 'buddyboss' ),
+		'members'           => _x( 'Members', 'Page title for the Members directory.', 'buddyboss' ),
+		'activate'          => _x( 'Activate', 'Page title for the user activation screen.', 'buddyboss' ),
+		'register'          => _x( 'Register', 'Page title for the user registration screen.', 'buddyboss' ),
+		'profile_dashboard' => _x( 'Dashboard', 'Page title for the user dashboard screen.', 'buddyboss' ),
 	);
 
 	/**
@@ -3925,4 +3926,40 @@ function bp_check_member_send_invites_tab_member_type_allowed() {
 		}
 	}
 	return $allowed;
+}
+
+function bp_core_set_default_pages() {
+
+	$page_ids       = bp_core_get_directory_page_ids( 'all' );
+	$valid_pages = array_merge( bp_core_admin_get_directory_pages(), bp_core_admin_get_static_pages() );
+
+	if ( !bp_get_signup_allowed() ) {
+		unset( $valid_pages['activate'] );
+		unset( $valid_pages['register'] );
+	}
+
+	foreach ( $valid_pages as $key => $value ) {
+
+		if (!array_key_exists($key, $page_ids ) ) {
+
+			$default_title = bp_core_get_directory_page_default_titles();
+			$title = ( isset( $default_title[ $key ] ) ) ? $default_title[ $key ] : $value;
+			$new_page = array(
+				'post_title'     => $title,
+				'post_status'    => 'publish',
+				'post_author'    => bp_loggedin_user_id(),
+				'post_type'      => 'page',
+				'comment_status' => 'closed',
+				'ping_status'    => 'closed',
+			);
+
+			$page_id                    = wp_insert_post( $new_page );
+			$page_ids[ $key ] = (int) $page_id;
+
+			bp_core_update_directory_page_ids( $page_ids );
+
+		}
+
+	}
+
 }

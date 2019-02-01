@@ -59,7 +59,7 @@ add_filter( 'bp_search_option_items-to-search', 'bb_global_search_default_items_
  *
  * @return mixed
  */
-function bboss_global_search_remove_search_types_for_guests( $search_types ) {
+function bp_search_remove_search_types_for_guests( $search_types ) {
 	if ( ! is_admin() && ! empty( $search_types ) && ! is_user_logged_in() ) {
 		$items_to_remove       = array( 'messages', 'notifications' );
 		$filtered_search_types = array();
@@ -75,7 +75,7 @@ function bboss_global_search_remove_search_types_for_guests( $search_types ) {
 	return $search_types;
 }
 
-add_filter( 'bp_search_option_items-to-search', 'bboss_global_search_remove_search_types_for_guests', 9 );
+add_filter( 'bp_search_option_items-to-search', 'bp_search_remove_search_types_for_guests', 9 );
 
 
 add_filter( 'template_include', 'bp_search_override_wp_native_results', 999 ); //don't leave any chance!.
@@ -198,7 +198,7 @@ function bp_search_clear_native_search_query( $query ) {
 
 function bp_search_filter_bp_before_has_groups_parse_args( $args ) {
 
-	if ( wp_doing_ajax() && isset( $_GET['action'] ) && $_GET['action'] === 'bboss_global_search_ajax' ) {
+	if ( wp_doing_ajax() && isset( $_GET['action'] ) && $_GET['action'] === 'bp_search_ajax' ) {
 		$args['type'] = '';
 	}
 

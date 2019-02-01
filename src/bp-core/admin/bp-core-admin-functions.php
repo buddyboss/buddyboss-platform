@@ -298,15 +298,23 @@ function bp_core_activation_notice() {
 
 	if ( !empty( $orphaned_components ) ) {
 		$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) );
-		$notice    = sprintf(
-			'%1$s <a href="%2$s">%3$s</a>',
-			sprintf(
-				__( 'The following active BuddyPress Components do not have associated WordPress Pages: %s.', 'buddyboss' ),
-				'<strong>' . implode( '</strong>, <strong>', array_map( 'esc_html', $orphaned_components ) ) . '</strong>'
-			),
-			esc_url( $admin_url ),
-			__( 'Repair', 'buddyboss' )
-		);
+
+		if ( isset( $_GET['page'] ) && 'bp-pages' === $_GET['page'] ) {
+			$notice = sprintf( '%1$s',
+				sprintf( __( 'The following active BuddyPress Components do not have associated WordPress Pages: %s.',
+					'buddyboss' ),
+					'<strong>' . implode( '</strong>, <strong>',
+						array_map( 'esc_html', $orphaned_components ) ) . '</strong>' )
+				);
+		} else {
+			$notice = sprintf( '%1$s <a href="%2$s">%3$s</a>',
+				sprintf( __( 'The following active BuddyPress Components do not have associated WordPress Pages: %s.',
+					'buddyboss' ),
+					'<strong>' . implode( '</strong>, <strong>',
+						array_map( 'esc_html', $orphaned_components ) ) . '</strong>' ),
+				esc_url( $admin_url ),
+				__( 'Repair', 'buddyboss' ) );
+		}
 
 		bp_core_add_admin_notice( $notice );
 	}
@@ -2014,3 +2022,46 @@ function bp_member_type_invalid_role_extended_profile_error_callback() {
 
 // Hook for display error message on extended profile page in admin.
 add_action( 'admin_notices', 'bp_member_type_invalid_role_extended_profile_error_callback' );
+
+/**
+ * Catch and process an admin directory page.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_core_admin_create_background_page() {
+	if ( ! current_user_can( 'install_plugins' ) ) {
+		wp_send_json_error();
+	}
+
+	if ( empty( $_POST['page'] ) ) {
+		wp_send_json_error();
+	}
+
+	$page_ids    = bp_core_get_directory_page_ids( 'all' );
+	$valid_pages = array_merge( bp_core_admin_get_directory_pages(), bp_core_admin_get_static_pages() );
+
+	if ( isset( $valid_pages[ $_POST['page'] ] ) ) {
+
+		$default_title = bp_core_get_directory_page_default_titles();
+		$title         = ( isset( $default_title[ $_POST['page'] ] ) ) ? $default_title[ $_POST['page'] ] : $valid_pages[ $_POST['page'] ];
+
+		$new_page = array(
+			'post_title'     => $title,
+			'post_status'    => 'publish',
+			'post_author'    => bp_loggedin_user_id(),
+			'post_type'      => 'page',
+			'comment_status' => 'closed',
+			'ping_status'    => 'closed',
+		);
+
+		$page_id                    = wp_insert_post( $new_page );
+		$page_ids[ $_POST['page'] ] = (int) $page_id;
+
+		bp_core_update_directory_page_ids( $page_ids );
+
+	}
+
+	wp_send_json_success();
+}
+
+add_action( 'wp_ajax_bp_core_admin_create_background_page', 'bp_core_admin_create_background_page' );

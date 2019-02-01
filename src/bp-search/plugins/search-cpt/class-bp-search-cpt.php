@@ -2,7 +2,7 @@
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-if (!class_exists('BBoss_Global_Search_CPT')):
+if (!class_exists('BP_Search_CPT')):
 
 	/**
 	 *
@@ -25,7 +25,7 @@ if (!class_exists('BBoss_Global_Search_CPT')):
 			$this->cpt_name = $cpt_name;
 			$this->search_type =$search_type;
 
-			add_action( "bboss_global_search_settings_item_{$this->cpt_name}", array( $this, 'print_search_options' ) );
+			add_action( "bp_search_settings_item_{$this->cpt_name}", array( $this, 'print_search_options' ) );
 		}
 
 		public function sql( $search_term, $only_totalrow_count=false ){
@@ -84,7 +84,7 @@ if (!class_exists('BBoss_Global_Search_CPT')):
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
 
             return apply_filters(
-                'BBoss_Global_Search_CPT_sql',
+                'BP_Search_CPT_sql',
                 $sql,
                 array(
                     'post_type'             => $this->cpt_name,
@@ -148,7 +148,7 @@ if (!class_exists('BBoss_Global_Search_CPT')):
 
 	}
 
-// End class BBoss_Global_Search_CPT
+// End class BP_Search_CPT
 
 endif;
 ?>

@@ -41,8 +41,8 @@ function bp_nouveau_search_register_scripts( $scripts = array() ) {
 function bp_nouveau_search_enqueue_scripts() {
 
 	$data = array(
-		'nonce'              => wp_create_nonce( 'bboss_global_search_ajax' ),
-		'action'             => 'bboss_global_search_ajax',
+		'nonce'              => wp_create_nonce( 'bp_search_ajax' ),
+		'action'             => 'bp_search_ajax',
 		'debug'              => true,//set it to false on production
 		'ajaxurl'            => admin_url( 'admin-ajax.php', is_ssl() ? 'admin' : 'http' ),
 		//'search_url'    => home_url( '/' ), Now we are using form[role='search'] selector
