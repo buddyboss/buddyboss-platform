@@ -8,9 +8,11 @@
 
 		<div class="item activity-content">
 			<?php if ( bp_nouveau_activity_has_content() ) : ?>
-				<div class="activity-inner">
-					<?php bp_nouveau_activity_content(); ?>
-				</div>
+				<a href="<?php echo bp_activity_get_permalink( bp_get_activity_id() ) ?>">
+					<div class="activity-inner">
+						<?php bp_nouveau_activity_content(); ?>
+					</div>
+				</a>
 			<?php endif; ?>
 			<div class="item-meta activity-header">
 				<strong>
