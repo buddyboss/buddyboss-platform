@@ -12,5 +12,5 @@
 <br />
 <div class="bp-feedback info">
 	<span class="bp-icon" aria-hidden="true"></span>
-	<p><?php _e( 'No discussions yet.', 'buddyboss' ); ?></p>
+	<p><?php _e( 'Sorry, there were no discussions found.', 'buddyboss' ); ?></p>
 </div>
