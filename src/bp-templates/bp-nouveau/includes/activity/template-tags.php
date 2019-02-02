@@ -289,6 +289,60 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 			$button_element = $args['button_element'];
 		}
 
+		if ( bp_activity_can_favorite() && bp_is_activity_like_active() ) {
+
+			// If button element set attr needs to be data-* else 'href'
+			if ( 'button' === $button_element ) {
+				$key = 'data-bp-nonce';
+			} else {
+				$key = 'href';
+			}
+
+			if ( ! bp_get_activity_is_favorite() ) {
+				$fav_args = array(
+					'parent_element'   => $parent_element,
+					'parent_attr'      => $parent_attr,
+					'button_element'   => $button_element,
+					'link_class'       => 'button fav bp-secondary-action bp-tooltip',
+					'data_bp_tooltip'  => __( 'Like', 'buddyboss' ),
+					'link_text'        => __( 'Like', 'buddyboss' ),
+					'aria-pressed'     => 'false',
+					'link_attr'        => bp_get_activity_favorite_link(),
+				);
+
+			} else {
+				$fav_args = array(
+					'parent_element'  => $parent_element,
+					'parent_attr'     => $parent_attr,
+					'button_element'  => $button_element,
+					'link_class'      => 'button unfav bp-secondary-action bp-tooltip',
+					'data_bp_tooltip' => __( 'Unlike', 'buddyboss' ),
+					'link_text'       => __( 'Unlike', 'buddyboss' ),
+					'aria-pressed'    => 'true',
+					'link_attr'       => bp_get_activity_unfavorite_link(),
+				);
+			}
+
+			$like_count = bp_activity_get_favorite_users_string( bp_get_activity_id() );
+
+			$buttons['activity_favorite'] =  array(
+				'id'                => 'activity_favorite',
+				'position'          => 4,
+				'component'         => 'activity',
+				'parent_element'    => $parent_element,
+				'parent_attr'       => $parent_attr,
+				'must_be_logged_in' => true,
+				'button_element'    => $fav_args['button_element'],
+				'link_text'         => sprintf( '<span class="bp-screen-reader-text">%1$s</span>  <span class="like-count">%2$s</span>', esc_html( $fav_args['link_text'] ), esc_html( $like_count ) ),
+				'button_attr'       => array(
+					$key              => $fav_args['link_attr'],
+					'class'           => $fav_args['link_class'],
+					'data-bp-tooltip' => $fav_args['data_bp_tooltip'],
+					'aria-pressed'    => $fav_args['aria-pressed'],
+				),
+			);
+		}
+
 		/*
 		 * The view conversation button and the comment one are sharing
 		 * the same id because when display_comments is on stream mode,
@@ -358,60 +412,6 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				$buttons['activity_conversation']['button_attr']['role'] = 'button';
 			}
 
-		}
-
-		if ( bp_activity_can_favorite() && bp_is_activity_like_active() ) {
-
-			// If button element set attr needs to be data-* else 'href'
-			if ( 'button' === $button_element ) {
-				$key = 'data-bp-nonce';
-			} else {
-				$key = 'href';
-			}
-
-			if ( ! bp_get_activity_is_favorite() ) {
-				$fav_args = array(
-					'parent_element'   => $parent_element,
-					'parent_attr'      => $parent_attr,
-					'button_element'   => $button_element,
-					'link_class'       => 'button fav bp-secondary-action bp-tooltip',
-					'data_bp_tooltip'  => __( 'Like', 'buddyboss' ),
-					'link_text'        => __( 'Like', 'buddyboss' ),
-					'aria-pressed'     => 'false',
-					'link_attr'        => bp_get_activity_favorite_link(),
-				);
-
-			} else {
-				$fav_args = array(
-					'parent_element'  => $parent_element,
-					'parent_attr'     => $parent_attr,
-					'button_element'  => $button_element,
-					'link_class'      => 'button unfav bp-secondary-action bp-tooltip',
-					'data_bp_tooltip' => __( 'Unlike', 'buddyboss' ),
-					'link_text'       => __( 'Unlike', 'buddyboss' ),
-					'aria-pressed'    => 'true',
-					'link_attr'       => bp_get_activity_unfavorite_link(),
-				);
-			}
-
-			$like_count = bp_activity_get_favorite_users_string( bp_get_activity_id() );
-
-			$buttons['activity_favorite'] =  array(
-				'id'                => 'activity_favorite',
-				'position'          => 15,
-				'component'         => 'activity',
-				'parent_element'    => $parent_element,
-				'parent_attr'       => $parent_attr,
-				'must_be_logged_in' => true,
-				'button_element'    => $fav_args['button_element'],
-				'link_text'         => sprintf( '<span class="bp-screen-reader-text">%1$s</span>  <span class="like-count">%2$s</span>', esc_html( $fav_args['link_text'] ), esc_html( $like_count ) ),
-				'button_attr'       => array(
-					$key              => $fav_args['link_attr'],
-					'class'           => $fav_args['link_class'],
-					'data-bp-tooltip' => $fav_args['data_bp_tooltip'],
-					'aria-pressed'    => $fav_args['aria-pressed'],
-				),
-			);
 		}
 
 		// The delete button is always created, and removed later on if needed.
