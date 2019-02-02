@@ -115,7 +115,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		 * @since 1.0.0
 		 */
 		public function __clone() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddypress-global-search' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddyboss' ), '1.7' );
 		}
 
 		/**
@@ -124,7 +124,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		 * @since 1.0.0
 		 */
 		public function __wakeup() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddypress-global-search' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddyboss' ), '1.7' );
 		}
 
 		/**
@@ -277,16 +277,6 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		 * @return void
 		 */
 		public function assets() {
-			//$min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-			//wp_enqueue_style( 'jquery-ui-search', $this->assets_url . '/css/jquery-ui.min.css', array(), '1.11.2' );
-//			wp_enqueue_style( 'buddypress-global-search', $this->assets_url . '/css/buddypress-global-search.css', array(), '1.1.2' );
-			//wp_enqueue_style( 'bp-search', $this->assets_url . '/css/bp-search.css', array(), bp_get_version() );
-
-//			wp_enqueue_script( 'bp-search', $this->assets_url . '/js/bp-search.js', array( 'jquery', 'jquery-ui-autocomplete' ), '1.0.4', true );
-//			wp_enqueue_script( 'buddypress-global-search', $this->assets_url . '/js/buddypress-global-search' . $min . '.js', array(
-//				'jquery',
-//				'jquery-ui-autocomplete'
-//			), bp_get_version(), true );
 
 		}
 

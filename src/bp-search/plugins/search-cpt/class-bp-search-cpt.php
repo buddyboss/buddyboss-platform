@@ -130,7 +130,6 @@ if (!class_exists('BP_Search_CPT')):
 		 */
 		public function print_search_options( $items_to_search ) {
 			echo "<div class='wp-{$this->cpt_name}-fields' style='margin: 10px 0 10px 30px'>";
-			//echo "<p class='wp-post-part-name' style='margin: 5px 0'><strong>" . __('Account','buddypress-global-search') . "</strong></p>";
 
 			$cpt_taxonomy = get_object_taxonomies( $this->cpt_name ) ;
 

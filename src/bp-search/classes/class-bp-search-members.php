@@ -238,13 +238,13 @@ if (!class_exists('Bp_Search_Members')):
 		 */
 		function print_search_options( $items_to_search ){
 			echo "<div class='wp-user-fields' style='margin: 10px 0 0 30px'>";
-			echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . __('Account','buddypress-global-search') . "</strong></p>";
+			echo "<p class='xprofile-group-name' style='margin: 5px 0'><strong>" . __('Account','buddyboss') . "</strong></p>";
 
 			$fields = array(
-				'user_login'	=> __( 'Username/Login', 'buddypress-global-search' ),
-				'display_name'	=> __( 'Display Name', 'buddypress-global-search' ),
-				'user_email'	=> __( 'Email', 'buddypress-global-search' ),
-				'user_meta'     => __( 'User Meta', 'buddypress-global-search' )
+				'user_login'	=> __( 'Username/Login', 'buddyboss' ),
+				'display_name'	=> __( 'Display Name', 'buddyboss' ),
+				'user_email'	=> __( 'Email', 'buddyboss' ),
+				'user_meta'     => __( 'User Meta', 'buddyboss' )
 			);
 			foreach( $fields as $field=>$label ){
 				$item = 'member_field_' . $field;

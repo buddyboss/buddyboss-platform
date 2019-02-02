@@ -1,1 +1,1 @@
-<?php _e( 'No groups found!', 'buddypress-global-search' ); ?>
+<?php _e( 'No groups found!', 'buddyboss' ); ?>

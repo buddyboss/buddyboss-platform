@@ -165,11 +165,10 @@ if (!class_exists('Bp_Search_Posts')):
 		function print_search_options( $items_to_search ){
 			global $wp_taxonomies;
 			echo "<div class='wp-posts-fields' style='margin: 10px 0 10px 30px'>";
-			//echo "<p class='wp-post-part-name' style='margin: 5px 0'><strong>" . __('Account','buddypress-global-search') . "</strong></p>";
 
 			/**  Post Meta Field **********************************/
 
-			$label 		= sprintf( __('%s Meta', 'buddypress-global-search' ), ucfirst( $this->pt_name ) );
+			$label 		= sprintf( __('%s Meta', 'buddyboss' ), ucfirst( $this->pt_name ) );
 			$item 		= 'post_field_' . $this->pt_name.'_meta';
 			$checked 	= ! empty( $items_to_search ) && in_array( $item, $items_to_search ) ? ' checked' : '';
 

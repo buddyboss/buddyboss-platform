@@ -309,26 +309,26 @@ endif;
 function bp_search_items() {
 
 	$items = array(
-		'posts'          => __( 'Blog Posts', 'buddypress-global-search' ),
-		'pages'          => __( 'Pages', 'buddypress-global-search' ),
-		'posts_comments' => __( 'Post Comments', 'buddypress-global-search' ),
-		'members'        => __( 'Members', 'buddypress-global-search' ),
+		'posts'          => __( 'Blog Posts', 'buddyboss' ),
+		'pages'          => __( 'Pages', 'buddyboss' ),
+		'posts_comments' => __( 'Post Comments', 'buddyboss' ),
+		'members'        => __( 'Members', 'buddyboss' ),
 	);
 
 	//forums?
 
-	$items['forum'] = __( 'Forums', 'buddypress-global-search' );
-	$items['topic'] = __( 'Forums Topics', 'buddypress-global-search' );
-	$items['reply'] = __( 'Forums Replies', 'buddypress-global-search' );
+	$items['forum'] = __( 'Forums', 'buddyboss' );
+	$items['topic'] = __( 'Forums Topics', 'buddyboss' );
+	$items['reply'] = __( 'Forums Replies', 'buddyboss' );
 
 
 	//other buddypress components
 	$bp_components = array(
-		'groups'   => __( 'Groups', 'buddypress-global-search' ),
-		'activity' => __( 'Activity', 'buddypress-global-search' ),
-		'messages' => __( 'Messages', 'buddypress-global-search' ),
+		'groups'   => __( 'Groups', 'buddyboss' ),
+		'activity' => __( 'Activity', 'buddyboss' ),
+		'messages' => __( 'Messages', 'buddyboss' ),
 		/* should we search notifications as well?
-		'notifications'	=> __( 'Notifications', 'buddypress-global-search' ), */
+		'notifications'	=> __( 'Notifications', 'buddyboss' ), */
 	);
 
 	//only the active ones please!
@@ -337,7 +337,7 @@ function bp_search_items() {
 			$items[ $component ] = $label;
 
 			if ( 'activity' === $component ) {
-				$items['activity_comment'] = __( 'Activity Comment', 'buddypress-global-search' );
+				$items['activity_comment'] = __( 'Activity Comment', 'buddyboss' );
 			}
 		}
 	}

@@ -96,7 +96,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 		 * @since 1.0.0
 		 */
 		public function __clone() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddypress-global-search' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddyboss' ), '1.7' );
 		}
 
 		/**
@@ -105,7 +105,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 		 * @since 1.0.0
 		 */
 		public function __wakeup() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddypress-global-search' ), '1.7' );
+			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddyboss' ), '1.7' );
 		}
 
 		/**
@@ -738,7 +738,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 			//first print the 'all results' tab
 			$class = 'all' == $this->search_args['search_subset'] ? 'active current selected' : '';
 			//this filter can be used to change display of 'all' to 'Everything' etc..
-			$all_label = __( 'All', 'buddypress-global-search' );
+			$all_label = __( 'All', 'buddyboss' );
 			$label     = apply_filters( 'bp_search_label_search_type', $all_label );
 
 			if ( $this->search_args['count_total'] && isset( $this->search_results['all'] ) ) {

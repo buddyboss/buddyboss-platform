@@ -2,7 +2,7 @@
 <li class="bboss_search_item bboss_search_item_message">
 	<p class="message_participants">
 		<?php 
-		_e( 'Conversation between', 'buddypress-global-search' );
+		_e( 'Conversation between', 'buddyboss' );
 		$participants = array();
 		foreach( $current_message->recepients as $recepient_id ){
 			if( $recepient_id==get_current_user_id() )
@@ -11,12 +11,12 @@
 			$participants[] = bp_core_get_userlink( $recepient_id );
 		}
 		
-		echo ' ' . implode( ', ', $participants ) . ' ' . __( 'and you.', 'buddypress-global-search' );
+		echo ' ' . implode( ', ', $participants ) . ' ' . __( 'and you.', 'buddyboss' );
 		?>
 		
 		<span class='view_thread_link'>
 			<a href='<?php echo esc_url( trailingslashit( bp_loggedin_user_domain() ) ) . 'messages/view/' . $current_message->thread_id . '/';?>'>
-				<?php _e( 'View Conversation', 'buddypress-global-search' );?>
+				<?php _e( 'View Conversation', 'buddyboss' );?>
 			</a>
 		</span>
 	</p>
