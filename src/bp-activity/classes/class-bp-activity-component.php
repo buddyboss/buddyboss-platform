@@ -251,69 +251,7 @@ class BP_Activity_Component extends BP_Component {
 			'item_css_id'         => $this->id
 		);
 
-		// Add the subnav items to the activity nav item if we are using a theme that supports this.
-		$sub_nav[] = array(
-			'name'            => _x( 'Posts', 'Profile activity screen sub nav', 'buddyboss' ),
-			'slug'            => 'just-me',
-			'parent_url'      => $activity_link,
-			'parent_slug'     => $slug,
-			'screen_function' => 'bp_activity_screen_my_activity',
-			'position'        => 10
-		);
-
-		// Favorite activity items.
-		if ( bp_activity_can_favorite() && bp_is_my_profile() && bp_is_activity_like_active() ) {
-			$sub_nav[] = array(
-				'name'            => _x( 'My Likes', 'Profile activity screen sub nav', 'buddyboss' ),
-				'slug'            => 'favorites',
-				'parent_url'      => $activity_link,
-				'parent_slug'     => $slug,
-				'screen_function' => 'bp_activity_screen_favorites',
-				'position'        => 20,
-				'item_css_id'     => 'activity-favs'
-			);
-		}
-
-		// Check @mentions.
-		// if ( bp_activity_do_mentions() ) {
-		// 	$sub_nav[] = array(
-		// 		'name'            => _x( 'Mentions', 'Profile activity screen sub nav', 'buddyboss' ),
-		// 		'slug'            => 'mentions',
-		// 		'parent_url'      => $activity_link,
-		// 		'parent_slug'     => $slug,
-		// 		'screen_function' => 'bp_activity_screen_mentions',
-		// 		'position'        => 30,
-		// 		'item_css_id'     => 'activity-mentions'
-		// 	);
-		// }
-
-		// Additional menu if friends is active.
-		// if ( bp_is_active( 'friends' ) ) {
-		// 	$sub_nav[] = array(
-		// 		'name'            => _x( 'Connections', 'Profile activity screen sub nav', 'buddyboss' ),
-		// 		'slug'            => bp_get_friends_slug(),
-		// 		'parent_url'      => $activity_link,
-		// 		'parent_slug'     => $slug,
-		// 		'screen_function' => 'bp_activity_screen_friends',
-		// 		'position'        => 40,
-		// 		'item_css_id'     => 'activity-friends'
-		// 	) ;
-		// }
-
-		// Additional menu if groups is active.
-		// if ( bp_is_active( 'groups' ) ) {
-		// 	$sub_nav[] = array(
-		// 		'name'            => _x( 'Groups', 'Profile activity screen sub nav', 'buddyboss' ),
-		// 		'slug'            => bp_get_groups_slug(),
-		// 		'parent_url'      => $activity_link,
-		// 		'parent_slug'     => $slug,
-		// 		'screen_function' => 'bp_activity_screen_groups',
-		// 		'position'        => 50,
-		// 		'item_css_id'     => 'activity-groups'
-		// 	);
-		// }
-
-		parent::setup_nav( $main_nav, $sub_nav );
+		parent::setup_nav( $main_nav );
 	}
 
 	/**
@@ -365,17 +303,6 @@ class BP_Activity_Component extends BP_Component {
 				'href'     => $activity_link,
 				'position' => 10
 			);
-
-			// Favorite activity items.
-			if ( bp_activity_can_favorite() && bp_is_activity_like_active() ) {
-				$wp_admin_nav[] = array(
-					'parent'   => 'my-account-' . $this->id,
-					'id'       => 'my-account-' . $this->id . '-favorites',
-					'title'    => _x( 'My Likes', 'My Account Activity sub nav', 'buddyboss' ),
-					'href'     => trailingslashit( $activity_link . 'favorites' ),
-					'position' => 30
-				);
-			}
 		}
 
 		parent::setup_admin_bar( $wp_admin_nav );
