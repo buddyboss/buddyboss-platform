@@ -173,6 +173,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
     }
 
 	if ( bp_is_group() ) {
+		$activity_strings['whatsnewPlaceholder'] = __( 'Share something with your group...', 'buddyboss' );
 		$activity_params = array_merge(
 			$activity_params,
 			array(
