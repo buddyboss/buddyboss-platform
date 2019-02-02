@@ -25,7 +25,12 @@
 
 					<?php else : ?>
 
-						<p><?php bbp_is_user_home() ? _e( 'You are not currently subscribed to any forums.', 'buddyboss' ) : _e( 'This user is not currently subscribed to any forums.', 'buddyboss' ); ?></p>
+						<aside class="bp-feedback bp-messages info">
+							<span class="bp-icon" aria-hidden="true"></span>
+							<p><?php bbp_is_user_home() ? _e( 'You are not currently subscribed to any forums.', 'buddyboss' ) : _e( 'This user is not currently subscribed to any forums.', 'buddyboss' ); ?></p>
+						</aside>
+
+						<br />
 
 					<?php endif; ?>
 
@@ -44,7 +49,10 @@
 
 					<?php else : ?>
 
-						<p><?php bbp_is_user_home() ? _e( 'You are not currently subscribed to any discussions.', 'buddyboss' ) : _e( 'This user is not currently subscribed to any discussions.', 'buddyboss' ); ?></p>
+						<aside class="bp-feedback bp-messages info">
+							<span class="bp-icon" aria-hidden="true"></span>
+							<p><?php bbp_is_user_home() ? _e( 'You are not currently subscribed to any discussions.', 'buddyboss' ) : _e( 'This user is not currently subscribed to any discussions.', 'buddyboss' ); ?></p>
+						</aside>
 
 					<?php endif; ?>
 
