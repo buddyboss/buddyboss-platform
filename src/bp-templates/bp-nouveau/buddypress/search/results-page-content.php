@@ -23,7 +23,7 @@ $no_results_class =
 			</ul>
 		</nav>
 
-		<div class="bboss_search_form_wrapper dir-search no-ajax">
+		<div class="bp-search-form-wrapper dir-search no-ajax">
 			<?php bp_get_template_part('common/search/search-form');?>
 		</div>
 
