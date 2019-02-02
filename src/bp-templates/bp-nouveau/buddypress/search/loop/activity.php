@@ -12,9 +12,13 @@
 					<?php bp_nouveau_activity_content(); ?>
 				</div>
 			<?php endif; ?>
-
-			<div class="activity-header">
-				<?php bp_activity_action(); ?>
+			<div class="item-meta activity-header">
+				<strong>
+					<?php echo bp_core_get_user_displayname( bp_get_activity_user_id() ) ?>
+				</strong>
+				<time>
+					<?php echo human_time_diff( bp_nouveau_get_activity_timestamp() ) . ' ago' ?>
+				</time>
 			</div>
 		</div>
 	</div>
