@@ -284,7 +284,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$display = empty( $_GET['menu'] ) ? 'courses' : (string) $_GET['menu'];
 
 			if ( empty( $this->courses ) ) {
-				_e( 'No Course associated to the Group', 'ld_bp_groups_reports' );
+				_e( 'No Course associated to the Group', 'buddyboss' );
 			    return;
             }
 

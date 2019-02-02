@@ -206,7 +206,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 			_x(
 				'%1$s / %2$s',
 				'placeholders: current points / maximum point for assignment',
-				'learndash'
+				'buddyboss'
 			),
 			get_post_meta($postId, 'points', true),
 			$maxPoints

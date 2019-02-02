@@ -14,7 +14,7 @@ class Requirements
 				'callback' => ['bp_is_active', ['groups']],
 				'error' => sprintf(
 		            __('BuddyPress component %s needs to be enabled.', 'buddyboss'),
-		            '<b>' . __('User Groups', 'buddypress') . '</b>'
+		            '<b>' . __('User Groups', 'buddyboss') . '</b>'
 		        )
 		    ]
 		];

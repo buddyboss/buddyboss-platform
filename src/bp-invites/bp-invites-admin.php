@@ -364,10 +364,8 @@ function bp_invite_bulk_action_notices() {
 
 		// depending on ho much posts were changed, make the message different
 		printf( '<div id="message" class="updated notice is-dismissible"><p>' .
-		        _n( 'Invite %s has been revoked.',
-			        'Invites of %s has been revoked..',
-			        intval( $_REQUEST['revoke_action'] )
-		        ) . '</p></div>', intval( $_REQUEST['revoke_action'] ) );
+			_n( 'Invite %s has been revoked.', 'Invites of %s has been revoked..', intval( $_REQUEST['revoke_action'] ), 'buddyboss' ) .
+			'</p></div>', intval( $_REQUEST['revoke_action'] ) );
 
 	}
 }

@@ -229,7 +229,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 			_x(
 				'%1$s / %2$d',
 				'placeholders: input points / maximum point for essay',
-				'learndash'
+				'buddyboss'
 			), $currentPoints, $maxPoints
 		);
 	}

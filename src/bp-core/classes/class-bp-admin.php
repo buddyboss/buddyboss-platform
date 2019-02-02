@@ -494,8 +494,8 @@ class BP_Admin {
 
 		// Add a few links to the existing links array.
 		return array_merge( $links, array(
-			'settings'    => '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-components' ) ) . '">' . esc_html_x( 'Settings', 'buddyboss' ) . '</a>',
-			'about'    => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddypress' ) ) . '">' . esc_html_x( 'About', 'buddyboss' ) . '</a>'
+			'settings'    => '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-components' ) ) . '">' . __( 'Settings', 'buddyboss' ) . '</a>',
+			'about'    => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddypress' ) ) . '">' . __( 'About', 'buddyboss' ) . '</a>'
 		) );
 	}
 

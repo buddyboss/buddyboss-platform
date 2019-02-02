@@ -121,8 +121,8 @@ if ( isset( $failed ) && '' !== $failed ) {
 			'format' => '?paged=%#%',
 			'current' => $current_page,
 			'total' => $total_pages,
-			'prev_text'    => __('« Prev'),
-			'next_text'    => __('Next »'),
+			'prev_text'    => __('« Prev', 'buddyboss'),
+			'next_text'    => __('Next »', 'buddyboss'),
 		));
 	}
 
@@ -131,6 +131,6 @@ if ( isset( $failed ) && '' !== $failed ) {
 
 	</tbody>
 </table>
+
 <?php
 bp_nouveau_member_hook( 'after', 'invites_sent_template' );
-

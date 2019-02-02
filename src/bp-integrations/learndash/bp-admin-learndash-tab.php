@@ -74,10 +74,10 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__('Course Tab Visibility', 'buddyboss'),
 			[
 				'input_options' => [
-					'anyone'   => __('Anyone', 'learndash'),
-					'loggedin' => __('Loggedin Users', 'learndash'),
-					'member'   => __('Group Members', 'learndash'),
-					'noone'    => __('No one', 'learndash'),
+					'anyone'   => __('Anyone', 'buddyboss'),
+					'loggedin' => __('Loggedin Users', 'buddyboss'),
+					'member'   => __('Group Members', 'buddyboss'),
+					'noone'    => __('No one', 'buddyboss'),
 		        ],
 		        'input_default' => 'admin',
 				'input_description' => __( 'Who can see the "course" tab in social group:', 'buddyboss' ),
@@ -110,9 +110,9 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__('Sync Organizers To:', 'buddyboss'),
 			[
 				'input_options' => [
-					'admin' => __('Group Leader', 'learndash'),
-					'user'  => __('Group User', 'learndash'),
-					'none'  => __('None', 'learndash'),
+					'admin' => __('Group Leader', 'buddyboss'),
+					'user'  => __('Group User', 'buddyboss'),
+					'none'  => __('None', 'buddyboss'),
 		        ],
 		        'input_default' => 'admin',
 				'input_description' => __( 'When a organizer is synced, their role in LearnDash group should be:', 'buddyboss' ),
@@ -125,9 +125,9 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__('Sync Moderators To:', 'buddyboss'),
 			[
 				'input_options' => [
-					'admin' => __('Group Leader', 'learndash'),
-					'user'  => __('Group User', 'learndash'),
-					'none'  => __('None', 'learndash'),
+					'admin' => __('Group Leader', 'buddyboss'),
+					'user'  => __('Group User', 'buddyboss'),
+					'none'  => __('None', 'buddyboss'),
 		        ],
 		        'input_default' => 'admin',
 				'input_description' => __( 'When a moderator is synced, their role in LearnDash group should be:', 'buddyboss' ),
@@ -140,8 +140,8 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__('Sync Users To:', 'buddyboss'),
 			[
 				'input_options' => [
-					'user'  => __('Group User', 'learndash'),
-					'none'  => __('None', 'learndash'),
+					'user'  => __('Group User', 'buddyboss'),
+					'none'  => __('None', 'buddyboss'),
 		        ],
 		        'input_default' => 'user',
 				'input_description' => __( 'When a member is synced, their role in LearnDash group should be:', 'buddyboss' ),
@@ -185,9 +185,9 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__('Generated Social Group Privacy', 'buddyboss'),
 			[
 				'input_options' => [
-		            'public'  => __( 'Public', 'learndash' ),
-		            'private' => __( 'Private', 'learndash' ),
-		            'hidden'  => __( 'Hidden', 'learndash' )
+		            'public'  => __( 'Public', 'buddyboss' ),
+		            'private' => __( 'Private', 'buddyboss' ),
+		            'hidden'  => __( 'Hidden', 'buddyboss' )
 		        ],
 		        'input_default' => 'private',
 				'input_description' => __( 'When a social group is generated, set the group privacy to:', 'buddyboss' ),
@@ -200,9 +200,9 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__('Generated Social Group Invite Status', 'buddyboss'),
 			[
 				'input_options' => [
-	                'members' => __('All group members', 'learndash'),
-	                'mods'    => __('Group organizers and moderators only', 'learndash'),
-	                'admins'  => __('Group organizers only', 'learndash')
+	                'members' => __('All group members', 'buddyboss'),
+	                'mods'    => __('Group organizers and moderators only', 'buddyboss'),
+	                'admins'  => __('Group organizers only', 'buddyboss')
 		        ],
 		        'input_default' => 'mods',
 				'input_description' => __( 'When a social group is generated, set the group invite status to:', 'buddyboss' ),
@@ -225,9 +225,9 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__('Sync Leaders To:', 'buddyboss'),
 			[
 				'input_options' => [
-					'admin' => __('Organizer', 'learndash'),
-					'mod'   => __('Moderator', 'learndash'),
-					'user'  => __('Member', 'learndash'),
+					'admin' => __('Organizer', 'buddyboss'),
+					'mod'   => __('Moderator', 'buddyboss'),
+					'user'  => __('Member', 'buddyboss'),
 					'none'  => __('None', 'buddyboss'),
 		        ],
 		        'input_default' => 'admin',
@@ -241,9 +241,9 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__('Sync Users To:', 'buddyboss'),
 			[
 				'input_options' => [
-					'admin' => __('Organizer', 'learndash'),
-					'mod'   => __('Moderator', 'learndash'),
-					'user'  => __('Member', 'learndash'),
+					'admin' => __('Organizer', 'buddyboss'),
+					'mod'   => __('Moderator', 'buddyboss'),
+					'user'  => __('Member', 'buddyboss'),
 					'none'  => __('None', 'buddyboss'),
 		        ],
 		        'input_default' => 'user',

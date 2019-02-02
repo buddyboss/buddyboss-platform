@@ -31,7 +31,7 @@
 							<h3><?php _e( 'LearnDash Courses', 'buddyboss' ); ?></h3>
 							<p><?php
 								printf(
-									__( 'We support all <a href="%s">LearnDash</a> features, and allow for an unlimited amount of courses in your mobile app! Your students can access all your courses from a single app.', 'buddypress' ),
+									__( 'We support all <a href="%s">LearnDash</a> features, and allow for an unlimited amount of courses in your mobile app! Your students can access all your courses from a single app.', 'buddyboss' ),
 									esc_url( 'https://getdpd.com/cart/hoplink/14394?referrer=56whuq1wlakosg0k4' )
 								);
 								?></p>
@@ -218,7 +218,7 @@
 				<h1><?php _e( 'We support <strong>every</strong> LearnDash feature', 'buddyboss' ); ?></h1>
 				<p><?php
 					printf(
-						__( 'AppBoss is designed to integrate with <a href="%s">LearnDash</a> &mdash; the #1 LMS solution for Fortune 500\'s, major universities, training organizations and entrepreneurs.', 'buddypress' ),
+						__( 'AppBoss is designed to integrate with <a href="%s">LearnDash</a> &mdash; the #1 LMS solution for Fortune 500\'s, major universities, training organizations and entrepreneurs.', 'buddyboss' ),
 						esc_url( 'https://getdpd.com/cart/hoplink/14394?referrer=56whuq1wlakosg0k4' )
 					);
 					?></p>

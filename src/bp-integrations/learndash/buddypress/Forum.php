@@ -27,7 +27,7 @@ class Forum
 		}
 
 		$generators['forum'] = [
-			'name'  => __('Forums', 'bp_ld_sync'),
+			'name'  => __('Forums', 'buddyboss'),
 			'class' => ForumsReportsGenerator::class
 		];
 
