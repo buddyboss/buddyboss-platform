@@ -738,7 +738,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 			//first print the 'all results' tab
 			$class = 'all' == $this->search_args['search_subset'] ? 'active current selected' : '';
 			//this filter can be used to change display of 'all' to 'Everything' etc..
-			$all_label = __( 'All', 'buddypress-global-search' );
+			$all_label = __( 'All Results', 'buddypress-global-search' );
 			$label     = apply_filters( 'bp_search_label_search_type', $all_label );
 
 			if ( $this->search_args['count_total'] && isset( $this->search_results['all'] ) ) {
