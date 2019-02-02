@@ -46,7 +46,7 @@ function bp_nouveau_search_enqueue_scripts() {
 		'debug'              => true,//set it to false on production
 		'ajaxurl'            => admin_url( 'admin-ajax.php', is_ssl() ? 'admin' : 'http' ),
 		//'search_url'    => home_url( '/' ), Now we are using form[role='search'] selector
-		'loading_msg'        => __( "Loading Suggestions", "buddypress-global-search" ),
+		'loading_msg'        => __( "Loading Suggestions", "buddyboss" ),
 		'enable_ajax_search' => bp_is_search_autotcomplete_enable(),
 		'per_page'           => bp_search_get_form_option( 'bp_search_number_of_results', 5 )
 	);

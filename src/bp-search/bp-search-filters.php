@@ -141,7 +141,7 @@ function bp_search_result_page_dummy_post_load( $template ) {
 		'post_modified'         => 0,
 		'post_modified_gmt'     => 0,
 		'post_content'          => '',
-		'post_title'            => sprintf( __( 'Showing Results For \'%s\'', "buddypress-global-search" ), strtoupper( $_GET['s'] ) ),
+		'post_title'            => sprintf( __( 'Showing results for \'%s\'', "buddyboss" ), strtoupper( $_GET['s'] ) ),
 		'post_excerpt'          => '',
 		'post_content_filtered' => '',
 		'post_mime_type'        => '',

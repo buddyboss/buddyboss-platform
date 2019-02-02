@@ -299,7 +299,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 				}
 
 				$all_results_row  = array(
-					"value"      => "<div class='bboss_ajax_search_item allresults'><a href='" . esc_url( $url ) . "'>" . sprintf( __( "View all results for '%s'", "buddypress-global-search" ), stripslashes( $this->search_args['search_term'] ) ) . "</a></div>",
+					"value"      => "<div class='bboss_ajax_search_item allresults'><a href='" . esc_url( $url ) . "'>" . sprintf( __( "View all results for '%s'", "buddyboss" ), stripslashes( $this->search_args['search_term'] ) ) . "</a></div>",
 					"type"       => 'view_all_type',
 					"type_label" => ''
 				);
@@ -307,7 +307,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 			} else {
 				//@todo give a settings screen for this field
 				$search_results[] = array(
-					'value' => '<div class="bboss_ajax_search_item noresult">' . sprintf( __( "Nothing found for '%s'", "buddypress-global-search" ), stripslashes( $this->search_args['search_term'] ) ) . '</div>',
+					'value' => '<div class="bboss_ajax_search_item noresult">' . sprintf( __( "Nothing found for '%s'", "buddyboss" ), stripslashes( $this->search_args['search_term'] ) ) . '</div>',
 					'label' => $this->search_args['search_term']
 				);
 			}
