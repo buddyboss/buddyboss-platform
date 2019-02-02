@@ -71,16 +71,16 @@ jQuery(document).ready(function($) {
 						return false;
 					},
 					open: function() {
-						$(".bb-global-search-ac").outerWidth($(this).outerWidth());
+						$(".bp-search-ac").outerWidth($(this).outerWidth());
 					},
                     position: ac_position_prop
 				})
 				.data("ui-autocomplete")._renderItem = function(ul, item) {
-					ul.addClass( 'bb-global-search-ac' );
+					ul.addClass( 'bp-search-ac' );
 
-					// Add .bb-global-search-ac-header if search is made from header area of the site
+					// Add .bp-search-ac-header if search is made from header area of the site
 					 if ( $form.parents('header').length != 0 ) {
-						 ul.addClass( 'bb-global-search-ac-header' );
+						 ul.addClass( 'bp-search-ac-header' );
 					 }
 
 					if (item.type_label != "") {
@@ -173,12 +173,12 @@ jQuery(document).ready(function($) {
                         return false;
                     },
                     open: function() {
-                        $(".bb-global-search-ac").outerWidth($(this).outerWidth());
+                        $(".bp-search-ac").outerWidth($(this).outerWidth());
                     },
                     position: ac_position_prop
                 })
                     .data("ui-autocomplete")._renderItem = function(ul, item) {
-                    ul.addClass("bb-global-search-ac");
+                    ul.addClass("bp-search-ac");
 
                     if (item.type_label != "") {
                         $(ul).data("current_cat", item.type)
@@ -195,7 +195,7 @@ jQuery(document).ready(function($) {
 
 	/* ajax load */
 
-	$(document).on("click", ".bboss_search_results_wrapper .item-list-tabs li a", function(e) {
+	$(document).on("click", ".bp-search-results-wrapper .item-list-tabs li a", function(e) {
 		e.preventDefault();
 
 		_this = this;
@@ -212,7 +212,7 @@ jQuery(document).ready(function($) {
 		get_page.done(function(d) {
 			$(_this).removeClass("loading");
 			if (d != '') {
-				present = $(".bboss_search_page");
+				present = $(".bp-search-page");
 				present.after(d);
 				present.remove();
 			}
@@ -226,7 +226,7 @@ jQuery(document).ready(function($) {
 
 	});
 
-	$(document).on("click", ".bboss_search_results_wrapper .pagination-links a", function(e) {
+	$(document).on("click", ".bp-search-results-wrapper .pagination-links a", function(e) {
 		e.preventDefault();
 
 		_this = this;
@@ -241,14 +241,14 @@ jQuery(document).ready(function($) {
 			'list': $(this).data('pagenumber')
 		};
 
-		var current_subset = $(".bboss_search_results_wrapper .item-list-tabs li.active").data('item');
+		var current_subset = $(".bp-search-results-wrapper .item-list-tabs li.active").data('item');
 		qdata.subset = current_subset;
 
 		get_page = $.post(BP_SEARCH.ajaxurl, qdata);
 		get_page.done(function(d) {
 			$(_this).removeClass("loading");
 			if (d != '') {
-				present = $(".bboss_search_page");
+				present = $(".bp-search-page");
 				present.after(d);
 				present.remove();
 			}
@@ -264,7 +264,7 @@ jQuery(document).ready(function($) {
 
 	/* end ajax load */
 
-	$('body.bp-nouveau').on('click', '.bboss_search_page button.friendship-button, .bboss_search_page button.group-button', function(e){
+	$('body.bp-nouveau').on('click', '.bp-search-page button.friendship-button, .bp-search-page button.group-button', function(e){
 		window.location = this.getAttribute('data-bp-nonce');
 	});
 

@@ -1,5 +1,5 @@
 <?php global $current_comment; //var_dump( $current_comment ); ?>
-<li class="bboss_search_item bboss_search_item_posts_comments">
+<li class="bp-search-item bp-search-item_posts_comments">
 	<div class="list-wrap">
 		<div class="item-avatar">
 			<a href="<?php comment_author_link( $current_comment ); ?>">

@@ -1,4 +1,4 @@
-<li class="bboss_search_item bboss_search_item_forum">
+<li class="bp-search-item bp-search-item_forum">
 	<div class="list-wrap">
 		<div class="item-avatar">
 			<a href="<?php bbp_forum_permalink( get_the_ID() ); ?>">

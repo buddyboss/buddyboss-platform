@@ -1,4 +1,4 @@
-<li class="bboss_search_item bboss_search_item_activity_comment">
+<li class="bp-search-item bp-search-item_activity_comment">
 	<div class="list-wrap">
 		<div class="item-avatar activity-avatar">
 			<a href="<?php bp_activity_user_link(); ?>">

@@ -1,5 +1,5 @@
 <?php global $current_comment; ?>
-<div class="bboss_ajax_search_item bboss_ajax_search_item_posts_comments">
+<div class="bp-search-ajax-item bp-search-ajax-item_posts_comments">
 	<div class="item-avatar">
 		<a href="<?php comment_author_link( $current_comment ); ?>">
 			<?php echo get_avatar( $current_comment->user_id, 50 );?>

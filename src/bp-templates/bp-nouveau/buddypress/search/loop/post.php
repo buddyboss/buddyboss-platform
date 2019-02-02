@@ -1,4 +1,4 @@
-<li class="bboss_search_item bboss_search_item_post">
+<li class="bp-search-item bp-search-item_post">
 	<div class="list-wrap">
 		<div class="item-avatar">
 			<a href="<?php the_permalink(); ?>">

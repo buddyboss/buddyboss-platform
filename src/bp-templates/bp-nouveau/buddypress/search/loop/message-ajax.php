@@ -1,5 +1,5 @@
 <?php global $current_message; ?>
-<div class="bboss_ajax_search_item bboss_ajax_search_item_ajax">
+<div class="bp-search-ajax-item bp-search-ajax-item_ajax">
 	<a href='<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), trailingslashit( bp_loggedin_user_domain() ) . 'messages/view/' . $current_message->thread_id . '/' ) );?>'>
 		<div class="item">
 			<div class="item-title">

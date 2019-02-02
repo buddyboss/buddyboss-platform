@@ -1,5 +1,5 @@
 <?php global $current_message; ?>
-<li class="bboss_search_item bboss_search_item_message">
+<li class="bp-search-item bp-search-item_message">
 	<p class="message_participants">
 		<?php 
 		_e( 'Conversation between', 'buddyboss' );

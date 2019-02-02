@@ -301,7 +301,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 				// Show "View All" link
 				if ( absint( $this->search_results['all']['total_match_count'] ) > absint( bp_search_get_form_option( 'bp_search_number_of_results', 5 ) ) ) {
 					$all_results_row  = array(
-						"value"      => "<div class='bboss_ajax_search_item allresults'><a href='" . esc_url( $url ) . "'>" . __( 'View all', 'buddyboss' ) . "</a></div>",
+						"value"      => "<div class='bp-search-ajax-item allresults'><a href='" . esc_url( $url ) . "'>" . __( 'View all', 'buddyboss' ) . "</a></div>",
 						"type"       => 'view_all_type',
 						"type_label" => ''
 					);
@@ -310,7 +310,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 			} else {
 				//@todo give a settings screen for this field
 				$search_results[] = array(
-					'value' => '<div class="bboss_ajax_search_item noresult">' . sprintf( __( "Nothing found for '%s'", "buddyboss" ), stripslashes( $this->search_args['search_term'] ) ) . '</div>',
+					'value' => '<div class="bp-search-ajax-item noresult">' . sprintf( __( "Nothing found for '%s'", "buddyboss" ), stripslashes( $this->search_args['search_term'] ) ) . '</div>',
 					'label' => $this->search_args['search_term']
 				);
 			}
@@ -512,12 +512,12 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 							$category_search_url = esc_url( add_query_arg( array( 'subset' => $type ), $search_url ) );
 							$label               = isset( $search_items[ $type ] ) ? trim($search_items[ $type ] ): trim( $type );
 							$first_item          = reset( $items );
-							$start_html = "<div class='results-group results-group-{$type} " . apply_filters( 'bp_search_class_search_wrap', 'bboss-results-wrap', $label ) . "'>"
+							$start_html = "<div class='results-group results-group-{$type} " . apply_filters( 'bp_search_class_search_wrap', 'bp-search-results-wrap', $label ) . "'>"
 							              . "<header class='results-group-header clearfix'>"
 							              . "<h3 class='results-group-title'><span>" . apply_filters( 'bp_search_label_search_type', $label ) . "</span></h3>"
 							              . "<a href='". $category_search_url."' class='view-all-link'>". esc_html__( 'View All', 'buddyboss' ) ."</a>"
 							              . "</header>"
-							              . "<ul id='{$type}-stream' class='item-list {$type}-list bp-list " . apply_filters( 'bp_search_class_search_list', 'bboss-results-list', $label ) . "'>";
+							              . "<ul id='{$type}-stream' class='item-list {$type}-list bp-list " . apply_filters( 'bp_search_class_search_list', 'bp-search-results-list', $label ) . "'>";
 
 							$group_start_html = apply_filters( "bp_search_results_group_start_html", $start_html, $type );
 
@@ -604,8 +604,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 
 					//now prepend html (opening tags) to first item of each type
 					$first_item = reset( $this->search_results[ $args['search_subset'] ]['items'] );
-					$start_html = "<div class='results-group results-group-{$args['search_subset']} " . apply_filters( 'bp_search_class_search_wrap', 'bboss-results-wrap', $args['search_subset'] ) . "'>"
-					              . "<ul id='{$args['search_subset']}-stream' class='item-list {$args['search_subset']}-list bp-list " . apply_filters( 'bp_search_class_search_list', 'bboss-results-list', $args['search_subset'] ) . "'>";
+					$start_html = "<div class='results-group results-group-{$args['search_subset']} " . apply_filters( 'bp_search_class_search_wrap', 'bp-search-results-wrap', $args['search_subset'] ) . "'>"
+					              . "<ul id='{$args['search_subset']}-stream' class='item-list {$args['search_subset']}-list bp-list " . apply_filters( 'bp_search_class_search_list', 'bp-search-results-list', $args['search_subset'] ) . "'>";
 
 					$group_start_html = apply_filters( "bp_search_results_group_start_html", $start_html, $args['search_subset'] );
 

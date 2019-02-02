@@ -1,4 +1,4 @@
-<div class="bboss_ajax_search_item bboss_ajax_search_item_topic">
+<div class="bp-search-ajax-item bp-search-ajax-item_topic">
 	<a href="<?php echo esc_url(add_query_arg( array( 'no_frame' => '1' ), bbp_get_topic_permalink(get_the_ID()) )); ?>">
 		<div class="item-avatar">
 			<img

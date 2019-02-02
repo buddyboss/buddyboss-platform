@@ -1,4 +1,4 @@
-<div class="bboss_ajax_search_item bboss_ajax_search_group">
+<div class="bp-search-ajax-item bboss_ajax_search_group">
 	<a href="<?php echo esc_url(add_query_arg( array( 'no_frame' => '1' ), bp_get_group_permalink() )); ?>">
 		<div class="item-avatar">
 			<?php bp_group_avatar( 'type=thumb&width=50&height=50' ); ?>

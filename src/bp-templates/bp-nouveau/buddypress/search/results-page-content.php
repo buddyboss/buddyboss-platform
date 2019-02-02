@@ -13,9 +13,9 @@ $no_results_class =
 
 ?>
 
-<div class="bboss_search_page buddypress-wrap bp-dir-hori-nav">
+<div class="bp-search-page buddypress-wrap bp-dir-hori-nav">
 
-	<div class="bboss_search_results_wrapper dir-form <?php echo $no_results_class; ?>">
+	<div class="bp-search-results-wrapper dir-form <?php echo $no_results_class; ?>">
 
 		<nav class="search_filters item-list-tabs main-navs dir-navs bp-navs no-ajax" role="navigation">
 			<ul class="component-navigation search-nav">
@@ -33,4 +33,4 @@ $no_results_class =
 
 	</div>
 
-</div><!-- .bboss_search_page -->
+</div><!-- .bp-search-page -->
