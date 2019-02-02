@@ -5,15 +5,19 @@
 		</div>
 
 		<div class="item">
-			<div class="item-title">
-				<?php echo wp_strip_all_tags( bp_get_activity_action() ); ?>
-			</div>
-
 			<?php if ( bp_activity_has_content() ) : ?>
 				<div class="item-desc">
 					<?php echo bp_search_activity_intro( 30 ); ?>
 				</div>
 			<?php endif; ?>
+			<div class="item-meta activity-header">
+				<strong>
+					<?php echo bp_core_get_user_displayname( bp_get_activity_user_id() ) ?>
+				</strong>
+				<time>
+					<?php echo human_time_diff( bp_nouveau_get_activity_timestamp() ) . ' ago' ?>
+				</time>
+			</div>
 		</div>
 	</a>
 </div>
