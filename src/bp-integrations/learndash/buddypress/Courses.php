@@ -48,13 +48,14 @@ class Courses
 		require bp_locate_template('groups/single/courses-view-button.php', false, false);
 	}
 
-	public function getGroupCourses()
-	{
-		$courseIds = learndash_group_enrolled_courses(
-			bp_ld_sync('buddypress')->helpers->getLearndashGroupId(groups_get_current_group()->id)
-		);
+	public function getGroupCourses() {
+		$group_id = bp_ld_sync('buddypress')->helpers->getLearndashGroupId(groups_get_current_group()->id);
+		$courseIds = learndash_group_enrolled_courses( $group_id );
 
-		return array_map('get_post', $courseIds);
+		/**
+		 * Filter to update course lists
+		 */
+		return array_map('get_post', apply_filters( 'bp_lp_learndash_group_enrolled_courses', $courseIds, $group_id ));
 	}
 
 	public function getUserCourseProgress($courseId = null, $userId = null)
