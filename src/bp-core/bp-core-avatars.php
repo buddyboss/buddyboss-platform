@@ -1371,6 +1371,16 @@ add_action( 'wp_ajax_bp_avatar_set', 'bp_avatar_ajax_set' );
 function bp_core_get_avatar_data_url_filter( $retval, $id_or_email, $args ) {
 	$user = null;
 
+	// Added this check for the display proper images in /wp-admin/options-discussion.php page Default Avatar page.
+	global $pagenow;
+	if ( 'options-discussion.php' === $pagenow ) {
+		if ( true === $args["force_default"] && 'mm' === $args["default"] ) {
+			return buddypress()->plugin_url . 'bp-core/images/mystery-man-50.jpg';
+		} else if ( true === $args["force_default"] ) {
+			return $retval;
+		}
+	}
+
 	// Ugh, hate duplicating code; process the user identifier.
 	if ( is_numeric( $id_or_email ) ) {
 		$user = get_user_by( 'id', absint( $id_or_email ) );
