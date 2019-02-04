@@ -264,8 +264,11 @@ class ReportsGenerator
 			$this->params['date_format'] = $this->args['date_format'] ?: 'Y-m-d';
 		}
 
+
 		// if ($this->hasArg('course')) {
-			$this->params['course_ids'] = $this->args['course'] ?: learndash_group_enrolled_courses($ldGroupId);
+			$this->params['course_ids'] = learndash_group_enrolled_courses($ldGroupId);
+//		var_dump( learndash_group_enrolled_courses($ldGroupId) );
+//		var_dump( $this->args['course'] );
 		// }
 
 		if ($this->hasArg('step')) {
