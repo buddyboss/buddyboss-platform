@@ -166,19 +166,23 @@ module.exports = function( grunt ) {
 		},
 		makepot: {
 			target: {
-				options: {
-					cwd: BUILD_DIR,
-					domainPath: '.',
-					mainFile: 'bp-loader.php',
-					potFilename: 'buddypress.pot',
-					processPot: function( pot ) {
-						pot.headers['report-msgid-bugs-to'] = 'https://buddypress.trac.wordpress.org';
-						pot.headers['last-translator'] = 'JOHN JAMES JACOBY <jjj@buddypress.org>';
-						pot.headers['language-team'] = 'ENGLISH <jjj@buddypress.org>';
-						return pot;
-					},
-					type: 'wp-plugin'
-				}
+                                options: {
+                                    cwd: '.', // Directory of files to internationalize.
+                                    domainPath: 'languages/', // Where to save the POT file.
+                                    exclude: [ 'node_modules/*' ], // List of files or directories to ignore.
+                                    mainFile: 'bp-loader.php', // Main project file.
+                                    potFilename: 'buddyboss-platform.pot', // Name of the POT file.
+                                    potHeaders: { // Headers to add to the generated POT file.
+                                        poedit: true, // Includes common Poedit headers.
+                                        'Last-Translator': 'BuddyBoss <support@buddyboss.com>',
+                                        'Language-Team': 'BuddyBoss <support@buddyboss.com>',
+                                        'report-msgid-bugs-to': 'https://www.buddyboss.com/contact/',
+                                        'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
+                                    },
+                                    type: 'wp-plugin', // Type of project (wp-plugin or wp-theme).
+                                    updateTimestamp: true, // Whether the POT-Creation-Date should be updated without other changes.
+                                    updatePoFiles: true // Whether to update PO files in the same directory as the POT file.
+                                }
 			}
 		},
 		imagemin: {
