@@ -73,9 +73,9 @@ function bp_groups_group_admin_menu() {
 				if ( bbp_is_group_forums_active() ) {
 					$wp_admin_bar->add_menu( array(
 						'parent' => $bp->group_admin_menu_id,
-						'id'     => 'forum-single',
+						'id'     => get_option( '_bbp_forum_slug', 'forum' ),
 						'title'  => 'Edit Group Discussion',
-						'href'   => bp_get_groups_action_link( 'admin/' . 'forum-single' )
+						'href'   => bp_get_groups_action_link( 'admin/' . get_option( '_bbp_forum_slug', 'forum' ) )
 					) );
 				}
 			}
