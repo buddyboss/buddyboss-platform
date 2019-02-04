@@ -342,7 +342,7 @@ function bp_ps_learndash_course_users_search( $f ) {
 
 		$course_id = $f->value;
 		if ( isset( $course_id ) && ! empty( $course_id ) ) {
-			$course_users = bp_ps_learndash_get_users_for_course( $course_id, '', true );
+			$course_users = bp_ps_learndash_get_users_for_course( $course_id, '', false );
 
 			$course_users = $course_users->results;
 
