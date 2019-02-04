@@ -332,10 +332,10 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 
 			$defaults = array(
 				//the search term
-				'search_term'      => '',
+				'search_term'   => '',
 				//Restrict search results to only this subset. eg: posts, members, groups, etc.
 				//See Setting > what to search?
-				'search_subset'    => 'all',
+				'search_subset' => 'all',
 				//
 				//What all to search for. e.g: members.
 				//See Setting > what to search?
@@ -345,19 +345,20 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 				//If search_subset is 'all', then search is performed for all searchable items.
 				//If search_subset is 'members' then only total match count for other searchable_items is calculated( so that it can be displayed in tabs)
 				//members(23) | posts(201) | groups(2) and so on.
-			//	'searchable_items' => BP_Search::instance()->option( 'items-to-search' ),
+				//	'searchable_items' => BP_Search::instance()->option( 'items-to-search' ),
 				//how many search results to display per page
-				'per_page'         => 10,
+				'per_page'      => 20,
 				//current page
-				'current_page'     => 1,
+				'current_page'  => 1,
 				//should we calculate total match count for all different types?
 				//it should be set to false while calling this function for ajax search
-				'count_total'      => true,
+				'count_total'   => true,
 				//template type to load for each item
 				//search results will be styled differently(minimal) while in ajax search
 				//options ''|'minimal'
-				'template_type'    => '',
-				'forum_search'     => false,
+				'template_type' => '',
+				'forum_search'  => false,
+				'number'        => 3
 			);
 
 			$args = wp_parse_args( $args, $defaults );
@@ -434,7 +435,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 					 * This also means that all such classes must have a common set of methods.
 					 */
 					$obj           = $this->search_helpers[ $search_type ];
-					$sql_queries[] = "( " . $obj->union_sql( $args['search_term'] ) . " ) ";
+					$limit         = " LIMIT " . ( $args['number'] + 1 );
+					$sql_queries[] = "( " . $obj->union_sql( $args['search_term'] ) . " $limit ) ";
 				}
 
 				if ( empty( $sql_queries ) ) {
@@ -444,11 +446,11 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 
 				$pre_search_query = implode( ' UNION ', $sql_queries ) . " ORDER BY relevance, type DESC, entry_date DESC ";
 
-				if ( $args['per_page'] > 0 ) {
-					$offset           = ( $args['current_page'] * $args['per_page'] ) - $args['per_page'];
-					$pre_search_query .= " LIMIT {$offset}, {$args['per_page']} ";
-
-				}
+//				if ( $args['per_page'] > 0 ) {
+//					$offset           = ( $args['current_page'] * $args['per_page'] ) - $args['per_page'];
+//					$pre_search_query .= " LIMIT {$offset}, {$args['per_page']} ";
+//
+//				}
 
 				$results = $wpdb->get_results( $pre_search_query );
 				/* $results will have a structure like below */
@@ -510,12 +512,14 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 						foreach ( $ordered_items_group as $type => &$items ) {
 							//now prepend html (opening tags) to first item of each
 							$category_search_url = esc_url( add_query_arg( array( 'subset' => $type ), $search_url ) );
-							$label               = isset( $search_items[ $type ] ) ? trim($search_items[ $type ] ): trim( $type );
+							$label               = isset( $search_items[ $type ] ) ? trim( $search_items[ $type ] ) : trim( $type );
 							$first_item          = reset( $items );
+							$view_all_class      = count( $items ) < 4 ? 'view-all-link-hidden' : '';
+
 							$start_html = "<div class='results-group results-group-{$type} " . apply_filters( 'bp_search_class_search_wrap', 'bp-search-results-wrap', $label ) . "'>"
 							              . "<header class='results-group-header clearfix'>"
 							              . "<h3 class='results-group-title'><span>" . apply_filters( 'bp_search_label_search_type', $label ) . "</span></h3>"
-							              . "<a href='". $category_search_url."' class='view-all-link'>". esc_html__( 'View All', 'buddyboss' ) ."</a>"
+							              . "<a href='". $category_search_url."' class='view-all-link $view_all_class'>". esc_html__( 'View All', 'buddyboss' ) ."</a>"
 							              . "</header>"
 							              . "<ul id='{$type}-stream' class='item-list {$type}-list bp-list " . apply_filters( 'bp_search_class_search_list', 'bp-search-results-list', $label ) . "'>";
 
@@ -537,6 +541,12 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 						//replace orginal items with this new, grouped set of items
 						$this->search_results['all']['items'] = array();
 						foreach ( $ordered_items_group as $type => $grouped_items ) {
+
+							// Remove last item from list
+							if ( count( $grouped_items ) > 3 ) {
+								array_pop( $grouped_items );
+							}
+
 							foreach ( $grouped_items as $item_id => $item ) {
 								$this->search_results['all']['items'][ $item_id ] = $item;
 							}
@@ -558,7 +568,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 				 * 1. Search top top 20( $args['per_page'] ) item( posts|members|..)
 				 * 2. Generate html for each of them
 				 */
-				$args['per_page'] = get_option( 'posts_per_page' );
+				//$args['per_page'] = get_option( 'posts_per_page' );
 				$obj              = $this->search_helpers[ $args['search_subset'] ];
 				$pre_search_query = $obj->union_sql( $args['search_term'] ) . " ORDER BY relevance DESC, entry_date DESC ";
 
@@ -782,7 +792,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 					echo $item['html'];
 				}
 
-				if ( function_exists( 'emi_generate_paging_param' ) ) {
+				if ( function_exists( 'emi_generate_paging_param' ) && $current_tab != 'all' ) {
 					$page_slug = untrailingslashit( str_replace( home_url(), '', $this->search_page_url() ) );
 					emi_generate_paging_param(
 						$this->search_results[ $current_tab ]['total_match_count'],
@@ -791,6 +801,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 						$page_slug
 					);
 				}
+
 			} else {
 				bp_search_buffer_template_part( 'no-results' );
 			}

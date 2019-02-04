@@ -7009,6 +7009,10 @@ SEARCH RESULTS PAGE
   padding-bottom: 5px;
 }
 
+.bp-search-results-wrap .results-group-header .view-all-link-hidden {
+  display: none;
+}
+
 .bp-search-results-wrap .results-group-title {
   flex: 1;
 }

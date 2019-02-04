@@ -377,6 +377,10 @@ SEARCH RESULTS PAGE
         display: flex;
         align-items: center;
         padding-bottom: 5px;
+		
+		.view-all-link-hidden {
+			display: none;
+		}
     }
 
     .results-group-title {
