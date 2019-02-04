@@ -80,27 +80,35 @@ if (!class_exists('Bp_Search_Members')):
 			 * wp_users table fields
 			 +++++++++++++++++++++++++++++++ */
 			$user_fields = bp_get_search_user_fields();
-			if( !empty( $user_fields ) ){
+			if ( ! empty( $user_fields ) ) {
 				$conditions_wp_user_table = array();
 				foreach ( $user_fields as $user_field => $field_label ) {
+
+
+					if ( ! bp_is_search_user_field_enable( $user_field ) ) {
+						continue;
+					}
 
 					if ( 'user_meta' === $user_field ) {
 						//Search in user meta table for terms
 						$conditions_wp_user_table[] = " ID IN ( SELECT user_id FROM {$wpdb->usermeta} WHERE meta_value LIKE %s ) ";
-						$query_placeholder[] = '%'. $search_term .'%';
+						$query_placeholder[]        = '%' . $search_term . '%';
 					} else {
 						$conditions_wp_user_table[] = $user_field . " LIKE %s ";
-						$query_placeholder[] = '%'. $search_term .'%';
+						$query_placeholder[]        = '%' . $search_term . '%';
 					}
 
 				}
 
+				if ( ! empty( $conditions_wp_user_table ) ) {
 
-				$clause_wp_user_table = "u.id IN ( SELECT ID FROM {$wpdb->users}  WHERE ( ";
-				$clause_wp_user_table .= implode( ' OR ', $conditions_wp_user_table );
-				$clause_wp_user_table .= " ) ) ";
+					$clause_wp_user_table = "u.id IN ( SELECT ID FROM {$wpdb->users}  WHERE ( ";
+					$clause_wp_user_table .= implode( ' OR ', $conditions_wp_user_table );
+					$clause_wp_user_table .= " ) ) ";
 
-				$where_fields[] = $clause_wp_user_table;
+					$where_fields[] = $clause_wp_user_table;
+				}
+
 			}
 			/* _____________________________ */
 
@@ -159,20 +167,20 @@ if (!class_exists('Bp_Search_Members')):
 
                             if (count($split_search_term) > 1 ) {
 
-                                $clause_search_string_table = "u.id IN ( SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key = 'bbgs_search_string' AND ";
+                                $clause_search_string_table = "u.id IN ( SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key = 'bbgs_search_string' AND (";
 
                                 foreach ( $split_search_term as $k => $sterm ) {
 
                                     if ( $k == 0 ) {
-                                        $clause_search_string_table .= "meta_value LIKE %s";
+                                        $clause_search_string_table .= " meta_value LIKE %s ";
 										$query_placeholder[] = '%'. $sterm .'%';
                                     } else {
-                                        $clause_search_string_table .= "AND meta_value LIKE %s";
+                                        $clause_search_string_table .= " OR meta_value LIKE %s ";
 										$query_placeholder[] = '%'. $sterm .'%';
                                     }
-
                                 }
-                                $clause_search_string_table .= " ) ";
+
+	                            $clause_search_string_table .= ") ) ";
 
                                 $where_fields[] = $clause_search_string_table;
 
@@ -193,6 +201,7 @@ if (!class_exists('Bp_Search_Members')):
 			}
 
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
+
 
                         return apply_filters(
                             'Bp_Search_Members_sql',
