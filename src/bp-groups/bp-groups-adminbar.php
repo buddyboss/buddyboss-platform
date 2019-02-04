@@ -69,6 +69,15 @@ function bp_groups_group_admin_menu() {
 			// Title is specific for delete.
 			if ( 'delete-group' == $menu->slug ) {
 				$title = sprintf( _x( '%s Group', 'Group WP Admin Bar delete link', 'buddyboss' ), $menu->name );
+
+				if ( bbp_is_group_forums_active() ) {
+					$wp_admin_bar->add_menu( array(
+						'parent' => $bp->group_admin_menu_id,
+						'id'     => 'forum-single',
+						'title'  => 'Edit Group Discussion',
+						'href'   => bp_get_groups_action_link( 'admin/' . 'forum-single' )
+					) );
+				}
 			}
 
 			$wp_admin_bar->add_menu( array(

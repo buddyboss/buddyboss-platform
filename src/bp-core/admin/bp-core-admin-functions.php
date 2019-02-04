@@ -336,15 +336,19 @@ function bp_core_activation_notice() {
 	// If there are duplicates, post a message about them.
 	if ( !empty( $dupe_names ) ) {
 		$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-page-settings' ), 'admin.php' ) );
-		$notice    = sprintf(
-			'%1$s <a href="%2$s">%3$s</a>',
-			sprintf(
-				__( 'Each BuddyBoss Component needs its own WordPress page. The following WordPress Pages have more than one component associated with them: %s.', 'buddyboss' ),
-				'<strong>' . implode( '</strong>, <strong>', array_map( 'esc_html', $dupe_names ) ) . '</strong>'
-			),
-			esc_url( $admin_url ),
-			__( 'Repair', 'buddyboss' )
-		);
+		if ( isset( $_GET['page'] ) && 'bp-pages' === $_GET['page'] ) {
+			$notice = sprintf( '%1$s',
+				sprintf( __( 'Each BuddyBoss Component needs its own WordPress page. The following WordPress Pages have more than one component associated with them: %s.',
+					'buddyboss' ),
+					'<strong>' . implode( '</strong>, <strong>', array_map( 'esc_html', $dupe_names ) ) . '</strong>' ) );
+		} else {
+			$notice = sprintf( '%1$s <a href="%2$s">%3$s</a>',
+				sprintf( __( 'Each BuddyBoss Component needs its own WordPress page. The following WordPress Pages have more than one component associated with them: %s.',
+					'buddyboss' ),
+					'<strong>' . implode( '</strong>, <strong>', array_map( 'esc_html', $dupe_names ) ) . '</strong>' ),
+				esc_url( $admin_url ),
+				__( 'Repair', 'buddyboss' ) );
+		}
 
 		bp_core_add_admin_notice( $notice );
 	}
