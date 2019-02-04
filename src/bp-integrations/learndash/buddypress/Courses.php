@@ -49,13 +49,13 @@ class Courses
 	}
 
 	public function getGroupCourses() {
-		$group_id = bp_ld_sync('buddypress')->helpers->getLearndashGroupId(groups_get_current_group()->id);
+		$group_id  = bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( groups_get_current_group()->id );
 		$courseIds = learndash_group_enrolled_courses( $group_id );
 
 		/**
 		 * Filter to update course lists
 		 */
-		return array_map('get_post', apply_filters( 'bp_lp_learndash_group_enrolled_courses', $courseIds, $group_id ));
+		return array_map( 'get_post', apply_filters( 'bp_ld_learndash_group_enrolled_courses', $courseIds, $group_id ) );
 	}
 
 	public function getUserCourseProgress($courseId = null, $userId = null)

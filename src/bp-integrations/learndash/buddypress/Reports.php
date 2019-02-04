@@ -315,18 +315,21 @@ class Reports
 		return wp_list_pluck($members, 'display_name', 'ID');
 	}
 
-	protected function getGroupCoursesList()
-	{
-		$ldGroupId = bp_ld_sync('buddypress')->helpers->getLearndashGroupId(groups_get_current_group()->id);
-		$courseIds = learndash_group_enrolled_courses($ldGroupId);
-		$courses   = array_map('get_post', $courseIds);
+	protected function getGroupCoursesList() {
+		$ldGroupId = bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( groups_get_current_group()->id );
+		$courseIds = learndash_group_enrolled_courses( $ldGroupId );
 
-		array_unshift($courses, (object) [
-			'ID' => '',
-			'post_title' => __('All Courses', 'buddyboss')
-		]);
+		/**
+		 * Filter to update course lists
+		 */
+		$courses = array_map( 'get_post', apply_filters( 'bp_ld_learndash_group_enrolled_courses', $courseIds, $ldGroupId ) );
 
-		return wp_list_pluck($courses, 'post_title', 'ID');
+		array_unshift( $courses, (object) [
+			'ID'         => '',
+			'post_title' => __( 'All Courses', 'buddyboss' )
+		] );
+
+		return wp_list_pluck( $courses, 'post_title', 'ID' );
 	}
 
 	protected function getStepTypes()
