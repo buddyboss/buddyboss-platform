@@ -301,14 +301,14 @@ function bp_core_activation_notice() {
 
 		if ( isset( $_GET['page'] ) && 'bp-pages' === $_GET['page'] ) {
 			$notice = sprintf( '%1$s',
-				sprintf( __( 'The following active BuddyPress Components do not have associated WordPress Pages: %s.',
+				sprintf( __( 'The following active BuddyBoss Components do not have associated WordPress Pages: %s.',
 					'buddyboss' ),
 					'<strong>' . implode( '</strong>, <strong>',
 						array_map( 'esc_html', $orphaned_components ) ) . '</strong>' )
 				);
 		} else {
 			$notice = sprintf( '%1$s <a href="%2$s">%3$s</a>',
-				sprintf( __( 'The following active BuddyPress Components do not have associated WordPress Pages: %s.',
+				sprintf( __( 'The following active BuddyBoss Components do not have associated WordPress Pages: %s.',
 					'buddyboss' ),
 					'<strong>' . implode( '</strong>, <strong>',
 						array_map( 'esc_html', $orphaned_components ) ) . '</strong>' ),
