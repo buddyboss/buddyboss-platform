@@ -358,7 +358,7 @@ function bp_ps_learndash_course_users_search( $f ) {
 }
 
 /**
- * Get all the users who is enrolled to the course.
+ * Get all the users who are enrolled in the course.
  *
  * @since BuddyBoss 1.0.0
  *
