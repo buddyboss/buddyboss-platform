@@ -337,12 +337,12 @@ function bp_ps_learndash_course_setup ($fields) {
 function bp_ps_learndash_course_users_search( $f ) {
 
 	// check for learndash plugin is activated or not.
-	if(in_array('sfwd-lms/sfwd_lms.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+	if ( in_array( 'sfwd-lms/sfwd_lms.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
 
 		$course_id = $f->value;
 		if ( isset( $course_id ) && ! empty( $course_id ) ) {
-			$course_users = learndash_get_users_for_course( $course_id, '', false );
+			$course_users = bp_ps_learndash_get_users_for_course( $course_id, '', true );
 
 			$course_users = $course_users->results;
 
@@ -354,6 +354,63 @@ function bp_ps_learndash_course_users_search( $f ) {
 		} else {
 			return array();
 		}
+	}
+}
+
+/**
+ * Get all the users who is enrolled to the course.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param int $course_id
+ * @param array $query_args
+ * @param bool $exclude_admin
+ *
+ * @return array|WP_User_Query
+ */
+function bp_ps_learndash_get_users_for_course( $course_id = 0, $query_args = array(), $exclude_admin = true ) {
+	$course_user_ids = array();
+
+	if ( empty( $course_id ) ) {
+		return $course_user_ids;
+	}
+
+	$defaults = array(
+		// By default WP_User_Query will return ALL users. Strange.
+		'fields' => 'ID',
+	);
+
+	$query_args = wp_parse_args( $query_args, $defaults );
+
+	if ( $exclude_admin == true ) {
+		$query_args['role__not_in'] = array( 'administrator' );
+	}
+
+	$course_access_list = get_course_meta_setting( $course_id, 'course_access_list' );
+	$course_user_ids    = array_merge( $course_user_ids, $course_access_list );
+
+	$course_access_users = get_course_users_access_from_meta( $course_id );
+	$course_user_ids     = array_merge( $course_user_ids, $course_access_users );
+
+	$course_groups_users = get_course_groups_users_access( $course_id );
+	$course_user_ids     = array_merge( $course_user_ids, $course_groups_users );
+
+	if ( ! empty( $course_user_ids ) ) {
+		$course_user_ids = array_unique( $course_user_ids );
+	}
+
+	$course_expired_access_users = get_course_expired_access_from_meta( $course_id );
+	if ( ! empty( $course_expired_access_users ) ) {
+		$course_user_ids = array_diff( $course_access_list, $course_expired_access_users );
+	}
+
+	if ( ! empty( $course_user_ids ) ) {
+		$query_args['include'] = $course_user_ids;
+
+		$user_query = new WP_User_Query( $query_args );
+
+		//$course_user_ids = $user_query->get_results();
+		return $user_query;
 	}
 }
 
