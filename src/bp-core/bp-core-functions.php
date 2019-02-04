@@ -3931,30 +3931,35 @@ function bp_check_member_send_invites_tab_member_type_allowed() {
 function bp_core_set_default_pages() {
 
 	$page_ids       = bp_core_get_directory_page_ids( 'all' );
-	$valid_pages = array_merge( bp_core_admin_get_directory_pages(), bp_core_admin_get_static_pages() );
+	$valid_pages    = array_merge( bp_core_admin_get_directory_pages(), bp_core_admin_get_static_pages() );
+	$policy_page_id = (int) get_option( 'wp_page_for_privacy_policy' );
 
-	if ( !bp_get_signup_allowed() ) {
+	if ( ! bp_get_signup_allowed() ) {
 		unset( $valid_pages['activate'] );
 		unset( $valid_pages['register'] );
 	}
 
 	foreach ( $valid_pages as $key => $value ) {
 
-		if (!array_key_exists($key, $page_ids ) ) {
+		if ( ! array_key_exists( $key, $page_ids ) ) {
 
 			$default_title = bp_core_get_directory_page_default_titles();
-			$title = ( isset( $default_title[ $key ] ) ) ? $default_title[ $key ] : $value;
-			$new_page = array(
-				'post_title'     => $title,
-				'post_status'    => 'publish',
-				'post_author'    => bp_loggedin_user_id(),
-				'post_type'      => 'page',
-				'comment_status' => 'closed',
-				'ping_status'    => 'closed',
-			);
 
-			$page_id                    = wp_insert_post( $new_page );
-			$page_ids[ $key ] = (int) $page_id;
+			if ( 'privacy' === $key && $policy_page_id > 0 ) {
+				$page_ids[ $key ] = (int) $policy_page_id;
+			} else {
+				$title            = ( isset( $default_title[ $key ] ) ) ? $default_title[ $key ] : $value;
+				$new_page         = array(
+					'post_title'     => $title,
+					'post_status'    => 'publish',
+					'post_author'    => bp_loggedin_user_id(),
+					'post_type'      => 'page',
+					'comment_status' => 'closed',
+					'ping_status'    => 'closed',
+				);
+				$page_id          = wp_insert_post( $new_page );
+				$page_ids[ $key ] = (int) $page_id;
+			}
 
 			bp_core_update_directory_page_ids( $page_ids );
 
