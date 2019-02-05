@@ -1376,7 +1376,7 @@ function bp_member_type_custom_metaboxes() {
 		}
 	}
 
-	if ( true === bp_disable_group_type_creation() && true === bp_enable_group_auto_join() ) {
+	if ( true === bp_disable_group_type_creation() && true === bp_enable_group_auto_join() && bp_is_active( 'invites' ) ) {
 
 		$get_all_registered_group_types = bp_get_active_group_types();
 
@@ -1387,7 +1387,7 @@ function bp_member_type_custom_metaboxes() {
 	}
 
 	// Metabox for the member type invite.
-	if ( true === bp_disable_invite_member_type() ) {
+	if ( true === bp_disable_invite_member_type() && bp_is_active( 'invites' ) ) {
 		add_meta_box( 'bp-member-type-invite', __( 'Member Invites', 'buddyboss' ), 'bp_member_type_invite_meta_box', null, 'normal', 'high' );
 	}
 }
