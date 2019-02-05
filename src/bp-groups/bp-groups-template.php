@@ -3720,6 +3720,14 @@ function bp_group_join_button( $group = false ) {
 				$is_only_admin = true;
 			}
 
+			if ( groups_is_user_admin( bp_loggedin_user_id(), $group->id ) ) {
+				$button_text = __( 'You\'re an organizer', 'buddyboss' );
+			} elseif ( groups_is_user_mod( bp_loggedin_user_id(), $group->id ) ) {
+				$button_text = __( 'You\'re a moderator', 'buddyboss' );
+			} else {
+				$button_text = __( 'You\'re a member', 'buddyboss' );
+			}
+
 			// Setup button attributes.
 			$button = array(
 				'id'                => 'leave_group',
@@ -3729,11 +3737,11 @@ function bp_group_join_button( $group = false ) {
 				'wrapper_class'     => 'group-button ' . $group->status,
 				'wrapper_id'        => 'groupbutton-' . $group->id,
 				'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'leave-group' ), 'groups_leave_group' ),
-				'link_text'         => __( 'You\'re a member', 'buddyboss' ),
+				'link_text'         => $button_text,
 				'link_class'        => 'group-button leave-group bp-toggle-action-button',
 				'button_attr' => array(
 					'data-title'           => __( 'Leave this group', 'buddyboss' ),
-					'data-title-displayed' => __( 'You\'re a member', 'buddyboss' )
+					'data-title-displayed' => $button_text
 				)
 			);
 
