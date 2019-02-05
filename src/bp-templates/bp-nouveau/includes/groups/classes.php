@@ -54,6 +54,11 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 			$type = 'include';
 		}
 
+		// We have to exclude users if set on $this->query_vars_raw["exclude"] parameter
+		if ( ! empty( $this->query_vars_raw["exclude"] ) ) {
+			$group_member_ids = array_merge( $group_member_ids, explode(',', $this->query_vars_raw["exclude"] ) );
+		}
+
 		if ( ! empty( $group_member_ids ) ) {
 			$this->query_vars[ $type ] = $group_member_ids;
 		}
