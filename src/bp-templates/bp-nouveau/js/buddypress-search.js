@@ -262,6 +262,12 @@ jQuery(document).ready(function($) {
 
 	});
 
+	// Submit search form
+	$('.bp-search-form').on('click', '.dashicons-search', function(  ) {
+		var searchWrapEl = document.querySelector('.bp-search-form');
+		searchWrapEl.querySelector('#search-form').submit();
+	});
+
 	/* end ajax load */
 
 	$('body.bp-nouveau').on('click', '.bp-search-page button.friendship-button, .bp-search-page button.group-button', function(e){
