@@ -266,6 +266,26 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 			);
 		}
 
+		if ( function_exists( 'bp_ld_sync' ) && function_exists( 'learndash_group_enrolled_courses') ) {
+			$va = bp_ld_sync( 'settings' )->get( 'buddypress.enabled', true );
+			if ( '1' === $va ) {
+				$generator = bp_ld_sync( 'buddypress' )->sync->generator( $this->group->id );
+				if ( $generator->hasLdGroup() ) {
+					$hasLdGroup = bp_ld_sync( 'buddypress' )->sync->generator( $this->group->id )->hasLdGroup();
+					$ldGroupId  = $hasLdGroup ? bp_ld_sync( 'buddypress' )->sync->generator( $this->group->id )->getLdGroupId() : 0;
+					$courseIds  = learndash_group_enrolled_courses( $ldGroupId );
+					if ( isset( $courseIds ) && ! empty( $courseIds ) ) {
+						$nav_items['courses'] = array(
+							'name'        => _x( 'Courses', 'My Group screen nav', 'buddyboss' ),
+							'slug'        => 'courses',
+							'parent_slug' => $this->group->slug,
+							'position'    => 40,
+						);
+					}
+				}
+			}
+		}
+
 		if ( bp_is_active( 'activity' ) ) {
 			$nav_items['activity'] = array(
 				'name'        => _x( 'Feed', 'My Group screen nav', 'buddyboss' ),

@@ -39,14 +39,23 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 		if ( 'group' === $this->type ) {
 			$guide = __( 'Customizing the Groups navigation order needs you create at least one group first.', 'buddyboss' );
 
+			$slug = array();
+
+			if ( isset( $_GET['url'] ) && !empty( $_GET['url'] ) ) {
+				$parse_url = parse_url( $_GET['url'] );
+				$path_arr = explode( '/', $parse_url['path'] );
+				if ( 'groups' === $path_arr[1] && '' !== $path_arr[2] ) {
+					$slug = array( $path_arr[2] );
+				}
+			}
+
 			// Try to fetch any random group:
-			$random = groups_get_groups(
-				array(
+			$random = groups_get_groups( array(
 					'type'        => 'random',
 					'per_page'    => 1,
+					'slug'        => $slug,
 					'show_hidden' => true,
-				)
-			);
+				) );
 
 			if ( ! empty( $random['groups'] ) ) {
 				$group    = reset( $random['groups'] );
