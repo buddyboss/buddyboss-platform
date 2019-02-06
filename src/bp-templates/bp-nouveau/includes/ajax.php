@@ -144,6 +144,47 @@ function bp_nouveau_ajax_object_template_loader() {
 		//$result['count'] = $GLOBALS["activities_template"]->activity_count;
 	}
 
+	$result = apply_filters( 'bp_nouveau_object_template_result', $result, $object );
+
 	// Locate the object template.
 	wp_send_json_success( $result );
+}
+
+add_filter('bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_members_tabs', 10, 2);
+function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
+	if ( $object != 'members' ) {
+		return $results;
+	}
+
+	$results['scopes'] = [];
+
+	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_all_scope', 20 );
+	bp_has_members( bp_ajax_querystring( 'members' ) );
+	$results['scopes']['all'] = $GLOBALS["members_template"]->total_member_count;
+	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_all_scope', 20 );
+
+	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_personal_scope', 20 );
+	bp_has_members( bp_ajax_querystring( 'members' ) );
+	$results['scopes']['personal'] = $GLOBALS["members_template"]->total_member_count;
+	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_personal_scope', 20 );
+
+	return $results;
+}
+
+function bp_nouveau_object_template_results_members_all_scope( $querystring ) {
+	$querystring = wp_parse_args( $querystring );
+	$querystring['scope'] = 'all';
+	$querystring['page'] = 1;
+	$querystring['per_page'] = '1';
+	$querystring['user_id'] = 0;
+	return http_build_query( $querystring );
+}
+
+function bp_nouveau_object_template_results_members_personal_scope( $querystring ) {
+	$querystring = wp_parse_args( $querystring );
+	$querystring['scope'] = 'personal';
+	$querystring['page'] = 1;
+	$querystring['per_page'] = '1';
+	$querystring['user_id'] = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	return http_build_query( $querystring );
 }
