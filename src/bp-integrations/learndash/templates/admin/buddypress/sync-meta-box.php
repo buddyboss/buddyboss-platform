@@ -19,7 +19,7 @@
 	    <option value="0"><?php _e('None', 'buddyboss'); ?></option>
 	    <?php foreach ($availableLdGroups as $group): ?>
 	        <?php $selected = $group->ID == $ldGroupId? 'selected' : ''; ?>
-	        <option value="<?php echo $group->id; ?>" <?php echo $selected; ?>>
+	        <option value="<?php echo $group->ID; ?>" <?php echo $selected; ?>>
 	            <?php echo $group->post_title; ?> (ID: <?php echo $group->ID; ?>)
 	        </option>
 	    <?php endforeach; ?>
