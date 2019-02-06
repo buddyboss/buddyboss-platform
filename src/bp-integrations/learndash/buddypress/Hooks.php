@@ -17,6 +17,9 @@ class Hooks
 		add_action('groups_before_delete_group', [$this, 'groupDeleting']);
 		add_action('groups_delete_group', [$this, 'groupDeleted']);
 
+		// admin
+		add_action('bp_group_admin_edit_after', [$this, 'groupUpdated']);
+
 		add_action('groups_member_after_save', [$this, 'groupMemberAdded']);
 		add_action('groups_member_after_remove', [$this, 'groupMemberRemoved']);
 	}

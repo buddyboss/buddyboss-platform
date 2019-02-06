@@ -16,7 +16,7 @@ class Sync
 	public function init()
 	{
 		add_action('bp_ld_sync/buddypress_group_created', [$this, 'onGroupCreate']);
-		// add_action('bp_ld_sync/buddypress_group_updated', [$this, 'onGroupUpdate']);
+		add_action('bp_ld_sync/buddypress_group_updated', [$this, 'onGroupUpdate']);
 		add_action('bp_ld_sync/buddypress_group_deleting', [$this, 'onGroupDeleting']);
 		add_action('bp_ld_sync/buddypress_group_deleted', [$this, 'onGroupDeleted']);
 
@@ -37,15 +37,8 @@ class Sync
 
 	public function onGroupCreate($groupId)
 	{
-		global $bp_ld_sync__syncing_to_buddypress;
-
-		// if it's group is created from learndash sync, don't need to sync back
-		if ($bp_ld_sync__syncing_to_buddypress) {
-			return false;
-		}
-
-		if (! $this->enabled()) {
-			return false;
+		if (! $this->preCheck()) {
+			return;
 		}
 
 		$settings = bp_ld_sync('settings');
@@ -65,17 +58,19 @@ class Sync
 		$this->generator($groupId)->associateToLearndash()->syncBpAdmins();
 	}
 
-	public function onGroupDeleting($groupId)
+	public function onGroupUpdate($groupId)
 	{
-		global $bp_ld_sync__syncing_to_buddypress;
-
-		// if it's group is created from learndash sync, don't need to sync back
-		if ($bp_ld_sync__syncing_to_buddypress) {
-			return false;
+		if (! $this->preCheck()) {
+			return;
 		}
 
-		if (! $this->enabled()) {
-			return false;
+		$this->generator($groupId)->fullSyncToLearndash();
+	}
+
+	public function onGroupDeleting($groupId)
+	{
+		if (! $this->preCheck()) {
+			return;
 		}
 
 		$this->deletingSyncedLdGroupId = $this->generator($groupId)->getLdGroupId();
@@ -155,22 +150,10 @@ class Sync
 	// 	$generator->syncBpMember($memberId, true);
 	// }
 
-	protected function enabled()
-	{
-		return bp_ld_sync('settings')->get('buddypress.enabled');
-	}
-
 	protected function groupUserEditCheck($role, $groupId)
 	{
-		global $bp_ld_sync__syncing_to_buddypress;
-
-		// if it's group is created from buddypress sync, don't need to sync back
-		if ($bp_ld_sync__syncing_to_buddypress) {
-			return false;
-		}
-
-		if (! $this->enabled()) {
-			return false;
+		if (! $this->preCheck()) {
+			return;
 		}
 
 		$settings = bp_ld_sync('settings');
@@ -190,5 +173,22 @@ class Sync
 		}
 
 		return $generator;
+	}
+
+	protected function preCheck()
+	{
+		global $bp_ld_sync__syncing_to_buddypress;
+
+		// if it's group is created from buddypress sync, don't need to sync back
+		if ($bp_ld_sync__syncing_to_buddypress) {
+			return false;
+		}
+
+		return $this->enabled();
+	}
+
+	protected function enabled()
+	{
+		return bp_ld_sync('settings')->get('buddypress.enabled');
 	}
 }

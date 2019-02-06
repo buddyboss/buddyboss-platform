@@ -121,6 +121,30 @@ class SyncGenerator
 		return $this;
 	}
 
+	public function fullSyncToLearndash()
+	{
+		$lastSynced = groups_get_groupmeta($this->bpGroupId, '_last_sync', true) ?: 0;
+
+		if ($lastSynced > $this->getLastSyncTimestamp('bp')) {
+			return;
+		}
+
+		$this->syncBpUsers()->syncBpMods()->syncBpAdmins();
+		groups_update_groupmeta($this->bpGroupId, '_last_sync', time());
+	}
+
+	public function fullSyncToBuddypress()
+	{
+		$lastSynced = groups_get_groupmeta($this->ldGroupId, '_last_sync', true) ?: 0;
+
+		if ($lastSynced > $this->getLastSyncTimestamp('ld')) {
+			return;
+		}
+
+		$this->syncLdAdmins()->syncLdUsers();
+		update_post_meta($this->ldGroupId, '_last_sync', time());
+	}
+
 	public function syncBpAdmins()
 	{
 		$this->syncingToLearndash(function() {
@@ -154,7 +178,9 @@ class SyncGenerator
 	public function syncBpUsers()
 	{
 		$this->syncingToLearndash(function() {
-			$members = groups_get_group_members($this->bpGroupId)['members'];
+			$members = groups_get_group_members([
+				'group_id' => $this->bpGroupId
+			])['members'];
 
 			foreach ($members as $member) {
 				$this->syncBpMember($member->ID, false, false);
@@ -446,5 +472,15 @@ class SyncGenerator
 		$bp_ld_sync__syncing_to_buddypress = false;
 
 		return $this;
+	}
+
+	protected function getLastSyncTimestamp($type = 'bp')
+	{
+		if (! $lastSync = bp_get_option("bp_ld_sync/{$type}_last_synced")) {
+			$lastSync = time();
+			bp_update_option("bp_ld_sync/{$type}_last_synced", $lastSync);
+		}
+
+		return $lastSync;
 	}
 }

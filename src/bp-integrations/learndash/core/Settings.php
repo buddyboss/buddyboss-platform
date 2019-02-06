@@ -14,6 +14,8 @@ class Settings
 	{
 		$this->installDefaultSettings();
 		$this->loader = new ValueLoader($this->options);
+
+		add_action('bp_ld_sync/setting_updated', [$this, 'setGroupSyncTimestamp'], 10, 2);
 	}
 
 	public function getName($key = '')
@@ -40,8 +42,25 @@ class Settings
 
 	public function update()
 	{
-		bp_update_option($this->optionKey, $this->loader->get());
+		$oldOptions = $this->options;
+		bp_update_option($this->optionKey, $this->options = $this->loader->get());
+		do_action('bp_ld_sync/setting_updated', $this->options, $oldOptions);
 		return $this;
+	}
+
+	public function setGroupSyncTimestamp($options, $oldOptions)
+	{
+		$new  = new ValueLoader($options);
+		$old  = new ValueLoader($oldOptions);
+		$time = time();
+
+		if ($new->get('buddypress.enabled') && ! $old->get('buddypress.enabled')) {
+			bp_update_option('bp_ld_sync/bp_last_synced', $time, false);
+		}
+
+		if ($new->get('learndash.enabled') && ! $old->get('learndash.enabled')) {
+			bp_update_option('bp_ld_sync/ld_last_synced', $time, false);
+		}
 	}
 
 	public function defaultOptions()

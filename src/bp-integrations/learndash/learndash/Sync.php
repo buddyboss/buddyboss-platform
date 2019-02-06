@@ -15,10 +15,6 @@ class Sync
 
 	public function init()
 	{
-		if (! bp_ld_sync('settings')->get('learndash.enabled')) {
-			return;
-		}
-
 		add_action('bp_ld_sync/learndash_group_updated', [$this, 'onGroupUpdated']);
 		add_action('bp_ld_sync/learndash_group_deleting', [$this, 'onGroupDeleting']);
 		add_action('bp_ld_sync/learndash_group_deleted', [$this, 'onGroupDeleted']);
@@ -37,10 +33,7 @@ class Sync
 
 	public function onGroupUpdated($groupId)
 	{
-		global $bp_ld_sync__syncing_to_learndash;
-
-		// if it's group is created from buddypress sync, don't need to sync back
-		if ($bp_ld_sync__syncing_to_learndash) {
+		if (! $this->preCheck()) {
 			return false;
 		}
 
@@ -58,6 +51,7 @@ class Sync
 		$generator = $this->generator(null, $groupId);
 
 		if ($generator->hasBpGroup() && $generator->getBpGroupId() == $newGroup) {
+			$generator->fullSyncToBuddypress();
 			return false;
 		}
 
@@ -68,10 +62,7 @@ class Sync
 
 	public function onGroupDeleting($groupId)
 	{
-		global $bp_ld_sync__syncing_to_learndash;
-
-		// if it's group is created from buddypress sync, don't need to sync back
-		if ($bp_ld_sync__syncing_to_learndash) {
+		if (! $this->preCheck()) {
 			return false;
 		}
 
@@ -132,20 +123,11 @@ class Sync
 
 	protected function groupUserEditCheck($role, $groupId)
 	{
-		global $bp_ld_sync__syncing_to_learndash;
-
-		// if it's group is created from buddypress sync, don't need to sync back
-		if ($bp_ld_sync__syncing_to_learndash) {
+		if (! $this->preCheck()) {
 			return false;
 		}
 
-		$settings = bp_ld_sync('settings');
-
-		if (! $settings->get('learndash.enabled')) {
-			return false;
-		}
-
-		if ('none' == $settings->get("learndash.default_{$role}_sync_to")) {
+		if ('none' == bp_ld_sync('settings')->get("learndash.default_{$role}_sync_to")) {
 			return false;
 		}
 
@@ -156,5 +138,17 @@ class Sync
 		}
 
 		return $generator;
+	}
+
+	protected function preCheck()
+	{
+		global $bp_ld_sync__syncing_to_learndash;
+
+		// if it's group is created from buddypress sync, don't need to sync back
+		if ($bp_ld_sync__syncing_to_learndash) {
+			return false;
+		}
+
+		return bp_ld_sync('settings')->get('learndash.enabled');
 	}
 }

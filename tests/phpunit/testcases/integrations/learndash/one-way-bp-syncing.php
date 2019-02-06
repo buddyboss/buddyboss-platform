@@ -22,7 +22,7 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 	 */
 	public function test_bp_group_will_not_create_ld_group_if_syncing_is_off()
 	{
-		$st = bp_ld_sync('settings')->set('buddypress.enabled', false)->update();
+		bp_ld_sync('settings')->set('buddypress.enabled', false)->update();
 
 		$bpGroupId = self::factory()->group->create();
 
@@ -35,14 +35,17 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 	 */
 	public function test_bp_group_will_create_ld_group_if_syncing_is_on()
 	{
-		$st = bp_ld_sync('settings')->set('buddypress.enabled', true)->update();
+		bp_ld_sync('settings')->set('buddypress.enabled', true)->update();
 
 		$bpGroupId = self::factory()->group->create();
 
 		$generator = bp_ld_sync('buddypress')->sync->generator($bpGroupId);
+		$ldGroupId = $generator->getLdGroupId();
 		$bpGroup = groups_get_group($generator->getBpGroupId());
-		$ldGroup = get_post($generator->getLdGroupId());
+		$ldGroup = get_post($ldGroupId);
+
 		$this->assertTrue(!! groups_get_groupmeta($bpGroupId, '_sync_group_id'));
+		$this->assertTrue(!! get_post_meta($ldGroupId, '_sync_group_id'));
 		$this->assertEquals($ldGroup->post_title, $bpGroup->name);
 	}
 
@@ -52,7 +55,7 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 	 */
 	public function test_bp_group_will_not_create_ld_group_if_syncing_is_on_but_auto_is_off()
 	{
-		$st = bp_ld_sync('settings')
+		bp_ld_sync('settings')
 			->set('buddypress.enabled', true)
 			->set('buddypress.default_auto_sync', false)
 			->update();
@@ -68,7 +71,7 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 	 */
 	public function test_bp_group_will_sync_users_when_added()
 	{
-		$st = bp_ld_sync('settings')->set('buddypress.enabled', true)->update();
+		bp_ld_sync('settings')->set('buddypress.enabled', true)->update();
 		$member         = self::factory()->user->create();
 		$bpGroupId      = self::factory()->group->create();
 		$ldGroupId      = bp_ld_sync('buddypress')->sync->generator($bpGroupId)->getLdGroupId();
@@ -87,7 +90,7 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 	 */
 	public function test_bp_group_will_sync_users_to_admin_when_added()
 	{
-		$st = bp_ld_sync('settings')->set('buddypress.enabled', true)->set('buddypress.default_user_sync_to', 'admin')->update();
+		bp_ld_sync('settings')->set('buddypress.enabled', true)->set('buddypress.default_user_sync_to', 'admin')->update();
 		$member         = self::factory()->user->create();
 		$bpGroupId      = self::factory()->group->create();
 		$ldGroupId      = bp_ld_sync('buddypress')->sync->generator($bpGroupId)->getLdGroupId();
@@ -110,7 +113,7 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 	 */
 	public function test_bp_group_will_sync_admins_when_added()
 	{
-		$st = bp_ld_sync('settings')->set('buddypress.enabled', true)->update();
+		bp_ld_sync('settings')->set('buddypress.enabled', true)->update();
 		$admin          = self::factory()->user->create();
 		$bpGroupId      = self::factory()->group->create();
 		$ldGroupId      = bp_ld_sync('buddypress')->sync->generator($bpGroupId)->getLdGroupId();
@@ -136,7 +139,7 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 	 */
 	public function test_bp_group_will_sync_mods_when_added()
 	{
-		$st = bp_ld_sync('settings')->set('buddypress.enabled', true)->update();
+		bp_ld_sync('settings')->set('buddypress.enabled', true)->update();
 		$mod            = self::factory()->user->create();
 		$bpGroupId      = self::factory()->group->create();
 		$ldGroupId      = bp_ld_sync('buddypress')->sync->generator($bpGroupId)->getLdGroupId();
@@ -162,7 +165,7 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 	 */
 	public function test_bp_group_will_sync_mods_to_user_when_added()
 	{
-		$st = bp_ld_sync('settings')->set('buddypress.enabled', true)->set('buddypress.default_mod_sync_to', 'user')->update();
+		bp_ld_sync('settings')->set('buddypress.enabled', true)->set('buddypress.default_mod_sync_to', 'user')->update();
 		$mod            = self::factory()->user->create();
 		$bpGroupId      = self::factory()->group->create();
 		$ldGroupId      = bp_ld_sync('buddypress')->sync->generator($bpGroupId)->getLdGroupId();
@@ -181,6 +184,58 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 		$this->assertEquals($ldLeaderCount, count($newLdLeaders));
 		$this->assertNotContains($mod, $newLdLeaders);
 	}
+
+	/**
+	 * @package Integration
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function test_bp_group_will_not_create_ld_group_on_user_join_when_setting_is_turned_on_afterwards()
+	{
+		bp_ld_sync('settings')->set('buddypress.enabled', false)->update();
+		$bpGroupId = self::factory()->group->create();
+
+		bp_ld_sync('settings')->set('buddypress.enabled', true)->update();
+		$user = self::factory()->user->create();
+		groups_join_group($bpGroupId, $user);
+
+		$this->assertFalse(!! groups_get_groupmeta($bpGroupId, '_sync_group_id'));
+	}
+
+	/**
+	 * @package Integration
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function test_bp_group_will_resync_users_on_existing_groups_when_setting_is_turned_on_afterwards()
+	{
+		bp_ld_sync('settings')->set('buddypress.enabled', true)->update();
+		$bpGroupId = self::factory()->group->create();
+		$ldGroupId = bp_ld_sync('buddypress')->sync->generator($bpGroupId)->getLdGroupId();
+		$ldStudentCount = count(learndash_get_groups_user_ids($ldGroupId));
+
+		bp_ld_sync('settings')->set('buddypress.enabled', false)->update();
+		groups_join_group($bpGroupId, $u1 = self::factory()->user->create());
+		groups_join_group($bpGroupId, $u2 = self::factory()->user->create());
+		groups_join_group($bpGroupId, $u3 = self::factory()->user->create());
+
+		// none shall be synced
+		$this->assertEquals($ldStudentCount, count(learndash_get_groups_user_ids($ldGroupId)));
+
+		// individual user won't trigger whole sync
+		bp_ld_sync('settings')->set('buddypress.enabled', true)->update();
+		groups_join_group($bpGroupId, $u4 = self::factory()->user->create());
+		$this->assertEquals($ldStudentCount + 1, count(learndash_get_groups_user_ids($ldGroupId)));
+		$this->assertContains($u4, learndash_get_groups_user_ids($ldGroupId));
+
+		// update group will trigger whole sync
+		groups_create_group(['group_id' => $bpGroupId]);
+		$newLdStudents = learndash_get_groups_user_ids($ldGroupId);
+		$this->assertEquals($ldStudentCount + 4, count($newLdStudents));
+		$this->assertContains($u1, $newLdStudents);
+		$this->assertContains($u2, $newLdStudents);
+		$this->assertContains($u3, $newLdStudents);
+		$this->assertContains($u4, $newLdStudents);
+	}
+
 
 	// setting turn on half way
 	// setting turn off half way
