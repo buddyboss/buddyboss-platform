@@ -21,7 +21,7 @@ $search_term =  ! empty( $_REQUEST['s'] ) ? $_REQUEST['s'] : '';
 			placeholder="<?php echo BP_Search::instance()->has_search_results() ?  __( 'Search Network...', "buddyboss" ) : __( 'Try different keywords...', "buddyboss" ) ?>"
 		/>
 
-		<button type="submit" id="<?php bp_nouveau_search_selector_id( 'search-submit' ); ?>" class="nouveau-search-submit" name="s">
+		<button type="submit" id="<?php bp_nouveau_search_selector_id( 'search-submit' ); ?>" class="nouveau-search-submit">
 			<span class="dashicons dashicons-search" aria-hidden="true"></span>
 			<span id="button-text" class="bp-screen-reader-text"><?php echo esc_html_x( 'Search', 'button', 'buddyboss' ); ?></span>
 		</button>
