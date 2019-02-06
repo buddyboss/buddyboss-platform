@@ -453,13 +453,21 @@ function bp_get_search_user_fields() {
 function bp_search_get_post_thumbnail_default( $post_type ) {
 
 	$default = [
-		'product'     => buddypress()->plugin_url . 'bp-core/images/mystery-product.png',
-		'sfwd-course' => buddypress()->plugin_url . 'bp-core/images/mystery-course.png',
-		'post'        => buddypress()->plugin_url . 'bp-core/images/mystery-blog.png',
+		'product'      => buddypress()->plugin_url . 'bp-core/images/mystery-product.png',
+		'sfwd-courses' => buddypress()->plugin_url . 'bp-core/images/mystery-course.png',
+		'sfwd-lessons' => buddypress()->plugin_url . 'bp-core/images/mystery-course.png',
+		'sfwd-topic'   => buddypress()->plugin_url . 'bp-core/images/mystery-course.png',
+		'post'         => buddypress()->plugin_url . 'bp-core/images/mystery-blog.png',
 	];
 
 	return
 		isset( $default[ $post_type ] ) ?
 			$default[ $post_type ] :
 			buddypress()->plugin_url . 'bp-core/images/mystery-default.png';
+}
+
+function bp_search_get_total_lessons_count( $course_id ) {
+	$ld_course_steps_object = LDLMS_Factory_Post::course_steps( $course_id );
+	$lesson_ids = $ld_course_steps_object->get_children_steps( $course_id, 'sfwd-lessons' );
+	return count($lesson_ids);
 }
