@@ -1,4 +1,4 @@
-<?php$topics = bp_search_get_total_topics_count(get_the_ID())?>
+<?php $topics = bp_search_get_total_topics_count(get_the_ID()) ?>
 <li class="bp-search-item bp-search-item_sfwd-lessons">
 	<div class="list-wrap">
 		<div class="item-avatar">
