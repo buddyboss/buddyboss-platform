@@ -70,10 +70,11 @@ if (!class_exists('Bp_Search_Members')):
 				$query_placeholder[] = '%'. $search_term .'%';
 			}
 
-			$FROM = " {$wpdb->users} u JOIN {$bp->members->table_name_last_activity} a ON a.user_id=u.id ";
+			$FROM = " {$wpdb->users} u LEFT JOIN {$bp->members->table_name_last_activity} a ON a.user_id=u.id ";
 
 			$WHERE = array();
 			$WHERE[] = "1=1";
+			$WHERE[] = "u.user_status = 0";
 			$where_fields = array();
 
 			/* ++++++++++++++++++++++++++++++++
