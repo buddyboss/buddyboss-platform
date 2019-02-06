@@ -70,7 +70,7 @@ if (!class_exists('Bp_Search_Members')):
 				$query_placeholder[] = '%'. $search_term .'%';
 			}
 
-			$FROM = " {$wpdb->users} u LEFT JOIN {$bp->members->table_name_last_activity} a ON a.user_id=u.id ";
+			$FROM = " {$wpdb->users} u LEFT JOIN {$bp->members->table_name_last_activity} a ON a.user_id=u.id AND a.component = 'members' AND a.type = 'last_activity'";
 
 			$WHERE = array();
 			$WHERE[] = "1=1";
@@ -190,11 +190,11 @@ if (!class_exists('Bp_Search_Members')):
                         /* _____________________________ */
 
 			if( !empty( $where_fields ) )
-				$WHERE[] = implode ( ' OR ', $where_fields );
+				$WHERE[] = '(' . implode ( ' OR ', $where_fields ) . ')';
 
 			// other conditions
-			$WHERE[] = " a.component = 'members' ";
-			$WHERE[] = " a.type = 'last_activity' ";
+//			$WHERE[] = " a.component = 'members' ";
+//			$WHERE[] = " a.type = 'last_activity' ";
 
 			$sql = $COLUMNS . ' FROM ' . $FROM . ' WHERE ' . implode( ' AND ', $WHERE );
 			if( !$only_totalrow_count ){
