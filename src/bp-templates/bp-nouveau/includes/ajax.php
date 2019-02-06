@@ -171,6 +171,27 @@ function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
 	return $results;
 }
 
+add_filter('bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_groups_tabs', 10, 2);
+function bp_nouveau_object_template_results_groups_tabs( $results, $object ) {
+	if ( $object != 'groups' ) {
+		return $results;
+	}
+
+	$results['scopes'] = [];
+
+	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_groups_all_scope', 20 );
+	bp_has_groups( bp_ajax_querystring( 'groups' ) );
+	$results['scopes']['all'] = $GLOBALS["groups_template"]->total_group_count;
+	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_groups_all_scope', 20 );
+
+	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_groups_personal_scope', 20 );
+	bp_has_groups( bp_ajax_querystring( 'groups' ) );
+	$results['scopes']['personal'] = $GLOBALS["groups_template"]->total_group_count;
+	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_groups_personal_scope', 20 );
+
+	return $results;
+}
+
 function bp_nouveau_object_template_results_members_all_scope( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
 	$querystring['scope'] = 'all';
@@ -181,6 +202,24 @@ function bp_nouveau_object_template_results_members_all_scope( $querystring ) {
 }
 
 function bp_nouveau_object_template_results_members_personal_scope( $querystring ) {
+	$querystring = wp_parse_args( $querystring );
+	$querystring['scope'] = 'personal';
+	$querystring['page'] = 1;
+	$querystring['per_page'] = '1';
+	$querystring['user_id'] = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	return http_build_query( $querystring );
+}
+
+function bp_nouveau_object_template_results_groups_all_scope( $querystring ) {
+	$querystring = wp_parse_args( $querystring );
+	$querystring['scope'] = 'all';
+	$querystring['page'] = 1;
+	$querystring['per_page'] = '1';
+	$querystring['user_id'] = 0;
+	return http_build_query( $querystring );
+}
+
+function bp_nouveau_object_template_results_groups_personal_scope( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
 	$querystring['scope'] = 'personal';
 	$querystring['page'] = 1;
