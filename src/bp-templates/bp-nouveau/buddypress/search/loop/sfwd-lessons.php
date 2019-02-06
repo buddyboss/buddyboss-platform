@@ -1,4 +1,4 @@
-<?php $topics = bp_search_get_total_topics_count(get_the_ID()) ?>
+<?php $total = bp_search_get_total_topics_count( get_the_ID() ) ?>
 <li class="bp-search-item bp-search-item_sfwd-lessons">
 	<div class="list-wrap">
 		<div class="item-avatar">
@@ -17,7 +17,7 @@
 			</h3>
 
 			<div class="entry-content entry-summary">
-				<?php printf( _n( '%d topic', '%d topics', $topics, 'buddyboss' ), $topics ); ?>
+				<?php printf( _n( '%d topic', '%d topics', $total, 'buddyboss' ), $total ); ?>
 			</div>
 		</div>
 	</div>

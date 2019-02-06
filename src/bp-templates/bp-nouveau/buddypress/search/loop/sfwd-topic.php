@@ -1,5 +1,5 @@
-<?php $total = bp_search_get_total_lessons_count( get_the_ID() ) ?>
-<li class="bp-search-item bp-search-item_sfwd-courses">
+<?php $total = bp_search_get_total_quizzes_count( get_the_ID() ) ?>
+<li class="bp-search-item bp-search-item_sfwd-topic">
 	<div class="list-wrap">
 		<div class="item-avatar">
 			<a href="<?php the_permalink(); ?>">
@@ -17,7 +17,7 @@
 			</h3>
 
 			<div class="entry-content entry-summary">
-				<?php printf( _n( '%d lesson', '%s lessons', $total, 'buddyboss' ), $total ); ?>
+				<?php printf( _n( '%d quiz', '%d quizzes', $total, 'buddyboss' ), $total ); ?>
 			</div>
 		</div>
 	</div>

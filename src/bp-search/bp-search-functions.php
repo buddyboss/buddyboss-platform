@@ -478,3 +478,10 @@ function bp_search_get_total_topics_count( $lesson_id ) {
 
 	return count( $topic_ids );
 }
+
+function bp_search_get_total_quizzes_count( $lesson_id ) {
+	$course_id = learndash_get_course_id( $lesson_id );
+	$quiz_ids = learndash_course_get_children_of_step( $course_id, $lesson_id, 'sfwd-quiz' );
+
+	return count( $quiz_ids );
+}

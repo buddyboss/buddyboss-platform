@@ -1,5 +1,5 @@
-<?php $total = bp_search_get_total_topics_count( get_the_ID() ) ?>
-<div class="bp-search-ajax-item bp-search-ajax-item_sfwd-lessons">
+<?php $total = bp_search_get_total_quizzes_count( get_the_ID() ) ?>
+<div class="bp-search-ajax-item bp-search-ajax-item_sfwd-topic">
 	<a href="<?php echo esc_url(add_query_arg( array( 'no_frame' => '1' ), get_permalink() ));?>">
 		<div class="item-avatar">
 			<img
@@ -11,7 +11,7 @@
 
 		<div class="item">
 			<div class="item-title"><?php the_title();?></div>
-			<div class="item-desc"><?php printf( _n( '%d topic', '%s topics', $total, 'buddyboss' ), $total ); ?></div>
+			<div class="item-desc"><?php printf( _n( '%d quiz', '%s quizzes', $total, 'buddyboss' ), $total ); ?></div>
 
 		</div>
 	</a>
