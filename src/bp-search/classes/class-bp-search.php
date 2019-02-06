@@ -786,8 +786,9 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 
 		public function print_results() {
 
-			$current_tab = $this->search_args['search_subset'];
-			if ( isset( $this->search_results[ $current_tab ]['items'] ) && ! empty( $this->search_results[ $current_tab ]['items'] ) ) {
+			if ( $this->has_search_results() ) {
+				$current_tab = $this->search_args['search_subset'];
+
 				foreach ( $this->search_results[ $current_tab ]['items'] as $item_id => $item ) {
 					echo $item['html'];
 				}
@@ -809,6 +810,11 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 
 		public function get_search_term() {
 			return isset( $this->search_args['search_term'] ) ? $this->search_args['search_term'] : '';
+		}
+
+		public function has_search_results() {
+			$current_tab = isset( $this->search_args['search_subset'] ) ? $this->search_args['search_subset'] : '';
+			return isset( $this->search_results[ $current_tab ]['items'] ) && ! empty( $this->search_results[ $current_tab ]['items'] );
 		}
 	}
 

@@ -24,7 +24,7 @@ $no_results_class =
 		</nav>
 
 		<div class="bp-search-form-wrapper dir-search no-ajax">
-			<?php bp_get_template_part('common/search/search-form');?>
+			<?php bp_search_buffer_template_part('search-form');?>
 		</div>
 
 		<div class="search_results">
