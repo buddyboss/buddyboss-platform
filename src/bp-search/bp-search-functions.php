@@ -467,7 +467,14 @@ function bp_search_get_post_thumbnail_default( $post_type ) {
 }
 
 function bp_search_get_total_lessons_count( $course_id ) {
-	$ld_course_steps_object = LDLMS_Factory_Post::course_steps( $course_id );
-	$lesson_ids = $ld_course_steps_object->get_children_steps( $course_id, 'sfwd-lessons' );
-	return count($lesson_ids);
+	$lesson_ids = learndash_course_get_children_of_step( $course_id, $course_id, 'sfwd-lessons' );
+
+	return count( $lesson_ids );
+}
+
+function bp_search_get_total_topics_count( $lesson_id ) {
+	$course_id = learndash_get_course_id( $lesson_id );
+	$topic_ids = learndash_course_get_children_of_step( $course_id, $lesson_id, 'sfwd-topic' );
+
+	return count( $topic_ids );
 }
