@@ -70,13 +70,15 @@ function bp_groups_group_admin_menu() {
 			if ( 'delete-group' == $menu->slug ) {
 				$title = sprintf( _x( '%s Group', 'Group WP Admin Bar delete link', 'buddyboss' ), $menu->name );
 
-				if ( bbp_is_group_forums_active() ) {
-					$wp_admin_bar->add_menu( array(
-						'parent' => $bp->group_admin_menu_id,
-						'id'     => get_option( '_bbp_forum_slug', 'forum' ),
-						'title'  => 'Edit Group Discussion',
-						'href'   => bp_get_groups_action_link( 'admin/' . get_option( '_bbp_forum_slug', 'forum' ) )
-					) );
+				if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_group_forums_active' ) ) {
+					if ( bbp_is_group_forums_active() ) {
+						$wp_admin_bar->add_menu( array(
+							'parent' => $bp->group_admin_menu_id,
+							'id'     => get_option( '_bbp_forum_slug', 'forum' ),
+							'title'  => 'Edit Group Discussion',
+							'href'   => bp_get_groups_action_link( 'admin/' . get_option( '_bbp_forum_slug', 'forum' ) )
+						) );
+					}
 				}
 			}
 

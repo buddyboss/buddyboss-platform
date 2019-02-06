@@ -257,7 +257,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 			),
 		);
 
-		if ( bp_is_active( 'forums' ) ) {
+		if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_group_forums_active' ) ) {
 			if ( bbp_is_group_forums_active() && bp_group_is_forum_enabled( $this->group ) ) {
 				$nav_items['forum'] = array(
 					'name'        => _x( 'Discussions', 'My Group screen nav', 'buddyboss' ),
