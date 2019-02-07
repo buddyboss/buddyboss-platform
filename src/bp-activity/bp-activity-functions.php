@@ -1194,7 +1194,7 @@ function bp_activity_favorites_upgrade_data() {
 		$user_query = new WP_User_Query( $args );
 
 		// User Loop
-		if ( ! empty( $user_query->get_results() ) ) {
+		if ( $user_query->get_results() ) {
 			foreach ( $user_query->get_results() as $user_id ) {
 				$my_favs = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
 

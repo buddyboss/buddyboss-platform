@@ -289,7 +289,7 @@ final class BP_Group_Export extends BP_Export {
 			$group_ids[] = $item->id;
 		}
 
-		if ( empty( count( $group_ids ) ) ) {
+		if ( empty( $group_ids ) ) {
 			return array();
 		}
 
