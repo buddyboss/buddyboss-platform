@@ -11,7 +11,7 @@
 
 		<div class="item">
 			<div class="item-title"><?php the_title();?></div>
-			<div class="item-desc"><?php printf( _n( '%d lesson', '%s lessons', $total, 'buddyboss' ), $total ); ?></div>
+			<div class="item-desc"><?php printf( _n( '%d lesson', '%d lessons', $total, 'buddyboss' ), $total ); ?></div>
 
 		</div>
 	</a>

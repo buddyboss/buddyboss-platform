@@ -60,9 +60,18 @@ if (!class_exists('Bp_Search_bbPress')):
 				$post_ids[] = $item_id;
 			}
 
+			remove_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
+
 			//now we have all the posts
 			//lets do a wp_query and generate html for all posts
-			$qry = new WP_Query( array( 'post_type' =>array( 'forum', 'topic', 'reply' ), 'post__in'=>$post_ids ) );
+			$qry = new WP_Query( [
+				'post_type'   => [ 'forum', 'topic', 'reply' ],
+				'post__in'    => $post_ids,
+				'post_status' => [ 'public', 'private', 'hidden' ]
+			] );
+
+			add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
+
 			if( $qry->have_posts() ){
 				while( $qry->have_posts() ){
 					$qry->the_post();

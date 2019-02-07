@@ -136,7 +136,9 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 				if ( bp_is_search_post_type_enable( 'forum' ) ) {
 					require_once( $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress-forums.php' );
 					$this->search_helpers['forum'] = Bp_Search_bbPress_Forums::instance();
+					$this->searchable_items[] = 'forum';
 				}
+
 
 				if ( bp_is_search_post_type_enable( 'topic' ) ) {
 					require_once( $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress-forums-topics.php' );
