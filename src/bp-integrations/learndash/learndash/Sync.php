@@ -31,33 +31,36 @@ class Sync
 		return new SyncGenerator($bpGroupId, $ldGroupId);
 	}
 
-	public function onGroupUpdated($groupId)
-	{
-		if (! $this->preCheck()) {
+	public function onGroupUpdated( $groupId ) {
+		if ( ! $this->preCheck() ) {
 			return false;
 		}
 
 		// created from backend
-		if (bp_ld_sync()->isRequestExists('bp-ld-sync-enable') && ! bp_ld_sync()->getRequest('bp-ld-sync-enable')) {
+		if ( bp_ld_sync()->isRequestExists( 'bp-ld-sync-enable' ) && ! bp_ld_sync()->getRequest( 'bp-ld-sync-enable' ) ) {
+			$group_id = get_post_meta( $groupId, '_sync_group_id', true );
+			if ( ! empty( $group_id ) ) {
+				bp_ld_sync( 'buddypress' )->sync->generator( $group_id )->desyncFromLearndash();
+			}
+
 			return false;
 		}
 
 		// created programatically
-		if (! bp_ld_sync('settings')->get('learndash.default_auto_sync')) {
+		if ( ! bp_ld_sync( 'settings' )->get( 'learndash.default_auto_sync' ) ) {
 			return false;
 		}
 
-		$newGroup = bp_ld_sync()->getRequest('bp-ld-sync-id', null);
-		$generator = $this->generator(null, $groupId);
+		$newGroup  = bp_ld_sync()->getRequest( 'bp-ld-sync-id', null );
+		$generator = $this->generator( null, $groupId );
 
-		if ($generator->hasBpGroup() && $generator->getBpGroupId() == $newGroup) {
+		if ( $generator->hasBpGroup() && $generator->getBpGroupId() == $newGroup ) {
 			$generator->fullSyncToBuddypress();
+
 			return false;
 		}
 
-		$generator->associateToBuddypress($newGroup)
-			->syncLdAdmins()
-			->syncLdUsers();
+		$generator->associateToBuddypress( $newGroup )->syncLdAdmins()->syncLdUsers();
 	}
 
 	public function onGroupDeleting($groupId)
