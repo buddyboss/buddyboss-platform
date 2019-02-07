@@ -1,3 +1,4 @@
+<?php $total = bbp_get_topic_reply_count( get_the_ID() ) ?>
 <li class="bp-search-item bp-search-item_topic">
 	<div class="list-wrap">
 		<div class="item-avatar">
@@ -13,8 +14,12 @@
 		</div>
 
 		<div class="item">
-			<div class="item-title"><a href="<?php bbp_topic_permalink(get_the_ID()); ?>"><?php bbp_topic_title(get_the_ID()); ?></a></div>
-			<div class="item-desc"><?php echo bp_search_reply_intro( 100 );?></div>
+			<h3 class="entry-title item-title">
+				<a href="<?php bbp_topic_permalink(get_the_ID()); ?>"><?php bbp_topic_title(get_the_ID()); ?></a>
+			</h3>
+			<div class="entry-content entry-summary">
+				<?php printf( _n( '%d reply', '%d replies', $total, 'buddyboss' ), $total ); ?>
+			</div>
 		</div>
 	</div>
 </li>

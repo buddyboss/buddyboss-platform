@@ -1,3 +1,4 @@
+<?php $total = bbp_get_topic_reply_count( get_the_ID() ) ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_topic">
 	<a href="<?php echo esc_url(add_query_arg( array( 'no_frame' => '1' ), bbp_get_topic_permalink(get_the_ID()) )); ?>">
 		<div class="item-avatar">
@@ -13,7 +14,9 @@
             <div class="item-title">
                 <?php echo stripslashes( wp_strip_all_tags( bbp_get_topic_title( get_the_ID() ) ) );?>
             </div>
-			<div class="item-desc"><?php echo bp_search_reply_intro( 30 ); ?></div>
+			<div class="item-desc">
+				<?php printf( _n( '%d reply', '%d replies', $total, 'buddyboss' ), $total ); ?>
+			</div>
 		</div>
 	</a>
 </div>
