@@ -653,7 +653,7 @@ window.bp = window.bp || {};
 				} else {
 					// Send to
 					if ( 'send_to' === pair.name ) {
-						var usernames = pair.value.match( /(^|[^@\w\-])@([a-zA-Z0-9_\-]{1,50})\b/g );
+						var usernames = pair.value.match( /(^|[^@\w\-])@([a-zA-Z0-9_\-\.]{1,50})\b/g );
 
 						if ( ! usernames ) {
 							errors.push( 'send_to' );
