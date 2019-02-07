@@ -180,7 +180,7 @@ function bp_profile_repeaters_update_field_data ( $user_id, $posted_field_ids, $
             . " AND object_id IN (". implode( ',', $posted_field_ids ) .") and object_type = 'field' " 
         );
         
-        if ( !empty( $fields_of_current_set && !is_wp_error( $fields_of_current_set ) ) ) {
+        if ( !empty( $fields_of_current_set ) && !is_wp_error( $fields_of_current_set ) ) {
             foreach ( $fields_of_current_set as $field_of_current_set ) {
                 $cloned_from = $wpdb->get_var( "SELECT meta_value FROM {$bp->profile->table_name_meta} WHERE object_id = {$field_of_current_set} AND meta_key = '_cloned_from' " );
                 
