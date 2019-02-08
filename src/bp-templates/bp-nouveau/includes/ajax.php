@@ -168,6 +168,16 @@ function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
 	$results['scopes']['personal'] = $GLOBALS["members_template"]->total_member_count;
 	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_personal_scope', 20 );
 
+	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
+		$counts = bp_total_follow_counts();
+		if ( ! empty( $counts['following'] ) ) {
+			add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_following_scope', 20 );
+			bp_has_members( bp_ajax_querystring( 'members' ) );
+			$results['scopes']['following'] = $GLOBALS["members_template"]->total_member_count;
+			remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_following_scope', 20 );
+		}
+	}
+
 	return $results;
 }
 
@@ -194,6 +204,15 @@ function bp_nouveau_object_template_results_groups_tabs( $results, $object ) {
 
 function bp_nouveau_object_template_results_members_all_scope( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
+
+	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
+		$counts = bp_total_follow_counts();
+		if ( ! empty( $counts['following'] ) ) {
+			if ( 'following' === $querystring["scope"] ) {
+				unset( $querystring["include"] );
+			}
+		}
+	}
 	$querystring['scope'] = 'all';
 	$querystring['page'] = 1;
 	$querystring['per_page'] = '1';
@@ -203,10 +222,37 @@ function bp_nouveau_object_template_results_members_all_scope( $querystring ) {
 
 function bp_nouveau_object_template_results_members_personal_scope( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
+
+	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
+		$counts = bp_total_follow_counts();
+		if ( ! empty( $counts['following'] ) ) {
+			if ( 'following' === $querystring["scope"] ) {
+				unset( $querystring["include"] );
+			}
+		}
+	}
 	$querystring['scope'] = 'personal';
 	$querystring['page'] = 1;
 	$querystring['per_page'] = '1';
 	$querystring['user_id'] = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	return http_build_query( $querystring );
+}
+
+function bp_nouveau_object_template_results_members_following_scope( $querystring ) {
+	$querystring = wp_parse_args( $querystring );
+
+	$args                             = array(
+		'user_id' => ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id(),
+	);
+	$following_comma_separated_string = bp_get_following_ids( $args );
+	$querystring['include']           = $following_comma_separated_string;
+	$querystring['scope']             = 'following';
+	$querystring['page']              = 1;
+	$querystring['per_page']          = '1';
+	if ( isset( $querystring['user_id'] ) && ! empty( $querystring['user_id'] ) ) {
+		unset( $querystring['user_id'] );
+	}
+
 	return http_build_query( $querystring );
 }
 
