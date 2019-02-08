@@ -314,6 +314,16 @@ class BP_Messages_Message {
 			implode(',', $recipient_ids)
 		) );
 
-		return $results? $results[0]->thread_id : null;
+        if ( ! $results ) {
+            return null;
+        }
+
+        $thread_id = $results[0]->thread_id;
+
+        if ( ! $is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread_id, $sender ) ) {
+            return null;
+        }
+
+        return $thread_id;
 	}
 }
