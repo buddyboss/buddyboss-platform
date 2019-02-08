@@ -11,6 +11,8 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Class BP_Xprofile_Export
+ *
+ * @since BuddyBoss 1.0.0
  */
 final class BP_Xprofile_Export extends BP_Export {
 
@@ -35,7 +37,6 @@ final class BP_Xprofile_Export extends BP_Export {
 	 * @param $page
 	 * @param bool $email_address
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
@@ -131,7 +132,6 @@ final class BP_Xprofile_Export extends BP_Export {
 	 * @param $page
 	 * @param bool $email_address
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
@@ -171,7 +171,6 @@ final class BP_Xprofile_Export extends BP_Export {
 	 * @param $user
 	 * @param $page
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array

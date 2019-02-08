@@ -35,7 +35,6 @@ final class BP_Group_Export extends BP_Export {
 	 * @param $page
 	 * @param bool $email_address
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
@@ -166,7 +165,6 @@ final class BP_Group_Export extends BP_Export {
 	 * @param $page
 	 * @param bool $email_address
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
@@ -202,7 +200,6 @@ final class BP_Group_Export extends BP_Export {
 	/**
 	 * @param $group_id
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 */
 	function additional_group_items_delete( $group_id ) {
@@ -227,7 +224,6 @@ final class BP_Group_Export extends BP_Export {
 	 * @param $user
 	 * @param $page
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
@@ -272,7 +268,6 @@ final class BP_Group_Export extends BP_Export {
 	 *
 	 * @param $items
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array

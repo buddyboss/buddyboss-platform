@@ -12,7 +12,6 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class BP_Bbp_Gdpr_Forums
  *
- * @package BuddyBoss
  * @since BuddyBoss 1.0.0
  */
 class BP_Bbp_Gdpr_Forums {
@@ -36,7 +35,6 @@ class BP_Bbp_Gdpr_Forums {
 	 *
 	 * @param $exporters
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return mixed
@@ -55,7 +53,6 @@ class BP_Bbp_Gdpr_Forums {
 	 *
 	 * @param $erasers
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return mixed
@@ -75,7 +72,6 @@ class BP_Bbp_Gdpr_Forums {
 	 * @param $email_address
 	 * @param int $page
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
@@ -163,7 +159,6 @@ class BP_Bbp_Gdpr_Forums {
 	 * @param $page
 	 * @param $per_page
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array|bool
@@ -191,7 +186,6 @@ class BP_Bbp_Gdpr_Forums {
 	 * @param $email_address
 	 * @param int $page
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array

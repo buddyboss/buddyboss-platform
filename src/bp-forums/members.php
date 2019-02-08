@@ -5,6 +5,7 @@
  *
  * @package BuddyBoss
  * @subpackage Forums
+ * @since bbPress (r4395)
  */
 
 // Exit if accessed directly
@@ -15,9 +16,6 @@ if ( !class_exists( 'BBP_Forums_Members' ) ) :
  * Member profile modifications
  *
  * @since bbPress (r4395)
- *
- * @package BuddyBoss
- * @subpackage Forums
  */
 class BBP_BuddyPress_Members {
 

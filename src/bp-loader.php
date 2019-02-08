@@ -17,7 +17,7 @@
  * Author URI:  https://buddyboss.com/
  * Version:     1.0.0
  * Text Domain: buddyboss
- * Domain Path: /bp-languages/
+ * Domain Path: /languages/
  * License:     GPLv2 or later (license.txt)
  */
 
@@ -73,7 +73,7 @@ if ( !$is_bp_active ) {
 if ( $is_bp_active ) {
 
     /**
-     * Displays an admin notice when BuddyPress plugin is also active.
+     * Displays an admin notice when BuddyPress plugin is active.
      *
      * @since BuddyBoss 1.0.0
      * @return void
@@ -106,7 +106,7 @@ if ( $is_bp_active ) {
 if ( $is_bb_active ) {
 
     /**
-     * Displays an admin notice when bbPress plugin is also active.
+     * Displays an admin notice when bbPress plugin is active.
      *
      * @since BuddyBoss 1.0.0
      * @return void
@@ -129,7 +129,7 @@ if ( $is_bb_active ) {
     }
 
     /**
-     * You can't have BuddyPress and BuddyBoss Platform both active at the same time!
+     * You can't have bbPress and BuddyBoss Platform both active at the same time!
      */
     add_action( 'admin_notices',            'bp_duplicate_bbpress_notice' );
 	add_action( 'network_admin_notices',    'bp_duplicate_bbpress_notice' );
@@ -137,16 +137,16 @@ if ( $is_bb_active ) {
 }
 
 /**
- * BuddyBoss Platform's code is already loaded when BuddyPress is being activated. And BuddyPress doesn't have function
+ * BuddyBoss Platform's code is already loaded when BuddyPress is being activated and BuddyPress doesn't have function
  * checks to avoid duplicate function declarations. This leads to a fatal error.
- * To avoid that, we prevent BuddyPress from activating and we show a nicer notice, instead of the dirty fatal error.
+ * To avoid that, we prevent BuddyPress from activating and we show a nice notice, instead of the dirty fatal error.
  */
 if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
 
     add_action( 'admin_init', 'bp_prevent_activating_buddypress' );
 
     /**
-     * Check if the current request is to activate BuddyPress plugins and redirect if so.
+     * Check if the current request is to activate BuddyPress plugins and redirect accordingly.
      *
      * @since BuddyBoss 1.0.0
      *
@@ -277,7 +277,7 @@ if ( !$is_bp_active && !$is_bb_active ) {
     }
 
     /**
-     * Adds an admin notice to installations that don't meet BP's minimum PHP requirement.
+     * Adds an admin notice to installations that don't meet minimum PHP requirement.
      *
      * @since BuddyPress 2.8.0
      */
@@ -289,10 +289,10 @@ if ( !$is_bp_active && !$is_bb_active ) {
         ?>
 
         <div id="message" class="error notice">
-            <p><strong><?php esc_html_e( 'Your site does not support BuddyBoss.', 'buddyboss' ); ?></strong></p>
+            <p><strong><?php esc_html_e( 'Your site does not support BuddyBoss Platform.', 'buddyboss' ); ?></strong></p>
             <?php /* translators: 1: current PHP version, 2: required PHP version */ ?>
-            <p><?php printf( esc_html__( 'Your site is currently running PHP version %1$s, while BuddyBoss requires version %2$s or greater.', 'buddyboss' ), esc_html( phpversion() ), esc_html( BP_REQUIRED_PHP_VERSION ) ); ?></p>
-            <p><?php esc_html_e( 'Please update your server or deactivate BuddyBoss.', 'buddyboss' ); ?></p>
+            <p><?php printf( esc_html__( 'Your site is currently running PHP version %1$s, while BuddyBoss Platform requires version %2$s or greater.', 'buddyboss' ), esc_html( phpversion() ), esc_html( BP_REQUIRED_PHP_VERSION ) ); ?></p>
+            <p><?php esc_html_e( 'Please update your server or deactivate BuddyBoss Platform.', 'buddyboss' ); ?></p>
         </div>
 
         <?php
@@ -305,7 +305,7 @@ if ( !$is_bp_active && !$is_bb_active ) {
     } else {
         require dirname( __FILE__ ) . '/class-buddypress.php';
 
-        // a lot of action in bbpress requires before component init,
+        // A lot of actions in bbpress require before component init,
         // hence we grab the pure db value and load the class
         // so all the hook prior to bp_init can be hook in
 	    if ( $bp_forum_active = array_key_exists( 'forums', get_option( 'bp-active-components', [] ) ) ) {
@@ -318,9 +318,9 @@ if ( !$is_bp_active && !$is_bb_active ) {
 	    /*
 	     * Hook BuddyPress early onto the 'plugins_loaded' action.
 	     *
-	     * This gives all other plugins the chance to load before BuddyPress,
+	     * This gives all other plugins the chance to load before BuddyBoss Platform,
 	     * to get their actions, filters, and overrides setup without
-	     * BuddyPress being in the way.
+	     * BuddyBoss Platform being in the way.
 	     */
 	    if ( defined( 'BUDDYPRESS_LATE_LOAD' ) ) {
 	        add_action( 'plugins_loaded', 'buddypress', (int) BUDDYPRESS_LATE_LOAD );

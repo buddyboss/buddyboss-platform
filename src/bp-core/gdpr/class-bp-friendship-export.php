@@ -36,7 +36,6 @@ final class BP_Friendship_Export extends BP_Export {
 	 * @param $page
 	 * @param bool $email_address
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
@@ -120,7 +119,6 @@ final class BP_Friendship_Export extends BP_Export {
 	 * @param      $page
 	 * @param bool $email_address
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
@@ -148,7 +146,6 @@ final class BP_Friendship_Export extends BP_Export {
 	 * @param $user
 	 * @param $page
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array

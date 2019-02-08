@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @package Integration
+ * @since BuddyBoss 1.0.0
+ * 
  * @group messages
  * @group functions
  */
@@ -17,7 +20,7 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 	}
 
 	/**
-	 * @package Integration
+	 * 
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function test_bp_group_will_not_create_ld_group_if_syncing_is_off()
@@ -30,7 +33,7 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 	}
 
 	/**
-	 * @package Integration
+	 * 
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function test_bp_group_will_create_ld_group_if_syncing_is_on()
@@ -50,7 +53,7 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 	}
 
 	/**
-	 * @package Integration
+	 * 
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function test_bp_group_will_not_create_ld_group_if_syncing_is_on_but_auto_is_off()
@@ -66,7 +69,7 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 	}
 
 	/**
-	 * @package Integration
+	 * 
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function test_bp_group_will_sync_users_when_added()
@@ -85,7 +88,7 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 	}
 
 	/**
-	 * @package Integration
+	 * 
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function test_bp_group_will_sync_users_to_admin_when_added()
@@ -108,7 +111,7 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 	}
 
 	/**
-	 * @package Integration
+	 * 
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function test_bp_group_will_sync_admins_when_added()
@@ -134,7 +137,7 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 	}
 
 	/**
-	 * @package Integration
+	 * 
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function test_bp_group_will_sync_mods_when_added()
@@ -160,7 +163,7 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 	}
 
 	/**
-	 * @package Integration
+	 * 
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function test_bp_group_will_sync_mods_to_user_when_added()
@@ -186,7 +189,7 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 	}
 
 	/**
-	 * @package Integration
+	 * 
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function test_bp_group_will_not_create_ld_group_on_user_join_when_setting_is_turned_on_afterwards()
@@ -202,7 +205,7 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 	}
 
 	/**
-	 * @package Integration
+	 * 
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function test_bp_group_will_resync_users_on_existing_groups_when_setting_is_turned_on_afterwards()
@@ -239,7 +242,7 @@ class BP_Tests_Integration_Learndash_Members_Sync extends BP_UnitTestCase {
 
 	// setting turn on half way
 	// setting turn off half way
-	// rolw setting changed half way
+	// role setting changed half way
 
 	protected function resetIntegrationOptions()
 	{

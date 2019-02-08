@@ -5,6 +5,7 @@
  *
  * @package BuddyBoss
  * @subpackage Forums
+ * @since bbPress (r3395)
  */
 
 // Exit if accessed directly
@@ -15,9 +16,6 @@ if ( !class_exists( 'BBP_BuddyPress_Activity' ) ) :
  * Loads BuddyBoss Activity extension
  *
  * @since bbPress (r3395)
- *
- * @package BuddyBoss
- * @subpackage Forums
  */
 class BBP_BuddyPress_Activity {
 

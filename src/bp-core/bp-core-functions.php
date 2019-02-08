@@ -2854,7 +2854,7 @@ function bp_get_email_post_type_labels() {
 	 * @param array $value Associative array (name => label).
 	 */
 	return apply_filters( 'bp_get_email_post_type_labels', array(
-		'add_new'               => _x( 'Add New', 'email post type label', 'buddyboss' ),
+		'add_new'               => _x( 'New Email', 'email post type label', 'buddyboss' ),
 		'add_new_item'          => _x( 'Add a New Email', 'email post type label', 'buddyboss' ),
 		'all_items'             => _x( 'All Emails', 'email post type label', 'buddyboss' ),
 		'edit_item'             => _x( 'Edit Email', 'email post type label', 'buddyboss' ),
@@ -2862,7 +2862,7 @@ function bp_get_email_post_type_labels() {
 		'items_list'            => _x( 'Email list', 'email post type label', 'buddyboss' ),
 		'items_list_navigation' => _x( 'Email list navigation', 'email post type label', 'buddyboss' ),
 		'menu_name'             => _x( 'Emails', 'email post type name', 'buddyboss' ),
-		'name'                  => _x( 'BuddyBoss Emails', 'email post type label', 'buddyboss' ),
+		'name'                  => _x( 'BuddyBoss Email Templates', 'email post type label', 'buddyboss' ),
 		'new_item'              => _x( 'New Email', 'email post type label', 'buddyboss' ),
 		'not_found'             => _x( 'No emails found', 'email post type label', 'buddyboss' ),
 		'not_found_in_trash'    => _x( 'No emails found in Trash', 'email post type label', 'buddyboss' ),

@@ -25,12 +25,10 @@ if ( !class_exists( 'BBP_Default' ) ) :
  * can copy these files into your theme without needing to merge anything
  * together; Forums should safely handle the rest.
  *
- * See @link BBP_Theme_Compat() for more.
+ * @see BBP_Theme_Compat() for more.
  *
  * @since bbPress (r3732)
  *
- * @package BuddyBoss
- * @subpackage BBP_Theme_Compat
  */
 class BBP_Default extends BBP_Theme_Compat {
 

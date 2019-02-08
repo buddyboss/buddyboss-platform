@@ -12,7 +12,6 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class BP_Export
  *
- * @package BuddyBoss
  * @since BuddyBoss 1.0.0
  */
 abstract class BP_Export {
@@ -25,7 +24,6 @@ abstract class BP_Export {
 	 * @param $name
 	 * @param $label
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 */
 	function setup( $name, $label ) {
@@ -45,7 +43,6 @@ abstract class BP_Export {
 	/**
 	 * Function to register erase and export hook.
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 */
 	function hooks() {
@@ -56,7 +53,6 @@ abstract class BP_Export {
 	/**
 	 * @param $exporters
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return mixed
@@ -74,7 +70,6 @@ abstract class BP_Export {
 	/**
 	 * @param $erasers
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return mixed
@@ -93,7 +88,6 @@ abstract class BP_Export {
 	 * @param     $email_address
 	 * @param int $page
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
@@ -111,7 +105,6 @@ abstract class BP_Export {
 	 * @param     $email_address
 	 * @param int $page
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return mixed
@@ -133,7 +126,6 @@ abstract class BP_Export {
 	 * @param      $page
 	 * @param bool $email_address
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
@@ -149,7 +141,6 @@ abstract class BP_Export {
 	 * @param      $page
 	 * @param bool $email_address
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
@@ -162,7 +153,6 @@ abstract class BP_Export {
 	 * @param array $export_data
 	 * @param bool $done
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
@@ -180,7 +170,6 @@ abstract class BP_Export {
 	 * @param array $messages
 	 * @param bool $items_retained
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
@@ -197,7 +186,6 @@ abstract class BP_Export {
 	/**
 	 * @param $value
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return string

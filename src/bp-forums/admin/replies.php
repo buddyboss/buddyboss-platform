@@ -14,8 +14,6 @@ if ( !class_exists( 'BBP_Replies_Admin' ) ) :
 /**
  * Loads Forums replies admin area
  *
- * @package BuddyBoss
- * @subpackage Administration
  * @since bbPress (r2464)
  */
 class BBP_Replies_Admin {

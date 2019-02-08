@@ -2851,7 +2851,7 @@ function bp_register_member_type_section() {
 	register_post_type(
 		bp_get_member_type_post_type(),
 		apply_filters( 'bp_register_member_type_post_type', array(
-			'description'       => _x( 'BuddyPress profile type', 'profile type post type description', 'buddyboss' ),
+			'description'       => _x( 'BuddyBoss profile type', 'profile type post type description', 'buddyboss' ),
 			'labels'            => bp_get_member_type_post_type_labels(),
 			'public'            => true,
 			'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),

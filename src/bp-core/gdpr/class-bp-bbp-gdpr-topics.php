@@ -28,7 +28,6 @@ class BP_Bbp_Gdpr_Topics {
 	/**
 	 * @param $exporters
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return mixed
@@ -45,7 +44,6 @@ class BP_Bbp_Gdpr_Topics {
 	/**
 	 * @param $erasers
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return mixed
@@ -63,7 +61,6 @@ class BP_Bbp_Gdpr_Topics {
 	 * @param $email_address
 	 * @param int $page
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
@@ -153,7 +150,6 @@ class BP_Bbp_Gdpr_Topics {
 	 * @param $page
 	 * @param $per_page
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array|bool
@@ -179,7 +175,6 @@ class BP_Bbp_Gdpr_Topics {
 	 * @param $email_address
 	 * @param int $page
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array

@@ -10,6 +10,7 @@
  *
  * @package BuddyBoss
  * @subpackage Cache
+ * @since bbPress (r4011)
  */
 
 // Exit if accessed directly
@@ -27,8 +28,6 @@ if ( !defined( 'ABSPATH' ) ) exit;
  *
  * @since bbPress (r4011)
  *
- * @package BuddyBoss
- * @subpackage Cache
  */
 class BBP_Skip_Children {
 
