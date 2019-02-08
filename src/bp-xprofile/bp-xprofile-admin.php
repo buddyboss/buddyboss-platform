@@ -228,7 +228,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
 			<h1 class="wp-heading-inline"><?php _ex( 'Profile Fields', 'Settings page header', 'buddyboss'); ?></h1>
 
-				<a id="add_group" class="page-title-action" href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'Add New Field Set', 'buddyboss' ); ?></a>
+				<a id="add_group" class="page-title-action" href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'New Field Set', 'buddyboss' ); ?></a>
 
 			<hr class="wp-header-end">
 
@@ -236,7 +236,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
 			<h1>
 				<?php _ex( 'Profile Fields', 'Settings page header', 'buddyboss'); ?>
-				<a id="add_group" class="add-new-h2" href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'Add New Field Set', 'buddyboss' ); ?></a>
+				<a id="add_group" class="add-new-h2" href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'New Field Set', 'buddyboss' ); ?></a>
 			</h1>
 
 		<?php endif; ?>
@@ -395,7 +395,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 				<?php endforeach; else : ?>
 
 					<div id="message" class="error"><p><?php _ex( 'You have no field sets.', 'You have no profile field sets.', 'buddyboss' ); ?></p></div>
-					<p><a href="<?php echo esc_url( $add_group_url ); ?>"><?php _ex( 'Add New Field Set', 'Add New Profile Field Set', 'buddyboss' ); ?></a></p>
+					<p><a href="<?php echo esc_url( $add_group_url ); ?>"><?php _ex( 'New Field Set', 'Add New Profile Field Set', 'buddyboss' ); ?></a></p>
 
 				<?php endif; ?>
 

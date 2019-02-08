@@ -628,7 +628,7 @@ function bp_groups_admin_edit() {
 			<h1 class="wp-heading-inline"><?php _e( 'Edit Group', 'buddyboss' ); ?></h1>
 
 			<?php if ( is_user_logged_in() && bp_user_can_create_groups() ) : ?>
-				<a class="page-title-action" href="<?php echo trailingslashit( bp_get_groups_directory_permalink() . 'create' ); ?>"><?php _e( 'Add New', 'buddyboss' ); ?></a>
+				<a class="page-title-action" href="<?php echo trailingslashit( bp_get_groups_directory_permalink() . 'create' ); ?>"><?php _e( 'New Group', 'buddyboss' ); ?></a>
 			<?php endif; ?>
 
 			<hr class="wp-header-end">
@@ -638,7 +638,7 @@ function bp_groups_admin_edit() {
 			<h1><?php _e( 'Edit Group', 'buddyboss' ); ?>
 
 				<?php if ( is_user_logged_in() && bp_user_can_create_groups() ) : ?>
-					<a class="add-new-h2" href="<?php echo trailingslashit( bp_get_groups_directory_permalink() . 'create' ); ?>"><?php _e( 'Add New', 'buddyboss' ); ?></a>
+					<a class="add-new-h2" href="<?php echo trailingslashit( bp_get_groups_directory_permalink() . 'create' ); ?>"><?php _e( 'New Group', 'buddyboss' ); ?></a>
 				<?php endif; ?>
 
 			</h1>
@@ -814,7 +814,7 @@ function bp_groups_admin_index() {
 			<h1 class="wp-heading-inline"><?php _e( 'Groups', 'buddyboss' ); ?></h1>
 
 			<?php if ( is_user_logged_in() && bp_user_can_create_groups() ) : ?>
-				<a class="page-title-action" href="<?php echo trailingslashit( bp_get_groups_directory_permalink() . 'create' ); ?>"><?php _e( 'Add New', 'buddyboss' ); ?></a>
+				<a class="page-title-action" href="<?php echo trailingslashit( bp_get_groups_directory_permalink() . 'create' ); ?>"><?php _e( 'New Group', 'buddyboss' ); ?></a>
 			<?php endif; ?>
 
 			<?php if ( !empty( $_REQUEST['s'] ) ) : ?>
@@ -829,7 +829,7 @@ function bp_groups_admin_index() {
 			<?php _e( 'Groups', 'buddyboss' ); ?>
 
 			<?php if ( is_user_logged_in() && bp_user_can_create_groups() ) : ?>
-				<a class="add-new-h2" href="<?php echo trailingslashit( bp_get_groups_directory_permalink() . 'create' ); ?>"><?php _e( 'Add New', 'buddyboss' ); ?></a>
+				<a class="add-new-h2" href="<?php echo trailingslashit( bp_get_groups_directory_permalink() . 'create' ); ?>"><?php _e( 'New Group', 'buddyboss' ); ?></a>
 			<?php endif; ?>
 
 			<?php if ( !empty( $_REQUEST['s'] ) ) : ?>

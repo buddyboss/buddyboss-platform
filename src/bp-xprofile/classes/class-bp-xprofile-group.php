@@ -771,7 +771,7 @@ class BP_XProfile_Group {
 
 		// New field group.
 		if ( empty( $this->id ) ) {
-			$title	= __( 'Add New Field Set', 'buddyboss' );
+			$title	= __( 'New Field Set', 'buddyboss' );
 			$button	= __( 'Save',                'buddyboss' );
 			$action	= add_query_arg( array(
 				'page' => 'bp-profile-setup',
