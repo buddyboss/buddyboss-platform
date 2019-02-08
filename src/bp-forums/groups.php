@@ -21,8 +21,6 @@ if ( !class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_Ex
  *
  * @since bbPress (r3552)
  *
- * @package BuddyBoss
- * @subpackage Forums
  * @todo Everything
  */
 class BBP_Forums_Group_Extension extends BP_Group_Extension {

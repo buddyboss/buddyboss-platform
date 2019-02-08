@@ -5,6 +5,7 @@
  *
  * @package BuddyBoss
  * @subpackage Administration
+ * @since bbPress (r2464)
  */
 
 // Exit if accessed directly
@@ -14,8 +15,6 @@ if ( !class_exists( 'BBP_Forums_Admin' ) ) :
 /**
  * Loads Forums forums admin area
  *
- * @package BuddyBoss
- * @subpackage Administration
  * @since bbPress (r2464)
  */
 class BBP_Forums_Admin {

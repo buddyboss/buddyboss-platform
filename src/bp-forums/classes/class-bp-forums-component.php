@@ -25,9 +25,6 @@ if ( !class_exists( 'BBP_Forums_Component' ) ) :
  * Loads Forums Component
  *
  * @since bbPress (r3552)
- *
- * @package BuddyBoss
- * @subpackage Forums
  */
 class BP_Forums_Component extends BP_Component {
 

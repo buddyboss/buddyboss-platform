@@ -45,7 +45,6 @@ function bp_core_is_multisite() {
  *
  * @deprecated 1.5.0
  * @deprecated Use is_main_site()
- * @package BuddyBoss
  * @param int|string $blog_id optional blog id to test (default current blog)
  * @return bool True if not multisite or $blog_id is main site
  * @since BuddyPress 1.2.6

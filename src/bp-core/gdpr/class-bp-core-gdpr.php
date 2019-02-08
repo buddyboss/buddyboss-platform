@@ -21,7 +21,6 @@ class BP_Core_Gdpr {
 	/**
 	 * Function to load all the dependency of GDPR classes.
 	 *
-	 * @package BuddyBoss
 	 * @since BuddyBoss 1.0.0
 	 */
 	function load_on_bp_dependency() {

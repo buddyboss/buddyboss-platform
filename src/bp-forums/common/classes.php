@@ -19,9 +19,6 @@ if ( !class_exists( 'BBP_Component' ) ) :
  * internally by Forums to create forums, topics and replies, but can be
  * extended to create other really neat things.
  *
- * @package BuddyBoss
- * @subpackage Classes
- *
  * @since bbPress (r2688)
  */
 class BBP_Component {
@@ -176,9 +173,6 @@ if ( class_exists( 'Walker' ) ) :
 /**
  * Create HTML dropdown list of Forums forums/topics.
  *
- * @package BuddyBoss
- * @subpackage Classes
- *
  * @since bbPress (r2746)
  * @uses Walker
  */
@@ -263,8 +257,6 @@ class BBP_Walker_Dropdown extends Walker {
 /**
  * Create hierarchical list of Forums replies.
  *
- * @package BuddyBoss
- * @subpackage Classes
  *
  * @since bbPress (r4944)
  */
