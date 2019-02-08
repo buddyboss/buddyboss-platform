@@ -1,8 +1,9 @@
 <?php
 /**
- * Core component classes.
+ * Export API: BP_Activity_Export class
  *
  * @package BuddyBoss
+ * @subpackage GDPR
  * @since BuddyBoss 1.0.0
  */
 

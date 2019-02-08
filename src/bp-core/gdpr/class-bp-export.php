@@ -1,8 +1,9 @@
 <?php
 /**
- * Core component classes.
+ * BP_Export base class
  *
  * @package BuddyBoss
+ * @subpackage GDPR
  * @since BuddyBoss 1.0.0
  */
 
@@ -41,7 +42,7 @@ abstract class BP_Export {
 	}
 
 	/**
-	 * Function to register erase and export hook.
+	 * Register erase and export hooks.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -51,6 +52,8 @@ abstract class BP_Export {
 	}
 
 	/**
+	 * Register exporter callback.
+	 *
 	 * @param $exporters
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -68,6 +71,8 @@ abstract class BP_Export {
 	}
 
 	/**
+	 * Register delete callback.
+	 *
 	 * @param $erasers
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -85,6 +90,8 @@ abstract class BP_Export {
 	}
 
 	/**
+	 * Process export callback.
+	 *
 	 * @param     $email_address
 	 * @param int $page
 	 *
@@ -102,6 +109,8 @@ abstract class BP_Export {
 	}
 
 	/**
+	 * Process delete callback
+	 *
 	 * @param     $email_address
 	 * @param int $page
 	 *
@@ -120,14 +129,14 @@ abstract class BP_Export {
 	}
 
 	/**
-	 * Function should be override.
+	 * Fallback.
 	 *
 	 * @param      $user
 	 * @param      $page
 	 * @param bool $email_address
 	 *
 	 * @since BuddyBoss 1.0.0
-	 *
+	 * @ignore
 	 * @return array
 	 */
 	function process_data( $user, $page, $email_address ) {
@@ -135,14 +144,14 @@ abstract class BP_Export {
 	}
 
 	/**
-	 * Function should be override.
+	 * Fallback.
 	 *
 	 * @param      $user
 	 * @param      $page
 	 * @param bool $email_address
 	 *
 	 * @since BuddyBoss 1.0.0
-	 *
+	 * @ignore
 	 * @return array
 	 */
 	function process_erase( $user, $page, $email_address ) {
@@ -150,6 +159,8 @@ abstract class BP_Export {
 	}
 
 	/**
+	 * Export data response.
+	 *
 	 * @param array $export_data
 	 * @param bool $done
 	 *
@@ -165,6 +176,8 @@ abstract class BP_Export {
 	}
 
 	/**
+	 * Delete data response.
+	 *
 	 * @param bool $item_removed
 	 * @param bool $done
 	 * @param array $messages
@@ -184,6 +197,8 @@ abstract class BP_Export {
 	}
 
 	/**
+	 * Convert serialized meta to readable data.
+	 *
 	 * @param $value
 	 *
 	 * @since BuddyBoss 1.0.0

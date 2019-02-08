@@ -1,8 +1,9 @@
 <?php
 /**
- * Core component classes.
+ * Export API: BP_Friendship_Export class
  *
  * @package BuddyBoss
+ * @subpackage GDPR
  * @since BuddyBoss 1.0.0
  */
 
@@ -32,6 +33,8 @@ final class BP_Friendship_Export extends BP_Export {
 	}
 
 	/**
+	 * Export member friendships.
+	 *
 	 * @param $user
 	 * @param $page
 	 * @param bool $email_address
@@ -113,7 +116,7 @@ final class BP_Friendship_Export extends BP_Export {
 	}
 
 	/**
-	 * Remove friendship relations data from database..
+	 * Delete friendship connection data.
 	 *
 	 * @param      $user
 	 * @param      $page
@@ -141,7 +144,7 @@ final class BP_Friendship_Export extends BP_Export {
 	}
 
 	/**
-	 * Returns the data & count of messages by page and user.
+	 * Get data & count of messages by page and user.
 	 *
 	 * @param $user
 	 * @param $page

@@ -1,8 +1,9 @@
 <?php
 /**
- * Core component classes.
+ * Export API: BP_Group_Export class
  *
  * @package BuddyBoss
+ * @subpackage GDPR
  * @since BuddyBoss 1.0.0
  */
 
@@ -31,6 +32,8 @@ final class BP_Group_Export extends BP_Export {
 	}
 
 	/**
+	 * Export member created groups.
+	 *
 	 * @param $user
 	 * @param $page
 	 * @param bool $email_address
@@ -161,6 +164,8 @@ final class BP_Group_Export extends BP_Export {
 	}
 
 	/**
+	 * Delete member created groups.
+	 *
 	 * @param $user
 	 * @param $page
 	 * @param bool $email_address
@@ -198,6 +203,8 @@ final class BP_Group_Export extends BP_Export {
 	}
 
 	/**
+	 * Delete group avatar and cover image.
+	 *
 	 * @param $group_id
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -219,7 +226,7 @@ final class BP_Group_Export extends BP_Export {
 	}
 
 	/**
-	 * Returns the data & count of messages by page and user.
+	 * Get data & count of messages by page and user.
 	 *
 	 * @param $user
 	 * @param $page

@@ -1,8 +1,9 @@
 <?php
 /**
- * Core component classes.
+ * Export API: BP_Group_Membership_Export class
  *
  * @package BuddyBoss
+ * @subpackage GDPR
  * @since BuddyBoss 1.0.0
  */
 
@@ -31,6 +32,8 @@ final class BP_Group_Membership_Export extends BP_Export {
 	}
 
 	/**
+	 * Export member group memberships.
+	 *
 	 * @param $user
 	 * @param $page
 	 * @param bool $email_address
@@ -137,7 +140,7 @@ final class BP_Group_Membership_Export extends BP_Export {
 	}
 
 	/**
-	 * Returns the data & count of messages by page and user.
+	 * Get data & count of groups by page and user.
 	 *
 	 * @param $user
 	 * @param $page

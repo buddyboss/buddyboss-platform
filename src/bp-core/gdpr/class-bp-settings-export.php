@@ -1,8 +1,9 @@
 <?php
 /**
- * Core component classes.
+ * Export API: BP_Settings_Export class
  *
  * @package BuddyBoss
+ * @subpackage GDPR
  * @since BuddyBoss 1.0.0
  */
 
@@ -34,6 +35,8 @@ final class BP_Settings_Export extends BP_Export {
 
 
 	/**
+	 * Export member profile settings.
+	 *
 	 * @param $user
 	 * @param $page
 	 * @param bool $email_address
@@ -100,7 +103,7 @@ final class BP_Settings_Export extends BP_Export {
 
 
 	/**
-	 * Remove user data.
+	 * Delete user profile settings.
 	 *
 	 * @param $user
 	 * @param $page

@@ -1,8 +1,11 @@
 <?php
 /**
- * Core component classes.
+ * BP_Bbp_Gdpr_Forums base class
+ *
+ * This class 
  *
  * @package BuddyBoss
+ * @subpackage GDPR
  * @since BuddyBoss 1.0.0
  */
 
@@ -49,7 +52,7 @@ class BP_Bbp_Gdpr_Forums {
 	}
 
 	/**
-	 * Forum erase exporter.
+	 * Register Forum data deletion.
 	 *
 	 * @param $erasers
 	 *
@@ -67,7 +70,7 @@ class BP_Bbp_Gdpr_Forums {
 	}
 
 	/**
-	 * Function to export user forum.
+	 * Export member created forum data.
 	 *
 	 * @param $email_address
 	 * @param int $page
@@ -77,7 +80,7 @@ class BP_Bbp_Gdpr_Forums {
 	 * @return array
 	 */
 	function forums_exporter( $email_address, $page = 1 ) {
-		$per_page = 500; // Limit us to avoid timing out
+		$per_page = 500; // Limit to avoid timeout
 		$page     = (int) $page;
 
 		$export_items = array();
@@ -153,7 +156,7 @@ class BP_Bbp_Gdpr_Forums {
 	}
 
 	/**
-	 * Function to fetch all the user forum.
+	 * Fetch all the user forums.
 	 *
 	 * @param $user
 	 * @param $page
@@ -181,7 +184,7 @@ class BP_Bbp_Gdpr_Forums {
 	}
 
 	/**
-	 * Function to remove forums.
+	 * Delete all forums created by member.
 	 *
 	 * @param $email_address
 	 * @param int $page
@@ -191,7 +194,7 @@ class BP_Bbp_Gdpr_Forums {
 	 * @return array
 	 */
 	function forums_eraser( $email_address, $page = 1 ) {
-		$per_page = 500; // Limit us to avoid timing out
+		$per_page = 500; // Limit to avoid timeout
 		$page     = (int) $page;
 
 		$user = get_user_by( 'email', $email_address );

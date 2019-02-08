@@ -1,8 +1,9 @@
 <?php
 /**
- * Core component classes.
+ * BP_Bbp_Gdpr_Topics base class
  *
  * @package BuddyBoss
+ * @subpackage GDPR
  * @since BuddyBoss 1.0.0
  */
 
@@ -26,6 +27,8 @@ class BP_Bbp_Gdpr_Topics {
 	}
 
 	/**
+	 * Register forum topic exporter.
+	 *
 	 * @param $exporters
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -42,6 +45,8 @@ class BP_Bbp_Gdpr_Topics {
 	}
 
 	/**
+	 * Register forum topic deletion.
+	 *
 	 * @param $erasers
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -58,6 +63,8 @@ class BP_Bbp_Gdpr_Topics {
 	}
 
 	/**
+	 * Export member created forum topics.
+	 *
 	 * @param $email_address
 	 * @param int $page
 	 *
@@ -146,6 +153,8 @@ class BP_Bbp_Gdpr_Topics {
 	}
 
 	/**
+	 * Get forum topics created by member.
+	 *
 	 * @param $user
 	 * @param $page
 	 * @param $per_page
@@ -172,6 +181,8 @@ class BP_Bbp_Gdpr_Topics {
 	}
 
 	/**
+	 * Delete forum topics created by member.
+	 *
 	 * @param $email_address
 	 * @param int $page
 	 *

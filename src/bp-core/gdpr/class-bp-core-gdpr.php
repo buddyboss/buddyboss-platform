@@ -1,8 +1,11 @@
 <?php
 /**
- * Core component classes.
+ * BP_Core_Gdpr base class
+ *
+ * This class calls all other classes associated with GDPR member data export.
  *
  * @package BuddyBoss
+ * @subpackage GDPR
  * @since BuddyBoss 1.0.0
  */
 
@@ -19,7 +22,7 @@ class BP_Core_Gdpr {
 	}
 
 	/**
-	 * Function to load all the dependency of GDPR classes.
+	 * Function to load all the dependencies of GDPR classes.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

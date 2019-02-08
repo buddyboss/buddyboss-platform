@@ -1,8 +1,9 @@
 <?php
 /**
- * Core component classes.
+ * Export API: BP_Notification_Export class
  *
  * @package BuddyBoss
+ * @subpackage GDPR
  * @since BuddyBoss 1.0.0
  */
 
@@ -31,6 +32,8 @@ final class BP_Notification_Export extends BP_Export {
 	}
 
 	/**
+	 * Export member notifications.
+	 *
 	 * @param $user
 	 * @param $page
 	 * @param bool $email_address
@@ -98,6 +101,8 @@ final class BP_Notification_Export extends BP_Export {
 	}
 
 	/**
+	 * Delete member notifications.
+	 *
 	 * @param $user
 	 * @param $page
 	 * @param bool $email_address
@@ -167,6 +172,8 @@ final class BP_Notification_Export extends BP_Export {
 	}
 
 	/**
+	 * Get full-text description for a specific notification.
+	 *
 	 * @param $notification
 	 *
 	 * @since BuddyBoss 1.0.0

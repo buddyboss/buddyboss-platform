@@ -1,8 +1,9 @@
 <?php
 /**
- * Core component classes.
+ * Export API: BP_Xprofile_Export class
  *
  * @package BuddyBoss
+ * @subpackage GDPR
  * @since BuddyBoss 1.0.0
  */
 
@@ -33,6 +34,8 @@ final class BP_Xprofile_Export extends BP_Export {
 	}
 
 	/**
+	 * Export member extended profile fields.
+	 *
 	 * @param $user
 	 * @param $page
 	 * @param bool $email_address
@@ -128,6 +131,8 @@ final class BP_Xprofile_Export extends BP_Export {
 	}
 
 	/**
+	 * Delete member extended profile fields.
+	 *
 	 * @param $user
 	 * @param $page
 	 * @param bool $email_address
