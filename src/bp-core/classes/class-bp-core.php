@@ -348,7 +348,7 @@ class BP_Core extends BP_Component {
 			register_post_type(
 				bp_get_email_post_type(),
 				apply_filters( 'bp_register_email_post_type', array(
-					'description'       => _x( 'BuddyPress emails', 'email post type description', 'buddyboss' ),
+					'description'       => _x( 'BuddyBoss emails', 'email post type description', 'buddyboss' ),
 					'labels'            => bp_get_email_post_type_labels(),
 					'menu_icon'         => 'dashicons-email-alt',
 					'public'            => false,
