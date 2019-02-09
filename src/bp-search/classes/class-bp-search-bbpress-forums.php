@@ -42,14 +42,14 @@ if (!class_exists('Bp_Search_bbPress_Forums')):
 			$where = array();
 			$where[] = "1=1";
 			$where[] = "(post_title LIKE %s OR post_content LIKE %s)";
-			$where[] = "post_type = 'forum'";
+			$where[] = "post_type = '{$this->type}'";
 
 			if ( current_user_can( 'read_hidden_forums' ) ) {
-				$post_status = [ 'public', 'private', 'hidden' ];
+				$post_status = [ 'publish', 'private', 'hidden' ];
 			} elseif ( current_user_can( 'read_private_forums' ) ) {
-				$post_status = [ 'public', 'private' ];
+				$post_status = [ 'publish', 'private' ];
 			} else {
-				$post_status = [ 'public' ];
+				$post_status = [ 'publish' ];
 			}
 
 			$where[] = '(post_status IN (\'' . join( '\',\'', $post_status ) . '\') OR pm.meta_value IN ('. trim( $in, ',' ) .'))';

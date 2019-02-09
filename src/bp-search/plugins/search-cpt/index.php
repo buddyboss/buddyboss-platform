@@ -42,7 +42,7 @@ add_filter( 'bp_search_additional_search_helpers', 'bp_search_helpers_cpts' );
 function bp_search_helpers_cpts( $helpers ) {
 
 	$post_types          = get_post_types( [ 'public' => true ] );
-	$custom_handler_cpts = [ 'post', 'forum' ];
+	$custom_handler_cpts = [ 'post', 'forum', 'topic', 'reply' ];
 
 	foreach ( $post_types as $post_type ) {
 		//if name starts with cpt-

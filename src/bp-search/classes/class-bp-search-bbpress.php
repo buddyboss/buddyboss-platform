@@ -67,7 +67,7 @@ if (!class_exists('Bp_Search_bbPress')):
 			$qry = new WP_Query( [
 				'post_type'     => [ 'forum', 'topic', 'reply' ],
 				'post__in'      => $post_ids,
-				'post_status'   => 'any',
+				'post_status'   => [ 'publish', 'private', 'hidden' ],
 				'no_found_rows' => true,
 				'nopaging'      => true
 			] );

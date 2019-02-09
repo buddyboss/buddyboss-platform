@@ -14,6 +14,66 @@ if (!class_exists('Bp_Search_bbPress_Replies')):
 	class Bp_Search_bbPress_Replies extends Bp_Search_bbPress {
 		public $type = 'reply';
 
+		function sql( $search_term, $only_totalrow_count=false ){
+			global $wpdb;
+			$query_placeholder = array();
+
+			if( $only_totalrow_count ){
+				$columns = " COUNT( DISTINCT id ) ";
+			} else {
+				$columns = " DISTINCT id , '{$this->type}' as type, post_title LIKE %s AS relevance, post_date as entry_date  ";
+				$query_placeholder[] = '%'. $search_term .'%';
+			}
+
+			$from = "{$wpdb->posts} p LEFT JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = '_bbp_forum_id'";
+
+			$group_memberships = bp_get_user_groups( get_current_user_id(), array(
+				'is_admin' => null,
+				'is_mod'   => null,
+			) );
+
+			$in = '0';
+			if ( ! empty( $group_memberships ) ) {
+				$in = array_reduce( array_keys( $group_memberships ), function ( $carry, $group_id ) {
+					return $carry . ',\'' . maybe_serialize( [$group_id] ) . '\'';
+				} );
+			}
+
+			if ( current_user_can( 'read_hidden_forums' ) ) {
+				$post_status = [ "'publish'", "'private'", "'hidden'" ];
+			} elseif ( current_user_can( 'read_private_forums' ) ) {
+				$post_status = [ "'publish'", "'private'" ];
+			} else {
+				$post_status = [ "'publish'" ];
+			}
+
+			$where = array();
+			$where[] = "1=1";
+			$where[] = "(post_title LIKE %s OR post_content LIKE %s)";
+			$where[] = "post_type = '{$this->type}'";
+
+			$where[] = '(
+			pm.meta_value IN ( SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key = \'_bbp_group_ids\' AND meta_value IN(' . trim( $in, ',' ) . ') ) OR
+			pm.meta_value IN ( SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = \'forum\' AND post_status IN (' . join( ',', $post_status ) . ') )
+			)';
+
+			$query_placeholder[] = '%'. $search_term .'%';
+			$query_placeholder[] = '%'. $search_term .'%';
+
+			$sql = 'SELECT '. $columns . ' FROM ' . $from .' WHERE ' . implode( ' AND ', $where );
+			$query = $wpdb->prepare( $sql, $query_placeholder );
+
+
+			return apply_filters(
+				'Bp_Search_Forums_sql',
+				$query,
+				array(
+					'search_term'           => $search_term,
+					'only_totalrow_count'   => $only_totalrow_count,
+				)
+			);
+		}
+
 		/**
 		 * Insures that only one instance of Class exists in memory at any
 		 * one time. Also prevents needing to define globals all over the place.

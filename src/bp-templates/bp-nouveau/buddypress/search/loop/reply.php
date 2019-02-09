@@ -13,11 +13,9 @@
 		</div>
 
 		<div class="item">
-			<a href="<?php bbp_reply_url(get_the_ID()); ?>">
-				<div class="item">
-					<div class="item-desc"><?php echo bp_search_reply_intro( 100 );?></div>
-				</div>
-			</a>
+			<h3 class="entry-title item-title">
+				<a href="<?php bbp_reply_url(get_the_ID()); ?>"><?php echo bp_search_reply_intro( 100 );?></a>
+			</h3>
 		</div>
 	</div>
 </li>
