@@ -65,10 +65,13 @@ if (!class_exists('Bp_Search_bbPress')):
 			//now we have all the posts
 			//lets do a wp_query and generate html for all posts
 			$qry = new WP_Query( [
-				'post_type'   => [ 'forum', 'topic', 'reply' ],
-				'post__in'    => $post_ids,
-				'post_status' => [ 'public', 'private', 'hidden' ]
+				'post_type'     => [ 'forum', 'topic', 'reply' ],
+				'post__in'      => $post_ids,
+				'post_status'   => 'any',
+				'no_found_rows' => true,
+				'nopaging'      => true
 			] );
+
 
 			add_action( 'pre_get_posts', 'bbp_pre_get_posts_normalize_forum_visibility', 4 );
 
