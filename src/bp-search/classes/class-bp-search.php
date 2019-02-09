@@ -490,7 +490,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 							'title' => $obj->get_title( $item->id )
 						);
 
-						$this->search_results['all']['items'][ $item->id ] = $result;
+						$this->search_results['all']['items'][ $item->type . '_' . $item->id ] = $result;
 					}
 					//now we've html saved for search results
 
@@ -505,7 +505,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 							if ( ! isset( $ordered_items_group[ $type ] ) ) {
 								$ordered_items_group[ $type ] = array();
 							}
-
+							$item_id = absint( str_replace( $type . '_', '', $item_id ) );
 							$ordered_items_group[ $type ][ $item_id ] = $item;
 						}
 
@@ -552,7 +552,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 							}
 
 							foreach ( $grouped_items as $item_id => $item ) {
-								$this->search_results['all']['items'][ $item_id ] = $item;
+								$this->search_results['all']['items'][ $type . '_' . $item_id ] = $item;
 							}
 						}
 						/* ________________________________ */
