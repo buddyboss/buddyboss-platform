@@ -797,9 +797,16 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 					echo $item['html'];
 				}
 
-				if ( function_exists( 'emi_generate_paging_param' ) && $current_tab != 'all' ) {
+				if ( $current_tab != 'all' ) {
 					$page_slug = untrailingslashit( str_replace( home_url(), '', $this->search_page_url() ) );
-					emi_generate_paging_param(
+
+					bp_search_pagination_page_counts(
+						$this->search_results[ $current_tab ]['total_match_count'],
+						$this->search_args['per_page'],
+						$this->search_args['current_page']
+					);
+
+					bp_search_pagination(
 						$this->search_results[ $current_tab ]['total_match_count'],
 						$this->search_args['per_page'],
 						$this->search_args['current_page'],

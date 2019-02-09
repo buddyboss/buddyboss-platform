@@ -155,7 +155,7 @@ function bp_search_result_match( $in, $wordToFind, $numWordsToWrap = 10 ) {
 
 }
 
-if ( ! function_exists( 'emi_generate_paging_param' ) ):
+if ( ! function_exists( 'bp_search_pagination' ) ):
 
 	/**
 	 * Prints pagination links for given parameters with pagination value as a querystring parameter.
@@ -175,7 +175,7 @@ if ( ! function_exists( 'emi_generate_paging_param' ) ):
 	 *
 	 * @return void
 	 */
-	function emi_generate_paging_param( $total_items, $items_per_page, $curr_paged, $slug, $links_on_each_side = 2, $hashlink = "", $param_key = "list" ) {
+	function bp_search_pagination( $total_items, $items_per_page, $curr_paged, $slug, $links_on_each_side = 2, $hashlink = "", $param_key = "list" ) {
 		$use_bootstrap = false;
 		if ( defined( 'BOOTSTRAP_ACTIVE' ) ) {
 			$use_bootstrap = true;
@@ -300,6 +300,24 @@ if ( ! function_exists( 'emi_generate_paging_param' ) ):
 	}
 
 endif;
+
+function bp_search_pagination_page_counts( $total_items, $items_per_page, $curr_paged ) {
+
+	if ( $curr_paged == 0 ) {
+		$curr_paged = 1;
+	}
+
+	$to_num   = $curr_paged * $items_per_page;
+	$from_num = $to_num - ( $items_per_page - 1 );
+
+	?>
+	<div class="pag-count bottom">
+		<div class="pag-data">
+			<?php printf( __( 'Viewing %d - %d of %d results', 'buddyboss' ), $from_num, min( $total_items, $to_num), $total_items ); ?>
+		</div>
+	</div>
+	<?php
+}
 
 
 /**
