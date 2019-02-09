@@ -6,8 +6,7 @@
  * Common template tags are ones that are used by more than one component, like
  * forums, topics, replies, users, topic tags, etc...
  *
- * @package BuddyBoss
- * @subpackage TemplateTags
+ * @package BuddyBoss\Template\Tags
  */
 
 // Exit if accessed directly

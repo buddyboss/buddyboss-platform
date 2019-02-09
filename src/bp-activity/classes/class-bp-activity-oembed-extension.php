@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Activity Classes.
  *
- * @package BuddyBoss
- * @subpackage Embeds
+ * @package BuddyBoss\Embeds
  */
 
 // Exit if accessed directly.

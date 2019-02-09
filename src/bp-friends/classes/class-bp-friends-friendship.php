@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Connections Classes.
  *
- * @package BuddyBoss
- * @subpackage ConnectionsClasses
+ * @package BuddyBoss\Connections\Classes
  * @since BuddyPress 1.0.0
  */
 

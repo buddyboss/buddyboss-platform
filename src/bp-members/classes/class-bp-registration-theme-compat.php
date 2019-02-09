@@ -4,8 +4,7 @@
  *
  * Handlers for member screens that aren't handled elsewhere.
  *
- * @package BuddyBoss
- * @subpackage MembersScreens
+ * @package BuddyBoss\Members\Screens
  * @since BuddyPress 1.7.0
  */
 

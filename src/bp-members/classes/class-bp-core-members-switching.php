@@ -3,8 +3,7 @@
 /**
  * BuddyBoss Member Switching class
  *
- * @package BuddyBoss
- * @subpackage Members
+ * @package BuddyBoss\Members
  * @since BuddyBoss 1.0.0
  */
 class BP_Core_Members_Switching {

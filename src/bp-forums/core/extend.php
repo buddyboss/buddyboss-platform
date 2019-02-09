@@ -6,8 +6,7 @@
  * There's a world of really cool plugins out there, and Forums comes with
  * support for some of the most popular ones.
  *
- * @package BuddyBoss
- * @subpackage Extend
+ * @package BuddyBoss\Extend
  */
 
 // Exit if accessed directly

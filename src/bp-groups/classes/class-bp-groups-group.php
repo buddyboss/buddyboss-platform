@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Groups Classes.
  *
- * @package BuddyBoss
- * @subpackage GroupsClasses
+ * @package BuddyBoss\Groups\Classes
  * @since BuddyPress 1.0.0
  */
 

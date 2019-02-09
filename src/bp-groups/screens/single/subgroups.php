@@ -2,8 +2,7 @@
 /**
  * Groups: Single group "Subgroups" screen handler
  *
- * @package BuddyBoss
- * @subpackage GroupsScreens
+ * @package BuddyBoss\Groups\Screens
  * @since BuddyBoss 1.0.0
  */
 

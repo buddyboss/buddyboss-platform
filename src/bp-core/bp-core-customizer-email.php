@@ -2,8 +2,7 @@
 /**
  * BuddyPress Customizer implementation for email.
  *
- * @package BuddyBoss
- * @subpackage Core
+ * @package BuddyBoss\Core
  * @since BuddyPress 2.5.0
  */
 

@@ -7,8 +7,7 @@
  * capability output in user profiles. This includes mapping capabilities and
  * groups to human readable strings,
  *
- * @package BuddyBoss
- * @subpackage Capabilities
+ * @package BuddyBoss\Capabilities
  */
 
 // Exit if accessed directly

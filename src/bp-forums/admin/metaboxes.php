@@ -3,8 +3,7 @@
 /**
  * Forums Admin Metaboxes
  *
- * @package BuddyBoss
- * @subpackage Administration
+ * @package BuddyBoss\Administration
  */
 
 /** Dashboard *****************************************************************/

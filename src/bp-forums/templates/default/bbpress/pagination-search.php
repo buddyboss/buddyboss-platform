@@ -3,8 +3,7 @@
 /**
  * Pagination for pages of search results 
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 ?>

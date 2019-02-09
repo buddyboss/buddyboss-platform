@@ -2,8 +2,7 @@
 /**
  * Messages: User's "Messages > Starred" screen handler
  *
- * @package BuddyBoss
- * @subpackage MessageScreens
+ * @package BuddyBoss\Message\Screens
  * @since BuddyPress 3.0.0
  */
 

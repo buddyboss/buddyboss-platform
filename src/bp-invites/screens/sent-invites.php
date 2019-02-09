@@ -2,8 +2,7 @@
 /**
  * Sent Invites: User's "Invites > Invite by Email" screen handler
  *
- * @package BuddyBoss
- * @subpackage InviteScreens
+ * @package BuddyBoss\Invite\Screens
  * @since BuddyBoss 1.0.0
  */
 

@@ -5,8 +5,7 @@
  *
  * Contains the forum list, topic list, reply list and login form widgets.
  *
- * @package BuddyBoss
- * @subpackage Widgets
+ * @package BuddyBoss\Widgets
  */
 
 // Exit if accessed directly

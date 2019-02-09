@@ -2,8 +2,7 @@
 /**
  * Connections: Add action
  *
- * @package BuddyBoss
- * @subpackage ConnectionsActions
+ * @package BuddyBoss\Connections\Actions
  * @since BuddyPress 3.0.0
  */
 

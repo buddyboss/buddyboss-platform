@@ -2,8 +2,7 @@
 /**
  * Core Avatars attachment class.
  *
- * @package BuddyBoss
- * @subpackage Core
+ * @package BuddyBoss\Core
  * @since BuddyPress 2.3.0
  */
 

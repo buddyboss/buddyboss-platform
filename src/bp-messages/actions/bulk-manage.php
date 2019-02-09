@@ -2,8 +2,7 @@
 /**
  * Messages: Bulk-manage action handler
  *
- * @package BuddyBoss
- * @subpackage MessageActions
+ * @package BuddyBoss\Message\Actions
  * @since BuddyPress 3.0.0
  */
 

@@ -2,8 +2,7 @@
 /**
  * BuddyPress Member Theme Compat.
  *
- * @package BuddyBoss
- * @subpackage MembersScreens
+ * @package BuddyBoss\Members\Screens
  * @since BuddyPress 1.7.0
  */
 

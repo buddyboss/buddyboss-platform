@@ -2,8 +2,7 @@
 /**
  * BuddyPress Admin Component Functions.
  *
- * @package BuddyBoss
- * @subpackage CoreAdministration
+ * @package BuddyBoss\Core\Administration
  * @since BuddyPress 2.3.0
  */
 

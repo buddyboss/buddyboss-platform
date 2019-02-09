@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Messages Sitewide Notices Widget.
  *
- * @package BuddyBoss
- * @subpackage Messages
+ * @package BuddyBoss\Messages
  * @since BuddyPress 1.9.0
  */
 

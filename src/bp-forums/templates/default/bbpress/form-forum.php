@@ -3,8 +3,7 @@
 /**
  * New/Edit Forum
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 ?>

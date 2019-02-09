@@ -4,8 +4,7 @@
  *
  * Apply WordPress defined filters to private messages.
  *
- * @package BuddyBoss
- * @subpackage MessagesFilters
+ * @package BuddyBoss\Messages\Filters
  * @since BuddyPress 1.0.0
  */
 

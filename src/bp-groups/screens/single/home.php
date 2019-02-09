@@ -2,8 +2,7 @@
 /**
  * Groups: Single group "Home" screen handler
  *
- * @package BuddyBoss
- * @subpackage GroupsScreens
+ * @package BuddyBoss\Groups\Screens
  * @since BuddyPress 3.0.0
  */
 

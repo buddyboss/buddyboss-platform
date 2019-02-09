@@ -5,8 +5,7 @@
  * These functions handle the recording, deleting and formatting of activity
  * for the user and for this specific component.
  *
- * @package BuddyBoss
- * @subpackage ConnectionsActivity
+ * @package BuddyBoss\Connections\Activity
  * @since BuddyPress 1.5.0
  */
 

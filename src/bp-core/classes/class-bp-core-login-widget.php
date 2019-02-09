@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Core Login Widget.
  *
- * @package BuddyBoss
- * @subpackage Core
+ * @package BuddyBoss\Core
  * @since BuddyPress 1.9.0
  */
 

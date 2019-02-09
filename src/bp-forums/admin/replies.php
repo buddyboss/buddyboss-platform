@@ -3,8 +3,7 @@
 /**
  * Forums Replies Admin Class
  *
- * @package BuddyBoss
- * @subpackage Administration
+ * @package BuddyBoss\Administration
  */
 
 // Exit if accessed directly

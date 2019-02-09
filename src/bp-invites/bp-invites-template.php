@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Invites Template Functions.
  *
- * @package BuddyBoss
- * @subpackage InvitesTemplates
+ * @package BuddyBoss\Invites\Templates
  * @since BuddyBoss 1.0.0
  */
 

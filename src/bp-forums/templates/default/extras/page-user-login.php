@@ -3,8 +3,7 @@
 /**
  * Template Name: Forums - User Login
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 // No logged in users

@@ -2,8 +2,7 @@
 /**
  * Activity: Single permalink screen handler
  *
- * @package BuddyBoss
- * @subpackage ActivityScreens
+ * @package BuddyBoss\Activity\Screens
  * @since BuddyPress 3.0.0
  */
 

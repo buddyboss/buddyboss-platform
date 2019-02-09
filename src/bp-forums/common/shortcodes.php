@@ -3,8 +3,7 @@
 /**
  * Forums Shortcodes
  *
- * @package BuddyBoss
- * @subpackage Shortcodes
+ * @package BuddyBoss\Shortcodes
  */
 
 // Exit if accessed directly

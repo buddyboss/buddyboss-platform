@@ -3,8 +3,7 @@
 /**
  * User Topics Created
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 ?>

@@ -5,8 +5,7 @@
  * Props to WordPress core for the Comments admin screen, and its contextual
  * help text, on which this implementation is heavily based.
  *
- * @package BuddyBoss
- * @subpackage Groups
+ * @package BuddyBoss\Groups
  * @since BuddyPress 1.7.0
  */
 

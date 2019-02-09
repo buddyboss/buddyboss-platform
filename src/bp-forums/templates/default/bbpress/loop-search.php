@@ -3,8 +3,7 @@
 /**
  * Search Loop
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
 */
 
 ?>

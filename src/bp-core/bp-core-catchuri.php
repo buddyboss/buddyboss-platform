@@ -5,8 +5,7 @@
  * Functions for parsing the URI and determining which BuddyPress template file
  * to use on-screen.
  *
- * @package BuddyBoss
- * @subpackage Core
+ * @package BuddyBoss\Core
  * @since BuddyPress 1.0.0
  */
 

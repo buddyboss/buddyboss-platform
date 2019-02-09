@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Settings Template Functions.
  *
- * @package BuddyBoss
- * @subpackage SettingsTemplate
+ * @package BuddyBoss\Settings\Template
  * @since BuddyPress 1.5.0
  */
 

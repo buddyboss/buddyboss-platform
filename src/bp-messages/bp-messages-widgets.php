@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Messages Widgets.
  *
- * @package BuddyBoss
- * @subpackage Messages
+ * @package BuddyBoss\Messages
  * @since BuddyPress 1.9.0
  */
 

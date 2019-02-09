@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Groups Filters.
  *
- * @package BuddyBoss
- * @subpackage GroupsFilters
+ * @package BuddyBoss\Groups\Filters
  * @since BuddyPress 1.0.0
  */
 

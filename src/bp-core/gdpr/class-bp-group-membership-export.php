@@ -2,8 +2,7 @@
 /**
  * Export API: BP_Group_Membership_Export class
  *
- * @package BuddyBoss
- * @subpackage GDPR
+ * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
  */
 

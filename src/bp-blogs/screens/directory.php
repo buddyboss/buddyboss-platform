@@ -2,8 +2,7 @@
 /**
  * Blogs: Directory screen handler
  *
- * @package BuddyBoss
- * @subpackage BlogsScreens
+ * @package BuddyBoss\Blogs\Screens
  * @since BuddyPress 3.0.0
  */
 

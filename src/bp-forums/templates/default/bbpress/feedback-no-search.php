@@ -3,8 +3,7 @@
 /**
  * No Search Results Feedback Part
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 ?>

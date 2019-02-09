@@ -3,8 +3,7 @@
 /**
  * Template Name: Forums - Topics (No Replies)
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 get_header(); ?>

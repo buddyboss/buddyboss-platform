@@ -7,8 +7,7 @@
  * Component. It's a great example of how to perform both simple and advanced
  * techniques to manipulate Forums' default output.
  *
- * @package BuddyBoss
- * @subpackage Forums
+ * @package BuddyBoss\Forums
  * @todo maybe move to BuddyBoss Forums once bbPress 1.1 can be removed
  */
 

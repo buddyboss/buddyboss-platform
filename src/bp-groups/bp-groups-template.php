@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Groups Template Functions.
  *
- * @package BuddyBoss
- * @subpackage GroupsTemplates
+ * @package BuddyBoss\Groups\Templates
  * @since BuddyPress 1.5.0
  */
 

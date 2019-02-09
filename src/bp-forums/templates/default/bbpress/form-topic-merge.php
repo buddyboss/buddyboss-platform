@@ -3,8 +3,7 @@
 /**
  * Merge Topic
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 ?>

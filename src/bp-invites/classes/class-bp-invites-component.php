@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Invites Component Class.
  *
- * @package BuddyBoss
- * @subpackage InvitesLoader
+ * @package BuddyBoss\Invites\Loader
  * @since BuddyBoss 1.0.0
  */
 

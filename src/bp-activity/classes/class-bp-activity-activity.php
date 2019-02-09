@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Activity Classes
  *
- * @package BuddyBoss
- * @subpackage Activity
+ * @package BuddyBoss\Activity
  * @since BuddyPress 1.0.0
  */
 

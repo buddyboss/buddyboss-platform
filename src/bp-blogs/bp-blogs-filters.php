@@ -2,8 +2,7 @@
 /**
  * Filters related to the Blogs component.
  *
- * @package BuddyBoss
- * @subpackage BlogFilters
+ * @package BuddyBoss\Blog\Filters
  * @since BuddyPress 1.6.0
  */
 

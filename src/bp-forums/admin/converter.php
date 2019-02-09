@@ -5,8 +5,7 @@
  *
  * Based on the hard work of Adam Ellis at http://bbconverter.com
  *
- * @package BuddyBoss
- * @subpackage Administration
+ * @package BuddyBoss\Administration
  */
 
 // Exit if accessed directly

@@ -3,8 +3,7 @@
 /**
  * Forums Admin Settings
  *
- * @package BuddyBoss
- * @subpackage Administration
+ * @package BuddyBoss\Administration
  */
 
 // Exit if accessed directly

@@ -2,8 +2,7 @@
 /**
  * BuddyPress Member Loader.
  *
- * @package BuddyBoss
- * @subpackage Members
+ * @package BuddyBoss\Members
  * @since BuddyPress 1.5.0
  */
 

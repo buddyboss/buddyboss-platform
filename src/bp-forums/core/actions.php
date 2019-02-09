@@ -3,8 +3,7 @@
 /**
  * Forums Actions
  *
- * @package BuddyBoss
- * @subpackage Core
+ * @package BuddyBoss\Core
  */
 
 /**

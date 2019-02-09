@@ -4,8 +4,7 @@
  *
  * A invites component, Allow your users to send email invites to non-members to join the network.
  *
- * @package BuddyBoss
- * @subpackage InvitesLoader
+ * @package BuddyBoss\Invites\Loader
  * @since BuddyBoss 1.0.0
  */
 

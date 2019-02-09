@@ -5,8 +5,7 @@
  *
  * Used to map topic capabilities to WordPress's existing capabilities.
  *
- * @package BuddyBoss
- * @subpackage Capabilities
+ * @package BuddyBoss\Capabilities
  */
 
 /**

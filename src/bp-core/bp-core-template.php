@@ -2,8 +2,7 @@
 /**
  * Core component template tag functions.
  *
- * @package BuddyBoss
- * @subpackage TemplateFunctions
+ * @package BuddyBoss\Template\Functions
  * @since BuddyPress 1.5.0
  */
 

@@ -2,8 +2,7 @@
 /**
  * BuddyPress XProfile Admin.
  *
- * @package BuddyBoss
- * @subpackage XProfileAdmin
+ * @package BuddyBoss\XProfile
  * @since BuddyPress 1.0.0
  */
 

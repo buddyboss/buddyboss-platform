@@ -3,8 +3,7 @@
 /**
  * User Favorites
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 ?>

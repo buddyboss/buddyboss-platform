@@ -3,8 +3,7 @@
 /**
  * Forums User Options
  *
- * @package BuddyBoss
- * @subpackage UserOptions
+ * @package BuddyBoss\User\Options
  */
 
 // Exit if accessed directly

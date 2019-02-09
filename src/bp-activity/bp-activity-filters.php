@@ -1,9 +1,8 @@
 <?php
 /**
- * Filters related to the Activity component.
+ * Filters related to the Activity Feeds component.
  *
- * @package BuddyBoss
- * @subpackage ActivityFilters
+ * @package BuddyBoss\Activity\Filters
  * @since BuddyPress 1.0.0
  */
 
@@ -832,7 +831,7 @@ add_filter( 'bp_activity_set_mentions_scope_args', 'bp_activity_filter_mentions_
 /**
  * Filter the members loop on a follow page.
  *
- * This is done so we can return the users that:
+ * This is done so we can return users that:
  *   - the current user is following (on a user page or member directory); or
  *   - are following the displayed user on the displayed user's followers page
  *

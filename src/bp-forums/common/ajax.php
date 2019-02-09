@@ -6,8 +6,7 @@
  * Common AJAX functions are ones that are used to setup and/or use during
  * Forums specific, theme-side  AJAX requests.
  *
- * @package BuddyBoss
- * @subpackage Ajax
+ * @package BuddyBoss\Ajax
  */
 
 // Exit if accessed directly

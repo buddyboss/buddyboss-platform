@@ -4,8 +4,7 @@
  *
  * Handles the core functions related to the WordPress Toolbar.
  *
- * @package BuddyBoss
- * @subpackage Core
+ * @package BuddyBoss\Core
  * @since BuddyPress 1.0.0
  */
 

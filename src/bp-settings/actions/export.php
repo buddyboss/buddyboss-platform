@@ -2,8 +2,7 @@
 /**
  * Settings: export data action handler
  *
- * @package BuddyBoss
- * @subpackage SettingsActions
+ * @package BuddyBoss\Settings\Actions
  * @since BuddyBoss 1.0.0
  */
 

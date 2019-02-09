@@ -3,8 +3,7 @@
 /**
  * Forums Updater
  *
- * @package BuddyBoss
- * @subpackage Updater
+ * @package BuddyBoss\Updater
  */
 
 // Exit if accessed directly

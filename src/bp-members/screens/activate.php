@@ -2,8 +2,7 @@
 /**
  * Members: Activate screen handler
  *
- * @package BuddyBoss
- * @subpackage MembersScreens
+ * @package BuddyBoss\Members\Screens
  * @since BuddyPress 3.0.0
  */
 

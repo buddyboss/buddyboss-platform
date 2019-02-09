@@ -3,8 +3,7 @@
 /**
  * Search Loop - Single Topic
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 ?>

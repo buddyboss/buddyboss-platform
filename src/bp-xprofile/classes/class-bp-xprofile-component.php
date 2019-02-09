@@ -5,8 +5,7 @@
  * An extended profile component for users. This allows site admins to create
  * groups of fields for users to enter information about themselves.
  *
- * @package BuddyBoss
- * @subpackage XProfileLoader
+ * @package BuddyBoss\XProfileLoader
  * @since BuddyPress 1.5.0
  */
 

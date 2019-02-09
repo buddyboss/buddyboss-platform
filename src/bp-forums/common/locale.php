@@ -3,8 +3,7 @@
 /**
  * Forums Localization
  *
- * @package BuddyBoss
- * @subpackage Localization
+ * @package BuddyBoss\Localization
  */
 
 // Exit if accessed directly

@@ -2,8 +2,7 @@
 /**
  * Functions related to the BuddyBoss Activity component and the WP Cache.
  *
- * @package BuddyBoss
- * @subpackage ActivityCache
+ * @package BuddyBoss\Activity\Cache
  * @since BuddyPress 1.6.0
  */
 

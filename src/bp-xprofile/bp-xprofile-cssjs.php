@@ -2,8 +2,7 @@
 /**
  * BuddyPress XProfile CSS and JS.
  *
- * @package BuddyBoss
- * @subpackage XProfileScripts
+ * @package BuddyBoss\XProfile
  * @since BuddyPress 1.0.0
  */
 

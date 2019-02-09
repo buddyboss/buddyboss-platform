@@ -4,8 +4,7 @@
  *
  * Functions that are safe to use inside your template files and themes.
  *
- * @package BuddyBoss
- * @subpackage Members
+ * @package BuddyBoss\Members
  * @since BuddyPress 1.5.0
  */
 

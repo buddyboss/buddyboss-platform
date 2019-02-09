@@ -2,8 +2,7 @@
 /**
  * BuddyPress XProfile Notifications.
  *
- * @package    BuddyPress
- * @subpackage XProfileSettings
+ * @package BuddyPress\XProfile
  * @since BuddyPress 1.0.0
  */
 

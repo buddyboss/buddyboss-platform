@@ -5,8 +5,7 @@
  * Caching functions handle the clearing of cached objects and pages on specific
  * actions throughout BuddyPress.
  *
- * @package BuddyBoss
- * @subpackage BlogsCache
+ * @package BuddyBoss\Blogs\Cache
  * @since BuddyPress 1.5.0
  */
 

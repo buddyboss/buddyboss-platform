@@ -3,8 +3,7 @@
 /**
  * Forums Classes
  *
- * @package BuddyBoss
- * @subpackage Classes
+ * @package BuddyBoss\Classes
  */
 
 // Exit if accessed directly

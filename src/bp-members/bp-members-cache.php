@@ -2,8 +2,7 @@
 /**
  * Caching functions specific to BuddyPress Members.
  *
- * @package BuddyBoss
- * @subpackage MembersCache
+ * @package BuddyBoss\Members\Cache
  * @since BuddyPress 2.2.0
  */
 

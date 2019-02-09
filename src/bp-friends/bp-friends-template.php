@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Connections Template Functions.
  *
- * @package BuddyBoss
- * @subpackage ConnectionsTemplate
+ * @package BuddyBoss\Connections\Template
  * @since BuddyPress 1.5.0
  */
 

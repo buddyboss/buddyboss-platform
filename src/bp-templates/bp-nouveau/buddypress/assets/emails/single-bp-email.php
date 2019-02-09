@@ -9,8 +9,7 @@
  * @since BuddyPress 2.5.0
  * @version 3.1.0
  *
- * @package BuddyBoss
- * @subpackage Core
+ * @package BuddyBoss\Core
  */
 
 /*

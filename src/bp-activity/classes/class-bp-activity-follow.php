@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Follow Classes.
  *
- * @package BuddyBoss
- * @subpackage FollowClasses
+ * @package BuddyBoss\Follow\Classes
  * @since BuddyBoss 1.0.0
 
  */

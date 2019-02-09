@@ -2,8 +2,7 @@
 /**
  * Roles and capabilities logic for the XProfile component.
  *
- * @package BuddyBoss
- * @subpackage XPRofileCaps
+ * @package BuddyBoss\XProfile
  * @since BuddyPress 1.6.0
  */
 

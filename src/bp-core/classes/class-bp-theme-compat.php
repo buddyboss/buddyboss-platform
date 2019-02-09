@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Core Theme Compatibility Base Class.
  *
- * @package BuddyBoss
- * @subpackage ThemeCompatibility
+ * @package BuddyBoss\Theme\Compatibility
  * @since BuddyPress 1.7.0
  */
 

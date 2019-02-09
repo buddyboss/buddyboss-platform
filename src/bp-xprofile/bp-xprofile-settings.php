@@ -2,8 +2,7 @@
 /**
  * BuddyPress XProfile Settings.
  *
- * @package    BuddyPress
- * @subpackage XProfileSettings
+ * @package BuddyPress\XProfile
  * @since BuddyPress 2.0.0
  */
 

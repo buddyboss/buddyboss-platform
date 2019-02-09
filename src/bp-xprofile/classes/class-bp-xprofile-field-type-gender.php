@@ -2,8 +2,7 @@
 /**
  * BuddyPress XProfile Classes.
  *
- * @package BuddyBoss
- * @subpackage XProfileClasses
+ * @package BuddyBoss\XProfileClasses
  * @since BuddyBoss 1.0.0
  */
 

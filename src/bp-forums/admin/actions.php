@@ -3,8 +3,7 @@
 /**
  * Forums Admin Actions
  *
- * @package BuddyBoss
- * @subpackage Admin
+ * @package BuddyBoss\Admin
  */
 
 /**

@@ -3,8 +3,7 @@
 /**
  * Forums Filters
  *
- * @package BuddyBoss
- * @subpackage Core
+ * @package BuddyBoss\Core
  */
 
 /**

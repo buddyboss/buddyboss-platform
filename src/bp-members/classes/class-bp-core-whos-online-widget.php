@@ -2,8 +2,7 @@
 /**
  * BuddyPress Members Who's Online Widget.
  *
- * @package BuddyBoss
- * @subpackage MembersWidgets
+ * @package BuddyBoss\Members\Widgets
  * @since BuddyPress 1.0.0
  */
 

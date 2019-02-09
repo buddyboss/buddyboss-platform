@@ -2,8 +2,7 @@
 /**
  * Signups Management class.
  *
- * @package BuddyBoss
- * @subpackage coreClasses
+ * @package BuddyBoss\Signup
  * @since BuddyPress 2.0.0
  */
 

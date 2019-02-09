@@ -7,8 +7,7 @@
  * hand off to a database class for data access, then return
  * true or false on success or failure.
  *
- * @package BuddyBoss
- * @subpackage InvitesFunctions
+ * @package BuddyBoss\Invites\Functions
  * @since BuddyBoss 1.0.0
  */
 

@@ -2,8 +2,7 @@
 /**
  * BuddyBoss LearnDash Loader.
  *
- * @package BuddyBoss
- * @subpackage LearnDash
+ * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
  */
 

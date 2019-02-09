@@ -8,8 +8,7 @@
  * The code below mostly contains function mappings. This file is subject to
  * change at any time.
  *
- * @package BuddyBoss
- * @subpackage WPAbstraction
+ * @package BuddyBoss\WPAbstraction
  * @since BuddyPress 1.2.0
  */
 

@@ -3,8 +3,7 @@
 /**
  * Edit Topic Tag
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 ?>

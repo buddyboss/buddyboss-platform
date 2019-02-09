@@ -2,8 +2,7 @@
 /**
  * Activity: Post action
  *
- * @package BuddyBoss
- * @subpackage ActivityActions
+ * @package BuddyBoss\Activity\Actions
  * @since BuddyPress 3.0.0
  */
 

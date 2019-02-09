@@ -2,8 +2,7 @@
 /**
  * Groups: Create action
  *
- * @package BuddyBoss
- * @subpackage GroupActions
+ * @package BuddyBoss\Group\Actions
  * @since BuddyPress 3.0.0
  */
 

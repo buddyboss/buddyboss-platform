@@ -5,8 +5,7 @@
  * Backwards compatibility functions and filters used for member notifications.
  * Use bp-notifications instead.
  *
- * @package BuddyBoss
- * @subpackage Member Notifications
+ * @package BuddyBoss\Member Notifications
  */
 
 // Exit if accessed directly

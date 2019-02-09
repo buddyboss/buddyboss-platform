@@ -6,8 +6,7 @@
  *
  * @since BuddyPress 2.6.0
  *
- * @package BuddyBoss
- * @subpackage ActivityEmbeds
+ * @package BuddyBoss\Activity\Embeds
  */
 
 // Exit if accessed directly.

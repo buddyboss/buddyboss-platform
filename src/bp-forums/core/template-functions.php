@@ -7,8 +7,7 @@
  * loading process. Many of those functions are not filterable, and even then
  * would not be robust enough to predict where Forums templates might exist.
  *
- * @package BuddyBoss
- * @subpackage TemplateFunctions
+ * @package BuddyBoss\Template\Functions
  */
 
 // Exit if accessed directly

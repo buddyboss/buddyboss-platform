@@ -2,8 +2,7 @@
 /**
  * Activity: User's "Activity > Mentions" screen handler
  *
- * @package BuddyBoss
- * @subpackage ActivityScreens
+ * @package BuddyBoss\Activity\Screens
  * @since BuddyPress 3.0.0
  */
 

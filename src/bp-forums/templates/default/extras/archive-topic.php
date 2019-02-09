@@ -3,8 +3,7 @@
 /**
  * Forums - Topic Archive
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 get_header(); ?>

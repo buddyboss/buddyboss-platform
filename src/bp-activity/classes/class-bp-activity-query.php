@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Activity Classes
  *
- * @package BuddyBoss
- * @subpackage ActivityQuery
+ * @package BuddyBoss\Activity\Query
  * @since BuddyPress 2.2.0
  */
 

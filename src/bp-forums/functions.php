@@ -3,8 +3,7 @@
 /**
  * Main Forums BuddyBoss Class
  *
- * @package BuddyBoss
- * @subpackage Forums
+ * @package BuddyBoss\Forums
  * @todo maybe move to BuddyBoss Forums once bbPress 1.1 can be removed
  */
 

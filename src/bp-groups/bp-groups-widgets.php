@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Groups Widgets
  *
- * @package BuddyBoss
- * @subpackage GroupsWidgets
+ * @package BuddyBoss\Groups\Widgets
  * @since BuddyPress 1.0.0
  */
 

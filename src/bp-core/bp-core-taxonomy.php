@@ -6,8 +6,7 @@
  * Because BuddyPress can be activated in various ways in a network environment, we
  * must switch to the root blog before using the WP functions.
  *
- * @package BuddyBoss
- * @subpackage Core
+ * @package BuddyBoss\Core
  * @since BuddyPress 2.2.0
  */
 

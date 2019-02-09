@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Settings Functions
  *
- * @package BuddyBoss
- * @subpackage SettingsFunctions
+ * @package BuddyBoss\Settings\Functions
  * @since BuddyPress 1.5.0
  */
 

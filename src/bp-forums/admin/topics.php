@@ -3,8 +3,7 @@
 /**
  * Forums Topics Admin Class
  *
- * @package BuddyBoss
- * @subpackage Administration
+ * @package BuddyBoss\Administration
  * @since bbPress (r2464)
  */
 

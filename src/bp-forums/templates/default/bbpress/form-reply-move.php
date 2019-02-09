@@ -3,8 +3,7 @@
 /**
  * Move Reply
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 ?>

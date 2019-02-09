@@ -4,8 +4,7 @@
  *
  * Functions and filters used in the Notifications component.
  *
- * @package BuddyBoss
- * @subpackage NotificationsFunctions
+ * @package BuddyBoss\Notifications\Functions
  * @since BuddyPress 1.9.0
  */
 

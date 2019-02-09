@@ -2,8 +2,7 @@
 /**
  * BuddyPress Members List Table for Multisite.
  *
- * @package BuddyBoss
- * @subpackage MembersAdminClasses
+ * @package BuddyBoss\Members\AdminClasses
  * @since BuddyPress 2.3.0
  */
 

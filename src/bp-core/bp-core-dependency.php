@@ -13,8 +13,7 @@
  * The following functions are wrappers for hooks, allowing them to be
  * manually called and/or piggy-backed on top of other hooks if needed.
  *
- * @package BuddyBoss
- * @subpackage Core
+ * @package BuddyBoss\Core
  * @since BuddyPress 1.7.0
  */
 

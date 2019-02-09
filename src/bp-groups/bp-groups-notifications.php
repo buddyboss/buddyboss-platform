@@ -5,8 +5,7 @@
  * These functions handle the recording, deleting and formatting of notifications
  * for the user and for this specific component.
  *
- * @package BuddyBoss
- * @subpackage GroupsActivity
+ * @package BuddyBoss\Groups\Activity
  * @since BuddyPress 1.0.0
  */
 

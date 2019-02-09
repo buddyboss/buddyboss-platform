@@ -8,8 +8,7 @@
  * are subject to changes, tweaking, and will need iteration as performance
  * improvements are made to WordPress core.
  *
- * @package BuddyBoss
- * @subpackage Cache
+ * @package BuddyBoss\Cache
  * @since bbPress (r4011)
  */
 

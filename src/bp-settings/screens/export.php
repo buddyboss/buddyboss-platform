@@ -2,8 +2,7 @@
 /**
  * Settings: User's "Settings > Export Data" screen handler
  *
- * @package BuddyBoss
- * @subpackage SettingsScreens
+ * @package BuddyBoss\Settings\Screens
  * @since BuddyBoss 1.0.0
  */
 

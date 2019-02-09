@@ -2,8 +2,7 @@
 /**
  * BuddyPress Blogs Recent Posts Widget.
  *
- * @package BuddyBoss
- * @subpackage BlogsWidgets
+ * @package BuddyBoss\Blogs\Widgets
  * @since BuddyPress 1.0.0
  */
 

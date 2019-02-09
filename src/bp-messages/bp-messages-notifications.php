@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Messages Notifications.
  *
- * @package BuddyBoss
- * @subpackage MessagesNotifications
+ * @package BuddyBoss\Messages\Notifications
  * @since BuddyPress 1.0.0
  */
 

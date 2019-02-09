@@ -4,8 +4,7 @@
  *
  * Core contains the commonly used functions, classes, and APIs.
  *
- * @package BuddyBoss
- * @subpackage Core
+ * @package BuddyBoss\Core
  * @since BuddyPress 1.5.0
  */
 

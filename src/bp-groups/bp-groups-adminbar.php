@@ -4,8 +4,7 @@
  *
  * Handles the groups functions related to the WordPress Toolbar.
  *
- * @package BuddyBoss
- * @subpackage Groups
+ * @package BuddyBoss\Groups
  * @since BuddyPress 1.5.0
  */
 

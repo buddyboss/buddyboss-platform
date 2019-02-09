@@ -2,8 +2,7 @@
 /**
  * Messages: Conversation thread screen handler
  *
- * @package BuddyBoss
- * @subpackage MessageScreens
+ * @package BuddyBoss\Message\Screens
  * @since BuddyPress 3.0.0
  */
 

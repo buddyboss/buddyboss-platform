@@ -3,8 +3,7 @@
 /**
  * Single Reply
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 get_header(); ?>

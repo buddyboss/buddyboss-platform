@@ -7,8 +7,7 @@
  *
  * $Id: bbpress.php 6686 2017-09-09 15:04:06Z johnjamesjacoby $
  *
- * @package bbPress
- * @subpackage Main
+ * @package BuddyBoss\Main
  */
 
 if ( !class_exists( 'bbPress' ) ) :

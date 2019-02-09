@@ -2,8 +2,7 @@
 /**
  * Deprecated functions
  *
- * @package BuddyBoss
- * @subpackage Core
+ * @package BuddyBoss\Core
  * @deprecated 2.1.0
  */
 

@@ -2,8 +2,7 @@
 /**
  * Connections: User's "Connections > Requests" screen handler
  *
- * @package BuddyBoss
- * @subpackage ConnectionsScreens
+ * @package BuddyBoss\Connections\Screens
  * @since BuddyPress 3.0.0
  */
 

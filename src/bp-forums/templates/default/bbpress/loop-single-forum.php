@@ -3,8 +3,7 @@
 /**
  * Forums Loop - Single Forum
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 ?>

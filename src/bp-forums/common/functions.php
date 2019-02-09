@@ -6,8 +6,7 @@
  * Common functions are ones that are used by more than one component, like
  * forums, topics, replies, users, topic tags, etc...
  *
- * @package BuddyBoss
- * @subpackage Functions
+ * @package BuddyBoss\Functions
  */
 
 // Exit if accessed directly

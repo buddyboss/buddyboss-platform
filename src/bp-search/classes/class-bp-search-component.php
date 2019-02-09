@@ -4,8 +4,7 @@
  *
  * The search component allow your users to search the entire network
  *
- * @package BuddyBoss
- * @subpackage Search
+ * @package BuddyBoss\Search
  * @since BuddyBoss 1.0.0
  */
 

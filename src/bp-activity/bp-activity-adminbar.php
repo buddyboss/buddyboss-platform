@@ -4,8 +4,7 @@
  *
  * Handles the activity functions related to the WordPress Toolbar.
  *
- * @package BuddyBoss
- * @subpackage Activity
+ * @package BuddyBoss\Activity
  */
 
 // Exit if accessed directly.

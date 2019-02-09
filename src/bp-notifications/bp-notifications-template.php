@@ -2,8 +2,7 @@
 /**
  * BuddyPress Notifications Template Functions.
  *
- * @package BuddyBoss
- * @subpackage TonificationsTemplate
+ * @package BuddyBoss\Tonifications\Template
  * @since BuddyPress 1.9.0
  */
 

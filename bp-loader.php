@@ -5,8 +5,7 @@
  *
  * BuddyBoss Platform adds community features to WordPress.
  *
- * @package BuddyPress
- * @subpackage Main
+ * @package BuddyPress\Main
  */
 
 /**

@@ -3,8 +3,7 @@
 /**
  * Forums User Template Tags
  *
- * @package BuddyBoss
- * @subpackage TemplateTags
+ * @package BuddyBoss\Template\Tags
  */
 
 // Exit if accessed directly

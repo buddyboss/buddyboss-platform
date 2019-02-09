@@ -13,8 +13,7 @@
  * code, what's in these files is pure madness. It should not be used as an
  * example of anything other than successfully juggling chainsaws and puppy-dogs.
  *
- * @package BuddyBoss
- * @subpackage Forums
+ * @package BuddyBoss\Forums
  */
 
 // Exit if accessed directly

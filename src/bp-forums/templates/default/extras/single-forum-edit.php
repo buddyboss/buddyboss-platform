@@ -3,8 +3,7 @@
 /**
  * Edit handler for forums
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 get_header(); ?>

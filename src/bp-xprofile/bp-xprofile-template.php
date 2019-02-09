@@ -2,8 +2,7 @@
 /**
  * BuddyPress XProfile Template Tags.
  *
- * @package BuddyBoss
- * @subpackage XProfileTemplate
+ * @package BuddyBoss\XProfile
  * @since BuddyPress 1.5.0
  */
 

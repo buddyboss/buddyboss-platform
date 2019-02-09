@@ -4,8 +4,7 @@
  *
  * The forums component allow groups to have discusstion..
  *
- * @package BuddyBoss
- * @subpackage Forum
+ * @package BuddyBoss\Forum
  * @since BuddyBoss 1.0.0
  */
 

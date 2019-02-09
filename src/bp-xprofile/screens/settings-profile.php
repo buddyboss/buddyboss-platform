@@ -2,8 +2,7 @@
 /**
  * XProfile: User's "Settings > Profile Visibility" screen handler
  *
- * @package BuddyBoss
- * @subpackage XProfileScreens
+ * @package BuddyBoss\XProfileScreens
  * @since BuddyPress 3.0.0
  */
 

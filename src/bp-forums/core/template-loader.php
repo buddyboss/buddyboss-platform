@@ -3,8 +3,7 @@
 /**
  * Forums Template Loader
  *
- * @package BuddyBoss
- * @subpackage TemplateLoader
+ * @package BuddyBoss\Template\Loader
  */
 
 // Exit if accessed directly

@@ -4,8 +4,7 @@
  *
  * Admin Bar functions for the Notifications component.
  *
- * @package BuddyBoss
- * @subpackage NotificationsToolbar
+ * @package BuddyBoss\Notifications\Toolbar
  * @since BuddyPress 1.9.0
  */
 

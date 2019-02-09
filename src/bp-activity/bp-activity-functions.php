@@ -4,8 +4,7 @@
  *
  * Functions for the Activity Feeds component.
  *
- * @package BuddyBoss
- * @subpackage ActivityFunctions
+ * @package BuddyBoss\Activity\Functions
  * @since BuddyPress 1.5.0
  */
 
@@ -1068,7 +1067,7 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0 ) {
 }
 
 /**
- * Get like count string for activity
+ * Get like count for activity
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1178,7 +1177,7 @@ function bp_activity_get_favorite_users_string( $activity_id ) {
 }
 
 /**
- * Check if activity favorites data needs upgrade & Update activity favorites data
+ * Check if BuddyPress activity favorites data needs upgrade & Update to BuddyBoss activity like data
  *
  * @since BuddyBoss 1.0.0
  */
@@ -3918,7 +3917,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 /**
  * Return if the activity stream should show activty comments as streamed or threaded
  *
- * @since BuddyBoss 1.0.0
+ * 
  */
 function bp_show_streamed_activity_comment() {
 	return apply_filters( 'bp_show_streamed_activity_comment', bp_get_option('show_streamed_activity_comment', false) );

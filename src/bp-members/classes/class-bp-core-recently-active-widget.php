@@ -2,8 +2,7 @@
 /**
  * BuddyPress Members Recently Active widget.
  *
- * @package BuddyBoss
- * @subpackage MembersWidgets
+ * @package BuddyBoss\Members\Widgets
  * @since BuddyPress 1.0.3
  */
 

@@ -3,8 +3,7 @@
 /**
  * Template Name: Forums - User Lost Password
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 // No logged in users

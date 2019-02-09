@@ -3,8 +3,7 @@
 /**
  * Forums Formatting
  *
- * @package BuddyBoss
- * @subpackage Formatting
+ * @package BuddyBoss/Formatting
  */
 
 // Exit if accessed directly

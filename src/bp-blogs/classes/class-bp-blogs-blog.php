@@ -2,8 +2,7 @@
 /**
  * BuddyPress Blogs Classes.
  *
- * @package BuddyBoss
- * @subpackage BlogsClasses
+ * @package BuddyBoss\Blogs\Classes
  * @since BuddyPress 1.0.0
  */
 

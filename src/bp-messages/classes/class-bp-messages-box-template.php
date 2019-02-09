@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Messages Box Template Class.
  *
- * @package BuddyBoss
- * @subpackage MessagesTemplate
+ * @package BuddyBoss\Messages\Template
  * @since BuddyPress 1.5.0
  */
 

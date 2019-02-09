@@ -2,8 +2,7 @@
 /**
  * Settings: Capabilities action handler
  *
- * @package BuddyBoss
- * @subpackage SettingsActions
+ * @package BuddyBoss\Settings\Actions
  * @since BuddyPress 3.0.0
  */
 

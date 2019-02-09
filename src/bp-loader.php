@@ -4,8 +4,7 @@
  *
  * BuddyBoss is social networking software with a twist.
  *
- * @package BuddyBoss
- * @subpackage Main
+ * @package BuddyBoss\Main
  * @since BuddyPress 1.0.0
  */
 

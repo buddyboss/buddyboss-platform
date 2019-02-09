@@ -4,8 +4,7 @@
  *
  * An activity feed component, for users, groups, and site tracking.
  *
- * @package BuddyBoss
- * @subpackage ActivityCore
+ * @package BuddyBoss\Activity\Core
  * @since BuddyPress 1.5.0
  */
 

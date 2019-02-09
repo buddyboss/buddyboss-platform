@@ -2,8 +2,7 @@
 /**
  * BuddyPress Member Activity
  *
- * @package BuddyBoss
- * @subpackage MembersActivity
+ * @package BuddyBoss\Members\Activity
  * @since BuddyPress 2.2.0
  */
 

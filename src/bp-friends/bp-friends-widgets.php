@@ -2,8 +2,7 @@
 /**
  * BuddyBoss Connections Widgets.
  *
- * @package BuddyBoss
- * @subpackage Connections
+ * @package BuddyBoss\Connections
  * @since BuddyPress 1.9.0
  */
 

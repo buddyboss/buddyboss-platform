@@ -4,8 +4,7 @@
  *
  * This class calls all other classes associated with GDPR member data export.
  *
- * @package BuddyBoss
- * @subpackage GDPR
+ * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
  */
 

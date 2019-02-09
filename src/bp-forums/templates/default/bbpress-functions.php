@@ -3,8 +3,7 @@
 /**
  * Functions of Forums' Default theme
  *
- * @package BuddyBoss
- * @subpackage BBP_Theme_Compat
+ * @package BuddyBoss\BBP_Theme_Compat
  * @since bbPress (r3732)
  */
 

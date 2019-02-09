@@ -2,8 +2,7 @@
 /**
  * Main BuddyBoss Admin Tab Class.
  *
- * @package BuddyBoss
- * @subpackage CoreAdministration
+ * @package BuddyBoss\Core\Administration
  * @since BuddyBoss 1.0.0
  */
 

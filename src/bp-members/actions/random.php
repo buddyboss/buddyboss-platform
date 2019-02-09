@@ -2,8 +2,7 @@
 /**
  * Members: Random member action handler
  *
- * @package BuddyBoss
- * @subpackage MembersActions
+ * @package BuddyBoss\Members\Actions
  * @since BuddyPress 3.0.0
  */
 

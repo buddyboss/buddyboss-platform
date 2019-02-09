@@ -3,8 +3,7 @@
 /**
  * Pagination for pages of replies (when viewing a topic)
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 ?>

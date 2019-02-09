@@ -3,8 +3,7 @@
 /**
  * Forums Forum Functions
  *
- * @package BuddyBoss
- * @subpackage Functions
+ * @package BuddyBoss\Functions
  */
 
 // Exit if accessed directly

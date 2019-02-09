@@ -2,8 +2,7 @@
 /**
  * Export API: BP_Xprofile_Export class
  *
- * @package BuddyBoss
- * @subpackage GDPR
+ * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
  */
 

@@ -2,8 +2,7 @@
 /**
  * Core BuddyPress Navigational Functions.
  *
- * @package BuddyBoss
- * @subpackage Core
+ * @package BuddyBoss\Core
  * @since BuddyPress 1.5.0
  *
  * @todo Deprecate BuddyBar functions.

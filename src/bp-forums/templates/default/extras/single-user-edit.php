@@ -3,8 +3,7 @@
 /**
  * Forums User Profile Edit
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 get_header(); ?>

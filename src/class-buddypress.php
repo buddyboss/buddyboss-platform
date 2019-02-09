@@ -319,7 +319,7 @@ class BuddyPress {
 	 * Component global variables.
 	 *
 	 * @since BuddyPress 1.6.0
-	 * @since BuddyBoss 1.0.0 Now using BuddyBoss version number
+	 * @since BuddyBoss 1.0.0
 	 *
 	 */
 	private function setup_globals() {

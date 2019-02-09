@@ -3,8 +3,7 @@
 /**
  * Replies Loop - Single Reply
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 ?>

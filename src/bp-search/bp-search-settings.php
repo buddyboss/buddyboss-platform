@@ -2,8 +2,7 @@
 /**
  * Search Settings
  *
- * @package BuddyBoss
- * @subpackage Search
+ * @package BuddyBoss\Search
  * @since BuddyBoss 1.0.0
  */
 

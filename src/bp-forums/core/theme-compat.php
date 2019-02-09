@@ -3,8 +3,7 @@
 /**
  * Forums Core Theme Compatibility
  *
- * @package BuddyBoss
- * @subpackage ThemeCompatibility
+ * @package BuddyBoss\Theme\Compatibility
  */
 
 // Exit if accessed directly

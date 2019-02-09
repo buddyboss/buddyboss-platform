@@ -7,8 +7,7 @@
  * hand off to a database class for data access, then return
  * true or false on success or failure.
  *
- * @package BuddyBoss
- * @subpackage XProfileFunctions
+ * @package BuddyBoss\XProfile
  * @since BuddyPress 1.5.0
  */
 

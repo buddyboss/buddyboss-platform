@@ -2,8 +2,7 @@
 /**
  * BuddyPress WP emails.
  *
- * @package BuddyBoss
- * @subpackage Core
+ * @package BuddyBoss\Core
  * @since BuddyBoss 1.0.0
  */
 

@@ -6,8 +6,7 @@
  * robust sub-component API that allows Groups to be extended.
  * Comes preconfigured with an activity feed, discussion forums, and settings.
  *
- * @package BuddyBoss
- * @subpackage GroupsLoader
+ * @package BuddyBoss\Groups\Loader
  * @since BuddyPress 1.5.0
  */
 

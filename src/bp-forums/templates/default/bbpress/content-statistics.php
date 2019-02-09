@@ -3,8 +3,7 @@
 /**
  * Statistics Content Part
  *
- * @package BuddyBoss
- * @subpackage Theme
+ * @package BuddyBoss\Theme
  */
 
 // Get the statistics

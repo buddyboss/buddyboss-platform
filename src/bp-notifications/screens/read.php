@@ -2,8 +2,7 @@
 /**
  * Notifications: User's "Notifications > Read" screen handler
  *
- * @package BuddyBoss
- * @subpackage NotificationsScreens
+ * @package BuddyBoss\Notifications\Screens
  * @since BuddyPress 3.0.0
  */
 

@@ -6,8 +6,7 @@
  * They are consolidated here to make searching for them easier, and to help
  * developers understand at a glance the order in which things occur.
  *
- * @package BuddyBoss
- * @subpackage Hooks
+ * @package BuddyBoss\Hooks
  * @since BuddyPress 1.6.0
  */
 

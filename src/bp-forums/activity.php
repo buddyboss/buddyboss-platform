@@ -3,8 +3,7 @@
 /**
  * Forums BuddyBoss Activity Class
  *
- * @package BuddyBoss
- * @subpackage Forums
+ * @package BuddyBoss\Forums
  * @since bbPress (r3395)
  */
 

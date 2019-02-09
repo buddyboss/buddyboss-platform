@@ -2,8 +2,7 @@
 /**
  * Core component CSS & JS.
  *
- * @package BuddyBoss
- * @subpackage Core
+ * @package BuddyBoss\Core
  * @since BuddyPress 1.0.0
  */
 
