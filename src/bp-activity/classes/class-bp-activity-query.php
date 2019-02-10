@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Activity Classes
+ * BuddyBoss Activity Query Classes
  *
- * @package BuddyBoss\Activity\Query
+ * @package BuddyBoss\Activity
  * @since BuddyPress 2.2.0
  */
 

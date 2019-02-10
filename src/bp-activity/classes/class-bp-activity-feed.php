@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Activity Classes.
+ * BuddyBoss Activity Feed RSS Classes.
  *
- * @package BuddyBoss\Activity\Feeds
+ * @package BuddyBoss\Activity
  * @since BuddyPress 1.8.0
  */
 

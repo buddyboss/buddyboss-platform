@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Follow Classes.
  *
- * @package BuddyBoss\Follow\Classes
+ * @package BuddyBoss\Activity
  * @since BuddyBoss 1.0.0
 
  */
@@ -11,7 +11,7 @@
 if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
- * BuddyBoss Follow Object.
+ * BuddyBoss Follow Component.
  *
  * Handles populating and saving follow relationships.
  *
@@ -57,7 +57,7 @@ class BP_Activity_Follow {
 	}
 
 	/**
-	 * Populate method.
+	 * Populate follow relationship id.
 	 *
 	 * Used in constructor.
 	 *
@@ -72,7 +72,7 @@ class BP_Activity_Follow {
 	}
 
 	/**
-	 * Saves a follow relationship into the database.
+	 * Saves a follow relationship to the database.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

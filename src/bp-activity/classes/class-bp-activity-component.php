@@ -1,10 +1,10 @@
 <?php
 /**
- * BuddyBoss Activity Feeds Loader.
+ * BuddyBoss Activity Feed Loader.
  *
  * An activity feed component, for users, groups, and site tracking.
  *
- * @package BuddyBoss\Activity\Core
+ * @package BuddyBoss\Activity
  * @since BuddyPress 1.5.0
  */
 

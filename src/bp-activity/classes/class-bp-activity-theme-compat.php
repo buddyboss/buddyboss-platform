@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Activity Theme Compatibility.
  *
- * @package BuddyBoss
+ * @package BuddyBoss\Activity
  * @since BuddyPress 1.7.0
  */
 

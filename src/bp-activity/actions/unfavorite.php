@@ -1,13 +1,13 @@
 <?php
 /**
- * Activity: Unfavorite action
+ * Activity: Remove like
  *
- * @package BuddyBoss\Activity\Actions
+ * @package BuddyBoss\Activity\Actions\Like
  * @since BuddyPress 3.0.0
  */
 
 /**
- * Remove activity from favorites.
+ * Remove activity from likes.
  *
  * @since BuddyPress 1.2.0
  *

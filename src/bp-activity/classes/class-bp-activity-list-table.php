@@ -5,7 +5,7 @@
  * Props to WordPress core for the Comments admin screen, and its contextual
  * help text, on which this implementation is heavily based.
  *
- * @package BuddyBoss\Activity\Admin
+ * @package BuddyBoss\Activity
  * @since BuddyPress 1.6.0
  */
 

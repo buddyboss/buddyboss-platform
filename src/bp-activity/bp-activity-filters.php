@@ -2,7 +2,7 @@
 /**
  * Filters related to the Activity Feeds component.
  *
- * @package BuddyBoss\Activity\Filters
+ * @package BuddyBoss\Activity
  * @since BuddyPress 1.0.0
  */
 
@@ -867,9 +867,6 @@ add_filter( 'bp_ajax_querystring', 'bp_add_member_follow_scope_filter', 20, 2 );
  * Set up activity arguments for use with the 'following' scope.
  *
  * For details on the syntax, see {@link BP_Activity_Query}.
- *
- * Only applicable to BuddyPress 2.2+.  Older BP installs uses the code
- * available in /backpat/activity-scope.php.
  *
  * @since BuddyBoss 1.0.0
  *

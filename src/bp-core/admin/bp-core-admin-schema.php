@@ -201,7 +201,7 @@ function bp_core_install_friends() {
 }
 
 /**
- * Install database tables for the Follow feature.
+ * Install database tables for the Follow component.
  *
  * @since BuddyBoss 1.0.0
  *

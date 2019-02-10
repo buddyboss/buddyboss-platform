@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Activity Notifications.
  *
- * @package BuddyBoss\Activity\Notifications
+ * @package BuddyBoss\Activity
  * @since BuddyPress 1.2.0
  */
 

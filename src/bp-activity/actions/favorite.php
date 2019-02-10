@@ -1,13 +1,13 @@
 <?php
 /**
- * Activity: Favorite action
+ * Activity: Like action
  *
- * @package BuddyBoss\Activity\Actions
+ * @package BuddyBoss\Activity\Actions\Like
  * @since BuddyPress 3.0.0
  */
 
 /**
- * Mark activity as favorite.
+ * Mark activity as liked.
  *
  * @since BuddyPress 1.2.0
  *

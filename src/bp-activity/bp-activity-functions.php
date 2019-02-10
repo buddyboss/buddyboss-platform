@@ -4,7 +4,7 @@
  *
  * Functions for the Activity Feeds component.
  *
- * @package BuddyBoss\Activity\Functions
+ * @package BuddyBoss\Activity
  * @since BuddyPress 1.5.0
  */
 

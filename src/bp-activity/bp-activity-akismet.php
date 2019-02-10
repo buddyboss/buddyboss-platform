@@ -2,7 +2,7 @@
 /**
  * Akismet support for BuddyPress' Activity Feed.
  *
- * @package BuddyBoss\Activity\Akismet
+ * @package BuddyBoss\Activity
  * @since BuddyPress 1.6.0
  */
 

@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyBoss Activity Classes.
+ * BuddyBoss oEmbed Classes.
  *
- * @package BuddyBoss\Embeds
+ * @package BuddyBoss\Activity\Embeds
  */
 
 // Exit if accessed directly.
