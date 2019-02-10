@@ -1,7 +1,8 @@
 <?php
 /*
  * Allow automatic updates from BuddyBoss servers
- * Version : 1.0
+ *
+ * @since BuddyBoss 1.0.0
 */
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;

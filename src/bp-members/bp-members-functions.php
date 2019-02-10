@@ -2830,7 +2830,7 @@ function bp_custom_display_name_format( $display_name, $user_id = null ) {
 }
 
 /**
- * Function for enable/disable member type functionality.
+ * Enable/disable member type functionality.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -3023,7 +3023,7 @@ function bp_get_member_type_key( $post_id ) {
 }
 
 /**
- * Function for getting members by role.
+ * Get members by role.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3065,7 +3065,7 @@ function bp_get_member_type_by_wp_role($role){
 }
 
 /**
- * Function for removing the role from member type.
+ * Removes the role from member type.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3082,7 +3082,7 @@ function bp_remove_member_type_to_roles($wp_roles, $member_type){
 }
 
 /**
- * Function for setting the member type to roles.
+ * Sets the member type to roles.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3099,7 +3099,7 @@ function bp_set_member_type_to_roles($wp_roles, $member_type){
 }
 
 /**
- * Function for getting a user by their role.
+ * Gets a user by their role.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3159,7 +3159,7 @@ function bp_set_user_member_type( $user_id, $member_type, $append = false ) {
 }
 
 /**
- * Gets member types id.
+ * Gets member type id.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3179,7 +3179,7 @@ function bp_member_type_type_id( $type_name ) {
 }
 
 /**
- * Gets member types term taxonomy id.
+ * Gets member type term taxonomy id.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3247,7 +3247,7 @@ function bp_member_type_by_type( $type_id ) {
 }
 
 /**
- * Function for getting an active member by type.
+ * Gets an active member by type.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3314,7 +3314,7 @@ function bp_plural_labels_array() {
 }
 
 /**
- * Function for removed member type.
+ * Removed member type.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3354,7 +3354,7 @@ function bp_get_removed_member_types(){
 }
 
 /**
- * Function for get members removed member type.
+ * Get members removed member type.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3431,7 +3431,7 @@ function bp_register_active_member_types() {
 }
 
 /**
- * Function for excluding specific member types from search and listing.
+ * Exclud specific member types from search and listing.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3465,7 +3465,7 @@ function bp_member_type_exclude_users_from_directory_and_searches( $qs=false, $o
 }
 
 /**
- * set member type while update user profile.
+ * Set member type while updating user profile.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3482,7 +3482,7 @@ function bp_update_user_member_type_type_set( $user_id, $user_role ) {
 }
 
 /**
- * fix all member count.
+ * Fix all member count.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3499,7 +3499,7 @@ function bp_fixed_all_member_type_count( $count ){
 }
 
 /**
- * Function for displaying a users by it's type.
+ * Displays a user by it's type.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -3558,7 +3558,7 @@ function bp_member_type_query( $query ) {
 }
 
 /**
- * remove member type metabox for users who doesn't have permission to change member types.
+ * Remove member type metabox for users who doesn't have permission to change member types.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3570,7 +3570,7 @@ function bp_remove_member_type_metabox() {
 }
 
 /**
- * Function for removing metabox feom extended profile if globally disabled.
+ * Removes metabox from member profile if member types are disabled.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -3600,7 +3600,7 @@ function bp_member_type_add_column( $columns ) {
 }
 
 /**
- * display data of columns.
+ * Display data by column and post id.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3654,7 +3654,7 @@ function bp_member_type_show_data( $column, $post_id  ) {
 }
 
 /**
- * Function for setting up a column on admin view on member type post type.
+ * Sets up a column on admin view on member type post type.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3673,7 +3673,7 @@ function bp_member_type_add_sortable_columns( $columns ) {
 }
 
 /**
- * Function adding a filter to member type sort items.
+ * Adds a filter to member type sort items.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3743,7 +3743,7 @@ function bp_member_type_hide_quickedit( $actions, $post ) {
 }
 
 /**
- * Function for adding body class where the shortcode added.
+ * Adds body class where the shortcode is added.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3766,7 +3766,7 @@ function bp_member_type_shortcode_add_body_class( $class ) {
 }
 
 /**
- * Function for displaying a shortcode data.
+ * Displays shortcode data.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3819,7 +3819,7 @@ function bp_member_type_shortcode_callback( $atts ) {
 }
 
 /**
- * Function for adding a filter on shortcode.
+ * Adds a filter on shortcode.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3842,7 +3842,7 @@ function bp_member_type_shortcode_filter( $query_string, $object ){
 }
 
 /**
- * Function for adding the js on member type post type.
+ * Adds the JS on member type post type.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -3877,7 +3877,7 @@ function bp_member_type_changing_listing_label() {
 }
 
 /**
- * Function which give the member type of particular user.
+ * Get member type.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3944,7 +3944,7 @@ function bp_get_user_member_type( $user_id ) {
 }
 
 /**
- * Function which will return "his", "her" or "their" based on their gender which we will use in activity.
+ * Return "his", "her" or "their" based on member selected gender, used in activity feeds.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3977,7 +3977,7 @@ function bp_get_user_gender_pronoun_type( $user_id = '' ) {
 }
 
 /**
- * Sets authorisation cookies containing the originating user information.
+ * Sets authorization cookies containing the originating user information.
  *
  * @since BuddyBoss 1.0.0
  *

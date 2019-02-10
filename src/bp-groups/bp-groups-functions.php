@@ -2700,8 +2700,9 @@ function bp_get_current_group_directory_type() {
 }
 
 /**
- * Is this a user's "My Groups" view? This can happen on the main directory or
+ * Check if this is a user's "My Groups" view? This can happen on the main directory or
  * at a user's profile (/members/username/groups/).
+ *
  * @since BuddyBoss 1.0.0
  *
  * @return bool True if yes.
@@ -2803,7 +2804,7 @@ function bp_groups_get_invited_by( $user_id = false, $group_id = false ) {
 }
 
 /**
- * Get a user's invite message.
+ * Get user's invite message.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -2815,7 +2816,7 @@ function bp_groups_get_invite_messsage_for_user( $user_id, $group_id ) {
 }
 
 /**
- * Clear a user's invite message.
+ * Clear user's invite message.
  *
  * Message is cleared when an invite is accepted, rejected or deleted.
  *
@@ -2832,7 +2833,7 @@ add_action( 'groups_reject_invite', 'bp_groups_clear_invite_message_for_user', 1
 add_action( 'groups_delete_invite', 'bp_groups_clear_invite_message_for_user', 10, 2 );
 
 /**
- * Clear a user's invite message on uninvite.
+ * Clear user's invite message on uninvite.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3065,7 +3066,7 @@ function bp_get_total_count_by_group_types( $group_type = '', $taxonomy = 'bp_gr
 }
 
 /**
- * Function for displaying a short code data.
+ * Sisplays shortcode data.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3135,7 +3136,7 @@ function bp_group_type_short_code_add_body_class( $class ) {
 }
 
 /**
- * Function for excluding specific group types from search and listing.
+ * Excluds specific group types from search and listing.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3164,7 +3165,7 @@ function bp_group_type_exclude_groups_from_directory_and_searches( $qs=false, $o
 }
 
 /**
- * Function for get groups removed from group type.
+ * Get groups removed from group type.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3202,7 +3203,7 @@ function bp_get_groups_of_removed_group_types() {
 }
 
 /**
- * Function for making a array flatten.
+ * Flatten array.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3315,7 +3316,7 @@ function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_grou
 }
 
 /**
- * Function for getting the post id of particular member type.
+ * Gets the post id of particular member type.
  *
  * @since BuddyBoss 1.0.0
  *

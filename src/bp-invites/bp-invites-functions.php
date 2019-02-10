@@ -90,7 +90,7 @@ function bp_get_invite_post_type_supports() {
 }
 
 /**
- * Is this the 'accept-invitation' page?
+ * Check if the current page is 'accept-invitation'?
  *
  * @since BuddyBoss 1.0.0
  *
@@ -107,7 +107,7 @@ function bp_invites_member_invite_invitation_page() {
 }
 
 /**
- * Function for unlocking the registration if globally registrations disabled.
+ * Allows invited users to register even if registration is disabled.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -170,9 +170,8 @@ function bp_invites_member_invite_remove_registration_lock() {
 add_action( 'wp', 'bp_invites_member_invite_remove_registration_lock', 1 );
 
 /**
- * Function will check like the email is invited or not
- * also it will set the auto populate email based on the url
- * and also it will show the welcome message to register page.
+ * Checks if the email is connected to an active invite, populates the email address
+ * and shows the welcome message on the register page.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -237,7 +236,7 @@ function bp_invites_member_invite_register_screen_message() {
 add_action( 'bp_before_register_page', 'bp_invites_member_invite_register_screen_message' );
 
 /**
- * Function which gives all the invited records from the DB based on email.
+ * Get all the invited records for a member by email.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -270,7 +269,7 @@ function bp_invites_member_invite_get_invitations_by_invited_email( $email ) {
 }
 
 /**
- * Function which return the subject of invites email.
+ * Returns the subject of invite email.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -299,7 +298,7 @@ function bp_get_member_invitation_subject() {
 }
 
 /**
- * Function which return the body content of invites email.
+ * Returns the body content of invite email.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -360,7 +359,7 @@ function bp_get_invites_member_invite_url() {
 }
 
 /**
- * Function which will replace the token to it's appropriate content dynamically.
+ * Replaces the token, {{ }}, to it's appropriate content dynamically.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -403,7 +402,7 @@ function bp_get_member_invites_wildcard_replace( $text, $email = false ) {
 }
 
 /**
- * Function which will mark the user as registered.
+ * Mark the invited user as registered.
  *
  * @since BuddyBoss 1.0.0
  *

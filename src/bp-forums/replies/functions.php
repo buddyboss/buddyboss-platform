@@ -2248,7 +2248,7 @@ function bbp_validate_reply_to( $reply_to = 0, $reply_id = 0 ) {
 }
 
 /**
- * Adjust forum labels that make more sense
+ * Change forum role labels to conform to BuddyBoss Platform naming conventions
  *
  * @since BuddyBoss 1.0.0
  */

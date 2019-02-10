@@ -20,7 +20,7 @@ if ( !class_exists( 'WP_List_Table' ) ) require( ABSPATH . 'wp-admin/includes/cl
 add_action( 'bp_loaded', 'bp_register_invite_type_sections_filters_actions' );
 
 /**
- * Function for register the invite admin action and filters.
+ * Registers the invite admin action and filters.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -76,7 +76,7 @@ function bp_invite_add_column( $columns ) {
 }
 
 /**
- * display data of columns.
+ * Display data by column and post id.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -139,7 +139,7 @@ function bp_invite_show_data( $column, $post_id  ) {
 }
 
 /**
- * Function for setting up a column on admin view on invite post type.
+ * Sets up a column on admin view on invite post type.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -159,7 +159,7 @@ function bp_invite_add_sortable_columns( $columns ) {
 }
 
 /**
- * Function adding a filter to invite sort items.
+ * Adds a filter to invite sort items.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -316,7 +316,7 @@ function invites_admin_menu_order( $custom_menus = array() ) {
 }
 
 /**
- * Function for revoke the bulk invitations.
+ * Bulk revoke invitations.
  *
  * @param $redirect
  * @param $doaction
@@ -352,7 +352,7 @@ function bp_invites_bulk_action_handler( $redirect, $doaction, $object_ids ) {
 }
 
 /**
- * Function for adding a revoke invitations success message.
+ * Revoke invitation success message.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -370,7 +370,7 @@ function bp_invite_bulk_action_notices() {
 }
 
 /**
- * Function for adding a JS popup while bulk revoke invitations.
+ * Javascript popup to confirm bulk revoke invitations.
  *
  * @since BuddyBoss 1.0.0
  *

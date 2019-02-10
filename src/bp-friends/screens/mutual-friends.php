@@ -3,8 +3,11 @@
  * Connections: User's "Connections" screen handler
  *
  * @package BuddyBoss\Connections\Screens
- * @since BuddyPress 3.0.0
+ * @since BuddyBoss 1.0.0
  */
+ 
+ // Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Catch and process the Mutual Connections page.

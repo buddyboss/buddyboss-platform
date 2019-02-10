@@ -684,7 +684,7 @@ function bbp_group_is_creator() {
 }
 
 /**
- * Function for enabling the TinyMce in Forum Topic and reply content.
+ * Enables the TinyMce in Forum Topic and reply content.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -708,7 +708,7 @@ function bbp_forum_topics_reply_enable_tinymce_editor( $args = array() ) {
 add_filter( 'bbp_after_get_the_content_parse_args', 'bbp_forum_topics_reply_enable_tinymce_editor' );
 
 /**
- * Function for TinyMce settings in Forum Topic and reply content.
+ * Enable TinyMce Quicktags in Forum Topic and reply content.
  *
  * @since BuddyBoss 1.0.0
  *

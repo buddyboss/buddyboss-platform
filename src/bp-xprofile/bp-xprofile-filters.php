@@ -698,7 +698,7 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $vlaue, $user_
 }
 
 /**
- * Function which validate the phone number is valid or not.
+ * Validate phone number format.
  *
  * @since BuddyBoss 1.0.0
  *

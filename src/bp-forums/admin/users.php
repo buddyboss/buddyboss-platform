@@ -49,7 +49,7 @@ class BBP_Users_Admin {
 	}
 
 	/**
-	 * Remove bbp's dynamic roles from user role list
+	 * Remove bbPress's dynamic roles from user role list
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

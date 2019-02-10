@@ -1,5 +1,20 @@
 <?php
+/**
+ * Add admin General settings page in Dashboard->BuddyBoss->Settings
+ *
+ * @package BuddyBoss\Core
+ *
+ * @since BuddyBoss 1.0.0
+ */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Main class.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 	public function initialize() {

@@ -57,9 +57,7 @@ class BP_Activity_Follow {
 	}
 
 	/**
-	 * Populate follow relationship id.
-	 *
-	 * Used in constructor.
+	 * Populate the object with data about the specific follow item.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

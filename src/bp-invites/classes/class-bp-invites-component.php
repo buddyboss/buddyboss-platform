@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Creates our Invites component.
+ * Creates Invites component.
  *
  * @since BuddyBoss 1.0.0
  */

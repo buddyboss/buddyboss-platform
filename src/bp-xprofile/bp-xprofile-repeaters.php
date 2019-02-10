@@ -10,11 +10,12 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Set maximum number of field sets
+ *
  * @since BuddyBoss 1.0.0
  * @return int
  */
 function bp_profile_field_set_max_cap () {
-    //how many maximum number of sets of a field can be added
     return 100;
 }
 
@@ -47,6 +48,8 @@ function bp_get_repeater_template_field_ids ( $field_group_id ) {
 }
 
 /**
+ * @todo Add Title/Description
+ *
  * @since BuddyBoss 1.0.0
  * @global type $wpdb
  * @param type $field_group_id
@@ -102,6 +105,8 @@ function bp_get_repeater_clone_field_ids_subset ( $field_group_id, $count ) {
 }
 
 /**
+ * @todo Add Title/Description
+ *
  * @since BuddyBoss 1.0.0
  * @global type $wpdb
  * @param type $field_group_id
@@ -137,6 +142,7 @@ function bp_get_repeater_clone_field_ids_all ( $field_group_id ) {
 add_action( 'xprofile_updated_profile', 'bp_profile_repeaters_update_field_data', 11, 5 );
 /**
  * Update/Sort repeater fields when profile data is updated.
+ *
  * @since BuddyBoss 1.0.0
  */
 function bp_profile_repeaters_update_field_data ( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {

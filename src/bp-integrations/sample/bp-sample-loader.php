@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Sample Integration Loader.
  *
- * @package BuddyBoss\LearnDash
+ * @package BuddyBoss\Sample
  * @since BuddyBoss 1.0.0
  */
 

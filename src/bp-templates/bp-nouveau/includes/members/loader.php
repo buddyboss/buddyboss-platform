@@ -51,8 +51,7 @@ class BP_Nouveau_Members {
 	 * Register do_action() hooks
 	 *
 	 * @since BuddyPress 3.0.0
-     * @since BuddyBoss 1.0.0 
-     * Addition: Hooked bp_nouveau_admin_bar_member_dashboard to bp_setup_admin_bar action
+     * @since BuddyBoss 1.0.0 Hooked bp_nouveau_admin_bar_member_dashboard to bp_setup_admin_bar action
 	 */
 	protected function setup_actions() {
 		$ajax_actions = array(

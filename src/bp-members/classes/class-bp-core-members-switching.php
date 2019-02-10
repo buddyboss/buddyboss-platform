@@ -45,6 +45,7 @@ class BP_Core_Members_Switching {
 
 	/**
 	 * Defines the names of the cookies used by Member Switching.
+	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function action_plugins_loaded() {
@@ -108,6 +109,7 @@ class BP_Core_Members_Switching {
 
 	/**
 	 * Loads localisation files and routes actions depending on the 'action' query var.
+	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function action_init() {

@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * Main Integration Class.
+ *
+ * @package BuddyBoss\Core
+ * @since BuddyBoss 1.0.0
+ */
 
 class BP_Integration {
 

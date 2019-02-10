@@ -49,7 +49,7 @@ function xprofile_add_admin_menu() {
 add_action( bp_core_admin_hook(), 'xprofile_add_admin_menu' );
 
 /**
- * Function for opening the users tab while on Profile Types
+ * Opens the users tab while on Profile Types
  *
  * @since BuddyBoss 1.0.0
  */
@@ -91,7 +91,7 @@ function bp_member_type_show_correct_current_menu(){
 add_action('admin_head', 'bp_member_type_show_correct_current_menu', 50);
 
 /**
- * Function for opening the users tab while on Profile Search
+ * Opens the users tab while on Profile Search
  *
  * @since BuddyBoss 1.0.0
  */
@@ -723,7 +723,7 @@ function xprofile_ajax_reorder_field_groups() {
 add_action( 'wp_ajax_xprofile_reorder_groups', 'xprofile_ajax_reorder_field_groups' );
 
 /**
- * Function which check the gender field previously added or not.
+ * Check if the gender field has been added.
  *
  * @since BuddyBoss 1.0.0
  *

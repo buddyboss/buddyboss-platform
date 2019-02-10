@@ -1481,7 +1481,7 @@ function bp_register_group_type_sections_filters_actions() {
 }
 
 /**
- * Function for opening the groups tab while on group types add/edit page.
+ * Opens the groups tab while on group types add/edit page.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -1518,7 +1518,7 @@ function bp_group_type_show_correct_current_menu(){
 }
 
 /**
- * Custom metaboxes used by our 'bp-group-type' post type.
+ * Custom metaboxes used by 'bp-group-type' post type.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -1644,7 +1644,7 @@ function bp_group_short_code_meta_box( $post ) {
 }
 
 /**
- * Function for displaying all the member types.
+ * Sisplays all the member types.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1675,7 +1675,7 @@ function bp_group_type_auto_join_member_type_meta_box( $post ) {
 }
 
 /**
- * Function for displaying all settings of group invites.
+ * Displays all settings of group invites.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1734,7 +1734,7 @@ function bp_group_type_add_column( $columns ) {
 }
 
 /**
- * display data of columns.
+ * Display data by column and post id.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1784,7 +1784,7 @@ function bp_group_type_show_data( $column, $post_id  ) {
 }
 
 /**
- * Function for setting up a column on admin view on group type post type.
+ * Sets up a column in admin view on group type post type.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1803,7 +1803,7 @@ function bp_group_type_add_sortable_columns( $columns ) {
 }
 
 /**
- * Function adding a filter to group type sort items.
+ * Adds a filter to group type sort items.
  *
  * @since BuddyBoss 1.0.0
  *

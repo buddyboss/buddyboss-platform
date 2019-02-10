@@ -3,6 +3,8 @@
  * Core component classes.
  *
  * @package BuddyBoss\Core
+ *
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly
@@ -204,8 +206,8 @@ class BP_Email_Tokens {
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td height="16px" style="font-size: 16px; line-height: 16px;">
-                                                        &nbsp;
+                                                    <td height="16px" style="font-size: 16px; line-height: 16px;">&nbsp;
+                                                        
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -842,8 +844,8 @@ class BP_Email_Tokens {
                                             <table cellpadding="0" cellspacing="0" border="0" width="100%"
                                                    style="width: 100%;">
                                                 <tr>
-                                                    <td height="10px" style="font-size: 10px; line-height: 10px;">
-                                                        &nbsp;
+                                                    <td height="10px" style="font-size: 10px; line-height: 10px;">&nbsp;
+                                                        
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -856,8 +858,8 @@ class BP_Email_Tokens {
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td height="30px" style="font-size: 30px; line-height: 30px;">
-                                                        &nbsp;
+                                                    <td height="30px" style="font-size: 30px; line-height: 30px;">&nbsp;
+                                                        
                                                     </td>
                                                 </tr>
 												<tr>
@@ -936,7 +938,7 @@ class BP_Email_Tokens {
 	}
 
 	/**
-	 * Generate the output for toke sender.url
+	 * Generate the output for token sender.url
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *

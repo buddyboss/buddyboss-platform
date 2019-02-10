@@ -5726,7 +5726,7 @@ function bp_group_current_admin_tab() {
 	}
 
 /**
- * Echoes the current group members tab slug.
+ * Outputs the current group members tab slug.
  *
  * @since BuddyBoss 1.0.0
  */
