@@ -778,9 +778,9 @@ class BP_Members_Admin {
 				'id'      => 'bp-profile-edit-overview',
 				'title'   => __( 'Overview', 'buddyboss' ),
 				'content' =>
-				'<p>' . __( 'This is the admin view of a user&#39;s profile.', 'buddyboss' ) . '</p>' .
-				'<p>' . __( 'In the main column, you can edit the fields of the user&#39;s extended profile.', 'buddyboss' ) . '</p>' .
-				'<p>' . __( 'In the right-hand column, you can update the user&#39;s status, delete the user&#39;s avatar, and view recent statistics.', 'buddyboss' ) . '</p>'
+				'<p>' . __( 'This is the admin view of a user\'s profile.', 'buddyboss' ) . '</p>' .
+				'<p>' . __( 'In the main column, you can edit the fields of the user\'s extended profile.', 'buddyboss' ) . '</p>' .
+				'<p>' . __( 'In the right-hand column, you can update the user\'s status, delete the user\'s avatar, and view recent statistics.', 'buddyboss' ) . '</p>'
 			) );
 
 			// Help panel - sidebar links.
@@ -2024,7 +2024,7 @@ class BP_Members_Admin {
 				<?php endif;
 
 				if ( $usersearch ) {
-					printf( '<span class="subtitle">' . __( 'Search results for &#8220;%s&#8221;', 'buddyboss' ) . '</span>', esc_html( $usersearch ) );
+					printf( '<span class="subtitle">' . __( 'Search results for "%s"', 'buddyboss' ) . '</span>', esc_html( $usersearch ) );
 				}
 				?>
 
@@ -2045,7 +2045,7 @@ class BP_Members_Admin {
 					<?php endif;
 
 					if ( $usersearch ) {
-						printf( '<span class="subtitle">' . __( 'Search results for &#8220;%s&#8221;', 'buddyboss' ) . '</span>', esc_html( $usersearch ) );
+						printf( '<span class="subtitle">' . __( 'Search results for "%s"', 'buddyboss' ) . '</span>', esc_html( $usersearch ) );
 					}
 
 					?>

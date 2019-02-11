@@ -126,7 +126,7 @@ class BBP_Forums_Admin {
 			'id'		=> 'screen-content',
 			'title'		=> __( 'Screen Content', 'buddyboss' ),
 			'content'	=>
-				'<p>' . __( 'You can customize the display of this screen&#8217;s contents in a number of ways:', 'buddyboss' ) . '</p>' .
+				'<p>' . __( 'You can customize the display of this screen\'s contents in a number of ways:', 'buddyboss' ) . '</p>' .
 				'<ul>' .
 					'<li>' . __( 'You can hide/display columns based on your needs and decide how many forums to list per screen using the Screen Options tab.',                                                                                                                                'buddyboss' ) . '</li>' .
 					'<li>' . __( 'You can filter the list of forums by forum status using the text links in the upper left to show All, Published, or Trashed forums. The default view is to show all forums.',                                                                                 'buddyboss' ) . '</li>' .
@@ -143,7 +143,7 @@ class BBP_Forums_Admin {
 				'<ul>' .
 					'<li>' . __( '<strong>Edit</strong> takes you to the editing screen for that forum. You can also reach that screen by clicking on the forum title.',                                                                              'buddyboss' ) . '</li>' .
 					'<li>' . __( '<strong>Trash</strong> removes your forum from this list and places it in the trash, from which you can permanently delete it.',                                                                                    'buddyboss' ) . '</li>' .
-					'<li>' . __( '<strong>View</strong> will show you what your draft forum will look like if you publish it. View will take you to your live site to view the forum. Which link is available depends on your forum&#8217;s status.', 'buddyboss' ) . '</li>' .
+					'<li>' . __( '<strong>View</strong> will show you what your draft forum will look like if you publish it. View will take you to your live site to view the forum. Which link is available depends on your forum\'s status.', 'buddyboss' ) . '</li>' .
 				'</ul>'
 		) );
 
@@ -185,7 +185,7 @@ class BBP_Forums_Admin {
 			'id'      => 'title-forum-editor',
 			'title'   => __( 'Title and Forum Editor', 'buddyboss' ),
 			'content' =>
-				'<p>' . __( '<strong>Title</strong> - Enter a title for your forum. After you enter a title, you&#8217;ll see the permalink below, which you can edit.', 'buddyboss' ) . '</p>' .
+				'<p>' . __( '<strong>Title</strong> - Enter a title for your forum. After you enter a title, you\'ll see the permalink below, which you can edit.', 'buddyboss' ) . '</p>' .
 				'<p>' . __( '<strong>Forum Editor</strong> - Enter the text for your forum. There are two modes of editing: Visual and HTML. Choose the mode by clicking on the appropriate tab. Visual mode gives you a WYSIWYG editor. Click the last icon in the row to get a second row of controls. The HTML mode allows you to enter raw HTML along with your forum text. You can insert media files by clicking the icons above the forum editor and following the directions. You can go to the distraction-free writing screen via the Fullscreen icon in Visual mode (second to last in the top row) or the Fullscreen button in HTML mode (last in the row). Once there, you can make buttons visible by hovering over the top area. Exit Fullscreen back to the regular forum editor.', 'buddyboss' ) . '</p>'
 		) );
 

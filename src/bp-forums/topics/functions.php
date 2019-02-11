@@ -261,7 +261,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	/** Topic Duplicate *******************************************************/
 
 	if ( !bbp_check_for_duplicate( array( 'post_type' => bbp_get_topic_post_type(), 'post_author' => $topic_author, 'post_content' => $topic_content, 'anonymous_data' => $anonymous_data ) ) )
-		bbp_add_error( 'bbp_topic_duplicate', __( '<strong>ERROR</strong>: Duplicate discussion detected; it looks as though you&#8217;ve already said that!', 'buddyboss' ) );
+		bbp_add_error( 'bbp_topic_duplicate', __( '<strong>ERROR</strong>: Duplicate discussion detected; it looks as though you\'ve already said that!', 'buddyboss' ) );
 
 	/** Topic Blacklist *******************************************************/
 

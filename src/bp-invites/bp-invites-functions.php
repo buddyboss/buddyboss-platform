@@ -223,7 +223,7 @@ function bp_invites_member_invite_register_screen_message() {
 		}
 
 		if ( ! empty( $inviters_names ) ) {
-			$message = sprintf( _n( 'Welcome! You&#8217;ve been invited to join the site by the following user: %s. Please fill out the information below to create your account.', 'Welcome! You&#8217;ve been invited to join the site by the following users: %s. Please fill out the information below to create your account.', count( $inviters_names ), 'buddyboss' ), implode( ', ', $inviters_names ) );
+			$message = sprintf( _n( 'Welcome! You\'ve been invited to join the site by the following user: %s. Please fill out the information below to create your account.', 'Welcome! You\'ve been invited to join the site by the following users: %s. Please fill out the information below to create your account.', count( $inviters_names ), 'buddyboss' ), implode( ', ', $inviters_names ) );
             
             echo '<aside class="bp-feedback bp-messages info"><span class="bp-icon" aria-hidden="true"></span><p>' . esc_html( $message ) . '</p></aside>';
 		}
