@@ -27,12 +27,11 @@ class ForumsReportsGenerator extends ReportsGenerator
 		];
 	}
 
-	protected function columns()
-	{
-		return [
-			'user_id'         => $this->column('user_id'),
-			'user'  => $this->column('user'),
-			'topic' => [
+	protected function columns() {
+		$columns = [
+			'user_id'   => $this->column( 'user_id' ),
+			'user'      => $this->column( 'user' ),
+			'topic'     => [
 				'label'     => __( 'Forum Topic', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'topic_title',
@@ -48,16 +47,27 @@ class ForumsReportsGenerator extends ReportsGenerator
 				'order_key' => 'post_date_gmt',
 			],
 		];
+
+		// Only Add `Status` Column at the time of exporting CSV
+		if ( $this->hasArg( 'export' ) && $this->args['export'] ) {
+			$columns['status'] = [
+				'label'     => __( 'Status', 'buddyboss' ),
+				'sortable'  => false,
+				'order_key' => '',
+			];
+		}
+
+		return $columns;
 	}
 
-	protected function formatData($activity)
-	{
+	protected function formatData( $activity ) {
 		return [
-			'user_id'         => $activity->user_id,
+			'user_id'   => $activity->user_id,
 			'user'      => $activity->user_display_name,
 			'topic'     => $activity->topic_title,
-			'reply'     => wp_trim_words($activity->last_reply_content, 15, '...'),
-			'post_date' => get_date_from_gmt($activity->topic_post_date, $this->args['date_format']),
+			'reply'     => wp_trim_words( $activity->last_reply_content, 15, '...' ),
+			'post_date' => get_date_from_gmt( $activity->topic_post_date, $this->args['date_format'] ),
+			'status'    => empty( $activity->last_reply_id ) ? $this->incompleted_table_title : $this->completed_table_title,
 		];
 	}
 
@@ -148,13 +158,15 @@ class ForumsReportsGenerator extends ReportsGenerator
 		return $strJoins;
 	}
 
-	public function addAdditionalWhere($strWhere)
-	{
-		$compare = $this->args['completed']? 'IS NOT' : 'IS';
+	public function addAdditionalWhere( $strWhere ) {
+		// check if this condition does not get add when exporting CSV
+		if ( empty( $this->args['export'] ) ) {
+			$compare = $this->args['completed'] ? 'IS NOT' : 'IS';
 
-		$strWhere .= "
+			$strWhere .= "
 			HAVING last_reply_id {$compare} NULL
 		";
+		}
 
 		return $strWhere;
 	}
