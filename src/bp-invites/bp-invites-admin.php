@@ -273,7 +273,7 @@ function bp_invite_hide_quick_edit( $actions, $post ) {
 }
 
 /**
- * Function for removing the bulk actions of bp-invite post type.
+ * Remove the bulk actions of bp-invite post type.
  *
  * @since BuddyBoss 1.0.0
  *

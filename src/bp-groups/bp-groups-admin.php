@@ -1873,7 +1873,7 @@ function bp_group_type_hide_quick_edit( $actions, $post ) {
 }
 
 /**
- * Function for saving meta boxes data of group type post data.
+ * Save group type post data.
  * @param $post_id
  *
  * @since BuddyBoss 1.0.0
