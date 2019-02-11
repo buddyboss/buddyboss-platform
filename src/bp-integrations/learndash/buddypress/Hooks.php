@@ -25,7 +25,9 @@ class Hooks
 	}
 
 	public function export_report_column( $columns, $report_generator ) {
-		$columns['status'] = $report_generator->column( 'status' );
+		if ( ! empty( $report_generator->args['step'] ) && in_array( $report_generator->args['step'], array( 'forum' ) ) ) {
+			$columns['status'] = $report_generator->column( 'status' );
+		}
 
 		return $columns;
 	}

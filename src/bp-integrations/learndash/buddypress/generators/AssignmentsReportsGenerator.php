@@ -57,13 +57,6 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 		];
 	}
 
-	protected function formatDataForExport( $data, $activity ) {
-		$assignment_approved = learndash_is_assignment_approved_by_meta( $activity->assignment_id );
-		$data['status'] = empty( $assignment_approved ) ? $this->incompleted_table_title : $this->completed_table_title;
-
-		return $data;
-	}
-
 	protected function formatData($activity)
 	{
 		return [
@@ -101,18 +94,16 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 			]
 		];
 
-		if ( empty( $this->args['export'] ) ) {
-			if ( $this->args['completed'] ) {
-				$args['meta_query'][] = [
-					'key'   => 'approval_status',
-					'value' => 1
-				];
-			} else {
-				$args['meta_query'][] = [
-					'key'     => 'approval_status',
-					'compare' => 'NOT EXISTS'
-				];
-			}
+		if ($this->args['completed']) {
+			$args['meta_query'][] = [
+				'key' => 'approval_status',
+				'value' => 1
+			];
+		} else {
+			$args['meta_query'][] = [
+				'key' => 'approval_status',
+				'compare' => 'NOT EXISTS'
+			];
 		}
 
 		if ($this->hasArg('user') && $this->args['user']) {
