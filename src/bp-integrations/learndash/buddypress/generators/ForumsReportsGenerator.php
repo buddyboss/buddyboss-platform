@@ -28,7 +28,7 @@ class ForumsReportsGenerator extends ReportsGenerator
 	}
 
 	protected function columns() {
-		$columns = [
+		return [
 			'user_id'   => $this->column( 'user_id' ),
 			'user'      => $this->column( 'user' ),
 			'topic'     => [
@@ -47,17 +47,11 @@ class ForumsReportsGenerator extends ReportsGenerator
 				'order_key' => 'post_date_gmt',
 			],
 		];
+	}
 
-		// Only Add `Status` Column at the time of exporting CSV
-		if ( $this->hasArg( 'export' ) && $this->args['export'] ) {
-			$columns['status'] = [
-				'label'     => __( 'Status', 'buddyboss' ),
-				'sortable'  => false,
-				'order_key' => '',
-			];
-		}
-
-		return $columns;
+	protected function formatDataForExport( $data, $activity ) {
+		$data['status'] = empty( $activity->last_reply_id ) ? $this->incompleted_table_title : $this->completed_table_title;
+		return $data;
 	}
 
 	protected function formatData( $activity ) {
@@ -67,7 +61,6 @@ class ForumsReportsGenerator extends ReportsGenerator
 			'topic'     => $activity->topic_title,
 			'reply'     => wp_trim_words( $activity->last_reply_content, 15, '...' ),
 			'post_date' => get_date_from_gmt( $activity->topic_post_date, $this->args['date_format'] ),
-			'status'    => empty( $activity->last_reply_id ) ? $this->incompleted_table_title : $this->completed_table_title,
 		];
 	}
 

@@ -9,19 +9,25 @@ class Hooks
 		add_action('bp_ld_sync/init', [$this, 'init']);
 	}
 
-	public function init()
-	{
+	public function init() {
 		// add some helpful missing hooks
-		add_action('groups_create_group', [$this, 'groupCreated']);
-		add_action('groups_update_group', [$this, 'groupUpdated']);
-		add_action('groups_before_delete_group', [$this, 'groupDeleting']);
-		add_action('groups_delete_group', [$this, 'groupDeleted']);
+		add_action( 'groups_create_group', [ $this, 'groupCreated' ] );
+		add_action( 'groups_update_group', [ $this, 'groupUpdated' ] );
+		add_action( 'groups_before_delete_group', [ $this, 'groupDeleting' ] );
+		add_action( 'groups_delete_group', [ $this, 'groupDeleted' ] );
 
 		// admin
-		add_action('bp_group_admin_edit_after', [$this, 'groupUpdated']);
+		add_action( 'bp_group_admin_edit_after', [ $this, 'groupUpdated' ] );
 
-		add_action('groups_member_after_save', [$this, 'groupMemberAdded']);
-		add_action('groups_member_after_remove', [$this, 'groupMemberRemoved']);
+		add_action( 'groups_member_after_save', [ $this, 'groupMemberAdded' ] );
+		add_action( 'groups_member_after_remove', [ $this, 'groupMemberRemoved' ] );
+		add_action( 'bp_ld_sync/export_report_column', [ $this, 'export_report_column' ], 10, 2 );
+	}
+
+	public function export_report_column( $columns, $report_generator ) {
+		$columns['status'] = $report_generator->column( 'status' );
+
+		return $columns;
 	}
 
 	public function groupCreated($groupId)

@@ -64,6 +64,12 @@ class EssaysReportsGenerator extends ReportsGenerator
 		];
 	}
 
+	protected function formatDataForExport( $data, $activity ) {
+		$data['status'] = empty( $activity->essay_modify_date ) ? $this->incompleted_table_title : $this->completed_table_title;
+
+		return $data;
+	}
+
 	protected function formatData($activity)
 	{
 		return [

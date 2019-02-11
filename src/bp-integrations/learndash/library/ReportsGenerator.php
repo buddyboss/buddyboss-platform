@@ -87,9 +87,10 @@ class ReportsGenerator
 	{
 		$hash    = $this->hasArg('hash')? $this->args['hash'] : md5(microtime());
 		$exports = get_transient($hash) ?: [];
-		$columns = $this->columns();
+		$columns = apply_filters('bp_ld_sync/export_report_column', $this->columns(), $this, $this->args);
+		$data = apply_filters('bp_ld_sync/export_report_data', $this->getData(), $this, $this->args);
 
-    	foreach ($this->getData() as $result) {
+    	foreach ($data as $result) {
     		$data = [];
 
     		foreach (array_keys($columns) as $key) {
@@ -196,7 +197,7 @@ class ReportsGenerator
 		return $strFields .= ', IF(activity_status = 1, activity_completed - activity_started, 0) as activity_time_spent';
 	}
 
-	protected function column($name)
+	public function column($name)
 	{
 		$builtInColumns = [
 			'course_id' => [
@@ -246,6 +247,11 @@ class ReportsGenerator
 			],
 			'points' => [
 				'label'     => __( 'Points Earned', 'buddyboss' ),
+				'sortable'  => false,
+				'order_key' => '',
+			],
+			'status' => [
+				'label'     => __( 'Status', 'buddyboss' ),
 				'sortable'  => false,
 				'order_key' => '',
 			],
