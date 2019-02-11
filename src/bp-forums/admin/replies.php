@@ -136,7 +136,7 @@ class BBP_Replies_Admin {
 			'id'		=> 'screen-content',
 			'title'		=> __( 'Screen Content', 'buddyboss' ),
 			'content'	=>
-				'<p>' . __( 'You can customize the display of this screen&#8217;s contents in a number of ways:', 'buddyboss' ) . '</p>' .
+				'<p>' . __( 'You can customize the display of this screen\'s contents in a number of ways:', 'buddyboss' ) . '</p>' .
 				'<ul>' .
 					'<li>' . __( 'You can hide/display columns based on your needs and decide how many replies to list per screen using the Screen Options tab.',                                                                                                                                                                          'buddyboss' ) . '</li>' .
 					'<li>' . __( 'You can filter the list of replies by reply status using the text links in the upper left to show All, Published, Draft, or Trashed replies. The default view is to show all replies.',                                                                                                                   'buddyboss' ) . '</li>' .
@@ -156,7 +156,7 @@ class BBP_Replies_Admin {
 					//'<li>' . __( '<strong>Quick Edit</strong> provides inline access to the metadata of your reply, allowing you to update reply details without leaving this screen.',                                                                  'buddyboss' ) . '</li>' .
 					'<li>' . __( '<strong>Trash</strong> removes your reply from this list and places it in the trash, from which you can permanently delete it.',                                                                                       'buddyboss' ) . '</li>' .
 					'<li>' . __( '<strong>Spam</strong> removes your reply from this list and places it in the spam queue, from which you can permanently delete it.',                                                                                   'buddyboss' ) . '</li>' .
-					'<li>' . __( '<strong>Preview</strong> will show you what your draft reply will look like if you publish it. View will take you to your live site to view the reply. Which link is available depends on your reply&#8217;s status.', 'buddyboss' ) . '</li>' .
+					'<li>' . __( '<strong>Preview</strong> will show you what your draft reply will look like if you publish it. View will take you to your live site to view the reply. Which link is available depends on your reply\'s status.', 'buddyboss' ) . '</li>' .
 				'</ul>'
 		) );
 
@@ -198,7 +198,7 @@ class BBP_Replies_Admin {
 			'id'      => 'title-reply-editor',
 			'title'   => __( 'Title and Reply Editor', 'buddyboss' ),
 			'content' =>
-				'<p>' . __( '<strong>Title</strong> - Enter a title for your reply. After you enter a title, you&#8217;ll see the permalink below, which you can edit.', 'buddyboss' ) . '</p>' .
+				'<p>' . __( '<strong>Title</strong> - Enter a title for your reply. After you enter a title, you\'ll see the permalink below, which you can edit.', 'buddyboss' ) . '</p>' .
 				'<p>' . __( '<strong>Reply Editor</strong> - Enter the text for your reply. There are two modes of editing: Visual and HTML. Choose the mode by clicking on the appropriate tab. Visual mode gives you a WYSIWYG editor. Click the last icon in the row to get a second row of controls. The HTML mode allows you to enter raw HTML along with your reply text. You can insert media files by clicking the icons above the reply editor and following the directions. You can go to the distraction-free writing screen via the Fullscreen icon in Visual mode (second to last in the top row) or the Fullscreen button in HTML mode (last in the row). Once there, you can make buttons visible by hovering over the top area. Exit Fullscreen back to the regular reply editor.', 'buddyboss' ) . '</p>'
 		) );
 
@@ -718,7 +718,7 @@ class BBP_Replies_Admin {
 		unset( $actions['inline hide-if-no-js'] );
 
 		// Reply view links to topic
-		$actions['view'] = '<a href="' . esc_url( bbp_get_reply_url( $reply->ID ) ) . '" title="' . esc_attr( sprintf( __( 'View &#8220;%s&#8221;', 'buddyboss' ), bbp_get_reply_title( $reply->ID ) ) ) . '" rel="permalink">' . esc_html__( 'View', 'buddyboss' ) . '</a>';
+		$actions['view'] = '<a href="' . esc_url( bbp_get_reply_url( $reply->ID ) ) . '" title="' . esc_attr( sprintf( __( 'View "%s"', 'buddyboss' ), bbp_get_reply_title( $reply->ID ) ) ) . '" rel="permalink">' . esc_html__( 'View', 'buddyboss' ) . '</a>';
 
 		// User cannot view replies in trash
 		if ( ( bbp_get_trash_status_id() === $reply->post_status ) && !current_user_can( 'view_trash' ) )

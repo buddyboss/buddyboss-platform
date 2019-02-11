@@ -1084,7 +1084,7 @@ function bp_core_filter_wp_query( $retval, $query ) {
 }
 
 /**
- * Function for redirecting users to wp-login.php if Private Network is enabled in BuddyBoss settings.
+ * Redirects users to login page if Private Network is enabled in BuddyBoss settings.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -1279,7 +1279,7 @@ function bp_private_network_template_redirect() {
 }
 
 /**
- * Function for redirect to user if profile dashboard enabled and redirect setting enabled.
+ * Redirect member to profile dashboard.
  *
  * @param $redirect_to
  * @param $redirect_to_raw
@@ -1310,7 +1310,7 @@ function bp_core_login_profile_dashboard_redirect( $redirect_to, $redirect_to_ra
 add_filter( 'bp_login_redirect', 'bp_core_login_profile_dashboard_redirect', 10, 3 );
 
 /**
- * Function for redirect to user if profile dashboard enabled and user is not logged in.
+ * Redirect user to profile dashboard if not logged in.
  *
  * @since BuddyBoss 1.0.0
  *

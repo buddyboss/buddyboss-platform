@@ -709,7 +709,7 @@ class BBP_Admin {
 
 			<h2 class="nav-tab-wrapper">
 				<a class="nav-tab nav-tab-active" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'bbp-about' ), 'index.php' ) ) ); ?>">
-					<?php esc_html_e( 'What&#8217;s New', 'buddyboss' ); ?>
+					<?php esc_html_e( 'What\'s New', 'buddyboss' ); ?>
 				</a><a class="nav-tab" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'bbp-credits' ), 'index.php' ) ) ); ?>">
 					<?php esc_html_e( 'Credits', 'buddyboss' ); ?>
 				</a>
@@ -736,7 +736,7 @@ class BBP_Admin {
 
 				<div class="feature-section col one-col">
 					<div class="last-feature">
-						<p><?php esc_html_e( 'We&#8217;re all abuzz about the hive of new importers, AEF, Drupal, FluxBB, Kunena Forums for Joomla, MyBB, Phorum, PHPFox, PHPWind, PunBB, SMF, Xenforo and XMB. Existing importers are now sweeter than honey with improved importing stickies, topic tags, forum categories and the sting is now gone if you need to remove imported users.', 'buddyboss' ); ?></p>
+						<p><?php esc_html_e( 'We\'re all abuzz about the hive of new importers, AEF, Drupal, FluxBB, Kunena Forums for Joomla, MyBB, Phorum, PHPFox, PHPWind, PunBB, SMF, Xenforo and XMB. Existing importers are now sweeter than honey with improved importing stickies, topic tags, forum categories and the sting is now gone if you need to remove imported users.', 'buddyboss' ); ?></p>
 					</div>
 				</div>
 
@@ -786,7 +786,7 @@ class BBP_Admin {
 
 			<h2 class="nav-tab-wrapper">
 				<a href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'bbp-about' ), 'index.php' ) ) ); ?>" class="nav-tab">
-					<?php esc_html_e( 'What&#8217;s New', 'buddyboss' ); ?>
+					<?php esc_html_e( 'What\'s New', 'buddyboss' ); ?>
 				</a><a href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'bbp-credits' ), 'index.php' ) ) ); ?>" class="nav-tab nav-tab-active">
 					<?php esc_html_e( 'Credits', 'buddyboss' ); ?>
 				</a>
@@ -1004,7 +1004,7 @@ class BBP_Admin {
 					</ul>
 
 					<p>
-						<?php esc_html_e( 'If your browser doesn&#8217;t start loading the next page automatically, click this link:', 'buddyboss' ); ?>
+						<?php esc_html_e( 'If your browser doesn\'t start loading the next page automatically, click this link:', 'buddyboss' ); ?>
 						<a class="button" href="update-core.php?page=bbpress-update&amp;action=bbpress-update&amp;n=<?php echo ( $n + 5 ); ?>"><?php esc_html_e( 'Next Forums', 'buddyboss' ); ?></a>
 					</p>
 					<script type='text/javascript'>

@@ -1554,7 +1554,7 @@ function bp_member_type_wprole_metabox( $post ) {
 }
 
 /**
- * Function for which type of groups this member type can create.
+ * When member types and group types are enabled, admins may restrict individual member types from creating specified group types.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1622,7 +1622,7 @@ function bp_member_type_group_create_metabox( $post ) {
 }
 
 /**
- * Function for which type of members type can auto join in groups.
+ * Admin option to enable specified members types to auto join specified group types.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1649,7 +1649,7 @@ function bp_member_type_group_auto_join_meta_box( $post ) {
 }
 
 /**
- * Function for members with this profile type are only allowed to invites following profile types.
+ * Allow a specific member type to send invitations to new members and specify their member type upon registration.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1665,11 +1665,11 @@ function bp_member_type_invite_meta_box( $post ) {
 	?>
 	<p>
 		<input type='checkbox' name='bp-member-type-enabled-invite' value='1' <?php checked( $enable_invite, 1 ); ?> tabindex="8" />
-		<strong><?php _e( 'Enable Invites for this profile type?', 'buddyboss' ); ?></strong>
+		<strong><?php _e( 'Enable this member type to set member type via invitation.', 'buddyboss' ); ?></strong>
 	</p>
 
 
-	<p><?php _e( 'Check Profile Type which you have to allow users to send invitation with following profile types.', 'buddyboss' ); ?></p>
+	<p><?php _e( 'Select which profile types this profile type is allowed to set via invitation.', 'buddyboss' ); ?></p>
 
 	<?php
 
@@ -1691,7 +1691,8 @@ function bp_member_type_invite_meta_box( $post ) {
 }
 
 /**
- * Function for saving metaboxes data of member type post data.
+ * Save member type post data.
+ *
  * @param $post_id
  *
  * @since BuddyBoss 1.0.0
@@ -1817,7 +1818,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 add_action( 'save_post', 'bp_save_member_type_post_metabox_data');
 
 /**
- * Function for displaying error message on edit profile type page.
+ * Display error message on edit profile type page.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -1846,7 +1847,7 @@ function bp_member_type_invalid_role_error_callback() {
 add_action( 'admin_notices', 'bp_member_type_invalid_role_error_callback' );
 
 /**
- * Function setting up a admin action messages.
+ * Setup admin action messages.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1925,7 +1926,7 @@ function bp_register_member_type_import_submenu_page() {
 }
 
 /**
- * Function for importing member types.
+ * Import member types.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1998,7 +1999,7 @@ function bp_member_type_import_submenu_page() {
 }
 
 /**
- * Function for display error message on extended profile page in admin.
+ * Display error message on extended profile page in admin.
  *
  * @since BuddyBoss 1.0.0
  */

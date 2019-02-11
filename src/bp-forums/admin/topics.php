@@ -137,7 +137,7 @@ class BBP_Topics_Admin {
 			'id'		=> 'screen-content',
 			'title'		=> __( 'Screen Content', 'buddyboss' ),
 			'content'	=>
-				'<p>' . __( 'You can customize the display of this screen&#8217;s contents in a number of ways:', 'buddyboss' ) . '</p>' .
+				'<p>' . __( 'You can customize the display of this screen\'s contents in a number of ways:', 'buddyboss' ) . '</p>' .
 				'<ul>' .
 					'<li>' . __( 'You can hide/display columns based on your needs and decide how many discussions to list per screen using the Screen Options tab.',                                                                                                                                'buddyboss' ) . '</li>' .
 					'<li>' . __( 'You can filter the list of discussions by discussion status using the text links in the upper left to show All, Published, or Trashed discussions. The default view is to show all discussions.',                                                                                 'buddyboss' ) . '</li>' .
@@ -155,10 +155,10 @@ class BBP_Topics_Admin {
 					'<li>' . __( '<strong>Edit</strong> takes you to the editing screen for that discussion. You can also reach that screen by clicking on the discussion title.',                                                                                 'buddyboss' ) . '</li>' .
 					'<li>' . __( '<strong>Trash</strong> removes your discussion from this list and places it in the trash, from which you can permanently delete it.',                                                                                       'buddyboss' ) . '</li>' .
 					'<li>' . __( '<strong>Spam</strong> removes your discussion from this list and places it in the spam queue, from which you can permanently delete it.',                                                                                   'buddyboss' ) . '</li>' .
-					'<li>' . __( '<strong>Preview</strong> will show you what your draft discussion will look like if you publish it. View will take you to your live site to view the discussion. Which link is available depends on your discussion&#8217;s status.', 'buddyboss' ) . '</li>' .
-					'<li>' . __( '<strong>Close</strong> will mark the selected discussion as &#8217;closed&#8217; and disable the option to post new replies to the discussion.',                                                                                 'buddyboss' ) . '</li>' .
-					'<li>' . __( '<strong>Stick</strong> will keep the selected discussion &#8217;pinned&#8217; to the top the parent forum discussion list.',                                                                                                     'buddyboss' ) . '</li>' .
-					'<li>' . __( '<strong>Stick <em>(to front)</em></strong> will keep the selected discussion &#8217;pinned&#8217; to the top of ALL forums and be visable in any forums discussions list.',                                                      'buddyboss' ) . '</li>' .
+					'<li>' . __( '<strong>Preview</strong> will show you what your draft discussion will look like if you publish it. View will take you to your live site to view the discussion. Which link is available depends on your discussion\'s status.', 'buddyboss' ) . '</li>' .
+					'<li>' . __( '<strong>Close</strong> will mark the selected discussion as "closed" and disable the option to post new replies to the discussion.',                                                                                 'buddyboss' ) . '</li>' .
+					'<li>' . __( '<strong>Stick</strong> will keep the selected discussion "pinned" to the top the parent forum discussion list.',                                                                                                     'buddyboss' ) . '</li>' .
+					'<li>' . __( '<strong>Stick <em>(to front)</em></strong> will keep the selected discussion "pinned" to the top of ALL forums and be visable in any forums discussions list.',                                                      'buddyboss' ) . '</li>' .
 				'</ul>'
 		) );
 
@@ -200,7 +200,7 @@ class BBP_Topics_Admin {
 			'id'      => 'title-topic-editor',
 			'title'   => __( 'Title and Discussion Editor', 'buddyboss' ),
 			'content' =>
-				'<p>' . __( '<strong>Title</strong> - Enter a title for your discussion. After you enter a title, you&#8217;ll see the permalink below, which you can edit.', 'buddyboss' ) . '</p>' .
+				'<p>' . __( '<strong>Title</strong> - Enter a title for your discussion. After you enter a title, you\'ll see the permalink below, which you can edit.', 'buddyboss' ) . '</p>' .
 				'<p>' . __( '<strong>Discussion Editor</strong> - Enter the text for your discussion. There are two modes of editing: Visual and HTML. Choose the mode by clicking on the appropriate tab. Visual mode gives you a WYSIWYG editor. Click the last icon in the row to get a second row of controls. The HTML mode allows you to enter raw HTML along with your discussion text. You can insert media files by clicking the icons above the discussion editor and following the directions. You can go to the distraction-free writing screen via the Fullscreen icon in Visual mode (second to last in the top row) or the Fullscreen button in HTML mode (last in the row). Once there, you can make buttons visible by hovering over the top area. Exit Fullscreen back to the regular discussion editor.', 'buddyboss' ) . '</p>'
 		) );
 
@@ -769,7 +769,7 @@ class BBP_Topics_Admin {
 
 		// Show view link if it's not set, the topic is trashed and the user can view trashed topics
 		if ( empty( $actions['view'] ) && ( bbp_get_trash_status_id() === $topic->post_status ) && current_user_can( 'view_trash' ) )
-			$actions['view'] = '<a href="' . esc_url( bbp_get_topic_permalink( $topic->ID ) ) . '" title="' . esc_attr( sprintf( __( 'View &#8220;%s&#8221;', 'buddyboss' ), bbp_get_topic_title( $topic->ID ) ) ) . '" rel="permalink">' . esc_html__( 'View', 'buddyboss' ) . '</a>';
+			$actions['view'] = '<a href="' . esc_url( bbp_get_topic_permalink( $topic->ID ) ) . '" title="' . esc_attr( sprintf( __( 'View "%s"', 'buddyboss' ), bbp_get_topic_title( $topic->ID ) ) ) . '" rel="permalink">' . esc_html__( 'View', 'buddyboss' ) . '</a>';
 
 		// Only show the actions if the user is capable of viewing them :)
 		if ( current_user_can( 'moderate', $topic->ID ) ) {

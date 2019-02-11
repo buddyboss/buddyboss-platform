@@ -209,9 +209,9 @@ function bp_groups_admin_load() {
 			'id'      => 'bp-groups-overview-actions',
 			'title'   => __( 'Group Actions', 'buddyboss' ),
 			'content' =>
-				'<p>' . __( 'Clicking "Visit" will take you to the group&#8217;s public page. Use this link to see what the group looks like on the front end of your site.', 'buddyboss' ) . '</p>' .
+				'<p>' . __( 'Clicking "Visit" will take you to the group\'s public page. Use this link to see what the group looks like on the front end of your site.', 'buddyboss' ) . '</p>' .
 				'<p>' . __( 'Clicking "Edit" will take you to a Dashboard panel where you can manage various details about the group, such as its name and description, its members, and other settings.', 'buddyboss' ) . '</p>' .
-				'<p>' . __( 'If you click "Delete" under a specific group, or select a number of groups and then choose Delete from the Bulk Actions menu, you will be led to a page where you&#8217;ll be asked to confirm the permanent deletion of the group(s).', 'buddyboss' ) . '</p>',
+				'<p>' . __( 'If you click "Delete" under a specific group, or select a number of groups and then choose Delete from the Bulk Actions menu, you will be led to a page where you\'ll be asked to confirm the permanent deletion of the group(s).', 'buddyboss' ) . '</p>',
 		) );
 
 		// Help panel - sidebar links.
@@ -817,7 +817,7 @@ function bp_groups_admin_index() {
 			<?php endif; ?>
 
 			<?php if ( !empty( $_REQUEST['s'] ) ) : ?>
-				<span class="subtitle"><?php printf( __( 'Search results for &#8220;%s&#8221;', 'buddyboss' ), wp_html_excerpt( esc_html( stripslashes( $_REQUEST['s'] ) ), 50 ) ); ?></span>
+				<span class="subtitle"><?php printf( __( 'Search results for "%s"', 'buddyboss' ), wp_html_excerpt( esc_html( stripslashes( $_REQUEST['s'] ) ), 50 ) ); ?></span>
 			<?php endif; ?>
 
 			<hr class="wp-header-end">
@@ -832,7 +832,7 @@ function bp_groups_admin_index() {
 			<?php endif; ?>
 
 			<?php if ( !empty( $_REQUEST['s'] ) ) : ?>
-				<span class="subtitle"><?php printf( __( 'Search results for &#8220;%s&#8221;', 'buddyboss' ), wp_html_excerpt( esc_html( stripslashes( $_REQUEST['s'] ) ), 50 ) ); ?></span>
+				<span class="subtitle"><?php printf( __( 'Search results for "%s"', 'buddyboss' ), wp_html_excerpt( esc_html( stripslashes( $_REQUEST['s'] ) ), 50 ) ); ?></span>
 			<?php endif; ?>
 		</h1>
 
@@ -1873,7 +1873,7 @@ function bp_group_type_hide_quick_edit( $actions, $post ) {
 }
 
 /**
- * Function for saving meta boxes data of group type post data.
+ * Save group type post data.
  * @param $post_id
  *
  * @since BuddyBoss 1.0.0

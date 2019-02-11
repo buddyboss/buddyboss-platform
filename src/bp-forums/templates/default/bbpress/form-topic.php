@@ -202,7 +202,7 @@
 	<div id="no-topic-<?php bbp_topic_id(); ?>" class="bbp-no-topic">
 		<div class="bp-feedback info">
 			<span class="bp-icon" aria-hidden="true"></span>
-			<p><?php printf( __( 'The forum &#8216;%s&#8217; is closed to new discussions and replies.', 'buddyboss' ), bbp_get_forum_title() ); ?></p>
+			<p><?php printf( __( 'The forum "%s" is closed to new discussions and replies.', 'buddyboss' ), bbp_get_forum_title() ); ?></p>
 		</div>
 	</div>
 

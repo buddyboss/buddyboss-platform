@@ -3228,7 +3228,7 @@ function bp_group_ids_array_flatten($array) {
 }
 
 /**
- * Function for removed group type.
+ * Get removed group types.
  *
  * @since BuddyBoss 1.0.0
  *

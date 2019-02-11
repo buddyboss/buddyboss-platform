@@ -116,14 +116,14 @@ final class bbPress {
      *
      * @since bbPress (r2464)
      */
-    public function __clone() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddyboss' ), '2.1' ); }
+    public function __clone() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '2.1' ); }
 
     /**
      * A dummy magic method to prevent Forums from being unserialized
      *
      * @since bbPress (r2464)
      */
-    public function __wakeup() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddyboss' ), '2.1' ); }
+    public function __wakeup() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '2.1' ); }
 
     /**
      * Magic method for checking the existence of a certain custom field

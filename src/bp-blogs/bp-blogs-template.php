@@ -1027,7 +1027,7 @@ function bp_show_blog_signup_form($blogname = '', $blog_title = '', $errors = ''
 		?>
 		<p><?php printf(__("By filling out the form below, you can <strong>add a site to your account</strong>. There is no limit to the number of sites that you can have, so create to your heart's content, but blog responsibly!", 'buddyboss'), $current_user->display_name) ?></p>
 
-		<p><?php _e("If you&#8217;re not going to use a great domain, leave it for a new user. Now have at it!", 'buddyboss') ?></p>
+		<p><?php _e("If you\'re not going to use a great domain, leave it for a new user. Now have at it!", 'buddyboss') ?></p>
 
 		<form class="standard-form" id="setupform" method="post" action="">
 
