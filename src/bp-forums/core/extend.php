@@ -28,7 +28,7 @@ function bbp_setup_akismet() {
 	if ( !bbp_is_akismet_active() ) return;
 
 	// Include the Akismet Component
-	require( bbpress()->includes_dir . 'extend/akismet.php' );
+	//require( bbpress()->includes_dir . 'extend/akismet.php' );
 
 	// Instantiate Akismet for Forums
 	bbpress()->extend->akismet = new BBP_Akismet();
