@@ -943,3 +943,10 @@ body.post-type-bp-email .categorydiv label {
 body.post-type-bp_ps_form .page-title-action {
 	display: none;
 }
+
+
+
+/* Discussion Forum */
+#bbpress_group_admin_ui_meta_box fieldset {
+	min-width: 230px;
+}
