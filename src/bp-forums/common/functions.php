@@ -1343,7 +1343,7 @@ function bbp_parse_args( $args, $defaults = array(), $filter_key = '' ) {
  *
  * @deprecated bbPress (r5820)
  *
- * @global DB $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @global WP $wp
  * @param string $where
  * @param WP_Query $object

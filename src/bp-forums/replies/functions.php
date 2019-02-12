@@ -2119,7 +2119,7 @@ function bbp_check_reply_edit() {
  *
  * @since bbPress (r3933)
  *
- * @global type $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @param type $reply_id
  * @param type $reply_position
  * @return mixed

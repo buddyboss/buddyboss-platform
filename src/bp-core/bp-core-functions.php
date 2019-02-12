@@ -81,7 +81,7 @@ function bp_db_version_raw() {
  *
  * @since BuddyPress 1.2.6
  *
- * @global object $wpdb WordPress database object.
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @return string Filtered database prefix.
  */

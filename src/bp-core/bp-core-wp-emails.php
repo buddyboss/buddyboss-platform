@@ -656,7 +656,7 @@ if ( !function_exists('wp_new_user_notification') ) {
 	 * @since 4.3.1 The `$plaintext_pass` parameter was deprecated. `$notify` added as a third parameter.
 	 * @since 4.6.0 The `$notify` parameter accepts 'user' for sending notification only to the user created.
 	 *
-	 * @global wpdb         $wpdb      WordPress database object for queries.
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 * @global PasswordHash $wp_hasher Portable PHP password hashing framework instance.
 	 *
 	 * @param int    $user_id    User ID.

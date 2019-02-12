@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.7.0
  *
- * @global WPDB $wpdb WordPress database access object.
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @param BP_User_Query $user_query   The BP_User_Query object.
  * @param string        $user_ids_sql Comma-separated list of user IDs to fetch extra

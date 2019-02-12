@@ -569,7 +569,7 @@ function bp_update_to_3_1_1() {
  *
  * @since BuddyPress 2.2.0
  *
- * @global $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  */
 function bp_migrate_new_member_activity_component() {
 	global $wpdb;
@@ -702,7 +702,7 @@ function bp_platform_plugin_updater() {
  *
  * @since BuddyPress 2.0.0
  *
- * @global WPDB $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  */
 function bp_core_maybe_install_signups() {
 	global $wpdb;

@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress XProfile Classes.
+ * BuddyPress XProfile Gender field Classes.
  *
- * @package BuddyBoss\XProfile
+ * @package BuddyBoss\XProfile\Classes
  * @since BuddyBoss 1.0.0
  */
 

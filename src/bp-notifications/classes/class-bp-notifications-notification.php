@@ -106,7 +106,7 @@ class BP_Notifications_Notification {
 	 *
 	 * @since BuddyPress 1.9.0
 	 *
-	 * @global wpdb $wpdb WordPress database object.
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @return bool True on success, false on failure.
 	 */
@@ -172,7 +172,7 @@ class BP_Notifications_Notification {
 	 * @since BuddyPress 1.9.0
 	 *
 	 * @global BuddyPress $bp The one true BuddyPress instance.
-	 * @global wpdb $wpdb WordPress database object.
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 */
 	public function populate() {
 		global $wpdb;

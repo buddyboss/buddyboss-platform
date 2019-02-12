@@ -369,7 +369,7 @@ function bbp_is_user_spammer( $user_id = 0 ) {
  *
  * @since bbPress (r3405)
  *
- * @global WPDB $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @param int $user_id Optional. User ID to spam. Defaults to displayed user.
 
  * @uses bbp_is_single_user()
@@ -457,7 +457,7 @@ function bbp_make_spam_user( $user_id = 0 ) {
  *
  * @since bbPress (r3405)
  *
- * @global WPDB $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @param int $user_id Optional. User ID to unspam. Defaults to displayed user.
  *
  * @uses bbp_is_single_user()

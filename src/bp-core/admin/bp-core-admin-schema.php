@@ -554,7 +554,7 @@ function bp_core_uninstall_discussion_forums() {
  *
  * @since BuddyPress 2.0.0
  *
- * @global $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  */
 function bp_core_install_signups() {
 	global $wpdb;
@@ -601,7 +601,7 @@ function bp_core_install_signups() {
  * @link https://core.trac.wordpress.org/ticket/27855 WordPress Trac Ticket
  * @link https://buddypress.trac.wordpress.org/ticket/5563 BuddyPress Trac Ticket
  *
- * @global WPDB $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  */
 function bp_core_upgrade_signups() {
 	global $wpdb;

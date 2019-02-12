@@ -40,7 +40,7 @@ add_action( 'bp_activity_setup_globals', 'bp_activity_setup_akismet' );
  *
  * @since BuddyPress 1.6.0
  *
- * @global wpdb $wpdb WordPress database object.
+ * @global wpdb $wpdb WordPress database abstraction object.
  */
 function bp_activity_akismet_delete_old_metadata() {
 	global $wpdb;

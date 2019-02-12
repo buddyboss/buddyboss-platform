@@ -424,7 +424,7 @@ class BP_Core_User {
 	/**
 	 * Fetch the details for all users whose usernames start with the given letter.
 	 *
-	 * @global wpdb $wpdb WordPress database object.
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param string   $letter          The letter the users names are to start with.
 	 * @param int|null $limit           The number of users we wish to retrive.
@@ -511,7 +511,7 @@ class BP_Core_User {
 	 *
 	 * Use {@link BP_User_Query} with the 'user_ids' param instead.
 	 *
-	 * @global wpdb $wpdb WordPress database object.
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param array    $user_ids        The user IDs of the users who we wish to
 	 *                                  fetch information on.
@@ -606,7 +606,7 @@ class BP_Core_User {
 	/**
 	 * Find users who match on the value of an xprofile data.
 	 *
-	 * @global wpdb $wpdb WordPress database object.
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param string   $search_terms    The terms to search the profile table
 	 *                                  value column for.
@@ -666,7 +666,7 @@ class BP_Core_User {
 	 *
 	 * Accepts multiple user IDs to fetch data for.
 	 *
-	 * @global wpdb $wpdb WordPress database object.
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param array       $paged_users An array of stdClass containing the users.
 	 * @param string      $user_ids    The user ids to select information about.

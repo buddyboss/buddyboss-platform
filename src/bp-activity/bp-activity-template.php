@@ -622,7 +622,7 @@ function bp_activities_title() {
 	}
 
 /**
- * {@internal Missing Description}
+ * Output text when there is no activity
  *
  * @since BuddyPress 1.0.0
  *
@@ -633,7 +633,7 @@ function bp_activities_no_activity() {
 }
 
 	/**
-	 * {@internal Missing Description}
+	 * Get text when there is no activity
 	 *
 	 * @since BuddyPress 1.0.0
 	 *

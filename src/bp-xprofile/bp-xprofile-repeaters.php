@@ -2,7 +2,7 @@
 /**
  * BuddyPress XProfile Repeater Fields and field sets.
  * 
- * @package BuddyBoss
+ * @package BuddyBoss\XProfile
  * @since BuddyBoss 1.0.0
  */
 
@@ -20,8 +20,10 @@ function bp_profile_field_set_max_cap () {
 }
 
 /**
+ * Return repeater template field ids
+ *
  * @since BuddyBoss 1.0.0
- * @global type $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @param type $field_group_id
  * @return type
  */
@@ -48,10 +50,10 @@ function bp_get_repeater_template_field_ids ( $field_group_id ) {
 }
 
 /**
- * @todo Add Title/Description
+ * Return ids of one field sets repeated instances.
  *
  * @since BuddyBoss 1.0.0
- * @global type $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @param type $field_group_id
  * @param type $count
  * @return array
@@ -105,10 +107,10 @@ function bp_get_repeater_clone_field_ids_subset ( $field_group_id, $count ) {
 }
 
 /**
- * @todo Add Title/Description
+ * Return ids of all field sets repeated instances.
  *
  * @since BuddyBoss 1.0.0
- * @global type $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @param type $field_group_id
  * @return array
  */
@@ -140,6 +142,7 @@ function bp_get_repeater_clone_field_ids_all ( $field_group_id ) {
 }
 
 add_action( 'xprofile_updated_profile', 'bp_profile_repeaters_update_field_data', 11, 5 );
+
 /**
  * Update/Sort repeater fields when profile data is updated.
  *
@@ -170,17 +173,13 @@ function bp_profile_repeaters_update_field_data ( $user_id, $posted_field_ids, $
     
     $field_set_sequence = wp_parse_id_list( $_POST['repeater_set_sequence'] );
     
-    /**
-     * We'll take the data from all clone fields and dump it into the main/template field.
-     * This is done to ensure that search etc, work smoothly.
-     */
+    //We'll take the data from all clone fields and dump it into the main/template field.
+    //This is done to ensure that search etc, work smoothly.
     $main_field_data = array();
     
     $counter = 1;
     foreach( (array) $field_set_sequence as $field_set_number ) {
-        /**
-         * Find all fields in this set, take their values and update the data for corresponding fields in set number $counter
-         */
+        //Find all fields in this set, take their values and update the data for corresponding fields in set number $counter
         $fields_of_current_set = $wpdb->get_col( 
             "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND meta_value = {$field_set_number} "
             . " AND object_id IN (". implode( ',', $posted_field_ids ) .") and object_type = 'field' " 
@@ -224,7 +223,10 @@ function bp_profile_repeaters_update_field_data ( $user_id, $posted_field_ids, $
 }
 
 add_filter( 'bp_xprofile_set_field_data_pre_validate', 'bp_repeater_set_field_data_pre_validate', 10, 2 );
+
 /**
+ * Prevalidate repeater set data.
+ *
  * bp_xprofile_field_type_is_valid filter doesn't pass the $field object.
  * So we hook into bp_xprofile_set_field_data_pre_validate filter and save the $field object in a global variable.
  * We then use this global variable later, in bp_xprofile_field_type_is_valid hook.
@@ -246,6 +248,8 @@ function bp_repeater_set_field_data_pre_validate ( $value, $field ) {
 add_filter( 'bp_xprofile_field_type_is_valid', 'bp_profile_repeater_is_data_valid_for_template_fields', 10, 3 );
 
 /**
+ * @todo Add Title/Description
+ *
  * @global \BP_XProfile_Field $bp_profile_repeater_last_field
  * 
  * @param boolean $validated
@@ -305,8 +309,10 @@ function bp_profile_repeater_is_data_valid_for_template_fields ( $validated, $va
 }
 
 /**
+ * Copy form fields for field sets that repeat.
+ *
  * @since BuddyBoss 1.0.0
- * @global type $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @param type $field_id
  * @return boolean
  */
@@ -385,6 +391,7 @@ function bp_clone_field_for_repeater_sets ( $field_id ) {
 }
 
 add_action( 'xprofile_fields_saved_field', 'xprofile_update_clones_on_template_update' );
+
 /**
  * Update repeater/clone fields when the main/template field is updated.
  * 
@@ -432,6 +439,7 @@ function xprofile_update_clones_on_template_update ( $field ) {
 }
 
 add_action( 'xprofile_fields_deleted_field', 'xprofile_delete_clones_on_template_delete' );
+
 /**
  * Delete repeater/clone fields when the main/template field is deleted.
  * 
@@ -459,25 +467,28 @@ function xprofile_delete_clones_on_template_delete ( $field ) {
 }
 
 add_action( 'xprofile_updated_field_position', 'xprofile_update_clone_positions_on_template_position_update', 10, 3 );
+
 /**
  * Update position and group_id for all clone fields when a template/main field's order is changed.
+ *
  * @since BuddyBoss 1.0.0
  * 
- * @global type $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @param int $template_field_id
  * @param int $new_position
  * @param int $template_field_group_id
  * @return type
  */
 function xprofile_update_clone_positions_on_template_position_update ( $template_field_id, $new_position, $template_field_group_id ) {
-    /**
-     * Check if template field is now moved to another field set
-     * If so
-     *  - If the new field set is also a repeater
-     *      - Update clone fields, update their group id and sorting numbers
-     * If not
-     *  - Update clone fields, update their sorting numbers
-     */
+	
+    //
+    // Check if template field is now moved to another field set
+    // If so
+    //  - If the new field set is also a repeater
+    //      - Update clone fields, update their group id and sorting numbers
+    // If not
+    //  - Update clone fields, update their sorting numbers
+    //
     
     global $wpdb;
     $bp = buddypress();
@@ -503,6 +514,7 @@ function xprofile_update_clone_positions_on_template_position_update ( $template
     if ( $old_group_id != $template_field_group_id ) {
         //tempalte field has been moved to a new field group
         $is_repeater_enabled = 'on' == bp_xprofile_get_meta( $template_field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
+		
         if ( $is_repeater_enabled ) {
             //update group id for all clone fields
             $sql = $wpdb->prepare( 
@@ -537,7 +549,10 @@ function xprofile_update_clone_positions_on_template_position_update ( $template
 }
 
 add_filter( 'bp_xprofile_field_get_children', 'bp_xprofile_repeater_field_get_children', 10, 3 );
+
 /**
+ * Return children of repeated field sets.
+ *
  * @since BuddyBoss 1.0.0
  * @param array $children
  * @param boolean $for_editing
@@ -551,10 +566,8 @@ function bp_xprofile_repeater_field_get_children ( $children, $for_editing, $fie
         return $children;
     }
     
-    /*
-     * If the current field is a clone,
-     * we'll query template field for children/field-options
-     */
+    //If the current field is a clone,
+    //we'll query template field for children/field-options
     $template_field_id = bp_xprofile_get_meta( $field->id, 'field', '_cloned_from', true );
     if ( empty( $template_field_id ) ) {
         return $children;
@@ -587,7 +600,7 @@ function bp_xprofile_repeater_field_get_children ( $children, $for_editing, $fie
     
     if ( !empty( $template_children ) ) {
         
-        //Since same children will be shared in all clones of a kind,
+        //Since some children will be shared in all clones of a kind,
         //there are duplicate radiobutton/checkbox ids and hence associated labels behave incorreclty.
         //we'll need to manipuate children ids
         $temp = array();
@@ -602,10 +615,10 @@ function bp_xprofile_repeater_field_get_children ( $children, $for_editing, $fie
     
     return $children;
 }
-/* ----------- User Profiles ------------------- */
 
 /**
- * 
+ * Return total number of field sets.
+ *
  * @param type $field_group_id
  * @param type $user_id
  * @since BuddyBoss 1.0.0
@@ -617,7 +630,8 @@ function bp_get_profile_field_set_count ( $field_group_id, $user_id ) {
 }
 
 /**
- * 
+ * Set maximum field set allowed.
+ *
  * @param type $field_group_id
  * @param type $user_id
  * @param type $count
@@ -632,7 +646,10 @@ function bp_set_profile_field_set_count ( $field_group_id, $user_id, $count ) {
 }
 
 add_action( 'bp_after_profile_field_content', 'bp_print_add_repeater_set_button' );
+
 /**
+ * Output button to add repeater field set.
+ *
  * @since BuddyBoss 1.0.0
  */
 function bp_print_add_repeater_set_button () {
@@ -655,7 +672,10 @@ function bp_print_add_repeater_set_button () {
 }
 
 add_action( 'wp_ajax_bp_xprofile_add_repeater_set', 'bp_xprofile_ajax_add_repeater_set' );
+
 /**
+ * Adds a repeater set.
+ *
  * @since BuddyBoss 1.0.0
  */
 function bp_xprofile_ajax_add_repeater_set () {
@@ -678,8 +698,10 @@ function bp_xprofile_ajax_add_repeater_set () {
 }
 
 add_action( 'bp_before_profile_field_html', 'bp_profile_repeaters_print_group_html_start' );
+
 /**
  * Open wrapper of repeater set - on edit profile screen
+ *
  * @since BuddyBoss 1.0.0
  * @global type $first_xpfield_in_repeater
  */
@@ -741,8 +763,10 @@ function bp_profile_repeaters_print_group_html_start () {
 }
 
 add_action( 'bp_after_profile_field_content', 'bp_profile_repeaters_print_group_html_end', 4 );
+
 /**
  * Close wrapper of repeater set - on edit profile screen
+ *
  * @since BuddyBoss 1.0.0
  * @global boolean $first_xpfield_in_repeater
  */
@@ -757,8 +781,10 @@ function bp_profile_repeaters_print_group_html_end () {
 
 
 add_action( 'bp_before_profile_field_item', 'bp_view_profile_repeaters_print_group_html_start' );
+
 /**
  * Open wrapper of repeater set - on View profile screen
+ *
  * @since BuddyBoss 1.0.0
  * @global type $first_xpfield_in_repeater
  */
@@ -783,8 +809,10 @@ function bp_view_profile_repeaters_print_group_html_start () {
 }
 
 add_action( 'bp_after_profile_field_items', 'bp_view_profile_repeaters_print_group_html_end', 4 );
+
 /**
  * Close wrapper of repeater set - on edit profile screen
+ *
  * @since BuddyBoss 1.0.0
  * @global boolean $first_xpfield_in_repeater
  */
@@ -798,11 +826,10 @@ function bp_view_profile_repeaters_print_group_html_end () {
     }
 }
 
-/* ----------- Profile Search ------------------ */
 add_filter( 'bp_ps_field_before_query', 'bp_profile_repeaters_search_change_filter' );
+
 /**
- * If the field is a main/template field for a repeater set,
- * search should have a like '%s keyword %s' query.
+ * If the field is a main/template field for a repeater set, search should have a like '%s keyword %s' query.
  * 
  * @param object $f Passed by reference
  */

@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress XProfile Classes.
+ * BuddyPress XProfile Group Classes.
  *
- * @package BuddyBoss\XProfileClasses
+ * @package BuddyBoss\XProfile\Classes
  * @since BuddyPress 1.0.0
  */
 
@@ -82,7 +82,7 @@ class BP_XProfile_Group {
 	 *
 	 * @since BuddyPress 1.0.0
 	 *
-	 * @global $wpdb $wpdb
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param int $id Field group ID.
 	 * @return boolean
@@ -115,7 +115,7 @@ class BP_XProfile_Group {
 	 *
 	 * @since BuddyPress 1.1.0
 	 *
-	 * @global object $wpdb
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @return boolean
 	 */
@@ -180,7 +180,7 @@ class BP_XProfile_Group {
 	 *
 	 * @since BuddyPress 1.1.0
 	 *
-	 * @global object $wpdb
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @return boolean
 	 */
@@ -241,7 +241,7 @@ class BP_XProfile_Group {
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
-	 * @global object $wpdb WordPress DB access object.
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param array $args {
 	 *  Array of optional arguments:
@@ -642,7 +642,7 @@ class BP_XProfile_Group {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @global $wpdb $wpdb
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param  int $field_group_id ID of the group the field belongs to.
 	 * @param  int $position       Field group position.

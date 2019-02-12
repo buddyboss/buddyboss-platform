@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress XProfile Classes.
+ * BuddyPress XProfile Field Type Class.
  *
- * @package BuddyBoss\XProfileClasses
+ * @package BuddyBoss\XProfile\Classes
  * @since BuddyPress 2.0.0
  */
 

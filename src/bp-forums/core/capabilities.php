@@ -322,7 +322,7 @@ function bbp_add_forums_roles( $wp_roles = null ) {
  *
  * @see _bbp_reinit_dynamic_roles()
  *
- * @global WPDB $wpdb Used to get the database prefix
+ * @global wpdb $wpdb WordPress database abstraction object.
  */
 function bbp_filter_user_roles_option() {
 	global $wpdb;

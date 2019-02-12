@@ -145,8 +145,6 @@ function xprofile_record_activity( $args = '' ) {
  *
  * @since BuddyPress 1.0.0
  *
- *                            for a specific activity.
- *
  * @param array|string $args Containing all variables used after bp_parse_args() call.
  * @return bool
  */
@@ -199,8 +197,6 @@ function xprofile_register_activity_action( $key, $value ) {
  *
  * @since BuddyPress 1.0.0
  * @since BuddyPress 2.3.4 Add new parameter to get the user id the avatar was set for.
- *
- *                         specific activity
  *
  * @param int $user_id The user id the avatar was set for.
  * @return bool

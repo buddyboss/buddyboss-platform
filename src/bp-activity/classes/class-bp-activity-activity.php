@@ -1424,7 +1424,7 @@ class BP_Activity_Activity {
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
-	 * @global wpdb $wpdb WordPress database object.
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param array  $activities Activities to fetch comments for.
 	 * @param string $spam       Optional. 'ham_only' (default), 'spam_only' or 'all'.
@@ -1454,7 +1454,7 @@ class BP_Activity_Activity {
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
-	 * @global wpdb $wpdb WordPress database object.
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param int    $activity_id         Activity ID to fetch comments for.
 	 * @param int    $left                Left-most node boundary.
@@ -1612,7 +1612,7 @@ class BP_Activity_Activity {
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
-	 * @global wpdb $wpdb WordPress database object.
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param int $parent_id ID of an activity or activity comment.
 	 * @param int $left      Node boundary start for activity or activity comment.
@@ -1652,7 +1652,7 @@ class BP_Activity_Activity {
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
-	 * @global wpdb $wpdb WordPress database object.
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param int $parent_id ID of an activity or activity comment.
 	 * @return object Numerically indexed array of child comments.

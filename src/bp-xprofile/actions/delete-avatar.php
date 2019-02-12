@@ -2,15 +2,15 @@
 /**
  * XProfile: Avatar deletion action handler
  *
- * @package BuddyBoss\XProfileActions
+ * @package BuddyBoss\XProfile\Actions
  * @since BuddyPress 3.0.0
  */
 
 /**
+ * Deletes the active avatar for a user.
+ *
  * This function runs when an action is set for a screen:
  * example.com/members/andy/profile/change-avatar/ [delete-avatar]
- *
- * The function will delete the active avatar for a user.
  *
  * @since BuddyPress 1.0.0
  *

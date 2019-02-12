@@ -91,7 +91,7 @@ class BP_Core_Notification {
 	/**
 	 * Update or insert notification details into the database.
 	 *
-	 * @global wpdb $wpdb WordPress database object.
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @return bool Success or failure.
 	 */
@@ -122,7 +122,7 @@ class BP_Core_Notification {
 	/**
 	 * Fetches the notification data from the database.
 	 *
-	 * @global wpdb $wpdb WordPress database object.
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 */
 	public function populate() {
 		global $wpdb;
@@ -160,7 +160,7 @@ class BP_Core_Notification {
 	/**
 	 * Fetches all the notifications in the database for a specific user.
 	 *
-	 * @global wpdb $wpdb WordPress database object
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @static
 	 *
@@ -183,7 +183,7 @@ class BP_Core_Notification {
 	/**
 	 * Delete all the notifications for a user based on the component name and action.
 	 *
-	 * @global wpdb $wpdb WordPress database object.
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @static
 	 *
@@ -203,7 +203,7 @@ class BP_Core_Notification {
 	/**
 	 * Delete all the notifications that have a specific item id, component name and action.
 	 *
-	 * @global wpdb $wpdb WordPress database object.
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @static
 	 *
@@ -230,7 +230,7 @@ class BP_Core_Notification {
 	/**
 	 * Deletes all the notifications sent by a specific user, by component and action.
 	 *
-	 * @global wpdb $wpdb WordPress database object.
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @static
 	 *
@@ -251,7 +251,7 @@ class BP_Core_Notification {
 	 * Deletes all the notifications for all users by item id, and optional secondary item id,
 	 * and component name and action.
 	 *
-	 * @global wpdb $wpdb WordPress database object.
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @static
 	 *

@@ -131,7 +131,7 @@ function bbp_current_author_ua() {
  * Return the raw database count of topics by a user
  *
  * @since bbPress (r3633)
- * @global WPDB $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @uses bbp_get_user_id()
  * @uses get_posts_by_author_sql()
  * @uses bbp_get_topic_post_type()
@@ -155,7 +155,7 @@ function bbp_get_user_topic_count_raw( $user_id = 0 ) {
  * Return the raw database count of replies by a user
  *
  * @since bbPress (r3633)
- * @global WPDB $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @uses bbp_get_user_id()
  * @uses get_posts_by_author_sql()
  * @uses bbp_get_reply_post_type()
@@ -1468,7 +1468,7 @@ function bbp_sanitize_displayed_user_field( $value = '', $field = '', $context =
  * Convert passwords from previous platfrom encryption to WordPress encryption.
  *
  * @since bbPress (r3813)
- * @global WPDB $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  */
 function bbp_user_maybe_convert_pass() {
 

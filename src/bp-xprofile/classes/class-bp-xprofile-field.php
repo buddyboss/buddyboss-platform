@@ -2,7 +2,7 @@
 /**
  * BuddyPress XProfile Classes.
  *
- * @package BuddyBoss\XProfileClasses
+ * @package BuddyBoss\XProfile\Classes
  * @since BuddyPress 1.0.0
  */
 
@@ -203,7 +203,7 @@ class BP_XProfile_Field {
 	 *
 	 * @since BuddyPress 1.1.0
 	 *
-	 * @global object $wpdb
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 * @global object $userdata
 	 *
 	 * @param int      $id Field ID.
@@ -347,7 +347,7 @@ class BP_XProfile_Field {
 	 *
 	 * @since BuddyPress 1.1.0
 	 *
-	 * @global object $wpdb
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param boolean $delete_data Whether or not to delete data.
 	 * @return boolean
@@ -405,7 +405,7 @@ class BP_XProfile_Field {
 	 *
 	 * @since BuddyPress 1.1.0
 	 *
-	 * @global object $wpdb
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @return boolean
 	 */
@@ -562,7 +562,7 @@ class BP_XProfile_Field {
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
-	 * @global object $wpdb
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param bool $for_editing Whether or not the field is for editing.
 	 * @return array
@@ -614,7 +614,7 @@ class BP_XProfile_Field {
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
-	 * @global object $wpdb
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 */
 	public function delete_children() {
 		global $wpdb;
@@ -931,7 +931,7 @@ class BP_XProfile_Field {
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
-	 * @global object $wpdb
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param int $group_id ID of the field group to delete fields from.
 	 * @return boolean
@@ -961,7 +961,7 @@ class BP_XProfile_Field {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @global object $wpdb
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param string $field_name Name of the field to query the ID for.
 	 * @return int|null Field ID on success; null on failure.
@@ -990,7 +990,7 @@ class BP_XProfile_Field {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 * @global object $wpdb
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param int      $field_id       ID of the field to update.
 	 * @param int|null $position       Field position to update.

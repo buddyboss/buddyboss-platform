@@ -2960,7 +2960,7 @@ function bp_get_group_type_key( $post_id ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global type $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @return type array
  */
 function bp_get_active_group_types() {

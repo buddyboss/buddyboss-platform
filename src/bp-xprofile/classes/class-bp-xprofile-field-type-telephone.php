@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress XProfile Classes.
+ * BuddyPress XProfile Telephone Field Classes.
  *
- * @package BuddyBoss\XProfileClasses
+ * @package BuddyBoss\XProfile\Classes
  * @since BuddyPress 3.0.0
  */
 

@@ -344,7 +344,7 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 
 	/**
 	 * @group bp_update_user_last_activity
-	 * @global object $wpdb
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 * @param  string $key
 	 * @return string
 	 */

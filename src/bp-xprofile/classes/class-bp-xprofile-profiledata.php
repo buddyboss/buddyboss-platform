@@ -1,8 +1,8 @@
 <?php
 /**
- * BuddyPress XProfile Classes.
+ * BuddyPress XProfile Data Class.
  *
- * @package BuddyBoss\XProfileClasses
+ * @package BuddyBoss\XProfile\Classes
  * @since BuddyPress 1.0.0
  */
 
@@ -114,7 +114,7 @@ class BP_XProfile_ProfileData {
 	 *
 	 * @since BuddyPress 1.0.0
 	 *
-	 * @global object $wpdb
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 * @global array $bp
 	 *
 	 * @return bool
@@ -149,7 +149,7 @@ class BP_XProfile_ProfileData {
 	 *
 	 * @since BuddyPress 1.0.0
 	 *
-	 * @global object $wpdb
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @return bool
 	 */
@@ -274,7 +274,7 @@ class BP_XProfile_ProfileData {
 	 *
 	 * @since BuddyPress 1.0.0
 	 *
-	 * @global object $wpdb
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @return boolean
 	 */

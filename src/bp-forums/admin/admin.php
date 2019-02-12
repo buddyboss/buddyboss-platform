@@ -878,7 +878,7 @@ class BBP_Admin {
 	 *
 	 * @since bbPress (r3689)
 	 *
-	 * @global WPDB $wpdb
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 * @uses get_blog_option()
 	 * @uses wp_remote_get()
 	 */
@@ -925,7 +925,7 @@ class BBP_Admin {
 	 *
 	 * @since bbPress (r3689)
 	 *
-	 * @global WPDB $wpdb
+	 * @global wpdb $wpdb WordPress database abstraction object.
 	 * @uses get_blog_option()
 	 * @uses wp_remote_get()
 	 */

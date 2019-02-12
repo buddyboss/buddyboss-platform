@@ -297,7 +297,7 @@ function bbp_admin_repair_topic_hidden_reply_count() {
  *
  * @since bbPress (r4395)
  *
- * @global WPDB $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @return If a wp_error() occurs and no converted forums are found
  */
 function bbp_admin_repair_group_forum_relationship() {

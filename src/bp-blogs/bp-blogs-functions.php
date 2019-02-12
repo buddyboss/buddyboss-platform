@@ -415,7 +415,7 @@ add_action( 'wpmu_new_blog', 'bp_blogs_record_blog', 10, 2 );
 /**
  * Update blog name in BuddyPress blogmeta table.
  *
- * @global object $wpdb DB Layer.
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @param string $oldvalue Value before save. Passed by do_action() but
  *                         unused here.
@@ -431,7 +431,7 @@ add_action( 'update_option_blogname', 'bp_blogs_update_option_blogname', 10, 2 )
 /**
  * Update blog description in BuddyPress blogmeta table.
  *
- * @global object $wpdb DB Layer.
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @param string $oldvalue Value before save. Passed by do_action() but
  *                         unused here.
@@ -449,7 +449,7 @@ add_action( 'update_option_blogdescription', 'bp_blogs_update_option_blogdescrip
  *
  * @since BuddyPress 2.0.0
  *
- * @global object $wpdb DB Layer.
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @param string $oldvalue Value before save. Passed by do_action() but
  *                         unused here.
@@ -467,7 +467,7 @@ add_action( 'update_option_close_comments_for_old_posts', 'bp_blogs_update_optio
  *
  * @since BuddyPress 2.0.0
  *
- * @global object $wpdb DB Layer.
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @param string $oldvalue Value before save. Passed by do_action() but
  *                         unused here.
@@ -485,7 +485,7 @@ add_action( 'update_option_close_comments_days_old', 'bp_blogs_update_option_clo
  *
  * @since BuddyPress 2.0.0
  *
- * @global object $wpdb DB Layer.
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @param string $oldvalue Value before save. Passed by do_action() but
  *                         unused here.
@@ -509,7 +509,7 @@ add_action( 'update_option_thread_comments', 'bp_blogs_update_option_thread_comm
  *
  * @since BuddyPress 2.0.0
  *
- * @global object $wpdb DB Layer.
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @param string $oldvalue Value before save. Passed by do_action() but
  *                         unused here.
@@ -1282,7 +1282,7 @@ function bp_blogs_is_blog_hidden( $blog_id ) {
 /**
  * Delete a metadata from the DB for a blog.
  *
- * @global object $wpdb WordPress database access object.
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @param int         $blog_id    ID of the blog whose metadata is being deleted.
  * @param string|bool $meta_key   Optional. The key of the metadata being deleted. If
@@ -1324,7 +1324,7 @@ function bp_blogs_delete_blogmeta( $blog_id, $meta_key = false, $meta_value = fa
  *
  * @since BuddyPress 1.2.0
  *
- * @global object $wpdb WordPress database access object.
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @param int    $blog_id  ID of the blog whose metadata is being requested.
  * @param string $meta_key Optional. If present, only the metadata matching
@@ -1346,7 +1346,7 @@ function bp_blogs_get_blogmeta( $blog_id, $meta_key = '', $single = true ) {
 /**
  * Update a piece of blog meta.
  *
- * @global object $wpdb WordPress database access object.
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @param int    $blog_id    ID of the blog whose metadata is being updated.
  * @param string $meta_key   Key of the metadata being updated.

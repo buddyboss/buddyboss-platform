@@ -676,7 +676,7 @@ function bp_notifications_screen_settings() {}
  *
  * @since BuddyPress 2.3.0
  *
- * @global object $wpdb WordPress database access object.
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @param int    $notification_id ID of the notification item whose metadata is being deleted.
  * @param string $meta_key        Optional. The key of the metadata being deleted. If

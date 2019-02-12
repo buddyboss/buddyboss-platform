@@ -3163,7 +3163,7 @@ function bp_set_user_member_type( $user_id, $member_type, $append = false ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global type $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @param type $type_name
  *
@@ -3183,7 +3183,7 @@ function bp_member_type_type_id( $type_name ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global type $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @param type $type_name
  * @return type int
  */
@@ -3201,7 +3201,7 @@ function bp_member_type_term_taxonomy_id( $type_name ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global type $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @param type $member_type
  * @return type array
  */
@@ -3228,7 +3228,7 @@ function bp_member_type_post_by_type($member_type) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global type $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @param type $type_id
  * @return type array
  */
@@ -3283,7 +3283,7 @@ function bp_active_member_type_by_type( $type_id ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global type $wpdb
+ * @global wpdb $wpdb WordPress database abstraction object.
  * @return type array
  */
 function bp_get_active_member_types() {
