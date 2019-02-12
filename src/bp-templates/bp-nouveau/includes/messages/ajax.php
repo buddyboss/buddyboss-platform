@@ -832,6 +832,8 @@ function bp_nouveau_ajax_dsearch_recipients() {
 		'type' => 'members',
 	] );
 
+	$results = apply_filters( 'bp_members_suggestions_results', $results );
+
 	wp_send_json_success( [
 		'results' => array_map( function($result) {
 			return [
@@ -851,3 +853,29 @@ function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
 
 	return $user_query;
 }
+
+/**
+ * Exclude members from messages suggestions list if require users to be connected before they can message each other
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $results
+ *
+ * @return array
+ */
+function bp_nouveau_ajax_search_recipients_exclude_non_friend( $results ) {
+
+	if ( true === bp_force_friendship_to_message() ) {
+		$new_users = array();
+		foreach ( $results as $user ) {
+			$member_friend_status = friends_check_friendship_status( $user->user_id, bp_loggedin_user_id() );
+			if ( 'is_friend' === $member_friend_status ) {
+				$new_users[] = $user;
+			}
+		}
+		return $new_users;
+	}
+	return $results;
+}
+
+add_filter( 'bp_members_suggestions_results', 'bp_nouveau_ajax_search_recipients_exclude_non_friend' );
