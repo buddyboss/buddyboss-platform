@@ -117,7 +117,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 			<input id="bp-enable-member-dashboard" name="bp-enable-member-dashboard" type="checkbox" value="1" <?php checked( bp_nouveau_get_appearance_settings( 'user_front_page' ) ); ?> />
 			<label for="bp-enable-member-dashboard"><?php _e( 'Use a WordPress page as each user\'s personal Profile Dashboard', 'buddyboss' ); ?></label>
-			<p class="description"><?php _e( 'This page is only accessible to logged-in users.', 'buddyboss' ); ?></p>
+			<p class="description"><?php _e( 'This page is only accessible to logged-in users. Set this page via Dashboard->BuddyBoss->Pages', 'buddyboss' ); ?></p>
 		<?php
 	}
 
@@ -216,7 +216,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function bp_admin_setting_callback_member_type_display_on_profile() {
 		?>
 		<input id="bp-member-type-display-on-profile" name="bp-member-type-display-on-profile" type="checkbox" value="1" <?php checked( bp_member_type_display_on_profile() ); ?> />
-		<label for="bp-member-type-display-on-profile"><?php _e( 'Display each member\'s profile type on their profile page', 'buddyboss' ); ?></label>
+		<label for="bp-member-type-display-on-profile"><?php _e( 'Display member profile type on their profile page', 'buddyboss' ); ?></label>
 		<?php
 	}
 }

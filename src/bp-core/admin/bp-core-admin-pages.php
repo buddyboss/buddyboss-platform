@@ -111,7 +111,7 @@ function bp_core_admin_register_page_fields() {
 	$existing_pages = bp_core_get_directory_page_ids();
 	$directory_pages = bp_core_admin_get_directory_pages();
 
-	add_settings_section( 'bp_pages', __( 'Directories', 'buddyboss' ), 'bp_core_admin_directory_pages_description', 'bp-pages' );
+	add_settings_section( 'bp_pages', __( 'Components', 'buddyboss' ), 'bp_core_admin_directory_pages_description', 'bp-pages' );
 	foreach ($directory_pages as $name => $label) {
 		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_pages', compact('existing_pages', 'name', 'label') );
 		register_setting( 'bp-pages', $name, [] );

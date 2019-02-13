@@ -41,7 +41,7 @@ window.bp = window.bp || {};
             // Toggle Grid/List View
 			this.switchGridList();
 
-			// Member Invites popup revoke access
+			// User Invites popup revoke access
 			this.sendInvitesRevokeAccess();
 
 			this.sentInvitesFormValidate();

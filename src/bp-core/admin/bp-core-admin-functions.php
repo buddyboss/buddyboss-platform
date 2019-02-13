@@ -1381,13 +1381,13 @@ function bp_member_type_custom_metaboxes() {
 
 		// Add meta box if group types is entered.
 		if ( true === bp_disable_group_type_creation() && isset( $get_all_registered_group_types ) && !empty( $get_all_registered_group_types ) ) {
-			add_meta_box( 'bp-member-type-group-auto-join', __( 'Members with this profile type are only allowed to auto join groups with the following group types.', 'buddyboss' ), 'bp_member_type_group_auto_join_meta_box', null, 'normal', 'high' );
+			add_meta_box( 'bp-member-type-group-auto-join', __( 'Auto Join Groups', 'buddyboss' ), 'bp_member_type_group_auto_join_meta_box', null, 'normal', 'high' );
 		}
 	}
 
 	// Metabox for the profile type invite.
 	if ( true === bp_disable_invite_member_type() && bp_is_active( 'invites' ) ) {
-		add_meta_box( 'bp-member-type-invite', __( 'Member Invites', 'buddyboss' ), 'bp_member_type_invite_meta_box', null, 'normal', 'high' );
+		add_meta_box( 'bp-member-type-invite', __( 'User Invites', 'buddyboss' ), 'bp_member_type_invite_meta_box', null, 'normal', 'high' );
 	}
 }
 add_action( 'add_meta_boxes_' . bp_get_member_type_post_type(), 'bp_member_type_custom_metaboxes' );
@@ -1561,7 +1561,7 @@ function bp_member_type_wprole_metabox( $post ) {
 function bp_member_type_group_create_metabox( $post ) {
 
 	?>
-	<p><?php printf( __( 'Users of the %s profile type are only allowed to create groups of the following group types. Leave all unchecked to allow them to create any type of group.', 'buddyboss' ), $post->post_title )?></p>
+	<p><?php printf( __( 'Select which group types the %s profile type is allowed to create. (Leave all unchecked to allow creation of any group type.)', 'buddyboss' ), $post->post_title )?></p>
 	<?php
 
 	$get_all_registered_group_types = bp_get_active_group_types();
@@ -1627,7 +1627,9 @@ function bp_member_type_group_create_metabox( $post ) {
  * @param $post
  */
 function bp_member_type_group_auto_join_meta_box( $post ) {
-
+	?>
+	<p><?php _e( 'Select which group types allow auto join.', 'buddyboss' ); ?></p>
+	<?php
 	$get_all_registered_group_types = bp_get_active_group_types();
 
 	$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_auto_join', true )?: [];
@@ -1663,11 +1665,11 @@ function bp_member_type_invite_meta_box( $post ) {
 	?>
 	<p>
 		<input type='checkbox' name='bp-member-type-enabled-invite' value='1' <?php checked( $enable_invite, 1 ); ?> />
-		<strong><?php _e( 'Enable this profile type to set profile type of invitee.', 'buddyboss' ); ?></strong>
+		<strong><?php _e( 'Enable members to set profile type of invitee.', 'buddyboss' ); ?></strong>
 	</p>
 
 
-	<p><?php _e( 'Select which profile types this profile type is allowed to set via invitation.', 'buddyboss' ); ?></p>
+	<p><?php _e( 'Select which profile types can be set via invitation.', 'buddyboss' ); ?></p>
 
 	<?php
 

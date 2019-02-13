@@ -1689,7 +1689,7 @@ function bp_group_type_group_invites_meta_box( $post ) {
 	?>
 	<p>
 		<input type='checkbox' name='bp-group-type-restrict-invites-user-same-group-type' value='<?php echo esc_attr( 1 ); ?>' <?php checked( $get_restrict_invites_same_group_types, 1 ); ?> tabindex="7" />
-		<strong><?php _e( 'Restrict invites if user already in other same group type', 'buddyboss' ); ?></strong>
+		<strong><?php _e( 'Restrict invites to members not currently in any group with this group type. (If a member is already in a group with this type they can not be sent an invite)', 'buddyboss' ); ?></strong>
 	</p>
 	<p><?php printf( __( 'Members of this group can only invite members of selected profile types. (Leave blank to allow unrestricted invites)', 'buddyboss' ), $post->post_title )?></p>
 	<?php
