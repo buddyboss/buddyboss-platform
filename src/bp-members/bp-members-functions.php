@@ -87,10 +87,10 @@ add_action( 'bp_setup_globals', 'bp_core_define_slugs', 11 );
  *     @type string       $search_terms        Limit to users matching search terms. Default: false.
  *     @type string       $meta_key            Limit to users with a meta_key. Default: false.
  *     @type string       $meta_value          Limit to users with a meta_value (with meta_key). Default: false.
- *     @type array|string $member_type         Array or comma-separated string of member types.
- *     @type array|string $member_type__in     Array or comma-separated string of member types.
+ *     @type array|string $member_type         Array or comma-separated string of profile types.
+ *     @type array|string $member_type__in     Array or comma-separated string of profile types.
  *                                             `$member_type` takes precedence over this parameter.
- *     @type array|string $member_type__not_in Array or comma-separated string of member types to be excluded.
+ *     @type array|string $member_type__not_in Array or comma-separated string of profile types to be excluded.
  *     @type mixed        $include             Limit results by user IDs. Default: false.
  *     @type int          $per_page            Results per page. Default: 20.
  *     @type int          $page                Page of results. Default: 1.
@@ -2437,10 +2437,10 @@ function bp_get_displayed_user() {
 	return apply_filters( 'bp_get_displayed_user', $displayed_user );
 }
 
-/** Member Types *************************************************************/
+/** Profile Types *************************************************************/
 
 /**
- * Output the slug of the member type taxonomy.
+ * Output the slug of the profile type taxonomy.
  *
  * @since BuddyPress 2.7.0
  */
@@ -2449,7 +2449,7 @@ function bp_member_type_tax_name() {
 }
 
 	/**
-	 * Return the slug of the member type taxonomy.
+	 * Return the slug of the profile type taxonomy.
 	 *
 	 * @since BuddyPress 2.7.0
 	 *
@@ -2457,23 +2457,23 @@ function bp_member_type_tax_name() {
 	 */
 	function bp_get_member_type_tax_name() {
 		/**
-		 * Filters the slug of the member type taxonomy.
+		 * Filters the slug of the profile type taxonomy.
 		 *
 		 * @since BuddyPress 2.7.0
 		 *
-		 * @param string $value Member type taxonomy slug.
+		 * @param string $value profile type taxonomy slug.
 		 */
 		return apply_filters( 'bp_get_member_type_tax_name', 'bp_member_type' );
 	}
 
 /**
- * Register a member type.
+ * Register a profile type.
  *
  * @since BuddyPress 2.2.0
  *
- * @param string $member_type Unique string identifier for the member type.
+ * @param string $member_type Unique string identifier for the profile type.
  * @param array  $args {
- *     Array of arguments describing the member type.
+ *     Array of arguments describing the profile type.
  *
  *     @type array       $labels {
  *         Array of labels to use in various parts of the interface.
@@ -2481,18 +2481,18 @@ function bp_member_type_tax_name() {
  *         @type string $name          Default name. Should typically be plural.
  *         @type string $singular_name Singular name.
  *     }
- *     @type bool|string $has_directory Whether the member type should have its own type-specific directory.
+ *     @type bool|string $has_directory Whether the profile type should have its own type-specific directory.
  *                                      Pass `true` to use the `$member_type` string as the type's slug.
  *                                      Pass a string to customize the slug. Pass `false` to disable.
  *                                      Default: true.
  * }
- * @return object|WP_Error Member type object on success, WP_Error object on failure.
+ * @return object|WP_Error profile type object on success, WP_Error object on failure.
  */
 function bp_register_member_type( $member_type, $args = array() ) {
 	$bp = buddypress();
 
 	if ( isset( $bp->members->types[ $member_type ] ) ) {
-		return new WP_Error( 'bp_member_type_exists', __( 'Member type already exists.', 'buddyboss' ), $member_type );
+		return new WP_Error( 'bp_member_type_exists', __( 'Profile type already exists.', 'buddyboss' ), $member_type );
 	}
 
 	$r = bp_parse_args( $args, array(
@@ -2503,11 +2503,11 @@ function bp_register_member_type( $member_type, $args = array() ) {
 	$member_type = sanitize_key( $member_type );
 
 	/**
-	 * Filters the list of illegal member type names.
+	 * Filters the list of illegal profile type names.
 	 *
-	 * - 'any' is a special pseudo-type, representing items unassociated with any member type.
+	 * - 'any' is a special pseudo-type, representing items unassociated with any profile type.
 	 * - 'null' is a special pseudo-type, representing users without any type.
-	 * - '_none' is used internally to denote an item that should not apply to any member types.
+	 * - '_none' is used internally to denote an item that should not apply to any profile types.
 	 *
 	 * @since BuddyPress 2.4.0
 	 *
@@ -2515,7 +2515,7 @@ function bp_register_member_type( $member_type, $args = array() ) {
 	 */
 	$illegal_names = apply_filters( 'bp_member_type_illegal_names', array( 'any', 'null', '_none' ) );
 	if ( in_array( $member_type, $illegal_names, true ) ) {
-		return new WP_Error( 'bp_member_type_illegal_name', __( 'You may not register a member type with this name.', 'buddyboss' ), $member_type );
+		return new WP_Error( 'bp_member_type_illegal_name', __( 'You may not register a profile type with this name.', 'buddyboss' ), $member_type );
 	}
 
 	// Store the post type name as data in the object (not just as the array key).
@@ -2530,7 +2530,7 @@ function bp_register_member_type( $member_type, $args = array() ) {
 
 	// Directory slug.
 	if ( $r['has_directory'] ) {
-		// A string value is intepreted as the directory slug. Otherwise fall back on member type.
+		// A string value is intepreted as the directory slug. Otherwise fall back on profile type.
 		if ( is_string( $r['has_directory'] ) ) {
 			$directory_slug = $r['has_directory'];
 		} else {
@@ -2548,12 +2548,12 @@ function bp_register_member_type( $member_type, $args = array() ) {
 	$bp->members->types[ $member_type ] = $type = (object) $r;
 
 	/**
-	 * Fires after a member type is registered.
+	 * Fires after a profile type is registered.
 	 *
 	 * @since BuddyPress 2.2.0
 	 *
-	 * @param string $member_type Member type identifier.
-	 * @param object $type        Member type object.
+	 * @param string $member_type profile type identifier.
+	 * @param object $type        profile type object.
 	 */
 	do_action( 'bp_registered_member_type', $member_type, $type );
 
@@ -2561,12 +2561,12 @@ function bp_register_member_type( $member_type, $args = array() ) {
 }
 
 /**
- * Retrieve a member type object by name.
+ * Retrieve a profile type object by name.
  *
  * @since BuddyPress 2.2.0
  *
- * @param string $member_type The name of the member type.
- * @return object A member type object.
+ * @param string $member_type The name of the profile type.
+ * @return object A profile type object.
  */
 function bp_get_member_type_object( $member_type ) {
 	$types = bp_get_member_types( array(), 'objects' );
@@ -2579,20 +2579,20 @@ function bp_get_member_type_object( $member_type ) {
 }
 
 /**
- * Get a list of all registered member type objects.
+ * Get a list of all registered profile type objects.
  *
  * @since BuddyPress 2.2.0
  *
  * @see bp_register_member_type() for accepted arguments.
  *
  * @param array|string $args     Optional. An array of key => value arguments to match against
- *                               the member type objects. Default empty array.
+ *                               the profile type objects. Default empty array.
  * @param string       $output   Optional. The type of output to return. Accepts 'names'
  *                               or 'objects'. Default 'names'.
  * @param string       $operator Optional. The logical operation to perform. 'or' means only one
  *                               element from the array needs to match; 'and' means all elements
  *                               must match. Accepts 'or' or 'and'. Default 'and'.
- * @return array A list of member type names or objects.
+ * @return array A list of profile type names or objects.
  */
 function bp_get_member_types( $args = array(), $output = 'names', $operator = 'and' ) {
 	$types = buddypress()->members->types;
@@ -2600,14 +2600,14 @@ function bp_get_member_types( $args = array(), $output = 'names', $operator = 'a
 	$types = wp_filter_object_list( $types, $args, $operator );
 
 	/**
-	 * Filters the array of member type objects.
+	 * Filters the array of profile type objects.
 	 *
 	 * This filter is run before the $output filter has been applied, so that
-	 * filtering functions have access to the entire member type objects.
+	 * filtering functions have access to the entire profile type objects.
 	 *
 	 * @since BuddyPress 2.2.0
 	 *
-	 * @param array  $types     Member type objects, keyed by name.
+	 * @param array  $types     profile type objects, keyed by name.
 	 * @param array  $args      Array of key=>value arguments for filtering.
 	 * @param string $operator  'or' to match any of $args, 'and' to require all.
 	 */
@@ -2626,7 +2626,7 @@ function bp_get_member_types( $args = array(), $output = 'names', $operator = 'a
  * @since BuddyPress 2.2.0
  *
  * @param int    $user_id     ID of the user.
- * @param string $member_type Member type.
+ * @param string $member_type profile type.
  * @param bool   $append      Optional. True to append this to existing types for user,
  *                            false to replace. Default: false.
  * @return false|array $retval See {@see bp_set_object_terms()}.
@@ -2644,12 +2644,12 @@ function bp_set_member_type( $user_id, $member_type, $append = false ) {
 		wp_cache_delete( $user_id, 'bp_member_member_type' );
 
 		/**
-		 * Fires just after a user's member type has been changed.
+		 * Fires just after a user's profile type has been changed.
 		 *
 		 * @since BuddyPress 2.2.0
 		 *
-		 * @param int    $user_id     ID of the user whose member type has been updated.
-		 * @param string $member_type Member type.
+		 * @param int    $user_id     ID of the user whose profile type has been updated.
+		 * @param string $member_type profile type.
 		 * @param bool   $append      Whether the type is being appended to existing types.
 		 */
 		do_action( 'bp_set_member_type', $user_id, $member_type, $append );
@@ -2664,11 +2664,11 @@ function bp_set_member_type( $user_id, $member_type, $append = false ) {
  * @since BuddyPress 2.3.0
  *
  * @param int    $user_id     ID of the user.
- * @param string $member_type Member Type.
+ * @param string $member_type profile type.
  * @return bool|WP_Error
  */
 function bp_remove_member_type( $user_id, $member_type ) {
-	// Bail if no valid member type was passed.
+	// Bail if no valid profile type was passed.
 	if ( empty( $member_type ) || ! bp_get_member_type_object( $member_type ) ) {
 		return false;
 	}
@@ -2680,12 +2680,12 @@ function bp_remove_member_type( $user_id, $member_type ) {
 		wp_cache_delete( $user_id, 'bp_member_member_type' );
 
 		/**
-		 * Fires just after a user's member type has been removed.
+		 * Fires just after a user's profile type has been removed.
 		 *
 		 * @since BuddyPress 2.3.0
 		 *
-		 * @param int    $user_id     ID of the user whose member type has been updated.
-		 * @param string $member_type Member type.
+		 * @param int    $user_id     ID of the user whose profile type has been updated.
+		 * @param string $member_type profile type.
 		 */
 		do_action( 'bp_remove_member_type', $user_id, $member_type );
 	}
@@ -2701,7 +2701,7 @@ function bp_remove_member_type( $user_id, $member_type ) {
  * @param int  $user_id ID of the user.
  * @param bool $single  Optional. Whether to return a single type string. If multiple types are found
  *                      for the user, the oldest one will be returned. Default: true.
- * @return string|array|bool On success, returns a single member type (if $single is true) or an array of member
+ * @return string|array|bool On success, returns a single profile type (if $single is true) or an array of member
  *                           types (if $single is false). Returns false on failure.
  */
 function bp_get_member_type( $user_id, $single = true ) {
@@ -2734,11 +2734,11 @@ function bp_get_member_type( $user_id, $single = true ) {
 	}
 
 	/**
-	 * Filters a user's member type(s).
+	 * Filters a user's profile type(s).
 	 *
 	 * @since BuddyPress 2.2.0
 	 *
-	 * @param string $type    Member type.
+	 * @param string $type    profile type.
 	 * @param int    $user_id ID of the user.
 	 * @param bool   $single  Whether to return a single type string, or an array.
 	 */
@@ -2746,21 +2746,21 @@ function bp_get_member_type( $user_id, $single = true ) {
 }
 
 /**
- * Check whether the given user has a certain member type.
+ * Check whether the given user has a certain profile type.
  *
  * @since BuddyPress 2.3.0
  *
  * @param int    $user_id     $user_id ID of the user.
- * @param string $member_type Member Type.
- * @return bool Whether the user has the given member type.
+ * @param string $member_type profile type.
+ * @return bool Whether the user has the given profile type.
  */
 function bp_has_member_type( $user_id, $member_type ) {
-	// Bail if no valid member type was passed.
+	// Bail if no valid profile type was passed.
 	if ( empty( $member_type ) || ! bp_get_member_type_object( $member_type ) ) {
 		return false;
 	}
 
-	// Get all user's member types.
+	// Get all user's profile types.
 	$types = bp_get_member_type( $user_id, false );
 
 	if ( ! is_array( $types ) ) {
@@ -2771,7 +2771,7 @@ function bp_has_member_type( $user_id, $member_type ) {
 }
 
 /**
- * Delete a user's member type when the user when the user is deleted.
+ * Delete a user's profile type when the user when the user is deleted.
  *
  * @since BuddyPress 2.2.0
  *
@@ -2785,7 +2785,7 @@ add_action( 'wpmu_delete_user', 'bp_remove_member_type_on_user_delete' );
 add_action( 'delete_user', 'bp_remove_member_type_on_user_delete' );
 
 /**
- * Get the "current" member type, if one is provided, in member directories.
+ * Get the "current" profile type, if one is provided, in member directories.
  *
  * @since BuddyPress 2.3.0
  *
@@ -2794,11 +2794,11 @@ add_action( 'delete_user', 'bp_remove_member_type_on_user_delete' );
 function bp_get_current_member_type() {
 
 	/**
-	 * Filters the "current" member type, if one is provided, in member directories.
+	 * Filters the "current" profile type, if one is provided, in member directories.
 	 *
 	 * @since BuddyPress 2.3.0
 	 *
-	 * @param string $value "Current" member type.
+	 * @param string $value "Current" profile type.
 	 */
 	return apply_filters( 'bp_get_current_member_type', buddypress()->current_member_type );
 }
@@ -2830,7 +2830,7 @@ function bp_custom_display_name_format( $display_name, $user_id = null ) {
 }
 
 /**
- * Enable/disable member type functionality.
+ * Enable/disable profile type functionality.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -2840,13 +2840,13 @@ function bp_register_member_type_section() {
 
 	if ( false === $is_member_type_enabled ) {
 
-		// action for remove member type metabox.
+		// action for remove profile type metabox.
 		add_action( 'bp_members_admin_user_metaboxes', 'bp_remove_member_type_metabox_globally' );
 
 		return;
 	}
 
-	// Member Types
+	// profile types
 	register_post_type(
 		bp_get_member_type_post_type(),
 		apply_filters( 'bp_register_member_type_post_type', array(
@@ -2867,19 +2867,19 @@ function bp_register_member_type_section() {
 
 
 
-	// remove users of a specific member type from members directory
+	// remove users of a specific profile type from members directory
 	add_action( 'bp_ajax_querystring', 'bp_member_type_exclude_users_from_directory_and_searches', 999, 2 );
 
-	// set member type while update user profile
+	// set profile type while update user profile
 	//add_action( 'set_user_role', 'bp_update_user_member_type_type_set', 10, 2 );
 
 	// fix all member count
 	add_filter( 'bp_core_get_active_member_count', 'bp_fixed_all_member_type_count', 999 );
 
-	// action for changing bp query of member types.
+	// action for changing bp query of profile types.
 	add_action( 'bp_pre_user_query',  'bp_member_type_query', 1, 1 );
 
-	// action for remove member type metabox.
+	// action for remove profile type metabox.
 	add_action( 'bp_members_admin_user_metaboxes', 'bp_remove_member_type_metabox' );
 
 	//add column
@@ -2900,52 +2900,52 @@ function bp_register_member_type_section() {
 	// filter for adding body class where the shortcode added.
 	add_filter( 'body_class', 'bp_member_type_shortcode_add_body_class' );
 
-	// Hook for creating a member type shortcode.
+	// Hook for creating a profile type shortcode.
 	add_shortcode( 'profile', 'bp_member_type_shortcode_callback' );
 
-	// action for adding the js for the member type post type.
+	// action for adding the js for the profile type post type.
 	add_action('admin_enqueue_scripts', 'bp_member_type_changing_listing_label');
 
 }
 
-// Register enable/disable member type functionality.
+// Register enable/disable profile type functionality.
 add_action( 'bp_init', 'bp_register_member_type_section' );
 
-// action for registering active member types.
+// action for registering active profile types.
 add_action( 'bp_register_member_types', 'bp_register_active_member_types' );
 
 /**
- * Output the name of the member type post type.
+ * Output the name of the profile type post type.
  *
  * @since BuddyBoss 1.0.0
  *
- * @return string   custom post type of member type.
+ * @return string   custom post type of profile type.
  */
 function bp_member_type_post_type() {
 	echo bp_get_member_type_post_type();
 }
 
 /**
- * Returns the name of the member type post type.
+ * Returns the name of the profile type post type.
  *
  * @since BuddyBoss 1.0.0
  *
- * @return string The name of the member type post type.
+ * @return string The name of the profile type post type.
  */
 function bp_get_member_type_post_type() {
 
 	/**
-	 * Filters the name of the member type post type.
+	 * Filters the name of the profile type post type.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param string $value Member Type post type name.
+	 * @param string $value profile type post type name.
 	 */
 	return apply_filters( 'bp_get_member_type_post_type', buddypress()->member_type_post_type );
 }
 
 /**
- * Return labels used by the member type post type.
+ * Return labels used by the profile type post type.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -2954,7 +2954,7 @@ function bp_get_member_type_post_type() {
 function bp_get_member_type_post_type_labels() {
 
 	/**
-	 * Filters member type post type labels.
+	 * Filters profile type post type labels.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -2975,7 +2975,7 @@ function bp_get_member_type_post_type_labels() {
 }
 
 /**
- * Return array of features that the member type post type supports.
+ * Return array of features that the profile type post type supports.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -2984,7 +2984,7 @@ function bp_get_member_type_post_type_labels() {
 function bp_get_member_type_post_type_supports() {
 
 	/**
-	 * Filters the features that the member type post type supports.
+	 * Filters the features that the profile type post type supports.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -2997,7 +2997,7 @@ function bp_get_member_type_post_type_supports() {
 }
 
 /**
- * Return member type key.
+ * Return profile type key.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3012,7 +3012,7 @@ function bp_get_member_type_key( $post_id ) {
 
 	$key = get_post_meta( $post_id, '_bp_member_type_key', true );
 
-	// Fallback to legacy way of generating member type key from singular label
+	// Fallback to legacy way of generating profile type key from singular label
 	// if Key is not set by admin user
 	if ( empty( $key ) ) {
 		$key = strtolower( get_post_meta( $post_id, '_bp_member_type_label_singular_name', true ) );
@@ -3065,7 +3065,7 @@ function bp_get_member_type_by_wp_role($role){
 }
 
 /**
- * Removes the role from member type.
+ * Removes the role from profile type.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3082,7 +3082,7 @@ function bp_remove_member_type_to_roles($wp_roles, $member_type){
 }
 
 /**
- * Sets the member type to roles.
+ * Sets the profile type to roles.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3125,12 +3125,12 @@ function bp_get_users_by_roles($roles) {
 
 /**
  * Set type for a member profile.
- * Set member types on save_post
+ * Set profile types on save_post
  *
  * @since BuddyBoss 1.0.0
  *
  * @param int    $user_id     ID of the user.
- * @param string $member_type Member type.
+ * @param string $member_type profile type.
  * @param bool   $append      Optional. True to append this to existing types for user,
  *                            false to replace. Default: false.
  * @return See {@see bp_set_object_terms()}.
@@ -3144,12 +3144,12 @@ function bp_set_user_member_type( $user_id, $member_type, $append = false ) {
 		wp_cache_delete( $user_id, 'bp_member_member_type' );
 
 		/**
-		 * Fires just after a user's member type has been changed.
+		 * Fires just after a user's profile type has been changed.
 		 *
 		 * @since BuddyPress (2.2.0)
 		 *
-		 * @param int    $user_id     ID of the user whose member type has been updated.
-		 * @param string $member_type Member type.
+		 * @param int    $user_id     ID of the user whose profile type has been updated.
+		 * @param string $member_type profile type.
 		 * @param bool   $append      Whether the type is being appended to existing types.
 		 */
 		do_action( 'bp_set_user_member_type', $user_id, $member_type, $append );
@@ -3159,7 +3159,7 @@ function bp_set_user_member_type( $user_id, $member_type, $append = false ) {
 }
 
 /**
- * Gets member type id.
+ * Gets profile type id.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3179,7 +3179,7 @@ function bp_member_type_type_id( $type_name ) {
 }
 
 /**
- * Gets member type term taxonomy id.
+ * Gets profile type term taxonomy id.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3197,7 +3197,7 @@ function bp_member_type_term_taxonomy_id( $type_name ) {
 }
 
 /**
- * Get Member post by member type.
+ * Get Member post by profile type.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3212,7 +3212,7 @@ function bp_member_type_post_by_type($member_type) {
 	$query = $wpdb->prepare( $query, '_bp_member_type_key', $member_type );
 	$post_id = $wpdb->get_var( $query );
 
-	// Fallback to legacy way to retrieve member type from name by using singular label
+	// Fallback to legacy way to retrieve profile type from name by using singular label
 	if ( ! $post_id ) {
 		$name = str_replace( array( '-', '-' ), array( ' ', ',' ), $member_type );
 		$query = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
@@ -3279,7 +3279,7 @@ function bp_active_member_type_by_type( $type_id ) {
 }
 
 /**
- * Get all member types.
+ * Get all profile types.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3314,7 +3314,7 @@ function bp_plural_labels_array() {
 }
 
 /**
- * Removed member type.
+ * Removed profile type.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3354,7 +3354,7 @@ function bp_get_removed_member_types(){
 }
 
 /**
- * Get members removed member type.
+ * Get members removed profile type.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3362,9 +3362,9 @@ function bp_get_removed_member_types(){
  */
 function bp_get_users_of_removed_member_types(){
 	$user_ids = array();
-	// get removed member type post ids
+	// get removed profile type post ids
 	$bp_member_type_ids = bp_get_removed_member_types();
-	// get removed member type names/slugs
+	// get removed profile type names/slugs
 	$bp_member_type_names = array();
 	if( isset($bp_member_type_ids) && !empty($bp_member_type_ids) ){
 		foreach($bp_member_type_ids as $single){
@@ -3389,7 +3389,7 @@ function bp_get_users_of_removed_member_types(){
 }
 
 /**
- * Register all active member types.
+ * Register all active profile types.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3431,7 +3431,7 @@ function bp_register_active_member_types() {
 }
 
 /**
- * Exclud specific member types from search and listing.
+ * Exclud specific profile types from search and listing.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3450,7 +3450,7 @@ function bp_member_type_exclude_users_from_directory_and_searches( $qs=false, $o
 
 	$args = wp_parse_args( $qs );
 
-	// Removed this condition to add the member type filter works properly do not remove because need to check if this causing anywhere.
+	// Removed this condition to add the profile type filter works properly do not remove because need to check if this causing anywhere.
 	//if( ! empty( $args['user_id'] ) )
 		//return $qs;
 
@@ -3465,7 +3465,7 @@ function bp_member_type_exclude_users_from_directory_and_searches( $qs=false, $o
 }
 
 /**
- * Set member type while updating user profile.
+ * Set profile type while updating user profile.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3558,7 +3558,7 @@ function bp_member_type_query( $query ) {
 }
 
 /**
- * Remove member type metabox for users who doesn't have permission to change member types.
+ * Remove profile type metabox for users who doesn't have permission to change profile types.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3570,7 +3570,7 @@ function bp_remove_member_type_metabox() {
 }
 
 /**
- * Removes metabox from member profile if member types are disabled.
+ * Removes metabox from member profile if profile types are disabled.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -3654,7 +3654,7 @@ function bp_member_type_show_data( $column, $post_id  ) {
 }
 
 /**
- * Sets up a column on admin view on member type post type.
+ * Sets up a column on admin view on profile type post type.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3673,7 +3673,7 @@ function bp_member_type_add_sortable_columns( $columns ) {
 }
 
 /**
- * Adds a filter to member type sort items.
+ * Adds a filter to profile type sort items.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3685,7 +3685,7 @@ function bp_member_type_add_request_filter() {
 }
 
 /**
- * Sort list of member type post types.
+ * Sort list of profile type post types.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3790,7 +3790,7 @@ function bp_member_type_shortcode_callback( $atts ) {
 
 		$name = str_replace(array(' ', ','), array('-', '-'), strtolower( $atts['type'] ) );
 
-		// Set the "current" member type, if one is provided, in member directories.
+		// Set the "current" profile type, if one is provided, in member directories.
 		buddypress()->current_member_type = $name;
 		buddypress()->current_component = 'members';
 		buddypress()->is_directory = true;
@@ -3842,7 +3842,7 @@ function bp_member_type_shortcode_filter( $query_string, $object ){
 }
 
 /**
- * Adds the JS on member type post type.
+ * Adds the JS on profile type post type.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -3857,7 +3857,7 @@ function bp_member_type_changing_listing_label() {
 		'edit-bp-group-type'
 	);
 
-	// Check to make sure we're on a member type's admin page
+	// Check to make sure we're on a profile type's admin page
 	if ( isset( $current_screen->id ) && in_array( $current_screen->id, $bp_member_type_pages ) ) {
 
 		wp_enqueue_script('bp-clipboard',$url.'clipboard.js',array(), '1.0.0' );
@@ -3877,7 +3877,7 @@ function bp_member_type_changing_listing_label() {
 }
 
 /**
- * Get member type.
+ * Get profile type.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3900,7 +3900,7 @@ function bp_get_user_member_type( $user_id ) {
 		if ( true === bp_member_type_enable_disable() ) {
 			if ( true === bp_member_type_display_on_profile() ) {
 
-				// Get the member type.
+				// Get the profile type.
 				$type = bp_get_member_type( $user_id );
 
 				// Output the
@@ -3921,7 +3921,7 @@ function bp_get_user_member_type( $user_id ) {
 		if ( true === bp_member_type_enable_disable() ) {
 			if ( true === bp_member_type_display_on_profile() ) {
 
-				// Get the member type.
+				// Get the profile type.
 				$type = bp_get_member_type( $user_id );
 
 				// Output the
@@ -4190,7 +4190,7 @@ function bp_member_add_auto_join_groups( $user_id, $key, $user ) {
 
 	$user_member_type = bp_get_member_type( $user_id );
 
-	// Get post id of selected member type.
+	// Get post id of selected profile type.
 	$post_id = bp_member_type_post_by_type( $user_member_type );
 
 	// Get selected auto join group types.

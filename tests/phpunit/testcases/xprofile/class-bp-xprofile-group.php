@@ -206,7 +206,7 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 		$field2 = new BP_XProfile_Field( $f2 );
 		$field2->set_member_types( array( 'bar' ) );
 
-		// Field 3 is visible to all users (no member type set).
+		// Field 3 is visible to all users (no profile type set).
 
 		// Field 4 is visible to no one.
 		$field4 = new BP_XProfile_Field( $f4 );
@@ -254,9 +254,9 @@ class BP_Tests_BP_XProfile_Group extends BP_UnitTestCase {
 		$field2 = new BP_XProfile_Field( $f2 );
 		$field2->set_member_types( array( 'null' ) );
 
-		// Field 3 is visible to all users (no member type set).
+		// Field 3 is visible to all users (no profile type set).
 
-		// User has no member types, so should see f2 and f3 .
+		// User has no profile types, so should see f2 and f3 .
 		$u = self::factory()->user->create();
 
 		$found_groups = BP_XProfile_Group::get( array(

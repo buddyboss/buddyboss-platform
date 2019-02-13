@@ -170,10 +170,10 @@ class BP_XProfile_Field {
 	public $data;
 
 	/**
-	 * Member types to which the profile field should be applied.
+	 * profile types to which the profile field should be applied.
 	 *
 	 * @since BuddyPress 2.4.0
-	 * @var array Array of member types.
+	 * @var array Array of profile types.
 	 */
 	protected $member_types;
 
@@ -626,15 +626,15 @@ class BP_XProfile_Field {
 	}
 
 	/**
-	 * Gets the member types to which this field should be available.
+	 * Gets the profile types to which this field should be available.
 	 *
-	 * Will not return inactive member types, even if associated metadata is found.
+	 * Will not return inactive profile types, even if associated metadata is found.
 	 *
-	 * 'null' is a special pseudo-type, which represents users that do not have a member type.
+	 * 'null' is a special pseudo-type, which represents users that do not have a profile type.
 	 *
 	 * @since BuddyPress 2.4.0
 	 *
-	 * @return array Array of member type names.
+	 * @return array Array of profile type names.
 	 */
 	public function get_member_types() {
 		if ( ! is_null( $this->member_types ) ) {
@@ -653,7 +653,7 @@ class BP_XProfile_Field {
 		if ( ! in_array( '_none', $raw_types ) ) {
 			$registered_types = bp_get_member_types();
 
-			// Eliminate invalid member types saved in the database.
+			// Eliminate invalid profile types saved in the database.
 			foreach ( $raw_types as $raw_type ) {
 				// 'null' is a special case - it represents users without a type.
 				if ( 'null' === $raw_type || isset( $registered_types[ $raw_type ] ) ) {
@@ -661,7 +661,7 @@ class BP_XProfile_Field {
 				}
 			}
 
-			// If no member types have been saved, intepret as *all* member types.
+			// If no profile types have been saved, intepret as *all* profile types.
 			if ( empty( $types ) ) {
 				$types = array_values( $registered_types );
 
@@ -671,11 +671,11 @@ class BP_XProfile_Field {
 		}
 
 		/**
-		 * Filters the member types to which an XProfile object should be applied.
+		 * Filters the profile types to which an XProfile object should be applied.
 		 *
 		 * @since BuddyPress 2.4.0
 		 *
-		 * @param array             $types Member types.
+		 * @param array             $types profile types.
 		 * @param BP_XProfile_Field $field Field object.
 		 */
 		$this->member_types = apply_filters( 'bp_xprofile_field_member_types', $types, $this );
@@ -684,18 +684,18 @@ class BP_XProfile_Field {
 	}
 
 	/**
-	 * Sets the member types for this field.
+	 * Sets the profile types for this field.
 	 *
 	 * @since BuddyPress 2.4.0
 	 *
-	 * @param array $member_types Array of member types. Can include 'null' (users with no type) in addition to any
+	 * @param array $member_types Array of profile types. Can include 'null' (users with no type) in addition to any
 	 *                            registered types.
-	 * @param bool  $append       Whether to append to existing member types. If false, all existing member type
+	 * @param bool  $append       Whether to append to existing profile types. If false, all existing profile type
 	 *                            associations will be deleted before adding your `$member_types`. Default false.
-	 * @return array Member types for the current field, after being saved.
+	 * @return array profile types for the current field, after being saved.
 	 */
 	public function set_member_types( $member_types, $append = false ) {
-		// Unset invalid member types.
+		// Unset invalid profile types.
 		$types = array();
 		foreach ( $member_types as $member_type ) {
 			// 'null' is a special case - it represents users without a type.
@@ -738,11 +738,11 @@ class BP_XProfile_Field {
 			}
 		}
 
-		// Reset internal cache of member types.
+		// Reset internal cache of profile types.
 		$this->member_types = null;
 
 		/**
-		 * Fires after a field's member types have been updated.
+		 * Fires after a field's profile types have been updated.
 		 *
 		 * @since BuddyPress 2.4.0
 		 *
@@ -755,7 +755,7 @@ class BP_XProfile_Field {
 	}
 
 	/**
-	 * Gets a label representing the field's member types.
+	 * Gets a label representing the field's profile types.
 	 *
 	 * This label is displayed alongside the field's name on the Profile Fields Dashboard panel.
 	 *
@@ -769,7 +769,7 @@ class BP_XProfile_Field {
 			return '';
 		}
 
-		// Return an empty string if no member types are registered.
+		// Return an empty string if no profile types are registered.
 		$all_types = bp_get_member_types();
 		if ( empty( $all_types ) ) {
 			return '';
@@ -777,7 +777,7 @@ class BP_XProfile_Field {
 
 		$member_types = $this->get_member_types();
 
-		// If the field applies to all member types, show no message.
+		// If the field applies to all profile types, show no message.
 		$all_types[] = 'null';
 		if ( array_values( $all_types ) == $member_types ) {
 			return '';
@@ -803,10 +803,10 @@ class BP_XProfile_Field {
 
 			// Add the 'null' option to the end of the list.
 			if ( $has_null ) {
-				$member_type_labels[] = __( 'Users with no member type', 'buddyboss' );
+				$member_type_labels[] = __( 'Users with no profile type', 'buddyboss' );
 			}
 
-			$label = sprintf( __( '(Member types: %s)', 'buddyboss' ), implode( ', ', array_map( 'esc_html', $member_type_labels ) ) );
+			$label = sprintf( __( '(Profile types: %s)', 'buddyboss' ), implode( ', ', array_map( 'esc_html', $member_type_labels ) ) );
 		} else {
 			$label = '<span class="member-type-none-notice">' . __( '(Unavailable to all members)', 'buddyboss' ) . '</span>';
 		}
@@ -1029,13 +1029,13 @@ class BP_XProfile_Field {
 	}
 
 	/**
-	 * Gets the IDs of fields applicable for a given member type or array of member types.
+	 * Gets the IDs of fields applicable for a given profile type or array of profile types.
 	 *
 	 * @since BuddyPress 2.4.0
 	 *
-	 * @param string|array $member_types Member type or array of member types. Use 'any' to return unrestricted
-	 *                                   fields (those available for anyone, regardless of member type).
-	 * @return array Multi-dimensional array, with field IDs as top-level keys, and arrays of member types
+	 * @param string|array $member_types profile type or array of profile types. Use 'any' to return unrestricted
+	 *                                   fields (those available for anyone, regardless of profile type).
+	 * @return array Multi-dimensional array, with field IDs as top-level keys, and arrays of profile types
 	 *               associated with each field as values.
 	 */
 	public static function get_fields_for_member_type( $member_types ) {
@@ -1051,7 +1051,7 @@ class BP_XProfile_Field {
 
 		$bp = buddypress();
 
-		// Pull up all recorded field member type data.
+		// Pull up all recorded field profile type data.
 		$mt_meta = wp_cache_get( 'field_member_types', 'bp_xprofile' );
 		if ( false === $mt_meta ) {
 			$mt_meta = $wpdb->get_results( "SELECT object_id, meta_value FROM {$bp->profile->table_name_meta} WHERE meta_key = 'member_type' AND object_type = 'field'" );
@@ -1080,7 +1080,7 @@ class BP_XProfile_Field {
 			}
 		}
 
-		// Any fields with no member_type metadata are available to all member types.
+		// Any fields with no member_type metadata are available to all profile types.
 		if ( ! in_array( '_none', $member_types ) ) {
 			if ( ! empty( $all_recorded_field_ids ) ) {
 				$all_recorded_field_ids_sql = implode( ',', array_map( 'absint', $all_recorded_field_ids ) );
@@ -1279,7 +1279,7 @@ class BP_XProfile_Field {
 							// Output the required metabox.
 							$this->required_metabox();
 
-							// Output the Member Types metabox.
+							// Output the profile types metabox.
 							$this->member_type_metabox();
 
 							// Output the field visibility metaboxes.
@@ -1456,7 +1456,7 @@ class BP_XProfile_Field {
 	}
 
 	/**
-	 * Private method used to output field Member Type metabox.
+	 * Private method used to output field profile type metabox.
 	 *
 	 * @since BuddyPress 2.4.0
 	 */
@@ -1469,7 +1469,7 @@ class BP_XProfile_Field {
 			return;
 		}
 
-		// Bail when no member types are registered.
+		// Bail when no profile types are registered.
 		if ( ! $member_types = bp_get_member_types( array(), 'objects' ) ) {
 			return;
 		}

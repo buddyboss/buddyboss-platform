@@ -3301,7 +3301,7 @@ function bp_the_body_class() {
 		if ( bp_is_user() ) {
 			$bp_classes[] = 'bp-user';
 
-			// Add current user member types.
+			// Add current user profile types.
 			if ( $member_types = bp_get_member_type( bp_displayed_user_id(), false ) ) {
 				foreach( $member_types as $member_type ) {
 					$bp_classes[] = sprintf( 'member-type-%s', esc_attr( $member_type ) );

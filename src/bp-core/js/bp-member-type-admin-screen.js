@@ -1,4 +1,4 @@
-//member types screen
+//profile types screen
 if (typeof jq == "undefined")
     var jq = jQuery;
 
@@ -9,7 +9,7 @@ var l10n        =  window._bpmtAdminL10n || {}
 
 jq(document).ready(function () {
 
-    /** Copy Member Type Shortcode *******************/
+    /** Copy profile type Shortcode *******************/
     var clipboard = new Clipboard('.copy-to-clipboard');
     clipboard.on('success', function(e) {
         var  $btnCtc = jq('.copy-to-clipboard');
@@ -76,7 +76,7 @@ jq(document).ready(function () {
 
 
     /**
-     * Show warning when we delete/trash a member type, that already has users attached to it
+     * Show warning when we delete/trash a profile type, that already has users attached to it
      */
     jq('a.submitdelete').on( 'click', function (e) {
 
@@ -103,7 +103,7 @@ jq(document).ready(function () {
     });
 
     /**
-     * Show warning when we bulk delete/trash a member type, that already has users attached to it
+     * Show warning when we bulk delete/trash a profile type, that already has users attached to it
      */
     jq('#doaction, #doaction2').on( 'click', function(e) {
         var
@@ -111,7 +111,7 @@ jq(document).ready(function () {
             user_count,
             msgWarnBulk = '';
 
-        //Check if we have users with member type assigned
+        //Check if we have users with profile type assigned
         jq('input[name="post[]"]:checked:not(:first-child):not(:last-child)').each(function(i,v){
             var $this = jq(this);
             var $tr = $this.parents('tr');

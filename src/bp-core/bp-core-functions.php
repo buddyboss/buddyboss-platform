@@ -3904,7 +3904,7 @@ function bp_check_member_send_invites_tab_member_type_allowed() {
 
 	// Check BuddyBoss > Settings > Profiles > Enable profile types to give members unique profile fields and permission.
 	if ( true === bp_member_type_enable_disable() ) {
-		// Check BuddyBoss > Settings > User Invites > Allow users to sign up the profile types to personal inviting.
+		// Check BuddyBoss > Settings > User Invites > Allow users to select profile type of invitee.
 		if ( true === bp_disable_invite_member_type() ) {
 			$current_user = bp_loggedin_user_id();
 			$member_type = bp_get_member_type( $current_user );

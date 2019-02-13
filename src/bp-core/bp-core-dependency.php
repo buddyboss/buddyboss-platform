@@ -204,14 +204,14 @@ function bp_setup_widgets() {
 }
 
 /**
- * Fire the 'bp_register_member_types' action, where plugins should register member types.
+ * Fire the 'bp_register_member_types' action, where plugins should register profile types.
  *
  * @since BuddyPress 2.3.0
  */
 function bp_register_member_types() {
 
 	/**
-	 * Fires inside bp_register_member_types(), so plugins can register member types.
+	 * Fires inside bp_register_member_types(), so plugins can register profile types.
 	 *
 	 * @since BuddyPress 2.3.0
 	 */

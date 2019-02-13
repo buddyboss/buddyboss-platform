@@ -1,197 +1,200 @@
 jQuery(document).ready(function($) {
 	BP_SEARCH.cache = [];
 
-	if (BP_SEARCH.enable_ajax_search == '1') {
-        var document_height = $(document).height();
-		$("form[role='search'], form.search-form, form.searchform, form#adminbarsearch, .bp-search>#search-form").each(function() {
-			var $form = $(this);
-			$search_field = $form.find("input[name='s'], input[type=search]");
-			if ($search_field.length > 0) {
-				currentType = '';
+	function initAutoComplete(  ) {
+		if (BP_SEARCH.enable_ajax_search == '1') {
+			var document_height = $(document).height();
+			$("form[role='search'], form.search-form, form.searchform, form#adminbarsearch, .bp-search-form>#search-form").each(function() {
+				var $form = $(this);
+				$search_field = $form.find("input[name='s'], input[type=search]");
+				if ($search_field.length > 0) {
+					currentType = '';
 
-                /**
-                 * If the search input is positioned towards bottom of html document,
-                 * autocomplete appearing vertically below the input isn't very effective.
-                 * Lets flip it in that case.
-                 */
-                var ac_position_prop = {},
-                    input_offset = $search_field.offset(),
-                    input_offset_plus = input_offset.top + $search_field.outerHeight(),
-                    distance_from_bottom = document_height - input_offset_plus;
+					/**
+					 * If the search input is positioned towards bottom of html document,
+					 * autocomplete appearing vertically below the input isn't very effective.
+					 * Lets flip it in that case.
+					 */
+					var ac_position_prop = {},
+						input_offset = $search_field.offset(),
+						input_offset_plus = input_offset.top + $search_field.outerHeight(),
+						distance_from_bottom = document_height - input_offset_plus;
 
-                //assuming 400px is good enough to display autocomplete ui
-                if( distance_from_bottom < 400 ){
-                    //but if space available on top is even less!
-                    if( input_offset.top > distance_from_bottom ){
-                        ac_position_prop = { collision: 'flip flip' };
-                    }
-                }
-
-				$($search_field).autocomplete({
-					source: function(request, response) {
-
-						var term = request.term;
-						if (term in BP_SEARCH.cache) {
-							response(BP_SEARCH.cache[ term ]);
-							return;
+					//assuming 400px is good enough to display autocomplete ui
+					if( distance_from_bottom < 400 ){
+						//but if space available on top is even less!
+						if( input_offset.top > distance_from_bottom ){
+							ac_position_prop = { collision: 'flip flip' };
 						}
-
-						var data = {
-							'action': BP_SEARCH.action,
-							'nonce': BP_SEARCH.nonce,
-							'search_term': request.term,
-                            'per_page': BP_SEARCH.per_page
-						};
-
-						response({value: '<div class="loading-msg"><span class="bb_global_search_spinner"></span>' + BP_SEARCH.loading_msg + '</div>'});
-
-						searchXHR = $.ajax({
-							url:BP_SEARCH.ajaxurl,
-							dataType: "json",
-							data: data,
-							success: function(data) {
-								BP_SEARCH.cache[ term ] = data;
-								response(data);
-							}
-						});
-					},
-					minLength: 2,
-					delay: 500,
-					select: function(event, ui) {
-						var newLocation = $( ui.item.value ).find( 'a' ).attr( 'href' );
-						if ( newLocation ) {
-							window.location = newLocation;
-						}
-
-						return false;
-					},
-					focus: function(event, ui) {
-						$(".ui-autocomplete li").removeClass("ui-state-hover");
-						$(".ui-autocomplete").find("li:has(a.ui-state-focus)").addClass("ui-state-hover");
-						return false;
-					},
-					open: function() {
-						$(".bp-search-ac").outerWidth($(this).outerWidth());
-					},
-                    position: ac_position_prop
-				})
-				.data("ui-autocomplete")._renderItem = function(ul, item) {
-					ul.addClass( 'bp-search-ac' );
-
-					// Add .bp-search-ac-header if search is made from header area of the site
-					 if ( $form.parents('header').length != 0 ) {
-						 ul.addClass( 'bp-search-ac-header' );
-					 }
-
-					if (item.type_label != "") {
-						$(ul).data("current_cat", item.type)
-						return $("<li>").attr("class", 'bbls-' + item.type + "-type bbls-category").append("<div>" + item.value + "</div>").appendTo(ul);
-					} else {
-						return $("<li>").attr("class", 'bbls-' + item.type + "-type bbls-sub-item").append("<a class='x'>" + item.value + "</a>").appendTo(ul);
 					}
 
+					$($search_field).autocomplete({
+						source: function(request, response) {
 
-					/*
-					 currentCategory = "";
-					 var li;
-					 if ( item.type != currentType ) {
-					 ul.append( "<li class='ui-autocomplete-category'>" + item.type + "</li>" );
-					 currentType = item.type;
-					 }
-					 //li = this._renderItemData( ul, item );
-					 if ( item.type ) {
-					 li.attr( "aria-label", item.type + " : " + item.label );
-					 }
+							var term = request.term;
+							if (term in BP_SEARCH.cache) {
+								response(BP_SEARCH.cache[ term ]);
+								return;
+							}
+
+							var data = {
+								'action': BP_SEARCH.action,
+								'nonce': BP_SEARCH.nonce,
+								'search_term': request.term,
+								'per_page': BP_SEARCH.per_page
+							};
+
+							response({value: '<div class="loading-msg"><span class="bb_global_search_spinner"></span>' + BP_SEARCH.loading_msg + '</div>'});
+
+							searchXHR = $.ajax({
+								url:BP_SEARCH.ajaxurl,
+								dataType: "json",
+								data: data,
+								success: function(data) {
+									BP_SEARCH.cache[ term ] = data;
+									response(data);
+								}
+							});
+						},
+						minLength: 2,
+						delay: 500,
+						select: function(event, ui) {
+							var newLocation = $( ui.item.value ).find( 'a' ).attr( 'href' );
+							if ( newLocation ) {
+								window.location = newLocation;
+							}
+
+							return false;
+						},
+						focus: function(event, ui) {
+							$(".ui-autocomplete li").removeClass("ui-state-hover");
+							$(".ui-autocomplete").find("li:has(a.ui-state-focus)").addClass("ui-state-hover");
+							return false;
+						},
+						open: function() {
+							$(".bp-search-ac").outerWidth($(this).outerWidth());
+						},
+						position: ac_position_prop
+					})
+					                 .data("ui-autocomplete")._renderItem = function(ul, item) {
+						ul.addClass( 'bp-search-ac' );
+
+						// Add .bp-search-ac-header if search is made from header area of the site
+						if ( $form.parents('header').length != 0 ) {
+							ul.addClass( 'bp-search-ac-header' );
+						}
+
+						if (item.type_label != "") {
+							$(ul).data("current_cat", item.type)
+							return $("<li>").attr("class", 'bbls-' + item.type + "-type bbls-category").append("<div>" + item.value + "</div>").appendTo(ul);
+						} else {
+							return $("<li>").attr("class", 'bbls-' + item.type + "-type bbls-sub-item").append("<a class='x'>" + item.value + "</a>").appendTo(ul);
+						}
+
+
+						/*
+						 currentCategory = "";
+						 var li;
+						 if ( item.type != currentType ) {
+						 ul.append( "<li class='ui-autocomplete-category'>" + item.type + "</li>" );
+						 currentType = item.type;
+						 }
+						 //li = this._renderItemData( ul, item );
+						 if ( item.type ) {
+						 li.attr( "aria-label", item.type + " : " + item.label );
+						 }
+						 */
+
+					};
+
+				}
+			});
+
+			$("#bbp-search-form, #bbp-search-index-form").each(function() {
+				var $form = $(this);
+				$search_field = $form.find("#bbp_search");
+				if ($search_field.length > 0) {
+					currentType = '';
+
+					/**
+					 * If the search input is positioned towards bottom of html document,
+					 * autocomplete appearing vertically below the input isn't very effective.
+					 * Lets flip it in that case.
 					 */
+					var ac_position_prop = {},
+						input_offset = $search_field.offset(),
+						input_offset_plus = input_offset.top + $search_field.outerHeight(),
+						distance_from_bottom = document_height - input_offset_plus;
 
-				};
+					//assuming 400px is good enough to display autocomplete ui
+					if( distance_from_bottom < 400 ){
+						//but if space available on top is even less!
+						if( input_offset.top > distance_from_bottom ){
+							ac_position_prop = { collision: 'flip flip' };
+						}
+					}
 
-			}
-		});
+					$($search_field).autocomplete({
+						source: function(request, response) {
 
-        $("#bbp-search-form, #bbp-search-index-form").each(function() {
-            var $form = $(this);
-            $search_field = $form.find("#bbp_search");
-            if ($search_field.length > 0) {
-                currentType = '';
+							var term = request.term;
+							if (term in BP_SEARCH.cache) {
+								response(BP_SEARCH.cache[ term ]);
+								return;
+							}
 
-                /**
-                 * If the search input is positioned towards bottom of html document,
-                 * autocomplete appearing vertically below the input isn't very effective.
-                 * Lets flip it in that case.
-                 */
-                var ac_position_prop = {},
-                    input_offset = $search_field.offset(),
-                    input_offset_plus = input_offset.top + $search_field.outerHeight(),
-                    distance_from_bottom = document_height - input_offset_plus;
+							var data = {
+								'action': BP_SEARCH.action,
+								'nonce': BP_SEARCH.nonce,
+								'search_term': request.term,
+								'forum_search_term': true,
+								'per_page': 15
+							};
 
-                //assuming 400px is good enough to display autocomplete ui
-                if( distance_from_bottom < 400 ){
-                    //but if space available on top is even less!
-                    if( input_offset.top > distance_from_bottom ){
-                        ac_position_prop = { collision: 'flip flip' };
-                    }
-                }
+							response({value: '<div class="loading-msg"><span class="bb_global_search_spinner"></span><span>' + BP_SEARCH.loading_msg + '</span></div>'});
 
-                $($search_field).autocomplete({
-                    source: function(request, response) {
+							$.ajax({
+								url:BP_SEARCH.ajaxurl,
+								dataType: "json",
+								data: data,
+								success: function(data) {
+									BP_SEARCH.cache[ term ] = data;
+									response(data);
+								}
+							});
+						},
+						minLength: 2,
+						select: function(event, ui) {
+							window.location = $(ui.item.value).find("a").attr("href");
+							return false;
+						},
+						focus: function(event, ui) {
+							$(".ui-autocomplete li").removeClass("ui-state-hover");
+							$(".ui-autocomplete").find("li:has(a.ui-state-focus)").addClass("ui-state-hover");
+							return false;
+						},
+						open: function() {
+							$(".bp-search-ac").outerWidth($(this).outerWidth());
+						},
+						position: ac_position_prop
+					})
+					                 .data("ui-autocomplete")._renderItem = function(ul, item) {
+						ul.addClass("bp-search-ac");
 
-                        var term = request.term;
-                        if (term in BP_SEARCH.cache) {
-                            response(BP_SEARCH.cache[ term ]);
-                            return;
-                        }
+						if (item.type_label != "") {
+							$(ul).data("current_cat", item.type)
+							return $("<li>").attr("class", 'bbls-' + item.type + "-type bbls-category").append("<span class='bb-cat-title'>" + item.value + "</span>").appendTo(ul);
+						} else {
+							return $("<li>").attr("class", 'bbls-' + item.type + "-type bbls-sub-item").append("<a class='x'>" + item.value + "</a>").appendTo(ul);
+						}
+					};
 
-                        var data = {
-                            'action': BP_SEARCH.action,
-                            'nonce': BP_SEARCH.nonce,
-                            'search_term': request.term,
-                            'forum_search_term': true,
-                            'per_page': 15
-                        };
+				}
+			});
 
-                        response({value: '<div class="loading-msg"><span class="bb_global_search_spinner"></span><span>' + BP_SEARCH.loading_msg + '</span></div>'});
-
-                        $.ajax({
-                            url:BP_SEARCH.ajaxurl,
-                            dataType: "json",
-                            data: data,
-                            success: function(data) {
-                                BP_SEARCH.cache[ term ] = data;
-                                response(data);
-                            }
-                        });
-                    },
-                    minLength: 2,
-                    select: function(event, ui) {
-                        window.location = $(ui.item.value).find("a").attr("href");
-                        return false;
-                    },
-                    focus: function(event, ui) {
-                        $(".ui-autocomplete li").removeClass("ui-state-hover");
-                        $(".ui-autocomplete").find("li:has(a.ui-state-focus)").addClass("ui-state-hover");
-                        return false;
-                    },
-                    open: function() {
-                        $(".bp-search-ac").outerWidth($(this).outerWidth());
-                    },
-                    position: ac_position_prop
-                })
-                    .data("ui-autocomplete")._renderItem = function(ul, item) {
-                    ul.addClass("bp-search-ac");
-
-                    if (item.type_label != "") {
-                        $(ul).data("current_cat", item.type)
-                        return $("<li>").attr("class", 'bbls-' + item.type + "-type bbls-category").append("<span class='bb-cat-title'>" + item.value + "</span>").appendTo(ul);
-                    } else {
-                        return $("<li>").attr("class", 'bbls-' + item.type + "-type bbls-sub-item").append("<a class='x'>" + item.value + "</a>").appendTo(ul);
-                    }
-                };
-
-            }
-        });
-
-    }
+		}
+	}
+	initAutoComplete();
 
 	/* ajax load */
 
@@ -216,6 +219,7 @@ jQuery(document).ready(function($) {
 				present.after(d);
 				present.remove();
 			}
+			initAutoComplete();
 		});
 
 		get_page.fail(function() {
@@ -260,12 +264,6 @@ jQuery(document).ready(function($) {
 
 		return false;
 
-	});
-
-	// Submit search form
-	$('.bp-search-form').on('click', '.dashicons-search', function(  ) {
-		var searchWrapEl = document.querySelector('.bp-search-form');
-		searchWrapEl.querySelector('#search-form').submit();
 	});
 
 	/* end ajax load */

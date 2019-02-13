@@ -1385,7 +1385,7 @@ function bp_member_type_custom_metaboxes() {
 		}
 	}
 
-	// Metabox for the member type invite.
+	// Metabox for the profile type invite.
 	if ( true === bp_disable_invite_member_type() && bp_is_active( 'invites' ) ) {
 		add_meta_box( 'bp-member-type-invite', __( 'Member Invites', 'buddyboss' ), 'bp_member_type_invite_meta_box', null, 'normal', 'high' );
 	}
@@ -1393,7 +1393,7 @@ function bp_member_type_custom_metaboxes() {
 add_action( 'add_meta_boxes_' . bp_get_member_type_post_type(), 'bp_member_type_custom_metaboxes' );
 
 /**
- * Generate Member Type Key Meta box.
+ * Generate profile type Key Meta box.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1411,7 +1411,7 @@ function bp_member_type_key_metabox( $post ) {
 }
 
 /**
- * Generate Member Type Label Meta box.
+ * Generate profile type Label Meta box.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1428,13 +1428,13 @@ function bp_member_type_labels_metabox( $post ) {
 		<tr valign="top">
 			<th scope="row" style="text-align: left; width: 15%;"><label for="bp-member-type[label_name]"><?php _e( 'Plural Label', 'buddyboss' ); ?></label></th>
 			<td>
-				<input type="text" class="bp-member-type-label-name" name="bp-member-type[label_name]" placeholder="<?php _e( 'e.g. Students', 'buddyboss' ); ?>"  value="<?php echo esc_attr( $label_name ); ?>" tabindex="2" style="width: 100%;" />
+				<input type="text" class="bp-member-type-label-name" name="bp-member-type[label_name]" placeholder="<?php _e( 'e.g. Students', 'buddyboss' ); ?>"  value="<?php echo esc_attr( $label_name ); ?>" style="width: 100%;" />
 			</td>
 		</tr>
 		<tr valign="top">
 			<th scope="row" style="text-align: left; width: 15%;"><label for="bp-member-type[label_singular_name]"><?php _e( 'Singular Label', 'buddyboss' ); ?></label></th>
 			<td>
-				<input type="text" class="bp-member-type-singular-name" name="bp-member-type[label_singular_name]" placeholder="<?php _e( 'e.g. Student', 'buddyboss' ); ?>" value="<?php echo esc_attr( $label_singular_name ); ?>" tabindex="3" style="width: 100%;" />
+				<input type="text" class="bp-member-type-singular-name" name="bp-member-type[label_singular_name]" placeholder="<?php _e( 'e.g. Student', 'buddyboss' ); ?>" value="<?php echo esc_attr( $label_singular_name ); ?>" style="width: 100%;" />
 			</td>
 		</tr>
 	</table>
@@ -1443,7 +1443,7 @@ function bp_member_type_labels_metabox( $post ) {
 }
 
 /**
- * Generate Member Type Directory Meta box.
+ * Generate profile type Directory Meta box.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1457,21 +1457,21 @@ function bp_member_type_visibility_metabox( $post ) {
 	$enable_filter = isset( $meta[ '_bp_member_type_enable_filter' ] ) ? $meta[ '_bp_member_type_enable_filter' ][ 0 ] : 0; //disabled by default
 	?>
 	<p>
-		<input type='checkbox' name='bp-member-type[enable_filter]' value='1' <?php checked( $enable_filter, 1 ); ?> tabindex="5" />
+		<input type='checkbox' name='bp-member-type[enable_filter]' value='1' <?php checked( $enable_filter, 1 ); ?> />
 		<strong><?php _e( 'Display in "All Types" filter in Members Directory', 'buddyboss' ); ?></strong>
 	</p>
 	<?php
 	$enable_remove = isset( $meta[ '_bp_member_type_enable_remove' ] ) ? $meta[ '_bp_member_type_enable_remove' ][ 0 ] : 0; //enabled by default
 	?>
 	<p>
-		<input type='checkbox' name='bp-member-type[enable_remove]' value='1' <?php checked( $enable_remove, 1 ); ?> tabindex="6" />
+		<input type='checkbox' name='bp-member-type[enable_remove]' value='1' <?php checked( $enable_remove, 1 ); ?> />
 		<strong><?php _e( 'Hide members of this type from Members Directory', 'buddyboss' ); ?></strong>
 	</p>
 	<?php
 }
 
 /**
- * Shortcode metabox for the Member types admin edit screen.
+ * Shortcode metabox for the profile types admin edit screen.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1496,7 +1496,7 @@ function bp_profile_shortcode_metabox( $post ) {
 }
 
 /**
- * Generate Member Type WP Role Meta box
+ * Generate profile type WP Role Meta box
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1505,7 +1505,6 @@ function bp_profile_shortcode_metabox( $post ) {
 function bp_member_type_wprole_metabox( $post ) {
 
 	global $wp_roles;
-	$tab_index = 7;
 	$all_roles = $wp_roles->role_names;
 
 	//remove bbPress roles
@@ -1542,7 +1541,6 @@ function bp_member_type_wprole_metabox( $post ) {
 						name='bp-member-type[wp_roles][]'
 						id="bp-member-type-wp-roles-<?php echo $key ?>"
 						value='<?php echo $key;?>' <?php echo in_array($key, $selected_roles) ? 'checked' : ''; ?>
-						tabindex="<?php echo ++$tab_index ?>"
 					/>
 					<?php echo $val; ?>
 				</label>
@@ -1554,7 +1552,7 @@ function bp_member_type_wprole_metabox( $post ) {
 }
 
 /**
- * When member types and group types are enabled, admins may restrict individual member types from creating specified group types.
+ * When profile types and group types are enabled, admins may restrict individual profile types from creating specified group types.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1572,7 +1570,7 @@ function bp_member_type_group_create_metabox( $post ) {
 
 	?>
 	<p>
-		<input class="group-type-checkboxes" type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( 'none' ); ?>' <?php checked( in_array( 'none', $get_selected_group_types ) ); ?> tabindex="7" />
+		<input class="group-type-checkboxes" type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( 'none' ); ?>' <?php checked( in_array( 'none', $get_selected_group_types ) ); ?> />
 		<strong><?php _e( '(None)', 'buddyboss' ); ?></strong>
 	</p>
 	<?php
@@ -1583,7 +1581,7 @@ function bp_member_type_group_create_metabox( $post ) {
 		$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];
 		?>
 		<p>
-			<input class="group-type-checkboxes"  type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> tabindex="7" />
+			<input class="group-type-checkboxes"  type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> />
 			<strong><?php _e( $group_type_label, 'buddyboss' ); ?></strong>
 		</p>
 		<?php
@@ -1640,7 +1638,7 @@ function bp_member_type_group_auto_join_meta_box( $post ) {
 		$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];
 		?>
 		<p>
-			<input type='checkbox' name='bp-group-type-auto-join[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> tabindex="7" />
+			<input type='checkbox' name='bp-group-type-auto-join[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> />
 			<strong><?php _e( $group_type_label, 'buddyboss' ); ?></strong>
 		</p>
 		<?php
@@ -1649,7 +1647,7 @@ function bp_member_type_group_auto_join_meta_box( $post ) {
 }
 
 /**
- * Allow a specific member type to send invitations to new members and specify their member type upon registration.
+ * Allow a specific profile type to send invitations to new members and specify their profile type upon registration.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1664,8 +1662,8 @@ function bp_member_type_invite_meta_box( $post ) {
 	$enable_invite = isset( $meta[ '_bp_member_type_enable_invite' ] ) ? $meta[ '_bp_member_type_enable_invite' ][ 0 ] : 1; //enabled by default
 	?>
 	<p>
-		<input type='checkbox' name='bp-member-type-enabled-invite' value='1' <?php checked( $enable_invite, 1 ); ?> tabindex="8" />
-		<strong><?php _e( 'Enable this member type to set member type via invitation.', 'buddyboss' ); ?></strong>
+		<input type='checkbox' name='bp-member-type-enabled-invite' value='1' <?php checked( $enable_invite, 1 ); ?> />
+		<strong><?php _e( 'Enable this profile type to set profile type of invitee.', 'buddyboss' ); ?></strong>
 	</p>
 
 
@@ -1682,7 +1680,7 @@ function bp_member_type_invite_meta_box( $post ) {
 		$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
 		?>
 		<p>
-			<input type='checkbox' name='bp-member-type-invite[]' value='<?php echo esc_attr( $member_type_id ); ?>' <?php checked( in_array( $member_type_id, $get_selected_profile_types ) ); ?> tabindex="9" />
+			<input type='checkbox' name='bp-member-type-invite[]' value='<?php echo esc_attr( $member_type_id ); ?>' <?php checked( in_array( $member_type_id, $get_selected_profile_types ) ); ?> />
 			<strong><?php _e( $member_type_name, 'buddyboss' ); ?></strong>
 		</p>
 		<?php
@@ -1691,7 +1689,7 @@ function bp_member_type_invite_meta_box( $post ) {
 }
 
 /**
- * Save member type post data.
+ * Save profile type post data.
  *
  * @param $post_id
  *
@@ -1761,7 +1759,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 		$member_type_name = bp_get_member_type_key( $post_id );
 		$type_term        = get_term_by( 'name',
 			$member_type_name,
-			'bp_member_type' ); // Get member type term data from database by name field.
+			'bp_member_type' ); // Get profile type term data from database by name field.
 
 		// Check logged user role.
 		$user = new WP_User( get_current_user_id() );
@@ -1770,7 +1768,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 		// flag to check condition.
 		$bp_prevent_data_update = false;
 
-		// Fetch all the users which associated this member type.
+		// Fetch all the users which associated this profile type.
 		$get_user_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_term->term_id );
 		if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
 			if ( in_array( get_current_user_id(), $get_user_ids ) ) {
@@ -1874,7 +1872,7 @@ function bp_member_type_filter_update_messages( $messages ) {
 add_filter( 'post_updated_messages', 'bp_member_type_filter_update_messages' );
 
 /**
- * Remove member type from users, when the Member Type is deleted.
+ * Remove profile type from users, when the profile type is deleted.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1889,15 +1887,15 @@ function bp_delete_member_type( $post_id ) {
 	if ( bp_get_member_type_post_type() !== $post->post_type ) return;
 
 	$member_type_name 	= bp_get_member_type_key( $post_id );
-	$type_term 			= get_term_by( 'name', $member_type_name, 'bp_member_type' ); // Get member type term data from database by name field.
+	$type_term 			= get_term_by( 'name', $member_type_name, 'bp_member_type' ); // Get profile type term data from database by name field.
 
 	//term exist
 	if ( $type_term ) {
 
-		//Removes a member type term from the database.
+		//Removes a profile type term from the database.
 		wp_delete_term( $type_term->term_id, 'bp_member_type' );
 
-		//Removes a member type term relation with users from the database.
+		//Removes a profile type term relation with users from the database.
 		$wpdb->delete( $wpdb->term_relationships, array( 'term_taxonomy_id' => $type_term->term_taxonomy_id ) );
 	}
 }
@@ -1905,11 +1903,11 @@ function bp_delete_member_type( $post_id ) {
 //delete post
 add_action( 'before_delete_post', 'bp_delete_member_type' );
 
-// Register submenu page for member type import.
+// Register submenu page for profile type import.
 add_action('admin_menu', 'bp_register_member_type_import_submenu_page');
 
 /**
- * Register submenu page for member type import.
+ * Register submenu page for profile type import.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1926,7 +1924,7 @@ function bp_register_member_type_import_submenu_page() {
 }
 
 /**
- * Import member types.
+ * Import profile types.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -2069,3 +2067,34 @@ function bp_core_admin_create_background_page() {
 }
 
 add_action( 'wp_ajax_bp_core_admin_create_background_page', 'bp_core_admin_create_background_page' );
+
+/**
+ * Adds a CSS to remove the Default Avatar settings from the /wp-admin/options-discussion.php page.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ *
+ */
+function bp_remove_avatar_settings_from_options_discussion_page() {
+	global $pagenow;
+
+	if ( 'options-discussion.php' === $pagenow ) {
+
+		?>
+		<style>
+			body.options-discussion-php .defaultavatarpicker .screen-reader-text, body.options-discussion-php .defaultavatarpicker label:not(:first-of-type), body.options-discussion-php .defaultavatarpicker br:not(:first-of-type){
+				display: none;
+			}
+			body.options-discussion-php .defaultavatarpicker{
+				font-size: 0px;
+				visibility: collapse;
+			}
+			body.options-discussion-php .defaultavatarpicker label{
+				font-size: 14px;
+				visibility: visible;
+			}
+		</style>
+		<?php
+
+	}
+}

@@ -41,6 +41,10 @@ bp_nouveau_activity_hook( 'before', 'entry' ); ?>
 
 		<?php endif; ?>
 
+		<div class="activity-state">
+			<?php bp_nouveau_activity_state() ?>
+		</div>
+
 		<?php bp_nouveau_activity_entry_buttons(); ?>
 
 	</div>

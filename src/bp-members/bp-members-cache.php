@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Pre-fetch member type data when initializing a Members loop.
+ * Pre-fetch profile type data when initializing a Members loop.
  *
  * @since BuddyPress 2.2.0
  *

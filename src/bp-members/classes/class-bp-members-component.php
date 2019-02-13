@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 class BP_Members_Component extends BP_Component {
 
 	/**
-	 * Member types.
+	 * Profile types.
 	 *
 	 * @see bp_register_member_type()
 	 *

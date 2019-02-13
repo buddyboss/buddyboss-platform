@@ -8,7 +8,7 @@
 
 <?php
 
-// Check member type enable?
+// Check profile type enable?
 $is_member_type_enabled = bp_member_type_enable_disable();
 
 if ( false === $is_member_type_enabled ) {

@@ -267,7 +267,7 @@ function bp_nouveau_member_locate_template_part( $template = '' ) {
 		);
 
 		/*
-		 * Check for member types and add it to the hierarchy
+		 * Check for profile types and add it to the hierarchy
 		 *
 		 * Make sure to register your member
 		 * type using the hook 'bp_register_member_types'

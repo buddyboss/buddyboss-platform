@@ -3,14 +3,7 @@
  * the template file to display content search result page
  * instead create a folder 'buddyboss-global-search' inside your theme, copy this file over there, and make changes there
  */
-
-$instance         = BP_Search::instance();
-$current_tab      = $instance->search_args['search_subset'];
-$no_results_class =
-	! isset( $instance->search_results[ $current_tab ]['items'] ) ||
-	empty( $instance->search_results[ $current_tab ]['items'] ) ?
-		'bp-search-no-results' : '';
-
+$no_results_class = ! BP_Search::instance()->has_search_results() ?  'bp-search-no-results' : '';
 ?>
 
 <div class="bp-search-page buddypress-wrap bp-dir-hori-nav">

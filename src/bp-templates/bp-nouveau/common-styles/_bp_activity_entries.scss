@@ -322,6 +322,26 @@
 					content: "";
 					display: table;
 				}
+
+				.activity-state {
+
+					clear: left;
+
+					.hint:after,
+					[data-hint]:after {
+						white-space: pre;
+					}
+
+					.separator {
+						font-size: 110%;
+						font-weight: 800;
+						&:before {
+							content:'\00B7';
+							padding: 0 5px;
+							vertical-align: middle;
+						}
+					}
+				}
 			}
 
 			.activity-header {

@@ -258,7 +258,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 		);
 
 		if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_group_forums_active' ) ) {
-			if ( bbp_is_group_forums_active() && bp_group_is_forum_enabled( $this->group ) ) {
+			if ( bbp_is_group_forums_active() ) {
 				$nav_items['forum'] = array(
 					'name'        => _x( 'Discussions', 'My Group screen nav', 'buddyboss' ),
 					'slug'        => get_option( '_bbp_forum_slug', 'forum' ),
@@ -268,23 +268,15 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 			}
 		}
 
-		if ( function_exists( 'bp_ld_sync' ) && function_exists( 'learndash_group_enrolled_courses') ) {
+		if ( function_exists( 'bp_ld_sync' ) ) {
 			$va = bp_ld_sync( 'settings' )->get( 'buddypress.enabled', true );
 			if ( '1' === $va ) {
-				$generator = bp_ld_sync( 'buddypress' )->sync->generator( $this->group->id );
-				if ( $generator->hasLdGroup() ) {
-					$hasLdGroup = bp_ld_sync( 'buddypress' )->sync->generator( $this->group->id )->hasLdGroup();
-					$ldGroupId  = $hasLdGroup ? bp_ld_sync( 'buddypress' )->sync->generator( $this->group->id )->getLdGroupId() : 0;
-					$courseIds  = learndash_group_enrolled_courses( $ldGroupId );
-					if ( isset( $courseIds ) && ! empty( $courseIds ) ) {
-						$nav_items['courses'] = array(
-							'name'        => _x( 'Courses', 'My Group screen nav', 'buddyboss' ),
-							'slug'        => 'courses',
-							'parent_slug' => $this->group->slug,
-							'position'    => 40,
-						);
-					}
-				}
+				$nav_items['courses'] = array(
+					'name'        => _x( 'Courses', 'My Group screen nav', 'buddyboss' ),
+					'slug'        => 'courses',
+					'parent_slug' => $this->group->slug,
+					'position'    => 40,
+				);
 			}
 		}
 

@@ -1,6 +1,8 @@
 // BuddyPress Tooltips
 // @version 3.0.0
 
+@import "hint/hint";
+
 [data-bp-tooltip] {
 	cursor: pointer;
 	position: relative;

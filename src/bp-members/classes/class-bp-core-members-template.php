@@ -125,9 +125,9 @@ class BP_Core_Members_Template {
 	 * @param array        $meta_value          Limit to users with a meta_value (with meta_key).
 	 * @param string       $page_arg            Optional. The string used as a query parameter in pagination links.
 	 *                                          Default: 'upage'.
-	 * @param array|string $member_type         Array or comma-separated string of member types to limit results to.
-	 * @param array|string $member_type__in     Array or comma-separated string of member types to limit results to.
-	 * @param array|string $member_type__not_in Array or comma-separated string of member types to exclude
+	 * @param array|string $member_type         Array or comma-separated string of profile types to limit results to.
+	 * @param array|string $member_type__in     Array or comma-separated string of profile types to limit results to.
+	 * @param array|string $member_type__not_in Array or comma-separated string of profile types to exclude
 	 *                                          from results.
 	 */
 	function __construct( $type, $page_number, $per_page, $max, $user_id, $search_terms, $include, $populate_extras, $exclude, $meta_key, $meta_value, $page_arg = 'upage', $member_type = '', $member_type__in = '', $member_type__not_in = '' ) {
