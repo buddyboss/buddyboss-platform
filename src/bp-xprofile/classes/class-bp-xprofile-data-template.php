@@ -110,7 +110,7 @@ class BP_XProfile_Data_Template {
 	 *     An array of arguments. All items are optional.
 	 *
 	 *     @type int          $user_id                 Fetch field data for this user ID.
-	 *     @type string|array $member_type             Limit results to those matching member type(s).
+	 *     @type string|array $member_type             Limit results to those matching profile type(s).
 	 *     @type int          $profile_group_id        Field group to fetch fields & data for.
 	 *     @type int|bool     $hide_empty_groups       Should empty field groups be skipped.
 	 *     @type int|bool     $fetch_fields            Fetch fields for field group.

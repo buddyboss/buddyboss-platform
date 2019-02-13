@@ -262,24 +262,24 @@ function bp_admin_setting_callback_group_type_creation() {
 function bp_admin_setting_callback_group_hierarchies() {
 	?>
 	<input id="bp-enable-group-hierarchies" name="bp-enable-group-hierarchies" type="checkbox" value="1" <?php checked( bp_enable_group_hierarchies() ); ?> />
-	<label for="bp-enable-group-hierarchies"><?php _e( 'Allow groups to have parent groups and subgroups', 'buddyboss' ); ?></label>
+	<label for="bp-enable-group-hierarchies"><?php _e( 'Allow groups to have subgroups', 'buddyboss' ); ?></label>
 	<?php
 }
 
 /**
- * 'Enable group restrict invites' field markup.
+ * Enable group restrict invites field markup.
  *
  * @since BuddyBoss 1.0.0
  */
 function bp_admin_setting_callback_group_restrict_invites() {
 	?>
 	<input id="bp-enable-group-restrict-invites" name="bp-enable-group-restrict-invites" type="checkbox" value="1" <?php checked( bp_enable_group_restrict_invites() ); ?> />
-	<label for="bp-enable-group-restrict-invites"><?php _e( 'Restrict group invites to only members of who already exists in parent group', 'buddyboss' ); ?></label>
+	<label for="bp-enable-group-restrict-invites"><?php _e( 'Restrict subgroup invites to members of the parent group', 'buddyboss' ); ?></label>
 	<?php
 }
 
 /**
- * 'Enable group auto join field markup.
+ * Enable group auto join field markup.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -295,7 +295,7 @@ function bp_admin_setting_callback_group_auto_join() {
 /**
  * The main settings page
  *
- * @since BuddyPress 1.6.0
+ * @since BuddyBoss 1.0.0
  *
  */
 function bp_core_admin_settings() {
@@ -316,9 +316,9 @@ function bp_core_admin_settings() {
 }
 
 /**
- * The main settings page
+ * The main Integrations page
  *
- * @since BuddyPress 1.6.0
+ * @since BuddyBoss 1.0.0
  *
  */
 function bp_core_admin_integrations() {
@@ -359,7 +359,6 @@ function bp_form_option( $option, $default = '' , $slug = false ) {
 	 * Return settings API option
 	 *
 	 * @since BuddyPress 1.6.0
-	 *
 	 *
 	 * @param string $option  Form option to return.
 	 * @param string $default Form option default.
@@ -404,7 +403,7 @@ function bp_form_option( $option, $default = '' , $slug = false ) {
 /** Invites Section ************************************************************/
 
 /**
- * 'Enable email subject' field markup.
+ * Enable email subject field markup.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -416,7 +415,7 @@ function bp_admin_setting_callback_member_invite_email_subject() {
 }
 
 /**
- * 'Enable email content' field markup.
+ * Enable email content field markup.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -428,13 +427,13 @@ function bp_admin_setting_callback_member_invite_email_content() {
 }
 
 /**
- * 'Enable member invite' field markup.
+ * Enable member invite field markup.
  *
  * @since BuddyBoss 1.0.0
  */
 function bp_admin_setting_callback_member_invite_member_type() {
 	?>
 	<input id="bp-disable-invite-member-type" name="bp-disable-invite-member-type" type="checkbox" value="1" <?php checked( bp_disable_invite_member_type() ); ?> />
-	<label for="bp-disable-invite-member-type"><?php _e( 'Allow users to sign up the profile types to personal inviting', 'buddyboss' ); ?></label>
+	<label for="bp-disable-invite-member-type"><?php _e( 'Allow users to select profile type of invitee', 'buddyboss' ); ?></label>
 	<?php
 }

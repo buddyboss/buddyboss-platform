@@ -992,8 +992,8 @@ function bp_groups_admin_edit_metabox_members( $item ) {
 			 *
 			 * @since BuddyPress 2.8.0
 			 *
-			 * @param int    $value Member types per page. Default 10.
-			 * @param string $type  Member type.
+			 * @param int    $value profile types per page. Default 10.
+			 * @param string $type  profile type.
 			 */
 			'per_page'   => apply_filters( 'bp_groups_admin_members_type_per_page', 10, $type ),
 			'page'       => $current_type_page,
@@ -1006,7 +1006,7 @@ function bp_groups_admin_edit_metabox_members( $item ) {
 	// Echo out the JavaScript variable.
 	echo '<script>var group_id = "' . esc_js( $item->id ) . '";</script>';
 
-	// Loop through each member type.
+	// Loop through each profile type.
 	foreach ( $members as $member_type => $type_users ) : ?>
 
 		<div class="bp-groups-member-type" id="bp-groups-member-type-<?php echo esc_attr( $member_type ) ?>">
@@ -1239,18 +1239,18 @@ function bp_groups_admin_create_pagination_links( BP_Group_Member_Query $query, 
 		return $pagination;
 	}
 
-	// The key used to paginate this member type in the $_GET global.
+	// The key used to paginate this profile type in the $_GET global.
 	$qs_key   = $member_type . '_page';
 	$url_base = remove_query_arg( array( $qs_key, 'updated', 'success_modified' ), $_SERVER['REQUEST_URI'] );
 
 	$page = isset( $_GET[ $qs_key ] ) ? absint( $_GET[ $qs_key ] ) : 1;
 
 	/**
-	 * Filters the number of members per member type that is displayed in group editing admin area.
+	 * Filters the number of members per profile type that is displayed in group editing admin area.
 	 *
 	 * @since BuddyPress 2.8.0
 	 *
-	 * @param string $member_type Member type, which is a group role (admin, mod etc).
+	 * @param string $member_type profile type, which is a group role (admin, mod etc).
 	 */
 	$per_page = apply_filters( 'bp_groups_admin_members_type_per_page', 10, $member_type );
 
@@ -1528,13 +1528,13 @@ function bp_group_type_custom_meta_boxes() {
 	add_meta_box( 'bp-group-type-visibility', __( 'Visibility', 'buddyboss' ), 'bp_group_type_visibility_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-short-code', __( 'Shortcode', 'buddyboss' ), 'bp_group_short_code_meta_box', null, 'normal', 'high' );
 
-	// Register meta box only if the member type is enabled.
+	// Register meta box only if the profile type is enabled.
 	if ( true === bp_member_type_enable_disable() ) {
 
 
 		$get_all_registered_member_types = bp_get_active_member_types();
 		if ( isset( $get_all_registered_member_types ) && !empty( $get_all_registered_member_types ) ) {
-			// Add meta box if member types is entered.
+			// Add meta box if profile types is entered.
 			add_meta_box( 'bp-group-type-auto-join-member-type', __( 'Profile Type Override', 'buddyboss' ),'bp_group_type_auto_join_member_type_meta_box',null,'normal','high' );
 			add_meta_box( 'bp-group-type-group-invites', __( 'Group Invites', 'buddyboss' ),'bp_group_type_group_invites_meta_box',null,'normal','high' );
 		}
@@ -1644,7 +1644,7 @@ function bp_group_short_code_meta_box( $post ) {
 }
 
 /**
- * Sisplays all the member types.
+ * Displays all the profile types.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1653,7 +1653,7 @@ function bp_group_short_code_meta_box( $post ) {
 function bp_group_type_auto_join_member_type_meta_box( $post ) {
 
 	?>
-	<p><?php printf( __( 'Members of the following profile types can always join groups of this group type, even if the group is private.', 'buddyboss' ), $post->post_title )?></p>
+	<p><?php printf( __( 'Members of the selected profile types can always join groups of this group type, even if the group is private.', 'buddyboss' ), $post->post_title )?></p>
 	<?php
 
 	$get_all_registered_member_types = bp_get_active_member_types();
@@ -1691,7 +1691,7 @@ function bp_group_type_group_invites_meta_box( $post ) {
 		<input type='checkbox' name='bp-group-type-restrict-invites-user-same-group-type' value='<?php echo esc_attr( 1 ); ?>' <?php checked( $get_restrict_invites_same_group_types, 1 ); ?> tabindex="7" />
 		<strong><?php _e( 'Restrict invites if user already in other same group type', 'buddyboss' ); ?></strong>
 	</p>
-	<p><?php printf( __( 'Users who are in this group are allowed to invite other users into the group who are which profile type.', 'buddyboss' ), $post->post_title )?></p>
+	<p><?php printf( __( 'Members of this group can only invite members of selected profile types. (Leave blank to allow unrestricted invites)', 'buddyboss' ), $post->post_title )?></p>
 	<?php
 
 	$get_all_registered_member_types = bp_get_active_member_types();

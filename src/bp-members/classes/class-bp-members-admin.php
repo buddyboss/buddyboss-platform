@@ -186,7 +186,7 @@ class BP_Members_Admin {
 		// Add user row actions for single site.
 		add_filter( 'user_row_actions', array( $this, 'row_actions' ), 10, 2 );
 
-		// Process changes to member type.
+		// Process changes to profile type.
 		add_action( 'bp_members_admin_load', array( $this, 'process_member_type_update' ) );
 
 		/** Signups **********************************************************
@@ -229,7 +229,7 @@ class BP_Members_Admin {
 			add_action( 'restrict_manage_users', array( $this, 'users_table_output_type_change_select' ) );
 			add_action( 'load-users.php',        array( $this, 'users_table_process_bulk_type_change'  ) );
 
-			// Add the member type column to the WP admin users list table.
+			// Add the profile type column to the WP admin users list table.
 			add_filter( 'manage_users_columns',       array( $this, 'users_table_add_type_column'    )        );
 			add_filter( 'manage_users_custom_column', array( $this, 'users_table_populate_type_cell' ), 10, 3 );
 
@@ -833,7 +833,7 @@ class BP_Members_Admin {
 				sanitize_key( $this->stats_metabox->priority )
 			);
 
-			// Member Type metabox. Only added if member types have been registered.
+			// profile type metabox. Only added if profile types have been registered.
 			$member_types = bp_get_member_types();
 			if ( ! empty( $member_types ) ) {
 				add_meta_box(
@@ -1178,7 +1178,7 @@ class BP_Members_Admin {
 	}
 
 	/**
-	 * Render the Member Type metabox.
+	 * Render the profile type metabox.
 	 *
 	 * @since BuddyPress 2.2.0
 	 *
@@ -1215,7 +1215,7 @@ class BP_Members_Admin {
 	}
 
 	/**
-	 * Process changes from the Member Type metabox.
+	 * Process changes from the profile type metabox.
 	 *
 	 * @since BuddyPress 2.2.0
 	 */
@@ -1233,7 +1233,7 @@ class BP_Members_Admin {
 			return;
 		}
 
-		// Member type string must either reference a valid member type, or be empty.
+		// profile type string must either reference a valid profile type, or be empty.
 		$member_type = stripslashes( $_POST['bp-members-profile-member-type'] );
 		if ( ! empty( $member_type ) && ! bp_get_member_type_object( $member_type ) ) {
 			return;
@@ -1241,10 +1241,10 @@ class BP_Members_Admin {
 
 		if ( '' !== $member_type ) {
 
-			// Get post id of selected member type.
+			// Get post id of selected profile type.
 			$post_id = bp_member_type_post_by_type( $member_type );
 
-			// Get selected member type role.
+			// Get selected profile type role.
 			$selected_member_type_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
 
 			if ( $user_id === get_current_user_id() ) {
@@ -1254,7 +1254,7 @@ class BP_Members_Admin {
 					if ( empty( $selected_member_type_wp_roles  ) ) {
 
 						/*
-						 * If an invalid member type is passed, someone's doing something
+						 * If an invalid profile type is passed, someone's doing something
 						 * fishy with the POST request, so we can fail silently.
 						 */
 						if ( bp_set_member_type( $user_id, $member_type ) ) {
@@ -1299,7 +1299,7 @@ class BP_Members_Admin {
 		}
 
 		/*
-		 * If an invalid member type is passed, someone's doing something
+		 * If an invalid profile type is passed, someone's doing something
 		 * fishy with the POST request, so we can fail silently.
 		 */
 		if ( bp_set_member_type( $user_id, $member_type ) ) {
@@ -2257,7 +2257,7 @@ class BP_Members_Admin {
 	/** Users List Management ****************************************************/
 
 	/**
-	 * Display a dropdown to bulk change the member type of selected user(s).
+	 * Display a dropdown to bulk change the profile type of selected user(s).
 	 *
 	 * @since BuddyPress 2.7.0
 	 *
@@ -2300,7 +2300,7 @@ class BP_Members_Admin {
 	}
 
 	/**
-	 * Process bulk member type change submission from the WP admin users list table.
+	 * Process bulk profile type change submission from the WP admin users list table.
 	 *
 	 * @since BuddyPress 2.7.0
 	 */
@@ -2343,11 +2343,11 @@ class BP_Members_Admin {
 			foreach ( (array) $_REQUEST['users'] as $user_id ) {
 				$user_id = (int) $user_id;
 
-				// Get the old member type to check against.
+				// Get the old profile type to check against.
 				$member_type = bp_get_member_type( $user_id );
 
 				if ( 'remove_member_type' === $new_type ) {
-					// Remove the current member type, if there's one to remove.
+					// Remove the current profile type, if there's one to remove.
 					if ( $member_type ) {
 						$removed = bp_remove_member_type( $user_id, $member_type );
 						if ( false === $removed || is_wp_error( $removed ) ) {
@@ -2358,13 +2358,13 @@ class BP_Members_Admin {
 
 					if ( $user_id === get_current_user_id() ) {
 
-						// Set the new member type.
+						// Set the new profile type.
 						if ( $new_type !== $member_type ) {
 
-							// Get post id of selected member type.
+							// Get post id of selected profile type.
 							$post_id = bp_member_type_post_by_type( $new_type );
 
-							// Get selected member type role.
+							// Get selected profile type role.
 							$selected_member_type_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
 							if ( empty( $selected_member_type_wp_roles ) ) {
 								$set = bp_set_member_type( $user_id, $new_type );
@@ -2385,7 +2385,7 @@ class BP_Members_Admin {
 						}
 					} else {
 
-						// Set the new member type.
+						// Set the new profile type.
 						if ( $new_type !== $member_type ) {
 							$set = bp_set_member_type( $user_id, $new_type );
 							if ( false === $set || is_wp_error( $set ) ) {
@@ -2415,7 +2415,7 @@ class BP_Members_Admin {
 	}
 
 	/**
-	 * Display an admin notice upon member type bulk update.
+	 * Display an admin notice upon profile type bulk update.
 	 *
 	 * @since BuddyPress 2.7.0
 	 */
@@ -2432,7 +2432,7 @@ class BP_Members_Admin {
 				$notice = __( 'You cannot assign yourself to this profile type as doing so would remove your Administrator role and lock you out of the WordPress admin. You first need to associate this profile type to the Administrator role, and then you can assign it to yourself.', 'buddyboss' );
 				$type   = 'error';
 			} else {
-				$notice = __( 'Member type was changed successfully.', 'buddyboss' );
+				$notice = __( 'Profile type was changed successfully.', 'buddyboss' );
 				$type   = 'updated';
 			}
 
@@ -2441,7 +2441,7 @@ class BP_Members_Admin {
 	}
 
 	/**
-	 * Add member type column to the WordPress admin users list table.
+	 * Add profile type column to the WordPress admin users list table.
 	 *
 	 * @since BuddyPress 2.7.0
 	 *
@@ -2464,18 +2464,18 @@ class BP_Members_Admin {
 	 * @param string $column_name
 	 * @param int $user_id
 	 *
-	 * @return string Member type as a link to filter all users.
+	 * @return string profile type as a link to filter all users.
 	 */
 	public function users_table_populate_type_cell( $retval = '', $column_name = '', $user_id = 0 ) {
-		// Only looking for member type column.
+		// Only looking for profile type column.
 		if ( bp_get_member_type_tax_name() !== $column_name ) {
 			return $retval;
 		}
 
-		// Get the member type.
+		// Get the profile type.
 		$type = bp_get_member_type( $user_id );
 
-		// Output the
+		// Output the profile type link.
 		if ( $type_obj = bp_get_member_type_object( $type ) ) {
 			$url = add_query_arg( array( 'bp-member-type' => urlencode( $type ) ) );
 			$retval = '<a href="' . esc_url( $url ) . '">' . esc_html( $type_obj->labels['singular_name'] ) . '</a>';
@@ -2502,7 +2502,7 @@ class BP_Members_Admin {
 				return;
 			}
 
-			// Get the list of users that are assigned to this member type.
+			// Get the list of users that are assigned to this profile type.
 			$type = bp_get_term_by( 'slug', $type_slug, bp_get_member_type_tax_name() );
 
 			if ( empty( $type->term_id ) ) {

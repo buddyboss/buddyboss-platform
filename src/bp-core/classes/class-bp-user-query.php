@@ -38,9 +38,9 @@ defined( 'ABSPATH' ) || exit;
  *                                                  that should be returned. When this parameter is passed, it will
  *                                                  override all others; BP User objects will be constructed using these
  *                                                  IDs only. Default: false.
- *     @type array|string      $member_type         Array or comma-separated list of member types to limit results to.
- *     @type array|string      $member_type__in     Array or comma-separated list of member types to limit results to.
- *     @type array|string      $member_type__not_in Array or comma-separated list of member types that will be
+ *     @type array|string      $member_type         Array or comma-separated list of profile types to limit results to.
+ *     @type array|string      $member_type__in     Array or comma-separated list of profile types to limit results to.
+ *     @type array|string      $member_type__not_in Array or comma-separated list of profile types that will be
  *			                                             excluded from results.
  *     @type string|bool       $meta_key            Limit results to users that have usermeta associated with this meta_key.
  *                                                  Usually used with $meta_value. Default: false.
@@ -429,11 +429,11 @@ class BP_User_Query {
 			$member_type = $member_type__in;
 		}
 
-		// Member types to exclude. Note that this takes precedence over inclusions.
+		// Profile types to exclude. Note that this takes precedence over inclusions.
 		if ( ! empty( $member_type__not_in ) ) {
 			$member_type_clause = $this->get_sql_clause_for_member_types( $member_type__not_in, 'NOT IN' );
 
-		// Member types to include.
+		// Profile types to include.
 		} elseif ( ! empty( $member_type ) ) {
 			$member_type_clause = $this->get_sql_clause_for_member_types( $member_type, 'IN' );
 		}
@@ -765,7 +765,7 @@ class BP_User_Query {
 	 *
 	 * @since BuddyPress 2.4.0
 	 *
-	 * @param string|array $member_types Array or comma-separated list of member types.
+	 * @param string|array $member_types Array or comma-separated list of profile types.
 	 * @param string       $operator     'IN' or 'NOT IN'.
 	 * @return string
 	 */
@@ -798,7 +798,7 @@ class BP_User_Query {
 			),
 		) );
 
-		// Switch to the root blog, where member type taxonomies live.
+		// Switch to the root blog, where profile type taxonomies live.
 		$site_id  = bp_get_taxonomy_term_site_id( bp_get_member_type_tax_name() );
 		$switched = false;
 		if ( $site_id !== get_current_blog_id() ) {

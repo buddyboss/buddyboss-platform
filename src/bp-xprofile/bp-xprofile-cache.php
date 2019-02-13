@@ -210,7 +210,7 @@ add_action( 'xprofile_fields_saved_field',   'xprofile_clear_profile_field_objec
 add_action( 'xprofile_fields_deleted_field', 'xprofile_clear_profile_field_object_cache' );
 
 /**
- * Clears member_type cache when a field's member types are updated.
+ * Clears member_type cache when a field's profile types are updated.
  *
  * @since BuddyPress 2.4.0
  */

@@ -96,7 +96,7 @@ function bp_members_root_slug() {
 	}
 
 /**
- * Output the member type base slug.
+ * Output the profile type base slug.
  *
  * @since BuddyPress 2.5.0
  */
@@ -104,10 +104,10 @@ function bp_members_member_type_base() {
 	echo esc_url( bp_get_members_member_type_base() );
 }
 	/**
-	 * Get the member type base slug.
+	 * Get the profile type base slug.
 	 *
-	 * The base slug is the string used as the base prefix when generating member type directory URLs.
-	 * For example, in example.com/members/type/foo/, 'foo' is the member type and 'type' is the
+	 * The base slug is the string used as the base prefix when generating profile type directory URLs.
+	 * For example, in example.com/members/type/foo/, 'foo' is the profile type and 'type' is the
 	 * base slug.
 	 *
 	 * @since BuddyPress 2.5.0
@@ -116,13 +116,13 @@ function bp_members_member_type_base() {
 	 */
 	function bp_get_members_member_type_base() {
 		/**
-		 * Filters the member type URL base.
+		 * Filters the profile type URL base.
 		 *
 		 * @since BuddyPress 2.3.0
 		 *
 		 * @param string $base
 		 */
-		return apply_filters( 'bp_members_member_type_base', _x( 'type', 'member type URL base', 'buddyboss' ) );
+		return apply_filters( 'bp_members_member_type_base', _x( 'type', 'profile type URL base', 'buddyboss' ) );
 	}
 
 /**
@@ -154,47 +154,47 @@ function bp_members_directory_permalink() {
 	}
 
 /**
- * Output member type directory permalink.
+ * Output profile type directory permalink.
  *
  * @since BuddyPress 2.5.0
  *
- * @param string $member_type Optional. Member type.
+ * @param string $member_type Optional. profile type.
  */
 function bp_member_type_directory_permalink( $member_type = '' ) {
 	echo esc_url( bp_get_member_type_directory_permalink( $member_type ) );
 }
 	/**
-	 * Return member type directory permalink.
+	 * Return profile type directory permalink.
 	 *
 	 * @since BuddyPress 2.5.0
 	 *
-	 * @param string $member_type Optional. Member type. Defaults to current member type.
-	 * @return string Member type directory URL on success, an empty string on failure.
+	 * @param string $member_type Optional. profile type. Defaults to current profile type.
+	 * @return string profile type directory URL on success, an empty string on failure.
 	 */
 	function bp_get_member_type_directory_permalink( $member_type = '' ) {
 
 		if ( $member_type ) {
 			$_member_type = $member_type;
 		} else {
-			// Fall back on the current member type.
+			// Fall back on the current profile type.
 			$_member_type = bp_get_current_member_type();
 		}
 
 		$type = bp_get_member_type_object( $_member_type );
 
-		// Bail when member type is not found or has no directory.
+		// Bail when profile type is not found or has no directory.
 		if ( ! $type || ! $type->has_directory ) {
 			return '';
 		}
 
 		/**
-		 * Filters the member type directory permalink.
+		 * Filters the profile type directory permalink.
 		 *
 		 * @since BuddyPress 2.5.0
 		 *
-		 * @param string $value       Member type directory permalink.
-		 * @param object $type        Member type object.
-		 * @param string $member_type Member type name, as passed to the function.
+		 * @param string $value       profile type directory permalink.
+		 * @param object $type        profile type object.
+		 * @param string $member_type profile type name, as passed to the function.
 		 */
 		return apply_filters( 'bp_get_member_type_directory_permalink', trailingslashit( bp_get_members_directory_permalink() . bp_get_members_member_type_base() . '/' . $type->directory_slug ), $type, $member_type );
 	}
@@ -311,11 +311,11 @@ function bp_activate_slug() {
  *     @type int                   $user_id             If provided, results are limited to the friends of the specified
  *                                                      user. When on a user's Connections page, defaults to the ID of the
  *                                                      displayed user. Otherwise defaults to 0.
- *     @type string|array          $member_type         Array or comma-separated list of member types to limit
+ *     @type string|array          $member_type         Array or comma-separated list of profile types to limit
  *                                                      results to.
- *     @type string|array          $member_type__in     Array or comma-separated list of member types to limit
+ *     @type string|array          $member_type__in     Array or comma-separated list of profile types to limit
  *                                                      results to.
- *     @type string|array          $member_type__not_in Array or comma-separated list of member types to exclude
+ *     @type string|array          $member_type__not_in Array or comma-separated list of profile types to exclude
  *                                                      from results.
  *     @type string                $search_terms        Limit results by a search term. Default: value of
  *                                                      `$_REQUEST['members_search']` or `$_REQUEST['s']`, if present.
@@ -629,7 +629,7 @@ function bp_member_class( $classes = array() ) {
 			$classes[] = 'is-current-user';
 		}
 
-		// Add current user member types.
+		// Add current user profile types.
 		if ( $member_types = bp_get_member_type( $members_template->member->id, false ) ) {
 			foreach ( $member_types as $member_type ) {
 				$classes[] = sprintf( 'member-type-%s', esc_attr( $member_type ) );
@@ -1360,7 +1360,7 @@ function bp_displayed_user_get_front_template( $displayed_user = null ) {
 	);
 
 	/**
-	 * Check for member types and add it to the hierarchy
+	 * Check for profile types and add it to the hierarchy
 	 *
 	 * Make sure to register your member
 	 * type using the hook 'bp_register_member_types'
@@ -1928,7 +1928,7 @@ function bp_loggedin_user_username() {
 	}
 
 /**
- * Echo the current member type message.
+ * Echo the current profile type message.
  *
  * @since BuddyPress 2.3.0
  */
@@ -1936,7 +1936,7 @@ function bp_current_member_type_message() {
 	echo bp_get_current_member_type_message();
 }
 	/**
-	 * Generate the current member type message.
+	 * Generate the current profile type message.
 	 *
 	 * @since BuddyPress 2.3.0
 	 *
@@ -1948,7 +1948,7 @@ function bp_current_member_type_message() {
 		$message = sprintf( __( 'Viewing all members who are %s', 'buddyboss' ), '<strong>' . $type_object->labels['name'] . '</strong>' );
 
 		/**
-		 * Filters the current member type message.
+		 * Filters the current profile type message.
 		 *
 		 * @since BuddyPress 2.3.0
 		 *

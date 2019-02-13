@@ -149,7 +149,7 @@ function bp_group_type_directory_permalink( $group_type = '' ) {
 
 		$type = bp_groups_get_group_type_object( $_group_type );
 
-		// Bail when member type is not found or has no directory.
+		// Bail when profile type is not found or has no directory.
 		if ( ! $type || ! $type->has_directory ) {
 			return '';
 		}

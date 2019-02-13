@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 2.2.0
  */
 function bp_register_default_taxonomies() {
-	// Member Type.
+	// Profile Type.
 	register_taxonomy( bp_get_member_type_tax_name(), 'user', array(
 		'public' => false,
 	) );

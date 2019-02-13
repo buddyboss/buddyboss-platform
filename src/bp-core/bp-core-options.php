@@ -47,7 +47,7 @@ function bp_get_default_options() {
 
 		'bp-display-name-format'			   => 'first_name',
 
-		// Enable/Disable Member Type.
+		// Enable/Disable Profile Type.
 		'bp-member-type-enable-disable'         => false,
 
 		// Enable/Disable Display on profiles.
@@ -707,7 +707,7 @@ function bp_enable_group_hierarchies( $default = false ) {
 function bp_enable_group_restrict_invites( $default = false ) {
 
 	/**
-	 * Filters whether or not groups are able to have a parent and sub groups.
+	 * Filters whether or not groups are able to have a subgroups.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -976,22 +976,22 @@ function bp_force_friendship_to_message( $default = false ) {
 }
 
 /**
- * Is member type disabled?
+ * Is profile type disabled?
  *
  * @since BuddyBoss 1.0.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
- * @return bool True if member type enabled, otherwise false.
+ * @return bool True if profile type enabled, otherwise false.
  */
 function bp_member_type_enable_disable( $default = false ) {
 
 	/**
-	 * Filters whether member type is enabled or not.
+	 * Filters whether profile type is enabled or not.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param bool $value Whether member type is enabled or not.
+	 * @param bool $value Whether profile type is enabled or not.
 	 */
 	return (bool) apply_filters( 'bp_member_type_enable_disable', (bool) bp_get_option( 'bp-member-type-enable-disable', $default ) );
 }
@@ -1003,16 +1003,16 @@ function bp_member_type_enable_disable( $default = false ) {
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
- * @return bool True if member type enabled, otherwise false.
+ * @return bool True if profile type enabled, otherwise false.
  */
 function bp_member_type_display_on_profile( $default = false ) {
 
 	/**
-	 * Filters whether member type is enabled or not.
+	 * Filters whether profile type is enabled or not.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param bool $value Whether member type is enabled or not.
+	 * @param bool $value Whether profile type is enabled or not.
 	 */
 	return (bool) apply_filters( 'bp_member_type_display_on_profile', (bool) bp_get_option( 'bp-member-type-display-on-profile', $default ) );
 }

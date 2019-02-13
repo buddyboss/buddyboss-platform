@@ -248,11 +248,11 @@ class BP_XProfile_Group {
 	 *      @type int          $profile_group_id  Limit results to a single profile group.
 	 *      @type int          $user_id           Required if you want to load a specific user's data.
 	 *                                            Default: displayed user's ID.
-	 *      @type array|string $member_type       Limit fields by those restricted to a given member type, or array of
-	 *                                            member types. If `$user_id` is provided, the value of `$member_type`
-	 *                                            will be overridden by the member types of the provided user. The
+	 *      @type array|string $member_type       Limit fields by those restricted to a given profile type, or array of
+	 *                                            profile types. If `$user_id` is provided, the value of `$member_type`
+	 *                                            will be overridden by the profile types of the provided user. The
 	 *                                            special value of 'any' will return only those fields that are
-	 *                                            unrestricted by member type - i.e., those applicable to any type.
+	 *                                            unrestricted by profile type - i.e., those applicable to any type.
 	 *      @type bool         $hide_empty_groups True to hide groups that don't have any fields. Default: false.
 	 *      @type bool         $hide_empty_fields True to hide fields where the user has not provided data.
 	 *                                            Default: false.

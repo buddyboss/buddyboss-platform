@@ -95,16 +95,16 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
         // Enable/Disable profile search.
 		$this->add_field( 'bp-enable-profile-search', __( 'Profile Search', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_search'], 'intval' );
 
-		// Section for member types.
+		// Section for profile types.
 		$this->add_section( 'bp_member_type_settings', __( 'Profile Types', 'buddyboss' ) );
 
-		// Enable/Disable Member types.
+		// Enable/Disable profile types.
 		$this->add_field( 'bp-member-type-enable-disable', __( 'Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_enable_disable'], 'intval' );
 
 		// Enable/Disable Display on profiles.
 		$this->add_field( 'bp-member-type-display-on-profile', __( 'Display on Profiles', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_display_on_profile'], 'intval' );
 
-		// Member types import.
+		// Profile types import.
 		$this->add_field( 'bp-member-type-import', __( 'Import Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_import'], 'intval' );
 	}
 
@@ -196,7 +196,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * Enable member type.
+	 * Enable profile type.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *

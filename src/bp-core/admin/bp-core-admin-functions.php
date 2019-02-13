@@ -1385,7 +1385,7 @@ function bp_member_type_custom_metaboxes() {
 		}
 	}
 
-	// Metabox for the member type invite.
+	// Metabox for the profile type invite.
 	if ( true === bp_disable_invite_member_type() && bp_is_active( 'invites' ) ) {
 		add_meta_box( 'bp-member-type-invite', __( 'Member Invites', 'buddyboss' ), 'bp_member_type_invite_meta_box', null, 'normal', 'high' );
 	}
@@ -1393,7 +1393,7 @@ function bp_member_type_custom_metaboxes() {
 add_action( 'add_meta_boxes_' . bp_get_member_type_post_type(), 'bp_member_type_custom_metaboxes' );
 
 /**
- * Generate Member Type Key Meta box.
+ * Generate profile type Key Meta box.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1411,7 +1411,7 @@ function bp_member_type_key_metabox( $post ) {
 }
 
 /**
- * Generate Member Type Label Meta box.
+ * Generate profile type Label Meta box.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1443,7 +1443,7 @@ function bp_member_type_labels_metabox( $post ) {
 }
 
 /**
- * Generate Member Type Directory Meta box.
+ * Generate profile type Directory Meta box.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1471,7 +1471,7 @@ function bp_member_type_visibility_metabox( $post ) {
 }
 
 /**
- * Shortcode metabox for the Member types admin edit screen.
+ * Shortcode metabox for the profile types admin edit screen.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1496,7 +1496,7 @@ function bp_profile_shortcode_metabox( $post ) {
 }
 
 /**
- * Generate Member Type WP Role Meta box
+ * Generate profile type WP Role Meta box
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1552,7 +1552,7 @@ function bp_member_type_wprole_metabox( $post ) {
 }
 
 /**
- * When member types and group types are enabled, admins may restrict individual member types from creating specified group types.
+ * When profile types and group types are enabled, admins may restrict individual profile types from creating specified group types.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1647,7 +1647,7 @@ function bp_member_type_group_auto_join_meta_box( $post ) {
 }
 
 /**
- * Allow a specific member type to send invitations to new members and specify their member type upon registration.
+ * Allow a specific profile type to send invitations to new members and specify their profile type upon registration.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1663,7 +1663,7 @@ function bp_member_type_invite_meta_box( $post ) {
 	?>
 	<p>
 		<input type='checkbox' name='bp-member-type-enabled-invite' value='1' <?php checked( $enable_invite, 1 ); ?> />
-		<strong><?php _e( 'Enable this member type to set member type via invitation.', 'buddyboss' ); ?></strong>
+		<strong><?php _e( 'Enable this profile type to set profile type of invitee.', 'buddyboss' ); ?></strong>
 	</p>
 
 
@@ -1689,7 +1689,7 @@ function bp_member_type_invite_meta_box( $post ) {
 }
 
 /**
- * Save member type post data.
+ * Save profile type post data.
  *
  * @param $post_id
  *
@@ -1759,7 +1759,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 		$member_type_name = bp_get_member_type_key( $post_id );
 		$type_term        = get_term_by( 'name',
 			$member_type_name,
-			'bp_member_type' ); // Get member type term data from database by name field.
+			'bp_member_type' ); // Get profile type term data from database by name field.
 
 		// Check logged user role.
 		$user = new WP_User( get_current_user_id() );
@@ -1768,7 +1768,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 		// flag to check condition.
 		$bp_prevent_data_update = false;
 
-		// Fetch all the users which associated this member type.
+		// Fetch all the users which associated this profile type.
 		$get_user_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_term->term_id );
 		if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
 			if ( in_array( get_current_user_id(), $get_user_ids ) ) {
@@ -1872,7 +1872,7 @@ function bp_member_type_filter_update_messages( $messages ) {
 add_filter( 'post_updated_messages', 'bp_member_type_filter_update_messages' );
 
 /**
- * Remove member type from users, when the Member Type is deleted.
+ * Remove profile type from users, when the profile type is deleted.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1887,15 +1887,15 @@ function bp_delete_member_type( $post_id ) {
 	if ( bp_get_member_type_post_type() !== $post->post_type ) return;
 
 	$member_type_name 	= bp_get_member_type_key( $post_id );
-	$type_term 			= get_term_by( 'name', $member_type_name, 'bp_member_type' ); // Get member type term data from database by name field.
+	$type_term 			= get_term_by( 'name', $member_type_name, 'bp_member_type' ); // Get profile type term data from database by name field.
 
 	//term exist
 	if ( $type_term ) {
 
-		//Removes a member type term from the database.
+		//Removes a profile type term from the database.
 		wp_delete_term( $type_term->term_id, 'bp_member_type' );
 
-		//Removes a member type term relation with users from the database.
+		//Removes a profile type term relation with users from the database.
 		$wpdb->delete( $wpdb->term_relationships, array( 'term_taxonomy_id' => $type_term->term_taxonomy_id ) );
 	}
 }
@@ -1903,11 +1903,11 @@ function bp_delete_member_type( $post_id ) {
 //delete post
 add_action( 'before_delete_post', 'bp_delete_member_type' );
 
-// Register submenu page for member type import.
+// Register submenu page for profile type import.
 add_action('admin_menu', 'bp_register_member_type_import_submenu_page');
 
 /**
- * Register submenu page for member type import.
+ * Register submenu page for profile type import.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1924,7 +1924,7 @@ function bp_register_member_type_import_submenu_page() {
 }
 
 /**
- * Import member types.
+ * Import profile types.
  *
  * @since BuddyBoss 1.0.0
  *

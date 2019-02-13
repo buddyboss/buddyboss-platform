@@ -38,7 +38,7 @@ class BP_Admin_Setting_Invites extends BP_Admin_Setting_tab {
 
 		if ( true === bp_member_type_enable_disable() ) {
 
-			// Allow members to invite member type.
+			// Allow members to invite profile type.
 			$this->add_field( 'bp-disable-invite-member-type', __( 'Invite Profile Type', 'buddyboss' ), 'bp_admin_setting_callback_member_invite_member_type', 'intval' );
 		}
 	}

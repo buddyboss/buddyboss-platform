@@ -182,7 +182,7 @@ function hide( id ) {
 }
 
 /**
- * @summary Toggles "no member type" notice.
+ * @summary Toggles "no profile type" notice.
  *
  * @since BuddyPress 2.4.0
  */
@@ -283,7 +283,7 @@ jQuery( document ).ready( function() {
 	// Set focus in Field Title, if we're on the right page
 	jQuery( '#bp-xprofile-add-field #title' ).focus();
 
-	// Set up the notice that shows when no member types are selected for a field.
+	// Set up the notice that shows when no profile types are selected for a field.
 	toggle_no_member_type_notice();
 	jQuery( 'input.member-type-selector' ).on( 'change', function() {
 		toggle_no_member_type_notice();

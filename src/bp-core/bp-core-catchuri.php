@@ -302,7 +302,7 @@ function bp_core_set_uri_globals() {
 				}
 			}
 
-			// Is this a member type directory?
+			// Is this a profile type directory?
 			if ( ! bp_displayed_user_id() && $after_member_slug === bp_get_members_member_type_base() && ! empty( $bp_uri[ $uri_offset + 2 ] ) ) {
 				$matched_types = bp_get_member_types( array(
 					'has_directory'  => true,
@@ -315,7 +315,7 @@ function bp_core_set_uri_globals() {
 				}
 			}
 
-			// If the slug matches neither a member type nor a specific member, 404.
+			// If the slug matches neither a profile type nor a specific member, 404.
 			if ( ! bp_displayed_user_id() && ! bp_get_current_member_type() && $after_member_slug ) {
 				// Prevent components from loading their templates.
 				$bp->current_component = '';

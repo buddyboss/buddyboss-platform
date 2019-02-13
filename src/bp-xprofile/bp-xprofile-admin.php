@@ -26,7 +26,7 @@ function xprofile_add_admin_menu() {
 
 	add_users_page( _x( 'Profile Fields', 'xProfile admin page title', 'buddyboss' ), _x( 'Profile Fields', 'Admin Users menu', 'buddyboss' ), 'manage_options', 'bp-profile-setup', 'xprofile_admin' );
 
-	// Check Member Type enabled.
+	// Check profile type enabled.
 	$is_member_type_enabled = bp_member_type_enable_disable();
 	$is_profile_search_enabled = bp_disable_advanced_profile_search();
 
@@ -578,7 +578,7 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 				$message = __( 'The field was saved successfully.', 'buddyboss' );
 				$type    = 'updated';
 
-				// Set member types.
+				// Set profile types.
 				if ( isset( $_POST['has-member-types'] ) ) {
 					$member_types = array();
 					if ( isset( $_POST['member-types'] ) ) {
@@ -938,7 +938,7 @@ function bp_xprofile_admin_form_field_types( $select_field_type ) {
 
 	// Loop through each category and output form <options>.
 	foreach ( $categories as $category => $fields ) {
-		printf( '<optgroup label="%1$s">', esc_attr( $category ) );  // Already i18n'd in each member type class.
+		printf( '<optgroup label="%1$s">', esc_attr( $category ) );  // Already i18n'd in each profile type class.
 
 		// Sort these fields types alphabetically.
 		uasort( $fields, function( $a, $b ) { return strnatcmp( $a[1]->name, $b[1]->name ); } );

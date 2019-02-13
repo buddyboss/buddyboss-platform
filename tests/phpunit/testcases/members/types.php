@@ -84,7 +84,7 @@ class BP_Tests_Members_Types extends BP_UnitTestCase {
 			),
 		) );
 
-		// 'name' is set to upper-case version of member type name.
+		// 'name' is set to upper-case version of profile type name.
 		$this->assertSame( 'Foo', $object->labels['name'] );
 		$this->assertSame( 'Bar', $object->labels['singular_name'] );
 	}
@@ -240,11 +240,11 @@ class BP_Tests_Members_Types extends BP_UnitTestCase {
 		// and members type prefetched
 		$users = bp_core_get_users( array( 'include' => array( $u1, $u2 ) ) );
 
-		// Get single member type
+		// Get single profile type
 		$this->assertSame( 'foo', bp_get_member_type( $u1, true ) );
 		$this->assertEmpty( bp_get_member_type( $u2, true ) );
 
-		// Get all member types for the user
+		// Get all profile types for the user
 		$this->assertEqualSets( array( 'foo', 'bar' ), bp_get_member_type( $u1, false ) );
 		$this->assertEmpty( bp_get_member_type( $u2, false ) );
 	}

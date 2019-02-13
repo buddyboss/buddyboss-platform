@@ -288,7 +288,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 		$group_type = bp_groups_get_group_type( $request['group_id'] );
 
-		// Include Member Type if in Group Types > E.g Team > Group Invites ( Meta Box ) specific member type selected.
+		// Include profile type if in Group Types > E.g Team > Group Invites ( Meta Box ) specific profile type selected.
 		if ( false !== $group_type ) {
 			$group_type_id = bp_get_group_type_post_id( $group_type );
 			$get_selected_member_types = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_group_invites', true );

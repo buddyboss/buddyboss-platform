@@ -113,7 +113,7 @@ class BP_Tests_XProfile_BpXprofileField_MemberTypes extends BP_UnitTestCase {
 	}
 
 	public function test_get_fields_for_member_type_should_include_fields_with_no_member_type_restrictions() {
-		// A field with no member_type metadata applies to all member types.
+		// A field with no member_type metadata applies to all profile types.
 		$found = BP_XProfile_Field::get_fields_for_member_type( 'foo' );
 		$this->assertEqualSets( array( 1, $this->field_id ), array_keys( $found ) );
 	}
@@ -209,7 +209,7 @@ class BP_Tests_XProfile_BpXprofileField_MemberTypes extends BP_UnitTestCase {
 
 		$this->field->set_member_types( array( 'aaa', 'zzz', 'null' ) );
 
-		$expected = '(Member types: AAA, ZZZ, Users with no member type)';
+		$expected = '(Profile types: AAA, ZZZ, Users with no member type)';
 		$this->assertSame( $expected, $this->field->get_member_type_label() );
 	}
 }

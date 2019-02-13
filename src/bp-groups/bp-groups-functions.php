@@ -3092,7 +3092,7 @@ function bp_group_type_short_code_callback( $atts ) {
 
 						$name = str_replace(array(' ', ','), array('-', '-'), strtolower( $atts['type'] ) );
 
-						// Set the "current" member type, if one is provided, in member directories.
+						// Set the "current" profile type, if one is provided, in member directories.
 						buddypress()->groups->current_directory_type = $name;
 						buddypress()->current_component = 'groups';
 						buddypress()->is_directory = true;
@@ -3316,7 +3316,7 @@ function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_grou
 }
 
 /**
- * Gets the post id of particular member type.
+ * Gets the post id of particular profile type.
  *
  * @since BuddyBoss 1.0.0
  *
