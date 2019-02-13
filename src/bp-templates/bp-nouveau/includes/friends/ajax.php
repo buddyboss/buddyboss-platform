@@ -129,8 +129,9 @@ function bp_nouveau_ajax_addremove_friend() {
 						'<div class="bp-feedback success">%s</div>',
 						esc_html__( 'Connection accepted.', 'buddyboss' )
 					),
-					'type'     => 'success',
-					'is_user'  => true,
+					'type'         => 'success',
+					'is_user'      => true,
+					'friend_count' => friends_get_friend_count_for_user( bp_loggedin_user_id() ),
 				)
 			);
 		}
@@ -153,8 +154,9 @@ function bp_nouveau_ajax_addremove_friend() {
 						'<div class="bp-feedback success">%s</div>',
 						esc_html__( 'Connection rejected.', 'buddyboss' )
 					),
-					'type'     => 'success',
-					'is_user'  => true,
+					'type'         => 'success',
+					'is_user'      => true,
+					'friend_count' => friends_get_friend_count_for_user( bp_loggedin_user_id() ),
 				)
 			);
 		}
@@ -175,15 +177,16 @@ function bp_nouveau_ajax_addremove_friend() {
 				$response = array( 'contents' => bp_get_add_friend_button( $friend_id, false, array(
 					'parent_element' => 'li',
 					'button_element' => 'button'
-				) ) );
+				) ), 'friend_count' => friends_get_friend_count_for_user( bp_loggedin_user_id() ) );
 			} else {
 				$response = array(
 					'feedback' => sprintf(
 						'<div class="bp-feedback success">%s</div>',
 						esc_html__( 'Connection removed.', 'buddyboss' )
 					),
-					'type'     => 'success',
-					'is_user'  => $is_user,
+					'type'         => 'success',
+					'is_user'      => $is_user,
+					'friend_count' => friends_get_friend_count_for_user( bp_loggedin_user_id() ),
 				);
 			}
 
