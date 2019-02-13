@@ -1104,6 +1104,10 @@ function bp_private_network_template_redirect() {
 
 		if ( '0' === $enable_private_network ) {
 
+			if (apply_filters('bp_private_network_pre_check', false)) {
+				return;
+			}
+
 			if ( get_option( 'users_can_register' ) ) {
 
 				if ( isset( $id ) ) {
