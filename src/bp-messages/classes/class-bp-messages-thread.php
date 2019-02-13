@@ -389,8 +389,8 @@ class BP_Messages_Thread {
 			$last_deleted_timestamp = $last_deleted_message? $last_deleted_message->date_sent : '0000-00-00 00:00:00';
 
 			if ( ! $before ) {
-				// $before = bp_core_current_time();
-				$before = gmdate( 'Y-m-d H:i:s', ( time() + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS + 1 ) ) );
+				$before = bp_core_current_time();
+				// $before = gmdate( 'Y-m-d H:i:s', ( time() + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS + 1 ) ) );
 			}
 
 			// Always sort by DESC by default.
