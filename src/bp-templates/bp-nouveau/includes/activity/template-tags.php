@@ -210,6 +210,47 @@ function bp_nouveau_activity_timestamp() {
 	}
 
 /**
+ * Output the state buttons inside an Activity Loop.
+ *
+ * @since BuddyPress 3.0.0
+ *
+ */
+function bp_nouveau_activity_state() {
+
+	$activity_id     = bp_get_activity_id();
+	$like_text       = bp_activity_get_favorite_users_string( $activity_id );
+	$comment_count   = bp_activity_get_comment_count();
+	$favorited_users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
+	$current_user_id = get_current_user_id();
+
+	$favorited_users = array_reduce( $favorited_users, function ( $carry, $user_id ) use ( $current_user_id, $like_text ) {
+		if ( $user_id != $current_user_id ) {
+			$user_data = get_userdata( $user_id );
+			if ( strpos( $like_text, $user_data->display_name ) === false ) {
+				$carry .= $user_data->display_name . '&#10;';
+			}
+		}
+
+		return $carry;
+	} );
+
+	if ( $like_text ) {
+		?>
+		<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo $favorited_users ?>"><?php echo $like_text ?></span>
+		<?php
+	}
+
+	if ( $comment_count ) {
+		?>
+		<span class="separator"></span>
+		<span class="comments-count">
+			<?php printf( _n( '%d Comment', '%d Comments', $comment_count, 'buddyboss' ), $comment_count ) ?>
+		</span>
+		<?php
+	}
+}
+
+/**
  * Output the action buttons inside an Activity Loop.
  *
  * @since BuddyPress 3.0.0
@@ -333,7 +374,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				'parent_attr'       => $parent_attr,
 				'must_be_logged_in' => true,
 				'button_element'    => $fav_args['button_element'],
-				'link_text'         => sprintf( '<span class="bp-screen-reader-text">%1$s</span>  <span class="like-count">%2$s</span>', esc_html( $fav_args['link_text'] ), esc_html( $like_count ) ),
+				'link_text'         => sprintf( '<span class="bp-screen-reader-text">%1$s</span>  <span class="like-count">%2$s</span>', esc_html( $fav_args['link_text'] ), esc_html( $fav_args['link_text'] ) ),
 				'button_attr'       => array(
 					$key              => $fav_args['link_attr'],
 					'class'           => $fav_args['link_class'],

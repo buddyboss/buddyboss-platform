@@ -469,8 +469,8 @@ window.bp = window.bp || {};
 								$( this ).attr('aria-pressed', 'false');
 							}
 
-							if ( $( this ).find( '.like-count' ).length ) {
-								$(this).find('.like-count').html(response.data.like_count);
+							if ( $( this ).find( '.like-text' ).length ) {
+								$(this).find('.like-text').html(response.data.like_count);
 							}
 
 							target.attr( 'data-bp-tooltip', response.data.content );
