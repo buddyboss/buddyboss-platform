@@ -1428,13 +1428,13 @@ function bp_member_type_labels_metabox( $post ) {
 		<tr valign="top">
 			<th scope="row" style="text-align: left; width: 15%;"><label for="bp-member-type[label_name]"><?php _e( 'Plural Label', 'buddyboss' ); ?></label></th>
 			<td>
-				<input type="text" class="bp-member-type-label-name" name="bp-member-type[label_name]" placeholder="<?php _e( 'e.g. Students', 'buddyboss' ); ?>"  value="<?php echo esc_attr( $label_name ); ?>" tabindex="2" style="width: 100%;" />
+				<input type="text" class="bp-member-type-label-name" name="bp-member-type[label_name]" placeholder="<?php _e( 'e.g. Students', 'buddyboss' ); ?>"  value="<?php echo esc_attr( $label_name ); ?>" style="width: 100%;" />
 			</td>
 		</tr>
 		<tr valign="top">
 			<th scope="row" style="text-align: left; width: 15%;"><label for="bp-member-type[label_singular_name]"><?php _e( 'Singular Label', 'buddyboss' ); ?></label></th>
 			<td>
-				<input type="text" class="bp-member-type-singular-name" name="bp-member-type[label_singular_name]" placeholder="<?php _e( 'e.g. Student', 'buddyboss' ); ?>" value="<?php echo esc_attr( $label_singular_name ); ?>" tabindex="3" style="width: 100%;" />
+				<input type="text" class="bp-member-type-singular-name" name="bp-member-type[label_singular_name]" placeholder="<?php _e( 'e.g. Student', 'buddyboss' ); ?>" value="<?php echo esc_attr( $label_singular_name ); ?>" style="width: 100%;" />
 			</td>
 		</tr>
 	</table>
@@ -1457,14 +1457,14 @@ function bp_member_type_visibility_metabox( $post ) {
 	$enable_filter = isset( $meta[ '_bp_member_type_enable_filter' ] ) ? $meta[ '_bp_member_type_enable_filter' ][ 0 ] : 0; //disabled by default
 	?>
 	<p>
-		<input type='checkbox' name='bp-member-type[enable_filter]' value='1' <?php checked( $enable_filter, 1 ); ?> tabindex="5" />
+		<input type='checkbox' name='bp-member-type[enable_filter]' value='1' <?php checked( $enable_filter, 1 ); ?> />
 		<strong><?php _e( 'Display in "All Types" filter in Members Directory', 'buddyboss' ); ?></strong>
 	</p>
 	<?php
 	$enable_remove = isset( $meta[ '_bp_member_type_enable_remove' ] ) ? $meta[ '_bp_member_type_enable_remove' ][ 0 ] : 0; //enabled by default
 	?>
 	<p>
-		<input type='checkbox' name='bp-member-type[enable_remove]' value='1' <?php checked( $enable_remove, 1 ); ?> tabindex="6" />
+		<input type='checkbox' name='bp-member-type[enable_remove]' value='1' <?php checked( $enable_remove, 1 ); ?> />
 		<strong><?php _e( 'Hide members of this type from Members Directory', 'buddyboss' ); ?></strong>
 	</p>
 	<?php
@@ -1505,7 +1505,6 @@ function bp_profile_shortcode_metabox( $post ) {
 function bp_member_type_wprole_metabox( $post ) {
 
 	global $wp_roles;
-	$tab_index = 7;
 	$all_roles = $wp_roles->role_names;
 
 	//remove bbPress roles
@@ -1542,7 +1541,6 @@ function bp_member_type_wprole_metabox( $post ) {
 						name='bp-member-type[wp_roles][]'
 						id="bp-member-type-wp-roles-<?php echo $key ?>"
 						value='<?php echo $key;?>' <?php echo in_array($key, $selected_roles) ? 'checked' : ''; ?>
-						tabindex="<?php echo ++$tab_index ?>"
 					/>
 					<?php echo $val; ?>
 				</label>
@@ -1572,7 +1570,7 @@ function bp_member_type_group_create_metabox( $post ) {
 
 	?>
 	<p>
-		<input class="group-type-checkboxes" type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( 'none' ); ?>' <?php checked( in_array( 'none', $get_selected_group_types ) ); ?> tabindex="7" />
+		<input class="group-type-checkboxes" type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( 'none' ); ?>' <?php checked( in_array( 'none', $get_selected_group_types ) ); ?> />
 		<strong><?php _e( '(None)', 'buddyboss' ); ?></strong>
 	</p>
 	<?php
@@ -1583,7 +1581,7 @@ function bp_member_type_group_create_metabox( $post ) {
 		$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];
 		?>
 		<p>
-			<input class="group-type-checkboxes"  type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> tabindex="7" />
+			<input class="group-type-checkboxes"  type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> />
 			<strong><?php _e( $group_type_label, 'buddyboss' ); ?></strong>
 		</p>
 		<?php
@@ -1640,7 +1638,7 @@ function bp_member_type_group_auto_join_meta_box( $post ) {
 		$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];
 		?>
 		<p>
-			<input type='checkbox' name='bp-group-type-auto-join[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> tabindex="7" />
+			<input type='checkbox' name='bp-group-type-auto-join[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> />
 			<strong><?php _e( $group_type_label, 'buddyboss' ); ?></strong>
 		</p>
 		<?php
@@ -1664,7 +1662,7 @@ function bp_member_type_invite_meta_box( $post ) {
 	$enable_invite = isset( $meta[ '_bp_member_type_enable_invite' ] ) ? $meta[ '_bp_member_type_enable_invite' ][ 0 ] : 1; //enabled by default
 	?>
 	<p>
-		<input type='checkbox' name='bp-member-type-enabled-invite' value='1' <?php checked( $enable_invite, 1 ); ?> tabindex="8" />
+		<input type='checkbox' name='bp-member-type-enabled-invite' value='1' <?php checked( $enable_invite, 1 ); ?> />
 		<strong><?php _e( 'Enable this member type to set member type via invitation.', 'buddyboss' ); ?></strong>
 	</p>
 
@@ -1682,7 +1680,7 @@ function bp_member_type_invite_meta_box( $post ) {
 		$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
 		?>
 		<p>
-			<input type='checkbox' name='bp-member-type-invite[]' value='<?php echo esc_attr( $member_type_id ); ?>' <?php checked( in_array( $member_type_id, $get_selected_profile_types ) ); ?> tabindex="9" />
+			<input type='checkbox' name='bp-member-type-invite[]' value='<?php echo esc_attr( $member_type_id ); ?>' <?php checked( in_array( $member_type_id, $get_selected_profile_types ) ); ?> />
 			<strong><?php _e( $member_type_name, 'buddyboss' ); ?></strong>
 		</p>
 		<?php
