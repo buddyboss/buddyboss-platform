@@ -1,17 +1,36 @@
 <?php
+/**
+ * Add admin Social Groups settings page in Dashboard->BuddyBoss->Settings
+ *
+ * @package BuddyBoss\Core
+ *
+ * @since BuddyBoss 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Main Social Groups Settings class.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 
 class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
+	//Initialize class
 	public function initialize() {
 		$this->tab_label = __( 'Groups', 'buddyboss' );
 		$this->tab_name  = 'bp-groups';
 		$this->tab_order = 20;
 	}
 
+	//Check if groups are enabled
 	public function is_active() {
 		return bp_is_active( 'groups' );
 	}
 
+	//Register setting fields
 	public function register_fields() {
 		$this->add_section( 'bp_groups', __( 'Group Settings', 'buddyboss' ) );
 

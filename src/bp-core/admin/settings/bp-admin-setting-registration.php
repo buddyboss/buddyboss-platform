@@ -1,6 +1,6 @@
 <?php
 /**
- * Add admin Credit settings page in Dashboard->BuddyBoss->Settings
+ * Add admin Registration settings page in Dashboard->BuddyBoss->Settings
  *
  * @package BuddyBoss\Core
  *
@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Main class.
+ * Main Registration Settings class.
  *
  * @since BuddyBoss 1.0.0
  */

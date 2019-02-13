@@ -23,10 +23,12 @@ class BP_Admin_Setting_Invites extends BP_Admin_Setting_tab {
 		$this->tab_order = 15;
 	}
 
+	//Check if invites are enabled
 	public function is_active() {
 		return bp_is_active( 'invites' );
 	}
 
+	//Register setting fields
 	public function register_fields() {
 		$this->add_section( 'bp_invites', __( 'User Invites Settings', 'buddyboss' ) );
 

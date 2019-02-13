@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Main class.
+ * Main activity settings class.
  *
  * @since BuddyBoss 1.0.0
  */

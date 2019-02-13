@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Main class.
+ * Main credits class.
  *
  * @since BuddyBoss 1.0.0
  */

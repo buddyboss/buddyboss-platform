@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Main class.
+ * Main Connection settings class.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -36,7 +36,7 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * Force users to be friends for messaging.
+	 * Force users to be connected before sending a message to each other.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
