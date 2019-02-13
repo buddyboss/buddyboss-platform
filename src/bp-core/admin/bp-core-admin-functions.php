@@ -2069,3 +2069,26 @@ function bp_core_admin_create_background_page() {
 }
 
 add_action( 'wp_ajax_bp_core_admin_create_background_page', 'bp_core_admin_create_background_page' );
+
+/**
+ * Adds a CSS to remove the Default Avatar settings from the /wp-admin/options-discussion.php page.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ *
+ */
+function bp_remove_avatar_settings_from_options_discussion_page() {
+	global $pagenow;
+
+	if ( 'options-discussion.php' === $pagenow ) {
+
+		?>
+		<style>
+			body.options-discussion-php #wpbody-content .wrap form table:nth-last-child(2) tbody tr:last-child {
+				display: none !important;
+			}
+		</style>
+		<?php
+
+	}
+}

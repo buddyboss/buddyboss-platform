@@ -56,6 +56,7 @@ add_action( 'bp_admin_init', 'bp_register_admin_settings'      );
 add_action( 'bp_admin_init', 'bp_register_admin_integrations'  );
 add_action( 'bp_admin_init', 'bp_do_activation_redirect', 1    );
 add_action( 'bp_admin_init', 'bp_check_for_legacy_theme');
+add_action( 'bp_admin_init', 'bp_remove_avatar_settings_from_options_discussion_page');
 
 // Add a new separator.
 add_action( 'bp_admin_menu', 'bp_admin_separator' );
