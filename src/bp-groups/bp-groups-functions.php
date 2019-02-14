@@ -2960,15 +2960,18 @@ function bp_get_group_type_key( $post_id ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global wpdb $wpdb WordPress database abstraction object.
  * @return type array
  */
 function bp_get_active_group_types() {
+	$query = new WP_Query([
+		'post_per_page' => -1,
+		'post_type'     => bp_get_group_type_post_type(),
+		'post_status'   => 'publish',
+		'fields'        => 'ids',
+		'orderby'       => 'menu_order'
+	]);
 
-	global $wpdb;
-	$query = "SELECT DISTINCT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s ORDER BY menu_order";
-
-	return $wpdb->get_col( $wpdb->prepare( $query, bp_get_group_type_post_type(), 'publish' ) );
+	return $query->posts;
 }
 
 if ( true === bp_disable_group_type_creation() ) {
