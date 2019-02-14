@@ -333,9 +333,9 @@ module.exports = function( grunt ) {
 	/**
 	 * Register tasks.
 	 */
-	grunt.registerTask( 'src',     ['checkDependencies', /*'jsvalidate:src', 'jshint', 'stylelint', */'sass', 'makepot:src', 'rtlcss'] );
+	grunt.registerTask( 'src',     ['checkDependencies', 'jsvalidate:src', 'jshint', 'stylelint', 'sass', 'makepot:src', 'rtlcss'] );
 	grunt.registerTask( 'commit',  ['src', 'checktextdomain', 'imagemin'] );
-	grunt.registerTask( 'build',   ['commit', 'clean:all', 'copy:files', 'uglify', /*'jsvalidate:build', */'cssmin', 'makepot:build',/* 'exec:bpdefault',*/ 'exec:cli'] );
+	grunt.registerTask( 'build',   ['commit', 'clean:all', 'copy:files', 'uglify', 'jsvalidate:build', 'cssmin', 'makepot:build',/* 'exec:bpdefault',*/ 'exec:cli'] );
 	grunt.registerTask( 'release', ['build'] );
 
 	// Testing tasks.
