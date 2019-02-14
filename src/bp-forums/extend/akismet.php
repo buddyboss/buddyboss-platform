@@ -306,14 +306,14 @@ class BBP_Akismet {
 
 				// Spammy
 				case 'spam' :
-					$this->update_post_history( $post_id, sprintf( esc_html__( '%1$s reported this %2$s as spam', 'bbpress' ),     $post_data['reporter'], $post_data['comment_type'] ), 'report-spam' );
+					$this->update_post_history( $post_id, sprintf( esc_html__( '%1$s reported this %2$s as spam', 'buddyboss' ),     $post_data['reporter'], $post_data['comment_type'] ), 'report-spam' );
 					update_post_meta( $post_id, '_bbp_akismet_user_result', 'true'                 );
 					update_post_meta( $post_id, '_bbp_akismet_user',        $post_data['reporter'] );
 					break;
 
 				// Hammy
 				case 'ham'  :
-					$this->update_post_history( $post_id, sprintf( esc_html__( '%1$s reported this %2$s as not spam', 'bbpress' ), $post_data['reporter'], $post_data['comment_type'] ), 'report-ham'  );
+					$this->update_post_history( $post_id, sprintf( esc_html__( '%1$s reported this %2$s as not spam', 'buddyboss' ), $post_data['reporter'], $post_data['comment_type'] ), 'report-ham'  );
 					update_post_meta( $post_id, '_bbp_akismet_user_result', 'false'                 );
 					update_post_meta( $post_id, '_bbp_akismet_user',         $post_data['reporter'] );
 
@@ -402,7 +402,7 @@ class BBP_Akismet {
 		if ( !empty( $response[1] ) ) {
 			$post_data['bbp_akismet_result'] = $response[1];
 		} else {
-			$post_data['bbp_akismet_result'] = esc_html__( 'No response', 'bbpress' );
+			$post_data['bbp_akismet_result'] = esc_html__( 'No response', 'buddyboss' );
 		}
 
 		// This is ham
@@ -460,11 +460,11 @@ class BBP_Akismet {
 
 					// Leave a trail so other's know what we did
 					update_post_meta( $post_id, '_bbp_akismet_result', 'true' );
-					$this->update_post_history( $post_id, esc_html__( 'Akismet caught this post as spam', 'bbpress' ), 'check-spam' );
+					$this->update_post_history( $post_id, esc_html__( 'Akismet caught this post as spam', 'buddyboss' ), 'check-spam' );
 
 					// If post_status isn't the spam status, as expected, leave a note
 					if ( bbp_get_spam_status_id() !== $_post->post_status ) {
-						$this->update_post_history( $post_id, sprintf( esc_html__( 'Post status was changed to %s', 'bbpress' ), $_post->post_status ), 'status-changed-' . $_post->post_status );
+						$this->update_post_history( $post_id, sprintf( esc_html__( 'Post status was changed to %s', 'buddyboss' ), $_post->post_status ), 'status-changed-' . $_post->post_status );
 					}
 
 				// Normal result: false
@@ -472,21 +472,21 @@ class BBP_Akismet {
 
 					// Leave a trail so other's know what we did
 					update_post_meta( $post_id, '_bbp_akismet_result', 'false' );
-					$this->update_post_history( $post_id, esc_html__( 'Akismet cleared this post as not spam', 'bbpress' ), 'check-ham' );
+					$this->update_post_history( $post_id, esc_html__( 'Akismet cleared this post as not spam', 'buddyboss' ), 'check-ham' );
 
 					// If post_status is the spam status, which isn't expected, leave a note
 					if ( bbp_get_spam_status_id() === $_post->post_status ) {
 
 						// @todo Use wp_blacklist_check()
 
-						$this->update_post_history( $post_id, sprintf( esc_html__( 'Post status was changed to %s', 'bbpress' ), $_post->post_status ), 'status-changed-' . $_post->post_status );
+						$this->update_post_history( $post_id, sprintf( esc_html__( 'Post status was changed to %s', 'buddyboss' ), $_post->post_status ), 'status-changed-' . $_post->post_status );
 					}
 
 				// Abnormal result: error
 				} else {
 					// Leave a trail so other's know what we did
 					update_post_meta( $post_id, '_bbp_akismet_error', time() );
-					$this->update_post_history( $post_id, sprintf( esc_html__( 'Akismet was unable to check this post (response: %s), will automatically retry again later.', 'bbpress' ), $this->last_post['bbp_akismet_result'] ), 'check-error' );
+					$this->update_post_history( $post_id, sprintf( esc_html__( 'Akismet was unable to check this post (response: %s), will automatically retry again later.', 'buddyboss' ), $this->last_post['bbp_akismet_result'] ), 'check-error' );
 				}
 
 				// Record the complete original data as submitted for checking
@@ -732,7 +732,7 @@ class BBP_Akismet {
 		// Topics
 		add_meta_box(
 			'bbp_akismet_topic_history',
-			__( 'Akismet History', 'bbpress' ),
+			__( 'Akismet History', 'buddyboss' ),
 			array( $this, 'history_metabox' ),
 			bbp_get_topic_post_type(),
 			'normal',
@@ -742,7 +742,7 @@ class BBP_Akismet {
 		// Replies
 		add_meta_box(
 			'bbp_akismet_reply_history',
-			__( 'Akismet History', 'bbpress' ),
+			__( 'Akismet History', 'buddyboss' ),
 			array( $this, 'history_metabox' ),
 			bbp_get_reply_post_type(),
 			'normal',
@@ -790,7 +790,7 @@ class BBP_Akismet {
 
 			<?php else : ?>
 
-				<p><?php esc_html_e( 'No recorded history. Akismet has not checked this post.', 'bbpress' ); ?></p>
+				<p><?php esc_html_e( 'No recorded history. Akismet has not checked this post.', 'buddyboss' ); ?></p>
 
 			<?php endif; ?>
 
