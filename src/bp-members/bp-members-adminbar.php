@@ -88,11 +88,16 @@ function bp_members_admin_bar_user_admin_menu() {
 	// Unique ID for the 'My Account' menu.
 	$bp->user_admin_menu_id = 'user-admin';
 
+	$user = get_userdata( bp_displayed_user_id() );
+	$link = BP_Core_Members_Switching::maybe_switch_url( $user );
+
 	// Add the top-level User Admin button.
 	$wp_admin_bar->add_menu( array(
 		'id'    => $bp->user_admin_menu_id,
 		'title' => __( 'Edit Member', 'buddyboss' ),
-		'href'  => bp_displayed_user_domain()
+		'href'  => add_query_arg( [
+			'redirect_to' => urlencode( bp_displayed_user_domain() ),
+		], $link )
 	) );
 
 	if ( bp_is_active( 'xprofile' ) ) {
@@ -101,7 +106,9 @@ function bp_members_admin_bar_user_admin_menu() {
 			'parent' => $bp->user_admin_menu_id,
 			'id'     => $bp->user_admin_menu_id . '-edit-profile',
 			'title'  => __( "Edit Profile", 'buddyboss' ),
-			'href'   => bp_get_members_component_link( 'profile', 'edit' )
+			'href'   => add_query_arg( [
+				'redirect_to' => urlencode( bp_get_members_component_link( 'profile', 'edit' ) ),
+			], $link )
 		) );
 
 		// User Admin > Edit this user's avatar.
@@ -110,7 +117,9 @@ function bp_members_admin_bar_user_admin_menu() {
 				'parent' => $bp->user_admin_menu_id,
 				'id'     => $bp->user_admin_menu_id . '-change-avatar',
 				'title'  => __( "Edit Profile Photo", 'buddyboss' ),
-				'href'   => bp_get_members_component_link( 'profile', 'change-avatar' )
+				'href'   => add_query_arg( [
+					'redirect_to' => urlencode( bp_get_members_component_link( 'profile', 'change-avatar' ) ),
+				], $link )
 			) );
 		}
 
@@ -120,7 +129,9 @@ function bp_members_admin_bar_user_admin_menu() {
 				'parent' => $bp->user_admin_menu_id,
 				'id'     => $bp->user_admin_menu_id . '-change-cover-image',
 				'title'  => __( 'Edit Cover Image', 'buddyboss' ),
-				'href'   => bp_get_members_component_link( 'profile', 'change-cover-image' )
+				'href'   => add_query_arg( [
+					'redirect_to' => urlencode( bp_get_members_component_link( 'profile', 'change-cover-image' ) ),
+				], $link )
 			) );
 		}
 
@@ -132,7 +143,9 @@ function bp_members_admin_bar_user_admin_menu() {
 			'parent' => $bp->user_admin_menu_id,
 			'id'     => $bp->user_admin_menu_id . '-user-capabilities',
 			'title'  => __( 'User Capabilities', 'buddyboss' ),
-			'href'   => bp_displayed_user_domain() . 'settings/capabilities/'
+			'href'   => add_query_arg( [
+				'redirect_to' => urlencode( bp_displayed_user_domain() . 'settings/capabilities/' ),
+			], $link )
 		) );
 
 		// User Admin > Delete Account.
@@ -140,7 +153,9 @@ function bp_members_admin_bar_user_admin_menu() {
 			'parent' => $bp->user_admin_menu_id,
 			'id'     => $bp->user_admin_menu_id . '-delete-user',
 			'title'  => __( 'Delete Account', 'buddyboss' ),
-			'href'   => bp_displayed_user_domain() . 'settings/delete-account/'
+			'href'   => add_query_arg( [
+				'redirect_to' => urlencode( bp_displayed_user_domain() . 'settings/delete-account/' ),
+			], $link )
 		) );
 
 	}
