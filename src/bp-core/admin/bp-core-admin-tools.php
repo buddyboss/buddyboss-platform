@@ -23,7 +23,7 @@ function bp_core_admin_tools() {
 		<p><?php esc_html_e( 'BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration.', 'buddyboss' ); ?></p>
 		<p><?php esc_html_e( 'Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?>
 		</p>
-		<p class="description"><?php esc_html_e( 'Some of these tools create substantial database overhead. Avoid running more than one repair job at a time.', 'buddyboss' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Some of these tools utilize substantial database resources. Avoid running more than one repair job at a time.', 'buddyboss' ); ?></p>
 
 		<form class="settings card" method="post" action="">
 
