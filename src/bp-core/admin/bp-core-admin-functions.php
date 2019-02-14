@@ -2071,7 +2071,8 @@ function bp_core_admin_create_background_page() {
 add_action( 'wp_ajax_bp_core_admin_create_background_page', 'bp_core_admin_create_background_page' );
 
 /**
- * Adds a CSS to remove the Default Avatar settings from the /wp-admin/options-discussion.php page.
+ * Adds CSS to remove the Default Avatar settings from /wp-admin/options-discussion.php page.
+ * These settings cannot be used with BuddyBoss, as we load custom avatars instead of gravatar.
  *
  * @since BuddyBoss 1.0.0
  *
