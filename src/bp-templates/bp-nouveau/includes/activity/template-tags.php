@@ -220,19 +220,7 @@ function bp_nouveau_activity_state() {
 	$activity_id     = bp_get_activity_id();
 	$like_text       = bp_activity_get_favorite_users_string( $activity_id );
 	$comment_count   = bp_activity_get_comment_count();
-	$favorited_users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
-	$current_user_id = get_current_user_id();
-
-	$favorited_users = array_reduce( $favorited_users, function ( $carry, $user_id ) use ( $current_user_id, $like_text ) {
-		if ( $user_id != $current_user_id ) {
-			$user_data = get_userdata( $user_id );
-			if ( strpos( $like_text, $user_data->display_name ) === false ) {
-				$carry .= $user_data->display_name . '&#10;';
-			}
-		}
-
-		return $carry;
-	} );
+	$favorited_users = bp_activity_get_favorite_users_tooltip_string( $activity_id );
 
 	?>
 	<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo $favorited_users ?>">

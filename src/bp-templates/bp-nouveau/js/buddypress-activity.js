@@ -474,8 +474,12 @@ window.bp = window.bp || {};
 
 							if ( likes_text.length ) {
 								response.data.like_count ?
-									likes_text.html( response.data.like_count ) && separator.addClass( 'has-likes' ) :
+									likes_text.text( response.data.like_count ) && separator.addClass( 'has-likes' ) :
 									likes_text.empty() && separator.removeClass( 'has-likes' );
+
+								// Update like tooltip
+								var decoded = $('<textarea/>').html(response.data.tooltip).text();
+								likes_text.attr( 'data-hint', decoded );
 							}
 
 							if ( $( this ).find( '.like-count' ).length ) {

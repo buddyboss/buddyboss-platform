@@ -103,8 +103,9 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 
 	if ( bp_activity_add_user_favorite( $_POST['id'] ) ) {
 		$response = array(
-			'content' => __( 'Unlike', 'buddyboss' ),
-			'like_count' => bp_activity_get_favorite_users_string( $_POST['id'] )
+			'content'    => __( 'Unlike', 'buddyboss' ),
+			'like_count' => bp_activity_get_favorite_users_string( $_POST['id'] ),
+			'tooltip'    => bp_activity_get_favorite_users_tooltip_string( $_POST['id'] )
 		); // here like_count is for activity total like count
 
 		if ( ! bp_is_user() ) {
@@ -146,8 +147,9 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 
 	if ( bp_activity_remove_user_favorite( $_POST['id'] ) ) {
 		$response = array(
-			'content' => __( 'Like', 'buddyboss' ),
-			'like_count' => bp_activity_get_favorite_users_string( $_POST['id'] )
+			'content'    => __( 'Like', 'buddyboss' ),
+			'like_count' => bp_activity_get_favorite_users_string( $_POST['id'] ),
+			'tooltip'    => bp_activity_get_favorite_users_tooltip_string( $_POST['id'] )
 		); // here like_count is for activity total like count
 
 		$fav_count = (int) bp_get_total_favorite_count_for_user( bp_loggedin_user_id() );
