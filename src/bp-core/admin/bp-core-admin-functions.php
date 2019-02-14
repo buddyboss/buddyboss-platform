@@ -239,7 +239,7 @@ function bp_core_activation_notice() {
 
 	// Add notice if no rewrite rules are enabled.
 	if ( empty( $wp_rewrite->permalink_structure ) ) {
-		bp_core_add_admin_notice( sprintf( __( '<strong>BuddyBoss is almost ready</strong>. You must <a href="%s">update your permalink structure</a> to something other than the default for it to work.', 'buddyboss' ), admin_url( 'options-permalink.php' ) ), 'error' );
+		bp_core_add_admin_notice( sprintf( __( '<strong>BuddyBoss Platform is almost ready</strong>. You must <a href="%s">update your permalink structure</a> to something other than the default for it to work.', 'buddyboss' ), admin_url( 'options-permalink.php' ) ), 'error' );
 	}
 
 	// Get BuddyPress instance.
@@ -1068,6 +1068,7 @@ add_action( 'admin_head-edit.php', 'bp_admin_email_maybe_add_translation_notice'
  * In emails editor, add notice linking to token documentation on Codex.
  *
  * @since BuddyPress 2.5.0
+ * @todo change link to BuddyBoss page
  */
 function bp_admin_email_add_codex_notice() {
 	if ( get_current_screen()->post_type !== bp_get_email_post_type() ) {

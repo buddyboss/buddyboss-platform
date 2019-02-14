@@ -12,6 +12,7 @@
  * @since BuddyPress 1.2.0
  *
  * @return bool False on failure.
+ * @todo is this still used?
  */
 function bp_activity_action_remove_favorite() {
 	if ( ! is_user_logged_in() || ! bp_is_activity_component() || ! bp_is_current_action( 'unfavorite' ) )

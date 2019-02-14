@@ -224,7 +224,7 @@ abstract class BP_Admin_Tab {
 			'<p class="submit">
 				<input type="submit" name="submit" class="button-primary" value="%s" />
 			</p>',
-			esc_attr( 'Save Settings', 'buddyboss' )
+			esc_attr__( 'Save Settings', 'buddyboss' )
 		);
 	}
 

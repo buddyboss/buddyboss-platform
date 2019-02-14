@@ -5,7 +5,7 @@
  *
  * BuddyBoss Platform adds community features to WordPress.
  *
- * @package BuddyPress\Main
+ * @package BuddyBoss\Main
  */
 
 /**
@@ -46,7 +46,7 @@ if ( ! defined( 'BP_PLUGIN_URL' ) ) {
 	define( 'BP_PLUGIN_URL', plugins_url( trailingslashit( basename( constant( 'BP_PLUGIN_DIR' ) ) ) ) );
 }
 
-// Include BuddyPress
+// Include BuddyBoss Platform
 include( $bp_loader );
 
 // Unset the loader, since it's loaded in global scope

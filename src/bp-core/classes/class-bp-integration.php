@@ -6,6 +6,15 @@
  * @since BuddyBoss 1.0.0
  */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * API to create BuddyBoss Integration.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+ 
 class BP_Integration {
 
 	/**

@@ -291,6 +291,7 @@ function bp_admin_setting_callback_group_auto_join() {
 	?>
 	<input id="bp-enable-group-auto-join" name="bp-enable-group-auto-join" type="checkbox" value="1" <?php checked( bp_enable_group_auto_join() ); ?> />
 	<label for="bp-enable-group-auto-join"><?php _e( 'Allow selected profile types to auto join groups', 'buddyboss' ); ?></label>
+    <p class="description"><?php _e( 'When a member requests to join a group their membership is automatically accepted', 'buddyboss' ); ?></p>
 	<?php
 }
 

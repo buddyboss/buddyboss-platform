@@ -232,8 +232,7 @@ function bp_activity_admin_load() {
 			'content' =>
 				'<p>' . __( '<strong>Primary Item/Secondary Item</strong> - These identify the object that created the activity. For example, the fields could reference a comment left on a specific site. Some types of activity may only use one, or none, of these fields.', 'buddyboss' ) . '</p>' .
 				'<p>' . __( '<strong>Link</strong> - Used by some types of activity (blog posts and comments) to store a link back to the original content.', 'buddyboss' ) . '</p>' .
-				'<p>' . __( '<strong>Type</strong> - Each distinct kind of activity has its own type. For example, <code>created_group</code> is used when a group is created and <code>joined_group</code> is used when a user joins a group.', 'buddyboss' ) . '</p>' .
-				'<p>' . __( 'For information about when and how BuddyPress uses all of these settings, see the Managing Activity link in the panel to the side.', 'buddyboss' ) . '</p>'
+				'<p>' . __( '<strong>Type</strong> - Each distinct kind of activity has its own type. For example, <code>created_group</code> is used when a group is created and <code>joined_group</code> is used when a user joins a group.', 'buddyboss' ) . '</p>'
 		) );
 
 		// Help panel - sidebar links.
@@ -275,7 +274,7 @@ function bp_activity_admin_load() {
 			'title'   => __( 'Overview', 'buddyboss' ),
 			'content' =>
 				'<p>' . __( 'You can manage activities made on your site similar to the way you manage comments and other content. This screen is customizable in the same ways as other management screens, and you can act on activities using the on-hover action links or the Bulk Actions.', 'buddyboss' ) . '</p>' .
-				'<p>' . __( 'There are many different types of activities. Some are generated automatically by BuddyPress and other plugins, and some are entered directly by a user in the form of status update. To help manage the different activity types, use the filter dropdown box to switch between them.', 'buddyboss' ) . '</p>'
+				'<p>' . __( 'There are many different types of activities. Some are generated automatically by BuddyBoss Platform and other plugins, and some are entered directly by a user in the form of status update. To help manage the different activity types, use the filter dropdown box to switch between them.', 'buddyboss' ) . '</p>'
 		) );
 
 		// Help panel - moderation text.
