@@ -1540,18 +1540,25 @@ a.layout-grid-view {
   .activity-list .activity-item .activity-content .activity-state {
     clear: left;
   }
+  .activity-list .activity-item .activity-content .activity-state span {
+    padding: 4px 8px;
+  }
   .activity-list .activity-item .activity-content .activity-state .hint:after,
   .activity-list .activity-item .activity-content .activity-state [data-hint]:after {
     white-space: pre;
   }
   .activity-list .activity-item .activity-content .activity-state .separator {
+    display: none;
     font-size: 110%;
     font-weight: 800;
+    padding: 0;
   }
   .activity-list .activity-item .activity-content .activity-state .separator:before {
     content: '\00B7';
-    padding: 0 5px;
     vertical-align: middle;
+  }
+  .activity-list .activity-item .activity-content .activity-state .separator.has-likes.has-comments {
+    display: inline-block;
   }
   .activity-list .activity-item .activity-header {
     margin: 0 15px 0 0;

@@ -234,20 +234,19 @@ function bp_nouveau_activity_state() {
 		return $carry;
 	} );
 
-	if ( $like_text ) {
-		?>
-		<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo $favorited_users ?>"><?php echo $like_text ?></span>
-		<?php
-	}
+	?>
+	<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo $favorited_users ?>">
+			<?php echo $like_text ?: '' ?>
+	</span>
+	<span
+		class="separator <?php echo $like_text ? 'has-likes' : '' ?> <?php echo $comment_count ? 'has-comments' : '' ?>"
+	>
+	</span>
+	<span class="comments-count">
+			<?php echo $comment_count ? sprintf( _n( '%d Comment', '%d Comments', $comment_count, 'buddyboss' ), $comment_count ) : '' ?>
+	</span>
+	<?php
 
-	if ( $comment_count ) {
-		?>
-		<span class="separator"></span>
-		<span class="comments-count">
-			<?php printf( _n( '%d Comment', '%d Comments', $comment_count, 'buddyboss' ), $comment_count ) ?>
-		</span>
-		<?php
-	}
 }
 
 /**
@@ -363,8 +362,6 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 					'link_attr'       => bp_get_activity_unfavorite_link(),
 				);
 			}
-
-			$like_count = bp_activity_get_favorite_users_string( bp_get_activity_id() );
 
 			$buttons['activity_favorite'] =  array(
 				'id'                => 'activity_favorite',

@@ -166,6 +166,8 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'whatsnewpostinLabel' => __( 'Post in', 'buddyboss' ),
 		'postUpdateButton'    => __( 'Post Update', 'buddyboss' ),
 		'cancelButton'        => __( 'Cancel', 'buddyboss' ),
+		'commentLabel'        => __( '%d Comment', 'buddyboss' ),
+		'commentsLabel'       => __( '%d Comments', 'buddyboss' ),
 	);
 
     if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {

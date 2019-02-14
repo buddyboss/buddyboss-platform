@@ -327,19 +327,28 @@
 
 					clear: left;
 
+					span {
+						padding: 4px 8px;
+					}
+
 					.hint:after,
 					[data-hint]:after {
 						white-space: pre;
 					}
 
 					.separator {
+						display: none;
 						font-size: 110%;
 						font-weight: 800;
+						padding: 0;
 						&:before {
 							content:'\00B7';
-							padding: 0 5px;
 							vertical-align: middle;
 						}
+					}
+
+					.separator.has-likes.has-comments {
+						display: inline-block;
 					}
 				}
 			}
