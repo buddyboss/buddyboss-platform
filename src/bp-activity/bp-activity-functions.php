@@ -1176,6 +1176,34 @@ function bp_activity_get_favorite_users_string( $activity_id ) {
 	return $return_str;
 }
 
+
+/**
+ * Get users for activity favorite tooltip
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $activity_id
+ *
+ * @return string
+ */
+function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
+	$current_user_id = get_current_user_id();
+	$favorited_users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
+	$like_text       = bp_activity_get_favorite_users_string( $activity_id );
+	$favorited_users = array_reduce( $favorited_users, function ( $carry, $user_id ) use ( $current_user_id, $like_text ) {
+		if ( $user_id != $current_user_id ) {
+			$user_data = get_userdata( $user_id );
+			if ( strpos( $like_text, $user_data->display_name ) === false ) {
+				$carry .= $user_data->display_name . '&#10;';
+			}
+		}
+
+		return $carry;
+	} );
+
+	return $favorited_users;
+}
+
 /**
  * Check if BuddyPress activity favorites data needs upgrade & Update to BuddyBoss activity like data
  *
@@ -3917,7 +3945,7 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 /**
  * Return if the activity stream should show activty comments as streamed or threaded
  *
- * 
+ *
  */
 function bp_show_streamed_activity_comment() {
 	return apply_filters( 'bp_show_streamed_activity_comment', bp_get_option('show_streamed_activity_comment', false) );
