@@ -139,14 +139,14 @@ function bp_members_admin_bar_user_admin_menu() {
 
 	if ( bp_is_active( 'settings' ) ) {
 		// User Admin > Spam/unspam.
-		$wp_admin_bar->add_menu( array(
-			'parent' => $bp->user_admin_menu_id,
-			'id'     => $bp->user_admin_menu_id . '-user-capabilities',
-			'title'  => __( 'User Capabilities', 'buddyboss' ),
-			'href'   => add_query_arg( [
-				'redirect_to' => urlencode( bp_displayed_user_domain() . 'settings/capabilities/' ),
-			], $link )
-		) );
+//		$wp_admin_bar->add_menu( array(
+//			'parent' => $bp->user_admin_menu_id,
+//			'id'     => $bp->user_admin_menu_id . '-user-capabilities',
+//			'title'  => __( 'User Capabilities', 'buddyboss' ),
+//			'href'   => add_query_arg( [
+//				'redirect_to' => urlencode( bp_displayed_user_domain() . 'settings/capabilities/' ),
+//			], $link )
+//		) );
 
 		// User Admin > Delete Account.
 		$wp_admin_bar->add_menu( array(
