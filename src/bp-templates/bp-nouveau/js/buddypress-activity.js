@@ -486,7 +486,7 @@ window.bp = window.bp || {};
 								$(this).find('.like-count').html(response.data.content);
 							}
 
-							target.attr( 'data-bp-tooltip', response.data.content );
+						//	target.attr( 'data-bp-tooltip', response.data.content );
 
 							$( this ).fadeIn( 200 );
 						} );

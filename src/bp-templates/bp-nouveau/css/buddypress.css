@@ -1524,6 +1524,10 @@ a.layout-grid-view {
   font-weight: 700;
 }
 
+.activity-list .activity-item .activity-meta.action .unfav .like-count {
+  color: #0061ac;
+}
+
 @media screen and (min-width: 46.8em) {
   .activity-list.bp-list {
     padding: 30px;
