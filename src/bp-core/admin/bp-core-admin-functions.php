@@ -1382,7 +1382,7 @@ function bp_member_type_custom_metaboxes() {
 
 		// Add meta box if group types is entered.
 		if ( true === bp_disable_group_type_creation() && isset( $get_all_registered_group_types ) && !empty( $get_all_registered_group_types ) ) {
-			add_meta_box( 'bp-member-type-group-auto-join', __( 'Auto Join Groups', 'buddyboss' ), 'bp_member_type_group_auto_join_meta_box', null, 'normal', 'high' );
+			add_meta_box( 'bp-member-type-group-auto-join', __( 'Auto Group Membership Approval', 'buddyboss' ), 'bp_member_type_group_auto_join_meta_box', null, 'normal', 'high' );
 		}
 	}
 
@@ -1621,7 +1621,7 @@ function bp_member_type_group_create_metabox( $post ) {
 }
 
 /**
- * Admin option to enable specified members types to auto join specified group types.
+ * Admin option to enable specified members types to auto approve group membershup within specified group types.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1629,7 +1629,7 @@ function bp_member_type_group_create_metabox( $post ) {
  */
 function bp_member_type_group_auto_join_meta_box( $post ) {
 	?>
-	<p><?php _e( 'Select which group types allow auto join.', 'buddyboss' ); ?></p>
+	<p><?php _e( 'Select which group types to automatically approve membership.', 'buddyboss' ); ?></p>
 	<?php
 	$get_all_registered_group_types = bp_get_active_group_types();
 

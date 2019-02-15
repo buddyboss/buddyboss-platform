@@ -4180,11 +4180,11 @@ function bp_current_member_switched() {
 }
 
 /**
- * Add members to auto join groups based on their profile type.
+ * Add members to Auto Group Membership Approval based on their profile type.
  *
  * @since BuddyBoss 1.0.0
  *
- * @param int $user_id The user ID to add the auto join groups.
+ * @param int $user_id The user ID to add the Auto Group Membership Approval.
  */
 function bp_member_add_auto_join_groups( $user_id, $key, $user ) {
 
@@ -4193,7 +4193,7 @@ function bp_member_add_auto_join_groups( $user_id, $key, $user ) {
 	// Get post id of selected profile type.
 	$post_id = bp_member_type_post_by_type( $user_member_type );
 
-	// Get selected auto join group types.
+	// Get selected Auto Membership Approval group types.
 	$group_types = get_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', true );
 
 	if ( !empty( $group_types ) && isset( $group_types ) ) {

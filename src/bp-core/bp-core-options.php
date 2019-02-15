@@ -81,7 +81,7 @@ function bp_get_default_options() {
 		// Group Types.
 		'bp-disable-group-type-creation' => false,
 
-		// Group auto join
+		// Auto Group Membership Approval.
 		'bp-enable-group-auto-join' => false,
 
 		// Group restrict invites to members who already in specific parent group.
@@ -717,22 +717,22 @@ function bp_enable_group_restrict_invites( $default = false ) {
 }
 
 /**
- * Are group auto join enabled?
+ * Is Auto Group Membership Approval enabled?
  *
  * @since BuddyBoss 1.0.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
- * @return bool True if group auto join are enabled, otherwise false.
+ * @return bool True if Auto Group Membership Approval is enabled, otherwise false.
  */
 function bp_enable_group_auto_join( $default = false ) {
 
 	/**
-	 * Filters whether or not groups auto join.
+	 * Filters whether or not groups auto approve membership.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param bool $value whether or not groups auto join.
+	 * @param bool $value whether or not groups auto approve membership.
 	 */
 	return (bool) apply_filters( 'bp_enable_group_auto_join', (bool) bp_get_option( 'bp-enable-group-auto-join', $default ) );
 }
