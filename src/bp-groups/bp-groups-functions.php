@@ -3069,7 +3069,7 @@ function bp_get_total_count_by_group_types( $group_type = '', $taxonomy = 'bp_gr
 }
 
 /**
- * Displays shortcode data.
+ * Sisplays shortcode data.
  *
  * @since BuddyBoss 1.0.0
  *

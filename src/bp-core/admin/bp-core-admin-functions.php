@@ -2086,16 +2086,8 @@ function bp_remove_avatar_settings_from_options_discussion_page() {
 
 		?>
 		<style>
-			body.options-discussion-php .defaultavatarpicker .screen-reader-text, body.options-discussion-php .defaultavatarpicker label:not(:first-of-type), body.options-discussion-php .defaultavatarpicker br:not(:first-of-type){
-				display: none;
-			}
-			body.options-discussion-php .defaultavatarpicker{
-				font-size: 0px;
-				visibility: collapse;
-			}
-			body.options-discussion-php .defaultavatarpicker label{
-				font-size: 14px;
-				visibility: visible;
+			body.options-discussion-php #wpbody-content .wrap form table:nth-last-child(2) tbody tr:last-child {
+				display: none !important;
 			}
 		</style>
 		<?php
