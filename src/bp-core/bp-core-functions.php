@@ -747,11 +747,12 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
  * @since BuddyPress 2.7.0
  *
  * @return array
+ * @todo pretty sure these need to be deprecated
  */
 function bp_core_get_directory_page_default_titles() {
 	$page_default_titles = array(
-		'activity'          => _x( 'News Feed', 'Page title for the Activity directory.', 'buddyboss' ),
-		'groups'            => _x( 'Groups', 'Page title for the Groups directory.', 'buddyboss' ),
+		'activity'          => _x( 'Activity Feed', 'Page title for the Activity directory.', 'buddyboss' ),
+		'groups'            => _x( 'Social Groups', 'Page title for the Groups directory.', 'buddyboss' ),
 		'blogs'             => _x( 'Sites', 'Page title for the Sites directory.', 'buddyboss' ),
 		'members'           => _x( 'Members', 'Page title for the Members directory.', 'buddyboss' ),
 		'activate'          => _x( 'Activate', 'Page title for the user activation screen.', 'buddyboss' ),
@@ -2419,7 +2420,7 @@ function bp_core_get_components( $type = 'all' ) {
 		'xprofile' => array(
 			'title'       => __( 'Profile Fields', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( 'users.php?page=bp-profile-setup' ),
-			'description' => __( 'Customize your community with fully editable profile fields that allow your users to describe themselves.', 'buddyboss' ),
+			'description' => __( 'Customize your community with fully editable profile fields that allow members to share details about themselves.', 'buddyboss' ),
 			'default'     => true,
 		),
 	);
@@ -2427,58 +2428,58 @@ function bp_core_get_components( $type = 'all' ) {
 	$optional_components = array(
 		'settings' => array(
 			'title'       => __( 'Account Settings', 'buddyboss' ),
-			'description' => __( 'Allow your users to modify their account and notification settings directly from within their profiles.', 'buddyboss' ),
+			'description' => __( 'Allow members to modify their account and notification settings from within their profile.', 'buddyboss' ),
 			'default'     => true,
 		),
 		'friends'  => array(
 			'title'       => __( 'User Connections', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-friends' ) , 'admin.php' ) ),
-			'description' => __( 'Let your users make connections with each other and focus on the people they care about the most.', 'buddyboss' ),
+			'description' => __( 'Allow members to make connections with one another and focus on those they care about most.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'invites'  => array(
 			'title'       => __( 'User Invites', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-invites' ) , 'admin.php' ) ),
-			'description' => __( 'Allow your users to send email invites to non-members to join the network.', 'buddyboss' ),
+			'description' => __( 'Allow members to send email invitations for non-members to join the network.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'messages' => array(
 			'title'       => __( 'Private Messaging', 'buddyboss' ),
-			'description' => __( 'Allow your users to talk to each other directly and in private. Not just limited to one-on-one discussions, messages can be sent between any number of members.', 'buddyboss' ),
+			'description' => __( 'Allow members to send private message. Messages can be sent to one member or a group of members.', 'buddyboss' ),
             'default'     => false,
 		),
 		'activity' => array(
 			'title'       => __( 'Activity Feeds', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-activity' ) , 'admin.php' ) ),
-			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, and @mentions, all with email notification support.', 'buddyboss' ),
+			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, and @mentions, with email notification support.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'blogs'    => array(
 			'title'       => __( 'Blog Feeds', 'buddyboss' ),
-			'description' => __( 'Publish new blog posts and comments from your site into the activity feed. Make sure to enable Activity Feeds first.', 'buddyboss' ),
+			'description' => __( 'Have new blog posts and comments appear in site activity feeds. Make sure to enable Activity Feeds first.', 'buddyboss' ),
             'default'     => false,
 		),
 		'notifications' => array(
 			'title'       => __( 'Notifications', 'buddyboss' ),
-			'description' => __( 'Notify users of relevant activity with a toolbar bubble and/or via email, and allow them to customize their notification settings.', 'buddyboss' ),
+			'description' => __( 'Notify members of relevant activity with a toolbar bubble and/or via email and allow them to customize their notification settings.', 'buddyboss' ),
 			'default'     => true,
 		),
 		'groups'   => array(
 			'title'       => __( 'Social Groups', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-groups' ) , 'admin.php' ) ),
-			'description' => __( 'Groups allow your users to organize themselves into specific public, private or hidden social areas with separate activity feeds and member listings.', 'buddyboss' ),
+			'description' => __( 'Allow members to organize themselves into public, private or hidden social areas with separate activity feeds and member listing.', 'buddyboss' ),
             'default'     => false,
 		),
 		'forums'   => array(
 			'title'       => __( 'Forum Discussions', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-forums' ) , 'admin.php' ) ),
-			'description' => __( 'Forums allow your users to have discussions using Q&A style message boards. Forums can be standalone or connected to social groups.', 'buddyboss' ),
+			'description' => __( 'Allow members to have discussions using Q&A style message boards. Forums can be standalone or connected to social groups.', 'buddyboss' ),
             'default'     => false,
 		),
 		'search'   => array(
 			'title'       => __( 'Network Search', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-search' ) , 'admin.php' ) ),
-			'description' => __( 'Allow your users to search the entire network, along with custom post types of your choice, all in one unified search bar.', 'buddyboss' ),
+			'description' => __( 'Allow members to search the entire network, along with custom post types of your choice, all in one unified search bar.', 'buddyboss' ),
 			'default'     => false,
 		)
 	);
@@ -2854,7 +2855,7 @@ function bp_get_email_post_type_labels() {
 	 */
 	return apply_filters( 'bp_get_email_post_type_labels', array(
 		'add_new'               => _x( 'New Email', 'email post type label', 'buddyboss' ),
-		'add_new_item'          => _x( 'Add a New Email', 'email post type label', 'buddyboss' ),
+		'add_new_item'          => _x( 'Add New Email', 'email post type label', 'buddyboss' ),
 		'all_items'             => _x( 'All Emails', 'email post type label', 'buddyboss' ),
 		'edit_item'             => _x( 'Edit Email', 'email post type label', 'buddyboss' ),
 		'filter_items_list'     => _x( 'Filter email list', 'email post type label', 'buddyboss' ),
@@ -3069,7 +3070,7 @@ function bp_get_email( $email_type ) {
  * @since BuddyPress 2.5.0
  *
  * @param string                   $email_type Type of email being sent.
- * @param string|array|int|WP_User $to         Either a email address, user ID, WP_User object,
+ * @param string|array|int|WP_User $to         Either an email address, user ID, WP_User object,
  *                                             or an array containg the address and name.
  * @param array                    $args {
  *     Optional. Array of extra parameters.
@@ -3125,7 +3126,7 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 	 *
 	 * @param BP_Email                 $email      The email (object) about to be sent.
 	 * @param string                   $email_type Type of email being sent.
-	 * @param string|array|int|WP_User $to         Either a email address, user ID, WP_User object,
+	 * @param string|array|int|WP_User $to         Either an email address, user ID, WP_User object,
 	 *                                             or an array containg the address and name.
      * @param array                    $args {
 	 *     Optional. Array of extra parameters.
@@ -3523,6 +3524,7 @@ function bp_email_get_schema() {
  *         @type string $meta_key The meta_key used to toggle the email setting for this notification.
  *         @type string $message  The message shown when the user has successfully unsubscribed.
  *     }
+ * @todo check if these can be deprecated
  */
 function bp_email_get_type_schema( $field = 'description' ) {
 	$activity_comment = array(
@@ -3568,15 +3570,15 @@ function bp_email_get_type_schema( $field = 'description' ) {
 	);
 
 	$friends_request = array(
-		'description'	=> __( 'A member has sent a invitation to connect to the recipient.', 'buddyboss' ),
+		'description'	=> __( 'A member has sent an invitation to connect to the recipient.', 'buddyboss' ),
 		'unsubscribe'	=> array(
 			'meta_key'	=> 'notification_friends_friendship_request',
-			'message'	=> __( 'You will no longer receive emails when someone sends you a invitation to connect.', 'buddyboss' ),
+			'message'	=> __( 'You will no longer receive emails when someone sends you an invitation to connect.', 'buddyboss' ),
 		),
 	);
 
 	$friends_request_accepted = array(
-		'description'	=> __( 'Recipient has had a invitation to connect accepted by a member.', 'buddyboss' ),
+		'description'	=> __( 'Recipient has had an invitation to connect accepted by a member.', 'buddyboss' ),
 		'unsubscribe'	=> array(
 			'meta_key'	=> 'notification_friends_friendship_accepted',
 			'message'	=> __( 'You will no longer receive emails when someone accepts your invitation to connect.', 'buddyboss' ),

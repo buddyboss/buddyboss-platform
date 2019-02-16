@@ -73,7 +73,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		);
 
 		// Avatars.
-		$this->add_field( 'bp-disable-avatar-uploads', __( 'Profile Photo Uploads', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval' );
+		$this->add_field( 'bp-disable-avatar-uploads', __( 'Photo Uploads', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval' );
 
 		// Cover images.
 		if ( bp_is_active( 'xprofile', 'cover_image' ) ) {
@@ -101,7 +101,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$this->add_field( 'bp-member-type-enable-disable', __( 'Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_enable_disable'], 'intval' );
 
 		// Enable/Disable Display on profiles.
-		$this->add_field( 'bp-member-type-display-on-profile', __( 'Display on Profiles', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_display_on_profile'], 'intval' );
+		$this->add_field( 'bp-member-type-display-on-profile', __( 'Display Profile Type', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_display_on_profile'], 'intval' );
 
 		// Profile types import.
 		$this->add_field( 'bp-member-type-import', __( 'Import Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_import'], 'intval' );

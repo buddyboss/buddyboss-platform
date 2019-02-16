@@ -56,7 +56,7 @@ class BP_Email_Recipient {
 	 *
 	 * @since BuddyPress 2.5.0
 	 *
-	 * @param string|array|int|WP_User $email_or_user Either a email address, user ID, WP_User object,
+	 * @param string|array|int|WP_User $email_or_user Either an email address, user ID, WP_User object,
 	 *                                                or an array containing any combination of the above.
 	 * @param string $name Optional. If $email_or_user is a string, this is the recipient's name.
 	 */
@@ -127,7 +127,7 @@ class BP_Email_Recipient {
 		 *
 		 * @since BuddyPress 2.5.0
 		 *
-		 * @param string|array|int|WP_User $email_or_user Either a email address, user ID, WP_User object,
+		 * @param string|array|int|WP_User $email_or_user Either an email address, user ID, WP_User object,
 		 *                                                or an array containing any combination of the above.
 		 * @param string $name If $email_or_user is a string, this is the recipient's name.
 		 * @param BP_Email_Recipient $this Current instance of the email type class.

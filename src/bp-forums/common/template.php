@@ -1134,7 +1134,7 @@ function is_bbpress() {
  * @since bbPress (r2815)
  *
  * @param string $args Pass a URL to redirect to
- * @uses add_query_arg() To add a arg to the url
+ * @uses add_query_arg() To add an arg to the url
  * @uses site_url() Toget the site url
  * @uses apply_filters() Calls 'bbp_wp_login_action' with the url and args
  */
@@ -1148,7 +1148,7 @@ function bbp_wp_login_action( $args = '' ) {
 	 * @since bbPress (r5691)
 	 *
 	 * @param string $args Pass a URL to redirect to
-	 * @uses add_query_arg() To add a arg to the url
+	 * @uses add_query_arg() To add an arg to the url
 	 * @uses site_url() Toget the site url
 	 * @uses apply_filters() Calls 'bbp_wp_login_action' with the url and args
 	 */

@@ -61,7 +61,7 @@ class BP_Bbp_Gdpr_Forums {
 	 */
 	function erase_exporter( $erasers ) {
 		$erasers['bbp-forum'] = array(
-			'eraser_friendly_name' => __( 'bbPress Forums', 'buddyboss' ),
+			'eraser_friendly_name' => __( 'Forums', 'buddyboss' ),
 			'callback'             => array( $this, 'forums_eraser' ),
 		);
 

@@ -276,7 +276,7 @@ function bp_admin_setting_callback_group_restrict_invites() {
 	?>
 	<input id="bp-enable-group-restrict-invites" name="bp-enable-group-restrict-invites" type="checkbox" value="1" <?php checked( bp_enable_group_restrict_invites() ); ?> />
 	<label for="bp-enable-group-restrict-invites"><?php _e( 'Restrict subgroup invites to members of the parent group', 'buddyboss' ); ?></label>
-    <p class="description"><?php _e( 'Members must first be a group member of the parent prior to being invited to a subgroup', 'buddyboss' ); ?></p>
+    <p class="description"><?php _e( 'Members must first be a member of the parent group prior to being invited to a subgroup', 'buddyboss' ); ?></p>
 	<?php
 }
 

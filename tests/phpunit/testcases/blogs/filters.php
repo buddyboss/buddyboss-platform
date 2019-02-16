@@ -111,7 +111,7 @@ class BP_Tests_Blogs_Filters extends BP_UnitTestCase {
 		// Approve the comment
 		self::factory()->comment->update_object( $comment_id, array( 'comment_approved' => 1 ) );
 
-		$this->assertTrue( $this->activity_exists_for_post_type( $parent_activity_id, '', 'activity_comment', 'stream' ), 'Generated activity for comments about a post type registering using the bp_blogs_record_post_post_types filter having sync on should have a activity_comment action' );
+		$this->assertTrue( $this->activity_exists_for_post_type( $parent_activity_id, '', 'activity_comment', 'stream' ), 'Generated activity for comments about a post type registering using the bp_blogs_record_post_post_types filter having sync on should have an activity_comment action' );
 
 		remove_filter( 'bp_disable_blogforum_comments', '__return_false' );
 	}

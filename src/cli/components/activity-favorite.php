@@ -73,7 +73,7 @@ class Activity_Favorite extends BuddypressCommand {
 	 * ## OPTIONS
 	 *
 	 * <activity-id>
-	 * : ID of the activity to remove a item to.
+	 * : ID of the activity to remove an item to.
 	 *
 	 * <user>
 	 * : Identifier for the user. Accepts either a user_login or a numeric ID.

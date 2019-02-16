@@ -524,7 +524,7 @@ class BP_Email {
 	 *
 	 * @since BuddyPress 2.5.0
 	 *
-	 * @param string|array|int|WP_User $bcc_address Either a email address, user ID, WP_User object,
+	 * @param string|array|int|WP_User $bcc_address Either an email address, user ID, WP_User object,
 	 *                                              or an array containing any combination of the above.
 	 * @param string $name Optional. If $bcc_address is a string, this is the recipient's name.
 	 * @param string $operation Optional. If "replace", $to_address replaces current setting (default).
@@ -549,7 +549,7 @@ class BP_Email {
 		 * @since BuddyPress 2.5.0
 		 *
 		 * @param BP_Email_Recipient[] $bcc BCC recipients.
-		 * @param string|array|int|WP_User $bcc_address Either a email address, user ID, WP_User object,
+		 * @param string|array|int|WP_User $bcc_address Either an email address, user ID, WP_User object,
 		 *                                              or an array containing any combination of the above.
 		 * @param string $name Optional. If $bcc_address is a string, this is the recipient's name.
 		 * @param string $operation If "replace", $to_address replaced previous recipients. If "add",
@@ -572,7 +572,7 @@ class BP_Email {
 	 *
 	 * @since BuddyPress 2.5.0
 	 *
-	 * @param string|array|int|WP_User $cc_address Either a email address, user ID, WP_User object,
+	 * @param string|array|int|WP_User $cc_address Either an email address, user ID, WP_User object,
 	 *                                             or an array containing any combination of the above.
 	 * @param string $name Optional. If $cc_address is a string, this is the recipient's name.
 	 * @param string $operation Optional. If "replace", $to_address replaces current setting (default).
@@ -597,7 +597,7 @@ class BP_Email {
 		 * @since BuddyPress 2.5.0
 		 *
 		 * @param BP_Email_Recipient[] $cc CC recipients.
-		 * @param string|array|int|WP_User $cc_address Either a email address, user ID, WP_User object,
+		 * @param string|array|int|WP_User $cc_address Either an email address, user ID, WP_User object,
 		 *                                             or an array containing any combination of the above.
 		 * @param string $name Optional. If $cc_address is a string, this is the recipient's name.
 		 * @param string $operation If "replace", $to_address replaced previous recipients. If "add",
@@ -689,7 +689,7 @@ class BP_Email {
 	 *
 	 * @since BuddyPress 2.5.0
 	 *
-	 * @param string|array|int|WP_User $email_address Either a email address, user ID, or WP_User object.
+	 * @param string|array|int|WP_User $email_address Either an email address, user ID, or WP_User object.
 	 * @param string $name Optional. If $email_address is a string, this is the recipient's name.
 	 * @return BP_Email
 	 */
@@ -702,7 +702,7 @@ class BP_Email {
 		 * @since BuddyPress 2.5.0
 		 *
 		 * @param BP_Email_Recipient $from Sender details.
-		 * @param string|array|int|WP_User $email_address Either a email address, user ID, or WP_User object.
+		 * @param string|array|int|WP_User $email_address Either an email address, user ID, or WP_User object.
 		 * @param string $name Optional. If $email_address is a string, this is the recipient's name.
 		 * @param BP_Email $this Current instance of the email type class.
 		 */
@@ -760,7 +760,7 @@ class BP_Email {
 	 *
 	 * @since BuddyPress 2.5.0
 	 *
-	 * @param string|array|int|WP_User $email_address Either a email address, user ID, WP_User object,
+	 * @param string|array|int|WP_User $email_address Either an email address, user ID, WP_User object,
 	 *                                                or an array containing any combination of the above.
 	 * @param string $name Optional. If $email_address is a string, this is the recipient's name.
 	 * @return BP_Email
@@ -774,7 +774,7 @@ class BP_Email {
 		 * @since BuddyPress 2.5.0
 		 *
 		 * @param BP_Email_Recipient $reply_to "Reply to" recipient.
-		 * @param string|array|int|WP_User $email_address Either a email address, user ID, WP_User object,
+		 * @param string|array|int|WP_User $email_address Either an email address, user ID, WP_User object,
 		 *                                                or an array containing any combination of the above.
 		 * @param string $name Optional. If $email_address is a string, this is the recipient's name.
 		 * @param BP_Email $this Current instance of the email type class.
@@ -849,7 +849,7 @@ class BP_Email {
 	 *
 	 * @since BuddyPress 2.5.0
 	 *
-	 * @param string|array|int|WP_User $to_address Either a email address, user ID, WP_User object,
+	 * @param string|array|int|WP_User $to_address Either an email address, user ID, WP_User object,
 	 *                                             or an array containing any combination of the above.
 	 * @param string $name Optional. If $to_address is a string, this is the recipient's name.
 	 * @param string $operation Optional. If "replace", $to_address replaces current setting (default).

@@ -143,7 +143,7 @@ function bp_nouveau_activity_hook( $when = '', $suffix = '' ) {
 		$hook[] = $when;
 	}
 
-	// It's a activity entry hook
+	// It's an activity entry hook
 	$hook[] = 'activity';
 
 	if ( $suffix ) {
@@ -307,7 +307,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 		$parent_attr = ( ! empty( $args['parent_attr'] ) ) ? $args['parent_attr'] : array();
 
 		/*
-		 * If we have a arg value for $button_element passed through
+		 * If we have an arg value for $button_element passed through
 		 * use it to default all the $buttons['button_element'] values
 		 * otherwise default to 'a' (anchor)
 		 * Or override & hardcode the 'element' string on $buttons array.
@@ -801,7 +801,7 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 		$parent_attr = ( ! empty( $args['parent_attr'] ) ) ? $args['parent_attr'] : array();
 
 		/*
-		 * If we have a arg value for $button_element passed through
+		 * If we have an arg value for $button_element passed through
 		 * use it to default all the $buttons['button_element'] values
 		 * otherwise default to 'a' (anchor).
 		 */

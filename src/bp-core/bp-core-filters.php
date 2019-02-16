@@ -390,6 +390,7 @@ add_filter( 'bp_email_get_property', 'bp_email_plaintext_entity_decode', 10, 3 )
  * @param string $welcome_email Complete email passed through WordPress.
  * @return string Filtered $welcome_email with the password replaced
  *                by '[User Set]'.
+ * @todo should [User Set] be in the text domain?
  */
 function bp_core_filter_user_welcome_email( $welcome_email ) {
 

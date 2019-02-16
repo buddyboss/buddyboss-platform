@@ -78,19 +78,19 @@ class BP_Email_Tokens {
 		$tokens = array(
 			'group.small_card' => array(
 				'function'    => array( $this, 'token__group_card_small' ),
-				'description' => __( 'Display the group card, with minimum details about the group.', 'buddyboss' ),
+				'description' => __( 'Display the group card with minimal group details.', 'buddyboss' ),
 			),
 			'group.card'       => array(
 				'function'    => array( $this, 'token__group_card' ),
-				'description' => __( 'Display the group card, with more details like group cover photo etc.', 'buddyboss' ),
+				'description' => __( 'Display the group card with more details like group cover photo etc.', 'buddyboss' ),
 			),
 			'group.description' => array(
 				'function'    => array( $this, 'token__group_description' ),
-				'description' => __( 'Outputs the description excerpt of the group.', 'buddyboss' ),
+				'description' => __( 'Display the group description.', 'buddyboss' ),
 			),
 			'group.invite_message' => array(
 				'function'    => array( $this, 'token__group_invite_message' ),
-				'description' => __( 'Outputs the invite message for the user.', 'buddyboss' ),
+				'description' => __( 'Display the invite message.', 'buddyboss' ),
 			),
 			'message'          => array(
 				'function'    => array( $this, 'token__message' ),
@@ -98,11 +98,11 @@ class BP_Email_Tokens {
 			),
 			'sender.url'       => array(
 				'function'    => array( $this, 'token__sender_url' ),
-				'description' => __( 'Outputs the link to the profile of member who has sent the message. Only works in email that is sent to a member when someone sends him/her a message.', 'buddyboss' ),
+				'description' => __( 'Display the link to the member profile who sent the message. Only works in email that is sent to a member when someone sends him/her a message.', 'buddyboss' ),
 			),
 			'member.card'      => array(
 				'function'    => array( $this, 'token__member_card_small' ),
-				'description' => __( 'Display the member card, with minimum details about the member.', 'buddyboss' ),
+				'description' => __( 'Display the member card with minimal member details.', 'buddyboss' ),
 			),
 			'status_update'    => array(
 				'function'    => array( $this, 'token__status_update' ),
@@ -110,19 +110,19 @@ class BP_Email_Tokens {
 			),
 			'activity_reply'   => array(
 				'function'    => array( $this, 'token__activity_reply' ),
-				'description' => __( 'Display the reply to  update, along with member\'s picture and name.', 'buddyboss' ),
+				'description' => __( 'Display the reply to update, along with member\'s picture and name.', 'buddyboss' ),
 			),
 			'poster.url'       => array(
 				'function'    => array( $this, 'token__poster_url' ),
-				'description' => __( 'Outputs the link to the profile of member who has posted the update.', 'buddyboss' ),
+				'description' => __( 'Display the link to the member profile who posted the update.', 'buddyboss' ),
 			),
 			'discussion.content'       => array(
 				'function'    => array( $this, 'token__discussion_content' ),
-				'description' => __( 'Outputs the discussion content.', 'buddyboss' ),
+				'description' => __( 'Display the discussion content.', 'buddyboss' ),
 			),
 			'reply.content'       => array(
 				'function'    => array( $this, 'token__reply_content' ),
-				'description' => __( 'Outputs the reply content.', 'buddyboss' ),
+				'description' => __( 'Display the reply content.', 'buddyboss' ),
 			),
 		);
 

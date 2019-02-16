@@ -926,13 +926,13 @@ function bp_core_avatar_handle_upload( $file, $upload_dir_filter ) {
 
 	// Check for WP_Error on what should be an image.
 	if ( is_wp_error( $bp->avatar_admin->image->dir ) ) {
-		bp_core_add_message( sprintf( __( 'Upload failed! Error was: %s', 'buddyboss' ), $bp->avatar_admin->image->dir->get_error_message() ), 'error' );
+		bp_core_add_message( sprintf( __( 'Upload Error: %s', 'buddyboss' ), $bp->avatar_admin->image->dir->get_error_message() ), 'error' );
 		return false;
 	}
 
 	// If the uploaded image is smaller than the "full" dimensions, throw a warning.
 	if ( $avatar_attachment->is_too_small( $bp->avatar_admin->image->file ) ) {
-		bp_core_add_message( sprintf( __( 'You have selected an image that is smaller than recommended. For best results, upload a picture larger than %d x %d pixels.', 'buddyboss' ), bp_core_avatar_full_width(), bp_core_avatar_full_height() ), 'error' );
+		bp_core_add_message( sprintf( __( 'For best results, upload an image that is %1$spx x %2$spx or larger.', 'buddyboss' ), bp_core_avatar_full_width(), bp_core_avatar_full_height() ), 'error' );
 	}
 
 	// Set the url value for the image.

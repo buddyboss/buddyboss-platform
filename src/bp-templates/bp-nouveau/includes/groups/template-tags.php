@@ -672,7 +672,7 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
 		}
 
 		/*
-		 * If we have a arg value for $button_element passed through
+		 * If we have an arg value for $button_element passed through
 		 * use it to default all the $buttons['button_element'] values
 		 * otherwise default to 'a' (anchor) o override & hardcode the
 		 * 'element' string on $buttons array.

@@ -295,7 +295,7 @@ function bp_email_get_customizer_controls() {
 	return apply_filters( 'bp_email_get_customizer_controls', array(
 		'bp_mailtpl_logo' => array(
 			'class'    => 'WP_Customize_Cropped_Image_Control',
-			'label'    => __( 'Logo Upload', 'buddyboss' ),
+			'label'    => __( 'Upload Logo', 'buddyboss' ),
 			'section'  => 'section_bp_mailtpl_header',
 			'settings' => 'bp_email_options[logo]',
 			'width'		=> 180,
@@ -305,7 +305,7 @@ function bp_email_get_customizer_controls() {
 		'bp_mailtpl_site_title_text_color' => array(
 			'class'    => 'WP_Customize_Color_Control',
 			'label'    => __( 'Site Title color', 'buddyboss' ),
-			'description' => __( 'Only used if no Logo is uploaded.', 'buddyboss' ),
+			'description' => __( 'Used when logo is not set.', 'buddyboss' ),
 			'section'  => 'section_bp_mailtpl_header',
 			'settings' => 'bp_email_options[site_title_text_color]',
 		),
@@ -313,7 +313,7 @@ function bp_email_get_customizer_controls() {
 		'bp_mailtpl_site_title_text_size' => array(
 			'class'    => 'BP_Customizer_Control_Range',
 			'label'    => __( 'Site Title text size', 'buddyboss' ),
-			'description' => __( 'Only used if no Logo is uploaded.', 'buddyboss' ),
+			'description' => __( 'Used when logo is not set.', 'buddyboss' ),
 			'section'  => 'section_bp_mailtpl_header',
 			'settings' => 'bp_email_options[site_title_text_size]',
 
@@ -326,14 +326,14 @@ function bp_email_get_customizer_controls() {
 
 		'bp_mailtpl_recipient_text_color' => array(
 			'class'    => 'WP_Customize_Color_Control',
-			'label'    => __( 'Recipient color', 'buddyboss' ),
+			'label'    => __( 'Recipient Color', 'buddyboss' ),
 			'section'  => 'section_bp_mailtpl_header',
 			'settings' => 'bp_email_options[recipient_text_color]',
 		),
 
 		'bp_mailtpl_recipient_text_size' => array(
 			'class'    => 'BP_Customizer_Control_Range',
-			'label'    => __( 'Recipient text size', 'buddyboss' ),
+			'label'    => __( 'Recipient Text Size', 'buddyboss' ),
 			'section'  => 'section_bp_mailtpl_header',
 			'settings' => 'bp_email_options[recipient_text_size]',
 
@@ -346,42 +346,42 @@ function bp_email_get_customizer_controls() {
 
 		'bp_mailtpl_email_bg' => array(
 			'class'    => 'WP_Customize_Color_Control',
-			'label'    => __( 'Email background color', 'buddyboss' ),
+			'label'    => __( 'Email Background Color', 'buddyboss' ),
 			'section'  => 'section_bp_mailtpl_body',
 			'settings' => 'bp_email_options[email_bg]',
 		),
 
 		'bp_mailtpl_body_bg' => array(
 			'class'    => 'WP_Customize_Color_Control',
-			'label'    => __( 'Body background color', 'buddyboss' ),
+			'label'    => __( 'Body Background Color', 'buddyboss' ),
 			'section'  => 'section_bp_mailtpl_body',
 			'settings' => 'bp_email_options[body_bg]',
 		),
 
 		'bp_mailtpl_body_border_color' => array(
 			'class'    => 'WP_Customize_Color_Control',
-			'label'    => __( 'Body border color', 'buddyboss' ),
+			'label'    => __( 'Body Border Color', 'buddyboss' ),
 			'section'  => 'section_bp_mailtpl_body',
 			'settings' => 'bp_email_options[body_border_color]',
 		),
 
 		'bp_mailtpl_body_text_color' => array(
 			'class'    => 'WP_Customize_Color_Control',
-			'label'    => __( 'Body primary text color', 'buddyboss' ),
+			'label'    => __( 'Body Primary Text Color', 'buddyboss' ),
 			'section'  => 'section_bp_mailtpl_body',
 			'settings' => 'bp_email_options[body_text_color]',
 		),
 
 		'bp_mailtpl_body_secondary_text_color' => array(
 			'class'    => 'WP_Customize_Color_Control',
-			'label'    => __( 'Body secondary text color', 'buddyboss' ),
+			'label'    => __( 'Body Secondary Text Color', 'buddyboss' ),
 			'section'  => 'section_bp_mailtpl_body',
 			'settings' => 'bp_email_options[body_secondary_text_color]',
 		),
 
 		'bp_mailtpl_body_text_size' => array(
 			'class'    => 'BP_Customizer_Control_Range',
-			'label'    => __( 'Body text size', 'buddyboss' ),
+			'label'    => __( 'Body Text Size', 'buddyboss' ),
 			'section'  => 'section_bp_mailtpl_body',
 			'settings' => 'bp_email_options[body_text_size]',
 
@@ -394,22 +394,22 @@ function bp_email_get_customizer_controls() {
 
 		'bp_mailtpl_quote_bg' => array(
 			'class'    => 'WP_Customize_Color_Control',
-			'label'    => __( 'Quote background color', 'buddyboss' ),
+			'label'    => __( 'Quote Background Color', 'buddyboss' ),
 			'section'  => 'section_bp_mailtpl_body',
 			'settings' => 'bp_email_options[quote_bg]',
 		),
 
 		'bp_mailtpl_highlight_color' => array(
 			'class'       => 'WP_Customize_Color_Control',
-			'label'       => __( 'Links and buttons color', 'buddyboss' ),
+			'label'       => __( 'Links and Buttons Color', 'buddyboss' ),
 			'section'     => 'section_bp_mailtpl_body',
 			'settings'    => 'bp_email_options[highlight_color]',
 		),
 
 		'bp_mailtpl_footer_text' => array(
 			'class'       => 'WP_Customize_Control',
-			'description' => __('Change the email footer content here.', 'buddyboss' ),
-			'label'       => __( 'Footer text', 'buddyboss' ),
+			'description' => __('Change the email footer content.', 'buddyboss' ),
+			'label'       => __( 'Footer Text', 'buddyboss' ),
 			'section'     => 'section_bp_mailtpl_footer',
 			'settings'    => 'bp_email_options[footer_text]',
 			'type'        => 'textarea',
@@ -417,14 +417,14 @@ function bp_email_get_customizer_controls() {
 
 		'bp_mailtpl_footer_text_color' => array(
 			'class'    => 'WP_Customize_Color_Control',
-			'label'    => __( 'Footer text color', 'buddyboss' ),
+			'label'    => __( 'Footer Text Color', 'buddyboss' ),
 			'section'  => 'section_bp_mailtpl_footer',
 			'settings' => 'bp_email_options[footer_text_color]',
 		),
 
 		'bp_mailtpl_footer_text_size' => array(
 			'class'    => 'BP_Customizer_Control_Range',
-			'label'    => __( 'Footer text size', 'buddyboss' ),
+			'label'    => __( 'Footer Text Size', 'buddyboss' ),
 			'section'  => 'section_bp_mailtpl_footer',
 			'settings' => 'bp_email_options[footer_text_size]',
 

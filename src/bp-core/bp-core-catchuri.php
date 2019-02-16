@@ -639,7 +639,7 @@ function bp_core_no_access( $args = '' ) {
 		'mode'     => 2,                    // 1 = $root, 2 = wp-login.php.
 		'redirect' => $redirect_url,        // the URL you get redirected to when a user successfully logs in.
 		'root'     => bp_get_root_domain(), // the landing page you get redirected to when a user doesn't have access.
-		'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' )
+		'message'  => __( 'You must log in to access the requested page.', 'buddyboss' )
 	);
 
 	$r = wp_parse_args( $args, $defaults );
@@ -750,7 +750,7 @@ function bp_core_no_access_wp_login_error( $errors ) {
 	 * @param string $value Error message to display.
 	 * @param string $value URL to redirect user to after successful login.
 	 */
-	$message = apply_filters( 'bp_wp_login_error', __( 'You must log in to access the page you requested.', 'buddyboss' ), $_REQUEST['redirect_to'] );
+	$message = apply_filters( 'bp_wp_login_error', __( 'You must log in to access the requested page.', 'buddyboss' ), $_REQUEST['redirect_to'] );
 
 	$errors->add( 'bp_no_access', $message );
 
@@ -1133,7 +1133,7 @@ function bp_private_network_template_redirect() {
 										// the URL you get redirected to when a user successfully logs in.
 										'root'     => bp_get_root_domain(),
 										// the landing page you get redirected to when a user doesn't have access.
-										'message'  => __( 'You must log in to access the page you requested dfdfd.',
+										'message'  => __( 'You must log in to access the requested page.',
 											'buddyboss' ),
 									);
 

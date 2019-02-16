@@ -161,7 +161,7 @@ final class BP_Settings_Export extends BP_Export {
 			$notification_settings['notification_groups_invite']                = __( 'A member invites you to join a group', 'buddyboss' );
 			$notification_settings['notification_groups_group_updated']         = __( 'Group information is updated', 'buddyboss' );
 			$notification_settings['notification_groups_admin_promotion']       = __( 'You are promoted to a group organizer or moderator', 'buddyboss' );
-			$notification_settings['notification_groups_membership_request']    = __( 'A member requests to join a private group for which you are an organizer', 'buddyboss' );
+			$notification_settings['notification_groups_membership_request']    = __( 'A member requests to join a private group you organize', 'buddyboss' );
 			$notification_settings['notification_membership_request_completed'] = __( 'Your request to join a group has been approved or denied', 'buddyboss' );
 		}
 

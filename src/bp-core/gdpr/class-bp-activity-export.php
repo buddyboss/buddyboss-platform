@@ -59,7 +59,7 @@ final class BP_Activity_Export extends BP_Export {
 		foreach ( $data_items["items"] as $item ) {
 
 			$group_id    = "bp_activities";
-			$group_label = __( "Activities & Activity Comments", 'buddyboss' );
+			$group_label = __( "Activities & Comments", 'buddyboss' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
 			$activity_type = __( 'Profile Update', 'buddyboss' );

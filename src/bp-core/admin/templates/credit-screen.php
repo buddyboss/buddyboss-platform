@@ -1,5 +1,17 @@
+<?php
+/**
+ * AppBoss Admin Screen.
+ *
+ * This file contains information about AppBoss. The BuddyBoss application to create a native mobile app with your WordPress site.
+ *
+ * @package BuddyBoss
+ * @since BuddyBoss 1.0.0
+ */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
+?>
 <div class="wrap bp-about-wrap">
 
 	<div class="card">

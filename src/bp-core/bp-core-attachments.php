@@ -782,14 +782,14 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 
 			// Set warning messages.
 			$strings['camera_warnings'] = array(
-				'requesting'  => __( 'Please allow us to access to your camera.', 'buddyboss'),
-				'loading'     => __( 'Please wait as we access your camera.', 'buddyboss' ),
-				'loaded'      => __( 'Camera loaded. Click on the "Capture" button to take your photo.', 'buddyboss' ),
-				'noaccess'    => __( 'It looks like you do not have a webcam or we were unable to get permission to use your webcam. Please upload a photo instead.', 'buddyboss' ),
+				'requesting'  => __( 'Please allow application access to your camera.', 'buddyboss'),
+				'loading'     => __( 'Please wait while your camera connects.', 'buddyboss' ),
+				'loaded'      => __( 'Camera loaded. Click "Capture" to take a photo.', 'buddyboss' ),
+				'noaccess'    => __( 'Webcam not found or permission was denied. Please upload a photo.', 'buddyboss' ),
 				'errormsg'    => __( 'Your browser is not supported. Please upload a photo instead.', 'buddyboss' ),
 				'videoerror'  => __( 'Video error. Please upload a photo instead.', 'buddyboss' ),
-				'ready'       => __( 'Your profile photo is ready. Click on the "Save" button to use this photo.', 'buddyboss' ),
-				'nocapture'   => __( 'No photo was captured. Click on the "Capture" button to take your photo.', 'buddyboss' ),
+				'ready'       => __( 'Your profile photo is ready. Click "Save" to use this photo.', 'buddyboss' ),
+				'nocapture'   => __( 'No photo captured. Click "Capture" to take your photo.', 'buddyboss' ),
 			);
 		}
 
@@ -836,7 +836,7 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 		// Set warning messages.
 		$strings['cover_image_warnings'] = apply_filters( 'bp_attachments_cover_image_ui_warnings', array(
 			'dimensions'  => sprintf(
-					__( 'For better results, make sure to upload an image that is larger than %1$spx wide, and %2$spx tall.', 'buddyboss' ),
+					__( 'For best results, upload an image that is %1$spx x %2$spx or larger.', 'buddyboss' ),
 					(int) $cover_dimensions['width'],
 					(int) $cover_dimensions['height']
 				),
@@ -1340,7 +1340,7 @@ function bp_attachments_cover_image_ajax_upload() {
 		// Upload error response.
 		bp_attachments_json_response( false, $is_html4, array(
 			'type'    => 'upload_error',
-			'message' => sprintf( __( 'Upload Failed! Error was: %s', 'buddyboss' ), $uploaded['error'] ),
+			'message' => sprintf( __( 'Upload Error: %s', 'buddyboss' ), $uploaded['error'] ),
 		) );
 	}
 
