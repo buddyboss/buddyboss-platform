@@ -22,7 +22,7 @@ class Core
 		$this->learndash    = new LearndashCore;
 		$this->settings     = new Settings;
 
-		$this->pluginName = __('BuddyPress Learndash', 'buddyboss');
+		$this->pluginName = __('BuddyPress LearnDash', 'buddyboss');
 
 		add_action('bp_ld_sync/requirements_checked', [$this, 'init']);
 	}

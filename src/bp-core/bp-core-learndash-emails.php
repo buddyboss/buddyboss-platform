@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyPress Learndash emails.
+ * BuddyPress LearnDash emails.
  *
  * @package BuddyBoss\Core
  * @since BuddyBoss 1.0.0
