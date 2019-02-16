@@ -37,6 +37,14 @@ function groups_screen_group_admin_delete_group() {
 		 */
 		do_action( 'groups_before_group_deleted', $bp->groups->current_group->id );
 
+		// Delete group forum
+		if ( isset( $_REQUEST['delete-group-forum-understand'] ) ) {
+			$forum_ids = bbp_get_group_forum_ids( $bp->groups->current_group->id );
+			foreach ( $forum_ids as $forum_id ) {
+				wp_delete_post( $forum_id, true );
+			}
+		}
+
 		// Group admin has deleted the group, now do it.
 		if ( !groups_delete_group( $bp->groups->current_group->id ) ) {
 			bp_core_add_message( __( 'There was an error deleting the group. Please try again.', 'buddyboss' ), 'error' );

@@ -5,6 +5,8 @@
  * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
+global $bp;
+$forum_ids = bbp_get_group_forum_ids( $bp->groups->current_group->id );
 ?>
 
 <h2 class="bp-screen-title warn">
@@ -17,3 +19,10 @@
 	<input type="checkbox" name="delete-group-understand" id="delete-group-understand" value="1" onclick="if(this.checked) { document.getElementById( 'delete-group-button' ).disabled = ''; } else { document.getElementById( 'delete-group-button' ).disabled = 'disabled'; }" />
 	<?php esc_html_e( 'I understand the consequences of deleting this group.', 'buddyboss' ); ?>
 </label>
+
+<?php if ( ! empty( $forum_ids ) && is_array( $forum_ids ) ): ?>
+	<label for="delete-group-forum-understand" class="bp-label-text warn">
+		<input type="checkbox" name="delete-group-forum-understand" id="delete-group-forum-understand" value="1"/>
+		<?php esc_html_e( 'I also want to delete the discussion forum.', 'buddyboss' ); ?>
+	</label>
+<?php endif; ?>
