@@ -315,8 +315,8 @@
 	.grid.bp-list.members-group-list {
 		li {
 			&.item-entry-header {
-				max-width: 100%;
-				flex: 100%;
+				max-width: 100% !important;
+				flex: 100% !important;
 			}
 		}
 	}
