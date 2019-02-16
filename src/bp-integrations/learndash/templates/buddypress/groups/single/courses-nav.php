@@ -4,7 +4,7 @@
  * @version BuddyBoss 1.0.0
  *
  * $groupId - (int) Current social group id
- * $hasLdGroup - (bool) Current social group has an associated Learndash group
+ * $hasLdGroup - (bool) Current social group has an associated LearnDash group
  * $currentMenu - (str) Current sub menu name
  * $subMenus - (arr) Array of sub menu objects
  */

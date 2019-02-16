@@ -9,7 +9,7 @@
         autocomplete="off"
         <?php checked($hasLdGroup, true); var_dump($hasLdGroup); ?>
     />
-    <?php _e('Yes. I want this group to have a Learndash group', 'buddyboss'); ?>
+    <?php _e('Yes. I want this group to have a LearnDash group', 'buddyboss'); ?>
 </label>
 
 <p>
