@@ -6153,6 +6153,11 @@ button[data-bp-close]:hover {
   float: none;
 }
 
+.buddypress-wrap .grid.bp-list.members-group-list li.item-entry-header {
+  max-width: 100%;
+  flex: 100%;
+}
+
 .buddypress-wrap .blogs-list.grid.two > li .blogs-title {
   min-height: 5em;
 }

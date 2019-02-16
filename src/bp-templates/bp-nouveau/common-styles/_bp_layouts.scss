@@ -312,6 +312,14 @@
 		} // close > li
 	} // close .grid.bp-list
 
+	.grid.bp-list.members-group-list {
+		li {
+			&.item-entry-header {
+				max-width: 100%;
+				flex: 100%;
+			}
+		}
+	}
 
 	// Specific grid layout adjustments by grid row qnt & component
 

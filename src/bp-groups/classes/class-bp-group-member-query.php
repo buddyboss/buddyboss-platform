@@ -227,7 +227,12 @@ class BP_Group_Member_Query extends BP_User_Query {
 		// of 'type'. If the 'type' value is not 'last_joined' or
 		// 'first_joined', the order will be overridden in
 		// BP_Group_Member_Query::set_orderby().
-		$sql['orderby'] = "ORDER BY date_modified";
+		if ( $this->query_vars['type'] === 'group_role' ) {
+			$sql['orderby'] = "ORDER BY -is_admin, -is_mod, date_modified";
+		} else {
+			$sql['orderby'] = "ORDER BY date_modified";
+		}
+
 		$sql['order']   = 'first_joined' === $this->query_vars['type'] ? 'ASC' : 'DESC';
 
 		$this->group_member_ids = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['orderby']} {$sql['order']}" );
@@ -272,7 +277,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 		// results from  BP_Group_Member_Query::get_group_members().
 		// In all other cases, we fall through and let BP_User_Query
 		// do its own (non-group-specific) ordering.
-		if ( in_array( $query->query_vars['type'], array( 'last_joined', 'first_joined', 'group_activity' ) ) ) {
+		if ( in_array( $query->query_vars['type'], array( 'last_joined', 'first_joined', 'group_activity', 'group_role' ) ) ) {
 
 			// Group Activity DESC.
 			if ( 'group_activity' == $query->query_vars['type'] ) {

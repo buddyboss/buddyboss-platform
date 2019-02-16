@@ -618,17 +618,17 @@ class BP_Groups_Component extends BP_Component {
 				'show_in_admin_bar' => true,
 			);
 
-			$sub_nav[] = array_merge( array(
-				'name'              => __( 'All Members', 'buddyboss' ),
-				'slug'              => 'all-members',
-				'position'          => 0,
-			), $default_params );
-
-			$sub_nav[] = array_merge( array(
-				'name'              => __( 'Group Leaders', 'buddyboss' ),
-				'slug'              => 'leaders',
-				'position'          => 10,
-			), $default_params );
+//			$sub_nav[] = array_merge( array(
+//				'name'              => __( 'All Members', 'buddyboss' ),
+//				'slug'              => 'all-members',
+//				'position'          => 0,
+//			), $default_params );
+//
+//			$sub_nav[] = array_merge( array(
+//				'name'              => __( 'Group Leaders', 'buddyboss' ),
+//				'slug'              => 'leaders',
+//				'position'          => 10,
+//			), $default_params );
 
 			if ( bp_is_active( 'activity' ) ) {
 				$sub_nav[] = array(
