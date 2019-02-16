@@ -224,7 +224,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 				'search_term'   => $_REQUEST['search_term'],
 				//How many results should be displyed in autosuggest?
 				//@todo: give a settings field for this value
-				'per_page'      => $_REQUEST['per_page'],
+				'ajax_per_page'      => $_REQUEST['per_page'],
 				'count_total'   => true,
 				'template_type' => 'ajax',
 			);
@@ -450,11 +450,9 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 
 				$pre_search_query = implode( ' UNION ', $sql_queries ) . " ORDER BY relevance, type DESC, entry_date DESC ";
 
-//				if ( $args['per_page'] > 0 ) {
-//					$offset           = ( $args['current_page'] * $args['per_page'] ) - $args['per_page'];
-//					$pre_search_query .= " LIMIT {$offset}, {$args['per_page']} ";
-//
-//				}
+				if ( isset( $args['ajax_per_page'] ) && $args['ajax_per_page'] > 0 ) {
+					$pre_search_query .= " LIMIT {$args['ajax_per_page']} ";
+				}
 
 				$results = $wpdb->get_results( $pre_search_query );
 				/* $results will have a structure like below */
