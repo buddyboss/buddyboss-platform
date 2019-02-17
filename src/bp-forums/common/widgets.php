@@ -380,10 +380,10 @@ class BBP_Search_Widget extends WP_Widget {
 	public function __construct() {
 		$widget_ops = apply_filters( 'bbp_search_widget_options', array(
 			'classname'   => 'widget_display_search',
-			'description' => __( 'The Forums forum search form.', 'buddyboss' )
+			'description' => __( 'The forums search form.', 'buddyboss' )
 		) );
 
-		parent::__construct( false, __( '(Forums) Forum Search Form', 'buddyboss' ), $widget_ops );
+		parent::__construct( false, __( '(Forums) Search Form', 'buddyboss' ), $widget_ops );
 	}
 
 	/**
@@ -511,7 +511,7 @@ class BBP_Forums_Widget extends WP_Widget {
 			'description' => __( 'A list of forums with an option to set the parent.', 'buddyboss' )
 		) );
 
-		parent::__construct( false, __( '(Forums) Forums List', 'buddyboss' ), $widget_ops );
+		parent::__construct( false, __( '(Forums) List', 'buddyboss' ), $widget_ops );
 	}
 
 	/**

@@ -12,7 +12,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
 
 if ( !class_exists( 'BBP_Forums_Admin' ) ) :
 /**
- * Loads Forums forums admin area
+ * Loads forums admin area
  *
  * @since bbPress (r2464)
  */
@@ -28,7 +28,7 @@ class BBP_Forums_Admin {
 	/** Functions *************************************************************/
 
 	/**
-	 * The main Forums forums admin loader
+	 * The main forums admin loader
 	 *
 	 * @since bbPress (r2515)
 	 *
@@ -566,7 +566,7 @@ class BBP_Forums_Admin {
 endif; // class_exists check
 
 /**
- * Setup Forums Forums Admin
+ * Setup forums Admin
  *
  * This is currently here to make hooking and unhooking of the admin UI easy.
  * It could use dependency injection in the future, but for now this is easier.

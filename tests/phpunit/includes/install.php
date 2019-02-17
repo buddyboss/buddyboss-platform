@@ -40,7 +40,7 @@ $PHP_SELF = $GLOBALS['PHP_SELF'] = $_SERVER['PHP_SELF'] = '/index.php';
 
 require_once ABSPATH . '/wp-settings.php';
 
-echo "Installing BuddyPress...\n";
+echo "Installing BuddyBoss Platform&hellip;\n";
 
 $wpdb->query( 'SET default_storage_engine = INNODB' );
 $wpdb->select( DB_NAME, $wpdb->dbh );

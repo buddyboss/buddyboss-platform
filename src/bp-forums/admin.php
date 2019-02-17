@@ -21,8 +21,8 @@ function bp_forums_add_admin_menu() {
 
 	// Add our screen.
 	$hook = add_menu_page(
-		_x( 'Forums', 'Admin Dashboard SWA page title', 'buddyboss' ),
-		_x( 'Forums', 'Admin Dashboard SWA menu', 'buddyboss' ),
+		__( 'Forums', 'buddyboss' ),
+		__( 'Forums', 'buddyboss' ),
 		'bp_moderate',
 		'bp-forums',
 		'__return_null',

@@ -102,7 +102,7 @@ class BP_Forums_Component extends BP_Component {
             'slug'          => bp_get_option( '_bbp_root_slug', BP_FORUMS_SLUG ),
             'root_slug'     => isset( $bp->pages->forums->slug ) ? $bp->pages->forums->slug : BP_FORUMS_SLUG,
             'has_directory' => false,
-            'search_string' => __( 'Search Forums...', 'buddyboss' ),
+            'search_string' => __( 'Search Forums&hellip;', 'buddyboss' ),
         );
 
         parent::setup_globals( $args );

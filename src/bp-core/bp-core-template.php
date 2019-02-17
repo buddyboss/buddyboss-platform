@@ -672,7 +672,7 @@ function bp_search_default_text( $component = '' ) {
 			$component = bp_current_component();
 		}
 
-		$default_text = __( 'Search anything...', 'buddyboss' );
+		$default_text = __( 'Search anything&hellip;', 'buddyboss' );
 
 		// Most of the time, $component will be the actual component ID.
 		if ( !empty( $component ) ) {

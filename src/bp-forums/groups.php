@@ -293,7 +293,7 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
 							'selected'  => $forum_id
 						) );
 					?>
-					<p class="description"><?php esc_html_e( 'Network administrators can reconfigure which forum belongs to this group.', 'buddyboss' ); ?></p>
+					<p class="description"><?php esc_html_e( 'Only site administrators can reconfigure which forum belongs to this group.', 'buddyboss' ); ?></p>
 				</div>
 			<?php endif; ?>
 
@@ -431,7 +431,7 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
 	public function group_admin_ui_edit_screen() {
 		add_meta_box(
 			'bbpress_group_admin_ui_meta_box',
-			_x( 'Discussion Forum', 'group admin edit screen', 'buddyboss' ),
+			__( 'Discussion Forum', 'buddyboss' ),
 			array( $this, 'group_admin_ui_display_metabox' ),
 			get_current_screen()->id,
 			'side',

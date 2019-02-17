@@ -43,7 +43,7 @@ class bp_ps_Fields
 			''				=> __('is', 'buddyboss'),
 			'like'			=> __('is like', 'buddyboss'),
 			'range'			=> __('range', 'buddyboss'),
-			'date_range'    => __('Date Range', 'buddyboss'),
+			'date_range'    => __('date range', 'buddyboss'),
 			'distance'		=> __('distance', 'buddyboss'),
 			'one_of'		=> __('is one of', 'buddyboss'),
 			'match_any'		=> __('match any', 'buddyboss'),

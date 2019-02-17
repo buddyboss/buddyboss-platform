@@ -770,7 +770,7 @@ class BBP_Admin {
 	/**
 	 * Output the credits screen
 	 *
-	 * Hardcoding this in here is pretty janky. It's fine for 2.2, but we'll
+	 * @todo Remove this? Hardcoding this in here is pretty janky. It's fine for 2.2, but we'll
 	 * want to leverage api.wordpress.org eventually.
 	 *
 	 * @since bbPress (r4159)
@@ -874,7 +874,7 @@ class BBP_Admin {
 	/** Updaters **************************************************************/
 
 	/**
-	 * Update all Forums forums across all sites
+	 * Update all forums across all sites
 	 *
 	 * @since bbPress (r3689)
 	 *
@@ -921,7 +921,7 @@ class BBP_Admin {
 	}
 
 	/**
-	 * Update all Forums forums across all sites
+	 * Update all forums across all sites
 	 *
 	 * @since bbPress (r3689)
 	 *

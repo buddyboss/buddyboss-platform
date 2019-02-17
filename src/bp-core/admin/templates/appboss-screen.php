@@ -231,7 +231,7 @@ defined( 'ABSPATH' ) || exit;
 				<h1><?php _e( 'We support <strong>every</strong> LearnDash feature', 'buddyboss' ); ?></h1>
 				<p><?php
 					printf(
-						__( 'AppBoss is designed to integrate with <a href="%s">LearnDash</a> &mdash; the #1 LMS solution for Fortune 500\'s, major universities, training organizations and entrepreneurs.', 'buddyboss' ),
+						__( 'AppBoss is designed to integrate with <a href="%s">LearnDash</a>, the #1 LMS solution for Fortune 500\'s, major universities, training organizations and entrepreneurs.', 'buddyboss' ),
 						esc_url( 'https://getdpd.com/cart/hoplink/14394?referrer=56whuq1wlakosg0k4' )
 					);
 					?></p>

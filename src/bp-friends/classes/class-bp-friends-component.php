@@ -134,7 +134,7 @@ class BP_Friends_Component extends BP_Component {
 		$args = array(
 			'slug'                  => BP_FRIENDS_SLUG,
 			'has_directory'         => false,
-			'search_string'         => __( 'Search Connections...', 'buddyboss' ),
+			'search_string'         => __( 'Search Connections&hellip;', 'buddyboss' ),
 			'notification_callback' => 'friends_format_notifications',
 			'global_tables'         => $global_tables
 		);

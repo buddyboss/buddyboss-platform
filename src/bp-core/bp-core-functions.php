@@ -2865,7 +2865,7 @@ function bp_get_email_post_type_labels() {
 		'name'                  => _x( 'BuddyBoss Email Templates', 'email post type label', 'buddyboss' ),
 		'new_item'              => _x( 'New Email', 'email post type label', 'buddyboss' ),
 		'not_found'             => _x( 'No emails found', 'email post type label', 'buddyboss' ),
-		'not_found_in_trash'    => _x( 'No emails found in Trash', 'email post type label', 'buddyboss' ),
+		'not_found_in_trash'    => _x( 'No emails found in trash', 'email post type label', 'buddyboss' ),
 		'search_items'          => _x( 'Search Emails', 'email post type label', 'buddyboss' ),
 		'singular_name'         => _x( 'Email', 'email post type singular name', 'buddyboss' ),
 		'uploaded_to_this_item' => _x( 'Uploaded to this email', 'email post type label', 'buddyboss' ),

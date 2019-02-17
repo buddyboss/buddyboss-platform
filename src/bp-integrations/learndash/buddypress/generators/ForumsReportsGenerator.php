@@ -59,7 +59,7 @@ class ForumsReportsGenerator extends ReportsGenerator
 			'user_id'   => $activity->user_id,
 			'user'      => $activity->user_display_name,
 			'topic'     => $activity->topic_title,
-			'reply'     => wp_trim_words( $activity->last_reply_content, 15, '...' ),
+			'reply'     => wp_trim_words( $activity->last_reply_content, 15, '&hellip;' ),
 			'post_date' => get_date_from_gmt( $activity->topic_post_date, $this->args['date_format'] ),
 		];
 	}

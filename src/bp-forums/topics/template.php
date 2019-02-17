@@ -56,7 +56,7 @@ function bbp_get_topic_post_type_labels() {
 		'view_item'          => __( 'View Discussion',               'buddyboss' ),
 		'search_items'       => __( 'Search Discussions',            'buddyboss' ),
 		'not_found'          => __( 'No discussions found',          'buddyboss' ),
-		'not_found_in_trash' => __( 'No discussions found in Trash', 'buddyboss' ),
+		'not_found_in_trash' => __( 'No discussions found in trash', 'buddyboss' ),
 		'parent_item_colon'  => __( 'Forum:',                   	 'buddyboss' )
 	) );
 }

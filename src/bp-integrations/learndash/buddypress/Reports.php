@@ -69,8 +69,8 @@ class Reports
 				'perpage' => bp_ld_sync('settings')->get('reports.per_page', 20)
 			],
 			'text' => [
-				'processing'     => __('Loading...', 'buddyboss'),
-				'emptyTable'     => __('No result found...', 'buddyboss'),
+				'processing'     => __('Loading&hellip;', 'buddyboss'),
+				'emptyTable'     => __('No result found&hellip;', 'buddyboss'),
 				'paginate_first' => __('First', 'buddyboss'),
 				'paginate_last'  => __('Last', 'buddyboss'),
 				'paginate_next'  => __('Next', 'buddyboss'),

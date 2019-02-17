@@ -56,7 +56,7 @@ function bbp_get_reply_post_type_labels() {
 		'view_item'          => __( 'View Reply',                'buddyboss' ),
 		'search_items'       => __( 'Search Replies',            'buddyboss' ),
 		'not_found'          => __( 'No replies found',          'buddyboss' ),
-		'not_found_in_trash' => __( 'No replies found in Trash', 'buddyboss' ),
+		'not_found_in_trash' => __( 'No replies found in trash', 'buddyboss' ),
 		'parent_item_colon'  => __( 'Discussion:',                    'buddyboss' )
 	) );
 }

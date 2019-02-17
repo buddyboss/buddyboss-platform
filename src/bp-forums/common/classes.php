@@ -170,7 +170,7 @@ endif; // BBP_Component
 
 if ( class_exists( 'Walker' ) ) :
 /**
- * Create HTML dropdown list of Forums forums/topics.
+ * Create HTML dropdown list of forums/topics.
  *
  * @since bbPress (r2746)
  * @uses Walker

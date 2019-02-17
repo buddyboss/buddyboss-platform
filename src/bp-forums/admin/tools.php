@@ -30,7 +30,7 @@ function bbp_admin_repair() {
 		<h2 class="nav-tab-wrapper"><?php bbp_tools_admin_tabs( __( 'Repair Forums', 'buddyboss' ) ); ?></h2>
 
 		<p><?php esc_html_e( 'Forums keeps track of relationships between forums, discussions, replies, and discussion tags, and users. Occasionally these relationships become out of sync, most often after an import or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
-		<p class="description"><?php esc_html_e( 'Some of these tools create substantial database overhead. Avoid running more than 1 repair job at a time.', 'buddyboss' ); ?></p>
+		<p class="description"><?php esc_html_e( 'Some of these tools utilize substantial database resources. Avoid running more than 1 repair job at a time.', 'buddyboss' ); ?></p>
 
 		<form class="settings card" method="post" action="">
 
@@ -1202,15 +1202,15 @@ function bbp_admin_reset() {
 					<tr valign="top">
 						<th scope="row"><?php esc_html_e( 'The following data will be removed:', 'buddyboss' ) ?></th>
 						<td>
-							<?php esc_html_e( 'All Forums',           'buddyboss' ); ?><br />
-							<?php esc_html_e( 'All Discussions',           'buddyboss' ); ?><br />
-							<?php esc_html_e( 'All Replies',          'buddyboss' ); ?><br />
-							<?php esc_html_e( 'All Topic Tags',       'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Related Meta Data',    'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Forum Settings',       'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Forum Activity',       'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Forum User Roles',     'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Importer Helper Data', 'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Forums',					'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Discussions',			'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Replies',				'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Topic Tags',				'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Related Meta Data',		'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Forum Settings',			'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Forum Activity',			'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Forum User Roles',		'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Importer Helper Data',	'buddyboss' ); ?><br />
 						</td>
 					</tr>
 					<tr valign="top">
@@ -1229,7 +1229,7 @@ function bbp_admin_reset() {
 							<fieldset>
 								<legend class="screen-reader-text"><span><?php esc_html_e( "Say it ain't so!", 'buddyboss' ); ?></span></legend>
 								<label><input type="checkbox" class="checkbox" name="bbpress-are-you-sure" id="bbpress-are-you-sure" value="1" /> <?php esc_html_e( 'This process cannot be undone.', 'buddyboss' ); ?></label>
-								<p class="description"><?php esc_html_e( 'Human sacrifice, dogs and cats living together... mass hysteria!', 'buddyboss' ); ?></p>
+								<p class="description"><?php esc_html_e( 'Human sacrifice, dogs and cats living together&hellip;mass hysteria!', 'buddyboss' ); ?></p>
 							</fieldset>
 						</td>
 					</tr>

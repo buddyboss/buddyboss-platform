@@ -76,7 +76,7 @@ class BP_Blogs_Component extends BP_Component {
 			'has_directory'         => is_multisite(), // Non-multisite installs don't need a top-level Sites directory, since there's only one site.
 			'directory_title'       => isset( $bp->pages->blogs->title ) ? $bp->pages->blogs->title : $default_directory_title,
 			'notification_callback' => 'bp_blogs_format_notifications',
-			'search_string'         => __( 'Search sites...', 'buddyboss' ),
+			'search_string'         => __( 'Search sites&hellip;', 'buddyboss' ),
 			'autocomplete_all'      => defined( 'BP_MESSAGES_AUTOCOMPLETE_ALL' ),
 			'global_tables'         => $global_tables,
 			'meta_tables'           => $meta_tables,

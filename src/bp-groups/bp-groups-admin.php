@@ -917,7 +917,7 @@ function bp_groups_admin_edit_metabox_group_parent( $item ) {
 	<div class="bp-groups-settings-section" id="bp-groups-settings-section-group-hierarchy">
 		<select id="bp-groups-parent" name="bp-groups-parent" autocomplete="off">
 			<option
-				value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php echo _x( '----', 'The option that sets a group to be a top-level group and have no parent.', 'buddyboss' ); ?></option>
+				value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php echo _x( 'Select Parent', 'The option that sets a group to be a top-level group and have no parent.', 'buddyboss' ); ?></option>
 			<?php
 			if ( $possible_parent_groups ) {
 
@@ -1167,7 +1167,7 @@ function bp_groups_admin_edit_metabox_group_type( BP_Groups_Group $group = null 
 
 	<div class="bp-groups-settings-section" id="bp-groups-settings-section-group-type">
 		<select id="bp-groups-group-type" name="bp-groups-group-type[]" autocomplete="off">
-			<option value="" <?php selected( '', $current_types[0] ); ?>><?php echo _x( '----', 'The option that sets a group type.', 'buddyboss' ); ?></option>
+			<option value="" <?php selected( '', $current_types[0] ); ?>><?php echo _x( 'Select Group Type', 'The option that sets a group type.', 'buddyboss' ); ?></option>
 			<?php
 
 

@@ -63,7 +63,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 								printf( '<option value="" %1$s>%2$s</option>',
 									selected( $value['min']['day'], 0, false ),
 									/* translators: no option picked in select box */
-									__( '----', 'buddyboss' ) );
+									__( 'Select Day', 'buddyboss' ) );
 
 								for ( $i = 1; $i < 32; ++ $i ) {
 									$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
@@ -95,7 +95,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 								printf( '<option value="" %1$s>%2$s</option>',
 									selected( $value['min']['month'], 0, false ),
 									/* translators: no option picked in select box */
-									__( '----', 'buddyboss' ) );
+									__( 'Select Month', 'buddyboss' ) );
 
 								for ( $i = 0; $i < 12; ++ $i ) {
 									$month = $i + 1;
@@ -113,7 +113,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 								printf( '<option value="" %1$s>%2$s</option>',
 									selected( $value['min']['year'], 0, false ),
 									/* translators: no option picked in select box */
-									__( '----', 'buddyboss' ) );
+									__( 'Select Year', 'buddyboss' ) );
 
 								$start = date( 'Y' ) - 50;//50 years ago
 								$end   = date( 'Y' ) + 50;//50 years in future
@@ -137,7 +137,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 								printf( '<option value="" %1$s>%2$s</option>',
 									selected( $value['max']['day'], 0, false ),
 									/* translators: no option picked in select box */
-									__( '----', 'buddyboss' ) );
+									__( 'Select Day', 'buddyboss' ) );
 
 								for ( $i = 1; $i < 32; ++ $i ) {
 									$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
@@ -154,7 +154,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 								printf( '<option value="" %1$s>%2$s</option>',
 									selected( $value['max']['month'], 0, false ),
 									/* translators: no option picked in select box */
-									__( '----', 'buddyboss' ) );
+									__( 'Select Month', 'buddyboss' ) );
 
 								for ( $i = 0; $i < 12; ++ $i ) {
 									$month = $i + 1;
@@ -172,7 +172,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 								printf( '<option value="" %1$s>%2$s</option>',
 									selected( $value['max']['year'], 0, false ),
 									/* translators: no option picked in select box */
-									__( '----', 'buddyboss' ) );
+									__( 'Select Year', 'buddyboss' ) );
 								for ( $i = $end; $i >= $start; $i -- ) {
 									printf( '<option value="%1$s" %2$s>%3$s</option>',
 										(int) $i,

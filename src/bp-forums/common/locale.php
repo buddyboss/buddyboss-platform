@@ -40,17 +40,17 @@ function bbp_translate_user_role( $name ) {
 function bbp_dummy_role_names() {
 
 	/* translators: user role */
-	_x( 'Keymaster', 'User role', 'buddyboss' );
+	_x( 'Organizer', 'Forum User role', 'buddyboss' );
 
 	/* translators: user role */
-	_x( 'Moderator', 'User role', 'buddyboss' );
+	_x( 'Moderator', 'Forum User role', 'buddyboss' );
 
 	/* translators: user role */
-	_x( 'Participant', 'User role', 'buddyboss' );
+	_x( 'Participant', 'Forum User role', 'buddyboss' );
 
 	/* translators: user role */
-	_x( 'Spectator', 'User role', 'buddyboss' );
+	_x( 'Spectator', 'Forum User role', 'buddyboss' );
 
 	/* translators: user role */
-	_x( 'Blocked', 'User role', 'buddyboss' );
+	_x( 'Blocked', 'Forum User role', 'buddyboss' );
 }

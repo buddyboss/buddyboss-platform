@@ -5024,7 +5024,7 @@ function bp_group_creation_stage_title() {
 	 *
 	 * @param string $value HTML markup for the group creation stage title.
 	 */
-	echo apply_filters( 'bp_group_creation_stage_title', '<span>&mdash; ' . $bp->groups->group_creation_steps[bp_get_groups_current_create_step()]['name'] . '</span>' );
+	echo apply_filters( 'bp_group_creation_stage_title', '<span>- ' . $bp->groups->group_creation_steps[bp_get_groups_current_create_step()]['name'] . '</span>' );
 }
 
 /**

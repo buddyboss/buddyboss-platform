@@ -39,8 +39,8 @@ function bp_profile_search_register_post_type (){
 			'add_new' => __('Add New', 'buddyboss'),
 			'add_new_item' => __('Add New Form', 'buddyboss'),
 			'edit_item' => __('Profile Search', 'buddyboss'),
-			'not_found' => __('No forms found.', 'buddyboss'),
-			'not_found_in_trash' => __('No forms found in Trash.', 'buddyboss'),
+			'not_found' => __('No forms found', 'buddyboss'),
+			'not_found_in_trash' => __('No forms found in trash', 'buddyboss'),
 		),
 		'show_ui' => true,
 		'show_in_menu' => '',
@@ -139,8 +139,8 @@ function bp_profile_search_admin_head () {
 
 function _bp_profile_search_admin_js () {
 	$translations = array (
-		'drag' => __('drag to reorder fields', 'buddyboss'),
-		'field' => __('select field', 'buddyboss'),
+		'drag' => __('Drag & drop to reorder fields', 'buddyboss'),
+		'field' => __('Select field', 'buddyboss'),
 		'remove' => __('Remove', 'buddyboss'),
 	);
 	wp_enqueue_script ( 'bp-profile-search-admin', buddypress()->plugin_url . 'bp-core/profile-search/bp-ps-admin.js', array ('jquery-ui-sortable'), bp_get_version() );

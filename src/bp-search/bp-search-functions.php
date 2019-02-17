@@ -24,7 +24,7 @@ function bp_search_activity_intro( $character_limit = 50 ) {
 
 			$shortened_content = substr( $content, 0, $character_limit );
 			if ( strlen( $content ) > $character_limit ) {
-				$shortened_content .= '...';
+				$shortened_content .= '&hellip;';
 			}
 
 			$content = $shortened_content;
@@ -69,7 +69,7 @@ function bp_search_reply_intro( $character_limit = 50 ) {
 			$shortened_content = substr( $content, 0, $character_limit );
 
 			if ( strlen( $content ) > $character_limit ) {
-				$shortened_content .= '...';
+				$shortened_content .= '&hellip;';
 			}
 		}
 
@@ -95,7 +95,7 @@ function bp_search_result_intro( $content, $character_limit = 50 ) {
 	$search_term_position = stripos( $content, $search_term );
 
 	if ( $search_term_position !== false ) {
-		$shortened_content = '...' . substr( $content, $search_term_position, $character_limit );
+		$shortened_content = '&hellip;' . substr( $content, $search_term_position, $character_limit );
 		//highlight search keyword
 
 		$shortened_content = str_ireplace( $search_term, "<strong>" . $search_term . "</strong>", $shortened_content );
@@ -104,7 +104,7 @@ function bp_search_result_intro( $content, $character_limit = 50 ) {
 	}
 
 	if ( strlen( $content ) > $character_limit ) {
-		$shortened_content .= '...';
+		$shortened_content .= '&hellip;';
 	}
 
 	$content = $shortened_content;
@@ -142,9 +142,9 @@ function bp_search_result_match( $in, $wordToFind, $numWordsToWrap = 10 ) {
 		$length = ( ( $pos + ( $numWordsToWrap + 1 ) < count( $words ) ) ? $pos + ( $numWordsToWrap + 1 ) : count( $words ) ) - $start;
 		$slice  = array_slice( $words, $start, $length );
 
-		$pre_start = ( $start > 0 ) ? "..." : "";
+		$pre_start = ( $start > 0 ) ? "&hellip;" : "";
 
-		$post_end = ( $pos + ( $numWordsToWrap + 1 ) < count( $words ) ) ? "..." : "";
+		$post_end = ( $pos + ( $numWordsToWrap + 1 ) < count( $words ) ) ? "&hellip;" : "";
 
 		$out = $pre_start . implode( ' ', $slice ) . $post_end;
 
@@ -208,7 +208,7 @@ if ( ! function_exists( 'bp_search_pagination' ) ):
 			}
 			$arr = array_reverse( $rev_array );
 			if ( $counter == $s ) {
-				$elements[] = array( ' ... ', '', 'nolink' );
+				$elements[] = array( ' &hellip; ', '', 'nolink' );
 			}
 			foreach ( $arr as $el ) {
 				$elements[] = array( $el, $el, 'link' );
@@ -233,7 +233,7 @@ if ( ! function_exists( 'bp_search_pagination' ) ):
 				$i ++;
 			}
 			if ( $counter == $s + 1 ) {
-				$elements[] = array( ' ... ', '', 'nolink' );
+				$elements[] = array( ' &hellip; ', '', 'nolink' );
 			}
 			unset( $i );
 			unset( $counter );

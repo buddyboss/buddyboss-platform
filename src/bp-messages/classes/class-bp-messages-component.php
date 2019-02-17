@@ -178,7 +178,7 @@ class BP_Messages_Component extends BP_Component {
 			'slug'                  => BP_MESSAGES_SLUG,
 			'has_directory'         => false,
 			'notification_callback' => 'messages_format_notifications',
-			'search_string'         => __( 'Search Messages...', 'buddyboss' ),
+			'search_string'         => __( 'Search Messages&hellip;', 'buddyboss' ),
 			'global_tables'         => $global_tables,
 			'meta_tables'           => $meta_tables
 		) );

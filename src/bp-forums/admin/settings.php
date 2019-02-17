@@ -655,7 +655,7 @@ function bbp_admin_setting_callback_use_autoembed() {
 ?>
 
 	<input name="_bbp_use_autoembed" id="_bbp_use_autoembed" type="checkbox" value="1" <?php checked( bbp_use_autoembed( true ) ); bbp_maybe_admin_setting_disabled( '_bbp_use_autoembed' ); ?> />
-	<label for="_bbp_use_autoembed"><?php esc_html_e( 'Embed media (YouTube, Twitter, Vimeo, etc...) directly into discussions and replies', 'buddyboss' ); ?></label>
+	<label for="_bbp_use_autoembed"><?php esc_html_e( 'Embed media (YouTube, Twitter, Vimeo, etc&hellip;) directly into discussions and replies', 'buddyboss' ); ?></label>
 
 <?php
 }
@@ -984,7 +984,7 @@ function bbp_admin_setting_callback_group_forums() {
 ?>
 
 	<input name="_bbp_enable_group_forums" id="_bbp_enable_group_forums" type="checkbox" value="1" <?php checked( bbp_is_group_forums_active( true ) );  bbp_maybe_admin_setting_disabled( '_bbp_enable_group_forums' ); ?> />
-	<label for="_bbp_enable_group_forums"><?php esc_html_e( 'Allow Social Groups to have their own forums', 'buddyboss' ); ?></label>
+	<label for="_bbp_enable_group_forums"><?php esc_html_e( 'Allow social groups to have their own forums', 'buddyboss' ); ?></label>
 
 <?php
 }
@@ -1001,7 +1001,7 @@ function bbp_admin_setting_callback_group_forums_root_id() {
 	// Output the dropdown for all forums
 	bbp_dropdown( array(
 		'selected'           => bbp_get_group_forums_root_id(),
-		'show_none'          => __( '&mdash; Forums Directory &mdash;', 'buddyboss' ),
+		'show_none'          => __( '- Forums Directory -', 'buddyboss' ),
 		'orderby'            => 'title',
 		'order'              => 'ASC',
 		'select_id'          => '_bbp_group_forums_root_id',

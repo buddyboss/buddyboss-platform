@@ -56,7 +56,7 @@ function bbp_get_forum_post_type_labels() {
 		'view_item'          => __( 'View Forum',               'buddyboss' ),
 		'search_items'       => __( 'Search Forums',            'buddyboss' ),
 		'not_found'          => __( 'No forums found',          'buddyboss' ),
-		'not_found_in_trash' => __( 'No forums found in Trash', 'buddyboss' ),
+		'not_found_in_trash' => __( 'No forums found in trash', 'buddyboss' ),
 		'parent_item_colon'  => __( 'Parent Forum:',            'buddyboss' )
 	) );
 }

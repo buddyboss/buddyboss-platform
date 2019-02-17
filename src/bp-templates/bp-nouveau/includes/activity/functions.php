@@ -145,7 +145,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		if ( bp_is_active( 'groups' ) && bp_has_groups( array( 'user_id' => bp_loggedin_user_id(), 'max' => 1 ) ) ) {
 			$activity_objects['group'] = array(
 				'text'                     => __( 'Post in: Group', 'buddyboss' ),
-				'autocomplete_placeholder' => __( 'Start typing the group name...', 'buddyboss' ),
+				'autocomplete_placeholder' => __( 'Start typing the group name&hellip;', 'buddyboss' ),
 				'priority'                 => 10,
 			);
 		}
@@ -171,11 +171,11 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	);
 
     if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
-        $activity_strings['whatsnewPlaceholder'] = sprintf( __( "Write something to %s...", 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
+        $activity_strings['whatsnewPlaceholder'] = sprintf( __( "Write something to %s&hellip;", 'buddyboss' ), bp_get_user_firstname( bp_get_displayed_user_fullname() ) );
     }
 
 	if ( bp_is_group() ) {
-		$activity_strings['whatsnewPlaceholder'] = __( 'Share something with your group...', 'buddyboss' );
+		$activity_strings['whatsnewPlaceholder'] = __( 'Share something with your group&hellip;', 'buddyboss' );
 		$activity_params = array_merge(
 			$activity_params,
 			array(

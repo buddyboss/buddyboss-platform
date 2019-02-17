@@ -18,7 +18,7 @@ $search_term =  ! empty( $_REQUEST['s'] ) ? $_REQUEST['s'] : '';
 			name="s"
 			type="search"
 			value="<?php echo BP_Search::instance()->has_search_results() ? $search_term : '' ?>"
-			placeholder="<?php echo BP_Search::instance()->has_search_results() ?  __( 'Search Network...', "buddyboss" ) : __( 'Try different keywords...', "buddyboss" ) ?>"
+			placeholder="<?php echo BP_Search::instance()->has_search_results() ?  __( 'Search Network&hellip;', "buddyboss" ) : __( 'Try different keywords&hellip;', "buddyboss" ) ?>"
 		/>
 
 		<button type="submit" id="<?php bp_nouveau_search_selector_id( 'search-submit' ); ?>" class="nouveau-search-submit">

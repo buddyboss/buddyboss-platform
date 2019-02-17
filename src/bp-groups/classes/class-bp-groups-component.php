@@ -259,7 +259,7 @@ class BP_Groups_Component extends BP_Component {
 			'has_directory'         => true,
 			'directory_title'       => isset( $bp->pages->groups->title ) ? $bp->pages->groups->title : $default_directory_title,
 			'notification_callback' => 'groups_format_notifications',
-			'search_string'         => _x( 'Search Groups...', 'Component directory search', 'buddyboss' ),
+			'search_string'         => _x( 'Search Groups&hellip;', 'Component directory search', 'buddyboss' ),
 			'global_tables'         => $global_tables,
 			'meta_tables'           => $meta_tables,
 		);

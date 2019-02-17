@@ -37,7 +37,7 @@
             <div class="item-desc">
                 <?php 
                     $content = wp_strip_all_tags($current_message->message);
-                    $trimmed_content = wp_trim_words( $content, 20, '...' ); 
+                    $trimmed_content = wp_trim_words( $content, 20, '&hellip;' ); 
                     echo $trimmed_content; 
                 ?>
             </div>

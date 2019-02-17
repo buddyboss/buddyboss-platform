@@ -56,7 +56,7 @@ function bp_ps_fields_box ( $post ) {
 			<span class="bp_ps_col4"><strong>&nbsp;<?php _e('Description', 'buddyboss'); ?></strong></span>&nbsp;
 			<span class="bp_ps_col5"><strong>&nbsp;<?php _e('Search Mode', 'buddyboss'); ?></strong></span>
 		</p>
-		<input type="hidden" id="empty-box-alert" name="empty-box-alert" value="<?php _e('You can not remove this field you have to keep at least one field or disable the advance search from settings.', 'buddyboss'); ?>">
+		<input type="hidden" id="empty-box-alert" name="empty-box-alert" value="<?php _e('You cannot remove this field, you must have at least one field to use this feature. To disable search navigate to Dashboard->BuddyBoss->Settings->Profiles.', 'buddyboss'); ?>">
 		<?php
 
 		foreach ($bp_ps_options['field_code'] as $k => $id) {
@@ -73,7 +73,7 @@ function bp_ps_fields_box ( $post ) {
 			?>
 
 			<div id="field_div<?php echo $k; ?>" class="sortable">
-				<span class="bp_ps_col1" title="<?php _e('drag to reorder fields', 'buddyboss'); ?>">&nbsp;&#x21C5;</span>
+				<span class="bp_ps_col1" title="<?php _e('Drag & drop to reorder fields', 'buddyboss'); ?>">&nbsp;&#x21C5;</span>
 				<?php _bp_ps_field_select ($groups, "bp_ps_options[field_name][$k]", "field_name$k", $id); ?>
 				<input class="bp_ps_col3" type="text" name="bp_ps_options[field_label][<?php echo $k; ?>]" id="field_label<?php echo $k; ?>" <?php echo $showlabel; ?> />
 				<input class="bp_ps_col4" type="text" name="bp_ps_options[field_desc][<?php echo $k; ?>]" id="field_desc<?php echo $k; ?>" <?php echo $showdesc; ?> />
@@ -202,7 +202,7 @@ function bp_search_ajax_option() {
 	?>
 
 	<div id="field_div<?php echo $k; ?>" class="sortable">
-		<span class="bp_ps_col1" title="<?php _e('drag to reorder fields', 'buddyboss'); ?>">&nbsp;&#x21C5;</span>
+		<span class="bp_ps_col1" title="<?php _e('Drag & drop to reorder fields', 'buddyboss'); ?>">&nbsp;&#x21C5;</span>
 		<?php _bp_ps_field_select ($groups, "bp_ps_options[field_name][$k]", "field_name$k", $id); ?>
 		<input class="bp_ps_col3" type="text" name="bp_ps_options[field_label][<?php echo $k; ?>]" id="field_label<?php echo $k; ?>" <?php echo $showlabel; ?> />
 		<input class="bp_ps_col4" type="text" name="bp_ps_options[field_desc][<?php echo $k; ?>]" id="field_desc<?php echo $k; ?>" <?php echo $showdesc; ?> />
