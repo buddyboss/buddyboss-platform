@@ -69,13 +69,13 @@ function bp_get_default_options() {
 		// Avatar uploads.
 		'bp-disable-avatar-uploads'            => false,
 
-		// Cover image uploads.
+		// cover photo uploads.
 		'bp-disable-cover-image-uploads'       => false,
 
 		// Group Profile Photos.
 		'bp-disable-group-avatar-uploads'      => false,
 
-		// Group Cover image uploads.
+		// Group cover photo uploads.
 		'bp-disable-group-cover-image-uploads' => false,
 
 		// Group Types.
@@ -578,22 +578,22 @@ function bp_disable_avatar_uploads( $default = true ) {
 }
 
 /**
- * Are members able to upload their own cover images?
+ * Are members able to upload their own cover photos?
  *
  * @since BuddyPress 2.4.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
- * @return bool True if cover image uploads are disabled, otherwise false.
+ * @return bool True if cover photo uploads are disabled, otherwise false.
  */
 function bp_disable_cover_image_uploads( $default = false ) {
 
 	/**
-	 * Filters whether or not members are able to upload their own cover images.
+	 * Filters whether or not members are able to upload their own cover photos.
 	 *
 	 * @since BuddyPress 2.4.0
 	 *
-	 * @param bool $value Whether or not members are able to upload their own cover images.
+	 * @param bool $value Whether or not members are able to upload their own cover photos.
 	 */
 	return (bool) apply_filters( 'bp_disable_cover_image_uploads', (bool) bp_get_option( 'bp-disable-cover-image-uploads', $default ) );
 }
@@ -633,22 +633,22 @@ function bp_disable_group_avatar_uploads( $default = null ) {
 }
 
 /**
- * Are group cover images disabled?
+ * Are group cover photos disabled?
  *
  * @since BuddyPress 2.4.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
- * @return bool True if group cover image uploads are disabled, otherwise false.
+ * @return bool True if group cover photo uploads are disabled, otherwise false.
  */
 function bp_disable_group_cover_image_uploads( $default = false ) {
 
 	/**
-	 * Filters whether or not members are able to upload group cover images.
+	 * Filters whether or not members are able to upload group cover photos.
 	 *
 	 * @since BuddyPress 2.4.0
 	 *
-	 * @param bool $value Whether or not members are able to upload thier groups cover images.
+	 * @param bool $value Whether or not members are able to upload thier groups cover photos.
 	 */
 	return (bool) apply_filters( 'bp_disable_group_cover_image_uploads', (bool) bp_get_option( 'bp-disable-group-cover-image-uploads', $default ) );
 }

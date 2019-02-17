@@ -320,7 +320,7 @@ function bp_nouveau_group_manage_screen() {
 			 * Fires before the display of group delete admin.
 			 *
 			 * @since BuddyPress 1.1.0 For most hooks.
-			 * @since BuddyPress 2.4.0 For the cover image hook.
+			 * @since BuddyPress 2.4.0 For the cover photo hook.
 			 */
 			do_action( 'bp_before_' . $core_screen['hook'] );
 		}
@@ -338,7 +338,7 @@ function bp_nouveau_group_manage_screen() {
 			 * Fires before the display of group delete admin.
 			 *
 			 * @since BuddyPress 1.1.0 For most hooks.
-			 * @since BuddyPress 2.4.0 For the cover image hook.
+			 * @since BuddyPress 2.4.0 For the cover photo hook.
 			 */
 			do_action( 'bp_after_' . $core_screen['hook'] );
 		}

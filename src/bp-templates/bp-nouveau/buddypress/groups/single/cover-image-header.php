@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Groups Cover Image Header.
+ * BuddyBoss - Groups Cover Photo Header.
  *
  * @since BuddyPress 3.0.0
  * @version 3.1.0
@@ -16,7 +16,7 @@ $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 
 	<div id="header-cover-image">
 		<?php if ( bp_is_item_admin() && bp_group_use_cover_image_header() ) { ?>
-			<a href="<?php echo $group_cover_link; ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip="<?php _e('Change Cover Image', 'buddyboss'); ?>">
+			<a href="<?php echo $group_cover_link; ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip="<?php _e('Change Cover Photo', 'buddyboss'); ?>">
 				<span class="dashicons dashicons-edit"></span>
 			</a>
 		<?php } ?>

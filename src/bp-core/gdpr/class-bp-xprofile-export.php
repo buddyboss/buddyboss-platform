@@ -80,7 +80,7 @@ final class BP_Xprofile_Export extends BP_Export {
 		}
 
 		$data[] = array( 'name' => __( 'Avatar', 'buddyboss' ), 'value' => $avatar );
-		$data[] = array( 'name' => __( 'Cover Image', 'buddyboss' ), 'value' => $cover_photo );
+		$data[] = array( 'name' => __( 'Cover Photo', 'buddyboss' ), 'value' => $cover_photo );
 
 		$export_items[] = array(
 			'group_id'    => "{$this->exporter_name}-cover-avatar",
@@ -161,7 +161,7 @@ final class BP_Xprofile_Export extends BP_Export {
 		// delete avatar
 		bp_core_delete_avatar_on_user_delete( $user->ID );
 
-		// delete cover image
+		// delete cover photo
 		bp_attachments_delete_file( array( 'item_id' => $user->ID, 'object' => 'members', 'type' => 'cover-image' ) );
 
 		$done = true;

@@ -20,7 +20,7 @@ window.bp = window.bp || {};
 			this.views   = new Backbone.Collection();
 			this.warning = null;
 
-			// The Cover Image Attachment object.
+			// The Cover Photo Attachment object.
 			this.Attachment = new Backbone.Model();
 
 			// Set up views
@@ -95,7 +95,7 @@ window.bp = window.bp || {};
 				this.views.remove( { id: 'delete', view: deleteView } );
 			}
 
-			// Remove the cover image !
+			// Remove the cover photo !
 			bp.ajax.post( 'bp_cover_image_delete', {
 				json:          true,
 				item_id:       model.get( 'item_id' ),
@@ -131,11 +131,11 @@ window.bp = window.bp || {};
 				/**
 				 * Reset the Attachment object
 				 *
-				 * You can run extra actions once the cover image is set using:
+				 * You can run extra actions once the cover photo is set using:
 				 * bp.CoverImage.Attachment.on( 'change:url', function( data ) { your code } );
 				 *
 				 * In this case data.attributes will include the default url for the
-				 * cover image (most of the time: ''), the object and the item_id concerned.
+				 * cover photo (most of the time: ''), the object and the item_id concerned.
 				 */
 				self.Attachment.set( _.extend(
 					_.pick( model.attributes, ['object', 'item_id'] ),
@@ -224,11 +224,11 @@ window.bp = window.bp || {};
 				/**
 				 * Set the Attachment object
 				 *
-				 * You can run extra actions once the cover image is set using:
+				 * You can run extra actions once the cover photo is set using:
 				 * bp.CoverImage.Attachment.on( 'change:url', function( data ) { your code } );
 				 *
 				 * In this case data.attributes will include the url to the newly
-				 * uploaded cover image, the object and the item_id concerned.
+				 * uploaded cover photo, the object and the item_id concerned.
 				 */
 				bp.CoverImage.Attachment.set( _.extend(
 					_.pick( BP_Uploader.settings.defaults.multipart_params.bp_params, ['object', 'item_id'] ),
@@ -238,7 +238,7 @@ window.bp = window.bp || {};
 		}
 	} );
 
-	// BuddyPress Cover Image Feedback view
+	// BuddyPress Cover Photo Feedback view
 	bp.Views.CoverImageStatus = bp.View.extend( {
 		tagName: 'p',
 		className: 'updated',
@@ -255,7 +255,7 @@ window.bp = window.bp || {};
 		}
 	} );
 
-	// BuddyPress Cover Image Delete view
+	// BuddyPress Cover Photo Delete view
 	bp.Views.DeleteCoverImage = bp.View.extend( {
 		tagName: 'div',
 		id: 'bp-delete-cover-image-container',

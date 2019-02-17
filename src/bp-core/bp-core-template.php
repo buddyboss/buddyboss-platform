@@ -2475,13 +2475,13 @@ function bp_is_user_change_avatar() {
 }
 
 /**
- * Is the current page the a user's change cover image profile page?
+ * Is the current page the a user's change cover photo profile page?
  *
  * Eg http://example.com/members/joe/profile/change-cover-image/ (or a subpage thereof).
  *
  * @since BuddyPress 2.4.0
  *
- * @return bool True if the current page is a user's profile edit cover image page.
+ * @return bool True if the current page is a user's profile edit cover photo page.
  */
 function bp_is_user_change_cover_image() {
 	return (bool) ( bp_is_profile_component() && bp_is_current_action( 'change-cover-image' ) );

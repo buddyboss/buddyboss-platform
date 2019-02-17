@@ -662,7 +662,7 @@ function bp_nouveau_sanitize_nav_order( $option = '' ) {
 }
 
 /**
- * BP Nouveau's callback for the cover image feature.
+ * BP Nouveau's callback for the cover photo feature.
  *
  * @since BuddyPress 3.0.0
  *
@@ -685,7 +685,7 @@ function bp_nouveau_theme_cover_image( $params = array() ) {
 	$cover_image = isset( $params['cover_image'] ) ? 'background-image: url( ' . $params['cover_image'] . ' );' : '';
 	$hide_avatar_style = '';
 
-	// Adjust the cover image header, in case avatars are completely disabled.
+	// Adjust the cover photo header, in case avatars are completely disabled.
 	if ( ! buddypress()->avatar->show_avatars ) {
 		$hide_avatar_style = '
 			#buddypress #item-header-cover-image #item-header-avatar {
@@ -709,7 +709,7 @@ function bp_nouveau_theme_cover_image( $params = array() ) {
 	}
 
 	return '
-		/* Cover image */
+		/* cover photo */
 		#buddypress #header-cover-image {
 			height: ' . $params['height'] . 'px;
 			' . $cover_image . '

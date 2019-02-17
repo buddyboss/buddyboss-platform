@@ -1,9 +1,9 @@
 <?php
 /**
- * BuddyPress Cover Images main template.
+ * BuddyPress Cover Photos main template.
  *
  * This template is used to inject the BuddyPress Backbone views
- * dealing with cover images.
+ * dealing with cover photos.
  *
  * It's also used to create the common Backbone views.
  *
@@ -21,23 +21,23 @@
 
 <script id="tmpl-bp-cover-image-delete" type="text/html">
 	<# if ( 'user' === data.object ) { #>
-		<p><?php esc_html_e( "If you'd like to delete your current cover image, use the delete Cover Image button.", 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( "If you'd like to delete your current cover photo, use the delete Cover Photo button.", 'buddyboss' ); ?></p>
 		<button type="button" class="button edit" id="bp-delete-cover-image">
 			<?php
-			echo esc_html_x( 'Delete My Cover Image', 'button', 'buddyboss' );
+			echo esc_html_x( 'Delete My Cover Photo', 'button', 'buddyboss' );
 			?>
 		</button>
 	<# } else if ( 'group' === data.object ) { #>
-		<p><?php esc_html_e( "If you'd like to remove the existing group cover image but not upload a new one, please use the delete group cover image button.", 'buddyboss' ); ?></p>
+		<p><?php esc_html_e( "If you'd like to remove the existing group cover photo but not upload a new one, please use the delete group cover photo button.", 'buddyboss' ); ?></p>
 		<button type="button" class="button edit" id="bp-delete-cover-image">
 			<?php
-			echo esc_html_x( 'Delete Group Cover Image', 'button', 'buddyboss' );
+			echo esc_html_x( 'Delete Group Cover Photo', 'button', 'buddyboss' );
 			?>
 		</button>
 	<# } else { #>
 		<?php
 			/**
-			 * Fires inside the cover image delete frontend template markup if no other data.object condition is met.
+			 * Fires inside the cover photo delete frontend template markup if no other data.object condition is met.
 			 *
 			 * @since BuddyPress 3.0.0
 			 */
@@ -47,7 +47,7 @@
 
 <?php
 	/**
-	 * Fires after the cover image main frontend template markup.
+	 * Fires after the cover photo main frontend template markup.
 	 *
 	 * @since BuddyPress 3.0.0
 	 */

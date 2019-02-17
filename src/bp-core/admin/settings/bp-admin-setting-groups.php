@@ -40,9 +40,9 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		// Allow group avatars.
 		$this->add_field( 'bp-disable-group-avatar-uploads', __( 'Photo Uploads', 'buddyboss' ), 'bp_admin_setting_callback_group_avatar_uploads', 'intval' );
 
-		// Allow group cover images.
+		// Allow group cover photos.
 		if ( bp_is_active( 'groups', 'cover_image' ) ) {
-			$this->add_field( 'bp-disable-group-cover-image-uploads', __( 'Cover Image Uploads', 'buddyboss' ), 'bp_admin_setting_callback_group_cover_image_uploads', 'intval' );
+			$this->add_field( 'bp-disable-group-cover-image-uploads', __( 'Cover Photo Uploads', 'buddyboss' ), 'bp_admin_setting_callback_group_cover_image_uploads', 'intval' );
 		}
 
 		// Register Group Types sections.

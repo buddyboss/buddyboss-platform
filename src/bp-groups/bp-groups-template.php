@@ -966,14 +966,14 @@ function bp_group_avatar_mini( $group = false ) {
 		) );
 	}
 
-/** Group cover image *********************************************************/
+/** Group cover photo *********************************************************/
 
 /**
- * Should we use the group's cover image header.
+ * Should we use the group's cover photo header.
  *
  * @since BuddyPress 2.4.0
  *
- * @return bool True if the displayed user has a cover image,
+ * @return bool True if the displayed user has a cover photo,
  *              False otherwise
  */
 function bp_group_use_cover_image_header() {

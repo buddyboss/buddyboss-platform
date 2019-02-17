@@ -182,14 +182,14 @@ function bp_admin_setting_callback_avatar_uploads() {
 }
 
 /**
- * Allow members to upload cover images field.
+ * Allow members to upload cover photos field.
  *
  * @since BuddyPress 2.4.0
  */
 function bp_admin_setting_callback_cover_image_uploads() {
 ?>
 	<input id="bp-disable-cover-image-uploads" name="bp-disable-cover-image-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_cover_image_uploads() ); ?> />
-	<label for="bp-disable-cover-image-uploads"><?php _e( 'Allow members to upload cover images', 'buddyboss' ); ?></label>
+	<label for="bp-disable-cover-image-uploads"><?php _e( 'Allow members to upload cover photos', 'buddyboss' ); ?></label>
 <?php
 }
 
@@ -232,14 +232,14 @@ function bp_admin_setting_callback_group_avatar_uploads() {
 }
 
 /**
- * 'Enable group cover images' field markup.
+ * 'Enable group cover photos' field markup.
  *
  * @since BuddyPress 2.4.0
  */
 function bp_admin_setting_callback_group_cover_image_uploads() {
 ?>
 	<input id="bp-disable-group-cover-image-uploads" name="bp-disable-group-cover-image-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_group_cover_image_uploads() ); ?> />
-	<label for="bp-disable-group-cover-image-uploads"><?php _e( 'Allow social group organizers to upload cover images', 'buddyboss' ); ?></label>
+	<label for="bp-disable-group-cover-image-uploads"><?php _e( 'Allow social group organizers to upload cover photos', 'buddyboss' ); ?></label>
 <?php
 }
 

@@ -112,7 +112,7 @@ final class BP_Group_Export extends BP_Export {
 					'value' => $avatar,
 				),
 				array(
-					'name'  => __( 'Group Cover Image', 'buddyboss' ),
+					'name'  => __( 'Group Cover Photo', 'buddyboss' ),
 					'value' => $cover_photo,
 				),
 				array(
@@ -202,7 +202,7 @@ final class BP_Group_Export extends BP_Export {
 	}
 
 	/**
-	 * Delete group avatar and cover image.
+	 * Delete group avatar and cover photo.
 	 *
 	 * @param $group_id
 	 *
@@ -212,7 +212,7 @@ final class BP_Group_Export extends BP_Export {
 
 		do_action( 'buddyboss_bp_gdpr_group_additional_group_items_delete', $group_id );
 
-		// delete cover image
+		// delete cover photo
 		bp_attachments_delete_file( array(
 			'item_id'    => $group_id,
 			'object_dir' => 'groups',

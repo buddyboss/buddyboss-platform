@@ -1437,14 +1437,14 @@ function bp_get_displayed_user_nav() {
 	}
 }
 
-/** Cover image ***************************************************************/
+/** cover photo ***************************************************************/
 
 /**
- * Should we use the cover image header
+ * Should we use the cover photo header
  *
  * @since BuddyPress 2.4.0
  *
- * @return bool True if the displayed user has a cover image,
+ * @return bool True if the displayed user has a cover photo,
  *              False otherwise
  */
 function bp_displayed_user_use_cover_image_header() {

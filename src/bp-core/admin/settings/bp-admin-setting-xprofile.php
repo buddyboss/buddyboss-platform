@@ -75,9 +75,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Avatars.
 		$this->add_field( 'bp-disable-avatar-uploads', __( 'Photo Uploads', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval' );
 
-		// Cover images.
+		// cover photos.
 		if ( bp_is_active( 'xprofile', 'cover_image' ) ) {
-			$this->add_field( 'bp-disable-cover-image-uploads', __( 'Cover Image Uploads', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'intval' );
+			$this->add_field( 'bp-disable-cover-image-uploads', __( 'Cover Photo Uploads', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'intval' );
 		}
 
 		// Section for profile dashboard.

@@ -409,7 +409,7 @@ class BP_Groups_Component extends BP_Component {
 
 		if ( bp_group_use_cover_image_header() ) {
 			$this->group_creation_steps['group-cover-image'] = array(
-				'name'     => _x( 'Cover Image', 'Group screen nav', 'buddyboss' ),
+				'name'     => _x( 'Cover Photo', 'Group screen nav', 'buddyboss' ),
 				'position' => 25
 			);
 		}
@@ -737,7 +737,7 @@ class BP_Groups_Component extends BP_Component {
 
 				if ( bp_group_use_cover_image_header() ) {
 					$sub_nav[] = array_merge( array(
-						'name'     => __( 'Cover Image', 'buddyboss' ),
+						'name'     => __( 'Cover Photo', 'buddyboss' ),
 						'slug'     => 'group-cover-image',
 						'position' => 25,
 					), $default_params );

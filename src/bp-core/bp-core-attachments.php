@@ -84,7 +84,7 @@ function bp_attachments_uploads_dir_get( $data = '' ) {
 }
 
 /**
- * Gets the upload dir array for cover images.
+ * Gets the upload dir array for cover photos.
  *
  * @since BuddyPress 3.0.0
  *
@@ -118,7 +118,7 @@ function bp_attachments_cover_image_upload_dir( $args = array() ) {
 	$upload_dir = bp_attachments_uploads_dir_get();
 
 	/**
-	 * Filters the cover image upload directory.
+	 * Filters the cover photo upload directory.
 	 *
 	 * @since BuddyPress 2.4.0
 	 *
@@ -421,7 +421,7 @@ function bp_attachments_create_item_type( $type = 'avatar', $args = array() ) {
 			'crop_y'        => $r['crop_y']
 		) );
 
-	// It's a cover image we need to fit it to feature's dimensions.
+	// It's a cover photo we need to fit it to feature's dimensions.
 	} elseif ( 'cover_image' === $type ) {
 		$cover_image = bp_attachments_cover_image_generate_file( array(
 			'file'            => $image_file_path,
@@ -812,16 +812,16 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 		 */
 		$settings['nav'] = bp_sort_by_key( apply_filters( 'bp_attachments_avatar_nav', $avatar_nav, $object ), 'order', 'num' );
 
-	// Specific to BuddyPress cover images.
+	// Specific to BuddyPress cover photos.
 	} elseif ( 'bp_cover_image_upload' === $defaults['multipart_params']['action'] ) {
 
-		// Cover images only need 1 file and 1 only!
+		// cover photos only need 1 file and 1 only!
 		$defaults['multi_selection'] = false;
 
 		// Default cover component is xprofile.
 		$cover_component = 'xprofile';
 
-		// Get the object we're editing the cover image of.
+		// Get the object we're editing the cover photo of.
 		$object = $defaults['multipart_params']['bp_params']['object'];
 
 		// Set the cover component according to the object.
@@ -830,7 +830,7 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 		} elseif ( 'user' !== $object ) {
 			$cover_component = apply_filters( 'bp_attachments_cover_image_ui_component', $cover_component );
 		}
-		// Get cover image advised dimensions.
+		// Get cover photo advised dimensions.
 		$cover_dimensions = bp_attachments_get_cover_image_dimensions( $cover_component );
 
 		// Set warning messages.
@@ -995,15 +995,15 @@ function bp_attachments_get_template_part( $slug ) {
 	}
 }
 
-/** Cover Image ***************************************************************/
+/** Cover Photo ***************************************************************/
 
 /**
- * Get the cover image settings
+ * Get the cover photo settings
  *
  * @since BuddyPress 2.4.0
  *
  * @param string $component The component to get the settings for ("xprofile" for user or "groups").
- * @return false|array The cover image settings in array, false on failure.
+ * @return false|array The cover photo settings in array, false on failure.
  */
 function bp_attachments_get_cover_image_settings( $component = 'xprofile' ) {
 	// Default parameters.
@@ -1019,12 +1019,12 @@ function bp_attachments_get_cover_image_settings( $component = 'xprofile' ) {
 	/**
 	 * Then let people override/set the feature using this dynamic filter
 	 *
-	 * Eg: for the user's profile cover image use:
+	 * Eg: for the user's profile cover photo use:
 	 * add_filter( 'bp_before_xprofile_cover_image_settings_parse_args', 'your_filter', 10, 1 );
 	 *
 	 * @since BuddyPress 2.4.0
 	 *
-	 * @param array $settings The cover image settings
+	 * @param array $settings The cover photo settings
 	 */
 	$settings = bp_parse_args( $args, array(
 		'components'    => array(),
@@ -1049,12 +1049,12 @@ function bp_attachments_get_cover_image_settings( $component = 'xprofile' ) {
 }
 
 /**
- * Get cover image Width and Height.
+ * Get cover photo Width and Height.
  *
  * @since BuddyPress 2.4.0
  *
  * @param string $component The BuddyPress component concerned ("xprofile" for user or "groups").
- * @return array|bool An associative array containing the advised width and height for the cover image. False if settings are empty.
+ * @return array|bool An associative array containing the advised width and height for the cover photo. False if settings are empty.
  */
 function bp_attachments_get_cover_image_dimensions( $component = 'xprofile' ) {
 	// Let's prevent notices when setting the warning strings.
@@ -1070,7 +1070,7 @@ function bp_attachments_get_cover_image_dimensions( $component = 'xprofile' ) {
 	$wh = array_intersect_key( $settings, $default );
 
 	/**
-	 * Filter here to edit the cover image dimensions if needed.
+	 * Filter here to edit the cover photo dimensions if needed.
 	 *
 	 * @since BuddyPress 2.4.0
 	 *
@@ -1082,11 +1082,11 @@ function bp_attachments_get_cover_image_dimensions( $component = 'xprofile' ) {
 }
 
 /**
- * Are we on a page to edit a cover image?
+ * Are we on a page to edit a cover photo?
  *
  * @since BuddyPress 2.4.0
  *
- * @return bool True if on a page to edit a cover image, false otherwise.
+ * @return bool True if on a page to edit a cover photo, false otherwise.
  */
 function bp_attachments_cover_image_is_edit() {
 	$retval = false;
@@ -1113,12 +1113,12 @@ function bp_attachments_cover_image_is_edit() {
 }
 
 /**
- * Does the user has a cover image?
+ * Does the user has a cover photo?
  *
  * @since BuddyPress 2.4.0
  *
- * @param int $user_id User ID to retrieve cover image for.
- * @return bool True if the user has a cover image, false otherwise.
+ * @param int $user_id User ID to retrieve cover photo for.
+ * @return bool True if the user has a cover photo, false otherwise.
  */
 function bp_attachments_get_user_has_cover_image( $user_id = 0 ) {
 	if ( empty( $user_id ) ) {
@@ -1133,12 +1133,12 @@ function bp_attachments_get_user_has_cover_image( $user_id = 0 ) {
 }
 
 /**
- * Does the group has a cover image?
+ * Does the group has a cover photo?
  *
  * @since BuddyPress 2.4.0
  *
- * @param int $group_id Group ID to check cover image existence for.
- * @return bool True if the group has a cover image, false otherwise.
+ * @param int $group_id Group ID to check cover photo existence for.
+ * @return bool True if the group has a cover photo, false otherwise.
  */
 function bp_attachments_get_group_has_cover_image( $group_id = 0 ) {
 	if ( empty( $group_id ) ) {
@@ -1154,17 +1154,17 @@ function bp_attachments_get_group_has_cover_image( $group_id = 0 ) {
 }
 
 /**
- * Generate the cover image file.
+ * Generate the cover photo file.
  *
  * @since BuddyPress 2.4.0
  *
  * @param array                          $args {
  *     @type string $file            The absolute path to the image. Required.
  *     @type string $component       The component for the object (eg: groups, xprofile). Required.
- *     @type string $cover_image_dir The Cover image dir to write the image into. Required.
+ *     @type string $cover_image_dir The cover photo dir to write the image into. Required.
  * }
- * @param BP_Attachment_Cover_Image|null $cover_image_class The class to use to fit the cover image.
- * @return false|array An array containing cover image data on success, false otherwise.
+ * @param BP_Attachment_Cover_Image|null $cover_image_class The class to use to fit the cover photo.
+ * @return false|array An array containing cover photo data on success, false otherwise.
  */
 function bp_attachments_cover_image_generate_file( $args = array(), $cover_image_class = null ) {
 	// Bail if an argument is missing.
@@ -1172,10 +1172,10 @@ function bp_attachments_cover_image_generate_file( $args = array(), $cover_image
 		return false;
 	}
 
-	// Get advised dimensions for the cover image.
+	// Get advised dimensions for the cover photo.
 	$dimensions = bp_attachments_get_cover_image_dimensions( $args['component'] );
 
-	// No dimensions or the file does not match with the cover image dir, stop!
+	// No dimensions or the file does not match with the cover photo dir, stop!
 	if ( false === $dimensions || $args['file'] !== $args['cover_image_dir'] . '/' . wp_basename( $args['file'] ) ) {
 		return false;
 	}
@@ -1186,12 +1186,12 @@ function bp_attachments_cover_image_generate_file( $args = array(), $cover_image
 
 	$upload_dir = bp_attachments_cover_image_upload_dir();
 
-	// Make sure the file is inside the Cover Image Upload path.
+	// Make sure the file is inside the Cover Photo Upload path.
 	if ( false === strpos( $args['file'], $upload_dir['basedir'] ) ) {
 		return false;
 	}
 
-	// Resize the image so that it fit with the cover image dimensions.
+	// Resize the image so that it fit with the cover photo dimensions.
 	$cover_image  = $cover_image_class->fit( $args['file'], $dimensions );
 	$is_too_small = false;
 
@@ -1211,17 +1211,17 @@ function bp_attachments_cover_image_generate_file( $args = array(), $cover_image
 		}
 	}
 
-	// We were not able to generate the cover image file.
+	// We were not able to generate the cover photo file.
 	if ( empty( $cover_file ) ) {
 		return false;
 	}
 
-	// Do some clean up with old cover image, now a new one is set.
+	// Do some clean up with old cover photo, now a new one is set.
 	$cover_basename = wp_basename( $cover_file );
 
 	if ( $att_dir = opendir( $args['cover_image_dir'] ) ) {
 		while ( false !== ( $attachment_file = readdir( $att_dir ) ) ) {
-			// Skip directories and the new cover image.
+			// Skip directories and the new cover photo.
 			if ( 2 < strlen( $attachment_file ) && 0 !== strpos( $attachment_file, '.' ) && $cover_basename !== $attachment_file ) {
 				@unlink( $args['cover_image_dir'] . '/' . $attachment_file );
 			}
@@ -1237,7 +1237,7 @@ function bp_attachments_cover_image_generate_file( $args = array(), $cover_image
 }
 
 /**
- * Ajax Upload and set a cover image
+ * Ajax Upload and set a cover photo
  *
  * @since BuddyPress 2.4.0
  *
@@ -1279,7 +1279,7 @@ function bp_attachments_cover_image_ajax_upload() {
 	$bp          = buddypress();
 	$needs_reset = array();
 
-	// Member's cover image.
+	// Member's cover photo.
 	if ( 'user' === $bp_params['object'] ) {
 		$object_data = array( 'dir' => 'members', 'component' => 'xprofile' );
 
@@ -1288,7 +1288,7 @@ function bp_attachments_cover_image_ajax_upload() {
 			$bp->displayed_user->id = $bp_params['item_id'];
 		}
 
-	// Group's cover image.
+	// Group's cover photo.
 	} elseif ( 'group' === $bp_params['object'] ) {
 		$object_data = array( 'dir' => 'groups', 'component' => 'groups' );
 
@@ -1297,7 +1297,7 @@ function bp_attachments_cover_image_ajax_upload() {
 			$bp->groups->current_group = groups_get_group( $bp_params['item_id'] );
 		}
 
-	// Other object's cover image.
+	// Other object's cover photo.
 	} else {
 		$object_data = apply_filters( 'bp_attachments_cover_image_object_dir', array(), $bp_params['object'] );
 	}
@@ -1308,7 +1308,7 @@ function bp_attachments_cover_image_ajax_upload() {
 	}
 
 	/**
-	 * Filters whether or not to handle cover image uploading.
+	 * Filters whether or not to handle cover photo uploading.
 	 *
 	 * If you want to override this function, make sure you return an array with the 'result' key set.
 	 *
@@ -1344,7 +1344,7 @@ function bp_attachments_cover_image_ajax_upload() {
 		) );
 	}
 
-	$error_message = __( 'There was a problem uploading the cover image.', 'buddyboss' );
+	$error_message = __( 'There was a problem uploading the cover photo.', 'buddyboss' );
 
 	$bp_attachments_uploads_dir = bp_attachments_cover_image_upload_dir();
 
@@ -1368,9 +1368,9 @@ function bp_attachments_cover_image_ajax_upload() {
 	}
 
 	/*
-	 * Generate the cover image so that it fit to feature's dimensions
+	 * Generate the cover photo so that it fit to feature's dimensions
 	 *
-	 * Unlike the avatar, uploading and generating the cover image is happening during
+	 * Unlike the avatar, uploading and generating the cover photo is happening during
 	 * the same Ajax request, as we already instantiated the BP_Attachment_Cover_Image
 	 * class, let's use it.
 	 */
@@ -1403,17 +1403,17 @@ function bp_attachments_cover_image_ajax_upload() {
 	$name = trim( substr( $name, 0, - ( 1 + strlen( $name_parts['extension'] ) ) ) );
 
 	/**
-	 * Fires if the new cover image was successfully uploaded.
+	 * Fires if the new cover photo was successfully uploaded.
 	 *
 	 * The dynamic portion of the hook will be xprofile in case of a user's
-	 * cover image, groups in case of a group's cover image. For instance:
+	 * cover photo, groups in case of a group's cover photo. For instance:
 	 * Use add_action( 'xprofile_cover_image_uploaded' ) to run your specific
-	 * code once the user has set his cover image.
+	 * code once the user has set his cover photo.
 	 *
 	 * @since BuddyPress 2.4.0
 	 * @since BuddyPress 3.0.0 Added $cover_url, $name, $feedback_code arguments.
 	 *
-	 * @param int    $item_id       Inform about the item id the cover image was set for.
+	 * @param int    $item_id       Inform about the item id the cover photo was set for.
 	 * @param string $name          Filename.
 	 * @param string $cover_url     URL to the image.
 	 * @param int    $feedback_code If value not 1, an error occured.
@@ -1426,7 +1426,7 @@ function bp_attachments_cover_image_ajax_upload() {
 		$feedback_code
 	);
 
-	// Finally return the cover image url to the UI.
+	// Finally return the cover photo url to the UI.
 	bp_attachments_json_response( true, $is_html4, array(
 		'name'          => $name,
 		'url'           => $cover_url,
@@ -1436,11 +1436,11 @@ function bp_attachments_cover_image_ajax_upload() {
 add_action( 'wp_ajax_bp_cover_image_upload', 'bp_attachments_cover_image_ajax_upload' );
 
 /**
- * Ajax delete a cover image for a given object and item id.
+ * Ajax delete a cover photo for a given object and item id.
  *
  * @since BuddyPress 2.4.0
  *
- * @return string|null A json object containing success data if the cover image was deleted
+ * @return string|null A json object containing success data if the cover photo was deleted
  *                     error message otherwise.
  */
 function bp_attachments_cover_image_ajax_delete() {
@@ -1477,16 +1477,16 @@ function bp_attachments_cover_image_ajax_delete() {
 	// Handle delete.
 	if ( bp_attachments_delete_file( array( 'item_id' => $args['item_id'], 'object_dir' => $dir, 'type' => 'cover-image' ) ) ) {
 		/**
-		 * Fires if the cover image was successfully deleted.
+		 * Fires if the cover photo was successfully deleted.
 		 *
 		 * The dynamic portion of the hook will be xprofile in case of a user's
-		 * cover image, groups in case of a group's cover image. For instance:
+		 * cover photo, groups in case of a group's cover photo. For instance:
 		 * Use add_action( 'xprofile_cover_image_deleted' ) to run your specific
-		 * code once the user has deleted his cover image.
+		 * code once the user has deleted his cover photo.
 		 *
 		 * @since BuddyPress 2.8.0
 		 *
-		 * @param int $item_id Inform about the item id the cover image was deleted for.
+		 * @param int $item_id Inform about the item id the cover photo was deleted for.
 		 */
 		do_action( "{$component}_cover_image_deleted", (int) $args['item_id'] );
 
@@ -1495,7 +1495,7 @@ function bp_attachments_cover_image_ajax_delete() {
 			'feedback_code' => 3,
 		);
 
-		// Get cover image settings in case there's a default header.
+		// Get cover photo settings in case there's a default header.
 		$cover_params = bp_attachments_get_cover_image_settings( $component );
 
 		// Check if there's a default cover.

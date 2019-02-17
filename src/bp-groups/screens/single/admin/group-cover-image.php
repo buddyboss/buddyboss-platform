@@ -1,13 +1,13 @@
 <?php
 /**
- * Groups: Single group "Manage > Cover Image" screen handler
+ * Groups: Single group "Manage > Cover Photo" screen handler
  *
  * @package BuddyBoss\Groups\Screens
  * @since BuddyPress 3.0.0
  */
 
 /**
- * Handle the display of a group's Change cover image page.
+ * Handle the display of a group's Change cover photo page.
  *
  * @since BuddyPress 2.4.0
  */
@@ -16,13 +16,13 @@ function groups_screen_group_admin_cover_image() {
 		return false;
 	}
 
-	// If the logged-in user doesn't have permission or if cover image uploads are disabled, then stop here.
+	// If the logged-in user doesn't have permission or if cover photo uploads are disabled, then stop here.
 	if ( ! bp_is_item_admin() || ! bp_group_use_cover_image_header() ) {
 		return false;
 	}
 
 	/**
-	 * Fires before the loading of the group Change cover image page template.
+	 * Fires before the loading of the group Change cover photo page template.
 	 *
 	 * @since BuddyPress 2.4.0
 	 *
@@ -31,11 +31,11 @@ function groups_screen_group_admin_cover_image() {
 	do_action( 'groups_screen_group_admin_cover_image', bp_get_current_group_id() );
 
 	/**
-	 * Filters the template to load for a group's Change cover image page.
+	 * Filters the template to load for a group's Change cover photo page.
 	 *
 	 * @since BuddyPress 2.4.0
 	 *
-	 * @param string $value Path to a group's Change cover image template.
+	 * @param string $value Path to a group's Change cover photo template.
 	 */
 	bp_core_load_template( apply_filters( 'groups_template_group_admin_cover_image', 'groups/single/home' ) );
 }

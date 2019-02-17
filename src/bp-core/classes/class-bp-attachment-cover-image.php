@@ -1,6 +1,6 @@
 <?php
 /**
- * Core Cover Image attachment class.
+ * Core Cover Photo attachment class.
  *
  * @package BuddyBoss\Core
  * @since BuddyPress 2.4.0
@@ -10,9 +10,9 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * BP Attachment Cover Image class.
+ * BP Attachment Cover Photo class.
  *
- * Extends BP Attachment to manage the cover images uploads.
+ * Extends BP Attachment to manage the cover photos uploads.
  *
  * @since BuddyPress 2.4.0
  */
@@ -23,7 +23,7 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 	 * @since BuddyPress 2.4.0
 	 */
 	public function __construct() {
-		// Allowed cover image types & upload size.
+		// Allowed cover photo types & upload size.
 		$allowed_types        = bp_attachments_get_allowed_types( 'cover_image' );
 		$max_upload_file_size = bp_attachments_get_max_upload_file_size( 'cover_image' );
 
@@ -34,7 +34,7 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 			'base_dir'              => bp_attachments_uploads_dir_get( 'dir' ),
 			'required_wp_files'     => array( 'file', 'image' ),
 
-			// Specific errors for cover images.
+			// Specific errors for cover photos.
 			'upload_error_strings'  => array(
 				11  => sprintf( __( 'That image is too big. Please upload one smaller than %s', 'buddyboss' ), size_format( $max_upload_file_size ) ),
 				12  => sprintf( _n( 'Please upload only this file type: %s.', 'Please upload only these file types: %s.', count( $allowed_types ), 'buddyboss' ), self::get_cover_image_types( $allowed_types ) ),
@@ -43,23 +43,23 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 	}
 
 	/**
-	 * Gets the available cover image types.
+	 * Gets the available cover photo types.
 	 *
 	 * @since BuddyPress 2.4.0
 	 *
-	 * @param array $allowed_types Array of allowed cover image types.
-	 * @return string $value Comma-separated list of allowed cover image types.
+	 * @param array $allowed_types Array of allowed cover photo types.
+	 * @return string $value Comma-separated list of allowed cover photo types.
 	 */
 	public static function get_cover_image_types( $allowed_types = array() ) {
 		$types = array_map( 'strtoupper', $allowed_types );
-		$comma = _x( ',', 'cover image types separator', 'buddyboss' );
+		$comma = _x( ',', 'cover photo types separator', 'buddyboss' );
 		return join( $comma . ' ', $types );
 	}
 
 	/**
-	 * Cover image specific rules.
+	 * cover photo specific rules.
 	 *
-	 * Adds an error if the cover image size or type don't match BuddyPress needs.
+	 * Adds an error if the cover photo size or type don't match BuddyPress needs.
 	 * The error code is the index of $upload_error_strings.
 	 *
 	 * @since BuddyPress 2.4.0
@@ -99,12 +99,12 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 	}
 
 	/**
-	 * Adjust the cover image to fit with advised width & height.
+	 * Adjust the cover photo to fit with advised width & height.
 	 *
 	 * @since BuddyPress 2.4.0
 	 *
 	 * @param string $file       The absolute path to the file.
-	 * @param array  $dimensions Array of dimensions for the cover image.
+	 * @param array  $dimensions Array of dimensions for the cover photo.
 	 * @return mixed
 	 */
 	public function fit( $file = '', $dimensions = array() ) {
@@ -162,7 +162,7 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 	}
 
 	/**
-	 * Generate a filename for the cover image.
+	 * Generate a filename for the cover photo.
 	 *
 	 * @since BuddyPress 2.4.0
 	 *
@@ -206,9 +206,9 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 
 			// Set feedback messages.
 			$script_data['feedback_messages'] = array(
-				1 => __( 'Your new cover image was uploaded successfully.', 'buddyboss' ),
-				2 => __( 'There was a problem deleting your cover image. Please try again.', 'buddyboss' ),
-				3 => __( 'Your cover image was deleted successfully!', 'buddyboss' ),
+				1 => __( 'Your new cover photo was uploaded successfully.', 'buddyboss' ),
+				2 => __( 'There was a problem deleting your cover photo. Please try again.', 'buddyboss' ),
+				3 => __( 'Your cover photo was deleted successfully!', 'buddyboss' ),
 			);
 		} elseif ( bp_is_group() ) {
 			$item_id = bp_get_current_group_id();
@@ -224,19 +224,19 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 
 			// Set feedback messages.
 			$script_data['feedback_messages'] = array(
-				1 => __( 'The group cover image was uploaded successfully.', 'buddyboss' ),
-				2 => __( 'There was a problem deleting the group cover image. Please try again.', 'buddyboss' ),
-				3 => __( 'The group cover image was deleted successfully!', 'buddyboss' ),
+				1 => __( 'The group cover photo was uploaded successfully.', 'buddyboss' ),
+				2 => __( 'There was a problem deleting the group cover photo. Please try again.', 'buddyboss' ),
+				3 => __( 'The group cover photo was deleted successfully!', 'buddyboss' ),
 			);
 		} else {
 
 			/**
-			 * Filters the cover image params to include specific BuddyPress params for your object.
-			 * e.g. Cover image for blogs single item.
+			 * Filters the cover photo params to include specific BuddyPress params for your object.
+			 * e.g. cover photo for blogs single item.
 			 *
 			 * @since BuddyPress 2.4.0
 			 *
-			 * @param array $value The cover image specific BuddyPress parameters.
+			 * @param array $value The cover photo specific BuddyPress parameters.
 			 */
 			$script_data['bp_params'] = apply_filters( 'bp_attachment_cover_image_params', array() );
 		}
@@ -246,11 +246,11 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 		$script_data['extra_css'] = array( 'bp-avatar' );
 
 		/**
-		 * Filters the cover image script data.
+		 * Filters the cover photo script data.
 		 *
 		 * @since BuddyPress 2.4.0
 		 *
-		 * @param array $script_data Array of data for the cover image.
+		 * @param array $script_data Array of data for the cover photo.
 		 */
 		return apply_filters( 'bp_attachments_cover_image_script_data', $script_data );
 	}

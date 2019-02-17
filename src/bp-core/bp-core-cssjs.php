@@ -193,7 +193,7 @@ function bp_core_avatar_scripts() {
 add_action( 'bp_enqueue_scripts', 'bp_core_avatar_scripts' );
 
 /**
- * Enqueues the css and js required by the Cover Image UI.
+ * Enqueues the css and js required by the Cover Photo UI.
  *
  * @since BuddyPress 2.4.0
  */
@@ -202,7 +202,7 @@ function bp_core_cover_image_scripts() {
 		return false;
 	}
 
-	// Enqueue the Attachments scripts for the Cover Image UI.
+	// Enqueue the Attachments scripts for the Cover Photo UI.
 	bp_attachments_enqueue_scripts( 'BP_Attachment_Cover_Image' );
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_cover_image_scripts' );
@@ -408,7 +408,7 @@ function bp_core_get_js_dependencies() {
 }
 
 /**
- * Add inline css to display the component's single item cover image.
+ * Add inline css to display the component's single item cover photo.
  *
  * @since BuddyPress 2.4.0
  *
@@ -422,7 +422,7 @@ function bp_add_cover_image_inline_css( $return = false ) {
 	// Find the component of the current item.
 	if ( bp_is_user() ) {
 
-		// User is not allowed to upload cover images
+		// User is not allowed to upload cover photos
 		// no need to carry on.
 		if ( bp_disable_cover_image_uploads() ) {
 			return;
@@ -434,7 +434,7 @@ function bp_add_cover_image_inline_css( $return = false ) {
 		);
 	} elseif ( bp_is_group() ) {
 
-		// Users are not allowed to upload cover images for their groups
+		// Users are not allowed to upload cover photos for their groups
 		// no need to carry on.
 		if ( bp_disable_group_cover_image_uploads() ) {
 			return;
@@ -453,7 +453,7 @@ function bp_add_cover_image_inline_css( $return = false ) {
 		return;
 	}
 
-	// Get the settings of the cover image feature for the current component.
+	// Get the settings of the cover photo feature for the current component.
 	$params = bp_attachments_get_cover_image_settings( $cover_image_object['component'] );
 
 	// Bail if no params.
@@ -492,7 +492,7 @@ function bp_add_cover_image_inline_css( $return = false ) {
 		// Finally add the inline css to the handle.
 		if ( ! empty( $inline_css ) ) {
 
-			// Used to get the css when Ajax setting the cover image.
+			// Used to get the css when Ajax setting the cover photo.
 			if ( true === $return ) {
 				return array(
 					'css_rules' => '<style>' . "\n" . $inline_css . "\n" . '</style>',

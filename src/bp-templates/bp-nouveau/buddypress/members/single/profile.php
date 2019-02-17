@@ -26,7 +26,7 @@ switch ( bp_current_action() ) :
 		bp_get_template_part( 'members/single/profile/change-avatar' );
 		break;
 
-	// Change Cover Image
+	// Change Cover Photo
 	case 'change-cover-image':
 		bp_get_template_part( 'members/single/profile/change-cover-image' );
 		break;
