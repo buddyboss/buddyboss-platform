@@ -6153,9 +6153,13 @@ button[data-bp-close]:hover {
   float: none;
 }
 
-.buddypress-wrap .grid.bp-list.members-group-list li.item-entry-header {
-  max-width: 100% !important;
-  flex: 100% !important;
+.buddypress-wrap #members-list.bp-list.members-group-list li.item-entry-header {
+  margin: 20px 0;
+}
+
+.buddypress-wrap #members-list.grid.bp-list.members-group-list li.item-entry-header {
+  max-width: 100%;
+  flex: 100%;
 }
 
 .buddypress-wrap .blogs-list.grid.two > li .blogs-title {

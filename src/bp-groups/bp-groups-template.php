@@ -4238,6 +4238,47 @@ function bp_group_the_member() {
 }
 
 /**
+ * Output the group members section header while in the groups members loop.
+ *
+ * @since BuddyPress 1.0.0
+ *
+ */
+function bp_group_member_section_title() {
+	echo bp_get_group_member_section_title();
+}
+
+	/**
+	 * Return the group member section header while in the groups members loop.
+	 *
+	 * @since BuddyPress 1.0.0
+	 *
+	 * @return string
+	 */
+	function bp_get_group_member_section_title() {
+		static $last_user_group_role_title = null;
+		$user_id               = bp_get_group_member_id();
+		$group_id              = bp_get_current_group_id();
+		$user_group_role_title = bp_get_user_group_role_title( $user_id, $group_id );
+
+		ob_start();
+
+		if ( $last_user_group_role_title != $user_group_role_title ) {
+			$last_user_group_role_title = $user_group_role_title; ?>
+			<li class="item-entry item-entry-header">
+				<?php if ( groups_is_user_admin( $user_id, $group_id ) ) {
+					esc_html_e( 'Organizers', 'buddyboss' );
+				} elseif ( groups_is_user_mod( $user_id, $group_id ) ) {
+					esc_html_e( 'Moderators', 'buddyboss' );
+				} else {
+					esc_html_e( 'Members', 'buddyboss' );
+				} ?>
+			</li>
+		<?php }
+
+		return ob_get_clean();
+	}
+
+/**
  * Output the group member avatar while in the groups members loop.
  *
  * @since BuddyPress 1.0.0
