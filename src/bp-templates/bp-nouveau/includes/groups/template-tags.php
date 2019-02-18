@@ -872,7 +872,7 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
 						'rel'              => '',
 						'title'            => '',
 					),
-					'link_text'         => __( 'Promote to Moderator', 'buddyboss' ),
+					'link_text'         => sprintf( __( 'Promote to %s', 'buddyboss' ), get_group_role_label( $group->id, 'moderator_singular_label_name' ) ),
 				),
 				'promote_admin' => array(
 					'id'                => 'promote_admin',
@@ -881,7 +881,7 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
 					'must_be_logged_in' => true,
 					'parent_element'    => $parent_element,
 					'button_element'    => $button_element,
-					'link_text'         => __( 'Promote to co-organizer', 'buddyboss' ),
+					'link_text'         => sprintf( __( 'Promote to co-%s', 'buddyboss' ), strtolower( get_group_role_label( $group->id, 'organizer_singular_label_name' ) ) ),
 					'parent_attr'       => array(
 						'id'    => '',
 						'class' => $parent_class,

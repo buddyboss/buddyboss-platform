@@ -1477,6 +1477,9 @@ function bp_register_group_type_sections_filters_actions() {
 		// action for saving meta boxes data of group type post data.
 		add_action( 'save_post', 'bp_save_group_type_post_meta_box_data' );
 
+		// action for saving meta boxes data of group type role labels post data.
+		add_action( 'save_post', 'bp_save_group_type_role_labels_post_meta_box_data' );
+
 	}
 }
 
@@ -1525,6 +1528,7 @@ function bp_group_type_show_correct_current_menu(){
 function bp_group_type_custom_meta_boxes() {
 	add_meta_box( 'bp-group-type-key', __( 'Group Type Key', 'buddyboss' ), 'bp_group_type_key_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_group_type_labels_meta_box', null, 'normal', 'high' );
+	add_meta_box( 'bp-group-type-role-label-box', __( 'Group Role Labels', 'buddyboss' ), 'bp_group_type_role_labels_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-visibility', __( 'Visibility', 'buddyboss' ), 'bp_group_type_visibility_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-short-code', __( 'Shortcode', 'buddyboss' ), 'bp_group_short_code_meta_box', null, 'normal', 'high' );
 
@@ -1589,6 +1593,73 @@ function bp_group_type_labels_meta_box( $post ) {
 	</table>
 	<?php wp_nonce_field( 'bp-group-type-edit-group-type', '_bp-group-type-nonce' ); ?>
 	<?php
+}
+
+/**
+ * Adds roles labels in Group
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $post
+ */
+function bp_group_type_role_labels_meta_box( $post ) {
+
+	$group_type_roles   = get_post_meta( $post->ID, '_bp_group_type_role_labels', true ) ?: [];
+	$organizer_plural   = ( $group_type_roles['organizer_plural_label_name'] ) ? $group_type_roles['organizer_plural_label_name'] : '';
+	$moderator_plural   = ( $group_type_roles['moderator_plural_label_name'] ) ? $group_type_roles['moderator_plural_label_name'] : '';
+	$members_plural     = ( $group_type_roles['member_plural_label_name'] ) ? $group_type_roles['member_plural_label_name'] : '';
+	$organizer_singular = ( $group_type_roles['organizer_singular_label_name'] ) ? $group_type_roles['organizer_singular_label_name'] : '';
+	$moderator_singular = ( $group_type_roles['moderator_singular_label_name'] ) ? $group_type_roles['moderator_singular_label_name'] : '';
+	$members_singular   = ( $group_type_roles['member_singular_label_name'] ) ? $group_type_roles['member_singular_label_name'] : '';
+
+	?>
+	<p><strong><?php _e( 'Organizers:', 'buddyboss' ); ?></strong></p>
+	<table style="width: 100%;">
+		<tr valign="top">
+			<th scope="row" style="text-align: left; width: 15%;"><label for="bp-group-type-role[organizer_plural_label_name]"><?php _e( 'Plural Label', 'buddyboss' ); ?></label></th>
+			<td>
+				<input type="text" name="bp-group-type-role[organizer_plural_label_name]" placeholder="<?php _e( 'e.g. Organizers', 'buddyboss' ); ?>"  value="<?php echo esc_attr( $organizer_plural ); ?>" tabindex="2" style="width: 100%;" />
+			</td>
+		</tr>
+		<tr valign="top">
+			<th scope="row" style="text-align: left; width: 15%;"><label for="bp-group-type-role[organizer_singular_label_name]"><?php _e( 'Singular Label', 'buddyboss' ); ?></label></th>
+			<td>
+				<input type="text" name="bp-group-type-role[organizer_singular_label_name]" placeholder="<?php _e( 'e.g. Organizer', 'buddyboss' ); ?>" value="<?php echo esc_attr( $organizer_singular ); ?>" tabindex="3" style="width: 100%;" />
+			</td>
+		</tr>
+	</table>
+	<p><strong><?php _e( 'Moderators:', 'buddyboss' ); ?></strong></p>
+	<table style="width: 100%;">
+		<tr valign="top">
+			<th scope="row" style="text-align: left; width: 15%;"><label for="bp-group-type-role[moderator_plural_label_name]"><?php _e( 'Plural Label', 'buddyboss' ); ?></label></th>
+			<td>
+				<input type="text" name="bp-group-type-role[moderator_plural_label_name]" placeholder="<?php _e( 'e.g. Moderators', 'buddyboss' ); ?>"  value="<?php echo esc_attr( $moderator_plural ); ?>" tabindex="4" style="width: 100%;" />
+			</td>
+		</tr>
+		<tr valign="top">
+			<th scope="row" style="text-align: left; width: 15%;"><label for="bp-group-type-role[moderator_singular_label_name]"><?php _e( 'Singular Label', 'buddyboss' ); ?></label></th>
+			<td>
+				<input type="text" name="bp-group-type-role[moderator_singular_label_name]" placeholder="<?php _e( 'e.g. Moderator', 'buddyboss' ); ?>" value="<?php echo esc_attr( $moderator_singular ); ?>" tabindex="5" style="width: 100%;" />
+			</td>
+		</tr>
+	</table>
+	<p><strong><?php _e( 'Members:', 'buddyboss' ); ?></strong></p>
+	<table style="width: 100%;">
+		<tr valign="top">
+			<th scope="row" style="text-align: left; width: 15%;"><label for="bp-group-type-role[member_plural_label_name]"><?php _e( 'Plural Label', 'buddyboss' ); ?></label></th>
+			<td>
+				<input type="text" name="bp-group-type-role[member_plural_label_name]" placeholder="<?php _e( 'e.g. Members', 'buddyboss' ); ?>"  value="<?php echo esc_attr( $members_plural ); ?>" tabindex="6" style="width: 100%;" />
+			</td>
+		</tr>
+		<tr valign="top">
+			<th scope="row" style="text-align: left; width: 15%;"><label for="bp-group-type-role[member_singular_label_name]"><?php _e( 'Singular Label', 'buddyboss' ); ?></label></th>
+			<td>
+				<input type="text" name="bp-group-type-role[member_singular_label_name]" placeholder="<?php _e( 'e.g. Member', 'buddyboss' ); ?>" value="<?php echo esc_attr( $members_singular ); ?>" tabindex="7" style="width: 100%;" />
+			</td>
+		</tr>
+	</table>
+	<?php
+
 }
 
 /**
@@ -1932,4 +2003,33 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_group_type_enabled_member_type_join', $member_type );
 	update_post_meta( $post_id, '_bp_group_type_enabled_member_type_group_invites', $member_type_group_invites );
 	update_post_meta( $post_id, '_bp_group_type_restrict_invites_user_same_group_type', $get_restrict_invites_same_group_types );
+}
+
+function bp_save_group_type_role_labels_post_meta_box_data( $post_id ){
+
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+		return;
+
+	$post = get_post( $post_id );
+
+	if ( $post->post_type !== bp_get_group_type_post_type() )
+		return;
+
+	if ( ! isset( $_POST[ '_bp-group-type-nonce' ] ) )
+		return;
+
+	//verify nonce
+	if ( ! wp_verify_nonce( $_POST[ '_bp-group-type-nonce' ], 'bp-group-type-edit-group-type' ) )
+		return;
+
+	//Save data
+	$bp_group_roles_labels = filter_input( INPUT_POST, 'bp-group-type-role', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+
+	$data = isset( $bp_group_roles_labels ) ? $bp_group_roles_labels : array();
+
+	if ( empty( $data ) )
+		return;
+
+
+	update_post_meta( $post_id, '_bp_group_type_role_labels', $data );
 }

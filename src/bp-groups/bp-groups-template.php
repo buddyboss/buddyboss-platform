@@ -3720,11 +3720,11 @@ function bp_group_join_button( $group = false ) {
 			}
 
 			if ( groups_is_user_admin( bp_loggedin_user_id(), $group->id ) ) {
-				$button_text = __( 'You\'re an organizer', 'buddyboss' );
+				$button_text = __( 'You\'re an ' . get_group_role_label( $group->id, 'organizer_singular_label_name'), 'buddyboss' );
 			} elseif ( groups_is_user_mod( bp_loggedin_user_id(), $group->id ) ) {
-				$button_text = __( 'You\'re a moderator', 'buddyboss' );
+				$button_text = __( 'You\'re a ' . get_group_role_label( $group->id, 'moderator_singular_label_name'), 'buddyboss' );
 			} else {
-				$button_text = __( 'You\'re a member', 'buddyboss' );
+				$button_text = __( 'You\'re a ' . get_group_role_label( $group->id, 'member_singular_label_name'), 'buddyboss' );
 			}
 
 			// Setup button attributes.
@@ -4266,12 +4266,12 @@ function bp_group_member_section_title() {
 			$last_user_group_role_title = $user_group_role_title; ?>
 			<li class="item-entry item-entry-header">
 				<?php if ( groups_is_user_admin( $user_id, $group_id ) ) {
-					esc_html_e( 'Organizers', 'buddyboss' );
-				} elseif ( groups_is_user_mod( $user_id, $group_id ) ) {
-					esc_html_e( 'Moderators', 'buddyboss' );
-				} else {
-					esc_html_e( 'Members', 'buddyboss' );
-				} ?>
+						esc_html_e( get_group_role_label( $group_id, 'organizer_plural_label_name' ), 'buddyboss' );
+					} elseif ( groups_is_user_mod( $user_id, $group_id ) ) {
+						esc_html_e( get_group_role_label( $group_id, 'moderator_plural_label_name' ), 'buddyboss' );
+					} elseif ( groups_is_user_member( $user_id, $group_id ) ) {
+						esc_html_e( get_group_role_label( $group_id, 'member_plural_label_name' ), 'buddyboss' );
+					} ?>
 			</li>
 		<?php }
 

@@ -2750,12 +2750,13 @@ function bp_get_user_group_role_title( $user_id = false, $group_id = false ) {
 		return '';
 
 	$role_title = '';
+
 	if ( groups_is_user_admin( $user_id, $group_id ) ) {
-		$role_title = __( 'Organizer', 'buddyboss' );
-	} else if ( groups_is_user_mod( $user_id, $group_id ) ) {
-		$role_title = __( 'Moderator', 'buddyboss' );
-	} else if ( groups_is_user_member( $user_id, $group_id ) ) {
-		$role_title = __( 'Member', 'buddyboss' );
+		$role_title = __( get_group_role_label( $group_id, 'organizer_singular_label_name' ), 'buddyboss' );
+	} elseif ( groups_is_user_mod( $user_id, $group_id ) ) {
+		$role_title = __( get_group_role_label( $group_id, 'moderator_singular_label_name' ), 'buddyboss' );
+	} elseif ( groups_is_user_member( $user_id, $group_id ) ) {
+		$role_title = __( get_group_role_label( $group_id, 'member_singular_label_name' ), 'buddyboss' );
 	}
 
 	/**
@@ -3345,4 +3346,82 @@ function bp_get_group_type_post_id( $group_type = '' ) {
 	$posts = $group_type_query->posts;
 
 	return $posts[0]->ID;
+}
+
+/**
+ * Get group roles labels.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $group_id
+ * @param $label_name
+ *
+ * @return string
+ */
+function get_group_role_label( $group_id, $label_name ) {
+
+	if ( '' === $group_id || '' === $label_name ) {
+		return '';
+	}
+
+	// Get group type of given group id.
+	$get_group_type = bp_groups_get_group_type( $group_id );
+
+	if ( ! $get_group_type ) {
+
+		if ( 'organizer_plural_label_name' === $label_name ) {
+			$label = 'Organizers';
+		} elseif ( 'moderator_plural_label_name' === $label_name ) {
+			$label = 'Moderators';
+		} elseif ( 'member_plural_label_name' === $label_name ) {
+			$label = 'Members';
+		} elseif ( 'organizer_singular_label_name' === $label_name ) {
+			$label = 'Organizer';
+		} elseif ( 'moderator_singular_label_name' === $label_name ) {
+			$label = 'Moderator';
+		} elseif ( 'member_singular_label_name' === $label_name ) {
+			$label = 'Member';
+		}
+
+	} else {
+
+		$group_type_post_id = bp_get_group_type_post_id( $get_group_type );
+
+		if ( '' === $group_type_post_id ) {
+
+			if ( 'organizer_plural_label_name' === $label_name ) {
+				$label = 'Organizers';
+			} elseif ( 'moderator_plural_label_name' === $label_name ) {
+				$label = 'Moderators';
+			} elseif ( 'member_plural_label_name' === $label_name ) {
+				$label = 'Members';
+			} elseif ( 'organizer_singular_label_name' === $label_name ) {
+				$label = 'Organizer';
+			} elseif ( 'moderator_singular_label_name' === $label_name ) {
+				$label = 'Moderator';
+			} elseif ( 'member_singular_label_name' === $label_name ) {
+				$label = 'Member';
+			}
+
+		}
+
+		$group_type_roles = get_post_meta( $group_type_post_id, '_bp_group_type_role_labels', true ) ?: [];
+
+		if ( 'organizer_plural_label_name' === $label_name ) {
+			$label = ( $group_type_roles['organizer_plural_label_name'] ) ? $group_type_roles['organizer_plural_label_name'] : 'Organizers';
+		} elseif ( 'moderator_plural_label_name' === $label_name ) {
+			$label = ( $group_type_roles['moderator_plural_label_name'] ) ? $group_type_roles['moderator_plural_label_name'] : 'Moderators';
+		} elseif ( 'member_plural_label_name' === $label_name ) {
+			$label = ( $group_type_roles['member_plural_label_name'] ) ? $group_type_roles['member_plural_label_name'] : 'Members';
+		} elseif ( 'organizer_singular_label_name' === $label_name ) {
+			$label = ( $group_type_roles['organizer_singular_label_name'] ) ? $group_type_roles['organizer_singular_label_name'] : 'Organizer';
+		} elseif ( 'moderator_singular_label_name' === $label_name ) {
+			$label = ( $group_type_roles['moderator_singular_label_name'] ) ? $group_type_roles['moderator_singular_label_name'] : 'Moderator';
+		} elseif ( 'member_singular_label_name' === $label_name ) {
+			$label = ( $group_type_roles['member_singular_label_name'] ) ? $group_type_roles['member_singular_label_name'] : 'Member';
+		}
+	}
+
+	return apply_filters( 'bp_'.$label_name, $label, $group_id , $label_name);
+
 }
