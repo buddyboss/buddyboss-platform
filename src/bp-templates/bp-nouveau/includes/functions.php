@@ -571,6 +571,7 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 		'members_layout'     => 4,
 		'members_dir_tabs'   => 0,
 		'members_dir_layout' => 0,
+		'bp_emails'          => ''
 	);
 
 	if ( bp_is_active( 'friends' ) ) {

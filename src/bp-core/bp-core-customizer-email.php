@@ -438,11 +438,11 @@ function bp_email_get_customizer_controls() {
 }
 
 /**
- * Implements a JS redirect to the Customizer, previewing a randomly selected email.
+ * Return a redirect url to the Customizer, previewing a randomly selected email.
  *
- * @since BuddyPress 2.5.0
+ * @since BuddyPress 3.0.0
  */
-function bp_email_redirect_to_customizer() {
+function bp_email_get_redirect_to_customizer_url() {
 	$switched = false;
 
 	// Switch to the root blog, where the email posts live.
@@ -480,9 +480,19 @@ function bp_email_redirect_to_customizer() {
 		restore_current_blog();
 	}
 
+	return $redirect_url;
+}
+
+/**
+ * Implements a JS redirect to the Customizer, previewing a randomly selected email.
+ *
+ * @since BuddyPress 2.5.0
+ */
+function bp_email_redirect_to_customizer() {
+
 	printf(
 		'<script>window.location = "%s";</script>',
-		esc_url_raw( $redirect_url )
+		esc_url_raw( bp_email_get_redirect_to_customizer_url() )
 	);
 
 	exit;
@@ -493,7 +503,7 @@ function bp_email_redirect_to_customizer() {
  *
  * @param array $components Core Customizer components list.
  * @return array (Maybe) modified components list.
- * 
+ *
  * @since BuddyBoss 1.0.0
  */
 function bp_email_remove_widgets_panel( $components ) {

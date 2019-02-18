@@ -54,6 +54,12 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'priority'    => 70,
 			'description' => __( 'Set the number of columns to use for grid views.', 'buddyboss' ),
 		),
+		'bp_nouveau_mail' => array(
+			'title'       => _x( 'BuddyBoss Emails', 'screen heading', 'buddyboss' ),
+			'panel'       => 'bp_nouveau_panel',
+			'priority'    => 80,
+			'description' => __( 'Customize the appearance of emails sent by BuddyBoss.', 'buddyboss' ),
+		),
 //		'bp_nouveau_dir_layout' => array(
 //			'title'       => __( 'Directory layouts', 'buddyboss' ),
 //			'panel'       => 'bp_nouveau_panel',
@@ -180,6 +186,13 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
+		'bp_nouveau_appearance[bp_emails]' => array(
+			'index'             => 'bp_emails',
+			'capability'        => 'bp_moderate',
+			'sanitize_callback' => 'absint',
+			'transport'         => 'refresh',
+			'type'              => 'option',
+		),
 	) );
 
 	// Add the settings
@@ -241,12 +254,10 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'type'       => 'select',
 			'choices'    => bp_nouveau_customizer_grid_choices(),
 		),
-//		'members_dir_layout' => array(
-//			'label'      => __( 'Use column navigation for the Members directory.', 'buddyboss' ),
-//			'section'    => 'bp_nouveau_dir_layout',
-//			'settings'   => 'bp_nouveau_appearance[members_dir_layout]',
-//			'type'       => 'checkbox',
-//		),
+		'mail_layout' => array(
+			'section'    => 'bp_nouveau_mail',
+			'settings'   => 'bp_nouveau_appearance[bp_emails]',
+		),
 //		'members_dir_tabs' => array(
 //			'label'      => __( 'Use tab styling for Members directory navigation.', 'buddyboss' ),
 //			'section'    => 'bp_nouveau_dir_layout',
@@ -290,6 +301,11 @@ function bp_nouveau_customizer_enqueue_scripts() {
 		bp_nouveau()->version,
 		true
 	);
+
+	wp_localize_script( 'bp-nouveau-customizer', 'BP_Customizer', [
+		'emailCustomizerUrl'    => bp_email_get_redirect_to_customizer_url(),
+		'platformCustomizerUrl' => admin_url( 'customize.php?autofocus[panel]=bp_nouveau_panel' )
+	] );
 
 	/**
 	 * Fires after Nouveau enqueues its required javascript.
