@@ -2087,7 +2087,7 @@ function bp_remove_avatar_settings_from_options_discussion_page() {
 		?>
 		<style>
 			body.options-discussion-php #wpbody-content .wrap form table:nth-last-child(2) tbody tr:last-child {
-				display: none !important;
+				display: none !important; 
 			}
 		</style>
 		<?php
