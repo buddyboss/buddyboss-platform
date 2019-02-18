@@ -1431,6 +1431,7 @@ function bbp_user_replies_created_url( $user_id = 0 ) {
  * @since bbPress (r2970)
  *
  * @uses WP_Error bbPress::errors::add() To add an error or message
+ * @todo deprecate?
  */
 function bbp_login_notices() {
 
@@ -1478,6 +1479,7 @@ function bbp_login_notices() {
  * @uses wp_safe_redirect() To safely redirect
  * @uses bbp_get_user_profile_url() To get the profile url of the user
  * @uses bbp_get_current_user_id() To get the current user id
+ * @todo deprecate?
  */
 function bbp_logged_in_redirect( $url = '' ) {
 
@@ -1501,6 +1503,7 @@ function bbp_logged_in_redirect( $url = '' ) {
  * @uses apply_filters() To allow custom redirection
  * @uses bbp_redirect_to_field() To output the hidden request url field
  * @uses wp_nonce_field() To generate hidden nonce fields
+ * @todo deprecate?
  */
 function bbp_user_login_fields() {
 ?>
@@ -1529,6 +1532,7 @@ function bbp_user_login_fields() {
  * @uses apply_filters() To allow custom redirection
  * @uses bbp_redirect_to_field() To output the redirect to field
  * @uses wp_nonce_field() To generate hidden nonce fields
+ * @todo deprecate?
  */
 function bbp_user_register_fields() {
 ?>
@@ -1556,6 +1560,7 @@ function bbp_user_register_fields() {
  * @uses apply_filters() To allow custom redirection
  * @uses bbp_redirect_to_field() Set referer
  * @uses wp_nonce_field() To generate hidden nonce fields
+ * @todo deprecate?
  */
 function bbp_user_lost_pass_fields() {
 ?>
@@ -1581,6 +1586,7 @@ function bbp_user_lost_pass_fields() {
  *
  * @param mixed $args Optional. If it is an integer, it is used as post id.
  * @uses bbp_get_author_link() To get the post author link
+ * @todo deprecate?
  */
 function bbp_author_link( $args = '' ) {
 	echo bbp_get_author_link( $args );

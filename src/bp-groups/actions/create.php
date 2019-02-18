@@ -62,7 +62,7 @@ function groups_action_create_group() {
 
 		// Only allow the group creator to continue to edit the new group.
 		if ( ! bp_is_group_creator( $bp->groups->current_group, bp_loggedin_user_id() ) ) {
-			bp_core_add_message( __( 'Only the group creator may continue editing this group.', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'Only the group organizer may continue editing this group.', 'buddyboss' ), 'error' );
 			bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create' ) );
 		}
 	}
@@ -241,11 +241,11 @@ function groups_action_create_group() {
 			return false;
 		}
 
-		$message = __( 'Invite successfully removed', 'buddyboss' );
+		$message = __( 'Invite successfully withdrawn', 'buddyboss' );
 		$error   = false;
 
 		if( ! groups_uninvite_user( (int) $_REQUEST['user_id'], $bp->groups->new_group_id ) ) {
-			$message = __( 'There was an error removing the invite', 'buddyboss' );
+			$message = __( 'There was an error withdrawing the invite', 'buddyboss' );
 			$error   = 'error';
 		}
 
@@ -286,7 +286,7 @@ function groups_action_create_group() {
 			);
 
 			if ( ! bp_core_avatar_handle_crop( $args ) ) {
-				bp_core_add_message( __( 'There was an error saving the group profile photo, please try uploading again.', 'buddyboss' ), 'error' );
+				bp_core_add_message( __( 'There was an error with the group profile photo, please try again.', 'buddyboss' ), 'error' );
 			} else {
 				/**
 				 * Fires after a group avatar is uploaded.

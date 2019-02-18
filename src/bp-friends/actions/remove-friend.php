@@ -35,7 +35,7 @@ function friends_action_remove_friend() {
 		}
 
 	} elseif ( 'not_friends' == $friendship_status ) {
-		bp_core_add_message( __( 'You are not yet connected with this user', 'buddyboss' ), 'error' );
+		bp_core_add_message( __( 'You are not connected with this user', 'buddyboss' ), 'error' );
 	} else {
 		bp_core_add_message( __( 'You have a pending connection request with this user', 'buddyboss' ), 'error' );
 	}

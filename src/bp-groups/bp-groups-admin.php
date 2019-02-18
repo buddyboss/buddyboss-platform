@@ -30,8 +30,8 @@ function bp_groups_add_admin_menu() {
 
 		// Add our screen.
 		$hooks[] = add_menu_page(
-			_x( 'Groups', 'Admin Groups page title', 'buddyboss' ),
-			_x( 'Groups', 'Admin Groups menu', 'buddyboss' ),
+			__( 'Social Groups', 'buddyboss' ),//Page Title
+			__( 'Social Groups', 'buddyboss' ),//Menu
 			'bp_moderate',
 			'bp-groups',
 			'bp_groups_admin',
@@ -49,8 +49,8 @@ function bp_groups_add_admin_menu() {
 	} else {
 		// Add our screen.
 		$hooks[] = add_menu_page(
-			_x( 'Groups', 'Admin Groups page title', 'buddyboss' ),
-			_x( 'Groups', 'Admin Groups menu', 'buddyboss' ),
+			__( 'Social Groups', 'buddyboss' ),//Page Title
+			__( 'Social Groups', 'buddyboss' ),//Menu
 			'bp_moderate',
 			'bp-groups',
 			'bp_groups_admin',
@@ -148,17 +148,17 @@ function bp_groups_admin_load() {
 		);
 
 		// Register metaboxes for the edit screen.
-		add_meta_box( 'submitdiv', _x( 'Save', 'group admin edit screen', 'buddyboss' ), 'bp_groups_admin_edit_metabox_status', get_current_screen()->id, 'side', 'high' );
-		add_meta_box( 'bp_group_settings', _x( 'Settings', 'group admin edit screen', 'buddyboss' ), 'bp_groups_admin_edit_metabox_settings', get_current_screen()->id, 'side', 'core' );
-		add_meta_box( 'bp_group_add_members', _x( 'Add New Members', 'group admin edit screen', 'buddyboss' ), 'bp_groups_admin_edit_metabox_add_new_members', get_current_screen()->id, 'normal', 'core' );
-		add_meta_box( 'bp_group_members', _x( 'Manage Members', 'group admin edit screen', 'buddyboss' ), 'bp_groups_admin_edit_metabox_members', get_current_screen()->id, 'normal', 'core' );
+		add_meta_box( 'submitdiv', __( 'Save', 'buddyboss' ), 'bp_groups_admin_edit_metabox_status', get_current_screen()->id, 'side', 'high' );
+		add_meta_box( 'bp_group_settings', __( 'Settings', 'buddyboss' ), 'bp_groups_admin_edit_metabox_settings', get_current_screen()->id, 'side', 'core' );
+		add_meta_box( 'bp_group_add_members', __( 'Add New Members', 'buddyboss' ), 'bp_groups_admin_edit_metabox_add_new_members', get_current_screen()->id, 'normal', 'core' );
+		add_meta_box( 'bp_group_members', __( 'Manage Members', 'buddyboss' ), 'bp_groups_admin_edit_metabox_members', get_current_screen()->id, 'normal', 'core' );
 
 		// Group Type metabox. Only added if group types have been registered.
 		$group_types = bp_groups_get_group_types();
 		if ( ! empty( $group_types ) ) {
 			add_meta_box(
 				'bp_groups_admin_group_type',
-				_x( 'Group Type', 'groups admin edit screen', 'buddyboss' ),
+				__( 'Group Type', 'buddyboss' ),
 				'bp_groups_admin_edit_metabox_group_type',
 				get_current_screen()->id,
 				'side',
@@ -170,7 +170,7 @@ function bp_groups_admin_load() {
 		if ( bp_enable_group_hierarchies() ) {
 			add_meta_box(
 				'bp_groups_admin_group_parent',
-				_x( 'Group Parent', 'groups admin edit screen', 'buddyboss' ),
+				__( 'Group Parent', 'buddyboss' ),
 				'bp_groups_admin_edit_metabox_group_parent',
 				get_current_screen()->id,
 				'side',
@@ -195,7 +195,7 @@ function bp_groups_admin_load() {
 		$bp_groups_list_table = new BP_Groups_List_Table();
 
 		// The per_page screen option.
-		add_screen_option( 'per_page', array( 'label' => _x( 'Groups', 'Groups per page (screen options)', 'buddyboss' )) );
+		add_screen_option( 'per_page', array( 'label' => __( 'Groups', 'buddyboss' )) );
 
 		// Help panel - overview text.
 		get_current_screen()->add_help_tab( array(
@@ -566,7 +566,7 @@ function bp_groups_admin_edit() {
 		$success_modified = ! empty( $_REQUEST['success_modified'] ) ? explode( ',', $_REQUEST['success_modified'] ) : array();
 
 		if ( ! empty( $no_admins ) ) {
-			$messages[] = __( 'You cannot remove all administrators from a group.', 'buddyboss' );
+			$messages[] = __( 'This group must have at least one organizer.', 'buddyboss' );
 		}
 
 		if ( ! empty( $errors ) ) {
@@ -881,11 +881,11 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 
 	<div class="bp-groups-settings-section" id="bp-groups-settings-section-invite-status">
 		<fieldset>
-			<legend><?php _e( 'Who can invite others to this group?', 'buddyboss' ); ?></legend>
+			<legend><?php _e( 'Who can invite others to join this group?', 'buddyboss' ); ?></legend>
 
-			<label for="bp-group-invite-status-members"><input type="radio" name="group-invite-status" id="bp-group-invite-status-members" value="members" <?php checked( $invite_status, 'members' ) ?> /><?php _e( 'All group members', 'buddyboss' ) ?></label>
-			<label for="bp-group-invite-status-mods"><input type="radio" name="group-invite-status" id="bp-group-invite-status-mods" value="mods" <?php checked( $invite_status, 'mods' ) ?> /><?php _e( 'Organizers and Moderators only', 'buddyboss' ) ?></label>
-			<label for="bp-group-invite-status-admins"><input type="radio" name="group-invite-status" id="bp-group-invite-status-admins" value="admins" <?php checked( $invite_status, 'admins' ) ?> /><?php _e( 'Organizers only', 'buddyboss' ) ?></label>
+			<label for="bp-group-invite-status-members"><input type="radio" name="group-invite-status" id="bp-group-invite-status-members" value="members" <?php checked( $invite_status, 'members' ) ?> /><?php _e( 'All Members', 'buddyboss' ) ?></label>
+			<label for="bp-group-invite-status-mods"><input type="radio" name="group-invite-status" id="bp-group-invite-status-mods" value="mods" <?php checked( $invite_status, 'mods' ) ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ) ?></label>
+			<label for="bp-group-invite-status-admins"><input type="radio" name="group-invite-status" id="bp-group-invite-status-admins" value="admins" <?php checked( $invite_status, 'admins' ) ?> /><?php _e( 'Organizers', 'buddyboss' ) ?></label>
 		</fieldset>
 	</div>
 
@@ -1027,9 +1027,9 @@ function bp_groups_admin_edit_metabox_members( $item ) {
 			<table class="widefat bp-group-members">
 				<thead>
 					<tr>
-						<th scope="col" class="uid-column"><?php _ex( 'ID', 'Group member user_id in group admin', 'buddyboss' ); ?></th>
-						<th scope="col" class="uname-column"><?php _ex( 'Name', 'Group member name in group admin', 'buddyboss' ); ?></th>
-						<th scope="col" class="urole-column"><?php _ex( 'Group Role', 'Group member role in group admin', 'buddyboss' ); ?></th>
+						<th scope="col" class="uid-column"><?php _e( 'ID', 'buddyboss' ); ?></th>
+						<th scope="col" class="uname-column"><?php _e( 'Name', 'buddyboss' ); ?></th>
+						<th scope="col" class="urole-column"><?php _e( 'Role', 'buddyboss' ); ?></th>
 					</tr>
 				</thead>
 

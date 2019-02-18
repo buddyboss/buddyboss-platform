@@ -100,7 +100,7 @@ function bp_friends_random_friends() {
 		<?php } else { ?>
 
 			<div id="message" class="info">
-				<p><?php bp_word_or_name( __( "You haven't added any connections yet.", 'buddyboss' ), __( "%s hasn't created any connections yet.", 'buddyboss' ) ) ?></p>
+				<p><?php bp_word_or_name( __( "You haven't made any connections yet.", 'buddyboss' ), __( "%s hasn't created any connections yet.", 'buddyboss' ) ) ?></p>
 			</div>
 
 		<?php } ?>

@@ -18,6 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.1.0
  *
  * @return false|null False on failure.
+ * @todo if these are overridden do they need to be in the textdomain?
  */
 function groups_register_activity_actions() {
 	$bp = buddypress();
