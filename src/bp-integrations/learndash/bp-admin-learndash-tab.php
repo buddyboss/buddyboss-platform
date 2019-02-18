@@ -40,20 +40,18 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_checkbox_field(
 			'enabled',
-			__('Enable Social Group Sync', 'buddyboss'),
+			__('Social Group Sync', 'buddyboss'),
 			[
-				'input_text' => __( 'Yes', 'buddyboss' ),
-				'input_description' => __( 'Enable all group sync functionality on Social Group', 'buddyboss' ),
+				'input_text' => __( 'Enable group sync functionality <b>FROM</b> BuddyBoss Social Groups <b>TO</b> LearnDash Groups', 'buddyboss' ),
 				'input_run_js' => 'buddypress_enabled'
 			]
 		);
 
 		$this->add_checkbox_field(
 			'show_in_bp_create',
-			__('Course Tab on Create', 'buddyboss'),
+			__('Create LearnDash Group', 'buddyboss'),
 			[
-				'input_text' => __( 'Yes', 'buddyboss' ),
-				'input_description' => __( 'Show "course" tab when creating a social group and allow creater to control group sync.', 'buddyboss' ),
+				'input_text' => __( 'Allow social group organizers to create associated LearnDash groups during the group creation process', 'buddyboss' ),
 				'input_run_js' => 'buddypress_show_in_bp_create',
 				'class' => 'js-show-on-buddypress_enabled'
 			]
@@ -61,10 +59,9 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_checkbox_field(
 			'show_in_bp_manage',
-			__('Course Tab on Manage', 'buddyboss'),
+			__('Manage LearnDash Group', 'buddyboss'),
 			[
-				'input_text' => __( 'Yes', 'buddyboss' ),
-				'input_description' => __( 'Show "course" tab when manage a social group settings and allow creater to control group sync.', 'buddyboss' ),
+				'input_text' => __( 'Allow social group organizers to manage associated LearnDash groups after the group creation process', 'buddyboss' ),
 				'class' => 'js-show-on-buddypress_enabled'
 			]
 		);
@@ -80,17 +77,17 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'noone'    => __('No one', 'buddyboss'),
 		        ],
 		        'input_default' => 'admin',
-				'input_description' => __( 'Who can see the "course" tab in social group:', 'buddyboss' ),
+				'input_description' => __( 'Select who can see the course tab in social groups', 'buddyboss' ),
 				'class' => 'js-show-on-buddypress_enabled',
 			]
 		);
 
 		$this->add_checkbox_field(
 			'default_auto_sync',
-			__('Generate LearnDash Group', 'buddyboss'),
+			__('Auto Create LearnDash Group', 'buddyboss'),
 			[
-				'input_text' => __( 'Yes', 'buddyboss' ),
-				'input_description' => __( 'Automatically generate and associate a LearnDash group on creation. (usually for if the group is created programatically or Course tab is disable on creation)', 'buddyboss' ),
+				'input_text' => __( 'Automatically create and associate a LearnDash group upon creation', 'buddyboss' ),
+				'input_description' => __( '(Required if you want an associated LearnDash group and course tab is disabled during creation)', 'buddyboss' ),
 				'class' => 'js-show-on-buddypress_enabled'
 			]
 		);
@@ -99,15 +96,15 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			'delete_ld_on_delete',
 			__('Delete LearnDash Group', 'buddyboss'),
 			[
-				'input_text' => __( 'Yes', 'buddyboss' ),
-				'input_description' => __( 'Automatically delete the associated LearnDash group upon social group deletion. Uncheck this to delete the group manually.', 'buddyboss' ),
+				'input_text' => __( 'Automatically delete the associated LearnDash group when the social group is deleted', 'buddyboss' ),
+				'input_description' => __( '(Uncheck this to delete the group manually)', 'buddyboss' ),
 				'class' => 'js-show-on-buddypress_enabled'
 			]
 		);
 
 		$this->add_select_field(
 			'default_admin_sync_to',
-			__('Sync Organizers To:', 'buddyboss'),
+			__('Sync Organizers', 'buddyboss'),
 			[
 				'input_options' => [
 					'admin' => __('Group Leader', 'buddyboss'),
@@ -115,14 +112,14 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'none'  => __('None', 'buddyboss'),
 		        ],
 		        'input_default' => 'admin',
-				'input_description' => __( 'When a organizer is synced, their role in LearnDash group should be:', 'buddyboss' ),
+				'input_description' => __( 'Select the group organizer\'s assigned role in LearnDash', 'buddyboss' ),
 				'class' => 'js-show-on-buddypress_enabled',
 			]
 		);
 
 		$this->add_select_field(
 			'default_mod_sync_to',
-			__('Sync Moderators To:', 'buddyboss'),
+			__('Sync Moderators', 'buddyboss'),
 			[
 				'input_options' => [
 					'admin' => __('Group Leader', 'buddyboss'),
@@ -130,21 +127,21 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'none'  => __('None', 'buddyboss'),
 		        ],
 		        'input_default' => 'admin',
-				'input_description' => __( 'When a moderator is synced, their role in LearnDash group should be:', 'buddyboss' ),
+				'input_description' => __( 'Select the group moderator\'s assigned role in LearnDash', 'buddyboss' ),
 				'class' => 'js-show-on-buddypress_enabled',
 			]
 		);
 
 		$this->add_select_field(
 			'default_user_sync_to',
-			__('Sync Users To:', 'buddyboss'),
+			__('Sync Users', 'buddyboss'),
 			[
 				'input_options' => [
 					'user'  => __('Group User', 'buddyboss'),
 					'none'  => __('None', 'buddyboss'),
 		        ],
 		        'input_default' => 'user',
-				'input_description' => __( 'When a member is synced, their role in LearnDash group should be:', 'buddyboss' ),
+				'input_description' => __( 'Select the group member\'s assigned role in LearnDash', 'buddyboss' ),
 				'class' => 'js-show-on-buddypress_enabled',
 			]
 		);
@@ -162,27 +159,25 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_checkbox_field(
 			'enabled',
-			__('Enable LearnDash Group Sync', 'buddyboss'),
+			__('LearnDash Group Sync', 'buddyboss'),
 			[
-				'input_text' => __( 'Yes', 'buddyboss' ),
-				'input_description' => __( 'Enable all group sync functionality on LearnDash Group', 'buddyboss' ),
+				'input_text' => __( 'Enable group sync functionality <b>FROM</b> LearnDash Groups <b>TO</b> BuddyBoss Social Groups', 'buddyboss' ),
 				'input_run_js' => 'learndash_enabled'
 			]
 		);
 
 		$this->add_checkbox_field(
 			'default_auto_sync',
-			__('Generate Social Group', 'buddyboss'),
+			__('Auto Create Social Group', 'buddyboss'),
 			[
-				'input_text' => __( 'Yes', 'buddyboss' ),
-				'input_description' => __( 'Automatically generate and associate a social group on creation. (usually for if the group is created programatically)', 'buddyboss' ),
+				'input_text' => __( 'Automatically create and associate a Social Group upon creation', 'buddyboss' ),
 				'class' => 'js-show-on-learndash_enabled'
 			]
 		);
 
 		$this->add_select_field(
 			'default_bp_privacy',
-			__('Generated Social Group Privacy', 'buddyboss'),
+			__('Social Group Privacy', 'buddyboss'),
 			[
 				'input_options' => [
 		            'public'  => __( 'Public', 'buddyboss' ),
@@ -190,14 +185,14 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		            'hidden'  => __( 'Hidden', 'buddyboss' )
 		        ],
 		        'input_default' => 'private',
-				'input_description' => __( 'When a social group is generated, set the group privacy to:', 'buddyboss' ),
+				'input_description' => __( 'Select the created Social Group privacy setting', 'buddyboss' ),
 				'class' => 'js-show-on-learndash_enabled'
 			]
 		);
 
 		$this->add_select_field(
 			'default_bp_invite_status',
-			__('Generated Social Group Invite Status', 'buddyboss'),
+			__('Social Group Invite Status', 'buddyboss'),
 			[
 				'input_options' => [
 	                'members' => __('All group members', 'buddyboss'),
@@ -205,7 +200,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	                'admins'  => __('Group organizers only', 'buddyboss')
 		        ],
 		        'input_default' => 'mods',
-				'input_description' => __( 'When a social group is generated, set the group invite status to:', 'buddyboss' ),
+				'input_description' => __( 'Select which group participants can invite others to join the group', 'buddyboss' ),
 				'class' => 'js-show-on-learndash_enabled'
 			]
 		);
@@ -214,15 +209,14 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			'delete_bp_on_delete',
 			__('Delete Social Group', 'buddyboss'),
 			[
-				'input_text' => __( 'Yes', 'buddyboss' ),
-				'input_description' => __( 'Automatically delete the associated social group upon LearnDash group deletion. Uncheck this to delete the group manually.', 'buddyboss' ),
+				'input_text' => __( 'Automatically delete the associated Social Group when the LearnDash group is deleted', 'buddyboss' ),
 				'class' => 'js-show-on-learndash_enabled'
 			]
 		);
 
 		$this->add_select_field(
 			'default_admin_sync_to',
-			__('Sync Leaders To:', 'buddyboss'),
+			__('Sync Leaders', 'buddyboss'),
 			[
 				'input_options' => [
 					'admin' => __('Organizer', 'buddyboss'),
@@ -231,14 +225,14 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'none'  => __('None', 'buddyboss'),
 		        ],
 		        'input_default' => 'admin',
-				'input_description' => __( 'When a LearnDash leader is synced, their role in social group should be:', 'buddyboss' ),
+				'input_description' => __( 'Select the LearnDash Leaders\'s assigned role in Social Groups', 'buddyboss' ),
 				'class' => 'js-show-on-learndash_enabled',
 			]
 		);
 
 		$this->add_select_field(
 			'default_user_sync_to',
-			__('Sync Users To:', 'buddyboss'),
+			__('Sync Users', 'buddyboss'),
 			[
 				'input_options' => [
 					'admin' => __('Organizer', 'buddyboss'),
@@ -247,7 +241,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'none'  => __('None', 'buddyboss'),
 		        ],
 		        'input_default' => 'user',
-				'input_description' => __( 'When a LearnDash user is synced, their role in social group should be:', 'buddyboss' ),
+				'input_description' => __( 'Select the LearnDash User\'s assigned role in Social Groups', 'buddyboss' ),
 				'class' => 'js-show-on-learndash_enabled',
 			]
 		);
@@ -265,17 +259,16 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_checkbox_field(
 			'enabled',
-			__('Enable Group Reports', 'buddyboss'),
+			__('Group Reports', 'buddyboss'),
 			[
-				'input_text' => __( 'Yes', 'buddyboss' ),
-				'input_description' => __( 'Enable Social Group Report for LearnDash.', 'buddyboss' ),
+				'input_text' => __( 'Enable Social Group Report for LearnDash', 'buddyboss' ),
 				'input_run_js' => 'reports_enabled'
 			]
 		);
 
 		$this->add_field(
 			'access',
-			__('Which Group Members Can View Reports', 'buddyboss'),
+			__('Report Access', 'buddyboss'),
 			[ $this, 'output_report_access_setting' ],
 			[],
 			[
@@ -288,7 +281,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__('Report Results Per Page', 'buddyboss'),
 			[
 				'input_type'        => 'number',
-				'input_description' => __( 'How many results should display in the report table per page?', 'buddyboss' ),
+				'input_description' => __( 'Number of report results displayed per page', 'buddyboss' ),
 				'class' => 'js-show-on-reports_enabled'
 			]
 		);
@@ -344,7 +337,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
         	', $input_name, $key, $checked, $value );
         }
 
-		echo $this->render_input_description(__('Allowed roles to view the group reports:', 'buddyboss'));
+		echo $this->render_input_description(__('Select which roles can view reports', 'buddyboss'));
 	}
 
 	public function add_sync_tool_scripts() {
