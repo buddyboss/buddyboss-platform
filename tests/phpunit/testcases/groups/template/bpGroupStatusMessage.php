@@ -107,7 +107,7 @@ class BP_Tests_Groups_Template_BpGroupStatusMessage extends BP_UnitTestCase {
 			}
 		}
 
-		$expected = __( 'This is a private group. Your membership request is awaiting approval from the group administrator.', 'buddyboss' );
+		$expected = __( 'This is a private group. Your membership request is awaiting approval from the group organizer.', 'buddyboss' );
 		$this->assertSame( $expected, $found );
 	}
 
@@ -150,7 +150,7 @@ class BP_Tests_Groups_Template_BpGroupStatusMessage extends BP_UnitTestCase {
 
 		$found = get_echo( 'bp_group_status_message', array( $group1 ) );
 
-		$expected = __( 'This is a private group. Your membership request is awaiting approval from the group administrator.', 'buddyboss' );
+		$expected = __( 'This is a private group. Your membership request is awaiting approval from the group organizer.', 'buddyboss' );
 		$this->assertSame( $expected, $found );
 	}
 }

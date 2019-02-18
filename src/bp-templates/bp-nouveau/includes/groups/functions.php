@@ -1172,7 +1172,7 @@ function bp_nouveau_groups_notification_filters() {
 		),
 		array(
 			'id'       => 'member_promoted_to_admin',
-			'label'    => __( 'Group Administrator promotions', 'buddyboss' ),
+			'label'    => __( 'Group Organizer promotions', 'buddyboss' ),
 			'position' => 85,
 		),
 		array(

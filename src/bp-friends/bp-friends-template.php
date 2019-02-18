@@ -229,6 +229,7 @@ function bp_member_total_friend_count() {
 	 * @since BuddyPress 1.2.0
 	 *
 	 * @return string A string of the form "x friends".
+	 * @todo clean this up with _n()
 	 */
 	function bp_get_member_total_friend_count() {
 		global $members_template;

@@ -175,7 +175,7 @@ function groups_create_group( $args = '' ) {
 		$member->group_id      = $group->id;
 		$member->user_id       = $group->creator_id;
 		$member->is_admin      = 1;
-		$member->user_title    = __( 'Group Admin', 'buddyboss' );
+		$member->user_title    = __( 'Group Organizer', 'buddyboss' );
 		$member->is_confirmed  = 1;
 		$member->date_modified = bp_core_current_time();
 		$member->save();
@@ -523,7 +523,7 @@ function groups_leave_group( $group_id, $user_id = 0 ) {
 	// Don't let single admins leave the group.
 	if ( count( groups_get_group_admins( $group_id ) ) < 2 ) {
 		if ( groups_is_user_admin( $user_id, $group_id ) ) {
-			bp_core_add_message( __( 'As the only admin, you cannot leave the group.', 'buddyboss' ), 'error' );
+			bp_core_add_message( __( 'This group must have at least one organizer.', 'buddyboss' ), 'error' );
 			return false;
 		}
 	}
@@ -2896,16 +2896,16 @@ function bp_get_group_type_post_type_labels() {
 	 * @param array $value Associative array (name => label).
 	 */
 	return apply_filters( 'bp_get_group_type_post_type_labels', array(
-		'add_new_item'          => _x( 'New Group Type', 'group type post type label', 'buddyboss' ),
-		'all_items'             => _x( 'Group Types', 'group type post type label', 'buddyboss' ),
-		'edit_item'             => _x( 'Edit Group Type', 'group type post type label', 'buddyboss' ),
-		'menu_name'             => _x( 'Groups', 'group type post type name', 'buddyboss' ),
-		'name'                  => _x( 'Group Types', 'group type post type label', 'buddyboss' ),
-		'new_item'              => _x( 'New Group Type', 'group type post type label', 'buddyboss' ),
-		'not_found'             => _x( 'No Group Types found', 'group type post type label', 'buddyboss' ),
-		'not_found_in_trash'    => _x( 'No Group Types found in trash', 'group type post type label', 'buddyboss' ),
-		'search_items'          => _x( 'Search Group Types', 'group type post type label', 'buddyboss' ),
-		'singular_name'         => _x( 'Group Type', 'group type post type singular name', 'buddyboss' ),
+		'add_new_item'          => __( 'New Group Type', 'buddyboss' ),
+		'all_items'             => __( 'Group Types', 'buddyboss' ),
+		'edit_item'             => __( 'Edit Group Type', 'buddyboss' ),
+		'menu_name'             => __( 'Social Groups', 'buddyboss' ),
+		'name'                  => __( 'Group Types', 'buddyboss' ),
+		'new_item'              => __( 'New Group Type', 'buddyboss' ),
+		'not_found'             => __( 'No Group Types found', 'buddyboss' ),
+		'not_found_in_trash'    => __( 'No Group Types found in trash', 'buddyboss' ),
+		'search_items'          => __( 'Search Group Types', 'buddyboss' ),
+		'singular_name'         => __( 'Group Type', 'buddyboss' ),
 	) );
 }
 

@@ -1271,16 +1271,12 @@ function bp_groups_admin_create_pagination_links( BP_Group_Member_Query $query, 
 		'current'   => $page,
 	) );
 
-	if ( 1 == $query->total_users ) {
-		$viewing_text = __( 'Viewing 1 member', 'buddyboss' );
-	} else {
-		$viewing_text = sprintf(
-			_nx( 'Viewing %1$s - %2$s of %3$s member', 'Viewing %1$s - %2$s of %3$s members', $query->total_users, 'Group members pagination in group admin', 'buddyboss' ),
-			bp_core_number_format( $current_page_start ),
-			bp_core_number_format( $current_page_end ),
-			bp_core_number_format( $query->total_users )
-		);
-	}
+	$viewing_text = sprintf(
+		_nx( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $query->total_users, 'Group members pagination in group admin', 'buddyboss' ),
+		bp_core_number_format( $current_page_start ),
+		bp_core_number_format( $current_page_end ),
+		bp_core_number_format( $query->total_users )
+	);
 
 	$pagination .= '<span class="bp-group-admin-pagination-viewing">' . $viewing_text . '</span>';
 	$pagination .= '<span class="bp-group-admin-pagination-links">' . $pag_links . '</span>';
@@ -1724,7 +1720,7 @@ function bp_group_short_code_meta_box( $post ) {
 function bp_group_type_auto_join_member_type_meta_box( $post ) {
 
 	?>
-	<p><?php printf( __( 'Members of the selected profile types can always join groups of this group type, even if the group is private.', 'buddyboss' ), $post->post_title )?></p>
+	<p><?php printf( __( 'Members of the selected profile types can always join groups of this type, even if the group is private.', 'buddyboss' ), $post->post_title )?></p>
 	<?php
 
 	$get_all_registered_member_types = bp_get_active_member_types();
@@ -1760,9 +1756,9 @@ function bp_group_type_group_invites_meta_box( $post ) {
 	?>
 	<p>
 		<input type='checkbox' name='bp-group-type-restrict-invites-user-same-group-type' value='<?php echo esc_attr( 1 ); ?>' <?php checked( $get_restrict_invites_same_group_types, 1 ); ?> tabindex="7" />
-		<strong><?php _e( 'Restrict invites to members not currently in any group with this group type. (If a member is already in a group with this type they can not be sent an invite)', 'buddyboss' ); ?></strong>
+		<strong><?php _e( 'Restrict invites to members not currently in any group with this type. (If a member is already in a group with this type they cannot be sent an invite)', 'buddyboss' ); ?></strong>
 	</p>
-	<p><?php printf( __( 'Members of this group can only invite members of selected profile types. (Leave blank to allow unrestricted invites)', 'buddyboss' ), $post->post_title )?></p>
+	<p><?php printf( __( 'Members of this group can only invite members of selected profile types. (Leave blank for unrestricted invites)', 'buddyboss' ), $post->post_title )?></p>
 	<?php
 
 	$get_all_registered_member_types = bp_get_active_member_types();

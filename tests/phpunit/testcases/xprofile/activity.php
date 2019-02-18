@@ -284,7 +284,7 @@ class BP_Tests_XProfile_Activity extends BP_UnitTestCase {
 			'user_id' => $u,
 		) );
 
-		$expected = sprintf( __( '%s changed their profile picture', 'buddyboss' ), bp_core_get_userlink( $u ) );
+		$expected = sprintf( __( '%s changed their profile photo', 'buddyboss' ), bp_core_get_userlink( $u ) );
 
 		$a_obj = new BP_Activity_Activity( $a );
 

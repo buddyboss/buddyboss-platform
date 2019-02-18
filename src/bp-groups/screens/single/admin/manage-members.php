@@ -61,7 +61,7 @@ function groups_screen_group_admin_manage_members() {
 			// Stop sole admins from abandoning their group.
 			$group_admins = groups_get_group_admins( $bp->groups->current_group->id );
 			if ( 1 == count( $group_admins ) && $group_admins[0]->user_id == $user_id )
-				bp_core_add_message( __( 'This group must have at least one admin', 'buddyboss' ), 'error' );
+				bp_core_add_message( __( 'This group must have at least one organizer', 'buddyboss' ), 'error' );
 
 			// Demote a user.
 			elseif ( !groups_demote_member( $user_id, $bp->groups->current_group->id ) )

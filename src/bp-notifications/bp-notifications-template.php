@@ -932,11 +932,7 @@ function bp_notifications_pagination_count() {
 		$to_num     = bp_core_number_format( ( $start_num + ( $query_loop->pag_num - 1 ) > $query_loop->total_notification_count ) ? $query_loop->total_notification_count : $start_num + ( $query_loop->pag_num - 1 ) );
 		$total      = bp_core_number_format( $query_loop->total_notification_count );
 
-		if ( 1 == $query_loop->total_notification_count ) {
-			$pag = __( 'Viewing 1 notification', 'buddyboss' );
-		} else {
-			$pag = sprintf( _n( 'Viewing %1$s - %2$s of %3$s notification', 'Viewing %1$s - %2$s of %3$s notifications', $query_loop->total_notification_count, 'buddyboss' ), $from_num, $to_num, $total );
-		}
+		$pag = sprintf( _n( 'Viewing 1 notification', 'Viewing %1$s - %2$s of %3$s notifications', $query_loop->total_notification_count, 'buddyboss' ), $from_num, $to_num, $total );
 
 		/**
 		 * Filters the pagination count for the current notification loop.

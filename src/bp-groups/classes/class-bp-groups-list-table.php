@@ -391,11 +391,11 @@ class BP_Groups_List_Table extends WP_List_Table {
 		 */
 		return apply_filters( 'bp_groups_list_table_get_columns', array(
 			'cb'          => '<input name type="checkbox" />',
-			'comment'     => _x( 'Name', 'Groups admin Group Name column header',               'buddyboss' ),
-			'description' => _x( 'Description', 'Groups admin Group Description column header', 'buddyboss' ),
-			'status'      => _x( 'Status', 'Groups admin Privacy Status column header',         'buddyboss' ),
-			'members'     => _x( 'Members', 'Groups admin Members column header',               'buddyboss' ),
-			'last_active' => _x( 'Last Active', 'Groups admin Last Active column header',       'buddyboss' )
+			'comment'     => __( 'Name', 'buddyboss' ),
+			'description' => __( 'Description', 'buddyboss' ),
+			'status'      => __( 'Status', 'buddyboss' ),
+			'members'     => __( 'Members', 'buddyboss' ),
+			'last_active' => __( 'Last Active', 'buddyboss' )
 		) );
 	}
 
@@ -695,7 +695,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 	 * @return array $columns
 	 */
 	public function add_type_column( $columns = array() ) {
-		$columns['bp_group_type'] = _x( 'Group Type', 'Label for the WP groups table group type column', 'buddyboss' );
+		$columns['bp_group_type'] = __( 'Group Type', 'buddyboss' );
 
 		return $columns;
 	}

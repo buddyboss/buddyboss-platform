@@ -94,7 +94,7 @@ class BP_Email_Tokens {
 			),
 			'message'          => array(
 				'function'    => array( $this, 'token__message' ),
-				'description' => __( 'Display the sent message, along with sender\'s picture and name.', 'buddyboss' ),
+				'description' => __( 'Display the sent message, along with sender\'s photo and name.', 'buddyboss' ),
 			),
 			'sender.url'       => array(
 				'function'    => array( $this, 'token__sender_url' ),
@@ -106,11 +106,11 @@ class BP_Email_Tokens {
 			),
 			'status_update'    => array(
 				'function'    => array( $this, 'token__status_update' ),
-				'description' => __( 'Display the status update, along with member\'s picture and name.', 'buddyboss' ),
+				'description' => __( 'Display the status update, along with member\'s photo and name.', 'buddyboss' ),
 			),
 			'activity_reply'   => array(
 				'function'    => array( $this, 'token__activity_reply' ),
-				'description' => __( 'Display the reply to update, along with member\'s picture and name.', 'buddyboss' ),
+				'description' => __( 'Display the reply to update, along with member\'s photo and name.', 'buddyboss' ),
 			),
 			'poster.url'       => array(
 				'function'    => array( $this, 'token__poster_url' ),

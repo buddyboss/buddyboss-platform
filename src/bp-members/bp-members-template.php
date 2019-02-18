@@ -486,29 +486,14 @@ function bp_members_pagination_count() {
 		$total     = bp_core_number_format( $members_template->total_member_count );
 
 		if ( 'active' == $members_template->type ) {
-			if ( 1 == $members_template->total_member_count ) {
-				$pag = __( 'Viewing 1 member', 'buddyboss' );
-			} else {
-				$pag = sprintf( _n( 'Viewing %1$s - %2$s of %3$s member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
-			}
+			$pag = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
 		} elseif ( 'popular' == $members_template->type ) {
-			if ( 1 == $members_template->total_member_count ) {
-				$pag = __( 'Viewing 1 member with connections', 'buddyboss' );
-			} else {
-				$pag = sprintf( _n( 'Viewing %1$s - %2$s of %3$s member with connections', 'Viewing %1$s - %2$s of %3$s members with connections', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
-			}
+			$pag = sprintf( _n( 'Viewing 1 member with connections', 'Viewing %1$s - %2$s of %3$s members with connections', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
 		} elseif ( 'online' == $members_template->type ) {
-			if ( 1 == $members_template->total_member_count ) {
-				$pag = __( 'Viewing 1 online member', 'buddyboss' );
-			} else {
-				$pag = sprintf( _n( 'Viewing %1$s - %2$s of %3$s online member', 'Viewing %1$s - %2$s of %3$s online members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
-			}
+			$pag = sprintf( _n( 'Viewing 1 online member', 'Viewing %1$s - %2$s of %3$s online members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
 		} else {
-			if ( 1 == $members_template->total_member_count ) {
-				$pag = __( 'Viewing 1 member', 'buddyboss' );
-			} else {
-				$pag = sprintf( _n( 'Viewing %1$s - %2$s of %3$s member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
-			}
+			$pag = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
+
 		}
 
 		/**
@@ -809,7 +794,7 @@ function bp_member_avatar( $args = '' ) {
 			'height' => false,
 			'class'  => 'avatar',
 			'id'     => false,
-			'alt'    => sprintf( __( 'Profile picture of %s', 'buddyboss' ), $fullname )
+			'alt'    => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $fullname )
 		);
 
 		$r = wp_parse_args( $args, $defaults );
@@ -1493,7 +1478,7 @@ function bp_loggedin_user_avatar( $args = '' ) {
 			'width'   => false,
 			'height'  => false,
 			'html'    => true,
-			'alt'     => sprintf( __( 'Profile picture of %s', 'buddyboss' ), bp_get_loggedin_user_fullname() )
+			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_loggedin_user_fullname() )
 		) );
 
 		/**
@@ -1548,7 +1533,7 @@ function bp_displayed_user_avatar( $args = '' ) {
 			'width'   => false,
 			'height'  => false,
 			'html'    => true,
-			'alt'     => sprintf( __( 'Profile picture of %s', 'buddyboss' ), bp_get_displayed_user_fullname() )
+			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() )
 		) );
 
 		/**

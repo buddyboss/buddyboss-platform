@@ -89,8 +89,9 @@ function bp_groups_group_type_base() {
 		 * @since BuddyPress 2.7.0
 		 *
 		 * @param string $base
+		 * @todo why would you change this and what is this going to break? 
 		 */
-		return apply_filters( 'bp_groups_group_type_base', _x( 'type', 'group type URL base', 'buddyboss' ) );
+		return apply_filters( 'bp_groups_group_type_base', _x( 'type', 'Group type URL base slug', 'buddyboss' ) );
 	}
 
 /**
@@ -813,9 +814,9 @@ function bp_group_status_description( $group = false ) {
         if ( 'public' == $group->status ) {
             $description = __( 'This group’s content, including its members and activity, are visible to any site member.', 'buddyboss' );
         } elseif ( 'hidden' == $group->status ) {
-            $description = __( 'Only this group\'s members can find the group and view its content, including its members and activity.', 'buddyboss' );
+            $description = __( 'Only group members can view its content, including its members and activity.', 'buddyboss' );
         } elseif ( 'private' == $group->status ) {
-            $description = __( 'This group’s content, including its members and activity, are only visible to members of the group.', 'buddyboss' );
+            $description = __( 'This group’s activity feed is only visible to members of the group.', 'buddyboss' );
         } else {
             $description = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
         }
@@ -1656,7 +1657,7 @@ function bp_group_creator_avatar( $group = false, $args = array() ) {
 			'height' => false,
 			'class'  => 'avatar',
 			'id'     => false,
-			'alt'    => sprintf( __( 'Group creator profile photo of %s', 'buddyboss' ),  bp_core_get_user_displayname( $group->creator_id ) )
+			'alt'    => sprintf( __( 'Group organizer profile photo of %s', 'buddyboss' ),  bp_core_get_user_displayname( $group->creator_id ) )
 		), 'group_creator_avatar' );
 		extract( $r, EXTR_SKIP );
 
@@ -1707,6 +1708,7 @@ function bp_group_is_mod() {
  *
  * @param object|bool $group Optional. Group object.
  *                           Default: current group in loop.
+ * @todo there is always an organizer, why is there text for "No Admin"?
  */
 function bp_group_list_admins( $group = false ) {
 	global $groups_template;
@@ -1719,12 +1721,12 @@ function bp_group_list_admins( $group = false ) {
 		<ul id="group-admins">
 			<?php foreach( (array) $group->admins as $admin ) { ?>
 				<li>
-					<a href="<?php echo bp_core_get_user_domain( $admin->user_id, $admin->user_nicename, $admin->user_login ) ?>" class="bp-tooltip" data-bp-tooltip="<?php printf( ('%s'),  bp_core_get_user_displayname( $admin->user_id ) ); ?>"><?php echo bp_core_fetch_avatar( array( 'item_id' => $admin->user_id, 'email' => $admin->user_email, 'alt' => sprintf( __( 'Profile picture of %s', 'buddyboss' ), bp_core_get_user_displayname( $admin->user_id ) ) ) ) ?></a>
+					<a href="<?php echo bp_core_get_user_domain( $admin->user_id, $admin->user_nicename, $admin->user_login ) ?>" class="bp-tooltip" data-bp-tooltip="<?php printf( ('%s'),  bp_core_get_user_displayname( $admin->user_id ) ); ?>"><?php echo bp_core_fetch_avatar( array( 'item_id' => $admin->user_id, 'email' => $admin->user_email, 'alt' => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $admin->user_id ) ) ) ) ?></a>
 				</li>
 			<?php } ?>
 		</ul>
 	<?php } else { ?>
-		<span class="activity"><?php _e( 'No Admins', 'buddyboss' ) ?></span>
+		<span class="activity"><?php _e( 'No Organizers', 'buddyboss' ) ?></span>
 	<?php } ?>
 <?php
 }
@@ -1758,7 +1760,7 @@ function bp_group_list_parents( $group = false ) {
 						   data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ) ?>"><?php echo bp_core_fetch_avatar( array(
 								'item_id' => $parent_group->id,
 								'object'  => 'group',
-								'alt'     => sprintf( __( 'Group picture of %s', 'buddyboss' ), bp_get_group_name( $parent_group ) )
+								'alt'     => sprintf( __( 'Group photo of %s', 'buddyboss' ), bp_get_group_name( $parent_group ) )
 							) ) ?></a>
 					</li>
 				</ul>
@@ -1790,7 +1792,7 @@ function bp_group_list_mods( $group = false ) {
 			<?php foreach( (array) $group->mods as $mod ) { ?>
 
 				<li>
-					<a href="<?php echo bp_core_get_user_domain( $mod->user_id, $mod->user_nicename, $mod->user_login ) ?>" class="bp-tooltip" data-bp-tooltip="<?php printf( ('%s'),  bp_core_get_user_displayname( $mod->user_id ) ); ?>"><?php echo bp_core_fetch_avatar( array( 'item_id' => $mod->user_id, 'email' => $mod->user_email, 'alt' => sprintf( __( 'Profile picture of %s', 'buddyboss' ), bp_core_get_user_displayname( $mod->user_id ) ) ) ) ?></a>
+					<a href="<?php echo bp_core_get_user_domain( $mod->user_id, $mod->user_nicename, $mod->user_login ) ?>" class="bp-tooltip" data-bp-tooltip="<?php printf( ('%s'),  bp_core_get_user_displayname( $mod->user_id ) ); ?>"><?php echo bp_core_fetch_avatar( array( 'item_id' => $mod->user_id, 'email' => $mod->user_email, 'alt' => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $mod->user_id ) ) ) ) ?></a>
 				</li>
 
 			<?php } ?>
@@ -1799,7 +1801,7 @@ function bp_group_list_mods( $group = false ) {
 
 <?php else : ?>
 
-		<span class="activity"><?php _e( 'No Mods', 'buddyboss' ) ?></span>
+		<span class="activity"><?php _e( 'No Moderators', 'buddyboss' ) ?></span>
 
 <?php endif;
 
@@ -2038,11 +2040,7 @@ function bp_groups_pagination_count() {
 		$to_num    = bp_core_number_format( ( $start_num + ( $groups_template->pag_num - 1 ) > $groups_template->total_group_count ) ? $groups_template->total_group_count : $start_num + ( $groups_template->pag_num - 1 ) );
 		$total     = bp_core_number_format( $groups_template->total_group_count );
 
-		if ( 1 == $groups_template->total_group_count ) {
-			$message = __( 'Viewing 1 group', 'buddyboss' );
-		} else {
-			$message = sprintf( _n( 'Viewing %1$s - %2$s of %3$s group', 'Viewing %1$s - %2$s of %3$s groups', $groups_template->total_group_count, 'buddyboss' ), $from_num, $to_num, $total );
-		}
+		$message = sprintf( _n( 'Viewing 1 group', 'Viewing %1$s - %2$s of %3$s groups', $groups_template->total_group_count, 'buddyboss' ), $from_num, $to_num, $total );
 
 		/**
 		 * Filters the "Viewing x-y of z groups" pagination message.
@@ -2698,14 +2696,14 @@ function bp_group_admin_memberlist( $admin_list = false, $group = false ) {
 
 			<li>
 
-				<?php echo bp_core_fetch_avatar( array( 'item_id' => $admin->user_id, 'type' => 'thumb', 'width' => 30, 'height' => 30, 'alt' => sprintf( __( 'Profile picture of %s', 'buddyboss' ), bp_core_get_user_displayname( $admin->user_id ) ) ) ) ?>
+				<?php echo bp_core_fetch_avatar( array( 'item_id' => $admin->user_id, 'type' => 'thumb', 'width' => 30, 'height' => 30, 'alt' => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $admin->user_id ) ) ) ) ?>
 
 				<h5>
 
 					<?php echo bp_core_get_userlink( $admin->user_id ); ?>
 
 					<span class="small">
-						<a class="button confirm admin-demote-to-member" href="<?php bp_group_member_demote_link($admin->user_id) ?>"><?php _e( 'Demote to regular member', 'buddyboss' ) ?></a>
+						<a class="button confirm admin-demote-to-member" href="<?php bp_group_member_demote_link($admin->user_id) ?>"><?php _e( 'Demote to member', 'buddyboss' ) ?></a>
 					</span>
 				</h5>
 			</li>
@@ -2714,7 +2712,7 @@ function bp_group_admin_memberlist( $admin_list = false, $group = false ) {
 
 			<li>
 
-				<?php echo bp_core_fetch_avatar( array( 'item_id' => $admin->user_id, 'type' => 'thumb', 'alt' => sprintf( __( 'Profile picture of %s', 'buddyboss' ), bp_core_get_user_displayname( $admin->user_id ) ) ) ) ?>
+				<?php echo bp_core_fetch_avatar( array( 'item_id' => $admin->user_id, 'type' => 'thumb', 'alt' => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $admin->user_id ) ) ) ) ?>
 
 				<h5><?php echo bp_core_get_userlink( $admin->user_id ) ?></h5>
 				<span class="activity">
@@ -2741,7 +2739,7 @@ function bp_group_admin_memberlist( $admin_list = false, $group = false ) {
 	<?php else : ?>
 
 		<div id="message" class="info">
-			<p><?php _e( 'This group has no administrators', 'buddyboss' ); ?></p>
+			<p><?php _e( 'This group has no organizers', 'buddyboss' ); ?></p>
 		</div>
 
 	<?php endif;
@@ -2774,14 +2772,14 @@ function bp_group_mod_memberlist( $admin_list = false, $group = false ) {
 
 			<li>
 
-				<?php echo bp_core_fetch_avatar( array( 'item_id' => $mod->user_id, 'type' => 'thumb', 'width' => 30, 'height' => 30, 'alt' => sprintf( __( 'Profile picture of %s', 'buddyboss' ), bp_core_get_user_displayname( $mod->user_id ) ) ) ) ?>
+				<?php echo bp_core_fetch_avatar( array( 'item_id' => $mod->user_id, 'type' => 'thumb', 'width' => 30, 'height' => 30, 'alt' => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $mod->user_id ) ) ) ) ?>
 
 				<h5>
 					<?php echo bp_core_get_userlink( $mod->user_id ); ?>
 
 					<span class="small">
 						<a href="<?php bp_group_member_promote_admin_link( array( 'user_id' => $mod->user_id ) ) ?>" class="button confirm mod-promote-to-admin"><?php _e( 'Promote to co-organizer', 'buddyboss' ); ?></a>
-						<a class="button confirm mod-demote-to-member" href="<?php bp_group_member_demote_link($mod->user_id) ?>"><?php _e( 'Demote to regular member', 'buddyboss' ) ?></a>
+						<a class="button confirm mod-demote-to-member" href="<?php bp_group_member_demote_link($mod->user_id) ?>"><?php _e( 'Demote to member', 'buddyboss' ) ?></a>
 					</span>
 				</h5>
 			</li>
@@ -2790,7 +2788,7 @@ function bp_group_mod_memberlist( $admin_list = false, $group = false ) {
 
 			<li>
 
-				<?php echo bp_core_fetch_avatar( array( 'item_id' => $mod->user_id, 'type' => 'thumb', 'alt' => sprintf( __( 'Profile picture of %s', 'buddyboss' ), bp_core_get_user_displayname( $mod->user_id ) ) ) ) ?>
+				<?php echo bp_core_fetch_avatar( array( 'item_id' => $mod->user_id, 'type' => 'thumb', 'alt' => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $mod->user_id ) ) ) ) ?>
 
 				<h5><?php echo bp_core_get_userlink( $mod->user_id ) ?></h5>
 
@@ -3739,7 +3737,7 @@ function bp_group_join_button( $group = false ) {
 				'link_text'         => $button_text,
 				'link_class'        => 'group-button leave-group bp-toggle-action-button',
 				'button_attr' => array(
-					'data-title'           => __( 'Leave this group', 'buddyboss' ),
+					'data-title'           => __( 'Leave group', 'buddyboss' ),
 					'data-title-displayed' => $button_text
 				)
 			);
@@ -3765,7 +3763,7 @@ function bp_group_join_button( $group = false ) {
 						'wrapper_class'     => 'group-button ' . $group->status,
 						'wrapper_id'        => 'groupbutton-' . $group->id,
 						'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'join' ), 'groups_join_group' ),
-						'link_text'         => __( 'Join this group', 'buddyboss' ),
+						'link_text'         => __( 'Join group', 'buddyboss' ),
 						'link_class'        => 'group-button join-group',
 					);
 					break;
@@ -3827,7 +3825,7 @@ function bp_group_join_button( $group = false ) {
 									'wrapper_class'     => 'group-button ' . $group->status,
 									'wrapper_id'        => 'groupbutton-' . $group->id,
 									'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
-									'link_text'         => __( 'Join  this group', 'buddyboss' ),
+									'link_text'         => __( 'Join group', 'buddyboss' ),
 									'link_class'        => 'group-button request-membership',
 								);
 							} else {
@@ -4013,7 +4011,7 @@ function bp_group_status_message( $group = null ) {
 						$message = __( 'This is a private group. To join you must be a registered site member and request group membership.', 'buddyboss' );
 					}
 				} else {
-					$message = __( 'This is a private group. Your membership request is awaiting approval from the group administrator.', 'buddyboss' );
+					$message = __( 'This is a private group. Your membership request is awaiting approval from the group organizer.', 'buddyboss' );
 				}
 
 				break;
@@ -4021,7 +4019,7 @@ function bp_group_status_message( $group = null ) {
 			// Hidden group.
 			case 'hidden' :
 			default :
-				$message = __( 'This is a hidden group and only invited members can join.', 'buddyboss' );
+				$message = __( 'This is a hidden group. You must be invited to join.', 'buddyboss' );
 				break;
 		}
 	}
@@ -4303,7 +4301,7 @@ function bp_group_member_avatar( $args = '' ) {
 			'item_id' => $members_template->member->user_id,
 			'type'    => 'full',
 			'email'   => $members_template->member->user_email,
-			'alt'     => sprintf( __( 'Profile picture of %s', 'buddyboss' ), $members_template->member->display_name )
+			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $members_template->member->display_name )
 		) );
 
 		/**
@@ -4342,7 +4340,7 @@ function bp_group_member_avatar_thumb( $args = '' ) {
 			'item_id' => $members_template->member->user_id,
 			'type'    => 'thumb',
 			'email'   => $members_template->member->user_email,
-			'alt'     => sprintf( __( 'Profile picture of %s', 'buddyboss' ), $members_template->member->display_name )
+			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $members_template->member->display_name )
 		) );
 
 		/**
@@ -4383,7 +4381,7 @@ function bp_group_member_avatar_mini( $width = 30, $height = 30 ) {
 			'item_id' => $members_template->member->user_id,
 			'type'    => 'thumb',
 			'email'   => $members_template->member->user_email,
-			'alt'     => sprintf( __( 'Profile picture of %s', 'buddyboss' ), $members_template->member->display_name ),
+			'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $members_template->member->display_name ),
 			'width'   => absint( $width ),
 			'height'  => absint( $height )
 		) );
@@ -4735,11 +4733,7 @@ function bp_group_member_pagination_count() {
 		$to_num    = bp_core_number_format( ( $start_num + ( $members_template->pag_num - 1 ) > $members_template->total_member_count ) ? $members_template->total_member_count : $start_num + ( $members_template->pag_num - 1 ) );
 		$total     = bp_core_number_format( $members_template->total_member_count );
 
-		if ( 1 == $members_template->total_member_count ) {
-			$message = __( 'Viewing 1 member', 'buddyboss' );
-		} else {
-			$message = sprintf( _n( 'Viewing %1$s - %2$s of %3$s member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
-		}
+		$message = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
 
 		/**
 		 * Filters the "Viewing x-y of z members" pagination message.
@@ -5650,7 +5644,7 @@ function bp_groups_header_tabs() {
 	<li<?php if ( !bp_action_variable( 0 ) || bp_is_action_variable( 'recently-active', 0 ) ) : ?> class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/recently-active' ); ?>"><?php _e( 'Recently Active', 'buddyboss' ); ?></a></li>
 	<li<?php if ( bp_is_action_variable( 'recently-joined', 0 ) ) : ?> class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/recently-joined' ); ?>"><?php _e( 'Recently Joined',  'buddyboss' ); ?></a></li>
 	<li<?php if ( bp_is_action_variable( 'most-popular',    0 ) ) : ?> class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/most-popular'    ); ?>"><?php _e( 'Most Popular',     'buddyboss' ); ?></a></li>
-	<li<?php if ( bp_is_action_variable( 'admin-of',        0 ) ) : ?> class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/admin-of'        ); ?>"><?php _e( 'Administrator Of', 'buddyboss' ); ?></a></li>
+	<li<?php if ( bp_is_action_variable( 'admin-of',        0 ) ) : ?> class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/admin-of'        ); ?>"><?php _e( 'Organizer Of', 'buddyboss' ); ?></a></li>
 	<li<?php if ( bp_is_action_variable( 'mod-of',          0 ) ) : ?> class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/mod-of'          ); ?>"><?php _e( 'Moderator Of',     'buddyboss' ); ?></a></li>
 	<li<?php if ( bp_is_action_variable( 'alphabetically'     ) ) : ?> class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/alphabetically'  ); ?>"><?php _e( 'Alphabetically',   'buddyboss' ); ?></a></li>
 
@@ -5997,7 +5991,7 @@ function bp_group_request_user_avatar_thumb() {
 	 *
 	 * @param string $value HTML markup for the user's avatar thumbnail.
 	 */
-	echo apply_filters( 'bp_group_request_user_avatar_thumb', bp_core_fetch_avatar( array( 'item_id' => $requests_template->request->user_id, 'type' => 'thumb', 'alt' => sprintf( __( 'Profile picture of %s', 'buddyboss' ), bp_core_get_user_displayname( $requests_template->request->user_id ) ) ) ) );
+	echo apply_filters( 'bp_group_request_user_avatar_thumb', bp_core_fetch_avatar( array( 'item_id' => $requests_template->request->user_id, 'type' => 'thumb', 'alt' => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $requests_template->request->user_id ) ) ) ) );
 }
 
 /**
@@ -6157,11 +6151,7 @@ function bp_group_requests_pagination_count() {
 		$to_num    = bp_core_number_format( ( $start_num + ( $requests_template->pag_num - 1 ) > $requests_template->total_request_count ) ? $requests_template->total_request_count : $start_num + ( $requests_template->pag_num - 1 ) );
 		$total     = bp_core_number_format( $requests_template->total_request_count );
 
-		if ( 1 == $requests_template->total_request_count ) {
-			$message = __( 'Viewing 1 request', 'buddyboss' );
-		} else {
-			$message = sprintf( _n( 'Viewing %1$s - %2$s of %3$s request', 'Viewing %1$s - %2$s of %3$s requests', $requests_template->total_request_count, 'buddyboss' ), $from_num, $to_num, $total );
-		}
+			$message = sprintf( _n( 'Viewing 1 request', 'Viewing %1$s - %2$s of %3$s requests', $requests_template->total_request_count, 'buddyboss' ), $from_num, $to_num, $total );
 
 		/**
 		 * Filters pagination count text for group membership requests.
@@ -6426,11 +6416,7 @@ function bp_group_invite_pagination_count() {
 		$to_num    = bp_core_number_format( ( $start_num + ( $invites_template->pag_num - 1 ) > $invites_template->total_invite_count ) ? $invites_template->total_invite_count : $start_num + ( $invites_template->pag_num - 1 ) );
 		$total     = bp_core_number_format( $invites_template->total_invite_count );
 
-		if ( 1 == $invites_template->total_invite_count ) {
-			$message = __( 'Viewing 1 invitation', 'buddyboss' );
-		} else {
-			$message = sprintf( _n( 'Viewing %1$s - %2$s of %3$s invitation', 'Viewing %1$s - %2$s of %3$s invitations', $invites_template->total_invite_count, 'buddyboss' ), $from_num, $to_num, $total );
-		}
+		$message = sprintf( _n( 'Viewing 1 invitation', 'Viewing %1$s - %2$s of %3$s invitations', $invites_template->total_invite_count, 'buddyboss' ), $from_num, $to_num, $total );
 
 		/** This filter is documented in bp-groups/bp-groups-template.php */
 		return apply_filters( 'bp_get_groups_pagination_count', $message, $from_num, $to_num, $total );

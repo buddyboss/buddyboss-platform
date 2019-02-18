@@ -721,7 +721,7 @@ function bp_message_thread_avatar( $args = '' ) {
 		global $messages_template;
 
 		$fullname = bp_core_get_user_displayname( $messages_template->thread->last_sender_id );
-		$alt      = sprintf( __( 'Profile picture of %s', 'buddyboss' ), $fullname );
+		$alt      = sprintf( __( 'Profile photo of %s', 'buddyboss' ), $fullname );
 
 		$r = bp_parse_args( $args, array(
 			'type'   => 'thumb',
@@ -820,11 +820,7 @@ function bp_messages_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $messages_template->pag_num - 1 ) > $messages_template->total_thread_count ) ? $messages_template->total_thread_count : $start_num + ( $messages_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $messages_template->total_thread_count );
 
-	if ( 1 == $messages_template->total_thread_count ) {
-		$message = __( 'Viewing 1 message', 'buddyboss' );
-	} else {
-		$message = sprintf( _n( 'Viewing %1$s - %2$s of %3$s message', 'Viewing %1$s - %2$s of %3$s messages', $messages_template->total_thread_count, 'buddyboss' ), $from_num, $to_num, $total );
-	}
+	$message = sprintf( _n( 'Viewing 1 message', 'Viewing %1$s - %2$s of %3$s messages', $messages_template->total_thread_count, 'buddyboss' ), $from_num, $to_num, $total );
 
 	echo esc_html( $message );
 }

@@ -63,11 +63,11 @@ function bp_groups_group_admin_menu() {
 		 * the 'show_in_admin_bar' argument of your edit screen to true
 		 */
 		if ( $menu->show_in_admin_bar ) {
-			$title = sprintf( _x( 'Edit Group %s', 'Group WP Admin Bar manage links', 'buddyboss' ), $menu->name );
+			$title = sprintf( __( 'Edit Group %s', 'buddyboss' ), $menu->name );
 
 			// Title is specific for delete.
 			if ( 'delete-group' == $menu->slug ) {
-				$title = sprintf( _x( '%s Group', 'Group WP Admin Bar delete link', 'buddyboss' ), $menu->name );
+				$title = sprintf( __( '%s Group', 'buddyboss' ), $menu->name );
 
 				if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_group_forums_active' ) ) {
 					if ( bbp_is_group_forums_active() ) {

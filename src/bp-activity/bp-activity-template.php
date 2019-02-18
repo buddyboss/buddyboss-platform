@@ -448,11 +448,7 @@ function bp_activity_pagination_count() {
 		$to_num    = bp_core_number_format( ( $start_num + ( $activities_template->pag_num - 1 ) > $activities_template->total_activity_count ) ? $activities_template->total_activity_count : $start_num + ( $activities_template->pag_num - 1 ) );
 		$total     = bp_core_number_format( $activities_template->total_activity_count );
 
-		if ( 1 == $activities_template->total_activity_count ) {
-			$message = __( 'Viewing 1 item', 'buddyboss' );
-		} else {
-			$message = sprintf( _n( 'Viewing %1$s - %2$s of %3$s item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddyboss' ), $from_num, $to_num, $total );
-		}
+		$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddyboss' ), $from_num, $to_num, $total );
 
 		return $message;
 	}
@@ -1033,7 +1029,7 @@ function bp_activity_avatar( $args = '' ) {
 		$dn_default  = isset( $current_activity_item->display_name ) ? $current_activity_item->display_name : '';
 
 		// Prepend some descriptive text to alt.
-		$alt_default = !empty( $dn_default ) ? sprintf( __( 'Profile picture of %s', 'buddyboss' ), $dn_default ) : __( 'Profile picture', 'buddyboss' );
+		$alt_default = !empty( $dn_default ) ? sprintf( __( 'Profile photo of %s', 'buddyboss' ), $dn_default ) : __( 'Profile photo', 'buddyboss' );
 
 		$defaults = array(
 			'alt'     => $alt_default,
@@ -1192,7 +1188,7 @@ function bp_activity_secondary_avatar( $args = '' ) {
 				$link    = home_url();
 
 				if ( empty( $alt ) ) {
-					$alt = sprintf( __( 'Profile picture of the author of the site %s', 'buddyboss' ), get_blog_option( $item_id, 'blogname' ) );
+					$alt = sprintf( __( 'Profile photo of the author of the site %s', 'buddyboss' ), get_blog_option( $item_id, 'blogname' ) );
 				}
 
 				break;
@@ -1202,7 +1198,7 @@ function bp_activity_secondary_avatar( $args = '' ) {
 				$link    = bp_core_get_userlink( $item_id, false, true );
 
 				if ( empty( $alt ) ) {
-					$alt = sprintf( __( 'Profile picture of %s', 'buddyboss' ), bp_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
+					$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
 				}
 
 				break;
@@ -1213,7 +1209,7 @@ function bp_activity_secondary_avatar( $args = '' ) {
 				$link    = bp_core_get_userlink( $item_id, false, true );
 
 				if ( empty( $alt ) ) {
-					$alt = sprintf( __( 'Profile picture of %s', 'buddyboss' ), $activities_template->activity->display_name );
+					$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), $activities_template->activity->display_name );
 				}
 
 				break;

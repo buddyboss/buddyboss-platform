@@ -959,7 +959,7 @@ class Activity extends BuddypressCommand {
 
 				// new_avatar.
 				if ( 'new_avatar' === $r['type'] ) {
-					$r['action'] = sprintf( __( '%s changed %s profile picture', 'buddyboss' ), $userlink, bp_get_user_gender_pronoun_type( $r['user-id'] ) );
+					$r['action'] = sprintf( __( '%s changed %s profile photo', 'buddyboss' ), $userlink, bp_get_user_gender_pronoun_type( $r['user-id'] ) );
 
 				// new_member.
 				} elseif ( 'new_member' === $r['type'] ) {

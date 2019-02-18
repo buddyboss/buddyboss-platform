@@ -238,11 +238,7 @@ function bp_get_blogs_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $blogs_template->pag_num - 1 ) > $blogs_template->total_blog_count ) ? $blogs_template->total_blog_count : $start_num + ( $blogs_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $blogs_template->total_blog_count );
 
-	if ( 1 == $blogs_template->total_blog_count ) {
-		$message = __( 'Viewing 1 site', 'buddyboss' );
-	} else {
-		$message = sprintf( _n( 'Viewing %1$s - %2$s of %3$s site', 'Viewing %1$s - %2$s of %3$s sites', $blogs_template->total_blog_count, 'buddyboss' ), $from_num, $to_num, $total );
-	}
+	$message = sprintf( _n( 'Viewing 1 site', 'Viewing %1$s - %2$s of %3$s sites', $blogs_template->total_blog_count, 'buddyboss' ), $from_num, $to_num, $total );
 
 	/**
 	 * Filters the "Viewing x-y of z blogs" pagination message.
@@ -336,7 +332,7 @@ function bp_blog_avatar( $args = '' ) {
 			'height'  => false,
 			'class'   => 'avatar',
 			'id'      => false,
-			'alt'     => sprintf( __( 'Profile picture of site author %s', 'buddyboss' ), esc_attr( $author_displayname ) ),
+			'alt'     => sprintf( __( 'Profile photo of site author %s', 'buddyboss' ), esc_attr( $author_displayname ) ),
 			'no_grav' => true,
 		) );
 
