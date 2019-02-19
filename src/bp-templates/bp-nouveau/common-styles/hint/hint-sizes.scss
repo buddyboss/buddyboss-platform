@@ -15,24 +15,30 @@
 .#{$hintPrefix}small,
 .#{$hintPrefix}medium,
 .#{$hintPrefix}large {
+
 	&:after {
 		white-space: normal;
-		line-height: 1.4em;
+		line-height: 1.4;
 		word-wrap: break-word; // Ensure long words do not overflow.
 	}
 }
 
 .#{$hintPrefix}small {
+
 	&:after {
 		width: $hintSizeSmall;
 	}
 }
+
 .#{$hintPrefix}medium {
+
 	&:after {
 		width: $hintSizeMedium;
 	}
 }
+
 .#{$hintPrefix}large {
+
 	&:after {
 		width: $hintSizeLarge;
 	}

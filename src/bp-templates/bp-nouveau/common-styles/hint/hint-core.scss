@@ -14,41 +14,45 @@
 	position: relative;
 	display: inline-block;
 
-	&:before, &:after {
+	&:before,
+	&:after {
 		position: absolute;
 
 		// HACK: Trigger hardware accelerated rendering, otherwise transform was not
 		// working on a hidden element
-		@include vendor('transform', translate3d(0, 0, 0));
+		@include vendor("transform", translate3d(0, 0, 0));
 
 		// HACK: visibility is set to hidden because IE & Opera don't support
-		// pointer-events on HTML content yet because of which hovering a hidden tooltip
-		// shows the tooltip.
+		// pointer-events on HTML content yet because of which hovering
+		// a hidden tooltip shows the tooltip.
 		visibility: hidden;
 		opacity: 0;
 		z-index: $hintZIndex;
-		// shouldn't receive pointer events, otherwise even hovering tooltip will make it appear
+		// shouldn't receive pointer events, otherwise even hovering
+		// tooltip will make it appear
 		pointer-events: none;
 
-		@include vendor('transition', $hintTransitionDuration ease);
-		@include vendor('transition-delay', $hintHideDelay);
+		@include vendor("transition", $hintTransitionDuration ease);
+		@include vendor("transition-delay", $hintHideDelay);
 	}
 
-	&:hover:before, &:hover:after {
+	&:hover:before,
+	&:hover:after {
 		visibility: visible;
 		opacity: 1;
 	}
 
-	&:hover:before, &:hover:after {
+	&:hover:before,
+	&:hover:after {
 		// $hintShowDelay will apply as soon as element is hovered.
-		@include vendor('transition-delay', $hintShowDelay);
+		@include vendor("transition-delay", $hintShowDelay);
 	}
 
 	/**
 	 * tooltip arrow
 	 */
 	&:before {
-		content: '';
+		content: "";
 		position: absolute;
 		background: transparent;
 		border: $hintArrowBorderWidth solid transparent;
@@ -61,17 +65,19 @@
 	 */
 	&:after {
 		background: $hintDefaultColor;
-		color: white;
+		color: #fff;
 		padding: $hintVerticalPadding $hintHorizontalPadding;
 		font-size: $hintFontSize;
 		font-family: $hintFontFamily;
 		line-height: $hintFontSize; // Vertical centering.
 		white-space: nowrap; // Prevent breaking to new line.
 	}
+
 	// Always get content from aria-label attribute.
 	&[aria-label]:after {
 		content: attr(aria-label); // The magic!
 	}
+
 	// If the `data-hint` attribute is present, use it.
 	// This might be deprecated in future in support of a11y.
 	&[data-hint]:after {
@@ -80,9 +86,11 @@
 }
 
 // Hide tooltips if any of the supported attributes is empty.
-[aria-label=''],
-[data-hint=''] {
-	&:before, &:after {
+[aria-label=""],
+[data-hint=""] {
+
+	&:before,
+	&:after {
 		display: none !important;
 	}
 }

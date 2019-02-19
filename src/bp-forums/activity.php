@@ -182,6 +182,10 @@ class BBP_BuddyPress_Activity {
 		// Sitewide activity stream items
 		bp_activity_set_action( $this->component, $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), [ $this, 'topic_activity_action_callback' ] );
 		bp_activity_set_action( $this->component, $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), [ $this, 'reply_activity_action_callback' ] );
+
+		// Group activity stream items
+		bp_activity_set_action( buddypress()->groups->id, $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), [ $this, 'group_forum_topic_activity_action_callback' ] );
+		bp_activity_set_action( buddypress()->groups->id, $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), [ $this, 'group_forum_reply_activity_action_callback' ] );
 	}
 
 	/**
@@ -661,6 +665,59 @@ class BBP_BuddyPress_Activity {
 			$user_link,
 			$topic_link,
 			$forum_link
+		);
+	}
+
+	public function group_forum_topic_activity_action_callback( $action, $activity ) {
+		$user_id  = $activity->user_id;
+		$topic_id = $activity->secondary_item_id;
+		$forum_id = bbp_get_topic_forum_id( $topic_id );
+
+		// User
+		$user_link = bbp_get_user_profile_link( $user_id );
+
+		// Topic
+		$topic_permalink = bbp_get_topic_permalink( $topic_id );
+		$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
+		$topic_link      = '<a href="' . $topic_permalink . '">' . $topic_title . '</a>';
+
+		// Group
+		$group_id   = current( bbp_get_forum_group_ids( $forum_id ) );
+		$group      = groups_get_group( $group_id );
+		$group_link = bp_get_group_link( $group );
+
+		return sprintf(
+			esc_html__( '%1$s started the discussion %2$s in the forum %3$s', 'buddyboss' ),
+			$user_link,
+			$topic_link,
+			$group_link
+		);
+	}
+
+	public function group_forum_reply_activity_action_callback( $action, $activity ) {
+		$user_id  = $activity->user_id;
+		$reply_id = $activity->secondary_item_id;
+		$forum_id = bbp_get_reply_forum_id( $reply_id );
+		$topic_id = bbp_get_reply_topic_id( $reply_id );
+
+		// User
+		$user_link = bbp_get_user_profile_link( $user_id );
+
+		// Topic
+		$topic_permalink = bbp_get_topic_permalink( $topic_id );
+		$topic_title     = get_post_field( 'post_title', $topic_id, 'raw' );
+		$topic_link      = '<a href="' . $topic_permalink . '">' . $topic_title . '</a>';
+
+		// Group
+		$group_id   = current( bbp_get_forum_group_ids( $forum_id ) );
+		$group      = groups_get_group( $group_id );
+		$group_link = bp_get_group_link( $group );
+
+		return sprintf(
+			esc_html__( '%1$s replied to the discussion %2$s in the forum %3$s', 'buddyboss' ),
+			$user_link,
+			$topic_link,
+			$group_link
 		);
 	}
 }

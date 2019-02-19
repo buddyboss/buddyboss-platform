@@ -3957,20 +3957,20 @@ function bp_get_user_gender_pronoun_type( $user_id = '' ) {
 	global $wpdb;
 
 	if ( '' === $user_id ) {
-		$gender_pronoun = 'their';
+		$gender_pronoun = esc_html__( 'their', 'buddyboss' );
 	} else {
 		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
 		if ( $exists_gender[0]->count > 0 ) {
 			$field_id = $exists_gender[0]->id;
 			$gender = xprofile_get_field_data( $field_id , $user_id );
 			if ( empty( $gender ) ) {
-				$gender_pronoun = 'their';
+				$gender_pronoun = esc_html__( 'their', 'buddyboss' );
 			} else {
 				$split_value = explode('_', $gender );
 				$gender_pronoun = $split_value[0];
 			}
 		} else {
-			$gender_pronoun = 'their';
+			$gender_pronoun = esc_html__( 'their', 'buddyboss' );
 		}
 	}
 	return $gender_pronoun;

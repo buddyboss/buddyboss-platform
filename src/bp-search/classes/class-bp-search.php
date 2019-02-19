@@ -531,7 +531,13 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 							$items[ $first_item['id'] ] = $first_item;
 
 							//and append html (closing tags) to last item of each type
-							$last_item = end( $items );
+							if ( count( $items ) < 4 ) {
+								$last_item = end( $items );
+							} else {
+								end( $items );
+								$last_item = prev( $items );
+							}
+
 							$end_html  = "</ul></div>";
 
 							$group_end_html = apply_filters( "bp_search_results_group_end_html", $end_html, $type );
