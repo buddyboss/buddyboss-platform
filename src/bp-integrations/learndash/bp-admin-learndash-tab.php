@@ -57,16 +57,6 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			]
 		);
 
-		//@todo this field should show only if the above field is EMPTY? Otherwise would the organizer selection override this?
-		$this->add_checkbox_field(
-			'default_auto_sync',
-			__('Force LearnDash Group', 'buddyboss'),
-			[
-				'input_text' => __( 'Automatically create and associate a LearnDash group upon creation', 'buddyboss' ),
-				'class' => 'js-show-on-buddypress_enabled'
-			]
-		);
-
 		$this->add_checkbox_field(
 			'show_in_bp_manage',
 			__('Manage LearnDash Group', 'buddyboss'),
@@ -87,8 +77,18 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'noone'    => __('No one', 'buddyboss'),
 		        ],
 		        'input_default' => 'admin',
-				'input_description' => __( 'Select who can see the course tab in groups', 'buddyboss' ),
+				'input_description' => __( 'Select who can see the course tab in social groups', 'buddyboss' ),
 				'class' => 'js-show-on-buddypress_enabled',
+			]
+		);
+
+		$this->add_checkbox_field(
+			'default_auto_sync',
+			__('Auto Create LearnDash Group', 'buddyboss'),
+			[
+				'input_text' => __( 'Automatically create and associate a LearnDash group upon creation', 'buddyboss' ),
+				'input_description' => __( '(Required if you want an associated LearnDash group and course tab is disabled during creation)', 'buddyboss' ),
+				'class' => 'js-show-on-buddypress_enabled'
 			]
 		);
 
@@ -97,6 +97,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__('Delete LearnDash Group', 'buddyboss'),
 			[
 				'input_text' => __( 'Automatically delete the associated LearnDash group when the social group is deleted', 'buddyboss' ),
+				'input_description' => __( '(Uncheck this to delete the group manually)', 'buddyboss' ),
 				'class' => 'js-show-on-buddypress_enabled'
 			]
 		);
@@ -260,7 +261,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			'enabled',
 			__('Group Reports', 'buddyboss'),
 			[
-				'input_text' => __( 'Enable Social Group Reports for LearnDash', 'buddyboss' ),
+				'input_text' => __( 'Enable Social Group Report for LearnDash', 'buddyboss' ),
 				'input_run_js' => 'reports_enabled'
 			]
 		);
@@ -311,7 +312,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 	public function learndash_groups_report_description() {
 		echo wpautop(
-			__( 'Control the settings for social group reports.', 'buddyboss' )
+			__( 'Control the setting for social group\'s reports.', 'buddyboss' )
 		);
 	}
 
