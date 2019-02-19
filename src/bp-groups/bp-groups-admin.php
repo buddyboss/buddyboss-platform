@@ -1523,7 +1523,7 @@ function bp_group_type_show_correct_current_menu(){
  */
 function bp_group_type_custom_meta_boxes() {
 	add_meta_box( 'bp-group-type-key', __( 'Group Type Key', 'buddyboss' ), 'bp_group_type_key_meta_box', null, 'normal', 'high' );
-	add_meta_box( 'bp-group-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_group_type_labels_meta_box', null, 'normal', 'high' );
+	add_meta_box( 'bp-group-type-label-box', __( 'Group Type Labels', 'buddyboss' ), 'bp_group_type_labels_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-role-label-box', __( 'Group Role Labels', 'buddyboss' ), 'bp_group_type_role_labels_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-visibility', __( 'Visibility', 'buddyboss' ), 'bp_group_type_visibility_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-short-code', __( 'Shortcode', 'buddyboss' ), 'bp_group_short_code_meta_box', null, 'normal', 'high' );
