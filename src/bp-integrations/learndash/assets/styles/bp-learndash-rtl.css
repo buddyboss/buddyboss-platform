@@ -29,10 +29,10 @@
 
 .ld-report-user-stats {
 	display: flex;
-        flex-flow: row wrap;
+	flex-flow: row wrap;
 	align-items: center;
-	background: white;
-	border: 1px solid #DEDFE2;
+	background: #fff;
+	border: 1px solid #dedfe2;
 	margin-bottom: 15px;
 }
 
@@ -47,11 +47,11 @@
 .ld-report-user-stats .user-info {
 	display: flex;
 	align-items: center;
-        min-width: 20%;
+	min-width: 20%;
 }
 
 .ld-report-user-stats .user-avatar {
-        margin-left: 15px;
+	margin-left: 15px;
 }
 
 .ld-report-user-stats .avatar {
@@ -59,7 +59,7 @@
 }
 
 .ld-report-user-stats .user-message {
-    margin-right: auto;
+	margin-right: auto;
 }
 
 .ld-report-user-stats .user-name h5 {
@@ -69,8 +69,8 @@
 .ld-report-course-stats {
 	display: flex;
 	align-items: center;
-	background: white;
-	border: 1px solid #DEDFE2;
+	background: #fff;
+	border: 1px solid #dedfe2;
 	margin-bottom: 15px;
 }
 
@@ -97,4 +97,3 @@
 .export-indicator {
 	display: none;
 }
-

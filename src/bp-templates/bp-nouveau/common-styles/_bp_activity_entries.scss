@@ -345,8 +345,9 @@
 						font-size: 110%;
 						font-weight: 800;
 						padding: 0;
+
 						&:before {
-							content:'\00B7';
+							content: "\00B7";
 							vertical-align: middle;
 						}
 					}
