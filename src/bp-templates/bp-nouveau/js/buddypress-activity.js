@@ -433,7 +433,7 @@ window.bp = window.bp || {};
 		activityActions: function( event ) {
 			var parent = event.data, target = $( event.target ), activity_item = $( event.currentTarget ),
 				activity_id = activity_item.data( 'bp-activity-id' ), stream = $( event.delegateTarget ),
-				separator = activity_item.find( '.separator' ),
+				activity_state = activity_item.find( '.activity-state' ),
 				comments_text = activity_item.find( '.comments-count' ),
 				likes_text = activity_item.find( '.like-text' ),
 				item_id, form;
@@ -474,8 +474,8 @@ window.bp = window.bp || {};
 
 							if ( likes_text.length ) {
 								response.data.like_count ?
-									likes_text.text( response.data.like_count ) && separator.addClass( 'has-likes' ) :
-									likes_text.empty() && separator.removeClass( 'has-likes' );
+									likes_text.text( response.data.like_count ) && activity_state.addClass( 'has-likes' ) :
+									likes_text.empty() && activity_state.removeClass( 'has-likes' );
 
 								// Update like tooltip
 								var decoded = $('<textarea/>').html(response.data.tooltip).text();
@@ -593,9 +593,9 @@ window.bp = window.bp || {};
 							} );
 
 							// Update the button count
-							comment_count_span = activity_item.find( '.acomment-reply span.comment-count' );
-							comment_count      = Number( comment_count_span.html() - deleted_comments_count );
-							comment_count_span.html( comment_count );
+							comment_count_span = activity_state.find( 'span.comments-count' );
+							comment_count = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[0] : 0;
+							comment_count = Number( comment_count - deleted_comments_count );
 
 							if ( comments_text.length ) {
 								var label = comment_count > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
@@ -611,7 +611,7 @@ window.bp = window.bp || {};
 							// Clean up the parent activity classes.
 							if ( 0 === comment_count ) {
 								activity_item.removeClass( 'has-comments' );
-								separator.removeClass( 'has-comments' );
+								activity_state.removeClass( 'has-comments' );
 								comments_text.empty();
 							}
 						}
@@ -792,21 +792,23 @@ window.bp = window.bp || {};
 							$( form ).find( 'textarea' ).first().val( '' );
 
 							activity_comments.parent().addClass( 'has-comments' );
-							separator.addClass( 'has-comments' );
+							activity_state.addClass( 'has-comments' );
 						} );
 
 						// why, as it's already done a few lines ahead ???
 						//jq( '#' + form.attr('id') + ' textarea').val('');
 
 						// Set the new count
-						comment_count = Number( $( activity_item ).find( 'a span.comment-count' ).html() || 0 ) + 1;
+						comment_count_span = activity_state.find( 'span.comments-count' );
+						comment_count = comment_count_span.text().length ? comment_count_span.text().match( /\d+/ )[0] : 0;
+						comment_count = Number( comment_count ) + 1;
 
 						// Increase the "Reply (X)" button count
-						$( activity_item ).find( 'a span.comment-count' ).html( comment_count );
+						//$( activity_item ).find( 'a span.comment-count' ).html( comment_count );
 
 						if ( comments_text.length ) {
 							var label = comment_count > 1 ? BP_Nouveau.activity.strings.commentsLabel : BP_Nouveau.activity.strings.commentLabel;
-							comments_text.text( label.replace( '%d', comment_count ) );
+							comments_text.text( label.replace( '%d', comment_count || 1 ) );
 						}
 
 						// Increment the 'Show all x comments' string, if present

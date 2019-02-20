@@ -221,26 +221,17 @@ function bp_nouveau_activity_state() {
 	$like_text       = bp_activity_get_favorite_users_string( $activity_id );
 	$comment_count   = bp_activity_get_comment_count();
 	$favorited_users = bp_activity_get_favorite_users_tooltip_string( $activity_id );
-
-	if( !empty($like_text) || $comment_count != 0 ) {
-		echo '<div class="activity-state">';
-	}
-
-	if( !empty($like_text) ) { ?>
-		<span class="like-text" data-hint="<?php echo $favorited_users ?>"><?php echo $like_text ?: '' ?></span><?php
-	}
-
-	if( !empty($like_text) && $comment_count != 0 ) {
-		echo '<span class="ac-state-separator">&middot;</span>';
-	}
-
-	if( $comment_count != 0 ) { ?>
-		<span class="comments-count"><?php echo $comment_count ? sprintf( _n( '%d Comment', '%d Comments', $comment_count, 'buddyboss' ), $comment_count ) : '' ?></span><?php
-	}
-
-	if( !empty($like_text) || $comment_count != 0 ) {
-		echo '</div>';
-	}
+	?>
+	<div class="activity-state <?php echo $like_text ? 'has-likes' : '' ?> <?php echo $comment_count ? 'has-comments' : '' ?>">
+		<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo $favorited_users ?>">
+			<?php echo $like_text ?: '' ?>
+		</span>
+		<span class="ac-state-separator">
+			&middot;
+		</span>
+		<span class="comments-count"><?php echo $comment_count ? sprintf( _n( '%d Comment', '%d Comments', $comment_count, 'buddyboss' ), $comment_count ) : '' ?></span>
+	</div>
+	<?php
 }
 
 /**
