@@ -117,6 +117,17 @@ function bp_groups_admin_load() {
 		check_admin_referer( 'bp-groups-delete' );
 
 		$group_ids = wp_parse_id_list( $_GET['gid'] );
+		$gf_ids    = wp_parse_id_list( $_GET['gfid'] );
+
+		// Delete groups forums
+		if ( ! empty( $gf_ids ) ) {
+			foreach ( $gf_ids as $gf_id ) {
+				$forum_ids = bbp_get_group_forum_ids( $gf_id );
+				foreach ( $forum_ids as $forum_id ) {
+					wp_delete_post( $forum_id, true );
+				}
+			}
+		}
 
 		$count = 0;
 		foreach ( $group_ids as $group_id ) {
@@ -756,13 +767,31 @@ function bp_groups_admin_delete() {
 
 		<ul class="bp-group-delete-list">
 		<?php foreach ( $groups['groups'] as $group ) : ?>
-			<li><?php echo esc_html( bp_get_group_name( $group ) ); ?></li>
+			<li>
+				<?php echo esc_html( bp_get_group_name( $group ) ); ?>
+				<?php $forum_ids = bbp_get_group_forum_ids( $group->id ); ?>
+				<?php if ( ! empty( $forum_ids ) && is_array( $forum_ids ) ): ?>
+					<label for="delete-group-forum-<?php echo $group->id ?>" class="delete-forum-label">
+						<input type="checkbox" name="delete_group_forum" id="delete-group-forum-<?php echo $group->id ?>" value="<?php echo $group->id ?>" checked/>
+						<?php esc_html_e( 'Permanently delete the group discussion forum', 'buddyboss' ); ?>
+					</label>
+				<?php endif; ?>
+			</li>
 		<?php endforeach; ?>
 		</ul>
 
 		<p><strong><?php _e( 'This action cannot be undone.', 'buddyboss' ) ?></strong></p>
 
-		<a class="button-primary" href="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'do_delete', 'gid' => implode( ',', $gids ) ), $base_url ), 'bp-groups-delete' ) ); ?>"><?php _e( 'Delete Permanently', 'buddyboss' ) ?></a>
+		<a
+			class="button-primary"
+			id="delete-groups-submit"
+			href="<?php echo esc_url( wp_nonce_url( add_query_arg( array(
+				'action' => 'do_delete',
+				'gid'    => implode( ',', $gids )
+			), $base_url ), 'bp-groups-delete' ) ); ?>"
+		>
+			<?php _e( 'Delete Permanently', 'buddyboss' ) ?>
+		</a>
 		<a class="button" href="<?php echo esc_attr( $base_url ); ?>"><?php _e( 'Cancel', 'buddyboss' ) ?></a>
 	</div>
 
