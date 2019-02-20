@@ -177,6 +177,25 @@
 
 		} // close .activity-header
 
+		.activity-state {
+			display: none;
+
+			&.has-likes,
+			&.has-comments {
+				display: block;
+			}
+
+			.ac-state-separator {
+				display: none;
+			}
+
+			&.has-likes.has-comments {
+				.ac-state-separator {
+					display: inline-block;
+				}
+			}
+		}
+
 		.activity-content {
 
 			.activity-header,

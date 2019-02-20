@@ -50,6 +50,22 @@
 			window.warn_on_leave = false;
 		});
 
+		$( '#delete-groups-submit' ).on( 'click', function( e ) {
+			e.preventDefault();
+			var gfid = [],
+				href = this.getAttribute('href');
+
+			document.querySelectorAll( 'input[name=delete_group_forum]:checked' ).forEach( function( checkbox ) {
+				gfid.push( checkbox.value );
+			} );
+
+			if ( gfid.length > 0 ) {
+				href += '&gfid=' + encodeURIComponent( gfid.join(',') );
+			}
+
+			location.replace(href);
+		} );
+
 		window.onbeforeunload = function() {
 			if ( window.warn_on_leave ) {
 				return BP_Group_Admin.warn_on_leave;
