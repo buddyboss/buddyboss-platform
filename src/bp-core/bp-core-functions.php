@@ -3969,3 +3969,52 @@ function bp_core_set_default_pages() {
 	}
 
 }
+
+/**
+ * Checks whether the current installation is "large".
+ *
+ * By default, an installation counts as "large" if there are 10000 users or more.
+ * Filter 'bp_is_large_install' to adjust.
+ *
+ * @since BuddyPress 4.1.0
+ *
+ * @return bool
+ */
+function bp_is_large_install() {
+	// Use the Multisite function if available.
+	if ( function_exists( 'wp_is_large_network' ) ) {
+		$is_large = wp_is_large_network( 'users' );
+	} else {
+		$is_large = bp_core_get_total_member_count() > 10000;
+	}
+
+	/**
+	 * Filters whether the current installation is "large".
+	 *
+	 * @since BuddyPress 4.1.0
+	 *
+	 * @param bool $is_large True if the network is "large".
+	 */
+	return (bool) apply_filters( 'bp_is_large_install', $is_large );
+}
+
+/**
+ * Returns the upper limit on the "max" item count, for widgets that support it.
+ *
+ * @since BuddyPress 5.0.0
+ *
+ * @param string $widget_class Optional. Class name of the calling widget.
+ * @return int
+ */
+function bp_get_widget_max_count_limit( $widget_class = '' ) {
+	/**
+	 * Filters the upper limit on the "max" item count, for widgets that support it.
+	 *
+	 * @since BuddyPress 5.0.0
+	 *
+	 * @param int    $count        Defaults to 50.
+	 * @param string $widget_class Class name of the calling widget.
+	 */
+	return apply_filters( 'bp_get_widget_max_count_limit', 50, $widget_class );
+}
+
