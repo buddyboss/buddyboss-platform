@@ -190,6 +190,7 @@
 			}
 
 			&.has-likes.has-comments {
+
 				.ac-state-separator {
 					display: inline-block;
 				}
@@ -311,8 +312,7 @@
 
 				span {
 					background: none;
-					color: #555;
-					font-weight: 700;
+					font-weight: 600;
 				}
 			}
 

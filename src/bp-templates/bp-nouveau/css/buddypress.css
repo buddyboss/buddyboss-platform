@@ -1536,8 +1536,7 @@ a.layout-grid-view {
 
 .activity-list .activity-item .activity-meta.action .button span {
   background: none;
-  color: #555;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .activity-list .activity-item .activity-meta.action .unfav .like-count {

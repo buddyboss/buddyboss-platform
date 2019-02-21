@@ -153,3 +153,7 @@ table.bp-group-members .urole-column {
 		margin: 0.25em 0;
 	}
 }
+
+.delete-forum-label {
+	margin-right: 10px;
+}
