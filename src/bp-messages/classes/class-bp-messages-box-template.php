@@ -211,8 +211,8 @@ class BP_Messages_Box_Template {
 				'format'    => '',
 				'total'     => ceil( (int) $this->total_thread_count / (int) $this->pag_num ),
 				'current'   => $this->pag_page,
-				'prev_text' => _x( '&larr;', 'Message pagination previous text', 'buddyboss' ),
-				'next_text' => _x( '&rarr;', 'Message pagination next text', 'buddyboss' ),
+				'prev_text' => __( '&larr;', 'buddyboss' ),
+				'next_text' => __( '&rarr;', 'buddyboss' ),
 				'mid_size'  => 1,
 				'add_args'  => $add_args,
 			) );

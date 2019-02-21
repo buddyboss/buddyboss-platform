@@ -205,7 +205,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 		return sprintf(
 			_x(
 				'%1$s / %2$s',
-				'placeholders: current points / maximum point for assignment',
+				'placeholders: current points / maximum point',
 				'buddyboss'
 			),
 			get_post_meta($postId, 'points', true),

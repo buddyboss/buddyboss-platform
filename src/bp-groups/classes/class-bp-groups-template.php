@@ -292,8 +292,8 @@ class BP_Groups_Template {
 				'format'    => '',
 				'total'     => ceil( (int) $this->total_group_count / (int) $this->pag_num ),
 				'current'   => $this->pag_page,
-				'prev_text' => _x( '&larr;', 'Group pagination previous text', 'buddyboss' ),
-				'next_text' => _x( '&rarr;', 'Group pagination next text', 'buddyboss' ),
+				'prev_text' => __( '&larr;', 'buddyboss' ),
+				'next_text' => __( '&rarr;', 'buddyboss' ),
 				'mid_size'  => 1,
 				'add_args'  => $add_args,
 			) );

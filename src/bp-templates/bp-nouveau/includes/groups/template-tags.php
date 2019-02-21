@@ -226,10 +226,10 @@ function bp_nouveau_group_creation_tabs() {
 		<li<?php if ( bp_get_groups_current_create_step() === $slug ) : ?> class="current"<?php endif; ?>>
 			<?php if ( $is_enabled ) : ?>
 				<a href="<?php echo esc_url( bp_groups_directory_permalink() . 'create/step/' . $slug . '/' ); ?>">
-					<?php echo (int) $counter; ?> <?php echo esc_html( $step['name'] ); ?>
+					<?php echo (int) $counter; ?> <?php esc_html_e( $step['name'] ); ?>
 				</a>
 			<?php else : ?>
-				<?php echo (int) $counter; ?>. <?php echo esc_html( $step['name'] ); ?>
+				<?php echo (int) $counter; ?>. <?php esc_html_e( $step['name'] ); ?>
 			<?php endif ?>
 		</li>
 			<?php
@@ -374,7 +374,7 @@ function bp_nouveau_group_manage_screen() {
 			if ( ! bp_is_first_group_creation_step() ) {
 				$creation_step_buttons .= sprintf(
 					'<input type="button" value="%1$s" id="group-creation-previous" name="previous" onclick="%2$s" />',
-					esc_attr__( 'Back to Previous Step', 'buddyboss' ),
+					esc_attr__( 'Previous Step', 'buddyboss' ),
 					"location.href='" . esc_js( esc_url_raw( bp_get_group_creation_previous_link() ) ) . "'"
 				);
 			}
@@ -1319,7 +1319,7 @@ function bp_nouveau_groups_get_customizer_widgets_link() {
  /**
   * Output "checked" attribute to determine if the group type should be checked.
   *
-  * @since 3.2.0
+  * @since BuddyPress 3.2.0
   *
   * @param object $type Group type object. See bp_groups_get_group_type_object().
   */

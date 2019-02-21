@@ -187,8 +187,8 @@ class BP_Core_Members_Template {
 				'format'    => '',
 				'total'     => ceil( (int) $this->total_member_count / (int) $this->pag_num ),
 				'current'   => (int) $this->pag_page,
-				'prev_text' => _x( '&larr;', 'Member pagination previous text', 'buddyboss' ),
-				'next_text' => _x( '&rarr;', 'Member pagination next text', 'buddyboss' ),
+				'prev_text' => __( '&larr;', 'buddyboss' ),
+				'next_text' => __( '&rarr;', 'buddyboss' ),
 				'mid_size'  => 1,
 				'add_args'  => $add_args,
 			) );

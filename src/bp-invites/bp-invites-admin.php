@@ -92,7 +92,7 @@ function bp_invite_show_data( $column, $post_id  ) {
 			$inviter_link = bp_core_get_user_domain( $author_id );
 			$inviter_name = bp_core_get_user_displayname( $author_id );
 			printf(
-				__( '<a href="%s">%s</a>', 'buddyboss' ),
+				'<a href="%s">%s</a>',
 				esc_url( $inviter_link ), $inviter_name
 			);
 
@@ -100,20 +100,20 @@ function bp_invite_show_data( $column, $post_id  ) {
 
 		case 'invitee_name':
 
-			echo __( get_post_meta( $post_id, '_bp_invitee_name', true ), 'buddyboss' );
+			echo get_post_meta( $post_id, '_bp_invitee_name', true );
 
 			break;
 
 		case 'invitee_email':
 
-			echo __( get_post_meta( $post_id, '_bp_invitee_email', true ), 'buddyboss' );
+			echo get_post_meta( $post_id, '_bp_invitee_email', true );
 
 			break;
 
 		case 'date_invited':
 
 			$date = get_the_date( '',$post_id );
-			echo __( $date, 'buddyboss' );
+			echo $date;
 
 			break;
 
@@ -121,7 +121,7 @@ function bp_invite_show_data( $column, $post_id  ) {
 			$title = ( '1' === get_post_meta( $post_id, '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Revoke Invite', 'buddyboss' );
 			if ( '1' === get_post_meta( $post_id, '_bp_invitee_status', true ) ) {
 				printf(
-					__( '<a href="javascript:void(0);">%s</a>', 'buddyboss' ),
+					'<a href="javascript:void(0);">%s</a>',
 					$title
 				);
 			} else {

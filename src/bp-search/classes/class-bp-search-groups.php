@@ -17,7 +17,7 @@ if (!class_exists('Bp_Search_Groups')):
 		/**
 		 * Insures that only one instance of Class exists in memory at any
 		 * one time. Also prevents needing to define globals all over the place.
-		 ** @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 *
 		 * @return object Bp_Search_Groups
 		 */
@@ -37,7 +37,7 @@ if (!class_exists('Bp_Search_Groups')):
 		/**
 		 * A dummy constructor to prevent this class from being loaded more than once.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 */
 		private function __construct() { /* Do nothing here */
 		}

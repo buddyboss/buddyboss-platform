@@ -37,12 +37,12 @@ class EssaysReportsGenerator extends ReportsGenerator
 			'course_id'       => $this->column('course_id'),
 			'course'          => $this->column('course'),
 			'quiz'            => [
-				'label'     => __( 'Quiz', 'buddyboss' ),
+				'label'     => __( 'Quizzes', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'quiz_title',
 			],
 			'essay'            => [
-				'label'     => __( 'Essay', 'buddyboss' ),
+				'label'     => __( 'Essays', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'essay_title',
 			],
@@ -227,8 +227,8 @@ class EssaysReportsGenerator extends ReportsGenerator
 
 		return sprintf(
 			_x(
-				'%1$s / %2$d',
-				'placeholders: input points / maximum point for essay',
+				'%1$s / %2$s',
+				'placeholders: current points / maximum point',
 				'buddyboss'
 			), $currentPoints, $maxPoints
 		);

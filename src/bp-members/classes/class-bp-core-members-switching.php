@@ -82,7 +82,7 @@ class BP_Core_Members_Switching {
 
 		?>
 		<tr>
-			<th scope="row"><?php echo esc_html_x( 'Member Switching', 'Member Switching title on user profile screen', 'buddyboss' ); ?></th>
+			<th scope="row"><?php echo esc_html__( 'Member Switching', 'buddyboss' ); ?></th>
 			<td><a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'Switch&nbsp;To', 'buddyboss' ); ?></a>
 			</td>
 		</tr>

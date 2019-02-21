@@ -781,7 +781,7 @@ function bp_customizer_nav_menus_get_items( $items = array(), $type = '', $objec
 			'type'       => $type,
 			'url'        => esc_url_raw( $bp_item->guid ),
 			'classes'    => "bp-menu bp-{$bp_item->post_excerpt}-nav",
-			'type_label' => _x( 'Custom Link', 'customizer menu type label', 'buddyboss' ),
+			'type_label' => __( 'Custom Link', 'buddyboss' ),
 			'object'     => $object,
 			'object_id'  => -1,
 		);
@@ -802,12 +802,12 @@ add_filter( 'customize_nav_menu_available_items', 'bp_customizer_nav_menus_get_i
 function bp_customizer_nav_menus_set_item_types( $item_types = array() ) {
 	$item_types = array_merge( $item_types, array(
 		'bp_loggedin_nav' => array(
-			'title'  => _x( 'BuddyPress (logged-in)', 'customizer menu section title', 'buddyboss' ),
+			'title'  => __( 'BuddyPress (logged-in)', 'buddyboss' ),
 			'type'   => 'bp_nav',
 			'object' => 'bp_loggedin_nav',
 		),
 		'bp_loggedout_nav' => array(
-			'title'  => _x( 'BuddyPress (logged-out)', 'customizer menu section title', 'buddyboss' ),
+			'title'  => __( 'BuddyPress (logged-out)', 'buddyboss' ),
 			'type'   => 'bp_nav',
 			'object' => 'bp_loggedout_nav',
 		),
@@ -1139,7 +1139,7 @@ function bp_core_render_email_template( $template ) {
 	ob_end_clean();
 
 	// Make sure we add a <title> tag so WP Customizer picks it up.
-	$template = str_replace( '<head>', '<head><title>' . esc_html_x( 'BuddyBoss Emails', 'screen heading', 'buddyboss' ) . '</title>', $template );
+	$template = str_replace( '<head>', '<head><title>' . esc_html__( 'BuddyBoss Emails', 'buddyboss' ) . '</title>', $template );
 	echo str_replace( '{{{content}}}', wpautop( get_post()->post_content ), $template );
 
 	/*

@@ -24,8 +24,8 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = _x( 'Single Fields', 'xprofile field type category', 'buddyboss' );
-		$this->name     = _x( 'Date Selector', 'xprofile field type', 'buddyboss' );
+		$this->category = __( 'Single Fields', 'buddyboss' );
+		$this->name     = __( 'Date Selector', 'buddyboss' );
 
 		$this->set_format( '/^\d{4}-\d{1,2}-\d{1,2} 00:00:00$/', 'replace' ); // "Y-m-d 00:00:00"
 

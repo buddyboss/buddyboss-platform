@@ -1598,8 +1598,8 @@ function bbp_update_forum( $args = '' ) {
  */
 function bbp_get_forum_statuses() {
 	return apply_filters( 'bbp_get_forum_statuses', array(
-		'open'   => _x( 'Open',    'Open the forum',  'buddyboss' ),
-		'closed' => _x( 'Closed',  'Close the forum', 'buddyboss' )
+		'open'   => __( 'Open', 'buddyboss' ),
+		'closed' => __( 'Closed', 'buddyboss' )
 	) );
 }
 
@@ -1612,8 +1612,8 @@ function bbp_get_forum_statuses() {
  */
 function bbp_get_forum_types() {
 	return apply_filters( 'bbp_get_forum_types', array(
-		'forum'    => _x( 'Forum',    'Forum accepts new topics', 'buddyboss' ),
-		'category' => _x( 'Category', 'Forum is a category',      'buddyboss' )
+		'forum'    => __( 'Forum', 'buddyboss' ),
+		'category' => __( 'Category', 'buddyboss' )
 	) );
 }
 
@@ -1626,16 +1626,16 @@ function bbp_get_forum_types() {
  */
 function bbp_get_forum_visibilities() {
 	return apply_filters( 'bbp_get_forum_visibilities', array(
-		bbp_get_public_status_id()  => _x( 'Public',  'Make forum public',  'buddyboss' ),
-		bbp_get_private_status_id() => _x( 'Private', 'Make forum private', 'buddyboss' ),
-		bbp_get_hidden_status_id()  => _x( 'Hidden',  'Make forum hidden',  'buddyboss' )
+		bbp_get_public_status_id()  => __( 'Public', 'buddyboss' ),
+		bbp_get_private_status_id() => __( 'Private', 'buddyboss' ),
+		bbp_get_hidden_status_id()  => __( 'Hidden', 'buddyboss' )
 	) );
 }
 
 /**
  * Check if given forum has thumbnail available
  *
- * @since  BuddyBoss 1.0.0
+ * @since BuddyBoss 1.0.0
  */
 function bbp_has_forum_thumbnail( $forum_id = null ) {
 	return !! bbp_get_forum_thumbnail_src( $forum_id );
@@ -1644,7 +1644,7 @@ function bbp_has_forum_thumbnail( $forum_id = null ) {
 /**
  * Get the forum thumbnail's image source
  *
- * @since  BuddyBoss 1.0.0
+ * @since BuddyBoss 1.0.0
  */
 function bbp_get_forum_thumbnail_src( $forum_id = null, $size = null, $type = null ) {
 	if ( $thumbnail_id = get_post_thumbnail_id( $forum_id ) ) {
@@ -1675,7 +1675,7 @@ function bbp_get_forum_thumbnail_src( $forum_id = null, $size = null, $type = nu
 /**
  * Get the forum thumbnail's image tag
  *
- * @since  BuddyBoss 1.0.0
+ * @since BuddyBoss 1.0.0
  */
 function bbp_get_forum_thumbnail_image( $forum_id = null, $size = null, $type = null ) {
 	if ( $thumbnail_id = get_post_thumbnail_id( $forum_id ) ) {

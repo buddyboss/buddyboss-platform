@@ -228,7 +228,7 @@ add_action( 'bp_activity_clear_new_mentions', 'bp_activity_remove_screen_notific
  * Mark notifications as read when a user visits an activity permalink.
  *
  * @since BuddyPress 2.0.0
- * @since 3.2.0 Marks replies to parent update and replies to an activity comment as read.
+ * @since BuddyPress 3.2.0 Marks replies to parent update and replies to an activity comment as read.
  *
  * @param BP_Activity_Activity $activity Activity object.
  */

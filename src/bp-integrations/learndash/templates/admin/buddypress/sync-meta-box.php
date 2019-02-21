@@ -9,7 +9,7 @@
         autocomplete="off"
         <?php checked($hasLdGroup, true); var_dump($hasLdGroup); ?>
     />
-    <?php _e('Yes. I want this group to have a LearnDash group', 'buddyboss'); ?>
+    <?php _e('Yes. I want this group to have a LearnDash group.', 'buddyboss'); ?>
 </label>
 
 <p>
@@ -27,7 +27,7 @@
 
 	<?php if ($hasLdGroup): ?>
         <a href="<?php echo get_edit_post_link($ldGroupId); ?>" target="_blank">
-            <?php _e('edit group', 'buddyboss'); ?>
+            <?php _e('Edit Group', 'buddyboss'); ?>
         </a>
 	<?php endif; ?>
 </p>

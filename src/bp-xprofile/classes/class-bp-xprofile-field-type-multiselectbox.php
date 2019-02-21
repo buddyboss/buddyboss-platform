@@ -24,8 +24,8 @@ class BP_XProfile_Field_Type_Multiselectbox extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = _x( 'Multi Fields', 'xprofile field type category', 'buddyboss' );
-		$this->name     = _x( 'Multi Select Box', 'xprofile field type', 'buddyboss' );
+		$this->category = __( 'Multi Fields', 'buddyboss' );
+		$this->name     = __( 'Multi Select Box', 'buddyboss' );
 
 		$this->supports_multiple_defaults = true;
 		$this->accepts_null_value         = true;

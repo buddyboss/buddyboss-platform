@@ -10,7 +10,7 @@ function bp_search_search_page_content( $content ){
      * Possibly due to some other plugin/theme.
      *
      * Lets add another precautionary measure, a global flag.
-     * @since 1.1.3
+     * @since BuddyPress 1.1.3
      */
     global $bpgs_main_content_filter_has_run;
 

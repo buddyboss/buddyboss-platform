@@ -324,7 +324,7 @@ class BP_Members_Component extends BP_Component {
 
 		if ( ! $is_xprofile_active ) {
 			$this->main_nav = array(
-				'name'                => _x( 'Profile', 'Member profile main navigation', 'buddyboss' ),
+				'name'                => __( 'Profile', 'buddyboss' ),
 				'slug'                => $slug,
 				'position'            => 10,
 				'screen_function'     => 'bp_members_screen_display_profile',
@@ -340,7 +340,7 @@ class BP_Members_Component extends BP_Component {
 		 * is not active.
 		 */
 		$this->sub_nav = array(
-			'name'            => _x( 'View', 'Member profile view', 'buddyboss' ),
+			'name'            => __( 'View', 'buddyboss' ),
 			'slug'            => 'public',
 			'parent_url'      => trailingslashit( $user_domain . $slug ),
 			'parent_slug'     => $slug,
@@ -354,7 +354,7 @@ class BP_Members_Component extends BP_Component {
 		 */
 		if ( bp_displayed_user_has_front_template() ) {
 			$main_nav = array(
-				'name'                => _x( 'Dashboard', 'Member Home page', 'buddyboss' ),
+				'name'                => __( 'Dashboard', 'buddyboss' ),
 				'slug'                => 'front',
 				'position'            => 5,
 				'screen_function'     => 'bp_members_screen_display_profile',

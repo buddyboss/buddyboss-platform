@@ -23,7 +23,7 @@ function bp_email_init_customizer( WP_Customize_Manager $wp_customize ) {
 
 	$wp_customize->add_panel( 'bp_mailtpl', array(
 		'description' => __( 'Customize the appearance of emails sent by BuddyBoss.', 'buddyboss' ),
-		'title'       => _x( 'BuddyBoss Emails', 'screen heading', 'buddyboss' ),
+		'title'       => __( 'BuddyBoss Emails', 'buddyboss' ),
 	) );
 
 	$sections = bp_email_get_customizer_sections();
@@ -128,17 +128,17 @@ function bp_email_get_customizer_sections() {
 		'section_bp_mailtpl_header' => array(
 			'capability' => 'bp_moderate',
 			'panel'      => 'bp_mailtpl',
-			'title'      => _x( 'Header', 'email', 'buddyboss' ),
+			'title'      => __( 'Header', 'buddyboss' ),
 		),
 		'section_bp_mailtpl_body' => array(
 			'capability' => 'bp_moderate',
 			'panel'      => 'bp_mailtpl',
-			'title'      => _x( 'Body', 'email', 'buddyboss' ),
+			'title'      => __( 'Body', 'buddyboss' ),
 		),
 		'section_bp_mailtpl_footer' => array(
 			'capability' => 'bp_moderate',
 			'panel'      => 'bp_mailtpl',
-			'title'      => _x( 'Footer', 'email', 'buddyboss' ),
+			'title'      => __( 'Footer', 'buddyboss' ),
 		),
 	) );
 }

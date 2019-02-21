@@ -3357,6 +3357,7 @@ function bp_get_group_type_post_id( $group_type = '' ) {
  * @param $label_name
  *
  * @return string
+ * @todo should these labels be added to the text domain?
  */
 function get_group_role_label( $group_id, $label_name ) {
 

@@ -247,7 +247,7 @@ function friends_screen_notification_settings() {
 		<thead>
 			<tr>
 				<th class="icon"></th>
-				<th class="title"><?php _ex( 'Connections', 'Connection settings on notification settings page', 'buddyboss' ) ?></th>
+				<th class="title"><?php _e( 'Connections', 'buddyboss' ) ?></th>
 				<th class="yes"><?php _e( 'Yes', 'buddyboss' ) ?></th>
 				<th class="no"><?php _e( 'No', 'buddyboss' )?></th>
 			</tr>
@@ -256,7 +256,7 @@ function friends_screen_notification_settings() {
 		<tbody>
 			<tr id="friends-notification-settings-request">
 				<td></td>
-				<td><?php _ex( 'A member invites you to connect', 'Connection settings on notification settings page', 'buddyboss' ) ?></td>
+				<td><?php _e( 'A member invites you to connect', 'buddyboss' ) ?></td>
 				<td class="yes"><input type="radio" name="notifications[notification_friends_friendship_request]" id="notification-friends-friendship-request-yes" value="yes" <?php checked( $send_requests, 'yes', true ) ?>/><label for="notification-friends-friendship-request-yes" class="bp-screen-reader-text"><?php
 					/* translators: accessibility text */
 					_e( 'Yes, send email', 'buddyboss' );
@@ -268,7 +268,7 @@ function friends_screen_notification_settings() {
 			</tr>
 			<tr id="friends-notification-settings-accepted">
 				<td></td>
-				<td><?php _ex( 'A member accepts your connection request', 'Connection settings on notification settings page', 'buddyboss' ) ?></td>
+				<td><?php _e( 'A member accepts your connection request', 'buddyboss' ) ?></td>
 				<td class="yes"><input type="radio" name="notifications[notification_friends_friendship_accepted]" id="notification-friends-friendship-accepted-yes" value="yes" <?php checked( $accept_requests, 'yes', true ) ?>/><label for="notification-friends-friendship-accepted-yes" class="bp-screen-reader-text"><?php
 					/* translators: accessibility text */
 					_e( 'Yes, send email', 'buddyboss' );

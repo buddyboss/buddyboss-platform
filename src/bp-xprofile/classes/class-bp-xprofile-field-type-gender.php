@@ -24,8 +24,8 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = _x( 'Multi Fields', 'xprofile field type category', 'buddyboss' );
-		$this->name     = _x( 'Gender', 'xprofile field type', 'buddyboss' );
+		$this->category = __( 'Multi Fields', 'buddyboss' );
+		$this->name     = __( 'Gender', 'buddyboss' );
 
 		$this->supports_options = true;
 
@@ -214,7 +214,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 		?>
 
 		<div id="<?php echo esc_attr( $type ); ?>" class="postbox bp-options-box" style="<?php echo esc_attr( $class ); ?> margin-top: 15px;">
-			<h3><?php esc_html_e( 'Male and Female allow us to use "his" and "her" in the activity feed.', 'buddyboss' ); ?></h3>
+			<h3><?php esc_html_e( 'Male and Female use "his" and "her" pronouns in the activity feed. Any other gender uses the pronoun "their"', 'buddyboss' ); ?></h3>
 			<div class="inside" aria-live="polite" aria-atomic="true" aria-relevant="all">
 				<p style="display: none;">
 					<label for="sort_order_<?php echo esc_attr( $type ); ?>"><?php esc_html_e( 'Sort Order:', 'buddyboss' ); ?></label>

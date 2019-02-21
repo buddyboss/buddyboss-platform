@@ -32,7 +32,7 @@ class BP_Latest_Activities extends WP_Widget {
 		$widget_ops = apply_filters(
 			'bp_latest_activities', array(
 				'classname'                   => 'bp-latest-activities buddypress',
-				'description'                 => __( 'Display the latest updates of your community having the types of your choice.', 'buddyboss' ),
+				'description'                 => __( 'Select to display the latest activity updates, by type, posted within your community.', 'buddyboss' ),
 				'customize_selective_refresh' => true,
 			)
 		);
@@ -189,10 +189,10 @@ class BP_Latest_Activities extends WP_Widget {
 			<input type="number" class="widefat" id="<?php echo $this->get_field_id( 'max' ); ?>" name="<?php echo $this->get_field_name( 'max' ); ?>" value="<?php echo intval( $max ); ?>" step="1" min="1" max="20" />
 		</p>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'type' ); ?>"><?php esc_html_e( 'Type:', 'buddyboss' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'type' ); ?>"><?php esc_html_e( 'Activity Type:', 'buddyboss' ); ?></label>
 			<select class="widefat" multiple="multiple" id="<?php echo $this->get_field_id( 'type' ); ?>" name="<?php echo $this->get_field_name( 'type' ); ?>[]">
 				<?php foreach ( bp_nouveau_get_activity_filters() as $key => $name ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( in_array( $key, $type ) ); ?>><?php echo esc_html( $name ); ?></option>
+					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( in_array( $key, $type ) ); ?>><?php esc_html_e( $name ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</p>

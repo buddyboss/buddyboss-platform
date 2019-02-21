@@ -209,7 +209,7 @@ function bp_adminbar_account_menu() {
 	}
 
 	echo '<li id="bp-adminbar-account-menu"><a href="' . bp_loggedin_user_domain() . '">';
-	echo __( 'My Account', 'buddyboss' ) . '</a>';
+	_e( 'My Account', 'buddyboss' ) . '</a>';
 	echo '<ul>';
 
 	// Loop through each navigation item

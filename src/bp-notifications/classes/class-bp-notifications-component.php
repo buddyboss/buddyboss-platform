@@ -24,7 +24,7 @@ class BP_Notifications_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'notifications',
-			_x( 'Notifications', 'Page <title>', 'buddyboss' ),
+			__( 'Notifications', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 30
@@ -158,7 +158,7 @@ class BP_Notifications_Component extends BP_Component {
 			$class    = ( 0 === $count ) ? 'no-count' : 'count';
 			$nav_name = sprintf(
 				/* translators: %s: Unread notification count for the current user */
-				_x( 'Notifications %s', 'Profile screen nav', 'buddyboss' ),
+				__( 'Notifications %s', 'buddyboss' ),
 				sprintf(
 					'<span class="%s">%s</span>',
 					esc_attr( $class ),
@@ -166,7 +166,7 @@ class BP_Notifications_Component extends BP_Component {
 				)
 			);
 		} else {
-			$nav_name = _x( 'Notifications', 'Profile screen nav', 'buddyboss' );
+			$nav_name = __( 'Notifications', 'buddyboss' );
 		}
 
 		// Add 'Notifications' to the main navigation.
@@ -182,7 +182,7 @@ class BP_Notifications_Component extends BP_Component {
 
 		// Add the subnav items to the notifications nav item.
 		$sub_nav[] = array(
-			'name'            => _x( 'Unread', 'Notification screen nav', 'buddyboss' ),
+			'name'            => __( 'Unread', 'buddyboss' ),
 			'slug'            => 'unread',
 			'parent_url'      => $notifications_link,
 			'parent_slug'     => $slug,
@@ -193,7 +193,7 @@ class BP_Notifications_Component extends BP_Component {
 		);
 
 		$sub_nav[] = array(
-			'name'            => _x( 'Read', 'Notification screen nav', 'buddyboss' ),
+			'name'            => __( 'Read', 'buddyboss' ),
 			'slug'            => 'read',
 			'parent_url'      => $notifications_link,
 			'parent_slug'     => $slug,
@@ -229,17 +229,17 @@ class BP_Notifications_Component extends BP_Component {
 			if ( ! empty( $count ) ) {
 				$title = sprintf(
 					/* translators: %s: Unread notification count for the current user */
-					_x( 'Notifications %s', 'My Account Notification pending', 'buddyboss' ),
+					__( 'Notifications %s', 'buddyboss' ),
 					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 				);
 				$unread = sprintf(
 					/* translators: %s: Unread notification count for the current user */
-					_x( 'Unread %s', 'My Account Notification pending', 'buddyboss' ),
+					__( 'Unread %s', 'buddyboss' ),
 					'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 				);
 			} else {
-				$title  = _x( 'Notifications', 'My Account Notification',         'buddyboss' );
-				$unread = _x( 'Unread',        'My Account Notification sub nav', 'buddyboss' );
+				$title  = __( 'Notifications', 'buddyboss' );
+				$unread = _x( 'Unread', 'buddyboss' );
 			}
 
 			// Add the "My Account" sub menus.
@@ -263,7 +263,7 @@ class BP_Notifications_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-read',
-				'title'    => _x( 'Read', 'My Account Notification sub nav', 'buddyboss' ),
+				'title'    => __( 'Read', 'buddyboss' ),
 				'href'     => trailingslashit( $notifications_link . 'read' ),
 				'position' => 20
 			);

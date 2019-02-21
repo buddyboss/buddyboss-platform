@@ -417,13 +417,13 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				'button_attr'       => array(
 					'id'              => 'acomment-comment-' . $activity_id,
 					'class'           => 'button acomment-reply bp-primary-action',
-					// 'data-bp-tooltip' => _x( 'Comment', 'button', 'buddyboss' ),
+					// 'data-bp-tooltip' => __( 'Comment', 'buddyboss' ),
 					'aria-expanded'   => 'false',
 				),
 				'link_text'  => sprintf(
 					'<span class="bp-screen-reader-text">%1$s</span> <span class="comment-count">%2$s</span>',
-					_x( 'Comment', 'link', 'buddyboss' ),
-					_x( 'Comment', 'link', 'buddyboss' )
+					__( 'Comment', 'buddyboss' ),
+					__( 'Comment', 'buddyboss' )
 				),
 			);
 
@@ -479,8 +479,8 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				'link_id'         => '',
 				'link_class'      => 'button item-button bp-secondary-action delete-activity confirm',
 				'link_rel'        => 'nofollow',
-				'data_bp_tooltip' => _x( 'Delete', 'button', 'buddyboss' ),
-				'link_text'       => _x( 'Delete', 'button', 'buddyboss' ),
+				'data_bp_tooltip' => __( 'Delete', 'buddyboss' ),
+				'link_text'       => __( 'Delete', 'buddyboss' ),
 				'link_href'       => bp_get_activity_delete_url(),
 			);
 
@@ -529,12 +529,12 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				'button_attr'       => array(
 					'class'           => 'bp-secondary-action spam-activity confirm button item-button bp-tooltip',
 					'id'              => 'activity_make_spam_' . $activity_id,
-					'data-bp-tooltip' => _x( 'Spam', 'button', 'buddyboss' ),
+					'data-bp-tooltip' => __( 'Spam', 'buddyboss' ),
 					),
 				'link_text'  => sprintf(
 					/** @todo: use a specific css rule for this *************************************************************/
 					'<span class="dashicons dashicons-flag" style="color:#a00;vertical-align:baseline;width:18px;height:18px" aria-hidden="true"></span><span class="bp-screen-reader-text">%s</span>',
-					esc_html_x( 'Spam', 'button', 'buddyboss' )
+					esc_html__( 'Spam', 'buddyboss' )
 				),
 			);
 
@@ -817,7 +817,7 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 				'parent_element'    => $parent_element,
 				'parent_attr'       => $parent_attr,
 				'button_element'    => $button_element,
-				'link_text'         => _x( 'Reply', 'link', 'buddyboss' ),
+				'link_text'         => __( 'Reply', 'buddyboss' ),
 				'button_attr'       => array(
 					'class' => "acomment-reply bp-primary-action",
 					'id'    => sprintf( 'acomment-reply-%1$s-from-%2$s', $activity_id, $activity_comment_id ),
@@ -831,7 +831,7 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 				'parent_element'    => $parent_element,
 				'parent_attr'       => $parent_attr,
 				'button_element'    => $button_element,
-				'link_text'         => _x( 'Delete', 'link', 'buddyboss' ),
+				'link_text'         => __( 'Delete', 'buddyboss' ),
 				'button_attr'       => array(
 					'class' => 'delete acomment-delete confirm bp-secondary-action',
 					'rel'   => 'nofollow',
@@ -858,7 +858,7 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 				'parent_element'    => $parent_element,
 				'parent_attr'       => $parent_attr,
 				'button_element'    => $button_element,
-				'link_text'         => _x( 'Spam', 'link', 'buddyboss' ),
+				'link_text'         => __( 'Spam', 'buddyboss' ),
 				'button_attr'       => array(
 					'id'     => "activity_make_spam_{$activity_comment_id}",
 					'class'  => 'bp-secondary-action spam-activity-comment confirm',

@@ -54,8 +54,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 							<?php
 							break;
 
-					case 'date_range': ?><span class="date-from date-label"><?php _ex( 'From',
-						'Profile search - date from',
+					case 'date_range': ?><span class="date-from date-label"><?php _e( 'From',
 						'buddyboss' ); ?></span>
 						<div class="date-wrapper">
 							<select name="<?php echo $name . '[min][day]'; ?>">
@@ -128,8 +127,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 							</select>
 						</div>
 
-						<span class="date-to date-label"><?php _ex( 'To',
-								'Profile search - date to',
+						<span class="date-to date-label"><?php _e( 'To',
 								'buddyboss' ); ?></span>
 						<div class="date-wrapper">
 							<select name="<?php echo $name . '[max][day]'; ?>">
@@ -298,14 +296,14 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 				<p class="clear-from-wrap">
 					<a href='#' onclick="return bp_ps_clear_form_elements(this);"><?php _e( 'Reset',
 							'buddyboss' ); ?></a></p>
-				<input type="submit" value="<?php echo __( 'Search', 'buddyboss' ); ?>"/>
+				<input type="submit" value="<?php _e( 'Search', 'buddyboss' ); ?>"/>
 			</div>
 
 			<?php
 		} else {
 			?>
 			<div class="submit-wrapper">
-				<span class="no-field"><?php echo __( 'Please add fields to search members.', 'buddyboss' ); ?></span>
+				<span class="no-field"><?php _e( 'Please add fields to search members.', 'buddyboss' ); ?></span>
 			</div>
 			<?php
 		}

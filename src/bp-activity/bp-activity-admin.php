@@ -28,8 +28,8 @@ function bp_activity_add_admin_menu() {
 
 	// Add our screen.
 	$hook = add_menu_page(
-		_x( 'Activity', 'Admin Dashboard SWA page title', 'buddyboss' ),
-		_x( 'Activity', 'Admin Dashboard SWA menu', 'buddyboss' ),
+		__( 'Activity', 'buddyboss' ),
+		__( 'Activity', 'buddyboss' ),
 		'bp_moderate',
 		'bp-activity',
 		'bp_activity_admin',
@@ -242,11 +242,11 @@ function bp_activity_admin_load() {
 		);
 
 		// Register metaboxes for the edit screen.
-		add_meta_box( 'submitdiv',           _x( 'Status', 'activity admin edit screen', 'buddyboss' ), 'bp_activity_admin_edit_metabox_status', get_current_screen()->id, 'side', 'core' );
-		add_meta_box( 'bp_activity_itemids', _x( 'Primary Item/Secondary Item', 'activity admin edit screen', 'buddyboss' ), 'bp_activity_admin_edit_metabox_itemids', get_current_screen()->id, 'normal', 'core' );
-		add_meta_box( 'bp_activity_link',    _x( 'Link', 'activity admin edit screen', 'buddyboss' ), 'bp_activity_admin_edit_metabox_link', get_current_screen()->id, 'normal', 'core' );
-		add_meta_box( 'bp_activity_type',    _x( 'Type', 'activity admin edit screen', 'buddyboss' ), 'bp_activity_admin_edit_metabox_type', get_current_screen()->id, 'normal', 'core' );
-		add_meta_box( 'bp_activity_userid',  _x( 'Author ID', 'activity admin edit screen', 'buddyboss' ), 'bp_activity_admin_edit_metabox_userid', get_current_screen()->id, 'normal', 'core' );
+		add_meta_box( 'submitdiv',           __( 'Status', 'buddyboss' ), 'bp_activity_admin_edit_metabox_status', get_current_screen()->id, 'side', 'core' );
+		add_meta_box( 'bp_activity_itemids', __( 'Primary Item/Secondary Item', 'buddyboss' ), 'bp_activity_admin_edit_metabox_itemids', get_current_screen()->id, 'normal', 'core' );
+		add_meta_box( 'bp_activity_link',    __( 'Link', 'buddyboss' ), 'bp_activity_admin_edit_metabox_link', get_current_screen()->id, 'normal', 'core' );
+		add_meta_box( 'bp_activity_type',    __( 'Type', 'buddyboss' ), 'bp_activity_admin_edit_metabox_type', get_current_screen()->id, 'normal', 'core' );
+		add_meta_box( 'bp_activity_userid',  __( 'Author ID', 'buddyboss' ), 'bp_activity_admin_edit_metabox_userid', get_current_screen()->id, 'normal', 'core' );
 
 		/**
 		 * Fires after the registration of all of the default activity meta boxes.
@@ -266,7 +266,7 @@ function bp_activity_admin_load() {
 		$bp_activity_list_table = new BP_Activity_List_Table();
 
 		// The per_page screen option.
-		add_screen_option( 'per_page', array( 'label' => _x( 'Activity', 'Activity items per page (screen options)', 'buddyboss' )) );
+		add_screen_option( 'per_page', array( 'label' => __( 'Activity', 'buddyboss' )) );
 
 		// Help panel - overview text.
 		get_current_screen()->add_help_tab( array(
@@ -1006,7 +1006,7 @@ function bp_activity_admin_index() {
 			<?php if ( !empty( $_REQUEST['aid'] ) ) : ?>
 				<?php printf( __( 'Activity related to ID #%s', 'buddyboss' ), number_format_i18n( (int) $_REQUEST['aid'] ) ); ?>
 			<?php else : ?>
-				<?php _ex( 'Activity', 'Admin SWA page', 'buddyboss' ); ?>
+				<?php _e( 'Activity', 'buddyboss' ); ?>
 			<?php endif; ?>
 
 			<?php if ( !empty( $_REQUEST['s'] ) ) : ?>

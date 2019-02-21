@@ -37,7 +37,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 
 		// It's a group
 		if ( 'group' === $this->type ) {
-			$guide = __( 'Customizing the Groups navigation order needs you create at least one group first.', 'buddyboss' );
+			$guide = __( 'Customizing the Groups navigation requires you to create a group first.', 'buddyboss' );
 
 			$slug = array();
 
@@ -64,20 +64,20 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 			}
 
 			if ( $item_nav ) {
-				$guide = __( 'Drag each possible group navigation items that are listed below into the order you prefer, in some groups some of these navigation items might not be active.', 'buddyboss' );
+				$guide = __( 'Drag and drop each group navigation item to change the order, not all groups have every navigation item enabled.', 'buddyboss' );
 			}
 
 		// It's a user!
 		} else {
 			$item_nav = bp_nouveau_member_customizer_nav();
 
-			$guide = __( 'Drag each possible member navigation items that are listed below into the order you prefer.', 'buddyboss' );
+			$guide = __( 'Drag and drop each member navigation item to change the order.', 'buddyboss' );
 		}
 		?>
 
 		<?php if ( isset( $guide ) ) : ?>
 			<p class="description">
-				<?php echo esc_html( $guide ); ?>
+				<?php esc_html_e( $guide ); ?>
 			</p>
 		<?php endif; ?>
 
@@ -93,7 +93,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 						<div class="menu-item-bar">
 							<div class="menu-item-handle ui-sortable-handle">
 								<span class="item-title" aria-hidden="true">
-									<span class="menu-item-title"><?php echo esc_html( _bp_strip_spans_from_title( $item->name ) ); ?></span>
+									<span class="menu-item-title"><?php esc_html_e( _bp_strip_spans_from_title( $item->name ) ); ?></span>
 								</span>
 							</div>
 						</div>

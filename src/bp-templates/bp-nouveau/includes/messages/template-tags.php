@@ -65,8 +65,8 @@ function bp_nouveau_messages_member_interface() {
  /**
  * Output the Member's messages search form.
  *
- * @since  3.0.0
- * @since  3.2.0 Move the function into Template Tags and use a template part.
+ * @since BuddyPress 3.0.0
+ * @since BuddyPress 3.2.0 Move the function into Template Tags and use a template part.
  */
 function bp_nouveau_message_search_form() {
     $search_form_html = bp_buffer_template_part( 'common/js-templates/messages/search-form', null, false );
@@ -74,7 +74,7 @@ function bp_nouveau_message_search_form() {
 	/**
 	 * Filters the private message component search form.
 	 *
-	 * @since 2.2.0
+	 * @since BuddyPress 2.2.0
 	 *
 	 * @param string $search_form_html HTML markup for the message search form.
 	 */

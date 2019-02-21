@@ -15,7 +15,9 @@
                 <?php echo stripslashes( wp_strip_all_tags( bbp_get_topic_title( get_the_ID() ) ) );?>
             </div>
 			<div class="item-desc">
-				<?php printf( _n( '%d reply', '%d replies', $total, 'buddyboss' ), $total ); ?>
+				<?php
+            	//@todo remove %d?
+				printf( _n( '%d reply', '%d replies', $total, 'buddyboss' ), $total ); ?>
 			</div>
 		</div>
 	</a>

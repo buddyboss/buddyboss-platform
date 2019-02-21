@@ -210,8 +210,8 @@ final class BP_Notification_Export extends BP_Export {
 		/**
 		 * Filters the full-text description for a specific notification.
 		 *
-		 * @since 1.9.0
-		 * @since 2.3.0 Added the `$notification` parameter.
+		 * @since BuddyPress 1.9.0
+		 * @since BuddyPress 2.3.0 Added the `$notification` parameter.
 		 *
 		 * @param string $description Full-text description for a specific notification.
 		 * @param object $notification Notification object.

@@ -105,7 +105,7 @@ function bp_members_admin_bar_user_admin_menu() {
 		$wp_admin_bar->add_menu( array(
 			'parent' => $bp->user_admin_menu_id,
 			'id'     => $bp->user_admin_menu_id . '-edit-profile',
-			'title'  => __( "Edit Profile", 'buddyboss' ),
+			'title'  => __( 'Edit Profile', 'buddyboss' ),
 			'href'   => add_query_arg( [
 				'redirect_to' => urlencode( bp_get_members_component_link( 'profile', 'edit' ) ),
 			], $link )
@@ -116,7 +116,7 @@ function bp_members_admin_bar_user_admin_menu() {
 			$wp_admin_bar->add_menu( array(
 				'parent' => $bp->user_admin_menu_id,
 				'id'     => $bp->user_admin_menu_id . '-change-avatar',
-				'title'  => __( "Edit Profile Photo", 'buddyboss' ),
+				'title'  => __( 'Edit Profile Photo', 'buddyboss' ),
 				'href'   => add_query_arg( [
 					'redirect_to' => urlencode( bp_get_members_component_link( 'profile', 'change-avatar' ) ),
 				], $link )

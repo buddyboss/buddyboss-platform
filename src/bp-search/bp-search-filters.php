@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Get the default items to search though, if nothing has been selected in settings.
  *
- * @since 1.0.0
+ * @since BuddyBoss 1.0.0
  *
  * @param mixed $value
  *
@@ -53,7 +53,7 @@ add_filter( 'bp_search_option_items-to-search', 'bb_global_search_default_items_
 /**
  * Remove 'messages' and 'notifications' from search, if user is not logged In
  *
- * @since 1.0.0
+ * @since BuddyBoss 1.0.0
  *
  * @param mixed $value
  *
@@ -83,7 +83,7 @@ add_filter( 'template_include', 'bp_search_override_wp_native_results', 999 ); /
 /**
  * Force native wp search section to load page template so we can hook stuff into it.
  *
- * @since 1.0.0
+ * @since BuddyBoss 1.0.0
  *
  * @param mixed $value
  *
@@ -114,7 +114,7 @@ function bp_search_override_wp_native_results( $template ) {
 
 /**
  * Load dummy post for wp native search result. magic starts here.
- * @since 1.0.0
+ * @since BuddyBoss 1.0.0
  *
  * @param mixed $value
  *
@@ -176,7 +176,7 @@ function bp_search_result_page_dummy_post_load( $template ) {
 
 /**
  * Force native wp search page not to look any data into db to save query and performance
- * @since 1.0.0
+ * @since BuddyBoss 1.0.0
  *
  * @param mixed $value
  *

@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 		</div>
 
 		<div class="bp-hello-title">
-			<h1 id="bp-hello-title" tabindex="-1"><?php esc_html_e( _x( 'New in BuddyBoss', 'section heading', 'buddyboss' ) ); ?></h1>
+			<h1 id="bp-hello-title" tabindex="-1"><?php esc_html_e( __( 'New in BuddyBoss', 'buddyboss' ) ); ?></h1>
 		</div>
 	</div>
 

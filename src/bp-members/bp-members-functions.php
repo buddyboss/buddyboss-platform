@@ -2850,7 +2850,7 @@ function bp_register_member_type_section() {
 	register_post_type(
 		bp_get_member_type_post_type(),
 		apply_filters( 'bp_register_member_type_post_type', array(
-			'description'       => _x( 'BuddyBoss profile type', 'profile type post type description', 'buddyboss' ),
+			'description'       => __( 'BuddyBoss profile type', 'buddyboss' ),
 			'labels'            => bp_get_member_type_post_type_labels(),
 			'public'            => true,
 			'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),
@@ -2961,16 +2961,16 @@ function bp_get_member_type_post_type_labels() {
 	 * @param array $value Associative array (name => label).
 	 */
 	return apply_filters( 'bp_get_member_type_post_type_labels', array(
-		'add_new_item'          => _x( 'New Profile Type', 'profile type post type label', 'buddyboss' ),
-		'all_items'             => _x( 'Profile Types', 'profile type post type label', 'buddyboss' ),
-		'edit_item'             => _x( 'Edit Profile Type', 'profile type post type label', 'buddyboss' ),
-		'menu_name'             => _x( 'Users', 'profile type post type name', 'buddyboss' ),
-		'name'                  => _x( 'Profile Types', 'profile type post type label', 'buddyboss' ),
-		'new_item'              => _x( 'New Profile Type', 'profile type post type label', 'buddyboss' ),
-		'not_found'             => _x( 'No Profile Types found', 'profile type post type label', 'buddyboss' ),
-		'not_found_in_trash'    => _x( 'No Profile Types found in trash', 'profile type post type label', 'buddyboss' ),
-		'search_items'          => _x( 'Search Profile Types', 'profile type post type label', 'buddyboss' ),
-		'singular_name'         => _x( 'Profile Type', 'profile type post type singular name', 'buddyboss' ),
+		'add_new_item'          => __( 'New Profile Type', 'buddyboss' ),
+		'all_items'             => __( 'Profile Types', 'buddyboss' ),
+		'edit_item'             => __( 'Edit Profile Type', 'buddyboss' ),
+		'menu_name'             => __( 'Users', 'profile type post type name', 'buddyboss' ),
+		'name'                  => __( 'Profile Types', 'buddyboss' ),
+		'new_item'              => __( 'New Profile Type', 'buddyboss' ),
+		'not_found'             => __( 'No Profile Types found', 'buddyboss' ),
+		'not_found_in_trash'    => __( 'No Profile Types found in trash', 'buddyboss' ),
+		'search_items'          => __( 'Search Profile Types', 'buddyboss' ),
+		'singular_name'         => __( 'Profile Type', 'buddyboss' ),
 	) );
 }
 
@@ -3521,7 +3521,7 @@ function bp_member_type_directory() {
 			$type_id = 0;
 		?>
 	<li id="members-<?php echo $type_id; ?>">
-		<a href="<?php echo bp_member_type_directory_permalink( $type_name ); ?>"><?php printf( __( $member_type_name.' <span>%s</span>', 'buddyboss' ),$members_count ); ?></a>
+		<a href="<?php echo bp_member_type_directory_permalink( $type_name ); ?>"><?php printf( __( $member_type_name.' <span>%s</span>', 'buddyboss' ),$members_count ); //@todo no variables in the text domain please ?></a>
 		</li><?php
 	}
 }
@@ -3619,18 +3619,18 @@ function bp_member_type_show_data( $column, $post_id  ) {
 		case 'enable_filter':
 
 			if( get_post_meta( $post_id, '_bp_member_type_enable_filter', true ) )
-				echo __( 'Show', 'buddyboss' );
+				_e( 'Show', 'buddyboss' );
 			else
-				echo __( 'Hide', 'buddyboss' );
+				_e( 'Hide', 'buddyboss' );
 
 			break;
 
 		case 'enable_remove':
 
 			if( get_post_meta( $post_id, '_bp_member_type_enable_remove', true ) )
-				echo __( 'Hide', 'buddyboss' );
+				_e( 'Hide', 'buddyboss' );
 			else
-				echo __( 'Show', 'buddyboss' );
+				_e( 'Show', 'buddyboss' );
 
 			break;
 
@@ -3643,9 +3643,10 @@ function bp_member_type_show_data( $column, $post_id  ) {
 			$count = count( bp_member_type_by_type( $type_id ) );
 
 			if ( $count > 0 )
-				printf( __( '<a href="%s">%s</a>', 'buddyboss' ), esc_url( $member_type_url ), $count );
+			//@todo why text domain here and below?
+				printf( '<a href="%s">%s</a>', esc_url( $member_type_url ), $count );
 			else
-				echo __( '0', 'buddyboss' );
+				echo '0';
 
 			break;
 

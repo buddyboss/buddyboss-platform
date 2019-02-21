@@ -6,7 +6,7 @@ add_action( 'bp_search_settings_items_to_search', 'bp_search_option_cpt_search' 
 /**
  * Print all custom post types on settings screen.
  * @param array $items_to_search
- * @since 1.0.0
+ * @since BuddyBoss 1.0.0
  */
 function bp_search_option_cpt_search( $items_to_search ){
 	//all the cpts registered
@@ -37,7 +37,7 @@ add_filter( 'bp_search_additional_search_helpers', 'bp_search_helpers_cpts' );
  *
  * @param array $helpers
  * @return array
- * @since 1.0.0
+ * @since BuddyBoss 1.0.0
  */
 function bp_search_helpers_cpts( $helpers ) {
 
@@ -68,7 +68,7 @@ add_filter( 'bp_search_label_search_type', 'bp_search_label_search_type_cpts' );
  *
  * @param string $search_type_label
  * @return string
- * @since 1.0.0
+ * @since BuddyBoss 1.0.0
  */
 function bp_search_label_search_type_cpts( $search_type_label ){
 	/**

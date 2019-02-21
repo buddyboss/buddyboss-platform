@@ -242,7 +242,7 @@ class BP_Activity_Component extends BP_Component {
 
 		// Add 'Activity' to the main navigation.
 		$main_nav = array(
-			'name'                => _x( 'Timeline', 'Profile activity screen nav', 'buddyboss' ),
+			'name'                => __( 'Timeline', 'buddyboss' ),
 			'slug'                => $slug,
 			'position'            => 25,
 			'screen_function'     => 'bp_activity_screen_my_activity',
@@ -278,11 +278,11 @@ class BP_Activity_Component extends BP_Component {
 				if ( !empty( $count ) ) {
 					$title = sprintf(
 						/* translators: %s: Unread mention count for the current user */
-						_x( 'Mentions %s', 'Toolbar Mention logged in user', 'buddyboss' ),
+						__( 'Mentions %s', 'buddyboss' ),
 						'<span class="count">' . bp_core_number_format( $count ) . '</span>'
 					);
 				} else {
-					$title = _x( 'Mentions', 'Toolbar Mention logged in user', 'buddyboss' );
+					$title = __( 'Mentions', 'buddyboss' );
 				}
 			}
 
@@ -290,7 +290,7 @@ class BP_Activity_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
-				'title'  => _x( 'Timeline', 'My Account Activity sub nav', 'buddyboss' ),
+				'title'  => __( 'Timeline', 'buddyboss' ),
 				'href'   => $activity_link
 			);
 
@@ -298,7 +298,7 @@ class BP_Activity_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-personal',
-				'title'    => _x( 'Posts', 'My Account Activity sub nav', 'buddyboss' ),
+				'title'    => __( 'Posts', 'buddyboss' ),
 				'href'     => $activity_link,
 				'position' => 10
 			);
@@ -320,7 +320,7 @@ class BP_Activity_Component extends BP_Component {
 			$bp = buddypress();
 
 			if ( bp_is_my_profile() ) {
-				$bp->bp_options_title = _x( 'My Activity', 'Page and <title>', 'buddyboss' );
+				$bp->bp_options_title = __( 'My Activity', 'buddyboss' );
 			} else {
 				$bp->bp_options_avatar = bp_core_fetch_avatar( array(
 					'item_id' => bp_displayed_user_id(),

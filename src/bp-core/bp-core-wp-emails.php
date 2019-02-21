@@ -13,7 +13,7 @@ if ( ! function_exists('wp_notify_postauthor') ) :
 	/**
 	 * Notify an author (and/or others) of a comment/trackback/pingback on a post.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int|WP_Comment  $comment_id Comment ID or WP_Comment object.
 	 * @param string          $deprecated Not used
@@ -43,7 +43,7 @@ if ( ! function_exists('wp_notify_postauthor') ) :
 		 * By default, only post authors are notified of comments. This filter allows
 		 * others to be added.
 		 *
-		 * @since 3.7.0
+		 * @since BuddyPress 3.7.0
 		 *
 		 * @param array $emails     An array of email addresses to receive a comment notification.
 		 * @param int   $comment_id The comment ID.
@@ -65,7 +65,7 @@ if ( ! function_exists('wp_notify_postauthor') ) :
 		 * By default, comment authors aren't notified of their comments on their own
 		 * posts. This filter allows you to override that.
 		 *
-		 * @since 3.8.0
+		 * @since BuddyPress 3.8.0
 		 *
 		 * @param bool $notify     Whether to notify the post author of their own comment.
 		 *                         Default false.
@@ -281,7 +281,7 @@ if ( ! function_exists('wp_notify_postauthor') ) :
 		/**
 		 * Filters the comment notification email text.
 		 *
-		 * @since 1.5.2
+		 * @since BuddyPress 1.5.2
 		 *
 		 * @param string $notify_message The comment notification email text.
 		 * @param int    $comment_id     Comment ID.
@@ -291,7 +291,7 @@ if ( ! function_exists('wp_notify_postauthor') ) :
 		/**
 		 * Filters the comment notification email subject.
 		 *
-		 * @since 1.5.2
+		 * @since BuddyPress 1.5.2
 		 *
 		 * @param string $subject    The comment notification email subject.
 		 * @param int    $comment_id Comment ID.
@@ -301,7 +301,7 @@ if ( ! function_exists('wp_notify_postauthor') ) :
 		/**
 		 * Filters the comment notification email headers.
 		 *
-		 * @since 1.5.2
+		 * @since BuddyPress 1.5.2
 		 *
 		 * @param string $message_headers Headers for the comment notification email.
 		 * @param int    $comment_id      Comment ID.
@@ -329,7 +329,7 @@ if ( !function_exists('wp_notify_moderator') ) :
 	/**
 	 * Notifies the moderator of the site about a new comment that is awaiting approval.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
@@ -347,7 +347,7 @@ if ( !function_exists('wp_notify_moderator') ) :
 		/**
 		 * Filters whether to send the site moderator email notifications, overriding the site setting.
 		 *
-		 * @since 4.4.0
+		 * @since BuddyPress 4.4.0
 		 *
 		 * @param bool $maybe_notify Whether to notify blog moderator.
 		 * @param int  $comment_ID   The id of the comment for the notification.
@@ -531,7 +531,7 @@ if ( !function_exists('wp_notify_moderator') ) :
 		/**
 		 * Filters the list of recipients for comment moderation emails.
 		 *
-		 * @since 3.7.0
+		 * @since BuddyPress 3.7.0
 		 *
 		 * @param array $emails     List of email addresses to notify for comment moderation.
 		 * @param int   $comment_id Comment ID.
@@ -541,7 +541,7 @@ if ( !function_exists('wp_notify_moderator') ) :
 		/**
 		 * Filters the comment moderation email text.
 		 *
-		 * @since 1.5.2
+		 * @since BuddyPress 1.5.2
 		 *
 		 * @param string $notify_message Text of the comment moderation email.
 		 * @param int    $comment_id     Comment ID.
@@ -551,7 +551,7 @@ if ( !function_exists('wp_notify_moderator') ) :
 		/**
 		 * Filters the comment moderation email subject.
 		 *
-		 * @since 1.5.2
+		 * @since BuddyPress 1.5.2
 		 *
 		 * @param string $subject    Subject of the comment moderation email.
 		 * @param int    $comment_id Comment ID.
@@ -561,7 +561,7 @@ if ( !function_exists('wp_notify_moderator') ) :
 		/**
 		 * Filters the comment moderation email headers.
 		 *
-		 * @since 2.8.0
+		 * @since BuddyPress 2.8.0
 		 *
 		 * @param string $message_headers Headers for the comment moderation email.
 		 * @param int    $comment_id      Comment ID.
@@ -589,7 +589,7 @@ if ( !function_exists('wp_password_change_notification') ) :
 	/**
 	 * Notify the blog admin of a user changing password, normally via email.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param WP_User $user User object.
 	 */
@@ -614,7 +614,7 @@ if ( !function_exists('wp_password_change_notification') ) :
 			/**
 			 * Filters the contents of the password change notification email sent to the site admin.
 			 *
-			 * @since 4.9.0
+			 * @since BuddyPress 4.9.0
 			 *
 			 * @param array   $wp_password_change_notification_email {
 			 *     Used to build wp_mail().
@@ -651,10 +651,10 @@ if ( !function_exists('wp_new_user_notification') ) {
 	 *
 	 * A new user registration notification is also sent to admin email.
 	 *
-	 * @since 2.0.0
-	 * @since 4.3.0 The `$plaintext_pass` parameter was changed to `$notify`.
-	 * @since 4.3.1 The `$plaintext_pass` parameter was deprecated. `$notify` added as a third parameter.
-	 * @since 4.6.0 The `$notify` parameter accepts 'user' for sending notification only to the user created.
+	 * @since BuddyPress 2.0.0
+	 * @since BuddyPress 4.3.0 The `$plaintext_pass` parameter was changed to `$notify`.
+	 * @since BuddyPress 4.3.1 The `$plaintext_pass` parameter was deprecated. `$notify` added as a third parameter.
+	 * @since BuddyPress 4.6.0 The `$notify` parameter accepts 'user' for sending notification only to the user created.
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 * @global PasswordHash $wp_hasher Portable PHP password hashing framework instance.
@@ -697,7 +697,7 @@ if ( !function_exists('wp_new_user_notification') ) {
 			/**
 			 * Filters the contents of the new user notification email sent to the site admin.
 			 *
-			 * @since 4.9.0
+			 * @since BuddyPress 4.9.0
 			 *
 			 * @param array   $wp_new_user_notification_email {
 			 *     Used to build wp_mail().
@@ -767,7 +767,7 @@ if ( !function_exists('wp_new_user_notification') ) {
 		/**
 		 * Filters the contents of the new user notification email sent to the new user.
 		 *
-		 * @since 4.9.0
+		 * @since BuddyPress 4.9.0
 		 *
 		 * @param array   $wp_new_user_notification_email {
 		 *     Used to build wp_mail().

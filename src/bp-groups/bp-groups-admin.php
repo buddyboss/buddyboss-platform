@@ -946,7 +946,7 @@ function bp_groups_admin_edit_metabox_group_parent( $item ) {
 	<div class="bp-groups-settings-section" id="bp-groups-settings-section-group-hierarchy">
 		<select id="bp-groups-parent" name="bp-groups-parent" autocomplete="off">
 			<option
-				value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php echo _x( 'Select Parent', 'The option that sets a group to be a top-level group and have no parent.', 'buddyboss' ); ?></option>
+				value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php _e( 'Select Parent', 'buddyboss' ); ?></option>
 			<?php
 			if ( $possible_parent_groups ) {
 
@@ -1196,7 +1196,7 @@ function bp_groups_admin_edit_metabox_group_type( BP_Groups_Group $group = null 
 
 	<div class="bp-groups-settings-section" id="bp-groups-settings-section-group-type">
 		<select id="bp-groups-group-type" name="bp-groups-group-type[]" autocomplete="off">
-			<option value="" <?php selected( '', $current_types[0] ); ?>><?php echo _x( 'Select Group Type', 'The option that sets a group type.', 'buddyboss' ); ?></option>
+			<option value="" <?php selected( '', $current_types[0] ); ?>><?php _e( 'Select Group Type', 'buddyboss' ); ?></option>
 			<?php
 
 
@@ -1301,7 +1301,7 @@ function bp_groups_admin_create_pagination_links( BP_Group_Member_Query $query, 
 	) );
 
 	$viewing_text = sprintf(
-		_nx( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $query->total_users, 'Group members pagination in group admin', 'buddyboss' ),
+		_n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $query->total_users, 'buddyboss' ),
 		bp_core_number_format( $current_page_start ),
 		bp_core_number_format( $current_page_end ),
 		bp_core_number_format( $query->total_users )
@@ -1850,18 +1850,18 @@ function bp_group_type_show_data( $column, $post_id  ) {
 		case 'enable_filter':
 
 			if( get_post_meta( $post_id, '_bp_group_type_enable_filter', true ) )
-				echo __( 'Show', 'buddyboss' );
+				_e( 'Show', 'buddyboss' );
 			else
-				echo __( 'Hide', 'buddyboss' );
+				_e( 'Hide', 'buddyboss' );
 
 			break;
 
 		case 'enable_remove':
 
 			if( get_post_meta( $post_id, '_bp_group_type_enable_remove', true ) )
-				echo __( 'Hide', 'buddyboss' );
+				_e( 'Hide', 'buddyboss' );
 			else
-				echo __( 'Show', 'buddyboss' );
+				_e( 'Show', 'buddyboss' );
 
 			break;
 

@@ -751,13 +751,13 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
  */
 function bp_core_get_directory_page_default_titles() {
 	$page_default_titles = array(
-		'activity'          => _x( 'Activity Feed', 'Page title for the Activity directory.', 'buddyboss' ),
-		'groups'            => _x( 'Social Groups', 'Page title for the Groups directory.', 'buddyboss' ),
-		'blogs'             => _x( 'Sites', 'Page title for the Sites directory.', 'buddyboss' ),
-		'members'           => _x( 'Members', 'Page title for the Members directory.', 'buddyboss' ),
-		'activate'          => _x( 'Activate', 'Page title for the user activation screen.', 'buddyboss' ),
-		'register'          => _x( 'Register', 'Page title for the user registration screen.', 'buddyboss' ),
-		'profile_dashboard' => _x( 'Dashboard', 'Page title for the user dashboard screen.', 'buddyboss' ),
+		'activity'          => __( 'Activity Feed', 'buddyboss' ),
+		'groups'            => __( 'Social Groups', 'buddyboss' ),
+		'blogs'             => __( 'Sites', 'buddyboss' ),
+		'members'           => __( 'Members', 'buddyboss' ),
+		'activate'          => __( 'Activate', 'buddyboss' ),
+		'register'          => __( 'Register', 'buddyboss' ),
+		'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
 	);
 
 	/**
@@ -2854,22 +2854,22 @@ function bp_get_email_post_type_labels() {
 	 * @param array $value Associative array (name => label).
 	 */
 	return apply_filters( 'bp_get_email_post_type_labels', array(
-		'add_new'               => _x( 'New Email', 'email post type label', 'buddyboss' ),
-		'add_new_item'          => _x( 'Add New Email', 'email post type label', 'buddyboss' ),
-		'all_items'             => _x( 'All Emails', 'email post type label', 'buddyboss' ),
-		'edit_item'             => _x( 'Edit Email', 'email post type label', 'buddyboss' ),
-		'filter_items_list'     => _x( 'Filter email list', 'email post type label', 'buddyboss' ),
-		'items_list'            => _x( 'Email list', 'email post type label', 'buddyboss' ),
-		'items_list_navigation' => _x( 'Email list navigation', 'email post type label', 'buddyboss' ),
-		'menu_name'             => _x( 'Emails', 'email post type name', 'buddyboss' ),
-		'name'                  => _x( 'BuddyBoss Email Templates', 'email post type label', 'buddyboss' ),
-		'new_item'              => _x( 'New Email', 'email post type label', 'buddyboss' ),
-		'not_found'             => _x( 'No emails found', 'email post type label', 'buddyboss' ),
-		'not_found_in_trash'    => _x( 'No emails found in trash', 'email post type label', 'buddyboss' ),
-		'search_items'          => _x( 'Search Emails', 'email post type label', 'buddyboss' ),
-		'singular_name'         => _x( 'Email', 'email post type singular name', 'buddyboss' ),
-		'uploaded_to_this_item' => _x( 'Uploaded to this email', 'email post type label', 'buddyboss' ),
-		'view_item'             => _x( 'View Email', 'email post type label', 'buddyboss' ),
+		'add_new'               => __( 'New Email', 'buddyboss' ),
+		'add_new_item'          => __( 'Add New Email', 'buddyboss' ),
+		'all_items'             => __( 'All Emails', 'buddyboss' ),
+		'edit_item'             => __( 'Edit Email', 'buddyboss' ),
+		'filter_items_list'     => __( 'Filter email list', 'buddyboss' ),
+		'items_list'            => __( 'Email list', 'buddyboss' ),
+		'items_list_navigation' => __( 'Email list navigation', 'buddyboss' ),
+		'menu_name'             => __( 'Emails', 'buddyboss' ),
+		'name'                  => __( 'BuddyBoss Email Templates', 'buddyboss' ),
+		'new_item'              => __( 'New Email', 'buddyboss' ),
+		'not_found'             => __( 'No emails found', 'buddyboss' ),
+		'not_found_in_trash'    => __( 'No emails found in trash', 'buddyboss' ),
+		'search_items'          => __( 'Search Emails', 'buddyboss' ),
+		'singular_name'         => __( 'Email', 'buddyboss' ),
+		'uploaded_to_this_item' => __( 'Uploaded to this email', 'buddyboss' ),
+		'view_item'             => __( 'View Email', 'buddyboss' ),
 	) );
 }
 
@@ -2945,21 +2945,21 @@ function bp_get_email_tax_type_labels() {
 	 * @param array $value Associative array (name => label).
 	 */
 	return apply_filters( 'bp_get_email_tax_type_labels', array(
-		'add_new_item'          => _x( 'New Email Situation', 'email type taxonomy label', 'buddyboss' ),
-		'all_items'             => _x( 'All Email Situations', 'email type taxonomy label', 'buddyboss' ),
-		'edit_item'             => _x( 'Edit Email Situations', 'email type taxonomy label', 'buddyboss' ),
-		'items_list'            => _x( 'Email list', 'email type taxonomy label', 'buddyboss' ),
-		'items_list_navigation' => _x( 'Email list navigation', 'email type taxonomy label', 'buddyboss' ),
-		'menu_name'             => _x( 'Situations', 'email type taxonomy label', 'buddyboss' ),
-		'name'                  => _x( 'Situation', 'email type taxonomy name', 'buddyboss' ),
-		'new_item_name'         => _x( 'New email situation name', 'email type taxonomy label', 'buddyboss' ),
-		'not_found'             => _x( 'No email situations found.', 'email type taxonomy label', 'buddyboss' ),
-		'no_terms'              => _x( 'No email situations', 'email type taxonomy label', 'buddyboss' ),
-		'popular_items'         => _x( 'Popular Email Situation', 'email type taxonomy label', 'buddyboss' ),
-		'search_items'          => _x( 'Search Emails', 'email type taxonomy label', 'buddyboss' ),
-		'singular_name'         => _x( 'Email', 'email type taxonomy singular name', 'buddyboss' ),
-		'update_item'           => _x( 'Update Email Situation', 'email type taxonomy label', 'buddyboss' ),
-		'view_item'             => _x( 'View Email Situation', 'email type taxonomy label', 'buddyboss' ),
+		'add_new_item'          => __( 'New Email Situation', 'buddyboss' ),
+		'all_items'             => __( 'All Email Situations', 'buddyboss' ),
+		'edit_item'             => __( 'Edit Email Situations', 'buddyboss' ),
+		'items_list'            => __( 'Email list', 'buddyboss' ),
+		'items_list_navigation' => __( 'Email list navigation', 'buddyboss' ),
+		'menu_name'             => __( 'Situations', 'buddyboss' ),
+		'name'                  => __( 'Situation', 'buddyboss' ),
+		'new_item_name'         => __( 'New email situation name', 'buddyboss' ),
+		'not_found'             => __( 'No email situations found', 'buddyboss' ),
+		'no_terms'              => __( 'No email situations', 'buddyboss' ),
+		'popular_items'         => __( 'Popular Email Situation', 'buddyboss' ),
+		'search_items'          => __( 'Search Emails', 'buddyboss' ),
+		'singular_name'         => __( 'Email', 'buddyboss' ),
+		'update_item'           => __( 'Update Email Situation', 'buddyboss' ),
+		'view_item'             => __( 'View Email Situation', 'buddyboss' ),
 	) );
 }
 
@@ -3250,7 +3250,7 @@ function bp_email_get_appearance_settings() {
 
 		'footer_text' => sprintf(
 			/* translators: email disclaimer, e.g. "© 2016 Site Name". */
-			_x( '&copy; %s %s', 'email', 'buddyboss' ),
+			__( '&copy; %s %s', 'buddyboss' ),
 			date_i18n( 'Y' ),
 			bp_get_option( 'blogname' )
 		),

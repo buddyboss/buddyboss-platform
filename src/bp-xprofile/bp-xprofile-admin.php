@@ -24,23 +24,23 @@ function xprofile_add_admin_menu() {
 		return false;
 	}
 
-	add_users_page( _x( 'Profile Fields', 'xProfile admin page title', 'buddyboss' ), _x( 'Profile Fields', 'Admin Users menu', 'buddyboss' ), 'manage_options', 'bp-profile-setup', 'xprofile_admin' );
+	add_users_page( __( 'Profile Fields', 'buddyboss' ), __( 'Profile Fields', 'buddyboss' ), 'manage_options', 'bp-profile-setup', 'xprofile_admin' );
 
 	// Check profile type enabled.
 	$is_member_type_enabled = bp_member_type_enable_disable();
 	$is_profile_search_enabled = bp_disable_advanced_profile_search();
 
 	if ( true === $is_member_type_enabled ) {
-		add_users_page( _x( 'Profile Types', 'Profile Types admin page title', 'buddyboss' ),
-			_x( 'Profile Types', 'Admin Users menu', 'buddyboss' ),
+		add_users_page( __( 'Profile Types', 'buddyboss' ),
+			__( 'Profile Types', 'buddyboss' ),
 			'manage_options',
 			'edit.php?post_type=bp-member-type',
 			'' );
 	}
 
 	if ( false === $is_profile_search_enabled ) {
-		add_users_page( _x( 'Profile Search', 'Profile Search admin page title', 'buddyboss' ),
-			_x( 'Profile Search', 'Admin Users menu', 'buddyboss' ),
+		add_users_page( __( 'Profile Search', 'buddyboss' ),
+			__( 'Profile Search', 'buddyboss' ),
 			'manage_options',
 			'edit.php?post_type=bp_ps_form',
 			'' );
@@ -225,7 +225,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 	<div class="wrap">
 		<?php if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) : ?>
 
-			<h1 class="wp-heading-inline"><?php _ex( 'Profile Fields', 'Settings page header', 'buddyboss'); ?></h1>
+			<h1 class="wp-heading-inline"><?php _e( 'Profile Fields', 'buddyboss'); ?></h1>
 
 				<a id="add_group" class="page-title-action" href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'New Field Set', 'buddyboss' ); ?></a>
 
@@ -234,7 +234,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 		<?php else : ?>
 
 			<h1>
-				<?php _ex( 'Profile Fields', 'Settings page header', 'buddyboss'); ?>
+				<?php _e( 'Profile Fields', 'buddyboss'); ?>
 				<a id="add_group" class="add-new-h2" href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'New Field Set', 'buddyboss' ); ?></a>
 			</h1>
 
@@ -313,12 +313,12 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 						<div class="tab-toolbar">
 							<div class="tab-toolbar-left">
 								<a class="button-primary" href="<?php echo esc_url( $add_field_url ); ?>"><?php _e( 'Add New Field', 'buddyboss' ); ?></a>
-								<a class="button edit" href="<?php echo esc_url( $edit_group_url ); ?>"><?php _ex( 'Edit Field Set', 'Edit Profile Field Set', 'buddyboss' ); ?></a>
+								<a class="button edit" href="<?php echo esc_url( $edit_group_url ); ?>"><?php _e( 'Edit Field Set', 'buddyboss' ); ?></a>
 
 								<?php if ( $group->can_delete ) : ?>
 
 									<div class="delete-button">
-										<a class="confirm submitdelete deletion ajax-option-delete delete-profile-field-group" href="<?php echo esc_url( $delete_group_url ); ?>"><?php _ex( 'Delete Field Set', 'Delete Profile Field Set', 'buddyboss' ); ?></a>
+										<a class="confirm submitdelete deletion ajax-option-delete delete-profile-field-group" href="<?php echo esc_url( $delete_group_url ); ?>"><?php _e( 'Delete Field Set', 'buddyboss' ); ?></a>
 									</div>
 
 								<?php endif; ?>
@@ -393,8 +393,8 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
 				<?php endforeach; else : ?>
 
-					<div id="message" class="error"><p><?php _ex( 'You have no field sets.', 'You have no profile field sets.', 'buddyboss' ); ?></p></div>
-					<p><a href="<?php echo esc_url( $add_group_url ); ?>"><?php _ex( 'New Field Set', 'Add New Profile Field Set', 'buddyboss' ); ?></a></p>
+					<div id="message" class="error"><p><?php _e( 'You have no field sets.', 'buddyboss' ); ?></p></div>
+					<p><a href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'New Field Set', 'buddyboss' ); ?></a></p>
 
 				<?php endif; ?>
 
@@ -487,10 +487,10 @@ function xprofile_admin_delete_group( $group_id ) {
 	$group = new BP_XProfile_Group( $group_id );
 
 	if ( !$group->delete() ) {
-		$message = _x( 'There was an error deleting the field set. Please try again.', 'Error when deleting profile field set', 'buddyboss' );
+		$message = __( 'There was an error deleting the field set. Please try again.', 'buddyboss' );
 		$type    = 'error';
 	} else {
-		$message = _x( 'The field set was deleted successfully.', 'Profile field set was deleted successfully', 'buddyboss' );
+		$message = __( 'The field set was deleted successfully.', 'buddyboss' );
 		$type    = 'success';
 
 		/**
@@ -864,12 +864,12 @@ function xprofile_admin_field( $admin_field, $admin_group, $class = '' ) {
 			<?php endif; ?>
 
 			<div class="actions">
-				<a class="button edit" href="<?php echo esc_url( $field_edit_url ); ?>"><?php _ex( 'Edit', 'Edit field link', 'buddyboss' ); ?></a>
+				<a class="button edit" href="<?php echo esc_url( $field_edit_url ); ?>"><?php _e( 'Edit', 'buddyboss' ); ?></a>
 
 				<?php if ( $field->can_delete ) : ?>
 
 					<div class="delete-button">
-						<a class="confirm submit-delete deletion" href="<?php echo esc_url( $field_delete_url ); ?>"><?php _ex( 'Delete', 'Delete field link', 'buddyboss' ); ?></a>
+						<a class="confirm submit-delete deletion" href="<?php echo esc_url( $field_delete_url ); ?>"><?php _e( 'Delete', 'buddyboss' ); ?></a>
 					</div>
 
 				<?php endif; ?>
@@ -915,7 +915,7 @@ function bp_xprofile_admin_form_field_types( $select_field_type ) {
 
 		// Fallback to a catch-all if category not set.
 		if ( ! $the_category ) {
-			$the_category = _x( 'Other', 'xprofile field type category', 'buddyboss' );
+			$the_category = __( 'Other', 'buddyboss' );
 		}
 
 		if ( isset( $categories[$the_category] ) ) {

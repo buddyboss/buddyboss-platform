@@ -1497,7 +1497,7 @@ function bp_activity_get_user_mentionname( $user_id ) {
 /**
  * Options for at mention js script
  *
- * @since  BuddyBoss 1.0.0
+ * @since BuddyBoss 1.0.0
  */
 function bp_at_mention_default_options() {
 	return apply_filters( 'bp_at_mention_js_options', [

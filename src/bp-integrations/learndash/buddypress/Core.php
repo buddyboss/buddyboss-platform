@@ -70,7 +70,7 @@ class Core
     {
     	return wp_list_sort(apply_filters('bp_ld_sync/group_tab_subnavs', [
     		'courses' => [
-				'name'     => _x('Courses', 'Buddypress Group Subnev Name', 'buddyboss'),
+				'name'     => __('Courses', 'buddyboss'),
 				'slug'     => '',
 				'position' => 10
     		],

@@ -388,8 +388,8 @@ class BP_Admin {
 
 		// Appearance > Emails.
 		$hooks[] = add_theme_page(
-			_x( 'Emails', 'screen heading', 'buddyboss' ),
-			_x( 'Emails', 'screen heading', 'buddyboss' ),
+			__( 'Emails', 'buddyboss' ),
+			__( 'Emails', 'buddyboss' ),
 			$this->capability,
 			'bp-emails-customizer-redirect',
 			'bp_email_redirect_to_customizer'
@@ -398,8 +398,8 @@ class BP_Admin {
 		// Emails > Customize.
 		$hooks[] = add_submenu_page(
 			'edit.php?post_type=' . bp_get_email_post_type(),
-			_x( 'Customize', 'email menu label', 'buddyboss' ),
-			_x( 'Customize', 'email menu label', 'buddyboss' ),
+			__( 'Customize', 'buddyboss' ),
+			__( 'Customize', 'buddyboss' ),
 			$this->capability,
 			'bp-emails-customizer-redirect',
 			'bp_email_redirect_to_customizer'
@@ -465,7 +465,7 @@ class BP_Admin {
 		$wp_admin_bar->add_menu( array(
 			'parent' => 'wp-logo',
 			'id'     => 'bp-about',
-			'title'  => esc_html_x( 'Hello, BuddyBoss!', 'Colloquial alternative to "learn about BuddyBoss"', 'buddyboss' ),
+			'title'  => esc_html__( 'Hello, BuddyBoss!', 'buddyboss' ),
 			'href'   => bp_get_admin_url( '?hello=buddypress' ),
 			'meta'   => array(
 				'class' => 'say-hello-buddypress',
@@ -574,7 +574,7 @@ class BP_Admin {
 	 */
 	public function emails_register_situation_column( $columns = array() ) {
 		$situation = array(
-			'situation' => _x( 'Situations', 'Email post type', 'buddyboss' )
+			'situation' => __( 'Situations', 'buddyboss' )
 		);
 
 		// Inject our 'Situations' column just before the last 'Date' column.

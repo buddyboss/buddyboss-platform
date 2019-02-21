@@ -479,7 +479,7 @@ function bp_activity_get_post_type_tracking_args( $post_type ) {
 
 	// Fall back to a generic name.
 	} else {
-		$post_type_activity->admin_filter = _x( 'New item published', 'Post Type generic activity post admin filter', 'buddyboss' );
+		$post_type_activity->admin_filter = __( 'New item published', 'buddyboss' );
 	}
 
 	// Check for the front filter in the post type labels.
@@ -512,7 +512,7 @@ function bp_activity_get_post_type_tracking_args( $post_type ) {
 
 		// Fall back to a generic name.
 		} else {
-			$post_type_activity->comments_tracking->admin_filter = _x( 'New item comment posted', 'Post Type generic comments activity admin filter', 'buddyboss' );
+			$post_type_activity->comments_tracking->admin_filter = __( 'New item comment posted', 'buddyboss' );
 		}
 
 		$post_type_activity->comments_tracking->format_callback = $post_type_activity->comment_format_callback;
@@ -523,7 +523,7 @@ function bp_activity_get_post_type_tracking_args( $post_type ) {
 
 		// Fall back to a generic name.
 		} else {
-			$post_type_activity->comments_tracking->front_filter = _x( 'Item comments', 'Post Type generic comments activity front filter', 'buddyboss' );
+			$post_type_activity->comments_tracking->front_filter = __( 'Item comments', 'buddyboss' );
 		}
 
 		$post_type_activity->comments_tracking->contexts = $post_type_activity->contexts;
@@ -1800,13 +1800,13 @@ function bp_activity_format_activity_action_custom_post_type_post( $action, $act
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_action_ms ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_action_ms, $user_link, $post_url, $blog_link );
 		} else {
-			$action = sprintf( _x( '%1$s wrote a new <a href="%2$s">item</a>, on the site %3$s', 'Activity Custom Post Type post action', 'buddyboss' ), $user_link, esc_url( $post_url ), $blog_link );
+			$action = sprintf( __( '%1$s wrote a new <a href="%2$s">item</a>, on the site %3$s', 'buddyboss' ), $user_link, esc_url( $post_url ), $blog_link );
 		}
 	} else {
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_action ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_action, $user_link, $post_url );
 		} else {
-			$action = sprintf( _x( '%1$s wrote a new <a href="%2$s">item</a>', 'Activity Custom Post Type post action', 'buddyboss' ), $user_link, esc_url( $post_url ) );
+			$action = sprintf( __( '%1$s wrote a new <a href="%2$s">item</a>', 'buddyboss' ), $user_link, esc_url( $post_url ) );
 		}
 	}
 
@@ -1851,13 +1851,13 @@ function bp_activity_format_activity_action_custom_post_type_comment( $action, $
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_comment_action_ms ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_comment_action_ms, $user_link, $activity->primary_link, $blog_link );
 		} else {
-			$action = sprintf( _x( '%1$s commented on the <a href="%2$s">item</a>, on the site %3$s', 'Activity Custom Post Type comment action', 'buddyboss' ), $user_link, $activity->primary_link, $blog_link );
+			$action = sprintf( __( '%1$s commented on the <a href="%2$s">item</a>, on the site %3$s', 'buddyboss' ), $user_link, $activity->primary_link, $blog_link );
 		}
 	} else {
 		if ( ! empty( $bp->activity->track[ $activity->type ]->new_post_type_comment_action ) ) {
 			$action = sprintf( $bp->activity->track[ $activity->type ]->new_post_type_comment_action, $user_link, $activity->primary_link );
 		} else {
-			$action = sprintf( _x( '%1$s commented on the <a href="%2$s">item</a>', 'Activity Custom Post Type post comment action', 'buddyboss' ), $user_link, $activity->primary_link );
+			$action = sprintf( __( '%1$s commented on the <a href="%2$s">item</a>', 'buddyboss' ), $user_link, $activity->primary_link );
 		}
 	}
 

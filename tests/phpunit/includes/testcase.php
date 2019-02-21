@@ -10,7 +10,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 	/**
 	 * A flag indicating whether an autocommit has been detected inside of a test.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @var bool
 	 */
@@ -19,7 +19,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 	/**
 	 * A list of components that have been deactivated during a test.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @var array
 	 */
@@ -28,7 +28,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 	/**
 	 * Cribbed from WP so that the self::factory() call comes from this class.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public static function setUpBeforeClass() {
 		global $wpdb;
@@ -110,7 +110,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 	/**
 	 * Multisite-agnostic way to delete a user from the database.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 */
 	public static function delete_user( $user_id ) {
 		$deleted = parent::delete_user( $user_id );
@@ -139,7 +139,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 	/**
 	 * Returns a factory that can be used across tests, even in static methods.
 	 *
-	 * @since 3.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return BP_UnitTest_Factory
 	 */
@@ -360,7 +360,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 	/**
 	 * Set a flag that an autocommit has taken place inside of a test method.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 */
 	public function set_autocommit_flag() {
 		$this->autocommitted = true;
@@ -369,7 +369,7 @@ class BP_UnitTestCase extends WP_UnitTestCase {
 	/**
 	 * Deactivate a component for the duration of a test.
 	 *
-	 * @since 2.4.0
+	 * @since BuddyPress 2.4.0
 	 *
 	 * @param string $component Component name.
 	 */

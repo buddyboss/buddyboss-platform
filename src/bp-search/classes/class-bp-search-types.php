@@ -33,7 +33,7 @@ if (!class_exists('Bp_Search_Type')):
 		/**
 		 * A dummy magic method to prevent this class from being cloned.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 */
 		public function __clone() {
 			_doing_it_wrong(__FUNCTION__, __('Cheatin\' huh?', 'buddyboss'), '1.7');
@@ -42,7 +42,7 @@ if (!class_exists('Bp_Search_Type')):
 		/**
 		 * A dummy magic method to prevent this class being unserialized.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 */
 		public function __wakeup() {
 			_doing_it_wrong(__FUNCTION__, __('Cheatin\' huh?', 'buddyboss'), '1.7');
@@ -53,7 +53,7 @@ if (!class_exists('Bp_Search_Type')):
 		 *
 		 * @param string $search_term
 		 * @return string sql query
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 */
 		public function union_sql( $search_term ){
 			$this->search_term = $search_term;//save it for future reference may be.

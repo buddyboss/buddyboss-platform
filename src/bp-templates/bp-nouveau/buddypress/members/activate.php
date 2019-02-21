@@ -40,7 +40,7 @@
 				<input type="text" name="key" id="key" value="<?php echo esc_attr( bp_get_current_activation_key() ); ?>" />
 
 				<p class="submit">
-					<input type="submit" name="submit" value="<?php echo esc_attr_x( 'Activate', 'button', 'buddyboss' ); ?>" />
+					<input type="submit" name="submit" value="<?php esc_attr_e( 'Activate', 'buddyboss' ); ?>" />
 				</p>
 
 			</form>

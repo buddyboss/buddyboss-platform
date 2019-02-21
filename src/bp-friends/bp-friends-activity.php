@@ -412,7 +412,7 @@ add_action( 'friends_remove_data', 'bp_friends_delete_activity_on_user_delete' )
 /**
  * Remove friendship activity item when a friendship is deleted.
  *
- * @since 3.2.0
+ * @since BuddyPress 3.2.0
  *
  * @param int $friendship_id ID of the friendship.
  */

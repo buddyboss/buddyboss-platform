@@ -58,8 +58,8 @@
 	<?php bp_nouveau_messages_hook( 'after', 'compose_content' ); ?>
 
 	<div class="submit">
-		<input type="button" id="bp-messages-send" class="button bp-primary-action" value="<?php echo esc_attr_x( 'Send', 'button', 'buddyboss' ); ?>"/>
-		<input type="button" id="bp-messages-reset" class="text-button small bp-secondary-action" value="<?php echo esc_attr_x( 'Reset', 'form reset button', 'buddyboss' ); ?>"/>
+		<input type="button" id="bp-messages-send" class="button bp-primary-action" value="<?php esc_attr_e( 'Send', 'buddyboss' ); ?>"/>
+		<input type="button" id="bp-messages-reset" class="text-button small bp-secondary-action" value="<?php esc_attr_e( 'Reset', 'buddyboss' ); ?>"/>
 	</div>
 </script>
 
@@ -92,14 +92,14 @@
 	<# if ( 1 !== data.page ) { #>
 		<button id="bp-messages-prev-page"class="button messages-button">
 			<span class="dashicons dashicons-arrow-left"></span>
-			<span class="bp-screen-reader-text"><?php echo esc_html_x( 'Previous page', 'link', 'buddyboss' ); ?></span>
+			<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'link', 'buddyboss' ); ?></span>
 		</button>
 	<# } #>
 
 	<# if ( data.total_page !== data.page ) { #>
 		<button id="bp-messages-next-page"class="button messages-button">
 			<span class="dashicons dashicons-arrow-right"></span>
-			<span class="bp-screen-reader-text"><?php echo esc_html_x( 'Next page', 'link', 'buddyboss' ); ?></span>
+			<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'link', 'buddyboss' ); ?></span>
 		</button>
 	<# } #>
 </script>
@@ -300,7 +300,7 @@
 				<?php bp_nouveau_messages_hook( 'after', 'reply_box' ); ?>
 
 				<div class="submit">
-					<input type="submit" name="send" value="<?php echo esc_attr_x( 'Send Reply', 'button', 'buddyboss' ); ?>" id="send_reply_button"/>
+					<input type="submit" name="send" value="<?php esc_attr_e( 'Send Reply', 'buddyboss' ); ?>" id="send_reply_button"/>
 				</div>
 
 			</div><!-- .message-content -->

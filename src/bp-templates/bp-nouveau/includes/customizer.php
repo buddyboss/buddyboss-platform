@@ -21,10 +21,10 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	require_once( trailingslashit( bp_nouveau()->includes_dir ) . 'customizer-controls.php' );
 	$wp_customize->register_control_type( 'BP_Nouveau_Nav_Customize_Control' );
 	$bp_nouveau_options = bp_nouveau_get_appearance_settings();
-
+	//@todo is the BuddyBoss Platform really translatable?
 	$wp_customize->add_panel( 'bp_nouveau_panel', array(
 		'description' => __( 'Customize the appearance of the BuddyBoss Platform.', 'buddyboss' ),
-		'title'       => _x( 'BuddyBoss Platform', 'Customizer Panel', 'buddyboss' ),
+		'title'       => __( 'BuddyBoss Platform', 'buddyboss' ),
 		'priority'    => 200,
 	) );
 
@@ -55,7 +55,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'description' => __( 'Set the number of columns to use for grid views.', 'buddyboss' ),
 		),
 		'bp_nouveau_mail' => array(
-			'title'       => _x( 'BuddyBoss Emails', 'screen heading', 'buddyboss' ),
+			'title'       => __( 'BuddyBoss Emails', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 80,
 			'description' => __( 'Customize the appearance of emails sent by BuddyBoss.', 'buddyboss' ),
@@ -235,7 +235,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 		),
 		'user_nav_order' => array(
 			'class'      => 'BP_Nouveau_Nav_Customize_Control',
-			'label'      => __( 'Reorder the primary navigation for a user.', 'buddyboss' ),
+			'label'      => __( 'Reorder the primary navigation for a member.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_user_primary_nav',
 			'settings'   => 'bp_nouveau_appearance[user_nav_order]',
 			'type'       => 'user',

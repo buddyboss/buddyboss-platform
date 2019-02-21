@@ -288,7 +288,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 						'component'         => 'friends',
 						'must_be_logged_in' => true,
 						'parent_element'    => $parent_element,
-						'link_text'         => _x( 'Accept', 'button', 'buddyboss' ),
+						'link_text'         => __( 'Accept', 'buddyboss' ),
 						'parent_attr'       => array(
 							'id'    => '',
 							'class' => $parent_class ,
@@ -304,7 +304,7 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 						'component'         => 'friends',
 						'must_be_logged_in' => true,
 						'parent_element'    => $parent_element,
-						'link_text'         => _x( 'Ignore', 'button', 'buddyboss' ),
+						'link_text'         => __( 'Ignore', 'buddyboss' ),
 						'parent_attr'       => array(
 							'id'    => '',
 							'class' => $parent_class,
@@ -658,7 +658,7 @@ function bp_nouveau_member_meta() {
 	/**
 	 * Get the member meta.
 	 *
-	 * @since 3.0.0
+	 * @since BuddyPress 3.0.0
 	 *
 	 * @return array The member meta.
 	 */
@@ -704,7 +704,7 @@ function bp_nouveau_member_meta() {
 			/**
 			 * Filter to add/remove Member meta.
 			 *
-			 * @since 3.0.0
+			 * @since BuddyPress 3.0.0
 			 *
 			 * @param array  $meta    The list of meta to output.
 			 * @param object $member  The member object
@@ -959,7 +959,7 @@ function bp_nouveau_wp_profile_field_id() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_wp_profile_field_label() {
-	echo esc_html( bp_nouveau_get_wp_profile_field_label() );
+	esc_html_e( bp_nouveau_get_wp_profile_field_label() );
 }
 
 	/**

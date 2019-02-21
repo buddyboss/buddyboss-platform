@@ -148,7 +148,7 @@ class BP_XProfile_User_Admin {
 			// If member is already a spammer, show a generic metabox.
 			add_meta_box(
 				'bp_xprofile_user_admin_empty_profile',
-				_x( 'User marked as a spammer', 'xprofile user-admin edit screen', 'buddyboss' ),
+				__( 'User marked as a spammer', 'buddyboss' ),
 				array( $this, 'user_admin_spammer_metabox' ),
 				$screen_id,
 				'normal',
@@ -160,7 +160,7 @@ class BP_XProfile_User_Admin {
 			// Avatar Metabox.
 			add_meta_box(
 				'bp_xprofile_user_admin_avatar',
-				_x( 'Profile Photo', 'xprofile user-admin edit screen', 'buddyboss' ),
+				__( 'Profile Photo', 'buddyboss' ),
 				array( $this, 'user_admin_avatar_metabox' ),
 				$screen_id,
 				'side',

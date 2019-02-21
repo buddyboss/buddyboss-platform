@@ -280,13 +280,13 @@ class BP_UnitTest_Factory_For_Signup extends WP_UnitTest_Factory_For_Thing {
 /**
  * Factory for friendships.
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  */
 class BP_UnitTest_Factory_For_Friendship extends WP_UnitTest_Factory_For_Thing {
 	/**
 	 * Constructor.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param $factory WP_UnitTest_Factory
 	 */
@@ -297,7 +297,7 @@ class BP_UnitTest_Factory_For_Friendship extends WP_UnitTest_Factory_For_Thing {
 	/**
 	 * Create friendship object.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param array $args Array of arguments.
 	 * @return int Friendship ID.
@@ -327,7 +327,7 @@ class BP_UnitTest_Factory_For_Friendship extends WP_UnitTest_Factory_For_Thing {
 	/**
 	 * Update a friendship object.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @todo Implement.
 	 *
@@ -339,7 +339,7 @@ class BP_UnitTest_Factory_For_Friendship extends WP_UnitTest_Factory_For_Thing {
 	/**
 	 * Get a friendship object by its ID.
 	 *
-	 * @since 2.7.0
+	 * @since BuddyPress 2.7.0
 	 *
 	 * @param int $id
 	 * @return BP_Friends_Friendship

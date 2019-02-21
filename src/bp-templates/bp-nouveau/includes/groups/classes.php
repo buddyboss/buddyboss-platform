@@ -238,19 +238,19 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				'default_subnav_slug' => apply_filters( 'bp_groups_default_extension', defined( 'BP_GROUPS_DEFAULT_EXTENSION' ) ? BP_GROUPS_DEFAULT_EXTENSION : 'home' ),
 			),
 			'members'    => array(
-				'name'        => _x( 'Members', 'Group screen navigation title', 'buddyboss' ),
+				'name'        => __( 'Members', 'buddyboss' ),
 				'slug'        => 'members',
 				'parent_slug' => $this->group->slug,
 				'position'    => 10,
 			),
 			'invites' => array(
-				'name'        => _x( 'Send Invites', 'My Group screen nav', 'buddyboss' ),
+				'name'        => __( 'Send Invites', 'buddyboss' ),
 				'slug'        => 'send-invites',
 				'parent_slug' => $this->group->slug,
 				'position'    => 70,
 			),
 			'manage'  => array(
-				'name'        => _x( 'Manage', 'My Group screen nav', 'buddyboss' ),
+				'name'        => __( 'Manage', 'buddyboss' ),
 				'slug'        => 'admin',
 				'parent_slug' => $this->group->slug,
 				'position'    => 1000,
@@ -260,7 +260,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 		if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_group_forums_active' ) ) {
 			if ( bbp_is_group_forums_active() ) {
 				$nav_items['forum'] = array(
-					'name'        => _x( 'Discussions', 'My Group screen nav', 'buddyboss' ),
+					'name'        => __( 'Discussions', 'buddyboss' ),
 					'slug'        => get_option( '_bbp_forum_slug', 'forum' ),
 					'parent_slug' => $this->group->slug,
 					'position'    => 30,
@@ -272,7 +272,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 			$va = bp_ld_sync( 'settings' )->get( 'buddypress.enabled', true );
 			if ( '1' === $va ) {
 				$nav_items['courses'] = array(
-					'name'        => _x( 'Courses', 'My Group screen nav', 'buddyboss' ),
+					'name'        => __( 'Courses', 'buddyboss' ),
 					'slug'        => 'courses',
 					'parent_slug' => $this->group->slug,
 					'position'    => 40,
@@ -282,7 +282,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 
 		if ( bp_is_active( 'activity' ) ) {
 			$nav_items['activity'] = array(
-				'name'        => _x( 'Feed', 'My Group screen nav', 'buddyboss' ),
+				'name'        => __( 'Feed', 'buddyboss' ),
 				'slug'        => 'activity',
 				'parent_slug' => $this->group->slug,
 				'position'    => 20,

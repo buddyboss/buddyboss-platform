@@ -14,7 +14,7 @@ class BuddyPress {
 	/**
 	 * Identify if ths BuddyPress class is from BuddyBoss Platform
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 * @var boolean
 	 */
 	public $buddyboss = true;

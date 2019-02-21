@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @see translate_user_role()
  *
- * @since 2.6.0 Forums
+ * @since BuddyPress 2.6.0 Forums
  *
  * @param string $name The role name.
  * @return string Translated role name on success, original name on failure.
@@ -35,22 +35,22 @@ function bbp_translate_user_role( $name ) {
 /**
  * Dummy gettext calls to get strings in the catalog.
  *
- * @since 2.6.0 Forums
+ * @since BuddyPress 2.6.0 Forums
  */
 function bbp_dummy_role_names() {
 
 	/* translators: user role */
-	_x( 'Organizer', 'Forum User role', 'buddyboss' );
+	__( 'Organizer', 'buddyboss' );
 
 	/* translators: user role */
-	_x( 'Moderator', 'Forum User role', 'buddyboss' );
+	__( 'Moderator', 'buddyboss' );
 
 	/* translators: user role */
-	_x( 'Participant', 'Forum User role', 'buddyboss' );
+	__( 'Participant', 'buddyboss' );
 
 	/* translators: user role */
-	_x( 'Spectator', 'Forum User role', 'buddyboss' );
+	__( 'Spectator', 'buddyboss' );
 
 	/* translators: user role */
-	_x( 'Blocked', 'Forum User role', 'buddyboss' );
+	__( 'Blocked', 'buddyboss' );
 }

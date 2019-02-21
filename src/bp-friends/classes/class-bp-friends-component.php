@@ -194,7 +194,7 @@ class BP_Friends_Component extends BP_Component {
 
 		// Add the subnav items to the friends nav item.
 		$sub_nav[] = array(
-			'name'            => ! bp_is_my_profile() ? __( 'All Connections', 'buddyboss' ) : _x( 'My Connections', 'Connections screen sub nav', 'buddyboss' ),
+			'name'            => ! bp_is_my_profile() ? __( 'All Connections', 'buddyboss' ) : __( 'My Connections', 'buddyboss' ),
 			'slug'            => 'my-friends',
 			'parent_url'      => $friends_link,
 			'parent_slug'     => $slug,

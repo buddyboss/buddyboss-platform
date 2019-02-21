@@ -1418,13 +1418,13 @@ class BP_XProfile_Field {
 
 		<div id="titlediv">
 			<div class="titlewrap">
-				<label id="title-prompt-text" for="title"><?php echo esc_html_x( 'Name (required)', 'XProfile admin edit field', 'buddyboss' ); ?></label>
+				<label id="title-prompt-text" for="title"><?php echo esc_html__( 'Name (required)', 'buddyboss' ); ?></label>
 				<input type="text" name="title" id="title" value="<?php echo esc_attr( $this->name ); ?>" autocomplete="off" />
 			</div>
 		</div>
 
 		<div class="postbox">
-			<h2><?php echo esc_html_x( 'Help Text', 'XProfile admin edit field', 'buddyboss' ); ?></h2>
+			<h2><?php echo esc_html__( 'Help Text', 'buddyboss' ); ?></h2>
 			<div class="inside">
 				<?php
 					/**

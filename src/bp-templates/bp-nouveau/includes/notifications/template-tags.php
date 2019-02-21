@@ -104,20 +104,20 @@ function bp_nouveau_notifications_bulk_management_dropdown() {
 		?></label>
 
 		<select name="notification_bulk_action" id="notification-select">
-			<option value="" selected="selected"><?php echo esc_html( 'Bulk Actions', 'buddyboss' ); ?></option>
+			<option value="" selected="selected"><?php esc_html_e( 'Bulk Actions', 'buddyboss' ); ?></option>
 
 			<?php if ( bp_is_current_action( 'unread' ) ) : ?>
-				<option value="read"><?php echo esc_html_x( 'Mark read', 'button', 'buddyboss' ); ?></option>
+				<option value="read"><?php esc_html_e( 'Mark read', 'buddyboss' ); ?></option>
 			<?php elseif ( bp_is_current_action( 'read' ) ) : ?>
-				<option value="unread"><?php echo esc_html_x( 'Mark unread', 'button', 'buddyboss' ); ?></option>
+				<option value="unread"><?php esc_html_e( 'Mark unread', 'buddyboss' ); ?></option>
 			<?php endif; ?>
-			<option value="delete"><?php echo esc_html_x( 'Delete', 'button', 'buddyboss' ); ?></option>
+			<option value="delete"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></option>
 		</select>
 
 		<span class="select-arrow"></span>
 
 	</div><!-- // .select-wrap -->
 
-	<input type="submit" id="notification-bulk-manage" class="button action" value="<?php echo esc_attr_x( 'Apply', 'button', 'buddyboss' ); ?>">
+	<input type="submit" id="notification-bulk-manage" class="button action" value="<?php esc_attr_e( 'Apply', 'buddyboss' ); ?>">
 	<?php
 }

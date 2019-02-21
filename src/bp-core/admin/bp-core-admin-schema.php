@@ -409,19 +409,19 @@ function bp_core_install_default_profiles_fields() {
 
 	// These values should only be updated if they are not already present.
 	if ( ! bp_get_option( 'bp-xprofile-base-group-name' ) ) {
-		bp_update_option( 'bp-xprofile-base-group-name', _x( 'General', 'First field-group name', 'buddyboss' ) );
+		bp_update_option( 'bp-xprofile-base-group-name', __( 'General', 'buddyboss' ) );
 	}
 
 	if ( ! bp_get_option( 'bp-xprofile-firstname-field-name' ) ) {
-		bp_update_option( 'bp-xprofile-firstname-field-name', _x( 'First Name', 'First name field', 'buddyboss' ) );
+		bp_update_option( 'bp-xprofile-firstname-field-name', __( 'First Name', 'buddyboss' ) );
 	}
 
 	if ( ! bp_get_option( 'bp-xprofile-lastname-field-name' ) ) {
-		bp_update_option( 'bp-xprofile-lastname-field-name', _x( 'Last Name', 'Last name field', 'buddyboss' ) );
+		bp_update_option( 'bp-xprofile-lastname-field-name', __( 'Last Name', 'buddyboss' ) );
 	}
 
 	if ( ! bp_get_option( 'bp-xprofile-nickname-field-name' ) ) {
-		bp_update_option( 'bp-xprofile-nickname-field-name', _x( 'Nickname', 'Nickname field', 'buddyboss' ) );
+		bp_update_option( 'bp-xprofile-nickname-field-name', __( 'Nickname', 'buddyboss' ) );
 	}
 
 	// Insert the default group and fields.

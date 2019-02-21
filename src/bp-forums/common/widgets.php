@@ -836,7 +836,7 @@ class BBP_Topics_Widget extends WP_Widget {
 
 					<?php if ( ! empty( $author_link ) ) : ?>
 
-						<?php printf( _x( 'by %1$s', 'widgets', 'buddyboss' ), '<span class="topic-author">' . $author_link . '</span>' ); ?>
+						<?php printf( __( 'by %1$s', 'buddyboss' ), '<span class="topic-author">' . $author_link . '</span>' ); ?>
 
 					<?php endif; ?>
 
@@ -1195,25 +1195,25 @@ class BBP_Replies_Widget extends WP_Widget {
 					if ( ! empty( $settings['show_date'] ) && !empty( $author_link ) ) :
 
 						// translators: 1: reply author, 2: reply link, 3: reply timestamp
-						printf( _x( '%1$s on %2$s %3$s', 'widgets', 'buddyboss' ), $author_link, $reply_link, '<div>' . bbp_get_time_since( get_the_time( 'U' ) ) . '</div>' );
+						printf( __( '%1$s on %2$s %3$s', 'buddyboss' ), $author_link, $reply_link, '<div>' . bbp_get_time_since( get_the_time( 'U' ) ) . '</div>' );
 
 					// Reply link and timestamp
 					elseif ( ! empty( $settings['show_date'] ) ) :
 
 						// translators: 1: reply link, 2: reply timestamp
-						printf( _x( '%1$s %2$s',         'widgets', 'buddyboss' ), $reply_link,  '<div>' . bbp_get_time_since( get_the_time( 'U' ) ) . '</div>'              );
+						printf( __( '%1$s %2$s', 'buddyboss' ), $reply_link,  '<div>' . bbp_get_time_since( get_the_time( 'U' ) ) . '</div>'              );
 
 					// Reply author and title
 					elseif ( !empty( $author_link ) ) :
 
 						// translators: 1: reply author, 2: reply link
-						printf( _x( '%1$s on %2$s',      'widgets', 'buddyboss' ), $author_link, $reply_link                                                                 );
+						printf( __( '%1$s on %2$s', 'buddyboss' ), $author_link, $reply_link                                                                 );
 
 					// Only the reply title
 					else :
 
 						// translators: 1: reply link
-						printf( _x( '%1$s',              'widgets', 'buddyboss' ), $reply_link                                                                               );
+						printf( __( '%1$s', 'buddyboss' ), $reply_link                                                                               );
 
 					endif;
 

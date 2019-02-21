@@ -11,7 +11,7 @@
 	<?php esc_html_e( 'Manage Group Members', 'buddyboss' ); ?>
 </h2>
 
-	<p class="bp-help-text"><?php printf( __( 'Manage your group members; promote to %s, co-%s, or demote or ban.', 'buddyboss' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'moderator_plural_label_name' ) ), strtolower( get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) ) ); ?></p>
+	<p class="bp-help-text"><?php printf( __( 'Manage group members; promote to %s, co-%s, or demote or ban.', 'buddyboss' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'moderator_plural_label_name' ) ), strtolower( get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) ) ); ?></p>
 
 	<dl class="groups-manage-members-list">
 
@@ -53,7 +53,7 @@
 
 		<dd class="moderator-listing">
 
-			<p><?php printf( __( 'When a group member is promoted to be a %s of the group, it means the member gets the ability to edit and delete any forum discussion in the group, and delete any activity feed items excluding those posted by %s.', 'buddyboss' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'moderator_singular_label_name' ) ), strtolower( get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) ) ); ?></p>
+			<p><?php printf( __( 'When a group member is promoted to be a %s of the group, the member gains the ability to edit and delete any forum discussion within the group and delete any activity feed items, excluding those posted by %s.', 'buddyboss' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'moderator_singular_label_name' ) ), strtolower( get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) ) ); ?></p>
 
 			<?php if ( bp_has_members( '&include=' . bp_group_mod_ids() ) ) : ?>
 			<ul id="mods-list" class="item-list single-line">
@@ -86,7 +86,7 @@
 
 	<dd class="general-members-listing">
 
-		<p><?php printf( __( 'By default, when a user joins a group, he or she has the role of %s. %s are able to contribute to the group’s discussions and activity feeds, and view other group members, even in hidden groups.', 'buddyboss' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'member_singular_label_name' ) ), get_group_role_label( bp_get_current_group_id(), 'member_plural_label_name' ) ); ?></p>
+		<p><?php printf( __( 'When a member joins a group, he or she is assigned the %s role by default. %s are able to contribute to the group’s discussions, activity feeds, and view other group members.', 'buddyboss' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'member_singular_label_name' ) ), get_group_role_label( bp_get_current_group_id(), 'member_plural_label_name' ) ); ?></p>
 
 		<?php if ( bp_group_has_members( 'per_page=15&exclude_banned=0' ) ) : ?>
 

@@ -516,23 +516,23 @@ final class bbPress {
      */
     public static function register_post_statuses() {
 
-        // Closed
+        // Closed @todo clean up translation
         register_post_status(
             bbp_get_closed_status_id(),
             apply_filters( 'bbp_register_closed_post_status', array(
-                'label'             => _x( 'Closed', 'post', 'buddyboss' ),
-                'label_count'       => _nx_noop( 'Closed <span class="count">(%s)</span>', 'Closed <span class="count">(%s)</span>', 'post', 'buddyboss' ),
+                'label'             => __( 'Closed', 'buddyboss' ),
+                'label_count'       => _n_noop( 'Closed <span class="count">(%s)</span>', 'Closed <span class="count">(%s)</span>', 'buddyboss' ),
                 'public'            => true,
                 'show_in_admin_all' => true
             ) )
         );
 
-        // Spam
+        // Spam @todo clean up translation
         register_post_status(
             bbp_get_spam_status_id(),
             apply_filters( 'bbp_register_spam_post_status', array(
-                'label'                     => _x( 'Spam', 'post', 'buddyboss' ),
-                'label_count'               => _nx_noop( 'Spam <span class="count">(%s)</span>', 'Spam <span class="count">(%s)</span>', 'post', 'buddyboss' ),
+                'label'                     => __( 'Spam', 'buddyboss' ),
+                'label_count'               => _n_noop( 'Spam <span class="count">(%s)</span>', 'Spam <span class="count">(%s)</span>', 'buddyboss' ),
                 'protected'                 => true,
                 'exclude_from_search'       => true,
                 'show_in_admin_status_list' => true,
@@ -544,8 +544,8 @@ final class bbPress {
         register_post_status(
             bbp_get_orphan_status_id(),
             apply_filters( 'bbp_register_orphan_post_status', array(
-                'label'                     => _x( 'Orphan', 'post', 'buddyboss' ),
-                'label_count'               => _nx_noop( 'Orphan <span class="count">(%s)</span>', 'Orphans <span class="count">(%s)</span>', 'post', 'buddyboss' ),
+                'label'                     => __( 'Orphan', 'buddyboss' ),
+                'label_count'               => _n_noop( 'Orphan <span class="count">(%s)</span>', 'Orphans <span class="count">(%s)</span>', 'buddyboss' ),
                 'protected'                 => true,
                 'exclude_from_search'       => true,
                 'show_in_admin_status_list' => true,
@@ -557,8 +557,8 @@ final class bbPress {
         register_post_status(
             bbp_get_hidden_status_id(),
             apply_filters( 'bbp_register_hidden_post_status', array(
-                'label'                     => _x( 'Hidden', 'post', 'buddyboss' ),
-                'label_count'               => _nx_noop( 'Hidden <span class="count">(%s)</span>', 'Hidden <span class="count">(%s)</span>', 'post', 'buddyboss' ),
+                'label'                     => __( 'Hidden', 'buddyboss' ),
+                'label_count'               => _n_noop( 'Hidden <span class="count">(%s)</span>', 'Hidden <span class="count">(%s)</span>', 'buddyboss' ),
                 'private'                   => true,
                 'exclude_from_search'       => true,
                 'show_in_admin_status_list' => true,

@@ -24,8 +24,8 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = _x( 'Single Fields', 'xprofile field type category', 'buddyboss' );
-		$this->name     = _x( 'Phone Number', 'xprofile field type', 'buddyboss' );
+		$this->category = __( 'Single Fields', 'buddyboss' );
+		$this->name     = __( 'Phone Number', 'buddyboss' );
 
 		$this->set_format( '/^.*$/', 'replace' );
         

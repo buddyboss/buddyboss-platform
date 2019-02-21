@@ -71,7 +71,7 @@
 
 				<p class="status">
 					<# if ( false === data.is_sent ) { #>
-						<?php esc_html_e( 'The invite has not been sent yet.', 'buddyboss' ); ?>
+						<?php esc_html_e( 'The invite has not been sent.', 'buddyboss' ); ?>
 					<# } else { #>
 						<?php esc_html_e( 'The invite has been sent.', 'buddyboss' ); ?>
 					<# } #>
@@ -83,22 +83,22 @@
 
 	<div class="action">
 		<# if ( undefined === data.is_sent || ( false === data.is_sent && true === data.can_edit ) ) { #>
-			<button type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons<# if ( data.selected ) { #> selected<# } #>" data-bp-tooltip="<# if ( data.selected ) { #><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?><# } else { #><?php echo esc_attr_x( 'Invite', 'button', 'buddyboss' ); ?><# } #>">
+			<button type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons<# if ( data.selected ) { #> selected<# } #>" data-bp-tooltip="<# if ( data.selected ) { #><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?><# } else { #><?php esc_attr_e( 'Invite', 'buddyboss' ); ?><# } #>">
 				<span class="icons" aria-hidden="true"></span>
 				<span class="bp-screen-reader-text">
 					<# if ( data.selected ) { #>
-						<?php echo esc_html_x( 'Cancel invitation', 'button', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Cancel invitation', 'buddyboss' ); ?>
 					<# } else { #>
-						<?php echo esc_html_x( 'Invite', 'button', 'buddyboss' ); ?>
+						<?php esc_html_e( 'Invite', 'buddyboss' ); ?>
 					<# } #>
 				</span>
 			</button>
 		<# } #>
 
 		<# if ( undefined !== data.can_edit && true === data.can_edit ) { #>
-			<button type="button" class="button invite-button group-remove-invite-button bp-tooltip bp-icons" data-bp-tooltip="<?php echo esc_attr_x( 'Cancel invitation', 'button', 'buddyboss' ); ?>">
+			<button type="button" class="button invite-button group-remove-invite-button bp-tooltip bp-icons" data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
 				<span class=" icons" aria-hidden="true"></span>
-				<span class="bp-screen-reader-text"><?php echo esc_attr_x( 'Cancel invitation', 'button', 'buddyboss' ); ?></span>
+				<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?></span>
 			</button>
 		<# } #>
 	</div>
@@ -113,12 +113,12 @@
 
 <script type="text/html" id="tmpl-bp-invites-form">
 
-	<label for="send-invites-control"><?php esc_html_e( 'Optional: add a message to your invite.', 'buddyboss' ); ?></label>
+	<label for="send-invites-control"><?php esc_html_e( 'Optional: Customize the message of your invite.', 'buddyboss' ); ?></label>
 	<textarea id="send-invites-control" class="bp-faux-placeholder-label"></textarea>
 
 	<div class="action">
-		<button type="button" id="bp-invites-reset" class="button bp-secondary-action"><?php echo esc_html_x( 'Cancel', 'button', 'buddyboss' ); ?></button>
-		<button type="button" id="bp-invites-send" class="button bp-primary-action"><?php echo esc_html_x( 'Send', 'button', 'buddyboss' ); ?></button>
+		<button type="button" id="bp-invites-reset" class="button bp-secondary-action"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></button>
+		<button type="button" id="bp-invites-send" class="button bp-primary-action"><?php esc_html_e( 'Send', 'buddyboss' ); ?></button>
 	</div>
 </script>
 
@@ -126,12 +126,12 @@
 	<div class="group-invites-search subnav-search clearfix" role="search" >
 		<div class="bp-search">
 			<form action="" method="get" id="group_invites_search_form" class="bp-invites-search-form" data-bp-search="{{data.scope}}">
-				<label for="group_invites_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( _x( 'Search Members', 'heading', 'buddyboss' ), false ); ?></label>
-				<input type="search" id="group_invites_search" placeholder="<?php echo esc_attr_x( 'Search', 'search placeholder text', 'buddyboss' ); ?>"/>
+				<label for="group_invites_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( __( 'Search Members', 'buddyboss' ), false ); ?></label>
+				<input type="search" id="group_invites_search" placeholder="<?php esc_attr_e( 'Search', 'buddyboss' ); ?>"/>
 
 				<button type="submit" id="group_invites_search_submit" class="nouveau-search-submit">
 					<span class="dashicons dashicons-search" aria-hidden="true"></span>
-					<span id="button-text" class="bp-screen-reader-text"><?php echo esc_html_x( 'Search', 'button', 'buddyboss' ); ?></span>
+					<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
 				</button>
 			</form>
 		</div>
@@ -140,15 +140,15 @@
 
 <script type="text/html" id="tmpl-bp-invites-paginate">
 	<# if ( 1 !== data.page ) { #>
-		<a href="#previous-page" id="bp-invites-prev-page" class="button invite-button bp-tooltip" data-bp-tooltip="<?php echo esc_attr_x( 'Previous page', 'link', 'buddyboss' ); ?>">
+		<a href="#previous-page" id="bp-invites-prev-page" class="button invite-button bp-tooltip" data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss' ); ?>">
 			<span class="dashicons dashicons-arrow-left" aria-hidden="true"></span>
-			<span class="bp-screen-reader-text"><?php echo esc_html_x( 'Previous page', 'link', 'buddyboss' ); ?></span>
+			<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'link', 'buddyboss' ); ?></span>
 		</a>
 	<# } #>
 
 	<# if ( data.total_page !== data.page ) { #>
-		<a href="#next-page" id="bp-invites-next-page" class="button invite-button bp-tooltip" data-bp-tooltip="<?php echo esc_attr_x( 'Next page', 'link', 'buddyboss' ); ?>">
-			<span class="bp-screen-reader-text"><?php echo esc_html_x( 'Next page', 'link', 'buddyboss' ); ?></span>
+		<a href="#next-page" id="bp-invites-next-page" class="button invite-button bp-tooltip" data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss' ); ?>">
+			<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'link', 'buddyboss' ); ?></span>
 			<span class="dashicons dashicons-arrow-right" aria-hidden="true"></span>
 		</a>
 	<# } #>

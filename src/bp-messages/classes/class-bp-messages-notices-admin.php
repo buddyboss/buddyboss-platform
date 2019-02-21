@@ -97,8 +97,8 @@ class BP_Messages_Notices_Admin {
 		}
 
 		$this->screen_id = add_users_page(
-			_x( 'Site Notices', 'Notices admin page title', 'buddyboss' ),
-			_x( 'Site Notices', 'Admin Users menu', 'buddyboss' ),
+			__( 'Site Notices', 'buddyboss' ),
+			__( 'Site Notices', 'buddyboss' ),
 			'manage_options',
 			'bp-notices',
 			array( $this, 'admin_index' )
@@ -184,12 +184,12 @@ class BP_Messages_Notices_Admin {
 		<div class="wrap">
 			<?php if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) : ?>
 
-				<h1 class="wp-heading-inline"><?php echo esc_html_x( 'Site Notices', 'Notices admin page title', 'buddyboss' ); ?></h1>
+				<h1 class="wp-heading-inline"><?php echo esc_html__( 'Site Notices', 'buddyboss' ); ?></h1>
 				<hr class="wp-header-end">
 
 			<?php else : ?>
 
-				<h1><?php echo esc_html_x( 'Site Notices', 'Notices admin page title', 'buddyboss' ); ?></h1>
+				<h1><?php echo esc_html__( 'Site Notices', 'buddyboss' ); ?></h1>
 
 			<?php endif; ?>
 

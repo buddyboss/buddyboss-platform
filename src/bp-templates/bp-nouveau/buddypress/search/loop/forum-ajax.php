@@ -12,7 +12,9 @@
 		</div>
 		<div class="item">
 			<div class="item-title"><?php bbp_forum_title(get_the_ID()); ?></div>
-			<div class="item-desc"><?php printf( _n( '%d topic', '%d topics', $total, 'buddyboss' ), $total ); ?></div>
+			<div class="item-desc"><?php
+            //@todo take %d out of this?
+			printf( _n( '%d topic', '%d topics', $total, 'buddyboss' ), $total ); ?></div>
 		</div>
 	</a>
 </div>

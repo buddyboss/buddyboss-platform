@@ -149,8 +149,8 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 	 */
 	public function get_bulk_actions() {
 		$actions = array(
-			'activate' => _x( 'Activate', 'Pending signup action', 'buddyboss' ),
-			'resend'   => _x( 'Email',    'Pending signup action', 'buddyboss' ),
+			'activate' => __( 'Activate', 'buddyboss' ),
+			'resend'   => __( 'Email', 'buddyboss' ),
 		);
 
 		if ( current_user_can( 'delete_users' ) ) {

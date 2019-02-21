@@ -472,7 +472,7 @@ function bp_nouveau_pagination( $position ) {
 			<div class="<?php echo esc_attr( 'pag-count ' . sanitize_html_class( $position ) ); ?>">
 
 				<p class="pag-data">
-					<?php echo esc_html( $pag_count ); ?>
+					<?php esc_html_e( $pag_count ); ?>
 				</p>
 
 			</div>
@@ -1172,7 +1172,7 @@ function bp_nouveau_nav_link_title() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_nav_link_text() {
-	echo esc_html( bp_nouveau_get_nav_link_text() );
+	esc_html_e( bp_nouveau_get_nav_link_text() );
 }
 
 	/**
@@ -1250,7 +1250,7 @@ function bp_nouveau_nav_has_count() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_nav_count() {
-	echo esc_html( number_format_i18n( bp_nouveau_get_nav_count() ) );
+	esc_html_e( number_format_i18n( bp_nouveau_get_nav_count() ) );
 }
 
 	/**
@@ -1882,7 +1882,7 @@ function bp_nouveau_search_default_text( $text = '', $is_attr = true ) {
 	if ( $is_attr ) {
 		echo esc_attr( $text );
 	} else {
-		echo esc_html( $text );
+		esc_html_e( $text );
 	}
 }
 
@@ -1909,7 +1909,7 @@ function bp_nouveau_search_form() {
 	     *     - bp_directory_blogs_search_form
 	     *     - bp_directory_groups_search_form
 	     *
-	     * @since 1.9.0
+	     * @since BuddyPress 1.9.0
 	     *
 	     * @param string $search_form_html The HTML output for the directory search form.
 	     */
@@ -1952,7 +1952,7 @@ function bp_nouveau_search_form() {
 			/**
 			 * Filter here to edit the HTML output of the displayed group search form.
 			 *
-			 * @since 3.2.0
+			 * @since BuddyPress 3.2.0
 			 *
 			 * @param string $search_form_html The HTML output for the directory search form.
 			 */
@@ -1962,7 +1962,7 @@ function bp_nouveau_search_form() {
 			/**
 			 * Filters the Members component search form.
 			 *
-			 * @since 1.9.0
+			 * @since BuddyPress 1.9.0
 			 *
 			 * @param string $search_form_html HTML markup for the member search form.
 			 */
@@ -1975,7 +1975,7 @@ function bp_nouveau_search_form() {
 			 *
 			 * Part of bp_groups_members_template_part().
 			 *
-			 * @since 1.5.0
+			 * @since BuddyPress 1.5.0
 			 */
 			do_action( 'bp_members_directory_member_sub_types' );
 
@@ -1983,7 +1983,7 @@ function bp_nouveau_search_form() {
 			/**
 			 * Fires inside the syndication options list, after the RSS option.
 			 *
-			 * @since 1.2.0
+			 * @since BuddyPress 1.2.0
 			 */
 			do_action( 'bp_group_activity_syndication_options' );
 		}
@@ -2121,7 +2121,7 @@ function bp_nouveau_filter_id() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_filter_label() {
-	echo esc_html( bp_nouveau_get_filter_label() );
+	esc_html_e( bp_nouveau_get_filter_label() );
 }
 
 	/**
@@ -2608,7 +2608,7 @@ function nouveau_error_template( $message = '', $type = '' ) {
 
 	<div class="<?php echo esc_attr( 'bp-messages bp-feedback ' . $type ); ?>">
 		<span class="bp-icon" aria-hidden="true"></span>
-		<p><?php echo esc_html( $message ); ?></p>
+		<p><?php esc_html_e( $message ); ?></p>
 	</div>
 
 	<?php

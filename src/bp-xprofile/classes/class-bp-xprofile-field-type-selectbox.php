@@ -24,8 +24,8 @@ class BP_XProfile_Field_Type_Selectbox extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = _x( 'Multi Fields', 'xprofile field type category', 'buddyboss' );
-		$this->name     = _x( 'Drop Down Select Box', 'xprofile field type', 'buddyboss' );
+		$this->category = __( 'Multi Fields', 'buddyboss' );
+		$this->name     = __( 'Drop Down Select Box', 'buddyboss' );
 
 		$this->supports_options = true;
 

@@ -803,7 +803,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 	$feedback_messages = apply_filters( 'bp_nouveau_feedback_messages', array(
 		'registration-disabled' => array(
 			'type'    => 'info',
-			'message' => __( 'Member registration is currently not allowed.', 'buddyboss' ),
+			'message' => __( 'Member registration is currently disabled.', 'buddyboss' ),
 			'before'  => 'bp_before_registration_disabled',
 			'after'   => 'bp_after_registration_disabled'
 		),
@@ -815,7 +815,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		),
 		'directory-activity-loading' => array(
 			'type'    => 'loading',
-			'message' => __( 'Loading the community updates. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading community updates. Please wait.', 'buddyboss' ),
 		),
 		'single-activity-loading' => array(
 			'type'    => 'loading',
@@ -839,7 +839,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		),
 		'directory-groups-loading' => array(
 			'type'    => 'loading',
-			'message' => __( 'Loading the groups of the community. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading groups of the community. Please wait.', 'buddyboss' ),
 		),
 		'groups-loop-none' => array(
 			'type'    => 'info',
@@ -859,11 +859,11 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		),
 		'group-members-none' => array(
 			'type'    => 'info',
-			'message' => __( 'Sorry, there were no group members found.', 'buddyboss' ),
+			'message' => __( 'Sorry, no group members were found.', 'buddyboss' ),
 		),
 		'group-members-search-none' => array(
 			'type'    => 'info',
-			'message' => __( 'Sorry, there was no member of that name found in this group.', 'buddyboss' ),
+			'message' => __( 'Sorry, there was no member with that name found within this group.', 'buddyboss' ),
 		),
 		'group-manage-members-none' => array(
 			'type'    => 'info',
@@ -887,11 +887,11 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		),
 		'group-avatar-delete-info' => array(
 			'type'    => 'info',
-			'message' => __( 'If you\'d like to remove the existing group profile photo but not upload a new one, please use the delete group profile photo button.', 'buddyboss' ),
+			'message' => __( 'To remove the existing group photo, please use the delete group profile photo button.', 'buddyboss' ),
 		),
 		'directory-members-loading' => array(
 			'type'    => 'loading',
-			'message' => __( 'Loading the members of your community. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading members of the community. Please wait.', 'buddyboss' ),
 		),
 		'members-loop-none' => array(
 			'type'    => 'info',
@@ -923,23 +923,23 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		),
 		'member-activity-loading' => array(
 			'type'    => 'loading',
-			'message' => __( 'Loading the member\'s updates. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading member\'s updates. Please wait.', 'buddyboss' ),
 		),
 		'member-blogs-loading' => array(
 			'type'    => 'loading',
-			'message' => __( 'Loading the member\'s blogs. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading member\'s blog. Please wait.', 'buddyboss' ),
 		),
 		'member-friends-loading' => array(
 			'type'    => 'loading',
-			'message' => __( 'Loading the member\'s friends. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading member\'s friends. Please wait.', 'buddyboss' ),
 		),
 		'member-mutual-friends-loading' => array(
 			'type'    => 'loading',
-			'message' => __( 'Loading the member\'s mutual connections. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading member\'s mutual connections. Please wait.', 'buddyboss' ),
 		),
 		'member-groups-loading' => array(
 			'type'    => 'loading',
-			'message' => __( 'Loading the member\'s groups. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading member\'s groups. Please wait.', 'buddyboss' ),
 		),
 		'member-notifications-loading' => array(
 			'type'    => 'loading',
@@ -947,15 +947,15 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		),
 		'member-group-invites-all' => array(
 			'type'    => 'info',
-			'message' => __( 'Currently every member of the community can invite you to join their groups. If you are not comfortable with it, you can always restrict group invites to your connections only.', 'buddyboss' ),
+			'message' => __( 'Currently every member of the community can invite you to join their groups. Optionally, you may restrict group invites to your connections only.', 'buddyboss' ),
 		),
 		'member-group-invites-friends-only' => array(
 			'type'    => 'info',
-			'message' => __( 'Currently only your friends can invite you to groups. Uncheck the box to allow any member to send invites.', 'buddyboss' ),
+			'message' => __( 'Currently only your connections may invite you to join a group. Uncheck this box to allow any member to send invites.', 'buddyboss' ),
 		),
 		'member-data-export' => array(
 			'type'    => 'info',
-			'message' => __( 'You can download a copy of all data you have shared on this platform. Click the button below to get started. An email will be sent to you to verify the request. Then the site admin will review your request and if approved, an export file will be generated and emailed to you.', 'buddyboss' ),
+			'message' => __( 'You may download a copy of all data you have created on this platform. Click the button below to start a new request. An email will be sent to you to verify the request. Then the site admin will review your request and if approved, a zip file will be generated and emailed to you.', 'buddyboss' ),
 		),
 	) );
 
@@ -967,7 +967,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 	 * Adjust some messages to the context.
 	 */
 	if ( 'completed-confirmation' === $feedback_id && bp_registration_needs_activation() ) {
-		$feedback_messages['completed-confirmation']['message'] = __( 'Before you can login, we just need you to confirm your email address via the email we just sent to you.', 'buddyboss' );
+		$feedback_messages['completed-confirmation']['message'] = __( 'Before you can login, you need to confirm your email address via the email we just sent to you.', 'buddyboss' );
 	} elseif ( 'member-notifications-none' === $feedback_id ) {
 		$is_myprofile = bp_is_my_profile();
 
@@ -1209,7 +1209,7 @@ function bp_nouveau_get_submit_button( $action = '' ) {
 			'wrapper'   => false,
 			'attributes' => array(
 				'name'  => 'ac_form_submit',
-				'value' => _x( 'Post', 'button', 'buddyboss' ),
+				'value' => __( 'Post', 'buddyboss' ),
 			),
 		),
 		'member-data-export' => array(

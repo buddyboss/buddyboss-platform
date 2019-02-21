@@ -25,7 +25,7 @@ bp_nouveau_before_loop(); ?>
 	<?php if ( bp_activity_has_more_items() ) : ?>
 
 		<li class="load-more">
-			<a href="<?php bp_activity_load_more_link(); ?>"><?php echo esc_html_x( 'Load More', 'button', 'buddyboss' ); ?></a>
+			<a href="<?php bp_activity_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
 		</li>
 
 	<?php endif; ?>

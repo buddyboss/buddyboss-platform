@@ -90,7 +90,7 @@ class Reports
 	public function addReportSubMenu($subMenus)
 	{
 		$subMenus['reports'] = [
-			'name'     => _x('Reports', 'Buddypress Group Subnev Name', 'buddyboss'),
+			'name'     => __('Reports', 'buddyboss'),
 			'slug'     => 'reports',
 			'position' => 20
 		];
@@ -143,7 +143,7 @@ class Reports
 	{
 		$generator = $this->getCurrentGenerator();
 		$completed_table_title = $generator->completed_table_title ?: __('Completed', 'buddyboss');
-		$incompleted_table_title = $generator->incompleted_table_title ?: __('Incompleted', 'buddyboss');
+		$incompleted_table_title = $generator->incompleted_table_title ?: __('Incomplete', 'buddyboss');
 		require bp_locate_template('groups/single/courses-reports-tables.php', false, false);
 	}
 

@@ -24,8 +24,8 @@ class BP_XProfile_Field_Type_Number extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = _x( 'Single Fields', 'xprofile field type category', 'buddyboss' );
-		$this->name     = _x( 'Number', 'xprofile field type', 'buddyboss' );
+		$this->category = __( 'Single Fields', 'buddyboss' );
+		$this->name     = __( 'Number', 'buddyboss' );
 
 		$this->set_format( '/^\d+|-\d+$/', 'replace' );
 

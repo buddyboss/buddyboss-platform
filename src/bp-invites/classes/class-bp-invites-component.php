@@ -50,7 +50,7 @@ class BP_Invites_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'invites',
-			_x( 'Sent Invites', 'Invite screen page <title>', 'buddyboss' ),
+			__( 'Sent Invites', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 100,
@@ -211,7 +211,7 @@ class BP_Invites_Component extends BP_Component {
 				$user_domain = false;
 			}
 
-			$nav_name = _x( 'Send Invites', 'Send Invite screen nav without counter', 'buddyboss' );
+			$nav_name = __( 'Send Invites', 'buddyboss' );
 
 			$slug = bp_get_invites_slug();
 
@@ -233,7 +233,7 @@ class BP_Invites_Component extends BP_Component {
 
 					// Add the Invite by Email nav item.
 					$sub_nav[] = array(
-						'name'            => __( 'Invite by Email', 'buddyboss' ),
+						'name'            => __( 'Send Invite', 'buddyboss' ),
 						'slug'            => 'send-invites',
 						'parent_url'      => $invites_link,
 						'parent_slug'     => $slug,
@@ -280,7 +280,7 @@ class BP_Invites_Component extends BP_Component {
 			// Setup the logged in user variables.
 			$invites_link = trailingslashit( bp_loggedin_user_domain() . bp_get_invites_slug() );
 
-			$title   = _x( 'Send Invites', 'Sent Invites', 'buddyboss' );
+			$title   = __( 'Send Invites', 'buddyboss' );
 
 			// Add the "My Account" sub menus.
 			$wp_admin_nav[] = array(
@@ -294,7 +294,7 @@ class BP_Invites_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-invites',
-				'title'    => _x( 'Invites by Email', 'Invites by Email sub nav', 'buddyboss' ),
+				'title'    => __( 'Send Invite', 'buddyboss' ),
 				'href'     => $invites_link,
 				'position' => 10
 			);
@@ -303,7 +303,7 @@ class BP_Invites_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-sent',
-				'title'    => _x( 'Sent Invites', 'Sent Invites sub nav', 'buddyboss' ),
+				'title'    => __( 'Sent Invites', 'buddyboss' ),
 				'href'     => $invites_link .'sent-invites',
 				'position' => 20
 			);
@@ -335,7 +335,7 @@ class BP_Invites_Component extends BP_Component {
 		register_post_type(
 			bp_get_invite_post_type(),
 			apply_filters( 'bp_invite_post_type', array(
-				'description'        => _x( 'BuddyPress member invite', 'invite post type description', 'buddyboss' ),
+				'description'        => __( 'BuddyBoss Invites', 'buddyboss' ),
 				'labels'             => bp_get_invite_post_type_labels(),
 				'public'             => false,
 				'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),

@@ -201,7 +201,7 @@ class ReportsGenerator
 	{
 		$builtInColumns = [
 			'course_id' => [
-				'label'     => __( 'Course Id', 'buddyboss' ),
+				'label'     => __( 'Course ID', 'buddyboss' ),
 				'sortable'  => false,
 				'order_key' => '',
 			],

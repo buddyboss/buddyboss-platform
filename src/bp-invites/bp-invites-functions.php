@@ -52,16 +52,16 @@ function bp_get_invite_post_type_labels() {
 	 * @param array $value Associative array (name => label).
 	 */
 	return apply_filters( 'bp_get_invite_post_type_labels', array(
-		'add_new_item'          => _x( 'New Sent Invite', 'group type post type label', 'buddyboss' ),
-		'all_items'             => _x( 'Sent Invites', 'invite post type label', 'buddyboss' ),
-		'edit_item'             => _x( 'Edit Sent Invite', 'invite post type label', 'buddyboss' ),
-		'menu_name'             => _x( 'Invites', 'invite post type name', 'buddyboss' ),
-		'name'                  => _x( 'Invites Sent by Users', 'invite post type label', 'buddyboss' ),
-		'new_item'              => _x( 'New Sent Invite', 'invite post type label', 'buddyboss' ),
-		'not_found'             => _x( 'No Sent Invites found', 'invite post type label', 'buddyboss' ),
-		'not_found_in_trash'    => _x( 'No Sent Invites found in trash', 'invite post type label', 'buddyboss' ),
-		'search_items'          => _x( 'Search Sent Invites', 'invite post type label', 'buddyboss' ),
-		'singular_name'         => _x( 'Sent Invite', 'invite post type singular name', 'buddyboss' ),
+		'add_new_item'          => __( 'Send Invite', 'buddyboss' ),
+		'all_items'             => __( 'Sent Invites', 'buddyboss' ),
+		'edit_item'             => __( 'Edit Sent Invite', 'buddyboss' ),
+		'menu_name'             => __( 'Invites', 'buddyboss' ),
+		'name'                  => __( 'Invites Sent by Users', 'buddyboss' ),
+		'new_item'              => __( 'New Sent Invite', 'buddyboss' ),
+		'not_found'             => __( 'No Sent Invites found', 'buddyboss' ),
+		'not_found_in_trash'    => __( 'No Sent Invites found in trash', 'buddyboss' ),
+		'search_items'          => __( 'Search Sent Invites', 'buddyboss' ),
+		'singular_name'         => __( 'Sent Invite', 'buddyboss' ),
 	) );
 
 }

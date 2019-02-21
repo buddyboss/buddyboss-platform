@@ -39,7 +39,7 @@
 
 	<# if ( data.selected ) { #>
 		<button type="button" class="bp-remove-item dashicons dashicons-no" data-item_id="{{data.id}}">
-			<span class="bp-screen-reader-text"><?php echo esc_html_x( 'Remove item', 'button', 'buddyboss' ); ?></span>
+			<span class="bp-screen-reader-text"><?php esc_html_e( 'Remove item', 'buddyboss' ); ?></span>
 		</button>
 	<# } #>
 </script>

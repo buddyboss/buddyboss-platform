@@ -626,10 +626,10 @@ function bp_migrate_directory_page_titles() {
 	$default_titles = bp_core_get_directory_page_default_titles();
 
 	$legacy_titles = array(
-		'activity' => _x( 'Site-Wide Activity', 'component directory title', 'buddyboss' ),
-		'blogs'    => _x( 'Sites', 'component directory title', 'buddyboss' ),
-		'groups'   => _x( 'Groups', 'component directory title', 'buddyboss' ),
-		'members'  => _x( 'Members', 'component directory title', 'buddyboss' ),
+		'activity' => __( 'Site-Wide Activity', 'buddyboss' ),
+		'blogs'    => __( 'Sites', 'buddyboss' ),
+		'groups'   => __( 'Groups', 'buddyboss' ),
+		'members'  => __( 'Members', 'buddyboss' ),
 	);
 
 	foreach ( $bp_pages as $component => $page_id ) {

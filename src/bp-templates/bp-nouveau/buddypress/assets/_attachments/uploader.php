@@ -24,7 +24,7 @@
 						<label for="{{data.browse_button}}" class="<?php echo is_admin() ? 'screen-reader-text' : 'bp-screen-reader-text'; ?>">
 							<?php esc_html_e( 'Select your file', 'buddyboss' ); ?>
 						</label>
-						<input id="{{data.browse_button}}" type="button" value="<?php echo esc_attr_x( 'Select your file', 'button', 'buddyboss' ); ?>" class="button" />
+						<input id="{{data.browse_button}}" type="button" value="<?php esc_attr_e( 'Select your file', 'buddyboss' ); ?>" class="button" />
 					</p>
 				</div>
 			</div>

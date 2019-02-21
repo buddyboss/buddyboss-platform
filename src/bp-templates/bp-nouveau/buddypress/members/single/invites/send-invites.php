@@ -2,11 +2,11 @@
 bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 
 <h2 class="screen-heading general-settings-screen">
-	<?php _e( 'Invite by Email', 'buddyboss' ); ?>
+	<?php _e( 'Send Invite', 'buddyboss' ); ?>
 </h2>
 
 <p class="info invite-info">
-	<?php _e( 'Invite non-members to join the network. They will receive an email with a link to register.', 'buddyboss' ); ?>
+	<?php _e( 'Invite non-members to create an account. They will receive an email with a link to register.', 'buddyboss' ); ?>
 </p>
 
 <form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_invites_slug() ); ?>" method="post" class="standard-form" id="send-invite-form">
@@ -54,7 +54,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 					?>
 					<td class="field-member-type">
 						<select name="member-type[<?php echo $i; ?>][]" id="member_type<?php echo $i; ?>_member_type" class="invites-input">
-							<option value=""><?php echo __( '-- Select Type --', 'buddyboss'); ?></option>
+							<option value=""><?php _e( '-- Select Type --', 'buddyboss'); ?></option>
 							<?php
 							foreach ( $member_types as $type ) {
 								$name    = bp_get_member_type_key( $type );
@@ -63,7 +63,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 									$member_type = __( $member_type, 'buddyboss');
 								}
 								?>
-								<option value="<?php echo esc_attr( $name ); ?>"><?php echo esc_html( $member_type ); ?></option>
+								<option value="<?php echo esc_attr( $name ); ?>"><?php esc_html_e( $member_type ); ?></option>
 								<?php
 							}
 							?>
@@ -85,7 +85,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 		?>
 		<label for="bp-member-invites-custom-subject"><?php _e( 'Customize the text of the invitation subject.', 'buddyboss' ) ?></label>
 		<textarea name="bp_member_invites_custom_subject" id="bp-member-invites-custom-subject" rows="5" cols="10" ><?php echo esc_textarea( bp_get_member_invitation_subject() ) ?></textarea>
-		<input type="hidden" value="<?php _e('Are you sure you want to send invite without subject?', 'buddyboss') ?>" name="error-message-empty-subject-field" id="error-message-empty-subject-field">
+		<input type="hidden" value="<?php _e('Are you sure you want to send the invite without a subject?', 'buddyboss') ?>" name="error-message-empty-subject-field" id="error-message-empty-subject-field">
 		<?php
 	}
 
@@ -112,13 +112,13 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 		// Remove the temporary filter on editor buttons
 		remove_filter( 'mce_buttons', 'bp_nouveau_invites_mce_buttons', 10, 1 );
 		?>
-		<input type="hidden" value="<?php _e('Are you sure you want to send invites without adding a message?', 'buddyboss') ?>" name="error-message-empty-body-field" id="error-message-empty-body-field">
+		<input type="hidden" value="<?php _e('Are you sure you want to send the invite without adding a message?', 'buddyboss') ?>" name="error-message-empty-body-field" id="error-message-empty-body-field">
 		<?php
 	}
 
 	if ( true === bp_disable_invite_member_email_subject() && true === bp_disable_invite_member_email_content() ) {
 		?>
-		<input type="hidden" value="<?php _e('Are you sure you want to send invites without adding a subject and message?', 'buddyboss') ?>" name="error-message-empty-subject-body-field" id="error-message-empty-subject-body-field">
+		<input type="hidden" value="<?php _e('Are you sure you want to send the invite without adding a subject and message?', 'buddyboss') ?>" name="error-message-empty-subject-body-field" id="error-message-empty-subject-body-field">
 		<?php
 	}
 	?>

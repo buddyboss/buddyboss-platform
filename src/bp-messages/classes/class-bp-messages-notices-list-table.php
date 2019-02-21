@@ -74,9 +74,9 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		return apply_filters( 'bp_notices_list_table_get_columns', array(
-			'subject'   => _x( 'Subject', 'Admin Notices column header', 'buddyboss' ),
-			'message'   => _x( 'Content', 'Admin Notices column header', 'buddyboss' ),
-			'date_sent' => _x( 'Created', 'Admin Notices column header', 'buddyboss' ),
+			'subject'   => __( 'Subject', 'buddyboss' ),
+			'message'   => __( 'Content', 'buddyboss' ),
+			'date_sent' => __( 'Created', 'buddyboss' ),
 		) );
 	}
 

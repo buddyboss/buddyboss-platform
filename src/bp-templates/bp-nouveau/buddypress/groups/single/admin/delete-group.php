@@ -23,6 +23,6 @@ $forum_ids = bbp_get_group_forum_ids( $bp->groups->current_group->id );
 <?php if ( ! empty( $forum_ids ) && is_array( $forum_ids ) ): ?>
 	<label for="delete-group-forum-understand" class="bp-label-text warn">
 		<input type="checkbox" name="delete-group-forum-understand" id="delete-group-forum-understand" value="1"/>
-		<?php esc_html_e( 'I also want to delete the discussion forum.', 'buddyboss' ); ?>
+		<?php esc_html_e( 'Delete the associated discussion forum.', 'buddyboss' ); ?>
 	</label>
 <?php endif; ?>

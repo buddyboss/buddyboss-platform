@@ -236,8 +236,8 @@ class BP_Notifications_Template {
 				'format'    => '',
 				'total'     => ceil( (int) $this->total_notification_count / (int) $this->pag_num ),
 				'current'   => $this->pag_page,
-				'prev_text' => _x( '&larr;', 'Notifications pagination previous text', 'buddyboss' ),
-				'next_text' => _x( '&rarr;', 'Notifications pagination next text',     'buddyboss' ),
+				'prev_text' => __( '&larr;', 'buddyboss' ),
+				'next_text' => __( '&rarr;', 'buddyboss' ),
 				'mid_size'  => 1,
 				'add_args'  => $add_args,
 			) );

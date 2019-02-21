@@ -347,12 +347,12 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	}
 
 	$bp->groups->invites_scope = 'members';
-	$message = __( 'Select members to invite by clicking the + button. Once you\'ve made your selection, use the "Send Invites" navigation item to continue.', 'buddyboss' );
+	$message = __( 'Select members to invite by clicking the + button next to each member. Once you\'ve made a selection, use the "Send Invites" navigation item to customize the invite.', 'buddyboss' );
 
 	if ( 'friends' === $request['scope'] ) {
 		$request['user_id'] = bp_loggedin_user_id();
 		$bp->groups->invites_scope = 'friends';
-		$message = __( 'Select connections to invite by clicking the + button. Once you\'ve made your selection, use the "Send Invites" navigation item to continue.', 'buddyboss' );
+		$message = __( 'Select which connections to invite by clicking the + button next to each member. Once you\'ve made a selection, use the "Send Invites" navigation item to customize the invite.', 'buddyboss' );
 	}
 
 	if ( 'invited' === $request['scope'] ) {
@@ -379,7 +379,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 		if ( 'friends' === $bp->groups->invites_scope ) {
 			$error = array(
-				'feedback' => __( 'All your connections are already members of this group, or have already received an invite to join this group, or have requested to join it.', 'buddyboss' ),
+				'feedback' => __( 'All your connections are already members of this group or have already received an invite to join this group or have requested to join it.', 'buddyboss' ),
 				'type'     => 'info',
 			);
 

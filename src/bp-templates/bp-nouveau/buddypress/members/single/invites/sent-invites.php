@@ -25,7 +25,7 @@ if ( isset( $failed ) && '' !== $failed ) {
 		<span class="bp-icon" aria-hidden="true"></span>
 		<p>
 			<?php
-			$text = __( 'Invitations did not send as the following email addresses are invalid:', 'buddyboss' );
+			$text = __( 'Invitations did NOT send because these email addresses are invalid:', 'buddyboss' );
 			echo trim ($text.' '. $failed );
 			?>
 		</p>

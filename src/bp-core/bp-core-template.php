@@ -538,21 +538,21 @@ function bp_search_form_type_select() {
 	$options = array();
 
 	if ( bp_is_active( 'xprofile' ) ) {
-		$options['members'] = _x( 'Members', 'search form', 'buddyboss' );
+		$options['members'] = __( 'Members', 'buddyboss' );
 	}
 
 	if ( bp_is_active( 'groups' ) ) {
-		$options['groups']  = _x( 'Groups', 'search form', 'buddyboss' );
+		$options['groups']  = __( 'Groups', 'buddyboss' );
 	}
 
 	if ( bp_is_active( 'blogs' ) && is_multisite() ) {
-		$options['blogs']   = _x( 'Blogs', 'search form', 'buddyboss' );
+		$options['blogs']   = __( 'Blogs', 'buddyboss' );
 	}
 
-	$options['posts'] = _x( 'Posts', 'search form', 'buddyboss' );
+	$options['posts'] = __( 'Posts', 'buddyboss' );
 
 	// Eventually this won't be needed and a page will be built to integrate all search results.
-	$selection_box  = '<label for="search-which" class="accessibly-hidden">' . _x( 'Search these:', 'search form', 'buddyboss' ) . '</label>';
+	$selection_box  = '<label for="search-which" class="accessibly-hidden">' . __( 'Search these:', 'buddyboss' ) . '</label>';
 	$selection_box .= '<select name="search-which" id="search-which" style="width: auto">';
 
 	/**
@@ -3181,7 +3181,7 @@ function bp_get_title_parts( $seplocation = 'right' ) {
 		$current_component = bp_current_component();
 
 		// No current component (when does this happen?).
-		$bp_title_parts = array( _x( 'Directory', 'component directory title', 'buddyboss' ) );
+		$bp_title_parts = array( __( 'Directory', 'buddyboss' ) );
 
 		if ( ! empty( $current_component ) ) {
 			$bp_title_parts = array( bp_get_directory_title( $current_component ) );
@@ -3820,6 +3820,7 @@ function bp_email_the_salutation( $settings = array() ) {
 		 * @param string $value    The Recipient Salutation.
 		 * @param array  $settings Email Settings.
 		 * @param string $token    The Recipient token.
+		 * @todo remove translatable text
 		 */
-		return apply_filters( 'bp_email_get_salutation', sprintf( _x( '%s', 'recipient salutation', 'buddyboss' ), $token ), $settings, $token );
+		return apply_filters( 'bp_email_get_salutation', sprintf( __( '%s', 'buddyboss' ), $token ), $settings, $token );
 	}

@@ -1961,11 +1961,11 @@ function bbp_edit_topic_tag_handler( $action = '' ) {
  */
 function bbp_get_topic_statuses() {
 	return apply_filters( 'bbp_get_topic_statuses', array(
-		bbp_get_public_status_id()  => _x( 'Open',    'Open the discussion',        'buddyboss' ),
-		bbp_get_closed_status_id()  => _x( 'Closed',  'Close the discussion',       'buddyboss' ),
-		bbp_get_spam_status_id()    => _x( 'Spam',    'Spam the discussion',        'buddyboss' ),
-		bbp_get_trash_status_id()   => _x( 'Trash',   'Trash the discussion',       'buddyboss' ),
-		bbp_get_pending_status_id() => _x( 'Pending', 'Mark discussion as pending', 'buddyboss' ),
+		bbp_get_public_status_id()  => __( 'Open', 'buddyboss' ),
+		bbp_get_closed_status_id()  => __( 'Closed', 'buddyboss' ),
+		bbp_get_spam_status_id()    => __( 'Spam', 'buddyboss' ),
+		bbp_get_trash_status_id()   => __( 'Trash', 'buddyboss' ),
+		bbp_get_pending_status_id() => __( 'Pending', 'buddyboss' ),
 	) );
 }
 
@@ -1978,9 +1978,9 @@ function bbp_get_topic_statuses() {
  */
 function bbp_get_topic_types() {
 	return apply_filters( 'bbp_get_topic_types', array(
-		'unstick' => _x( 'Normal',       'Unstick a discussion',         'buddyboss' ),
-		'stick'   => _x( 'Sticky',       'Make discussion sticky',       'buddyboss' ),
-		'super'   => _x( 'Super Sticky', 'Make discussion super sticky', 'buddyboss' )
+		'unstick' => __( 'Normal', 'buddyboss' ),
+		'stick'   => __( 'Sticky', 'buddyboss' ),
+		'super'   => __( 'Super Sticky', 'buddyboss' )
 	) );
 }
 

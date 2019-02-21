@@ -1,5 +1,18 @@
+<?php
+/**
+ * Course Reports User Stats
+ *
+ * @package BuddyBoss\Integrations\LearnDash\Reports
+ * @since BuddyBoss 1.0.0
+ */
 
-<?php if ($courseId): ?>
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * @todo Should we be labeling Teacher and Student here?
+ */
+if ($courseId): ?>
 	<h3 class="ld-report-course-name"><?php echo $course->post_title; ?></h3>
 <?php endif; ?>
 

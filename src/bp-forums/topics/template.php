@@ -2683,8 +2683,8 @@ function bbp_topic_close_link( $args = '' ) {
 			'link_before' => '',
 			'link_after'  => '',
 			'sep'         => ' | ',
-			'close_text'  => _x( 'Close', 'Discussion Status', 'buddyboss' ),
-			'open_text'   => _x( 'Open',  'Discussion Status', 'buddyboss' )
+			'close_text'  => __( 'Close', 'buddyboss' ),
+			'open_text'   => __( 'Open', 'buddyboss' )
 		), 'get_topic_close_link' );
 
 		$topic = bbp_get_topic( bbp_get_topic_id( (int) $r['id'] ) );

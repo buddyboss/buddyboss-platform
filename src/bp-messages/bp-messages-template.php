@@ -996,15 +996,15 @@ function bp_messages_options() {
 	?></label>
 	<select name="message-type-select" id="message-type-select">
 		<option value=""><?php _e( 'Select', 'buddyboss' ); ?></option>
-		<option value="read"><?php _ex('Read', 'Message dropdown filter', 'buddyboss') ?></option>
-		<option value="unread"><?php _ex('Unread', 'Message dropdown filter', 'buddyboss') ?></option>
-		<option value="all"><?php _ex('All', 'Message dropdown filter', 'buddyboss') ?></option>
+		<option value="read"><?php _ex('Read', 'Past Participle: Messages have been read', 'buddyboss') ?></option>
+		<option value="unread"><?php _e('Unread', 'buddyboss') ?></option>
+		<option value="all"><?php _e('All', 'buddyboss') ?></option>
 	</select> &nbsp;
 
 	<?php if ( ! bp_is_current_action( 'notices' ) ) : ?>
 
-		<a href="#" id="mark_as_read"><?php _ex('Mark as Read', 'Message management markup', 'buddyboss') ?></a> &nbsp;
-		<a href="#" id="mark_as_unread"><?php _ex('Mark as Unread', 'Message management markup', 'buddyboss') ?></a> &nbsp;
+		<a href="#" id="mark_as_read"><?php _e('Mark as Read', 'buddyboss') ?></a> &nbsp;
+		<a href="#" id="mark_as_unread"><?php _e('Mark as Unread', 'buddyboss') ?></a> &nbsp;
 
 		<?php wp_nonce_field( 'bp_messages_mark_messages_read', 'mark-messages-read-nonce', false ); ?>
 		<?php wp_nonce_field( 'bp_messages_mark_messages_unread', 'mark-messages-unread-nonce', false ); ?>

@@ -11,7 +11,7 @@ bp_nouveau_group_hook( 'before', 'request_membership_content' ); ?>
 <?php if ( ! bp_group_has_requested_membership() ) : ?>
 	<p>
 		<?php
-		echo esc_html(
+		esc_html_e(
 			sprintf(
 				/* translators: %s = group name */
 				__( 'You are requesting to become a member of the group "%s".', 'buddyboss' ),
@@ -27,7 +27,7 @@ bp_nouveau_group_hook( 'before', 'request_membership_content' ); ?>
 
 		<?php bp_nouveau_group_hook( '', 'request_membership_content' ); ?>
 
-		<p><input type="submit" name="group-request-send" id="group-request-send" value="<?php echo esc_attr_x( 'Send Request', 'button', 'buddyboss' ); ?>" />
+		<p><input type="submit" name="group-request-send" id="group-request-send" value="<?php esc_attr_e( 'Send Request', 'buddyboss' ); ?>" />
 
 		<?php wp_nonce_field( 'groups_request_membership' ); ?>
 	</form><!-- #request-membership-form -->

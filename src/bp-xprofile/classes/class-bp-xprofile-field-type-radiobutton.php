@@ -24,8 +24,8 @@ class BP_XProfile_Field_Type_Radiobutton extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = _x( 'Multi Fields', 'xprofile field type category', 'buddyboss' );
-		$this->name     = _x( 'Radio Buttons', 'xprofile field type', 'buddyboss' );
+		$this->category = __( 'Multi Fields', 'buddyboss' );
+		$this->name     = __( 'Radio Buttons', 'buddyboss' );
 
 		$this->supports_options = true;
 

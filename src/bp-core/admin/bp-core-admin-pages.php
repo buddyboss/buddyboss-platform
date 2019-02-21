@@ -69,7 +69,7 @@ function bp_custom_pages_do_settings_sections( $page ) {
  *
  * @global $wp_settings_fields Storage array of settings fields and their pages/sections
  *
- * @since 2.7.0
+ * @since BuddyPress 2.7.0
  *
  * @param string $page Slug title of the admin page who's settings fields you want to show.
  * @param string $section Slug title of the settings section who's fields you want to show.

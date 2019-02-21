@@ -27,10 +27,10 @@ $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 
 	<div id="item-header-content">
 
-		<p class="highlight group-status bp-tooltip" data-bp-tooltip="<?php echo esc_html( bp_get_group_status_description() ); ?>"><strong><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></strong></p>
+		<p class="highlight group-status bp-tooltip" data-bp-tooltip="<?php esc_html_e( bp_get_group_status_description() ); ?>"><strong><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></strong></p>
 
 		<p class="activity">
-			<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>"><?php echo esc_html( bp_get_group_member_count() ); ?></a>
+			<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>"><?php esc_html_e( bp_get_group_member_count() ); ?></a>
 		</p>
 
 		<?php bp_nouveau_group_hook( 'before', 'header_meta' ); ?>

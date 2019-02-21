@@ -10,7 +10,7 @@ class Dependencies
 	public function __construct()
 	{
 		$this->dependencies = [
-			'bp_init'        => __('BuddyPress', 'buddyboss'),
+			'bp_init'        => __('BuddyBoss Platform', 'buddyboss'),
 			'learndash_init' => __('Learndash LMS', 'buddyboss')
 		];
 

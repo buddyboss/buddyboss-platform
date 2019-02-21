@@ -2,7 +2,7 @@
 /**
  * File include Courses menu that is going to be added in the BuddyPress Group
  *
- * @since 1.0.1
+ * @since BuddyBoss 1.0.1
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -13,7 +13,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 	/**
 	 * Class LearnDash_BuddyPress_Groups_Reports_Extension to display courses menu in BuddyPress groups.
 	 *
-	 * @since 1.0.1
+	 * @since BuddyBoss 1.0.1
 	 *
 	 */
 	class LearnDash_BuddyPress_Groups_Reports_Extension extends BP_Group_Extension {
@@ -21,7 +21,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		/**
 		 * Here you can see more customization of the config options
 		 *
-		 * since 1.0.1
+		 * @since BuddyBoss 1.0.1
 		 */
 		function __construct() {
 
@@ -284,7 +284,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$display = empty( $_GET['menu'] ) ? 'courses' : (string) $_GET['menu'];
 
 			if ( empty( $this->courses ) ) {
-				_e( 'No Course associated to the Group', 'buddyboss' );
+				_e( 'No Course associated to Group', 'buddyboss' );
 			    return;
             }
 
@@ -1028,7 +1028,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			if ( $this->is_admin_or_mod() ) {
 
 				if ( $this->get_member_count() < 1 ) {
-					_e( 'No Member associated to the Group', 'buddyboss' );
+					_e( 'No Member associated to Group', 'buddyboss' );
 				} else {
 
 					$style = sprintf( 'style=display:%s;', ( 1 == $this->get_member() ) ? 'none' : 'block' );
@@ -1540,7 +1540,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 	/**
 	 * Add Courses menu in BuddyPress Group Menu
 	 *
-	 * @since 1.0.1
+	 * @since BuddyBoss 1.0.1
 	 */
 	function bp_learndash_groups_add_courses_reports_menu() {
 		if (

@@ -372,10 +372,10 @@ class BP_Activity_List_Table extends WP_List_Table {
 		 */
 		return apply_filters( 'bp_activity_list_table_get_columns', array(
 			'cb'       => '<input name type="checkbox" />',
-			'author'   => _x('Author', 'Admin SWA column header', 'buddyboss' ),
-			'comment'  => _x( 'Activity', 'Admin SWA column header', 'buddyboss' ),
-			'action'   => _x( 'Action', 'Admin SWA column header', 'buddyboss' ),
-			'response' => _x( 'In Response To', 'Admin SWA column header', 'buddyboss' ),
+			'author'   => __('Author', 'buddyboss' ),
+			'comment'  => __( 'Activity', 'buddyboss' ),
+			'action'   => __( 'Action', 'buddyboss' ),
+			'response' => __( 'In Response To', 'buddyboss' ),
 		) );
 	}
 

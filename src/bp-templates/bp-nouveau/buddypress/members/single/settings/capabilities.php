@@ -9,7 +9,7 @@
 bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 
 <h2 class="screen-heading member-capabilities-screen">
-	<?php esc_html_e( 'Members Capabilities', 'buddyboss' ); ?>
+	<?php esc_html_e( 'Member Capabilities', 'buddyboss' ); ?>
 </h2>
 
 <form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/capabilities/' ); ?>" name="account-capabilities-form" id="account-capabilities-form" class="standard-form" method="post">

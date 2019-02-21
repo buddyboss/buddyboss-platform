@@ -477,9 +477,9 @@ abstract class BP_Attachment {
 		}
 
 		// Check image file types.
-		$check_types = array( 'src_file' => array( 'file' => $r['original_file'], 'error' => _x( 'source file', 'Attachment source file', 'buddyboss' ) ) );
+		$check_types = array( 'src_file' => array( 'file' => $r['original_file'], 'error' => __( 'source file', 'buddyboss' ) ) );
 		if ( ! empty( $r['dst_file'] ) ) {
-			$check_types['dst_file'] = array( 'file' => $r['dst_file'], 'error' => _x( 'destination file', 'Attachment destination file', 'buddyboss' ) );
+			$check_types['dst_file'] = array( 'file' => $r['dst_file'], 'error' => __( 'destination file', 'buddyboss' ) );
 		}
 
 		/**

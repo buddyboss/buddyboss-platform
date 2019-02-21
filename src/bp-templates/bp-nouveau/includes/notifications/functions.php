@@ -207,7 +207,7 @@ function bp_nouveau_notifications_dashiconified_link( $link = '', $bp_tooltip = 
 function bp_nouveau_notifications_mark_unread_link( $link = '' ) {
 	return bp_nouveau_notifications_dashiconified_link(
 		$link,
-		_x( 'Mark Unread', 'link', 'buddyboss' ),
+		__( 'Mark Unread', 'buddyboss' ),
 		'dashicons-hidden'
 	);
 }
@@ -224,7 +224,7 @@ function bp_nouveau_notifications_mark_unread_link( $link = '' ) {
 function bp_nouveau_notifications_mark_read_link( $link = '' ) {
 	return bp_nouveau_notifications_dashiconified_link(
 		$link,
-		_x( 'Mark Read', 'link', 'buddyboss' ),
+		__( 'Mark Read', 'buddyboss' ),
 		'dashicons-visibility'
 	);
 }
@@ -241,7 +241,7 @@ function bp_nouveau_notifications_mark_read_link( $link = '' ) {
 function bp_nouveau_notifications_delete_link( $link = '' ) {
 	return bp_nouveau_notifications_dashiconified_link(
 		$link,
-		_x( 'Delete', 'link', 'buddyboss' ),
+		__( 'Delete', 'buddyboss' ),
 		'dashicons-trash'
 	);
 }

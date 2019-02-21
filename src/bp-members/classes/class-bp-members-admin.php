@@ -792,7 +792,7 @@ class BP_Members_Admin {
 			// Register metaboxes for the edit screen.
 			add_meta_box(
 				'submitdiv',
-				_x( 'Status', 'members user-admin edit screen', 'buddyboss' ),
+				__( 'Status', 'buddyboss' ),
 				array( $this, 'user_admin_status_metabox' ),
 				get_current_screen()->id,
 				'side',
@@ -826,7 +826,7 @@ class BP_Members_Admin {
 			// User Stat metabox.
 			add_meta_box(
 				'bp_members_admin_user_stats',
-				sprintf( _x( "%s's Stats", 'members user-admin edit screen', 'buddyboss' ), $display_name ),
+				sprintf( __( "%s's Stats", 'buddyboss' ), $display_name ),
 				array( $this, 'user_admin_stats_metabox' ),
 				get_current_screen()->id,
 				sanitize_key( $this->stats_metabox->context ),
@@ -838,7 +838,7 @@ class BP_Members_Admin {
 			if ( ! empty( $member_types ) ) {
 				add_meta_box(
 					'bp_members_admin_member_type',
-					_x( 'Profile Type', 'members user-admin edit screen', 'buddyboss' ),
+					__( 'Profile Type', 'buddyboss' ),
 					array( $this, 'user_admin_member_type_metabox' ),
 					get_current_screen()->id,
 					'side',
@@ -958,11 +958,11 @@ class BP_Members_Admin {
 
 					<?php if ( current_user_can( 'create_users' ) ) : ?>
 
-						<a href="user-new.php" class="page-title-action"><?php echo esc_html_x( 'Add New', 'user', 'buddyboss' ); ?></a>
+						<a href="user-new.php" class="page-title-action"><?php echo esc_html__( 'Add New', 'buddyboss' ); ?></a>
 
 					<?php elseif ( is_multisite() && current_user_can( 'promote_users' ) ) : ?>
 
-						<a href="user-new.php" class="page-title-action"><?php echo esc_html_x( 'Add Existing', 'user', 'buddyboss' ); ?></a>
+						<a href="user-new.php" class="page-title-action"><?php echo esc_html__( 'Add Existing', 'buddyboss' ); ?></a>
 
 					<?php endif; ?>
 
@@ -978,11 +978,11 @@ class BP_Members_Admin {
 
 						<?php if ( current_user_can( 'create_users' ) ) : ?>
 
-							<a href="user-new.php" class="add-new-h2"><?php echo esc_html_x( 'Add New', 'user', 'buddyboss' ); ?></a>
+							<a href="user-new.php" class="add-new-h2"><?php echo esc_html__( 'Add New', 'buddyboss' ); ?></a>
 
 						<?php elseif ( is_multisite() && current_user_can( 'promote_users' ) ) : ?>
 
-							<a href="user-new.php" class="add-new-h2"><?php echo esc_html_x( 'Add Existing', 'user', 'buddyboss' ); ?></a>
+							<a href="user-new.php" class="add-new-h2"><?php echo esc_html__( 'Add Existing', 'buddyboss' ); ?></a>
 
 						<?php endif; ?>
 
@@ -1502,7 +1502,7 @@ class BP_Members_Admin {
 		}
 
 		$url     = add_query_arg( 'page', 'bp-signups', $base_url );
-		$text    = sprintf( _x( 'Pending %s', 'signup users', 'buddyboss' ), '<span class="count">(' . number_format_i18n( $signups ) . ')</span>' );
+		$text    = sprintf( __( 'Pending %s', 'buddyboss' ), '<span class="count">(' . number_format_i18n( $signups ) . ')</span>' );
 
 		$views['registered'] = sprintf( '<a href="%1$s" class="%2$s">%3$s</a>', esc_url( $url ), $class, $text );
 
@@ -1577,7 +1577,7 @@ class BP_Members_Admin {
 			}
 
 			// The per_page screen option.
-			add_screen_option( 'per_page', array( 'label' => _x( 'Pending Accounts', 'Pending Accounts per page (screen options)', 'buddyboss' ) ) );
+			add_screen_option( 'per_page', array( 'label' => __( 'Pending Accounts', 'buddyboss' ) ) );
 
 			get_current_screen()->add_help_tab( array(
 				'id'      => 'bp-signups-overview',
@@ -1771,9 +1771,8 @@ class BP_Members_Admin {
 
 					if ( ! empty( $_REQUEST['resent'] ) ) {
 						$notice['message'] .= sprintf(
-							_nx( '%s activation email successfully sent! ', '%s activation emails successfully sent! ',
+							_n( '%s activation email successfully sent! ', '%s activation emails successfully sent! ',
 							 absint( $_REQUEST['resent'] ),
-							 'signup resent',
 							 'buddyboss'
 							),
 							number_format_i18n( absint( $_REQUEST['resent'] ) )
@@ -1782,9 +1781,8 @@ class BP_Members_Admin {
 
 					if ( ! empty( $_REQUEST['notsent'] ) ) {
 						$notice['message'] .= sprintf(
-							_nx( '%s activation email was not sent.', '%s activation emails were not sent.',
+							_n( '%s activation email was not sent.', '%s activation emails were not sent.',
 							 absint( $_REQUEST['notsent'] ),
-							 'signup notsent',
 							 'buddyboss'
 							),
 							number_format_i18n( absint( $_REQUEST['notsent'] ) )
@@ -1805,9 +1803,8 @@ class BP_Members_Admin {
 
 					if ( ! empty( $_REQUEST['activated'] ) ) {
 						$notice['message'] .= sprintf(
-							_nx( '%s account successfully activated! ', '%s accounts successfully activated! ',
+							_n( '%s account successfully activated! ', '%s accounts successfully activated! ',
 							 absint( $_REQUEST['activated'] ),
-							 'signup resent',
 							 'buddyboss'
 							),
 							number_format_i18n( absint( $_REQUEST['activated'] ) )
@@ -1816,9 +1813,8 @@ class BP_Members_Admin {
 
 					if ( ! empty( $_REQUEST['notactivated'] ) ) {
 						$notice['message'] .= sprintf(
-							_nx( '%s account was not activated.', '%s accounts were not activated.',
+							_n( '%s account was not activated.', '%s accounts were not activated.',
 							 absint( $_REQUEST['notactivated'] ),
-							 'signup notsent',
 							 'buddyboss'
 							),
 							number_format_i18n( absint( $_REQUEST['notactivated'] ) )
@@ -1839,9 +1835,8 @@ class BP_Members_Admin {
 
 					if ( ! empty( $_REQUEST['deleted'] ) ) {
 						$notice['message'] .= sprintf(
-							_nx( '%s sign-up successfully deleted!', '%s sign-ups successfully deleted!',
+							_n( '%s sign-up successfully deleted!', '%s sign-ups successfully deleted!',
 							 absint( $_REQUEST['deleted'] ),
-							 'signup deleted',
 							 'buddyboss'
 							),
 							number_format_i18n( absint( $_REQUEST['deleted'] ) )
@@ -1850,9 +1845,8 @@ class BP_Members_Admin {
 
 					if ( ! empty( $_REQUEST['notdeleted'] ) ) {
 						$notice['message'] .= sprintf(
-							_nx( '%s sign-up was not deleted.', '%s sign-ups were not deleted.',
+							_n( '%s sign-up was not deleted.', '%s sign-ups were not deleted.',
 							 absint( $_REQUEST['notdeleted'] ),
-							 'signup notdeleted',
 							 'buddyboss'
 							),
 							number_format_i18n( absint( $_REQUEST['notdeleted'] ) )
@@ -2015,11 +2009,11 @@ class BP_Members_Admin {
 
 				<?php if ( current_user_can( 'create_users' ) ) : ?>
 
-					<a href="user-new.php" class="page-title-action"><?php echo esc_html_x( 'Add New', 'user', 'buddyboss' ); ?></a>
+					<a href="user-new.php" class="page-title-action"><?php echo esc_html__( 'Add New', 'buddyboss' ); ?></a>
 
 				<?php elseif ( is_multisite() && current_user_can( 'promote_users' ) ) : ?>
 
-					<a href="user-new.php" class="page-title-action"><?php echo esc_html_x( 'Add Existing', 'user', 'buddyboss' ); ?></a>
+					<a href="user-new.php" class="page-title-action"><?php echo esc_html__( 'Add Existing', 'buddyboss' ); ?></a>
 
 				<?php endif;
 
@@ -2036,11 +2030,11 @@ class BP_Members_Admin {
 
 					<?php if ( current_user_can( 'create_users' ) ) : ?>
 
-						<a href="user-new.php" class="add-new-h2"><?php echo esc_html_x( 'Add New', 'user', 'buddyboss' ); ?></a>
+						<a href="user-new.php" class="add-new-h2"><?php echo esc_html__( 'Add New', 'buddyboss' ); ?></a>
 
 					<?php elseif ( is_multisite() && current_user_can( 'promote_users' ) ) : ?>
 
-						<a href="user-new.php" class="add-new-h2"><?php echo esc_html_x( 'Add Existing', 'user', 'buddyboss' ); ?></a>
+						<a href="user-new.php" class="add-new-h2"><?php echo esc_html__( 'Add Existing', 'buddyboss' ); ?></a>
 
 					<?php endif;
 
@@ -2450,7 +2444,7 @@ class BP_Members_Admin {
 	 * @return array $columns
 	 */
 	public function users_table_add_type_column( $columns = array() ) {
-		$columns[ bp_get_member_type_tax_name() ] = _x( 'Profile Type', 'Label for the WP users table profile type column', 'buddyboss' );
+		$columns[ bp_get_member_type_tax_name() ] = __( 'Profile Type', 'buddyboss' );
 
 		return $columns;
 	}

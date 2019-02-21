@@ -11,7 +11,9 @@
 
 		<div class="item">
 			<div class="item-title"><?php the_title();?></div>
-			<div class="item-desc"><?php printf( _n( '%d topic', '%d topics', $total, 'buddyboss' ), $total ); ?></div>
+			<div class="item-desc"><?php
+            //@todo remove %d?
+			printf( _n( '%d topic', '%d topics', $total, 'buddyboss' ), $total ); ?></div>
 
 		</div>
 	</a>

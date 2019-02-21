@@ -14,7 +14,7 @@
 bp_nouveau_before_activity_post_form();
 ?>
 
-<h2 class="bp-screen-reader-text"><?php echo esc_html_x( 'Post Update', 'heading', 'buddyboss' ); ?></h2>
+<h2 class="bp-screen-reader-text"><?php esc_html_e( 'Post Update', 'buddyboss' ); ?></h2>
 
 <div id="bp-nouveau-activity-form" class="activity-update-form"></div>
 

@@ -19,8 +19,8 @@
 		<div class="avatar-crop-management">
 			<div id="avatar-crop-pane" class="avatar" style="width:{{data.w}}px; height:{{data.h}}px"></div>
 			<div id="avatar-crop-actions">
-				<button type="button" class="button avatar-webcam-capture"><?php echo esc_html_x( 'Capture', 'button', 'buddyboss' ); ?></button>
-				<button type="button" class="button avatar-webcam-save"><?php echo esc_html_x( 'Save', 'button', 'buddyboss' ); ?></button>
+				<button type="button" class="button avatar-webcam-capture"><?php esc_html_e( 'Capture', 'buddyboss' ); ?></button>
+				<button type="button" class="button avatar-webcam-save"><?php esc_html_e( 'Save', 'buddyboss' ); ?></button>
 			</div>
 		</div>
 	<# } #>

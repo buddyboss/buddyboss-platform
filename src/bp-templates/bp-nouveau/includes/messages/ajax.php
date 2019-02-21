@@ -59,7 +59,7 @@ function bp_nouveau_ajax_messages_send_message() {
 
 	// Validate recipients
 	if ( empty( $_POST['send_to'] ) || ! is_array( $_POST['send_to'] ) ) {
-		$response['feedback'] = __( 'Your message was not sent. Please enter at least one username.', 'buddyboss' );
+		$response['feedback'] = __( 'Please add at least one recipient.', 'buddyboss' );
 
 		wp_send_json_error( $response );
 	}
@@ -116,7 +116,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	}
 
 	if ( empty( $_POST['content'] ) || empty( $_POST['thread_id'] ) ) {
-		$response['feedback'] = __( 'Your reply was not sent. Please enter some content.', 'buddyboss' );
+		$response['feedback'] = __( 'Please add some content to your message.', 'buddyboss' );
 
 		wp_send_json_error( $response );
 	}

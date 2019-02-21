@@ -43,7 +43,7 @@
                         } else {
                             printf(
                                 '<span style="color: #aeaeae">%s</span>',
-                                __('No assoticated BuddyBoss group.', 'buddyboss')
+                                __('No associated BuddyBoss group.', 'buddyboss')
                             );
                         }
                     ?>
@@ -59,7 +59,7 @@
                         <option value="generate"><?php _e('Generate new one', 'buddyboss'); ?></option>
                         <?php foreach ($bp_groups as $i => $bp_group): ?>
                             <option value="linkup_<?php echo $bp_group->id; ?>" <?php if (! $i) echo 'selected'; ?>>
-                                <?php printf(__('Link up with group ID: %d', 'buddyboss'), $bp_group->id); ?>
+                                <?php printf(__('Associate group with ID: %d', 'buddyboss'), $bp_group->id); ?>
                             </option>
                         <?php endforeach; ?>
                         <option value="nothing"><?php _e('Do nothing', 'buddyboss'); ?></option>

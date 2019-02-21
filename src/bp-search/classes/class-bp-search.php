@@ -22,7 +22,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 		 *  'groups' => an object of Bp_Search_Groups
 		 * ]
 		 * @var array
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 */
 		private $search_helpers = array();
 
@@ -53,7 +53,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 		 * Insures that only one instance of Class exists in memory at any
 		 * one time. Also prevents needing to define globals all over the place.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 *
 		 * @see BP_Search::instance()
 		 *
@@ -85,7 +85,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 		/**
 		 * A dummy constructor to prevent this class from being loaded more than once.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 */
 		private function __construct() { /* Do nothing here */
 		}
@@ -93,7 +93,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 		/**
 		 * A dummy magic method to prevent this class from being cloned.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 */
 		public function __clone() {
 			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' );
@@ -102,7 +102,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 		/**
 		 * A dummy magic method to prevent this class being unserialized.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 */
 		public function __wakeup() {
 			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' );
@@ -327,7 +327,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 		 *
 		 * @param mixed $args
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 */
 		public function do_search( $args = '' ) {
 			global $wpdb;
@@ -716,7 +716,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 
 		/**
 		 * Returns the url of the page which is selected to display search results.
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 * @return string url of the serach results page
 		 */
 		public function search_page_url( $value = "" ) {

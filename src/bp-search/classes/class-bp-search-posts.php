@@ -19,7 +19,7 @@ if (!class_exists('Bp_Search_Posts')):
 		 * A real constructor. Since we do want multiple copies of this class.
 		 * The idea is to have one object for each searchable custom post type.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 */
 		public function __construct( $pt_name, $search_type ) {
 			$this->pt_name = $pt_name;

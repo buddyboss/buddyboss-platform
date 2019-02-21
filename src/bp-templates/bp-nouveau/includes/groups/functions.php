@@ -298,13 +298,13 @@ function bp_nouveau_get_group_potential_invites( $args = array() ) {
 function bp_nouveau_group_invites_create_steps( $steps = array() ) {
 	if ( bp_is_active( 'friends' ) && isset( $steps['group-invites'] ) ) {
 		// Simply change the name
-		$steps['group-invites']['name'] = _x( 'Invite', 'Group invitations menu title', 'buddyboss' );
+		$steps['group-invites']['name'] = __( 'Invite', 'buddyboss' );
 		return $steps;
 	}
 
 	// Add the create step if friends component is not active
 	$steps['group-invites'] = array(
-		'name'     => _x( 'Invite', 'Group invitations menu title', 'buddyboss' ),
+		'name'     => __( 'Invite', 'buddyboss' ),
 		'position' => 30,
 	);
 
@@ -324,7 +324,7 @@ function bp_nouveau_group_setup_nav() {
 		$bp = buddypress();
 
 		$bp->groups->nav->edit_nav(
-			array( 'name' => _x( 'Send Invites', 'Group invitations menu title', 'buddyboss' ) ),
+			array( 'name' => __( 'Send Invites', 'buddyboss' ) ),
 			'send-invites',
 			bp_get_current_group_slug()
 		);
@@ -335,7 +335,7 @@ function bp_nouveau_group_setup_nav() {
 		$group_link    = bp_get_group_permalink( $current_group );
 
 		bp_core_new_subnav_item( array(
-			'name'            => _x( 'Send Invites', 'Group invitations menu title', 'buddyboss' ),
+			'name'            => __( 'Send Invites', 'buddyboss' ),
 			'slug'            => 'send-invites',
 			'parent_url'      => $group_link,
 			'parent_slug'     => $current_group->slug,
@@ -411,7 +411,7 @@ function bp_nouveau_groups_invites_restriction_nav() {
 	}
 
 	bp_core_new_subnav_item( array(
-		'name'            => _x( 'Group Invites', 'Group invitations main menu title', 'buddyboss' ),
+		'name'            => __( 'Group Invites', 'buddyboss' ),
 		'slug'            => 'invites',
 		'parent_url'      => trailingslashit( $user_domain . $slug ),
 		'parent_slug'     => $slug,
@@ -439,7 +439,7 @@ function bp_nouveau_groups_invites_restriction_admin_nav( $wp_admin_nav ) {
 	$wp_admin_nav[] = array(
 		'parent' => 'my-account-' . buddypress()->settings->id,
 		'id'     => 'my-account-' . buddypress()->settings->id . '-invites',
-		'title'  => _x( 'Group Invites', 'Group invitations main menu title', 'buddyboss' ),
+		'title'  => __( 'Group Invites', 'buddyboss' ),
 		'href'   => trailingslashit( $settings_link . 'invites/' ),
 	);
 
@@ -818,7 +818,7 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 			'type'       => 'group',
 		),
 		'groups_layout' => array(
-			'label'      => _x( 'Groups', 'Customizer control label', 'buddyboss' ),
+			'label'      => __( 'Groups', 'buddyboss' ),
 			'section'    => 'bp_nouveau_loops_layout',
 			'settings'   => 'bp_nouveau_appearance[groups_layout]',
 			'type'       => 'select',

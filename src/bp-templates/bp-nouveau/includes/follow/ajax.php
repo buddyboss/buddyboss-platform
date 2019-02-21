@@ -86,7 +86,7 @@ function bp_nouveau_ajax_followunfollow_member() {
 				array(
 					'feedback' => sprintf(
 						'<div class="bp-feedback error">%s</div>',
-						esc_html__( 'No member found by that ID.', 'buddyboss' )
+						esc_html__( 'No member found with that ID.', 'buddyboss' )
 					),
 				)
 			);

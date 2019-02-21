@@ -175,7 +175,7 @@ if (!empty ($options['theme']))
 				<label><input type="radio" <?php if ($key == $value) echo 'checked="checked"'; ?>
 					name="<?php echo $name; ?>" value="<?php echo $key; ?>"> <?php echo $label; ?></label><br>
 			<?php } ?>
-			<a href="javascript:bp_ps_clear_radio('<?php echo $id; ?>_wrap')"><?php echo __('Clear', 'buddyboss'); ?></a><br>
+			<a href="javascript:bp_ps_clear_radio('<?php echo $id; ?>_wrap')"><?php _e('Clear', 'buddyboss'); ?></a><br>
 <?php
 			break;
 
@@ -201,7 +201,7 @@ if (!empty ($options['theme']))
 	}
 ?>
 		<div>
-			<input type="submit" value="<?php echo __('Search', 'buddyboss'); ?>">
+			<input type="submit" value="<?php _e('Search', 'buddyboss'); ?>">
 		</div>
 	</form>
 

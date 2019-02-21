@@ -70,7 +70,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		 * Insures that only one instance of BuddyPress Global Search exists in memory at any
 		 * one time. Also prevents needing to define globals all over the place.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 *
 		 * @static object $instance
 		 * @uses bp_search_Plugin::setup_globals() Setup the globals needed.
@@ -112,7 +112,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		/**
 		 * A dummy magic method to prevent BuddyPress Global Search from being cloned.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 */
 		public function __clone() {
 			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' );
@@ -121,7 +121,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		/**
 		 * A dummy magic method to prevent BuddyPress Global Search from being unserialized.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 */
 		public function __wakeup() {
 			_doing_it_wrong( __FUNCTION__, __( 'Cheatin\' huh?', 'buddyboss' ), '1.7' );
@@ -130,7 +130,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		/**
 		 * Magic method for checking the existence of a certain custom field.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 */
 		public function __isset( $key ) {
 			return isset( $this->data[ $key ] );
@@ -139,7 +139,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		/**
 		 * Magic method for getting BuddyPress Global Search varibles.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 */
 		public function __get( $key ) {
 			return isset( $this->data[ $key ] ) ? $this->data[ $key ] : null;
@@ -148,7 +148,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		/**
 		 * Magic method for setting BuddyPress Global Search varibles.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 */
 		public function __set( $key, $value ) {
 			$this->data[ $key ] = $value;
@@ -157,7 +157,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		/**
 		 * Magic method for unsetting BuddyPress Global Search variables.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 */
 		public function __unset( $key ) {
 			if ( isset( $this->data[ $key ] ) ) {
@@ -168,7 +168,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		/**
 		 * Magic method to prevent notices and errors from invalid method calls.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 */
 		public function __call( $name = '', $args = array() ) {
 			unset( $name, $args );
@@ -179,7 +179,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		/**
 		 * Setup BuddyPress Global Search plugin global variables.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 * @access private
 		 *
 		 * @uses plugin_dir_path() To generate BuddyPress Global Search plugin path.
@@ -194,7 +194,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		/**
 		 * Set up the default hooks and actions.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 * @access private
 		 *
 		 * @uses add_action() To add various actions.
@@ -221,7 +221,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		 * up. This ensures any BuddyPress related code is only loaded
 		 * when BuddyPress is active.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 *
 		 * @return void
 		 */
@@ -236,7 +236,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		/**
 		 * Include required admin files.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 * @access private
 		 *
 		 * @uses $this->do_includes() Loads array of files in the include folder
@@ -250,7 +250,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		/**
 		 * Include required files.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 * @access private
 		 *
 		 * @uses bp_search_Plugin::do_includes() Loads array of files in the include folder
@@ -273,7 +273,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		/**
 		 * Load css/js files
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 * @return void
 		 */
 		public function assets() {
@@ -294,7 +294,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		/**
 		 * Include required array of files in the includes directory
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 *
 		 * @uses require_once() Loads include file
 		 */

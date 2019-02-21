@@ -557,7 +557,7 @@ class BBP_Admin {
 		// Mint
 		wp_admin_css_color(
 			'bbp-mint',
-			esc_html_x( 'Mint',      'admin color scheme', 'buddyboss' ),
+			esc_html__( 'Mint', 'buddyboss' ),
 			$this->styles_url . 'mint' . $suffix . '.css',
 			array( '#4f6d59', '#33834e', '#5FB37C', '#81c498' ),
 			array( 'base' => '#f1f3f2', 'focus' => '#fff', 'current' => '#fff' )
@@ -566,7 +566,7 @@ class BBP_Admin {
 		// Evergreen
 		wp_admin_css_color(
 			'bbp-evergreen',
-			esc_html_x( 'Evergreen', 'admin color scheme', 'buddyboss' ),
+			esc_html__( 'Evergreen', 'buddyboss' ),
 			$this->styles_url . 'evergreen' . $suffix . '.css',
 			array( '#324d3a', '#446950', '#56b274', '#324d3a' ),
 			array( 'base' => '#f1f3f2', 'focus' => '#fff', 'current' => '#fff' )

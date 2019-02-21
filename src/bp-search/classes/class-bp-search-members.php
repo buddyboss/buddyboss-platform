@@ -18,7 +18,7 @@ if (!class_exists('Bp_Search_Members')):
 		 * Insures that only one instance of Class exists in memory at any
 		 * one time. Also prevents needing to define globals all over the place.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 *
 		 * @return object Bp_Search_Members
 		 */
@@ -40,7 +40,7 @@ if (!class_exists('Bp_Search_Members')):
 		/**
 		 * A dummy constructor to prevent this class from being loaded more than once.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 */
 		private function __construct() { /* Do nothing here */
 		}
@@ -51,7 +51,7 @@ if (!class_exists('Bp_Search_Members')):
 		 * @todo: if Mr.X has set privacy of xprofile field 'location' data as 'private'
 		 * then, location of Mr.X shouldn't be checked in searched.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyBoss 1.0.0
 		 * @param string $search_term
 		 * @param boolean $only_totalrow_count
 		 *
@@ -244,7 +244,7 @@ if (!class_exists('Bp_Search_Members')):
 		 * Prints options to search through username, email, nicename/displayname.
 		 * Prints xprofile fields, if xprofile component is active.
 		 *
-		 * @since 1.1.0
+		 * @since BuddyBoss 1.0.0
 		 */
 		function print_search_options( $items_to_search ){
 			echo "<div class='wp-user-fields' style='margin: 10px 0 0 30px'>";

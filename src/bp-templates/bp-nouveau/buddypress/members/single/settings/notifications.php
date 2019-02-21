@@ -13,7 +13,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 </h2>
 
 <p class="bp-help-text email-notifications-info">
-	<?php _e( 'Choose what type of emails you wish to receive.', 'buddyboss' ); ?>
+	<?php _e( 'Choose your email notification preferences.', 'buddyboss' ); ?>
 </p>
 
 <form action="<?php echo esc_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/notifications' ); ?>" method="post" class="standard-form" id="settings-form">

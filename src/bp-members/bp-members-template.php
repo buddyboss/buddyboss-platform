@@ -121,6 +121,7 @@ function bp_members_member_type_base() {
 		 * @since BuddyPress 2.3.0
 		 *
 		 * @param string $base
+		 * @todo if this is changed what will it break? Should we allow this?
 		 */
 		return apply_filters( 'bp_members_member_type_base', _x( 'type', 'profile type URL base', 'buddyboss' ) );
 	}

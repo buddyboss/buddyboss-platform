@@ -43,7 +43,7 @@ class QuizzesReportsGenerator extends ReportsGenerator
 				'order_key' => 'activity_points',
 			],
 			'attempts'         => [
-				'label'     => __( 'No. of Attempts', 'buddyboss' ),
+				'label'     => __( 'Attempts', 'buddyboss' ),
 				'sortable'  => false,
 				'order_key' => 'post_title',
 			],

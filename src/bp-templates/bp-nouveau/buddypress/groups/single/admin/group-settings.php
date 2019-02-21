@@ -129,7 +129,7 @@
 
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'What type of group is this? (optional)', 'buddyboss' ); ?></p>
 			<select id="bp-groups-type" name="group-types[]" autocomplete="off">
-				<option value="" <?php selected( '', '' ); ?>><?php echo _x( 'Select Group Type', 'The option that sets a group type.', 'buddyboss' ); ?></option>
+				<option value="" <?php selected( '', '' ); ?>><?php _e( 'Select Group Type', 'buddyboss' ); ?></option>
 			<?php foreach ( $group_types as $type ) : ?>
 				<?php
 				if ( false === bp_restrict_group_creation() && true === bp_member_type_enable_disable() ) {
@@ -148,28 +148,28 @@
 							if ( isset( $include_group_type ) && !empty( $include_group_type ) ) {
 								if ( in_array( $type->name, $include_group_type ) ) {
 									?>
-									<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
+									<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name ); ?>><?php esc_html_e( $type->labels['singular_name'] ); ?></option>
 									<?php
 								}
 							} else {
 								?>
-								<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
+								<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name ); ?>><?php esc_html_e( $type->labels['singular_name'] ); ?></option>
 								<?php
 							}
 
 						} else {
 							?>
-							<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '' , $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
+							<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '' , $type->name ); ?>><?php esc_html_e( $type->labels['singular_name'] ); ?></option>
 							<?php
 						}
 					} else {
 						?>
-						<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '' , $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
+						<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '' , $type->name ); ?>><?php esc_html_e( $type->labels['singular_name'] ); ?></option>
 						<?php
 					}
 				} else {
 					?>
-					<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '' , $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
+					<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '' , $type->name ); ?>><?php esc_html_e( $type->labels['singular_name'] ); ?></option>
 					<?php
 				}
 				?>
@@ -189,13 +189,13 @@
 			<legend><?php esc_html_e( 'Group Parent', 'buddyboss' ); ?></legend>
 			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which group should be the parent of this group? (optional)', 'buddyboss' ); ?></p>
 			<select id="bp-groups-parent" name="bp-groups-parent" autocomplete="off">
-				<option value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php echo _x( 'Select Parent', 'The option that sets a group to be a top-level group and have no parent.', 'buddyboss' ); ?></option>
+				<option value="0" <?php selected( 0, $current_parent_group_id ); ?>><?php _e( 'Select Parent', 'buddyboss' ); ?></option>
 				<?php
 				if ( $possible_parent_groups ) {
 
 					foreach ( $possible_parent_groups as $possible_parent_group ) {
 						?>
-						<option value="<?php echo $possible_parent_group->id; ?>" <?php selected( $current_parent_group_id, $possible_parent_group->id ); ?>><?php echo esc_html( $possible_parent_group->name ); ?></option>
+						<option value="<?php echo $possible_parent_group->id; ?>" <?php selected( $current_parent_group_id, $possible_parent_group->id ); ?>><?php esc_html_e( $possible_parent_group->name ); ?></option>
 						<?php
 					}
 				}
