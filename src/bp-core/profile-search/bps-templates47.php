@@ -1,4 +1,13 @@
 <?php
+/**
+ * BuddyBoss Profile Search Template
+ *
+ * @package BuddyBoss\Core\ProfileSearch
+ * @since BuddyBoss 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 function bp_ps_escaped_form_data47( $version ) {
 	list ( $form, $location ) = bp_ps_template_args();

@@ -1,4 +1,13 @@
 <?php
+/**
+ * BuddyBoss Profile Search Request
+ *
+ * @package BuddyBoss\Core\ProfileSearch
+ * @since BuddyBoss 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 add_action ('wp', 'bp_ps_set_request');
 function bp_ps_set_request ()

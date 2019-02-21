@@ -1,4 +1,13 @@
 <?php
+/**
+ * BuddyBoss Profile Search Directory
+ *
+ * @package BuddyBoss\Core\ProfileSearch
+ * @since BuddyBoss 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 function bp_ps_directories ()
 {

@@ -1,4 +1,13 @@
 <?php
+/**
+ * BuddyBoss Profile Search Form
+ *
+ * @package BuddyBoss\Core\ProfileSearch
+ * @since BuddyBoss 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 add_action ( 'bp_before_directory_members', 'bp_profile_search_show_form');
 

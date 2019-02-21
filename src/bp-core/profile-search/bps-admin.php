@@ -1,4 +1,13 @@
 <?php
+/**
+ * BuddyBoss Profile Search Admin
+ *
+ * @package BuddyBoss\Core\ProfileSearch
+ * @since BuddyBoss 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 add_action( 'current_screen', 'bp_profile_search_redirect_admin_screens' );
 function bp_profile_search_redirect_admin_screens () {

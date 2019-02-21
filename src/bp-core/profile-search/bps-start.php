@@ -1,4 +1,13 @@
 <?php
+/**
+ * BuddyBoss Profile Search Loader
+ *
+ * @package BuddyBoss\Core\ProfileSearch
+ * @since BuddyBoss 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 define ('BP_PS_FORM', 'bp_profile_search');
 

@@ -1,4 +1,13 @@
 <?php
+/**
+ * BuddyBoss Profile Search Extended
+ *
+ * @package BuddyBoss\Core\ProfileSearch
+ * @since BuddyBoss 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 add_filter ('bp_ps_add_fields', 'bp_ps_xprofile_setup');
 function bp_ps_xprofile_setup ($fields)
