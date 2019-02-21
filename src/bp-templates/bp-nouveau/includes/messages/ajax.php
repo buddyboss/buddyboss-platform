@@ -120,9 +120,15 @@ function bp_nouveau_ajax_messages_send_reply() {
 
 		wp_send_json_error( $response );
 	}
+	
+	$thread_id = (int) $_POST['thread_id'];
+
+	if ( ! bp_current_user_can( 'bp_moderate' ) && ( ! messages_is_valid_thread( $thread_id ) || ! messages_check_thread_access( $thread_id ) ) ) {
+		wp_send_json_error( $response );
+	}
 
 	$new_reply = messages_new_message( array(
-		'thread_id' => (int) $_POST['thread_id'],
+		'thread_id' => $thread_id,
 		'subject'   => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false,
 		'content'   => $_POST['content'],
 		'error_type' => 'wp_error',
@@ -147,7 +153,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	// Override bp_current_action().
 	$bp->current_action = 'view';
 
-	bp_thread_has_messages( array( 'thread_id' => (int) $_POST['thread_id'] ) );
+	bp_thread_has_messages( array( 'thread_id' => $thread_id ) );
 
 	// Set current message to current key.
 	$thread_template->current_message = -1;
@@ -162,12 +168,12 @@ function bp_nouveau_ajax_messages_send_reply() {
 	// Output single message template part.
 	$reply = array(
 		'id'            => bp_get_the_thread_message_id(),
-		'content'       => html_entity_decode( do_shortcode( bp_get_the_thread_message_content() ) ),
+		'content'       => do_shortcode( bp_get_the_thread_message_content() ),
 		'sender_id'     => bp_get_the_thread_message_sender_id(),
 		'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
 		'sender_link'   => bp_get_the_thread_message_sender_link(),
 		'sender_is_you' => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
-		'sender_avatar' => htmlspecialchars_decode( bp_core_fetch_avatar( array(
+		'sender_avatar' => esc_url( bp_core_fetch_avatar( array(
 			'item_id' => bp_get_the_thread_message_sender_id(),
 			'object'  => 'user',
 			'type'    => 'thumb',
@@ -273,14 +279,14 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		$threads->threads[ $i ] = array(
 			'id'            => bp_get_message_thread_id(),
 			'message_id'    => (int) $last_message_id,
-			'subject'       => html_entity_decode( bp_get_message_thread_subject() ),
-			'excerpt'       => html_entity_decode( bp_get_message_thread_excerpt() ),
-			'content'       => html_entity_decode( do_shortcode( bp_get_message_thread_content() ) ),
+			'subject'       => strip_tags( bp_get_message_thread_subject() ),
+			'excerpt'       => strip_tags( bp_get_message_thread_excerpt() ),
+			'content'       => do_shortcode( bp_get_message_thread_content() ),
 			'unread'        => bp_message_thread_has_unread(),
 			'sender_name'   => bp_core_get_user_displayname( $messages_template->thread->last_sender_id ),
 			'sender_is_you' => $messages_template->thread->last_sender_id == bp_loggedin_user_id(),
 			'sender_link'   => bp_core_get_userlink( $messages_template->thread->last_sender_id, false, true ),
-			'sender_avatar' => htmlspecialchars_decode( bp_core_fetch_avatar( array(
+			'sender_avatar' => esc_url( bp_core_fetch_avatar( array(
 				'item_id' => $messages_template->thread->last_sender_id,
 				'object'  => 'user',
 				'type'    => 'thumb',
@@ -300,7 +306,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		if ( is_array( $messages_template->thread->recipients ) ) {
 			foreach ( $messages_template->thread->recipients as $recipient ) {
 				$threads->threads[ $i ]['recipients'][] = array(
-					'avatar' => htmlspecialchars_decode( bp_core_fetch_avatar( array(
+					'avatar' => esc_url( bp_core_fetch_avatar( array(
 						'item_id' => $recipient->user_id,
 						'object'  => 'user',
 						'type'    => 'thumb',
@@ -476,7 +482,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 	if ( empty( $_POST['js_thread'] ) ) {
 		$thread->thread = array(
 			'id'      => bp_get_the_thread_id(),
-			'subject' => html_entity_decode( bp_get_the_thread_subject() ),
+			'subject' => strip_tags( bp_get_the_thread_subject() ),
 			'started_date' => date(
 				get_option('date_format'),
 				strtotime($thread_template->thread->first_message_date)
@@ -486,7 +492,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 		if ( is_array( $thread_template->thread->recipients ) ) {
 			foreach ( $thread_template->thread->recipients as $recipient ) {
 				$thread->thread['recipients'][] = array(
-					'avatar' => htmlspecialchars_decode( bp_core_fetch_avatar( array(
+					'avatar' => esc_url( bp_core_fetch_avatar( array(
 						'item_id' => $recipient->user_id,
 						'object'  => 'user',
 						'type'    => 'thumb',
@@ -508,12 +514,12 @@ function bp_nouveau_ajax_get_thread_messages() {
 	while ( bp_thread_messages() ) : bp_thread_the_message();
 		$thread->messages[ $i ] = array(
 			'id'            => bp_get_the_thread_message_id(),
-			'content'       => html_entity_decode( do_shortcode( bp_get_the_thread_message_content() ) ),
+			'content'       => do_shortcode( bp_get_the_thread_message_content() ),
 			'sender_id'     => bp_get_the_thread_message_sender_id(),
 			'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
 			'sender_link'   => bp_get_the_thread_message_sender_link(),
 			'sender_is_you' => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
-			'sender_avatar' => htmlspecialchars_decode( bp_core_fetch_avatar( array(
+			'sender_avatar' => esc_url( bp_core_fetch_avatar( array(
 				'item_id' => bp_get_the_thread_message_sender_id(),
 				'object'  => 'user',
 				'type'    => 'thumb',
