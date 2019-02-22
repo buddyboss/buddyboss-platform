@@ -56,7 +56,7 @@ function bp_has_message_threads( $args = array() ) {
 
 	// User ID
 	// @todo displayed user for moderators that get this far?
-	$user_id = bp_displayed_user_id();
+	$user_id = bp_displayed_user_id()?:bp_loggedin_user_id();
 
 	// Search Terms.
 	$search_terms = isset( $_REQUEST['s'] ) ? stripslashes( $_REQUEST['s'] ) : '';
