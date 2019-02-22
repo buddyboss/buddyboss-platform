@@ -193,11 +193,14 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 		) ),
 	);
 
+	// Group id
+	$group_id = bp_get_current_group_id()?: (int) $_REQUEST['group_id'];
+
 	// Do extra queries only if needed
 	if ( ! empty( $bp->groups->invites_scope ) && 'invited' === $bp->groups->invites_scope ) {
-		$response['is_sent']  = (bool) groups_check_user_has_invite( $user->ID, bp_get_current_group_id() );
+		$response['is_sent']  = (bool) groups_check_user_has_invite( $user->ID, $group_id );
 
-		$inviter_ids = bp_nouveau_groups_get_inviter_ids( $user->ID, bp_get_current_group_id() );
+		$inviter_ids = bp_nouveau_groups_get_inviter_ids( $user->ID, $group_id );
 
 		foreach ( $inviter_ids as $inviter_id ) {
 			$class = false;
