@@ -357,7 +357,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 	if ( 'invited' === $request['scope'] ) {
 
-		if ( ! bp_group_has_invites( array( 'user_id' => 'any' ) ) ) {
+		if ( ! bp_group_has_invites( array( 'user_id' => 'any', 'group_id' => $request['group_id'] ) ) ) {
 			wp_send_json_error( array(
 				'feedback' => __( 'No pending group invitations found.', 'buddyboss' ),
 				'type'     => 'info',
@@ -423,7 +423,7 @@ function bp_nouveau_ajax_send_group_invites() {
 		wp_send_json_error( $response );
 	}
 
-	$group_id = bp_get_current_group_id();
+	$group_id = bp_get_current_group_id()?: $_POST['group_id'];
 
 	if ( bp_is_group_create() && ! empty( $_POST['group_id'] ) ) {
 		$group_id = (int) $_POST['group_id'];
