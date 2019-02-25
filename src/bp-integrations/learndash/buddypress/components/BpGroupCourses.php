@@ -57,7 +57,7 @@ class BpGroupCourses extends BP_Group_Extension
 
     protected function prepareComponentOptions()
     {
-		$tabName     = apply_filters('bp_ld_sync/courses_group_tab_name', __('Courses', 'buddyboss'));
+		$tabName     = apply_filters('bp_ld_sync/courses_group_tab_name', $this->tabLabel());
 		$tabSlug     = apply_filters('bp_ld_sync/courses_group_tab_slug', 'courses');
 		$tabPosition = apply_filters('bp_ld_sync/courses_group_tab_position', 15);
 		// learndash_is_group_leader_user
@@ -94,6 +94,19 @@ class BpGroupCourses extends BP_Group_Extension
 				),
 			]
 		];
+    }
+
+    protected function tabLabel()
+    {
+    	$default = __('Courses', 'buddyboss');
+
+    	if (! $currentGroup = groups_get_current_group()) {
+    		return $default;
+    	}
+
+    	$coursesCount = count(bp_learndash_get_group_courses($currentGroup->id));
+
+    	return _nx('Course', 'Courses', $coursesCount, 'bp group tab name', 'buddyboss');
     }
 
     protected function showTabOnView()

@@ -13,6 +13,16 @@ function bp_ld_sync($component = null) {
 	return $component? $bp_ld_sync->$component : $bp_ld_sync;
 }
 
+function bp_learndash_get_group_courses($bpGroupId) {
+	$generator = bp_ld_sync('buddypress')->sync->generator($bpGroupId);
+
+	if (! $generator->hasLdGroup()) {
+		return [];
+	}
+
+	return learndash_group_enrolled_courses($generator->getLdGroupId());
+}
+
 // forward competibility
 if (! function_exists('learndash_get_post_type_slug')) {
 	function learndash_get_post_type_slug($type) {
