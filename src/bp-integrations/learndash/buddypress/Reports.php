@@ -30,7 +30,10 @@ class Reports
 		add_action('bp_ld_sync/reports', [$this, 'showReportTables'], 30);
 		add_action('bp_ld_sync/reports', [$this, 'showReportExport'], 40);
 
+		add_filter('bp_ld_sync/reports_generator_params', [$this, 'forceOwnReportResults'], 99);
+
 		add_filter('bp_ld_sync/report_filters', [$this, 'removeCourseFilterIfOnlyOne']);
+		add_filter('bp_ld_sync/report_filters', [$this, 'removeUserFilterIfStudent']);
 
 		add_filter('learndash_user_activity_query_fields', [$this, 'reportAdditionalActivityFields'], 10, 2);
 		add_filter('learndash_user_activity_query_tables', [$this, 'reportAdditionalActivityTables'], 10, 2);
@@ -135,6 +138,23 @@ class Reports
 		require bp_locate_template('groups/single/reports-tables.php', false, false);
 	}
 
+	public function forceOwnReportResults($params)
+	{
+    	if (! $currentGroup = groups_get_current_group()) {
+    		return $params;
+    	}
+
+		$userId = bp_loggedin_user_id();
+		$groupId = $currentGroup->id;
+
+		if (groups_is_user_admin($userId, $groupId) || groups_is_user_mod($userId, $groupId)) {
+			return $params;
+		}
+
+		$params['user_ids'] = [bp_loggedin_user_id()];
+		return $params;
+	}
+
 	public function showReportExport()
 	{
 		require bp_locate_template('groups/single/reports-export.php', false, false);
@@ -149,6 +169,27 @@ class Reports
     	if (count(bp_learndash_get_group_courses($currentGroup->id)) < 2) {
     		unset($filters['course']);
     	}
+
+    	return $filters;
+	}
+
+	public function removeUserFilterIfStudent($filters)
+	{
+    	if (! $currentGroup = groups_get_current_group()) {
+    		return $filters;
+    	}
+
+		// admin can always view
+		if (learndash_is_admin_user()) {
+			return $filters;
+		}
+
+		$userId = bp_loggedin_user_id();
+		$groupId = $currentGroup->id;
+
+		if (! groups_is_user_admin($userId, $groupId) && ! groups_is_user_mod($userId, $groupId)) {
+			unset($filters['user']);
+		}
 
     	return $filters;
 	}
