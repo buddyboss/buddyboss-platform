@@ -21,10 +21,6 @@ class Reports
 
 	public function init()
 	{
-		if (! $this->reportTabIsVisible()) {
-			return;
-		}
-
 		add_action('bp_enqueue_scripts', [$this, 'registerReportsScript']);
 
 		// add plugable templates to report actions
@@ -33,6 +29,8 @@ class Reports
 		add_action('bp_ld_sync/reports', [$this, 'showReportCourseStats'], 20);
 		add_action('bp_ld_sync/reports', [$this, 'showReportTables'], 30);
 		add_action('bp_ld_sync/reports', [$this, 'showReportExport'], 40);
+
+		add_filter('bp_ld_sync/report_filters', [$this, 'removeCourseFilterIfOnlyOne']);
 
 		add_filter('learndash_user_activity_query_fields', [$this, 'reportAdditionalActivityFields'], 10, 2);
 		add_filter('learndash_user_activity_query_tables', [$this, 'reportAdditionalActivityTables'], 10, 2);
@@ -142,6 +140,19 @@ class Reports
 		require bp_locate_template('groups/single/reports-export.php', false, false);
 	}
 
+	public function removeCourseFilterIfOnlyOne($filters)
+	{
+    	if (! $currentGroup = groups_get_current_group()) {
+    		return $filters;
+    	}
+
+    	if (count(bp_learndash_get_group_courses($currentGroup->id)) < 2) {
+    		unset($filters['course']);
+    	}
+
+    	return $filters;
+	}
+
 	public function reportAdditionalActivityFields($strFields, $queryArgs)
 	{
 		return apply_filters('bp_ld_sync/reports/activity_fields', $strFields, $queryArgs);
@@ -242,31 +253,6 @@ class Reports
 				'class' => AssignmentsReportsGenerator::class
 			],
 		]);
-	}
-
-	protected function reportTabIsVisible()
-	{
-		if (! bp_ld_sync('settings')->get('reports.enabled')) {
-			return false;
-		}
-
-		if (! $currentGroup = groups_get_current_group()) {
-			return false;
-		}
-
-		// admin can always view
-		if (learndash_is_admin_user()) {
-			return true;
-		}
-
-		foreach (bp_ld_sync('settings')->get('reports.access', []) as $type) {
-			$function = "groups_is_user_{$type}";
-			if (function_exists($function) && call_user_func_array($function, [bp_loggedin_user_id(), $currentGroup->id])) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	protected function getReportFilters()
