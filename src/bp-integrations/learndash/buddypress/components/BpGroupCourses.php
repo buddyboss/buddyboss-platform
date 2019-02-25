@@ -1,10 +1,10 @@
 <?php
 
-namespace Buddyboss\LearndashIntegration\Buddypress;
+namespace Buddyboss\LearndashIntegration\Buddypress\Components;
 
 use BP_Group_Extension;
 
-class GroupBpComponent extends BP_Group_Extension
+class BpGroupCourses extends BP_Group_Extension
 {
 	public function __construct()
 	{
@@ -50,39 +50,39 @@ class GroupBpComponent extends BP_Group_Extension
 		$subMenus    = array_map(function($menu) {
 			$menu['url'] = bp_ld_sync('buddypress')->subMenuLink($menu['slug']);
 			return $menu;
-		}, bp_ld_sync('buddypress')->subMenus());
+		}, bp_ld_sync('buddypress')->coursesSubMenus());
 
 		require bp_locate_template('groups/single/courses-nav.php', false, false);
     }
 
     protected function prepareComponentOptions()
     {
-		$tabName     = apply_filters('bp_ld_sync/group_tab_name', __('Courses', 'buddyboss'));
-		$tabSlug     = apply_filters('bp_ld_sync/group_tab_slug', 'courses');
-		$tabPosition = apply_filters('bp_ld_sync/group_tab_position', 15);
+		$tabName     = apply_filters('bp_ld_sync/courses_group_tab_name', __('Courses', 'buddyboss'));
+		$tabSlug     = apply_filters('bp_ld_sync/courses_group_tab_slug', 'courses');
+		$tabPosition = apply_filters('bp_ld_sync/courses_group_tab_position', 15);
 		// learndash_is_group_leader_user
 
     	return [
 			'name' => $tabName,
 			'slug' => $tabSlug,
 			'nav_item_position' => $tabPosition,
-			'access' => $this->showTabOnView(),
+			'access' => apply_filters('bp_ld_sync/courses_group_tab_enabled', $this->showTabOnView()),
 
 			'screens' => [
 				'create' => [
-					'enabled'         => apply_filters('bp_ld_sync/group_tab_enabled/screen=create', $this->showTabOnCreate()),
-					'name'            => apply_filters('bp_ld_sync/group_tab_name/screen=create', $tabName),
-					'slug'            => apply_filters('bp_ld_sync/group_tab_slug/screen=create', $tabSlug),
-					'position'        => apply_filters('bp_ld_sync/group_tab_position/screen=create', $tabPosition),
+					'enabled'         => apply_filters('bp_ld_sync/courses_group_tab_enabled/screen=create', $this->showTabOnCreate()),
+					'name'            => apply_filters('bp_ld_sync/courses_group_tab_name/screen=create', $tabName),
+					'slug'            => apply_filters('bp_ld_sync/courses_group_tab_slug/screen=create', $tabSlug),
+					'position'        => apply_filters('bp_ld_sync/courses_group_tab_position/screen=create', $tabPosition),
 					// 'screen_callback' => '',
 					// 'save_callback'   => '', // ??
 				],
 
 				'edit' => [
-					'enabled'         => apply_filters('bp_ld_sync/group_tab_enabled/screen=edit', true),
-					'name'            => apply_filters('bp_ld_sync/group_tab_name/screen=edit', $tabName),
-					'slug'            => apply_filters('bp_ld_sync/group_tab_slug/screen=edit', $tabSlug),
-					'position'        => apply_filters('bp_ld_sync/group_tab_position/screen=edit', $tabPosition),
+					'enabled'         => apply_filters('bp_ld_sync/courses_group_tab_enabled/screen=edit', true),
+					'name'            => apply_filters('bp_ld_sync/courses_group_tab_name/screen=edit', $tabName),
+					'slug'            => apply_filters('bp_ld_sync/courses_group_tab_slug/screen=edit', $tabSlug),
+					'position'        => apply_filters('bp_ld_sync/courses_group_tab_position/screen=edit', $tabPosition),
 					// 'screen_callback' => '',
 					// 'save_callback'   => '', // ??
 					// 'submit_text' => ''

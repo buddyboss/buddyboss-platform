@@ -26,7 +26,8 @@ class Reports
 		}
 
 		add_action('bp_enqueue_scripts', [$this, 'registerReportsScript']);
-		add_filter('bp_ld_sync/group_tab_subnavs', [$this, 'addReportSubMenu']);
+
+		// add plugable templates to report actions
 		add_action('bp_ld_sync/reports', [$this, 'showReportFilters'], 10);
 		add_action('bp_ld_sync/reports', [$this, 'showReportUserStats'], 20);
 		add_action('bp_ld_sync/reports', [$this, 'showReportCourseStats'], 20);
@@ -45,7 +46,7 @@ class Reports
 
 	public function registerReportsScript()
 	{
-		if (! bp_is_groups_component() || ! bp_is_action_variable('reports')) {
+		if (! bp_is_groups_component() || ! bp_is_current_action('reports')) {
 			return;
 		}
 
@@ -87,21 +88,10 @@ class Reports
 		);
 	}
 
-	public function addReportSubMenu($subMenus)
-	{
-		$subMenus['reports'] = [
-			'name'     => __('Reports', 'buddyboss'),
-			'slug'     => 'reports',
-			'position' => 20
-		];
-
-		return $subMenus;
-	}
-
 	public function showReportFilters()
 	{
 		$filters = $this->getReportFilters();
-		require bp_locate_template('groups/single/courses-reports-filters.php', false, false);
+		require bp_locate_template('groups/single/reports-filters.php', false, false);
 	}
 
 	public function showReportUserStats()
@@ -116,7 +106,7 @@ class Reports
 		$group    = groups_get_current_group();
 		$user     = get_user_by('ID', $_GET['user']);
 
-		require bp_locate_template('groups/single/courses-reports-user-stats.php', false, false);
+		require bp_locate_template('groups/single/reports-user-stats.php', false, false);
 	}
 
 	public function showReportCourseStats()
@@ -136,7 +126,7 @@ class Reports
 		$courseHasPoints = !! $coursePoints = get_post_meta($course->ID, 'course_points', true);
 		$averagePoints = $courseHasPoints? count($ldGroupUsersCompleted) * $coursePoints : 0;
 
-		require bp_locate_template('groups/single/courses-reports-course-stats.php', false, false);
+		require bp_locate_template('groups/single/reports-course-stats.php', false, false);
 	}
 
 	public function showReportTables()
@@ -144,12 +134,12 @@ class Reports
 		$generator = $this->getCurrentGenerator();
 		$completed_table_title = $generator->completed_table_title ?: __('Completed', 'buddyboss');
 		$incompleted_table_title = $generator->incompleted_table_title ?: __('Incomplete', 'buddyboss');
-		require bp_locate_template('groups/single/courses-reports-tables.php', false, false);
+		require bp_locate_template('groups/single/reports-tables.php', false, false);
 	}
 
 	public function showReportExport()
 	{
-		require bp_locate_template('groups/single/courses-reports-export.php', false, false);
+		require bp_locate_template('groups/single/reports-export.php', false, false);
 	}
 
 	public function reportAdditionalActivityFields($strFields, $queryArgs)

@@ -73,6 +73,7 @@ class Core
 				'Buddyboss\LearndashIntegration\Library'    => 'library',
 				'Buddyboss\LearndashIntegration\Buddypress' => 'buddypress',
 				'Buddyboss\LearndashIntegration\Buddypress\Generators' => 'buddypress/generators',
+				'Buddyboss\LearndashIntegration\Buddypress\Components' => 'buddypress/components',
 				'Buddyboss\LearndashIntegration\Learndash'  => 'learndash',
 			];
 
