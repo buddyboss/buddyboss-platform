@@ -543,6 +543,7 @@ class BuddyPress {
 		require( $this->plugin_dir . 'bp-core/bp-core-learndash-emails.php' );
 		require( $this->plugin_dir . 'bp-core/bp-core-mepr-emails.php'      );
 		require( $this->plugin_dir . 'bp-core/bp-core-profile-search.php'   );
+		require( $this->plugin_dir . 'bp-core/bp-core-media.php'            );
 		require( $this->plugin_dir . 'bp-core/bp-core-gdpr.php'             );
 
 		// Maybe load deprecated buddypress functionality (this double negative is proof positive!)

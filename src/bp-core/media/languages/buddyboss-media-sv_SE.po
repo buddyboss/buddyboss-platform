@@ -1,0 +1,1050 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: BuddyBoss Media 1.0.0\n"
+"Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
+"POT-Creation-Date: 2018-06-21 05:08:57+00:00\n"
+"PO-Revision-Date: 2015-06-23 22:18+0100\n"
+"Last-Translator: Anton Andreasson <anton@andreasson.org>\n"
+"Language-Team: BuddyBoss <support@buddyboss.com>\n"
+"Language: sv_SE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 1.7.1\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
+"_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2\n"
+"X-Textdomain-Support: yes\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: .\n"
+
+# @ buddyboss-media
+#: buddyboss-media.php:87
+msgid "Couldn't load main class at:<br/>%s"
+msgstr "Kunde inte ladda huvudklassen:<br/>%s"
+
+# @ buddyboss-media
+#: buddyboss-media.php:93
+msgid "<h1>Fatal error:</h1><hr/><pre>%s</pre>"
+msgstr "<h1>Allvarligt fel:</h1><hr/><pre>%s</pre>"
+
+#: buddyboss-media.php:194
+msgid ""
+"<strong>BuddyPress Media</strong></a> requires the BuddyPress plugin to "
+"work. Please <a href=\"http://buddypress.org\">install BuddyPress</a> first."
+msgstr ""
+
+# @ buddyboss-media
+#: includes/admin.php:191
+msgid "General Settings"
+msgstr "Allmänna inställningar"
+
+# @ buddyboss-media
+#: includes/admin.php:192
+msgid "User Photos Slug"
+msgstr "URL-namn för användarnas foton"
+
+# @ buddyboss-media
+#: includes/admin.php:193
+msgid "Global Photos Page"
+msgstr "Alla foton"
+
+# @ buddyboss-media
+#: includes/admin.php:194
+msgid "Activity Photo Size"
+msgstr "Storlek på bild i aktivitetsvyn"
+
+# @ buddyboss-media
+#: includes/admin.php:195
+msgid "Photo Layout"
+msgstr "Bild-layout"
+
+# @ buddyboss-media
+#: includes/admin.php:196
+msgid "Friend Tagging"
+msgstr "Taggning av vänner"
+
+# @ buddyboss-media
+#: includes/admin.php:197
+msgid "Max. Files per Batch"
+msgstr "Max antal filer per uppladdning"
+
+# @ buddyboss-media
+#: includes/admin.php:198
+msgid "Mobile Rotation Fix"
+msgstr "Mobil-roteringsfix"
+
+# @ buddyboss-media
+#: includes/admin.php:199
+#, fuzzy
+msgid "Media Management"
+msgstr "Media-komponent"
+
+#: includes/admin.php:200
+msgid "Enable Unminified JS"
+msgstr ""
+
+#: includes/admin.php:201
+msgid "Disable Upload Box"
+msgstr ""
+
+#: includes/admin.php:205
+msgid "Forums"
+msgstr ""
+
+#: includes/admin.php:206
+msgid "bbPress Media"
+msgstr ""
+
+#: includes/admin.php:210
+msgid "Groups"
+msgstr ""
+
+#: includes/admin.php:211
+msgid "Group Media"
+msgstr ""
+
+# @ buddyboss-media
+#: includes/admin.php:212
+#, fuzzy
+msgid "Group Albums"
+msgstr "Album"
+
+#: includes/admin.php:216
+msgid "Support"
+msgstr ""
+
+# @ buddyboss-media
+#: includes/admin.php:307 includes/buddyboss-media-wp-user-export-gdpr.php:36
+#: includes/buddyboss-media-wp-user-export-gdpr.php:46
+#: includes/buddyboss-plugin-updater.php:10
+msgid "BuddyBoss Media"
+msgstr "BuddyBoss Media"
+
+# @ buddyboss-media
+#: includes/admin.php:313
+msgid "Settings updated."
+msgstr "Inställningarna uppdaterades."
+
+# @ default
+#: includes/admin.php:321
+msgid "Save Changes"
+msgstr "Spara ändringar"
+
+# @ buddyboss-media
+#: includes/admin.php:365
+msgid "Settings"
+msgstr "Inställningar"
+
+# @ buddyboss-media
+#: includes/admin.php:456
+msgid "Example: "
+msgstr "Exempel: "
+
+# @ buddyboss-media
+#: includes/admin.php:486
+msgid "Enable fix for mobile uploads rotating."
+msgstr "Aktivera fix av felaktigt roterade bilder uppladdade via mobiler."
+
+# @ buddyboss-media
+#: includes/admin.php:489
+msgid ""
+"It's recommended that you have at least 256M-512M of RAM allocated to PHP, "
+"otherwise photo uploads may fail."
+msgstr ""
+"Det är rekommenderat att du har gett PHP åtminstone 256M-512M RAM-minne, "
+"annars kan bilduppladdningar misslyckas."
+
+# @ buddyboss-media
+#: includes/admin.php:491
+msgid "Your current memory limit is "
+msgstr "Din nuvarande minnesgräns är "
+
+# @ buddyboss-media
+#: includes/admin.php:493
+msgid "You can contact your web host to increase the memory limit."
+msgstr "Kontakta ditt webbhotell för att öka minnesgränsen."
+
+# @ buddyboss-media
+#: includes/admin.php:511
+msgid "- None -"
+msgstr "- Inget -"
+
+# @ buddyboss-media
+#: includes/admin.php:514
+msgid "New Page"
+msgstr "Ny sida"
+
+# @ buddyboss-media
+#: includes/admin.php:516
+msgid "View"
+msgstr "Visa"
+
+# @ buddyboss-media
+#: includes/admin.php:518
+msgid ""
+"Use a WordPress page to display all media uploaded by all users.<br /> You "
+"may need to reset your permalinks after changing this setting. Go to "
+"Settings > Permalinks."
+msgstr ""
+"Använd en WordPress-sida för att visa alla användares uppladdade foton. <br /"
+">Du kan komma att behöva uppdatera permalänkarna efter att denna inställning "
+"ändrats. Gå till Inställningar > Permalänkar"
+
+# @ buddyboss-media
+#: includes/admin.php:534
+msgid "Medium"
+msgstr "Mellanstor"
+
+# @ buddyboss-media
+#: includes/admin.php:535
+msgid "Large"
+msgstr "Stor"
+
+# @ buddyboss-media
+#: includes/admin.php:544
+msgid "Image size displayed in activity posts."
+msgstr "Bildstorlek för aktivitets-uppdateringar."
+
+# @ buddyboss-media
+#: includes/admin.php:561
+msgid "Grid"
+msgstr "Rutnät"
+
+# @ buddyboss-media
+#: includes/admin.php:562
+msgid "Activity Posts"
+msgstr "Aktivitetsuppdateringar"
+
+# @ buddyboss-media
+#: includes/admin.php:569
+msgid "In your albums, you can display photos in a grid or as activity posts."
+msgstr ""
+"I dina album kan du visa bilder i ett rutnät eller som "
+"aktivitetsuppdateringar."
+
+# @ buddyboss-media
+#: includes/admin.php:589
+msgid "Enable Tagging."
+msgstr "Aktivera taggning av vänner"
+
+# @ buddyboss-media
+#: includes/admin.php:590
+msgid "Allow members to tag friends in media uploads."
+msgstr "Tillåt medlemmar att tagga varandra i bilduppladdningar."
+
+# @ buddyboss-media
+#: includes/admin.php:608
+msgid "Maximum number of images that can be uploaded in one batch."
+msgstr "Maximalt antal bilder som kan laddas upp åt gången."
+
+#: includes/admin.php:629
+msgid ""
+"When a photo upload is removed, permanently delete the associated media file."
+msgstr ""
+
+#: includes/admin.php:650
+msgid ""
+"Load the Unminified version of Javascript, for compatibility with certain "
+"plugins."
+msgstr ""
+
+#: includes/admin.php:669
+msgid ""
+"When adding a photo, use browser's default file selector instead of our "
+"popup upload box."
+msgstr ""
+
+#: includes/admin.php:692
+msgid "Allow photo posting in bbPress groups and forums."
+msgstr ""
+
+#: includes/admin.php:715
+msgid "Allow photo posting in BuddyPress group activity updates and comments."
+msgstr ""
+
+#: includes/admin.php:737
+msgid "Enable BuddyPress group photo albums."
+msgstr ""
+
+#: includes/admin.php:748
+msgid ""
+"Mobile Rotation Fix requires PHP EXIF extension to be loaded. Please contact "
+"your server administrator."
+msgstr ""
+
+# @ buddyboss-media
+#: includes/albums/album-functions.php:557
+msgid "Something went wrong!"
+msgstr "Någonting gick fel."
+
+# @ buddyboss-media
+#: includes/albums/album-functions.php:573
+#: includes/albums/album-functions.php:583
+#: includes/albums/album-functions.php:591
+msgid "Access denied!"
+msgstr "Obehörig åtkomst."
+
+#: includes/albums/album-functions.php:679
+msgid "Your changes saved!."
+msgstr ""
+
+# @ buddyboss-media
+#: includes/albums/album-screens.php:82
+msgid "Album title cannot be empty."
+msgstr "En titel för albumet måste anges."
+
+# @ buddyboss-media
+#: includes/albums/album-screens.php:109
+msgid "Album created successfully."
+msgstr "Albumet skapades."
+
+# @ buddyboss-media
+#: includes/albums/album-screens.php:117
+msgid "Album was successfully updated."
+msgstr "Albumet uppdaterades."
+
+# @ buddyboss-media
+#: includes/albums/album-screens.php:134
+msgid "Album deleted successfuly!"
+msgstr "Albumet raderades."
+
+# @ buddyboss-media
+#: includes/albums/album-screens.php:137
+msgid "Access Denied!"
+msgstr "Obehörig åtkomst."
+
+# @ buddyboss-media
+#: includes/albums/album-screens.php:140
+msgid "Invalid request!"
+msgstr "Ogiltig begäran."
+
+# @ buddyboss-media
+#: includes/albums/album-template.php:511
+msgid "created %s ago"
+msgstr "skapat %s sedan"
+
+# @ buddyboss-media
+#: includes/albums/album-template.php:545
+#, fuzzy
+msgid "%s photo"
+msgid_plural "%s photos"
+msgstr[0] "%s bilder"
+msgstr[1] "%s bilder"
+
+# @ buddyboss-media
+#: includes/albums/album-template.php:570
+#: includes/albums/album-template.php:571
+msgid "Album"
+msgstr "Album"
+
+# @ buddyboss-media
+#: includes/albums/album-template.php:611
+#: includes/groups/bbm-group-media-functions.php:218
+msgid ""
+"Are you sure you want to delete this album? When you delete an album, all "
+"its photos go under global uploads."
+msgstr ""
+"Är du säker på att du vill radera detta album? När du raderar ett album så "
+"hamnar alla dess bilder under globala uppladdningar istället."
+
+# @ buddyboss-media
+#: includes/albums/album-template.php:613
+#: includes/groups/bbm-group-media-functions.php:220
+msgid "Delete Album"
+msgstr "Radera album"
+
+# @ buddyboss-media
+#: includes/bbm-migrate.php:196
+msgid "Please Migrate your Database"
+msgstr "Var god migrera din databas"
+
+# @ buddyboss-media
+#: includes/bbm-migrate.php:196
+msgid "Click Here"
+msgstr "Klicka här"
+
+# @ buddyboss-media
+#: includes/bbm-migrate.php:196
+msgid "Hide"
+msgstr "Göm"
+
+# @ buddyboss-media
+#: includes/bbm-migrate.php:204
+msgid "BuddyBoss Media Migration"
+msgstr "BuddyBoss Media-migrering"
+
+# @ buddyboss-media
+#: includes/bbm-migrate.php:204
+msgid "BBM Migration"
+msgstr "BBM-migrering"
+
+# @ default
+#: includes/bbm-migrate.php:247
+msgid "Migrate Changes"
+msgstr "Migrera ändringar"
+
+# @ buddyboss-media
+#: includes/bbpress/class-bbm-bbpress-media.php:128
+#: includes/bbpress/class-bbm-bbpress-media.php:158
+#: includes/comment/class-bbm-comment-media.php:95
+#: includes/comment/class-bbm-comment-media.php:126
+#: includes/media-edit-activity.php:106 includes/types/photo-class.php:435
+#: includes/types/photo-class.php:534
+msgid "Drop files anywhere to upload"
+msgstr "Dra och släpp filer här för att ladda upp dem"
+
+# @ buddyboss-media
+#: includes/bbpress/class-bbm-bbpress-media.php:129
+#: includes/bbpress/class-bbm-bbpress-media.php:159
+#: includes/comment/class-bbm-comment-media.php:96
+#: includes/comment/class-bbm-comment-media.php:127
+#: includes/media-edit-activity.php:107 includes/types/photo-class.php:436
+#: includes/types/photo-class.php:535
+msgid "or"
+msgstr "eller"
+
+# @ buddyboss-media
+#: includes/bbpress/class-bbm-bbpress-media.php:130
+#: includes/bbpress/class-bbm-bbpress-media.php:160
+#: includes/comment/class-bbm-comment-media.php:97
+#: includes/comment/class-bbm-comment-media.php:128
+#: includes/media-edit-activity.php:108 includes/types/photo-class.php:437
+#: includes/types/photo-class.php:536
+msgid "Select Files"
+msgstr "Välj filer"
+
+# @ buddyboss-media
+#: includes/bbpress/class-bbm-bbpress-media.php:163
+#, fuzzy
+msgid "Attach Photos"
+msgstr "Alla foton"
+
+# @ buddyboss-media
+#: includes/buddyboss-media-wp-user-export-gdpr.php:50
+#, fuzzy
+msgid "BuddyBoss Media Photos"
+msgstr "BuddyBoss Media"
+
+# @ buddyboss-media
+#: includes/buddyboss-media-wp-user-export-gdpr.php:91
+#: includes/groups/class-bbm-group-media.php:114
+#: includes/types/photo-class.php:601 includes/types/photo-class.php:632
+#: templates/bp-nouveau/groups/single/buddyboss-media-albums.php:10
+#: templates/bp-nouveau/members/single/buddyboss-media-albums.php:12
+#: templates/groups/single/buddyboss-media-albums.php:10
+#: templates/members/single/buddyboss-media-albums.php:12
+msgid "Albums"
+msgstr "Album"
+
+#: includes/buddyboss-media-wp-user-export-gdpr.php:105
+msgid "Album Author"
+msgstr ""
+
+#: includes/buddyboss-media-wp-user-export-gdpr.php:109
+msgid "Album Author Email"
+msgstr ""
+
+# @ buddyboss-media
+#: includes/buddyboss-media-wp-user-export-gdpr.php:113
+#, fuzzy
+msgid "Album Title"
+msgstr "Album"
+
+# @ buddyboss-media
+#: includes/buddyboss-media-wp-user-export-gdpr.php:117
+#, fuzzy
+msgid "Album Description"
+msgstr "Beskrivning"
+
+# @ buddyboss-media
+#: includes/buddyboss-media-wp-user-export-gdpr.php:121
+#, fuzzy
+msgid "Album Date"
+msgstr "Album"
+
+#: includes/buddyboss-media-wp-user-export-gdpr.php:125
+msgid "Album Privacy"
+msgstr ""
+
+# @ buddyboss-media
+#: includes/buddyboss-media-wp-user-export-gdpr.php:129
+#, fuzzy
+msgid "Album URL"
+msgstr "Album"
+
+#: includes/buddyboss-plugin-updater.php:49
+msgid ""
+"To receive updates for BuddyBoss products, please install and activate the "
+"plugin %s"
+msgstr ""
+
+# @ buddyboss-media
+#: includes/comment/class-bbm-comment-media.php:120
+#: includes/types/photo-class.php:526
+msgid "Say something about the photo(s)..."
+msgstr "Säg nåt om detta foto…"
+
+#: includes/comment/class-bbm-comment-media.php:131
+msgid "Post"
+msgstr ""
+
+# @ buddyboss-media
+#: includes/groups/class-bbm-group-media.php:33
+#: includes/types/photo-class.php:582
+msgid "Photos <span>%d</span>"
+msgstr "Foton <span>%d</span>"
+
+# @ buddyboss-media
+#: includes/groups/class-bbm-group-media.php:35
+#: includes/types/photo-class.php:81 includes/types/photo-class.php:618
+msgid "Photos"
+msgstr "Foton"
+
+# @ buddyboss-media
+#: includes/groups/class-bbm-group-media.php:67
+#, fuzzy
+msgid "Photo Albums"
+msgstr "I albumet:"
+
+#: includes/groups/class-bbm-group-media.php:69
+msgid "Which members of this group are allowed to create album?"
+msgstr ""
+
+#: includes/groups/class-bbm-group-media.php:72
+msgid "All group members"
+msgstr ""
+
+#: includes/groups/class-bbm-group-media.php:74
+msgid "Group admins and mods only"
+msgstr ""
+
+#: includes/groups/class-bbm-group-media.php:76
+msgid "Group admins only"
+msgstr ""
+
+# @ buddyboss-media
+#: includes/groups/class-bbm-group-media.php:102
+#: includes/types/photo-class.php:592 includes/types/photo-class.php:625
+msgid "Uploads"
+msgstr "Uppladdningar"
+
+#: includes/help-support.php:5
+msgid "Here is a video tutorial to get you started:"
+msgstr ""
+
+#: includes/help-support.php:13
+msgid "Need more help?"
+msgstr ""
+
+#: includes/help-support.php:16
+msgid "Frequently Asked Questions"
+msgstr ""
+
+# @ buddypress
+#: includes/help-support.php:17
+#, fuzzy
+msgid "How to Update"
+msgstr "Skicka uppdatering"
+
+# @ buddyboss-media
+#: includes/main-class.php:270 includes/main-class.php:277
+msgid "Cheatin&#8217; huh?"
+msgstr "Funkar du?"
+
+# @ buddyboss-media
+#: includes/main-class.php:827
+#, fuzzy
+msgid ""
+"To use the <strong>BuddyBoss Media</strong> plugin, please manually update "
+"your BuddyBoss theme to version 4.0 or above first. <a href=\"https://www."
+"buddyboss.com/upgrading-to-buddyboss-4-0/\">Read how &rarr;</a>"
+msgstr ""
+"För att använda pluginen <strong>BuddyBoss Media</strong>, var god "
+"uppgradera ditt BuddyBoss-tema till version 4.0 eller senare först. <a href="
+"\"https://www.buddyboss.com/upgrading-to-buddyboss-4-0/\">Läs hur &rarr;</a>"
+
+# @ buddyboss-media
+#: includes/main-class.php:828
+msgid "Disable Notice"
+msgstr "Stäng av notis"
+
+# @ buddyboss-media
+#: includes/main-class.php:848 includes/main-class.php:850
+msgid "BuddyPress Settings"
+msgstr "BuddyPress-inställningar"
+
+# @ buddyboss-media
+#: includes/main-class.php:852
+msgid ""
+"Hey! BuddyBoss Media requires activity component be enabled. Please enable "
+"it in your %s."
+msgstr ""
+"BuddyBoss Media kräver att aktivitetskomponenten är aktiverad. Var god "
+"aktivera den i dina %s."
+
+#: includes/media-functions.php:333
+msgid "Profile photo of %s"
+msgstr ""
+
+#: includes/media-functions.php:379
+msgid "Post in: Profile"
+msgstr ""
+
+#: includes/media-functions.php:388
+msgid "Post in: Group"
+msgstr ""
+
+#: includes/media-functions.php:389
+msgid "Start typing the group name..."
+msgstr ""
+
+#: includes/media-functions.php:398
+msgid "What's new, %s?"
+msgstr ""
+
+#: includes/media-functions.php:399
+msgid "Post what's new"
+msgstr ""
+
+#: includes/media-functions.php:400
+msgid "Post in"
+msgstr ""
+
+# @ buddyboss-media
+#: includes/media-pagination.php:163 includes/media-pagination.php:166
+msgid "First"
+msgstr "Första"
+
+# @ buddyboss-media
+#: includes/media-pagination.php:207 includes/media-pagination.php:210
+msgid "Last"
+msgstr "Sista"
+
+# @ buddyboss-media
+#: includes/media-privacy.php:81
+#: templates/bp-nouveau/members/single/buddyboss-media-album-edit.php:38
+#: templates/members/single/buddyboss-media-album-create.php:39
+#: templates/members/single/buddyboss-media-album-edit.php:40
+msgid "Everyone"
+msgstr "Alla"
+
+# @ buddyboss-media
+#: includes/media-privacy.php:84
+#: templates/bp-nouveau/members/single/buddyboss-media-album-edit.php:40
+#: templates/members/single/buddyboss-media-album-create.php:41
+#: templates/members/single/buddyboss-media-album-edit.php:42
+msgid "Logged In Users"
+msgstr "Inloggade användare"
+
+# @ buddyboss-media
+#: includes/media-privacy.php:87
+#: templates/bp-nouveau/members/single/buddyboss-media-album-edit.php:39
+#: templates/members/single/buddyboss-media-album-create.php:40
+#: templates/members/single/buddyboss-media-album-edit.php:41
+msgid "Only Me"
+msgstr "Bara jag"
+
+# @ buddyboss-media
+#: includes/media-privacy.php:90
+#: templates/bp-nouveau/members/single/buddyboss-media-album-edit.php:44
+#: templates/members/single/buddyboss-media-album-create.php:44
+#: templates/members/single/buddyboss-media-album-edit.php:46
+msgid "My Friends"
+msgstr "Mina vänner"
+
+#: includes/media-privacy.php:93
+msgid "Group Members"
+msgstr ""
+
+# @ buddyboss-media
+#: includes/tagging/class.BuddyBoss_Media_Tagging.php:47
+#: includes/tagging/class.BuddyBoss_Media_Tagging.php:48
+msgid "Tag Photo"
+msgstr "Tagga bild"
+
+# @ buddyboss-media
+#: includes/tagging/class.BuddyBoss_Media_Tagging.php:152
+msgid "You have no friends yet!"
+msgstr "Du har inte några vänner ännu."
+
+#: includes/tagging/class.BuddyBoss_Media_Tagging.php:154
+msgid "Nothing found!"
+msgstr ""
+
+# @ buddyboss-media
+#: includes/tagging/class.BuddyBoss_Media_Tagging_Hooks.php:53
+#: includes/types/photo-hooks.php:170
+msgid "You"
+msgstr "Du"
+
+# @ buddyboss-media
+#: includes/tagging/class.BuddyBoss_Media_Tagging_Hooks.php:92
+msgid "You and %s"
+msgstr "Du och %s"
+
+# @ buddyboss-media
+#: includes/tagging/class.BuddyBoss_Media_Tagging_Hooks.php:94
+msgid "%s"
+msgstr "aktiv %s"
+
+# @ buddyboss-media
+#: includes/tagging/class.BuddyBoss_Media_Tagging_Hooks.php:101
+msgid "You, %s and %s"
+msgstr "Du, %s och %s"
+
+# @ buddyboss-media
+#: includes/tagging/class.BuddyBoss_Media_Tagging_Hooks.php:104
+msgid "%s and %s"
+msgstr "%s %s detta."
+
+# @ buddyboss-media
+#: includes/tagging/class.BuddyBoss_Media_Tagging_Hooks.php:111
+#: includes/tagging/class.BuddyBoss_Media_Tagging_Hooks.php:134
+msgid "You, %s, %s and %s"
+msgstr "Du, %s, %s och %s"
+
+# @ buddyboss-media
+#: includes/tagging/class.BuddyBoss_Media_Tagging_Hooks.php:114
+#: includes/tagging/class.BuddyBoss_Media_Tagging_Hooks.php:138
+msgid "%s, %s and %s"
+msgstr "%s %s %s detta."
+
+# @ buddyboss-media
+#: includes/tagging/class.BuddyBoss_Media_Tagging_Hooks.php:129
+msgid "%s others"
+msgstr "%s andra"
+
+# @ buddyboss-media
+#: includes/tagging/class.BuddyBoss_Media_Tagging_Hooks.php:144
+msgid " - with %s"
+msgstr " - med %s"
+
+# @ buddyboss-media
+#: includes/tagging/class.BuddyBoss_Media_Tagging_Notifications.php:55
+msgid "%s tagged you in a photo"
+msgstr "%s taggade dig i en bild"
+
+# @ buddyboss-media
+#: includes/types/photo-class.php:210
+msgid "Picture upload currently in progress, please wait until completed."
+msgstr "Bilduppladdning pågår, var god vänta."
+
+# @ buddyboss-media
+#: includes/types/photo-class.php:212
+msgid "Upload a Picture"
+msgstr "Ladda upp en bild"
+
+# @ buddyboss-media
+#: includes/types/photo-class.php:213 includes/types/photo-class.php:510
+#: includes/types/photo-class.php:511 templates/tag-friends.php:26
+#: templates/tag-friends.php:27
+msgid "Cancel"
+msgstr "Avbryt"
+
+# @ buddyboss-media
+#: includes/types/photo-class.php:214
+msgid "Failed"
+msgstr "Misslyckades"
+
+# @ buddyboss-media
+#: includes/types/photo-class.php:215
+msgid "Add Photos"
+msgstr "Lägg till foton"
+
+# @ buddyboss-media
+#: includes/types/photo-class.php:216
+msgid "Add photos, %s"
+msgstr "Lägg till foton, %s"
+
+# @ buddyboss-media
+#: includes/types/photo-class.php:217
+msgid "Photo is currently uploading, please wait!"
+msgstr "Foto laddas upp…"
+
+# @ buddyboss-media
+#: includes/types/photo-class.php:218
+msgid "Sure you want to delete this photo?"
+msgstr "Är du säker på att du vill ta bort detta foto?"
+
+# @ buddyboss-media
+#: includes/types/photo-class.php:219
+msgid "You can upload a maximum of %s photos in one update"
+msgstr "Du kan ladda upp max %s foton åt gången"
+
+# @ buddyboss-media
+#: includes/types/photo-class.php:325
+#, fuzzy
+msgid "Fetching..."
+msgstr "Skalar om bilden…"
+
+# @ buddyboss-media
+#: includes/types/photo-class.php:486
+msgid "In photo album:"
+msgstr "I albumet:"
+
+# @ buddyboss-media
+#: includes/types/photo-class.php:498
+msgid "[None]"
+msgstr "[Inget]"
+
+# @ buddyboss-media
+#: includes/types/photo-class.php:503
+msgid "You have not created any albums yet!"
+msgstr "Du har inte skapat några album än."
+
+# @ buddyboss-media
+#: includes/types/photo-class.php:509
+#: templates/bp-nouveau/groups/single/buddyboss-media-album-edit.php:54
+#: templates/bp-nouveau/members/single/buddyboss-media-album-edit.php:57
+#: templates/groups/single/buddyboss-media-album-edit.php:57
+#: templates/members/single/buddyboss-media-album-edit.php:60
+msgid "Save"
+msgstr "Spara"
+
+#: includes/types/photo-class.php:542
+msgid "Who should see this?"
+msgstr ""
+
+# @ buddyboss-media
+#: includes/types/photo-class.php:669
+msgid "Photo does not exists."
+msgstr "Fotot saknas"
+
+# @ buddyboss-media
+#: includes/types/photo-class.php:711
+msgid "You don't have permission to delete this photo."
+msgstr "Du har inte rättigheter att ta bort detta foto"
+
+# @ buddyboss-media
+#: includes/types/photo-hooks.php:84
+msgid "posted a photo"
+msgstr "laddade upp ett foto"
+
+# @ buddyboss-media
+#: includes/types/photo-hooks.php:87
+msgid "posted %s photos"
+msgstr "postade %s foton"
+
+# @ buddyboss-media
+#: includes/types/photo-hooks.php:98
+msgid "in the group"
+msgstr "i gruppen"
+
+# @ buddyboss-media
+#: includes/types/photo-hooks.php:188
+msgid "View Discussion"
+msgstr "Visa diskussion"
+
+# @ buddyboss-media
+#: includes/types/photo-hooks.php:516
+msgid "new photo"
+msgstr "ny bild"
+
+# @ buddyboss-media
+#: includes/types/photo-hooks.php:653
+msgid "Add a photo, %s"
+msgstr "Lägg till ett foto, %s"
+
+# @ buddyboss-media
+#: templates/activity/buddyboss-media-activity-loop.php:88
+#: templates/bp-nouveau/activity/buddyboss-media-activity-loop.php:28
+msgid "Load More"
+msgstr "Visa fler"
+
+# @ buddyboss-media
+#: templates/activity/buddyboss-media-activity-loop.php:105
+msgid "Sorry, there were no photos found."
+msgstr "Inga foton hittades."
+
+#: templates/bp-nouveau/global-media-albums.php:30
+#: templates/bp-nouveau/global-media.php:33
+msgid "Directory menu"
+msgstr ""
+
+# @ buddyboss-media
+#: templates/bp-nouveau/global-media-albums.php:35
+#: templates/bp-nouveau/global-media.php:37
+#: templates/global-media-albums.php:25 templates/global-media.php:24
+msgid "All Photos"
+msgstr "Alla foton"
+
+# @ buddyboss-media
+#: templates/bp-nouveau/global-media-albums.php:38
+#: templates/bp-nouveau/global-media.php:40
+#: templates/global-media-albums.php:26 templates/global-media.php:25
+msgid "All Albums"
+msgstr "Alla album"
+
+# @ buddyboss-media
+#: templates/bp-nouveau/global-media-albums.php:92
+#: templates/bp-nouveau/groups/single/buddyboss-media-album-edit.php:63
+#: templates/bp-nouveau/groups/single/buddyboss-media-album.php:45
+#: templates/bp-nouveau/groups/single/buddyboss-media-albums.php:71
+#: templates/bp-nouveau/members/single/buddyboss-media-album-edit.php:67
+#: templates/bp-nouveau/members/single/buddyboss-media-album.php:43
+#: templates/bp-nouveau/members/single/buddyboss-media-albums.php:98
+#: templates/global-media-albums.php:82
+#: templates/groups/single/buddyboss-media-album-edit.php:67
+#: templates/groups/single/buddyboss-media-album.php:53
+#: templates/groups/single/buddyboss-media-albums.php:66
+#: templates/members/single/buddyboss-media-album-edit.php:70
+#: templates/members/single/buddyboss-media-album.php:51
+#: templates/members/single/buddyboss-media-albums.php:91
+msgid "There were no albums found."
+msgstr "Inga album hittades."
+
+#: templates/bp-nouveau/group-media.php:10
+msgid "Group photo menu"
+msgstr ""
+
+# @ buddyboss-media
+#: templates/bp-nouveau/groups/single/buddyboss-media-album-create.php:12
+#: templates/bp-nouveau/groups/single/buddyboss-media-albums.php:16
+#: templates/bp-nouveau/members/single/buddyboss-media-album-create.php:12
+#: templates/bp-nouveau/members/single/buddyboss-media-albums.php:20
+#: templates/groups/single/buddyboss-media-album-create.php:12
+#: templates/groups/single/buddyboss-media-albums.php:16
+#: templates/members/single/buddyboss-media-album-create.php:12
+#: templates/members/single/buddyboss-media-albums.php:20
+msgid "Create an Album"
+msgstr "Skapa ett album"
+
+# @ buddyboss-media
+#: templates/bp-nouveau/groups/single/buddyboss-media-album-create.php:19
+#: templates/bp-nouveau/groups/single/buddyboss-media-album-edit.php:24
+#: templates/bp-nouveau/members/single/buddyboss-media-album-create.php:19
+#: templates/bp-nouveau/members/single/buddyboss-media-album-edit.php:24
+#: templates/groups/single/buddyboss-media-album-create.php:20
+#: templates/groups/single/buddyboss-media-album-edit.php:25
+#: templates/members/single/buddyboss-media-album-create.php:24
+#: templates/members/single/buddyboss-media-album-edit.php:25
+msgid "Title (required)"
+msgstr "Titel (obligatoriskt)"
+
+# @ buddyboss-media
+#: templates/bp-nouveau/groups/single/buddyboss-media-album-create.php:24
+#: templates/bp-nouveau/groups/single/buddyboss-media-album-edit.php:29
+#: templates/bp-nouveau/members/single/buddyboss-media-album-create.php:24
+#: templates/bp-nouveau/members/single/buddyboss-media-album-edit.php:29
+#: templates/groups/single/buddyboss-media-album-create.php:25
+#: templates/groups/single/buddyboss-media-album-edit.php:30
+#: templates/members/single/buddyboss-media-album-create.php:29
+#: templates/members/single/buddyboss-media-album-edit.php:30
+msgid "Description"
+msgstr "Beskrivning"
+
+# @ buddyboss-media
+#: templates/bp-nouveau/groups/single/buddyboss-media-album-create.php:29
+#: templates/bp-nouveau/groups/single/buddyboss-media-album-edit.php:34
+#: templates/bp-nouveau/members/single/buddyboss-media-album-create.php:29
+#: templates/bp-nouveau/members/single/buddyboss-media-album-edit.php:34
+#: templates/groups/single/buddyboss-media-album-create.php:31
+#: templates/groups/single/buddyboss-media-album-edit.php:36
+#: templates/members/single/buddyboss-media-album-create.php:35
+#: templates/members/single/buddyboss-media-album-edit.php:36
+msgid "Visibility (required)"
+msgstr "Synlighet (obligatoriskt)"
+
+# @ buddyboss-media
+#: templates/bp-nouveau/groups/single/buddyboss-media-album-create.php:50
+#: templates/bp-nouveau/members/single/buddyboss-media-album-create.php:50
+#: templates/groups/single/buddyboss-media-album-create.php:53
+#: templates/members/single/buddyboss-media-album-create.php:59
+#, fuzzy
+msgid "Create Album"
+msgstr "Skapa ett album"
+
+# @ buddyboss-media
+#: templates/bp-nouveau/groups/single/buddyboss-media-album-edit.php:14
+#: templates/bp-nouveau/groups/single/buddyboss-media-album.php:24
+#: templates/bp-nouveau/members/single/buddyboss-media-album-edit.php:14
+#: templates/bp-nouveau/members/single/buddyboss-media-album.php:22
+#: templates/groups/single/buddyboss-media-album-edit.php:14
+#: templates/groups/single/buddyboss-media-album.php:25
+#: templates/members/single/buddyboss-media-album-edit.php:14
+#: templates/members/single/buddyboss-media-album.php:23
+msgid "Edit Album"
+msgstr "Redigera album"
+
+# @ buddyboss-media
+#: templates/loop-tagged-friends.php:23
+msgid "Remove Tag"
+msgstr "Ta bort tagg"
+
+#: templates/tag-friends.php:18
+msgid "Search friends.."
+msgstr ""
+
+# @ buddyboss-media
+#: templates/tag-friends.php:25
+msgid "Done Tagging"
+msgstr "Klar med taggning"
+
+# @ buddyboss-media
+#: includes/albums/album-template.php:146
+msgctxt "Album pagination previous text"
+msgid "&larr;"
+msgstr "&larr;"
+
+# @ buddyboss-media
+#: includes/albums/album-template.php:147
+msgctxt "Album pagination next text"
+msgid "&rarr;"
+msgstr "&rarr;"
+
+#: includes/tagging/class.BuddyBoss_Media_Tagging.php:144
+msgctxt "xx will be replaced with real number"
+msgid "and xx more.."
+msgstr ""
+
+# @ buddyboss-media
+#~ msgid "Added to album."
+#~ msgstr "Tillagd till album."
+
+# @ buddyboss-media
+#~ msgid "One moment..."
+#~ msgstr "Ett ögonblick…"
+
+# @ default
+#~ msgid ""
+#~ "An Unexpected HTTP Error occurred during the API request.</p> <p><a href="
+#~ "\"?\" onclick=\"document.location.reload(); return false;\">Try again</a>"
+#~ msgstr ""
+#~ "Ett oväntat HTTP-fel inträffade under API-anropet. <a href=\"?\" onclick="
+#~ "\"document.location.reload(); return false;\">Försök igen</a>"
+
+# @ default
+#~ msgid "An unknown error occurred"
+#~ msgstr "Ett oväntat fel inträffade"
+
+# @ buddyboss-media
+#, fuzzy
+#~ msgid "Enable Plugin"
+#~ msgstr "Aktivera taggning av vänner"
+
+# @ buddyboss-media
+#, fuzzy
+#~ msgid "Enable BuddyBoss Media."
+#~ msgstr "BuddyBoss Media"
+
+# @ buddyboss-media
+#~ msgid "Enable Media Component."
+#~ msgstr "Aktivera Media-komponent"
+
+# @ buddyboss-media
+#~ msgid "Enable mobile theme on iPad."
+#~ msgstr "Aktivera mobilt tema på iPad."
+
+# @ buddyboss-media
+#~ msgid "Choose a theme for mobile phones."
+#~ msgstr "Välj ett tema för mobila enheter."
+
+# @ buddyboss-media
+#~ msgid "   image size must be 114 x 114 px"
+#~ msgstr "   bildstorleken måste vara 114 x 114 px"
+
+# @ buddyboss-media
+#~ msgid "Error uploading photo."
+#~ msgstr "Fel vid bilduppladdning."
