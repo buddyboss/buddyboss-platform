@@ -23,7 +23,6 @@ class Core
 		$this->courses = new Courses;
 		$this->reports = new Reports;
 		$this->ajax    = new Ajax;
-		$this->forum   = new Forum;
 		$this->sync    = new Sync;
 		$this->hooks   = new Hooks;
 		$this->admin   = new Admin;
