@@ -1277,6 +1277,8 @@ window.bp = window.bp || {};
 				sending   : true
 			} );
 
+			jQuery(tinyMCE.activeEditor.formElement).addClass('loading');
+
 			this.collection.sync( 'create', _.pick( this.reply.attributes, ['thread_id', 'content' ] ), {
 				success : _.bind( this.replySent, this ),
 				error   : _.bind( this.replyError, this )
@@ -1289,6 +1291,7 @@ window.bp = window.bp || {};
 			// Reset the form
 			tinyMCE.activeEditor.setContent( '' );
 			this.reply.set( 'sending', false );
+			jQuery(tinyMCE.activeEditor.formElement).removeClass('loading');
 
 			this.collection.add( _.first( reply ) );
 		},
