@@ -86,7 +86,7 @@ class BuddyBoss_Media_Plugin
 	 */
 	private $core_includes = array(
 		// 3rd-Party/Vendor
-		'vendor/image-rotation-fixer',
+		'lib/image-rotation-fixer',
 
 		// Plugin files
 		'media-functions'
