@@ -2326,8 +2326,6 @@ function bp_activity_post_type_publish( $post_id = 0, $post = null, $user_id = 0
 
 		// Backward compatibility filter for blog posts.
 		if ( 'blogs' == $activity_post_object->component_id )  {
-			$theimg = wp_get_attachment_image_src(  get_post_thumbnail_id( $post_id ) );
-
 			$activity_args['content'] = apply_filters( 'bp_blogs_record_activity_content', $activity_summary, $activity_args['content'], $activity_args, $post->post_type );
 		} else {
 			$activity_args['content'] = $activity_summary;
@@ -4603,6 +4601,8 @@ function bp_update_activity( $post_id, $post, $update ) {
 		return;
 	}
 
+	$post_thumbnail_id = get_post_thumbnail_id($post->ID);
+
 	// Delete the activity if the post was updated with a password.
 	if ( ! empty( $post->post_password ) ) {
 		bp_activity_delete( array( 'id' => $activity_id ) );
@@ -4613,6 +4613,10 @@ function bp_update_activity( $post_id, $post, $update ) {
 
 	if ( ! empty( $post->post_content ) ) {
 		$activity_summary = bp_activity_create_summary( $post->post_content, (array) $activity );
+
+		$src = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full', false );
+
+		$activity_summary .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
 
 		// Backward compatibility filter for the blogs component.
 		if ( 'blogs' == $activity_post_object->component_id ) {
