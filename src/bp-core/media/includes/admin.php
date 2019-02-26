@@ -349,7 +349,7 @@ class BuddyBoss_Media_Admin
 		}
 
 		$mylinks = array(
-			'<a href="' . esc_url( $this->plugin_settings_url ) . '">' . __( "Settings", "buddyboss-media" ) . '</a>',
+			'<a href="' . esc_url( $this->plugin_settings_url ) . '">' . __( "Settings", "buddyboss" ) . '</a>',
 		);
 		return array_merge( $links, $mylinks );
 	}
@@ -473,11 +473,11 @@ class BuddyBoss_Media_Admin
 		_e( "Enable fix for mobile uploads rotating.", 'buddyboss' );
 
 		echo '<p class="description">';
-		_e( "It's recommended that you have at least 256M-512M of RAM allocated to PHP, otherwise photo uploads may fail.", "buddyboss-media" );
+		_e( "It's recommended that you have at least 256M-512M of RAM allocated to PHP, otherwise photo uploads may fail.", "buddyboss" );
 		echo "<br/>";
-		_e( "Your current memory limit is ", "buddyboss-media" );
+		_e( "Your current memory limit is ", "buddyboss" );
 		echo "<strong>$memory_limit</strong>. ";
-		_e( "You can contact your web host to increase the memory limit.", "buddyboss-media" );
+		_e( "You can contact your web host to increase the memory limit.", "buddyboss" );
 		echo '</p>';
 	}
 
@@ -653,7 +653,7 @@ class BuddyBoss_Media_Admin
 			$checked = ' checked="checked" ';
 		}
 
-		echo "<input ".$checked." id='enabled' name='buddyboss_media_plugin_options[show_uploadbox]' type='checkbox' value='yes' />" . __( "When adding a photo, use browser's default file selector instead of our popup upload box.", "buddyboss-media" ) . "";
+		echo "<input ".$checked." id='enabled' name='buddyboss_media_plugin_options[show_uploadbox]' type='checkbox' value='yes' />" . __( "When adding a photo, use browser's default file selector instead of our popup upload box.", "buddyboss" ) . "";
 	}
 
 	/**

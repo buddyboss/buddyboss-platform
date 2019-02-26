@@ -52,7 +52,7 @@ class BuddyBoss_Media_Tagging_Notifications {
 		if ( $action == $this->component_action ) {
 			$activity_permalink = bp_activity_get_permalink( $item_id );
 			if( $activity_permalink ){
-				$text = sprintf( __( "%s tagged you in a photo", "buddyboss-media" ), bp_core_get_user_displayname( $secondary_item_id ) );
+				$text = sprintf( __( "%s tagged you in a photo", "buddyboss" ), bp_core_get_user_displayname( $secondary_item_id ) );
 				
 				if( 'string'==$format ){
 					return sprintf( "<a href='%s'>%s</a>", esc_url( $activity_permalink ), $text );

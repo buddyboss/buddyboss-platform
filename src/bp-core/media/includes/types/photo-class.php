@@ -666,7 +666,7 @@ if ( !class_exists( 'BuddyBoss_Media_Type_Photo' ) ):
 			$activity_id = intval( $_POST[ "media" ] );
 			$photo_id	 = intval( $_POST[ 'photo-id' ] );
 			if ( empty( $activity_id ) || empty( $photo_id ) ) {
-				_e( "Photo does not exists.", "buddyboss-media" );
+				_e( "Photo does not exists.", "buddyboss" );
 				exit;
 			}
 
@@ -708,7 +708,7 @@ if ( !class_exists( 'BuddyBoss_Media_Type_Photo' ) ):
 					bp_activity_delete( array( 'id' => $activity_id ) );
 					echo "done";
 				} else {
-					_e( "You don't have permission to delete this photo.", "buddyboss-media" );
+					_e( "You don't have permission to delete this photo.", "buddyboss" );
 				}
 				exit;
 			}
