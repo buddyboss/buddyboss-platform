@@ -212,19 +212,6 @@ class BuddyBoss_Media_Admin
 		add_settings_field( 'enable-group-albums', __( 'Group Albums', 'buddyboss-media' ), array( $this, 'setting_enable_group_albums' ), __FILE__, 'groups_section' );
 	}
 
-	function register_support_settings() {
-		$this->plugin_settings_tabs[ 'buddyboss_media_support_options' ] = __('Support','buddyboss-media');
-
-		register_setting( 'buddyboss_media_support_options', 'buddyboss_media_support_options' );
-		add_settings_section( 'section_support', ' ', array( &$this, 'section_support_desc' ), 'buddyboss_media_support_options' );
-	}
-
-	function section_support_desc() {
-		if ( file_exists( dirname( __FILE__ ) . '/help-support.php' ) ) {
-			require_once( dirname( __FILE__ ) . '/help-support.php' );
-		}
-	}
-
 	/**
 	 * Add plugin settings page
 	 *
