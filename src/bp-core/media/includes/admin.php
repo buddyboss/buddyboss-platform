@@ -699,7 +699,7 @@ class BuddyBoss_Media_Admin
 			$checked = ' checked="checked" ';
 		}
 
-		echo "<input ".$checked." id='enabled' name='buddyboss_media_plugin_options[group_media_support]' type='checkbox'  />" . __( 'Allow photo posting in BuddyPress group activity updates and comments.', 'buddyboss-media' ) . "";
+		echo "<input ".$checked." id='enabled' name='buddyboss_media_plugin_options[group_media_support]' type='checkbox'  />" . __( 'Allow photo posting in social group activity updates and comments.', 'buddyboss-media' ) . "";
 	}
 
 
@@ -721,7 +721,7 @@ class BuddyBoss_Media_Admin
 			$checked = ' checked="checked" ';
 		}
 
-		echo "<input ".$checked." id='enabled' name='buddyboss_media_plugin_options[group_albums]' type='checkbox'  />" . __( 'Enable BuddyPress group photo albums.', 'buddyboss-media' ) . "";
+		echo "<input ".$checked." id='enabled' name='buddyboss_media_plugin_options[group_albums]' type='checkbox'  />" . __( 'Enable social group photo albums.', 'buddyboss-media' ) . "";
 	}
 
 	/**
