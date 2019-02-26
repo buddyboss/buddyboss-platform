@@ -7,7 +7,7 @@ add_filter( 'bboss_licensed_packages', 'bbmedia_register_licensed_package' );
 function bbmedia_register_licensed_package( $packages=array() ){
     $this_package = array(
         'id'        => 'bbmedia',
-        'name'      => __( 'BuddyBoss Media', 'buddyboss-media' ),
+        'name'      => __( 'BuddyBoss Media', 'buddyboss' ),
         'products'  => array(
             //key should be unique for every individual buddyboss product
             //and if product X is included in 2 different packages, key for product X must be same in both packages.
@@ -46,7 +46,7 @@ if( !function_exists( 'bboss_notice_install_updater' ) ) {
             return;
 
         $plugin_link = "<a href='https://www.buddyboss.com/tutorials/buddyboss-updater-plugin/' target='_blank' rel='noopener'>Buddyboss Updater.</a>";
-        $notice_install_buddyboss_updater = sprintf( __( "To receive updates for BuddyBoss products, please install and activate the plugin %s", 'buddyboss-media' ), $plugin_link );
+        $notice_install_buddyboss_updater = sprintf( __( "To receive updates for BuddyBoss products, please install and activate the plugin %s", 'buddyboss' ), $plugin_link );
 
         echo "<div class='error'><p>{$notice_install_buddyboss_updater}</p></div>";
     }

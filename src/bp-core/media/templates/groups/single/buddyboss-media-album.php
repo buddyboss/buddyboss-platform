@@ -22,7 +22,7 @@
 					$edit_album_url = esc_url(add_query_arg( 'album', buddyboss_media_album_get_id(), $edit_album_url ));
 					?>
 					<a href="<?php echo esc_url( $edit_album_url );?>" class="button album-edit bp-title-button">
-						<?php _e( 'Edit Album', 'buddyboss-media' );?>
+						<?php _e( 'Edit Album', 'buddyboss' );?>
 					</a>
                 <?php endif; ?>
 			</h2>
@@ -50,6 +50,6 @@
 
 <?php else: ?>
 	<div id="message" class="info">
-		<p><?php _e( 'There were no albums found.', 'buddyboss-media' ); ?></p>
+		<p><?php _e( 'There were no albums found.', 'buddyboss' ); ?></p>
 	</div>
 <?php endif; ?>

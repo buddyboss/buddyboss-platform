@@ -92,9 +92,9 @@ class BBM_Comment_Media {
 
                 <?php if( bp_is_my_profile() && bp_is_current_component( $component_slug ) ):?>
                     <div id="buddyboss-comment-media-bulk-uploader-reception-fake" class="image-drop-box">
-                        <h3 class="buddyboss-media-drop-instructions"><?php _e( 'Drop files anywhere to upload', 'buddyboss-media' );?></h3>
-                        <p class="buddyboss-media-drop-separator"><?php _e( 'or', 'buddyboss-media' );?></p>
-                        <a title="<?php _e( 'Select Files', 'buddyboss-media' );?>" class="browse-file-button button" href="#"> <?php _e( 'Select Files', 'buddyboss-media' );?></a>
+                        <h3 class="buddyboss-media-drop-instructions"><?php _e( 'Drop files anywhere to upload', 'buddyboss' );?></h3>
+                        <p class="buddyboss-media-drop-separator"><?php _e( 'or', 'buddyboss' );?></p>
+                        <a title="<?php _e( 'Select Files', 'buddyboss' );?>" class="browse-file-button button" href="#"> <?php _e( 'Select Files', 'buddyboss' );?></a>
                     </div>
 
                     <?php
@@ -117,18 +117,18 @@ class BBM_Comment_Media {
         <div id="buddyboss-comment-media-bulk-uploader-wrapper" style="display:none">
             <div id="buddyboss-comment-media-bulk-uploader">
                 <div class="buddyboss-comment-media-bulk-uploader-uploaded">
-                    <textarea class="buddyboss-comment-media-bulk-uploader-text" placeholder="<?php esc_attr_e( 'Say something about the photo(s)...', 'buddyboss-media' ) ;?>"></textarea>
+                    <textarea class="buddyboss-comment-media-bulk-uploader-text" placeholder="<?php esc_attr_e( 'Say something about the photo(s)...', 'buddyboss' ) ;?>"></textarea>
                     <div class="images clearfix">
 
                     </div>
                 </div>
                 <div id="buddyboss-comment-media-bulk-uploader-reception" class="image-drop-box">
-                    <h3 class="buddyboss-media-drop-instructions"><?php _e( 'Drop files anywhere to upload', 'buddyboss-media' );?></h3>
-                    <p class="buddyboss-media-drop-separator"><?php _e( 'or', 'buddyboss-media' );?></p>
-                    <a class="logo-comment-file-browser-button browse-file-button" title="Select image" > <?php _e( 'Select Files', 'buddyboss-media' );?></a>
+                    <h3 class="buddyboss-media-drop-instructions"><?php _e( 'Drop files anywhere to upload', 'buddyboss' );?></h3>
+                    <p class="buddyboss-media-drop-separator"><?php _e( 'or', 'buddyboss' );?></p>
+                    <a class="logo-comment-file-browser-button browse-file-button" title="Select image" > <?php _e( 'Select Files', 'buddyboss' );?></a>
                 </div>
 
-                <input type="submit" id="buddyboss-comment-media-attach" value="<?php esc_attr_e( 'Post', 'buddyboss-media' );?>" />
+                <input type="submit" id="buddyboss-comment-media-attach" value="<?php esc_attr_e( 'Post', 'buddyboss' );?>" />
 
             </div>
         </div>

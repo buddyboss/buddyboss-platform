@@ -30,9 +30,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) :
 
 			//Group creation tab- Should not show 0 in title
 			if ( ! bp_is_current_action('create') ) {
-				$name = sprintf( __( 'Photos <span>%d</span>', 'buddyboss-media' ), $photos_cnt );
+				$name = sprintf( __( 'Photos <span>%d</span>', 'buddyboss' ), $photos_cnt );
 			} else {
-				$name = sprintf( __( 'Photos', 'buddyboss-media' )  );
+				$name = sprintf( __( 'Photos', 'buddyboss' )  );
 			}
 
 			$args = array(
@@ -64,16 +64,16 @@ if ( class_exists( 'BP_Group_Extension' ) ) :
 
 		function settings_screen( $group_id = NULL ) {
 			?>
-			<h4><?php _e( 'Photo Albums', 'buddyboss-media' ); ?></h4>
+			<h4><?php _e( 'Photo Albums', 'buddyboss' ); ?></h4>
 
-			<p><?php _e( 'Which members of this group are allowed to create album?', 'buddyboss-media' ); ?></p>
+			<p><?php _e( 'Which members of this group are allowed to create album?', 'buddyboss' ); ?></p>
 
 			<div class="radio">
-				<label for="group-album-status-members"><input type="radio" name="group-album-status" id="group-album-status-members" value="members"<?php bbm_group_show_media_status_setting( 'members' ); ?> /> <?php _e( 'All group members', 'buddyboss-media' ); ?></label>
+				<label for="group-album-status-members"><input type="radio" name="group-album-status" id="group-album-status-members" value="members"<?php bbm_group_show_media_status_setting( 'members' ); ?> /> <?php _e( 'All group members', 'buddyboss' ); ?></label>
 
-				<label for="group-album-status-mods"><input type="radio" name="group-album-status" id="group-album-status-mods" value="mods"<?php bbm_group_show_media_status_setting( 'mods' ); ?> /> <?php _e( 'Group admins and mods only', 'buddyboss-media' ); ?></label>
+				<label for="group-album-status-mods"><input type="radio" name="group-album-status" id="group-album-status-mods" value="mods"<?php bbm_group_show_media_status_setting( 'mods' ); ?> /> <?php _e( 'Group admins and mods only', 'buddyboss' ); ?></label>
 
-				<label for="group-album-status-admins"><input type="radio" name="group-album-status" id="group-album-status-admins" value="admins"<?php bbm_group_show_media_status_setting( 'admins' ); ?> /> <?php _e( 'Group admins only', 'buddyboss-media' ); ?></label>
+				<label for="group-album-status-admins"><input type="radio" name="group-album-status" id="group-album-status-admins" value="admins"<?php bbm_group_show_media_status_setting( 'admins' ); ?> /> <?php _e( 'Group admins only', 'buddyboss' ); ?></label>
 
 			</div>
 			<br />
@@ -99,7 +99,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) :
 			$photo_link = trailingslashit( $group_link . $this->component_slug  );
 
 			bp_core_new_subnav_item( array(
-				'name'				 => __( 'Uploads', 'buddyboss-media' ),
+				'name'				 => __( 'Uploads', 'buddyboss' ),
 				'slug'				 => 'uploads',
 				'parent_slug'		 => $slug,
 				'parent_url'		 => $photo_link,
@@ -111,7 +111,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) :
 
 			if ( true === $group_albums_support ) {
 				bp_core_new_subnav_item( array(
-					'name'				 => __( 'Albums', 'buddyboss-media' ),
+					'name'				 => __( 'Albums', 'buddyboss' ),
 					'slug'				 => 'albums',
 					'parent_slug'		 => $slug,
 					'parent_url'		 => $photo_link,

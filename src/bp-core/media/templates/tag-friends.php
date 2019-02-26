@@ -15,16 +15,16 @@ if ( !defined( 'ABSPATH' ) )
 		<div class="invite">
 			<div class="left-menu">
 				<div id="invite-list">
-					<input type='search' name='ac_search' placeholder='<?php esc_attr_e( 'Search friends..', 'buddyboss-media' );?>' style='display: none'>
+					<input type='search' name='ac_search' placeholder='<?php esc_attr_e( 'Search friends..', 'buddyboss' );?>' style='display: none'>
                     <ul style='display:none'></ul>
                     <p class="preloading"></p>
 				</div>
 			</div>
 		</div>
 		<div class="field submit">
-			<input type="submit" value="<?php _e( 'Done Tagging', 'buddyboss-media' ); ?>"  class="buddyboss-media-done-tagging-submit"> &nbsp; &nbsp;
-			<a class='buddyboss_media_tag_friends_cancel' href='#' onclick='return buddyboss_media_tag_friends_close();' title="<?php _e( 'Cancel', 'buddyboss-media' ); ?>">
-				<?php _e( 'Cancel', 'buddyboss-media' ); ?>
+			<input type="submit" value="<?php _e( 'Done Tagging', 'buddyboss' ); ?>"  class="buddyboss-media-done-tagging-submit"> &nbsp; &nbsp;
+			<a class='buddyboss_media_tag_friends_cancel' href='#' onclick='return buddyboss_media_tag_friends_close();' title="<?php _e( 'Cancel', 'buddyboss' ); ?>">
+				<?php _e( 'Cancel', 'buddyboss' ); ?>
 			</a>
 		</div>
 		<div id="message"></div>

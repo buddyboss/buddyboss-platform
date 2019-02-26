@@ -78,19 +78,19 @@ function bbm_get_visibility_lists($is_group_media = false){
 	$options = array();
 
 	if ( !$disble_everyone_privacy ) {
-		$options['public'] = __('Everyone', 'buddyboss-media');
+		$options['public'] = __('Everyone', 'buddyboss');
 	}
 
-	$options['loggedin'] = __('Logged In Users', 'buddyboss-media');
+	$options['loggedin'] = __('Logged In Users', 'buddyboss');
 
     if( $bp_displayed_user_id == $bp_loggedin_user_id || !bp_is_user_activity() ) {
-        $options['onlyme'] = __('Only Me', 'buddyboss-media');
+        $options['onlyme'] = __('Only Me', 'buddyboss');
     }
     if( bp_is_active( 'friends' ) ) {
-        $options['friends'] = __('My Friends', 'buddyboss-media');
+        $options['friends'] = __('My Friends', 'buddyboss');
     }
     if( $is_group_media && bp_is_active( 'groups' ) ) {
-        $options['grouponly'] = __('Group Members', 'buddyboss-media');
+        $options['grouponly'] = __('Group Members', 'buddyboss');
     }
 
     return $options;

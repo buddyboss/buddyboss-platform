@@ -32,10 +32,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			<ul class="component-navigation activity-nav">
 				<?php $global_media_permalink = trailingslashit( _get_page_link( buddyboss_media()->option('all-media-page') ) ); ?>
 				<li class="dynamic" id="photos-all">
-					<a href="<?php echo esc_url( $global_media_permalink );?>"><?php _e( 'All Photos', 'buddyboss-media' );?></a>
+					<a href="<?php echo esc_url( $global_media_permalink );?>"><?php _e( 'All Photos', 'buddyboss' );?></a>
 				</li>
 				<li class="dynamic selected" id="albums-personal">
-					<a href="<?php echo esc_url( $global_media_permalink );?>albums/"><?php _e( 'All Albums', 'buddyboss-media' );?></a>
+					<a href="<?php echo esc_url( $global_media_permalink );?>albums/"><?php _e( 'All Albums', 'buddyboss' );?></a>
 				</li>
 			</ul>
 		</nav>
@@ -89,7 +89,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 			<?php else: ?>
 
 				<div id="message" class="info">
-					<p><?php _e( 'There were no albums found.', 'buddyboss-media' ); ?></p>
+					<p><?php _e( 'There were no albums found.', 'buddyboss' ); ?></p>
 				</div>
 
 			<?php endif; ?>

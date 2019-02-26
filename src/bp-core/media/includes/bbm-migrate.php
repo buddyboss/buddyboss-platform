@@ -193,7 +193,7 @@ class BBMediaMigration {
 	function add_migration_notice(){
 		$status = get_option('bbm_db_album_migrate');
 		if ( current_user_can( 'manage_options' ) && empty($status) ) {
-			$this->create_notice( '<p><strong>BuddyBoss Media</strong>: ' . __( 'Please Migrate your Database', 'buddyboss-media' ) . " <a href='" . admin_url( 'admin.php?page=bbm-migration&force=true' ) . "'>" . __( 'Click Here', 'buddyboss-media' ) . "</a>.  <a href='" . admin_url( 'admin.php?page=bbm-migration&hide=true' ) . "' style='float:right'>" . __( 'Hide', 'buddyboss-media' ) . '</a> </p>' );
+			$this->create_notice( '<p><strong>BuddyBoss Media</strong>: ' . __( 'Please Migrate your Database', 'buddyboss' ) . " <a href='" . admin_url( 'admin.php?page=bbm-migration&force=true' ) . "'>" . __( 'Click Here', 'buddyboss' ) . "</a>.  <a href='" . admin_url( 'admin.php?page=bbm-migration&hide=true' ) . "' style='float:right'>" . __( 'Hide', 'buddyboss' ) . '</a> </p>' );
 		}
 	}
 	function create_notice( $message, $type = 'error' ){
@@ -201,7 +201,7 @@ class BBMediaMigration {
 	}
 
 	public function bbm_migrate_menu() {
-		add_submenu_page( 'options-general.php', __( 'BuddyBoss Media Migration', 'buddyboss-media' ), __( 'BBM Migration', 'buddyboss-media' ), 'manage_options', 'bbm-migration', array( $this, 'bbm_custom_migrate' ) );
+		add_submenu_page( 'options-general.php', __( 'BuddyBoss Media Migration', 'buddyboss' ), __( 'BBM Migration', 'buddyboss' ), 'manage_options', 'bbm-migration', array( $this, 'bbm_custom_migrate' ) );
 	}
 
 	function bbm_custom_migrate() {
@@ -244,7 +244,7 @@ class BBMediaMigration {
 		if ( empty( $status ) || ('INCOMPLETE' == $status)   ) { ?>
 			<form action="options-general.php?page=bbm-migration" method="post">
 				<p class="submit">
-					<input name="bboss_settings_migrate" type="submit" class="button-primary" value="<?php esc_attr_e( 'Migrate Changes', 'buddyboss-media' ); ?>" />
+					<input name="bboss_settings_migrate" type="submit" class="button-primary" value="<?php esc_attr_e( 'Migrate Changes', 'buddyboss' ); ?>" />
 					<strong style="margin-left: 10px;">Keep clicking button until you see a Success message. We are upgrading your database in batches.</strong>
 				</p>
 			</form>

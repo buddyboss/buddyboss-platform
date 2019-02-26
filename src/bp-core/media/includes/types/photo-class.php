@@ -78,7 +78,7 @@ if ( !class_exists( 'BuddyBoss_Media_Type_Photo' ) ):
 			$this->hooks = new BuddyBoss_Media_Photo_Hooks();
 
 			parent::start(
-			$slug, __( 'Photos', 'buddyboss-media' ), dirname( __FILE__ )
+			$slug, __( 'Photos', 'buddyboss' ), dirname( __FILE__ )
 			);
 
 			// register our component as an active component in BP
@@ -207,16 +207,16 @@ if ( !class_exists( 'BuddyBoss_Media_Type_Photo' ) ):
 			$uploader_filesize	 = $js_app_state[ 'uploader_filesize' ];
 
 			$js_translations = array(
-				'error_photo_is_uploading'	 => __( 'Picture upload currently in progress, please wait until completed.', 'buddyboss-media' ),
-				'error_uploading_photo'		 => __( sprintf( 'File not supported. Supported file types: %1s & file size: %1s', $uploader_filetypes, $uploader_filesize ), 'buddyboss-media' ),
-				'file_browse_title'			 => __( 'Upload a Picture', 'buddyboss-media' ),
-				'cancel'					 => __( 'Cancel', 'buddyboss-media' ),
-				'failed'					 => __( 'Failed', 'buddyboss-media' ),
-				'add_photo'					 => __( 'Add Photos', 'buddyboss-media' ),
-				'user_add_photo'			 => sprintf( __( "Add photos, %s", 'buddyboss-media' ), $firstname ),
-				'photo_uploading'			 => __( 'Photo is currently uploading, please wait!', 'buddyboss-media' ),
-				'sure_delete_photo'			 => __( 'Sure you want to delete this photo?', 'buddyboss-media' ),
-				'exceed_max_files_per_batch' => sprintf( __( 'You can upload a maximum of %s photos in one update', 'buddyboss-media' ), $this->option( 'files-per-batch' ) ),
+				'error_photo_is_uploading'	 => __( 'Picture upload currently in progress, please wait until completed.', 'buddyboss' ),
+				'error_uploading_photo'		 => __( sprintf( 'File not supported. Supported file types: %1s & file size: %1s', $uploader_filetypes, $uploader_filesize ), 'buddyboss' ),
+				'file_browse_title'			 => __( 'Upload a Picture', 'buddyboss' ),
+				'cancel'					 => __( 'Cancel', 'buddyboss' ),
+				'failed'					 => __( 'Failed', 'buddyboss' ),
+				'add_photo'					 => __( 'Add Photos', 'buddyboss' ),
+				'user_add_photo'			 => sprintf( __( "Add photos, %s", 'buddyboss' ), $firstname ),
+				'photo_uploading'			 => __( 'Photo is currently uploading, please wait!', 'buddyboss' ),
+				'sure_delete_photo'			 => __( 'Sure you want to delete this photo?', 'buddyboss' ),
+				'exceed_max_files_per_batch' => sprintf( __( 'You can upload a maximum of %s photos in one update', 'buddyboss' ), $this->option( 'files-per-batch' ) ),
 			);
 
 			return apply_filters( 'buddyboss_media_js_translations', $js_translations );
@@ -322,7 +322,7 @@ if ( !class_exists( 'BuddyBoss_Media_Type_Photo' ) ):
 				'is_media_page'			 => ( buddyboss_media()->option( 'all-media-page' ) && is_page( buddyboss_media()->option( 'all-media-page' ) ) ) ? 'true' : 'false',
 				'is_photo_page'			 => ( bp_is_current_component( $component_slug ) || ( bbm_is_group_media_screen( 'uploads' ) || bbm_is_group_media_screen( 'albums' )  ) ) ? 'true' : 'false',
 				'media_upload_nonce'	 => wp_create_nonce( 'bbm-media-upload' ),
-				'fetchingL10n'           => __( 'Fetching...', 'buddyboss-media')
+				'fetchingL10n'           => __( 'Fetching...', 'buddyboss')
 			);
 
 			wp_localize_script( 'buddyboss-media-main', 'BBOSS_MEDIA', $data );
@@ -432,9 +432,9 @@ if ( !class_exists( 'BuddyBoss_Media_Type_Photo' ) ):
 							|| ( buddyboss_media()->option( 'all-media-page' ) && is_page( buddyboss_media()->option( 'all-media-page' ) ) )
 					): ?>
 						<div id="buddyboss-media-bulk-uploader-reception-fake" class="image-drop-box">
-							<h3 class="buddyboss-media-drop-instructions"><?php _e( 'Drop files anywhere to upload', 'buddyboss-media' ); ?></h3>
-							<p class="buddyboss-media-drop-separator"><?php _e( 'or', 'buddyboss-media' ); ?></p>
-							<a title="<?php _e( 'Select Files', 'buddyboss-media' ); ?>" class="browse-file-button button" href="#"> <?php _e( 'Select Files', 'buddyboss-media' ); ?></a>
+							<h3 class="buddyboss-media-drop-instructions"><?php _e( 'Drop files anywhere to upload', 'buddyboss' ); ?></h3>
+							<p class="buddyboss-media-drop-separator"><?php _e( 'or', 'buddyboss' ); ?></p>
+							<a title="<?php _e( 'Select Files', 'buddyboss' ); ?>" class="browse-file-button button" href="#"> <?php _e( 'Select Files', 'buddyboss' ); ?></a>
 						</div>
 
 						<?php
@@ -483,7 +483,7 @@ if ( !class_exists( 'BuddyBoss_Media_Type_Photo' ) ):
 
 						<div class="clearfix" id="buddyboss-media-move-media" >
 							<div class="field">
-								<label><?php _e( 'In photo album:', 'buddyboss-media' ); ?></label>
+								<label><?php _e( 'In photo album:', 'buddyboss' ); ?></label>
 								<select id="buddyboss_media_move_media_albums" name="buddyboss_media_move_media_albums" >
 									<?php
 									global $wpdb;
@@ -495,20 +495,20 @@ if ( !class_exists( 'BuddyBoss_Media_Type_Photo' ) ):
 									}
 
 									if ( !empty( $albums ) && ! is_wp_error( $albums ) ) {
-										echo "<option value=''>" . __( '[None]', 'buddyboss-media' ) . "</option>";
+										echo "<option value=''>" . __( '[None]', 'buddyboss' ) . "</option>";
 										foreach ( $albums as $album ) {
 											echo "<option value='{$album->id}'>" . stripslashes( $album->title ) . "</option>";
 										}
 									} else {
-										echo "<option value=''>" . __( 'You have not created any albums yet!', 'buddyboss-media' ) . "</option>";
+										echo "<option value=''>" . __( 'You have not created any albums yet!', 'buddyboss' ) . "</option>";
 									}
 									?>
 								</select>
 							</div>
 							<div class="field submit">
-								<input type="submit" id="buddyboss-media-move-media-submit" value="<?php _e( 'Save', 'buddyboss-media' ); ?>" > &nbsp;
-								<a class='buddyboss_media_move_media_cancel' href='#' onclick='return buddyboss_media_move_media_close();' title="<?php _e( 'Cancel', 'buddyboss-media' ); ?>">
-									<?php _e( 'Cancel', 'buddyboss-media' ); ?>
+								<input type="submit" id="buddyboss-media-move-media-submit" value="<?php _e( 'Save', 'buddyboss' ); ?>" > &nbsp;
+								<a class='buddyboss_media_move_media_cancel' href='#' onclick='return buddyboss_media_move_media_close();' title="<?php _e( 'Cancel', 'buddyboss' ); ?>">
+									<?php _e( 'Cancel', 'buddyboss' ); ?>
 								</a>
 							</div>
 						</div><!-- #buddyboss-media-move-media -->
@@ -523,7 +523,7 @@ if ( !class_exists( 'BuddyBoss_Media_Type_Photo' ) ):
 								<textarea
 										id="buddyboss-media-bulk-uploader-text"
 										class="bp-suggestions"
-										placeholder="<?php esc_attr_e( 'Say something about the photo(s)...', 'buddyboss-media' ); ?>"
+										placeholder="<?php esc_attr_e( 'Say something about the photo(s)...', 'buddyboss' ); ?>"
 								></textarea>
 							<?php endif; ?>
 							<div class="images clearfix">
@@ -531,15 +531,15 @@ if ( !class_exists( 'BuddyBoss_Media_Type_Photo' ) ):
 							</div>
 						</div>
 						<div id="buddyboss-media-bulk-uploader-reception" class="image-drop-box">
-							<h3 class="buddyboss-media-drop-instructions"><?php _e( 'Drop files anywhere to upload', 'buddyboss-media' ); ?></h3>
-							<p class="buddyboss-media-drop-separator"><?php _e( 'or', 'buddyboss-media' ); ?></p>
-							<a id="logo-file-browser-button" title="Select image" class="browse-file-button" href="#"> <?php _e( 'Select Files', 'buddyboss-media' ); ?></a>
+							<h3 class="buddyboss-media-drop-instructions"><?php _e( 'Drop files anywhere to upload', 'buddyboss' ); ?></h3>
+							<p class="buddyboss-media-drop-separator"><?php _e( 'or', 'buddyboss' ); ?></p>
+							<a id="logo-file-browser-button" title="Select image" class="browse-file-button" href="#"> <?php _e( 'Select Files', 'buddyboss' ); ?></a>
 						</div>
 
 						<?php if ( function_exists( 'buddyboss_wall' ) &&
 						           buddyboss_wall()->is_wall_privacy_enabled() ): ?>
 							<div class="media-privacy-wrapper">
-								<label for=""><?php _e( 'Who should see this?', 'buddyboss-media' ); ?></label>
+								<label for=""><?php _e( 'Who should see this?', 'buddyboss' ); ?></label>
 								<?php echo bbm_get_media_visibility(); ?>
 							</div>
 						<?php endif; ?>
@@ -579,7 +579,7 @@ if ( !class_exists( 'BuddyBoss_Media_Type_Photo' ) ):
 
 			/* Add 'Photos' to the main user profile navigation */
 			bp_core_new_nav_item( array(
-				'name'					 => sprintf( __( 'Photos <span>%d</span>', 'buddyboss-media' ), $photos_cnt ),
+				'name'					 => sprintf( __( 'Photos <span>%d</span>', 'buddyboss' ), $photos_cnt ),
 				'slug'					 => $this->slug,
 				'position'				 => 80,
 				'screen_function'		 => 'buddyboss_media_screen_photo_grid',
@@ -589,7 +589,7 @@ if ( !class_exists( 'BuddyBoss_Media_Type_Photo' ) ):
 			$buddyboss_media_link = $bp->displayed_user->domain . $this->slug . '/';
 
 			bp_core_new_subnav_item( array(
-				'name'				 => __( 'Uploads', 'buddyboss-media' ),
+				'name'				 => __( 'Uploads', 'buddyboss' ),
 				'slug'				 => 'my-gallery',
 				'parent_slug'		 => $this->slug,
 				'parent_url'		 => $buddyboss_media_link,
@@ -598,7 +598,7 @@ if ( !class_exists( 'BuddyBoss_Media_Type_Photo' ) ):
 			) );
 
 			bp_core_new_subnav_item( array(
-				'name'				 => __( 'Albums', 'buddyboss-media' ),
+				'name'				 => __( 'Albums', 'buddyboss' ),
 				'slug'				 => 'albums',
 				'parent_slug'		 => $this->slug,
 				'parent_url'		 => $buddyboss_media_link,
@@ -615,21 +615,21 @@ if ( !class_exists( 'BuddyBoss_Media_Type_Photo' ) ):
 				$wp_admin_nav[] = array(
 					'parent' => buddypress()->my_account_menu_id,
 					'id'	 => 'my-account-photos',
-					'title'	 => __( 'Photos', 'buddyboss-media' ),
+					'title'	 => __( 'Photos', 'buddyboss' ),
 					'href'	 => $buddyboss_media_link
 				);
 
 				$wp_admin_nav[] = array(
 					'parent' => 'my-account-photos',
 					'id'	 => 'my-account-photos-view',
-					'title'	 => __( 'Uploads', 'buddyboss-media' ),
+					'title'	 => __( 'Uploads', 'buddyboss' ),
 					'href'	 => $buddyboss_media_link
 				);
 
 				$wp_admin_nav[] = array(
 					'parent' => 'my-account-photos',
 					'id'	 => 'my-account-photos-albums',
-					'title'	 => __( 'Albums', 'buddyboss-media' ),
+					'title'	 => __( 'Albums', 'buddyboss' ),
 					'href'	 => $buddyboss_media_link . 'albums/'
 				);
 			}

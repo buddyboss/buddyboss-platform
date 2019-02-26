@@ -160,10 +160,10 @@ class BuddyBoss_Media_Paginated
       if( $currentPage != 1 && $currentPage != 2 && $currentPage != 3 )
       {
 		if( 'paged' != $pagination_param_scheme ){
-			$str .= "<a href='?page=1$queryVars' title='Start' class='pag-first page-numbers'>". __( 'First' , 'buddyboss-media' ) . " (1)</a>";
+			$str .= "<a href='?page=1$queryVars' title='Start' class='pag-first page-numbers'>". __( 'First' , 'buddyboss' ) . " (1)</a>";
 		}
 		else{
-			$str .= "<a href='{$page_permalink}/?{$queryVars_paged}' title='Start' class='pag-first page-numbers'>". __( 'First' , 'buddyboss-media' ) . " (1)</a>";
+			$str .= "<a href='{$page_permalink}/?{$queryVars_paged}' title='Start' class='pag-first page-numbers'>". __( 'First' , 'buddyboss' ) . " (1)</a>";
 		}
       }
     }
@@ -204,10 +204,10 @@ class BuddyBoss_Media_Paginated
       if( $currentPage != $parent->fetchNumberPages() && $currentPage != $parent->fetchNumberPages() -1 && $currentPage != $parent->fetchNumberPages() - 2 )
       {
 		  if( 'paged' != $pagination_param_scheme ){
-			$str .= "<a class='pag-last page-numbers' href=\"?page=".$parent->fetchNumberPages()."$queryVars\" title=\"Last\">" . __( 'Last' , 'buddyboss-media' ) . " (".$parent->fetchNumberPages().")</a>";
+			$str .= "<a class='pag-last page-numbers' href=\"?page=".$parent->fetchNumberPages()."$queryVars\" title=\"Last\">" . __( 'Last' , 'buddyboss' ) . " (".$parent->fetchNumberPages().")</a>";
 		  }
 		  else{
-			$str .= "<a class='pag-last page-numbers' href=\"{$page_permalink}/page/".$parent->fetchNumberPages()."/?$queryVars\" title=\"Last\">" . __( 'Last' , 'buddyboss-media' ) . " (".$parent->fetchNumberPages().")</a>";
+			$str .= "<a class='pag-last page-numbers' href=\"{$page_permalink}/page/".$parent->fetchNumberPages()."/?$queryVars\" title=\"Last\">" . __( 'Last' , 'buddyboss' ) . " (".$parent->fetchNumberPages().")</a>";
 		  }
       }
     }

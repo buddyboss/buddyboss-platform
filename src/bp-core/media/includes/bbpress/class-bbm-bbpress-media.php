@@ -125,9 +125,9 @@ class BBM_BBPress_Media {
 
 				<?php if( bp_is_my_profile() && bp_is_current_component( $component_slug ) ):?>
 					<div id="buddyboss-bbpress-media-bulk-uploader-reception-fake" class="image-drop-box">
-						<h3 class="buddyboss-media-drop-instructions"><?php _e( 'Drop files anywhere to upload', 'buddyboss-media' );?></h3>
-						<p class="buddyboss-media-drop-separator"><?php _e( 'or', 'buddyboss-media' );?></p>
-						<a title="<?php _e( 'Select Files', 'buddyboss-media' );?>" class="browse-file-button button" href="#"> <?php _e( 'Select Files', 'buddyboss-media' );?></a>
+						<h3 class="buddyboss-media-drop-instructions"><?php _e( 'Drop files anywhere to upload', 'buddyboss' );?></h3>
+						<p class="buddyboss-media-drop-separator"><?php _e( 'or', 'buddyboss' );?></p>
+						<a title="<?php _e( 'Select Files', 'buddyboss' );?>" class="browse-file-button button" href="#"> <?php _e( 'Select Files', 'buddyboss' );?></a>
 					</div>
 
 					<?php
@@ -155,12 +155,12 @@ class BBM_BBPress_Media {
 					</div>
 				</div>
 				<div id="buddyboss-bbpress-media-bulk-uploader-reception" class="image-drop-box">
-					<h3 class="buddyboss-media-drop-instructions"><?php _e( 'Drop files anywhere to upload', 'buddyboss-media' );?></h3>
-					<p class="buddyboss-media-drop-separator"><?php _e( 'or', 'buddyboss-media' );?></p>
-					<a class="logo-bbpress-file-browser-button browse-file-button" title="Select image" > <?php _e( 'Select Files', 'buddyboss-media' );?></a>
+					<h3 class="buddyboss-media-drop-instructions"><?php _e( 'Drop files anywhere to upload', 'buddyboss' );?></h3>
+					<p class="buddyboss-media-drop-separator"><?php _e( 'or', 'buddyboss' );?></p>
+					<a class="logo-bbpress-file-browser-button browse-file-button" title="Select image" > <?php _e( 'Select Files', 'buddyboss' );?></a>
 				</div>
 
-				<input type="submit" id="buddyboss-bbpress-media-attach" value="<?php esc_attr_e( 'Attach Photos', 'buddyboss-media' );?>" />
+				<input type="submit" id="buddyboss-bbpress-media-attach" value="<?php esc_attr_e( 'Attach Photos', 'buddyboss' );?>" />
 
 			</div>
 		</div>

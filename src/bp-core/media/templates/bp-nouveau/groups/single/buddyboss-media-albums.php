@@ -7,13 +7,13 @@
  */
 ?>
 
-<h2 class="entry-title"><?php _e( 'Albums', 'buddyboss-media' );?>
+<h2 class="entry-title"><?php _e( 'Albums', 'buddyboss' );?>
 	<?php if( bbm_groups_user_can_create_albums() ): ?>
 		<?php global $bp;
 		$create_album_url = esc_url( add_query_arg( array('album' => 'new' ) ) ); ?>
 
 		<a href="<?php echo esc_url( $create_album_url );?>" class="button album-create bp-title-button">
-			<?php _e( 'Create an Album', 'buddyboss-media' );?>
+			<?php _e( 'Create an Album', 'buddyboss' );?>
 		</a>
 
 	<?php endif; ?>
@@ -68,7 +68,7 @@
 			<?php else: ?>
 
 				<div id="message" class="info">
-					<p><?php _e( 'There were no albums found.', 'buddyboss-media' ); ?></p>
+					<p><?php _e( 'There were no albums found.', 'buddyboss' ); ?></p>
 				</div>
 
 			<?php endif; ?>

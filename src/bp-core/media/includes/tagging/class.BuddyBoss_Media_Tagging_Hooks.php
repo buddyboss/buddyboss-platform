@@ -50,7 +50,7 @@ class BuddyBoss_Media_Tagging_Hooks {
 			
 			// Only the current user is tagged
 			if ( $count === 1 && $current_user_is_tagged ){
-				$tagged_txt = __( 'You', 'buddyboss-media' );
+				$tagged_txt = __( 'You', 'buddyboss' );
 			} else {
 				// Show up to two 3 names (you + 3 others)
 				$tagged_for_display = array();
@@ -89,29 +89,29 @@ class BuddyBoss_Media_Tagging_Hooks {
 				// 1 user
 				if ( count( $tagged_for_display ) === 1 ){
 					if ( $current_user_is_tagged ){
-						$tagged_txt = sprintf( __( 'You and %s', 'buddyboss-media' ), $tagged_for_display[0] );
+						$tagged_txt = sprintf( __( 'You and %s', 'buddyboss' ), $tagged_for_display[0] );
 					} else {
-						$tagged_txt = sprintf( __( '%s', 'buddyboss-media' ), $tagged_for_display[0] );
+						$tagged_txt = sprintf( __( '%s', 'buddyboss' ), $tagged_for_display[0] );
 					}
 				}
 				
 				// 2 users
 				else if ( count( $tagged_for_display ) === 2 ){
 					if ( $current_user_is_tagged ){
-						$tagged_txt = sprintf( __( 'You, %s and %s', 'buddyboss-media' ), $tagged_for_display[0], $tagged_for_display[1] );
+						$tagged_txt = sprintf( __( 'You, %s and %s', 'buddyboss' ), $tagged_for_display[0], $tagged_for_display[1] );
 					}
 					else {
-						$tagged_txt = sprintf( __( '%s and %s', 'buddyboss-media' ), $tagged_for_display[0], $tagged_for_display[1] );
+						$tagged_txt = sprintf( __( '%s and %s', 'buddyboss' ), $tagged_for_display[0], $tagged_for_display[1] );
 					}
 				}
 				
 				// 3 users + no others
 				else if ( count( $tagged_for_display ) === 3 && $others === 0 ){
 					if ( $current_user_is_tagged ){
-						$tagged_txt = sprintf( __( 'You, %s, %s and %s', 'buddyboss-media' ), $tagged_for_display[0], $tagged_for_display[1], $tagged_for_display[2] );
+						$tagged_txt = sprintf( __( 'You, %s, %s and %s', 'buddyboss' ), $tagged_for_display[0], $tagged_for_display[1], $tagged_for_display[2] );
 					}
 					else {
-						$tagged_txt = sprintf( __( '%s, %s and %s', 'buddyboss-media' ), $tagged_for_display[0], $tagged_for_display[1], $tagged_for_display[2] );
+						$tagged_txt = sprintf( __( '%s, %s and %s', 'buddyboss' ), $tagged_for_display[0], $tagged_for_display[1], $tagged_for_display[2] );
 					}
 				}
 				
@@ -126,22 +126,22 @@ class BuddyBoss_Media_Tagging_Hooks {
 					$others++;
 					
 					$others_count_txt = number_format_i18n( $others );
-					$others_i18n = sprintf( __( '%s others', 'buddyboss-media' ), $others_count_txt );
+					$others_i18n = sprintf( __( '%s others', 'buddyboss' ), $others_count_txt );
 					$others_txt = '<a class="buddyboss-media-tt-others">' . $others_i18n . '</a>';
 
 					if ( $current_user_is_tagged ){
 						//You, member one, member two and 7 others
-						$tagged_txt = sprintf( __( 'You, %s, %s and %s', 'buddyboss-media' ), $tagged_for_display[0], $tagged_for_display[1], $others_txt );
+						$tagged_txt = sprintf( __( 'You, %s, %s and %s', 'buddyboss' ), $tagged_for_display[0], $tagged_for_display[1], $others_txt );
 					}
 					else {
 						//member one, member two and 7 others
-						$tagged_txt = sprintf( __( '%s, %s and %s', 'buddyboss-media' ), $tagged_for_display[0], $tagged_for_display[1], $others_txt );
+						$tagged_txt = sprintf( __( '%s, %s and %s', 'buddyboss' ), $tagged_for_display[0], $tagged_for_display[1], $others_txt );
 					}
 				}
 			}
 			
 			if( $tagged_txt ){
-				$action .= sprintf( __( ' - with %s', 'buddyboss-media' ), $tagged_txt );
+				$action .= sprintf( __( ' - with %s', 'buddyboss' ), $tagged_txt );
 			}
 			
 			//save tooltip text to be used later

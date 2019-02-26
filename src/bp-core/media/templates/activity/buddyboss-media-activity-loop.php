@@ -85,7 +85,7 @@
 	<?php if ( bp_activity_has_more_items() ) : ?>
 
 		<li class="load-more photo-item-wrapper">
-			<a href="<?php bp_activity_load_more_link() ?>"><?php _e( 'Load More', 'buddyboss-media' ); ?></a>
+			<a href="<?php bp_activity_load_more_link() ?>"><?php _e( 'Load More', 'buddyboss' ); ?></a>
 		</li>
 
 	<?php endif; ?>
@@ -102,7 +102,7 @@
 <?php else : ?>
 
 	<div id="message" class="info">
-		<p><?php _e( 'Sorry, there were no photos found.', 'buddyboss-media' ); ?></p>
+		<p><?php _e( 'Sorry, there were no photos found.', 'buddyboss' ); ?></p>
 	</div>
 
 <?php endif; ?>

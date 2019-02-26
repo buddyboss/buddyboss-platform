@@ -20,7 +20,7 @@ $args = apply_filters( 'bboss_media_tagged_friends', array(
 			<span class="activity"><?php bp_member_last_active(); ?></span>
 
 			<div class="action">
-				<a class="button remove" href="#" data-userid="<?php bp_member_user_id(); ?>"><?php _e( 'Remove Tag', 'buddyboss-media' ); ?></a>
+				<a class="button remove" href="#" data-userid="<?php bp_member_user_id(); ?>"><?php _e( 'Remove Tag', 'buddyboss' ); ?></a>
 			</div>
 		</li>
 	<?php endwhile; ?>

@@ -79,7 +79,7 @@ function buddyboss_media_albums_process_update(){
 				//validation
 
 				if( empty( $_POST['album_title'] ) ){
-					bp_core_add_message( __( 'Album title cannot be empty.', 'buddyboss-media' ), 'error');
+					bp_core_add_message( __( 'Album title cannot be empty.', 'buddyboss' ), 'error');
 				} else {
 
 					$data = array(
@@ -106,7 +106,7 @@ function buddyboss_media_albums_process_update(){
 								$new_album_url = $bp->displayed_user->domain . buddyboss_media_component_slug() . '/albums/' . $new_album_id . '/';
 							}
 
-							bp_core_add_message( __( 'Album created successfully.', 'buddyboss-media' ), 'success');
+							bp_core_add_message( __( 'Album created successfully.', 'buddyboss' ), 'success');
 							//redirect to new album
 							wp_redirect( $new_album_url );
 							exit();
@@ -114,7 +114,7 @@ function buddyboss_media_albums_process_update(){
 					} else {
 						$data['id'] = $album;
 						buddyboss_media_update_album( $data );
-						bp_core_add_message( __( 'Album was successfully updated.', 'buddyboss-media' ), 'success' );
+						bp_core_add_message( __( 'Album was successfully updated.', 'buddyboss' ), 'success' );
 					}
 				}
 			}
@@ -131,13 +131,13 @@ function buddyboss_media_albums_process_update(){
 				 */
 				$deleted = buddyboss_media_delete_album( $album_to_delete );
 				if( $deleted ){
-					bp_core_add_message( __( 'Album deleted successfuly!', 'buddyboss-media' ), 'success' );
+					bp_core_add_message( __( 'Album deleted successfuly!', 'buddyboss' ), 'success' );
 				} else {
 					//shouldn't come here
-					bp_core_add_message( __( 'Access Denied!', 'buddyboss-media' ), 'error' );
+					bp_core_add_message( __( 'Access Denied!', 'buddyboss' ), 'error' );
 				}
 			} else {
-				bp_core_add_message( __( 'Invalid request!', 'buddyboss-media' ), 'error');
+				bp_core_add_message( __( 'Invalid request!', 'buddyboss' ), 'error');
 			}
 		}
 	}

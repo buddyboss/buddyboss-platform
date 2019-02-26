@@ -554,7 +554,7 @@ function buddyboss_media_ajax_move_media(){
 
 	$retval = array(
 		'status'	=> false,
-		'message'	=> __( 'Something went wrong!', 'buddyboss-media' ),
+		'message'	=> __( 'Something went wrong!', 'buddyboss' ),
 	);
 
 	$new_album_id = isset( $_POST['buddyboss_media_move_media_albums'] ) ? $_POST['buddyboss_media_move_media_albums'] : '';
@@ -570,7 +570,7 @@ function buddyboss_media_ajax_move_media(){
 		//make sure user is the group member
 		$is_group_member = groups_is_user_member( $current_user->ID, $bp->groups->current_group->id );
 		if ( false === $is_group_member ) {
-			$retval['message'] = __( 'Access denied!', 'buddyboss-media' );
+			$retval['message'] = __( 'Access denied!', 'buddyboss' );
 			die( json_encode( $retval ) );
 		}
 
@@ -580,7 +580,7 @@ function buddyboss_media_ajax_move_media(){
 		//make sure user is author of activity as well as album
 		$activity_author = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM {$bp->activity->table_name} WHERE id=%d", $activity_id ) );
 		if( bp_loggedin_user_id()!=$activity_author ){
-			$retval['message'] = __( 'Access denied!', 'buddyboss-media' );
+			$retval['message'] = __( 'Access denied!', 'buddyboss' );
 			die( json_encode( $retval ) );
 		}
 
@@ -588,7 +588,7 @@ function buddyboss_media_ajax_move_media(){
 		if ( $new_album_id ) {
 			$album_author = $wpdb->get_var( $wpdb->prepare( "SELECT user_id FROM {$wpdb->prefix}buddyboss_media_albums WHERE id=%d", $new_album_id ) );
 			if( bp_loggedin_user_id()!=$album_author ){
-				$retval['message'] = __( 'Access denied!', 'buddyboss-media' );
+				$retval['message'] = __( 'Access denied!', 'buddyboss' );
 				die( json_encode( $retval ) );
 			}
 		}
@@ -676,7 +676,7 @@ function buddyboss_media_ajax_move_media(){
 
 	$retval = array(
 		'status'	=> true,
-		'message'	=> __( 'Your changes saved!.', 'buddyboss-media' ),
+		'message'	=> __( 'Your changes saved!.', 'buddyboss' ),
 	);
 	die( json_encode( $retval ) );
 }

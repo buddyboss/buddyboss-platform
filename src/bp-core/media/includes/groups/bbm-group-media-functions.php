@@ -215,9 +215,9 @@ function bbm_group_media_btn_delete_album( $album_id = false ) {
 	$delete_album_url	 = esc_url( add_query_arg( 'delete', $album_id, $albums_url ) );
 	$delete_album_url	 = esc_url( add_query_arg( 'nonce', wp_create_nonce( 'bboss_media_delete_album' ), $delete_album_url ) );
 
-	$confimation_message = __( 'Are you sure you want to delete this album? When you delete an album, all its photos go under global uploads.', 'buddyboss-media' );
+	$confimation_message = __( 'Are you sure you want to delete this album? When you delete an album, all its photos go under global uploads.', 'buddyboss' );
 
-	$anchor = "<a class='button album-delete bp-title-button' href='" . esc_url( $delete_album_url ) . "' onclick='return confirm(\"" . $confimation_message . "\");' >" . __( 'Delete Album', 'buddyboss-media' ) . "</a>";
+	$anchor = "<a class='button album-delete bp-title-button' href='" . esc_url( $delete_album_url ) . "' onclick='return confirm(\"" . $confimation_message . "\");' >" . __( 'Delete Album', 'buddyboss' ) . "</a>";
 	echo apply_filters( 'bbm_group_media_btn_delete_album', $anchor, $album_id );
 }
 

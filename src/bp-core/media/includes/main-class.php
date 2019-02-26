@@ -267,14 +267,14 @@ class BuddyBoss_Media_Plugin
 	 *
 	 * @since BuddyBoss Media (1.0.0)
 	 */
-	public function __clone() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddyboss-media' ), '1.7' ); }
+	public function __clone() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddyboss' ), '1.7' ); }
 
 	/**
 	 * A dummy magic method to prevent BuddyBoss Media from being unserialized.
 	 *
 	 * @since BuddyBoss Media (1.0.0)
 	 */
-	public function __wakeup() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddyboss-media' ), '1.7' ); }
+	public function __wakeup() { _doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddyboss' ), '1.7' ); }
 
 	/**
 	 * Magic method for checking the existence of a certain custom field.
@@ -482,14 +482,14 @@ class BuddyBoss_Media_Plugin
 	 */
 	public function setup_textdomain()
 	{
-		$domain = 'buddyboss-media';
+		$domain = 'buddyboss';
 		$locale = apply_filters('plugin_locale', get_locale(), $domain);
 
 		//first try to load from wp-content/languages/plugins/ directory
 		load_textdomain($domain, WP_LANG_DIR.'/plugins/'.$domain.'-'.$locale.'.mo');
 
 		//if not found, then load from buddboss-media/languages/ directory
-		load_plugin_textdomain( 'buddyboss-media', false, $this->lang_dir );
+		load_plugin_textdomain( 'buddyboss', false, $this->lang_dir );
 	}
 
 	/**
@@ -824,8 +824,8 @@ class BuddyBoss_Media_Plugin
 	{
     ?>
     <div class="updated">
-	    <p><?php _e( 'To use the <strong>BuddyBoss Media</strong> plugin, please manually update your BuddyBoss theme to version 4.0 or above first. <a href="https://www.buddyboss.com/upgrading-to-buddyboss-4-0/">Read how &rarr;</a>', 'buddyboss-media' ); ?></p>
-			<p class="submit"><a href="<?php echo esc_url(add_query_arg('disable_media_legacy_notice', 'true', admin_url('options-general.php?page=buddyboss-media/includes/admin.php') )); ?>" class="button-primary"><?php _e( 'Disable Notice', 'buddyboss-media' ); ?></a></p>
+	    <p><?php _e( 'To use the <strong>BuddyBoss Media</strong> plugin, please manually update your BuddyBoss theme to version 4.0 or above first. <a href="https://www.buddyboss.com/upgrading-to-buddyboss-4-0/">Read how &rarr;</a>', 'buddyboss' ); ?></p>
+			<p class="submit"><a href="<?php echo esc_url(add_query_arg('disable_media_legacy_notice', 'true', admin_url('options-general.php?page=buddyboss-media/includes/admin.php') )); ?>" class="button-primary"><?php _e( 'Disable Notice', 'buddyboss' ); ?></a></p>
     </div>
     <?php
 	}
@@ -845,11 +845,11 @@ class BuddyBoss_Media_Plugin
 			}
 
 			if( $network_wide  ){
-				$bp_settings_link = "<a href='" .	network_admin_url( 'admin.php?page=bp-components' ) . "'>" . __( 'BuddyPress Settings', 'buddyboss-media' ) . "</a>";
+				$bp_settings_link = "<a href='" .	network_admin_url( 'admin.php?page=bp-components' ) . "'>" . __( 'BuddyPress Settings', 'buddyboss' ) . "</a>";
 			} else {
-				$bp_settings_link = "<a href='" .			admin_url( 'admin.php?page=bp-components' ) . "'>" . __( 'BuddyPress Settings', 'buddyboss-media' ) . "</a>";
+				$bp_settings_link = "<a href='" .			admin_url( 'admin.php?page=bp-components' ) . "'>" . __( 'BuddyPress Settings', 'buddyboss' ) . "</a>";
 			}
-			$notice = sprintf( __( "Hey! BuddyBoss Media requires activity component be enabled. Please enable it in your %s.", 'buddyboss-media' ), $bp_settings_link );
+			$notice = sprintf( __( "Hey! BuddyBoss Media requires activity component be enabled. Please enable it in your %s.", 'buddyboss' ), $bp_settings_link );
 
 			echo "<div class='error'><p>{$notice}</p></div>";
 		}

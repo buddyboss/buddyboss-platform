@@ -32,8 +32,8 @@ if ( ! class_exists( 'Media_WP_User_Export_GDPR' ) ) {
 
 		function register_media_exporter( $exporters ) {
 			if ( function_exists( 'buddypress' ) ) {
-				$exporters['buddyboss-media'] = array(
-					'exporter_friendly_name' => __( 'BuddyBoss Media', 'buddyboss-media' ),
+				$exporters['buddyboss'] = array(
+					'exporter_friendly_name' => __( 'BuddyBoss Media', 'buddyboss' ),
 					'callback'               => array( $this, 'albums_exporter' ),
 				);
 			}
@@ -43,11 +43,11 @@ if ( ! class_exists( 'Media_WP_User_Export_GDPR' ) ) {
 		function erase_media_exporter( $erasers ) {
 			if ( function_exists( 'buddypress' ) ) {
 				$erasers['buddyboss-media-albums'] = array(
-					'eraser_friendly_name' => __( 'BuddyBoss Media', 'buddyboss-media' ),
+					'eraser_friendly_name' => __( 'BuddyBoss Media', 'buddyboss' ),
 					'callback'             => array( $this, 'albums_eraser' ),
 				);
 				$erasers['buddyboss-media-photos'] = array(
-					'eraser_friendly_name' => __( 'BuddyBoss Media Photos', 'buddyboss-media' ),
+					'eraser_friendly_name' => __( 'BuddyBoss Media Photos', 'buddyboss' ),
 					'callback'             => array( $this, 'photos_eraser' ),
 				);
 			}
@@ -88,7 +88,7 @@ if ( ! class_exists( 'Media_WP_User_Export_GDPR' ) ) {
 
 					$group_id = 'albums';
 
-					$group_label = __( 'Albums', 'buddyboss-media' );
+					$group_label = __( 'Albums', 'buddyboss' );
 
 					if ( $album->group_id ) {
 						$group      = groups_get_group( array( 'group_id' => $album->group_id ) );
@@ -102,31 +102,31 @@ if ( ! class_exists( 'Media_WP_User_Export_GDPR' ) ) {
 					// Plugins can add as many items in the item data array as they want
 					$data = array(
 						array(
-							'name'  => __( 'Album Author', 'buddyboss-media' ),
+							'name'  => __( 'Album Author', 'buddyboss' ),
 							'value' => $user->display_name
 						),
 						array(
-							'name'  => __( 'Album Author Email', 'buddyboss-media' ),
+							'name'  => __( 'Album Author Email', 'buddyboss' ),
 							'value' => $user->user_email
 						),
 						array(
-							'name'  => __( 'Album Title', 'buddyboss-media' ),
+							'name'  => __( 'Album Title', 'buddyboss' ),
 							'value' => $album->title
 						),
 						array(
-							'name'  => __( 'Album Description', 'buddyboss-media' ),
+							'name'  => __( 'Album Description', 'buddyboss' ),
 							'value' => $album->description
 						),
 						array(
-							'name'  => __( 'Album Date', 'buddyboss-media' ),
+							'name'  => __( 'Album Date', 'buddyboss' ),
 							'value' => $album->date_created
 						),
 						array(
-							'name'  => __( 'Album Privacy', 'buddyboss-media' ),
+							'name'  => __( 'Album Privacy', 'buddyboss' ),
 							'value' => $album->privacy
 						),
 						array(
-							'name'  => __( 'Album URL', 'buddyboss-media' ),
+							'name'  => __( 'Album URL', 'buddyboss' ),
 							'value' => $permalink
 						),
 					);

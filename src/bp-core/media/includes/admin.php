@@ -188,28 +188,28 @@ class BuddyBoss_Media_Admin
 		register_setting( 'buddyboss_media_plugin_options', 'buddyboss_media_plugin_options', array( $this, 'plugin_options_validate' ) );
 
 		//general options
-		add_settings_section( 'general_section', __( 'General Settings', 'buddyboss-media' ), array( $this, 'section_general' ), __FILE__ );
-		add_settings_field( 'component-slug', __( 'User Photos Slug', 'buddyboss-media' ), array( $this, 'setting_component_slug' ), __FILE__, 'general_section');
-		add_settings_field( 'all-media-page', __( 'Global Photos Page', 'buddyboss-media' ), array( $this, 'setting_all_media_page' ), __FILE__, 'general_section');
-		add_settings_field( 'activity-photo-size', __( 'Activity Photo Size', 'buddyboss-media' ), array( $this, 'setting_activity_photo_size' ), __FILE__, 'general_section');
-		add_settings_field( 'activity-custom-template', __( 'Photo Layout', 'buddyboss-media' ), array( $this, 'setting_activity_custom_template' ), __FILE__, 'general_section');
-		add_settings_field( 'enable-tagging', __( 'Friend Tagging', 'buddyboss-media' ), array( $this, 'setting_enable_tagging' ), __FILE__, 'general_section');
-		add_settings_field( 'files-per-batch', __( 'Max. Files per Batch', 'buddyboss-media' ), array( $this, 'setting_files_per_batch' ), __FILE__, 'general_section');
-		add_settings_field( 'rotation-fix', __( 'Mobile Rotation Fix', 'buddyboss-media' ), array( $this, 'setting_rotation_fix' ), __FILE__, 'general_section' );
-		add_settings_field( 'delete-media-permanently', __( 'Media Management', 'buddyboss-media' ), array( $this, 'setting_delete_media_permanently' ), __FILE__, 'general_section' );
-		add_settings_field( 'enable-js-debug', __( 'Enable Unminified JS', 'buddyboss-media' ), array( $this, 'setting_enable_js_debug' ), __FILE__, 'general_section');
-		add_settings_field( 'show-uploadbox', __( 'Disable Upload Box', 'buddyboss-media' ), array( $this, 'setting_show_uploadbox' ), __FILE__, 'general_section' );
+		add_settings_section( 'general_section', __( 'General Settings', 'buddyboss' ), array( $this, 'section_general' ), __FILE__ );
+		add_settings_field( 'component-slug', __( 'User Photos Slug', 'buddyboss' ), array( $this, 'setting_component_slug' ), __FILE__, 'general_section');
+		add_settings_field( 'all-media-page', __( 'Global Photos Page', 'buddyboss' ), array( $this, 'setting_all_media_page' ), __FILE__, 'general_section');
+		add_settings_field( 'activity-photo-size', __( 'Activity Photo Size', 'buddyboss' ), array( $this, 'setting_activity_photo_size' ), __FILE__, 'general_section');
+		add_settings_field( 'activity-custom-template', __( 'Photo Layout', 'buddyboss' ), array( $this, 'setting_activity_custom_template' ), __FILE__, 'general_section');
+		add_settings_field( 'enable-tagging', __( 'Friend Tagging', 'buddyboss' ), array( $this, 'setting_enable_tagging' ), __FILE__, 'general_section');
+		add_settings_field( 'files-per-batch', __( 'Max. Files per Batch', 'buddyboss' ), array( $this, 'setting_files_per_batch' ), __FILE__, 'general_section');
+		add_settings_field( 'rotation-fix', __( 'Mobile Rotation Fix', 'buddyboss' ), array( $this, 'setting_rotation_fix' ), __FILE__, 'general_section' );
+		add_settings_field( 'delete-media-permanently', __( 'Media Management', 'buddyboss' ), array( $this, 'setting_delete_media_permanently' ), __FILE__, 'general_section' );
+		add_settings_field( 'enable-js-debug', __( 'Enable Unminified JS', 'buddyboss' ), array( $this, 'setting_enable_js_debug' ), __FILE__, 'general_section');
+		add_settings_field( 'show-uploadbox', __( 'Disable Upload Box', 'buddyboss' ), array( $this, 'setting_show_uploadbox' ), __FILE__, 'general_section' );
 
 		//bbpress options
 		if ( is_plugin_active('bbpress/bbpress.php') ) {
-			add_settings_section( 'bbpress_section', __( 'Forums', 'buddyboss-media' ), array( $this, 'section_forums' ), __FILE__ );
-			add_settings_field( 'bbpress-media-support', __( 'bbPress Media', 'buddyboss-media' ), array( $this, 'setting_enable_bbpress_media_support' ), __FILE__, 'bbpress_section');
+			add_settings_section( 'bbpress_section', __( 'Forums', 'buddyboss' ), array( $this, 'section_forums' ), __FILE__ );
+			add_settings_field( 'bbpress-media-support', __( 'bbPress Media', 'buddyboss' ), array( $this, 'setting_enable_bbpress_media_support' ), __FILE__, 'bbpress_section');
 		}
 
 		//groups options
-		add_settings_section( 'groups_section', __( 'Groups', 'buddyboss-media' ), array( $this, 'section_groups' ), __FILE__ );
-		add_settings_field( 'enable-group-media', __( 'Group Media', 'buddyboss-media' ), array( $this, 'setting_enable_group_media_support' ), __FILE__, 'groups_section' );
-		add_settings_field( 'enable-group-albums', __( 'Group Albums', 'buddyboss-media' ), array( $this, 'setting_enable_group_albums' ), __FILE__, 'groups_section' );
+		add_settings_section( 'groups_section', __( 'Groups', 'buddyboss' ), array( $this, 'section_groups' ), __FILE__ );
+		add_settings_field( 'enable-group-media', __( 'Group Media', 'buddyboss' ), array( $this, 'setting_enable_group_media_support' ), __FILE__, 'groups_section' );
+		add_settings_field( 'enable-group-albums', __( 'Group Albums', 'buddyboss' ), array( $this, 'setting_enable_group_albums' ), __FILE__, 'groups_section' );
 	}
 
 	/**
@@ -291,13 +291,13 @@ class BuddyBoss_Media_Admin
 		$tab = isset( $_GET['tab'] ) ? $_GET['tab'] : __FILE__;
 	?>
 		<div class="wrap">
-			<h2><?php _e( 'BuddyBoss Media', 'buddyboss-media' ); ?></h2>
+			<h2><?php _e( 'BuddyBoss Media', 'buddyboss' ); ?></h2>
 			<?php $this->plugin_options_tabs(); ?>
 			<form action="<?php echo $this->form_action; ?>" method="post">
 
 				<?php
 					if ( $this->network_activated && isset($_GET['updated']) ) {
-						echo "<div class='updated'><p>" . __('Settings updated.', 'buddyboss-media') . "</p></div>";
+						echo "<div class='updated'><p>" . __('Settings updated.', 'buddyboss') . "</p></div>";
 					}
 				?>
 				<?php
@@ -305,7 +305,7 @@ class BuddyBoss_Media_Admin
 					settings_fields( 'buddyboss_media_plugin_options' );
 					do_settings_sections( __FILE__ ); ?>
 					<p class="submit">
-						<input name="bboss_g_s_settings_submit" type="submit" class="button-primary" value="<?php esc_attr_e( 'Save Changes', 'buddyboss-media' ); ?>" />
+						<input name="bboss_g_s_settings_submit" type="submit" class="button-primary" value="<?php esc_attr_e( 'Save Changes', 'buddyboss' ); ?>" />
 					</p><?php
 				} else {
 					settings_fields( $tab );
@@ -440,7 +440,7 @@ class BuddyBoss_Media_Admin
 		}
 
 		echo "<input id='component-slug' name='buddyboss_media_plugin_options[component-slug]' type='text' value='" . esc_attr( $slug ) . "' />";
-		echo '<p class="description">' . __( 'Example: ', 'buddyboss-media' ) . '<a href="'.bp_loggedin_user_domain() . $slug .'"profile/edit">' . bp_loggedin_user_domain() . '<strong>' . $slug . '</strong>/</a>' . '</p>';
+		echo '<p class="description">' . __( 'Example: ', 'buddyboss' ) . '<a href="'.bp_loggedin_user_domain() . $slug .'"profile/edit">' . bp_loggedin_user_domain() . '<strong>' . $slug . '</strong>/</a>' . '</p>';
 	}
 
 	/**
@@ -470,7 +470,7 @@ class BuddyBoss_Media_Admin
 
 		echo "<input ".$checked." id='enabled' name='buddyboss_media_plugin_options[rotation_fix]' type='checkbox' />  ";
 
-		_e( "Enable fix for mobile uploads rotating.", 'buddyboss-media' );
+		_e( "Enable fix for mobile uploads rotating.", 'buddyboss' );
 
 		echo '<p class="description">';
 		_e( "It's recommended that you have at least 256M-512M of RAM allocated to PHP, otherwise photo uploads may fail.", "buddyboss-media" );
@@ -495,14 +495,14 @@ class BuddyBoss_Media_Admin
 		echo wp_dropdown_pages( array(
 			'name'             => 'buddyboss_media_plugin_options[all-media-page]',
 			'echo'             => false,
-			'show_option_none' => __( '- None -', 'buddyboss-media' ),
+			'show_option_none' => __( '- None -', 'buddyboss' ),
 			'selected'         => $all_media_page
 		) );
-		echo '<a href="' . admin_url( esc_url(add_query_arg( array( 'post_type' => 'page' ), 'post-new.php' ) )) . '" class="button-secondary">' . __( 'New Page', 'buddyboss-media' ) .'</a>';
+		echo '<a href="' . admin_url( esc_url(add_query_arg( array( 'post_type' => 'page' ), 'post-new.php' ) )) . '" class="button-secondary">' . __( 'New Page', 'buddyboss' ) .'</a>';
 		if ( !empty( $all_media_page ) ) {
-			echo '<a href="' . get_permalink( $all_media_page ) .'" class="button-secondary" target="_bp" style="margin-left: 5px;">' . __( 'View', 'buddyboss-media' ) . '</a>';
+			echo '<a href="' . get_permalink( $all_media_page ) .'" class="button-secondary" target="_bp" style="margin-left: 5px;">' . __( 'View', 'buddyboss' ) . '</a>';
 		}
-		echo '<p class="description">' . __( 'Use a WordPress page to display all media uploaded by all users.<br /> You may need to reset your permalinks after changing this setting. Go to Settings > Permalinks.', 'buddyboss-media' ) . '</p>';
+		echo '<p class="description">' . __( 'Use a WordPress page to display all media uploaded by all users.<br /> You may need to reset your permalinks after changing this setting. Go to Settings > Permalinks.', 'buddyboss' ) . '</p>';
 	}
 
 	/**
@@ -518,8 +518,8 @@ class BuddyBoss_Media_Admin
 		echo '<select name="buddyboss_media_plugin_options[activity-photo-size]">';
 
 		$options = array(
-			'medium'						=> __( 'Medium', 'buddyboss-media' ),
-			'buddyboss_media_photo_wide'	=> __( 'Large', 'buddyboss-media' ),
+			'medium'						=> __( 'Medium', 'buddyboss' ),
+			'buddyboss_media_photo_wide'	=> __( 'Large', 'buddyboss' ),
 		);
 		foreach( $options as $option=>$label ){
 			$selected = $option==$activity_photo_size ? ' selected' : '';
@@ -528,7 +528,7 @@ class BuddyBoss_Media_Admin
 
 		echo '</select>';
 
-		echo '<p class="description">' . __( 'Image size displayed in activity posts.', 'buddyboss-media' ) . '</p>';
+		echo '<p class="description">' . __( 'Image size displayed in activity posts.', 'buddyboss' ) . '</p>';
 	}
 
 	/**
@@ -545,15 +545,15 @@ class BuddyBoss_Media_Admin
 		}
 
 		$options = array(
-			'yes'	=> __( 'Grid', 'buddyboss-media' ),
-			'no'	=> __( 'Activity Posts', 'buddyboss-media' )
+			'yes'	=> __( 'Grid', 'buddyboss' ),
+			'no'	=> __( 'Activity Posts', 'buddyboss' )
 		);
 		foreach( $options as $option=>$label ){
 			$checked = $activity_custom_template == $option ? ' checked' : '';
 			echo '<input type="radio" name="buddyboss_media_plugin_options[activity-custom-template]" value="'. $option . '" '. $checked . '>' . $label . '&nbsp;&nbsp;';
 		}
 
-		echo '<p class="description">' . __( 'In your albums, you can display photos in a grid or as activity posts.', 'buddyboss-media' ) . '</p>';
+		echo '<p class="description">' . __( 'In your albums, you can display photos in a grid or as activity posts.', 'buddyboss' ) . '</p>';
 	}
 
 	/**
@@ -573,8 +573,8 @@ class BuddyBoss_Media_Admin
 			$checked = ' checked="checked" ';
 		}
 
-		echo "<input ".$checked." id='enabled' name='buddyboss_media_plugin_options[enable_tagging]' type='checkbox' value='yes' />" . __( 'Enable Tagging.', 'buddyboss-media' ) . "";
-		echo '<p class="description">' . __( 'Allow members to tag friends in media uploads.', 'buddyboss-media' ) . '</p>';
+		echo "<input ".$checked." id='enabled' name='buddyboss_media_plugin_options[enable_tagging]' type='checkbox' value='yes' />" . __( 'Enable Tagging.', 'buddyboss' ) . "";
+		echo '<p class="description">' . __( 'Allow members to tag friends in media uploads.', 'buddyboss' ) . '</p>';
 	}
 
 	/**
@@ -592,7 +592,7 @@ class BuddyBoss_Media_Admin
 		}
 
 		echo "<input id='files-per-batch' name='buddyboss_media_plugin_options[files-per-batch]' min='1' type='number' value='" . esc_attr( $files_per_batch ) . "' />";
-		echo '<p class="description">' . __( 'Maximum number of images that can be uploaded in one batch.', 'buddyboss-media' ) . '</p>';
+		echo '<p class="description">' . __( 'Maximum number of images that can be uploaded in one batch.', 'buddyboss' ) . '</p>';
 	}
 
 	/**
@@ -613,7 +613,7 @@ class BuddyBoss_Media_Admin
 			$checked = ' checked="checked" ';
 		}
 
-		echo "<input ".$checked." id='enabled' name='buddyboss_media_plugin_options[delete_media_permanently]' type='checkbox' value='yes' />" . __( 'When a photo upload is removed, permanently delete the associated media file.', 'buddyboss-media' ) . "";
+		echo "<input ".$checked." id='enabled' name='buddyboss_media_plugin_options[delete_media_permanently]' type='checkbox' value='yes' />" . __( 'When a photo upload is removed, permanently delete the associated media file.', 'buddyboss' ) . "";
 	}
 
 	/**
@@ -634,7 +634,7 @@ class BuddyBoss_Media_Admin
 			$checked = ' checked="checked" ';
 		}
 
-		echo "<input ".$checked." id='enabled' name='buddyboss_media_plugin_options[enable_js_debug]' type='checkbox' value='yes' />" . __( 'Load the Unminified version of Javascript, for compatibility with certain plugins.', 'buddyboss-media' ) . "";
+		echo "<input ".$checked." id='enabled' name='buddyboss_media_plugin_options[enable_js_debug]' type='checkbox' value='yes' />" . __( 'Load the Unminified version of Javascript, for compatibility with certain plugins.', 'buddyboss' ) . "";
 	}
 
 	/**
@@ -676,7 +676,7 @@ class BuddyBoss_Media_Admin
 			$checked = ' checked="checked" ';
 		}
 
-		echo "<input ".$checked." id='enabled' name='buddyboss_media_plugin_options[bbpress_media_support]' type='checkbox' value='yes' />" . __( 'Allow photo posting in bbPress groups and forums.', 'buddyboss-media' ) . "";
+		echo "<input ".$checked." id='enabled' name='buddyboss_media_plugin_options[bbpress_media_support]' type='checkbox' value='yes' />" . __( 'Allow photo posting in bbPress groups and forums.', 'buddyboss' ) . "";
 	}
 
 	/**
@@ -699,7 +699,7 @@ class BuddyBoss_Media_Admin
 			$checked = ' checked="checked" ';
 		}
 
-		echo "<input ".$checked." id='enabled' name='buddyboss_media_plugin_options[group_media_support]' type='checkbox'  />" . __( 'Allow photo posting in social group activity updates and comments.', 'buddyboss-media' ) . "";
+		echo "<input ".$checked." id='enabled' name='buddyboss_media_plugin_options[group_media_support]' type='checkbox'  />" . __( 'Allow photo posting in social group activity updates and comments.', 'buddyboss' ) . "";
 	}
 
 
@@ -721,7 +721,7 @@ class BuddyBoss_Media_Admin
 			$checked = ' checked="checked" ';
 		}
 
-		echo "<input ".$checked." id='enabled' name='buddyboss_media_plugin_options[group_albums]' type='checkbox'  />" . __( 'Enable social group photo albums.', 'buddyboss-media' ) . "";
+		echo "<input ".$checked." id='enabled' name='buddyboss_media_plugin_options[group_albums]' type='checkbox'  />" . __( 'Enable social group photo albums.', 'buddyboss' ) . "";
 	}
 
 	/**
@@ -732,7 +732,7 @@ class BuddyBoss_Media_Admin
 		$enabled = buddyboss_media()->option( 'rotation_fix' ) === 'on';
 
 		if ( $enabled && ! extension_loaded( 'exif' ) ) {
-			$notice = __( "Mobile Rotation Fix requires PHP EXIF extension to be loaded. Please contact your server administrator.", 'buddyboss-media' );
+			$notice = __( "Mobile Rotation Fix requires PHP EXIF extension to be loaded. Please contact your server administrator.", 'buddyboss' );
 			echo "<div class='error'><p><strong>BuddyBoss Media: </strong>{$notice}</p></div>";
 		}
 	}

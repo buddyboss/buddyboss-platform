@@ -103,9 +103,9 @@ function buddyboss_media_print_add_media_wrapper() {
 				</div>
 			</div>
 			<div id="buddyboss-edit-media-bulk-uploader-reception" class="image-drop-box">
-				<h3 class="buddyboss-media-drop-instructions"><?php _e( 'Drop files anywhere to upload', 'buddyboss-media' ); ?></h3>
-				<p class="buddyboss-media-drop-separator"><?php _e( 'or', 'buddyboss-media' ); ?></p>
-				<a id="logo-file-browser-button" id="browse-file-button" title="Select image" class="browse-file-button" href="#"> <?php _e( 'Select Files', 'buddyboss-media' ); ?></a>
+				<h3 class="buddyboss-media-drop-instructions"><?php _e( 'Drop files anywhere to upload', 'buddyboss' ); ?></h3>
+				<p class="buddyboss-media-drop-separator"><?php _e( 'or', 'buddyboss' ); ?></p>
+				<a id="logo-file-browser-button" id="browse-file-button" title="Select image" class="browse-file-button" href="#"> <?php _e( 'Select Files', 'buddyboss' ); ?></a>
 			</div>
 
 		</div>

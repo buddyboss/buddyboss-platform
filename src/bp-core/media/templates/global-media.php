@@ -9,7 +9,7 @@
  * The template file to display the content of 'all media page'.
  * Making changes to this file is not advised.
  * To override this template file:
- *  - create a folder 'buddyboss-media' inside your active theme (or child theme)
+ *  - create a folder 'buddyboss' inside your active theme (or child theme)
  *  - copy this file and place in the folder mentioned above
  *  - and make changes to the new file (the one you just copied into your theme).
  */
@@ -21,8 +21,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 	<div class="item-list-tabs no-ajax" id="subnav" role="navigation">
 		<ul>
 			<?php $global_media_permalink = trailingslashit( _get_page_link( buddyboss_media()->option('all-media-page') ) ); ?>
-			<li class="selected" id="photos-all"><a href="<?php echo esc_url( $global_media_permalink );?>"><?php _e( 'All Photos', 'buddyboss-media' );?></a></li>
-			<li id="albums-personal"><a href="<?php echo esc_url( $global_media_permalink );?>albums/"><?php _e( 'All Albums', 'buddyboss-media' );?></a></li>
+			<li class="selected" id="photos-all"><a href="<?php echo esc_url( $global_media_permalink );?>"><?php _e( 'All Photos', 'buddyboss' );?></a></li>
+			<li id="albums-personal"><a href="<?php echo esc_url( $global_media_permalink );?>albums/"><?php _e( 'All Albums', 'buddyboss' );?></a></li>
 		</ul>
 	</div>
 	

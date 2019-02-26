@@ -44,8 +44,8 @@ if ( !class_exists( 'BuddyBoss_Media_Tagging' ) ):
 		public function btn_tag_friends() {
 			if ( $this->can_tag_in_activity() ) {
 				?>
-				<a href="#" class="button bp-secondary-action buddyboss_media_tag" onclick="return buddyboss_media_initiate_tagging( this );" data-activity_id="<?php bp_activity_id(); ?>" title="<?php _e( 'Tag Photo', 'buddyboss-media' ); ?>">
-					<?php _e( 'Tag Photo', 'buddyboss-media' ); ?>
+				<a href="#" class="button bp-secondary-action buddyboss_media_tag" onclick="return buddyboss_media_initiate_tagging( this );" data-activity_id="<?php bp_activity_id(); ?>" title="<?php _e( 'Tag Photo', 'buddyboss' ); ?>">
+					<?php _e( 'Tag Photo', 'buddyboss' ); ?>
 				</a>
 				<?php
 			}
@@ -141,7 +141,7 @@ if ( !class_exists( 'BuddyBoss_Media_Tagging' ) ):
 				'tagged_friends'    => '',
                 'show_search'       => false,
                 'total'             => isset( $friends['total'] ) ? $friends['total'] : 0,
-                'more_i10'          => _x( 'and xx more..', 'xx will be replaced with real number', 'buddyboss-media' ),
+                'more_i10'          => _x( 'and xx more..', 'xx will be replaced with real number', 'buddyboss' ),
 			);
 
             if( $friends['total'] > $friends['args']['per_page'] ){
@@ -149,9 +149,9 @@ if ( !class_exists( 'BuddyBoss_Media_Tagging' ) ):
             }
 			if ( empty( $friends_list ) ) {
                 if( empty( $search_term ) ){
-                    $retval[ 'error' ] = "<div id='message'><p class='error'>" . __( 'You have no friends yet!', 'buddyboss-media' ) . "</p></div>";
+                    $retval[ 'error' ] = "<div id='message'><p class='error'>" . __( 'You have no friends yet!', 'buddyboss' ) . "</p></div>";
                 } else {
-                    $retval[ 'error' ] = "<div id='message'><p class='error'>" . __( 'Nothing found!', 'buddyboss-media' ) . "</p></div>";
+                    $retval[ 'error' ] = "<div id='message'><p class='error'>" . __( 'Nothing found!', 'buddyboss' ) . "</p></div>";
                 }
                 $retval[ 'friends_list' ] = '';
 			}

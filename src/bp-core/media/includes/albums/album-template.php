@@ -143,8 +143,8 @@ if ( !class_exists( 'BuddyBoss_Media_Albums' ) ):
 					'format'	 => '',
 					'total'		 => ceil( (int) $this->total_album_count / (int) $this->pag_num ),
 					'current'	 => $this->pag_page,
-					'prev_text'	 => _x( '&larr;', 'Album pagination previous text', 'buddyboss-media' ),
-					'next_text'	 => _x( '&rarr;', 'Album pagination next text', 'buddyboss-media' ),
+					'prev_text'	 => _x( '&larr;', 'Album pagination previous text', 'buddyboss' ),
+					'next_text'	 => _x( '&rarr;', 'Album pagination next text', 'buddyboss' ),
 					'mid_size'	 => 1
 				);
 				$this->pag_links	 = paginate_links( $paginate_links_args );
@@ -508,7 +508,7 @@ function buddyboss_media_album_date() {
 
 function buddyboss_media_album_get_date() {
 	global $buddyboss_media_albums_template;
-	return sprintf( __( 'created %s ago', 'buddyboss-media' ), human_time_diff( strtotime( $buddyboss_media_albums_template->album->date_created ) ) );
+	return sprintf( __( 'created %s ago', 'buddyboss' ), human_time_diff( strtotime( $buddyboss_media_albums_template->album->date_created ) ) );
 }
 
 function buddyboss_media_album_photos_count() {
@@ -542,7 +542,7 @@ function buddyboss_media_album_get_photos_count() {
             );
         }
     }
-	return sprintf( _n( '%s photo', '%s photos', $photos_count, 'buddyboss-media' ), $photos_count );
+	return sprintf( _n( '%s photo', '%s photos', $photos_count, 'buddyboss' ), $photos_count );
 }
 
 function buddyboss_media_album_privacy() {
@@ -567,8 +567,8 @@ function buddyboss_media_btn_move_media() {
 		}
 		?>
 
-		<a href="#" class="button bp-secondary-action buddyboss_media_move" onclick="return buddyboss_media_initiate_media_move( this );" data-activity_id="<?php bp_activity_id(); ?>" data-album_id="<?php echo $album_id; ?>" title="<?php _e( 'Album', 'buddyboss-media' ); ?>">
-			<?php _e( 'Album', 'buddyboss-media' ); ?>
+		<a href="#" class="button bp-secondary-action buddyboss_media_move" onclick="return buddyboss_media_initiate_media_move( this );" data-activity_id="<?php bp_activity_id(); ?>" data-album_id="<?php echo $album_id; ?>" title="<?php _e( 'Album', 'buddyboss' ); ?>">
+			<?php _e( 'Album', 'buddyboss' ); ?>
 		</a>
 		<?php
 	endif;
@@ -608,8 +608,8 @@ function buddyboss_media_btn_delete_album( $album_id = false ) {
 	$delete_album_url	 = esc_url( add_query_arg( 'delete', $album_id, $albums_url ) );
 	$delete_album_url	 = esc_url( add_query_arg( 'nonce', wp_create_nonce( 'bboss_media_delete_album' ), $delete_album_url ) );
 
-	$confimation_message = __( 'Are you sure you want to delete this album? When you delete an album, all its photos go under global uploads.', 'buddyboss-media' );
+	$confimation_message = __( 'Are you sure you want to delete this album? When you delete an album, all its photos go under global uploads.', 'buddyboss' );
 
-	$anchor = "<a class='button album-delete bp-title-button' href='" . esc_url( $delete_album_url ) . "' onclick='return confirm(\"" . $confimation_message . "\");' >" . __( 'Delete Album', 'buddyboss-media' ) . "</a>";
+	$anchor = "<a class='button album-delete bp-title-button' href='" . esc_url( $delete_album_url ) . "' onclick='return confirm(\"" . $confimation_message . "\");' >" . __( 'Delete Album', 'buddyboss' ) . "</a>";
 	echo apply_filters( 'buddyboss_media_btn_delete_album', $anchor, $album_id );
 }

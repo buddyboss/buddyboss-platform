@@ -79,12 +79,12 @@ class BuddyBoss_Media_Photo_Hooks
 
     if ( $user && $compat_class_search && isset( $_POST['pics_uploaded']) && !empty( $_POST['pics_uploaded'] ) ){
       /*$action  = '<a href="'.$user->domain.'">'.$user->fullname.'</a> '
-        . __( 'posted a photo', 'buddyboss-media' );*/
+        . __( 'posted a photo', 'buddyboss' );*/
 
-		$action  = '%USER% ' . __( 'posted a photo', 'buddyboss-media' );
+		$action  = '%USER% ' . __( 'posted a photo', 'buddyboss' );
 
 		if( is_array( $_POST['pics_uploaded'] ) && count( $_POST['pics_uploaded'] ) > 1 ){
-			$action  = '%USER% ' . sprintf( __( 'posted %s photos', 'buddyboss-media' ), count( $_POST['pics_uploaded'] ) );
+			$action  = '%USER% ' . sprintf( __( 'posted %s photos', 'buddyboss' ), count( $_POST['pics_uploaded'] ) );
 		}
 
 		/**
@@ -95,7 +95,7 @@ class BuddyBoss_Media_Photo_Hooks
 				while( bp_groups() ){
 					bp_the_group();
 					$group_link = sprintf( "<a href='%s'>%s</a>", bp_get_group_permalink(), bp_get_group_name() );
-					$action .= ' ' . __( 'in the group', 'buddyboss-media' ) . ' ' . $group_link;
+					$action .= ' ' . __( 'in the group', 'buddyboss' ) . ' ' . $group_link;
 				}
 			}
 		}
@@ -167,7 +167,7 @@ class BuddyBoss_Media_Photo_Hooks
 		//display You if its current users activity
 		$replacement = '';
 		if( $current_activity->user_id == get_current_user_id() ){
-			$replacement = __( 'You', 'buddyboss-media' );
+			$replacement = __( 'You', 'buddyboss' );
 		} else {
 			$userdomain = bp_core_get_user_domain( $current_activity->user_id );
 			$user_fullname = bp_core_get_user_displayname( $current_activity->user_id );
@@ -185,7 +185,7 @@ class BuddyBoss_Media_Photo_Hooks
 
       // Insert the permalink
       if ( !bp_is_single_activity() )
-        $content = apply_filters_ref_array( 'bp_activity_permalink', array( sprintf( '%1$s <a href="%2$s" class="view activity-time-since" title="%3$s">%4$s</a>', $content, bp_activity_get_permalink( $activities_template->activity->id, $activities_template->activity ), esc_attr__( 'View Discussion', 'buddyboss-media' ), $time_since ), &$activities_template->activity ) );
+        $content = apply_filters_ref_array( 'bp_activity_permalink', array( sprintf( '%1$s <a href="%2$s" class="view activity-time-since" title="%3$s">%4$s</a>', $content, bp_activity_get_permalink( $activities_template->activity->id, $activities_template->activity ), esc_attr__( 'View Discussion', 'buddyboss' ), $time_since ), &$activities_template->activity ) );
       else
         $content .= str_pad( $time_since, strlen( $time_since ) + 2, ' ', STR_PAD_BOTH );
 
@@ -513,7 +513,7 @@ class BuddyBoss_Media_Photo_Hooks
 	  //remove user placeholder
 	  $content = str_replace( "%USER%", "", $content );
 
-      $activity_action_text = __( 'new photo', 'buddyboss-media' );
+      $activity_action_text = __( 'new photo', 'buddyboss' );
 
       // Look for 'posted a photo' and linkify
       if ( stristr( $content, $activity_action_text ) )
@@ -611,7 +611,7 @@ function buddyboss_media_load_template_filter( $found_template, $templates ) {
 
   global $bp;
 
-  // @TODO: Should we change the component name to 'buddyboss-media'?
+  // @TODO: Should we change the component name to 'buddyboss'?
   // @TODO: Can we dynamically let the user choose a component's slug?
   if ( $bp->current_component !== buddyboss_media_component_slug() )
     return $found_template;
@@ -650,7 +650,7 @@ function buddyboss_media_greetings_template_text( $text )
 			$firstname = bp_get_user_firstname();
 		}
 
-		$text =  sprintf( __( "Add a photo, %s", 'buddyboss-media' ), $firstname );
+		$text =  sprintf( __( "Add a photo, %s", 'buddyboss' ), $firstname );
 	}
 
 	return $text;
