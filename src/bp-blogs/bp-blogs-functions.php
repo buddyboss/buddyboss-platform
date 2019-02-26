@@ -590,7 +590,7 @@ if ( function_exists( 'wp_switch_roles_and_user' ) ) {
  * @param array   $args        Array of arguments.
  */
 function bp_blogs_publish_post_activity_meta( $activity_id, $post, $args ) {
-	if ( empty( $activity_id ) || 'post' != $post->post_type ) {
+	if ( empty( $activity_id ) || !in_array( $post->post_type, bp_core_get_active_custom_post_type_feed())  ) {
 		return;
 	}
 
@@ -1447,3 +1447,11 @@ function bp_blogs_restore_data( $user_id = 0 ) {
 	}
 }
 add_action( 'bp_make_ham_user', 'bp_blogs_restore_data', 10, 1 );
+
+function bp_core_admin_get_active_custom_post_type_feed() {
+
+	$post_types = get_post_types( [ 'public' => true ] );
+
+	bp_update_option('bp_core_admin_get_active_custom_post_type_feed', $post_types);
+}
+add_action('init', 'bp_core_admin_get_active_custom_post_type_feed');

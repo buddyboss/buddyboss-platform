@@ -2326,6 +2326,8 @@ function bp_activity_post_type_publish( $post_id = 0, $post = null, $user_id = 0
 
 		// Backward compatibility filter for blog posts.
 		if ( 'blogs' == $activity_post_object->component_id )  {
+			$theimg = wp_get_attachment_image_src(  get_post_thumbnail_id( $post_id ) );
+
 			$activity_args['content'] = apply_filters( 'bp_blogs_record_activity_content', $activity_summary, $activity_args['content'], $activity_args, $post->post_type );
 		} else {
 			$activity_args['content'] = $activity_summary;
@@ -3525,7 +3527,8 @@ function bp_activity_create_summary( $content, $activity ) {
 
 	// If we converted $content to an object earlier, flip it back to a string.
 	if ( is_a( $content, 'WP_Post' ) ) {
-		$content = $content->post_content;
+		$excerpt = get_the_excerpt( $content->ID );
+		$content = ( $excerpt )?:$content->post_content;
 	}
 
 	$para_count     = substr_count( strtolower( wpautop( $content ) ), '<p>' );
@@ -4574,3 +4577,55 @@ function bp_remove_follow_data( $user_id ) {
 add_action( 'wpmu_delete_user',	'bp_remove_follow_data' );
 add_action( 'delete_user',	'bp_remove_follow_data' );
 add_action( 'make_spam_user',	'bp_remove_follow_data' );
+
+function bp_update_activity( $post_id, $post, $update ) {
+
+	if ( ! is_a( $post, 'WP_Post' ) ) {
+		return;
+	}
+
+	// Get the post type tracking args.
+	$activity_post_object = bp_activity_get_post_type_tracking_args( $post->post_type );
+
+	if ( empty( $activity_post_object->action_id ) ) {
+		return;
+	}
+
+	$activity_id = bp_activity_get_activity_id( array(
+		'component'         => $activity_post_object->component_id,
+		'item_id'           => get_current_blog_id(),
+		'secondary_item_id' => $post->ID,
+		'type'              => $activity_post_object->action_id,
+	) );
+
+	// Activity ID doesn't exist, so stop!
+	if ( empty( $activity_id ) ) {
+		return;
+	}
+
+	// Delete the activity if the post was updated with a password.
+	if ( ! empty( $post->post_password ) ) {
+		bp_activity_delete( array( 'id' => $activity_id ) );
+	}
+
+	// Update the activity entry.
+	$activity = new BP_Activity_Activity( $activity_id );
+
+	if ( ! empty( $post->post_content ) ) {
+		$activity_summary = bp_activity_create_summary( $post->post_content, (array) $activity );
+
+		// Backward compatibility filter for the blogs component.
+		if ( 'blogs' == $activity_post_object->component_id ) {
+			$activity->content = apply_filters( 'bp_blogs_record_activity_content', $activity_summary, $post->post_content, (array) $activity, $post->post_type );
+		} else {
+			$activity->content = $activity_summary;
+		}
+	}
+
+	// Save the updated activity.
+	$updated = $activity->save();
+
+
+
+}
+add_action( 'save_post', 'bp_update_activity', 88, 3 );

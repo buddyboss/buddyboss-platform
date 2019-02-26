@@ -363,6 +363,10 @@ tr.bp-search-parent-field td p.section-header {
 	margin: 0 0 20px;
 }
 
+tr.bp-custom-post-type-child-field td {
+	padding: 6px 40px;
+}
+
 /*
  * 2.6 Settings - Cards
  */
@@ -394,7 +398,8 @@ tr.bp-search-parent-field td p.section-header {
 	background-image: url(../../images/admin/icon_user.svg);
 }
 
-.buddyboss_page_bp-settings .section-bp_activity h2 {
+.buddyboss_page_bp-settings .section-bp_activity h2,
+.buddyboss_page_bp-settings .section-bp_custom_post_type h2 {
 	background-image: url(../../images/admin/icon_bell.svg);
 }
 

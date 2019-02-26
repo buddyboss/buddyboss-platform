@@ -4018,3 +4018,19 @@ function bp_get_widget_max_count_limit( $widget_class = '' ) {
 	return apply_filters( 'bp_get_widget_max_count_limit', 50, $widget_class );
 }
 
+function bp_core_get_active_custom_post_type_feed() {
+
+	$custom_post_types = bp_get_option( 'bp_core_admin_get_active_custom_post_type_feed', array());
+
+	$post_arr = array();
+	foreach ( $custom_post_types as $single_post ) {
+
+		$enabled = bp_is_post_type_feed_enable( $single_post );
+		if ( $enabled  ) {
+			$post_arr[] = $single_post;
+		}
+
+	}
+
+	return $post_arr;
+}
