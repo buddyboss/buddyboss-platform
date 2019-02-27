@@ -3525,7 +3525,11 @@ function bp_activity_create_summary( $content, $activity ) {
 
 	// If we converted $content to an object earlier, flip it back to a string.
 	if ( is_a( $content, 'WP_Post' ) ) {
+
+		// For the post and custom post type get the excerpt first.
 		$excerpt = get_the_excerpt( $content->ID );
+
+		// Get the excerpt first if found otherwise it will take the post content.
 		$content = ( $excerpt )?:$content->post_content;
 	}
 
@@ -4576,8 +4580,18 @@ add_action( 'wpmu_delete_user',	'bp_remove_follow_data' );
 add_action( 'delete_user',	'bp_remove_follow_data' );
 add_action( 'make_spam_user',	'bp_remove_follow_data' );
 
-function bp_update_activity( $post_id, $post, $update ) {
+/**
+ * Update the custom post type activity feed after the attachment attached to that particular custom post type.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $post_id
+ * @param $post
+ * @param $update
+ */
+function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update ) {
 
+	// check is WP_Post if not then return
 	if ( ! is_a( $post, 'WP_Post' ) ) {
 		return;
 	}
@@ -4589,6 +4603,7 @@ function bp_update_activity( $post_id, $post, $update ) {
 		return;
 	}
 
+	// Get the existing activity id based on the post.
 	$activity_id = bp_activity_get_activity_id( array(
 		'component'         => $activity_post_object->component_id,
 		'item_id'           => get_current_blog_id(),
@@ -4601,8 +4616,6 @@ function bp_update_activity( $post_id, $post, $update ) {
 		return;
 	}
 
-	$post_thumbnail_id = get_post_thumbnail_id($post->ID);
-
 	// Delete the activity if the post was updated with a password.
 	if ( ! empty( $post->post_password ) ) {
 		bp_activity_delete( array( 'id' => $activity_id ) );
@@ -4611,16 +4624,38 @@ function bp_update_activity( $post_id, $post, $update ) {
 	// Update the activity entry.
 	$activity = new BP_Activity_Activity( $activity_id );
 
-	if ( ! empty( $post->post_content ) ) {
-		$activity_summary = bp_activity_create_summary( $post->post_content, (array) $activity );
+	// get the excerpt first of post.
+	$excerpt = get_the_excerpt( $post->ID );
+
+	// if excert found then take content as a excerpt otherwise take the content as a post content.
+	$content = ( $excerpt )?:$post->post_content;
+
+	// If content not empty.
+	if ( ! empty( $content ) ) {
+		$activity_summary = bp_activity_create_summary( $content, (array) $activity );
 
 		$src = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full', false );
 
-		$activity_summary .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+		if ( isset($src[0] ) ) {
+			$activity_summary .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+		}
+		// Backward compatibility filter for the blogs component.
+		if ( 'blogs' == $activity_post_object->component_id ) {
+			$activity->content = apply_filters( 'bp_update_activity_feed_of_custom_post_content', $activity_summary, $content, (array) $activity, $post->post_type );
+		} else {
+			$activity->content = $activity_summary;
+		}
+	} else {
+
+		$src = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full', false );
+		$activity_summary = '';
+		if ( isset($src[0] ) ) {
+			$activity_summary = sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+		}
 
 		// Backward compatibility filter for the blogs component.
 		if ( 'blogs' == $activity_post_object->component_id ) {
-			$activity->content = apply_filters( 'bp_blogs_record_activity_content', $activity_summary, $post->post_content, (array) $activity, $post->post_type );
+			$activity->content = apply_filters( 'bp_update_activity_feed_of_custom_post_content', $activity_summary, $post->post_content, (array) $activity, $post->post_type );
 		} else {
 			$activity->content = $activity_summary;
 		}
@@ -4629,7 +4664,5 @@ function bp_update_activity( $post_id, $post, $update ) {
 	// Save the updated activity.
 	$updated = $activity->save();
 
-
-
 }
-add_action( 'save_post', 'bp_update_activity', 88, 3 );
+add_action( 'save_post', 'bp_update_activity_feed_of_custom_post_type', 88, 3 );

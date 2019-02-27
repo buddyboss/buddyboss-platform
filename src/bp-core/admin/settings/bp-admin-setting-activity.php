@@ -36,10 +36,30 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		$enable_custom_post_type_feed = isset( $_POST['bp-enable-custom-post-type-feed'] ) && '0' !== $_POST['bp-enable-custom-post-type-feed'];
 
 		if ( $enable_custom_post_type_feed ) {
-			$enable_blog_feeds = isset( $_POST['bp-feed-custom-post-type-post'] );
 
-			if ( $enable_blog_feeds ) {
-				$active_components['blogs'] = "1";
+			// Flag for activate the blogs component
+			$is_blog_component_active = false;
+
+			// Get all active custom post type.
+			$post_types = get_post_types( [ 'public' => true ] );
+
+			foreach ( $post_types as $cpt ) {
+				// Exclude all the custom post type which is already in BuddyPress Activity support.
+				if ( in_array( $cpt,
+					[ 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' ] ) ) {
+					continue;
+				}
+
+				$enable_blog_feeds = isset( $_POST["bp-feed-custom-post-type-$cpt"] );
+
+				if ( $enable_blog_feeds ) {
+					$is_blog_component_active = true;
+				}
+
+			}
+
+			if ( $is_blog_component_active ) {
+				$active_components['blogs'] = '1';
 			} else {
 				unset( $active_components['blogs'] );
 			}
@@ -101,11 +121,11 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			'input_text' => __( 'Automatically publish new custom post types into the activity stream', 'buddyboss' )
 		] );
 
-
+		// Get all active custom post type.
 		$post_types = get_post_types( [ 'public' => true ] );
 
 		foreach ( $post_types as $post_type ) {
-
+			// Exclude all the custom post type which is already in BuddyPress Activity support.
 			if ( in_array( $post_type, [ 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' ] ) ) {
 				continue;
 			}
@@ -117,10 +137,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					'class'     => 'bp-custom-post-type-child-field'
 			];
 
+			// create field for each of custom post type.
 			$this->add_field( "bp-feed-custom-post-type-$post_type", '&#65279;', 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
-
 		}
-
 
 	}
 

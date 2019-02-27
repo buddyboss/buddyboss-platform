@@ -590,7 +590,7 @@ if ( function_exists( 'wp_switch_roles_and_user' ) ) {
  * @param array   $args        Array of arguments.
  */
 function bp_blogs_publish_post_activity_meta( $activity_id, $post, $args ) {
-	if ( empty( $activity_id ) || !in_array( $post->post_type, bp_core_get_active_custom_post_type_feed())  ) {
+	if ( empty( $activity_id ) || !in_array( $post->post_type, bp_core_get_active_custom_post_type_feed() )  ) {
 		return;
 	}
 

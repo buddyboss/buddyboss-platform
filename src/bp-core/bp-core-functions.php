@@ -4018,19 +4018,30 @@ function bp_get_widget_max_count_limit( $widget_class = '' ) {
 	return apply_filters( 'bp_get_widget_max_count_limit', 50, $widget_class );
 }
 
+/**
+ * Returns the active custom post type activity feed CPT array.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return array
+ */
 function bp_core_get_active_custom_post_type_feed() {
 
+	// Get site-wide all the CPT array.
 	$custom_post_types = bp_get_option( 'bp_core_admin_get_active_custom_post_type_feed', array());
 
-	$post_arr = array();
+	$cpt_arr = array();
 	foreach ( $custom_post_types as $single_post ) {
 
+		// check custom post type feed is enabled from the BuddyBoss > Settings > Activity > Custom Post Types metabox settings.
 		$enabled = bp_is_post_type_feed_enable( $single_post );
+
+		// If enabled put in $cpt_arr
 		if ( $enabled  ) {
-			$post_arr[] = $single_post;
+			$cpt_arr[] = $single_post;
 		}
 
 	}
 
-	return $post_arr;
+	return $cpt_arr;
 }
