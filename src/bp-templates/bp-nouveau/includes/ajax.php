@@ -208,7 +208,7 @@ function bp_nouveau_object_template_results_members_all_scope( $querystring ) {
 	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
 		$counts = bp_total_follow_counts();
 		if ( ! empty( $counts['following'] ) ) {
-			if ( 'following' === $querystring["scope"] ) {
+			if ( isset($querystring["scope"]) && 'following' === $querystring["scope"] ) {
 				unset( $querystring["include"] );
 			}
 		}
@@ -226,11 +226,12 @@ function bp_nouveau_object_template_results_members_personal_scope( $querystring
 	if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
 		$counts = bp_total_follow_counts();
 		if ( ! empty( $counts['following'] ) ) {
-			if ( 'following' === $querystring["scope"] ) {
+			if ( isset($querystring["scope"]) &&  'following' === $querystring["scope"] ) {
 				unset( $querystring["include"] );
 			}
 		}
 	}
+
 	$querystring['scope'] = 'personal';
 	$querystring['page'] = 1;
 	$querystring['per_page'] = '1';
