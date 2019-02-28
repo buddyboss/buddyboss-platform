@@ -21,12 +21,12 @@ function bp_search_get_settings_sections() {
 	return (array) apply_filters( 'bp_search_get_settings_sections', array(
 		'bp_search_settings_community'  => array(
 			'page'     => 'search',
-			'title'    => __( 'Community Network', 'buddyboss' ),
+			'title'    => __( 'Network Search', 'buddyboss' ),
 			'callback' => 'bp_search_settings_callback_community_section',
 		),
 		'bp_search_settings_post_types' => array(
 			'page'  => 'search',
-			'title'    => __( 'Pages and Post Types', 'buddyboss' ),
+			'title'    => __( 'Pages and Posts Search', 'buddyboss' ),
 			'callback' => 'bp_search_settings_callback_post_type_section',
 		),
 		'bp_search_settings_general'    => array(
