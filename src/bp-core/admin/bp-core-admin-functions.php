@@ -1388,7 +1388,7 @@ function bp_member_type_custom_metaboxes() {
 
 	// Metabox for the profile type invite.
 	if ( true === bp_disable_invite_member_type() && bp_is_active( 'invites' ) ) {
-		add_meta_box( 'bp-member-type-invite', __( 'User Invites', 'buddyboss' ), 'bp_member_type_invite_meta_box', null, 'normal', 'high' );
+		add_meta_box( 'bp-member-type-invite', __( 'Email Invites', 'buddyboss' ), 'bp_member_type_invite_meta_box', null, 'normal', 'high' );
 	}
 }
 add_action( 'add_meta_boxes_' . bp_get_member_type_post_type(), 'bp_member_type_custom_metaboxes' );

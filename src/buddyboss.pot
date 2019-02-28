@@ -1733,7 +1733,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1391
 #: bp-core/bp-core-functions.php:2441
-msgid "User Invites"
+msgid "Email Invites"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1410
@@ -1874,7 +1874,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-pages.php:162
 msgid ""
-"Registration is currently disabled. If \"User Invites\" is enabled, invited "
+"Registration is currently disabled. If \"Email Invites\" is enabled, invited "
 "users will still be allowed to register new accounts. To enable "
 "registration, please select either the \"User accounts may be registered\" "
 "or \"Both sites and user accounts can be registered\" option on <a "
@@ -1883,7 +1883,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-pages.php:169
 msgid ""
-"Registration is currently disabled. If \"User Invites\" is enabled, invited "
+"Registration is currently disabled. If \"Email Invites\" is enabled, invited "
 "users will still be allowed to register new accounts. To enable "
 "registration, please click on the \"Anyone can register\" checkbox on <a "
 "href=\"%s\">this page</a>."
@@ -2373,7 +2373,7 @@ msgid "Invites"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-invites.php:33
-msgid "User Invites Settings"
+msgid "Email Invites Settings"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-invites.php:36
@@ -3316,7 +3316,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2435
-msgid "User Connections"
+msgid "Member Connections"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2437

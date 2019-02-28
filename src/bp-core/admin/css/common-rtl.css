@@ -366,82 +366,91 @@ tr.bp-search-parent-field td p.section-header {
 /*
  * 2.6 Settings - Cards
  */
-.buddyboss_page_bp-settings .card,
-.buddyboss_page_bp-integrations .card {
-	max-width: 100%;
+.bp-admin-card {
+	position: relative;
+    margin-top: 20px;
+    padding: 2.2em 3em 3em;
+    min-width: 255px;
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    background: #fff;
 }
 
-.buddyboss_page_bp-settings .card h2,
-.buddyboss_page_bp-integrations .card h2 {
+.bp-admin-card h2 {
 	background-repeat: no-repeat;
-	background-position: right center;
-	background-image: url(../../images/admin/icon_gear.svg);
-	background-size: 50px;
-	line-height: 50px;
-	padding-right: 73px;
-	font-size: 23px;
-	font-weight: 400;
+	background-position: right top;
+	background-image: url(../../images/admin/admin_icon-settings.png);
+	background-size: 40px;
+	line-height: 40px;
+	margin: 0 0 1em;
+	padding-right: 53px;
+	padding-bottom: 1.2em;
+	font-size: 22px;
+	font-weight: 600;
+	color: #333;
+	border-bottom: 1px solid #eaeaea;
 }
 
-.buddyboss_page_bp-settings .section-bp_main h2 {
-	background-image: url(../../images/admin/icon_gear.svg);
+.bp-admin-card.section-bp_main h2 {
+	background-image: url(../../images/admin/admin_icon-settings.png);
 }
 
-.buddyboss_page_bp-settings .section-bp_xprofile h2,
-.buddyboss_page_bp-settings .section-bp_profile_dashboard_settings h2,
-.buddyboss_page_bp-settings .section-bp_profile_search_settings h2,
-.buddyboss_page_bp-settings .section-bp_member_type_settings h2 {
-	background-image: url(../../images/admin/icon_user.svg);
+.bp-admin-card.section-bp_xprofile h2,
+.bp-admin-card.section-bp_profile_dashboard_settings h2,
+.bp-admin-card.section-bp_profile_search_settings h2,
+.bp-admin-card.section-bp_member_type_settings h2 {
+	background-image: url(../../images/admin/admin_icon-profiles.png);
 }
 
-.buddyboss_page_bp-settings .section-bp_activity h2 {
-	background-image: url(../../images/admin/icon_bell.svg);
+.bp-admin-card.section-bp_activity h2 {
+	background-image: url(../../images/admin/admin_icon-activity.png);
 }
 
-.buddyboss_page_bp-settings .section-bp_invites h2 {
-	background-image: url(../../images/admin/icon_mail.svg);
+.bp-admin-card.section-bp_invites h2 {
+	background-image: url(../../images/admin/admin_icon-invites.png);
 }
 
-.buddyboss_page_bp-settings .section-bp_groups h2,
-.buddyboss_page_bp-settings .section-bp_groups_types h2,
-.buddyboss_page_bp-settings .section-bp_groups_hierarchies h2 {
-	background-image: url(../../images/admin/icon_users.svg);
+.bp-admin-card.section-bp_groups h2,
+.bp-admin-card.section-bp_groups_types h2,
+.bp-admin-card.section-bp_groups_hierarchies h2 {
+	background-image: url(../../images/admin/admin_icon-groups.png);
 }
 
-.buddyboss_page_bp-settings .section-bp_friends h2 {
-	background-image: url(../../images/admin/icon_user-plus.svg);
+.bp-admin-card.section-bp_friends h2 {
+	background-image: url(../../images/admin/admin_icon-friends.png);
 }
 
-.buddyboss_page_bp-settings .section-bbp_settings_users h2,
-.buddyboss_page_bp-settings .section-bbp_settings_features h2,
-.buddyboss_page_bp-settings .section-bbp_settings_per_page h2,
-.buddyboss_page_bp-settings .section-bbp_settings_per_rss_page h2,
-.buddyboss_page_bp-settings .section-bbp_settings_root_slugs h2,
-.buddyboss_page_bp-settings .section-bbp_settings_single_slugs h2,
-.buddyboss_page_bp-settings .section-bbp_settings_buddypress h2 {
-	background-image: url(../../images/admin/icon_forums.svg);
+.bp-admin-card.section-bbp_settings_users h2,
+.bp-admin-card.section-bbp_settings_features h2,
+.bp-admin-card.section-bbp_settings_per_page h2,
+.bp-admin-card.section-bbp_settings_per_rss_page h2,
+.bp-admin-card.section-bbp_settings_root_slugs h2,
+.bp-admin-card.section-bbp_settings_single_slugs h2,
+.bp-admin-card.section-bbp_settings_buddypress h2 {
+	background-image: url(../../images/admin/admin_icon-forums.png);
 }
 
-.buddyboss_page_bp-integrations .section-bp_ld_sync-buddypress h2,
-.buddyboss_page_bp-integrations .section-bp_ld_sync-learndash h2,
-.buddyboss_page_bp-integrations .section-bp_ld_sync-reports h2 {
-	background-image: url(../../images/admin/icon_learndash.svg);
+.bp-admin-card.section-bp_search_settings_community h2,
+.bp-admin-card.section-bp_search_settings_post_types h2,
+.bp-admin-card.section-bp_search_settings_general h2 {
+	background-image: url(../../images/admin/admin_icon-search.png);
 }
 
-.buddyboss_page_bp-settings .section-bp_search_settings_community h2,
-.buddyboss_page_bp-settings .section-bp_search_settings_post_types h2,
-.buddyboss_page_bp-settings .section-bp_search_settings_general h2 {
-	background-image: url(../../images/admin/icon_search.svg);
-}
-
-.buddyboss_page_bp-settings .section-bp_search_settings_community table,
-.buddyboss_page_bp-settings .section-bp_search_settings_post_types table {
+.bp-admin-card.section-bp_search_settings_community table,
+.bp-admin-card.section-bp_search_settings_post_types table {
 	margin-bottom: 20px;
 }
 
-.buddyboss_page_bp-settings .section-bp_search_settings_community th[scope="row"],
-.buddyboss_page_bp-settings .section-bp_search_settings_post_types th[scope="row"] {
+.bp-admin-card.section-bp_search_settings_community th[scope="row"],
+.bp-admin-card.section-bp_search_settings_post_types th[scope="row"] {
 	width: 1px;
+}
+
+.bp-admin-card.section-bp_ld_sync-buddypress h2,
+.bp-admin-card.section-bp_ld_sync-learndash h2,
+.bp-admin-card.section-bp_ld_sync-reports h2 {
+	background-image: url(../../images/admin/admin_icon-learndash.png);
 }
 
 /*
