@@ -2413,7 +2413,7 @@ function bp_core_get_components( $type = 'all' ) {
 
 	$required_components = array(
 		'members' => array(
-			'title'       => __( 'User Profiles', 'buddyboss' ),
+			'title'       => __( 'Member Profiles', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-xprofile' ) , 'admin.php' ) ),
 			'description' => __( 'Everything in a community website revolves around its members.', 'buddyboss' ),
 		),
@@ -2432,13 +2432,13 @@ function bp_core_get_components( $type = 'all' ) {
 			'default'     => true,
 		),
 		'friends'  => array(
-			'title'       => __( 'User Connections', 'buddyboss' ),
+			'title'       => __( 'Member Connections', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-friends' ) , 'admin.php' ) ),
 			'description' => __( 'Allow members to make connections with one another and focus on those they care about most.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'invites'  => array(
-			'title'       => __( 'User Invites', 'buddyboss' ),
+			'title'       => __( 'Email Invites', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-invites' ) , 'admin.php' ) ),
 			'description' => __( 'Allow members to send email invitations for non-members to join the network.', 'buddyboss' ),
 			'default'     => false,
