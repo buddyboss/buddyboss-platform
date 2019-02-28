@@ -66,6 +66,11 @@ TABLE OF CONTENTS:
 
 .bp-about-wrap .card {
 	max-width: 100%;
+	background: #fff;
+    border: 1px solid #ddd;
+    box-shadow: none;
+    margin: 1em 0 0;
+    padding: 2em;
 }
 
 .bp-about-wrap img {
@@ -81,67 +86,27 @@ TABLE OF CONTENTS:
 }
 
 .bp-about-wrap h2 {
-	margin: 40px 0 0.6em;
-	font-size: 2.7em;
-	line-height: 1.3;
-	font-weight: 300;
-	text-align: center;
-}
-
-.bp-about-wrap h3 {
-	margin: 1.25em 0 0.6em;
-	font-size: 1.4em;
-	line-height: 1.5;
-}
-
-.bp-about-wrap code {
-	font-size: 14px;
+	font-size: 23px;
 	font-weight: 400;
-}
-
-.bp-about-wrap h3.wp-people-group {
-	margin: 1.33em 0;
-	padding: 0;
-	font-size: 16px;
-	line-height: inherit;
-}
-
-.bp-about-wrap .wp-people-group {
-	padding: 0 5px;
-	margin: 0 -5px 0 -15px;
-}
-
-.bp-about-wrap .compact {
-	margin-bottom: 0;
+	margin: 0;
+	padding: 9px 0 4px 0;
+	line-height: 29px;
 }
 
 .bp-about-wrap .wp-person {
 	display: inline-block;
 	vertical-align: top;
 	margin-left: 10px;
-	padding-bottom: 7px;
 	height: 70px;
 	width: 280px;
-}
-
-.bp-about-wrap .compact .wp-person {
-	height: auto;
-	width: 180px;
-	padding-bottom: 0;
-	margin-bottom: 0;
 }
 
 .bp-about-wrap .wp-person .gravatar {
 	float: right;
 	margin: 0 0 10px 10px;
-	border: 1px solid #ccc;
+	border-radius: 100%;
 	width: 60px;
 	height: 60px;
-}
-
-.bp-about-wrap .compact .wp-person .gravatar {
-	width: 30px;
-	height: 30px;
 }
 
 .bp-about-wrap .wp-person .web {
@@ -375,6 +340,11 @@ tr.bp-search-parent-field td p.section-header {
     border-radius: 8px;
     box-shadow: 0 1px 1px rgba(0,0,0,.04);
     background: #fff;
+}
+
+.bp-admin-card .form-table td p {
+	color: #999;
+	margin-top: 6px;
 }
 
 .bp-admin-card h2 {
