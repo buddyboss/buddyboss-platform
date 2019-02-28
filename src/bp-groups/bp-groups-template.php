@@ -3841,7 +3841,7 @@ function bp_group_join_button( $group = false ) {
 									'wrapper_class'     => 'group-button ' . $group->status,
 									'wrapper_id'        => 'groupbutton-' . $group->id,
 									'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
-									'link_text'         => __( 'Request Membership', 'buddyboss' ),
+									'link_text'         => __( 'Request Access', 'buddyboss' ),
 									'link_class'        => 'group-button request-membership',
 								);
 							}
@@ -3855,7 +3855,7 @@ function bp_group_join_button( $group = false ) {
 								'wrapper_class'     => 'group-button ' . $group->status,
 								'wrapper_id'        => 'groupbutton-' . $group->id,
 								'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
-								'link_text'         => __( 'Request Membership', 'buddyboss' ),
+								'link_text'         => __( 'Request Access', 'buddyboss' ),
 								'link_class'        => 'group-button request-membership',
 							);
 						}
