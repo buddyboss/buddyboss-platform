@@ -377,7 +377,8 @@ tr.bp-custom-post-type-child-field td {
 	background-image: url(../../images/admin/admin_icon-profiles.png);
 }
 
-.bp-admin-card.section-bp_activity h2 {
+.bp-admin-card.section-bp_activity h2,
+.buddyboss_page_bp-settings .section-bp_custom_post_type h2 {
 	background-image: url(../../images/admin/admin_icon-activity.png);
 }
 
