@@ -328,6 +328,10 @@ tr.bp-search-parent-field td p.section-header {
 	margin: 0 0 20px;
 }
 
+tr.bp-custom-post-type-child-field td {
+	padding: 6px 40px;
+}
+
 /*
  * 2.6 Settings - Cards
  */
