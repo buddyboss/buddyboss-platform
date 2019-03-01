@@ -75,6 +75,11 @@ function bp_core_install( $active_components = false ) {
 	if ( !empty( $active_components['forums'] ) ) {
 		bp_core_install_discussion_forums();
 	}
+
+	// Media
+	if ( !empty( $active_components['media'] ) ) {
+		bp_core_install_media();
+	}
 }
 
 function bp_core_uninstall( $uninstalled_components ) {
@@ -545,6 +550,52 @@ function bp_core_install_discussion_forums() {
  */
 function bp_core_uninstall_discussion_forums() {
 	bbp_deactivation();
+}
+
+/** Media *********************************************************/
+
+/**
+ * Install database tables for Media component.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_core_install_media() {
+	$sql             = array();
+	$charset_collate = $GLOBALS['wpdb']->get_charset_collate();
+	$bp_prefix       = bp_core_get_table_prefix();
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_media_albums (
+	   id bigint(20) NOT NULL AUTO_INCREMENT,
+	   user_id bigint(20) NOT NULL,
+	   group_id bigint(20) NULL,
+	   date_created datetime NULL DEFAULT '0000-00-00',
+	   title text NOT NULL,
+	   description text NULL,
+	   total_items mediumint(9) NULL DEFAULT '0',
+	   privacy varchar(50) NULL DEFAULT 'public',
+	   PRIMARY KEY  (id)
+   ) {$charset_collate};";
+
+	$sql[] = "CREATE TABLE {$bp_prefix}bp_media (
+		id bigint(20) NOT NULL AUTO_INCREMENT ,
+		blog_id bigint(20) NULL DEFAULT NULL,
+		media_id bigint(20) NOT NULL ,
+		media_author bigint(20) NOT NULL,
+		media_title text,
+		album_id bigint(20),
+		activity_id bigint(20) NULL DEFAULT NULL ,
+		privacy varchar(50) NULL DEFAULT 'public',
+		favorites bigint(20) NULL DEFAULT 0 ,
+		upload_date datetime DEFAULT '0000-00-00 00:00:00',
+		PRIMARY KEY  (id),
+		KEY media_id (media_id),
+		KEY media_author (media_author),
+		KEY album_id (album_id),
+		KEY media_author_id (album_id,media_author),
+		KEY activity_id (activity_id)
+	) {$charset_collate};";
+
+	dbDelta( $sql );
 }
 
 /** Signups *******************************************************************/

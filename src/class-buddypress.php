@@ -327,7 +327,7 @@ class BuddyPress {
 		/** Versions **********************************************************/
 
 		$this->version    = '1.0.0';
-		$this->db_version = 13510;
+		$this->db_version = 13610;
 
 		/** Loading ***********************************************************/
 
@@ -543,7 +543,6 @@ class BuddyPress {
 		require( $this->plugin_dir . 'bp-core/bp-core-learndash-emails.php' );
 		require( $this->plugin_dir . 'bp-core/bp-core-mepr-emails.php'      );
 		require( $this->plugin_dir . 'bp-core/bp-core-profile-search.php'   );
-		require( $this->plugin_dir . 'bp-core/bp-core-media.php'            );
 		require( $this->plugin_dir . 'bp-core/bp-core-gdpr.php'             );
 
 		// Maybe load deprecated buddypress functionality (this double negative is proof positive!)
@@ -604,6 +603,7 @@ class BuddyPress {
 			'profiletype',
 			'forums',
 			'search',
+			'media',
 			'gdpr',
 			'invites',
 		);

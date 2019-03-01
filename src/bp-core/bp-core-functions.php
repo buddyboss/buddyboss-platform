@@ -2481,6 +2481,12 @@ function bp_core_get_components( $type = 'all' ) {
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-search' ) , 'admin.php' ) ),
 			'description' => __( 'Allow members to search the entire network, along with custom post types of your choice, all in one unified search bar.', 'buddyboss' ),
 			'default'     => false,
+		),
+		'media'   => array(
+			'title'       => __( 'Media', 'buddyboss' ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-media' ) , 'admin.php' ) ),
+			'description' => __( 'Allow members to upload photos into activity posts and create albums.', 'buddyboss' ),
+			'default'     => false,
 		)
 	);
 
