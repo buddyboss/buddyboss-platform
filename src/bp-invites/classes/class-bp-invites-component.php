@@ -211,7 +211,7 @@ class BP_Invites_Component extends BP_Component {
 				$user_domain = false;
 			}
 
-			$nav_name = __( 'Send Invites', 'buddyboss' );
+			$nav_name = __( 'Email Invites', 'buddyboss' );
 
 			$slug = bp_get_invites_slug();
 
