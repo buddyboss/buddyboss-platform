@@ -92,7 +92,7 @@ add_filter( 'template_include', 'bp_search_override_wp_native_results', 999 ); /
 
 function bp_search_override_wp_native_results( $template ) {
 
-	if ( is_search() ) { //if search page.
+	if ( bp_search_is_search() ) { //if search page.
 
 
 		$live_template = locate_template( array(
@@ -126,7 +126,7 @@ add_filter( 'template_include', 'bp_search_result_page_dummy_post_load', 999 ); 
 function bp_search_result_page_dummy_post_load( $template ) {
 	global $wp_query;
 
-	if ( ! is_search() ) { //cancel if not search page.
+	if ( ! bp_search_is_search() ) { //cancel if not search page.
 		return $template;
 	}
 
@@ -187,7 +187,7 @@ add_filter( 'pre_get_posts', 'bp_search_clear_native_search_query' );
 
 function bp_search_clear_native_search_query( $query ) {
 
-	if ( $query->is_search && ! is_admin() ) {
+	if ( bp_search_is_search() ) {
 
 		remove_filter( 'pre_get_posts', 'bp_search_clear_native_search_query' ); //only do first time
 

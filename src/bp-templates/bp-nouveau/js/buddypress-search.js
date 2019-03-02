@@ -107,6 +107,17 @@ jQuery(document).ready(function($) {
 
 					};
 
+					/**
+					 * Add hidden input as a flag in a search form. If this hidden input exist in a search form,
+					 * it'll sprint network search feature of the platform in the search query.
+					 */
+					if ( ! $( 'input[name="bp_search"]', $form ).length ) {
+						$( '<input>' ).attr( {
+							type: 'hidden',
+							name: 'bp_search',
+							value: '1',
+						} ).appendTo( $form );
+					}
 				}
 			});
 
