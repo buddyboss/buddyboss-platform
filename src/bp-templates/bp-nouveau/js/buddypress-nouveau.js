@@ -46,9 +46,6 @@ window.bp = window.bp || {};
 
 			this.sentInvitesFormValidate();
 
-			//this.memberPreFilter();
-			$.ajaxPrefilter( this.memberPreFilter );
-			$.ajaxPrefilter( this.groupPreFilter );
 		},
 
 		/**
@@ -473,6 +470,10 @@ window.bp = window.bp || {};
 			// Filtering
 			$( document ).on( 'change', '#buddypress [data-bp-filter]', this, this.filterQuery );
 
+			// Group Type & Member Type Filter
+			$( document ).on( 'change', '#buddypress [data-bp-group-type-filter]', this, this.typeGroupFilterQuery );
+			$( document ).on( 'change', '#buddypress [data-bp-member-type-filter]', this, this.typeMemberFilterQuery );
+
 			// Searching
 			$( '#buddypress [data-bp-search]' ).on( 'submit', 'form', this, this.searchQuery );
 			$( '#buddypress [data-bp-search] form' ).on( 'search', 'input[type=search]', this.resetSearch );
@@ -877,6 +878,80 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * [typeGroupFilterQuery description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		typeGroupFilterQuery: function( event ) {
+			var self = event.data, object = $( event.target ).data( 'bp-group-type-filter' ),
+				scope = 'all', filter = $( event.target ).val(),
+				search_terms = '', template = null;
+
+			if ( ! object ) {
+				return event;
+			}
+
+			if ( $( self.objectNavParent + ' [data-bp-object].selected' ).length ) {
+				scope = $( self.objectNavParent + ' [data-bp-object].selected' ).data( 'bp-scope' );
+			}
+
+			if ( $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).length ) {
+				search_terms = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).val();
+			}
+
+			if ( 'friends' === object ) {
+				object = 'members';
+			}
+
+			self.objectRequest( {
+				object       : object,
+				scope        : scope,
+				filter       : filter,
+				search_terms : search_terms,
+				page         : 1,
+				template     : template,
+				group_type   : $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).val()
+			} );
+		},
+
+		/**
+		 * [typeMemberFilterQuery description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		typeMemberFilterQuery: function( event ) {
+			var self = event.data, object = $( event.target ).data( 'bp-member-type-filter' ),
+				scope = 'all', filter = $( event.target ).val(),
+				search_terms = '', template = null;
+
+			if ( ! object ) {
+				return event;
+			}
+
+			if ( $( self.objectNavParent + ' [data-bp-object].selected' ).length ) {
+				scope = $( self.objectNavParent + ' [data-bp-object].selected' ).data( 'bp-scope' );
+			}
+
+			if ( $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).length ) {
+				search_terms = $( '#buddypress [data-bp-search="' + object + '"] input[type=search]' ).val();
+			}
+
+			if ( 'friends' === object ) {
+				object = 'members';
+			}
+
+			self.objectRequest( {
+				object         : object,
+				scope          : scope,
+				filter         : filter,
+				search_terms   : search_terms,
+				page           : 1,
+				template       : template,
+				member_type_id : $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).val()
+			} );
+		},
+
+		/**
 		 * [searchQuery description]
 		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
@@ -1225,18 +1300,6 @@ window.bp = window.bp || {};
 
 			// Request the page
 			self.objectRequest( queryData );
-		},
-		memberPreFilter: function( options ) {
-			if ( typeof options.data === 'string' && -1 !== options.data.indexOf('action=members_filter') ) {
-				var	member_type_id = $('#member-type-order-by').find(':selected').val();
-				options.data += '&member_type_id=' + member_type_id;
-			}
-		},
-		groupPreFilter: function( options ) {
-			if ( typeof options.data === 'string' && -1 !== options.data.indexOf('action=groups_filter') ) {
-				var	group_type = $('#group-type-order-by').find(':selected').val();
-				options.data += '&group_type=' + group_type;
-			}
 		}
 	};
 
