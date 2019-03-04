@@ -2482,6 +2482,7 @@ function bp_get_possible_parent_groups( $group_id = false, $user_id = false ) {
 		'show_hidden'     => true,
 		'per_page'        => false, // Do not limit the number returned.
 		'page'            => false, // Do not limit the number returned.
+		'user_id'         => $user_id, // get loggedin users groups
 	), 'get_possible_parent_groups'  );
 
 	$possible_parents = groups_get_groups( $args );
