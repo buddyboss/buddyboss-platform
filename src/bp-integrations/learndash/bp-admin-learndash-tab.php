@@ -16,6 +16,8 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		if ($values = bp_ld_sync()->getRequest($settings->getName())) {
 			$settings->set(null, $values)->update();
 		}
+
+		do_action('bp_integrations_learndash_fields_updated', $settings);
 	}
 
 	public function register_fields() {
