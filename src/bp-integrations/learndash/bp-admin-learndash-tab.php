@@ -104,7 +104,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_checkbox_field(
 			'delete_ld_on_delete',
-			__('Delete LearnDash Group', 'buddyboss'),
+			__('Auto Delete LearnDash Group', 'buddyboss'),
 			[
 				'input_text' => __( 'Automatically delete the associated LearnDash group when the social group is deleted', 'buddyboss' ),
 				'input_description' => __( '(Uncheck this to delete the group manually)', 'buddyboss' ),
@@ -217,7 +217,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_checkbox_field(
 			'delete_bp_on_delete',
-			__('Delete Social Group', 'buddyboss'),
+			__('Auto Delete Social Group', 'buddyboss'),
 			[
 				'input_text' => __( 'Automatically delete the associated Social Group when the LearnDash group is deleted', 'buddyboss' ),
 				'class' => 'js-show-on-learndash_enabled'
