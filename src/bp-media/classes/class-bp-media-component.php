@@ -71,6 +71,7 @@ class BP_Media_Component extends BP_Component {
 	 */
 	public function includes( $includes = array() ) {
 		$includes = array(
+			'cssjs',
 			'template',
 			'functions',
 			'settings',

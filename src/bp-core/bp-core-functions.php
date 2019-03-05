@@ -482,6 +482,7 @@ function bp_core_get_packaged_component_ids() {
 		'blogs',
 		'xprofile',
 		'friends',
+		'media',
 		'messages',
 		'settings',
 		'notifications',

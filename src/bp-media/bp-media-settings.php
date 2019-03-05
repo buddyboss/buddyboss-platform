@@ -23,6 +23,7 @@ function bp_media_get_settings_sections() {
 		'bp_media_settings_general' => array(
 			'page'  => 'media',
 			'title' => __( 'Media Settings', 'buddyboss' ),
+			'callback' => 'bp_media_settings_callback_general_section',
 		),
 	);
 
@@ -30,6 +31,7 @@ function bp_media_get_settings_sections() {
 		$settings['bp_media_settings_groups'] = array(
 			'page'  => 'media',
 			'title' => __( 'Groups', 'buddyboss' ),
+			'callback' => 'bp_media_settings_callback_groups_section',
 		);
 	}
 
@@ -37,6 +39,7 @@ function bp_media_get_settings_sections() {
 		$settings['bp_media_settings_forums'] = array(
 			'page'  => 'media',
 			'title' => __( 'Forums', 'buddyboss' ),
+			'callback' => 'bp_media_settings_callback_forums_section',
 		);
 	}
 
@@ -60,60 +63,70 @@ function bp_media_get_settings_fields() {
 			'title'             => __( 'User Photos Slug', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_user_photos_slug',
 			'sanitize_callback' => 'string',
+			'args'              => []
 		],
 
 		'bp_media_all_media_page' => [
 			'title'             => __( 'Global Photos Page', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_all_media_page',
 			'sanitize_callback' => 'string',
+			'args'              => []
 		],
 
 		'bp_media_activity_photo_size' => [
 			'title'             => __( 'Activity Photo Size', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_activity_photo_size',
 			'sanitize_callback' => 'string',
+			'args'              => []
 		],
 
 		'bp_media_activity_photo_layout' => [
 			'title'             => __( 'Photo Layout', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_activity_photo_layout',
 			'sanitize_callback' => 'string',
+			'args'              => []
 		],
 
 		'bp_media_enable_tagging' => [
 			'title'             => __( 'Friend Tagging', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_enable_tagging',
 			'sanitize_callback' => 'absint',
+			'args'              => []
 		],
 
 		'bp_media_files_per_batch' => [
 			'title'             => __( 'Files Per Batch', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_files_per_batch',
 			'sanitize_callback' => 'absint',
+			'args'              => []
 		],
 
 		'bp_media_files_rotation_fix' => [
 			'title'             => __( 'Mobile Rotation Fix', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_files_rotation_fix',
 			'sanitize_callback' => 'absint',
+			'args'              => []
 		],
 
 		'bp_media_delete_media_permanently' => [
 			'title'             => __( 'Media Management', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_delete_media_permanently',
 			'sanitize_callback' => 'absint',
+			'args'              => []
 		],
 
 		'bp_media_enable_js_debug' => [
 			'title'             => __( 'Enable Unminified JS', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_enable_js_debug',
 			'sanitize_callback' => 'absint',
+			'args'              => []
 		],
 
 		'bp_media_show_uploadbox' => [
 			'title'             => __( 'Disable Upload Box', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_show_uploadbox',
 			'sanitize_callback' => 'absint',
+			'args'              => []
 		],
 
 	];
@@ -125,12 +138,14 @@ function bp_media_get_settings_fields() {
 				'title'             => __( 'Group Media', 'buddyboss' ),
 				'callback'          => 'bp_media_settings_callback_group_media_support',
 				'sanitize_callback' => 'absint',
+				'args'              => []
 			],
 
 			'bp_media_group_albums' => [
 				'title'             => __( 'Group Albums', 'buddyboss' ),
 				'callback'          => 'bp_media_settings_callback_group_albums',
 				'sanitize_callback' => 'absint',
+				'args'              => []
 			],
 		];
 	}
@@ -142,6 +157,7 @@ function bp_media_get_settings_fields() {
 				'title'             => __( 'Forums Media', 'buddyboss' ),
 				'callback'          => 'bp_media_settings_callback_forums_media_support',
 				'sanitize_callback' => 'absint',
+				'args'              => []
 			],
 
 		];
@@ -223,6 +239,24 @@ function bp_media_get_form_option( $option, $default = '', $slug = false ) {
 
 	// Allow plugins to further filter the output
 	return apply_filters( 'bp_media_get_form_option', $value, $option );
+}
+
+function bp_media_settings_callback_general_section() {
+	?>
+    <p><?php esc_html_e( 'General Media Settings', 'buddyboss' ) ?></p>
+	<?php
+}
+
+function bp_media_settings_callback_groups_section() {
+	?>
+    <p><?php esc_html_e( 'Groups Media Settings', 'buddyboss' ) ?></p>
+	<?php
+}
+
+function bp_media_settings_callback_forums_section() {
+	?>
+    <p><?php esc_html_e( 'Forums Media Settings', 'buddyboss' ) ?></p>
+	<?php
 }
 
 /**

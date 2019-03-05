@@ -22,6 +22,13 @@
 	<?php bp_nouveau_activity_hook( '', 'post_form_options' ); ?>
 </script>
 
+<script type="text/html" id="tmpl-activity-post-options-media">
+	<a href="#" class="activity-post-form-media">Media</a>
+    <div class="activity-post-form-media-uploader-wrapper" style="display: none;">
+        <div class="dropzone" id="activity-post-form-media-uploader"></div>
+    </div>
+</script>
+
 <script type="text/html" id="tmpl-activity-post-form-buttons">
 	<button type="button" class="button dashicons {{data.icon}}" data-button="{{data.id}}"><span class="bp-screen-reader-text">{{data.caption}}</span></button>
 </script>
