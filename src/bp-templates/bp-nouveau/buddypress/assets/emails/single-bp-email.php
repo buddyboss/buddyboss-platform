@@ -220,7 +220,7 @@ $settings = bp_email_get_appearance_settings();
 						if ( !empty( $attachment_id ) ) {
 							$image_src = wp_get_attachment_image_src( $attachment_id, array( 180, 41 ) );
 							if ( !empty( $image_src ) ) {
-								echo "<img src='" . esc_attr( $image_src[ 0 ] ) . "' alt='" . esc_attr( $blogname ) . "' style='margin:0; padding:0; border:none; display:block; max-height: 41px; width: auto;' border='0'>";
+								echo "<img src='" . esc_attr( $image_src[ 0 ] ) . "' alt='" . esc_attr( $blogname ) . "' style='margin:0; padding:0; border:none; display:block; max-height: auto; width: auto;' border='0'>";
 							} else {
 								echo $blogname;
 							}

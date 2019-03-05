@@ -442,3 +442,35 @@ function bp_admin_setting_callback_member_invite_member_type() {
     <p class="description"><?php _e( 'Customize this setting via Dashboard->Users->Profile Types', 'buddyboss' ); ?></p>
 	<?php
 }
+
+/**
+ * Allow Post Type feed setting field
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $args array
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_feed_settings_callback_post_type( $args ) {
+
+	$post_type   = $args['post_type'];
+	$option_name = 'bp-feed-custom-post-type-' . $post_type;
+
+	$post_type_obj = get_post_type_object( $post_type );
+	?>
+	<input
+		name="<?php echo $option_name ?>"
+		id="<?php echo $option_name ?>"
+		type="checkbox"
+		value="1"
+		<?php checked( bp_is_post_type_feed_enable( $post_type, false ) ) ?>
+	/>
+	<label for="<?php echo $option_name ?>">
+		<?php echo $post_type === 'post' ? esc_html__( 'Blog Posts', 'buddyboss' ) : $post_type_obj->labels->name ?>
+	</label>
+	<?php
+
+}
+
+

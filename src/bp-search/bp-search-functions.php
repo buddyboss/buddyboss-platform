@@ -449,7 +449,7 @@ add_filter( 'body_class', 'bp_search_body_class', 10, 1 );
  */
 function bp_search_body_class( $wp_classes ) {
 
-	if ( is_search() ) { //if search page.
+	if ( bp_search_is_search() ) { //if search page.
 		$wp_classes[] = 'buddypress';
 		$wp_classes[] = 'directory';
 	}
@@ -502,4 +502,14 @@ function bp_search_get_total_quizzes_count( $lesson_id ) {
 	$quiz_ids = learndash_course_get_children_of_step( $course_id, $lesson_id, 'sfwd-quiz' );
 
 	return count( $quiz_ids );
+}
+
+/**
+ * Determines whether the query is for a network search.
+ *
+ * @since BuddyBoss 1.0.0
+ * @return bool
+ */
+function bp_search_is_search() {
+	return ! is_admin() && is_search() && isset( $_REQUEST['bp_search'] );
 }

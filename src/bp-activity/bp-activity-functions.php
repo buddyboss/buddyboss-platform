@@ -3525,7 +3525,12 @@ function bp_activity_create_summary( $content, $activity ) {
 
 	// If we converted $content to an object earlier, flip it back to a string.
 	if ( is_a( $content, 'WP_Post' ) ) {
-		$content = $content->post_content;
+
+		// For the post and custom post type get the excerpt first.
+		$excerpt = get_the_excerpt( $content->ID );
+
+		// Get the excerpt first if found otherwise it will take the post content.
+		$content = ( $excerpt )?:$content->post_content;
 	}
 
 	$para_count     = substr_count( strtolower( wpautop( $content ) ), '<p>' );
@@ -4574,3 +4579,207 @@ function bp_remove_follow_data( $user_id ) {
 add_action( 'wpmu_delete_user',	'bp_remove_follow_data' );
 add_action( 'delete_user',	'bp_remove_follow_data' );
 add_action( 'make_spam_user',	'bp_remove_follow_data' );
+
+/**
+ * Update the custom post type activity feed after the attachment attached to that particular custom post type.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $post_id
+ * @param $post
+ * @param $update
+ */
+function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update ) {
+
+	// check is WP_Post if not then return
+	if ( ! is_a( $post, 'WP_Post' ) ) {
+		return;
+	}
+
+	if ( 'post' === $post->post_type ) {
+		return;
+	}
+
+	$enabled = bp_is_post_type_feed_enable( $post->post_type );
+
+	// If enabled update the activity.
+	if ( $enabled  ) {
+
+		// Get the post type tracking args.
+		$activity_post_object = bp_activity_get_post_type_tracking_args( $post->post_type );
+
+		if ( empty( $activity_post_object->action_id ) ) {
+			return;
+		}
+
+		// Get the existing activity id based on the post.
+		$activity_id = bp_activity_get_activity_id( array(
+			'component'         => $activity_post_object->component_id,
+			'item_id'           => get_current_blog_id(),
+			'secondary_item_id' => $post->ID,
+			'type'              => $activity_post_object->action_id,
+		) );
+
+		// Activity ID doesn't exist, so stop!
+		if ( empty( $activity_id ) ) {
+			return;
+		}
+
+		// Delete the activity if the post was updated with a password.
+		if ( ! empty( $post->post_password ) ) {
+			bp_activity_delete( array( 'id' => $activity_id ) );
+		}
+
+		// Update the activity entry.
+		$activity = new BP_Activity_Activity( $activity_id );
+
+		// get the excerpt first of post.
+		$excerpt = get_the_excerpt( $post->ID );
+
+		// if excert found then take content as a excerpt otherwise take the content as a post content.
+		$content = ( $excerpt ) ?: $post->post_content;
+
+		// If content not empty.
+		if ( ! empty( $content ) ) {
+			$activity_summary = bp_activity_create_summary( $content, (array) $activity );
+
+			$src = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full', false );
+
+			if ( isset( $src[0] ) ) {
+				$activity_summary .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+			}
+			// Backward compatibility filter for the blogs component.
+			if ( 'blogs' == $activity_post_object->component_id ) {
+				$activity->content = apply_filters( 'bp_update_activity_feed_of_custom_post_content',
+					$activity_summary,
+					$content,
+					(array) $activity,
+					$post->post_type );
+			} else {
+				$activity->content = $activity_summary;
+			}
+		} else {
+
+			$src              = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full', false );
+			$activity_summary = '';
+			if ( isset( $src[0] ) ) {
+				$activity_summary = sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+			}
+
+			// Backward compatibility filter for the blogs component.
+			if ( 'blogs' == $activity_post_object->component_id ) {
+				$activity->content = apply_filters( 'bp_update_activity_feed_of_custom_post_content',
+					$activity_summary,
+					$post->post_content,
+					(array) $activity,
+					$post->post_type );
+			} else {
+				$activity->content = $activity_summary;
+			}
+		}
+
+		// Save the updated activity.
+		$updated = $activity->save();
+
+	}
+
+}
+add_action( 'save_post', 'bp_update_activity_feed_of_custom_post_type', 88, 3 );
+
+
+/**
+ * Update the post activity feed after the attachment attached to that particular post.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $post
+ * @param $request
+ * @param $action
+ */
+function bp_update_activity_feed_of_post( $post, $request, $action ) {
+
+	// check is WP_Post if not then return
+	if ( ! is_a( $post, 'WP_Post' ) ) {
+		return;
+	}
+
+	$enabled = bp_is_post_type_feed_enable( $post->post_type );
+
+	// If enabled update the activity.
+	if ( $enabled  ) {
+
+		// Get the post type tracking args.
+		$activity_post_object = bp_activity_get_post_type_tracking_args( $post->post_type );
+
+		if ( empty( $activity_post_object->action_id ) ) {
+			return;
+		}
+
+		// Get the existing activity id based on the post.
+		$activity_id = bp_activity_get_activity_id( array(
+			'component'         => $activity_post_object->component_id,
+			'item_id'           => get_current_blog_id(),
+			'secondary_item_id' => $post->ID,
+			'type'              => $activity_post_object->action_id,
+		) );
+
+		// Activity ID doesn't exist, so stop!
+		if ( empty( $activity_id ) ) {
+			return;
+		}
+
+		// Delete the activity if the post was updated with a password.
+		if ( ! empty( $post->post_password ) ) {
+			bp_activity_delete( array( 'id' => $activity_id ) );
+		}
+
+		// Update the activity entry.
+		$activity = new BP_Activity_Activity( $activity_id );
+
+		// get the excerpt first of post.
+		$excerpt = get_the_excerpt( $post->ID );
+
+		// if excert found then take content as a excerpt otherwise take the content as a post content.
+		$content = ( $excerpt ) ?: $post->post_content;
+
+		// If content not empty.
+		if ( ! empty( $content ) ) {
+			$activity_summary = bp_activity_create_summary( $content, (array) $activity );
+
+			// Backward compatibility filter for the blogs component.
+			if ( 'blogs' == $activity_post_object->component_id ) {
+				$activity->content = apply_filters( 'bp_update_activity_feed_of_custom_post_content',
+					$activity_summary,
+					$content,
+					(array) $activity,
+					$post->post_type );
+			} else {
+				$activity->content = $activity_summary;
+			}
+		} else {
+
+			$src              = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full', false );
+			$activity_summary = '';
+			if ( isset( $src[0] ) ) {
+				$activity_summary = sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+			}
+
+			// Backward compatibility filter for the blogs component.
+			if ( 'blogs' == $activity_post_object->component_id ) {
+				$activity->content = apply_filters( 'bp_update_activity_feed_of_custom_post_content',
+					$activity_summary,
+					$post->post_content,
+					(array) $activity,
+					$post->post_type );
+			} else {
+				$activity->content = $activity_summary;
+			}
+		}
+
+		// Save the updated activity.
+		$updated = $activity->save();
+
+	}
+
+}
+add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 );

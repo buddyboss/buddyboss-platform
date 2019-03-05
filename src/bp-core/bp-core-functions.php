@@ -3242,6 +3242,7 @@ function bp_email_get_appearance_settings() {
 		'footer_text_color' => '#7F868F',
 		'footer_text_size'  => 12,
 		'highlight_color'   => '#007CFF',
+        'site_title_logo_size'  => 	150,
 		'site_title_text_color' => '#122B46',
 		'site_title_text_size'  => 	20,
 		'recipient_text_color'	=> '#7F868F',
@@ -3906,7 +3907,7 @@ function bp_check_member_send_invites_tab_member_type_allowed() {
 
 	// Check BuddyBoss > Settings > Profiles > Enable profile types to give members unique profile fields and permission.
 	if ( true === bp_member_type_enable_disable() ) {
-		// Check BuddyBoss > Settings > User Invites > Allow users to select profile type of invitee.
+		// Check BuddyBoss > Settings > Email Invites > Allow users to select profile type of invitee.
 		if ( true === bp_disable_invite_member_type() ) {
 			$current_user = bp_loggedin_user_id();
 			$member_type = bp_get_member_type( $current_user );
@@ -4018,3 +4019,30 @@ function bp_get_widget_max_count_limit( $widget_class = '' ) {
 	return apply_filters( 'bp_get_widget_max_count_limit', 50, $widget_class );
 }
 
+/**
+ * Returns the active custom post type activity feed CPT array.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return array
+ */
+function bp_core_get_active_custom_post_type_feed() {
+
+	// Get site-wide all the CPT array.
+	$custom_post_types = bp_get_option( 'bp_core_admin_get_active_custom_post_type_feed', array());
+
+	$cpt_arr = array();
+	foreach ( $custom_post_types as $single_post ) {
+
+		// check custom post type feed is enabled from the BuddyBoss > Settings > Activity > Custom Post Types metabox settings.
+		$enabled = bp_is_post_type_feed_enable( $single_post );
+
+		// If enabled put in $cpt_arr
+		if ( $enabled  ) {
+			$cpt_arr[] = $single_post;
+		}
+
+	}
+
+	return $cpt_arr;
+}

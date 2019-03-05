@@ -667,7 +667,7 @@ class BP_Groups_Component extends BP_Component {
 			if ( groups_check_for_membership_request( bp_loggedin_user_id(), $this->current_group->id ) || bp_current_user_can( 'groups_request_membership', array( 'group_id' => $this->current_group->id ) ) ) {
 
 				$sub_nav[] = array(
-					'name'            => __( 'Request Membership', 'buddyboss' ),
+					'name'            => __( 'Request Access', 'buddyboss' ),
 					'slug'            => 'request-membership',
 					'parent_url'      => $group_link,
 					'parent_slug'     => $this->current_group->slug,

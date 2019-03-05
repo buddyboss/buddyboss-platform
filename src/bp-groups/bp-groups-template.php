@@ -2482,6 +2482,7 @@ function bp_get_possible_parent_groups( $group_id = false, $user_id = false ) {
 		'show_hidden'     => true,
 		'per_page'        => false, // Do not limit the number returned.
 		'page'            => false, // Do not limit the number returned.
+		'user_id'         => $user_id, // get loggedin users groups
 	), 'get_possible_parent_groups'  );
 
 	$possible_parents = groups_get_groups( $args );
@@ -3841,7 +3842,7 @@ function bp_group_join_button( $group = false ) {
 									'wrapper_class'     => 'group-button ' . $group->status,
 									'wrapper_id'        => 'groupbutton-' . $group->id,
 									'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
-									'link_text'         => __( 'Request Membership', 'buddyboss' ),
+									'link_text'         => __( 'Request Access', 'buddyboss' ),
 									'link_class'        => 'group-button request-membership',
 								);
 							}
@@ -3855,7 +3856,7 @@ function bp_group_join_button( $group = false ) {
 								'wrapper_class'     => 'group-button ' . $group->status,
 								'wrapper_id'        => 'groupbutton-' . $group->id,
 								'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
-								'link_text'         => __( 'Request Membership', 'buddyboss' ),
+								'link_text'         => __( 'Request Access', 'buddyboss' ),
 								'link_class'        => 'group-button request-membership',
 							);
 						}

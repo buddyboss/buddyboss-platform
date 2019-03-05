@@ -1079,3 +1079,29 @@ function bp_disable_invite_member_type( $default = false ) {
 	 */
 	return (bool) apply_filters( 'bp_disable_invite_member_type', (bool) bp_get_option( 'bp-disable-invite-member-type', $default ) );
 }
+
+/**
+ * Checks if post type feed is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $post_type string
+ *
+ * @return bool Is post type feed enabled or not
+ */
+function bp_is_post_type_feed_enable( $post_type, $default = false ) {
+	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) get_option( "bp-feed-custom-post-type-$post_type", $default ) );
+}
+
+/**
+ * Checks if custom post type feed is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $post_type string
+ *
+ * @return bool Is post type feed enabled or not
+ */
+function bp_is_custom_post_type_feed_enable( $default = false ) {
+	return (bool) apply_filters( 'bp_is_custom_post_type_feed_enable', (bool) get_option( 'bp-enable-custom-post-type-feed', $default ) );
+}

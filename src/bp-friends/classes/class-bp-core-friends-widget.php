@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * The User Connections widget class.
+ * The Member Connections widget class.
  *
  * @since BuddyPress 1.9.0
  */

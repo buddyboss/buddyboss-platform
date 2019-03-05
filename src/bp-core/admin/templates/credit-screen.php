@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 <div class="wrap bp-about-wrap">
 
 	<div class="card">
-		<h3 class="wp-people-group"><?php _e( 'Meet the BuddyBoss Team', 'buddyboss' ); ?></h3>
+		<h2><?php _e( 'Meet the BuddyBoss Team', 'buddyboss' ); ?></h2>
 		<ul class="wp-people-group " id="wp-people-group-core-team">
 			<li class="wp-person" id="wp-person-michaeleisenwasser">
 				<a class="web" href="https://profiles.wordpress.org/eisenwasser"><?php echo '<img alt="" class="gravatar" src="' . buddypress()->plugin_url . "bp-core/images/admin/gravatar-michael.png" . '" />'; ?>
@@ -37,7 +37,7 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 
 	<div class="card">
-		<h3 class="wp-people-group"><?php _e( 'Special thanks to the BuddyPress contributors', 'buddyboss' ); ?></h3>
+		<h2><?php _e( 'Special thanks to the BuddyPress contributors', 'buddyboss' ); ?></h2>
 		<p class="wp-about-description">
 			<?php
 			printf(
@@ -71,7 +71,7 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 
 	<div class="card">
-		<h3 class="wp-people-group"><?php _e( 'Special thanks to these open source projects', 'buddyboss' ); ?></h3>
+		<h2><?php _e( 'Special thanks to these open source projects', 'buddyboss' ); ?></h2>
 		<p class="wp-credits-list">
 			<a href="https://github.com/ichord/At.js">At.js</a>,
 			<a href="https://bbpress.org">bbPress</a>,
