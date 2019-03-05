@@ -47,6 +47,13 @@ class BP_Admin_Setting_Forums extends BP_Admin_Setting_tab {
 		flush_rewrite_rules();
 	}
 
+	public function settings_saved() {
+
+		$url = bp_core_admin_setting_url( $this->tab_name, [ 'edited' => 'true' ] );
+		bp_core_redirect( $url );
+
+	}
+
 	public function register_fields() {
 		$sections = bbp_admin_get_settings_sections();
 		$fields = bbp_admin_get_settings_fields();

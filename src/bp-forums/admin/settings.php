@@ -764,7 +764,7 @@ function bbp_admin_setting_callback_replies_per_rss_page() {
 function bbp_admin_setting_callback_root_slug_section() {
 
 	// Flush rewrite rules when this section is saved
-	if ( isset( $_GET['settings-updated'] ) && isset( $_GET['page'] ) )
+	if ( isset( $_GET['edited'] ) && isset( $_GET['page'] ) )
 		flush_rewrite_rules(); ?>
 
 	<p><?php esc_html_e( 'Customize your Forums directory. Use Shortcodes for more flexibility.', 'buddyboss' ); ?></p>
