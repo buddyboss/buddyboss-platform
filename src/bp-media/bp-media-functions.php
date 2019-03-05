@@ -269,9 +269,7 @@ function bp_media_format_size_units( $bytes, $post_string = false ) {
  *
  * @return string
  */
-function bp_media_update_activity_meta( $content, $user_id, $activity_id ) {
-
-    error_log(print_r($_POST,1));
+function bp_media_update_media_meta( $content, $user_id, $activity_id ) {
 
 	if ( ! isset( $_POST['media'] ) || empty( $_POST['media'] ) ) {
 		return false;
@@ -326,7 +324,7 @@ function bp_media_update_activity_meta( $content, $user_id, $activity_id ) {
 add_action( 'bp_activity_posted_update', 'bp_media_update_media_meta', 10, 3 );
 
 function bp_media_groups_update_media_meta( $content, $user_id, $group_id, $activity_id ) {
-	bp_media_update_activity_meta( $content, $user_id, $activity_id );
+	bp_media_update_media_meta( $content, $user_id, $activity_id );
 }
 add_action( 'bp_groups_posted_update', 'bp_media_groups_update_media_meta', 10, 4 );
 
