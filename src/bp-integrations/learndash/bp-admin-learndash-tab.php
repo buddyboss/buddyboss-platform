@@ -19,9 +19,17 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	public function register_fields() {
-		$this->registerBuddypressSettings();
-		$this->registerLearnDashSettings();
-		$this->registerReportsSettings();
+
+		$fields = apply_filters('bp_integrations_learndash_fields', array(
+			'buddypress' => [$this, 'registerBuddypressSettings'],
+			'learndash' => [$this, 'registerLearnDashSettings'],
+			'reports' => [$this, 'registerReportsSettings']
+		), $this);
+
+		foreach ($fields as $key => $field) {
+			call_user_func($field);
+			do_action('bp_integrations_learndash_field_added', $key, $this);
+		}
 	}
 
 	public function form_html() {
