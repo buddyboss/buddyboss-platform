@@ -65,12 +65,14 @@ TABLE OF CONTENTS:
 }
 
 .bp-about-wrap .card {
+	min-width: 255px;
 	max-width: 100%;
 	background: #fff;
-    border: 1px solid #ddd;
-    box-shadow: none;
-    margin: 1em 0 0;
-    padding: 2em;
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+    margin: 20px 0 0;
+    padding: 3em;
 }
 
 .bp-about-wrap img {
@@ -80,23 +82,28 @@ TABLE OF CONTENTS:
 	vertical-align: middle;
 }
 
+.bp-about-wrap ul {
+	margin: 0;
+}
+
 .bp-about-wrap p {
 	line-height: 1.5;
 	font-size: 14px;
 }
 
 .bp-about-wrap h2 {
-	font-size: 23px;
-	font-weight: 400;
-	margin: 0;
-	padding: 9px 0 4px 0;
-	line-height: 29px;
+	margin: 0 0 1.5em;
+	padding-bottom: 1.3em;
+	font-size: 22px;
+	font-weight: 600;
+	color: #333;
+	border-bottom: 1px solid #eaeaea;
 }
 
 .bp-about-wrap .wp-person {
 	display: inline-block;
 	vertical-align: top;
-	margin-left: 10px;
+	margin: 0 0 0 10px;
 	height: 70px;
 	width: 280px;
 }
@@ -119,6 +126,7 @@ TABLE OF CONTENTS:
 
 .bp-about-wrap .wp-person .title {
 	display: block;
+	font-weight: 300;
 }
 
 .bp-about-wrap p.wp-credits-list a {
