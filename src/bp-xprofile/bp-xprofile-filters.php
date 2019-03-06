@@ -648,11 +648,11 @@ function xprofile_filter_field_edit_name ( $field_name ) {
  *
  * @global $wpdb
  *
+ * @param $retval
  * @param string $field_name
- * @param string $field_name
- * @param string $field_name
- * @param string $field_name
- * @return string
+ * @param string $value
+ * @param string $user_id
+ * @return $retval
  */
 function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_id = null ) {
 	if ( $field_id != bp_xprofile_nickname_field_id() ) {
@@ -773,6 +773,11 @@ function bp_xprofile_validate_phone_value( $retval, $field_id, $value, $user_id 
 	return sprintf( __( 'Enter valid %s', 'buddyboss' ), $field_name );
 }
 
+/**
+ * Change member display_name for current_user.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_xprofile_adjust_current_user_display_name() {
 	global $current_user;
 
@@ -783,6 +788,11 @@ function bp_xprofile_adjust_current_user_display_name() {
 	$current_user->data->display_name = bp_custom_display_name_format( $current_user->data->display_name, $current_user->ID );
 }
 
+/**
+ * Change member display_name for user_metadata.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_xprofile_adjust_display_name( $null, $object_id, $meta_key ) {
 	if ( $meta_key != 'display_name' ) {
 		return $null;
@@ -791,15 +801,30 @@ function bp_xprofile_adjust_display_name( $null, $object_id, $meta_key ) {
 	return bp_custom_display_name_format( $null, $object_id );
 }
 
+/**
+ * Change member display_name for author.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_xprofile_adjust_author_display_name( $display_name, $user_id ) {
 	return bp_custom_display_name_format( $display_name, $user_id );
 }
 
+/**
+ * Change display_name for core_userdata.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_xprofile_adjust_display_user_display_name( $userdata ) {
 	$userdata->display_name = bp_custom_display_name_format( $userdata->display_name, $userdata->ID );
 	return $userdata;
 }
 
+/**
+ * Change display_name for admin areas.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_xprofile_replace_username_to_display_name( $email_content, $user = null ) {
 	if ( ! $user || ! is_a( $user, 'WP_User' ) ) {
 		$user = wp_get_current_user()->to_array();

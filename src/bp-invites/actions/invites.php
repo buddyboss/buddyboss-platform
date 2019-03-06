@@ -1,10 +1,19 @@
 <?php
 
 /**
- * Send Invites: send invitations action handler
+ * Email Invite: Submit Actions and Filters
  *
- * @package BuddyBoss\Settings\Actions
- * @since BuddyPress 3.0.0
+ * @package BuddyBoss\Invite\Actions
+ * @since BuddyBoss 1.0.0
+ */
+ 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+ /**
+ * Member submit email invite.
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_member_invite_submit() {
 
@@ -151,8 +160,8 @@ add_action( 'bp_actions', 'bp_member_invite_submit' );
  *
  * @since BuddyBoss 1.0.0
  *
- * @param $subject
- * @param $email
+ * @param string $subject
+ * @param email $email
  *
  * @return mixed
  */

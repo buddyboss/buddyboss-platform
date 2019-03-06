@@ -1,10 +1,19 @@
 <?php
 
 /**
- * Send Invites: send invitations action handler
+ * Email Invite: Admin Revoke Actions
  *
- * @package BuddyBoss\Settings\Actions
- * @since BuddyPress 3.0.0
+ * @package BuddyBoss\Invite\Actions
+ * @since BuddyBoss 1.0.0
+ */
+ 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+ /**
+ * Admin revoke email invite.
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_member_revoke_invite_admin() {
 
@@ -45,8 +54,6 @@ function bp_member_revoke_invite_admin() {
 	if ( isset( $post_id ) && '' !== $post_id ) {
 		wp_delete_post( $post_id, true );
 	}
-
-
 
 	bp_core_redirect( $redirect );
 
