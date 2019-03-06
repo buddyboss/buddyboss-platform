@@ -422,7 +422,7 @@ abstract class BP_Admin_Tab {
 			return;
 
 		foreach ( (array) $wp_settings_sections[$page] as $section ) {
-			echo "<div class='card section-{$section['id']}'>";
+			echo "<div class='bp-admin-card section-{$section['id']}'>";
 			if ( $section['title'] ) {
 				echo "<h2>{$section['title']}</h2>\n";
 			}

@@ -1,6 +1,6 @@
 <div class="wrap">
 	
-	<div class="card">
+	<div class="bp-admin-card">
 		<h3><?php _e( 'LearnDash Settings', 'buddyboss' ); ?></h3>
 		<p><?php
 			printf(
