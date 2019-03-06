@@ -193,13 +193,15 @@ if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
 /**
  * Prevent running BuddyBoss Platform if any incompatible plugins are active.
  * Show admin error message instead.
- *
- * @since BuddyBoss 1.0.0
  */
 if ( ! function_exists( 'bp_check_incompatible_plugins' ) ) {
 
 	add_action( 'admin_init', 'bp_check_incompatible_plugins', 0.50 );
-
+	/**
+	 * Check for incompatible plugins that are currently active.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	function bp_check_incompatible_plugins() {
 		if ( is_admin() && current_user_can( 'activate_plugins' ) ) {
 
@@ -237,11 +239,15 @@ if ( ! function_exists( 'bp_check_incompatible_plugins' ) ) {
 }
 
 /**
- * Admin Notice for having one or more incompatible plugins activated.
+ * We need to show a message for incompatible plugins that are currently active.
  *
- * @since BuddyBoss 1.0.0
  */
 if ( ! function_exists( 'bp_incompatible_plugins_deactivate_notice' ) ) {
+	/**
+	 * Admin Notice for having one or more incompatible plugins activated.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	function bp_incompatible_plugins_deactivate_notice() {
         global $bp_incompatible_plugins_messages;
         if ( empty( $bp_incompatible_plugins_messages ) ) {

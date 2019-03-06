@@ -261,7 +261,11 @@ class Reports
 
 		return $columns;
 	}
-
+	/**
+	*
+	* @todo make PHP 5.4 compatible
+	*
+	*/
 	public function getGenerators()
 	{
 		return apply_filters('bp_ld_sync/reports_generators', [

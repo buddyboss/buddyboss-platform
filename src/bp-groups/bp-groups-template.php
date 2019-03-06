@@ -4219,6 +4219,8 @@ function bp_group_has_members( $args = '' ) {
 }
 
 /**
+ * Check if there is another member in the loop to display.
+ *
  * @since BuddyPress 1.0.0
  *
  * @return mixed
@@ -4230,6 +4232,8 @@ function bp_group_members() {
 }
 
 /**
+ * Get the group member info to display.
+ *
  * @since BuddyPress 1.0.0
  *
  * @return mixed
@@ -4403,6 +4407,8 @@ function bp_group_member_avatar_mini( $width = 30, $height = 30 ) {
 	}
 
 /**
+ * Output the group member displayed name.
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_group_member_name() {
@@ -4410,6 +4416,8 @@ function bp_group_member_name() {
 }
 
 	/**
+	 * Get the group member displayed name.
+	 *
 	 * @since BuddyPress 1.0.0
 	 *
 	 * @return mixed|void
@@ -4428,31 +4436,8 @@ function bp_group_member_name() {
 	}
 
 /**
- * @since BuddyPress 1.0.0
- */
-function bp_group_member_url() {
-	echo bp_get_group_member_url();
-}
-
-	/**
-	 * @since BuddyPress 1.0.0
-	 *
-	 * @return mixed|void
-	 */
-	function bp_get_group_member_url() {
-		global $members_template;
-
-		/**
-		 * Filters the group member url for the current user in the loop.
-		 *
-		 * @since BuddyPress 1.0.0
-		 *
-		 * @param string $value URL for the current user.
-		 */
-		return apply_filters( 'bp_get_group_member_url', bp_core_get_user_domain( $members_template->member->user_id, $members_template->member->user_nicename, $members_template->member->user_login ) );
-	}
-
-/**
+ * Output an anchor tag of the group member profile url with link of displayed name.
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_group_member_link() {
@@ -4460,6 +4445,8 @@ function bp_group_member_link() {
 }
 
 	/**
+	 * Get the anchor tag of the group member profile url with link of displayed name.
+	 *
 	 * @since BuddyPress 1.0.0
 	 *
 	 * @return mixed|void
@@ -4478,6 +4465,8 @@ function bp_group_member_link() {
 	}
 
 /**
+ * Output the current group member profile url in the loop.
+ *
  * @since BuddyPress 1.2.0
  */
 function bp_group_member_domain() {
@@ -4485,6 +4474,8 @@ function bp_group_member_domain() {
 }
 
 	/**
+	 * Get the current group member profile url in the loop.
+	 *
 	 * @since BuddyPress 1.2.0
 	 *
 	 * @return mixed|void
@@ -4503,6 +4494,8 @@ function bp_group_member_domain() {
 	}
 
 /**
+ * Output connection status between current member and displayed member in group (pending/connected/not connected).
+ *
  * @since BuddyPress 1.2.0
  */
 function bp_group_member_is_friend() {
@@ -4510,6 +4503,8 @@ function bp_group_member_is_friend() {
 }
 
 	/**
+	 * Get connection status between current member and displayed member in group (pending/connected/not connected).
+	 *
 	 * @since BuddyPress 1.2.0
 	 *
 	 * @return mixed|void
@@ -4536,6 +4531,8 @@ function bp_group_member_is_friend() {
 	}
 
 /**
+ * Output if current group member is banned.
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_group_member_is_banned() {
@@ -4543,6 +4540,8 @@ function bp_group_member_is_banned() {
 }
 
 	/**
+	 * Check if current group member is banned.
+	 *
 	 * @since BuddyPress 1.0.0
 	 *
 	 * @return mixed|void
@@ -4561,6 +4560,8 @@ function bp_group_member_is_banned() {
 	}
 
 /**
+ * Output group member class 'banned-user' for banned members.
+ *
  * @since BuddyPress 1.2.6
  */
 function bp_group_member_css_class() {
@@ -4629,6 +4630,8 @@ function bp_group_member_joined_since( $args = array() ) {
 	}
 
 /**
+ * Output the current group member id in the loop.
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_group_member_id() {
@@ -4636,6 +4639,8 @@ function bp_group_member_id() {
 }
 
 	/**
+	 * Get the current group member id in the loop.
+	 *
 	 * @since BuddyPress 1.0.0
 	 *
 	 * @return mixed|void
@@ -4654,6 +4659,8 @@ function bp_group_member_id() {
 	}
 
 /**
+ * Check if total group member count is greater than set pagination limit.
+ *
  * @since BuddyPress 1.0.0
  *
  * @return bool
@@ -4669,6 +4676,8 @@ function bp_group_member_needs_pagination() {
 }
 
 /**
+ * Output the current page id in the loop.
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_group_pag_id() {
@@ -4676,6 +4685,8 @@ function bp_group_pag_id() {
 }
 
 	/**
+	 * Get the current page id in the loop.
+	 *
 	 * @since BuddyPress 1.0.0
 	 *
 	 * @return mixed|void
@@ -4693,6 +4704,8 @@ function bp_group_pag_id() {
 	}
 
 /**
+ * Output HTML group member pagination.
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_group_member_pagination() {
@@ -4701,6 +4714,8 @@ function bp_group_member_pagination() {
 }
 
 	/**
+	 * Get HTML group member pagination.
+	 *
 	 * @since BuddyPress 1.0.0
 	 *
 	 * @return mixed|void
@@ -4719,6 +4734,8 @@ function bp_group_member_pagination() {
 	}
 
 /**
+ * Output total number of group member pages and total number of group members.
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_group_member_pagination_count() {
@@ -4726,6 +4743,8 @@ function bp_group_member_pagination_count() {
 }
 
 	/**
+	 * Get total number of group member pages and total number of group members.
+	 *
 	 * @since BuddyPress 1.0.0
 	 *
 	 * @return mixed|void
@@ -4754,6 +4773,8 @@ function bp_group_member_pagination_count() {
 	}
 
 /**
+ * Output group member pagination for admin.
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_group_member_admin_pagination() {
@@ -4762,6 +4783,8 @@ function bp_group_member_admin_pagination() {
 }
 
 	/**
+	 * Get group member pagination for admin.
+	 *
 	 * @since BuddyPress 1.0.0
 	 *
 	 * @return mixed
@@ -4859,7 +4882,7 @@ function bp_groups_get_front_template( $group = null ) {
 }
 
 /**
- * Output the Group members template
+ * Output the Group members template.
  *
  * @since BuddyPress 2.0.0
  */
@@ -4975,6 +4998,8 @@ function bp_user_can_create_groups() {
 }
 
 /**
+ * Output HTML for group creation steps.
+ *
  * @since BuddyPress 1.0.0
  *
  * @return bool
@@ -5011,6 +5036,8 @@ function bp_group_creation_tabs() {
 }
 
 /**
+ * Output group creation step title.
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_group_creation_stage_title() {
@@ -5027,6 +5054,8 @@ function bp_group_creation_stage_title() {
 }
 
 /**
+ * Output the group creation next step url.
+ *
  * @since BuddyPress 1.1.0
  */
 function bp_group_creation_form_action() {
@@ -5034,6 +5063,8 @@ function bp_group_creation_form_action() {
 }
 
 /**
+ * Get the group creation next step url.
+ *
  * @since BuddyPress 1.1.0
  *
  * @return mixed|void
@@ -5057,6 +5088,8 @@ function bp_group_creation_form_action() {
 	}
 
 /**
+ * Check which step is displayed during the group creation process.
+ *
  * @since BuddyPress 1.1.0
  *
  * @param string $step_slug
@@ -5095,6 +5128,8 @@ function bp_is_group_creation_step( $step_slug ) {
 }
 
 /**
+ * Check which group creation steps have been completed.
+ *
  * @since BuddyPress 1.1.0
  *
  * @param array $step_slugs
@@ -5126,6 +5161,8 @@ function bp_is_group_creation_step_complete( $step_slugs ) {
 }
 
 /**
+ * Check all previous group creation steps are complete.
+ *
  * @since BuddyPress 1.1.0
  *
  * @param string $step_slug
@@ -5158,6 +5195,8 @@ function bp_are_previous_group_creation_steps_complete( $step_slug ) {
 }
 
 /**
+ * Output the newly created group ID after the creation process.
+ *
  * @since BuddyPress 1.1.0
  */
 function bp_new_group_id() {
@@ -5165,6 +5204,8 @@ function bp_new_group_id() {
 }
 
 	/**
+	 * Get the newly created group ID after the creation process.
+	 *
 	 * @since BuddyPress 1.1.0
 	 *
 	 * @return int
@@ -5186,6 +5227,8 @@ function bp_new_group_id() {
 	}
 
 /**
+ * Output the newly created group name after the creation process.
+ *
  * @since BuddyPress 1.1.0
  */
 function bp_new_group_name() {
@@ -5193,6 +5236,8 @@ function bp_new_group_name() {
 }
 
 	/**
+	 * Get the newly created group name after the creation process.
+	 *
 	 * @since BuddyPress 1.1.0
 	 *
 	 * @return mixed|void
@@ -5214,6 +5259,8 @@ function bp_new_group_name() {
 	}
 
 /**
+ * Output the newly created group description after the creation process.
+ *
  * @since BuddyPress 1.1.0
  */
 function bp_new_group_description() {
@@ -5221,6 +5268,8 @@ function bp_new_group_description() {
 }
 
 	/**
+	 * Get the newly created group description after the creation process.
+	 *
 	 * @since BuddyPress 1.1.0
 	 *
 	 * @return mixed|void
@@ -5242,6 +5291,8 @@ function bp_new_group_description() {
 	}
 
 /**
+ * Output if the newly created group has forums enabled.
+ *
  * @since BuddyPress 1.1.0
  */
 function bp_new_group_enable_forum() {
@@ -5249,6 +5300,8 @@ function bp_new_group_enable_forum() {
 }
 
 	/**
+	 * Check if the newly created group has forums enabled.
+	 *
 	 * @since BuddyPress 1.1.0
 	 *
 	 * @return int
@@ -5270,6 +5323,8 @@ function bp_new_group_enable_forum() {
 	}
 
 /**
+ * Output the newly created group privacy.
+ *
  * @since BuddyPress 1.1.0
  */
 function bp_new_group_status() {
@@ -5277,6 +5332,8 @@ function bp_new_group_status() {
 }
 
 	/**
+	 * Get the newly created group privacy.
+	 *
 	 * @since BuddyPress 1.1.0
 	 *
 	 * @return mixed|void
@@ -5608,6 +5665,8 @@ function bp_new_group_invite_friend_list( $args = array() ) {
 	}
 
 /**
+ * Output group search form on group directory page.
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_directory_groups_search_form() {
@@ -5871,6 +5930,8 @@ function bp_get_group_has_avatar( $group_id = false ) {
 }
 
 /**
+ * Output displayed group delete avatar url.
+ *
  * @since BuddyPress 1.1.0
  */
 function bp_group_avatar_delete_link() {
@@ -5878,6 +5939,8 @@ function bp_group_avatar_delete_link() {
 }
 
 	/**
+	 * Get displayed group delete avatar url.
+	 *
 	 * @since BuddyPress 1.1.0
 	 *
 	 * @return mixed|void
@@ -5896,6 +5959,10 @@ function bp_group_avatar_delete_link() {
 	}
 
 /**
+ * Do action 'groups_custom_group_boxes'
+ *
+ * @todo deprecate?
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_custom_group_boxes() {
@@ -5903,6 +5970,10 @@ function bp_custom_group_boxes() {
 }
 
 /**
+ * Do action 'groups_custom_group_admin_tabs'
+ *
+ * @todo deprecate?
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_custom_group_admin_tabs() {
@@ -5910,6 +5981,10 @@ function bp_custom_group_admin_tabs() {
 }
 
 /**
+ * Do action 'groups_custom_group_fields_editable'
+ *
+ * @todo deprecate?
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_custom_group_fields_editable() {
@@ -5917,6 +5992,10 @@ function bp_custom_group_fields_editable() {
 }
 
 /**
+ * Do action 'groups_custom_group_fields'
+ *
+ * @todo deprecate?
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_custom_group_fields() {
@@ -5962,6 +6041,8 @@ function bp_group_has_membership_requests( $args = '' ) {
 }
 
 /**
+ * Get the total number of group membership requests.
+ *
  * @since BuddyPress 1.0.0
  *
  * @return mixed
@@ -5973,6 +6054,8 @@ function bp_group_membership_requests() {
 }
 
 /**
+ * Start the loop to display all group membership requests.
+ *
  * @since BuddyPress 1.0.0
  *
  * @return mixed
@@ -5984,6 +6067,8 @@ function bp_group_the_membership_request() {
 }
 
 /**
+ * Output avatar of current membership request.
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_group_request_user_avatar_thumb() {
@@ -6000,6 +6085,8 @@ function bp_group_request_user_avatar_thumb() {
 }
 
 /**
+ * Output the reject group membership link.
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_group_request_reject_link() {
@@ -6007,6 +6094,8 @@ function bp_group_request_reject_link() {
 }
 
 	/**
+	 * Get the reject group membership link.
+	 *
 	 * @since BuddyPress 1.2.6
 	 *
 	 * @return mixed|void
@@ -6025,6 +6114,8 @@ function bp_group_request_reject_link() {
 	}
 
 /**
+ * Output the accept group membership link.
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_group_request_accept_link() {
@@ -6032,6 +6123,8 @@ function bp_group_request_accept_link() {
 }
 
 	/**
+	 * Get the accept group membership link.
+	 *
 	 * @since BuddyPress 1.2.6
 	 * @return mixed|void
 	 */
@@ -6049,6 +6142,8 @@ function bp_group_request_accept_link() {
 	}
 
 /**
+ * Output the anchor tag with profile link of the member who requested group membership.
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_group_request_user_link() {
@@ -6056,6 +6151,8 @@ function bp_group_request_user_link() {
 }
 
 	/**
+	 * Get the anchor tag with profile link of the member who requested group membership.
+	 *
 	 * @since BuddyPress 1.2.6
 	 *
 	 * @return mixed|void
@@ -6074,6 +6171,8 @@ function bp_group_request_user_link() {
 	}
 
 /**
+ * Output the time when group membership was requested for displayed member.
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_group_request_time_since_requested() {
@@ -6090,6 +6189,8 @@ function bp_group_request_time_since_requested() {
 }
 
 /**
+ * Output the member comments submitted with group membership request.
+ *
  * @since BuddyPress 1.0.0
  */
 function bp_group_request_comment() {
@@ -6222,6 +6323,8 @@ function bp_group_has_invites( $args = '' ) {
 }
 
 /**
+ * Display group invite loop.
+ *
  * @since BuddyPress 1.1.0
  *
  * @return mixed
@@ -6233,6 +6336,8 @@ function bp_group_invites() {
 }
 
 /**
+ * Display group invite item within loop.
+ *
  * @since BuddyPress 1.1.0
  *
  * @return mixed
@@ -6244,6 +6349,8 @@ function bp_group_the_invite() {
 }
 
 /**
+ * Output the displayed group invite item id within loop.
+ *
  * @since BuddyPress 1.1.0
  */
 function bp_group_invite_item_id() {
@@ -6251,6 +6358,8 @@ function bp_group_invite_item_id() {
 }
 
 	/**
+	 * Get the displayed group invite item id within loop.
+	 *
 	 * @since BuddyPress 1.1.0
 	 *
 	 * @return mixed|void
@@ -6269,6 +6378,8 @@ function bp_group_invite_item_id() {
 	}
 
 /**
+ * Output the displayed group invite member avatar.
+ *
  * @since BuddyPress 1.1.0
  */
 function bp_group_invite_user_avatar() {
@@ -6276,6 +6387,8 @@ function bp_group_invite_user_avatar() {
 }
 
 	/**
+	 * Get the displayed group invite member avatar.
+	 *
 	 * @since BuddyPress 1.1.0
 	 *
 	 * @return mixed|void
@@ -6294,6 +6407,8 @@ function bp_group_invite_user_avatar() {
 	}
 
 /**
+ * Output the group invite member profile link.
+ *
  * @since BuddyPress 1.1.0
  */
 function bp_group_invite_user_link() {
@@ -6301,6 +6416,8 @@ function bp_group_invite_user_link() {
 }
 
 	/**
+	 * Get the group invite member profile link.
+	 *
 	 * @since BuddyPress 1.1.0
 	 *
 	 * @return mixed|void
@@ -6319,6 +6436,8 @@ function bp_group_invite_user_link() {
 	}
 
 /**
+ * Output the group invite member's last active time.
+ *
  * @since BuddyPress 1.1.0
  */
 function bp_group_invite_user_last_active() {
@@ -6326,6 +6445,8 @@ function bp_group_invite_user_last_active() {
 }
 
 	/**
+	 * Get the group invite member's last active time.
+	 *
 	 * @since BuddyPress 1.1.0
 	 *
 	 * @return mixed|void
@@ -6344,6 +6465,8 @@ function bp_group_invite_user_last_active() {
 	}
 
 /**
+ * Output cancel invite url for displayed member group invite in loop.
+ *
  * @since BuddyPress 1.1.0
  */
 function bp_group_invite_user_remove_invite_url() {
@@ -6351,6 +6474,8 @@ function bp_group_invite_user_remove_invite_url() {
 }
 
 	/**
+	 * Get cancel invite url for displayed member group invite in loop.
+	 *
 	 * @since BuddyPress 1.1.0
 	 *
 	 * @return string

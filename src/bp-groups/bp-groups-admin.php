@@ -1477,6 +1477,11 @@ add_action( bp_core_admin_hook(), 'bp_groups_admin_groups_type_change_notice' );
 // Hook for register the group type admin action and filters.
 add_action( 'bp_loaded', 'bp_register_group_type_sections_filters_actions' );
 
+/**
+ * Add actions and filters for group types.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_register_group_type_sections_filters_actions() {
 
 	if ( true === bp_disable_group_type_creation() ) {

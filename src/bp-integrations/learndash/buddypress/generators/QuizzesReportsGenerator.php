@@ -66,7 +66,11 @@ class QuizzesReportsGenerator extends ReportsGenerator
 			'attempts'        => $activity->activity_attemps,
 		];
 	}
-
+	/**
+	*
+	* @todo make PHP 5.4 compatible
+	*
+	*/
 	public function loadAdditionalFields($generator)
 	{
 		if (! is_a($generator, static::class)) {

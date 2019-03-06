@@ -174,6 +174,12 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 	}
 }
 
+/**
+ * Periodically update members list for recently active members widget.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
 function buddyboss_theme_recently_active_widget_heartbeat( $response = array(), $data = array()  ){
 	global $members_template;
 

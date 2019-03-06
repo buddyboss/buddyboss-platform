@@ -3127,6 +3127,11 @@ function bp_group_type_short_code_callback( $atts ) {
 	return ob_get_clean();
 }
 
+/**
+ * Add body class to group type shortcode.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_group_type_short_code_add_body_class( $class ) {
 
 	global $post;

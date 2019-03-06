@@ -127,6 +127,11 @@ function bp_members_edit_profile_url( $url, $user_id, $scheme = 'admin' ) {
 }
 add_filter( 'edit_profile_url', 'bp_members_edit_profile_url', 10, 3 );
 
+/**
+ * Overwrites login form email field label.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_overwrite_login_form_email_field_label( $defaults ) {
 	$defaults['label_username'] = __( 'Email Address', 'buddyboss' );
 
@@ -134,6 +139,11 @@ function bp_overwrite_login_form_email_field_label( $defaults ) {
 }
 add_filter( 'login_form_defaults', 'bp_overwrite_login_form_email_field_label' );
 
+/**
+ * Overwrites login email field label.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_overwrite_login_email_field_label( $translated_text, $text, $domain ) {
 	if ( 'Username or Email Address' == $text && 'default' == $domain ) {
 		remove_filter( 'gettext', 'bp_overwrite_login_email_field_label' );
@@ -143,6 +153,11 @@ function bp_overwrite_login_email_field_label( $translated_text, $text, $domain 
 	return $translated_text;
 }
 
+/**
+ * Overwrites login form email field label hook.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_overwrite_login_email_field_label_hook() {
 	add_filter( 'gettext', 'bp_overwrite_login_email_field_label', 10, 3 );
 }

@@ -185,6 +185,11 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 }
 
 if ( ! function_exists( 'bp_get_total_online_member_count' ) ) {
+	/**
+	 * Get total number of members currently online.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	function bp_get_total_online_member_count() {
 
 		global $members_template;
@@ -208,6 +213,11 @@ if ( ! function_exists( 'bp_get_total_online_member_count' ) ) {
 	}
 }
 
+/**
+ * Periodically update total number of members online for who's online widget.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $data = array()  ){
 	global $members_template;
 
