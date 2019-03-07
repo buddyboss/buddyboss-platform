@@ -4783,3 +4783,189 @@ function bp_update_activity_feed_of_post( $post, $request, $action ) {
 
 }
 add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 );
+
+/**
+ * AJAX endpoint for link preview URL parser.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_activity_action_parse_url() {
+	require_once trailingslashit( buddypress()->plugin_dir . 'bp-activity/vendors' ) . '/website-parser/website_parser.php';
+
+	// curling
+	$json_data = array();
+	if ( class_exists( 'WebsiteParser' ) ) {
+
+		$url    = $_POST['url'];
+		$parser = new WebsiteParser( $url );
+		$body   = wp_remote_get( $url );
+
+		if ( ! is_wp_error( $body ) && isset( $body['body'] ) ) {
+
+			$title       = '';
+			$description = '';
+			$images      = array();
+
+			$parser->content = $body['body'];
+
+			$meta_tags = $parser->getMetaTags( false );
+
+			if ( is_array( $meta_tags ) && ! empty( $meta_tags ) ) {
+				foreach ( $meta_tags as $tag ) {
+					if ( is_array( $tag ) && ! empty( $tag ) ) {
+						if ( $tag[0] == 'og:title' ) {
+							$title = $tag[1];
+						}
+						if ( $tag[0] == 'og:description' ) {
+							$description = html_entity_decode( $tag[1], ENT_QUOTES, "utf-8" );
+						} elseif ( strtolower( $tag[0] ) == 'description' && $description == '' ) {
+							$description = html_entity_decode( $tag[1], ENT_QUOTES, "utf-8" );
+						}
+						if ( $tag[0] == 'og:image' ) {
+							$images[] = $tag[1];
+						}
+					}
+				}
+			}
+			if ( $title == '' ) {
+				$title = $parser->getTitle( false );
+			}
+			if ( empty( $images ) ) {
+				$images = $parser->getImageSources( false );
+			}
+			// Generate Image URL Previews
+			if ( empty( $images ) ) {
+				$content_type = wp_remote_retrieve_header( $body, 'content-type' );
+				if ( false !== strpos( $content_type, 'image' ) ) {
+					$images = array( $url );
+				}
+			}
+
+			$json_data['title']       = $title;
+			$json_data['description'] = $description;
+			$json_data['images']      = $images;
+			$json_data['error']       = '';
+		} else {
+			$json_data['error'] = 'Sorry! preview is not available right now. Please try again later.';
+		}
+	} else {
+		$json_data['error'] = 'Sorry! preview is not available right now. Please try again later.';
+	}
+
+	wp_send_json( $json_data );
+}
+
+add_action( 'wp_ajax_bp_activity_parse_url', 'bp_activity_action_parse_url' );
+
+/**
+ * Download an image from the specified URL and attach it to a post.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $file The URL of the image to download
+ *
+ * @return int|void
+ */
+function bp_activity_media_sideload_image( $file ) {
+	if ( empty( $file ) ) {
+		return;
+	}
+
+	// Set variables for storage, fix file filename for query strings.
+	preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png)\b/i', $file, $matches );
+	$file_array = array();
+
+	if ( empty( $matches ) ) {
+		return;
+	}
+
+	$file_array['name'] = basename( $matches[0] );
+
+	// Download file to temp location.
+	$file                   = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER["SERVER_PROTOCOL"], 0, strpos( $_SERVER["SERVER_PROTOCOL"], '/' ) ) ) . '://', $file );
+	$file_array['tmp_name'] = download_url( $file );
+
+	// If error storing temporarily, return the error.
+	if ( is_wp_error( $file_array['tmp_name'] ) ) {
+		return;
+	}
+
+	// Do the validation and storage stuff.
+	$id = bp_activity_media_handle_sideload( $file_array );
+
+	// If error storing permanently, unlink.
+	if ( is_wp_error( $id ) ) {
+		return;
+	}
+
+	return $id;
+}
+
+/**
+ * This handles a sideloaded file in the same way as an uploaded file is handled by {@link media_handle_upload()}
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param array $file_array Array similar to a {@link $_FILES} upload array
+ * @param array $post_data  allows you to overwrite some of the attachment
+ *
+ * @return int|object The ID of the attachment or a WP_Error on failure
+ */
+function bp_activity_media_handle_sideload( $file_array, $post_data = array() ) {
+
+	$overrides = array( 'test_form' => false );
+
+	$time = current_time( 'mysql' );
+	if ( $post = get_post() ) {
+		if ( substr( $post->post_date, 0, 4 ) > 0 ) {
+			$time = $post->post_date;
+		}
+	}
+
+	$file = wp_handle_sideload( $file_array, $overrides, $time );
+	if ( isset( $file['error'] ) ) {
+		return new WP_Error( 'upload_error', $file['error'] );
+	}
+
+	$url     = $file['url'];
+	$type    = $file['type'];
+	$file    = $file['file'];
+	$title   = preg_replace( '/\.[^.]+$/', '', basename( $file ) );
+	$content = '';
+
+	// Use image exif/iptc data for title and caption defaults if possible.
+	if ( $image_meta = @wp_read_image_metadata( $file ) ) {
+		if ( trim( $image_meta['title'] ) && ! is_numeric( sanitize_title( $image_meta['title'] ) ) ) {
+			$title = $image_meta['title'];
+		}
+		if ( trim( $image_meta['caption'] ) ) {
+			$content = $image_meta['caption'];
+		}
+	}
+
+	if ( isset( $desc ) ) {
+		$title = $desc;
+	}
+
+	// Construct the attachment array.
+	$attachment = array_merge( array(
+		'post_mime_type' => $type,
+		'guid'           => $url,
+		'post_title'     => $title,
+		'post_content'   => $content,
+	), $post_data );
+
+	// This should never be set as it would then overwrite an existing attachment.
+	if ( isset( $attachment['ID'] ) ) {
+		unset( $attachment['ID'] );
+	}
+
+	// Save the attachment metadata
+	$id = wp_insert_attachment( $attachment, $file );
+
+	if ( ! is_wp_error( $id ) ) {
+		wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $file ) );
+	}
+
+	return $id;
+}

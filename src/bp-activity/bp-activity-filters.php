@@ -109,6 +109,8 @@ add_filter( 'bp_get_total_mention_count_for_user',  'bp_core_number_format' );
 add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_embed_excerpt_onclick_location_filter', 9 );
 add_filter( 'bp_after_has_activities_parse_args', 'bp_activity_display_all_types_on_just_me' );
 
+add_filter( 'bp_get_activity_content_body', 'bp_activity_link_preview', 7, 2 );
+
 /* Actions *******************************************************************/
 
 // At-name filter.
@@ -117,6 +119,9 @@ add_action( 'bp_activity_before_save', 'bp_activity_at_name_filter_updates' );
 // Activity feed moderation.
 add_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2, 1 );
 add_action( 'bp_activity_before_save', 'bp_activity_check_blacklist_keys',  2, 1 );
+
+// Activity link preview
+add_action( 'bp_activity_after_save', 'bp_activity_save_link_data', 2, 1 );
 
 /** Functions *****************************************************************/
 
@@ -191,6 +196,39 @@ function bp_activity_check_blacklist_keys( $activity ) {
 		// Backpat.
 		$activity->component = false;
 	}
+}
+
+/**
+ * Save link preview data into activity meta key "_link_preview_data"
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $activity
+ */
+function bp_activity_save_link_data( $activity ) {
+
+	if ( empty( $_POST['link_url'] ) ) {
+		return;
+	}
+
+	$preview_data['url'] = $_POST['link_url'];
+
+	if ( ! empty( $_POST['link_image'] ) ) {
+		$attachment_id = bp_activity_media_sideload_image( $_POST['link_image'] );
+		if ( $attachment_id ) {
+			$preview_data['attachment_id'] = $attachment_id;
+		}
+	}
+
+	if ( ! empty( $_POST['link_title'] ) ) {
+		$preview_data['title'] = $_POST['link_title'];
+	}
+
+	if ( ! empty( $_POST['link_description'] ) ) {
+		$preview_data['description'] = $_POST['link_description'];
+	}
+
+	bp_activity_update_meta( $activity->id, '_link_preview_data', $preview_data );
 }
 
 /**
@@ -450,6 +488,54 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 * @param string $append_text The final append text applied.
 	 */
 	return apply_filters( 'bp_activity_truncate_entry', $excerpt, $text, $append_text );
+}
+
+/**
+ * Embed link preview in activity content
+ *
+ * @param $content
+ * @param $activity
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string
+ */
+function bp_activity_link_preview( $content, $activity ) {
+
+	$activity_id = $activity->id;
+
+	$preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );
+
+	if ( empty( $preview_data['url'] ) ) {
+		return $content;
+	}
+
+	$preview_data = bp_parse_args( $preview_data, [
+		'title'       => '',
+		'description' => '',
+	] );
+
+	$description = $preview_data['description'];
+	$read_more   = ' <a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Read more', 'buddyboss' ) . '...</a>';
+	$description = wp_trim_words( $description, 40, $read_more );
+
+	$content = make_clickable( $content );
+
+	$content .= '<div class="bb_final_link">';
+	if ( ! empty( $preview_data['attachment_id'] ) ) {
+		$image_url = wp_get_attachment_image_url( $preview_data['attachment_id'], 'full' );
+		$content   .= '<div class="bb_link_preview_container">';
+		$content   .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . $image_url . '" /></a>';
+		$content   .= '</div>';
+	}
+	$content .= '<div class="bb_link_contents">';
+	$content .= '<span class="bb_link_preview_title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . addslashes( $preview_data['title'] ) . '</a></span>';
+	$content .= '<span class="bb_link_preview_body">' . $description . '</span>';
+	$content .= '</div>';
+	$content .= '</div>';
+	$content .= '<br/>';
+
+	return $content;
 }
 
 /**
