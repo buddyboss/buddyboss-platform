@@ -13,36 +13,36 @@
 <script type="text/html" id="tmpl-activity-link-preview">
 	<# if ( data.link_scrapping ) { #>
 	<# if ( data.link_loading ) { #>
-	<i class="bb-url-scrapper-loading buddyboss-wall-ajax-loader fa fa-spinner"></i>
+	<i class="activity-url-scrapper-loading activity-ajax-loader fa fa-spinner"></i>
 	<# } #>
-	<div id="bb-url-scrapper">
+	<div id="activity-url-scrapper">
 		<# if ( data.link_success && ! data.link_error ) { #>
-		<div id="bb-url-scrapper-img-holder">
-			<div id="bb-url-scrapper-img">
+		<div id="activity-url-scrapper-img-holder">
+			<div id="activity-url-scrapper-img">
 				<img src="{{{data.link_images[data.link_image_index]}}}"/>
 				<a title="Cancel Preview Image" href="#" id="bbimagecloselinksuggestion">
 					<i class="fa fa-times"></i>
 				</a>
 			</div>
-			<div class="bb-url-thumb-nav">
-				<input type="button" id="bb-url-prevPicButton" value="<"/>
-				<input type="button" id="bb-url-nextPicButton" value=">">
-				<div id="bb-url-scrapper-img-count">
+			<div class="activity-url-thumb-nav">
+				<input type="button" id="activity-url-prevPicButton" value="<"/>
+				<input type="button" id="activity-url-nextPicButton" value=">">
+				<div id="activity-url-scrapper-img-count">
 					<# print(data.link_image_index + 1) #>&nbsp;<?php esc_html_e( 'of', 'buddyboss' ) ?>&nbsp;<# print(data.link_images.length) #>
 				</div>
 			</div>
 		</div>
 		<# } #>
-		<div id="bb-url-scrapper-text-holder">
+		<div id="activity-url-scrapper-text-holder">
 			<# if ( data.link_success && ! data.link_error ) { #>
-			<div id="bb-url-scrapper-title">{{data.link_title}}</div>
-			<div id="bb-url-scrapper-url">{{data.link_url}}</div>
-			<div id="bb-url-scrapper-description">{{data.link_description}}</div>
+			<div id="activity-url-scrapper-title">{{data.link_title}}</div>
+			<div id="activity-url-scrapper-url">{{data.link_url}}</div>
+			<div id="activity-url-scrapper-description">{{data.link_description}}</div>
 			<# } #>
 			<# if ( data.link_error && ! data.link_success ) { #>
-			<div id="bb-url-error">{{data.link_error_msg}}</div>
+			<div id="activity-url-error">{{data.link_error_msg}}</div>
 			<# } #>
-			<a title="Cancel Preview" href="#" id="bbcloselinksuggestion">
+			<a title="Cancel Preview" href="#" id="activity-close-link-suggestion">
 				<i class="fa fa-times"></i>
 			</a>
 		</div>

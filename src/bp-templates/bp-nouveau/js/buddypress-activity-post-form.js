@@ -154,11 +154,11 @@ window.bp = window.bp || {};
 	// Activity link preview
 	bp.Views.ActivityLinkPreview = bp.View.extend( {
 		tagName: 'div',
-		className: 'bb-url-scrapper-container',
+		className: 'activity-url-scrapper-container',
 		template: bp.template( 'activity-link-preview' ),
 		events: {
-			'click #bb-url-prevPicButton': 'prev',
-			'click #bb-url-nextPicButton': 'next',
+			'click #activity-url-prevPicButton': 'prev',
+			'click #activity-url-nextPicButton': 'next',
 		},
 
 		initialize: function() {
