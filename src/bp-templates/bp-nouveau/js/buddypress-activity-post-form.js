@@ -159,6 +159,8 @@ window.bp = window.bp || {};
 		events: {
 			'click #activity-url-prevPicButton': 'prev',
 			'click #activity-url-nextPicButton': 'next',
+			'click #activity-link-preview-close-image': 'close',
+			'click #activity-close-link-suggestion': 'destroy',
 		},
 
 		initialize: function() {
@@ -175,7 +177,6 @@ window.bp = window.bp || {};
 			if ( imageIndex > 0 ) {
 				this.model.set( 'link_image_index', imageIndex - 1 );
 			}
-
 		},
 
 		next: function() {
@@ -186,6 +187,32 @@ window.bp = window.bp || {};
 				this.model.set( 'link_image_index', imageIndex + 1 );
 			}
 		},
+
+		close: function(e) {
+			e.preventDefault();
+			this.model.set({
+				link_images: [],
+				link_image_index: 0,
+			});
+		},
+
+		destroy: function( e ) {
+			e.preventDefault();
+			this.remove();
+			this.unbind();
+			// Set default values
+			this.model.set({
+				link_success: false,
+				link_error: false,
+				link_error_msg: '',
+				link_scrapping: false,
+				link_images: [],
+				link_image_index: 0,
+				link_title: '',
+				link_description: '',
+				link_url: ''
+			});
+		}
 	} );
 
 	// Regular input
@@ -791,9 +818,11 @@ window.bp = window.bp || {};
 			var regexp = /^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
 			if ( regexp.test( url ) ) {
 
-				self.model.set( 'link_scrapping', true );
-				self.model.set( 'link_loading', true );
-				self.model.set( 'link_error', false );
+				self.model.set( {
+					link_scrapping: true,
+					link_loading: true,
+					link_error: false,
+				} );
 
 				bp.ajax.post( 'bp_activity_parse_url', { url: url } ).always( function( response ) {
 					self.model.set('link_loading', false);
@@ -804,16 +833,20 @@ window.bp = window.bp || {};
 					}
 
 					if ( response.error === '' ) {
-						self.model.set( 'link_success', true );
-						self.model.set( 'link_title', response.title );
-						self.model.set( 'link_description', response.description );
-						self.model.set( 'link_url', url );
-						self.model.set( 'link_images', response.images );
-						self.model.set( 'link_image_index', 0 );
+						self.model.set( {
+							link_success: true,
+							link_title: response.title,
+							link_description: response.description,
+							link_url: url,
+							link_images: response.images,
+							link_image_index: 0,
+						} );
 					} else {
-						self.model.set( 'link_success', false );
-						self.model.set( 'link_error', true );
-						self.model.set( 'link_error_msg', response.error );
+						self.model.set( {
+							link_success: false,
+							link_error: true,
+							link_error_msg: response.error,
+						} );
 					}
 				});
 			}

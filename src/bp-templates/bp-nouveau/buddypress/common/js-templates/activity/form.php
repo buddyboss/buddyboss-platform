@@ -16,12 +16,12 @@
 	<i class="activity-url-scrapper-loading activity-ajax-loader fa fa-spinner"></i>
 	<# } #>
 	<div id="activity-url-scrapper">
-		<# if ( data.link_success && ! data.link_error ) { #>
+		<# if ( data.link_images.length && data.link_success && ! data.link_error ) { #>
 		<div id="activity-url-scrapper-img-holder">
 			<div id="activity-url-scrapper-img">
 				<img src="{{{data.link_images[data.link_image_index]}}}"/>
-				<a title="Cancel Preview Image" href="#" id="bbimagecloselinksuggestion">
-					<i class="fa fa-times"></i>
+				<a title="Cancel Preview Image" href="#" id="activity-link-preview-close-image">
+					<i class="dashicons dashicons-no-alt"></i>
 				</a>
 			</div>
 			<div class="activity-url-thumb-nav">
@@ -43,7 +43,7 @@
 			<div id="activity-url-error">{{data.link_error_msg}}</div>
 			<# } #>
 			<a title="Cancel Preview" href="#" id="activity-close-link-suggestion">
-				<i class="fa fa-times"></i>
+				<i class="dashicons dashicons-no-alt"></i>
 			</a>
 		</div>
 	</div>
