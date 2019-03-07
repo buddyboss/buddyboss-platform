@@ -10,7 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 add_action ( 'bp_before_directory_members', 'bp_profile_search_show_form');
-
+/**
+ * Output BuddyBoss Profile Search Form.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_profile_search_show_form () {
     if ( bp_disable_advanced_profile_search() ) {
         return false;
@@ -22,6 +26,11 @@ function bp_profile_search_show_form () {
     include $template;
 }
 
+/**
+ * Escape BuddyBoss Profile Search Form data.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_profile_search_escaped_form_data ( $form = false ) {
     if ( empty( $form ) ) {
         $form = bp_profile_search_main_form();

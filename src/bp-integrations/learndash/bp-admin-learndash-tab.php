@@ -1,5 +1,19 @@
 <?php
+/**
+ * BuddyBoss LearnDash integration admin tabs.
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Setup the BuddyBoss LearnDash admin tab.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	protected $current_section;
 

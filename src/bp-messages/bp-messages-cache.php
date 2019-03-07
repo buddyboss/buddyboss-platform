@@ -103,6 +103,11 @@ function bp_notices_clear_cache( $notice ) {
 add_action( 'messages_notice_after_save',    'bp_notices_clear_cache' );
 add_action( 'messages_notice_before_delete', 'bp_notices_clear_cache' );
 
+/**
+ * Invalidate cache for thread pagination messages.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_messages_delete_thread_paginated_messages_cache( $thread_id ) {
 	BP_Messages_Thread::$noCache = true;
 	$thread_id = $thread_id;

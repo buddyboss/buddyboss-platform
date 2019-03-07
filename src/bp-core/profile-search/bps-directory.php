@@ -8,7 +8,11 @@
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
-
+/**
+ * Returns array of BuddyBoss Profile Search directories.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_directories ()
 {
 	static $dirs = array ();
@@ -46,6 +50,11 @@ function bp_ps_directories ()
 }
 
 add_action ('wp_enqueue_scripts', 'bp_ps_clear_directory', 1);
+/**
+ * Clear BuddyBoss Profile Search directory.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_clear_directory ()
 {
 	global $bp;
@@ -62,6 +71,11 @@ function bp_ps_clear_directory ()
 }
 
 add_shortcode ('bp_ps_directory', 'bp_ps_show_directory');
+/**
+ * Output BuddyBoss Profile Search directory template.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_show_directory ($attr, $content)
 {
 	ob_start ();
@@ -89,6 +103,11 @@ function bp_ps_show_directory ($attr, $content)
 	return ob_get_clean ();
 }
 
+/**
+ * Set BuddyBoss Profile Search sort options.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_set_sort_options ($options)
 {
 	global $bp_ps_sort_options;
@@ -127,6 +146,11 @@ function bp_ps_set_sort_options ($options)
 	add_action ('bp_members_directory_order_options', 'bp_ps_display_sort_options');
 }
 
+/**
+ * Output BuddyBoss Profile Search sort options.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_display_sort_options ()
 {
 	global $bp_ps_sort_options;
@@ -146,7 +170,13 @@ function bp_ps_display_sort_options ()
 }
 
 add_filter ('bp_user_query_uid_clauses', 'bp_ps_uid_clauses', 99, 2);
-function bp_ps_uid_clauses ($sql, $object)
+
+/**
+ * Returns BuddyBoss Profile Search sql with added directory member item clauses.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+ function bp_ps_uid_clauses ($sql, $object)
 {
 	$code = $object->query_vars['type']; 
 	$order = 'ASC';
@@ -167,6 +197,11 @@ function bp_ps_uid_clauses ($sql, $object)
 	return $sql;
 }
 
+/**
+ * Out BuddyBoss Profile Search field value template.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_directory_members_item ()
 {
 	global $members_template;

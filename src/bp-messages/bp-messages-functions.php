@@ -487,6 +487,11 @@ function messages_get_message_thread_id( $message_id = 0 ) {
 	return (int) $wpdb->get_var( $wpdb->prepare( "SELECT thread_id FROM {$bp->messages->table_name_messages} WHERE id = %d", $message_id ) );
 }
 
+/**
+ * Filter default message length. (30 characters)
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function messages_get_default_subject_length() {
 	return apply_filters('bp_messages_get_default_subject_length', 30);
 }

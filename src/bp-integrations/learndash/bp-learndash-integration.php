@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Set up the bp learndash class.
+ * Setup the bp learndash class.
  *
  * @since BuddyBoss 1.0.0
  */
