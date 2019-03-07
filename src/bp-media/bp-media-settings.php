@@ -611,11 +611,7 @@ function bp_media_settings_callback_files_rotation_fix() {
 		<?php esc_html_e( 'Enable fix for mobile uploads rotating', 'buddyboss' ) ?>
     </label>
     <p class="description">
-        <?php _e( 'It\'s recommended that you have at least 256M-512M of RAM allocated to PHP, otherwise photo uploads may fail.', 'buddyboss' ); ?>
-        <br/>
-        <?php _e( 'Your current memory limit is ', 'buddyboss' ); ?>
-        <strong><?php echo $memory_limit; ?></strong>
-        <?php _e( 'You can contact your web host to increase the memory limit.', 'buddyboss' ); ?>
+        <?php _e( 'It\'s recommended that you have at least 256M-512M of RAM allocated to PHP, otherwise photo uploads may fail while this option is enabled. Your current memory limit is ', 'buddyboss' ); ?><strong><?php echo $memory_limit; ?>.</strong> <?php _e( 'Follow <a href="https://www.wpbeginner.com/wp-tutorials/fix-wordpress-memory-exhausted-error-increase-php-memory/">this tutorial</a> to increase the memory limit.', 'buddyboss' ); ?>
     </p>
 	<?php
 }
