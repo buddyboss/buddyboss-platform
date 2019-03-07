@@ -1717,7 +1717,7 @@ a.layout-grid-view {
   text-decoration: none;
 }
 
-#bbimagecloselinksuggestion {
+#activity-link-preview-close-image {
   border: 0;
   color: #fff;
   font-size: 16px;
@@ -1727,7 +1727,7 @@ a.layout-grid-view {
   text-decoration: none;
 }
 
-#activity-close-link-suggestion:focus, #bbimagecloselinksuggestion:focus {
+#activity-close-link-suggestion:focus, #activity-link-preview-close-image:focus {
   outline: 0;
 }
 
@@ -1767,7 +1767,7 @@ a.layout-grid-view {
   .activity-link-preview-image {
     margin-bottom: 20px;
   }
-  #bbimagecloselinksuggestion {
+  #activity-link-preview-close-image {
     right: 22px;
     top: 17px;
   }
