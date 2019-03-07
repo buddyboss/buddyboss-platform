@@ -1599,6 +1599,187 @@ a.layout-grid-view {
   box-shadow: 0 0 6px 0 #eaeaea;
 }
 
+.activity-url-scrapper-container {
+  min-height: 100px;
+  text-align: center;
+}
+
+.activity-url-scrapper-container .activity-url-scrapper-loading {
+  display: none;
+  margin-top: 40px;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper {
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  background-color: rgba(250, 250, 250, 0.2);
+  margin: 20px 0 10px;
+  overflow: hidden;
+  position: relative;
+  padding: 15px;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper td {
+  vertical-align: middle;
+  padding: 8px 15px;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper td #activity-close-link-suggestion {
+  font-size: 0;
+  line-height: 0;
+  text-indent: -999em;
+  overflow: hidden;
+  text-align: center;
+  display: block;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper td #activity-close-link-suggestion:after {
+  content: "\f00d";
+  display: inline-block;
+  font: normal normal normal 20px/1 'Font Awesome 5 Free';
+  text-rendering: auto;
+  vertical-align: bottom;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-img-holder td {
+  border: none;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-img-holder #activity-url-scrapper-img {
+  background-position: center;
+  background-color: white;
+  background-repeat: no-repeat;
+  background-size: contain;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-img-holder #activity-url-scrapper-img img {
+  max-width: 100%;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-img-holder #activity-url-prevPicButton,
+.activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-img-holder #activity-url-nextPicButton {
+  cursor: pointer;
+  cursor: pointer;
+  width: auto;
+  padding: 6px 15px;
+  margin: 0 5px;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-img-holder #activity-url-scrapper-img-count {
+  font-size: 11px;
+  color: #7f7f7f;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-text-holder {
+  border: none;
+  overflow: hidden;
+  text-align: right;
+}
+
+.activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-text-holder #activity-url-scrapper-title {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+#activity-url-error {
+  color: #FF0000;
+}
+
+#activity-url-scrapper-url {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 14px;
+}
+
+.activity-link-preview-title {
+  display: block;
+  margin-bottom: 5px;
+  margin-left: 5px;
+}
+
+.activity-link-preview-title > a {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+#activity-close-link-suggestion {
+  border: 0;
+  color: rgba(0, 0, 0, 0.4);
+  font-size: 16px;
+  position: absolute;
+  left: 8px;
+  top: 0;
+  text-decoration: none;
+}
+
+#bbimagecloselinksuggestion {
+  border: 0;
+  color: #fff;
+  font-size: 16px;
+  left: 3px;
+  position: absolute;
+  top: 0;
+  text-decoration: none;
+}
+
+#activity-close-link-suggestion:focus, #bbimagecloselinksuggestion:focus {
+  outline: 0;
+}
+
+/* Media query for only large devices */
+@media only screen and (min-width: 481px) {
+  .activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-img-holder {
+    border: none;
+    float: right;
+    position: relative;
+  }
+  .activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-text-holder {
+    padding: 0 15px;
+  }
+  .activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-img-holder #activity-url-scrapper-img img {
+    height: auto;
+    max-height: 120px;
+    width: 200px;
+  }
+  .activity-link-preview-container {
+    overflow: hidden;
+  }
+  .activity-link-preview-image {
+    float: right;
+    max-width: 200px;
+  }
+  .activity-link-preview-image a img {
+    max-width: 100%;
+  }
+  .activity-link-preview-content {
+    overflow: hidden;
+    padding: 0 15px 0 0;
+  }
+}
+
+/* Media query for only small devices */
+@media only screen and (max-width: 480px) {
+  .activity-link-preview-image {
+    margin-bottom: 20px;
+  }
+  #bbimagecloselinksuggestion {
+    left: 22px;
+    top: 17px;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .activity-link-preview-content {
+    width: 100%;
+    clear: both;
+  }
+}
+
 /**
 *-----------------------------------------------------
 * @section 3.1.3 - Activity Comments

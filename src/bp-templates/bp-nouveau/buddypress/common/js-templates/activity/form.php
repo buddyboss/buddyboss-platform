@@ -10,6 +10,46 @@
 	<span class="bp-icon" aria-hidden="true"></span><p>{{{data.message}}}</p>
 </script>
 
+<script type="text/html" id="tmpl-activity-link-preview">
+	<# if ( data.link_scrapping ) { #>
+	<# if ( data.link_loading ) { #>
+	<i class="activity-url-scrapper-loading activity-ajax-loader fa fa-spinner"></i>
+	<# } #>
+	<div id="activity-url-scrapper">
+		<# if ( data.link_images.length && data.link_success && ! data.link_error ) { #>
+		<div id="activity-url-scrapper-img-holder">
+			<div id="activity-url-scrapper-img">
+				<img src="{{{data.link_images[data.link_image_index]}}}"/>
+				<a title="Cancel Preview Image" href="#" id="activity-link-preview-close-image">
+					<i class="dashicons dashicons-no-alt"></i>
+				</a>
+			</div>
+			<div class="activity-url-thumb-nav">
+				<input type="button" id="activity-url-prevPicButton" value="<"/>
+				<input type="button" id="activity-url-nextPicButton" value=">">
+				<div id="activity-url-scrapper-img-count">
+					<# print(data.link_image_index + 1) #>&nbsp;<?php esc_html_e( 'of', 'buddyboss' ) ?>&nbsp;<# print(data.link_images.length) #>
+				</div>
+			</div>
+		</div>
+		<# } #>
+		<div id="activity-url-scrapper-text-holder">
+			<# if ( data.link_success && ! data.link_error ) { #>
+			<div id="activity-url-scrapper-title">{{data.link_title}}</div>
+			<div id="activity-url-scrapper-url">{{data.link_url}}</div>
+			<div id="activity-url-scrapper-description">{{data.link_description}}</div>
+			<# } #>
+			<# if ( data.link_error && ! data.link_success ) { #>
+			<div id="activity-url-error">{{data.link_error_msg}}</div>
+			<# } #>
+			<a title="Cancel Preview" href="#" id="activity-close-link-suggestion">
+				<i class="dashicons dashicons-no-alt"></i>
+			</a>
+		</div>
+	</div>
+	<# } #>
+</script>
+
 <script type="text/html" id="tmpl-activity-post-form-avatar">
 	<# if ( data.display_avatar ) { #>
 		<a href="{{data.user_domain}}">

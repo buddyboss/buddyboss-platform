@@ -74,7 +74,16 @@ window.bp = window.bp || {};
 			user_id:   0,
 			item_id:   0,
 			object:   '',
-			content:  ''
+			content:  '',
+			link_success: false,
+			link_error: false,
+			link_error_msg: '',
+			link_scrapping: false,
+			link_images: [],
+			link_image_index: 0,
+			link_title: '',
+			link_description: '',
+			link_url: ''
 		}
 	} );
 
@@ -142,6 +151,70 @@ window.bp = window.bp || {};
 		}
 	} );
 
+	// Activity link preview
+	bp.Views.ActivityLinkPreview = bp.View.extend( {
+		tagName: 'div',
+		className: 'activity-url-scrapper-container',
+		template: bp.template( 'activity-link-preview' ),
+		events: {
+			'click #activity-url-prevPicButton': 'prev',
+			'click #activity-url-nextPicButton': 'next',
+			'click #activity-link-preview-close-image': 'close',
+			'click #activity-close-link-suggestion': 'destroy',
+		},
+
+		initialize: function() {
+			this.listenTo( this.model, 'change', this.render );
+		},
+
+		render: function() {
+			this.$el.html( this.template( this.model.toJSON() ) );
+			return this;
+		},
+
+		prev: function() {
+			var imageIndex = this.model.get( 'link_image_index' );
+			if ( imageIndex > 0 ) {
+				this.model.set( 'link_image_index', imageIndex - 1 );
+			}
+		},
+
+		next: function() {
+			var imageIndex = this.model.get( 'link_image_index' );
+			var images = this.model.get( 'link_images' );
+			if ( imageIndex < images.length - 1 ) {
+				this.model.link_image_index++;
+				this.model.set( 'link_image_index', imageIndex + 1 );
+			}
+		},
+
+		close: function(e) {
+			e.preventDefault();
+			this.model.set({
+				link_images: [],
+				link_image_index: 0,
+			});
+		},
+
+		destroy: function( e ) {
+			e.preventDefault();
+			this.remove();
+			this.unbind();
+			// Set default values
+			this.model.set({
+				link_success: false,
+				link_error: false,
+				link_error_msg: '',
+				link_scrapping: false,
+				link_images: [],
+				link_image_index: 0,
+				link_title: '',
+				link_description: '',
+				link_url: ''
+			});
+		}
+	} );
+
 	// Regular input
 	bp.Views.ActivityInput = bp.View.extend( {
 		tagName  : 'input',
@@ -158,7 +231,13 @@ window.bp = window.bp || {};
 			_.each( this.options, function( value, key ) {
 				this.$el.prop( key, value );
 			}, this );
-		}
+
+			this.listenTo(this.model, 'change:link_loading', this.onLinkScrapping );
+		},
+
+		onLinkScrapping: function() {
+			this.$el.prop( 'disabled', false );
+		},
 	} );
 
 	// The content of the activity
@@ -366,8 +445,12 @@ window.bp = window.bp || {};
 
 		initialize: function() {
 			this.$el.html( $('<div></div>' ).prop( 'id', 'whats-new-textarea' ) );
-			this.views.set( '#whats-new-textarea', new bp.Views.WhatsNew( { activity: this.options.activity } ) );
+			this.views.set( '#whats-new-textarea', [
+				new bp.Views.WhatsNew( {activity: this.options.activity} ),
+				new bp.Views.ActivityLinkPreview( { model: this.model } )
+			] );
 		}
+
 	} );
 
 	bp.Views.FormOptions = bp.View.extend( {
@@ -540,6 +623,7 @@ window.bp = window.bp || {};
 			} );
 
 			var submit = new bp.Views.ActivityInput( {
+				model: this.model,
 				type  : 'submit',
 				id    : 'aw-whats-new-submit',
 				className : 'button',
@@ -579,7 +663,8 @@ window.bp = window.bp || {};
 			'focus #whats-new' : 'displayFull',
 			'reset'            : 'resetForm',
 			'submit'           : 'postUpdate',
-			'keydown'          : 'postUpdate'
+			'keydown'          : 'postUpdate',
+			'keyup'            : 'updateLinkPreview'
 		},
 
 		initialize: function() {
@@ -591,9 +676,11 @@ window.bp = window.bp || {};
 			// Clone the model to set the resetted one
 			this.resetModel = this.model.clone();
 
+			this.linkTimeout = null;
+
 			this.views.set( [
 				new bp.Views.FormAvatar(),
-				new bp.Views.FormContent( { activity: this.model } )
+				new bp.Views.FormContent( { activity: this.model, model: this.model } )
 			] );
 
 			this.model.on( 'change:errors', this.displayFeedback, this );
@@ -670,6 +757,112 @@ window.bp = window.bp || {};
 			}
 		},
 
+		updateLinkPreview: function( event ) {
+			var self = this;
+
+			if ( this.linkTimeout != null ) {
+				clearTimeout( this.linkTimeout );
+			}
+
+			this.linkTimeout = setTimeout( function() {
+				this.linkTimeout = null;
+				self.scrapURL( event.target.value );
+			}, 1000 );
+		},
+
+		scrapURL: function(urlText) {
+			var urlString = "";
+			if ( urlText.indexOf( 'http://' ) >= 0 ) {
+				urlString = this.getURL( 'http://', urlText );
+			} else if ( urlText.indexOf( 'https://' ) >= 0 ) {
+				urlString = this.getURL( 'https://', urlText );
+			} else if ( urlText.indexOf( 'www.' ) >= 0 ) {
+				urlString = this.getURL( 'www', urlText );
+			}
+
+			if( urlString !== '' ){
+				//check if the url of any of the excluded video oembeds
+				var url_a = document.createElement( 'a' );
+				url_a.href = urlString;
+				var hostname = url_a.hostname;
+				if ( BP_Nouveau.activity.params.excluded_hosts.indexOf( hostname ) !== - 1 ) {
+					urlString = '';
+				}
+			}
+
+			if( '' !== urlString ) {
+				this.loadURLPreview( urlString );
+			}
+		},
+
+		getURL: function( prefix, urlText ) {
+			var urlString = '';
+			var startIndex = urlText.indexOf( prefix );
+			for ( var i = startIndex; i < urlText.length; i ++ ) {
+				if ( urlText[i] === ' ' || urlText[i] === '\n' ) {
+					break;
+				} else {
+					urlString += urlText[i];
+				}
+			}
+			if ( prefix === 'www' ) {
+				prefix = 'http://';
+				urlString = prefix + urlString;
+			}
+			return urlString;
+		},
+
+		loadURLPreview: function(url) {
+			var self = this;
+
+			var regexp = /^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+			if ( regexp.test( url ) ) {
+
+				self.model.set( {
+					link_scrapping: true,
+					link_loading: true,
+					link_error: false,
+				} );
+
+				bp.ajax.post( 'bp_activity_parse_url', { url: url } ).always( function( response ) {
+					self.model.set('link_loading', false);
+
+					if ( response.title === '' && response.images === '' ) {
+						self.model.set( 'link_scrapping', false );
+						return;
+					}
+
+					if ( response.error === '' ) {
+						self.model.set( {
+							link_success: true,
+							link_title: response.title,
+							link_description: response.description,
+							link_url: url,
+							link_images: response.images,
+							link_image_index: 0,
+						} );
+					} else {
+						self.model.set( {
+							link_success: false,
+							link_error: true,
+							link_error_msg: response.error,
+						} );
+					}
+				});
+			}
+		},
+
+		delay: function( callback, ms ) {
+			var timer = 0;
+			return function() {
+				var context = this, args = arguments;
+				clearTimeout( timer );
+				timer = setTimeout( function() {
+					callback.apply( context, args );
+				}, ms || 0 );
+			};
+		},
+
 		postUpdate: function( event ) {
 			var self = this,
 			    meta = {};
@@ -712,7 +905,35 @@ window.bp = window.bp || {};
 				data._bp_as_nonce = $('#_bp_as_nonce').val();
 			}
 
-			bp.ajax.post( 'post_update', _.extend( data, this.model.attributes ) ).done( function( response ) {
+			// Remove all unused link preview data
+			data = _.omit( _.extend( data, this.model.attributes ), [
+				'link_images',
+				'link_image_index',
+				'link_success',
+				'link_error',
+				'link_error_msg',
+				'link_scrapping',
+				'link_loading'
+			] );
+
+			// Form link preview data to pass in request if available
+			if ( this.model.get( 'link_success' ) ) {
+				var images = this.model.get( 'link_images' ),
+					index = this.model.get( 'link_image_index' );
+				if ( images.length ) {
+					data = _.extend( data, {
+						'link_image': images[ index ]
+					} );
+				}
+			} else {
+				data = _.omit(data, [
+					'link_title',
+					'link_description',
+					'link_url'
+				]);
+			}
+
+			bp.ajax.post( 'post_update', data ).done( function( response ) {
 				var store       = bp.Nouveau.getStorage( 'bp-activity' ),
 					searchTerms = $( '[data-bp-search="activity"] input[type="search"]' ).val(), matches = {},
 					toPrepend = false;
