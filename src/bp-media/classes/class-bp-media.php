@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss Media
+ * BuddyBoss Media Classes
  *
  * @package BuddyBoss\Media
  * @since BuddyBoss 1.0.0
@@ -10,10 +10,10 @@
 if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
- * BuddyBoss Media DB Model.
+ * Database interaction class for the BuddyBoss media component.
+ * Instance methods are available for creating/editing an media,
+ * static methods for querying media.
  *
- * Handles populating and saving media information.
- *
- * @since BuddyBoss 1.0.0
+ * @since BuddyPress 1.0.0
  */
 class BP_Media extends BP_Media_Model {}
