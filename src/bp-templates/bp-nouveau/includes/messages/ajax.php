@@ -37,6 +37,8 @@ add_action( 'admin_init', function() {
 }, 12 );
 
 /**
+ * AJAX send message and display error.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_messages_send_message() {
@@ -102,6 +104,8 @@ function bp_nouveau_ajax_messages_send_message() {
 }
 
 /**
+ * AJAX send message reply and display error.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_messages_send_reply() {
@@ -224,6 +228,8 @@ function bp_nouveau_ajax_messages_send_reply() {
 }
 
 /**
+ * AJAX get all user message threads.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_get_user_message_threads() {
@@ -375,6 +381,8 @@ function bp_nouveau_ajax_get_user_message_threads() {
 }
 
 /**
+ * AJAX mark message as read.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_messages_thread_read() {
@@ -405,6 +413,8 @@ function bp_nouveau_ajax_messages_thread_read() {
 }
 
 /**
+ * AJAX get messages for each thread.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_get_thread_messages() {
@@ -571,6 +581,8 @@ function bp_nouveau_ajax_get_thread_messages() {
 }
 
 /**
+ * AJAX delete entire message thread.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_delete_thread_messages() {
@@ -604,6 +616,8 @@ function bp_nouveau_ajax_delete_thread_messages() {
 }
 
 /**
+ * AJAX mark message with star.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_star_thread_messages() {
@@ -703,6 +717,8 @@ function bp_nouveau_ajax_star_thread_messages() {
 }
 
 /**
+ * AJAX mark message as read/unread
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_readunread_thread_messages() {
@@ -766,6 +782,8 @@ function bp_nouveau_ajax_readunread_thread_messages() {
 }
 
 /**
+ * AJAX dismiss sitewide notice.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_dismiss_sitewide_notice() {
@@ -814,6 +832,11 @@ function bp_nouveau_ajax_dismiss_sitewide_notice() {
 	}
 }
 
+/**
+ * AJAX load recipient list.
+ *
+ * @since BuddyPress 3.0.0
+ */
 function bp_nouveau_ajax_dsearch_recipients() {
 	if ( empty( $_GET['action'] ) ) {
 		wp_send_json_error();
@@ -851,6 +874,11 @@ function bp_nouveau_ajax_dsearch_recipients() {
 	] );
 }
 
+/**
+ * Exclude logged in member from recipients list.
+ *
+ * @since BuddyPress 3.0.0
+ */
 function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
 	if ( ! $user_query['exclude'] ) {
 		$user_query['exclude'] = [];

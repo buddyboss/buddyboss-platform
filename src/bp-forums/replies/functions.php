@@ -1095,7 +1095,7 @@ function bbp_update_reply_topic_id( $reply_id = 0, $topic_id = 0 ) {
 	return apply_filters( 'bbp_update_reply_topic_id', (int) $topic_id, $reply_id );
 }
 
-/*
+/**
  * Update the reply's meta data with its reply to id
  *
  * @since bbPress (r4944)

@@ -204,6 +204,8 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 }
 
 /**
+ * Get activity directory navigation menu items.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_get_activity_directory_nav_items() {
@@ -324,6 +326,8 @@ function bp_nouveau_get_activity_filters() {
 }
 
 /**
+ * Adds a small avatar to activity meta action if the activity is between a connection or group.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_secondary_avatars( $action, $activity ) {
@@ -343,6 +347,8 @@ function bp_nouveau_activity_secondary_avatars( $action, $activity ) {
 }
 
 /**
+ * Add class to newest activities by type.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_scope_newest_class( $classes = '' ) {

@@ -62,6 +62,11 @@ function bp_nouveau_search_enqueue_scripts() {
 	wp_localize_script( 'bp-nouveau-search', 'BP_SEARCH', apply_filters( 'bp_search_js_settings', $data ) );
 }
 
+/**
+ * Output search message autocomplete init JS.
+ *
+ * @since BuddyPress 3.0.0
+ */
 function bp_nouveau_search_messages_autocomplete_init_jsblock() {
 	?>
 

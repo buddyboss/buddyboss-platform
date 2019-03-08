@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * @ignore Step functions used by Behat steps
+ */
+ 
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode,
     WP_CLI\Process;

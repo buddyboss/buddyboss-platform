@@ -1,5 +1,7 @@
 <?php
-/*
+/**
+ * @ignore parser file
+ *
 This is a compressed copy of NBBC. Do not edit!
 
 Copyright (c) 2008-9, the Phantom Inker.  All rights reserved.

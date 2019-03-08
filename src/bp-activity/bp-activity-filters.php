@@ -577,6 +577,14 @@ function bp_activity_newest_class( $classes = '' ) {
 	return $classes;
 }
 
+/**
+ * Returns $args to force display of all member activity types on members activity feed.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param array $args
+ * @return array $args
+ */
 function bp_activity_display_all_types_on_just_me($args) {
 	if ( ! isset( $args['scope'] ) ) {
 		return $args;

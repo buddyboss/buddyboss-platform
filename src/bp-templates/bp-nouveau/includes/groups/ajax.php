@@ -250,6 +250,8 @@ function bp_nouveau_ajax_joinleave_group() {
 }
 
 /**
+ * AJAX get list of members to invite to group.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_get_users_to_invite() {
@@ -424,6 +426,8 @@ function bp_nouveau_ajax_get_users_to_invite() {
 }
 
 /**
+ * AJAX send group invite.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_send_group_invites() {
@@ -513,6 +517,8 @@ function bp_nouveau_ajax_send_group_invites() {
 }
 
 /**
+ * AJAX remove group invite.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_remove_group_invite() {
