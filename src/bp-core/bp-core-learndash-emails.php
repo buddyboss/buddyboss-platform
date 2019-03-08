@@ -10,7 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 if ( ! function_exists( 'bp_email_ld_group_email_users_args' ) ) {
-
+	/**
+	 * Return email template for LearnDash groups.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	function bp_email_ld_group_email_users_args( $mail_args ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
@@ -24,7 +28,11 @@ if ( ! function_exists( 'bp_email_ld_group_email_users_args' ) ) {
 }
 
 if ( ! function_exists( 'bp_email_learndash_quiz_email' ) ) {
-
+	/**
+	 * Return email template for LearnDash quizzes.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	function bp_email_learndash_quiz_email( $email_params ) {
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email

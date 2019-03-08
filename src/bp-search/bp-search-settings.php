@@ -1,15 +1,13 @@
 <?php
 /**
- * Search Settings
+ * BuddyBoss Search Settings
  *
  * @package BuddyBoss\Search
  * @since BuddyBoss 1.0.0
  */
 
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Get the Search settings sections.
@@ -374,18 +372,33 @@ function bp_search_settings_callback_number_of_results() {
 	<?php
 }
 
+/**
+ * Component search helper text.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_search_settings_callback_community_section() {
 	?>
 	<p><?php esc_html_e( 'Search the following BuddyBoss components:', 'buddyboss' ) ?></p>
 	<?php
 }
 
+/**
+ * Post type search helper text.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_search_settings_callback_post_type_section() {
 	?>
 	<p><?php esc_html_e( 'Search the following WordPress content and custom post types:', 'buddyboss' ) ?></p>
 	<?php
 }
 
+/**
+ * Autocomplete search helper text.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_search_settings_callback_general_section() {
 	?>
 	<p><?php esc_html_e( 'Configure autocomplete dropdown as you type', 'buddyboss' ) ?></p>

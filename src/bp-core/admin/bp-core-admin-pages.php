@@ -13,7 +13,6 @@ defined( 'ABSPATH' ) || exit;
  * Renders the Pages Setup admin panel.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_core_admin_pages_settings() {
 	?>
@@ -38,6 +37,11 @@ function bp_core_admin_pages_settings() {
 	<?php
 }
 
+/**
+ * Output custom pages admin settings.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_custom_pages_do_settings_sections( $page ) {
 	global $wp_settings_sections, $wp_settings_fields;
 

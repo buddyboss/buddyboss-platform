@@ -2,7 +2,7 @@
 /**
  * Deprecated functions.
  *
- * @deprecated 2.3.0
+ * @deprecated BuddyPress 2.3.0
  */
 
 // Exit if accessed directly.
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Return the referrer URL without the http(s)://
  *
- * @deprecated 2.3.0
+ * @deprecated BuddyPress 2.3.0
  *
  * @return string The referrer URL.
  */

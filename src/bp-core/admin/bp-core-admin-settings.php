@@ -322,7 +322,6 @@ function bp_core_admin_settings() {
  * The main Integrations page
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_core_admin_integrations() {
     $active_tab = bp_core_get_admin_integration_active_tab();
@@ -341,6 +340,11 @@ function bp_core_admin_integrations() {
 <?php
 }
 
+/**
+ * Load the AppBoss integration admin screen.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_core_admin_appboss() {
 	require buddypress()->plugin_dir . 'bp-core/admin/templates/appboss-screen.php';
 }

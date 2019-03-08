@@ -2,7 +2,7 @@
 /**
  * Deprecated functions.
  *
- * @deprecated 2.6.0
+ * @deprecated BuddyPress 2.6.0
  */
 
 // Exit if accessed directly.
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  * Print the generation time in the footer of the site.
  *
  * @since BuddyPress 1.0.0
- * @deprecated 2.6.0
+ * @deprecated BuddyPress 2.6.0
  */
 function bp_core_print_generation_time() {
 ?>
@@ -29,7 +29,7 @@ function bp_core_print_generation_time() {
  * after all plugins have had a chance to register their navigation items.
  *
  * @since BuddyPress 1.0.0
- * @deprecated 2.6.0
+ * @deprecated BuddyPress 2.6.0
  *
  * @return bool|null Returns false on failure.
  */
@@ -41,7 +41,7 @@ function bp_core_sort_nav_items() {
  * Sort all subnavigation arrays.
  *
  * @since BuddyPress 1.1.0
- * @deprecated 2.6.0
+ * @deprecated BuddyPress 2.6.0
  *
  * @return bool|null Returns false on failure.
  */

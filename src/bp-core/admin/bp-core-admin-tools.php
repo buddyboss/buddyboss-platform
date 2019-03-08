@@ -120,7 +120,7 @@ function bp_admin_repair_list() {
 	$repair_list[35] = array(
 		'bp-xprofile-fields',
 		__( 'Repair default profile set and fields.', 'buddyboss' ),
-		'repare_default_profiles_fields',
+		'repair_default_profiles_fields',
 	);
 
 	$repair_list[36] = array(
@@ -353,7 +353,12 @@ function bp_admin_repair_last_activity() {
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
-function repare_default_profiles_fields() {
+/**
+ * Repair default profile fields.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function repair_default_profiles_fields() {
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	require_once( buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
 
@@ -371,6 +376,11 @@ function repare_default_profiles_fields() {
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
+/**
+ * Resync BuddyBoss profile data to WordPress.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function resync_xprofile_wordpress_fields() {
 	$users = get_users( [
 		'fields' => [ 'ID' ]
@@ -382,6 +392,11 @@ function resync_xprofile_wordpress_fields() {
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
+/**
+ * Resync WordPress profile data to BuddyBoss.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function resync_wordpress_xprofile_fields() {
 	$users = get_users( [
 		'fields' => [ 'ID', 'user_nicename' ]
@@ -409,6 +424,11 @@ function resync_wordpress_xprofile_fields() {
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
+/**
+ * Update member display names.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function xprofile_update_display_names() {
 	$users = get_users( [
 		'fields' => [ 'ID', 'display_name' ]

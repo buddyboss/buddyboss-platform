@@ -3900,6 +3900,11 @@ function bp_strip_script_and_style_tags( $string ) {
 	return preg_replace( '@<(script|style)[^>]*?>.*?</\\1>@si', '', $string );
 }
 
+/**
+ * Check if logged in member type is allowed to send invites
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_check_member_send_invites_tab_member_type_allowed() {
 
 	// default allowed false
@@ -3930,6 +3935,11 @@ function bp_check_member_send_invites_tab_member_type_allowed() {
 	return $allowed;
 }
 
+/**
+ * Set default pages for Privacy Policy, Terms of Service, Activate and Register
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_core_set_default_pages() {
 
 	$page_ids       = bp_core_get_directory_page_ids( 'all' );

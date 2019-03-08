@@ -2,7 +2,7 @@
 /**
  * Deprecated functions.
  *
- * @deprecated 2.8.0
+ * @deprecated BuddyPress 2.8.0
  */
 
 // Exit if accessed directly.
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * BuddyPress 2.8 introduces a minimum PHP requirement of PHP 5.3.
  *
  * @since BuddyPress 2.7.0
- * @deprecated 2.8.0
+ * @deprecated BuddyPress 2.8.0
  *
  * @return bool
  */
@@ -29,7 +29,7 @@ function bp_core_admin_is_running_php53_or_greater() {
  * Originally hooked to 'load-plugins.php' with priority 100.
  *
  * @since BuddyPress 2.7.0
- * @deprecated 2.8.0
+ * @deprecated BuddyPress 2.8.0
  */
 function bp_core_admin_maybe_disable_update_row_for_php53_requirement() {
 	if ( bp_core_admin_is_running_php53_or_greater() ) {
@@ -48,7 +48,7 @@ function bp_core_admin_maybe_disable_update_row_for_php53_requirement() {
  * Originally hooked to 'load-update-core.php'.
  *
  * @since BuddyPress 2.7.0
- * @deprecated 2.8.0
+ * @deprecated BuddyPress 2.8.0
  */
 function bp_core_admin_maybe_remove_from_update_core() {
 	if ( bp_core_admin_is_running_php53_or_greater() ) {
@@ -65,7 +65,7 @@ function bp_core_admin_maybe_remove_from_update_core() {
  * Attached to the 'site_transient_update_plugins' filter.
  *
  * @since BuddyPress 2.7.0
- * @deprecated 2.8.0
+ * @deprecated BuddyPress 2.8.0
  *
  * @param  object $retval Object of plugin update data.
  * @return object
@@ -92,7 +92,7 @@ function bp_core_admin_remove_buddypress_from_update_transient( $retval ) {
  * allows a single plugin to be updated.
  *
  * @since BuddyPress 2.7.0
- * @deprecated 2.8.0
+ * @deprecated BuddyPress 2.8.0
  *
  * @param string $file        Plugin filename. buddypress/bp-loader.php.
  * @param array  $plugin_data Data about the BuddyPress plugin, as returned by the
@@ -158,7 +158,7 @@ function bp_core_admin_php52_plugin_row( $file, $plugin_data ) {
  * Add an admin notice to installations that are not running PHP 5.3+.
  *
  * @since BuddyPress 2.7.0
- * @deprecated 2.8.0
+ * @deprecated BuddyPress 2.8.0
  */
 function bp_core_admin_php53_admin_notice() {
 	_deprecated_function( __FUNCTION__, '2.8' );

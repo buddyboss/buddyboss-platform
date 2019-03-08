@@ -3,7 +3,7 @@
  * Deprecated functions
  *
  * @package BuddyBoss\Core
- * @deprecated 2.2.0
+ * @deprecated BuddyPress 2.2.0
  */
 
 // Exit if accessed directly
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * See #4090, #3746, #2546 for background.
  *
  * @since BuddyPress 2.0.0
- * @deprecated 2.2.0
+ * @deprecated BuddyPress 2.2.0
  *
  * @todo Support untrashing better
  *
@@ -35,7 +35,7 @@ function bp_blogs_catch_transition_post_status( $new_status, $old_status, $post 
 /**
  * Record a new blog post in the BuddyBoss activity feed.
  *
- * @deprecated 2.2.0
+ * @deprecated BuddyPress 2.2.0
  *
  * @param int $post_id ID of the post being recorded.
  * @param object $post The WP post object passed to the 'save_post' action.
@@ -52,7 +52,7 @@ function bp_blogs_record_post( $post_id, $post, $user_id = 0 ) {
  * Updates a blog post's corresponding activity entry during a post edit.
  *
  * @since BuddyPress 2.0.0
- * @deprecated 2.2.0
+ * @deprecated BuddyPress 2.2.0
  *
  * @see bp_blogs_catch_transition_post_status()
  *
@@ -67,7 +67,7 @@ function bp_blogs_update_post( $post ) {
  * Clear cache when a new blog is created.
  *
  * @since BuddyPress 1.0.0
- * @deprecated 2.2.0
+ * @deprecated BuddyPress 2.2.0
  *
  * @param BP_Blogs_Blog $recorded_blog_obj The recorded blog, passed by
  *        'bp_blogs_new_blog'.
@@ -81,7 +81,7 @@ function bp_blogs_format_clear_blog_cache( $recorded_blog_obj ) {
  * Format 'new_member' activity actions.
  *
  * @since BuddyPress 2.0.0
- * @deprecated 2.2.0
+ * @deprecated BuddyPress 2.2.0
  *
  * @param string $action Static activity action.
  * @param object $activity Activity object.
@@ -98,7 +98,7 @@ function bp_xprofile_format_activity_action_new_member( $action, $activity ) {
  * Add 'bp' to global group of network wide cachable objects.
  *
  * @since BuddyPress 1.1.0
- * @deprecated 2.2.0
+ * @deprecated BuddyPress 2.2.0
  */
 function bp_core_add_global_group() {
 	_deprecated_function( __FUNCTION__, '2.2', 'This function has no replacement' );
@@ -107,7 +107,7 @@ function bp_core_add_global_group() {
 /**
  * Add a piece of message metadata.
  *
- * @deprecated 2.2.2
+ * @deprecated BuddyPress 2.2.2
  */
 function bp_message_add_meta( $message_id, $meta_key, $meta_value, $unique = false ) {
 	_deprecated_function( __FUNCTION__, '2.3.0', 'bp_messages_add_meta()' );

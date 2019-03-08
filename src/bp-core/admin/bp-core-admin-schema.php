@@ -77,6 +77,11 @@ function bp_core_install( $active_components = false ) {
 	}
 }
 
+/**
+ * Uninstall forums if $uninstalled_components['forums'] is not empty.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_core_uninstall( $uninstalled_components ) {
 	// Discussion forums
 	if ( !empty( $uninstalled_components['forums'] ) ) {
@@ -88,7 +93,6 @@ function bp_core_uninstall( $uninstalled_components ) {
  * Install database tables for the Notifications component.
  *
  * @since BuddyPress 1.0.0
- *
  */
 function bp_core_install_notifications() {
 	$sql             = array();
@@ -402,6 +406,11 @@ function bp_core_install_extended_profiles() {
 	bp_core_install_default_profiles_fields();
 }
 
+/**
+ * Install default profile fields.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_core_install_default_profiles_fields() {
 	global $wpdb;
 
@@ -526,7 +535,7 @@ function bp_core_install_blog_tracking() {
 /** Discussion Forums *********************************************************/
 
 /**
- * Run the bbpress activation,
+ * Run the bbpress activation.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -539,7 +548,7 @@ function bp_core_install_discussion_forums() {
 }
 
 /**
- * Run the bbpress deactivation,
+ * Run the bbpress deactivation.
  *
  * @since BuddyBoss 1.0.0
  */

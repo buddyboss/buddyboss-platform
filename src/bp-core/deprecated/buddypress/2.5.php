@@ -2,7 +2,7 @@
 /**
  * Deprecated functions.
  *
- * @deprecated 2.5.0
+ * @deprecated BuddyPress 2.5.0
  */
 
 // Exit if accessed directly.
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  * Set "From" name in outgoing email to the site name.
  *
  * @since BuddyPress 1.0.0
- * @deprecated 2.5.0 Not used. Was hooked to WordPress' "wp_mail_from_name" action.
+ * @deprecated BuddyPress 2.5.0 Not used. Was hooked to WordPress' "wp_mail_from_name" action.
  *                   Use the "bp_email_get_from" action instead.
  *
  * @return string The blog name for the root blog.
@@ -24,7 +24,7 @@ function bp_core_email_from_name_filter() {
 	 * Filters the "From" name in outgoing email to the site name.
 	 *
 	 * @since BuddyPress 1.2.0
-	 * @deprecated 2.5.0 Not used.
+	 * @deprecated BuddyPress 2.5.0 Not used.
 	 *
 	 * @param string $value Value to set the "From" name to.
 	 */
@@ -89,7 +89,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the user email that the new comment notification will be sent to.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string $value
 			 */
@@ -100,7 +100,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the new comment notification subject that will be sent to user.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string $value       Email notification subject text.
 			 * @param string $poster_name Name of the person who made the comment.
@@ -112,7 +112,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the new comment notification message that will be sent to user.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
 			 *
 			 * @param string $value         Email notification message text.
 			 * @param string $poster_name   Name of the person who made the comment.
@@ -129,7 +129,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the user email that the new comment reply notification will be sent to.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string $value
 			 */
@@ -140,7 +140,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the new comment reply notification subject that will be sent to user.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string $value       Email notification subject text.
 			 * @param string $poster_name Name of the person who made the comment.
@@ -152,7 +152,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the new comment reply notification message that will be sent to user.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
 			 *
 			 * @param string $value         Email notification message text.
 			 * @param string $poster_name   Name of the person who made the comment.
@@ -169,7 +169,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the user email that the @mention notification will be sent to.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string $value
 			 */
@@ -180,7 +180,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the @mention notification subject that will be sent to user.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string $value       Email notification subject text.
 			 * @param string $poster_name Name of the person who made the @mention.
@@ -192,7 +192,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the @mention notification message that will be sent to user.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
 			 *
 			 * @param string $message       Email notification message text.
 			 * @param string $poster_name   Name of the person who made the @mention.
@@ -224,7 +224,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the email that the notification is going to upon successful registration without blog.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $meta argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $meta argument unset and deprecated.
 			 *
 			 * @param string $value              User email the notification is being sent to.
 			 * @param string $recipient_username The user's login name.
@@ -240,7 +240,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the subject that the notification uses upon successful registration without blog.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $meta argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $meta argument unset and deprecated.
 			 *
 			 * @param string $value              Email notification subject text.
 			 * @param string $recipient_username The user's login name.
@@ -255,7 +255,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the message that the notification uses upon successful registration without blog.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $meta argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $meta argument unset and deprecated.
 			 *
 			 * @param string $value              The message to use.
 			 * @param string $recipient_username The user's login name.
@@ -272,7 +272,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the email that the notification is going to upon successful registration with blog.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $meta argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $meta argument unset and deprecated.
 			 *
 			 * @param string $value              User email the notification is being sent to.
 			 * @param string $domain             The new blog domain.
@@ -290,7 +290,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the subject that the notification uses upon successful registration with blog.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $meta argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $meta argument unset and deprecated.
 			 *
 			 * @param string $value              The subject to use.
 			 * @param string $domain             The new blog domain.
@@ -308,7 +308,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the message that the notification uses upon successful registration with blog.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $meta argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $meta argument unset and deprecated.
 			 *
 			 * @param string $value              The message to use.
 			 * @param string $domain             The new blog domain.
@@ -328,7 +328,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the email address for who is getting the friend request.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string $value
 			 */
@@ -339,7 +339,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the subject for the friend request email.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string $value          Subject line to be used in friend request email.
 			 * @param string $initiator_name Name of the person requesting friendship.
@@ -351,7 +351,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the message for the friend request email.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
 			 *
 			 * @param string $value             Message to be used in friend request email.
 			 * @param string $initiator_name    Name of the person requesting friendship.
@@ -368,7 +368,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the email address for whose friend request got accepted.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string $value Email address for whose friend request got accepted.
 			 */
@@ -379,7 +379,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the subject for the connection request accepted email.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string $value       Subject line to be used in connection request accepted email.
 			 * @param string $friend_name Name of the person who accepted the friendship request.
@@ -391,7 +391,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the message for the connection request accepted email.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
 			 *
 			 * @param string $value         Message to be used in friend request email.
 			 * @param string $friend_name   Name of the person who accepted the friendship request.
@@ -407,7 +407,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the user email that the group update notification will be sent to.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string $value User email the notification is being sent to.
 			 */
@@ -418,7 +418,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the group update notification subject that will be sent to user.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string          $value Email notification subject text.
 			 * @param BP_Groups_Group $group Object holding the current group instance. Passed by reference.
@@ -430,7 +430,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the group update notification message that will be sent to user.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
 			 *
 			 * @param string          $value         Email notification message text.
 			 * @param BP_Groups_Group $group         Object holding the current group instance. Passed by reference.
@@ -446,7 +446,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the user email that the group invite notification will be sent to.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string $value User email the invite notification is being sent to.
 			 */
@@ -457,7 +457,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the group invite notification subject that will be sent to user.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string          $value Invite notification email subject text.
 			 * @param BP_Groups_Group $group Object holding the current group instance. Passed by reference.
@@ -469,7 +469,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the group invite notification message that will be sent to user.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
 			 *
 			 * @param string          $value         Invite notification email message text.
 			 * @param BP_Groups_Group $group         Object holding the current group instance. Passed by reference.
@@ -488,7 +488,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the user email that the group promotion notification will be sent to.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string $value User email the promotion notification is being sent to.
 			 */
@@ -499,7 +499,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the group promotion notification subject that will be sent to user.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string          $value Promotion notification email subject text.
 			 * @param BP_Groups_Group $group Object holding the current group instance. Passed by reference.
@@ -511,7 +511,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the group promotion notification message that will be sent to user.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
 			 *
 			 * @param string          $value         Promotion notification email message text.
 			 * @param BP_Groups_Group $group         Object holding the current group instance. Passed by reference.
@@ -528,7 +528,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the user email that the group membership request will be sent to.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string $value User email the request is being sent to.
 			 */
@@ -539,7 +539,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the group membership request subject that will be sent to user.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string          $value Membership request email subject text.
 			 * @param BP_Groups_Group $group Object holding the current group instance. Passed by reference.
@@ -551,7 +551,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the group membership request message that will be sent to user.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
 			 *
 			 * @param string          $value                Membership request email message text.
 			 * @param BP_Groups_Group $group                Object holding the current group instance. Passed by reference.
@@ -568,7 +568,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			/**
 			 * Filters the user email that the group membership request result will be sent to.
 			 *
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string $value User email the request is being sent to.
 			 */
@@ -579,7 +579,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the group membership request result subject that will be sent to user.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *
 			 * @param string          $value Membership request result email subject text.
 			 * @param BP_Groups_Group $group Object holding the current group instance. Passed by reference.
@@ -591,7 +591,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the group membership request result message that will be sent to user.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $settings_link argument unset and deprecated.
 			 *
 			 * @param string          $value      Membership request result email message text.
 			 * @param BP_Groups_Group $group      Object holding the current group instance. Passed by reference.
@@ -607,7 +607,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the user email that the message notification will be sent to.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $ud argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $ud argument unset and deprecated.
 			 *
 			 * @param string $value      User email the message notification is being sent to.
 			 * @param bool   $deprecated Removed in 2.5; now a bool (false).
@@ -619,7 +619,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the message notification subject that will be sent to user.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $ud argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $ud argument unset and deprecated.
 			 *
 			 * @param string $value       Email notification subject text.
 			 * @param string $sender_name Name of the person who sent the message.
@@ -632,7 +632,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filters the message notification message that will be sent to user.
 			 *
 			 * @since BuddyPress 1.2.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 			 *                   $settings_link and $ud arguments unset and deprecated.
 			 *
 			 * @param string $value        Email notification message text.
@@ -652,7 +652,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 * Filter the email text sent when a user changes emails.
 			 *
 			 * @since BuddyPress 2.1.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $update_user argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $update_user argument unset and deprecated.
 			 *
 			 * @param string  $value           Text of the email.
 			 * @param string  $recipient_email New user email that the current user has changed to.
@@ -718,7 +718,7 @@ function bp_core_deprecated_email_actions( $delivery_status, $email ) {
 		 * Fires after the sending of a reply to an update email notification.
 		 *
 		 * @since BuddyPress 1.5.0
-		 * @deprecated 2.5.0 Use the filters in BP_Email. $params argument unset and deprecated.
+		 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $params argument unset and deprecated.
 		 *
 		 * @param int    $user_id       ID of the original activity item author.
 		 * @param string $email_subject Email notification subject text.
@@ -734,7 +734,7 @@ function bp_core_deprecated_email_actions( $delivery_status, $email ) {
 		 * Fires after the sending of a reply to a reply email notification.
 		 *
 		 * @since BuddyPress 1.5.0
-		 * @deprecated 2.5.0 Use the filters in BP_Email. $params argument unset and deprecated.
+		 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $params argument unset and deprecated.
 		 *
 		 * @param int    $user_id       ID of the parent activity item author.
 		 * @param string $email_subject Email notification subject text.
@@ -765,7 +765,7 @@ function bp_core_deprecated_email_actions( $delivery_status, $email ) {
 			 * Fires after the sending of the notification to new users for successful registration without blog.
 			 *
 			 * @since BuddyPress 1.5.0
-			 * @deprecated 2.5.0 Use the filters in BP_Email. $meta argument unset and deprecated.
+			 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $meta argument unset and deprecated.
 			 *
 			 * @param string $admin_email        Admin Email address for the site.
 			 * @param string $email_subject      Subject used in the notification email.
@@ -783,7 +783,7 @@ function bp_core_deprecated_email_actions( $delivery_status, $email ) {
 		 * Fires after the sending of the notification to new users for successful registration with blog.
 		 *
 		 * @since BuddyPress 1.5.0
-		 * @deprecated 2.5.0 Use the filters in BP_Email. $meta argument unset and deprecated.
+		 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email. $meta argument unset and deprecated.
 		 *
 		 * @param string $admin_email        Admin Email address for the site.
 		 * @param string $email_subject      Subject used in the notification email.
@@ -803,7 +803,7 @@ function bp_core_deprecated_email_actions( $delivery_status, $email ) {
 		 * Fires after the new friend request email is sent.
 		 *
 		 * @since BuddyPress 1.5.0
-		 * @deprecated 2.5.0 Use the filters in BP_Email.
+		 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 		 *
 		 * @param int    $friend_id     ID of the request recipient.
 		 * @param string $email_subject Text for the friend request subject field.
@@ -818,7 +818,7 @@ function bp_core_deprecated_email_actions( $delivery_status, $email ) {
 		 * Fires after the connection request accepted email is sent.
 		 *
 		 * @since BuddyPress 1.5.0
-		 * @deprecated 2.5.0 Use the filters in BP_Email.
+		 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 		 *
 		 * @param int    $initiator_id  ID of the friendship requester.
 		 * @param string $email_subject Text for the friend request subject field.
@@ -833,7 +833,7 @@ function bp_core_deprecated_email_actions( $delivery_status, $email ) {
 		 * Fires after the notification is sent that a member has been invited to a group.
 		 *
 		 * @since BuddyPress 1.5.0
-		 * @deprecated 2.5.0 Use the filters in BP_Email.
+		 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 		 *
 		 * @param int             $invited_user_id  ID of the user who was invited.
 		 * @param string          $email_subject    Email notification subject text.
@@ -847,7 +847,7 @@ function bp_core_deprecated_email_actions( $delivery_status, $email ) {
 		 * Fires after the notification is sent that a member has been promoted.
 		 *
 		 * @since BuddyPress 1.5.0
-		 * @deprecated 2.5.0 Use the filters in BP_Email.
+		 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 		 *
 		 * @param int    $user_id       ID of the user who was promoted.
 		 * @param string $email_subject Email notification subject text.
@@ -861,7 +861,7 @@ function bp_core_deprecated_email_actions( $delivery_status, $email ) {
 		 * Fires after the notification is sent that a member has requested group membership.
 		 *
 		 * @since BuddyPress 1.5.0
-		 * @deprecated 2.5.0 Use the filters in BP_Email.
+		 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 		 *
 		 * @param int    $admin_id           ID of the group administrator.
 		 * @param string $email_subject      Email notification subject text.
@@ -877,7 +877,7 @@ function bp_core_deprecated_email_actions( $delivery_status, $email ) {
 		 * Fires after the notification is sent that a membership has been approved.
 		 *
 		 * @since BuddyPress 1.5.0
-		 * @deprecated 2.5.0 Use the filters in BP_Email.
+		 * @deprecated BuddyPress 2.5.0 Use the filters in BP_Email.
 		 *
 		 * @param int    $requesting_user_id ID of the user whose membership was approved.
 		 * @param string $email_subject      Email notification subject text.
@@ -893,7 +893,7 @@ add_action( 'bp_send_email_success', 'bp_core_deprecated_email_actions', 20, 2 )
  * When a blog comment status transition occurs, update the relevant activity's status.
  *
  * @since BuddyPress 1.6.0
- * @deprecated 2.5.0
+ * @deprecated BuddyPress 2.5.0
  *
  * @param string $new_status New comment status.
  * @param string $old_status Previous comment status.
@@ -909,7 +909,7 @@ function bp_blogs_transition_activity_status( $new_status, $old_status, $comment
  *
  * Only posts the item if blog is public and post is not password-protected.
  *
- * @deprecated 2.5.0
+ * @deprecated BuddyPress 2.5.0
  *
  * @param int $comment_id ID of the comment being recorded.
  * @param bool|string $is_approved Optional. The $is_approved value passed to
@@ -924,7 +924,7 @@ function bp_blogs_record_comment( $comment_id, $is_approved = true ) {
 /**
  * Remove a blog comment activity item from the activity feed.
  *
- * @deprecated 2.5.0
+ * @deprecated BuddyPress 2.5.0
  *
  * @param int $comment_id ID of the comment to be removed.
  */

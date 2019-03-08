@@ -1,8 +1,13 @@
 <?php
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+/**
+ * BuddyPress Search Filters.
+ *
+ * @package BuddyBoss\Search
+ * @since BuddyBoss 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Get the default items to search though, if nothing has been selected in settings.
@@ -55,7 +60,7 @@ add_filter( 'bp_search_option_items-to-search', 'bb_global_search_default_items_
  *
  * @since BuddyBoss 1.0.0
  *
- * @param mixed $value
+ * @param mixed $search_types
  *
  * @return mixed
  */
@@ -85,11 +90,10 @@ add_filter( 'template_include', 'bp_search_override_wp_native_results', 999 ); /
  *
  * @since BuddyBoss 1.0.0
  *
- * @param mixed $value
+ * @param mixed $template
  *
  * @return mixed
  **/
-
 function bp_search_override_wp_native_results( $template ) {
 
 	if ( bp_search_is_search() ) { //if search page.
@@ -112,17 +116,15 @@ function bp_search_override_wp_native_results( $template ) {
 }
 
 
+add_filter( 'template_include', 'bp_search_result_page_dummy_post_load', 999 ); //don't leave any chance!.
 /**
  * Load dummy post for wp native search result. magic starts here.
  * @since BuddyBoss 1.0.0
  *
- * @param mixed $value
+ * @param mixed $template
  *
  * @return mixed
  **/
-
-add_filter( 'template_include', 'bp_search_result_page_dummy_post_load', 999 ); //don't leave any chance!.
-
 function bp_search_result_page_dummy_post_load( $template ) {
 	global $wp_query;
 
@@ -174,17 +176,16 @@ function bp_search_result_page_dummy_post_load( $template ) {
 	return $template;
 }
 
+
+add_filter( 'pre_get_posts', 'bp_search_clear_native_search_query' );
 /**
  * Force native wp search page not to look any data into db to save query and performance
  * @since BuddyBoss 1.0.0
  *
- * @param mixed $value
+ * @param mixed $query
  *
  * @return mixed
  **/
-
-add_filter( 'pre_get_posts', 'bp_search_clear_native_search_query' );
-
 function bp_search_clear_native_search_query( $query ) {
 
 	if ( bp_search_is_search() ) {
@@ -196,6 +197,14 @@ function bp_search_clear_native_search_query( $query ) {
 	return $query;
 }
 
+/**
+ * Before searching groups parse type to be blank.
+ * @since BuddyBoss 1.0.0
+ *
+ * @param mixed $args
+ *
+ * @return mixed
+ **/
 function bp_search_filter_bp_before_has_groups_parse_args( $args ) {
 
 	if ( wp_doing_ajax() && isset( $_GET['action'] ) && $_GET['action'] === 'bp_search_ajax' ) {

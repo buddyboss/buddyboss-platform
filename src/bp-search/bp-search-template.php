@@ -1,6 +1,13 @@
 <?php
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+/**
+ * BuddyBoss Search Template.
+ *
+ * @package BuddyBoss\Search
+ * @since BuddyBoss 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 add_filter( 'the_content', 'bp_search_search_page_content', 9 );
 
