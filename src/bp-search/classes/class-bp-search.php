@@ -276,7 +276,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 
 				/* _______________________________ */
 				$url      = $this->search_page_search_url();
-				$url      = esc_url( add_query_arg( array( 'no_frame' => '1' ), $url ) );
+				$url      = esc_url( add_query_arg( array( 'no_frame' => '1', 'bp_search' => 1 ), $url ) );
 				$type_mem = "";
 				foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
 					$new_row               = array( 'value' => $item['html'] );
