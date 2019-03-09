@@ -444,13 +444,15 @@ window.bp = window.bp || {};
 		id       : 'whats-new-content',
 
 		initialize: function() {
-			this.$el.html( $('<div></div>' ).prop( 'id', 'whats-new-textarea' ) );
-			this.views.set( '#whats-new-textarea', [
-				new bp.Views.WhatsNew( {activity: this.options.activity} ),
-				new bp.Views.ActivityLinkPreview( { model: this.model } )
-			] );
-		}
+			this.$el.html( $( '<div></div>' ).prop( 'id', 'whats-new-textarea' ) );
+			var views = [ new bp.Views.WhatsNew( { activity: this.options.activity } ) ];
 
+			if ( BP_Nouveau.activity.params.link_preview ) {
+				views[ views.length ] = new bp.Views.ActivityLinkPreview( { model: this.model } );
+			}
+
+			this.views.set( '#whats-new-textarea', views );
+		}
 	} );
 
 	bp.Views.FormOptions = bp.View.extend( {
@@ -684,6 +686,10 @@ window.bp = window.bp || {};
 			] );
 
 			this.model.on( 'change:errors', this.displayFeedback, this );
+
+			if ( ! BP_Nouveau.activity.params.link_preview ) {
+				this.$el.off( 'keyup' );
+			}
 		},
 
 		displayFull: function( event ) {

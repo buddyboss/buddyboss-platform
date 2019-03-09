@@ -141,6 +141,22 @@ function bp_admin_setting_callback_enable_activity_like() {
 	<?php
 }
 
+
+/**
+ * Allow link previews in activity posts.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_admin_setting_callback_enable_activity_link_preview() {
+	?>
+
+	<input id="_bp_enable_activity_link_preview" name="_bp_enable_activity_link_preview" type="checkbox" value="1" <?php checked( bp_is_activity_link_preview_active( false ) ); ?> />
+	<label for="_bp_enable_activity_link_preview"><?php _e( 'Allow link previews in activity posts', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+
 /**
  * Sanitization for bp-disable-blogforum-comments setting.
  *

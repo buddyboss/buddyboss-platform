@@ -104,6 +104,10 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		) );
 	}
 
+	if ( bp_is_activity_link_preview_active() ) {
+		$activity_params['link_preview'] = true;
+	}
+
 	/**
 	 * Filters the included, specific, Action buttons.
 	 *

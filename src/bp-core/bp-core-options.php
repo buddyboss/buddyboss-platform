@@ -933,6 +933,28 @@ function bp_is_activity_like_active( $default = true ) {
 	return (bool) apply_filters( 'bp_is_activity_like_active', (bool) bp_get_option( '_bp_enable_activity_like', $default ) );
 }
 
+
+/**
+ * Check whether Activity Link Preview is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if Link Preview is enabled, otherwise false.
+ */
+function bp_is_activity_link_preview_active( $default = false ) {
+
+	/**
+	 * Filters whether or not Activity Link Preview is enabled.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param bool $value Whether or not Activity Link Preview is enabled.
+	 */
+	return (bool) apply_filters( 'bp_is_activity_link_preview_active', (bool) bp_get_option( '_bp_enable_activity_link_preview', $default ) );
+}
+
 /**
  * Get the current theme package ID.
  *
