@@ -1,5 +1,19 @@
 <?php
+/**
+ * Sample integration main class
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Setup sample integration class
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class BP_Learndash_Integration extends BP_Integration {
 
 	public function __construct() {

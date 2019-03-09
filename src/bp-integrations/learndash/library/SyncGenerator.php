@@ -1,9 +1,23 @@
 <?php
+/**
+ * @todo add description
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 namespace Buddyboss\LearndashIntegration\Library;
 
 use BP_Groups_Member;
 
+/**
+ * 
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class SyncGenerator
 {
 	protected $syncingToLearndash = false;
@@ -12,6 +26,11 @@ class SyncGenerator
 	protected $ldGroupId;
 	protected $syncMetaKey = '_sync_group_id';
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct($bpGroupId = null, $ldGroupId = null)
 	{
 		$this->bpGroupId = $bpGroupId;
@@ -21,26 +40,51 @@ class SyncGenerator
 		$this->verifyInputs();
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function hasLdGroup()
 	{
 		return !! $this->ldGroupId;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function hasBpGroup()
 	{
 		return !! $this->bpGroupId;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function getLdGroupId()
 	{
 		return $this->ldGroupId;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function getBpGroupId()
 	{
 		return $this->bpGroupId;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function associateToLearndash($ldGroupId = null)
 	{
 		if ($this->ldGroupId && ! $ldGroupId) {
@@ -63,6 +107,11 @@ class SyncGenerator
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function desyncFromLearndash()
 	{
 		if (! $this->ldGroupId) {
@@ -74,6 +123,11 @@ class SyncGenerator
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function deleteBpGroup($bpGroupId)
 	{
 		$this->syncingToBuddypress(function() use ($bpGroupId) {
@@ -81,6 +135,11 @@ class SyncGenerator
 		});
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function deleteLdGroup($ldGroupId)
 	{
 		$this->syncingToLearndash(function() use ($ldGroupId) {
@@ -88,6 +147,11 @@ class SyncGenerator
 		});
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function associateToBuddypress($bpGroupId = null)
 	{
 		if ($this->bpGroupId && ! $bpGroupId) {
@@ -110,6 +174,11 @@ class SyncGenerator
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function desyncFromBuddypress()
 	{
 		if (! $this->bpGroupId) {
@@ -121,6 +190,11 @@ class SyncGenerator
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function fullSyncToLearndash()
 	{
 		$lastSynced = groups_get_groupmeta($this->bpGroupId, '_last_sync', true) ?: 0;
@@ -133,6 +207,11 @@ class SyncGenerator
 		groups_update_groupmeta($this->bpGroupId, '_last_sync', time());
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function fullSyncToBuddypress()
 	{
 		$lastSynced = groups_get_groupmeta($this->ldGroupId, '_last_sync', true) ?: 0;
@@ -145,6 +224,11 @@ class SyncGenerator
 		update_post_meta($this->ldGroupId, '_last_sync', time());
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function syncBpAdmins()
 	{
 		$this->syncingToLearndash(function() {
@@ -160,6 +244,11 @@ class SyncGenerator
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function syncBpMods()
 	{
 		$this->syncingToLearndash(function() {
@@ -175,6 +264,11 @@ class SyncGenerator
 		return $this;
 	}
 
+	/**
+	 * 
+	 * @todo seeing a PHP error line 263?
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function syncBpUsers()
 	{
 		$this->syncingToLearndash(function() {
@@ -192,6 +286,11 @@ class SyncGenerator
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function syncLdAdmins()
 	{
 		$this->syncingToBuddypress(function() {
@@ -205,6 +304,11 @@ class SyncGenerator
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function syncLdUsers()
 	{
 		$this->syncingToBuddypress(function() {
@@ -218,6 +322,11 @@ class SyncGenerator
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function syncBpAdmin($userId, $remove = false, $clearCache = true)
 	{
 		$this->syncingToLearndash(function() use ($userId, $remove) {
@@ -232,6 +341,11 @@ class SyncGenerator
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function syncBpMod($userId, $remove = false, $clearCache = true)
 	{
 		$this->syncingToLearndash(function() use ($userId, $remove) {
@@ -246,6 +360,11 @@ class SyncGenerator
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function syncBpMember($userId, $remove = false, $clearCache = true)
 	{
 		$this->syncingToLearndash(function() use ($userId, $remove) {
@@ -264,6 +383,11 @@ class SyncGenerator
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function syncLdAdmin($userId, $remove = false)
 	{
 		$this->syncingToBuddypress(function() use ($userId, $remove) {
@@ -273,6 +397,11 @@ class SyncGenerator
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function syncLdUser($userId, $remove = false)
 	{
 		$ldGroupAdmins = learndash_get_groups_administrator_ids($this->ldGroupid);
@@ -289,6 +418,11 @@ class SyncGenerator
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function verifyInputs()
 	{
 		if ($this->bpGroupId && ! groups_get_group($this->bpGroupId)->id) {
@@ -300,6 +434,11 @@ class SyncGenerator
 		}
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function populateData()
 	{
 		if (! $this->bpGroupId) {
@@ -311,33 +450,63 @@ class SyncGenerator
 		}
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function loadBpGroupId()
 	{
 		return get_post_meta($this->ldGroupId, $this->syncMetaKey, true) ?: null;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function loadLdGroupId()
 	{
 		return groups_get_groupmeta($this->bpGroupId, $this->syncMetaKey, true) ?: null;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function setBpGroupId()
 	{
 		update_post_meta($this->ldGroupId, $this->syncMetaKey, $this->bpGroupId);
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function setLdGroupId()
 	{
 		groups_update_groupmeta($this->bpGroupId, $this->syncMetaKey, $this->ldGroupId);
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function setSyncGropuIds()
 	{
 		return $this->setLdGroupId()->setBpGroupId();
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function unsetBpGroupMeta($removeProp = true)
 	{
 		if ($removeProp) {
@@ -348,6 +517,11 @@ class SyncGenerator
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function unsetLdGroupMeta($removeProp = true)
 	{
 		if ($removeProp) {
@@ -358,6 +532,11 @@ class SyncGenerator
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function unsetSyncGropuIds()
 	{
 		$this->unsetBpGroupMeta(false)->unsetLdGroupMeta(false);
@@ -365,6 +544,11 @@ class SyncGenerator
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function createLearndashGroup()
 	{
 		$bpGroup = groups_get_group($this->bpGroupId);
@@ -378,6 +562,11 @@ class SyncGenerator
     	]);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function createBuddypressGroup()
 	{
 		$ldGroup = get_post($this->ldGroupId);
@@ -393,6 +582,11 @@ class SyncGenerator
     	$this->setSyncGropuIds();
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function maybeRemoveAsLdUser($type, $userId)
 	{
 		if ('user' == $this->getBpSyncToRole($type)) {
@@ -403,11 +597,21 @@ class SyncGenerator
 		ld_update_group_access($userId, $this->ldGroupId, true);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function getBpSyncToRole($type)
 	{
 		return bp_ld_sync('settings')->get("buddypress.default_{$type}_sync_to");
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function getBpSyncFunction($type)
 	{
 		switch ($this->getBpSyncToRole($type)) {
@@ -418,11 +622,21 @@ class SyncGenerator
 		}
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function getLdSyncToRole($type)
 	{
 		return bp_ld_sync('settings')->get("learndash.default_{$type}_sync_to");
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function addUserToBpGroup($userId, $type, $remove)
 	{
 		$groupMember = new BP_Groups_Member($userId, $this->bpGroupId);
@@ -446,12 +660,22 @@ class SyncGenerator
 		$groupMember->save();
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function clearLdGroupCache()
 	{
 		delete_transient("learndash_group_leaders_{$this->ldGroupId}");
 		delete_transient("learndash_group_users_{$this->ldGroupId}");
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function syncingToLearndash($callback)
 	{
 		global $bp_ld_sync__syncing_to_learndash;
@@ -463,6 +687,11 @@ class SyncGenerator
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function syncingToBuddypress($callback)
 	{
 		global $bp_ld_sync__syncing_to_buddypress;
@@ -474,6 +703,11 @@ class SyncGenerator
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function getLastSyncTimestamp($type = 'bp')
 	{
 		if (! $lastSync = bp_get_option("bp_ld_sync/{$type}_last_synced")) {

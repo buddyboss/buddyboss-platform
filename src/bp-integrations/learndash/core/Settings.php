@@ -1,15 +1,34 @@
 <?php
+/**
+ * @todo add description
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 namespace Buddyboss\LearndashIntegration\Core;
 
 use Buddyboss\LearndashIntegration\Library\ValueLoader;
 
+/**
+ * 
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class Settings
 {
 	protected $loader;
 	protected $options = [];
 	protected $optionKey = 'bp_ld_sync_settings';
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
 		$this->installDefaultSettings();
@@ -18,6 +37,11 @@ class Settings
 		add_action('bp_ld_sync/setting_updated', [$this, 'setGroupSyncTimestamp'], 10, 2);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function getName($key = '')
 	{
 		$name = $this->optionKey;
@@ -29,17 +53,32 @@ class Settings
 		return $name;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function get($key = null, $default = null)
 	{
 		return $this->loader->get($key, $default);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function set($key = null, $value = null)
 	{
 		$this->loader->set($key, $value);
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function update()
 	{
 		$oldOptions = $this->options;
@@ -48,6 +87,11 @@ class Settings
 		return $this;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function setGroupSyncTimestamp($options, $oldOptions)
 	{
 		$new  = new ValueLoader($options);
@@ -63,6 +107,11 @@ class Settings
 		}
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function defaultOptions()
 	{
 		return [
@@ -95,6 +144,11 @@ class Settings
 		];
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function installDefaultSettings()
 	{
 		if (! $options = get_option($this->optionKey)) {

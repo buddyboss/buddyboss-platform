@@ -1,4 +1,13 @@
 <?php
+/**
+ * BuddyBoss LearnDash integration essay reports generator.
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 namespace Buddyboss\LearndashIntegration\Buddypress\Generators;
 
@@ -7,8 +16,18 @@ use WP_Query;
 use WpProQuiz_Model_QuestionMapper;
 use WpProQuiz_Model_Question;
 
+/**
+ * 
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class EssaysReportsGenerator extends ReportsGenerator
 {
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
 		$this->completed_table_title = __('Marked Essays', 'buddyboss');
@@ -17,6 +36,11 @@ class EssaysReportsGenerator extends ReportsGenerator
 		parent::__construct();
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function fetch()
 	{
 		$essayQuery = $this->getGroupEssays($this->args);
@@ -29,6 +53,11 @@ class EssaysReportsGenerator extends ReportsGenerator
 		];
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function columns()
 	{
 		return [
@@ -64,6 +93,11 @@ class EssaysReportsGenerator extends ReportsGenerator
 		];
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function formatData($activity)
 	{
 		return [
@@ -79,6 +113,11 @@ class EssaysReportsGenerator extends ReportsGenerator
 		];
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function getGroupEssays()
 	{
 		if ($this->hasArg('course') && ! $this->args['course']) {
@@ -113,6 +152,11 @@ class EssaysReportsGenerator extends ReportsGenerator
 		return $query;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function registerQueryHooks()
 	{
 		add_filter('posts_fields', [$this, 'addAdditionalFields']);
@@ -120,6 +164,11 @@ class EssaysReportsGenerator extends ReportsGenerator
 		add_filter('posts_orderby', [$this, 'addAdditionalOrderBy']);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function unregisterQueryHooks()
 	{
 		remove_filter('posts_fields', [$this, 'addAdditionalFields']);
@@ -127,6 +176,11 @@ class EssaysReportsGenerator extends ReportsGenerator
 		remove_filter('posts_orderby', [$this, 'addAdditionalOrderBy']);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function addAdditionalFields($strFields)
 	{
 		global $wpdb;
@@ -177,6 +231,11 @@ class EssaysReportsGenerator extends ReportsGenerator
 		return $fields;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function addAdditionalJoins($strJoins)
 	{
 		global $wpdb;
@@ -188,6 +247,11 @@ class EssaysReportsGenerator extends ReportsGenerator
 		return $strJoins;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function addAdditionalOrderBy($strOrder)
 	{
 		$strOrder = 'GREATEST(essay_modify_date, essay_post_date) DESC';
@@ -203,6 +267,11 @@ class EssaysReportsGenerator extends ReportsGenerator
 		return $strOrder;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function getEssayScore($activity)
 	{
 		if (! $activity->activity_completed) {

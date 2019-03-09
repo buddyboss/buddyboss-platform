@@ -1,7 +1,21 @@
 <?php
+/**
+ * @todo add description
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 namespace Buddyboss\LearndashIntegration\Library;
 
+/**
+ * 
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class ReportsGenerator
 {
 	public $completed_table_title;
@@ -23,6 +37,11 @@ class ReportsGenerator
 		'date_format' => 'Y-m-d',
 	];
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
 		$this->args = apply_filters(
@@ -38,6 +57,11 @@ class ReportsGenerator
 		}
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function getColumns()
 	{
 		$columns = array_map(function($column) {
@@ -49,6 +73,11 @@ class ReportsGenerator
 		return apply_filters("bp_ld_sync/report_columns/step={$this->args['step']}", $columns, $this->args);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function getData()
 	{
 		$results = array_map([$this, 'formatData'], $this->results);
@@ -70,11 +99,21 @@ class ReportsGenerator
 		return apply_filters("bp_ld_sync/report_datas/step={$this->args['step']}", $results, $this->args);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function getPager()
 	{
 		return $this->pager;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function fetch()
 	{
 		$this->activityQuery = learndash_reports_get_activity($this->params, $this->args['user']);
@@ -83,6 +122,11 @@ class ReportsGenerator
 		$this->pager = $this->activityQuery['pager'];
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function export()
 	{
 		$hash    = $this->hasArg('hash')? $this->args['hash'] : md5(microtime());
@@ -118,16 +162,31 @@ class ReportsGenerator
 		]);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function columns()
 	{
 		return [];
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function formatData($activity)
 	{
 		return $activity;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function formatDataForDisplay($data, $activity)
 	{
 		return wp_parse_args([
@@ -139,11 +198,21 @@ class ReportsGenerator
 		], $data);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function formatDataForExport($data, $activity)
 	{
 		return $data;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function includeCourseTitle()
 	{
 		add_filter('bp_ld_sync/reports/activity_fields', [$this, 'addCourseTitleActivityFields'], 10, 2);
@@ -154,11 +223,21 @@ class ReportsGenerator
 	}
 
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function addCourseTitleActivityFields($strFields, $queryArgs)
 	{
 		return $strFields .= ', courses.post_title as activity_course_title';
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function addCourseTitleActivityTables($strJoins, $queryArgs)
 	{
 		global $wpdb;
@@ -166,37 +245,72 @@ class ReportsGenerator
 		return $strJoins .= " LEFT JOIN {$wpdb->posts} as courses ON courses.ID=ld_user_activity.course_id ";
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function addCourseTitleActivityWhere($strWheres, $queryArgs)
 	{
 		return $strWheres .= " AND activity_id IS NOT NULL ";
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function addCourseTitleActivityGroup($strWheres, $queryArgs)
 	{
 		return $strWheres .= " AND 2=2 "; // we gonna conditionaly replace this for group_by
 		// return $strWheres .= " GROUP BY activity_id ";
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function maybeAddActivityGroupBy($strSql, $queryArgs)
 	{
 		return str_replace('AND 2=2', 'GROUP BY activity_id', $strSql);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function includeCourseTimeSpent()
 	{
 		add_filter('bp_ld_sync/reports/activity_fields', [$this, 'addCourseTimeSpentActivityFields'], 10, 2);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function excludeCourseTimeSpent()
 	{
 		remove_filter('bp_ld_sync/reports/activity_fields', [$this, 'addCourseTimeSpentActivityFields'], 10, 2);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function addCourseTimeSpentActivityFields($strFields, $queryArgs)
 	{
 		return $strFields .= ', IF(activity_status = 1, activity_completed - activity_started, 0) as activity_time_spent';
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function column($name)
 	{
 		$builtInColumns = [
@@ -260,6 +374,11 @@ class ReportsGenerator
 		return $builtInColumns[$name];
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function setupParams()
 	{
 		// includes/ld-reports.php:882 learndash_reports_get_activity only allowd leader if group_id is passed
@@ -309,11 +428,21 @@ class ReportsGenerator
 		$this->params = apply_filters('bp_ld_sync/reports_generator_params', $this->params, $this->args);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function hasArg($key)
 	{
 		return isset($this->args[$key]) && ! is_null($this->args[$key]);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function allSteps()
 	{
 		global $learndash_post_types;
@@ -321,6 +450,11 @@ class ReportsGenerator
 		return array_diff($learndash_post_types, ['groups']);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function timeSpent($activity)
 	{
 		$seconds = intval($activity->activity_time_spent);
@@ -351,16 +485,31 @@ class ReportsGenerator
 		}
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function completionDate($activity)
 	{
 		return $activity->activity_completed? $activity->activity_completed_formatted : '-';
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function updatedDate($activity)
 	{
 		return $activity->activity_completed? '-' : $activity->activity_updated_formatted;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function coursePointsEarned($activity)
 	{
 		if ($activity->activity_type !== 'course') {

@@ -1,16 +1,40 @@
 <?php
+/**
+ * @todo add description
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 namespace Buddyboss\LearndashIntegration\Library;
 
+/**
+ * 
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class ValueLoader
 {
 	protected $value = [];
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct($value)
 	{
 		$this->value = $value;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function get($key = null, $default = null)
 	{
 		$target = $this->value;
@@ -34,6 +58,11 @@ class ValueLoader
         return $target;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function set($key = null, $value = null)
 	{
 		$target =& $this->value;

@@ -1,11 +1,30 @@
 <?php
+/**
+ * BuddyBoss LearnDash integration courses reports generator.
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 namespace Buddyboss\LearndashIntegration\Buddypress\Generators;
 
 use Buddyboss\LearndashIntegration\Library\ReportsGenerator;
 
+/**
+ * 
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class CoursesReportsGenerator extends ReportsGenerator
 {
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
 		$this->completed_table_title = __('Completed Courses', 'buddyboss');
@@ -14,6 +33,11 @@ class CoursesReportsGenerator extends ReportsGenerator
 		parent::__construct();
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function columns()
 	{
 		return [
@@ -29,6 +53,11 @@ class CoursesReportsGenerator extends ReportsGenerator
 		];
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function formatData($activity)
 	{
 		return [

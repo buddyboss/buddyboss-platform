@@ -1,5 +1,19 @@
 <?php
+/**
+ * Sample integration admin tab
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Setup sample integration admin tab class.
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class BP_Admin_Integration_Sample extends BP_Admin_Integration_tab {
 
 	public function initialize() {

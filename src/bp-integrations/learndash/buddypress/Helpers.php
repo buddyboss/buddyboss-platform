@@ -1,11 +1,30 @@
 <?php
+/**
+ * BuddyBoss LearnDash integration gelper class.
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 namespace Buddyboss\LearndashIntegration\Buddypress;
 
+/**
+ * 
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class Helpers
 {
 	protected $ldGroupMetaKey = '_ld_group_id';
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function hasLearndashGroup($groupId = null)
 	{
 		if (! $groupId) {
@@ -23,6 +42,11 @@ class Helpers
 		return true;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function getLearndashGroupId($groupId)
 	{
 		return bp_ld_sync('buddypress')->sync->generator($groupId)->getLdGroupId();
@@ -30,11 +54,21 @@ class Helpers
 		return groups_get_groupmeta($groupId, $this->ldGroupMetaKey, true);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function setLearndashGroupId($groupId, $ldGroupId)
 	{
 		return groups_update_groupmeta($groupId, $this->ldGroupMetaKey, $ldGroupId);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function deleteLearndashGroupId($groupId)
 	{
 		return groups_delete_groupmeta($groupId, $this->ldGroupMetaKey);

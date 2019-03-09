@@ -148,7 +148,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		}
 
 		/**
-		 * Export CSV
+		 * 
+		 *
+		 * @since BuddyBoss 1.0.0
 		 */
 		public function export_csv() {
 			$this->is_ajax = true;
@@ -334,6 +336,11 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			<?php
 		}
 
+		/**
+		 * 
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		public function bbp_include_all_forums( $return ) {
 			return true;
 		}
@@ -950,6 +957,11 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$this->basic_html( 'courses', __( 'Steps', 'buddyboss' ) );
 		}
 
+		/**
+		 * 
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		public function basic_html( $slug, $label, $display = 'all', $table_head = 'courses_table_head' ) {
 
 			$this->incomplete_step       = '';

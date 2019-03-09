@@ -1,14 +1,38 @@
 <?php
+/**
+ * @todo add description
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 namespace Buddyboss\LearndashIntegration\Learndash;
 
+/**
+ * 
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class Hooks
 {
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
 		add_action('bp_ld_sync/init', [$this, 'init']);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function init()
 	{
 		// add some helpful missing hooks
@@ -25,11 +49,21 @@ class Hooks
 		add_action('deleted_post_meta', [$this, 'checkLearndashCourseDeleteMeta'], 10, 4);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function groupUpdated($groupId)
 	{
 		do_action('bp_ld_sync/learndash_group_updated', $groupId);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function groupDeleting($groupId)
 	{
 		global $wpdb;
@@ -44,12 +78,22 @@ class Hooks
 		add_action('delete_post', [$this, 'groupDeleted']);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function groupDeleted($groupId)
 	{
 		remove_action('delete_post', [$this, 'groupDeleted']);
 		do_action('bp_ld_sync/learndash_group_deleted', $groupId);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function checkLearndashGroupUpdateMeta($metaId, $userId, $metaKey, $metaValue)
 	{
 		if ($this->isLearndashLeaderMeta($metaKey)) {
@@ -63,6 +107,11 @@ class Hooks
 		}
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function checkLearndashGroupDeleteMeta($metaId, $userId, $metaKey, $metaValue)
 	{
 		if ($this->isLearndashLeaderMeta($metaKey)) {
@@ -76,6 +125,11 @@ class Hooks
 		}
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function checkLearndashCourseUpdateMeta($metaId, $groupId, $metaKey, $metaValue)
 	{
 		if ($this->isLearndashCourseMeta($metaKey)) {
@@ -84,6 +138,11 @@ class Hooks
 		}
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function checkLearndashCourseDeleteMeta($metaId, $groupId, $metaKey, $metaValue)
 	{
 		if ($this->isLearndashCourseMeta($metaKey)) {
@@ -92,21 +151,41 @@ class Hooks
 		}
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function isLearndashLeaderMeta($key)
 	{
 		return strpos($key, 'learndash_group_leaders_') === 0;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function isLearndashUserMeta($key)
 	{
 		return strpos($key, 'learndash_group_users_') === 0;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function isLearndashCourseMeta($key)
 	{
 		return strpos($key, 'learndash_group_enrolled_') === 0;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function getLeardashMetaGroupId($key)
 	{
 		$segments = explode('_', $key);

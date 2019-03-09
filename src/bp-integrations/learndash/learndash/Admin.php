@@ -1,14 +1,38 @@
 <?php
+/**
+ * @todo add description
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 namespace Buddyboss\LearndashIntegration\Learndash;
 
+/**
+ * 
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class Admin
 {
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
 		add_action('bp_ld_sync/init', [$this, 'init']);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function init()
 	{
 		if (! bp_ld_sync('settings')->get('learndash.enabled')) {
@@ -18,6 +42,11 @@ class Admin
         add_action('add_meta_boxes', [$this, 'addGroupSyncMetaBox']);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function addGroupSyncMetaBox()
 	{
         add_meta_box(
@@ -29,7 +58,12 @@ class Admin
         );
 	}
 
-    public function asyncMetaboxHtml()
+    /**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function asyncMetaboxHtml()
     {
 		$groupId    = get_the_ID();
 		$generator  = bp_ld_sync('learndash')->sync->generator(null, $groupId);

@@ -1,16 +1,40 @@
 <?php
+/**
+ * @todo add description
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 namespace Buddyboss\LearndashIntegration\Buddypress\Components;
 
 use BP_Group_Extension;
 
+/**
+ * 
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class BpGroupCourses extends BP_Group_Extension
 {
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
         parent::init($this->prepareComponentOptions());
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function settings_screen($groupId = null)
 	{
 		$groupId    = $groupId ?: bp_get_new_group_id();
@@ -20,7 +44,12 @@ class BpGroupCourses extends BP_Group_Extension
 		require bp_locate_template('groups/single/admin/edit-courses.php', false);
     }
 
-    public function settings_screen_save($groupId = null)
+    /**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function settings_screen_save($groupId = null)
     {
     	$generator = bp_ld_sync('buddypress')->sync->generator($groupId);
 
@@ -31,7 +60,12 @@ class BpGroupCourses extends BP_Group_Extension
     	$generator->associateToLearndash()->syncBpAdmins();
     }
 
-    public function display($groupId = null)
+    /**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function display($groupId = null)
 	{
 		$this->loadSubMenuTemplate($groupId);
 
@@ -42,7 +76,12 @@ class BpGroupCourses extends BP_Group_Extension
 		}
     }
 
-    protected function loadSubMenuTemplate($groupId)
+    /**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	protected function loadSubMenuTemplate($groupId)
     {
 		$groupId     = $groupId ?: bp_get_new_group_id();
 		$hasLdGroup  = bp_ld_sync('buddypress')->sync->generator($groupId)->hasLdGroup();
@@ -55,7 +94,12 @@ class BpGroupCourses extends BP_Group_Extension
 		require bp_locate_template('groups/single/courses-nav.php', false, false);
     }
 
-    protected function prepareComponentOptions()
+    /**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	protected function prepareComponentOptions()
     {
 		$tabName     = apply_filters('bp_ld_sync/courses_group_tab_name', $this->tabLabel());
 		$tabSlug     = apply_filters('bp_ld_sync/courses_group_tab_slug', 'courses');
@@ -96,7 +140,12 @@ class BpGroupCourses extends BP_Group_Extension
 		];
     }
 
-    protected function tabLabel()
+    /**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	protected function tabLabel()
     {
     	$default = __('Courses', 'buddyboss');
 
@@ -109,7 +158,12 @@ class BpGroupCourses extends BP_Group_Extension
     	return _nx('Course', 'Courses', $coursesCount, 'bp group tab name', 'buddyboss');
     }
 
-    protected function showTabOnView()
+    /**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	protected function showTabOnView()
     {
     	if (! $currentGroup = groups_get_current_group()) {
     		return 'noone';
@@ -127,7 +181,12 @@ class BpGroupCourses extends BP_Group_Extension
     	return bp_ld_sync('settings')->get('buddypress.tab_access', true);
     }
 
-    protected function showTabOnCreate()
+    /**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	protected function showTabOnCreate()
     {
     	return bp_ld_sync('settings')->get('buddypress.show_in_bp_create', true);
     }

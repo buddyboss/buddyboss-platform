@@ -1,17 +1,41 @@
 <?php
+/**
+ * @todo add description
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 namespace Buddyboss\LearndashIntegration\Buddypress\Components;
 
 use BP_Group_Extension;
 
+/**
+ * 
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class BpGroupReports extends BP_Group_Extension
 {
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
         parent::init($this->prepareComponentOptions());
 	}
 
-    public function display($groupId = null)
+    /**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function display($groupId = null)
 	{
 		$this->loadSubMenuTemplate($groupId);
 
@@ -22,7 +46,12 @@ class BpGroupReports extends BP_Group_Extension
 		}
     }
 
-    protected function loadSubMenuTemplate($groupId)
+    /**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	protected function loadSubMenuTemplate($groupId)
     {
 		$groupId     = $groupId ?: bp_get_new_group_id();
 		$hasLdGroup  = bp_ld_sync('buddypress')->sync->generator($groupId)->hasLdGroup();
@@ -35,7 +64,12 @@ class BpGroupReports extends BP_Group_Extension
 		require bp_locate_template('groups/single/reports-nav.php', false, false);
     }
 
-    protected function prepareComponentOptions()
+    /**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	protected function prepareComponentOptions()
     {
 		$tabName     = apply_filters('bp_ld_sync/reports_group_tab_name', __('Reports', 'buddyboss'));
 		$tabSlug     = apply_filters('bp_ld_sync/reports_group_tab_slug', 'reports');
@@ -61,7 +95,12 @@ class BpGroupReports extends BP_Group_Extension
 		];
     }
 
-    protected function showTabOnView()
+    /**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	protected function showTabOnView()
     {
     	if (! $currentGroup = groups_get_current_group()) {
     		return 'noone';

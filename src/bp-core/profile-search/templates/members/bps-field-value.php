@@ -1,6 +1,4 @@
 <?php
-! defined( 'ABSPATH' ) ? exit() : '';
-
 	list ($name, $value) = bp_ps_template_args ();
 ?>
 	<div class="item-meta">

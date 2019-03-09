@@ -1,12 +1,31 @@
 <?php
+/**
+ * @todo add description
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 namespace Buddyboss\LearndashIntegration\Core;
 
+/**
+ * 
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class Requirements
 {
 	protected $requirements = [];
 	protected $checkedRequirements = [];
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
 		$this->requirements = [
@@ -22,6 +41,11 @@ class Requirements
 		add_action('bp_ld_sync/depencencies_loaded', [$this, 'checkForRequirements']);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function checkForRequirements()
 	{
 		foreach ($this->requirements as $name => $data) {
@@ -36,11 +60,21 @@ class Requirements
 		do_action($success? 'bp_ld_sync/requirements_checked' : 'bp_ld_sync/requirements_failed', $this);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function getMissingRequirements()
 	{
 		return array_diff_key($this->requirements, array_flip($this->checkedRequirements));
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function getLoadedRequirements()
 	{
 		return array_intersect_key($this->requirements, array_flip($this->checkedRequirements));

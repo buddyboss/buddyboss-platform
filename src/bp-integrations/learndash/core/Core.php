@@ -1,4 +1,13 @@
 <?php
+/**
+ * @todo add description
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 namespace Buddyboss\LearndashIntegration\Core;
 
@@ -9,8 +18,18 @@ use Buddyboss\LearndashIntegration\Core\Requirements;
 use Buddyboss\LearndashIntegration\Core\Settings;
 use Buddyboss\LearndashIntegration\Learndash\Core as LearndashCore;;
 
+/**
+ * 
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class Core
 {
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
 		$this->registerAutoloader();
@@ -27,27 +46,52 @@ class Core
 		add_action('bp_ld_sync/requirements_checked', [$this, 'init']);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function init()
 	{
 		do_action('bp_ld_sync/init');
 	}
 
-    public function path($path = '')
+    /**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function path($path = '')
     {
         return bp_learndash_path(trim($path, '/\\'));
     }
 
-    public function url($uri = '')
+    /**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function url($uri = '')
     {
         return bp_learndash_url(trim($uri, '/\\'));
     }
 
-    public function template($path = '')
+    /**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function template($path = '')
     {
         return bp_learndash_path('templates/' . trim($path, '/\\'));
     }
 
-    public function getRequest($key = '*', $default = null, $type = null) {
+    /**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function getRequest($key = '*', $default = null, $type = null) {
 		if ($type) {
 			return $key == '*'? $$type : (isset($$type[$key])? $$type[$key] : $default);
 		}
@@ -56,6 +100,11 @@ class Core
 		return $key == '*'? $merged : (isset($merged[$key])? $merged[$key] : $default);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function isRequestExists( $key, $default = null, $type = null ) {
 		if ($type) {
 			return isset($$type[$key]);
@@ -65,6 +114,11 @@ class Core
 		return isset($merged[$key]);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function registerAutoloader()
 	{
 		spl_autoload_register(function($class) {

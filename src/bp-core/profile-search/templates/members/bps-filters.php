@@ -1,5 +1,6 @@
 <?php
-! defined( 'ABSPATH' ) ? exit() : '';
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 	$F = bp_profile_search_escaped_form_data();
 	if (empty ($F->fields))  return false;

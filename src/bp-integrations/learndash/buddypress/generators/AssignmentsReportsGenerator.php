@@ -1,12 +1,31 @@
 <?php
+/**
+ * BuddyBoss LearnDash integration assignment reports generator.
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 namespace Buddyboss\LearndashIntegration\Buddypress\Generators;
 
 use Buddyboss\LearndashIntegration\Library\ReportsGenerator;
 use WP_Query;
 
+/**
+ * 
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class AssignmentsReportsGenerator extends ReportsGenerator
 {
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
 		$this->completed_table_title = __('Marked Assignments', 'buddyboss');
@@ -15,6 +34,11 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 		parent::__construct();
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function fetch()
 	{
 		$assignmentQuery = $this->getGroupAssignments($this->args);
@@ -27,6 +51,11 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 		];
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function columns()
 	{
 		return [
@@ -57,6 +86,11 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 		];
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function formatData($activity)
 	{
 		return [
@@ -71,6 +105,11 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 		];
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function getGroupAssignments()
 	{
 		if ($this->hasArg('course') && ! $this->args['course']) {
@@ -117,6 +156,11 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 		return $query;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function registerQueryHooks()
 	{
 		add_filter('posts_fields', [$this, 'addAdditionalFields']);
@@ -124,6 +168,11 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 		add_filter('posts_orderby', [$this, 'addAdditionalOrderBy']);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function unregisterQueryHooks()
 	{
 		remove_filter('posts_fields', [$this, 'addAdditionalFields']);
@@ -131,6 +180,11 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 		remove_filter('posts_orderby', [$this, 'addAdditionalOrderBy']);
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function addAdditionalFields($strFields)
 	{
 		global $wpdb;
@@ -160,6 +214,11 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 		return $fields;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function addAdditionalJoins($strJoins)
 	{
 		global $wpdb;
@@ -171,6 +230,11 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 		return $strJoins;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function addAdditionalOrderBy($strOrder)
 	{
 		$strOrder = 'GREATEST(assignment_modify_date, assignment_post_date) DESC';
@@ -186,6 +250,11 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 		return $strOrder;
 	}
 
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function getAssignmentScore($activity)
 	{
 		$postId = $activity->assignment_id;

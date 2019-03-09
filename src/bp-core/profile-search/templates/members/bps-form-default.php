@@ -1,5 +1,6 @@
 <?php 
-! defined( 'ABSPATH' ) ? exit() : '';
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 // 1st section: set the default value of the template options
 

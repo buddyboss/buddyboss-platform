@@ -1,11 +1,30 @@
 <?php
+/**
+ * @todo add description
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 namespace Buddyboss\LearndashIntegration\Learndash;
 
 use WP_Query;
 
+/**
+ * 
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class Group
 {
+	/**
+	 * 
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function getUnassociatedGroups($include = null)
 	{
 		$meta_query = [
