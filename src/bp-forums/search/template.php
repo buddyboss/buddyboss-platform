@@ -140,7 +140,7 @@ function bbp_has_search_results( $args = '' ) {
 				'prev_text' => is_rtl() ? '&rarr;' : '&larr;',
 				'next_text' => is_rtl() ? '&larr;' : '&rarr;',
 				'mid_size'  => 1,
-				'add_args'  => $add_args, 
+				'add_args'  => $add_args,
 			) )
 		);
 
@@ -266,7 +266,7 @@ function bbp_search_url() {
 			$url = add_query_arg( array( bbp_get_search_rewrite_id() => '' ), home_url( '/' ) );
 		}
 
-		return apply_filters( 'bbp_get_search_url', $url );
+		return apply_filters( 'bbp_get_search_url', add_query_arg( 'bp_search', 1, $url ) );
 	}
 
 /**

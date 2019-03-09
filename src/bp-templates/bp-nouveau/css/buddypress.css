@@ -8002,6 +8002,10 @@ SEARCH RESULTS PAGE
   flex: 1;
 }
 
+.bp-search-results-wrap .results-group-footer {
+  text-align: center;
+}
+
 .bp-search-results-wrap .view-all-link {
   font-size: 14px;
   color: #888;
