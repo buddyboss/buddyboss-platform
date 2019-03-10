@@ -23,23 +23,20 @@ function bp_media_get_settings_sections() {
 		'bp_media_settings_general' => array(
 			'page'  => 'media',
 			'title' => __( 'Media Settings', 'buddyboss' ),
-			'callback' => 'bp_media_settings_callback_general_section',
 		),
 	);
 
 	if ( bp_is_active( 'groups' ) ) {
 		$settings['bp_media_settings_groups'] = array(
 			'page'  => 'media',
-			'title' => __( 'Groups', 'buddyboss' ),
-			'callback' => 'bp_media_settings_callback_groups_section',
+			'title' => __( 'Groups Media', 'buddyboss' ),
 		);
 	}
 
 	if ( bp_is_active( 'forums' ) ) {
 		$settings['bp_media_settings_forums'] = array(
 			'page'  => 'media',
-			'title' => __( 'Forums', 'buddyboss' ),
-			'callback' => 'bp_media_settings_callback_forums_section',
+			'title' => __( 'Forums Media', 'buddyboss' ),
 		);
 	}
 
@@ -239,24 +236,6 @@ function bp_media_get_form_option( $option, $default = '', $slug = false ) {
 
 	// Allow plugins to further filter the output
 	return apply_filters( 'bp_media_get_form_option', $value, $option );
-}
-
-function bp_media_settings_callback_general_section() {
-	?>
-    <p><?php esc_html_e( 'General Media Settings', 'buddyboss' ) ?></p>
-	<?php
-}
-
-function bp_media_settings_callback_groups_section() {
-	?>
-    <p><?php esc_html_e( 'Groups Media Settings', 'buddyboss' ) ?></p>
-	<?php
-}
-
-function bp_media_settings_callback_forums_section() {
-	?>
-    <p><?php esc_html_e( 'Forums Media Settings', 'buddyboss' ) ?></p>
-	<?php
 }
 
 /**
@@ -506,7 +485,7 @@ function bp_media_settings_callback_forums_media_support() {
 		<?php checked( bp_is_media_forums_media_support_enabled() ) ?>
     />
     <label for="bp_media_forums_media_support">
-		<?php esc_html_e( 'Allow photo posting in bbPress groups and forums', 'buddyboss' ) ?>
+		<?php esc_html_e( 'Allow photo posting in forum discussions', 'buddyboss' ) ?>
     </label>
 	<?php
 }
@@ -538,7 +517,7 @@ function bp_media_settings_callback_group_media_support() {
 		<?php checked( bp_is_media_group_media_support_enabled() ) ?>
     />
     <label for="bp_media_group_media_support">
-		<?php esc_html_e( 'Allow photo posting in BuddyPress group activity updates and comments', 'buddyboss' ) ?>
+		<?php esc_html_e( 'Allow photo posting in social group activity updates and comments', 'buddyboss' ) ?>
     </label>
 	<?php
 }
@@ -571,7 +550,7 @@ function bp_media_settings_callback_group_albums() {
 		<?php checked( bp_is_media_group_album_support_enabled() ) ?>
     />
     <label for="bp_media_group_albums">
-		<?php esc_html_e( 'Enable BuddyPress group photo albums', 'buddyboss' ) ?>
+		<?php esc_html_e( 'Enable social group photo albums', 'buddyboss' ) ?>
     </label>
 	<?php
 }
