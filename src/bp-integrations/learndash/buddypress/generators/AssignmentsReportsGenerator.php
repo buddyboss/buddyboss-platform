@@ -6,13 +6,13 @@
  * @since BuddyBoss 1.0.0
  */ 
 
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
 namespace Buddyboss\LearndashIntegration\Buddypress\Generators;
 
 use Buddyboss\LearndashIntegration\Library\ReportsGenerator;
 use WP_Query;
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 /**
  * 
