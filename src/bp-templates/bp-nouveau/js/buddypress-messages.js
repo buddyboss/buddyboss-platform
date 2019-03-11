@@ -347,7 +347,7 @@ window.bp = window.bp || {};
 
 			if ( 'read' === method ) {
 				options.data = _.extend( options.data, {
-					action: 'messages_get_user_message_threads'
+					action: 'messages_get_user_message_threads',
 				} );
 
 				return bp.ajax.send( options );
@@ -737,8 +737,15 @@ window.bp = window.bp || {};
 		tagName   : 'div',
 
 		events: {
-			'click .subject' : 'changePreview'
+			'click .subject' : 'changePreview',
+			//'scroll' : 'scrolled'
 		},
+
+		// attributes: function () {
+		// 	return {
+		// 		'style': 'max-height: 200px; overflow: scroll;'
+		// 	};
+		// },
 
 		initialize: function() {
 			var Views = [
@@ -785,6 +792,28 @@ window.bp = window.bp || {};
 
 			if ( this.collection.length ) {
 				$('.bp-messages-threads-list').removeClass('bp-no-messages');
+			}
+		},
+
+		scrolled: function( event ) {
+			var target = $( event.currentTarget );
+
+			if ( ( target[0].scrollHeight - target.scrollTop() ) == target.innerHeight() &&
+				this.collection.length &&
+				this.collection.options.page < this.collection.options.total_page
+			) {
+				this.collection.options.page = this.collection.options.page + 1;
+
+				bp.Nouveau.Messages.displayFeedback( BP_Nouveau.messages.loading, 'loading' );
+
+				_.extend( this.collection.options, _.pick( bp.Nouveau.Messages.filters.attributes, ['box', 'search_terms'] ) );
+
+				this.collection.fetch( {
+					remove  : false,
+					data    : _.pick( this.collection.options, ['box', 'search_terms', 'page'] ),
+					success : this.threadsFetched,
+					error   : this.threadsFetchError
+				} );
 			}
 		},
 
@@ -960,10 +989,10 @@ window.bp = window.bp || {};
 
 		initialize: function() {
 			this.model.on( 'change', this.filterThreads, this );
-			this.options.threads.on( 'sync', this.addPaginatation, this );
+			this.options.threads.on( 'sync', this.addPagination, this );
 		},
 
-		addPaginatation: function( collection ) {
+		addPagination: function( collection ) {
 			_.each( this.views._views, function( view ) {
 				if ( ! _.isUndefined( view ) ) {
 					_.first( view ).remove();
