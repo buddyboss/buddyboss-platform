@@ -134,12 +134,22 @@ function bp_ps_escaped_form_data47( $version ) {
 		$f->mode       = $mode;
 		$f->full_label = bp_ps_full_label( $f );
 
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action( 'bp_ps_field_before_search_form', $f );
 		$f->code     = ( $mode == '' ) ? $f->code : $f->code . '_' . $mode;        // to be removed
 		$F->fields[] = $f;
 	}
 
 	$F->fields[] = bp_ps_set_hidden_field( BP_PS_FORM, $form );
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	do_action( 'bp_ps_before_search_form', $F );
 
 	foreach ( $F->fields as $f ) {
@@ -196,10 +206,20 @@ function bp_ps_escaped_filters_data47() {
 		$f->max    = isset ( $f->value['max'] ) ? $f->value['max'] : '';
 		$f->values = (array) $f->value;
 
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action( 'bp_ps_field_before_filters', $f );
 		$F->fields[] = $f;
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	do_action( 'bp_ps_before_filters', $F );
 	usort( $F->fields, 'bp_ps_sort_fields' );
 

@@ -31,6 +31,11 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			$settings->set(null, $values)->update();
 		}
 
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action('bp_integrations_learndash_fields_updated', $settings);
 	}
 
@@ -44,6 +49,11 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		foreach ($fields as $key => $field) {
 			call_user_func($field);
+			/**
+			 * @todo add title/description
+			 *
+			 * @since BuddyBoss 1.0.0
+			 */
 			do_action('bp_integrations_learndash_field_added', $key, $this);
 		}
 	}

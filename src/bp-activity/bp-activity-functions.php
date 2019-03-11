@@ -4447,6 +4447,11 @@ function bp_stop_following( $args = '' ) {
 		return false;
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	do_action_ref_array( 'bp_stop_following', array( &$follow ) );
 
 	return true;
@@ -4570,10 +4575,20 @@ function bp_total_follow_counts( $args = '' ) {
  * @uses BP_Activity_Follow::delete_all_for_user() Deletes user ID from all following / follower records
  */
 function bp_remove_follow_data( $user_id ) {
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	do_action( 'bp_before_remove_follow_data', $user_id );
 
 	BP_Activity_Follow::delete_all_for_user( $user_id );
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	do_action( 'bp_remove_follow_data', $user_id );
 }
 add_action( 'wpmu_delete_user',	'bp_remove_follow_data' );

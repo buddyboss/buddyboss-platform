@@ -210,6 +210,11 @@ final class BP_Group_Export extends BP_Export {
 	 */
 	function additional_group_items_delete( $group_id ) {
 
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action( 'buddyboss_bp_gdpr_group_additional_group_items_delete', $group_id );
 
 		// delete cover photo

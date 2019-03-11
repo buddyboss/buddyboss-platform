@@ -157,6 +157,11 @@ final class BP_Message_Export extends BP_Export {
 				array( '%s', '%s', '%d' ),
 				array( '%d' ) );
 
+			/**
+			 * @todo add title/description
+			 *
+			 * @since BuddyBoss 1.0.0
+			 */
 			do_action( 'buddyboss_bp_gdpr_message_after_data_erasers_item', $item, $get_data );
 
 			$items_removed = true;

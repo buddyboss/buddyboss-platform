@@ -102,6 +102,11 @@ abstract class BP_Export {
 
 		$user = get_user_by( 'email', $email_address );
 
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action( 'buddyboss_bp_gdpr_pre_exporter_callback', $email_address, $page, $user );
 
 		return $this->process_data( $user, $page, $email_address );
@@ -121,6 +126,11 @@ abstract class BP_Export {
 
 		$user = get_user_by( 'email', $email_address );
 
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action( 'buddyboss_bp_gdpr_pre_eraser_callback', $email_address, $page, $user );
 
 		return $this->process_erase( $user, $page, $email_address );

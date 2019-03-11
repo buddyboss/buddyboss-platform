@@ -51,6 +51,11 @@ function bp_ps_xprofile_setup ($fields)
 					$f->options[$key] = $label;
 
 				if ($f->format == 'custom')
+					/**
+					 * @todo add title/description
+					 *
+					 * @since BuddyBoss 1.0.0
+					 */
 					do_action ('bp_ps_custom_field', $f);
 
 				if ($f->format == 'set')

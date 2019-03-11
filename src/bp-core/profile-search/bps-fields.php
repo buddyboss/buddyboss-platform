@@ -23,6 +23,11 @@ function bp_ps_get_fields ()
 	$field_list = apply_filters ('bp_ps_add_fields', array ());
 	foreach ($field_list as $f)
 	{
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action ('bp_ps_edit_field', $f);
 		if (!bp_ps_Fields::set_filters ($f))  continue;
 

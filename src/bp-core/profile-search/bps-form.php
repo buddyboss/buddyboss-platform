@@ -131,12 +131,22 @@ function bp_profile_search_escaped_form_data ( $form = false ) {
 		$f->mode = $mode;
 		$f->full_label = bp_ps_full_label ($f);
 
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action ('bp_ps_field_before_search_form', $f);
 		$f->code = ($mode == '')? $f->code: $f->code. '_'. $mode;		// to be removed
 		$F->fields[] = $f;
 	}
 
 	$F->fields[] = bp_ps_set_hidden_field ( BP_PS_FORM, $form);
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	do_action ('bp_ps_before_search_form', $F);
 
 	foreach ($F->fields as $f)

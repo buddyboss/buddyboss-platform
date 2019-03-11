@@ -59,8 +59,18 @@ class Ajax
 
 		$generator = $this->getGenerator();
 
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action('bp_ld_sync/ajax/pre_fetch_reports', $generator);
 		$generator->fetch();
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action('bp_ld_sync/ajax/post_fetch_reports', $generator);
 
 		echo json_encode([

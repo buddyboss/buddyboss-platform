@@ -3419,6 +3419,11 @@ function bp_activity_types_list( $output = 'select', $args = '' ) {
 
 	// Backpat with BP-Default for dropdown boxes only.
 	if ( 'select' === $output ) {
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action( 'bp_activity_filter_options' );
 	}
 }

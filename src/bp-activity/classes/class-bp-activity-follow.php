@@ -82,6 +82,11 @@ class BP_Activity_Follow {
 		$this->leader_id   = apply_filters( 'bp_follow_leader_id_before_save',   $this->leader_id,   $this->id );
 		$this->follower_id = apply_filters( 'bp_follow_follower_id_before_save', $this->follower_id, $this->id );
 
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action_ref_array( 'bp_follow_before_save', array( &$this ) );
 
 		// leader ID is required
@@ -101,6 +106,11 @@ class BP_Activity_Follow {
 			$this->id = $wpdb->insert_id;
 		}
 
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action_ref_array( 'bp_follow_after_save', array( &$this ) );
 
 		return $result;

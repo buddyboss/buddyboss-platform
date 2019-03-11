@@ -501,6 +501,11 @@ function bp_word_or_name( $youtext, $nametext, $capitalize = true, $echo = true 
  * @todo Deprecate.
  */
 function bp_styles() {
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	do_action( 'bp_styles' );
 	wp_print_styles();
 }
