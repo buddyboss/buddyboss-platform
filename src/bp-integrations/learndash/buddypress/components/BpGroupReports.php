@@ -4,12 +4,12 @@
  * 
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
- */ 
+ */
+
+namespace Buddyboss\LearndashIntegration\Buddypress\Components;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
-
-namespace Buddyboss\LearndashIntegration\Buddypress\Components;
 
 use BP_Group_Extension;
 
