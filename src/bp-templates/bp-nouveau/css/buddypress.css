@@ -1154,6 +1154,18 @@ a.layout-grid-view {
   padding: 0 0 20px 0;
 }
 
+.activity-update-form #whats-new-elements #whats-new-elements-buttons {
+  margin: 1em 0;
+}
+
+.activity-update-form #whats-new-elements #whats-new-elements-buttons ul {
+  list-style: none;
+}
+
+.activity-update-form #whats-new-elements #whats-new-elements-buttons ul li {
+  display: inline-block;
+}
+
 .activity-update-form #whats-new-textarea textarea {
   background: #fff;
   -webkit-box-sizing: border-box;
@@ -1242,6 +1254,7 @@ a.layout-grid-view {
     margin: 0;
   }
   .activity-update-form #whats-new-content,
+  .activity-update-form #whats-new-elements,
   .activity-update-form #whats-new-post-in-box,
   .activity-update-form #whats-new-submit {
     margin-left: 8.5%;
@@ -1599,13 +1612,7 @@ a.layout-grid-view {
   box-shadow: 0 0 6px 0 #eaeaea;
 }
 
-.activity-url-scrapper-container {
-  min-height: 100px;
-  text-align: center;
-}
-
 .activity-url-scrapper-container .activity-url-scrapper-loading {
-  display: none;
   margin-top: 40px;
 }
 
