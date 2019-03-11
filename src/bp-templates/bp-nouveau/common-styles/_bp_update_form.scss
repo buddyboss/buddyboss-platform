@@ -40,6 +40,19 @@
 		padding: 0 0 $marg-lrg 0;
 	}
 
+	#whats-new-elements {
+		#whats-new-elements-buttons {
+			margin: 1em 0;
+			ul {
+				list-style: none;
+
+				li {
+					display: inline-block;
+				}
+			}
+		}
+	}
+
 	// these ID's need replacing with this!
 	//.textarea-wrap { // #whats-new-textarea
 
@@ -131,6 +144,7 @@
 		}
 
 		#whats-new-content,
+		#whats-new-elements,
 		#whats-new-post-in-box,
 		#whats-new-submit {
 			margin-left: 8.5%;

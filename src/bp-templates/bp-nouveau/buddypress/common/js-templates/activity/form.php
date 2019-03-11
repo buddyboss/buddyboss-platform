@@ -12,9 +12,13 @@
 
 <script type="text/html" id="tmpl-activity-link-preview">
 	<# if ( data.link_scrapping ) { #>
-	<# if ( data.link_loading ) { #>
-	<i class="activity-url-scrapper-loading activity-ajax-loader fa fa-spinner"></i>
+	<input type="url" id="activity-link-preview-url" value="{{data.link_url}}" />
 	<# } #>
+	<# if ( data.link_scrapping ) { #>
+	<# if ( data.link_loading ) { #>
+	<span class="activity-url-scrapper-loading activity-ajax-loader"><?php esc_html_e( 'Processing...', 'buddyboss' ) ?></span>
+	<# } #>
+	<# if ( data.link_success || data.link_error ) { #>
 	<div id="activity-url-scrapper">
 		<# if ( data.link_images.length && data.link_success && ! data.link_error ) { #>
 		<div id="activity-url-scrapper-img-holder">
@@ -48,6 +52,17 @@
 		</div>
 	</div>
 	<# } #>
+	<# } #>
+</script>
+
+<script type="text/html" id="tmpl-activity-post-elements-buttons">
+	<ul>
+		<?php if ( bp_is_activity_link_preview_active() ):  ?>
+			<li>
+				<a href="#" id="activity-link-preview-button" class="dashicons dashicons-admin-links"></a>
+			</li>
+		<?php endif; ?>
+	</ul>
 </script>
 
 <script type="text/html" id="tmpl-activity-post-form-avatar">

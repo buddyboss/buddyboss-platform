@@ -398,81 +398,89 @@
 }
 
 .activity-url-scrapper-container {
-	min-height: 100px;
-	text-align: center;
+	.activity-url-scrapper-loading {
+		margin-top: 40px;
+	}
+
+	#activity-url-scrapper {
+		border: 1px solid rgba(0,0,0,0.07);
+		background-color: rgba(250,250,250,0.2);
+		margin: 20px 0 10px;
+		overflow: hidden;
+		position: relative;
+		padding: 15px;
+
+		td {
+			vertical-align: middle;
+			padding: 8px 15px;
+
+			#activity-close-link-suggestion {
+				font-size: 0;
+				line-height: 0;
+				text-indent: -999em;
+				overflow: hidden;
+				text-align: center;
+				display: block;
+			}
+
+			#activity-close-link-suggestion:after {
+				content: "\f00d";
+				display: inline-block;
+				font: normal normal normal 20px/1 'Font Awesome 5 Free';
+				text-rendering: auto;
+				vertical-align: bottom;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+			}
+		}
+
+		#activity-url-scrapper-img-holder {
+			td { border: none; }
+
+			#activity-url-scrapper-img {
+				background-position: center;
+				background-color: white;
+				background-repeat: no-repeat;
+				background-size: contain;
+				text-align: center;
+				margin-bottom: 10px;
+
+				img {
+					max-width: 100%;
+				}
+			}
+
+			#activity-url-prevPicButton,
+			#activity-url-nextPicButton {
+				cursor: pointer;
+				cursor: pointer;
+				width: auto;
+				padding: 6px 15px;
+				margin: 0 5px;
+			}
+
+			#activity-url-scrapper-img-count {
+				font-size: 11px;
+				color: #7f7f7f;
+				text-align: center;
+				margin-top: 10px;
+			}
+		}
+
+		#activity-url-scrapper-text-holder {
+			border: none;
+			overflow: hidden;
+			text-align: left;
+		}
+
+		#activity-url-scrapper-text-holder #activity-url-scrapper-title {
+			font-weight: bold;
+			font-size: 16px;
+			margin-bottom: 5px;
+		}
+	}
 }
 
-.activity-url-scrapper-container .activity-url-scrapper-loading {
-	display: none;
-	margin-top: 40px;
-}
-.activity-url-scrapper-container #activity-url-scrapper {
-	border: 1px solid rgba(0,0,0,0.07);
-	background-color: rgba(250,250,250,0.2);
-	margin: 20px 0 10px;
-	overflow: hidden;
-	position: relative;
-	padding: 15px;
-}
-.activity-url-scrapper-container #activity-url-scrapper td {
-	vertical-align: middle;
-	padding: 8px 15px;
-}
-
-.activity-url-scrapper-container #activity-url-scrapper td #activity-close-link-suggestion {
-	font-size: 0;
-	line-height: 0;
-	text-indent: -999em;
-	overflow: hidden;
-	text-align: center;
-	display: block;
-}
-.activity-url-scrapper-container #activity-url-scrapper td #activity-close-link-suggestion:after {
-	content: "\f00d";
-	display: inline-block;
-	font: normal normal normal 20px/1 'Font Awesome 5 Free';
-	text-rendering: auto;
-	vertical-align: bottom;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-
-.activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-img-holder td { border: none; }
-.activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-img-holder #activity-url-scrapper-img {
-	background-position: center;
-	background-color: white;
-	background-repeat: no-repeat;
-	background-size: contain;
-	text-align: center;
-	margin-bottom: 10px;
-}
-.activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-img-holder #activity-url-scrapper-img img {
-	max-width: 100%;
-}
-.activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-img-holder #activity-url-prevPicButton,
-.activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-img-holder #activity-url-nextPicButton {
-	cursor: pointer;
-	cursor: pointer;
-	width: auto;
-	padding: 6px 15px;
-	margin: 0 5px;
-}
-.activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-img-holder #activity-url-scrapper-img-count {
-	font-size: 11px;
-	color: #7f7f7f;
-	text-align: center;
-	margin-top: 10px;
-}
-.activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-text-holder {
-	border: none;
-	overflow: hidden;
-	text-align: left;
-}
-.activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-text-holder #activity-url-scrapper-title {
-	font-weight: bold;
-	font-size: 16px;
-	margin-bottom: 5px;
-}
 #activity-url-error {
 	color: #FF0000;
 }

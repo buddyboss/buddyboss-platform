@@ -157,6 +157,8 @@ window.bp = window.bp || {};
 		className: 'activity-url-scrapper-container',
 		template: bp.template( 'activity-link-preview' ),
 		events: {
+			'click #activity-link-preview-button': 'toggleURLInput',
+			'keyup #activity-link-preview-url': 'updateLinkPreview',
 			'click #activity-url-prevPicButton': 'prev',
 			'click #activity-url-nextPicButton': 'next',
 			'click #activity-link-preview-close-image': 'close',
@@ -198,8 +200,6 @@ window.bp = window.bp || {};
 
 		destroy: function( e ) {
 			e.preventDefault();
-			this.remove();
-			this.unbind();
 			// Set default values
 			this.model.set({
 				link_success: false,
@@ -212,7 +212,102 @@ window.bp = window.bp || {};
 				link_description: '',
 				link_url: ''
 			});
-		}
+		},
+
+		updateLinkPreview: function( event ) {
+			var self = this;
+
+			if ( this.linkTimeout != null ) {
+				clearTimeout( this.linkTimeout );
+			}
+
+			this.linkTimeout = setTimeout( function() {
+				this.linkTimeout = null;
+				self.scrapURL( event.target.value );
+			}, 1000 );
+		},
+
+		scrapURL: function(urlText) {
+			var urlString = "";
+			if ( urlText.indexOf( 'http://' ) >= 0 ) {
+				urlString = this.getURL( 'http://', urlText );
+			} else if ( urlText.indexOf( 'https://' ) >= 0 ) {
+				urlString = this.getURL( 'https://', urlText );
+			} else if ( urlText.indexOf( 'www.' ) >= 0 ) {
+				urlString = this.getURL( 'www', urlText );
+			}
+
+			if( urlString !== '' ){
+				//check if the url of any of the excluded video oembeds
+				var url_a = document.createElement( 'a' );
+				url_a.href = urlString;
+				var hostname = url_a.hostname;
+				if ( BP_Nouveau.activity.params.excluded_hosts.indexOf( hostname ) !== - 1 ) {
+					urlString = '';
+				}
+			}
+
+			if( '' !== urlString ) {
+				this.loadURLPreview( urlString );
+			}
+		},
+
+		getURL: function( prefix, urlText ) {
+			var urlString = '';
+			var startIndex = urlText.indexOf( prefix );
+			for ( var i = startIndex; i < urlText.length; i ++ ) {
+				if ( urlText[i] === ' ' || urlText[i] === '\n' ) {
+					break;
+				} else {
+					urlString += urlText[i];
+				}
+			}
+			if ( prefix === 'www' ) {
+				prefix = 'http://';
+				urlString = prefix + urlString;
+			}
+			return urlString;
+		},
+
+		loadURLPreview: function(url) {
+			var self = this;
+
+			var regexp = /^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+			if ( regexp.test( url ) ) {
+
+				self.model.set( {
+					link_scrapping: true,
+					link_loading: true,
+					link_error: false,
+					link_url: url,
+				} );
+
+				bp.ajax.post( 'bp_activity_parse_url', { url: url } ).always( function( response ) {
+					self.model.set('link_loading', false);
+
+					if ( response.title === '' && response.images === '' ) {
+						self.model.set( 'link_scrapping', false );
+						return;
+					}
+
+					if ( response.error === '' ) {
+						self.model.set( {
+							link_success: true,
+							link_title: response.title,
+							link_description: response.description,
+							link_images: response.images,
+							link_image_index: 0,
+						} );
+					} else {
+						self.model.set( {
+							link_success: false,
+							link_error: true,
+							link_error_msg: response.error,
+						} );
+					}
+				});
+			}
+		},
 	} );
 
 	// Regular input
@@ -445,13 +540,7 @@ window.bp = window.bp || {};
 
 		initialize: function() {
 			this.$el.html( $( '<div></div>' ).prop( 'id', 'whats-new-textarea' ) );
-			var views = [ new bp.Views.WhatsNew( { activity: this.options.activity } ) ];
-
-			if ( BP_Nouveau.activity.params.link_preview ) {
-				views[ views.length ] = new bp.Views.ActivityLinkPreview( { model: this.model } );
-			}
-
-			this.views.set( '#whats-new-textarea', views );
+			this.views.set( '#whats-new-textarea', new bp.Views.WhatsNew( { activity: this.options.activity } ) );
 		}
 	} );
 
@@ -529,6 +618,35 @@ window.bp = window.bp || {};
 		}
 	} );
 
+	bp.Views.PostElementsButtons = bp.View.extend({
+		tagName   : 'div',
+		id        : 'whats-new-elements-buttons',
+		className : 'post-elements-buttons',
+		template:  bp.template( 'activity-post-elements-buttons' ),
+		events: {
+			'click #activity-link-preview-button': 'toggleURLInput',
+		},
+
+		toggleURLInput: function( e ) {
+			e.preventDefault();
+			this.model.set( 'link_scrapping', ! this.model.get( 'link_scrapping' ) );
+		},
+	});
+
+	bp.Views.PostElements = bp.View.extend({
+		tagName   : 'div',
+		id        : 'whats-new-elements',
+		className : 'post-elements',
+
+		initialize: function() {
+
+			if ( !_.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
+				this.views.add( new bp.Views.ActivityLinkPreview( { model: this.model } ) );
+			}
+
+			this.views.add( new bp.Views.PostElementsButtons( { model: this.model } ) );
+		}
+	});
 	/**
 	 * Now build the buttons!
 	 * @type {[type]}
@@ -718,6 +836,8 @@ window.bp = window.bp || {};
 				this.views.add( new bp.Views.FormButtons( { collection: bp.Nouveau.Activity.postForm.buttons, model: this.model } ) );
 			}
 
+			this.views.add( new bp.Views.PostElements( { model: this.model } ) );
+
 			// Select box for the object
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) {
 				this.views.add( new bp.Views.FormTarget( { model: this.model } ) );
@@ -760,101 +880,6 @@ window.bp = window.bp || {};
 				this.cleanFeedback();
 			} else {
 				this.views.add( new bp.Views.activityFeedback( model.get( 'errors' ) ) );
-			}
-		},
-
-		updateLinkPreview: function( event ) {
-			var self = this;
-
-			if ( this.linkTimeout != null ) {
-				clearTimeout( this.linkTimeout );
-			}
-
-			this.linkTimeout = setTimeout( function() {
-				this.linkTimeout = null;
-				self.scrapURL( event.target.value );
-			}, 1000 );
-		},
-
-		scrapURL: function(urlText) {
-			var urlString = "";
-			if ( urlText.indexOf( 'http://' ) >= 0 ) {
-				urlString = this.getURL( 'http://', urlText );
-			} else if ( urlText.indexOf( 'https://' ) >= 0 ) {
-				urlString = this.getURL( 'https://', urlText );
-			} else if ( urlText.indexOf( 'www.' ) >= 0 ) {
-				urlString = this.getURL( 'www', urlText );
-			}
-
-			if( urlString !== '' ){
-				//check if the url of any of the excluded video oembeds
-				var url_a = document.createElement( 'a' );
-				url_a.href = urlString;
-				var hostname = url_a.hostname;
-				if ( BP_Nouveau.activity.params.excluded_hosts.indexOf( hostname ) !== - 1 ) {
-					urlString = '';
-				}
-			}
-
-			if( '' !== urlString ) {
-				this.loadURLPreview( urlString );
-			}
-		},
-
-		getURL: function( prefix, urlText ) {
-			var urlString = '';
-			var startIndex = urlText.indexOf( prefix );
-			for ( var i = startIndex; i < urlText.length; i ++ ) {
-				if ( urlText[i] === ' ' || urlText[i] === '\n' ) {
-					break;
-				} else {
-					urlString += urlText[i];
-				}
-			}
-			if ( prefix === 'www' ) {
-				prefix = 'http://';
-				urlString = prefix + urlString;
-			}
-			return urlString;
-		},
-
-		loadURLPreview: function(url) {
-			var self = this;
-
-			var regexp = /^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
-			if ( regexp.test( url ) ) {
-
-				self.model.set( {
-					link_scrapping: true,
-					link_loading: true,
-					link_error: false,
-				} );
-
-				bp.ajax.post( 'bp_activity_parse_url', { url: url } ).always( function( response ) {
-					self.model.set('link_loading', false);
-
-					if ( response.title === '' && response.images === '' ) {
-						self.model.set( 'link_scrapping', false );
-						return;
-					}
-
-					if ( response.error === '' ) {
-						self.model.set( {
-							link_success: true,
-							link_title: response.title,
-							link_description: response.description,
-							link_url: url,
-							link_images: response.images,
-							link_image_index: 0,
-						} );
-					} else {
-						self.model.set( {
-							link_success: false,
-							link_error: true,
-							link_error_msg: response.error,
-						} );
-					}
-				});
 			}
 		},
 
@@ -930,6 +955,10 @@ window.bp = window.bp || {};
 					data = _.extend( data, {
 						'link_image': images[ index ]
 					} );
+				}
+
+				if ( _.isEmpty( data.content ) ) {
+					data.content = '&#8203;';
 				}
 			} else {
 				data = _.omit(data, [
