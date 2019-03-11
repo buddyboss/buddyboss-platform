@@ -6,15 +6,15 @@
  * @since BuddyBoss 1.0.0
  */ 
 
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
 namespace Buddyboss\LearndashIntegration\Learndash;
 
 use Buddyboss\LearndashIntegration\Learndash\Sync;
 use Buddyboss\LearndashIntegration\Learndash\Hooks;
 use Buddyboss\LearndashIntegration\Learndash\Admin;
 use Buddyboss\LearndashIntegration\Learndash\Group;
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 /**
  * 

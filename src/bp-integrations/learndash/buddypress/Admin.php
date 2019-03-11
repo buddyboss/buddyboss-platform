@@ -6,10 +6,10 @@
  * @since BuddyBoss 1.0.0
  */ 
 
+namespace Buddyboss\LearndashIntegration\Buddypress;
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
-
-namespace Buddyboss\LearndashIntegration\Buddypress;
 
 /**
  * 

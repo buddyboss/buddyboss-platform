@@ -6,9 +6,6 @@
  * @since BuddyBoss 1.0.0
  */ 
 
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
 namespace Buddyboss\LearndashIntegration\Core;
 
 use Buddyboss\LearndashIntegration\Buddypress\Core as BuddypressCore;
@@ -17,6 +14,9 @@ use Buddyboss\LearndashIntegration\Core\Dependencies;
 use Buddyboss\LearndashIntegration\Core\Requirements;
 use Buddyboss\LearndashIntegration\Core\Settings;
 use Buddyboss\LearndashIntegration\Learndash\Core as LearndashCore;;
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 /**
  * 

@@ -6,9 +6,6 @@
  * @since BuddyBoss 1.0.0
  */
 
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
 namespace Buddyboss\LearndashIntegration\Buddypress;
 
 use Buddyboss\LearndashIntegration\Buddypress\Admin;
@@ -23,6 +20,9 @@ use Buddyboss\LearndashIntegration\Buddypress\Helpers;
 use Buddyboss\LearndashIntegration\Buddypress\Hooks;
 use Buddyboss\LearndashIntegration\Buddypress\Reports;
 use Buddyboss\LearndashIntegration\Buddypress\Sync;
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 /**
  * 

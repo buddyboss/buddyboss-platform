@@ -6,11 +6,13 @@
  * @since BuddyBoss 1.0.0
  */ 
 
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+
 namespace Buddyboss\LearndashIntegration\Learndash;
 
 use Buddyboss\LearndashIntegration\Library\SyncGenerator;
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 /**
  * 

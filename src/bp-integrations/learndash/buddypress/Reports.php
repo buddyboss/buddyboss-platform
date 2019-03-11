@@ -6,9 +6,6 @@
  * @since BuddyBoss 1.0.0
  */
 
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
 namespace Buddyboss\LearndashIntegration\Buddypress;
 
 use Buddyboss\LearndashIntegration\Buddypress\Generators\AllReportsGenerator;
@@ -18,6 +15,9 @@ use Buddyboss\LearndashIntegration\Buddypress\Generators\EssaysReportsGenerator;
 use Buddyboss\LearndashIntegration\Buddypress\Generators\LessonsReportsGenerator;
 use Buddyboss\LearndashIntegration\Buddypress\Generators\QuizzesReportsGenerator;
 use Buddyboss\LearndashIntegration\Buddypress\Generators\TopicsReportsGenerator;
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 /**
  * 

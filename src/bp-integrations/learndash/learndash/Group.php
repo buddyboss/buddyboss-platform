@@ -6,12 +6,12 @@
  * @since BuddyBoss 1.0.0
  */ 
 
-// Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
-
 namespace Buddyboss\LearndashIntegration\Learndash;
 
 use WP_Query;
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 /**
  * 
