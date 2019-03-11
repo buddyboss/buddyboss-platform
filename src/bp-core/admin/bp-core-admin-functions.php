@@ -1634,7 +1634,7 @@ function bp_member_type_group_create_metabox( $post ) {
  */
 function bp_member_type_group_auto_join_meta_box( $post ) {
 	?>
-	<p><?php _e( 'Select which group types to automatically approve membership.', 'buddyboss' ); ?></p>
+	<p><?php _e( 'Selected group types will automatically approve all membership requests.', 'buddyboss' ); ?></p>
 	<?php
 	$get_all_registered_group_types = bp_get_active_group_types();
 
