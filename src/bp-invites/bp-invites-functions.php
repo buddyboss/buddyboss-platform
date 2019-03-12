@@ -54,7 +54,7 @@ function bp_get_invite_post_type_labels() {
 		'all_items'             => __( 'Sent Invites', 'buddyboss' ),
 		'edit_item'             => __( 'Edit Sent Invite', 'buddyboss' ),
 		'menu_name'             => __( 'Invites', 'buddyboss' ),
-		'name'                  => __( 'Invites Sent by Users', 'buddyboss' ),
+		'name'                  => __( 'Email Invites', 'buddyboss' ),
 		'new_item'              => __( 'New Sent Invite', 'buddyboss' ),
 		'not_found'             => __( 'No Sent Invites found', 'buddyboss' ),
 		'not_found_in_trash'    => __( 'No Sent Invites found in trash', 'buddyboss' ),
