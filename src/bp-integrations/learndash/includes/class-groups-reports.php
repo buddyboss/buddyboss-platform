@@ -1,13 +1,12 @@
 <?php
 /**
- * File include Courses menu that is going to be added in the BuddyPress Group
+ * Courses menu for Social Groups class.
  *
  * @since BuddyBoss 1.0.1
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 if ( class_exists( 'BP_Group_Extension' ) ) {
 	/**

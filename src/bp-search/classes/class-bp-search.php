@@ -1,14 +1,19 @@
 <?php
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+/**
+ * BuddyBoss global search main classes.
+ *
+ * @package BuddyBoss\Activity
+ * @since BuddyBoss 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'Bp_Search_Helper' ) ):
 
 	/**
 	 *
-	 * BuddyPress Global Search Plugin Main Controller
+	 * BuddyPress Global Search Main Controller
 	 * **************************************
 	 *
 	 *
