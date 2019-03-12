@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * 
+ * @todo add title/description
  * 
  * @since BuddyBoss 1.0.0
  */
@@ -19,7 +19,7 @@ class LearnDash_BuddyPress_Groups_Sync
     protected static $instance;
 
     /**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -29,7 +29,7 @@ class LearnDash_BuddyPress_Groups_Sync
     }
 
     /**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -43,7 +43,7 @@ class LearnDash_BuddyPress_Groups_Sync
     }
 
     /**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

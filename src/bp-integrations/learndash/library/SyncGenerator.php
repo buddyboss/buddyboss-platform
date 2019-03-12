@@ -14,7 +14,7 @@ use BP_Groups_Member;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * 
+ * @todo add title/description
  * 
  * @since BuddyBoss 1.0.0
  */
@@ -27,7 +27,7 @@ class SyncGenerator
 	protected $syncMetaKey = '_sync_group_id';
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -41,7 +41,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -51,7 +51,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -61,7 +61,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -71,7 +71,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -81,7 +81,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -108,7 +108,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -124,7 +124,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -136,7 +136,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -148,7 +148,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -175,7 +175,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -191,7 +191,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -208,7 +208,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -225,7 +225,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -245,7 +245,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -266,7 +266,7 @@ class SyncGenerator
 
 	/**
 	 * 
-	 * @todo seeing a PHP error line 263?
+	 * @todo seeing a PHP error line 277? and add title/description
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function syncBpUsers()
@@ -287,7 +287,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -305,7 +305,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -323,7 +323,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -342,7 +342,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -361,7 +361,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -384,7 +384,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -398,7 +398,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -419,7 +419,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -435,7 +435,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -451,7 +451,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -461,7 +461,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -471,7 +471,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -482,7 +482,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -493,7 +493,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -503,7 +503,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -518,7 +518,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -533,7 +533,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -545,7 +545,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -563,7 +563,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -583,7 +583,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -598,7 +598,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -608,7 +608,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -623,7 +623,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -633,7 +633,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -661,7 +661,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -672,7 +672,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -688,7 +688,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -704,7 +704,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

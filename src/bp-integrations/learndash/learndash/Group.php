@@ -14,14 +14,14 @@ use WP_Query;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * 
+ * @todo add title/description
  * 
  * @since BuddyBoss 1.0.0
  */
 class Group
 {
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

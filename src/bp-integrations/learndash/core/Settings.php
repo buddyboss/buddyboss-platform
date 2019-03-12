@@ -14,7 +14,7 @@ use Buddyboss\LearndashIntegration\Library\ValueLoader;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * 
+ * @todo add title/description
  * 
  * @since BuddyBoss 1.0.0
  */
@@ -25,7 +25,7 @@ class Settings
 	protected $optionKey = 'bp_ld_sync_settings';
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -38,7 +38,7 @@ class Settings
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -54,7 +54,7 @@ class Settings
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -64,7 +64,7 @@ class Settings
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -75,7 +75,7 @@ class Settings
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -88,7 +88,7 @@ class Settings
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -108,7 +108,7 @@ class Settings
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -145,7 +145,7 @@ class Settings
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

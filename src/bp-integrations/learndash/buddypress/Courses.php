@@ -12,14 +12,14 @@ namespace Buddyboss\LearndashIntegration\Buddypress;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * 
+ * @todo add title/description
  * 
  * @since BuddyBoss 1.0.0
  */
 class Courses
 {
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -29,7 +29,7 @@ class Courses
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -41,7 +41,7 @@ class Courses
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -61,7 +61,7 @@ class Courses
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -73,7 +73,7 @@ class Courses
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -88,7 +88,7 @@ class Courses
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -103,7 +103,7 @@ class Courses
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -129,7 +129,7 @@ class Courses
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -159,7 +159,7 @@ class Courses
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

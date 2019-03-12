@@ -15,14 +15,14 @@ use LDLMS_DB;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * 
+ * @todo add title/description
  * 
  * @since BuddyBoss 1.0.0
  */
 class QuizzesReportsGenerator extends ReportsGenerator
 {
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -37,7 +37,7 @@ class QuizzesReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -75,7 +75,7 @@ class QuizzesReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -113,7 +113,7 @@ class QuizzesReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

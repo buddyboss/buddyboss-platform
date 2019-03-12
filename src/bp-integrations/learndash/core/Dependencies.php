@@ -12,7 +12,7 @@ namespace Buddyboss\LearndashIntegration\Core;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * 
+ * @todo add title/description
  * 
  * @since BuddyBoss 1.0.0
  */
@@ -22,7 +22,7 @@ class Dependencies
 	protected $loadedDependencies = [];
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -37,7 +37,7 @@ class Dependencies
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -51,7 +51,7 @@ class Dependencies
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -61,7 +61,7 @@ class Dependencies
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -76,7 +76,7 @@ class Dependencies
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -87,7 +87,7 @@ class Dependencies
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -97,7 +97,7 @@ class Dependencies
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

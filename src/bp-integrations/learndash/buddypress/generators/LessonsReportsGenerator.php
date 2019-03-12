@@ -14,14 +14,14 @@ use Buddyboss\LearndashIntegration\Library\ReportsGenerator;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * 
+ * @todo add title/description
  * 
  * @since BuddyBoss 1.0.0
  */
 class LessonsReportsGenerator extends ReportsGenerator
 {
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -34,7 +34,7 @@ class LessonsReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -58,7 +58,7 @@ class LessonsReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -69,7 +69,7 @@ class LessonsReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -89,7 +89,7 @@ class LessonsReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

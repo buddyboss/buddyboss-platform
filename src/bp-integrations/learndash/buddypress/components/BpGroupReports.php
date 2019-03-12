@@ -14,14 +14,14 @@ defined( 'ABSPATH' ) || exit;
 use BP_Group_Extension;
 
 /**
- * 
+ * @todo add title/description
  * 
  * @since BuddyBoss 1.0.0
  */
 class BpGroupReports extends BP_Group_Extension
 {
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -31,7 +31,7 @@ class BpGroupReports extends BP_Group_Extension
 	}
 
     /**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -47,7 +47,7 @@ class BpGroupReports extends BP_Group_Extension
     }
 
     /**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -65,7 +65,7 @@ class BpGroupReports extends BP_Group_Extension
     }
 
     /**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -96,7 +96,7 @@ class BpGroupReports extends BP_Group_Extension
     }
 
     /**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

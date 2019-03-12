@@ -17,14 +17,14 @@ use WpProQuiz_Model_Question;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * 
+ * @todo add title/description
  * 
  * @since BuddyBoss 1.0.0
  */
 class EssaysReportsGenerator extends ReportsGenerator
 {
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -37,7 +37,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -54,7 +54,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -94,7 +94,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -114,7 +114,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -153,7 +153,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -165,7 +165,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -177,7 +177,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -232,7 +232,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -248,7 +248,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -268,7 +268,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * 
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
