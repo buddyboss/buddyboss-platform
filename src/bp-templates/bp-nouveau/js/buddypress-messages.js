@@ -1073,6 +1073,7 @@ window.bp = window.bp || {};
 
 			var data = {};
 
+			$(this.$el).find('button').addClass('loading');
 			bp.Nouveau.Messages.displayFeedback( BP_Nouveau.messages.loading, 'loading' );
 
 			if ( _.isUndefined( this.options.thread.attributes ) ) {
@@ -1234,6 +1235,7 @@ window.bp = window.bp || {};
 		},
 
 		messagesFetched: function( collection, response ) {
+			var loadMore = null;
 			collection.before = response.next_messages_timestamp;
 
 			if ( ! _.isUndefined( response.thread ) ) {
@@ -1249,11 +1251,14 @@ window.bp = window.bp || {};
 			}
 
 			if ( response.messages.length < response.per_page && ! _.isUndefined( this.views.get( '#bp-message-load-more' ) ) ) {
-				var loadMore = this.views.get( '#bp-message-load-more' )[0];
+				loadMore = this.views.get( '#bp-message-load-more' )[0];
 				loadMore.views.view.remove();
 			} else {
-				var loadMore = this.views.get( '#bp-message-load-more' )[0];
-				loadMore.views.view.$el.find('button').show();
+				loadMore = this.views.get( '#bp-message-load-more' )[0];
+				loadMore.views.view.$el.find('button').removeClass('loading').show();
+
+				// add scroll event for the auto load messages without user having to click the button
+				$('#bp-message-thread-list').on('scroll', this.messages_scrolled );
 			}
 
 			if ( ! this.views.get( '#bp-message-thread-header' ) ) {
@@ -1261,7 +1266,18 @@ window.bp = window.bp || {};
 			}
 		},
 
+		messages_scrolled: function( event ) {
+			var target = $( event.currentTarget );
+			if ( target.scrollTop() <= 1 ) {
+				var button = $('#bp-message-load-more').find('button');
+				if ( !button.hasClass('loading') ) {
+					button.trigger('click');
+				}
+			}
+		},
+
 		messagesFetchError: function( collection, response ) {
+			var loadMore = null;
 			if ( ! response.messages ) {
 				collection.hasMore = false;
 			}
@@ -1269,8 +1285,11 @@ window.bp = window.bp || {};
 			bp.Nouveau.Messages.removeFeedback();
 
 			if ( ! response.messages && ! _.isUndefined( this.views.get( '#bp-message-load-more' ) ) ) {
-				var loadMore = this.views.get( '#bp-message-load-more' )[0];
+				loadMore = this.views.get( '#bp-message-load-more' )[0];
 				loadMore.views.view.remove();
+			} else {
+				loadMore = this.views.get( '#bp-message-load-more' )[0];
+				loadMore.views.view.$el.find('button').removeClass('loading');
 			}
 
 			if ( response.feedback && response.type ) {
