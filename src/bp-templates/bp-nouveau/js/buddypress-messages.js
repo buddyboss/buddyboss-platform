@@ -738,7 +738,7 @@ window.bp = window.bp || {};
 
 		events: {
 			'click .subject' : 'changePreview',
-			//'scroll' : 'scrolled'
+			'scroll' : 'scrolled'
 		},
 
 		// attributes: function () {
