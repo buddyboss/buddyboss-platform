@@ -666,11 +666,17 @@ div.search_results .groups-list li .last-activity {
 		}
 	}
 
+	dd.course_progress {
+		margin: 0;
+		width: 40%;
+		height: 5px;
+	}
 
-	.posted-in {
+	.entry-meta {
+		span,
 		a {
 			color: #737373;
-			font-size: 12px;
+			font-size: 90%;
 		}
 	}
 }

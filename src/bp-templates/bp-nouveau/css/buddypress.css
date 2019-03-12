@@ -8282,9 +8282,16 @@ div.search_results .groups-list li .last-activity {
   z-index: 9;
 }
 
-.bp-search-results-list .bp-search-item .posted-in a {
+.bp-search-results-list .bp-search-item dd.course_progress {
+  margin: 0;
+  width: 40%;
+  height: 5px;
+}
+
+.bp-search-results-list .bp-search-item .entry-meta span,
+.bp-search-results-list .bp-search-item .entry-meta a {
   color: #737373;
-  font-size: 12px;
+  font-size: 90%;
 }
 
 .bp-search-results-wrapper.bp-search-no-results {
