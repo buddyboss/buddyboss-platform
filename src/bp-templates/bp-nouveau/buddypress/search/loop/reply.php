@@ -1,9 +1,13 @@
+<?php
+$reply_id = get_the_ID();
+$topic_id = bbp_get_reply_topic_id($reply_id);
+?>
 <li class="bp-search-item bp-search-item_reply">
 	<div class="list-wrap">
 		<div class="item-avatar">
-			<a href="<?php bbp_reply_url( get_the_ID() ); ?>">
+			<a href="<?php bbp_reply_url( $reply_id ); ?>">
 				<img
-					src="<?php echo bbp_get_forum_thumbnail_src( bbp_get_forum_id( get_the_ID() ) ) ?: buddypress()->plugin_url . "bp-core/images/mystery-forum.png"; ?>"
+					src="<?php echo bbp_get_forum_thumbnail_src( bbp_get_forum_id( $reply_id ) ) ?: buddypress()->plugin_url . "bp-core/images/mystery-forum.png"; ?>"
 					class="avatar forum-avatar"
 					height="150"
 					width="150"
@@ -13,9 +17,17 @@
 		</div>
 
 		<div class="item">
-			<h3 class="entry-title item-title">
-				<a href="<?php bbp_reply_url(get_the_ID()); ?>"><?php echo bp_search_reply_intro( 100 );?></a>
-			</h3>
+			<div class="entry-title item-title">
+				<a href="<?php bbp_reply_url( $reply_id ); ?>"><?php bbp_topic_title( $topic_id ) ?></a>
+			</div>
+			<div class="entry-content entry-summary">
+				<?php echo wp_trim_words( bbp_get_reply_content( $reply_id ), 30, '...' ) ?>
+			</div>
+			<div class="entry-meta">
+				<span class="datetime">
+					<?php bbp_reply_post_date( $reply_id ) ?>
+				</span>
+			</div>
 		</div>
 	</div>
 </li>

@@ -18,6 +18,16 @@
 			<div class="entry-content entry-summary">
 				<?php echo make_clickable( get_the_excerpt() ); ?>
 			</div>
+
+			<div class="entry-meta">
+				<span class="author">
+					<?php printf( esc_html__( 'By %s', 'buddyboss' ), get_the_author_link() ) ?>
+				</span>
+				<span>&middot;</span>
+				<span class="published">
+					<?php the_date() ?>
+				</span>
+			</div>
 		</div>
 	</div>
 </li>
