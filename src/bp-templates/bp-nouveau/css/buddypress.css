@@ -1682,6 +1682,10 @@ a.layout-grid-view {
   margin-top: 10px;
 }
 
+.activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-img-holder .activity-url-thumb-nav {
+  text-align: center;
+}
+
 .activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-text-holder {
   border: none;
   overflow: hidden;

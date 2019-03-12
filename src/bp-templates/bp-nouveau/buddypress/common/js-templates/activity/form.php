@@ -40,7 +40,6 @@
 		<div id="activity-url-scrapper-text-holder">
 			<# if ( data.link_success && ! data.link_error ) { #>
 			<div id="activity-url-scrapper-title">{{data.link_title}}</div>
-			<div id="activity-url-scrapper-url">{{data.link_url}}</div>
 			<div id="activity-url-scrapper-description">{{data.link_description}}</div>
 			<# } #>
 			<# if ( data.link_error && ! data.link_success ) { #>
