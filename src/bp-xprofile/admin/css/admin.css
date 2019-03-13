@@ -82,8 +82,7 @@ ul#field-group-tabs li.ui-state-acceptable:not(.ui-state-active) a.ui-tab {
 }
 
 ul#field-group-tabs li.ui-state-acceptable a.ui-tab {
-	margin-right: 5px;
-	margin-right: 5px;
+	margin-right: 10px;
 }
 
 ul#field-group-tabs li.drop-candidate.ui-state-acceptable:not(.ui-state-active) a.ui-tab {
