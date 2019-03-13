@@ -15,8 +15,8 @@
 switch ( bp_current_action() ) :
 
 	// Home/Media
-	case 'media':
-		bp_get_template_part( 'members/single/media/media' );
+	case 'my-media':
+		bp_get_template_part( 'members/single/media/my-media' );
 		break;
 
 	// Home/Media/Albums

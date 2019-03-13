@@ -8,7 +8,9 @@
 
 	<h2 class="screen-heading member-media-screen"><?php esc_html_e( 'Media', 'buddyboss' ); ?></h2>
 
-
+    <div class="media-uploader-wrapper">
+        <div class="dropzone" id="media-uploader"></div>
+    </div>
 
 <?php bp_nouveau_member_hook( 'before', 'media_list_content' ); ?>
 
