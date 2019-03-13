@@ -671,7 +671,7 @@ window.bp = window.bp || {};
 			}
 
 			// Displaying the comment form
-			if ( target.hasClass( 'acomment-reply' ) || target.parent().hasClass( 'acomment-reply' ) ) {
+			if ( target.hasClass('activity-state-comments') || target.hasClass( 'acomment-reply' ) || target.parent().hasClass( 'acomment-reply' ) ) {
 				var comment_link = target;
 
 				form = $( '#ac-form-' + activity_id );
@@ -683,6 +683,20 @@ window.bp = window.bp || {};
 				// If the comment count span inside the link is clicked
 				if ( target.parent().hasClass( 'acomment-reply' ) ) {
 					comment_link = target.parent();
+				}
+
+				// Roll-down comments
+				if ( !activity_item.hasClass( 'comments-loaded' ) ) {
+					wp.ajax.send( 'bp_get_comments', {
+						type: 'GET',
+						dataType: 'html',
+						data: {
+							activity_id: item_id
+						}
+					} ).always( function( response ) {
+						form[ 0 ].insertAdjacentHTML( 'beforebegin', response );
+						activity_item.addClass( 'comments-loaded' );
+					} );
 				}
 
 				if ( target.closest( 'li' ).data( 'bp-activity-comment-id' ) ) {

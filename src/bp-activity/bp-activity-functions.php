@@ -4163,6 +4163,23 @@ function bp_ajax_get_suggestions() {
 }
 add_action( 'wp_ajax_bp_get_suggestions', 'bp_ajax_get_suggestions' );
 
+function bp_ajax_get_comments() {
+	if ( empty( $_GET['activity_id'] ) ) {
+		exit;
+	}
+
+	if ( bp_has_activities( 'include=' . $_GET['activity_id'] ) ) {
+		while ( bp_activities() ) {
+			bp_the_activity();
+			bp_nouveau_activity_comments();
+
+			exit;
+		}
+	}
+}
+
+add_action( 'wp_ajax_bp_get_comments', 'bp_ajax_get_comments' );
+
 /**
  * Detect a change in post type status, and initiate an activity update if necessary.
  *
