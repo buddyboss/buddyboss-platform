@@ -59,14 +59,13 @@ p.nofields {
 /* Field group tabs */
 ul#field-group-tabs {
 	float: left;
-	padding: 0 0 0 15px;
+	padding: 0;
 	margin: 0;
 	display: none;
 }
 
 ul#field-group-tabs li {
 	float: left;
-	margin-right: 8px;
 	margin-bottom: -1px;
 }
 
@@ -79,6 +78,11 @@ ul#field-group-tabs li.ui-state-acceptable:not(.ui-state-active) a.ui-tab {
 	-moz-animation: tab-throb 2s infinite;
 	-o-animation: tab-throb 2s infinite;
 	animation: tab-throb 2s infinite;
+}
+
+ul#field-group-tabs li.ui-state-acceptable a.ui-tab {
+	margin-right: 5px;
+	margin-right: 5px;
 }
 
 ul#field-group-tabs li.drop-candidate.ui-state-acceptable:not(.ui-state-active) a.ui-tab {
@@ -96,20 +100,29 @@ ul#field-group-tabs li.drop-candidate.ui-state-acceptable:not(.ui-state-active) 
 ul#field-group-tabs li a.ui-tab {
 	font-size: 14px;
 	display: block;
-	margin-top: 3px;
-	padding: 5px 10px 6px;
-	border: 1px solid #e5e5e5;
+	padding: 10px 14px 11px;
+	border-top: 1px solid #e5e5e5;
+	border-right: 1px solid #e5e5e5;
 	background-color: #f5f5f5;
 	text-decoration: none;
-	color: #000;
+	color: #555;
+	font-weight: 500;
 	outline: none;
+}
+
+ul#field-group-tabs li a.ui-tab span {
+	font-size: 13px;
+	font-weight: 400;
+}
+
+/* First tab */
+ul#field-group-tabs li:first-child a.ui-tab {
+	border-left: 1px solid #e5e5e5;
 }
 
 /* Selected tab */
 ul#field-group-tabs li.ui-state-active a.ui-tab {
 	background-color: #fff;
-	margin-top: 0;
-	padding: 7px 10px;
 	border-bottom: 1px solid transparent;
 	color: #000;
 }
