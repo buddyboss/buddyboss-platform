@@ -4163,6 +4163,11 @@ function bp_ajax_get_suggestions() {
 }
 add_action( 'wp_ajax_bp_get_suggestions', 'bp_ajax_get_suggestions' );
 
+/**
+ * AJAX endpoint for activity comments.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ajax_get_comments() {
 	if ( empty( $_GET['activity_id'] ) ) {
 		exit;
@@ -4172,7 +4177,6 @@ function bp_ajax_get_comments() {
 		while ( bp_activities() ) {
 			bp_the_activity();
 			bp_nouveau_activity_comments();
-
 			exit;
 		}
 	}

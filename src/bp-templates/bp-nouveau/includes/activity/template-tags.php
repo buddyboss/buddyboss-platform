@@ -61,6 +61,8 @@ function bp_nouveau_after_activity_directory_content() {
 	 * @since BuddyPress 1.5.0
 	 */
 	do_action( 'bp_after_directory_activity' );
+
+	bp_get_template_part( 'common/js-templates/activity/comments' );
 }
 
 /**

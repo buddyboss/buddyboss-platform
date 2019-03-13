@@ -823,6 +823,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'loading',
 			'message' => __( 'Loading community updates. Please wait.', 'buddyboss' ),
 		),
+		'activity-comments-loading' => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading activity comments. Please wait.', 'buddyboss' ),
+		),
 		'single-activity-loading' => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading the update. Please wait.', 'buddyboss' ),
