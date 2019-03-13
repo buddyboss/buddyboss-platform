@@ -1,4 +1,10 @@
-<?php 
+<?php
+/**
+ * BP Profile Search - default template
+ *
+ * @since BuddyBoss 1.0.0
+ */
+ 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 

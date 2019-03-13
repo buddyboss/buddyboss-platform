@@ -12,11 +12,7 @@ defined( 'ABSPATH' ) || exit;
 if (!class_exists('Bp_Search_Groups')):
 
 	/**
-	 *
-	 * BuddyPress Global Search  - search groups
-	 * **************************************
-	 *
-	 *
+	 * BuddyPress Global Search  - search groups class
 	 */
 	class Bp_Search_Groups extends Bp_Search_Type {
 		private $type = 'groups';

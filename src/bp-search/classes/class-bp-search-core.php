@@ -12,11 +12,7 @@ defined( 'ABSPATH' ) || exit;
 if ( ! class_exists( 'BP_Search_Core' ) ):
 
 	/**
-	 *
-	 * BuddyPress Global Search Core Controller
-	 * **************************************
-	 *
-	 *
+	 * BuddyPress Global Search Core Controller class
 	 */
 	class BP_Search_Core {
 

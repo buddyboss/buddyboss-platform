@@ -12,11 +12,7 @@ defined( 'ABSPATH' ) || exit;
 if (!class_exists('Bp_Search_bbPress')):
 
 	/**
-	 *
-	 * BuddyPress Global Search  - search bbPress
-	 * **************************************
-	 *
-	 *
+	 * BuddyPress Global Search  - search bbPress class
 	 */
 	abstract class Bp_Search_bbPress extends Bp_Search_Type {
 		public $type;

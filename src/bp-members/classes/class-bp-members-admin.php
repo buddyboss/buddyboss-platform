@@ -1381,7 +1381,6 @@ class BP_Members_Admin {
 	 *
 	 * @since BuddyPress 2.1.0
 	 *
-	 *
 	 * @param string $profile_link Profile Link for admin bar.
 	 * @param string $url          Profile URL.
 	 * @param int    $user_id      User ID.

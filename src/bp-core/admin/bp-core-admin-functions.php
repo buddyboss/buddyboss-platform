@@ -2081,8 +2081,6 @@ add_action( 'wp_ajax_bp_core_admin_create_background_page', 'bp_core_admin_creat
  * These settings cannot be used with BuddyBoss, as we load custom avatars instead of gravatar.
  *
  * @since BuddyBoss 1.0.0
- *
- *
  */
 function bp_remove_avatar_settings_from_options_discussion_page() {
 	global $pagenow;

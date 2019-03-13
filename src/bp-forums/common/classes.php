@@ -256,7 +256,6 @@ class BBP_Walker_Dropdown extends Walker {
 /**
  * Create hierarchical list of Forums replies.
  *
- *
  * @since bbPress (r4944)
  */
 class BBP_Walker_Reply extends Walker {

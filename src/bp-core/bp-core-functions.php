@@ -1785,7 +1785,6 @@ function bp_admin_url( $path = '', $scheme = 'admin' ) {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 *
 	 * @param string $path   Optional. The sub-path under /wp-admin to be
 	 *                       appended to the admin URL.
 	 * @param string $scheme The scheme to use. Default is 'admin', which

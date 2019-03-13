@@ -5480,7 +5480,6 @@ function bp_groups_current_create_step() {
 	 *
 	 * @since BuddyPress 1.6.0
 	 *
-	 *
 	 * @return string $current_create_step
 	 */
 	function bp_get_groups_current_create_step() {
@@ -5804,7 +5803,6 @@ function bp_group_current_admin_tab() {
 	 *
 	 * @since BuddyPress 1.6.0
 	 *
-	 *
 	 * @return string $tab The current tab's slug.
 	 */
 	function bp_get_group_current_admin_tab() {
@@ -5836,7 +5834,6 @@ function bp_group_current_members_tab() {
  * Returns the current group members tab slug.
  *
  * @since BuddyBoss 1.0.0
- *
  *
  * @return string $tab The current tab's slug.
  */

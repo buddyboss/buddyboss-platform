@@ -69,7 +69,6 @@ class BP_Embed extends WP_Embed {
 	 * enabled, then the URL will be passed to {@link BP_Embed::parse_oembed()}
 	 * for oEmbed parsing.
 	 *
-	 *
 	 * @param array  $attr Shortcode attributes.
 	 * @param string $url  The URL attempting to be embeded.
 	 * @return string The embed HTML on success, otherwise the original URL.

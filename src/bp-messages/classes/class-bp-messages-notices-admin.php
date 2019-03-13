@@ -2,7 +2,6 @@
 /**
  * BuddyBoss messages component Site-wide Notices admin screen.
  *
- *
  * @package BuddyBoss\Messages
  * @since BuddyPress 3.0.0
  */

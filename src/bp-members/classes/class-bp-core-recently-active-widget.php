@@ -162,7 +162,6 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 	 *
 	 * @since BuddyPress 2.3.0
 	 *
-	 *
 	 * @param array $instance Widget instance settings.
 	 * @return array
 	 */

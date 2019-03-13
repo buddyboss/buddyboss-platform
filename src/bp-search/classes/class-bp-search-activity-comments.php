@@ -1,15 +1,18 @@
 <?php
+/**
+ * @todo add description
+ * 
+ * @package BuddyBoss\Search
+ * @since BuddyBoss 1.0.0
+ */ 
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 if (!class_exists('Bp_Search_Activity_Comment')):
 
 	/**
-	 *
-	 * BuddyPress Global Search  - search activity comment
-	 * **************************************
-	 *
-	 *
+	 * BuddyPress Global Search  - search activity comment class
 	 */
 	class Bp_Search_Activity_Comment extends Bp_Search_Type {
 		private $type = 'activity_comment';

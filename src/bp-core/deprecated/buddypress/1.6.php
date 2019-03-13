@@ -110,8 +110,6 @@ function bp_blogs_manage_comment( $comment_id, $comment_status ) {
 }
 
 /**
- * 
- *
  * Core functions
  */
 

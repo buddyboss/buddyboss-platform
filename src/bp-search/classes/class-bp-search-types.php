@@ -12,11 +12,7 @@ defined( 'ABSPATH' ) || exit;
 if (!class_exists('Bp_Search_Type')):
 
 	/**
-	 *
 	 * BuddyPress Global Search Type - Parent class
-	 * **************************************
-	 *
-	 *
 	 */
 	abstract class Bp_Search_Type {
 

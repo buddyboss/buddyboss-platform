@@ -3065,7 +3065,6 @@ function bp_activity_delete( $args = '' ) {
 	 * @since BuddyPress 1.1.0
 	 * @deprecated 1.2.0
 	 *
-	 *
 	 * @param array|string $args See BP_Activity_Activity::get for a
 	 *                           description of accepted arguments.
 	 * @return bool True on success, false on failure.
@@ -3088,7 +3087,6 @@ function bp_activity_delete( $args = '' ) {
 	 *
 	 * @since BuddyPress 1.1.0
 	 *
-	 *
 	 * @param int $activity_id ID of the activity item to be deleted.
 	 * @return bool True on success, false on failure.
 	 */
@@ -3103,7 +3101,6 @@ function bp_activity_delete( $args = '' ) {
 	 *
 	 * @since BuddyPress 1.1.0
 	 * @deprecated 1.2.0
-	 *
 	 *
 	 * @param int    $user_id   The user id.
 	 * @param string $content   The activity id.
@@ -3127,7 +3124,6 @@ function bp_activity_delete( $args = '' ) {
 	 *
 	 * @since BuddyPress 1.1.0
 	 * @deprecated 1.2.0
-	 *
 	 *
 	 * @param int    $user_id   The user id.
 	 * @param string $component The activity component.
@@ -3215,7 +3211,6 @@ function bp_activity_delete_comment( $activity_id, $comment_id ) {
 	 * Delete an activity comment's children.
 	 *
 	 * @since BuddyPress 1.2.0
-	 *
 	 *
 	 * @param int $activity_id The ID of the "root" activity, ie the
 	 *                         comment's oldest ancestor.
@@ -3949,8 +3944,6 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 
 /**
  * Return if the activity stream should show activty comments as streamed or threaded
- *
- *
  */
 function bp_show_streamed_activity_comment() {
 	return apply_filters( 'bp_show_streamed_activity_comment', bp_get_option('show_streamed_activity_comment', false) );

@@ -12,11 +12,7 @@ defined( 'ABSPATH' ) || exit;
 if (!class_exists('Bp_Search_Activities')):
 
 	/**
-	 *
-	 * BuddyPress Global Search  - search activities
-	 * **************************************
-	 *
-	 *
+	 * BuddyPress Global Search  - search activities class
 	 */
 	class Bp_Search_Activities extends Bp_Search_Type {
 		private $type = 'activity';

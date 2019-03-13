@@ -12,11 +12,7 @@ defined( 'ABSPATH' ) || exit;
 if ( ! class_exists( 'Bp_Search_Helper' ) ):
 
 	/**
-	 *
-	 * BuddyPress Global Search Main Controller
-	 * **************************************
-	 *
-	 *
+	 * BuddyPress Global Search Main Controller class
 	 */
 	class BP_Search {
 		/**
@@ -114,7 +110,9 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 		}
 
 		/**
+		 * @todo add title/description
 		 *
+		 * @since BuddyBoss 1.0.0
 		 */
 		public function load_search_helpers() {
 			global $bp;

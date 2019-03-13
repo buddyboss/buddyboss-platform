@@ -12,11 +12,7 @@ defined( 'ABSPATH' ) || exit;
 if (!class_exists('Bp_Search_bbPress_Forums')):
 
 	/**
-	 *
-	 * BuddyPress Global Search  - search bbpress forums
-	 * **************************************
-	 *
-	 *
+	 * BuddyPress Global Search  - search bbpress forums class
 	 */
 	class Bp_Search_bbPress_Forums extends Bp_Search_bbPress {
 		public $type = 'forum';

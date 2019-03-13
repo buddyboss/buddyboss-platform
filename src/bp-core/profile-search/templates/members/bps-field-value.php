@@ -1,5 +1,14 @@
 <?php
-	list ($name, $value) = bp_ps_template_args ();
+/**
+ * BP Profile Search - meta template
+ *
+ * @since BuddyBoss 1.0.0
+ */
+ 
+ // Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+ 
+list ($name, $value) = bp_ps_template_args ();
 ?>
 	<div class="item-meta">
 		<span class="activity">
