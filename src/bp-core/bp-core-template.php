@@ -2244,6 +2244,17 @@ function bp_is_invites_component() {
 }
 
 /**
+ * Check whether the current page is part of the Media component.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is part of the Media component.
+ */
+function bp_is_media_component() {
+	return (bool) bp_is_current_component( 'media' );
+}
+
+/**
  * Is the current component an active core component?
  *
  * Use this function when you need to check if the current component is an
@@ -2683,6 +2694,21 @@ function bp_is_user_invites() {
  */
 function bp_is_user_invites_send_invites() {
 	return (bool) ( bp_is_user_invites() && bp_is_current_action( 'invites' ) );
+}
+
+/** Media ********************************************************************/
+
+/**
+ * Is this a user's media page?
+ *
+ * Eg http://example.com/members/joe/media/ (or a subpage thereof).
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is a user's media page.
+ */
+function bp_is_user_media() {
+	return (bool) ( bp_is_user() && bp_is_media_component() );
 }
 
 /** Groups ********************************************************************/

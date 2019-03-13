@@ -957,6 +957,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'info',
 			'message' => __( 'You may download a copy of all data you have created on this platform. Click the button below to start a new request. An email will be sent to you to verify the request. Then the site admin will review your request and if approved, a zip file will be generated and emailed to you.', 'buddyboss' ),
 		),
+		'member-media-none' => array(
+			'type'    => 'info',
+			'message' => __( 'Sorry, no media was found.', 'buddyboss' ),
+		),
 	) );
 
 	if ( ! isset( $feedback_messages[ $feedback_id ] ) ) {
