@@ -61,6 +61,7 @@ ul#field-group-tabs {
 	float: left;
 	padding: 0;
 	margin: 0;
+	border-left: 1px solid #e5e5e5;
 	display: none;
 }
 
@@ -100,9 +101,9 @@ ul#field-group-tabs li.drop-candidate.ui-state-acceptable:not(.ui-state-active) 
 ul#field-group-tabs li a.ui-tab {
 	font-size: 14px;
 	display: block;
-	padding: 10px 14px 11px;
-	border-top: 1px solid #e5e5e5;
-	border-right: 1px solid #e5e5e5;
+	padding: 10px 14px;
+	border: 1px solid #e5e5e5;
+	border-left: none;
 	background-color: #f5f5f5;
 	text-decoration: none;
 	color: #555;
@@ -113,11 +114,6 @@ ul#field-group-tabs li a.ui-tab {
 ul#field-group-tabs li a.ui-tab span {
 	font-size: 13px;
 	font-weight: 400;
-}
-
-/* First tab */
-ul#field-group-tabs li:first-child a.ui-tab {
-	border-left: 1px solid #e5e5e5;
 }
 
 /* Selected tab */
