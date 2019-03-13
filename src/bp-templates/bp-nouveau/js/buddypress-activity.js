@@ -812,6 +812,7 @@ window.bp = window.bp || {};
 							$( form ).find( 'textarea' ).first().val( '' );
 
 							activity_comments.parent().addClass( 'has-comments' );
+							activity_comments.parent().addClass( 'comments-loaded' );
 							activity_state.addClass( 'has-comments' );
 						} );
 
