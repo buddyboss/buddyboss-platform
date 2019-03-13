@@ -421,6 +421,12 @@ tr.bp-custom-post-type-child-field td {
 	background-image: url(../../images/admin/admin_icon-search.png);
 }
 
+.bp-admin-card.section-bp_media_settings_general h2,
+.bp-admin-card.section-bp_media_settings_groups h2,
+.bp-admin-card.section-bp_media_settings_forums h2 {
+	background-image: url(../../images/admin/admin_icon-media.png);
+}
+
 .bp-admin-card.section-bp_search_settings_community table,
 .bp-admin-card.section-bp_search_settings_post_types table {
 	margin-bottom: 20px;
