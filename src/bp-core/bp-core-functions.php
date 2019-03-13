@@ -2863,7 +2863,7 @@ function bp_get_email_post_type_labels() {
 		'items_list_navigation' => __( 'Email list navigation', 'buddyboss' ),
 		'menu_name'             => __( 'Emails', 'buddyboss' ),
 		'name'                  => __( 'BuddyBoss Email Templates', 'buddyboss' ),
-		'new_item'              => __( 'New Email', 'buddyboss' ),
+		'new_item'              => __( 'New Template', 'buddyboss' ),
 		'not_found'             => __( 'No emails found', 'buddyboss' ),
 		'not_found_in_trash'    => __( 'No emails found in trash', 'buddyboss' ),
 		'search_items'          => __( 'Search Emails', 'buddyboss' ),
