@@ -6,5 +6,5 @@
  */
 ?>
 <script type="text/html" id="tmpl-activity-comments-loading-message">
-	<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'activity-comments-loading' ); ?></div>
+	<div id="bp-activity-comments-ajax-loader"><?php bp_nouveau_user_feedback( 'activity-comments-loading' ); ?></div>
 </script>

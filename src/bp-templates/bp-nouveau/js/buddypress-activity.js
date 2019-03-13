@@ -698,7 +698,7 @@ window.bp = window.bp || {};
 							activity_id: item_id
 						}
 					} ).always( function( response ) {
-						$activity_comments[ 0 ].removeChild( $activity_comments[ 0 ].querySelector( '#bp-ajax-loader' ) );
+						$activity_comments[ 0 ].removeChild( $activity_comments[ 0 ].querySelector( '#bp-activity-comments-ajax-loader' ) );
 						$activity_comments[ 0 ].classList.remove( 'comments-loading' );
 						form[ 0 ].insertAdjacentHTML( 'beforebegin', response );
 						activity_item[ 0 ].classList.add( 'comments-loaded' );
