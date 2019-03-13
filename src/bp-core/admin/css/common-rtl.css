@@ -89,6 +89,7 @@ TABLE OF CONTENTS:
 .bp-about-wrap p {
 	line-height: 1.5;
 	font-size: 14px;
+	margin: 0;
 }
 
 .bp-about-wrap h2 {
@@ -155,7 +156,7 @@ TABLE OF CONTENTS:
 #adminmenu #toplevel_page_bp-activity .wp-menu-image:before,
 #adminmenu #toplevel_page_bp-activity_user .wp-menu-image:before,
 #adminmenu #toplevel_page_bp-activity_network .wp-menu-image:before {
-	content: "\f130";
+	content: "\f130"
 }
 
 #adminmenu #toplevel_page_bp-groups .wp-menu-image:before,
@@ -336,6 +337,10 @@ tr.bp-search-parent-field td p.section-header {
 	margin: 0 0 20px;
 }
 
+tr.bp-custom-post-type-child-field td {
+	padding: 6px 40px;
+}
+
 /*
  * 2.6 Settings - Cards
  */
@@ -381,7 +386,8 @@ tr.bp-search-parent-field td p.section-header {
 	background-image: url(../../images/admin/admin_icon-profiles.png);
 }
 
-.bp-admin-card.section-bp_activity h2 {
+.bp-admin-card.section-bp_activity h2,
+.buddyboss_page_bp-settings .section-bp_custom_post_type h2 {
 	background-image: url(../../images/admin/admin_icon-activity.png);
 }
 

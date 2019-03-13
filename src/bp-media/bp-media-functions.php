@@ -332,18 +332,19 @@ function bp_media_activity_entry() {
 	$media_list = bp_media_get_media( bp_get_activity_id() );
 
 	if ( ! empty( $media_list ) ) {
+		$media_list_length = sizeof( $media_list );
 		?>
-		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . sizeof( $media_list ); echo sizeof( $media_list ) > 5 ? 'bb-media-length-more' : ''; ?>">
+		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_list_length; echo $media_list_length > 5 ? 'bb-media-length-more' : ''; ?>">
 		<?php
 		foreach( array_splice( $media_list, 0, 5 ) as $media_index => $media ) {
 			?>
 
-				<div class="bb-activity-media-elem <?php echo sizeof( $media_list ) == 1 || sizeof( $media_list ) > 1 && $media_index == 0 ? 'act-grid-1-1' : ''; echo sizeof( $media_list ) > 1 && $media_index > 0 ? 'act-grid-1-2' : ''; echo $media['meta']['width'] > $media['meta']['height'] ? 'bb-horizontal-layout' : ''; echo $media['meta']['height'] > $media['meta']['width'] ? 'bb-vertical-layout' : ''; ?>">
+				<div class="bb-activity-media-elem <?php echo $media_list_length == 1 || $media_list_length > 1 && $media_index == 0 ? 'act-grid-1-1 ' : ''; echo $media_list_length > 1 && $media_index > 0 ? 'act-grid-1-2 ' : ''; echo $media['meta']['width'] > $media['meta']['height'] ? 'bb-horizontal-layout' : ''; echo $media['meta']['height'] > $media['meta']['width'] ? 'bb-vertical-layout' : ''; ?>">
 					<a href="#" class="entry-img">
 						<img src="<?php echo $media['activity_thumb']; ?>" class="no-round photo" alt="<?php echo $media['title']; ?>" />
-						<?php if ( sizeof( $media_list ) > 5 && $media_index == 4 ) {
+						<?php if ( $media_list_length > 5 && $media_index == 4 ) {
 							?>
-							<span class="bb-photos-length"><span><strong>+<?php echo sizeof( $media_list ) - 5; ?></strong> <span><?php _e( 'More Photos', 'buddyboss' ); ?></span></span></span>
+							<span class="bb-photos-length"><span><strong>+<?php echo $media_list_length - 5; ?></strong> <span><?php _e( 'More Photos', 'buddyboss' ); ?></span></span></span>
 							<?php
 						} ?>
 					</a>
