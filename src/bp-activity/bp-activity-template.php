@@ -2579,6 +2579,37 @@ function bp_activity_css_class() {
 		 * @param string $value Classes to be added to the HTML element.
 		 */
 		return apply_filters( 'bp_get_activity_css_class', $activities_template->activity->component . ' ' . $activities_template->activity->type . $class );
+	}/**
+ *
+ * Output the activity comment CSS class.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_activity_comment_css_class() {
+	echo bp_get_activity_comment_css_class();
+}
+
+	/**
+	 * Return the current activity comment's CSS class.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @return string The activity comment's CSS class.
+	 */
+	function bp_get_activity_comment_css_class() {
+
+		$class = ' comment-item';
+
+		// Fall back on current comment in activity loop.
+		$comment_depth = bp_activity_get_comment_depth();
+
+		// Threading is turned on, so check the depth.
+		if ( get_option( 'thread_comments' ) ) {
+			$class .= (bool) ( $comment_depth > get_option( 'thread_comments_depth' ) ) ? ' detached-comment-item' : '';
+		}
+
+		return apply_filters( 'bp_get_activity_comment_css_class',  $class );
 	}
 
 /**

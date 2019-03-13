@@ -917,9 +917,9 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 		 * If post comment / Activity comment sync is on, it's safer
 		 * to unset the comment button just before returning it.
 		 */
-		if ( ! bp_activity_can_comment_reply( bp_activity_current_comment() ) ) {
-			unset( $return['activity_comment_reply'] );
-		}
+//		if ( ! bp_activity_can_comment_reply( bp_activity_current_comment() ) ) {
+//			unset( $return['activity_comment_reply'] );
+//		}
 
 		/**
 		 * If there was an activity of the user before one af another

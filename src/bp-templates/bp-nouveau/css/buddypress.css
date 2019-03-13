@@ -1827,6 +1827,10 @@ a.layout-grid-view {
   margin-left: 5%;
 }
 
+.buddypress-wrap .activity-comments ul li ul li.detached-comment-item {
+  margin-left: -5%;
+}
+
 .buddypress-wrap .activity-comments ul li:first-child {
   border-top: 0;
 }
