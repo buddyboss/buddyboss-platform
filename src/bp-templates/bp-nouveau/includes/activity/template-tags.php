@@ -223,13 +223,13 @@ function bp_nouveau_activity_state() {
 	$favorited_users = bp_activity_get_favorite_users_tooltip_string( $activity_id );
 	?>
 	<div class="activity-state <?php echo $like_text ? 'has-likes' : '' ?> <?php echo $comment_count ? 'has-comments' : '' ?>">
-		<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo $favorited_users ?>">
-			<?php echo $like_text ?: '' ?>
-		</span>
-		<span class="ac-state-separator">
-			&middot;
-		</span>
-		<span class="comments-count"><?php echo $comment_count ? sprintf( _n( '%d Comment', '%d Comments', $comment_count, 'buddyboss' ), $comment_count ) : '' ?></span>
+		<a href="#" class="activity-state-likes">
+			<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo $favorited_users ?>"><?php echo $like_text ?: '' ?></span>
+		</a>
+		<span class="ac-state-separator">&middot;</span>
+		<a href="#" class="activity-state-comments">
+			<span class="comments-count"><?php echo $comment_count ? sprintf( _n( '%d Comment', '%d Comments', $comment_count, 'buddyboss' ), $comment_count ) : '' ?></span>
+		</a>
 	</div>
 	<?php
 }
