@@ -751,8 +751,10 @@ function bp_nouveau_member_template_part() {
 			$template = 'notifications';
 		} elseif ( bp_is_user_settings() ) {
 			$template = 'settings';
-		} elseif ( bp_is_user_invites()) {
+		} elseif ( bp_is_user_invites() ) {
 			$template = 'invites';
+		} elseif ( bp_is_user_media() ) {
+			$template = 'media';
 		}
 
 		bp_nouveau_member_get_template_part( $template );
