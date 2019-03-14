@@ -875,8 +875,8 @@ function bbp_user_favorites_link( $args = array(), $user_id = 0, $wrap = true ) 
 
 		// Parse arguments against default values
 		$r = bbp_parse_args( $args, array(
-			'favorite'  => __( 'Like',  'buddyboss' ),
-			'favorited' => __( 'Unlike', 'buddyboss' ),
+			'favorite'  => __( 'Favorite',  'buddyboss' ),
+			'favorited' => __( 'Unfavorite', 'buddyboss' ),
 			'user_id'   => 0,
 			'topic_id'  => 0,
 			'before'    => '',
