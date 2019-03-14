@@ -516,7 +516,7 @@ function bp_feed_settings_callback_post_type( $args ) {
 	}
 
 	// Description for the last option of CPT
-	if ( true === $args['description'] ) {
+	if ( true === $args['description'] && 'post' !== $post_type ) {
 		?>
 		<p class="description"><?php _e( 'Select which Custom Post Types (coming from your plugins) should be shown in the activity feed. For example, if using WooCommerce it could post into the activity feed every time someone creates a new product.', 'buddyboss' ); ?></p>
 		<?php
