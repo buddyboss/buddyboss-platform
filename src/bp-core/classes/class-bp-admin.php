@@ -337,6 +337,16 @@ class BP_Admin {
 			'bp_core_admin_integrations'
 		);
 
+		// Credits.
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( 'Credits', 'buddyboss' ),
+			__( 'Credits', 'buddyboss' ),
+			$this->capability,
+			'bp-credits',
+			array( $this, 'bp_credits_screen' )
+		);
+
 		if ( ! is_plugin_active( 'appboss/appboss.php' ) ) {
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
@@ -406,6 +416,24 @@ class BP_Admin {
 		// foreach( $hooks as $hook ) {
 		// 	add_action( "admin_head-$hook", 'bp_core_modify_admin_menu_highlight' );
 		// }
+	}
+
+	/**
+	 * Output the credits screen.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 */
+	public function bp_credits_screen() {
+		?>
+
+		<div class="wrap">
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Credits', 'buddypress' ) ); ?></h2>
+			<?php include $this->admin_dir . 'templates/credit-screen.php'; ?>
+		</div>
+
+		<?php
+
 	}
 
 	public function adjust_buddyboss_menus() {

@@ -323,9 +323,12 @@ function bp_core_admin_settings() {
 	?>
 
 	<div class="wrap">
-		<h1><?php _e( 'BuddyBoss Settings', 'buddyboss' ); ?> </h1>
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs(); ?></h2>
-
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Settings', 'buddypress' ) ); ?></h2>
+		<div class="nav-settings-subsubsub">
+			<ul class="subsubsub">
+				<?php bp_core_settings_admin_tabs(); ?>
+			</ul>
+		</div>
 		<form action="<?php echo esc_url( $form_action ) ?>" method="post">
             <?php bp_core_get_admin_active_tab_object()->form_html(); ?>
 		</form>
@@ -345,9 +348,12 @@ function bp_core_admin_integrations() {
     ?>
 
     <div class="wrap">
-        <h1><?php _e( 'Plugin Integrations', 'buddyboss' ); ?> </h1>
-        <h2 class="nav-tab-wrapper"><?php bp_core_admin_integration_tabs(); ?></h2>
-
+	    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Integrations', 'buddypress' ) ); ?></h2>
+	    <div class="nav-settings-subsubsub">
+	        <ul class="subsubsub">
+		        <?php bp_core_admin_integration_tabs(); ?>
+	        </ul>
+	    </div>
         <form action="<?php echo esc_url( $form_action ) ?>" method="post">
             <?php bp_core_get_admin_integration_active_tab_object()->form_html(); ?>
         </form>
@@ -362,7 +368,12 @@ function bp_core_admin_integrations() {
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_appboss() {
-	require buddypress()->plugin_dir . 'bp-core/admin/templates/appboss-screen.php';
+		?>
+		 <div class="wrap">
+		    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Mobile App', 'buddypress' ) ); ?></h2>
+	        <?php require buddypress()->plugin_dir . 'bp-core/admin/templates/appboss-screen.php'; ?>
+	    </div>
+		<?php
 }
 
 /**

@@ -62,7 +62,6 @@ ul#field-group-tabs {
 	padding: 0;
 	margin: 0;
 	border-right: 1px solid #e5e5e5;
-	border-left: none;
 	display: none;
 }
 
@@ -84,7 +83,6 @@ ul#field-group-tabs li.ui-state-acceptable:not(.ui-state-active) a.ui-tab {
 
 ul#field-group-tabs li.ui-state-acceptable a.ui-tab {
 	margin-left: 10px;
-	margin-right: 0;
 }
 
 ul#field-group-tabs li.drop-candidate.ui-state-acceptable:not(.ui-state-active) a.ui-tab {

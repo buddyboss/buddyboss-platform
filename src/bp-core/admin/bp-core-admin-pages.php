@@ -17,8 +17,7 @@ defined( 'ABSPATH' ) || exit;
 function bp_core_admin_pages_settings() {
 	?>
     <div class="wrap">
-        <h1><?php _e( 'BuddyBoss Pages', 'buddyboss' ); ?> </h1>
-
+	    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Pages', 'buddypress' ) ); ?></h2>
         <form action="" method="post">
 			<?php
 			settings_fields( 'bp-pages' );

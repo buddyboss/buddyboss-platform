@@ -1453,6 +1453,7 @@ a.layout-grid-view {
 .activity-list .activity-item .activity-content .activity-state {
   display: none;
   font-size: 12px;
+  clear: both;
 }
 
 .activity-list .activity-item .activity-content .activity-state a {
@@ -1824,6 +1825,10 @@ a.layout-grid-view {
 
 .buddypress-wrap .activity-comments ul li ul {
   margin-right: 5%;
+}
+
+.buddypress-wrap .activity-comments ul li ul li.detached-comment-item {
+  margin-right: -5%;
 }
 
 .buddypress-wrap .activity-comments ul li:first-child {

@@ -77,3 +77,17 @@
 	background: #21759b;
 	color: #fff;
 }
+
+li.toplevel_page_buddyboss-platform .wp-submenu li a[href^="admin.php?page=bp-credits"],
+li.toplevel_page_buddyboss-platform .wp-submenu li a[href^="admin.php?page=bp-appboss"] {
+	display: none !important;
+}
+
+.nav-settings-subsubsub {
+	padding: 3px 13px 22px 0;
+}
+
+.nav-tab-wrapper a.bp-credits.nav-tab,
+.nav-tab-wrapper a.bp-appboss.nav-tab {
+	float: right;
+}
