@@ -11,8 +11,7 @@ TABLE OF CONTENTS:
 --------------------------------------------------------------------------------
 1.0 Welcome Screen
 	1.1 Version Badge
-	1.2 ---
-	1.3 Credits Panel
+	1.2 Credits Panel
 2.0 Dashicons
 	2.1 Top level menus
 	2.2 Settings - Components
@@ -53,24 +52,24 @@ TABLE OF CONTENTS:
 }
 
 /*
- * 1.3 Credits Panel
- *
- * Taken from WP 4.9.5.
+ * 1.2 Credits Panel
  */
 .bp-about-wrap {
   position: relative;
   font-size: 15px;
+  max-width: 1150px;
+  margin-top: 25px;
 }
 
 .bp-about-wrap .card {
-  min-width: 255px;
-  max-width: 1050px;
   background: #fff;
-  border-radius: 8px;
-  border: none;
+  min-width: 255px;
+  max-width: 100%;
+  border-radius: 6px;
+  border: 1px solid #e5e5e5;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-  margin: 20px 0 0;
-  padding: 3em;
+  margin: 0 0 20px;
+  padding: 2em 2.8em;
 }
 
 .bp-about-wrap img {
@@ -130,16 +129,6 @@ TABLE OF CONTENTS:
 
 .bp-about-wrap p.wp-credits-list a {
   white-space: nowrap;
-}
-
-@media only screen and (max-width: 500px) {
-  .bp-about-wrap {
-    margin-right: 20px;
-    margin-left: 10px;
-  }
-  .bp-about-wrap .bp-about-wrap h1 {
-    margin-right: 0;
-  }
 }
 
 /*------------------------------------------------------------------------------
@@ -339,10 +328,11 @@ tr.bp-custom-post-type-child-field td {
 .bp-admin-card {
   position: relative;
   margin-top: 20px;
-  padding: 2.2em 3em 3em;
+  padding: 2.2em 2.8em 2em;
   min-width: 255px;
   max-width: 1050px;
-  border-radius: 8px;
+  border-radius: 6px;
+  border: 1px solid #e5e5e5;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   background: #fff;
 }
@@ -355,7 +345,6 @@ tr.bp-custom-post-type-child-field td {
 .bp-admin-card h2 {
   background-repeat: no-repeat;
   background-position: left top;
-  background-image: url(../../images/admin/admin_icon-settings.png);
   background-size: 40px;
   line-height: 40px;
   margin: 0 0 1em;
@@ -367,6 +356,8 @@ tr.bp-custom-post-type-child-field td {
   border-bottom: 1px solid #eaeaea;
 }
 
+/* Settings */
+.bp-admin-card h2,
 .bp-admin-card.section-bp_main h2 {
   background-image: url(../../images/admin/admin_icon-settings.png);
 }
@@ -429,10 +420,17 @@ tr.bp-custom-post-type-child-field td {
   width: 1px;
 }
 
+/* Integrations */
 .bp-admin-card.section-bp_ld_sync-buddypress h2,
 .bp-admin-card.section-bp_ld_sync-learndash h2,
 .bp-admin-card.section-bp_ld_sync-reports h2 {
   background-image: url(../../images/admin/admin_icon-learndash.png);
+}
+
+/* Pages */
+.bp-admin-card.section-bp_pages h2,
+.bp-admin-card.section-bp_registration_pages h2 {
+  background-image: url(../../images/admin/admin_icon-settings.png);
 }
 
 /*
@@ -647,7 +645,8 @@ body.post-type-bp-email .categorydiv label {
  * 7.0 AppBoss page
  *----------------------------------------------------------------------------*/
 .bp_appboss_wrap {
-  max-width: 1200px;
+  min-width: 255px;
+  max-width: 1150px;
 }
 
 .bp_appboss_wrap .appboss-featured {
@@ -657,9 +656,11 @@ body.post-type-bp-email .categorydiv label {
 .bp_appboss_wrap .appboss-banner-block,
 .bp_appboss_wrap .appboss-learndash-banner-block {
   background: #fff;
-  border: 1px solid #ddd;
-  margin: 0 0 1em;
-  padding: 2em 2em 1em;
+  margin: 0 0 20px;
+  padding: 2em 2.8em;
+  border-radius: 6px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 }
 
 .bp_appboss_wrap .appboss-banner-block p {
@@ -693,8 +694,8 @@ body.post-type-bp-email .categorydiv label {
   flex-wrap: wrap;
   -webkit-box-pack: justify;
   justify-content: space-between;
-  margin: 0 -20px;
-  padding: 20px;
+  margin: 0 -2em;
+  padding: 20px 2em;
 }
 
 .bp_appboss_wrap .appboss-banner-block-item,
@@ -755,7 +756,7 @@ body.post-type-bp-email .categorydiv label {
   background: #f7f7f7;
   border: 1px solid #e6e6e6;
   height: 100px;
-  margin: 0 20px 10px 0;
+  margin: 0 20px 0 0;
   width: 100px;
 }
 
@@ -846,16 +847,22 @@ body.post-type-bp-email .categorydiv label {
   -webkit-box-flex: 1;
   flex: 1;
   width: 50%;
-  padding: 0 0.5em;
+  padding-right: 20px;
+}
+
+.bp_appboss_wrap .appboss-column:last-child {
+  padding-right: 0;
 }
 
 .bp_appboss_wrap .appboss-column-block,
 .bp_appboss_wrap .appboss-small-dark-block,
 .bp_appboss_wrap .appboss-small-light-block {
   box-sizing: border-box;
-  border: 1px solid #ddd;
-  margin: 0 0 1em;
-  padding: 20px;
+  border-radius: 6px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  margin: 0 0 20px;
+  padding: 2em;
 }
 
 .bp_appboss_wrap .appboss-column-block,
@@ -871,7 +878,7 @@ body.post-type-bp-email .categorydiv label {
 
 .bp_appboss_wrap .appboss-small-light-block img {
   height: 225px;
-  margin: 0 22px 0 -20px;
+  margin: 0 2em 0 -2em;
 }
 
 .bp_appboss_wrap .appboss-small-light-block-content {
