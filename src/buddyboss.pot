@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-14 11:07:42+00:00\n"
+"POT-Creation-Date: 2019-03-14 12:18:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -938,7 +938,7 @@ msgid "Unfollow"
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:3996
-#: bp-core/admin/settings/bp-admin-setting-activity.php:107
+#: bp-core/admin/settings/bp-admin-setting-activity.php:89
 msgid "Follow"
 msgstr ""
 
@@ -1875,7 +1875,7 @@ msgid "Profile type saved."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2068
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:107
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:110
 msgid "Import Profile Types"
 msgstr ""
 
@@ -1946,7 +1946,7 @@ msgid "General"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:425
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:147
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:150
 msgid "First Name"
 msgstr ""
 
@@ -1955,7 +1955,7 @@ msgid "Last Name"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:433
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:149
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:152
 msgid "Nickname"
 msgstr ""
 
@@ -2071,8 +2071,6 @@ msgid "Blog Posts"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:38
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:84
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:87
 msgid "Profile Dashboard"
 msgstr ""
 
@@ -2261,35 +2259,30 @@ msgid ""
 "the \"Repopulate site tracking records\" option."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:93
+#: bp-core/admin/settings/bp-admin-setting-activity.php:75
 msgid "Activity Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:101
+#: bp-core/admin/settings/bp-admin-setting-activity.php:83
 #: bp-search/bp-search-functions.php:362
 msgid "Post Comments"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:104
+#: bp-core/admin/settings/bp-admin-setting-activity.php:86
 msgid "Activity auto-refresh"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:110
+#: bp-core/admin/settings/bp-admin-setting-activity.php:92
 #: bp-forums/admin/settings.php:133
 msgid "Likes"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:113
+#: bp-core/admin/settings/bp-admin-setting-activity.php:95
 msgid "Link Preview"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:120
-#: bp-core/admin/settings/bp-admin-setting-activity.php:123
-msgid "Custom Post Types"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-activity.php:124
-msgid "Automatically publish new custom post types into the activity stream"
+#: bp-core/admin/settings/bp-admin-setting-activity.php:102
+msgid "Posts in Activity Feed"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-forums.php:21
@@ -2460,20 +2453,16 @@ msgstr ""
 msgid "Display Name Format"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:89
-msgid "Redirect on Login"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:92
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:95
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:98
 #: bp-core/profile-search/bps-start.php:57
 #: bp-core/profile-search/bps-start.php:60 bp-xprofile/bp-xprofile-admin.php:42
 #: bp-xprofile/bp-xprofile-admin.php:43
 msgid "Profile Search"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:98
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:101
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:104
 #: bp-members/bp-members-functions.php:2991
 #: bp-members/bp-members-functions.php:2994
 #: bp-xprofile/bp-xprofile-admin.php:34 bp-xprofile/bp-xprofile-admin.php:35
@@ -2481,55 +2470,55 @@ msgstr ""
 msgid "Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:104
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:107
 msgid "Display Profile Type"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:119
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:122
 msgid "Use a WordPress page as each user's personal Profile Dashboard"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:124
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:127
 msgid ""
 "This page is only accessible to logged-in users. Create a WordPress page "
 "and assign it in the <a href=\"%s\">Pages</a> settings."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:141
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:144
 msgid "Redirect users to their Profile Dashboard on login"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:148
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:151
 msgid "First Name &amp; Last Name"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:168
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:171
 msgid ""
 "After the format has been updated, remember to run <a href=\"%s\">Repair "
 "Tools</a> to update all the users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:186
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:189
 msgid "Enable advanced profile search on the members directory"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:200
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:203
 msgid ""
 "Use the <a href=\"%s\">migration tool</a> to import existing profile type "
 "data"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:204
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:207
 msgid ""
 "If importing from a BuddyPress site, these were called \"member types\" "
 "before."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:217
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:220
 msgid "Enable profile types to give members unique profile fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:230
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:233
 msgid "Display member profile type on their profile page"
 msgstr ""
 
@@ -12650,7 +12639,6 @@ msgid "Message"
 msgstr ""
 
 #: bp-integrations/memberpress/bp-admin-memberpress-tab.php:31
-#: bp-integrations/sample/bp-admin-sample-tab.php:31
 #: bp-integrations/woocommerce/bp-admin-woocommerce-tab.php:31
 msgid "Section Heading"
 msgstr ""
@@ -12670,14 +12658,6 @@ msgid ""
 "add the ability to easily enroll users into courses based on their "
 "purchased membership level. If using our BuddyBoss Theme we also include "
 "styling for MemberPress."
-msgstr ""
-
-#: bp-integrations/sample/bp-sample-integration.php:22
-msgid "Sample"
-msgstr ""
-
-#: bp-integrations/sample/templates/admin/integration-tab-intro.php:4
-msgid "Sample Integration"
 msgstr ""
 
 #: bp-integrations/woocommerce/bp-woocommerce-integration.php:22
