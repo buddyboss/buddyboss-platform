@@ -126,7 +126,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				if ( 0 === $count ) {
 					$fields['args']['class'] = 'child-no-padding-first';
 					// create field for each of custom post type.
-					$this->add_field( "bp-feed-custom-post-type-$post_type", 'Custom Post Type', 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
+					$this->add_field( "bp-feed-custom-post-type-$post_type", 'Custom Post Types', 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
 
 				} else {
 					$fields['args']['class'] = 'child-no-padding';
