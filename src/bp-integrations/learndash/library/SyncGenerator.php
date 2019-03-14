@@ -265,8 +265,8 @@ class SyncGenerator
 	}
 
 	/**
-	 * 
 	 * @todo seeing a PHP error line 277? and add title/description
+	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function syncBpUsers()

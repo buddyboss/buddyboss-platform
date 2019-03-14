@@ -188,6 +188,72 @@ class BP_Admin {
 
 		// Emails
 		add_filter( 'bp_admin_menu_order', array( $this, 'emails_admin_menu_order' ), 20 );
+
+		// Add the separator above the BuddyBoss in admin.
+		add_filter( 'menu_order', array( $this, 'buddyboss_menu_order' ) );
+
+		// Add the separator above the plugins in admin.
+		add_filter( 'menu_order', array( $this, 'buddyboss_plugins_menu_order' ) );
+	}
+
+	/**
+	 * Add the separator above the BuddyBoss menu in admin.
+	 *
+	 * @param int $menu_order Menu order.
+	 * @return array
+	 */
+	public function buddyboss_menu_order( $menu_order ) {
+		// Initialize our custom order array.
+		$buddyboss_menu_order = array();
+
+		// Get the index of our custom separator.
+		$buddyboss_separator = array_search( 'separator-buddyboss-platform', $menu_order, true );
+
+		// Loop through menu order and do some rearranging.
+		foreach ( $menu_order as $index => $item ) {
+
+			if ( 'buddyboss-platform' === $item ) {
+				$buddyboss_menu_order[] = 'separator-buddyboss';
+				$buddyboss_menu_order[] = $item;
+				unset( $menu_order[ $buddyboss_separator ] );
+			} elseif ( ! in_array( $item, array( 'separator-buddyboss' ), true ) ) {
+				$buddyboss_menu_order[] = $item;
+			}
+
+		}
+
+		// Return order.
+		return $buddyboss_menu_order;
+	}
+
+	/**
+	 * Add the separator above the plugins menu in admin.
+	 *
+	 * @param int $menu_order Menu order.
+	 * @return array
+	 */
+	public function buddyboss_plugins_menu_order( $menu_order ) {
+		// Initialize our custom order array.
+		$plugins_menu_order = array();
+
+		// Get the index of our custom separator.
+		$plugins_separator = array_search( 'separator-plugins.php', $menu_order, true );
+
+		// Loop through menu order and do some rearranging.
+		foreach ( $menu_order as $index => $item ) {
+
+			if ( 'plugins.php' === $item ) {
+				$plugins_menu_order[] = 'separator-plugins';
+				$plugins_menu_order[] = $item;
+				unset( $menu_order[ $plugins_separator ] );
+			} elseif ( ! in_array( $item, array( 'separator-plugins' ), true ) ) {
+				$plugins_menu_order[] = $item;
+			}
+
+		}
+
+		// Return order.
+		return $plugins_menu_order;
 	}
 
 	/**
@@ -199,9 +265,17 @@ class BP_Admin {
 	 */
 	public function admin_menus() {
 
+		global $menu;
+
 		// Bail if user cannot moderate.
 		if ( ! bp_current_user_can( 'manage_options' ) ) {
 			return;
+		}
+
+		// Add BuddyBoss Menu separator above the BuddyBoss and below the BuddyBoss
+		if ( bp_current_user_can( 'manage_options' ) ) {
+			$menu[] = array( '', 'read', 'separator-buddyboss', '', 'wp-menu-separator buddyboss' ); // WPCS: override ok.
+			$menu[] = array( '', 'read', 'separator-plugins', '', 'wp-menu-separator plugins' ); // WPCS: override ok.
 		}
 
 		$hooks = array();
@@ -261,6 +335,16 @@ class BP_Admin {
 			$this->capability,
 			'bp-integrations',
 			'bp_core_admin_integrations'
+		);
+
+		// Credits.
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( 'Credits', 'buddyboss' ),
+			__( 'Credits', 'buddyboss' ),
+			$this->capability,
+			'bp-credits',
+			array( $this, 'bp_credits_screen' )
 		);
 
 		if ( ! is_plugin_active( 'appboss/appboss.php' ) ) {
@@ -332,6 +416,24 @@ class BP_Admin {
 		// foreach( $hooks as $hook ) {
 		// 	add_action( "admin_head-$hook", 'bp_core_modify_admin_menu_highlight' );
 		// }
+	}
+
+	/**
+	 * Output the credits screen.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 */
+	public function bp_credits_screen() {
+		?>
+
+		<div class="wrap">
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Credits', 'buddypress' ) ); ?></h2>
+			<?php include $this->admin_dir . 'templates/credit-screen.php'; ?>
+		</div>
+
+		<?php
+
 	}
 
 	public function adjust_buddyboss_menus() {

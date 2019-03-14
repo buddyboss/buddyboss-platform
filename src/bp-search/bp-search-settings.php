@@ -395,17 +395,6 @@ function bp_search_settings_callback_post_type_section() {
 }
 
 /**
- * Autocomplete search helper text.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_search_settings_callback_general_section() {
-	?>
-	<p><?php esc_html_e( 'Configure autocomplete dropdown as you type', 'buddyboss' ) ?></p>
-	<?php
-}
-
-/**
  * Allow Members search setting field
  *
  * @since BuddyBoss 1.0.0
@@ -631,7 +620,6 @@ function bp_is_search_post_type_meta_enable( $post_type ) {
  *
  * @since BuddyBoss 1.0.0
  *
- *
  * @uses checked() To display the checked attribute
  */
 function bp_search_settings_callback_groups() { ?>
@@ -666,7 +654,6 @@ function bp_is_search_groups_enable( $default = 1 ) {
  *
  * @since BuddyBoss 1.0.0
  *
- *
  * @uses checked() To display the checked attribute
  */
 function bp_search_settings_callback_activity() { ?>
@@ -700,7 +687,6 @@ function bp_is_search_activity_enable( $default = 1 ) {
  * Allow Activity Comments search setting field
  *
  * @since BuddyBoss 1.0.0
- *
  *
  * @uses checked() To display the checked attribute
  */

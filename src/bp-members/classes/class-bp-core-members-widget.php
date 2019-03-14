@@ -255,7 +255,6 @@ class BP_Core_Members_Widget extends WP_Widget {
 	 *
 	 * @since BuddyPress 2.3.0
 	 *
-	 *
 	 * @param array $instance Widget instance settings.
 	 * @return array
 	 */

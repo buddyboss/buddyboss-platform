@@ -436,7 +436,8 @@ window.bp = window.bp || {};
 				activity_state = activity_item.find( '.activity-state' ),
 				comments_text = activity_item.find( '.comments-count' ),
 				likes_text = activity_item.find( '.like-text' ),
-				item_id, form;
+				item_id, form,
+				comment_load_template = wp.template('activity-comments-loading-message');
 
 			// In case the target is set to a span inside the link.
 			if ( $( target ).is( 'span' ) ) {
@@ -671,18 +672,37 @@ window.bp = window.bp || {};
 			}
 
 			// Displaying the comment form
-			if ( target.hasClass( 'acomment-reply' ) || target.parent().hasClass( 'acomment-reply' ) ) {
+			if ( target.hasClass('activity-state-comments') || target.hasClass( 'acomment-reply' ) || target.parent().hasClass( 'acomment-reply' ) ) {
 				var comment_link = target;
 
 				form = $( '#ac-form-' + activity_id );
 				item_id = activity_id;
 
+				var $activity_comments = $( '[data-bp-activity-id="' + item_id + '"] .activity-comments' );
 				// Stop event propagation
 				event.preventDefault();
 
 				// If the comment count span inside the link is clicked
 				if ( target.parent().hasClass( 'acomment-reply' ) ) {
 					comment_link = target.parent();
+				}
+
+				// Roll-down comments
+				if ( activity_item[ 0 ].classList.contains( 'has-comments' ) && !activity_item[ 0 ].classList.contains( 'comments-loaded' ) ) {
+					$activity_comments[ 0 ].classList.add( 'comments-loading' );
+					form[ 0 ].insertAdjacentHTML( 'beforebegin', comment_load_template() );
+					wp.ajax.send( 'bp_get_comments', {
+						type: 'GET',
+						dataType: 'html',
+						data: {
+							activity_id: item_id
+						}
+					} ).always( function( response ) {
+						$activity_comments[ 0 ].removeChild( $activity_comments[ 0 ].querySelector( '#bp-activity-comments-ajax-loader' ) );
+						$activity_comments[ 0 ].classList.remove( 'comments-loading' );
+						form[ 0 ].insertAdjacentHTML( 'beforebegin', response );
+						activity_item[ 0 ].classList.add( 'comments-loaded' );
+					} );
 				}
 
 				if ( target.closest( 'li' ).data( 'bp-activity-comment-id' ) ) {
@@ -703,7 +723,7 @@ window.bp = window.bp || {};
 
 				// It's an activity we're commenting
 				if ( item_id === activity_id ) {
-					$( '[data-bp-activity-id="' + item_id + '"] .activity-comments' ).append( form );
+					$activity_comments.append( form );
 					form.addClass( 'root' );
 
 				// It's a comment we're replying to
@@ -792,6 +812,7 @@ window.bp = window.bp || {};
 							$( form ).find( 'textarea' ).first().val( '' );
 
 							activity_comments.parent().addClass( 'has-comments' );
+							activity_comments.parent().addClass( 'comments-loaded' );
 							activity_state.addClass( 'has-comments' );
 						} );
 

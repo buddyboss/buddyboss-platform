@@ -29,3 +29,5 @@
 
 <?php
 bp_nouveau_member_hook( 'after', 'activity_content' );
+
+bp_get_template_part( 'common/js-templates/activity/comments' );

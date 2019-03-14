@@ -1,27 +1,17 @@
 <div class="wrap">
 	
-	<div class="card">
-		<h3><?php _e( 'LearnDash Settings', 'buddyboss' ); ?></h3>
+	<div class="bp-admin-card section-bp_ld_disabled">
+		<h2><?php _e( 'LearnDash <span>(disabled)</span>', 'buddyboss' ); ?></h2>
 		<p><?php
 			printf(
-				__('We integrated with %s. Below are the features if the plugin is activated:', 'buddyboss'),
+				__('BuddyBoss Platform has integration settings for %s. If using LearnDash we add the ability to sync LearnDash groups with social groups, to generate course reports within social groups, and more. If using our BuddyBoss Theme we also include styling for LearnDash.', 'buddyboss'),
 				sprintf(
 					'<a href="%s" target="_blank">%s</a>',
 					'https://getdpd.com/cart/hoplink/14394?referrer=56whuq1wlakosg0k4',
-					__('LearnDash', 'buddyboss')
+					__('LearnDash LMS', 'buddyboss')
 				)
 			)
 		?></p>
-
-		<ul class="wp-list">
-			<li>
-				<span class="dashicons dashicons-editor-unlink"></span>
-				<?php _e('Members syncing between groups.', 'buddyboss'); ?>
-			</li>
-			<li>
-				<span class="dashicons dashicons-analytics"></span>
-				<?php _e('Course reports within groups.', 'buddyboss'); ?>
-			</li>
-		</ul>
 	</div>
+
 </div>

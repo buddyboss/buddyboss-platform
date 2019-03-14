@@ -205,7 +205,6 @@ class BP_Component {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 *
 	 * @param array $args {
 	 *     All values are optional.
 	 *     @type string   $slug                  The component slug. Used to construct certain URLs, such as 'friends' in
@@ -346,7 +345,6 @@ class BP_Component {
 	 *   - ./bp-my_component/bp-my_component-actions.php
 	 *
 	 * @since BuddyPress 1.5.0
-	 *
 	 *
 	 * @param array $includes An array of file names, or file name chunks,
 	 *                        to be parsed and then included.
@@ -818,7 +816,6 @@ class BP_Component {
 	 * Allow components to parse the main query.
 	 *
 	 * @since BuddyPress 1.9.0
-	 *
 	 *
 	 * @param object $query The main WP_Query.
 	 */

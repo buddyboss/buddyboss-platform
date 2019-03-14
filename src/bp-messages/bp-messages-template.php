@@ -2078,7 +2078,6 @@ function bp_the_thread_message_date_sent() {
 	 *
 	 * @since BuddyPress 2.1.0
 	 *
-	 *
 	 * @return int
 	 */
 	function bp_get_the_thread_message_date_sent() {

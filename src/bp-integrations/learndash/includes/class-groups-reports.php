@@ -147,7 +147,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		}
 
 		/**
-		 * 
+		 * @todo add title/description
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
@@ -336,7 +336,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		}
 
 		/**
-		 * 
+		 * @todo add title/description
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
@@ -945,7 +945,6 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		 * Display lessons HTML
 		 */
 		public function lessons() {
-
 			$this->basic_html( 'lessons', $this->menus['lessons']['label'], 'sfwd-lessons' );
 		}
 
@@ -957,7 +956,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		}
 
 		/**
-		 * 
+		 * @todo add title/description
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */

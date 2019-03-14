@@ -23,7 +23,6 @@ function bp_activity_slug() {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 *
 	 * @return string The activity component slug.
 	 */
 	function bp_get_activity_slug() {
@@ -52,7 +51,6 @@ function bp_activity_root_slug() {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 *
 	 * @return string The activity component root slug.
 	 */
 	function bp_get_activity_root_slug() {
@@ -71,7 +69,6 @@ function bp_activity_root_slug() {
  * Output activity directory permalink.
  *
  * @since BuddyPress 1.5.0
- *
  */
 function bp_activity_directory_permalink() {
 	echo esc_url( bp_get_activity_directory_permalink() );
@@ -80,7 +77,6 @@ function bp_activity_directory_permalink() {
 	 * Return activity directory permalink.
 	 *
 	 * @since BuddyPress 1.5.0
-	 *
 	 *
 	 * @return string Activity directory permalink.
 	 */
@@ -903,7 +899,6 @@ function bp_activity_type() {
 	 *
 	 * @todo Properly deprecate in favor of bp_get_activity_type().
 	 *
-	 *
 	 * @return string The activity type.
 	 */
 	function bp_get_activity_action_name() { return bp_get_activity_type(); }
@@ -912,7 +907,6 @@ function bp_activity_type() {
  * Output the activity user ID.
  *
  * @since BuddyPress 1.1.0
- *
  */
 function bp_activity_user_id() {
 	echo bp_get_activity_user_id();
@@ -1427,7 +1421,6 @@ function bp_activity_content() {
 	 *
 	 * @todo properly deprecate this function.
 	 *
-	 *
 	 * @return string The activity content.
 	 */
 	function bp_get_activity_content() {
@@ -1935,7 +1928,6 @@ function bp_activity_comment_user_link() {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 *
 	 * @return string $user_link The URL of the activity comment author's profile.
 	 */
 	function bp_get_activity_comment_user_link() {
@@ -2008,7 +2000,6 @@ function bp_activity_comment_date_recorded() {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 *
 	 * @return string|bool $date_recorded Time since the activity was recorded,
 	 *                                    in the form "%s ago". False on failure.
 	 */
@@ -2028,7 +2019,6 @@ function bp_activity_comment_date_recorded() {
  * Output the date_recorded of the activity comment currently being displayed.
  *
  * @since BuddyPress 2.3.0
- *
  */
 function bp_activity_comment_date_recorded_raw() {
 	echo bp_get_activity_comment_date_recorded_raw();
@@ -2071,7 +2061,6 @@ function bp_activity_comment_delete_link() {
 	 * Gets the 'delete' URL for the activity comment currently being displayed.
 	 *
 	 * @since BuddyPress 1.5.0
-	 *
 	 *
 	 * @return string $link The nonced URL for deleting the current
 	 *                      activity comment.
@@ -2181,7 +2170,6 @@ function bp_activity_comment_count() {
 		 * activity child has, and returns them.
 		 *
 		 * @since BuddyPress 1.2.0
-		 *
 		 *
 		 * @param object $comment Activity comment object.
 		 * @param int    $count The current iteration count.
@@ -2359,7 +2347,6 @@ function bp_activity_comment_form_action() {
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
-	 *
 	 * @return string The activity comment form action.
 	 */
 	function bp_get_activity_comment_form_action() {
@@ -2389,7 +2376,6 @@ function bp_activity_permalink_id() {
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
-	 *
 	 * @return string The activity permalink ID.
 	 */
 	function bp_get_activity_permalink_id() {
@@ -2418,7 +2404,6 @@ function bp_activity_thread_permalink() {
 	 * Return the activity thread permalink.
 	 *
 	 * @since BuddyPress 1.2.0
-	 *
 	 *
 	 * @return string $link The activity thread permalink.
 	 */
@@ -2594,6 +2579,37 @@ function bp_activity_css_class() {
 		 * @param string $value Classes to be added to the HTML element.
 		 */
 		return apply_filters( 'bp_get_activity_css_class', $activities_template->activity->component . ' ' . $activities_template->activity->type . $class );
+	}/**
+ *
+ * Output the activity comment CSS class.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_activity_comment_css_class() {
+	echo bp_get_activity_comment_css_class();
+}
+
+	/**
+	 * Return the current activity comment's CSS class.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @return string The activity comment's CSS class.
+	 */
+	function bp_get_activity_comment_css_class() {
+
+		$class = ' comment-item';
+
+		// Fall back on current comment in activity loop.
+		$comment_depth = bp_activity_get_comment_depth();
+
+		// Threading is turned on, so check the depth.
+		if ( get_option( 'thread_comments' ) ) {
+			$class .= (bool) ( $comment_depth > get_option( 'thread_comments_depth' ) ) ? ' detached-comment-item' : '';
+		}
+
+		return apply_filters( 'bp_get_activity_comment_css_class',  $class );
 	}
 
 /**
@@ -2697,7 +2713,6 @@ function bp_activity_latest_update( $user_id = 0 ) {
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
-	 *
 	 * @param int $user_id If empty, will fall back on displayed user.
 	 * @return string|bool $latest_update The activity latest update link.
 	 *                                    False on failure.
@@ -2763,7 +2778,6 @@ function bp_activity_filter_links( $args = false ) {
 	 * Return the activity filter links.
 	 *
 	 * @since BuddyPress 1.1.0
-	 *
 	 *
 	 * @param array|bool $args {
 	 *     @type string $style The type of markup to use for the links.
@@ -2977,7 +2991,6 @@ function bp_total_favorite_count_for_user( $user_id = 0 ) {
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
-	 *
 	 * @param int $user_id ID of user being queried. Default: displayed user ID.
 	 * @return int The total favorite count for the specified user.
 	 */
@@ -3027,7 +3040,6 @@ function bp_total_mention_count_for_user( $user_id = 0 ) {
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
-	 *
 	 * @param int $user_id ID of user being queried. Default: displayed user ID.
 	 * @return int The total mention count for the specified user.
 	 */
@@ -3069,7 +3081,6 @@ function bp_send_public_message_link() {
 	 * Return the public message link for the displayed user.
 	 *
 	 * @since BuddyPress 1.2.0
-	 *
 	 *
 	 * @return string The public message link for the displayed user.
 	 */
@@ -3139,7 +3150,6 @@ function bp_mentioned_user_display_name( $user_id_or_username = false ) {
 	 *
 	 * @since BuddyPress 1.2.0
 	 *
-	 *
 	 * @param int|string|bool $user_id_or_username User ID or username.
 	 * @return string The mentioned user's display name.
 	 */
@@ -3178,7 +3188,6 @@ function bp_activity_post_form_action() {
 	 * Return the activity post form action.
 	 *
 	 * @since BuddyPress 1.2.0
-	 *
 	 *
 	 * @return string The activity post form action.
 	 */
@@ -3446,7 +3455,6 @@ function bp_sitewide_activity_feed_link() {
 	 *
 	 * @since BuddyPress 1.0.0
 	 *
-	 *
 	 * @return string The sitewide activity feed link.
 	 */
 	function bp_get_sitewide_activity_feed_link() {
@@ -3486,7 +3494,6 @@ function bp_activities_member_rss_link() { echo bp_get_member_activity_feed_link
 	 * Return the member activity feed link.
 	 *
 	 * @since BuddyPress 1.2.0
-	 *
 	 *
 	 * @return string $link The member activity feed link.
 	 */
@@ -3535,7 +3542,6 @@ function bp_activities_member_rss_link() { echo bp_get_member_activity_feed_link
 	 *
 	 * @todo properly deprecate in favor of bp_get_member_activity_feed_link().
 	 *
-	 *
 	 * @return string The member activity feed link.
 	 */
 	function bp_get_activities_member_rss_link() { return bp_get_member_activity_feed_link(); }
@@ -3547,7 +3553,6 @@ function bp_activities_member_rss_link() { echo bp_get_member_activity_feed_link
  * Outputs the activity feed item guid.
  *
  * @since BuddyPress 1.0.0
- *
  */
 function bp_activity_feed_item_guid() {
 	echo bp_get_activity_feed_item_guid();

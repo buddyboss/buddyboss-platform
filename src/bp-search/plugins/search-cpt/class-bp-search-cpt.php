@@ -12,11 +12,7 @@ defined( 'ABSPATH' ) || exit;
 if (!class_exists('BP_Search_CPT')):
 
 	/**
-	 *
-	 * BuddyPress Global Search  - search posts
-	 * **************************************
-	 *
-	 *
+	 * BuddyPress Global Search  - search posts class
 	 */
 	class BP_Search_CPT extends Bp_Search_Type {
 		private $cpt_name;

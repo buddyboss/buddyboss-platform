@@ -772,7 +772,6 @@ function bp_the_profile_field_options( $args = array() ) {
 	 *
 	 * @since BuddyPress 1.1.0
 	 *
-	 *
 	 * @param array $args {
 	 *     Array of optional arguments.
 	 *     @type string|bool $type    Type of datebox. False if it's not a

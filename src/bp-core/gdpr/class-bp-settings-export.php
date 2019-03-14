@@ -141,7 +141,6 @@ final class BP_Settings_Export extends BP_Export {
 
 
 	/**
-	 *
 	 * Fetch user settings.
 	 *
 	 * @since BuddyBoss 1.0.0

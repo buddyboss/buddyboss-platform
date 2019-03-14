@@ -96,8 +96,7 @@ class QuizzesReportsGenerator extends ReportsGenerator
 		];
 	}
 	/**
-	 *
-	 * @todo make PHP 5.4 compatible
+	 * @todo add title/description and make PHP 5.4 compatible
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

@@ -17,8 +17,7 @@ defined( 'ABSPATH' ) || exit;
 function bp_core_admin_pages_settings() {
 	?>
     <div class="wrap">
-        <h1><?php _e( 'BuddyBoss Pages', 'buddyboss' ); ?> </h1>
-
+	    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Pages', 'buddypress' ) ); ?></h2>
         <form action="" method="post">
 			<?php
 			settings_fields( 'bp-pages' );
@@ -49,7 +48,7 @@ function bp_custom_pages_do_settings_sections( $page ) {
 		return;
 
 	foreach ( (array) $wp_settings_sections[$page] as $section ) {
-		echo "<div class='card section-{$section['id']}'>";
+		echo "<div class='bp-admin-card section-{$section['id']}'>";
 		if ( $section['title'] )
 			echo "<h2>{$section['title']}</h2>\n";
 

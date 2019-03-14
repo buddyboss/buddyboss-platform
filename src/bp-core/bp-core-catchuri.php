@@ -1311,7 +1311,9 @@ function bp_core_login_profile_dashboard_redirect( $redirect_to, $redirect_to_ra
 	}
 	return apply_filters( 'bp_core_login_profile_dashboard_redirect', $redirect_to );
 }
-add_filter( 'bp_login_redirect', 'bp_core_login_profile_dashboard_redirect', 10, 3 );
+
+// @todo will use this later on
+//add_filter( 'bp_login_redirect', 'bp_core_login_profile_dashboard_redirect', 10, 3 );
 
 /**
  * Redirect user to profile dashboard if not logged in.

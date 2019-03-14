@@ -33,60 +33,42 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		$bp = buddypress();
 		$active_components = $bp->active_components;
 
-		$enable_custom_post_type_feed = isset( $_POST['bp-enable-custom-post-type-feed'] ) && '0' !== $_POST['bp-enable-custom-post-type-feed'];
+		// Flag for activate the blogs component
+		$is_blog_component_active = false;
 
-		if ( $enable_custom_post_type_feed ) {
+		// Get all active custom post type.
+		$post_types = get_post_types( [ 'public' => true ] );
 
-			// Flag for activate the blogs component
-			$is_blog_component_active = false;
-
-			// Get all active custom post type.
-			$post_types = get_post_types( [ 'public' => true ] );
-
-			foreach ( $post_types as $cpt ) {
-				// Exclude all the custom post type which is already in BuddyPress Activity support.
-				if ( in_array( $cpt,
-					[ 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' ] ) ) {
-					continue;
-				}
-
-				$enable_blog_feeds = isset( $_POST["bp-feed-custom-post-type-$cpt"] );
-
-				if ( $enable_blog_feeds ) {
-					$is_blog_component_active = true;
-				}
-
+		foreach ( $post_types as $cpt ) {
+			// Exclude all the custom post type which is already in BuddyPress Activity support.
+			if ( in_array( $cpt,
+				[ 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' ] ) ) {
+				continue;
 			}
 
-			if ( $is_blog_component_active ) {
-				$active_components['blogs'] = '1';
-			} else {
-				unset( $active_components['blogs'] );
+			$enable_blog_feeds = isset( $_POST["bp-feed-custom-post-type-$cpt"] );
+
+			if ( $enable_blog_feeds ) {
+				$is_blog_component_active = true;
 			}
-
-			// Save settings and upgrade schema.
-			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-			require_once( $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
-
-			$bp->active_components = $active_components;
-			bp_core_install( $bp->active_components );
-			bp_core_add_page_mappings( $bp->active_components );
-			bp_update_option( 'bp-active-components', $bp->active_components );
-
-		} else {
-
-			unset( $active_components['blogs'] );
-
-			// Save settings and upgrade schema.
-			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-			require_once( $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
-
-			$bp->active_components = $active_components;
-			bp_core_install( $bp->active_components );
-			bp_core_add_page_mappings( $bp->active_components );
-			bp_update_option( 'bp-active-components', $bp->active_components );
 
 		}
+
+		if ( $is_blog_component_active ) {
+			$active_components['blogs'] = '1';
+		} else {
+			unset( $active_components['blogs'] );
+		}
+
+		// Save settings and upgrade schema.
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		require_once( $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
+
+		$bp->active_components = $active_components;
+		bp_core_install( $bp->active_components );
+		bp_core_add_page_mappings( $bp->active_components );
+		bp_update_option( 'bp-active-components', $bp->active_components );
+
 	}
 
 	public function register_fields() {
@@ -117,15 +99,12 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			// $this->add_field( '_bp_enable_akismet', __( 'Akismet', 'buddyboss' ), 'bp_admin_setting_callback_activity_akismet', 'intval' );
 		}
 
-		$this->add_section( 'bp_custom_post_type', __( 'Custom Post Types', 'buddyboss' ) );
-
-		// Blog Feeds Option (will sync with "blogs" component)
-		$this->add_checkbox_field( 'bp-enable-custom-post-type-feed', __( 'Custom Post Types', 'buddyboss' ), [
-			'input_text' => __( 'Automatically publish new custom post types into the activity stream', 'buddyboss' )
-		] );
+		$this->add_section( 'bp_custom_post_type', __( 'Posts in Activity Feed', 'buddyboss' ) );
 
 		// Get all active custom post type.
 		$post_types = get_post_types( [ 'public' => true ] );
+
+		$count = 0;
 
 		foreach ( $post_types as $post_type ) {
 			// Exclude all the custom post type which is already in BuddyPress Activity support.
@@ -137,11 +116,27 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 			$fields['args'] = [
 					'post_type' => $post_type,
-					'class'     => 'bp-custom-post-type-child-field'
 			];
 
-			// create field for each of custom post type.
-			$this->add_field( "bp-feed-custom-post-type-$post_type", '&#65279;', 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
+			if ( 'post' === $post_type ) {
+				// create field for each of custom post type.
+				$this->add_field( "bp-feed-custom-post-type-$post_type", __( 'WordPress', 'buddyboss' ), 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
+			} else {
+
+				if ( 0 === $count ) {
+					$fields['args']['class'] = 'child-no-padding-first';
+					// create field for each of custom post type.
+					$this->add_field( "bp-feed-custom-post-type-$post_type", __( 'Custom Post Types', 'buddyboss' ), 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
+
+				} else {
+					$fields['args']['class'] = 'child-no-padding';
+					// create field for each of custom post type.
+					$this->add_field( "bp-feed-custom-post-type-$post_type", '&#65279;', 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
+
+				}
+				$count++;
+			}
+
 		}
 
 	}

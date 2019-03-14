@@ -1,8 +1,8 @@
 <?php
 /**
- * Sample integration admin tab
+ * WooCommerce integration admin tab
  * 
- * @package BuddyBoss\LearnDash
+ * @package BuddyBoss\WooCommerce
  * @since BuddyBoss 1.0.0
  */ 
 
@@ -10,14 +10,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Setup sample integration admin tab class.
+ * Setup WooCommerce integration admin tab class.
  * 
  * @since BuddyBoss 1.0.0
  */
-class BP_Admin_Integration_Sample extends BP_Admin_Integration_tab {
+class BP_Woocommerce_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 	public function initialize() {
-		$this->tab_order             = 999;
+		$this->tab_order             = 15;
 		$this->intro_template        = $this->root_path . '/templates/admin/integration-tab-intro.php';
 	}
 
@@ -27,7 +27,7 @@ class BP_Admin_Integration_Sample extends BP_Admin_Integration_tab {
 
 	public function register_fields() {
 		$this->add_section(
-			'sample-section',
+			'woocommerce-section',
 			__( 'Section Heading', 'buddyboss' )
 		);
 	}

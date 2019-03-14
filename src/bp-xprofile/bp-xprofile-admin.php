@@ -269,7 +269,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 								?>
 
 								<?php if ( !$group->can_delete ) : ?>
-									<?php _e( '(Signup)', 'buddyboss'); ?>
+									<span><?php _e( '(Signup)', 'buddyboss'); ?></span>
 								<?php endif; ?>
 
 							</a>
