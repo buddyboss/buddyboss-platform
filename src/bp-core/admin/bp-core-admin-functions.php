@@ -593,15 +593,15 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 			'name'  => __( 'Integrations', 'buddypress' ),
 			'class' => 'bp-integrations',
 		),
-		'5' => array(
-			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-appboss' ), 'admin.php' ) ),
-			'name'  => __( 'Mobile App', 'buddypress' ),
-			'class' => 'bp-appboss',
-		),
 		'4' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-credits' ), 'admin.php' ) ),
 			'name'  => __( 'Credits', 'buddypress' ),
 			'class' => 'bp-credits',
+		),
+		'5' => array(
+			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-appboss' ), 'admin.php' ) ),
+			'name'  => __( 'Mobile App', 'buddypress' ),
+			'class' => 'bp-appboss',
 		),
 
 	);
