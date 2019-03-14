@@ -470,8 +470,14 @@ function bp_admin_setting_callback_member_invite_member_type() {
 	?>
 	<input id="bp-disable-invite-member-type" name="bp-disable-invite-member-type" type="checkbox" value="1" <?php checked( bp_disable_invite_member_type() ); ?> />
 	<label for="bp-disable-invite-member-type"><?php _e( 'Allow members to select profile type of invitee', 'buddyboss' ); ?></label>
-    <p class="description"><?php _e( 'Customize this setting via Dashboard->Users->Profile Types', 'buddyboss' ); ?></p>
 	<?php
+		printf(
+			'<p class="description">%s</p>',
+			sprintf(
+				__( 'Customize this setting while editing any of your <a href="%s">Profile Types</a>.', 'buddyboss' ),
+				admin_url( 'edit.php?post_type=bp-member-type' )
+			)
+		);
 }
 
 /**

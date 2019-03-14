@@ -117,8 +117,16 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 			<input id="bp-enable-member-dashboard" name="bp-enable-member-dashboard" type="checkbox" value="1" <?php checked( bp_nouveau_get_appearance_settings( 'user_front_page' ) ); ?> />
 			<label for="bp-enable-member-dashboard"><?php _e( 'Use a WordPress page as each user\'s personal Profile Dashboard', 'buddyboss' ); ?></label>
-			<p class="description"><?php _e( 'This page is only accessible to logged-in users. Set this page via Dashboard->BuddyBoss->Pages', 'buddyboss' ); ?></p>
 		<?php
+			printf(
+				'<p class="description">%s</p>',
+				sprintf(
+					__( 'This page is only accessible to logged-in users. Create a WordPress page and assign it in the <a href="%s">Pages</a> settings.', 'buddyboss' ),
+					add_query_arg([
+						'page' => 'bp-pages',
+					], admin_url( 'admin.php' ) )
+				)
+			);
 	}
 
 	/**
@@ -157,7 +165,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		printf(
 			'<p class="description">%s</p>',
 			sprintf(
-				__( 'After the format has been updated, remember to run the <a href="%s">Repair Tools</a> to update all the users.', 'buddyboss' ),
+				__( 'After the format has been updated, remember to run <a href="%s">Repair Tools</a> to update all the users.', 'buddyboss' ),
 				add_query_arg([
 					'page' => 'bp-tools',
 					'tool' => 'bp-wordpress-update-display-name'
@@ -189,9 +197,12 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$import_url = admin_url().'users.php?page=bp-member-type-import';
 		//echo '<a href="'. esc_url( $import_url ).'">Click here to go import page.</a>';
 		printf(
-			__( 'Click <a href="%s">here</a> to import existing profile types (or "member types" in BuddyPress)', 'buddyboss' ),
+			__( 'Use the <a href="%s">migration tool</a> to import existing profile type data', 'buddyboss' ),
 			esc_url( $import_url )
 		);
+		?>
+			<p class="description"><?php _e( 'If importing from a BuddyPress site, these were called "member types" before.', 'buddyboss' ); ?></p>
+		<?php
 	}
 
 	/**
