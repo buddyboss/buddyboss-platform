@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 class BP_Woocommerce_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 	public function initialize() {
-		$this->tab_order             = 0;
+		$this->tab_order             = 15;
 		$this->intro_template        = $this->root_path . '/templates/admin/integration-tab-intro.php';
 	}
 
