@@ -107,6 +107,7 @@ defined( 'ABSPATH' ) || exit;
 						<h1><?php _e( 'All The Features You Need', 'buddyboss' ); ?></h1>
 						<p><?php _e( 'Our team will customize, build and launch your mobile app, on your own account, on the Apple App Store and Google Play Store.', 'buddyboss' ); ?></p>
 
+						<!-- offline support
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
 								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_offline.svg" . '" />'; ?>
@@ -116,6 +117,7 @@ defined( 'ABSPATH' ) || exit;
 								<p><?php _e( 'Your users can access your content from anywhere, even without an internet connection!', 'buddyboss' ); ?></p>
 							</div>
 						</div>
+						-->
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
@@ -188,11 +190,11 @@ defined( 'ABSPATH' ) || exit;
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
-								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_ads.svg" . '" />'; ?>
+								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_money.svg" . '" />'; ?>
 							</div>
 							<div class="appboss-column-block-item-content">
-								<h2><?php _e( 'Mobile Ads with AdMob', 'buddyboss' ); ?></h2>
-								<p><?php _e( 'AppBoss integrates with Google AdMob, allowing you to place ads in your mobile app. Use another ad service? Let us know, we can help integrate it for you.', 'buddyboss' ); ?></p>
+								<h2><?php _e( 'In-App Purchases', 'buddyboss' ); ?></h2>
+								<p><?php _e( 'You can enable both Apple Pay for iOS and Google Pay for Android to let your users easily pay for their LearnDash courses and/or membership levels.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
 
@@ -203,16 +205,6 @@ defined( 'ABSPATH' ) || exit;
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'In-App Registration', 'buddyboss' ); ?></h2>
 								<p><?php _e( 'You can choose to enable registration within the app, or limit logins to your paying members only. AppBoss syncs your WordPress database and mobile app in real-time.', 'buddyboss' ); ?></p>
-							</div>
-						</div>
-
-						<div class="appboss-column-block-item">
-							<div class="appboss-column-block-item-icon">
-								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_money.svg" . '" />'; ?>
-							</div>
-							<div class="appboss-column-block-item-content">
-								<h2><?php _e( 'In-App Purchases', 'buddyboss' ); ?></h2>
-								<p><?php _e( 'You can enable both Apple Pay for iOS and Google Pay for Android to let your users easily pay for their LearnDash courses and/or membership levels.', 'buddyboss' ); ?></p>
 							</div>
 						</div>
 
@@ -330,7 +322,7 @@ defined( 'ABSPATH' ) || exit;
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Google Analytics', 'buddyboss' ); ?></h3>
-							<p><?php _e( 'Your app comes pre-integrated with Google Analytics, so you can track all kinds of data about your app. If you\'re using a different service, we can handle the integration for you.', 'buddyboss' ); ?></p>
+							<p><?php _e( 'Your app can be integrated with Google Analytics, so you can track all kinds of data about your app. If you\'re using a different service, we can handle the integration for you.', 'buddyboss' ); ?></p>
 						</div>
 					</div>
 					
