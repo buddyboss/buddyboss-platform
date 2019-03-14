@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-14 08:42:03+00:00\n"
+"POT-Creation-Date: 2019-03-14 09:06:44+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1946,7 +1946,7 @@ msgid "General"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:425
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:139
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:147
 msgid "First Name"
 msgstr ""
 
@@ -1955,7 +1955,7 @@ msgid "Last Name"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:433
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:141
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:149
 msgid "Nickname"
 msgstr ""
 
@@ -2059,11 +2059,13 @@ msgstr ""
 msgid "Allow members to select profile type of invitee"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:473
-msgid "Customize this setting via Dashboard->Users->Profile Types"
+#: bp-core/admin/bp-core-admin-settings.php:477
+msgid ""
+"Customize this setting while editing any of your <a href=\"%s\">Profile "
+"Types</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:501
+#: bp-core/admin/bp-core-admin-settings.php:507
 #: bp-search/bp-search-functions.php:360 bp-search/bp-search-settings.php:569
 msgid "Blog Posts"
 msgstr ""
@@ -2487,41 +2489,47 @@ msgstr ""
 msgid "Use a WordPress page as each user's personal Profile Dashboard"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:120
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:124
 msgid ""
-"This page is only accessible to logged-in users. Set this page via "
-"Dashboard->BuddyBoss->Pages"
+"This page is only accessible to logged-in users. Create a WordPress page "
+"and assign it in the <a href=\"%s\">Pages</a> settings."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:133
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:141
 msgid "Redirect users to their Profile Dashboard on login"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:140
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:148
 msgid "First Name &amp; Last Name"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:160
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:168
 msgid ""
-"After the format has been updated, remember to run the <a "
-"href=\"%s\">Repair Tools</a> to update all the users."
+"After the format has been updated, remember to run <a href=\"%s\">Repair "
+"Tools</a> to update all the users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:178
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:186
 msgid "Enable advanced profile search on the members directory"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:192
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:200
 msgid ""
-"Click <a href=\"%s\">here</a> to import existing profile types (or \"member "
-"types\" in BuddyPress)"
+"Use the <a href=\"%s\">migration tool</a> to import existing profile type "
+"data"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:206
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:204
+msgid ""
+"If importing from a BuddyPress site, these were called \"member types\" "
+"before."
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:217
 msgid "Enable profile types to give members unique profile fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:219
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:230
 msgid "Display member profile type on their profile page"
 msgstr ""
 
