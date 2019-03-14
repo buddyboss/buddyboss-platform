@@ -970,3 +970,19 @@ body.post-type-bp_ps_form .page-title-action {
 .buddypress .wrap div.notice {
   margin: 25px 0 0;
 }
+
+tr.child-no-padding th {
+	padding: 0px 10px 0px 0;
+}
+
+tr.child-no-padding td {
+	padding: 5px 10px;
+}
+
+tr.child-no-padding-first th {
+	padding: 20px 10px 0px 0;
+}
+
+tr.child-no-padding-first td {
+	padding: 15px 10px 5px 10px;
+}
