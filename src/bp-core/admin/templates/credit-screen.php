@@ -41,7 +41,7 @@ defined( 'ABSPATH' ) || exit;
 		<p class="wp-about-description">
 			<?php
 			printf(
-				__( 'The "BuddyBoss Platform" is a fork of the open source project <strong><a class="web" href="%s">BuddyPress</a></strong>. We cannot thank the core BuddyPress team enough for their many years of contributing to the original plugin:', 'buddyboss' ),
+				__( 'The <strong>BuddyBoss Platform</strong> is a fork of the open source project <strong><a class="web" href="%s">BuddyPress</a></strong>. We cannot thank the core BuddyPress team enough for their many years of contributing to the original plugin:', 'buddyboss' ),
 				esc_url( 'https://buddypress.org/' )
 			);
 			?>
