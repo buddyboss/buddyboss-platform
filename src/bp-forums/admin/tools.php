@@ -153,7 +153,7 @@ function bbp_admin_repair_list() {
 		15 => array( 'bbp-sync-all-topics-forums',   __( 'Recalculate last activity in each discussion and forum', 'buddyboss' ), 'bbp_admin_repair_freshness'                ),
 		20 => array( 'bbp-sync-all-topics-sticky',   __( 'Recalculate the sticky relationship of each discussion', 'buddyboss' ), 'bbp_admin_repair_sticky'                   ),
 		25 => array( 'bbp-sync-all-reply-positions', __( 'Recalculate the position of each reply',            'buddyboss' ), 'bbp_admin_repair_reply_menu_order'         ),
-		30 => array( 'bbp-group-forums',             __( 'Repair BuddyBoss Group Forum relationships',       'buddyboss' ), 'bbp_admin_repair_group_forum_relationship' ),
+		30 => array( 'bbp-group-forums',             __( 'Repair social group forum relationships',       'buddyboss' ), 'bbp_admin_repair_group_forum_relationship' ),
 		35 => array( 'bbp-forum-topics',             __( 'Count discussions in each forum',                        'buddyboss' ), 'bbp_admin_repair_forum_topic_count'        ),
 		40 => array( 'bbp-forum-replies',            __( 'Count replies in each forum',                       'buddyboss' ), 'bbp_admin_repair_forum_reply_count'        ),
 		45 => array( 'bbp-topic-replies',            __( 'Count replies in each discussion',                       'buddyboss' ), 'bbp_admin_repair_topic_reply_count'        ),
