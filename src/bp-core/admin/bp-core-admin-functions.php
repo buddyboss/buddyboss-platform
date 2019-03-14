@@ -752,7 +752,7 @@ function bp_core_get_admin_integrations_tabs( $active_tab = '' ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_core_get_admin_integration_active_tab() {
-	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-learndash' );
+	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-sample' );
 	return isset($_GET['tab'])? $_GET['tab'] : $default_tab;
 }
 
