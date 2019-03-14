@@ -91,12 +91,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// @todo will use this later on
 		//$this->add_field( 'bp-enable-member-dashboard-redirect', __( 'Redirect on Login', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_dashboard_redirect'], 'intval' );
 
-		// Section for profile search.
-		$this->add_section( 'bp_profile_search_settings', __( 'Profile Search', 'buddyboss' ) );
-
-        // Enable/Disable profile search.
-		$this->add_field( 'bp-enable-profile-search', __( 'Profile Search', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_search'], 'intval' );
-
 		// Section for profile types.
 		$this->add_section( 'bp_member_type_settings', __( 'Profile Types', 'buddyboss' ) );
 
@@ -108,6 +102,13 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		// Profile types import.
 		$this->add_field( 'bp-member-type-import', __( 'Import Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_import'], 'intval' );
+
+		// Section for profile search.
+		$this->add_section( 'bp_profile_search_settings', __( 'Profile Search', 'buddyboss' ) );
+
+        // Enable/Disable profile search.
+		$this->add_field( 'bp-enable-profile-search', __( 'Profile Search', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_search'], 'intval' );
+
 	}
 
 	/**
