@@ -12,7 +12,7 @@
 				)
 			);
 			printf(
-				__('<a href="%s">Learn more &rarr;</a>', 'buddyboss'),
+				__('<strong><a href="%s">Learn more &rarr;</a></strong>', 'buddyboss'),
 				add_query_arg([
 					'page' => 'bp-appboss',
 				], admin_url( 'admin.php' ) )
