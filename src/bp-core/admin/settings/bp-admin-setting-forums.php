@@ -20,7 +20,7 @@ class BP_Admin_Setting_Forums extends BP_Admin_Setting_tab {
 	public function initialize() {
 		$this->tab_label = __( 'Forums', 'buddyboss' );
 		$this->tab_name  = 'bp-forums';
-		$this->tab_order = 20;
+		$this->tab_order = 25;
 	}
 
 	public function is_active() {

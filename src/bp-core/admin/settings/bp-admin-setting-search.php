@@ -21,7 +21,7 @@ class BP_Admin_Setting_Search extends BP_Admin_Setting_tab {
 
 		$this->tab_label = __( 'Search', 'buddyboss' );
 		$this->tab_name  = 'bp-search';
-		$this->tab_order = 35;
+		$this->tab_order = 40;
 	}
 
 	public function is_active() {
