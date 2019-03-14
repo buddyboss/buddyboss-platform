@@ -327,6 +327,15 @@ tr.bp-custom-post-type-child-field td {
 	padding: 6px 40px;
 }
 
+tr.bp-search-parent-field label,
+tr.bp-custom-post-type-child-field {
+	font-weight: 600;
+}
+
+tr.bp-search-parent-field label {
+	font-size: 16px;
+}
+
 /*
  * 2.6 Settings - Cards
  */

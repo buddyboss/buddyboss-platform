@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-14 10:10:52+00:00\n"
+"POT-Creation-Date: 2019-03-14 10:26:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2876,10 +2876,10 @@ msgstr ""
 
 #: bp-core/admin/templates/credit-screen.php:44
 msgid ""
-"The \"BuddyBoss Platform\" is a fork of the open source project <strong><a "
-"class=\"web\" href=\"%s\">BuddyPress</a></strong>. We cannot thank the core "
-"BuddyPress team enough for their many years of contributing to the original "
-"plugin:"
+"The <strong>BuddyBoss Platform</strong> is a fork of the open source "
+"project <strong><a class=\"web\" href=\"%s\">BuddyPress</a></strong>. We "
+"cannot thank the core BuddyPress team enough for their many years of "
+"contributing to the original plugin:"
 msgstr ""
 
 #: bp-core/admin/templates/credit-screen.php:74
