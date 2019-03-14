@@ -508,6 +508,20 @@ function bp_feed_settings_callback_post_type( $args ) {
 	</label>
 	<?php
 
+	// Description for the WordPress Blog Posts
+	if ( 'post' === $post_type ) {
+		?>
+		<p class="description"><?php _e( 'Blog Posts text.', 'buddyboss' ); ?></p>
+		<?php
+	}
+
+	// Description for the last option of CPT
+	if ( true === $args['description'] ) {
+		?>
+		<p class="description"><?php _e( 'CPT text.', 'buddyboss' ); ?></p>
+		<?php
+	}
+
 }
 
 

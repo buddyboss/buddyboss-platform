@@ -104,11 +104,20 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Get all active custom post type.
 		$post_types = get_post_types( [ 'public' => true ] );
 
+		// Exclude BP CPT
+		$bp_exclude_cpt = [ 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' ];
+
+		// flag for adding a helping text below the Blog Posts and custom post types list end.
+		$post_type_count = count( $post_types ) - count( $bp_exclude_cpt );
+		$counter         = 1;
+
+		// flag for adding conditional CSS class.
 		$count = 0;
+
 
 		foreach ( $post_types as $post_type ) {
 			// Exclude all the custom post type which is already in BuddyPress Activity support.
-			if ( in_array( $post_type, [ 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' ] ) ) {
+			if ( in_array( $post_type, $bp_exclude_cpt ) ) {
 				continue;
 			}
 
@@ -116,31 +125,32 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 			$fields['args'] = [
 					'post_type' => $post_type,
+					'description' => false,
 			];
+
+			// set the description flag for adding text below the last CPT
+			if ( $counter === $post_type_count ) {
+				$fields['args']['description'] = true;
+			}
 
 			if ( 'post' === $post_type ) {
 				// create field for each of custom post type.
 				$this->add_field( "bp-feed-custom-post-type-$post_type", __( 'WordPress', 'buddyboss' ), 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
 			} else {
-
 				if ( 0 === $count ) {
 					$fields['args']['class'] = 'child-no-padding-first';
 					// create field for each of custom post type.
 					$this->add_field( "bp-feed-custom-post-type-$post_type", __( 'Custom Post Types', 'buddyboss' ), 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
-
 				} else {
 					$fields['args']['class'] = 'child-no-padding';
 					// create field for each of custom post type.
 					$this->add_field( "bp-feed-custom-post-type-$post_type", '&#65279;', 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
-
 				}
 				$count++;
 			}
-
+			$counter++;
 		}
-
 	}
-
 
 }
 
