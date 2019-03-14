@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 			?>
 			<div class="appboss-banner-block">
 				<h1><?php _e( 'Extend WordPress into your own native mobile app', 'buddyboss' ); ?></h1>
-				<p><?php _e( 'We will create and launch your own custom app synced with your WordPress site. No technical knowledge required.', 'buddyboss' ); ?></p>
+				<p><?php _e( 'AppBoss will create and launch your own custom app synced with your WordPress site. No technical knowledge required.', 'buddyboss' ); ?></p>
 				<div class="appboss-banner-block-items">
 					
 					<div class="appboss-banner-block-item">
