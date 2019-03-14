@@ -22,7 +22,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 	public function initialize() {
 		$this->tab_label = __( 'Groups', 'buddyboss' );
 		$this->tab_name  = 'bp-groups';
-		$this->tab_order = 20;
+		$this->tab_order = 15;
 	}
 
 	//Check if groups are enabled
