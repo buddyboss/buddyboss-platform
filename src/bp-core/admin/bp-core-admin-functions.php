@@ -606,6 +606,11 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 
 	);
 
+	// Remove the Mobile App if appboss plugin is activate.
+	if ( is_plugin_active( 'appboss/appboss.php' ) ) {
+		unset( $tabs['5'] );
+	}
+
 	/**
 	 * Filters the tab data used in our wp-admin screens.
 	 *
