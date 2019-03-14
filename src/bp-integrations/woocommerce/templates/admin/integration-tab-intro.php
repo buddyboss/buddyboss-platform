@@ -6,7 +6,7 @@
 			printf(
 				__('BuddyBoss Platform has integration settings for %s. If using LearnDash we add the ability to easily enroll users into courses based on their purchased WooCommerce product. If using our BuddyBoss Theme we also include styling for WooCommerce.', 'buddyboss'),
 				sprintf(
-					'<a href="%s" target="_blank">%s</a>',
+					'<a href="%s">%s</a>',
 					'https://wordpress.org/plugins/woocommerce/',
 					__('WooCommerce', 'buddyboss')
 				)

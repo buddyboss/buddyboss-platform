@@ -6,7 +6,7 @@
 			printf(
 				__('BuddyBoss Platform has integration settings for %s. If using LearnDash we add the ability to easily enroll users into courses based on their purchased membership level. If using our BuddyBoss Theme we also include styling for MemberPress.', 'buddyboss'),
 				sprintf(
-					'<a href="%s" target="_blank">%s</a>',
+					'<a href="%s">%s</a>',
 					'https://memberpress.com/buddyboss/home',
 					__('MemberPress', 'buddyboss')
 				)

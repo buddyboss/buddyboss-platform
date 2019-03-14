@@ -4,13 +4,19 @@
 		<h2><?php _e( 'AppBoss <span>(disabled)</span>', 'buddyboss' ); ?></h2>
 		<p><?php
 			printf(
-				__('BuddyBoss Platform has integration settings for %s. If using LearnDash we add the ability to easily enroll users into courses based on their purchased AppBoss product. If using our BuddyBoss Theme we also include styling for AppBoss.', 'buddyboss'),
+				__('Extend your community into a native mobile app using %s. AppBoss is a paid service provided by BuddyBoss, which will launch native iOS and Android apps for you, published under your own Apple and Google Play accounts. The apps will be branded to match your site, and can sync community data (profiles, activity, etc.) back and forth with BuddyBoss Platform. If using LearnDash they will also sync course data with your website. ', 'buddyboss'),
 				sprintf(
-					'<a href="%s" target="_blank">%s</a>',
-					'https://wordpress.org/plugins/appboss/',
+					'<a href="%s">%s</a>',
+					'https://appboss.com',
 					__('AppBoss', 'buddyboss')
 				)
-			)
+			);
+			printf(
+				__('<a href="%s">Learn more &rarr;</a>', 'buddyboss'),
+				add_query_arg([
+					'page' => 'bp-appboss',
+				], admin_url( 'admin.php' ) )
+			);
 		?></p>
 	</div>
 
