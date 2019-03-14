@@ -433,7 +433,13 @@ tr.bp-search-parent-field label {
   width: 1px;
 }
 
-/* Integrations */
+/* Pages */
+.bp-admin-card.section-bp_pages h2,
+.bp-admin-card.section-bp_registration_pages h2 {
+  background-image: url(../../images/admin/admin_icon-pages.png);
+}
+
+/* Integrations - LearnDash */
 .bp-admin-card.section-bp_ld_sync-buddypress h2,
 .bp-admin-card.section-bp_ld_sync-learndash h2,
 .bp-admin-card.section-bp_ld_sync-reports h2,
@@ -441,10 +447,14 @@ tr.bp-search-parent-field label {
   background-image: url(../../images/admin/admin_icon-learndash.png);
 }
 
-/* Pages */
-.bp-admin-card.section-bp_pages h2,
-.bp-admin-card.section-bp_registration_pages h2 {
-  background-image: url(../../images/admin/admin_icon-pages.png);
+/* Integrations - WooCommerce */
+.bp-admin-card.section-bp_woocommerce_disabled h2 {
+  background-image: url(../../images/admin/admin_icon-woocommerce.png);
+}
+
+/* Integrations - MemberPress */
+.bp-admin-card.section-bp_memberpress_disabled h2 {
+  background-image: url(../../images/admin/admin_icon-memberpress.png);
 }
 
 /*
@@ -956,6 +966,7 @@ body.post-type-bp_ps_form .page-title-action {
 }
 
 /* Notices */
-.buddypress .wrap div#message {
+.buddypress .wrap div#message,
+.buddypress .wrap div.notice {
   margin: 25px 0 0;
 }
