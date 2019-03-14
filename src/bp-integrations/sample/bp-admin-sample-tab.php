@@ -14,10 +14,10 @@ defined( 'ABSPATH' ) || exit;
  * 
  * @since BuddyBoss 1.0.0
  */
-class BP_Admin_Integration_Sample extends BP_Admin_Integration_tab {
+class BP_Sample_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 	public function initialize() {
-		$this->tab_order             = 999;
+		$this->tab_order             = 0;
 		$this->intro_template        = $this->root_path . '/templates/admin/integration-tab-intro.php';
 	}
 

@@ -161,14 +161,14 @@ class BP_Core extends BP_Component {
 		$bp = buddypress();
 
 		/**
-		 * Filters the included and optional inetegrations.
+		 * Filters the included and optional integrations.
 		 *
 		 * @since BuddyBoss 1.0.0
 		 *
-		 * @param array $value Array of included and optional inetegrations.
+		 * @param array $value Array of included and optional integrations.
 		 */
 		$bp->available_integrations = apply_filters( 'bp_integrations', array(
-			'learndash' /* , 'sample' */
+			'sample' ,'learndash'
 		) );
 
 		$integration_dir = $bp->plugin_dir . '/bp-integrations/';
@@ -181,7 +181,7 @@ class BP_Core extends BP_Component {
 		}
 
 		/**
-		 * Fires after the loading of individual inetegrations.
+		 * Fires after the loading of individual integrations.
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */

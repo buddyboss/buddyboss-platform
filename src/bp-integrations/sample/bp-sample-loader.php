@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.0.0
  */
 function bp_register_sample_integration() {
-	require_once dirname( __FILE__ ) . '/admin/bp-admin-sample-tab.php';
-	buddypress()->integrations['sample'] = new BP_Admin_Integration_Sample;
+	require_once dirname( __FILE__ ) . '/bp-sample-integration.php';
+	buddypress()->integrations['sample'] = new BP_Sample_Integration;
 }
-add_action( 'bp_register_admin_integrations', 'bp_register_sample_integration' );
+add_action( 'bp_setup_integrations', 'bp_register_sample_integration' );
