@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-14 12:18:05+00:00\n"
+"POT-Creation-Date: 2019-03-14 12:48:40+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1875,7 +1875,7 @@ msgid "Profile type saved."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2068
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:110
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:104
 msgid "Import Profile Types"
 msgstr ""
 
@@ -1946,7 +1946,7 @@ msgid "General"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:425
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:150
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:151
 msgid "First Name"
 msgstr ""
 
@@ -1955,7 +1955,7 @@ msgid "Last Name"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:433
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:152
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:153
 msgid "Nickname"
 msgstr ""
 
@@ -2285,6 +2285,14 @@ msgstr ""
 msgid "Posts in Activity Feed"
 msgstr ""
 
+#: bp-core/admin/settings/bp-admin-setting-activity.php:123
+msgid "WordPress"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-activity.php:129
+msgid "Custom Post Types"
+msgstr ""
+
 #: bp-core/admin/settings/bp-admin-setting-forums.php:21
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:46
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:64
@@ -2455,14 +2463,6 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:95
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:98
-#: bp-core/profile-search/bps-start.php:57
-#: bp-core/profile-search/bps-start.php:60 bp-xprofile/bp-xprofile-admin.php:42
-#: bp-xprofile/bp-xprofile-admin.php:43
-msgid "Profile Search"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:101
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:104
 #: bp-members/bp-members-functions.php:2991
 #: bp-members/bp-members-functions.php:2994
 #: bp-xprofile/bp-xprofile-admin.php:34 bp-xprofile/bp-xprofile-admin.php:35
@@ -2470,55 +2470,63 @@ msgstr ""
 msgid "Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:107
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:101
 msgid "Display Profile Type"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:122
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:107
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:110
+#: bp-core/profile-search/bps-start.php:57
+#: bp-core/profile-search/bps-start.php:60 bp-xprofile/bp-xprofile-admin.php:42
+#: bp-xprofile/bp-xprofile-admin.php:43
+msgid "Profile Search"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:123
 msgid "Use a WordPress page as each user's personal Profile Dashboard"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:127
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:128
 msgid ""
 "This page is only accessible to logged-in users. Create a WordPress page "
 "and assign it in the <a href=\"%s\">Pages</a> settings."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:144
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:145
 msgid "Redirect users to their Profile Dashboard on login"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:151
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:152
 msgid "First Name &amp; Last Name"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:171
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:172
 msgid ""
 "After the format has been updated, remember to run <a href=\"%s\">Repair "
 "Tools</a> to update all the users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:189
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:190
 msgid "Enable advanced profile search on the members directory"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:203
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:204
 msgid ""
 "Use the <a href=\"%s\">migration tool</a> to import existing profile type "
 "data"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:207
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:208
 msgid ""
 "If importing from a BuddyPress site, these were called \"member types\" "
 "before."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:220
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:221
 msgid "Enable profile types to give members unique profile fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:233
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:234
 msgid "Display member profile type on their profile page"
 msgstr ""
 
@@ -11813,6 +11821,29 @@ msgstr ""
 msgid "Group invite rejected"
 msgstr ""
 
+#: bp-integrations/appboss/bp-admin-appboss-tab.php:31
+#: bp-integrations/memberpress/bp-admin-memberpress-tab.php:31
+#: bp-integrations/woocommerce/bp-admin-woocommerce-tab.php:31
+msgid "Section Heading"
+msgstr ""
+
+#: bp-integrations/appboss/bp-appboss-integration.php:22
+#: bp-integrations/appboss/templates/admin/integration-tab-intro.php:11
+msgid "AppBoss"
+msgstr ""
+
+#: bp-integrations/appboss/templates/admin/integration-tab-intro.php:4
+msgid "AppBoss <span>(disabled)</span>"
+msgstr ""
+
+#: bp-integrations/appboss/templates/admin/integration-tab-intro.php:7
+msgid ""
+"BuddyBoss Platform has integration settings for %s. If using LearnDash we "
+"add the ability to easily enroll users into courses based on their "
+"purchased AppBoss product. If using our BuddyBoss Theme we also include "
+"styling for AppBoss."
+msgstr ""
+
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:71
 msgid "BuddyBoss to LearnDash Sync"
 msgstr ""
@@ -12636,11 +12667,6 @@ msgstr[1] ""
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-user-stats.php:63
 #: bp-messages/bp-messages-template.php:1423
 msgid "Message"
-msgstr ""
-
-#: bp-integrations/memberpress/bp-admin-memberpress-tab.php:31
-#: bp-integrations/woocommerce/bp-admin-woocommerce-tab.php:31
-msgid "Section Heading"
 msgstr ""
 
 #: bp-integrations/memberpress/bp-memberpress-integration.php:22

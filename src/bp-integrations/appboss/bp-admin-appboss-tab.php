@@ -1,8 +1,8 @@
 <?php
 /**
- * WooCommerce integration admin tab
+ * AppBoss integration admin tab
  * 
- * @package BuddyBoss\WooCommerce
+ * @package BuddyBoss\AppBoss
  * @since BuddyBoss 1.0.0
  */ 
 
@@ -10,14 +10,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Setup WooCommerce integration admin tab class.
+ * Setup AppBoss integration admin tab class.
  * 
  * @since BuddyBoss 1.0.0
  */
-class BP_Woocommerce_Admin_Integration_Tab extends BP_Admin_Integration_tab {
+class BP_Appboss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 	public function initialize() {
-		$this->tab_order             = 30;
+		$this->tab_order             = 10;
 		$this->intro_template        = $this->root_path . '/templates/admin/integration-tab-intro.php';
 	}
 
@@ -27,7 +27,7 @@ class BP_Woocommerce_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 	public function register_fields() {
 		$this->add_section(
-			'woocommerce-section',
+			'appboss-section',
 			__( 'Section Heading', 'buddyboss' )
 		);
 	}

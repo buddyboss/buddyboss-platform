@@ -439,6 +439,11 @@ tr.bp-search-parent-field label {
   background-image: url(../../images/admin/admin_icon-pages.png);
 }
 
+/* Integrations - AppBoss */
+.bp-admin-card.section-bp_appboss_disabled h2 {
+  background-image: url(../../images/admin/admin_icon-appboss.png);
+}
+
 /* Integrations - LearnDash */
 .bp-admin-card.section-bp_ld_sync-buddypress h2,
 .bp-admin-card.section-bp_ld_sync-learndash h2,
