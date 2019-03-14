@@ -2,7 +2,7 @@
 /**
  * BuddyBoss MemberPress Integration Loader.
  *
- * @package BuddyBoss\Memberpress
+ * @package BuddyBoss\MemberPress
  * @since BuddyBoss 1.0.0
  */
 

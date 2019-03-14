@@ -593,15 +593,15 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 			'name'  => __( 'Integrations', 'buddypress' ),
 			'class' => 'bp-integrations',
 		),
-		'5' => array(
-			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-appboss' ), 'admin.php' ) ),
-			'name'  => __( 'Mobile App', 'buddypress' ),
-			'class' => 'bp-appboss',
-		),
 		'4' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-credits' ), 'admin.php' ) ),
 			'name'  => __( 'Credits', 'buddypress' ),
 			'class' => 'bp-credits',
+		),
+		'5' => array(
+			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-appboss' ), 'admin.php' ) ),
+			'name'  => __( 'Mobile App', 'buddypress' ),
+			'class' => 'bp-appboss',
 		),
 
 	);
@@ -747,12 +747,12 @@ function bp_core_get_admin_integrations_tabs( $active_tab = '' ) {
 }
 
 /**
- * Get the slug of the current integration tab
+ * Set the default integration tab
  *
  * @since BuddyBoss 1.0.0
  */
 function bp_core_get_admin_integration_active_tab() {
-	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-learndash' );
+	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-appboss' );
 	return isset($_GET['tab'])? $_GET['tab'] : $default_tab;
 }
 

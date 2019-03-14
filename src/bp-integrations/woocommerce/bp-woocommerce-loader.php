@@ -2,7 +2,7 @@
 /**
  * BuddyBoss WooCommerce Integration Loader.
  *
- * @package BuddyBoss\Woocommerce
+ * @package BuddyBoss\WooCommerce
  * @since BuddyBoss 1.0.0
  */
 

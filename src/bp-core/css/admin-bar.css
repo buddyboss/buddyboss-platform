@@ -87,7 +87,6 @@ li.toplevel_page_buddyboss-platform .wp-submenu li a[href^="admin.php?page=bp-ap
 	padding: 3px 13px 22px 0;
 }
 
-.nav-tab-wrapper a.bp-credits.nav-tab,
 .nav-tab-wrapper a.bp-appboss.nav-tab {
-	float: right;
+	display: none !important;
 }
