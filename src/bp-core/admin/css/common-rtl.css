@@ -59,13 +59,12 @@ TABLE OF CONTENTS:
  */
 .bp-about-wrap {
   position: relative;
-  max-width: 1050px;
   font-size: 15px;
 }
 
 .bp-about-wrap .card {
   min-width: 255px;
-  max-width: 100%;
+  max-width: 1050px;
   background: #fff;
   border-radius: 8px;
   border: none;
