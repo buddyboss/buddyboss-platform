@@ -365,6 +365,10 @@ tr.bp-search-parent-field label {
   border-bottom: 1px solid #eaeaea;
 }
 
+.bp-admin-card h2 span {
+  font-weight: 400;
+}
+
 /* Settings */
 .bp-admin-card h2,
 .bp-admin-card.section-bp_main h2 {
@@ -432,7 +436,8 @@ tr.bp-search-parent-field label {
 /* Integrations */
 .bp-admin-card.section-bp_ld_sync-buddypress h2,
 .bp-admin-card.section-bp_ld_sync-learndash h2,
-.bp-admin-card.section-bp_ld_sync-reports h2 {
+.bp-admin-card.section-bp_ld_sync-reports h2,
+.bp-admin-card.section-bp_ld_disabled h2 {
   background-image: url(../../images/admin/admin_icon-learndash.png);
 }
 

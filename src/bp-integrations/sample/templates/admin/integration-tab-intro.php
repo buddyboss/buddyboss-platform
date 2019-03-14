@@ -1,5 +1,7 @@
 <div class="wrap">
-	<div class="card">
-		<h3><?php _e( 'Sample Integration', 'buddyboss' ); ?></h3>
+	
+	<div class="bp-admin-card">
+		<h2><?php _e( 'Sample Integration', 'buddyboss' ); ?></h2>
 	</div>
+
 </div>

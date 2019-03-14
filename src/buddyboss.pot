@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-14 10:32:40+00:00\n"
+"POT-Creation-Date: 2019-03-14 10:42:46+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5985,7 +5985,6 @@ msgstr ""
 
 #: bp-core/profile-search/bps-xprofile.php:361
 #: bp-integrations/learndash/bp-learndash-integration.php:22
-#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:11
 msgid "LearnDash"
 msgstr ""
 
@@ -12553,19 +12552,19 @@ msgid "Associated Group:"
 msgstr ""
 
 #: bp-integrations/learndash/templates/admin/integration-tab-intro.php:4
-msgid "LearnDash Settings"
+msgid "LearnDash <span>(disabled)</span>"
 msgstr ""
 
 #: bp-integrations/learndash/templates/admin/integration-tab-intro.php:7
-msgid "We integrated with %s. Below are the features if the plugin is activated:"
+msgid ""
+"BuddyBoss Platform has integration settings for %s. If using LearnDash we "
+"add the ability to sync LeanDash Groups with social groups, to generate "
+"course reports within social groups, and more. If using our BuddyBoss Theme "
+"we also include styling for LearnDash."
 msgstr ""
 
-#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:19
-msgid "Members syncing between groups."
-msgstr ""
-
-#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:23
-msgid "Course reports within groups."
+#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:11
+msgid "LearnDash LMS"
 msgstr ""
 
 #: bp-integrations/learndash/templates/admin/learndash/sync-meta-box.php:11
@@ -12658,7 +12657,7 @@ msgstr ""
 msgid "Sample"
 msgstr ""
 
-#: bp-integrations/sample/templates/admin/integration-tab-intro.php:3
+#: bp-integrations/sample/templates/admin/integration-tab-intro.php:4
 msgid "Sample Integration"
 msgstr ""
 
