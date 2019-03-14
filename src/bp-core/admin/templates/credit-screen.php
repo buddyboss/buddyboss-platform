@@ -76,9 +76,10 @@ defined( 'ABSPATH' ) || exit;
 			<a href="https://github.com/ichord/At.js">At.js</a>,
 			<a href="https://bbpress.org">bbPress</a>,
 			<a href="https://buddypress.org">BuddyPress</a>,
-			<a href="https://wordpress.org/plugins/bp-profile-search/">BP Profile Search</a>,
+			<a href="https://wordpress.org/plugins/bp-default-data/">BP Default Data</a>,
 			<a href="https://wordpress.org/plugins/buddypress-followers/">BP Follow</a>,
 			<a href="https://wordpress.org/plugins/buddypress-global-search/">BP Global Search</a>,
+			<a href="https://wordpress.org/plugins/bp-profile-search/">BP Profile Search</a>,
 			<a href="https://github.com/ichord/Caret.js">Caret.js</a>,
 			<a href="https://tedgoas.github.io/Cerberus/">Cerberus</a>,
 			<a href="https://ionicons.com/">Ionicons</a>,
@@ -87,6 +88,7 @@ defined( 'ABSPATH' ) || exit;
 			<a href="https://www.mediawiki.org/wiki/MediaWiki">MediaWiki</a>,
 			<a href="https://wordpress.org/plugins/menu-icons/">Menu Icons</a>,
 			<a href="https://momentjs.com/">Moment.js</a>,
+			<a href="https://wordpress.org/plugins/user-switching/">User Switching</a>,
 			<a href="https://wordpress.org">WordPress</a>.
 		</p>
 	</div>
