@@ -455,9 +455,12 @@ tr.bp-search-parent-field label {
 }
 
 /* Pages */
-.bp-admin-card.section-bp_pages h2,
-.bp-admin-card.section-bp_registration_pages h2 {
+.bp-admin-card.section-bp_pages h2 {
   background-image: url(../../images/admin/admin_icon-pages.png);
+}
+
+.bp-admin-card.section-bp_registration_pages h2 {
+  background-image: url(../../images/admin/admin_icon-registration.png);
 }
 
 /* Integrations - AppBoss */
