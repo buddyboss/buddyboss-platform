@@ -219,7 +219,7 @@ function bp_core_get_forums_admin_tabs( $active_tab = '') {
 
 	$tabs[] = array(
 		'href'  => bp_get_admin_url( add_query_arg( array( 'taxonomy' =>  bbp_get_topic_tag_tax_id(), 'post_type' => bbp_get_topic_post_type() ), 'edit-tags.php' ) ),
-		'name'  => __( 'Tags', 'buddypress' ),
+		'name'  => __( 'Discussion Tags', 'buddypress' ),
 		'class' => 'bp-tags',
 	);
 
@@ -308,7 +308,7 @@ function bp_tags_admin_tags_listing_add_tab() {
 	if ( ( $current_screen->taxonomy == bbp_get_topic_tag_tax_id() && $pagenow == 'edit-tags.php' ) || ( $current_screen->taxonomy == bbp_get_topic_tag_tax_id() && $pagenow == 'term.php' ) ) {
 
 		?>
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Tags', 'buddypress' ) ); ?></h2>
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Discussion Tags', 'buddypress' ) ); ?></h2>
 		<?php
 	}
 
