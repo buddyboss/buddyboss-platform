@@ -23,7 +23,7 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 			'classname'                   => 'widget_bp_blogs_widget buddypress widget',
 			'customize_selective_refresh' => true,
 		);
-		parent::__construct( false, $name = __( '(BuddyBoss) Recent Networkwide Posts', 'buddyboss' ), $widget_ops );
+		parent::__construct( false, $name = __( '(BB) Recent Networkwide Posts', 'buddyboss' ), $widget_ops );
 	}
 
 	/**

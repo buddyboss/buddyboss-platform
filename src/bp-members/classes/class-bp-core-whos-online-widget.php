@@ -22,7 +22,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 	 * @since BuddyPress 1.5.0
 	 */
 	public function __construct() {
-		$name        = __( "(BuddyBoss) Who's Online", 'buddyboss' );
+		$name        = __( '(BB) Who\'s Online', 'buddyboss' );
 		$description = __( 'Profile photos of online users', 'buddyboss' );
 		parent::__construct( false, $name, array(
 			'description'                 => $description,

@@ -216,7 +216,7 @@ class BP_Nouveau_Object_Nav_Widget extends WP_Widget {
 
 		parent::__construct(
 			'bp_nouveau_sidebar_object_nav_widget',
-			__( '(BuddyBoss) Primary navigation', 'buddyboss' ),
+			__( '(BB) Primary navigation', 'buddyboss' ),
 			$widget_ops
 		);
 	}

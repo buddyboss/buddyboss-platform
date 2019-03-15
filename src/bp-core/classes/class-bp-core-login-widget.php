@@ -24,7 +24,7 @@ class BP_Core_Login_Widget extends WP_Widget {
 	public function __construct() {
 		parent::__construct(
 			false,
-			__( '(BuddyBoss) Log In', 'buddyboss' ),
+			__( '(BB) Log In', 'buddyboss' ),
 			array(
 				'description'                 => __( 'Show a Log In form to logged-out visitors, and a Log Out link to those who are logged in.', 'buddyboss' ),
 				'classname'                   => 'widget_bp_core_login_widget buddypress widget',
