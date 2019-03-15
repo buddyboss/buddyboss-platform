@@ -22,7 +22,7 @@ class BP_Appboss_Integration extends BP_Integration {
 			__( 'AppBoss', 'buddyboss' ),
 			'appboss',
 			[
-				'required_plugin' => ' '
+				'required_plugin' => 'appboss/appboss.php'
 			]
 		);
 	}
