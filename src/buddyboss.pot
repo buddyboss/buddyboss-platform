@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-14 12:48:40+00:00\n"
+"POT-Creation-Date: 2019-03-15 05:29:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -336,7 +336,7 @@ msgid "Edit activity action"
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:682
-#: bp-messages/classes/class-bp-messages-notices-admin.php:207
+#: bp-messages/classes/class-bp-messages-notices-admin.php:260
 #: bp-messages/classes/class-bp-messages-notices-list-table.php:78
 msgid "Content"
 msgstr ""
@@ -1631,19 +1631,19 @@ msgid "Integrations"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:598
-#: bp-core/admin/bp-core-admin-settings.php:373
-#: bp-core/classes/class-bp-admin.php:353
-#: bp-core/classes/class-bp-admin.php:354
-msgid "Mobile App"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-functions.php:603
 #: bp-core/admin/settings/bp-admin-setting-credit.php:21
 #: bp-core/classes/class-bp-admin.php:343
 #: bp-core/classes/class-bp-admin.php:344
 #: bp-core/classes/class-bp-admin.php:431 bp-forums/admin/admin.php:714
 #: bp-forums/admin/admin.php:791
 msgid "Credits"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-functions.php:603
+#: bp-core/admin/bp-core-admin-settings.php:373
+#: bp-core/classes/class-bp-admin.php:353
+#: bp-core/classes/class-bp-admin.php:354
+msgid "Mobile App"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:890
@@ -2070,6 +2070,17 @@ msgstr ""
 msgid "Blog Posts"
 msgstr ""
 
+#: bp-core/admin/bp-core-admin-settings.php:514
+msgid "When users publish new blog posts, show them in the activity feed."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:521
+msgid ""
+"Select which Custom Post Types (coming from your plugins) should be shown "
+"in the activity feed. For example, if using WooCommerce it could post into "
+"the activity feed every time someone creates a new product."
+msgstr ""
+
 #: bp-core/admin/bp-core-admin-slugs.php:38
 msgid "Profile Dashboard"
 msgstr ""
@@ -2285,11 +2296,11 @@ msgstr ""
 msgid "Posts in Activity Feed"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:123
+#: bp-core/admin/settings/bp-admin-setting-activity.php:138
 msgid "WordPress"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:129
+#: bp-core/admin/settings/bp-admin-setting-activity.php:143
 msgid "Custom Post Types"
 msgstr ""
 
@@ -2578,8 +2589,8 @@ msgstr ""
 
 #: bp-core/admin/templates/appboss-screen.php:26
 msgid ""
-"We will create and launch your own custom app synced with your WordPress "
-"site. No technical knowledge required."
+"AppBoss will create and launch your own custom app synced with your "
+"WordPress site. No technical knowledge required."
 msgstr ""
 
 #: bp-core/admin/templates/appboss-screen.php:34
@@ -2642,211 +2653,200 @@ msgid ""
 "account, on the Apple App Store and Google Play Store."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:115
+#: bp-core/admin/templates/appboss-screen.php:116
 msgid "Offline Support"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:116
+#: bp-core/admin/templates/appboss-screen.php:117
 msgid ""
 "Your users can access your content from anywhere, even without an internet "
 "connection!"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:125
+#: bp-core/admin/templates/appboss-screen.php:127
 msgid "Advanced Push Notifications"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:126
+#: bp-core/admin/templates/appboss-screen.php:128
 msgid ""
 "Create audience segments, automations, and campaigns with Push "
 "Notifications so you can target the right users at the right time."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:135
+#: bp-core/admin/templates/appboss-screen.php:137
 msgid "Custom Mobile App Pages"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:136
+#: bp-core/admin/templates/appboss-screen.php:138
 msgid ""
 "Need to add a custom page? There's no extra fees. Create and edit pages "
 "from your WordPress dashboard and display them inside your mobile app."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:150
+#: bp-core/admin/templates/appboss-screen.php:152
 msgid "Say hello to <strong>AppBoss</strong>"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:151
+#: bp-core/admin/templates/appboss-screen.php:153
 msgid ""
 "Brought to you by BuddyBoss, we know WordPress inside and out. We have "
 "invested thousands of hours into building the processes and technology to "
 "seamlessy integrate WordPress with your mobile app."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:153
+#: bp-core/admin/templates/appboss-screen.php:155
 msgid "About Us"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:154
+#: bp-core/admin/templates/appboss-screen.php:156
 msgid "Contact Us"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:174
+#: bp-core/admin/templates/appboss-screen.php:176
 msgid "Built with React Native"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:175
+#: bp-core/admin/templates/appboss-screen.php:177
 msgid ""
 "This is a true native app and NOT a \"responsive website within an app\". "
 "It is built with React Native, the app framework created by Facebook and "
 "used by Walmart, Airbnb, Instagram, Tesla, and SoundCloud."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:186
+#: bp-core/admin/templates/appboss-screen.php:188
 msgid "Monetize your Mobile App"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:187
+#: bp-core/admin/templates/appboss-screen.php:189
 msgid "We've built the integrations to help you earn money from your app."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:194
-msgid "Mobile Ads with AdMob"
+#: bp-core/admin/templates/appboss-screen.php:196
+msgid "In-App Purchases"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:195
+#: bp-core/admin/templates/appboss-screen.php:197
 msgid ""
-"AppBoss integrates with Google AdMob, allowing you to place ads in your "
-"mobile app. Use another ad service? Let us know, we can help integrate it "
-"for you."
+"You can enable both Apple Pay for iOS and Google Pay for Android to let "
+"your users easily pay for their LearnDash courses and/or membership levels."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:204
+#: bp-core/admin/templates/appboss-screen.php:206
 msgid "In-App Registration"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:205
+#: bp-core/admin/templates/appboss-screen.php:207
 msgid ""
 "You can choose to enable registration within the app, or limit logins to "
 "your paying members only. AppBoss syncs your WordPress database and mobile "
 "app in real-time."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:214
-msgid "In-App Purchases"
-msgstr ""
-
-#: bp-core/admin/templates/appboss-screen.php:215
-msgid ""
-"You can enable both Apple Pay for iOS and Google Pay for Android to let "
-"your users easily pay for their LearnDash courses and/or membership levels."
-msgstr ""
-
-#: bp-core/admin/templates/appboss-screen.php:231
+#: bp-core/admin/templates/appboss-screen.php:223
 msgid "We support <strong>every</strong> LearnDash feature"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:234
+#: bp-core/admin/templates/appboss-screen.php:226
 msgid ""
 "AppBoss is designed to integrate with <a href=\"%s\">LearnDash</a>, the #1 "
 "LMS solution for Fortune 500's, major universities, training organizations "
 "and entrepreneurs."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:246
+#: bp-core/admin/templates/appboss-screen.php:238
 msgid "Advanced Quizzing"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:247
+#: bp-core/admin/templates/appboss-screen.php:239
 msgid ""
 "We support all eight quiz question types including Single Answer, Multiple "
 "Choice, Sorting, Matching, Fill-In-The-Blank, Free Text, Survey, Essays and "
 "more."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:256
+#: bp-core/admin/templates/appboss-screen.php:248
 msgid "Drip-Feed Content"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:257
+#: bp-core/admin/templates/appboss-screen.php:249
 msgid ""
 "Deliver all your lessons at once, or choose to drip-feed (schedule) them "
 "over a specified amount of time resulting in a guided learning experience."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:266
+#: bp-core/admin/templates/appboss-screen.php:258
 msgid "Social Learning"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:267
+#: bp-core/admin/templates/appboss-screen.php:259
 msgid ""
 "Organize your students into groups and assign a Group Leader to manage "
 "their progress, track performance and send push notifications when new "
 "content becomes available."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:279
+#: bp-core/admin/templates/appboss-screen.php:271
 msgid "Lesson Timers"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:280
+#: bp-core/admin/templates/appboss-screen.php:272
 msgid ""
 "You can prevent your students from moving through your courses too quickly "
 "by simply setting a Lesson Timer. When the clock reaches \"zero\", students "
 "are then permitted to move onto the next lesson."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:289
+#: bp-core/admin/templates/appboss-screen.php:281
 msgid "Expire Access"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:290
+#: bp-core/admin/templates/appboss-screen.php:282
 msgid ""
 "Allow students to have lifetime access to your courses, or expire access "
 "after a certain amount of time. This is a perfect way to encourage "
 "re-certifications and renewals from your students!"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:299
+#: bp-core/admin/templates/appboss-screen.php:291
 msgid "Assignment Management"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:300
+#: bp-core/admin/templates/appboss-screen.php:292
 msgid ""
 "Have your students submit assignments throughout your course after every "
 "lesson or topic. Automatically approve assignments, or require that they be "
 "manually approved and awarded grades, points or rewards."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:312
+#: bp-core/admin/templates/appboss-screen.php:304
 msgid "Certificates &amp; Badges"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:313
+#: bp-core/admin/templates/appboss-screen.php:305
 msgid ""
 "Award certificates based on quiz performance, completing a course, or both! "
 "Certificates can be 100% customized and support dynamic data generation "
 "including student's names, completion dates, grades and more."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:322
+#: bp-core/admin/templates/appboss-screen.php:314
 msgid "Discussion Forums"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:323
+#: bp-core/admin/templates/appboss-screen.php:315
 msgid ""
 "AppBoss offers a mobile integration with BuddyBoss forums. This allows your "
 "students to participate in course discussions, learn from other students, "
 "and creates unique user-generated content for your online school."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:332
+#: bp-core/admin/templates/appboss-screen.php:324
 msgid "Google Analytics"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:333
+#: bp-core/admin/templates/appboss-screen.php:325
 msgid ""
-"Your app comes pre-integrated with Google Analytics, so you can track all "
+"Your app can be integrated with Google Analytics, so you can track all "
 "kinds of data about your app. If you're using a different service, we can "
 "handle the integration for you."
 msgstr ""
@@ -7748,7 +7748,7 @@ msgid "Recalculate the position of each reply"
 msgstr ""
 
 #: bp-forums/admin/tools.php:156
-msgid "Repair BuddyBoss Group Forum relationships"
+msgid "Repair social group forum relationships"
 msgstr ""
 
 #: bp-forums/admin/tools.php:157
@@ -8419,8 +8419,7 @@ msgstr ""
 
 #: bp-forums/classes/class-bp-forums-component.php:218
 #: bp-forums/classes/class-bp-forums-component.php:285
-#: bp-templates/bp-nouveau/includes/activity/functions.php:242
-msgid "My Likes"
+msgid "My Favorites"
 msgstr ""
 
 #: bp-forums/common/functions.php:117
@@ -9806,14 +9805,14 @@ msgid "in: <a href=\"%1$s\">%2$s</a>"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/user-favorites.php:14
-msgid "My Liked Discussions"
+msgid "My Favorite Discussions"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/user-favorites.php:27
-msgid "You currently have no liked discussions."
+#: bp-forums/templates/default/bbpress/user-favorites.php:29
+msgid "You currently have no favorite discussions."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/user-favorites.php:27
+#: bp-forums/templates/default/bbpress/user-favorites.php:29
 msgid "This user has no liked discussions."
 msgstr ""
 
@@ -10196,15 +10195,11 @@ msgid "This discussion was modified %1$s by %2$s."
 msgstr ""
 
 #: bp-forums/topics/template.php:1892 bp-forums/users/template.php:878
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:150
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:335
-msgid "Like"
+msgid "Favorite"
 msgstr ""
 
 #: bp-forums/topics/template.php:1893 bp-forums/users/template.php:879
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:106
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:347
-msgid "Unlike"
+msgid "Unfavorite"
 msgstr ""
 
 #: bp-forums/topics/template.php:2296
@@ -11833,15 +11828,21 @@ msgid "AppBoss"
 msgstr ""
 
 #: bp-integrations/appboss/templates/admin/integration-tab-intro.php:4
-msgid "AppBoss <span>(disabled)</span>"
+msgid "AppBoss <span>&mdash; purchase to activate</span>"
 msgstr ""
 
 #: bp-integrations/appboss/templates/admin/integration-tab-intro.php:7
 msgid ""
-"BuddyBoss Platform has integration settings for %s. If using LearnDash we "
-"add the ability to easily enroll users into courses based on their "
-"purchased AppBoss product. If using our BuddyBoss Theme we also include "
-"styling for AppBoss."
+"Extend your community into a native mobile app using %s. AppBoss is a paid "
+"service provided by BuddyBoss, which will launch native iOS and Android "
+"apps for you, published under your own Apple and Google Play accounts. The "
+"apps will be branded to match your site, and can sync community data "
+"(profiles, activity, etc.) back and forth with BuddyBoss Platform. If using "
+"LearnDash they will also sync course data with your website. "
+msgstr ""
+
+#: bp-integrations/appboss/templates/admin/integration-tab-intro.php:15
+msgid "<strong><a href=\"%s\">Learn more &rarr;</a></strong>"
 msgstr ""
 
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:71
@@ -12572,7 +12573,7 @@ msgid "Associated Group:"
 msgstr ""
 
 #: bp-integrations/learndash/templates/admin/integration-tab-intro.php:4
-msgid "LearnDash <span>(disabled)</span>"
+msgid "LearnDash <span>&mdash; purchase plugin to activate</span>"
 msgstr ""
 
 #: bp-integrations/learndash/templates/admin/integration-tab-intro.php:7
@@ -12675,7 +12676,7 @@ msgid "MemberPress"
 msgstr ""
 
 #: bp-integrations/memberpress/templates/admin/integration-tab-intro.php:4
-msgid "MemberPress <span>(disabled)</span>"
+msgid "MemberPress <span>&mdash; purchase plugin to activate</span>"
 msgstr ""
 
 #: bp-integrations/memberpress/templates/admin/integration-tab-intro.php:7
@@ -12692,7 +12693,7 @@ msgid "WooCommerce"
 msgstr ""
 
 #: bp-integrations/woocommerce/templates/admin/integration-tab-intro.php:4
-msgid "WooCommerce <span>(disabled)</span>"
+msgid "WooCommerce <span>&mdash; install plugin to activate</span>"
 msgstr ""
 
 #: bp-integrations/woocommerce/templates/admin/integration-tab-intro.php:7
@@ -13705,12 +13706,12 @@ msgid "Your message was not sent. Please enter some content."
 msgstr ""
 
 #: bp-messages/actions/compose.php:53
-#: bp-messages/classes/class-bp-messages-notices-admin.php:231
+#: bp-messages/classes/class-bp-messages-notices-admin.php:284
 msgid "Notice successfully created."
 msgstr ""
 
 #: bp-messages/actions/compose.php:59
-#: bp-messages/classes/class-bp-messages-notices-admin.php:225
+#: bp-messages/classes/class-bp-messages-notices-admin.php:278
 msgid "Notice was not created. Please try again."
 msgstr ""
 
@@ -13992,10 +13993,10 @@ msgid "Notices"
 msgstr ""
 
 #: bp-messages/classes/class-bp-messages-component.php:343
-#: bp-messages/classes/class-bp-messages-notices-admin.php:99
-#: bp-messages/classes/class-bp-messages-notices-admin.php:100
-#: bp-messages/classes/class-bp-messages-notices-admin.php:186
-#: bp-messages/classes/class-bp-messages-notices-admin.php:191
+#: bp-messages/classes/class-bp-messages-notices-admin.php:102
+#: bp-messages/classes/class-bp-messages-notices-admin.php:103
+#: bp-messages/classes/class-bp-messages-notices-admin.php:239
+#: bp-messages/classes/class-bp-messages-notices-admin.php:244
 msgid "Site Notices"
 msgstr ""
 
@@ -14003,32 +14004,32 @@ msgstr ""
 msgid "My Messages"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notices-admin.php:195
+#: bp-messages/classes/class-bp-messages-notices-admin.php:248
 msgid "Manage notices shown at front end of your site to all logged-in users."
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notices-admin.php:199
+#: bp-messages/classes/class-bp-messages-notices-admin.php:252
 msgid "Add New Notice"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notices-admin.php:204
+#: bp-messages/classes/class-bp-messages-notices-admin.php:257
 #: bp-messages/classes/class-bp-messages-notices-list-table.php:77
 msgid "Subject"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notices-admin.php:211
+#: bp-messages/classes/class-bp-messages-notices-admin.php:264
 msgid "Publish Notice"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notices-admin.php:227
+#: bp-messages/classes/class-bp-messages-notices-admin.php:280
 msgid "Notice was not updated. Please try again."
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notices-admin.php:233
+#: bp-messages/classes/class-bp-messages-notices-admin.php:286
 msgid "Notice successfully updated."
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notices-admin.php:243
+#: bp-messages/classes/class-bp-messages-notices-admin.php:296
 msgid "Notices List"
 msgstr ""
 
@@ -15304,8 +15305,18 @@ msgid ""
 "be lost."
 msgstr ""
 
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:106
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:347
+msgid "Unlike"
+msgstr ""
+
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:117
 msgid "Liked"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:150
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:335
+msgid "Like"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:159
@@ -15388,6 +15399,10 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:214
 msgid "All Updates"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/activity/functions.php:242
+msgid "My Likes"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:463

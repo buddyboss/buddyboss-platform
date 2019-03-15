@@ -82,6 +82,7 @@ class BP_Messages_Notices_Admin {
 	 */
 	protected function setup_actions() {
 		add_action( bp_core_admin_hook(), array( $this, 'admin_menu' ) );
+		add_filter( 'custom_menu_order', array( $this, 'site_notice_submenu_order' ) );
 	}
 
 	/**
@@ -95,7 +96,8 @@ class BP_Messages_Notices_Admin {
 			return false;
 		}
 
-		$this->screen_id = add_users_page(
+		$this->screen_id = add_submenu_page(
+			'buddyboss-platform',
 			__( 'Site Notices', 'buddyboss' ),
 			__( 'Site Notices', 'buddyboss' ),
 			'manage_options',
@@ -104,6 +106,33 @@ class BP_Messages_Notices_Admin {
 		);
 
 		add_action( 'load-' . $this->screen_id, array( $this, 'admin_load' ) );
+
+	}
+
+	/**
+	 * Set the Site Notices position above the components
+	 * @param $menu_order
+	 *
+	 * @return array
+	 */
+	public function site_notice_submenu_order( $menu_order ) {
+
+		global $submenu;
+
+		$settings = $submenu['buddyboss-platform'];
+		foreach ( $settings as $key => $details ) {
+			if ( $details[2] == 'bp-notices' ) {
+				$the_desired_key = $key;
+			}
+		}
+		# Set the 'Site Notices' menu above Components Separator
+		$submenu['buddyboss-platform'][0] = $submenu['buddyboss-platform'][$the_desired_key];
+		unset( $submenu['buddyboss-platform'][$the_desired_key] );
+		# Reorder the menu based on the keys in ascending order
+		ksort( $submenu['buddyboss-platform'] );
+		# Return the new submenu order
+		return $menu_order;
+
 	}
 
 	/**

@@ -300,6 +300,16 @@ class BP_Admin {
 			'bp_core_admin_backpat_page'
 		);
 
+		// Add the Separator.
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( '', 'buddyboss' ),
+			__( '', 'buddyboss' ),
+			$this->capability,
+			'bp-plugin-separator-notice',
+			''
+		);
+
 		// Add the option pages.
 		$hooks[] = add_submenu_page(
 			$this->settings_page,

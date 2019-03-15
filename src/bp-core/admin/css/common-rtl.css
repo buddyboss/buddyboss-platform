@@ -188,6 +188,26 @@ TABLE OF CONTENTS:
   border-bottom: 1px solid #555;
 }
 
+#adminmenu li.toplevel_page_buddyboss-platform a[href="bp-plugin-seperator"] {
+  pointer-events: none;
+  cursor: default;
+  padding-bottom: 0;
+  margin-left: 16px;
+  margin-right: 14px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #555;
+}
+
+#adminmenu li.toplevel_page_buddyboss-platform a[href="bp-plugin-separator-notice"] {
+  pointer-events: none;
+  cursor: default;
+  padding-bottom: 0;
+  margin-left: 16px;
+  margin-right: 14px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #555;
+}
+
 /*
  * 2.2 Settings - Components
  */
