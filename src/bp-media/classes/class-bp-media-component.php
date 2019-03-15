@@ -72,6 +72,7 @@ class BP_Media_Component extends BP_Component {
 	public function includes( $includes = array() ) {
 		$includes = array(
 			'cssjs',
+			'filters',
 			'template',
 			'functions',
 			'settings',
@@ -130,8 +131,8 @@ class BP_Media_Component extends BP_Component {
 
 		// Global tables for media component.
 		$global_tables = array(
-			'table_name_media'        => $bp->table_prefix . 'bp_media',
-			'table_name_media_albums' => $bp->table_prefix . 'bp_media_albums',
+			'table_name'        => $bp->table_prefix . 'bp_media',
+			'table_name_albums' => $bp->table_prefix . 'bp_media_albums',
 		);
 
 		// All globals for media component.

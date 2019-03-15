@@ -270,7 +270,7 @@ function bp_version_updater() {
 		}
 
 		// Version 3.1.1
-		if ( $raw_db_version < 13610 ) {
+		if ( $raw_db_version < 13710 ) {
 			bp_update_to_3_1_1();
 		}
 	}

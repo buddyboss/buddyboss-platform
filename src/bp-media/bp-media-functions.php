@@ -280,7 +280,7 @@ function bp_media_update_media_meta( $content, $user_id, $activity_id ) {
 	$media_model = new BP_Media();
 	$exist_medias = $media_model::where( array( 'activity_id' => $activity_id ) );
 	if ( ! empty( $exist_medias ) ) {
-		$exist_medias = wp_list_pluck( $exist_medias, 'media_id' );
+		$exist_medias = wp_list_pluck( $exist_medias, 'attachment_id' );
 	}
 
 	if ( ! empty( $media_list ) ) {
@@ -290,7 +290,7 @@ function bp_media_update_media_meta( $content, $user_id, $activity_id ) {
 				$media_model::update( array(
 					'menu_order'    => isset( $media['menu_order'] ) ? absint( $media['menu_order'] ) : $media_index,
 				), array(
-						'media_id' => ! empty( $media['id'] ) ? $media['id'] : 0,
+						'attachment_id' => ! empty( $media['id'] ) ? $media['id'] : 0,
 					)
 				);
 				unset( $exist_medias[ $index ] );
@@ -298,25 +298,24 @@ function bp_media_update_media_meta( $content, $user_id, $activity_id ) {
 			}
 			$media_model::insert( array(
 					'blog_id'      => get_current_blog_id(),
-					'media_author'    => ! empty( $media['user_id'] ) ? $media['user_id'] : $user_id,
-					'media_title'        => ! empty( $media['name'] ) ? $media['name'] : '&nbsp;',
+					'user_id'    => ! empty( $media['user_id'] ) ? $media['user_id'] : $user_id,
+					'title'        => ! empty( $media['name'] ) ? $media['name'] : '&nbsp;',
 					'album_id'     => ! empty( $media['album_id'] ) ? $media['album_id'] : 0,
 					'activity_id'  => $activity_id,
 					'privacy'      => ! empty( $media['privacy'] ) ? $media['privacy'] : 'public',
-					'upload_date' => $media_model::now(),
-					'media_id'     => ! empty( $media['id'] ) ? $media['id'] : 0,
-					'favorites'     => isset( $media['menu_order'] ) ? absint( $media['menu_order'] ) : $media_index,
-					//'menu_order'    => isset( $media['menu_order'] ) ? absint( $media['menu_order'] ) : $media_index,
+					'date_created' => $media_model::now(),
+					'attachment_id'     => ! empty( $media['id'] ) ? $media['id'] : 0,
+					'menu_order'    => isset( $media['menu_order'] ) ? absint( $media['menu_order'] ) : $media_index,
 				)
 			);
 		}
 	}
 
 	if ( ! empty( $exist_medias ) ) {
-		$exist_medias = $media_model::where( array( 'media_id' => $exist_medias ) );
+		$exist_medias = $media_model::where( array( 'attachment_id' => $exist_medias ) );
 		if ( ! empty( $exist_medias ) ) {
 			foreach ( $exist_medias as $media ) {
-				$media_model::delete( $media->id, $media->media_id );
+				$media_model::delete( $media->id, $media->attachment_id );
 			}
 		}
 	}
@@ -368,8 +367,7 @@ add_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
  */
 function bp_media_get_media( $activity_id, $args = array() ){
 	$response = array();
-	//$orderby = ! empty( $args['photos_orderby'] ) ? $args['photos_orderby'] : 'menu_order';
-	$orderby = ! empty( $args['photos_orderby'] ) ? $args['photos_orderby'] : 'favorites';
+	$orderby = ! empty( $args['photos_orderby'] ) ? $args['photos_orderby'] : 'menu_order';
 	$order = ! empty( $args['photos_order'] ) ? $args['photos_order'] : 'asc';
 	$media_model = new BP_Media();
 	$media_list = $media_model::where( array( 'activity_id' => $activity_id ), false, false, $orderby . ' ' . $order );
@@ -380,19 +378,19 @@ function bp_media_get_media( $activity_id, $args = array() ){
 
 				$data = array (
 					'id' => $media->id,
-					'author' => $media->media_author,
+					'author' => $media->user_id,
 					'title' => $media->title,
 					'album_id' => $media->album_id,
 					'activity_id' => $media->activity_id,
 					'privacy' => $media->privacy,
-					'media_id' => $media->media_id,
-					'upload_date' => $media->upload_date,
+					'media_id' => $media->attachment_id,
+					'upload_date' => $media->date_created,
 				);
 
-				$data['full'] = wp_get_attachment_image_url( $media->media_id, 'full' );
-				$data['thumb'] = wp_get_attachment_image_url( $media->media_id, 'bp-media-thumbnail' );
-				$data['activity_thumb'] = wp_get_attachment_image_url( $media->media_id, 'bp-activity-media-thumbnail' );
-				$data['meta'] = wp_get_attachment_metadata( $media->media_id );
+				$data['full'] = wp_get_attachment_image_url( $media->attachment_id, 'full' );
+				$data['thumb'] = wp_get_attachment_image_url( $media->attachment_id, 'bp-media-thumbnail' );
+				$data['activity_thumb'] = wp_get_attachment_image_url( $media->attachment_id, 'bp-activity-media-thumbnail' );
+				$data['meta'] = wp_get_attachment_metadata( $media->attachment_id );
 
 //				if ( ! empty( $data['meta']['buddyboss_reduced_size'] ) ) {
 //					$file_path = get_attached_file( $media->media_id );
@@ -406,4 +404,149 @@ function bp_media_get_media( $activity_id, $args = array() ){
 		}
 	}
 	return $response;
+}
+
+/*
+ * Business functions are where all the magic happens in BuddyPress. They will
+ * handle the actual saving or manipulation of information. Usually they will
+ * hand off to a database class for data access, then return
+ * true or false on success or failure.
+ */
+
+/**
+ * Retrieve an media or medias.
+ *
+ * The bp_media_get() function shares all arguments with BP_Media::get().
+ * The following is a list of bp_media_get() parameters that have different
+ * default values from BP_Media::get() (value in parentheses is
+ * the default for the bp_media_get()).
+ *   - 'per_page' (false)
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @see BP_Media::get() For more information on accepted arguments
+ *      and the format of the returned value.
+ *
+ * @param array|string $args See BP_Media::get() for description.
+ * @return array $activity See BP_Media::get() for description.
+ */
+function bp_media_get( $args = '' ) {
+
+	$r = bp_parse_args( $args, array(
+		'max'               => false,        // Maximum number of results to return.
+		'fields'            => 'all',
+		'page'              => 1,            // Page 1 without a per_page will result in no pagination.
+		'per_page'          => false,        // results per page
+		'sort'              => 'DESC',       // sort ASC or DESC
+
+		'search_terms'      => false,        // Pass search terms as a string
+		'exclude'           => false,        // Comma-separated list of activity IDs to exclude.
+		// want to limit the query.
+		'update_meta_cache' => true,
+		'count_total'       => false,
+	), 'media_get' );
+
+	$media = BP_Media::get( array(
+		'page'              => $r['page'],
+		'per_page'          => $r['per_page'],
+		'user_id'           => $r['user_id'],
+		'max'               => $r['max'],
+		'sort'              => $r['sort'],
+		'search_terms'      => $r['search_terms'],
+		'exclude'           => $r['exclude'],
+		'update_meta_cache' => $r['update_meta_cache'],
+		'count_total'       => $r['count_total'],
+		'fields'            => $r['fields'],
+	) );
+
+	/**
+	 * Filters the requested media item(s).
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param BP_Media  $media Requested media object.
+	 * @param array     $r     Arguments used for the media query.
+	 */
+	return apply_filters_ref_array( 'bp_media_get', array( &$media, &$r ) );
+}
+
+/**
+ * Fetch specific media items.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @see BP_Media::get() For more information on accepted arguments.
+ *
+ * @param array|string $args {
+ *     All arguments and defaults are shared with BP_Media::get(),
+ *     except for the following:
+ *     @type string|int|array Single media ID, comma-separated list of IDs,
+ *                            or array of IDs.
+ * }
+ * @return array $activity See BP_Media::get() for description.
+ */
+function bp_media_get_specific( $args = '' ) {
+
+	$r = bp_parse_args( $args, array(
+		'media_ids'         => false,      // A single media_id or array of IDs.
+		'max'               => false,      // Maximum number of results to return.
+		'page'              => 1,          // Page 1 without a per_page will result in no pagination.
+		'per_page'          => false,      // Results per page.
+		'sort'              => 'DESC',     // Sort ASC or DESC
+		'update_meta_cache' => true,
+	), 'media_get_specific' );
+
+	$get_args = array(
+		'in'                => $r['media_ids'],
+		'max'               => $r['max'],
+		'page'              => $r['page'],
+		'per_page'          => $r['per_page'],
+		'sort'              => $r['sort'],
+		'update_meta_cache' => $r['update_meta_cache'],
+	);
+
+	/**
+	 * Filters the requested specific media item.
+	 *
+	 * @since BuddyBoss
+	 *
+	 * @param BP_Media      $media    Requested media object.
+	 * @param array         $args     Original passed in arguments.
+	 * @param array         $get_args Constructed arguments used with request.
+	 */
+	return apply_filters( 'bp_media_get_specific', BP_Media::get( $get_args ), $args, $get_args );
+}
+
+/**
+ * Return the media activity.
+ *
+ * @param $activity_id
+ * @since BuddyBoss 1.0.0
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return object The media activity object or false.
+ */
+function bp_media_get_media_activity( $activity_id ) {
+
+    if ( ! bp_is_active( 'activity' ) ) {
+        return false;
+    }
+    
+	$result = bp_activity_get( array(
+		'in' => $activity_id
+	) );
+
+	if ( empty( $result['activities'][0] ) ) {
+		return false;
+	}
+
+	/**
+	 * Filters the media activity object being displayed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param object $activity The media activity.
+	 */
+	return apply_filters( 'bp_media_get_media_activity', $result['activities'][0] );
 }

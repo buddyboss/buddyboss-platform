@@ -71,18 +71,16 @@ class BP_Media_Privacy {
 
 	function is_media_visible( $media_id = 0 ) {
 
-		$media_model = new BP_Media();
+		$media = new BP_Media( $media_id );
 
-		$media = $media_model::get( $media_id );
-
-		if ( empty( $media ) || is_wp_error( $media ) ) {
+		if ( empty( $media->id ) ) {
 			return new \WP_Error( 'no_media', __( 'There is no media.', 'buddyboss' ), array( 'status' => 500 ) );
 		}
 
 		$visibility = $media->privacy;
 		$visible = true;
 
-		if( bp_loggedin_user_id() != $media->media_author ) {
+		if( bp_loggedin_user_id() != $media->user_id ) {
 
 			switch ( $visibility ) {
 				//Logged in users
@@ -94,7 +92,7 @@ class BP_Media_Privacy {
 				//My friends
 				case 'friends' :
 					if ( bp_is_active( 'friends' ) ) {
-						$is_friend = friends_check_friendship( bp_loggedin_user_id(), $media->media_author );
+						$is_friend = friends_check_friendship( bp_loggedin_user_id(), $media->user_id );
 						if( !$is_friend )
 							$visible = false;
 					}
@@ -109,7 +107,7 @@ class BP_Media_Privacy {
 
 				//Only Me
 				case 'onlyme' :
-					if( bp_loggedin_user_id() != $media->media_author )
+					if( bp_loggedin_user_id() != $media->user_id )
 						$visible = false;
 					break;
 

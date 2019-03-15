@@ -579,19 +579,19 @@ function bp_core_install_media() {
 	$sql[] = "CREATE TABLE {$bp_prefix}bp_media (
 		id bigint(20) NOT NULL AUTO_INCREMENT ,
 		blog_id bigint(20) NULL DEFAULT NULL,
-		media_id bigint(20) NOT NULL ,
-		media_author bigint(20) NOT NULL,
-		media_title text,
+		attachment_id bigint(20) NOT NULL ,
+		user_id bigint(20) NOT NULL,
+		title text,
 		album_id bigint(20),
 		activity_id bigint(20) NULL DEFAULT NULL ,
 		privacy varchar(50) NULL DEFAULT 'public',
-		favorites bigint(20) NULL DEFAULT 0 ,
-		upload_date datetime DEFAULT '0000-00-00 00:00:00',
+		menu_order bigint(20) NULL DEFAULT 0 ,
+		date_created datetime DEFAULT '0000-00-00 00:00:00',
 		PRIMARY KEY  (id),
-		KEY media_id (media_id),
-		KEY media_author (media_author),
+		KEY attachment_id (attachment_id),
+		KEY user_id (user_id),
 		KEY album_id (album_id),
-		KEY media_author_id (album_id,media_author),
+		KEY media_author_id (album_id,user_id),
 		KEY activity_id (activity_id)
 	) {$charset_collate};";
 

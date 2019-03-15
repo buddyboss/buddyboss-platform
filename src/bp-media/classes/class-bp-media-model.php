@@ -64,7 +64,7 @@ abstract class BP_Media_Model {
 	 */
 	static function insert( $data ) {
 		global $wpdb;
-		$wpdb->insert( self::_table(), $data );
+		return $wpdb->insert( self::_table(), $data );
 	}
 
 	/**
@@ -77,7 +77,7 @@ abstract class BP_Media_Model {
 	 */
 	static function update( $data, $where ) {
 		global $wpdb;
-		$wpdb->update( self::_table(), $data, $where );
+		return $wpdb->update( self::_table(), $data, $where );
 	}
 
 	/**
