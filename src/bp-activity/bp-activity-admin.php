@@ -27,19 +27,19 @@ if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-activity' == $_REQUEST['p
 function bp_activity_add_admin_menu() {
 
 	// Add our screen.
-	$hook = add_menu_page(
+	$hook = add_submenu_page(
+		'buddyboss-platform',
 		__( 'Activity', 'buddyboss' ),
 		__( 'Activity', 'buddyboss' ),
 		'bp_moderate',
 		'bp-activity',
-		'bp_activity_admin',
-		'dashicons-rss'
+		'bp_activity_admin'
 	);
 
 	// Hook into early actions to load custom CSS and our init handler.
 	add_action( "load-$hook", 'bp_activity_admin_load' );
 }
-add_action( bp_core_admin_hook(), 'bp_activity_add_admin_menu' );
+add_action( bp_core_admin_hook(), 'bp_activity_add_admin_menu', 55 );
 
 /**
  * Add activity component to custom menus array.

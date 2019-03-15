@@ -398,3 +398,23 @@ function bp_invites_js_bulk_admin_footer() {
 		<?php
 	}
 }
+
+/**
+ * Register the Invites component in BuddyBoss > Invites admin screen.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_invites_add_admin_menu() {
+
+	// Add our screen.
+	$hook = add_submenu_page(
+		'buddyboss-platform',
+		__( 'Invites', 'buddyboss' ),
+		__( 'Invites', 'buddyboss' ),
+		'bp_moderate',
+		'edit.php?post_type=' . bp_get_invite_post_type(),
+		''
+	);
+
+}
+add_action( bp_core_admin_hook(), 'bp_invites_add_admin_menu', 65 );

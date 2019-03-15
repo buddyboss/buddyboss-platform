@@ -2212,3 +2212,174 @@ function bp_remove_avatar_settings_from_options_discussion_page() {
 
 	}
 }
+
+/**
+ * Add Navigation tab on top of the page BuddyBoss > Email Templates
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_emails_admin_email_listing_add_tab() {
+	global $pagenow, $post;
+
+	if ( ( $post->post_type == bp_get_email_post_type() && $pagenow == 'edit.php' ) || ( $post->post_type == bp_get_email_post_type() && $pagenow == 'post-new.php' ) || ( $post->post_type == bp_get_email_post_type() && $pagenow == 'post.php' ) ) {
+
+		?>
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_emails_tabs( __( 'Email Templates', 'buddypress' ) ); ?></h2>
+		<?php
+	}
+
+}
+add_action('admin_notices','bp_emails_admin_email_listing_add_tab');
+
+/**
+ * Output the tabs in the admin area.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $active_tab Name of the tab that is active. Optional.
+ */
+function bp_core_admin_groups_tabs( $active_tab = '' ) {
+
+	$tabs_html    = '';
+	$idle_class   = 'nav-tab';
+	$active_class = 'nav-tab nav-tab-active';
+
+	/**
+	 * Filters the admin tabs to be displayed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param array $value Array of tabs to output to the admin area.
+	 */
+	$tabs         = apply_filters( 'bp_core_admin_groups_tabs', bp_core_get_groups_admin_tabs( $active_tab ) );
+
+	// Loop through tabs and build navigation.
+	foreach ( array_values( $tabs ) as $tab_data ) {
+		$is_current = (bool) ( $tab_data['name'] == $active_tab );
+		$tab_class  = $is_current ? $tab_data['class'].' '.$active_class : $tab_data['class'].' '.$idle_class;
+		$tabs_html .= '<a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a>';
+	}
+
+	echo $tabs_html;
+
+	/**
+	 * Fires after the output of tabs for the admin area.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	do_action( 'bp_admin_groups_tabs' );
+}
+
+/**
+ * Register tabs for the BuddyBoss > Groups screens.
+ *
+ * @param string $active_tab
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return array
+ */
+function bp_core_get_groups_admin_tabs( $active_tab = '') {
+
+	$tabs = array();
+
+	if ( true === bp_disable_group_type_creation() ) {
+
+		$tabs[] = array(
+			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-groups' ), 'admin.php' ) ),
+			'name'  => __( 'All Groups', 'buddypress' ),
+			'class' => 'bp-all-groups',
+		);
+
+		$tabs[] = array(
+			'href'  => bp_get_admin_url( add_query_arg( array( 'post_type' => 'bp-group-type' ), 'edit.php' ) ),
+			'name'  => __( 'Group Types', 'buddypress' ),
+			'class' => 'bp-group-types',
+		);
+
+	}
+
+	/**
+	 * Filters the tab data used in our wp-admin screens.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param array $tabs Tab data.
+	 */
+	return apply_filters( 'bp_core_get_groups_admin_tabs', $tabs );
+}
+
+/**
+ * Output the tabs in the admin area.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $active_tab Name of the tab that is active. Optional.
+ */
+function bp_core_admin_emails_tabs( $active_tab = '' ) {
+
+	$tabs_html    = '';
+	$idle_class   = 'nav-tab';
+	$active_class = 'nav-tab nav-tab-active';
+
+	/**
+	 * Filters the admin tabs to be displayed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param array $value Array of tabs to output to the admin area.
+	 */
+	$tabs         = apply_filters( 'bp_core_admin_emails_tabs', bp_core_get_emails_admin_tabs( $active_tab ) );
+
+	// Loop through tabs and build navigation.
+	foreach ( array_values( $tabs ) as $tab_data ) {
+		$is_current = (bool) ( $tab_data['name'] == $active_tab );
+		$tab_class  = $is_current ? $tab_data['class'].' '.$active_class : $tab_data['class'].' '.$idle_class;
+		$tabs_html .= '<a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a>';
+	}
+
+	echo $tabs_html;
+
+	/**
+	 * Fires after the output of tabs for the admin area.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	do_action( 'bp_admin_groups_tabs' );
+}
+
+/**
+ * Register tabs for the BuddyBoss > Emails screens.
+ *
+ * @param string $active_tab
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return array
+ */
+function bp_core_get_emails_admin_tabs( $active_tab = '') {
+
+	$tabs = array();
+
+	$tabs[] = array(
+		'href'  => bp_get_admin_url( add_query_arg( array( 'post_type' => bp_get_email_post_type() ), 'edit.php' ) ),
+		'name'  => __( 'Email Templates', 'buddypress' ),
+		'class' => 'bp-email-templates',
+	);
+
+	$tabs[] = array(
+		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-emails-customizer-redirect' ), 'themes.php' ) ),
+		'name'  => __( 'Customize', 'buddypress' ),
+		'class' => 'bp-group-types',
+	);
+
+	/**
+	 * Filters the tab data used in our wp-admin screens.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param array $tabs Tab data.
+	 */
+	return apply_filters( 'bp_core_get_emails_admin_tabs', $tabs );
+}

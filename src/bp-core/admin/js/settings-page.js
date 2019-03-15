@@ -49,5 +49,29 @@
 			$('body.buddypress.buddyboss_page_bp-appboss #wpwrap #wpcontent #wpbody #wpbody-content .wrap .nav-tab-wrapper .bp-integrations').addClass('nav-tab-active');
 		}
 
+		// Set Groups selected on Group Type post types.
+		if ( $('body.buddypress.post-type-bp-group-type').length ) {
+			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform').addClass('wp-has-current-submenu wp-menu-open');
+			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform a.toplevel_page_buddyboss-platform').addClass('wp-has-current-submenu wp-menu-open');
+		}
+
+		// Set Forums selected on Reply post types.
+		if ( $('body.buddypress.post-type-topic').length ) {
+			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform').addClass('wp-has-current-submenu wp-menu-open');
+			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform a.toplevel_page_buddyboss-platform').addClass('wp-has-current-submenu wp-menu-open');
+			var selector = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="post_type=forum"]');
+			$(selector).addClass('current');
+			$(selector).parents().addClass('current');
+		}
+
+		// Set Forums selected on Reply post types.
+		if ( $('body.buddypress.post-type-reply').length ) {
+			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform').addClass('wp-has-current-submenu wp-menu-open');
+			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform a.toplevel_page_buddyboss-platform').addClass('wp-has-current-submenu wp-menu-open');
+			var selectorReply = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="post_type=forum"]');
+			$(selectorReply).addClass('current');
+			$(selectorReply).parents().addClass('current');
+		}
+
 	});
 }());

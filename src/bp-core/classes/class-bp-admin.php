@@ -139,8 +139,9 @@ class BP_Admin {
 		add_action( 'bp_admin_head',            array( $this, 'admin_head'  ), 999 );
 
 		// Add menu item to settings menu.
-		add_action( 'admin_menu',               array( $this, 'site_admin_menus' ), 5 );
+		add_action( 'admin_menu',               array( $this, 'site_admin_menus' ), 68 );
 		add_action( bp_core_admin_hook(),       array( $this, 'admin_menus' ), 5 );
+		add_action( bp_core_admin_hook(),       array( $this, 'admin_menus_components' ), 75 );
 		add_action( bp_core_admin_hook(),       array( $this, 'adjust_buddyboss_menus' ), 100 );
 
 		// Enqueue all admin JS and CSS.
@@ -257,50 +258,14 @@ class BP_Admin {
 	}
 
 	/**
-	 * Register site- or network-admin nav menu elements.
+	 * Register main settings menu elements.
 	 *
-	 * Contextually hooked to site or network-admin depending on current configuration.
-	 *
-	 * @since BuddyPress 1.6.0
+	 * @since BuddyBoss 1.0.0
 	 */
-	public function admin_menus() {
-
-		global $menu;
-
-		// Bail if user cannot moderate.
-		if ( ! bp_current_user_can( 'manage_options' ) ) {
-			return;
-		}
-
-		// Add BuddyBoss Menu separator above the BuddyBoss and below the BuddyBoss
-		if ( bp_current_user_can( 'manage_options' ) ) {
-			$menu[] = array( '', 'read', 'separator-buddyboss', '', 'wp-menu-separator buddyboss' ); // WPCS: override ok.
-			$menu[] = array( '', 'read', 'separator-plugins', '', 'wp-menu-separator plugins' ); // WPCS: override ok.
-		}
+	public function admin_menus_components(){
 
 		$hooks = array();
 
-		// Changed in BP 1.6 . See bp_core_admin_backpat_menu().
-		$hooks[] = add_menu_page(
-			__( 'BuddyBoss', 'buddyboss' ),
-			__( 'BuddyBoss', 'buddyboss' ),
-			$this->capability,
-			$this->settings_page,
-			'bp_core_admin_backpat_menu',
-			buddypress()->plugin_url . 'bp-core/images/admin/logo-buddyboss.svg',
-			62
-		);
-
-		$hooks[] = add_submenu_page(
-			'bp-general-settings',
-			__( 'BuddyBoss Help', 'buddyboss' ),
-			__( 'Help', 'buddyboss' ),
-			$this->capability,
-			'bp-general-settings',
-			'bp_core_admin_backpat_page'
-		);
-
-		// Add the Separator.
 		$hooks[] = add_submenu_page(
 			$this->settings_page,
 			__( '', 'buddyboss' ),
@@ -367,6 +332,72 @@ class BP_Admin {
 				'bp_core_admin_appboss'
 			);
 		}
+	}
+
+	/**
+	 * Register site- or network-admin nav menu elements.
+	 *
+	 * Contextually hooked to site or network-admin depending on current configuration.
+	 *
+	 * @since BuddyPress 1.6.0
+	 */
+	public function admin_menus() {
+
+		global $menu;
+
+		// Bail if user cannot moderate.
+		if ( ! bp_current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		// Add BuddyBoss Menu separator above the BuddyBoss and below the BuddyBoss
+		if ( bp_current_user_can( 'manage_options' ) ) {
+			$menu[] = array( '', 'read', 'separator-buddyboss', '', 'wp-menu-separator buddyboss' ); // WPCS: override ok.
+			$menu[] = array( '', 'read', 'separator-plugins', '', 'wp-menu-separator plugins' ); // WPCS: override ok.
+		}
+
+		$hooks = array();
+
+		// Changed in BP 1.6 . See bp_core_admin_backpat_menu().
+		$hooks[] = add_menu_page(
+			__( 'BuddyBoss', 'buddyboss' ),
+			__( 'BuddyBoss', 'buddyboss' ),
+			$this->capability,
+			$this->settings_page,
+			'bp_core_admin_backpat_menu',
+			buddypress()->plugin_url . 'bp-core/images/admin/logo-buddyboss.svg',
+			62
+		);
+
+		$hooks[] = add_submenu_page(
+			'bp-general-settings',
+			__( 'BuddyBoss Help', 'buddyboss' ),
+			__( 'Help', 'buddyboss' ),
+			$this->capability,
+			'bp-general-settings',
+			'bp_core_admin_backpat_page'
+		);
+
+		// Add the Separator.
+//		$hooks[] = add_submenu_page(
+//			$this->settings_page,
+//			__( '', 'buddyboss' ),
+//			__( '', 'buddyboss' ),
+//			$this->capability,
+//			'bp-plugin-separator-notice',
+//			''
+//		);
+
+
+
+//		$hooks[] = add_submenu_page(
+//			$this->settings_page,
+//			__( '', 'buddyboss' ),
+//			__( '', 'buddyboss' ),
+//			$this->capability,
+//			'bp-plugin-separator-notice',
+//			''
+//		);
 
 		// For consistency with non-Multisite, we add a Tools menu in
 		// the Network Admin as a home for our Tools panel.
@@ -507,14 +538,13 @@ class BP_Admin {
 			'bp_email_redirect_to_customizer'
 		);
 
-		// Emails > Customize.
 		$hooks[] = add_submenu_page(
+			'buddyboss-platform',
+			__( 'Emails', 'buddyboss' ),
+			__( 'Emails', 'buddyboss' ),
+			'bp_moderate',
 			'edit.php?post_type=' . bp_get_email_post_type(),
-			__( 'Customize', 'buddyboss' ),
-			__( 'Customize', 'buddyboss' ),
-			$this->capability,
-			'bp-emails-customizer-redirect',
-			'bp_email_redirect_to_customizer'
+			''
 		);
 
 		foreach( $hooks as $hook ) {

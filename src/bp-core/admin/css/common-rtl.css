@@ -138,13 +138,11 @@ TABLE OF CONTENTS:
 /*
  * 2.1 Top level menus
  */
-#adminmenu #toplevel_page_bp-activity .wp-menu-image:before,
 #adminmenu #toplevel_page_bp-activity_user .wp-menu-image:before,
 #adminmenu #toplevel_page_bp-activity_network .wp-menu-image:before {
   content: "\f130";
 }
 
-#adminmenu #toplevel_page_bp-groups .wp-menu-image:before,
 #adminmenu #toplevel_page_bp-groups_user .wp-menu-image:before,
 #adminmenu #toplevel_page_bp-groups_network .wp-menu-image:before {
   content: "\f307";
