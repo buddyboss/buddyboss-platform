@@ -11,9 +11,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
-$_GET['page'] = 'bp-integrations';
-
 ?>
 <div class="wrap bp_appboss_wrap">
     <h1 class="screen-reader-text"><?php _e( 'AppBoss Mobile App', 'buddyboss' ); ?></h1>
