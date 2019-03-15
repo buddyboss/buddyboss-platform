@@ -598,18 +598,8 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 			'name'  => __( 'Credits', 'buddypress' ),
 			'class' => 'bp-credits',
 		),
-		'5' => array(
-			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-appboss' ), 'admin.php' ) ),
-			'name'  => __( 'Mobile App', 'buddypress' ),
-			'class' => 'bp-appboss',
-		),
 
 	);
-
-	// Remove the Mobile App if appboss plugin is activate.
-	if ( is_plugin_active( 'appboss/appboss.php' ) ) {
-		unset( $tabs['5'] );
-	}
 
 	/**
 	 * Filters the tab data used in our wp-admin screens.

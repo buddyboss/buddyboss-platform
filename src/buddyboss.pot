@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-15 05:29:03+00:00\n"
+"POT-Creation-Date: 2019-03-15 06:26:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -161,10 +161,10 @@ msgid ""
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:222 bp-activity/bp-activity-admin.php:274
-#: bp-core/admin/bp-core-admin-functions.php:806
-#: bp-core/admin/bp-core-admin-functions.php:824
-#: bp-core/admin/bp-core-admin-functions.php:842
-#: bp-core/admin/bp-core-admin-functions.php:860 bp-forums/admin/forums.php:119
+#: bp-core/admin/bp-core-admin-functions.php:796
+#: bp-core/admin/bp-core-admin-functions.php:814
+#: bp-core/admin/bp-core-admin-functions.php:832
+#: bp-core/admin/bp-core-admin-functions.php:850 bp-forums/admin/forums.php:119
 #: bp-forums/admin/replies.php:129 bp-forums/admin/settings.php:1353
 #: bp-forums/admin/topics.php:130 bp-groups/bp-groups-admin.php:149
 #: bp-groups/bp-groups-admin.php:214
@@ -221,10 +221,10 @@ msgid ""
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:240 bp-activity/bp-activity-admin.php:291
-#: bp-core/admin/bp-core-admin-functions.php:812
-#: bp-core/admin/bp-core-admin-functions.php:830
-#: bp-core/admin/bp-core-admin-functions.php:848
-#: bp-core/admin/bp-core-admin-functions.php:866 bp-forums/admin/forums.php:161
+#: bp-core/admin/bp-core-admin-functions.php:802
+#: bp-core/admin/bp-core-admin-functions.php:820
+#: bp-core/admin/bp-core-admin-functions.php:838
+#: bp-core/admin/bp-core-admin-functions.php:856 bp-forums/admin/forums.php:161
 #: bp-forums/admin/forums.php:220 bp-forums/admin/replies.php:174
 #: bp-forums/admin/replies.php:231 bp-forums/admin/settings.php:1399
 #: bp-forums/admin/topics.php:176 bp-forums/admin/topics.php:231
@@ -235,10 +235,10 @@ msgid "For more information:"
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:241 bp-activity/bp-activity-admin.php:292
-#: bp-core/admin/bp-core-admin-functions.php:813
-#: bp-core/admin/bp-core-admin-functions.php:831
-#: bp-core/admin/bp-core-admin-functions.php:849
-#: bp-core/admin/bp-core-admin-functions.php:867
+#: bp-core/admin/bp-core-admin-functions.php:803
+#: bp-core/admin/bp-core-admin-functions.php:821
+#: bp-core/admin/bp-core-admin-functions.php:839
+#: bp-core/admin/bp-core-admin-functions.php:857
 #: bp-groups/bp-groups-admin.php:158 bp-groups/bp-groups-admin.php:231
 #: bp-members/classes/class-bp-members-admin.php:789
 #: bp-members/classes/class-bp-members-admin.php:1605
@@ -336,7 +336,7 @@ msgid "Edit activity action"
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:682
-#: bp-messages/classes/class-bp-messages-notices-admin.php:260
+#: bp-messages/classes/class-bp-messages-notices-admin.php:236
 #: bp-messages/classes/class-bp-messages-notices-list-table.php:78
 msgid "Content"
 msgstr ""
@@ -368,7 +368,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-list-table.php:605
 #: bp-activity/classes/class-bp-akismet.php:204
 #: bp-activity/classes/class-bp-akismet.php:233
-#: bp-core/admin/bp-core-admin-functions.php:1349
+#: bp-core/admin/bp-core-admin-functions.php:1339
 #: bp-forums/admin/replies.php:734 bp-forums/admin/topics.php:805
 #: bp-forums/classes/class-bbpress.php:534 bp-forums/replies/template.php:2106
 #: bp-forums/topics/functions.php:1966 bp-forums/topics/template.php:2873
@@ -903,7 +903,7 @@ msgid "Delete"
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:2749
-#: bp-core/admin/bp-core-admin-functions.php:1355
+#: bp-core/admin/bp-core-admin-functions.php:1345
 #: bp-core/admin/bp-core-admin-pages.php:201 bp-forums/admin/replies.php:721
 #: bp-forums/admin/topics.php:772
 #: bp-groups/classes/class-bp-groups-list-table.php:532
@@ -1029,7 +1029,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:343
 #: bp-activity/classes/class-bp-activity-list-table.php:603
-#: bp-core/admin/bp-core-admin-functions.php:1343
+#: bp-core/admin/bp-core-admin-functions.php:1333
 msgid "Not Spam"
 msgstr ""
 
@@ -1446,7 +1446,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-components.php:23
 #: bp-core/admin/bp-core-admin-functions.php:578
 #: bp-core/admin/bp-core-admin-pages.php:117
-#: bp-core/classes/class-bp-admin.php:307
+#: bp-core/classes/class-bp-admin.php:317
 msgid "Components"
 msgstr ""
 
@@ -1543,8 +1543,8 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-components.php:214
 #: bp-core/admin/bp-core-admin-functions.php:588
 #: bp-core/admin/bp-core-admin-settings.php:326
-#: bp-core/classes/class-bp-admin.php:325
-#: bp-core/classes/class-bp-admin.php:597
+#: bp-core/classes/class-bp-admin.php:335
+#: bp-core/classes/class-bp-admin.php:607
 #: bp-core/gdpr/class-bp-settings-export.php:29
 #: bp-core/gdpr/class-bp-settings-export.php:55 bp-forums/admin/admin.php:440
 #: bp-groups/bp-groups-admin.php:163
@@ -1618,35 +1618,28 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:583
 #: bp-core/admin/bp-core-admin-pages.php:20
-#: bp-core/classes/class-bp-admin.php:315
-#: bp-core/classes/class-bp-admin.php:316 bp-forums/admin/settings.php:1492
+#: bp-core/classes/class-bp-admin.php:325
+#: bp-core/classes/class-bp-admin.php:326 bp-forums/admin/settings.php:1492
 #: bp-search/bp-search-functions.php:361
 msgid "Pages"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:593
 #: bp-core/admin/bp-core-admin-settings.php:351
-#: bp-core/classes/class-bp-admin.php:334
+#: bp-core/classes/class-bp-admin.php:344
 msgid "Integrations"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:598
 #: bp-core/admin/settings/bp-admin-setting-credit.php:21
-#: bp-core/classes/class-bp-admin.php:343
-#: bp-core/classes/class-bp-admin.php:344
-#: bp-core/classes/class-bp-admin.php:431 bp-forums/admin/admin.php:714
+#: bp-core/classes/class-bp-admin.php:353
+#: bp-core/classes/class-bp-admin.php:354
+#: bp-core/classes/class-bp-admin.php:441 bp-forums/admin/admin.php:714
 #: bp-forums/admin/admin.php:791
 msgid "Credits"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:603
-#: bp-core/admin/bp-core-admin-settings.php:373
-#: bp-core/classes/class-bp-admin.php:353
-#: bp-core/classes/class-bp-admin.php:354
-msgid "Mobile App"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-functions.php:890
+#: bp-core/admin/bp-core-admin-functions.php:880
 msgid ""
 "By default, several BuddyBoss components are enabled. You can selectively "
 "enable or disable any of the components by using the form below. Your "
@@ -1655,26 +1648,26 @@ msgid ""
 "site."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:894
+#: bp-core/admin/bp-core-admin-functions.php:884
 msgid ""
 "BuddyBoss Components use WordPress Pages for their root directory/archive "
 "pages. You can change the page associations for each active component by "
 "using the form below."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:898
+#: bp-core/admin/bp-core-admin-functions.php:888
 msgid ""
 "Extra configuration settings are provided and activated. You can "
 "selectively enable or disable any setting by using the form on this screen."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:902
+#: bp-core/admin/bp-core-admin-functions.php:892
 msgid ""
 "Your users will distinguish themselves through their profile page. Create "
 "relevant profile fields that will show on each users profile."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:902
+#: bp-core/admin/bp-core-admin-functions.php:892
 msgid "Note: Any fields in the first group will appear on the signup page."
 msgstr ""
 
@@ -1682,204 +1675,204 @@ msgstr ""
 msgid "BuddyBoss"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1095
-#: bp-core/admin/bp-core-admin-functions.php:1104
+#: bp-core/admin/bp-core-admin-functions.php:1085
+#: bp-core/admin/bp-core-admin-functions.php:1094
 msgid "Logged-In"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1098
-#: bp-core/admin/bp-core-admin-functions.php:1113
+#: bp-core/admin/bp-core-admin-functions.php:1088
+#: bp-core/admin/bp-core-admin-functions.php:1103
 msgid "Logged-Out"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1105
+#: bp-core/admin/bp-core-admin-functions.php:1095
 msgid ""
 "<em>Logged-In</em> links are relative to the current user, and are not "
 "visible to visitors who are not logged in."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1114
+#: bp-core/admin/bp-core-admin-functions.php:1104
 msgid "<em>Logged-Out</em> links are not visible to users who are logged in."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1143
+#: bp-core/admin/bp-core-admin-functions.php:1133
 msgid "Select All"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1146
+#: bp-core/admin/bp-core-admin-functions.php:1136
 msgid "Add to Menu"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1181
+#: bp-core/admin/bp-core-admin-functions.php:1171
 msgid ""
 "Are these emails not written in your site's language? Go to <a "
 "href=\"%s\">BuddyBoss Tools and try the \"reinstall emails\"</a> tool."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1202
+#: bp-core/admin/bp-core-admin-functions.php:1192
 msgid ""
 "Phrases wrapped in braces <code>{{ }}</code> are email tokens. <a "
 "href=\"%s\">Learn about tokens on the BuddyPress Codex</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1245
+#: bp-core/admin/bp-core-admin-functions.php:1235
 msgid "Choose when this email will be sent."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1258
-#: bp-core/admin/bp-core-admin-functions.php:1276
+#: bp-core/admin/bp-core-admin-functions.php:1248
+#: bp-core/admin/bp-core-admin-functions.php:1266
 #. translators: accessibility text
 msgid "Plain text email content"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1279
+#: bp-core/admin/bp-core-admin-functions.php:1269
 msgid ""
 "Most email clients support HTML email. However, some people prefer to "
 "receive plain text email. Enter a plain text alternative version of your "
 "email here."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1407
+#: bp-core/admin/bp-core-admin-functions.php:1397
 #: bp-core/deprecated/buddypress/3.0.php:136
 #: bp-members/classes/class-bp-members-admin.php:364
 msgid "User marked as spammer. Spam users are visible only to site admins."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1409
+#: bp-core/admin/bp-core-admin-functions.php:1399
 msgid "User removed from spam."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1490
+#: bp-core/admin/bp-core-admin-functions.php:1480
 msgid "Profile Type Key"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1491
+#: bp-core/admin/bp-core-admin-functions.php:1481
 msgid "Labels"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1492
+#: bp-core/admin/bp-core-admin-functions.php:1482
 #: bp-groups/bp-groups-admin.php:1562
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:34
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1524
 msgid "Visibility"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1493
+#: bp-core/admin/bp-core-admin-functions.php:1483
 #: bp-groups/bp-groups-admin.php:1563
 msgid "Shortcode"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1494
+#: bp-core/admin/bp-core-admin-functions.php:1484
 msgid "WordPress Role"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1502
+#: bp-core/admin/bp-core-admin-functions.php:1492
 msgid "Allowed Group Types"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1512
+#: bp-core/admin/bp-core-admin-functions.php:1502
 msgid "Auto Group Membership Approval"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1518
+#: bp-core/admin/bp-core-admin-functions.php:1508
 #: bp-core/bp-core-functions.php:2440 bp-invites/bp-invites-functions.php:57
 #: bp-invites/classes/class-bp-invites-component.php:214
 msgid "Email Invites"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1537
+#: bp-core/admin/bp-core-admin-functions.php:1527
 msgid ""
 "Profile Type Keys are used as internal identifiers. Lowercase alphanumeric "
 "characters, dashes and underscores are allowed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1557
+#: bp-core/admin/bp-core-admin-functions.php:1547
 #: bp-groups/bp-groups-admin.php:1612 bp-groups/bp-groups-admin.php:1650
 #: bp-groups/bp-groups-admin.php:1665 bp-groups/bp-groups-admin.php:1680
 msgid "Plural Label"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1559
+#: bp-core/admin/bp-core-admin-functions.php:1549
 msgid "e.g. Students"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1563
+#: bp-core/admin/bp-core-admin-functions.php:1553
 #: bp-groups/bp-groups-admin.php:1618 bp-groups/bp-groups-admin.php:1656
 #: bp-groups/bp-groups-admin.php:1671 bp-groups/bp-groups-admin.php:1686
 msgid "Singular Label"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1565
+#: bp-core/admin/bp-core-admin-functions.php:1555
 msgid "e.g. Student"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1589
+#: bp-core/admin/bp-core-admin-functions.php:1579
 msgid "Display in \"All Types\" filter in Members Directory"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1596
+#: bp-core/admin/bp-core-admin-functions.php:1586
 msgid "Hide members of this type from Members Directory"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1618
+#: bp-core/admin/bp-core-admin-functions.php:1608
 #: bp-groups/bp-groups-admin.php:1740 bp-members/bp-members-functions.php:3899
 msgid "Copy to clipboard"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1621
+#: bp-core/admin/bp-core-admin-functions.php:1611
 msgid ""
 "To display all users with the %s profile type on a dedicated page, add the "
 "above shortcode to any WordPress page."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1649
+#: bp-core/admin/bp-core-admin-functions.php:1639
 msgid ""
 "Users of the %s profile type will be auto-assigned to the following "
 "WordPress roles (includes existing users)."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1658
-#: bp-core/admin/bp-core-admin-functions.php:1702
+#: bp-core/admin/bp-core-admin-functions.php:1648
+#: bp-core/admin/bp-core-admin-functions.php:1692
 msgid "(None)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1692
+#: bp-core/admin/bp-core-admin-functions.php:1682
 msgid ""
 "Select which group types the %s profile type is allowed to create. (Leave "
 "all unchecked to allow creation of any group type.)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1759
+#: bp-core/admin/bp-core-admin-functions.php:1749
 msgid "Selected group types will automatically approve all membership requests."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1796
+#: bp-core/admin/bp-core-admin-functions.php:1786
 msgid "Enable members to set profile type of invitee."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1800
+#: bp-core/admin/bp-core-admin-functions.php:1790
 msgid "Select which profile types can be set via invitation."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1990
-#: bp-core/admin/bp-core-admin-functions.php:1992
+#: bp-core/admin/bp-core-admin-functions.php:1980
+#: bp-core/admin/bp-core-admin-functions.php:1982
 msgid "Profile type updated."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1994
+#: bp-core/admin/bp-core-admin-functions.php:1984
 msgid "Profile type published. "
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1996
+#: bp-core/admin/bp-core-admin-functions.php:1986
 msgid "Profile type saved."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2068
+#: bp-core/admin/bp-core-admin-functions.php:2058
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:104
 msgid "Import Profile Types"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2069
+#: bp-core/admin/bp-core-admin-functions.php:2059
 msgid ""
 "Import your existing profile types (or \"member types\" in BuddyPress). You "
 "may have created these types <strong>manually via code</strong> or by using "
@@ -1889,15 +1882,15 @@ msgid ""
 "code or plugin."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2071
+#: bp-core/admin/bp-core-admin-functions.php:2061
 msgid "Run Migration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2096
+#: bp-core/admin/bp-core-admin-functions.php:2086
 msgid "Nothing to import"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2120
+#: bp-core/admin/bp-core-admin-functions.php:2110
 msgid "Successfully Imported"
 msgstr ""
 
@@ -2047,6 +2040,12 @@ msgid ""
 "accepted"
 msgstr ""
 
+#: bp-core/admin/bp-core-admin-settings.php:373
+#: bp-core/classes/class-bp-admin.php:363
+#: bp-core/classes/class-bp-admin.php:364
+msgid "Mobile App"
+msgstr ""
+
 #: bp-core/admin/bp-core-admin-settings.php:447
 msgid "Allow members to customize the email subject"
 msgstr ""
@@ -2104,7 +2103,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:21
 #: bp-core/admin/bp-core-admin-tools.php:533
 #: bp-core/admin/bp-core-admin-tools.php:536
-#: bp-core/classes/class-bp-admin.php:390
+#: bp-core/classes/class-bp-admin.php:400
 msgid "BuddyBoss Tools"
 msgstr ""
 
@@ -2244,8 +2243,8 @@ msgid "Update WordPress user display names; %s"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:504
-#: bp-core/classes/class-bp-admin.php:367
-#: bp-core/classes/class-bp-admin.php:368
+#: bp-core/classes/class-bp-admin.php:377
+#: bp-core/classes/class-bp-admin.php:378
 msgid "Tools"
 msgstr ""
 
@@ -2579,58 +2578,58 @@ msgstr ""
 msgid "Built by <a href=\"%s\">BuddyBoss</a>."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:16
+#: bp-core/admin/templates/appboss-screen.php:19
 msgid "AppBoss Mobile App"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:25
+#: bp-core/admin/templates/appboss-screen.php:33
 msgid "Extend WordPress into your own native mobile app"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:26
+#: bp-core/admin/templates/appboss-screen.php:34
 msgid ""
 "AppBoss will create and launch your own custom app synced with your "
 "WordPress site. No technical knowledge required."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:34
+#: bp-core/admin/templates/appboss-screen.php:42
 msgid "Unlimited Users"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:35
+#: bp-core/admin/templates/appboss-screen.php:43
 msgid ""
 "You can have an unlimited amount of users using your mobile app without any "
 "hidden fees! Making it easy for you to scale your community around the "
 "globe."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:44
+#: bp-core/admin/templates/appboss-screen.php:52
 msgid "LearnDash Courses"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:47
+#: bp-core/admin/templates/appboss-screen.php:55
 msgid ""
 "We support all <a href=\"%s\">LearnDash</a> features, and allow for an "
 "unlimited amount of courses in your mobile app! Your students can access "
 "all your courses from a single app."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:59
+#: bp-core/admin/templates/appboss-screen.php:67
 msgid "Synchronized Data"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:60
+#: bp-core/admin/templates/appboss-screen.php:68
 msgid ""
 "AppBoss automatically synchronizes data between your website and your "
 "mobile app in real-time, so your users can seamlessy switch between desktop "
 "and mobile."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:79
+#: bp-core/admin/templates/appboss-screen.php:87
 msgid "Your Classroom In Your Student's Pocket — Everywhere They Go."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:80
+#: bp-core/admin/templates/appboss-screen.php:88
 msgid ""
 "<strong>Using LearnDash?</strong> A native mobile app allows you to provide "
 "<strong>Offline Support</strong> of your courses for your students. This "
@@ -2639,212 +2638,212 @@ msgid ""
 "internet connection."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:81
+#: bp-core/admin/templates/appboss-screen.php:89
 msgid "Learn More"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:107
+#: bp-core/admin/templates/appboss-screen.php:115
 msgid "All The Features You Need"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:108
+#: bp-core/admin/templates/appboss-screen.php:116
 msgid ""
 "Our team will customize, build and launch your mobile app, on your own "
 "account, on the Apple App Store and Google Play Store."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:116
+#: bp-core/admin/templates/appboss-screen.php:124
 msgid "Offline Support"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:117
+#: bp-core/admin/templates/appboss-screen.php:125
 msgid ""
 "Your users can access your content from anywhere, even without an internet "
 "connection!"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:127
+#: bp-core/admin/templates/appboss-screen.php:135
 msgid "Advanced Push Notifications"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:128
+#: bp-core/admin/templates/appboss-screen.php:136
 msgid ""
 "Create audience segments, automations, and campaigns with Push "
 "Notifications so you can target the right users at the right time."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:137
+#: bp-core/admin/templates/appboss-screen.php:145
 msgid "Custom Mobile App Pages"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:138
+#: bp-core/admin/templates/appboss-screen.php:146
 msgid ""
 "Need to add a custom page? There's no extra fees. Create and edit pages "
 "from your WordPress dashboard and display them inside your mobile app."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:152
+#: bp-core/admin/templates/appboss-screen.php:160
 msgid "Say hello to <strong>AppBoss</strong>"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:153
+#: bp-core/admin/templates/appboss-screen.php:161
 msgid ""
 "Brought to you by BuddyBoss, we know WordPress inside and out. We have "
 "invested thousands of hours into building the processes and technology to "
 "seamlessy integrate WordPress with your mobile app."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:155
+#: bp-core/admin/templates/appboss-screen.php:163
 msgid "About Us"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:156
+#: bp-core/admin/templates/appboss-screen.php:164
 msgid "Contact Us"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:176
+#: bp-core/admin/templates/appboss-screen.php:184
 msgid "Built with React Native"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:177
+#: bp-core/admin/templates/appboss-screen.php:185
 msgid ""
 "This is a true native app and NOT a \"responsive website within an app\". "
 "It is built with React Native, the app framework created by Facebook and "
 "used by Walmart, Airbnb, Instagram, Tesla, and SoundCloud."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:188
+#: bp-core/admin/templates/appboss-screen.php:196
 msgid "Monetize your Mobile App"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:189
+#: bp-core/admin/templates/appboss-screen.php:197
 msgid "We've built the integrations to help you earn money from your app."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:196
+#: bp-core/admin/templates/appboss-screen.php:204
 msgid "In-App Purchases"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:197
+#: bp-core/admin/templates/appboss-screen.php:205
 msgid ""
 "You can enable both Apple Pay for iOS and Google Pay for Android to let "
 "your users easily pay for their LearnDash courses and/or membership levels."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:206
+#: bp-core/admin/templates/appboss-screen.php:214
 msgid "In-App Registration"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:207
+#: bp-core/admin/templates/appboss-screen.php:215
 msgid ""
 "You can choose to enable registration within the app, or limit logins to "
 "your paying members only. AppBoss syncs your WordPress database and mobile "
 "app in real-time."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:223
+#: bp-core/admin/templates/appboss-screen.php:231
 msgid "We support <strong>every</strong> LearnDash feature"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:226
+#: bp-core/admin/templates/appboss-screen.php:234
 msgid ""
 "AppBoss is designed to integrate with <a href=\"%s\">LearnDash</a>, the #1 "
 "LMS solution for Fortune 500's, major universities, training organizations "
 "and entrepreneurs."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:238
+#: bp-core/admin/templates/appboss-screen.php:246
 msgid "Advanced Quizzing"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:239
+#: bp-core/admin/templates/appboss-screen.php:247
 msgid ""
 "We support all eight quiz question types including Single Answer, Multiple "
 "Choice, Sorting, Matching, Fill-In-The-Blank, Free Text, Survey, Essays and "
 "more."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:248
+#: bp-core/admin/templates/appboss-screen.php:256
 msgid "Drip-Feed Content"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:249
+#: bp-core/admin/templates/appboss-screen.php:257
 msgid ""
 "Deliver all your lessons at once, or choose to drip-feed (schedule) them "
 "over a specified amount of time resulting in a guided learning experience."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:258
+#: bp-core/admin/templates/appboss-screen.php:266
 msgid "Social Learning"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:259
+#: bp-core/admin/templates/appboss-screen.php:267
 msgid ""
 "Organize your students into groups and assign a Group Leader to manage "
 "their progress, track performance and send push notifications when new "
 "content becomes available."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:271
+#: bp-core/admin/templates/appboss-screen.php:279
 msgid "Lesson Timers"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:272
+#: bp-core/admin/templates/appboss-screen.php:280
 msgid ""
 "You can prevent your students from moving through your courses too quickly "
 "by simply setting a Lesson Timer. When the clock reaches \"zero\", students "
 "are then permitted to move onto the next lesson."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:281
+#: bp-core/admin/templates/appboss-screen.php:289
 msgid "Expire Access"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:282
+#: bp-core/admin/templates/appboss-screen.php:290
 msgid ""
 "Allow students to have lifetime access to your courses, or expire access "
 "after a certain amount of time. This is a perfect way to encourage "
 "re-certifications and renewals from your students!"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:291
+#: bp-core/admin/templates/appboss-screen.php:299
 msgid "Assignment Management"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:292
+#: bp-core/admin/templates/appboss-screen.php:300
 msgid ""
 "Have your students submit assignments throughout your course after every "
 "lesson or topic. Automatically approve assignments, or require that they be "
 "manually approved and awarded grades, points or rewards."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:304
+#: bp-core/admin/templates/appboss-screen.php:312
 msgid "Certificates &amp; Badges"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:305
+#: bp-core/admin/templates/appboss-screen.php:313
 msgid ""
 "Award certificates based on quiz performance, completing a course, or both! "
 "Certificates can be 100% customized and support dynamic data generation "
 "including student's names, completion dates, grades and more."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:314
+#: bp-core/admin/templates/appboss-screen.php:322
 msgid "Discussion Forums"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:315
+#: bp-core/admin/templates/appboss-screen.php:323
 msgid ""
 "AppBoss offers a mobile integration with BuddyBoss forums. This allows your "
 "students to participate in course discussions, learn from other students, "
 "and creates unique user-generated content for your online school."
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:324
+#: bp-core/admin/templates/appboss-screen.php:332
 msgid "Google Analytics"
 msgstr ""
 
-#: bp-core/admin/templates/appboss-screen.php:325
+#: bp-core/admin/templates/appboss-screen.php:333
 msgid ""
 "Your app can be integrated with Google Analytics, so you can track all "
 "kinds of data about your app. If you're using a different service, we can "
@@ -3506,8 +3505,8 @@ msgstr ""
 msgid "Email list navigation"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2863 bp-core/classes/class-bp-admin.php:493
-#: bp-core/classes/class-bp-admin.php:494
+#: bp-core/bp-core-functions.php:2863 bp-core/classes/class-bp-admin.php:503
+#: bp-core/classes/class-bp-admin.php:504
 msgid "Emails"
 msgstr ""
 
@@ -3567,7 +3566,7 @@ msgstr ""
 msgid "Edit Email Situations"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2952 bp-core/classes/class-bp-admin.php:679
+#: bp-core/bp-core-functions.php:2952 bp-core/classes/class-bp-admin.php:689
 msgid "Situations"
 msgstr ""
 
@@ -4735,33 +4734,33 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:306
+#: bp-core/classes/class-bp-admin.php:316
 msgid "BuddyBoss Components"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:324
+#: bp-core/classes/class-bp-admin.php:334
 msgid "BuddyBoss Settings"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:333
+#: bp-core/classes/class-bp-admin.php:343
 msgid "Plugin Integrations"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:378
-#: bp-core/classes/class-bp-admin.php:379
+#: bp-core/classes/class-bp-admin.php:388
+#: bp-core/classes/class-bp-admin.php:389
 msgid "Available Tools"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:503
-#: bp-core/classes/class-bp-admin.php:504
+#: bp-core/classes/class-bp-admin.php:513
+#: bp-core/classes/class-bp-admin.php:514
 msgid "Customize"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:570
+#: bp-core/classes/class-bp-admin.php:580
 msgid "Hello, BuddyBoss!"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:598 bp-forums/admin/admin.php:445
+#: bp-core/classes/class-bp-admin.php:608 bp-forums/admin/admin.php:445
 msgid "About"
 msgstr ""
 
@@ -13706,12 +13705,12 @@ msgid "Your message was not sent. Please enter some content."
 msgstr ""
 
 #: bp-messages/actions/compose.php:53
-#: bp-messages/classes/class-bp-messages-notices-admin.php:284
+#: bp-messages/classes/class-bp-messages-notices-admin.php:260
 msgid "Notice successfully created."
 msgstr ""
 
 #: bp-messages/actions/compose.php:59
-#: bp-messages/classes/class-bp-messages-notices-admin.php:278
+#: bp-messages/classes/class-bp-messages-notices-admin.php:254
 msgid "Notice was not created. Please try again."
 msgstr ""
 
@@ -13993,10 +13992,10 @@ msgid "Notices"
 msgstr ""
 
 #: bp-messages/classes/class-bp-messages-component.php:343
+#: bp-messages/classes/class-bp-messages-notices-admin.php:101
 #: bp-messages/classes/class-bp-messages-notices-admin.php:102
-#: bp-messages/classes/class-bp-messages-notices-admin.php:103
-#: bp-messages/classes/class-bp-messages-notices-admin.php:239
-#: bp-messages/classes/class-bp-messages-notices-admin.php:244
+#: bp-messages/classes/class-bp-messages-notices-admin.php:215
+#: bp-messages/classes/class-bp-messages-notices-admin.php:220
 msgid "Site Notices"
 msgstr ""
 
@@ -14004,32 +14003,32 @@ msgstr ""
 msgid "My Messages"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notices-admin.php:248
+#: bp-messages/classes/class-bp-messages-notices-admin.php:224
 msgid "Manage notices shown at front end of your site to all logged-in users."
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notices-admin.php:252
+#: bp-messages/classes/class-bp-messages-notices-admin.php:228
 msgid "Add New Notice"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notices-admin.php:257
+#: bp-messages/classes/class-bp-messages-notices-admin.php:233
 #: bp-messages/classes/class-bp-messages-notices-list-table.php:77
 msgid "Subject"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notices-admin.php:264
+#: bp-messages/classes/class-bp-messages-notices-admin.php:240
 msgid "Publish Notice"
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notices-admin.php:280
+#: bp-messages/classes/class-bp-messages-notices-admin.php:256
 msgid "Notice was not updated. Please try again."
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notices-admin.php:286
+#: bp-messages/classes/class-bp-messages-notices-admin.php:262
 msgid "Notice successfully updated."
 msgstr ""
 
-#: bp-messages/classes/class-bp-messages-notices-admin.php:296
+#: bp-messages/classes/class-bp-messages-notices-admin.php:272
 msgid "Notices List"
 msgstr ""
 
