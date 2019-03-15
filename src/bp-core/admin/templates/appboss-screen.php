@@ -12,7 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 ?>
-<div class="wrap bp_appboss_wrap">
+<div class="bp_appboss_wrap">
     <h1 class="screen-reader-text"><?php _e( 'AppBoss Mobile App', 'buddyboss' ); ?></h1>
 	<div class="nav-settings-subsubsub">
 		<ul class="subsubsub">
