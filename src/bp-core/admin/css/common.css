@@ -19,10 +19,11 @@ TABLE OF CONTENTS:
 	2.4 Tooltips
 	2.5 Settings - Tabs
 	2.6 Settings - Cards
-3.0 Users
+3.0 Content
 	3.1 Users List
 	3.2 Activity List
-	3.3 Site Notices
+	3.3 Groups List
+	3.4 Site Notices
 4.0 Emails - Edit page
 5.0 Tools - BuddyBoss
 6.0 Plugins page
@@ -485,7 +486,7 @@ tr.bp-search-parent-field label {
 }
 
 /*
- * 3.0 Users
+ * 3.0 Content
  */
 /*
  * 3.1 Users List
@@ -540,7 +541,14 @@ body.users_page_bp-signups td.count_sent {
 }
 
 /*
- * 3.3 Site Notices
+ * 3.3 Groups
+ */
+form#bp-groups-form .fixed .column-comment {
+  width: 20%;
+}
+
+/*
+ * 3.4 Site Notices
  */
 .bp-new-notice-panel {
   background: #fff;
