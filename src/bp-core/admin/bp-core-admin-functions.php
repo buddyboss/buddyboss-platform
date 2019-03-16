@@ -2223,14 +2223,32 @@ function bp_emails_admin_email_listing_add_tab() {
 	global $pagenow, $post;
 
 	if ( ( $post->post_type == bp_get_email_post_type() && $pagenow == 'edit.php' ) || ( $post->post_type == bp_get_email_post_type() && $pagenow == 'post-new.php' ) || ( $post->post_type == bp_get_email_post_type() && $pagenow == 'post.php' ) ) {
-
 		?>
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_emails_tabs( __( 'Email Templates', 'buddypress' ) ); ?></h2>
+		<div class="wrap">
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_emails_tabs( __( 'Email Templates', 'buddypress' ) ); ?></h2>
+		</div>
 		<?php
 	}
 
 }
 add_action('admin_notices','bp_emails_admin_email_listing_add_tab');
+
+add_filter( 'parent_file', 'bp_set_emails_platform_tab_submenu_active' );
+/**
+ * Highlights the submenu item using WordPress native styles.
+ *
+ * @param string $parent_file The filename of the parent menu.
+ *
+ * @return string $parent_file The filename of the parent menu.
+ */
+function bp_set_emails_platform_tab_submenu_active( $parent_file ) {
+	global $pagenow, $current_screen, $post;
+
+	if ( ( $post->post_type == bp_get_email_post_type() && $pagenow == 'edit.php' ) || ( $post->post_type == bp_get_email_post_type() && $pagenow == 'post-new.php' ) || ( $post->post_type == bp_get_email_post_type() && $pagenow == 'post.php' ) ) {
+		$parent_file = 'buddyboss-platform';
+	}
+	return $parent_file;
+}
 
 /**
  * Output the tabs in the admin area.

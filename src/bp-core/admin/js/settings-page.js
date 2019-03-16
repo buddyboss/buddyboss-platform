@@ -44,34 +44,49 @@
 			});
 		}
 
+	});
+
+	$( document ).ready(function() {
 		// Set active class on Integration tab while /wp-admin/admin.php?page=bp-appboss page.
 		if ( $('body.buddypress.buddyboss_page_bp-appboss').length ) {
 			$('body.buddypress.buddyboss_page_bp-appboss #wpwrap #wpcontent #wpbody #wpbody-content .wrap .nav-tab-wrapper .bp-integrations').addClass('nav-tab-active');
 		}
 
+		var menuOpen = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu #toplevel_page_buddyboss-platform ul.wp-submenu li');
+		var menuOpenSelected = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu #toplevel_page_buddyboss-platform>a');
+
 		// Set Groups selected on Group Type post types.
 		if ( $('body.buddypress.post-type-bp-group-type').length ) {
-			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform').addClass('wp-has-current-submenu wp-menu-open');
-			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform a.toplevel_page_buddyboss-platform').addClass('wp-has-current-submenu wp-menu-open');
+			var selectorGroups = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="bp-groups"]');
+			$(menuOpen).removeClass('current');
+			$(selectorGroups).addClass('current');
+			$(selectorGroups).attr('aria-current','page');
+			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li').find('a[href*="bp-groups"]').parent().addClass('current');
+		}
+
+		if ( $('body.buddypress.post-type-bp-email').length ) {
+			var selectorEmails = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="bp-email"]');
+			$(menuOpen).removeClass('current');
+			$(selectorEmails).addClass('current');
+			$(selectorEmails).attr('aria-current','page');
+			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li').find('a[href*="bp-email"]').parent().addClass('current');
 		}
 
 		// Set Forums selected on Reply post types.
 		if ( $('body.buddypress.post-type-topic').length ) {
-			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform').addClass('wp-has-current-submenu wp-menu-open');
-			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform a.toplevel_page_buddyboss-platform').addClass('wp-has-current-submenu wp-menu-open');
 			var selector = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="post_type=forum"]');
 			$(selector).addClass('current');
-			$(selector).parents().addClass('current');
+			$(selector).attr('aria-current','page');
+			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li').find('a[href*="post_type=forum"]').parent().addClass('current');
 		}
 
 		// Set Forums selected on Reply post types.
 		if ( $('body.buddypress.post-type-reply').length ) {
-			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform').addClass('wp-has-current-submenu wp-menu-open');
-			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform a.toplevel_page_buddyboss-platform').addClass('wp-has-current-submenu wp-menu-open');
 			var selectorReply = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="post_type=forum"]');
 			$(selectorReply).addClass('current');
-			$(selectorReply).parents().addClass('current');
+			$(selectorReply).attr('aria-current','page');
+			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li').find('a[href*="post_type=forum"]').parent().addClass('current');
 		}
-
 	});
+
 }());

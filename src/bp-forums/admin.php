@@ -249,9 +249,10 @@ function bp_forums_admin_forums_listing_add_tab() {
 	global $pagenow,$current_screen;
 
 	if ( ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'edit.php' ) || ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'post-new.php' ) || ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'post.php' ) ) {
-
 		?>
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Forums', 'buddypress' ) ); ?></h2>
+		<div class="wrap">
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Forums', 'buddypress' ) ); ?></h2>
+		</div>
 		<?php
 	}
 
@@ -268,9 +269,10 @@ function bp_discussions_admin_discussions_listing_add_tab() {
 	global $pagenow ,$post;
 
 	if ( ( $post->post_type == bbp_get_topic_post_type() && $pagenow == 'edit.php' ) || ( $post->post_type == bbp_get_topic_post_type() && $pagenow == 'post-new.php' ) || ( $post->post_type == bbp_get_topic_post_type() && $pagenow == 'post.php' ) ) {
-
 		?>
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Discussions', 'buddypress' ) ); ?></h2>
+		<div class="wrap">
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Discussions', 'buddypress' ) ); ?></h2>
+		</div>
 		<?php
 	}
 
@@ -287,9 +289,10 @@ function bp_replies_admin_replies_listing_add_tab() {
 	global $pagenow ,$post;
 
 	if ( ( $post->post_type == bbp_get_reply_post_type() && $pagenow == 'edit.php' ) || ( $post->post_type == bbp_get_reply_post_type() && $pagenow == 'post-new.php' ) || ( $post->post_type == bbp_get_reply_post_type() && $pagenow == 'post.php' ) ) {
-
 		?>
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Replies', 'buddypress' ) ); ?></h2>
+		<div class="wrap">
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Replies', 'buddypress' ) ); ?></h2>
+		</div>
 		<?php
 	}
 
@@ -306,11 +309,35 @@ function bp_tags_admin_tags_listing_add_tab() {
 	global $pagenow ,$current_screen;
 
 	if ( ( $current_screen->taxonomy == bbp_get_topic_tag_tax_id() && $pagenow == 'edit-tags.php' ) || ( $current_screen->taxonomy == bbp_get_topic_tag_tax_id() && $pagenow == 'term.php' ) ) {
-
 		?>
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Discussion Tags', 'buddypress' ) ); ?></h2>
+		<div class="wrap">
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Discussion Tags', 'buddypress' ) ); ?></h2>
+		</div>
 		<?php
 	}
 
 }
 add_action('admin_notices','bp_tags_admin_tags_listing_add_tab');
+
+add_filter( 'parent_file', 'bbp_set_platform_tab_submenu_active' );
+/**
+ * Highlights the submenu item using WordPress native styles.
+ *
+ * @param string $parent_file The filename of the parent menu.
+ *
+ * @return string $parent_file The filename of the parent menu.
+ */
+function bbp_set_platform_tab_submenu_active( $parent_file ) {
+	global $pagenow, $current_screen, $post;
+
+	if ( ( $post->post_type == bbp_get_reply_post_type() && $pagenow == 'edit.php' ) || ( $post->post_type == bbp_get_reply_post_type() && $pagenow == 'post-new.php' ) || ( $post->post_type == bbp_get_reply_post_type() && $pagenow == 'post.php' ) ) {
+		$parent_file = 'buddyboss-platform';
+	} elseif ( ( $current_screen->taxonomy == bbp_get_topic_tag_tax_id() && $pagenow == 'edit-tags.php' ) || ( $current_screen->taxonomy == bbp_get_topic_tag_tax_id() && $pagenow == 'term.php' ) ) {
+		$parent_file = 'buddyboss-platform';
+	} elseif ( ( $post->post_type == bbp_get_topic_post_type() && $pagenow == 'edit.php' ) || ( $post->post_type == bbp_get_topic_post_type() && $pagenow == 'post-new.php' ) || ( $post->post_type == bbp_get_topic_post_type() && $pagenow == 'post.php' ) ) {
+		$parent_file = 'buddyboss-platform';
+	} elseif ( ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'edit.php' ) || ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'post-new.php' ) || ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'post.php' ) ) {
+		$parent_file = 'buddyboss-platform';
+	}
+	return $parent_file;
+}

@@ -530,31 +530,29 @@ function bp_groups_admin_screen_options( $value, $option, $new_value ) {
  * @since BuddyPress 1.7.0
  */
 function bp_groups_admin() {
-	?>
-	<div class="wrap">
-		<?php
-		// Added navigation tab on top.
-		if ( bp_core_get_groups_admin_tabs() ) { ?>
+
+	// Added navigation tab on top.
+	if ( bp_core_get_groups_admin_tabs() ) { ?>
+		<div class="wrap">
 			<h2 class="nav-tab-wrapper"><?php bp_core_admin_groups_tabs( __( 'All Groups', 'buddypress' ) ); ?></h2>
-			<?php
-		}
-		// Decide whether to load the index or edit screen.
-		$doaction = bp_admin_list_table_current_bulk_action();
+		</div>
+		<?php
+	}
+	// Decide whether to load the index or edit screen.
+	$doaction = bp_admin_list_table_current_bulk_action();
 
-		// Display the single group edit screen.
-		if ( 'edit' == $doaction && ! empty( $_GET['gid'] ) ) {
-			bp_groups_admin_edit();
+	// Display the single group edit screen.
+	if ( 'edit' == $doaction && ! empty( $_GET['gid'] ) ) {
+		bp_groups_admin_edit();
 
-		// Display the group deletion confirmation screen.
-		} elseif ( 'delete' == $doaction && ! empty( $_GET['gid'] ) ) {
-			bp_groups_admin_delete();
+	// Display the group deletion confirmation screen.
+	} elseif ( 'delete' == $doaction && ! empty( $_GET['gid'] ) ) {
+		bp_groups_admin_delete();
 
-		// Otherwise, display the groups index screen.
-		} else {
-			bp_groups_admin_index();
-		} ?>
-	</div>
-	<?php
+	// Otherwise, display the groups index screen.
+	} else {
+		bp_groups_admin_index();
+	}
 }
 
 /**
@@ -2080,12 +2078,32 @@ function bp_groups_admin_group_type_listing_add_groups_tab() {
 	if ( true === bp_disable_group_type_creation() ) {
 
 		if ( ( $post->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( $post->post_type == 'bp-group-type' && $pagenow == 'post-new.php' ) || ( $post->post_type == 'bp-group-type' && $pagenow == 'post.php' ) ) {
-
 			?>
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_groups_tabs( __( 'Group Types', 'buddypress' ) ); ?></h2>
+			<div class="wrap">
+				<h2 class="nav-tab-wrapper"><?php bp_core_admin_groups_tabs( __( 'Group Types', 'buddypress' ) ); ?></h2>
+			</div>
 			<?php
 		}
 
 	}
 }
 add_action('admin_notices','bp_groups_admin_group_type_listing_add_groups_tab');
+
+add_filter( 'parent_file', 'bp_group_type_set_platform_tab_submenu_active' );
+/**
+ * Highlights the submenu item using WordPress native styles.
+ *
+ * @param string $parent_file The filename of the parent menu.
+ *
+ * @return string $parent_file The filename of the parent menu.
+ */
+function bp_group_type_set_platform_tab_submenu_active( $parent_file ) {
+	global $pagenow, $current_screen, $post;
+
+	if ( true === bp_disable_group_type_creation() ) {
+		if ( ( $post->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( $post->post_type == 'bp-group-type' && $pagenow == 'post-new.php' ) || ( $post->post_type == 'bp-group-type' && $pagenow == 'post.php' ) ) {
+			$parent_file = 'buddyboss-platform';
+		}
+	}
+	return $parent_file;
+}
