@@ -2439,7 +2439,7 @@ function bp_core_get_components( $type = 'all' ) {
 		'invites'  => array(
 			'title'       => __( 'Email Invites', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-invites' ) , 'admin.php' ) ),
-			'description' => __( 'Allow members to send email invitations for non-members to join the network.', 'buddyboss' ),
+			'description' => __( 'Allow members to send email invitations to non-members to join the network.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'messages' => array(
