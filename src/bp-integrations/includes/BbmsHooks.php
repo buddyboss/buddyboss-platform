@@ -1,7 +1,6 @@
 <?php
 namespace BuddyBoss\Integrations\Includes;
 
-/** Helper methods for working with hooks in BuddyBoss MemberShip */
 class BbmsHooks {
 	public static function do_action($tag, $arg = '') {
 		$args = func_get_args();

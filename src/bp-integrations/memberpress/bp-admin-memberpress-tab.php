@@ -18,7 +18,6 @@ class BP_Memberpress_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	protected $current_section;
 
 	public function initialize() {
-		error_log("BP_Memberpress_Admin_Integration_Tab->initialize()");
 		$this->tab_order = 40;
 		$this->intro_template = $this->root_path . '/templates/admin/integration-tab-intro.php';
 		$this->template = $this->root_path . '/templates/';
@@ -30,19 +29,18 @@ class BP_Memberpress_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	public function settings_save() {
-		error_log("BP_Memberpress_Admin_Integration_Tab->settings_save()");
 
 		$settings = $_REQUEST;
 		error_log(print_r($settings, true));
 
-		register_setting('_bp-learndash-memberpess', '_bp-learndash-memberpess');
+		register_setting('bbms-settings', 'bbms-settings', BuddyBoss\Integrations\BbmsHelper::bbmsSettingsSanitize($settings));
 
 		/**
 		 * After Learndash-Memberpress Integration settings are saved
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
-		do_action('bp_integrations_memberpess_fields_updated', $settings);
+		do_action('bp_learndash_memberpess_fields_updated', $settings);
 
 	}
 
@@ -55,7 +53,7 @@ class BP_Memberpress_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		// If Enabled/Disabled
 		$this->add_checkbox_field(
-			'_bp-learndash-memberpess', // Unique Identifier
+			'bp-learndash-memberpess', // Unique Identifier
 			__('Enable', 'buddyboss'), //Title
 			['input_text' => __("Enroll user in Learndash course(s) after purchasing MemberPress membership.", 'bbms'), 'buddyboss']); //Callback
 

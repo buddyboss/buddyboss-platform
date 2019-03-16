@@ -39,6 +39,26 @@ class BbmsHelper {
 	}
 
 	/**
+	 * Need to sanitize value before updating to options table
+	 * @param {array} $inputs - Form inputs/element
+	 * @return {array} $sanitaryValues - Modified values
+	 */
+	public static function bbmsSettingsSanitize($inputs) {
+		error_log("bbmsSettingsSanitize()");
+		error_log(print_r($inputs, true));
+
+		$sanitaryValues = array();
+		if (isset($inputs['bp-learndash-memberpess'])) {
+			$sanitaryValues['bp-learndash-memberpess'] = $inputs['bp-learndash-memberpess'];
+		}
+		if (isset($inputs['bp-learndash-woocommerce'])) {
+			$sanitaryValues['bp-learndash-woocommerce'] = $inputs['bp-learndash-woocommerce'];
+		}
+
+		return $sanitaryValues;
+	}
+
+	/**
 	 * Enqueue plugin scripts/styles
 	 * @param  {string}      $hook_suffix - Refers to the hook suffix for the admin page
 	 * @return {void}
@@ -64,9 +84,8 @@ class BbmsHelper {
 				// Localize the script with new data
 				$bbmsVars = array(
 					'ajax_url' => admin_url('admin-ajax.php'),
-					// 'lms_type' => self::getLmsTypesSelected(LD_POST_TYPE),
+					'lms_type' => self::getLmsTypesSelected(LD_POST_TYPE),
 					// 'membership_type' => self::getVendorTypesSelected(),
-					'lms_type' => LD_POST_TYPE,
 					'membership_type' => $post->post_type,
 					'p_id' => $post->ID,
 				);

@@ -24,8 +24,7 @@ class MpHelper {
 	 */
 	public static function mpLearndashTabContent($product) {
 
-		// $lmsType = BbmsHelper::getLmsTypesSelected(LD_POST_TYPE);
-		$lmsType = LD_POST_TYPE;
+		$lmsType = BbmsHelper::getLmsTypesSelected(LD_POST_TYPE);
 
 		$membershipType = MP_POST_TYPE;
 
