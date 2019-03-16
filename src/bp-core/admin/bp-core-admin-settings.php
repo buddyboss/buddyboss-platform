@@ -56,9 +56,17 @@ function bp_admin_setting_callback_private_network() {
 	?>
 
 	<input id="bp-enable-private-network" name="bp-enable-private-network" type="checkbox" value="1" <?php checked( !bp_enable_private_network( false ) ); ?> />
-	<label for="bp-enable-private-network"><?php _e( 'Block this website for logged out users (allows login and registration)', 'buddyboss' ); ?></label>
-
+	<label for="bp-enable-private-network"><?php _e( 'Restrict all access to only logged-in members', 'buddyboss' ); ?></label>
 	<?php
+	printf(
+	'<p class="description">%s</p>',
+			sprintf(
+				__( 'Login and <a href="%s">Registration</a> pages will remain publicly visible.', 'buddyboss' ),
+				add_query_arg([
+					'page' => 'bp-pages',
+				], admin_url( 'admin.php' ) )
+			)
+	);
 }
 
 /** Activity *******************************************************************/
