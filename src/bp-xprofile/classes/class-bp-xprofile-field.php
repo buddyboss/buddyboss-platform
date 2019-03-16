@@ -1424,7 +1424,7 @@ class BP_XProfile_Field {
 		</div>
 
 		<div class="postbox">
-			<h2><?php echo esc_html__( 'Help Text', 'buddyboss' ); ?></h2>
+			<h2><?php echo esc_html__( 'Text shown while editing your profile', 'buddyboss' ); ?></h2>
 			<div class="inside">
 				<?php
 					/**
@@ -1436,17 +1436,17 @@ class BP_XProfile_Field {
 				?>
 				<label for="title_secondary" class="screen-reader-text"><?php
 					/* translators: accessibility text */
-					esc_html_e( 'Alternate Title', 'buddyboss' );
+					esc_html_e( 'Override Title', 'buddyboss' );
 				?></label>
-				<p class="description"><?php _e( 'Alternate Title (optional)', 'buddyboss' ); ?></p>
+				<p class="description"><?php _e( 'Override Title (optional)', 'buddyboss' ); ?></p>
                 <input type="text" name="title_secondary" id="title_secondary" value="<?php echo esc_attr( $this->get_alternate_name() ) ;?>" autocomplete="off" />
 
 				<?php /* description while editing */ ?>
 				<label for="description" class="screen-reader-text"><?php
 					/* translators: accessibility text */
-					esc_html_e( 'Instructions', 'buddyboss' );
+					esc_html_e( 'Helper Text', 'buddyboss' );
 				?></label>
-				<p class="description" style="margin-top: 15px;"><?php _e( 'Instructions (optional)', 'buddyboss' ); ?></p>
+				<p class="description" style="margin-top: 15px;"><?php _e( 'Helper Text (optional)', 'buddyboss' ); ?></p>
 				<textarea name="description" id="description" rows="8" cols="60"><?php echo esc_textarea( $this->description ); ?></textarea>
 
 			</div>
