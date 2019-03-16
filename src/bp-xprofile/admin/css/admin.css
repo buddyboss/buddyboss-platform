@@ -214,7 +214,7 @@ fieldset span.bp-required-field-label {
 	float: none;
 }
 
-.field-group fieldset:hover {
+.field-group fieldset:not(.core):hover {
 	border-color: #999;
 }
 
