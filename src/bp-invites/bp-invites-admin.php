@@ -63,9 +63,9 @@ function bp_register_invite_type_sections_filters_actions() {
  */
 function bp_invite_add_column( $columns ) {
 
-	$columns['inviter'] = __( 'Inviter', 'buddyboss' );
-	$columns['invitee_name'] = __( 'Invitee Name', 'buddyboss' );
-	$columns['invitee_email'] = __( 'Invitee Email', 'buddyboss' );
+	$columns['inviter'] = __( 'Sender', 'buddyboss' );
+	$columns['invitee_name'] = __( 'Recipient Name', 'buddyboss' );
+	$columns['invitee_email'] = __( 'Recipient Email', 'buddyboss' );
 	$columns['date_invited'] = __( 'Date Invited', 'buddyboss' );
 	$columns['status'] = __( 'Status', 'buddyboss' );
 
@@ -248,7 +248,7 @@ function bp_invite_hide_quick_edit( $actions, $post ) {
 
 	if ( bp_get_invite_post_type() == $post->post_type ) {
 
-		// Inviter author id
+		// Sender author id
 		$author_id = get_post_field ('post_author', $post->ID );
 
 		// Build edit links URL.

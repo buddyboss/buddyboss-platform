@@ -2,7 +2,7 @@
 bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 
 <h2 class="screen-heading general-settings-screen">
-	<?php _e( 'Send Invite', 'buddyboss' ); ?>
+	<?php _e( 'Send Invites', 'buddyboss' ); ?>
 </h2>
 
 <p class="info invite-info">

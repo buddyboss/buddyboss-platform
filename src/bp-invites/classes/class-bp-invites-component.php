@@ -233,7 +233,7 @@ class BP_Invites_Component extends BP_Component {
 
 					// Add the Invite by Email nav item.
 					$sub_nav[] = array(
-						'name'            => __( 'Send Invite', 'buddyboss' ),
+						'name'            => __( 'Send Invites', 'buddyboss' ),
 						'slug'            => 'send-invites',
 						'parent_url'      => $invites_link,
 						'parent_slug'     => $slug,
@@ -294,7 +294,7 @@ class BP_Invites_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-invites',
-				'title'    => __( 'Send Invite', 'buddyboss' ),
+				'title'    => __( 'Send Invites', 'buddyboss' ),
 				'href'     => $invites_link,
 				'position' => 10
 			);
