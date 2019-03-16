@@ -2214,7 +2214,7 @@ function bp_remove_avatar_settings_from_options_discussion_page() {
 }
 
 /**
- * Add Navigation tab on top of the page BuddyBoss > Email Templates
+ * Add Navigation tab on top of the page BuddyBoss > Emails
  *
  * @since BuddyBoss 1.0.0
  *
@@ -2225,7 +2225,7 @@ function bp_emails_admin_email_listing_add_tab() {
 	if ( ( $post->post_type == bp_get_email_post_type() && $pagenow == 'edit.php' ) || ( $post->post_type == bp_get_email_post_type() && $pagenow == 'post-new.php' ) || ( $post->post_type == bp_get_email_post_type() && $pagenow == 'post.php' ) ) {
 		?>
 		<div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_emails_tabs( __( 'Email Templates', 'buddypress' ) ); ?></h2>
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_emails_tabs( __( 'Emails', 'buddypress' ) ); ?></h2>
 		</div>
 		<?php
 	}
@@ -2382,7 +2382,7 @@ function bp_core_get_emails_admin_tabs( $active_tab = '') {
 
 	$tabs[] = array(
 		'href'  => bp_get_admin_url( add_query_arg( array( 'post_type' => bp_get_email_post_type() ), 'edit.php' ) ),
-		'name'  => __( 'Email Templates', 'buddypress' ),
+		'name'  => __( 'Emails', 'buddypress' ),
 		'class' => 'bp-email-templates',
 	);
 

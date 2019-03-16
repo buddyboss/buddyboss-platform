@@ -2861,7 +2861,7 @@ function bp_get_email_post_type_labels() {
 		'items_list'            => __( 'Email list', 'buddyboss' ),
 		'items_list_navigation' => __( 'Email list navigation', 'buddyboss' ),
 		'menu_name'             => __( 'Emails', 'buddyboss' ),
-		'name'                  => __( 'Email Templates', 'buddyboss' ),
+		'name'                  => __( 'Email Notifications', 'buddyboss' ),
 		'new_item'              => __( 'New Template', 'buddyboss' ),
 		'not_found'             => __( 'No emails found', 'buddyboss' ),
 		'not_found_in_trash'    => __( 'No emails found in trash', 'buddyboss' ),
