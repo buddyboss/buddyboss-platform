@@ -169,34 +169,43 @@ div.field-group {
 
 .field-group fieldset {
 	position: relative;
-	border: 1px solid #ddd;
+	border-width: 1px;
+	border-color: #d2d2d2;
+	background-color: #fafafa;
 	margin: 20px 0 0;
-	background: #fafafa;
 	padding: 10px 0 0;
+	border-radius: 3px;
 }
 
 .field-group fieldset.sortable {
 	cursor: move;
+	border-style: solid;
+	box-shadow: 0 1px 0 #d2d2d2;
+}
+
+.field-group fieldset.core {
+	border-style: dashed;
+	background-color: #fff;
 }
 
 .field-group fieldset legend {
 	position: absolute;
-	top: 10px;
-	left: 10px;
+	top: 14px;
+	left: 14px;
 	padding: 0;
 }
 
 fieldset .field-name {
 	font-weight: 500;
-	font-size: 14px;
+	font-size: 15px;
 }
 
 fieldset.clear-value {
-	margin-left: 10px;
+	margin-left: 14px;
 }
 
 fieldset div.field-wrapper {
-	padding: 25px 10px 10px;
+	padding: 29px 14px 14px;
 }
 
 fieldset span.bp-required-field-label {
@@ -227,6 +236,7 @@ fieldset span.bp-required-field-label {
 .field-group fieldset.ui-sortable-placeholder {
 	border: 1px dashed #999;
 	background-color: #fff;
+	box-shadow: none;
 	visibility: visible !important;
 }
 

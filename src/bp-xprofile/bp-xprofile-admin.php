@@ -385,7 +385,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
 						<?php if ( empty( $group->can_delete ) ) : ?>
 
-							<p><?php esc_html_e( '* These fields appear on the signup page. The (Signup) fields cannot be removed and must remain in this field set.', 'buddyboss' ); ?></p>
+							<p><?php esc_html_e( '* These fields appear on the signup page. The (Signup) fields cannot be deleted or moved.', 'buddyboss' ); ?></p>
 
 						<?php endif; ?>
 
