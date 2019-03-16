@@ -141,7 +141,7 @@ class BP_Admin {
 		// Add menu item to settings menu.
 		add_action( 'admin_menu',               array( $this, 'site_admin_menus' ), 68 );
 		add_action( bp_core_admin_hook(),       array( $this, 'admin_menus' ), 5 );
-		add_action( bp_core_admin_hook(),       array( $this, 'admin_menus_components' ), 75 );
+		//add_action( bp_core_admin_hook(),       array( $this, 'admin_menus_components' ), 75 );
 		add_action( bp_core_admin_hook(),       array( $this, 'adjust_buddyboss_menus' ), 100 );
 
 		// Enqueue all admin JS and CSS.
@@ -388,16 +388,72 @@ class BP_Admin {
 //			''
 //		);
 
+		// Add the option pages.
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( 'BuddyBoss Components', 'buddyboss' ),
+			__( 'Components', 'buddyboss' ),
+			$this->capability,
+			'bp-components',
+			'bp_core_admin_components_settings'
+		);
 
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( 'Pages', 'buddyboss' ),
+			__( 'Pages', 'buddyboss' ),
+			$this->capability,
+			'bp-pages',
+			'bp_core_admin_pages_settings'
+		);
 
-//		$hooks[] = add_submenu_page(
-//			$this->settings_page,
-//			__( '', 'buddyboss' ),
-//			__( '', 'buddyboss' ),
-//			$this->capability,
-//			'bp-plugin-separator-notice',
-//			''
-//		);
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( 'BuddyBoss Settings', 'buddyboss' ),
+			__( 'Settings', 'buddyboss' ),
+			$this->capability,
+			'bp-settings',
+			'bp_core_admin_settings'
+		);
+
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( 'Plugin Integrations', 'buddyboss' ),
+			__( 'Integrations', 'buddyboss' ),
+			$this->capability,
+			'bp-integrations',
+			'bp_core_admin_integrations'
+		);
+
+		// Credits.
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( 'Credits', 'buddyboss' ),
+			__( 'Credits', 'buddyboss' ),
+			$this->capability,
+			'bp-credits',
+			array( $this, 'bp_credits_screen' )
+		);
+
+		if ( ! is_plugin_active( 'appboss/appboss.php' ) ) {
+			$hooks[] = add_submenu_page(
+				$this->settings_page,
+				__( 'Mobile App', 'buddyboss' ),
+				__( 'Mobile App', 'buddyboss' ),
+				$this->capability,
+				'bp-appboss',
+				'bp_core_admin_appboss'
+			);
+		}
+
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( '', 'buddyboss' ),
+			__( '', 'buddyboss' ),
+			$this->capability,
+			'bp-plugin-separator-notice',
+			''
+		);
 
 		// For consistency with non-Multisite, we add a Tools menu in
 		// the Network Admin as a home for our Tools panel.
