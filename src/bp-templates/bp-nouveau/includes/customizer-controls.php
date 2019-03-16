@@ -71,7 +71,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 		} else {
 			$item_nav = bp_nouveau_member_customizer_nav();
 
-			$guide = __( 'Drag and drop each member navigation item to change the order.', 'buddyboss' );
+			$guide = __( 'Drag and drop each profile navigation item to change the order.', 'buddyboss' );
 		}
 		?>
 
