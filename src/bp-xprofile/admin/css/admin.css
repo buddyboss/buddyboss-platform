@@ -186,9 +186,9 @@ div.field-group {
 	padding: 0;
 }
 
-fieldset.radio div div label,
-fieldset.checkbox div label {
-	margin-right: 20px;
+fieldset .field-name {
+	font-weight: 500;
+	font-size: 14px;
 }
 
 fieldset.clear-value {
@@ -199,10 +199,12 @@ fieldset div.field-wrapper {
 	padding: 25px 10px 10px;
 }
 
+fieldset span.bp-required-field-label {
+	color: #999;
+}
+
 .field-group div.actions {
 	float: none;
-	border-top: 1px solid #ddd;
-	margin: 10px 0 0;
 	padding-top: 10px;
 }
 

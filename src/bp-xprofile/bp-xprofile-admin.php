@@ -385,7 +385,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
 						<?php if ( empty( $group->can_delete ) ) : ?>
 
-							<p><?php esc_html_e( '* These fields appear on the signup page. The (Name) fields cannot be removed and must remain in this field set.', 'buddyboss' ); ?></p>
+							<p><?php esc_html_e( '* These fields appear on the signup page. The (Signup) fields cannot be removed and must remain in this field set.', 'buddyboss' ); ?></p>
 
 						<?php endif; ?>
 
@@ -816,9 +816,9 @@ function xprofile_admin_field( $admin_field, $admin_group, $class = '' ) {
 	<fieldset id="draggable_field_<?php echo esc_attr( $field->id ); ?>" class="<?php echo implode( ' ', $fieldset_class ); ?>">
 		<legend>
 			<span>
-				<?php bp_the_profile_field_name(); ?>
+				<span class="field-name"><?php bp_the_profile_field_name(); ?></span>
 
-				<?php if ( empty( $field->can_delete )                                    ) : ?><?php esc_html_e( '(Name)', 'buddyboss' ); endif; ?>
+				<?php if ( empty( $field->can_delete ) ) : ?><?php esc_html_e( '(Signup)', 'buddyboss' ); endif; ?>
 				<?php bp_the_profile_field_required_label(); ?>
 				<?php if ( bp_xprofile_get_meta( $field->id, 'field', 'signup_position' ) ) : ?><?php esc_html_e( '(Signup)', 'buddyboss' ); endif; ?>
 				<?php if ( bp_get_member_types() ) : echo $field->get_member_type_label(); endif; ?>
@@ -837,25 +837,6 @@ function xprofile_admin_field( $admin_field, $admin_group, $class = '' ) {
 			</span>
 		</legend>
 		<div class="field-wrapper">
-
-			<?php
-			if ( in_array( $field->type, array_keys( bp_xprofile_get_field_types() ) ) ) {
-				$field_type = bp_xprofile_create_field_type( $field->type );
-				$field_type->admin_field_html();
-			} else {
-
-				/**
-				 * Fires after the input if the current field is not in default field types.
-				 *
-				 * @since BuddyPress 1.5.0
-				 *
-				 * @param BP_XProfile_Field $field Current BP_XProfile_Field
-				 *                                 object being rendered.
-				 * @param int               $value Integer 1.
-				 */
-				do_action( 'xprofile_admin_field', $field, 1 );
-			}
-			?>
 
 			<?php if ( $field->description ) : ?>
 

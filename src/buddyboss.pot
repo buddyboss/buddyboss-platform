@@ -16359,7 +16359,7 @@ msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:388
 msgid ""
-"* These fields appear on the signup page. The (Name) fields cannot be "
+"* These fields appear on the signup page. The (Signup) fields cannot be "
 "removed and must remain in this field set."
 msgstr ""
 
@@ -16414,7 +16414,7 @@ msgid ""
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:821
-msgid "(Name)"
+msgid "(Signup)"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-cssjs.php:56
