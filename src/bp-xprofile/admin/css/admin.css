@@ -126,13 +126,12 @@ ul#field-group-tabs li.ui-state-active a.ui-tab {
 .tab-toolbar {
 	clear: left;
 	background: #fff;
-	border-width: 1px;
+	border-width: 1px 1px 0;
 	border-color: #e5e5e5;
 	border-style: solid;
 	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-	padding: 15px 20px;
-	margin-bottom: 10px;
+	padding: 20px 20px 0;
 }
 
 .bp-option a.delete,
@@ -155,11 +154,12 @@ div.field-group {
 
 .field-group {
 	cursor: default;
-	border: 1px solid #e5e5e5;
+	border-width: 0 1px 1px;
+	border-style: solid;
+	border-color: #e5e5e5;
 	background: #fff;
 	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-	margin-top: 10px;
 	padding: 0 20px 20px;
 }
 
