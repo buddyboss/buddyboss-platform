@@ -149,7 +149,14 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 	) ); ?>
 
 	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddypress' ) ); ?></h2>
+		<?php
+			$users_tab = count( bp_core_get_users_admin_tabs() );
+			if ( $users_tab > 1 ) {
+				?>
+				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddypress' ) ); ?></h2><?php
+			}
+		?>
+
 		<?php if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) : ?>
 
 			<h1 class="wp-heading-inline"><?php _e( 'Profile Fields', 'buddyboss'); ?></h1>
@@ -975,7 +982,13 @@ function bp_users_admin_profile_types_listing_add_users_tab() {
 		if ( ( $post->post_type == 'bp-member-type' && $pagenow == 'edit.php' ) || ( $post->post_type == 'bp-member-type' && $pagenow == 'post-new.php' ) || ( $post->post_type == 'bp-member-type' && $pagenow == 'post.php' ) ) {
 			?>
 			<div class="wrap">
-				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Types', 'buddypress' ) ); ?></h2>
+				<?php
+				$users_tab = count( bp_core_get_users_admin_tabs() );
+				if ( $users_tab > 1 ) {
+					?>
+					<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Types', 'buddypress' ) ); ?></h2><?php
+				}
+				?>
 			</div>
 			<?php
 		}

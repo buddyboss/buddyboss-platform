@@ -233,7 +233,13 @@ function bp_users_admin_profile_search_listing_add_users_tab() {
 		if ( ( $post->post_type == 'bp_ps_form' && $pagenow == 'edit.php' ) || ( $post->post_type == 'bp_ps_form' && $pagenow == 'post-new.php' ) || ( $post->post_type == 'bp_ps_form' && $pagenow == 'post.php' ) ) {
 			?>
 			<div class="wrap">
-				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Search', 'buddypress' ) ); ?></h2>
+				<?php
+				$users_tab = count( bp_core_get_users_admin_tabs() );
+				if ( $users_tab > 1 ) {
+					?>
+					<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Search', 'buddypress' ) ); ?></h2><?php
+				}
+				?>
 			</div>
 			<?php
 		}

@@ -789,7 +789,13 @@ class BP_XProfile_Group {
 		} ?>
 
 		<div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddypress' ) ); ?></h2>
+			<?php
+			$users_tab = count( bp_core_get_users_admin_tabs() );
+			if ( $users_tab > 1 ) {
+				?>
+				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddypress' ) ); ?></h2><?php
+			}
+			?>
 			<h1><?php echo esc_html( $title ); ?></h1>
 
 			<?php if ( ! empty( $message ) ) : ?>
