@@ -46,6 +46,7 @@ class Admin
 	 */
 	public function registerRequirementNotices()
 	{
+		// Removed this action because we don't have to display the notice.
 		//add_action('admin_notices',  [$this, 'printRequirementAdminNotice']);
 	}
 
