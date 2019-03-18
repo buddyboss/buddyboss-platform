@@ -76,10 +76,10 @@ class BbmsHelper {
 				}
 
 				// Select2 Js
-				wp_enqueue_script('select2-js', BBMS_URL . '/assets/js/select2.min.js');
+				wp_enqueue_script('select2-js', BBMS_URL . '/assets/scripts/select2.min.js');
 
 				// Select2 Css
-				wp_enqueue_style('select2', BBMS_URL . '/assets/css/select2.min.css');
+				wp_enqueue_style('select2', BBMS_URL . '/assets/styles/select2.min.css');
 
 				// Localize the script with new data
 				$bbmsVars = array(
@@ -91,11 +91,11 @@ class BbmsHelper {
 				);
 
 				// Custom
-				wp_register_script('bbms-js', BBMS_URL . '/assets/js/bbms.js');
+				wp_register_script('bbms-js', BBMS_URL . '/assets/scripts/bbms.js');
 				wp_localize_script('bbms-js', 'bbmsVars', $bbmsVars);
 				wp_enqueue_script('bbms-js');
 
-				wp_enqueue_style('bbms', BBMS_URL . '/assets/css/bbms.css');
+				wp_enqueue_style('bbms', BBMS_URL . '/assets/styles/bbms.css');
 
 			}
 		}
