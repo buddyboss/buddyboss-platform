@@ -84,7 +84,7 @@ window.bp = window.bp || {};
 			link_title: '',
 			link_description: '',
 			link_url: '',
-			gif_url: ''
+			gif_data: {}
 		}
 	} );
 
@@ -330,6 +330,9 @@ window.bp = window.bp || {};
 		tagName: 'div',
 		className: 'activity-attached-gif-container',
 		template: bp.template( 'activity-attached-gif' ),
+		events: {
+			'click .gif-image-remove': 'handleRemove'
+		},
 
 		initialize: function() {
 			this.listenTo( this.model, 'change', this.render );
@@ -340,28 +343,32 @@ window.bp = window.bp || {};
 			return this;
 		},
 
+		handleRemove: function( e ) {
+			this.model.set('gif_data', {} );
+		}
 	} );
 
 	bp.Views.GifMediaSearchDropdown = bp.View.extend( {
 		tagName: 'div',
 		className: 'activity-attached-gif-container  caret caret--stroked caret--top',
 		template: bp.template( 'gif-media-search-dropdown' ),
-		total_page: 0,
-		page: 0,
+		total_count: 0,
+		offset: 0,
 		limit: 20,
-		q: '',
+		q: null,
+		requests: [],
 		events: {
 			'keyup .search-query-input': 'search',
 			'click .found-media-item': 'select'
 		},
 
-		initialize: function(options) {
+		initialize: function( options ) {
 			this.options = options || {};
-			this.giphy = new window.Giphy('dc6zaTOxFJmzC');
+			this.giphy = new window.Giphy( 'dc6zaTOxFJmzC' );
 
 			this.gifDataItems = new bp.Collections.GifDatas();
-			this.listenTo(this.gifDataItems, 'add', this.addOne);
-			this.listenTo(this.gifDataItems, 'reset', this.addAll);
+			this.listenTo( this.gifDataItems, 'add', this.addOne );
+			this.listenTo( this.gifDataItems, 'reset', this.addAll );
 
 			document.addEventListener( 'scroll', _.bind( this.loadMore, this ), true );
 
@@ -369,8 +376,8 @@ window.bp = window.bp || {};
 
 		render: function() {
 			this.$el.html( this.template( this.model.toJSON() ) );
-			this.$gifResultItem = this.$el.find('.gif-search-results-list');
-			this.$gifResultItem.on('scroll', this.loadMore);
+			this.$gifResultItem = this.$el.find( '.gif-search-results-list' );
+			this.loadTrending();
 			return this;
 		},
 
@@ -389,89 +396,141 @@ window.bp = window.bp || {};
 
 		searchGif: function( q ) {
 			var self = this;
-			this.q = q;
-			self.giphy.search( {
+			self.q = q;
+			self.offset = 0;
+
+			self.clearRequests();
+			self.el.classList.add('loading');
+
+			var request = self.giphy.search( {
 					q: q,
-					offset: 0,
+					offset: self.offset,
 					fmt: 'json',
 					limit: this.limit,
 				},
 				function( response ) {
-					self.gifDataItems.reset(response.data);
-					self.total_page = Math.ceil( response.pagination.total_count / self.limit );
+					self.gifDataItems.reset( response.data );
+					self.total_count = response.pagination.total_count;
+					self.el.classList.remove('loading');
 				}
 			);
+
+			self.requests.push( request );
+			self.offset = self.offset + self.limit;
 		},
 
 		select: function( e ) {
 			e.preventDefault();
-			this.$el.parent().removeClass('open');
-			this.model.set( 'gif_url', e.currentTarget.href );
+			this.$el.parent().removeClass( 'open' );
+			var model = this.gifDataItems.findWhere({id: e.currentTarget.dataset.id});
+			this.model.set( 'gif_data', model.attributes );
 		},
 
-		// Add a single todo item to the list by creating a view for it, and
+		// Add a single GifDataItem to the list by creating a view for it, and
 		// appending its element to the `<ul>`.
-		addOne: function (data) {
-			var view = new bp.Views.GifDataItem({ model: data });
-			this.$gifResultItem.append(view.render().el);
+		addOne: function( data ) {
+			var view = new bp.Views.GifDataItem( { model: data } );
+			this.$gifResultItem.append( view.render().el );
 		},
 
-		// Add all items in the **Todos** collection at once.
-		addAll: function () {
-			this.$gifResultItem.html('');
-			this.gifDataItems.each(this.addOne, this);
+		// Add all items in the **GifDataItem** collection at once.
+		addAll: function() {
+			this.$gifResultItem.html( '' );
+			this.gifDataItems.each( this.addOne, this );
+		},
+
+		loadTrending: function() {
+			var self = this;
+			self.offset = 0;
+			self.q = null;
+
+			self.clearRequests();
+			self.el.classList.add('loading');
+
+			var request = self.giphy.trending( {
+				offset: self.offset,
+				fmt: 'json',
+				limit: this.limit,
+			}, function( response ) {
+				self.gifDataItems.reset( response.data );
+				self.total_count = response.pagination.total_count;
+				self.el.classList.remove('loading');
+			});
+
+			self.requests.push( request );
+			self.offset = self.offset + self.limit;
 		},
 
 		loadMore: function( event ) {
-			if (event.target.id === 'gif-search-results') { // or any other filtering condition
+			if ( event.target.id === 'gif-search-results' ) { // or any other filtering condition
 				var el = event.target;
-				if(el.scrollTop + el.offsetHeight >= el.scrollHeight){
-				if ( this.total_page > 0 && this.page <= this.total_page ) {
-						var self = this;
-						self.page = self.page + 1;
-						self.giphy.search( {
-								q: self.q,
-								offset: self.page * self.limit,
-								fmt: 'json',
-								limit: self.limit,
-							},
-							function( response ) {
-								self.gifDataItems.add(response.data);
-							}
-						);
+				if ( el.scrollTop + el.offsetHeight >= el.scrollHeight &&  ! el.classList.contains('loading') ) {
+					if ( this.total_count > 0 && this.offset <= this.total_count ) {
+						var self = this,
+						params = {
+							offset: self.offset,
+							fmt: 'json',
+							limit: self.limit,
+						};
+
+						self.el.classList.add('loading');
+
+						if ( _.isNull( self.q ) ) {
+							var request = self.giphy.trending( params, _.bind( self.loadMoreResponse, self ) );
+						} else {
+							var request = self.giphy.search( _.extend( { q: self.q }, params ), _.bind( self.loadMoreResponse, self ) );
+						}
+
+						self.requests.push( request );
+						this.offset = this.offset + this.limit;
 					}
 				}
 			}
-		}
-	});
+		},
 
-	bp.Views.GifDataItem = bp.View.extend({
+		clearRequests: function() {
+			this.gifDataItems.reset();
+
+			for ( i = 0; i < this.requests.length; i++ ) {
+				this.requests[i].abort();
+			}
+
+			this.requests = [];
+		},
+
+		loadMoreResponse: function( response ) {
+			this.el.classList.remove('loading');
+			this.gifDataItems.add( response.data );
+		}
+	} );
+
+	bp.Views.GifDataItem = bp.View.extend( {
 		tagName: 'li',
-		template: wp.template('gif-result-item'),
+		template: wp.template( 'gif-result-item' ),
 		initialize: function() {
-			this.listenTo(this.model, 'change', this.render);
-			this.listenTo(this.model, 'destroy', this.remove);
+			this.listenTo( this.model, 'change', this.render );
+			this.listenTo( this.model, 'destroy', this.remove );
 		},
 
 		render: function() {
-			this.$el.html(this.template(this.model.toJSON()));
-			var bgNo = Math.floor(Math.random() * (6 - 1 + 1)) + 1;
-			this.$el.addClass('bg' + bgNo);
+			this.$el.html( this.template( this.model.toJSON() ) );
+			var bgNo = Math.floor( Math.random() * (6 - 1 + 1) ) + 1;
+			this.$el.addClass( 'bg' + bgNo );
 			return this;
 		}
 
-	});
+	} );
 
 	// Regular input
 	bp.Views.ActivityInput = bp.View.extend( {
-		tagName  : 'input',
+		tagName: 'input',
 
 		attributes: {
-			type : 'text'
+			type: 'text'
 		},
 
 		initialize: function() {
-			if ( ! _.isObject( this.options ) ) {
+			if ( !_.isObject( this.options ) ) {
 				return;
 			}
 
@@ -479,7 +538,7 @@ window.bp = window.bp || {};
 				this.$el.prop( key, value );
 			}, this );
 
-			this.listenTo(this.model, 'change:link_loading', this.onLinkScrapping );
+			this.listenTo( this.model, 'change:link_loading', this.onLinkScrapping );
 		},
 
 		onLinkScrapping: function() {
@@ -806,7 +865,7 @@ window.bp = window.bp || {};
 
 		closeGifDropdownOnEsc: function( event ) {
 			var key = event.key; // const {key} = event; in ES6+
-			if (key === "Escape") {
+			if ( key === 'Escape' ) {
 				this.$searchDropdownEl.removeClass('open');
 			}
 		},

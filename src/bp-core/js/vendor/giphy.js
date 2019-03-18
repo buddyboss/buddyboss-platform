@@ -5,13 +5,13 @@
 		self.version = 1;
 		self.url = 'https://api.giphy.com/v' + self.version + '/';
 		self.stickers = {};
-	
+
 		// Search
 		// --
 		// https://github.com/Giphy/GiphyAPI#search-endpoint
 		self.search = function(params, succCb, errCb) {
 			var url = 'gifs/search';
-			
+
 			// Check for required parameters
 			if('q' in params) {
 				url += '?q=' + params.q;
@@ -21,8 +21,8 @@
 				if(errCb) errCb(eMsg);
 				else console.error(eMsg);
 			}
-			
-			self.request(url, params, succCb, errCb);
+
+			return self.request(url, params, succCb, errCb);
 		};
 
 		// Get GIF by ID
@@ -30,7 +30,7 @@
 		// https://github.com/Giphy/GiphyAPI#get-gifs-by-id-endpoint
 		self.gif = function(params, succCb, errCb) {
 			var url = 'gifs/';
-			
+
 			// Check for required parameters
 			if('id' in params) {
 				url += params.id;
@@ -39,7 +39,7 @@
 				var eMsg = 'giphy.js: No ID.';
 				if(errCb) errCb(eMsg);
 				else console.error(eMsg);
-			}		
+			}
 			self.request(url, params, succCb, errCb);
 		};
 
@@ -48,7 +48,7 @@
 		// https://github.com/Giphy/GiphyAPI#get-gif-by-id-endpoint
 		self.gifs = function(params, succCb, errCb) {
 			var url = 'gifs?ids=';
-			
+
 			// Check for required parameters
 			if('ids' in params) {
 				params.ids.forEach(function(id, idx) {
@@ -61,7 +61,7 @@
 				if(errCb) errCb(eMsg);
 				else console.error(eMsg);
 			}
-			
+
 			self.request(url, params, succCb, errCb);
 		};
 
@@ -70,7 +70,7 @@
 		// https://github.com/Giphy/GiphyAPI#translate-endpoint
 		self.translate = function(params, succCb, errCb) {
 			var url = 'gifs/translate';
-			
+
 			// Check for required parameters
 			if('s' in params) {
 				url += '?s=' + params.s.replace(' ', '+');
@@ -80,7 +80,7 @@
 				if(errCb) errCb(eMsg);
 				else console.error(eMsg);
 			}
-			
+
 			self.request(url, params, succCb, errCb);
 		};
 
@@ -89,23 +89,23 @@
 		// https://github.com/Giphy/GiphyAPI#random-endpoint
 		self.random = function(params, succCb, errCb) {
 			var url = 'gifs/random';
-			
+
 			// Check for required parameters
 			if('tag' in params) {
 				url += '?tag=' + params.tag;
 				delete params.tag;
 			}
-			
+
 			self.request(url, params, succCb, errCb);
 		};
 
 		// Trending GIFs
 		// --
 		// https://github.com/Giphy/GiphyAPI#trending-gifs-endpoint
-		self.trending = function(succCb, errCb) {
+		self.trending = function(params, succCb, errCb) {
 			var url = 'gifs/trending';
-			
-			self.request(url, {}, succCb, errCb);
+
+			return self.request(url, params, succCb, errCb);
 		};
 
 		// STICKER API
@@ -117,7 +117,7 @@
 		// https://github.com/Giphy/GiphyAPI#sticker-search-endpoint
 		self.stickers.search = function(params, succCb, errCb) {
 			var url = 'stickers/search';
-			
+
 			// Check for required parameters
 			if('q' in params) {
 				url += '?q=' + params.q;
@@ -127,7 +127,7 @@
 				if(errCb) errCb(eMsg);
 				else console.error(eMsg);
 			}
-			
+
 			self.request(url, params, succCb, errCb);
 		};
 
@@ -136,7 +136,7 @@
 		// https://github.com/Giphy/GiphyAPI#sticker-roulette-random-endpoint
 		self.stickers.roulette = function(params, succCb, errCb) {
 			var url = 'stickers/roulette';
-			
+
 			// Check for required parameters
 			if('tag' in params) {
 				url += '?tag=' + params.tag;
@@ -146,7 +146,7 @@
 				if(errCb) errCb(eMsg);
 				else console.error(eMsg);
 			}
-			
+
 			self.request(url, params, succCb, errCb);
 		};
 
@@ -155,7 +155,7 @@
 		// https://github.com/Giphy/GiphyAPI#sticker-trending-endpoint
 		self.stickers.trending = function(params, succCb, errCb) {
 			var url = 'stickers/trending';
-			
+
 			// Check for required parameters
 			if('s' in params) {
 				url += '?s=' + params.s;
@@ -165,16 +165,16 @@
 				if(errCb) errCb(eMsg);
 				else console.error(eMsg);
 			}
-			
+
 			self.request(url, params, succCb, errCb);
 		};
 
 		// STICKER Translate
-		// -- 
+		// --
 		// https://github.com/Giphy/GiphyAPI#sticker-translate-endpoint
 		self.stickers.translate = function(params, succCb, errCb) {
 			var url = 'stickers/translate';
-			
+
 			// Check for required parameters
 			if('s' in params) {
 				url += '?s=' + params.s;
@@ -184,10 +184,10 @@
 				if(errCb) errCb(eMsg);
 				else console.error(eMsg);
 			}
-			
+
 			self.request(url, params, succCb, errCb);
 		};
-		
+
 		// Request
 		self.request = function(urlParams, params, succCb, errCb) {
 			var self = this;
@@ -198,7 +198,7 @@
 
 			// Check for starting '?'
 			if(url.indexOf('?') > -1) hasStartingValue = true;
-			
+
 			for(var key in params) {
 				if(hasStartingValue) {
 					url += '&' + key + '=' + params[key];
@@ -207,13 +207,13 @@
 					hasStartingValue = true;
 				}
 			}
-			
+
 			if(hasStartingValue) {
 				url += '&api_key=' + self.key;
 			} else {
 				url += '?api_key=' + self.key;
 			}
-			
+
 			var req = new XMLHttpRequest();
 			req.open("GET", url, true);
 			req.responseType = "json";
@@ -230,11 +230,11 @@
 			};
 			req.send();
 
-			return url;
+			return req;
 		};
 
 	};
 
-	
+
 	$$['Giphy'] = giphy; // jshint ignore:line
 })(document, window);

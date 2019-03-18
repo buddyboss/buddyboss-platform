@@ -110,6 +110,7 @@ add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_embed_excerpt_onclick_
 add_filter( 'bp_after_has_activities_parse_args', 'bp_activity_display_all_types_on_just_me' );
 
 add_filter( 'bp_get_activity_content_body', 'bp_activity_link_preview', 7, 2 );
+add_filter( 'bp_get_activity_content_body', 'bp_activity_embed_gif', 7, 2 );
 
 /* Actions *******************************************************************/
 
@@ -241,13 +242,16 @@ function bp_activity_save_link_data( $activity ) {
  */
 function bp_activity_save_gif_data( $activity ) {
 
-	if ( empty( $_POST['gif_url'] ) ) {
+	if ( empty( $_POST['gif_data'] ) ) {
 		return;
 	}
 
-	$attachment_id = bp_activity_media_sideload_image( $_POST['gif_url'] );
+	$gif_data =  $_POST['gif_data'];
+
+	$attachment_id = bp_activity_media_sideload_image( $gif_data['images']['original']['url'] );
 
 	bp_activity_update_meta( $activity->id, '_gif_attachment_id', $attachment_id );
+	bp_activity_update_meta( $activity->id, '_gif_data', $gif_data );
 }
 
 /**
@@ -553,6 +557,39 @@ function bp_activity_link_preview( $content, $activity ) {
 	$content .= '</div>';
 	$content .= '</div>';
 	$content .= '<br/>';
+
+	return $content;
+}
+
+/**
+ * Embed gif in activity content
+ *
+ * @param $content
+ * @param $activity
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string
+ */
+function bp_activity_embed_gif( $content, $activity ) {
+	$activity_id = $activity->id;
+
+	$media_id = bp_activity_get_meta( $activity_id, '_gif_attachment_id', true );
+
+	if ( empty( $media_id ) ) {
+		return $content;
+	}
+
+	$media_url = wp_get_attachment_url( $media_id );
+	ob_start();
+	?>
+	<div class="activity-attached-gif-container">
+		<div class="gif-image-container">
+			<img src="<?php echo $media_url ?>" alt="">
+		</div>
+	</div>
+	<?php
+	$content .= ob_get_clean();
 
 	return $content;
 }

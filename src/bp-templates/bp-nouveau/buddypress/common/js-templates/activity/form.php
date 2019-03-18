@@ -56,12 +56,17 @@
 
 <script type="text/html" id="tmpl-activity-attached-gif">
 	<div class="gif-image-container">
-		<img src="{{data.gif_url}}" alt="">
+		<# if ( ! _.isUndefined( data.gif_data.images ) ) { #>
+			<img src="{{data.gif_data.images.original.url}}" alt="">
+		<# } #>
+	</div>
+	<div class="gif-image-remove gif-image-overlay">
+		<span class="dashicons dashicons-no"></span>
 	</div>
 </script>
 
 <script type="text/html" id="tmpl-gif-result-item">
-	<a class="found-media-item" href="{{{data.images.original.url}}}">
+	<a class="found-media-item" href="{{{data.images.original.url}}}" data-id="{{data.id}}">
 		<img src="{{{data.images.preview_gif.url}}}" />
 	</a>
 </script>
