@@ -487,8 +487,8 @@ class BP_Members_Admin {
 
 			// Manage signups.
 			$hooks['signups'] = $this->signups_page = add_users_page(
-				__( 'Manage Signups',  'buddyboss' ),
-				__( 'Manage Signups',  'buddyboss' ),
+				__( 'Pending Signups',  'buddyboss' ),
+				__( 'Pending Signups',  'buddyboss' ),
 				$this->capability,
 				'bp-signups',
 				array( $this, 'signups_admin' )
