@@ -74,6 +74,7 @@ window.bp = window.bp || {};
 			// Activity actions
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions );
 			$( document ).keydown( this.commentFormAction );
+			$(document).on('click', '.activity-attached-gif-container', this.playVideo );
 		},
 
 		/**
@@ -882,6 +883,25 @@ window.bp = window.bp || {};
 				}
 			} else if ( event.ctrlKey && 13 === keyCode && $( element ).val() ) {
 				$( element ).closest( 'form' ).find( '[type=submit]' ).first().trigger( 'click' );
+			}
+		},
+
+		playVideo: function(event) {
+			event.preventDefault();
+			var video = $(this).find('video').get(0),
+				$button = $(this).find('.gif-play-button');
+			if (video.paused == true) {
+				// Play the video
+				video.play();
+
+				// Update the button text to 'Pause'
+				$button.hide();
+			} else {
+				// Pause the video
+				video.pause();
+
+				// Update the button text to 'Play'
+				$button.show();
 			}
 		}
 	};

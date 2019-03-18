@@ -216,7 +216,7 @@ function bp_activity_save_link_data( $activity ) {
 	$preview_data['url'] = $_POST['link_url'];
 
 	if ( ! empty( $_POST['link_image'] ) ) {
-		$attachment_id = bp_activity_media_sideload_image( $_POST['link_image'] );
+		$attachment_id = bp_activity_media_sideload_attachment( $_POST['link_image'] );
 		if ( $attachment_id ) {
 			$preview_data['attachment_id'] = $attachment_id;
 		}
@@ -248,10 +248,15 @@ function bp_activity_save_gif_data( $activity ) {
 
 	$gif_data =  $_POST['gif_data'];
 
-	$attachment_id = bp_activity_media_sideload_image( $gif_data['images']['original']['url'] );
+	$still = bp_activity_media_sideload_attachment( $gif_data['images']['480w_still']['url'] );
+	$mp4 = bp_activity_media_sideload_attachment( $gif_data['images']['original_mp4']['mp4'] );
 
-	bp_activity_update_meta( $activity->id, '_gif_attachment_id', $attachment_id );
-	bp_activity_update_meta( $activity->id, '_gif_data', $gif_data );
+	bp_activity_update_meta( $activity->id, '_gif_data', [
+		'still' => $still,
+		'mp4'   => $mp4,
+	] );
+
+	bp_activity_update_meta( $activity->id, '_gif_raw_data', $gif_data );
 }
 
 /**
@@ -574,18 +579,28 @@ function bp_activity_link_preview( $content, $activity ) {
 function bp_activity_embed_gif( $content, $activity ) {
 	$activity_id = $activity->id;
 
-	$media_id = bp_activity_get_meta( $activity_id, '_gif_attachment_id', true );
+	$gif_data = bp_activity_get_meta( $activity_id, '_gif_data', true );
 
-	if ( empty( $media_id ) ) {
+	if ( empty( $gif_data ) ) {
 		return $content;
 	}
 
-	$media_url = wp_get_attachment_url( $media_id );
+	$preview_url = wp_get_attachment_url( $gif_data['still'] );
+	$video_url = wp_get_attachment_url( $gif_data['mp4'] );
+
 	ob_start();
 	?>
 	<div class="activity-attached-gif-container">
 		<div class="gif-image-container">
-			<img src="<?php echo $media_url ?>" alt="">
+			<div class="gif-player">
+				<video preload="auto" playsinline poster="<?php echo $preview_url ?>" loop muted playsinline>
+					<source src="<?php echo $video_url ?>" type="video/mp4">
+				</video>
+				<a href="#" class="gif-play-button">
+					<span class="dashicons dashicons-video-alt3"></span>
+				</a>
+				<span class="gif-icon"></span>
+			</div>
 		</div>
 	</div>
 	<?php

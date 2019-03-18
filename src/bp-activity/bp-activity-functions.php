@@ -4895,13 +4895,13 @@ add_action( 'wp_ajax_bp_activity_parse_url', 'bp_activity_action_parse_url' );
  *
  * @return int|void
  */
-function bp_activity_media_sideload_image( $file ) {
+function bp_activity_media_sideload_attachment( $file ) {
 	if ( empty( $file ) ) {
 		return;
 	}
 
 	// Set variables for storage, fix file filename for query strings.
-	preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png)\b/i', $file, $matches );
+	preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png|mp4)\b/i', $file, $matches );
 	$file_array = array();
 
 	if ( empty( $matches ) ) {

@@ -528,6 +528,51 @@
 	outline: 0;
 }
 
+.activity-attached-gif-container {
+	cursor: pointer;
+	max-width: 480px;
+
+	.gif-player {
+		position: relative;
+		max-width: 480px;
+
+		video {
+			margin: 0;
+		}
+	}
+
+	.gif-play-button {
+		height: 80px;
+		width: 80px;
+		position: absolute;
+		left: 50%;
+		margin-left: -40px;
+		top: 50%;
+		margin-top: -40px;
+
+		span.dashicons {
+			font-size: 80px;
+			width: 80px;
+			height: 80px;
+			margin: 0;
+			padding: 0;
+			line-height: 0;
+		}
+	}
+
+	.gif-icon {
+		background: url(../images/gif-symbol.png) bottom left no-repeat;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		display: block;
+		bottom: 30px;
+		left: 10px;
+		background-size: 40px 30px;
+		max-width: 40px;
+		max-height: 30px;
+	}
+}
 
 /* Media query for only large devices */
 @media only screen and (min-width: 481px) {
