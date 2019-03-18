@@ -54,14 +54,45 @@
 	<# } #>
 </script>
 
-<script type="text/html" id="tmpl-activity-post-elements-buttons">
-	<ul>
+<script type="text/html" id="tmpl-activity-attached-gif">
+	<div class="gif-image-container">
+		<img src="{{data.gif_url}}" alt="">
+	</div>
+</script>
+
+<script type="text/html" id="tmpl-gif-result-item">
+	<a class="found-media-item" href="{{{data.images.original.url}}}">
+		<img src="{{{data.images.preview_gif.url}}}" />
+	</a>
+</script>
+
+<script type="text/html" id="tmpl-gif-media-search-dropdown">
+	<div class="gif-search-content">
+		<div class="gif-search-query">
+			<input type="text" class="search-query-input" />
+			<span class="search-icon"></span>
+		</div>
+		<div class="gif-search-results" id="gif-search-results">
+			<ul class="gif-search-results-list" >
+			</ul>
+		</div>
+	</div>
+</script>
+
+<script type="text/html" id="tmpl-whats-new-toolbar">
 		<?php if ( bp_is_activity_link_preview_active() ):  ?>
-			<li>
-				<a href="#" id="activity-link-preview-button" class="dashicons dashicons-admin-links"></a>
-			</li>
+			<span class="post-elements-buttons-item post-link">
+				<a id="activity-link-preview-button" class="toolbar-button">
+					<span class="dashicons dashicons-admin-links"></span>
+				</a>
+			</span>
 		<?php endif; ?>
-	</ul>
+		<span class="post-elements-buttons-item post-gif">
+			<div class="gif-media-search">
+				<a id="activity-gif-button" class="toolbar-button"><span class="dashicons dashicons-smiley"></span></a>
+				<div class="gif-media-search-dropdown"></div>
+			</div>
+		</span>
 </script>
 
 <script type="text/html" id="tmpl-activity-post-form-avatar">

@@ -122,6 +122,7 @@ add_action( 'bp_activity_before_save', 'bp_activity_check_blacklist_keys',  2, 1
 
 // Activity link preview
 add_action( 'bp_activity_after_save', 'bp_activity_save_link_data', 2, 1 );
+add_action( 'bp_activity_after_save', 'bp_activity_save_gif_data', 2, 1 );
 
 /** Functions *****************************************************************/
 
@@ -229,6 +230,24 @@ function bp_activity_save_link_data( $activity ) {
 	}
 
 	bp_activity_update_meta( $activity->id, '_link_preview_data', $preview_data );
+}
+
+/**
+ * Save gif data into activity meta key "_gif_attachment_id"
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $activity
+ */
+function bp_activity_save_gif_data( $activity ) {
+
+	if ( empty( $_POST['gif_url'] ) ) {
+		return;
+	}
+
+	$attachment_id = bp_activity_media_sideload_image( $_POST['gif_url'] );
+
+	bp_activity_update_meta( $activity->id, '_gif_attachment_id', $attachment_id );
 }
 
 /**

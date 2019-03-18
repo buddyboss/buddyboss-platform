@@ -83,9 +83,24 @@ window.bp = window.bp || {};
 			link_image_index: 0,
 			link_title: '',
 			link_description: '',
-			link_url: ''
+			link_url: '',
+			gif_url: ''
 		}
 	} );
+
+	bp.Models.GifResults = Backbone.Model.extend( {
+		defaults: {
+			q: '',
+			data: []
+		}
+	});
+
+	bp.Models.GifData = Backbone.Model.extend({});
+
+	bp.Collections.GifDatas =  Backbone.Collection.extend( {
+		// Reference to this collection's model.
+		model: bp.Models.GifData,
+	});
 
 	// Object, the activity is attached to (group or blog or any other)
 	bp.Models.ActivityObject = Backbone.Model.extend( {
@@ -309,6 +324,143 @@ window.bp = window.bp || {};
 			}
 		},
 	} );
+
+	// Activity gif selector
+	bp.Views.ActivityAttachedGifPreview = bp.View.extend( {
+		tagName: 'div',
+		className: 'activity-attached-gif-container',
+		template: bp.template( 'activity-attached-gif' ),
+
+		initialize: function() {
+			this.listenTo( this.model, 'change', this.render );
+		},
+
+		render: function() {
+			this.$el.html( this.template( this.model.toJSON() ) );
+			return this;
+		},
+
+	} );
+
+	bp.Views.GifMediaSearchDropdown = bp.View.extend( {
+		tagName: 'div',
+		className: 'activity-attached-gif-container  caret caret--stroked caret--top',
+		template: bp.template( 'gif-media-search-dropdown' ),
+		total_page: 0,
+		page: 0,
+		limit: 20,
+		q: '',
+		events: {
+			'keyup .search-query-input': 'search',
+			'click .found-media-item': 'select'
+		},
+
+		initialize: function(options) {
+			this.options = options || {};
+			this.giphy = new window.Giphy('dc6zaTOxFJmzC');
+
+			this.gifDataItems = new bp.Collections.GifDatas();
+			this.listenTo(this.gifDataItems, 'add', this.addOne);
+			this.listenTo(this.gifDataItems, 'reset', this.addAll);
+
+			document.addEventListener( 'scroll', _.bind( this.loadMore, this ), true );
+
+		},
+
+		render: function() {
+			this.$el.html( this.template( this.model.toJSON() ) );
+			this.$gifResultItem = this.$el.find('.gif-search-results-list');
+			this.$gifResultItem.on('scroll', this.loadMore);
+			return this;
+		},
+
+		search: function( e ) {
+			var self = this;
+
+			if ( this.Timeout != null ) {
+				clearTimeout( this.Timeout );
+			}
+
+			this.Timeout = setTimeout( function() {
+				this.Timeout = null;
+				self.searchGif( e.target.value );
+			}, 1000 );
+		},
+
+		searchGif: function( q ) {
+			var self = this;
+			this.q = q;
+			self.giphy.search( {
+					q: q,
+					offset: 0,
+					fmt: 'json',
+					limit: this.limit,
+				},
+				function( response ) {
+					self.gifDataItems.reset(response.data);
+					self.total_page = Math.ceil( response.pagination.total_count / self.limit );
+				}
+			);
+		},
+
+		select: function( e ) {
+			e.preventDefault();
+			this.$el.parent().removeClass('open');
+			this.model.set( 'gif_url', e.currentTarget.href );
+		},
+
+		// Add a single todo item to the list by creating a view for it, and
+		// appending its element to the `<ul>`.
+		addOne: function (data) {
+			var view = new bp.Views.GifDataItem({ model: data });
+			this.$gifResultItem.append(view.render().el);
+		},
+
+		// Add all items in the **Todos** collection at once.
+		addAll: function () {
+			this.$gifResultItem.html('');
+			this.gifDataItems.each(this.addOne, this);
+		},
+
+		loadMore: function( event ) {
+			if (event.target.id === 'gif-search-results') { // or any other filtering condition
+				var el = event.target;
+				if(el.scrollTop + el.offsetHeight >= el.scrollHeight){
+				if ( this.total_page > 0 && this.page <= this.total_page ) {
+						var self = this;
+						self.page = self.page + 1;
+						self.giphy.search( {
+								q: self.q,
+								offset: self.page * self.limit,
+								fmt: 'json',
+								limit: self.limit,
+							},
+							function( response ) {
+								self.gifDataItems.add(response.data);
+							}
+						);
+					}
+				}
+			}
+		}
+	});
+
+	bp.Views.GifDataItem = bp.View.extend({
+		tagName: 'li',
+		template: wp.template('gif-result-item'),
+		initialize: function() {
+			this.listenTo(this.model, 'change', this.render);
+			this.listenTo(this.model, 'destroy', this.remove);
+		},
+
+		render: function() {
+			this.$el.html(this.template(this.model.toJSON()));
+			var bgNo = Math.floor(Math.random() * (6 - 1 + 1)) + 1;
+			this.$el.addClass('bg' + bgNo);
+			return this;
+		}
+
+	});
 
 	// Regular input
 	bp.Views.ActivityInput = bp.View.extend( {
@@ -618,36 +770,68 @@ window.bp = window.bp || {};
 		}
 	} );
 
-	bp.Views.PostElementsButtons = bp.View.extend({
-		tagName   : 'div',
-		id        : 'whats-new-elements-buttons',
-		className : 'post-elements-buttons',
-		template:  bp.template( 'activity-post-elements-buttons' ),
+	bp.Views.ActivityToolbar = bp.View.extend( {
+		tagName: 'div',
+		id: 'whats-new-toolbar',
+		template: bp.template( 'whats-new-toolbar' ),
 		events: {
 			'click #activity-link-preview-button': 'toggleURLInput',
+			'click #activity-gif-button': 'toggleGifSelector'
+		},
+
+		initialize: function() {
+			document.addEventListener( 'keydown', _.bind( this.closeGifDropdownOnEsc, this ) );
+			$( document ).on( 'click', _.bind( this.closeGifDropdownOnClick, this ) );
+		},
+
+		render: function() {
+			this.$el.html(this.template(this.model.toJSON()));
+			this.$searchDropdownEl = this.$el.find('.gif-media-search-dropdown');
+			return this;
 		},
 
 		toggleURLInput: function( e ) {
 			e.preventDefault();
-			this.model.set( 'link_scrapping', ! this.model.get( 'link_scrapping' ) );
+			this.model.set( 'link_scrapping', !this.model.get( 'link_scrapping' ) );
 		},
-	});
 
-	bp.Views.PostElements = bp.View.extend({
-		tagName   : 'div',
-		id        : 'whats-new-elements',
-		className : 'post-elements',
+		toggleGifSelector: function( e ) {
+			e.preventDefault();
+			if ( this.$searchDropdownEl.is(':empty') ) {
+				var gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown({model: this.model});
+				this.$searchDropdownEl.html( gifMediaSearchDropdownView.render().el );
+			}
+			this.$searchDropdownEl.toggleClass('open');
+		},
 
+		closeGifDropdownOnEsc: function( event ) {
+			var key = event.key; // const {key} = event; in ES6+
+			if (key === "Escape") {
+				this.$searchDropdownEl.removeClass('open');
+			}
+		},
+
+		closeGifDropdownOnClick: function( event ) {
+			if (!$(event.target).closest('.post-gif').length) {
+				this.$searchDropdownEl.removeClass('open');
+			}
+		}
+	} );
+
+	bp.Views.ActivityAttachments = bp.View.extend( {
+		tagName: 'div',
+		id: 'whats-new-attachments',
 		initialize: function() {
 
 			if ( !_.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
 				this.views.add( new bp.Views.ActivityLinkPreview( { model: this.model } ) );
 			}
 
-			this.views.add( new bp.Views.PostElementsButtons( { model: this.model } ) );
+			this.views.add( new bp.Views.ActivityAttachedGifPreview( { model: this.model } ) );
 		}
 	});
-	/**
+
+		/**
 	 * Now build the buttons!
 	 * @type {[type]}
 	 */
@@ -836,7 +1020,8 @@ window.bp = window.bp || {};
 				this.views.add( new bp.Views.FormButtons( { collection: bp.Nouveau.Activity.postForm.buttons, model: this.model } ) );
 			}
 
-			this.views.add( new bp.Views.PostElements( { model: this.model } ) );
+			this.views.add( new bp.Views.ActivityAttachments( { model: this.model } ) );
+			this.views.add( new bp.Views.ActivityToolbar( { model: this.model } ) );
 
 			// Select box for the object
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) {
@@ -881,17 +1066,6 @@ window.bp = window.bp || {};
 			} else {
 				this.views.add( new bp.Views.activityFeedback( model.get( 'errors' ) ) );
 			}
-		},
-
-		delay: function( callback, ms ) {
-			var timer = 0;
-			return function() {
-				var context = this, args = arguments;
-				clearTimeout( timer );
-				timer = setTimeout( function() {
-					callback.apply( context, args );
-				}, ms || 0 );
-			};
 		},
 
 		postUpdate: function( event ) {
