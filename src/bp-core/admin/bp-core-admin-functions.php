@@ -2302,13 +2302,13 @@ function bp_core_get_groups_admin_tabs( $active_tab = '') {
 
 	$tabs = array();
 
-	if ( true === bp_disable_group_type_creation() ) {
+	$tabs[] = array(
+		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-groups' ), 'admin.php' ) ),
+		'name'  => __( 'All Groups', 'buddypress' ),
+		'class' => 'bp-all-groups',
+	);
 
-		$tabs[] = array(
-			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-groups' ), 'admin.php' ) ),
-			'name'  => __( 'All Groups', 'buddypress' ),
-			'class' => 'bp-all-groups',
-		);
+	if ( true === bp_disable_group_type_creation() ) {
 
 		$tabs[] = array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'post_type' => 'bp-group-type' ), 'edit.php' ) ),
@@ -2317,6 +2317,14 @@ function bp_core_get_groups_admin_tabs( $active_tab = '') {
 		);
 
 	}
+
+	$query['autofocus[section]'] = 'bp_nouveau_group_primary_nav';
+	$section_link = add_query_arg( $query, admin_url( 'customize.php' ) );
+	$tabs[] = array(
+		'href'  => esc_url( $section_link ),
+		'name'  => __( 'Customize Layout', 'buddypress' ),
+		'class' => 'bp-group-customize-layout',
+	);
 
 	/**
 	 * Filters the tab data used in our wp-admin screens.

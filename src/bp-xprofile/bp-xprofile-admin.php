@@ -956,6 +956,14 @@ function bp_core_get_users_admin_tabs( $active_tab = '') {
 		);
 	}
 
+	$query['autofocus[section]'] = 'bp_nouveau_user_primary_nav';
+	$section_link = add_query_arg( $query, admin_url( 'customize.php' ) );
+	$tabs[] = array(
+		'href'  => esc_url( $section_link ),
+		'name'  => __( 'Customize Layout', 'buddypress' ),
+		'class' => 'bp-user-customize-layout',
+	);
+
 	/**
 	 * Filters the tab data used in our wp-admin screens.
 	 *
