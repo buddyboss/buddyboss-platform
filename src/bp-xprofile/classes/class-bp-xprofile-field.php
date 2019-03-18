@@ -1246,7 +1246,7 @@ class BP_XProfile_Field {
 		} ?>
 
 		<div class="wrap">
-
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddypress' ) ); ?></h2>
 			<h1><?php echo esc_html( $title ); ?></h1>
 
 			<?php if ( !empty( $message ) ) : ?>

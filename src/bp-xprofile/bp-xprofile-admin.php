@@ -24,91 +24,17 @@ function xprofile_add_admin_menu() {
 		return false;
 	}
 
-	add_users_page( __( 'Profile Fields', 'buddyboss' ), __( 'Profile Fields', 'buddyboss' ), 'manage_options', 'bp-profile-setup', 'xprofile_admin' );
+	add_submenu_page(
+		'buddyboss-platform',
+		__( 'Profile', 'buddyboss' ),
+		__( 'Profile', 'buddyboss' ),
+		'bp_moderate',
+		'bp-profile-setup',
+		'xprofile_admin'
+	);
 
-	// Check profile type enabled.
-	$is_member_type_enabled = bp_member_type_enable_disable();
-	$is_profile_search_enabled = bp_disable_advanced_profile_search();
-
-	if ( true === $is_member_type_enabled ) {
-		add_users_page( __( 'Profile Types', 'buddyboss' ),
-			__( 'Profile Types', 'buddyboss' ),
-			'manage_options',
-			'edit.php?post_type=bp-member-type',
-			'' );
-	}
-
-	if ( false === $is_profile_search_enabled ) {
-		add_users_page( __( 'Profile Search', 'buddyboss' ),
-			__( 'Profile Search', 'buddyboss' ),
-			'manage_options',
-			'edit.php?post_type=bp_ps_form',
-			'' );
-	}
 }
 add_action( bp_core_admin_hook(), 'xprofile_add_admin_menu' );
-
-/**
- * Opens the users tab while on Profile Types
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_member_type_show_correct_current_menu(){
-	$screen = get_current_screen();
-	if ( $screen->id == 'bp-member-type' || $screen->id == 'edit-bp-member-type' ) {
-		?>
-		<script>
-			jQuery(document).ready(function($) {
-				$('#menu-users').addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
-				$('#menu-users > a').addClass('wp-has-current-submenu').removeClass('wp-not-current-submenu');
-			});
-		</script>
-		<?php
-	}
-	if ( $screen->id == 'bp-member-type' ) {
-		?>
-		<script>
-			jQuery(document).ready(function($) {
-				var parent_div = $('li').find('a[href$="bp-profile-setup"]').parent();
-				$(parent_div).closest('li').addClass('bp-profile-setup');
-				$('li.bp-profile-setup').next().addClass('current');
-			});
-		</script>
-		<?php
-	}
-	if ( $screen->id == 'edit-bp-member-type' ) {
-		?>
-		<script>
-			jQuery(document).ready(function($) {
-				var parent_div = $('li').find('a[href$="bp-profile-setup"]').parent();
-				$(parent_div).closest('li').addClass('bp-profile-setup');
-				$('li.bp-profile-setup').next().addClass('current');
-			});
-		</script>
-		<?php
-	}
-}
-add_action('admin_head', 'bp_member_type_show_correct_current_menu', 50);
-
-/**
- * Opens the users tab while on Profile Search
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_profile_search_show_correct_current_menu(){
-	$screen = get_current_screen();
-	if ( $screen->id == 'bp_ps_form' || $screen->id == 'edit-bp_ps_form' ) {
-		?>
-		<script>
-			jQuery(document).ready(function($) {
-				$('#menu-users').addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
-				$('#menu-users > a').addClass('wp-has-current-submenu').removeClass('wp-not-current-submenu');
-			});
-		</script>
-		<?php
-	}
-}
-add_action('admin_head', 'bp_profile_search_show_correct_current_menu', 50);
 
 /**
  * Handles all actions for the admin area for creating, editing and deleting
@@ -206,7 +132,7 @@ function xprofile_admin( $message = '', $type = 'error' ) {
 function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
 	// Users admin URL
-	$url = bp_get_admin_url( 'users.php' );
+	$url = bp_get_admin_url( 'admin.php' );
 
 	// Add Group
 	$add_group_url = add_query_arg( array(
@@ -223,6 +149,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 	) ); ?>
 
 	<div class="wrap">
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddypress' ) ); ?></h2>
 		<?php if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) : ?>
 
 			<h1 class="wp-heading-inline"><?php _e( 'Profile Fields', 'buddyboss'); ?></h1>
@@ -781,7 +708,7 @@ function xprofile_admin_field( $admin_field, $admin_group, $class = '' ) {
 	$field = $admin_field;
 
 	// Users admin URL
-	$url = bp_get_admin_url( 'users.php' );
+	$url = bp_get_admin_url( 'admin.php' );
 
 	// Edit
 	$field_edit_url = add_query_arg( array(
@@ -940,3 +867,138 @@ function bp_xprofile_admin_form_field_types( $select_field_type ) {
 
 // Load the xprofile user admin.
 add_action( 'bp_init', array( 'BP_XProfile_User_Admin', 'register_xprofile_user_admin' ), 11 );
+
+/**
+ * Output the tabs in the admin area.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $active_tab Name of the tab that is active. Optional.
+ */
+function bp_core_admin_users_tabs( $active_tab = '' ) {
+
+	$tabs_html    = '';
+	$idle_class   = 'nav-tab';
+	$active_class = 'nav-tab nav-tab-active';
+
+	/**
+	 * Filters the admin tabs to be displayed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param array $value Array of tabs to output to the admin area.
+	 */
+	$tabs         = apply_filters( 'bp_core_admin_users_tabs', bp_core_get_users_admin_tabs( $active_tab ) );
+
+	// Loop through tabs and build navigation.
+	foreach ( array_values( $tabs ) as $tab_data ) {
+		$is_current = (bool) ( $tab_data['name'] == $active_tab );
+		$tab_class  = $is_current ? $tab_data['class'].' '.$active_class : $tab_data['class'].' '.$idle_class;
+		$tabs_html .= '<a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a>';
+	}
+
+	echo $tabs_html;
+
+	/**
+	 * Fires after the output of tabs for the admin area.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	do_action( 'bp_admin_groups_tabs' );
+}
+
+/**
+ * Register tabs for the BuddyBoss > Groups screens.
+ *
+ * @param string $active_tab
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return array
+ */
+function bp_core_get_users_admin_tabs( $active_tab = '') {
+
+	$tabs = array();
+
+	// Check profile type enabled.
+	$is_member_type_enabled = bp_member_type_enable_disable();
+
+	// Check profile search enabled.
+	$is_profile_search_enabled = bp_disable_advanced_profile_search();
+
+	$tabs[] = array(
+		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-profile-setup' ), 'admin.php' ) ),
+		'name'  => __( 'Profile Fields', 'buddypress' ),
+		'class' => 'bp-profile-fields',
+	);
+
+	if ( true === $is_member_type_enabled ) {
+		$tabs[] = array(
+			'href'  => bp_get_admin_url( add_query_arg( array( 'post_type' => 'bp-member-type' ), 'edit.php' ) ),
+			'name'  => __( 'Profile Types', 'buddypress' ),
+			'class' => 'bp-profile-types',
+		);
+	}
+
+	if ( false === $is_profile_search_enabled ) {
+		$tabs[] = array(
+			'href'  => bp_get_admin_url( add_query_arg( array( 'post_type' => 'bp_ps_form' ), 'edit.php' ) ),
+			'name'  => __( 'Profile Search', 'buddypress' ),
+			'class' => 'bp-profile-search',
+		);
+	}
+
+	/**
+	 * Filters the tab data used in our wp-admin screens.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param array $tabs Tab data.
+	 */
+	return apply_filters( 'bp_core_get_users_admin_tabs', $tabs );
+}
+
+/**
+ * Added Navigation tab on top of the page BuddyBoss > Group Types
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_users_admin_profile_types_listing_add_users_tab() {
+	global $pagenow ,$post;
+
+	// Check profile type enabled.
+	$is_member_type_enabled = bp_member_type_enable_disable();
+
+	if ( true === $is_member_type_enabled ) {
+
+		if ( ( $post->post_type == 'bp-member-type' && $pagenow == 'edit.php' ) || ( $post->post_type == 'bp-member-type' && $pagenow == 'post-new.php' ) || ( $post->post_type == 'bp-member-type' && $pagenow == 'post.php' ) ) {
+			?>
+			<div class="wrap">
+				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Types', 'buddypress' ) ); ?></h2>
+			</div>
+			<?php
+		}
+
+	}
+}
+add_action('admin_notices','bp_users_admin_profile_types_listing_add_users_tab');
+
+add_filter( 'parent_file', 'bp_profile_type_set_platform_tab_submenu_active' );
+/**
+ * Highlights the submenu item using WordPress native styles.
+ *
+ * @param string $parent_file The filename of the parent menu.
+ *
+ * @return string $parent_file The filename of the parent menu.
+ */
+function bp_profile_type_set_platform_tab_submenu_active( $parent_file ) {
+	global $pagenow, $current_screen, $post;
+
+	if ( true === bp_member_type_enable_disable() ) {
+		if ( ( $post->post_type == 'bp-member-type' && $pagenow == 'edit.php' ) || ( $post->post_type == 'bp-member-type' && $pagenow == 'post-new.php' ) || ( $post->post_type == 'bp-member-type' && $pagenow == 'post.php' ) ) {
+			$parent_file = 'buddyboss-platform';
+		}
+	}
+	return $parent_file;
+}

@@ -215,3 +215,48 @@ function bp_profile_search_add_main_form () {
         bp_update_option ( 'bp_profile_search_main_form', $post_id );
     }
 }
+
+/**
+ * Added Navigation tab on top of the page BuddyBoss > Group Types
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_users_admin_profile_search_listing_add_users_tab() {
+	global $pagenow ,$post;
+
+	// Check profile search enabled.
+	$is_profile_search_enabled = bp_disable_advanced_profile_search();
+
+	if ( false === $is_profile_search_enabled ) {
+
+		if ( ( $post->post_type == 'bp_ps_form' && $pagenow == 'edit.php' ) || ( $post->post_type == 'bp_ps_form' && $pagenow == 'post-new.php' ) || ( $post->post_type == 'bp_ps_form' && $pagenow == 'post.php' ) ) {
+			?>
+			<div class="wrap">
+				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Search', 'buddypress' ) ); ?></h2>
+			</div>
+			<?php
+		}
+
+	}
+}
+add_action('admin_notices','bp_users_admin_profile_search_listing_add_users_tab');
+
+add_filter( 'parent_file', 'bp_profile_search_set_platform_tab_submenu_active' );
+/**
+ * Highlights the submenu item using WordPress native styles.
+ *
+ * @param string $parent_file The filename of the parent menu.
+ *
+ * @return string $parent_file The filename of the parent menu.
+ */
+function bp_profile_search_set_platform_tab_submenu_active( $parent_file ) {
+	global $pagenow, $current_screen, $post;
+
+	if ( false === bp_disable_advanced_profile_search() ) {
+		if ( ( $post->post_type == 'bp_ps_form' && $pagenow == 'edit.php' ) || ( $post->post_type == 'bp_ps_form' && $pagenow == 'post-new.php' ) || ( $post->post_type == 'bp_ps_form' && $pagenow == 'post.php' ) ) {
+			$parent_file = 'buddyboss-platform';
+		}
+	}
+	return $parent_file;
+}

@@ -53,7 +53,6 @@
 		}
 
 		var menuOpen = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu #toplevel_page_buddyboss-platform ul.wp-submenu li');
-		var menuOpenSelected = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu #toplevel_page_buddyboss-platform>a');
 
 		// Set Groups selected on Group Type post types.
 		if ( $('body.buddypress.post-type-bp-group-type').length ) {
@@ -64,6 +63,7 @@
 			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li').find('a[href*="bp-groups"]').parent().addClass('current');
 		}
 
+		// Set Emails selected on email templates post types.
 		if ( $('body.buddypress.post-type-bp-email').length ) {
 			var selectorEmails = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="bp-email"]');
 			$(menuOpen).removeClass('current');
@@ -87,6 +87,25 @@
 			$(selectorReply).attr('aria-current','page');
 			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li').find('a[href*="post_type=forum"]').parent().addClass('current');
 		}
+
+		// Set Profile selected on Profile Type post types.
+		if ( $('body.buddypress.post-type-bp-member-type').length ) {
+			var selectorProfileTypes = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="bp-profile-setup"]');
+			$(menuOpen).removeClass('current');
+			$(selectorProfileTypes).addClass('current');
+			$(selectorProfileTypes).attr('aria-current','page');
+			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li').find('a[href*="bp-profile-setup"]').parent().addClass('current');
+		}
+
+		// Set Profile selected on Profile Search post types.
+		if ( $('body.buddypress.post-type-bp_ps_form').length ) {
+			var selectorProfileSearch = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="bp-profile-setup"]');
+			$(menuOpen).removeClass('current');
+			$(selectorProfileSearch).addClass('current');
+			$(selectorProfileSearch).attr('aria-current','page');
+			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li').find('a[href*="bp-profile-setup"]').parent().addClass('current');
+		}
+
 	});
 
 }());
