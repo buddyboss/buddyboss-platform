@@ -59,6 +59,23 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	public function form_html() {
+
+		if ( $this->required_plugin && ! is_plugin_active( $this->required_plugin ) ) {
+			if ( is_file ( $this->intro_template ) ) {
+				require $this->intro_template;
+			}
+
+			return;
+		}
+
+		// Check Group component active.
+		if ( ! bp_is_active( 'groups' ) ) {
+			if ( is_file ( $this->intro_template ) ) {
+				require $this->intro_template;
+			}
+
+			return;
+		}
 		parent::form_html();
 	}
 
