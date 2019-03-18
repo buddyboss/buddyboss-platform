@@ -26,8 +26,8 @@ function xprofile_add_admin_menu() {
 
 	add_submenu_page(
 		'buddyboss-platform',
-		__( 'Profile', 'buddyboss' ),
-		__( 'Profile', 'buddyboss' ),
+		__( 'Profiles', 'buddyboss' ),
+		__( 'Profiles', 'buddyboss' ),
 		'bp_moderate',
 		'bp-profile-setup',
 		'xprofile_admin'
