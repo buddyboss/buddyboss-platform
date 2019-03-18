@@ -92,8 +92,8 @@ function bp_invite_show_data( $column, $post_id  ) {
 			$inviter_link = bp_core_get_user_domain( $author_id );
 			$inviter_name = bp_core_get_user_displayname( $author_id );
 			printf(
-				'<a href="%s">%s</a>',
-				esc_url( $inviter_link ), $inviter_name
+				'<strong>%s<a href="%s">%s</a></strong>',
+				get_avatar( $author_id, '32' ),esc_url( $inviter_link ), $inviter_name
 			);
 
 			break;

@@ -156,7 +156,8 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddypress' ) ); ?></h2><?php
 			}
 		?>
-
+	</div>
+	<div class="wrap">
 		<?php if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) : ?>
 
 			<h1 class="wp-heading-inline"><?php _e( 'Profile Fields', 'buddyboss'); ?></h1>
