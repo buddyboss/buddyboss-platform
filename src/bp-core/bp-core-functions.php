@@ -2418,7 +2418,7 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'xprofile' => array(
 			'title'       => __( 'Profile Fields', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( 'users.php?page=bp-profile-setup' ),
+			'settings'    => bp_get_admin_url( 'admin.php?page=bp-profile-setup' ),
 			'description' => __( 'Customize your community with fully editable profile fields that allow members to share details about themselves.', 'buddyboss' ),
 			'default'     => true,
 		),

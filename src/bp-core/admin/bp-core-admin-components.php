@@ -211,7 +211,13 @@ function bp_core_admin_components_options() {
 			                    	<span><?php _e( '|', 'buddyboss' ); ?></span>
                                     <span class="settings">
                                         <a href="<?php echo esc_url( $labels['settings'] ); ?>">
-                                            <?php _e( 'Settings', 'buddyboss' ); ?>
+	                                        <?php
+		                                        if ( 'xprofile' === $name ) {
+		                                            _e( 'Edit Fields', 'buddyboss' );
+		                                        } else {
+		                                            _e( 'Settings', 'buddyboss' );
+		                                        }
+	                                        ?>
                                         </a>
                                     </span>
 			                    <?php endif; ?>
