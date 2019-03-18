@@ -230,7 +230,7 @@ function bp_users_admin_profile_search_listing_add_users_tab() {
 
 	if ( false === $is_profile_search_enabled ) {
 
-		if ( ( $post->post_type == 'bp_ps_form' && $pagenow == 'edit.php' ) || ( $post->post_type == 'bp_ps_form' && $pagenow == 'post-new.php' ) || ( $post->post_type == 'bp_ps_form' && $pagenow == 'post.php' ) ) {
+		if ( ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'post.php' ) ) {
 			?>
 			<div class="wrap">
 				<?php
@@ -260,7 +260,7 @@ function bp_profile_search_set_platform_tab_submenu_active( $parent_file ) {
 	global $pagenow, $current_screen, $post;
 
 	if ( false === bp_disable_advanced_profile_search() ) {
-		if ( ( $post->post_type == 'bp_ps_form' && $pagenow == 'edit.php' ) || ( $post->post_type == 'bp_ps_form' && $pagenow == 'post-new.php' ) || ( $post->post_type == 'bp_ps_form' && $pagenow == 'post.php' ) ) {
+		if ( ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'post.php' ) ) {
 			$parent_file = 'buddyboss-platform';
 		}
 	}

@@ -268,7 +268,7 @@ add_action('admin_notices','bp_forums_admin_forums_listing_add_tab');
 function bp_discussions_admin_discussions_listing_add_tab() {
 	global $pagenow ,$post;
 
-	if ( ( $post->post_type == bbp_get_topic_post_type() && $pagenow == 'edit.php' ) || ( $post->post_type == bbp_get_topic_post_type() && $pagenow == 'post-new.php' ) || ( $post->post_type == bbp_get_topic_post_type() && $pagenow == 'post.php' ) ) {
+	if ( ( isset( $post->post_type ) && $post->post_type == bbp_get_topic_post_type() && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_topic_post_type() && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_topic_post_type() && $pagenow == 'post.php' ) ) {
 		?>
 		<div class="wrap">
 			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Discussions', 'buddypress' ) ); ?></h2>
@@ -288,7 +288,7 @@ add_action('admin_notices','bp_discussions_admin_discussions_listing_add_tab');
 function bp_replies_admin_replies_listing_add_tab() {
 	global $pagenow ,$post;
 
-	if ( ( $post->post_type == bbp_get_reply_post_type() && $pagenow == 'edit.php' ) || ( $post->post_type == bbp_get_reply_post_type() && $pagenow == 'post-new.php' ) || ( $post->post_type == bbp_get_reply_post_type() && $pagenow == 'post.php' ) ) {
+	if ( ( isset( $post->post_type ) && $post->post_type == bbp_get_reply_post_type() && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_reply_post_type() && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_reply_post_type() && $pagenow == 'post.php' ) ) {
 		?>
 		<div class="wrap">
 			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Replies', 'buddypress' ) ); ?></h2>
@@ -330,11 +330,11 @@ add_filter( 'parent_file', 'bbp_set_platform_tab_submenu_active' );
 function bbp_set_platform_tab_submenu_active( $parent_file ) {
 	global $pagenow, $current_screen, $post;
 
-	if ( ( $post->post_type == bbp_get_reply_post_type() && $pagenow == 'edit.php' ) || ( $post->post_type == bbp_get_reply_post_type() && $pagenow == 'post-new.php' ) || ( $post->post_type == bbp_get_reply_post_type() && $pagenow == 'post.php' ) ) {
+	if ( ( isset( $post->post_type ) && $post->post_type == bbp_get_reply_post_type() && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_reply_post_type() && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_reply_post_type() && $pagenow == 'post.php' ) ) {
 		$parent_file = 'buddyboss-platform';
 	} elseif ( ( $current_screen->taxonomy == bbp_get_topic_tag_tax_id() && $pagenow == 'edit-tags.php' ) || ( $current_screen->taxonomy == bbp_get_topic_tag_tax_id() && $pagenow == 'term.php' ) ) {
 		$parent_file = 'buddyboss-platform';
-	} elseif ( ( $post->post_type == bbp_get_topic_post_type() && $pagenow == 'edit.php' ) || ( $post->post_type == bbp_get_topic_post_type() && $pagenow == 'post-new.php' ) || ( $post->post_type == bbp_get_topic_post_type() && $pagenow == 'post.php' ) ) {
+	} elseif ( ( isset( $post->post_type ) && $post->post_type == bbp_get_topic_post_type() && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_topic_post_type() && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_topic_post_type() && $pagenow == 'post.php' ) ) {
 		$parent_file = 'buddyboss-platform';
 	} elseif ( ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'edit.php' ) || ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'post-new.php' ) || ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'post.php' ) ) {
 		$parent_file = 'buddyboss-platform';

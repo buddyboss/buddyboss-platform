@@ -2222,7 +2222,7 @@ function bp_remove_avatar_settings_from_options_discussion_page() {
 function bp_emails_admin_email_listing_add_tab() {
 	global $pagenow, $post;
 
-	if ( ( $post->post_type == bp_get_email_post_type() && $pagenow == 'edit.php' ) || ( $post->post_type == bp_get_email_post_type() && $pagenow == 'post-new.php' ) || ( $post->post_type == bp_get_email_post_type() && $pagenow == 'post.php' ) ) {
+	if ( ( isset( $post->post_type ) && $post->post_type == bp_get_email_post_type() && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == bp_get_email_post_type() && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == bp_get_email_post_type() && $pagenow == 'post.php' ) ) {
 		?>
 		<div class="wrap">
 			<h2 class="nav-tab-wrapper"><?php bp_core_admin_emails_tabs( __( 'Emails', 'buddypress' ) ); ?></h2>
@@ -2244,7 +2244,7 @@ add_filter( 'parent_file', 'bp_set_emails_platform_tab_submenu_active' );
 function bp_set_emails_platform_tab_submenu_active( $parent_file ) {
 	global $pagenow, $current_screen, $post;
 
-	if ( ( $post->post_type == bp_get_email_post_type() && $pagenow == 'edit.php' ) || ( $post->post_type == bp_get_email_post_type() && $pagenow == 'post-new.php' ) || ( $post->post_type == bp_get_email_post_type() && $pagenow == 'post.php' ) ) {
+	if ( ( isset( $post->post_type ) && $post->post_type == bp_get_email_post_type() && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == bp_get_email_post_type() && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == bp_get_email_post_type() && $pagenow == 'post.php' ) ) {
 		$parent_file = 'buddyboss-platform';
 	}
 	return $parent_file;
