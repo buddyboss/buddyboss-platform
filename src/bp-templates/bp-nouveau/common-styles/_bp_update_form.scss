@@ -51,7 +51,6 @@
 			cursor: pointer;
 			display: inline-block;
 			font-size: 12px;
-			max-width: 312px;
 			overflow: hidden;
 			position: relative;
 
@@ -144,16 +143,14 @@
 						max-height: 410px;
 
 						ul {
-							display: flex;
-							flex-wrap: wrap;
+							columns: 2 190px;
+							column-gap: 0;
+							margin: 0;
+							padding: 0;
 							list-style: none;
 
 							li {
-								display: block;
-								flex: 0 0 50%;
 								border: 3px solid #fff;
-								position: relative;
-								min-height: 100px;
 
 								&.bg1 {
 									background: #e0245e
@@ -184,6 +181,7 @@
 						.found-media-item img {
 							width: 100%;
 							height: 100%;
+							min-width: 180px;
 						}
 					}
 

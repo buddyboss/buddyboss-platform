@@ -175,7 +175,7 @@ function bp_admin_setting_callback_enable_activity_gif() {
 	<input id="_bp_enable_activity_gif" name="_bp_enable_activity_gif" type="checkbox" value="1" data-run-js-condition="_bp_enable_activity_gif" <?php checked( bp_is_activity_gif_active( false ) ); ?> />
 	<label for="_bp_enable_activity_gif"><?php _e( 'Allow GIFs in activity posts', 'buddyboss' ); ?></label>
 	<p class="js-show-on-_bp_enable_activity_gif">
-		<input type="text" name="_bp_activity_gif_api_key" id="_bp_activity_gif_api_key" value="<?php echo bp_get_activity_gif_api_key() ?>"/>
+		<input type="text" name="_bp_activity_gif_api_key" id="_bp_activity_gif_api_key" value="<?php echo bp_get_activity_gif_api_key() ?>" style="width: 300px;" />
 		<p class="description"><?php esc_html_e('Gif developer api key', 'buddyboss') ?></p>
 	</p>
 	<?php

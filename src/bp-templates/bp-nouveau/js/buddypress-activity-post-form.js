@@ -97,6 +97,7 @@ window.bp = window.bp || {};
 
 	bp.Models.GifData = Backbone.Model.extend({});
 
+	// Git results collection returned from giphy api
 	bp.Collections.GifDatas =  Backbone.Collection.extend( {
 		// Reference to this collection's model.
 		model: bp.Models.GifData,
@@ -348,6 +349,7 @@ window.bp = window.bp || {};
 		}
 	} );
 
+	// Gif search dropdown
 	bp.Views.GifMediaSearchDropdown = bp.View.extend( {
 		tagName: 'div',
 		className: 'activity-attached-gif-container  caret caret--stroked caret--top',
@@ -504,6 +506,7 @@ window.bp = window.bp || {};
 		}
 	} );
 
+	// Gif search dropdown single item
 	bp.Views.GifDataItem = bp.View.extend( {
 		tagName: 'li',
 		template: wp.template( 'gif-result-item' ),
@@ -513,9 +516,13 @@ window.bp = window.bp || {};
 		},
 
 		render: function() {
-			this.$el.html( this.template( this.model.toJSON() ) );
-			var bgNo = Math.floor( Math.random() * (6 - 1 + 1) ) + 1;
-			this.$el.addClass( 'bg' + bgNo );
+			var bgNo = Math.floor( Math.random() * (6 - 1 + 1) ) + 1,
+				images = this.model.get('images');
+
+			this.el.innerHTML = this.template( this.model.toJSON() );
+			this.el.classList.add('bg' + bgNo);
+			this.el.style.height = images.fixed_width.height + 'px';
+
 			return this;
 		}
 
