@@ -29,6 +29,8 @@ class BpMemberships {
 
 	public function __construct() {
 
+		add_submenu_page('', 'BuddyBoss Memberships', 'Memberships Settings', 'manage_options', 'bbms-product-events', array($this, 'bbmsProductEvents'));
+
 		// Trigger filters/action after Learndash is loaded
 		add_action('learndash_init', array($this, 'onLearndashInit'));
 
