@@ -114,19 +114,20 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Exclude BP CPT
 		$bp_exclude_cpt = [ 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' ];
 
-		// flag for adding a helping text below the Blog Posts and custom post types list end.
-		$post_type_count = count( $post_types ) - count( $bp_exclude_cpt );
-		$counter         = 1;
-
-		// flag for adding conditional CSS class.
-		$count = 0;
-
-
+		$bp_excluded_cpt = array();
 		foreach ( $post_types as $post_type ) {
 			// Exclude all the custom post type which is already in BuddyPress Activity support.
 			if ( in_array( $post_type, $bp_exclude_cpt ) ) {
 				continue;
 			}
+
+			$bp_excluded_cpt[] = $post_type;
+		}
+
+		// flag for adding conditional CSS class.
+		$count = 0;
+
+		foreach ( $bp_excluded_cpt as $key => $post_type ) {
 
 			$fields = [];
 
@@ -136,7 +137,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			];
 
 			// set the description flag for adding text below the last CPT
-			if ( $counter === $post_type_count ) {
+			if( $key == ( count( $bp_excluded_cpt ) - 1 ) ) {
 				$fields['args']['description'] = true;
 			}
 
