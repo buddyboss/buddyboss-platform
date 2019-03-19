@@ -568,10 +568,9 @@ function bp_core_install_media() {
 	   id bigint(20) NOT NULL AUTO_INCREMENT,
 	   user_id bigint(20) NOT NULL,
 	   group_id bigint(20) NULL,
-	   date_created datetime NULL DEFAULT '0000-00-00',
+	   date_created datetime NULL DEFAULT '0000-00-00 00:00:00',
 	   title text NOT NULL,
 	   description text NULL,
-	   total_items mediumint(9) NULL DEFAULT '0',
 	   privacy varchar(50) NULL DEFAULT 'public',
 	   PRIMARY KEY  (id)
    ) {$charset_collate};";

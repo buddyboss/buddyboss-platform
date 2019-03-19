@@ -10,18 +10,18 @@
 if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
- * Database interaction class for the BuddyBoss media component.
- * Instance methods are available for creating/editing an media,
- * static methods for querying media.
+ * Database interaction class for the BuddyBoss media album component.
+ * Instance methods are available for creating/editing an media albums,
+ * static methods for querying media album.
  *
- * @since BuddyPress 1.0.0
+ * @since BuddyBoss 1.0.0
  */
-class BP_Media {
+class BP_Media_Album {
 
 	/** Properties ************************************************************/
 
 	/**
-	 * ID of the media item.
+	 * ID of the album.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 * @var int
@@ -29,23 +29,7 @@ class BP_Media {
 	var $id;
 
 	/**
-	 * Blog ID of the media item.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 * @var int
-	 */
-	var $blog_id;
-
-	/**
-	 * Attachment ID of the media item.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 * @var int
-	 */
-	var $attachment_id;
-
-	/**
-	 * User ID of the media item.
+	 * User ID of the album.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 * @var int
@@ -53,7 +37,15 @@ class BP_Media {
 	var $user_id;
 
 	/**
-	 * Title of the media item.
+	 * Group ID of the album.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @var int
+	 */
+	var $group_id;
+
+	/**
+	 * Title of the album.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 * @var string
@@ -61,23 +53,15 @@ class BP_Media {
 	var $title;
 
 	/**
-	 * Album ID of the media item.
+	 * Description of the album.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @var int
+	 * @var string
 	 */
-	var $album_id;
+	var $description;
 
 	/**
-	 * Activity ID of the media item.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 * @var int
-	 */
-	var $activity_id;
-
-	/**
-	 * Privacy of the media item.
+	 * Privacy of the album.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 * @var string
@@ -85,15 +69,7 @@ class BP_Media {
 	var $privacy;
 
 	/**
-	 * Menu order of the media item.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 * @var int
-	 */
-	var $menu_order;
-
-	/**
-	 * Upload date of the media item.
+	 * Upload date of the album.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 * @var string
@@ -123,7 +99,7 @@ class BP_Media {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param int|bool $id Optional. The ID of a specific activity item.
+	 * @param int|bool $id Optional. The ID of a specific media album.
 	 */
 	function __construct( $id = false ) {
 		// Instantiate errors object.
@@ -136,7 +112,7 @@ class BP_Media {
 	}
 
 	/**
-	 * Populate the object with data about the specific media item.
+	 * Populate the object with data about the specific album item.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -144,13 +120,13 @@ class BP_Media {
 
 		global $wpdb;
 
-		$row = wp_cache_get( $this->id, 'bp_media' );
+		$row = wp_cache_get( $this->id, 'bp_media_album' );
 
 		if ( false === $row ) {
 			$bp  = buddypress();
-			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->media->table_name} WHERE id = %d", $this->id ) );
+			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->media->table_name_albums} WHERE id = %d", $this->id ) );
 
-			wp_cache_set( $this->id, $row, 'bp_media' );
+			wp_cache_set( $this->id, $row, 'bp_media_album' );
 		}
 
 		if ( empty( $row ) ) {
@@ -158,20 +134,17 @@ class BP_Media {
 			return;
 		}
 
-		$this->id            = (int) $row->id;
-		$this->blog_id       = (int) $row->blog_id;
-		$this->attachment_id = (int) $row->attachment_id;
-		$this->user_id       = (int) $row->user_id;
-		$this->title         = $row->title;
-		$this->album_id      = (int) $row->album_id;
-		$this->activity_id   = (int) $row->activity_id;
-		$this->privacy       = $row->privacy;
-		$this->menu_order    = (int) $row->menu_order;
-		$this->date_created  = $row->date_created;
+		$this->id           = (int) $row->id;
+		$this->user_id      = (int) $row->user_id;
+		$this->group_id     = (int) $row->group_id;
+		$this->title        = $row->title;
+		$this->description  = $row->description;
+		$this->privacy      = $row->privacy;
+		$this->date_created = $row->date_created;
 	}
 
 	/**
-	 * Save the media item to the database.
+	 * Save the media album to the database.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -184,69 +157,52 @@ class BP_Media {
 		$bp = buddypress();
 
 		$this->id            = apply_filters_ref_array( 'bp_media_id_before_save',                array( $this->id,                &$this ) );
-		$this->blog_id       = apply_filters_ref_array( 'bp_media_blog_id_before_save',           array( $this->blog_id,           &$this ) );
-		$this->attachment_id = apply_filters_ref_array( 'bp_media_attachment_id_before_save',     array( $this->attachment_id,     &$this ) );
 		$this->user_id       = apply_filters_ref_array( 'bp_media_user_id_before_save',           array( $this->user_id,           &$this ) );
+		$this->group_id      = apply_filters_ref_array( 'bp_media_group_id_before_save',          array( $this->group_id,          &$this ) );
 		$this->title         = apply_filters_ref_array( 'bp_media_title_before_save',             array( $this->title,             &$this ) );
-		$this->album_id      = apply_filters_ref_array( 'bp_media_album_id_before_save',          array( $this->album_id,          &$this ) );
-		$this->activity_id   = apply_filters_ref_array( 'bp_media_activity_id_before_save',       array( $this->activity_id,       &$this ) );
+		$this->description   = apply_filters_ref_array( 'bp_media_description_before_save',       array( $this->title,             &$this ) );
 		$this->privacy       = apply_filters_ref_array( 'bp_media_privacy_before_save',           array( $this->privacy,           &$this ) );
-		$this->menu_order    = apply_filters_ref_array( 'bp_media_menu_order_before_save',        array( $this->menu_order,        &$this ) );
 		$this->date_created  = apply_filters_ref_array( 'bp_media_date_created_before_save',      array( $this->date_created,      &$this ) );
 
 		/**
-		 * Fires before the current media item gets saved.
+		 * Fires before the current album gets saved.
 		 *
 		 * Please use this hook to filter the properties above. Each part will be passed in.
 		 *
 		 * @since BuddyBoss 1.0.0
 		 *
-		 * @param BP_Media $this Current instance of the media item being saved. Passed by reference.
+		 * @param BP_Media $this Current instance of the album being saved. Passed by reference.
 		 */
-		do_action_ref_array( 'bp_media_before_save', array( &$this ) );
+		do_action_ref_array( 'bp_media_album_before_save', array( &$this ) );
 
 		if ( 'wp_error' === $this->error_type && $this->errors->get_error_code() ) {
 			return $this->errors;
 		}
 
-		if ( empty( $this->activity_id ) || empty( $this->attachment_id ) ) {
-			if ( 'bool' === $this->error_type ) {
-				return false;
-			} else {
-				if ( empty( $this->activity_id ) ) {
-					$this->errors->add( 'bp_media_missing_activity' );
-				} else {
-					$this->errors->add( 'bp_media_missing_attachment' );
-				}
-
-				return $this->errors;
-			}
-		}
-
-		// If we have an existing ID, update the media item, otherwise insert it.
+		// If we have an existing ID, update the album, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, privacy = %s, menu_order = %d, date_created = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->privacy, $this->menu_order, $this->date_created, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name_albums} SET user_id = %d, group_id = %d, title = %s, description = %s, privacy = %s, date_created = %s WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->description, $this->privacy, $this->date_created, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, privacy, menu_order, date_created ) VALUES ( %d, %d, %d, %s, %d, %d, %s, %d, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->privacy, $this->menu_order, $this->date_created );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name_albums} ( user_id, group_id, title, description, privacy, date_created ) VALUES ( %d, %d, %s, %s, %s, %s )", $this->user_id, $this->group_id, $this->title, $this->description, $this->privacy, $this->date_created );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
 			return false;
 		}
 
-		// If this is a new media item, set the $id property.
+		// If this is a new album, set the $id property.
 		if ( empty( $this->id ) ) {
 			$this->id = $wpdb->insert_id;
 		}
 
 		/**
-		 * Fires after an media item has been saved to the database.
+		 * Fires after an album has been saved to the database.
 		 *
 		 * @since BuddyBoss 1.0.0
 		 *
-		 * @param BP_Media $this Current instance of media item being saved. Passed by reference.
+		 * @param BP_Media $this Current instance of album being saved. Passed by reference.
 		 */
-		do_action_ref_array( 'bp_media_after_save', array( &$this ) );
+		do_action_ref_array( 'bp_media_album_after_save', array( &$this ) );
 
 		return true;
 	}
@@ -254,7 +210,7 @@ class BP_Media {
 	/** Static Methods ***************************************************/
 
 	/**
-	 * Get media items, as specified by parameters.
+	 * Get albums, as specified by parameters.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -271,12 +227,12 @@ class BP_Media {
 	 *     @type array        $exclude           Array of media IDs to exclude. Default: false.
 	 *     @type string       $search_terms      Limit results by a search term. Default: false.
 	 *     @type bool         $update_meta_cache Whether to pre-fetch metadata for queried activity items. Default: true.
-	 *     @type string|bool  $count_total       If true, an additional DB query is run to count the total media items
+	 *     @type string|bool  $count_total       If true, an additional DB query is run to count the total albums
 	 *                                           for the query. Default: false.
 	 * }
 	 * @return array The array returned has two keys:
 	 *               - 'total' is the count of located medias
-	 *               - 'medias' is an array of the located medias
+	 *               - 'albums' is an array of the located medias
 	 */
 	public static function get( $args = array() ) {
 
@@ -285,7 +241,7 @@ class BP_Media {
 		$bp = buddypress();
 		$r  = wp_parse_args( $args, array(
 			'page'              => 1,               // The current page.
-			'per_page'          => 20,              // Media items per page.
+			'per_page'          => 20,              // albums per page.
 			'max'               => false,           // Max number of items to return.
 			'fields'            => 'all',           // Fields to include.
 			'sort'              => 'DESC',          // ASC or DESC.
@@ -299,7 +255,7 @@ class BP_Media {
 		// Select conditions.
 		$select_sql = "SELECT DISTINCT m.id";
 
-		$from_sql   = " FROM {$bp->media->table_name} m";
+		$from_sql   = " FROM {$bp->media->table_name_albums} m";
 
 		$join_sql   = '';
 
@@ -318,7 +274,7 @@ class BP_Media {
 			 *
 			 * @param bool $value Whether or not to include user search. Default false.
 			 */
-			if ( apply_filters( 'bp_media_get_include_user_search', false ) ) {
+			if ( apply_filters( 'bp_media_album_get_include_user_search', false ) ) {
 				$user_search = get_user_by( 'slug', $r['search_terms'] );
 				if ( false !== $user_search ) {
 					$user_id                         = $user_search->ID;
@@ -357,7 +313,7 @@ class BP_Media {
 		}
 
 		/**
-		 * Filters the MySQL WHERE conditions for the Media items get method.
+		 * Filters the MySQL WHERE conditions for the albums get method.
 		 *
 		 * @since BuddyBoss 1.0.0
 		 *
@@ -367,7 +323,7 @@ class BP_Media {
 		 * @param string $from_sql         Current FROM MySQL statement at point of execution.
 		 * @param string $join_sql         Current INNER JOIN MySQL statement at point of execution.
 		 */
-		$where_conditions = apply_filters( 'bp_media_get_where_conditions', $where_conditions, $r, $select_sql, $from_sql, $join_sql );
+		$where_conditions = apply_filters( 'bp_media_album_get_where_conditions', $where_conditions, $r, $select_sql, $from_sql, $join_sql );
 
 		if ( empty( $where_conditions ) ) {
 			$where_conditions['2'] = '2';
@@ -387,25 +343,25 @@ class BP_Media {
 		 * @param string $from_sql   Current FROM MySQL statement.
 		 * @param string $where_sql  Current WHERE MySQL statement.
 		 */
-		$join_sql = apply_filters( 'bp_media_get_join_sql', $join_sql, $r, $select_sql, $from_sql, $where_sql );
+		$join_sql = apply_filters( 'bp_media_album_get_join_sql', $join_sql, $r, $select_sql, $from_sql, $where_sql );
 
 		// Sanitize page and per_page parameters.
 		$page     = absint( $r['page']     );
 		$per_page = absint( $r['per_page'] );
 
 		$retval = array(
-			'medias'         => null,
+			'albums'         => null,
 			'total'          => null,
 			'has_more_items' => null,
 		);
 
-		// Query first for media IDs.
-		$media_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, m.id {$sort}";
+		// Query first for album IDs.
+		$album_ids_sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} ORDER BY {$order_by} {$sort}, m.id {$sort}";
 
 		if ( ! empty( $per_page ) && ! empty( $page ) ) {
 			// We query for $per_page + 1 items in order to
 			// populate the has_more_items flag.
-			$media_ids_sql .= $wpdb->prepare( " LIMIT %d, %d", absint( ( $page - 1 ) * $per_page ), $per_page + 1 );
+			$album_ids_sql .= $wpdb->prepare( " LIMIT %d, %d", absint( ( $page - 1 ) * $per_page ), $per_page + 1 );
 		}
 
 		/**
@@ -413,44 +369,44 @@ class BP_Media {
 		 *
 		 * @since BuddyBoss 1.0.0
 		 *
-		 * @param string $media_ids_sql    MySQL statement used to query for Media IDs.
+		 * @param string $album_ids_sql    MySQL statement used to query for Media IDs.
 		 * @param array  $r                Array of arguments passed into method.
 		 */
-		$media_ids_sql = apply_filters( 'bp_media_paged_activities_sql', $media_ids_sql, $r );
+		$album_ids_sql = apply_filters( 'bp_media_album_paged_activities_sql', $album_ids_sql, $r );
 
-		$cache_group = 'bp_media';
+		$cache_group = 'bp_media_album';
 
-		$cached = bp_core_get_incremented_cache( $media_ids_sql, $cache_group );
+		$cached = bp_core_get_incremented_cache( $album_ids_sql, $cache_group );
 		if ( false === $cached ) {
-			$media_ids = $wpdb->get_col( $media_ids_sql );
-			bp_core_set_incremented_cache( $media_ids_sql, $cache_group, $media_ids_sql );
+			$album_ids = $wpdb->get_col( $album_ids_sql );
+			bp_core_set_incremented_cache( $album_ids_sql, $cache_group, $album_ids_sql );
 		} else {
-			$media_ids = $cached;
+			$album_ids = $cached;
 		}
 
-		$retval['has_more_items'] = ! empty( $per_page ) && count( $media_ids ) > $per_page;
+		$retval['has_more_items'] = ! empty( $per_page ) && count( $album_ids ) > $per_page;
 
 		// If we've fetched more than the $per_page value, we
 		// can discard the extra now.
-		if ( ! empty( $per_page ) && count( $media_ids ) === $per_page + 1 ) {
-			array_pop( $media_ids );
+		if ( ! empty( $per_page ) && count( $album_ids ) === $per_page + 1 ) {
+			array_pop( $album_ids );
 		}
 
 		if ( 'ids' === $r['fields'] ) {
-			$medias = array_map( 'intval', $media_ids );
+			$albums = array_map( 'intval', $album_ids );
 		} else {
-			$medias = self::get_media_data( $media_ids );
+			$albums = self::get_album_data( $album_ids );
 		}
 
 		if ( 'ids' !== $r['fields'] ) {
 			// Get the fullnames of users so we don't have to query in the loop.
-			$medias = self::append_user_fullnames( $medias );
+			$albums = self::append_user_fullnames( $albums );
 
 			// Pre-fetch data associated with media users and other objects.
-			$medias = BP_Media::prefetch_object_data( $medias );
+			$albums = BP_Media_Album::prefetch_object_data( $albums );
 		}
 
-		$retval['medias'] = $medias;
+		$retval['albums'] = $albums;
 
 		// If $max is set, only return up to the max results.
 		if ( ! empty( $r['count_total'] ) ) {
@@ -464,22 +420,22 @@ class BP_Media {
 			 * @param string $where_sql MySQL WHERE statement portion.
 			 * @param string $sort      Sort direction for query.
 			 */
-			$total_medias_sql = apply_filters( 'bp_media_total_medias_sql', "SELECT count(DISTINCT m.id) FROM {$bp->media->table_name} m {$join_sql} {$where_sql}", $where_sql, $sort );
-			$cached = bp_core_get_incremented_cache( $total_medias_sql, $cache_group );
+			$total_albums_sql = apply_filters( 'bp_media_album_total_medias_sql', "SELECT count(DISTINCT m.id) FROM {$bp->media->table_name_albums} m {$join_sql} {$where_sql}", $where_sql, $sort );
+			$cached = bp_core_get_incremented_cache( $total_albums_sql, $cache_group );
 			if ( false === $cached ) {
-				$total_medias = $wpdb->get_var( $total_medias_sql );
-				bp_core_set_incremented_cache( $total_medias_sql, $cache_group, $total_medias );
+				$total_albums = $wpdb->get_var( $total_albums_sql );
+				bp_core_set_incremented_cache( $total_albums_sql, $cache_group, $total_albums );
 			} else {
-				$total_medias = $cached;
+				$total_albums = $cached;
 			}
 
 			if ( !empty( $r['max'] ) ) {
-				if ( (int) $total_medias > (int) $r['max'] ) {
-					$total_medias = $r['max'];
+				if ( (int) $total_albums > (int) $r['max'] ) {
+					$total_albums = $r['max'];
 				}
 			}
 
-			$retval['total'] = $total_medias;
+			$retval['total'] = $total_albums;
 		}
 
 		return $retval;
@@ -490,83 +446,71 @@ class BP_Media {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param array $media_ids Array of media IDs.
+	 * @param array $album_ids Array of media IDs.
 	 * @return array
 	 */
-	protected static function get_media_data( $media_ids = array() ) {
+	protected static function get_album_data( $album_ids = array() ) {
 		global $wpdb;
 
 		// Bail if no media ID's passed.
-		if ( empty( $media_ids ) ) {
+		if ( empty( $album_ids ) ) {
 			return array();
 		}
 
 		// Get BuddyPress.
 		$bp = buddypress();
 
-		$medias   = array();
-		$uncached_ids = bp_get_non_cached_ids( $media_ids, 'bp_media' );
+		$albums   = array();
+		$uncached_ids = bp_get_non_cached_ids( $album_ids, 'bp_media_album' );
 
 		// Prime caches as necessary.
 		if ( ! empty( $uncached_ids ) ) {
-			// Format the media ID's for use in the query below.
+			// Format the album ID's for use in the query below.
 			$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
-			// Fetch data from media table, preserving order.
-			$queried_adata = $wpdb->get_results( "SELECT * FROM {$bp->media->table_name} WHERE id IN ({$uncached_ids_sql})");
+			// Fetch data from album table, preserving order.
+			$queried_adata = $wpdb->get_results( "SELECT * FROM {$bp->media->table_name_albums} WHERE id IN ({$uncached_ids_sql})");
 
 			// Put that data into the placeholders created earlier,
 			// and add it to the cache.
 			foreach ( (array) $queried_adata as $adata ) {
-				wp_cache_set( $adata->id, $adata, 'bp_media' );
+				wp_cache_set( $adata->id, $adata, 'bp_media_album' );
 			}
 		}
 
 		// Now fetch data from the cache.
-		foreach ( $media_ids as $media_id ) {
+		foreach ( $album_ids as $album_id ) {
 			// Integer casting.
-			$media = wp_cache_get( $media_id, 'bp_media' );
-			if ( ! empty( $media ) ) {
-				$media->id            = (int) $media->id;
-				$media->blog_id       = (int) $media->blog_id;
-				$media->user_id       = (int) $media->user_id;
-				$media->attachment_id = (int) $media->attachment_id;
-				$media->album_id      = (int) $media->album_id;
-				$media->activity_id   = (int) $media->activity_id;
-				$media->menu_order    = (int) $media->menu_order;
-
-				//fetch attachment data
-				$attachment_data                 = new stdClass();
-				$attachment_data->full           = wp_get_attachment_image_url( $media->attachment_id, 'full' );
-				$attachment_data->thumb          = wp_get_attachment_image_url( $media->attachment_id, 'bp-media-thumbnail' );
-				$attachment_data->activity_thumb = wp_get_attachment_image_url( $media->attachment_id, 'bp-activity-media-thumbnail' );
-				$attachment_data->meta           = wp_get_attachment_metadata( $media->attachment_id );
-				$media->attachment_data          = $attachment_data;
+			$album = wp_cache_get( $album_id, 'bp_media' );
+			if ( ! empty( $album ) ) {
+				$album->id       = (int) $album->id;
+				$album->user_id  = (int) $album->user_id;
+				$album->group_id = (int) $album->group_id;
 			}
 
-			$medias[] = $media;
+			$albums[] = $album;
 		}
 
 		// Then fetch user data.
 		$user_query = new BP_User_Query( array(
-			'user_ids'        => wp_list_pluck( $medias, 'user_id' ),
+			'user_ids'        => wp_list_pluck( $albums, 'user_id' ),
 			'populate_extras' => false,
 		) );
 
-		// Associated located user data with media items.
-		foreach ( $medias as $a_index => $a_item ) {
+		// Associated located user data with albums.
+		foreach ( $albums as $a_index => $a_item ) {
 			$a_user_id = intval( $a_item->user_id );
 			$a_user    = isset( $user_query->results[ $a_user_id ] ) ? $user_query->results[ $a_user_id ] : '';
 
 			if ( !empty( $a_user ) ) {
-				$medias[ $a_index ]->user_email    = $a_user->user_email;
-				$medias[ $a_index ]->user_nicename = $a_user->user_nicename;
-				$medias[ $a_index ]->user_login    = $a_user->user_login;
-				$medias[ $a_index ]->display_name  = $a_user->display_name;
+				$albums[ $a_index ]->user_email    = $a_user->user_email;
+				$albums[ $a_index ]->user_nicename = $a_user->user_nicename;
+				$albums[ $a_index ]->user_login    = $a_user->user_login;
+				$albums[ $a_index ]->display_name  = $a_user->display_name;
 			}
 		}
 
-		return $medias;
+		return $albums;
 	}
 
 	/**
@@ -574,58 +518,58 @@ class BP_Media {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param array $medias Medias array.
+	 * @param array $albums Albums array.
 	 * @return array
 	 */
-	protected static function append_user_fullnames( $medias ) {
+	protected static function append_user_fullnames( $albums ) {
 
-		if ( bp_is_active( 'xprofile' ) && ! empty( $medias ) ) {
-			$media_user_ids = wp_list_pluck( $medias, 'user_id' );
+		if ( bp_is_active( 'xprofile' ) && ! empty( $albums ) ) {
+			$album_user_ids = wp_list_pluck( $albums, 'user_id' );
 
-			if ( ! empty( $media_user_ids ) ) {
-				$fullnames = bp_core_get_user_displaynames( $media_user_ids );
+			if ( ! empty( $album_user_ids ) ) {
+				$fullnames = bp_core_get_user_displaynames( $album_user_ids );
 				if ( ! empty( $fullnames ) ) {
-					foreach ( (array) $medias as $i => $media ) {
-						if ( ! empty( $fullnames[ $media->user_id ] ) ) {
-							$medias[ $i ]->user_fullname = $fullnames[ $media->user_id ];
+					foreach ( (array) $albums as $i => $album ) {
+						if ( ! empty( $fullnames[ $album->user_id ] ) ) {
+							$albums[ $i ]->user_fullname = $fullnames[ $album->user_id ];
 						}
 					}
 				}
 			}
 		}
 
-		return $medias;
+		return $albums;
 	}
 
 	/**
-	 * Pre-fetch data for objects associated with media items.
+	 * Pre-fetch data for objects associated with albums.
 	 *
-	 * Media items are associated with users, and often with other
+	 * albums are associated with users, and often with other
 	 * BuddyPress data objects. Here, we pre-fetch data about these
 	 * associated objects, so that inline lookups - done primarily when
 	 * building action strings - do not result in excess database queries.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param array $medias Array of media.
-	 * @return array $medias Array of media.
+	 * @param array $albums Array of media albums.
+	 * @return array $albums Array of media albums.
 	 */
-	protected static function prefetch_object_data( $medias ) {
+	protected static function prefetch_object_data( $albums ) {
 
 		/**
-		 * Filters inside prefetch_object_data method to aid in pre-fetching object data associated with media item.
+		 * Filters inside prefetch_object_data method to aid in pre-fetching object data associated with album.
 		 *
 		 * @since BuddyBoss 1.0.0
 		 *
-		 * @param array $medias Array of media.
+		 * @param array $medias Array of media albums.
 		 */
-		return apply_filters( 'bp_media_prefetch_object_data', $medias );
+		return apply_filters( 'bp_media_album_prefetch_object_data', $albums );
 	}
 
 	/**
-	 * Delete media items from the database.
+	 * Delete albums from the database.
 	 *
-	 * To delete a specific media item, pass an 'id' parameter.
+	 * To delete a specific album, pass an 'id' parameter.
 	 * Otherwise use the filters.
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -650,13 +594,8 @@ class BP_Media {
 		$bp = buddypress();
 		$r = wp_parse_args( $args, array(
 			'id'            => false,
-			'blog_id'       => false,
-			'attachment_id' => false,
 			'user_id'       => false,
-			'title'         => false,
-			'album_id'      => false,
-			'activity_id'   => false,
-			'privacy'       => false,
+			'group_id'      => false,
 			'date_created'  => false,
 		) );
 
@@ -668,39 +607,14 @@ class BP_Media {
 			$where_args[] = $wpdb->prepare( "id = %d", $r['id'] );
 		}
 
-		// blog ID.
-		if ( ! empty( $r['blog_id'] ) ) {
-			$where_args[] = $wpdb->prepare( "blog_id = %d", $r['blog_id'] );
-		}
-
-		// attachment ID.
-		if ( ! empty( $r['attachment_id'] ) ) {
-			$where_args[] = $wpdb->prepare( "attachment_id = %d", $r['attachment_id'] );
-		}
-
 		// User ID.
 		if ( ! empty( $r['user_id'] ) ) {
 			$where_args[] = $wpdb->prepare( "user_id = %d", $r['user_id'] );
 		}
 
-		// title.
-		if ( ! empty( $r['title'] ) ) {
-			$where_args[] = $wpdb->prepare( "title = %s", $r['title'] );
-		}
-
-		// album ID.
-		if ( ! empty( $r['album_id'] ) ) {
-			$where_args[] = $wpdb->prepare( "album_id = %d", $r['album_id'] );
-		}
-
-		// activity ID.
-		if ( ! empty( $r['activity_id'] ) ) {
-			$where_args[] = $wpdb->prepare( "activity_id = %d", $r['activity_id'] );
-		}
-
-		// privacy.
-		if ( ! empty( $r['privacy'] ) ) {
-			$where_args[] = $wpdb->prepare( "privacy = %s", $r['privacy'] );
+		// Group ID.
+		if ( ! empty( $r['group_id'] ) ) {
+			$where_args[] = $wpdb->prepare( "group_id = %d", $r['group_id'] );
 		}
 
 		// Date created.
@@ -716,21 +630,21 @@ class BP_Media {
 		// Join the where arguments for querying.
 		$where_sql = 'WHERE ' . join( ' AND ', $where_args );
 
-		// Fetch all media being deleted so we can perform more actions.
-		$medias = $wpdb->get_results( "SELECT * FROM {$bp->media->table_name} {$where_sql}" );
+		// Fetch all media albums being deleted so we can perform more actions.
+		$albums = $wpdb->get_results( "SELECT * FROM {$bp->media->table_name_albums} {$where_sql}" );
 
 		/**
-		 * Action to allow intercepting media items to be deleted.
+		 * Action to allow intercepting albums to be deleted.
 		 *
 		 * @since BuddyBoss 1.0.0
 		 *
-		 * @param array $medias Array of media.
+		 * @param array $albums Array of media albums.
 		 * @param array $r          Array of parsed arguments.
 		 */
-		do_action_ref_array( 'bp_media_before_delete', array( $medias, $r ) );
+		do_action_ref_array( 'bp_media_album_before_delete', array( $albums, $r ) );
 
-		// Attempt to delete media from the database.
-		$deleted = $wpdb->query( "DELETE FROM {$bp->media->table_name} {$where_sql}" );
+		// Attempt to delete media albums from the database.
+		$deleted = $wpdb->query( "DELETE FROM {$bp->media->table_name_albums} {$where_sql}" );
 
 		// Bail if nothing was deleted.
 		if ( empty( $deleted ) ) {
@@ -738,29 +652,19 @@ class BP_Media {
 		}
 
 		/**
-		 * Action to allow intercepting media items just deleted.
+		 * Action to allow intercepting albums just deleted.
 		 *
 		 * @since BuddyBoss 1.0.0
 		 *
-		 * @param array $medias Array of media.
+		 * @param array $albums Array of media albums.
 		 * @param array $r          Array of parsed arguments.
 		 */
-		do_action_ref_array( 'bp_media_after_delete', array( $medias, $r ) );
+		do_action_ref_array( 'bp_media_album_after_delete', array( $albums, $r ) );
 
-		// Pluck the media IDs out of the $medias array.
-		$media_ids      = wp_parse_id_list( wp_list_pluck( $medias, 'id' ) );
-		$attachment_ids = wp_parse_id_list( wp_list_pluck( $medias, 'attachment_id' ) );
+		// Pluck the media albums IDs out of the $albums array.
+		$album_ids      = wp_parse_id_list( wp_list_pluck( $albums, 'id' ) );
 
-		// Handle accompanying attachments and meta deletion.
-		if ( ! empty( $attachment_ids ) ) {
-
-			// Loop through attachment ids and attempt to delete.
-			foreach ( $attachment_ids as $attachment_id ) {
-				wp_delete_post( $attachment_id, true );
-			}
-		}
-
-		return $media_ids;
+		return $album_ids;
 	}
 
 }

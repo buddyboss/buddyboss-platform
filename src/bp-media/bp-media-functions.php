@@ -550,3 +550,108 @@ function bp_media_get_media_activity( $activity_id ) {
 	 */
 	return apply_filters( 'bp_media_get_media_activity', $result['activities'][0] );
 }
+
+//******************** Albums *********************/
+/**
+ * Retrieve an album or albums.
+ *
+ * The bp_album_get() function shares all arguments with BP_Media_Album::get().
+ * The following is a list of bp_album_get() parameters that have different
+ * default values from BP_Media_Album::get() (value in parentheses is
+ * the default for the bp_album_get()).
+ *   - 'per_page' (false)
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @see BP_Media_Album::get() For more information on accepted arguments
+ *      and the format of the returned value.
+ *
+ * @param array|string $args See BP_Media_Album::get() for description.
+ * @return array $activity See BP_Media_Album::get() for description.
+ */
+function bp_album_get( $args = '' ) {
+
+	$r = bp_parse_args( $args, array(
+		'max'               => false,        // Maximum number of results to return.
+		'fields'            => 'all',
+		'page'              => 1,            // Page 1 without a per_page will result in no pagination.
+		'per_page'          => false,        // results per page
+		'sort'              => 'DESC',       // sort ASC or DESC
+
+		'search_terms'      => false,        // Pass search terms as a string
+		'exclude'           => false,        // Comma-separated list of activity IDs to exclude.
+		// want to limit the query.
+		'update_meta_cache' => true,
+		'count_total'       => false,
+	), 'media_get' );
+
+	$album = BP_Media_Album::get( array(
+		'page'              => $r['page'],
+		'per_page'          => $r['per_page'],
+		'user_id'           => $r['user_id'],
+		'max'               => $r['max'],
+		'sort'              => $r['sort'],
+		'search_terms'      => $r['search_terms'],
+		'exclude'           => $r['exclude'],
+		'update_meta_cache' => $r['update_meta_cache'],
+		'count_total'       => $r['count_total'],
+		'fields'            => $r['fields'],
+	) );
+
+	/**
+	 * Filters the requested album item(s).
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param BP_Media  $album Requested media object.
+	 * @param array     $r     Arguments used for the album query.
+	 */
+	return apply_filters_ref_array( 'bp_album_get', array( &$album, &$r ) );
+}
+
+/**
+ * Fetch specific albums.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @see BP_Media_Album::get() For more information on accepted arguments.
+ *
+ * @param array|string $args {
+ *     All arguments and defaults are shared with BP_Media_Album::get(),
+ *     except for the following:
+ *     @type string|int|array Single album ID, comma-separated list of IDs,
+ *                            or array of IDs.
+ * }
+ * @return array $albums See BP_Media_Album::get() for description.
+ */
+function bp_album_get_specific( $args = '' ) {
+
+	$r = bp_parse_args( $args, array(
+		'album_ids'         => false,      // A single media_id or array of IDs.
+		'max'               => false,      // Maximum number of results to return.
+		'page'              => 1,          // Page 1 without a per_page will result in no pagination.
+		'per_page'          => false,      // Results per page.
+		'sort'              => 'DESC',     // Sort ASC or DESC
+		'update_meta_cache' => true,
+	), 'media_get_specific' );
+
+	$get_args = array(
+		'in'                => $r['album_ids'],
+		'max'               => $r['max'],
+		'page'              => $r['page'],
+		'per_page'          => $r['per_page'],
+		'sort'              => $r['sort'],
+		'update_meta_cache' => $r['update_meta_cache'],
+	);
+
+	/**
+	 * Filters the requested specific album item.
+	 *
+	 * @since BuddyBoss
+	 *
+	 * @param BP_Media      $album    Requested media object.
+	 * @param array         $args     Original passed in arguments.
+	 * @param array         $get_args Constructed arguments used with request.
+	 */
+	return apply_filters( 'bp_album_get_specific', BP_Media_Album::get( $get_args ), $args, $get_args );
+}

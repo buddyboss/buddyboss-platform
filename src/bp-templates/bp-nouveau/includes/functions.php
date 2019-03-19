@@ -961,6 +961,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'info',
 			'message' => __( 'Sorry, no media was found.', 'buddyboss' ),
 		),
+		'member-media-album-none' => array(
+			'type'    => 'info',
+			'message' => __( 'Sorry, no album was found.', 'buddyboss' ),
+		),
 	) );
 
 	if ( ! isset( $feedback_messages[ $feedback_id ] ) ) {
