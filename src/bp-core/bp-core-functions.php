@@ -4112,14 +4112,10 @@ function bp_platform_default_activity_types() {
 			'activity_label' => 'Member registered on site'
 		),
 		'13' => array(
-			'activity_name' => 'activity_comment',
-			'activity_label' => 'Member added comment on activity'
-		),
-		'14' => array(
 			'activity_name' => 'group_details_updated',
 			'activity_label' => 'Group detail updated'
 		),
-		'15' => array(
+		'14' => array(
 			'activity_name' => 'new_blog_comment',
 			'activity_label' => 'New blog comment'
 		)
