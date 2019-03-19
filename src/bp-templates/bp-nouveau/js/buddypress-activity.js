@@ -74,7 +74,7 @@ window.bp = window.bp || {};
 			// Activity actions
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions );
 			$( document ).keydown( this.commentFormAction );
-			$(document).on('click', '.activity-attached-gif-container', this.playVideo );
+			$(document).on('click', '.gif-image-container', this.playVideo );
 		},
 
 		/**

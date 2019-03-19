@@ -1165,7 +1165,6 @@ a.layout-grid-view {
   cursor: pointer;
   display: inline-block;
   font-size: 12px;
-  max-width: 312px;
   overflow: hidden;
   position: relative;
 }
@@ -1261,17 +1260,15 @@ a.layout-grid-view {
 }
 
 .activity-update-form #whats-new-toolbar .post-elements-buttons-item .gif-media-search .gif-media-search-dropdown .gif-search-results ul {
-  display: flex;
-  flex-wrap: wrap;
+  columns: 2 190px;
+  column-gap: 0;
+  margin: 0;
+  padding: 0;
   list-style: none;
 }
 
 .activity-update-form #whats-new-toolbar .post-elements-buttons-item .gif-media-search .gif-media-search-dropdown .gif-search-results ul li {
-  display: block;
-  flex: 0 0 50%;
   border: 3px solid #fff;
-  position: relative;
-  min-height: 100px;
 }
 
 .activity-update-form #whats-new-toolbar .post-elements-buttons-item .gif-media-search .gif-media-search-dropdown .gif-search-results ul li.bg1 {
@@ -1301,6 +1298,7 @@ a.layout-grid-view {
 .activity-update-form #whats-new-toolbar .post-elements-buttons-item .gif-media-search .gif-media-search-dropdown .gif-search-results .found-media-item img {
   width: 100%;
   height: 100%;
+  min-width: 180px;
 }
 
 .activity-update-form #whats-new-textarea textarea {
