@@ -341,11 +341,24 @@ window.bp = window.bp || {};
 
 		render: function() {
 			this.$el.html( this.template( this.model.toJSON() ) );
+
+			var gifData = this.model.get('gif_data');
+			if ( ! _.isEmpty( gifData ) ) {
+				this.el.style.backgroundImage = 'url(' + gifData.images.fixed_width.url + ')';
+				this.el.style.backgroundSize = 'contain';
+				this.el.style.height = gifData.images.original.height + 'px';
+				this.el.style.width = gifData.images.original.width + 'px';
+			}
+
 			return this;
 		},
 
 		handleRemove: function( e ) {
 			this.model.set('gif_data', {} );
+			this.el.style.backgroundImage = '';
+			this.el.style.backgroundSize = '';
+			this.el.style.height = '0px';
+			this.el.style.width = '0px';
 		}
 	} );
 
@@ -519,7 +532,7 @@ window.bp = window.bp || {};
 			var bgNo = Math.floor( Math.random() * (6 - 1 + 1) ) + 1,
 				images = this.model.get('images');
 
-			this.el.innerHTML = this.template( this.model.toJSON() );
+			this.$el.html( this.template( this.model.toJSON() ) );
 			this.el.classList.add('bg' + bgNo);
 			this.el.style.height = images.fixed_width.height + 'px';
 

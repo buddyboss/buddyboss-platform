@@ -56,7 +56,7 @@
 
 <script type="text/html" id="tmpl-activity-attached-gif">
 	<div class="gif-image-container">
-		<# if ( ! _.isUndefined( data.gif_data.images ) ) { #>
+		<# if ( ! _.isEmpty( data.gif_data ) ) { #>
 			<img src="{{data.gif_data.images.original.url}}" alt="">
 		<# } #>
 	</div>
