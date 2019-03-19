@@ -7,7 +7,7 @@
  */
 
 // Exit if accessed directly.
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 /**
  * Set up the bp woocommerce integration.
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.0.0
  */
 function bp_register_woocommerce_integration() {
-	require_once dirname( __FILE__ ) . '/bp-woocommerce-integration.php';
+	require_once dirname(__FILE__) . '/bp-woocommerce-integration.php';
 	buddypress()->integrations['woocommerce'] = new BP_Woocommerce_Integration;
 }
-add_action( 'bp_setup_integrations', 'bp_register_woocommerce_integration' );
+add_action('bp_setup_integrations', 'bp_register_woocommerce_integration');

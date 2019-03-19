@@ -17,7 +17,7 @@ defined('ABSPATH') || exit;
 class BP_Woocommerce_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 	public function initialize() {
-		$this->tab_order = 30;
+		$this->tab_order = 50;
 		$this->intro_template = $this->root_path . '/templates/admin/integration-tab-intro.php';
 	}
 
@@ -25,7 +25,7 @@ class BP_Woocommerce_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$settings = $_REQUEST;
 		error_log(print_r($settings, true));
 
-		register_setting('bbms-settings', 'bbms-settings', BuddyBoss\Integrations\BbmsHelper::bbmsSettingsSanitize($settings));
+		// register_setting('bbms-settings', 'bbms-settings', BuddyBoss\Integrations\BpMemberships::bbmsSettingsSanitize($settings));
 
 		/**
 		 * After Learndash-WooCommerce Integration settings are saved
