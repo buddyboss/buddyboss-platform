@@ -168,7 +168,7 @@ class BBP_Topics_Admin {
 			'title'		=> __( 'Bulk Actions', 'buddyboss' ),
 			'content'	=>
 				'<p>' . __( 'You can also edit or move multiple discussions to the trash at once. Select the discussions you want to act on using the checkboxes, then select the action you want to take from the Bulk Actions menu and click Apply.',           'buddyboss' ) . '</p>' .
-				'<p>' . __( 'When using Bulk Edit, you can change the metadata (categories, author, etc.) for all selected discussions at once. To remove a discussion from the grouping, just click the x next to its name in the Bulk Edit area that appears.', 'buddyboss' ) . '</p>'
+				'<p>' . __( 'When using Bulk Edit, you can change the status (Published, Private, etc.) and add discussion tags for all selected discussions at once. To remove a discussion from the grouping, just click the x next to its name in the Bulk Edit area that appears.', 'buddyboss' ) . '</p>'
 		) );
 
 		// Help Sidebar
