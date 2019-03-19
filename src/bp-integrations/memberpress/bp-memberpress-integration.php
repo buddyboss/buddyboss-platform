@@ -54,47 +54,7 @@ class BP_Memberpress_Integration extends BP_Integration {
 	public function includes($includes = array()) {
 		// Calling Parent
 		parent::includes([
-			'../../../vendor/autoload.php',
 		]);
-
-		$mpHelper = new BuddyBoss\Integrations\MemberPress\Helpers\MpHelper();
-		$this->mpHooks($mpHelper);
-	}
-
-	/**
-	 * Memberpress Hooks
-	 * @return void
-	 */
-	public function mpHooks($classObj) {
-
-		add_action('mepr-product-options-tabs', array($classObj, 'mpLearndashTab'));
-		add_action('mepr-product-options-pages', array($classObj, 'mpLearndashTabContent'));
-		add_action('mepr-membership-save-meta', array($classObj, 'mpSaveProduct'));
-
-		// Signup type can be 'free', 'non-recurring' or 'recurring'
-		add_action('mepr-non-recurring-signup', array($classObj, 'mpSignUp'));
-		add_action('mepr-free-signup', array($classObj, 'mpSignUp'));
-		add_action('mepr-recurring-signup', array($classObj, 'mpSignUp'));
-		add_action('mepr-signup', array($classObj, 'mpSignUp'));
-		// Transaction Related
-		add_action('mepr-txn-status-complete', array($classObj, 'mpTransactionUpdated'));
-		add_action('mepr-txn-status-pending', array($classObj, 'mpTransactionUpdated'));
-		add_action('mepr-txn-status-failed', array($classObj, 'mpTransactionUpdated'));
-		add_action('mepr-txn-status-refunded', array($classObj, 'mpTransactionUpdated'));
-		add_action('mepr-txn-status-confirmed', array($classObj, 'mpTransactionUpdated'));
-		add_action('mepr-transaction-expired', array($classObj, 'mpTransactionUpdated'));
-
-		// Subscription Related
-		// add_action(array('mepr_subscription_stored', 'mepr_subscription_saved'), array($classObj, 'mpSubscriptionUpdated'));
-		add_action('mepr_subscription_saved', array($classObj, 'mpSubscriptionUpdated'));
-		// add_action('mepr_subscription_transition_status', array($classObj, 'mpSubscriptionTransitionStatus'));
-		// add_action('mepr_subscription_status_created', array($classObj, 'mpSubscriptionTransitionStatus'));
-		// add_action('mepr_subscription_status_paused', array($classObj, 'mpSubscriptionTransitionStatus'));
-		// add_action('mepr_subscription_status_resumed', array($classObj, 'mpSubscriptionTransitionStatus'));
-		// add_action('mepr_subscription_status_stopped', array($classObj, 'mpSubscriptionTransitionStatus'));
-		// add_action('mepr_subscription_status_upgraded', array($classObj, 'mpSubscriptionTransitionStatus'));
-		// add_action('mepr_subscription_status_downgraded', array($classObj, 'mpSubscriptionTransitionStatus'));
-		// add_action('mepr_subscription_status_expired', array($classObj, 'mpSubscriptionTransitionStatus'));
 
 	}
 

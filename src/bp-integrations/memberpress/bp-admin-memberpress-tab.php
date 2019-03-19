@@ -31,9 +31,9 @@ class BP_Memberpress_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	public function settings_save() {
 
 		$settings = $_REQUEST;
-		error_log(print_r($settings, true));
+		// error_log(print_r($settings, true));
 
-		register_setting('bbms-settings', 'bbms-settings', BuddyBoss\Integrations\BbmsHelper::bbmsSettingsSanitize($settings));
+		// register_setting('bbms-settings', 'bbms-settings', BuddyBoss\Integrations\BpMemberships::bbmsSettingsSanitize($settings));
 
 		/**
 		 * After Learndash-Memberpress Integration settings are saved

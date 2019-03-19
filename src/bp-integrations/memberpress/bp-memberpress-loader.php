@@ -21,5 +21,5 @@ function bp_register_memberpress_integration() {
 add_action('bp_setup_integrations', 'bp_register_memberpress_integration');
 
 // Autoloading
-require __DIR__ . '/../../vendor/autoload.php';
-new BuddyBoss\Integrations\BbmsHelper;
+// require __DIR__ . '/../../../vendor/autoload.php';
+// new BuddyBoss\Integrations\BpMemberships;
