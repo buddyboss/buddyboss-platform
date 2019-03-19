@@ -976,6 +976,28 @@ function bp_is_activity_gif_active( $default = false ) {
 	return (bool) apply_filters( 'bp_is_activity_gif_active', (bool) bp_get_option( '_bp_enable_activity_gif', $default ) );
 }
 
+
+/**
+ * Return GIFs .
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return GIF Api Key if, empty string.
+ */
+function bp_get_activity_gif_api_key( $default = '' ) {
+
+	/**
+	 * Filters whether GIF key.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param GIF Api Key if, empty sting.
+	 */
+	return apply_filters( 'bp_get_activity_gif_api_key', bp_get_option( '_bp_activity_gif_api_key', $default ) );
+}
+
 /**
  * Get the current theme package ID.
  *

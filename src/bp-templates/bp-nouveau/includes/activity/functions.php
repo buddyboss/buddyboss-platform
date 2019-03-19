@@ -99,6 +99,11 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		$activity_params['link_preview'] = true;
 	}
 
+	// Gif api key
+	if ( bp_is_activity_gif_active() ) {
+		$activity_params['gif_api_key'] = bp_get_activity_gif_api_key();
+	}
+
 	/**
 	 * Filters the included, specific, Action buttons.
 	 *

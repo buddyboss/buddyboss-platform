@@ -96,6 +96,10 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 		// Allow gif.
 		$this->add_field( '_bp_enable_activity_gif', __( 'GIFs', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_gif', 'intval' );
+		$this->add_field( '_bp_activity_gif_api_key', __( 'GIFs Key', 'buddyboss' ), '__return_true', [], [
+			'class' => 'hidden'
+		] );
+
 
 		// Allow subscriptions setting.
 		if ( is_plugin_active( 'akismet/akismet.php' ) && defined( 'AKISMET_VERSION' ) ) {
