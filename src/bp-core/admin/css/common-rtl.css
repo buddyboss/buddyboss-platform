@@ -1040,3 +1040,10 @@ td.inviter.column-inviter strong img {
   margin-left: 10px;
   margin-top: 1px;
 }
+
+td label.platform-activity {
+  clear: right;
+  display: block;
+  line-height: 1.5;
+  margin: 0 0 1em;
+}

@@ -108,6 +108,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 		$this->add_section( 'bp_custom_post_type', __( 'Posts in Activity Feed', 'buddyboss' ) );
 
+		// create field for default Platform activity feed.
+		$this->add_field( "bp-feed-platform", __( 'BuddyBoss Platform', 'buddyboss' ), 'bp_feed_settings_callback_platform', 'intval', '' );
+
 		// Get all active custom post type.
 		$post_types = get_post_types( [ 'public' => true ] );
 

@@ -1170,3 +1170,16 @@ function bp_is_post_type_feed_enable( $post_type, $default = false ) {
 function bp_is_custom_post_type_feed_enable( $default = false ) {
 	return (bool) apply_filters( 'bp_is_custom_post_type_feed_enable', (bool) get_option( 'bp-enable-custom-post-type-feed', $default ) );
 }
+
+/**
+ * Checks if default platform activity feed is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $post_type string
+ *
+ * @return bool Is post type feed enabled or not
+ */
+function bp_platform_is_feed_enable( $activity_type, $default = true ) {
+	return (bool) apply_filters( 'bp_platform_is_feed_enable', (bool) get_option( "bp-platform-activity-type-$activity_type", $default ) );
+}

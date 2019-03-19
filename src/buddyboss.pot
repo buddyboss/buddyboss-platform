@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-19 06:11:08+00:00\n"
+"POT-Creation-Date: 2019-03-19 11:51:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -521,7 +521,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-admin.php:2244
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:29
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/index.php:120
-#: bp-templates/bp-nouveau/includes/activity/functions.php:173
+#: bp-templates/bp-nouveau/includes/activity/functions.php:178
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1394
 #: bp-xprofile/classes/class-bp-xprofile-group.php:881
 msgid "Cancel"
@@ -1546,7 +1546,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:218
 #: bp-core/admin/bp-core-admin-functions.php:588
-#: bp-core/admin/bp-core-admin-settings.php:347
+#: bp-core/admin/bp-core-admin-settings.php:351
 #: bp-core/classes/class-bp-admin.php:300
 #: bp-core/classes/class-bp-admin.php:413
 #: bp-core/classes/class-bp-admin.php:695
@@ -1632,7 +1632,7 @@ msgid "Pages"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:593
-#: bp-core/admin/bp-core-admin-settings.php:372
+#: bp-core/admin/bp-core-admin-settings.php:376
 #: bp-core/classes/class-bp-admin.php:309
 #: bp-core/classes/class-bp-admin.php:422
 msgid "Integrations"
@@ -2052,59 +2052,63 @@ msgstr ""
 msgid "Allow GIFs in activity posts"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:216
+#: bp-core/admin/bp-core-admin-settings.php:179
+msgid "Gif developer api key"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:220
 msgid "Allow members to upload avatars"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:229
+#: bp-core/admin/bp-core-admin-settings.php:233
 msgid "Allow members to upload cover photos"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:253
+#: bp-core/admin/bp-core-admin-settings.php:257
 msgid "Enable social group creation by all users"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:254
+#: bp-core/admin/bp-core-admin-settings.php:258
 msgid "Administrators can always create groups, regardless of this setting."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:267
+#: bp-core/admin/bp-core-admin-settings.php:271
 msgid "Allow social group organizers to upload an avatar"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:279
+#: bp-core/admin/bp-core-admin-settings.php:283
 msgid "Allow social group organizers to upload cover photos"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:291
+#: bp-core/admin/bp-core-admin-settings.php:295
 msgid "Enable group types to better organize groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:303
+#: bp-core/admin/bp-core-admin-settings.php:307
 msgid "Allow groups to have subgroups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:315
+#: bp-core/admin/bp-core-admin-settings.php:319
 msgid "Restrict subgroup invites to members of the parent group"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:316
+#: bp-core/admin/bp-core-admin-settings.php:320
 msgid ""
 "Members must first be a member of the parent group prior to being invited "
 "to a subgroup"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:328
+#: bp-core/admin/bp-core-admin-settings.php:332
 msgid "Allow selected profile types to automatically join groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:329
+#: bp-core/admin/bp-core-admin-settings.php:333
 msgid ""
 "When a member requests to join a group their membership is automatically "
 "accepted"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:394
+#: bp-core/admin/bp-core-admin-settings.php:398
 #: bp-core/classes/class-bp-admin.php:328
 #: bp-core/classes/class-bp-admin.php:329
 #: bp-core/classes/class-bp-admin.php:441
@@ -2112,34 +2116,34 @@ msgstr ""
 msgid "Mobile App"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:468
+#: bp-core/admin/bp-core-admin-settings.php:472
 msgid "Allow members to customize the email subject"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:480
+#: bp-core/admin/bp-core-admin-settings.php:484
 msgid "Allow members to customize the email body content"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:493
+#: bp-core/admin/bp-core-admin-settings.php:497
 msgid "Allow members to select profile type of invitee"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:498
+#: bp-core/admin/bp-core-admin-settings.php:502
 msgid ""
 "Customize this setting while editing any of your <a href=\"%s\">Profile "
 "Types</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:528
+#: bp-core/admin/bp-core-admin-settings.php:532
 #: bp-search/bp-search-functions.php:360 bp-search/bp-search-settings.php:558
 msgid "Blog Posts"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:535
+#: bp-core/admin/bp-core-admin-settings.php:539
 msgid "When users publish new blog posts, show them in the activity feed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:542
+#: bp-core/admin/bp-core-admin-settings.php:546
 msgid ""
 "Select which Custom Post Types (coming from your plugins) should be shown "
 "in the activity feed. For example, if using WooCommerce it could post into "
@@ -2354,15 +2358,23 @@ msgstr ""
 msgid "GIFs"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:105
+#: bp-core/admin/settings/bp-admin-setting-activity.php:99
+msgid "GIFs Key"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-activity.php:109
 msgid "Posts in Activity Feed"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:141
+#. Plugin Name of the plugin/theme
+msgid "BuddyBoss Platform"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-activity.php:150
 msgid "WordPress"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:146
+#: bp-core/admin/settings/bp-admin-setting-activity.php:155
 msgid "Custom Post Types"
 msgstr ""
 
@@ -12383,10 +12395,6 @@ msgstr[1] ""
 msgid "BuddyBoss LearnDash"
 msgstr ""
 
-#. Plugin Name of the plugin/theme
-msgid "BuddyBoss Platform"
-msgstr ""
-
 #: bp-integrations/learndash/core/Dependencies.php:33
 msgid "Learndash LMS"
 msgstr ""
@@ -14416,7 +14424,7 @@ msgid "Load More"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/post-form.php:17
-#: bp-templates/bp-nouveau/includes/activity/functions.php:172
+#: bp-templates/bp-nouveau/includes/activity/functions.php:177
 msgid "Post Update"
 msgstr ""
 
@@ -15409,64 +15417,64 @@ msgstr ""
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:143
+#: bp-templates/bp-nouveau/includes/activity/functions.php:148
 msgid "Post in: Profile"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:152
+#: bp-templates/bp-nouveau/includes/activity/functions.php:157
 msgid "Post in: Group"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:153
+#: bp-templates/bp-nouveau/includes/activity/functions.php:158
 msgid "Start typing the group name&hellip;"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:169
+#: bp-templates/bp-nouveau/includes/activity/functions.php:174
 msgid "Write here or use @ to mention someone."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:170
+#: bp-templates/bp-nouveau/includes/activity/functions.php:175
 msgid "Post what's new"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:171
+#: bp-templates/bp-nouveau/includes/activity/functions.php:176
 msgid "Post in"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:174
+#: bp-templates/bp-nouveau/includes/activity/functions.php:179
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:233
 msgid "%d Comment"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:175
+#: bp-templates/bp-nouveau/includes/activity/functions.php:180
 msgid "%d Comments"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:179
+#: bp-templates/bp-nouveau/includes/activity/functions.php:184
 msgid "Write something to %s..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:183
+#: bp-templates/bp-nouveau/includes/activity/functions.php:188
 msgid "Share something with your group..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:214
+#: bp-templates/bp-nouveau/includes/activity/functions.php:219
 msgid "All Updates"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:242
+#: bp-templates/bp-nouveau/includes/activity/functions.php:247
 msgid "My Likes"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:463
+#: bp-templates/bp-nouveau/includes/activity/functions.php:468
 msgid "New mentions"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:468
+#: bp-templates/bp-nouveau/includes/activity/functions.php:473
 msgid "New update replies"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:473
+#: bp-templates/bp-nouveau/includes/activity/functions.php:478
 msgid "New update comment replies"
 msgstr ""
 
@@ -15524,17 +15532,17 @@ msgstr ""
 msgid "Include navigation title"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer-controls.php:40
+#: bp-templates/bp-nouveau/includes/customizer-controls.php:41
 msgid "Customizing the Groups navigation requires you to create a group first."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer-controls.php:67
+#: bp-templates/bp-nouveau/includes/customizer-controls.php:69
 msgid ""
 "Drag and drop each group navigation item to change the order, not all "
 "groups have every navigation item enabled."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer-controls.php:74
+#: bp-templates/bp-nouveau/includes/customizer-controls.php:77
 msgid "Drag and drop each profile navigation item to change the order."
 msgstr ""
 
