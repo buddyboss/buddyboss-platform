@@ -1,11 +1,11 @@
 <?php
 namespace BuddyBoss\Memberships\Classes;
 
-use BuddyBoss\Memberships\Classes\BbmsHooks;
+use BuddyBoss\Memberships\Classes\BpmsHooks;
 
 define('BP_VIEWS_PATH', dirname(__FILE__) . '/../views/');
 
-class BbmsView {
+class BpmsView {
 
 	public static function file($slug, $paths = array()) {
 
@@ -29,13 +29,13 @@ class BbmsView {
 	/** Used to get a string of a view. We can use this when calling a file to
 	 * pass all the locally defined variables as the args variable:
 	 *
-	 * BbmsView::get_string('mycoolstuff/what', get_defined_vars());
+	 * BpmsView::get_string('mycoolstuff/what', get_defined_vars());
 	 *
 	 */
 	public static function get_string($slug, $vars = array(), $paths = array()) {
 
-		$paths = BbmsHooks::apply_filters('bbms_view_paths_get_string_' . $slug, $paths, $slug, $vars);
-		$paths = BbmsHooks::apply_filters('bbms_view_paths_get_string', $paths, $slug, $vars);
+		$paths = BpmsHooks::apply_filters('bbms_view_paths_get_string_' . $slug, $paths, $slug, $vars);
+		$paths = BpmsHooks::apply_filters('bbms_view_paths_get_string', $paths, $slug, $vars);
 
 		// $template_part_slug = 'buddyboss-memberships/' . dirname($slug);
 		// $template_part_name = basename($slug);
@@ -53,8 +53,8 @@ class BbmsView {
 		require $file;
 		$view = ob_get_clean();
 
-		$view = BbmsHooks::apply_filters('bbms_view_get_string_' . $slug, $view, $vars); // Slug specific filter
-		$view = BbmsHooks::apply_filters('bbms_view_get_string', $view, $slug, $vars); // General filter
+		$view = BpmsHooks::apply_filters('bbms_view_get_string_' . $slug, $view, $vars); // Slug specific filter
+		$view = BpmsHooks::apply_filters('bbms_view_get_string', $view, $slug, $vars); // General filter
 
 		return $view;
 	}
@@ -77,5 +77,5 @@ class BbmsView {
 
 		$paths[] = BP_VIEWS_PATH;
 
-		return BbmsHooks::apply_filters('bbms_view_paths', $paths);
+		return BpmsHooks::apply_filters('bbms_view_paths', $paths);
 	}}

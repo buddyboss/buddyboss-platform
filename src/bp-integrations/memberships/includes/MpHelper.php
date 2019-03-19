@@ -1,8 +1,8 @@
 <?php
 namespace BuddyBoss\Memberships\Classes;
 
-use BuddyBoss\Memberships\Classes\BbmsView;
 use BuddyBoss\Memberships\Classes\BpMemberships;
+use BuddyBoss\Memberships\Classes\BpmsView;
 
 class MpHelper {
 
@@ -31,7 +31,7 @@ class MpHelper {
 
 		error_log("MpHelper::mpLearndashTab()");
 
-		BbmsView::render('memberpress/tab', get_defined_vars());
+		BpmsView::render('memberpress/tab', get_defined_vars());
 	}
 
 	/**
@@ -68,7 +68,7 @@ class MpHelper {
 			// error_log(print_r($groups, true));
 		}
 
-		BbmsView::render('memberpress/tab-content', get_defined_vars());
+		BpmsView::render('memberpress/tab-content', get_defined_vars());
 
 	}
 

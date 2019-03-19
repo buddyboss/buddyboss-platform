@@ -1,7 +1,7 @@
 <?php
 namespace BuddyBoss\Memberships\Classes;
 
-class BbmsHooks {
+class BpmsHooks {
 	public static function do_action($tag, $arg = '') {
 		$args = func_get_args();
 		$tags = self::tags($tag);

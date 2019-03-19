@@ -1,8 +1,8 @@
 <?php
 namespace BuddyBoss\Memberships\Classes;
 
-use BuddyBoss\Memberships\Classes\BbmsView;
 use BuddyBoss\Memberships\Classes\BpMemberships;
+use BuddyBoss\Memberships\Classes\BpmsView;
 
 class WcHelper {
 	private static $instance;
@@ -62,7 +62,7 @@ class WcHelper {
 		$buttonOrder = get_post_meta($post->ID, "_bbms-$lmsType-$membershipType-purchase_button_order", true);
 		$pId = $post->ID; //Required for ajax-call
 		$accessMethods = BpMemberships::getCourseOptions();
-		BbmsView::render('woocommerce/wc-tab-content', get_defined_vars());
+		BpmsView::render('woocommerce/wc-tab-content', get_defined_vars());
 	}
 
 	/**

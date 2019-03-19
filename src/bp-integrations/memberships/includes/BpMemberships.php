@@ -18,7 +18,7 @@ class BpMemberships {
 
 	public function __construct() {
 
-		add_action('wp_load', array($this, 'onWpLoaded'));
+		add_action('wp_loaded', array($this, 'onWpLoaded'));
 
 		/**
 		 * Available as hook, runs after a bbms(BuddyBoss Membership) plugin is loaded.
@@ -31,6 +31,7 @@ class BpMemberships {
 	 * @return object - Singleton
 	 */
 	public static function getInstance() {
+
 		if (!isset(self::$instance)) {
 			self::$instance = new self;
 		}
@@ -276,48 +277,6 @@ class BpMemberships {
 	}
 
 	/**
-	 * This will verify all cases and return
-	 * @param  {int}   $courseId - Unique ID post(sfwd-courses as post_type)
-	 * @return {boolean}
-	 */
-	public static function courseHasAnyMembership($courseId) {
-		if (BPMS_DEBUG) {
-			error_log("Checking : courseHasAnyMembership($courseId)");
-		}
-		$responseObj = new \stdClass;
-
-		$responseObj = self::courseMembership($courseId);
-		$permitFlag = $responseObj->has_membership;
-
-		return $permitFlag;
-
-	}
-
-	/**
-	 * This will create a object with all data/property for course membership
-	 * @param  {int}   $courseId - Unique ID post(sfwd-courses as post_type)
-	 * @return {object}
-	 */
-	public static function courseMembership($courseId) {
-		$responseObj = new \stdClass();
-		$responseObj->has_membership = false;
-
-		$responseObj = self::courseBelongsToMp($courseId, $responseObj);
-		if (BPMS_DEBUG) {
-			error_log(print_r($responseObj, true));
-		}
-		if (!$responseObj->has_membership) {
-			$responseObj = self::courseBelongsToWc($courseId, $responseObj);
-			if (BPMS_DEBUG) {
-				error_log(print_r($responseObj, true));
-			}
-		}
-
-		return $responseObj;
-
-	}
-
-	/**
 	 * Runs after a users list of courses is been updated
 	 * @param  {string}      $userId
 	 * @param  {string}      $courseId
@@ -390,8 +349,7 @@ class BpMemberships {
 		$results = array();
 		foreach ($products as $product) {
 
-			if ($product->post_type == MP_POST_TYPE) {
-				error_log("Count : $count");
+			if (in_array($product->post_type, array(MP_POST_TYPE, WC_POST_TYPE))) {
 
 				$isEnabled = get_post_meta($product->ID, "_bbms-$lmsTypes-$product->post_type-is_enabled", true);
 
@@ -402,8 +360,6 @@ class BpMemberships {
 						$results[$eventIdentifier] = array('event_identifier' => $eventIdentifier, 'user_id' => $eventMeta['user_id'], 'course_attached' => $eventMeta['course_attached'], 'grant_access' => $eventMeta['grant_access'], 'product_id' => $product->ID, 'created_at' => $eventMeta['created_at'], 'updated_at' => $eventMeta['updated_at']);
 					}
 				}
-
-			} else if ($product->post_type == WC_POST_TYPE) {
 
 			}
 
@@ -882,11 +838,25 @@ class BpMemberships {
 
 		add_submenu_page('', 'BuddyBoss Memberships', 'Memberships Settings', 'manage_options', 'bbms-product-events', array($this, 'bbmsProductEvents'));
 
-		// Trigger filters/action after Learndash is loaded
-		add_action('learndash_init', array($this, 'onLearndashInit'));
-
 		/* Add scripts for admin section for plugin */
 		add_action('admin_enqueue_scripts', array($this, 'addAdminScripts'));
+
+		// Memberpress-Learndash Integration
+		// -----------------------------------------------------------------------------
+		$isEnabled = bp_get_option('bp-learndash-memberpess');
+		if ($isEnabled) {
+			$this->mpHooks(MpHelper::getInstance());
+		}
+
+		// WooCommerce-Learndash Integration
+		// -----------------------------------------------------------------------------
+		$isEnabled = bp_get_option('bp-learndash-woocommerce');
+		if ($isEnabled) {
+			$this->wcHooks(WcHelper::getInstance());
+		}
+
+		// Trigger filters/action after Learndash is loaded
+		add_action('learndash_init', array($this, 'onLearndashInit'));
 
 		// Ajax services, related to courses
 		// -----------------------------------------------------------------------------
@@ -911,7 +881,7 @@ class BpMemberships {
 		}
 
 		$productEvents = BpMemberships::getProductEvents();
-		BbmsView::render('reports/product-events', get_defined_vars());
+		BpmsView::render('reports/product-events', get_defined_vars());
 	}
 
 	/**
@@ -919,22 +889,8 @@ class BpMemberships {
 	 * @return {void}
 	 */
 	public function onLearndashInit() {
-
-		/* Add scripts for admin section for plugin */
-		add_action('admin_enqueue_scripts', array($this, 'addAdminScripts'));
-
-		// Memberpress-Learndash Integration
-		// -----------------------------------------------------------------------------
-		$isEnabled = bp_get_option('bp-learndash-memberpess');
-		if ($isEnabled) {
-			$this->mpHooks(MpHelper::getInstance());
-		}
-
-		// WooCommerce-Learndash Integration
-		// -----------------------------------------------------------------------------
-		$isEnabled = bp_get_option('bp-learndash-woocommerce');
-		if ($isEnabled) {
-			$this->wcHooks(WcHelper::getInstance());
+		if (BPMS_DEBUG) {
+			error_log("onLearndashInit()");
 		}
 
 		// Learndash Hooks
