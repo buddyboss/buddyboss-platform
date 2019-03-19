@@ -15,17 +15,22 @@ defined('ABSPATH') || exit;
  * @since BuddyBoss 1.0.0
  */
 class BP_Woocommerce_Admin_Integration_Tab extends BP_Admin_Integration_tab {
+	protected $current_section;
 
 	public function initialize() {
 		$this->tab_order = 50;
 		$this->intro_template = $this->root_path . '/templates/admin/integration-tab-intro.php';
+		$this->current_section = 'bp-woocommerce-section';
 	}
 
 	public function settings_save() {
 		$settings = $_REQUEST;
-		error_log(print_r($settings, true));
 
-		// register_setting('bbms-settings', 'bbms-settings', BuddyBoss\Integrations\BpMemberships::bbmsSettingsSanitize($settings));
+		//@See : bp-core-options.php
+		bp_update_option('bp-learndash-woocommerce', $settings['bp-learndash-woocommerce']);
+
+		$isEnabled = bp_get_option('bp-learndash-woocommerce');
+		error_log($isEnabled);
 
 		/**
 		 * After Learndash-WooCommerce Integration settings are saved
@@ -39,7 +44,7 @@ class BP_Woocommerce_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	public function register_fields() {
 
 		$this->add_section(
-			'woocommerce-section', // Unique Identifier
+			$this->current_section, // Unique Identifier
 			__('General Settings ', 'buddyboss') //Title
 		);
 

@@ -16,16 +16,18 @@ defined('ABSPATH') || exit;
  */
 class BP_Memberships_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
+	protected $current_section;
+
 	public function initialize() {
 		$this->tab_order = 10;
 		$this->intro_template = $this->root_path . '/templates/admin/integration-tab-intro.php';
+		$this->current_section = 'bp-memberships-section';
 	}
 
 	public function settings_save() {
 		$settings = $_REQUEST;
-		error_log(print_r($settings, true));
 
-		// register_setting('bbms-settings', 'bbms-settings', BuddyBoss\Integrations\BpMemberships::bbmsSettingsSanitize($settings));
+		//@See : bp-core-options.php->bp_update_option()
 
 		/**
 		 * After Memberships settings are saved
@@ -38,8 +40,8 @@ class BP_Memberships_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	public function register_fields() {
 
 		$this->add_section(
-			'memberships-section', // Unique Identifier
-			__('General Settings for Memberships ', 'buddyboss') //Title
+			$this->current_section, // Unique Identifier
+			__('Global Settings', 'buddyboss') //Title
 		);
 	}
 }

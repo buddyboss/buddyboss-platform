@@ -1049,21 +1049,21 @@ class BpMemberships {
 
 		// Memberpress-Learndash Integration
 		// -----------------------------------------------------------------------------
-		if (BpMemberships::getVendorTypesSelected() == MP_POST_TYPE) {
-			$this->mpHooks($this);
+		$isEnabled = bp_get_option('bp-learndash-memberpess');
+		if ($isEnabled) {
+			$this->mpHooks(MpHelper::getInstance());
 		}
-		$this->mpHooks(MpHelper::getInstance());
 
 		// WooCommerce-Learndash Integration
 		// -----------------------------------------------------------------------------
-		if (BpMemberships::getVendorTypesSelected() == WC_POST_TYPE) {
-			$this->wcHooks($this);
+		$isEnabled = bp_get_option('bp-learndash-woocommerce');
+		if ($isEnabled) {
+			$this->wcHooks(WcHelper::getInstance());
 		}
-		$this->wcHooks(WcHelper::getInstance());
 
 		// Learndash Hooks
 		// -----------------------------------------------------------------------------
-		if (BpMemberships::getLmsTypesSelected() == LD_POST_TYPE) {
+		if (BpMemberships::getLmsTypesSelected(LD_POST_TYPE) == LD_POST_TYPE) {
 			add_action('save_post_sfwd-courses', array($this, 'learndashCourseAdded'), 4, 99);
 			add_action('save_post_groups', array($this, 'learndashGroupUpdated'), 88, 3);
 			// add_action('learndash_update_course_access', array($this, 'learndashUpdateCourseAccess'), 4, 99);
