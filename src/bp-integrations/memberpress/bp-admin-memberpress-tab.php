@@ -20,12 +20,6 @@ class BP_Memberpress_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	public function initialize() {
 		$this->tab_order = 40;
 		$this->intro_template = $this->root_path . '/templates/admin/integration-tab-intro.php';
-		$this->template = $this->root_path . '/templates/';
-		$this->plugin_is_active = false;
-		if (defined('MEPR_PLUGIN_SLUG')) {
-			$this->plugin_is_active = true;
-		}
-
 	}
 
 	public function settings_save() {
