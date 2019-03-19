@@ -560,58 +560,10 @@ function bp_feed_settings_callback_post_type( $args ) {
  */
 function bp_feed_settings_callback_platform( $args ) {
 
-	$activity_type = apply_filters( 'bp_feed_settings_callback_platform', array(
-		'0' => array(
-			'activity_name' => 'member_cover_photo',
-			'activity_label' => 'Member changes their their profile photo'
-		),
-		'1' => array(
-			'activity_name' => 'member_profile_photo',
-			'activity_label' => 'Member changes their cover photo'
-		),
-		'2' => array(
-			'activity_name' => 'member_send_mention',
-			'activity_label' => 'Member sends an @mention'
-		),
-		'3' => array(
-			'activity_name' => 'member_create_group',
-			'activity_label' => 'Member creates a group'
-		),
-		'4' => array(
-			'activity_name' => 'member_join_group',
-			'activity_label' => 'Member joins a group'
-		),
-		'5' => array(
-			'activity_name' => 'member_create_forum',
-			'activity_label' => 'Member creates a forum discussion'
-		),
-		'6' => array(
-			'activity_name' => 'member_reply_forum',
-			'activity_label' => 'Member replies to a forum discussion'
-		),
-		'7' => array(
-			'activity_name' => 'member_create_blog_post',
-			'activity_label' => 'Member creates a blog post'
-		),
-		'8' => array(
-			'activity_name' => 'member_create_friendship',
-			'activity_label' => 'Two members become connected'
-		),
-		'9' => array(
-			'activity_name' => 'group_photo',
-			'activity_label' => 'Group changes its photo'
-		),
-		'10' => array(
-			'activity_name' => 'group_cover_photo',
-			'activity_label' => 'Group changes its cover photo'
-		)
-	));
-
-	foreach ( $activity_type as $activity ) {
+		$option_name = $args['activity_name'];
 		?>
-		<label class="platform-activity" for="<?php echo esc_attr( $activity['activity_name'] ); ?>"><input name="<?php echo esc_attr( $activity['activity_name'] ); ?>" id="<?php echo esc_attr( $activity['activity_name'] ); ?>" type="checkbox" value="1" <?php checked( bp_platform_is_feed_enable( $activity['activity_name'], true ) ) ?>/>
-		<?php esc_html_e( $activity['activity_label'], 'buddyboss' ); ?></label>
+		<input name="<?php echo esc_attr( 'bp-feed-platform-'.$option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bp_platform_is_feed_enable( 'bp-feed-platform-'.$option_name, true ) ); ?>/>
+		<label for="<?php echo esc_attr( $option_name ); ?>"><?php esc_html_e( $args['activity_label'], 'buddyboss' ); ?></label>
 		<?php
-	}
 
 }
