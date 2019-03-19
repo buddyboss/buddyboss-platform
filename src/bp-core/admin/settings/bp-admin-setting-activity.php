@@ -156,7 +156,6 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 				}
 				$count++;
 			}
-			$counter++;
 		}
 	}
 
