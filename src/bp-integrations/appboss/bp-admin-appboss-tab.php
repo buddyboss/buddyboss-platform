@@ -15,6 +15,7 @@ defined('ABSPATH') || exit;
  * @since BuddyBoss 1.0.0
  */
 class BP_Appboss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
+	protected $current_section;
 
 	public function initialize() {
 		$this->tab_order = 30;
@@ -22,12 +23,19 @@ class BP_Appboss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	public function settings_save() {
-		// var_dump( $_POST );
+		$settings = $_REQUEST;
+
+		/**
+		 * After BuddyBoss Platform - Appboss Integration settings are saved
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
+		do_action('bp_appboss_fields_updated', $settings);
 	}
 
 	public function register_fields() {
 		$this->add_section(
-			'appboss-section',
+			$this->current_section,
 			__('Section Heading', 'buddyboss')
 		);
 	}

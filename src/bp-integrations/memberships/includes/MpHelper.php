@@ -64,7 +64,7 @@ class MpHelper {
 			$groups = learndash_get_groups();
 		}
 
-		if (BBMS_DEBUG) {
+		if (BPMS_DEBUG) {
 			// error_log(print_r($groups, true));
 		}
 
@@ -77,7 +77,7 @@ class MpHelper {
 	 * @return  {void}
 	 */
 	public static function mpSubscriptionUpdated($meprObj) {
-		if (BBMS_DEBUG) {
+		if (BPMS_DEBUG) {
 			error_log("mpSubscriptionUpdated() injected, subscription is updated at this point");
 			// error_log(print_r($meprObj, true));
 		}
@@ -102,7 +102,7 @@ class MpHelper {
 	 * @return  {void}
 	 */
 	public static function mpTransactionUpdated($meprObj) {
-		if (BBMS_DEBUG) {
+		if (BPMS_DEBUG) {
 			error_log("mpTransactionUpdated() injected, transaction is updated at this point");
 			// error_log(print_r($meprObj, true));
 		}
@@ -129,7 +129,7 @@ class MpHelper {
 	 * @return  {void}
 	 */
 	public static function mpSubscriptionTransitionStatus($oldStatus, $newStatus, $meprObj) {
-		if (BBMS_DEBUG) {
+		if (BPMS_DEBUG) {
 			error_log("mpSubscriptionTransitionStatus() injected, old status : $oldStatus, new status : $newStatus");
 			// error_log(print_r($meprObj, true));
 		}
@@ -156,7 +156,7 @@ class MpHelper {
 	 * @return  {void}
 	 */
 	public static function mpSaveProduct($product) {
-		if (BBMS_DEBUG) {
+		if (BPMS_DEBUG) {
 			error_log("mpSaveProduct()");
 			// error_log(print_r($product, true));
 		}
@@ -179,7 +179,7 @@ class MpHelper {
 				update_post_meta($product->rec->ID, "_bbms-$lmsType-$membershipType-courses_enrolled", serialize(array_values($newCourses)));
 			} else if ($courseAccessMethod == 'ALL_COURSES') {
 
-				if (BBMS_DEBUG) {
+				if (BPMS_DEBUG) {
 					error_log("ALL_COURSES selected");
 				}
 
@@ -187,7 +187,7 @@ class MpHelper {
 				$allClosedCourses = BpMemberships::getLearndashClosedCourses();
 			} else if ($courseAccessMethod == 'LD_GROUPS') {
 
-				if (BBMS_DEBUG) {
+				if (BPMS_DEBUG) {
 					error_log("LD_GROUPS selected");
 				}
 

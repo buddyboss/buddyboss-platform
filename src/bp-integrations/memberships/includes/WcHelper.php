@@ -70,7 +70,7 @@ class WcHelper {
 	 * @return  {void}
 	 */
 	public static function wcOrderUpdated($wcObj) {
-		if (BBMS_DEBUG) {
+		if (BPMS_DEBUG) {
 			error_log("wcOrderUpdated() injected, order is updated at this point");
 			// error_log(print_r($wcObj, true));
 		}
@@ -84,7 +84,7 @@ class WcHelper {
 	 * @return  {void}
 	 */
 	public static function wcSubscriptionUpdated($wcObj) {
-		if (BBMS_DEBUG) {
+		if (BPMS_DEBUG) {
 			error_log("wcSubscriptionUpdated() injected, subscription is updated at this point");
 			// error_log(print_r($wcObj, true));
 			// error_log(print_r($wcObj->id, true));
@@ -96,7 +96,7 @@ class WcHelper {
 	 * @return {void}
 	 */
 	public static function wcProductUpdate($productId) {
-		if (BBMS_DEBUG) {
+		if (BPMS_DEBUG) {
 			error_log("wcProductUpdate(), $productId");
 		}
 
@@ -116,13 +116,13 @@ class WcHelper {
 				update_post_meta($productId, "_bbms-$lmsType-$membershipType-courses_enrolled", serialize(array_values($newCourses)));
 			} else if ($courseAccessMethod == 'ALL_COURSES') {
 
-				if (BBMS_DEBUG) {
+				if (BPMS_DEBUG) {
 					error_log("ALL_COURSES selected");
 				}
 
 				$allClosedCourses = BpMemberships::getLearndashClosedCourses();
 			} else if ($courseAccessMethod == 'LD_GROUPS') {
-				if (BBMS_DEBUG) {
+				if (BPMS_DEBUG) {
 					error_log("LD_GROUPS selected");
 				}
 

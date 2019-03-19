@@ -6,15 +6,25 @@ if (!defined('ABSPATH')) {
 	die("Sorry, you can't access this directly - Security established");
 }
 
-define('BBMS_DEBUG', true);
+define('BPMS_DEBUG', true);
 define('LD_POST_TYPE', 'sfwd-courses');
 define('MP_POST_TYPE', 'memberpressproduct');
 define('WC_POST_TYPE', 'product');
-define('BBMS_URL', BP_PLUGIN_URL . '/src/bp-integrations/memberships');
+define('BPMS_URL', BP_PLUGIN_URL . '/src/bp-integrations/memberships');
 
 class BpMemberships {
 
 	private static $instance;
+
+	public function __construct() {
+
+		add_action('wp_load', array($this, 'onWpLoaded'));
+
+		/**
+		 * Available as hook, runs after a bbms(BuddyBoss Membership) plugin is loaded.
+		 */
+		do_action('bbms_loaded');
+	}
 
 	/**
 	 * Will return instance of bbms(BuddyBoss Membership) class
@@ -25,55 +35,6 @@ class BpMemberships {
 			self::$instance = new self;
 		}
 		return self::$instance;
-	}
-
-	public function __construct() {
-
-		add_submenu_page('', 'BuddyBoss Memberships', 'Memberships Settings', 'manage_options', 'bbms-product-events', array($this, 'bbmsProductEvents'));
-
-		// Trigger filters/action after Learndash is loaded
-		add_action('learndash_init', array($this, 'onLearndashInit'));
-
-		/* Add scripts for admin section for plugin */
-		add_action('admin_enqueue_scripts', array($this, 'addAdminScripts'));
-
-		// Ajax services, related to courses
-		// -----------------------------------------------------------------------------
-		add_action('wp_ajax_search_courses', array($this, 'searchLearndashCourses'));
-		add_action('wp_ajax_get_courses', array($this, 'getLearndashCoursesAsJson'));
-		add_action('wp_ajax_selected_courses', array($this, 'selectedCourses'));
-
-		// Ajax services, related to groups
-		// -----------------------------------------------------------------------------
-		add_action('wp_ajax_search_groups', array($this, 'searchLearndashGroups'));
-		add_action('wp_ajax_get_groups', array($this, 'getLearndashGroupsAsJson'));
-		add_action('wp_ajax_selected_groups', array($this, 'selectedGroups'));
-
-		/**
-		 * Available as hook, runs after a bbms(BuddyBoss Membership) plugin is loaded.
-		 */
-		do_action('bbms_loaded');
-
-	}
-
-	/**
-	 * Need to sanitize value before updating to options table
-	 * @param {array} $inputs - Form inputs/element
-	 * @return {array} $sanitaryValues - Modified values
-	 */
-	public static function bbmsSettingsSanitize($inputs) {
-		error_log("bbmsSettingsSanitize()");
-		error_log(print_r($inputs, true));
-
-		$sanitaryValues = array();
-		if (isset($inputs['bp-learndash-memberpess'])) {
-			$sanitaryValues['bp-learndash-memberpess'] = $inputs['bp-learndash-memberpess'];
-		}
-		if (isset($inputs['bp-learndash-woocommerce'])) {
-			$sanitaryValues['bp-learndash-woocommerce'] = $inputs['bp-learndash-woocommerce'];
-		}
-
-		return $sanitaryValues;
 	}
 
 	/**
@@ -91,14 +52,14 @@ class BpMemberships {
 
 			if (in_array($postType, array(MP_POST_TYPE, WC_POST_TYPE))) {
 
-				if (BBMS_DEBUG) {
+				if (BPMS_DEBUG) {
 				}
 
 				// Select2 Js
-				wp_enqueue_script('select2-js', BBMS_URL . '/assets/scripts/select2.min.js');
+				wp_enqueue_script('select2-js', BPMS_URL . '/assets/scripts/select2.min.js');
 
 				// Select2 Css
-				wp_enqueue_style('select2', BBMS_URL . '/assets/styles/select2.min.css');
+				wp_enqueue_style('select2', BPMS_URL . '/assets/styles/select2.min.css');
 
 				// Localize the script with new data
 				$bbmsVars = array(
@@ -110,11 +71,11 @@ class BpMemberships {
 				);
 
 				// Custom
-				wp_register_script('bbms-js', BBMS_URL . '/assets/scripts/bbms.js');
+				wp_register_script('bbms-js', BPMS_URL . '/assets/scripts/bbms.js');
 				wp_localize_script('bbms-js', 'bbmsVars', $bbmsVars);
 				wp_enqueue_script('bbms-js');
 
-				wp_enqueue_style('bbms', BBMS_URL . '/assets/styles/bbms.css');
+				wp_enqueue_style('bbms', BPMS_URL . '/assets/styles/bbms.css');
 
 			}
 		}
@@ -216,7 +177,7 @@ class BpMemberships {
 			$metaKey = $_GET['meta_key'];
 
 			$selectedCourses = unserialize(get_post_meta($productId, $metaKey, true));
-			if (BBMS_DEBUG) {
+			if (BPMS_DEBUG) {
 				error_log(print_r($selectedCourses, true));
 			}
 
@@ -298,7 +259,7 @@ class BpMemberships {
 			$metaKey = $_GET['meta_key'];
 
 			$selectedCourses = unserialize(get_post_meta($productId, $metaKey, true));
-			if (BBMS_DEBUG) {
+			if (BPMS_DEBUG) {
 				error_log(print_r($selectedCourses, true));
 			}
 
@@ -320,7 +281,7 @@ class BpMemberships {
 	 * @return {boolean}
 	 */
 	public static function courseHasAnyMembership($courseId) {
-		if (BBMS_DEBUG) {
+		if (BPMS_DEBUG) {
 			error_log("Checking : courseHasAnyMembership($courseId)");
 		}
 		$responseObj = new \stdClass;
@@ -342,12 +303,12 @@ class BpMemberships {
 		$responseObj->has_membership = false;
 
 		$responseObj = self::courseBelongsToMp($courseId, $responseObj);
-		if (BBMS_DEBUG) {
+		if (BPMS_DEBUG) {
 			error_log(print_r($responseObj, true));
 		}
 		if (!$responseObj->has_membership) {
 			$responseObj = self::courseBelongsToWc($courseId, $responseObj);
-			if (BBMS_DEBUG) {
+			if (BPMS_DEBUG) {
 				error_log(print_r($responseObj, true));
 			}
 		}
@@ -366,7 +327,7 @@ class BpMemberships {
 	 */
 	public static function learndashUpdateCourseAccess($userId, $courseId, $courseAccessList, $remove) {
 
-		if (BBMS_DEBUG) {
+		if (BPMS_DEBUG) {
 			error_log("learndashUpdateCourseAccess()");
 			error_log("userId : $userId");
 			error_log("courseId : $courseId");
@@ -384,7 +345,7 @@ class BpMemberships {
 	 * @return {void}
 	 */
 	public static function learndashCourseAdded($postId, $post, $update) {
-		if (BBMS_DEBUG) {
+		if (BPMS_DEBUG) {
 			error_log("learndashCourseAdded()");
 		}
 
@@ -402,7 +363,7 @@ class BpMemberships {
 	 * @todo : This hook is triggered twice, seems like learndash is trigger save_post_groups as well
 	 */
 	public static function learndashGroupUpdated($postId, $post, $update) {
-		if (BBMS_DEBUG) {
+		if (BPMS_DEBUG) {
 			error_log("learndashGroupUpdated(), update is :  $update");
 		}
 
@@ -461,7 +422,7 @@ class BpMemberships {
 	 */
 	public static function updateBbmsEnrollments($userId) {
 
-		if (BBMS_DEBUG) {
+		if (BPMS_DEBUG) {
 			error_log("updateBbmsEnrollments() for userId : $userId");
 			error_log("WC_POST_TYPE : " . WC_POST_TYPE);
 
@@ -539,7 +500,7 @@ class BpMemberships {
 	 */
 	public static function updateBbmsEvent($vendorObj, $vendorType, $grantAccess = true) {
 
-		if (BBMS_DEBUG) {
+		if (BPMS_DEBUG) {
 			error_log("updateBbmsEvent(), $vendorObj->id");
 			error_log("updateBbmsEvent(),productPostType :  $vendorType");
 		}
@@ -567,20 +528,20 @@ class BpMemberships {
 
 				$courseAccessMethod = get_post_meta($vendorObj->product_id, "_bbms-$lmsType-$vendorType-course_access_method", true);
 				if ($courseAccessMethod == 'SINGLE_COURSES') {
-					if (BBMS_DEBUG) {
+					if (BPMS_DEBUG) {
 						error_log("SINGLE_COURSES selected");
 					}
 					$coursesAttached = unserialize(get_post_meta($vendorObj->product_id, "_bbms-$lmsType-$vendorType-courses_enrolled", true));
 
 				} else if ($courseAccessMethod == 'ALL_COURSES') {
-					if (BBMS_DEBUG) {
+					if (BPMS_DEBUG) {
 						error_log("ALL_COURSES selected");
 					}
 					$coursesAttached = BpMemberships::getLearndashClosedCourses();
 
 				} else if ($courseAccessMethod == 'LD_GROUPS') {
 
-					if (BBMS_DEBUG) {
+					if (BPMS_DEBUG) {
 						error_log("LD_GROUPS selected");
 					}
 					$groupsAttached = unserialize(get_post_meta($vendorObj->product_id, "_bbms-$lmsType-$vendorType-groups_attached", true));
@@ -620,20 +581,20 @@ class BpMemberships {
 
 				$courseAccessMethod = get_post_meta($vendorObj['product_id'], "_bbms-$lmsType-$vendorType-course_access_method", true);
 				if ($courseAccessMethod == 'SINGLE_COURSES') {
-					if (BBMS_DEBUG) {
+					if (BPMS_DEBUG) {
 						error_log("SINGLE_COURSES selected");
 					}
 					$coursesAttached = unserialize(get_post_meta($vendorObj['product_id'], "_bbms-$lmsType-$vendorType-courses_enrolled", true));
 
 				} else if ($courseAccessMethod == 'ALL_COURSES') {
-					if (BBMS_DEBUG) {
+					if (BPMS_DEBUG) {
 						error_log("ALL_COURSES selected");
 					}
 					$coursesAttached = BpMemberships::getLearndashClosedCourses();
 
 				} else if ($courseAccessMethod == 'LD_GROUPS') {
 
-					if (BBMS_DEBUG) {
+					if (BPMS_DEBUG) {
 						error_log("LD_GROUPS selected");
 					}
 					$groupsAttached = unserialize(get_post_meta($vendorObj['product_id'], "_bbms-$lmsType-$vendorType-groups_attached", true));
@@ -693,7 +654,7 @@ class BpMemberships {
 	 * @return {void}
 	 */
 	public static function bbmsUpdateMembershipAccess($vendorObj, $vendorType, $grantAccess = true) {
-		if (BBMS_DEBUG) {
+		if (BPMS_DEBUG) {
 			error_log("grant_access is $grantAccess");
 		}
 
@@ -863,7 +824,7 @@ class BpMemberships {
 	 * @return {void}
 	 */
 	public static function onBpIntegrationsLearndashFieldsUpdated($bpSettings) {
-		if (BBMS_DEBUG) {
+		if (BPMS_DEBUG) {
 			error_log("onBpIntegrationsLearndashFieldsUpdated()");
 			error_log(print_r($bpSettings, true));
 		}
@@ -882,7 +843,7 @@ class BpMemberships {
 	 * @return {void}
 	 */
 	public static function onBpIntegrationsLearndashFieldAdded($key, $classObj) {
-		if (BBMS_DEBUG) {
+		if (BPMS_DEBUG) {
 			error_log("onBpIntegrationsLearndashFieldAdded()");
 		}
 
@@ -915,10 +876,29 @@ class BpMemberships {
 	 * @return {void}
 	 */
 	public static function onWpLoaded() {
-
-		error_log("onWpLoaded()");
+		if (BPMS_DEBUG) {
+			error_log("onWpLoaded()");
+		}
 
 		add_submenu_page('', 'BuddyBoss Memberships', 'Memberships Settings', 'manage_options', 'bbms-product-events', array($this, 'bbmsProductEvents'));
+
+		// Trigger filters/action after Learndash is loaded
+		add_action('learndash_init', array($this, 'onLearndashInit'));
+
+		/* Add scripts for admin section for plugin */
+		add_action('admin_enqueue_scripts', array($this, 'addAdminScripts'));
+
+		// Ajax services, related to courses
+		// -----------------------------------------------------------------------------
+		add_action('wp_ajax_search_courses', array($this, 'searchLearndashCourses'));
+		add_action('wp_ajax_get_courses', array($this, 'getLearndashCoursesAsJson'));
+		add_action('wp_ajax_selected_courses', array($this, 'selectedCourses'));
+
+		// Ajax services, related to groups
+		// -----------------------------------------------------------------------------
+		add_action('wp_ajax_search_groups', array($this, 'searchLearndashGroups'));
+		add_action('wp_ajax_get_groups', array($this, 'getLearndashGroupsAsJson'));
+		add_action('wp_ajax_selected_groups', array($this, 'selectedGroups'));
 
 	}
 
@@ -926,7 +906,7 @@ class BpMemberships {
 	 * @return {HTML} - rendering content inside product-events file
 	 */
 	public static function bbmsProductEvents() {
-		if (BBMS_DEBUG) {
+		if (BPMS_DEBUG) {
 			error_log("bbmsProductEvents()");
 		}
 
@@ -935,116 +915,10 @@ class BpMemberships {
 	}
 
 	/**
-	 * Buddyboss Membership - Lms Types
-	 * @return {array} - List of supported types
-	 */
-	public static function bbmsLmsTypes() {
-		if (BBMS_DEBUG) {
-			error_log("bbmsLmsTypes()");
-		}
-		$lmsTypes = array('' => '-- Select to proceed --');
-
-		if (defined('LEARNDASH_VERSION')) {
-			$lmsTypes['sfwd-courses'] = "Learndash LMS (Active)";
-			$lmsTypes['lifter-lms'] = "Lifter LMS (Supported in 2019 Fall)";
-		} else {
-			$lmsTypes['sfwd-courses'] = "Learndash LMS (InActive)";
-			$lmsTypes['lifter-lms'] = "Lifter LMS (Supported in 2019 Fall)";
-		}
-		return $lmsTypes;
-	}
-
-	/**
-	 * Buddyboss Membership - Vendor(membership) Types
-	 * @return {array} - List of supported types
-	 */
-	public static function bbmsVendorTypes() {
-		if (BBMS_DEBUG) {
-			error_log("bbmsVendorTypes()");
-		}
-		$vendorTypes = array('' => '-- Select to proceed --');
-		//Check if Memperess is active
-		if (defined('MEPR_PLUGIN_SLUG')) {
-			$vendorTypes[MP_POST_TYPE] = "MemberPress (Active)";
-		} else {
-			$vendorTypes[MP_POST_TYPE] = "MemberPress (InActive)";
-		}
-		//Check if WooCommerce is active
-		if (defined('WC_PLUGIN_FILE')) {
-			$vendorTypes[WC_POST_TYPE] = "WooCommerce (Active)";
-		} else {
-			$vendorTypes[WC_POST_TYPE] = "WooCommerce (InActive)";
-		}
-
-		return $vendorTypes;
-	}
-
-	/**
-	 * Buddyboss Membership  page.
-	 * @return {HTML} - rendering content inside product-events.php file
-	 */
-	public static function bbmsDebugLogging() {
-		if (BBMS_DEBUG) {
-			error_log("bbmsOptionsPage()");
-		}
-
-		$lmsTypes = self::bbmsLmsTypes();
-		$vendorTypes = self::bbmsVendorTypes();
-		BbmsView::render('settings-page', get_defined_vars());
-	}
-
-	/**
-	 * Buddyboss Membership Options page.
-	 * @return {HTML} - rendering content inside settings-page.php file
-	 */
-	public static function bbmsOptionsPage() {
-		if (BBMS_DEBUG) {
-			error_log("bbmsOptionsPage()");
-		}
-
-		$lmsTypes = self::bbmsLmsTypes();
-		$vendorTypes = self::bbmsVendorTypes();
-		BbmsView::render('settings-page', get_defined_vars());
-	}
-
-	/**
-	 * Buddyboss Membership Options page updated/saved.
+	 * Invoked after Learndash is loaded
 	 * @return {void}
 	 */
-	public static function bbmsOptionsUpdate() {
-		if (BBMS_DEBUG) {
-			error_log("bbmsOptionsUpdate()");
-		}
-
-		//Register BBMS settings
-		register_setting('bbms-settings', 'bbms-settings', array($this, 'bbmsSettingsSanitize'));
-	}
-
-	/**
-	 * Need to sanitize value before updating to options table
-	 * @param {array} $inputs - Form inputs/element
-	 * @return {array} $sanitaryValues - Modified values
-	 */
-	// public function bbmsSettingsSanitize($inputs) {
-	// 	error_log("bbmsSettingsSanitize()");
-	// 	error_log(print_r($inputs, true));
-
-	// 	$sanitaryValues = array();
-	// 	$sanitaryValues['bbms-lms-types'] = $inputs['lms-types'];
-	// 	$sanitaryValues['bbms-vendor-types'] = $inputs['vendor-types'];
-
-	// 	// error_log(print_r($sanitaryValues, true));
-	// 	return $sanitaryValues;
-	// }
-
-	/**
-	 * Invoked after Learndash is loaded
-	 * @return void
-	 */
 	public function onLearndashInit() {
-
-		/** LearnDash - User functions **/
-		// require_once LEARNDASH_LMS_PLUGIN_DIR . '/includes/ld-users.php';
 
 		/* Add scripts for admin section for plugin */
 		add_action('admin_enqueue_scripts', array($this, 'addAdminScripts'));
@@ -1072,25 +946,6 @@ class BpMemberships {
 			// Remove course increment record if a course unenrolled manually
 			// add_action( 'learndash_update_course_access', array( $this, 'remove_access_increment_count' ), 10, 4 );
 		}
-		add_action('save_post_sfwd-courses', array($this, 'learndashCourseAdded'), 4, 99);
-		add_action('save_post_groups', array($this, 'learndashGroupUpdated'), 88, 3);
-
-		// Ajax services, related to courses
-		// -----------------------------------------------------------------------------
-		add_action('wp_ajax_search_courses', array($this, 'searchLearndashCourses'));
-		add_action('wp_ajax_get_courses', array($this, 'getLearndashCoursesAsJson'));
-		add_action('wp_ajax_selected_courses', array($this, 'selectedCourses'));
-
-		// Ajax services, related to groups
-		// -----------------------------------------------------------------------------
-		add_action('wp_ajax_search_groups', array($this, 'searchLearndashGroups'));
-		add_action('wp_ajax_get_groups', array($this, 'getLearndashGroupsAsJson'));
-		add_action('wp_ajax_selected_groups', array($this, 'selectedGroups'));
-
-		/**
-		 * Available as hook, runs after a bbms(BuddyBoss Membership) plugin is loaded.
-		 */
-		do_action('bbms_loaded');
 	}
 
 }
