@@ -20,23 +20,36 @@ class BP_Appboss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	public function initialize() {
 		$this->tab_order = 30;
 		$this->intro_template = $this->root_path . '/templates/admin/integration-tab-intro.php';
+		$this->current_section = 'bp-appboss-section';
 	}
 
 	public function settings_save() {
 		$settings = $_REQUEST;
 
+		//@See : bp-core-options.php->bp_update_option()
+		bp_update_option('bp-appboss_enabled', $settings['bp-appboss_enabled']);
+
+		$isEnabled = bp_get_option('bp-appboss_enabled');
+		error_log($isEnabled);
+
 		/**
-		 * After BuddyBoss Platform - Appboss Integration settings are saved
-		 *
+		 * After Appboss Integration settings are saved
 		 * @since BuddyBoss 1.0.0
 		 */
-		do_action('bp_appboss_fields_updated', $settings);
+		do_action('bp_integrations_appboss_fields_updated', $settings);
 	}
 
 	public function register_fields() {
 		$this->add_section(
 			$this->current_section,
-			__('Section Heading', 'buddyboss')
+			__('General Settings', 'buddyboss')
 		);
+
+		// If Enabled/Disabled
+		$this->add_checkbox_field(
+			'bp-appboss_enabled', // Unique Identifier
+			__('Enable', 'buddyboss'), //Title
+			['input_text' => __("Enable AppBoss Integration.", 'buddyboss')]); //Callback
+
 	}
 }

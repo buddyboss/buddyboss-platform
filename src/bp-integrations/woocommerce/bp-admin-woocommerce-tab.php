@@ -27,17 +27,15 @@ class BP_Woocommerce_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$settings = $_REQUEST;
 
 		//@See : bp-core-options.php
-		bp_update_option('bp-learndash-woocommerce', $settings['bp-learndash-woocommerce']);
+		bp_update_option('bp-woocommerce_enabled', $settings['bp-woocommerce_enabled']);
 
-		$isEnabled = bp_get_option('bp-learndash-woocommerce');
-		error_log($isEnabled);
+		$isEnabled = bp_get_option('bp-woocommerce_enabled');
 
 		/**
-		 * After Learndash-WooCommerce Integration settings are saved
-		 *
+		 * After WooCommerce Integration settings are saved
 		 * @since BuddyBoss 1.0.0
 		 */
-		do_action('bp_learndash_woocommerce_fields_updated', $settings);
+		do_action('bp_integrations_woocommerce_fields_updated', $settings);
 
 	}
 
@@ -50,7 +48,7 @@ class BP_Woocommerce_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		// If Enabled/Disabled
 		$this->add_checkbox_field(
-			'bp-learndash-woocommerce', // Unique Identifier
+			'bp-woocommerce_enabled', // Unique Identifier
 			__('Enable', 'buddyboss'), //Title
 			['input_text' => __("Enroll user in Learndash course(s) after purchasing WooCommerce product.", 'bbms'), 'buddyboss']); //Callback
 

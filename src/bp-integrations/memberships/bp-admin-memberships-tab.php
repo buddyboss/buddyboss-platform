@@ -28,13 +28,15 @@ class BP_Memberships_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$settings = $_REQUEST;
 
 		//@See : bp-core-options.php->bp_update_option()
+		bp_update_option('bp-memberships_enabled', $settings['bp-memberships_enabled']);
+
+		$isEnabled = bp_get_option('bp-memberships_enabled');
 
 		/**
-		 * After Memberships settings are saved
-		 *
+		 * After Memberships Integration settings are saved
 		 * @since BuddyBoss 1.0.0
 		 */
-		do_action('bp_memberships_fields_updated', $settings);
+		do_action('bp_integrations_memberships_fields_updated', $settings);
 	}
 
 	public function register_fields() {
@@ -43,5 +45,12 @@ class BP_Memberships_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			$this->current_section, // Unique Identifier
 			__('Global Settings', 'buddyboss') //Title
 		);
+
+		// If Enabled/Disabled
+		$this->add_checkbox_field(
+			'bp-memberships_enabled', // Unique Identifier
+			__('Enable', 'buddyboss'), //Title
+			['input_text' => __("Enable BuddyBoss Memberships Integration.", 'buddyboss')]); //Callback
+
 	}
 }

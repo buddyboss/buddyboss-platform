@@ -843,14 +843,14 @@ class BpMemberships {
 
 		// Memberpress-Learndash Integration
 		// -----------------------------------------------------------------------------
-		$isEnabled = bp_get_option('bp-learndash-memberpess');
+		$isEnabled = bp_get_option('bp-memberpess');
 		if ($isEnabled) {
 			$this->mpHooks(MpHelper::getInstance());
 		}
 
 		// WooCommerce-Learndash Integration
 		// -----------------------------------------------------------------------------
-		$isEnabled = bp_get_option('bp-learndash-woocommerce');
+		$isEnabled = bp_get_option('bp-woocommerce');
 		if ($isEnabled) {
 			$this->wcHooks(WcHelper::getInstance());
 		}

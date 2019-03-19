@@ -48,7 +48,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		foreach ($fields as $key => $field) {
 			call_user_func($field);
 			/**
-			 * @todo add title/description
+			 * @todo After registering fields
 			 *
 			 * @since BuddyBoss 1.0.0
 			 */
