@@ -1154,6 +1154,36 @@ a.layout-grid-view {
   padding: 0 0 20px 0;
 }
 
+.activity-update-form #whats-new-attachments {
+  margin-right: 8.5%;
+}
+
+.activity-update-form #whats-new-attachments .activity-attached-gif-container {
+  background-color: #ccd6dd;
+  border-radius: 6px;
+  box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.05), 0 1px 0 rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  display: inline-block;
+  font-size: 12px;
+  max-width: 312px;
+  overflow: hidden;
+  position: relative;
+}
+
+.activity-update-form #whats-new-attachments .activity-attached-gif-container .gif-image-remove {
+  border-radius: 10px;
+  height: 19px;
+  left: 4px;
+  top: 4px;
+  width: 19px;
+}
+
+.activity-update-form #whats-new-attachments .activity-attached-gif-container .gif-image-overlay {
+  color: #fff;
+  margin-top: 0;
+  position: absolute;
+}
+
 .activity-update-form #whats-new-elements #whats-new-elements-buttons {
   margin: 1em 0;
 }
@@ -1164,6 +1194,10 @@ a.layout-grid-view {
 
 .activity-update-form #whats-new-elements #whats-new-elements-buttons ul li {
   display: inline-block;
+}
+
+.activity-update-form #whats-new-toolbar {
+  margin-right: 8.5%;
 }
 
 .activity-update-form #whats-new-toolbar .post-elements-buttons-item {
@@ -1849,6 +1883,52 @@ a.layout-grid-view {
 
 #activity-close-link-suggestion:focus, #activity-link-preview-close-image:focus {
   outline: 0;
+}
+
+.activity-attached-gif-container {
+  cursor: pointer;
+  max-width: 480px;
+}
+
+.activity-attached-gif-container .gif-player {
+  position: relative;
+  max-width: 480px;
+}
+
+.activity-attached-gif-container .gif-player video {
+  margin: 0;
+}
+
+.activity-attached-gif-container .gif-play-button {
+  height: 80px;
+  width: 80px;
+  position: absolute;
+  right: 50%;
+  margin-right: -40px;
+  top: 50%;
+  margin-top: -40px;
+}
+
+.activity-attached-gif-container .gif-play-button span.dashicons {
+  font-size: 80px;
+  width: 80px;
+  height: 80px;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+}
+
+.activity-attached-gif-container .gif-icon {
+  background: url(../images/gif-symbol.png) bottom left no-repeat;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: block;
+  bottom: 30px;
+  right: 10px;
+  background-size: 40px 30px;
+  max-width: 40px;
+  max-height: 30px;
 }
 
 /* Media query for only large devices */

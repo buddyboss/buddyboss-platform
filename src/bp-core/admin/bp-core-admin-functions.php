@@ -594,6 +594,11 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 			'class' => 'bp-integrations',
 		),
 		'4' => array(
+			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-tools' ), 'admin.php' ) ),
+			'name'  => __( 'Tools', 'buddypress' ),
+			'class' => 'bp-tools',
+		),
+		'5' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-credits' ), 'admin.php' ) ),
 			'name'  => __( 'Credits', 'buddypress' ),
 			'class' => 'bp-credits',
@@ -2408,4 +2413,84 @@ function bp_core_get_emails_admin_tabs( $active_tab = '') {
 	 * @param array $tabs Tab data.
 	 */
 	return apply_filters( 'bp_core_get_emails_admin_tabs', $tabs );
+}
+
+/**
+ * Output the settings tabs in the admin area.
+ *
+ * @since BuddyPress 1.5.0
+ *
+ * @param string $active_tab Name of the tab that is active. Optional.
+ */
+function bp_core_tools_settings_admin_tabs( $active_tab = '' ) {
+
+	$tabs_html    = '';
+	$idle_class   = '';
+	$active_class = 'current';
+	$active_tab   = isset( $_GET['tab'] ) ? $_GET['tab'] : 'bp-tools';
+
+	/**
+	 * Filters the admin tabs to be displayed.
+	 *
+	 * @since BuddyPress 1.9.0
+	 *
+	 * @param array $value Array of tabs to output to the admin area.
+	 */
+	$tabs         = apply_filters( 'bp_core_tools_settings_admin_tabs', bp_core_get_tools_settings_admin_tabs( $active_tab ) );
+
+	$count = count( array_values( $tabs ) );
+	$i     = 1;
+
+	// Loop through tabs and build navigation.
+	foreach ( array_values( $tabs ) as $tab_data ) {
+
+		$is_current = (bool) ( $tab_data['slug'] == $active_tab );
+		$tab_class  = $is_current ? $active_class : $idle_class;
+		if ( $i === $count ) {
+			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
+		} else {
+			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a> |</li>';
+		}
+
+		$i = $i + 1;
+	}
+
+	echo $tabs_html;
+
+	/**
+	 * Fires after the output of tabs for the admin area.
+	 *
+	 * @since BuddyPress 1.5.0
+	 */
+	do_action( 'bp_tools_settings_admin_tabs' );
+}
+
+/**
+ * Get the data for the settings tabs in the admin area.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $active_tab Name of the tab that is active. Optional.
+ * @return string
+ */
+function bp_core_get_tools_settings_admin_tabs( $active_tab = '' ) {
+
+	// Tabs for the BuddyBoss > Tools
+	$tabs = array(
+		'0' => array(
+			'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bp-tools', 'tab' => 'bp-tools'  ), 'admin.php' ) ),
+			'name' => __( 'Repair Community', 'buddyboss' ),
+			'slug' => 'bp-tools'
+		)
+	);
+
+
+	/**
+	 * Filters the tab data used in our wp-admin screens.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param array $tabs Tab data.
+	 */
+	return apply_filters( 'bp_core_get_tools_settings_admin_tabs', $tabs );
 }

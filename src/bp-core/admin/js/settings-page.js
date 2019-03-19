@@ -106,6 +106,24 @@
 			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li').find('a[href*="bp-profile-setup"]').parent().addClass('current');
 		}
 
+		// Set Tools selected on Repair Forums Page.
+		if ( $('body.buddypress.buddyboss_page_bbp-repair').length ) {
+			var selectorForumRepair= $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="bp-tools"]');
+			$(menuOpen).removeClass('current');
+			$(selectorForumRepair).addClass('current');
+			$(selectorForumRepair).attr('aria-current','page');
+			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li').find('a[href*="bp-tools"]').parent().addClass('current');
+		}
+
+		// Set Tools selected on Import Forums Page.
+		if ( $('body.buddypress.buddyboss_page_bbp-converter').length ) {
+			var selectorForumImport= $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="bp-tools"]');
+			$(menuOpen).removeClass('current');
+			$(selectorForumImport).addClass('current');
+			$(selectorForumImport).attr('aria-current','page');
+			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li').find('a[href*="bp-tools"]').parent().addClass('current');
+		}
+
 	});
 
 }());

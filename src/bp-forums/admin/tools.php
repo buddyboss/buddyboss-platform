@@ -26,8 +26,14 @@ function bbp_admin_repair() {
 ?>
 
 	<div class="wrap">
-
-		<h2 class="nav-tab-wrapper"><?php bbp_tools_admin_tabs( __( 'Repair Forums', 'buddyboss' ) ); ?></h2>
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddypress' ) ); ?></h2>
+		<div class="nav-settings-subsubsub">
+			<ul class="subsubsub">
+				<?php bp_core_tools_settings_admin_tabs(); ?>
+			</ul>
+		</div>
+	</div>
+	<div class="wrap">
 
 		<p><?php esc_html_e( 'Forums keeps track of relationships between forums, discussions, replies, and discussion tags, and users. Occasionally these relationships become out of sync, most often after an import or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
 		<p class="description"><?php esc_html_e( 'Some of these tools utilize substantial database resources. Avoid running more than 1 repair job at a time.', 'buddyboss' ); ?></p>
@@ -1191,8 +1197,15 @@ function bbp_admin_reset() {
 ?>
 
 	<div class="wrap">
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddypress' ) ); ?></h2>
+		<div class="nav-settings-subsubsub">
+			<ul class="subsubsub">
+				<?php bp_core_tools_settings_admin_tabs(); ?>
+			</ul>
+		</div>
+	</div>
+	<div class="wrap">
 
-		<h2 class="nav-tab-wrapper"><?php bbp_tools_admin_tabs( __( 'Reset Forums', 'buddyboss' ) ); ?></h2>
 		<p><?php esc_html_e( 'Revert your forums back to a brand new installation. This process cannot be undone.', 'buddyboss' ); ?></p>
 		<p><strong><?php esc_html_e( 'Backup your database before proceeding.', 'buddyboss' ); ?></strong></p>
 

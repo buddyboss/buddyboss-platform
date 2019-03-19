@@ -653,31 +653,31 @@ body.post-type-bp-email .categorydiv label {
 /*------------------------------------------------------------------------------
  * 5.0 Tools - BuddyBoss
  *----------------------------------------------------------------------------*/
-.tools_page_bp-tools .wrap,
-.tools_page_bbp-repair .wrap {
+.buddyboss_page_bp-tools .wrap,
+.buddyboss_page_bbp-repair .wrap {
   max-width: 950px;
 }
 
-.tools_page_bp-tools p,
-.tools_page_bbp-repair p {
+.buddyboss_page_bp-tools p,
+.buddyboss_page_bbp-repair p {
   line-height: 2;
 }
 
-.tools_page_bp-tools fieldset,
-.tools_page_bbp-repair fieldset {
+.buddyboss_page_bp-tools fieldset,
+.buddyboss_page_bbp-repair fieldset {
   margin: 2em 0 0;
 }
 
-.tools_page_bp-tools legend,
-.tools_page_bbp-repair legend {
+.buddyboss_page_bp-tools legend,
+.buddyboss_page_bbp-repair legend {
   color: #23282d;
   font-size: 1.3em;
   font-weight: 600;
   margin: 1em 0;
 }
 
-.tools_page_bp-tools label,
-.tools_page_bbp-repair label {
+.buddyboss_page_bp-tools label,
+.buddyboss_page_bbp-repair label {
   clear: left;
   display: block;
   line-height: 1.5;
@@ -685,18 +685,18 @@ body.post-type-bp-email .categorydiv label {
 }
 
 @media screen and (max-width: 782px) {
-  .tools_page_bp-tools p,
-  .tools_page_bbp-repair p {
+  .buddyboss_page_bp-tools p,
+  .buddyboss_page_bbp-repair p {
     line-height: 1.5;
   }
-  .tools_page_bp-tools label,
-  .tools_page_bbp-repair label {
+  .buddyboss_page_bp-tools label,
+  .buddyboss_page_bbp-repair label {
     margin-bottom: 1em;
     padding-right: 25px;
     text-indent: -33px;
   }
-  .tools_page_bp-tools .checkbox,
-  .tools_page_bbp-repair .checkbox {
+  .buddyboss_page_bp-tools .checkbox,
+  .buddyboss_page_bbp-repair .checkbox {
     padding: 0 0 0 30px;
   }
 }

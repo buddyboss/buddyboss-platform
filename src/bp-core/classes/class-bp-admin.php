@@ -446,14 +446,7 @@ class BP_Admin {
 			);
 		}
 
-		$hooks[] = add_submenu_page(
-			$this->settings_page,
-			__( '', 'buddyboss' ),
-			__( '', 'buddyboss' ),
-			$this->capability,
-			'bp-plugin-separator-notice',
-			''
-		);
+
 
 		// For consistency with non-Multisite, we add a Tools menu in
 		// the Network Admin as a home for our Tools panel.
@@ -483,12 +476,21 @@ class BP_Admin {
 		}
 
 		$hooks[] = add_submenu_page(
-			$tools_parent,
-			__( 'BuddyBoss Tools', 'buddyboss' ),
-			__( 'BuddyBoss', 'buddyboss' ),
+			$this->settings_page,
+			__( 'Tools', 'buddyboss' ),
+			__( 'Tools', 'buddyboss' ),
 			$this->capability,
 			'bp-tools',
 			'bp_core_admin_tools'
+		);
+
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( '', 'buddyboss' ),
+			__( '', 'buddyboss' ),
+			$this->capability,
+			'bp-plugin-separator-notice',
+			''
 		);
 
 		// For network-wide configs, add a link to (the root site's) Emails screen.
