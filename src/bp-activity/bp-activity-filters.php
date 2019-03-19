@@ -125,6 +125,9 @@ add_action( 'bp_activity_before_save', 'bp_activity_check_blacklist_keys',  2, 1
 add_action( 'bp_activity_after_save', 'bp_activity_save_link_data', 2, 1 );
 add_action( 'bp_activity_after_save', 'bp_activity_save_gif_data', 2, 1 );
 
+// Remove Activity if uncheck the options from the backend BuddyBoss > Settings > Activity > Posts in Activity Feed >BuddyBoss Platform
+add_action( 'bp_activity_before_save', 'bp_activity_remove_platform_updates', 999, 1 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -1086,3 +1089,18 @@ function bp_users_filter_activity_following_scope( $retval = array(), $filter = 
 }
 
 add_filter( 'bp_activity_set_following_scope_args', 'bp_users_filter_activity_following_scope', 10, 2 );
+
+/**
+ * Do not add the activity if uncheck the options from the
+ * backend BuddyBoss > Settings > Activity > Posts in Activity Feed >BuddyBoss Platform
+ *
+ * @param $activity_object
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_activity_remove_platform_updates( $activity_object ) {
+
+	if ( false === bp_platform_is_feed_enable( 'bp-feed-platform-'.$activity_object->type ) ) {
+		$activity_object->type = false;
+	}
+}

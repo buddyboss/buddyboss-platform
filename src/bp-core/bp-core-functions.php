@@ -4055,3 +4055,75 @@ function bp_core_get_active_custom_post_type_feed() {
 
 	return $cpt_arr;
 }
+
+function bp_platform_default_activity_types() {
+
+	$activity_type = apply_filters( 'bp_platform_default_activity_types', array(
+		'0' => array(
+			'activity_name' => 'new_avatar',
+			'activity_label' => 'Member changes their their profile photo'
+		),
+		'1' => array(
+			'activity_name' => 'member_profile_photo',
+			'activity_label' => 'Member changes their cover photo'
+		),
+		'2' => array(
+			'activity_name' => 'member_send_mention',
+			'activity_label' => 'Member sends an @mention'
+		),
+		'3' => array(
+			'activity_name' => 'created_group',
+			'activity_label' => 'Member creates a group'
+		),
+		'4' => array(
+			'activity_name' => 'joined_group',
+			'activity_label' => 'Member joins a group'
+		),
+		'5' => array(
+			'activity_name' => 'bbp_topic_create',
+			'activity_label' => 'Member creates a forum discussion'
+		),
+		'6' => array(
+			'activity_name' => 'bbp_reply_create',
+			'activity_label' => 'Member replies to a forum discussion'
+		),
+		'7' => array(
+			'activity_name' => 'new_blog_post',
+			'activity_label' => 'Member creates a blog post'
+		),
+		'8' => array(
+			'activity_name' => 'friendship_created',
+			'activity_label' => 'Two members become connected'
+		),
+		'9' => array(
+			'activity_name' => 'group_photo',
+			'activity_label' => 'Group changes its photo'
+		),
+		'10' => array(
+			'activity_name' => 'group_cover_photo',
+			'activity_label' => 'Group changes its cover photo'
+		),
+		'11' => array(
+			'activity_name' => 'updated_profile',
+			'activity_label' => 'Member updated their profile'
+		),
+		'12' => array(
+			'activity_name' => 'new_member',
+			'activity_label' => 'Member registered on site'
+		),
+		'13' => array(
+			'activity_name' => 'activity_comment',
+			'activity_label' => 'Member added comment on activity'
+		),
+		'14' => array(
+			'activity_name' => 'group_details_updated',
+			'activity_label' => 'Group detail updated'
+		),
+		'15' => array(
+			'activity_name' => 'new_blog_comment',
+			'activity_label' => 'New blog comment'
+		)
+	));
+
+	return $activity_type;
+}
