@@ -1,0 +1,27 @@
+/**
+ * MemberpressProduct (memberpressproduct) Css
+ */
+
+#bbms-learndash-memberpressproduct-search_courses_wrapper, #bbms-learndash-memberpressproduct-search_groups_wrapper {
+    padding: 15px 0;
+}
+/**
+ * WooCommerce(product) Css
+ */
+
+/* LearnDash Menu Icon */
+
+li.learndash_options a::before {
+    font-family: Dashicons !important;
+    content: '\f118' !important;
+    speak: none !important;
+    font-weight: 400 !important;
+    font-variant: normal !important;
+    text-transform: none !important;
+    line-height: 1 !important;
+    -webkit-font-smoothing: antialiased !important;
+    text-decoration: none !important;
+}
+#bbms-learndash-product-search_courses_wrapper, #bbms-learndash-product-search_groups_wrapper {
+    padding: 15px 0;
+}
