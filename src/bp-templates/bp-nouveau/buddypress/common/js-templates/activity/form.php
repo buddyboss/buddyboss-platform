@@ -92,12 +92,14 @@
 				</a>
 			</span>
 		<?php endif; ?>
+		<?php if ( bp_is_activity_gif_active() ):  ?>
 		<span class="post-elements-buttons-item post-gif">
 			<div class="gif-media-search">
 				<a id="activity-gif-button" class="toolbar-button"><span class="dashicons dashicons-smiley"></span></a>
 				<div class="gif-media-search-dropdown"></div>
 			</div>
 		</span>
+	<?php endif; ?>
 </script>
 
 <script type="text/html" id="tmpl-activity-post-form-avatar">

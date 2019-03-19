@@ -94,6 +94,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Allow link preview.
 		$this->add_field( '_bp_enable_activity_link_preview', __( 'Link Preview', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_link_preview', 'intval' );
 
+		// Allow gif.
+		$this->add_field( '_bp_enable_activity_gif', __( 'GIFs', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_gif', 'intval' );
+
 		// Allow subscriptions setting.
 		if ( is_plugin_active( 'akismet/akismet.php' ) && defined( 'AKISMET_VERSION' ) ) {
 			// $this->add_field( '_bp_enable_akismet', __( 'Akismet', 'buddyboss' ), 'bp_admin_setting_callback_activity_akismet', 'intval' );

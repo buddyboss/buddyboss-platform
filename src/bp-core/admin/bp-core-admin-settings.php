@@ -164,6 +164,19 @@ function bp_admin_setting_callback_enable_activity_link_preview() {
 	<?php
 }
 
+/**
+ * Allow GIFs in activity posts.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_admin_setting_callback_enable_activity_gif() {
+	?>
+
+	<input id="_bp_enable_activity_gif" name="_bp_enable_activity_gif" type="checkbox" value="1" <?php checked( bp_is_activity_gif_active( false ) ); ?> />
+	<label for="_bp_enable_activity_gif"><?php _e( 'Allow GIFs in activity posts', 'buddyboss' ); ?></label>
+	<?php
+}
+
 
 /**
  * Sanitization for bp-disable-blogforum-comments setting.
