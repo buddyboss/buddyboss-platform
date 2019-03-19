@@ -716,7 +716,10 @@ class BBP_Replies_Admin {
 		if ( $this->bail() ) return $actions;
 
 		unset( $actions['inline hide-if-no-js'] );
-
+		
+		//simple hack to show the reply content
+		bbp_reply_content( $reply->ID );
+		
 		// Reply view links to topic
 		$actions['view'] = '<a href="' . esc_url( bbp_get_reply_url( $reply->ID ) ) . '" title="' . esc_attr( sprintf( __( 'View "%s"', 'buddyboss' ), bbp_get_reply_title( $reply->ID ) ) ) . '" rel="permalink">' . esc_html__( 'View', 'buddyboss' ) . '</a>';
 
