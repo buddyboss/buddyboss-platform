@@ -169,11 +169,11 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		printf(
 			'<p class="description">%s</p>',
 			sprintf(
-				__( 'After the format has been updated, remember to run <a href="%s">Repair Tools</a> to update all the users.', 'buddyboss' ),
+				__( 'After the format has been updated, remember to run <a href="%s">Repair Community</a> tools to update all the users.', 'buddyboss' ),
 				add_query_arg([
 					'page' => 'bp-tools',
 					'tool' => 'bp-wordpress-update-display-name'
-				], admin_url( 'tools.php' ) )
+				], admin_url( 'admin.php' ) )
 			)
 		);
 	}
