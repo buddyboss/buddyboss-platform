@@ -187,8 +187,22 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function bp_admin_setting_callback_profile_search() {
 		?>
 			<input id="bp-enable-profile-search" name="bp-enable-profile-search" type="checkbox" value="1" <?php checked( ! bp_disable_advanced_profile_search() ); ?> />
-			<label for="bp-enable-profile-search"><?php _e( 'Enable advanced profile search on the members directory', 'buddyboss' ); ?></label>
 			<?php
+			if ( false === bp_disable_advanced_profile_search() ) {
+				printf(
+					'<label for="bp-enable-profile-search">%s</label>',
+					sprintf(
+						__( 'Enable <a href="%s">advanced profile search</a> on the members directory.', 'buddyboss' ),
+						add_query_arg([
+							'post_type' => 'bp_ps_form',
+						], admin_url( 'edit.php' ) )
+					)
+				);
+			} else {
+				?>
+				<label for="bp-enable-profile-search"><?php _e( 'Enable advanced profile search on the members directory', 'buddyboss' ); ?></label>
+				<?php
+			}
 	}
 
 	/**
