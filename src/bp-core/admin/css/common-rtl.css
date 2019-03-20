@@ -389,11 +389,6 @@ tr.bp-search-parent-field label {
   font-weight: 400;
 }
 
-.bp-admin-card .form-table td p span.input-label {
-  color: #444;
-  font-weight: 500;
-}
-
 /* Settings */
 .bp-admin-card h2,
 .bp-admin-card.section-bp_main h2 {
