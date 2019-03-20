@@ -98,7 +98,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$this->add_field( 'bp-member-type-enable-disable', __( 'Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_enable_disable'], 'intval' );
 
 		// Enable/Disable Display on profiles.
-		$this->add_field( 'bp-member-type-display-on-profile', __( 'Display Profile Type', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_display_on_profile'], 'intval' );
+		$this->add_field( 'bp-member-type-display-on-profile', __( 'Display Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_display_on_profile'], 'intval' );
 
 		// Profile types import.
 		$this->add_field( 'bp-member-type-import', __( 'Import Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_import'], 'intval' );
@@ -189,15 +189,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			<input id="bp-enable-profile-search" name="bp-enable-profile-search" type="checkbox" value="1" <?php checked( ! bp_disable_advanced_profile_search() ); ?> />
 			<label for="bp-enable-profile-search"><?php _e( 'Enable advanced profile search on the members directory', 'buddyboss' ); ?></label>
 			<?php
-			printf(
-			'<p class="description">%s</p>',
-					sprintf(
-						__( 'Configure options for your <a href="%s">Profile Search Form</a>.', 'buddyboss' ),
-						add_query_arg([
-							'page' => '#',
-						], admin_url( 'admin.php' ) )
-					)
-			);
 	}
 
 	/**
@@ -240,7 +231,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function bp_admin_setting_callback_member_type_display_on_profile() {
 		?>
 		<input id="bp-member-type-display-on-profile" name="bp-member-type-display-on-profile" type="checkbox" value="1" <?php checked( bp_member_type_display_on_profile() ); ?> />
-		<label for="bp-member-type-display-on-profile"><?php _e( 'Display member profile type on their profile page', 'buddyboss' ); ?></label>
+		<label for="bp-member-type-display-on-profile"><?php _e( 'Display each member\'s profile type on their profile page', 'buddyboss' ); ?></label>
 		<?php
 	}
 }
