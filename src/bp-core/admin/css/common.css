@@ -486,8 +486,8 @@ tr.bp-search-parent-field label {
 
 
 /* Integrations - Memberships */
-.bp-admin-card.section-bp_memberpress_disabled h2, .bp-admin-card.section-bp-memberships-section h2 {
-  /*background-image: url(../../images/admin/admin_icon-appboss.png);*/
+.bp-admin-card.section-bp_memberships_disabled h2, .bp-admin-card.section-bp-memberships-section h2 {
+  background-image: url(../../images/admin/admin_icon-appboss.png);
 }
 
 

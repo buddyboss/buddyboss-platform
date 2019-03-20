@@ -3,7 +3,7 @@ namespace BuddyBoss\Memberships\Classes;
 
 use BuddyBoss\Memberships\Classes\BpmsHooks;
 
-define('BP_VIEWS_PATH', dirname(__FILE__) . '/../views/');
+define('BP_VIEWS_PATH', dirname(__FILE__) . '/../templates/');
 
 class BpmsView {
 
