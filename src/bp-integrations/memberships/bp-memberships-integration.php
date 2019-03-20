@@ -24,7 +24,7 @@ class BP_Memberships_Integration extends BP_Integration {
 			__('Memberships', 'buddyboss'), // Internal integration name.
 			'memberships', //Path for includes.
 			[
-				'required_plugin' => 'sfwd-lms/sfwd_lms.php', //Params
+				'required_plugin' => 'buddyboss-platform/bp-loader.php', //Params
 			]
 		);
 	}
@@ -34,17 +34,17 @@ class BP_Memberships_Integration extends BP_Integration {
 	 * @return {HTML} - renders html in bp-admin-memberships-tab.php
 	 */
 	public function setup_admin_integartion_tab() {
-		require_once trailingslashit($this->path) . 'bp-admin-memberships-tab.php';
+		// require_once trailingslashit($this->path) . 'bp-admin-memberships-tab.php';
 
-		new BP_Memberships_Admin_Integration_Tab(
-			"bp-{$this->id}",
-			$this->name,
-			[
-				'root_path' => $this->path,
-				'root_url' => $this->url,
-				'required_plugin' => $this->required_plugin,
-			]
-		);
+		// new BP_Memberships_Admin_Integration_Tab(
+		// 	"bp-{$this->id}",
+		// 	$this->name,
+		// 	[
+		// 		'root_path' => $this->path,
+		// 		'root_url' => $this->url,
+		// 		'required_plugin' => $this->required_plugin,
+		// 	]
+		// );
 	}
 
 	/**

@@ -18,7 +18,7 @@ class BP_Appboss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	protected $current_section;
 
 	public function initialize() {
-		$this->tab_order = 30;
+		$this->tab_order = 40;
 		$this->intro_template = $this->root_path . '/templates/admin/integration-tab-intro.php';
 		$this->current_section = 'bp-appboss-section';
 	}
@@ -49,7 +49,8 @@ class BP_Appboss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$this->add_checkbox_field(
 			'bp-appboss_enabled', // Unique Identifier
 			__('Enable', 'buddyboss'), //Title
-			['input_text' => __("Enable AppBoss Integration.", 'buddyboss')]); //Callback
+			['input_text' => __("Learndash-AppBoss Integration", 'buddyboss'),
+				'input_description' => __("Enroll user in Learndash course(s) after purchasing In-App purchases.")]); //Callback
 
 	}
 }

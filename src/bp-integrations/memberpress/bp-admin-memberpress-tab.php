@@ -18,7 +18,7 @@ class BP_Memberpress_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	protected $current_section;
 
 	public function initialize() {
-		$this->tab_order = 40;
+		$this->tab_order = 20;
 		$this->intro_template = $this->root_path . '/templates/admin/integration-tab-intro.php';
 		$this->current_section = 'bp-memberpress-section';
 	}
@@ -52,7 +52,10 @@ class BP_Memberpress_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$this->add_checkbox_field(
 			'bp-memberpess_enabled', // Unique Identifier
 			__('Enable', 'buddyboss'), //Title
-			['input_text' => __("Enroll user in Learndash course(s) after purchasing MemberPress membership.", 'buddyboss')]); //Callback
+			['input_text' => __("Learndash-MemberPress Integration", 'buddyboss'),
+				'input_description' => __("Enroll user in Learndash course(s) after purchasing MemberPress membership.")]); //Callback
+
+		// $this->render_input_description("View Logs");
 
 	}
 }
