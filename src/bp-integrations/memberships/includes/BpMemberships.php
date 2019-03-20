@@ -47,13 +47,16 @@ class BpMemberships {
 
 		global $pagenow;
 
+		$vendorTypes = self::getVendorTypesSelected();
 		if (in_array($pagenow, array('post.php', 'post-new.php'))) {
 			global $post;
 			$postType = $post->post_type;
 
-			if (in_array($postType, array(MP_POST_TYPE, WC_POST_TYPE))) {
+			if (in_array($postType, $vendorTypes)) {
 
 				if (BPMS_DEBUG) {
+					error_log("addAdminScripts, see vendorTypes below");
+					error_log(print_r($vendorTypes, true));
 				}
 
 				// Select2 Js
@@ -63,20 +66,19 @@ class BpMemberships {
 				wp_enqueue_style('select2', BPMS_URL . '/assets/styles/select2.min.css');
 
 				// Localize the script with new data
-				$bbmsVars = array(
+				$bpmsVars = array(
 					'ajax_url' => admin_url('admin-ajax.php'),
-					'lms_type' => self::getLmsTypesSelected(LD_POST_TYPE),
-					// 'membership_type' => self::getVendorTypesSelected(),
+					'lms_types' => self::getLmsTypesSelected(LD_POST_TYPE),
 					'membership_type' => $post->post_type,
 					'p_id' => $post->ID,
 				);
 
 				// Custom
-				wp_register_script('bbms-js', BPMS_URL . '/assets/scripts/bbms.js');
-				wp_localize_script('bbms-js', 'bbmsVars', $bbmsVars);
-				wp_enqueue_script('bbms-js');
+				wp_register_script('bpms-js', BPMS_URL . '/assets/scripts/bpms.js');
+				wp_localize_script('bpms-js', 'bpmsVars', $bpmsVars);
+				wp_enqueue_script('bpms-js');
 
-				wp_enqueue_style('bbms', BPMS_URL . '/assets/styles/bbms.css');
+				wp_enqueue_style('bpms', BPMS_URL . '/assets/styles/bpms.css');
 
 			}
 		}
@@ -342,30 +344,28 @@ class BpMemberships {
 	public static function getProductEvents() {
 
 		$lmsTypes = self::getLmsTypesSelected(LD_POST_TYPE);
-		$vendorTypes = array(MP_POST_TYPE, WC_POST_TYPE);
+		$vendorTypes = array(WC_POST_TYPE, MP_POST_TYPE);
 
 		$products = get_posts(array("post_type" => $vendorTypes));
 
+		$count = count($products);
+		error_log("Count in getProductEvents is : $count");
 		$results = array();
 		foreach ($products as $product) {
 
-			if (in_array($product->post_type, array(MP_POST_TYPE, WC_POST_TYPE))) {
+			$isEnabled = get_post_meta($product->ID, "_bpms-$lmsTypes-$product->post_type-is_enabled", true);
 
-				$isEnabled = get_post_meta($product->ID, "_bbms-$lmsTypes-$product->post_type-is_enabled", true);
-
-				// Display only enabled ones
-				if ($isEnabled) {
-					$events = unserialize(get_post_meta($product->ID, '_bbms-events', true));
-					foreach ($events as $eventIdentifier => $eventMeta) {
-						$results[$eventIdentifier] = array('event_identifier' => $eventIdentifier, 'user_id' => $eventMeta['user_id'], 'course_attached' => $eventMeta['course_attached'], 'grant_access' => $eventMeta['grant_access'], 'product_id' => $product->ID, 'created_at' => $eventMeta['created_at'], 'updated_at' => $eventMeta['updated_at']);
-					}
+			// Display only enabled ones
+			if ($isEnabled) {
+				$events = unserialize(get_post_meta($product->ID, '_bpms-events', true));
+				foreach ($events as $eventIdentifier => $eventMeta) {
+					$results[$eventIdentifier] = array('event_identifier' => $eventIdentifier, 'user_id' => $eventMeta['user_id'], 'course_attached' => $eventMeta['course_attached'], 'grant_access' => $eventMeta['grant_access'], 'product_id' => $product->ID, 'created_at' => $eventMeta['created_at'], 'updated_at' => $eventMeta['updated_at']);
 				}
-
 			}
 
 		}
 
-		// error_log(print_r($results, true));
+		error_log(print_r($results, true));
 		return $results;
 
 	}
@@ -380,55 +380,55 @@ class BpMemberships {
 
 		if (BPMS_DEBUG) {
 			error_log("updateBbmsEnrollments() for userId : $userId");
-			error_log("WC_POST_TYPE : " . WC_POST_TYPE);
-
 		}
 		$accessList = array();
-		// $lmsType = self::getLmsTypesSelected(LD_POST_TYPE);
-		// $products = get_posts(array("post_type" => self::getVendorTypesSelected()));
-		$lmsType = LD_POST_TYPE;
-		$products = get_posts(array("post_type" => array(MP_POST_TYPE, WC_POST_TYPE)));
+		$lmsTypes = self::getLmsTypesSelected(LD_POST_TYPE);
+		$products = get_posts(array("post_type" => self::getVendorTypesSelected()));
 		$count = count($products);
-
 		error_log("Count is : $count");
+		//NOTE : Vendor Type(s), Eg (Slugs): Memberpress, WooCommerce
 		foreach ($products as $product) {
 			error_log("productId : $product->ID");
 
-			$isEnabled = get_post_meta($product->ID, "_bbms-$lmsType-$product->post_type-is_enabled", true);
-			$courseAccessMethod = get_post_meta($product->ID, "_bbms-$lmsType-$product->post_type-course_access_method", true);
+			// NOTE : LMS Type(s), Eg (Slugs): Learndash
+			foreach ($lmsTypes as $lmsSlug) {
+				$isEnabled = get_post_meta($product->ID, "_bpms-$lmsSlug-$product->post_type-is_enabled", true);
+				$courseAccessMethod = get_post_meta($product->ID, "_bpms-$lmsSlug-$product->post_type-course_access_method", true);
 
-			if ($isEnabled) {
+				if ($isEnabled) {
 
-				$events = unserialize(get_post_meta($product->ID, '_bbms-events', true));
+					$events = unserialize(get_post_meta($product->ID, '_bpms-events', true));
 
-				if (is_array($events) && !empty($events)) {
+					if (is_array($events) && !empty($events)) {
 
-					foreach ($events as $eventIdentifier => $eventMeta) {
-						// error_log("after foreach");
+						foreach ($events as $eventIdentifier => $eventMeta) {
+							// error_log("after foreach");
 
-						if ($eventMeta['user_id'] == $userId) {
-							$coursesEnrolled = unserialize($eventMeta['course_attached']);
+							if ($eventMeta['user_id'] == $userId) {
+								$coursesEnrolled = unserialize($eventMeta['course_attached']);
 
-							if (is_array($coursesEnrolled) && !empty($coursesEnrolled)) {
+								if (is_array($coursesEnrolled) && !empty($coursesEnrolled)) {
 
-								foreach ($coursesEnrolled as $courseId) {
+									foreach ($coursesEnrolled as $courseId) {
 
-									if (isset($accessList[$courseId])) {
-										//NOTE : Change flag to true
-										if ($eventMeta['grant_access']) {
-											$accessList[$courseId] = true;
+										if (isset($accessList[$courseId])) {
+											//NOTE : Change flag to true
+											if ($eventMeta['grant_access']) {
+												$accessList[$courseId] = true;
+											}
+										} else {
+											//NOTE : Setting up first time value
+											$accessList[$courseId] = $eventMeta['grant_access'] ? true : false;
 										}
-									} else {
-										//NOTE : Setting up first time value
-										$accessList[$courseId] = $eventMeta['grant_access'] ? true : false;
+
 									}
 
 								}
 
 							}
-
 						}
 					}
+
 				}
 
 			}
@@ -457,11 +457,9 @@ class BpMemberships {
 	public static function updateBbmsEvent($vendorObj, $vendorType, $grantAccess = true) {
 
 		if (BPMS_DEBUG) {
-			error_log("updateBbmsEvent(), $vendorObj->id");
 			error_log("updateBbmsEvent(),productPostType :  $vendorType");
 		}
-		// $lmsType = self::getLmsTypesSelected(LD_POST_TYPE);
-		$lmsType = LD_POST_TYPE;
+		$lmsType = self::getLmsTypesSelected(LD_POST_TYPE);
 
 		if ($vendorType == MP_POST_TYPE) {
 
@@ -471,7 +469,7 @@ class BpMemberships {
 				$eventIdentifier = $vendorType . '-' . $vendorObj->subscription_id;
 			}
 
-			$events = unserialize(get_post_meta($vendorObj->product_id, '_bbms-events', true));
+			$events = unserialize(get_post_meta($vendorObj->product_id, '_bpms-events', true));
 			if (isset($events[$eventIdentifier])) {
 				error_log("Event EXISTS for this user, just update grant access");
 				error_log("product_id : $vendorObj->product_id");
@@ -482,12 +480,12 @@ class BpMemberships {
 			} else {
 				error_log("Event DO NOT for this user : $vendorObj->user_id");
 
-				$courseAccessMethod = get_post_meta($vendorObj->product_id, "_bbms-$lmsType-$vendorType-course_access_method", true);
+				$courseAccessMethod = get_post_meta($vendorObj->product_id, "_bpms-$lmsType-$vendorType-course_access_method", true);
 				if ($courseAccessMethod == 'SINGLE_COURSES') {
 					if (BPMS_DEBUG) {
 						error_log("SINGLE_COURSES selected");
 					}
-					$coursesAttached = unserialize(get_post_meta($vendorObj->product_id, "_bbms-$lmsType-$vendorType-courses_enrolled", true));
+					$coursesAttached = unserialize(get_post_meta($vendorObj->product_id, "_bpms-$lmsType-$vendorType-courses_enrolled", true));
 
 				} else if ($courseAccessMethod == 'ALL_COURSES') {
 					if (BPMS_DEBUG) {
@@ -500,7 +498,7 @@ class BpMemberships {
 					if (BPMS_DEBUG) {
 						error_log("LD_GROUPS selected");
 					}
-					$groupsAttached = unserialize(get_post_meta($vendorObj->product_id, "_bbms-$lmsType-$vendorType-groups_attached", true));
+					$groupsAttached = unserialize(get_post_meta($vendorObj->product_id, "_bpms-$lmsType-$vendorType-groups_attached", true));
 					$coursesAttached = array();
 					foreach ($groupsAttached as $groupId) {
 						$ids = learndash_group_enrolled_courses($groupId);
@@ -517,7 +515,7 @@ class BpMemberships {
 			error_log(print_r($events, true));
 
 			// Finally serialize and update
-			update_post_meta($vendorObj->product_id, '_bbms-events', serialize($events));
+			update_post_meta($vendorObj->product_id, '_bpms-events', serialize($events));
 			BpMemberships::updateBbmsEnrollments($vendorObj->user_id);
 
 		} else if ($vendorType == WC_POST_TYPE) {
@@ -525,7 +523,7 @@ class BpMemberships {
 			//@todo : Verify if subscription object is different than normal order
 			$eventIdentifier = $vendorType . '-' . $vendorObj['order_id'];
 
-			$events = unserialize(get_post_meta($vendorObj['product_id'], '_bbms-events', true));
+			$events = unserialize(get_post_meta($vendorObj['product_id'], '_bpms-events', true));
 			if (isset($events[$eventIdentifier])) {
 				error_log("Event EXISTS for this user, just update grant access");
 				error_log(print_r($events[$eventIdentifier], true));
@@ -535,12 +533,12 @@ class BpMemberships {
 			} else {
 				error_log("Event DO NOT for this user : " . $vendorObj['customer_id']);
 
-				$courseAccessMethod = get_post_meta($vendorObj['product_id'], "_bbms-$lmsType-$vendorType-course_access_method", true);
+				$courseAccessMethod = get_post_meta($vendorObj['product_id'], "_bpms-$lmsType-$vendorType-course_access_method", true);
 				if ($courseAccessMethod == 'SINGLE_COURSES') {
 					if (BPMS_DEBUG) {
 						error_log("SINGLE_COURSES selected");
 					}
-					$coursesAttached = unserialize(get_post_meta($vendorObj['product_id'], "_bbms-$lmsType-$vendorType-courses_enrolled", true));
+					$coursesAttached = unserialize(get_post_meta($vendorObj['product_id'], "_bpms-$lmsType-$vendorType-courses_enrolled", true));
 
 				} else if ($courseAccessMethod == 'ALL_COURSES') {
 					if (BPMS_DEBUG) {
@@ -553,7 +551,7 @@ class BpMemberships {
 					if (BPMS_DEBUG) {
 						error_log("LD_GROUPS selected");
 					}
-					$groupsAttached = unserialize(get_post_meta($vendorObj['product_id'], "_bbms-$lmsType-$vendorType-groups_attached", true));
+					$groupsAttached = unserialize(get_post_meta($vendorObj['product_id'], "_bpms-$lmsType-$vendorType-groups_attached", true));
 					$coursesAttached = array();
 					foreach ($groupsAttached as $groupId) {
 						$ids = learndash_group_enrolled_courses($groupId);
@@ -570,7 +568,7 @@ class BpMemberships {
 			error_log(print_r($events, true));
 
 			// Finally serialize and update
-			update_post_meta($vendorObj['product_id'], '_bbms-events', serialize($events));
+			update_post_meta($vendorObj['product_id'], '_bpms-events', serialize($events));
 			BpMemberships::updateBbmsEnrollments($vendorObj['customer_id']);
 
 		}
@@ -583,11 +581,16 @@ class BpMemberships {
 	 */
 	public static function getLmsTypesSelected($default = null) {
 
-		if (isset(get_option('bbms-settings')['bbms-lms-types'])) {
-			return get_option('bbms-settings')['bbms-lms-types'];
-		} else {
-			return $default;
+		//For Flexibility to use key/value, Eg : $array['sfwd-courses'] = 'sfwd-courses'
+		$integrationsEnabled[$default] = $default;
+
+		if (bp_get_option('bp-learndash_enabled')) {
+			$integrationsEnabled[LD_POST_TYPE] = LD_POST_TYPE;
 		}
+		error_log("under getLmsTypesSelected;");
+		error_log(print_r($integrationsEnabled, true));
+
+		return $integrationsEnabled;
 	}
 
 	/**
@@ -596,11 +599,21 @@ class BpMemberships {
 	 */
 	public static function getVendorTypesSelected() {
 
-		if (isset(get_option('bbms-settings')['bbms-vendor-types'])) {
-			return get_option('bbms-settings')['bbms-vendor-types'];
-		} else {
-			return null;
+		//For Flexibility to use key/value, Eg : $array['product'] = 'product';
+
+		$integrationsEnabled = null;
+
+		if (bp_get_option('bp-memberpress_enabled')) {
+			$integrationsEnabled[MP_POST_TYPE] = MP_POST_TYPE;
 		}
+
+		if (bp_get_option('bp-woocommerce_enabled')) {
+			$integrationsEnabled[WC_POST_TYPE] = WC_POST_TYPE;
+		}
+
+		error_log("getVendorTypesSelected : See below");
+		error_log(print_r($integrationsEnabled, true));
+		return $integrationsEnabled;
 	}
 
 	/**
@@ -619,14 +632,30 @@ class BpMemberships {
 
 		if ($vendorType == MP_POST_TYPE) {
 
-			$isEnabled = get_post_meta($vendorObj->product_id, "_bbms-$lmsType-$vendorType-is_enabled", true);
+			$isEnabled = get_post_meta($vendorObj->product_id, "_bpms-$lmsType-$vendorType-is_enabled", true);
 			if ($isEnabled) {
 				// NOTE : Update BBMS Event
 				BpMemberships::updateBbmsEvent($vendorObj, $vendorType, $grantAccess);
 			}
 		} else if ($vendorType == WC_POST_TYPE) {
-			//@todo : Finish wooCommerce here
-			error_log("Finish wooCommerce here");
+			$items = $vendorObj->get_items();
+
+			foreach ($items as $key => $itemObj) {
+				//NOTE : Manually passing order_id, customer_id
+				$itemObj['order_id'] = $vendorObj->ID;
+				$itemObj['customer_id'] = $vendorObj->customer_id;
+
+				error_log($itemObj['product_id']);
+				error_log($itemObj['order_id']);
+				error_log($itemObj['customer_id']);
+
+				$isEnabled = get_post_meta($itemObj['product_id'], "_bpms-$lmsType-$vendorType-is_enabled", true);
+				if ($isEnabled) {
+					// NOTE : Update BBMS Event
+					BpMemberships::updateBbmsEvent($itemObj, $vendorType, $grantAccess);
+				}
+
+			}
 		}
 
 	}
@@ -679,7 +708,7 @@ class BpMemberships {
 		error_log("mpHooks()");
 
 		add_action('mepr-product-options-tabs', array($classObj, 'mpLearndashTab'));
-		add_action('mepr-product-options-pages', array($classObj, 'mpLearndashTabContent'));
+		add_action('mepr-product-options-pages', array($classObj, 'mpTabContent'));
 		add_action('mepr-membership-save-meta', array($classObj, 'mpSaveProduct'));
 
 		// Signup type can be 'free', 'non-recurring' or 'recurring'
@@ -716,8 +745,8 @@ class BpMemberships {
 	public function wcHooks($classObj) {
 		error_log("wcHooks()");
 
-		add_filter('woocommerce_product_data_tabs', array($classObj, 'wcLearndashTab'));
-		add_action('woocommerce_product_data_panels', array($classObj, 'wcLearndashTabContent'));
+		add_filter('woocommerce_product_data_tabs', array($classObj, 'wcTab'));
+		add_action('woocommerce_product_data_panels', array($classObj, 'wcTabContent'));
 		// On Save/Update
 		add_action('save_post_product', array($classObj, 'wcProductUpdate'));
 
@@ -786,12 +815,12 @@ class BpMemberships {
 		}
 
 		//register learndash settings
-		register_setting('bbms_learndash_integration', '_bbms-remove-user-on-course-unattached');
-		register_setting('bbms_learndash_integration', '_bbms-remove-user-on-membership-deletion');
+		register_setting('bbms_learndash_integration', '_bpms-remove-user-on-course-unattached');
+		register_setting('bbms_learndash_integration', '_bpms-remove-user-on-membership-deletion');
 
 		//register bbms settings
-		// register_setting('bbms-settings', '_bbms-remove-user-on-course-unattached');
-		// register_setting('bbms-settings', '_bbms-remove-user-on-membership-deletion');
+		// register_setting('bpms-settings', '_bpms-remove-user-on-course-unattached');
+		// register_setting('bpms-settings', '_bpms-remove-user-on-membership-deletion');
 	}
 
 	/**
@@ -812,13 +841,13 @@ class BpMemberships {
 			);
 
 			$classObj->add_checkbox_field(
-				'_bbms-remove-user-on-course-unattached',
+				'_bpms-remove-user-on-course-unattached',
 				__('On Course unattached', 'buddyboss'),
 				[
 					'input_text' => __("Remove User if course unattached from Product. Unattached don't mean course removed from site", 'bbms'), 'buddyboss']);
 
 			$classObj->add_checkbox_field(
-				'_bbms-remove-user-on-membership-deletion',
+				'_bpms-remove-user-on-membership-deletion',
 				__('On membership deletion', 'buddyboss'),
 				[
 					'input_text' => __("Remove User if membership deleted from site.", 'bbms'), 'buddyboss']);
@@ -843,14 +872,14 @@ class BpMemberships {
 
 		// Memberpress-Learndash Integration
 		// -----------------------------------------------------------------------------
-		$isEnabled = bp_get_option('bp-memberpess');
+		$isEnabled = bp_get_option('bp-memberpress_enabled');
 		if ($isEnabled) {
 			$this->mpHooks(MpHelper::getInstance());
 		}
 
 		// WooCommerce-Learndash Integration
 		// -----------------------------------------------------------------------------
-		$isEnabled = bp_get_option('bp-woocommerce');
+		$isEnabled = bp_get_option('bp-woocommerce_enabled');
 		if ($isEnabled) {
 			$this->wcHooks(WcHelper::getInstance());
 		}

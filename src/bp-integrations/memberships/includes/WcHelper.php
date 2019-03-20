@@ -28,14 +28,22 @@ class WcHelper {
 	 * @param  {array}  $tabs WooCommerce product tabs
 	 * @return  {array}  $tabs Updated WooCommerce product tabs
 	 */
-	public static function wcLearndashTab($tabs = array()) {
+	public static function wcTab($tabs = array()) {
 
-		$tabs['learndash'] = array(
-			'label' => __('Learndash', 'woocommerce'),
-			'target' => 'learndash_product_data',
-			'class' => array(),
-			'priority' => 100,
-		);
+		$lmsTypes = BpMemberships::getLmsTypesSelected(LD_POST_TYPE);
+		foreach ($lmsTypes as $key => $lmsType) {
+			if ($lmsType == LD_POST_TYPE) {
+
+				$tabs[$lmsType] = array(
+					'label' => __('Learndash', 'woocommerce'),
+					'target' => 'learndash_product_data',
+					'class' => array(),
+					'priority' => 100,
+				);
+			} else {
+				// NOTE : Implementation for another LMS when required
+			}
+		}
 
 		return $tabs;
 	}
@@ -44,32 +52,45 @@ class WcHelper {
 	 * Output tab content for LearnDash on WooCommerce product edit screen
 	 * @return  {HTML} - Renders tab content
 	 */
-	public static function wcLearndashTabContent() {
+	public static function wcTabContent() {
 
+		if (BPMS_DEBUG) {
+			error_log("wcTabContent()");
+		}
 		global $post;
 
-		// $lmsType = BpMemberships::getLmsTypesSelected(LD_POST_TYPE);
-		$lmsType = LD_POST_TYPE;
+		$lmsTypes = BpMemberships::getLmsTypesSelected(LD_POST_TYPE);
 		$membershipType = WC_POST_TYPE;
+		foreach ($lmsTypes as $key => $lmsType) {
+			if ($lmsType == LD_POST_TYPE) {
+				// NOTE : Implementation for Learndash LMS
 
-		$allCourses = BpMemberships::getLearndashCourses();
-		$isEnabled = get_post_meta($post->ID, "_bbms-$lmsType-$membershipType-is_enabled", true);
-		$courseAccessMethod = get_post_meta($post->ID, "_bbms-$lmsType-$membershipType-course_access_method", true);
-		$coursesEnrolled = unserialize(get_post_meta($post->ID, "_bbms-$lmsType-$membershipType-courses_enrolled", true));
-		$themeName = wp_get_theme();
-		$allowFromPricebox = get_post_meta($post->ID, "_bbms-$lmsType-$membershipType-allow_from_pricebox", true);
-		$buttonText = get_post_meta($post->ID, "_bbms-$lmsType-$membershipType-purchase_button_text", true);
-		$buttonOrder = get_post_meta($post->ID, "_bbms-$lmsType-$membershipType-purchase_button_order", true);
-		$pId = $post->ID; //Required for ajax-call
-		$accessMethods = BpMemberships::getCourseOptions();
-		BpmsView::render('woocommerce/wc-tab-content', get_defined_vars());
+				$allCourses = BpMemberships::getLearndashCourses();
+				$isEnabled = get_post_meta($post->ID, "_bpms-$lmsType-$membershipType-is_enabled", true);
+				$courseAccessMethod = get_post_meta($post->ID, "_bpms-$lmsType-$membershipType-course_access_method", true);
+				$coursesEnrolled = unserialize(get_post_meta($post->ID, "_bpms-$lmsType-$membershipType-courses_enrolled", true));
+				$themeName = wp_get_theme();
+				$allowFromPricebox = get_post_meta($post->ID, "_bpms-$lmsType-$membershipType-allow_from_pricebox", true);
+				$buttonText = get_post_meta($post->ID, "_bpms-$lmsType-$membershipType-purchase_button_text", true);
+				$buttonOrder = get_post_meta($post->ID, "_bpms-$lmsType-$membershipType-purchase_button_order", true);
+				$pId = $post->ID; //Required for ajax-call
+				$accessMethods = BpMemberships::getCourseOptions();
+				$groups = learndash_get_groups();
+				BpmsView::render('woocommerce/wc-tab-content', get_defined_vars());
+			} else {
+				// NOTE : Implementation for another LMS when required
+			}
+		}
+
 	}
 
 	/**
-	 * @param  {object}  $wcObj WooCommerce order (Updated) information
+	 * @param  {int}  $orderId WooCommerce order Id
 	 * @return  {void}
 	 */
-	public static function wcOrderUpdated($wcObj) {
+	public static function wcOrderUpdated($orderId) {
+		$wcObj = wc_get_order($orderId);
+
 		if (BPMS_DEBUG) {
 			error_log("wcOrderUpdated() injected, order is updated at this point");
 			// error_log(print_r($wcObj, true));
@@ -77,7 +98,17 @@ class WcHelper {
 
 		$status = $wcObj->status;
 		error_log("Status is : $status");
-	}
+
+		$grantValues = array('completed');
+		$revokeValues = array('pending', 'processing', 'on-hold', 'cancelled');
+
+		if (in_array($status, $revokeValues)) {
+			// revoke access
+			BpMemberships::bbmsUpdateMembershipAccess($wcObj, WC_POST_TYPE, false);
+		} else if (in_array($status, $grantValues)) {
+			// grant access
+			BpMemberships::bbmsUpdateMembershipAccess($wcObj, WC_POST_TYPE, true);
+		}}
 
 	/**
 	 * @param  {object}  $wcObj WooCommerce subscription (Updated) information
@@ -100,52 +131,57 @@ class WcHelper {
 			error_log("wcProductUpdate(), $productId");
 		}
 
-		$lmsType = BpMemberships::getLmsTypesSelected(LD_POST_TYPE);
+		$lmsTypes = BpMemberships::getLmsTypesSelected(LD_POST_TYPE);
 		$membershipType = WC_POST_TYPE;
+		foreach ($lmsTypes as $lmsType) {
+			if ($lmsType == LD_POST_TYPE) {
+				// NOTE : Implementation for Learndash LMS
 
-		$isEnabled = $_POST["bbms-$lmsType-$membershipType-is_enabled"];
-		update_post_meta($productId, "_bbms-$lmsType-$membershipType-is_enabled", $isEnabled);
+				$isEnabled = $_REQUEST["bpms-$lmsType-$membershipType-is_enabled"];
+				update_post_meta($productId, "_bpms-$lmsType-$membershipType-is_enabled", $isEnabled);
 
-		if ($isEnabled) {
+				if ($isEnabled) {
 
-			$courseAccessMethod = $_POST["bbms-$lmsType-$membershipType-course_access_method"];
-			update_post_meta($productId, "_bbms-$lmsType-$membershipType-course_access_method", $courseAccessMethod);
+					$courseAccessMethod = $_REQUEST["bpms-$lmsType-$membershipType-course_access_method"];
+					update_post_meta($productId, "_bpms-$lmsType-$membershipType-course_access_method", $courseAccessMethod);
 
-			if ($courseAccessMethod == 'SINGLE_COURSES') {
-				$newCourses = array_filter($_POST["bbms-$lmsType-$membershipType-courses_enrolled"]);
-				update_post_meta($productId, "_bbms-$lmsType-$membershipType-courses_enrolled", serialize(array_values($newCourses)));
-			} else if ($courseAccessMethod == 'ALL_COURSES') {
+					if ($courseAccessMethod == 'SINGLE_COURSES') {
+						$newCourses = array_filter($_REQUEST["bpms-$lmsType-$membershipType-courses_enrolled"]);
+						update_post_meta($productId, "_bpms-$lmsType-$membershipType-courses_enrolled", serialize(array_values($newCourses)));
+					} else if ($courseAccessMethod == 'ALL_COURSES') {
 
-				if (BPMS_DEBUG) {
-					error_log("ALL_COURSES selected");
+						if (BPMS_DEBUG) {
+							error_log("ALL_COURSES selected");
+						}
+
+						$allClosedCourses = BpMemberships::getLearndashClosedCourses();
+					} else if ($courseAccessMethod == 'LD_GROUPS') {
+						if (BPMS_DEBUG) {
+							error_log("LD_GROUPS selected");
+						}
+
+						$newGroups = array_filter($_REQUEST["bpms-$lmsType-$membershipType-groups_attached"]);
+						// error_log(print_r($newGroups, true));
+
+						update_post_meta($productId, "_bpms-$lmsType-$membershipType-groups_attached", serialize(array_values($newGroups)));
+
+					}
+					// Update Allow From PriceBox
+					$allowFromPricebox = $_REQUEST["bpms-$lmsType-$membershipType-allow_from_pricebox"];
+					update_post_meta($productId, "_bpms-$lmsType-$membershipType-allow_from_pricebox", $allowFromPricebox);
+
+					if ($allowFromPricebox) {
+						$buttonText = $_REQUEST["bpms-$lmsType-$membershipType-purchase_button_text"];
+						$buttonOrder = $_REQUEST["bpms-$lmsType-$membershipType-purchase_button_order"];
+
+						update_post_meta($productId, "_bpms-$lmsType-$membershipType-purchase_button_text", $buttonText);
+						update_post_meta($productId, "_bpms-$lmsType-$membershipType-purchase_button_order", $buttonOrder);
+					}
 				}
 
-				$allClosedCourses = BpMemberships::getLearndashClosedCourses();
-			} else if ($courseAccessMethod == 'LD_GROUPS') {
-				if (BPMS_DEBUG) {
-					error_log("LD_GROUPS selected");
-				}
-
-				$newGroups = array_filter($_POST["bbms-$lmsType-$membershipType-groups_attached"]);
-				// error_log(print_r($newGroups, true));
-
-				update_post_meta($productId, "_bbms-$lmsType-$membershipType-groups_attached", serialize(array_values($newGroups)));
-
+			} else {
+				// NOTE : Implementation for another LMS when required
 			}
-			// Update Allow From PriceBox
-			$allowFromPricebox = $_POST["bbms-$lmsType-$membershipType-allow_from_pricebox"];
-			update_post_meta($productId, "_bbms-$lmsType-$membershipType-allow_from_pricebox", $allowFromPricebox);
-
-			if ($allowFromPricebox) {
-				$buttonText = $_POST["bbms-$lmsType-$membershipType-purchase_button_text"];
-				$buttonOrder = $_POST["bbms-$lmsType-$membershipType-purchase_button_order"];
-
-				update_post_meta($productId, "_bbms-$lmsType-$membershipType-purchase_button_text", $buttonText);
-				update_post_meta($productId, "_bbms-$lmsType-$membershipType-purchase_button_order", $buttonOrder);
-
-			}
-
 		}
 	}
-
 }
