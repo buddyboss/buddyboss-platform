@@ -97,7 +97,7 @@ class EventsList extends WpListTable {
 
 			return $html;
 		case 'grant_access':
-			return $item[$column_name] ? "Grant access" : "Revoke access";
+			return $item[$column_name] ? "Access Granted" : "Access Revoked";
 		case 'created_at':
 			return $item[$column_name];
 		case 'updated_at':
@@ -151,8 +151,8 @@ class EventsList extends WpListTable {
 		$columns = [
 			'cb' => '<input type="checkbox" />',
 			'product_id' => __('Product', 'buddyboss'),
-			'user_id' => __('User ID', 'buddyboss'),
-			'course_attached' => __('Course Attached', 'buddyboss'),
+			'user_id' => __('User', 'buddyboss'),
+			'course_attached' => __('Course attached', 'buddyboss'),
 			'grant_access' => __('Action', 'buddyboss'),
 			'event_identifier' => __('Identifier', 'buddyboss'),
 			'created_at' => __('Creation Date', 'buddyboss'),
