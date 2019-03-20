@@ -1,10 +1,10 @@
 <?php
 /**
- * @todo add description
- * 
+ * BuddyBoss LearnDash integration Dependencies class.
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 namespace Buddyboss\LearndashIntegration\Core;
 
@@ -12,8 +12,8 @@ namespace Buddyboss\LearndashIntegration\Core;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Class hendling plugin dependencies
+ *
  * @since BuddyBoss 1.0.0
  */
 class Dependencies
@@ -22,7 +22,7 @@ class Dependencies
 	protected $loadedDependencies = [];
 
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -37,7 +37,7 @@ class Dependencies
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add hook to each dependencies' init hook
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -51,7 +51,7 @@ class Dependencies
 	}
 
 	/**
-	 * @todo add title/description
+	 * Set a flag when dependency is init
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -61,7 +61,7 @@ class Dependencies
 	}
 
 	/**
-	 * @todo add title/description
+	 * Check if the required dependencies are all init
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -76,7 +76,7 @@ class Dependencies
 	}
 
 	/**
-	 * @todo add title/description
+	 * Run sub action based on depencency init status
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -87,7 +87,7 @@ class Dependencies
 	}
 
 	/**
-	 * @todo add title/description
+	 * Check if any dependencies is missing
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -97,7 +97,7 @@ class Dependencies
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get the dependencies that are loaded successfully
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

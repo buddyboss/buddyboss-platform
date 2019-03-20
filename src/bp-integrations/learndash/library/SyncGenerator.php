@@ -1,10 +1,10 @@
 <?php
 /**
- * @todo add description
- * 
+ * BuddyBoss LearnDash integration SyncGenerator class.
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 namespace Buddyboss\LearndashIntegration\Library;
 
@@ -14,8 +14,8 @@ use BP_Groups_Member;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Class for controlling gorup syncing
+ *
  * @since BuddyBoss 1.0.0
  */
 class SyncGenerator
@@ -27,7 +27,7 @@ class SyncGenerator
 	protected $syncMetaKey = '_sync_group_id';
 
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -41,7 +41,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Check if there's a ld group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -51,7 +51,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Check if there's a bp group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -61,7 +61,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get the ld group id
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -71,7 +71,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get the bp group id
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -81,7 +81,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Associate current bp group to a ld group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -108,7 +108,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Un-associate the current bp group from ld group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -124,7 +124,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * delete the bp group without trigging sync
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -136,7 +136,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * delete the ld group without trigging sync
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -148,7 +148,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Associate current ld group to bp group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -175,7 +175,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Un associate current ld group from bp group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -191,7 +191,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Run a full users sync up bp group to ld group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -208,7 +208,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Run a full users sync up ld group to bp group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -225,7 +225,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sync the bp admins to ld
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -245,7 +245,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sync the bp mods to ld
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -265,7 +265,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo seeing a PHP error line 277? and add title/description
+	 * Sync the bp members to ld
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -274,7 +274,9 @@ class SyncGenerator
 		$this->syncingToLearndash(function() {
 			$members = groups_get_group_members([
 				'group_id' => $this->bpGroupId
-			])['members'];
+			]);
+
+			$members = $members['members'];
 
 			foreach ($members as $member) {
 				$this->syncBpMember($member->ID, false, false);
@@ -287,7 +289,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sync the ld admins to bp
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -305,7 +307,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sync the ld students to bp
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -323,7 +325,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sync a bp admin to ld
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -342,7 +344,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sync a bp mod to ld
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -361,7 +363,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sync a bp member to ld
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -384,7 +386,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sync a ld admin to bp
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -398,7 +400,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sync a ld student to bp
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -419,7 +421,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Verify the givent group ids still exists in db
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -435,7 +437,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Populate the class data based on given input
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -451,7 +453,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Find the bp group id on current ld group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -461,7 +463,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Find the ld group id on current bp group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -471,7 +473,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sasve bp group id to current ld group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -482,7 +484,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sasve ld group id to current bp group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -493,7 +495,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Force id sync
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -503,7 +505,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Remove bp group id from current ld group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -518,7 +520,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Remove ld group id from current bp group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -533,7 +535,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Force unsync group ids
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -545,7 +547,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Greate a ld group based on current bp group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -563,7 +565,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Create bp group based on current ld group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -583,7 +585,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Maybe remove ld user if user is promote or demote from bp
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -598,7 +600,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get the bp role to sync to
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -608,7 +610,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get the function that update ld group role
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -623,7 +625,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get the ld role to sync to
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -633,7 +635,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add a user to bp group by role
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -661,7 +663,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Clear the ld cache after sync
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -672,7 +674,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Wrapper to prevent infinite 2 way sync when syncing to learndash
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -688,7 +690,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Wrapper to prevent infinite 2 way sync when syncing to buddypress
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -704,7 +706,7 @@ class SyncGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get the timestamp when the group is last synced
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

@@ -1,7 +1,7 @@
 <?php
 /**
  * BuddyBoss LearnDash integration core class.
- * 
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
  */
@@ -25,14 +25,14 @@ use Buddyboss\LearndashIntegration\Buddypress\Sync;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Core class for the buddypress settings
+ *
  * @since BuddyBoss 1.0.0
  */
 class Core
 {
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -51,7 +51,7 @@ class Core
 	}
 
 	/**
-	 * @todo add title/description
+	 * Register actions on init
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -62,7 +62,7 @@ class Core
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add bp template stack so child theme can overwrite template
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -72,7 +72,7 @@ class Core
 	}
 
 	/**
-	 * @todo add title/description
+	 * Register BP group extension components based on settings
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -98,7 +98,7 @@ class Core
 	}
 
 	/**
-	 * @todo add title/description
+	 * Register the path the bp template stack
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -108,7 +108,7 @@ class Core
 	}
 
     /**
-	 * @todo add title/description
+	 * Get the courses tab's sub menu items in group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -124,7 +124,7 @@ class Core
     }
 
     /**
-	 * @todo add title/description
+	 * Get the reports tab's sub menu items in group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -140,7 +140,7 @@ class Core
     }
 
     /**
-	 * @todo add title/description
+	 * Returns the link to the selected sub menu
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

@@ -1,7 +1,7 @@
 <?php
 /**
  * BuddyBoss LearnDash integration admin tabs.
- * 
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
  */
@@ -17,28 +17,34 @@ defined( 'ABSPATH' ) || exit;
 class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	protected $current_section;
 
+	/**
+	 * Initialize Admin Integration Tab
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function initialize() {
 		$this->tab_order             = 20;
 		$this->intro_template        = $this->root_path . '/templates/admin/integration-tab-intro.php';
-
-		add_action( 'admin_footer', [ $this, 'add_sync_tool_scripts' ], 20 );
 	}
 
+	/**
+	 * Save learndash settings with setting helper class
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function settings_save() {
 		$settings = bp_ld_sync('settings');
 
 		if ($values = bp_ld_sync()->getRequest($settings->getName())) {
 			$settings->set(null, $values)->update();
 		}
-
-		/**
-		 * @todo add title/description
-		 *
-		 * @since BuddyBoss 1.0.0
-		 */
-		do_action('bp_integrations_learndash_fields_updated', $settings);
 	}
 
+	/**
+	 * Register setting fields
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function register_fields() {
 
 		$fields = apply_filters('bp_integrations_learndash_fields', array(
@@ -47,10 +53,11 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			'reports' => [$this, 'registerReportsSettings']
 		), $this);
 
-		foreach ($fields as $key => $field) {
-			call_user_func($field);
+		foreach ($fields as $key => $callback) {
+			call_user_func($callback);
+
 			/**
-			 * @todo add title/description
+			 * Action to add additional fields into each learndash setting sections
 			 *
 			 * @since BuddyBoss 1.0.0
 			 */
@@ -58,16 +65,12 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		}
 	}
 
+	/**
+	 * Load the settings html
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function form_html() {
-
-		if ( $this->required_plugin && ! is_plugin_active( $this->required_plugin ) ) {
-			if ( is_file ( $this->intro_template ) ) {
-				require $this->intro_template;
-			}
-
-			return;
-		}
-
 		// Check Group component active.
 		if ( ! bp_is_active( 'groups' ) ) {
 			if ( is_file ( $this->intro_template ) ) {
@@ -76,9 +79,15 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 			return;
 		}
+
 		parent::form_html();
 	}
 
+	/**
+	 * Register Buddypress related settings
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function registerBuddypressSettings()
 	{
 		$this->current_section = 'buddypress';
@@ -206,6 +215,11 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		);
 	}
 
+	/**
+	 * Register Learndash related settings
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function registerLearnDashSettings()
 	{
 		$this->current_section = 'learndash';
@@ -314,8 +328,12 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		);
 	}
 
-	public function registerReportsSettings()
-	{
+	/**
+	 * Register reports related settings
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function registerReportsSettings() {
 		$this->current_section = 'reports';
 
 		$this->add_section(
@@ -352,37 +370,46 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'class' => 'js-show-on-reports_enabled'
 			]
 		);
-
-		// disabled this for now
-		// $this->add_input_field(
-		// 	'cache_time',
-		// 	__('Reports Cache Time (minute)', 'buddyboss'),
-		// 	[
-		// 		'input_type'        => 'number',
-		// 		'input_description' => __( 'Recommanded. Reports are cached to have better performance and less server load. Here you can adjust how long the cache lives. Organizers and Moderator can refresh report at anytime. Set this to 0 to disable cache.', 'buddyboss' ),
-		// 		'class' => 'js-show-on-reports_enabled'
-		// 	]
-		// );
 	}
 
+	/**
+	 * Description for Buddypress setting section
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function buddypress_groups_sync_description() {
 		echo wpautop(
 			__( 'Sync BuddyBoss group members to LearnDash groups.', 'buddyboss' )
 		);
 	}
 
+	/**
+	 * Description for Learndash setting section
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function learndash_groups_sync_description() {
 		echo wpautop(
 			__( 'Sync LearnDash group users to BuddyBoss groups.', 'buddyboss' )
 		);
 	}
 
+	/**
+	 * Description for reports setting section
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function learndash_groups_report_description() {
 		echo wpautop(
 			__( 'Control the setting for social group\'s reports.', 'buddyboss' )
 		);
 	}
 
+	/**
+	 * Dropdown options for report aceess setting
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function output_report_access_setting() {
 		$input_field = 'access';
 		$input_value = $this->get_input_value( $input_field, [] );
@@ -407,25 +434,20 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		echo $this->render_input_description(__('Select which roles can view reports', 'buddyboss'));
 	}
 
-	public function add_sync_tool_scripts() {
-		if ( ! $this->is_active() ) {
-			return;
-		}
-
-		printf(
-			'<script src="%s"></script>',
-			add_query_arg(
-				'ver',
-				filemtime( bp_learndash_path( $filePath = '/assets/scripts/bp_learndash_groups_sync-settings.js' ) ),
-				bp_learndash_url( $filePath )
-			)
-		);
-	}
-
+	/**
+	 * Overwrite the input name
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function get_input_name( $name ) {
 		return bp_ld_sync('settings')->getName("{$this->current_section}.{$name}");
 	}
 
+	/**
+	 * Overwrite the input value
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function get_input_value( $key, $default = '' ) {
 		return bp_ld_sync('settings')->get("{$this->current_section}.{$key}", $default);
 	}

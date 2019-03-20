@@ -1,10 +1,10 @@
 <?php
 /**
- * @todo add description
- * 
+ * BuddyBoss LearnDash integration Admin class.
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 namespace Buddyboss\LearndashIntegration\Core;
 
@@ -12,14 +12,14 @@ namespace Buddyboss\LearndashIntegration\Core;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Admin related actions on the core plugin
+ *
  * @since BuddyBoss 1.0.0
  */
 class Admin
 {
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -30,7 +30,7 @@ class Admin
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add admin notice hook for dependencies
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -40,7 +40,7 @@ class Admin
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add admin notice hook for requirements
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -51,7 +51,7 @@ class Admin
 	}
 
 	/**
-	 * @todo add title/description
+	 * Output the dependency notice html
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -74,7 +74,7 @@ class Admin
 	}
 
 	/**
-	 * @todo add title/description
+	 * Output the requirement notice html
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

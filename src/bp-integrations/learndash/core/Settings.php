@@ -1,10 +1,10 @@
 <?php
 /**
- * @todo add description
- * 
+ * BuddyBoss LearnDash integration Settings class.
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 namespace Buddyboss\LearndashIntegration\Core;
 
@@ -14,8 +14,8 @@ use Buddyboss\LearndashIntegration\Library\ValueLoader;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Class to handle options saving/loading
+ *
  * @since BuddyBoss 1.0.0
  */
 class Settings
@@ -25,7 +25,7 @@ class Settings
 	protected $optionKey = 'bp_ld_sync_settings';
 
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -38,7 +38,7 @@ class Settings
 	}
 
 	/**
-	 * @todo add title/description
+	 * Convert . seperated name to array syntax
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -54,7 +54,7 @@ class Settings
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get the option from loader
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -64,7 +64,7 @@ class Settings
 	}
 
 	/**
-	 * @todo add title/description
+	 * Set the option to loader
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -75,7 +75,7 @@ class Settings
 	}
 
 	/**
-	 * @todo add title/description
+	 * Presist the loader value to db
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -88,7 +88,7 @@ class Settings
 	}
 
 	/**
-	 * @todo add title/description
+	 * Set the group sync timestamp to determine if we need a full sync of simple sync
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -108,7 +108,7 @@ class Settings
 	}
 
 	/**
-	 * @todo add title/description
+	 * Default options
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -145,7 +145,7 @@ class Settings
 	}
 
 	/**
-	 * @todo add title/description
+	 * Presist the default option into db if not exists
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

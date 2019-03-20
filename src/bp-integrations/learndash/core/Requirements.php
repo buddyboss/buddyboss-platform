@@ -1,10 +1,10 @@
 <?php
 /**
- * @todo add description
- * 
+ * BuddyBoss LearnDash integration Requirements class.
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 namespace Buddyboss\LearndashIntegration\Core;
 
@@ -12,8 +12,8 @@ namespace Buddyboss\LearndashIntegration\Core;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Class handle requirement checking
+ *
  * @since BuddyBoss 1.0.0
  */
 class Requirements
@@ -22,7 +22,7 @@ class Requirements
 	protected $checkedRequirements = [];
 
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -42,7 +42,7 @@ class Requirements
 	}
 
 	/**
-	 * @todo add title/description
+	 * Check if each requirement is satisfied
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -61,7 +61,7 @@ class Requirements
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get the missing requirements
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -71,7 +71,7 @@ class Requirements
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get the passed requirements
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

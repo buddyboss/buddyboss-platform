@@ -1,10 +1,10 @@
 <?php
 /**
  * BuddyBoss LearnDash integration quizzes reports generator.
- * 
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 namespace Buddyboss\LearndashIntegration\Buddypress\Generators;
 
@@ -15,14 +15,14 @@ use LDLMS_DB;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Extends report generator for quizzes reports
+ *
  * @since BuddyBoss 1.0.0
  */
 class QuizzesReportsGenerator extends ReportsGenerator
 {
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -37,7 +37,7 @@ class QuizzesReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Returns the columns and their settings
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -75,7 +75,7 @@ class QuizzesReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Format the activity results for each column
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -95,14 +95,15 @@ class QuizzesReportsGenerator extends ReportsGenerator
 			'attempts'        => $activity->activity_attemps,
 		];
 	}
+
 	/**
-	 * @todo add title/description and make PHP 5.4 compatible
+	 * Remove and add additional sql field on ajax
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function loadAdditionalFields($generator)
 	{
-		if (! is_a($generator, static::class)) {
+		if (! is_a($generator, get_class($this))) {
 			return;
 		}
 
@@ -112,7 +113,7 @@ class QuizzesReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add quiz activity fields on sql statement
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

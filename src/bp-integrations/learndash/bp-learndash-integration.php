@@ -27,6 +27,11 @@ class BP_Learndash_Integration extends BP_Integration {
 		);
 	}
 
+	/**
+	 * Register admin setting tab
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function setup_admin_integartion_tab() {
 		require_once trailingslashit( $this->path ) . 'bp-admin-learndash-tab.php';
 
@@ -41,6 +46,11 @@ class BP_Learndash_Integration extends BP_Integration {
 		);
 	}
 
+	/**
+	 * Load function files
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function includes( $includes = array() ) {
 		parent::includes([
 			'functions',

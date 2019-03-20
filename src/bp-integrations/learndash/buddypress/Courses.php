@@ -1,7 +1,7 @@
 <?php
 /**
  * BuddyBoss LearnDash integration courses class.
- * 
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
  */
@@ -12,14 +12,14 @@ namespace Buddyboss\LearndashIntegration\Buddypress;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Class for all courses related functions
+ *
  * @since BuddyBoss 1.0.0
  */
 class Courses
 {
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -29,7 +29,7 @@ class Courses
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add actions once integration is ready
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -41,7 +41,7 @@ class Courses
 	}
 
 	/**
-	 * @todo add title/description
+	 * Output user course progress html
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -61,7 +61,7 @@ class Courses
 	}
 
 	/**
-	 * @todo add title/description
+	 * Output group course progress html
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -73,7 +73,7 @@ class Courses
 	}
 
 	/**
-	 * @todo add title/description
+	 * Output course link button html
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -88,7 +88,7 @@ class Courses
 	}
 
 	/**
-	 * @todo add title/description
+	 * Returns the courses belongs to the group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -103,7 +103,7 @@ class Courses
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get user's course progress
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -129,7 +129,7 @@ class Courses
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get gorup's course progress
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -159,7 +159,7 @@ class Courses
 	}
 
 	/**
-	 * @todo add title/description
+	 * Returns dynamic label text based on user's course progress
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

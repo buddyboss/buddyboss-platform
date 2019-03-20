@@ -1,7 +1,7 @@
 <?php
 /**
  * BuddyBoss LearnDash integration sync class.
- * 
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
  */
@@ -14,8 +14,8 @@ use Buddyboss\LearndashIntegration\Library\SyncGenerator;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Class for all syncing related functions
+ *
  * @since BuddyBoss 1.0.0
  */
 class Sync
@@ -24,7 +24,7 @@ class Sync
 	protected $deletingSyncedLdGroupId;
 
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -34,7 +34,7 @@ class Sync
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add actions once integration is ready
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -56,7 +56,7 @@ class Sync
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get Sync generator object
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -66,7 +66,7 @@ class Sync
 	}
 
 	/**
-	 * @todo add title/description
+	 * Run the sync when new group is created
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -94,7 +94,7 @@ class Sync
 	}
 
 	/**
-	 * @todo add title/description
+	 * Run the sync when new group is updated
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -108,7 +108,7 @@ class Sync
 	}
 
 	/**
-	 * @todo add title/description
+	 * Set the deleted gropu in temporarly variable for later use
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -122,7 +122,7 @@ class Sync
 	}
 
 	/**
-	 * @todo add title/description
+	 * Desync when group is deleted
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -147,7 +147,7 @@ class Sync
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sync when a admin is added to the group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -161,7 +161,7 @@ class Sync
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sync when a mod is added to the group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -175,7 +175,7 @@ class Sync
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sync when a member is added to the group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -189,7 +189,7 @@ class Sync
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sync when a admin is removed from the group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -203,7 +203,7 @@ class Sync
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sync when a mod is removed from the group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -217,7 +217,7 @@ class Sync
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sync when a members is removed from the group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -231,7 +231,7 @@ class Sync
 	// }
 
 	/**
-	 * @todo add title/description
+	 * Check if the user type need to be synced
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -261,7 +261,7 @@ class Sync
 	}
 
 	/**
-	 * @todo add title/description
+	 * Standard pre check bore all sync happens
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -278,7 +278,7 @@ class Sync
 	}
 
 	/**
-	 * @todo add title/description
+	 * Returns if buddypress sync is enabled or not
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

@@ -1,10 +1,10 @@
 <?php
 /**
- * @todo add description
- * 
+ * BuddyBoss LearnDash integration Core class.
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 namespace Buddyboss\LearndashIntegration\Core;
 
@@ -19,14 +19,14 @@ use Buddyboss\LearndashIntegration\Learndash\Core as LearndashCore;;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * COre file of the plugin
+ *
  * @since BuddyBoss 1.0.0
  */
 class Core
 {
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -47,7 +47,7 @@ class Core
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sub action once dependencies and requirements are checked
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -57,7 +57,7 @@ class Core
 	}
 
     /**
-	 * @todo add title/description
+	 * Get absolute path from the integration folder
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -67,7 +67,7 @@ class Core
     }
 
     /**
-	 * @todo add title/description
+	 * Get url path from the integration folder
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -77,7 +77,7 @@ class Core
     }
 
     /**
-	 * @todo add title/description
+	 * Load template from the integration folder
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -87,7 +87,7 @@ class Core
     }
 
     /**
-	 * @todo add title/description
+	 * Get the request from $_POST, $_GET, or $_REQUEST with default fallback
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -101,7 +101,7 @@ class Core
 	}
 
 	/**
-	 * @todo add title/description
+	 * Check if the given request isset
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -115,7 +115,7 @@ class Core
 	}
 
 	/**
-	 * @todo add title/description
+	 * Register psr4 autoloader manually
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

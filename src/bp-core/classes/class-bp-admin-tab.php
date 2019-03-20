@@ -60,6 +60,7 @@ abstract class BP_Admin_Tab {
 
 		if ( $this->is_active() ) {
 			$this->register_fields();
+			do_action( 'bp_admin_tab_fields_registered', $this->tab_name, $this );
 			add_action( 'bp_admin_init', [$this, 'maybe_save_admin_settings'], 100 );
 		}
 	}
@@ -131,8 +132,12 @@ abstract class BP_Admin_Tab {
 		}
 
 		check_admin_referer( $this->tab_name . '-options' );
+
 		$this->settings_save();
+		do_action( 'bp_admin_tab_setting_save', $this->tab_name, $this );
+
 		$this->settings_saved();
+		do_action( 'bp_admin_tab_setting_saved', $this->tab_name, $this );
 	}
 
 	/**

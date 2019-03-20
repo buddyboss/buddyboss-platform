@@ -1,10 +1,10 @@
 <?php
 /**
- * @todo add description
- * 
+ * BuddyBoss LearnDash integration hooks class.
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 namespace Buddyboss\LearndashIntegration\Learndash;
 
@@ -12,14 +12,14 @@ namespace Buddyboss\LearndashIntegration\Learndash;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Class adds additional missing hooks from Learndash
+ *
  * @since BuddyBoss 1.0.0
  */
 class Hooks
 {
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -29,7 +29,7 @@ class Hooks
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add actions once integration is ready
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -50,7 +50,7 @@ class Hooks
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sub action when ld gorup is created
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -60,7 +60,7 @@ class Hooks
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sub action before ld gorup is deleted
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -79,7 +79,7 @@ class Hooks
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sub action after ld gorup is deleted
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -90,7 +90,7 @@ class Hooks
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sub actions when admin or user is added to ld group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -108,7 +108,7 @@ class Hooks
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sub actions when admin or user is removed from ld group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -126,7 +126,7 @@ class Hooks
 	}
 
 	/**
-	 * @todo add title/description
+	 * sub action when a course is added to ld group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -139,7 +139,7 @@ class Hooks
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sub action when a course is deleted from ld group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -152,7 +152,7 @@ class Hooks
 	}
 
 	/**
-	 * @todo add title/description
+	 * If the key is a ld leader meta key
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -162,7 +162,7 @@ class Hooks
 	}
 
 	/**
-	 * @todo add title/description
+	 * If the key is a ld user meta key
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -172,7 +172,7 @@ class Hooks
 	}
 
 	/**
-	 * @todo add title/description
+	 * If the key is a ld course meta key
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -182,7 +182,7 @@ class Hooks
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get the gorup id from the meta key
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

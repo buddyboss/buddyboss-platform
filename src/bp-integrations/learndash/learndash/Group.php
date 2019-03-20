@@ -1,10 +1,10 @@
 <?php
 /**
- * @todo add description
- * 
+ * BuddyBoss LearnDash integration Group class.
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 namespace Buddyboss\LearndashIntegration\Learndash;
 
@@ -14,14 +14,14 @@ use WP_Query;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Core class for the learndash settings
+ *
  * @since BuddyBoss 1.0.0
  */
 class Group
 {
 	/**
-	 * @todo add title/description
+	 * Get groups that's not associated to bp
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

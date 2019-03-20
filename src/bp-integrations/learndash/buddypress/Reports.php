@@ -1,7 +1,7 @@
 <?php
 /**
  * BuddyBoss LearnDash integration reports class.
- * 
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
  */
@@ -20,8 +20,8 @@ use Buddyboss\LearndashIntegration\Buddypress\Generators\TopicsReportsGenerator;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Class for all reports related functions
+ *
  * @since BuddyBoss 1.0.0
  */
 class Reports
@@ -29,7 +29,7 @@ class Reports
 	protected $isRealJoins = false;
 
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -39,7 +39,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add actions once integration is ready
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -67,10 +67,12 @@ class Reports
 		add_filter('bp_ld_sync/report_columns', [$this, 'removeUserColumnIfSelected'], 10, 2);
 		add_filter('bp_ld_sync/report_columns', [$this, 'removeCourseColumnIfSelected'], 10, 2);
 		add_filter('bp_ld_sync/report_columns', [$this, 'removePointsColumnIfNotAssigned'], 10, 2);
+
+		add_action( 'bp_ld_sync/export_report_column', [ $this, 'export_report_column' ], 10, 2 );
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add scripts when it's on the reports page
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -119,7 +121,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Output report filters html
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -130,7 +132,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Output report user stats html
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -150,7 +152,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Output report course stats html
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -175,7 +177,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Output report results tables
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -188,7 +190,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Only allow non admin/mod to view his own reports
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -210,7 +212,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Output report export button html
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -220,7 +222,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Remove the filter if only 1 option available
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -238,7 +240,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Remove user filter is nond admin/mod are viewing reports tab
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -264,7 +266,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sub filter for ld's activity sql query on fields
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -274,7 +276,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sub filter for ld's activity sql query on joins
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -290,7 +292,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sub filter for ld's activity sql query on wheres
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -300,7 +302,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sub filter for ld's activity sql query on group_by
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -310,7 +312,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Remove the user column if a user is selected in the filter
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -324,7 +326,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Remove the course column if a course is selected in the filter
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -338,7 +340,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Remove the points column if all courses doesn't have points
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -365,8 +367,22 @@ class Reports
 
 		return $columns;
 	}
+
 	/**
-	* @todo make PHP 5.4 compatible and add title/description
+	 * Add status columns to export
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function export_report_column( $columns, $report_generator ) {
+		if ( ! empty( $report_generator->args['step'] ) && in_array( $report_generator->args['step'], array( 'forum' ) ) ) {
+			$columns['status'] = $report_generator->column( 'status' );
+		}
+
+		return $columns;
+	}
+
+	/**
+	* Get available report generators
 	*
 	* @since BuddyBoss 1.0.0
 	*/
@@ -375,37 +391,37 @@ class Reports
 		return apply_filters('bp_ld_sync/reports_generators', [
 			'all' => [
 				'name'  => __('All Steps', 'buddyboss'),
-				'class' => AllReportsGenerator::class
+				'class' => '\Buddyboss\LearndashIntegration\Buddypress\Generators\AllReportsGenerator'
 			],
 			learndash_get_post_type_slug('course') => [
 				'name'  => __('Courses', 'buddyboss'),
-				'class' => CoursesReportsGenerator::class
+				'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\CoursesReportsGenerator'
 			],
 			learndash_get_post_type_slug('lesson') => [
 				'name'  => __('Lessons', 'buddyboss'),
-				'class' => LessonsReportsGenerator::class
+				'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\LessonsReportsGenerator'
 			],
 			learndash_get_post_type_slug('topic') => [
 				'name'  => __('Topics', 'buddyboss'),
-				'class' => TopicsReportsGenerator::class
+				'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\TopicsReportsGenerator'
 			],
 			learndash_get_post_type_slug('quiz') => [
 				'name'  => __('Quizzes', 'buddyboss'),
-				'class' => QuizzesReportsGenerator::class
+				'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\QuizzesReportsGenerator'
 			],
 			learndash_get_post_type_slug('essays') => [
 				'name'  => __('Essays', 'buddyboss'),
-				'class' => EssaysReportsGenerator::class
+				'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\EssaysReportsGenerator'
 			],
 			learndash_get_post_type_slug('assignment') => [
 				'name'  => __('Assignments', 'buddyboss'),
-				'class' => AssignmentsReportsGenerator::class
+				'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\AssignmentsReportsGenerator'
 			],
 		]);
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get available report filters
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -433,7 +449,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get group's member list for filter
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -451,7 +467,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get group's course list for filter
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -473,7 +489,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get list of steps available from all generators
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -483,7 +499,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get the table columns on the current generator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -493,7 +509,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get the class name for the current generator based on request value
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -505,7 +521,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Convert generator columns to datatable js format by current generator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -517,7 +533,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Convert generator columns to datatable js format
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -532,7 +548,7 @@ class Reports
 	}
 
 	/**
-	 * @todo add title/description
+	 * Fix bug on LD where they typed the action name wrong
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

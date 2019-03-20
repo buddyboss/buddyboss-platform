@@ -1,10 +1,10 @@
 <?php
 /**
  * BuddyBoss LearnDash integration assignment reports generator.
- * 
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 namespace Buddyboss\LearndashIntegration\Buddypress\Generators;
 
@@ -15,14 +15,14 @@ use WP_Query;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Extends report generator for assignments reports
+ *
  * @since BuddyBoss 1.0.0
  */
 class AssignmentsReportsGenerator extends ReportsGenerator
 {
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -35,7 +35,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Custom fetcher to load the assigments from database and setup the pagination
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -52,7 +52,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Returns the columns and their settings
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -87,7 +87,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Format the activity results for each column
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -106,7 +106,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Load all the assignments from the courses belong to the group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -157,7 +157,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add additional sql statement to fetch data
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -169,7 +169,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Remove additional sql statement to fetch data
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -181,7 +181,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add additional field sql statement
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -215,7 +215,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add additional joins sql statement
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -231,7 +231,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add additional order sql statement
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -251,7 +251,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Return the assignment score if available
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
