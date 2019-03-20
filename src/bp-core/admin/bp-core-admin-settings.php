@@ -173,11 +173,11 @@ function bp_admin_setting_callback_enable_activity_gif() {
 	?>
 
 	<input id="_bp_enable_activity_gif" name="_bp_enable_activity_gif" type="checkbox" value="1" data-run-js-condition="_bp_enable_activity_gif" <?php checked( bp_is_activity_gif_active( false ) ); ?> />
-	<label for="_bp_enable_activity_gif"><?php _e( 'Allow GIFs in activity posts', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_activity_gif"><?php _e( 'Allow GIFs from the <a href="https://giphy.com/">GIPHY library</a> in activity posts', 'buddyboss' ); ?></label>
 	<p class="js-show-on-_bp_enable_activity_gif">
-		<input type="text" name="_bp_activity_gif_api_key" id="_bp_activity_gif_api_key" value="<?php echo bp_get_activity_gif_api_key() ?>" style="width: 300px;" />
-		<p class="description"><?php esc_html_e('Gif developer api key', 'buddyboss') ?></p>
+		<span class="input-label"><?php esc_html_e('API key', 'buddyboss') ?></span> <input type="text" name="_bp_activity_gif_api_key" id="_bp_activity_gif_api_key" value="<?php echo bp_get_activity_gif_api_key() ?>" style="width: 300px;" />
 	</p>
+	<p class="description js-show-on-_bp_enable_activity_gif"><?php _e('Create an account at <a href="https://developers.giphy.com/">GIPHY</a> and then click "Create an App". Once done, copy the API key and paste it above.', 'buddyboss') ?></p>
 	<?php
 }
 

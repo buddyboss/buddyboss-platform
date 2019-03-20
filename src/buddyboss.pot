@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-19 11:51:07+00:00\n"
+"POT-Creation-Date: 2019-03-20 09:34:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -368,7 +368,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-akismet.php:204
 #: bp-activity/classes/class-bp-akismet.php:233
 #: bp-core/admin/bp-core-admin-functions.php:1344
-#: bp-forums/admin/replies.php:734 bp-forums/admin/topics.php:805
+#: bp-forums/admin/replies.php:737 bp-forums/admin/topics.php:808
 #: bp-forums/classes/class-bbpress.php:534 bp-forums/replies/template.php:2106
 #: bp-forums/topics/functions.php:1966 bp-forums/topics/template.php:2873
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:534
@@ -378,7 +378,7 @@ msgid "Spam"
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:758 bp-forums/admin/forums.php:555
-#: bp-forums/admin/replies.php:874 bp-forums/admin/topics.php:944
+#: bp-forums/admin/replies.php:877 bp-forums/admin/topics.php:947
 #: bp-members/classes/class-bp-members-admin.php:1094
 #: bp-members/classes/class-bp-members-admin.php:1154
 #. Translators: Publish box date format, see http:php.net/date.
@@ -549,19 +549,19 @@ msgstr ""
 msgid "Your browser does not support HTML5 audio"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:489
+#: bp-activity/bp-activity-filters.php:492
 msgid "[Read more]"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:493
+#: bp-activity/bp-activity-filters.php:496
 msgid "&hellip;"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:547
+#: bp-activity/bp-activity-filters.php:550
 msgid "Read more"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:823
+#: bp-activity/bp-activity-filters.php:826
 msgid "Load Newest"
 msgstr ""
 
@@ -903,8 +903,8 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:2749
 #: bp-core/admin/bp-core-admin-functions.php:1350
-#: bp-core/admin/bp-core-admin-pages.php:201 bp-forums/admin/replies.php:721
-#: bp-forums/admin/topics.php:772
+#: bp-core/admin/bp-core-admin-pages.php:201 bp-forums/admin/replies.php:724
+#: bp-forums/admin/topics.php:775
 #: bp-groups/classes/class-bp-groups-list-table.php:532
 #: bp-invites/bp-invites-admin.php:268
 #: bp-members/classes/class-bp-members-component.php:343
@@ -1034,7 +1034,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:344
 #: bp-activity/classes/class-bp-activity-list-table.php:608
-#: bp-forums/admin/replies.php:749 bp-forums/admin/topics.php:819
+#: bp-forums/admin/replies.php:752 bp-forums/admin/topics.php:822
 #: bp-groups/bp-groups-admin.php:794
 msgid "Delete Permanently"
 msgstr ""
@@ -2049,11 +2049,20 @@ msgid "Allow link previews in activity posts"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:176
-msgid "Allow GIFs in activity posts"
+msgid ""
+"Allow GIFs from the <a href=\"https://giphy.com/\">GIPHY library</a> in "
+"activity posts"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:179
-msgid "Gif developer api key"
+#: bp-core/admin/bp-core-admin-settings.php:178
+msgid "API key"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:180
+msgid ""
+"Create an account at <a href=\"https://developers.giphy.com/\">GIPHY</a> "
+"and then click \"Create an App\". Once done, copy the API key and paste it "
+"above."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:220
@@ -2370,11 +2379,11 @@ msgstr ""
 msgid "BuddyBoss Platform"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:150
+#: bp-core/admin/settings/bp-admin-setting-activity.php:157
 msgid "WordPress"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:155
+#: bp-core/admin/settings/bp-admin-setting-activity.php:162
 msgid "Custom Post Types"
 msgstr ""
 
@@ -6601,9 +6610,9 @@ msgstr ""
 
 #: bp-forums/admin/forums.php:156
 msgid ""
-"When using Bulk Edit, you can change the metadata (categories, author, "
-"etc.) for all selected forums at once. To remove a forum from the grouping, "
-"just click the x next to its name in the Bulk Edit area that appears."
+"When using Bulk Edit, you can change the status (Published, Private, etc.) "
+"for all selected forums at once. To remove a forum from the grouping, just "
+"click the x next to its name in the Bulk Edit area that appears."
 msgstr ""
 
 #: bp-forums/admin/forums.php:162 bp-forums/admin/forums.php:221
@@ -6776,13 +6785,13 @@ msgstr ""
 msgid "Forum updated. <a href=\"%s\">View forum</a>"
 msgstr ""
 
-#: bp-forums/admin/forums.php:529 bp-forums/admin/replies.php:848
-#: bp-forums/admin/topics.php:918
+#: bp-forums/admin/forums.php:529 bp-forums/admin/replies.php:851
+#: bp-forums/admin/topics.php:921
 msgid "Custom field updated."
 msgstr ""
 
-#: bp-forums/admin/forums.php:532 bp-forums/admin/replies.php:851
-#: bp-forums/admin/topics.php:921
+#: bp-forums/admin/forums.php:532 bp-forums/admin/replies.php:854
+#: bp-forums/admin/topics.php:924
 msgid "Custom field deleted."
 msgstr ""
 
@@ -7036,10 +7045,9 @@ msgstr ""
 
 #: bp-forums/admin/replies.php:169
 msgid ""
-"When using Bulk Edit, you can change the metadata (categories, author, "
-"etc.) for all selected replies at once. To remove a reply from the "
-"grouping, just click the x next to its name in the Bulk Edit area that "
-"appears."
+"When using Bulk Edit, you can change the status (Published, Private, etc.) "
+"for all selected replies at once. To remove a reply from the grouping, just "
+"click the x next to its name in the Bulk Edit area that appears."
 msgstr ""
 
 #: bp-forums/admin/replies.php:189
@@ -7167,88 +7175,88 @@ msgstr ""
 msgid "(Mismatch)"
 msgstr ""
 
-#: bp-forums/admin/replies.php:721 bp-forums/admin/topics.php:772
+#: bp-forums/admin/replies.php:724 bp-forums/admin/topics.php:775
 msgid "View \"%s\""
 msgstr ""
 
-#: bp-forums/admin/replies.php:732
+#: bp-forums/admin/replies.php:735
 msgid "Mark the reply as not spam"
 msgstr ""
 
-#: bp-forums/admin/replies.php:732 bp-forums/admin/topics.php:803
+#: bp-forums/admin/replies.php:735 bp-forums/admin/topics.php:806
 msgid "Not spam"
 msgstr ""
 
-#: bp-forums/admin/replies.php:734
+#: bp-forums/admin/replies.php:737
 msgid "Mark this reply as spam"
 msgstr ""
 
-#: bp-forums/admin/replies.php:743 bp-forums/admin/topics.php:813
+#: bp-forums/admin/replies.php:746 bp-forums/admin/topics.php:816
 #: bp-forums/replies/template.php:2048 bp-forums/topics/template.php:2629
 msgid "Restore this item from the Trash"
 msgstr ""
 
-#: bp-forums/admin/replies.php:743 bp-forums/admin/topics.php:813
+#: bp-forums/admin/replies.php:746 bp-forums/admin/topics.php:816
 #: bp-forums/replies/template.php:2036 bp-forums/topics/template.php:2617
 msgid "Restore"
 msgstr ""
 
-#: bp-forums/admin/replies.php:745 bp-forums/admin/topics.php:815
+#: bp-forums/admin/replies.php:748 bp-forums/admin/topics.php:818
 #: bp-forums/replies/template.php:2050 bp-forums/topics/template.php:2631
 msgid "Move this item to the Trash"
 msgstr ""
 
-#: bp-forums/admin/replies.php:745 bp-forums/admin/topics.php:815
+#: bp-forums/admin/replies.php:748 bp-forums/admin/topics.php:818
 #: bp-forums/replies/template.php:2035 bp-forums/topics/functions.php:1967
 #: bp-forums/topics/template.php:2616
 msgid "Trash"
 msgstr ""
 
-#: bp-forums/admin/replies.php:749 bp-forums/admin/topics.php:819
+#: bp-forums/admin/replies.php:752 bp-forums/admin/topics.php:822
 #: bp-forums/replies/template.php:2054 bp-forums/topics/template.php:2635
 msgid "Delete this item permanently"
 msgstr ""
 
-#: bp-forums/admin/replies.php:775 bp-forums/admin/topics.php:845
+#: bp-forums/admin/replies.php:778 bp-forums/admin/topics.php:848
 msgid "Empty Spam"
 msgstr ""
 
-#: bp-forums/admin/replies.php:785 bp-forums/admin/topics.php:855
+#: bp-forums/admin/replies.php:788 bp-forums/admin/topics.php:858
 msgid "In all forums"
 msgstr ""
 
-#: bp-forums/admin/replies.php:845
+#: bp-forums/admin/replies.php:848
 msgid "Reply updated. <a href=\"%s\">View topic</a>"
 msgstr ""
 
-#: bp-forums/admin/replies.php:854
+#: bp-forums/admin/replies.php:857
 msgid "Reply updated."
 msgstr ""
 
-#: bp-forums/admin/replies.php:859
+#: bp-forums/admin/replies.php:862
 #. translators: %s: date and time of the revision
 msgid "Reply restored to revision from %s"
 msgstr ""
 
-#: bp-forums/admin/replies.php:863
+#: bp-forums/admin/replies.php:866
 msgid "Reply created. <a href=\"%s\">View topic</a>"
 msgstr ""
 
-#: bp-forums/admin/replies.php:866
+#: bp-forums/admin/replies.php:869
 msgid "Reply saved."
 msgstr ""
 
-#: bp-forums/admin/replies.php:869
+#: bp-forums/admin/replies.php:872
 msgid "Reply submitted. <a target=\"_blank\" href=\"%s\">Preview topic</a>"
 msgstr ""
 
-#: bp-forums/admin/replies.php:872
+#: bp-forums/admin/replies.php:875
 msgid ""
 "Reply scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" "
 "href=\"%2$s\">Preview topic</a>"
 msgstr ""
 
-#: bp-forums/admin/replies.php:879
+#: bp-forums/admin/replies.php:882
 msgid "Reply draft updated. <a target=\"_blank\" href=\"%s\">Preview topic</a>"
 msgstr ""
 
@@ -8148,10 +8156,10 @@ msgstr ""
 
 #: bp-forums/admin/topics.php:171
 msgid ""
-"When using Bulk Edit, you can change the metadata (categories, author, "
-"etc.) for all selected discussions at once. To remove a discussion from the "
-"grouping, just click the x next to its name in the Bulk Edit area that "
-"appears."
+"When using Bulk Edit, you can change the status (Published, Private, etc.) "
+"and add discussion tags for all selected discussions at once. To remove a "
+"discussion from the grouping, just click the x next to its name in the Bulk "
+"Edit area that appears."
 msgstr ""
 
 #: bp-forums/admin/topics.php:191
@@ -8306,92 +8314,92 @@ msgstr ""
 msgid "No Replies"
 msgstr ""
 
-#: bp-forums/admin/topics.php:782
+#: bp-forums/admin/topics.php:785
 msgid "Close this discussion"
 msgstr ""
 
-#: bp-forums/admin/topics.php:782 bp-forums/topics/template.php:2686
+#: bp-forums/admin/topics.php:785 bp-forums/topics/template.php:2686
 #: bp-templates/bp-nouveau/buddypress/common/notices/template-notices.php:15
 #: bp-templates/bp-nouveau/buddypress/members/single/parts/profile-visibility.php:35
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:412
 msgid "Close"
 msgstr ""
 
-#: bp-forums/admin/topics.php:784
+#: bp-forums/admin/topics.php:787
 msgid "Open this discussion"
 msgstr ""
 
-#: bp-forums/admin/topics.php:784 bp-forums/forums/functions.php:1601
+#: bp-forums/admin/topics.php:787 bp-forums/forums/functions.php:1601
 #: bp-forums/topics/functions.php:1964 bp-forums/topics/template.php:2687
 msgid "Open"
 msgstr ""
 
-#: bp-forums/admin/topics.php:793
+#: bp-forums/admin/topics.php:796
 msgid "Unstick this discussion"
 msgstr ""
 
-#: bp-forums/admin/topics.php:793 bp-forums/topics/template.php:2747
+#: bp-forums/admin/topics.php:796 bp-forums/topics/template.php:2747
 msgid "Unstick"
 msgstr ""
 
-#: bp-forums/admin/topics.php:796
+#: bp-forums/admin/topics.php:799
 msgid "Stick this discussion to its forum"
 msgstr ""
 
-#: bp-forums/admin/topics.php:796 bp-forums/topics/template.php:2746
+#: bp-forums/admin/topics.php:799 bp-forums/topics/template.php:2746
 msgid "Stick"
 msgstr ""
 
-#: bp-forums/admin/topics.php:796
+#: bp-forums/admin/topics.php:799
 msgid "Stick this discussion to front"
 msgstr ""
 
-#: bp-forums/admin/topics.php:796 bp-forums/topics/template.php:2748
+#: bp-forums/admin/topics.php:799 bp-forums/topics/template.php:2748
 msgid "(to front)"
 msgstr ""
 
-#: bp-forums/admin/topics.php:803
+#: bp-forums/admin/topics.php:806
 msgid "Mark the discussion as not spam"
 msgstr ""
 
-#: bp-forums/admin/topics.php:805
+#: bp-forums/admin/topics.php:808
 msgid "Mark this discussion as spam"
 msgstr ""
 
-#: bp-forums/admin/topics.php:915
+#: bp-forums/admin/topics.php:918
 msgid "Discussion updated. <a href=\"%s\">View discussion</a>"
 msgstr ""
 
-#: bp-forums/admin/topics.php:924
+#: bp-forums/admin/topics.php:927
 msgid "Discussion updated."
 msgstr ""
 
-#: bp-forums/admin/topics.php:929
+#: bp-forums/admin/topics.php:932
 #. translators: %s: date and time of the revision
 msgid "Discussion restored to revision from %s"
 msgstr ""
 
-#: bp-forums/admin/topics.php:933
+#: bp-forums/admin/topics.php:936
 msgid "Discussion created. <a href=\"%s\">View discussion</a>"
 msgstr ""
 
-#: bp-forums/admin/topics.php:936
+#: bp-forums/admin/topics.php:939
 msgid "Discussion saved."
 msgstr ""
 
-#: bp-forums/admin/topics.php:939
+#: bp-forums/admin/topics.php:942
 msgid ""
 "Discussion submitted. <a target=\"_blank\" href=\"%s\">Preview "
 "discussion</a>"
 msgstr ""
 
-#: bp-forums/admin/topics.php:942
+#: bp-forums/admin/topics.php:945
 msgid ""
 "Discussion scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" "
 "href=\"%2$s\">Preview discussion</a>"
 msgstr ""
 
-#: bp-forums/admin/topics.php:949
+#: bp-forums/admin/topics.php:952
 msgid ""
 "Discussion draft updated. <a target=\"_blank\" href=\"%s\">Preview "
 "discussion</a>"
