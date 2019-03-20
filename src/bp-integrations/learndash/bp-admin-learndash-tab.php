@@ -93,7 +93,15 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			'enabled',
 			__('Social Group Sync', 'buddyboss'),
 			[
-				'input_text' => __( 'Enable group sync functionality <b>FROM</b> BuddyBoss Social Groups <b>TO</b> LearnDash Groups', 'buddyboss' ),
+				'input_text' => sprintf(
+					__( 'Enable group sync functionality <b>FROM</b> <a href="%s">BuddyBoss Social Groups</a> <b>TO</b> <a href="%s">LearnDash Groups</a>', 'buddyboss' ),
+					add_query_arg([
+						'page' => 'bp-groups',
+					], admin_url( 'admin.php' ) ),
+					add_query_arg([
+						'post_type' => 'groups',
+					], admin_url( 'edit.php' ) )
+				),
 				'input_run_js' => 'buddypress_enabled'
 			]
 		);
@@ -212,7 +220,15 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			'enabled',
 			__('LearnDash Group Sync', 'buddyboss'),
 			[
-				'input_text' => __( 'Enable group sync functionality <b>FROM</b> LearnDash Groups <b>TO</b> BuddyBoss Social Groups', 'buddyboss' ),
+				'input_text' => sprintf(
+					__( 'Enable group sync functionality <b>FROM</b> <a href="%s">LearnDash Groups</a> <b>TO</b> <a href="%s">BuddyBoss Social Groups</a>', 'buddyboss' ),
+					add_query_arg([
+						'post_type' => 'groups',
+					], admin_url( 'edit.php' ) ),
+					add_query_arg([
+						'page' => 'bp-groups',
+					], admin_url( 'admin.php' ) )
+				),
 				'input_run_js' => 'learndash_enabled'
 			]
 		);
