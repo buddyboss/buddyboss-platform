@@ -836,7 +836,7 @@ class BpMemberships {
 			error_log("onWpLoaded()");
 		}
 
-		add_submenu_page('', 'BuddyBoss Memberships', 'Memberships Settings', 'manage_options', 'bbms-product-events', array($this, 'bbmsProductEvents'));
+		$bpProductEvents = BpProductEvents::get_instance();
 
 		/* Add scripts for admin section for plugin */
 		add_action('admin_enqueue_scripts', array($this, 'addAdminScripts'));
@@ -870,18 +870,6 @@ class BpMemberships {
 		add_action('wp_ajax_get_groups', array($this, 'getLearndashGroupsAsJson'));
 		add_action('wp_ajax_selected_groups', array($this, 'selectedGroups'));
 
-	}
-
-	/**
-	 * @return {HTML} - rendering content inside product-events file
-	 */
-	public static function bbmsProductEvents() {
-		if (BPMS_DEBUG) {
-			error_log("bbmsProductEvents()");
-		}
-
-		$productEvents = BpMemberships::getProductEvents();
-		BpmsView::render('reports/product-events', get_defined_vars());
 	}
 
 	/**
