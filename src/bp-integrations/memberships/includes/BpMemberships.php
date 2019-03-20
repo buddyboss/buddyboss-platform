@@ -344,7 +344,7 @@ class BpMemberships {
 	public static function getProductEvents() {
 
 		$lmsTypes = self::getLmsTypesSelected(LD_POST_TYPE);
-		$vendorTypes = array(WC_POST_TYPE, MP_POST_TYPE);
+		$vendorTypes = self::getVendorTypesSelected();
 
 		$products = get_posts(array("post_type" => $vendorTypes));
 
@@ -353,13 +353,16 @@ class BpMemberships {
 		$results = array();
 		foreach ($products as $product) {
 
-			$isEnabled = get_post_meta($product->ID, "_bpms-$lmsTypes-$product->post_type-is_enabled", true);
+			foreach ($lmsTypes as $lmsType) {
 
-			// Display only enabled ones
-			if ($isEnabled) {
-				$events = unserialize(get_post_meta($product->ID, '_bpms-events', true));
-				foreach ($events as $eventIdentifier => $eventMeta) {
-					$results[$eventIdentifier] = array('event_identifier' => $eventIdentifier, 'user_id' => $eventMeta['user_id'], 'course_attached' => $eventMeta['course_attached'], 'grant_access' => $eventMeta['grant_access'], 'product_id' => $product->ID, 'created_at' => $eventMeta['created_at'], 'updated_at' => $eventMeta['updated_at']);
+				$isEnabled = get_post_meta($product->ID, "_bpms-$lmsType-$product->post_type-is_enabled", true);
+
+				// Display only enabled ones
+				if ($isEnabled) {
+					$events = unserialize(get_post_meta($product->ID, '_bpms-events', true));
+					foreach ($events as $eventIdentifier => $eventMeta) {
+						$results[$eventIdentifier] = array('event_identifier' => $eventIdentifier, 'user_id' => $eventMeta['user_id'], 'course_attached' => $eventMeta['course_attached'], 'grant_access' => $eventMeta['grant_access'], 'product_id' => $product->ID, 'created_at' => $eventMeta['created_at'], 'updated_at' => $eventMeta['updated_at']);
+					}
 				}
 			}
 

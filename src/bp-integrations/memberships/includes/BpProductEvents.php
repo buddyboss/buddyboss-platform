@@ -40,7 +40,7 @@ class BpProductEvents {
 	public function bbmsProductEvents() {
 		?>
 		<div class="wrap">
-			<h2>BuddyBoss Memberships - Product Events</h2>
+			<h2>Memberships Logs</h2>
 
 			<div id="poststuff">
 				<div id="post-body" class="metabox-holder columns-2">
@@ -74,7 +74,7 @@ $this->events_obj->prepare_items();
 
 		add_screen_option($option, $args);
 
-		$this->events_obj = new Events_List();
+		$this->events_obj = new EventsList();
 	}
 
 	/** Singleton instance */

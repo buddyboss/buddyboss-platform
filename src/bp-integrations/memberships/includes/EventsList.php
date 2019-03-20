@@ -3,7 +3,7 @@ namespace BuddyBoss\Memberships\Classes;
 
 use BuddyBoss\Memberships\Classes\WpListTable as WpListTable;
 
-class Events_List extends WpListTable {
+class EventsList extends WpListTable {
 
 	/** Class constructor */
 	public function __construct() {
@@ -29,8 +29,7 @@ class Events_List extends WpListTable {
 		$results = BpMemberships::getProductEvents();
 
 		error_log(print_r($results, true));
-
-		return $result;
+		return $results;
 	}
 
 	/**
@@ -74,8 +73,34 @@ class Events_List extends WpListTable {
 	 */
 	public function column_default($item, $column_name) {
 		switch ($column_name) {
-		case 'address':
-		case 'city':
+		case 'product_id':
+			$html = "";
+			$productId = $item[$column_name];
+			$product = get_post($productId, OBJECT);
+			$html .= "<a target=\"_blank\" href=\"post.php?post=$productId&action=edit\">&nbsp;&nbsp;$product->post_title</a></br>";
+			return $html;
+		case 'event_identifier':
+			return $item[$column_name];
+		case 'user_id':
+			$html = "";
+			$userId = $item[$column_name];
+			$user = get_userdata($userId);
+			$html .= "<a target=\"_blank\" href=\"user-edit.php?user_id=$userId\">&nbsp;&nbsp;$user->user_login</a></br>";
+
+			return $html;
+		case 'course_attached':
+			$html = "";
+			foreach (unserialize($item[$column_name]) as $key => $courseId) {
+				$course = get_post($courseId, OBJECT);
+				$html .= "<a target=\"_blank\" href=\"post.php?post=$courseId&action=edit\">&nbsp;&nbsp;$course->post_title</a></br>";
+			}
+
+			return $html;
+		case 'grant_access':
+			return $item[$column_name] ? "Grant access" : "Revoke access";
+		case 'created_at':
+			return $item[$column_name];
+		case 'updated_at':
 			return $item[$column_name];
 		default:
 			return print_r($item, true); //Show the whole array for troubleshooting purposes
@@ -124,15 +149,14 @@ class Events_List extends WpListTable {
 		error_log("get_columns()");
 
 		$columns = [
-			// 'cb' => '<input type="checkbox" />',
-			'product' => __('Product', 'buddyboss'),
-			'event_identifier' => __('Identifier', 'buddyboss'),
+			'cb' => '<input type="checkbox" />',
+			'product_id' => __('Product', 'buddyboss'),
 			'user_id' => __('User ID', 'buddyboss'),
 			'course_attached' => __('Course Attached', 'buddyboss'),
 			'grant_access' => __('Action', 'buddyboss'),
-			'product_id' => __('Product ID', 'buddyboss'),
-			'created_at' => __('Created At', 'buddyboss'),
-			'updated_at' => __('Updated At', 'buddyboss'),
+			'event_identifier' => __('Identifier', 'buddyboss'),
+			'created_at' => __('Creation Date', 'buddyboss'),
+			'updated_at' => __('Last Modified', 'buddyboss'),
 		];
 
 		return $columns;
@@ -145,8 +169,8 @@ class Events_List extends WpListTable {
 	 */
 	public function get_sortable_columns() {
 		$sortable_columns = array(
-			'name' => array('name', true),
-			'city' => array('city', false),
+			'product_id' => array('product_id', true),
+			'user_id' => array('user_id', false),
 		);
 
 		return $sortable_columns;
@@ -184,11 +208,8 @@ class Events_List extends WpListTable {
 			'per_page' => $per_page, //WE have to determine how many items to show on a page
 		]);
 
-		// $sampleResults = array('product_id' => "todo-product_id", 'event_identifier' => "todo-event_identifier", 'user_id' => "todo-user_id", 'course_attached' => 'some course attached', 'grant_access' => "todo-grant_access", 'created_at' => "todo-created_at", "updated_at" => "todo-updated_at");
-		$sampleResults = array("todo-product_id", "todo-event_identifier", "todo-user_id", 'some course attached', "todo-grant_access", "todo-created_at", "todo-updated_at");
-
-		$this->items = $sampleResults;
-		// $this->items = self::get_events($per_page, $current_page);
+		// $this->items = self::get_events(1, $current_page);
+		$this->items = self::get_events($per_page, $current_page);
 	}
 
 	public function process_bulk_action() {
