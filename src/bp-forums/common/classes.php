@@ -7,7 +7,7 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 if ( !class_exists( 'BBP_Component' ) ) :
 /**
@@ -255,7 +255,6 @@ class BBP_Walker_Dropdown extends Walker {
 
 /**
  * Create hierarchical list of Forums replies.
- *
  *
  * @since bbPress (r4944)
  */

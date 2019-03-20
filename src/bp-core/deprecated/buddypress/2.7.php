@@ -2,7 +2,7 @@
 /**
  * Deprecated functions.
  *
- * @deprecated 2.7.0
+ * @deprecated BuddyPress 2.7.0
  */
 
 // Exit if accessed directly.
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  * Get the DB schema to use for BuddyPress components.
  *
  * @since BuddyPress 1.1.0
- * @deprecated 2.7.0
+ * @deprecated BuddyPress 2.7.0
  *
  * @return string The default database character-set, if set.
  */

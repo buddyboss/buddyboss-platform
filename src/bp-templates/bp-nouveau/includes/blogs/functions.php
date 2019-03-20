@@ -10,6 +10,8 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Get blog directory navigation menu items.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_get_blogs_directory_nav_items() {

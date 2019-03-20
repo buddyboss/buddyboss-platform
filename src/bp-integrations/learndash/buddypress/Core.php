@@ -1,4 +1,10 @@
 <?php
+/**
+ * BuddyBoss LearnDash integration core class.
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */
 
 namespace Buddyboss\LearndashIntegration\Buddypress;
 
@@ -15,15 +21,27 @@ use Buddyboss\LearndashIntegration\Buddypress\Hooks;
 use Buddyboss\LearndashIntegration\Buddypress\Reports;
 use Buddyboss\LearndashIntegration\Buddypress\Sync;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * @todo add title/description
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class Core
 {
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
 		$this->helpers = new Helpers;
 		$this->courses = new Courses;
 		$this->reports = new Reports;
 		$this->ajax    = new Ajax;
-		$this->forum   = new Forum;
 		$this->sync    = new Sync;
 		$this->hooks   = new Hooks;
 		$this->admin   = new Admin;
@@ -32,17 +50,32 @@ class Core
 		add_action('bp_ld_sync/init', [$this, 'init']);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function init()
 	{
 		$this->registerTemplateStack();
 		$this->registerGroupComponent();
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function registerTemplateStack()
 	{
 		bp_register_template_stack([$this, 'registerPluginTemplate']);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function registerGroupComponent()
 	{
 		if (! bp_is_group() && ! bp_is_group_create()) {
@@ -64,12 +97,22 @@ class Core
 		}
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function registerPluginTemplate()
 	{
 		return bp_learndash_path('/templates');
 	}
 
-    public function coursesSubMenus()
+    /**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function coursesSubMenus()
     {
     	return wp_list_sort(apply_filters('bp_ld_sync/courses_group_tab_subnavs', [
     		'courses' => [
@@ -80,7 +123,12 @@ class Core
     	]), 'position', 'ASC', true);
     }
 
-    public function reportsSubMenus()
+    /**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function reportsSubMenus()
     {
     	return wp_list_sort(apply_filters('bp_ld_sync/reports_group_tab_subnavs', [
     		'reports' => [
@@ -91,7 +139,12 @@ class Core
     	]), 'position', 'ASC', true);
     }
 
-    public function subMenuLink($slug)
+    /**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function subMenuLink($slug)
     {
 		$groupUrl = untrailingslashit(bp_get_group_permalink(groups_get_current_group()));
 		$action   = bp_current_action();

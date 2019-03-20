@@ -56,9 +56,17 @@ function bp_admin_setting_callback_private_network() {
 	?>
 
 	<input id="bp-enable-private-network" name="bp-enable-private-network" type="checkbox" value="1" <?php checked( !bp_enable_private_network( false ) ); ?> />
-	<label for="bp-enable-private-network"><?php _e( 'Block this website for logged out users (allows login and registration)', 'buddyboss' ); ?></label>
-
+	<label for="bp-enable-private-network"><?php _e( 'Restrict site access to only logged-in members', 'buddyboss' ); ?></label>
 	<?php
+	printf(
+	'<p class="description">%s</p>',
+			sprintf(
+				__( 'Login and <a href="%s">Registration</a> pages will remain publicly visible.', 'buddyboss' ),
+				add_query_arg([
+					'page' => 'bp-pages',
+				], admin_url( 'admin.php' ) )
+			)
+	);
 }
 
 /** Activity *******************************************************************/
@@ -140,6 +148,39 @@ function bp_admin_setting_callback_enable_activity_like() {
 
 	<?php
 }
+
+
+/**
+ * Allow link previews in activity posts.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_admin_setting_callback_enable_activity_link_preview() {
+	?>
+
+	<input id="_bp_enable_activity_link_preview" name="_bp_enable_activity_link_preview" type="checkbox" value="1" <?php checked( bp_is_activity_link_preview_active( false ) ); ?> />
+	<label for="_bp_enable_activity_link_preview"><?php _e( 'Allow link previews in activity posts', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
+ * Allow GIFs in activity posts.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_admin_setting_callback_enable_activity_gif() {
+	?>
+
+	<input id="_bp_enable_activity_gif" name="_bp_enable_activity_gif" type="checkbox" value="1" data-run-js-condition="_bp_enable_activity_gif" <?php checked( bp_is_activity_gif_active( false ) ); ?> />
+	<label for="_bp_enable_activity_gif"><?php _e( 'Allow GIFs in activity posts', 'buddyboss' ); ?></label>
+	<p class="js-show-on-_bp_enable_activity_gif">
+		<input type="text" name="_bp_activity_gif_api_key" id="_bp_activity_gif_api_key" value="<?php echo bp_get_activity_gif_api_key() ?>" style="width: 300px;" />
+		<p class="description"><?php esc_html_e('Gif developer api key', 'buddyboss') ?></p>
+	</p>
+	<?php
+}
+
 
 /**
  * Sanitization for bp-disable-blogforum-comments setting.
@@ -307,9 +348,12 @@ function bp_core_admin_settings() {
 	?>
 
 	<div class="wrap">
-		<h1><?php _e( 'BuddyBoss Settings', 'buddyboss' ); ?> </h1>
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs(); ?></h2>
-
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Settings', 'buddypress' ) ); ?></h2>
+		<div class="nav-settings-subsubsub">
+			<ul class="subsubsub">
+				<?php bp_core_settings_admin_tabs(); ?>
+			</ul>
+		</div>
 		<form action="<?php echo esc_url( $form_action ) ?>" method="post">
             <?php bp_core_get_admin_active_tab_object()->form_html(); ?>
 		</form>
@@ -322,7 +366,6 @@ function bp_core_admin_settings() {
  * The main Integrations page
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_core_admin_integrations() {
     $active_tab = bp_core_get_admin_integration_active_tab();
@@ -330,9 +373,12 @@ function bp_core_admin_integrations() {
     ?>
 
     <div class="wrap">
-        <h1><?php _e( 'Plugin Integrations', 'buddyboss' ); ?> </h1>
-        <h2 class="nav-tab-wrapper"><?php bp_core_admin_integration_tabs(); ?></h2>
-
+	    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Integrations', 'buddypress' ) ); ?></h2>
+	    <div class="nav-settings-subsubsub">
+	        <ul class="subsubsub">
+		        <?php bp_core_admin_integration_tabs(); ?>
+	        </ul>
+	    </div>
         <form action="<?php echo esc_url( $form_action ) ?>" method="post">
             <?php bp_core_get_admin_integration_active_tab_object()->form_html(); ?>
         </form>
@@ -341,8 +387,18 @@ function bp_core_admin_integrations() {
 <?php
 }
 
+/**
+ * Load the AppBoss integration admin screen.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_core_admin_appboss() {
-	require buddypress()->plugin_dir . 'bp-core/admin/templates/appboss-screen.php';
+		?>
+		 <div class="wrap">
+		    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Mobile App', 'buddypress' ) ); ?></h2>
+	        <?php require buddypress()->plugin_dir . 'bp-core/admin/templates/appboss-screen.php'; ?>
+	    </div>
+		<?php
 }
 
 /**
@@ -439,6 +495,75 @@ function bp_admin_setting_callback_member_invite_member_type() {
 	?>
 	<input id="bp-disable-invite-member-type" name="bp-disable-invite-member-type" type="checkbox" value="1" <?php checked( bp_disable_invite_member_type() ); ?> />
 	<label for="bp-disable-invite-member-type"><?php _e( 'Allow members to select profile type of invitee', 'buddyboss' ); ?></label>
-    <p class="description"><?php _e( 'Customize this setting via Dashboard->Users->Profile Types', 'buddyboss' ); ?></p>
 	<?php
+		printf(
+			'<p class="description">%s</p>',
+			sprintf(
+				__( 'Customize this setting while editing any of your <a href="%s">Profile Types</a>.', 'buddyboss' ),
+				admin_url( 'edit.php?post_type=bp-member-type' )
+			)
+		);
+}
+
+/**
+ * Allow Post Type feed setting field
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $args array
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_feed_settings_callback_post_type( $args ) {
+
+	$post_type   = $args['post_type'];
+	$option_name = 'bp-feed-custom-post-type-' . $post_type;
+
+	$post_type_obj = get_post_type_object( $post_type );
+	?>
+	<input
+		name="<?php echo $option_name ?>"
+		id="<?php echo $option_name ?>"
+		type="checkbox"
+		value="1"
+		<?php checked( bp_is_post_type_feed_enable( $post_type, false ) ) ?>
+	/>
+	<label for="<?php echo $option_name ?>">
+		<?php echo $post_type === 'post' ? esc_html__( 'Blog Posts', 'buddyboss' ) : $post_type_obj->labels->name ?>
+	</label>
+	<?php
+
+	// Description for the WordPress Blog Posts
+	if ( 'post' === $post_type ) {
+		?>
+		<p class="description"><?php _e( 'When users publish new blog posts, show them in the activity feed.', 'buddyboss' ); ?></p>
+		<?php
+	}
+
+	// Description for the last option of CPT
+	if ( true === $args['description'] && 'post' !== $post_type ) {
+		?>
+		<p class="description"><?php _e( 'Select which Custom Post Types (coming from your plugins) should be shown in the activity feed. For example, if using WooCommerce it could post into the activity feed every time someone creates a new product.', 'buddyboss' ); ?></p>
+		<?php
+	}
+
+}
+
+/**
+ * Allow Platform default activity feed setting field
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $args array
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_feed_settings_callback_platform( $args ) {
+
+		$option_name = $args['activity_name'];
+		?>
+		<input name="<?php echo esc_attr( 'bp-feed-platform-'.$option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bp_platform_is_feed_enable( 'bp-feed-platform-'.$option_name, true ) ); ?>/>
+		<label for="<?php echo esc_attr( $option_name ); ?>"><?php esc_html_e( $args['activity_label'], 'buddyboss' ); ?></label>
+		<?php
+
 }

@@ -20,41 +20,34 @@ if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-groups' == $_REQUEST['pag
 	add_filter( 'set-screen-option', 'bp_groups_admin_screen_options', 10, 3 );
 
 /**
- * Register the Groups component admin screen.
+ * Register the Groups component in BuddyBoss > Groups admin screen.
  *
  * @since BuddyPress 1.7.0
+ *
  */
 function bp_groups_add_admin_menu() {
 
 	if ( true === bp_disable_group_type_creation() ) {
 
 		// Add our screen.
-		$hooks[] = add_menu_page(
-			__( 'Social Groups', 'buddyboss' ),//Page Title
-			__( 'Social Groups', 'buddyboss' ),//Menu
+		$hooks[] = add_submenu_page(
+			'buddyboss-platform',
+			__( 'Groups', 'buddyboss' ),
+			__( 'Groups', 'buddyboss' ),
 			'bp_moderate',
 			'bp-groups',
-			'bp_groups_admin',
-			'dashicons-groups'
+			'bp_groups_admin'
 		);
-
-		// Register All Groups sub menu.
-		$hooks[] = add_submenu_page( 'bp-groups', 'All Groups', 'All Groups',
-			'bp_moderate', 'bp-groups');
-
-		// Register All Groups Types menu.
-		$hooks[] = add_submenu_page( 'bp-groups', 'Group Types', 'Group Types',
-			'bp_moderate', 'edit.php?post_type=bp-group-type');
 
 	} else {
 		// Add our screen.
-		$hooks[] = add_menu_page(
-			__( 'Social Groups', 'buddyboss' ),//Page Title
-			__( 'Social Groups', 'buddyboss' ),//Menu
+		$hooks[] = add_submenu_page(
+			'buddyboss-platform',
+			__( 'Groups', 'buddyboss' ),
+			__( 'Groups', 'buddyboss' ),
 			'bp_moderate',
 			'bp-groups',
-			'bp_groups_admin',
-			'dashicons-groups'
+			'bp_groups_admin'
 		);
 	}
 
@@ -63,7 +56,7 @@ function bp_groups_add_admin_menu() {
 		add_action( "load-$hook", 'bp_groups_admin_load' );
 	}
 }
-add_action( bp_core_admin_hook(), 'bp_groups_add_admin_menu' );
+add_action( bp_core_admin_hook(), 'bp_groups_add_admin_menu', 60 );
 
 /**
  * Add groups component to custom menus array.
@@ -537,6 +530,14 @@ function bp_groups_admin_screen_options( $value, $option, $new_value ) {
  * @since BuddyPress 1.7.0
  */
 function bp_groups_admin() {
+
+	// Added navigation tab on top.
+	if ( bp_core_get_groups_admin_tabs() ) { ?>
+		<div class="wrap">
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_groups_tabs( __( 'All Groups', 'buddypress' ) ); ?></h2>
+		</div>
+		<?php
+	}
 	// Decide whether to load the index or edit screen.
 	$doaction = bp_admin_list_table_current_bulk_action();
 
@@ -1477,6 +1478,11 @@ add_action( bp_core_admin_hook(), 'bp_groups_admin_groups_type_change_notice' );
 // Hook for register the group type admin action and filters.
 add_action( 'bp_loaded', 'bp_register_group_type_sections_filters_actions' );
 
+/**
+ * Add actions and filters for group types.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_register_group_type_sections_filters_actions() {
 
 	if ( true === bp_disable_group_type_creation() ) {
@@ -1630,12 +1636,12 @@ function bp_group_type_labels_meta_box( $post ) {
 function bp_group_type_role_labels_meta_box( $post ) {
 
 	$group_type_roles   = get_post_meta( $post->ID, '_bp_group_type_role_labels', true ) ?: [];
-	$organizer_plural   = ( $group_type_roles['organizer_plural_label_name'] ) ? $group_type_roles['organizer_plural_label_name'] : '';
-	$moderator_plural   = ( $group_type_roles['moderator_plural_label_name'] ) ? $group_type_roles['moderator_plural_label_name'] : '';
-	$members_plural     = ( $group_type_roles['member_plural_label_name'] ) ? $group_type_roles['member_plural_label_name'] : '';
-	$organizer_singular = ( $group_type_roles['organizer_singular_label_name'] ) ? $group_type_roles['organizer_singular_label_name'] : '';
-	$moderator_singular = ( $group_type_roles['moderator_singular_label_name'] ) ? $group_type_roles['moderator_singular_label_name'] : '';
-	$members_singular   = ( $group_type_roles['member_singular_label_name'] ) ? $group_type_roles['member_singular_label_name'] : '';
+	$organizer_plural   = ( isset( $group_type_roles['organizer_plural_label_name'] ) && $group_type_roles['organizer_plural_label_name'] ) ? $group_type_roles['organizer_plural_label_name'] : '';
+	$moderator_plural   = ( isset( $group_type_roles['moderator_plural_label_name'] ) && $group_type_roles['moderator_plural_label_name'] ) ? $group_type_roles['moderator_plural_label_name'] : '';
+	$members_plural     = ( isset( $group_type_roles['member_plural_label_name'] ) && $group_type_roles['member_plural_label_name'] ) ? $group_type_roles['member_plural_label_name'] : '';
+	$organizer_singular = ( isset( $group_type_roles['organizer_singular_label_name'] ) && $group_type_roles['organizer_singular_label_name'] ) ? $group_type_roles['organizer_singular_label_name'] : '';
+	$moderator_singular = ( isset( $group_type_roles['moderator_singular_label_name'] ) && $group_type_roles['moderator_singular_label_name'] ) ? $group_type_roles['moderator_singular_label_name'] : '';
+	$members_singular   = ( isset( $group_type_roles['member_singular_label_name'] ) && $group_type_roles['member_singular_label_name'] ) ? $group_type_roles['member_singular_label_name'] : '';
 
 	?>
 	<p><?php printf( __( 'Rename the group member roles for groups of this type.', 'buddyboss' ), $post->post_title )?></p>
@@ -1788,7 +1794,7 @@ function bp_group_type_group_invites_meta_box( $post ) {
 		<input type='checkbox' name='bp-group-type-restrict-invites-user-same-group-type' value='<?php echo esc_attr( 1 ); ?>' <?php checked( $get_restrict_invites_same_group_types, 1 ); ?> tabindex="7" />
 		<strong><?php _e( 'Restrict invites to members not currently in any group with this type. (If a member is already in a group with this type they cannot be sent an invite)', 'buddyboss' ); ?></strong>
 	</p>
-	<p><?php printf( __( 'Members of this group can only invite members of selected profile types. (Leave blank for unrestricted invites)', 'buddyboss' ), $post->post_title )?></p>
+	<p><?php printf( __( 'Only these selected profile types may be sent requests to join this group. (Leave blank for unrestricted invites)', 'buddyboss' ), $post->post_title )?></p>
 	<?php
 
 	$get_all_registered_member_types = bp_get_active_member_types();
@@ -2058,4 +2064,46 @@ function bp_save_group_type_role_labels_post_meta_box_data( $post_id ){
 
 
 	update_post_meta( $post_id, '_bp_group_type_role_labels', $data );
+}
+
+/**
+ * Added Navigation tab on top of the page BuddyBoss > Group Types
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_groups_admin_group_type_listing_add_groups_tab() {
+	global $pagenow ,$post;
+
+	if ( true === bp_disable_group_type_creation() ) {
+
+		if ( ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post.php' ) ) {
+			?>
+			<div class="wrap">
+				<h2 class="nav-tab-wrapper"><?php bp_core_admin_groups_tabs( __( 'Group Types', 'buddypress' ) ); ?></h2>
+			</div>
+			<?php
+		}
+
+	}
+}
+add_action('admin_notices','bp_groups_admin_group_type_listing_add_groups_tab');
+
+add_filter( 'parent_file', 'bp_group_type_set_platform_tab_submenu_active' );
+/**
+ * Highlights the submenu item using WordPress native styles.
+ *
+ * @param string $parent_file The filename of the parent menu.
+ *
+ * @return string $parent_file The filename of the parent menu.
+ */
+function bp_group_type_set_platform_tab_submenu_active( $parent_file ) {
+	global $pagenow, $current_screen, $post;
+
+	if ( true === bp_disable_group_type_creation() ) {
+		if ( ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post.php' ) ) {
+			$parent_file = 'buddyboss-platform';
+		}
+	}
+	return $parent_file;
 }

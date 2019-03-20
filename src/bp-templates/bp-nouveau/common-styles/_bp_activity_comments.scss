@@ -23,6 +23,11 @@
 				ul {
 					// indent any nested comments - comment to a comment
 					margin-left: 5%;
+
+					// When comment threading limit is reached, the comments should not indent
+					li.detached-comment-item {
+						margin-left: -5%;
+					}
 				}
 			}
 

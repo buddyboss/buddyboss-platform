@@ -1,11 +1,30 @@
 <?php
+/**
+ * BuddyBoss LearnDash integration all reports generator.
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
 
 namespace Buddyboss\LearndashIntegration\Buddypress\Generators;
 
 use Buddyboss\LearndashIntegration\Library\ReportsGenerator;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * @todo add title/description
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class AllReportsGenerator extends ReportsGenerator
 {
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
 		$this->completed_table_title = __('Completed Steps', 'buddyboss');
@@ -14,6 +33,11 @@ class AllReportsGenerator extends ReportsGenerator
 		parent::__construct();
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function columns()
 	{
 		return [
@@ -30,6 +54,11 @@ class AllReportsGenerator extends ReportsGenerator
 		];
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function formatData($activity)
 	{
 		return [
@@ -47,6 +76,11 @@ class AllReportsGenerator extends ReportsGenerator
 		];
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function formatDataForDisplay($data, $activity)
 	{
 		return wp_parse_args([
@@ -58,6 +92,11 @@ class AllReportsGenerator extends ReportsGenerator
 		], $data);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function activityStepLabel($activity)
 	{
 		return get_post_type_object(learndash_get_post_type_slug($activity->activity_type))->labels->singular_name;

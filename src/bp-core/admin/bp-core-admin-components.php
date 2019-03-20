@@ -20,8 +20,7 @@ function bp_core_admin_components_settings() {
 
 	<div class="wrap">
 
-		<h1><?php _e( 'BuddyBoss Components', 'buddyboss' ); ?> </h1>
-
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Components', 'buddypress' ) ); ?></h2>
 		<form action="" method="post" id="bp-admin-component-form">
 
 			<?php bp_core_admin_components_options(); ?>
@@ -212,7 +211,13 @@ function bp_core_admin_components_options() {
 			                    	<span><?php _e( '|', 'buddyboss' ); ?></span>
                                     <span class="settings">
                                         <a href="<?php echo esc_url( $labels['settings'] ); ?>">
-                                            <?php _e( 'Settings', 'buddyboss' ); ?>
+	                                        <?php
+		                                        if ( 'xprofile' === $name ) {
+		                                            _e( 'Edit Fields', 'buddyboss' );
+		                                        } else {
+		                                            _e( 'Settings', 'buddyboss' );
+		                                        }
+	                                        ?>
                                         </a>
                                     </span>
 			                    <?php endif; ?>

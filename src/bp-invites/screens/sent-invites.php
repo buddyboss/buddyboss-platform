@@ -4,6 +4,8 @@
  *
  * @package BuddyBoss\Invite\Screens
  * @since BuddyBoss 1.0.0
+ *
+ * @todo how is this page different from send-invites?
  */
 
 /**
@@ -30,6 +32,11 @@ function bp_invites_screen_sent_invite() {
 	bp_core_load_template( apply_filters( 'bp_invites_screen_sent_invite', 'members/single/plugins' ) );
 }
 
+/**
+ * Output members's Invites > Email Invite page.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_invites_sent_invite_screen() {
 	bp_get_template_part( 'members/single/invites');
 }

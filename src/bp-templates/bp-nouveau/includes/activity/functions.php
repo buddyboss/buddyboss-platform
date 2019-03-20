@@ -31,7 +31,7 @@ function bp_nouveau_activity_register_scripts( $scripts = array() ) {
 		),
 		'bp-nouveau-activity-post-form' => array(
 			'file'         => 'js/buddypress-activity-post-form%s.js',
-			'dependencies' => array( 'bp-nouveau', 'bp-nouveau-activity', 'json2', 'wp-backbone' ),
+			'dependencies' => array( 'bp-nouveau', 'bp-nouveau-activity', 'json2', 'wp-backbone', 'giphy' ),
 			'footer'       => true,
 		),
 	) );
@@ -65,10 +65,11 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	}
 
 	$activity_params = array(
-		'user_id'     => bp_loggedin_user_id(),
-		'object'      => 'user',
-		'backcompat'  => (bool) has_action( 'bp_activity_post_form_options' ),
-		'post_nonce'  => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
+		'user_id'        => bp_loggedin_user_id(),
+		'object'         => 'user',
+		'backcompat'     => (bool) has_action( 'bp_activity_post_form_options' ),
+		'post_nonce'     => wp_create_nonce( 'post_update', '_wpnonce_post_update' ),
+		'excluded_hosts' => []
 	);
 
 	$user_displayname = bp_get_loggedin_user_fullname();
@@ -92,6 +93,15 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 				$user_displayname
 			),
 		) );
+	}
+
+	if ( bp_is_activity_link_preview_active() ) {
+		$activity_params['link_preview'] = true;
+	}
+
+	// Gif api key
+	if ( bp_is_activity_gif_active() ) {
+		$activity_params['gif_api_key'] = bp_get_activity_gif_api_key();
 	}
 
 	/**
@@ -194,6 +204,8 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 }
 
 /**
+ * Get activity directory navigation menu items.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_get_activity_directory_nav_items() {
@@ -314,6 +326,8 @@ function bp_nouveau_get_activity_filters() {
 }
 
 /**
+ * Adds a small avatar to activity meta action if the activity is between a connection or group.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_secondary_avatars( $action, $activity ) {
@@ -333,6 +347,8 @@ function bp_nouveau_activity_secondary_avatars( $action, $activity ) {
 }
 
 /**
+ * Add class to newest activities by type.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_scope_newest_class( $classes = '' ) {

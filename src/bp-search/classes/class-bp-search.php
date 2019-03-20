@@ -1,17 +1,18 @@
 <?php
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+/**
+ * BuddyBoss global search main classes.
+ *
+ * @package BuddyBoss\Activity
+ * @since BuddyBoss 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'Bp_Search_Helper' ) ):
 
 	/**
-	 *
-	 * BuddyPress Global Search Plugin Main Controller
-	 * **************************************
-	 *
-	 *
+	 * BuddyPress Global Search Main Controller class
 	 */
 	class BP_Search {
 		/**
@@ -109,7 +110,9 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 		}
 
 		/**
+		 * @todo add title/description
 		 *
+		 * @since BuddyBoss 1.0.0
 		 */
 		public function load_search_helpers() {
 			global $bp;
@@ -276,7 +279,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 
 				/* _______________________________ */
 				$url      = $this->search_page_search_url();
-				$url      = esc_url( add_query_arg( array( 'no_frame' => '1' ), $url ) );
+				$url      = esc_url( add_query_arg( array( 'no_frame' => '1', 'bp_search' => 1 ), $url ) );
 				$type_mem = "";
 				foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
 					$new_row               = array( 'value' => $item['html'] );
@@ -426,7 +429,9 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 				----------------------------------------------------
 				*/
 
-				$sql_queries = array();
+				$sql_queries   = [];
+				$total = [];
+
 				foreach ( $this->searchable_items as $search_type ) {
 					if ( ! isset( $this->search_helpers[ $search_type ] ) ) {
 						continue;
@@ -438,9 +443,10 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 					 * so we can safely call the public methods defined in those classes.
 					 * This also means that all such classes must have a common set of methods.
 					 */
-					$obj           = $this->search_helpers[ $search_type ];
-					$limit         = " LIMIT " . ( $args['number'] + 1 );
-					$sql_queries[] = "( " . $obj->union_sql( $args['search_term'] ) . " $limit ) ";
+					$obj                   = $this->search_helpers[ $search_type ];
+					$limit                 = " LIMIT " . ( $args['number'] );
+					$sql_queries[]         = "( " . $obj->union_sql( $args['search_term'] ) . " $limit ) ";
+					$total[ $search_type ] = $obj->get_total_match_count( $args['search_term'] );
 				}
 
 				if ( empty( $sql_queries ) ) {
@@ -513,15 +519,14 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 
 						foreach ( $ordered_items_group as $type => &$items ) {
 							//now prepend html (opening tags) to first item of each
-							$category_search_url = esc_url( add_query_arg( array( 'subset' => $type ), $search_url ) );
+							$category_search_url = esc_url( add_query_arg( array( 'subset' => $type, 'bp_search' => 1 ), $search_url ) );
 							$label               = isset( $search_items[ $type ] ) ? trim( $search_items[ $type ] ) : trim( $type );
 							$first_item          = reset( $items );
-							$view_all_class      = count( $items ) < 4 ? 'view-all-link-hidden' : '';
-
+							$total_results       = $total[ $type ];
 							$start_html = "<div class='results-group results-group-{$type} " . apply_filters( 'bp_search_class_search_wrap', 'bp-search-results-wrap', $label ) . "'>"
 							              . "<header class='results-group-header clearfix'>"
 							              . "<h3 class='results-group-title'><span>" . apply_filters( 'bp_search_label_search_type', $label ) . "</span></h3>"
-							              . "<a href='". $category_search_url."' class='view-all-link $view_all_class'>". esc_html__( 'View All', 'buddyboss' ) ."</a>"
+							              . "<span class='total-results'>" . sprintf( _n( '%d result', '%d results', $total_results, 'buddyboss' ), $total_results ) . "</a>"
 							              . "</header>"
 							              . "<ul id='{$type}-stream' class='item-list {$type}-list bp-list " . apply_filters( 'bp_search_class_search_list', 'bp-search-results-list', $label ) . "'>";
 
@@ -531,14 +536,18 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 							$items[ $first_item['id'] ] = $first_item;
 
 							//and append html (closing tags) to last item of each type
-							if ( count( $items ) < 4 ) {
-								$last_item = end( $items );
-							} else {
-								end( $items );
-								$last_item = prev( $items );
+							$last_item = end( $items );
+							$end_html  = "</ul>";
+
+							if ( $total_results > 3 ) {
+								$end_html .= "<footer class='results-group-footer'>";
+								$end_html .= "<a href='" . $category_search_url . "' class='view-all-link'>" .
+								               sprintf( esc_html__( 'View (%d) more', 'buddyboss' ), $total_results -  $args['number'] ).
+								             "</a>";
+								$end_html .= "</footer>";
 							}
 
-							$end_html  = "</ul></div>";
+							$end_html  .= "</div>";
 
 							$group_end_html = apply_filters( "bp_search_results_group_end_html", $end_html, $type );
 

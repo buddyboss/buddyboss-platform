@@ -40,6 +40,150 @@
 		padding: 0 0 $marg-lrg 0;
 	}
 
+	#whats-new-attachments {
+
+		margin-left: 8.5%;
+
+		.activity-attached-gif-container {
+			position: relative;
+
+			.gif-image-remove {
+				border-radius: 10px;
+				height: 19px;
+				right: 2px;
+				top: 4px;
+				width: 19px;
+			}
+
+			.gif-image-overlay {
+				color: #fff;
+				margin-top: 0;
+				position: absolute;
+			}
+		}
+	}
+
+	#whats-new-elements {
+		#whats-new-elements-buttons {
+			margin: 1em 0;
+			ul {
+				list-style: none;
+
+				li {
+					display: inline-block;
+				}
+			}
+		}
+	}
+
+	#whats-new-toolbar {
+		margin-left: 8.5%;
+
+		.post-elements-buttons-item {
+			display: inline-block;
+			position: relative;
+
+			a.toolbar-button {
+				display: inline-block;
+				padding: 4px 10px;
+				border: 1px solid transparent;
+				line-height: normal;
+			}
+
+			.activity-attached-gif-container::before,
+			.activity-attached-gif-container::after {
+				left: 24px;
+				border-color: #f5f8fa;
+				border-width: 8px;
+			}
+
+			.gif-media-search {
+				position: relative;
+				max-width: 450px;
+
+				.gif-media-search-dropdown {
+					position: absolute;
+					top: 100%;
+					z-index: 900;
+					display: none;
+					float: left;
+					margin: 2px 0 0;
+					background: #fff;
+					border-radius: 4px;
+					box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+					background-clip: padding-box;
+
+					&.open {
+						display: block;
+						width: 400px;
+					}
+
+					.gif-search-query {
+						background-color: #f5f8fa;
+						background-repeat: repeat-x;
+						background-image: linear-gradient(#fff, #f5f8fa);
+						border: 1px solid #e6ecf0;
+						border-radius: 4px 4px 0 0;
+						position: relative;
+						padding: 8px;
+						margin: 0;
+					}
+
+					.gif-search-results {
+						padding: 3px 6px;
+						overflow: auto;
+						min-height: 270px;
+						max-height: 410px;
+
+						ul {
+							columns: 2 190px;
+							column-gap: 0;
+							margin: 0;
+							padding: 0;
+							list-style: none;
+
+							li {
+								border: 3px solid #fff;
+
+								&.bg1 {
+									background: #e0245e
+								}
+
+								&.bg2 {
+									background: #f45d22;
+								}
+
+								&.bg3 {
+									background: #ffad1f
+								}
+
+								&.bg4 {
+									background: #17bf63
+								}
+
+								&.bg5 {
+									background: #1c94e0
+								}
+
+								&.bg6 {
+									background: #794bc4
+								}
+							}
+						}
+
+						.found-media-item img {
+							width: 100%;
+							height: 100%;
+							min-width: 180px;
+						}
+					}
+
+				}
+			}
+
+		}
+	}
+
 	// these ID's need replacing with this!
 	//.textarea-wrap { // #whats-new-textarea
 
@@ -131,6 +275,7 @@
 		}
 
 		#whats-new-content,
+		#whats-new-elements,
 		#whats-new-post-in-box,
 		#whats-new-submit {
 			margin-left: 8.5%;

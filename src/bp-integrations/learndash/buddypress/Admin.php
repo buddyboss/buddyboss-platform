@@ -1,14 +1,38 @@
 <?php
+/**
+ * BuddyBoss LearnDash integration admin class.
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
 
 namespace Buddyboss\LearndashIntegration\Buddypress;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * @todo add title/description
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class Admin
 {
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
 		add_action('bp_ld_sync/init', [$this, 'init']);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function init()
 	{
 		if (! bp_ld_sync('settings')->get('buddypress.enabled')) {
@@ -19,6 +43,11 @@ class Admin
         add_action('bp_groups_admin_meta_boxes', [$this, 'addGroupSyncMetaBox']);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function saveGroupSyncMetaBox($groupId)
 	{
 		// created from backend
@@ -40,6 +69,11 @@ class Admin
 			->syncBpUsers();
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function addGroupSyncMetaBox()
 	{
         add_meta_box(
@@ -51,7 +85,12 @@ class Admin
         );
 	}
 
-    public function asyncMetaboxHtml()
+    /**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function asyncMetaboxHtml()
     {
 		$groupId    = bp_ld_sync()->getRequest('gid');
 		$generator  = bp_ld_sync('buddypress')->sync->generator($groupId);

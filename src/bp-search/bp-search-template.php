@@ -1,9 +1,20 @@
 <?php
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+/**
+ * BuddyBoss Search Template.
+ *
+ * @package BuddyBoss\Search
+ * @since BuddyBoss 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 add_filter( 'the_content', 'bp_search_search_page_content', 9 );
-
+/**
+ * BuddyBoss Search page content.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_search_search_page_content( $content ){
     /**
      * Reportedly, on some installations, the remove_filter call below, doesn't work and this filter is called over and over again.
@@ -14,7 +25,7 @@ function bp_search_search_page_content( $content ){
      */
     global $bpgs_main_content_filter_has_run;
 
-	if( !is_admin() && is_search() && 'yes' != $bpgs_main_content_filter_has_run ){
+	if(  bp_search_is_search() && 'yes' != $bpgs_main_content_filter_has_run ){
 			remove_filter( 'the_content', 'bp_search_search_page_content', 9 );
 			remove_filter( 'the_content', 'wpautop' );
             $bpgs_main_content_filter_has_run = 'yes';
@@ -28,6 +39,11 @@ function bp_search_search_page_content( $content ){
 	return $content;
 }
 
+/**
+ * Loads BuddyBoss Search template.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_search_load_template( $template, $variation=false ){
 	$file = $template;
 
@@ -38,6 +54,11 @@ function bp_search_load_template( $template, $variation=false ){
 	bp_get_template_part( 'search/' . $file );
 }
 
+/**
+ * BuddyBoss Search page content.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_search_buffer_template_part( $template, $variation='', $echo=true ){
 	ob_start();
 
@@ -53,10 +74,20 @@ function bp_search_buffer_template_part( $template, $variation='', $echo=true ){
 	}
 }
 
+/**
+ * Output BuddyBoss Search subnavigation tabs.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_search_filters(){
 	BP_Search::instance()->print_tabs();
 }
 
+/**
+ * Output BuddyBoss Search results for current subnavigation selection.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_search_results(){
 	BP_Search::instance()->print_results();
 }

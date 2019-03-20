@@ -71,6 +71,11 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 			), $topic_link, (int) $total_items, $text, $topic_title );
 		}
 
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action( 'bbp_format_buddypress_notifications', $action, $item_id, $secondary_item_id, $total_items );
 
 		return $return;

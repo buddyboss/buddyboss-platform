@@ -20,7 +20,7 @@ class BP_Admin_Setting_Invites extends BP_Admin_Setting_tab {
 	public function initialize() {
 		$this->tab_label = __( 'Invites', 'buddyboss' );
 		$this->tab_name  = 'bp-invites';
-		$this->tab_order = 15;
+		$this->tab_order = 35;
 	}
 
 	//Check if invites are enabled
@@ -30,7 +30,7 @@ class BP_Admin_Setting_Invites extends BP_Admin_Setting_tab {
 
 	//Register setting fields
 	public function register_fields() {
-		$this->add_section( 'bp_invites', __( 'User Invites Settings', 'buddyboss' ) );
+		$this->add_section( 'bp_invites', __( 'Email Invites Settings', 'buddyboss' ) );
 
 		// Allow members to change the email subject.
 		$this->add_field( 'bp-disable-invite-member-email-subject', __( 'Email Subject', 'buddyboss' ), 'bp_admin_setting_callback_member_invite_email_subject', 'intval' );

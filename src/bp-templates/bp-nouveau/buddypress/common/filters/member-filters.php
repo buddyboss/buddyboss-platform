@@ -46,7 +46,7 @@ if ( isset( $display_arr ) && !empty( $display_arr )) {
 				<span ><?php bp_nouveau_filter_label(); ?></span>
 			</label>
 			<div class="select-wrap">
-				<select id="member-type-order-by" data-bp-filter="members">
+				<select id="member-type-order-by" data-bp-member-type-filter="members">
 					<option value=""><?php _e( 'All Types', 'buddyboss' ); ?></option><?php
 					foreach ( $display_arr as $member ) {
 						//@todo variable in textdomain ?>

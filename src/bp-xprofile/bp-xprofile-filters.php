@@ -641,7 +641,20 @@ function xprofile_filter_field_edit_name ( $field_name ) {
     return $field_name;
 }
 
-function bp_xprofile_validate_nickname_value( $retval, $field_id, $vlaue, $user_id = null ) {
+/**
+ * Validate nickname approved characters and format.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @global $wpdb
+ *
+ * @param $retval
+ * @param string $field_name
+ * @param string $value
+ * @param string $user_id
+ * @return $retval
+ */
+function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_id = null ) {
 	if ( $field_id != bp_xprofile_nickname_field_id() ) {
 		return $retval;
 	}
@@ -650,25 +663,25 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $vlaue, $user_
 		return $retval;
 	}
 
-	$value = strtolower( $vlaue );
+	$value = strtolower( $value );
 	$field_name = xprofile_get_field( $field_id )->name;
 
 	// Empty nickname
-	if ( '' === trim( $vlaue ) ) {
+	if ( '' === trim( $value ) ) {
 		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
 	}
 
 	// only alpha numeric, underscore, dash
-	if ( ! preg_match( '/^([A-Za-z0-9-_\.]+)$/', $vlaue ) ) {
+	if ( ! preg_match( '/^([A-Za-z0-9-_\.]+)$/', $value ) ) {
 		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name );
 	}
 
 	// cannot have 2 continued special characters
-	if ( preg_match( '/([-_\.]{2})/', $vlaue ) ) {
+	if ( preg_match( '/([-_\.]{2})/', $value ) ) {
 		return sprintf( __( '"-", "_" and "." cannot be repeated twice in %s.', 'buddyboss' ), $field_name );
 	}
 
-	// must be shorter then 20 characters
+	// must be shorter then 32 characters
 	$nickname_length = apply_filters( 'xprofile_nickname_max_length', 32 );
 	if ( strlen( $value ) > $nickname_length ) {
 		return sprintf( __( '%s must be shorter than %d characters.', 'buddyboss' ), $field_name, $nickname_length );
@@ -760,6 +773,11 @@ function bp_xprofile_validate_phone_value( $retval, $field_id, $value, $user_id 
 	return sprintf( __( 'Enter valid %s', 'buddyboss' ), $field_name );
 }
 
+/**
+ * Change member display_name for current_user.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_xprofile_adjust_current_user_display_name() {
 	global $current_user;
 
@@ -770,6 +788,11 @@ function bp_xprofile_adjust_current_user_display_name() {
 	$current_user->data->display_name = bp_custom_display_name_format( $current_user->data->display_name, $current_user->ID );
 }
 
+/**
+ * Change member display_name for user_metadata.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_xprofile_adjust_display_name( $null, $object_id, $meta_key ) {
 	if ( $meta_key != 'display_name' ) {
 		return $null;
@@ -778,15 +801,30 @@ function bp_xprofile_adjust_display_name( $null, $object_id, $meta_key ) {
 	return bp_custom_display_name_format( $null, $object_id );
 }
 
+/**
+ * Change member display_name for author.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_xprofile_adjust_author_display_name( $display_name, $user_id ) {
 	return bp_custom_display_name_format( $display_name, $user_id );
 }
 
+/**
+ * Change display_name for core_userdata.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_xprofile_adjust_display_user_display_name( $userdata ) {
 	$userdata->display_name = bp_custom_display_name_format( $userdata->display_name, $userdata->ID );
 	return $userdata;
 }
 
+/**
+ * Change display_name for admin areas.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_xprofile_replace_username_to_display_name( $email_content, $user = null ) {
 	if ( ! $user || ! is_a( $user, 'WP_User' ) ) {
 		$user = wp_get_current_user()->to_array();

@@ -69,7 +69,6 @@ class BP_Embed extends WP_Embed {
 	 * enabled, then the URL will be passed to {@link BP_Embed::parse_oembed()}
 	 * for oEmbed parsing.
 	 *
-	 *
 	 * @param array  $attr Shortcode attributes.
 	 * @param string $url  The URL attempting to be embeded.
 	 * @return string The embed HTML on success, otherwise the original URL.
@@ -241,5 +240,40 @@ class BP_Embed extends WP_Embed {
 
 		// Still unknown.
 		return $this->maybe_make_link( $url );
+	}
+
+	/**
+	 * Passes any unlinked URLs that are on their own line to WP_Embed::shortcode() for potential embedding.
+	 *
+	 * @see WP_Embed::autoembed_callback()
+	 *
+	 * @param string $content The content to be searched.
+	 * @return string Potentially modified $content.
+	 */
+	public function autoembed( $content ) {
+		// Replace line breaks from all HTML elements with placeholders.
+		$content = wp_replace_in_html_tags( $content, array( "\n" => '<!-- wp-line-break -->' ) );
+		$old_content = $content;
+		if ( preg_match( '#(^|\s|>)https?://#i', $content ) ) {
+
+			$url = '@(http(s)?)?(://)?(([a-zA-Z])([-\w]+\.)+([^\s\.]+[^\s]*)+[^,.\s])@';
+			$content = preg_replace($url, '<p>$0</p>', $content);
+
+
+			// Find URLs on their own line.
+			$content = preg_replace_callback( '|^(\s*)(https?://[^\s<>"]+)(\s*)$|im', array( $this, 'autoembed_callback' ), $content );
+			// Find URLs in their own paragraph.
+			$content = preg_replace_callback( '|(<p(?: [^>]*)?>\s*)(https?://[^\s<>"]+)(\s*<\/p>)|i', array( $this, 'autoembed_callback' ), $content );
+		}
+
+
+		if (strpos($content,'<iframe') !== false) {
+
+		} else {
+			$content = $old_content;
+		}
+
+		// Put the line breaks back.
+		return str_replace( '<!-- wp-line-break -->', "\n", $content );
 	}
 }

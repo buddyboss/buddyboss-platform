@@ -7,7 +7,7 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /** Sections ******************************************************************/
 
@@ -764,7 +764,7 @@ function bbp_admin_setting_callback_replies_per_rss_page() {
 function bbp_admin_setting_callback_root_slug_section() {
 
 	// Flush rewrite rules when this section is saved
-	if ( isset( $_GET['settings-updated'] ) && isset( $_GET['page'] ) )
+	if ( isset( $_GET['edited'] ) && isset( $_GET['page'] ) )
 		flush_rewrite_rules(); ?>
 
 	<p><?php esc_html_e( 'Customize your Forums directory. Use Shortcodes for more flexibility.', 'buddyboss' ); ?></p>
@@ -1309,8 +1309,14 @@ function bbp_converter_settings() {
 ?>
 
 	<div class="wrap">
-
-		<h2 class="nav-tab-wrapper"><?php bbp_tools_admin_tabs( esc_html__( 'Import Forums', 'buddyboss' ) ); ?></h2>
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddypress' ) ); ?></h2>
+		<div class="nav-settings-subsubsub">
+			<ul class="subsubsub">
+				<?php bp_core_tools_settings_admin_tabs(); ?>
+			</ul>
+		</div>
+	</div>
+	<div class="wrap">
 
 		<form action="#" method="post" id="bbp-converter-settings">
 

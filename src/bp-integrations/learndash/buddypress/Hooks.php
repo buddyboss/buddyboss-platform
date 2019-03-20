@@ -1,14 +1,38 @@
 <?php
+/**
+ * BuddyBoss LearnDash integration hooks class.
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */
 
 namespace Buddyboss\LearndashIntegration\Buddypress;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * @todo add title/description
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class Hooks
 {
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
 		add_action('bp_ld_sync/init', [$this, 'init']);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function init() {
 		// add some helpful missing hooks
 		add_action( 'groups_create_group', [ $this, 'groupCreated' ] );
@@ -24,6 +48,11 @@ class Hooks
 		add_action( 'bp_ld_sync/export_report_column', [ $this, 'export_report_column' ], 10, 2 );
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function export_report_column( $columns, $report_generator ) {
 		if ( ! empty( $report_generator->args['step'] ) && in_array( $report_generator->args['step'], array( 'forum' ) ) ) {
 			$columns['status'] = $report_generator->column( 'status' );
@@ -32,26 +61,51 @@ class Hooks
 		return $columns;
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function groupCreated($groupId)
 	{
 		do_action('bp_ld_sync/buddypress_group_created', $groupId);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function groupUpdated($groupId)
 	{
 		do_action('bp_ld_sync/buddypress_group_updated', $groupId);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function groupDeleting($groupId)
 	{
 		do_action('bp_ld_sync/buddypress_group_deleting', $groupId);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function groupDeleted($groupId)
 	{
 		do_action('bp_ld_sync/buddypress_group_deleted', $groupId);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function groupMemberAdded($groupMemberObject)
 	{
 		if (! $groupMemberObject->is_confirmed) {
@@ -76,6 +130,11 @@ class Hooks
 		return do_action('bp_ld_sync/buddypress_group_member_added', $groupId, $memberId, $groupMemberObject);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function groupMemberRemoved($groupMemberObject)
 	{
 		$groupId = $groupMemberObject->group_id;

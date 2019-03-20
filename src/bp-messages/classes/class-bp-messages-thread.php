@@ -399,7 +399,7 @@ class BP_Messages_Thread {
 				WHERE thread_id = %d
 				AND id > %d
 				AND date_sent > %s
-				AND date_sent < %s
+				AND date_sent <= %s
 				ORDER BY date_sent DESC, id DESC
 				LIMIT %d
 			", $thread_id, $last_deleted_id, $last_deleted_timestamp, $before, $perpage ) );

@@ -3,7 +3,7 @@
  * Deprecated Functions
  *
  * @package BuddyBoss\Core
- * @deprecated 1.6.0
+ * @deprecated BuddyPress 1.6.0
  */
 
 // Exit if accessed directly
@@ -12,56 +12,72 @@ defined( 'ABSPATH' ) || exit;
 /** Toolbar functions *********************************************************/
 
 /**
- * @deprecated 1.6.0
+ * bp_admin_bar_remove_wp_menus()
+ *
+ * @deprecated BuddyPress 1.6.0
  */
 function bp_admin_bar_remove_wp_menus() {
 	_deprecated_function( __FUNCTION__, '1.6' );
 }
 
 /**
- * @deprecated 1.6.0
+ * bp_admin_bar_root_site()
+ *
+ * @deprecated BuddyPress 1.6.0
  */
 function bp_admin_bar_root_site() {
 	_deprecated_function( __FUNCTION__, '1.6' );
 }
 
 /**
- * @deprecated 1.6.0
+ * bp_admin_bar_my_sites_menu()
+ *
+ * @deprecated BuddyPress 1.6.0
  */
 function bp_admin_bar_my_sites_menu() {
 	_deprecated_function( __FUNCTION__, '1.6' );
 }
 
 /**
- * @deprecated 1.6.0
+ * bp_admin_bar_comments_menu( $wp_admin_bar = '' )
+ *
+ * @deprecated BuddyPress 1.6.0
  */
 function bp_admin_bar_comments_menu( $wp_admin_bar = '' ) {
 	_deprecated_function( __FUNCTION__, '1.6' );
 }
 
 /**
- * @deprecated 1.6.0
+ * bp_admin_bar_appearance_menu()
+ *
+ * @deprecated BuddyPress 1.6.0
  */
 function bp_admin_bar_appearance_menu() {
 	_deprecated_function( __FUNCTION__, '1.6' );
 }
 
 /**
- * @deprecated 1.6.0
+ * bp_admin_bar_updates_menu()
+ *
+ * @deprecated BuddyPress 1.6.0
  */
 function bp_admin_bar_updates_menu() {
 	_deprecated_function( __FUNCTION__, '1.6' );
 }
 
 /**
- * @deprecated 1.6.0
+ * bp_members_admin_bar_my_account_logout()
+ *
+ * @deprecated BuddyPress 1.6.0
  */
 function bp_members_admin_bar_my_account_logout() {
 	_deprecated_function( __FUNCTION__, '1.6' );
 }
 
 /**
- * @deprecated 1.6.0
+ * bp_core_is_user_deleted( $user_id = 0 )
+ *
+ * @deprecated BuddyPress 1.6.0
  */
 function bp_core_is_user_deleted( $user_id = 0 ) {
 	_deprecated_function( __FUNCTION__, '1.6' );
@@ -69,7 +85,9 @@ function bp_core_is_user_deleted( $user_id = 0 ) {
 }
 
 /**
- * @deprecated 1.6.0
+ * bp_core_is_user_spammer( $user_id = 0 )
+ *
+ * @deprecated BuddyPress 1.6.0
  */
 function bp_core_is_user_spammer( $user_id = 0 ) {
 	_deprecated_function( __FUNCTION__, '1.6' );
@@ -82,7 +100,9 @@ function bp_core_is_user_spammer( $user_id = 0 ) {
  */
 
 /**
- * @deprecated 1.6.0
+ * bp_blogs_manage_comment( $comment_id, $comment_status )
+ *
+ * @deprecated BuddyPress 1.6.0
  * @deprecated No longer used; see bp_activity_transition_post_type_comment_status()
  */
 function bp_blogs_manage_comment( $comment_id, $comment_status ) {
@@ -94,7 +114,9 @@ function bp_blogs_manage_comment( $comment_id, $comment_status ) {
  */
 
 /**
- * @deprecated 1.6.0
+ * bp_core_add_admin_menu()
+ *
+ * @deprecated BuddyPress 1.6.0
  * @deprecated No longer used; see BP_Admin::admin_menus()
  */
 function bp_core_add_admin_menu() {
@@ -102,7 +124,9 @@ function bp_core_add_admin_menu() {
 }
 
 /**
- * @deprecated 1.6.0
+ * bp_core_add_ajax_hook()
+ *
+ * @deprecated BuddyPress 1.6.0
  * @deprecated No longer used. We do ajax properly now.
  */
 function bp_core_add_ajax_hook() {
@@ -116,7 +140,7 @@ function bp_core_add_ajax_hook() {
 /**
  * Displays Connections header tabs
  *
- * @deprecated 1.6.0
+ * @deprecated BuddyPress 1.6.0
  * @deprecated No longer used
  */
 function bp_friends_header_tabs() {
@@ -134,7 +158,7 @@ function bp_friends_header_tabs() {
 /**
  * Filters the title for the Connections component
  *
- * @deprecated 1.6.0
+ * @deprecated BuddyPress 1.6.0
  * @deprecated No longer used
  */
 function bp_friends_filter_title() {
@@ -159,7 +183,9 @@ function bp_friends_filter_title() {
 /** Groups functions **********************************************************/
 
 /**
- * @deprecated 1.6.0
+ * groups_check_group_exists( $group_slug )
+ *
+ * @deprecated BuddyPress 1.6.0
  * @deprecated Renamed to groups_get_id() for greater consistency
  */
 function groups_check_group_exists( $group_slug ) {
@@ -172,7 +198,7 @@ function groups_check_group_exists( $group_slug ) {
 /**
  * Loads admin panel styles and scripts.
  *
- * @deprecated 1.6.0
+ * @deprecated BuddyPress 1.6.0
  */
 function bp_core_add_admin_menu_styles() {
 	_deprecated_function( __FUNCTION__, '1.6' );
@@ -181,7 +207,9 @@ function bp_core_add_admin_menu_styles() {
 /** Activity functions ********************************************************/
 
 /**
- * @deprecated 1.6.0
+ * updates_register_activity_actions()
+ *
+ * @deprecated BuddyPress 1.6.0
  */
 function updates_register_activity_actions() {
 	_deprecated_function( __FUNCTION__, '1.6' );
@@ -190,7 +218,7 @@ function updates_register_activity_actions() {
 /**
  * Sets the "From" address in emails sent
  *
- * @deprecated 1.6.0
+ * @deprecated BuddyPress 1.6.0
  * @return string email address
  */
 function bp_core_email_from_address_filter() {

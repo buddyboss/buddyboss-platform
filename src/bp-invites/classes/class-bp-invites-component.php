@@ -211,7 +211,7 @@ class BP_Invites_Component extends BP_Component {
 				$user_domain = false;
 			}
 
-			$nav_name = __( 'Send Invites', 'buddyboss' );
+			$nav_name = __( 'Email Invites', 'buddyboss' );
 
 			$slug = bp_get_invites_slug();
 
@@ -233,7 +233,7 @@ class BP_Invites_Component extends BP_Component {
 
 					// Add the Invite by Email nav item.
 					$sub_nav[] = array(
-						'name'            => __( 'Send Invite', 'buddyboss' ),
+						'name'            => __( 'Send Invites', 'buddyboss' ),
 						'slug'            => 'send-invites',
 						'parent_url'      => $invites_link,
 						'parent_slug'     => $slug,
@@ -294,7 +294,7 @@ class BP_Invites_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-invites',
-				'title'    => __( 'Send Invite', 'buddyboss' ),
+				'title'    => __( 'Send Invites', 'buddyboss' ),
 				'href'     => $invites_link,
 				'position' => 10
 			);
@@ -332,28 +332,27 @@ class BP_Invites_Component extends BP_Component {
 	public function register_post_types() {
 
 		// Register invite custom post type.
-		register_post_type(
-			bp_get_invite_post_type(),
-			apply_filters( 'bp_invite_post_type', array(
-				'description'        => __( 'BuddyBoss Invites', 'buddyboss' ),
-				'labels'             => bp_get_invite_post_type_labels(),
-				'public'             => false,
-				'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),
-				'query_var'          => false,
-				'rewrite'            => false,
-				'show_in_admin_bar'  => false,
-				'show_in_menu'       => true,
-				'map_meta_cap'       => true,
-				'menu_icon'          => 'dashicons-email',
-				//'menu_position'      => 27,
-				'show_in_rest'       => true,
-				'capabilities' => array(
-					'create_posts' => 'do_not_allow', // false < WP 4.5, credit @Ewout
-				),
-				'show_ui'            => bp_current_user_can( 'bp_moderate' ),
-				'supports'           => bp_get_invite_post_type_supports(),
-			) )
-		);
+		register_post_type( bp_get_invite_post_type(),
+			apply_filters( 'bp_invite_post_type',
+				array(
+					'description'        => __( 'BuddyBoss Invites', 'buddyboss' ),
+					'labels'             => bp_get_invite_post_type_labels(),
+					'public'             => false,
+					'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),
+					'query_var'          => false,
+					'rewrite'            => false,
+					'show_in_admin_bar'  => false,
+					'show_in_menu'       => false,
+					'map_meta_cap'       => true,
+					'menu_icon'          => 'dashicons-email',
+					//'menu_position'      => 27,
+					'show_in_rest'       => true,
+					'capabilities'       => array(
+						'create_posts' => 'do_not_allow', // false < WP 4.5, credit @Ewout
+					),
+					'show_ui'            => bp_current_user_can( 'bp_moderate' ),
+					'supports'           => bp_get_invite_post_type_supports(),
+				) ) );
 
 		parent::register_post_types();
 	}

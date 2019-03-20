@@ -171,7 +171,6 @@ class BP_Attachment_Avatar extends BP_Attachment {
 	 *
 	 * @since BuddyPress 2.3.0
 	 *
-	 *
 	 * @param string $file the absolute path to the file.
 	 * @return bool
 	 */

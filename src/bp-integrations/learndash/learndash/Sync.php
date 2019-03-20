@@ -1,18 +1,44 @@
 <?php
+/**
+ * @todo add description
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
+
+
 namespace Buddyboss\LearndashIntegration\Learndash;
 
 use Buddyboss\LearndashIntegration\Library\SyncGenerator;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * @todo add title/description
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class Sync
 {
 	// temporarily hold the synced learndash group id just before delete
 	protected $deletingSyncedBpGroupId;
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
 		add_action('bp_ld_sync/init', [$this, 'init']);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function init()
 	{
 		add_action('bp_ld_sync/learndash_group_updated', [$this, 'onGroupUpdated']);
@@ -26,11 +52,21 @@ class Sync
 		add_action('bp_ld_sync/learndash_group_user_removed', [$this, 'onUserRemoved'], 10, 2);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function generator($bpGroupId = null, $ldGroupId = null)
 	{
 		return new SyncGenerator($bpGroupId, $ldGroupId);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function onGroupUpdated( $groupId ) {
 		if ( ! $this->preCheck() ) {
 			return false;
@@ -63,6 +99,11 @@ class Sync
 		$generator->associateToBuddypress( $newGroup )->syncLdAdmins()->syncLdUsers();
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function onGroupDeleting($groupId)
 	{
 		if (! $this->preCheck()) {
@@ -72,6 +113,11 @@ class Sync
 		$this->deletingSyncedBpGroupId = $this->generator(null, $groupId)->getBpGroupId();
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function onGroupDeleted($groupId)
 	{
 		if (! $bpGroupId = $this->deletingSyncedBpGroupId) {
@@ -88,6 +134,11 @@ class Sync
 		$this->generator()->deleteBpGroup($bpGroupId);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function onAdminAdded($groupId, $userId)
 	{
 		if (! $generator = $this->groupUserEditCheck('admin', $groupId)) {
@@ -97,6 +148,11 @@ class Sync
 		$generator->syncLdAdmin($userId);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function onUserAdded($groupId, $userId)
 	{
 		if (! $generator = $this->groupUserEditCheck('user', $groupId)) {
@@ -106,6 +162,11 @@ class Sync
 		$generator->syncLdUser($userId);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function onAdminRemoved($groupId, $userId)
 	{
 		if (! $generator = $this->groupUserEditCheck('admin', $groupId)) {
@@ -115,6 +176,11 @@ class Sync
 		$generator->syncLdAdmin($userId, true);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function onUserRemoved($groupId, $userId)
 	{
 		if (! $generator = $this->groupUserEditCheck('user', $groupId)) {
@@ -124,6 +190,11 @@ class Sync
 		$generator->syncLdUser($userId, true);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function groupUserEditCheck($role, $groupId)
 	{
 		if (! $this->preCheck()) {
@@ -143,6 +214,11 @@ class Sync
 		return $generator;
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function preCheck()
 	{
 		global $bp_ld_sync__syncing_to_learndash;

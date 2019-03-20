@@ -63,9 +63,9 @@ function bp_register_invite_type_sections_filters_actions() {
  */
 function bp_invite_add_column( $columns ) {
 
-	$columns['inviter'] = __( 'Inviter', 'buddyboss' );
-	$columns['invitee_name'] = __( 'Invitee Name', 'buddyboss' );
-	$columns['invitee_email'] = __( 'Invitee Email', 'buddyboss' );
+	$columns['inviter'] = __( 'Sender', 'buddyboss' );
+	$columns['invitee_name'] = __( 'Recipient Name', 'buddyboss' );
+	$columns['invitee_email'] = __( 'Recipient Email', 'buddyboss' );
 	$columns['date_invited'] = __( 'Date Invited', 'buddyboss' );
 	$columns['status'] = __( 'Status', 'buddyboss' );
 
@@ -92,8 +92,8 @@ function bp_invite_show_data( $column, $post_id  ) {
 			$inviter_link = bp_core_get_user_domain( $author_id );
 			$inviter_name = bp_core_get_user_displayname( $author_id );
 			printf(
-				'<a href="%s">%s</a>',
-				esc_url( $inviter_link ), $inviter_name
+				'<strong>%s<a href="%s">%s</a></strong>',
+				get_avatar( $author_id, '32' ),esc_url( $inviter_link ), $inviter_name
 			);
 
 			break;
@@ -118,7 +118,7 @@ function bp_invite_show_data( $column, $post_id  ) {
 			break;
 
 		case 'status':
-			$title = ( '1' === get_post_meta( $post_id, '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Revoke Invite', 'buddyboss' );
+			$title = ( '1' === get_post_meta( $post_id, '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Pending &ndash; Revoke Invite', 'buddyboss' );
 			if ( '1' === get_post_meta( $post_id, '_bp_invitee_status', true ) ) {
 				printf(
 					'<a href="javascript:void(0);">%s</a>',
@@ -248,7 +248,7 @@ function bp_invite_hide_quick_edit( $actions, $post ) {
 
 	if ( bp_get_invite_post_type() == $post->post_type ) {
 
-		// Inviter author id
+		// Sender author id
 		$author_id = get_post_field ('post_author', $post->ID );
 
 		// Build edit links URL.
@@ -398,3 +398,23 @@ function bp_invites_js_bulk_admin_footer() {
 		<?php
 	}
 }
+
+/**
+ * Register the Invites component in BuddyBoss > Invites admin screen.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_invites_add_admin_menu() {
+
+	// Add our screen.
+	$hook = add_submenu_page(
+		'buddyboss-platform',
+		__( 'Invites', 'buddyboss' ),
+		__( 'Invites', 'buddyboss' ),
+		'bp_moderate',
+		'edit.php?post_type=' . bp_get_invite_post_type(),
+		''
+	);
+
+}
+add_action( bp_core_admin_hook(), 'bp_invites_add_admin_menu', 65 );

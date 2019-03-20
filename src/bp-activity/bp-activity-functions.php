@@ -3065,7 +3065,6 @@ function bp_activity_delete( $args = '' ) {
 	 * @since BuddyPress 1.1.0
 	 * @deprecated 1.2.0
 	 *
-	 *
 	 * @param array|string $args See BP_Activity_Activity::get for a
 	 *                           description of accepted arguments.
 	 * @return bool True on success, false on failure.
@@ -3088,7 +3087,6 @@ function bp_activity_delete( $args = '' ) {
 	 *
 	 * @since BuddyPress 1.1.0
 	 *
-	 *
 	 * @param int $activity_id ID of the activity item to be deleted.
 	 * @return bool True on success, false on failure.
 	 */
@@ -3103,7 +3101,6 @@ function bp_activity_delete( $args = '' ) {
 	 *
 	 * @since BuddyPress 1.1.0
 	 * @deprecated 1.2.0
-	 *
 	 *
 	 * @param int    $user_id   The user id.
 	 * @param string $content   The activity id.
@@ -3127,7 +3124,6 @@ function bp_activity_delete( $args = '' ) {
 	 *
 	 * @since BuddyPress 1.1.0
 	 * @deprecated 1.2.0
-	 *
 	 *
 	 * @param int    $user_id   The user id.
 	 * @param string $component The activity component.
@@ -3215,7 +3211,6 @@ function bp_activity_delete_comment( $activity_id, $comment_id ) {
 	 * Delete an activity comment's children.
 	 *
 	 * @since BuddyPress 1.2.0
-	 *
 	 *
 	 * @param int $activity_id The ID of the "root" activity, ie the
 	 *                         comment's oldest ancestor.
@@ -3525,7 +3520,12 @@ function bp_activity_create_summary( $content, $activity ) {
 
 	// If we converted $content to an object earlier, flip it back to a string.
 	if ( is_a( $content, 'WP_Post' ) ) {
-		$content = $content->post_content;
+
+		// For the post and custom post type get the excerpt first.
+		$excerpt = get_the_excerpt( $content->ID );
+
+		// Get the excerpt first if found otherwise it will take the post content.
+		$content = ( $excerpt )?:$content->post_content;
 	}
 
 	$para_count     = substr_count( strtolower( wpautop( $content ) ), '<p>' );
@@ -3944,8 +3944,6 @@ function bp_activity_new_comment_notification( $comment_id = 0, $commenter_id = 
 
 /**
  * Return if the activity stream should show activty comments as streamed or threaded
- *
- *
  */
 function bp_show_streamed_activity_comment() {
 	return apply_filters( 'bp_show_streamed_activity_comment', bp_get_option('show_streamed_activity_comment', false) );
@@ -4164,6 +4162,27 @@ function bp_ajax_get_suggestions() {
 	wp_send_json_success( $results );
 }
 add_action( 'wp_ajax_bp_get_suggestions', 'bp_ajax_get_suggestions' );
+
+/**
+ * AJAX endpoint for activity comments.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_ajax_get_comments() {
+	if ( empty( $_GET['activity_id'] ) ) {
+		exit;
+	}
+
+	if ( bp_has_activities( 'include=' . $_GET['activity_id'] ) ) {
+		while ( bp_activities() ) {
+			bp_the_activity();
+			bp_nouveau_activity_comments();
+			exit;
+		}
+	}
+}
+
+add_action( 'wp_ajax_bp_get_comments', 'bp_ajax_get_comments' );
 
 /**
  * Detect a change in post type status, and initiate an activity update if necessary.
@@ -4442,6 +4461,11 @@ function bp_stop_following( $args = '' ) {
 		return false;
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	do_action_ref_array( 'bp_stop_following', array( &$follow ) );
 
 	return true;
@@ -4565,12 +4589,412 @@ function bp_total_follow_counts( $args = '' ) {
  * @uses BP_Activity_Follow::delete_all_for_user() Deletes user ID from all following / follower records
  */
 function bp_remove_follow_data( $user_id ) {
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	do_action( 'bp_before_remove_follow_data', $user_id );
 
 	BP_Activity_Follow::delete_all_for_user( $user_id );
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	do_action( 'bp_remove_follow_data', $user_id );
 }
 add_action( 'wpmu_delete_user',	'bp_remove_follow_data' );
 add_action( 'delete_user',	'bp_remove_follow_data' );
 add_action( 'make_spam_user',	'bp_remove_follow_data' );
+
+/**
+ * Update the custom post type activity feed after the attachment attached to that particular custom post type.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $post_id
+ * @param $post
+ * @param $update
+ */
+function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update ) {
+
+	// check is WP_Post if not then return
+	if ( ! is_a( $post, 'WP_Post' ) ) {
+		return;
+	}
+
+	if ( 'post' === $post->post_type ) {
+		return;
+	}
+
+	$enabled = bp_is_post_type_feed_enable( $post->post_type );
+
+	// If enabled update the activity.
+	if ( $enabled  ) {
+
+		// Get the post type tracking args.
+		$activity_post_object = bp_activity_get_post_type_tracking_args( $post->post_type );
+
+		if ( empty( $activity_post_object->action_id ) ) {
+			return;
+		}
+
+		// Get the existing activity id based on the post.
+		$activity_id = bp_activity_get_activity_id( array(
+			'component'         => $activity_post_object->component_id,
+			'item_id'           => get_current_blog_id(),
+			'secondary_item_id' => $post->ID,
+			'type'              => $activity_post_object->action_id,
+		) );
+
+		// Activity ID doesn't exist, so stop!
+		if ( empty( $activity_id ) ) {
+			return;
+		}
+
+		// Delete the activity if the post was updated with a password.
+		if ( ! empty( $post->post_password ) ) {
+			bp_activity_delete( array( 'id' => $activity_id ) );
+		}
+
+		// Update the activity entry.
+		$activity = new BP_Activity_Activity( $activity_id );
+
+		// get the excerpt first of post.
+		$excerpt = get_the_excerpt( $post->ID );
+
+		// if excert found then take content as a excerpt otherwise take the content as a post content.
+		$content = ( $excerpt ) ?: $post->post_content;
+
+		// If content not empty.
+		if ( ! empty( $content ) ) {
+			$activity_summary = bp_activity_create_summary( $content, (array) $activity );
+
+			$src = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full', false );
+
+			if ( isset( $src[0] ) ) {
+				$activity_summary .= sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+			}
+			// Backward compatibility filter for the blogs component.
+			if ( 'blogs' == $activity_post_object->component_id ) {
+				$activity->content = apply_filters( 'bp_update_activity_feed_of_custom_post_content',
+					$activity_summary,
+					$content,
+					(array) $activity,
+					$post->post_type );
+			} else {
+				$activity->content = $activity_summary;
+			}
+		} else {
+
+			$src              = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full', false );
+			$activity_summary = '';
+			if ( isset( $src[0] ) ) {
+				$activity_summary = sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+			}
+
+			// Backward compatibility filter for the blogs component.
+			if ( 'blogs' == $activity_post_object->component_id ) {
+				$activity->content = apply_filters( 'bp_update_activity_feed_of_custom_post_content',
+					$activity_summary,
+					$post->post_content,
+					(array) $activity,
+					$post->post_type );
+			} else {
+				$activity->content = $activity_summary;
+			}
+		}
+
+		// Save the updated activity.
+		$updated = $activity->save();
+
+	}
+
+}
+add_action( 'save_post', 'bp_update_activity_feed_of_custom_post_type', 88, 3 );
+
+
+/**
+ * Update the post activity feed after the attachment attached to that particular post.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $post
+ * @param $request
+ * @param $action
+ */
+function bp_update_activity_feed_of_post( $post, $request, $action ) {
+
+	// check is WP_Post if not then return
+	if ( ! is_a( $post, 'WP_Post' ) ) {
+		return;
+	}
+
+	$enabled = bp_is_post_type_feed_enable( $post->post_type );
+
+	// If enabled update the activity.
+	if ( $enabled  ) {
+
+		// Get the post type tracking args.
+		$activity_post_object = bp_activity_get_post_type_tracking_args( $post->post_type );
+
+		if ( empty( $activity_post_object->action_id ) ) {
+			return;
+		}
+
+		// Get the existing activity id based on the post.
+		$activity_id = bp_activity_get_activity_id( array(
+			'component'         => $activity_post_object->component_id,
+			'item_id'           => get_current_blog_id(),
+			'secondary_item_id' => $post->ID,
+			'type'              => $activity_post_object->action_id,
+		) );
+
+		// Activity ID doesn't exist, so stop!
+		if ( empty( $activity_id ) ) {
+			return;
+		}
+
+		// Delete the activity if the post was updated with a password.
+		if ( ! empty( $post->post_password ) ) {
+			bp_activity_delete( array( 'id' => $activity_id ) );
+		}
+
+		// Update the activity entry.
+		$activity = new BP_Activity_Activity( $activity_id );
+
+		// get the excerpt first of post.
+		$excerpt = get_the_excerpt( $post->ID );
+
+		// if excert found then take content as a excerpt otherwise take the content as a post content.
+		$content = ( $excerpt ) ?: $post->post_content;
+
+		// If content not empty.
+		if ( ! empty( $content ) ) {
+			$activity_summary = bp_activity_create_summary( $content, (array) $activity );
+
+			// Backward compatibility filter for the blogs component.
+			if ( 'blogs' == $activity_post_object->component_id ) {
+				$activity->content = apply_filters( 'bp_update_activity_feed_of_custom_post_content',
+					$activity_summary,
+					$content,
+					(array) $activity,
+					$post->post_type );
+			} else {
+				$activity->content = $activity_summary;
+			}
+		} else {
+
+			$src              = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full', false );
+			$activity_summary = '';
+			if ( isset( $src[0] ) ) {
+				$activity_summary = sprintf( ' <img src="%s">', esc_url( $src[0] ) );
+			}
+
+			// Backward compatibility filter for the blogs component.
+			if ( 'blogs' == $activity_post_object->component_id ) {
+				$activity->content = apply_filters( 'bp_update_activity_feed_of_custom_post_content',
+					$activity_summary,
+					$post->post_content,
+					(array) $activity,
+					$post->post_type );
+			} else {
+				$activity->content = $activity_summary;
+			}
+		}
+
+		// Save the updated activity.
+		$updated = $activity->save();
+
+	}
+
+}
+add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 );
+
+/**
+ * AJAX endpoint for link preview URL parser.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_activity_action_parse_url() {
+	require_once trailingslashit( buddypress()->plugin_dir . 'bp-activity/vendors' ) . '/website-parser/website_parser.php';
+
+	// curling
+	$json_data = array();
+	if ( class_exists( 'WebsiteParser' ) ) {
+
+		$url    = $_POST['url'];
+		$parser = new WebsiteParser( $url );
+		$body   = wp_remote_get( $url );
+
+		if ( ! is_wp_error( $body ) && isset( $body['body'] ) ) {
+
+			$title       = '';
+			$description = '';
+			$images      = array();
+
+			$parser->content = $body['body'];
+
+			$meta_tags = $parser->getMetaTags( false );
+
+			if ( is_array( $meta_tags ) && ! empty( $meta_tags ) ) {
+				foreach ( $meta_tags as $tag ) {
+					if ( is_array( $tag ) && ! empty( $tag ) ) {
+						if ( $tag[0] == 'og:title' ) {
+							$title = $tag[1];
+						}
+						if ( $tag[0] == 'og:description' ) {
+							$description = html_entity_decode( $tag[1], ENT_QUOTES, "utf-8" );
+						} elseif ( strtolower( $tag[0] ) == 'description' && $description == '' ) {
+							$description = html_entity_decode( $tag[1], ENT_QUOTES, "utf-8" );
+						}
+						if ( $tag[0] == 'og:image' ) {
+							$images[] = $tag[1];
+						}
+					}
+				}
+			}
+			if ( $title == '' ) {
+				$title = $parser->getTitle( false );
+			}
+			if ( empty( $images ) ) {
+				$images = $parser->getImageSources( false );
+			}
+			// Generate Image URL Previews
+			if ( empty( $images ) ) {
+				$content_type = wp_remote_retrieve_header( $body, 'content-type' );
+				if ( false !== strpos( $content_type, 'image' ) ) {
+					$images = array( $url );
+				}
+			}
+
+			$json_data['title']       = $title;
+			$json_data['description'] = $description;
+			$json_data['images']      = $images;
+			$json_data['error']       = '';
+		} else {
+			$json_data['error'] = 'Sorry! preview is not available right now. Please try again later.';
+		}
+	} else {
+		$json_data['error'] = 'Sorry! preview is not available right now. Please try again later.';
+	}
+
+	wp_send_json( $json_data );
+}
+
+add_action( 'wp_ajax_bp_activity_parse_url', 'bp_activity_action_parse_url' );
+
+/**
+ * Download an image from the specified URL and attach it to a post.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $file The URL of the image to download
+ *
+ * @return int|void
+ */
+function bp_activity_media_sideload_attachment( $file ) {
+	if ( empty( $file ) ) {
+		return;
+	}
+
+	// Set variables for storage, fix file filename for query strings.
+	preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png|mp4)\b/i', $file, $matches );
+	$file_array = array();
+
+	if ( empty( $matches ) ) {
+		return;
+	}
+
+	$file_array['name'] = basename( $matches[0] );
+
+	// Download file to temp location.
+	$file                   = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER["SERVER_PROTOCOL"], 0, strpos( $_SERVER["SERVER_PROTOCOL"], '/' ) ) ) . '://', $file );
+	$file_array['tmp_name'] = download_url( $file );
+
+	// If error storing temporarily, return the error.
+	if ( is_wp_error( $file_array['tmp_name'] ) ) {
+		return;
+	}
+
+	// Do the validation and storage stuff.
+	$id = bp_activity_media_handle_sideload( $file_array );
+
+	// If error storing permanently, unlink.
+	if ( is_wp_error( $id ) ) {
+		return;
+	}
+
+	return $id;
+}
+
+/**
+ * This handles a sideloaded file in the same way as an uploaded file is handled by {@link media_handle_upload()}
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param array $file_array Array similar to a {@link $_FILES} upload array
+ * @param array $post_data  allows you to overwrite some of the attachment
+ *
+ * @return int|object The ID of the attachment or a WP_Error on failure
+ */
+function bp_activity_media_handle_sideload( $file_array, $post_data = array() ) {
+
+	$overrides = array( 'test_form' => false );
+
+	$time = current_time( 'mysql' );
+	if ( $post = get_post() ) {
+		if ( substr( $post->post_date, 0, 4 ) > 0 ) {
+			$time = $post->post_date;
+		}
+	}
+
+	$file = wp_handle_sideload( $file_array, $overrides, $time );
+	if ( isset( $file['error'] ) ) {
+		return new WP_Error( 'upload_error', $file['error'] );
+	}
+
+	$url     = $file['url'];
+	$type    = $file['type'];
+	$file    = $file['file'];
+	$title   = preg_replace( '/\.[^.]+$/', '', basename( $file ) );
+	$content = '';
+
+	// Use image exif/iptc data for title and caption defaults if possible.
+	if ( $image_meta = @wp_read_image_metadata( $file ) ) {
+		if ( trim( $image_meta['title'] ) && ! is_numeric( sanitize_title( $image_meta['title'] ) ) ) {
+			$title = $image_meta['title'];
+		}
+		if ( trim( $image_meta['caption'] ) ) {
+			$content = $image_meta['caption'];
+		}
+	}
+
+	if ( isset( $desc ) ) {
+		$title = $desc;
+	}
+
+	// Construct the attachment array.
+	$attachment = array_merge( array(
+		'post_mime_type' => $type,
+		'guid'           => $url,
+		'post_title'     => $title,
+		'post_content'   => $content,
+	), $post_data );
+
+	// This should never be set as it would then overwrite an existing attachment.
+	if ( isset( $attachment['ID'] ) ) {
+		unset( $attachment['ID'] );
+	}
+
+	// Save the attachment metadata
+	$id = wp_insert_attachment( $attachment, $file );
+
+	if ( ! is_wp_error( $id ) ) {
+		wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $file ) );
+	}
+
+	return $id;
+}

@@ -59,14 +59,14 @@ p.nofields {
 /* Field group tabs */
 ul#field-group-tabs {
 	float: right;
-	padding: 0 15px 0 0;
+	padding: 0;
 	margin: 0;
+	border-right: 1px solid #e5e5e5;
 	display: none;
 }
 
 ul#field-group-tabs li {
 	float: right;
-	margin-left: 8px;
 	margin-bottom: -1px;
 }
 
@@ -79,6 +79,10 @@ ul#field-group-tabs li.ui-state-acceptable:not(.ui-state-active) a.ui-tab {
 	-moz-animation: tab-throb 2s infinite;
 	-o-animation: tab-throb 2s infinite;
 	animation: tab-throb 2s infinite;
+}
+
+ul#field-group-tabs li.ui-state-acceptable a.ui-tab {
+	margin-left: 10px;
 }
 
 ul#field-group-tabs li.drop-candidate.ui-state-acceptable:not(.ui-state-active) a.ui-tab {
@@ -96,20 +100,24 @@ ul#field-group-tabs li.drop-candidate.ui-state-acceptable:not(.ui-state-active) 
 ul#field-group-tabs li a.ui-tab {
 	font-size: 14px;
 	display: block;
-	margin-top: 3px;
-	padding: 5px 10px 6px;
+	padding: 10px 14px;
 	border: 1px solid #e5e5e5;
+	border-right: none;
 	background-color: #f5f5f5;
 	text-decoration: none;
-	color: #000;
+	color: #555;
+	font-weight: 500;
 	outline: none;
+}
+
+ul#field-group-tabs li a.ui-tab span {
+	font-size: 13px;
+	font-weight: 400;
 }
 
 /* Selected tab */
 ul#field-group-tabs li.ui-state-active a.ui-tab {
 	background-color: #fff;
-	margin-top: 0;
-	padding: 7px 10px;
 	border-bottom: 1px solid transparent;
 	color: #000;
 }
@@ -118,13 +126,12 @@ ul#field-group-tabs li.ui-state-active a.ui-tab {
 .tab-toolbar {
 	clear: right;
 	background: #fff;
-	border-width: 1px;
+	border-width: 1px 1px 0;
 	border-color: #e5e5e5;
 	border-style: solid;
 	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-	padding: 10px;
-	margin-bottom: 10px;
+	padding: 20px 20px 0;
 }
 
 .bp-option a.delete,
@@ -147,11 +154,12 @@ div.field-group {
 
 .field-group {
 	cursor: default;
-	border: 1px solid #e5e5e5;
+	border-width: 0 1px 1px;
+	border-style: solid;
+	border-color: #e5e5e5;
 	background: #fff;
 	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-	margin-top: 10px;
 	padding: 0 20px 20px;
 }
 
@@ -161,40 +169,51 @@ div.field-group {
 
 .field-group fieldset {
 	position: relative;
-	border: 1px solid #ddd;
+	border-width: 1px;
+	border-color: #d2d2d2;
+	background-color: #fafafa;
 	margin: 20px 0 0;
-	background: #fafafa;
 	padding: 10px 0 0;
+	border-radius: 3px;
 }
 
 .field-group fieldset.sortable {
 	cursor: move;
+	border-style: solid;
+	box-shadow: 0 1px 0 #d2d2d2;
+}
+
+.field-group fieldset.core {
+	border-style: dashed;
+	background-color: #fff;
 }
 
 .field-group fieldset legend {
 	position: absolute;
-	top: 10px;
-	right: 10px;
+	top: 14px;
+	right: 14px;
 	padding: 0;
 }
 
-fieldset.radio div div label,
-fieldset.checkbox div label {
-	margin-left: 20px;
+fieldset .field-name {
+	font-weight: 500;
+	font-size: 15px;
 }
 
 fieldset.clear-value {
-	margin-right: 10px;
+	margin-right: 14px;
 }
 
 fieldset div.field-wrapper {
-	padding: 25px 10px 10px;
+	padding: 29px 14px 14px;
+}
+
+fieldset span.bp-required-field-label {
+	color: #999;
 }
 
 .field-group div.actions {
 	float: none;
-	border-top: 1px solid #ddd;
-	margin: 10px 0 0;
 	padding-top: 10px;
 }
 
@@ -204,7 +223,7 @@ fieldset div.field-wrapper {
 	float: none;
 }
 
-.field-group fieldset:hover {
+.field-group fieldset:not(.core):hover {
 	border-color: #999;
 }
 
@@ -217,6 +236,7 @@ fieldset div.field-wrapper {
 .field-group fieldset.ui-sortable-placeholder {
 	border: 1px dashed #999;
 	background-color: #fff;
+	box-shadow: none;
 	visibility: visible !important;
 }
 

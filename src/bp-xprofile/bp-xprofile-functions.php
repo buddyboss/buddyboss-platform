@@ -605,6 +605,11 @@ function xprofile_check_is_required_field( $field_id ) {
 	return (bool) $retval;
 }
 
+/**
+ * Validate profile field.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function xprofile_validate_field( $field_id, $value, $UserId ) {
 	return apply_filters('xprofile_validate_field', '', $field_id, $value, $UserId );
 }
@@ -923,6 +928,11 @@ function xprofile_sync_bp_profile( &$errors, $update, &$user ) {
 }
 add_action( 'user_profile_update_errors', 'xprofile_sync_bp_profile', 20, 3 );
 
+/**
+ * Update display_name in user database.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_xprofile_update_display_name( $user_id ) {
 	wp_update_user( array(
 		'ID' => $user_id,
@@ -930,6 +940,11 @@ function bp_xprofile_update_display_name( $user_id ) {
 	) );
 }
 
+/**
+ * Validate nickname when updated and return error if invalid.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function user_profile_update_validate_nickname( &$errors, $update, &$user ) {
 	// Bail if not updating or already has error
 	if ( ! $update || $errors->get_error_codes() ) {

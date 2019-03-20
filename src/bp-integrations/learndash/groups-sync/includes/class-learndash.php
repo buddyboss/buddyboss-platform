@@ -1,13 +1,37 @@
 <?php
+/**
+ * @todo add description
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * @todo add title/description
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class LearnDash_BuddyPress_Groups_Sync_LearnDash
 {
-    public function __construct()
+    /**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function __construct()
     {
         $this->register_hooks();
     }
 
-    public function register_hooks()
+    /**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function register_hooks()
     {
     	// global $bp_learndash_requirement;
 
@@ -20,7 +44,12 @@ class LearnDash_BuddyPress_Groups_Sync_LearnDash
     }
 
 
-    public function ajax_scan_learndash_groups()
+    /**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function ajax_scan_learndash_groups()
     {
         $nonce = $this->request_value('_wpnonce');
 
@@ -38,7 +67,12 @@ class LearnDash_BuddyPress_Groups_Sync_LearnDash
         wp_send_json_success(['html' => ob_get_clean()]);
     }
 
-    public function ajax_sync_learndash_groups()
+    /**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function ajax_sync_learndash_groups()
     {
         $nonce  = $this->request_value('_wpnonce');
         $id     = $this->request_value('id');

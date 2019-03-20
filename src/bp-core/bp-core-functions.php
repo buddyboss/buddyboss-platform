@@ -1786,7 +1786,6 @@ function bp_admin_url( $path = '', $scheme = 'admin' ) {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 *
 	 * @param string $path   Optional. The sub-path under /wp-admin to be
 	 *                       appended to the admin URL.
 	 * @param string $scheme The scheme to use. Default is 'admin', which
@@ -2414,13 +2413,13 @@ function bp_core_get_components( $type = 'all' ) {
 
 	$required_components = array(
 		'members' => array(
-			'title'       => __( 'User Profiles', 'buddyboss' ),
+			'title'       => __( 'Member Profiles', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-xprofile' ) , 'admin.php' ) ),
 			'description' => __( 'Everything in a community website revolves around its members.', 'buddyboss' ),
 		),
 		'xprofile' => array(
 			'title'       => __( 'Profile Fields', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( 'users.php?page=bp-profile-setup' ),
+			'settings'    => bp_get_admin_url( 'admin.php?page=bp-profile-setup' ),
 			'description' => __( 'Customize your community with fully editable profile fields that allow members to share details about themselves.', 'buddyboss' ),
 			'default'     => true,
 		),
@@ -2433,15 +2432,15 @@ function bp_core_get_components( $type = 'all' ) {
 			'default'     => true,
 		),
 		'friends'  => array(
-			'title'       => __( 'User Connections', 'buddyboss' ),
+			'title'       => __( 'Member Connections', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-friends' ) , 'admin.php' ) ),
 			'description' => __( 'Allow members to make connections with one another and focus on those they care about most.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'invites'  => array(
-			'title'       => __( 'User Invites', 'buddyboss' ),
+			'title'       => __( 'Email Invites', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-invites' ) , 'admin.php' ) ),
-			'description' => __( 'Allow members to send email invitations for non-members to join the network.', 'buddyboss' ),
+			'description' => __( 'Allow members to send email invitations to non-members to join the network.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'messages' => array(
@@ -2869,8 +2868,8 @@ function bp_get_email_post_type_labels() {
 		'items_list'            => __( 'Email list', 'buddyboss' ),
 		'items_list_navigation' => __( 'Email list navigation', 'buddyboss' ),
 		'menu_name'             => __( 'Emails', 'buddyboss' ),
-		'name'                  => __( 'BuddyBoss Email Templates', 'buddyboss' ),
-		'new_item'              => __( 'New Email', 'buddyboss' ),
+		'name'                  => __( 'Email Notifications', 'buddyboss' ),
+		'new_item'              => __( 'New Template', 'buddyboss' ),
 		'not_found'             => __( 'No emails found', 'buddyboss' ),
 		'not_found_in_trash'    => __( 'No emails found in trash', 'buddyboss' ),
 		'search_items'          => __( 'Search Emails', 'buddyboss' ),
@@ -3249,6 +3248,7 @@ function bp_email_get_appearance_settings() {
 		'footer_text_color' => '#7F868F',
 		'footer_text_size'  => 12,
 		'highlight_color'   => '#007CFF',
+        'site_title_logo_size'  => 	150,
 		'site_title_text_color' => '#122B46',
 		'site_title_text_size'  => 	20,
 		'recipient_text_color'	=> '#7F868F',
@@ -3906,6 +3906,11 @@ function bp_strip_script_and_style_tags( $string ) {
 	return preg_replace( '@<(script|style)[^>]*?>.*?</\\1>@si', '', $string );
 }
 
+/**
+ * Check if logged in member type is allowed to send invites
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_check_member_send_invites_tab_member_type_allowed() {
 
 	// default allowed false
@@ -3913,7 +3918,7 @@ function bp_check_member_send_invites_tab_member_type_allowed() {
 
 	// Check BuddyBoss > Settings > Profiles > Enable profile types to give members unique profile fields and permission.
 	if ( true === bp_member_type_enable_disable() ) {
-		// Check BuddyBoss > Settings > User Invites > Allow users to select profile type of invitee.
+		// Check BuddyBoss > Settings > Email Invites > Allow users to select profile type of invitee.
 		if ( true === bp_disable_invite_member_type() ) {
 			$current_user = bp_loggedin_user_id();
 			$member_type = bp_get_member_type( $current_user );
@@ -3936,6 +3941,11 @@ function bp_check_member_send_invites_tab_member_type_allowed() {
 	return $allowed;
 }
 
+/**
+ * Set default pages for Privacy Policy, Terms of Service, Activate and Register
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_core_set_default_pages() {
 
 	$page_ids       = bp_core_get_directory_page_ids( 'all' );
@@ -4025,3 +4035,98 @@ function bp_get_widget_max_count_limit( $widget_class = '' ) {
 	return apply_filters( 'bp_get_widget_max_count_limit', 50, $widget_class );
 }
 
+/**
+ * Returns the active custom post type activity feed CPT array.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return array
+ */
+function bp_core_get_active_custom_post_type_feed() {
+
+	// Get site-wide all the CPT array.
+	$custom_post_types = bp_get_option( 'bp_core_admin_get_active_custom_post_type_feed', array());
+
+	$cpt_arr = array();
+	foreach ( $custom_post_types as $single_post ) {
+
+		// check custom post type feed is enabled from the BuddyBoss > Settings > Activity > Custom Post Types metabox settings.
+		$enabled = bp_is_post_type_feed_enable( $single_post );
+
+		// If enabled put in $cpt_arr
+		if ( $enabled  ) {
+			$cpt_arr[] = $single_post;
+		}
+
+	}
+
+	return $cpt_arr;
+}
+
+function bp_platform_default_activity_types() {
+
+	$activity_type = apply_filters( 'bp_platform_default_activity_types', array(
+		'0' => array(
+			'activity_name' => 'new_avatar',
+			'activity_label' => 'Member changes their profile photo'
+		),
+		'1' => array(
+			'activity_name' => 'member_profile_photo',
+			'activity_label' => 'Member changes their cover photo'
+		),
+		'2' => array(
+			'activity_name' => 'member_send_mention',
+			'activity_label' => 'Member sends an @mention'
+		),
+		'3' => array(
+			'activity_name' => 'created_group',
+			'activity_label' => 'Member creates a group'
+		),
+		'4' => array(
+			'activity_name' => 'joined_group',
+			'activity_label' => 'Member joins a group'
+		),
+		'5' => array(
+			'activity_name' => 'bbp_topic_create',
+			'activity_label' => 'Member creates a forum discussion'
+		),
+		'6' => array(
+			'activity_name' => 'bbp_reply_create',
+			'activity_label' => 'Member replies to a forum discussion'
+		),
+		'7' => array(
+			'activity_name' => 'new_blog_post',
+			'activity_label' => 'Member creates a blog post'
+		),
+		'8' => array(
+			'activity_name' => 'friendship_created',
+			'activity_label' => 'Two members become connected'
+		),
+		'9' => array(
+			'activity_name' => 'group_photo',
+			'activity_label' => 'Group changes its photo'
+		),
+		'10' => array(
+			'activity_name' => 'group_cover_photo',
+			'activity_label' => 'Group changes its cover photo'
+		),
+		'11' => array(
+			'activity_name' => 'updated_profile',
+			'activity_label' => 'Member updated their profile'
+		),
+		'12' => array(
+			'activity_name' => 'new_member',
+			'activity_label' => 'Member registered on site'
+		),
+		'13' => array(
+			'activity_name' => 'group_details_updated',
+			'activity_label' => 'Group detail updated'
+		),
+		'14' => array(
+			'activity_name' => 'new_blog_comment',
+			'activity_label' => 'New blog comment'
+		)
+	));
+
+	return $activity_type;
+}

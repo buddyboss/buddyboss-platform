@@ -61,6 +61,8 @@ function bp_nouveau_after_activity_directory_content() {
 	 * @since BuddyPress 1.5.0
 	 */
 	do_action( 'bp_after_directory_activity' );
+
+	bp_get_template_part( 'common/js-templates/activity/comments' );
 }
 
 /**
@@ -223,13 +225,13 @@ function bp_nouveau_activity_state() {
 	$favorited_users = bp_activity_get_favorite_users_tooltip_string( $activity_id );
 	?>
 	<div class="activity-state <?php echo $like_text ? 'has-likes' : '' ?> <?php echo $comment_count ? 'has-comments' : '' ?>">
-		<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo $favorited_users ?>">
-			<?php echo $like_text ?: '' ?>
-		</span>
-		<span class="ac-state-separator">
-			&middot;
-		</span>
-		<span class="comments-count"><?php echo $comment_count ? sprintf( _n( '%d Comment', '%d Comments', $comment_count, 'buddyboss' ), $comment_count ) : '' ?></span>
+		<a href="#" class="activity-state-likes">
+			<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo $favorited_users ?>"><?php echo $like_text ?: '' ?></span>
+		</a>
+		<span class="ac-state-separator">&middot;</span>
+		<a href="#" class="activity-state-comments">
+			<span class="comments-count"><?php echo $comment_count ? sprintf( _n( '%d Comment', '%d Comments', $comment_count, 'buddyboss' ), $comment_count ) : '' ?></span>
+		</a>
 	</div>
 	<?php
 }
@@ -915,9 +917,9 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 		 * If post comment / Activity comment sync is on, it's safer
 		 * to unset the comment button just before returning it.
 		 */
-		if ( ! bp_activity_can_comment_reply( bp_activity_current_comment() ) ) {
-			unset( $return['activity_comment_reply'] );
-		}
+//		if ( ! bp_activity_can_comment_reply( bp_activity_current_comment() ) ) {
+//			unset( $return['activity_comment_reply'] );
+//		}
 
 		/**
 		 * If there was an activity of the user before one af another

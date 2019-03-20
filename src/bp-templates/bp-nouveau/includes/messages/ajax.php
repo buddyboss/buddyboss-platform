@@ -37,6 +37,8 @@ add_action( 'admin_init', function() {
 }, 12 );
 
 /**
+ * AJAX send message and display error.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_messages_send_message() {
@@ -102,6 +104,8 @@ function bp_nouveau_ajax_messages_send_message() {
 }
 
 /**
+ * AJAX send message reply and display error.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_messages_send_reply() {
@@ -120,7 +124,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 
 		wp_send_json_error( $response );
 	}
-	
+
 	$thread_id = (int) $_POST['thread_id'];
 
 	if ( ! bp_current_user_can( 'bp_moderate' ) && ( ! messages_is_valid_thread( $thread_id ) || ! messages_check_thread_access( $thread_id ) ) ) {
@@ -131,6 +135,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		'thread_id' => $thread_id,
 		'subject'   => ! empty( $_POST['subject'] ) ? $_POST['subject'] : false,
 		'content'   => $_POST['content'],
+		'date_sent' => $date_sent = bp_core_current_time(),
 		'error_type' => 'wp_error',
 	) );
 
@@ -153,7 +158,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	// Override bp_current_action().
 	$bp->current_action = 'view';
 
-	bp_thread_has_messages( array( 'thread_id' => $thread_id ) );
+	bp_thread_has_messages( array( 'thread_id' => $thread_id , 'before' => $date_sent ) );
 
 	// Set current message to current key.
 	$thread_template->current_message = -1;
@@ -223,6 +228,8 @@ function bp_nouveau_ajax_messages_send_reply() {
 }
 
 /**
+ * AJAX get all user message threads.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_get_user_message_threads() {
@@ -374,6 +381,8 @@ function bp_nouveau_ajax_get_user_message_threads() {
 }
 
 /**
+ * AJAX mark message as read.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_messages_thread_read() {
@@ -404,6 +413,8 @@ function bp_nouveau_ajax_messages_thread_read() {
 }
 
 /**
+ * AJAX get messages for each thread.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_get_thread_messages() {
@@ -570,6 +581,8 @@ function bp_nouveau_ajax_get_thread_messages() {
 }
 
 /**
+ * AJAX delete entire message thread.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_delete_thread_messages() {
@@ -603,6 +616,8 @@ function bp_nouveau_ajax_delete_thread_messages() {
 }
 
 /**
+ * AJAX mark message with star.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_star_thread_messages() {
@@ -702,6 +717,8 @@ function bp_nouveau_ajax_star_thread_messages() {
 }
 
 /**
+ * AJAX mark message as read/unread
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_readunread_thread_messages() {
@@ -765,6 +782,8 @@ function bp_nouveau_ajax_readunread_thread_messages() {
 }
 
 /**
+ * AJAX dismiss sitewide notice.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_dismiss_sitewide_notice() {
@@ -813,6 +832,11 @@ function bp_nouveau_ajax_dismiss_sitewide_notice() {
 	}
 }
 
+/**
+ * AJAX load recipient list.
+ *
+ * @since BuddyPress 3.0.0
+ */
 function bp_nouveau_ajax_dsearch_recipients() {
 	if ( empty( $_GET['action'] ) ) {
 		wp_send_json_error();
@@ -850,6 +874,11 @@ function bp_nouveau_ajax_dsearch_recipients() {
 	] );
 }
 
+/**
+ * Exclude logged in member from recipients list.
+ *
+ * @since BuddyPress 3.0.0
+ */
 function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
 	if ( ! $user_query['exclude'] ) {
 		$user_query['exclude'] = [];

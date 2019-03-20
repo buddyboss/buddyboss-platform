@@ -1,14 +1,38 @@
 <?php
+/**
+ * BuddyBoss LearnDash integration courses class.
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */
 
 namespace Buddyboss\LearndashIntegration\Buddypress;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * @todo add title/description
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class Courses
 {
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
 		add_action('bp_ld_sync/init', [$this, 'init']);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function init()
 	{
 		add_action('bp_ld_sync/courses_loop/after_title', [$this, 'showUserProgress'], 10);
@@ -16,6 +40,11 @@ class Courses
 		add_action('bp_ld_sync/courses_loop/after_title', [$this, 'showCourseButton'], 30);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function showUserProgress()
 	{
 		if (! groups_is_user_member(bp_loggedin_user_id(), groups_get_current_group()->id)) {
@@ -31,6 +60,11 @@ class Courses
 		require bp_locate_template('groups/single/courses-progress.php', false, false);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function showGroupProgress()
 	{
 		$label = __('Group Progress', 'buddyboss');
@@ -38,6 +72,11 @@ class Courses
 		require bp_locate_template('groups/single/courses-progress.php', false, false);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function showCourseButton()
 	{
 		if (! is_user_logged_in()) {
@@ -48,6 +87,11 @@ class Courses
 		require bp_locate_template('groups/single/courses-view-button.php', false, false);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function getGroupCourses() {
 		$group_id  = bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( groups_get_current_group()->id );
 		$courseIds = learndash_group_enrolled_courses( $group_id );
@@ -58,6 +102,11 @@ class Courses
 		return array_map( 'get_post', apply_filters( 'bp_ld_learndash_group_enrolled_courses', $courseIds, $group_id ) );
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function getUserCourseProgress($courseId = null, $userId = null)
 	{
 		if (! $courseId) {
@@ -79,6 +128,11 @@ class Courses
 		return round($userSteps / $totalSteps * 100);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function getGroupCourseProgress($courseId = null)
 	{
 		if (! $courseId) {
@@ -104,6 +158,11 @@ class Courses
 		return round($memberSteps / ($members['count'] * $totalSteps) * 100);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function getUserCourseViewButtonLabel($userId, $courseId)
 	{
 		$label  = __('Start Course', 'buddyboss');

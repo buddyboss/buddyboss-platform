@@ -7,7 +7,7 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 if ( !class_exists( 'BBP_Replies_Admin' ) ) :
 /**
@@ -166,7 +166,7 @@ class BBP_Replies_Admin {
 			'title'		=> __( 'Bulk Actions', 'buddyboss' ),
 			'content'	=>
 				'<p>' . __( 'You can also edit or move multiple replies to the trash at once. Select the replies you want to act on using the checkboxes, then select the action you want to take from the Bulk Actions menu and click Apply.',           'buddyboss' ) . '</p>' .
-				'<p>' . __( 'When using Bulk Edit, you can change the metadata (categories, author, etc.) for all selected replies at once. To remove a reply from the grouping, just click the x next to its name in the Bulk Edit area that appears.', 'buddyboss' ) . '</p>'
+				'<p>' . __( 'When using Bulk Edit, you can change the status (Published, Private, etc.) for all selected replies at once. To remove a reply from the grouping, just click the x next to its name in the Bulk Edit area that appears.', 'buddyboss' ) . '</p>'
 		) );
 
 		// Help Sidebar
@@ -716,7 +716,10 @@ class BBP_Replies_Admin {
 		if ( $this->bail() ) return $actions;
 
 		unset( $actions['inline hide-if-no-js'] );
-
+		
+		//simple hack to show the reply content
+		bbp_reply_content( $reply->ID );
+		
 		// Reply view links to topic
 		$actions['view'] = '<a href="' . esc_url( bbp_get_reply_url( $reply->ID ) ) . '" title="' . esc_attr( sprintf( __( 'View "%s"', 'buddyboss' ), bbp_get_reply_title( $reply->ID ) ) ) . '" rel="permalink">' . esc_html__( 'View', 'buddyboss' ) . '</a>';
 

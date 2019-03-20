@@ -10,6 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 add_action( 'current_screen', 'bp_profile_search_redirect_admin_screens' );
+/**
+ * BuddyBoss Profile Search admin redirect.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_profile_search_redirect_admin_screens () {
     $redirect_to_main_form = false;
     
@@ -38,11 +43,21 @@ function bp_profile_search_redirect_admin_screens () {
 }
 
 add_action ('add_meta_boxes', 'bp_ps_add_meta_boxes');
+/**
+ * Register metaboxes for the BuddyBoss profile search edit screen.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_add_meta_boxes () {
 	add_meta_box ('bp_ps_fields_box', __('Form Fields', 'buddyboss'), 'bp_ps_fields_box', 'bp_ps_form', 'normal');
 }
 
 add_action( 'post_submitbox_start', 'bp_ps_edit_form_preview_button' );
+/**
+ * Output BuddyBoss profile search preview button.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_edit_form_preview_button ( $post ) {
     if ( $post->post_type == 'bp_ps_form' ) {
         $members_directory = trailingslashit( bp_get_root_domain() . '/' . bp_get_members_root_slug() );
@@ -50,6 +65,11 @@ function bp_ps_edit_form_preview_button ( $post ) {
     }
 }
 
+/**
+ * Output BuddyBoss profile search admin settings.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_fields_box ( $post ) {
 	$bp_ps_options = bp_ps_meta ( $post->ID );
 
@@ -117,6 +137,11 @@ function bp_ps_fields_box ( $post ) {
 <?php
 }
 
+/**
+ * Output BuddyBoss Profile Search select field.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function _bp_ps_field_select ($groups, $name, $id, $value)
 {
 	echo "<select class='bp_ps_col2 existing' name='$name' id='$id'>\n";
@@ -134,6 +159,11 @@ function _bp_ps_field_select ($groups, $name, $id, $value)
 	echo "</select>\n";
 }
 
+/**
+ * Output BuddyBoss Profile Search filtered select field.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function _bp_ps_filter_select ($f, $name, $id, $value)
 {
 	$filters = bp_ps_Fields::get_filters ($f);
@@ -148,6 +178,11 @@ function _bp_ps_filter_select ($f, $name, $id, $value)
 }
 
 add_action ('save_post', 'bp_ps_update_meta', 10, 2);
+/**
+ * Update BuddyBoss Profile Search post meta
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_update_meta ($form, $post) {
 	if ($post->post_type != 'bp_ps_form' || $post->post_status != 'publish')  return false;
 	if (empty ($_POST['options']) && empty ($_POST['bp_ps_options']))  return false;
@@ -182,6 +217,11 @@ function bp_ps_update_meta ($form, $post) {
 	return true;
 }
 
+/**
+ * BuddyBoss Profile Search Admin
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_set_option ($name, $value){
 	$settings = get_option ('bp_ps_settings');
 	if ($settings === false)
@@ -191,12 +231,22 @@ function bp_ps_set_option ($name, $value){
 	update_option ('bp_ps_settings', $settings);
 }
 
+/**
+ * BuddyBoss Profile Search Admin
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_get_option ($name, $default)
 {
 	$settings = get_option ('bp_ps_settings');
 	return isset ($settings->{$name})? $settings->{$name}: $default;
 }
 
+/**
+ * BuddyBoss Profile Search Admin
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_search_ajax_option() {
 
 	list ($groups, $fields) = bp_ps_get_fields ();

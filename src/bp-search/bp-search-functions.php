@@ -1,11 +1,21 @@
 <?php
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+/**
+ * BuddyBoss Search Functions.
+ *
+ * @package BuddyBoss\Search
+ * @since BuddyBoss 1.0.0
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 //add shortcode support
 add_shortcode( 'BBOSS_AJAX_SEARCH_FORM', 'bp_search_ajax_search_form_shortcode' );
+/**
+ * Returns search buffer ajax template part
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_search_ajax_search_form_shortcode( $atts ) {
 	return bp_search_buffer_template_part( 'ajax-search-form', '', false );
 }
@@ -13,6 +23,8 @@ function bp_search_ajax_search_form_shortcode( $atts ) {
 /**
  * Returns a trimmed activity content string.
  * Must be used while inside activity loop
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_search_activity_intro( $character_limit = 50 ) {
 	$content = '';
@@ -38,6 +50,8 @@ function bp_search_activity_intro( $character_limit = 50 ) {
  * Returns a trimmed reply content string.
  * Works for replies as well as topics.
  * Must be used while inside the loop
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_search_reply_intro( $character_limit = 50 ) {
 	$content = '';
@@ -82,6 +96,8 @@ function bp_search_reply_intro( $character_limit = 50 ) {
 /**
  * Returns   highlighted search keyword and trimmed content string with
  *
+ * @since BuddyBoss 1.0.0
+ *
  * @param $content
  * @param int $character_limit
  *
@@ -114,6 +130,8 @@ function bp_search_result_intro( $content, $character_limit = 50 ) {
 
 /**
  * Find a certain word in a string, and then wrap around it
+ *
+ * @since BuddyBoss 1.0.0
  *
  * @param $in
  * @param $wordToFind
@@ -164,6 +182,8 @@ if ( ! function_exists( 'bp_search_pagination' ) ):
 	 * If your theme uses twitter bootstrap styles, define a constant :
 	 * define('BOOTSTRAP_ACTIVE', true)
 	 * and this function will generate the bootstrap-pagination-compliant html.
+	 *
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param int $total_items total number of items(grand total)
 	 * @param int $items_per_page number of items displayed per page
@@ -301,6 +321,13 @@ if ( ! function_exists( 'bp_search_pagination' ) ):
 
 endif;
 
+/**
+ * Outputs BuddyBoss pagination number viewing and total
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return mixed|void
+ */
 function bp_search_pagination_page_counts( $total_items, $items_per_page, $curr_paged ) {
 
 	if ( $curr_paged == 0 ) {
@@ -322,6 +349,9 @@ function bp_search_pagination_page_counts( $total_items, $items_per_page, $curr_
 
 /**
  * Buddyboss global search items options
+ *
+ * @since BuddyBoss 1.0.0
+ *
  * @return mixed|void
  */
 function bp_search_items() {
@@ -366,6 +396,8 @@ function bp_search_items() {
 /**
  * Generate search string on profile update
  *
+ * @since BuddyBoss 1.0.0
+ *
  * @param type $user_id
  * @param type $posted_field_ids
  * @param type $errors
@@ -395,6 +427,13 @@ function bb_gs_create_searchstring( $user_id, $posted_field_ids, $errors, $old_v
 
 add_action( 'xprofile_updated_profile', 'bb_gs_create_searchstring', 1, 5 );
 
+/**
+ * Generate search string on group update.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param type $groupid
+ */
 function bb_gs_create_group_searchstring( $groupid ) {
 
 	if ( ! function_exists( 'bp_is_active' ) || ! bp_is_active( 'groups' ) ) {
@@ -449,7 +488,7 @@ add_filter( 'body_class', 'bp_search_body_class', 10, 1 );
  */
 function bp_search_body_class( $wp_classes ) {
 
-	if ( is_search() ) { //if search page.
+	if ( bp_search_is_search() ) { //if search page.
 		$wp_classes[] = 'buddypress';
 		$wp_classes[] = 'directory';
 	}
@@ -459,6 +498,11 @@ function bp_search_body_class( $wp_classes ) {
 	return apply_filters( 'bp_search_body_class', $wp_classes );
 }
 
+/**
+ * Returns array of search field labels.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_get_search_user_fields() {
 	return [
 		'user_meta'    => __( 'User Meta', 'buddyboss' ),
@@ -468,6 +512,11 @@ function bp_get_search_user_fields() {
 	];
 }
 
+/**
+ * Returns the defulat post thumbnail based on post type
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_search_get_post_thumbnail_default( $post_type ) {
 
 	$default = [
@@ -484,12 +533,22 @@ function bp_search_get_post_thumbnail_default( $post_type ) {
 			buddypress()->plugin_url . 'bp-core/images/mystery-default.png';
 }
 
+/**
+ * Returns total number of LearnDash lessons
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_search_get_total_lessons_count( $course_id ) {
 	$lesson_ids = learndash_course_get_children_of_step( $course_id, $course_id, 'sfwd-lessons' );
 
 	return count( $lesson_ids );
 }
 
+/**
+ * Returns total number of LearnDash topics
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_search_get_total_topics_count( $lesson_id ) {
 	$course_id = learndash_get_course_id( $lesson_id );
 	$topic_ids = learndash_course_get_children_of_step( $course_id, $lesson_id, 'sfwd-topic' );
@@ -497,9 +556,24 @@ function bp_search_get_total_topics_count( $lesson_id ) {
 	return count( $topic_ids );
 }
 
+/**
+ * Returns total number of LearnDash quizzes
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_search_get_total_quizzes_count( $lesson_id ) {
 	$course_id = learndash_get_course_id( $lesson_id );
 	$quiz_ids = learndash_course_get_children_of_step( $course_id, $lesson_id, 'sfwd-quiz' );
 
 	return count( $quiz_ids );
+}
+
+/**
+ * Determines whether the query is for a network search.
+ *
+ * @since BuddyBoss 1.0.0
+ * @return bool
+ */
+function bp_search_is_search() {
+	return ! is_admin() && is_search() && isset( $_REQUEST['bp_search'] );
 }

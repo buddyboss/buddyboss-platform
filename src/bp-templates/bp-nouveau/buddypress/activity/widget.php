@@ -18,7 +18,7 @@
 
 			<?php if ( bp_activity_has_content() ) : ?>
 
-				<blockquote>
+				<div>
 
 					<?php bp_activity_content_body(); ?>
 
@@ -42,7 +42,7 @@
 
 					</footer>
 
-				</blockquote>
+				</div>
 
 			<?php else : ?>
 

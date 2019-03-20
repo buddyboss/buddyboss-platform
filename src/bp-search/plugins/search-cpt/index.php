@@ -1,6 +1,13 @@
 <?php
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+/**
+ * @todo add description
+ * 
+ * @package BuddyBoss\Search
+ * @since BuddyBoss 1.0.0
+ */ 
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 add_action( 'bp_search_settings_items_to_search', 'bp_search_option_cpt_search' );
 /**

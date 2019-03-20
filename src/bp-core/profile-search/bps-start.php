@@ -19,6 +19,11 @@ include 'bps-search.php';
 include 'bps-templates47.php';
 include 'bps-xprofile.php';
 
+/**
+ * Return BuddyBoss Profile Search meta options.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_meta ( $form ) {
 	static $options;
 	if (isset ($options[$form]))  return $options[$form];
@@ -39,6 +44,11 @@ function bp_ps_meta ( $form ) {
 }
 
 add_action ('init', 'bp_profile_search_register_post_type');
+/**
+ * Register BuddyBoss Profile Search post type.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_profile_search_register_post_type (){
 	$args = array (
 		'labels' => array (
@@ -81,6 +91,11 @@ function bp_profile_search_register_post_type (){
 	}
 }
 
+/**
+ * Remove capability to delete BuddyBoss Profile Search form post type.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_profile_search_prevent_delete () {
     global $wp_roles;
     $wp_roles->remove_cap( 'administrator', 'delete_bp_ps_forms' );
@@ -94,6 +109,11 @@ add_action( 'init', 'bp_profile_search_prevent_delete' );
 /******* post.php, post-new.php */
 
 add_filter ( 'post_updated_messages', 'bp_profile_search_form_updated_messages');
+/**
+ * Returns BuddyBoss Profile Search message after form update.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_profile_search_form_updated_messages ( $messages ) {
 	$messages['bp_ps_form'] = array (
 		 0 => 'message 0',
@@ -111,14 +131,22 @@ function bp_profile_search_form_updated_messages ( $messages ) {
 	return $messages;
 }
 
-/******* common */
-
+/**
+ * Check if we are on the BuddyBoss Profile Search screen.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_profile_search_screen () {
 	global $current_screen;
 	return isset ( $current_screen->post_type ) && $current_screen->post_type == 'bp_ps_form';
 }
 
 add_action ( 'admin_head', 'bp_profile_search_admin_head' );
+/**
+ * Output BuddyBoss Profile Search admin styling.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_profile_search_admin_head () {
 	global $current_screen;
 	if ( !bp_profile_search_screen () )  return;
@@ -146,6 +174,11 @@ function bp_profile_search_admin_head () {
     <?php
 }
 
+/**
+ * Enqueue BuddyBoss Profile Search JS.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function _bp_profile_search_admin_js () {
 	$translations = array (
 		'drag' => __('Drag & drop to reorder fields', 'buddyboss'),
@@ -156,11 +189,20 @@ function _bp_profile_search_admin_js () {
 	wp_localize_script ( 'bp-profile-search-admin', 'bp_ps_strings', $translations );
 }
 
-
+/**
+ * Returns BuddyBoss Profile Search form ID?
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_profile_search_main_form () {
     return (int) bp_get_option( 'bp_profile_search_main_form' );
 }
 
+/**
+ * Add BuddyBoss Profile Search form.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_profile_search_add_main_form () {
     $post_args = array(
         'post_title'    => __( 'Filter Results', 'buddyboss' ),
@@ -172,4 +214,55 @@ function bp_profile_search_add_main_form () {
     if ( !is_wp_error( $post_id ) ) {
         bp_update_option ( 'bp_profile_search_main_form', $post_id );
     }
+}
+
+/**
+ * Added Navigation tab on top of the page BuddyBoss > Group Types
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_users_admin_profile_search_listing_add_users_tab() {
+	global $pagenow ,$post;
+
+	// Check profile search enabled.
+	$is_profile_search_enabled = bp_disable_advanced_profile_search();
+
+	if ( false === $is_profile_search_enabled ) {
+
+		if ( ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'post.php' ) ) {
+			?>
+			<div class="wrap">
+				<?php
+				$users_tab = count( bp_core_get_users_admin_tabs() );
+				if ( $users_tab > 1 ) {
+					?>
+					<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Search', 'buddypress' ) ); ?></h2><?php
+				}
+				?>
+			</div>
+			<?php
+		}
+
+	}
+}
+add_action('admin_notices','bp_users_admin_profile_search_listing_add_users_tab');
+
+add_filter( 'parent_file', 'bp_profile_search_set_platform_tab_submenu_active' );
+/**
+ * Highlights the submenu item using WordPress native styles.
+ *
+ * @param string $parent_file The filename of the parent menu.
+ *
+ * @return string $parent_file The filename of the parent menu.
+ */
+function bp_profile_search_set_platform_tab_submenu_active( $parent_file ) {
+	global $pagenow, $current_screen, $post;
+
+	if ( false === bp_disable_advanced_profile_search() ) {
+		if ( ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'post.php' ) ) {
+			$parent_file = 'buddyboss-platform';
+		}
+	}
+	return $parent_file;
 }

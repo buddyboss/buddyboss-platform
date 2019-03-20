@@ -24,6 +24,14 @@
 			}
 		});
 	});
+    
+    wp.customize( 'bp_email_options[site_title_logo_size]', function( value ) {
+		value.bind(function( newval ) {
+			if ( newval.length ) {
+				$( '.site_title_text_size img' ).css( 'width', newval + 'px' );
+			}
+		});
+	});
 
 	wp.customize( 'bp_email_options[recipient_text_size]', function( value ) {
 		value.bind(function( newval ) {

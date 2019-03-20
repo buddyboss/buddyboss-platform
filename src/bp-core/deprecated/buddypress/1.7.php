@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * Output the BuddyPress maintenance mode
  *
  * @since BuddyPress 1.6.0
- * @deprecated 1.7.0
+ * @deprecated BuddyPress 1.7.0
  */
 function bp_maintenance_mode() {
 	echo bp_get_maintenance_mode();
@@ -22,7 +22,7 @@ function bp_maintenance_mode() {
 	 * Return the BuddyPress maintenance mode
 	 *
 	 * @since BuddyPress 1.6.0
-	 * @deprecated 1.7.0
+	 * @deprecated BuddyPress 1.7.0
 	 * @return string The BuddyPress maintenance mode
 	 */
 	function bp_get_maintenance_mode() {
@@ -30,7 +30,9 @@ function bp_maintenance_mode() {
 	}
 
 /**
- * @deprecated 1.7.0
+ * xprofile_get_profile()
+ *
+ * @deprecated BuddyPress 1.7.0
  */
 function xprofile_get_profile() {
 	_deprecated_function( __FUNCTION__, '1.7' );
@@ -38,7 +40,9 @@ function xprofile_get_profile() {
 }
 
 /**
- * @deprecated 1.7.0
+ * bp_get_profile_header()
+ *
+ * @deprecated BuddyPress 1.7.0
  */
 function bp_get_profile_header() {
 	_deprecated_function( __FUNCTION__, '1.7' );
@@ -46,7 +50,9 @@ function bp_get_profile_header() {
 }
 
 /**
- * @deprecated 1.7.0
+ * bp_exists( $component_name )
+ *
+ * @deprecated BuddyPress 1.7.0
  * @param string $component_name
  * @return boolean
  */
@@ -59,7 +65,9 @@ function bp_exists( $component_name ) {
 }
 
 /**
- * @deprecated 1.7.0
+ * bp_get_plugin_sidebar()
+ *
+ * @deprecated BuddyPress 1.7.0
  */
 function bp_get_plugin_sidebar() {
 	_deprecated_function( __FUNCTION__, '1.7' );
@@ -72,7 +80,7 @@ function bp_get_plugin_sidebar() {
  * bundled themes show up on the root blog selection screen and bypass this
  * step. It also means that the themes won't show for selection on other blogs.
  *
- * @deprecated 1.7.0
+ * @deprecated BuddyPress 1.7.0
  * @return array
  */
 function bp_core_allow_default_theme( $themes ) {
@@ -95,7 +103,7 @@ function bp_core_allow_default_theme( $themes ) {
 /**
  * No longer used by BuddyPress core
  *
- * @deprecated 1.7.0
+ * @deprecated BuddyPress 1.7.0
  * @param string $page
  * @return boolean True if is BuddyPress page
  */
@@ -117,7 +125,7 @@ function bp_is_page( $page = '' ) {
  * This function was originally used to update pre-1.1 schemas, but that was
  * before we had a legitimate update process.
  *
- * @deprecated 1.7.0
+ * @deprecated BuddyPress 1.7.0
  * @global wpdb $wpdb WordPress database abstraction object.
  */
 function bp_update_db_stuff() {

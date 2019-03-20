@@ -250,6 +250,8 @@ function bp_nouveau_ajax_joinleave_group() {
 }
 
 /**
+ * AJAX get list of members to invite to group.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_get_users_to_invite() {
@@ -285,6 +287,22 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 	if ( 'groups_get_group_potential_invites' === $request['action'] ) {
 
+		// check if subgroup.
+		$parent_group_id = bp_get_parent_group_id( $request['group_id'] );
+
+		if ( isset( $parent_group_id ) && $parent_group_id > 0 ) {
+
+			$check_admin = groups_is_user_admin( bp_loggedin_user_id(), $parent_group_id );
+			$check_moder = groups_is_user_mod( bp_loggedin_user_id(), $parent_group_id );
+
+			// Check role of current logged in user for this group.
+			if ( false === $check_admin && false === $check_moder ) {
+				wp_send_json_error( array(
+					'feedback' => __( 'You are not authorized to send invites to other users.', 'buddyboss' ),
+					'type'     => 'info',
+				) );
+			}
+		}
 
 		$group_type = bp_groups_get_group_type( $request['group_id'] );
 
@@ -408,6 +426,8 @@ function bp_nouveau_ajax_get_users_to_invite() {
 }
 
 /**
+ * AJAX send group invite.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_send_group_invites() {
@@ -497,6 +517,8 @@ function bp_nouveau_ajax_send_group_invites() {
 }
 
 /**
+ * AJAX remove group invite.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_remove_group_invite() {

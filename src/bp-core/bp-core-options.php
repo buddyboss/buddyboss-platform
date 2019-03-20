@@ -933,6 +933,71 @@ function bp_is_activity_like_active( $default = true ) {
 	return (bool) apply_filters( 'bp_is_activity_like_active', (bool) bp_get_option( '_bp_enable_activity_like', $default ) );
 }
 
+
+/**
+ * Check whether Activity Link Preview is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if Link Preview is enabled, otherwise false.
+ */
+function bp_is_activity_link_preview_active( $default = false ) {
+
+	/**
+	 * Filters whether or not Activity Link Preview is enabled.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param bool $value Whether or not Activity Link Preview is enabled.
+	 */
+	return (bool) apply_filters( 'bp_is_activity_link_preview_active', (bool) bp_get_option( '_bp_enable_activity_link_preview', $default ) );
+}
+
+/**
+ * Check whether Activity GIFs is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if Link Preview is enabled, otherwise false.
+ */
+function bp_is_activity_gif_active( $default = false ) {
+
+	/**
+	 * Filters whether or not Activity GIFs is enabled.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param bool $value Whether or not Activity GIFs is enabled.
+	 */
+	return (bool) apply_filters( 'bp_is_activity_gif_active', (bool) bp_get_option( '_bp_enable_activity_gif', $default ) );
+}
+
+
+/**
+ * Return GIFs .
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return GIF Api Key if, empty string.
+ */
+function bp_get_activity_gif_api_key( $default = '' ) {
+
+	/**
+	 * Filters whether GIF key.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param GIF Api Key if, empty sting.
+	 */
+	return apply_filters( 'bp_get_activity_gif_api_key', bp_get_option( '_bp_activity_gif_api_key', $default ) );
+}
+
 /**
  * Get the current theme package ID.
  *
@@ -1078,4 +1143,43 @@ function bp_disable_invite_member_type( $default = false ) {
 	 * @param bool $value Whether allow users to sign up the profile types to personal inviting is enabled or not.
 	 */
 	return (bool) apply_filters( 'bp_disable_invite_member_type', (bool) bp_get_option( 'bp-disable-invite-member-type', $default ) );
+}
+
+/**
+ * Checks if post type feed is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $post_type string
+ *
+ * @return bool Is post type feed enabled or not
+ */
+function bp_is_post_type_feed_enable( $post_type, $default = false ) {
+	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) get_option( "bp-feed-custom-post-type-$post_type", $default ) );
+}
+
+/**
+ * Checks if custom post type feed is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $post_type string
+ *
+ * @return bool Is post type feed enabled or not
+ */
+function bp_is_custom_post_type_feed_enable( $default = false ) {
+	return (bool) apply_filters( 'bp_is_custom_post_type_feed_enable', (bool) get_option( 'bp-enable-custom-post-type-feed', $default ) );
+}
+
+/**
+ * Checks if default platform activity feed is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $post_type string
+ *
+ * @return bool Is post type feed enabled or not
+ */
+function bp_platform_is_feed_enable( $activity_type, $default = true ) {
+	return (bool) apply_filters( 'bp_platform_is_feed_enable', (bool) get_option( $activity_type, $default ) );
 }

@@ -10,6 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 add_filter ('bp_ps_add_fields', 'bp_ps_xprofile_setup');
+/**
+ * Setup BuddyBoss Profile Search Extended fields.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_xprofile_setup ($fields)
 {
 	global $group, $field;
@@ -46,6 +51,11 @@ function bp_ps_xprofile_setup ($fields)
 					$f->options[$key] = $label;
 
 				if ($f->format == 'custom')
+					/**
+					 * @todo add title/description
+					 *
+					 * @since BuddyBoss 1.0.0
+					 */
 					do_action ('bp_ps_custom_field', $f);
 
 				if ($f->format == 'set')
@@ -59,6 +69,11 @@ function bp_ps_xprofile_setup ($fields)
 	return $fields;
 }
 
+/**
+ * Return results from BuddyBoss Profile Search Extended.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_xprofile_search ($f)
 {   
     global $bp, $wpdb;
@@ -196,6 +211,11 @@ function bp_ps_xprofile_search ($f)
 	return $results;
 }
 
+/**
+ * Return $sql of BuddyBoss Profile Search Extended sort directory.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_xprofile_sort_directory ($sql, $object, $f, $order)
 {
 	global $bp, $wpdb;
@@ -213,6 +233,11 @@ function bp_ps_xprofile_sort_directory ($sql, $object, $f, $order)
 	return $sql;
 }
 
+/**
+ * Return xprofile value from BuddyBoss Profile Search Extended field.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_xprofile_get_value ($f)
 {
 	global $members_template;
@@ -227,6 +252,11 @@ function bp_ps_xprofile_get_value ($f)
 	return stripslashes ($value);
 }
 
+/**
+ * Return array of BuddyBoss Profile Search input field formats.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_xprofile_format ($type, $field_id)
 {
 	$formats = array
@@ -252,6 +282,11 @@ function bp_ps_xprofile_format ($type, $field_id)
 	return in_array ($format, $formats)? $format: $default;
 }
 
+/**
+ * Returns array of BuddyBoss Profile Search profile options.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_xprofile_options ($field_id)
 {
 	$field = new BP_XProfile_Field ($field_id);
@@ -267,6 +302,11 @@ function bp_ps_xprofile_options ($field_id)
 }
 
 add_filter ('bp_ps_add_fields', 'bp_ps_anyfield_setup', 12 );
+/**
+ * Setup BuddyBoss Profile Search all fields.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_anyfield_setup ($fields)
 {
 	$f = new stdClass;
@@ -423,6 +463,11 @@ function bp_ps_learndash_get_users_for_course( $course_id = 0, $query_args = arr
 	}
 }
 
+/**
+ * Return results from BuddyBoss Profile Search all fields.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_anyfield_search ($f)
 {
 	global $bp, $wpdb;
@@ -459,6 +504,11 @@ function bp_ps_anyfield_search ($f)
 }
 
 add_filter( 'bp_ps_add_fields', 'bp_ps_heading_field_setup', 11 );
+/**
+ * Setup BuddyBoss Profile Search headings.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_heading_field_setup ( $fields ) {
 	$f = new stdClass;
 	$f->group = __('Other', 'buddyboss');
@@ -474,6 +524,11 @@ function bp_ps_heading_field_setup ( $fields ) {
 	return $fields;
 }
 
+/**
+ * Search BuddyBoss Profile Search dummy fields.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_search_dummy_fields ( $f ) {
     return array();
 }

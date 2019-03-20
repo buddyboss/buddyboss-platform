@@ -77,3 +77,19 @@
 	background: #21759b;
 	color: #fff;
 }
+
+li.toplevel_page_buddyboss-platform .wp-submenu li a[href^="admin.php?page=bbp-repair"],
+li.toplevel_page_buddyboss-platform .wp-submenu li a[href^="admin.php?page=bbp-converter"],
+li.toplevel_page_buddyboss-platform .wp-submenu li a[href^="admin.php?page=bbp-reset"],
+li.toplevel_page_buddyboss-platform .wp-submenu li a[href^="admin.php?page=bp-credits"],
+li.toplevel_page_buddyboss-platform .wp-submenu li a[href^="admin.php?page=bp-appboss"] {
+	display: none !important;
+}
+
+.nav-settings-subsubsub {
+	padding: 3px 13px 22px 0;
+}
+
+.nav-tab-wrapper a.bp-appboss.nav-tab {
+	display: none !important;
+}

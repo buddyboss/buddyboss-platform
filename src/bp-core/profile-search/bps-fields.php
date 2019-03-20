@@ -8,7 +8,11 @@
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
-
+/**
+ * Get BuddyBoss profile search fields.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_get_fields ()
 {
 	static $groups = array ();
@@ -19,6 +23,11 @@ function bp_ps_get_fields ()
 	$field_list = apply_filters ('bp_ps_add_fields', array ());
 	foreach ($field_list as $f)
 	{
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action ('bp_ps_edit_field', $f);
 		if (!bp_ps_Fields::set_filters ($f))  continue;
 
@@ -29,6 +38,11 @@ function bp_ps_get_fields ()
 	return array ($groups, $fields);
 }
 
+/**
+ * Setup BuddyBoss profile search fields.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 class bp_ps_Fields
 {
 	private static $display = array
@@ -108,6 +122,11 @@ class bp_ps_Fields
 	}
 }
 
+/**
+ * Parse BuddyBoss profile search request.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_parse_request ($request)
 {
 	$j = 1;
@@ -245,6 +264,11 @@ function bp_ps_parse_request ($request)
 	return $parsed;
 }
 
+/**
+ * Check if BuddyBoss profile search field matches key.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_match_key ($key, $fields)
 {
 	foreach ($fields as $k => $f)
@@ -253,6 +277,11 @@ function bp_ps_match_key ($key, $fields)
 	return false;
 }
 
+/**
+ * Check if request is a valid filter.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_is_filter ($filter, $f)
 {
 	if ($filter == 'range_min' || $filter == 'range_max')  $filter = 'range';
@@ -262,11 +291,21 @@ function bp_ps_is_filter ($filter, $f)
 	return bp_ps_Fields::is_filter ($f, $filter);
 }
 
+/**
+ * Returns version 4.7 escaped form data.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_escaped_form_data ($version = '')
 {
 	return bp_ps_escaped_form_data47 ($version);
 }
 
+/**
+ * Escape BuddyBoss profile search filter data.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_escaped_filters_data ($version = '4.7')
 {
 	if ($version == '4.7')	return bp_ps_escaped_filters_data47 ();
@@ -275,6 +314,11 @@ function bp_ps_escaped_filters_data ($version = '4.7')
 	return false;
 }
 
+/**
+ * Hide BuddyBoss profile search field.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_set_hidden_field ($name, $value)
 {
 	$new = new stdClass;
@@ -287,6 +331,11 @@ function bp_ps_set_hidden_field ($name, $value)
 	return $new;
 }
 
+/**
+ * Sort BuddyBoss profile search fields.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_sort_fields ($a, $b)
 {
 	return ($a->order <= $b->order)? -1: 1;

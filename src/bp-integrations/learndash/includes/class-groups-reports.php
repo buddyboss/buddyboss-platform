@@ -1,13 +1,12 @@
 <?php
 /**
- * File include Courses menu that is going to be added in the BuddyPress Group
+ * Courses menu for Social Groups class.
  *
  * @since BuddyBoss 1.0.1
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 if ( class_exists( 'BP_Group_Extension' ) ) {
 	/**
@@ -148,7 +147,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		}
 
 		/**
-		 * Export CSV
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
 		 */
 		public function export_csv() {
 			$this->is_ajax = true;
@@ -334,6 +335,11 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			<?php
 		}
 
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		public function bbp_include_all_forums( $return ) {
 			return true;
 		}
@@ -939,7 +945,6 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 		 * Display lessons HTML
 		 */
 		public function lessons() {
-
 			$this->basic_html( 'lessons', $this->menus['lessons']['label'], 'sfwd-lessons' );
 		}
 
@@ -950,6 +955,11 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$this->basic_html( 'courses', __( 'Steps', 'buddyboss' ) );
 		}
 
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		public function basic_html( $slug, $label, $display = 'all', $table_head = 'courses_table_head' ) {
 
 			$this->incomplete_step       = '';

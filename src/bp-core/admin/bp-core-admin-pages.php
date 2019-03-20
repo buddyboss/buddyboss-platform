@@ -13,13 +13,11 @@ defined( 'ABSPATH' ) || exit;
  * Renders the Pages Setup admin panel.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_core_admin_pages_settings() {
 	?>
     <div class="wrap">
-        <h1><?php _e( 'BuddyBoss Pages', 'buddyboss' ); ?> </h1>
-
+	    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Pages', 'buddypress' ) ); ?></h2>
         <form action="" method="post">
 			<?php
 			settings_fields( 'bp-pages' );
@@ -38,6 +36,11 @@ function bp_core_admin_pages_settings() {
 	<?php
 }
 
+/**
+ * Output custom pages admin settings.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_custom_pages_do_settings_sections( $page ) {
 	global $wp_settings_sections, $wp_settings_fields;
 
@@ -159,14 +162,14 @@ function bp_core_admin_registration_pages_description() {
 		if ( is_multisite() ) :
 			echo wpautop(
 				sprintf(
-					__( 'Registration is currently disabled. If "User Invites" is enabled, invited users will still be allowed to register new accounts. To enable registration, please select either the "User accounts may be registered" or "Both sites and user accounts can be registered" option on <a href="%s">this page</a>.', 'buddyboss' ),
+					__( 'Registration is currently disabled. If "Email Invites" is enabled, invited users will still be allowed to register new accounts. To enable registration, please select either the "User accounts may be registered" or "Both sites and user accounts can be registered" option on <a href="%s">this page</a>.', 'buddyboss' ),
 					network_admin_url( 'settings.php' )
 				)
 			);
 		else :
 			echo wpautop(
 				sprintf(
-					__( 'Registration is currently disabled. If "User Invites" is enabled, invited users will still be allowed to register new accounts. To enable registration, please click on the "Anyone can register" checkbox on <a href="%s">this page</a>.', 'buddyboss' ),
+					__( 'Registration is currently disabled. If "Email Invites" is enabled, invited users will still be allowed to register new accounts. To enable registration, please click on the "Anyone can register" checkbox on <a href="%s">this page</a>.', 'buddyboss' ),
 					network_admin_url( 'options-general.php' )
 				)
 			);

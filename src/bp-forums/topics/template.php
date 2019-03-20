@@ -7,7 +7,7 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /** Post Type *****************************************************************/
 
@@ -1889,8 +1889,8 @@ function bbp_topic_favorite_link( $args = array() ) {
 			'topic_id'  => 0,
 			'before'    => '',
 			'after'     => '',
-			'favorite'  => __( 'Like',   'buddyboss' ),
-			'favorited' => __( 'Unlike', 'buddyboss' )
+			'favorite'  => __( 'Favorite',   'buddyboss' ),
+			'favorited' => __( 'Unfavorite', 'buddyboss' )
 		), 'get_forum_favorite_link' );
 
 		// Get the link

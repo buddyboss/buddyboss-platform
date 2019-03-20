@@ -14,8 +14,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
-
 /**
  * Returns the name of the invite post type.
  *
@@ -56,7 +54,7 @@ function bp_get_invite_post_type_labels() {
 		'all_items'             => __( 'Sent Invites', 'buddyboss' ),
 		'edit_item'             => __( 'Edit Sent Invite', 'buddyboss' ),
 		'menu_name'             => __( 'Invites', 'buddyboss' ),
-		'name'                  => __( 'Invites Sent by Users', 'buddyboss' ),
+		'name'                  => __( 'Email Invites', 'buddyboss' ),
 		'new_item'              => __( 'New Sent Invite', 'buddyboss' ),
 		'not_found'             => __( 'No Sent Invites found', 'buddyboss' ),
 		'not_found_in_trash'    => __( 'No Sent Invites found in trash', 'buddyboss' ),
@@ -351,6 +349,11 @@ function bp_get_member_invitation_message() {
 	return apply_filters( 'bp_get_member_invitation_message', stripslashes( $text ) );
 }
 
+/**
+ * Get email invite instructions text.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_get_invites_member_invite_url() {
 
 	$invite_link = apply_filters( 'bp_get_invites_member_invite_url', __( 'To accept this invitation, please visit %%ACCEPTURL%%', 'buddyboss' ) );
@@ -383,12 +386,17 @@ function bp_get_member_invites_wildcard_replace( $text, $email = false ) {
 	), bp_get_root_domain() . '/' . bp_get_signup_slug() . '/' );
 	$accept_link  = apply_filters( 'bp_member_invitation_accept_url', $accept_link );
 
-
+	/**
+	 * @todo why are we using %% instead of {{ }} or {{{ }}}?
+	 * Also, why are we using all caps, also why aren't we using . as separators?
+	 */
+	
 	$text = str_replace( '{{inviter.name}}', $inviter_name, $text );
 	$text = str_replace( '[{{{site.name}}}]', get_bloginfo('name'), $text );
 	$text = str_replace( '{{{site.url}}}', site_url(), $text );
 	$text = str_replace( '%%INVITERNAME%%', $inviter_name, $text );
 	$text = str_replace( '%%INVITERURL%%', $inviter_url, $text );
+	// @todo Don't we already have site.name above?
 	$text = str_replace( '%%SITENAME%%', $site_name, $text );
 	$text = str_replace( '%%ACCEPTURL%%', $accept_link, $text );
 

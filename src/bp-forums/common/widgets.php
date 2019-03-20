@@ -9,7 +9,7 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Forums Login Widget
@@ -38,7 +38,7 @@ class BBP_Login_Widget extends WP_Widget {
 			'description' => __( 'A simple login form with optional links to sign-up and lost password pages.', 'buddyboss' )
 		) );
 
-		parent::__construct( false, __( '(Forums) Login Widget', 'buddyboss' ), $widget_ops );
+		parent::__construct( false, __( '(BB) Forum Login Widget', 'buddyboss' ), $widget_ops );
 	}
 
 	/**
@@ -242,7 +242,7 @@ class BBP_Views_Widget extends WP_Widget {
 			'description' => __( 'A list of registered optional discussion views.', 'buddyboss' )
 		) );
 
-		parent::__construct( false, __( '(Forums) Discussion Views List', 'buddyboss' ), $widget_ops );
+		parent::__construct( false, __( '(BB) Forum Discussion Views List', 'buddyboss' ), $widget_ops );
 	}
 
 	/**
@@ -383,7 +383,7 @@ class BBP_Search_Widget extends WP_Widget {
 			'description' => __( 'The forums search form.', 'buddyboss' )
 		) );
 
-		parent::__construct( false, __( '(Forums) Search Form', 'buddyboss' ), $widget_ops );
+		parent::__construct( false, __( '(BB) Forum Search Form', 'buddyboss' ), $widget_ops );
 	}
 
 	/**
@@ -511,7 +511,7 @@ class BBP_Forums_Widget extends WP_Widget {
 			'description' => __( 'A list of forums with an option to set the parent.', 'buddyboss' )
 		) );
 
-		parent::__construct( false, __( '(Forums) List', 'buddyboss' ), $widget_ops );
+		parent::__construct( false, __( '(BB) Forums List', 'buddyboss' ), $widget_ops );
 	}
 
 	/**
@@ -716,7 +716,7 @@ class BBP_Topics_Widget extends WP_Widget {
 			'description' => __( 'A list of recent discussions, sorted by popularity or freshness.', 'buddyboss' )
 		) );
 
-		parent::__construct( false, __( '(Forums) Recent Topics', 'buddyboss' ), $widget_ops );
+		parent::__construct( false, __( '(BB) Forum Recent Topics', 'buddyboss' ), $widget_ops );
 	}
 
 	/**
@@ -980,7 +980,7 @@ class BBP_Stats_Widget extends WP_Widget {
 			'description' => __( 'Some statistics from your forum.', 'buddyboss' )
 		) );
 
-		parent::__construct( false, __( '(Forums) Statistics', 'buddyboss' ), $widget_ops );
+		parent::__construct( false, __( '(BB) Forum Statistics', 'buddyboss' ), $widget_ops );
 	}
 
 	/**
@@ -1110,7 +1110,7 @@ class BBP_Replies_Widget extends WP_Widget {
 			'description' => __( 'A list of the most recent replies.', 'buddyboss' )
 		) );
 
-		parent::__construct( false, __( '(Forums) Recent Replies', 'buddyboss' ), $widget_ops );
+		parent::__construct( false, __( '(BB) Forum Recent Replies', 'buddyboss' ), $widget_ops );
 	}
 
 	/**

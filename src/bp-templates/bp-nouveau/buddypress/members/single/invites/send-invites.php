@@ -2,7 +2,7 @@
 bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 
 <h2 class="screen-heading general-settings-screen">
-	<?php _e( 'Send Invite', 'buddyboss' ); ?>
+	<?php _e( 'Send Invites', 'buddyboss' ); ?>
 </h2>
 
 <p class="info invite-info">
@@ -14,12 +14,12 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 	<table class="invite-settings bp-tables-user" id="<?php echo esc_attr( 'member-invites-table' ); ?>">
 		<thead>
 		<tr>
-			<th class="title"><?php esc_html_e( 'Name', 'buddyboss' ); ?></th>
-			<th class="title"><?php esc_html_e( 'Email', 'buddyboss' ); ?></th>
+			<th class="title"><?php esc_html_e( 'Recipient Name', 'buddyboss' ); ?></th>
+			<th class="title"><?php esc_html_e( 'Recipient Email', 'buddyboss' ); ?></th>
 			<?php
 			if ( true === bp_check_member_send_invites_tab_member_type_allowed() ) {
 				?>
-				<th class="title"><?php esc_html_e( 'Type', 'buddyboss' ); ?></th>
+				<th class="title"><?php esc_html_e( 'Profile Type', 'buddyboss' ); ?></th>
 				<?php
 			}
 			?>

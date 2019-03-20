@@ -3,7 +3,7 @@
  * Deprecated functions
  *
  * @package BuddyBoss\Core
- * @deprecated 2.1.0
+ * @deprecated BuddyPress 2.1.0
  */
 
 // Exit if accessed directly
@@ -33,7 +33,7 @@ function bp_core_register_deprecated_styles() {
  * Add a Sites menu to the BuddyBar.
  *
  * @since BuddyPress 1.0.0
- * @deprecated 2.1.0
+ * @deprecated BuddyPress 2.1.0
  *
  * @return false|null Returns false on failure. Otherwise echoes the menu item.
  */
@@ -100,7 +100,7 @@ function bp_adminbar_blogs_menu() {
  * to the WP Toolbar.
  *
  * @since BuddyPress 1.6.0
- * @deprecated 2.1.0
+ * @deprecated BuddyPress 2.1.0
  */
 function bp_admin_setting_callback_force_buddybar() {
 ?>
@@ -120,7 +120,7 @@ function bp_admin_setting_callback_force_buddybar() {
  * to flip the boolean before saving the intval.
  *
  * @since BuddyPress 1.6.0
- * @deprecated 2.1.0
+ * @deprecated BuddyPress 2.1.0
  * @access Private
  */
 function bp_admin_sanitize_callback_force_buddybar( $value = false ) {
@@ -131,7 +131,7 @@ function bp_admin_sanitize_callback_force_buddybar( $value = false ) {
  * Wrapper function for rendering the BuddyBar.
  *
  * @return false|null Returns false if the BuddyBar is disabled.
- * @deprecated 2.1.0
+ * @deprecated BuddyPress 2.1.0
  */
 function bp_core_admin_bar() {
 	$bp = buddypress();
@@ -165,7 +165,7 @@ function bp_core_admin_bar() {
 /**
  * Output the BuddyBar logo.
  *
- * @deprecated 2.1.0
+ * @deprecated BuddyPress 2.1.0
  */
 function bp_adminbar_logo() {
 	echo '<a href="' . bp_get_root_domain() . '" id="admin-bar-logo">' . get_blog_option( bp_get_root_blog_id(), 'blogname' ) . '</a>';
@@ -176,7 +176,7 @@ function bp_adminbar_logo() {
  *
  * Visible only to visitors who are not logged in.
  *
- * @deprecated 2.1.0
+ * @deprecated BuddyPress 2.1.0
  *
  * @return false|null Returns false if the current user is logged in.
  */
@@ -197,7 +197,7 @@ function bp_adminbar_login_menu() {
 /**
  * Output the My Account BuddyBar menu.
  *
- * @deprecated 2.1.0
+ * @deprecated BuddyPress 2.1.0
  *
  * @return false|null Returns false on failure.
  */
@@ -259,6 +259,11 @@ function bp_adminbar_account_menu() {
 	echo '</li>';
 }
 
+/**
+ * bp_adminbar_thisblog_menu()
+ *
+ * @deprecated BuddyPress 2.1.0
+ */
 function bp_adminbar_thisblog_menu() {
 	if ( current_user_can( 'edit_posts' ) ) {
 		echo '<li id="bp-adminbar-thisblog-menu"><a href="' . admin_url() . '">';
@@ -282,7 +287,7 @@ function bp_adminbar_thisblog_menu() {
  *
  * Not visible for logged-in users.
  *
- * @deprecated 2.1.0
+ * @deprecated BuddyPress 2.1.0
  */
 function bp_adminbar_random_menu() {
 ?>
@@ -315,7 +320,7 @@ function bp_adminbar_random_menu() {
 /**
  * Enqueue the BuddyBar CSS.
  *
- * @deprecated 2.1.0
+ * @deprecated BuddyPress 2.1.0
  */
 function bp_core_load_buddybar_css() {
 
@@ -345,7 +350,7 @@ add_action( 'bp_init', 'bp_core_load_buddybar_css' );
  *
  * @since BuddyPress 1.0.0
  *
- * @deprecated 2.1.0
+ * @deprecated BuddyPress 2.1.0
  */
 function bp_groups_adminbar_admin_menu() {
 	$bp = buddypress();
@@ -401,7 +406,7 @@ add_action( 'bp_adminbar_menus', 'bp_groups_adminbar_admin_menu', 20 );
 /**
  * Add the Notifications menu to the BuddyBar.
  *
- * @deprecated 2.1.0
+ * @deprecated BuddyPress 2.1.0
  */
 function bp_adminbar_notifications_menu() {
 
@@ -417,7 +422,7 @@ add_action( 'bp_adminbar_menus', 'bp_adminbar_notifications_menu', 8 );
 /**
  * Add the Blog Authors menu to the BuddyBar (visible when not logged in).
  *
- * @deprecated 2.1.0
+ * @deprecated BuddyPress 2.1.0
  */
 function bp_adminbar_authors_menu() {
 	global $wpdb;
@@ -473,7 +478,7 @@ add_action( 'bp_adminbar_menus', 'bp_adminbar_authors_menu', 12 );
  * Adds an Toolbar menu to any profile page providing site moderator actions
  * that allow capable users to clean up a users account.
  *
- * @deprecated 2.1.0
+ * @deprecated BuddyPress 2.1.0
  */
 function bp_members_adminbar_admin_menu() {
 
@@ -517,7 +522,7 @@ add_action( 'bp_adminbar_menus', 'bp_members_adminbar_admin_menu', 20 );
  * Create the Notifications menu for the BuddyBar.
  *
  * @since BuddyPress 1.9.0
- * @deprecated 2.1.0
+ * @deprecated BuddyPress 2.1.0
  */
 function bp_notifications_buddybar_menu() {
 
@@ -565,7 +570,7 @@ add_action( 'bp_adminbar_menus', 'bp_adminbar_notifications_menu', 8 );
  *
  * @since BuddyPress 1.6.0
  *
- * @deprecated 2.1.0
+ * @deprecated BuddyPress 2.1.0
  */
 function bp_blogs_subdomain_base() {
 	_deprecated_function( __FUNCTION__, '2.1', 'bp_signup_subdomain_base()' );
@@ -579,7 +584,7 @@ function bp_blogs_subdomain_base() {
  *
  * @return string The base URL - eg, 'example.com' for site_url() example.com or www.example.com.
  *
- * @deprecated 2.1.0
+ * @deprecated BuddyPress 2.1.0
  */
 function bp_blogs_get_subdomain_base() {
 	_deprecated_function( __FUNCTION__, '2.1', 'bp_signup_get_subdomain_base()' );
@@ -590,7 +595,7 @@ function bp_blogs_get_subdomain_base() {
  * Allegedly output an avatar upload form, but it hasn't done that since 2009.
  *
  * @since BuddyPress 1.0.0
- * @deprecated 2.1.0
+ * @deprecated BuddyPress 2.1.0
  */
 function bp_avatar_upload_form() {
 	_deprecated_function(__FUNCTION__, '2.1', 'No longer used' );

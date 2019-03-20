@@ -8,7 +8,7 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 if ( !class_exists( 'BBP_Admin' ) ) :
 /**
@@ -191,9 +191,10 @@ class BBP_Admin {
 		// These are later removed in admin_head
 		if ( current_user_can( 'bbp_tools_page' ) ) {
 			if ( current_user_can( 'bbp_tools_repair_page' ) ) {
-				$hooks[] = add_management_page(
+				$hooks[] = add_submenu_page(
+					'buddyboss-platform',
 					__( 'Repair Forums', 'buddyboss' ),
-					__( 'Forum Repair',  'buddyboss' ),
+					__( 'Forum Repair', 'buddyboss' ),
 					$this->minimum_capability,
 					'bbp-repair',
 					'bbp_admin_repair'
@@ -201,9 +202,10 @@ class BBP_Admin {
 			}
 
 			if ( current_user_can( 'bbp_tools_import_page' ) ) {
-				$hooks[] = add_management_page(
+				$hooks[] = add_submenu_page(
+					'buddyboss-platform',
 					__( 'Import Forums', 'buddyboss' ),
-					__( 'Forum Import',  'buddyboss' ),
+					__( 'Forum Import', 'buddyboss' ),
 					$this->minimum_capability,
 					'bbp-converter',
 					'bbp_converter_settings'
@@ -211,13 +213,14 @@ class BBP_Admin {
 			}
 
 			if ( current_user_can( 'bbp_tools_reset_page' ) ) {
-				$hooks[] = add_management_page(
-					__( 'Reset Forums', 'buddyboss' ),
-					__( 'Forum Reset',  'buddyboss' ),
-					$this->minimum_capability,
-					'bbp-reset',
-					'bbp_admin_reset'
-				);
+//				$hooks[] = add_submenu_page(
+//					'buddyboss-platform',
+//					__( 'Reset Forums', 'buddyboss' ),
+//					__( 'Forum Reset', 'buddyboss' ),
+//					$this->minimum_capability,
+//					'bbp-reset',
+//					'bbp_admin_reset'
+//				);
 			}
 
 			// Fudge the highlighted subnav item when on a Forums admin page
@@ -225,14 +228,6 @@ class BBP_Admin {
 				add_action( "admin_head-$hook", 'bbp_tools_modify_menu_highlight' );
 			}
 
-			// Forums Tools Root
-			add_management_page(
-				__( 'Forums', 'buddyboss' ),
-				__( 'Forums', 'buddyboss' ),
-				$this->minimum_capability,
-				'bbp-repair',
-				'bbp_admin_repair'
-			);
 		}
 
 		// These are later removed in admin_head

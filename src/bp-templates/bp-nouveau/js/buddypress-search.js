@@ -4,7 +4,7 @@ jQuery(document).ready(function($) {
 	function initAutoComplete(  ) {
 		if (BP_SEARCH.enable_ajax_search == '1') {
 			var document_height = $(document).height();
-			$("form[role='search'], form.search-form, form.searchform, form#adminbarsearch, .bp-search-form>#search-form").each(function() {
+			$(BP_SEARCH.selector).each(function() {
 				var $form = $(this);
 				$search_field = $form.find("input[name='s'], input[type=search]");
 				if ($search_field.length > 0) {
@@ -107,6 +107,17 @@ jQuery(document).ready(function($) {
 
 					};
 
+					/**
+					 * Add hidden input as a flag in a search form. If this hidden input exist in a search form,
+					 * it'll sprint network search feature of the platform in the search query.
+					 */
+					if ( ! $( 'input[name="bp_search"]', $form ).length ) {
+						$( '<input>' ).attr( {
+							type: 'hidden',
+							name: 'bp_search',
+							value: '1',
+						} ).appendTo( $form );
+					}
 				}
 			});
 

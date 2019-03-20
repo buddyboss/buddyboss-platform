@@ -11,7 +11,7 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /** Mapping *******************************************************************/
 
@@ -548,6 +548,11 @@ function bbp_remove_roles() {
 	remove_role( 'bbp_visitor' );
 }
 
+/**
+ * Map forum capabilities to WP roles
+ *
+ * @since  BuddyBoss 1.0.0
+ */
 function bbp_map_caps_to_wp_roles() {
 	$wp_bbp_role_map = [
 		'administrator' => 'bbp_keymaster',
@@ -568,6 +573,11 @@ function bbp_map_caps_to_wp_roles() {
 	}
 }
 
+/**
+ * Restore forum capabilities from WP roles
+ *
+ * @since  BuddyBoss 1.0.0
+ */
 function bbp_restore_caps_from_wp_roles() {
 	$wp_bbp_role_map = [
 		'administrator' => 'bbp_keymaster',

@@ -74,9 +74,34 @@ window.bp = window.bp || {};
 			user_id:   0,
 			item_id:   0,
 			object:   '',
-			content:  ''
+			content:  '',
+			link_success: false,
+			link_error: false,
+			link_error_msg: '',
+			link_scrapping: false,
+			link_images: [],
+			link_image_index: 0,
+			link_title: '',
+			link_description: '',
+			link_url: '',
+			gif_data: {}
 		}
 	} );
+
+	bp.Models.GifResults = Backbone.Model.extend( {
+		defaults: {
+			q: '',
+			data: []
+		}
+	});
+
+	bp.Models.GifData = Backbone.Model.extend({});
+
+	// Git results collection returned from giphy api
+	bp.Collections.GifDatas =  Backbone.Collection.extend( {
+		// Reference to this collection's model.
+		model: bp.Models.GifData,
+	});
 
 	// Object, the activity is attached to (group or blog or any other)
 	bp.Models.ActivityObject = Backbone.Model.extend( {
@@ -142,23 +167,403 @@ window.bp = window.bp || {};
 		}
 	} );
 
-	// Regular input
-	bp.Views.ActivityInput = bp.View.extend( {
-		tagName  : 'input',
-
-		attributes: {
-			type : 'text'
+	// Activity link preview
+	bp.Views.ActivityLinkPreview = bp.View.extend( {
+		tagName: 'div',
+		className: 'activity-url-scrapper-container',
+		template: bp.template( 'activity-link-preview' ),
+		events: {
+			'click #activity-link-preview-button': 'toggleURLInput',
+			'keyup #activity-link-preview-url': 'updateLinkPreview',
+			'click #activity-url-prevPicButton': 'prev',
+			'click #activity-url-nextPicButton': 'next',
+			'click #activity-link-preview-close-image': 'close',
+			'click #activity-close-link-suggestion': 'destroy',
 		},
 
 		initialize: function() {
-			if ( ! _.isObject( this.options ) ) {
+			this.listenTo( this.model, 'change', this.render );
+		},
+
+		render: function() {
+			this.$el.html( this.template( this.model.toJSON() ) );
+			return this;
+		},
+
+		prev: function() {
+			var imageIndex = this.model.get( 'link_image_index' );
+			if ( imageIndex > 0 ) {
+				this.model.set( 'link_image_index', imageIndex - 1 );
+			}
+		},
+
+		next: function() {
+			var imageIndex = this.model.get( 'link_image_index' );
+			var images = this.model.get( 'link_images' );
+			if ( imageIndex < images.length - 1 ) {
+				this.model.link_image_index++;
+				this.model.set( 'link_image_index', imageIndex + 1 );
+			}
+		},
+
+		close: function(e) {
+			e.preventDefault();
+			this.model.set({
+				link_images: [],
+				link_image_index: 0,
+			});
+		},
+
+		destroy: function( e ) {
+			e.preventDefault();
+			// Set default values
+			this.model.set({
+				link_success: false,
+				link_error: false,
+				link_error_msg: '',
+				link_scrapping: false,
+				link_images: [],
+				link_image_index: 0,
+				link_title: '',
+				link_description: '',
+				link_url: ''
+			});
+		},
+
+		updateLinkPreview: function( event ) {
+			var self = this;
+
+			if ( this.linkTimeout != null ) {
+				clearTimeout( this.linkTimeout );
+			}
+
+			this.linkTimeout = setTimeout( function() {
+				this.linkTimeout = null;
+				self.scrapURL( event.target.value );
+			}, 1000 );
+		},
+
+		scrapURL: function(urlText) {
+			var urlString = "";
+			if ( urlText.indexOf( 'http://' ) >= 0 ) {
+				urlString = this.getURL( 'http://', urlText );
+			} else if ( urlText.indexOf( 'https://' ) >= 0 ) {
+				urlString = this.getURL( 'https://', urlText );
+			} else if ( urlText.indexOf( 'www.' ) >= 0 ) {
+				urlString = this.getURL( 'www', urlText );
+			}
+
+			if( urlString !== '' ){
+				//check if the url of any of the excluded video oembeds
+				var url_a = document.createElement( 'a' );
+				url_a.href = urlString;
+				var hostname = url_a.hostname;
+				if ( BP_Nouveau.activity.params.excluded_hosts.indexOf( hostname ) !== - 1 ) {
+					urlString = '';
+				}
+			}
+
+			if( '' !== urlString ) {
+				this.loadURLPreview( urlString );
+			}
+		},
+
+		getURL: function( prefix, urlText ) {
+			var urlString = '';
+			var startIndex = urlText.indexOf( prefix );
+			for ( var i = startIndex; i < urlText.length; i ++ ) {
+				if ( urlText[i] === ' ' || urlText[i] === '\n' ) {
+					break;
+				} else {
+					urlString += urlText[i];
+				}
+			}
+			if ( prefix === 'www' ) {
+				prefix = 'http://';
+				urlString = prefix + urlString;
+			}
+			return urlString;
+		},
+
+		loadURLPreview: function(url) {
+			var self = this;
+
+			var regexp = /^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+			if ( regexp.test( url ) ) {
+
+				self.model.set( {
+					link_scrapping: true,
+					link_loading: true,
+					link_error: false,
+					link_url: url,
+				} );
+
+				bp.ajax.post( 'bp_activity_parse_url', { url: url } ).always( function( response ) {
+					self.model.set('link_loading', false);
+
+					if ( response.title === '' && response.images === '' ) {
+						self.model.set( 'link_scrapping', false );
+						return;
+					}
+
+					if ( response.error === '' ) {
+						self.model.set( {
+							link_success: true,
+							link_title: response.title,
+							link_description: response.description,
+							link_images: response.images,
+							link_image_index: 0,
+						} );
+					} else {
+						self.model.set( {
+							link_success: false,
+							link_error: true,
+							link_error_msg: response.error,
+						} );
+					}
+				});
+			}
+		},
+	} );
+
+	// Activity gif selector
+	bp.Views.ActivityAttachedGifPreview = bp.View.extend( {
+		tagName: 'div',
+		className: 'activity-attached-gif-container',
+		template: bp.template( 'activity-attached-gif' ),
+		events: {
+			'click .gif-image-remove': 'handleRemove'
+		},
+
+		initialize: function() {
+			this.listenTo( this.model, 'change', this.render );
+		},
+
+		render: function() {
+			this.$el.html( this.template( this.model.toJSON() ) );
+
+			var gifData = this.model.get('gif_data');
+			if ( ! _.isEmpty( gifData ) ) {
+				this.el.style.backgroundImage = 'url(' + gifData.images.fixed_width.url + ')';
+				this.el.style.backgroundSize = 'contain';
+				this.el.style.height = gifData.images.original.height + 'px';
+				this.el.style.width = gifData.images.original.width + 'px';
+			}
+
+			return this;
+		},
+
+		handleRemove: function( e ) {
+			this.model.set('gif_data', {} );
+			this.el.style.backgroundImage = '';
+			this.el.style.backgroundSize = '';
+			this.el.style.height = '0px';
+			this.el.style.width = '0px';
+		}
+	} );
+
+	// Gif search dropdown
+	bp.Views.GifMediaSearchDropdown = bp.View.extend( {
+		tagName: 'div',
+		className: 'activity-attached-gif-container  caret caret--stroked caret--top',
+		template: bp.template( 'gif-media-search-dropdown' ),
+		total_count: 0,
+		offset: 0,
+		limit: 20,
+		q: null,
+		requests: [],
+		events: {
+			'keyup .search-query-input': 'search',
+			'click .found-media-item': 'select'
+		},
+
+		initialize: function( options ) {
+			this.options = options || {};
+			this.giphy = new window.Giphy( BP_Nouveau.activity.params.gif_api_key );
+
+			this.gifDataItems = new bp.Collections.GifDatas();
+			this.listenTo( this.gifDataItems, 'add', this.addOne );
+			this.listenTo( this.gifDataItems, 'reset', this.addAll );
+
+			document.addEventListener( 'scroll', _.bind( this.loadMore, this ), true );
+
+		},
+
+		render: function() {
+			this.$el.html( this.template( this.model.toJSON() ) );
+			this.$gifResultItem = this.$el.find( '.gif-search-results-list' );
+			this.loadTrending();
+			return this;
+		},
+
+		search: function( e ) {
+			var self = this;
+
+			if ( this.Timeout != null ) {
+				clearTimeout( this.Timeout );
+			}
+
+			this.Timeout = setTimeout( function() {
+				this.Timeout = null;
+				self.searchGif( e.target.value );
+			}, 1000 );
+		},
+
+		searchGif: function( q ) {
+			var self = this;
+			self.q = q;
+			self.offset = 0;
+
+			self.clearRequests();
+			self.el.classList.add('loading');
+
+			var request = self.giphy.search( {
+					q: q,
+					offset: self.offset,
+					fmt: 'json',
+					limit: this.limit,
+				},
+				function( response ) {
+					self.gifDataItems.reset( response.data );
+					self.total_count = response.pagination.total_count;
+					self.el.classList.remove('loading');
+				}
+			);
+
+			self.requests.push( request );
+			self.offset = self.offset + self.limit;
+		},
+
+		select: function( e ) {
+			e.preventDefault();
+			this.$el.parent().removeClass( 'open' );
+			var model = this.gifDataItems.findWhere({id: e.currentTarget.dataset.id});
+			this.model.set( 'gif_data', model.attributes );
+		},
+
+		// Add a single GifDataItem to the list by creating a view for it, and
+		// appending its element to the `<ul>`.
+		addOne: function( data ) {
+			var view = new bp.Views.GifDataItem( { model: data } );
+			this.$gifResultItem.append( view.render().el );
+		},
+
+		// Add all items in the **GifDataItem** collection at once.
+		addAll: function() {
+			this.$gifResultItem.html( '' );
+			this.gifDataItems.each( this.addOne, this );
+		},
+
+		loadTrending: function() {
+			var self = this;
+			self.offset = 0;
+			self.q = null;
+
+			self.clearRequests();
+			self.el.classList.add('loading');
+
+			var request = self.giphy.trending( {
+				offset: self.offset,
+				fmt: 'json',
+				limit: this.limit,
+			}, function( response ) {
+				self.gifDataItems.reset( response.data );
+				self.total_count = response.pagination.total_count;
+				self.el.classList.remove('loading');
+			});
+
+			self.requests.push( request );
+			self.offset = self.offset + self.limit;
+		},
+
+		loadMore: function( event ) {
+			if ( event.target.id === 'gif-search-results' ) { // or any other filtering condition
+				var el = event.target;
+				if ( el.scrollTop + el.offsetHeight >= el.scrollHeight &&  ! el.classList.contains('loading') ) {
+					if ( this.total_count > 0 && this.offset <= this.total_count ) {
+						var self = this,
+						params = {
+							offset: self.offset,
+							fmt: 'json',
+							limit: self.limit,
+						};
+
+						self.el.classList.add('loading');
+
+						if ( _.isNull( self.q ) ) {
+							var request = self.giphy.trending( params, _.bind( self.loadMoreResponse, self ) );
+						} else {
+							var request = self.giphy.search( _.extend( { q: self.q }, params ), _.bind( self.loadMoreResponse, self ) );
+						}
+
+						self.requests.push( request );
+						this.offset = this.offset + this.limit;
+					}
+				}
+			}
+		},
+
+		clearRequests: function() {
+			this.gifDataItems.reset();
+
+			for ( i = 0; i < this.requests.length; i++ ) {
+				this.requests[i].abort();
+			}
+
+			this.requests = [];
+		},
+
+		loadMoreResponse: function( response ) {
+			this.el.classList.remove('loading');
+			this.gifDataItems.add( response.data );
+		}
+	} );
+
+	// Gif search dropdown single item
+	bp.Views.GifDataItem = bp.View.extend( {
+		tagName: 'li',
+		template: wp.template( 'gif-result-item' ),
+		initialize: function() {
+			this.listenTo( this.model, 'change', this.render );
+			this.listenTo( this.model, 'destroy', this.remove );
+		},
+
+		render: function() {
+			var bgNo = Math.floor( Math.random() * (6 - 1 + 1) ) + 1,
+				images = this.model.get('images');
+
+			this.$el.html( this.template( this.model.toJSON() ) );
+			this.el.classList.add('bg' + bgNo);
+			this.el.style.height = images.fixed_width.height + 'px';
+
+			return this;
+		}
+
+	} );
+
+	// Regular input
+	bp.Views.ActivityInput = bp.View.extend( {
+		tagName: 'input',
+
+		attributes: {
+			type: 'text'
+		},
+
+		initialize: function() {
+			if ( !_.isObject( this.options ) ) {
 				return;
 			}
 
 			_.each( this.options, function( value, key ) {
 				this.$el.prop( key, value );
 			}, this );
-		}
+
+			this.listenTo( this.model, 'change:link_loading', this.onLinkScrapping );
+		},
+
+		onLinkScrapping: function() {
+			this.$el.prop( 'disabled', false );
+		},
 	} );
 
 	// The content of the activity
@@ -365,7 +770,7 @@ window.bp = window.bp || {};
 		id       : 'whats-new-content',
 
 		initialize: function() {
-			this.$el.html( $('<div></div>' ).prop( 'id', 'whats-new-textarea' ) );
+			this.$el.html( $( '<div></div>' ).prop( 'id', 'whats-new-textarea' ) );
 			this.views.set( '#whats-new-textarea', new bp.Views.WhatsNew( { activity: this.options.activity } ) );
 		}
 	} );
@@ -494,7 +899,68 @@ window.bp = window.bp || {};
 		}
 	} );
 
-	/**
+	bp.Views.ActivityToolbar = bp.View.extend( {
+		tagName: 'div',
+		id: 'whats-new-toolbar',
+		template: bp.template( 'whats-new-toolbar' ),
+		events: {
+			'click #activity-link-preview-button': 'toggleURLInput',
+			'click #activity-gif-button': 'toggleGifSelector'
+		},
+
+		initialize: function() {
+			document.addEventListener( 'keydown', _.bind( this.closeGifDropdownOnEsc, this ) );
+			$( document ).on( 'click', _.bind( this.closeGifDropdownOnClick, this ) );
+		},
+
+		render: function() {
+			this.$el.html(this.template(this.model.toJSON()));
+			this.$searchDropdownEl = this.$el.find('.gif-media-search-dropdown');
+			return this;
+		},
+
+		toggleURLInput: function( e ) {
+			e.preventDefault();
+			this.model.set( 'link_scrapping', !this.model.get( 'link_scrapping' ) );
+		},
+
+		toggleGifSelector: function( e ) {
+			e.preventDefault();
+			if ( this.$searchDropdownEl.is(':empty') ) {
+				var gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown({model: this.model});
+				this.$searchDropdownEl.html( gifMediaSearchDropdownView.render().el );
+			}
+			this.$searchDropdownEl.toggleClass('open');
+		},
+
+		closeGifDropdownOnEsc: function( event ) {
+			var key = event.key; // const {key} = event; in ES6+
+			if ( key === 'Escape' ) {
+				this.$searchDropdownEl.removeClass('open');
+			}
+		},
+
+		closeGifDropdownOnClick: function( event ) {
+			if (!$(event.target).closest('.post-gif').length) {
+				this.$searchDropdownEl.removeClass('open');
+			}
+		}
+	} );
+
+	bp.Views.ActivityAttachments = bp.View.extend( {
+		tagName: 'div',
+		id: 'whats-new-attachments',
+		initialize: function() {
+
+			if ( !_.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
+				this.views.add( new bp.Views.ActivityLinkPreview( { model: this.model } ) );
+			}
+
+			this.views.add( new bp.Views.ActivityAttachedGifPreview( { model: this.model } ) );
+		}
+	});
+
+		/**
 	 * Now build the buttons!
 	 * @type {[type]}
 	 */
@@ -590,6 +1056,7 @@ window.bp = window.bp || {};
 			} );
 
 			var submit = new bp.Views.ActivityInput( {
+				model: this.model,
 				type  : 'submit',
 				id    : 'aw-whats-new-submit',
 				className : 'button',
@@ -629,7 +1096,8 @@ window.bp = window.bp || {};
 			'focus #whats-new' : 'displayFull',
 			'reset'            : 'resetForm',
 			'submit'           : 'postUpdate',
-			'keydown'          : 'postUpdate'
+			'keydown'          : 'postUpdate',
+			'keyup'            : 'updateLinkPreview'
 		},
 
 		initialize: function() {
@@ -641,12 +1109,18 @@ window.bp = window.bp || {};
 			// Clone the model to set the resetted one
 			this.resetModel = this.model.clone();
 
+			this.linkTimeout = null;
+
 			this.views.set( [
 				new bp.Views.FormAvatar(),
-				new bp.Views.FormContent( { activity: this.model } )
+				new bp.Views.FormContent( { activity: this.model, model: this.model } )
 			] );
 
 			this.model.on( 'change:errors', this.displayFeedback, this );
+
+			if ( ! BP_Nouveau.activity.params.link_preview ) {
+				this.$el.off( 'keyup' );
+			}
 		},
 
 		displayFull: function( event ) {
@@ -678,6 +1152,9 @@ window.bp = window.bp || {};
 				bp.Nouveau.Activity.postForm.buttons.set( BP_Nouveau.activity.params.buttons );
 				this.views.add( new bp.Views.FormButtons( { collection: bp.Nouveau.Activity.postForm.buttons, model: this.model } ) );
 			}
+
+			this.views.add( new bp.Views.ActivityAttachments( { model: this.model } ) );
+			this.views.add( new bp.Views.ActivityToolbar( { model: this.model } ) );
 
 			// Select box for the object
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) {
@@ -768,7 +1245,45 @@ window.bp = window.bp || {};
 				data._bp_as_nonce = $('#_bp_as_nonce').val();
 			}
 
-			bp.ajax.post( 'post_update', _.extend( data, this.model.attributes ) ).done( function( response ) {
+			// Remove all unused link preview data
+			data = _.omit( _.extend( data, this.model.attributes ), [
+				'link_images',
+				'link_image_index',
+				'link_success',
+				'link_error',
+				'link_error_msg',
+				'link_scrapping',
+				'link_loading'
+			] );
+
+			// Form link preview data to pass in request if available
+			if ( this.model.get( 'link_success' ) ) {
+				var images = this.model.get( 'link_images' ),
+					index = this.model.get( 'link_image_index' );
+				if ( images.length ) {
+					data = _.extend( data, {
+						'link_image': images[ index ]
+					} );
+				}
+
+				// Append zero-width character to allow post link without activity content
+				if ( _.isEmpty( data.content ) ) {
+					data.content = '&#8203;';
+				}
+			} else {
+				data = _.omit(data, [
+					'link_title',
+					'link_description',
+					'link_url'
+				]);
+			}
+
+			// Append zero-width character to allow post gif without activity content
+			if ( ! _.isEmpty( data.gif_data ) && _.isEmpty( data.content ) ) {
+				data.content = '&#8203;';
+			}
+
+			bp.ajax.post( 'post_update', data ).done( function( response ) {
 				var store       = bp.Nouveau.getStorage( 'bp-activity' ),
 					searchTerms = $( '[data-bp-search="activity"] input[type="search"]' ).val(), matches = {},
 					toPrepend = false;

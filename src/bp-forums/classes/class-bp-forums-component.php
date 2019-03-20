@@ -17,7 +17,7 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 if ( !class_exists( 'BBP_Forums_Component' ) ) :
 /**
@@ -215,7 +215,7 @@ class BP_Forums_Component extends BP_Component {
 
         // Favorite topics
         $sub_nav[] = array(
-            'name'            => __( 'My Likes', 'buddyboss' ),
+            'name'            => __( 'My Favorites', 'buddyboss' ),
             'slug'            => bbp_get_user_favorites_slug(),
             'parent_url'      => $forums_link,
             'parent_slug'     => $this->slug,
@@ -282,7 +282,7 @@ class BP_Forums_Component extends BP_Component {
             $wp_admin_nav[] = array(
                 'parent' => 'my-account-' . $this->id,
                 'id'     => 'my-account-' . $this->id . '-favorites',
-                'title'  => __( 'My Likes', 'buddyboss' ),
+                'title'  => __( 'My Favorites', 'buddyboss' ),
                 'href'   => trailingslashit( $forums_link . bbp_get_user_favorites_slug() )
             );
 

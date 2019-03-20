@@ -175,6 +175,13 @@ function bp_email_get_customizer_settings() {
 			'transport'         => 'postMessage',
 			'type'              => 'option',
 		),
+        'bp_email_options[site_title_logo_size]' => array(
+			'capability'        => 'bp_moderate',
+			'default'           => $defaults['site_title_logo_size'],
+			'sanitize_callback' => 'absint',
+			'transport'         => 'postMessage',
+			'type'              => 'option',
+		),
 		'bp_email_options[site_title_text_size]' => array(
 			'capability'        => 'bp_moderate',
 			'default'           => $defaults['site_title_text_size'],
@@ -300,6 +307,20 @@ function bp_email_get_customizer_controls() {
 			'settings' => 'bp_email_options[logo]',
 			'width'		=> 180,
 			'height'	=> 41,
+		),
+        
+        'bp_mailtpl_site_title_logo_size' => array(
+			'class'    => 'BP_Customizer_Control_Range',
+			'label'    => __( 'Site Title logo size', 'buddyboss' ),
+			'description' => __( 'Used when logo is set.', 'buddyboss' ),
+			'section'  => 'section_bp_mailtpl_header',
+			'settings' => 'bp_email_options[site_title_logo_size]',
+
+			'input_attrs' => array(
+				'max'  => 300,
+				'min'  => 65,
+				'step' => 1,
+			),
 		),
 
 		'bp_mailtpl_site_title_text_color' => array(

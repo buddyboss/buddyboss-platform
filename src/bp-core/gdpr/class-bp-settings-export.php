@@ -127,6 +127,11 @@ final class BP_Settings_Export extends BP_Export {
 			bp_delete_user_meta( $user->ID, $noti_key );
 		}
 
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action( 'buddyboss_bp_gdpr_delete_additional_settings', $user );
 
 		$done = true;
@@ -136,7 +141,6 @@ final class BP_Settings_Export extends BP_Export {
 
 
 	/**
-	 *
 	 * Fetch user settings.
 	 *
 	 * @since BuddyBoss 1.0.0

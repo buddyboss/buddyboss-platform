@@ -7,7 +7,7 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /** Repair ********************************************************************/
 
@@ -26,8 +26,14 @@ function bbp_admin_repair() {
 ?>
 
 	<div class="wrap">
-
-		<h2 class="nav-tab-wrapper"><?php bbp_tools_admin_tabs( __( 'Repair Forums', 'buddyboss' ) ); ?></h2>
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddypress' ) ); ?></h2>
+		<div class="nav-settings-subsubsub">
+			<ul class="subsubsub">
+				<?php bp_core_tools_settings_admin_tabs(); ?>
+			</ul>
+		</div>
+	</div>
+	<div class="wrap">
 
 		<p><?php esc_html_e( 'Forums keeps track of relationships between forums, discussions, replies, and discussion tags, and users. Occasionally these relationships become out of sync, most often after an import or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
 		<p class="description"><?php esc_html_e( 'Some of these tools utilize substantial database resources. Avoid running more than 1 repair job at a time.', 'buddyboss' ); ?></p>
@@ -153,7 +159,7 @@ function bbp_admin_repair_list() {
 		15 => array( 'bbp-sync-all-topics-forums',   __( 'Recalculate last activity in each discussion and forum', 'buddyboss' ), 'bbp_admin_repair_freshness'                ),
 		20 => array( 'bbp-sync-all-topics-sticky',   __( 'Recalculate the sticky relationship of each discussion', 'buddyboss' ), 'bbp_admin_repair_sticky'                   ),
 		25 => array( 'bbp-sync-all-reply-positions', __( 'Recalculate the position of each reply',            'buddyboss' ), 'bbp_admin_repair_reply_menu_order'         ),
-		30 => array( 'bbp-group-forums',             __( 'Repair BuddyBoss Group Forum relationships',       'buddyboss' ), 'bbp_admin_repair_group_forum_relationship' ),
+		30 => array( 'bbp-group-forums',             __( 'Repair social group forum relationships',       'buddyboss' ), 'bbp_admin_repair_group_forum_relationship' ),
 		35 => array( 'bbp-forum-topics',             __( 'Count discussions in each forum',                        'buddyboss' ), 'bbp_admin_repair_forum_topic_count'        ),
 		40 => array( 'bbp-forum-replies',            __( 'Count replies in each forum',                       'buddyboss' ), 'bbp_admin_repair_forum_reply_count'        ),
 		45 => array( 'bbp-topic-replies',            __( 'Count replies in each discussion',                       'buddyboss' ), 'bbp_admin_repair_topic_reply_count'        ),
@@ -1191,8 +1197,15 @@ function bbp_admin_reset() {
 ?>
 
 	<div class="wrap">
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddypress' ) ); ?></h2>
+		<div class="nav-settings-subsubsub">
+			<ul class="subsubsub">
+				<?php bp_core_tools_settings_admin_tabs(); ?>
+			</ul>
+		</div>
+	</div>
+	<div class="wrap">
 
-		<h2 class="nav-tab-wrapper"><?php bbp_tools_admin_tabs( __( 'Reset Forums', 'buddyboss' ) ); ?></h2>
 		<p><?php esc_html_e( 'Revert your forums back to a brand new installation. This process cannot be undone.', 'buddyboss' ); ?></p>
 		<p><strong><?php esc_html_e( 'Backup your database before proceeding.', 'buddyboss' ); ?></strong></p>
 

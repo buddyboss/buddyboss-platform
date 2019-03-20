@@ -1246,7 +1246,13 @@ class BP_XProfile_Field {
 		} ?>
 
 		<div class="wrap">
-
+			<?php
+			$users_tab = count( bp_core_get_users_admin_tabs() );
+			if ( $users_tab > 1 ) {
+				?>
+				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddypress' ) ); ?></h2><?php
+			}
+			?>
 			<h1><?php echo esc_html( $title ); ?></h1>
 
 			<?php if ( !empty( $message ) ) : ?>
@@ -1424,7 +1430,7 @@ class BP_XProfile_Field {
 		</div>
 
 		<div class="postbox">
-			<h2><?php echo esc_html__( 'Help Text', 'buddyboss' ); ?></h2>
+			<h2><?php echo esc_html__( 'Text shown while editing your profile', 'buddyboss' ); ?></h2>
 			<div class="inside">
 				<?php
 					/**
@@ -1436,17 +1442,17 @@ class BP_XProfile_Field {
 				?>
 				<label for="title_secondary" class="screen-reader-text"><?php
 					/* translators: accessibility text */
-					esc_html_e( 'Alternate Title', 'buddyboss' );
+					esc_html_e( 'Override Title', 'buddyboss' );
 				?></label>
-				<p class="description"><?php _e( 'Alternate Title (optional)', 'buddyboss' ); ?></p>
+				<p class="description"><?php _e( 'Override Title (optional)', 'buddyboss' ); ?></p>
                 <input type="text" name="title_secondary" id="title_secondary" value="<?php echo esc_attr( $this->get_alternate_name() ) ;?>" autocomplete="off" />
 
 				<?php /* description while editing */ ?>
 				<label for="description" class="screen-reader-text"><?php
 					/* translators: accessibility text */
-					esc_html_e( 'Instructions', 'buddyboss' );
+					esc_html_e( 'Helper Text', 'buddyboss' );
 				?></label>
-				<p class="description" style="margin-top: 15px;"><?php _e( 'Instructions (optional)', 'buddyboss' ); ?></p>
+				<p class="description" style="margin-top: 15px;"><?php _e( 'Helper Text (optional)', 'buddyboss' ); ?></p>
 				<textarea name="description" id="description" rows="8" cols="60"><?php echo esc_textarea( $this->description ); ?></textarea>
 
 			</div>
@@ -1658,7 +1664,8 @@ class BP_XProfile_Field {
 
 		$synced_fields = [
 			bp_xprofile_firstname_field_id(),
-			bp_xprofile_nickname_field_id()
+			bp_xprofile_nickname_field_id(),
+			bp_xprofile_lastname_field_id()
 		];
 
 		if ( bp_get_option( 'bp-display-name-format' ) == 'first_last_name' ) {

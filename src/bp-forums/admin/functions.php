@@ -7,7 +7,7 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 /** Admin Menus ***************************************************************/
 
@@ -251,3 +251,25 @@ function bbp_tools_admin_tabs( $active_tab = '' ) {
 		// Output the tabs
 		return $tabs_html;
 	}
+
+function bbp_core_get_tools_settings_admin_tabs( $tabs ) {
+
+	$tabs[] = array(
+		'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bbp-repair', 'tab' => 'bbp-repair' ), 'admin.php' ) ),
+		'name' => __( 'Repair Forums', 'buddyboss' ),
+		'slug' => 'bbp-repair'
+	);
+	$tabs[] = array(
+		'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bbp-converter', 'tab' => 'bbp-converter' ), 'admin.php' ) ),
+		'name' => __( 'Import Forums', 'buddyboss' ),
+		'slug' => 'bbp-converter'
+	);
+//	$tabs[] = array(
+//		'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bbp-reset', 'tab' => 'bbp-reset' ), 'admin.php' ) ),
+//		'name' => __( 'Reset Forums', 'buddyboss' ),
+//		'slug' => 'bbp-reset'
+//	);
+
+	return $tabs;
+}
+add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bbp_core_get_tools_settings_admin_tabs', 15, 1 );

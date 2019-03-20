@@ -8,7 +8,7 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 if ( !class_exists( 'BBP_Topics_Admin' ) ) :
 /**
@@ -168,7 +168,7 @@ class BBP_Topics_Admin {
 			'title'		=> __( 'Bulk Actions', 'buddyboss' ),
 			'content'	=>
 				'<p>' . __( 'You can also edit or move multiple discussions to the trash at once. Select the discussions you want to act on using the checkboxes, then select the action you want to take from the Bulk Actions menu and click Apply.',           'buddyboss' ) . '</p>' .
-				'<p>' . __( 'When using Bulk Edit, you can change the metadata (categories, author, etc.) for all selected discussions at once. To remove a discussion from the grouping, just click the x next to its name in the Bulk Edit area that appears.', 'buddyboss' ) . '</p>'
+				'<p>' . __( 'When using Bulk Edit, you can change the status (Published, Private, etc.) and add discussion tags for all selected discussions at once. To remove a discussion from the grouping, just click the x next to its name in the Bulk Edit area that appears.', 'buddyboss' ) . '</p>'
 		) );
 
 		// Help Sidebar
@@ -766,6 +766,9 @@ class BBP_Topics_Admin {
 		if ( $this->bail() ) return $actions;
 
 		unset( $actions['inline hide-if-no-js'] );
+		
+		//simple hack to show the discussion content
+		bbp_topic_content( $topic->ID );
 
 		// Show view link if it's not set, the topic is trashed and the user can view trashed topics
 		if ( empty( $actions['view'] ) && ( bbp_get_trash_status_id() === $topic->post_status ) && current_user_can( 'view_trash' ) )

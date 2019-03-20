@@ -166,6 +166,8 @@ function bp_nouveau_ajax_querystring( $query_string, $object ) {
 }
 
 /**
+ * Output ajax button for action (e.g. request connection with member, join group, leave group, follow member, etc.)
+ *
  * @since BuddyPress 3.0.0
  *
  * @return string
@@ -300,6 +302,8 @@ function bp_nouveau_wrapper( $args = array() ) {
 }
 
 /**
+ * Check if Nouveau sidebar object nav widget is active.
+ *
  * @since BuddyPress 3.0.0
  *
  * @return bool
@@ -309,6 +313,8 @@ function bp_nouveau_is_object_nav_in_sidebar() {
 }
 
 /**
+ * Check if logged in user has queried capability.
+ *
  * @since BuddyPress 3.0.0
  *
  * @return bool
@@ -816,6 +822,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		'directory-activity-loading' => array(
 			'type'    => 'loading',
 			'message' => __( 'Loading community updates. Please wait.', 'buddyboss' ),
+		),
+		'activity-comments-loading' => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading activity comments. Please wait.', 'buddyboss' ),
 		),
 		'single-activity-loading' => array(
 			'type'    => 'loading',

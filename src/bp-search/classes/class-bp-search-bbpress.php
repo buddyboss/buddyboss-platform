@@ -1,15 +1,18 @@
 <?php
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+/**
+ * @todo add description
+ * 
+ * @package BuddyBoss\Search
+ * @since BuddyBoss 1.0.0
+ */ 
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 if (!class_exists('Bp_Search_bbPress')):
 
 	/**
-	 *
-	 * BuddyPress Global Search  - search bbPress
-	 * **************************************
-	 *
-	 *
+	 * BuddyPress Global Search  - search bbPress class
 	 */
 	abstract class Bp_Search_bbPress extends Bp_Search_Type {
 		public $type;

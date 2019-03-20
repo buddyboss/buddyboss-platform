@@ -34,12 +34,14 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 		$class    = 'customize-control customize-control-' . $this->type;
 		$setting  = "bp_nouveau_appearance[{$this->type}_nav_order]";
 		$item_nav = array();
+		$type     = '';
 
 		// It's a group
 		if ( 'group' === $this->type ) {
 			$guide = __( 'Customizing the Groups navigation requires you to create a group first.', 'buddyboss' );
 
 			$slug = array();
+			$type = 'group';
 
 			if ( isset( $_GET['url'] ) && !empty( $_GET['url'] ) ) {
 				$parse_url = parse_url( $_GET['url'] );
@@ -70,8 +72,9 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 		// It's a user!
 		} else {
 			$item_nav = bp_nouveau_member_customizer_nav();
+			$type     = 'user';
 
-			$guide = __( 'Drag and drop each member navigation item to change the order.', 'buddyboss' );
+			$guide = __( 'Drag and drop each profile navigation item to change the order.', 'buddyboss' );
 		}
 		?>
 
@@ -87,18 +90,49 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 				<?php
 				$i = 0;
 				foreach ( $item_nav as $item ) :
-					$i += 1;
-				?>
-					<li data-bp-nav="<?php echo esc_attr( $item->slug ); ?>">
-						<div class="menu-item-bar">
-							<div class="menu-item-handle ui-sortable-handle">
-								<span class="item-title" aria-hidden="true">
-									<span class="menu-item-title"><?php esc_html_e( _bp_strip_spans_from_title( $item->name ) ); ?></span>
-								</span>
+
+					// Get current activated theme.
+					$theme_name = wp_get_theme();
+					$name       = $theme_name->get( 'Name' );
+
+					// Check if theme is BuddyBoss
+					if ( strpos( $name, 'BuddyBoss' ) !== false && 'user' === $type ) {
+
+						// If the BuddyBoss theme activated then remove ( Account, Notification abd Message ) tab.
+						if ( ! in_array( $item->slug, array( 'settings', 'notifications', 'messages' ) ) ) {
+
+							$i += 1;
+
+							?>
+							<li data-bp-nav="<?php echo esc_attr( $item->slug ); ?>">
+								<div class="menu-item-bar">
+									<div class="menu-item-handle ui-sortable-handle">
+									<span class="item-title" aria-hidden="true">
+										<span class="menu-item-title"><?php esc_html_e( _bp_strip_spans_from_title( $item->name ) ); ?></span>
+									</span>
+									</div>
+								</div>
+							</li>
+							<?php
+						}
+					// do nothing
+					} else {
+						$i += 1;
+
+						?>
+						<li data-bp-nav="<?php echo esc_attr( $item->slug ); ?>">
+							<div class="menu-item-bar">
+								<div class="menu-item-handle ui-sortable-handle">
+									<span class="item-title" aria-hidden="true">
+										<span class="menu-item-title"><?php esc_html_e( _bp_strip_spans_from_title( $item->name ) ); ?></span>
+									</span>
+								</div>
 							</div>
-						</div>
-					</li>
-				<?php endforeach; ?>
+						</li>
+						<?php
+					}
+
+				endforeach; ?>
 
 			</ul>
 		<?php endif; ?>

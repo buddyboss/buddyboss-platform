@@ -267,7 +267,7 @@ function bp_core_get_userid( $username = '' ) {
 }
 
 /**
- * Return the user ID based on a user's user_nicename.
+ * Return the user ID based on user_nicename.
  *
  * @since BuddyPress 1.2.3
  *
@@ -292,6 +292,14 @@ function bp_core_get_userid_from_nicename( $user_nicename = '' ) {
 	return apply_filters( 'bp_core_get_userid_from_nicename', ! empty( $user->ID ) ? $user->ID : NULL, $user_nicename );
 }
 
+/**
+ * Return the user ID based on nickname.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $nickname nickname to check.
+ * @return int|null The ID of the matched user on success, null on failure.
+ */
 function bp_core_get_userid_from_nickname( $nickname ) {
 	if ( empty( $nickname ) ) {
 		return false;
@@ -304,14 +312,22 @@ function bp_core_get_userid_from_nickname( $nickname ) {
 		'count_total' => false
 	] );
 
-	$user = $users? $users[0] : null;
+	$user = $users ? $users[0] : null;
 
 	return apply_filters( 'bp_core_get_userid_from_nickname', ! empty( $user->ID ) ? $user->ID : null, $nickname );
 }
 
+/**
+ * Retrieve member info based on nickname.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $nickname nickname to check.
+ * @return WP_User|null WP_User object on success, null on failure.
+ */
 function bp_get_user_by_nickname( $nickname ) {
 	$user_id = bp_core_get_userid_from_nickname( $nickname );
-	return $user_id? get_user_by( 'ID', $user_id ) : null;
+	return $user_id ? get_user_by( 'ID', $user_id ) : null;
 }
 
 /**
@@ -2803,6 +2819,16 @@ function bp_get_current_member_type() {
 	return apply_filters( 'bp_get_current_member_type', buddypress()->current_member_type );
 }
 
+/**
+ * Get the display_name for member based on user_id
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $display_name
+ * @param int $user_id
+ *
+ * @return string
+ */
 function bp_custom_display_name_format( $display_name, $user_id = null ) {
 	// some cases it calls the filter directly, therefore no user id is passed
 	if ( ! $user_id ) {

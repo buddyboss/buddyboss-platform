@@ -2,7 +2,6 @@
 /**
  * BuddyBoss messages component Site-wide Notices admin screen.
  *
- *
  * @package BuddyBoss\Messages
  * @since BuddyPress 3.0.0
  */
@@ -82,7 +81,7 @@ class BP_Messages_Notices_Admin {
 	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_actions() {
-		add_action( bp_core_admin_hook(), array( $this, 'admin_menu' ) );
+		add_action( bp_core_admin_hook(), array( $this, 'admin_menu' ), 70 );
 	}
 
 	/**
@@ -96,15 +95,17 @@ class BP_Messages_Notices_Admin {
 			return false;
 		}
 
-		$this->screen_id = add_users_page(
-			__( 'Site Notices', 'buddyboss' ),
-			__( 'Site Notices', 'buddyboss' ),
+		$this->screen_id = add_submenu_page(
+			'buddyboss-platform',
+			__( 'Notices', 'buddyboss' ),
+			__( 'Notices', 'buddyboss' ),
 			'manage_options',
 			'bp-notices',
 			array( $this, 'admin_index' )
 		);
 
 		add_action( 'load-' . $this->screen_id, array( $this, 'admin_load' ) );
+
 	}
 
 	/**
@@ -193,7 +194,7 @@ class BP_Messages_Notices_Admin {
 
 			<?php endif; ?>
 
-			<p class="bp-notice-about"><?php esc_html_e( 'Manage notices shown at front end of your site to all logged-in users.', 'buddyboss' ); ?></p>
+			<p class="bp-notice-about"><?php esc_html_e( 'Manage notices shown on the front end of your site to all logged-in members. Use this to quickly notify all members.', 'buddyboss' ); ?></p>
 
 			<div class="bp-new-notice-panel">
 

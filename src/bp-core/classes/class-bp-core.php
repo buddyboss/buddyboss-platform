@@ -161,14 +161,14 @@ class BP_Core extends BP_Component {
 		$bp = buddypress();
 
 		/**
-		 * Filters the included and optional inetegrations.
+		 * Filters the included and optional integrations.
 		 *
 		 * @since BuddyBoss 1.0.0
 		 *
-		 * @param array $value Array of included and optional inetegrations.
+		 * @param array $value Array of included and optional integrations.
 		 */
 		$bp->available_integrations = apply_filters( 'bp_integrations', array(
-			'learndash' /* , 'sample' */
+			'appboss', 'learndash', 'woocommerce', 'memberpress'
 		) );
 
 		$integration_dir = $bp->plugin_dir . '/bp-integrations/';
@@ -181,7 +181,7 @@ class BP_Core extends BP_Component {
 		}
 
 		/**
-		 * Fires after the loading of individual inetegrations.
+		 * Fires after the loading of individual integrations.
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
@@ -347,16 +347,17 @@ class BP_Core extends BP_Component {
 			register_post_type(
 				bp_get_email_post_type(),
 				apply_filters( 'bp_register_email_post_type', array(
-					'description'       => __( 'BuddyBoss emails', 'buddyboss' ),
-					'labels'            => bp_get_email_post_type_labels(),
-					'menu_icon'         => 'dashicons-email-alt',
-					'public'            => false,
+					'description'        => __( 'BuddyBoss emails', 'buddyboss' ),
+					'labels'             => bp_get_email_post_type_labels(),
+					'menu_icon'          => 'dashicons-email-alt',
+					'public'             => false,
 					'publicly_queryable' => bp_current_user_can( 'bp_moderate' ),
-					'query_var'         => false,
-					'rewrite'           => false,
-					'show_in_admin_bar' => false,
-					'show_ui'           => bp_current_user_can( 'bp_moderate' ),
-					'supports'          => bp_get_email_post_type_supports(),
+					'query_var'          => false,
+					'rewrite'            => false,
+					'show_in_admin_bar'  => false,
+					'show_in_menu'       => false,
+					'show_ui'            => bp_current_user_can( 'bp_moderate' ),
+					'supports'           => bp_get_email_post_type_supports(),
 				) )
 			);
 		}

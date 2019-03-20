@@ -1,5 +1,12 @@
 <?php
-! defined( 'ABSPATH' ) ? exit() : '';
+/**
+ * BP Profile Search - filters template
+ *
+ * @since BuddyBoss 1.0.0
+ */
+ 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 	$F = bp_profile_search_escaped_form_data();
 	if (empty ($F->fields))  return false;

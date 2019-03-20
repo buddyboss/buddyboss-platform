@@ -1,10 +1,19 @@
 <?php
 
 /**
- * Send Invites: send invitations action handler
+ * Email Invite: Revoke Actions
  *
- * @package BuddyBoss\Settings\Actions
- * @since BuddyPress 3.0.0
+ * @package BuddyBoss\Invite\Actions
+ * @since BuddyBoss 1.0.0
+ */
+ 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+ /**
+ * Member revoke email invite.
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_member_revoke_invite() {
 

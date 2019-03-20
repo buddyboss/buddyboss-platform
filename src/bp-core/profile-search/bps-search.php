@@ -10,6 +10,11 @@
 defined( 'ABSPATH' ) || exit;
 
 add_action ('wp', 'bp_ps_set_request');
+/**
+ * Set BuddyBoss Profile Search request.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_set_request ()
 {
 	global $post;
@@ -58,6 +63,11 @@ function bp_ps_set_request ()
 	}
 }
 
+/**
+ * Gets BuddyBoss Profile Search request.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_get_request ($type, $form=0)
 {
 	$current = bp_ps_current_page ();
@@ -92,6 +102,11 @@ function bp_ps_get_request ($type, $form=0)
 	return apply_filters ('bp_ps_request', $request, $type, $form);
 }
 
+/**
+ * Saves BuddyBoss Profile Search hidden filters.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_save_hidden_filters ($attr, $content)
 {
 	global $bp_ps_hidden_filters;
@@ -149,6 +164,11 @@ function bp_ps_save_hidden_filters ($attr, $content)
 	add_filter ('body_class', function ($classes) {return array_merge (array ('directory', 'members', 'buddypress'), $classes);});
 }
 
+/**
+ * Hides BuddyBoss Profile Search filters.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_hidden_filters ()
 {
 	global $bp_ps_hidden_filters;
@@ -157,6 +177,11 @@ function bp_ps_hidden_filters ()
 	return apply_filters ('bp_ps_hidden_filters', $filters);
 }
 
+/**
+ * Return current BuddyBoss Profile Search page.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_current_page ()
 {
 	$current = defined ('DOING_AJAX')?
@@ -166,6 +191,11 @@ function bp_ps_current_page ()
 	return $current;
 }
 
+/**
+ * Check if BuddyBoss Profile Search debugging is set.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_debug ()
 {
 	$cookie = apply_filters ('bp_ps_cookie_name', 'bp_ps_debug');
@@ -173,7 +203,13 @@ function bp_ps_debug ()
 }
 
 //add_action ('bp_before_directory_members_content', 'bp_ps_display_filters');
-function bp_ps_display_filters ()
+
+/**
+ * Output BuddyBoss Profile Search filters template.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+ function bp_ps_display_filters ()
 {
 	$request = bp_ps_get_request ('filters');
 	if (!empty ($request))
@@ -181,7 +217,13 @@ function bp_ps_display_filters ()
 }
 
 add_filter ('bp_ajax_querystring', 'bp_ps_filter_members', 99, 2);
-function bp_ps_filter_members ($qs, $object)
+
+/**
+ * Filters and returns BuddyBoss Profile Search query members.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+ function bp_ps_filter_members ($qs, $object)
 {
 	if (!in_array ($object, array ('members', 'group_members')))  return $qs;
 
@@ -209,6 +251,11 @@ function bp_ps_filter_members ($qs, $object)
 	return $qs;
 }
 
+/**
+ * Returns BuddyBoss Profile Search results.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_search ( $request, $users = null ) {
     $results = array ( 'users' => array ( 0 ), 'validated' => true );
 
@@ -263,6 +310,11 @@ function bp_ps_search ( $request, $users = null ) {
     return $results;
 }
 
+/**
+ * Returns escaped $text with backslashes before characters _%\.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_esc_like ($text)
 {
     return addcslashes ($text, '_%\\');

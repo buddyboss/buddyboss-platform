@@ -1,19 +1,43 @@
 <?php
+/**
+ * BuddyBoss LearnDash integration ajax class.
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */
 
 namespace Buddyboss\LearndashIntegration\Buddypress;
 
 use Buddyboss\LearndashIntegration\Buddypress\ReportsGenerator;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * @todo add title/description
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class Ajax
 {
 	protected $bpGroup  = null;
 	protected $ldGroup  = null;
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
 		add_action('bp_ld_sync/init', [$this, 'init']);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function init()
 	{
 		add_action('wp_ajax_bp_ld_group_get_reports', [$this, 'ajaxGetReports']);
@@ -23,6 +47,11 @@ class Ajax
 		add_action('bp_ld_sync/reports_generator_args', [$this, 'unsetCompletionOnExport']);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function ajaxGetReports()
 	{
 		$this->enableDebugOnDev();
@@ -30,8 +59,18 @@ class Ajax
 
 		$generator = $this->getGenerator();
 
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action('bp_ld_sync/ajax/pre_fetch_reports', $generator);
 		$generator->fetch();
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action('bp_ld_sync/ajax/post_fetch_reports', $generator);
 
 		echo json_encode([
@@ -50,6 +89,11 @@ class Ajax
 		// ]);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function unsetCompletionOnExport($args)
 	{
 		if (bp_ld_sync()->getRequest('export')) {
@@ -59,6 +103,11 @@ class Ajax
 		return $args;
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function removeIdsOnNonExport($column, $args)
 	{
 		if (! isset($args['report'])) {
@@ -69,6 +118,11 @@ class Ajax
 		return $column;
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function ajaxGetExports($generator)
 	{
 		if (! bp_ld_sync()->getRequest('export')) {
@@ -78,6 +132,11 @@ class Ajax
 		return $generator->export();
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function ajaxDownloadReport()
 	{
 		$hash    = bp_ld_sync()->getRequest('hash');
@@ -104,6 +163,11 @@ class Ajax
 	    die();
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function enableDebugOnDev()
 	{
 		if (strpos(get_bloginfo('url'), '.test') === false) {
@@ -114,6 +178,11 @@ class Ajax
 		ini_set("display_errors", 1);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function validateRequest()
 	{
         if (! wp_verify_nonce(bp_ld_sync()->getRequest('nonce'), 'bp_ld_report')) {
@@ -129,6 +198,11 @@ class Ajax
         }
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function setRequestGroups()
 	{
 		if (! $groupId = bp_ld_sync()->getRequest('group')) {
@@ -145,6 +219,11 @@ class Ajax
 		$this->ldGroup = get_post(bp_ld_sync('buddypress')->helpers->getLearndashGroupId($groupId));
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function getGenerator()
 	{
 		$generators = bp_ld_sync('buddypress')->reports->getGenerators();

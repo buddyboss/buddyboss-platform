@@ -109,6 +109,9 @@ add_filter( 'bp_get_total_mention_count_for_user',  'bp_core_number_format' );
 add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_embed_excerpt_onclick_location_filter', 9 );
 add_filter( 'bp_after_has_activities_parse_args', 'bp_activity_display_all_types_on_just_me' );
 
+add_filter( 'bp_get_activity_content_body', 'bp_activity_link_preview', 7, 2 );
+add_filter( 'bp_get_activity_content_body', 'bp_activity_embed_gif', 7, 2 );
+
 /* Actions *******************************************************************/
 
 // At-name filter.
@@ -117,6 +120,13 @@ add_action( 'bp_activity_before_save', 'bp_activity_at_name_filter_updates' );
 // Activity feed moderation.
 add_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2, 1 );
 add_action( 'bp_activity_before_save', 'bp_activity_check_blacklist_keys',  2, 1 );
+
+// Activity link preview
+add_action( 'bp_activity_after_save', 'bp_activity_save_link_data', 2, 1 );
+add_action( 'bp_activity_after_save', 'bp_activity_save_gif_data', 2, 1 );
+
+// Remove Activity if uncheck the options from the backend BuddyBoss > Settings > Activity > Posts in Activity Feed >BuddyBoss Platform
+add_action( 'bp_activity_before_save', 'bp_activity_remove_platform_updates', 999, 1 );
 
 /** Functions *****************************************************************/
 
@@ -191,6 +201,65 @@ function bp_activity_check_blacklist_keys( $activity ) {
 		// Backpat.
 		$activity->component = false;
 	}
+}
+
+/**
+ * Save link preview data into activity meta key "_link_preview_data"
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $activity
+ */
+function bp_activity_save_link_data( $activity ) {
+
+	if ( empty( $_POST['link_url'] ) ) {
+		return;
+	}
+
+	$preview_data['url'] = $_POST['link_url'];
+
+	if ( ! empty( $_POST['link_image'] ) ) {
+		$attachment_id = bp_activity_media_sideload_attachment( $_POST['link_image'] );
+		if ( $attachment_id ) {
+			$preview_data['attachment_id'] = $attachment_id;
+		}
+	}
+
+	if ( ! empty( $_POST['link_title'] ) ) {
+		$preview_data['title'] = $_POST['link_title'];
+	}
+
+	if ( ! empty( $_POST['link_description'] ) ) {
+		$preview_data['description'] = $_POST['link_description'];
+	}
+
+	bp_activity_update_meta( $activity->id, '_link_preview_data', $preview_data );
+}
+
+/**
+ * Save gif data into activity meta key "_gif_attachment_id"
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $activity
+ */
+function bp_activity_save_gif_data( $activity ) {
+
+	if ( empty( $_POST['gif_data'] ) ) {
+		return;
+	}
+
+	$gif_data =  $_POST['gif_data'];
+
+	$still = bp_activity_media_sideload_attachment( $gif_data['images']['480w_still']['url'] );
+	$mp4 = bp_activity_media_sideload_attachment( $gif_data['images']['original_mp4']['mp4'] );
+
+	bp_activity_update_meta( $activity->id, '_gif_data', [
+		'still' => $still,
+		'mp4'   => $mp4,
+	] );
+
+	bp_activity_update_meta( $activity->id, '_gif_raw_data', $gif_data );
 }
 
 /**
@@ -453,6 +522,97 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 }
 
 /**
+ * Embed link preview in activity content
+ *
+ * @param $content
+ * @param $activity
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string
+ */
+function bp_activity_link_preview( $content, $activity ) {
+
+	$activity_id = $activity->id;
+
+	$preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );
+
+	if ( empty( $preview_data['url'] ) ) {
+		return $content;
+	}
+
+	$preview_data = bp_parse_args( $preview_data, [
+		'title'       => '',
+		'description' => '',
+	] );
+
+	$description = $preview_data['description'];
+	$read_more   = ' <a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Read more', 'buddyboss' ) . '...</a>';
+	$description = wp_trim_words( $description, 40, $read_more );
+
+	$content = make_clickable( $content );
+
+	$content .= '<div class="activity-link-preview-container">';
+	if ( ! empty( $preview_data['attachment_id'] ) ) {
+		$image_url = wp_get_attachment_image_url( $preview_data['attachment_id'], 'full' );
+		$content   .= '<div class="activity-link-preview-image">';
+		$content   .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . $image_url . '" /></a>';
+		$content   .= '</div>';
+	}
+	$content .= '<div class="activity-link-preview-content">';
+	$content .= '<span class="activity-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . addslashes( $preview_data['title'] ) . '</a></span>';
+	$content .= '<span class="activity-link-preview-body">' . $description . '</span>';
+	$content .= '</div>';
+	$content .= '</div>';
+	$content .= '<br/>';
+
+	return $content;
+}
+
+/**
+ * Embed gif in activity content
+ *
+ * @param $content
+ * @param $activity
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string
+ */
+function bp_activity_embed_gif( $content, $activity ) {
+	$activity_id = $activity->id;
+
+	$gif_data = bp_activity_get_meta( $activity_id, '_gif_data', true );
+
+	if ( empty( $gif_data ) ) {
+		return $content;
+	}
+
+	$preview_url = wp_get_attachment_url( $gif_data['still'] );
+	$video_url = wp_get_attachment_url( $gif_data['mp4'] );
+
+	ob_start();
+	?>
+	<div class="activity-attached-gif-container">
+		<div class="gif-image-container">
+			<div class="gif-player">
+				<video preload="auto" playsinline poster="<?php echo $preview_url ?>" loop muted playsinline>
+					<source src="<?php echo $video_url ?>" type="video/mp4">
+				</video>
+				<a href="#" class="gif-play-button">
+					<span class="dashicons dashicons-video-alt3"></span>
+				</a>
+				<span class="gif-icon"></span>
+			</div>
+		</div>
+	</div>
+	<?php
+	$content .= ob_get_clean();
+
+	return $content;
+}
+
+/**
  * Include extra JavaScript dependencies for activity component.
  *
  * @since BuddyPress 2.0.0
@@ -491,6 +651,14 @@ function bp_activity_newest_class( $classes = '' ) {
 	return $classes;
 }
 
+/**
+ * Returns $args to force display of all member activity types on members activity feed.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param array $args
+ * @return array $args
+ */
 function bp_activity_display_all_types_on_just_me($args) {
 	if ( ! isset( $args['scope'] ) ) {
 		return $args;
@@ -921,3 +1089,18 @@ function bp_users_filter_activity_following_scope( $retval = array(), $filter = 
 }
 
 add_filter( 'bp_activity_set_following_scope_args', 'bp_users_filter_activity_following_scope', 10, 2 );
+
+/**
+ * Do not add the activity if uncheck the options from the
+ * backend BuddyBoss > Settings > Activity > Posts in Activity Feed >BuddyBoss Platform
+ *
+ * @param $activity_object
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_activity_remove_platform_updates( $activity_object ) {
+
+	if ( false === bp_platform_is_feed_enable( 'bp-feed-platform-'.$activity_object->type ) ) {
+		$activity_object->type = false;
+	}
+}

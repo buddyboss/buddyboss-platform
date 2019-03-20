@@ -20,7 +20,7 @@ class BP_Admin_Setting_Forums extends BP_Admin_Setting_tab {
 	public function initialize() {
 		$this->tab_label = __( 'Forums', 'buddyboss' );
 		$this->tab_name  = 'bp-forums';
-		$this->tab_order = 30;
+		$this->tab_order = 25;
 	}
 
 	public function is_active() {
@@ -45,6 +45,13 @@ class BP_Admin_Setting_Forums extends BP_Admin_Setting_tab {
 		}
 
 		flush_rewrite_rules();
+	}
+
+	public function settings_saved() {
+
+		$url = bp_core_admin_setting_url( $this->tab_name, [ 'edited' => 'true' ] );
+		bp_core_redirect( $url );
+
 	}
 
 	public function register_fields() {

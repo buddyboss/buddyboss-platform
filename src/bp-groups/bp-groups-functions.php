@@ -3127,6 +3127,11 @@ function bp_group_type_short_code_callback( $atts ) {
 	return ob_get_clean();
 }
 
+/**
+ * Add body class to group type shortcode.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_group_type_short_code_add_body_class( $class ) {
 
 	global $post;
@@ -3409,17 +3414,17 @@ function get_group_role_label( $group_id, $label_name ) {
 		$group_type_roles = get_post_meta( $group_type_post_id, '_bp_group_type_role_labels', true ) ?: [];
 
 		if ( 'organizer_plural_label_name' === $label_name ) {
-			$label = ( $group_type_roles['organizer_plural_label_name'] ) ? $group_type_roles['organizer_plural_label_name'] : 'Organizers';
+			$label = ( isset( $group_type_roles['organizer_plural_label_name'] ) && $group_type_roles['organizer_plural_label_name'] ) ? $group_type_roles['organizer_plural_label_name'] : 'Organizers';
 		} elseif ( 'moderator_plural_label_name' === $label_name ) {
-			$label = ( $group_type_roles['moderator_plural_label_name'] ) ? $group_type_roles['moderator_plural_label_name'] : 'Moderators';
+			$label = ( isset( $group_type_roles['moderator_plural_label_name'] ) && $group_type_roles['moderator_plural_label_name'] ) ? $group_type_roles['moderator_plural_label_name'] : 'Moderators';
 		} elseif ( 'member_plural_label_name' === $label_name ) {
-			$label = ( $group_type_roles['member_plural_label_name'] ) ? $group_type_roles['member_plural_label_name'] : 'Members';
+			$label = ( isset( $group_type_roles['member_plural_label_name'] ) && $group_type_roles['member_plural_label_name'] ) ? $group_type_roles['member_plural_label_name'] : 'Members';
 		} elseif ( 'organizer_singular_label_name' === $label_name ) {
-			$label = ( $group_type_roles['organizer_singular_label_name'] ) ? $group_type_roles['organizer_singular_label_name'] : 'Organizer';
+			$label = ( isset( $group_type_roles['organizer_singular_label_name'] ) && $group_type_roles['organizer_singular_label_name'] ) ? $group_type_roles['organizer_singular_label_name'] : 'Organizer';
 		} elseif ( 'moderator_singular_label_name' === $label_name ) {
-			$label = ( $group_type_roles['moderator_singular_label_name'] ) ? $group_type_roles['moderator_singular_label_name'] : 'Moderator';
+			$label = ( isset( $group_type_roles['moderator_singular_label_name'] ) && $group_type_roles['moderator_singular_label_name'] ) ? $group_type_roles['moderator_singular_label_name'] : 'Moderator';
 		} elseif ( 'member_singular_label_name' === $label_name ) {
-			$label = ( $group_type_roles['member_singular_label_name'] ) ? $group_type_roles['member_singular_label_name'] : 'Member';
+			$label = ( isset( $group_type_roles['member_singular_label_name'] ) && $group_type_roles['member_singular_label_name'] ) ? $group_type_roles['member_singular_label_name'] : 'Member';
 		}
 	}
 

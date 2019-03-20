@@ -63,21 +63,55 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 	 *
 	 * @param array $value Array of post types to track.
 	 */
-	$post_types = apply_filters( 'bp_blogs_record_post_post_types', array( 'post' ) );
+	$post_types = apply_filters( 'bp_blogs_record_post_post_types', bp_core_get_active_custom_post_type_feed() );
+
 	$post_types_array = array_flip( $post_types );
 
 	if ( ! isset( $post_types_array[ $post_type ] ) ) {
 		return $params;
 	}
 
-	// Set specific params for the 'post' post type.
-	$params->component_id    = buddypress()->blogs->id;
-	$params->action_id       = 'new_blog_post';
-	$params->admin_filter    = __( 'New post published', 'buddyboss' );
-	$params->format_callback = 'bp_blogs_format_activity_action_new_blog_post';
-	$params->front_filter    = __( 'Posts', 'buddyboss' );
-	$params->contexts        = array( 'activity', 'member' );
-	$params->position        = 5;
+	if ( 'post' === $post_type ) {
+		// Set specific params for the 'post' post type.
+		$params->component_id    = buddypress()->blogs->id;
+		$params->action_id       = 'new_blog_post';
+		$params->admin_filter    = __( 'New post published', 'buddyboss' );
+		$params->format_callback = 'bp_blogs_format_activity_action_new_blog_post';
+		$params->front_filter    = __( 'Posts', 'buddyboss' );
+		$params->contexts        = array( 'activity', 'member' );
+		$params->position        = 5;
+	} else {
+
+		$enabled = bp_is_post_type_feed_enable( $post_type );
+		if ( $enabled  ) {
+
+			$args = array(
+				'name' => $post_type
+			);
+
+			$output = 'objects'; // names or objects
+
+			$cu_post_types = get_post_types( $args, $output );
+
+
+			foreach ( $cu_post_types  as $cu ) {
+
+				$plural_label_name = $cu->labels->name;
+				$singular_label_name = $cu->labels->singular_name;
+
+				// Set specific params for the 'post' post type.
+				$params->component_id    = buddypress()->blogs->id;
+				$params->action_id       = 'new_blog_' . $post_type;
+				$params->admin_filter    = sprintf( __( 'New %s published', 'buddyboss' ), strtolower( $singular_label_name ) );
+				$params->format_callback = 'bp_blogs_format_activity_action_new_custom_post_type_feed';
+				$params->front_filter    = sprintf( __( '%s', 'buddyboss' ), $plural_label_name );
+				$params->contexts        = array( 'activity', 'member' );
+				$params->position        = 5;
+
+			}
+		}
+	}
+
 
 	if ( post_type_supports( $post_type, 'comments' ) ) {
 		$params->comment_action_id = 'new_blog_comment';
@@ -235,9 +269,9 @@ function bp_blogs_format_activity_action_new_blog_post( $action, $activity ) {
 
 	// Build the complete activity action string.
 	if ( is_multisite() ) {
-		$action  = sprintf( __( '%1$s wrote a new post, %2$s, on the site %3$s', 'buddyboss' ), $user_link, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
+		$action  = sprintf( __( '%1$s posted a new post, %2$s, on the site %3$s', 'buddyboss' ), $user_link, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 	} else {
-		$action  = sprintf( __( '%1$s wrote a new post, %2$s', 'buddyboss' ), $user_link, $post_link );
+		$action  = sprintf( __( '%1$s posted a new post, %2$s', 'buddyboss' ), $user_link, $post_link );
 	}
 
 	// Legacy filter - requires the post object.
@@ -1461,3 +1495,141 @@ function bp_blogs_activity_comment_single_action( $retval, $activity ) {
 	return $retval;
 }
 add_filter( 'bp_get_activity_action_pre_meta', 'bp_blogs_activity_comment_single_action', 10, 2 );
+
+/**
+ * Format 'new_blog_*' various custom post type activity actions.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $action   Static activity action.
+ * @param object $activity Activity data object.
+ * @return string Constructed activity action.
+ */
+function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $activity ) {
+	$blog_url  = bp_blogs_get_blogmeta( $activity->item_id, 'url' );
+	$blog_name = bp_blogs_get_blogmeta( $activity->item_id, 'name' );
+
+	if ( empty( $blog_url ) || empty( $blog_name ) ) {
+		$blog_url  = get_home_url( $activity->item_id );
+		$blog_name = get_blog_option( $activity->item_id, 'blogname' );
+
+		bp_blogs_update_blogmeta( $activity->item_id, 'url', $blog_url );
+		bp_blogs_update_blogmeta( $activity->item_id, 'name', $blog_name );
+	}
+
+	/**
+	 * When the custom post type is published we are faking an activity object
+	 * to which we add 2 properties :
+	 * - the post url
+	 * - the post title
+	 * This is done to build the 'post link' part of the activity
+	 * action string.
+	 * NB: in this case the activity has not yet been created.
+	 */
+	if ( isset( $activity->post_url ) ) {
+		$post_url = $activity->post_url;
+
+		/**
+		 * The post_url property is not set, we need to build the url
+		 * thanks to the post id which is also saved as the secondary
+		 * item id property of the activity object.
+		 */
+	} else {
+		$post_url = add_query_arg( 'p', $activity->secondary_item_id, trailingslashit( $blog_url ) );
+	}
+
+	// Should be the case when the post has just been published.
+	if ( isset( $activity->post_title ) ) {
+		$post_title = $activity->post_title;
+
+		// If activity already exists try to get the post title from activity meta.
+	} else if ( ! empty( $activity->id ) ) {
+		$post_title = bp_activity_get_meta( $activity->id, 'post_title' );
+	}
+
+	/**
+	 * In case the post was published without a title
+	 * or the activity meta was not found.
+	 */
+	if ( empty( $post_title ) ) {
+		// Defaults to no title.
+		$post_title = esc_html__( '(no title)', 'buddyboss' );
+
+		switch_to_blog( $activity->item_id );
+
+		$post = get_post( $activity->secondary_item_id );
+		if ( is_a( $post, 'WP_Post' ) ) {
+			// Does the post have a title ?
+			if ( ! empty( $post->post_title ) ) {
+				$post_title = $post->post_title;
+			}
+
+			// Make sure the activity exists before saving the post title in activity meta.
+			if ( ! empty( $activity->id ) ) {
+				bp_activity_update_meta( $activity->id, 'post_title', $post_title );
+			}
+		}
+
+		restore_current_blog();
+	}
+
+	// Build the 'post link' part of the activity action string.
+	$post_link  = '<a href="' . esc_url( $post_url ) . '">' . $post_title . '</a>';
+
+	$user_link = bp_core_get_userlink( $activity->user_id );
+
+	// Get post type by id
+	$post_type = get_post_type( $activity->secondary_item_id );
+
+	$enabled = bp_is_post_type_feed_enable( $post_type );
+	if ( $enabled  ) {
+
+		$args = array(
+			'name' => $post_type
+		);
+
+		$output = 'objects'; // names or objects
+
+		$cu_post_types = get_post_types( $args, $output );
+
+		foreach ( $cu_post_types as $cu ) {
+			$singular_label_name = strtolower( $cu->labels->singular_name );
+		}
+
+		// Build the complete activity action string.
+		if ( is_multisite() ) {
+			$action  = sprintf( __( '%1$s posted a new %2$s, %3$s, on the site %4$s', 'buddyboss' ), $user_link, $singular_label_name, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
+		} else {
+			$action  = sprintf( __( '%1$s posted a new %2$s, %3$s', 'buddyboss' ), $user_link, $singular_label_name, $post_link );
+		}
+
+	} else {
+		// Build the complete activity action string.
+		if ( is_multisite() ) {
+			$action  = sprintf( __( '%1$s posted a new post, %2$s, on the site %3$s', 'buddyboss' ), $user_link, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
+		} else {
+			$action  = sprintf( __( '%1$s posted a new post, %2$s', 'buddyboss' ), $user_link, $post_link );
+		}
+	}
+
+	// Legacy filter - requires the post object.
+	if ( has_filter( 'bp_blogs_activity_new_custom_post_action' ) ) {
+		switch_to_blog( $activity->item_id );
+		$post = get_post( $activity->secondary_item_id );
+		restore_current_blog();
+
+		if ( ! empty( $post ) && ! is_wp_error( $post ) ) {
+			$action = apply_filters( 'bp_blogs_activity_new_custom_post_action', $action, $post, $post_url );
+		}
+	}
+
+	/**
+	 * Filters the new blog post action for the new blog.
+	 *
+	 * @since BuddyPress 2.0.0
+	 *
+	 * @param string $action   Constructed activity action.
+	 * @param object $activity Activity data object.
+	 */
+	return apply_filters( 'bp_blogs_format_activity_action_new_custom_post_type_feed', $action, $activity );
+}

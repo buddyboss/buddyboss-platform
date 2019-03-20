@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 <div class="wrap bp-about-wrap">
 
 	<div class="card">
-		<h3 class="wp-people-group"><?php _e( 'Meet the BuddyBoss Team', 'buddyboss' ); ?></h3>
+		<h2><?php _e( 'Meet the BuddyBoss Team', 'buddyboss' ); ?></h2>
 		<ul class="wp-people-group " id="wp-people-group-core-team">
 			<li class="wp-person" id="wp-person-michaeleisenwasser">
 				<a class="web" href="https://profiles.wordpress.org/eisenwasser"><?php echo '<img alt="" class="gravatar" src="' . buddypress()->plugin_url . "bp-core/images/admin/gravatar-michael.png" . '" />'; ?>
@@ -37,11 +37,11 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 
 	<div class="card">
-		<h3 class="wp-people-group"><?php _e( 'Special thanks to the BuddyPress contributors', 'buddyboss' ); ?></h3>
+		<h2><?php _e( 'Special thanks to the BuddyPress contributors', 'buddyboss' ); ?></h2>
 		<p class="wp-about-description">
 			<?php
 			printf(
-				__( 'The "BuddyBoss Platform" is a fork of the open source project <strong><a class="web" href="%s">BuddyPress</a></strong>. We cannot thank the core BuddyPress team enough for their many years of contributing to the original plugin:', 'buddyboss' ),
+				__( 'The <strong>BuddyBoss Platform</strong> is a fork of the open source project <strong><a class="web" href="%s">BuddyPress</a></strong>. We cannot thank the core BuddyPress team enough for their many years of contributing to the original plugin:', 'buddyboss' ),
 				esc_url( 'https://buddypress.org/' )
 			);
 			?>
@@ -71,14 +71,15 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 
 	<div class="card">
-		<h3 class="wp-people-group"><?php _e( 'Special thanks to these open source projects', 'buddyboss' ); ?></h3>
+		<h2><?php _e( 'Special thanks to these open source projects', 'buddyboss' ); ?></h2>
 		<p class="wp-credits-list">
 			<a href="https://github.com/ichord/At.js">At.js</a>,
 			<a href="https://bbpress.org">bbPress</a>,
 			<a href="https://buddypress.org">BuddyPress</a>,
-			<a href="https://wordpress.org/plugins/bp-profile-search/">BP Profile Search</a>,
+			<a href="https://wordpress.org/plugins/bp-default-data/">BP Default Data</a>,
 			<a href="https://wordpress.org/plugins/buddypress-followers/">BP Follow</a>,
 			<a href="https://wordpress.org/plugins/buddypress-global-search/">BP Global Search</a>,
+			<a href="https://wordpress.org/plugins/bp-profile-search/">BP Profile Search</a>,
 			<a href="https://github.com/ichord/Caret.js">Caret.js</a>,
 			<a href="https://tedgoas.github.io/Cerberus/">Cerberus</a>,
 			<a href="https://ionicons.com/">Ionicons</a>,
@@ -87,6 +88,7 @@ defined( 'ABSPATH' ) || exit;
 			<a href="https://www.mediawiki.org/wiki/MediaWiki">MediaWiki</a>,
 			<a href="https://wordpress.org/plugins/menu-icons/">Menu Icons</a>,
 			<a href="https://momentjs.com/">Moment.js</a>,
+			<a href="https://wordpress.org/plugins/user-switching/">User Switching</a>,
 			<a href="https://wordpress.org">WordPress</a>.
 		</p>
 	</div>

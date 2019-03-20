@@ -22,7 +22,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 	 * @since BuddyPress 1.5.0
 	 */
 	public function __construct() {
-		$name        = __( '(BuddyBoss) Recently Active Members', 'buddyboss' );
+		$name        = __( '(BB) Recently Active Members', 'buddyboss' );
 		$description = __( 'Profile photos of recently active members', 'buddyboss' );
 		parent::__construct( false, $name, array(
 			'description'                 => $description,
@@ -162,7 +162,6 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 	 *
 	 * @since BuddyPress 2.3.0
 	 *
-	 *
 	 * @param array $instance Widget instance settings.
 	 * @return array
 	 */
@@ -174,6 +173,12 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 	}
 }
 
+/**
+ * Periodically update members list for recently active members widget.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
 function buddyboss_theme_recently_active_widget_heartbeat( $response = array(), $data = array()  ){
 	global $members_template;
 

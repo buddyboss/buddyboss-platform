@@ -1,10 +1,12 @@
-<?php $total = bbp_get_topic_reply_count( get_the_ID() ) ?>
+<?php
+$topic_id = get_the_ID();
+$total = bbp_get_topic_reply_count( $topic_id ) ?>
 <li class="bp-search-item bp-search-item_topic">
 	<div class="list-wrap">
 		<div class="item-avatar">
-			<a href="<?php bbp_topic_permalink( get_the_ID() ); ?>">
+			<a href="<?php bbp_topic_permalink( $topic_id ); ?>">
 				<img
-					src="<?php echo bbp_get_forum_thumbnail_src( bbp_get_forum_id( get_the_ID() ) ) ?: buddypress()->plugin_url . "bp-core/images/mystery-forum.png"; ?>"
+					src="<?php echo bbp_get_forum_thumbnail_src( bbp_get_forum_id( $topic_id ) ) ?: buddypress()->plugin_url . "bp-core/images/mystery-forum.png"; ?>"
 					class="avatar forum-avatar"
 					height="150"
 					width="150"
@@ -15,10 +17,19 @@
 
 		<div class="item">
 			<h3 class="entry-title item-title">
-				<a href="<?php bbp_topic_permalink(get_the_ID()); ?>"><?php bbp_topic_title(get_the_ID()); ?></a>
+				<a href="<?php bbp_topic_permalink( $topic_id ); ?>"><?php bbp_topic_title( $topic_id ); ?></a>
 			</h3>
 			<div class="entry-content entry-summary">
-				<?php printf( _n( '%d reply', '%d replies', $total, 'buddyboss' ), $total ); ?>
+				<?php echo wp_trim_words( bbp_get_topic_content( $topic_id ), 30, '...' ) ?>
+			</div>
+			<div class="entry-meta">
+				<span class="reply-count">
+					<?php printf( _n( '%d reply', '%d replies', $total, 'buddyboss' ), $total ); ?>
+				</span>
+				<span>&middot;</span>
+				<span class="freshness">
+					<?php bbp_topic_freshness_link( $topic_id ) ?>
+				</span>
 			</div>
 		</div>
 	</div>

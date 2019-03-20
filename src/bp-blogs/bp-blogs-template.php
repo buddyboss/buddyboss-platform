@@ -79,7 +79,6 @@ function bp_blogs_directory_permalink() {
 	 *
 	 * @since BuddyPress 1.5.0
 	 *
-	 *
 	 * @return string The URL of the Blogs directory.
 	 */
 	function bp_get_blogs_directory_permalink() {

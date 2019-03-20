@@ -43,10 +43,10 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'description' => __( 'Configure general BuddyBoss appearance options.', 'buddyboss' ),
 		),
 		'bp_nouveau_user_primary_nav' => array(
-			'title'       => __( 'Member navigation', 'buddyboss' ),
+			'title'       => __( 'Profile navigation', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 50,
-			'description' => __( 'Customize the navigation menu for members. In the preview window, navigate to a user to preview your changes.', 'buddyboss' ),
+			'description' => __( 'Customize the navigation menu for member profiles. In the preview window, navigate to a user to preview your changes.', 'buddyboss' ),
 		),
 		'bp_nouveau_loops_layout' => array(
 			'title'       => __( 'Grid views', 'buddyboss' ),
@@ -216,7 +216,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'type'       => 'checkbox',
 		),
 		'user_nav_display' => array(
-			'label'      => __( 'Display the member navigation vertically.', 'buddyboss' ),
+			'label'      => __( 'Display the profile navigation vertically.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_user_primary_nav',
 			'settings'   => 'bp_nouveau_appearance[user_nav_display]',
 			'type'       => 'checkbox',

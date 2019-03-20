@@ -48,7 +48,8 @@ function bp_nouveau_search_enqueue_scripts() {
 		//'search_url'    => home_url( '/' ), Now we are using form[role='search'] selector
 		'loading_msg'        => __( "Loading Suggestions", "buddyboss" ),
 		'enable_ajax_search' => bp_is_search_autotcomplete_enable(),
-		'per_page'           => bp_search_get_form_option( 'bp_search_number_of_results', 5 )
+		'per_page'           => bp_search_get_form_option( 'bp_search_number_of_results', 5 ),
+		'selector'           => "form[role='search'], form.search-form, form.searchform, form#adminbarsearch, .bp-search-form>#search-form"
 	);
 
 	if ( isset( $_GET["s"] ) ) {
@@ -58,9 +59,14 @@ function bp_nouveau_search_enqueue_scripts() {
 	wp_enqueue_script( 'jquery-ui-autocomplete' );
 	wp_enqueue_script( 'bp-nouveau-search' );
 
-	wp_localize_script( 'bp-nouveau-search', 'BP_SEARCH', $data );
+	wp_localize_script( 'bp-nouveau-search', 'BP_SEARCH', apply_filters( 'bp_search_js_settings', $data ) );
 }
 
+/**
+ * Output search message autocomplete init JS.
+ *
+ * @since BuddyPress 3.0.0
+ */
 function bp_nouveau_search_messages_autocomplete_init_jsblock() {
 	?>
 

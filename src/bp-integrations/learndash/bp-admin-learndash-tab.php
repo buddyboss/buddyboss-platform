@@ -1,10 +1,24 @@
 <?php
+/**
+ * BuddyBoss LearnDash integration admin tabs.
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Setup the BuddyBoss LearnDash admin tab.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	protected $current_section;
 
 	public function initialize() {
-		$this->tab_order             = 10;
+		$this->tab_order             = 20;
 		$this->intro_template        = $this->root_path . '/templates/admin/integration-tab-intro.php';
 
 		add_action( 'admin_footer', [ $this, 'add_sync_tool_scripts' ], 20 );
@@ -16,15 +30,52 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		if ($values = bp_ld_sync()->getRequest($settings->getName())) {
 			$settings->set(null, $values)->update();
 		}
+
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
+		do_action('bp_integrations_learndash_fields_updated', $settings);
 	}
 
 	public function register_fields() {
-		$this->registerBuddypressSettings();
-		$this->registerLearnDashSettings();
-		$this->registerReportsSettings();
+
+		$fields = apply_filters('bp_integrations_learndash_fields', array(
+			'buddypress' => [$this, 'registerBuddypressSettings'],
+			'learndash' => [$this, 'registerLearnDashSettings'],
+			'reports' => [$this, 'registerReportsSettings']
+		), $this);
+
+		foreach ($fields as $key => $field) {
+			call_user_func($field);
+			/**
+			 * @todo add title/description
+			 *
+			 * @since BuddyBoss 1.0.0
+			 */
+			do_action('bp_integrations_learndash_field_added', $key, $this);
+		}
 	}
 
 	public function form_html() {
+
+		if ( $this->required_plugin && ! is_plugin_active( $this->required_plugin ) ) {
+			if ( is_file ( $this->intro_template ) ) {
+				require $this->intro_template;
+			}
+
+			return;
+		}
+
+		// Check Group component active.
+		if ( ! bp_is_active( 'groups' ) ) {
+			if ( is_file ( $this->intro_template ) ) {
+				require $this->intro_template;
+			}
+
+			return;
+		}
 		parent::form_html();
 	}
 
@@ -94,7 +145,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_checkbox_field(
 			'delete_ld_on_delete',
-			__('Delete LearnDash Group', 'buddyboss'),
+			__('Auto Delete LearnDash Group', 'buddyboss'),
 			[
 				'input_text' => __( 'Automatically delete the associated LearnDash group when the social group is deleted', 'buddyboss' ),
 				'input_description' => __( '(Uncheck this to delete the group manually)', 'buddyboss' ),
@@ -207,7 +258,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_checkbox_field(
 			'delete_bp_on_delete',
-			__('Delete Social Group', 'buddyboss'),
+			__('Auto Delete Social Group', 'buddyboss'),
 			[
 				'input_text' => __( 'Automatically delete the associated Social Group when the LearnDash group is deleted', 'buddyboss' ),
 				'class' => 'js-show-on-learndash_enabled'

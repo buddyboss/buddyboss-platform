@@ -42,7 +42,7 @@ if ( isset( $display_arr ) && !empty( $display_arr )) {
 				<span ><?php bp_nouveau_filter_label(); ?></span>
 			</label>
 			<div class="select-wrap">
-				<select id="group-type-order-by" data-bp-filter="<?php bp_nouveau_search_object_data_attr() ?>">
+				<select id="group-type-order-by" data-bp-group-type-filter="<?php bp_nouveau_search_object_data_attr() ?>">
 					<option value=""><?php _e( 'All Types', 'buddyboss' ); ?></option><?php
 					foreach ( $display_arr as $group ) {
 						?>

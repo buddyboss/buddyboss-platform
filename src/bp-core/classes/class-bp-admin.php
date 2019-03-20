@@ -139,8 +139,9 @@ class BP_Admin {
 		add_action( 'bp_admin_head',            array( $this, 'admin_head'  ), 999 );
 
 		// Add menu item to settings menu.
-		add_action( 'admin_menu',               array( $this, 'site_admin_menus' ), 5 );
+		add_action( 'admin_menu',               array( $this, 'site_admin_menus' ), 68 );
 		add_action( bp_core_admin_hook(),       array( $this, 'admin_menus' ), 5 );
+		//add_action( bp_core_admin_hook(),       array( $this, 'admin_menus_components' ), 75 );
 		add_action( bp_core_admin_hook(),       array( $this, 'adjust_buddyboss_menus' ), 100 );
 
 		// Enqueue all admin JS and CSS.
@@ -188,42 +189,90 @@ class BP_Admin {
 
 		// Emails
 		add_filter( 'bp_admin_menu_order', array( $this, 'emails_admin_menu_order' ), 20 );
+
+		// Add the separator above the BuddyBoss in admin.
+		add_filter( 'menu_order', array( $this, 'buddyboss_menu_order' ) );
+
+		// Add the separator above the plugins in admin.
+		add_filter( 'menu_order', array( $this, 'buddyboss_plugins_menu_order' ) );
 	}
 
 	/**
-	 * Register site- or network-admin nav menu elements.
+	 * Add the separator above the BuddyBoss menu in admin.
 	 *
-	 * Contextually hooked to site or network-admin depending on current configuration.
-	 *
-	 * @since BuddyPress 1.6.0
+	 * @param int $menu_order Menu order.
+	 * @return array
 	 */
-	public function admin_menus() {
+	public function buddyboss_menu_order( $menu_order ) {
+		// Initialize our custom order array.
+		$buddyboss_menu_order = array();
 
-		// Bail if user cannot moderate.
-		if ( ! bp_current_user_can( 'manage_options' ) ) {
-			return;
+		// Get the index of our custom separator.
+		$buddyboss_separator = array_search( 'separator-buddyboss-platform', $menu_order, true );
+
+		// Loop through menu order and do some rearranging.
+		foreach ( $menu_order as $index => $item ) {
+
+			if ( 'buddyboss-platform' === $item ) {
+				$buddyboss_menu_order[] = 'separator-buddyboss';
+				$buddyboss_menu_order[] = $item;
+				unset( $menu_order[ $buddyboss_separator ] );
+			} elseif ( ! in_array( $item, array( 'separator-buddyboss' ), true ) ) {
+				$buddyboss_menu_order[] = $item;
+			}
+
 		}
+
+		// Return order.
+		return $buddyboss_menu_order;
+	}
+
+	/**
+	 * Add the separator above the plugins menu in admin.
+	 *
+	 * @param int $menu_order Menu order.
+	 * @return array
+	 */
+	public function buddyboss_plugins_menu_order( $menu_order ) {
+		// Initialize our custom order array.
+		$plugins_menu_order = array();
+
+		// Get the index of our custom separator.
+		$plugins_separator = array_search( 'separator-plugins.php', $menu_order, true );
+
+		// Loop through menu order and do some rearranging.
+		foreach ( $menu_order as $index => $item ) {
+
+			if ( 'plugins.php' === $item ) {
+				$plugins_menu_order[] = 'separator-plugins';
+				$plugins_menu_order[] = $item;
+				unset( $menu_order[ $plugins_separator ] );
+			} elseif ( ! in_array( $item, array( 'separator-plugins' ), true ) ) {
+				$plugins_menu_order[] = $item;
+			}
+
+		}
+
+		// Return order.
+		return $plugins_menu_order;
+	}
+
+	/**
+	 * Register main settings menu elements.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function admin_menus_components(){
 
 		$hooks = array();
 
-		// Changed in BP 1.6 . See bp_core_admin_backpat_menu().
-		$hooks[] = add_menu_page(
-			__( 'BuddyBoss', 'buddyboss' ),
-			__( 'BuddyBoss', 'buddyboss' ),
-			$this->capability,
-			$this->settings_page,
-			'bp_core_admin_backpat_menu',
-			buddypress()->plugin_url . 'bp-core/images/admin/logo-buddyboss.svg',
-			62
-		);
-
 		$hooks[] = add_submenu_page(
-			'bp-general-settings',
-			__( 'BuddyBoss Help', 'buddyboss' ),
-			__( 'Help', 'buddyboss' ),
+			$this->settings_page,
+			__( '', 'buddyboss' ),
+			__( '', 'buddyboss' ),
 			$this->capability,
-			'bp-general-settings',
-			'bp_core_admin_backpat_page'
+			'bp-plugin-separator-notice',
+			''
 		);
 
 		// Add the option pages.
@@ -263,6 +312,16 @@ class BP_Admin {
 			'bp_core_admin_integrations'
 		);
 
+		// Credits.
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( 'Credits', 'buddyboss' ),
+			__( 'Credits', 'buddyboss' ),
+			$this->capability,
+			'bp-credits',
+			array( $this, 'bp_credits_screen' )
+		);
+
 		if ( ! is_plugin_active( 'appboss/appboss.php' ) ) {
 			$hooks[] = add_submenu_page(
 				$this->settings_page,
@@ -273,6 +332,121 @@ class BP_Admin {
 				'bp_core_admin_appboss'
 			);
 		}
+	}
+
+	/**
+	 * Register site- or network-admin nav menu elements.
+	 *
+	 * Contextually hooked to site or network-admin depending on current configuration.
+	 *
+	 * @since BuddyPress 1.6.0
+	 */
+	public function admin_menus() {
+
+		global $menu;
+
+		// Bail if user cannot moderate.
+		if ( ! bp_current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		// Add BuddyBoss Menu separator above the BuddyBoss and below the BuddyBoss
+		if ( bp_current_user_can( 'manage_options' ) ) {
+			$menu[] = array( '', 'read', 'separator-buddyboss', '', 'wp-menu-separator buddyboss' ); // WPCS: override ok.
+			$menu[] = array( '', 'read', 'separator-plugins', '', 'wp-menu-separator plugins' ); // WPCS: override ok.
+		}
+
+		$hooks = array();
+
+		// Changed in BP 1.6 . See bp_core_admin_backpat_menu().
+		$hooks[] = add_menu_page(
+			__( 'BuddyBoss', 'buddyboss' ),
+			__( 'BuddyBoss', 'buddyboss' ),
+			$this->capability,
+			$this->settings_page,
+			'bp_core_admin_backpat_menu',
+			buddypress()->plugin_url . 'bp-core/images/admin/logo-buddyboss.svg',
+			62
+		);
+
+		$hooks[] = add_submenu_page(
+			'bp-general-settings',
+			__( 'BuddyBoss Help', 'buddyboss' ),
+			__( 'Help', 'buddyboss' ),
+			$this->capability,
+			'bp-general-settings',
+			'bp_core_admin_backpat_page'
+		);
+
+		// Add the Separator.
+//		$hooks[] = add_submenu_page(
+//			$this->settings_page,
+//			__( '', 'buddyboss' ),
+//			__( '', 'buddyboss' ),
+//			$this->capability,
+//			'bp-plugin-separator-notice',
+//			''
+//		);
+
+		// Add the option pages.
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( 'BuddyBoss Components', 'buddyboss' ),
+			__( 'Components', 'buddyboss' ),
+			$this->capability,
+			'bp-components',
+			'bp_core_admin_components_settings'
+		);
+
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( 'Pages', 'buddyboss' ),
+			__( 'Pages', 'buddyboss' ),
+			$this->capability,
+			'bp-pages',
+			'bp_core_admin_pages_settings'
+		);
+
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( 'BuddyBoss Settings', 'buddyboss' ),
+			__( 'Settings', 'buddyboss' ),
+			$this->capability,
+			'bp-settings',
+			'bp_core_admin_settings'
+		);
+
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( 'Plugin Integrations', 'buddyboss' ),
+			__( 'Integrations', 'buddyboss' ),
+			$this->capability,
+			'bp-integrations',
+			'bp_core_admin_integrations'
+		);
+
+		// Credits.
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( 'Credits', 'buddyboss' ),
+			__( 'Credits', 'buddyboss' ),
+			$this->capability,
+			'bp-credits',
+			array( $this, 'bp_credits_screen' )
+		);
+
+		if ( ! is_plugin_active( 'appboss/appboss.php' ) ) {
+			$hooks[] = add_submenu_page(
+				$this->settings_page,
+				__( 'Mobile App', 'buddyboss' ),
+				__( 'Mobile App', 'buddyboss' ),
+				$this->capability,
+				'bp-appboss',
+				'bp_core_admin_appboss'
+			);
+		}
+
+
 
 		// For consistency with non-Multisite, we add a Tools menu in
 		// the Network Admin as a home for our Tools panel.
@@ -302,12 +476,21 @@ class BP_Admin {
 		}
 
 		$hooks[] = add_submenu_page(
-			$tools_parent,
-			__( 'BuddyBoss Tools', 'buddyboss' ),
-			__( 'BuddyBoss', 'buddyboss' ),
+			$this->settings_page,
+			__( 'Tools', 'buddyboss' ),
+			__( 'Tools', 'buddyboss' ),
 			$this->capability,
 			'bp-tools',
 			'bp_core_admin_tools'
+		);
+
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( '', 'buddyboss' ),
+			__( '', 'buddyboss' ),
+			$this->capability,
+			'bp-plugin-separator-notice',
+			''
 		);
 
 		// For network-wide configs, add a link to (the root site's) Emails screen.
@@ -332,6 +515,24 @@ class BP_Admin {
 		// foreach( $hooks as $hook ) {
 		// 	add_action( "admin_head-$hook", 'bp_core_modify_admin_menu_highlight' );
 		// }
+	}
+
+	/**
+	 * Output the credits screen.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 */
+	public function bp_credits_screen() {
+		?>
+
+		<div class="wrap">
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Credits', 'buddypress' ) ); ?></h2>
+			<?php include $this->admin_dir . 'templates/credit-screen.php'; ?>
+		</div>
+
+		<?php
+
 	}
 
 	public function adjust_buddyboss_menus() {
@@ -395,14 +596,13 @@ class BP_Admin {
 			'bp_email_redirect_to_customizer'
 		);
 
-		// Emails > Customize.
 		$hooks[] = add_submenu_page(
+			'buddyboss-platform',
+			__( 'Emails', 'buddyboss' ),
+			__( 'Emails', 'buddyboss' ),
+			'bp_moderate',
 			'edit.php?post_type=' . bp_get_email_post_type(),
-			__( 'Customize', 'buddyboss' ),
-			__( 'Customize', 'buddyboss' ),
-			$this->capability,
-			'bp-emails-customizer-redirect',
-			'bp_email_redirect_to_customizer'
+			''
 		);
 
 		foreach( $hooks as $hook ) {

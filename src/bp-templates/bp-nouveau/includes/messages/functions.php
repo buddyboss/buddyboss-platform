@@ -152,6 +152,8 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 }
 
 /**
+ * Adjust message navigation for notices and composing.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_messages_adjust_nav() {
@@ -179,6 +181,8 @@ function bp_nouveau_messages_adjust_nav() {
 }
 
 /**
+ * Adjust admin message navigation for notices.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_messages_adjust_admin_nav( $admin_nav ) {
@@ -202,6 +206,8 @@ function bp_nouveau_messages_adjust_admin_nav( $admin_nav ) {
 }
 
 /**
+ * Add notice notification for member.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_add_notice_notification_for_user( $notifications, $user_id ) {
@@ -237,6 +243,8 @@ function bp_nouveau_add_notice_notification_for_user( $notifications, $user_id )
 }
 
 /**
+ * Format for notice notifications.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_format_notice_notification_for_user( $array ) {
@@ -251,6 +259,8 @@ function bp_nouveau_format_notice_notification_for_user( $array ) {
 }
 
 /**
+ * Unregister BP_Messages_Sitewide_Notices_Widget.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_unregister_notices_widget() {
@@ -356,6 +366,8 @@ function bp_nouveau_messages_mce_buttons( $buttons = array() ) {
 }
 
 /**
+ * Display tinyMCE editor when editing messages in Dashboard.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_messages_at_on_tinymce_init( $settings, $editor_id ) {
@@ -368,6 +380,8 @@ function bp_nouveau_messages_at_on_tinymce_init( $settings, $editor_id ) {
 }
 
 /**
+ * Get message date.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_get_message_date( $date ) {
@@ -418,6 +432,8 @@ function bp_nouveau_get_message_date( $date ) {
 }
 
 /**
+ * Output bulk actions for messages.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_messages_get_bulk_actions() {

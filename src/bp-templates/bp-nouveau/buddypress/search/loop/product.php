@@ -12,13 +12,27 @@
 		</div>
 
 		<div class="item">
+			<span class="entry-meta">
+				<?php echo wc_get_product_category_list(get_the_ID()) ?>
+			</span>
+
 			<h3 class="entry-title item-title">
 				<a href="<?php the_permalink(); ?>" title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'buddyboss' ), the_title_attribute( 'echo=0' ) ) ); ?>" rel="bookmark"><?php the_title(); ?></a>
 			</h3>
-
-			<div class="entry-content entry-summary">
-				<?php echo $product->get_price_html() ?>
+			<div class="rating-custom clearfix">
+				<?php wc_get_template( 'single-product/rating.php' ); ?>
 			</div>
+
+			<?php if ( $product->is_on_sale() ): ?>
+				<div class="product-sale">
+					<span class="onsale"><?php esc_html_e( 'Sale!', 'buddyboss' ) ?></span>
+				</div>
+			<?php endif; ?>
+
+		</div>
+
+		<div class="item-extra">
+			<?php echo  wc_price( wc_get_price_to_display( $product ) ) . $product->get_price_suffix() ?>
 		</div>
 	</div>
 </li>

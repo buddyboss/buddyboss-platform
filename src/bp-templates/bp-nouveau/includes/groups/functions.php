@@ -164,6 +164,8 @@ function bp_nouveau_groups_localize_scripts( $params = array() ) {
 }
 
 /**
+ * Returns id of member who sent group invite.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_groups_get_inviter_ids( $user_id, $group_id ) {
@@ -175,6 +177,8 @@ function bp_nouveau_groups_get_inviter_ids( $user_id, $group_id ) {
 }
 
 /**
+ * Prepare list of group invites for JS.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
@@ -243,6 +247,8 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 }
 
 /**
+ * Get potential group invites.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_get_group_potential_invites( $args = array() ) {
@@ -296,6 +302,8 @@ function bp_nouveau_get_group_potential_invites( $args = array() ) {
 }
 
 /**
+ * Create group invites steps
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_group_invites_create_steps( $steps = array() ) {
@@ -315,6 +323,8 @@ function bp_nouveau_group_invites_create_steps( $steps = array() ) {
 }
 
 /**
+ * Setup group invite navigation menu item.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_group_setup_nav() {
@@ -352,6 +362,8 @@ function bp_nouveau_group_setup_nav() {
 }
 
 /**
+ * Returns group invite custom message.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_groups_invites_custom_message( $message = '' ) {
@@ -491,6 +503,8 @@ function bp_nouveau_groups_screen_invites_restriction() {
 }
 
 /**
+ * Get group directory navigation menu items.
+ *
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_get_groups_directory_nav_items() {

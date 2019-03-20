@@ -12,7 +12,7 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+defined( 'ABSPATH' ) || exit;
 
 if ( !class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_Extension' ) ) :
 /**
@@ -766,7 +766,8 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
 					// No forums found
 					else : ?>
 
-						<div id="message" class="info">
+						<div class="info bp-feedback">
+							<span class="bp-icon" aria-hidden="true"></span>
 							<p><?php esc_html_e( 'This group does not currently have a forum.', 'buddyboss' ); ?></p>
 						</div>
 

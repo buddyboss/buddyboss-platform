@@ -1,4 +1,10 @@
 <?php
+/**
+ * BuddyBoss LearnDash integration reports class.
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */
 
 namespace Buddyboss\LearndashIntegration\Buddypress;
 
@@ -10,15 +16,33 @@ use Buddyboss\LearndashIntegration\Buddypress\Generators\LessonsReportsGenerator
 use Buddyboss\LearndashIntegration\Buddypress\Generators\QuizzesReportsGenerator;
 use Buddyboss\LearndashIntegration\Buddypress\Generators\TopicsReportsGenerator;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * @todo add title/description
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class Reports
 {
 	protected $isRealJoins = false;
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
 		add_action('bp_ld_sync/init', [$this, 'init']);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function init()
 	{
 		add_action('bp_enqueue_scripts', [$this, 'registerReportsScript']);
@@ -45,6 +69,11 @@ class Reports
 		add_filter('bp_ld_sync/report_columns', [$this, 'removePointsColumnIfNotAssigned'], 10, 2);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function registerReportsScript()
 	{
 		if (! bp_is_groups_component() || ! bp_is_current_action('reports')) {
@@ -89,12 +118,22 @@ class Reports
 		);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function showReportFilters()
 	{
 		$filters = $this->getReportFilters();
 		require bp_locate_template('groups/single/reports-filters.php', false, false);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function showReportUserStats()
 	{
 		if (empty($_GET['user'])) {
@@ -110,6 +149,11 @@ class Reports
 		require bp_locate_template('groups/single/reports-user-stats.php', false, false);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function showReportCourseStats()
 	{
 		if (! empty($_GET['user']) || empty($_GET['course'])) {
@@ -130,6 +174,11 @@ class Reports
 		require bp_locate_template('groups/single/reports-course-stats.php', false, false);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function showReportTables()
 	{
 		$generator = $this->getCurrentGenerator();
@@ -138,6 +187,11 @@ class Reports
 		require bp_locate_template('groups/single/reports-tables.php', false, false);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function forceOwnReportResults($params)
 	{
     	if (! $currentGroup = groups_get_current_group()) {
@@ -155,11 +209,21 @@ class Reports
 		return $params;
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function showReportExport()
 	{
 		require bp_locate_template('groups/single/reports-export.php', false, false);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function removeCourseFilterIfOnlyOne($filters)
 	{
     	if (! $currentGroup = groups_get_current_group()) {
@@ -173,6 +237,11 @@ class Reports
     	return $filters;
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function removeUserFilterIfStudent($filters)
 	{
     	if (! $currentGroup = groups_get_current_group()) {
@@ -194,11 +263,21 @@ class Reports
     	return $filters;
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function reportAdditionalActivityFields($strFields, $queryArgs)
 	{
 		return apply_filters('bp_ld_sync/reports/activity_fields', $strFields, $queryArgs);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function reportAdditionalActivityTables($strJoins, $queryArgs)
 	{
 		// Learndash Bug https://screencast.com/t/iBajWvdt
@@ -210,16 +289,31 @@ class Reports
 		return apply_filters('bp_ld_sync/reports/activity_joins', $strJoins, $queryArgs);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function reportAdditionalActivityWheres($strWheres, $queryArgs)
 	{
 		return apply_filters('bp_ld_sync/reports/activity_wheres', $strWheres, $queryArgs);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function reportAdditionalActivityGroups($strWheres, $queryArgs)
 	{
 		return apply_filters('bp_ld_sync/reports/activity_groups', $strWheres, $queryArgs);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function removeUserColumnIfSelected($columns, $args)
 	{
 		if ($args['user']) {
@@ -229,6 +323,11 @@ class Reports
 		return $columns;
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function removeCourseColumnIfSelected($columns, $args)
 	{
 		if ($args['course']) {
@@ -238,6 +337,11 @@ class Reports
 		return $columns;
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function removePointsColumnIfNotAssigned($columns, $args)
 	{
 		$shouldRemove = false;
@@ -261,7 +365,11 @@ class Reports
 
 		return $columns;
 	}
-
+	/**
+	* @todo make PHP 5.4 compatible and add title/description
+	*
+	* @since BuddyBoss 1.0.0
+	*/
 	public function getGenerators()
 	{
 		return apply_filters('bp_ld_sync/reports_generators', [
@@ -296,6 +404,11 @@ class Reports
 		]);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function getReportFilters()
 	{
     	$filters = apply_filters('bp_ld_sync/report_filters', [
@@ -319,6 +432,11 @@ class Reports
     	return wp_list_sort($filters, 'position', 'ASC', true);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function getGroupUsersList()
 	{
 		$generator = bp_ld_sync('buddypress')->sync->generator(groups_get_current_group()->id);
@@ -332,6 +450,11 @@ class Reports
 		return wp_list_pluck($members, 'display_name', 'ID');
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function getGroupCoursesList() {
 		$ldGroupId = bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( groups_get_current_group()->id );
 		$courseIds = learndash_group_enrolled_courses( $ldGroupId );
@@ -349,16 +472,31 @@ class Reports
 		return wp_list_pluck( $courses, 'post_title', 'ID' );
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function getStepTypes()
 	{
 		return wp_list_pluck($this->getGenerators(), 'name');
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function getCurrentTableColumns()
 	{
 		return array_map([$this, 'getGeneratorColumns'], $this->getGenerators());
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function getCurrentGenerator()
 	{
 		$step = bp_ld_sync()->getRequest('step', 'all');
@@ -366,6 +504,11 @@ class Reports
 		return new $generator['class'];
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function getGeneratorColumns($generator)
 	{
 		$columns = (new $generator['class'])->getColumns();
@@ -373,6 +516,11 @@ class Reports
 		return array_map([$this, 'standarlizeGeneratorColumns'], $columns, array_keys($columns));
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function standarlizeGeneratorColumns($column, $key)
 	{
 		return [
@@ -383,6 +531,11 @@ class Reports
 		];
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function isRealJoins()
 	{
 		if (in_array(current_filter(), ['learndash_user_activity_query_joins', 'learndash_user_activity_query_join'])) {

@@ -8,7 +8,11 @@
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
-
+/**
+ * Escape BuddyBoss profile search form data version 4.7. 
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_escaped_form_data47( $version ) {
 	list ( $form, $location ) = bp_ps_template_args();
 
@@ -130,12 +134,22 @@ function bp_ps_escaped_form_data47( $version ) {
 		$f->mode       = $mode;
 		$f->full_label = bp_ps_full_label( $f );
 
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action( 'bp_ps_field_before_search_form', $f );
 		$f->code     = ( $mode == '' ) ? $f->code : $f->code . '_' . $mode;        // to be removed
 		$F->fields[] = $f;
 	}
 
 	$F->fields[] = bp_ps_set_hidden_field( BP_PS_FORM, $form );
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	do_action( 'bp_ps_before_search_form', $F );
 
 	foreach ( $F->fields as $f ) {
@@ -161,6 +175,11 @@ function bp_ps_escaped_form_data47( $version ) {
 	return $F;
 }
 
+/**
+ * Escape BuddyBoss profile search filter data version 4.7.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_escaped_filters_data47() {
 	list ( $request, $full ) = bp_ps_template_args();
 
@@ -187,10 +206,20 @@ function bp_ps_escaped_filters_data47() {
 		$f->max    = isset ( $f->value['max'] ) ? $f->value['max'] : '';
 		$f->values = (array) $f->value;
 
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
 		do_action( 'bp_ps_field_before_filters', $f );
 		$F->fields[] = $f;
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	do_action( 'bp_ps_before_filters', $F );
 	usort( $F->fields, 'bp_ps_sort_fields' );
 
@@ -211,6 +240,11 @@ function bp_ps_escaped_filters_data47() {
 	return $F;
 }
 
+/**
+ * Filter BuddyBoss profile search field label.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_full_label( $f ) {
 	$labels = array(
 		'contains'   => __( '<strong>%1$s</strong><span></span>', 'buddyboss' ),
@@ -231,6 +265,11 @@ function bp_ps_full_label( $f ) {
 	return apply_filters( 'bp_ps_full_label', $label, $f );
 }
 
+/**
+ * Output BuddyBoss profile search condition filters.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_print_filter( $f ) {
 	if ( ! empty ( $f->options ) ) {
 		$values = array();
@@ -305,6 +344,11 @@ function bp_ps_print_filter( $f ) {
 	}
 }
 
+/**
+ * Output BuddyBoss profile search autocomplete script.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_autocomplete_script( $f ) {
 	wp_enqueue_script( $f->script_handle );
 	$autocomplete_options = apply_filters( 'bp_ps_autocomplete_options', "{types: ['geocode']}", $f );
@@ -363,6 +407,11 @@ function bp_ps_autocomplete_script( $f ) {
 	<?php
 }
 
+/**
+ * Check if BuddyBoss profile serach field id is unique.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_ps_unique_id( $id ) {
 	static $k = array();
 

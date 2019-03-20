@@ -24,7 +24,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 	public function __construct() {
 
 		// Setup widget name & description.
-		$name        = __( '(BuddyBoss) Members', 'buddyboss' );
+		$name        = __( '(BB) Members', 'buddyboss' );
 		$description = __( 'A dynamic list of recently active, popular, and newest members', 'buddyboss' );
 
 		// Call WP_Widget constructor.
@@ -254,7 +254,6 @@ class BP_Core_Members_Widget extends WP_Widget {
 	 * Merge the widget settings into defaults array.
 	 *
 	 * @since BuddyPress 2.3.0
-	 *
 	 *
 	 * @param array $instance Widget instance settings.
 	 * @return array

@@ -1,12 +1,31 @@
 <?php
+/**
+ * BuddyBoss LearnDash integration quizzes reports generator.
+ * 
+ * @package BuddyBoss\LearnDash
+ * @since BuddyBoss 1.0.0
+ */ 
 
 namespace Buddyboss\LearndashIntegration\Buddypress\Generators;
 
 use Buddyboss\LearndashIntegration\Library\ReportsGenerator;
 use LDLMS_DB;
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * @todo add title/description
+ * 
+ * @since BuddyBoss 1.0.0
+ */
 class QuizzesReportsGenerator extends ReportsGenerator
 {
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function __construct()
 	{
 		$this->completed_table_title = __('Marked Quizzes', 'buddyboss');
@@ -17,6 +36,11 @@ class QuizzesReportsGenerator extends ReportsGenerator
 		parent::__construct();
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function columns()
 	{
 		return [
@@ -50,6 +74,11 @@ class QuizzesReportsGenerator extends ReportsGenerator
 		];
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	protected function formatData($activity)
 	{
 		return [
@@ -66,7 +95,11 @@ class QuizzesReportsGenerator extends ReportsGenerator
 			'attempts'        => $activity->activity_attemps,
 		];
 	}
-
+	/**
+	 * @todo add title/description and make PHP 5.4 compatible
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function loadAdditionalFields($generator)
 	{
 		if (! is_a($generator, static::class)) {
@@ -78,6 +111,11 @@ class QuizzesReportsGenerator extends ReportsGenerator
 		add_filter('bp_ld_sync/reports/activity_fields', [$this, 'addQuizActivityFields'], 10, 2);
 	}
 
+	/**
+	 * @todo add title/description
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
 	public function addQuizActivityFields($strFields, $queryArgs)
 	{
 		global $wpdb;
