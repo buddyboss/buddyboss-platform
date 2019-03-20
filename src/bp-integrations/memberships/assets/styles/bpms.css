@@ -2,7 +2,7 @@
  * MemberpressProduct (memberpressproduct) Css
  */
 
-#bbms-learndash-memberpressproduct-search_courses_wrapper, #bbms-learndash-memberpressproduct-search_groups_wrapper {
+#bpms-learndash-memberpressproduct-search_courses_wrapper, #bpms-learndash-memberpressproduct-search_groups_wrapper {
     padding: 15px 0;
 }
 /**
@@ -22,6 +22,6 @@ li.learndash_options a::before {
     -webkit-font-smoothing: antialiased !important;
     text-decoration: none !important;
 }
-#bbms-learndash-product-search_courses_wrapper, #bbms-learndash-product-search_groups_wrapper {
+#bpms-learndash-product-search_courses_wrapper, #bpms-learndash-product-search_groups_wrapper {
     padding: 15px 0;
 }

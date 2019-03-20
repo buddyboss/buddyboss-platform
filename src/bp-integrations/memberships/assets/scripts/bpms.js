@@ -1,66 +1,74 @@
-var ajaxUrl = bbmsVars.ajax_url;
-var lmsType = bbmsVars.lms_type;
-var membershipType = bbmsVars.membership_type;
-var pId = bbmsVars.p_id;
-console.log(bbmsVars);
-jQuery(document).ready(function() {
-    defaultBehavior();
-    // 1st Toggler
-    jQuery(document).on('change', '#bbms-' + lmsType + '-' + membershipType + '-is_enabled', function() {
-        console.log("changed, checkbox()");
-        console.log('#bbms-' + lmsType + '-' + membershipType + '-courses_wrapper');
+var ajaxUrl = bpmsVars.ajax_url;
+var lmsTypes = bpmsVars.lms_types;
+var membershipType = bpmsVars.membership_type;
+var pId = bpmsVars.p_id;
+console.log(bpmsVars);
 
-        if (this.checked) {
-            jQuery('#bbms-' + lmsType + '-' + membershipType + '-courses_wrapper').show();
-        } else {
-            jQuery('#bbms-' + lmsType + '-' + membershipType + '-courses_wrapper').hide();
-        }
+jQuery(document).ready(function() {
+    // NOTE : There is flexibility to use key/value
+    jQuery.each(lmsTypes, function(key, lmsType) {
+        defaultBehavior(lmsType);
+    
+        // 1st Toggler
+        jQuery(document).on('change', '#bpms-' + lmsType + '-' + membershipType + '-is_enabled', function() {
+            console.log("changed, checkbox()");
+            console.log('#bpms-' + lmsType + '-' + membershipType + '-courses_wrapper');
+
+            if (this.checked) {
+                jQuery('#bpms-' + lmsType + '-' + membershipType + '-courses_wrapper').show();
+            } else {
+                jQuery('#bpms-' + lmsType + '-' + membershipType + '-courses_wrapper').hide();
+            }
+        });
+
+        // 2nd Toggler
+        jQuery(document).on('change', '#bpms-' + lmsType + '-' + membershipType + '-course_access_method', function() {;
+            console.log(jQuery(this).val());
+            if (jQuery(this).val() == "SINGLE_COURSES") {
+                jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_courses_wrapper').show();
+                jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_groups_wrapper').hide();
+                jQuery(".helper-text").hide();
+                jQuery("#single-course-helper-text").show();
+            } else if (jQuery(this).val() == "ALL_COURSES") {
+                jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_courses_wrapper').hide();
+                jQuery('#bpms-'+ lmsType + '-' + membershipType + '-search_groups_wrapper').hide();
+                jQuery(".helper-text").hide();
+                jQuery("#all-course-helper-text").show();
+            } else if (jQuery(this).val() == "LD_GROUPS") {
+                jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_groups_wrapper').show();
+                jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_courses_wrapper').hide();
+                jQuery(".helper-text").hide();
+                jQuery('#' + lmsType + '-groups-helper-text').show();
+                console.log("INFO : Learndash Groups UI under construction");
+            } else {
+                // Some other use case for future
+            }
+        });
+        // 3rd Toggler
+        jQuery(document).on('change', '#bpms-' + lmsType + '-' + membershipType + '-allow_from_pricebox', function() {
+            console.log("allow checkbox un/checked");
+            if (this.checked) {
+                jQuery("#bpms-allow_purchase_wrapper").show();
+            } else {
+                jQuery("#bpms-allow_purchase_wrapper").hide();
+            }
+        });
+
+        initializeCourseSelect2(lmsType, true);
+        initializeGroupSelect2(lmsType, true);
     });
-    // 2nd Toggler
-    jQuery(document).on('change', '#bbms-' + lmsType + '-' + membershipType + '-course_access_method', function() {;
-        console.log(jQuery(this).val());
-        if (jQuery(this).val() == "SINGLE_COURSES") {
-            jQuery('#bbms-' + lmsType + '-' + membershipType + '-search_courses_wrapper').show();
-            jQuery('#bbms-' + lmsType + '-' + membershipType + '-search_groups_wrapper').hide();
-            jQuery(".helper-text").hide();
-            jQuery("#single-course-helper-text").show();
-        } else if (jQuery(this).val() == "ALL_COURSES") {
-            jQuery('#bbms-' + lmsType + '-' + membershipType + '-search_courses_wrapper').hide();
-            jQuery('#bbms-'+ lmsType + '-' + membershipType + '-search_groups_wrapper').hide();
-            jQuery(".helper-text").hide();
-            jQuery("#all-course-helper-text").show();
-        } else if (jQuery(this).val() == "LD_GROUPS") {
-            jQuery('#bbms-' + lmsType + '-' + membershipType + '-search_groups_wrapper').show();
-            jQuery('#bbms-' + lmsType + '-' + membershipType + '-search_courses_wrapper').hide();
-            jQuery(".helper-text").hide();
-            jQuery('#' + lmsType + '-groups-helper-text').show();
-            console.log("INFO : Learndash Groups UI under construction");
-        } else {
-            // Some other use case for future
-        }
-    });
-    // 3rd Toggler
-    jQuery(document).on('change', '#bbms-' + lmsType + '-' + membershipType + '-allow_from_pricebox', function() {
-        console.log("allow checkbox un/checked");
-        if (this.checked) {
-            jQuery("#bbms-allow_purchase_wrapper").show();
-        } else {
-            jQuery("#bbms-allow_purchase_wrapper").hide();
-        }
-    });
-    initializeCourseSelect2(true);
-    initializeGroupSelect2(true);
+    
 });
 /**
  * Initialize/Configure ui for courses(learndash).
  * @param  {boolean} loadAllAtOnce : Whether to load all values/options in a single ajax call or input-based 
  * @return  {void}
  */
-function initializeCourseSelect2(loadAllAtOnce) {
+function initializeCourseSelect2(lmsType, loadAllAtOnce) {
     console.log("initializeCourseSelect2, loadAllAtOnce is : " + loadAllAtOnce);
     if (loadAllAtOnce) {
         console.log("Loading loadAllAtOnce");
-        var search_course_ui = jQuery('#bbms-'+ lmsType + '-' + membershipType + '-courses_enrolled').select2({
+        var search_course_ui = jQuery('#bpms-'+ lmsType + '-' + membershipType + '-courses_enrolled').select2({
             debug: true,
             multiple: true,
             minimumInputLength: 2,
@@ -83,7 +91,7 @@ function initializeCourseSelect2(loadAllAtOnce) {
             width: "resolve"
         });
     } else {
-        var search_course_ui = jQuery('#bbms-'+ lmsType + '-' + membershipType + '-courses_enrolled').select2({
+        var search_course_ui = jQuery('#bpms-'+ lmsType + '-' + membershipType + '-courses_enrolled').select2({
             debug: true,
             multiple: true,
             minimumInputLength: 2,
@@ -115,18 +123,18 @@ function initializeCourseSelect2(loadAllAtOnce) {
             width: "resolve"
         });
     }
-    setCoursePreSelected(search_course_ui);
+    setCoursePreSelected(lmsType, search_course_ui);
 }
 /**
  * Initialize/Configure ui for groups(learndash).
  * @param  {boolean} loadAllAtOnce : Whether to load all values/options in a single ajax call or input-based 
  * @return  {void}
  */
-function initializeGroupSelect2(loadAllAtOnce) {
+function initializeGroupSelect2(lmsType, loadAllAtOnce) {
     console.log("initializeGroupSelect2, loadAllAtOnce is : " + loadAllAtOnce);
     if (loadAllAtOnce) {
         console.log("Loading loadAllAtOnce");
-        var search_group_ui = jQuery('#bbms-' + lmsType + '-' + membershipType + "-groups_attached").select2({
+        var search_group_ui = jQuery('#bpms-' + lmsType + '-' + membershipType + "-groups_attached").select2({
             debug: true,
             multiple: true,
             minimumInputLength: 2,
@@ -149,7 +157,7 @@ function initializeGroupSelect2(loadAllAtOnce) {
             width: "resolve"
         });
     } else {
-        var search_group_ui = jQuery('#bbms-' + lmsType + '-' + membershipType + "-groups_attached").select2({
+        var search_group_ui = jQuery('#bpms-' + lmsType + '-' + membershipType + "-groups_attached").select2({
             debug: true,
             multiple: true,
             minimumInputLength: 2,
@@ -188,10 +196,10 @@ function initializeGroupSelect2(loadAllAtOnce) {
  * @param  {htmlElement} select2 element
  * @return  {void}
  */
-function setCoursePreSelected(uiSelector) {
+function setCoursePreSelected(lmsType, uiSelector) {
     // Set pre-selected values now
     jQuery.ajax({
-        url: ajaxUrl + "?action=selected_courses&meta_key=_bbms-"  + lmsType + "-" + membershipType + "-courses_enrolled&pid=" + pId,
+        url: ajaxUrl + "?action=selected_courses&meta_key=_bpms-"  + lmsType + "-" + membershipType + "-courses_enrolled&pid=" + pId,
     }).then(function(jsonData) {
         // console.log(jsonData);
         // var asArray = JSON.parse(jsonData);
@@ -209,10 +217,10 @@ function setCoursePreSelected(uiSelector) {
  * @param  {htmlElement} select2 element
  * @return  {void}
  */
-function setGroupPreSelected(uiSelector) {
+function setGroupPreSelected(lmsType, uiSelector) {
     // Set pre-selected values now
     jQuery.ajax({
-        url: ajaxUrl + "?action=selected_groups&meta_key=_bbms-" + lmsType + "-"  + membershipType + "-groups_attached&pid=" + pId,
+        url: ajaxUrl + "?action=selected_groups&meta_key=_bpms-" + lmsType + "-"  + membershipType + "-groups_attached&pid=" + pId,
     }).then(function(jsonData) {
         // var asArray = JSON.parse(jsonData);
         // console.log(asArray);
@@ -225,31 +233,31 @@ function setGroupPreSelected(uiSelector) {
     });
 }
 
-function defaultBehavior() {
-    console.log('#bbms-' + lmsType + '-' + membershipType + '-course_access_method');
+function defaultBehavior(lmsType) {
+    console.log('#bpms-' + lmsType + '-' + membershipType + '-course_access_method');
     // Selectbox : Course/Group Access 
-    if (jQuery('#bbms-' + lmsType + '-' + membershipType + '-course_access_method option:selected').val() == "SINGLE_COURSES") {
-        jQuery('#bbms-' + lmsType + '-' + membershipType + '-search_courses_wrapper').show();
-        jQuery('#bbms-' + lmsType + '-' + membershipType + '-search_groups_wrapper').hide();
+    if (jQuery('#bpms-' + lmsType + '-' + membershipType + '-course_access_method option:selected').val() == "SINGLE_COURSES") {
+        jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_courses_wrapper').show();
+        jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_groups_wrapper').hide();
         jQuery(".helper-text").hide();
         jQuery('#single-course-helper-text').show();
-    } else if (jQuery('#bbms-' + lmsType + '-' + membershipType + '-course_access_method option:selected').val() == "ALL_COURSES") {
-        jQuery('#bbms-' + lmsType + '-' + membershipType + '-search_courses_wrapper').hide();
-        jQuery('#bbms-' + lmsType + '-' + membershipType + '-search_groups_wrapper').hide();
+    } else if (jQuery('#bpms-' + lmsType + '-' + membershipType + '-course_access_method option:selected').val() == "ALL_COURSES") {
+        jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_courses_wrapper').hide();
+        jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_groups_wrapper').hide();
         jQuery(".helper-text").hide();
         jQuery("#all-course-helper-text").show();
-    } else if (jQuery('#bbms-' + lmsType + '-' + membershipType + '-course_access_method option:selected').val() == "LD_GROUPS") {
-        jQuery('#bbms-' + lmsType + '-' + membershipType + '-search_groups_wrapper').show();
-        jQuery('#bbms-' + lmsType + '-' + membershipType + '-search_courses_wrapper').hide();
+    } else if (jQuery('#bpms-' + lmsType + '-' + membershipType + '-course_access_method option:selected').val() == "LD_GROUPS") {
+        jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_groups_wrapper').show();
+        jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_courses_wrapper').hide();
         jQuery(".helper-text").hide();
         jQuery('#' + lmsType + '-groups-helper-text').show();
     } else {
         // Some 
     }
     // Checkbox : Allow Purchasing....
-    if (jQuery('#bbms-' + lmsType + '-' + membershipType + '-allow_from_pricebox').prop('checked') == true) {
-        jQuery("#bbms-allow_purchase_wrapper").show();
+    if (jQuery('#bpms-' + lmsType + '-' + membershipType + '-allow_from_pricebox').prop('checked') == true) {
+        jQuery("#bpms-allow_purchase_wrapper").show();
     } else {
-        jQuery("#bbms-allow_purchase_wrapper").hide();
+        jQuery("#bpms-allow_purchase_wrapper").hide();
     }
 }
