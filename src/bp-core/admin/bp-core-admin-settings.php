@@ -289,8 +289,23 @@ function bp_admin_setting_callback_group_cover_image_uploads() {
 function bp_admin_setting_callback_group_type_creation() {
 ?>
 	<input id="bp-disable-group-type-creation" name="bp-disable-group-type-creation" type="checkbox" value="1" <?php checked( bp_disable_group_type_creation() ); ?> />
-	<label for="bp-disable-group-type-creation"><?php _e( 'Enable group types to better organize groups', 'buddyboss' ); ?></label>
-<?php
+	<?php
+	if ( true === bp_disable_group_type_creation() ) {
+		printf(
+			'<label for="bp-disable-group-type-creation">%s</label>',
+			sprintf(
+				__( 'Enable <a href="%s">group types</a> to better organize groups', 'buddyboss' ),
+				add_query_arg([
+					'post_type' => bp_get_group_type_post_type(),
+				], admin_url( 'edit.php' ) )
+			)
+		);
+	} else {
+		?>
+		<label for="bp-disable-group-type-creation"><?php _e( 'Enable group types to better organize groups', 'buddyboss' ); ?></label>
+		<?php
+	}
+
 }
 
 /**
@@ -326,8 +341,24 @@ function bp_admin_setting_callback_group_restrict_invites() {
 function bp_admin_setting_callback_group_auto_join() {
 	?>
 	<input id="bp-enable-group-auto-join" name="bp-enable-group-auto-join" type="checkbox" value="1" <?php checked( bp_enable_group_auto_join() ); ?> />
-	<label for="bp-enable-group-auto-join"><?php _e( 'Allow selected profile types to automatically join groups', 'buddyboss' ); ?></label>
-    <p class="description"><?php _e( 'When a member requests to join a group their membership is automatically accepted', 'buddyboss' ); ?></p>
+	<?php
+	if ( true === bp_enable_group_auto_join() ) {
+		printf(
+			'<label for="bp-enable-group-auto-join">%s</label>',
+			sprintf(
+				__( 'Allow selected <a href="%s">profile types</a> to automatically join groups', 'buddyboss' ),
+				add_query_arg([
+					'post_type' => bp_get_member_type_post_type(),
+				], admin_url( 'edit.php' ) )
+			)
+		);
+	} else {
+		?>
+		<label for="bp-enable-group-auto-join"><?php _e( 'Allow selected profile types to automatically join groups', 'buddyboss' ); ?></label>
+		<?php
+	}
+	?>
+	<p class="description"><?php _e( 'When a member requests to join a group their membership is automatically accepted', 'buddyboss' ); ?></p>
 	<?php
 }
 
