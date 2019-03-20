@@ -139,7 +139,7 @@ class BP_Media_Component extends BP_Component {
 		// Note that global_tables is included in this array.
 		parent::setup_globals( array(
 			'slug'                  => BP_MEDIA_SLUG,
-			'has_directory'         => false,
+			'has_directory'         => true,
 			'notification_callback' => 'bp_media_format_notifications',
 			'global_tables'         => $global_tables,
 		) );

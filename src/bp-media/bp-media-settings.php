@@ -63,13 +63,6 @@ function bp_media_get_settings_fields() {
 			'args'              => []
 		],
 
-		'bp_media_all_media_page' => [
-			'title'             => __( 'Global Photos Page', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_all_media_page',
-			'sanitize_callback' => 'string',
-			'args'              => []
-		],
-
 		'bp_media_activity_photo_size' => [
 			'title'             => __( 'Activity Photo Size', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_activity_photo_size',

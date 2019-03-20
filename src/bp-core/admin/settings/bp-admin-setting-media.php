@@ -40,8 +40,8 @@ class BP_Admin_Setting_Media extends BP_Admin_Setting_tab {
 				continue;
 			}
 
-			$section_title = ! empty( $section['title'] ) ?? '';
-			$section_callback = ! empty( $section['callback'] ) ?? false ;
+			$section_title    = ! empty( $section['title'] ) ? $section['title'] : '';
+			$section_callback = ! empty( $section['callback'] ) ? $section['callback'] : false ;
 
 			// Add the section
 			$this->add_section( $section_id, $section_title, $section_callback );
