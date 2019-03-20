@@ -25,10 +25,6 @@ function bp_core_admin_components_settings() {
 
 			<?php bp_core_admin_components_options(); ?>
 
-			<p class="submit clear">
-				<input class="button-primary" type="submit" name="bp-admin-component-submit" id="bp-admin-component-submit" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ) ?>"/>
-			</p>
-
 			<?php wp_nonce_field( 'bp-admin-component-setup' ); ?>
 
 		</form>
@@ -141,6 +137,17 @@ function bp_core_admin_components_options() {
 		_e( 'Components list', 'buddyboss' );
 	?></h3>
 
+	<div class="tablenav top">
+		<div class="alignleft actions bulkactions">
+			<label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>
+			<select name="action" id="bulk-action-selector-top">
+				<option value="">Bulk Actions</option>
+				<option value="active" class="hide-if-no-js">Activate</option>
+				<option value="inactive">Deactivate</option>
+			</select>
+			<input type="submit" id="doaction" class="button action" name="bp-admin-component-submit" value="Apply">
+		</div>
+	</div>
 	<table class="wp-list-table widefat plugins">
 		<thead>
 			<tr>
@@ -261,6 +268,17 @@ function bp_core_admin_components_options() {
 	<input type="hidden" name="bp_components[members]" value="1" />
 	<input type="hidden" name="bp_components[xprofile]" value="1" />
 
+	<div class="tablenav bottom">
+		<div class="alignleft actions bulkactions">
+			<label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>
+			<select name="action2" id="bulk-action-selector-top">
+				<option value="">Bulk Actions</option>
+				<option value="active" class="hide-if-no-js">Activate</option>
+				<option value="inactive">Deactivate</option>
+			</select>
+			<input type="submit" id="doaction" class="button action" name="bp-admin-component-submit" value="Apply">
+		</div>
+	</div>
 	<?php
 }
 
@@ -281,6 +299,10 @@ function bp_core_admin_components_settings_handler() {
 	if ( ! check_admin_referer( 'bp-admin-component-setup' ) )
 		return;
 
+	$action = ( isset( $_POST['action'] ) && '' !== $_POST['action'] ) ? $_POST['action'] : $_POST['action2'];
+	if ( '' === $action )
+		return;
+
 	// Settings form submitted, now save the settings. First, set active components.
 	if ( isset( $_POST['bp_components'] ) ) {
 
@@ -292,15 +314,53 @@ function bp_core_admin_components_settings_handler() {
 		require_once( $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
 
 		$current_components = $bp->active_components;
-		$submitted = stripslashes_deep( $_POST['bp_components'] );
-		$bp->active_components = bp_core_admin_get_active_components_from_submitted_settings( $submitted );
-		$uninstalled_components = array_diff_key($current_components, $bp->active_components);
+		$submitted          = stripslashes_deep( $_POST['bp_components'] );
+		$required           = bp_core_admin_get_components( 'required' );
 
-		bp_core_install( $bp->active_components );
-		bp_core_add_page_mappings( $bp->active_components );
-		bp_update_option( 'bp-active-components', $bp->active_components );
+		if ( 'inactive' === $action ) {
+			$submitted = array_diff_key( $current_components, $submitted );
+			if ( empty( $submitted ) ) {
+				foreach ( $required as $key => $req ) {
+					$submitted[$key] = '1';
+				}
+			} else {
+				foreach ( $required as $key => $req ) {
+					$submitted[$key] = '1';
+				}
+			}
 
-		bp_core_uninstall( $uninstalled_components );
+			$bp->active_components = $submitted;
+			$uninstalled_components = array_diff_key($current_components, $bp->active_components);
+
+			bp_core_install( $bp->active_components );
+			bp_core_add_page_mappings( $bp->active_components );
+			bp_update_option( 'bp-active-components', $bp->active_components );
+
+			bp_core_uninstall( $uninstalled_components );
+
+		} else {
+
+			if ( empty( $submitted ) ) {
+				foreach ( $required as $key => $req ) {
+					$submitted[$key] = '1';
+				}
+			} else {
+				foreach ( $required as $key => $req ) {
+					$submitted[$key] = '1';
+				}
+			}
+
+			$bp->active_components = $submitted;
+			$uninstalled_components = array_diff_key($current_components, $bp->active_components);
+
+			bp_core_install( $bp->active_components );
+			bp_core_add_page_mappings( $bp->active_components );
+			bp_update_option( 'bp-active-components', $bp->active_components );
+
+			bp_core_uninstall( $uninstalled_components );
+		}
+
+
 	}
 
 	$current_action = 'all';
@@ -309,7 +369,7 @@ function bp_core_admin_components_settings_handler() {
 	}
 
 	// Where are we redirecting to?
-	$base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $current_action, 'updated' => 'true' ), 'admin.php' ) );
+	$base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) );
 
 	// Redirect.
 	wp_redirect( $base_url );
@@ -411,8 +471,8 @@ add_action( 'bp_admin_init', 'bp_core_admin_components_activation_handler' );
  *                         global. You should stripslashes_deep() before passing to this function.
  * @return array The calculated list of component settings
  */
-function bp_core_admin_get_active_components_from_submitted_settings( $submitted ) {
-	$current_action = 'all';
+function bp_core_admin_get_active_components_from_submitted_settings( $submitted, $action = 'all' ) {
+	$current_action = $action;
 
 	if ( isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'active', 'inactive' ) ) ) {
 		$current_action = $_GET['action'];
