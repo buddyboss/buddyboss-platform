@@ -80,7 +80,7 @@ class BBP_Converter {
 	public function register_admin_settings() {
 
 		// Add the main section
-		add_settings_section( 'bbpress_converter_main',     __( 'Database Settings', 'buddyboss' ),  'bbp_converter_setting_callback_main_section', 'bbpress_converter' );
+		add_settings_section( 'bbpress_converter_main',     __( 'Import Forums', 'buddyboss' ),  'bbp_converter_setting_callback_main_section', 'bbpress_converter' );
 
 		// System Select
 		add_settings_field( '_bbp_converter_platform',      __( 'Select Platform',   'buddyboss' ),  'bbp_converter_setting_callback_platform', 'bbpress_converter', 'bbpress_converter_main' );
@@ -111,7 +111,7 @@ class BBP_Converter {
 		register_setting  ( 'bbpress_converter_main',       '_bbp_converter_db_prefix',          'sanitize_title' );
 
 		// Add the options section
-		add_settings_section( 'bbpress_converter_opt',      __( 'Options',           'buddyboss' ),  'bbp_converter_setting_callback_options_section', 'bbpress_converter' );
+		add_settings_section( 'bbpress_converter_opt',      __( '',           'buddyboss' ),  'bbp_converter_setting_callback_options_section', 'bbpress_converter' );
 
 		// Rows Limit
 		add_settings_field( '_bbp_converter_rows',          __( 'Rows Limit',        'buddyboss' ),  'bbp_converter_setting_callback_rows', 'bbpress_converter', 'bbpress_converter_opt' );
