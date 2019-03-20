@@ -23,6 +23,11 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
 	}
 
 	return array_merge( $scripts, array(
+		'bp-nouveau-media' => array(
+			'file'         => 'js/buddypress-media%s.js',
+			'dependencies' => array( 'bp-nouveau' ),
+			'footer'       => true,
+		),
 		'bp-nouveau-media-dropzone-options' => array(
 			'file'         => buddypress()->plugin_url . 'bp-media/js/dropzone-options.js',
 			'dependencies' => array( 'bp-nouveau' ),
@@ -38,6 +43,7 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_nouveau_media_enqueue_scripts() {
+	wp_enqueue_script( 'bp-nouveau-media' );
 	wp_enqueue_script( 'bp-nouveau-media-dropzone-options' );
 }
 

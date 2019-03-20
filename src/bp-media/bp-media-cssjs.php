@@ -16,9 +16,10 @@ function bp_media_add_dropzone_js() {
 	// Include the dropzone JS
     $url = buddypress()->plugin_url . 'bp-media/js/';
     wp_enqueue_script( 'bp-media-dropzone', "{$url}dropzone.min.js", false, bp_get_version() );
-    wp_enqueue_script( 'bp-media-dropzone-main', "{$url}dropzone-main.js", false, bp_get_version() );
+    //wp_enqueue_script( 'bp-media-dropzone-wrapper', "{$url}dropzone-wrapper.js", array( 'jquery' ), bp_get_version() );
+    //wp_enqueue_script( 'bp-media-dropzone-main', "{$url}dropzone-main.js", false, bp_get_version(), true );
 }
-add_action( 'bp_enqueue_scripts', 'bp_media_add_dropzone_js' );
+add_action( 'bp_enqueue_scripts', 'bp_media_add_dropzone_js', 0 );
 
 /**
  * Enqueue the CSS for dropzone.
