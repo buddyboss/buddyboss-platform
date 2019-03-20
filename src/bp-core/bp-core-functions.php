@@ -4061,7 +4061,7 @@ function bp_platform_default_activity_types() {
 	$activity_type = apply_filters( 'bp_platform_default_activity_types', array(
 		'0' => array(
 			'activity_name' => 'new_avatar',
-			'activity_label' => 'Member changes their their profile photo'
+			'activity_label' => 'Member changes their profile photo'
 		),
 		'1' => array(
 			'activity_name' => 'member_profile_photo',
