@@ -3,7 +3,7 @@ namespace BuddyBoss\Memberships\Classes;
 
 class BpProductEvents {
 
-// class instance
+	// class instance
 	static $instance;
 
 	// customer WP_List_Table object
@@ -40,7 +40,7 @@ class BpProductEvents {
 	public function bbmsProductEvents() {
 		?>
 		<div class="wrap">
-			<h2>WP_List_Table Class Example</h2>
+			<h2>BuddyBoss Memberships - Product Events</h2>
 
 			<div id="poststuff">
 				<div id="post-body" class="metabox-holder columns-2">

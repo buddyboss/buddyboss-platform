@@ -341,10 +341,10 @@ class BpMemberships {
 	 */
 	public static function getProductEvents() {
 
-		$lmsTypes = self::getLmsTypesSelected();
-		$vendorTypes = self::getVendorTypesSelected();
+		$lmsTypes = self::getLmsTypesSelected(LD_POST_TYPE);
+		$vendorTypes = array(MP_POST_TYPE, WC_POST_TYPE);
 
-		$products = get_posts(array("post_type" => self::getVendorTypesSelected()));
+		$products = get_posts(array("post_type" => $vendorTypes));
 
 		$results = array();
 		foreach ($products as $product) {

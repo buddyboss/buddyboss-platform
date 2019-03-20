@@ -26,19 +26,9 @@ class Events_List extends WpListTable {
 	 */
 	public static function get_events($per_page = 5, $page_number = 1) {
 
-		global $wpdb;
+		$results = BpMemberships::getProductEvents();
 
-		$sql = "SELECT * FROM {$wpdb->prefix}events";
-
-		if (!empty($_REQUEST['orderby'])) {
-			$sql .= ' ORDER BY ' . esc_sql($_REQUEST['orderby']);
-			$sql .= !empty($_REQUEST['order']) ? ' ' . esc_sql($_REQUEST['order']) : ' ASC';
-		}
-
-		$sql .= " LIMIT $per_page";
-		$sql .= ' OFFSET ' . ($page_number - 1) * $per_page;
-
-		$result = $wpdb->get_results($sql, 'ARRAY_A');
+		error_log(print_r($results, true));
 
 		return $result;
 	}
@@ -52,7 +42,7 @@ class Events_List extends WpListTable {
 		global $wpdb;
 
 		$wpdb->delete(
-			"{$wpdb->prefix}events",
+			"{$wpdb->prefix}",
 			['ID' => $id],
 			['%d']
 		);
@@ -64,11 +54,9 @@ class Events_List extends WpListTable {
 	 * @return null|string
 	 */
 	public static function record_count() {
-		global $wpdb;
+		$results = BpMemberships::getProductEvents();
 
-		$sql = "SELECT COUNT(*) FROM {$wpdb->prefix}events";
-
-		return $wpdb->get_var($sql);
+		return count($results);
 	}
 
 	/** Text displayed when no customer data is available */
@@ -133,14 +121,18 @@ class Events_List extends WpListTable {
 	 * @return array
 	 */
 	function get_columns() {
+		error_log("get_columns()");
+
 		$columns = [
-			'cb' => '<input type="checkbox" />',
+			// 'cb' => '<input type="checkbox" />',
 			'product' => __('Product', 'buddyboss'),
+			'event_identifier' => __('Identifier', 'buddyboss'),
 			'user_id' => __('User ID', 'buddyboss'),
 			'course_attached' => __('Course Attached', 'buddyboss'),
+			'grant_access' => __('Action', 'buddyboss'),
+			'product_id' => __('Product ID', 'buddyboss'),
 			'created_at' => __('Created At', 'buddyboss'),
 			'updated_at' => __('Updated At', 'buddyboss'),
-			'identifier' => __('Identifier', 'buddyboss'),
 		];
 
 		return $columns;
@@ -183,7 +175,7 @@ class Events_List extends WpListTable {
 		/** Process bulk action */
 		$this->process_bulk_action();
 
-		$per_page = $this->get_items_per_page('events_per_page', 5);
+		$per_page = $this->get_items_per_page('events_per_page', 1);
 		$current_page = $this->get_pagenum();
 		$total_items = self::record_count();
 
@@ -192,7 +184,11 @@ class Events_List extends WpListTable {
 			'per_page' => $per_page, //WE have to determine how many items to show on a page
 		]);
 
-		$this->items = self::get_events($per_page, $current_page);
+		// $sampleResults = array('product_id' => "todo-product_id", 'event_identifier' => "todo-event_identifier", 'user_id' => "todo-user_id", 'course_attached' => 'some course attached', 'grant_access' => "todo-grant_access", 'created_at' => "todo-created_at", "updated_at" => "todo-updated_at");
+		$sampleResults = array("todo-product_id", "todo-event_identifier", "todo-user_id", 'some course attached', "todo-grant_access", "todo-created_at", "todo-updated_at");
+
+		$this->items = $sampleResults;
+		// $this->items = self::get_events($per_page, $current_page);
 	}
 
 	public function process_bulk_action() {
@@ -206,7 +202,7 @@ class Events_List extends WpListTable {
 			if (!wp_verify_nonce($nonce, 'sp_delete_event')) {
 				die('Go get a life script kiddies');
 			} else {
-				self::delete_event(absint($_GET['customer']));
+				self::delete_event(absint($_GET['events']));
 
 				// esc_url_raw() is used to prevent converting ampersand in url to "#038;"
 				// add_query_arg() return the current url
