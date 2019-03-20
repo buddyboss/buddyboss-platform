@@ -188,7 +188,16 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 			<input id="bp-enable-profile-search" name="bp-enable-profile-search" type="checkbox" value="1" <?php checked( ! bp_disable_advanced_profile_search() ); ?> />
 			<label for="bp-enable-profile-search"><?php _e( 'Enable advanced profile search on the members directory', 'buddyboss' ); ?></label>
-		<?php
+			<?php
+			printf(
+			'<p class="description">%s</p>',
+					sprintf(
+						__( 'Configure options for your <a href="%s">Profile Search Form</a>.', 'buddyboss' ),
+						add_query_arg([
+							'page' => '#',
+						], admin_url( 'admin.php' ) )
+					)
+			);
 	}
 
 	/**
