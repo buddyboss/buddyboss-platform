@@ -1089,7 +1089,7 @@ function bbp_admin_settings() {
  */
 function bbp_converter_setting_callback_main_section() {
 ?>
-
+	<h3><?php _e('Database Settings', 'buddyboss') ?></h3>
 	<p><?php _e( 'Information about your previous forums database so that they can be converted. <strong>Backup your database before proceeding.</strong>', 'buddyboss' ); ?></p>
 
 <?php
@@ -1202,7 +1202,7 @@ function bbp_converter_setting_callback_dbname() {
  */
 function bbp_converter_setting_callback_options_section() {
 ?>
-
+	<h3><?php _e( 'Options', 'buddyboss' ); ?></h3>
 	<p><?php esc_html_e( 'Some optional parameters to help tune the conversion process.', 'buddyboss' ); ?></p>
 
 <?php
