@@ -248,7 +248,7 @@ class BBP_Topics_Admin {
 
 		add_meta_box (
 			'bbp_topic_attributes',
-			__( 'Topic Attributes', 'buddyboss' ),
+			__( 'Discussion Attributes', 'buddyboss' ),
 			'bbp_topic_metabox',
 			$this->post_type,
 			'side',

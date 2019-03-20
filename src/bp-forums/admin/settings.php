@@ -1533,7 +1533,7 @@ function bbp_form_slug_conflict_check( $slug, $default ) {
 			'_bbp_view_slug'          => array( 'name' => __( 'View base',   'buddyboss' ), 'default' => 'view',   'context' => 'Forums' ),
 
 			// Topic tag slug
-			'_bbp_topic_tag_slug'     => array( 'name' => __( 'Topic tag slug', 'buddyboss' ), 'default' => 'discussion-tag', 'context' => 'Forums' ),
+			'_bbp_topic_tag_slug'     => array( 'name' => __( 'Discussion tag slug', 'buddyboss' ), 'default' => 'discussion-tag', 'context' => 'Forums' ),
 		) );
 
 		/** BuddyBoss Core *******************************************************/

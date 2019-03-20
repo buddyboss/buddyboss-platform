@@ -1225,7 +1225,7 @@ function bbp_admin_reset() {
 							<?php esc_html_e( 'Forums',					'buddyboss' ); ?><br />
 							<?php esc_html_e( 'Discussions',			'buddyboss' ); ?><br />
 							<?php esc_html_e( 'Replies',				'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Topic Tags',				'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Discussion Tags',		'buddyboss' ); ?><br />
 							<?php esc_html_e( 'Related Meta Data',		'buddyboss' ); ?><br />
 							<?php esc_html_e( 'Forum Settings',			'buddyboss' ); ?><br />
 							<?php esc_html_e( 'Forum Activity',			'buddyboss' ); ?><br />
