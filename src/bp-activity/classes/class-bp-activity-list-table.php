@@ -546,7 +546,29 @@ class BP_Activity_List_Table extends WP_List_Table {
 		if ( isset( $actions[ $item['type'] ] ) ) {
 			echo $actions[ $item['type'] ];
 		} else {
-			printf( __( 'Unregistered action - %s', 'buddyboss' ), $item['type'] );
+			if ( strpos( $item['type'], 'new_blog_' ) !== false ) {
+				$get_action = bp_activity_get_meta( $item['id'], 'admin_filters' );
+				if ( '' !== $get_action ) {
+					echo __( $get_action, 'buddyboss' );
+				} else {
+					$split_cpt = explode('new_blog_', $item['type'] );
+
+					$args = array(
+						'name' => $split_cpt[1]
+					);
+
+					$output = 'objects'; // names or objects
+
+					$cu_post_types = get_post_types( $args, $output );
+
+					foreach ( $cu_post_types as $cu ) {
+						$singular_label_name = strtolower( $cu->labels->singular_name );
+					}
+					printf( __( 'New %s published', 'buddyboss' ), $singular_label_name );
+				}
+			} else {
+				printf( __( 'Unregistered action - %s', 'buddyboss' ), $item['type'] );
+			}
 		}
 	}
 

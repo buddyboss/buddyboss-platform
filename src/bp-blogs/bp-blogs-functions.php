@@ -604,6 +604,21 @@ function bp_blogs_publish_post_activity_meta( $activity_id, $post, $args ) {
 
 	bp_activity_update_meta( $activity_id, 'post_url',   $post_permalink );
 
+	$args = array(
+		'name' => $post->post_type
+	);
+
+	$output = 'objects'; // names or objects
+
+	$cu_post_types = get_post_types( $args, $output );
+
+	foreach ( $cu_post_types as $cu ) {
+		$singular_label_name = strtolower( $cu->labels->singular_name );
+	}
+
+	$admin_filters = 'New '.$singular_label_name.' published';
+	bp_activity_update_meta( $activity_id, 'admin_filters',  $admin_filters );
+
 	// Update the blog's last activity.
 	bp_blogs_update_blogmeta( $args['item_id'], 'last_activity', bp_core_current_time() );
 
