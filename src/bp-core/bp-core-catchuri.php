@@ -1097,8 +1097,8 @@ function bp_private_network_template_redirect() {
 		$enable_private_network = bp_get_option( 'bp-enable-private-network' );
 
 		$page_ids            = bp_core_get_directory_page_ids();
-		$terms               = isset( $page_ids['terms'] ) ? $page_ids['terms'] : false;
-		$privacy             = isset( $page_ids['privacy'] ) ? $page_ids['privacy'] : false;
+		$terms               = false;
+		$privacy             = false;
 		$current_page_object = $wp_query->get_queried_object();
 		$id                  = isset( $current_page_object->ID ) ? $current_page_object->ID : get_the_ID();
 

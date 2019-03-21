@@ -46,6 +46,8 @@ window.bp = window.bp || {};
 
 			this.sentInvitesFormValidate();
 
+			this.registerPopUp();
+
 		},
 
 		/**
@@ -1300,6 +1302,18 @@ window.bp = window.bp || {};
 
 			// Request the page
 			self.objectRequest( queryData );
+		},
+		registerPopUp: function() {
+			$('.popup-modal-register').magnificPopup({
+				type: 'inline',
+				preloader: false,
+				fixedContentPos: true,
+				modal: true
+			});
+			$('.popup-modal-dismiss').click(function(e){
+				e.preventDefault();
+				$.magnificPopup.close();
+			});
 		}
 	};
 
