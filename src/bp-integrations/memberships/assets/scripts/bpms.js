@@ -189,7 +189,7 @@ function initializeGroupSelect2(lmsType, loadAllAtOnce) {
             width: "resolve"
         });
     }
-    setGroupPreSelected(search_group_ui);
+    setGroupPreSelected(lmsType, search_group_ui);
 }
 /**
  * Set preselected values for courses(learndash).

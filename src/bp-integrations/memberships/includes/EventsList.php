@@ -34,7 +34,9 @@ class EventsList extends WpListTable {
 		}
 
 		$results = BpMemberships::getProductEvents($vendorType);
-		// error_log(print_r($results, true));
+		if (BPMS) {
+			error_log(print_r($results, true));
+		}
 		return $results;
 	}
 
@@ -44,7 +46,6 @@ class EventsList extends WpListTable {
 	 * @param int $id event ID
 	 */
 	public static function delete_event($id) {
-
 		// Not applicable
 	}
 
@@ -54,7 +55,14 @@ class EventsList extends WpListTable {
 	 * @return null|string
 	 */
 	public static function record_count() {
-		$results = BpMemberships::getProductEvents();
+		$vendorType = null;
+
+		if (isset($_GET['integration'])) {
+			$integration = $_GET['integration'];
+			$vendorType = array($integration);
+		}
+
+		$results = BpMemberships::getProductEvents($vendorType);
 
 		return count($results);
 	}
@@ -147,10 +155,8 @@ class EventsList extends WpListTable {
 	 * @return array
 	 */
 	function get_columns() {
-		error_log("get_columns()");
 
 		$columns = [
-			'cb' => '<input type="checkbox" />',
 			'product_id' => __('Product', 'buddyboss'),
 			'user_id' => __('User', 'buddyboss'),
 			'course_attached' => __('Course attached', 'buddyboss'),

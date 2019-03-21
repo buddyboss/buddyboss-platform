@@ -138,7 +138,6 @@ class WpListTable {
 	 * }
 	 */
 	public function __construct($args = array()) {
-		error_log("WpListTable::__construct()");
 		$args = wp_parse_args(
 			$args,
 			array(
@@ -1155,7 +1154,6 @@ foreach ($this->modes as $mode => $title) {
 	 * @since 3.1.0
 	 */
 	public function display() {
-		error_log("display() from WpListTable.php");
 		$singular = $this->_args['singular'];
 
 		$this->display_tablenav('top');

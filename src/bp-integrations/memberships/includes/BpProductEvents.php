@@ -13,15 +13,15 @@ class BpProductEvents {
 
 	// class constructor
 	public function __construct() {
-		add_filter('set-screen-option', [__CLASS__, 'set_screen'], 10, 3);
-		add_action('admin_menu', [$this, 'plugin_menu']);
+		add_filter('set-screen-option', [__CLASS__, 'setScreen'], 10, 3);
+		add_action('admin_menu', [$this, 'pluginMenu']);
 	}
 
-	public static function set_screen($status, $option, $value) {
+	public static function setScreen($status, $option, $value) {
 		return $value;
 	}
 
-	public function plugin_menu() {
+	public function pluginMenu() {
 
 		$hook = add_submenu_page(
 			'',
@@ -32,7 +32,7 @@ class BpProductEvents {
 			[$this, 'bpmsProductEvents']
 		);
 
-		add_action("load-$hook", [$this, 'screen_option']);
+		add_action("load-$hook", [$this, 'screenOption']);
 
 	}
 
@@ -47,7 +47,7 @@ class BpProductEvents {
 	/**
 	 * Screen options
 	 */
-	public function screen_option() {
+	public function screenOption() {
 
 		$option = 'per_page';
 		$args = [
@@ -62,7 +62,7 @@ class BpProductEvents {
 	}
 
 	/** Singleton instance */
-	public static function get_instance() {
+	public static function getInstance() {
 		if (!isset(self::$instance)) {
 			self::$instance = new self();
 		}
