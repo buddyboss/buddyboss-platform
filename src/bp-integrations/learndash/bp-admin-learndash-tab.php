@@ -23,8 +23,9 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function initialize() {
-		$this->tab_order = 20;
+		$this->tab_order = 10;
 		$this->intro_template = $this->root_path . '/templates/admin/integration-tab-intro.php';
+		add_action('admin_footer', [$this, 'add_sync_tool_scripts'], 20);
 	}
 
 	/**
