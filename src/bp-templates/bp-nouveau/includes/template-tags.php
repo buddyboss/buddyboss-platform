@@ -2516,7 +2516,7 @@ function bp_nouveau_signup_terms_privacy() {
 			$get_terms = get_post( $terms );
 			echo wp_kses_post( apply_filters( 'the_content',  $get_terms->post_content ) );
 			?>
-			<button title="Close (Esc)" type="button" class="mfp-close">×</button>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss'); ?>" type="button" class="mfp-close"><?php esc_html_e('×','buddyboss');?></button>
 		</div>
 		<?php
 	}
@@ -2532,7 +2532,7 @@ function bp_nouveau_signup_terms_privacy() {
 			$get_privacy = get_post( $privacy );
 			echo wp_kses_post( apply_filters( 'the_content',  $get_privacy->post_content ) );
 			?>
-			<button title="Close (Esc)" type="button" class="mfp-close">×</button>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss'); ?>" type="button" class="mfp-close"><?php esc_html_e('×','buddyboss');?></button>
 		</div>
 		<?php
 	}
@@ -2548,7 +2548,7 @@ function bp_nouveau_signup_terms_privacy() {
 			$get_terms = get_post( $terms );
 			echo wp_kses_post( apply_filters( 'the_content',  $get_terms->post_content ) );
 			?>
-			<button title="Close (Esc)" type="button" class="mfp-close">×</button>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss'); ?>" type="button" class="mfp-close"><?php esc_html_e('×','buddyboss');?></button>
 		</div>
 		<div id="privacy-modal" class="mfp-hide white-popup-block">
 			<h1><?php esc_html_e( get_the_title( $privacy ), 'buddyboss' ); ?></h1>
@@ -2556,7 +2556,7 @@ function bp_nouveau_signup_terms_privacy() {
 			$get_privacy = get_post( $privacy );
 			echo wp_kses_post( apply_filters( 'the_content',  $get_privacy->post_content ) );
 			?>
-			<button title="Close (Esc)" type="button" class="mfp-close">×</button>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss'); ?>" type="button" class="mfp-close"><?php esc_html_e('×','buddyboss');?></button>
 		</div>
 		<?php
 	}
