@@ -1,6 +1,8 @@
 <?php
 namespace BuddyBoss\Memberships\Classes;
 
+use BuddyBoss\Memberships\Classes\BpmsView;
+
 class BpProductEvents {
 
 	// class instance
@@ -26,8 +28,8 @@ class BpProductEvents {
 			'BuddyBoss Memberships',
 			'Memberships Settings',
 			'manage_options',
-			'bpms-product-events',
-			[$this, 'bbmsProductEvents']
+			'bp-memberships-log',
+			[$this, 'bpmsProductEvents']
 		);
 
 		add_action("load-$hook", [$this, 'screen_option']);
@@ -37,28 +39,10 @@ class BpProductEvents {
 	/**
 	 * Plugin settings page
 	 */
-	public function bbmsProductEvents() {
-		?>
-		<div class="wrap">
-			<h2>Memberships Logs</h2>
-
-			<div id="poststuff">
-				<div id="post-body" class="metabox-holder columns-2">
-					<div id="post-body-content">
-						<div class="meta-box-sortables ui-sortable">
-							<form method="post">
-								<?php
-$this->events_obj->prepare_items();
-		$this->events_obj->display();?>
-							</form>
-						</div>
-					</div>
-				</div>
-				<br class="clear">
-			</div>
-		</div>
-	<?php
-}
+	public function bpmsProductEvents() {
+		$classObj = $this;
+		BpmsView::render('admin/membership-logs', get_defined_vars());
+	}
 
 	/**
 	 * Screen options

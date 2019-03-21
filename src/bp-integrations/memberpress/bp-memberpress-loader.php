@@ -19,7 +19,3 @@ function bp_register_memberpress_integration() {
 	buddypress()->integrations['memberpress'] = new BP_Memberpress_Integration;
 }
 add_action('bp_setup_integrations', 'bp_register_memberpress_integration');
-
-// Autoloading
-// require __DIR__ . '/../../../vendor/autoload.php';
-// new BuddyBoss\Integrations\BpMemberships;

@@ -42,8 +42,42 @@ class BP_Appboss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'bp-appboss_enabled', // Unique Identifier
 				__('Enable', 'buddyboss'), //Title
 				['input_text' => __("LearnDash-AppBoss Integration", 'buddyboss'),
-					'input_description' => __("Enroll user in Learndash course(s) after purchasing In-App purchases.", 'buddyboss')]); //Callback
+					'input_description' => __("Enroll user in LearnDash course(s) after purchasing In-App purchases.", 'buddyboss')]); //Callback
 
+			$this->add_field(
+				'bp-appboss_link', // Unique Identifier
+				'', //Label
+				'appBossRenderAnchor', //Callback
+				'', //Fields arguments
+				'appboss' //Callback arguments
+			);
+
+		} else {
+
+			$this->add_field(
+				'bp-appboss_ld_text', // Unique Identifier
+				'', //Label
+				'appBossNoLearnDashText', //Callback,
+				'', //Fields arguments
+				'AppBoss' //Callback arguments
+			);
+
+		}
+
+	}
+
+	public function form_html() {
+		settings_fields($this->tab_name);
+		$this->bp_custom_do_settings_sections($this->tab_name);
+
+		if (defined('LEARNDASH_VERSION')) {
+
+			printf(
+				'<p class="submit">
+				<input type="submit" name="submit" class="button-primary" value="%s" />
+			</p>',
+				esc_attr__('Save Settings', 'buddyboss')
+			);
 		}
 	}
 }

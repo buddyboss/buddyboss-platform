@@ -1,8 +1,8 @@
 <?php
 /**
- * Memberpress integration helpers
+ * AppBoss integration helpers
  *
- * @package BuddyBoss\Memberpress
+ * @package BuddyBoss\AppBoss
  * @since BuddyBoss 1.0.0
  */
 
@@ -15,7 +15,7 @@ defined('ABSPATH') || exit;
  * @param  {string}  $integration Name of integration to be used in url-param
  * @return  {html}
  */
-function mpRenderAnchor($integration) {
+function appBossRenderAnchor($integration) {
 
 	echo wpautop(
 		__("<a href=\"admin.php?page=bp-memberships-log&integration=$integration\" style=\"float:right\">View Logs</a>", 'buddyboss')
@@ -27,7 +27,7 @@ function mpRenderAnchor($integration) {
  *
  * @return {html}
  */
-function mpNoLearnDashText($integration) {
+function appBossNoLearnDashText($integration) {
 	echo sprintf(
 		__("BuddyBoss Platform has integration settings for LearnDash-%s. If using LearnDash we add the ability to sync LearnDash groups with social groups, to generate course reports within social groups, and more. If using our BuddyBoss Theme we also include styling for LearnDash.", 'buddyboss'), $integration);
 

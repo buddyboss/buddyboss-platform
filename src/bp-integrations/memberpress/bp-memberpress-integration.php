@@ -54,6 +54,7 @@ class BP_Memberpress_Integration extends BP_Integration {
 	public function includes($includes = array()) {
 		// Calling Parent
 		parent::includes([
+			'functions',
 		]);
 
 	}

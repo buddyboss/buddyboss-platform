@@ -46,7 +46,40 @@ class BP_Memberpress_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				__('Enable', 'buddyboss'), //Title
 				['input_text' => __("LearnDash-MemberPress Integration", 'buddyboss'),
 					'input_description' => __("Enroll user in LearnDash course(s) after purchasing MemberPress membership.", 'buddyboss')]); //Callback
+
+			$this->add_field(
+				'bp-memberpress_link', // Unique Identifier
+				'', //Label
+				'mpRenderAnchor', //Callback
+				'', //Fields arguments
+				'memberpress' //Callback arguments
+			);
+		} else {
+
+			$this->add_field(
+				'bp-memberpress_ld_text', // Unique Identifier
+				'', //Label
+				'mpNoLearnDashText', //Callback,
+				'', //Fields arguments
+				'MemberPress' //Callback arguments
+			);
+
 		}
 
 	}
+
+	public function form_html() {
+		if (defined('LEARNDASH_VERSION')) {
+			settings_fields($this->tab_name);
+			$this->bp_custom_do_settings_sections($this->tab_name);
+
+			printf(
+				'<p class="submit">
+				<input type="submit" name="submit" class="button-primary" value="%s" />
+			</p>',
+				esc_attr__('Save Settings', 'buddyboss')
+			);
+		}
+	}
+
 }
