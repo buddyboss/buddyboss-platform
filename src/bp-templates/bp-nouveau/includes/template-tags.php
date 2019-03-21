@@ -2508,24 +2508,56 @@ function bp_nouveau_signup_terms_privacy() {
 	if ( $terms && ! $privacy ) {
 		?>
         <p class="register-privacy-info">
-            <?php printf( __( 'By creating an account, you agree to our <a href="%s" target="_blank">Terms of Service</a>.', 'buddyboss' ), get_permalink( $terms ) ); ?>
+            <?php printf( __( 'By creating an account, you agree to our <a class="popup-modal popup-terms" href="#terms-modal">Terms of Service</a>.', 'buddyboss' ), get_permalink( $terms ) ); ?>
         </p>
+		<div id="terms-modal" class="mfp-hide registration-popup">
+			<h1><?php esc_html_e( get_the_title( $terms ), 'buddyboss' ); ?></h1>
+			<?php
+			$get_terms = get_post( $terms );
+			echo wp_kses_post( apply_filters( 'the_content',  $get_terms->post_content ) );
+			?>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss'); ?>" type="button" class="mfp-close"><?php esc_html_e('×','buddyboss');?></button>
+		</div>
 		<?php
 	}
 
 	if ( ! $terms && $privacy ) {
 		?>
         <p class="register-privacy-info">
-            <?php printf( __( 'By creating an account, you agree to our <a href="%s" target="_blank">Privacy Policy</a>.', 'buddyboss' ), get_permalink( $privacy ) ); ?>
+            <?php printf( __( 'By creating an account, you agree to our <a class="popup-modal-register popup-privacy" href="#privacy-modal">Privacy Policy</a>.', 'buddyboss' ), get_permalink( $privacy ) ); ?>
         </p>
+		<div id="privacy-modal" class="mfp-hide registration-popup">
+			<h1><?php esc_html_e( get_the_title( $privacy ), 'buddyboss' ); ?></h1>
+			<?php
+			$get_privacy = get_post( $privacy );
+			echo wp_kses_post( apply_filters( 'the_content',  $get_privacy->post_content ) );
+			?>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss'); ?>" type="button" class="mfp-close"><?php esc_html_e('×','buddyboss');?></button>
+		</div>
 		<?php
 	}
 
 	if ( $terms && $privacy ) {
 		?>
         <p class="register-privacy-info">
-            <?php printf( __( 'By creating an account, you agree to our <a href="%s" target="_blank">Terms of Service</a> and <a href="%s" target="_blank">Privacy Policy</a>.', 'buddyboss' ), get_permalink( $terms ), get_permalink( $privacy ) ); ?>
+            <?php printf( __( 'By creating an account, you agree to our <a class="popup-modal-register popup-terms" href="#terms-modal">Terms of Service</a> and <a class="popup-modal-register popup-privacy" href="#privacy-modal">Privacy Policy</a>.', 'buddyboss' ), get_permalink( $terms ), get_permalink( $privacy ) ); ?>
         </p>
+		<div id="terms-modal" class="mfp-hide registration-popup">
+			<h1><?php esc_html_e( get_the_title( $terms ), 'buddyboss' ); ?></h1>
+			<?php
+			$get_terms = get_post( $terms );
+			echo wp_kses_post( apply_filters( 'the_content',  $get_terms->post_content ) );
+			?>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss'); ?>" type="button" class="mfp-close"><?php esc_html_e('×','buddyboss');?></button>
+		</div>
+		<div id="privacy-modal" class="mfp-hide registration-popup">
+			<h1><?php esc_html_e( get_the_title( $privacy ), 'buddyboss' ); ?></h1>
+			<?php
+			$get_privacy = get_post( $privacy );
+			echo wp_kses_post( apply_filters( 'the_content',  $get_privacy->post_content ) );
+			?>
+			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss'); ?>" type="button" class="mfp-close"><?php esc_html_e('×','buddyboss');?></button>
+		</div>
 		<?php
 	}
 }
