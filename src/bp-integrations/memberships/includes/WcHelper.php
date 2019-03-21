@@ -76,7 +76,7 @@ class WcHelper {
 				$pId = $post->ID; //Required for ajax-call
 				$accessMethods = BpMemberships::getCourseOptions();
 				$groups = learndash_get_groups();
-				BpmsView::render('woocommerce/wc-tab-content', get_defined_vars());
+				BpmsView::render('woocommerce/tab-content', get_defined_vars());
 			} else {
 				// NOTE : Implementation for another LMS when required
 			}
