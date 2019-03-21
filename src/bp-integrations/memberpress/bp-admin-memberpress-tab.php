@@ -29,15 +29,6 @@ class BP_Memberpress_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		//@See : bp-core-options.php->bp_update_option()
 		bp_update_option('bp-memberpress_enabled', $settings['bp-memberpress_enabled']);
-
-		$isEnabled = bp_get_option('bp-memberpress_enabled');
-
-		/**
-		 * After Memberpress Integration settings are saved
-		 * @since BuddyBoss 1.0.0
-		 */
-		do_action('bp_integrations_memberpess_fields_updated', $settings);
-
 	}
 
 	public function register_fields() {

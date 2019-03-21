@@ -53,7 +53,9 @@ class BP_Woocommerce_Integration extends BP_Integration {
 	 */
 	public function includes($includes = array()) {
 		// Calling Parent
-		parent::includes([]);
+		parent::includes([
+			'functions',
+		]);
 
 	}
 

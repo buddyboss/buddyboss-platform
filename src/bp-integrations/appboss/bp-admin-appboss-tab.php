@@ -28,15 +28,6 @@ class BP_Appboss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		//@See : bp-core-options.php->bp_update_option()
 		bp_update_option('bp-appboss_enabled', $settings['bp-appboss_enabled']);
-
-		$isEnabled = bp_get_option('bp-appboss_enabled');
-		error_log($isEnabled);
-
-		/**
-		 * After Appboss Integration settings are saved
-		 * @since BuddyBoss 1.0.0
-		 */
-		do_action('bp_integrations_appboss_fields_updated', $settings);
 	}
 
 	public function register_fields() {

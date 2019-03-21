@@ -29,14 +29,6 @@ class BP_Memberships_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		//@See : bp-core-options.php->bp_update_option()
 		bp_update_option('bp-memberships_enabled', $settings['bp-memberships_enabled']);
-
-		$isEnabled = bp_get_option('bp-memberships_enabled');
-
-		/**
-		 * After Memberships Integration settings are saved
-		 * @since BuddyBoss 1.0.0
-		 */
-		do_action('bp_integrations_memberships_fields_updated', $settings);
 	}
 
 	public function register_fields() {
