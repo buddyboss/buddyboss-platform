@@ -13654,8 +13654,9 @@ img.mfp-img {
 
 body.register .white-popup-block {
   background: #FFF;
-  padding: 20px 30px;
+  padding: 30px;
   text-align: right;
+  min-height: 400px;
   max-width: 650px;
   margin: 40px auto;
   position: relative;
