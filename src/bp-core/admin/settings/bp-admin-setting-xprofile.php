@@ -212,7 +212,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 *
 	 */
 	public function bp_admin_setting_callback_member_type_import() {
-		$import_url = admin_url().'users.php?page=bp-member-type-import';
+		$import_url = admin_url().'admin.php?page=bp-member-type-import';
 		//echo '<a href="'. esc_url( $import_url ).'">Click here to go import page.</a>';
 		printf(
 			__( 'Use the <a href="%s">migration tool</a> to import existing profile type data', 'buddyboss' ),
