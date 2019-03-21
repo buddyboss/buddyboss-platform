@@ -141,6 +141,26 @@ body.register {
 			margin-right: auto;
 		}
 	}
+
+	.registration-popup {
+	  background: #FFF;
+	  padding: 30px;
+	  text-align: left;
+	  min-height: 400px;
+	  max-width: 650px;
+	  margin: 40px auto;
+	  position: relative;
+	}
+
+	.registration-popup .mfp-close {
+	  color: #000;
+	}
+
+	.registration-popup .mfp-close:focus,
+	.registration-popup .mfp-close:hover {
+	  background: transparent;
+	}
+
 }
 
 #buddypress #signup-form {

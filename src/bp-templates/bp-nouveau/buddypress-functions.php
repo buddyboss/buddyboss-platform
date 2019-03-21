@@ -332,6 +332,12 @@ class BP_Nouveau extends BP_Theme_Compat {
 			);
 		}
 
+		$scripts['bp-nouveau-magnific-popup'] = array(
+			'file'         => 'js/magnific-popup%s.js',
+			'dependencies' => array(),
+			'footer'       => true,
+		);
+
 		foreach ( $scripts as $handle => $script ) {
 			if ( ! isset( $script['file'] ) ) {
 				continue;
@@ -368,6 +374,11 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * @since BuddyPress 3.0.0
 	 */
 	public function enqueue_scripts() {
+
+		if ( bp_is_register_page() ) {
+			wp_enqueue_script( 'bp-nouveau-magnific-popup' );
+		}
+
 		wp_enqueue_script( 'bp-nouveau' );
 
 		if ( bp_is_register_page() || bp_is_user_settings_general() ) {
