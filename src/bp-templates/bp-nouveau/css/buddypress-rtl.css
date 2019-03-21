@@ -2484,6 +2484,25 @@ body.register #page #primary .entry-header {
   }
 }
 
+body.register .registration-popup {
+  background: #FFF;
+  padding: 30px;
+  text-align: right;
+  min-height: 400px;
+  max-width: 650px;
+  margin: 40px auto;
+  position: relative;
+}
+
+body.register .registration-popup .mfp-close {
+  color: #000;
+}
+
+body.register .registration-popup .mfp-close:focus,
+body.register .registration-popup .mfp-close:hover {
+  background: transparent;
+}
+
 #buddypress #signup-form input:focus {
   border-color: #aaa;
 }
@@ -8573,7 +8592,7 @@ div.search_results .groups-list li .last-activity {
 
 /**
 *-------------------------------------------------------------------------------
-* @section 12.0 - Register & Media classes
+* @section 12.0 - Registration Popup
 *-------------------------------------------------------------------------------
 */
 .mfp-bg {
@@ -13650,31 +13669,4 @@ img.mfp-img {
     padding-right: 6px;
     padding-left: 6px;
   }
-}
-
-body.register .white-popup-block {
-  background: #FFF;
-  padding: 30px;
-  text-align: right;
-  min-height: 400px;
-  max-width: 650px;
-  margin: 40px auto;
-  position: relative;
-}
-
-body.register .white-popup-block {
-  background: #FFF;
-  padding: 20px 30px;
-  text-align: right;
-  max-width: 650px;
-  margin: 40px auto;
-  position: relative;
-}
-
-body.register .mfp-close {
-  color: #000 !important;
-}
-
-body.register .mfp-close:focus, body.register .mfp-close:hover {
-  background: transparent !important;
 }

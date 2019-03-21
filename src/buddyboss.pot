@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-21 11:22:33+00:00\n"
+"POT-Creation-Date: 2019-03-21 11:47:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3211,13 +3211,13 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-catchuri.php:642 bp-core/bp-core-catchuri.php:753
-#: bp-core/bp-core-catchuri.php:1136
+#: bp-core/bp-core-catchuri.php:1137
 msgid "Please login to access this website."
 msgstr ""
 
-#: bp-core/bp-core-catchuri.php:1159 bp-core/bp-core-catchuri.php:1191
-#: bp-core/bp-core-catchuri.php:1215 bp-core/bp-core-catchuri.php:1245
-#: bp-core/bp-core-catchuri.php:1269
+#: bp-core/bp-core-catchuri.php:1160 bp-core/bp-core-catchuri.php:1192
+#: bp-core/bp-core-catchuri.php:1216 bp-core/bp-core-catchuri.php:1246
+#: bp-core/bp-core-catchuri.php:1270
 msgid "You must log in to access the page you requested dfdfd."
 msgstr ""
 
