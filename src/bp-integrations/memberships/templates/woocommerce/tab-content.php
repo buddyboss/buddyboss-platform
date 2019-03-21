@@ -7,7 +7,7 @@ foreach ($lmsTypes as $lmsType) {
         <input id="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-is_enabled" name="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-is_enabled" type="checkbox" value="1"<?php checked($isEnabled)?>/>
 
         <label for="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-is_enabled">
-        <?php echo _e('Enroll user in Learndash course(s) after purchasing this membership.', 'buddyboss'); ?>
+        <?php echo _e('Enroll user in LearnDash course(s) after purchasing this membership.', 'buddyboss'); ?>
         </label>
 
 
@@ -26,7 +26,7 @@ foreach ($lmsTypes as $lmsType) {
             </select>
 
             <div id="all-course-helper-text" class="helper-text" style="padding-top : 15px" >
-            <?php echo _e('Enrolls the user into all existing Learndash courses, and to any courses added in future.', 'buddyboss'); ?>
+            <?php echo _e('Enrolls the user into all existing LearnDash courses, and to any courses added in future.', 'buddyboss'); ?>
             </div>
 
             <div id="single-course-helper-text" class="helper-text" style="padding-top : 15px">
@@ -44,7 +44,7 @@ foreach ($lmsTypes as $lmsType) {
           </div>
 
 
-          <!-- Learndash Groups(for courses)  -->
+          <!-- LearnDash Groups(for courses)  -->
           <div id="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-search_groups_wrapper"><select id="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-groups_attached" name="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-groups_attached[]"></select>
           </div>
 

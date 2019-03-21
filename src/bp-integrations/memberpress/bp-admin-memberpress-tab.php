@@ -31,7 +31,6 @@ class BP_Memberpress_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		bp_update_option('bp-memberpress_enabled', $settings['bp-memberpress_enabled']);
 
 		$isEnabled = bp_get_option('bp-memberpress_enabled');
-		error_log($isEnabled);
 
 		/**
 		 * After Memberpress Integration settings are saved
@@ -48,14 +47,15 @@ class BP_Memberpress_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__('General Settings ', 'buddyboss') //Title
 		);
 
-		// If Enabled/Disabled
-		$this->add_checkbox_field(
-			'bp-memberpress_enabled', // Unique Identifier
-			__('Enable', 'buddyboss'), //Title
-			['input_text' => __("Learndash-MemberPress Integration", 'buddyboss'),
-				'input_description' => __("Enroll user in Learndash course(s) after purchasing MemberPress membership.")]); //Callback
+		if (defined('LEARNDASH_VERSION')) {
 
-		// $this->render_input_description("View Logs");
+			// If Enabled/Disabled
+			$this->add_checkbox_field(
+				'bp-memberpress_enabled', // Unique Identifier
+				__('Enable', 'buddyboss'), //Title
+				['input_text' => __("Learndash-MemberPress Integration", 'buddyboss'),
+					'input_description' => __("Enroll user in Learndash course(s) after purchasing MemberPress membership.", 'buddyboss')]); //Callback
+		}
 
 	}
 }

@@ -45,12 +45,14 @@ class BP_Appboss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__('General Settings', 'buddyboss')
 		);
 
-		// If Enabled/Disabled
-		$this->add_checkbox_field(
-			'bp-appboss_enabled', // Unique Identifier
-			__('Enable', 'buddyboss'), //Title
-			['input_text' => __("Learndash-AppBoss Integration", 'buddyboss'),
-				'input_description' => __("Enroll user in Learndash course(s) after purchasing In-App purchases.")]); //Callback
+		if (defined('LEARNDASH_VERSION')) {
+			// If Enabled/Disabled
+			$this->add_checkbox_field(
+				'bp-appboss_enabled', // Unique Identifier
+				__('Enable', 'buddyboss'), //Title
+				['input_text' => __("Learndash-AppBoss Integration", 'buddyboss'),
+					'input_description' => __("Enroll user in Learndash course(s) after purchasing In-App purchases.", 'buddyboss')]); //Callback
 
+		}
 	}
 }
