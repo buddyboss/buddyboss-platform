@@ -13651,3 +13651,29 @@ img.mfp-img {
     padding-right: 6px;
   }
 }
+
+body.register .white-popup-block {
+  background: #FFF;
+  padding: 20px 30px;
+  text-align: left;
+  max-width: 650px;
+  margin: 40px auto;
+  position: relative;
+}
+
+body.register .white-popup-block {
+  background: #FFF;
+  padding: 20px 30px;
+  text-align: left;
+  max-width: 650px;
+  margin: 40px auto;
+  position: relative;
+}
+
+body.register .mfp-close {
+  color: #000 !important;
+}
+
+body.register .mfp-close:focus, body.register .mfp-close:hover {
+  background: transparent !important;
+}

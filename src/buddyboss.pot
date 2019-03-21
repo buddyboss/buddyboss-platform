@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-21 10:07:14+00:00\n"
+"POT-Creation-Date: 2019-03-21 10:39:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16135,6 +16135,20 @@ msgstr ""
 msgid ""
 "By creating an account, you agree to our <a class=\"popup-modal "
 "popup-terms\" href=\"#terms-modal\">Terms of Service</a>."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/template-tags.php:2519
+#: bp-templates/bp-nouveau/includes/template-tags.php:2535
+#: bp-templates/bp-nouveau/includes/template-tags.php:2551
+#: bp-templates/bp-nouveau/includes/template-tags.php:2559
+msgid "Close (Esc)"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/template-tags.php:2519
+#: bp-templates/bp-nouveau/includes/template-tags.php:2535
+#: bp-templates/bp-nouveau/includes/template-tags.php:2551
+#: bp-templates/bp-nouveau/includes/template-tags.php:2559
+msgid "×"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/template-tags.php:2527
