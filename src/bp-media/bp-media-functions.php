@@ -277,46 +277,19 @@ function bp_media_update_media_meta( $content, $user_id, $activity_id ) {
 
 	$media_list = $_POST['media'];
 
-	$media_model = new BP_Media();
-	$exist_medias = $media_model::where( array( 'activity_id' => $activity_id ) );
-	if ( ! empty( $exist_medias ) ) {
-		$exist_medias = wp_list_pluck( $exist_medias, 'attachment_id' );
-	}
-
 	if ( ! empty( $media_list ) ) {
 		foreach ( $media_list as $media_index => $media ) {
-			$index = array_search( $media['id'], $exist_medias );
-			if ( ! empty( $media['id'] ) && $index !== false && ! empty( $exist_medias ) ){
-				$media_model::update( array(
-					'menu_order'    => isset( $media['menu_order'] ) ? absint( $media['menu_order'] ) : $media_index,
-				), array(
-						'attachment_id' => ! empty( $media['id'] ) ? $media['id'] : 0,
-					)
-				);
-				unset( $exist_medias[ $index ] );
-				continue;
-			}
-			$media_model::insert( array(
+			bp_media_add(
+			        array(
 					'blog_id'      => get_current_blog_id(),
-					'user_id'    => ! empty( $media['user_id'] ) ? $media['user_id'] : $user_id,
 					'title'        => ! empty( $media['name'] ) ? $media['name'] : '&nbsp;',
 					'album_id'     => ! empty( $media['album_id'] ) ? $media['album_id'] : 0,
 					'activity_id'  => $activity_id,
 					'privacy'      => ! empty( $media['privacy'] ) ? $media['privacy'] : 'public',
-					'date_created' => $media_model::now(),
 					'attachment_id'     => ! empty( $media['id'] ) ? $media['id'] : 0,
 					'menu_order'    => isset( $media['menu_order'] ) ? absint( $media['menu_order'] ) : $media_index,
 				)
 			);
-		}
-	}
-
-	if ( ! empty( $exist_medias ) ) {
-		$exist_medias = $media_model::where( array( 'attachment_id' => $exist_medias ) );
-		if ( ! empty( $exist_medias ) ) {
-			foreach ( $exist_medias as $media ) {
-				$media_model::delete( $media->id, $media->attachment_id );
-			}
 		}
 	}
 }
@@ -328,19 +301,19 @@ function bp_media_groups_update_media_meta( $content, $user_id, $group_id, $acti
 add_action( 'bp_groups_posted_update', 'bp_media_groups_update_media_meta', 10, 4 );
 
 function bp_media_activity_entry() {
-	$media_list = bp_media_get_media( bp_get_activity_id() );
+	$result = bp_media_get( array( 'activity_id' => bp_get_activity_id() ) );
 
-	if ( ! empty( $media_list ) ) {
-		$media_list_length = sizeof( $media_list );
+	if ( ! empty( $result['medias'] ) ) {
+	    $media_list = $result['medias'];
+		$media_list_length = sizeof( $result['medias'] );
 		?>
 		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_list_length; echo $media_list_length > 5 ? 'bb-media-length-more' : ''; ?>">
 		<?php
 		foreach( array_splice( $media_list, 0, 5 ) as $media_index => $media ) {
 			?>
-
-				<div class="bb-activity-media-elem <?php echo $media_list_length == 1 || $media_list_length > 1 && $media_index == 0 ? 'act-grid-1-1 ' : ''; echo $media_list_length > 1 && $media_index > 0 ? 'act-grid-1-2 ' : ''; echo $media['meta']['width'] > $media['meta']['height'] ? 'bb-horizontal-layout' : ''; echo $media['meta']['height'] > $media['meta']['width'] ? 'bb-vertical-layout' : ''; ?>">
+				<div class="bb-activity-media-elem <?php echo $media_list_length == 1 || $media_list_length > 1 && $media_index == 0 ? 'act-grid-1-1 ' : ''; echo $media_list_length > 1 && $media_index > 0 ? 'act-grid-1-2 ' : ''; echo $media->attachment_data->meta['width'] > $media->attachment_data->meta['height'] ? 'bb-horizontal-layout' : ''; echo $media->attachment_data->meta['height'] > $media->attachment_data->meta['width'] ? 'bb-vertical-layout' : ''; ?>">
 					<a href="#" class="entry-img">
-						<img src="<?php echo $media['activity_thumb']; ?>" class="no-round photo" alt="<?php echo $media['title']; ?>" />
+						<img src="<?php echo $media->attachment_data->activity_thumb; ?>" class="no-round photo" alt="<?php echo $media->title; ?>" />
 						<?php if ( $media_list_length > 5 && $media_index == 4 ) {
 							?>
 							<span class="bb-photos-length"><span><strong>+<?php echo $media_list_length - 5; ?></strong> <span><?php _e( 'More Photos', 'buddyboss' ); ?></span></span></span>
@@ -438,7 +411,8 @@ function bp_media_get( $args = '' ) {
 		'page'              => 1,            // Page 1 without a per_page will result in no pagination.
 		'per_page'          => false,        // results per page
 		'sort'              => 'DESC',       // sort ASC or DESC
-
+		'user_id'           => false,
+		'activity_id'       => false,
 		'search_terms'      => false,        // Pass search terms as a string
 		'exclude'           => false,        // Comma-separated list of activity IDs to exclude.
 		// want to limit the query.
@@ -450,6 +424,7 @@ function bp_media_get( $args = '' ) {
 		'page'              => $r['page'],
 		'per_page'          => $r['per_page'],
 		'user_id'           => $r['user_id'],
+		'activity_id'       => $r['activity_id'],
 		'max'               => $r['max'],
 		'sort'              => $r['sort'],
 		'search_terms'      => $r['search_terms'],
@@ -515,6 +490,86 @@ function bp_media_get_specific( $args = '' ) {
 	 * @param array         $get_args Constructed arguments used with request.
 	 */
 	return apply_filters( 'bp_media_get_specific', BP_Media::get( $get_args ), $args, $get_args );
+}
+
+/**
+ * Add an media item.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param array|string $args {
+ *     An array of arguments.
+ *     @type int|bool $id                Pass an activity ID to update an existing item, or
+ *                                       false to create a new item. Default: false.
+ *     @type string   $content           Optional. The content of the activity item.
+ *     @type string   $component         The unique name of the component associated with
+ *                                       the activity item - 'groups', 'profile', etc.
+ *     @type string   $type              The specific activity type, used for directory
+ *                                       filtering. 'new_blog_post', 'activity_update', etc.
+ *     @type string   $primary_link      Optional. The URL for this item, as used in
+ *                                       RSS feeds. Defaults to the URL for this activity
+ *                                       item's permalink page.
+ *     @type int|bool $user_id           Optional. The ID of the user associated with the activity
+ *                                       item. May be set to false or 0 if the item is not related
+ *                                       to any user. Default: the ID of the currently logged-in user.
+ *     @type int      $item_id           Optional. The ID of the associated item.
+ *     @type int      $secondary_item_id Optional. The ID of a secondary associated item.
+ *     @type string   $date_recorded     Optional. The GMT time, in Y-m-d h:i:s format, when
+ *                                       the item was recorded. Defaults to the current time.
+ *     @type bool     $hide_sitewide     Should the item be hidden on sitewide streams?
+ *                                       Default: false.
+ *     @type bool     $is_spam           Should the item be marked as spam? Default: false.
+ *     @type string   $error_type        Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
+ * }
+ * @return WP_Error|bool|int The ID of the activity on success. False on error.
+ */
+function bp_media_add( $args = '' ) {
+
+	$r = bp_parse_args( $args, array(
+		'id'            => false,                  // Pass an existing media ID to update an existing entry.
+		'blog_id'       => get_current_blog_id(),                     // Blog ID
+		'attachment_id' => false,                  // attachment id.
+		'user_id'       => bp_loggedin_user_id(),                  // user_id of the uploader.
+		'title'         => '',                     // title of media being added.
+		'album_id'      => false,  // Optional: ID of the album.
+		'activity_id'   => false,                  // The ID of activity.
+		'privacy'       => 'public',                  // Optional: privacy of the media e.g. public.
+		'menu_order'    => 0, // Optional:  Menu order.
+		'date_created'  => bp_core_current_time(), // The GMT time that this media was recorded
+		'error_type'    => 'bool'
+	), 'media_add' );
+
+	// Setup media to be added.
+	$media                = new BP_Media( $r['id'] );
+	$media->blog_id       = $r['blog_id'];
+	$media->attachment_id = $r['attachment_id'];
+	$media->user_id       = $r['user_id'];
+	$media->title         = $r['title'];
+	$media->album_id      = $r['album_id'];
+	$media->activity_id   = $r['activity_id'];
+	$media->privacy       = $r['privacy'];
+	$media->menu_order    = $r['menu_order'];
+	$media->date_created  = $r['date_created'];
+	$media->error_type    = $r['error_type'];
+
+	$save = $media->save();
+
+	if ( 'wp_error' === $r['error_type'] && is_wp_error( $save ) ) {
+		return $save;
+	} elseif ('bool' === $r['error_type'] && false === $save ) {
+		return false;
+	}
+
+	/**
+	 * Fires at the end of the execution of adding a new media item, before returning the new media item ID.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param array $r Array of parsed arguments for the media item being added.
+	 */
+	do_action( 'bp_media_add', $r );
+
+	return $media->id;
 }
 
 /**
@@ -627,7 +682,7 @@ function bp_album_get( $args = '' ) {
 function bp_album_get_specific( $args = '' ) {
 
 	$r = bp_parse_args( $args, array(
-		'album_ids'         => false,      // A single media_id or array of IDs.
+		'album_ids'         => false,      // A single album id or array of IDs.
 		'max'               => false,      // Maximum number of results to return.
 		'page'              => 1,          // Page 1 without a per_page will result in no pagination.
 		'per_page'          => false,      // Results per page.
@@ -654,4 +709,80 @@ function bp_album_get_specific( $args = '' ) {
 	 * @param array         $get_args Constructed arguments used with request.
 	 */
 	return apply_filters( 'bp_album_get_specific', BP_Media_Album::get( $get_args ), $args, $get_args );
+}
+
+/**
+ * Add album item.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param array|string $args {
+ *     An array of arguments.
+ *     @type int|bool $id                Pass an activity ID to update an existing item, or
+ *                                       false to create a new item. Default: false.
+ *     @type string   $content           Optional. The content of the activity item.
+ *     @type string   $component         The unique name of the component associated with
+ *                                       the activity item - 'groups', 'profile', etc.
+ *     @type string   $type              The specific activity type, used for directory
+ *                                       filtering. 'new_blog_post', 'activity_update', etc.
+ *     @type string   $primary_link      Optional. The URL for this item, as used in
+ *                                       RSS feeds. Defaults to the URL for this activity
+ *                                       item's permalink page.
+ *     @type int|bool $user_id           Optional. The ID of the user associated with the activity
+ *                                       item. May be set to false or 0 if the item is not related
+ *                                       to any user. Default: the ID of the currently logged-in user.
+ *     @type int      $item_id           Optional. The ID of the associated item.
+ *     @type int      $secondary_item_id Optional. The ID of a secondary associated item.
+ *     @type string   $date_recorded     Optional. The GMT time, in Y-m-d h:i:s format, when
+ *                                       the item was recorded. Defaults to the current time.
+ *     @type bool     $hide_sitewide     Should the item be hidden on sitewide streams?
+ *                                       Default: false.
+ *     @type bool     $is_spam           Should the item be marked as spam? Default: false.
+ *     @type string   $error_type        Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
+ * }
+ * @return WP_Error|bool|int The ID of the activity on success. False on error.
+ */
+function bp_album_add( $args = '' ) {
+
+	$r = bp_parse_args( $args, array(
+		'id'           => false,                  // Pass an existing album ID to update an existing entry.
+		'user_id'      => bp_loggedin_user_id(),                     // User ID
+		'group_id'     => false,                  // attachment id.
+		'title'        => '',                     // title of album being added.
+		'description'  => '',  // Optional: description of album.
+		'total_items'  => false,                  // Total items of album
+		'privacy'      => 'public',                  // Optional: privacy of the media e.g. public.
+		'date_created' => bp_core_current_time(), // The GMT time that this media was recorded
+		'error_type'   => 'bool'
+	), 'album_add' );
+
+	// Setup media to be added.
+	$album               = new BP_Media_Album( $r['id'] );
+	$album->user_id      = $r['user_id'];
+	$album->group_id     = $r['group_id'];
+	$album->title        = $r['title'];
+	$album->description  = $r['description'];
+	$album->total_items  = $r['total_items'];
+	$album->privacy      = $r['privacy'];
+	$album->date_created = $r['date_created'];
+	$album->error_type   = $r['error_type'];
+
+	$save = $album->save();
+
+	if ( 'wp_error' === $r['error_type'] && is_wp_error( $save ) ) {
+		return $save;
+	} elseif ('bool' === $r['error_type'] && false === $save ) {
+		return false;
+	}
+
+	/**
+	 * Fires at the end of the execution of adding a new album item, before returning the new album item ID.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param array $r Array of parsed arguments for the album item being added.
+	 */
+	do_action( 'bp_album_add', $r );
+
+	return $album->id;
 }

@@ -356,6 +356,16 @@ class BP_Media {
 			$where_conditions['exclude'] = "m.id NOT IN ({$exclude})";
 		}
 
+		// The specific ids to which you want to limit the query.
+		if ( ! empty( $r['in'] ) ) {
+			$in = implode( ',', wp_parse_id_list( $r['in'] ) );
+			$where_conditions['in'] = "m.id IN ({$in})";
+		}
+
+		if ( ! empty( $r['activity_id'] ) ) {
+			$where_conditions['activity'] = "m.activity_id = {$r['activity_id']}";
+		}
+
 		/**
 		 * Filters the MySQL WHERE conditions for the Media items get method.
 		 *

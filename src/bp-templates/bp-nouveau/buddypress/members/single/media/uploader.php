@@ -5,35 +5,35 @@
  * @since BuddyBoss 1.0.0
  */
 ?>
-<div id="boss-photo-uploader">
-<transition name="modal">
-    <div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
-        <div class="modal-wrapper bb-large">
-            <div class="modal-container">
+<div id="bp-media-uploader" style="display: none;">
+    <transition name="modal">
+        <div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
+            <div class="modal-wrapper bb-large">
+                <div class="modal-container">
 
-                <header class="flex bb-model-header bg-white align-items-center">
-                    <h4>Uploader</h4>
-                    <span>Uploading 1 out of 4 files</span>
-                    <a class="push-right bb-model-close-button" href="#"><i class="feather icon-x"></i></a>
-                </header>
+                    <header class="flex bb-model-header bg-white align-items-center">
+                        <h4 id="bp-media-uploader-modal-title"><?php _e( 'Upload', 'buddyboss' ); ?></h4>
+                        <span id="bp-media-uploader-modal-status-text" style="display: none;"></span>
+                        <a class="push-right bb-model-close-button" id="bp-media-uploader-close" href="#">close</a>
+                    </header>
 
-				<?php do_action( 'bp_media_before_media_uploader' ); ?>
+					<?php do_action( 'bp_media_before_media_uploader' ); ?>
 
-                <div class="bb-dropzone-wrap bb-has-items">
-                    <div class="media-uploader-wrapper">
-                        <div class="dropzone" id="media-uploader"></div>
+                    <div class="bb-dropzone-wrap bb-has-items">
+                        <div class="media-uploader-wrapper">
+                            <div class="dropzone" id="media-uploader"></div>
+                        </div>
                     </div>
+
+					<?php do_action( 'bp_media_after_media_uploader' ); ?>
+
+                    <footer class="flex align-items-center bb-model-footer">
+                        <a class="button outline" id="bp-media-add-more" style="display: none;" href="#">+ <?php _e( 'Add More Media', 'buddyboss' ); ?></a>
+                        <a class="button push-right" id="bp-media-submit" href="#"><?php _e( 'Done', 'buddyboss' ); ?></a>
+                    </footer>
+
                 </div>
-
-				<?php do_action( 'bp_media_after_media_uploader' ); ?>
-
-                <footer class="flex align-items-center bb-model-footer">
-                    <a class="button outline" href="#">+ <?php _e( 'Add More Photos', 'buddyboss' ); ?></a>
-                    <a class="button push-right" href="#"><?php _e( 'Done', 'buddyboss' ); ?></a>
-                </footer>
-
             </div>
         </div>
-    </div>
-</transition>
+    </transition>
 </div>

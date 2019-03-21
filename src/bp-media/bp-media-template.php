@@ -949,7 +949,7 @@ function bp_album_has_more_items() {
 		$remaining_pages = 0;
 
 		if ( ! empty( $media_album_template->pag_page ) ) {
-			$remaining_pages = floor( ( $media_album_template->total_media_count - 1 ) / ( $media_album_template->pag_num * $media_album_template->pag_page ) );
+			$remaining_pages = floor( ( $media_album_template->total_album_count - 1 ) / ( $media_album_template->pag_num * $media_album_template->pag_page ) );
 		}
 
 		$has_more_items = (int) $remaining_pages > 0;

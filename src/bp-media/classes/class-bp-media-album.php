@@ -312,6 +312,12 @@ class BP_Media_Album {
 			$where_conditions['exclude'] = "m.id NOT IN ({$exclude})";
 		}
 
+		// The specific ids to which you want to limit the query.
+		if ( ! empty( $r['in'] ) ) {
+			$in = implode( ',', wp_parse_id_list( $r['in'] ) );
+			$where_conditions['in'] = "m.id IN ({$in})";
+		}
+
 		/**
 		 * Filters the MySQL WHERE conditions for the albums get method.
 		 *
@@ -481,7 +487,7 @@ class BP_Media_Album {
 		// Now fetch data from the cache.
 		foreach ( $album_ids as $album_id ) {
 			// Integer casting.
-			$album = wp_cache_get( $album_id, 'bp_media' );
+			$album = wp_cache_get( $album_id, 'bp_media_album' );
 			if ( ! empty( $album ) ) {
 				$album->id       = (int) $album->id;
 				$album->user_id  = (int) $album->user_id;
