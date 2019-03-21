@@ -38,13 +38,8 @@ class EventsList extends WpListTable {
 	 * @param int $id event ID
 	 */
 	public static function delete_event($id) {
-		global $wpdb;
 
-		$wpdb->delete(
-			"{$wpdb->prefix}",
-			['ID' => $id],
-			['%d']
-		);
+		// Not applicable
 	}
 
 	/**
@@ -182,9 +177,7 @@ class EventsList extends WpListTable {
 	 * @return array
 	 */
 	public function get_bulk_actions() {
-		$actions = [
-			'bulk-delete' => 'Delete',
-		];
+		$actions = [];
 
 		return $actions;
 	}
@@ -208,7 +201,6 @@ class EventsList extends WpListTable {
 			'per_page' => $per_page, //WE have to determine how many items to show on a page
 		]);
 
-		// $this->items = self::get_events(1, $current_page);
 		$this->items = self::get_events($per_page, $current_page);
 	}
 

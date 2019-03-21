@@ -494,7 +494,7 @@ class BpMemberships {
 					if (BPMS_DEBUG) {
 						error_log("ALL_COURSES selected");
 					}
-					$coursesAttached = BpMemberships::getLearndashClosedCourses();
+					$coursesAttached = self::getLearndashClosedCourses();
 
 				} else if ($courseAccessMethod == 'LD_GROUPS') {
 
@@ -519,7 +519,7 @@ class BpMemberships {
 
 			// Finally serialize and update
 			update_post_meta($vendorObj->product_id, '_bpms-events', serialize($events));
-			BpMemberships::updateBbmsEnrollments($vendorObj->user_id);
+			self::updateBbmsEnrollments($vendorObj->user_id);
 
 		} else if ($vendorType == WC_POST_TYPE) {
 
@@ -547,7 +547,7 @@ class BpMemberships {
 					if (BPMS_DEBUG) {
 						error_log("ALL_COURSES selected");
 					}
-					$coursesAttached = BpMemberships::getLearndashClosedCourses();
+					$coursesAttached = self::getLearndashClosedCourses();
 
 				} else if ($courseAccessMethod == 'LD_GROUPS') {
 
@@ -572,7 +572,7 @@ class BpMemberships {
 
 			// Finally serialize and update
 			update_post_meta($vendorObj['product_id'], '_bpms-events', serialize($events));
-			BpMemberships::updateBbmsEnrollments($vendorObj['customer_id']);
+			self::updateBbmsEnrollments($vendorObj['customer_id']);
 
 		}
 
@@ -638,7 +638,7 @@ class BpMemberships {
 			$isEnabled = get_post_meta($vendorObj->product_id, "_bpms-$lmsType-$vendorType-is_enabled", true);
 			if ($isEnabled) {
 				// NOTE : Update BBMS Event
-				BpMemberships::updateBbmsEvent($vendorObj, $vendorType, $grantAccess);
+				self::updateBbmsEvent($vendorObj, $vendorType, $grantAccess);
 			}
 		} else if ($vendorType == WC_POST_TYPE) {
 			$items = $vendorObj->get_items();
@@ -655,7 +655,7 @@ class BpMemberships {
 				$isEnabled = get_post_meta($itemObj['product_id'], "_bpms-$lmsType-$vendorType-is_enabled", true);
 				if ($isEnabled) {
 					// NOTE : Update BBMS Event
-					BpMemberships::updateBbmsEvent($itemObj, $vendorType, $grantAccess);
+					self::updateBbmsEvent($itemObj, $vendorType, $grantAccess);
 				}
 
 			}
@@ -915,7 +915,7 @@ class BpMemberships {
 
 		// Learndash Hooks
 		// -----------------------------------------------------------------------------
-		if (BpMemberships::getLmsTypesSelected(LD_POST_TYPE) == LD_POST_TYPE) {
+		if (self::getLmsTypesSelected(LD_POST_TYPE) == LD_POST_TYPE) {
 			add_action('save_post_sfwd-courses', array($this, 'learndashCourseAdded'), 4, 99);
 			add_action('save_post_groups', array($this, 'learndashGroupUpdated'), 88, 3);
 			// add_action('learndash_update_course_access', array($this, 'learndashUpdateCourseAccess'), 4, 99);
