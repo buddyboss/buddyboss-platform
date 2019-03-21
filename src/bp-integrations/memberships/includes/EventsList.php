@@ -26,9 +26,15 @@ class EventsList extends WpListTable {
 	 */
 	public static function get_events($per_page = 5, $page_number = 1) {
 
-		$results = BpMemberships::getProductEvents();
+		$vendorType = null;
 
-		error_log(print_r($results, true));
+		if (isset($_GET['integration'])) {
+			$integration = $_GET['integration'];
+			$vendorType = array($integration);
+		}
+
+		$results = BpMemberships::getProductEvents($vendorType);
+		// error_log(print_r($results, true));
 		return $results;
 	}
 
@@ -165,7 +171,9 @@ class EventsList extends WpListTable {
 	public function get_sortable_columns() {
 		$sortable_columns = array(
 			'product_id' => array('product_id', true),
-			'user_id' => array('user_id', false),
+			'user_id' => array('user_id', true),
+			'created_at' => array('created_at', true),
+			'updated_at' => array('updated_at', true),
 		);
 
 		return $sortable_columns;
@@ -178,7 +186,7 @@ class EventsList extends WpListTable {
 	 */
 	public function get_bulk_actions() {
 		$actions = [];
-
+		//NOTE : We are NOT allowing any operation such as edit or delete.
 		return $actions;
 	}
 
@@ -205,44 +213,7 @@ class EventsList extends WpListTable {
 	}
 
 	public function process_bulk_action() {
-
-		//Detect when a bulk action is being triggered...
-		if ('delete' === $this->current_action()) {
-
-			// In our file that handles the request, verify the nonce.
-			$nonce = esc_attr($_REQUEST['_wpnonce']);
-
-			if (!wp_verify_nonce($nonce, 'sp_delete_event')) {
-				die('Go get a life script kiddies');
-			} else {
-				self::delete_event(absint($_GET['events']));
-
-				// esc_url_raw() is used to prevent converting ampersand in url to "#038;"
-				// add_query_arg() return the current url
-				wp_redirect(esc_url_raw(add_query_arg()));
-				exit;
-			}
-
-		}
-
-		// If the delete bulk action is triggered
-		if ((isset($_POST['action']) && $_POST['action'] == 'bulk-delete')
-			|| (isset($_POST['action2']) && $_POST['action2'] == 'bulk-delete')
-		) {
-
-			$delete_ids = esc_sql($_POST['bulk-delete']);
-
-			// loop over the array of record IDs and delete them
-			foreach ($delete_ids as $id) {
-				self::delete_event($id);
-
-			}
-
-			// esc_url_raw() is used to prevent converting ampersand in url to "#038;"
-			// add_query_arg() return the current url
-			wp_redirect(esc_url_raw(add_query_arg()));
-			exit;
-		}
+		//NOTE : We are NOT allowing any operation such as edit or delete.
 	}
 
 }

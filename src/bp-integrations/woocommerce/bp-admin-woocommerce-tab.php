@@ -52,7 +52,7 @@ class BP_Woocommerce_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'', //Label
 				'wcRenderAnchor', //Callback
 				'', //Fields arguments
-				'woocommerce' //Callback arguments
+				WC_POST_TYPE//Callback arguments
 			);
 
 		} else {

@@ -10,6 +10,7 @@ define('BPMS_DEBUG', true);
 define('LD_POST_TYPE', 'sfwd-courses');
 define('MP_POST_TYPE', 'memberpressproduct');
 define('WC_POST_TYPE', 'product');
+define('APPBOSS_PROD_TYPE', 'app-product');
 define('BPMS_URL', BP_PLUGIN_URL . '/src/bp-integrations/memberships');
 
 class BpMemberships {
@@ -341,10 +342,13 @@ class BpMemberships {
 	/**
 	 * Return All product events
 	 */
-	public static function getProductEvents() {
+	public static function getProductEvents($vendorTypes = null) {
 
 		$lmsTypes = self::getLmsTypesSelected(LD_POST_TYPE);
-		$vendorTypes = self::getVendorTypesSelected();
+		if ($vendorTypes == null) {
+			error_log("getProductEvents, vendorTypes is null");
+			$vendorTypes = self::getVendorTypesSelected();
+		}
 
 		$products = get_posts(array("post_type" => $vendorTypes));
 

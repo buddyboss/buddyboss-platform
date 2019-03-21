@@ -49,7 +49,7 @@ class BP_Appboss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'', //Label
 				'appBossRenderAnchor', //Callback
 				'', //Fields arguments
-				'appboss' //Callback arguments
+				APPBOSS_PROD_TYPE//Callback arguments
 			);
 
 		} else {

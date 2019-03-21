@@ -52,7 +52,7 @@ class BP_Memberpress_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'', //Label
 				'mpRenderAnchor', //Callback
 				'', //Fields arguments
-				'memberpress' //Callback arguments
+				MP_POST_TYPE//Callback arguments
 			);
 		} else {
 
