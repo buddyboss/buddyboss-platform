@@ -44,8 +44,8 @@ class BP_Woocommerce_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			$this->add_checkbox_field(
 				'bp-woocommerce_enabled', // Unique Identifier
 				__('Enable', 'buddyboss'), //Title
-				['input_text' => __("Learndash-WooCommerce Integration", 'buddyboss'),
-					'input_description' => __("Enroll user in Learndash course(s) after purchasing WooCommerce product.", 'buddyboss')]); //Callback
+				['input_text' => __("LearnDash-WooCommerce Integration", 'buddyboss'),
+					'input_description' => __("Enroll user in LearnDash course(s) after purchasing WooCommerce product.", 'buddyboss')]); //Callback
 		}
 	}
 }

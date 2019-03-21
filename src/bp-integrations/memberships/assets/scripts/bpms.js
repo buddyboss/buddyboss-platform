@@ -39,7 +39,7 @@ jQuery(document).ready(function() {
                 jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_courses_wrapper').hide();
                 jQuery(".helper-text").hide();
                 jQuery('#' + lmsType + '-groups-helper-text').show();
-                console.log("INFO : Learndash Groups UI under construction");
+                console.log("INFO : LearnDash Groups UI under construction");
             } else {
                 // Some other use case for future
             }

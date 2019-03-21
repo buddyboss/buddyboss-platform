@@ -216,7 +216,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	/**
-	 * Register Learndash related settings
+	 * Register LearnDash related settings
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -383,7 +383,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	/**
-	 * Description for Learndash setting section
+	 * Description for LearnDash setting section
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
