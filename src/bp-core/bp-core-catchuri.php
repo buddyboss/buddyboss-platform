@@ -1101,6 +1101,7 @@ function bp_private_network_template_redirect() {
 		$privacy             = false;
 		$current_page_object = $wp_query->get_queried_object();
 		$id                  = isset( $current_page_object->ID ) ? $current_page_object->ID : get_the_ID();
+		$activate            = ( bp_is_activation_page() && ( '' !== bp_get_current_activation_key() || isset( $_GET['activated'] ) ) ) ? true : false;
 
 		if ( '0' === $enable_private_network ) {
 
@@ -1112,7 +1113,7 @@ function bp_private_network_template_redirect() {
 
 				if ( isset( $id ) ) {
 
-					if ( ! bp_is_register_page() && ! bp_is_activation_page() && $terms !== $id && $privacy !== $id ) {
+					if ( ! bp_is_register_page() && ! $activate && $terms !== $id && $privacy !== $id ) {
 
 						if ( class_exists( 'woocommerce' ) ) {
 
