@@ -8,7 +8,7 @@ $total_reply = bbp_get_forum_reply_count( $forum_id );
 		<div class="item-avatar">
 			<a href="<?php bbp_forum_permalink( get_the_ID() ); ?>">
 				<img
-					src="<?php echo bbp_get_forum_thumbnail_src( $forum_id ) ?: buddypress()->plugin_url . "bp-core/images/mystery-forum.png"; ?>"
+					src="<?php echo bbp_get_forum_thumbnail_src( $forum_id ) ?: buddypress()->plugin_url . "bp-core/images/forum.svg"; ?>"
 					class="avatar forum-avatar"
 					height="150"
 					width="150"
@@ -28,11 +28,11 @@ $total_reply = bbp_get_forum_reply_count( $forum_id );
 				<span class="topic-count">
 					<?php printf( _n( '%d topic', '%d topics', $total_topic, 'buddyboss' ), $total_topic ); ?>
 				</span>
-				<span>&middot;</span>
+				<span class="middot">&middot;</span>
 				<span class="reply-count">
 				<?php printf( _n( '%d reply', '%d replies', $total_reply, 'buddyboss' ), $total_reply ); ?>
 				</span>
-				<span>&middot;</span>
+				<span class="middot">&middot;</span>
 				<span class="freshness">
 					<?php bbp_forum_freshness_link( $forum_id ) ?>
 				</span>

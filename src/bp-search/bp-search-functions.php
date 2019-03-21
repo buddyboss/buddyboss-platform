@@ -520,17 +520,17 @@ function bp_get_search_user_fields() {
 function bp_search_get_post_thumbnail_default( $post_type ) {
 
 	$default = [
-		'product'      => buddypress()->plugin_url . 'bp-core/images/mystery-product.png',
-		'sfwd-courses' => buddypress()->plugin_url . 'bp-core/images/mystery-course.png',
+		'product'      => buddypress()->plugin_url . 'bp-core/images/product.svg',
+		'sfwd-courses' => buddypress()->plugin_url . 'bp-core/images/course.svg',
 		'sfwd-lessons' => buddypress()->plugin_url . 'bp-core/images/mystery-course.png',
 		'sfwd-topic'   => buddypress()->plugin_url . 'bp-core/images/mystery-course.png',
-		'post'         => buddypress()->plugin_url . 'bp-core/images/mystery-blog.png',
+		'post'         => buddypress()->plugin_url . 'bp-core/images/blog-post.svg',
 	];
 
 	return
 		isset( $default[ $post_type ] ) ?
 			$default[ $post_type ] :
-			buddypress()->plugin_url . 'bp-core/images/mystery-default.png';
+			buddypress()->plugin_url . 'bp-core/images/post-type.svg';
 }
 
 /**

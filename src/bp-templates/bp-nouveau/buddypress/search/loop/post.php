@@ -24,7 +24,7 @@
 					<span class="author">
 						<?php printf( esc_html__( 'By %s', 'buddyboss' ), get_the_author_link() ) ?>
 					</span>
-					<span>&middot;</span>
+					<span class="middot">&middot;</span>
 					<span class="published">
 						<?php the_date() ?>
 					</span>
