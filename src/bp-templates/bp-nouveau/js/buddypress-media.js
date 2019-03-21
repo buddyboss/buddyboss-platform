@@ -51,6 +51,7 @@ window.bp = window.bp || {};
 
 			this.dropzone_obj = null;
 			this.dropzone_media = [];
+			this.album_id = typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
 
 		},
 
@@ -108,8 +109,9 @@ window.bp = window.bp || {};
 				self.dropzone_obj.on('success', function(file, response) {
 					if ( response.data.id ) {
 						file.id = response.id;
-						response.uuid = file.upload.uuid;
-						response.menu_order = self.dropzone_media.length;
+						response.data.uuid = file.upload.uuid;
+						response.data.menu_order = self.dropzone_media.length;
+						response.data.album_id = self.album_id;
 						self.dropzone_media.push( response.data );
 					}
 					$('#bp-media-add-more').show();

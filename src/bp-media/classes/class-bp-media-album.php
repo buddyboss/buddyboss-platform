@@ -385,7 +385,7 @@ class BP_Media_Album {
 		$cached = bp_core_get_incremented_cache( $album_ids_sql, $cache_group );
 		if ( false === $cached ) {
 			$album_ids = $wpdb->get_col( $album_ids_sql );
-			bp_core_set_incremented_cache( $album_ids_sql, $cache_group, $album_ids_sql );
+			bp_core_set_incremented_cache( $album_ids_sql, $cache_group, $album_ids );
 		} else {
 			$album_ids = $cached;
 		}
@@ -492,6 +492,8 @@ class BP_Media_Album {
 				$album->id       = (int) $album->id;
 				$album->user_id  = (int) $album->user_id;
 				$album->group_id = (int) $album->group_id;
+
+				$album->media = bp_media_get( array( 'album_id' => $album->id, 'count_total' => true ) );
 			}
 
 			$albums[] = $album;

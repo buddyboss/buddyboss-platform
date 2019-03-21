@@ -103,11 +103,11 @@ class BP_Media_Component extends BP_Component {
 				/*
 				 * Nav items.
 				 *
-				 * 'view' is not a registered nav item, but we add a screen handler manually.
+				 * 'album' is not a registered nav item, but we add a screen handler manually.
 				 */
-//				if ( bp_is_user_messages() && in_array( bp_current_action(), array( 'compose', 'notices', 'view' ), true ) ) {
-//					require $this->path . 'bp-messages/screens/' . bp_current_action() . '.php';
-//				}
+				if ( bp_is_user_media() && in_array( bp_current_action(), array( 'albums' ), true ) ) {
+					require $this->path . 'bp-media/screens/' . bp_current_action() . '.php';
+				}
 			}
 		}
 	}

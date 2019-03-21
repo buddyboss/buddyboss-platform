@@ -401,7 +401,7 @@ function bp_media_get_media( $activity_id, $args = array() ){
  *      and the format of the returned value.
  *
  * @param array|string $args See BP_Media::get() for description.
- * @return array $activity See BP_Media::get() for description.
+ * @return array $media See BP_Media::get() for description.
  */
 function bp_media_get( $args = '' ) {
 
@@ -413,6 +413,7 @@ function bp_media_get( $args = '' ) {
 		'sort'              => 'DESC',       // sort ASC or DESC
 		'user_id'           => false,
 		'activity_id'       => false,
+		'album_id'          => false,
 		'search_terms'      => false,        // Pass search terms as a string
 		'exclude'           => false,        // Comma-separated list of activity IDs to exclude.
 		// want to limit the query.
@@ -425,6 +426,7 @@ function bp_media_get( $args = '' ) {
 		'per_page'          => $r['per_page'],
 		'user_id'           => $r['user_id'],
 		'activity_id'       => $r['activity_id'],
+		'album_id'          => $r['album_id'],
 		'max'               => $r['max'],
 		'sort'              => $r['sort'],
 		'search_terms'      => $r['search_terms'],

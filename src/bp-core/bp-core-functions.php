@@ -1344,6 +1344,40 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 		return $date->format( DateTime::ISO8601 );
 	}
 
+/**
+ * Output formatted date from a date string.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string String of date to convert. Timezone should be UTC before using this.
+ * @param string String of format of date.
+ * @return string|null
+ */
+function bp_core_format_date( $date = '', $format = '' ) {
+	echo bp_core_get_format_date( $date, $format );
+}
+    /**
+     * Return formatted date from a date string.
+     *
+     * @since BuddyBoss 1.0.0
+     *
+     * @param string String of date to convert. Timezone should be UTC before using this.
+     * @param string String of format of date.
+     * @return string
+     */
+    function bp_core_get_format_date( $date = '', $format = '' ) {
+        if ( ! $date ) {
+            return '';
+        }
+
+        if ( empty( $format ) ) {
+            $format = get_option( 'date_format' );
+        }
+
+	    return date_i18n( $format, strtotime( $date ) );
+    }
+
+
 /** Messages ******************************************************************/
 
 /**

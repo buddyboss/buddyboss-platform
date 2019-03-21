@@ -6,9 +6,7 @@
  */
 ?>
 
-<?php if ( bp_is_my_profile() ) : ?>
-	<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
-<?php endif; ?>
+<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
 
 <?php
 
@@ -21,7 +19,10 @@ switch ( bp_current_action() ) :
 
 	// Home/Media/Albums
 	case 'albums':
-		bp_get_template_part( 'members/single/media/albums' );
+		if ( ! (int) bp_action_variable( 0 ) )
+			bp_get_template_part( 'members/single/media/albums' );
+		else
+			bp_get_template_part( 'members/single/media/single-album' );
 		break;
 
 	// Any other

@@ -736,7 +736,7 @@ function bp_has_albums( $args = '' ) {
 		: false;
 
 	$search_terms_default = false;
-	$search_query_arg = bp_core_get_component_search_query_arg( 'media' );
+	$search_query_arg = bp_core_get_component_search_query_arg( 'album' );
 	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
@@ -748,7 +748,7 @@ function bp_has_albums( $args = '' ) {
 	// Note: any params used for filtering can be a single value, or multiple
 	// values comma separated.
 	$r = bp_parse_args( $args, array(
-		'include'           => false,     // Pass an activity_id or string of IDs comma-separated.
+		'include'           => false,     // Pass an album_id or string of IDs comma-separated.
 		'exclude'           => false,        // Pass an activity_id or string of IDs comma-separated.
 		'sort'              => 'DESC',       // Sort DESC or ASC.
 		'page'              => 1,            // Which page to load.
@@ -766,7 +766,7 @@ function bp_has_albums( $args = '' ) {
 		// Searching.
 		'search_terms'      => $search_terms_default,
 		'update_meta_cache' => true,
-	), 'has_media' );
+	), 'has_album' );
 
 	/*
 	 * Smart Overrides.

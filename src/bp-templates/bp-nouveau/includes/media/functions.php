@@ -61,5 +61,9 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'max_upload_size' => bp_media_file_upload_max_size(),
 	);
 
+	if ( 'albums' == bp_current_action() && (int) bp_action_variable( 0 ) ) {
+		$params['media']['album_id'] = (int) bp_action_variable( 0 );
+	}
+
 	return $params;
 }

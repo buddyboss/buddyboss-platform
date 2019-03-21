@@ -366,6 +366,10 @@ class BP_Media {
 			$where_conditions['activity'] = "m.activity_id = {$r['activity_id']}";
 		}
 
+		if ( ! empty( $r['album_id'] ) ) {
+			$where_conditions['album'] = "m.album_id = {$r['album_id']}";
+		}
+
 		/**
 		 * Filters the MySQL WHERE conditions for the Media items get method.
 		 *
@@ -433,7 +437,7 @@ class BP_Media {
 		$cached = bp_core_get_incremented_cache( $media_ids_sql, $cache_group );
 		if ( false === $cached ) {
 			$media_ids = $wpdb->get_col( $media_ids_sql );
-			bp_core_set_incremented_cache( $media_ids_sql, $cache_group, $media_ids_sql );
+			bp_core_set_incremented_cache( $media_ids_sql, $cache_group, $media_ids );
 		} else {
 			$media_ids = $cached;
 		}

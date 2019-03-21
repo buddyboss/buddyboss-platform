@@ -143,7 +143,13 @@ function bp_nouveau_ajax_media_save() {
 	$medias = $_POST['medias'];
 	$media_ids = array();
 	foreach( $medias as $media ) {
-		$media_id = bp_media_add( array( 'attachment_id' => $media['id'], 'title' => $media['name'], 'activity_id' => $activity_id, 'error_type' => 'wp_error' ) );
+		$media_id = bp_media_add( array(
+			'attachment_id' => $media['id'],
+			'title'         => $media['name'],
+			'activity_id'   => $activity_id,
+			'album_id'      => $media['album_id'],
+			'error_type'    => 'wp_error'
+		) );
 
 		if ( is_wp_error( $media_id ) ) {
 			$response['feedback'] = sprintf(
