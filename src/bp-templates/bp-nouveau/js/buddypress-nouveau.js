@@ -1304,16 +1304,20 @@ window.bp = window.bp || {};
 			self.objectRequest( queryData );
 		},
 		registerPopUp: function() {
-			$('.popup-modal-register').magnificPopup({
-				type: 'inline',
-				preloader: false,
-				fixedContentPos: true,
-				modal: true
-			});
-			$('.popup-modal-dismiss').click(function(e){
-				e.preventDefault();
-				$.magnificPopup.close();
-			});
+			if ( $('.popup-modal-register').length ) {
+				$('.popup-modal-register').magnificPopup({
+					type: 'inline',
+					preloader: false,
+					fixedContentPos: true,
+					modal: true
+				});
+			}
+			if ( $('.popup-modal-dismiss').length ) {
+				$('.popup-modal-dismiss').click(function (e) {
+					e.preventDefault();
+					$.magnificPopup.close();
+				});
+			}
 		}
 	};
 
