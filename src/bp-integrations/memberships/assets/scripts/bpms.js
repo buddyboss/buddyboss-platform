@@ -1,51 +1,51 @@
 var ajaxUrl = bpmsVars.ajax_url;
-var lmsTypes = bpmsVars.lms_types;
-var membershipType = bpmsVars.membership_type;
+var lmsCourseSlugs = bpmsVars.lms_course_slugs;
+var membershipProductSlug = bpmsVars.membership_product_slug;
 var pId = bpmsVars.p_id;
 console.log(bpmsVars);
 
 jQuery(document).ready(function() {
     // NOTE : There is flexibility to use key/value
-    jQuery.each(lmsTypes, function(key, lmsType) {
-        defaultBehavior(lmsType);
+    jQuery.each(lmsCourseSlugs, function(key, lmsCourseSlug) {
+        defaultBehavior(lmsCourseSlug);
     
         // 1st Toggler
-        jQuery(document).on('change', '#bpms-' + lmsType + '-' + membershipType + '-is_enabled', function() {
+        jQuery(document).on('change', '#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-is_enabled', function() {
             console.log("changed, checkbox()");
-            console.log('#bpms-' + lmsType + '-' + membershipType + '-courses_wrapper');
+            console.log('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-courses_wrapper');
 
             if (this.checked) {
-                jQuery('#bpms-' + lmsType + '-' + membershipType + '-courses_wrapper').show();
+                jQuery('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-courses_wrapper').show();
             } else {
-                jQuery('#bpms-' + lmsType + '-' + membershipType + '-courses_wrapper').hide();
+                jQuery('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-courses_wrapper').hide();
             }
         });
 
         // 2nd Toggler
-        jQuery(document).on('change', '#bpms-' + lmsType + '-' + membershipType + '-course_access_method', function() {;
+        jQuery(document).on('change', '#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-course_access_method', function() {;
             console.log(jQuery(this).val());
             if (jQuery(this).val() == "SINGLE_COURSES") {
-                jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_courses_wrapper').show();
-                jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_groups_wrapper').hide();
+                jQuery('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-search_courses_wrapper').show();
+                jQuery('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-search_groups_wrapper').hide();
                 jQuery(".helper-text").hide();
                 jQuery("#single-course-helper-text").show();
             } else if (jQuery(this).val() == "ALL_COURSES") {
-                jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_courses_wrapper').hide();
-                jQuery('#bpms-'+ lmsType + '-' + membershipType + '-search_groups_wrapper').hide();
+                jQuery('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-search_courses_wrapper').hide();
+                jQuery('#bpms-'+ lmsCourseSlug + '-' + membershipProductSlug + '-search_groups_wrapper').hide();
                 jQuery(".helper-text").hide();
                 jQuery("#all-course-helper-text").show();
             } else if (jQuery(this).val() == "LD_GROUPS") {
-                jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_groups_wrapper').show();
-                jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_courses_wrapper').hide();
+                jQuery('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-search_groups_wrapper').show();
+                jQuery('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-search_courses_wrapper').hide();
                 jQuery(".helper-text").hide();
-                jQuery('#' + lmsType + '-groups-helper-text').show();
+                jQuery('#' + lmsCourseSlug + '-groups-helper-text').show();
                 console.log("INFO : LearnDash Groups UI under construction");
             } else {
                 // Some other use case for future
             }
         });
         // 3rd Toggler
-        jQuery(document).on('change', '#bpms-' + lmsType + '-' + membershipType + '-allow_from_pricebox', function() {
+        jQuery(document).on('change', '#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-allow_from_pricebox', function() {
             console.log("allow checkbox un/checked");
             if (this.checked) {
                 jQuery("#bpms-allow_purchase_wrapper").show();
@@ -54,8 +54,8 @@ jQuery(document).ready(function() {
             }
         });
 
-        initializeCourseSelect2(lmsType, true);
-        initializeGroupSelect2(lmsType, true);
+        initializeCourseSelect2(lmsCourseSlug, true);
+        initializeGroupSelect2(lmsCourseSlug, true);
     });
     
 });
@@ -64,16 +64,16 @@ jQuery(document).ready(function() {
  * @param  {boolean} loadAllAtOnce : Whether to load all values/options in a single ajax call or input-based 
  * @return  {void}
  */
-function initializeCourseSelect2(lmsType, loadAllAtOnce) {
+function initializeCourseSelect2(lmsCourseSlug, loadAllAtOnce) {
     console.log("initializeCourseSelect2, loadAllAtOnce is : " + loadAllAtOnce);
     if (loadAllAtOnce) {
         console.log("Loading loadAllAtOnce");
-        var search_course_ui = jQuery('#bpms-'+ lmsType + '-' + membershipType + '-courses_enrolled').select2({
+        var search_course_ui = jQuery('#bpms-'+ lmsCourseSlug + '-' + membershipProductSlug + '-courses_attached').select2({
             debug: true,
             multiple: true,
             minimumInputLength: 2,
             ajax: {
-                url: ajaxUrl + '?action=get_courses',
+                url: ajaxUrl + '?action=get_courses&lms_course_slug=' + lmsCourseSlug,
                 type: 'GET',
                 dataType: 'json',
                 processResults: function(data, params) {
@@ -91,7 +91,7 @@ function initializeCourseSelect2(lmsType, loadAllAtOnce) {
             width: "resolve"
         });
     } else {
-        var search_course_ui = jQuery('#bpms-'+ lmsType + '-' + membershipType + '-courses_enrolled').select2({
+        var search_course_ui = jQuery('#bpms-'+ lmsCourseSlug + '-' + membershipProductSlug + '-courses_attached').select2({
             debug: true,
             multiple: true,
             minimumInputLength: 2,
@@ -104,7 +104,8 @@ function initializeCourseSelect2(lmsType, loadAllAtOnce) {
                     var query = {
                         search: params.term,
                         type: "public",
-                        action: "search_courses"
+                        action: "search_courses",
+                        lms_course_slug : lmsCourseSlug
                     }
                     // Query parameters will be ?search=[term]&type=public
                     return query;
@@ -123,23 +124,23 @@ function initializeCourseSelect2(lmsType, loadAllAtOnce) {
             width: "resolve"
         });
     }
-    setCoursePreSelected(lmsType, search_course_ui);
+    setPreSavedCourse(lmsCourseSlug, search_course_ui);
 }
 /**
  * Initialize/Configure ui for groups(learndash).
  * @param  {boolean} loadAllAtOnce : Whether to load all values/options in a single ajax call or input-based 
  * @return  {void}
  */
-function initializeGroupSelect2(lmsType, loadAllAtOnce) {
+function initializeGroupSelect2(lmsCourseSlug, loadAllAtOnce) {
     console.log("initializeGroupSelect2, loadAllAtOnce is : " + loadAllAtOnce);
     if (loadAllAtOnce) {
         console.log("Loading loadAllAtOnce");
-        var search_group_ui = jQuery('#bpms-' + lmsType + '-' + membershipType + "-groups_attached").select2({
+        var search_group_ui = jQuery('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + "-groups_attached").select2({
             debug: true,
             multiple: true,
             minimumInputLength: 2,
             ajax: {
-                url: ajaxUrl + '?action=get_groups', //@todo : verify get_groups call
+                url: ajaxUrl + '?action=get_groups&lms_course_slug=' + lmsCourseSlug,
                 type: 'GET',
                 dataType: 'json',
                 processResults: function(data, params) {
@@ -157,7 +158,7 @@ function initializeGroupSelect2(lmsType, loadAllAtOnce) {
             width: "resolve"
         });
     } else {
-        var search_group_ui = jQuery('#bpms-' + lmsType + '-' + membershipType + "-groups_attached").select2({
+        var search_group_ui = jQuery('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + "-groups_attached").select2({
             debug: true,
             multiple: true,
             minimumInputLength: 2,
@@ -166,11 +167,12 @@ function initializeGroupSelect2(lmsType, loadAllAtOnce) {
                 type: 'GET',
                 dataType: 'json',
                 data: function(params) {
-                    // Eg   : admin-ajax.php?action=search_groups&search=TERM&type=public
+                    // Eg   : admin-ajax.php?action=search_groups&lms_course_slug={lmsCourseSlug}&search=TERM&type=public
                     var query = {
                         search: params.term,
                         type: "public",
-                        action: "search_groups" //@todo : verify search_groups call
+                        action: "search_groups",
+                        lms_course_slug: lmsCourseSlug 
                     }
                     // Query parameters will be ?search=[term]&type=public
                     return query;
@@ -189,17 +191,17 @@ function initializeGroupSelect2(lmsType, loadAllAtOnce) {
             width: "resolve"
         });
     }
-    setGroupPreSelected(lmsType, search_group_ui);
+    setPreSavedGroup(lmsCourseSlug, search_group_ui);
 }
 /**
  * Set preselected values for courses(learndash).
  * @param  {htmlElement} select2 element
  * @return  {void}
  */
-function setCoursePreSelected(lmsType, uiSelector) {
+function setPreSavedCourse(lmsCourseSlug, uiSelector) {
     // Set pre-selected values now
     jQuery.ajax({
-        url: ajaxUrl + "?action=selected_courses&meta_key=_bpms-"  + lmsType + "-" + membershipType + "-courses_enrolled&pid=" + pId,
+        url: ajaxUrl + "?action=pre_saved_courses&lms_course_slug="  + lmsCourseSlug + "&membership_product_slug=" + membershipProductSlug + "&pid=" + pId,
     }).then(function(jsonData) {
         // console.log(jsonData);
         // var asArray = JSON.parse(jsonData);
@@ -217,10 +219,10 @@ function setCoursePreSelected(lmsType, uiSelector) {
  * @param  {htmlElement} select2 element
  * @return  {void}
  */
-function setGroupPreSelected(lmsType, uiSelector) {
+function setPreSavedGroup(lmsCourseSlug, uiSelector) {
     // Set pre-selected values now
     jQuery.ajax({
-        url: ajaxUrl + "?action=selected_groups&meta_key=_bpms-" + lmsType + "-"  + membershipType + "-groups_attached&pid=" + pId,
+        url: ajaxUrl + "?action=pre_saved_groups&lms_course_slug="  + lmsCourseSlug + "&membership_product_slug=" + membershipProductSlug + "&pid=" + pId,
     }).then(function(jsonData) {
         // var asArray = JSON.parse(jsonData);
         // console.log(asArray);
@@ -233,29 +235,29 @@ function setGroupPreSelected(lmsType, uiSelector) {
     });
 }
 
-function defaultBehavior(lmsType) {
-    console.log('#bpms-' + lmsType + '-' + membershipType + '-course_access_method');
+function defaultBehavior(lmsCourseSlug) {
+    console.log('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-course_access_method');
     // Selectbox : Course/Group Access 
-    if (jQuery('#bpms-' + lmsType + '-' + membershipType + '-course_access_method option:selected').val() == "SINGLE_COURSES") {
-        jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_courses_wrapper').show();
-        jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_groups_wrapper').hide();
+    if (jQuery('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-course_access_method option:selected').val() == "SINGLE_COURSES") {
+        jQuery('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-search_courses_wrapper').show();
+        jQuery('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-search_groups_wrapper').hide();
         jQuery(".helper-text").hide();
         jQuery('#single-course-helper-text').show();
-    } else if (jQuery('#bpms-' + lmsType + '-' + membershipType + '-course_access_method option:selected').val() == "ALL_COURSES") {
-        jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_courses_wrapper').hide();
-        jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_groups_wrapper').hide();
+    } else if (jQuery('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-course_access_method option:selected').val() == "ALL_COURSES") {
+        jQuery('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-search_courses_wrapper').hide();
+        jQuery('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-search_groups_wrapper').hide();
         jQuery(".helper-text").hide();
         jQuery("#all-course-helper-text").show();
-    } else if (jQuery('#bpms-' + lmsType + '-' + membershipType + '-course_access_method option:selected').val() == "LD_GROUPS") {
-        jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_groups_wrapper').show();
-        jQuery('#bpms-' + lmsType + '-' + membershipType + '-search_courses_wrapper').hide();
+    } else if (jQuery('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-course_access_method option:selected').val() == "LD_GROUPS") {
+        jQuery('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-search_groups_wrapper').show();
+        jQuery('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-search_courses_wrapper').hide();
         jQuery(".helper-text").hide();
-        jQuery('#' + lmsType + '-groups-helper-text').show();
+        jQuery('#' + lmsCourseSlug + '-groups-helper-text').show();
     } else {
         // Some 
     }
     // Checkbox : Allow Purchasing....
-    if (jQuery('#bpms-' + lmsType + '-' + membershipType + '-allow_from_pricebox').prop('checked') == true) {
+    if (jQuery('#bpms-' + lmsCourseSlug + '-' + membershipProductSlug + '-allow_from_pricebox').prop('checked') == true) {
         jQuery("#bpms-allow_purchase_wrapper").show();
     } else {
         jQuery("#bpms-allow_purchase_wrapper").hide();

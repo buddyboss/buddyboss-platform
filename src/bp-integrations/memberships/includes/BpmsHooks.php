@@ -48,9 +48,9 @@ class BpmsHooks {
 
 	// We love dashes and underscores ... we just can't choose which we like better :)
 	private static function tags($tag) {
-		// Prepend bbms if it doesn't exist already
-		if (!preg_match('/^bbms[-_]/i', $tag)) {
-			$tag = 'bbms' . $tag;
+		// Prepend bpms if it doesn't exist already
+		if (!preg_match('/^bpms[-_]/i', $tag)) {
+			$tag = 'bpms' . $tag;
 		}
 
 		$tags = array(

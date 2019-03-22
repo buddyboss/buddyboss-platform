@@ -1,24 +1,24 @@
 <?php echo !defined('ABSPATH') ? die("Sorry, you can't access this directly - Security established") : '';
-foreach ($lmsTypes as $lmsType) {
-	if ($lmsType == LD_POST_TYPE) { ?>
+foreach ($lmsCourseSlugs as $lmsCourseSlug) {
+	if ($lmsCourseSlug == LD_COURSE_SLUG) { ?>
 
 <div id="learndash_product_data" class="panel" style="margin-top:30px; margin-left: 220px">
         <!-- Enroll User -->
-        <input id="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-is_enabled" name="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-is_enabled" type="checkbox" value="1"<?php checked($isEnabled)?>/>
+        <input id="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-is_enabled" name="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-is_enabled" type="checkbox" value="1"<?php checked($isEnabled)?>/>
 
-        <label for="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-is_enabled">
+        <label for="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-is_enabled">
         <?php echo _e('Enroll user in LearnDash course(s) after purchasing this membership.', 'buddyboss'); ?>
         </label>
 
 
-        <div id="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-courses_wrapper" style="display:<?php echo $isEnabled ? 'block' : 'none'; ?>" >
+        <div id="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-courses_wrapper" style="display:<?php echo $isEnabled ? 'block' : 'none'; ?>" >
 
           <div class="post-body-content">
             <!-- Course Access -->
-            <label for="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-course_access_method" style="float: left;padding: 5px">
+            <label for="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-course_access_method" style="float: left;padding: 5px">
             <?php echo _e('Course access:', 'buddyboss'); ?>
             </label>
-            <select id="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-course_access_method" name="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-course_access_method">
+            <select id="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-course_access_method" name="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-course_access_method">
 
                 <?php foreach ($accessMethods as $key => $text) {?>
                     <option value="<?php echo $key; ?>" <?php echo $key == $courseAccessMethod ? "selected" : '' ?>><?php echo $text; ?></option>
@@ -40,12 +40,12 @@ foreach ($lmsTypes as $lmsType) {
           </div>
 
           <!-- Search Course  -->
-          <div id="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-search_courses_wrapper"><select id="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-courses_enrolled" name="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-courses_enrolled[]"></select>
+          <div id="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-search_courses_wrapper"><select id="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-courses_attached" name="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-courses_attached[]"></select>
           </div>
 
 
           <!-- LearnDash Groups(for courses)  -->
-          <div id="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-search_groups_wrapper"><select id="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-groups_attached" name="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-groups_attached[]"></select>
+          <div id="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-search_groups_wrapper"><select id="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-groups_attached" name="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-groups_attached[]"></select>
           </div>
 
 
@@ -54,23 +54,23 @@ foreach ($lmsTypes as $lmsType) {
 
         <div class="post-body-content" style="padding-top: 30px">
             <!-- Allow Purchasing -->
-                <input id="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-allow_from_pricebox" name="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-allow_from_pricebox" type="checkbox" value="1" <?php checked($allowFromPricebox)?> />
+                <input id="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-allow_from_pricebox" name="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-allow_from_pricebox" type="checkbox" value="1" <?php checked($allowFromPricebox)?> />
 
-                <label for="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-allow_from_pricebox">
+                <label for="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-allow_from_pricebox">
                 <?php echo _e('Allow purchasing this product from the course price box.', 'buddyboss'); ?>
                 </label>
 
                 <div id="bpms-allow_purchase_wrapper">
 
                   <div class="post-body-content">
-                    <label for="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-purchase_button_text"><?php echo _e('Button text:', 'buddyboss'); ?>
+                    <label for="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-purchase_button_text"><?php echo _e('Button text:', 'buddyboss'); ?>
                     </label>
-                    <input type="text" name="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-purchase_button_text" id="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-purchase_button_text" placeholder="Purchase" value="<?php echo $buttonText; ?>"/>
+                    <input type="text" name="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-purchase_button_text" id="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-purchase_button_text" placeholder="Purchase" value="<?php echo $buttonText; ?>"/>
                   </div>
 
                   <div class="post-body-content">
-                    <label for="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-purchase_button_order"><?php echo _e('Button order:', 'buddyboss'); ?>
-                    <input type="text" name="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-purchase_button_order" id="bpms-<?php echo $lmsType . '-' . $membershipType; ?>-purchase_button_order" placeholder="0" size="3" value="<?php echo $buttonOrder; ?>"/>
+                    <label for="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-purchase_button_order"><?php echo _e('Button order:', 'buddyboss'); ?>
+                    <input type="text" name="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-purchase_button_order" id="bpms-<?php echo $lmsCourseSlug . '-' . $membershipProductType; ?>-purchase_button_order" placeholder="0" size="3" value="<?php echo $buttonOrder; ?>"/>
                     </label>
                   </div>
                 </div>

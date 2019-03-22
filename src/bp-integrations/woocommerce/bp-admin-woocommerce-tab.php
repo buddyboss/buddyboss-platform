@@ -51,7 +51,7 @@ class BP_Woocommerce_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'', //Label
 				'wcRenderAnchor', //Callback
 				'', //Fields arguments
-				WC_POST_TYPE//Callback arguments
+				WC_PRODUCT_SLUG//Callback arguments
 			);
 
 		} else {
