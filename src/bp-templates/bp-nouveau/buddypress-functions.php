@@ -222,16 +222,30 @@ class BP_Nouveau extends BP_Theme_Compat {
 		?>
 		<script>
 			jQuery( document ).ready( function () {
-				jQuery('.popup-modal-register').magnificPopup({
-					type: 'inline',
-					preloader: false,
-					fixedContentPos: true,
-					modal: true
-				});
-				jQuery('.popup-modal-dismiss').click(function(e){
-					e.preventDefault();
-					$.magnificPopup.close();
-				});
+				if ( jQuery('.popup-modal-register').length ) {
+					jQuery('.popup-modal-register').magnificPopup({
+						type: 'inline',
+						preloader: false,
+						fixedContentPos: true,
+						modal: true
+					});
+					jQuery('.popup-modal-dismiss').click(function (e) {
+						e.preventDefault();
+						$.magnificPopup.close();
+					});
+				}
+				if ( jQuery('.popup-modal-login').length ) {
+					jQuery('.popup-modal-login').magnificPopup({
+						type: 'inline',
+						preloader: false,
+						fixedContentPos: true,
+						modal: true
+					});
+					jQuery('.popup-modal-dismiss').click(function (e) {
+						e.preventDefault();
+						$.magnificPopup.close();
+					});
+				}
 			});
 		</script>
 		<?php

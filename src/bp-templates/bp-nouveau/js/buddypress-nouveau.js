@@ -46,7 +46,11 @@ window.bp = window.bp || {};
 
 			this.sentInvitesFormValidate();
 
+			// Privacy Policy & Terms Popup on Register page
 			this.registerPopUp();
+
+			// Privacy Policy Popup on Login page and Lost Password page
+			this.loginPopUp();
 
 		},
 
@@ -1306,6 +1310,22 @@ window.bp = window.bp || {};
 		registerPopUp: function() {
 			if ( $('.popup-modal-register').length ) {
 				$('.popup-modal-register').magnificPopup({
+					type: 'inline',
+					preloader: false,
+					fixedContentPos: true,
+					modal: true
+				});
+			}
+			if ( $('.popup-modal-dismiss').length ) {
+				$('.popup-modal-dismiss').click(function (e) {
+					e.preventDefault();
+					$.magnificPopup.close();
+				});
+			}
+		},
+		loginPopUp: function() {
+			if ( $('.popup-modal-login').length ) {
+				$('.popup-modal-login').magnificPopup({
 					type: 'inline',
 					preloader: false,
 					fixedContentPos: true,

@@ -2503,25 +2503,6 @@ body.register .registration-popup .mfp-close:hover {
   background: transparent;
 }
 
-body.login .registration-popup {
-  background: #FFF;
-  padding: 30px;
-  text-align: left;
-  min-height: 400px;
-  max-width: 650px;
-  margin: 40px auto;
-  position: relative;
-}
-
-body.login .registration-popup .mfp-close {
-  color: #000;
-}
-
-body.login .registration-popup .mfp-close:focus,
-body.login .registration-popup .mfp-close:hover {
-  background: transparent;
-}
-
 #buddypress #signup-form input:focus {
   border-color: #aaa;
 }
@@ -13688,4 +13669,28 @@ img.mfp-img {
     padding-left: 6px;
     padding-right: 6px;
   }
+}
+
+/**
+*-------------------------------------------------------------------------------
+* @section 13.0 - Login and Lost Password Popup
+*-------------------------------------------------------------------------------
+*/
+body.login .login-popup {
+  background: #FFF;
+  padding: 30px;
+  text-align: left;
+  min-height: 400px;
+  max-width: 650px;
+  margin: 40px auto;
+  position: relative;
+}
+
+body.login .login-popup .mfp-close {
+  color: #000;
+}
+
+body.login .login-popup .mfp-close:focus,
+body.login .login-popup .mfp-close:hover {
+  background: transparent;
 }

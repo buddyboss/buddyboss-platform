@@ -1406,7 +1406,7 @@ function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_
 			if ( $privacy_policy_url && $page_title ) {
 				$get_privacy_policy = get_post( $policy_page_id );
 				$link = sprintf(
-					'<a class="privacy-policy-link popup-modal-register popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide registration-popup"><h1>%s</h1>%s<<button title="%s" type="button" class="mfp-close">%s</button>/div>',
+					'<a class="privacy-policy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup"><h1>%s</h1>%s<<button title="%s" type="button" class="mfp-close">%s</button>/div>',
 					'#privacy-modal',
 					esc_html( $page_title ),
 					esc_html( $page_title ),
