@@ -469,3 +469,21 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 @import "../common-styles/_bp_magnific";
 
+/**
+*-------------------------------------------------------------------------------
+* @section 13.0 - Login and Lost Password Popup
+*-------------------------------------------------------------------------------
+*/
+
+// Login and Lost Password index screen (directory)
+
+@import "../common-styles/_bp_login.scss";
+
+/**
+*-------------------------------------------------------------------------------
+* @section 14.0 - Media
+*-------------------------------------------------------------------------------
+*/
+// Import global media styles
+
+@import "../common-styles/_bp_media";

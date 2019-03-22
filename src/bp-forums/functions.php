@@ -700,7 +700,7 @@ function bbp_forum_topics_reply_enable_tinymce_editor( $args = array() ) {
 	// Enable the tinyMce.
 	$args['tinymce'] = true;
 	$args['tinymce'] = array(
-		'toolbar1' =>'bold, italic, bullist, numlist, blockquote, link, image',
+		'toolbar1' =>'bold, italic, bullist, numlist, blockquote, link',
 	);
 
 	return $args;

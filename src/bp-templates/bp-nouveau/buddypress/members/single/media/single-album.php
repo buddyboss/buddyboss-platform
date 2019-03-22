@@ -49,7 +49,7 @@ $album_id = (int) bp_action_variable( 0 );
 
 	            <?php bp_get_template_part( 'members/single/media/uploader' ); ?>
 
-                <ul class="bb-photo-list grid">
+                <ul class="bb-photo-list">
 
                 <?php if ( $total_media > 0 ) {
                     ?>

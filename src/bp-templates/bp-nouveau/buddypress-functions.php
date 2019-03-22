@@ -185,6 +185,12 @@ class BP_Nouveau extends BP_Theme_Compat {
 		add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); // Enqueue theme JS
 		add_filter( 'bp_enqueue_scripts', array( $this, 'localize_scripts' ) ); // Enqueue theme script localization
 
+		// Register login and forgot password popup link
+		add_action( 'login_enqueue_scripts', array( $this, 'register_scripts' ), 2 );
+		add_action( 'login_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+		add_action( 'login_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'login_head', array( $this, 'platform_login_scripts' ) );
+
 		// Body no-js class
 		add_filter( 'body_class', array( $this, 'add_nojs_body_class' ), 20, 1 );
 
@@ -210,6 +216,40 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 * @param BP_Nouveau $this Current BP_Nouveau instance.
 		 */
 		do_action_ref_array( 'bp_theme_compat_actions', array( &$this ) );
+	}
+
+	public function platform_login_scripts() {
+		?>
+		<script>
+			jQuery( document ).ready( function () {
+				if ( jQuery('.popup-modal-register').length ) {
+					jQuery('.popup-modal-register').magnificPopup({
+						type: 'inline',
+						preloader: false,
+						fixedContentPos: true,
+						modal: true
+					});
+					jQuery('.popup-modal-dismiss').click(function (e) {
+						e.preventDefault();
+						$.magnificPopup.close();
+					});
+				}
+				if ( jQuery('.popup-modal-login').length ) {
+					jQuery('.popup-modal-login').magnificPopup({
+						type: 'inline',
+						preloader: false,
+						fixedContentPos: true,
+						modal: true
+					});
+					jQuery('.popup-modal-dismiss').click(function (e) {
+						e.preventDefault();
+						$.magnificPopup.close();
+					});
+				}
+			});
+		</script>
+		<?php
+
 	}
 
 	/**
@@ -375,9 +415,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 */
 	public function enqueue_scripts() {
 
-		if ( bp_is_register_page() ) {
-			wp_enqueue_script( 'bp-nouveau-magnific-popup' );
-		}
+		wp_enqueue_script( 'bp-nouveau-magnific-popup' );
 
 		wp_enqueue_script( 'bp-nouveau' );
 

@@ -25,7 +25,7 @@
 			}).trigger('change.run-condition');
 		});
 
-		var bpPages = $('body.buddypress.buddyboss_page_bp-pages .card').length;
+		var bpPages = $('body.buddypress.buddyboss_page_bp-pages .bp-admin-card').length;
 		if ( bpPages > 1 ) {
 			$('.create-background-page').click(function () {
 				var dataPage = $(this).attr('data-name');

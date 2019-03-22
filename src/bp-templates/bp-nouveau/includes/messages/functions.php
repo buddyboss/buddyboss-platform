@@ -331,7 +331,7 @@ function bp_nouveau_invites_mce_buttons( $buttons = array() ) {
 	$buttons = array_diff( $buttons, $remove_buttons );
 
 	// Add the image button
-	array_push( $buttons, 'image' );
+	//array_push( $buttons, 'image' );
 
 	return $buttons;
 }
@@ -360,7 +360,7 @@ function bp_nouveau_messages_mce_buttons( $buttons = array() ) {
 	$buttons = array_diff( $buttons, $remove_buttons );
 
 	// Add the image button
-	array_push( $buttons, 'image' );
+	//array_push( $buttons, 'image' );
 
 	return $buttons;
 }
