@@ -1854,7 +1854,7 @@ function bbp_get_teeny_mce_buttons( $buttons = array() ) {
 	) );
 
 	// Images
-	array_push( $buttons, 'image' );
+	//array_push( $buttons, 'image' );
 
 	return apply_filters( 'bbp_get_teeny_mce_buttons', $buttons );
 }
