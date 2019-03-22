@@ -1341,3 +1341,33 @@ function bp_core_profile_dashboard_non_logged_redirect() {
 
 }
 add_filter( 'bp_template_redirect', 'bp_core_profile_dashboard_non_logged_redirect', 10 );
+
+/**
+ * Returns the url to the lost password.
+ *
+ * @param  string $default_url Default lost password URL.
+ * @return string
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_remove_wc_lostpassword_url( $default_url = '' ) {
+
+	if ( !is_user_logged_in() ) {
+
+		$enable_private_network = bp_get_option( 'bp-enable-private-network' );
+
+		if ( '0' === $enable_private_network ) {
+
+			$args = array( 'action' => 'lostpassword' );
+			if ( ! empty( $redirect ) ) {
+				$args['redirect_to'] = urlencode( $redirect );
+			}
+
+			$default_url = add_query_arg( $args, network_site_url( 'wp-login.php', 'login' ) );
+		}
+	}
+
+	return $default_url;
+}
+
+add_filter( 'lostpassword_url', 'bp_remove_wc_lostpassword_url', 11, 1 );

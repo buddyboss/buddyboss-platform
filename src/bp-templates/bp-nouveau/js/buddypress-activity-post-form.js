@@ -781,6 +781,56 @@ window.bp = window.bp || {};
 		template : bp.template( 'activity-post-form-options' )
 	} );
 
+	bp.Views.FormMedia = bp.View.extend({
+		tagName: 'div',
+		id: 'activity-post-options-media',
+		template : bp.template( 'activity-post-options-media' ),
+		media : [],
+
+		events: {
+			'click a.activity-post-form-media': 'clicked',
+		},
+
+		initialize: function () {
+			this.model.set( 'media', this.media );
+		},
+
+		clicked: function (e) {
+			e.preventDefault();
+
+			var self = this;
+			self.$el.find('.activity-post-form-media-uploader-wrapper').show();
+			var activityDropzone = new Dropzone('div#activity-post-form-media-uploader', dropzone_options );
+
+			activityDropzone.on('sending', function(file, xhr, formData) {
+				formData.append('action', 'media_upload');
+				formData.append('_wpnonce', BP_Nouveau.nonces.media);
+			});
+
+			activityDropzone.on('success', function(file, response) {
+				if ( response.data.id ) {
+					file.id = response.id;
+					response.uuid = file.upload.uuid;
+					response.menu_order = self.media.length;
+					self.media.push( response.data );
+					self.model.set( 'media', self.media );
+				}
+			});
+
+			activityDropzone.on('removedfile', function(file) {
+				var self = this;
+				if ( self.media.length ) {
+					for ( var i in self.media ) {
+						if ( file.id == self.media[i].id ) {
+							self.media.splice( i, 1 );
+							self.model.set( 'media', self.media );
+						}
+					}
+				}
+			});
+		},
+	});
+
 	bp.Views.FormTarget = bp.View.extend( {
 		tagName   : 'div',
 		id        : 'whats-new-post-in-box',
@@ -1092,6 +1142,10 @@ window.bp = window.bp || {};
 				this.views.add( new bp.Views.FormOptions( { model: this.model } ) );
 			}
 
+			if ( typeof window.Dropzone !== 'undefined' ) {
+				this.views.add(new bp.Views.FormMedia({model: this.model}));
+			}
+
 			// Attach buttons
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.buttons ) ) {
 				// Global
@@ -1176,6 +1230,8 @@ window.bp = window.bp || {};
 					}
 				}
 			} );
+
+			console.log(this.model);
 
 			// Silently add meta
 			this.model.set( meta, { silent: true } );

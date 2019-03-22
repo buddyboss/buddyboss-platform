@@ -482,6 +482,7 @@ function bp_core_get_packaged_component_ids() {
 		'blogs',
 		'xprofile',
 		'friends',
+		'media',
 		'messages',
 		'settings',
 		'notifications',
@@ -1342,6 +1343,40 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 
 		return $date->format( DateTime::ISO8601 );
 	}
+
+/**
+ * Output formatted date from a date string.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string String of date to convert. Timezone should be UTC before using this.
+ * @param string String of format of date.
+ * @return string|null
+ */
+function bp_core_format_date( $date = '', $format = '' ) {
+	echo bp_core_get_format_date( $date, $format );
+}
+    /**
+     * Return formatted date from a date string.
+     *
+     * @since BuddyBoss 1.0.0
+     *
+     * @param string String of date to convert. Timezone should be UTC before using this.
+     * @param string String of format of date.
+     * @return string
+     */
+    function bp_core_get_format_date( $date = '', $format = '' ) {
+        if ( ! $date ) {
+            return '';
+        }
+
+        if ( empty( $format ) ) {
+            $format = get_option( 'date_format' );
+        }
+
+	    return date_i18n( $format, strtotime( $date ) );
+    }
+
 
 /** Messages ******************************************************************/
 
@@ -2479,6 +2514,12 @@ function bp_core_get_components( $type = 'all' ) {
 			'title'       => __( 'Network Search', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-search' ) , 'admin.php' ) ),
 			'description' => __( 'Allow members to search the entire network, along with custom post types of your choice, all in one unified search bar.', 'buddyboss' ),
+			'default'     => false,
+		),
+		'media'   => array(
+			'title'       => __( 'Media', 'buddyboss' ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-media' ) , 'admin.php' ) ),
+			'description' => __( 'Allow members to upload photos into activity posts and create albums.', 'buddyboss' ),
 			'default'     => false,
 		)
 	);

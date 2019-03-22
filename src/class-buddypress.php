@@ -327,7 +327,7 @@ class BuddyPress {
 		/** Versions **********************************************************/
 
 		$this->version    = '1.0.0';
-		$this->db_version = 13510;
+		$this->db_version = 13710;
 
 		/** Loading ***********************************************************/
 
@@ -603,6 +603,7 @@ class BuddyPress {
 			'profiletype',
 			'forums',
 			'search',
+			'media',
 			'gdpr',
 			'invites',
 		);
