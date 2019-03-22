@@ -67,7 +67,6 @@ class BP_Appboss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	/**
-	 * @todo : Test more
 	 * Case-1: AppBoss is inActive but form_html would still be executed
 	 * Case-2: AppBoss is Active but LD is InActive
 	 * Case-3: LearnDash and AppBoss both are Active

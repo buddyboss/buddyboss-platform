@@ -69,7 +69,6 @@ class BP_Memberpress_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	/**
-	 * @todo : Test more
 	 * Case-1: Memberpress is inActive(but form_html would still be executed)
 	 * Case-2: Memberpress is Active but LD is InActive
 	 * Case-3: LearnDash and Memberpress both are Active

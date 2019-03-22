@@ -68,7 +68,6 @@ class BP_Woocommerce_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	/**
-	 * @todo : Test more
 	 * Case-1: WooCommerce is inActive but form_html would still be executed
 	 * Case-2: WooCommerce is Active but LD is InActive
 	 * Case-3: LearnDash and WooCommerce both are Active
