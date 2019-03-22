@@ -2510,7 +2510,7 @@ function bp_nouveau_signup_terms_privacy() {
         <p class="register-privacy-info">
             <?php printf( __( 'By creating an account, you agree to our <a class="popup-modal popup-terms" href="#terms-modal">Terms of Service</a>.', 'buddyboss' ), get_permalink( $terms ) ); ?>
         </p>
-		<div id="terms-modal" class="mfp-hide registration-popup">
+		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php esc_html_e( get_the_title( $terms ), 'buddyboss' ); ?></h1>
 			<?php
 			$get_terms = get_post( $terms );
@@ -2526,7 +2526,7 @@ function bp_nouveau_signup_terms_privacy() {
         <p class="register-privacy-info">
             <?php printf( __( 'By creating an account, you agree to our <a class="popup-modal-register popup-privacy" href="#privacy-modal">Privacy Policy</a>.', 'buddyboss' ), get_permalink( $privacy ) ); ?>
         </p>
-		<div id="privacy-modal" class="mfp-hide registration-popup">
+		<div id="privacy-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php esc_html_e( get_the_title( $privacy ), 'buddyboss' ); ?></h1>
 			<?php
 			$get_privacy = get_post( $privacy );
@@ -2542,7 +2542,7 @@ function bp_nouveau_signup_terms_privacy() {
         <p class="register-privacy-info">
             <?php printf( __( 'By creating an account, you agree to our <a class="popup-modal-register popup-terms" href="#terms-modal">Terms of Service</a> and <a class="popup-modal-register popup-privacy" href="#privacy-modal">Privacy Policy</a>.', 'buddyboss' ), get_permalink( $terms ), get_permalink( $privacy ) ); ?>
         </p>
-		<div id="terms-modal" class="mfp-hide registration-popup">
+		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php esc_html_e( get_the_title( $terms ), 'buddyboss' ); ?></h1>
 			<?php
 			$get_terms = get_post( $terms );
@@ -2550,7 +2550,7 @@ function bp_nouveau_signup_terms_privacy() {
 			?>
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss'); ?>" type="button" class="mfp-close"><?php esc_html_e('×','buddyboss');?></button>
 		</div>
-		<div id="privacy-modal" class="mfp-hide registration-popup">
+		<div id="privacy-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php esc_html_e( get_the_title( $privacy ), 'buddyboss' ); ?></h1>
 			<?php
 			$get_privacy = get_post( $privacy );
