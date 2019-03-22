@@ -1312,8 +1312,8 @@ window.bp = window.bp || {};
 				$('.popup-modal-register').magnificPopup({
 					type: 'inline',
 					preloader: false,
-					fixedContentPos: true,
-					modal: true
+                    fixedBgPos: true,
+					fixedContentPos: true
 				});
 			}
 			if ( $('.popup-modal-dismiss').length ) {
@@ -1328,8 +1328,8 @@ window.bp = window.bp || {};
 				$('.popup-modal-login').magnificPopup({
 					type: 'inline',
 					preloader: false,
-					fixedContentPos: true,
-					modal: true
+                    fixedBgPos: true,
+					fixedContentPos: true
 				});
 			}
 			if ( $('.popup-modal-dismiss').length ) {
