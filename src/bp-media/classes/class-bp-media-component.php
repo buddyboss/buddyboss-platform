@@ -235,5 +235,40 @@ class BP_Media_Component extends BP_Component {
 	 *
 	 * @param array $wp_admin_nav See BP_Component::setup_admin_bar() for a description.
 	 */
-	public function setup_admin_bar( $wp_admin_nav = array() ) {}
+	public function setup_admin_bar( $wp_admin_nav = array() ) {
+		// Menus for logged in user.
+		if ( is_user_logged_in() ) {
+
+			// Setup the logged in user variables.
+			$media_link = trailingslashit( bp_loggedin_user_domain() . bp_get_media_slug() );
+
+			// Add main Messages menu.
+			$wp_admin_nav[] = array(
+				'parent' => buddypress()->my_account_menu_id,
+				'id'     => 'my-account-' . $this->id,
+				'title'  => __( 'Media', 'buddyboss' ),
+				'href'   => $media_link
+			);
+
+			// Media.
+			$wp_admin_nav[] = array(
+				'parent'   => 'my-account-' . $this->id,
+				'id'       => 'my-account-' . $this->id . '-my-media',
+				'title'    => __( 'My Media', 'buddyboss' ),
+				'href'     => $media_link,
+				'position' => 10
+			);
+
+			// Albums.
+			$wp_admin_nav[] = array(
+				'parent'   => 'my-account-' . $this->id,
+				'id'       => 'my-account-' . $this->id . '-albums',
+				'title'    => __( 'Albums', 'buddyboss' ),
+				'href'     => trailingslashit( $media_link . 'albums' ),
+				'position' => 20
+			);
+		}
+
+		parent::setup_admin_bar( $wp_admin_nav );
+	}
 }
