@@ -56,7 +56,6 @@ class BP_Memberpress_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			);
 		} else {
 
-			error_log("LD dont exists");
 			$this->add_field(
 				'bp-memberpress_ld_text', // Unique Identifier
 				'', //Label

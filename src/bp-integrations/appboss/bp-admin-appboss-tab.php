@@ -68,8 +68,8 @@ class BP_Appboss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 	/**
 	 * @todo : Test more
-	 * Case-1: WooCommerce is inActive
-	 * Case-2: WooCommerce is Active but we would control LD Text from register_fields if LearnDash is InActive
+	 * Case-1: AppBoss is inActive
+	 * Case-2: AppBoss is Active but we would control LD Text from register_fields if LearnDash is InActive
 	 */
 	public function form_html() {
 
@@ -81,7 +81,7 @@ class BP_Appboss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			}
 
 		} else {
-			//NOTE : LearnDash and WooCommerce both are Active, so display form
+			//NOTE : LearnDash and AppBoss both are Active, so display form
 			parent::form_html();
 		}
 
