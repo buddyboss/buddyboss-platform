@@ -322,7 +322,23 @@ class BBP_Forums_Admin {
 
 		if ( $this->bail() ) return;
 
-		?>
+
+		global $post, $pagenow;
+		if ( ( isset( $post->post_type ) && $post->post_type === bbp_get_forum_post_type() && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_forum_post_type() && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_forum_post_type() && $pagenow == 'post.php' ) ) {
+			?>
+			<style media="screen">
+				/*<![CDATA[*/
+
+				#misc-publishing-actions,
+				#save-post {
+					display: block !important;
+				}
+
+				/*]]>*/
+			</style>
+			<?php
+		}
+			?>
 
 		<style media="screen">
 		/*<![CDATA[*/
