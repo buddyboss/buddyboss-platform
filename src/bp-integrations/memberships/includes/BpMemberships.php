@@ -13,13 +13,18 @@ define('WC_POST_TYPE', 'product');
 define('APPBOSS_PROD_TYPE', 'app-product');
 define('BPMS_URL', BP_PLUGIN_URL . '/src/bp-integrations/memberships');
 
+use BuddyBoss\Memberships\Classes\MpHelper;
+use BuddyBoss\Memberships\Classes\WcHelper;
+
 class BpMemberships {
 
 	private static $instance;
 
 	public function __construct() {
 
-		add_action('wp_loaded', array($this, 'onWpLoaded'));
+		// NOTE : This must happen when LearnDash is loaded, NOT when wp_loaded
+		add_action('learndash_init', array($this, 'onLearndashInit'));
+		// add_action('wp_loaded', array($this, 'onWpLoaded'));
 
 		/**
 		 * Available as hook, runs after a bbms(BuddyBoss Membership) plugin is loaded.
@@ -307,7 +312,7 @@ class BpMemberships {
 	}
 
 	/**
-	 * Update BBMS enrolment(grant/revoke) for particular user
+	 * Update BPMS enrolment(grant/revoke) for particular user
 	 * @param {int} $userId - Wordpress's unique ID for user identification
 	 * @param {array} $activeVendorTypes - Active membership vendors such as memberpressproduct(By memberpress), product(By WooCommerce)
 	 * @return {void}
@@ -320,13 +325,14 @@ class BpMemberships {
 		$accessList = array();
 		$lmsTypes = self::getLmsTypesSelected(LD_POST_TYPE);
 		$products = get_posts(array("post_type" => self::getVendorTypesSelected()));
-		//NOTE : Vendor Type(s), Eg (Slugs): Memberpress, WooCommerce
-		foreach ($products as $product) {
+		// NOTE : LMS Type(s), Eg (Slugs): Learndash
+		foreach ($lmsTypes as $lmsType) {
 
-			// NOTE : LMS Type(s), Eg (Slugs): Learndash
-			foreach ($lmsTypes as $lmsSlug) {
-				$isEnabled = get_post_meta($product->ID, "_bpms-$lmsSlug-$product->post_type-is_enabled", true);
-				$courseAccessMethod = get_post_meta($product->ID, "_bpms-$lmsSlug-$product->post_type-course_access_method", true);
+			//NOTE : Vendor Type(s), Eg (Slugs): Memberpress, WooCommerce
+			foreach ($products as $product) {
+
+				$isEnabled = get_post_meta($product->ID, "_bpms-$lmsType-$product->post_type-is_enabled", true);
+				$courseAccessMethod = get_post_meta($product->ID, "_bpms-$lmsType-$product->post_type-course_access_method", true);
 
 				if ($isEnabled) {
 
@@ -365,17 +371,19 @@ class BpMemberships {
 
 			}
 
-		}
+			if (BPMS_DEBUG) {
+				error_log("accessList is below:");
+				error_log(print_r($accessList, true));
+			}
 
-		if (BPMS_DEBUG) {
-			error_log("accessList is below:");
-			error_log(print_r($accessList, true));
-		}
+			// Grant or Revoke based on grantFlag
+			foreach ($accessList as $courseId => $grantFlag) {
+				if ($lmsType == LD_POST_TYPE) {
+					$grantFlag ? ld_update_course_access($userId, $courseId, false) : ld_update_course_access($userId, $courseId, true);
+				} else {
+					// NOTE : Implementation for another LMS when required
+				}
 
-		// Grant or Revoke based on grantFlag
-		foreach ($accessList as $courseId => $grantFlag) {
-			if (self::getLmsTypesSelected(LD_POST_TYPE) == LD_POST_TYPE) {
-				$grantFlag ? ld_update_course_access($userId, $courseId, false) : ld_update_course_access($userId, $courseId, true);
 			}
 
 		}
@@ -393,120 +401,119 @@ class BpMemberships {
 		if (BPMS_DEBUG) {
 			error_log("updateBbmsEvent(),productPostType :  $vendorType");
 		}
-		$lmsType = self::getLmsTypesSelected(LD_POST_TYPE);
+		$lmsTypes = self::getLmsTypesSelected(LD_POST_TYPE);
+		// NOTE : LMS Type(s), Eg (Slugs): Learndash
+		foreach ($lmsTypes as $lmsType) {
+			if ($vendorType == MP_POST_TYPE) {
 
-		if ($vendorType == MP_POST_TYPE) {
-
-			if ($vendorObj->subscription_id == 0) {
-				$eventIdentifier = $vendorType . '-' . $vendorObj->id;
-			} else {
-				$eventIdentifier = $vendorType . '-' . $vendorObj->subscription_id;
-			}
-
-			$events = unserialize(get_post_meta($vendorObj->product_id, '_bpms-events', true));
-			if (isset($events[$eventIdentifier])) {
-				if (BPMS_DEBUG) {
-					error_log("Event EXISTS for this user, just update grant access");
-					error_log("product_id : $vendorObj->product_id");
-					error_log(print_r($events[$eventIdentifier], true));
+				if ($vendorObj->subscription_id == 0) {
+					$eventIdentifier = $vendorType . '-non-recurring-' . $vendorObj->id;
+				} else {
+					$eventIdentifier = $vendorType . '-recurring-' . $vendorObj->subscription_id;
 				}
 
-				$events[$eventIdentifier]['grant_access'] = $grantAccess;
-				$events[$eventIdentifier]['updated_at'] = date('Y-m-d H:i:s');
-			} else {
-				if (BPMS_DEBUG) {
-					error_log("Event DO NOT for this user : $vendorObj->user_id");
-				}
-
-				$courseAccessMethod = get_post_meta($vendorObj->product_id, "_bpms-$lmsType-$vendorType-course_access_method", true);
-				if (BPMS_DEBUG) {
-					error_log("Course Access Method selected is : $courseAccessMethod");
-				}
-
-				if ($courseAccessMethod == 'SINGLE_COURSES') {
-					$coursesAttached = unserialize(get_post_meta($vendorObj->product_id, "_bpms-$lmsType-$vendorType-courses_enrolled", true));
-
-				} else if ($courseAccessMethod == 'ALL_COURSES') {
-					$coursesAttached = self::getLearndashClosedCourses();
-
-				} else if ($courseAccessMethod == 'LD_GROUPS') {
-
-					$groupsAttached = unserialize(get_post_meta($vendorObj->product_id, "_bpms-$lmsType-$vendorType-groups_attached", true));
-					$coursesAttached = array();
-					foreach ($groupsAttached as $groupId) {
-						$ids = learndash_group_enrolled_courses($groupId);
-						// NOTE : Array format is consistent with GUI
-						$coursesAttached = array_merge($ids, $coursesAttached);
+				$events = unserialize(get_post_meta($vendorObj->product_id, '_bpms-events', true));
+				if (isset($events[$eventIdentifier])) {
+					if (BPMS_DEBUG) {
+						error_log("Event EXISTS for this user, just update grant access");
+						error_log("product_id : $vendorObj->product_id");
+						error_log(print_r($events[$eventIdentifier], true));
 					}
-				}
-				// error_log(print_r($coursesAttached, true));
-				$events[$eventIdentifier] = array('user_id' => $vendorObj->user_id, 'course_attached' => serialize(array_values($coursesAttached)), 'grant_access' => $grantAccess, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'));
 
-			}
-			if (BPMS_DEBUG) {
-				error_log("Events on Product:");
-				error_log(print_r($events, true));
-			}
-
-			// Finally serialize and update
-			update_post_meta($vendorObj->product_id, '_bpms-events', serialize($events));
-			self::updateBbmsEnrollments($vendorObj->user_id);
-
-		} else if ($vendorType == WC_POST_TYPE) {
-
-			//@todo : Verify if subscription object is different than normal order
-			$eventIdentifier = $vendorType . '-' . $vendorObj['order_id'];
-
-			$events = unserialize(get_post_meta($vendorObj['product_id'], '_bpms-events', true));
-			if (isset($events[$eventIdentifier])) {
-				if (BPMS_DEBUG) {
-					error_log("Event EXISTS for this user, just update grant access");
-					error_log(print_r($events[$eventIdentifier], true));
-				}
-
-				$events[$eventIdentifier]['grant_access'] = $grantAccess;
-				$events[$eventIdentifier]['updated_at'] = date('Y-m-d H:i:s');
-			} else {
-				if (BPMS_DEBUG) {
-					error_log("Event DO NOT for this user : " . $vendorObj['customer_id']);
-				}
-
-				$courseAccessMethod = get_post_meta($vendorObj['product_id'], "_bpms-$lmsType-$vendorType-course_access_method", true);
-
-				if (BPMS_DEBUG) {
-					error_log("Course Access Method selected is : $courseAccessMethod");
-				}
-
-				if ($courseAccessMethod == 'SINGLE_COURSES') {
-					$coursesAttached = unserialize(get_post_meta($vendorObj['product_id'], "_bpms-$lmsType-$vendorType-courses_enrolled", true));
-
-				} else if ($courseAccessMethod == 'ALL_COURSES') {
-					$coursesAttached = self::getLearndashClosedCourses();
-
-				} else if ($courseAccessMethod == 'LD_GROUPS') {
-					$groupsAttached = unserialize(get_post_meta($vendorObj['product_id'], "_bpms-$lmsType-$vendorType-groups_attached", true));
-					$coursesAttached = array();
-					foreach ($groupsAttached as $groupId) {
-						$ids = learndash_group_enrolled_courses($groupId);
-						// NOTE : Array format is consistent with GUI
-						$coursesAttached = array_merge($ids, $coursesAttached);
+					$events[$eventIdentifier]['grant_access'] = $grantAccess;
+					$events[$eventIdentifier]['updated_at'] = date('Y-m-d H:i:s');
+				} else {
+					if (BPMS_DEBUG) {
+						error_log("Event DO NOT for this user : $vendorObj->user_id");
 					}
+
+					$courseAccessMethod = get_post_meta($vendorObj->product_id, "_bpms-$lmsType-$vendorType-course_access_method", true);
+					if (BPMS_DEBUG) {
+						error_log("Course Access Method selected is : $courseAccessMethod");
+					}
+
+					if ($courseAccessMethod == 'SINGLE_COURSES') {
+						$coursesAttached = unserialize(get_post_meta($vendorObj->product_id, "_bpms-$lmsType-$vendorType-courses_enrolled", true));
+
+					} else if ($courseAccessMethod == 'ALL_COURSES') {
+						$coursesAttached = self::getLearndashClosedCourses();
+
+					} else if ($courseAccessMethod == 'LD_GROUPS') {
+
+						$groupsAttached = unserialize(get_post_meta($vendorObj->product_id, "_bpms-$lmsType-$vendorType-groups_attached", true));
+						$coursesAttached = array();
+						foreach ($groupsAttached as $groupId) {
+							$ids = learndash_group_enrolled_courses($groupId);
+							// NOTE : Array format is consistent with GUI
+							$coursesAttached = array_merge($ids, $coursesAttached);
+						}
+					}
+					// error_log(print_r($coursesAttached, true));
+					$events[$eventIdentifier] = array('user_id' => $vendorObj->user_id, 'course_attached' => serialize(array_values($coursesAttached)), 'grant_access' => $grantAccess, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'));
+
 				}
 				if (BPMS_DEBUG) {
-					error_log(print_r($coursesAttached, true));
+					error_log("Events on Product:");
+					error_log(print_r($events, true));
 				}
-				$events[$eventIdentifier] = array('user_id' => $vendorObj['customer_id'], 'course_attached' => serialize(array_values($coursesAttached)), 'grant_access' => $grantAccess, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'));
+
+				// Finally serialize and update
+				update_post_meta($vendorObj->product_id, '_bpms-events', serialize($events));
+				self::updateBbmsEnrollments($vendorObj->user_id);
+
+			} else if ($vendorType == WC_POST_TYPE) {
+
+				//@todo : Verify if subscription object is different than normal order
+				$eventIdentifier = $vendorType . '-' . $vendorObj['order_id'];
+
+				$events = unserialize(get_post_meta($vendorObj['product_id'], '_bpms-events', true));
+				if (isset($events[$eventIdentifier])) {
+					if (BPMS_DEBUG) {
+						error_log("Event EXISTS for this user, just update grant access");
+						error_log(print_r($events[$eventIdentifier], true));
+					}
+
+					$events[$eventIdentifier]['grant_access'] = $grantAccess;
+					$events[$eventIdentifier]['updated_at'] = date('Y-m-d H:i:s');
+				} else {
+					$courseAccessMethod = get_post_meta($vendorObj['product_id'], "_bpms-$lmsType-$vendorType-course_access_method", true);
+
+					if (BPMS_DEBUG) {
+						error_log("Event DO NOT exists for this user : " . $vendorObj['customer_id']);
+						error_log("Course Access Method selected is : $courseAccessMethod");
+					}
+
+					if ($courseAccessMethod == 'SINGLE_COURSES') {
+						$coursesAttached = unserialize(get_post_meta($vendorObj['product_id'], "_bpms-$lmsType-$vendorType-courses_enrolled", true));
+
+					} else if ($courseAccessMethod == 'ALL_COURSES') {
+						$coursesAttached = self::getLearndashClosedCourses();
+
+					} else if ($courseAccessMethod == 'LD_GROUPS') {
+						$groupsAttached = unserialize(get_post_meta($vendorObj['product_id'], "_bpms-$lmsType-$vendorType-groups_attached", true));
+						$coursesAttached = array();
+						foreach ($groupsAttached as $groupId) {
+							$ids = learndash_group_enrolled_courses($groupId);
+							// NOTE : Array format is consistent with GUI
+							$coursesAttached = array_merge($ids, $coursesAttached);
+						}
+					}
+					if (BPMS_DEBUG) {
+						error_log(print_r($coursesAttached, true));
+					}
+					$events[$eventIdentifier] = array('user_id' => $vendorObj['customer_id'], 'course_attached' => serialize(array_values($coursesAttached)), 'grant_access' => $grantAccess, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'));
+
+				}
+				if (BPMS_DEBUG) {
+					error_log("Events on Product:");
+					error_log(print_r($events, true));
+				}
+
+				// Finally serialize and update
+				update_post_meta($vendorObj['product_id'], '_bpms-events', serialize($events));
+				self::updateBbmsEnrollments($vendorObj['customer_id']);
 
 			}
-			if (BPMS_DEBUG) {
-				error_log("Events on Product:");
-				error_log(print_r($events, true));
-			}
-
-			// Finally serialize and update
-			update_post_meta($vendorObj['product_id'], '_bpms-events', serialize($events));
-			self::updateBbmsEnrollments($vendorObj['customer_id']);
-
 		}
 
 	}
@@ -557,39 +564,45 @@ class BpMemberships {
 	 */
 	public static function bbmsUpdateMembershipAccess($vendorObj, $vendorType, $grantAccess = true) {
 		if (BPMS_DEBUG) {
-			error_log("bbmsUpdateMembershipAccess()");
+			error_log("bbmsUpdateMembershipAccess(), vendorType : $vendorType");
 		}
 
 		global $wpdb;
-		$lmsType = self::getLmsTypesSelected(LD_POST_TYPE);
+		$lmsTypes = self::getLmsTypesSelected(LD_POST_TYPE);
+		// NOTE : LMS Type(s), Eg (Slugs): Learndash
+		foreach ($lmsTypes as $lmsType) {
+			if ($vendorType == MP_POST_TYPE) {
 
-		if ($vendorType == MP_POST_TYPE) {
-
-			$isEnabled = get_post_meta($vendorObj->product_id, "_bpms-$lmsType-$vendorType-is_enabled", true);
-			if ($isEnabled) {
-				// NOTE : Update BBMS Event
-				self::updateBbmsEvent($vendorObj, $vendorType, $grantAccess);
-			}
-		} else if ($vendorType == WC_POST_TYPE) {
-			$items = $vendorObj->get_items();
-
-			foreach ($items as $key => $itemObj) {
-				//NOTE : Manually passing order_id, customer_id
-				$itemObj['order_id'] = $vendorObj->ID;
-				$itemObj['customer_id'] = $vendorObj->customer_id;
-
-				if (BPMS_DEBUG) {
-					error_log("ProductId : " . $itemObj['product_id']);
-					error_log("OrderId : " . $itemObj['order_id']);
-					error_log("CustomerId : " . $itemObj['customer_id']);
-				}
-
-				$isEnabled = get_post_meta($itemObj['product_id'], "_bpms-$lmsType-$vendorType-is_enabled", true);
+				$isEnabled = get_post_meta($vendorObj->product_id, "_bpms-$lmsType-$vendorType-is_enabled", true);
 				if ($isEnabled) {
-					// NOTE : Update BBMS Event
-					self::updateBbmsEvent($itemObj, $vendorType, $grantAccess);
-				}
+					error_log("isEnabled");
 
+					// NOTE : Update BBMS Event
+					self::updateBbmsEvent($vendorObj, $vendorType, $grantAccess);
+				} else {
+					error_log("isDisabled");
+				}
+			} else if ($vendorType == WC_POST_TYPE) {
+				$items = $vendorObj->get_items();
+
+				foreach ($items as $key => $itemObj) {
+					//NOTE : Manually passing order_id, customer_id
+					$itemObj['order_id'] = $vendorObj->ID;
+					$itemObj['customer_id'] = $vendorObj->customer_id;
+
+					if (BPMS_DEBUG) {
+						error_log("ProductId : " . $itemObj['product_id']);
+						error_log("OrderId : " . $itemObj['order_id']);
+						error_log("CustomerId : " . $itemObj['customer_id']);
+					}
+
+					$isEnabled = get_post_meta($itemObj['product_id'], "_bpms-$lmsType-$vendorType-is_enabled", true);
+					if ($isEnabled) {
+						// NOTE : Update BBMS Event
+						self::updateBbmsEvent($itemObj, $vendorType, $grantAccess);
+					}
+
+				}
 			}
 		}
 
@@ -641,18 +654,19 @@ class BpMemberships {
 	 */
 	public function mpHooks($classObj) {
 		if (BPMS_DEBUG) {
-			error_log("mpHooks()");
+			error_log("BpMemberships->mpHooks()");
 		}
 
-		add_action('mepr-product-options-tabs', array($classObj, 'mpLearndashTab'));
+		add_action('mepr-product-options-tabs', array($classObj, 'mpTab'));
 		add_action('mepr-product-options-pages', array($classObj, 'mpTabContent'));
 		add_action('mepr-membership-save-meta', array($classObj, 'mpSaveProduct'));
 
 		// Signup type can be 'free', 'non-recurring' or 'recurring'
-		add_action('mepr-non-recurring-signup', array($classObj, 'mpSignUp'));
-		add_action('mepr-free-signup', array($classObj, 'mpSignUp'));
-		add_action('mepr-recurring-signup', array($classObj, 'mpSignUp'));
+		// add_action('mepr-non-recurring-signup', array($classObj, 'mpSignUp'));
+		// add_action('mepr-free-signup', array($classObj, 'mpSignUp'));
+		// add_action('mepr-recurring-signup', array($classObj, 'mpSignUp'));
 		add_action('mepr-signup', array($classObj, 'mpSignUp'));
+
 		// Transaction Related
 		add_action('mepr-txn-status-complete', array($classObj, 'mpTransactionUpdated'));
 		add_action('mepr-txn-status-pending', array($classObj, 'mpTransactionUpdated'));
@@ -662,16 +676,17 @@ class BpMemberships {
 		add_action('mepr-transaction-expired', array($classObj, 'mpTransactionUpdated'));
 
 		// Subscription Related
-		// add_action(array('mepr_subscription_stored', 'mepr_subscription_saved'), array($classObj, 'mpSubscriptionUpdated'));
-		add_action('mepr_subscription_saved', array($classObj, 'mpSubscriptionUpdated'));
+		//This should happen after everything is done processing including the subscr txn_count
 		// add_action('mepr_subscription_transition_status', array($classObj, 'mpSubscriptionTransitionStatus'));
-		// add_action('mepr_subscription_status_created', array($classObj, 'mpSubscriptionTransitionStatus'));
-		// add_action('mepr_subscription_status_paused', array($classObj, 'mpSubscriptionTransitionStatus'));
-		// add_action('mepr_subscription_status_resumed', array($classObj, 'mpSubscriptionTransitionStatus'));
-		// add_action('mepr_subscription_status_stopped', array($classObj, 'mpSubscriptionTransitionStatus'));
-		// add_action('mepr_subscription_status_upgraded', array($classObj, 'mpSubscriptionTransitionStatus'));
-		// add_action('mepr_subscription_status_downgraded', array($classObj, 'mpSubscriptionTransitionStatus'));
-		// add_action('mepr_subscription_status_expired', array($classObj, 'mpSubscriptionTransitionStatus'));
+		add_filter('mepr_subscription_stored', array($classObj, 'mpSubscriptionUpdated'));
+		add_action('mepr_subscription_saved', array($classObj, 'mpSubscriptionUpdated'));
+		// add_filter('mepr_subscription_status_created', array($classObj, 'mpSubscriptionUpdated'));
+		// add_action('mepr_subscription_status_paused', array($classObj, 'mpSubscriptionUpdated'));
+		// add_action('mepr_subscription_status_resumed', array($classObj, 'mpSubscriptionUpdated'));
+		// add_action('mepr_subscription_status_stopped', array($classObj, 'mpSubscriptionUpdated'));
+		// add_action('mepr_subscription_status_upgraded', array($classObj, 'mpSubscriptionUpdated'));
+		// add_action('mepr_subscription_status_downgraded', array($classObj, 'mpSubscriptionUpdated'));
+		// add_action('mepr_subscription_status_expired', array($classObj, 'mpSubscriptionUpdated'));
 
 	}
 
@@ -681,7 +696,7 @@ class BpMemberships {
 	 */
 	public function wcHooks($classObj) {
 		if (BPMS_DEBUG) {
-			error_log("wcHooks()");
+			error_log("BpMemberships->wcHooks()");
 		}
 
 		add_filter('woocommerce_product_data_tabs', array($classObj, 'wcTab'));
@@ -743,15 +758,13 @@ class BpMemberships {
 	}
 
 	/**
-	 * After wp is loaded
+	 * Invoked after Learndash is loaded
 	 * @return {void}
 	 */
-	public static function onWpLoaded() {
+	public static function onLearndashInit() {
 		if (BPMS_DEBUG) {
-			error_log("onWpLoaded()");
+			error_log("onLearndashInit()");
 		}
-
-		$bpProductEvents = BpProductEvents::getInstance();
 
 		/* Add scripts for admin section for plugin */
 		add_action('admin_enqueue_scripts', array($this, 'addAdminScripts'));
@@ -770,9 +783,6 @@ class BpMemberships {
 			$this->wcHooks(WcHelper::getInstance());
 		}
 
-		// Trigger filters/action after Learndash is loaded
-		// add_action('learndash_init', array($this, 'onLearndashInit'));
-
 		// Ajax services, related to courses
 		// -----------------------------------------------------------------------------
 		add_action('wp_ajax_search_courses', array($this, 'searchLearndashCourses'));
@@ -785,16 +795,7 @@ class BpMemberships {
 		add_action('wp_ajax_get_groups', array($this, 'getLearndashGroupsAsJson'));
 		add_action('wp_ajax_selected_groups', array($this, 'selectedGroups'));
 
-	}
-
-	/**
-	 * Invoked after Learndash is loaded
-	 * @return {void}
-	 */
-	public function onLearndashInit() {
-		if (BPMS_DEBUG) {
-			error_log("onLearndashInit()");
-		}
+		$bpProductEvents = BpProductEvents::getInstance();
 
 		// Learndash Hooks if required
 		// -----------------------------------------------------------------------------
@@ -805,6 +806,19 @@ class BpMemberships {
 		// Remove course increment record if a course unenrolled manually
 		// add_action( 'learndash_update_course_access', array( $this, 'someFunction' ), 10, 4 );
 		// }
+	}
+
+	/**
+	 * After wp is loaded
+	 * @return {void}
+	 */
+	public function onWpLoaded() {
+		if (BPMS_DEBUG) {
+			error_log("onWpLoaded()");
+		}
+
+		// Trigger filters/action after Learndash is loaded
+		// add_action('learndash_init', array($this, 'onLearndashInit'));
 	}
 
 }
