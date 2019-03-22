@@ -697,13 +697,10 @@ class BpMemberships {
 		add_action('mepr-product-options-pages', array($classObj, 'mpTabContent'));
 		add_action('mepr-membership-save-meta', array($classObj, 'mpSaveProduct'));
 
-		// Signup type can be 'free', 'non-recurring' or 'recurring'
-		// add_action('mepr-non-recurring-signup', array($classObj, 'mpSignUp'));
-		// add_action('mepr-free-signup', array($classObj, 'mpSignUp'));
-		// add_action('mepr-recurring-signup', array($classObj, 'mpSignUp'));
+		// Signup related hooks. NOTE : Type can be 'free', 'non-recurring' or 'recurring'
 		add_action('mepr-signup', array($classObj, 'mpSignUp'));
 
-		// Transaction Related
+		// Transaction related hooks
 		add_action('mepr-txn-status-complete', array($classObj, 'mpTransactionUpdated'));
 		add_action('mepr-txn-status-pending', array($classObj, 'mpTransactionUpdated'));
 		add_action('mepr-txn-status-failed', array($classObj, 'mpTransactionUpdated'));
@@ -712,18 +709,29 @@ class BpMemberships {
 		add_action('mepr-transaction-expired', array($classObj, 'mpTransactionUpdated'));
 
 		// Subscription Related
-		//This should happen after everything is done processing including the subscr txn_count
-		// add_action('mepr_subscription_transition_status', array($classObj, 'mpSubscriptionTransitionStatus'));
 		add_action('mepr_subscription_stored', array($classObj, 'mpSubscriptionUpdated'));
 		add_action('mepr_subscription_saved', array($classObj, 'mpSubscriptionUpdated'));
-		// add_action('mepr_subscription_status_created', array($classObj, 'mpSubscriptionUpdated'));
-		// add_action('mepr_subscription_status_paused', array($classObj, 'mpSubscriptionUpdated'));
-		// add_action('mepr_subscription_status_resumed', array($classObj, 'mpSubscriptionUpdated'));
-		// add_action('mepr_subscription_status_stopped', array($classObj, 'mpSubscriptionUpdated'));
-		// add_action('mepr_subscription_status_upgraded', array($classObj, 'mpSubscriptionUpdated'));
-		// add_action('mepr_subscription_status_downgraded', array($classObj, 'mpSubscriptionUpdated'));
-		// add_action('mepr_subscription_status_expired', array($classObj, 'mpSubscriptionUpdated'));
 
+		// More useful hooks when required
+		// -----------------------------------------------------------------------------
+		/* Related to sign-ups
+		1) mepr-non-recurring-signup,
+		2) mepr-free-signup
+		3) mepr-recurring-signup
+
+		Related to transactions
+		1) mepr_subscription_transition_status
+
+		Related to subscriptions
+		1) mepr_subscription_transition_status
+		2) mepr_subscription_status_created
+		3) mepr_subscription_status_paused
+		4) mepr_subscription_status_resumed
+		5) mepr_subscription_status_stopped
+		6) mepr_subscription_status_upgraded
+		7) mepr_subscription_status_downgraded
+		8) mepr_subscription_status_expired
+		*/
 	}
 
 	/**
@@ -739,13 +747,6 @@ class BpMemberships {
 		add_action('woocommerce_product_data_panels', array($classObj, 'wcTabContent'));
 		// On Save/Update
 		add_action('save_post_product', array($classObj, 'wcProductUpdate'));
-
-		// Transaction Related
-		// add_action('woocommerce_order_details_after_order_table', array($classObj, 'wcOrderUpdated'));
-		// add_action('woocommerce_payment_complete', array($classObj, 'wcOrderUpdated'));
-		// add_action('woocommerce_new_order', array($classObj, 'wcOrderUpdated'));
-		// add_action('woocommerce_new_product', array($classObj, 'wcVerify'));
-		// add_action('woocommerce_new_product', array($classObj, 'wcVerify'));
 
 		// Order related hooks for WC
 		add_action('woocommerce_order_status_pending_to_processing', array($classObj, 'wcOrderUpdated'));
@@ -772,9 +773,6 @@ class BpMemberships {
 		add_action('woocommerce_order_status_on-hold', array($classObj, 'wcOrderUpdated'));
 		add_action('woocommerce_order_status_completed', array($classObj, 'wcOrderUpdated'));
 
-		// add_action('woocommerce_payment_complete', array($classObj, 'wcOrderUpdated'), 10, 1);
-		// add_action('woocommerce_order_status_refunded', array($classObj, 'wcOrderUpdated'), 10, 1);
-
 		// Subscription related hooks for WC
 		add_action('woocommerce_subscription_status_cancelled', array($classObj, 'wcSubscriptionUpdated'));
 		add_action('woocommerce_subscription_status_on-hold', array($classObj, 'wcSubscriptionUpdated'));
@@ -782,13 +780,43 @@ class BpMemberships {
 		add_action('woocommerce_subscription_status_active', array($classObj, 'wcSubscriptionUpdated'));
 		add_action('woocommerce_subscription_renewal_payment_complete', array($classObj, 'wcSubscriptionUpdated'));
 
-		// Other hooks for WC subscription
+		// More useful hooks when required
+		// -----------------------------------------------------------------------------
+		/*
+			Related to orders
+			1) woocommerce_order_status_pending_to_processing
+			2) woocommerce_order_status_pending_to_completed
+			3) woocommerce_order_status_processing_to_cancelled
+			4) woocommerce_order_status_pending_to_failed
+			5) woocommerce_order_status_pending_to_on-hold
+			6) woocommerce_order_status_failed_to_processing
+			7) woocommerce_order_status_failed_to_completed
+			8) woocommerce_order_status_failed_to_on-hold
+			9) woocommerce_order_status_cancelled_to_processing
+			10) woocommerce_order_status_cancelled_to_completed
+			11) woocommerce_order_status_cancelled_to_on-hold
+			12) woocommerce_order_status_on-hold_to_processing
+			13) woocommerce_order_status_on-hold_to_cancelled
+			14) woocommerce_order_status_on-hold_to_failed
+			15) woocommerce_order_status_completed
+			16) woocommerce_order_fully_refunded
+			17) woocommerce_order_partially_refunded
+			18) woocommerce_payment_complete
+			19) woocommerce_order_status_refunded
 
-		// // Force user to log in or create account if there is LD course in WC cart
-		// add_action( 'woocommerce_checkout_init', array( __CLASS__, 'force_login' ), 10, 1 );
+			Related to transactions
+			1) woocommerce_order_details_after_order_table
+			2) woocommerce_payment_complete
+			3) woocommerce_new_order
+			4) woocommerce_new_product
 
-		// // Auto complete course transaction
-		// add_action( 'woocommerce_thankyou', array( __CLASS__, 'auto_complete_transaction' ) );
+			Related to subscriptions
+			1) woocommerce_checkout_init
+			=> Force user to log in or create account if there is LD course in WC cart
+			2) woocommerce_thankyou
+			=> Auto complete course transaction
+
+		*/
 
 	}
 
