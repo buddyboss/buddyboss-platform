@@ -56,6 +56,7 @@ class BP_Memberpress_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			);
 		} else {
 
+			error_log("LD dont exists");
 			$this->add_field(
 				'bp-memberpress_ld_text', // Unique Identifier
 				'', //Label
@@ -69,26 +70,24 @@ class BP_Memberpress_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	}
 
 	/**
-	 * @todo : Need to find a way to avoid using form_html here since integration-tab-intro(templates/admin/integration-tab-intro.php) is NOT displayed when AppBoss is inactive.
-	 * Explore-1: Load below function in particular file and includes if Plugin is active
-	 * Explore-2: Try to hide 'Save Settings' button via some javascript if possible?
+	 * @todo : Test more
+	 * Case-1: Memberpress is inActive
+	 * Case-2: Memberpress is Active but we would control LD Text from register_fields if LearnDash is InActive
 	 */
 	public function form_html() {
 
-		settings_fields($this->tab_name);
-		$this->bp_custom_do_settings_sections($this->tab_name);
+		if (!is_plugin_active($this->required_plugin)) {
 
-		if (defined('LEARNDASH_VERSION')) {
+			$this->intro_template = $this->root_path . '/templates/admin/integration-tab-intro.php';
+			if (is_file($this->intro_template)) {
+				require $this->intro_template;
+			}
 
-			printf(
-				'<p class="submit">
-				<input type="submit" name="submit" class="button-primary" value="%s" />
-			</p>',
-				esc_attr__('Save Settings', 'buddyboss')
-			);
 		} else {
-
+			//NOTE : LearnDash and Memberpress both are Active, so display form
+			parent::form_html();
 		}
+
 	}
 
 }
