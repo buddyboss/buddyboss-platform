@@ -76,6 +76,9 @@ class BBP_Forums_Admin {
 		add_action( 'load-edit.php',     array( $this, 'edit_help' ) );
 		add_action( 'load-post.php',     array( $this, 'new_help'  ) );
 		add_action( 'load-post-new.php', array( $this, 'new_help'  ) );
+
+		// Set forum states
+		add_filter( 'display_post_states', array( $this, 'bbp_set_hidden_forum_states' ), 10, 2 );
 	}
 
 	/**
@@ -102,6 +105,27 @@ class BBP_Forums_Admin {
 	}
 
 	/** Contextual Help *******************************************************/
+
+	/**
+	 * Set the forum states if forum is hidden.
+	 *
+	 * @param $states
+	 * @param $post
+	 *
+	 * @return array
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function bbp_set_hidden_forum_states( $states, $post ) {
+		global $post;
+
+		if ( bbp_get_forum_post_type() === get_post_type( $post->ID ) && bbp_get_hidden_status_id() === bbp_get_forum_visibility( $post->ID ) ) {
+
+		$states[] = __( 'Hidden' );
+
+		}
+
+		return $states;
+	}
 
 	/**
 	 * Contextual help for Forums forum edit page
