@@ -324,7 +324,7 @@ class BpMemberships {
 				if ($isEnabled) {
 					$events = unserialize(get_post_meta($product->ID, '_bpms-events', true));
 					foreach ($events as $eventIdentifier => $eventMeta) {
-						$results[$eventIdentifier] = array('event_identifier' => $eventIdentifier, 'user_id' => $eventMeta['user_id'], 'course_attached' => $eventMeta['course_attached'], 'grant_access' => $eventMeta['grant_access'], 'product_id' => $product->ID, 'created_at' => $eventMeta['created_at'], 'updated_at' => $eventMeta['updated_at']);
+						$results[$eventIdentifier] = array('event_identifier' => $eventIdentifier, 'user_id' => $eventMeta['user_id'], 'course_attached' => $eventMeta['course_attached'], 'grant_access' => $eventMeta['grant_access'], 'product_id' => $product->ID, 'created_at' => $eventMeta['created_at'], 'updated_at' => $eventMeta['updated_at'], 'event_edit_url' => $eventMeta['event_edit_url']);
 					}
 				}
 			}
@@ -435,8 +435,10 @@ class BpMemberships {
 
 				if ($membershipObj->subscription_id == 0) {
 					$eventIdentifier = $membershipProductSlug . '-non-recurring-' . $membershipObj->id;
+					$eventEditUrl = "admin.php?page=memberpress-trans&action=edit&id=$membershipObj->id";
 				} else {
 					$eventIdentifier = $membershipProductSlug . '-recurring-' . $membershipObj->subscription_id;
+					$eventEditUrl = "admin.php?page=memberpress-trans&action=edit&id=$membershipObj->subscription_id";
 				}
 
 				$events = unserialize(get_post_meta($membershipObj->product_id, '_bpms-events', true));
@@ -476,7 +478,13 @@ class BpMemberships {
 						}
 					}
 					// error_log(print_r($coursesAttached, true));
-					$events[$eventIdentifier] = array('user_id' => $membershipObj->user_id, 'course_attached' => serialize(array_values($coursesAttached)), 'grant_access' => $grantAccess, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'));
+					$events[$eventIdentifier] = array(
+						'user_id' => $membershipObj->user_id,
+						'course_attached' => serialize(array_values($coursesAttached)),
+						'grant_access' => $grantAccess,
+						'created_at' => date('Y-m-d H:i:s'),
+						'updated_at' => date('Y-m-d H:i:s'),
+						'event_edit_url' => $eventEditUrl);
 
 				}
 				if (BPMS_DEBUG) {
@@ -492,6 +500,7 @@ class BpMemberships {
 
 				//@todo : Verify if subscription object is different than normal order
 				$eventIdentifier = $membershipProductSlug . '-' . $membershipObj['order_id'];
+				$eventEditUrl = "post.php?post=" . $membershipObj['order_id'] . "&action=edit";
 
 				$events = unserialize(get_post_meta($membershipObj['product_id'], '_bpms-events', true));
 				if (isset($events[$eventIdentifier])) {
@@ -528,7 +537,7 @@ class BpMemberships {
 					if (BPMS_DEBUG) {
 						error_log(print_r($coursesAttached, true));
 					}
-					$events[$eventIdentifier] = array('user_id' => $membershipObj['customer_id'], 'course_attached' => serialize(array_values($coursesAttached)), 'grant_access' => $grantAccess, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'));
+					$events[$eventIdentifier] = array('user_id' => $membershipObj['customer_id'], 'course_attached' => serialize(array_values($coursesAttached)), 'grant_access' => $grantAccess, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'), 'event_edit_url' => $eventEditUrl);
 
 				}
 				if (BPMS_DEBUG) {

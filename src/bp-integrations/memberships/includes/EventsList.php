@@ -88,6 +88,10 @@ class EventsList extends WpListTable {
 			$product = get_post($productId, OBJECT);
 			$html .= "<a target=\"_blank\" href=\"post.php?post=$productId&action=edit\">&nbsp;&nbsp;$product->post_title</a></br>";
 			return $html;
+		case 'event_edit_url':
+			$html = "";
+			$html .= "<a target=\"_blank\" href=\"$item[$column_name]\">&nbsp;&nbsp;View/Edit Event</a></br>";
+			return $html;
 		case 'event_identifier':
 			return $item[$column_name];
 		case 'user_id':
@@ -164,6 +168,7 @@ class EventsList extends WpListTable {
 			'event_identifier' => __('Identifier', 'buddyboss'),
 			'created_at' => __('Creation Date', 'buddyboss'),
 			'updated_at' => __('Last Modified', 'buddyboss'),
+			'event_edit_url' => __('Event/Transaction', 'buddyboss'),
 		];
 
 		return $columns;
