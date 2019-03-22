@@ -1166,7 +1166,7 @@ function bp_private_network_template_redirect() {
 
 						}
 					// 404 redirect
-					} else {
+					} elseif ( is_404() ) {
 						$redirect_url = is_ssl() ? 'https://' : 'http://';
 						$redirect_url .= $_SERVER['HTTP_HOST'];
 						$redirect_url .= $_SERVER['REQUEST_URI'];
