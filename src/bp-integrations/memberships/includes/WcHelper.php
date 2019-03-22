@@ -29,8 +29,11 @@ class WcHelper {
 	 * @return  {array}  $tabs Updated WooCommerce product tabs
 	 */
 	public static function wcTab($tabs = array()) {
-
+		if (BPMS_DEBUG) {
+			error_log("WcHelper::wcTab");
+		}
 		$lmsTypes = BpMemberships::getLmsTypesSelected(LD_POST_TYPE);
+		// NOTE : LMS Type(s), Eg (Slugs): Learndash
 		foreach ($lmsTypes as $key => $lmsType) {
 			if ($lmsType == LD_POST_TYPE) {
 
@@ -61,6 +64,8 @@ class WcHelper {
 
 		$lmsTypes = BpMemberships::getLmsTypesSelected(LD_POST_TYPE);
 		$membershipType = WC_POST_TYPE;
+		// NOTE : LMS Type(s), Eg (Slugs): Learndash
+
 		foreach ($lmsTypes as $key => $lmsType) {
 			if ($lmsType == LD_POST_TYPE) {
 				// NOTE : Implementation for Learndash LMS
@@ -133,6 +138,8 @@ class WcHelper {
 
 		$lmsTypes = BpMemberships::getLmsTypesSelected(LD_POST_TYPE);
 		$membershipType = WC_POST_TYPE;
+		// NOTE : LMS Type(s), Eg (Slugs): Learndash
+
 		foreach ($lmsTypes as $lmsType) {
 			if ($lmsType == LD_POST_TYPE) {
 				// NOTE : Implementation for Learndash LMS
