@@ -34,8 +34,8 @@ class BpmsView {
 	 */
 	public static function get_string($slug, $vars = array(), $paths = array()) {
 
-		$paths = BpmsHooks::apply_filters('bbms_view_paths_get_string_' . $slug, $paths, $slug, $vars);
-		$paths = BpmsHooks::apply_filters('bbms_view_paths_get_string', $paths, $slug, $vars);
+		$paths = BpmsHooks::apply_filters('bpms_view_paths_get_string_' . $slug, $paths, $slug, $vars);
+		$paths = BpmsHooks::apply_filters('bpms_view_paths_get_string', $paths, $slug, $vars);
 
 		// $template_part_slug = 'buddyboss-memberships/' . dirname($slug);
 		// $template_part_name = basename($slug);
@@ -53,8 +53,8 @@ class BpmsView {
 		require $file;
 		$view = ob_get_clean();
 
-		$view = BpmsHooks::apply_filters('bbms_view_get_string_' . $slug, $view, $vars); // Slug specific filter
-		$view = BpmsHooks::apply_filters('bbms_view_get_string', $view, $slug, $vars); // General filter
+		$view = BpmsHooks::apply_filters('bpms_view_get_string_' . $slug, $view, $vars); // Slug specific filter
+		$view = BpmsHooks::apply_filters('bpms_view_get_string', $view, $slug, $vars); // General filter
 
 		return $view;
 	}
@@ -77,5 +77,5 @@ class BpmsView {
 
 		$paths[] = BP_VIEWS_PATH;
 
-		return BpmsHooks::apply_filters('bbms_view_paths', $paths);
+		return BpmsHooks::apply_filters('bpms_view_paths', $paths);
 	}}

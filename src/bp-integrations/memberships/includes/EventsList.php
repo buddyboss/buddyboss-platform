@@ -26,14 +26,14 @@ class EventsList extends WpListTable {
 	 */
 	public static function get_events($per_page = 5, $page_number = 1) {
 
-		$vendorType = null;
+		$membershipProductSlug = null;
 
 		if (isset($_GET['integration'])) {
 			$integration = $_GET['integration'];
-			$vendorType = array($integration);
+			$membershipProductSlug = array($integration);
 		}
 
-		$results = BpMemberships::getProductEvents($vendorType);
+		$results = BpMemberships::getProductEvents($membershipProductSlug);
 		if (BPMS) {
 			error_log(print_r($results, true));
 		}
@@ -55,14 +55,14 @@ class EventsList extends WpListTable {
 	 * @return null|string
 	 */
 	public static function record_count() {
-		$vendorType = null;
+		$membershipProductSlug = null;
 
 		if (isset($_GET['integration'])) {
 			$integration = $_GET['integration'];
-			$vendorType = array($integration);
+			$membershipProductSlug = array($integration);
 		}
 
-		$results = BpMemberships::getProductEvents($vendorType);
+		$results = BpMemberships::getProductEvents($membershipProductSlug);
 
 		return count($results);
 	}

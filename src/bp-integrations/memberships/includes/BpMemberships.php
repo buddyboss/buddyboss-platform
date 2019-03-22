@@ -7,9 +7,9 @@ if (!defined('ABSPATH')) {
 }
 
 define('BPMS_DEBUG', true);
-define('LD_POST_TYPE', 'sfwd-courses');
-define('MP_POST_TYPE', 'memberpressproduct');
-define('WC_POST_TYPE', 'product');
+define('LD_COURSE_SLUG', 'sfwd-courses');
+define('MP_PRODUCT_SLUG', 'memberpressproduct');
+define('WC_PRODUCT_SLUG', 'product');
 define('APPBOSS_PROD_TYPE', 'app-product');
 define('BPMS_URL', BP_PLUGIN_URL . '/src/bp-integrations/memberships');
 
@@ -24,17 +24,16 @@ class BpMemberships {
 
 		// NOTE : This must happen when LearnDash is loaded, NOT when wp_loaded
 		add_action('learndash_init', array($this, 'onLearndashInit'));
-		// add_action('wp_loaded', array($this, 'onWpLoaded'));
 
 		/**
-		 * Available as hook, runs after a bbms(BuddyBoss Membership) plugin is loaded.
+		 * Available as hook, runs after a bpms(BuddyBoss Membership) plugin is loaded.
 		 */
 		do_action('bpms_loaded');
 	}
 
 	/**
 	 * Will return only one(and one) instance of class
-	 * @return {object} - Singleton object
+	 * @return {object} - The one and only true BpMemberships instance.
 	 */
 	public static function getInstance() {
 		if (BPMS_DEBUG) {
@@ -58,12 +57,12 @@ class BpMemberships {
 
 		global $pagenow;
 
-		$vendorTypes = self::getVendorTypesSelected();
+		$membershipProductSlugs = self::getMembershipProductSlugs();
 		if (in_array($pagenow, array('post.php', 'post-new.php'))) {
 			global $post;
 			$postType = $post->post_type;
 
-			if (in_array($postType, $vendorTypes)) {
+			if (in_array($postType, $membershipProductSlugs)) {
 
 				// Select2 Js
 				wp_enqueue_script('select2-js', BPMS_URL . '/assets/scripts/select2.min.js');
@@ -74,8 +73,8 @@ class BpMemberships {
 				// Localize the script with new data
 				$bpmsVars = array(
 					'ajax_url' => admin_url('admin-ajax.php'),
-					'lms_types' => self::getLmsTypesSelected(LD_POST_TYPE),
-					'membership_type' => $post->post_type,
+					'lms_course_slugs' => self::getLmsCourseSlugs(LD_COURSE_SLUG),
+					'membership_product_slug' => $post->post_type,
 					'p_id' => $post->ID,
 				);
 
@@ -138,9 +137,9 @@ class BpMemberships {
 	 * @param  {string}   $_GET['search'] - Term searched from UI
 	 * @return {JSON} Searched LearnDash course(s) if found
 	 */
-	public function searchLearndashCourses() {
+	public function searchCourses() {
 		if (BPMS_DEBUG) {
-			error_log("searchLearndashCourses()");
+			error_log("searchCourses()");
 		}
 		// @todo : use post_where filter. Inject the ld-functions/hooks.
 		// @todo : https://codex.wordpress.org/Plugin_API/Filter_Reference/posts_where
@@ -161,7 +160,7 @@ class BpMemberships {
 	 *
 	 * @return {JSON} All LearnDash courses
 	 */
-	public function getLearndashCoursesAsJson() {
+	public function getCoursesAsJson() {
 		// @todo : use post_where filter. Inject the ld-functions/hooks.
 		// @todo : https://codex.wordpress.org/Plugin_API/Filter_Reference/posts_where
 		global $wpdb;
@@ -178,22 +177,30 @@ class BpMemberships {
 	 * get selected course for product
 	 * @return {JSON} selected courses
 	 */
-	public static function selectedCourses() {
+	public static function getPreSavedCourses() {
 		// @todo : use post_where filter. Inject the ld-functions/hooks.
 		// @todo : https://codex.wordpress.org/Plugin_API/Filter_Reference/posts_where
 		global $wpdb;
 
-		if (isset($_GET['pid']) && isset($_GET['meta_key'])) {
+		if (isset($_GET['pid']) && isset($_GET['lms_course_slug']) && isset($_GET['membership_product_slug'])) {
 			$productId = $_GET['pid'];
-			$metaKey = $_GET['meta_key'];
+			$lmsCourseSlug = $_GET['lms_course_slug'];
+			$membershipProductSlug = $_GET['membership_product_slug'];
 
-			$selectedCourses = unserialize(get_post_meta($productId, $metaKey, true));
-			if (BPMS_DEBUG) {
-				error_log(print_r($selectedCourses, true));
+			if ($lmsCourseSlug == LD_COURSE_SLUG) {
+				error_log("getPreSavedCourses()");
+				$metaKey = '_bpms-' . $lmsCourseSlug . '-' . $membershipProductSlug . '-courses_attached';
+
+				$getPreSavedCourses = unserialize(get_post_meta($productId, $metaKey, true));
+				if (BPMS_DEBUG) {
+					error_log(print_r($getPreSavedCourses, true));
+				}
+
+				// Eg : SELECT ID as 'id', post_title as 'text' FROM wp_posts WHERE ID IN ('1','39','35')
+				$query = "SELECT ID as 'id', CONCAT(posts.post_title, \"(ID:\" , posts.ID, \")\")  as 'text' FROM $wpdb->posts posts WHERE posts.ID IN ('" . implode("','", $getPreSavedCourses) . "')";
+			} else {
+				// NOTE : Implementation for another LMS when required
 			}
-
-			// Eg : SELECT ID as 'id', post_title as 'text' FROM wp_posts WHERE ID IN ('1','39','35')
-			$query = "SELECT ID as 'id', CONCAT(posts.post_title, \"(ID:\" , posts.ID, \")\")  as 'text' FROM $wpdb->posts posts WHERE posts.ID IN ('" . implode("','", $selectedCourses) . "')";
 
 			$selected = $wpdb->get_results($query, OBJECT);
 			$data = array();
@@ -210,14 +217,20 @@ class BpMemberships {
 	 * @param  {string}   $_GET['search'] - Term searched from UI
 	 * @return {JSON} Searched LearnDash group(s) if found
 	 */
-	public static function searchLearndashGroups() {
+	public static function searchGroups() {
 		// @todo : use post_where filter. Inject the ld-functions/hooks.
 		// @todo : https://codex.wordpress.org/Plugin_API/Filter_Reference/posts_where
 		global $wpdb;
 
-		$search = $_GET['search'];
+		if (isset($_GET['search']) && isset($_GET['lms_course_slug'])) {
+			$search = $_GET['search'];
+			$lmsCourseSlug = $_GET['lms_course_slug'];
 
-		$query = "SELECT CONCAT(posts.ID, \":\" , posts.post_title, \"\") as 'id', CONCAT(posts.post_title, \"(ID:\" , posts.ID, \")\")  as 'text' FROM $wpdb->posts posts WHERE posts.post_type = 'groups' AND posts.post_status = 'publish' AND posts.post_title LIKE \"%$search%\" OR posts.ID LIKE \"%$search%\" limit 2";
+			if ($lmsCourseSlug == LD_COURSE_SLUG) {
+				$query = "SELECT CONCAT(posts.ID, \":\" , posts.post_title, \"\") as 'id', CONCAT(posts.post_title, \"(ID:\" , posts.ID, \")\")  as 'text' FROM $wpdb->posts posts WHERE posts.post_type = 'groups' AND posts.post_status = 'publish' AND posts.post_title LIKE \"%$search%\" OR posts.ID LIKE \"%$search%\" limit 2";
+			}
+
+		}
 
 		$courses = $wpdb->get_results($query, OBJECT);
 		$data = array();
@@ -229,12 +242,18 @@ class BpMemberships {
 	 * get All LearnDash groups for Ajax-call
 	 * @return {JSON} All LearnDash groups
 	 */
-	public static function getLearndashGroupsAsJson() {
+	public static function getGroupsAsJson() {
 		// @todo : use post_where filter. Inject the ld-functions/hooks.
 		// @todo : https://codex.wordpress.org/Plugin_API/Filter_Reference/posts_where
 		global $wpdb;
 
-		$query = "SELECT posts.ID as 'id', CONCAT(posts.post_title, \"(ID:\" , posts.ID, \")\")  as 'text' FROM $wpdb->posts posts WHERE posts.post_type = 'groups' AND posts.post_status = 'publish'";
+		if (isset($_GET['lms_course_slug'])) {
+			$lmsCourseSlug = $_GET['lms_course_slug'];
+			if ($lmsCourseSlug == LD_COURSE_SLUG) {
+				$query = "SELECT posts.ID as 'id', CONCAT(posts.post_title, \"(ID:\" , posts.ID, \")\")  as 'text' FROM $wpdb->posts posts WHERE posts.post_type = 'groups' AND posts.post_status = 'publish'";
+			}
+
+		}
 
 		$courses = $wpdb->get_results($query, OBJECT);
 		$data = array();
@@ -246,23 +265,31 @@ class BpMemberships {
 	 * get selected course for product
 	 * @return {JSON} selected courses
 	 */
-	public static function selectedGroups() {
+	public static function getPreSavedGroups() {
 		// @todo : use post_where filter. Inject the ld-functions/hooks.
 		// @todo : https://codex.wordpress.org/Plugin_API/Filter_Reference/posts_where
 		global $wpdb;
 
-		if (isset($_GET['pid']) && isset($_GET['meta_key'])) {
+		if (isset($_GET['pid']) && isset($_GET['lms_course_slug']) && isset($_GET['membership_product_slug'])) {
 
 			$productId = $_GET['pid'];
-			$metaKey = $_GET['meta_key'];
+			$lmsCourseSlug = $_GET['lms_course_slug'];
+			$membershipProductSlug = $_GET['membership_product_slug'];
+			$metaKey = '_bpms-' . $lmsCourseSlug . '-' . $membershipProductSlug . '-groups_attached';
 
-			$selectedCourses = unserialize(get_post_meta($productId, $metaKey, true));
-			if (BPMS_DEBUG) {
-				error_log(print_r($selectedCourses, true));
+			if ($lmsCourseSlug == LD_COURSE_SLUG) {
+				error_log("getPreSavedGroups(), $metaKey");
+
+				$getPreSavedCourses = unserialize(get_post_meta($productId, $metaKey, true));
+				if (BPMS_DEBUG) {
+					error_log(print_r($getPreSavedCourses, true));
+				}
+
+				// Eg : SELECT ID as 'id', post_title as 'text' FROM wp_posts WHERE ID IN ('1','39','35')
+				$query = "SELECT ID as 'id', CONCAT(posts.post_title, \"(ID:\" , posts.ID, \")\")  as 'text' FROM $wpdb->posts posts WHERE posts.ID IN ('" . implode("','", $getPreSavedCourses) . "')";
+			} else {
+				// NOTE : Implementation for another LMS when required
 			}
-
-			// Eg : SELECT ID as 'id', post_title as 'text' FROM wp_posts WHERE ID IN ('1','39','35')
-			$query = "SELECT ID as 'id', CONCAT(posts.post_title, \"(ID:\" , posts.ID, \")\")  as 'text' FROM $wpdb->posts posts WHERE posts.ID IN ('" . implode("','", $selectedCourses) . "')";
 
 			$selected = $wpdb->get_results($query, OBJECT);
 			$data = array();
@@ -276,22 +303,22 @@ class BpMemberships {
 	/**
 	 * Return All product events
 	 */
-	public static function getProductEvents($vendorTypes = null) {
+	public static function getProductEvents($membershipProductSlugs = null) {
 
-		$lmsTypes = self::getLmsTypesSelected(LD_POST_TYPE);
-		if ($vendorTypes == null) {
-			error_log("getProductEvents, vendorTypes is null");
-			$vendorTypes = self::getVendorTypesSelected();
+		$lmsCourseSlugs = self::getLmsCourseSlugs(LD_COURSE_SLUG);
+		if ($membershipProductSlugs == null) {
+			error_log("getProductEvents, membershipProductSlugs is null");
+			$membershipProductSlugs = self::getMembershipProductSlugs();
 		}
 
-		$products = get_posts(array("post_type" => $vendorTypes));
+		$products = get_posts(array("post_type" => $membershipProductSlugs));
 
 		$results = array();
 		foreach ($products as $product) {
 
-			foreach ($lmsTypes as $lmsType) {
+			foreach ($lmsCourseSlugs as $lmsCourseSlug) {
 
-				$isEnabled = get_post_meta($product->ID, "_bpms-$lmsType-$product->post_type-is_enabled", true);
+				$isEnabled = get_post_meta($product->ID, "_bpms-$lmsCourseSlug-$product->post_type-is_enabled", true);
 
 				// Display only enabled ones
 				if ($isEnabled) {
@@ -317,22 +344,22 @@ class BpMemberships {
 	 * @param {array} $activeVendorTypes - Active membership vendors such as memberpressproduct(By memberpress), product(By WooCommerce)
 	 * @return {void}
 	 */
-	public static function updateBbmsEnrollments($userId) {
+	public static function updateBpmsEnrollments($userId) {
 		if (BPMS_DEBUG) {
-			error_log("updateBbmsEnrollments(), userId is : $userId");
+			error_log("updateBpmsEnrollments(), userId is : $userId");
 		}
 
 		$accessList = array();
-		$lmsTypes = self::getLmsTypesSelected(LD_POST_TYPE);
-		$products = get_posts(array("post_type" => self::getVendorTypesSelected()));
+		$lmsCourseSlugs = self::getLmsCourseSlugs(LD_COURSE_SLUG);
+		$products = get_posts(array("post_type" => self::getMembershipProductSlugs()));
 		// NOTE : LMS Type(s), Eg (Slugs): Learndash
-		foreach ($lmsTypes as $lmsType) {
+		foreach ($lmsCourseSlugs as $lmsCourseSlug) {
 
 			//NOTE : Vendor Type(s), Eg (Slugs): Memberpress, WooCommerce
 			foreach ($products as $product) {
 
-				$isEnabled = get_post_meta($product->ID, "_bpms-$lmsType-$product->post_type-is_enabled", true);
-				$courseAccessMethod = get_post_meta($product->ID, "_bpms-$lmsType-$product->post_type-course_access_method", true);
+				$isEnabled = get_post_meta($product->ID, "_bpms-$lmsCourseSlug-$product->post_type-is_enabled", true);
+				$courseAccessMethod = get_post_meta($product->ID, "_bpms-$lmsCourseSlug-$product->post_type-course_access_method", true);
 
 				if ($isEnabled) {
 
@@ -378,7 +405,7 @@ class BpMemberships {
 
 			// Grant or Revoke based on grantFlag
 			foreach ($accessList as $courseId => $grantFlag) {
-				if ($lmsType == LD_POST_TYPE) {
+				if ($lmsCourseSlug == LD_COURSE_SLUG) {
 					$grantFlag ? ld_update_course_access($userId, $courseId, false) : ld_update_course_access($userId, $courseId, true);
 				} else {
 					// NOTE : Implementation for another LMS when required
@@ -391,32 +418,32 @@ class BpMemberships {
 	}
 
 	/**
-	 * @param  {object}      $vendorObj
-	 * @param  {string}      $vendorType - Product post type, eg : memberpressproduct, product
+	 * @param  {object}      $membershipObj
+	 * @param  {string}      $membershipProductSlug - Product post type, eg : memberpressproduct, product
 	 * @param  {boolean}     $grantAccess - Whether to grant/revoke access
 	 * @return {void}
 	 */
-	public static function updateBbmsEvent($vendorObj, $vendorType, $grantAccess = true) {
+	public static function updateBpmsEvent($membershipObj, $membershipProductSlug, $grantAccess = true) {
 
 		if (BPMS_DEBUG) {
-			error_log("updateBbmsEvent(),productPostType :  $vendorType");
+			error_log("updateBpmsEvent(),productPostType :  $membershipProductSlug");
 		}
-		$lmsTypes = self::getLmsTypesSelected(LD_POST_TYPE);
+		$lmsCourseSlugs = self::getLmsCourseSlugs(LD_COURSE_SLUG);
 		// NOTE : LMS Type(s), Eg (Slugs): Learndash
-		foreach ($lmsTypes as $lmsType) {
-			if ($vendorType == MP_POST_TYPE) {
+		foreach ($lmsCourseSlugs as $lmsCourseSlug) {
+			if ($membershipProductSlug == MP_PRODUCT_SLUG) {
 
-				if ($vendorObj->subscription_id == 0) {
-					$eventIdentifier = $vendorType . '-non-recurring-' . $vendorObj->id;
+				if ($membershipObj->subscription_id == 0) {
+					$eventIdentifier = $membershipProductSlug . '-non-recurring-' . $membershipObj->id;
 				} else {
-					$eventIdentifier = $vendorType . '-recurring-' . $vendorObj->subscription_id;
+					$eventIdentifier = $membershipProductSlug . '-recurring-' . $membershipObj->subscription_id;
 				}
 
-				$events = unserialize(get_post_meta($vendorObj->product_id, '_bpms-events', true));
+				$events = unserialize(get_post_meta($membershipObj->product_id, '_bpms-events', true));
 				if (isset($events[$eventIdentifier])) {
 					if (BPMS_DEBUG) {
 						error_log("Event EXISTS for this user, just update grant access");
-						error_log("product_id : $vendorObj->product_id");
+						error_log("product_id : $membershipObj->product_id");
 						error_log(print_r($events[$eventIdentifier], true));
 					}
 
@@ -424,23 +451,23 @@ class BpMemberships {
 					$events[$eventIdentifier]['updated_at'] = date('Y-m-d H:i:s');
 				} else {
 					if (BPMS_DEBUG) {
-						error_log("Event DO NOT for this user : $vendorObj->user_id");
+						error_log("Event DO NOT for this user : $membershipObj->user_id");
 					}
 
-					$courseAccessMethod = get_post_meta($vendorObj->product_id, "_bpms-$lmsType-$vendorType-course_access_method", true);
+					$courseAccessMethod = get_post_meta($membershipObj->product_id, "_bpms-$lmsCourseSlug-$membershipProductSlug-course_access_method", true);
 					if (BPMS_DEBUG) {
 						error_log("Course Access Method selected is : $courseAccessMethod");
 					}
 
 					if ($courseAccessMethod == 'SINGLE_COURSES') {
-						$coursesAttached = unserialize(get_post_meta($vendorObj->product_id, "_bpms-$lmsType-$vendorType-courses_enrolled", true));
+						$coursesAttached = unserialize(get_post_meta($membershipObj->product_id, "_bpms-$lmsCourseSlug-$membershipProductSlug-courses_attached", true));
 
 					} else if ($courseAccessMethod == 'ALL_COURSES') {
 						$coursesAttached = self::getLearndashClosedCourses();
 
 					} else if ($courseAccessMethod == 'LD_GROUPS') {
 
-						$groupsAttached = unserialize(get_post_meta($vendorObj->product_id, "_bpms-$lmsType-$vendorType-groups_attached", true));
+						$groupsAttached = unserialize(get_post_meta($membershipObj->product_id, "_bpms-$lmsCourseSlug-$membershipProductSlug-groups_attached", true));
 						$coursesAttached = array();
 						foreach ($groupsAttached as $groupId) {
 							$ids = learndash_group_enrolled_courses($groupId);
@@ -449,7 +476,7 @@ class BpMemberships {
 						}
 					}
 					// error_log(print_r($coursesAttached, true));
-					$events[$eventIdentifier] = array('user_id' => $vendorObj->user_id, 'course_attached' => serialize(array_values($coursesAttached)), 'grant_access' => $grantAccess, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'));
+					$events[$eventIdentifier] = array('user_id' => $membershipObj->user_id, 'course_attached' => serialize(array_values($coursesAttached)), 'grant_access' => $grantAccess, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'));
 
 				}
 				if (BPMS_DEBUG) {
@@ -458,15 +485,15 @@ class BpMemberships {
 				}
 
 				// Finally serialize and update
-				update_post_meta($vendorObj->product_id, '_bpms-events', serialize($events));
-				self::updateBbmsEnrollments($vendorObj->user_id);
+				update_post_meta($membershipObj->product_id, '_bpms-events', serialize($events));
+				self::updateBpmsEnrollments($membershipObj->user_id);
 
-			} else if ($vendorType == WC_POST_TYPE) {
+			} else if ($membershipProductSlug == WC_PRODUCT_SLUG) {
 
 				//@todo : Verify if subscription object is different than normal order
-				$eventIdentifier = $vendorType . '-' . $vendorObj['order_id'];
+				$eventIdentifier = $membershipProductSlug . '-' . $membershipObj['order_id'];
 
-				$events = unserialize(get_post_meta($vendorObj['product_id'], '_bpms-events', true));
+				$events = unserialize(get_post_meta($membershipObj['product_id'], '_bpms-events', true));
 				if (isset($events[$eventIdentifier])) {
 					if (BPMS_DEBUG) {
 						error_log("Event EXISTS for this user, just update grant access");
@@ -476,21 +503,21 @@ class BpMemberships {
 					$events[$eventIdentifier]['grant_access'] = $grantAccess;
 					$events[$eventIdentifier]['updated_at'] = date('Y-m-d H:i:s');
 				} else {
-					$courseAccessMethod = get_post_meta($vendorObj['product_id'], "_bpms-$lmsType-$vendorType-course_access_method", true);
+					$courseAccessMethod = get_post_meta($membershipObj['product_id'], "_bpms-$lmsCourseSlug-$membershipProductSlug-course_access_method", true);
 
 					if (BPMS_DEBUG) {
-						error_log("Event DO NOT exists for this user : " . $vendorObj['customer_id']);
+						error_log("Event DO NOT exists for this user : " . $membershipObj['customer_id']);
 						error_log("Course Access Method selected is : $courseAccessMethod");
 					}
 
 					if ($courseAccessMethod == 'SINGLE_COURSES') {
-						$coursesAttached = unserialize(get_post_meta($vendorObj['product_id'], "_bpms-$lmsType-$vendorType-courses_enrolled", true));
+						$coursesAttached = unserialize(get_post_meta($membershipObj['product_id'], "_bpms-$lmsCourseSlug-$membershipProductSlug-courses_attached", true));
 
 					} else if ($courseAccessMethod == 'ALL_COURSES') {
 						$coursesAttached = self::getLearndashClosedCourses();
 
 					} else if ($courseAccessMethod == 'LD_GROUPS') {
-						$groupsAttached = unserialize(get_post_meta($vendorObj['product_id'], "_bpms-$lmsType-$vendorType-groups_attached", true));
+						$groupsAttached = unserialize(get_post_meta($membershipObj['product_id'], "_bpms-$lmsCourseSlug-$membershipProductSlug-groups_attached", true));
 						$coursesAttached = array();
 						foreach ($groupsAttached as $groupId) {
 							$ids = learndash_group_enrolled_courses($groupId);
@@ -501,7 +528,7 @@ class BpMemberships {
 					if (BPMS_DEBUG) {
 						error_log(print_r($coursesAttached, true));
 					}
-					$events[$eventIdentifier] = array('user_id' => $vendorObj['customer_id'], 'course_attached' => serialize(array_values($coursesAttached)), 'grant_access' => $grantAccess, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'));
+					$events[$eventIdentifier] = array('user_id' => $membershipObj['customer_id'], 'course_attached' => serialize(array_values($coursesAttached)), 'grant_access' => $grantAccess, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'));
 
 				}
 				if (BPMS_DEBUG) {
@@ -510,8 +537,8 @@ class BpMemberships {
 				}
 
 				// Finally serialize and update
-				update_post_meta($vendorObj['product_id'], '_bpms-events', serialize($events));
-				self::updateBbmsEnrollments($vendorObj['customer_id']);
+				update_post_meta($membershipObj['product_id'], '_bpms-events', serialize($events));
+				self::updateBpmsEnrollments($membershipObj['customer_id']);
 
 			}
 		}
@@ -522,73 +549,73 @@ class BpMemberships {
 	 * Retrieve selected LMS such as sfwd-courses(Learndash) or lifter-courses(LifterLms)
 	 * @return {array | null}
 	 */
-	public static function getLmsTypesSelected($default = null) {
+	public static function getLmsCourseSlugs($default = null) {
 
 		//NOTE : For Flexibility to use key/value, Eg : $array['sfwd-courses'] = 'sfwd-courses'
 		$integrationsEnabled[$default] = $default;
 
 		if (bp_get_option('bp-learndash_enabled')) {
-			$integrationsEnabled[LD_POST_TYPE] = LD_POST_TYPE;
+			$integrationsEnabled[LD_COURSE_SLUG] = LD_COURSE_SLUG;
 		}
 
 		return $integrationsEnabled;
 	}
 
 	/**
-	 * Retrieve vendorTypes such as memberpress(Memberpress) or product(WooCommerce)
+	 * Retrieve product slug of vendor-types such as memberpress(Memberpress) or product(WooCommerce) if they are ACTIVE/ENABLED/CHECKED
 	 * @return {array | null}
 	 */
-	public static function getVendorTypesSelected() {
+	public static function getMembershipProductSlugs() {
 		if (BPMS_DEBUG) {
-			error_log("getVendorTypesSelected()");
+			error_log("getMembershipProductSlugs()");
 		}
 		//NOTE - For Flexibility to use key/value, Eg : $array['product'] = 'product';
 		$integrationsEnabled = null;
 
 		if (bp_get_option('bp-memberpress_enabled')) {
-			$integrationsEnabled[MP_POST_TYPE] = MP_POST_TYPE;
+			$integrationsEnabled[MP_PRODUCT_SLUG] = MP_PRODUCT_SLUG;
 		}
 
 		if (bp_get_option('bp-woocommerce_enabled')) {
-			$integrationsEnabled[WC_POST_TYPE] = WC_POST_TYPE;
+			$integrationsEnabled[WC_PRODUCT_SLUG] = WC_PRODUCT_SLUG;
 		}
 
 		return $integrationsEnabled;
 	}
 
 	/**
-	 * @param  {Object}      $vendorObj
-	 * @param  {string}      $vendorType
+	 * @param  {Object}      $membershipObj
+	 * @param  {string}      $membershipProductSlug
 	 * @param  {boolean}     $grantAccess
 	 * @return {void}
 	 */
-	public static function bbmsUpdateMembershipAccess($vendorObj, $vendorType, $grantAccess = true) {
+	public static function bpmsUpdateMembershipAccess($membershipObj, $membershipProductSlug, $grantAccess = true) {
 		if (BPMS_DEBUG) {
-			error_log("bbmsUpdateMembershipAccess(), vendorType : $vendorType");
+			error_log("bpmsUpdateMembershipAccess(), membershipProductSlug : $membershipProductSlug");
 		}
 
 		global $wpdb;
-		$lmsTypes = self::getLmsTypesSelected(LD_POST_TYPE);
+		$lmsCourseSlugs = self::getLmsCourseSlugs(LD_COURSE_SLUG);
 		// NOTE : LMS Type(s), Eg (Slugs): Learndash
-		foreach ($lmsTypes as $lmsType) {
-			if ($vendorType == MP_POST_TYPE) {
+		foreach ($lmsCourseSlugs as $lmsCourseSlug) {
+			if ($membershipProductSlug == MP_PRODUCT_SLUG) {
 
-				$isEnabled = get_post_meta($vendorObj->product_id, "_bpms-$lmsType-$vendorType-is_enabled", true);
+				$isEnabled = get_post_meta($membershipObj->product_id, "_bpms-$lmsCourseSlug-$membershipProductSlug-is_enabled", true);
 				if ($isEnabled) {
 					error_log("isEnabled");
 
 					// NOTE : Update BBMS Event
-					self::updateBbmsEvent($vendorObj, $vendorType, $grantAccess);
+					self::updateBpmsEvent($membershipObj, $membershipProductSlug, $grantAccess);
 				} else {
 					error_log("isDisabled");
 				}
-			} else if ($vendorType == WC_POST_TYPE) {
-				$items = $vendorObj->get_items();
+			} else if ($membershipProductSlug == WC_PRODUCT_SLUG) {
+				$items = $membershipObj->get_items();
 
 				foreach ($items as $key => $itemObj) {
 					//NOTE : Manually passing order_id, customer_id
-					$itemObj['order_id'] = $vendorObj->ID;
-					$itemObj['customer_id'] = $vendorObj->customer_id;
+					$itemObj['order_id'] = $membershipObj->ID;
+					$itemObj['customer_id'] = $membershipObj->customer_id;
 
 					if (BPMS_DEBUG) {
 						error_log("ProductId : " . $itemObj['product_id']);
@@ -596,10 +623,10 @@ class BpMemberships {
 						error_log("CustomerId : " . $itemObj['customer_id']);
 					}
 
-					$isEnabled = get_post_meta($itemObj['product_id'], "_bpms-$lmsType-$vendorType-is_enabled", true);
+					$isEnabled = get_post_meta($itemObj['product_id'], "_bpms-$lmsCourseSlug-$membershipProductSlug-is_enabled", true);
 					if ($isEnabled) {
 						// NOTE : Update BBMS Event
-						self::updateBbmsEvent($itemObj, $vendorType, $grantAccess);
+						self::updateBpmsEvent($itemObj, $membershipProductSlug, $grantAccess);
 					}
 
 				}
@@ -626,7 +653,7 @@ class BpMemberships {
 
 		global $wpdb;
 
-		$transient_key = "bbms_learndash_closed_courses";
+		$transient_key = "bpms_learndash_closed_courses";
 
 		if (!$bypass_transient) {
 			$courses_ids_transient = learndash_get_valid_transient($transient_key);
@@ -678,9 +705,9 @@ class BpMemberships {
 		// Subscription Related
 		//This should happen after everything is done processing including the subscr txn_count
 		// add_action('mepr_subscription_transition_status', array($classObj, 'mpSubscriptionTransitionStatus'));
-		add_filter('mepr_subscription_stored', array($classObj, 'mpSubscriptionUpdated'));
+		add_action('mepr_subscription_stored', array($classObj, 'mpSubscriptionUpdated'));
 		add_action('mepr_subscription_saved', array($classObj, 'mpSubscriptionUpdated'));
-		// add_filter('mepr_subscription_status_created', array($classObj, 'mpSubscriptionUpdated'));
+		// add_action('mepr_subscription_status_created', array($classObj, 'mpSubscriptionUpdated'));
 		// add_action('mepr_subscription_status_paused', array($classObj, 'mpSubscriptionUpdated'));
 		// add_action('mepr_subscription_status_resumed', array($classObj, 'mpSubscriptionUpdated'));
 		// add_action('mepr_subscription_status_stopped', array($classObj, 'mpSubscriptionUpdated'));
@@ -711,41 +738,40 @@ class BpMemberships {
 		// add_action('woocommerce_new_product', array($classObj, 'wcVerify'));
 		// add_action('woocommerce_new_product', array($classObj, 'wcVerify'));
 
-		// Order hooks for WC
+		// Order related hooks for WC
+		add_action('woocommerce_order_status_pending_to_processing', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_pending_to_completed', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_processing_to_cancelled', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_pending_to_failed', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_pending_to_on-hold', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_failed_to_processing', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_failed_to_completed', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_failed_to_on-hold', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_cancelled_to_processing', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_cancelled_to_completed', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_cancelled_to_on-hold', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_on-hold_to_processing', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_on-hold_to_cancelled', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_on-hold_to_failed', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_completed', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_fully_refunded', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_partially_refunded', array($classObj, 'wcOrderUpdated'));
 
-		add_action('woocommerce_order_status_pending_to_processing', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_status_pending_to_completed', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_status_processing_to_cancelled', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_status_pending_to_failed', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_status_pending_to_on-hold', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_status_failed_to_processing', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_status_failed_to_completed', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_status_failed_to_on-hold', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_status_cancelled_to_processing', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_status_cancelled_to_completed', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_status_cancelled_to_on-hold', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_status_on-hold_to_processing', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_status_on-hold_to_cancelled', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_status_on-hold_to_failed', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_status_completed', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_fully_refunded', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_partially_refunded', array($classObj, 'wcOrderUpdated'), 10, 1);
-
-		add_action('woocommerce_order_status_pending', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_status_completed', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_status_processing', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_status_on-hold', array($classObj, 'wcOrderUpdated'), 10, 1);
-		add_action('woocommerce_order_status_completed', array($classObj, 'wcOrderUpdated'), 10, 1);
+		add_action('woocommerce_order_status_pending', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_completed', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_processing', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_on-hold', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_completed', array($classObj, 'wcOrderUpdated'));
 
 		// add_action('woocommerce_payment_complete', array($classObj, 'wcOrderUpdated'), 10, 1);
 		// add_action('woocommerce_order_status_refunded', array($classObj, 'wcOrderUpdated'), 10, 1);
 
-		// Subscription hooks for WC
-		add_action('woocommerce_subscription_status_cancelled', array($classObj, 'wcSubscriptionUpdated'), 10, 1);
-		add_action('woocommerce_subscription_status_on-hold', array($classObj, 'wcSubscriptionUpdated'), 10, 1);
-		add_action('woocommerce_subscription_status_expired', array($classObj, 'wcSubscriptionUpdated'), 10, 1);
-		add_action('woocommerce_subscription_status_active', array($classObj, 'wcSubscriptionUpdated'), 10, 1);
-		add_action('woocommerce_subscription_renewal_payment_complete', array($classObj, 'wcSubscriptionUpdated'), 10, 1);
+		// Subscription related hooks for WC
+		add_action('woocommerce_subscription_status_cancelled', array($classObj, 'wcSubscriptionUpdated'));
+		add_action('woocommerce_subscription_status_on-hold', array($classObj, 'wcSubscriptionUpdated'));
+		add_action('woocommerce_subscription_status_expired', array($classObj, 'wcSubscriptionUpdated'));
+		add_action('woocommerce_subscription_status_active', array($classObj, 'wcSubscriptionUpdated'));
+		add_action('woocommerce_subscription_renewal_payment_complete', array($classObj, 'wcSubscriptionUpdated'));
 
 		// Other hooks for WC subscription
 
@@ -785,40 +811,17 @@ class BpMemberships {
 
 		// Ajax services, related to courses
 		// -----------------------------------------------------------------------------
-		add_action('wp_ajax_search_courses', array($this, 'searchLearndashCourses'));
-		add_action('wp_ajax_get_courses', array($this, 'getLearndashCoursesAsJson'));
-		add_action('wp_ajax_selected_courses', array($this, 'selectedCourses'));
+		add_action('wp_ajax_search_courses', array($this, 'searchCourses'));
+		add_action('wp_ajax_get_courses', array($this, 'getCoursesAsJson'));
+		add_action('wp_ajax_pre_saved_courses', array($this, 'getPreSavedCourses'));
 
 		// Ajax services, related to groups
 		// -----------------------------------------------------------------------------
-		add_action('wp_ajax_search_groups', array($this, 'searchLearndashGroups'));
-		add_action('wp_ajax_get_groups', array($this, 'getLearndashGroupsAsJson'));
-		add_action('wp_ajax_selected_groups', array($this, 'selectedGroups'));
+		add_action('wp_ajax_search_groups', array($this, 'searchGroups'));
+		add_action('wp_ajax_get_groups', array($this, 'getGroupsAsJson'));
+		add_action('wp_ajax_pre_saved_groups', array($this, 'getPreSavedGroups'));
 
 		$bpProductEvents = BpProductEvents::getInstance();
-
-		// Learndash Hooks if required
-		// -----------------------------------------------------------------------------
-		// if (self::getLmsTypesSelected(LD_POST_TYPE) == LD_POST_TYPE) {
-		// add_action('save_post_sfwd-courses', array($this, 'someFunction'), 4, 99);
-		// add_action('save_post_groups', array($this, 'someFunction'), 88, 3);
-		// add_action('learndash_update_course_access', array($this, 'someFunction'), 4, 99);
-		// Remove course increment record if a course unenrolled manually
-		// add_action( 'learndash_update_course_access', array( $this, 'someFunction' ), 10, 4 );
-		// }
-	}
-
-	/**
-	 * After wp is loaded
-	 * @return {void}
-	 */
-	public function onWpLoaded() {
-		if (BPMS_DEBUG) {
-			error_log("onWpLoaded()");
-		}
-
-		// Trigger filters/action after Learndash is loaded
-		// add_action('learndash_init', array($this, 'onLearndashInit'));
 	}
 
 }

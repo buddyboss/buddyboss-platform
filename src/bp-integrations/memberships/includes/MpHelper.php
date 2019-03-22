@@ -37,10 +37,10 @@ class MpHelper {
 			error_log("MpHelper::mpTab()");
 		}
 
-		$lmsTypes = BpMemberships::getLmsTypesSelected(LD_POST_TYPE);
+		$lmsCourseSlugs = BpMemberships::getLmsCourseSlugs(LD_COURSE_SLUG);
 		// NOTE : LMS Type(s), Eg (Slugs): Learndash
-		foreach ($lmsTypes as $key => $lmsType) {
-			if ($lmsType == LD_POST_TYPE) {
+		foreach ($lmsCourseSlugs as $key => $lmsCourseSlug) {
+			if ($lmsCourseSlug == LD_COURSE_SLUG) {
 				BpmsView::render('memberpress/tab', get_defined_vars());
 			} else {
 				// NOTE : Implementation for another LMS when required
@@ -59,21 +59,21 @@ class MpHelper {
 			error_log("MpHelper::mpTabContent()");
 		}
 
-		$lmsTypes = BpMemberships::getLmsTypesSelected(LD_POST_TYPE);
-		$membershipType = MP_POST_TYPE;
+		$lmsCourseSlugs = BpMemberships::getLmsCourseSlugs(LD_COURSE_SLUG);
+		$membershipProductType = MP_PRODUCT_SLUG;
 		$themeName = wp_get_theme();
 		// NOTE : LMS Type(s), Eg (Slugs): Learndash
-		foreach ($lmsTypes as $lmsType) {
-			if ($lmsType == LD_POST_TYPE) {
+		foreach ($lmsCourseSlugs as $lmsCourseSlug) {
+			if ($lmsCourseSlug == LD_COURSE_SLUG) {
 
 				// NOTE : Implementation for Learndash LMS
 				$allCourses = BpMemberships::getLearndashCourses();
-				$isEnabled = get_post_meta($product->rec->ID, "_bpms-$lmsType-$membershipType-is_enabled", true);
-				$courseAccessMethod = get_post_meta($product->rec->ID, "_bpms-$lmsType-$membershipType-course_access_method", true);
-				$coursesEnrolled = unserialize(get_post_meta($product->rec->ID, "_bpms-$lmsType-$membershipType-courses_enrolled", true));
-				$allowFromPricebox = get_post_meta($product->rec->ID, "_bpms-$lmsType-$membershipType-allow_from_pricebox", true);
-				$buttonText = get_post_meta($product->rec->ID, "_bpms-$lmsType-$membershipType-purchase_button_text", true);
-				$buttonOrder = get_post_meta($product->rec->ID, "_bpms-$lmsType-$membershipType-purchase_button_order", true);
+				$isEnabled = get_post_meta($product->rec->ID, "_bpms-$lmsCourseSlug-$membershipProductType-is_enabled", true);
+				$courseAccessMethod = get_post_meta($product->rec->ID, "_bpms-$lmsCourseSlug-$membershipProductType-course_access_method", true);
+				$coursesEnrolled = unserialize(get_post_meta($product->rec->ID, "_bpms-$lmsCourseSlug-$membershipProductType-courses_attached", true));
+				$allowFromPricebox = get_post_meta($product->rec->ID, "_bpms-$lmsCourseSlug-$membershipProductType-allow_from_pricebox", true);
+				$buttonText = get_post_meta($product->rec->ID, "_bpms-$lmsCourseSlug-$membershipProductType-purchase_button_text", true);
+				$buttonOrder = get_post_meta($product->rec->ID, "_bpms-$lmsCourseSlug-$membershipProductType-purchase_button_order", true);
 				$pId = $product->rec->ID; //Required for ajax-call
 				$accessMethods = BpMemberships::getCourseOptions();
 				$groups = learndash_get_groups();
@@ -104,10 +104,10 @@ class MpHelper {
 		}
 		if (in_array($status, $revokeValues)) {
 			// revoke access
-			BpMemberships::bbmsUpdateMembershipAccess($meprObj, MP_POST_TYPE, false);
+			BpMemberships::bpmsUpdateMembershipAccess($meprObj, MP_PRODUCT_SLUG, false);
 		} else if (in_array($status, $grantValues)) {
 			// grant access
-			BpMemberships::bbmsUpdateMembershipAccess($meprObj, MP_POST_TYPE, true);
+			BpMemberships::bpmsUpdateMembershipAccess($meprObj, MP_PRODUCT_SLUG, true);
 		}
 
 	}
@@ -131,10 +131,10 @@ class MpHelper {
 
 		if (in_array($status, $revokeValues)) {
 			// revoke access
-			BpMemberships::bbmsUpdateMembershipAccess($meprObj, MP_POST_TYPE, false);
+			BpMemberships::bpmsUpdateMembershipAccess($meprObj, MP_PRODUCT_SLUG, false);
 		} else if (in_array($status, $grantValues)) {
 			// grant access
-			BpMemberships::bbmsUpdateMembershipAccess($meprObj, MP_POST_TYPE, true);
+			BpMemberships::bpmsUpdateMembershipAccess($meprObj, MP_PRODUCT_SLUG, true);
 		}
 
 	}
@@ -160,10 +160,10 @@ class MpHelper {
 
 		if (in_array($status, $revokeValues)) {
 			// revoke access
-			BpMemberships::bbmsUpdateMembershipAccess($meprObj, MP_POST_TYPE, false);
+			BpMemberships::bpmsUpdateMembershipAccess($meprObj, MP_PRODUCT_SLUG, false);
 		} else if (in_array($status, $grantValues)) {
 			// grant access
-			BpMemberships::bbmsUpdateMembershipAccess($meprObj, MP_POST_TYPE, true);
+			BpMemberships::bpmsUpdateMembershipAccess($meprObj, MP_PRODUCT_SLUG, true);
 		}
 
 	}
@@ -195,19 +195,19 @@ class MpHelper {
 			error_log("MpHelper::mpSaveProduct()");
 			// error_log(print_r($product, true));
 		}
-		$lmsTypes = BpMemberships::getLmsTypesSelected(LD_POST_TYPE);
-		$membershipType = MP_POST_TYPE;
+		$lmsCourseSlugs = BpMemberships::getLmsCourseSlugs(LD_COURSE_SLUG);
+		$membershipProductType = MP_PRODUCT_SLUG;
 		// NOTE : LMS Type(s), Eg (Slugs): Learndash
-		foreach ($lmsTypes as $lmsType) {
-			if ($lmsType == LD_POST_TYPE) {
+		foreach ($lmsCourseSlugs as $lmsCourseSlug) {
+			if ($lmsCourseSlug == LD_COURSE_SLUG) {
 				// NOTE : Implementation for Learndash LMS
-				$isEnabled = $_REQUEST["bpms-$lmsType-$membershipType-is_enabled"];
-				update_post_meta($product->rec->ID, "_bpms-$lmsType-$membershipType-is_enabled", $isEnabled);
+				$isEnabled = $_REQUEST["bpms-$lmsCourseSlug-$membershipProductType-is_enabled"];
+				update_post_meta($product->rec->ID, "_bpms-$lmsCourseSlug-$membershipProductType-is_enabled", $isEnabled);
 
 				if ($isEnabled) {
 
-					$courseAccessMethod = $_REQUEST["bpms-$lmsType-$membershipType-course_access_method"];
-					update_post_meta($product->rec->ID, "_bpms-$lmsType-$membershipType-course_access_method", $courseAccessMethod);
+					$courseAccessMethod = $_REQUEST["bpms-$lmsCourseSlug-$membershipProductType-course_access_method"];
+					update_post_meta($product->rec->ID, "_bpms-$lmsCourseSlug-$membershipProductType-course_access_method", $courseAccessMethod);
 
 					if (BPMS_DEBUG) {
 						error_log("Course Access Method selected :$courseAccessMethod");
@@ -215,30 +215,30 @@ class MpHelper {
 
 					if ($courseAccessMethod == 'SINGLE_COURSES') {
 
-						$newCourses = array_filter($_REQUEST["bpms-$lmsType-$membershipType-courses_enrolled"]);
+						$newCourses = array_filter($_REQUEST["bpms-$lmsCourseSlug-$membershipProductType-courses_attached"]);
 						// error_log(print_r($newCourses, true));
 
-						update_post_meta($product->rec->ID, "_bpms-$lmsType-$membershipType-courses_enrolled", serialize(array_values($newCourses)));
+						update_post_meta($product->rec->ID, "_bpms-$lmsCourseSlug-$membershipProductType-courses_attached", serialize(array_values($newCourses)));
 					} else if ($courseAccessMethod == 'ALL_COURSES') {
 
 						// NOTE : Array format is consistent with GUI
 						$allClosedCourses = BpMemberships::getLearndashClosedCourses();
 					} else if ($courseAccessMethod == 'LD_GROUPS') {
 
-						$newGroups = array_filter($_REQUEST["bpms-$lmsType-$membershipType-groups_attached"]);
-						update_post_meta($product->rec->ID, "_bpms-$lmsType-$membershipType-groups_attached", serialize(array_values($newGroups)));
+						$newGroups = array_filter($_REQUEST["bpms-$lmsCourseSlug-$membershipProductType-groups_attached"]);
+						update_post_meta($product->rec->ID, "_bpms-$lmsCourseSlug-$membershipProductType-groups_attached", serialize(array_values($newGroups)));
 					}
 
 					// Update Allow From PriceBox
-					$allowFromPricebox = $_REQUEST["bpms-$lmsType-$membershipType-allow_from_pricebox"];
-					update_post_meta($product->rec->ID, "_bpms-$lmsType-$membershipType-allow_from_pricebox", $allowFromPricebox);
+					$allowFromPricebox = $_REQUEST["bpms-$lmsCourseSlug-$membershipProductType-allow_from_pricebox"];
+					update_post_meta($product->rec->ID, "_bpms-$lmsCourseSlug-$membershipProductType-allow_from_pricebox", $allowFromPricebox);
 
 					if ($allowFromPricebox) {
-						$buttonText = $_REQUEST["bpms-$lmsType-$membershipType-purchase_button_text"];
-						$buttonOrder = $_REQUEST["bpms-$lmsType-$membershipType-purchase_button_order"];
+						$buttonText = $_REQUEST["bpms-$lmsCourseSlug-$membershipProductType-purchase_button_text"];
+						$buttonOrder = $_REQUEST["bpms-$lmsCourseSlug-$membershipProductType-purchase_button_order"];
 
-						update_post_meta($product->rec->ID, "_bpms-$lmsType-$membershipType-purchase_button_text", $buttonText);
-						update_post_meta($product->rec->ID, "_bpms-$lmsType-$membershipType-purchase_button_order", $buttonOrder);
+						update_post_meta($product->rec->ID, "_bpms-$lmsCourseSlug-$membershipProductType-purchase_button_text", $buttonText);
+						update_post_meta($product->rec->ID, "_bpms-$lmsCourseSlug-$membershipProductType-purchase_button_order", $buttonOrder);
 					}
 
 				}
