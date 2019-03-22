@@ -25,7 +25,7 @@
     <div id="members-photos-dir-list" class="bb-member-photos bb-photos-dir-list">
 
 		<?php if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
-        <ul class="bb-photo-list grid">
+        <ul class="bb-photo-list">
 			<?php endif; ?>
 
 			<?php

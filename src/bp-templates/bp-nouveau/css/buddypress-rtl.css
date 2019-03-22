@@ -1586,6 +1586,7 @@ a.layout-grid-view {
 
 .activity-list .activity-item .activity-content .activity-state a {
   border: 0;
+  padding: 0;
 }
 
 .activity-list .activity-item .activity-content .activity-state.has-likes, .activity-list .activity-item .activity-content .activity-state.has-comments {
@@ -13669,4 +13670,208 @@ img.mfp-img {
     padding-right: 6px;
     padding-left: 6px;
   }
+}
+
+/**
+*-------------------------------------------------------------------------------
+* @section 13.0 - Media
+*-------------------------------------------------------------------------------
+*/
+.bb-activity-media-wrap {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0 -3px;
+  align-items: flex-start;
+  position: relative;
+}
+
+.act-grid-1-1 {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+.bb-media-length-2 .act-grid-1-1 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.act-grid-1-2 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.bb-activity-media-elem {
+  padding: 3px;
+}
+
+.bb-activity-media-elem .entry-img {
+  background: transparent;
+  border-radius: 3px;
+  display: block;
+  margin: 0;
+  position: relative;
+  padding-top: 42.56%;
+  overflow: hidden;
+}
+
+.bb-activity-media-elem .entry-img img {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+  z-index: 0;
+  min-height: 100%;
+  width: auto;
+  min-width: 100%;
+  object-fit: cover;
+}
+
+.bb-activity-media-elem .bb-photos-length {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  right: 0;
+  height: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  flex-flow: row wrap;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  font-size: 16px;
+}
+
+.bb-activity-media-elem .bb-photos-length strong {
+  color: inherit;
+  display: block;
+  font-size: 28px;
+  font-weight: 400;
+  margin-bottom: 10px;
+}
+
+.bb-media-length-1 .bb-activity-media-elem .entry-img {
+  padding-top: 42.56%;
+}
+
+.bb-media-length-2 .bb-activity-media-elem .entry-img {
+  padding-top: 72.56%;
+}
+
+.bb-media-length-3 .bb-activity-media-elem .entry-img.act-grid-1-1 {
+  padding-top: 52.56%;
+}
+
+.bb-media-length-4 .act-grid-1-2 {
+  flex: 0 0 33.33%;
+  max-width: 33.33%;
+}
+
+.bb-media-length-4 .bb-activity-media-elem.act-grid-1-2 .entry-img {
+  padding-top: 72.56%;
+}
+
+.bb-media-length-5 .bb-activity-media-elem .entry-img {
+  padding-top: 72.56%;
+}
+
+.bb-media-length-5 .act-grid-1-1 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.bb-media-length-5 .act-grid-1-1 + .act-grid-1-2 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.bb-media-length-5 .act-grid-1-2 {
+  flex: 0 0 33.33%;
+  max-width: 33.33%;
+}
+
+.bb-activity-media-wrap.bb-media-length-3 .act-grid-1-2 .entry-img {
+  padding-top: 55.56%;
+}
+
+.bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout {
+  flex: 0 0 64%;
+  max-width: 64%;
+}
+
+.bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout ~ .bb-activity-media-elem {
+  flex: 0 0 36%;
+  max-width: 36%;
+}
+
+.bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout ~ .bb-activity-media-elem .entry-img {
+  padding-top: 105.6%;
+}
+
+.bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout .entry-img {
+  padding-top: 119%;
+}
+
+.bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout + div + div {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 36%;
+}
+
+.bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout {
+  flex: 0 0 64%;
+  max-width: 64%;
+}
+
+.bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout ~ .bb-activity-media-elem {
+  flex: 0 0 36%;
+  max-width: 36%;
+}
+
+.bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout ~ .bb-activity-media-elem .entry-img {
+  padding-top: 69.1%;
+}
+
+.bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout .entry-img {
+  padding-top: 119%;
+}
+
+.bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + div {
+  position: absolute;
+  left: 0;
+  top: 33.4%;
+  width: 36%;
+}
+
+.bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout + div + div {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 36%;
+}
+
+.bb-activity-media-wrap.bb-media-length-more .bb-activity-media-elem .entry-img {
+  padding-top: 82.56%;
+}
+
+.bb-activity-media-wrap.bb-media-length-more .act-grid-1-1 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.bb-activity-media-wrap.bb-media-length-more .act-grid-1-1 + .act-grid-1-2 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.bb-activity-media-wrap.bb-media-length-more .act-grid-1-2 {
+  flex: 0 0 33.33%;
+  max-width: 33.33%;
+}
+
+.dropzone {
+  border-style: dashed;
 }
