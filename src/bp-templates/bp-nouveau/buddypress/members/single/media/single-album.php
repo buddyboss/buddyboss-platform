@@ -49,9 +49,10 @@ $album_id = (int) bp_action_variable( 0 );
 
 	            <?php bp_get_template_part( 'members/single/media/uploader' ); ?>
 
+                <ul class="bb-photo-list grid">
+
                 <?php if ( $total_media > 0 ) {
                     ?>
-                    <ul class="bb-photo-list grid">
                         <?php foreach( $media_album_template->album->media['medias'] as $media ) {
                             ?>
                             <li data-id="<?php echo $media->id; ?>" class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3">
@@ -64,9 +65,10 @@ $album_id = (int) bp_action_variable( 0 );
                             </li>
                             <?php
                         } ?>
-                    </ul>
                     <?php
                 } ?>
+
+                </ul>
 
             </div>
         </div>

@@ -163,9 +163,19 @@ function bp_nouveau_ajax_media_save() {
 		$media_ids[] = $media_id;
 	}
 
-	$medias = bp_media_get_specific( array( 'media_ids' => $media_ids ) );
+	ob_start();
+	if ( bp_has_media( array( 'include' => $media_ids ) ) ) {
+		while ( bp_media() ) {
+			bp_the_media();
+			bp_get_template_part( 'members/single/media/entry' );
+		}
+	}
+	$media = ob_get_contents();
+	ob_end_clean();
 
-	return wp_send_json_success( $medias );
+	wp_send_json_success( array(
+		'media'     => $media,
+	) );
 }
 
 /**
@@ -217,7 +227,17 @@ function bp_nouveau_ajax_media_album_save() {
 
 	$album_id = bp_album_add( array( 'title' => $title, 'description' => $description, 'privacy' => $privacy ) );
 
-	$album = bp_album_get_specific( array( 'album_ids' => $album_id ) );
+	ob_start();
+	if ( bp_has_albums( array( 'include' => $album_id ) ) ) {
+		while ( bp_album() ) {
+			bp_the_album();
+			bp_get_template_part( 'members/single/media/album-entry' );
+		}
+	}
+	$album = ob_get_contents();
+	ob_end_clean();
 
-	return wp_send_json_success( $album );
+	wp_send_json_success( array(
+		'album'     => $album,
+	) );
 }

@@ -165,7 +165,11 @@ window.bp = window.bp || {};
 				url: BP_Nouveau.ajaxurl,
 				data: data,
 				success: function (response) {
-					self.closeUploader(event);
+					if ( response.success ) {
+						$('.bb-photo-list').prepend(response.data.media);
+						self.closeUploader(event);
+					}
+
 				},
 			});
 			
@@ -187,7 +191,10 @@ window.bp = window.bp || {};
 				url: BP_Nouveau.ajaxurl,
 				data: data,
 				success: function (response) {
-					self.closeCreateAlbumModal(event);
+					if ( response.success ) {
+						$('.bb-album-list').prepend(response.data.album);
+						self.closeCreateAlbumModal(event);
+					}
 				},
 			});
 

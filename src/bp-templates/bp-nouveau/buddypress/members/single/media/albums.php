@@ -25,38 +25,19 @@
 
 <?php if ( bp_has_albums() ) : ?>
 
-    <div id="members-photos-dir-list" class="bb-member-photos bb-photos-dir-list">
+    <div id="members-albums-dir-list" class="bb-member-albums bb-albums-dir-list">
 
 		<?php if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
-        <ul class="bb-photo-list grid">
+        <ul class="bb-album-list grid">
 			<?php endif; ?>
 
 			<?php
 			while ( bp_album() ) :
 				bp_the_album();
-				?>
 
-                <div id="members-albums-dir-list" class="bb-member-albums bb-albums-dir-list">
-                    <ul class="bb-member-albums-items" ref="albumsList" aria-live="assertive" aria-relevant="all">
-                        <li>
-                            <ul class="bb-albums-list">
-                                <li class="bb-album-list-item">
-                                    <div class="bb-album-cover-wrap">
-                                        <div class="bb-album-content-wrap">
-                                            <a href="<?php echo esc_url( trailingslashit( bp_displayed_user_domain() . bp_get_media_slug() . '/albums/' . bp_get_album_id() ) ); ?>">
-                                                <h4><?php bp_album_title(); ?></h4>
-                                                <span><?php echo bp_core_format_date( $media_album_template->album->date_created ); ?></span> <span>&middot;</span> <span><?php echo $media_album_template->album->media['total']; ?> <?php _e( 'photos', 'buddyboss' ); ?></span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+				bp_get_template_part( 'members/single/media/album-entry' );
 
-                </div>
-
-			<?php endwhile; ?>
+			endwhile; ?>
 
 			<?php if ( bp_album_has_more_items() ) : ?>
 
