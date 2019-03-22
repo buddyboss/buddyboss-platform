@@ -1389,3 +1389,39 @@ function bp_remove_wc_lostpassword_url( $default_url = '' ) {
 }
 
 add_filter( 'lostpassword_url', 'bp_remove_wc_lostpassword_url', 11, 1 );
+
+add_filter( 'the_privacy_policy_link', 'bp_core_change_privacy_policy_link_on_private_network', 999999, 2 );
+function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_policy_url ) {
+
+	if ( ! is_user_logged_in() ) {
+
+		$enable_private_network = bp_get_option( 'bp-enable-private-network' );
+
+		if ( '0' === $enable_private_network ) {
+
+			$privacy_policy_url = get_privacy_policy_url();
+			$policy_page_id     = (int) get_option( 'wp_page_for_privacy_policy' );
+			$page_title         = ( $policy_page_id ) ? get_the_title( $policy_page_id ) : '';
+
+			if ( $privacy_policy_url && $page_title ) {
+				$get_privacy_policy = get_post( $policy_page_id );
+				$link = sprintf(
+					'<a class="privacy-policy-link popup-modal-register popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide registration-popup"><h1>%s</h1>%s<<button title="%s" type="button" class="mfp-close">%s</button>/div>',
+					'#privacy-modal',
+					esc_html( $page_title ),
+					esc_html( $page_title ),
+					wp_kses_post( apply_filters( 'the_content',  $get_privacy_policy->post_content ) ),
+					esc_html( 'Close (Esc)' ),
+					esc_html( '×' )
+				);
+			}
+
+		}
+
+	}
+
+	$link = apply_filters( 'bp_core_change_privacy_policy_link_on_private_network', $link, $privacy_policy_url );
+
+
+	return $link;
+}

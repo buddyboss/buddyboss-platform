@@ -2503,6 +2503,25 @@ body.register .registration-popup .mfp-close:hover {
   background: transparent;
 }
 
+body.login .registration-popup {
+  background: #FFF;
+  padding: 30px;
+  text-align: left;
+  min-height: 400px;
+  max-width: 650px;
+  margin: 40px auto;
+  position: relative;
+}
+
+body.login .registration-popup .mfp-close {
+  color: #000;
+}
+
+body.login .registration-popup .mfp-close:focus,
+body.login .registration-popup .mfp-close:hover {
+  background: transparent;
+}
+
 #buddypress #signup-form input:focus {
   border-color: #aaa;
 }
