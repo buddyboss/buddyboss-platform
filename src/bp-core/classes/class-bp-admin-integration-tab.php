@@ -36,7 +36,15 @@ class BP_Admin_Integration_tab extends BP_Admin_Tab {
 			}
 		}
 
+		add_action( 'bp_admin_tab_setting_save', [ $this, 'integration_setting_save'] );
+
 		parent::__construct();
+	}
+
+	public function integration_setting_save( $tab_name ) {
+		$settings = bp_ld_sync('settings');
+
+		do_action( "bp_integrations_{$this->tab_name}_fields_updated", $settings, $tab_name );
 	}
 
 	public function settings_saved() {

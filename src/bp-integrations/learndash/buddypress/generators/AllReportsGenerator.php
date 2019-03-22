@@ -1,10 +1,10 @@
 <?php
 /**
  * BuddyBoss LearnDash integration all reports generator.
- * 
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 namespace Buddyboss\LearndashIntegration\Buddypress\Generators;
 
@@ -14,14 +14,14 @@ use Buddyboss\LearndashIntegration\Library\ReportsGenerator;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Extends report generator for all reports
+ *
  * @since BuddyBoss 1.0.0
  */
 class AllReportsGenerator extends ReportsGenerator
 {
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -34,7 +34,7 @@ class AllReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Returns the columns and their settings
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -55,7 +55,7 @@ class AllReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Format the activity results for each column
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -66,7 +66,6 @@ class AllReportsGenerator extends ReportsGenerator
 			'user'            => $activity->user_display_name,
 			'course_id'       => $activity->activity_course_id,
 			'course'          => $activity->activity_course_title,
-			// 'step'            => $this->activityStepLabel($activity),
 			'step'            => $activity->post_title,
 			'start_date'      => $activity->activity_started_formatted,
 			'completion_date' => $this->completionDate($activity),
@@ -77,7 +76,7 @@ class AllReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Overwrite results value for display
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -90,15 +89,5 @@ class AllReportsGenerator extends ReportsGenerator
 				$activity->post_title
 			)
 		], $data);
-	}
-
-	/**
-	 * @todo add title/description
-	 *
-	 * @since BuddyBoss 1.0.0
-	 */
-	protected function activityStepLabel($activity)
-	{
-		return get_post_type_object(learndash_get_post_type_slug($activity->activity_type))->labels->singular_name;
 	}
 }

@@ -462,9 +462,10 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 /**
 *-------------------------------------------------------------------------------
-* @section 12.0 - Media Search classes
+* @section 12.0 - Registration Popup
 *-------------------------------------------------------------------------------
 */
-// Import media styles
+// Import global magnific popup styles
 
-@import "../common-styles/_bp_media";
+@import "../common-styles/_bp_magnific";
+

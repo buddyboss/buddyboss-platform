@@ -159,7 +159,7 @@ function bp_admin_setting_callback_enable_activity_link_preview() {
 	?>
 
 	<input id="_bp_enable_activity_link_preview" name="_bp_enable_activity_link_preview" type="checkbox" value="1" <?php checked( bp_is_activity_link_preview_active( false ) ); ?> />
-	<label for="_bp_enable_activity_link_preview"><?php _e( 'Allow link previews in activity posts', 'buddyboss' ); ?></label>
+	<label for="_bp_enable_activity_link_preview"><?php _e( 'When links are used in activity posts, display an image and excerpt from the site', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -173,11 +173,8 @@ function bp_admin_setting_callback_enable_activity_gif() {
 	?>
 
 	<input id="_bp_enable_activity_gif" name="_bp_enable_activity_gif" type="checkbox" value="1" data-run-js-condition="_bp_enable_activity_gif" <?php checked( bp_is_activity_gif_active( false ) ); ?> />
-	<label for="_bp_enable_activity_gif"><?php _e( 'Allow GIFs in activity posts', 'buddyboss' ); ?></label>
-	<p class="js-show-on-_bp_enable_activity_gif">
-		<input type="text" name="_bp_activity_gif_api_key" id="_bp_activity_gif_api_key" value="<?php echo bp_get_activity_gif_api_key() ?>" style="width: 300px;" />
-		<p class="description"><?php esc_html_e('Gif developer api key', 'buddyboss') ?></p>
-	</p>
+	<label for="_bp_enable_activity_gif"><?php _e( 'Display a library of animated GIFs to choose from when creating activity posts', 'buddyboss' ); ?></label>
+	<p class="description js-show-on-_bp_enable_activity_gif"><?php _e('This feature requires an account at <a href="https://developers.giphy.com/">GIPHY</a>. Create your account, and then click "Create an App". Once done, copy the API key and paste it here:', 'buddyboss') ?> <input type="text" name="_bp_activity_gif_api_key" id="_bp_activity_gif_api_key" value="<?php echo bp_get_activity_gif_api_key() ?>" placeholder="<?php _e( 'GIPHY API key', 'buddyboss' ); ?>" style="width: 300px;" /></p>
 	<?php
 }
 
@@ -292,8 +289,23 @@ function bp_admin_setting_callback_group_cover_image_uploads() {
 function bp_admin_setting_callback_group_type_creation() {
 ?>
 	<input id="bp-disable-group-type-creation" name="bp-disable-group-type-creation" type="checkbox" value="1" <?php checked( bp_disable_group_type_creation() ); ?> />
-	<label for="bp-disable-group-type-creation"><?php _e( 'Enable group types to better organize groups', 'buddyboss' ); ?></label>
-<?php
+	<?php
+	if ( true === bp_disable_group_type_creation() ) {
+		printf(
+			'<label for="bp-disable-group-type-creation">%s</label>',
+			sprintf(
+				__( 'Enable <a href="%s">group types</a> to better organize groups', 'buddyboss' ),
+				add_query_arg([
+					'post_type' => bp_get_group_type_post_type(),
+				], admin_url( 'edit.php' ) )
+			)
+		);
+	} else {
+		?>
+		<label for="bp-disable-group-type-creation"><?php _e( 'Enable group types to better organize groups', 'buddyboss' ); ?></label>
+		<?php
+	}
+
 }
 
 /**
@@ -329,8 +341,24 @@ function bp_admin_setting_callback_group_restrict_invites() {
 function bp_admin_setting_callback_group_auto_join() {
 	?>
 	<input id="bp-enable-group-auto-join" name="bp-enable-group-auto-join" type="checkbox" value="1" <?php checked( bp_enable_group_auto_join() ); ?> />
-	<label for="bp-enable-group-auto-join"><?php _e( 'Allow selected profile types to automatically join groups', 'buddyboss' ); ?></label>
-    <p class="description"><?php _e( 'When a member requests to join a group their membership is automatically accepted', 'buddyboss' ); ?></p>
+	<?php
+	if ( true === bp_enable_group_auto_join() ) {
+		printf(
+			'<label for="bp-enable-group-auto-join">%s</label>',
+			sprintf(
+				__( 'Allow selected <a href="%s">profile types</a> to automatically join groups', 'buddyboss' ),
+				add_query_arg([
+					'post_type' => bp_get_member_type_post_type(),
+				], admin_url( 'edit.php' ) )
+			)
+		);
+	} else {
+		?>
+		<label for="bp-enable-group-auto-join"><?php _e( 'Allow selected profile types to automatically join groups', 'buddyboss' ); ?></label>
+		<?php
+	}
+	?>
+	<p class="description"><?php _e( 'When a member requests to join a group their membership is automatically accepted', 'buddyboss' ); ?></p>
 	<?php
 }
 

@@ -1,10 +1,10 @@
 <?php
 /**
- * @todo add description
- * 
+ * BuddyBoss LearnDash integration ReportsGenerator class.
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 namespace Buddyboss\LearndashIntegration\Library;
 
@@ -12,8 +12,8 @@ namespace Buddyboss\LearndashIntegration\Library;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Report generator class
+ *
  * @since BuddyBoss 1.0.0
  */
 class ReportsGenerator
@@ -38,7 +38,7 @@ class ReportsGenerator
 	];
 
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -58,7 +58,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get the table columns
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -74,7 +74,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get the results data
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -100,7 +100,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get the pagination info
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -110,7 +110,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Fetch the data from the database
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -123,7 +123,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Prepare the export data
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -163,7 +163,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Returns the columns and their settings
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -173,7 +173,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Format the activity results for each column
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -183,7 +183,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Overwrite results value for display
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -199,7 +199,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Overwrite results value for export
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -209,7 +209,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add addition sql statement when fetching course reports
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -224,7 +224,7 @@ class ReportsGenerator
 
 
 	/**
-	 * @todo add title/description
+	 * Add course name to sql fields
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -234,7 +234,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add course table to sql joins
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -246,7 +246,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add activity check on sql where
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -256,7 +256,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add placeholder where statement
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -267,7 +267,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Replace placeholder where with gorup by statement
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -277,7 +277,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add course time spent to sql statement
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -287,7 +287,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Remove course time spent to sql statement
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -297,7 +297,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add course time spent to sql fields statement
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -307,7 +307,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get the built-in column setting by name reference
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -375,7 +375,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Setup ld activity query params
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -429,7 +429,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Check if the given argument is passed from request
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -439,7 +439,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get all the learndash post type except groups
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -451,7 +451,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Format secons to human readable teim spent
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -486,7 +486,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Format completed date
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -496,7 +496,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Convert completed date
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -506,7 +506,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Format points earned if enabled
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

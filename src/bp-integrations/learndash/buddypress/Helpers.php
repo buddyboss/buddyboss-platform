@@ -1,7 +1,7 @@
 <?php
 /**
  * BuddyBoss LearnDash integration gelper class.
- * 
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
  */
@@ -12,8 +12,8 @@ namespace Buddyboss\LearndashIntegration\Buddypress;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Class misc helper functions
+ *
  * @since BuddyBoss 1.0.0
  */
 class Helpers
@@ -21,7 +21,7 @@ class Helpers
 	protected $ldGroupMetaKey = '_ld_group_id';
 
 	/**
-	 * @todo add title/description
+	 * Determine whether a group has connected ld group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -43,7 +43,7 @@ class Helpers
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get the connected ld group id
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -55,7 +55,7 @@ class Helpers
 	}
 
 	/**
-	 * @todo add title/description
+	 * Set the ld group id on a bp grouop
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -65,7 +65,7 @@ class Helpers
 	}
 
 	/**
-	 * @todo add title/description
+	 * Remove ld group connection from a bp group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

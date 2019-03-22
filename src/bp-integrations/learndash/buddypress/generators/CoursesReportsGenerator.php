@@ -1,10 +1,10 @@
 <?php
 /**
  * BuddyBoss LearnDash integration courses reports generator.
- * 
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 namespace Buddyboss\LearndashIntegration\Buddypress\Generators;
 
@@ -14,14 +14,14 @@ use Buddyboss\LearndashIntegration\Library\ReportsGenerator;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Extends report generator for courses reports
+ *
  * @since BuddyBoss 1.0.0
  */
 class CoursesReportsGenerator extends ReportsGenerator
 {
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -34,7 +34,7 @@ class CoursesReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Returns the columns and their settings
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -54,7 +54,7 @@ class CoursesReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Format the activity results for each column
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

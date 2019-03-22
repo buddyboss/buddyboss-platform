@@ -649,6 +649,8 @@ class BuddyPress {
 			'BP_Bbp_Gdpr_Replies'            => 'gdpr',
 			'BP_Bbp_Gdpr_Topics'             => 'gdpr',
 			'BP_Core_Friends_Widget'         => 'friends',
+            'BP_Core_Network_Posts_Widget'   => 'core',
+            'BP_Core_Follow_Following_Widget'=> 'core',
 			'BP_Group_Extension'             => 'groups',
 			'BP_Group_Member_Query'          => 'groups',
 			'BP_Core_Members_Template'       => 'members',

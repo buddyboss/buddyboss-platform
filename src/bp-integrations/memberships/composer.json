@@ -1,0 +1,19 @@
+{
+    "name": "buddyboss/integrations",
+    "description": "BuddyPress adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!",
+    "type": "wordpress-plugin",
+    "keywords": ["membership", "all-in-one", "mobile app", "In App Purchase"],
+    "homepage": "https://buddyboss.com",
+    "license": "GPL-2.0-or-later",
+    "authors": [{
+        "name": "BuddyBoss",
+        "homepage": "https://buddyboss.com"
+    }],
+    "require": {
+        "composer/installers": "~1.0",
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "classmap"  : [ "includes/"]
+    }
+}

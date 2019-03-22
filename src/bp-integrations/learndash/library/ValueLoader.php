@@ -1,10 +1,10 @@
 <?php
 /**
- * @todo add description
- * 
+ * BuddyBoss LearnDash integration ValueLoader class.
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 namespace Buddyboss\LearndashIntegration\Library;
 
@@ -12,8 +12,8 @@ namespace Buddyboss\LearndashIntegration\Library;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Class to handle multi dimension values data
+ *
  * @since BuddyBoss 1.0.0
  */
 class ValueLoader
@@ -21,7 +21,7 @@ class ValueLoader
 	protected $value = [];
 
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -31,7 +31,7 @@ class ValueLoader
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get a value by key
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -59,7 +59,7 @@ class ValueLoader
 	}
 
 	/**
-	 * @todo add title/description
+	 * Set a value by key
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

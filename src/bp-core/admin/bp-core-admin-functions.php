@@ -2057,15 +2057,25 @@ function bp_register_member_type_import_submenu_page() {
 function bp_member_type_import_submenu_page() {
 	?>
 	<div class="wrap">
-		<div class="boss-import-area">
-			<form id="bp-member-type-import-form" method="post" action="">
-				<div class="import-panel-content">
-					<h1><?php _e( 'Import Profile Types', 'buddyboss' ); ?></h1>
-					<p><?php _e( 'Import your existing profile types (or "member types" in BuddyPress). You may have created these types <strong>manually via code</strong> or by using a <strong>third party plugin</strong> previously. The code or plugin needs to be activated on the site first. Then click "Run Migration" below and all of the data will be imported. Then you can disable and remove the old code or plugin.', 'buddyboss' ); ?></p><br/>
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools    ', 'buddypress' ) ); ?></h2>
+		<div class="nav-settings-subsubsub">
+			<ul class="subsubsub">
+				<?php bp_core_tools_settings_admin_tabs(); ?>
+			</ul>
+		</div>
+	</div>
+	<div class="wrap">
+		<div class="bp-admin-card">
+			<div class="boss-import-area">
+				<form id="bp-member-type-import-form" method="post" action="">
+					<div class="import-panel-content">
+						<h2><?php _e( 'Import Profile Types', 'buddyboss' ); ?></h2>
+						<p><?php _e( 'Import your existing profile types (or "member types" in BuddyPress). You may have created these types <strong>manually via code</strong> or by using a <strong>third party plugin</strong> previously. The code or plugin needs to be activated on the site first. Then click "Run Migration" below and all of the data will be imported. Then you can disable and remove the old code or plugin.', 'buddyboss' ); ?></p><br/>
 
-					<input type="submit" value="<?php _e('Run Migration', 'buddyboss'); ?>" id="bp-member-type-import-submit" name="bp-member-type-import-submit" class="button-primary">
-				</div>
-			</form>
+						<input type="submit" value="<?php _e('Run Migration', 'buddyboss'); ?>" id="bp-member-type-import-submit" name="bp-member-type-import-submit" class="button-primary">
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
 	<br />
@@ -2494,3 +2504,34 @@ function bp_core_get_tools_settings_admin_tabs( $active_tab = '' ) {
 	 */
 	return apply_filters( 'bp_core_get_tools_settings_admin_tabs', $tabs );
 }
+
+function bp_core_get_tools_import_profile_settings_admin_tabs( $tabs ) {
+
+	$tabs[] = array(
+		'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bp-member-type-import', 'tab' => 'bp-member-type-import' ), 'admin.php' ) ),
+		'name' => __( 'Import Profile Types', 'buddyboss' ),
+		'slug' => 'bp-member-type-import'
+	);
+
+	return $tabs;
+}
+add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_core_get_tools_import_profile_settings_admin_tabs', 20, 1 );
+
+/**
+ * Add the 'Site Notices' admin menu item.
+ *
+ * @since BuddyPress 3.0.0
+ */
+function bp_import_profile_types_admin_menu() {
+
+	add_submenu_page(
+		'buddyboss-platform',
+		__( 'Import Profile Types', 'buddyboss' ),
+		__( 'Import Profile Types', 'buddyboss' ),
+		'manage_options',
+		'bp-member-type-import',
+		'bp_member_type_import_submenu_page'
+	);
+
+}
+add_action( bp_core_admin_hook(), 'bp_import_profile_types_admin_menu' );

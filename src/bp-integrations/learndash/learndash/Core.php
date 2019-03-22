@@ -1,10 +1,10 @@
 <?php
 /**
- * @todo add description
- * 
+ * BuddyBoss LearnDash integration Core class.
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 namespace Buddyboss\LearndashIntegration\Learndash;
 
@@ -17,14 +17,14 @@ use Buddyboss\LearndashIntegration\Learndash\Group;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Core class for the learndash settings
+ *
  * @since BuddyBoss 1.0.0
  */
 class Core
 {
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -39,7 +39,7 @@ class Core
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add actions once integration is ready
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

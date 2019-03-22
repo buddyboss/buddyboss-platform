@@ -1,7 +1,7 @@
 <?php
 /**
  * BuddyBoss LearnDash integration group class.
- * 
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
  */
@@ -12,14 +12,14 @@ namespace Buddyboss\LearndashIntegration\Buddypress;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Class for all gruops related functions
+ *
  * @since BuddyBoss 1.0.0
  */
 class Group
 {
 	/**
-	 * @todo add title/description
+	 * Get groups that's not associated to ld
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

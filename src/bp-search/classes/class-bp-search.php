@@ -25,7 +25,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 		 * @var array
 		 * @since BuddyBoss 1.0.0
 		 */
-		private $search_helpers = array();
+		public $search_helpers = array();
 
 		public $searchable_items;
 

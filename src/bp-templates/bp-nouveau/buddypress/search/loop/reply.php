@@ -7,7 +7,7 @@ $topic_id = bbp_get_reply_topic_id($reply_id);
 		<div class="item-avatar">
 			<a href="<?php bbp_reply_url( $reply_id ); ?>">
 				<img
-					src="<?php echo bbp_get_forum_thumbnail_src( bbp_get_forum_id( $reply_id ) ) ?: buddypress()->plugin_url . "bp-core/images/mystery-forum.png"; ?>"
+					src="<?php echo bbp_get_forum_thumbnail_src( bbp_get_forum_id( $reply_id ) ) ?: buddypress()->plugin_url . "bp-core/images/forum.svg"; ?>"
 					class="avatar forum-avatar"
 					height="150"
 					width="150"

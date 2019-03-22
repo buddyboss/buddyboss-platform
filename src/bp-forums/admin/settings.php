@@ -1089,7 +1089,7 @@ function bbp_admin_settings() {
  */
 function bbp_converter_setting_callback_main_section() {
 ?>
-
+	<h3><?php _e('Database Settings', 'buddyboss') ?></h3>
 	<p><?php _e( 'Information about your previous forums database so that they can be converted. <strong>Backup your database before proceeding.</strong>', 'buddyboss' ); ?></p>
 
 <?php
@@ -1202,7 +1202,7 @@ function bbp_converter_setting_callback_dbname() {
  */
 function bbp_converter_setting_callback_options_section() {
 ?>
-
+	<h3><?php _e( 'Options', 'buddyboss' ); ?></h3>
 	<p><?php esc_html_e( 'Some optional parameters to help tune the conversion process.', 'buddyboss' ); ?></p>
 
 <?php
@@ -1317,21 +1317,24 @@ function bbp_converter_settings() {
 		</div>
 	</div>
 	<div class="wrap">
+		<div class="bp-admin-card">
 
-		<form action="#" method="post" id="bbp-converter-settings">
+			<form action="#" method="post" id="bbp-converter-settings">
 
-			<?php settings_fields( 'bbpress_converter' ); ?>
+				<?php settings_fields( 'bbpress_converter' ); ?>
 
-			<?php do_settings_sections( 'bbpress_converter' ); ?>
+				<?php do_settings_sections( 'bbpress_converter' ); ?>
 
-			<p class="submit">
-				<input type="button" name="submit" class="button-primary" id="bbp-converter-start" value="<?php esc_attr_e( 'Start', 'buddyboss' ); ?>" onclick="bbconverter_start();" />
-				<input type="button" name="submit" class="button-primary" id="bbp-converter-stop" value="<?php esc_attr_e( 'Stop', 'buddyboss' ); ?>" onclick="bbconverter_stop();" />
-				<img id="bbp-converter-progress" src="">
-			</p>
+				<p class="submit">
+					<input type="button" name="submit" class="button-primary" id="bbp-converter-start" value="<?php esc_attr_e( 'Start', 'buddyboss' ); ?>" onclick="bbconverter_start();" />
+					<input type="button" name="submit" class="button-primary" id="bbp-converter-stop" value="<?php esc_attr_e( 'Stop', 'buddyboss' ); ?>" onclick="bbconverter_stop();" />
+					<img id="bbp-converter-progress" src="">
+				</p>
 
-			<div class="bbp-converter-updated" id="bbp-converter-message"></div>
-		</form>
+				<div class="bbp-converter-updated" id="bbp-converter-message"></div>
+			</form>
+
+		</div>
 	</div>
 
 <?php
@@ -1530,7 +1533,7 @@ function bbp_form_slug_conflict_check( $slug, $default ) {
 			'_bbp_view_slug'          => array( 'name' => __( 'View base',   'buddyboss' ), 'default' => 'view',   'context' => 'Forums' ),
 
 			// Topic tag slug
-			'_bbp_topic_tag_slug'     => array( 'name' => __( 'Topic tag slug', 'buddyboss' ), 'default' => 'discussion-tag', 'context' => 'Forums' ),
+			'_bbp_topic_tag_slug'     => array( 'name' => __( 'Discussion tag slug', 'buddyboss' ), 'default' => 'discussion-tag', 'context' => 'Forums' ),
 		) );
 
 		/** BuddyBoss Core *******************************************************/

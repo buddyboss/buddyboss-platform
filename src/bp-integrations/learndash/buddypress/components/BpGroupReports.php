@@ -1,7 +1,7 @@
 <?php
 /**
- * @todo add description
- * 
+ * BuddyBoss LearnDash integration BpGroupReports class.
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
  */
@@ -14,14 +14,14 @@ defined( 'ABSPATH' ) || exit;
 use BP_Group_Extension;
 
 /**
- * @todo add title/description
- * 
+ * Exttends Buddypress Group Tab
+ *
  * @since BuddyBoss 1.0.0
  */
 class BpGroupReports extends BP_Group_Extension
 {
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -31,7 +31,7 @@ class BpGroupReports extends BP_Group_Extension
 	}
 
     /**
-	 * @todo add title/description
+	 * Display the tab content based on the selected sub tab
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -47,7 +47,7 @@ class BpGroupReports extends BP_Group_Extension
     }
 
     /**
-	 * @todo add title/description
+	 * Display the tab sub menu before the tab content
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -65,7 +65,7 @@ class BpGroupReports extends BP_Group_Extension
     }
 
     /**
-	 * @todo add title/description
+	 * Arguments to pass into the buddypress group extension class
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -96,7 +96,7 @@ class BpGroupReports extends BP_Group_Extension
     }
 
     /**
-	 * @todo add title/description
+	 * Determine who can see the tab
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

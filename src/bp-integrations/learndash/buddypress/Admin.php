@@ -1,10 +1,10 @@
 <?php
 /**
  * BuddyBoss LearnDash integration admin class.
- * 
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 namespace Buddyboss\LearndashIntegration\Buddypress;
 
@@ -12,14 +12,14 @@ namespace Buddyboss\LearndashIntegration\Buddypress;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Class for all admin related functions
+ *
  * @since BuddyBoss 1.0.0
  */
 class Admin
 {
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -29,7 +29,7 @@ class Admin
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add actions once integration is ready
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -44,7 +44,7 @@ class Admin
 	}
 
 	/**
-	 * @todo add title/description
+	 * Save group sync metabox value when bp group is saved from admin
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -70,7 +70,7 @@ class Admin
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add group sync metabox
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -86,7 +86,7 @@ class Admin
 	}
 
     /**
-	 * @todo add title/description
+	 * Output group sync metabox html
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

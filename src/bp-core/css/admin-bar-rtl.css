@@ -82,6 +82,7 @@ li.toplevel_page_buddyboss-platform .wp-submenu li a[href^="admin.php?page=bbp-r
 li.toplevel_page_buddyboss-platform .wp-submenu li a[href^="admin.php?page=bbp-converter"],
 li.toplevel_page_buddyboss-platform .wp-submenu li a[href^="admin.php?page=bbp-reset"],
 li.toplevel_page_buddyboss-platform .wp-submenu li a[href^="admin.php?page=bp-credits"],
+li.toplevel_page_buddyboss-platform .wp-submenu li a[href^="admin.php?page=bp-member-type-import"],
 li.toplevel_page_buddyboss-platform .wp-submenu li a[href^="admin.php?page=bp-appboss"] {
 	display: none !important;
 }

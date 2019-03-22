@@ -1,7 +1,7 @@
 <?php
 /**
  * BuddyBoss LearnDash integration hooks class.
- * 
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
  */
@@ -12,14 +12,14 @@ namespace Buddyboss\LearndashIntegration\Buddypress;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Class adds additional missing hooks from Learndash
+ *
  * @since BuddyBoss 1.0.0
  */
 class Hooks
 {
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -29,7 +29,7 @@ class Hooks
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add actions once integration is ready
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -45,24 +45,10 @@ class Hooks
 
 		add_action( 'groups_member_after_save', [ $this, 'groupMemberAdded' ] );
 		add_action( 'groups_member_after_remove', [ $this, 'groupMemberRemoved' ] );
-		add_action( 'bp_ld_sync/export_report_column', [ $this, 'export_report_column' ], 10, 2 );
 	}
 
 	/**
-	 * @todo add title/description
-	 *
-	 * @since BuddyBoss 1.0.0
-	 */
-	public function export_report_column( $columns, $report_generator ) {
-		if ( ! empty( $report_generator->args['step'] ) && in_array( $report_generator->args['step'], array( 'forum' ) ) ) {
-			$columns['status'] = $report_generator->column( 'status' );
-		}
-
-		return $columns;
-	}
-
-	/**
-	 * @todo add title/description
+	 * Sub action when bp gorup is created
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -72,7 +58,7 @@ class Hooks
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sub action when bp gorup is updated
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -82,7 +68,7 @@ class Hooks
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sub action before bp gorup is deleted
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -92,7 +78,7 @@ class Hooks
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sub action after bp gorup is deleted
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -102,7 +88,7 @@ class Hooks
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sub action when a member is added to bp group, based on type
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -131,7 +117,7 @@ class Hooks
 	}
 
 	/**
-	 * @todo add title/description
+	 * Sub action when a member is deleted to bp group, based on type
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

@@ -16,5 +16,11 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_core_register_widgets() {
 	add_action( 'widgets_init', function() { register_widget( 'BP_Core_Login_Widget' ); } );
+    if(is_multisite()) {
+        add_action( 'widgets_init', function() { register_widget( 'BP_Core_Network_Posts_Widget' ); } );
+    }
+    if(function_exists("bp_get_following_ids")) {
+        add_action( 'widgets_init', function() { register_widget( 'BP_Core_Follow_Following_Widget' ); } );
+    }
 }
 add_action( 'bp_register_widgets', 'bp_core_register_widgets' );

@@ -1,10 +1,10 @@
 <?php
 /**
  * BuddyBoss LearnDash integration essay reports generator.
- * 
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 namespace Buddyboss\LearndashIntegration\Buddypress\Generators;
 
@@ -17,14 +17,14 @@ use WpProQuiz_Model_Question;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Extends report generator for essays reports
+ *
  * @since BuddyBoss 1.0.0
  */
 class EssaysReportsGenerator extends ReportsGenerator
 {
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -37,14 +37,14 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Custom fetcher to load the essays from database and setup the pagination
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function fetch()
 	{
 		$essayQuery = $this->getGroupEssays($this->args);
-// print_r($essayQuery->request);die();
+
 		$this->results = $essayQuery->posts;
 		$this->pager = [
 			'total_items' => $essayQuery->found_posts,
@@ -54,7 +54,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Returns the columns and their settings
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -94,7 +94,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Format the activity results for each column
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -114,7 +114,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Load all the essays from the courses belong to the group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -153,7 +153,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add additional sql statement to fetch data
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -165,7 +165,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Remove additional sql statement to fetch data
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -177,7 +177,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add additional field sql statement
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -232,7 +232,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add additional joins sql statement
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -248,7 +248,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add additional order sql statement
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -268,7 +268,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	}
 
 	/**
-	 * @todo add title/description
+	 * Return the essay score if available
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

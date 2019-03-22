@@ -1,10 +1,10 @@
 <?php
 /**
- * @todo add description
- * 
+ * BuddyBoss LearnDash integration Admin class.
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 namespace Buddyboss\LearndashIntegration\Learndash;
 
@@ -12,14 +12,14 @@ namespace Buddyboss\LearndashIntegration\Learndash;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Class for learndash admin related functions
+ *
  * @since BuddyBoss 1.0.0
  */
 class Admin
 {
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -29,7 +29,7 @@ class Admin
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add actions once integration is ready
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -43,7 +43,7 @@ class Admin
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add gorup sync metabox to admin
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -59,7 +59,7 @@ class Admin
 	}
 
     /**
-	 * @todo add title/description
+	 * Output group sync metabox html
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

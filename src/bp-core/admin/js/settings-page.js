@@ -124,6 +124,15 @@
 			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li').find('a[href*="bp-tools"]').parent().addClass('current');
 		}
 
+		// Set Tools selected on Import Profile Types Page.
+		if ( $('body.buddypress.buddyboss_page_bp-member-type-import').length ) {
+			var selectorProfileImport= $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="bp-tools"]');
+			$(menuOpen).removeClass('current');
+			$(selectorProfileImport).addClass('current');
+			$(selectorProfileImport).attr('aria-current','page');
+			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li').find('a[href*="bp-tools"]').parent().addClass('current');
+		}
+
 	});
 
 }());

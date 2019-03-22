@@ -1,7 +1,7 @@
 <?php
 /**
  * BuddyBoss LearnDash integration ajax class.
- * 
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
  */
@@ -14,8 +14,8 @@ use Buddyboss\LearndashIntegration\Buddypress\ReportsGenerator;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * @todo add title/description
- * 
+ * Class for all ajax related functions
+ *
  * @since BuddyBoss 1.0.0
  */
 class Ajax
@@ -24,7 +24,7 @@ class Ajax
 	protected $ldGroup  = null;
 
 	/**
-	 * @todo add title/description
+	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -34,7 +34,7 @@ class Ajax
 	}
 
 	/**
-	 * @todo add title/description
+	 * Add actions once integration is ready
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -48,7 +48,7 @@ class Ajax
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get reports
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -60,14 +60,16 @@ class Ajax
 		$generator = $this->getGenerator();
 
 		/**
-		 * @todo add title/description
+		 * Hook before the data is fetched, in cause of overwriting the post value
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
 		do_action('bp_ld_sync/ajax/pre_fetch_reports', $generator);
+
 		$generator->fetch();
+
 		/**
-		 * @todo add title/description
+		 * Hook after the data is fetched, in cause of overwriting results value
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
@@ -90,7 +92,7 @@ class Ajax
 	}
 
 	/**
-	 * @todo add title/description
+	 * Unset the completed status when exporting
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -104,7 +106,7 @@ class Ajax
 	}
 
 	/**
-	 * @todo add title/description
+	 * Remove the id fields when fetching for display only
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -119,7 +121,7 @@ class Ajax
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get export data from report generator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -133,7 +135,7 @@ class Ajax
 	}
 
 	/**
-	 * @todo add title/description
+	 * Output the export content to header buffer
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -164,7 +166,7 @@ class Ajax
 	}
 
 	/**
-	 * @todo add title/description
+	 * Enable error reporting on local development (internal use only)
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -179,7 +181,7 @@ class Ajax
 	}
 
 	/**
-	 * @todo add title/description
+	 * Validate the ajax request
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -199,7 +201,7 @@ class Ajax
 	}
 
 	/**
-	 * @todo add title/description
+	 * Setup the current bp and ld groups on ajax request
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -220,7 +222,7 @@ class Ajax
 	}
 
 	/**
-	 * @todo add title/description
+	 * Get the generator class based on the request
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
