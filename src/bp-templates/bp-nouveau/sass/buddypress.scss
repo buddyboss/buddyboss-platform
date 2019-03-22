@@ -471,7 +471,17 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 /**
 *-------------------------------------------------------------------------------
-* @section 13.0 - Media
+* @section 13.0 - Login and Lost Password Popup
+*-------------------------------------------------------------------------------
+*/
+
+// Login and Lost Password index screen (directory)
+
+@import "../common-styles/_bp_login.scss";
+
+/**
+*-------------------------------------------------------------------------------
+* @section 14.0 - Media
 *-------------------------------------------------------------------------------
 */
 // Import global media styles

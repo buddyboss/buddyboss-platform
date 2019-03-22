@@ -13674,7 +13674,31 @@ img.mfp-img {
 
 /**
 *-------------------------------------------------------------------------------
-* @section 13.0 - Media
+* @section 13.0 - Login and Lost Password Popup
+*-------------------------------------------------------------------------------
+*/
+body.login .login-popup {
+  background: #FFF;
+  padding: 30px;
+  text-align: left;
+  min-height: 400px;
+  max-width: 650px;
+  margin: 40px auto;
+  position: relative;
+}
+
+body.login .login-popup .mfp-close {
+  color: #000;
+}
+
+body.login .login-popup .mfp-close:focus,
+body.login .login-popup .mfp-close:hover {
+  background: transparent;
+}
+
+/**
+*-------------------------------------------------------------------------------
+* @section 14.0 - Media
 *-------------------------------------------------------------------------------
 */
 .bb-activity-media-wrap {

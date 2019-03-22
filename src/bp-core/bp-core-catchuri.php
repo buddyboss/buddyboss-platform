@@ -1165,7 +1165,25 @@ function bp_private_network_template_redirect() {
 							exit();
 
 						}
+					// 404 redirect
+					} elseif ( is_404() ) {
+						$redirect_url = is_ssl() ? 'https://' : 'http://';
+						$redirect_url .= $_SERVER['HTTP_HOST'];
+						$redirect_url .= $_SERVER['REQUEST_URI'];
 
+						$defaults = array(
+							'mode'     => 2,
+							// 1 = $root, 2 = wp-login.php.
+							'redirect' => $redirect_url,
+							// the URL you get redirected to when a user successfully logs in.
+							'root'     => bp_get_root_domain(),
+							// the landing page you get redirected to when a user doesn't have access.
+							'message'  => __( 'You must log in to access the page you requested dfdfd.',
+								'buddyboss' ),
+						);
+
+						bp_core_no_access( $defaults );
+						exit();
 					}
 
 				} else {
@@ -1371,3 +1389,39 @@ function bp_remove_wc_lostpassword_url( $default_url = '' ) {
 }
 
 add_filter( 'lostpassword_url', 'bp_remove_wc_lostpassword_url', 11, 1 );
+
+add_filter( 'the_privacy_policy_link', 'bp_core_change_privacy_policy_link_on_private_network', 999999, 2 );
+function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_policy_url ) {
+
+	if ( ! is_user_logged_in() ) {
+
+		$enable_private_network = bp_get_option( 'bp-enable-private-network' );
+
+		if ( '0' === $enable_private_network ) {
+
+			$privacy_policy_url = get_privacy_policy_url();
+			$policy_page_id     = (int) get_option( 'wp_page_for_privacy_policy' );
+			$page_title         = ( $policy_page_id ) ? get_the_title( $policy_page_id ) : '';
+
+			if ( $privacy_policy_url && $page_title ) {
+				$get_privacy_policy = get_post( $policy_page_id );
+				$link = sprintf(
+					'<a class="privacy-policy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup"><h1>%s</h1>%s<<button title="%s" type="button" class="mfp-close">%s</button>/div>',
+					'#privacy-modal',
+					esc_html( $page_title ),
+					esc_html( $page_title ),
+					wp_kses_post( apply_filters( 'the_content',  $get_privacy_policy->post_content ) ),
+					esc_html( 'Close (Esc)' ),
+					esc_html( '×' )
+				);
+			}
+
+		}
+
+	}
+
+	$link = apply_filters( 'bp_core_change_privacy_policy_link_on_private_network', $link, $privacy_policy_url );
+
+
+	return $link;
+}
