@@ -68,8 +68,9 @@ class BP_Appboss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 	/**
 	 * @todo : Test more
-	 * Case-1: AppBoss is inActive
-	 * Case-2: AppBoss is Active but we would control LD Text from register_fields if LearnDash is InActive
+	 * Case-1: AppBoss is inActive but form_html would still be executed
+	 * Case-2: AppBoss is Active but LD is InActive
+	 * Case-3: LearnDash and AppBoss both are Active
 	 */
 	public function form_html() {
 
@@ -79,6 +80,12 @@ class BP_Appboss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			if (is_file($this->intro_template)) {
 				require $this->intro_template;
 			}
+
+		} else if (!defined('LEARNDASH_VERSION')) {
+			//NOTE : LearnDash is InActive
+
+			settings_fields($this->tab_name);
+			$this->bp_custom_do_settings_sections($this->tab_name);
 
 		} else {
 			//NOTE : LearnDash and AppBoss both are Active, so display form

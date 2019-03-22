@@ -152,20 +152,17 @@ class WcHelper {
 					$courseAccessMethod = $_REQUEST["bpms-$lmsType-$membershipType-course_access_method"];
 					update_post_meta($productId, "_bpms-$lmsType-$membershipType-course_access_method", $courseAccessMethod);
 
+					if (BPMS_DEBUG) {
+						error_log("Course Access Method selected :$courseAccessMethod");
+					}
+
 					if ($courseAccessMethod == 'SINGLE_COURSES') {
 						$newCourses = array_filter($_REQUEST["bpms-$lmsType-$membershipType-courses_enrolled"]);
 						update_post_meta($productId, "_bpms-$lmsType-$membershipType-courses_enrolled", serialize(array_values($newCourses)));
 					} else if ($courseAccessMethod == 'ALL_COURSES') {
 
-						if (BPMS_DEBUG) {
-							error_log("ALL_COURSES selected");
-						}
-
 						$allClosedCourses = BpMemberships::getLearndashClosedCourses();
 					} else if ($courseAccessMethod == 'LD_GROUPS') {
-						if (BPMS_DEBUG) {
-							error_log("LD_GROUPS selected");
-						}
 
 						$newGroups = array_filter($_REQUEST["bpms-$lmsType-$membershipType-groups_attached"]);
 						// error_log(print_r($newGroups, true));
