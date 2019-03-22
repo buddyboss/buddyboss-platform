@@ -31,4 +31,6 @@ function wcNoLearnDashText($integration) {
 	echo sprintf(
 		__("BuddyBoss Platform has integration settings for LearnDash-%s. If using LearnDash we add the ability to sync LearnDash groups with social groups, to generate course reports within social groups, and more. If using our BuddyBoss Theme we also include styling for LearnDash.", 'buddyboss'), $integration);
 
+	//@todo:  Try to hide 'Save Settings' button via Css here?
+
 }

@@ -66,7 +66,13 @@ class BP_Appboss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 	}
 
+	/**
+	 * @todo : Need to find a way to avoid using form_html here since integration-tab-intro(templates/admin/integration-tab-intro.php) is NOT displayed when AppBoss is inactive.
+	 * Explore-1: Load below function in particular file and includes if Plugin is active
+	 * Explore-2: Try to hide 'Save Settings' button via some javascript if possible?
+	 */
 	public function form_html() {
+
 		settings_fields($this->tab_name);
 		$this->bp_custom_do_settings_sections($this->tab_name);
 
@@ -78,6 +84,8 @@ class BP_Appboss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			</p>',
 				esc_attr__('Save Settings', 'buddyboss')
 			);
+		} else {
+
 		}
 	}
 }

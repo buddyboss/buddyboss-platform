@@ -2,6 +2,7 @@
     <h2>
         Memberships Logs
     </h2>
+   <a href="admin.php?page=bp-integrations" class="">Back to BuddyBoss</a>
     <div id="poststuff">
         <div class="metabox-holder columns-2" id="post-body">
             <div id="post-body-content">
