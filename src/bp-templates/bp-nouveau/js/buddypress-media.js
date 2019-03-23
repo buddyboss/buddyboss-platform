@@ -60,13 +60,13 @@ window.bp = window.bp || {};
 		 */
 		addListeners: function() {
 
-			$( '#buddypress' ).on( 'click', '#bp-add-media', this.openUploader.bind( this ) );
-			$( '#buddypress' ).on( 'click', '#bp-media-submit', this.submitMedia.bind( this ) );
-			$( '#buddypress' ).on( 'click', '#bp-media-uploader-close', this.closeUploader.bind( this ) );
+			$( '.bp-nouveau' ).on( 'click', '#bp-add-media', this.openUploader.bind( this ) );
+			$( '.bp-nouveau' ).on( 'click', '#bp-media-submit', this.submitMedia.bind( this ) );
+			$( '.bp-nouveau' ).on( 'click', '#bp-media-uploader-close', this.closeUploader.bind( this ) );
 
-			$( '#buddypress' ).on( 'click', '#bb-create-album', this.openCreateAlbumModal.bind( this ) );
-			$( '#buddypress' ).on( 'click', '#bp-media-create-album-submit', this.submitAlbum.bind( this ) );
-			$( '#buddypress' ).on( 'click', '#bp-media-create-album-close', this.closeCreateAlbumModal.bind( this ) );
+			$( '.bp-nouveau' ).on( 'click', '#bb-create-album', this.openCreateAlbumModal.bind( this ) );
+			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-album-submit', this.submitAlbum.bind( this ) );
+			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-album-close', this.closeCreateAlbumModal.bind( this ) );
 
 		},
 
@@ -113,6 +113,7 @@ window.bp = window.bp || {};
 						response.data.menu_order = self.dropzone_media.length;
 						response.data.album_id = self.album_id;
 						self.dropzone_media.push( response.data );
+						self.addMediaIdsToReply();
 					}
 					$('#bp-media-add-more').show();
 					$('#bp-media-uploader-modal-title').text('Uploading...');
@@ -199,6 +200,12 @@ window.bp = window.bp || {};
 			});
 
 		},
+
+		addMediaIdsToReply: function() {
+			var self = this;
+
+			$('#bbp_media').val(JSON.stringify(self.dropzone_media));
+		}
 	};
 
 	// Launch BP Nouveau Media

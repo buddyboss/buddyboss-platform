@@ -788,3 +788,49 @@ function bp_album_add( $args = '' ) {
 
 	return $album->id;
 }
+
+
+//********************** Forums ***************************//
+
+function bp_media_forums_reply_media_field() {
+    if ( bp_is_media_forums_media_support_enabled() ) {
+        ?><a href="#" id="bp-add-media" class="bb-add-media button small outline"><?php _e( 'Add Media', 'buddyboss' ); ?></a>
+	    <?php bp_get_template_part( 'members/single/media/uploader' ); ?>
+        <input name="bbp_media" id="bbp_media" type="hidden" value=""/>
+	    <?php
+    }
+}
+add_action( 'bbp_theme_before_reply_form_submit_wrapper', 'bp_media_forums_media_field' );
+
+
+function bp_media_forums_new_post_media_save( $post_id ) {
+
+    if ( ! empty( $_POST['bbp_media'] ) ) {
+	    // save media
+	    $medias = json_decode( stripslashes( $_POST['bbp_media'] ), true );
+	    $media_ids = array();
+	    foreach ( $medias as $media ) {
+		    $media_id = bp_media_add( array(
+			    'attachment_id' => $media['id'],
+			    'title'         => $media['name'],
+			    'activity_id'   => false,
+			    'album_id'      => $media['album_id'],
+			    'error_type'    => 'wp_error'
+		    ) );
+
+		    if ( ! is_wp_error( $media_id ) ) {
+			    $media_ids[] = $media_id;
+            }
+	    }
+
+	    //Save all attachment ids in forums post meta
+	    update_post_meta( $post_id, 'bp_media_ids', $media_ids );
+    }
+}
+
+add_action( 'bbp_new_reply', 'bp_media_forums_new_post_media_save' );
+add_action( 'bbp_new_topic', 'bp_media_forums_new_post_media_save' );
+add_action( 'edit_post',     'bp_media_forums_new_post_media_save' );
+
+//add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 10, 2 );
+//add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 10, 2 );
