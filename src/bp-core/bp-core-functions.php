@@ -4102,39 +4102,39 @@ function bp_platform_default_activity_types() {
 	$activity_type = apply_filters( 'bp_platform_default_activity_types', array(
 		'0' => array(
 			'activity_name' => 'new_avatar',
-			'activity_label' => 'Member changes their profile photo'
+			'activity_label' => __( 'Member changes their profile photo', 'buddyboss' )
 		),
 		'1' => array(
 			'activity_name' => 'updated_profile',
-			'activity_label' => 'Member updated their profile'
+			'activity_label' => __( 'Member updates their profile details', 'buddyboss' )
 		),
 		'2' => array(
 			'activity_name' => 'new_member',
-			'activity_label' => 'Member registered on site'
+			'activity_label' => __( 'Member registers to the site', 'buddyboss' )
 		),
 		'3' => array(
 			'activity_name' => 'friendship_created',
-			'activity_label' => 'Two members become connected'
+			'activity_label' => __( 'Two members become connected', 'buddyboss' )
 		),
 		'4' => array(
 			'activity_name' => 'created_group',
-			'activity_label' => 'Member creates a group'
+			'activity_label' => __( 'Member creates a group', 'buddyboss' )
 		),
 		'5' => array(
 			'activity_name' => 'joined_group',
-			'activity_label' => 'Member joins a group'
+			'activity_label' => __( 'Member joins a group', 'buddyboss' )
 		),
 		'6' => array(
 			'activity_name' => 'group_details_updated',
-			'activity_label' => 'Group detail updated'
+			'activity_label' => __( 'Group details are updated', 'buddyboss' )
 		),
 		'7' => array(
 			'activity_name' => 'bbp_topic_create',
-			'activity_label' => 'Member creates a forum discussion'
+			'activity_label' => __( 'Member creates a forum discussion', 'buddyboss' )
 		),
 		'8' => array(
 			'activity_name' => 'bbp_reply_create',
-			'activity_label' => 'Member replies to a forum discussion'
+			'activity_label' => __( 'Member replies to a forum discussion', 'buddyboss' )
 		)
 	));
 
