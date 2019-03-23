@@ -41,7 +41,7 @@ function bp_admin_setting_callback_account_deletion() {
 ?>
 
 	<input id="bp-disable-account-deletion" name="bp-disable-account-deletion" type="checkbox" value="1" <?php checked( !bp_disable_account_deletion( false ) ); ?> />
-	<label for="bp-disable-account-deletion"><?php _e( 'Allow members to delete their profile', 'buddyboss' ); ?></label>
+	<label for="bp-disable-account-deletion"><?php _e( 'Allow members to delete their profiles', 'buddyboss' ); ?></label>
 
 <?php
 }
