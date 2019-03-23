@@ -423,10 +423,10 @@ class BpMemberships {
 	 * @param  {boolean}     $grantAccess - Whether to grant/revoke access
 	 * @return {void}
 	 */
-	public static function updateBpmsEvent($membershipObj, $membershipProductSlug, $grantAccess = true) {
+	public static function updateBpmsMembershipEvent($membershipObj, $membershipProductSlug, $grantAccess = true) {
 
 		if (BPMS_DEBUG) {
-			error_log("updateBpmsEvent(),productPostType :  $membershipProductSlug");
+			error_log("updateBpmsMembershipEvent(),productPostType :  $membershipProductSlug");
 		}
 		$lmsCourseSlugs = self::getLmsCourseSlugs(LD_COURSE_SLUG);
 		// NOTE : LMS Type(s), Eg (Slugs): Learndash
@@ -614,7 +614,7 @@ class BpMemberships {
 					error_log("isEnabled");
 
 					// NOTE : Update BBMS Event
-					self::updateBpmsEvent($membershipObj, $membershipProductSlug, $grantAccess);
+					self::updateBpmsMembershipEvent($membershipObj, $membershipProductSlug, $grantAccess);
 				} else {
 					error_log("isDisabled");
 				}
@@ -635,7 +635,7 @@ class BpMemberships {
 					$isEnabled = get_post_meta($itemObj['product_id'], "_bpms-$lmsCourseSlug-$membershipProductSlug-is_enabled", true);
 					if ($isEnabled) {
 						// NOTE : Update BBMS Event
-						self::updateBpmsEvent($itemObj, $membershipProductSlug, $grantAccess);
+						self::updateBpmsMembershipEvent($itemObj, $membershipProductSlug, $grantAccess);
 					}
 
 				}
