@@ -18,7 +18,7 @@ defined('ABSPATH') || exit;
 function mpRenderAnchor($integration) {
 
 	echo wpautop(
-		__("<a href=\"admin.php?page=bp-memberships-log&integration=$integration\" style=\"float:right\">View Logs</a>", 'buddyboss')
+		'<a href="admin.php?page=bp-memberships-log&integration=$integration" class="button" style="float:right">'.__('View Logs','buddyboss').'</a>'
 	);
 }
 

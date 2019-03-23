@@ -479,14 +479,16 @@ tr.bp-search-parent-field label {
   background-image: url(../../images/admin/admin_icon-learndash.png);
 }
 
-/* Integrations - WooCommerce */
-.bp-admin-card.section-bp_woocommerce_disabled h2 {
-  background-image: url(../../images/admin/admin_icon-woocommerce.png);
+/* Integrations - MemberPress */
+.bp-admin-card.section-bp-memberpress_disabled h2,
+.bp-admin-card.section-bp-memberpress-section h2 {
+  background-image: url(../../images/admin/admin_icon-memberpress.png);
 }
 
-/* Integrations - MemberPress */
-.bp-admin-card.section-bp_memberpress_disabled h2 {
-  background-image: url(../../images/admin/admin_icon-memberpress.png);
+/* Integrations - WooCommerce */
+.bp-admin-card.section-bp-woocommerce_disabled h2,
+.bp-admin-card.section-bp-woocommerce-section h2 {
+  background-image: url(../../images/admin/admin_icon-woocommerce.png);
 }
 
 /*

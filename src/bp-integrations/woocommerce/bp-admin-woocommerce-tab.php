@@ -34,7 +34,7 @@ class BP_Woocommerce_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_section(
 			$this->current_section, // Unique Identifier
-			__('General Settings ', 'buddyboss') //Title,
+			__('WooCommerce Settings ', 'buddyboss') //Title,
 
 		);
 		if (defined('LEARNDASH_VERSION')) {
@@ -42,9 +42,9 @@ class BP_Woocommerce_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			// If Enabled/Disabled
 			$this->add_checkbox_field(
 				'bp-woocommerce_enabled', // Unique Identifier
-				__('Enable', 'buddyboss'), //Title
-				['input_text' => __("LearnDash-WooCommerce Integration", 'buddyboss'),
-					'input_description' => __("Enroll user in LearnDash course(s) after purchasing WooCommerce product.", 'buddyboss')]); //Callback
+				__('LearnDash Enrollment', 'buddyboss'), //Title
+				['input_text' => __("Enroll members into LearnDash course(s) after purchasing WooCommerce products", 'buddyboss'),
+					'input_description' => __("Configure the course enrollment when editing the product", 'buddyboss')]); //Callback
 
 			$this->add_field(
 				'bp-woocommerce_link', // Unique Identifier

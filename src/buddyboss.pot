@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-23 08:03:55+00:00\n"
+"POT-Creation-Date: 2019-03-23 13:02:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2026,7 +2026,7 @@ msgid "Show the Toolbar for logged out users"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:44
-msgid "Allow members to delete their profile"
+msgid "Allow members to delete their profiles"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:59
@@ -2143,11 +2143,9 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:426
-#: bp-core/classes/class-bp-admin.php:328
-#: bp-core/classes/class-bp-admin.php:329
-#: bp-core/classes/class-bp-admin.php:441
-#: bp-core/classes/class-bp-admin.php:442
-msgid "Mobile App"
+#: bp-integrations/appboss/bp-appboss-integration.php:24
+#: bp-integrations/appboss/templates/admin/integration-tab-intro.php:11
+msgid "AppBoss"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:500
@@ -4358,6 +4356,42 @@ msgid ""
 "email settings."
 msgstr ""
 
+#: bp-core/bp-core-functions.php:4105
+msgid "Member changes their profile photo"
+msgstr ""
+
+#: bp-core/bp-core-functions.php:4109
+msgid "Member updates their profile details"
+msgstr ""
+
+#: bp-core/bp-core-functions.php:4113
+msgid "Member registers to the site"
+msgstr ""
+
+#: bp-core/bp-core-functions.php:4117
+msgid "Two members become connected"
+msgstr ""
+
+#: bp-core/bp-core-functions.php:4121
+msgid "Member creates a group"
+msgstr ""
+
+#: bp-core/bp-core-functions.php:4125
+msgid "Member joins a group"
+msgstr ""
+
+#: bp-core/bp-core-functions.php:4129
+msgid "Group details are updated"
+msgstr ""
+
+#: bp-core/bp-core-functions.php:4133
+msgid "Member creates a forum discussion"
+msgstr ""
+
+#: bp-core/bp-core-functions.php:4137
+msgid "Member replies to a forum discussion"
+msgstr ""
+
 #: bp-core/bp-core-moderation.php:134
 msgid "You have posted too many links"
 msgstr ""
@@ -4852,6 +4886,13 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:308
 #: bp-core/classes/class-bp-admin.php:421
 msgid "Plugin Integrations"
+msgstr ""
+
+#: bp-core/classes/class-bp-admin.php:328
+#: bp-core/classes/class-bp-admin.php:329
+#: bp-core/classes/class-bp-admin.php:441
+#: bp-core/classes/class-bp-admin.php:442
+msgid "Mobile App"
 msgstr ""
 
 #: bp-core/classes/class-bp-admin.php:374
@@ -7548,7 +7589,7 @@ msgid "Customize your Forums directory. Use Shortcodes for more flexibility."
 msgstr ""
 
 #: bp-forums/admin/settings.php:803
-msgid "Prefix all forum content with the Forums Directory slug (Recommended)"
+msgid "Prefix all forum content with the Forums page slug (Recommended)"
 msgstr ""
 
 #: bp-forums/admin/settings.php:823
@@ -11978,9 +12019,7 @@ msgid "Group invite rejected"
 msgstr ""
 
 #: bp-integrations/appboss/bp-admin-appboss-tab.php:43
-#: bp-integrations/memberpress/bp-admin-memberpress-tab.php:46
 #: bp-integrations/memberships/bp-admin-memberships-tab.php:44
-#: bp-integrations/woocommerce/bp-admin-woocommerce-tab.php:45
 msgid "Enable"
 msgstr ""
 
@@ -11992,6 +12031,12 @@ msgstr ""
 msgid "Enroll user in LearnDash course(s) after purchasing In-App purchases."
 msgstr ""
 
+#: bp-integrations/appboss/bp-appboss-functions.php:21
+#: bp-integrations/memberpress/bp-memberpress-functions.php:21
+#: bp-integrations/woocommerce/bp-woocommerce-functions.php:21
+msgid "View Logs"
+msgstr ""
+
 #: bp-integrations/appboss/bp-appboss-functions.php:32
 #: bp-integrations/memberpress/bp-memberpress-functions.php:32
 #: bp-integrations/woocommerce/bp-woocommerce-functions.php:33
@@ -12001,11 +12046,6 @@ msgid ""
 "groups with social groups, to generate course reports within social groups, "
 "and more. If using our BuddyBoss Theme we also include styling for "
 "LearnDash."
-msgstr ""
-
-#: bp-integrations/appboss/bp-appboss-integration.php:24
-#: bp-integrations/appboss/templates/admin/integration-tab-intro.php:11
-msgid "AppBoss"
 msgstr ""
 
 #: bp-integrations/appboss/templates/admin/integration-tab-intro.php:4
@@ -12653,16 +12693,22 @@ msgid "Message"
 msgstr ""
 
 #: bp-integrations/memberpress/bp-admin-memberpress-tab.php:38
-#: bp-integrations/woocommerce/bp-admin-woocommerce-tab.php:37
-msgid "General Settings "
+msgid "MemberPress Settings "
+msgstr ""
+
+#: bp-integrations/memberpress/bp-admin-memberpress-tab.php:46
+#: bp-integrations/woocommerce/bp-admin-woocommerce-tab.php:45
+msgid "LearnDash Enrollment"
 msgstr ""
 
 #: bp-integrations/memberpress/bp-admin-memberpress-tab.php:47
-msgid "LearnDash-MemberPress Integration"
+msgid ""
+"Enroll members in LearnDash course(s) after purchasing MemberPress "
+"memberships."
 msgstr ""
 
 #: bp-integrations/memberpress/bp-admin-memberpress-tab.php:48
-msgid "Enroll user in LearnDash course(s) after purchasing MemberPress membership."
+msgid "Configure the course enrollment when editing the membership."
 msgstr ""
 
 #: bp-integrations/memberpress/bp-memberpress-integration.php:24
@@ -12897,12 +12943,18 @@ msgstr ""
 msgid "Button order:"
 msgstr ""
 
+#: bp-integrations/woocommerce/bp-admin-woocommerce-tab.php:37
+msgid "WooCommerce Settings "
+msgstr ""
+
 #: bp-integrations/woocommerce/bp-admin-woocommerce-tab.php:46
-msgid "LearnDash-WooCommerce Integration"
+msgid ""
+"Enroll members into LearnDash course(s) after purchasing WooCommerce "
+"products"
 msgstr ""
 
 #: bp-integrations/woocommerce/bp-admin-woocommerce-tab.php:47
-msgid "Enroll user in LearnDash course(s) after purchasing WooCommerce product."
+msgid "Configure the course enrollment when editing the product"
 msgstr ""
 
 #: bp-integrations/woocommerce/bp-woocommerce-integration.php:24
