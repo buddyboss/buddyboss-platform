@@ -2447,7 +2447,7 @@ function bp_core_get_components( $type = 'all' ) {
 
 	$required_components = array(
 		'members' => array(
-			'title'       => __( 'Member Profiles', 'buddyboss' ),
+			'title'       => __( 'Members', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-xprofile' ) , 'admin.php' ) ),
 			'description' => __( 'Everything in a community website revolves around its members.', 'buddyboss' ),
 		),
@@ -2465,38 +2465,16 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Allow members to modify their account and notification settings from within their profile.', 'buddyboss' ),
 			'default'     => true,
 		),
-		'friends'  => array(
-			'title'       => __( 'Member Connections', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-friends' ) , 'admin.php' ) ),
-			'description' => __( 'Allow members to make connections with one another and focus on those they care about most.', 'buddyboss' ),
-			'default'     => false,
-		),
-		'invites'  => array(
-			'title'       => __( 'Email Invites', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-invites' ) , 'admin.php' ) ),
-			'description' => __( 'Allow members to send email invitations to non-members to join the network.', 'buddyboss' ),
-			'default'     => false,
-		),
-		'messages' => array(
-			'title'       => __( 'Private Messaging', 'buddyboss' ),
-			'description' => __( 'Allow members to send private message. Messages can be sent to one member or a group of members.', 'buddyboss' ),
-            'default'     => false,
+		'notifications' => array(
+			'title'       => __( 'Notifications', 'buddyboss' ),
+			'description' => __( 'Notify members of relevant activity with a toolbar bubble and/or via email and allow them to customize their notification settings.', 'buddyboss' ),
+			'default'     => true,
 		),
 		'activity' => array(
 			'title'       => __( 'Activity Feeds', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-activity' ) , 'admin.php' ) ),
 			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, and @mentions, with email notification support.', 'buddyboss' ),
 			'default'     => false,
-		),
-		'blogs'    => array(
-			'title'       => __( 'Blog Feeds', 'buddyboss' ),
-			'description' => __( 'Have new blog posts and comments appear in site activity feeds. Make sure to enable Activity Feeds first.', 'buddyboss' ),
-            'default'     => false,
-		),
-		'notifications' => array(
-			'title'       => __( 'Notifications', 'buddyboss' ),
-			'description' => __( 'Notify members of relevant activity with a toolbar bubble and/or via email and allow them to customize their notification settings.', 'buddyboss' ),
-			'default'     => true,
 		),
 		'groups'   => array(
 			'title'       => __( 'Social Groups', 'buddyboss' ),
@@ -2510,17 +2488,39 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Allow members to have discussions using Q&A style message boards. Forums can be standalone or connected to social groups.', 'buddyboss' ),
             'default'     => false,
 		),
+		'friends'  => array(
+			'title'       => __( 'Member Connections', 'buddyboss' ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-friends' ) , 'admin.php' ) ),
+			'description' => __( 'Allow members to make connections with one another and focus on those they care about most.', 'buddyboss' ),
+			'default'     => false,
+		),
+		'media'   => array(
+			'title'       => __( 'Media', 'buddyboss' ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-media' ) , 'admin.php' ) ),
+			'description' => __( 'Allow members to upload photos and create photo albums.', 'buddyboss' ),
+			'default'     => false,
+		),
+		'invites'  => array(
+			'title'       => __( 'Email Invites', 'buddyboss' ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-invites' ) , 'admin.php' ) ),
+			'description' => __( 'Allow members to send email invitations to non-members to join the network.', 'buddyboss' ),
+			'default'     => false,
+		),
+		'messages' => array(
+			'title'       => __( 'Private Messaging', 'buddyboss' ),
+			'description' => __( 'Allow members to send private message. Messages can be sent to one member or a group of members.', 'buddyboss' ),
+            'default'     => false,
+		),
 		'search'   => array(
 			'title'       => __( 'Network Search', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-search' ) , 'admin.php' ) ),
 			'description' => __( 'Allow members to search the entire network, along with custom post types of your choice, all in one unified search bar.', 'buddyboss' ),
 			'default'     => false,
 		),
-		'media'   => array(
-			'title'       => __( 'Media', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-media' ) , 'admin.php' ) ),
-			'description' => __( 'Allow members to upload photos into activity posts and create albums.', 'buddyboss' ),
-			'default'     => false,
+		'blogs'    => array(
+			'title'       => __( 'Blog Feeds', 'buddyboss' ),
+			'description' => __( 'Have new blog posts and comments appear in site activity feeds. Make sure to enable Activity Feeds first.', 'buddyboss' ),
+            'default'     => false,
 		)
 	);
 
