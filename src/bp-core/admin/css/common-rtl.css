@@ -211,6 +211,10 @@ TABLE OF CONTENTS:
 /*
  * 2.2 Settings - Components
  */
+#bp-admin-component-form .tablenav {
+  margin-bottom: 10px;
+}
+
 #bp-admin-component-form .wp-list-table.plugins .plugin-title {
   width: 25%;
   padding-bottom: 15px;
