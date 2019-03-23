@@ -18,7 +18,7 @@ class BP_Memberpress_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	protected $current_section;
 
 	public function initialize() {
-		$this->tab_order = 20;
+		$this->tab_order = 30;
 		$this->intro_template = $this->root_path . '/templates/admin/integration-tab-intro.php';
 		$this->current_section = 'bp-memberpress-section';
 	}
