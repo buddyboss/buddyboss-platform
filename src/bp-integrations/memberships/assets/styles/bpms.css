@@ -14,7 +14,7 @@
 /* LearnDash Menu Icon */
 
 li.sfwd-courses_tab a:before {
-    font-family: "dashicons" !important;
+    font-family: dashicons !important;
     content: "\f118" !important;
 }
 

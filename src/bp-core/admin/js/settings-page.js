@@ -2,12 +2,12 @@
 	var $ = jQuery.noConflict();
 
 	$(function() {
-		$("[data-run-js-condition]").each(function() {
+		$('[data-run-js-condition]').each(function() {
 			var id = $(this).data('run-js-condition');
 			var tag= $(this).prop('tagName');
 
 			$(this).on('change.run-condition', function(e) {
-				if (tag == 'SELECT' && $(this).is(":visible")) {
+				if (tag == 'SELECT' && $(this).is(':visible')) {
 					var selector = id + '-' + $(this).val();
 					$("[class*='js-show-on-" + id + "-']:not(.js-show-on-" + selector + ")").hide();
 					$(".js-show-on-" + selector).show().find('[data-run-js-condition]').trigger('change.run-condition');

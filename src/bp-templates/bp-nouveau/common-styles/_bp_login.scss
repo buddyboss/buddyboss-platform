@@ -5,22 +5,22 @@
 body.login {
 
 	.login-popup {
-	  background: #FFF;
-	  padding: 30px;
-	  text-align: left;
-	  min-height: 400px;
-	  max-width: 650px;
-	  margin: 40px auto;
-	  position: relative;
+		background: #fff;
+		padding: 30px;
+		text-align: left;
+		min-height: 400px;
+		max-width: 650px;
+		margin: 40px auto;
+		position: relative;
 	}
 
 	.login-popup .mfp-close {
-	  color: #000;
+		color: #000;
 	}
 
 	.login-popup .mfp-close:focus,
 	.login-popup .mfp-close:hover {
-	  background: transparent;
+		background: transparent;
 	}
 
 }

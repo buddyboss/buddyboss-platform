@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-24 08:25:27+00:00\n"
+"POT-Creation-Date: 2019-03-24 10:36:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -6194,6 +6194,7 @@ msgstr ""
 
 #: bp-core/profile-search/bps-xprofile.php:361
 #: bp-integrations/learndash/bp-learndash-integration.php:22
+#: bp-integrations/memberships/includes/WcHelper.php:41
 #: bp-integrations/memberships/templates/memberpress/tab.php:9
 msgid "LearnDash"
 msgstr ""
@@ -12776,10 +12777,6 @@ msgstr ""
 
 #: bp-integrations/memberships/includes/EventsList.php:171
 msgid "Event/Transaction"
-msgstr ""
-
-#: bp-integrations/memberships/includes/WcHelper.php:41
-msgid "Learndash"
 msgstr ""
 
 #: bp-integrations/memberships/includes/WpListTable.php:171

@@ -38,7 +38,7 @@ class WcHelper {
 			if ($lmsCourseSlug == LD_COURSE_SLUG) {
 
 				$tabs[$lmsCourseSlug] = array(
-					'label' => __('Learndash', 'woocommerce'),
+					'label' => __('LearnDash', 'woocommerce'),
 					'target' => 'learndash_product_data',
 					'class' => array(),
 					'priority' => 100,
