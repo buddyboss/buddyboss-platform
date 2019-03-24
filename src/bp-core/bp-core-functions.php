@@ -2479,7 +2479,7 @@ function bp_core_get_components( $type = 'all' ) {
 		'groups'   => array(
 			'title'       => __( 'Social Groups', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-groups' ) , 'admin.php' ) ),
-			'description' => __( 'Allow members to organize themselves into public, private or hidden social areas with separate activity feeds and member listing.', 'buddyboss' ),
+			'description' => __( 'Allow members to organize themselves into public, private or hidden social groups with separate activity feeds and member listings.', 'buddyboss' ),
             'default'     => false,
 		),
 		'forums'   => array(
@@ -2508,7 +2508,7 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'messages' => array(
 			'title'       => __( 'Private Messaging', 'buddyboss' ),
-			'description' => __( 'Allow members to send private message. Messages can be sent to one member or a group of members.', 'buddyboss' ),
+			'description' => __( 'Allow members to send private messages. Messages can be sent to one member or a group of members.', 'buddyboss' ),
             'default'     => false,
 		),
 		'search'   => array(
