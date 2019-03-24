@@ -114,12 +114,12 @@ TABLE OF CONTENTS:
 			color: var(--bp-hello-color-primary);
 		}
 
-		&.support:before {
-			content: "\f448";
-		}
-
 		&.twitter:before {
 			content: "\f301";
+		}
+
+		&.facebook:before {
+			content: "\f304";
 		}
 	}
 }

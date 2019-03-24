@@ -726,7 +726,7 @@ function bp_nouveau_theme_cover_image( $params = array() ) {
 
 		#buddypress div#item-header-cover-image h2 a,
 		#buddypress div#item-header-cover-image h2 {
-			color: #FFF;
+			color: #fff;
 			text-rendering: optimizelegibility;
 			text-shadow: 0px 0px 3px rgba( 0, 0, 0, 0.8 );
 			margin: 0 0 .6em;
