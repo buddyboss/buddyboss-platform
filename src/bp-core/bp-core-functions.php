@@ -2449,7 +2449,7 @@ function bp_core_get_components( $type = 'all' ) {
 		'members' => array(
 			'title'       => __( 'Members', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-xprofile' ) , 'admin.php' ) ),
-			'description' => __( 'Everything in a community website revolves around its members.', 'buddyboss' ),
+			'description' => __( 'Everything in a community website revolves around its members. All website users are given member profiles.', 'buddyboss' ),
 		),
 		'xprofile' => array(
 			'title'       => __( 'Profile Fields', 'buddyboss' ),
