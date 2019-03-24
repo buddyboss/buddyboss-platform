@@ -6731,11 +6731,11 @@ button[data-bp-close]:hover {
   }
 }
 
-.caret {
+.bp-caret {
   position: relative;
 }
 
-.caret:before, .caret--stroked:after {
+.bp-caret:before, .bp-caret--stroked:after {
   border-style: solid;
   border-width: 5px;
   content: "";
@@ -6745,7 +6745,7 @@ button[data-bp-close]:hover {
   width: 0;
 }
 
-.caret--right:before, .caret--right.caret--stroked:after {
+.bp-caret--right:before, .bp-caret--right.bp-caret--stroked:after {
   border-right-width: 0 !important;
   border-bottom-color: transparent !important;
   border-right-color: transparent !important;
@@ -6756,7 +6756,7 @@ button[data-bp-close]:hover {
   transform: translateX(100%) translateY(-50%);
 }
 
-.caret--left:before, .caret--left.caret--stroked:after {
+.bp-caret--left:before, .bp-caret--left.bp-caret--stroked:after {
   border-left-width: 0 !important;
   border-bottom-color: transparent !important;
   border-left-color: transparent !important;
@@ -6767,7 +6767,7 @@ button[data-bp-close]:hover {
   transform: translateX(-100%) translateY(-50%);
 }
 
-.caret--top:before, .caret--top.caret--stroked:after {
+.bp-caret--top:before, .bp-caret--top.bp-caret--stroked:after {
   border-top-width: 0 !important;
   border-left-color: transparent !important;
   border-right-color: transparent !important;
@@ -6778,7 +6778,7 @@ button[data-bp-close]:hover {
   transform: translateX(-50%) translateY(-100%);
 }
 
-.caret--bottom:before, .caret--bottom.caret--stroked:after {
+.bp-caret--bottom:before, .bp-caret--bottom.bp-caret--stroked:after {
   border-bottom-width: 0 !important;
   border-left-color: transparent !important;
   border-right-color: transparent !important;
@@ -6789,19 +6789,19 @@ button[data-bp-close]:hover {
   transform: translateX(-50%) translateY(100%);
 }
 
-.caret--right.caret--stroked:after {
+.bp-caret--right.bp-caret--stroked:after {
   right: 1px;
 }
 
-.caret--left.caret--stroked:after {
+.bp-caret--left.bp-caret--stroked:after {
   left: 1px;
 }
 
-.caret--top.caret--stroked:after {
+.bp-caret--top.bp-caret--stroked:after {
   top: 1px;
 }
 
-.caret--bottom.caret--stroked:after {
+.bp-caret--bottom.bp-caret--stroked:after {
   bottom: 1px;
 }
 

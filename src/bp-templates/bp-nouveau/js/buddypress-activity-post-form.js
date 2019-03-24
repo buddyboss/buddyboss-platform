@@ -366,7 +366,7 @@ window.bp = window.bp || {};
 	// Gif search dropdown
 	bp.Views.GifMediaSearchDropdown = bp.View.extend( {
 		tagName: 'div',
-		className: 'activity-attached-gif-container  caret caret--stroked caret--top',
+		className: 'activity-attached-gif-container  bp-caret bp-caret--stroked bp-caret--top',
 		template: bp.template( 'gif-media-search-dropdown' ),
 		total_count: 0,
 		offset: 0,
