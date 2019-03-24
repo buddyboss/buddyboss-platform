@@ -689,7 +689,10 @@ window.bp = window.bp || {};
 				}
 
 				// Roll-down comments
-				if ( activity_item[ 0 ].classList.contains( 'has-comments' ) && !activity_item[ 0 ].classList.contains( 'comments-loaded' ) ) {
+				if ( activity_item[ 0 ].classList.contains( 'has-comments' ) &&
+				     !activity_item[ 0 ].classList.contains( 'comments-loaded' ) &&
+				     !$activity_comments[ 0 ].classList.contains( 'comments-loading' )
+				) {
 					$activity_comments[ 0 ].classList.add( 'comments-loading' );
 					form[ 0 ].insertAdjacentHTML( 'beforebegin', comment_load_template() );
 					wp.ajax.send( 'bp_get_comments', {
