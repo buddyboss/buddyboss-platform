@@ -75,6 +75,7 @@ window.bp = window.bp || {};
 			item_id:   0,
 			object:   '',
 			content:  '',
+			posting: false,
 			link_success: false,
 			link_error: false,
 			link_error_msg: '',
@@ -1048,14 +1049,14 @@ window.bp = window.bp || {};
 		className : 'in-profile',
 
 		initialize: function() {
-			var reset = new bp.Views.ActivityInput( {
+			this.reset = new bp.Views.ActivityInput( {
 				type  : 'reset',
 				id    : 'aw-whats-new-reset',
 				className : 'text-button small',
 				value : BP_Nouveau.activity.strings.cancelButton
 			} );
 
-			var submit = new bp.Views.ActivityInput( {
+			this.submit = new bp.Views.ActivityInput( {
 				model: this.model,
 				type  : 'submit',
 				id    : 'aw-whats-new-submit',
@@ -1064,9 +1065,10 @@ window.bp = window.bp || {};
 				value : BP_Nouveau.activity.strings.postUpdateButton
 			} );
 
-			this.views.set( [ submit, reset ] );
+			this.views.set( [ this.submit, this.reset ] );
 
 			this.model.on( 'change:object', this.updateDisplay, this );
+			this.model.on( 'change:posting', this.updateStatus, this );
 		},
 
 		updateDisplay: function( model ) {
@@ -1078,6 +1080,24 @@ window.bp = window.bp || {};
 				this.$el.removeClass( 'in-profile' );
 			} else if ( ! this.$el.hasClass( 'in-profile' ) ) {
 				this.$el.addClass( 'in-profile' );
+			}
+		},
+
+		updateStatus: function( model ) {
+			if ( _.isUndefined( model ) ) {
+				return;
+			}
+
+			if ( model.get( 'posting' ) ) {
+				this.submit.el.disabled = true;
+				this.reset.el.disabled = true;
+
+				this.submit.el.classList.add( 'loading' );
+			} else {
+				this.submit.el.disabled = false;
+				this.reset.el.disabled = false;
+
+				this.submit.el.classList.remove( 'loading' );
 			}
 		}
 	} );
@@ -1236,6 +1256,9 @@ window.bp = window.bp || {};
 			// Silently add meta
 			this.model.set( meta, { silent: true } );
 
+			// update posting status true
+			this.model.set( 'posting', true );
+
 			var data = {
 				'_wpnonce_post_update': BP_Nouveau.activity.params.post_nonce
 			};
@@ -1245,7 +1268,7 @@ window.bp = window.bp || {};
 				data._bp_as_nonce = $('#_bp_as_nonce').val();
 			}
 
-			// Remove all unused link preview data
+			// Remove all unused model attribute
 			data = _.omit( _.extend( data, this.model.attributes ), [
 				'link_images',
 				'link_image_index',
@@ -1253,7 +1276,8 @@ window.bp = window.bp || {};
 				'link_error',
 				'link_error_msg',
 				'link_scrapping',
-				'link_loading'
+				'link_loading',
+				'posting'
 			] );
 
 			// Form link preview data to pass in request if available
