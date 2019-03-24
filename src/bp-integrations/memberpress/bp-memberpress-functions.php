@@ -17,8 +17,10 @@ defined('ABSPATH') || exit;
  */
 function mpRenderAnchor($integration) {
 
-	echo wpautop(
-		'<a href="admin.php?page=bp-memberships-log&integration=$integration" class="button" style="float:right">'.__('View Logs','buddyboss').'</a>'
+	printf(
+		'<a href="%s" class="button-secondary">%s</a>',
+		admin_url( 'admin.php?page=bp-memberships-log&integration=$integration' ),
+		__('View Logs', 'buddyboss')
 	);
 }
 
@@ -29,6 +31,6 @@ function mpRenderAnchor($integration) {
  */
 function mpNoLearnDashText($integration) {
 	echo sprintf(
-		__("<h3>LearnDash is Required.</h3>BuddyBoss Platform has integration settings for LearnDash-%s. If using LearnDash we add the ability to sync LearnDash groups with social groups, to generate course reports within social groups, and more. If using our BuddyBoss Theme we also include styling for LearnDash.", 'buddyboss'), $integration);
+		__("<h3>LearnDash is Required.</h3> <p>BuddyBoss Platform has integration settings for LearnDash-%s. If using LearnDash we add the ability to sync LearnDash groups with social groups, to generate course reports within social groups, and more. If using our BuddyBoss Theme we also include styling for LearnDash.</p>", 'buddyboss'), $integration);
 
 }
