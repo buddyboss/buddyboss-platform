@@ -177,8 +177,6 @@ window.bp = window.bp || {};
 		dropzone : null,
 		dropzone_options : null,
 
-		events: {}, // will use this when close button added
-
 		initialize: function () {
 
 			// set up dropzones auto discover to false so it does not automatically set dropzones
@@ -197,7 +195,7 @@ window.bp = window.bp || {};
 			this.model.set( 'media', this.media );
 
 			document.addEventListener( 'activity_media_open', this.open_media_uploader.bind(this) );
-			document.addEventListener( 'activity_media_close', this.close_media_uploader.bind(this) );
+			//document.addEventListener( 'activity_media_close', this.close_media_uploader.bind(this) );
 		},
 
 		close_media_uploader: function() {
@@ -206,14 +204,19 @@ window.bp = window.bp || {};
 			if ( self.dropzone != null ) {
 				self.dropzone.destroy();
 			}
-			self.$el.addClass('closed');
+			self.$el.find('#activity-post-media-uploader').addClass('closed');
+			self.$el.find('#activity-post-media-uploader').removeClass('open');
 		},
 
 		open_media_uploader: function() {
 			var self = this;
 
-			self.$el.addClass('open');
+			self.$el.find('#activity-post-media-uploader').removeClass('closed');
+			self.$el.find('#activity-post-media-uploader').addClass('open');
 			self.media = [];
+			if ( self.dropzone != null ) {
+				self.dropzone.destroy();
+			}
 			self.dropzone = new window.Dropzone('#activity-post-media-uploader', self.dropzone_options );
 
 			self.dropzone.on('sending', function(file, xhr, formData) {
