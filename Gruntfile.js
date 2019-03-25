@@ -252,7 +252,7 @@ module.exports = function( grunt ) {
 				},
 				expand: true,
 				cwd: SOURCE_DIR,
-				src: BP_CSS.concat( BP_EXCLUDED_CSS, BP_EXCLUDED_MISC, BP_SCSS_CSS_FILES, [ '!**/*.min.css' ] )
+				src: BP_CSS.concat( BP_EXCLUDED_CSS, BP_EXCLUDED_MISC, BP_SCSS_CSS_FILES, [ '!**/*.min.css', '!**/admin/**/*.css' ] )
 			},
 			scss: {
 				options: {
