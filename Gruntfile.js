@@ -261,7 +261,7 @@ module.exports = function( grunt ) {
 				},
 				expand: true,
 				cwd: SOURCE_DIR,
-				src: [ '**/*.scss' ]
+				src: [ '**/*.scss', '!**/vendor/**/*.scss' ]
 			}
 		},
 		cssmin: {

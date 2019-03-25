@@ -758,7 +758,7 @@ body.bb-model-open {
 	padding-top: 20px;
 }
 
-@media ( max-width: 544px) {
+@media (max-width: 544px) {
 
 	.bb-photos-wrap #boss-media-create-album-popup .bb-model-footer {
 		flex-direction: column;
@@ -954,7 +954,7 @@ ul.bb-albums-list {
 	}
 }
 
-@media ( min-width: 768px ) {
+@media (min-width: 768px) {
 
 	.bb-media-model-inner {
 		max-height: 90vh;
@@ -970,7 +970,7 @@ ul.bb-albums-list {
 	}
 }
 
-@media ( max-width: 767px ) {
+@media (max-width: 767px) {
 
 	a.bb-close-model {
 		top: 10px;
@@ -978,7 +978,7 @@ ul.bb-albums-list {
 	}
 }
 
-@media ( max-width: 1000px ) {
+@media (max-width: 1000px) {
 
 	.bb-album-cover-wrap .bb-album-content-wrap {
 		font-size: 11px;
@@ -998,7 +998,7 @@ ul.bb-albums-list {
 	}
 }
 
-@media ( max-width: 580px ) {
+@media (max-width: 580px) {
 
 	ul.bb-albums-list > li:first-child {
 		max-width: 44%;
@@ -1131,7 +1131,7 @@ ul.bb-albums-list {
 		content: "\E80A";
 		font-size: 20px;
 		position: absolute;
-		font-family: 'bb-icons';
+		font-family: bb-icons;
 		text-rendering: auto;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
