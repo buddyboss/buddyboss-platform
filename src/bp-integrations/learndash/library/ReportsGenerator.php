@@ -89,11 +89,11 @@ class ReportsGenerator
 			$results = array_map( [ $this, 'formatDataForExport' ], $results, $this->results );
 		}
 
-		$results = array_map( function ( $result ) {
-			$result = apply_filters( 'bp_ld_sync/report_data', $result, $this->args );
+		$results = array_map( function ( $result, $activity ) {
+			$result = apply_filters( 'bp_ld_sync/report_data', $result, $this->args, $activity );
 
-			return apply_filters( "bp_ld_sync/report_data/step={$this->args['step']}", $result, $this->args );
-		}, $results );
+			return apply_filters( "bp_ld_sync/report_data/step={$this->args['step']}", $result, $this->args, $activity );
+		}, $results, array_values( $this->results ) );
 
 		$results = apply_filters( 'bp_ld_sync/report_datas', $results, $this->args );
 
