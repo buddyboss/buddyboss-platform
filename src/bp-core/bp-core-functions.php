@@ -2447,7 +2447,7 @@ function bp_core_get_components( $type = 'all' ) {
 
 	$required_components = array(
 		'members' => array(
-			'title'       => __( 'Members', 'buddyboss' ),
+			'title'       => __( 'Member Profiles', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-xprofile' ) , 'admin.php' ) ),
 			'description' => __( 'Everything in a community website revolves around its members. All website users are given member profiles.', 'buddyboss' ),
 		),
@@ -2470,12 +2470,6 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Notify members of relevant activity with a toolbar bubble and/or via email and allow them to customize their notification settings.', 'buddyboss' ),
 			'default'     => true,
 		),
-		'activity' => array(
-			'title'       => __( 'Activity Feeds', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-activity' ) , 'admin.php' ) ),
-			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, and @mentions, with email notification support.', 'buddyboss' ),
-			'default'     => false,
-		),
 		'groups'   => array(
 			'title'       => __( 'Social Groups', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-groups' ) , 'admin.php' ) ),
@@ -2488,16 +2482,27 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Allow members to have discussions using Q&A style message boards. Forums can be standalone or connected to social groups.', 'buddyboss' ),
             'default'     => false,
 		),
+		'activity' => array(
+			'title'       => __( 'Activity Feeds', 'buddyboss' ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-activity' ) , 'admin.php' ) ),
+			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, and @mentions, with email notification support.', 'buddyboss' ),
+			'default'     => false,
+		),
+		'media'   => array(
+			'title'       => __( 'Media Uploading', 'buddyboss' ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-media' ) , 'admin.php' ) ),
+			'description' => __( 'Allow members to upload photos and create photo albums.', 'buddyboss' ),
+			'default'     => false,
+		),
+		'messages' => array(
+			'title'       => __( 'Private Messaging', 'buddyboss' ),
+			'description' => __( 'Allow members to send private messages. Messages can be sent to one member or a group of members.', 'buddyboss' ),
+            'default'     => false,
+		),
 		'friends'  => array(
 			'title'       => __( 'Member Connections', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-friends' ) , 'admin.php' ) ),
 			'description' => __( 'Allow members to make connections with one another and focus on those they care about most.', 'buddyboss' ),
-			'default'     => false,
-		),
-		'media'   => array(
-			'title'       => __( 'Media', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-media' ) , 'admin.php' ) ),
-			'description' => __( 'Allow members to upload photos and create photo albums.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'invites'  => array(
@@ -2505,11 +2510,6 @@ function bp_core_get_components( $type = 'all' ) {
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-invites' ) , 'admin.php' ) ),
 			'description' => __( 'Allow members to send email invitations to non-members to join the network.', 'buddyboss' ),
 			'default'     => false,
-		),
-		'messages' => array(
-			'title'       => __( 'Private Messaging', 'buddyboss' ),
-			'description' => __( 'Allow members to send private messages. Messages can be sent to one member or a group of members.', 'buddyboss' ),
-            'default'     => false,
 		),
 		'search'   => array(
 			'title'       => __( 'Network Search', 'buddyboss' ),

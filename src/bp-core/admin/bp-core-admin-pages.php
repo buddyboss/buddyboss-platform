@@ -119,10 +119,10 @@ function bp_core_admin_register_page_fields() {
 
 		if ( 'members' === $name ) {
 			$description = 'This directory shows a listing of all members.';
-		} elseif ( 'activity' === $name ) {
-			$description = 'This directory shows all sitewide activity.';
 		} elseif ( 'groups' === $name ) {
 			$description = 'This directory shows a listing of all groups.';
+		} elseif ( 'activity' === $name ) {
+			$description = 'This directory shows all sitewide activity.';
 		} elseif ( 'media' === $name ) {
 			$description = 'This directory shows any media uploaded by members.';
 		}
