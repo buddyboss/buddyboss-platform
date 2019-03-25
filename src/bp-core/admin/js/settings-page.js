@@ -44,6 +44,21 @@
 			});
 		}
 
+		// Auto check parent search type
+		$( '.bp-search-child-field' ).on( 'click', 'input[type="checkbox"]', function( e ) {
+			var $parentRow = $( e.delegateTarget ).prevAll( '.bp-search-parent-field' ).first();
+			if ( $parentRow.length && e.currentTarget.checked ) {
+				$parentRow.find( 'input[type="checkbox"]' ).prop( 'checked', true );
+			}
+		} );
+
+		// Auto uncheck child search types
+		$( '.bp-search-parent-field' ).on( 'click', 'input[type="checkbox"]', function( e ) {
+			var $childRows = $( e.delegateTarget ).nextUntil( '.bp-search-parent-field' );
+			if ( $childRows.length && ! e.currentTarget.checked ) {
+				$childRows.find( 'input[type="checkbox"]' ).prop( 'checked', false );
+			}
+		} );
 	});
 
 	$( document ).ready(function() {
