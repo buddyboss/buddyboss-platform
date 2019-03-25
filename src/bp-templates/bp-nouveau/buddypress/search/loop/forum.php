@@ -8,7 +8,7 @@ $total_reply = bbp_get_forum_reply_count( $forum_id );
 		<div class="item-avatar">
 			<a href="<?php bbp_forum_permalink( get_the_ID() ); ?>">
 				<img
-					src="<?php echo bbp_get_forum_thumbnail_src( $forum_id ) ?: buddypress()->plugin_url . "bp-core/images/forum.svg"; ?>"
+					src="<?php echo bbp_get_forum_thumbnail_src( $forum_id ) ?: bp_search_get_post_thumbnail_default( get_post_type() ); ?>"
 					class="avatar forum-avatar"
 					height="150"
 					width="150"

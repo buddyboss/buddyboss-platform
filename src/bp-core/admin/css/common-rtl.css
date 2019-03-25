@@ -211,6 +211,10 @@ TABLE OF CONTENTS:
 /*
  * 2.2 Settings - Components
  */
+#bp-admin-component-form .tablenav {
+  margin-bottom: 10px;
+}
+
 #bp-admin-component-form .wp-list-table.plugins .plugin-title {
   width: 25%;
   padding-bottom: 15px;
@@ -475,14 +479,16 @@ tr.bp-search-parent-field label {
   background-image: url(../../images/admin/admin_icon-learndash.png);
 }
 
-/* Integrations - WooCommerce */
-.bp-admin-card.section-bp_woocommerce_disabled h2 {
-  background-image: url(../../images/admin/admin_icon-woocommerce.png);
+/* Integrations - MemberPress */
+.bp-admin-card.section-bp-memberpress_disabled h2,
+.bp-admin-card.section-bp-memberpress-section h2 {
+  background-image: url(../../images/admin/admin_icon-memberpress.png);
 }
 
-/* Integrations - MemberPress */
-.bp-admin-card.section-bp_memberpress_disabled h2 {
-  background-image: url(../../images/admin/admin_icon-memberpress.png);
+/* Integrations - WooCommerce */
+.bp-admin-card.section-bp-woocommerce_disabled h2,
+.bp-admin-card.section-bp-woocommerce-section h2 {
+  background-image: url(../../images/admin/admin_icon-woocommerce.png);
 }
 
 /*
@@ -1020,7 +1026,7 @@ body.post-type-bp_ps_form .page-title-action {
 }
 
 tr.child-no-padding th {
-  padding: 0px 0 0px 10px;
+  padding: 0 0 0 10px;
 }
 
 tr.child-no-padding td {
@@ -1028,11 +1034,11 @@ tr.child-no-padding td {
 }
 
 tr.child-no-padding-first th {
-  padding: 20px 0 0px 10px;
+  padding: 20px 0 0 10px;
 }
 
 tr.child-no-padding-first td {
-  padding: 15px 10px 5px 10px;
+  padding: 15px 10px 5px;
 }
 
 td.inviter.column-inviter strong img {

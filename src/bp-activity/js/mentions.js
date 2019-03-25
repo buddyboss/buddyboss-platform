@@ -255,17 +255,17 @@ window.bp = window.bp || {};
 	};
 
 	$( document ).ready(function() {
-        $(document).on("focus", BP_Mentions_Options.selectors.join(',') , function() {
-            if ( $(this).data( "bp_mentions_activated" ) ) {
+        $(document).on('focus', BP_Mentions_Options.selectors.join(',') , function() {
+            if ( $(this).data( 'bp_mentions_activated' ) ) {
                 return;
             }
 
-            if ( typeof( bp ) === "undefined" ) {
+            if ( typeof( bp ) === 'undefined' ) {
                 return;
             }
 
             $(this).bp_mentions( bp.mentions.users );
-            $(this).data( "bp_mentions_activated", true );
+            $(this).data( 'bp_mentions_activated', true );
         });
 	});
 

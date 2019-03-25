@@ -1,6 +1,6 @@
 <div class="wrap">
 	
-	<div class="bp-admin-card section-bp_memberpress_disabled">
+	<div class="bp-admin-card section-bp-memberpress_disabled">
 		<h2><?php _e( 'MemberPress <span>&mdash; purchase plugin to activate</span>', 'buddyboss' ); ?></h2>
 		<p><?php
 			printf(

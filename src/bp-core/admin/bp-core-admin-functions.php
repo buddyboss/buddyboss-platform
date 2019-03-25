@@ -383,7 +383,7 @@ function bp_do_activation_redirect() {
 	}
 
 	// Redirect to dashboard and trigger the Hello screen.
-	wp_safe_redirect( add_query_arg( $query_args, bp_get_admin_url( '?hello=buddypress' ) ) );
+	wp_safe_redirect( add_query_arg( $query_args, bp_get_admin_url( '?hello=buddyboss' ) ) );
 }
 
 /**
@@ -2057,7 +2057,7 @@ function bp_register_member_type_import_submenu_page() {
 function bp_member_type_import_submenu_page() {
 	?>
 	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools    ', 'buddypress' ) ); ?></h2>
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddypress' ) ); ?></h2>
 		<div class="nav-settings-subsubsub">
 			<ul class="subsubsub">
 				<?php bp_core_tools_settings_admin_tabs(); ?>

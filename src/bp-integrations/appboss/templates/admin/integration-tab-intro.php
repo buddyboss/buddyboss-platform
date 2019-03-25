@@ -11,13 +11,15 @@
 					__('AppBoss', 'buddyboss')
 				)
 			);
-			printf(
-				__('<strong><a href="%s">Learn more &rarr;</a></strong>', 'buddyboss'),
-				add_query_arg([
-					'page' => 'bp-appboss',
-				], admin_url( 'admin.php' ) )
-			);
 		?></p>
+		<br />
+		<?php
+			printf(
+				'<a href="%s" class="button-secondary">%s</a>',
+				admin_url( 'admin.php?page=bp-appboss' ),
+				__('Learn more', 'buddyboss')
+			);
+		?>
 	</div>
 
 </div>

@@ -18,7 +18,7 @@ class BP_Appboss_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	protected $current_section;
 
 	public function initialize() {
-		$this->tab_order = 40;
+		$this->tab_order = 10;
 		$this->intro_template = $this->root_path . '/templates/admin/integration-tab-intro.php';
 		$this->current_section = 'bp-appboss-section';
 	}

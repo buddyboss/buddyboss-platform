@@ -41,7 +41,7 @@ function bp_admin_setting_callback_account_deletion() {
 ?>
 
 	<input id="bp-disable-account-deletion" name="bp-disable-account-deletion" type="checkbox" value="1" <?php checked( !bp_disable_account_deletion( false ) ); ?> />
-	<label for="bp-disable-account-deletion"><?php _e( 'Allow members to delete their profile', 'buddyboss' ); ?></label>
+	<label for="bp-disable-account-deletion"><?php _e( 'Allow members to delete their profiles', 'buddyboss' ); ?></label>
 
 <?php
 }
@@ -423,7 +423,7 @@ function bp_core_admin_integrations() {
 function bp_core_admin_appboss() {
 		?>
 		 <div class="wrap">
-		    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Mobile App', 'buddypress' ) ); ?></h2>
+		    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'AppBoss', 'buddyboss' ) ); ?></h2>
 	        <?php require buddypress()->plugin_dir . 'bp-core/admin/templates/appboss-screen.php'; ?>
 	    </div>
 		<?php

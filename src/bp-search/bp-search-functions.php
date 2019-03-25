@@ -525,6 +525,9 @@ function bp_search_get_post_thumbnail_default( $post_type ) {
 		'sfwd-lessons' => buddypress()->plugin_url . 'bp-core/images/mystery-course.png',
 		'sfwd-topic'   => buddypress()->plugin_url . 'bp-core/images/mystery-course.png',
 		'post'         => buddypress()->plugin_url . 'bp-core/images/blog-post.svg',
+		'forum'        => buddypress()->plugin_url . 'bp-core/images/forum.svg',
+		'topic'        => buddypress()->plugin_url . 'bp-core/images/forum.svg',
+		'reply'        => buddypress()->plugin_url . 'bp-core/images/forum.svg',
 	];
 
 	return

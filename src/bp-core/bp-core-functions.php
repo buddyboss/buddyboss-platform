@@ -2447,9 +2447,9 @@ function bp_core_get_components( $type = 'all' ) {
 
 	$required_components = array(
 		'members' => array(
-			'title'       => __( 'Member Profiles', 'buddyboss' ),
+			'title'       => __( 'Members', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-xprofile' ) , 'admin.php' ) ),
-			'description' => __( 'Everything in a community website revolves around its members.', 'buddyboss' ),
+			'description' => __( 'Everything in a community website revolves around its members. All website users are given member profiles.', 'buddyboss' ),
 		),
 		'xprofile' => array(
 			'title'       => __( 'Profile Fields', 'buddyboss' ),
@@ -2465,10 +2465,39 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Allow members to modify their account and notification settings from within their profile.', 'buddyboss' ),
 			'default'     => true,
 		),
+		'notifications' => array(
+			'title'       => __( 'Notifications', 'buddyboss' ),
+			'description' => __( 'Notify members of relevant activity with a toolbar bubble and/or via email and allow them to customize their notification settings.', 'buddyboss' ),
+			'default'     => true,
+		),
+		'activity' => array(
+			'title'       => __( 'Activity Feeds', 'buddyboss' ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-activity' ) , 'admin.php' ) ),
+			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, and @mentions, with email notification support.', 'buddyboss' ),
+			'default'     => false,
+		),
+		'groups'   => array(
+			'title'       => __( 'Social Groups', 'buddyboss' ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-groups' ) , 'admin.php' ) ),
+			'description' => __( 'Allow members to organize themselves into public, private or hidden social groups with separate activity feeds and member listings.', 'buddyboss' ),
+            'default'     => false,
+		),
+		'forums'   => array(
+			'title'       => __( 'Forum Discussions', 'buddyboss' ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-forums' ) , 'admin.php' ) ),
+			'description' => __( 'Allow members to have discussions using Q&A style message boards. Forums can be standalone or connected to social groups.', 'buddyboss' ),
+            'default'     => false,
+		),
 		'friends'  => array(
 			'title'       => __( 'Member Connections', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-friends' ) , 'admin.php' ) ),
 			'description' => __( 'Allow members to make connections with one another and focus on those they care about most.', 'buddyboss' ),
+			'default'     => false,
+		),
+		'media'   => array(
+			'title'       => __( 'Media', 'buddyboss' ),
+			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-media' ) , 'admin.php' ) ),
+			'description' => __( 'Allow members to upload photos and create photo albums.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'invites'  => array(
@@ -2479,35 +2508,7 @@ function bp_core_get_components( $type = 'all' ) {
 		),
 		'messages' => array(
 			'title'       => __( 'Private Messaging', 'buddyboss' ),
-			'description' => __( 'Allow members to send private message. Messages can be sent to one member or a group of members.', 'buddyboss' ),
-            'default'     => false,
-		),
-		'activity' => array(
-			'title'       => __( 'Activity Feeds', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-activity' ) , 'admin.php' ) ),
-			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, and @mentions, with email notification support.', 'buddyboss' ),
-			'default'     => false,
-		),
-		'blogs'    => array(
-			'title'       => __( 'Blog Feeds', 'buddyboss' ),
-			'description' => __( 'Have new blog posts and comments appear in site activity feeds. Make sure to enable Activity Feeds first.', 'buddyboss' ),
-            'default'     => false,
-		),
-		'notifications' => array(
-			'title'       => __( 'Notifications', 'buddyboss' ),
-			'description' => __( 'Notify members of relevant activity with a toolbar bubble and/or via email and allow them to customize their notification settings.', 'buddyboss' ),
-			'default'     => true,
-		),
-		'groups'   => array(
-			'title'       => __( 'Social Groups', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-groups' ) , 'admin.php' ) ),
-			'description' => __( 'Allow members to organize themselves into public, private or hidden social areas with separate activity feeds and member listing.', 'buddyboss' ),
-            'default'     => false,
-		),
-		'forums'   => array(
-			'title'       => __( 'Forum Discussions', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-forums' ) , 'admin.php' ) ),
-			'description' => __( 'Allow members to have discussions using Q&A style message boards. Forums can be standalone or connected to social groups.', 'buddyboss' ),
+			'description' => __( 'Allow members to send private messages. Messages can be sent to one member or a group of members.', 'buddyboss' ),
             'default'     => false,
 		),
 		'search'   => array(
@@ -2516,11 +2517,10 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Allow members to search the entire network, along with custom post types of your choice, all in one unified search bar.', 'buddyboss' ),
 			'default'     => false,
 		),
-		'media'   => array(
-			'title'       => __( 'Media', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-media' ) , 'admin.php' ) ),
-			'description' => __( 'Allow members to upload photos into activity posts and create albums.', 'buddyboss' ),
-			'default'     => false,
+		'blogs'    => array(
+			'title'       => __( 'Blog Feeds', 'buddyboss' ),
+			'description' => __( 'Have new blog posts and comments appear in site activity feeds. Make sure to enable Activity Feeds first.', 'buddyboss' ),
+            'default'     => false,
 		)
 	);
 
@@ -4102,39 +4102,39 @@ function bp_platform_default_activity_types() {
 	$activity_type = apply_filters( 'bp_platform_default_activity_types', array(
 		'0' => array(
 			'activity_name' => 'new_avatar',
-			'activity_label' => 'Member changes their profile photo'
+			'activity_label' => __( 'Member changes their profile photo', 'buddyboss' )
 		),
 		'1' => array(
 			'activity_name' => 'updated_profile',
-			'activity_label' => 'Member updated their profile'
+			'activity_label' => __( 'Member updates their profile details', 'buddyboss' )
 		),
 		'2' => array(
 			'activity_name' => 'new_member',
-			'activity_label' => 'Member registered on site'
+			'activity_label' => __( 'Member registers to the site', 'buddyboss' )
 		),
 		'3' => array(
 			'activity_name' => 'friendship_created',
-			'activity_label' => 'Two members become connected'
+			'activity_label' => __( 'Two members become connected', 'buddyboss' )
 		),
 		'4' => array(
 			'activity_name' => 'created_group',
-			'activity_label' => 'Member creates a group'
+			'activity_label' => __( 'Member creates a group', 'buddyboss' )
 		),
 		'5' => array(
 			'activity_name' => 'joined_group',
-			'activity_label' => 'Member joins a group'
+			'activity_label' => __( 'Member joins a group', 'buddyboss' )
 		),
 		'6' => array(
 			'activity_name' => 'group_details_updated',
-			'activity_label' => 'Group detail updated'
+			'activity_label' => __( 'Group details are updated', 'buddyboss' )
 		),
 		'7' => array(
 			'activity_name' => 'bbp_topic_create',
-			'activity_label' => 'Member creates a forum discussion'
+			'activity_label' => __( 'Member creates a forum discussion', 'buddyboss' )
 		),
 		'8' => array(
 			'activity_name' => 'bbp_reply_create',
-			'activity_label' => 'Member replies to a forum discussion'
+			'activity_label' => __( 'Member replies to a forum discussion', 'buddyboss' )
 		)
 	));
 

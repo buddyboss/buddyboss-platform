@@ -408,10 +408,6 @@ div.search_results .groups-list li .last-activity {
 	clear: both;
 }
 
-.bp-search-results-wrapper .results-group-members {
-	margin-top: 2em;
-}
-
 .bp-search-item {
 	margin: 0 0 20px;
 	padding: 0 0 20px;
@@ -582,13 +578,14 @@ div.search_results .groups-list li .last-activity {
 	}
 
 	.rating-custom .woocommerce-product-rating .star-rating {
-		margin: .5em 4px 0 0;
+		margin: 0.5em 4px 0 0;
 		float: left;
 	}
 
-	.rating-custom .woocommerce-product-rating::after, .rating-custom .woocommerce-product-rating::before {
+	.rating-custom .woocommerce-product-rating:after,
+	.rating-custom .woocommerce-product-rating:before {
 
-		content: ' ';
+		content: " ";
 		display: table;
 
 	}
@@ -608,8 +605,8 @@ div.search_results .groups-list li .last-activity {
 		font-family: star;
 	}
 
-	.rating-custom .star-rating::before {
-		content: '\73\73\73\73\73';
+	.rating-custom .star-rating:before {
+		content: "\73\73\73\73\73";
 		color: #d3ced2;
 		float: left;
 		top: 0;
@@ -632,8 +629,8 @@ div.search_results .groups-list li .last-activity {
 		padding-top: 1.5em;
 	}
 
-	.rating-custom .star-rating span::before {
-		content: '\53\53\53\53\53';
+	.rating-custom .star-rating span:before {
+		content: "\53\53\53\53\53";
 		top: 0;
 		position: absolute;
 		left: 0;
@@ -656,8 +653,9 @@ div.search_results .groups-list li .last-activity {
 
 	.product-sale {
 		margin-top: 0.5em;
+
 		.onsale {
-			padding: .202em;
+			padding: 0.202em;
 			text-align: center;
 			background-color: #77a464;
 			color: #fff;
@@ -673,6 +671,7 @@ div.search_results .groups-list li .last-activity {
 	}
 
 	.entry-meta {
+
 		span,
 		a {
 			color: #737373;

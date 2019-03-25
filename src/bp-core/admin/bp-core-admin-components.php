@@ -63,7 +63,7 @@ function bp_core_admin_components_options() {
     }
 
 	// Merge optional and required together.
-	$all_components = $optional_components + $required_components;
+	$all_components = $required_components + $optional_components;
 
 	// If this is an upgrade from before BuddyPress 1.5, we'll have to convert
 	// deactivated components into activated ones.

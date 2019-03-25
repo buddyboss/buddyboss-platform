@@ -34,7 +34,7 @@ class BP_Members_Component extends BP_Component {
 	public function __construct() {
 		parent::start(
 			'members',
-			__( 'Members Directory', 'buddyboss' ),
+			__( 'Members', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 10,

@@ -64,8 +64,10 @@
 	}
 
 	#whats-new-elements {
+
 		#whats-new-elements-buttons {
 			margin: 1em 0;
+
 			ul {
 				list-style: none;
 
@@ -90,8 +92,8 @@
 				line-height: normal;
 			}
 
-			.activity-attached-gif-container::before,
-			.activity-attached-gif-container::after {
+			.activity-attached-gif-container:before,
+			.activity-attached-gif-container:after {
 				left: 24px;
 				border-color: #f5f8fa;
 				border-width: 8px;
@@ -146,7 +148,7 @@
 								border: 3px solid #fff;
 
 								&.bg1 {
-									background: #e0245e
+									background: #e0245e;
 								}
 
 								&.bg2 {
@@ -154,19 +156,19 @@
 								}
 
 								&.bg3 {
-									background: #ffad1f
+									background: #ffad1f;
 								}
 
 								&.bg4 {
-									background: #17bf63
+									background: #17bf63;
 								}
 
 								&.bg5 {
-									background: #1c94e0
+									background: #1c94e0;
 								}
 
 								&.bg6 {
-									background: #794bc4
+									background: #794bc4;
 								}
 							}
 						}
