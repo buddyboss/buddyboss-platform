@@ -6174,6 +6174,10 @@ button[data-bp-close]:hover {
   transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s cubic-bezier(0.71, 1.7, 0.77, 1.24);
 }
 
+.hint--multiline::after {
+  white-space: pre;
+}
+
 [data-bp-tooltip] {
   cursor: pointer;
   position: relative;

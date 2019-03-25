@@ -3,6 +3,10 @@
 
 @import "hint/hint";
 
+.hint--multiline::after {
+	white-space: pre;
+}
+
 [data-bp-tooltip] {
 	cursor: pointer;
 	position: relative;
