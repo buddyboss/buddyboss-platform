@@ -181,14 +181,13 @@ class BpMemberships {
 		// @todo : use post_where filter. Inject the ld-functions/hooks.
 		// @todo : https://codex.wordpress.org/Plugin_API/Filter_Reference/posts_where
 		global $wpdb;
-
+		$selectedCourses = array();
 		if (isset($_GET['pid']) && isset($_GET['lms_course_slug']) && isset($_GET['membership_product_slug'])) {
 			$productId = $_GET['pid'];
 			$lmsCourseSlug = $_GET['lms_course_slug'];
 			$membershipProductSlug = $_GET['membership_product_slug'];
 
 			if ($lmsCourseSlug == LD_COURSE_SLUG) {
-				error_log("getPreSavedCourses()");
 				$metaKey = '_bpms-' . $lmsCourseSlug . '-' . $membershipProductSlug . '-courses_attached';
 
 				$getPreSavedCourses = unserialize(get_post_meta($productId, $metaKey, true));
@@ -202,9 +201,9 @@ class BpMemberships {
 				// NOTE : Implementation for another LMS when required
 			}
 
-			$selected = $wpdb->get_results($query, OBJECT);
+			$selectedCourses = $wpdb->get_results($query, OBJECT);
 			$data = array();
-			$data['results'] = $selected;
+			$data['results'] = $selectedCourses;
 			wp_send_json_success($data, JSON_PRETTY_PRINT);
 		} else {
 			wp_send_json_error(array('error_msg' => 'Bad request since pid and meta_key is required'), JSON_PRETTY_PRINT);
@@ -221,7 +220,7 @@ class BpMemberships {
 		// @todo : use post_where filter. Inject the ld-functions/hooks.
 		// @todo : https://codex.wordpress.org/Plugin_API/Filter_Reference/posts_where
 		global $wpdb;
-
+		$searchedCourses = array();
 		if (isset($_GET['search']) && isset($_GET['lms_course_slug'])) {
 			$search = $_GET['search'];
 			$lmsCourseSlug = $_GET['lms_course_slug'];
@@ -232,14 +231,14 @@ class BpMemberships {
 
 		}
 
-		$courses = $wpdb->get_results($query, OBJECT);
+		$searchedCourses = $wpdb->get_results($query, OBJECT);
 		$data = array();
-		$data['results'] = $courses;
+		$data['results'] = $searchedCourses;
 		wp_send_json_success($data, JSON_PRETTY_PRINT);
 	}
 
 	/**
-	 * get All LearnDash groups for Ajax-call
+	 * get All LearnDash groups for Ajax requests
 	 * @return {JSON} All LearnDash groups
 	 */
 	public static function getGroupsAsJson() {
@@ -255,9 +254,9 @@ class BpMemberships {
 
 		}
 
-		$courses = $wpdb->get_results($query, OBJECT);
+		$groups = $wpdb->get_results($query, OBJECT);
 		$data = array();
-		$data['results'] = $courses;
+		$data['results'] = $groups;
 		wp_send_json_success($data, JSON_PRETTY_PRINT);
 	}
 
@@ -269,7 +268,7 @@ class BpMemberships {
 		// @todo : use post_where filter. Inject the ld-functions/hooks.
 		// @todo : https://codex.wordpress.org/Plugin_API/Filter_Reference/posts_where
 		global $wpdb;
-
+		$selectedGroups = array();
 		if (isset($_GET['pid']) && isset($_GET['lms_course_slug']) && isset($_GET['membership_product_slug'])) {
 
 			$productId = $_GET['pid'];
@@ -291,9 +290,9 @@ class BpMemberships {
 				// NOTE : Implementation for another LMS when required
 			}
 
-			$selected = $wpdb->get_results($query, OBJECT);
+			$selectedGroups = $wpdb->get_results($query, OBJECT);
 			$data = array();
-			$data['results'] = $selected;
+			$data['results'] = $selectedGroups;
 			wp_send_json_success($data, JSON_PRETTY_PRINT);
 		} else {
 			wp_send_json_error(array('error_msg' => 'Bad request since pid and meta_key is required'), JSON_PRETTY_PRINT);
