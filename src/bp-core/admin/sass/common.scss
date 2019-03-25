@@ -422,12 +422,12 @@ tr.bp-search-parent-field label {
 
 /* Default */
 .bp-admin-card h2:before {
-	content: "\f7d9";	
+	content: "\f0ad";	
 }
 
 /* Settings */
 .bp-admin-card.section-bp_main h2:before {
-	content: "\f1de";
+	content: "\f7d9";
 }
 
 /* Profiles */
@@ -495,9 +495,12 @@ tr.bp-search-parent-field label {
 
 /* Search */
 .bp-admin-card.section-bp_search_settings_community h2:before,
-.bp-admin-card.section-bp_search_settings_post_types h2:before,
+.bp-admin-card.section-bp_search_settings_post_types h2:before {
+	content: "\f002";	
+}
+
 .bp-admin-card.section-bp_search_settings_general h2:before {
-	content: "\f002";
+	content: "\f150";	
 }
 
 .bp-admin-card.section-bp_search_settings_community table,
@@ -512,11 +515,11 @@ tr.bp-search-parent-field label {
 
 /* Pages */
 .bp-admin-card.section-bp_pages h2:before {
-	content: "\f328";
+	content: "\f14a";
 }
 
 .bp-admin-card.section-bp_registration_pages h2:before {
-	content: "\f044";
+	content: "\f14b";
 }
 
 /* Integrations */

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-25 16:11:16+00:00\n"
+"POT-Creation-Date: 2019-03-25 16:27:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13126,7 +13126,7 @@ msgid ""
 "deactivate BuddyBoss Platform first, if you wish to activate BuddyPress."
 msgstr ""
 
-#: bp-loader.php:219
+#: bp-loader.php:218
 msgid ""
 "The BuddyBoss Platform can't work while BuddyPress Global Search plugin is "
 "active. Global Search functionality is built into the platform. Please "
@@ -13134,7 +13134,7 @@ msgid ""
 "BuddyBoss Platform."
 msgstr ""
 
-#: bp-loader.php:220
+#: bp-loader.php:219
 msgid ""
 "The BuddyBoss Platform can't work while BuddyPress Follow plugin is active. "
 "Following/followers functionality is built into the platform. Please "
@@ -13142,22 +13142,22 @@ msgid ""
 "Platform."
 msgstr ""
 
-#: bp-loader.php:268
+#: bp-loader.php:267
 msgid "BuddyBoss Platform can't be activated."
 msgstr ""
 
-#: bp-loader.php:307
+#: bp-loader.php:306
 msgid "Your site does not support BuddyBoss Platform."
 msgstr ""
 
-#: bp-loader.php:309
+#: bp-loader.php:308
 #. translators: 1: current PHP version, 2: required PHP version
 msgid ""
 "Your site is currently running PHP version %1$s, while BuddyBoss Platform "
 "requires version %2$s or greater."
 msgstr ""
 
-#: bp-loader.php:310
+#: bp-loader.php:309
 msgid "Please update your server or deactivate BuddyBoss Platform."
 msgstr ""
 
