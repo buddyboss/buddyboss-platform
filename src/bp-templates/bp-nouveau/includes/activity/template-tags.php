@@ -225,7 +225,7 @@ function bp_nouveau_activity_state() {
 	$favorited_users = bp_activity_get_favorite_users_tooltip_string( $activity_id );
 	?>
 	<div class="activity-state <?php echo $like_text ? 'has-likes' : '' ?> <?php echo $comment_count ? 'has-comments' : '' ?>">
-		<a href="#" class="activity-state-likes">
+		<a href="javascript:void(0);" class="activity-state-likes">
 			<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo $favorited_users ?>"><?php echo $like_text ?: '' ?></span>
 		</a>
 		<span class="ac-state-separator">&middot;</span>
