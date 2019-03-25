@@ -118,13 +118,13 @@ function bp_core_admin_register_page_fields() {
 	foreach ($directory_pages as $name => $label) {
 
 		if ( 'members' === $name ) {
-			$description = 'Directory showing all members';
+			$description = 'This directory shows a listing of all members.';
 		} elseif ( 'activity' === $name ) {
-			$description = 'All sitewide activity';
+			$description = 'This directory shows all sitewide activity.';
 		} elseif ( 'groups' === $name ) {
-			$description = 'Directory showing all groups';
+			$description = 'This directory shows a listing of all groups.';
 		} elseif ( 'media' === $name ) {
-			$description = 'All media uploaded by members';
+			$description = 'This directory shows any media uploaded by members.';
 		}
 		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_pages', compact('existing_pages', 'name', 'label', 'description' ) );
 		register_setting( 'bp-pages', $name, [] );
@@ -147,13 +147,13 @@ function bp_core_admin_register_registration_page_fields() {
 
 	foreach ($static_pages as $name => $label) {
 		if ( 'register' === $name ) {
-			$description = 'This is a register descriptions.';
+			$description = 'New users fill out this form to register their accounts.';
 		} elseif ( 'terms' === $name ) {
-			$description = 'This is a terms descriptions.';
+			$description = 'If a page is added, its contents will display in a popup on the register form.';
 		} elseif ( 'privacy' === $name ) {
-			$description = 'This is a privacy descriptions.';
+			$description = 'If a page is added, its contents will display in a popup on the register form.';
 		} elseif ( 'activate' === $name ) {
-			$description = 'This is a activate descriptions.';
+			$description = 'After registering, users are sent to this page to activate their accounts.';
 		}
 		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_registration_pages', compact('existing_pages', 'name', 'label', 'description' ) );
 		register_setting( 'bp-pages', $name, [] );
