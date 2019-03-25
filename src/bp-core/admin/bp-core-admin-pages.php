@@ -118,13 +118,13 @@ function bp_core_admin_register_page_fields() {
 	foreach ($directory_pages as $name => $label) {
 
 		if ( 'members' === $name ) {
-			$description = 'This is a members descriptions.';
+			$description = 'Directory showing all members';
 		} elseif ( 'activity' === $name ) {
-			$description = 'This is a activity descriptions.';
+			$description = 'All sitewide activity';
 		} elseif ( 'groups' === $name ) {
-			$description = 'This is a groups descriptions.';
+			$description = 'Directory showing all groups';
 		} elseif ( 'media' === $name ) {
-			$description = 'This is a media descriptions.';
+			$description = 'All media uploaded by members';
 		}
 		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_pages', compact('existing_pages', 'name', 'label', 'description' ) );
 		register_setting( 'bp-pages', $name, [] );
@@ -167,7 +167,7 @@ add_action( 'admin_init', 'bp_core_admin_register_registration_page_fields' );
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_directory_pages_description() {
-    echo wpautop( __( 'Associate a WordPress Page with each BuddyBoss component.', 'buddyboss' ) );
+    echo wpautop( __( 'Associate a WordPress page with each of the following components.', 'buddyboss' ) );
 }
 
 /**
@@ -177,7 +177,7 @@ function bp_core_admin_directory_pages_description() {
  */
 function bp_core_admin_registration_pages_description() {
 	if ( bp_get_signup_allowed() ) :
-		echo wpautop( __( 'Associate WordPress Pages with the following BuddyBoss Registration pages.', 'buddyboss' ) );
+		echo wpautop( __( 'Associate a WordPress page with the following Registration sections.', 'buddyboss' ) );
 	else :
 		if ( is_multisite() ) :
 			echo wpautop(
