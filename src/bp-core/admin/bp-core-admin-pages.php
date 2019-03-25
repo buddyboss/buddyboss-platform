@@ -146,6 +146,15 @@ function bp_core_admin_register_registration_page_fields() {
 	$description = '';
 
 	foreach ($static_pages as $name => $label) {
+		if ( 'register' === $name ) {
+			$description = 'This is a register descriptions.';
+		} elseif ( 'terms' === $name ) {
+			$description = 'This is a terms descriptions.';
+		} elseif ( 'privacy' === $name ) {
+			$description = 'This is a privacy descriptions.';
+		} elseif ( 'activate' === $name ) {
+			$description = 'This is a activate descriptions.';
+		}
 		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_registration_pages', compact('existing_pages', 'name', 'label', 'description' ) );
 		register_setting( 'bp-pages', $name, [] );
 	}
