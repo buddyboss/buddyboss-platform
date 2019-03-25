@@ -2508,7 +2508,7 @@ function bp_nouveau_signup_terms_privacy() {
 	if ( $terms && ! $privacy ) {
 		?>
         <p class="register-privacy-info">
-            <?php printf( __( 'By creating an account you are agreeing to the <a class="popup-modal popup-terms" href="#terms-modal">Terms of Service</a>.', 'buddyboss' ), get_permalink( $terms ) ); ?>
+            <?php printf( __( 'By creating an account you are agreeing to the <a class="popup-modal popup-terms" href="#terms-modal">%s</a>.', 'buddyboss' ), get_the_title( $terms ) ); ?>
         </p>
 		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php esc_html_e( get_the_title( $terms ), 'buddyboss' ); ?></h1>
@@ -2524,7 +2524,7 @@ function bp_nouveau_signup_terms_privacy() {
 	if ( ! $terms && $privacy ) {
 		?>
         <p class="register-privacy-info">
-            <?php printf( __( 'By creating an account you are agreeing to the <a class="popup-modal-register popup-privacy" href="#privacy-modal">Privacy Policy</a>.', 'buddyboss' ), get_permalink( $privacy ) ); ?>
+            <?php printf( __( 'By creating an account you are agreeing to the <a class="popup-modal-register popup-privacy" href="#privacy-modal">%s</a>.', 'buddyboss' ), get_the_title( $privacy ) ); ?>
         </p>
 		<div id="privacy-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php esc_html_e( get_the_title( $privacy ), 'buddyboss' ); ?></h1>
@@ -2540,7 +2540,7 @@ function bp_nouveau_signup_terms_privacy() {
 	if ( $terms && $privacy ) {
 		?>
         <p class="register-privacy-info">
-            <?php printf( __( 'By creating an account you are agreeing to the <a class="popup-modal-register popup-terms" href="#terms-modal">Terms of Service</a> and <a class="popup-modal-register popup-privacy" href="#privacy-modal">Privacy Policy</a>.', 'buddyboss' ), get_permalink( $terms ), get_permalink( $privacy ) ); ?>
+            <?php printf( __( 'By creating an account you are agreeing to the <a class="popup-modal-register popup-terms" href="#terms-modal">%s</a> and <a class="popup-modal-register popup-privacy" href="#privacy-modal">%s</a>.', 'buddyboss' ), get_the_title( $terms ), get_the_title( $privacy ) ); ?>
         </p>
 		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php esc_html_e( get_the_title( $terms ), 'buddyboss' ); ?></h1>
