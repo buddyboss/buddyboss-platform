@@ -87,7 +87,7 @@ function add_option(forWhat) {
  * @param {string} forWhat Value of the field to show options for
  */
 function show_options( forWhat ) {
-	var do_autolink;
+	var do_autolink, i;
 
 	if ( forWhat === 'gender' ) {
 
@@ -100,7 +100,6 @@ function show_options( forWhat ) {
 				referer: jQuery('#bp-xprofile-add-field').find('input[name="_wp_http_referer"]').val()
 			},
 			success : function( response ) {
-
 				var result = jQuery.parseJSON( response );
 
 				if ( 'added' === result.status ) {
@@ -108,7 +107,7 @@ function show_options( forWhat ) {
 					jQuery('#fieldtype').val('');
 					jQuery('#fieldtype').val('textbox');
 					forWhat = 'textbox';
-					for ( var i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
+					for ( i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
 						document.getElementById( XProfileAdmin.do_settings_section_field_types[i] ).style.display = 'none';
 					}
 
@@ -127,7 +126,7 @@ function show_options( forWhat ) {
 
 					jQuery( document ).trigger( 'bp-xprofile-show-options', forWhat );
 				} else {
-					for ( var i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
+					for ( i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
 						document.getElementById( XProfileAdmin.do_settings_section_field_types[i] ).style.display = 'none';
 					}
 
@@ -149,7 +148,7 @@ function show_options( forWhat ) {
 			}
 		});
 	} else {
-		for ( var i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
+		for ( i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
 			document.getElementById( XProfileAdmin.do_settings_section_field_types[i] ).style.display = 'none';
 		}
 
@@ -264,12 +263,12 @@ function sortFieldOptions( sortElem ){
 	var valArray = [];
 	var sortOrder = sortElem.val();
 	var parentElem = sortElem.closest( '.bp-options-box' );
-	parentElem.find( 'input[type="text"]' ).each(function( index ){
+	parentElem.find( 'input[type="text"]' ).each(function(){
 		valArray.push(jQuery(this).val());
 	});
-	if(sortOrder == 'asc'){
+	if(sortOrder === 'asc'){
 		valArray.sort();
-	}else if(sortOrder == 'desc'){
+	}else if(sortOrder === 'desc'){
 		valArray.sort();
 		valArray.reverse();
 	}
@@ -306,7 +305,7 @@ jQuery( document ).ready( function() {
 	// Set up the sort order change actions
 	jQuery( '[id^="sort_order_"]' ).change(function() {
 		if ( jQuery( this ).val() !== 'custom' ) {
-			if(jQuery( '.sortable, .sortable span' ).attr( 'cursor' ) == 'move'){
+			if(jQuery( '.sortable, .sortable span' ).attr( 'cursor' ) === 'move'){
 				destroySortableFieldOptions();
 			}
 			sortFieldOptions( jQuery( this ) );

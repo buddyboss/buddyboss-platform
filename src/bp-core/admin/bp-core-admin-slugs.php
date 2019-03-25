@@ -65,7 +65,7 @@ function bp_core_admin_get_static_pages() {
 		'register' => __( 'Register Form', 'buddyboss' ),
 		'terms'    => __( 'Terms of Service', 'buddyboss' ),
 		'privacy'  => __( 'Privacy Policy', 'buddyboss' ),
-		'activate' => __( 'Activation', 'buddyboss' ),
+		'activate' => __( 'Activate Account', 'buddyboss' ),
 	);
 
 	/**

@@ -43,6 +43,8 @@ class BP_Nouveau_Media {
 	 */
 	protected function includes() {
 		require $this->dir . 'functions.php';
+		require $this->dir . 'template-tags.php';
+
 		// Test suite requires the AJAX functions early.
 		if ( function_exists( 'tests_add_filter' ) ) {
 			require $this->dir . 'ajax.php';

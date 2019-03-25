@@ -113,10 +113,20 @@ function bp_custom_pages_do_settings_fields($page, $section) {
 function bp_core_admin_register_page_fields() {
 	$existing_pages = bp_core_get_directory_page_ids();
 	$directory_pages = bp_core_admin_get_directory_pages();
-
+	$description = '';
 	add_settings_section( 'bp_pages', __( 'Components', 'buddyboss' ), 'bp_core_admin_directory_pages_description', 'bp-pages' );
 	foreach ($directory_pages as $name => $label) {
-		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_pages', compact('existing_pages', 'name', 'label') );
+
+		if ( 'members' === $name ) {
+			$description = 'This directory shows a listing of all members.';
+		} elseif ( 'groups' === $name ) {
+			$description = 'This directory shows a listing of all groups.';
+		} elseif ( 'activity' === $name ) {
+			$description = 'This directory shows all sitewide activity.';
+		} elseif ( 'media' === $name ) {
+			$description = 'This directory shows any media uploaded by members.';
+		}
+		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_pages', compact('existing_pages', 'name', 'label', 'description' ) );
 		register_setting( 'bp-pages', $name, [] );
 	}
 }
@@ -133,9 +143,19 @@ function bp_core_admin_register_registration_page_fields() {
 
 	$existing_pages = bp_core_get_directory_page_ids();
 	$static_pages = bp_core_admin_get_static_pages();
+	$description = '';
 
 	foreach ($static_pages as $name => $label) {
-		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_registration_pages', compact('existing_pages', 'name', 'label') );
+		if ( 'register' === $name ) {
+			$description = 'New users fill out this form to register their accounts.';
+		} elseif ( 'terms' === $name ) {
+			$description = 'If a page is added, its contents will display in a popup on the register form.';
+		} elseif ( 'privacy' === $name ) {
+			$description = 'If a page is added, its contents will display in a popup on the register form.';
+		} elseif ( 'activate' === $name ) {
+			$description = 'After registering, users are sent to this page to activate their accounts.';
+		}
+		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_registration_pages', compact('existing_pages', 'name', 'label', 'description' ) );
 		register_setting( 'bp-pages', $name, [] );
 	}
 }
@@ -147,7 +167,7 @@ add_action( 'admin_init', 'bp_core_admin_register_registration_page_fields' );
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_directory_pages_description() {
-    echo wpautop( __( 'Associate a WordPress Page with each BuddyBoss component.', 'buddyboss' ) );
+    echo wpautop( __( 'Associate a WordPress page with each of the following components.', 'buddyboss' ) );
 }
 
 /**
@@ -157,7 +177,7 @@ function bp_core_admin_directory_pages_description() {
  */
 function bp_core_admin_registration_pages_description() {
 	if ( bp_get_signup_allowed() ) :
-		echo wpautop( __( 'Associate WordPress Pages with the following BuddyBoss Registration pages.', 'buddyboss' ) );
+		echo wpautop( __( 'Associate a WordPress page with the following Registration sections.', 'buddyboss' ) );
 	else :
 		if ( is_multisite() ) :
 			echo wpautop(
@@ -204,6 +224,14 @@ function bp_admin_setting_callback_page_directory_dropdown($args) {
 			'javascript:void(0);',esc_attr( $name ),
 			__( 'Create Page', 'buddyboss' ) );
 	}
+
+	if ( '' !== $description )
+	printf(
+		'<p class="description">%s</p>',
+		sprintf(
+			__( $description, 'buddyboss' )
+		)
+	);
 
 	if ( ! bp_is_root_blog() ) restore_current_blog();
 }

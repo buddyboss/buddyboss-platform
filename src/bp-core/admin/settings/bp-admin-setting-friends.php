@@ -20,7 +20,7 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 	public function initialize() {
 		$this->tab_label = __( 'Connections', 'buddyboss' );
 		$this->tab_name  = 'bp-friends';
-		$this->tab_order = 30;
+		$this->tab_order = 60;
 	}
 
 	public function is_active() {

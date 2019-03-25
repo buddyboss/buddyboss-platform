@@ -96,6 +96,11 @@ class BP_Media_Component extends BP_Component {
 
 		if ( bp_is_media_component() ) {
 
+			// Screens - Directory.
+			if ( bp_is_media_directory() ) {
+				require $this->path . 'bp-media/screens/directory.php';
+			}
+
 			// Screens - User profile integration.
 			if ( bp_is_user() ) {
 				require $this->path . 'bp-media/screens/media.php';
@@ -109,6 +114,9 @@ class BP_Media_Component extends BP_Component {
 					require $this->path . 'bp-media/screens/' . bp_current_action() . '.php';
 				}
 			}
+
+			// Theme compatibility.
+			new BP_Media_Theme_Compat();
 		}
 	}
 
@@ -135,13 +143,20 @@ class BP_Media_Component extends BP_Component {
 			'table_name_albums' => $bp->table_prefix . 'bp_media_albums',
 		);
 
+		// Fetch the default directory title.
+		$default_directory_titles = bp_core_get_directory_page_default_titles();
+		$default_directory_title  = $default_directory_titles[$this->id];
+
 		// All globals for media component.
 		// Note that global_tables is included in this array.
 		parent::setup_globals( array(
 			'slug'                  => BP_MEDIA_SLUG,
+			'root_slug'             => isset( $bp->pages->media->slug ) ? $bp->pages->media->slug : BP_MEDIA_SLUG,
 			'has_directory'         => true,
 			'notification_callback' => 'bp_media_format_notifications',
 			'global_tables'         => $global_tables,
+			'directory_title'       => isset( $bp->pages->media->title ) ? $bp->pages->media->title : $default_directory_title,
+			'search_string'         => __( 'Search Media&hellip;', 'buddyboss' ),
 		) );
 
 	}
@@ -263,12 +278,28 @@ class BP_Media_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-albums',
-				'title'    => __( 'Albums', 'buddyboss' ),
+				'title'    => __( 'My Albums', 'buddyboss' ),
 				'href'     => trailingslashit( $media_link . 'albums' ),
 				'position' => 20
 			);
 		}
 
 		parent::setup_admin_bar( $wp_admin_nav );
+	}
+
+	/**
+	 * Setup cache groups.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function setup_cache_groups() {
+
+		// Global groups.
+		wp_cache_add_global_groups( array(
+			'bp_media',
+			'bp_media_albums'
+		) );
+
+		parent::setup_cache_groups();
 	}
 }

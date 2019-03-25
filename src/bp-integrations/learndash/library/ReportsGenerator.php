@@ -78,25 +78,26 @@ class ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function getData()
-	{
-		$results = array_map([$this, 'formatData'], $this->results);
+	public function getData() {
+		$results = array_map( [ $this, 'formatData' ], $this->results );
 
-		if ($this->hasArg('display') && $this->args['display']) {
-			$results = array_map([$this, 'formatDataForDisplay'], $results, $this->results);
+		if ( $this->hasArg( 'display' ) && $this->args['display'] ) {
+			$results = array_map( [ $this, 'formatDataForDisplay' ], $results, $this->results );
 		}
 
-		if ($this->hasArg('export') && $this->args['export']) {
-			$results = array_map([$this, 'formatDataForExport'], $results, $this->results);
+		if ( $this->hasArg( 'export' ) && $this->args['export'] ) {
+			$results = array_map( [ $this, 'formatDataForExport' ], $results, $this->results );
 		}
 
-		$results = array_map(function($result) {
-			$result = apply_filters('bp_ld_sync/report_data', $result, $this->args);
-			return apply_filters("bp_ld_sync/report_data/step={$this->args['step']}", $result, $this->args);
-		}, $results);
+		$results = array_map( function ( $result, $activity ) {
+			$result = apply_filters( 'bp_ld_sync/report_data', $result, $this->args, $activity );
 
-		$results = apply_filters('bp_ld_sync/report_datas', $results, $this->args);
-		return apply_filters("bp_ld_sync/report_datas/step={$this->args['step']}", $results, $this->args);
+			return apply_filters( "bp_ld_sync/report_data/step={$this->args['step']}", $result, $this->args, $activity );
+		}, $results, array_values( $this->results ) );
+
+		$results = apply_filters( 'bp_ld_sync/report_datas', $results, $this->args );
+
+		return apply_filters( "bp_ld_sync/report_datas/step={$this->args['step']}", $results, $this->args );
 	}
 
 	/**

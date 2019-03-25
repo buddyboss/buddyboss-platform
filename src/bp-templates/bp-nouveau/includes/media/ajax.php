@@ -12,6 +12,12 @@ defined( 'ABSPATH' ) || exit;
 add_action( 'admin_init', function() {
 	$ajax_actions = array(
 		array(
+			'media_filter' => array(
+				'function' => 'bp_nouveau_ajax_object_template_loader',
+				'nopriv'   => true,
+			),
+		),
+		array(
 			'media_upload' => array(
 				'function' => 'bp_nouveau_ajax_media_upload',
 				'nopriv'   => true,

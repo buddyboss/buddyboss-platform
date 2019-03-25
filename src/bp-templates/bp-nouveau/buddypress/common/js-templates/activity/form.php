@@ -10,6 +10,10 @@
 	<span class="bp-icon" aria-hidden="true"></span><p>{{{data.message}}}</p>
 </script>
 
+<script type="text/html" id="tmpl-activity-media">
+    <div class="dropzone closed" id="activity-post-media-uploader"></div>
+</script>
+
 <script type="text/html" id="tmpl-activity-link-preview">
 	<# if ( data.link_scrapping ) { #>
 	<input type="url" id="activity-link-preview-url" value="{{data.link_url}}" />
@@ -85,17 +89,24 @@
 </script>
 
 <script type="text/html" id="tmpl-whats-new-toolbar">
-		<?php if ( bp_is_activity_link_preview_active() ):  ?>
-			<span class="post-elements-buttons-item post-link">
-				<a id="activity-link-preview-button" class="toolbar-button">
+	<?php if ( bp_is_active( 'media' ) ): ?>
+        <span class="post-elements-buttons-item post-media">
+				<a href="#" id="activity-media-button" class="toolbar-button">
+					<span class="dashicons dashicons-admin-media"></span>
+				</a>
+			</span>
+	<?php endif; ?>
+	<?php if ( bp_is_activity_link_preview_active() ): ?>
+        <span class="post-elements-buttons-item post-link">
+				<a href="#" id="activity-link-preview-button" class="toolbar-button">
 					<span class="dashicons dashicons-admin-links"></span>
 				</a>
 			</span>
-		<?php endif; ?>
-		<?php if ( bp_is_activity_gif_active() ):  ?>
-		<span class="post-elements-buttons-item post-gif">
+	<?php endif; ?>
+	<?php if ( bp_is_activity_gif_active() ): ?>
+        <span class="post-elements-buttons-item post-gif">
 			<div class="gif-media-search">
-				<a id="activity-gif-button" class="toolbar-button"><span class="dashicons dashicons-smiley"></span></a>
+				<a href="#" id="activity-gif-button" class="toolbar-button"><span class="dashicons dashicons-smiley"></span></a>
 				<div class="gif-media-search-dropdown"></div>
 			</div>
 		</span>
@@ -112,13 +123,6 @@
 
 <script type="text/html" id="tmpl-activity-post-form-options">
 	<?php bp_nouveau_activity_hook( '', 'post_form_options' ); ?>
-</script>
-
-<script type="text/html" id="tmpl-activity-post-options-media">
-	<a href="#" class="activity-post-form-media">Media</a>
-    <div class="activity-post-form-media-uploader-wrapper" style="display: none;">
-        <div class="dropzone" id="activity-post-form-media-uploader"></div>
-    </div>
 </script>
 
 <script type="text/html" id="tmpl-activity-post-form-buttons">
