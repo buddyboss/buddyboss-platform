@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-24 10:36:18+00:00\n"
+"POT-Creation-Date: 2019-03-25 04:56:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1640,6 +1640,7 @@ msgid "Integrations"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:598
+#: bp-core/admin/bp-core-admin-functions.php:2060
 #: bp-core/admin/bp-core-admin-tools.php:20
 #: bp-core/admin/bp-core-admin-tools.php:512
 #: bp-core/classes/class-bp-admin.php:457
@@ -1888,10 +1889,6 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1991
 msgid "Profile type saved."
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-functions.php:2060
-msgid "Tools    "
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2072

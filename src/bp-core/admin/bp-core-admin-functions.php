@@ -383,7 +383,7 @@ function bp_do_activation_redirect() {
 	}
 
 	// Redirect to dashboard and trigger the Hello screen.
-	wp_safe_redirect( add_query_arg( $query_args, bp_get_admin_url( '?hello=buddypress' ) ) );
+	wp_safe_redirect( add_query_arg( $query_args, bp_get_admin_url( '?hello=buddyboss' ) ) );
 }
 
 /**

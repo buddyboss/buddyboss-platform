@@ -667,7 +667,7 @@ class BP_Admin {
 			'parent' => 'wp-logo',
 			'id'     => 'bp-about',
 			'title'  => esc_html__( 'Hello, BuddyBoss!', 'buddyboss' ),
-			'href'   => bp_get_admin_url( '?hello=buddypress' ),
+			'href'   => bp_get_admin_url( '?hello=buddyboss' ),
 			'meta'   => array(
 				'class' => 'say-hello-buddypress',
 			),
@@ -694,7 +694,7 @@ class BP_Admin {
 		// Add a few links to the existing links array.
 		return array_merge( $links, array(
 			'settings'    => '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-components' ) ) . '">' . __( 'Settings', 'buddyboss' ) . '</a>',
-			'about'    => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddypress' ) ) . '">' . __( 'About', 'buddyboss' ) . '</a>'
+			'about'    => '<a href="' . esc_url( bp_get_admin_url( '?hello=buddyboss' ) ) . '">' . __( 'About', 'buddyboss' ) . '</a>'
 		) );
 	}
 
@@ -729,7 +729,7 @@ class BP_Admin {
 		wp_enqueue_style( 'bp-admin-common-css' );
 
 		// BuddyPress Hello
-		if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddypress' ) {
+		if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddyboss' ) {
 			wp_enqueue_style( 'bp-hello-css' );
 			wp_enqueue_script( 'bp-hello-js' );
 		}
@@ -744,7 +744,7 @@ class BP_Admin {
 	 * @since BuddyPress 3.0.0 Now outputs BuddyPress Hello template.
 	 */
 	public function about_screen() {
-		if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'buddypress' ) {
+		if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'buddyboss' ) {
 			return;
 		}
 

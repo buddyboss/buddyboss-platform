@@ -1,5 +1,5 @@
 /**
- * Loads for BuddyPress Hello in wp-admin for query string `hello=buddypress`.
+ * Loads for BuddyPress Hello in wp-admin for query string `hello=buddyboss`.
  *
  * @since BuddyPress 3.0.0
  */
