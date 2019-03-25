@@ -113,10 +113,20 @@ function bp_custom_pages_do_settings_fields($page, $section) {
 function bp_core_admin_register_page_fields() {
 	$existing_pages = bp_core_get_directory_page_ids();
 	$directory_pages = bp_core_admin_get_directory_pages();
-
+	$description = '';
 	add_settings_section( 'bp_pages', __( 'Components', 'buddyboss' ), 'bp_core_admin_directory_pages_description', 'bp-pages' );
 	foreach ($directory_pages as $name => $label) {
-		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_pages', compact('existing_pages', 'name', 'label') );
+
+		if ( 'members' === $name ) {
+			$description = 'This is a members descriptions.';
+		} elseif ( 'activity' === $name ) {
+			$description = 'This is a activity descriptions.';
+		} elseif ( 'groups' === $name ) {
+			$description = 'This is a groups descriptions.';
+		} elseif ( 'media' === $name ) {
+			$description = 'This is a media descriptions.';
+		}
+		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_pages', compact('existing_pages', 'name', 'label', 'description' ) );
 		register_setting( 'bp-pages', $name, [] );
 	}
 }
@@ -133,9 +143,10 @@ function bp_core_admin_register_registration_page_fields() {
 
 	$existing_pages = bp_core_get_directory_page_ids();
 	$static_pages = bp_core_admin_get_static_pages();
+	$description = '';
 
 	foreach ($static_pages as $name => $label) {
-		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_registration_pages', compact('existing_pages', 'name', 'label') );
+		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_registration_pages', compact('existing_pages', 'name', 'label', 'description' ) );
 		register_setting( 'bp-pages', $name, [] );
 	}
 }
@@ -204,6 +215,14 @@ function bp_admin_setting_callback_page_directory_dropdown($args) {
 			'javascript:void(0);',esc_attr( $name ),
 			__( 'Create Page', 'buddyboss' ) );
 	}
+
+	if ( '' !== $description )
+	printf(
+		'<p class="description">%s</p>',
+		sprintf(
+			__( $description, 'buddyboss' )
+		)
+	);
 
 	if ( ! bp_is_root_blog() ) restore_current_blog();
 }

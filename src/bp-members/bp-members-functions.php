@@ -3874,8 +3874,10 @@ function bp_member_type_shortcode_filter( $query_string, $object ){
  * @since BuddyBoss 1.0.0
  */
 function bp_member_type_changing_listing_label() {
-	global $pagenow, $current_screen;
-	$url = buddypress()->plugin_url . 'bp-core/js/';
+	global $current_screen;
+
+	$url_clip_board = buddypress()->plugin_url . 'bp-core/js/vendor/';
+	$url_member     = buddypress()->plugin_url . 'bp-core/js/';
 
 	$bp_member_type_pages = array(
 		'edit-bp-member-type',
@@ -3887,8 +3889,8 @@ function bp_member_type_changing_listing_label() {
 	// Check to make sure we're on a profile type's admin page
 	if ( isset( $current_screen->id ) && in_array( $current_screen->id, $bp_member_type_pages ) ) {
 
-		wp_enqueue_script('bp-clipboard',$url.'clipboard.js',array(), '1.0.0' );
-		wp_enqueue_script('bp-member-type-admin-screen',$url.'bp-member-type-admin-screen.js',array('jquery'), '1.0.0' );
+		wp_enqueue_script('bp-clipboard',$url_clip_board.'clipboard.js',array(), bp_get_version() );
+		wp_enqueue_script('bp-member-type-admin-screen',$url_member.'bp-member-type-admin-screen.js',array('jquery'), bp_get_version() );
 
 		$strings = array(
 			'warnTrash' 		=> __( 'You have {total_users} members with this profile type, are you sure you would like to trash it?', 'buddyboss' ),
