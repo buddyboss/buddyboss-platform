@@ -90,14 +90,14 @@ class ReportsGenerator
 		}
 
 		$results = array_map( function ( $result ) {
-			$result = apply_filters( 'bp_ld_sync/report_data', $result, $this->args, $this->results );
+			$result = apply_filters( 'bp_ld_sync/report_data', $result, $this->args );
 
-			return apply_filters( "bp_ld_sync/report_data/step={$this->args['step']}", $result, $this->args, $this->results );
+			return apply_filters( "bp_ld_sync/report_data/step={$this->args['step']}", $result, $this->args );
 		}, $results );
 
-		$results = apply_filters( 'bp_ld_sync/report_datas', $results, $this->args, $this->results );
+		$results = apply_filters( 'bp_ld_sync/report_datas', $results, $this->args );
 
-		return apply_filters( "bp_ld_sync/report_datas/step={$this->args['step']}", $results, $this->args, $this->results );
+		return apply_filters( "bp_ld_sync/report_datas/step={$this->args['step']}", $results, $this->args );
 	}
 
 	/**
