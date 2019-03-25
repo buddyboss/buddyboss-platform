@@ -191,6 +191,16 @@ if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
 }
 
 /**
+ * Loads FontAwesome in WordPress admin
+**/
+function bp_font_awesome_icons(){
+    echo '<link href="//use.fontawesome.com/releases/v5.8.1/css/solid.css" rel="stylesheet" integrity="sha384-QokYePQSOwpBDuhlHOsX0ymF6R/vLk/UQVz3WHa6wygxI5oGTmDTv8wahFOSspdm" crossorigin="anonymous">';
+    echo '<link href="//use.fontawesome.com/releases/v5.8.1/css/fontawesome.css" rel="stylesheet" integrity="sha384-vd1e11sR28tEK9YANUtpIOdjGW14pS87bUBuOIoBILVWLFnS+MCX9T6MMf0VdPGq" crossorigin="anonymous">';
+}
+add_action('admin_head', 'bp_font_awesome_icons');
+add_action('wp_head', 'bp_font_awesome_icons');
+
+/**
  * Prevent running BuddyBoss Platform if any incompatible plugins are active.
  * Show admin error message instead.
  */
