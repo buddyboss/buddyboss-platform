@@ -56,65 +56,9 @@ function bp_media_get_settings_fields() {
 	/** General Section ******************************************************/
 	$fields['bp_media_settings_general'] = [
 
-		'bp_media_user_photos_slug' => [
-			'title'             => __( 'User Photos Slug', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_user_photos_slug',
-			'sanitize_callback' => 'string',
-			'args'              => []
-		],
-
-		'bp_media_activity_photo_size' => [
-			'title'             => __( 'Activity Photo Size', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_activity_photo_size',
-			'sanitize_callback' => 'string',
-			'args'              => []
-		],
-
-		'bp_media_activity_photo_layout' => [
-			'title'             => __( 'Photo Layout', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_activity_photo_layout',
-			'sanitize_callback' => 'string',
-			'args'              => []
-		],
-
-		'bp_media_enable_tagging' => [
-			'title'             => __( 'Friend Tagging', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_enable_tagging',
-			'sanitize_callback' => 'absint',
-			'args'              => []
-		],
-
-		'bp_media_files_per_batch' => [
-			'title'             => __( 'Files Per Batch', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_files_per_batch',
-			'sanitize_callback' => 'absint',
-			'args'              => []
-		],
-
-		'bp_media_files_rotation_fix' => [
-			'title'             => __( 'Mobile Rotation Fix', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_files_rotation_fix',
-			'sanitize_callback' => 'absint',
-			'args'              => []
-		],
-
 		'bp_media_delete_media_permanently' => [
 			'title'             => __( 'Media Management', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_delete_media_permanently',
-			'sanitize_callback' => 'absint',
-			'args'              => []
-		],
-
-		'bp_media_enable_js_debug' => [
-			'title'             => __( 'Enable Unminified JS', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_enable_js_debug',
-			'sanitize_callback' => 'absint',
-			'args'              => []
-		],
-
-		'bp_media_show_uploadbox' => [
-			'title'             => __( 'Disable Upload Box', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_show_uploadbox',
 			'sanitize_callback' => 'absint',
 			'args'              => []
 		],
