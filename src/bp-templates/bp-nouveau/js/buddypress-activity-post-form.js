@@ -63,7 +63,7 @@ window.bp = window.bp || {};
 				autoProcessQueue: true,
 				addRemoveLinks: true,
 				uploadMultiple: false,
-				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
 			};
 		}
 	};
@@ -122,7 +122,7 @@ window.bp = window.bp || {};
 	// Git results collection returned from giphy api
 	bp.Collections.GifDatas =  Backbone.Collection.extend( {
 		// Reference to this collection's model.
-		model: bp.Models.GifData,
+		model: bp.Models.GifData
 	});
 
 	// Object, the activity is attached to (group or blog or any other)
@@ -245,7 +245,7 @@ window.bp = window.bp || {};
 					}
 				}
 			});
-		},
+		}
 
 	});
 
@@ -260,7 +260,7 @@ window.bp = window.bp || {};
 			'click #activity-url-prevPicButton': 'prev',
 			'click #activity-url-nextPicButton': 'next',
 			'click #activity-link-preview-close-image': 'close',
-			'click #activity-close-link-suggestion': 'destroy',
+			'click #activity-close-link-suggestion': 'destroy'
 		},
 
 		initialize: function() {
@@ -292,7 +292,7 @@ window.bp = window.bp || {};
 			e.preventDefault();
 			this.model.set({
 				link_images: [],
-				link_image_index: 0,
+				link_image_index: 0
 			});
 		},
 
@@ -326,7 +326,7 @@ window.bp = window.bp || {};
 		},
 
 		scrapURL: function(urlText) {
-			var urlString = "";
+			var urlString = '';
 			if ( urlText.indexOf( 'http://' ) >= 0 ) {
 				urlString = this.getURL( 'http://', urlText );
 			} else if ( urlText.indexOf( 'https://' ) >= 0 ) {
@@ -377,7 +377,7 @@ window.bp = window.bp || {};
 					link_scrapping: true,
 					link_loading: true,
 					link_error: false,
-					link_url: url,
+					link_url: url
 				} );
 
 				bp.ajax.post( 'bp_activity_parse_url', { url: url } ).always( function( response ) {
@@ -394,18 +394,18 @@ window.bp = window.bp || {};
 							link_title: response.title,
 							link_description: response.description,
 							link_images: response.images,
-							link_image_index: 0,
+							link_image_index: 0
 						} );
 					} else {
 						self.model.set( {
 							link_success: false,
 							link_error: true,
-							link_error_msg: response.error,
+							link_error_msg: response.error
 						} );
 					}
 				});
 			}
-		},
+		}
 	} );
 
 	// Activity gif selector
@@ -435,7 +435,7 @@ window.bp = window.bp || {};
 			return this;
 		},
 
-		handleRemove: function( e ) {
+		handleRemove: function() {
 			this.model.set('gif_data', {} );
 			this.el.style.backgroundImage = '';
 			this.el.style.backgroundSize = '';
@@ -503,7 +503,7 @@ window.bp = window.bp || {};
 					q: q,
 					offset: self.offset,
 					fmt: 'json',
-					limit: this.limit,
+					limit: this.limit
 				},
 				function( response ) {
 					self.gifDataItems.reset( response.data );
@@ -547,7 +547,7 @@ window.bp = window.bp || {};
 			var request = self.giphy.trending( {
 				offset: self.offset,
 				fmt: 'json',
-				limit: this.limit,
+				limit: this.limit
 			}, function( response ) {
 				self.gifDataItems.reset( response.data );
 				self.total_count = response.pagination.total_count;
@@ -567,15 +567,15 @@ window.bp = window.bp || {};
 						params = {
 							offset: self.offset,
 							fmt: 'json',
-							limit: self.limit,
+							limit: self.limit
 						};
 
 						self.el.classList.add('loading');
-
+						var request = null;
 						if ( _.isNull( self.q ) ) {
-							var request = self.giphy.trending( params, _.bind( self.loadMoreResponse, self ) );
+							request = self.giphy.trending( params, _.bind( self.loadMoreResponse, self ) );
 						} else {
-							var request = self.giphy.search( _.extend( { q: self.q }, params ), _.bind( self.loadMoreResponse, self ) );
+							request = self.giphy.search( _.extend( { q: self.q }, params ), _.bind( self.loadMoreResponse, self ) );
 						}
 
 						self.requests.push( request );
@@ -588,7 +588,7 @@ window.bp = window.bp || {};
 		clearRequests: function() {
 			this.gifDataItems.reset();
 
-			for ( i = 0; i < this.requests.length; i++ ) {
+			for ( var i = 0; i < this.requests.length; i++ ) {
 				this.requests[i].abort();
 			}
 
@@ -645,7 +645,7 @@ window.bp = window.bp || {};
 
 		onLinkScrapping: function() {
 			this.$el.prop( 'disabled', false );
-		},
+		}
 	} );
 
 	// The content of the activity
