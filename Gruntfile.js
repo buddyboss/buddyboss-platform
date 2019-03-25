@@ -50,7 +50,7 @@ module.exports = function( grunt ) {
 			core: {
 				expand: true,
 				cwd: SOURCE_DIR,
-				src: BP_JS,
+				src: BP_JS.concat( [ '!**/vendor/*.js', '!**/*.min.js' ] ),
 
 				/**
 				 * Limit JSHint's run to a single specified file:
@@ -252,7 +252,7 @@ module.exports = function( grunt ) {
 				},
 				expand: true,
 				cwd: SOURCE_DIR,
-				src: BP_CSS.concat( BP_EXCLUDED_CSS, BP_EXCLUDED_MISC, BP_SCSS_CSS_FILES )
+				src: BP_CSS.concat( BP_EXCLUDED_CSS, BP_EXCLUDED_MISC, BP_SCSS_CSS_FILES, [ '!**/*.min.css' ] )
 			},
 			scss: {
 				options: {
