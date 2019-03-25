@@ -148,7 +148,7 @@ function show_options( forWhat ) {
 			}
 		});
 	} else {
-		for ( var i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
+		for ( i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
 			document.getElementById( XProfileAdmin.do_settings_section_field_types[i] ).style.display = 'none';
 		}
 
