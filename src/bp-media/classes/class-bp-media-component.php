@@ -278,7 +278,7 @@ class BP_Media_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-albums',
-				'title'    => __( 'Albums', 'buddyboss' ),
+				'title'    => __( 'My Albums', 'buddyboss' ),
 				'href'     => trailingslashit( $media_link . 'albums' ),
 				'position' => 20
 			);
