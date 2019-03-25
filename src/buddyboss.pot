@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-25 04:56:24+00:00\n"
+"POT-Creation-Date: 2019-03-25 14:16:31+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15511,7 +15511,7 @@ msgstr ""
 msgid "Next »"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/media/album-entry.php:16
+#: bp-templates/bp-nouveau/buddypress/members/single/media/album-entry.php:17
 #: bp-templates/bp-nouveau/buddypress/members/single/media/single-album.php:32
 msgid "photos"
 msgstr ""
@@ -15534,11 +15534,11 @@ msgstr ""
 msgid "Add Photos"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/media/uploader.php:31
+#: bp-templates/bp-nouveau/buddypress/members/single/media/uploader.php:35
 msgid "Add More Media"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/media/uploader.php:32
+#: bp-templates/bp-nouveau/buddypress/members/single/media/uploader.php:36
 msgid "Done"
 msgstr ""
 
@@ -16776,7 +16776,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/template-tags.php:2511
 msgid ""
 "By creating an account you are agreeing to the <a class=\"popup-modal "
-"popup-terms\" href=\"#terms-modal\">Terms of Service</a>."
+"popup-terms\" href=\"#terms-modal\">%s</a>."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/template-tags.php:2519
@@ -16796,16 +16796,15 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/template-tags.php:2527
 msgid ""
 "By creating an account you are agreeing to the <a "
-"class=\"popup-modal-register popup-privacy\" "
-"href=\"#privacy-modal\">Privacy Policy</a>."
+"class=\"popup-modal-register popup-privacy\" href=\"#privacy-modal\">%s</a>."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/template-tags.php:2543
 msgid ""
 "By creating an account you are agreeing to the <a "
-"class=\"popup-modal-register popup-terms\" href=\"#terms-modal\">Terms of "
-"Service</a> and <a class=\"popup-modal-register popup-privacy\" "
-"href=\"#privacy-modal\">Privacy Policy</a>."
+"class=\"popup-modal-register popup-terms\" href=\"#terms-modal\">%s</a> and "
+"<a class=\"popup-modal-register popup-privacy\" "
+"href=\"#privacy-modal\">%s</a>."
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-activity.php:28

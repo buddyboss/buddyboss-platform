@@ -241,9 +241,17 @@
 }
 
 .dropzone {
-	min-height: 150px;
-	border: 2px solid rgba(0, 0, 0, 0.3);
-	background: #fff;
+	background: rgba(240,243,247,0.5);
+    border: 1px dashed #DEDFE2;
+    border-radius: 6px;
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #122B46;
+    letter-spacing: -0.24px;
+	line-height: 26px;
 	padding: 20px;
 }
 

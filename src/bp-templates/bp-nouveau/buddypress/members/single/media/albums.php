@@ -10,8 +10,8 @@
 
 <?php if ( bp_is_my_profile() ) : ?>
 
-    <div class="flex">
-        <div class="push-right bb-media-actions">
+    <div class="bb-media-actions-wrap">
+        <div class="bb-media-actions">
             <a href="#" id="bb-create-album" class="bb-create-album button small outline">+ <?php _e( 'Create Album', 'buddyboss' ); ?></a>
         </div>
     </div>
@@ -28,7 +28,7 @@
     <div id="members-albums-dir-list" class="bb-member-albums bb-albums-dir-list">
 
 		<?php if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
-        <ul class="bb-album-list grid">
+        <ul class="bb-albums-list">
 			<?php endif; ?>
 
 			<?php
