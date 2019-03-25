@@ -977,7 +977,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		),
 		'directory-media-loading' => array(
 			'type'    => 'loading',
-			'message' => __( 'Loading community media. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading media from the community. Please wait.', 'buddyboss' ),
 		),
 	) );
 
