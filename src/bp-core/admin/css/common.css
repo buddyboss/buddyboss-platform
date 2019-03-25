@@ -482,6 +482,11 @@ tr.bp-search-parent-field label {
   content: "\f083";
 }
 
+.bp-admin-card.section-bp_search_settings_community table,
+.bp-admin-card.section-bp_search_settings_post_types table {
+  margin-bottom: 20px;
+}
+
 .bp-admin-card.section-bp_search_settings_community th[scope="row"],
 .bp-admin-card.section-bp_search_settings_post_types th[scope="row"] {
   width: 1px;
