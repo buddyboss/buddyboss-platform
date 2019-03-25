@@ -363,7 +363,8 @@ tr.bp-search-parent-field label {
 /*
  * 2.6 Settings - Cards
  */
-.bp-admin-card {
+.bp-admin-card,
+.bp-integration-card {
 	position: relative;
 	margin-top: 20px;
 	padding: 2.2em 2.8em 2em;
@@ -375,12 +376,14 @@ tr.bp-search-parent-field label {
 	background: #fff;
 }
 
-.bp-admin-card .form-table td p {
+.bp-admin-card .form-table td p,
+.bp-integration-card .form-table td p {
 	color: #999;
 	margin-top: 6px;
 }
 
-.bp-admin-card h2 {
+.bp-admin-card h2,
+.bp-integration-card h2 {
 	line-height: 40px;
 	margin: 0 0 1em;
 	padding-bottom: 1.2em;
@@ -390,11 +393,12 @@ tr.bp-search-parent-field label {
 	border-bottom: 1px solid #eaeaea;
 }
 
-.bp-admin-card h2 span {
+.bp-admin-card h2 span,
+.bp-integration-card h2 span {
 	font-weight: 400;
 }
 
-body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
+.bp-admin-card h2:before {
 	font-family: "Font Awesome 5 Free";
     font-weight: 900;
 	margin-right: 1em;
@@ -515,28 +519,35 @@ body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
 	content: "\f044";
 }
 
+/* Integrations */
+.bp-integration-card h2 {
+	background-repeat: no-repeat;
+	background-position: left top;
+	padding-left: 53px;
+}
+
 /* Integrations - AppBoss */
-.bp-admin-card.section-bp_appboss_disabled h2 {
+.bp-integration-card.section-bp_appboss_disabled h2 {
 	background-image: url(../../images/admin/admin_icon-appboss.png);
 }
 
 /* Integrations - LearnDash */
-.bp-admin-card.section-bp_ld_sync-buddypress h2,
-.bp-admin-card.section-bp_ld_sync-learndash h2,
-.bp-admin-card.section-bp_ld_sync-reports h2,
-.bp-admin-card.section-bp_ld_disabled h2 {
+.bp-integration-card.section-bp_ld_sync-buddypress h2,
+.bp-integration-card.section-bp_ld_sync-learndash h2,
+.bp-integration-card.section-bp_ld_sync-reports h2,
+.bp-integration-card.section-bp_ld_disabled h2 {
 	background-image: url(../../images/admin/admin_icon-learndash.png);
 }
 
 /* Integrations - MemberPress */
-.bp-admin-card.section-bp-memberpress_disabled h2,
-.bp-admin-card.section-bp-memberpress-section h2 {
+.bp-integration-card.section-bp-memberpress_disabled h2,
+.bp-integration-card.section-bp-memberpress-section h2 {
 	background-image: url(../../images/admin/admin_icon-memberpress.png);
 }
 
 /* Integrations - WooCommerce */
-.bp-admin-card.section-bp-woocommerce_disabled h2,
-.bp-admin-card.section-bp-woocommerce-section h2 {
+.bp-integration-card.section-bp-woocommerce_disabled h2,
+.bp-integration-card.section-bp-woocommerce-section h2 {
 	background-image: url(../../images/admin/admin_icon-woocommerce.png);
 }
 
