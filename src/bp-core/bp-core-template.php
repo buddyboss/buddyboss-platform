@@ -2716,6 +2716,21 @@ function bp_is_user_media() {
 	return (bool) ( bp_is_user() && bp_is_media_component() );
 }
 
+/**
+ * Is the current page the media directory?
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is the media directory.
+ */
+function bp_is_media_directory() {
+	if ( ! bp_displayed_user_id() && bp_is_media_component() && ! bp_current_action() ) {
+		return true;
+	}
+
+	return false;
+}
+
 /** Groups ********************************************************************/
 
 /**

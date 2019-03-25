@@ -96,6 +96,11 @@ class BP_Media_Component extends BP_Component {
 
 		if ( bp_is_media_component() ) {
 
+			// Screens - Directory.
+			if ( bp_is_media_directory() ) {
+				require $this->path . 'bp-media/screens/directory.php';
+			}
+
 			// Screens - User profile integration.
 			if ( bp_is_user() ) {
 				require $this->path . 'bp-media/screens/media.php';
@@ -109,6 +114,9 @@ class BP_Media_Component extends BP_Component {
 					require $this->path . 'bp-media/screens/' . bp_current_action() . '.php';
 				}
 			}
+
+			// Theme compatibility.
+			new BP_Media_Theme_Compat();
 		}
 	}
 
