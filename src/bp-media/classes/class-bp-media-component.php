@@ -143,13 +143,20 @@ class BP_Media_Component extends BP_Component {
 			'table_name_albums' => $bp->table_prefix . 'bp_media_albums',
 		);
 
+		// Fetch the default directory title.
+		$default_directory_titles = bp_core_get_directory_page_default_titles();
+		$default_directory_title  = $default_directory_titles[$this->id];
+
 		// All globals for media component.
 		// Note that global_tables is included in this array.
 		parent::setup_globals( array(
 			'slug'                  => BP_MEDIA_SLUG,
+			'root_slug'             => isset( $bp->pages->media->slug ) ? $bp->pages->media->slug : BP_MEDIA_SLUG,
 			'has_directory'         => true,
 			'notification_callback' => 'bp_media_format_notifications',
 			'global_tables'         => $global_tables,
+			'directory_title'       => isset( $bp->pages->media->title ) ? $bp->pages->media->title : $default_directory_title,
+			'search_string'         => __( 'Search Media&hellip;', 'buddyboss' ),
 		) );
 
 	}
@@ -278,5 +285,21 @@ class BP_Media_Component extends BP_Component {
 		}
 
 		parent::setup_admin_bar( $wp_admin_nav );
+	}
+
+	/**
+	 * Setup cache groups.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function setup_cache_groups() {
+
+		// Global groups.
+		wp_cache_add_global_groups( array(
+			'bp_media',
+			'bp_media_albums'
+		) );
+
+		parent::setup_cache_groups();
 	}
 }

@@ -168,6 +168,83 @@ window.bp = window.bp || {};
 		}
 	} );
 
+	// Activity Media
+	bp.Views.ActivityMedia = bp.View.extend({
+		tagName: 'div',
+		className: 'activity-media-container',
+		template: bp.template( 'activity-media' ),
+		media : [],
+		dropzone : null,
+		dropzone_options : null,
+
+		events: {}, // will use this when close button added
+
+		initialize: function () {
+
+			// set up dropzones auto discover to false so it does not automatically set dropzones
+			window.Dropzone.autoDiscover = false;
+
+			this.dropzone_options = {
+				url: BP_Nouveau.ajaxurl,
+				timeout: 3 * 60 * 60 * 1000,
+				acceptedFiles: 'image/*',
+				autoProcessQueue: true,
+				addRemoveLinks: true,
+				uploadMultiple: false,
+				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+			};
+
+			this.model.set( 'media', this.media );
+
+			document.addEventListener( 'activity_media_open', this.open_media_uploader.bind(this) );
+			document.addEventListener( 'activity_media_close', this.close_media_uploader.bind(this) );
+		},
+
+		close_media_uploader: function() {
+			var self = this;
+			self.media = [];
+			if ( self.dropzone != null ) {
+				self.dropzone.destroy();
+			}
+			self.$el.addClass('closed');
+		},
+
+		open_media_uploader: function() {
+			var self = this;
+
+			self.$el.addClass('open');
+			self.media = [];
+			self.dropzone = new window.Dropzone('#activity-post-media-uploader', self.dropzone_options );
+
+			self.dropzone.on('sending', function(file, xhr, formData) {
+				formData.append('action', 'media_upload');
+				formData.append('_wpnonce', BP_Nouveau.nonces.media);
+			});
+
+			self.dropzone.on('success', function(file, response) {
+				if ( response.data.id ) {
+					file.id = response.data.id;
+					response.data.uuid = file.upload.uuid;
+					response.data.menu_order = self.media.length;
+					self.media.push( response.data );
+					self.model.set( 'media', self.media );
+				}
+			});
+
+			self.dropzone.on('removedfile', function(file) {
+				if ( self.media.length ) {
+					for ( var i in self.media ) {
+						if ( file.id == self.media[i].id ) {
+							self.media.splice( i, 1 );
+							self.model.set( 'media', self.media );
+						}
+					}
+				}
+			});
+		},
+
+	});
+
 	// Activity link preview
 	bp.Views.ActivityLinkPreview = bp.View.extend( {
 		tagName: 'div',
@@ -782,56 +859,6 @@ window.bp = window.bp || {};
 		template : bp.template( 'activity-post-form-options' )
 	} );
 
-	bp.Views.FormMedia = bp.View.extend({
-		tagName: 'div',
-		id: 'activity-post-options-media',
-		template : bp.template( 'activity-post-options-media' ),
-		media : [],
-
-		events: {
-			'click a.activity-post-form-media': 'clicked',
-		},
-
-		initialize: function () {
-			this.model.set( 'media', this.media );
-		},
-
-		clicked: function (e) {
-			e.preventDefault();
-
-			var self = this;
-			self.$el.find('.activity-post-form-media-uploader-wrapper').show();
-			var activityDropzone = new Dropzone('div#activity-post-form-media-uploader', dropzone_options );
-
-			activityDropzone.on('sending', function(file, xhr, formData) {
-				formData.append('action', 'media_upload');
-				formData.append('_wpnonce', BP_Nouveau.nonces.media);
-			});
-
-			activityDropzone.on('success', function(file, response) {
-				if ( response.data.id ) {
-					file.id = response.id;
-					response.uuid = file.upload.uuid;
-					response.menu_order = self.media.length;
-					self.media.push( response.data );
-					self.model.set( 'media', self.media );
-				}
-			});
-
-			activityDropzone.on('removedfile', function(file) {
-				var self = this;
-				if ( self.media.length ) {
-					for ( var i in self.media ) {
-						if ( file.id == self.media[i].id ) {
-							self.media.splice( i, 1 );
-							self.model.set( 'media', self.media );
-						}
-					}
-				}
-			});
-		},
-	});
-
 	bp.Views.FormTarget = bp.View.extend( {
 		tagName   : 'div',
 		id        : 'whats-new-post-in-box',
@@ -906,7 +933,8 @@ window.bp = window.bp || {};
 		template: bp.template( 'whats-new-toolbar' ),
 		events: {
 			'click #activity-link-preview-button': 'toggleURLInput',
-			'click #activity-gif-button': 'toggleGifSelector'
+			'click #activity-gif-button': 'toggleGifSelector',
+			'click #activity-media-button': 'toggleMediaSelector'
 		},
 
 		initialize: function() {
@@ -934,6 +962,13 @@ window.bp = window.bp || {};
 			this.$searchDropdownEl.toggleClass('open');
 		},
 
+		toggleMediaSelector: function( e ) {
+			e.preventDefault();
+
+			var event = new Event('activity_media_open');
+			document.dispatchEvent(event);
+		},
+
 		closeGifDropdownOnEsc: function( event ) {
 			var key = event.key; // const {key} = event; in ES6+
 			if ( key === 'Escape' ) {
@@ -952,6 +987,9 @@ window.bp = window.bp || {};
 		tagName: 'div',
 		id: 'whats-new-attachments',
 		initialize: function() {
+			if ( typeof window.Dropzone !== 'undefined' ) {
+				this.views.add(new bp.Views.ActivityMedia({model: this.model}));
+			}
 
 			if ( !_.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
 				this.views.add( new bp.Views.ActivityLinkPreview( { model: this.model } ) );
@@ -1160,10 +1198,6 @@ window.bp = window.bp || {};
 			// Backcompat custom fields
 			if ( true === BP_Nouveau.activity.params.backcompat ) {
 				this.views.add( new bp.Views.FormOptions( { model: this.model } ) );
-			}
-
-			if ( typeof window.Dropzone !== 'undefined' ) {
-				this.views.add(new bp.Views.FormMedia({model: this.model}));
 			}
 
 			// Attach buttons
