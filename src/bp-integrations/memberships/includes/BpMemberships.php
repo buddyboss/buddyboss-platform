@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
 	die("Sorry, you can't access this directly - Security established");
 }
 
-define('BPMS_DEBUG', true);
+define('BPMS_DEBUG', false);
 define('LD_COURSE_SLUG', 'sfwd-courses');
 define('MP_PRODUCT_SLUG', 'memberpressproduct');
 define('WC_PRODUCT_SLUG', 'product');
