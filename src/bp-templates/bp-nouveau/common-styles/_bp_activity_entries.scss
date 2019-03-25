@@ -202,18 +202,32 @@
 				font-size: 12px;
 				clear: both;
 
+				.activity-state-likes,
+				.ac-state-separator,
+				.activity-state-comments {
+					display: none;
+				}
+
 				a {
 					border: 0;
 					padding: 0;
 				}
 
+				&.has-likes {
+					.activity-state-likes {
+						display: inline-block;
+					}
+				}
+
+				&.has-comments {
+					.activity-state-comments {
+						display: inline-block;
+					}
+				}
+
 				&.has-likes,
 				&.has-comments {
 					display: block;
-				}
-
-				.ac-state-separator {
-					display: none;
 				}
 
 				&.has-likes.has-comments {
