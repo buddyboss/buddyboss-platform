@@ -1,4 +1,5 @@
-
+/*jshint unused:false*/
+/*jshint scripturl:true*/
 function add_field () {
 
 	var holder = document.getElementById ('field_box');
@@ -32,7 +33,7 @@ function add_field () {
 	});
 
 	var toDelete = document.createElement ('a');
-	toDelete.setAttribute ('href', "javascript:remove('field_div" + theId + "')");
+	toDelete.setAttribute ('href', 'javascript:remove("field_div' + theId + '");');
 	toDelete.setAttribute ('class', 'delete');
 	toDelete.appendChild (document.createTextNode (window.bp_ps_strings.remove));
 

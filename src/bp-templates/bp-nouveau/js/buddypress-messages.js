@@ -347,7 +347,7 @@ window.bp = window.bp || {};
 
 			if ( 'read' === method ) {
 				options.data = _.extend( options.data, {
-					action: 'messages_get_user_message_threads',
+					action: 'messages_get_user_message_threads'
 				} );
 
 				return bp.ajax.send( options );
@@ -581,7 +581,7 @@ window.bp = window.bp || {};
 		addSelect2: function() {
 			var $input = $( this.el ).find( '#send-to-input' );
 
-			if ( $input.prop("tagName") != 'SELECT' ) {
+			if ( $input.prop('tagName') != 'SELECT' ) {
 				this.addMentions();
 				return;
 			}
@@ -603,7 +603,7 @@ window.bp = window.bp || {};
 						return {
 							results: data && data.success? data.data.results : []
 						};
-					},
+					}
 				}
 			});
 		},

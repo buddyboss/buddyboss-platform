@@ -1,3 +1,5 @@
+/* global BP_SEARCH */
+/* jshint unused:false */
 jQuery(document).ready(function($) {
 	BP_SEARCH.cache = [];
 
@@ -5,10 +7,9 @@ jQuery(document).ready(function($) {
 		if (BP_SEARCH.enable_ajax_search == '1') {
 			var document_height = $(document).height();
 			$(BP_SEARCH.selector).each(function() {
-				var $form = $(this);
-				$search_field = $form.find("input[name='s'], input[type=search]");
+				var $form = $(this),
+					$search_field = $form.find('input[name="s"], input[type=search]');
 				if ($search_field.length > 0) {
-					currentType = '';
 
 					/**
 					 * If the search input is positioned towards bottom of html document,
@@ -46,9 +47,9 @@ jQuery(document).ready(function($) {
 
 							response({value: '<div class="loading-msg"><span class="bb_global_search_spinner"></span>' + BP_SEARCH.loading_msg + '</div>'});
 
-							searchXHR = $.ajax({
+							 $.ajax({
 								url:BP_SEARCH.ajaxurl,
-								dataType: "json",
+								dataType: 'json',
 								data: data,
 								success: function(data) {
 									BP_SEARCH.cache[ term ] = data;
@@ -66,17 +67,17 @@ jQuery(document).ready(function($) {
 
 							return false;
 						},
-						focus: function(event, ui) {
-							$(".ui-autocomplete li").removeClass("ui-state-hover");
-							$(".ui-autocomplete").find("li:has(a.ui-state-focus)").addClass("ui-state-hover");
+						focus: function() {
+							$('.ui-autocomplete li').removeClass('ui-state-hover');
+							$('.ui-autocomplete').find('li:has(a.ui-state-focus)').addClass('ui-state-hover');
 							return false;
 						},
 						open: function() {
-							$(".bp-search-ac").outerWidth($(this).outerWidth());
+							$('.bp-search-ac').outerWidth($(this).outerWidth());
 						},
 						position: ac_position_prop
 					})
-					                 .data("ui-autocomplete")._renderItem = function(ul, item) {
+					                 .data('ui-autocomplete')._renderItem = function(ul, item) {
 						ul.addClass( 'bp-search-ac' );
 
 						// Add .bp-search-ac-header if search is made from header area of the site
@@ -84,11 +85,11 @@ jQuery(document).ready(function($) {
 							ul.addClass( 'bp-search-ac-header' );
 						}
 
-						if (item.type_label != "") {
-							$(ul).data("current_cat", item.type)
-							return $("<li>").attr("class", 'bbls-' + item.type + "-type bbls-category").append("<div>" + item.value + "</div>").appendTo(ul);
+						if (item.type_label != '') {
+							$(ul).data('current_cat', item.type);
+							return $('<li>').attr('class', 'bbls-' + item.type + '-type bbls-category').append('<div>' + item.value + '</div>').appendTo(ul);
 						} else {
-							return $("<li>").attr("class", 'bbls-' + item.type + "-type bbls-sub-item").append("<a class='x'>" + item.value + "</a>").appendTo(ul);
+							return $('<li>').attr('class', 'bbls-' + item.type + '-type bbls-sub-item').append('<a class="x">' + item.value + '</a>').appendTo(ul);
 						}
 
 
@@ -115,17 +116,16 @@ jQuery(document).ready(function($) {
 						$( '<input>' ).attr( {
 							type: 'hidden',
 							name: 'bp_search',
-							value: '1',
+							value: '1'
 						} ).appendTo( $form );
 					}
 				}
 			});
 
-			$("#bbp-search-form, #bbp-search-index-form").each(function() {
-				var $form = $(this);
-				$search_field = $form.find("#bbp_search");
+			$('#bbp-search-form, #bbp-search-index-form').each(function() {
+				var $form = $(this),
+					$search_field = $form.find('#bbp_search');
 				if ($search_field.length > 0) {
-					currentType = '';
 
 					/**
 					 * If the search input is positioned towards bottom of html document,
@@ -166,7 +166,7 @@ jQuery(document).ready(function($) {
 
 							$.ajax({
 								url:BP_SEARCH.ajaxurl,
-								dataType: "json",
+								dataType: 'json',
 								data: data,
 								success: function(data) {
 									BP_SEARCH.cache[ term ] = data;
@@ -176,27 +176,27 @@ jQuery(document).ready(function($) {
 						},
 						minLength: 2,
 						select: function(event, ui) {
-							window.location = $(ui.item.value).find("a").attr("href");
+							window.location = $(ui.item.value).find('a').attr('href');
 							return false;
 						},
-						focus: function(event, ui) {
-							$(".ui-autocomplete li").removeClass("ui-state-hover");
-							$(".ui-autocomplete").find("li:has(a.ui-state-focus)").addClass("ui-state-hover");
+						focus: function() {
+							$('.ui-autocomplete li').removeClass('ui-state-hover');
+							$('.ui-autocomplete').find('li:has(a.ui-state-focus)').addClass('ui-state-hover');
 							return false;
 						},
 						open: function() {
-							$(".bp-search-ac").outerWidth($(this).outerWidth());
+							$('.bp-search-ac').outerWidth($(this).outerWidth());
 						},
 						position: ac_position_prop
 					})
-					                 .data("ui-autocomplete")._renderItem = function(ul, item) {
-						ul.addClass("bp-search-ac");
+					                 .data('ui-autocomplete')._renderItem = function(ul, item) {
+						ul.addClass('bp-search-ac');
 
-						if (item.type_label != "") {
-							$(ul).data("current_cat", item.type)
-							return $("<li>").attr("class", 'bbls-' + item.type + "-type bbls-category").append("<span class='bb-cat-title'>" + item.value + "</span>").appendTo(ul);
+						if (item.type_label != '') {
+							$(ul).data('current_cat', item.type);
+							return $('<li>').attr('class', 'bbls-' + item.type + '-type bbls-category').append('<span class="bb-cat-title">' + item.value + '</span>').appendTo(ul);
 						} else {
-							return $("<li>").attr("class", 'bbls-' + item.type + "-type bbls-sub-item").append("<a class='x'>" + item.value + "</a>").appendTo(ul);
+							return $('<li>').attr('class', 'bbls-' + item.type + '-type bbls-sub-item').append('<a class="x">' + item.value + '</a>').appendTo(ul);
 						}
 					};
 
@@ -209,24 +209,24 @@ jQuery(document).ready(function($) {
 
 	/* ajax load */
 
-	$(document).on("click", ".bp-search-results-wrapper .item-list-tabs li a", function(e) {
+	$(document).on('click', '.bp-search-results-wrapper .item-list-tabs li a', function(e) {
 		e.preventDefault();
 
-		_this = this;
+		var _this = this;
 
-		$(this).addClass("loading");
+		$(this).addClass('loading');
 
-		get_page = $.post(BP_SEARCH.ajaxurl, {
+		var get_page = $.post(BP_SEARCH.ajaxurl, {
 			'action': BP_SEARCH.action,
 			'nonce': BP_SEARCH.nonce,
-			'subset': $(this).parent().data("item"),
+			'subset': $(this).parent().data('item'),
 			's': BP_SEARCH.search_term,
 			'view': 'content'
 		});
 		get_page.done(function(d) {
-			$(_this).removeClass("loading");
+			$(_this).removeClass('loading');
 			if (d != '') {
-				present = $(".bp-search-page");
+				var present = $('.bp-search-page');
 				present.after(d);
 				present.remove();
 			}
@@ -234,43 +234,43 @@ jQuery(document).ready(function($) {
 		});
 
 		get_page.fail(function() {
-			$(_this).removeClass("loading");
+			$(_this).removeClass('loading');
 		});
 
 		return false;
 
 	});
 
-	$(document).on("click", ".bp-search-results-wrapper .pagination-links a", function(e) {
+	$(document).on('click', '.bp-search-results-wrapper .pagination-links a', function(e) {
 		e.preventDefault();
 
-		_this = this;
+		var _this = this;
 
-		$(this).addClass("loading");
+		$(this).addClass('loading');
 		var qdata = {
 			'action': BP_SEARCH.action,
 			'nonce': BP_SEARCH.nonce,
-			'subset': $(this).parent().data("item"),
+			'subset': $(this).parent().data('item'),
 			's': BP_SEARCH.search_term,
 			'view': 'content',
 			'list': $(this).data('pagenumber')
 		};
 
-		var current_subset = $(".bp-search-results-wrapper .item-list-tabs li.active").data('item');
+		var current_subset = $('.bp-search-results-wrapper .item-list-tabs li.active').data('item');
 		qdata.subset = current_subset;
 
-		get_page = $.post(BP_SEARCH.ajaxurl, qdata);
+		var get_page = $.post(BP_SEARCH.ajaxurl, qdata);
 		get_page.done(function(d) {
-			$(_this).removeClass("loading");
+			$(_this).removeClass('loading');
 			if (d != '') {
-				present = $(".bp-search-page");
+				var present = $('.bp-search-page');
 				present.after(d);
 				present.remove();
 			}
 		});
 
 		get_page.fail(function() {
-			$(_this).removeClass("loading");
+			$(_this).removeClass('loading');
 		});
 
 		return false;
@@ -279,7 +279,7 @@ jQuery(document).ready(function($) {
 
 	/* end ajax load */
 
-	$('body.bp-nouveau').on('click', '.bp-search-page button.friendship-button, .bp-search-page button.group-button', function(e){
+	$('body.bp-nouveau').on('click', '.bp-search-page button.friendship-button, .bp-search-page button.group-button', function(){
 		window.location = this.getAttribute('data-bp-nonce');
 	});
 

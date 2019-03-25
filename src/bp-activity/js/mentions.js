@@ -1,4 +1,4 @@
-/* global bp */
+/* global bp, BP_Mentions_Options */
 
 window.bp = window.bp || {};
 
@@ -160,7 +160,7 @@ window.bp = window.bp || {};
 		/**
 		 * Default options for our @mentions; see https://github.com/ichord/At.js/.
 		 */
-		mentionsDefaults = $.extend( true, {}, {
+		var mentionsDefaults = $.extend( true, {}, {
 			callbacks: {
 				/**
 				 * If there are no matches for the query in this.data, then query BuddyPress.
@@ -250,7 +250,7 @@ window.bp = window.bp || {};
 			displayTpl: BP_Mentions_Options.display_tpl
 		}, mentions );
 
-		opts = $.extend( true, {}, suggestionsDefaults, mentionsDefaults, options );
+		var opts = $.extend( true, {}, suggestionsDefaults, mentionsDefaults, options );
 		return $.fn.atwho.call( this, opts );
 	};
 

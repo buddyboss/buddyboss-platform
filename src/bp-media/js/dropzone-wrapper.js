@@ -1,5 +1,5 @@
 /* jshint browser: true */
-/* global bp, BP_Nouveau */
+/* global bp, BP_Nouveau, Dropzone  */
 /* @version 1.0.0 */
 window.bp = window.bp || {};
 
@@ -31,7 +31,7 @@ window.bp = window.bp || {};
 				autoProcessQueue: true,
 				addRemoveLinks: true,
 				uploadMultiple: false,
-				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
 			};
 		},
 

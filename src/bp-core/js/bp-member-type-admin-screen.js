@@ -1,9 +1,11 @@
+/* global Clipboard */
 //profile types screen
-if (typeof jq == 'undefined')
-    var jq = jQuery;
+if (typeof jq == 'undefined') {
+	var jq = jQuery;
+}
 
 // Link any localized strings.
-var l10n        =  window._bpmtAdminL10n || {};
+var l10n        =  window._bpmtAdminL10n || {},
     btnChanged  = false;
 
 
@@ -11,7 +13,7 @@ jq(document).ready(function () {
 
     /** Copy profile type Shortcode *******************/
     var clipboard = new Clipboard('.copy-to-clipboard');
-    clipboard.on('success', function(e) {
+    clipboard.on('success', function() {
         var  $btnCtc = jq('.copy-to-clipboard');
         $btnCtc.fadeOut(function(){
             $btnCtc.text(l10n.copied);
@@ -27,7 +29,7 @@ jq(document).ready(function () {
     });
 
     //Change button text from "Copied" to "Copy to clipboard" on mouseout
-    jq('.copy-to-clipboard').on('mouseout', function(e) {
+    jq('.copy-to-clipboard').on('mouseout', function() {
         if ( btnChanged ) {
             var $btnCtc = jq('.copy-to-clipboard');
             $btnCtc.fadeOut(function(){
@@ -50,20 +52,20 @@ jq(document).ready(function () {
         var p_singular_name = jq('.bp-member-type-singular-name').val();
 
         if (p_title.length == 0) {
-            jq('#title').css({"border-color": '#d54e21',
-                "border-width": '1px',
-                "border-style": 'solid'});
+            jq('#title').css({'border-color': '#d54e21',
+                'border-width': '1px',
+                'border-style': 'solid'});
 
         }
         if (p_plural_name.length == 0) {
-            jq('.bp-member-type-label-name').css({"border-color": '#d54e21',
-                "border-width": '1px',
-                "border-style": 'solid'});
+            jq('.bp-member-type-label-name').css({'border-color': '#d54e21',
+                'border-width': '1px',
+                'border-style': 'solid'});
         }
         if (p_singular_name.length == 0) {
-            jq('.bp-member-type-singular-name').css({"border-color": '#d54e21',
-                "border-width": '1px',
-                "border-style": 'solid'});
+            jq('.bp-member-type-singular-name').css({'border-color': '#d54e21',
+                'border-width': '1px',
+                'border-style': 'solid'});
         }
 
         if ( p_title.length == 0 || p_plural_name.length == 0 || p_singular_name.length == 0 ) {
@@ -94,9 +96,7 @@ jq(document).ready(function () {
             msgWarn = l10n.warnDelete.formatUnicorn({total_users: user_count});
         }
 
-        if (    0 < user_count
-            &&  0 < msgWarn.length
-            && ! window.confirm(msgWarn) ) {
+        if ( 0 < user_count &&  0 < msgWarn.length && ! window.confirm(msgWarn) ) {
             e.preventDefault();
         }
 
@@ -112,31 +112,29 @@ jq(document).ready(function () {
             msgWarnBulk = '';
 
         //Check if we have users with profile type assigned
-        jq('input[name="post[]"]:checked:not(:first-child):not(:last-child)').each(function(i,v){
+        jq('input[name="post[]"]:checked:not(:first-child):not(:last-child)').each(function(){
             var $this = jq(this);
             var $tr = $this.parents('tr');
 
             user_count  = +($tr.children('.total_users').text());
 
             if (  0 < user_count ) {
-                typeStr += "\n" + $this.prev().text().trim().substr(6).trim();
+                typeStr += '\n' + $this.prev().text().trim().substr(6).trim();
             }
         });
 
             //Performing trash
         if ( 'trash' === jq('select[name^="action"]').val() ) {
 
-            msgWarnBulk = l10n.warnBulkTrash + "\n" + typeStr;
+            msgWarnBulk = l10n.warnBulkTrash + '\n' + typeStr;
 
             //Performing permanent delete
         } else if ( 'delete' === jq('select[name^="action"]').val() ) {
-            msgWarnBulk = l10n.warnBulkDelete + "\n" + typeStr;
+            msgWarnBulk = l10n.warnBulkDelete + '\n' + typeStr;
         }
 
         // You want to delete/trash? - Confirm
-        if (    0 < typeStr.length
-            &&  0 < msgWarnBulk.length
-            &&  ! window.confirm(msgWarnBulk) ) {
+        if ( 0 < typeStr.length &&  0 < msgWarnBulk.length &&  ! window.confirm(msgWarnBulk) ) {
             e.preventDefault();
         }
     });
@@ -162,12 +160,14 @@ jq(document).ready(function () {
 if (!String.prototype.formatUnicorn) {
     String.prototype.formatUnicorn = function() {
         var str = this.toString();
-        if (!arguments.length)
-            return str;
-        var args = typeof arguments[0],
-            args = (("string" == args || "number" == args) ? arguments : arguments[0]);
-        for (arg in args)
-            str = str.replace(RegExp("\\{" + arg + "\\}", "gi"), args[arg]);
-        return str;
-    }
+	    if ( !arguments.length ) {
+		    return str;
+	    }
+	    var /*args = typeof arguments[0],*/
+            args = (('string' == args || 'number' == args) ? arguments : arguments[0]);
+	    for ( var arg in args ) {
+		    str = str.replace( RegExp( '\\{' + arg + '\\}', 'gi' ), args[ arg ] );
+	    }
+	    return str;
+    };
 }

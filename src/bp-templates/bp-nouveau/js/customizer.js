@@ -1,4 +1,4 @@
-/* global _ */
+/* global _, BP_Customizer */
 /* @version 3.0.0 */
 window.wp = window.wp || {};
 
@@ -49,11 +49,11 @@ window.wp = window.wp || {};
 		} ).disableSelection();
 
 		$( '#accordion-section-bp_nouveau_mail > h3' ).off( 'click' );
-		$( '#accordion-section-bp_nouveau_mail' ).on( 'click', function( e ) {
+		$( '#accordion-section-bp_nouveau_mail' ).on( 'click', function() {
 			location.replace( BP_Customizer.emailCustomizerUrl );
 		} );
 
-		$( '#sub-accordion-panel-bp_mailtpl' ).on( 'click', '.customize-panel-back', function( e ) {
+		$( '#sub-accordion-panel-bp_mailtpl' ).on( 'click', '.customize-panel-back', function() {
 			location.replace( BP_Customizer.platformCustomizerUrl );
 		} );
 	} );
