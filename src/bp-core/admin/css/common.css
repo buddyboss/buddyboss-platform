@@ -410,17 +410,17 @@ body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
 }
 
 /* Default */
-body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
+.bp-admin-card h2:before {
   content: "\f7d9";
 }
 
 /* Settings */
-body .bp-admin-card.section-bp_main h2:before {
+.bp-admin-card.section-bp_main h2:before {
   content: "\f1de";
 }
 
 /* Profiles */
-body .bp-admin-card.section-bp_xprofile h2:before {
+.bp-admin-card.section-bp_xprofile h2:before {
   content: "\f007";
 }
 
