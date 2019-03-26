@@ -126,12 +126,12 @@ function bp_core_admin_register_page_fields() {
 			$description = 'This directory shows a listing of all members.';
 		} elseif ( 'groups' === $name ) {
 			$description = 'This directory shows a listing of all groups.';
+		} elseif ( 'new_forums_page' === $name ) {
+			$description = 'This directory shows a listing of all forums.';
 		} elseif ( 'activity' === $name ) {
 			$description = 'This directory shows all sitewide activity.';
 		} elseif ( 'media' === $name ) {
 			$description = 'This directory shows any media uploaded by members.';
-		} elseif ( 'new_forums_page' === $name ) {
-			$description = 'This directory shows all sitewide forums.';
 		}
 		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_pages', compact('existing_pages', 'name', 'label', 'description' ) );
 		register_setting( 'bp-pages', $name, [] );
