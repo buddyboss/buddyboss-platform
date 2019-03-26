@@ -2573,3 +2573,40 @@ function bp_import_profile_types_admin_menu() {
 
 }
 add_action( bp_core_admin_hook(), 'bp_import_profile_types_admin_menu' );
+
+/**
+ * Set the forum slug on edit page from backend.
+ *
+ * @param $post_id
+ * @param $post
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_change_forum_slug_quickedit_save_page( $post_id, $post ) {
+
+	// if called by autosave, then bail here
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+		return;
+
+	// if this "post" post type?
+	if ( $post->post_type != 'page' )
+		return;
+
+	// does this user have permissions?
+	if ( ! current_user_can( 'edit_post', $post_id ) )
+		return;
+
+	// update!
+	$forum_page_id = (int) bp_get_option('_bbp_root_slug_custom_slug');
+
+	if ( $forum_page_id > 0  && $forum_page_id === $post_id ) {
+		$slug = get_post_field( 'post_name', $post_id );
+		if ( '' !== $slug ) {
+			bp_update_option( '_bbp_root_slug', $slug );
+			bp_update_option( 'rewrite_rules', '' );
+		}
+	}
+}
+
+// Set the forum slug on edit page from backend.
+add_action( 'save_post', 'bp_change_forum_slug_quickedit_save_page', 10, 2 );
