@@ -87,32 +87,6 @@ class MpHelper {
 	}
 
 	/**
-	 * @param  {object}  $meprObj MemberPress Subscription (Updated) information
-	 * @return  {void}
-	 */
-	public static function mpSubscriptionUpdated($meprObj) {
-		if (BPMS_DEBUG) {
-			error_log("MpHelper::mpSubscriptionUpdated() injected, subscription is updated at this point");
-			// error_log(print_r($meprObj, true));
-		}
-
-		$status = $meprObj->status;
-		$grantValues = array('active');
-		$revokeValues = array('pending', 'suspended', 'cancelled');
-		if (BPMS_DEBUG) {
-			error_log("MpHelper->mpSubscriptionUpdated, Status : $status");
-		}
-		if (in_array($status, $revokeValues)) {
-			// revoke access
-			BpMemberships::bpmsUpdateMembershipAccess($meprObj, MP_PRODUCT_SLUG, false);
-		} else if (in_array($status, $grantValues)) {
-			// grant access
-			BpMemberships::bpmsUpdateMembershipAccess($meprObj, MP_PRODUCT_SLUG, true);
-		}
-
-	}
-
-	/**
 	 * @param  {object}  $transaction MemberPress transaction (Updated) information
 	 * @return  {void}
 	 */
@@ -122,12 +96,20 @@ class MpHelper {
 			// error_log(print_r($meprObj, true));
 		}
 
-		$status = $meprObj->status;
-		$grantValues = array('complete');
-		$revokeValues = array('pending', 'failed', 'refunded');
-		if (BPMS_DEBUG) {
-			error_log("MpHelper->mpTransactionUpdated, Status : $status");
+		$isRecurring = true;
+		if (isset($meprObj->subscription_id) && $meprObj->subscription_id == 0) {
+			$isRecurring = false;
 		}
+
+		$status = $meprObj->status;
+		//NOTE : Status of RECURRING and NON-RECURRING added below
+		$grantValues = array('active', 'complete', 'confirmed');
+		$revokeValues = array('pending', 'suspended', 'cancelled', 'failed', 'refunded');
+
+		if (BPMS_DEBUG) {
+			error_log("MpHelper->mpTransactionUpdated, Status : $status, isRecurring : $isRecurring");
+		}
+		error_log("MpHelper->mpTransactionUpdated, Status : $status, isRecurring : $isRecurring");
 
 		if (in_array($status, $revokeValues)) {
 			// revoke access
@@ -177,12 +159,7 @@ class MpHelper {
 			error_log("MpHelper::mpSignup() injected, subscription_id would be non-ZERO");
 		}
 
-		if ($meprObj->subscription_id == 0) {
-			self::mpTransactionUpdated($meprObj);
-		} else {
-			self::mpSubscriptionUpdated($meprObj);
-		}
-
+		self::mpTransactionUpdated($meprObj);
 	}
 
 	/**
