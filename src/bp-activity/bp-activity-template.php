@@ -1370,6 +1370,11 @@ function bp_activity_content_body() {
 			$activities_template->activity->content = bp_insert_activity_meta( $activities_template->activity->content );
 		}
 
+		// scrape off activity content if it contain empty characters only
+		if ( in_array( $activities_template->activity->content, [ '&nbsp;', '&#8203;' ] ) ) {
+			$activities_template->activity->content = '';
+		}
+
 		/**
 		 * Filters the activity content body.
 		 *
