@@ -237,7 +237,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	public function bbp_set_forum_selected_menu_class( $classes = array(), $item = false ) {
 
 		// Protocol
-		$url = ( 'on' == $_SERVER['HTTPS'] ) ? 'https://' : 'http://';
+		$url = ( isset( $_SERVER['HTTPS'] ) && 'on' === $_SERVER['HTTPS'] ) ? 'https://' : 'http://';
 		$url .= $_SERVER['SERVER_NAME'];
 		$url .= $_SERVER['REQUEST_URI'];
 
