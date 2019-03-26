@@ -1144,6 +1144,21 @@ window.bp = window.bp || {};
 		}
 	} );
 
+	bp.Views.FormSubmitWrapper = bp.View.extend( {
+		tagName: 'div',
+		id: 'activity-form-submit-wrapper',
+		initialize: function() {
+			// Select box for the object
+			if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) {
+				this.views.add( new bp.Views.FormTarget( { model: this.model } ) );
+			}
+
+			$('#whats-new-form').addClass('focus-in'); // add some class to form so that DOM knows about focus
+
+			this.views.add( new bp.Views.FormSubmit( { model: this.model } ) );
+		}
+	});
+
 	bp.Views.PostForm = bp.View.extend( {
 		tagName   : 'form',
 		className : 'activity-form',
@@ -1214,14 +1229,7 @@ window.bp = window.bp || {};
 			this.views.add( new bp.Views.ActivityAttachments( { model: this.model } ) );
 			this.views.add( new bp.Views.ActivityToolbar( { model: this.model } ) );
 
-			// Select box for the object
-			if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) {
-				this.views.add( new bp.Views.FormTarget( { model: this.model } ) );
-			}
-
-			$('#whats-new-form').addClass('focus-in'); // add some class to form so that DOM knows about focus
-
-			this.views.add( new bp.Views.FormSubmit( { model: this.model } ) );
+			this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 		},
 
 		resetForm: function() {
