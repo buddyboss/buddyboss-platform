@@ -432,14 +432,29 @@ class BpMemberships {
 		foreach ($lmsCourseSlugs as $lmsCourseSlug) {
 			if ($membershipProductSlug == MP_PRODUCT_SLUG) {
 
-				if ($membershipObj->subscription_id == 0) {
-					$eventIdentifier = $membershipProductSlug . '-non-recurring-' . $membershipObj->id;
-					$eventEditUrl = "admin.php?page=memberpress-trans&action=edit&id=$membershipObj->id";
+				$isRecurring = MpHelper::mpIsRecurring($membershipObj);
+
+				if ($isRecurring) {
+
+					if (isset($membershipObj->subscr_id)) {
+						//Existing but Recurring transaction
+						$assignedId = $membershipObj->id;
+					} else {
+						//New but Recurring transaction
+						$assignedId = $membershipObj->subscription_id;
+
+					}
+					$eventIdentifier = "$membershipProductSlug-RECURRING-$assignedId";
+					$eventEditUrl = "admin.php?page=memberpress-subscriptions&action=edit&id=$assignedId";
+
 				} else {
-					$eventIdentifier = $membershipProductSlug . '-recurring-' . $membershipObj->subscription_id;
-					$eventEditUrl = "admin.php?page=memberpress-trans&action=edit&id=$membershipObj->subscription_id";
+					$assignedId = $membershipObj->id;
+					$eventIdentifier = "$membershipProductSlug-NON-RECURRING-$assignedId";
+					$eventEditUrl = "admin.php?page=memberpress-trans&action=edit&id=$assignedId";
+
 				}
 
+				// NOTE : MUST do this to ignoring repeatition
 				$events = unserialize(get_post_meta($membershipObj->product_id, '_bpms-events', true));
 				if (isset($events[$eventIdentifier])) {
 					if (BPMS_DEBUG) {
@@ -466,7 +481,6 @@ class BpMemberships {
 					} else if ($courseAccessMethod == 'ALL_COURSES') {
 						$coursesAttached = self::getLearndashAllCourses();
 					} else if ($courseAccessMethod == 'LD_GROUPS') {
-
 						$groupsAttached = unserialize(get_post_meta($membershipObj->product_id, "_bpms-$lmsCourseSlug-$membershipProductSlug-groups_attached", true));
 						$coursesAttached = array();
 						foreach ($groupsAttached as $groupId) {
@@ -691,8 +705,10 @@ class BpMemberships {
 		add_action('mepr-transaction-expired', array($classObj, 'mpTransactionUpdated'));
 
 		// Subscription Related
-		add_action('mepr_subscription_stored', array($classObj, 'mpSubscriptionUpdated'));
-		add_action('mepr_subscription_saved', array($classObj, 'mpSubscriptionUpdated'));
+		add_action('mepr_subscription_stored', array($classObj, 'mpTransactionUpdated'));
+		add_action('mepr_subscription_saved', array($classObj, 'mpTransactionUpdated'));
+		// add_action('mepr_subscription_stored', array($classObj, 'mpSubscriptionUpdated'));
+		// add_action('mepr_subscription_saved', array($classObj, 'mpSubscriptionUpdated'));
 
 		// More useful hooks when required
 		// -----------------------------------------------------------------------------

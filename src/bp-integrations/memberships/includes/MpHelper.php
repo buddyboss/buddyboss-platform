@@ -87,34 +87,9 @@ class MpHelper {
 	}
 
 	/**
-	 * @param  {object}  $meprObj MemberPress Subscription (Updated) information
-	 * @return  {void}
-	 */
-	public static function mpSubscriptionUpdated($meprObj) {
-		if (BPMS_DEBUG) {
-			error_log("MpHelper::mpSubscriptionUpdated() injected, subscription is updated at this point");
-			// error_log(print_r($meprObj, true));
-		}
-
-		$status = $meprObj->status;
-		$grantValues = array('active');
-		$revokeValues = array('pending', 'suspended', 'cancelled');
-		if (BPMS_DEBUG) {
-			error_log("MpHelper->mpSubscriptionUpdated, Status : $status");
-		}
-		if (in_array($status, $revokeValues)) {
-			// revoke access
-			BpMemberships::bpmsUpdateMembershipAccess($meprObj, MP_PRODUCT_SLUG, false);
-		} else if (in_array($status, $grantValues)) {
-			// grant access
-			BpMemberships::bpmsUpdateMembershipAccess($meprObj, MP_PRODUCT_SLUG, true);
-		}
-
-	}
-
-	/**
 	 * @param  {object}  $transaction MemberPress transaction (Updated) information
 	 * @return  {void}
+	 * @see Possible status :  'pending','active','confirmed','cancelled' AND  'complete','suspended','failed','refunded'
 	 */
 	public static function mpTransactionUpdated($meprObj) {
 		if (BPMS_DEBUG) {
@@ -122,20 +97,96 @@ class MpHelper {
 			// error_log(print_r($meprObj, true));
 		}
 
-		$status = $meprObj->status;
-		$grantValues = array('complete');
-		$revokeValues = array('pending', 'failed', 'refunded');
-		if (BPMS_DEBUG) {
-			error_log("MpHelper->mpTransactionUpdated, Status : $status");
-		}
+		$isRecurring = self::mpIsRecurring($meprObj);
+		$grantStatus = self::mpIdentifyGrantStatus($meprObj);
+		$revokeStatus = self::mpIdentifyRevokeStatus($meprObj);
 
-		if (in_array($status, $revokeValues)) {
+		$status = $meprObj->status;
+		if (BPMS_DEBUG) {
+			error_log("MpHelper->mpTransactionUpdated, Status : $status, isRecurring : $isRecurring");
+		}
+		error_log("MpHelper->mpTransactionUpdated, Status : $status, isRecurring : $isRecurring");
+
+		if (in_array($status, $revokeStatus)) {
 			// revoke access
 			BpMemberships::bpmsUpdateMembershipAccess($meprObj, MP_PRODUCT_SLUG, false);
-		} else if (in_array($status, $grantValues)) {
+		} else if (in_array($status, $grantStatus)) {
 			// grant access
 			BpMemberships::bpmsUpdateMembershipAccess($meprObj, MP_PRODUCT_SLUG, true);
 		}
+
+	}
+
+	/**
+	 * @param  {object}  $meprObj MemberPress Transaction(Including Subscription) Object
+	 * @return  {array} Grant status based on transaction type(Eg : Recurring or Non-Recurring)
+	 * @see Possible status :  'pending','active','confirmed','cancelled' AND  'complete','suspended','failed','refunded'
+	 */
+	public static function mpIdentifyGrantStatus($meprObj) {
+		$isRecurring = self::mpIsRecurring($meprObj);
+		// NOTE : Configs for NON-RECURRING Transaction
+		$grantStatus = array('complete');
+
+		if ($isRecurring) {
+			// NOTE : Configs for RECURRING Transaction
+			$grantStatus = array('active', 'confirmed');
+		}
+
+		return $grantStatus;
+
+	}
+
+	/**
+	 * @param  {object}  $meprObj MemberPress Transaction(Including Subscription) Object
+	 * @return  {array} Revoke status based on transaction type(Eg : Recurring or Non-Recurring)
+	 * @see Possible status :  'pending','active','confirmed','cancelled' AND  'complete','suspended','failed','refunded'
+	 */
+	public static function mpIdentifyRevokeStatus($meprObj) {
+		$isRecurring = self::mpIsRecurring($meprObj);
+		// NOTE : Configs for NON-RECURRING Transaction
+		$revokeStatus = array('failed', 'refunded');
+
+		if ($isRecurring) {
+			// NOTE : Configs for RECURRING Transaction
+			$revokeStatus = array('pending', 'suspended', 'cancelled');
+		}
+
+		return $revokeStatus;
+
+	}
+
+	/**
+	 * @param  {object}  $meprObj MemberPress Transaction(Including Subscription) Object
+	 * @return  {boolean} Whether the Transaction is recurring(including old or new)
+	 */
+	public static function mpIsRecurring($meprObj) {
+		$isRecurring = false;
+		// Case-1) New but Recurring transaction
+		if (isset($meprObj->subscription_id) && $meprObj->subscription_id != 0) {
+			$isRecurring = true;
+		}
+
+		// Case-2) Existing but Recurring transaction
+		if (isset($meprObj->subscr_id)) {
+			$isRecurring = true;
+		}
+
+		return $isRecurring;
+
+	}
+
+	/**
+	 * @param  {object}  $meprObj MemberPress Transaction(Including Subscription) Object
+	 * @return  {boolean} Whether the Transaction is existing or new
+	 */
+	public static function mpIsExisting($meprObj) {
+		$isExisting = false;
+
+		if (isset($meprObj->subscr_id)) {
+			$isExisting = true;
+		}
+
+		return $isExisting;
 
 	}
 
@@ -144,6 +195,7 @@ class MpHelper {
 	 * @param  {string}  $newStatus - Status such as 'created', 'paused', 'resumed', 'stopped', 'upgraded', 'downgraded', 'expired'
 	 * @param  {object}  $meprObj MemberPress Subscription information
 	 * @return  {void}
+	 * @see Possible status :  'pending','active','confirmed','cancelled' AND  'complete','suspended','failed','refunded'
 	 */
 	public static function mpSubscriptionTransitionStatus($oldStatus, $newStatus, $meprObj) {
 		if (BPMS_DEBUG) {
@@ -151,11 +203,14 @@ class MpHelper {
 			// error_log(print_r($meprObj, true));
 		}
 
-		$status = $newStatus;
-		$grantValues = array('active');
-		$revokeValues = array('pending', 'suspended', 'cancelled');
+		$isRecurring = self::mpIsRecurring($meprObj);
+		$grantValues = self::mpIdentifyGrantStatus($meprObj);
+		$revokeValues = self::mpIdentifyRevokeStatus($meprObj);
+
+		$status = $meprObj->status;
+
 		if (BPMS_DEBUG) {
-			error_log("MpHelper->mpSubscriptionTransitionStatus, Status : $status");
+			error_log("MpHelper->mpSubscriptionTransitionStatus, Status : $status, isRecurring : $isRecurring");
 		}
 
 		if (in_array($status, $revokeValues)) {
@@ -174,15 +229,10 @@ class MpHelper {
 	 */
 	public static function mpSignUp($meprObj) {
 		if (BPMS_DEBUG) {
-			error_log("MpHelper::mpSignup() injected, subscription_id would be non-ZERO");
+			error_log("MpHelper::mpSignup() injected");
 		}
 
-		if ($meprObj->subscription_id == 0) {
-			self::mpTransactionUpdated($meprObj);
-		} else {
-			self::mpSubscriptionUpdated($meprObj);
-		}
-
+		self::mpTransactionUpdated($meprObj);
 	}
 
 	/**

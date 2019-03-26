@@ -1,4 +1,5 @@
 .DS_Store
+_docs
 phpunit.xml
 .idea
 *.netbeans.xml
