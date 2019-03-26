@@ -295,6 +295,22 @@ function bp_core_activation_notice() {
 		}
 	}
 
+	// If forum enabled and forum page is not set then add to forums to $orphaned_components components to show the notice.
+	if ( bp_is_active( 'forums' ) ) {
+
+		$id = (int) bp_get_option( '_bbp_root_slug_custom_slug');
+
+		// Check the status of current set value.
+		$status = get_post_status( $id );
+
+		// Set the page id if page exists and in publish otherwise set blank.
+		$id = ( '' !== $status && 'publish' === $status ) ? $id : '';
+
+		if ( empty( $id ) ) {
+			$orphaned_components[] = 'Forums';
+		}
+	}
+
 	if ( !empty( $orphaned_components ) ) {
 		$admin_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) );
 
@@ -2194,11 +2210,33 @@ function bp_core_admin_create_background_page() {
 		$page_id                    = wp_insert_post( $new_page );
 		$page_ids[ $_POST['page'] ] = (int) $page_id;
 
-		bp_core_update_directory_page_ids( $page_ids );
+		// If forums page then store into the _bbp_root_slug_custom_slug option.
+		if ( 'new_forums_page' === $_POST['page'] ) {
+			bp_update_option('_bbp_root_slug_custom_slug', $page_id );
+		// Else store into the directory pages.
+		} else {
+			bp_core_update_directory_page_ids( $page_ids );
+		}
+
+		// If forums page then change the BBPress root slug _bbp_root_slug and flush the redirect rule.
+		if ( 'new_forums_page' === $_POST['page'] ) {
+			$slug = get_post_field( 'post_name', $page_id );
+			bp_update_option('_bbp_root_slug', $slug);
+			flush_rewrite_rules(true);
+		}
 
 	}
 
-	wp_send_json_success();
+	$response =array(
+		'feedback' => __( 'Added successfully', 'buddyboss' ),
+		'type'     => 'success',
+		'url' => add_query_arg([
+			'page' => 'bp-pages',
+			'added' => 'true',
+		], admin_url( 'admin.php' ) )
+	);
+
+	wp_send_json_success( $response );
 }
 
 add_action( 'wp_ajax_bp_core_admin_create_background_page', 'bp_core_admin_create_background_page' );

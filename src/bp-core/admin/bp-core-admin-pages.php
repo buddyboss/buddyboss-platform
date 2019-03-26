@@ -15,6 +15,11 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_pages_settings() {
+
+	// Flush the rewrite rule to work forum on newly assigned the page.
+	if ( 'true' === $_GET['added'] ) {
+		flush_rewrite_rules( true );
+	}
 	?>
     <div class="wrap">
 	    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Pages', 'buddypress' ) ); ?></h2>
@@ -125,6 +130,8 @@ function bp_core_admin_register_page_fields() {
 			$description = 'This directory shows all sitewide activity.';
 		} elseif ( 'media' === $name ) {
 			$description = 'This directory shows any media uploaded by members.';
+		} elseif ( 'new_forums_page' === $name ) {
+			$description = 'This directory shows all sitewide forums.';
 		}
 		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_pages', compact('existing_pages', 'name', 'label', 'description' ) );
 		register_setting( 'bp-pages', $name, [] );
@@ -208,30 +215,73 @@ function bp_admin_setting_callback_page_directory_dropdown($args) {
 
 	if ( ! bp_is_root_blog() ) switch_to_blog( bp_get_root_blog_id() );
 
-	echo wp_dropdown_pages( array(
-		'name'             => 'bp_pages[' . esc_attr( $name ) . ']',
-		'echo'             => false,
-		'show_option_none' => __( '- Select a page -', 'buddyboss' ),
-		'selected'         => !empty( $existing_pages[$name] ) ? $existing_pages[$name] : false
-	) );
+	// For the forums will set the page selected from the custom option `_bbp_root_slug_custom_slug`
+	if ( 'new_forums_page' === $name ) {
 
-	if ( !empty( $existing_pages[$name] ) ) {
-		printf( '<a href="%s" class="button-secondary" target="_bp">%s</a>',
-			get_permalink( $existing_pages[ $name ] ),
-			__( 'View', 'buddyboss' ) );
+		// Get the page id from the options.
+		$id = (int) bp_get_option( '_bbp_root_slug_custom_slug');
+
+		// Check the status of current set value.
+		$status = get_post_status( $id );
+
+		// Set the page id if page exists and in publish otherwise set blank.
+		$id = ( '' !== $status && 'publish' === $status ) ? $id : '';
+
+		echo wp_dropdown_pages( array(
+			'name'             => 'bp_pages[' . esc_attr( $name ) . ']',
+			'echo'             => false,
+			'show_option_none' => __( '- Select a page -', 'buddyboss' ),
+			'selected'         => !empty( $id ) ? $id : false
+		) );
+
+		if ( !empty( $id ) ) {
+			printf( '<a href="%s" class="button-secondary" target="_bp">%s</a>',
+				get_permalink( $id ),
+				__( 'View', 'buddyboss' ) );
+		} else {
+			printf( '<a href="%s" class="button-secondary create-background-page" data-name="%s" target="_bp">%s</a>',
+				'javascript:void(0);',esc_attr( $name ),
+				__( 'Create Page', 'buddyboss' ) );
+		}
+
+		if ( '' !== $description )
+			printf(
+				'<p class="description">%s</p>',
+				sprintf(
+					__( $description, 'buddyboss' )
+				)
+			);
+
+	// For the normal directory pages.
 	} else {
-		printf( '<a href="%s" class="button-secondary create-background-page" data-name="%s" target="_bp">%s</a>',
-			'javascript:void(0);',esc_attr( $name ),
-			__( 'Create Page', 'buddyboss' ) );
+
+		echo wp_dropdown_pages( array(
+			'name'             => 'bp_pages[' . esc_attr( $name ) . ']',
+			'echo'             => false,
+			'show_option_none' => __( '- Select a page -', 'buddyboss' ),
+			'selected'         => !empty( $existing_pages[$name] ) ? $existing_pages[$name] : false
+		) );
+
+		if ( !empty( $existing_pages[$name] ) ) {
+			printf( '<a href="%s" class="button-secondary" target="_bp">%s</a>',
+				get_permalink( $existing_pages[ $name ] ),
+				__( 'View', 'buddyboss' ) );
+		} else {
+			printf( '<a href="%s" class="button-secondary create-background-page" data-name="%s" target="_bp">%s</a>',
+				'javascript:void(0);',esc_attr( $name ),
+				__( 'Create Page', 'buddyboss' ) );
+		}
+
+		if ( '' !== $description )
+			printf(
+				'<p class="description">%s</p>',
+				sprintf(
+					__( $description, 'buddyboss' )
+				)
+			);
+
 	}
 
-	if ( '' !== $description )
-	printf(
-		'<p class="description">%s</p>',
-		sprintf(
-			__( $description, 'buddyboss' )
-		)
-	);
 
 	if ( ! bp_is_root_blog() ) restore_current_blog();
 }
@@ -261,14 +311,26 @@ function bp_core_admin_maybe_save_pages_settings() {
 
 		$new_directory_pages = array();
 		foreach ( (array) $_POST['bp_pages'] as $key => $value ) {
-			if ( isset( $valid_pages[ $key ] ) ) {
+			// Exclude the new_forums_page to set in $new_directory_pages array.
+			if ( isset( $valid_pages[ $key ] ) && 'new_forums_page' !== $key ) {
 				$new_directory_pages[ $key ] = (int) $value;
 			}
 		}
 		bp_core_update_directory_page_ids( $new_directory_pages );
+
+		// Save the forums page id into the _bbp_root_slug_custom_slug option and set the forum root slug to selected page slug.
+		if ( bp_is_active( 'forums' ) ) {
+			if ( isset( $_POST['bp_pages'] ) && '' === $_POST['bp_pages']['new_forums_page'] ) {
+				bp_update_option('_bbp_root_slug_custom_slug', '' );
+			} else {
+				$slug = get_post_field( 'post_name', (int)$_POST['bp_pages']['new_forums_page'] );
+				bp_update_option('_bbp_root_slug', $slug);
+				bp_update_option('_bbp_root_slug_custom_slug', (int)$_POST['bp_pages']['new_forums_page'] );
+			}
+		}
 	}
 
-	bp_core_redirect( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages', 'updated' => 'true' ) , 'admin.php' ) ) );
+	bp_core_redirect( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages', 'added' => 'true' ) , 'admin.php' ) ) );
 }
 
 add_action( 'bp_admin_init', 'bp_core_admin_maybe_save_pages_settings', 100 );

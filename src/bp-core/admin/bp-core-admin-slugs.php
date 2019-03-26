@@ -39,6 +39,11 @@ function bp_core_admin_get_directory_pages() {
 		}
 	}
 
+	// Add new Forums option into the Pages.
+	if ( bp_is_active( 'forums' ) ) {
+		$directory_pages['new_forums_page'] = __( 'Forums', 'buddyboss' );
+	}
+
 	/** Directory Display *****************************************************/
 
 	/**

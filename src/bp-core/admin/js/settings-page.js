@@ -38,8 +38,8 @@
 						'action' : 'bp_core_admin_create_background_page',
 						'page' : dataPage
 					},
-					'success' : function() {
-						window.location.reload( true );
+					'success' : function( response ) {
+						window.location.href = response.data.url;
 					}
 				});
 			});
