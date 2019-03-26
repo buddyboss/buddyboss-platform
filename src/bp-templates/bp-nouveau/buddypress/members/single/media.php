@@ -17,6 +17,8 @@ switch ( bp_current_action() ) :
 
 		bp_get_template_part( 'media/add-media' );
 
+		bp_nouveau_member_hook( 'before', 'media_content' );
+
 		?>
 		<div id="media-stream" class="media" data-bp-list="media">
 
@@ -25,11 +27,13 @@ switch ( bp_current_action() ) :
 		</div><!-- .media -->
 		<?php
 
+		bp_nouveau_member_hook( 'after', 'media_content' );
+
 		break;
 
 	// Home/Media/Albums
 	case 'albums':
-		if ( ! (int) bp_action_variable( 0 ) )
+		if ( ! bp_is_single_album() )
 			bp_get_template_part( 'media/albums' );
 		else
 			bp_get_template_part( 'media/single-album' );
