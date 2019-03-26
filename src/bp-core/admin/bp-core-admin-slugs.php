@@ -41,7 +41,12 @@ function bp_core_admin_get_directory_pages() {
 
 	// Add new Forums option into the Pages.
 	if ( bp_is_active( 'forums' ) ) {
-		$directory_pages['new_forums_page'] = __( 'Forums', 'buddyboss' );
+
+		if ( bp_is_active( 'groups' ) ) {
+			$directory_pages = array_insert_after( $directory_pages, 'groups', array( 'new_forums_page' => __( 'Forums', 'buddyboss' ) ) );
+		} else {
+			$directory_pages = array_insert_after( $directory_pages, 'members', array( 'new_forums_page' => __( 'Forums', 'buddyboss' ) ) );
+		}
 	}
 
 	/** Directory Display *****************************************************/
@@ -54,6 +59,23 @@ function bp_core_admin_get_directory_pages() {
 	 * @param array $directory_pages Array of available components to set associations for.
 	 */
 	return apply_filters( 'bp_directory_pages', $directory_pages );
+}
+
+/**
+ * Insert a value or key/value pair after a specific key in an array.  If key doesn't exist, value is appended
+ * to the end of the array.
+ *
+ * @param array $array
+ * @param string $key
+ * @param array $new
+ *
+ * @return array
+ */
+function array_insert_after( array $array, $key, array $new ) {
+	$keys = array_keys( $array );
+	$index = array_search( $key, $keys );
+	$pos = false === $index ? count( $array ) : $index + 1;
+	return array_merge( array_slice( $array, 0, $pos ), $new, array_slice( $array, $pos ) );
 }
 
 /**
