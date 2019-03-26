@@ -384,7 +384,7 @@ tr.bp-search-parent-field label {
   padding-bottom: 1.2em;
   font-size: 22px;
   font-weight: 600;
-  color: #495057;
+  color: #333;
   border-bottom: 1px solid #eaeaea;
 }
 
@@ -397,8 +397,8 @@ tr.bp-search-parent-field label {
   font-family: "Font Awesome 5 Free";
   font-weight: 900;
   margin-left: 1em;
-  color: #fff;
-  background: #495057;
+  color: #333;
+  background: #f6f6f6;
   padding: 7px;
   border-radius: 100%;
   -webkit-font-smoothing: antialiased;
