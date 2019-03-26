@@ -1,5 +1,5 @@
 /* jshint browser: true */
-/* global bp, BP_Nouveau */
+/* global bp, BP_Nouveau, JSON, Dropzone */
 /* @version 1.0.0 */
 window.bp = window.bp || {};
 
@@ -46,7 +46,7 @@ window.bp = window.bp || {};
 				autoProcessQueue: true,
 				addRemoveLinks: true,
 				uploadMultiple: false,
-				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
 			};
 
 			this.dropzone_obj = null;
@@ -97,12 +97,12 @@ window.bp = window.bp || {};
 					formData.append('_wpnonce', BP_Nouveau.nonces.media);
 				});
 
-				self.dropzone_obj.on('addedfile', function(file) {
+				self.dropzone_obj.on('addedfile', function() {
 					$('#bp-media-uploader-modal-title').text('Uploading...');
 					$('#bp-media-uploader-modal-status-text').text(self.dropzone_media.length + ' out of ' + self.dropzone_obj.getAcceptedFiles().length + ' uploaded').show();
 				});
 
-				self.dropzone_obj.on('queuecomplete', function(file, xhr, formData) {
+				self.dropzone_obj.on('queuecomplete', function() {
 					$('#bp-media-uploader-modal-title').text('Upload');
 				});
 
@@ -158,11 +158,11 @@ window.bp = window.bp || {};
 			var data = {
 				'action': 'media_save',
 				'_wpnonce': BP_Nouveau.nonces.media,
-				'medias': self.dropzone_media,
+				'medias': self.dropzone_media
 			};
 
 			$.ajax({
-				type: "POST",
+				type: 'POST',
 				url: BP_Nouveau.ajaxurl,
 				data: data,
 				success: function (response) {
@@ -171,9 +171,9 @@ window.bp = window.bp || {};
 						self.closeUploader(event);
 					}
 
-				},
+				}
 			});
-			
+
 		},
 
 		submitAlbum: function(event) {
@@ -184,11 +184,11 @@ window.bp = window.bp || {};
 				'_wpnonce': BP_Nouveau.nonces.media,
 				'title': $('#bb-album-title').val(),
 				'description': $('#bb-album-description').val(),
-				'privacy': $('#bb-album-privacy').val(),
+				'privacy': $('#bb-album-privacy').val()
 			};
 
 			$.ajax({
-				type: "POST",
+				type: 'POST',
 				url: BP_Nouveau.ajaxurl,
 				data: data,
 				success: function (response) {
@@ -196,7 +196,7 @@ window.bp = window.bp || {};
 						$('.bb-album-list').prepend(response.data.album);
 						self.closeCreateAlbumModal(event);
 					}
-				},
+				}
 			});
 
 		},

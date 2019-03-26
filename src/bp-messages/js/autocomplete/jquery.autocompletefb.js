@@ -23,7 +23,7 @@ jQuery.fn.autoCompletefb = function(options)
 		acOptions  : {},
 		foundClass : ".friend-tab",
 		inputClass : ".send-to-input"
-	}
+	};
 
 	if(options) jQuery.extend(settings, options);
 
@@ -40,7 +40,7 @@ jQuery.fn.autoCompletefb = function(options)
 			var newID = o.parentNode.id.substr( o.parentNode.id.indexOf('-')+1 );
 			jQuery('#send-to-usernames').removeClass(newID);
 		}
-	}
+	};
 
 	jQuery(settings.foundClass+" img.p").click(function(){
 		acfb.removeFind(this);
@@ -72,4 +72,4 @@ jQuery.fn.autoCompletefb = function(options)
 
 	jQuery(settings.inputClass,tmp).focus();
 	return acfb;
-}
+};

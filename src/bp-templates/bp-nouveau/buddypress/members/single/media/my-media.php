@@ -8,8 +8,8 @@
 
 <?php if ( bp_is_my_profile() ) : ?>
 
-    <div class="flex">
-        <div class="push-right bb-media-actions">
+    <div class="bb-media-actions-wrap">
+        <div class="bb-media-actions">
             <a href="#" id="bp-add-media" class="bb-add-media button small outline"><?php _e( 'Add Media', 'buddyboss' ); ?></a>
         </div>
     </div>

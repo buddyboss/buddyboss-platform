@@ -74,67 +74,63 @@ function bp_search_get_settings_fields() {
 		],
 	];
 
-	if ( bp_is_search_members_enable() ) {
+	$fields['bp_search_settings_community']['bp_search_user_fields_label'] = [
+		'title'    => '&#65279;',
+		'callback' => 'bp_search_settings_callback_user_fields_label',
+		'args'     => [
+			'class' => 'bp-search-child-field'
+		]
+	];
 
-		$fields['bp_search_settings_community']['bp_search_user_fields_label'] = [
-			'title'    => '&#65279;',
-			'callback' => 'bp_search_settings_callback_user_fields_label',
-			'args'     => [
+	$user_fields = bp_get_search_user_fields();
+
+	foreach ( $user_fields as $field_key => $field_label ) {
+		$fields['bp_search_settings_community']["bp_search_user_field_{$field_key}"] = [
+			'title'             => '&#65279;',
+			'callback'          => 'bp_search_settings_callback_user_field',
+			'sanitize_callback' => 'intval',
+			'args'              => [
+				'field' => [
+					'field_key'   => $field_key,
+					'field_label' => $field_label
+				],
 				'class' => 'bp-search-child-field'
 			]
 		];
+	}
 
-		$user_fields = bp_get_search_user_fields();
+	$groups = bp_xprofile_get_groups( array(
+		'fetch_fields' => true
+	) );
 
-		foreach ( $user_fields as $field_key => $field_label ) {
-			$fields['bp_search_settings_community']["bp_search_user_field_{$field_key}"] = [
-				'title'             => '&#65279;',
-				'callback'          => 'bp_search_settings_callback_user_field',
-				'sanitize_callback' => 'intval',
-				'args'              => [
-					'field' => [
-						'field_key'   => $field_key,
-						'field_label' => $field_label
-					],
-					'class' => 'bp-search-child-field'
-				]
-			];
-		}
+	if ( ! empty( $groups ) ) {
+		foreach ( $groups as $group ) {
+			if ( ! empty( $group->fields ) ) {
 
-		$groups = bp_xprofile_get_groups( array(
-			'fetch_fields' => true
-		) );
+				$fields['bp_search_settings_community']["bp_search_xprofile_group_{$group->id}"] = [
+					'title'    => '&#65279;',
+					'callback' => 'bp_search_settings_callback_xprofile_group',
+					'args'     => [
+						'group' => $group,
+						'class' => 'bp-search-child-field bp-search-subgroup-heading'
+					]
+				];
 
-
-		if ( ! empty( $groups ) ) {
-			foreach ( $groups as $group ) {
-				if ( ! empty( $group->fields ) ) {
-
-					$fields['bp_search_settings_community']["bp_search_xprofile_group_{$group->id}"] = [
-						'title'    => '&#65279;',
-						'callback' => 'bp_search_settings_callback_xprofile_group',
-						'args'     => [
-							'group' => $group,
-							'class' => 'bp-search-child-field bp-search-subgroup-heading'
+				foreach ( $group->fields as $field ) {
+					$fields['bp_search_settings_community']["bp_search_xprofile_{$field->id}"] = [
+						'title'             => '&#65279;',
+						'callback'          => 'bp_search_settings_callback_xprofile',
+						'sanitize_callback' => 'intval',
+						'args'              => [
+							'field' => $field,
+							'class' => 'bp-search-child-field'
 						]
 					];
-
-					foreach ( $group->fields as $field ) {
-						$fields['bp_search_settings_community']["bp_search_xprofile_{$field->id}"] = [
-							'title'             => '&#65279;',
-							'callback'          => 'bp_search_settings_callback_xprofile',
-							'sanitize_callback' => 'intval',
-							'args'              => [
-								'field' => $field,
-								'class' => 'bp-search-child-field'
-							]
-						];
-					}
 				}
 			}
 		}
-
 	}
+
 
 	if ( bp_is_active( 'forums' ) ) {
 		$fields['bp_search_settings_community']["bp_search_post_type_forum"] = [

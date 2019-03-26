@@ -1,3 +1,4 @@
+/* global BP_ADMIN */
 (function() {
 	var $ = jQuery.noConflict();
 
@@ -6,21 +7,21 @@
 			var id = $(this).data('run-js-condition');
 			var tag= $(this).prop('tagName');
 
-			$(this).on('change.run-condition', function(e) {
+			$(this).on('change.run-condition', function() {
 				if (tag == 'SELECT' && $(this).is(':visible')) {
 					var selector = id + '-' + $(this).val();
-					$("[class*='js-show-on-" + id + "-']:not(.js-show-on-" + selector + ")").hide();
-					$(".js-show-on-" + selector).show().find('[data-run-js-condition]').trigger('change.run-condition');
+					$('[class*="js-show-on-' + id + '-"]:not(.js-show-on-' + selector + ')').hide();
+					$('.js-show-on-' + selector).show().find('[data-run-js-condition]').trigger('change.run-condition');
 					return true;
 				}
 
 				var checked = $(this).prop('checked');
-				if (checked && $(this).is(":visible")) {
-					$(".js-hide-on-" + id).hide();
-					$(".js-show-on-" + id).show().find('[data-run-js-condition]').trigger('change.run-condition');
+				if (checked && $(this).is(':visible')) {
+					$('.js-hide-on-' + id).hide();
+					$('.js-show-on-' + id).show().find('[data-run-js-condition]').trigger('change.run-condition');
 				} else {
-					$(".js-hide-on-" + id).show();
-					$(".js-show-on-" + id).hide().find('[data-run-js-condition]').trigger('change.run-condition');
+					$('.js-hide-on-' + id).show();
+					$('.js-show-on-' + id).hide().find('[data-run-js-condition]').trigger('change.run-condition');
 				}
 			}).trigger('change.run-condition');
 		});
@@ -37,13 +38,28 @@
 						'action' : 'bp_core_admin_create_background_page',
 						'page' : dataPage
 					},
-					'success' : function() {
-						window.location.reload( true );
+					'success' : function( response ) {
+						window.location.href = response.data.url;
 					}
 				});
 			});
 		}
 
+		// Auto check parent search type
+		$( '.bp-search-child-field' ).on( 'click', 'input[type="checkbox"]', function( e ) {
+			var $parentRow = $( e.delegateTarget ).prevAll( '.bp-search-parent-field' ).first();
+			if ( $parentRow.length && e.currentTarget.checked ) {
+				$parentRow.find( 'input[type="checkbox"]' ).prop( 'checked', true );
+			}
+		} );
+
+		// Auto uncheck child search types
+		$( '.bp-search-parent-field' ).on( 'click', 'input[type="checkbox"]', function( e ) {
+			var $childRows = $( e.delegateTarget ).nextUntil( '.bp-search-parent-field' );
+			if ( $childRows.length && ! e.currentTarget.checked ) {
+				$childRows.find( 'input[type="checkbox"]' ).prop( 'checked', false );
+			}
+		} );
 	});
 
 	$( document ).ready(function() {

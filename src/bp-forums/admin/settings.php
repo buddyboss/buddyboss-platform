@@ -251,12 +251,12 @@ function bbp_admin_get_settings_fields() {
 		'bbp_settings_root_slugs' => array(
 
 			// Root slug setting
-			'_bbp_root_slug' => array(
-				'title'             => __( 'Forums Directory', 'buddyboss' ),
-				'callback'          => 'bbp_admin_setting_callback_root_slug',
-				'sanitize_callback' => 'bbp_sanitize_slug',
-				'args'              => array()
-			),
+//			'_bbp_root_slug' => array(
+//				'title'             => __( 'Forums Directory', 'buddyboss' ),
+//				'callback'          => 'bbp_admin_setting_callback_root_slug',
+//				'sanitize_callback' => 'bbp_sanitize_slug',
+//				'args'              => array()
+//			),
 
 			// Include root setting
 			'_bbp_include_root' => array(

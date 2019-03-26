@@ -27,6 +27,10 @@ window.bp = window.bp || {};
 			this.ActivityObjects = new bp.Collections.ActivityObjects();
 			this.buttons         = new Backbone.Collection();
 
+			if ( typeof window.Dropzone !== 'undefined' ) {
+				this.dropzoneView();
+			}
+
 			this.postFormView();
 		},
 
@@ -44,6 +48,23 @@ window.bp = window.bp || {};
 
 			// Display it
 			postForm.inject( '#bp-nouveau-activity-form' );
+		},
+
+		dropzoneView: function() {
+			this.dropzone = null;
+
+			// set up dropzones auto discover to false so it does not automatically set dropzones
+			window.Dropzone.autoDiscover = false;
+
+			this.dropzone_options = {
+				url: BP_Nouveau.ajaxurl,
+				timeout: 3 * 60 * 60 * 1000,
+				acceptedFiles: 'image/*',
+				autoProcessQueue: true,
+				addRemoveLinks: true,
+				uploadMultiple: false,
+				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
+			};
 		}
 	};
 
@@ -101,7 +122,7 @@ window.bp = window.bp || {};
 	// Git results collection returned from giphy api
 	bp.Collections.GifDatas =  Backbone.Collection.extend( {
 		// Reference to this collection's model.
-		model: bp.Models.GifData,
+		model: bp.Models.GifData
 	});
 
 	// Object, the activity is attached to (group or blog or any other)
@@ -168,6 +189,66 @@ window.bp = window.bp || {};
 		}
 	} );
 
+	// Activity Media
+	bp.Views.ActivityMedia = bp.View.extend({
+		tagName: 'div',
+		className: 'activity-media-container',
+		template: bp.template( 'activity-media' ),
+		media : [],
+
+		initialize: function () {
+
+			this.model.set( 'media', this.media );
+
+			document.addEventListener( 'activity_media_open', this.open_media_uploader.bind(this) );
+			//document.addEventListener( 'activity_media_close', this.close_media_uploader.bind(this) );
+		},
+
+		close_media_uploader: function() {
+			var self = this;
+			self.media = [];
+			if ( bp.Nouveau.Activity.postForm.dropzone != null ) {
+				bp.Nouveau.Activity.postForm.dropzone.destroy();
+			}
+			self.$el.find('#activity-post-media-uploader').addClass('open').removeClass('closed');
+		},
+
+		open_media_uploader: function() {
+			var self = this;
+
+			self.close_media_uploader();
+
+			bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone('#activity-post-media-uploader', bp.Nouveau.Activity.postForm.dropzone_options );
+
+			bp.Nouveau.Activity.postForm.dropzone.on('sending', function(file, xhr, formData) {
+				formData.append('action', 'media_upload');
+				formData.append('_wpnonce', BP_Nouveau.nonces.media);
+			});
+
+			bp.Nouveau.Activity.postForm.dropzone.on('success', function(file, response) {
+				if ( response.data.id ) {
+					file.id = response.data.id;
+					response.data.uuid = file.upload.uuid;
+					response.data.menu_order = self.media.length;
+					self.media.push( response.data );
+					self.model.set( 'media', self.media );
+				}
+			});
+
+			bp.Nouveau.Activity.postForm.dropzone.on('removedfile', function(file) {
+				if ( self.media.length ) {
+					for ( var i in self.media ) {
+						if ( file.id == self.media[i].id ) {
+							self.media.splice( i, 1 );
+							self.model.set( 'media', self.media );
+						}
+					}
+				}
+			});
+		}
+
+	});
+
 	// Activity link preview
 	bp.Views.ActivityLinkPreview = bp.View.extend( {
 		tagName: 'div',
@@ -179,7 +260,7 @@ window.bp = window.bp || {};
 			'click #activity-url-prevPicButton': 'prev',
 			'click #activity-url-nextPicButton': 'next',
 			'click #activity-link-preview-close-image': 'close',
-			'click #activity-close-link-suggestion': 'destroy',
+			'click #activity-close-link-suggestion': 'destroy'
 		},
 
 		initialize: function() {
@@ -211,7 +292,7 @@ window.bp = window.bp || {};
 			e.preventDefault();
 			this.model.set({
 				link_images: [],
-				link_image_index: 0,
+				link_image_index: 0
 			});
 		},
 
@@ -245,7 +326,7 @@ window.bp = window.bp || {};
 		},
 
 		scrapURL: function(urlText) {
-			var urlString = "";
+			var urlString = '';
 			if ( urlText.indexOf( 'http://' ) >= 0 ) {
 				urlString = this.getURL( 'http://', urlText );
 			} else if ( urlText.indexOf( 'https://' ) >= 0 ) {
@@ -296,7 +377,7 @@ window.bp = window.bp || {};
 					link_scrapping: true,
 					link_loading: true,
 					link_error: false,
-					link_url: url,
+					link_url: url
 				} );
 
 				bp.ajax.post( 'bp_activity_parse_url', { url: url } ).always( function( response ) {
@@ -313,18 +394,18 @@ window.bp = window.bp || {};
 							link_title: response.title,
 							link_description: response.description,
 							link_images: response.images,
-							link_image_index: 0,
+							link_image_index: 0
 						} );
 					} else {
 						self.model.set( {
 							link_success: false,
 							link_error: true,
-							link_error_msg: response.error,
+							link_error_msg: response.error
 						} );
 					}
 				});
 			}
-		},
+		}
 	} );
 
 	// Activity gif selector
@@ -354,7 +435,7 @@ window.bp = window.bp || {};
 			return this;
 		},
 
-		handleRemove: function( e ) {
+		handleRemove: function() {
 			this.model.set('gif_data', {} );
 			this.el.style.backgroundImage = '';
 			this.el.style.backgroundSize = '';
@@ -422,7 +503,7 @@ window.bp = window.bp || {};
 					q: q,
 					offset: self.offset,
 					fmt: 'json',
-					limit: this.limit,
+					limit: this.limit
 				},
 				function( response ) {
 					self.gifDataItems.reset( response.data );
@@ -466,7 +547,7 @@ window.bp = window.bp || {};
 			var request = self.giphy.trending( {
 				offset: self.offset,
 				fmt: 'json',
-				limit: this.limit,
+				limit: this.limit
 			}, function( response ) {
 				self.gifDataItems.reset( response.data );
 				self.total_count = response.pagination.total_count;
@@ -486,15 +567,15 @@ window.bp = window.bp || {};
 						params = {
 							offset: self.offset,
 							fmt: 'json',
-							limit: self.limit,
+							limit: self.limit
 						};
 
 						self.el.classList.add('loading');
-
+						var request = null;
 						if ( _.isNull( self.q ) ) {
-							var request = self.giphy.trending( params, _.bind( self.loadMoreResponse, self ) );
+							request = self.giphy.trending( params, _.bind( self.loadMoreResponse, self ) );
 						} else {
-							var request = self.giphy.search( _.extend( { q: self.q }, params ), _.bind( self.loadMoreResponse, self ) );
+							request = self.giphy.search( _.extend( { q: self.q }, params ), _.bind( self.loadMoreResponse, self ) );
 						}
 
 						self.requests.push( request );
@@ -507,7 +588,7 @@ window.bp = window.bp || {};
 		clearRequests: function() {
 			this.gifDataItems.reset();
 
-			for ( i = 0; i < this.requests.length; i++ ) {
+			for ( var i = 0; i < this.requests.length; i++ ) {
 				this.requests[i].abort();
 			}
 
@@ -564,7 +645,7 @@ window.bp = window.bp || {};
 
 		onLinkScrapping: function() {
 			this.$el.prop( 'disabled', false );
-		},
+		}
 	} );
 
 	// The content of the activity
@@ -782,56 +863,6 @@ window.bp = window.bp || {};
 		template : bp.template( 'activity-post-form-options' )
 	} );
 
-	bp.Views.FormMedia = bp.View.extend({
-		tagName: 'div',
-		id: 'activity-post-options-media',
-		template : bp.template( 'activity-post-options-media' ),
-		media : [],
-
-		events: {
-			'click a.activity-post-form-media': 'clicked',
-		},
-
-		initialize: function () {
-			this.model.set( 'media', this.media );
-		},
-
-		clicked: function (e) {
-			e.preventDefault();
-
-			var self = this;
-			self.$el.find('.activity-post-form-media-uploader-wrapper').show();
-			var activityDropzone = new Dropzone('div#activity-post-form-media-uploader', dropzone_options );
-
-			activityDropzone.on('sending', function(file, xhr, formData) {
-				formData.append('action', 'media_upload');
-				formData.append('_wpnonce', BP_Nouveau.nonces.media);
-			});
-
-			activityDropzone.on('success', function(file, response) {
-				if ( response.data.id ) {
-					file.id = response.id;
-					response.uuid = file.upload.uuid;
-					response.menu_order = self.media.length;
-					self.media.push( response.data );
-					self.model.set( 'media', self.media );
-				}
-			});
-
-			activityDropzone.on('removedfile', function(file) {
-				var self = this;
-				if ( self.media.length ) {
-					for ( var i in self.media ) {
-						if ( file.id == self.media[i].id ) {
-							self.media.splice( i, 1 );
-							self.model.set( 'media', self.media );
-						}
-					}
-				}
-			});
-		},
-	});
-
 	bp.Views.FormTarget = bp.View.extend( {
 		tagName   : 'div',
 		id        : 'whats-new-post-in-box',
@@ -906,7 +937,8 @@ window.bp = window.bp || {};
 		template: bp.template( 'whats-new-toolbar' ),
 		events: {
 			'click #activity-link-preview-button': 'toggleURLInput',
-			'click #activity-gif-button': 'toggleGifSelector'
+			'click #activity-gif-button': 'toggleGifSelector',
+			'click #activity-media-button': 'toggleMediaSelector'
 		},
 
 		initialize: function() {
@@ -934,6 +966,13 @@ window.bp = window.bp || {};
 			this.$searchDropdownEl.toggleClass('open');
 		},
 
+		toggleMediaSelector: function( e ) {
+			e.preventDefault();
+
+			var event = new Event('activity_media_open');
+			document.dispatchEvent(event);
+		},
+
 		closeGifDropdownOnEsc: function( event ) {
 			var key = event.key; // const {key} = event; in ES6+
 			if ( key === 'Escape' ) {
@@ -952,6 +991,9 @@ window.bp = window.bp || {};
 		tagName: 'div',
 		id: 'whats-new-attachments',
 		initialize: function() {
+			if ( typeof window.Dropzone !== 'undefined' ) {
+				this.views.add(new bp.Views.ActivityMedia({model: this.model}));
+			}
 
 			if ( !_.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
 				this.views.add( new bp.Views.ActivityLinkPreview( { model: this.model } ) );
@@ -1162,10 +1204,6 @@ window.bp = window.bp || {};
 				this.views.add( new bp.Views.FormOptions( { model: this.model } ) );
 			}
 
-			if ( typeof window.Dropzone !== 'undefined' ) {
-				this.views.add(new bp.Views.FormMedia({model: this.model}));
-			}
-
 			// Attach buttons
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.buttons ) ) {
 				// Global
@@ -1250,8 +1288,6 @@ window.bp = window.bp || {};
 					}
 				}
 			} );
-
-			console.log(this.model);
 
 			// Silently add meta
 			this.model.set( meta, { silent: true } );

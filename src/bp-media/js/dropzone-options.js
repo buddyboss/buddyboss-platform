@@ -1,3 +1,4 @@
+/* exported dropzone_options */
 var dropzone_options = {
 	url:  BP_Nouveau.ajaxurl,
 	timeout:3*60*60*1000,
@@ -5,5 +6,5 @@ var dropzone_options = {
 	autoProcessQueue: true,
 	addRemoveLinks: true,
 	uploadMultiple: false,
-	maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2,
+	maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
 };
