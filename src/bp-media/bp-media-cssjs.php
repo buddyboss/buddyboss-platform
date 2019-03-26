@@ -28,4 +28,4 @@ function bp_media_add_dropzone_css() {
     $url = buddypress()->plugin_url . 'bp-media/css/';
     wp_enqueue_style( 'bp-media-dropzone', "{$url}dropzone.min.css", array(), bp_get_version() );
 }
-add_action( 'wp_head', 'bp_media_add_dropzone_css' );
+//add_action( 'wp_head', 'bp_media_add_dropzone_css' );

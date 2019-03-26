@@ -210,6 +210,13 @@
 		}
 	}
 
+	#activity-form-submit-wrapper {
+		display: flex;
+		justify-content: space-between;
+		flex-flow: row wrap;
+		align-items: center;
+	}
+
 	#whats-new-post-in-box {
 		margin: $marg-sml 0;
 
@@ -254,7 +261,9 @@
 	}
 
 	#whats-new-submit {
-		margin: $marg-med 0 $marg-sml;
+		margin: $marg-sml 0;
+		display: flex;
+		flex-flow: row-reverse;
 
 		input {
 
@@ -278,10 +287,8 @@
 
 		#whats-new-content,
 		#whats-new-elements,
-		#whats-new-post-in-box,
-		#whats-new-submit {
+		#activity-form-submit-wrapper {
 			margin-left: 8.5%;
-
 		}
 
 		#whats-new-submit {

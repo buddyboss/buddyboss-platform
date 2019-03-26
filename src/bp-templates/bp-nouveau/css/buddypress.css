@@ -1314,6 +1314,13 @@ a.layout-grid-view {
   box-shadow: 0 0 6px 0 #d6d6d6;
 }
 
+.activity-update-form #activity-form-submit-wrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-flow: row wrap;
+  align-items: center;
+}
+
 .activity-update-form #whats-new-post-in-box {
   margin: 10px 0;
 }
@@ -1362,7 +1369,9 @@ a.layout-grid-view {
 }
 
 .activity-update-form #whats-new-submit {
-  margin: 15px 0 10px;
+  margin: 10px 0;
+  display: flex;
+  flex-flow: row-reverse;
 }
 
 .activity-update-form #whats-new-submit input {
@@ -1383,8 +1392,7 @@ a.layout-grid-view {
   }
   .activity-update-form #whats-new-content,
   .activity-update-form #whats-new-elements,
-  .activity-update-form #whats-new-post-in-box,
-  .activity-update-form #whats-new-submit {
+  .activity-update-form #activity-form-submit-wrapper {
     margin-left: 8.5%;
   }
   .activity-update-form #whats-new-submit input {
@@ -9270,10 +9278,6 @@ body.login .login-popup .mfp-close:hover {
   max-width: 33.33%;
 }
 
-.dropzone {
-  border-style: dashed;
-}
-
 .modal-mask {
   position: fixed;
   z-index: 9998;
@@ -10055,6 +10059,58 @@ ul.bb-albums-list .bb-more-photos strong {
   margin-bottom: 0;
 }
 
+#media_uploader.dropzone .bb-dz-preview-wrap .dz-image img {
+  cursor: default;
+}
+
+.bb-dropzone-wrap.bb-has-items .dz-default {
+  display: none !important;
+}
+
+.bb-dropzone-wrap.bb-has-items {
+  margin: -8px;
+}
+
+.bb-dropzone-wrap.bb-has-items .dz-preview {
+  margin: 8px;
+  width: calc(20% - 16px);
+}
+
+.bb-model-footer .button {
+  min-width: 130px;
+}
+
+.bbm-uploader-model-wrap .bb-model-header h4 {
+  font-size: 22px;
+}
+
+.bbm-uploader-model-wrap .bb-model-header span {
+  font-size: 17px;
+  color: #939597;
+  letter-spacing: -0.24px;
+  line-height: 24px;
+  margin-left: 20px;
+}
+
+.bb-media-actions-wrap {
+  display: flex;
+  margin: 15px 0;
+}
+
+.bb-add-media {
+  display: inline-block;
+}
+
+/**
+*-------------------------------------------------------------------------------
+* @section 15.0 - Media Dropzone
+*-------------------------------------------------------------------------------
+*/
+.dropzone,
+.dropzone * {
+  box-sizing: border-box;
+}
+
 .dropzone.dz-clickable {
   cursor: pointer;
 }
@@ -10068,10 +10124,8 @@ ul.bb-albums-list .bb-more-photos strong {
   cursor: pointer;
 }
 
-.vue-dropzone.dropzone {
-  display: flex;
-  flex-flow: row wrap;
-  margin-bottom: 10px;
+.dropzone.dz-started .dz-message {
+  display: none;
 }
 
 .dz-default.dz-message {
@@ -10114,10 +10168,6 @@ ul.bb-albums-list .bb-more-photos strong {
   object-fit: cover;
 }
 
-#media_uploader.dropzone .bb-dz-preview-wrap .dz-image img {
-  cursor: default;
-}
-
 .dropzone .dz-remove {
   font-size: 0;
   text-align: center;
@@ -10135,22 +10185,20 @@ ul.bb-albums-list .bb-more-photos strong {
   overflow: hidden;
 }
 
-.dropzone .dz-remove:after {
-  content: "\E80A";
-  font-size: 20px;
-  position: absolute;
-  font-family: bb-icons;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  left: -3px;
-  top: -8px;
+.dropzone .dz-complete .dz-remove:after {
+  content: "\00d7";
+  font-size: 14px;
+  line-height: 1;
 }
 
 .dropzone .dz-complete .dz-remove {
   color: #fff;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
   background: #fd4343;
+}
+
+.dropzone .dz-preview:hover {
+  z-index: 1000;
 }
 
 .dropzone .dz-preview:hover .dz-details {
@@ -10210,8 +10258,14 @@ ul.bb-albums-list .bb-more-photos strong {
   top: 38%;
 }
 
-.dz-success-mark i {
-  color: #1cd991;
+.dz-success-mark svg {
+  max-width: 20px;
+  height: auto;
+  margin: -10px 0 0 10px;
+}
+
+.dz-success-mark svg path {
+  fill: #1cd991;
 }
 
 .dz-error-mark i {
@@ -10566,11 +10620,11 @@ ul.bb-albums-list .bb-more-photos strong {
   }
 }
 
-body:not(.settings):not(.edit-details) .dropzone .dz-default {
+.dropzone .dz-default {
   background: rgba(240, 243, 247, 0.5);
   border: 1px dashed #dedfe2;
   border-radius: 6px;
-  min-height: 50vh;
+  min-height: 20vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -10580,15 +10634,15 @@ body:not(.settings):not(.edit-details) .dropzone .dz-default {
   line-height: 26px;
 }
 
-body:not(.settings):not(.edit-details) .dropzone .dz-default:before {
+.dropzone .dz-default:before {
   display: none;
 }
 
-body:not(.settings):not(.edit-details) .dropzone .dz-default span {
+.dropzone .dz-default span {
   margin-top: 0;
 }
 
-body:not(.settings):not(.edit-details) .dropzone .dz-default span:before {
+.dropzone .dz-default span:before {
   background: url(../images/upload-large.svg) no-repeat;
   background-size: cover;
   content: " ";
@@ -10598,46 +10652,31 @@ body:not(.settings):not(.edit-details) .dropzone .dz-default span:before {
   margin: 0 auto 15px;
 }
 
-.bb-dropzone-wrap.bb-has-items .dz-default {
-  display: none !important;
+.dz-details {
+  display: none;
 }
 
-.bb-has-items .vue-dropzone {
-  max-height: 45vh;
-  overflow: auto;
-  margin-bottom: 30px;
-}
-
-.bb-dropzone-wrap.bb-has-items {
-  margin: -8px;
-}
-
-.bb-dropzone-wrap.bb-has-items .dz-preview {
-  margin: 8px;
-  width: calc(20% - 16px);
-}
-
-.bb-model-footer .button {
-  min-width: 130px;
-}
-
-.bbm-uploader-model-wrap .bb-model-header h4 {
-  font-size: 22px;
-}
-
-.bbm-uploader-model-wrap .bb-model-header span {
-  font-size: 17px;
-  color: #939597;
-  letter-spacing: -0.24px;
-  line-height: 24px;
-  margin-left: 20px;
-}
-
-.bb-media-actions-wrap {
+.activity-media-container .dropzone {
   display: flex;
-  margin: 15px 0;
+  flex-flow: row wrap;
+  margin-bottom: 10px;
 }
 
-.bb-add-media {
-  display: inline-block;
+.dropzone.dz-started .dz-default.dz-message {
+  display: flex;
+  order: 2;
+  min-height: 1px;
+  max-width: 120px;
+  height: 120px;
+  font-size: 12px;
+  text-align: center;
+  line-height: 1.3;
+  margin: 0 5px 10px;
+}
+
+.dropzone.dz-started .dz-default.dz-message span:before {
+  background-size: 30px;
+  height: 26px;
+  width: 30px;
+  margin: 0 auto 10px;
 }
