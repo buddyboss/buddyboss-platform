@@ -432,77 +432,81 @@ class BpMemberships {
 		foreach ($lmsCourseSlugs as $lmsCourseSlug) {
 			if ($membershipProductSlug == MP_PRODUCT_SLUG) {
 
-				$hasId = false;
-				if (isset($membershipObj->subscription_id) && $membershipObj->subscription_id == 0) {
-					// NOTE : Need to check since for some status ID is NOT generated until complete
-					if (isset($membershipObj->id)) {
-						$hasId = true;
-						$eventIdentifier = $membershipProductSlug . '-NON-RECURRING-' . $membershipObj->id;
-						$eventEditUrl = "admin.php?page=memberpress-trans&action=edit&id=$membershipObj->id";
+				$isRecurring = MpHelper::mpIsRecurring($membershipObj);
+
+				if ($isRecurring) {
+
+					if (isset($membershipObj->subscr_id)) {
+						//Existing but Recurring transaction
+						$assignedId = $membershipObj->id;
+					} else {
+						//New but Recurring transaction
+						$assignedId = $membershipObj->subscription_id;
 
 					}
-				} else if (isset($membershipObj->subscription_id)) {
-					$hasId = true;
-					$eventIdentifier = $membershipProductSlug . '-RECURRING-' . $membershipObj->subscription_id;
-					$eventEditUrl = "admin.php?page=memberpress-subscriptions&action=edit&id=$membershipObj->subscription_id";
+					$eventIdentifier = "$membershipProductSlug-RECURRING-$assignedId";
+					$eventEditUrl = "admin.php?page=memberpress-subscriptions&action=edit&id=$assignedId";
+
+				} else {
+					$assignedId = $membershipObj->id;
+					$eventIdentifier = "$membershipProductSlug-NON-RECURRING-$assignedId";
+					$eventEditUrl = "admin.php?page=memberpress-trans&action=edit&id=$assignedId";
+
 				}
 
 				// NOTE : MUST do this to ignoring repeatition
-				if ($hasId) {
-					$events = unserialize(get_post_meta($membershipObj->product_id, '_bpms-events', true));
-					if (isset($events[$eventIdentifier])) {
-						if (BPMS_DEBUG) {
-							error_log("Event EXISTS for this user, just update grant access");
-							error_log("product_id : $membershipObj->product_id");
-							error_log(print_r($events[$eventIdentifier], true));
-						}
-
-						$events[$eventIdentifier]['grant_access'] = $grantAccess;
-						$events[$eventIdentifier]['updated_at'] = date('Y-m-d H:i:s');
-					} else {
-						if (BPMS_DEBUG) {
-							error_log("Event DO NOT exists for this user : $membershipObj->user_id");
-						}
-
-						$courseAccessMethod = get_post_meta($membershipObj->product_id, "_bpms-$lmsCourseSlug-$membershipProductSlug-course_access_method", true);
-						if (BPMS_DEBUG) {
-							error_log("Course Access Method selected is : $courseAccessMethod");
-						}
-
-						if ($courseAccessMethod == 'SINGLE_COURSES') {
-							$coursesAttached = unserialize(get_post_meta($membershipObj->product_id, "_bpms-$lmsCourseSlug-$membershipProductSlug-courses_attached", true));
-
-						} else if ($courseAccessMethod == 'ALL_COURSES') {
-							$coursesAttached = self::getLearndashAllCourses();
-						} else if ($courseAccessMethod == 'LD_GROUPS') {
-
-							$groupsAttached = unserialize(get_post_meta($membershipObj->product_id, "_bpms-$lmsCourseSlug-$membershipProductSlug-groups_attached", true));
-							$coursesAttached = array();
-							foreach ($groupsAttached as $groupId) {
-								$ids = learndash_group_enrolled_courses($groupId);
-								// NOTE : Array format is consistent with GUI
-								$coursesAttached = array_merge($ids, $coursesAttached);
-							}
-						}
-						// error_log(print_r($coursesAttached, true));
-						$events[$eventIdentifier] = array(
-							'user_id' => $membershipObj->user_id,
-							'course_attached' => serialize(array_values($coursesAttached)),
-							'grant_access' => $grantAccess,
-							'created_at' => date('Y-m-d H:i:s'),
-							'updated_at' => date('Y-m-d H:i:s'),
-							'event_edit_url' => $eventEditUrl);
-
-					}
+				$events = unserialize(get_post_meta($membershipObj->product_id, '_bpms-events', true));
+				if (isset($events[$eventIdentifier])) {
 					if (BPMS_DEBUG) {
-						error_log("Events on Product:");
-						error_log(print_r($events, true));
+						error_log("Event EXISTS for this user, just update grant access");
+						error_log("product_id : $membershipObj->product_id");
+						error_log(print_r($events[$eventIdentifier], true));
 					}
 
-					// Finally serialize and update
-					update_post_meta($membershipObj->product_id, '_bpms-events', serialize($events));
-					self::updateBpmsEnrollments($membershipObj->user_id);
+					$events[$eventIdentifier]['grant_access'] = $grantAccess;
+					$events[$eventIdentifier]['updated_at'] = date('Y-m-d H:i:s');
+				} else {
+					if (BPMS_DEBUG) {
+						error_log("Event DO NOT exists for this user : $membershipObj->user_id");
+					}
+
+					$courseAccessMethod = get_post_meta($membershipObj->product_id, "_bpms-$lmsCourseSlug-$membershipProductSlug-course_access_method", true);
+					if (BPMS_DEBUG) {
+						error_log("Course Access Method selected is : $courseAccessMethod");
+					}
+
+					if ($courseAccessMethod == 'SINGLE_COURSES') {
+						$coursesAttached = unserialize(get_post_meta($membershipObj->product_id, "_bpms-$lmsCourseSlug-$membershipProductSlug-courses_attached", true));
+
+					} else if ($courseAccessMethod == 'ALL_COURSES') {
+						$coursesAttached = self::getLearndashAllCourses();
+					} else if ($courseAccessMethod == 'LD_GROUPS') {
+						$groupsAttached = unserialize(get_post_meta($membershipObj->product_id, "_bpms-$lmsCourseSlug-$membershipProductSlug-groups_attached", true));
+						$coursesAttached = array();
+						foreach ($groupsAttached as $groupId) {
+							$ids = learndash_group_enrolled_courses($groupId);
+							// NOTE : Array format is consistent with GUI
+							$coursesAttached = array_merge($ids, $coursesAttached);
+						}
+					}
+					// error_log(print_r($coursesAttached, true));
+					$events[$eventIdentifier] = array(
+						'user_id' => $membershipObj->user_id,
+						'course_attached' => serialize(array_values($coursesAttached)),
+						'grant_access' => $grantAccess,
+						'created_at' => date('Y-m-d H:i:s'),
+						'updated_at' => date('Y-m-d H:i:s'),
+						'event_edit_url' => $eventEditUrl);
+
 				}
+				if (BPMS_DEBUG) {
+					error_log("Events on Product:");
+					error_log(print_r($events, true));
+				}
+
+				// Finally serialize and update
+				update_post_meta($membershipObj->product_id, '_bpms-events', serialize($events));
+				self::updateBpmsEnrollments($membershipObj->user_id);
 
 			} else if ($membershipProductSlug == WC_PRODUCT_SLUG) {
 
