@@ -452,7 +452,7 @@ class BpMemberships {
 					$events[$eventIdentifier]['updated_at'] = date('Y-m-d H:i:s');
 				} else {
 					if (BPMS_DEBUG) {
-						error_log("Event DO NOT for this user : $membershipObj->user_id");
+						error_log("Event DO NOT exists for this user : $membershipObj->user_id");
 					}
 
 					$courseAccessMethod = get_post_meta($membershipObj->product_id, "_bpms-$lmsCourseSlug-$membershipProductSlug-course_access_method", true);
@@ -464,8 +464,7 @@ class BpMemberships {
 						$coursesAttached = unserialize(get_post_meta($membershipObj->product_id, "_bpms-$lmsCourseSlug-$membershipProductSlug-courses_attached", true));
 
 					} else if ($courseAccessMethod == 'ALL_COURSES') {
-						$coursesAttached = self::getLearndashClosedCourses();
-
+						$coursesAttached = self::getLearndashAllCourses();
 					} else if ($courseAccessMethod == 'LD_GROUPS') {
 
 						$groupsAttached = unserialize(get_post_meta($membershipObj->product_id, "_bpms-$lmsCourseSlug-$membershipProductSlug-groups_attached", true));
@@ -522,7 +521,7 @@ class BpMemberships {
 						$coursesAttached = unserialize(get_post_meta($membershipObj['product_id'], "_bpms-$lmsCourseSlug-$membershipProductSlug-courses_attached", true));
 
 					} else if ($courseAccessMethod == 'ALL_COURSES') {
-						$coursesAttached = self::getLearndashClosedCourses();
+						$coursesAttached = self::getLearndashAllCourses();
 
 					} else if ($courseAccessMethod == 'LD_GROUPS') {
 						$groupsAttached = unserialize(get_post_meta($membershipObj['product_id'], "_bpms-$lmsCourseSlug-$membershipProductSlug-groups_attached", true));
@@ -657,28 +656,12 @@ class BpMemberships {
 	 * @param {boolean} $bypass_transient - Whether to bypass or reuse existing transient for quick retrieval
 	 * @return {array}
 	 */
-	public static function getLearndashClosedCourses($bypass_transient = false) {
+	public static function getLearndashAllCourses() {
 
 		global $wpdb;
 
-		$transient_key = "bpms_learndash_closed_courses";
-
-		if (!$bypass_transient) {
-			$courses_ids_transient = learndash_get_valid_transient($transient_key);
-		} else {
-			$courses_ids_transient = false;
-		}
-
-		if ($courses_ids_transient === false) {
-
-			$sql_str = "SELECT postmeta.post_id as post_id FROM " . $wpdb->postmeta . " as postmeta INNER JOIN " . $wpdb->posts . " as posts ON posts.ID = postmeta.post_id WHERE posts.post_status='publish' AND posts.post_type='sfwd-courses' AND postmeta.meta_key='_sfwd-courses' AND ( postmeta.meta_value REGEXP '\"sfwd-courses_course_price_type\";s:6:\"closed\";' )";
-			$course_ids = $wpdb->get_col($sql_str);
-
-			set_transient($transient_key, $course_ids, MINUTE_IN_SECONDS);
-
-		} else {
-			$course_ids = $courses_ids_transient;
-		}
+		$sql_str = "SELECT postmeta.post_id as post_id FROM " . $wpdb->postmeta . " as postmeta INNER JOIN " . $wpdb->posts . " as posts ON posts.ID = postmeta.post_id WHERE posts.post_status='publish' AND posts.post_type='sfwd-courses' AND postmeta.meta_key='_sfwd-courses'";
+		$course_ids = $wpdb->get_col($sql_str);
 
 		return $course_ids;
 	}
@@ -748,23 +731,23 @@ class BpMemberships {
 		add_action('save_post_product', array($classObj, 'wcProductUpdate'));
 
 		// Order related hooks for WC
-		// add_action('woocommerce_order_status_pending_to_processing', array($classObj, 'wcOrderUpdated'));
-		// add_action('woocommerce_order_status_pending_to_completed', array($classObj, 'wcOrderUpdated'));
-		// add_action('woocommerce_order_status_processing_to_cancelled', array($classObj, 'wcOrderUpdated'));
-		// add_action('woocommerce_order_status_pending_to_failed', array($classObj, 'wcOrderUpdated'));
-		// add_action('woocommerce_order_status_pending_to_on-hold', array($classObj, 'wcOrderUpdated'));
-		// add_action('woocommerce_order_status_failed_to_processing', array($classObj, 'wcOrderUpdated'));
-		// add_action('woocommerce_order_status_failed_to_completed', array($classObj, 'wcOrderUpdated'));
-		// add_action('woocommerce_order_status_failed_to_on-hold', array($classObj, 'wcOrderUpdated'));
-		// add_action('woocommerce_order_status_cancelled_to_processing', array($classObj, 'wcOrderUpdated'));
-		// add_action('woocommerce_order_status_cancelled_to_completed', array($classObj, 'wcOrderUpdated'));
-		// add_action('woocommerce_order_status_cancelled_to_on-hold', array($classObj, 'wcOrderUpdated'));
-		// add_action('woocommerce_order_status_on-hold_to_processing', array($classObj, 'wcOrderUpdated'));
-		// add_action('woocommerce_order_status_on-hold_to_cancelled', array($classObj, 'wcOrderUpdated'));
-		// add_action('woocommerce_order_status_on-hold_to_failed', array($classObj, 'wcOrderUpdated'));
-		// add_action('woocommerce_order_status_completed', array($classObj, 'wcOrderUpdated'));
-		// add_action('woocommerce_order_fully_refunded', array($classObj, 'wcOrderUpdated'));
-		// add_action('woocommerce_order_partially_refunded', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_pending_to_processing', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_pending_to_completed', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_processing_to_cancelled', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_pending_to_failed', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_pending_to_on-hold', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_failed_to_processing', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_failed_to_completed', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_failed_to_on-hold', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_cancelled_to_processing', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_cancelled_to_completed', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_cancelled_to_on-hold', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_on-hold_to_processing', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_on-hold_to_cancelled', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_on-hold_to_failed', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_completed', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_fully_refunded', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_partially_refunded', array($classObj, 'wcOrderUpdated'));
 
 		add_action('woocommerce_order_status_pending', array($classObj, 'wcOrderUpdated'));
 		add_action('woocommerce_order_status_completed', array($classObj, 'wcOrderUpdated'));

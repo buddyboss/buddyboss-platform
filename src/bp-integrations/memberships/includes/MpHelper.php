@@ -222,7 +222,7 @@ class MpHelper {
 					} else if ($courseAccessMethod == 'ALL_COURSES') {
 
 						// NOTE : Array format is consistent with GUI
-						$allClosedCourses = BpMemberships::getLearndashClosedCourses();
+						$allClosedCourses = BpMemberships::getLearndashAllCourses();
 					} else if ($courseAccessMethod == 'LD_GROUPS') {
 
 						$newGroups = array_filter($_REQUEST["bpms-$lmsCourseSlug-$membershipProductType-groups_attached"]);

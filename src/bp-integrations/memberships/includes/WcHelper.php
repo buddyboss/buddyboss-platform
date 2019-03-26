@@ -175,7 +175,7 @@ class WcHelper {
 						update_post_meta($productId, "_bpms-$lmsCourseSlug-$membershipProductType-courses_attached", serialize(array_values($newCourses)));
 					} else if ($courseAccessMethod == 'ALL_COURSES') {
 
-						$allClosedCourses = BpMemberships::getLearndashClosedCourses();
+						$allClosedCourses = BpMemberships::getLearndashAllCourses();
 					} else if ($courseAccessMethod == 'LD_GROUPS') {
 
 						$newGroups = array_filter($_REQUEST["bpms-$lmsCourseSlug-$membershipProductType-groups_attached"]);
