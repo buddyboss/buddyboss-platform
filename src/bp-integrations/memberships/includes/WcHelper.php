@@ -105,7 +105,7 @@ class WcHelper {
 		error_log("Status is : $status");
 
 		$grantValues = array('completed');
-		$revokeValues = array('pending', 'processing', 'on-hold', 'cancelled');
+		$revokeValues = array('pending', 'processing', 'on-hold', 'cancelled', 'refunded');
 
 		if (in_array($status, $revokeValues)) {
 			// revoke access

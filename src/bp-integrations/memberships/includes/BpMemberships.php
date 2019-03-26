@@ -771,6 +771,8 @@ class BpMemberships {
 		add_action('woocommerce_order_status_processing', array($classObj, 'wcOrderUpdated'));
 		add_action('woocommerce_order_status_on-hold', array($classObj, 'wcOrderUpdated'));
 		add_action('woocommerce_order_status_completed', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_cancelled', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_failed', array($classObj, 'wcOrderUpdated'));
 
 		// Subscription related hooks for WC
 		add_action('woocommerce_subscription_status_cancelled', array($classObj, 'wcSubscriptionUpdated'));
