@@ -2086,7 +2086,7 @@ function bp_member_type_import_submenu_page() {
 				<form id="bp-member-type-import-form" method="post" action="">
 					<div class="import-panel-content">
 						<h2><?php _e( 'Import Profile Types', 'buddyboss' ); ?></h2>
-						<p><?php _e( 'Import your existing profile types (or "member types" in BuddyPress). You may have created these types <strong>manually via code</strong> or by using a <strong>third party plugin</strong> previously. The code or plugin needs to be activated on the site first. Then click "Run Migration" below and all of the data will be imported. Then you can disable and remove the old code or plugin.', 'buddyboss' ); ?></p><br/>
+						<p><?php _e( 'Import your existing profile types (or "member types" in BuddyPress). You may have created these types <strong>manually via code</strong> or by using a <strong>third party plugin</strong>. Click "Run Migration" below and all registered member types will be imported. Then you can remove the old code or plugin.', 'buddyboss' ); ?></p><br/>
 
 						<input type="submit" value="<?php _e('Run Migration', 'buddyboss'); ?>" id="bp-member-type-import-submit" name="bp-member-type-import-submit" class="button-primary">
 					</div>
