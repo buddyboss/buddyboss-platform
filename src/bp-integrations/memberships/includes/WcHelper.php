@@ -113,7 +113,8 @@ class WcHelper {
 		} else if (in_array($status, $grantValues)) {
 			// grant access
 			BpMemberships::bpmsUpdateMembershipAccess($wcObj, WC_PRODUCT_SLUG, true);
-		}}
+		}
+	}
 
 	/**
 	 * @param  {object}  $wcObj WooCommerce subscription (Updated) information
@@ -122,8 +123,21 @@ class WcHelper {
 	public static function wcSubscriptionUpdated($wcObj) {
 		if (BPMS_DEBUG) {
 			error_log("wcSubscriptionUpdated() injected, subscription is updated at this point");
-			// error_log(print_r($wcObj, true));
 			// error_log(print_r($wcObj->id, true));
+		}
+
+		$status = $wcObj->status;
+		error_log("Status is : $status");
+
+		$grantValues = array('active');
+		$revokeValues = array('on-hold', 'cancelled', 'expired');
+
+		if (in_array($status, $revokeValues)) {
+			// revoke access
+			BpMemberships::bpmsUpdateMembershipAccess($wcObj, WC_PRODUCT_SLUG, false);
+		} else if (in_array($status, $grantValues)) {
+			// grant access
+			BpMemberships::bpmsUpdateMembershipAccess($wcObj, WC_PRODUCT_SLUG, true);
 		}
 	}
 

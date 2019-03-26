@@ -748,23 +748,23 @@ class BpMemberships {
 		add_action('save_post_product', array($classObj, 'wcProductUpdate'));
 
 		// Order related hooks for WC
-		add_action('woocommerce_order_status_pending_to_processing', array($classObj, 'wcOrderUpdated'));
-		add_action('woocommerce_order_status_pending_to_completed', array($classObj, 'wcOrderUpdated'));
-		add_action('woocommerce_order_status_processing_to_cancelled', array($classObj, 'wcOrderUpdated'));
-		add_action('woocommerce_order_status_pending_to_failed', array($classObj, 'wcOrderUpdated'));
-		add_action('woocommerce_order_status_pending_to_on-hold', array($classObj, 'wcOrderUpdated'));
-		add_action('woocommerce_order_status_failed_to_processing', array($classObj, 'wcOrderUpdated'));
-		add_action('woocommerce_order_status_failed_to_completed', array($classObj, 'wcOrderUpdated'));
-		add_action('woocommerce_order_status_failed_to_on-hold', array($classObj, 'wcOrderUpdated'));
-		add_action('woocommerce_order_status_cancelled_to_processing', array($classObj, 'wcOrderUpdated'));
-		add_action('woocommerce_order_status_cancelled_to_completed', array($classObj, 'wcOrderUpdated'));
-		add_action('woocommerce_order_status_cancelled_to_on-hold', array($classObj, 'wcOrderUpdated'));
-		add_action('woocommerce_order_status_on-hold_to_processing', array($classObj, 'wcOrderUpdated'));
-		add_action('woocommerce_order_status_on-hold_to_cancelled', array($classObj, 'wcOrderUpdated'));
-		add_action('woocommerce_order_status_on-hold_to_failed', array($classObj, 'wcOrderUpdated'));
-		add_action('woocommerce_order_status_completed', array($classObj, 'wcOrderUpdated'));
-		add_action('woocommerce_order_fully_refunded', array($classObj, 'wcOrderUpdated'));
-		add_action('woocommerce_order_partially_refunded', array($classObj, 'wcOrderUpdated'));
+		// add_action('woocommerce_order_status_pending_to_processing', array($classObj, 'wcOrderUpdated'));
+		// add_action('woocommerce_order_status_pending_to_completed', array($classObj, 'wcOrderUpdated'));
+		// add_action('woocommerce_order_status_processing_to_cancelled', array($classObj, 'wcOrderUpdated'));
+		// add_action('woocommerce_order_status_pending_to_failed', array($classObj, 'wcOrderUpdated'));
+		// add_action('woocommerce_order_status_pending_to_on-hold', array($classObj, 'wcOrderUpdated'));
+		// add_action('woocommerce_order_status_failed_to_processing', array($classObj, 'wcOrderUpdated'));
+		// add_action('woocommerce_order_status_failed_to_completed', array($classObj, 'wcOrderUpdated'));
+		// add_action('woocommerce_order_status_failed_to_on-hold', array($classObj, 'wcOrderUpdated'));
+		// add_action('woocommerce_order_status_cancelled_to_processing', array($classObj, 'wcOrderUpdated'));
+		// add_action('woocommerce_order_status_cancelled_to_completed', array($classObj, 'wcOrderUpdated'));
+		// add_action('woocommerce_order_status_cancelled_to_on-hold', array($classObj, 'wcOrderUpdated'));
+		// add_action('woocommerce_order_status_on-hold_to_processing', array($classObj, 'wcOrderUpdated'));
+		// add_action('woocommerce_order_status_on-hold_to_cancelled', array($classObj, 'wcOrderUpdated'));
+		// add_action('woocommerce_order_status_on-hold_to_failed', array($classObj, 'wcOrderUpdated'));
+		// add_action('woocommerce_order_status_completed', array($classObj, 'wcOrderUpdated'));
+		// add_action('woocommerce_order_fully_refunded', array($classObj, 'wcOrderUpdated'));
+		// add_action('woocommerce_order_partially_refunded', array($classObj, 'wcOrderUpdated'));
 
 		add_action('woocommerce_order_status_pending', array($classObj, 'wcOrderUpdated'));
 		add_action('woocommerce_order_status_completed', array($classObj, 'wcOrderUpdated'));
@@ -772,9 +772,11 @@ class BpMemberships {
 		add_action('woocommerce_order_status_on-hold', array($classObj, 'wcOrderUpdated'));
 		add_action('woocommerce_order_status_completed', array($classObj, 'wcOrderUpdated'));
 		add_action('woocommerce_order_status_cancelled', array($classObj, 'wcOrderUpdated'));
+		add_action('woocommerce_order_status_refunded', array($classObj, 'wcOrderUpdated'));
 		add_action('woocommerce_order_status_failed', array($classObj, 'wcOrderUpdated'));
 
 		// Subscription related hooks for WC
+		add_action('woocommerce_subscription_status_pending', array($classObj, 'wcSubscriptionUpdated'));
 		add_action('woocommerce_subscription_status_cancelled', array($classObj, 'wcSubscriptionUpdated'));
 		add_action('woocommerce_subscription_status_on-hold', array($classObj, 'wcSubscriptionUpdated'));
 		add_action('woocommerce_subscription_status_expired', array($classObj, 'wcSubscriptionUpdated'));
