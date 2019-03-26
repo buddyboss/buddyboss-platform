@@ -310,7 +310,12 @@ function bp_ps_clear_form_elements( ele ) {
         }
     });
 
-    $form.submit();
-
-    return false;
+	jQuery.removeCookie('bp_ps_request', { path: '/' });
+	var redirect_url = '';
+	setTimeout(
+		function()
+		{
+			redirect_url = window.location.href;
+			window.location.href = redirect_url;
+		}, 1000);
 }
