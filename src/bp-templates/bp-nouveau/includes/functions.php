@@ -967,13 +967,25 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'info',
 			'message' => __( 'You may download a copy of all data you have created on this platform. Click the button below to start a new request. An email will be sent to you to verify the request. Then the site admin will review your request and if approved, a zip file will be generated and emailed to you.', 'buddyboss' ),
 		),
+		'member-media-loading' => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading media for the member. Please wait.', 'buddyboss' ),
+		),
+		'media-loop-none' => array(
+			'type'    => 'info',
+			'message' => __( 'Sorry, no media was found.', 'buddyboss' ),
+		),
 		'member-media-none' => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, no media was found.', 'buddyboss' ),
 		),
-		'member-media-album-none' => array(
+		'media-album-none' => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, no album was found.', 'buddyboss' ),
+		),
+		'album-media-loading' => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading media from the album. Please wait.', 'buddyboss' ),
 		),
 		'directory-media-loading' => array(
 			'type'    => 'loading',

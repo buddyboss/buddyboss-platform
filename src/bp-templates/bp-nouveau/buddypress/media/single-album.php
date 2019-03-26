@@ -47,28 +47,13 @@ $album_id = (int) bp_action_variable( 0 );
 <!--                    </select>-->
                 </div>
 
-	            <?php bp_get_template_part( 'members/single/media/uploader' ); ?>
+	            <?php bp_get_template_part( 'media/uploader' ); ?>
 
-                <ul class="bb-photo-list">
+                <div id="media-stream" class="media" data-bp-list="media">
 
-                <?php if ( $total_media > 0 ) {
-                    ?>
-                        <?php foreach( $media_album_template->album->media['medias'] as $media ) {
-                            ?>
-                            <li data-id="<?php echo $media->id; ?>" class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3">
+                    <div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'album-media-loading' ); ?></div>
 
-                                <div class="bb-photo-thumb">
-                                    <a class="bb-photo-cover-wrap" href="#">
-                                        <img src="<?php echo $media->attachment_data->thumb; ?>"/></a>
-                                </div>
-
-                            </li>
-                            <?php
-                        } ?>
-                    <?php
-                } ?>
-
-                </ul>
+                </div>
 
             </div>
         </div>

@@ -71,9 +71,17 @@ window.bp = window.bp || {};
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-album-submit', this.submitAlbum.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-album-close', this.closeCreateAlbumModal.bind( this ) );
 
+			$( '.bp-nouveau' ).on( 'click', '#bp-media-add-more', this.triggerDropzoneSelectFileDialog.bind( this ) );
+
 			// Fetch Media
 			$( '.bp-nouveau [data-bp-list="media"]' ).on( 'click', 'li.load-more', this.injectMedias.bind( this ) );
 
+		},
+
+		triggerDropzoneSelectFileDialog: function() {
+			var self = this;
+
+			self.dropzone_obj.hiddenFileInput.click();
 		},
 
 		closeUploader: function(event) {
@@ -173,7 +181,14 @@ window.bp = window.bp || {};
 				data: data,
 				success: function (response) {
 					if ( response.success ) {
-						$('.bb-photo-list').prepend(response.data.media);
+
+						// It's the very first media, let's make sure the container can welcome it!
+						if ( ! $( '#media-stream ul.media-list').length ) {
+							$( '#media-stream' ).html( $( '<ul></ul>').addClass( 'media-list item-list bp-list bb-photo-list grid' ) );
+						}
+
+						// Prepend the activity.
+						bp.Nouveau.inject( '#media-stream ul.media-list', response.data.media, 'prepend' );
 						self.closeUploader(event);
 					}
 
@@ -199,7 +214,7 @@ window.bp = window.bp || {};
 				data: data,
 				success: function (response) {
 					if ( response.success ) {
-						$('.bb-album-list').prepend(response.data.album);
+						$('#buddypress .bb-albums-list').prepend(response.data.album);
 						self.closeCreateAlbumModal(event);
 					}
 				}

@@ -5,8 +5,6 @@
  * @since BuddyBoss 1.0.0
  */
 
-global $media_template;
-
 bp_nouveau_before_loop(); ?>
 
 <?php if ( bp_has_media( bp_ajax_querystring( 'media' ) ) ) : ?>
