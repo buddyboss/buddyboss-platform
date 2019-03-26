@@ -209,6 +209,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 		// Set the forum slug on edit page from backend.
 		add_action( 'save_post', array( $this, 'bp_change_forum_slug_on_edit_save_page'), 10, 2 );
 
+		// Set the Forums to selected in menu items.
+		add_filter( 'nav_menu_css_class', array( $this, 'bbp_set_forum_selected_menu_class'), 10, 3 );
+
 		/** Override **********************************************************/
 
 		/**
@@ -219,6 +222,44 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 * @param BP_Nouveau $this Current BP_Nouveau instance.
 		 */
 		do_action_ref_array( 'bp_theme_compat_actions', array( &$this ) );
+	}
+
+	/**
+	 * Set the Forums to selected in menu items
+	 *
+	 * @param array $classes
+	 * @param bool $item
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @return array
+	 */
+	public function bbp_set_forum_selected_menu_class( $classes = array(), $item = false ) {
+
+		// Protocol
+		$url = ( 'on' == $_SERVER['HTTPS'] ) ? 'https://' : 'http://';
+		$url .= $_SERVER['SERVER_NAME'];
+		$url .= $_SERVER['REQUEST_URI'];
+
+		// Get current URL
+		$current_url = trailingslashit( $url );
+
+		// Get homepage URL
+		$homepage_url = trailingslashit( get_bloginfo( 'url' ) );
+
+		// Exclude 404 and homepage
+		if( is_404() or $item->url == $homepage_url )
+			return $classes;
+
+		if ( 'forum' === get_post_type() || 'topic' === get_post_type() )
+		{
+			unset($classes[array_search('current_page_parent',$classes)]);
+			if ( isset($item->url) )
+				if ( strstr( $current_url, $item->url) )
+					$classes[] = 'current-menu-item';
+		}
+
+		return $classes;
 	}
 
 	/**
