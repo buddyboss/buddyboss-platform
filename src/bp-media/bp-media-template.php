@@ -652,7 +652,39 @@ function bp_get_media_date_created() {
 }
 
 /**
- * Output the media date created.
+ * Output the media attachment thumbnail.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_media_attachment_image_thumbnail() {
+	echo bp_get_media_attachment_image_thumbnail();
+}
+
+/**
+ * Return the media attachment thumbnail.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return string The media attachment thumbnail url.
+ */
+function bp_get_media_attachment_image_thumbnail() {
+	global $media_template;
+
+	/**
+	 * Filters the media thumbnail being displayed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string The media thumbnail.
+	 */
+	return apply_filters( 'bp_get_media_attachment_image', $media_template->media->attachment_data->thumb );
+}
+
+/**
+ * Output the media attachment.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -662,25 +694,25 @@ function bp_media_attachment_image() {
 }
 
 /**
- * Return the media date created.
+ * Return the media attachment.
  *
  * @since BuddyBoss 1.0.0
  *
  * @global object $media_template {@link BP_Media_Template}
  *
- * @return string The media date created.
+ * @return string The media attachment url.
  */
 function bp_get_media_attachment_image() {
 	global $media_template;
 
 	/**
-	 * Filters the media date created being displayed.
+	 * Filters the media image being displayed.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param string The date created.
+	 * @param string The full image.
 	 */
-	return apply_filters( 'bp_get_media_attachment_image', $media_template->media->attachment_data->thumb );
+	return apply_filters( 'bp_get_media_attachment_image', $media_template->media->attachment_data->full );
 }
 
 //****************************** Media Albums *********************************//

@@ -1209,7 +1209,7 @@ class BP_XProfile_Field {
 	public function render_admin_form( $message = '', $message_type = 'error' ) {
 
 		// Users Admin URL
-		$users_url = bp_get_admin_url( 'users.php' );
+		$users_url = bp_get_admin_url( 'admin.php' );
 
 		// Add New
 		if ( empty( $this->id ) ) {
@@ -1349,7 +1349,7 @@ class BP_XProfile_Field {
 	private function submit_metabox( $button_text = '' ) {
 
 		// Setup the URL for deleting
-		$users_url  = bp_get_admin_url( 'users.php' );
+		$users_url  = bp_get_admin_url( 'admin.php' );
 		$cancel_url = add_query_arg( array(
 			'page' => 'bp-profile-setup'
 		), $users_url );
