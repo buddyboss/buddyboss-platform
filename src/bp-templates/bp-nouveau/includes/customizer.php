@@ -43,7 +43,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'description' => __( 'Configure general BuddyBoss appearance options.', 'buddyboss' ),
 		),
 		'bp_nouveau_user_primary_nav' => array(
-			'title'       => __( 'Profile navigation', 'buddyboss' ),
+			'title'       => __( 'Profile Navigation', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 50,
 			'description' => __( 'Customize the navigation menu for member profiles. In the preview window, navigate to a user to preview your changes.', 'buddyboss' ),

@@ -2375,7 +2375,7 @@ function bp_core_get_groups_admin_tabs( $active_tab = '') {
 	$section_link = add_query_arg( $query, admin_url( 'customize.php' ) );
 	$tabs[] = array(
 		'href'  => esc_url( $section_link ),
-		'name'  => __( 'Customize Layout', 'buddypress' ),
+		'name'  => __( 'Group Navigation', 'buddypress' ),
 		'class' => 'bp-group-customize-layout',
 	);
 
