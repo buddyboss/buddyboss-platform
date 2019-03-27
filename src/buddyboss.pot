@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-26 15:42:14+00:00\n"
+"POT-Creation-Date: 2019-03-27 06:17:41+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -519,7 +519,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-admin.php:2244
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:29
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/index.php:120
-#: bp-templates/bp-nouveau/includes/activity/functions.php:178
+#: bp-templates/bp-nouveau/includes/activity/functions.php:181
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1394
 #: bp-xprofile/classes/class-bp-xprofile-group.php:881
 msgid "Cancel"
@@ -834,7 +834,7 @@ msgstr[1] ""
 #: bp-messages/bp-messages-template.php:724
 #: bp-messages/classes/class-bp-messages-component.php:367
 #: bp-notifications/classes/class-bp-notifications-component.php:292
-#: bp-templates/bp-nouveau/includes/activity/functions.php:92
+#: bp-templates/bp-nouveau/includes/activity/functions.php:95
 #: bp-xprofile/classes/class-bp-xprofile-component.php:441
 #. translators: %s = member name
 msgid "Profile photo of %s"
@@ -1090,7 +1090,7 @@ msgid "Replies disabled"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:630
-#: bp-core/bp-core-cssjs.php:171
+#: bp-core/bp-core-cssjs.php:177
 #: bp-templates/bp-nouveau/buddypress-functions.php:547
 msgid "Are you sure?"
 msgstr ""
@@ -1904,9 +1904,8 @@ msgstr ""
 msgid ""
 "Import your existing profile types (or \"member types\" in BuddyPress). You "
 "may have created these types <strong>manually via code</strong> or by using "
-"a <strong>third party plugin</strong> previously. The code or plugin needs "
-"to be activated on the site first. Then click \"Run Migration\" below and "
-"all of the data will be imported. Then you can disable and remove the old "
+"a <strong>third party plugin</strong>. Click \"Run Migration\" below and "
+"all registered member types will be imported. Then you can remove the old "
 "code or plugin."
 msgstr ""
 
@@ -13198,39 +13197,35 @@ msgstr ""
 msgid "Media Settings"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:32
-msgid "Groups Media"
-msgstr ""
-
-#: bp-media/bp-media-settings.php:39 bp-media/bp-media-settings.php:91
-msgid "Forums Media"
-msgstr ""
-
-#: bp-media/bp-media-settings.php:60
+#: bp-media/bp-media-settings.php:46
 msgid "Media Management"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:72
+#: bp-media/bp-media-settings.php:57
 msgid "Group Media"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:79
+#: bp-media/bp-media-settings.php:64
 msgid "Group Albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:192
+#: bp-media/bp-media-settings.php:74
+msgid "Forums Media"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:173
 msgid "When a photo upload is removed, permanently delete the associated media file"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:224
+#: bp-media/bp-media-settings.php:205
 msgid "Allow photo posting in forum discussions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:256
+#: bp-media/bp-media-settings.php:237
 msgid "Allow photo posting in social group activity updates and comments"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:289
+#: bp-media/bp-media-settings.php:270
 msgid "Enable social group photo albums"
 msgstr ""
 
@@ -14756,7 +14751,7 @@ msgid "Load More"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/post-form.php:17
-#: bp-templates/bp-nouveau/includes/activity/functions.php:177
+#: bp-templates/bp-nouveau/includes/activity/functions.php:180
 msgid "Post Update"
 msgstr ""
 
@@ -14847,7 +14842,7 @@ msgstr ""
 msgid "Processing..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/form.php:145
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/form.php:146
 msgid "Remove item"
 msgstr ""
 
@@ -15761,64 +15756,64 @@ msgstr ""
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:148
+#: bp-templates/bp-nouveau/includes/activity/functions.php:151
 msgid "Post in: Profile"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:157
+#: bp-templates/bp-nouveau/includes/activity/functions.php:160
 msgid "Post in: Group"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:158
+#: bp-templates/bp-nouveau/includes/activity/functions.php:161
 msgid "Start typing the group name&hellip;"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:174
+#: bp-templates/bp-nouveau/includes/activity/functions.php:177
 msgid "Write here or use @ to mention someone."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:175
+#: bp-templates/bp-nouveau/includes/activity/functions.php:178
 msgid "Post what's new"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:176
+#: bp-templates/bp-nouveau/includes/activity/functions.php:179
 msgid "Post in"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:179
+#: bp-templates/bp-nouveau/includes/activity/functions.php:182
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:233
 msgid "%d Comment"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:180
+#: bp-templates/bp-nouveau/includes/activity/functions.php:183
 msgid "%d Comments"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:184
+#: bp-templates/bp-nouveau/includes/activity/functions.php:187
 msgid "Write something to %s..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:188
+#: bp-templates/bp-nouveau/includes/activity/functions.php:191
 msgid "Share something with your group..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:219
+#: bp-templates/bp-nouveau/includes/activity/functions.php:222
 msgid "All Updates"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:247
+#: bp-templates/bp-nouveau/includes/activity/functions.php:250
 msgid "My Likes"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:468
+#: bp-templates/bp-nouveau/includes/activity/functions.php:471
 msgid "New mentions"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:473
+#: bp-templates/bp-nouveau/includes/activity/functions.php:476
 msgid "New update replies"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:478
+#: bp-templates/bp-nouveau/includes/activity/functions.php:481
 msgid "New update comment replies"
 msgstr ""
 
@@ -16504,11 +16499,11 @@ msgstr ""
 msgid "Remove from group"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1296
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1304
 msgid "Groups default front page"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1314
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1322
 msgid "widgets (content blocks)"
 msgstr ""
 

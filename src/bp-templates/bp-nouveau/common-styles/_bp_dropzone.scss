@@ -61,7 +61,7 @@
 	display: block;
 	background: #f0f3f7;
 
-    img {
+        img {
 		position: absolute;
 		top: 0;
 		bottom: 0;
@@ -567,7 +567,8 @@
 		font-size: 16px;
 		color: #122b46;
 		letter-spacing: -0.24px;
-		line-height: 26px;
+        line-height: 26px;
+        padding: 20px 0;
 
         &:before {
 			display: none;
