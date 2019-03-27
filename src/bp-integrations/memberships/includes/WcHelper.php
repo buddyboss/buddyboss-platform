@@ -98,7 +98,7 @@ class WcHelper {
 
 		if (BPMS_DEBUG) {
 			error_log("wcOrderUpdated() injected, order is updated at this point");
-			// error_log(print_r($wcObj, true));
+			error_log(print_r($wcObj, true));
 		}
 		$isRecurring = self::wcIsRecurring($wcObj);
 		$grantStatus = self::wcIdentifyGrantStatus($wcObj);
@@ -108,15 +108,16 @@ class WcHelper {
 		if (BPMS_DEBUG) {
 			error_log("WcHelper->wcOrderUpdated, Status : $status, isRecurring : $isRecurring");
 		}
+
 		error_log("WcHelper->wcOrderUpdated, Status : $status, isRecurring : $isRecurring");
 
-		// if (in_array($status, $revokeStatus)) {
-		// 	// revoke access
-		// 	BpMemberships::bpmsUpdateMembershipAccess($wcObj, WC_PRODUCT_SLUG, false);
-		// } else if (in_array($status, $grantStatus)) {
-		// 	// grant access
-		// 	BpMemberships::bpmsUpdateMembershipAccess($wcObj, WC_PRODUCT_SLUG, true);
-		// }
+		if (in_array($status, $revokeStatus)) {
+			// revoke access
+			BpMemberships::bpmsUpdateMembershipAccess($wcObj, WC_PRODUCT_SLUG, false);
+		} else if (in_array($status, $grantStatus)) {
+			// grant access
+			BpMemberships::bpmsUpdateMembershipAccess($wcObj, WC_PRODUCT_SLUG, true);
+		}
 	}
 
 	/**
@@ -129,12 +130,15 @@ class WcHelper {
 			// error_log(print_r($wcObj->id, true));
 		}
 
-		$status = $wcObj->status;
-		error_log("Status is : $status");
-
 		$isRecurring = self::wcIsRecurring($wcObj);
 		$grantStatus = self::wcIdentifyGrantStatus($wcObj);
 		$revokeStatus = self::wcIdentifyRevokeStatus($wcObj);
+
+		$status = $wcObj->status;
+		if (BPMS_DEBUG) {
+			error_log("WcHelper->wcSubscriptionUpdated, Status : $status, isRecurring : $isRecurring");
+		}
+		error_log("WcHelper->wcSubscriptionUpdated, Status : $status, isRecurring : $isRecurring");
 
 		if (in_array($status, $revokeStatus)) {
 			// revoke access
@@ -153,14 +157,8 @@ class WcHelper {
 	public static function wcIsRecurring($wcObj) {
 
 		$isRecurring = false;
-		// Case-1) New but Recurring transaction
-		if (isset($wcObj->subscription_id) && $wcObj->subscription_id != 0) {
-			$isRecurring = true;
-		}
-
-		// Case-2) Existing but Recurring transaction
-		if (isset($wcObj->subscr_id)) {
-			$isRecurring = true;
+		if (isset($wcObj->order_type)) {
+			$isRecurring = $wcObj->order_type == 'shop_subscription' ? true : false;
 		}
 
 		return $isRecurring;

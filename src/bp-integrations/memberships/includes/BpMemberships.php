@@ -347,6 +347,7 @@ class BpMemberships {
 		if (BPMS_DEBUG) {
 			error_log("updateBpmsEnrollments(), userId is : $userId");
 		}
+		error_log("updateBpmsEnrollments(), userId is : $userId");
 
 		$accessList = array();
 		$lmsCourseSlugs = self::getLmsCourseSlugs(LD_COURSE_SLUG);
@@ -401,6 +402,8 @@ class BpMemberships {
 				error_log("accessList is below:");
 				error_log(print_r($accessList, true));
 			}
+			error_log("accessList is below:");
+			error_log(print_r($accessList, true));
 
 			// Grant or Revoke based on grantFlag
 			foreach ($accessList as $courseId => $grantFlag) {
@@ -454,7 +457,6 @@ class BpMemberships {
 
 				}
 
-				// NOTE : MUST do this to ignoring repeatition
 				$events = unserialize(get_post_meta($membershipObj->product_id, '_bpms-events', true));
 				if (isset($events[$eventIdentifier])) {
 					if (BPMS_DEBUG) {
@@ -510,9 +512,16 @@ class BpMemberships {
 
 			} else if ($membershipProductSlug == WC_PRODUCT_SLUG) {
 
-				//@todo : Verify if subscription object is different than normal order
-				$eventIdentifier = $membershipProductSlug . '-' . $membershipObj['order_id'];
-				$eventEditUrl = "post.php?post=" . $membershipObj['order_id'] . "&action=edit";
+				$isRecurring = WcHelper::wcIsRecurring($membershipObj);
+				$assignedId = $membershipObj['order_id'];
+
+				if ($isRecurring) {
+					$eventIdentifier = "$membershipProductSlug-RECURRING-$assignedId";
+
+				} else {
+					$eventIdentifier = "$membershipProductSlug-NON-RECURRING-$assignedId";
+				}
+				$eventEditUrl = "post.php?post=$assignedId&action=edit";
 
 				$events = unserialize(get_post_meta($membershipObj['product_id'], '_bpms-events', true));
 				if (isset($events[$eventIdentifier])) {
@@ -524,16 +533,21 @@ class BpMemberships {
 					$events[$eventIdentifier]['grant_access'] = $grantAccess;
 					$events[$eventIdentifier]['updated_at'] = date('Y-m-d H:i:s');
 				} else {
-					$courseAccessMethod = get_post_meta($membershipObj['product_id'], "_bpms-$lmsCourseSlug-$membershipProductSlug-course_access_method", true);
 
 					if (BPMS_DEBUG) {
 						error_log("Event DO NOT exists for this user : " . $membershipObj['customer_id']);
+					}
+					$courseAccessMethod = get_post_meta($membershipObj['product_id'], "_bpms-$lmsCourseSlug-$membershipProductSlug-course_access_method", true);
+
+					if (BPMS_DEBUG) {
 						error_log("Course Access Method selected is : $courseAccessMethod");
 					}
 
 					if ($courseAccessMethod == 'SINGLE_COURSES') {
 						$coursesAttached = unserialize(get_post_meta($membershipObj['product_id'], "_bpms-$lmsCourseSlug-$membershipProductSlug-courses_attached", true));
 
+						error_log("Course Access Method selected is : $courseAccessMethod");
+						error_log(print_r($coursesAttached, true));
 					} else if ($courseAccessMethod == 'ALL_COURSES') {
 						$coursesAttached = self::getLearndashAllCourses();
 
@@ -546,16 +560,25 @@ class BpMemberships {
 							$coursesAttached = array_merge($ids, $coursesAttached);
 						}
 					}
+
 					if (BPMS_DEBUG) {
 						error_log(print_r($coursesAttached, true));
 					}
-					$events[$eventIdentifier] = array('user_id' => $membershipObj['customer_id'], 'course_attached' => serialize(array_values($coursesAttached)), 'grant_access' => $grantAccess, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'), 'event_edit_url' => $eventEditUrl);
+					$events[$eventIdentifier] = array(
+						'user_id' => $membershipObj['customer_id'],
+						'course_attached' => serialize(array_values($coursesAttached)),
+						'grant_access' => $grantAccess,
+						'created_at' => date('Y-m-d H:i:s'),
+						'updated_at' => date('Y-m-d H:i:s'),
+						'event_edit_url' => $eventEditUrl);
 
 				}
 				if (BPMS_DEBUG) {
 					error_log("Events on Product:");
 					error_log(print_r($events, true));
 				}
+				error_log("Events on Product:");
+				error_log(print_r($events, true));
 
 				// Finally serialize and update
 				update_post_meta($membershipObj['product_id'], '_bpms-events', serialize($events));
@@ -623,12 +646,9 @@ class BpMemberships {
 
 				$isEnabled = get_post_meta($membershipObj->product_id, "_bpms-$lmsCourseSlug-$membershipProductSlug-is_enabled", true);
 				if ($isEnabled) {
-					error_log("isEnabled");
 
 					// NOTE : Update BBMS Event
 					self::updateBpmsMembershipEvent($membershipObj, $membershipProductSlug, $grantAccess);
-				} else {
-					error_log("isDisabled");
 				}
 			} else if ($membershipProductSlug == WC_PRODUCT_SLUG) {
 				$items = $membershipObj->get_items();
