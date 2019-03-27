@@ -2731,6 +2731,18 @@ function bp_is_media_directory() {
 	return false;
 }
 
+/**
+ * Is the current page a single album item permalink?
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is a single album item permalink.
+ */
+function bp_is_single_album() {
+	return (bool) ( bp_is_media_component() && 'albums' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
+}
+
+
 /** Groups ********************************************************************/
 
 /**

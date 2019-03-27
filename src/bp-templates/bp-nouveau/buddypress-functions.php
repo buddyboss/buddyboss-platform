@@ -206,6 +206,12 @@ class BP_Nouveau extends BP_Theme_Compat {
 		// Set the BP Uri for the Ajax customizer preview
 		add_filter( 'bp_uri', array( $this, 'customizer_set_uri' ), 10, 1 );
 
+		// Set the forum slug on edit page from backend.
+		add_action( 'save_post', array( $this, 'bp_change_forum_slug_on_edit_save_page'), 10, 2 );
+
+		// Set the Forums to selected in menu items.
+		add_filter( 'nav_menu_css_class', array( $this, 'bbp_set_forum_selected_menu_class'), 10, 3 );
+
 		/** Override **********************************************************/
 
 		/**
@@ -216,6 +222,75 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 * @param BP_Nouveau $this Current BP_Nouveau instance.
 		 */
 		do_action_ref_array( 'bp_theme_compat_actions', array( &$this ) );
+	}
+
+	/**
+	 * Set the Forums to selected in menu items
+	 *
+	 * @param array $classes
+	 * @param bool $item
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @return array
+	 */
+	public function bbp_set_forum_selected_menu_class( $classes = array(), $item = false ) {
+
+		// Protocol
+		$url = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+
+		// Get current URL
+		$current_url = trailingslashit( $url );
+
+		// Get homepage URL
+		$homepage_url = trailingslashit( get_bloginfo( 'url' ) );
+
+		// Exclude 404 and homepage
+		if( is_404() or $item->url == $homepage_url )
+			return $classes;
+
+		if ( 'forum' === get_post_type() || 'topic' === get_post_type() )
+		{
+			unset($classes[array_search('current_page_parent',$classes)]);
+			if ( isset($item->url) )
+				if ( strstr( $current_url, $item->url) )
+					$classes[] = 'current-menu-item';
+		}
+
+		return $classes;
+	}
+
+	/**
+	 * Set the forum slug on edit page from backend.
+	 *
+	 * @param $post_id
+	 * @param $post
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function bp_change_forum_slug_on_edit_save_page( $post_id, $post ) {
+		// if called by autosave, then bail here
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+			return;
+
+		// if this "post" post type?
+		if ( $post->post_type != 'page' )
+			return;
+
+		// does this user have permissions?
+		if ( ! current_user_can( 'edit_post', $post_id ) )
+			return;
+
+		// update!
+		$forum_page_id = (int) bp_get_option('_bbp_root_slug_custom_slug');
+
+		if ( $forum_page_id > 0  && $forum_page_id === $post_id ) {
+			$slug = get_post_field( 'post_name', $post_id );
+			if ( '' !== $slug ) {
+				bp_update_option( '_bbp_root_slug', $slug );
+				bp_update_option( 'rewrite_rules', '' );
+			}
+		}
 	}
 
 	public function platform_login_scripts() {
@@ -236,10 +311,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 				}
 				if ( jQuery('.popup-modal-login').length ) {
 					jQuery('.popup-modal-login').magnificPopup({
-						type: 'inline',
-						preloader: false,
-						fixedContentPos: true,
-						modal: true
+                        type: 'inline',
+    					preloader: false,
+                        fixedBgPos: true,
+    					fixedContentPos: true
 					});
 					jQuery('.popup-modal-dismiss').click(function (e) {
 						e.preventDefault();

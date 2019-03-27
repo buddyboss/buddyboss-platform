@@ -2927,7 +2927,7 @@ function bp_register_member_type_section() {
 	add_filter( 'body_class', 'bp_member_type_shortcode_add_body_class' );
 
 	// Hook for creating a profile type shortcode.
-	add_shortcode( 'profile', 'bp_member_type_shortcode_callback' );
+	add_shortcode( 'member', 'bp_member_type_shortcode_callback' );
 
 	// action for adding the js for the profile type post type.
 	add_action('admin_enqueue_scripts', 'bp_member_type_changing_listing_label');

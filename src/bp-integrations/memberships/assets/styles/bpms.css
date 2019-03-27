@@ -4,7 +4,7 @@
 
 #bpms-learndash-memberpressproduct-search_courses_wrapper,
 #bpms-learndash-memberpressproduct-search_groups_wrapper {
-    padding: 15px 0;
+	padding: 15px 0;
 }
 
 /**
@@ -14,11 +14,11 @@
 /* LearnDash Menu Icon */
 
 li.sfwd-courses_tab a:before {
-    font-family: dashicons !important;
-    content: "\f118" !important;
+	font-family: dashicons !important;
+	content: "\f118" !important;
 }
 
 #bpms-learndash-product-search_courses_wrapper,
 #bpms-learndash-product-search_groups_wrapper {
-    padding: 15px 0;
+	padding: 15px 0;
 }

@@ -75,6 +75,8 @@ function bp_core_register_common_scripts() {
 
         'giphy'        => array( 'file' => "{$url}vendor/giphy{$min}.js", 'dependencies' => array(), 'footer' => true ),
 
+        'emojionearea'        => array( 'file' => "{$url}emojionearea-edited{$min}.js", 'dependencies' => array(), 'footer' => true ),
+
 	);
 
 	// Version 2.7 - Add Moment.js locale to our $scripts array if we found one.
@@ -140,6 +142,10 @@ function bp_core_register_common_styles() {
 		'bp-avatar' => array(
 			'file'         => "{$url}avatar{$min}.css",
 			'dependencies' => array( 'jcrop' )
+		),
+		'emojionearea' => array(
+			'file'         => "{$url}emojionearea-edited{$min}.css",
+			'dependencies' => array()
 		),
 	) );
 

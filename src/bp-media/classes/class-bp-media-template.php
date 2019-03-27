@@ -141,6 +141,7 @@ class BP_Media_Template {
 			'page_arg'          => 'acpage',
 			'max'               => false,
 			'user_id'           => false,
+			'album_id'          => false,
 			'fields'            => 'all',
 			'count_total'       => false,
 			'sort'              => false,
@@ -169,6 +170,7 @@ class BP_Media_Template {
 				'per_page'          => $this->pag_num,
 				'sort'              => $sort,
 				'user_id'           => $user_id,
+				'album_id'          => $album_id,
 				'update_meta_cache' => $update_meta_cache,
 			) );
 
@@ -182,6 +184,7 @@ class BP_Media_Template {
 				'sort'              => $sort,
 				'search_terms'      => $search_terms,
 				'user_id'           => $user_id,
+				'album_id'          => $album_id,
 				'exclude'           => $exclude,
 				'update_meta_cache' => $update_meta_cache,
 			) );

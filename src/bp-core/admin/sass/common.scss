@@ -1128,3 +1128,23 @@ td label.platform-activity {
 	line-height: 1.5;
 	margin: 0 0 1em;
 }
+
+/* Customize tabs */
+.nav-tab-wrapper {
+
+	.bp-user-customizer,
+	.bp-group-customizer,
+	.bp-emails-customizer {
+		padding-right: 6px;
+	}
+
+	.bp-user-customizer:after,
+	.bp-group-customizer:after,
+	.bp-emails-customizer:after {
+		font-family: dashicons;
+		content: "\f345";
+		margin-left: 3px;
+		display: inline-block;
+		vertical-align: top;
+	}
+}

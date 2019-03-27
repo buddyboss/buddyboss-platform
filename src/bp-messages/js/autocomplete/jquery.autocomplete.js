@@ -232,7 +232,7 @@ $.Autocompleter = function(input, options) {
 			stopLoading();
 			select.hide();
 		}
-	};
+	}
 
 	function trimWords(value) {
 		if ( !value ) {
@@ -264,12 +264,12 @@ $.Autocompleter = function(input, options) {
 			// select the portion of the value not typed by the user (so the next character will erase)
 			$.Autocompleter.Selection(input, previousValue.length, previousValue.length + sValue.length);
 		}
-	};
+	}
 
 	function hideResults() {
 		clearTimeout(timeout);
 		timeout = setTimeout(hideResultsNow, 200);
-	};
+	}
 
 	function hideResultsNow() {
 		select.hide();
@@ -284,7 +284,7 @@ $.Autocompleter = function(input, options) {
 				}
 			);
 		}
-	};
+	}
 
 	function receiveData(q, data) {
 		if ( data && data.length && hasFocus ) {
@@ -299,7 +299,7 @@ $.Autocompleter = function(input, options) {
 		} else {
 			hideResultsNow();
 		}
-	};
+	}
 
 	function request(term, success, failure) {
 		if (!options.matchCase)
@@ -338,7 +338,7 @@ $.Autocompleter = function(input, options) {
 		} else {
 			failure(term);
 		}
-	};
+	}
 
 	function parse(data) {
 		var parsed = [];
@@ -355,12 +355,12 @@ $.Autocompleter = function(input, options) {
 			}
 		}
 		return parsed;
-	};
+	}
 
 	function stopLoading() {
 		$input.removeClass(options.loadingClass);
 		jQuery('#send-to-input').removeClass('loading');
-	};
+	}
 
 	/* Returns a querystring of BP cookies (cookies beginning with 'bp-') */
 	function getAutocompleteCookies() {
@@ -425,7 +425,7 @@ $.Autocompleter.Cache = function(options) {
 		var i = s.indexOf(sub);
 		if (i == -1) return false;
 		return i == 0 || options.matchContains;
-	};
+	}
 
 	function add(q, value) {
 		if (length > options.cacheLength){
@@ -478,7 +478,7 @@ $.Autocompleter.Cache = function(options) {
 			if ( nullData++ < options.max ) {
 				stMatchSets[""].push(row);
 			}
-		};
+		}
 
 		// add the data items to the cache
 		$.each(stMatchSets, function(i, value) {
@@ -620,7 +620,7 @@ $.Autocompleter.Select = function (options, input, select, config) {
                 list.scrollTop(offset);
             }
         }
-	};
+	}
 
 	function movePosition(step) {
 		active += step;

@@ -520,7 +520,7 @@ function bp_core_get_directory_page_ids( $status = 'active' ) {
 		}
 
 		// 'register', 'activate', 'terms' and 'privacy' do not have components, but should be whitelisted.
-		if ( in_array( $component_name, array( 'register', 'activate', 'terms', 'privacy', 'profile_dashboard' ), true ) ) {
+		if ( in_array( $component_name, array( 'register', 'activate', 'terms', 'privacy', 'profile_dashboard', 'new_forums_page' ), true ) ) {
 			continue;
 		}
 
@@ -760,6 +760,7 @@ function bp_core_get_directory_page_default_titles() {
 		'activate'          => __( 'Activate', 'buddyboss' ),
 		'register'          => __( 'Register', 'buddyboss' ),
 		'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
+		'new_forums_page'   => __( 'Forums', 'buddyboss' ),
 	);
 
 	/**
@@ -2903,8 +2904,8 @@ function bp_get_email_post_type_labels() {
 		'items_list'            => __( 'Email list', 'buddyboss' ),
 		'items_list_navigation' => __( 'Email list navigation', 'buddyboss' ),
 		'menu_name'             => __( 'Emails', 'buddyboss' ),
-		'name'                  => __( 'Email Notifications', 'buddyboss' ),
-		'new_item'              => __( 'New Template', 'buddyboss' ),
+		'name'                  => __( 'Email Templates', 'buddyboss' ),
+		'new_item'              => __( 'New Email', 'buddyboss' ),
 		'not_found'             => __( 'No emails found', 'buddyboss' ),
 		'not_found_in_trash'    => __( 'No emails found in trash', 'buddyboss' ),
 		'search_items'          => __( 'Search Emails', 'buddyboss' ),

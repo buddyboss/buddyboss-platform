@@ -105,7 +105,7 @@ function bp_core_admin_backpat_page() {
 		<h2><?php _e( 'Why have all my BuddyPress menus disappeared?', 'buddyboss' ); ?></h2>
 
 		<p><?php _e( "Don't worry! We've moved the BuddyPress options into more convenient and easier to find locations. You're seeing this page because you are running a legacy BuddyPress plugin which has not been updated.", 'buddyboss' ); ?></p>
-		<p><?php printf( __( 'Components, Pages, Settings, and Forums, have been moved to <a href="%s">Settings &gt; BuddyPress</a>. Profile Fields has been moved into the <a href="%s">Users</a> menu.', 'buddyboss' ), esc_url( $settings_url ), bp_get_admin_url( 'users.php?page=bp-profile-setup' ) ); ?></p>
+		<p><?php printf( __( 'Components, Pages, Settings, and Forums, have been moved to <a href="%s">Settings &gt; BuddyPress</a>. Profile Fields has been moved into the <a href="%s">Users</a> menu.', 'buddyboss' ), esc_url( $settings_url ), bp_get_admin_url( 'admin.php?page=bp-profile-setup' ) ); ?></p>
 	</div>
 
 	<?php
@@ -292,6 +292,22 @@ function bp_core_activation_notice() {
 			if ( ! isset( $bp->pages->profile_dashboard ) ) {
 				$orphaned_components[] = 'Profile Dashboard';
 			}
+		}
+	}
+
+	// If forum enabled and forum page is not set then add to forums to $orphaned_components components to show the notice.
+	if ( bp_is_active( 'forums' ) ) {
+
+		$id = (int) bp_get_option( '_bbp_root_slug_custom_slug');
+
+		// Check the status of current set value.
+		$status = get_post_status( $id );
+
+		// Set the page id if page exists and in publish otherwise set blank.
+		$id = ( '' !== $status && 'publish' === $status ) ? $id : '';
+
+		if ( empty( $id ) ) {
+			$orphaned_components[] = 'Forums';
 		}
 	}
 
@@ -2070,7 +2086,7 @@ function bp_member_type_import_submenu_page() {
 				<form id="bp-member-type-import-form" method="post" action="">
 					<div class="import-panel-content">
 						<h2><?php _e( 'Import Profile Types', 'buddyboss' ); ?></h2>
-						<p><?php _e( 'Import your existing profile types (or "member types" in BuddyPress). You may have created these types <strong>manually via code</strong> or by using a <strong>third party plugin</strong> previously. The code or plugin needs to be activated on the site first. Then click "Run Migration" below and all of the data will be imported. Then you can disable and remove the old code or plugin.', 'buddyboss' ); ?></p><br/>
+						<p><?php _e( 'Import your existing profile types (or "member types" in BuddyPress). You may have created these types <strong>manually via code</strong> or by using a <strong>third party plugin</strong>. Click "Run Migration" below and all registered member types will be imported. Then you can remove the old code or plugin.', 'buddyboss' ); ?></p><br/>
 
 						<input type="submit" value="<?php _e('Run Migration', 'buddyboss'); ?>" id="bp-member-type-import-submit" name="bp-member-type-import-submit" class="button-primary">
 					</div>
@@ -2194,11 +2210,33 @@ function bp_core_admin_create_background_page() {
 		$page_id                    = wp_insert_post( $new_page );
 		$page_ids[ $_POST['page'] ] = (int) $page_id;
 
-		bp_core_update_directory_page_ids( $page_ids );
+		// If forums page then store into the _bbp_root_slug_custom_slug option.
+		if ( 'new_forums_page' === $_POST['page'] ) {
+			bp_update_option('_bbp_root_slug_custom_slug', $page_id );
+		// Else store into the directory pages.
+		} else {
+			bp_core_update_directory_page_ids( $page_ids );
+		}
+
+		// If forums page then change the BBPress root slug _bbp_root_slug and flush the redirect rule.
+		if ( 'new_forums_page' === $_POST['page'] ) {
+			$slug = get_post_field( 'post_name', $page_id );
+			bp_update_option('_bbp_root_slug', $slug);
+			flush_rewrite_rules(true);
+		}
 
 	}
 
-	wp_send_json_success();
+	$response =array(
+		'feedback' => __( 'Added successfully', 'buddyboss' ),
+		'type'     => 'success',
+		'url' => add_query_arg([
+			'page' => 'bp-pages',
+			'added' => 'true',
+		], admin_url( 'admin.php' ) )
+	);
+
+	wp_send_json_success( $response );
 }
 
 add_action( 'wp_ajax_bp_core_admin_create_background_page', 'bp_core_admin_create_background_page' );
@@ -2337,8 +2375,8 @@ function bp_core_get_groups_admin_tabs( $active_tab = '') {
 	$section_link = add_query_arg( $query, admin_url( 'customize.php' ) );
 	$tabs[] = array(
 		'href'  => esc_url( $section_link ),
-		'name'  => __( 'Customize Layout', 'buddypress' ),
-		'class' => 'bp-group-customize-layout',
+		'name'  => __( 'Group Navigation', 'buddypress' ),
+		'class' => 'bp-group-customizer',
 	);
 
 	/**
@@ -2412,7 +2450,7 @@ function bp_core_get_emails_admin_tabs( $active_tab = '') {
 	$tabs[] = array(
 		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-emails-customizer-redirect' ), 'themes.php' ) ),
 		'name'  => __( 'Customize Layout', 'buddypress' ),
-		'class' => 'bp-group-types',
+		'class' => 'bp-emails-customizer',
 	);
 
 	/**
@@ -2535,3 +2573,40 @@ function bp_import_profile_types_admin_menu() {
 
 }
 add_action( bp_core_admin_hook(), 'bp_import_profile_types_admin_menu' );
+
+/**
+ * Set the forum slug on edit page from backend.
+ *
+ * @param $post_id
+ * @param $post
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_change_forum_slug_quickedit_save_page( $post_id, $post ) {
+
+	// if called by autosave, then bail here
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+		return;
+
+	// if this "post" post type?
+	if ( $post->post_type != 'page' )
+		return;
+
+	// does this user have permissions?
+	if ( ! current_user_can( 'edit_post', $post_id ) )
+		return;
+
+	// update!
+	$forum_page_id = (int) bp_get_option('_bbp_root_slug_custom_slug');
+
+	if ( $forum_page_id > 0  && $forum_page_id === $post_id ) {
+		$slug = get_post_field( 'post_name', $post_id );
+		if ( '' !== $slug ) {
+			bp_update_option( '_bbp_root_slug', $slug );
+			bp_update_option( 'rewrite_rules', '' );
+		}
+	}
+}
+
+// Set the forum slug on edit page from backend.
+add_action( 'save_post', 'bp_change_forum_slug_quickedit_save_page', 10, 2 );

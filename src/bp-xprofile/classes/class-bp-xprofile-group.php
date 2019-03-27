@@ -761,7 +761,7 @@ class BP_XProfile_Group {
 		global $message;
 
 		// Users Admin URL
-		$users_url = bp_get_admin_url( 'users.php' );
+		$users_url = bp_get_admin_url( 'admin.php' );
 
 		// URL to cancel to
 		$cancel_url = add_query_arg( array(

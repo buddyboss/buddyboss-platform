@@ -1,9 +1,9 @@
 // BuddyPress Tooltips
 // @version 3.0.0
 
-@import "hint/hint";
+@import "vendors/hint/hint";
 
-.hint--multiline::after {
+.hint--multiline:after {
 	white-space: pre;
 }
 

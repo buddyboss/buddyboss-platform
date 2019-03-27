@@ -1,4 +1,5 @@
-
+/*jshint unused:false*/
+/* global google */
 function bp_ps_clear_radio(container) {
     var event = new Event('change');
 

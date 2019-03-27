@@ -56,14 +56,14 @@ function bp_get_media_slug() {
  *     a dynamic fashion, we list all accepted arguments here as well.
  *
  *     Arguments can be passed as an associative array, or as a URL querystring
- *     (eg, 'author_id=4&privacy=public').
+ *     (eg, 'user_id=4&fields=all').
  *
  *     @type int               $page             Which page of results to fetch. Using page=1 without per_page will result
  *                                               in no pagination. Default: 1.
  *     @type int|bool          $per_page         Number of results per page. Default: 20.
  *     @type string            $page_arg         String used as a query parameter in pagination links. Default: 'acpage'.
  *     @type int|bool          $max              Maximum number of results to return. Default: false (unlimited).
- *     @type string            $fields           Activity fields to retrieve. 'all' to fetch entire media objects,
+ *     @type string            $fields           Media fields to retrieve. 'all' to fetch entire media objects,
  *                                               'ids' to get only the media IDs. Default 'all'.
  *     @type string|bool       $count_total      If true, an additional DB query is run to count the total media items
  *                                               for the query. Default: false.
@@ -77,6 +77,9 @@ function bp_get_media_slug() {
  *     @type int|array|bool    $user_id          The ID(s) of user(s) whose media should be fetched. Pass a single ID or
  *                                               an array of IDs. When viewing a user profile page, 'user_id' defaults to
  *                                               the ID of the displayed user. Otherwise the default is false.
+ *     @type int|array|bool    $album_id         The ID(s) of album(s) whose media should be fetched. Pass a single ID or
+ *                                               an array of IDs. When viewing a single album page, 'album_id' defaults to
+ *                                               the ID of the displayed album. Otherwise the default is false.
  *     @type int               $offset           Return only media items with an ID greater than or equal to this one.
  *                                               Note that providing an offset will disable pagination. Default: false.
  * }
@@ -100,6 +103,9 @@ function bp_has_media( $args = '' ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
 
+	// Album filtering
+	$album_id = bp_is_single_album() ? (int) bp_action_variable( 0 ) : false;
+
 	/*
 	 * Parse Args.
 	 */
@@ -107,7 +113,7 @@ function bp_has_media( $args = '' ) {
 	// Note: any params used for filtering can be a single value, or multiple
 	// values comma separated.
 	$r = bp_parse_args( $args, array(
-		'include'           => false,     // Pass an activity_id or string of IDs comma-separated.
+		'include'           => false,        // Pass an media_id or string of IDs comma-separated.
 		'exclude'           => false,        // Pass an activity_id or string of IDs comma-separated.
 		'sort'              => 'DESC',       // Sort DESC or ASC.
 		'page'              => 1,            // Which page to load.
@@ -119,6 +125,7 @@ function bp_has_media( $args = '' ) {
 
 		// Filtering
 		'user_id'           => $user_id,     // user_id to filter on.
+		'album_id'          => $album_id,     // album_id to filter on.
 		'offset'            => false,        // Return only items >= this ID.
 		'since'             => false,        // Return only items recorded since this Y-m-d H:i:s date.
 
@@ -645,7 +652,39 @@ function bp_get_media_date_created() {
 }
 
 /**
- * Output the media date created.
+ * Output the media attachment thumbnail.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_media_attachment_image_thumbnail() {
+	echo bp_get_media_attachment_image_thumbnail();
+}
+
+/**
+ * Return the media attachment thumbnail.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return string The media attachment thumbnail url.
+ */
+function bp_get_media_attachment_image_thumbnail() {
+	global $media_template;
+
+	/**
+	 * Filters the media thumbnail being displayed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string The media thumbnail.
+	 */
+	return apply_filters( 'bp_get_media_attachment_image', $media_template->media->attachment_data->thumb );
+}
+
+/**
+ * Output the media attachment.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -655,25 +694,25 @@ function bp_media_attachment_image() {
 }
 
 /**
- * Return the media date created.
+ * Return the media attachment.
  *
  * @since BuddyBoss 1.0.0
  *
  * @global object $media_template {@link BP_Media_Template}
  *
- * @return string The media date created.
+ * @return string The media attachment url.
  */
 function bp_get_media_attachment_image() {
 	global $media_template;
 
 	/**
-	 * Filters the media date created being displayed.
+	 * Filters the media image being displayed.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param string The date created.
+	 * @param string The full image.
 	 */
-	return apply_filters( 'bp_get_media_attachment_image', $media_template->media->attachment_data->thumb );
+	return apply_filters( 'bp_get_media_attachment_image', $media_template->media->attachment_data->full );
 }
 
 //****************************** Media Albums *********************************//

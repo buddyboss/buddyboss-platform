@@ -26,20 +26,6 @@ function bp_media_get_settings_sections() {
 		),
 	);
 
-	if ( bp_is_active( 'groups' ) ) {
-		$settings['bp_media_settings_groups'] = array(
-			'page'  => 'media',
-			'title' => __( 'Groups Media', 'buddyboss' ),
-		);
-	}
-
-	if ( bp_is_active( 'forums' ) ) {
-		$settings['bp_media_settings_forums'] = array(
-			'page'  => 'media',
-			'title' => __( 'Forums Media', 'buddyboss' ),
-		);
-	}
-
 	return (array) apply_filters( 'bp_media_get_settings_sections', $settings );
 }
 
@@ -66,34 +52,29 @@ function bp_media_get_settings_fields() {
 	];
 
 	if ( bp_is_active( 'groups' ) ) {
-		$fields['bp_media_settings_groups'] = [
 
-			'bp_media_group_media_support' => [
-				'title'             => __( 'Group Media', 'buddyboss' ),
-				'callback'          => 'bp_media_settings_callback_group_media_support',
-				'sanitize_callback' => 'absint',
-				'args'              => []
-			],
+		$fields['bp_media_settings_general']['bp_media_group_media_support'] = [
+			'title'             => __( 'Group Media', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_group_media_support',
+			'sanitize_callback' => 'absint',
+			'args'              => []
+		];
 
-			'bp_media_group_albums' => [
-				'title'             => __( 'Group Albums', 'buddyboss' ),
-				'callback'          => 'bp_media_settings_callback_group_albums',
-				'sanitize_callback' => 'absint',
-				'args'              => []
-			],
+		$fields['bp_media_settings_general']['bp_media_group_albums'] = [
+			'title'             => __( 'Group Albums', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_group_albums',
+			'sanitize_callback' => 'absint',
+			'args'              => []
 		];
 	}
 
 	if ( bp_is_active( 'forums' ) ) {
-		$fields['bp_media_settings_forums'] = [
 
-			'bp_media_forums_media_support' => [
-				'title'             => __( 'Forums Media', 'buddyboss' ),
-				'callback'          => 'bp_media_settings_callback_forums_media_support',
-				'sanitize_callback' => 'absint',
-				'args'              => []
-			],
-
+		$fields['bp_media_settings_general']['bp_media_forums_media_support'] = [
+			'title'             => __( 'Forums Media', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_forums_media_support',
+			'sanitize_callback' => 'absint',
+			'args'              => []
 		];
 	}
 

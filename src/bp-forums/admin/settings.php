@@ -251,12 +251,12 @@ function bbp_admin_get_settings_fields() {
 		'bbp_settings_root_slugs' => array(
 
 			// Root slug setting
-			'_bbp_root_slug' => array(
-				'title'             => __( 'Forums Directory', 'buddyboss' ),
-				'callback'          => 'bbp_admin_setting_callback_root_slug',
-				'sanitize_callback' => 'bbp_sanitize_slug',
-				'args'              => array()
-			),
+//			'_bbp_root_slug' => array(
+//				'title'             => __( 'Forums Directory', 'buddyboss' ),
+//				'callback'          => 'bbp_admin_setting_callback_root_slug',
+//				'sanitize_callback' => 'bbp_sanitize_slug',
+//				'args'              => array()
+//			),
 
 			// Include root setting
 			'_bbp_include_root' => array(
@@ -800,9 +800,17 @@ function bbp_admin_setting_callback_include_root() {
 ?>
 
 	<input name="_bbp_include_root" id="_bbp_include_root" type="checkbox" value="1" <?php checked( bbp_include_root_slug() ); bbp_maybe_admin_setting_disabled( '_bbp_include_root' ); ?> />
-	<label for="_bbp_include_root"><?php esc_html_e( 'Prefix all forum content with the Forums page slug (Recommended)', 'buddyboss' ); ?></label>
+	<?php
+	printf(
+		'<label for="_bbp_include_root">%s</label>',
+		sprintf(
+			__( 'Prefix all forum content with the  <a href="%s">Forums page</a> slug (Recommended)', 'buddyboss' ),
+			add_query_arg([
+				'page' => 'bp-pages',
+			], admin_url( 'admin.php' ) )
+		)
+	);
 
-<?php
 }
 
 /**

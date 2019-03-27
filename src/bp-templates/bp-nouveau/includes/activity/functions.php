@@ -31,7 +31,7 @@ function bp_nouveau_activity_register_scripts( $scripts = array() ) {
 		),
 		'bp-nouveau-activity-post-form' => array(
 			'file'         => 'js/buddypress-activity-post-form%s.js',
-			'dependencies' => array( 'bp-nouveau', 'bp-nouveau-activity', 'json2', 'wp-backbone', 'giphy' ),
+			'dependencies' => array( 'bp-nouveau', 'bp-nouveau-activity', 'json2', 'wp-backbone' ),
 			'footer'       => true,
 		),
 	) );
@@ -43,11 +43,14 @@ function bp_nouveau_activity_register_scripts( $scripts = array() ) {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_enqueue_scripts() {
-	if ( ! bp_is_activity_component() && ! bp_is_group_activity() ) {
+	if ( ! bp_is_activity_component() && ! bp_is_group_activity() && ! bp_is_media_component() && ! bp_is_media_directory() ) {
 		return;
 	}
 
 	wp_enqueue_script( 'bp-nouveau-activity' );
+	wp_enqueue_script( 'giphy' );
+	wp_enqueue_script( 'emojionearea' );
+	wp_enqueue_style( 'emojionearea' );
 }
 
 /**

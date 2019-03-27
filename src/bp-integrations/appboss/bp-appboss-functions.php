@@ -19,7 +19,7 @@ function appBossRenderAnchor($integration) {
 
 	printf(
 		'<a href="%s" class="button-secondary">%s</a>',
-		admin_url( 'admin.php?page=bp-memberships-log&integration=$integration' ),
+		admin_url( "admin.php?page=bp-memberships-log&integration=$integration" ),
 		__('View Logs', 'buddyboss')
 	);
 }

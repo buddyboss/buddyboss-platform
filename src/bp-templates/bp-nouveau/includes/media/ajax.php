@@ -93,7 +93,7 @@ function bp_nouveau_ajax_media_upload() {
 		wp_send_json_error( $response );
 	}
 
-	return wp_send_json_success( $result );
+	wp_send_json_success( $result );
 }
 
 /**
@@ -169,18 +169,21 @@ function bp_nouveau_ajax_media_save() {
 		$media_ids[] = $media_id;
 	}
 
-	ob_start();
-	if ( bp_has_media( array( 'include' => $media_ids ) ) ) {
-		while ( bp_media() ) {
-			bp_the_media();
-			bp_get_template_part( 'members/single/media/entry' );
+	$media = '';
+	if ( ! empty( $media_ids ) ) {
+		ob_start();
+		if ( bp_has_media( array( 'include' => implode( ',', $media_ids ) ) ) ) {
+			while ( bp_media() ) {
+				bp_the_media();
+				bp_get_template_part( 'media/entry' );
+			}
 		}
+		$media = ob_get_contents();
+		ob_end_clean();
 	}
-	$media = ob_get_contents();
-	ob_end_clean();
 
 	wp_send_json_success( array(
-		'media'     => $media,
+		'media' => $media,
 	) );
 }
 
@@ -227,9 +230,9 @@ function bp_nouveau_ajax_media_album_save() {
 	}
 
 	// save media
-	$title = $_POST['title'];
+	$title       = $_POST['title'];
 	$description = ! empty( $_POST['description'] ) ? $_POST['description'] : '';
-	$privacy = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : 'public';
+	$privacy     = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : 'public';
 
 	$album_id = bp_album_add( array( 'title' => $title, 'description' => $description, 'privacy' => $privacy ) );
 
@@ -237,7 +240,7 @@ function bp_nouveau_ajax_media_album_save() {
 	if ( bp_has_albums( array( 'include' => $album_id ) ) ) {
 		while ( bp_album() ) {
 			bp_the_album();
-			bp_get_template_part( 'members/single/media/album-entry' );
+			bp_get_template_part( 'media/album-entry' );
 		}
 	}
 	$album = ob_get_contents();

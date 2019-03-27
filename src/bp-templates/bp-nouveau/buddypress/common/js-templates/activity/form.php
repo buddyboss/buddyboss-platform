@@ -111,6 +111,7 @@
 			</div>
 		</span>
 	<?php endif; ?>
+	<span class="post-elements-buttons-item post-emoji"></span>
 </script>
 
 <script type="text/html" id="tmpl-activity-post-form-avatar">

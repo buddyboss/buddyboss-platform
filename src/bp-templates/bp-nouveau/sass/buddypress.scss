@@ -487,3 +487,12 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 // Import global media styles
 
 @import "../common-styles/_bp_media";
+
+/**
+*-------------------------------------------------------------------------------
+* @section 15.0 - Media Dropzone
+*-------------------------------------------------------------------------------
+*/
+// Import global dropzone styles
+
+@import "../common-styles/_bp_dropzone";

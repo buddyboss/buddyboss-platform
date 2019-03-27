@@ -1111,3 +1111,20 @@ td label.platform-activity {
   line-height: 1.5;
   margin: 0 0 1em;
 }
+
+/* Customize tabs */
+.nav-tab-wrapper .bp-user-customizer,
+.nav-tab-wrapper .bp-group-customizer,
+.nav-tab-wrapper .bp-emails-customizer {
+  padding-left: 6px;
+}
+
+.nav-tab-wrapper .bp-user-customizer:after,
+.nav-tab-wrapper .bp-group-customizer:after,
+.nav-tab-wrapper .bp-emails-customizer:after {
+  font-family: dashicons;
+  content: "\f345";
+  margin-right: 3px;
+  display: inline-block;
+  vertical-align: top;
+}

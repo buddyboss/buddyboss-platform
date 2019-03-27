@@ -520,14 +520,17 @@ function bp_get_search_user_fields() {
 function bp_search_get_post_thumbnail_default( $post_type ) {
 
 	$default = [
-		'product'      => buddypress()->plugin_url . 'bp-core/images/product.svg',
-		'sfwd-courses' => buddypress()->plugin_url . 'bp-core/images/course.svg',
-		'sfwd-lessons' => buddypress()->plugin_url . 'bp-core/images/mystery-course.png',
-		'sfwd-topic'   => buddypress()->plugin_url . 'bp-core/images/mystery-course.png',
-		'post'         => buddypress()->plugin_url . 'bp-core/images/blog-post.svg',
-		'forum'        => buddypress()->plugin_url . 'bp-core/images/forum.svg',
-		'topic'        => buddypress()->plugin_url . 'bp-core/images/forum.svg',
-		'reply'        => buddypress()->plugin_url . 'bp-core/images/forum.svg',
+		'product'		=> buddypress()->plugin_url . 'bp-core/images/product.svg',
+		'sfwd-courses'	=> buddypress()->plugin_url . 'bp-core/images/course.svg',
+		'sfwd-lessons'	=> buddypress()->plugin_url . 'bp-core/images/topics.svg',
+		'sfwd-topic'	=> buddypress()->plugin_url . 'bp-core/images/topics.svg',
+		'sfwd-quiz'		=> buddypress()->plugin_url . 'bp-core/images/quizzes.svg',
+		'post'			=> buddypress()->plugin_url . 'bp-core/images/blog-post.svg',
+		'forum'			=> buddypress()->plugin_url . 'bp-core/images/forum.svg',
+		'topic'			=> buddypress()->plugin_url . 'bp-core/images/topics.svg',
+		'reply'			=> buddypress()->plugin_url . 'bp-core/images/forum.svg',
+		'bp-member-type'   => buddypress()->plugin_url . 'bp-core/images/membership.svg',
+		'memberpressproduct'   => buddypress()->plugin_url . 'bp-core/images/membership.svg',
 	];
 
 	return

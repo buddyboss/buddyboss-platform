@@ -14,15 +14,29 @@ switch ( bp_current_action() ) :
 
 	// Home/Media
 	case 'my-media':
-		bp_get_template_part( 'members/single/media/my-media' );
+
+		bp_get_template_part( 'media/add-media' );
+
+		bp_nouveau_member_hook( 'before', 'media_content' );
+
+		?>
+		<div id="media-stream" class="media" data-bp-list="media">
+
+			<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-media-loading' ); ?></div>
+
+		</div><!-- .media -->
+		<?php
+
+		bp_nouveau_member_hook( 'after', 'media_content' );
+
 		break;
 
 	// Home/Media/Albums
 	case 'albums':
-		if ( ! (int) bp_action_variable( 0 ) )
-			bp_get_template_part( 'members/single/media/albums' );
+		if ( ! bp_is_single_album() )
+			bp_get_template_part( 'media/albums' );
 		else
-			bp_get_template_part( 'members/single/media/single-album' );
+			bp_get_template_part( 'media/single-album' );
 		break;
 
 	// Any other
