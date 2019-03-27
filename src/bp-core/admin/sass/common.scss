@@ -400,19 +400,17 @@ tr.bp-search-parent-field label {
 
 .bp-admin-card h2:before {
 	font-family: "Font Awesome 5 Free";
-    font-weight: 900;
+	font-weight: 900;
 	margin-right: 1em;
 	color: #333;
 	background: #f6f6f6;
 	padding: 7px;
 	border-radius: 100%;
-
 	-webkit-font-smoothing: antialiased;
 	display: inline-block;
 	font-style: normal;
 	font-variant: normal;
 	text-rendering: auto;
-
 	font-size: 18px;
 	width: 24px;
 	height: 24px;
@@ -422,7 +420,7 @@ tr.bp-search-parent-field label {
 
 /* Default */
 .bp-admin-card h2:before {
-	content: "\f0ad";	
+	content: "\f0ad";
 }
 
 /* Settings */
@@ -436,16 +434,18 @@ tr.bp-search-parent-field label {
 }
 
 .bp-admin-card.section-bp_member_type_settings h2:before {
-	content: "\f507";	
+	content: "\f507";
+	text-align: right;
 }
 
 .bp-admin-card.section-bp_profile_search_settings h2:before {
 	content: "\f234";
+	text-align: right;
 }
 
 /* Activity */
 .bp-admin-card.section-bp_activity h2:before {
-	content: "\f09e"
+	content: "\f09e";
 }
 
 .buddyboss_page_bp-settings .section-bp_custom_post_type h2:before {
@@ -466,6 +466,7 @@ tr.bp-search-parent-field label {
 	content: "\f1b3";
 	font-size: 20px;
 }
+
 .bp-admin-card.section-bp_groups_hierarchies h2:before {
 	content: "\f5fd";
 }
@@ -496,11 +497,11 @@ tr.bp-search-parent-field label {
 /* Search */
 .bp-admin-card.section-bp_search_settings_community h2:before,
 .bp-admin-card.section-bp_search_settings_post_types h2:before {
-	content: "\f002";	
+	content: "\f002";
 }
 
 .bp-admin-card.section-bp_search_settings_general h2:before {
-	content: "\f150";	
+	content: "\f150";
 }
 
 .bp-admin-card.section-bp_search_settings_community table,

@@ -430,10 +430,12 @@ tr.bp-search-parent-field label {
 
 .bp-admin-card.section-bp_member_type_settings h2:before {
   content: "\f507";
+  text-align: left;
 }
 
 .bp-admin-card.section-bp_profile_search_settings h2:before {
   content: "\f234";
+  text-align: left;
 }
 
 /* Activity */
