@@ -1,5 +1,5 @@
 /* jshint browser: true */
-/* global bp, BP_Nouveau, JSON, Dropzone */
+/* global bp */
 /* @version 1.0.0 */
 window.bp = window.bp || {};
 
@@ -179,7 +179,7 @@ window.bp = window.bp || {};
 				$( '#bb-media-model-container' ).find( '.bb-prev-media' ).show();
 				$( '#bb-media-model-container' ).find( '.bb-next-media' ).show();
 			}
-		},
+		}
 	};
 
 	// Launch BP Nouveau Media Theatre
