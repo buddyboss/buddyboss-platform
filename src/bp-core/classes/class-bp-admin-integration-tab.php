@@ -42,14 +42,7 @@ class BP_Admin_Integration_tab extends BP_Admin_Tab {
 	}
 
 	public function integration_setting_save( $tab_name ) {
-
-		$settings = new StdClass();
-
-		if ( function_exists( 'bp_ld_sync') ) {
-			$settings = bp_ld_sync('settings');
-		}
-
-		do_action( "bp_integrations_{$this->tab_name}_fields_updated", $settings, $tab_name );
+		do_action( "bp_integrations_{$this->tab_name}_setting_saved" );
 	}
 
 	public function settings_saved() {
