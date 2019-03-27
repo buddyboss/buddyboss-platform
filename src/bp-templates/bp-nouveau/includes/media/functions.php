@@ -28,8 +28,8 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
 			'dependencies' => array( 'bp-nouveau' ),
 			'footer'       => true,
 		),
-		'bp-nouveau-media-dropzone-options' => array(
-			'file'         => buddypress()->plugin_url . 'bp-media/js/dropzone-options.js',
+		'bp-nouveau-media-theatre' => array(
+			'file'         => 'js/buddypress-media-theatre%s.js',
 			'dependencies' => array( 'bp-nouveau' ),
 			'version'      => bp_get_version(),
 			'footer'       => true,
@@ -44,7 +44,7 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
  */
 function bp_nouveau_media_enqueue_scripts() {
 	wp_enqueue_script( 'bp-nouveau-media' );
-	wp_enqueue_script( 'bp-nouveau-media-dropzone-options' );
+	wp_enqueue_script( 'bp-nouveau-media-theatre' );
 }
 
 /**
@@ -61,7 +61,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'max_upload_size' => bp_media_file_upload_max_size(),
 	);
 
-	if ( 'albums' == bp_current_action() && (int) bp_action_variable( 0 ) ) {
+	if ( bp_is_single_album() ) {
 		$params['media']['album_id'] = (int) bp_action_variable( 0 );
 	}
 
