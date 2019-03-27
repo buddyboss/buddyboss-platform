@@ -105,7 +105,7 @@ function bp_core_admin_backpat_page() {
 		<h2><?php _e( 'Why have all my BuddyPress menus disappeared?', 'buddyboss' ); ?></h2>
 
 		<p><?php _e( "Don't worry! We've moved the BuddyPress options into more convenient and easier to find locations. You're seeing this page because you are running a legacy BuddyPress plugin which has not been updated.", 'buddyboss' ); ?></p>
-		<p><?php printf( __( 'Components, Pages, Settings, and Forums, have been moved to <a href="%s">Settings &gt; BuddyPress</a>. Profile Fields has been moved into the <a href="%s">Users</a> menu.', 'buddyboss' ), esc_url( $settings_url ), bp_get_admin_url( 'users.php?page=bp-profile-setup' ) ); ?></p>
+		<p><?php printf( __( 'Components, Pages, Settings, and Forums, have been moved to <a href="%s">Settings &gt; BuddyPress</a>. Profile Fields has been moved into the <a href="%s">Users</a> menu.', 'buddyboss' ), esc_url( $settings_url ), bp_get_admin_url( 'admin.php?page=bp-profile-setup' ) ); ?></p>
 	</div>
 
 	<?php
@@ -2375,8 +2375,8 @@ function bp_core_get_groups_admin_tabs( $active_tab = '') {
 	$section_link = add_query_arg( $query, admin_url( 'customize.php' ) );
 	$tabs[] = array(
 		'href'  => esc_url( $section_link ),
-		'name'  => __( 'Customize Layout', 'buddypress' ),
-		'class' => 'bp-group-customize-layout',
+		'name'  => __( 'Group Navigation', 'buddypress' ),
+		'class' => 'bp-group-customizer',
 	);
 
 	/**
@@ -2450,7 +2450,7 @@ function bp_core_get_emails_admin_tabs( $active_tab = '') {
 	$tabs[] = array(
 		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-emails-customizer-redirect' ), 'themes.php' ) ),
 		'name'  => __( 'Customize Layout', 'buddypress' ),
-		'class' => 'bp-group-types',
+		'class' => 'bp-emails-customizer',
 	);
 
 	/**

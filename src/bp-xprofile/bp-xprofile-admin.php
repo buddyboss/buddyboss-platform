@@ -960,8 +960,8 @@ function bp_core_get_users_admin_tabs( $active_tab = '') {
 	$section_link = add_query_arg( $query, admin_url( 'customize.php' ) );
 	$tabs[] = array(
 		'href'  => esc_url( $section_link ),
-		'name'  => __( 'Customize Layout', 'buddypress' ),
-		'class' => 'bp-user-customize-layout',
+		'name'  => __( 'Profile Navigation', 'buddypress' ),
+		'class' => 'bp-user-customizer',
 	);
 
 	/**

@@ -700,7 +700,7 @@ function bp_nouveau_groups_front_page_description() {
 function bp_nouveau_groups_customizer_sections( $sections = array() ) {
 	return array_merge( $sections, array(
 		'bp_nouveau_group_primary_nav' => array(
-			'title'       => __( 'Group navigation', 'buddyboss' ),
+			'title'       => __( 'Group Navigation', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 40,
 			'description' => __( 'Customize the navigation menu for groups. See your changes by navigating to a group in the live-preview window.', 'buddyboss' ),

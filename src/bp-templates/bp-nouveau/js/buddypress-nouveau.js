@@ -544,7 +544,12 @@ window.bp = window.bp || {};
 	                extras.layout = 'grid';
                 }
 
-                _this.setStorage( 'bp-' + object, 'extras', extras );
+                // Added this condition to fix the list and grid view on Groups members page pagination.
+				if ( true === $( 'body' ).hasClass('group-members' ) ) {
+					_this.setStorage( 'bp-group_members', 'extras', extras );
+				} else {
+					_this.setStorage( 'bp-' + object, 'extras', extras );
+				}
             });
 		},
 

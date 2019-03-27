@@ -81,6 +81,12 @@
 	#whats-new-toolbar {
 		margin-left: 8.5%;
 		position: relative;
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-align: center;
+		-ms-flex-align: center;
+		align-items: center;
 
 		.post-elements-buttons-item {
 			display: inline-block;
@@ -184,10 +190,6 @@
 				}
 			}
 
-			&.post-emoji {
-				position: absolute;
-				right: 0;
-			}
 		}
 	}
 
