@@ -545,6 +545,10 @@ function bp_groups_admin() {
 	if ( 'edit' == $doaction && ! empty( $_GET['gid'] ) ) {
 		bp_groups_admin_edit();
 
+	// Create the group from admin
+	} elseif ( 'edit' == $doaction && ! empty( $_GET['create'] ) ) {
+		bp_groups_admin_create();
+
 	// Display the group deletion confirmation screen.
 	} elseif ( 'delete' == $doaction && ! empty( $_GET['gid'] ) ) {
 		bp_groups_admin_delete();
@@ -639,7 +643,7 @@ function bp_groups_admin_edit() {
 			<h1 class="wp-heading-inline"><?php _e( 'Edit Group', 'buddyboss' ); ?></h1>
 
 			<?php if ( is_user_logged_in() && bp_user_can_create_groups() ) : ?>
-				<a class="page-title-action" href="<?php echo trailingslashit( bp_get_groups_directory_permalink() . 'create' ); ?>"><?php _e( 'New Group', 'buddyboss' ); ?></a>
+				<a class="page-title-action" href="<?php echo esc_url( add_query_arg([ 'page' => 'bp-groups', 'create' => 'create-from-admin', 'action' => 'edit', ], admin_url( 'admin.php' ) ) ); ?>"><?php _e( 'New Group', 'buddyboss' ); ?></a>
 			<?php endif; ?>
 
 			<hr class="wp-header-end">
@@ -649,7 +653,7 @@ function bp_groups_admin_edit() {
 			<h1><?php _e( 'Edit Group', 'buddyboss' ); ?>
 
 				<?php if ( is_user_logged_in() && bp_user_can_create_groups() ) : ?>
-					<a class="add-new-h2" href="<?php echo trailingslashit( bp_get_groups_directory_permalink() . 'create' ); ?>"><?php _e( 'New Group', 'buddyboss' ); ?></a>
+					<a class="add-new-h2" href="<?php echo esc_url( add_query_arg([ 'page' => 'bp-groups', 'create' => 'create-from-admin', 'action' => 'edit', ], admin_url( 'admin.php' ) ) ); ?>"><?php _e( 'New Group', 'buddyboss' ); ?></a>
 				<?php endif; ?>
 
 			</h1>
@@ -727,6 +731,108 @@ function bp_groups_admin_edit() {
 	</div><!-- .wrap -->
 
 <?php
+}
+
+/**
+ * Display the single groups edit screen.
+ *
+ * @since BuddyPress 1.7.0
+ */
+function bp_groups_admin_create() {
+
+	if ( ! bp_current_user_can( 'bp_moderate' ) )
+		die( '-1' );
+
+	?>
+
+	<div class="wrap">
+		<?php if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) : ?>
+
+			<h1 class="wp-heading-inline"><?php _e( 'Create New Group', 'buddyboss' ); ?></h1>
+
+			<hr class="wp-header-end">
+
+		<?php else : ?>
+
+			<h1><?php _e( 'Create New Group', 'buddyboss' ); ?> </h1>
+
+		<?php endif; ?>
+
+		<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="bp-groups-edit-form" method="post">
+			<div id="poststuff">
+
+				<div id="post-body" class="metabox-holder columns-<?php echo 1 == get_current_screen()->get_columns() ? '1' : '2'; ?>">
+					<div id="post-body-content">
+						<div id="postdiv">
+							<div id="bp_groups_name" class="postbox">
+								<h2><?php _e( 'Name and Description', 'buddyboss' ); ?></h2>
+								<div class="inside">
+									<label for="bp-groups-name" class="screen-reader-text"><?php
+										/* translators: accessibility text */
+										_e( 'Group Name', 'buddyboss' );
+										?></label>
+									<input required type="text" name="bp-groups-name" id="bp-groups-name" value="" />
+
+
+									<label for="bp-groups-description" class="screen-reader-text"><?php
+										/* translators: accessibility text */
+										_e( 'Group Description', 'buddyboss' );
+										?></label>
+									<?php wp_editor( '', 'bp-groups-description', array( 'media_buttons' => false, 'teeny' => true, 'textarea_rows' => 5, 'quicktags' => array( 'buttons' => 'strong,em,link,block,del,ins,img,code,spell,close' ) ) ); ?>
+								</div>
+							</div>
+						</div>
+					</div><!-- #post-body-content -->
+
+					<input type="hidden" name="action" value="bp_create_group_admin">
+					<?php wp_nonce_field( 'bp_create_group_form_nonce' ); ?>
+
+					<div id="postbox-container-1" class="postbox-container">
+						<div id="submitdiv" class="postbox">
+							<h2 class="hndle ui-sortable-handle"><span><?php esc_html_e('Publish', 'buddyboss' );?></span></h2>
+							<div class="inside">
+								<div id="submitcomment" class="submitbox">
+									<div id="major-publishing-actions">
+										<div id="publishing-action">
+											<input type="submit" name="save" id="save" class="button button-primary" value="<?php esc_attr_e('Publish', 'buddyboss' );?>">			</div>
+										<div class="clear"></div>
+									</div><!-- #major-publishing-actions -->
+								</div><!-- #submitcomment -->
+							</div>
+						</div>
+					</div>
+
+
+				</div><!-- #post-body -->
+
+			</div><!-- #poststuff -->
+
+		</form>
+
+
+	</div><!-- .wrap -->
+
+	<?php
+}
+
+add_action( 'admin_post_bp_create_group_admin', 'bp_process_create_group_admin' );
+
+function bp_process_create_group_admin() {
+
+	if ( !current_user_can( 'manage_options' ) ) {
+		wp_die( 'You are not allowed to be on this page.' );
+	}
+	// Check that nonce field
+	check_admin_referer( 'bp_create_group_form_nonce' );
+
+	$new_group_id = groups_create_group( array( 'group_id' => 0, 'name' => $_POST['bp-groups-name'], 'description' => $_POST['bp-groups-description'], 'slug' => groups_check_slug( sanitize_title( esc_attr( $_POST['bp-groups-name'] ) ) ), 'date_created' => bp_core_current_time(), 'status' => 'public' ) );
+
+	wp_safe_redirect( add_query_arg([
+		'page' => 'bp-groups',
+		'gid' => $new_group_id,
+		'action' => 'edit',
+	], admin_url( 'admin.php' ) ));
+	exit();
 }
 
 /**
@@ -843,7 +949,7 @@ function bp_groups_admin_index() {
 			<h1 class="wp-heading-inline"><?php _e( 'Groups', 'buddyboss' ); ?></h1>
 
 			<?php if ( is_user_logged_in() && bp_user_can_create_groups() ) : ?>
-				<a class="page-title-action" href="<?php echo trailingslashit( bp_get_groups_directory_permalink() . 'create' ); ?>"><?php _e( 'New Group', 'buddyboss' ); ?></a>
+				<a class="page-title-action" href="<?php echo esc_url( add_query_arg([ 'page' => 'bp-groups', 'create' => 'create-from-admin', 'action' => 'edit', ], admin_url( 'admin.php' ) ) ); ?>"><?php _e( 'New Group', 'buddyboss' ); ?></a>
 			<?php endif; ?>
 
 			<?php if ( !empty( $_REQUEST['s'] ) ) : ?>
@@ -858,7 +964,7 @@ function bp_groups_admin_index() {
 			<?php _e( 'Groups', 'buddyboss' ); ?>
 
 			<?php if ( is_user_logged_in() && bp_user_can_create_groups() ) : ?>
-				<a class="add-new-h2" href="<?php echo trailingslashit( bp_get_groups_directory_permalink() . 'create' ); ?>"><?php _e( 'New Group', 'buddyboss' ); ?></a>
+				<a class="add-new-h2" href="<?php echo esc_url( add_query_arg([ 'page' => 'bp-groups', 'create' => 'create-from-admin', 'action' => 'edit', ], admin_url( 'admin.php' ) ) ); ?>"><?php _e( 'New Group', 'buddyboss' ); ?></a>
 			<?php endif; ?>
 
 			<?php if ( !empty( $_REQUEST['s'] ) ) : ?>
