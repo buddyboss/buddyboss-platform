@@ -100,8 +100,13 @@
 			display: flex;
 			flex-direction: column;
 
+			legend {
+				margin-bottom: $marg-sml;
+			}
+
 			.description {
-				margin-top: $marg-sml;
+				margin-top: -$marg-sml;
+				margin-bottom: $marg-sml;
 				order: 2;
 			}
 
