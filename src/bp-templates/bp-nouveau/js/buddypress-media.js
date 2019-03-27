@@ -266,7 +266,7 @@ window.bp = window.bp || {};
 					}
 				} );
 			}
-		},
+		}
 	};
 
 	// Launch BP Nouveau Media
