@@ -1,10 +1,12 @@
 jQuery(document).ready( function() {
 	member_widget_click_handler();
+	member_widget_online_click_handler();
 
 	// WP 4.5 - Customizer selective refresh support.
 	if ( 'undefined' !== typeof wp && wp.customize && wp.customize.selectiveRefresh ) {
 		wp.customize.selectiveRefresh.bind( 'partial-content-rendered', function() {
 			member_widget_click_handler();
+			member_widget_online_click_handler();
 		} );
 	}
     
@@ -35,6 +37,12 @@ jQuery(document).ready( function() {
         } );
 
     }
+
+    if ( jQuery( '#boss_whos_online_widget_connections' ).length ) {
+		jQuery('#boss_whos_online_widget_connections').hide();
+		jQuery('#online-members').addClass('selected');
+	}
+
 });
 
 function member_widget_click_handler() {
@@ -85,4 +93,23 @@ function member_widget_response(response) {
 			}
 		);
 	}
+}
+
+function member_widget_online_click_handler() {
+	jQuery('.widget div#who-online-members-list-options a').on('click',
+		function() {
+			var link = this;
+			jQuery(link).addClass('loading');
+
+			jQuery('.widget div#who-online-members-list-options a').removeClass('selected');
+			jQuery(this).addClass('selected');
+
+			var div = jQuery(this).attr('data-content');
+			jQuery('.widget_bp_core_whos_online_widget .widget-content').hide();
+			jQuery('.widget_bp_core_whos_online_widget #'+ div).show();
+
+			jQuery(link).removeClass('loading');
+			return false;
+		}
+	);
 }
