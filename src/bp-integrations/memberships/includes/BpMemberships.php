@@ -769,7 +769,6 @@ class BpMemberships {
 		add_action('woocommerce_order_status_completed', array($classObj, 'wcOrderUpdated'));
 		add_action('woocommerce_order_status_processing', array($classObj, 'wcOrderUpdated'));
 		add_action('woocommerce_order_status_on-hold', array($classObj, 'wcOrderUpdated'));
-		add_action('woocommerce_order_status_completed', array($classObj, 'wcOrderUpdated'));
 		add_action('woocommerce_order_status_cancelled', array($classObj, 'wcOrderUpdated'));
 		add_action('woocommerce_order_status_refunded', array($classObj, 'wcOrderUpdated'));
 		add_action('woocommerce_order_status_failed', array($classObj, 'wcOrderUpdated'));
@@ -780,7 +779,6 @@ class BpMemberships {
 		add_action('woocommerce_subscription_status_on-hold', array($classObj, 'wcSubscriptionUpdated'));
 		add_action('woocommerce_subscription_status_expired', array($classObj, 'wcSubscriptionUpdated'));
 		add_action('woocommerce_subscription_status_active', array($classObj, 'wcSubscriptionUpdated'));
-		add_action('woocommerce_subscription_renewal_payment_complete', array($classObj, 'wcSubscriptionUpdated'));
 
 		// More useful hooks when required
 		// -----------------------------------------------------------------------------
@@ -817,6 +815,9 @@ class BpMemberships {
 			=> Force user to log in or create account if there is LD course in WC cart
 			2) woocommerce_thankyou
 			=> Auto complete course transaction
+
+			Related to subscriptions-renewals
+			1) woocommerce_subscription_renewal_payment_complete
 
 		*/
 
