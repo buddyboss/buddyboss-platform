@@ -2449,7 +2449,7 @@ function bp_core_get_emails_admin_tabs( $active_tab = '') {
 
 	$tabs[] = array(
 		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-emails-customizer-redirect' ), 'themes.php' ) ),
-		'name'  => __( 'Email Layout', 'buddypress' ),
+		'name'  => __( 'Customize Layout', 'buddypress' ),
 		'class' => 'bp-emails-customizer',
 	);
 
