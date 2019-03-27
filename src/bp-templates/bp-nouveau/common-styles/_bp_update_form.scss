@@ -80,6 +80,7 @@
 
 	#whats-new-toolbar {
 		margin-left: 8.5%;
+		position: relative;
 
 		.post-elements-buttons-item {
 			display: inline-block;
@@ -183,6 +184,10 @@
 				}
 			}
 
+			&.post-emoji {
+				position: absolute;
+				right: 0;
+			}
 		}
 	}
 

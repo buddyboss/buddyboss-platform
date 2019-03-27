@@ -1230,6 +1230,14 @@ window.bp = window.bp || {};
 			this.views.add( new bp.Views.ActivityToolbar( { model: this.model } ) );
 
 			this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
+
+			$('#whats-new').emojioneArea( {
+				standalone: true,
+				hideSource: false,
+				container: '.post-emoji',
+				autocomplete: false,
+				pickerPosition: 'bottom'
+			} );
 		},
 
 		resetForm: function() {
