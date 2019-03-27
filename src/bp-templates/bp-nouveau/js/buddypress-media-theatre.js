@@ -40,6 +40,8 @@ window.bp = window.bp || {};
 			this.current_media = false;
 			this.current_index = 0;
 			this.is_open = false;
+			this.nextLink = $('.bb-next-media');
+			this.previousLink = $('.bb-prev-media');
 
 		},
 
@@ -86,6 +88,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			var target = $(event.currentTarget), id, self = this;
 
+			self.setupGlobals();
 			self.setMedias();
 
 			id = target.data('id');
@@ -148,7 +151,7 @@ window.bp = window.bp || {};
 				self.current_media = self.medias[self.current_index];
 				self.showMedia();
 			} else {
-				$( '#bb-media-model-container' ).find( '.bb-next-media' ).hide();
+				self.nextLink.hide();
 			}
 		},
 
@@ -160,24 +163,24 @@ window.bp = window.bp || {};
 				self.current_media = self.medias[self.current_index];
 				self.showMedia();
 			} else {
-				$( '#bb-media-model-container' ).find( '.bb-prev-media' ).hide();
+				self.previousLink.hide();
 			}
 		},
 
 		navigationCommands: function() {
 			var self = this;
 			if ( self.current_index == 0 && self.current_index != ( self.medias.length - 1 ) ) {
-				$( '#bb-media-model-container' ).find( '.bb-prev-media' ).hide();
-				$( '#bb-media-model-container' ).find( '.bb-next-media' ).show();
+				self.previousLink.hide();
+				self.nextLink.show();
 			} else if ( self.current_index == 0 && self.current_index == ( self.medias.length - 1 ) ) {
-				$( '#bb-media-model-container' ).find( '.bb-prev-media' ).hide();
-				$( '#bb-media-model-container' ).find( '.bb-next-media' ).hide();
+				self.previousLink.hide();
+				self.nextLink.hide();
 			} else if ( self.current_index == ( self.medias.length - 1 ) ) {
-				$( '#bb-media-model-container' ).find( '.bb-prev-media' ).show();
-				$( '#bb-media-model-container' ).find( '.bb-next-media' ).hide();
+				self.previousLink.show();
+				self.nextLink.hide();
 			} else {
-				$( '#bb-media-model-container' ).find( '.bb-prev-media' ).show();
-				$( '#bb-media-model-container' ).find( '.bb-next-media' ).show();
+				self.previousLink.show();
+				self.nextLink.show();
 			}
 		}
 	};
