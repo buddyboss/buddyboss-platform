@@ -3369,8 +3369,13 @@ body.buddypress.bp-user #page #primary .entry-header {
   flex-direction: column;
 }
 
+.buddypress-wrap .profile.edit .editfield legend {
+  margin-bottom: 10px;
+}
+
 .buddypress-wrap .profile.edit .editfield .description {
-  margin-top: 10px;
+  margin-top: -10px;
+  margin-bottom: 10px;
   order: 2;
 }
 

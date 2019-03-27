@@ -961,7 +961,7 @@ function bp_core_get_users_admin_tabs( $active_tab = '') {
 	$tabs[] = array(
 		'href'  => esc_url( $section_link ),
 		'name'  => __( 'Profile Navigation', 'buddypress' ),
-		'class' => 'bp-user-customize-layout',
+		'class' => 'bp-user-customizer',
 	);
 
 	/**

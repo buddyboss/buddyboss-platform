@@ -2376,7 +2376,7 @@ function bp_core_get_groups_admin_tabs( $active_tab = '') {
 	$tabs[] = array(
 		'href'  => esc_url( $section_link ),
 		'name'  => __( 'Group Navigation', 'buddypress' ),
-		'class' => 'bp-group-customize-layout',
+		'class' => 'bp-group-customizer',
 	);
 
 	/**
@@ -2449,8 +2449,8 @@ function bp_core_get_emails_admin_tabs( $active_tab = '') {
 
 	$tabs[] = array(
 		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-emails-customizer-redirect' ), 'themes.php' ) ),
-		'name'  => __( 'Customize Layout', 'buddypress' ),
-		'class' => 'bp-group-types',
+		'name'  => __( 'Email Layout', 'buddypress' ),
+		'class' => 'bp-emails-customizer',
 	);
 
 	/**
