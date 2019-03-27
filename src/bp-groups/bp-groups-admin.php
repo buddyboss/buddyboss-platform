@@ -734,9 +734,9 @@ function bp_groups_admin_edit() {
 }
 
 /**
- * Display the single groups edit screen.
+ * Display the single groups create screen.
  *
- * @since BuddyPress 1.7.0
+ * @since BuddyBoss 1.0.0
  */
 function bp_groups_admin_create() {
 
@@ -815,8 +815,15 @@ function bp_groups_admin_create() {
 	<?php
 }
 
+// action for saving the data of newly create group from the backend.
 add_action( 'admin_post_bp_create_group_admin', 'bp_process_create_group_admin' );
 
+/**
+ * Saving the data of newly create group from the backend.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
 function bp_process_create_group_admin() {
 
 	if ( !current_user_can( 'manage_options' ) ) {
