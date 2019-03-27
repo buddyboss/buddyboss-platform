@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 function bp_core_admin_pages_settings() {
 
 	// Flush the rewrite rule to work forum on newly assigned the page.
-	if ( 'true' === $_GET['added'] ) {
+	if ( isset( $_GET['added'] ) && 'true' === $_GET['added'] ) {
 		flush_rewrite_rules( true );
 	}
 	?>
