@@ -1301,11 +1301,6 @@ a.layout-grid-view {
   min-width: 180px;
 }
 
-.activity-update-form #whats-new-toolbar .post-elements-buttons-item.post-emoji {
-  position: absolute;
-  right: 0;
-}
-
 .activity-update-form #whats-new-textarea textarea {
   background: #fff;
   -webkit-box-sizing: border-box;
