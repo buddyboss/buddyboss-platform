@@ -998,6 +998,14 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
 			}
 		}
 
+		// Exclude Kick & Ban button for the site admin.
+		if ( 'manage_members' === $type && isset( $GLOBALS['members_template']->member->user_id ) ) {
+			$user_id = $GLOBALS['members_template']->member->user_id;
+			if ( user_can( $user_id, 'manage_options' ) ) {
+				unset( $buttons['ban_member'] );
+			}
+		}
+
 		/**
 		 * Filter to add your buttons, use the position argument to choose where to insert it.
 		 *
