@@ -311,10 +311,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 				}
 				if ( jQuery('.popup-modal-login').length ) {
 					jQuery('.popup-modal-login').magnificPopup({
-						type: 'inline',
-						preloader: false,
-						fixedContentPos: true,
-						modal: true
+                        type: 'inline',
+    					preloader: false,
+                        fixedBgPos: true,
+    					fixedContentPos: true
 					});
 					jQuery('.popup-modal-dismiss').click(function (e) {
 						e.preventDefault();
