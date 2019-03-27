@@ -98,19 +98,23 @@ class WcHelper {
 
 		if (BPMS_DEBUG) {
 			error_log("wcOrderUpdated() injected, order is updated at this point");
-			// error_log(print_r($wcObj, true));
+			error_log(print_r($wcObj, true));
 		}
+		$isRecurring = self::wcIsRecurring($wcObj);
+		$grantStatus = self::wcIdentifyGrantStatus($wcObj);
+		$revokeStatus = self::wcIdentifyRevokeStatus($wcObj);
 
 		$status = $wcObj->status;
-		error_log("Status is : $status");
+		if (BPMS_DEBUG) {
+			error_log("WcHelper->wcOrderUpdated, Status : $status, isRecurring : $isRecurring");
+		}
 
-		$grantValues = array('completed');
-		$revokeValues = array('pending', 'processing', 'on-hold', 'cancelled', 'refunded');
+		error_log("WcHelper->wcOrderUpdated, Status : $status, isRecurring : $isRecurring");
 
-		if (in_array($status, $revokeValues)) {
+		if (in_array($status, $revokeStatus)) {
 			// revoke access
 			BpMemberships::bpmsUpdateMembershipAccess($wcObj, WC_PRODUCT_SLUG, false);
-		} else if (in_array($status, $grantValues)) {
+		} else if (in_array($status, $grantStatus)) {
 			// grant access
 			BpMemberships::bpmsUpdateMembershipAccess($wcObj, WC_PRODUCT_SLUG, true);
 		}
@@ -126,19 +130,76 @@ class WcHelper {
 			// error_log(print_r($wcObj->id, true));
 		}
 
+		$isRecurring = self::wcIsRecurring($wcObj);
+		$grantStatus = self::wcIdentifyGrantStatus($wcObj);
+		$revokeStatus = self::wcIdentifyRevokeStatus($wcObj);
+
 		$status = $wcObj->status;
-		error_log("Status is : $status");
+		if (BPMS_DEBUG) {
+			error_log("WcHelper->wcSubscriptionUpdated, Status : $status, isRecurring : $isRecurring");
+		}
+		error_log("WcHelper->wcSubscriptionUpdated, Status : $status, isRecurring : $isRecurring");
 
-		$grantValues = array('active');
-		$revokeValues = array('on-hold', 'cancelled', 'expired');
-
-		if (in_array($status, $revokeValues)) {
+		if (in_array($status, $revokeStatus)) {
 			// revoke access
 			BpMemberships::bpmsUpdateMembershipAccess($wcObj, WC_PRODUCT_SLUG, false);
-		} else if (in_array($status, $grantValues)) {
+		} else if (in_array($status, $grantStatus)) {
 			// grant access
 			BpMemberships::bpmsUpdateMembershipAccess($wcObj, WC_PRODUCT_SLUG, true);
 		}
+	}
+
+	/**
+	 * @param  {object}  $wcObj WooCommerce Order (Recurring | Non-Recurring) Object
+	 * @return  {boolean} Whether the order is recurring(including old or new)
+	 * @todo  Find differentiator between Recurring | Non-Recurring
+	 */
+	public static function wcIsRecurring($wcObj) {
+
+		$isRecurring = false;
+		if (isset($wcObj->order_type)) {
+			$isRecurring = $wcObj->order_type == 'shop_subscription' ? true : false;
+		}
+
+		return $isRecurring;
+
+	}
+
+	/**
+	 * @param  {object}  $wcObj WooCommerce Order(Recurring | Non-Recurring) Object
+	 * @return  {array} Grant status based on order type (Eg : Recurring or Non-Recurring)
+	 * @see Possible status: 'pending','active','on-hold','expired','failed' AND  'pending','completed','processing','on-hold','cancelled','refunded','failed'
+	 */
+	public static function wcIdentifyGrantStatus($wcObj) {
+		$isRecurring = self::wcIsRecurring($wcObj);
+		// NOTE : Configs for NON-RECURRING Transaction
+		$grantStatus = array('completed');
+
+		if ($isRecurring) {
+			// NOTE : Configs for RECURRING Transaction
+			$grantStatus = array('active');
+		}
+
+		return $grantStatus;
+
+	}
+
+	/**
+	 * @param  {object}  $wcObj WooCommerce Order(Recurring | Non-Recurring) Object
+	 * @return  {array} Grant status based on order type (Eg : Recurring or Non-Recurring)
+	 * @see Possible status: 'pending','active','on-hold','expired','failed' AND  'pending','completed','processing','on-hold','cancelled','refunded','failed'
+	 */
+	public static function wcIdentifyRevokeStatus($wcObj) {
+		$isRecurring = self::wcIsRecurring($wcObj);
+		// NOTE : Configs for NON-RECURRING Transaction
+		$revokeStatus = array('pending', 'processing', 'on-hold', 'cancelled', 'refunded', 'failed');
+
+		if ($isRecurring) {
+			// NOTE : Configs for RECURRING Transaction
+			$revokeStatus = array('pending', 'on-hold', 'expired', 'failed');
+		}
+
+		return $revokeStatus;
 	}
 
 	/**

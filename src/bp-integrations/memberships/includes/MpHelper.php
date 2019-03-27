@@ -89,7 +89,7 @@ class MpHelper {
 	/**
 	 * @param  {object}  $transaction MemberPress transaction (Updated) information
 	 * @return  {void}
-	 * @see Possible status :  'pending','active','confirmed','cancelled' AND  'complete','suspended','failed','refunded'
+	 * @see Possible status: 'pending','active','confirmed','suspended','cancelled' AND  'pending','complete','failed','refunded'
 	 */
 	public static function mpTransactionUpdated($meprObj) {
 		if (BPMS_DEBUG) {
@@ -105,6 +105,7 @@ class MpHelper {
 		if (BPMS_DEBUG) {
 			error_log("MpHelper->mpTransactionUpdated, Status : $status, isRecurring : $isRecurring");
 		}
+
 		error_log("MpHelper->mpTransactionUpdated, Status : $status, isRecurring : $isRecurring");
 
 		if (in_array($status, $revokeStatus)) {
@@ -120,7 +121,7 @@ class MpHelper {
 	/**
 	 * @param  {object}  $meprObj MemberPress Transaction(Including Subscription) Object
 	 * @return  {array} Grant status based on transaction type(Eg : Recurring or Non-Recurring)
-	 * @see Possible status :  'pending','active','confirmed','cancelled' AND  'complete','suspended','failed','refunded'
+	 * @see Possible status: 'pending','active','confirmed','suspended','cancelled' AND  'pending','complete','failed','refunded'
 	 */
 	public static function mpIdentifyGrantStatus($meprObj) {
 		$isRecurring = self::mpIsRecurring($meprObj);
@@ -139,7 +140,7 @@ class MpHelper {
 	/**
 	 * @param  {object}  $meprObj MemberPress Transaction(Including Subscription) Object
 	 * @return  {array} Revoke status based on transaction type(Eg : Recurring or Non-Recurring)
-	 * @see Possible status :  'pending','active','confirmed','cancelled' AND  'complete','suspended','failed','refunded'
+	 * @see Possible status: 'pending','active','confirmed','suspended','cancelled' AND  'pending','complete','failed','refunded'
 	 */
 	public static function mpIdentifyRevokeStatus($meprObj) {
 		$isRecurring = self::mpIsRecurring($meprObj);
@@ -204,8 +205,8 @@ class MpHelper {
 		}
 
 		$isRecurring = self::mpIsRecurring($meprObj);
-		$grantValues = self::mpIdentifyGrantStatus($meprObj);
-		$revokeValues = self::mpIdentifyRevokeStatus($meprObj);
+		$grantStatus = self::mpIdentifyGrantStatus($meprObj);
+		$revokeStatus = self::mpIdentifyRevokeStatus($meprObj);
 
 		$status = $meprObj->status;
 
@@ -213,10 +214,10 @@ class MpHelper {
 			error_log("MpHelper->mpSubscriptionTransitionStatus, Status : $status, isRecurring : $isRecurring");
 		}
 
-		if (in_array($status, $revokeValues)) {
+		if (in_array($status, $revokeStatus)) {
 			// revoke access
 			BpMemberships::bpmsUpdateMembershipAccess($meprObj, MP_PRODUCT_SLUG, false);
-		} else if (in_array($status, $grantValues)) {
+		} else if (in_array($status, $grantStatus)) {
 			// grant access
 			BpMemberships::bpmsUpdateMembershipAccess($meprObj, MP_PRODUCT_SLUG, true);
 		}
@@ -266,7 +267,6 @@ class MpHelper {
 					if ($courseAccessMethod == 'SINGLE_COURSES') {
 
 						$newCourses = array_filter($_REQUEST["bpms-$lmsCourseSlug-$membershipProductType-courses_attached"]);
-						// error_log(print_r($newCourses, true));
 
 						update_post_meta($product->rec->ID, "_bpms-$lmsCourseSlug-$membershipProductType-courses_attached", serialize(array_values($newCourses)));
 					} else if ($courseAccessMethod == 'ALL_COURSES') {
