@@ -138,7 +138,6 @@ class WcHelper {
 		if (BPMS_DEBUG) {
 			error_log("WcHelper->wcSubscriptionUpdated, Status : $status, isRecurring : $isRecurring");
 		}
-		error_log("WcHelper->wcSubscriptionUpdated, Status : $status, isRecurring : $isRecurring");
 
 		if (in_array($status, $revokeStatus)) {
 			// revoke access

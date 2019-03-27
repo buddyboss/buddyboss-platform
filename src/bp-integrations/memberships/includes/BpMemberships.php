@@ -347,7 +347,6 @@ class BpMemberships {
 		if (BPMS_DEBUG) {
 			error_log("updateBpmsEnrollments(), userId is : $userId");
 		}
-		error_log("updateBpmsEnrollments(), userId is : $userId");
 
 		$accessList = array();
 		$lmsCourseSlugs = self::getLmsCourseSlugs(LD_COURSE_SLUG);
@@ -402,8 +401,6 @@ class BpMemberships {
 				error_log("accessList is below:");
 				error_log(print_r($accessList, true));
 			}
-			error_log("accessList is below:");
-			error_log(print_r($accessList, true));
 
 			// Grant or Revoke based on grantFlag
 			foreach ($accessList as $courseId => $grantFlag) {
