@@ -1681,7 +1681,7 @@ function bp_member_type_wprole_metabox( $post ) {
 	$selected_roles = (array) $selected_roles;
 	?>
 
-	<p><?php printf( __( 'Users of the %s profile type will be auto-assigned to the following WordPress roles (includes existing users).', 'buddyboss' ), $post->post_title )?></p>
+	<p><?php _e( 'Users of this profile type will be auto-assigned to the following WordPress roles (includes existing users)', 'buddyboss' ); ?></p>
 	<p>
 		<label for="bp-member-type-roles-none">
 			<input
@@ -1724,7 +1724,7 @@ function bp_member_type_wprole_metabox( $post ) {
 function bp_member_type_group_create_metabox( $post ) {
 
 	?>
-	<p><?php printf( __( 'Select which group types the %s profile type is allowed to create. (Leave all unchecked to allow creation of any group type.)', 'buddyboss' ), $post->post_title )?></p>
+	<p><?php _e( 'Select which group types this profile type is allowed to create. (Leave all unchecked to allow creation of any group type.)', 'buddyboss' ); ?></p>
 	<?php
 
 	$get_all_registered_group_types = bp_get_active_group_types();
