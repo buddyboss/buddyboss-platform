@@ -1808,24 +1808,45 @@ function bp_member_type_group_create_metabox( $post ) {
  */
 function bp_member_type_group_auto_join_meta_box( $post ) {
 	?>
-	<p><?php _e( 'Selected group types will automatically approve all membership requests.', 'buddyboss' ); ?></p>
-	<?php
-	$get_all_registered_group_types = bp_get_active_group_types();
 
-	$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_auto_join', true )?: [];
+	<table class="widefat bp-post-type">
+		<thead>
+			<tr>
+				<th colspan="2">
+					<?php _e( 'Auto Group Membership Approval', 'buddyboss' ); ?>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td colspan="2">
+					<?php _e( 'Selected group types will automatically approve all membership requests:', 'buddyboss' ); ?>
+				</td>
+			</tr>
 
-	foreach ( $get_all_registered_group_types as $group_type_id ) {
+		<?php
+		$get_all_registered_group_types = bp_get_active_group_types();
+
+		$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_auto_join', true )?: [];
+
+		foreach ( $get_all_registered_group_types as $group_type_id ) {
 
 		$group_type_key = get_post_meta( $group_type_id, '_bp_group_type_key', true );
 		$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];
 		?>
-		<p>
-			<input type='checkbox' name='bp-group-type-auto-join[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> />
-			<strong><?php _e( $group_type_label, 'buddyboss' ); ?></strong>
-		</p>
-		<?php
+			
+			<tr>
+				<td colspan="2">
+					<input type='checkbox' name='bp-group-type-auto-join[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> /> <?php _e( $group_type_label, 'buddyboss' ); ?>
+				</td>
+			</tr>
 
-	}
+		<?php } ?>
+
+		</tbody>
+	</table>
+
+	<?php
 }
 
 /**
