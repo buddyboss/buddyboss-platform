@@ -1705,7 +1705,7 @@ function bp_group_type_labels_meta_box( $post ) {
 					<?php _e( 'Plural Label', 'buddyboss' ); ?>
 				</th>
 				<td>
-					<input type="text" class="bp-group-type-label-name" name="bp-group-type[label_name]" placeholder="<?php _e( 'e.g. Teams', 'buddyboss' ); ?>"  value="<?php echo esc_attr( $label_name ); ?>" tabindex="1" style="width: 100%" />
+					<input type="text" class="bp-group-type-label-name" name="bp-group-type[label_name]" placeholder="<?php _e( 'e.g. Teams', 'buddyboss' ); ?>"  value="<?php echo esc_attr( $label_name ); ?>" style="width: 100%" />
 				</td>
 			</tr>
 			<tr>
@@ -1713,7 +1713,7 @@ function bp_group_type_labels_meta_box( $post ) {
 					<?php _e( 'Singular Label', 'buddyboss' ); ?>
 				</th>
 				<td>
-					<input type="text" class="bp-group-type-singular-name" name="bp-group-type[label_singular_name]" placeholder="<?php _e( 'e.g. Team', 'buddyboss' ); ?>" value="<?php echo esc_attr( $label_singular_name ); ?>" tabindex="2" style="width: 100%" />
+					<input type="text" class="bp-group-type-singular-name" name="bp-group-type[label_singular_name]" placeholder="<?php _e( 'e.g. Team', 'buddyboss' ); ?>" value="<?php echo esc_attr( $label_singular_name ); ?>" style="width: 100%" />
 				</td>
 			</tr>
 		</tbody>
@@ -1750,7 +1750,7 @@ function bp_group_type_labels_meta_box( $post ) {
 					<?php _e( 'Plural Label', 'buddyboss' ); ?>
 				</th>
 				<td>
-					<input type="text" name="bp-group-type-role[organizer_plural_label_name]" placeholder="<?php _e( 'e.g. Organizers', 'buddyboss' ); ?>"  value="<?php echo esc_attr( $organizer_plural ); ?>" tabindex="3" style="width: 100%;" />
+					<input type="text" name="bp-group-type-role[organizer_plural_label_name]" placeholder="<?php _e( 'e.g. Organizers', 'buddyboss' ); ?>"  value="<?php echo esc_attr( $organizer_plural ); ?>" style="width: 100%;" />
 				</td>
 			</tr>
 			<tr>
@@ -1758,7 +1758,7 @@ function bp_group_type_labels_meta_box( $post ) {
 					<?php _e( 'Singular Label', 'buddyboss' ); ?>
 				</th>
 				<td>
-					<input type="text" name="bp-group-type-role[organizer_singular_label_name]" placeholder="<?php _e( 'e.g. Organizer', 'buddyboss' ); ?>" value="<?php echo esc_attr( $organizer_singular ); ?>" tabindex="4" style="width: 100%;" />
+					<input type="text" name="bp-group-type-role[organizer_singular_label_name]" placeholder="<?php _e( 'e.g. Organizer', 'buddyboss' ); ?>" value="<?php echo esc_attr( $organizer_singular ); ?>" style="width: 100%;" />
 				</td>
 			</tr>
 		</tbody>
@@ -1778,7 +1778,7 @@ function bp_group_type_labels_meta_box( $post ) {
 					<?php _e( 'Plural Label', 'buddyboss' ); ?>
 				</th>
 				<td>
-					<input type="text" name="bp-group-type-role[moderator_plural_label_name]" placeholder="<?php _e( 'e.g. Moderators', 'buddyboss' ); ?>"  value="<?php echo esc_attr( $moderator_plural ); ?>" tabindex="5" style="width: 100%;" />
+					<input type="text" name="bp-group-type-role[moderator_plural_label_name]" placeholder="<?php _e( 'e.g. Moderators', 'buddyboss' ); ?>"  value="<?php echo esc_attr( $moderator_plural ); ?>" style="width: 100%;" />
 				</td>
 			</tr>
 			<tr>
@@ -1786,7 +1786,7 @@ function bp_group_type_labels_meta_box( $post ) {
 					<?php _e( 'Singular Label', 'buddyboss' ); ?>
 				</th>
 				<td>
-					<input type="text" name="bp-group-type-role[moderator_singular_label_name]" placeholder="<?php _e( 'e.g. Moderator', 'buddyboss' ); ?>" value="<?php echo esc_attr( $moderator_singular ); ?>" tabindex="6" style="width: 100%;" />
+					<input type="text" name="bp-group-type-role[moderator_singular_label_name]" placeholder="<?php _e( 'e.g. Moderator', 'buddyboss' ); ?>" value="<?php echo esc_attr( $moderator_singular ); ?>" style="width: 100%;" />
 				</td>
 			</tr>
 		</tbody>
@@ -1806,7 +1806,7 @@ function bp_group_type_labels_meta_box( $post ) {
 					<?php _e( 'Plural Label', 'buddyboss' ); ?>
 				</th>
 				<td>
-					<input type="text" name="bp-group-type-role[member_plural_label_name]" placeholder="<?php _e( 'e.g. Members', 'buddyboss' ); ?>"  value="<?php echo esc_attr( $members_plural ); ?>" tabindex="7" style="width: 100%;" />
+					<input type="text" name="bp-group-type-role[member_plural_label_name]" placeholder="<?php _e( 'e.g. Members', 'buddyboss' ); ?>"  value="<?php echo esc_attr( $members_plural ); ?>" style="width: 100%;" />
 				</td>
 			</tr>
 			<tr>
@@ -1814,7 +1814,7 @@ function bp_group_type_labels_meta_box( $post ) {
 					<?php _e( 'Singular Label', 'buddyboss' ); ?>
 				</th>
 				<td>
-					<input type="text" name="bp-group-type-role[member_singular_label_name]" placeholder="<?php _e( 'e.g. Member', 'buddyboss' ); ?>" value="<?php echo esc_attr( $members_singular ); ?>" tabindex="8" style="width: 100%;" />
+					<input type="text" name="bp-group-type-role[member_singular_label_name]" placeholder="<?php _e( 'e.g. Member', 'buddyboss' ); ?>" value="<?php echo esc_attr( $members_singular ); ?>" style="width: 100%;" />
 				</td>
 			</tr>
 		</tbody>
@@ -1850,7 +1850,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 		<tbody>
 			<tr>
 				<td style="width: 15px">
-					<input type='checkbox' name='bp-group-type[enable_filter]' value='1' <?php checked( $enable_filter, 1 ); ?> tabindex="9" />
+					<input type='checkbox' name='bp-group-type[enable_filter]' value='1' <?php checked( $enable_filter, 1 ); ?> />
 				</td>
 				<td>
 					<?php _e( 'Display this group type in "Types" filter in the Groups Directory', 'buddyboss' ); ?>
@@ -1861,7 +1861,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 					<?php
 					$enable_remove = isset( $meta[ '_bp_group_type_enable_remove' ] ) ? $meta[ '_bp_group_type_enable_remove' ][ 0 ] : 0; //enabled by default
 					?>
-					<input type='checkbox' name='bp-group-type[enable_remove]' value='1' <?php checked( $enable_remove, 1 ); ?> tabindex="10" />
+					<input type='checkbox' name='bp-group-type[enable_remove]' value='1' <?php checked( $enable_remove, 1 ); ?> />
 				</td>
 				<td>
 					<?php _e( 'Hide all groups of this type from the Groups Directory', 'buddyboss' ); ?>
@@ -1905,7 +1905,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 			?>
 				<tr>
 					<td style="width: 15px">
-						<input type='checkbox' name='bp-member-type[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> tabindex="11" />
+						<input type='checkbox' name='bp-member-type[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> />
 					</td>
 					<td>
 						<?php _e( get_the_title( $member_type ), 'buddyboss' ); ?>
@@ -1938,7 +1938,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 			<tbody>
 				<tr>
 					<td style="width: 15px">
-						<input type='checkbox' name='bp-group-type-restrict-invites-user-same-group-type' value='<?php echo esc_attr( 1 ); ?>' <?php checked( $get_restrict_invites_same_group_types, 1 ); ?> tabindex="12" />
+						<input type='checkbox' name='bp-group-type-restrict-invites-user-same-group-type' value='<?php echo esc_attr( 1 ); ?>' <?php checked( $get_restrict_invites_same_group_types, 1 ); ?> />
 					</td>
 					<td>
 						<?php _e( 'If a member is already in a group with this type they cannot be sent an invite to join another group of this type.', 'buddyboss' ); ?>
@@ -1975,7 +1975,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 
 				<tr>
 					<td style="width: 15px">
-						<input type='checkbox' name='bp-member-type-group-invites[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> tabindex="13" />
+						<input type='checkbox' name='bp-member-type-group-invites[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> />
 					</td>
 					<td>
 						<?php _e( get_the_title( $member_type ), 'buddyboss' ); ?>
@@ -2018,7 +2018,7 @@ function bp_group_short_code_meta_box( $post ) {
 			</tr>
 			<tr>
 				<td style="width: 50%">
-					<input id='group-type-shortcode' value='<?php echo '[group type="'. $key .'"]' ?>' tabindex="14" style="width: 100%;">
+					<input id='group-type-shortcode' value='<?php echo '[group type="'. $key .'"]' ?>' style="width: 100%;">
 				</td>
 				<td>
 					<button class="copy-to-clipboard button"  data-clipboard-target="#group-type-shortcode"><?php _e('Copy to clipboard', 'buddyboss' ) ?></button>
