@@ -1638,6 +1638,84 @@ function bp_member_type_permissions_metabox( $post ) {
 		</tbody>
 	</table>
 
+	///// CONDITION GOES HERE /////
+
+	<table class="widefat bp-post-type">
+		<thead>
+			<tr>
+				<th colspan="2">
+					<?php _e( 'Allowed Group Types', 'buddyboss' ); ?>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td colspan="2">
+					<?php _e( 'Select which group types this profile type is allowed to create. (Leave all unchecked to allow creation of any group type.)', 'buddyboss' ); ?>
+				</td>
+			</tr>
+
+		<?php
+
+		$get_all_registered_group_types = bp_get_active_group_types();
+
+		$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_create', true ) ?: [];
+
+		?>
+
+			<tr>
+				<td colspan="2">
+					<input class="group-type-checkboxes" type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( 'none' ); ?>' <?php checked( in_array( 'none', $get_selected_group_types ) ); ?> /> <?php _e( '(None)', 'buddyboss' ); ?>
+				</td>
+			</tr>
+
+		<?php
+
+		foreach ( $get_all_registered_group_types as $group_type_id ) {
+
+			$group_type_key = get_post_meta( $group_type_id, '_bp_group_type_key', true );
+			$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];
+			?>
+			
+			<tr>
+				<td colspan="2">
+					<input class="group-type-checkboxes"  type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> /> <?php _e( $group_type_label, 'buddyboss' ); ?>
+				</td>
+			</tr>
+
+		<?php } ?>
+
+		</tbody>
+	</table>
+	<script>
+		jQuery( document ).ready(function() {
+			jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').click(function () {
+				var checkValues = jQuery(this).val();
+				if ('none' === checkValues && jQuery(this).is(':checked')) {
+					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('checked', false);
+					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('disabled', true);
+					jQuery(this).attr('checked', true);
+					jQuery(this).attr('disabled', false);
+				} else {
+					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('disabled', false);
+				}
+			});
+
+			jQuery("#bp-member-type-group-create .inside .group-type-checkboxes").each(function () {
+				var checkValues = jQuery(this).val();
+				if ('none' === checkValues && jQuery(this).is(':checked')) {
+					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('checked', false);
+					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('disabled', true);
+					jQuery(this).attr('checked', true);
+					jQuery(this).attr('disabled', false);
+					return false;
+				} else {
+					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('disabled', false);
+				}
+			});
+		});
+	</script>
+
 	<?php
 }
 
@@ -1742,81 +1820,8 @@ function bp_member_type_group_create_metabox( $post ) {
 
 	?>
 
-	<table class="widefat bp-post-type">
-		<thead>
-			<tr>
-				<th colspan="2">
-					<?php _e( 'Allowed Group Types', 'buddyboss' ); ?>
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td colspan="2">
-					<?php _e( 'Select which group types this profile type is allowed to create. (Leave all unchecked to allow creation of any group type.)', 'buddyboss' ); ?>
-				</td>
-			</tr>
+	<h3>Old Allowed Group Types metabox
 
-		<?php
-
-		$get_all_registered_group_types = bp_get_active_group_types();
-
-		$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_create', true ) ?: [];
-
-		?>
-
-			<tr>
-				<td colspan="2">
-					<input class="group-type-checkboxes" type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( 'none' ); ?>' <?php checked( in_array( 'none', $get_selected_group_types ) ); ?> /> <?php _e( '(None)', 'buddyboss' ); ?>
-				</td>
-			</tr>
-
-		<?php
-
-		foreach ( $get_all_registered_group_types as $group_type_id ) {
-
-			$group_type_key = get_post_meta( $group_type_id, '_bp_group_type_key', true );
-			$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];
-			?>
-			
-			<tr>
-				<td colspan="2">
-					<input class="group-type-checkboxes"  type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> /> <?php _e( $group_type_label, 'buddyboss' ); ?>
-				</td>
-			</tr>
-
-		<?php } ?>
-
-		</tbody>
-	</table>
-	<script>
-		jQuery( document ).ready(function() {
-			jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').click(function () {
-				var checkValues = jQuery(this).val();
-				if ('none' === checkValues && jQuery(this).is(':checked')) {
-					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('checked', false);
-					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('disabled', true);
-					jQuery(this).attr('checked', true);
-					jQuery(this).attr('disabled', false);
-				} else {
-					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('disabled', false);
-				}
-			});
-
-			jQuery("#bp-member-type-group-create .inside .group-type-checkboxes").each(function () {
-				var checkValues = jQuery(this).val();
-				if ('none' === checkValues && jQuery(this).is(':checked')) {
-					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('checked', false);
-					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('disabled', true);
-					jQuery(this).attr('checked', true);
-					jQuery(this).attr('disabled', false);
-					return false;
-				} else {
-					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('disabled', false);
-				}
-			});
-		});
-	</script>
 	<?php
 }
 
