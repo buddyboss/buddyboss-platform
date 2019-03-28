@@ -15,11 +15,11 @@
 
 	<dl class="groups-manage-members-list">
 
-	<dt class="admin-section section-title"><?php esc_html_e( get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ), 'buddyboss' ); ?></dt>
+	<dt class="admin-section section-title"><?php echo esc_html( get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ), 'buddyboss' ); ?></dt>
 
 	<?php if ( bp_has_members( '&include=' . bp_group_admin_ids() ) ) : ?>
 		<dd class="admin-listing">
-			
+
 			<p><?php printf( __( '%s have total control over the contents and settings of a group. That includes all the abilities of %s, as well as the ability to turn group forums on or off, change group status from public to private, change the group photo,  manage group %s, and delete the group.', 'buddyboss' ), get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'moderator_plural_label_name' ) ), strtolower( get_group_role_label( bp_get_current_group_id(), 'member_plural_label_name' ) ) ); ?></p>
 
 			<ul id="admins-list" class="item-list single-line">
@@ -49,7 +49,7 @@
 
 	<?php if ( bp_group_has_moderators() ) : ?>
 
-		<dt class="moderator-section section-title"><?php esc_html_e( get_group_role_label( bp_get_current_group_id(), 'moderator_plural_label_name' ), 'buddyboss' ); ?></dt>
+		<dt class="moderator-section section-title"><?php echo esc_html( get_group_role_label( bp_get_current_group_id(), 'moderator_plural_label_name' ), 'buddyboss' ); ?></dt>
 
 		<dd class="moderator-listing">
 
@@ -82,7 +82,7 @@
 	<?php endif ?>
 
 
-	<dt class="gen-members-section section-title"><?php esc_html_e( get_group_role_label( bp_get_current_group_id(), 'member_plural_label_name' ), 'buddyboss' ); ?></dt>
+	<dt class="gen-members-section section-title"><?php echo esc_html( get_group_role_label( bp_get_current_group_id(), 'member_plural_label_name' ), 'buddyboss' ); ?></dt>
 
 	<dd class="general-members-listing">
 

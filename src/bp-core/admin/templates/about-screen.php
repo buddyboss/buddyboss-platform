@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 		</div>
 
 		<div class="bp-hello-title">
-			<h1 id="bp-hello-title" tabindex="-1"><?php esc_html_e( __( 'New in BuddyBoss', 'buddyboss' ) ); ?></h1>
+			<h1 id="bp-hello-title" tabindex="-1"><?php esc_html_e( 'New in BuddyBoss', 'buddyboss' ); ?></h1>
 		</div>
 	</div>
 
@@ -47,10 +47,10 @@ defined( 'ABSPATH' ) || exit;
 
 		<hr>
 
-		<h2><?php esc_html_e( __( 'Feature', 'buddyboss' ) ); ?></h2>
+		<h2><?php esc_html_e( 'Feature', 'buddyboss' ); ?></h2>
 		<p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'buddyboss' ); ?></p>
 
-		<h2><?php esc_html_e( __( "Feature", 'buddyboss' ) ); ?></h2>
+		<h2><?php esc_html_e( "Feature", 'buddyboss' ); ?></h2>
 		<p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'buddyboss' ); ?></p>
 
 		<p><?php esc_html_e( 'Thank you for using BuddyBoss!', 'buddyboss' ); ?></p>

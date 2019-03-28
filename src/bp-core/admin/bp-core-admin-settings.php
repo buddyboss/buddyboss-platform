@@ -591,7 +591,7 @@ function bp_feed_settings_callback_platform( $args ) {
 		$option_name = $args['activity_name'];
 		?>
 		<input name="<?php echo esc_attr( 'bp-feed-platform-'.$option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bp_platform_is_feed_enable( 'bp-feed-platform-'.$option_name, true ) ); ?>/>
-		<label for="<?php echo esc_attr( $option_name ); ?>"><?php esc_html_e( $args['activity_label'], 'buddyboss' ); ?></label>
+		<label for="<?php echo esc_attr( $option_name ); ?>"><?php echo esc_html( $args['activity_label'], 'buddyboss' ); ?></label>
 		<?php
 
 }
