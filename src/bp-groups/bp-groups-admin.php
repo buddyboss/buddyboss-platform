@@ -1691,8 +1691,6 @@ function bp_group_type_labels_meta_box( $post ) {
 	$label_singular_name = isset( $meta[ '_bp_group_type_label_singular_name' ] ) ? $meta[ '_bp_group_type_label_singular_name' ][ 0 ] : '';
 	?>
 
-	<br />
-
 	<table class="widefat bp-content-type">
 		<thead>
 			<tr>
@@ -1766,8 +1764,6 @@ function bp_group_type_labels_meta_box( $post ) {
 		</tbody>
 	</table>
 
-	<br />
-
 	<table class="widefat bp-content-type">
 		<thead>
 			<tr>
@@ -1795,8 +1791,6 @@ function bp_group_type_labels_meta_box( $post ) {
 			</tr>
 		</tbody>
 	</table>
-
-	<br />
 
 	<table class="widefat bp-content-type">
 		<thead>
@@ -1845,8 +1839,6 @@ function bp_group_type_permissions_meta_box( $post ) {
 	$enable_filter = isset( $meta[ '_bp_group_type_enable_filter' ] ) ? $meta[ '_bp_group_type_enable_filter' ][ 0 ] : 0; //disabled by default
 	?>
 
-	<br />
-
 	<table class="widefat bp-content-type">
 		<thead>
 			<tr>
@@ -1885,8 +1877,6 @@ function bp_group_type_permissions_meta_box( $post ) {
 	if ( isset( $get_all_registered_member_types ) && !empty( $get_all_registered_member_types ) ) {
 		
 	?>
-
-		<br />
 
 		<table class="widefat bp-content-type">
 			<thead>
@@ -1957,8 +1947,6 @@ function bp_group_type_permissions_meta_box( $post ) {
 			</tbody>
 		</table>
 
-		<br />
-
 		<table class="widefat bp-content-type">
 			<thead>
 				<tr>
@@ -2020,8 +2008,6 @@ function bp_group_short_code_meta_box( $post ) {
 
 	$key = bp_get_group_type_key( $post->ID );
 	?>
-
-	<br />
 
 	<table class="widefat bp-content-type">
 		<tbody>
