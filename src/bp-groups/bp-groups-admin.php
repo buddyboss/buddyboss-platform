@@ -1970,7 +1970,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 			<tbody>
 				<tr>
 					<td colspan="2">
-						<?php _e( 'Only these selected profile types may be sent requests to join this group. (Leave blank for unrestricted invites)', 'buddyboss' ); ?>
+						<?php _e( 'Only members of the selected profile types may be sent requests to join this group. (Leave blank for unrestricted invites)', 'buddyboss' ); ?>
 					</td>
 				</tr>
 
