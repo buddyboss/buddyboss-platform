@@ -1905,7 +1905,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 			?>
 				<tr>
 					<td style="width: 15px">
-						<input type='checkbox' name='bp-member-type[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> tabindex="7" />
+						<input type='checkbox' name='bp-member-type[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> tabindex="11" />
 					</td>
 					<td>
 						<?php _e( get_the_title( $member_type ), 'buddyboss' ); ?>
@@ -1938,7 +1938,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 			<tbody>
 				<tr>
 					<td style="width: 15px">
-						<input type='checkbox' name='bp-group-type-restrict-invites-user-same-group-type' value='<?php echo esc_attr( 1 ); ?>' <?php checked( $get_restrict_invites_same_group_types, 1 ); ?> tabindex="7" />
+						<input type='checkbox' name='bp-group-type-restrict-invites-user-same-group-type' value='<?php echo esc_attr( 1 ); ?>' <?php checked( $get_restrict_invites_same_group_types, 1 ); ?> tabindex="12" />
 					</td>
 					<td>
 						<?php _e( 'If a member is already in a group with this type they cannot be sent an invite to join another group of this type.', 'buddyboss' ); ?>
@@ -1975,7 +1975,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 
 				<tr>
 					<td style="width: 15px">
-						<input type='checkbox' name='bp-member-type-group-invites[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> tabindex="7" />
+						<input type='checkbox' name='bp-member-type-group-invites[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> tabindex="13" />
 					</td>
 					<td>
 						<?php _e( get_the_title( $member_type ), 'buddyboss' ); ?>
@@ -2018,7 +2018,7 @@ function bp_group_short_code_meta_box( $post ) {
 			</tr>
 			<tr>
 				<td style="width: 50%">
-					<input id='group-type-shortcode' value='<?php echo '[group type="'. $key .'"]' ?>' style="width: 100%;">
+					<input id='group-type-shortcode' value='<?php echo '[group type="'. $key .'"]' ?>' tabindex="14" style="width: 100%;">
 				</td>
 				<td>
 					<button class="copy-to-clipboard button"  data-clipboard-target="#group-type-shortcode"><?php _e('Copy to clipboard', 'buddyboss' ) ?></button>
