@@ -3547,7 +3547,7 @@ function bp_member_type_directory() {
 			$type_id = 0;
 		?>
 	<li id="members-<?php echo $type_id; ?>">
-		<a href="<?php echo bp_member_type_directory_permalink( $type_name ); ?>"><?php printf( __( $member_type_name.' <span>%s</span>', 'buddyboss' ),$members_count ); //@todo no variables in the text domain please ?></a>
+		<a href="<?php echo bp_member_type_directory_permalink( $type_name ); ?>"><?php printf( '%s <span>%s</span>', $member_type_name, $members_count ); //@todo no variables in the text domain please ?></a>
 		</li><?php
 	}
 }
@@ -3935,7 +3935,6 @@ function bp_get_user_member_type( $user_id ) {
 				// Output the
 				if ( $type_obj = bp_get_member_type_object( $type ) ) {
 					$member_type = $type_obj->labels['singular_name'];
-					$member_type = __( $member_type, 'buddyboss');
 				}
 
 				$string = '<span class="bp-member-type">'.$member_type.'</span>';
@@ -3956,7 +3955,6 @@ function bp_get_user_member_type( $user_id ) {
 				// Output the
 				if ( $type_obj = bp_get_member_type_object( $type ) ) {
 					$member_type = $type_obj->labels['singular_name'];
-					$member_type = __( $member_type, 'buddyboss');
 					$string = '<span class="bp-member-type">'.$member_type.'</span>';
 				} else {
 					$string = '';

@@ -1781,7 +1781,7 @@ function bp_member_type_group_create_metabox( $post ) {
 
 			<tr>
 				<td colspan="2">
-					<input class="group-type-checkboxes"  type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> /> <?php _e( $group_type_label, 'buddyboss' ); ?>
+					<input class="group-type-checkboxes"  type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> /> <?php echo $group_type_label; ?>
 				</td>
 			</tr>
 
@@ -1858,7 +1858,7 @@ function bp_member_type_group_auto_join_meta_box( $post ) {
 
 			<tr>
 				<td colspan="2">
-					<input type='checkbox' name='bp-group-type-auto-join[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> /> <?php _e( $group_type_label, 'buddyboss' ); ?>
+					<input type='checkbox' name='bp-group-type-auto-join[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> /> <?php echo $group_type_label; ?>
 				</td>
 			</tr>
 
@@ -1914,7 +1914,7 @@ function bp_member_type_invite_meta_box( $post ) {
 
 			<tr>
 				<td colspan="2">
-					<input type='checkbox' name='bp-member-type-invite[]' value='<?php echo esc_attr( $member_type_id ); ?>' <?php checked( in_array( $member_type_id, $get_selected_profile_types ) ); ?> /> <?php _e( $member_type_name, 'buddyboss' ); ?>
+					<input type='checkbox' name='bp-member-type-invite[]' value='<?php echo esc_attr( $member_type_id ); ?>' <?php checked( in_array( $member_type_id, $get_selected_profile_types ) ); ?> /> <?php echo $member_type_name; ?>
 				</td>
 			</tr>
 
@@ -2017,9 +2017,8 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 		if ( true === $bp_prevent_data_update ) {
 			if ( 'administrator' === $old_wp_roles[0] ) {
 				if ( ! in_array( $current_user_role, $wp_roles ) ) {
-					$bp_error_message_string = 'As your profile is currently assigned to this profile type, you cannot change its associated WordPress role. Changing this setting would remove your Administrator role and lock you out of the WordPress admin. You first need to remove yourself from this profile type (at Users > Your Profile > Extended) and then you can come back to this page to update the associated WordPress role.';
-					$error_message           = apply_filters( 'bp_member_type_admin_error_message',
-						__( $bp_error_message_string, 'buddyboss' ) );
+					$bp_error_message_string = __( 'As your profile is currently assigned to this profile type, you cannot change its associated WordPress role. Changing this setting would remove your Administrator role and lock you out of the WordPress admin. You first need to remove yourself from this profile type (at Users > Your Profile > Extended) and then you can come back to this page to update the associated WordPress role.', 'buddyboss' );
+					$error_message           = apply_filters( 'bp_member_type_admin_error_message', $bp_error_message_string);
 					// Define the settings error to display
 					add_settings_error( 'bp-invalid-role-selection',
 						'bp-invalid-role-selection',

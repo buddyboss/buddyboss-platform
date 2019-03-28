@@ -247,9 +247,7 @@ function bp_admin_setting_callback_page_directory_dropdown($args) {
 		if ( '' !== $description )
 			printf(
 				'<p class="description">%s</p>',
-				sprintf(
-					__( $description, 'buddyboss' )
-				)
+				$description
 			);
 
 	// For the normal directory pages.
@@ -275,9 +273,7 @@ function bp_admin_setting_callback_page_directory_dropdown($args) {
 		if ( '' !== $description )
 			printf(
 				'<p class="description">%s</p>',
-				sprintf(
-					__( $description, 'buddyboss' )
-				)
+				$description,
 			);
 
 	}

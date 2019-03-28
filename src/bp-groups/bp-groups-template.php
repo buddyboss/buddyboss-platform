@@ -701,19 +701,16 @@ function bp_get_group_type( $group = false ) {
 		if ( 'public' == $group->status ) {
 
 			$group_visibility = __( 'Public', 'buddyboss' );
-			$group_type       = __( $group_type, 'buddyboss' );
 			$type = !empty( $group_type ) ? '<span class="group-visibility public">'.$group_visibility.'</span> <span class="type-separator">/</span> <span class="group-type">'.$group_type.'</span>'  : '<span class="group-visibility public">'.__( "Public Group", 'buddyboss' ).'</span>';
 
 		} elseif ( 'hidden' == $group->status ) {
 
 			$group_visibility = __( 'Hidden', 'buddyboss' );
-			$group_type       = __( $group_type, 'buddyboss' );
 			$type = !empty( $group_type ) ? '<span class="group-visibility hidden">'.$group_visibility.'</span> <span class="type-separator">/</span> <span class="group-type">'.$group_type.'</span>'  : '<span class="group-visibility hidden">'.__( "Hidden Group", 'buddyboss' ).'</span>';
 
 		} elseif ( 'private' == $group->status ) {
 
 			$group_visibility = __( 'Private', 'buddyboss' );
-			$group_type       = __( $group_type, 'buddyboss' );
 			$type = !empty( $group_type ) ? '<span class="group-visibility private">'.$group_visibility.'</span> <span class="type-separator">/</span> <span class="group-type">'.$group_type.'</span>'  : '<span class="group-visibility private">'.__( "Private Group", 'buddyboss' ).'</span>';
 
 		} else {

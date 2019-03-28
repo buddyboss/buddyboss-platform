@@ -46,7 +46,7 @@ if ( isset( $display_arr ) && !empty( $display_arr )) {
 					<option value=""><?php _e( 'All Types', 'buddyboss' ); ?></option><?php
 					foreach ( $display_arr as $group ) {
 						?>
-						<option value="<?php echo $group['group_type_name']; ?>"><?php _e( $group['group_type_label'], 'buddyboss' ); ?></option><?php
+						<option value="<?php echo $group['group_type_name']; ?>"><?php echo $group['group_type_label']; ?></option><?php
 					}
 					?>
 				</select>
