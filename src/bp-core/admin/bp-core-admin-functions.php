@@ -1499,7 +1499,7 @@ add_filter( 'bp_active_components', 'bp_xprofile_always_active' );
  */
 function bp_member_type_custom_metaboxes() {
 	add_meta_box( 'bp-member-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_member_type_labels_metabox', null, 'normal', 'high' );
-	add_meta_box( 'bp-member-type-visibility', __( 'Visibility', 'buddyboss' ), 'bp_member_type_visibility_metabox', null, 'normal', 'high' );
+	add_meta_box( 'bp-member-type-permissions', __( 'Permissions', 'buddyboss' ), 'bp_member_type_permissions_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-shortcode', __( 'Shortcode', 'buddyboss' ), 'bp_profile_shortcode_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-wp-role', __( 'WordPress Role', 'buddyboss' ), 'bp_member_type_wprole_metabox', null, 'normal', 'high' );
 		add_meta_box( 'bp-member-type-key', __( 'Profile Type Key &mdash; REMOVE ME', 'buddyboss' ), 'bp_member_type_key_metabox', null, 'normal', 'high' );
@@ -1597,13 +1597,13 @@ function bp_member_type_labels_metabox( $post ) {
 }
 
 /**
- * Generate profile type Directory Meta box.
+ * Generate Profile Type Permissions Meta box.
  *
  * @since BuddyBoss 1.0.0
  *
  * @param WP_Post $post
  */
-function bp_member_type_visibility_metabox( $post ) {
+function bp_member_type_permissions_metabox( $post ) {
 
 	$meta = get_post_custom( $post->ID );
 	?>
