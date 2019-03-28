@@ -1689,24 +1689,6 @@ function bp_group_type_custom_meta_boxes() {
 }
 
 /**
- * Generate Group Type Key Meta box.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param WP_Post $post
- */
-function bp_group_type_key_meta_box( $post ) {
-
-	$key = get_post_meta($post->ID, '_bp_group_type_key', true );
-	?>
-	<p>
-		<input type="text" name="bp-group-type[group_type_key]" value="<?php echo $key; ?>" placeholder="<?php _e( 'e.g. teams', 'buddyboss' ); ?>" />
-	</p>
-	<p><?php _e( 'Group Type Keys are used as internal identifiers. Lowercase alphanumeric characters, dashes and underscores are allowed.', 'buddyboss' ); ?></p>
-	<?php
-}
-
-/**
  * Generate group Type Label Meta box.
  *
  * @since BuddyBoss 1.0.0
@@ -2021,6 +2003,24 @@ function bp_group_type_group_invites_meta_box( $post ) {
 
 	<?php
 
+}
+
+/**
+ * Generate Group Type Key Meta box.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param WP_Post $post
+ */
+function bp_group_type_key_meta_box( $post ) {
+
+	$key = get_post_meta($post->ID, '_bp_group_type_key', true );
+	?>
+	<p>
+		<input type="text" name="bp-group-type[group_type_key]" value="<?php echo $key; ?>" placeholder="<?php _e( 'e.g. teams', 'buddyboss' ); ?>" />
+	</p>
+	<p><?php _e( 'Group Type Keys are used as internal identifiers. Lowercase alphanumeric characters, dashes and underscores are allowed.', 'buddyboss' ); ?></p>
+	<?php
 }
 
 /**
