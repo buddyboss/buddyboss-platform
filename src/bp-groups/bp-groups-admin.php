@@ -1672,7 +1672,7 @@ function bp_group_type_show_correct_current_menu(){
 function bp_group_type_custom_meta_boxes() {
 	add_meta_box( 'bp-group-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_group_type_labels_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-permissions', __( 'Permissions', 'buddyboss' ), 'bp_group_type_permissions_meta_box', null, 'normal', 'high' );
-	add_meta_box( 'bp-group-type-key', __( 'Group Type Key', 'buddyboss' ), 'bp_group_type_key_meta_box', null, 'normal', 'high' );
+	add_meta_box( 'bp-group-type-key', __( 'Group Type Key &mdash; REMOVE ME', 'buddyboss' ), 'bp_group_type_key_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-short-code', __( 'Shortcode', 'buddyboss' ), 'bp_group_short_code_meta_box', null, 'normal', 'high' );
 
 	// Register meta box only if the profile type is enabled.
@@ -1758,7 +1758,7 @@ function bp_group_type_labels_meta_box( $post ) {
 	<br />
 
 	<h3><?php _e( 'Group Roles', 'buddyboss' ); ?></h3>
-	<p><?php printf( __( 'Rename the group member roles for groups of this type.', 'buddyboss' ), $post->post_title )?></p>
+	<p><?php _e( 'Rename the group member roles for groups of this type.', 'buddyboss' ); ?></p>
 	
 	<table class="widefat bp-content-type">
 		<thead>
@@ -1906,15 +1906,13 @@ function bp_group_short_code_meta_box( $post ) {
 
 	$key = bp_get_group_type_key( $post->ID );
 	?>
-	<p class="group-type-shortcode-wrapper">
-		<!-- Target -->
-		<input id='group-type-shortcode' value='<?php echo '[group type="'. $key .'"]' ?>' style="width: 50%;">
+	<p><?php _e( 'To display all groups with this group type on a dedicated page, add the above shortcode to any WordPress page.', 'buddyboss' ); ?></p>
+	<!-- Target -->
+	<input id='group-type-shortcode' value='<?php echo '[group type="'. $key .'"]' ?>' style="width: 50%;">
 
-		<button class="copy-to-clipboard button"  data-clipboard-target="#group-type-shortcode">
-			<?php _e('Copy to clipboard', 'buddyboss' ) ?>
-		</button>
-	</p>
-	<p><?php printf( __( 'To display all groups with the %s group type on a dedicated page, add the above shortcode to any WordPress page.', 'buddyboss' ), $post->post_title )?></p>
+	<button class="copy-to-clipboard button"  data-clipboard-target="#group-type-shortcode">
+		<?php _e('Copy to clipboard', 'buddyboss' ) ?>
+	</button>
 
 	<?php
 }
@@ -1929,7 +1927,7 @@ function bp_group_short_code_meta_box( $post ) {
 function bp_group_type_auto_join_member_type_meta_box( $post ) {
 
 	?>
-	<p><?php printf( __( 'Members of the selected profile types can always join groups of this type, even if the group is private.', 'buddyboss' ), $post->post_title )?></p>
+	<p><?php _e( 'Members of the selected profile types can always join groups of this type, even if the group is private.', 'buddyboss' ); ?></p>
 	<?php
 
 	$get_all_registered_member_types = bp_get_active_member_types();
@@ -1965,9 +1963,9 @@ function bp_group_type_group_invites_meta_box( $post ) {
 	?>
 	<p>
 		<input type='checkbox' name='bp-group-type-restrict-invites-user-same-group-type' value='<?php echo esc_attr( 1 ); ?>' <?php checked( $get_restrict_invites_same_group_types, 1 ); ?> tabindex="7" />
-		<strong><?php _e( 'Restrict invites to members not currently in any group with this type. (If a member is already in a group with this type they cannot be sent an invite)', 'buddyboss' ); ?></strong>
+		<?php _e( 'Restrict invites to members not currently in any group with this type. (If a member is already in a group with this type they cannot be sent an invite)', 'buddyboss' ); ?>
 	</p>
-	<p><?php printf( __( 'Only these selected profile types may be sent requests to join this group. (Leave blank for unrestricted invites)', 'buddyboss' ), $post->post_title )?></p>
+	<p><?php _e( 'Only these selected profile types may be sent requests to join this group. (Leave blank for unrestricted invites)', 'buddyboss' ); ?></p>
 	<?php
 
 	$get_all_registered_member_types = bp_get_active_member_types();
