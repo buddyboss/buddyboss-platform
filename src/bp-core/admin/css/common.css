@@ -553,14 +553,22 @@ form#bp-groups-form .fixed .column-comment {
   width: 20%;
 }
 
+body.post-type-bp-group-type .postbox .inside {
+  padding: 0 22px 22px;
+}
+
 table.bp-content-type {
-  background: #fafafa;
+  background: #f9f9f9;
   margin-top: 22px;
   border-radius: 3px;
 }
 
-body.post-type-bp-group-type .postbox .inside {
-  padding: 0 22px 22px;
+table.bp-content-type tbody th {
+  width: 23%;
+}
+
+table.bp-content-type tbody td input[type=checkbox] {
+  margin-right: 8px;
 }
 
 /*

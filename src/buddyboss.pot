@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-28 15:56:57+00:00\n"
+"POT-Creation-Date: 2019-03-28 16:23:08+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1840,7 +1840,7 @@ msgid "Hide members of this type from Members Directory"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1629
-#: bp-groups/bp-groups-admin.php:2024 bp-members/bp-members-functions.php:3901
+#: bp-groups/bp-groups-admin.php:2005 bp-members/bp-members-functions.php:3901
 msgid "Copy to clipboard"
 msgstr ""
 
@@ -1942,7 +1942,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:2373
 #: bp-core/admin/settings/bp-admin-setting-groups.php:49
 #: bp-core/admin/settings/bp-admin-setting-groups.php:52
-#: bp-groups/bp-groups-admin.php:2316 bp-groups/bp-groups-functions.php:2900
+#: bp-groups/bp-groups-admin.php:2297 bp-groups/bp-groups-functions.php:2900
 #: bp-groups/bp-groups-functions.php:2903
 msgid "Group Types"
 msgstr ""
@@ -2479,7 +2479,7 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:36 bp-groups/bp-groups-admin.php:46
 #: bp-groups/bp-groups-admin.php:47 bp-groups/bp-groups-admin.php:202
 #: bp-groups/bp-groups-admin.php:956 bp-groups/bp-groups-admin.php:971
-#: bp-groups/bp-groups-admin.php:2065
+#: bp-groups/bp-groups-admin.php:2046
 #: bp-groups/classes/class-bp-groups-component.php:534
 #: bp-groups/classes/class-bp-groups-component.php:809
 #: bp-groups/classes/class-bp-groups-widget.php:74
@@ -5963,7 +5963,7 @@ msgstr ""
 msgid "Field"
 msgstr ""
 
-#: bp-core/profile-search/bps-admin.php:84 bp-groups/bp-groups-admin.php:2062
+#: bp-core/profile-search/bps-admin.php:84 bp-groups/bp-groups-admin.php:2043
 #: bp-members/bp-members-functions.php:3618
 msgid "Label"
 msgstr ""
@@ -10956,8 +10956,7 @@ msgid "Add New Members"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:165 bp-groups/bp-groups-admin.php:1698
-#: bp-groups/bp-groups-admin.php:1934 bp-groups/bp-groups-admin.php:2061
-#: bp-groups/bp-groups-functions.php:2908
+#: bp-groups/bp-groups-admin.php:2042 bp-groups/bp-groups-functions.php:2908
 #: bp-groups/classes/class-bp-groups-list-table.php:698
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:128
 msgid "Group Type"
@@ -11287,85 +11286,81 @@ msgstr ""
 msgid "e.g. Member"
 msgstr ""
 
-#: bp-groups/bp-groups-admin.php:1846 bp-groups/bp-groups-admin.php:2064
+#: bp-groups/bp-groups-admin.php:1846 bp-groups/bp-groups-admin.php:2045
 msgid "Groups Directory"
 msgstr ""
 
-#: bp-groups/bp-groups-admin.php:1856
+#: bp-groups/bp-groups-admin.php:1854
 msgid "Display this group type in \"Types\" filter in the Groups Directory"
 msgstr ""
 
-#: bp-groups/bp-groups-admin.php:1867
+#: bp-groups/bp-groups-admin.php:1863
 msgid "Hide all groups of this type from the Groups Directory"
 msgstr ""
 
-#: bp-groups/bp-groups-admin.php:1885
-msgid "Group Join"
+#: bp-groups/bp-groups-admin.php:1879
+msgid "Group Type Invites"
 msgstr ""
 
-#: bp-groups/bp-groups-admin.php:1892
+#: bp-groups/bp-groups-admin.php:1887
 msgid ""
-"Members of the selected profile types can always join groups of this type, "
-"even if the group is private."
-msgstr ""
-
-#: bp-groups/bp-groups-admin.php:1922
-msgid "Restrict Invites"
-msgstr ""
-
-#: bp-groups/bp-groups-admin.php:1944
-msgid ""
-"If a member is already in a group with this type they cannot be sent an "
+"If a member is already in a group of this type, they cannot be sent an "
 "invite to join another group of this type."
 msgstr ""
 
-#: bp-groups/bp-groups-admin.php:1954 bp-members/bp-members-functions.php:2999
-#: bp-members/bp-members-functions.php:3617
-#: bp-members/classes/class-bp-members-admin.php:841
-#: bp-members/classes/class-bp-members-admin.php:2446
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:22
-msgid "Profile Type"
+#: bp-groups/bp-groups-admin.php:1905
+msgid "Profile Type Invites"
 msgstr ""
 
-#: bp-groups/bp-groups-admin.php:1961
+#: bp-groups/bp-groups-admin.php:1912
 msgid ""
 "Only members of the selected profile types may be sent requests to join "
 "this group. (Leave blank for unrestricted invites)"
 msgstr ""
 
-#: bp-groups/bp-groups-admin.php:2016
+#: bp-groups/bp-groups-admin.php:1943
+msgid "Profile Type Joining"
+msgstr ""
+
+#: bp-groups/bp-groups-admin.php:1950
+msgid ""
+"Members of the selected profile types can always join groups of this type, "
+"even if the group is private."
+msgstr ""
+
+#: bp-groups/bp-groups-admin.php:1997
 msgid ""
 "To display all groups with this group type on a dedicated page, add this "
 "shortcode to any WordPress page."
 msgstr ""
 
-#: bp-groups/bp-groups-admin.php:2045
+#: bp-groups/bp-groups-admin.php:2026
 msgid "e.g. teams"
 msgstr ""
 
-#: bp-groups/bp-groups-admin.php:2047
+#: bp-groups/bp-groups-admin.php:2028
 msgid ""
 "Group Type Keys are used as internal identifiers. Lowercase alphanumeric "
 "characters, dashes and underscores are allowed."
 msgstr ""
 
-#: bp-groups/bp-groups-admin.php:2063
+#: bp-groups/bp-groups-admin.php:2044
 msgid "Groups Filter"
 msgstr ""
 
-#: bp-groups/bp-groups-admin.php:2092 bp-groups/bp-groups-admin.php:2103
+#: bp-groups/bp-groups-admin.php:2073 bp-groups/bp-groups-admin.php:2084
 #: bp-members/bp-members-functions.php:3648
 #: bp-members/bp-members-functions.php:3659
 msgid "Show"
 msgstr ""
 
-#: bp-groups/bp-groups-admin.php:2094 bp-groups/bp-groups-admin.php:2101
+#: bp-groups/bp-groups-admin.php:2075 bp-groups/bp-groups-admin.php:2082
 #: bp-members/bp-members-functions.php:3650
 #: bp-members/bp-members-functions.php:3657
 msgid "Hide"
 msgstr ""
 
-#: bp-groups/bp-groups-admin.php:2112
+#: bp-groups/bp-groups-admin.php:2093
 msgid "<a href=\"%s\">%s</a>"
 msgstr ""
 
@@ -13463,6 +13458,14 @@ msgstr ""
 
 #: bp-members/bp-members-functions.php:2998
 msgid "Search Profile Types"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:2999
+#: bp-members/bp-members-functions.php:3617
+#: bp-members/classes/class-bp-members-admin.php:841
+#: bp-members/classes/class-bp-members-admin.php:2446
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:22
+msgid "Profile Type"
 msgstr ""
 
 #: bp-members/bp-members-functions.php:3619
