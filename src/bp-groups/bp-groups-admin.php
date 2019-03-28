@@ -1682,7 +1682,6 @@ function bp_group_type_custom_meta_boxes() {
 		$get_all_registered_member_types = bp_get_active_member_types();
 		if ( isset( $get_all_registered_member_types ) && !empty( $get_all_registered_member_types ) ) {
 			// Add meta box if profile types is entered.
-			add_meta_box( 'bp-group-type-auto-join-member-type', __( 'Profile Type Override', 'buddyboss' ),'bp_group_type_auto_join_member_type_meta_box',null,'normal','high' );
 			add_meta_box( 'bp-group-type-group-invites', __( 'Group Invites', 'buddyboss' ),'bp_group_type_group_invites_meta_box',null,'normal','high' );
 		}
 	}
@@ -1874,6 +1873,53 @@ function bp_group_type_permissions_meta_box( $post ) {
 		</tbody>
 	</table>
 
+	<?php	// Register sections only if "profile types" are enabled.
+	if ( true === bp_member_type_enable_disable() ) {
+
+	$get_all_registered_member_types = bp_get_active_member_types();
+	if ( isset( $get_all_registered_member_types ) && !empty( $get_all_registered_member_types ) ) {
+		
+	?>
+
+		Condition is TRUE
+
+		<h3><?php _e( 'Profile Type Override', 'buddyboss' ); ?></h3>
+		<p><?php _e( 'Members of the selected profile types can always join groups of this type, even if the group is private.', 'buddyboss' ); ?></p>
+		
+		<table class="widefat bp-content-type">
+			<tbody>
+
+			<?php
+
+			$get_all_registered_member_types = bp_get_active_member_types();
+
+			$get_selected_member_types = get_post_meta( $post->ID, '_bp_group_type_enabled_member_type_join', true ) ?: [];
+
+			foreach ( $get_all_registered_member_types as $member_type ) {
+
+			$member_type_key = bp_get_member_type_key( $member_type );
+			?>
+				<tr>
+					<td style="width: 15px">
+						<input type='checkbox' name='bp-member-type[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> tabindex="7" />
+					</td>
+					<td>
+						<?php _e( get_the_title( $member_type ), 'buddyboss' ); ?>
+					</td>
+				</tr>
+
+			<?php }?>
+
+			</tbody>
+		</table>
+
+		<?php
+
+		}
+	}
+
+	?>
+
 	<?php
 }
 
@@ -1895,50 +1941,6 @@ function bp_group_short_code_meta_box( $post ) {
 	<button class="copy-to-clipboard button"  data-clipboard-target="#group-type-shortcode">
 		<?php _e('Copy to clipboard', 'buddyboss' ) ?>
 	</button>
-
-	<?php
-}
-
-/**
- * Displays all the profile types.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $post
- */
-function bp_group_type_auto_join_member_type_meta_box( $post ) {
-
-	?>
-
-	<h3><?php _e( 'Profile Type Override', 'buddyboss' ); ?></h3>
-	<p><?php _e( 'Members of the selected profile types can always join groups of this type, even if the group is private.', 'buddyboss' ); ?></p>
-	
-	<table class="widefat bp-content-type">
-		<tbody>
-
-		<?php
-
-		$get_all_registered_member_types = bp_get_active_member_types();
-
-		$get_selected_member_types = get_post_meta( $post->ID, '_bp_group_type_enabled_member_type_join', true ) ?: [];
-
-		foreach ( $get_all_registered_member_types as $member_type ) {
-
-		$member_type_key = bp_get_member_type_key( $member_type );
-		?>
-			<tr>
-				<td style="width: 15px">
-					<input type='checkbox' name='bp-member-type[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> tabindex="7" />
-				</td>
-				<td>
-					<?php _e( get_the_title( $member_type ), 'buddyboss' ); ?>
-				</td>
-			</tr>
-
-		<?php }?>
-
-		</tbody>
-	</table>
 
 	<?php
 }
