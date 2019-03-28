@@ -1500,8 +1500,8 @@ add_filter( 'bp_active_components', 'bp_xprofile_always_active' );
 function bp_member_type_custom_metaboxes() {
 	add_meta_box( 'bp-member-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_member_type_labels_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-permissions', __( 'Permissions', 'buddyboss' ), 'bp_member_type_permissions_metabox', null, 'normal', 'high' );
-	add_meta_box( 'bp-member-type-shortcode', __( 'Shortcode', 'buddyboss' ), 'bp_profile_shortcode_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-wp-role', __( 'WordPress Role', 'buddyboss' ), 'bp_member_type_wprole_metabox', null, 'normal', 'high' );
+	add_meta_box( 'bp-member-type-shortcode', __( 'Shortcode', 'buddyboss' ), 'bp_profile_shortcode_metabox', null, 'normal', 'high' );
 		add_meta_box( 'bp-member-type-key', __( 'Profile Type Key &mdash; REMOVE ME', 'buddyboss' ), 'bp_member_type_key_metabox', null, 'normal', 'high' );
 
 	if ( false === bp_restrict_group_creation() ) {
@@ -1843,31 +1843,45 @@ function bp_member_type_invite_meta_box( $post ) {
 	<?php
 	$enable_invite = isset( $meta[ '_bp_member_type_enable_invite' ] ) ? $meta[ '_bp_member_type_enable_invite' ][ 0 ] : 1; //enabled by default
 	?>
-	<p>
-		<input type='checkbox' name='bp-member-type-enabled-invite' value='1' <?php checked( $enable_invite, 1 ); ?> />
-		<strong><?php _e( 'Enable members to set profile type of invitee.', 'buddyboss' ); ?></strong>
-	</p>
 
+	<table class="widefat bp-post-type">
+		<thead>
+			<tr>
+				<th colspan="2">
+					<?php _e( 'Email Invites', 'buddyboss' ); ?>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td colspan="2">
+					<input type='checkbox' name='bp-member-type-enabled-invite' value='1' <?php checked( $enable_invite, 1 ); ?> /> <?php _e( 'Allow members to select the profile type that the invited recipient will be automatically assigned to on registration. If checked, select which of the below profile types can be assigned to the recipient:', 'buddyboss' ); ?>
+				</td>
+			</tr>
 
-	<p><?php _e( 'Select which profile types can be set via invitation.', 'buddyboss' ); ?></p>
+		<?php
 
-	<?php
+		$get_all_registered_profile_types = bp_get_active_member_types();
 
-	$get_all_registered_profile_types = bp_get_active_member_types();
+		$get_selected_profile_types = get_post_meta( $post->ID, '_bp_member_type_allowed_member_type_invite', true )?: [];
 
-	$get_selected_profile_types = get_post_meta( $post->ID, '_bp_member_type_allowed_member_type_invite', true )?: [];
-
-	foreach ( $get_all_registered_profile_types as $member_type_id ) {
+		foreach ( $get_all_registered_profile_types as $member_type_id ) {
 
 		$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
 		?>
-		<p>
-			<input type='checkbox' name='bp-member-type-invite[]' value='<?php echo esc_attr( $member_type_id ); ?>' <?php checked( in_array( $member_type_id, $get_selected_profile_types ) ); ?> />
-			<strong><?php _e( $member_type_name, 'buddyboss' ); ?></strong>
-		</p>
-		<?php
+			
+			<tr>
+				<td colspan="2">
+					<input type='checkbox' name='bp-member-type-invite[]' value='<?php echo esc_attr( $member_type_id ); ?>' <?php checked( in_array( $member_type_id, $get_selected_profile_types ) ); ?> /> <?php _e( $member_type_name, 'buddyboss' ); ?>
+				</td>
+			</tr>
 
-	}
+		<?php } ?>
+
+		</tbody>
+	</table>
+
+	<?php
 }
 
 /**
