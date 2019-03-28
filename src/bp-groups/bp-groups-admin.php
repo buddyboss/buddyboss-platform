@@ -1851,7 +1851,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 			<tr>
 				<td colspan="2">
 					<input type='checkbox' name='bp-group-type[enable_filter]' value='1' <?php checked( $enable_filter, 1 ); ?> />
-					<?php _e( 'Display this group type in "Types" filter in the Groups Directory', 'buddyboss' ); ?>
+					<?php _e( 'Display this group type in "Types" filter in Groups Directory', 'buddyboss' ); ?>
 				</td>
 			</tr>
 			<tr>
@@ -1860,7 +1860,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 					$enable_remove = isset( $meta[ '_bp_group_type_enable_remove' ] ) ? $meta[ '_bp_group_type_enable_remove' ][ 0 ] : 0; //enabled by default
 					?>
 					<input type='checkbox' name='bp-group-type[enable_remove]' value='1' <?php checked( $enable_remove, 1 ); ?> />
-					<?php _e( 'Hide all groups of this type from the Groups Directory', 'buddyboss' ); ?>
+					<?php _e( 'Hide all groups of this type from Groups Directory', 'buddyboss' ); ?>
 				</td>
 			</tr>
 		</tbody>

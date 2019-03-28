@@ -1610,17 +1610,34 @@ function bp_member_type_permissions_metabox( $post ) {
 	<?php
 	$enable_filter = isset( $meta[ '_bp_member_type_enable_filter' ] ) ? $meta[ '_bp_member_type_enable_filter' ][ 0 ] : 0; //disabled by default
 	?>
-	<p>
-		<input type='checkbox' name='bp-member-type[enable_filter]' value='1' <?php checked( $enable_filter, 1 ); ?> />
-		<strong><?php _e( 'Display in "All Types" filter in Members Directory', 'buddyboss' ); ?></strong>
-	</p>
-	<?php
-	$enable_remove = isset( $meta[ '_bp_member_type_enable_remove' ] ) ? $meta[ '_bp_member_type_enable_remove' ][ 0 ] : 0; //enabled by default
-	?>
-	<p>
-		<input type='checkbox' name='bp-member-type[enable_remove]' value='1' <?php checked( $enable_remove, 1 ); ?> />
-		<strong><?php _e( 'Hide members of this type from Members Directory', 'buddyboss' ); ?></strong>
-	</p>
+
+	<table class="widefat bp-post-type">
+		<thead>
+			<tr>
+				<th scope="col" colspan="2">
+					<?php _e( 'Members Directory', 'buddyboss' ); ?>		
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td colspan="2">
+					<input type='checkbox' name='bp-member-type[enable_filter]' value='1' <?php checked( $enable_filter, 1 ); ?> />
+					<?php _e( 'Display this profile type in "Types" filter in Members Directory', 'buddyboss' ); ?>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<?php
+					$enable_remove = isset( $meta[ '_bp_member_type_enable_remove' ] ) ? $meta[ '_bp_member_type_enable_remove' ][ 0 ] : 0; //enabled by default
+					?>
+					<input type='checkbox' name='bp-member-type[enable_remove]' value='1' <?php checked( $enable_remove, 1 ); ?> />
+					<?php _e( 'Hide all members of this type from Members Directory', 'buddyboss' ); ?>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
 	<?php
 }
 
