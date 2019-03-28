@@ -5,8 +5,6 @@
  * @since BuddyPress 3.0.0
  * @version 3.1.0
  */
-global $bp;
-$forum_ids = bbp_get_group_forum_ids( $bp->groups->current_group->id );
 ?>
 
 <h2 class="bp-screen-title warn">
@@ -20,7 +18,7 @@ $forum_ids = bbp_get_group_forum_ids( $bp->groups->current_group->id );
 	<?php esc_html_e( 'I understand the consequences of deleting this group.', 'buddyboss' ); ?>
 </label>
 
-<?php if ( ! empty( $forum_ids ) && is_array( $forum_ids ) ): ?>
+<?php if ( bp_is_active('forums') && bbp_get_group_forum_ids( groups_get_current_group()->id ) ): ?>
 	<label for="delete-group-forum-understand" class="bp-label-text warn">
 		<input type="checkbox" name="delete-group-forum-understand" id="delete-group-forum-understand" value="1"/>
 		<?php esc_html_e( 'Delete the associated discussion forum.', 'buddyboss' ); ?>

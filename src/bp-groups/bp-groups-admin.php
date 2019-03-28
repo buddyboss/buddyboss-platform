@@ -883,8 +883,7 @@ function bp_groups_admin_delete() {
 		<?php foreach ( $groups['groups'] as $group ) : ?>
 			<li>
 				<?php echo esc_html( bp_get_group_name( $group ) ); ?>
-				<?php $forum_ids = bbp_get_group_forum_ids( $group->id ); ?>
-				<?php if ( ! empty( $forum_ids ) && is_array( $forum_ids ) ): ?>
+				<?php if (  bp_is_active('forums') && bbp_get_group_forum_ids( $group->id ) ): ?>
 					<label for="delete-group-forum-<?php echo $group->id ?>" class="delete-forum-label">
 						<input type="checkbox" name="delete_group_forum" id="delete-group-forum-<?php echo $group->id ?>" value="<?php echo $group->id ?>" checked/>
 						<?php esc_html_e( 'Permanently delete the group discussion forum', 'buddyboss' ); ?>
