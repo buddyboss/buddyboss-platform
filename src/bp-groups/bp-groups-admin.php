@@ -1733,7 +1733,7 @@ function bp_group_type_labels_meta_box( $post ) {
 	<br />
 
 	<h3><?php _e( 'Group Roles', 'buddyboss' ); ?></h3>
-	<p><?php _e( 'Rename the group member roles for groups of this type.', 'buddyboss' ); ?></p>
+	<p><?php _e( 'Rename the group member roles for groups of this type (optional).', 'buddyboss' ); ?></p>
 	
 	<table class="widefat bp-post-type">
 		<thead>
