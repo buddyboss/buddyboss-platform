@@ -301,18 +301,20 @@ function bp_media_groups_update_media_meta( $content, $user_id, $group_id, $acti
 add_action( 'bp_groups_posted_update', 'bp_media_groups_update_media_meta', 10, 4 );
 
 function bp_media_activity_entry() {
-	$result = bp_media_get( array( 'activity_id' => bp_get_activity_id() ) );
+	$result = bp_media_get( array( 'activity_id' => bp_get_activity_id(), 'count_total' => true ) );
 
 	if ( ! empty( $result['medias'] ) ) {
 	    $media_list = $result['medias'];
-		$media_list_length = sizeof( $result['medias'] );
+		$media_list_length = $result['total'];
 		?>
 		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_list_length; echo $media_list_length > 5 ? 'bb-media-length-more' : ''; ?>">
 		<?php
 		foreach( array_splice( $media_list, 0, 5 ) as $media_index => $media ) {
 			?>
 				<div class="bb-activity-media-elem <?php echo $media_list_length == 1 || $media_list_length > 1 && $media_index == 0 ? 'act-grid-1-1 ' : ''; echo $media_list_length > 1 && $media_index > 0 ? 'act-grid-1-2 ' : ''; echo $media->attachment_data->meta['width'] > $media->attachment_data->meta['height'] ? 'bb-horizontal-layout' : ''; echo $media->attachment_data->meta['height'] > $media->attachment_data->meta['width'] ? 'bb-vertical-layout' : ''; ?>">
-					<a href="#" class="entry-img">
+					<a href="#" class="bb-open-media-theatre entry-img" data-id="<?php echo $media->id; ?>"
+                       data-attachment-full="<?php echo $media->attachment_data->full; ?>"
+                       data-activity-id="<?php echo $media->activity_id; ?>">
 						<img src="<?php echo $media->attachment_data->activity_thumb; ?>" class="no-round photo" alt="<?php echo $media->title; ?>" />
 						<?php if ( $media_list_length > 5 && $media_index == 4 ) {
 							?>

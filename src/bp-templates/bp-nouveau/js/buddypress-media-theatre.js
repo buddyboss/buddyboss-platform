@@ -89,12 +89,13 @@ window.bp = window.bp || {};
 			var target = $(event.currentTarget), id, self = this;
 
 			self.setupGlobals();
-			self.setMedias();
+			self.setMedias(target);
 
 			id = target.data('id');
 			self.setCurrentMedia( id );
 			self.showMedia();
 			self.navigationCommands();
+			self.getActivity();
 
 			$('.bb-media-model-wrapper').show();
 			self.is_open = true;
@@ -114,8 +115,14 @@ window.bp = window.bp || {};
 			//document.removeEventListener( 'click', self.documentClick.bind(self) );
 		},
 
-		setMedias: function() {
+		setMedias: function(target) {
 			var media_elements = $('.bb-open-media-theatre'), i = 0, self = this;
+
+			//check if on activity page, load only activity media in theatre
+			if ( $('body').hasClass('activity') ) {
+				media_elements = $(target).closest('.bb-activity-media-wrap').find('.bb-open-media-theatre');
+			}
+
 			if ( typeof media_elements !== 'undefined' ) {
 				self.medias = [];
 				for( i = 0; i < media_elements.length; i++ ) {
@@ -145,11 +152,15 @@ window.bp = window.bp || {};
 
 		next: function(event) {
 			event.preventDefault();
-			var self = this;
+			var self = this, activity_id;
 			if ( typeof self.medias[self.current_index + 1] !== 'undefined' ) {
 				self.current_index = self.current_index + 1;
+				activity_id = self.current_media.activity_id;
 				self.current_media = self.medias[self.current_index];
 				self.showMedia();
+				if ( activity_id != self.current_media.activity_id ) {
+					self.getActivity();
+				}
 			} else {
 				self.nextLink.hide();
 			}
@@ -157,11 +168,15 @@ window.bp = window.bp || {};
 
 		previous: function(event) {
 			event.preventDefault();
-			var self = this;
+			var self = this, activity_id;
 			if ( typeof self.medias[self.current_index - 1] !== 'undefined' ) {
 				self.current_index = self.current_index - 1;
+				activity_id = self.current_media.activity_id;
 				self.current_media = self.medias[self.current_index];
 				self.showMedia();
+				if ( activity_id != self.current_media.activity_id ) {
+					self.getActivity();
+				}
 			} else {
 				self.previousLink.hide();
 			}
@@ -181,6 +196,26 @@ window.bp = window.bp || {};
 			} else {
 				self.previousLink.show();
 				self.nextLink.show();
+			}
+		},
+
+		getActivity: function() {
+			var self = this;
+			if ( self.current_media && typeof self.current_media.activity_id !== 'undefined' ) {
+				$.ajax({
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: {
+						action: 'media_get_activity',
+						id: self.current_media.activity_id,
+						nonce: BP_Nouveau.nonces.media
+					},
+					success: function (response) {
+						if (response.success) {
+							$('.bb-media-info-section .activity-list').html(response.data.activity);
+						}
+					}
+				});
 			}
 		}
 	};

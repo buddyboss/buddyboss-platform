@@ -67,3 +67,10 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 
 	return $params;
 }
+
+/**
+ * Add media theatre template for activity pages
+ */
+function bp_nouveau_media_add_theatre_template() {
+	bp_get_template_part( 'media/theatre' );
+}

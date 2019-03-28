@@ -19,7 +19,11 @@
                     <img src="" alt="" />
                 </figure>
             </div>
-            <div class="bb-media-info-section"></div>
+            <div class="bb-media-info-section">
+                <ul class="activity-list item-list bp-list">
+
+                </ul>
+            </div>
         </div>
     </div>
 
