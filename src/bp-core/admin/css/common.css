@@ -22,7 +22,7 @@ TABLE OF CONTENTS:
 3.0 Content
 	3.1 Users List
 	3.2 Activity List
-	3.3 Groups List
+	3.3 Groups List & Types
 	3.4 Site Notices
 4.0 Emails - Edit page
 5.0 Tools - BuddyBoss
@@ -547,10 +547,14 @@ body.users_page_bp-signups td.count_sent {
 }
 
 /*
- * 3.3 Groups
+ * 3.3 Groups List & Types
  */
 form#bp-groups-form .fixed .column-comment {
   width: 20%;
+}
+
+table.bp-content-type {
+  background: #fafafa;
 }
 
 /*
