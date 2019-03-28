@@ -1510,7 +1510,7 @@ function bp_member_type_custom_metaboxes() {
 
 		// Add meta box if group types is entered.
 		if ( true === bp_disable_group_type_creation() && isset( $get_all_registered_group_types ) && !empty( $get_all_registered_group_types ) ) {
-			add_meta_box( 'bp-member-type-group-create', __( 'Allowed Group Types', 'buddyboss' ), 'bp_member_type_group_create_metabox', null, 'normal', 'high' );
+			add_meta_box( 'bp-member-type-group-create', __( 'Group Type Creation', 'buddyboss' ), 'bp_member_type_group_create_metabox', null, 'normal', 'high' );
 		}
 	}
 
@@ -1520,7 +1520,7 @@ function bp_member_type_custom_metaboxes() {
 
 		// Add meta box if group types is entered.
 		if ( true === bp_disable_group_type_creation() && isset( $get_all_registered_group_types ) && !empty( $get_all_registered_group_types ) ) {
-			add_meta_box( 'bp-member-type-group-auto-join', __( 'Auto Group Membership Approval', 'buddyboss' ), 'bp_member_type_group_auto_join_meta_box', null, 'normal', 'high' );
+			add_meta_box( 'bp-member-type-group-auto-join', __( 'Group Type Membership Approval', 'buddyboss' ), 'bp_member_type_group_auto_join_meta_box', null, 'normal', 'high' );
 		}
 	}
 
@@ -1746,7 +1746,7 @@ function bp_member_type_group_create_metabox( $post ) {
 		<thead>
 			<tr>
 				<th colspan="2">
-					<?php _e( 'Allowed Group Types', 'buddyboss' ); ?>
+					<?php _e( 'Group Type Creation', 'buddyboss' ); ?>
 				</th>
 			</tr>
 		</thead>
@@ -1834,14 +1834,14 @@ function bp_member_type_group_auto_join_meta_box( $post ) {
 		<thead>
 			<tr>
 				<th colspan="2">
-					<?php _e( 'Auto Group Membership Approval', 'buddyboss' ); ?>
+					<?php _e( 'Group Type Membership Approval', 'buddyboss' ); ?>
 				</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
 				<td colspan="2">
-					<?php _e( 'Selected group types will automatically approve all membership requests:', 'buddyboss' ); ?>
+					<?php _e( 'Selected group types will automatically approve all membership requests from users of this profile type:', 'buddyboss' ); ?>
 				</td>
 			</tr>
 
