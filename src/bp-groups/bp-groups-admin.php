@@ -1691,8 +1691,16 @@ function bp_group_type_labels_meta_box( $post ) {
 	$label_singular_name = isset( $meta[ '_bp_group_type_label_singular_name' ] ) ? $meta[ '_bp_group_type_label_singular_name' ][ 0 ] : '';
 	?>
 
-	<h3><?php _e( 'Group Type', 'buddyboss' ); ?></h3>
+	<br />
+
 	<table class="widefat bp-content-type">
+		<thead>
+			<tr>
+				<th scope="col" colspan="2">
+					<strong><?php _e( 'Group Type', 'buddyboss' ); ?></strong>		
+				</th>
+			</tr>
+		</thead>
 		<tbody>
 			<tr>
 				<th style="width: 25%">
@@ -1837,8 +1845,16 @@ function bp_group_type_permissions_meta_box( $post ) {
 	$enable_filter = isset( $meta[ '_bp_group_type_enable_filter' ] ) ? $meta[ '_bp_group_type_enable_filter' ][ 0 ] : 0; //disabled by default
 	?>
 
-	<h3><?php _e( 'Visibility', 'buddyboss' ); ?></h3>
+	<br />
+
 	<table class="widefat bp-content-type">
+		<thead>
+			<tr>
+				<th scope="col" colspan="2">
+					<strong><?php _e( 'Groups Directory', 'buddyboss' ); ?></strong>		
+				</th>
+			</tr>
+		</thead>
 		<tbody>
 			<tr>
 				<td style="width: 15px">
@@ -1870,11 +1886,22 @@ function bp_group_type_permissions_meta_box( $post ) {
 		
 	?>
 
-		<h3><?php _e( 'Profile Type Override', 'buddyboss' ); ?></h3>
-		<p><?php _e( 'Members of the selected profile types can always join groups of this type, even if the group is private.', 'buddyboss' ); ?></p>
-		
+		<br />
+
 		<table class="widefat bp-content-type">
+			<thead>
+				<tr>
+					<th scope="col" colspan="2">
+						<strong><?php _e( 'Group Join', 'buddyboss' ); ?></strong>
+					</th>
+				</tr>
+			</thead>
 			<tbody>
+				<tr>
+					<td colspan="2">
+						<?php _e( 'Members of the selected profile types can always join groups of this type, even if the group is private.', 'buddyboss' ); ?>
+					</td>
+				</tr>
 
 			<?php
 
@@ -1900,7 +1927,9 @@ function bp_group_type_permissions_meta_box( $post ) {
 			</tbody>
 		</table>
 
-		<h3><?php _e( 'Group Invites', 'buddyboss' ); ?></h3>
+		<br />
+
+		<h3><?php _e( 'Restrict Invites', 'buddyboss' ); ?></h3>
 
 		<?php
 		$meta = get_post_custom( $post->ID );
@@ -1909,22 +1938,41 @@ function bp_group_type_permissions_meta_box( $post ) {
 		?>
 
 		<table class="widefat bp-content-type">
+			<thead>
+				<tr>
+					<th scope="col" colspan="2">
+						<strong><?php _e( 'Group Type', 'buddyboss' ); ?></strong>
+					</th>
+				</tr>
+			</thead>
 			<tbody>
 				<tr>
 					<td style="width: 15px">
 						<input type='checkbox' name='bp-group-type-restrict-invites-user-same-group-type' value='<?php echo esc_attr( 1 ); ?>' <?php checked( $get_restrict_invites_same_group_types, 1 ); ?> tabindex="7" />
 					</td>
 					<td>
-						<?php _e( 'Restrict invites to members not currently in any group with this type. (If a member is already in a group with this type they cannot be sent an invite)', 'buddyboss' ); ?>
+						<?php _e( 'If a member is already in a group with this type they cannot be sent an invite to join another group of this type.', 'buddyboss' ); ?>
 					</td>
 				</tr>
 			</tbody>
 		</table>
 
-		<p><?php _e( 'Only these selected profile types may be sent requests to join this group. (Leave blank for unrestricted invites)', 'buddyboss' ); ?></p>
+		<br />
 
 		<table class="widefat bp-content-type">
+			<thead>
+				<tr>
+					<th scope="col" colspan="2">
+						<strong><?php _e( 'Profile Type', 'buddyboss' ); ?></strong>
+					</th>
+				</tr>
+			</thead>
 			<tbody>
+				<tr>
+					<td colspan="2">
+						<?php _e( 'Only these selected profile types may be sent requests to join this group. (Leave blank for unrestricted invites)', 'buddyboss' ); ?>
+					</td>
+				</tr>
 
 			<?php
 
@@ -1937,15 +1985,15 @@ function bp_group_type_permissions_meta_box( $post ) {
 			$member_type_key = bp_get_member_type_key( $member_type );
 			?>
 
-			<tr>
-				<td style="width: 15px">
-					<input type='checkbox' name='bp-member-type-group-invites[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> tabindex="7" />
-				</td>
-				<td>
-					<?php _e( get_the_title( $member_type ), 'buddyboss' ); ?>
-				</td>
-			</tr>
-			
+				<tr>
+					<td style="width: 15px">
+						<input type='checkbox' name='bp-member-type-group-invites[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> tabindex="7" />
+					</td>
+					<td>
+						<?php _e( get_the_title( $member_type ), 'buddyboss' ); ?>
+					</td>
+				</tr>
+				
 			<?php } ?>
 
 			</tbody>
@@ -1972,13 +2020,26 @@ function bp_group_short_code_meta_box( $post ) {
 
 	$key = bp_get_group_type_key( $post->ID );
 	?>
-	<p><?php _e( 'To display all groups with this group type on a dedicated page, add the above shortcode to any WordPress page.', 'buddyboss' ); ?></p>
-	<!-- Target -->
-	<input id='group-type-shortcode' value='<?php echo '[group type="'. $key .'"]' ?>' style="width: 50%;">
 
-	<button class="copy-to-clipboard button"  data-clipboard-target="#group-type-shortcode">
-		<?php _e('Copy to clipboard', 'buddyboss' ) ?>
-	</button>
+	<br />
+
+	<table class="widefat bp-content-type">
+		<tbody>
+			<tr>
+				<td colspan="2">
+					<?php _e( 'To display all groups with this group type on a dedicated page, add this shortcode to any WordPress page.', 'buddyboss' ); ?>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 50%">
+					<input id='group-type-shortcode' value='<?php echo '[group type="'. $key .'"]' ?>' style="width: 100%;">
+				</td>
+				<td>
+					<button class="copy-to-clipboard button"  data-clipboard-target="#group-type-shortcode"><?php _e('Copy to clipboard', 'buddyboss' ) ?></button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 
 	<?php
 }
