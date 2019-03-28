@@ -605,8 +605,8 @@ function _bp_core_moment_js_config_footer() {
  */
 function bp_core_jquery_validate_scripts() {
 
-	wp_enqueue_script( 'bp-jquery-validate' );
-	add_action( 'wp_head', 'bp_core_add_jquery_validate_inline_js' );
+	//wp_enqueue_script( 'bp-jquery-validate' );
+	//add_action( 'wp_head', 'bp_core_add_jquery_validate_inline_js' );
 
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_jquery_validate_scripts' );
