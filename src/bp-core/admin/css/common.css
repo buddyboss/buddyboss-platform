@@ -24,6 +24,7 @@ TABLE OF CONTENTS:
 	3.2 Activity List
 	3.3 Groups List & Types
 	3.4 Site Notices
+	3.5 Post Types
 4.0 Emails - Edit page
 5.0 Tools - BuddyBoss
 6.0 Plugins page
@@ -547,28 +548,10 @@ body.users_page_bp-signups td.count_sent {
 }
 
 /*
- * 3.3 Groups List & Types
+ * 3.3 Groups List
  */
 form#bp-groups-form .fixed .column-comment {
   width: 20%;
-}
-
-body.post-type-bp-group-type .postbox .inside {
-  padding: 0 22px 22px;
-}
-
-table.bp-content-type {
-  background: #f9f9f9;
-  margin-top: 22px;
-  border-radius: 3px;
-}
-
-table.bp-content-type tbody th {
-  width: 23%;
-}
-
-table.bp-content-type tbody td input[type=checkbox] {
-  margin-right: 8px;
 }
 
 /*
@@ -650,6 +633,32 @@ table.bp-content-type tbody td input[type=checkbox] {
   .bp-new-notice {
     margin-bottom: 0.5em;
   }
+}
+
+/*
+ * 3.5 Post Types
+ */
+body.post-type-bp-member-type .postbox .inside,
+body.post-type-bp-group-type .postbox .inside {
+  padding: 0 22px 22px;
+}
+
+table.bp-post-type {
+  background: #f9f9f9;
+  margin-top: 22px;
+  border-radius: 3px;
+}
+
+table.bp-post-type thead th {
+  font-weight: 600;
+}
+
+table.bp-post-type tbody th {
+  width: 23%;
+}
+
+table.bp-post-type tbody td input[type=checkbox] {
+  margin-right: 8px;
 }
 
 /*------------------------------------------------------------------------------

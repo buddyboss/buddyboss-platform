@@ -1691,11 +1691,11 @@ function bp_group_type_labels_meta_box( $post ) {
 	$label_singular_name = isset( $meta[ '_bp_group_type_label_singular_name' ] ) ? $meta[ '_bp_group_type_label_singular_name' ][ 0 ] : '';
 	?>
 
-	<table class="widefat bp-content-type">
+	<table class="widefat bp-post-type">
 		<thead>
 			<tr>
 				<th scope="col" colspan="2">
-					<strong><?php _e( 'Group Type', 'buddyboss' ); ?></strong>		
+					<?php _e( 'Group Type', 'buddyboss' ); ?>		
 				</th>
 			</tr>
 		</thead>
@@ -1736,11 +1736,11 @@ function bp_group_type_labels_meta_box( $post ) {
 	<h3><?php _e( 'Group Roles', 'buddyboss' ); ?></h3>
 	<p><?php _e( 'Rename the group member roles for groups of this type.', 'buddyboss' ); ?></p>
 	
-	<table class="widefat bp-content-type">
+	<table class="widefat bp-post-type">
 		<thead>
 			<tr>
 				<th scope="col" colspan="2">
-					<strong><?php _e( 'Organizers', 'buddyboss' ); ?></strong>		
+					<?php _e( 'Organizers', 'buddyboss' ); ?>	
 				</th>
 			</tr>
 		</thead>
@@ -1764,11 +1764,11 @@ function bp_group_type_labels_meta_box( $post ) {
 		</tbody>
 	</table>
 
-	<table class="widefat bp-content-type">
+	<table class="widefat bp-post-type">
 		<thead>
 			<tr>
 				<th scope="col" colspan="2">
-					<strong><?php _e( 'Moderators', 'buddyboss' ); ?></strong>		
+					<?php _e( 'Moderators', 'buddyboss' ); ?>	
 				</th>
 			</tr>
 		</thead>
@@ -1792,11 +1792,11 @@ function bp_group_type_labels_meta_box( $post ) {
 		</tbody>
 	</table>
 
-	<table class="widefat bp-content-type">
+	<table class="widefat bp-post-type">
 		<thead>
 			<tr>
 				<th scope="col" colspan="2">
-					<strong><?php _e( 'Members', 'buddyboss' ); ?></strong>		
+					<?php _e( 'Members', 'buddyboss' ); ?>	
 				</th>
 			</tr>
 		</thead>
@@ -1825,7 +1825,7 @@ function bp_group_type_labels_meta_box( $post ) {
 }
 
 /**
- * Generate Group Type Directory Meta box.
+ * Generate Group Type Permissions Meta box.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1839,11 +1839,11 @@ function bp_group_type_permissions_meta_box( $post ) {
 	$enable_filter = isset( $meta[ '_bp_group_type_enable_filter' ] ) ? $meta[ '_bp_group_type_enable_filter' ][ 0 ] : 0; //disabled by default
 	?>
 
-	<table class="widefat bp-content-type">
+	<table class="widefat bp-post-type">
 		<thead>
 			<tr>
 				<th scope="col" colspan="2">
-					<strong><?php _e( 'Groups Directory', 'buddyboss' ); ?></strong>		
+					<?php _e( 'Groups Directory', 'buddyboss' ); ?>		
 				</th>
 			</tr>
 		</thead>
@@ -1872,11 +1872,11 @@ function bp_group_type_permissions_meta_box( $post ) {
 	$get_restrict_invites_same_group_types = isset( $meta[ '_bp_group_type_restrict_invites_user_same_group_type' ] ) ? intval( $meta[ '_bp_group_type_restrict_invites_user_same_group_type' ][ 0 ] ) : 0; //disabled by default
 	?>
 
-	<table class="widefat bp-content-type">
+	<table class="widefat bp-post-type">
 		<thead>
 			<tr>
 				<th scope="col" colspan="2">
-					<strong><?php _e( 'Group Type Invites', 'buddyboss' ); ?></strong>
+					<?php _e( 'Group Type Invites', 'buddyboss' ); ?>
 				</th>
 			</tr>
 		</thead>
@@ -1898,11 +1898,11 @@ function bp_group_type_permissions_meta_box( $post ) {
 		
 	?>
 
-		<table class="widefat bp-content-type">
+		<table class="widefat bp-post-type">
 			<thead>
 				<tr>
 					<th scope="col" colspan="2">
-						<strong><?php _e( 'Profile Type Invites', 'buddyboss' ); ?></strong>
+						<?php _e( 'Profile Type Invites', 'buddyboss' ); ?>
 					</th>
 				</tr>
 			</thead>
@@ -1936,11 +1936,11 @@ function bp_group_type_permissions_meta_box( $post ) {
 			</tbody>
 		</table>
 
-		<table class="widefat bp-content-type">
+		<table class="widefat bp-post-type">
 			<thead>
 				<tr>
 					<th scope="col" colspan="2">
-						<strong><?php _e( 'Profile Type Joining', 'buddyboss' ); ?></strong>
+						<?php _e( 'Profile Type Joining', 'buddyboss' ); ?>
 					</th>
 				</tr>
 			</thead>
@@ -1990,7 +1990,7 @@ function bp_group_short_code_meta_box( $post ) {
 	$key = bp_get_group_type_key( $post->ID );
 	?>
 
-	<table class="widefat bp-content-type">
+	<table class="widefat bp-post-type">
 		<tbody>
 			<tr>
 				<td colspan="2">

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-28 16:23:08+00:00\n"
+"POT-Creation-Date: 2019-03-28 16:31:06+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1641,7 +1641,7 @@ msgid "Integrations"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:614
-#: bp-core/admin/bp-core-admin-functions.php:2076
+#: bp-core/admin/bp-core-admin-functions.php:2091
 #: bp-core/admin/bp-core-admin-tools.php:20
 #: bp-core/admin/bp-core-admin-tools.php:512
 #: bp-core/classes/class-bp-admin.php:457
@@ -1768,27 +1768,27 @@ msgid "User removed from spam."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1501
-msgid "Profile Type Key"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-functions.php:1502
 #: bp-groups/bp-groups-admin.php:1673
 msgid "Labels"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1503
+#: bp-core/admin/bp-core-admin-functions.php:1502
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:34
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1530
 msgid "Visibility"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1504
+#: bp-core/admin/bp-core-admin-functions.php:1503
 #: bp-groups/bp-groups-admin.php:1676
 msgid "Shortcode"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1505
+#: bp-core/admin/bp-core-admin-functions.php:1504
 msgid "WordPress Role"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-functions.php:1505
+msgid "Profile Type Key &mdash; REMOVE ME"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1513
@@ -1811,95 +1811,104 @@ msgid ""
 "characters, dashes and underscores are allowed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1568
+#: bp-core/admin/bp-core-admin-functions.php:1571
+#: bp-members/bp-members-functions.php:2999
+#: bp-members/bp-members-functions.php:3617
+#: bp-members/classes/class-bp-members-admin.php:841
+#: bp-members/classes/class-bp-members-admin.php:2446
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:22
+msgid "Profile Type"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-functions.php:1578
 #: bp-groups/bp-groups-admin.php:1705 bp-groups/bp-groups-admin.php:1750
 #: bp-groups/bp-groups-admin.php:1778 bp-groups/bp-groups-admin.php:1806
 msgid "Plural Label"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1570
+#: bp-core/admin/bp-core-admin-functions.php:1581
 msgid "e.g. Students"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1574
+#: bp-core/admin/bp-core-admin-functions.php:1586
 #: bp-groups/bp-groups-admin.php:1713 bp-groups/bp-groups-admin.php:1758
 #: bp-groups/bp-groups-admin.php:1786 bp-groups/bp-groups-admin.php:1814
 msgid "Singular Label"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1576
+#: bp-core/admin/bp-core-admin-functions.php:1589
 msgid "e.g. Student"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1600
+#: bp-core/admin/bp-core-admin-functions.php:1615
 msgid "Display in \"All Types\" filter in Members Directory"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1607
+#: bp-core/admin/bp-core-admin-functions.php:1622
 msgid "Hide members of this type from Members Directory"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1629
+#: bp-core/admin/bp-core-admin-functions.php:1644
 #: bp-groups/bp-groups-admin.php:2005 bp-members/bp-members-functions.php:3901
 msgid "Copy to clipboard"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1632
+#: bp-core/admin/bp-core-admin-functions.php:1647
 msgid ""
 "To display all users with the %s profile type on a dedicated page, add the "
 "above shortcode to any WordPress page."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1660
+#: bp-core/admin/bp-core-admin-functions.php:1675
 msgid ""
 "Users of the %s profile type will be auto-assigned to the following "
 "WordPress roles (includes existing users)."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1669
-#: bp-core/admin/bp-core-admin-functions.php:1713
+#: bp-core/admin/bp-core-admin-functions.php:1684
+#: bp-core/admin/bp-core-admin-functions.php:1728
 msgid "(None)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1703
+#: bp-core/admin/bp-core-admin-functions.php:1718
 msgid ""
 "Select which group types the %s profile type is allowed to create. (Leave "
 "all unchecked to allow creation of any group type.)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1770
+#: bp-core/admin/bp-core-admin-functions.php:1785
 msgid "Selected group types will automatically approve all membership requests."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1807
+#: bp-core/admin/bp-core-admin-functions.php:1822
 msgid "Enable members to set profile type of invitee."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:1811
+#: bp-core/admin/bp-core-admin-functions.php:1826
 msgid "Select which profile types can be set via invitation."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2001
-#: bp-core/admin/bp-core-admin-functions.php:2003
+#: bp-core/admin/bp-core-admin-functions.php:2016
+#: bp-core/admin/bp-core-admin-functions.php:2018
 msgid "Profile type updated."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2005
+#: bp-core/admin/bp-core-admin-functions.php:2020
 msgid "Profile type published. "
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2007
+#: bp-core/admin/bp-core-admin-functions.php:2022
 msgid "Profile type saved."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2088
-#: bp-core/admin/bp-core-admin-functions.php:2555
-#: bp-core/admin/bp-core-admin-functions.php:2572
-#: bp-core/admin/bp-core-admin-functions.php:2573
+#: bp-core/admin/bp-core-admin-functions.php:2103
+#: bp-core/admin/bp-core-admin-functions.php:2570
+#: bp-core/admin/bp-core-admin-functions.php:2587
+#: bp-core/admin/bp-core-admin-functions.php:2588
 msgid "Import Profile Types"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2091
+#: bp-core/admin/bp-core-admin-functions.php:2106
 msgid ""
 "Import your existing <a href=\"%s\">profile types</a> (or \"member types\" "
 "in BuddyPress). You may have created these types <strong>manually via "
@@ -1908,24 +1917,24 @@ msgid ""
 "Then you can remove the old code or plugin."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2096
+#: bp-core/admin/bp-core-admin-functions.php:2111
 msgid "Run Migration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2122
+#: bp-core/admin/bp-core-admin-functions.php:2137
 msgid "Nothing to import"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2146
+#: bp-core/admin/bp-core-admin-functions.php:2161
 msgid "Successfully Imported"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2236
+#: bp-core/admin/bp-core-admin-functions.php:2251
 msgid "Added successfully"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2286
-#: bp-core/admin/bp-core-admin-functions.php:2451
+#: bp-core/admin/bp-core-admin-functions.php:2301
+#: bp-core/admin/bp-core-admin-functions.php:2466
 #: bp-core/bp-core-functions.php:2906 bp-core/classes/class-bp-admin.php:592
 #: bp-core/classes/class-bp-admin.php:593
 #: bp-core/classes/class-bp-admin.php:601
@@ -1933,13 +1942,13 @@ msgstr ""
 msgid "Emails"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2365
+#: bp-core/admin/bp-core-admin-functions.php:2380
 #: bp-groups/bp-groups-admin.php:537
 #: bp-templates/bp-nouveau/includes/groups/functions.php:518
 msgid "All Groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2373
+#: bp-core/admin/bp-core-admin-functions.php:2388
 #: bp-core/admin/settings/bp-admin-setting-groups.php:49
 #: bp-core/admin/settings/bp-admin-setting-groups.php:52
 #: bp-groups/bp-groups-admin.php:2297 bp-groups/bp-groups-functions.php:2900
@@ -1947,16 +1956,16 @@ msgstr ""
 msgid "Group Types"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2383
+#: bp-core/admin/bp-core-admin-functions.php:2398
 #: bp-templates/bp-nouveau/includes/groups/functions.php:703
 msgid "Group Navigation"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2457
+#: bp-core/admin/bp-core-admin-functions.php:2472
 msgid "Customize Layout"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-functions.php:2535
+#: bp-core/admin/bp-core-admin-functions.php:2550
 #: bp-core/admin/bp-core-admin-tools.php:30
 msgid "Repair Community"
 msgstr ""
@@ -13458,14 +13467,6 @@ msgstr ""
 
 #: bp-members/bp-members-functions.php:2998
 msgid "Search Profile Types"
-msgstr ""
-
-#: bp-members/bp-members-functions.php:2999
-#: bp-members/bp-members-functions.php:3617
-#: bp-members/classes/class-bp-members-admin.php:841
-#: bp-members/classes/class-bp-members-admin.php:2446
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:22
-msgid "Profile Type"
 msgstr ""
 
 #: bp-members/bp-members-functions.php:3619
