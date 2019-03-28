@@ -791,6 +791,32 @@ function bp_album_add( $args = '' ) {
 	return $album->id;
 }
 
+/**
+ * Fetch a single album object.
+ *
+ * When calling up a album object, you should always use this function instead
+ * of instantiating BP_Media_Album directly, so that you will inherit cache
+ * support and pass through the albums_get_album filter.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param int $album_id ID of the album.
+ * @return BP_Media_Album $album The album object.
+ */
+function albums_get_album( $album_id ) {
+
+	$album = new BP_Media_Album( $album_id );
+
+	/**
+	 * Filters a single album object.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param BP_Media_Album $album Single album object.
+	 */
+	return apply_filters( 'albums_get_album', $album );
+}
+
 
 //********************** Forums ***************************//
 
