@@ -1919,6 +1919,11 @@ function bp_group_type_permissions_meta_box( $post ) {
 
 		<br />
 
+	<?php
+		}
+	}
+	?>
+
 		<h3><?php _e( 'Restrict Invites', 'buddyboss' ); ?></h3>
 
 		<?php
@@ -1946,6 +1951,14 @@ function bp_group_type_permissions_meta_box( $post ) {
 				</tr>
 			</tbody>
 		</table>
+
+	<?php	// Register following sections only if "profile types" are enabled.
+	if ( true === bp_member_type_enable_disable() ) {
+
+	$get_all_registered_member_types = bp_get_active_member_types();
+	if ( isset( $get_all_registered_member_types ) && !empty( $get_all_registered_member_types ) ) {
+		
+	?>
 
 		<table class="widefat bp-content-type">
 			<thead>
@@ -1987,14 +2000,9 @@ function bp_group_type_permissions_meta_box( $post ) {
 			</tbody>
 		</table>
 
-		<?php
-
+	<?php
 		}
 	}
-
-	?>
-
-	<?php
 }
 
 /**
