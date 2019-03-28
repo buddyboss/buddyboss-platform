@@ -16,6 +16,13 @@ defined( 'ABSPATH' ) || exit;
  */
 class BP_Media_Component extends BP_Component {
 
+	/**
+	 * The album being currently accessed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @var BP_Media_Album
+	 */
+	public $current_album;
 
 	/**
 	 * Default media extension.
@@ -159,6 +166,20 @@ class BP_Media_Component extends BP_Component {
 			'search_string'         => __( 'Search Media&hellip;', 'buddyboss' ),
 		) );
 
+		/* Single Album Globals **********************************************/
+
+		// Are we viewing a single album?
+		if ( bp_is_media_component() && bp_is_single_album()
+		     && ( $album_id = BP_Media_Album::album_exists( bp_action_variable( 0 ) ) )
+		) {
+			$bp->is_single_item  = true;
+			$this->current_album = albums_get_album( $album_id );
+
+			// Set current_album to 0 to prevent debug errors.
+		} else {
+			$this->current_album = 0;
+		}
+
 	}
 
 	/**
@@ -285,6 +306,45 @@ class BP_Media_Component extends BP_Component {
 		}
 
 		parent::setup_admin_bar( $wp_admin_nav );
+	}
+
+	/**
+	 * Set up the title for pages and <title>.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function setup_title() {
+
+		if ( bp_is_media_component() ) {
+			$bp = buddypress();
+
+			if ( bp_is_my_profile() && !bp_is_single_album() ) {
+				$bp->bp_options_title = __( 'My Media', 'buddyboss' );
+
+			} elseif ( !bp_is_my_profile() && !bp_is_single_album() ) {
+				$bp->bp_options_avatar = bp_core_fetch_avatar( array(
+					'item_id' => bp_displayed_user_id(),
+					'type'    => 'thumb',
+					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() )
+				) );
+				$bp->bp_options_title = bp_get_displayed_user_fullname();
+
+				// We are viewing a single album
+			} elseif ( bp_is_single_album() ) {
+				$bp->bp_options_title  = $this->current_album->title;
+				$bp->bp_options_avatar = bp_core_fetch_avatar( array(
+					'item_id'    => $this->current_album->user_id,
+					'type'       => 'thumb',
+					'alt'        => __( 'Profile Photo', 'buddyboss' )
+				) );
+
+				if ( empty( $bp->bp_options_avatar ) ) {
+					$bp->bp_options_avatar = '<img src="' . esc_url( bp_core_avatar_default_thumb() ) . '" alt="' . esc_attr__( 'No Album Profile Photo', 'buddyboss' ) . '" class="avatar" />';
+				}
+			}
+		}
+
+		parent::setup_title();
 	}
 
 	/**
