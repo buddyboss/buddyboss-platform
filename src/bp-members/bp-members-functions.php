@@ -2990,7 +2990,7 @@ function bp_get_member_type_post_type_labels() {
 		'add_new_item'          => __( 'New Profile Type', 'buddyboss' ),
 		'all_items'             => __( 'Profile Types', 'buddyboss' ),
 		'edit_item'             => __( 'Edit Profile Type', 'buddyboss' ),
-		'menu_name'             => __( 'Users', 'profile type post type name', 'buddyboss' ),
+		'menu_name'             => __( 'Users', 'buddyboss' ),
 		'name'                  => __( 'Profile Types', 'buddyboss' ),
 		'new_item'              => __( 'New Profile Type', 'buddyboss' ),
 		'not_found'             => __( 'No Profile Types found', 'buddyboss' ),

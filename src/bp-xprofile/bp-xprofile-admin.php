@@ -153,7 +153,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 			$users_tab = count( bp_core_get_users_admin_tabs() );
 			if ( $users_tab > 1 ) {
 				?>
-				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddypress' ) ); ?></h2><?php
+				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddyboss' ) ); ?></h2><?php
 			}
 		?>
 	</div>
@@ -445,7 +445,7 @@ function xprofile_admin_delete_group( $group_id ) {
  * Handles the adding or editing of profile field data for a user.
  *
  * @since BuddyPress 1.0.0
- * @since BuddyBoss 1.0.0 
+ * @since BuddyBoss 1.0.0
  * Updated to continue showing the field-edit form, after field is saved/updated.
  * Updated to exclude repeater field IDs while determining field_order for new field.
  *
@@ -936,14 +936,14 @@ function bp_core_get_users_admin_tabs( $active_tab = '') {
 
 	$tabs[] = array(
 		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-profile-setup' ), 'admin.php' ) ),
-		'name'  => __( 'Profile Fields', 'buddypress' ),
+		'name'  => __( 'Profile Fields', 'buddyboss' ),
 		'class' => 'bp-profile-fields',
 	);
 
 	if ( true === $is_member_type_enabled ) {
 		$tabs[] = array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'post_type' => 'bp-member-type' ), 'edit.php' ) ),
-			'name'  => __( 'Profile Types', 'buddypress' ),
+			'name'  => __( 'Profile Types', 'buddyboss' ),
 			'class' => 'bp-profile-types',
 		);
 	}
@@ -951,7 +951,7 @@ function bp_core_get_users_admin_tabs( $active_tab = '') {
 	if ( false === $is_profile_search_enabled ) {
 		$tabs[] = array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'post_type' => 'bp_ps_form' ), 'edit.php' ) ),
-			'name'  => __( 'Profile Search', 'buddypress' ),
+			'name'  => __( 'Profile Search', 'buddyboss' ),
 			'class' => 'bp-profile-search',
 		);
 	}
@@ -960,7 +960,7 @@ function bp_core_get_users_admin_tabs( $active_tab = '') {
 	$section_link = add_query_arg( $query, admin_url( 'customize.php' ) );
 	$tabs[] = array(
 		'href'  => esc_url( $section_link ),
-		'name'  => __( 'Profile Navigation', 'buddypress' ),
+		'name'  => __( 'Profile Navigation', 'buddyboss' ),
 		'class' => 'bp-user-customizer',
 	);
 
@@ -995,7 +995,7 @@ function bp_users_admin_profile_types_listing_add_users_tab() {
 				$users_tab = count( bp_core_get_users_admin_tabs() );
 				if ( $users_tab > 1 ) {
 					?>
-					<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Types', 'buddypress' ) ); ?></h2><?php
+					<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Types', 'buddyboss' ) ); ?></h2><?php
 				}
 				?>
 			</div>

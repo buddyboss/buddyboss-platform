@@ -239,7 +239,7 @@ class BP_Notifications_Component extends BP_Component {
 				);
 			} else {
 				$title  = __( 'Notifications', 'buddyboss' );
-				$unread = _x( 'Unread', 'buddyboss' );
+				$unread = __( 'Unread', 'buddyboss' );
 			}
 
 			// Add the "My Account" sub menus.

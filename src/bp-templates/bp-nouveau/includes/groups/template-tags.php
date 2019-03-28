@@ -226,10 +226,10 @@ function bp_nouveau_group_creation_tabs() {
 		<li<?php if ( bp_get_groups_current_create_step() === $slug ) : ?> class="current"<?php endif; ?>>
 			<?php if ( $is_enabled ) : ?>
 				<a href="<?php echo esc_url( bp_groups_directory_permalink() . 'create/step/' . $slug . '/' ); ?>">
-					<?php echo (int) $counter; ?> <?php esc_html_e( $step['name'] ); ?>
+					<?php echo (int) $counter; ?> <?php echo esc_html( $step['name'] ); ?>
 				</a>
 			<?php else : ?>
-				<?php echo (int) $counter; ?>. <?php esc_html_e( $step['name'] ); ?>
+				<?php echo (int) $counter; ?>. <?php echo esc_html( $step['name'] ); ?>
 			<?php endif ?>
 		</li>
 			<?php

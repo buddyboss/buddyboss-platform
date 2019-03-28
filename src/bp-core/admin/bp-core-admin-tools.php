@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 function bp_core_admin_tools() {
 	?>
 	<div class="wrap">
-	    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddypress' ) ); ?></h2>
+	    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
 		<div class="nav-settings-subsubsub">
 			<ul class="subsubsub">
 				<?php bp_core_tools_settings_admin_tabs(); ?>

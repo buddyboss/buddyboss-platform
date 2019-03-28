@@ -1,4 +1,4 @@
-<?php
+bp-nouveau/includes/template-tags.php<?php
 /**
  * Common template tags
  *
@@ -472,7 +472,7 @@ function bp_nouveau_pagination( $position ) {
 			<div class="<?php echo esc_attr( 'pag-count ' . sanitize_html_class( $position ) ); ?>">
 
 				<p class="pag-data">
-					<?php esc_html_e( $pag_count ); ?>
+					<?php echo esc_html( $pag_count ); ?>
 				</p>
 
 			</div>
@@ -1172,7 +1172,7 @@ function bp_nouveau_nav_link_title() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_nav_link_text() {
-	esc_html_e( bp_nouveau_get_nav_link_text() );
+	echo esc_html( bp_nouveau_get_nav_link_text() );
 }
 
 	/**
@@ -1250,7 +1250,7 @@ function bp_nouveau_nav_has_count() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_nav_count() {
-	esc_html_e( number_format_i18n( bp_nouveau_get_nav_count() ) );
+	echo esc_html( number_format_i18n( bp_nouveau_get_nav_count() ) );
 }
 
 	/**
@@ -1876,7 +1876,7 @@ function bp_nouveau_search_default_text( $text = '', $is_attr = true ) {
 	if ( $is_attr ) {
 		echo esc_attr( $text );
 	} else {
-		esc_html_e( $text );
+		echo esc_html( $text );
 	}
 }
 
@@ -2115,7 +2115,7 @@ function bp_nouveau_filter_id() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_filter_label() {
-	esc_html_e( bp_nouveau_get_filter_label() );
+	echo esc_html( bp_nouveau_get_filter_label() );
 }
 
 	/**
@@ -2505,7 +2505,7 @@ function bp_nouveau_signup_terms_privacy() {
             <?php printf( __( 'By creating an account you are agreeing to the <a class="popup-modal popup-terms" href="#terms-modal">%s</a>.', 'buddyboss' ), get_the_title( $terms ) ); ?>
         </p>
 		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
-			<h1><?php esc_html_e( get_the_title( $terms ), 'buddyboss' ); ?></h1>
+			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
 			$get_terms = get_post( $terms );
 			echo wp_kses_post( apply_filters( 'the_content',  $get_terms->post_content ) );
@@ -2521,7 +2521,7 @@ function bp_nouveau_signup_terms_privacy() {
             <?php printf( __( 'By creating an account you are agreeing to the <a class="popup-modal-register popup-privacy" href="#privacy-modal">%s</a>.', 'buddyboss' ), get_the_title( $privacy ) ); ?>
         </p>
 		<div id="privacy-modal" class="mfp-hide registration-popup bb-modal">
-			<h1><?php esc_html_e( get_the_title( $privacy ), 'buddyboss' ); ?></h1>
+			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
 			<?php
 			$get_privacy = get_post( $privacy );
 			echo wp_kses_post( apply_filters( 'the_content',  $get_privacy->post_content ) );
@@ -2537,7 +2537,7 @@ function bp_nouveau_signup_terms_privacy() {
             <?php printf( __( 'By creating an account you are agreeing to the <a class="popup-modal-register popup-terms" href="#terms-modal">%s</a> and <a class="popup-modal-register popup-privacy" href="#privacy-modal">%s</a>.', 'buddyboss' ), get_the_title( $terms ), get_the_title( $privacy ) ); ?>
         </p>
 		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
-			<h1><?php esc_html_e( get_the_title( $terms ), 'buddyboss' ); ?></h1>
+			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
 			<?php
 			$get_terms = get_post( $terms );
 			echo wp_kses_post( apply_filters( 'the_content',  $get_terms->post_content ) );
@@ -2545,7 +2545,7 @@ function bp_nouveau_signup_terms_privacy() {
 			<button title="<?php esc_attr_e( 'Close (Esc)', 'buddyboss'); ?>" type="button" class="mfp-close"><?php esc_html_e('×','buddyboss');?></button>
 		</div>
 		<div id="privacy-modal" class="mfp-hide registration-popup bb-modal">
-			<h1><?php esc_html_e( get_the_title( $privacy ), 'buddyboss' ); ?></h1>
+			<h1><?php echo esc_html( get_the_title( $privacy ) ); ?></h1>
 			<?php
 			$get_privacy = get_post( $privacy );
 			echo wp_kses_post( apply_filters( 'the_content',  $get_privacy->post_content ) );
@@ -2634,7 +2634,7 @@ function nouveau_error_template( $message = '', $type = '' ) {
 
 	<div class="<?php echo esc_attr( 'bp-messages bp-feedback ' . $type ); ?>">
 		<span class="bp-icon" aria-hidden="true"></span>
-		<p><?php esc_html_e( $message ); ?></p>
+		<p><?php echo esc_html( $message ); ?></p>
 	</div>
 
 	<?php

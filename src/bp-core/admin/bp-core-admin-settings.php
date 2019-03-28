@@ -376,7 +376,7 @@ function bp_core_admin_settings() {
 	?>
 
 	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Settings', 'buddypress' ) ); ?></h2>
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Settings', 'buddyboss' ) ); ?></h2>
 		<div class="nav-settings-subsubsub">
 			<ul class="subsubsub">
 				<?php bp_core_settings_admin_tabs(); ?>
@@ -401,7 +401,7 @@ function bp_core_admin_integrations() {
     ?>
 
     <div class="wrap">
-	    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Integrations', 'buddypress' ) ); ?></h2>
+	    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Integrations', 'buddyboss' ) ); ?></h2>
 	    <div class="nav-settings-subsubsub">
 	        <ul class="subsubsub">
 		        <?php bp_core_admin_integration_tabs(); ?>

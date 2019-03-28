@@ -22,7 +22,7 @@ function bp_core_admin_pages_settings() {
 	}
 	?>
     <div class="wrap">
-	    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Pages', 'buddypress' ) ); ?></h2>
+	    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Pages', 'buddyboss' ) ); ?></h2>
         <form action="" method="post">
 			<?php
 			settings_fields( 'bp-pages' );

@@ -534,7 +534,7 @@ function bp_groups_admin() {
 	// Added navigation tab on top.
 	if ( bp_core_get_groups_admin_tabs() ) { ?>
 		<div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_groups_tabs( __( 'All Groups', 'buddypress' ) ); ?></h2>
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_groups_tabs( __( 'All Groups', 'buddyboss' ) ); ?></h2>
 		</div>
 		<?php
 	}
@@ -1694,7 +1694,7 @@ function bp_group_type_labels_meta_box( $post ) {
 		<thead>
 			<tr>
 				<th scope="col" colspan="2">
-					<?php _e( 'Group Type', 'buddyboss' ); ?>		
+					<?php _e( 'Group Type', 'buddyboss' ); ?>
 				</th>
 			</tr>
 		</thead>
@@ -1734,12 +1734,12 @@ function bp_group_type_labels_meta_box( $post ) {
 
 	<h3><?php _e( 'Group Roles', 'buddyboss' ); ?></h3>
 	<p><?php _e( 'Rename the group member roles for groups of this type (optional).', 'buddyboss' ); ?></p>
-	
+
 	<table class="widefat bp-post-type">
 		<thead>
 			<tr>
 				<th scope="col" colspan="2">
-					<?php _e( 'Organizers', 'buddyboss' ); ?>	
+					<?php _e( 'Organizers', 'buddyboss' ); ?>
 				</th>
 			</tr>
 		</thead>
@@ -1767,7 +1767,7 @@ function bp_group_type_labels_meta_box( $post ) {
 		<thead>
 			<tr>
 				<th scope="col" colspan="2">
-					<?php _e( 'Moderators', 'buddyboss' ); ?>	
+					<?php _e( 'Moderators', 'buddyboss' ); ?>
 				</th>
 			</tr>
 		</thead>
@@ -1795,7 +1795,7 @@ function bp_group_type_labels_meta_box( $post ) {
 		<thead>
 			<tr>
 				<th scope="col" colspan="2">
-					<?php _e( 'Members', 'buddyboss' ); ?>	
+					<?php _e( 'Members', 'buddyboss' ); ?>
 				</th>
 			</tr>
 		</thead>
@@ -1842,7 +1842,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 		<thead>
 			<tr>
 				<th scope="col" colspan="2">
-					<?php _e( 'Groups Directory', 'buddyboss' ); ?>		
+					<?php _e( 'Groups Directory', 'buddyboss' ); ?>
 				</th>
 			</tr>
 		</thead>
@@ -1894,7 +1894,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 
 	$get_all_registered_member_types = bp_get_active_member_types();
 	if ( isset( $get_all_registered_member_types ) && !empty( $get_all_registered_member_types ) ) {
-		
+
 	?>
 
 		<table class="widefat bp-post-type">
@@ -1929,7 +1929,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 						<?php _e( get_the_title( $member_type ), 'buddyboss' ); ?>
 					</td>
 				</tr>
-				
+
 			<?php } ?>
 
 			</tbody>
@@ -2293,7 +2293,7 @@ function bp_groups_admin_group_type_listing_add_groups_tab() {
 		if ( ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post.php' ) ) {
 			?>
 			<div class="wrap">
-				<h2 class="nav-tab-wrapper"><?php bp_core_admin_groups_tabs( __( 'Group Types', 'buddypress' ) ); ?></h2>
+				<h2 class="nav-tab-wrapper"><?php bp_core_admin_groups_tabs( __( 'Group Types', 'buddyboss' ) ); ?></h2>
 			</div>
 			<?php
 		}

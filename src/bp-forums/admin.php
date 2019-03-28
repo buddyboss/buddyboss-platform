@@ -207,25 +207,25 @@ function bp_core_get_forums_admin_tabs( $active_tab = '') {
 
 	$tabs[] = array(
 		'href'  => bp_get_admin_url( add_query_arg( array( 'post_type' => bbp_get_forum_post_type() ), 'edit.php' ) ),
-		'name'  => __( 'Forums', 'buddypress' ),
+		'name'  => __( 'Forums', 'buddyboss' ),
 		'class' => 'bp-forums',
 	);
 
 	$tabs[] = array(
 		'href'  => bp_get_admin_url( add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), 'edit.php' ) ),
-		'name'  => __( 'Discussions', 'buddypress' ),
+		'name'  => __( 'Discussions', 'buddyboss' ),
 		'class' => 'bp-discussions',
 	);
 
 	$tabs[] = array(
 		'href'  => bp_get_admin_url( add_query_arg( array( 'taxonomy' =>  bbp_get_topic_tag_tax_id(), 'post_type' => bbp_get_topic_post_type() ), 'edit-tags.php' ) ),
-		'name'  => __( 'Discussion Tags', 'buddypress' ),
+		'name'  => __( 'Discussion Tags', 'buddyboss' ),
 		'class' => 'bp-tags',
 	);
 
 	$tabs[] = array(
 		'href'  => bp_get_admin_url( add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), 'edit.php' ) ),
-		'name'  => __( 'Replies', 'buddypress' ),
+		'name'  => __( 'Replies', 'buddyboss' ),
 		'class' => 'bp-replies',
 	);
 
@@ -251,7 +251,7 @@ function bp_forums_admin_forums_listing_add_tab() {
 	if ( ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'edit.php' ) || ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'post-new.php' ) || ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'post.php' ) ) {
 		?>
 		<div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Forums', 'buddypress' ) ); ?></h2>
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Forums', 'buddyboss' ) ); ?></h2>
 		</div>
 		<?php
 	}
@@ -271,7 +271,7 @@ function bp_discussions_admin_discussions_listing_add_tab() {
 	if ( ( isset( $post->post_type ) && $post->post_type == bbp_get_topic_post_type() && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_topic_post_type() && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_topic_post_type() && $pagenow == 'post.php' ) ) {
 		?>
 		<div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Discussions', 'buddypress' ) ); ?></h2>
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Discussions', 'buddyboss' ) ); ?></h2>
 		</div>
 		<?php
 	}
@@ -291,7 +291,7 @@ function bp_replies_admin_replies_listing_add_tab() {
 	if ( ( isset( $post->post_type ) && $post->post_type == bbp_get_reply_post_type() && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_reply_post_type() && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_reply_post_type() && $pagenow == 'post.php' ) ) {
 		?>
 		<div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Replies', 'buddypress' ) ); ?></h2>
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Replies', 'buddyboss' ) ); ?></h2>
 		</div>
 		<?php
 	}
@@ -311,7 +311,7 @@ function bp_tags_admin_tags_listing_add_tab() {
 	if ( ( $current_screen->taxonomy == bbp_get_topic_tag_tax_id() && $pagenow == 'edit-tags.php' ) || ( $current_screen->taxonomy == bbp_get_topic_tag_tax_id() && $pagenow == 'term.php' ) ) {
 		?>
 		<div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Discussion Tags', 'buddypress' ) ); ?></h2>
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Discussion Tags', 'buddyboss' ) ); ?></h2>
 		</div>
 		<?php
 	}

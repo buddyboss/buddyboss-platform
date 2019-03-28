@@ -527,7 +527,7 @@ class BP_Admin {
 		?>
 
 		<div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Credits', 'buddypress' ) ); ?></h2>
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Credits', 'buddyboss' ) ); ?></h2>
 			<?php include $this->admin_dir . 'templates/credit-screen.php'; ?>
 		</div>
 

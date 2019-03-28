@@ -120,7 +120,7 @@ class BBP_Forums_Admin {
 
 		if ( bbp_get_forum_post_type() === get_post_type( $post->ID ) && bbp_get_hidden_status_id() === bbp_get_forum_visibility( $post->ID ) ) {
 
-		$states[] = __( 'Hidden' );
+		$states[] = __( 'Hidden', 'buddyboss' );
 
 		}
 
@@ -238,7 +238,7 @@ class BBP_Forums_Admin {
 			'title'   => __( 'Publish Box', 'buddyboss' ),
 			'content' => $publish_box,
 		) );
-		
+
 		// Help Sidebar
 		get_current_screen()->set_help_sidebar(
 			'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .

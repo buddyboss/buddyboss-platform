@@ -63,7 +63,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 									$member_type = __( $member_type, 'buddyboss');
 								}
 								?>
-								<option value="<?php echo esc_attr( $name ); ?>"><?php esc_html_e( $member_type ); ?></option>
+								<option value="<?php echo esc_attr( $name ); ?>"><?php echo esc_html( $member_type ); ?></option>
 								<?php
 							}
 							?>

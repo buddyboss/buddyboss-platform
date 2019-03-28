@@ -591,32 +591,32 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 	$tabs = array(
 		'0' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) ),
-			'name'  => __( 'Components', 'buddypress' ),
+			'name'  => __( 'Components', 'buddyboss' ),
 			'class' => 'bp-components',
 		),
 		'1' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages' ), 'admin.php' ) ),
-			'name'  => __( 'Pages', 'buddypress' ),
+			'name'  => __( 'Pages', 'buddyboss' ),
 			'class' => 'bp-pages',
 		),
 		'2' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings' ), 'admin.php' ) ),
-			'name'  => __( 'Settings', 'buddypress' ),
+			'name'  => __( 'Settings', 'buddyboss' ),
 			'class' => 'bp-settings',
 		),
 		'3' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-integrations' ), 'admin.php' ) ),
-			'name'  => __( 'Integrations', 'buddypress' ),
+			'name'  => __( 'Integrations', 'buddyboss' ),
 			'class' => 'bp-integrations',
 		),
 		'4' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-tools' ), 'admin.php' ) ),
-			'name'  => __( 'Tools', 'buddypress' ),
+			'name'  => __( 'Tools', 'buddyboss' ),
 			'class' => 'bp-tools',
 		),
 		'5' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-credits' ), 'admin.php' ) ),
-			'name'  => __( 'Credits', 'buddypress' ),
+			'name'  => __( 'Credits', 'buddyboss' ),
 			'class' => 'bp-credits',
 		),
 
@@ -638,7 +638,7 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_core_get_admin_active_tab() {
-	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'buddypress' );
+	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'buddyboss' );
 	return isset($_GET['tab'])? $_GET['tab'] : $default_tab;
 }
 
@@ -1615,7 +1615,7 @@ function bp_member_type_permissions_metabox( $post ) {
 		<thead>
 			<tr>
 				<th scope="col" colspan="2">
-					<?php _e( 'Members Directory', 'buddyboss' ); ?>		
+					<?php _e( 'Members Directory', 'buddyboss' ); ?>
 				</th>
 			</tr>
 		</thead>
@@ -1778,7 +1778,7 @@ function bp_member_type_group_create_metabox( $post ) {
 			$group_type_key = get_post_meta( $group_type_id, '_bp_group_type_key', true );
 			$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];
 			?>
-			
+
 			<tr>
 				<td colspan="2">
 					<input class="group-type-checkboxes"  type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> /> <?php _e( $group_type_label, 'buddyboss' ); ?>
@@ -1855,7 +1855,7 @@ function bp_member_type_group_auto_join_meta_box( $post ) {
 		$group_type_key = get_post_meta( $group_type_id, '_bp_group_type_key', true );
 		$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];
 		?>
-			
+
 			<tr>
 				<td colspan="2">
 					<input type='checkbox' name='bp-group-type-auto-join[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> /> <?php _e( $group_type_label, 'buddyboss' ); ?>
@@ -1911,7 +1911,7 @@ function bp_member_type_invite_meta_box( $post ) {
 
 		$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
 		?>
-			
+
 			<tr>
 				<td colspan="2">
 					<input type='checkbox' name='bp-member-type-invite[]' value='<?php echo esc_attr( $member_type_id ); ?>' <?php checked( in_array( $member_type_id, $get_selected_profile_types ) ); ?> /> <?php _e( $member_type_name, 'buddyboss' ); ?>
@@ -2170,7 +2170,7 @@ function bp_register_member_type_import_submenu_page() {
 function bp_member_type_import_submenu_page() {
 	?>
 	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddypress' ) ); ?></h2>
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
 		<div class="nav-settings-subsubsub">
 			<ul class="subsubsub">
 				<?php bp_core_tools_settings_admin_tabs(); ?>
@@ -2357,10 +2357,10 @@ function bp_remove_avatar_settings_from_options_discussion_page() {
 		?>
 		<style>
 			body.options-discussion-php #wpbody-content .wrap form table:nth-last-child(2) tbody tr:last-child {
-				display: none !important; 
+				display: none !important;
 			}
 			body.options-discussion-php #wpbody-content .wrap h2.title, body.options-discussion-php #wpbody-content .wrap h2.title + p, body.options-discussion-php #wpbody-content .wrap h2.title + p + table {
-				display: none !important; 
+				display: none !important;
 			}
 		</style>
 		<?php
@@ -2380,7 +2380,7 @@ function bp_emails_admin_email_listing_add_tab() {
 	if ( ( isset( $post->post_type ) && $post->post_type == bp_get_email_post_type() && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == bp_get_email_post_type() && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == bp_get_email_post_type() && $pagenow == 'post.php' ) ) {
 		?>
 		<div class="wrap">
-			<h2 class="nav-tab-wrapper"><?php bp_core_admin_emails_tabs( __( 'Emails', 'buddypress' ) ); ?></h2>
+			<h2 class="nav-tab-wrapper"><?php bp_core_admin_emails_tabs( __( 'Emails', 'buddyboss' ) ); ?></h2>
 		</div>
 		<?php
 	}
@@ -2459,7 +2459,7 @@ function bp_core_get_groups_admin_tabs( $active_tab = '') {
 
 	$tabs[] = array(
 		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-groups' ), 'admin.php' ) ),
-		'name'  => __( 'All Groups', 'buddypress' ),
+		'name'  => __( 'All Groups', 'buddyboss' ),
 		'class' => 'bp-all-groups',
 	);
 
@@ -2467,7 +2467,7 @@ function bp_core_get_groups_admin_tabs( $active_tab = '') {
 
 		$tabs[] = array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'post_type' => 'bp-group-type' ), 'edit.php' ) ),
-			'name'  => __( 'Group Types', 'buddypress' ),
+			'name'  => __( 'Group Types', 'buddyboss' ),
 			'class' => 'bp-group-types',
 		);
 
@@ -2477,7 +2477,7 @@ function bp_core_get_groups_admin_tabs( $active_tab = '') {
 	$section_link = add_query_arg( $query, admin_url( 'customize.php' ) );
 	$tabs[] = array(
 		'href'  => esc_url( $section_link ),
-		'name'  => __( 'Group Navigation', 'buddypress' ),
+		'name'  => __( 'Group Navigation', 'buddyboss' ),
 		'class' => 'bp-group-customizer',
 	);
 
@@ -2545,13 +2545,13 @@ function bp_core_get_emails_admin_tabs( $active_tab = '') {
 
 	$tabs[] = array(
 		'href'  => bp_get_admin_url( add_query_arg( array( 'post_type' => bp_get_email_post_type() ), 'edit.php' ) ),
-		'name'  => __( 'Emails', 'buddypress' ),
+		'name'  => __( 'Emails', 'buddyboss' ),
 		'class' => 'bp-email-templates',
 	);
 
 	$tabs[] = array(
 		'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-emails-customizer-redirect' ), 'themes.php' ) ),
-		'name'  => __( 'Customize Layout', 'buddypress' ),
+		'name'  => __( 'Customize Layout', 'buddyboss' ),
 		'class' => 'bp-emails-customizer',
 	);
 

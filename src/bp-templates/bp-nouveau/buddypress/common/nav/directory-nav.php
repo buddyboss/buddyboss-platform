@@ -158,7 +158,7 @@
 					<?php bp_nouveau_nav_link_text(); ?>
 
 					<?php if ( bp_nouveau_nav_has_count() ) : ?>
-						<span class="count"><?php esc_html_e( number_format_i18n( max( $count,0) ) ); ?></span>
+						<span class="count"><?php esc_html_e( number_format_i18n( max( $count,0) ), 'buddyboss' ); ?></span>
 					<?php endif; ?>
 				</a>
 			</li>

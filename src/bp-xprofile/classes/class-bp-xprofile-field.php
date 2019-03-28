@@ -146,9 +146,9 @@ class BP_XProfile_Field {
 	 * Whether values from this field are autolinked to directory searches.
 	 *
 	 * @since BuddyPress 2.5.0
-     * @deprecated BuddyBoss 1.0.0 
+     * @deprecated BuddyBoss 1.0.0
      * No longer used. Will be removed in future.
-     * 
+     *
 	 * @var bool
 	 */
 	public $do_autolink;
@@ -1250,7 +1250,7 @@ class BP_XProfile_Field {
 			$users_tab = count( bp_core_get_users_admin_tabs() );
 			if ( $users_tab > 1 ) {
 				?>
-				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddypress' ) ); ?></h2><?php
+				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddyboss' ) ); ?></h2><?php
 			}
 			?>
 			<h1><?php echo esc_html( $title ); ?></h1>
