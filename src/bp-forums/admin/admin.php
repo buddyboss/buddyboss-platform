@@ -525,9 +525,9 @@ class BBP_Admin {
 	 * @uses remove_submenu_page() To remove menu items with alternat navigation
 	 */
 	public function admin_head() {
-		remove_submenu_page( 'tools.php', 'bbp-repair'    );
-		remove_submenu_page( 'tools.php', 'bbp-converter' );
-		remove_submenu_page( 'tools.php', 'bbp-reset'     );
+		remove_submenu_page( 'admin.php', 'bbp-repair'    );
+		remove_submenu_page( 'admin.php', 'bbp-converter' );
+		remove_submenu_page( 'admin.php', 'bbp-reset'     );
 		remove_submenu_page( 'index.php', 'bbp-about'     );
 		remove_submenu_page( 'index.php', 'bbp-credits'   );
 	}

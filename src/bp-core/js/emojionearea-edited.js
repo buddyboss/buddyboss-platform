@@ -68,15 +68,16 @@ document = window.document || {};
 	function getTemplate(template, unicode, shortname) {
 		var imageType = emojione.imageType, imagePath;
 		if (imageType=='svg'){
-			imagePath = emojione.imagePathSVG;
+			imagePath = _wpemojiSettings.svgUrl;
 		} else {
-			imagePath = emojione.imagePathPNG;
+			imagePath = _wpemojiSettings.baseUrl;
 		}
 		var friendlyName = '';
 		if (shortname) {
 			friendlyName = shortname.substr(1, shortname.length - 2).replace(/_/g, ' ').replace(/\w\S*/g, function(txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 		}
 		var fname = '';
+		var originalUnicode = unicode;
 		if (unicode.uc_base && emojioneSupportMode > 4) {
 			fname = unicode.uc_base;
 			unicode = unicode.uc_output.toUpperCase();
@@ -85,7 +86,7 @@ document = window.document || {};
 		}
 		template = template.replace('{name}', shortname || '')
 			.replace('{friendlyName}', friendlyName)
-			.replace('{img}', imagePath + (emojioneSupportMode < 2 ? fname.toUpperCase() : fname) + '.' + imageType)
+			.replace('{img}', imagePath + (emojioneSupportMode < 2 ? fname.toUpperCase() :  originalUnicode.uc_output ) + '.' + imageType)
 			.replace('{uni}', unicode);
 
 		if(shortname) {
@@ -138,7 +139,7 @@ document = window.document || {};
 		}
 	}
 	function getEmojioneVersion() {
-		return window.emojioneVersion || '3.1.2';
+		return window.emojioneVersion || '4.5';
 	};
 	function isObject(variable) {
 		return typeof variable === 'object';
@@ -769,7 +770,9 @@ document = window.document || {};
 				var e = $(this), top = e.offset().top;
 
 				if (top > pickerTop && top < pickerBottom) {
-					e.attr("src", e.data("src")).removeClass("lazy-emoji");
+					this.src = this.dataset.src;
+					this.classList.remove('lazy-emoji');
+					//e.attr("src", e.data("src")).removeClass("lazy-emoji");
 				}
 
 				if (top > pickerBottom) {

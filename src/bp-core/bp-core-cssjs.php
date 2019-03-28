@@ -75,7 +75,8 @@ function bp_core_register_common_scripts() {
 
         'giphy'        => array( 'file' => "{$url}vendor/giphy{$min}.js", 'dependencies' => array(), 'footer' => true ),
 
-        'emojionearea'        => array( 'file' => "{$url}emojionearea-edited{$min}.js", 'dependencies' => array(), 'footer' => true ),
+		'emojione'        => array( 'file' => "{$url}emojione-edited{$min}.js", 'dependencies' => array(), 'footer' => true ),
+        'emojionearea'        => array( 'file' => "{$url}emojionearea-edited{$min}.js", 'dependencies' => array( 'emojione' ), 'footer' => true ),
 
 	);
 
@@ -605,8 +606,8 @@ function _bp_core_moment_js_config_footer() {
  */
 function bp_core_jquery_validate_scripts() {
 
-	wp_enqueue_script( 'bp-jquery-validate' );
-	add_action( 'wp_head', 'bp_core_add_jquery_validate_inline_js' );
+	//wp_enqueue_script( 'bp-jquery-validate' );
+	//add_action( 'wp_head', 'bp_core_add_jquery_validate_inline_js' );
 
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_jquery_validate_scripts' );

@@ -1565,7 +1565,7 @@ function bp_core_validate_email_address( $user_email ) {
  */
 function bp_core_add_validation_error_messages( WP_Error $errors, $validation_results ) {
 	if ( ! empty( $validation_results['invalid'] ) ) {
-		$errors->add( 'user_email', __( 'Please check your email address.', 'buddyboss' ) );
+		$errors->add( 'user_email', __( 'Please enter a valid email address.', 'buddyboss' ) );
 	}
 
 	if ( ! empty( $validation_results['domain_banned'] ) ) {
