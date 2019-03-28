@@ -1672,7 +1672,7 @@ function bp_group_type_show_correct_current_menu(){
 function bp_group_type_custom_meta_boxes() {
 	add_meta_box( 'bp-group-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_group_type_labels_meta_box', null, 'normal', 'high' );
 	//add_meta_box( 'bp-group-type-key', __( 'Group Type Key', 'buddyboss' ), 'bp_group_type_key_meta_box', null, 'normal', 'high' );
-	add_meta_box( 'bp-group-type-preferences', __( 'Preferences', 'buddyboss' ), 'bp_group_type_preferences_meta_box', null, 'normal', 'high' );
+	add_meta_box( 'bp-group-type-permissions', __( 'Permissions', 'buddyboss' ), 'bp_group_type_permissions_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-short-code', __( 'Shortcode', 'buddyboss' ), 'bp_group_short_code_meta_box', null, 'normal', 'high' );
 
 	// Register meta box only if the profile type is enabled.
@@ -1857,7 +1857,7 @@ function bp_group_type_labels_meta_box( $post ) {
  *
  * @param WP_Post $post
  */
-function bp_group_type_preferences_meta_box( $post ) {
+function bp_group_type_permissions_meta_box( $post ) {
 
 	$meta = get_post_custom( $post->ID );
 	?>
