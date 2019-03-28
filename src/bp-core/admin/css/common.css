@@ -557,6 +557,10 @@ table.bp-content-type {
   background: #fafafa;
 }
 
+body.post-type-bp-group-type .postbox .inside {
+  padding: 2px 22px 22px;
+}
+
 /*
  * 3.4 Site Notices
  */
