@@ -493,7 +493,7 @@
 
 	&.bb-internal-model {
 		position: fixed;
-		z-index: 222;
+		z-index: 99999;
 		background-color: rgba(0, 0, 0, 0.9);
 		width: 100%;
 		height: 100%;
@@ -511,6 +511,17 @@
 	position: relative;
 	margin: auto;
 	padding: 20px 0;
+
+	#buddypress & .activity-list {
+		margin: 0;
+	}
+}
+
+#buddypress .bb-media-model-container .activity-list .activity-item {
+	border: 0;
+	margin: 0;
+	max-height: 90vh;
+	overflow: auto;
 }
 
 .bb-media-model-inner {

@@ -1200,15 +1200,8 @@ a.layout-grid-view {
 }
 
 .activity-update-form #whats-new-toolbar .post-elements-buttons-item {
-  display: inline-block;
+  margin-right: 15px;
   position: relative;
-}
-
-.activity-update-form #whats-new-toolbar .post-elements-buttons-item a.toolbar-button {
-  display: inline-block;
-  padding: 4px 10px;
-  border: 1px solid transparent;
-  line-height: normal;
 }
 
 .activity-update-form #whats-new-toolbar .post-elements-buttons-item .activity-attached-gif-container:before,
@@ -9549,7 +9542,7 @@ body.login .login-popup .mfp-close:hover {
 
 .bb-media-model-wrapper.bb-internal-model {
   position: fixed;
-  z-index: 222;
+  z-index: 99999;
   background-color: rgba(0, 0, 0, 0.9);
   width: 100%;
   height: 100%;
@@ -9566,6 +9559,17 @@ body.login .login-popup .mfp-close:hover {
   position: relative;
   margin: auto;
   padding: 20px 0;
+}
+
+#buddypress .bb-media-model-container .activity-list {
+  margin: 0;
+}
+
+#buddypress .bb-media-model-container .activity-list .activity-item {
+  border: 0;
+  margin: 0;
+  max-height: 90vh;
+  overflow: auto;
 }
 
 .bb-media-model-inner {

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-27 15:59:29+00:00\n"
+"POT-Creation-Date: 2019-03-28 15:14:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3615,7 +3615,7 @@ msgstr ""
 msgid "Log In"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2899
+#: bp-core/bp-core-functions.php:2899 bp-core/bp-core-functions.php:2908
 msgid "New Email"
 msgstr ""
 
@@ -3644,11 +3644,7 @@ msgid "Email list navigation"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2907
-msgid "Email Notifications"
-msgstr ""
-
-#: bp-core/bp-core-functions.php:2908
-msgid "New Template"
+msgid "Email Templates"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2909
@@ -13199,11 +13195,11 @@ msgstr ""
 msgid "Error while uploading media."
 msgstr ""
 
-#: bp-media/bp-media-functions.php:319
+#: bp-media/bp-media-functions.php:321
 msgid "More Photos"
 msgstr ""
 
-#: bp-media/bp-media-functions.php:797
+#: bp-media/bp-media-functions.php:799
 #: bp-templates/bp-nouveau/buddypress/media/add-media.php:13
 msgid "Add Media"
 msgstr ""
@@ -15748,6 +15744,7 @@ msgid "There was a problem when deleting. Please try again."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:275
+#: bp-templates/bp-nouveau/includes/media/ajax.php:271
 msgid "There was a problem displaying the content. Please try again."
 msgstr ""
 
@@ -15959,9 +15956,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:68
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:47
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:261
-#: bp-templates/bp-nouveau/includes/media/ajax.php:62
-#: bp-templates/bp-nouveau/includes/media/ajax.php:110
-#: bp-templates/bp-nouveau/includes/media/ajax.php:201
+#: bp-templates/bp-nouveau/includes/media/ajax.php:68
+#: bp-templates/bp-nouveau/includes/media/ajax.php:116
+#: bp-templates/bp-nouveau/includes/media/ajax.php:207
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
 
@@ -16523,19 +16520,19 @@ msgstr ""
 msgid "widgets (content blocks)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:90
+#: bp-templates/bp-nouveau/includes/media/ajax.php:96
 msgid "There was a problem when trying to upload this file."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:135
+#: bp-templates/bp-nouveau/includes/media/ajax.php:141
 msgid "Please upload media before saving."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:163
+#: bp-templates/bp-nouveau/includes/media/ajax.php:169
 msgid "There was a problem when trying to add the media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:226
+#: bp-templates/bp-nouveau/includes/media/ajax.php:232
 msgid "Please enter title of album."
 msgstr ""
 
