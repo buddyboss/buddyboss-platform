@@ -109,10 +109,6 @@ body #buddypress .bp-list .action {
   clear: both;
 }
 
-.buddypress-wrap.round-avatars .avatar {
-  border-radius: 50%;
-}
-
 body.buddypress article.page > .entry-header {
   margin-bottom: 2em;
   padding: 0;
@@ -9955,7 +9951,7 @@ ul.bb-albums-list .bb-more-photos strong {
 .bb-album-list-item .bs-cover-wrap:after {
   content: " ";
   position: absolute;
-  background: #0000001a;
+  background: #000;
   background-image: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.01) 70%, rgba(0, 0, 0, 0) 100%);
   border-radius: 3px;
   width: 100%;
