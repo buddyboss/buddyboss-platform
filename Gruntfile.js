@@ -53,6 +53,7 @@ module.exports = function( grunt ) {
 				src: BP_JS.concat( [
 					'!**/vendor/*.js',
 					'!**/*.min.js',
+					'!**/emojione-edited.js',
 					'!**/emojionearea-edited.js'
 				] ),
 
