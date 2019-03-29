@@ -165,6 +165,20 @@ function bp_admin_setting_callback_enable_activity_link_preview() {
 }
 
 /**
+ * Allow emoji in activity posts.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_admin_setting_callback_enable_activity_emoji() {
+	?>
+
+	<input id="_bp_enable_activity_emoji" name="_bp_enable_activity_emoji" type="checkbox" value="1" <?php checked( bp_is_activity_emoji_active( false ) ); ?> />
+	<label for="_bp_enable_activity_emoji"><?php _e( 'Display emoji dropdown to choose from when creating activity posts', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
  * Allow GIFs in activity posts.
  *
  * @since BuddyBoss 1.0.0
@@ -376,7 +390,7 @@ function bp_core_admin_settings() {
 	?>
 
 	<div class="wrap">
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Settings', 'buddypress' ) ); ?></h2>
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Settings', 'buddyboss' ) ); ?></h2>
 		<div class="nav-settings-subsubsub">
 			<ul class="subsubsub">
 				<?php bp_core_settings_admin_tabs(); ?>
@@ -401,7 +415,7 @@ function bp_core_admin_integrations() {
     ?>
 
     <div class="wrap">
-	    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Integrations', 'buddypress' ) ); ?></h2>
+	    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Integrations', 'buddyboss' ) ); ?></h2>
 	    <div class="nav-settings-subsubsub">
 	        <ul class="subsubsub">
 		        <?php bp_core_admin_integration_tabs(); ?>
@@ -591,7 +605,7 @@ function bp_feed_settings_callback_platform( $args ) {
 		$option_name = $args['activity_name'];
 		?>
 		<input name="<?php echo esc_attr( 'bp-feed-platform-'.$option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bp_platform_is_feed_enable( 'bp-feed-platform-'.$option_name, true ) ); ?>/>
-		<label for="<?php echo esc_attr( $option_name ); ?>"><?php esc_html_e( $args['activity_label'], 'buddyboss' ); ?></label>
+		<label for="<?php echo esc_attr( $option_name ); ?>"><?php echo esc_html( $args['activity_label'], 'buddyboss' ); ?></label>
 		<?php
 
 }

@@ -89,15 +89,8 @@
 		align-items: center;
 
 		.post-elements-buttons-item {
-			display: inline-block;
+			margin-right: 15px;
 			position: relative;
-
-			a.toolbar-button {
-				display: inline-block;
-				padding: 4px 10px;
-				border: 1px solid transparent;
-				line-height: normal;
-			}
 
 			.activity-attached-gif-container:before,
 			.activity-attached-gif-container:after {

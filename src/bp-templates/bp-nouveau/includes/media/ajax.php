@@ -35,6 +35,12 @@ add_action( 'admin_init', function() {
 				'nopriv'   => true,
 			),
 		),
+		array(
+			'media_get_activity' => array(
+				'function' => 'bp_nouveau_ajax_media_get_activity',
+				'nopriv'   => true,
+			),
+		),
 	);
 
 	foreach ( $ajax_actions as $ajax_action ) {
@@ -248,5 +254,44 @@ function bp_nouveau_ajax_media_album_save() {
 
 	wp_send_json_success( array(
 		'album'     => $album,
+	) );
+}
+
+/**
+ * Get activity for the media
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string HTML
+ */
+function bp_nouveau_ajax_media_get_activity() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback bp-messages error">%s</div>',
+			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Nonce check!
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_media' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	remove_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
+
+	ob_start();
+	if ( bp_has_activities( array( 'include' => $_POST['id'] ) ) ) {
+		while ( bp_activities() ) {
+			bp_the_activity();
+			bp_get_template_part( 'activity/entry' );
+		}
+	}
+	$activity = ob_get_contents();
+	ob_end_clean();
+
+	add_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
+
+	wp_send_json_success( array(
+		'activity'     => $activity,
 	) );
 }

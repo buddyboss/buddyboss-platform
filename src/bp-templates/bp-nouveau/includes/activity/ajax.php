@@ -560,13 +560,13 @@ function bp_nouveau_ajax_post_update() {
 			bp_get_template_part( 'activity/entry' );
 		}
 	}
-	$acivity = ob_get_contents();
+	$activity = ob_get_contents();
 	ob_end_clean();
 
 	wp_send_json_success( array(
 		'id'           => $activity_id,
 		'message'      => esc_html__( 'Update posted.', 'buddyboss' ) . ' ' . sprintf( '<a href="%s" class="just-posted">%s</a>', esc_url( bp_activity_get_permalink( $activity_id ) ), esc_html__( 'View activity.', 'buddyboss' ) ),
-		'activity'     => $acivity,
+		'activity'     => $activity,
 
 		/**
 		 * Filters whether or not an AJAX post update is private.

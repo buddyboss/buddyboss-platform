@@ -148,28 +148,28 @@
 							if ( isset( $include_group_type ) && !empty( $include_group_type ) ) {
 								if ( in_array( $type->name, $include_group_type ) ) {
 									?>
-									<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name ); ?>><?php esc_html_e( $type->labels['singular_name'] ); ?></option>
+									<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
 									<?php
 								}
 							} else {
 								?>
-								<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name ); ?>><?php esc_html_e( $type->labels['singular_name'] ); ?></option>
+								<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '', $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
 								<?php
 							}
 
 						} else {
 							?>
-							<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '' , $type->name ); ?>><?php esc_html_e( $type->labels['singular_name'] ); ?></option>
+							<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '' , $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
 							<?php
 						}
 					} else {
 						?>
-						<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '' , $type->name ); ?>><?php esc_html_e( $type->labels['singular_name'] ); ?></option>
+						<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '' , $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
 						<?php
 					}
 				} else {
 					?>
-					<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '' , $type->name ); ?>><?php esc_html_e( $type->labels['singular_name'] ); ?></option>
+					<option for="<?php printf( 'group-type-%s', $type->name ); ?>" value="<?php echo esc_attr( $type->name ) ?>" <?php selected( ( true === bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) ) ? $type->name : '' , $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
 					<?php
 				}
 				?>
@@ -195,7 +195,7 @@
 
 					foreach ( $possible_parent_groups as $possible_parent_group ) {
 						?>
-						<option value="<?php echo $possible_parent_group->id; ?>" <?php selected( $current_parent_group_id, $possible_parent_group->id ); ?>><?php esc_html_e( $possible_parent_group->name ); ?></option>
+						<option value="<?php echo $possible_parent_group->id; ?>" <?php selected( $current_parent_group_id, $possible_parent_group->id ); ?>><?php echo esc_html( $possible_parent_group->name ); ?></option>
 						<?php
 					}
 				}

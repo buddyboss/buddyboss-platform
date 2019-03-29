@@ -710,7 +710,7 @@ function bp_nouveau_activity_comment_action() {
 		 */
 		return apply_filters( 'bp_nouveau_get_activity_comment_action',
 			/* translators: 1: user profile link, 2: user name, 3: activity permalink, 4: activity recorded date, 5: activity timestamp, 6: activity human time since */
-			sprintf( __( '<a href="%1$s">%2$s</a> replied <a href="%3$s" class="activity-time-since"><time class="time-since" datetime="%4$s" data-bp-timestamp="%5$d">%6$s</time></a>', 'buddyboss' ),
+			sprintf( __( '<a href="%1$s">%2$s</a> <a href="%3$s" class="activity-time-since"><time class="time-since" datetime="%4$s" data-bp-timestamp="%5$d">%6$s</time></a>', 'buddyboss' ),
 				esc_url( bp_get_activity_comment_user_link() ),
 				esc_html( bp_get_activity_comment_name() ),
 				esc_url( bp_get_activity_comment_permalink() ),

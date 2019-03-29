@@ -6,6 +6,6 @@ if (!defined('ABSPATH')) {
 
 <a class="nav-tab main-nav-tab" href="#" id="learndash">
 <?php
-echo _e('LearnDash', 'learndash-memberpress');
+	_e('LearnDash', 'buddyboss');
 ?>
 </a>

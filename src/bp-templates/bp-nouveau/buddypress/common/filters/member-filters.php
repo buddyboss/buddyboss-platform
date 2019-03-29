@@ -50,7 +50,7 @@ if ( isset( $display_arr ) && !empty( $display_arr )) {
 					<option value=""><?php _e( 'All Types', 'buddyboss' ); ?></option><?php
 					foreach ( $display_arr as $member ) {
 						//@todo variable in textdomain ?>
-						<option value="<?php echo $member['member_type_id']; ?>"><?php _e( $member['name'], 'buddyboss' ); ?></option><?php
+						<option value="<?php echo $member['member_type_id']; ?>"><?php echo $member['name']; ?></option><?php
 					}
 					?>
 				</select>

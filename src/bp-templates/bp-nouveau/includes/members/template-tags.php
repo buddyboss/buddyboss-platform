@@ -961,7 +961,7 @@ function bp_nouveau_wp_profile_field_id() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_wp_profile_field_label() {
-	esc_html_e( bp_nouveau_get_wp_profile_field_label() );
+	echo esc_html( bp_nouveau_get_wp_profile_field_label() );
 }
 
 	/**

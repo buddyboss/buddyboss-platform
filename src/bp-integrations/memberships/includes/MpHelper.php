@@ -106,8 +106,6 @@ class MpHelper {
 			error_log("MpHelper->mpTransactionUpdated, Status : $status, isRecurring : $isRecurring");
 		}
 
-		error_log("MpHelper->mpTransactionUpdated, Status : $status, isRecurring : $isRecurring");
-
 		if (in_array($status, $revokeStatus)) {
 			// revoke access
 			BpMemberships::bpmsUpdateMembershipAccess($meprObj, MP_PRODUCT_SLUG, false);

@@ -81,13 +81,6 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	 * @param array $value Array of Customizer settings.
 	 */
 	$settings = apply_filters( 'bp_nouveau_customizer_settings', array(
-		'bp_nouveau_appearance[avatar_style]' => array(
-			'index'             => 'avatar_style',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
 		'bp_nouveau_appearance[user_nav_display]' => array(
 			'index'             => 'user_nav_display',
 			'capability'        => 'bp_moderate',
@@ -209,12 +202,6 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	}
 
 	$controls = array(
-		'bp_site_avatars' => array(
-			'label'      => __( 'Use the round style for single member and single group avatars.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_general_settings',
-			'settings'   => 'bp_nouveau_appearance[avatar_style]',
-			'type'       => 'checkbox',
-		),
 		'user_nav_display' => array(
 			'label'      => __( 'Display the profile navigation vertically.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_user_primary_nav',

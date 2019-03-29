@@ -89,7 +89,7 @@ function bp_groups_group_type_base() {
 		 * @since BuddyPress 2.7.0
 		 *
 		 * @param string $base
-		 * @todo why would you change this and what is this going to break? 
+		 * @todo why would you change this and what is this going to break?
 		 */
 		return apply_filters( 'bp_groups_group_type_base', _x( 'type', 'Group type URL base slug', 'buddyboss' ) );
 	}
@@ -701,19 +701,16 @@ function bp_get_group_type( $group = false ) {
 		if ( 'public' == $group->status ) {
 
 			$group_visibility = __( 'Public', 'buddyboss' );
-			$group_type       = __( $group_type, 'buddyboss' );
 			$type = !empty( $group_type ) ? '<span class="group-visibility public">'.$group_visibility.'</span> <span class="type-separator">/</span> <span class="group-type">'.$group_type.'</span>'  : '<span class="group-visibility public">'.__( "Public Group", 'buddyboss' ).'</span>';
 
 		} elseif ( 'hidden' == $group->status ) {
 
 			$group_visibility = __( 'Hidden', 'buddyboss' );
-			$group_type       = __( $group_type, 'buddyboss' );
 			$type = !empty( $group_type ) ? '<span class="group-visibility hidden">'.$group_visibility.'</span> <span class="type-separator">/</span> <span class="group-type">'.$group_type.'</span>'  : '<span class="group-visibility hidden">'.__( "Hidden Group", 'buddyboss' ).'</span>';
 
 		} elseif ( 'private' == $group->status ) {
 
 			$group_visibility = __( 'Private', 'buddyboss' );
-			$group_type       = __( $group_type, 'buddyboss' );
 			$type = !empty( $group_type ) ? '<span class="group-visibility private">'.$group_visibility.'</span> <span class="type-separator">/</span> <span class="group-type">'.$group_type.'</span>'  : '<span class="group-visibility private">'.__( "Private Group", 'buddyboss' ).'</span>';
 
 		} else {
@@ -4273,11 +4270,11 @@ function bp_group_member_section_title() {
 			$last_user_group_role_title = $user_group_role_title; ?>
 			<li class="item-entry item-entry-header">
 				<?php if ( groups_is_user_admin( $user_id, $group_id ) ) {
-						esc_html_e( get_group_role_label( $group_id, 'organizer_plural_label_name' ), 'buddyboss' );
+						echo esc_html( get_group_role_label( $group_id, 'organizer_plural_label_name' ), 'buddyboss' );
 					} elseif ( groups_is_user_mod( $user_id, $group_id ) ) {
-						esc_html_e( get_group_role_label( $group_id, 'moderator_plural_label_name' ), 'buddyboss' );
+						echo esc_html( get_group_role_label( $group_id, 'moderator_plural_label_name' ), 'buddyboss' );
 					} elseif ( groups_is_user_member( $user_id, $group_id ) ) {
-						esc_html_e( get_group_role_label( $group_id, 'member_plural_label_name' ), 'buddyboss' );
+						echo esc_html( get_group_role_label( $group_id, 'member_plural_label_name' ), 'buddyboss' );
 					} ?>
 			</li>
 		<?php }

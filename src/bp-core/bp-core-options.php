@@ -956,6 +956,27 @@ function bp_is_activity_link_preview_active( $default = false ) {
 }
 
 /**
+ * Check whether Activity Emoji is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if Emoji is enabled, otherwise false.
+ */
+function bp_is_activity_emoji_active( $default = false ) {
+
+	/**
+	 * Filters whether or not Activity Emoji is enabled.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param bool $value Whether or not Activity Emoji is enabled.
+	 */
+	return (bool) apply_filters( 'bp_is_activity_emoji_active', (bool) bp_get_option( '_bp_enable_activity_emoji', $default ) );
+}
+
+/**
  * Check whether Activity GIFs is enabled.
  *
  * @since BuddyBoss 1.0.0

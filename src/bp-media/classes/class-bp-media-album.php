@@ -522,6 +522,33 @@ class BP_Media_Album {
 	}
 
 	/**
+	 * Get whether an album exists for a given id.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string      $id       ID to check.
+	 * @return int|null Album ID if found; null if not.
+	 */
+	public static function album_exists( $id ) {
+		if ( empty( $id ) ) {
+			return false;
+		}
+
+		$args = array(
+			'include' => $id,
+		);
+
+		$albums = BP_Media_Album::get( $args );
+
+		$album_id = null;
+		if ( $albums['albums'] ) {
+			$album_id = current( $albums['albums'] )->id;
+		}
+
+		return $album_id;
+	}
+
+	/**
 	 * Append xProfile fullnames to an media array.
 	 *
 	 * @since BuddyBoss 1.0.0

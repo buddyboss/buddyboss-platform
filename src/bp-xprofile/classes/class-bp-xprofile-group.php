@@ -162,7 +162,7 @@ class BP_XProfile_Group {
         // Save metadata
         $repeater_enabled = isset( $_POST['group_is_repeater'] ) && 'on' == $_POST['group_is_repeater'] ? 'on' : 'off';
         self::update_group_meta( $this->id, 'is_repeater_enabled', $repeater_enabled );
-        
+
 		/**
 		 * Fires after the current group instance gets saved.
 		 *
@@ -329,13 +329,13 @@ class BP_XProfile_Group {
 		if ( empty( $group_ids ) ) {
 			return $groups;
 		}
-        
+
 		// Setup IN query from group IDs.
 		$group_ids_in = implode( ',', (array) $group_ids );
 
 		// Support arrays and comma-separated strings.
 		$exclude_fields_cs = wp_parse_id_list( $r['exclude_fields'] );
-        
+
         /**
          * For each group, check if it is a repeater set.
          * If so,
@@ -347,7 +347,7 @@ class BP_XProfile_Group {
             $is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
             if ( $is_repeater_enabled ) {
                 $clone_field_ids_all = bp_get_repeater_clone_field_ids_all( $group_id );
-                
+
                 if ( $r['repeater_show_main_fields_only'] ) {
                     //exclude clones
                     $exclude_fields_cs  = array_merge( $exclude_fields_cs, $clone_field_ids_all );
@@ -355,12 +355,12 @@ class BP_XProfile_Group {
                     //exclude template fields
                     $template_field_ids = bp_get_repeater_template_field_ids( $group_id );
                     $exclude_fields_cs  = array_merge( $exclude_fields_cs, $template_field_ids );
-                    
+
                     //include only the subset of clones the current user has data in
                     $user_field_set_count = bp_get_profile_field_set_count( $group_id, $r['user_id'] );
                     $clone_field_ids_has_data = bp_get_repeater_clone_field_ids_subset( $group_id, $user_field_set_count );
                     $clones_to_exclude = array_diff( $clone_field_ids_all, $clone_field_ids_has_data );
-                    
+
                     $exclude_fields_cs  = array_merge( $exclude_fields_cs, $clones_to_exclude );
                 }
             }
@@ -607,11 +607,11 @@ class BP_XProfile_Group {
 		// Reset indexes & return.
 		return array_values( $groups );
 	}
-    
+
     public static function get_group_meta ( $group_id, $meta_key = '', $single = true ) {
         return bp_xprofile_get_meta( $group_id, 'group', $meta_key, $single );
     }
-    
+
     public static function update_group_meta ( $group_id, $meta_key, $meta_value, $prev_value = '' ) {
         return bp_xprofile_update_meta( $group_id, 'group', $meta_key, $meta_value, $prev_value );
     }
@@ -793,7 +793,7 @@ class BP_XProfile_Group {
 			$users_tab = count( bp_core_get_users_admin_tabs() );
 			if ( $users_tab > 1 ) {
 				?>
-				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddypress' ) ); ?></h2><?php
+				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddyboss' ) ); ?></h2><?php
 			}
 			?>
 			<h1><?php echo esc_html( $title ); ?></h1>
@@ -887,7 +887,7 @@ class BP_XProfile_Group {
 							</div>
 
 							<?php
-                            
+
 							/**
 							 * Fires after XProfile Group submit metabox.
 							 *
@@ -896,16 +896,16 @@ class BP_XProfile_Group {
 							 * @param BP_XProfile_Group $this Current XProfile group.
 							 */
 							do_action( 'xprofile_group_after_submitbox', $this ); ?>
-                            
-                            <?php 
+
+                            <?php
                             /**
                              * The main profile field group, used in registration form,
                              * can not be a repeater.
                              */
                             if ( empty( $this->id ) || $this->can_delete ) : ?>
-                            
+
                                 <?php $enabled = 'on' == self::get_group_meta( $this->id, 'is_repeater_enabled' ) ? 'on' : 'off'; ?>
-                            
+
                                 <div id="repeatersetdiv" class="postbox">
                                     <h2><?php _e( 'Repeater Set', 'buddyboss' ); ?></h2>
                                     <div class="inside">
@@ -916,9 +916,9 @@ class BP_XProfile_Group {
                                         </select>
                                     </div>
                                 </div>
-                            
+
                             <?php endif; ?>
-                            
+
 						</div>
 					</div>
 				</div>

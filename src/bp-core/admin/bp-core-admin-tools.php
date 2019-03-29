@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 function bp_core_admin_tools() {
 	?>
 	<div class="wrap">
-	    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddypress' ) ); ?></h2>
+	    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
 		<div class="nav-settings-subsubsub">
 			<ul class="subsubsub">
 				<?php bp_core_tools_settings_admin_tabs(); ?>
@@ -534,7 +534,7 @@ function bp_core_admin_available_tools_intro() {
 		'page' => 'bp-tools'
 	);
 
-	$page = bp_core_do_network_admin() ? 'admin.php' : 'tools.php' ;
+	$page = bp_core_do_network_admin() ? 'admin.php' : 'admin.php' ;
 	$url  = add_query_arg( $query_arg, bp_get_admin_url( $page ) );
 	?>
 	<div class="card tool-box">

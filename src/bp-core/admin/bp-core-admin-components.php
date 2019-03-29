@@ -20,7 +20,7 @@ function bp_core_admin_components_settings() {
 
 	<div class="wrap">
 
-		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Components', 'buddypress' ) ); ?></h2>
+		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Components', 'buddyboss' ) ); ?></h2>
 		<form action="" method="post" id="bp-admin-component-form">
 
 			<?php bp_core_admin_components_options(); ?>

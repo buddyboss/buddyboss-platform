@@ -100,9 +100,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Enable/Disable Display on profiles.
 		$this->add_field( 'bp-member-type-display-on-profile', __( 'Display Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_display_on_profile'], 'intval' );
 
-		// Profile types import.
-		$this->add_field( 'bp-member-type-import', __( 'Import Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_import'], 'intval' );
-
 		// Section for profile search.
 		$this->add_section( 'bp_profile_search_settings', __( 'Profile Search', 'buddyboss' ) );
 
@@ -203,24 +200,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				<label for="bp-enable-profile-search"><?php _e( 'Enable advanced profile search on the members directory', 'buddyboss' ); ?></label>
 				<?php
 			}
-	}
-
-	/**
-	 * Provide link to access import setting.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 */
-	public function bp_admin_setting_callback_member_type_import() {
-		$import_url = admin_url().'admin.php?page=bp-member-type-import&tab=bp-member-type-import';
-		//echo '<a href="'. esc_url( $import_url ).'">Click here to go import page.</a>';
-		printf(
-			__( 'Use the <a href="%s">migration tool</a> to import existing profile type data', 'buddyboss' ),
-			esc_url( $import_url )
-		);
-		?>
-			<p class="description"><?php _e( 'If importing from a BuddyPress site, these were called "member types" before.', 'buddyboss' ); ?></p>
-		<?php
 	}
 
 	/**

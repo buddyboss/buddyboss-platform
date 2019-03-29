@@ -16,7 +16,7 @@
 function media_screen_single_album() {
 
 	// Bail if not viewing a single album.
-	if ( ! bp_is_media_component() || ! bp_is_current_action( 'albums' ) || ! (int) bp_action_variable( 0 ) ) {
+	if ( ! bp_is_media_component() || ! bp_is_single_album() ) {
 		return false;
 	}
 

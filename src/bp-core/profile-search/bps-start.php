@@ -209,7 +209,7 @@ function bp_profile_search_add_main_form () {
         'post_type'     => 'bp_ps_form',
         'post_status'   => 'publish',
     );
-    
+
     $post_id = wp_insert_post( $post_args, true );
     if ( !is_wp_error( $post_id ) ) {
         bp_update_option ( 'bp_profile_search_main_form', $post_id );
@@ -237,7 +237,7 @@ function bp_users_admin_profile_search_listing_add_users_tab() {
 				$users_tab = count( bp_core_get_users_admin_tabs() );
 				if ( $users_tab > 1 ) {
 					?>
-					<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Search', 'buddypress' ) ); ?></h2><?php
+					<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Search', 'buddyboss' ) ); ?></h2><?php
 				}
 				?>
 			</div>

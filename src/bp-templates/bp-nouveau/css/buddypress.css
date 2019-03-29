@@ -109,10 +109,6 @@ body #buddypress .bp-list .action {
   clear: both;
 }
 
-.buddypress-wrap.round-avatars .avatar {
-  border-radius: 50%;
-}
-
 body.buddypress article.page > .entry-header {
   margin-bottom: 2em;
   padding: 0;
@@ -1200,15 +1196,8 @@ a.layout-grid-view {
 }
 
 .activity-update-form #whats-new-toolbar .post-elements-buttons-item {
-  display: inline-block;
+  margin-right: 15px;
   position: relative;
-}
-
-.activity-update-form #whats-new-toolbar .post-elements-buttons-item a.toolbar-button {
-  display: inline-block;
-  padding: 4px 10px;
-  border: 1px solid transparent;
-  line-height: normal;
 }
 
 .activity-update-form #whats-new-toolbar .post-elements-buttons-item .activity-attached-gif-container:before,
@@ -5422,8 +5411,7 @@ button[data-bp-close]:hover {
   color: #777;
 }
 
-/*-------------------------------------*\
-	HINT.css - A CSS tooltip library
+/*-------------------------------------*	HINT.css - A CSS tooltip library
 \*-------------------------------------*/
 /**
  * HINT.css is a tooltip library made in pure CSS.
@@ -9549,7 +9537,7 @@ body.login .login-popup .mfp-close:hover {
 
 .bb-media-model-wrapper.bb-internal-model {
   position: fixed;
-  z-index: 222;
+  z-index: 99999;
   background-color: rgba(0, 0, 0, 0.9);
   width: 100%;
   height: 100%;
@@ -9566,6 +9554,17 @@ body.login .login-popup .mfp-close:hover {
   position: relative;
   margin: auto;
   padding: 20px 0;
+}
+
+#buddypress .bb-media-model-container .activity-list {
+  margin: 0;
+}
+
+#buddypress .bb-media-model-container .activity-list .activity-item {
+  border: 0;
+  margin: 0;
+  max-height: 90vh;
+  overflow: auto;
 }
 
 .bb-media-model-inner {
@@ -9951,8 +9950,8 @@ ul.bb-albums-list .bb-more-photos strong {
 .bb-album-list-item .bs-cover-wrap:after {
   content: " ";
   position: absolute;
-  background: #0000001a;
-  background-image: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.01) 70%, rgba(0, 0, 0, 0) 100%);
+  background: #000000;
+  background-image: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.01) 70%, transparent 100%);
   border-radius: 3px;
   width: 100%;
   height: 100%;

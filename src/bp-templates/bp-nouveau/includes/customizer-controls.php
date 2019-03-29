@@ -80,7 +80,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 
 		<?php if ( isset( $guide ) ) : ?>
 			<p class="description">
-				<?php esc_html_e( $guide ); ?>
+				<?php echo esc_html( $guide ); ?>
 			</p>
 		<?php endif; ?>
 
@@ -108,7 +108,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 								<div class="menu-item-bar">
 									<div class="menu-item-handle ui-sortable-handle">
 									<span class="item-title" aria-hidden="true">
-										<span class="menu-item-title"><?php esc_html_e( _bp_strip_spans_from_title( $item->name ) ); ?></span>
+										<span class="menu-item-title"><?php echo esc_html( _bp_strip_spans_from_title( $item->name ) ); ?></span>
 									</span>
 									</div>
 								</div>
@@ -124,7 +124,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 							<div class="menu-item-bar">
 								<div class="menu-item-handle ui-sortable-handle">
 									<span class="item-title" aria-hidden="true">
-										<span class="menu-item-title"><?php esc_html_e( _bp_strip_spans_from_title( $item->name ) ); ?></span>
+										<span class="menu-item-title"><?php echo esc_html( _bp_strip_spans_from_title( $item->name ) ); ?></span>
 									</span>
 								</div>
 							</div>

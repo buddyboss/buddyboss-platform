@@ -1565,7 +1565,7 @@ function bp_core_validate_email_address( $user_email ) {
  */
 function bp_core_add_validation_error_messages( WP_Error $errors, $validation_results ) {
 	if ( ! empty( $validation_results['invalid'] ) ) {
-		$errors->add( 'user_email', __( 'Please check your email address.', 'buddyboss' ) );
+		$errors->add( 'user_email', __( 'Please enter a valid email address.', 'buddyboss' ) );
 	}
 
 	if ( ! empty( $validation_results['domain_banned'] ) ) {
@@ -2990,7 +2990,7 @@ function bp_get_member_type_post_type_labels() {
 		'add_new_item'          => __( 'New Profile Type', 'buddyboss' ),
 		'all_items'             => __( 'Profile Types', 'buddyboss' ),
 		'edit_item'             => __( 'Edit Profile Type', 'buddyboss' ),
-		'menu_name'             => __( 'Users', 'profile type post type name', 'buddyboss' ),
+		'menu_name'             => __( 'Users', 'buddyboss' ),
 		'name'                  => __( 'Profile Types', 'buddyboss' ),
 		'new_item'              => __( 'New Profile Type', 'buddyboss' ),
 		'not_found'             => __( 'No Profile Types found', 'buddyboss' ),
@@ -3547,7 +3547,7 @@ function bp_member_type_directory() {
 			$type_id = 0;
 		?>
 	<li id="members-<?php echo $type_id; ?>">
-		<a href="<?php echo bp_member_type_directory_permalink( $type_name ); ?>"><?php printf( __( $member_type_name.' <span>%s</span>', 'buddyboss' ),$members_count ); //@todo no variables in the text domain please ?></a>
+		<a href="<?php echo bp_member_type_directory_permalink( $type_name ); ?>"><?php printf( '%s <span>%s</span>', $member_type_name, $members_count ); //@todo no variables in the text domain please ?></a>
 		</li><?php
 	}
 }
@@ -3935,7 +3935,6 @@ function bp_get_user_member_type( $user_id ) {
 				// Output the
 				if ( $type_obj = bp_get_member_type_object( $type ) ) {
 					$member_type = $type_obj->labels['singular_name'];
-					$member_type = __( $member_type, 'buddyboss');
 				}
 
 				$string = '<span class="bp-member-type">'.$member_type.'</span>';
@@ -3956,7 +3955,6 @@ function bp_get_user_member_type( $user_id ) {
 				// Output the
 				if ( $type_obj = bp_get_member_type_object( $type ) ) {
 					$member_type = $type_obj->labels['singular_name'];
-					$member_type = __( $member_type, 'buddyboss');
 					$string = '<span class="bp-member-type">'.$member_type.'</span>';
 				} else {
 					$string = '';

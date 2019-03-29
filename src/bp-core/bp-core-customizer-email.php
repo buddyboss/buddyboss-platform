@@ -491,7 +491,11 @@ function bp_email_get_redirect_to_customizer_url() {
 		array(
 			'autofocus[panel]' => 'bp_mailtpl',
 			'bp_customizer'    => 'email',
-			'return'           => rawurlencode( admin_url() ),
+			'return'           => rawurlencode( add_query_arg(
+				array(
+					'post_type'              => bp_get_email_post_type(),
+				),
+				admin_url( 'edit.php' ) ) ),
 			'url'              => rawurlencode( $preview_url ),
 		),
 		admin_url( 'customize.php' )

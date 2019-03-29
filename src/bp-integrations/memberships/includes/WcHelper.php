@@ -38,7 +38,7 @@ class WcHelper {
 			if ($lmsCourseSlug == LD_COURSE_SLUG) {
 
 				$tabs[$lmsCourseSlug] = array(
-					'label' => __('LearnDash', 'woocommerce'),
+					'label' => __('LearnDash', 'buddyboss'),
 					'target' => 'learndash_product_data',
 					'class' => array(),
 					'priority' => 100,
@@ -138,7 +138,6 @@ class WcHelper {
 		if (BPMS_DEBUG) {
 			error_log("WcHelper->wcSubscriptionUpdated, Status : $status, isRecurring : $isRecurring");
 		}
-		error_log("WcHelper->wcSubscriptionUpdated, Status : $status, isRecurring : $isRecurring");
 
 		if (in_array($status, $revokeStatus)) {
 			// revoke access

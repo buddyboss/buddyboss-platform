@@ -943,7 +943,7 @@ window.bp = window.bp || {};
 
 		initialize: function() {
 			document.addEventListener( 'keydown', _.bind( this.closeGifDropdownOnEsc, this ) );
-			$( document ).on( 'click', _.bind( this.closeGifDropdownOnClick, this ) );
+			$( document ).on( 'click', _.bind( this.closeDropdowns, this ) );
 		},
 
 		render: function() {
@@ -980,9 +980,13 @@ window.bp = window.bp || {};
 			}
 		},
 
-		closeGifDropdownOnClick: function( event ) {
+		closeDropdowns: function( event ) {
 			if (!$(event.target).closest('.post-gif').length) {
 				this.$searchDropdownEl.removeClass('open');
+			}
+
+			if (!$(event.target).closest('.post-emoji').length) {
+			//	$('#whats-new').data('emojioneArea').hidePicker();
 			}
 		}
 	} );
@@ -1231,13 +1235,18 @@ window.bp = window.bp || {};
 
 			this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
-			$('#whats-new').emojioneArea( {
-				standalone: true,
-				hideSource: false,
-				container: '.post-emoji',
-				autocomplete: false,
-				pickerPosition: 'bottom'
-			} );
+			if (!_.isUndefined(BP_Nouveau.activity.params.emoji)) {
+				$('#whats-new').emojioneArea({
+					standalone: true,
+					hideSource: false,
+					container: '.post-emoji',
+					autocomplete: false,
+					pickerPosition: 'bottom',
+					hidePickerOnBlur: true,
+					useInternalCDN: false
+				});
+			}
+
 		},
 
 		resetForm: function() {

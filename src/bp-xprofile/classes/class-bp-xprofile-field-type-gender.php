@@ -72,7 +72,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 				<?php bp_the_profile_field_required_label(); ?>
 			<?php endif; ?>
 		</legend>
-        
+
         <?php if ( bp_get_the_profile_field_description() ) : ?>
 			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
 		<?php endif; ?>
@@ -325,14 +325,13 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 							<label for="<?php echo esc_attr( "{$type}_option{$default_name}" ); ?>">
 								<?php
 								if ( 1 === $j ) {
-									$name = 'Male';
+									_e( 'Male', 'buddyboss' );
 								} elseif ( 2 === $j ) {
-									$name = 'Female';
+									_e( 'Female', 'buddyboss' );
 								} else {
-									$name = 'Other';
+									_e( 'Other', 'buddyboss' );
 								}
 								?>
-								<?php _e( $name, 'buddyboss' ); ?>
 							</label>
 
 							<?php if ( 1 !== $j && 2 !== $j ) : ?>
