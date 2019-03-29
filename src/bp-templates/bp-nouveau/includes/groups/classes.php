@@ -268,12 +268,33 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 			}
 		}
 
+		if ( bp_enable_group_hierarchies() ) {
+			$nav_items['subgroups'] = array(
+				'name'        => __( 'Subgroups', 'buddyboss' ),
+				'slug'        => 'subgroups',
+				'parent_slug' => $this->group->slug,
+				'position'    => 30,
+			);
+		}
+
 		if ( function_exists( 'bp_ld_sync' ) ) {
 			$va = bp_ld_sync( 'settings' )->get( 'buddypress.enabled', true );
 			if ( '1' === $va ) {
 				$nav_items['courses'] = array(
 					'name'        => __( 'Courses', 'buddyboss' ),
 					'slug'        => 'courses',
+					'parent_slug' => $this->group->slug,
+					'position'    => 40,
+				);
+			}
+		}
+
+		if ( function_exists( 'bp_ld_sync' ) ) {
+			$va = bp_ld_sync( 'settings' )->get( 'reports.enabled', true );
+			if ( '1' === $va ) {
+				$nav_items['reports'] = array(
+					'name'        => __( 'Reports', 'buddyboss' ),
+					'slug'        => 'reports',
 					'parent_slug' => $this->group->slug,
 					'position'    => 40,
 				);
