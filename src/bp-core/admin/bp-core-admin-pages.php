@@ -270,14 +270,11 @@ function bp_admin_setting_callback_page_directory_dropdown($args) {
 				__( 'Create Page', 'buddyboss' ) );
 		}
 
-		if ( '' !== $description )
-			printf(
-				'<p class="description">%s</p>',
-				$description
-			);
+		if ( '' !== $description ) {
+			printf( '<p class="description">%s</p>', $description );
+		}
 
 	}
-
 
 	if ( ! bp_is_root_blog() ) restore_current_blog();
 }

@@ -245,7 +245,7 @@ class BBP_Converter {
 				bbconverter_log(response);
 
 				if ( response == '<p class="loading"><?php esc_html_e( 'Conversion Complete', 'buddyboss' ); ?></p>' || response.indexOf('error') > -1 ) {
-					bbconverter_log('<p>Repair any missing information: <a href="<?php echo admin_url(); ?>tools.php?page=bbp-repair">Continue</a></p>');
+					bbconverter_log('<p><?php esc_html_e('Repair any missing information:', 'buddyboss' ); ?> <a href="<?php echo admin_url(); ?>admin.php?page=bbp-repair"><?php esc_html_e( 'Continue', 'buddyboss'); ?></a></p>');
 					bbconverter_stop();
 				} else if( bbconverter_is_running ) { // keep going
 					jQuery('#bbp-converter-progress').show();
