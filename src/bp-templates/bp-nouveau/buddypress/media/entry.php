@@ -14,7 +14,7 @@
            data-attachment-full="<?php bp_media_attachment_image(); ?>"
            data-activity-id="<?php bp_media_activity_id(); ?>"
            href="#">
-            <img src="<?php bp_media_attachment_image_thumbnail(); ?>"/>
+            <img src="<?php bp_media_attachment_image_thumbnail(); ?>" alt="<?php bp_media_title(); ?>"/>
         </a>
         <div class="bb-media-check-wrap">
             <input id="bb-media-<?php bp_media_id(); ?>" class="bb-custom-check" type="checkbox"

@@ -160,7 +160,7 @@ class BP_Media_Component extends BP_Component {
 			'slug'                  => BP_MEDIA_SLUG,
 			'root_slug'             => isset( $bp->pages->media->slug ) ? $bp->pages->media->slug : BP_MEDIA_SLUG,
 			'has_directory'         => true,
-			'notification_callback' => 'bp_media_format_notifications',
+//			'notification_callback' => 'bp_media_format_notifications',
 			'global_tables'         => $global_tables,
 			'directory_title'       => isset( $bp->pages->media->title ) ? $bp->pages->media->title : $default_directory_title,
 			'search_string'         => __( 'Search Media&hellip;', 'buddyboss' ),

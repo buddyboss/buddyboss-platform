@@ -74,3 +74,134 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 function bp_nouveau_media_add_theatre_template() {
 	bp_get_template_part( 'media/theatre' );
 }
+
+/**
+ * Get activity entry media to render on front end
+ */
+function bp_nouveau_media_activity_entry() {
+	$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
+
+	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids ) ) ) {
+		while ( bp_media() ) {
+			bp_the_media();
+			bp_get_template_part( 'media/activity-entry' );
+		}
+	}
+}
+
+/**
+ * Update media for activity
+ *
+ * @param $content
+ * @param $user_id
+ * @param $activity_id
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool
+ */
+function bp_nouveau_media_update_media_meta( $content, $user_id, $activity_id ) {
+
+	if ( ! isset( $_POST['media'] ) || empty( $_POST['media'] ) ) {
+		return false;
+	}
+
+	$media_list = $_POST['media'];
+
+	if ( ! empty( $media_list ) ) {
+		$media_ids = array();
+		foreach ( $media_list as $media_index => $media ) {
+
+			// remove actions to avoid infinity loop
+			remove_action( 'bp_activity_posted_update', 'bp_nouveau_media_update_media_meta', 10, 3 );
+			remove_action( 'bp_groups_posted_update', 'bp_nouveau_media_groups_update_media_meta', 10, 4 );
+
+			// make an activity for the media
+			$content = '&nbsp;';
+			$a_id = bp_activity_post_update( array( 'content' => $content, 'hide_sitewide' => true ) );
+
+			add_action( 'bp_activity_posted_update', 'bp_nouveau_media_update_media_meta', 10, 3 );
+			add_action( 'bp_groups_posted_update', 'bp_nouveau_media_groups_update_media_meta', 10, 4 );
+
+			$media_id = bp_media_add(
+				array(
+					'title'         => ! empty( $media['name'] ) ? $media['name'] : '&nbsp;',
+					'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : 0,
+					'activity_id'   => $a_id,
+					'privacy'       => ! empty( $media['privacy'] ) ? $media['privacy'] : 'public',
+					'attachment_id' => ! empty( $media['id'] ) ? $media['id'] : 0,
+					'menu_order'    => isset( $media['menu_order'] ) ? absint( $media['menu_order'] ) : $media_index,
+				)
+			);
+
+			if ( $media_id ) {
+				$media_ids[] = $media_id;
+			}
+		}
+
+		$media_ids = implode( ',', $media_ids );
+
+		//save media meta for activity
+		if ( ! empty( $activity_id ) ) {
+			bp_activity_update_meta( $activity_id, 'bp_media_ids', $media_ids );
+		}
+	}
+}
+
+/**
+ * Update media for group activity
+ *
+ * @param $content
+ * @param $user_id
+ * @param $group_id
+ * @param $activity_id
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool
+ */
+function bp_nouveau_media_groups_update_media_meta( $content, $user_id, $group_id, $activity_id ) {
+	bp_nouveau_media_update_media_meta( $content, $user_id, $activity_id );
+}
+
+/**
+ * Get the nav items for the Media directory
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return array An associative array of nav items.
+ */
+function bp_nouveau_get_media_directory_nav_items() {
+	$nav_items = array();
+
+	$nav_items['all'] = array(
+		'component' => 'media',
+		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
+		'li_class'  => array(),
+		'link'      => bp_get_media_directory_permalink(),
+		'text'      => __( 'All Media', 'buddyboss' ),
+		'count'     => 0,
+		'position'  => 5,
+	);
+
+	if ( is_user_logged_in() ) {
+		$nav_items['personal'] = array(
+			'component' => 'media',
+			'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
+			'li_class'  => array(),
+			'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/my-media/',
+			'text'      => __( 'My Media', 'buddyboss' ),
+			'count'     => 0,
+			'position'  => 15,
+		);
+	}
+
+	/**
+	 * Use this filter to introduce your custom nav items for the media directory.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param array $nav_items The list of the media directory nav items.
+	 */
+	return apply_filters( 'bp_nouveau_get_media_directory_nav_items', $nav_items );
+}

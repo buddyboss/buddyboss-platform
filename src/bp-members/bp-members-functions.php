@@ -2927,7 +2927,7 @@ function bp_register_member_type_section() {
 	add_filter( 'body_class', 'bp_member_type_shortcode_add_body_class' );
 
 	// Hook for creating a profile type shortcode.
-	add_shortcode( 'member', 'bp_member_type_shortcode_callback' );
+	add_shortcode( 'profile', 'bp_member_type_shortcode_callback' );
 
 	// action for adding the js for the profile type post type.
 	add_action('admin_enqueue_scripts', 'bp_member_type_changing_listing_label');
@@ -3041,8 +3041,14 @@ function bp_get_member_type_key( $post_id ) {
 	// Fallback to legacy way of generating profile type key from singular label
 	// if Key is not set by admin user
 	if ( empty( $key ) ) {
-		$key = strtolower( get_post_meta( $post_id, '_bp_member_type_label_singular_name', true ) );
-		$key = str_replace( array( ' ', ',' ), array( '-', '-' ), $key );
+		$key = get_post_field( 'post_name', $post_id );
+		$term = term_exists( sanitize_key( $key ), bp_get_member_type_tax_name() );
+		if ( 0 !== $term && null !== $term ) {
+			$digits = 3;
+			$unique = rand(pow(10, $digits-1), pow(10, $digits)-1);
+			$key = $key.$unique;
+		}
+		update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) );
 	}
 
 	return apply_filters( 'bp_get_member_type_key', $key );
