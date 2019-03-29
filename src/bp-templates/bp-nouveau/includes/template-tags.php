@@ -1,4 +1,4 @@
-bp-nouveau/includes/template-tags.php<?php
+<?php
 /**
  * Common template tags
  *
