@@ -106,7 +106,7 @@ class BBP_Admin {
 	 * @access private
 	 */
 	private function includes() {
-		require( $this->admin_dir . 'admin.php'     );
+		require( $this->admin_dir . 'tools.php'     );
 		require( $this->admin_dir . 'converter.php' );
 		require( $this->admin_dir . 'settings.php'  );
 		require( $this->admin_dir . 'functions.php' );

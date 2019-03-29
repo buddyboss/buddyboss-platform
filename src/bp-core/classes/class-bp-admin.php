@@ -472,7 +472,7 @@ class BP_Admin {
 				'bp_core_admin_available_tools_page'
 			);
 		} else {
-			$tools_parent = 'admin.php';
+			$tools_parent = 'tools.php';
 		}
 
 		$hooks[] = add_submenu_page(
