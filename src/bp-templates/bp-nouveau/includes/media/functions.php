@@ -163,3 +163,45 @@ function bp_nouveau_media_update_media_meta( $content, $user_id, $activity_id ) 
 function bp_nouveau_media_groups_update_media_meta( $content, $user_id, $group_id, $activity_id ) {
 	bp_nouveau_media_update_media_meta( $content, $user_id, $activity_id );
 }
+
+/**
+ * Get the nav items for the Media directory
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return array An associative array of nav items.
+ */
+function bp_nouveau_get_media_directory_nav_items() {
+	$nav_items = array();
+
+	$nav_items['all'] = array(
+		'component' => 'media',
+		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
+		'li_class'  => array(),
+		'link'      => bp_get_media_directory_permalink(),
+		'text'      => __( 'All Media', 'buddyboss' ),
+		'count'     => 0,
+		'position'  => 5,
+	);
+
+	if ( is_user_logged_in() ) {
+		$nav_items['personal'] = array(
+			'component' => 'media',
+			'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
+			'li_class'  => array(),
+			'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/my-media/',
+			'text'      => __( 'My Media', 'buddyboss' ),
+			'count'     => 0,
+			'position'  => 15,
+		);
+	}
+
+	/**
+	 * Use this filter to introduce your custom nav items for the media directory.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param array $nav_items The list of the media directory nav items.
+	 */
+	return apply_filters( 'bp_nouveau_get_media_directory_nav_items', $nav_items );
+}

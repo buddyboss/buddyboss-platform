@@ -38,6 +38,34 @@ function bp_get_media_slug() {
 }
 
 /**
+ * Output the media component root slug.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_media_root_slug() {
+	echo bp_get_media_root_slug();
+}
+/**
+ * Return the media component root slug.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string
+ */
+function bp_get_media_root_slug() {
+
+	/**
+	 * Filters the Media component root slug.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string $slug Media component root slug.
+	 */
+	return apply_filters( 'bp_get_media_root_slug', buddypress()->media->root_slug );
+}
+
+/**
  * Initialize the media loop.
  *
  * Based on the $args passed, bp_has_media() populates the
@@ -747,6 +775,34 @@ function bp_get_media_attachment_image() {
 	 * @param string The full image.
 	 */
 	return apply_filters( 'bp_get_media_attachment_image', $media_template->media->attachment_data->full );
+}
+
+/**
+ * Output media directory permalink.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_media_directory_permalink() {
+	echo esc_url( bp_get_media_directory_permalink() );
+}
+/**
+ * Return media directory permalink.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string
+ */
+function bp_get_media_directory_permalink() {
+
+	/**
+	 * Filters the media directory permalink.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string $value Media directory permalink.
+	 */
+	return apply_filters( 'bp_get_media_directory_permalink', trailingslashit( bp_get_root_domain() . '/' . bp_get_media_root_slug() ) );
 }
 
 //****************************** Media Albums *********************************//

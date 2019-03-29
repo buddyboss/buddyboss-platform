@@ -371,6 +371,10 @@ class BP_Media {
 			$where_conditions['album'] = "m.album_id = {$r['album_id']}";
 		}
 
+		if ( ! empty( $r['user_id'] ) ) {
+			$where_conditions['user'] = "m.user_id = {$r['user_id']}";
+		}
+
 		/**
 		 * Filters the MySQL WHERE conditions for the Media items get method.
 		 *

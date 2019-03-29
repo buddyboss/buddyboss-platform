@@ -15,6 +15,23 @@
 
 		<?php bp_nouveau_media_hook( 'before_directory', 'list' ); ?>
 
+		<?php
+		/**
+		 * Fires before the display of the members list tabs.
+		 *
+		 * @since BuddyPress 1.8.0
+		 */
+		do_action( 'bp_before_directory_media_tabs' );
+		?>
+
+		<?php if ( ! bp_nouveau_is_object_nav_in_sidebar() ) : ?>
+
+			<?php bp_get_template_part( 'common/nav/directory-nav' ); ?>
+
+		<?php endif; ?>
+
+		<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
+
 		<div id="media-stream" class="media" data-bp-list="media">
 
 				<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'directory-media-loading' ); ?></div>
