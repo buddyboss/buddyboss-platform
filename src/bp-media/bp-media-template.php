@@ -104,7 +104,9 @@ function bp_has_media( $args = '' ) {
 	}
 
 	// Album filtering
-	$album_id = bp_is_single_album() ? (int) bp_action_variable( 0 ) : false;
+	if ( empty( $args['album_id'] ) ) {
+		$album_id = bp_is_single_album() ? (int) bp_action_variable( 0 ) : false;
+	}
 
 	/*
 	 * Parse Args.
