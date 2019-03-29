@@ -94,6 +94,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Allow link preview.
 		$this->add_field( '_bp_enable_activity_link_preview', __( 'Link Previews', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_link_preview', 'intval' );
 
+		// Allow emoji
+		$this->add_field( '_bp_enable_activity_emoji', __( 'Emoji', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_emoji', 'intval' );
+
 		// Allow gif.
 		$this->add_field( '_bp_enable_activity_gif', __( 'GIFs', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_gif', 'intval' );
 		$this->add_field( '_bp_activity_gif_api_key', __( 'GIFs Key', 'buddyboss' ), '__return_true', [], [

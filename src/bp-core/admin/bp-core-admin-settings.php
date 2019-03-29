@@ -165,6 +165,20 @@ function bp_admin_setting_callback_enable_activity_link_preview() {
 }
 
 /**
+ * Allow emoji in activity posts.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_admin_setting_callback_enable_activity_emoji() {
+	?>
+
+	<input id="_bp_enable_activity_emoji" name="_bp_enable_activity_emoji" type="checkbox" value="1" <?php checked( bp_is_activity_emoji_active( false ) ); ?> />
+	<label for="_bp_enable_activity_emoji"><?php _e( 'Display emoji dropdown to choose from when creating activity posts', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
  * Allow GIFs in activity posts.
  *
  * @since BuddyBoss 1.0.0

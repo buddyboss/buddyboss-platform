@@ -1235,15 +1235,18 @@ window.bp = window.bp || {};
 
 			this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
-			$('#whats-new').emojioneArea( {
-				standalone: true,
-				hideSource: false,
-				container: '.post-emoji',
-				autocomplete: false,
-				pickerPosition: 'bottom',
-				hidePickerOnBlur: true,
-				useInternalCDN: false
-			} );
+			if (!_.isUndefined(BP_Nouveau.activity.params.emoji)) {
+				$('#whats-new').emojioneArea({
+					standalone: true,
+					hideSource: false,
+					container: '.post-emoji',
+					autocomplete: false,
+					pickerPosition: 'bottom',
+					hidePickerOnBlur: true,
+					useInternalCDN: false
+				});
+			}
+
 		},
 
 		resetForm: function() {
