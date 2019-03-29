@@ -273,7 +273,7 @@ function bp_admin_setting_callback_page_directory_dropdown($args) {
 		if ( '' !== $description )
 			printf(
 				'<p class="description">%s</p>',
-				$description,
+				$description
 			);
 
 	}
