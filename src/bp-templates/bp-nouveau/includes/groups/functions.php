@@ -775,13 +775,6 @@ function bp_nouveau_groups_customizer_settings( $settings = array() ) {
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
-		'bp_nouveau_appearance[groups_layout]' => array(
-			'index'             => 'groups_layout',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
 		'bp_nouveau_appearance[groups_dir_tabs]' => array(
 			'index'             => 'groups_dir_tabs',
 			'capability'        => 'bp_moderate',
@@ -833,20 +826,6 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 			'section'    => 'bp_nouveau_group_primary_nav',
 			'settings'   => 'bp_nouveau_appearance[group_nav_order]',
 			'type'       => 'group',
-		),
-		'groups_layout' => array(
-			'label'      => __( 'Groups', 'buddyboss' ),
-			'section'    => 'bp_nouveau_loops_layout',
-			'settings'   => 'bp_nouveau_appearance[groups_layout]',
-			'type'       => 'select',
-			'choices'    => bp_nouveau_customizer_grid_choices(),
-		),
-		'members_group_layout' => array(
-			'label'      => __( 'Group > Members', 'buddyboss' ),
-			'section'    => 'bp_nouveau_loops_layout',
-			'settings'   => 'bp_nouveau_appearance[members_group_layout]',
-			'type'       => 'select',
-			'choices'    => bp_nouveau_customizer_grid_choices(),
 		),
 //		'group_dir_layout' => array(
 //			'label'      => __( 'Use column navigation for the Groups directory.', 'buddyboss' ),
