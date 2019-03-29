@@ -30,6 +30,12 @@ add_action( 'admin_init', function() {
 			),
 		),
 		array(
+			'media_move_to_album' => array(
+				'function' => 'bp_nouveau_ajax_media_move_to_album',
+				'nopriv'   => true,
+			),
+		),
+		array(
 			'media_album_save' => array(
 				'function' => 'bp_nouveau_ajax_media_album_save',
 				'nopriv'   => true,
@@ -167,6 +173,95 @@ function bp_nouveau_ajax_media_save() {
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error">%s</div>',
 				esc_html__( 'There was a problem when trying to add the media.', 'buddyboss' )
+			);
+
+			wp_send_json_error( $response );
+		}
+
+		$media_ids[] = $media_id;
+	}
+
+	$media = '';
+	if ( ! empty( $media_ids ) ) {
+		ob_start();
+		if ( bp_has_media( array( 'include' => implode( ',', $media_ids ) ) ) ) {
+			while ( bp_media() ) {
+				bp_the_media();
+				bp_get_template_part( 'media/entry' );
+			}
+		}
+		$media = ob_get_contents();
+		ob_end_clean();
+	}
+
+	wp_send_json_success( array(
+		'media' => $media,
+	) );
+}
+
+/**
+ * Move media to album
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string HTML
+ */
+function bp_nouveau_ajax_media_move_to_album() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['_wpnonce'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Use default nonce
+	$nonce = $_POST['_wpnonce'];
+	$check = 'bp_nouveau_media';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['medias'] ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error">%s</div>',
+			esc_html__( 'Please upload media before saving.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['album_id'] ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error">%s</div>',
+			esc_html__( 'Please provide album to move media.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	// save media
+	$medias = $_POST['medias'];
+	$media_ids = array();
+	foreach( $medias as $media_id ) {
+
+		$media_obj = new BP_Media( $media_id );
+		$media_obj->album_id = (int) $_POST['album_id'];
+
+		if ( ! $media_obj->save() ) {
+			$response['feedback'] = sprintf(
+				'<div class="bp-feedback error">%s</div>',
+				esc_html__( 'There was a problem when trying to move the media.', 'buddyboss' )
 			);
 
 			wp_send_json_error( $response );

@@ -12,8 +12,9 @@
                 <div class="modal-container">
 
                     <header class="bb-model-header bg-white">
-                        <h4 id="bp-media-uploader-modal-title"><?php _e( 'Upload', 'buddyboss' ); ?></h4>
+                        <a href="#" class="bp-media-upload-tab" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php _e( 'Upload', 'buddyboss' ); ?></a>
                         <span id="bp-media-uploader-modal-status-text" style="display: none;"></span>
+                        <a href="#" class="bp-media-upload-tab" data-content="bp-existing-media-content" id="bp-media-select-from-existing"><?php _e( 'Select Media', 'buddyboss' ); ?></a>
                         <a class="bb-model-close-button" id="bp-media-uploader-close" href="#">
 							<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13">
 								<path fill="#7A888E" fill-rule="evenodd" d="M6.095 5.063L11.158 0l1.032 1.032-5.063 5.063 5.063 5.063-1.032 1.032-5.063-5.063-5.063 5.063L0 11.158l5.063-5.063L0 1.032 1.032 0l5.063 5.063z"/>
@@ -21,15 +22,42 @@
 						</a>
                     </header>
 
-					<?php do_action( 'bp_media_before_media_uploader' ); ?>
-
-                    <div class="bb-dropzone-wrap bb-has-items">
+                    <div class="bb-dropzone-wrap bb-has-items bp-media-upload-tab-content" id="bp-dropzone-content">
                         <div class="media-uploader-wrapper">
                             <div class="dropzone" id="media-uploader"></div>
                         </div>
                     </div>
 
-					<?php do_action( 'bp_media_after_media_uploader' ); ?>
+                    <div class="bp-existing-media-wrap bp-media-upload-tab-content" id="bp-existing-media-content" style="display: none;">
+
+                        <?php if ( bp_has_media( array( 'album_id' => 0 ) ) ) : ?>
+
+                            <ul class="media-list item-list bp-list bb-photo-list grid">
+
+                                <?php while ( bp_media() ) :
+                                    bp_the_media();
+
+                                    bp_get_template_part( 'media/entry' ); ?>
+
+                                <?php endwhile; ?>
+
+                                <?php if ( bp_media_has_more_items() ) : ?>
+
+                                    <li class="load-more">
+                                        <a href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+                                    </li>
+
+                                <?php endif; ?>
+
+                            </ul>
+
+	                    <?php else : ?>
+
+		                    <?php bp_nouveau_user_feedback( 'media-loop-none' ); ?>
+
+	                    <?php endif; ?>
+
+                    </div>
 
                     <footer class="flex align-items-center bb-model-footer">
                         <a class="button outline" id="bp-media-add-more" style="display: none;" href="#">+ <?php _e( 'Add More Media', 'buddyboss' ); ?></a>
