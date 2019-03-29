@@ -3445,8 +3445,8 @@ function bp_set_admin_group_default_tab( $component ) {
 
 	// Get the group nav order based on the customizer settings.
 	$nav_tabs = bp_nouveau_get_appearance_settings( 'group_nav_order' );
-	if ( isset( $nav_tabs[0] ) && 'admin' === $nav_tabs[0] && bp_is_active( $nav_tabs[0] ) ) {
-		if ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) || groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() )  ) {
+	if ( isset( $nav_tabs[0] ) && 'admin' === $nav_tabs[0] && bp_is_active( 'groups' ) ) {
+		if ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) || groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) || current_user_can( 'bp_moderate')  ) {
 			return $nav_tabs[0];
 		}
 	}
