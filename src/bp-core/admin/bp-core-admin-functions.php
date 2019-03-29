@@ -1505,27 +1505,8 @@ function bp_member_type_custom_metaboxes() {
 	if( 'add' != $screen->action ){
 		add_meta_box( 'bp-member-type-shortcode', __( 'Shortcode', 'buddyboss' ), 'bp_profile_shortcode_metabox', null, 'normal', 'high' );
 	}
-	add_meta_box( 'bp-member-type-key', __( 'Profile Type Key &mdash; REMOVE ME', 'buddyboss' ), 'bp_member_type_key_metabox', null, 'normal', 'high' );
 }
 add_action( 'add_meta_boxes_' . bp_get_member_type_post_type(), 'bp_member_type_custom_metaboxes' );
-
-/**
- * Generate profile type Key Meta box.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param WP_Post $post
- */
-function bp_member_type_key_metabox( $post ) {
-
-	$key = get_post_meta($post->ID, '_bp_member_type_key', true );
-	?>
-	<p>
-		<input type="text" name="bp-member-type[member_type_key]" value="<?php echo $key; ?>" placeholder="e.g. students" />
-	</p>
-	<p><?php _e( 'Profile Type Keys are used as internal identifiers. Lowercase alphanumeric characters, dashes and underscores are allowed.', 'buddyboss' ); ?></p>
-	<?php
-}
 
 /**
  * Generate profile type Label Meta box.
@@ -1916,7 +1897,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	$post_title = wp_kses( $_POST[ 'post_title' ], wp_kses_allowed_html( 'strip' ) );
 
 	// key
-	$key = isset( $data['member_type_key'] ) ? sanitize_key( $data['member_type_key'] )  : '';
+	$key = get_post_field( 'post_name', $post_id );
 
 	//for label
 	$label_name = isset( $data[ 'label_name' ] ) ? wp_kses( $data[ 'label_name' ], wp_kses_allowed_html( 'strip' ) ) : $post_title;
@@ -1932,7 +1913,13 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	$data[ 'wp_roles' ] = array_filter( $data[ 'wp_roles' ] ); // Remove empty value from wp_roles array
 	$wp_roles = isset( $data[ 'wp_roles' ] ) ? $data[ 'wp_roles' ] : '';
 
-	update_post_meta( $post_id, '_bp_member_type_key', $key );
+	$term = term_exists( sanitize_key( $key ), bp_get_member_type_tax_name() );
+	if ( 0 !== $term && null !== $term ) {
+		$digits = 3;
+		$unique = rand(pow(10, $digits-1), pow(10, $digits)-1);
+		$key = $key.$unique;
+	}
+	update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) );
 	update_post_meta( $post_id, '_bp_member_type_label_name', $label_name );
 	update_post_meta( $post_id, '_bp_member_type_label_singular_name', $singular_name );
 	update_post_meta( $post_id, '_bp_member_type_enable_filter', $enable_filter );
@@ -2188,8 +2175,15 @@ function bp_member_type_import_submenu_page() {
 			$post_id = wp_insert_post($my_post);
 
 			if ( $post_id ) {
+				$key = get_post_field( 'post_name', $post_id );
+				$term = term_exists( sanitize_key( $key ), bp_get_member_type_tax_name() );
+				if ( 0 !== $term && null !== $term ) {
 
-				update_post_meta( $post_id, '_bp_member_type_key', $sing_name );
+					$digits = 3;
+					$unique = rand(pow(10, $digits-1), pow(10, $digits)-1);
+					$key = $key.$unique;
+				}
+				update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) );
 				update_post_meta( $post_id, '_bp_member_type_label_name', $sing_name );
 				update_post_meta( $post_id, '_bp_member_type_label_singular_name', $sing_name );
 

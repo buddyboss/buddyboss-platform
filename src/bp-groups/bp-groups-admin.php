@@ -1672,7 +1672,6 @@ function bp_group_type_custom_meta_boxes() {
 	$screen = get_current_screen();
 	add_meta_box( 'bp-group-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_group_type_labels_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-permissions', __( 'Permissions', 'buddyboss' ), 'bp_group_type_permissions_meta_box', null, 'normal', 'high' );
-	add_meta_box( 'bp-group-type-key', __( 'Group Type Key &mdash; REMOVE ME', 'buddyboss' ), 'bp_group_type_key_meta_box', null, 'normal', 'high' );
 	if( 'add' != $screen->action ){
 		add_meta_box( 'bp-group-type-short-code', __( 'Shortcode', 'buddyboss' ), 'bp_group_shortcode_meta_box', null, 'normal', 'high' );
 	}
@@ -2000,22 +1999,6 @@ function bp_group_shortcode_meta_box( $post ) {
 }
 
 /**
- * Generate Group Type Key Meta box.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param WP_Post $post
- */
-function bp_group_type_key_meta_box( $post ) {
-
-	$key = get_post_meta($post->ID, '_bp_group_type_key', true );
-	?>
-	<p><input type="text" name="bp-group-type[group_type_key]" value="<?php echo $key; ?>" placeholder="<?php _e( 'e.g. teams', 'buddyboss' ); ?>" /></p>
-	<p><?php _e( 'Group Type Keys are used as internal identifiers. Lowercase alphanumeric characters, dashes and underscores are allowed.', 'buddyboss' ); ?></p>
-	<?php
-}
-
-/**
  * Add new columns to the post type list screen.
  *
  * @since BuddyBoss 1.0.0
@@ -2210,7 +2193,7 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 	$post_title = wp_kses( $_POST[ 'post_title' ], wp_kses_allowed_html( 'strip' ) );
 
 	// key
-	$key = isset( $data['group_type_key'] ) ? sanitize_key( $data['group_type_key'] )  : '';
+	$key = get_post_field( 'post_name', $post_id );
 
 	//for label
 	$label_name = isset( $data[ 'label_name' ] ) ? wp_kses( $data[ 'label_name' ], wp_kses_allowed_html( 'strip' ) ) : $post_title;
@@ -2227,7 +2210,13 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 	$member_type_group_invites = $_POST['bp-member-type-group-invites'];
 	$get_restrict_invites_same_group_types = isset( $_POST['bp-group-type-restrict-invites-user-same-group-type'] ) ? absint( $_POST['bp-group-type-restrict-invites-user-same-group-type'] ) : 0;
 
-	update_post_meta( $post_id, '_bp_group_type_key', $key );
+	$term = term_exists( sanitize_key( $key ), 'bp_group_type' );
+	if ( 0 !== $term && null !== $term ) {
+		$digits = 3;
+		$unique = rand(pow(10, $digits-1), pow(10, $digits)-1);
+		$key = $key.$unique;
+	}
+	update_post_meta( $post_id, '_bp_group_type_key', sanitize_key( $key ) );
 	update_post_meta( $post_id, '_bp_group_type_label_name', $label_name );
 	update_post_meta( $post_id, '_bp_group_type_label_singular_name', $singular_name );
 	update_post_meta( $post_id, '_bp_group_type_enable_filter', $enable_filter );
