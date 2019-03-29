@@ -1992,23 +1992,9 @@ function bp_group_shortcode_meta_box( $post ) {
 	$key = bp_get_group_type_key( $post->ID );
 	?>
 
-	<table class="widefat bp-post-type">
-		<tbody>
-			<tr>
-				<td colspan="2">
-					<?php _e( 'To display all groups with this group type on a dedicated page, add this shortcode to any WordPress page.', 'buddyboss' ); ?>
-				</td>
-			</tr>
-			<tr>
-				<td style="width: 50%">
-					<code id="group-type-shortcode" style="width: 100%;"><?php echo '[group type="'. $key .'"]' ?></code>
-				</td>
-				<td>
-					<button class="copy-to-clipboard button"  data-clipboard-target="#group-type-shortcode"><?php _e('Copy to clipboard', 'buddyboss' ) ?></button>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+		<p><?php _e( 'To display all groups with this group type on a dedicated page, add this shortcode to any WordPress page.', 'buddyboss' ); ?></p>
+		<code id="group-type-shortcode"><?php echo '[group type="'. $key .'"]' ?></code>
+		<button class="copy-to-clipboard button"  data-clipboard-target="#group-type-shortcode"><?php _e('Copy to clipboard', 'buddyboss' ) ?></button>
 
 	<?php
 }
@@ -2024,9 +2010,7 @@ function bp_group_type_key_meta_box( $post ) {
 
 	$key = get_post_meta($post->ID, '_bp_group_type_key', true );
 	?>
-	<p>
-		<input type="text" name="bp-group-type[group_type_key]" value="<?php echo $key; ?>" placeholder="<?php _e( 'e.g. teams', 'buddyboss' ); ?>" />
-	</p>
+	<p><input type="text" name="bp-group-type[group_type_key]" value="<?php echo $key; ?>" placeholder="<?php _e( 'e.g. teams', 'buddyboss' ); ?>" /></p>
 	<p><?php _e( 'Group Type Keys are used as internal identifiers. Lowercase alphanumeric characters, dashes and underscores are allowed.', 'buddyboss' ); ?></p>
 	<?php
 }

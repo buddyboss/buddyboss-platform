@@ -1817,23 +1817,9 @@ function bp_profile_shortcode_metabox( $post ) {
 
 	?>
 
-	<table class="widefat bp-post-type">
-		<tbody>
-			<tr>
-				<td colspan="2">
-					<?php _e( 'To display all users with this profile type on a dedicated page, add the below shortcode to any WordPress page.', 'buddyboss' ); ?>
-				</td>
-			</tr>
-			<tr>
-				<td style="width: 50%">
-					<code id="member-type-shortcode" style="width: 100%;"><?php echo '[profile type="'. $key .'"]' ?></code>
-				</td>
-				<td>
-					<button class="copy-to-clipboard button"  data-clipboard-target="#member-type-shortcode"><?php _e('Copy to clipboard', 'buddyboss' ) ?></button>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+		<p><?php _e( 'To display all users with this profile type on a dedicated page, add the below shortcode to any WordPress page.', 'buddyboss' ); ?></p>
+		<code id="member-type-shortcode"><?php echo '[profile type="'. $key .'"]' ?></code>
+		<button class="copy-to-clipboard button"  data-clipboard-target="#member-type-shortcode"><?php _e('Copy to clipboard', 'buddyboss' ) ?></button>
 
 	<?php
 }
