@@ -244,6 +244,9 @@ add_filter( 'bbp_make_clickable', 'bbp_make_ftps_clickable',      4 ); // ftps:/
 add_filter( 'bbp_make_clickable', 'bbp_make_emails_clickable',    6 ); // jjj@bbpress.org
 add_filter( 'bbp_make_clickable', 'bbp_make_mentions_clickable',  8 ); // @jjj
 
+// Make forum extension to default in group
+add_filter( 'bp_groups_default_extension', 'bbp_set_group_default_tab' );
+
 /** Deprecated ****************************************************************/
 
 /**

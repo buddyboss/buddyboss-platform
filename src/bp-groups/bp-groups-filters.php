@@ -73,6 +73,9 @@ add_filter( 'bp_activity_at_name_do_notifications', 'bp_groups_disable_at_mentio
 add_filter( 'bp_core_avatar_default',       'bp_groups_default_avatar', 10, 3 );
 add_filter( 'bp_core_avatar_default_thumb', 'bp_groups_default_avatar', 10, 3 );
 
+// Make admin extension to default in group
+add_filter( 'bp_groups_default_extension', 'bp_set_admin_group_default_tab' );
+
 /**
  * Filter output of Group Description through WordPress's KSES API.
  *

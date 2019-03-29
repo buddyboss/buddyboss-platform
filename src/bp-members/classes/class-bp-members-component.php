@@ -241,6 +241,17 @@ class BP_Members_Component extends BP_Component {
 			$bp->default_component = ( 'xprofile' === $bp->profile->id ) ? 'profile' : $bp->profile->id;
 		}
 
+		// Get the user nav order based on the customizer settings.
+		$nav_tabs = bp_nouveau_get_appearance_settings( 'user_nav_order' );
+		if ( isset( $nav_tabs[0] ) ) {
+			if ( bp_core_can_edit_settings() && bp_is_active( $nav_tabs[0] ) ) {
+				$bp->default_component = $nav_tabs[0];
+			}
+		}
+
+		$bp->default_component = apply_filters( 'bp_member_default_component', $bp->default_component );
+
+
 		/** Canonical Component Stack ****************************************
 		 */
 

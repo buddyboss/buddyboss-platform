@@ -76,3 +76,30 @@ if (! function_exists('learndash_get_post_type_slug')) {
 		return $postTypes[$type];
 	}
 }
+
+// Make forum extension to default in group
+add_filter( 'bp_groups_default_extension', 'bp_set_course_group_default_tab' );
+
+/**
+ * Make course extension to default in group.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $component
+ *
+ * @return mixed
+ */
+function bp_set_course_group_default_tab( $component ) {
+
+	// Get the group nav order based on the customizer settings.
+	$nav_tabs = bp_nouveau_get_appearance_settings( 'group_nav_order' );
+	if ( isset( $nav_tabs[0] ) && 'courses' === $nav_tabs[0] && bp_is_active( 'groups' ) && is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) ) {
+		if ( empty( bp_learndash_get_group_courses( bp_get_current_group_id() ) ) ) {
+			return $component;
+		} else {
+			return $nav_tabs[0];
+		}
+	}
+
+	return $component;
+}

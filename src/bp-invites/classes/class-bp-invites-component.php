@@ -71,6 +71,7 @@ class BP_Invites_Component extends BP_Component {
 	 */
 	public function includes( $includes = array() ) {
 		$includes = array(
+			'filters',
 			'template',
 			'functions',
 		);

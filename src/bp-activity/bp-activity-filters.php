@@ -128,6 +128,9 @@ add_action( 'bp_activity_after_save', 'bp_activity_save_gif_data', 2, 1 );
 // Remove Activity if uncheck the options from the backend BuddyBoss > Settings > Activity > Posts in Activity Feed >BuddyBoss Platform
 add_action( 'bp_activity_before_save', 'bp_activity_remove_platform_updates', 999, 1 );
 
+// Make forum extension to default in group
+add_filter( 'bp_groups_default_extension', 'bp_set_feed_group_default_tab' );
+
 /** Functions *****************************************************************/
 
 /**
