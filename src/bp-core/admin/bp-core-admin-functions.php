@@ -457,7 +457,7 @@ function bp_core_settings_admin_tabs( $active_tab = '' ) {
 	$tabs_html    = '';
 	$idle_class   = '';
 	$active_class = 'current';
-	$active_tab   = isset( $_GET['tab'] ) ? $_GET['tab'] : 'buddypress';
+	$active_tab   = isset( $_GET['tab'] ) ? $_GET['tab'] : 'bp-general';
 
 	/**
 	 * Filters the admin tabs to be displayed.
@@ -638,7 +638,7 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_core_get_admin_active_tab() {
-	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'buddyboss' );
+	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-general' );
 	return isset($_GET['tab'])? $_GET['tab'] : $default_tab;
 }
 
