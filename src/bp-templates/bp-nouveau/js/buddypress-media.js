@@ -188,7 +188,8 @@ window.bp = window.bp || {};
 				data = {
 					'action': 'media_save',
 					'_wpnonce': BP_Nouveau.nonces.media,
-					'medias': self.dropzone_media
+					'medias': self.dropzone_media,
+					'content' : $('#bp-media-post-content').val(),
 				};
 
 				$.ajax({

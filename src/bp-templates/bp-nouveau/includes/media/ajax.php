@@ -150,17 +150,43 @@ function bp_nouveau_ajax_media_save() {
 		wp_send_json_error( $response );
 	}
 
-	$activity_id = false;
-	// make an activity for the media
+	if ( empty( $_POST['content'] ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error">%s</div>',
+			esc_html__( 'Please write something about media.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	$main_activity_id = false;
+	// make an activity
 	if ( bp_is_active( 'activity' ) ) {
-		$content = '&nbsp;';
-		$activity_id = bp_activity_post_update( array( 'content' => $content, 'user_id' => bp_displayed_user_id() ) );
+
+		/**
+		 * Filters the content provided in the activity input field.
+		 *
+		 * @since BuddyPress 1.2.0
+		 *
+		 * @param string $value Activity message being posted.
+		 */
+		$content = apply_filters( 'bp_activity_post_update_content', $_POST['content'] );
+
+		$main_activity_id = bp_activity_post_update( array( 'content' => $content, 'user_id' => bp_displayed_user_id() ) );
 	}
 
 	// save media
 	$medias = $_POST['medias'];
 	$media_ids = array();
 	foreach( $medias as $media ) {
+
+		$activity_id = false;
+		// make an activity for the media
+		if ( bp_is_active( 'activity' ) ) {
+			$content = '&nbsp;';
+			$activity_id = bp_activity_post_update( array( 'content' => $content, 'user_id' => bp_displayed_user_id(), 'hide_sitewide' => true ) );
+		}
+
 		$media_id = bp_media_add( array(
 			'attachment_id' => $media['id'],
 			'title'         => $media['name'],
@@ -183,8 +209,15 @@ function bp_nouveau_ajax_media_save() {
 
 	$media = '';
 	if ( ! empty( $media_ids ) ) {
+		$media_ids = implode( ',', $media_ids );
+
+		//save media meta for activity
+		if ( ! empty( $main_activity_id ) ) {
+			bp_activity_update_meta( $main_activity_id, 'bp_media_ids', $media_ids );
+		}
+
 		ob_start();
-		if ( bp_has_media( array( 'include' => implode( ',', $media_ids ) ) ) ) {
+		if ( bp_has_media( array( 'include' => $media_ids ) ) ) {
 			while ( bp_media() ) {
 				bp_the_media();
 				bp_get_template_part( 'media/entry' );
@@ -375,7 +408,7 @@ function bp_nouveau_ajax_media_get_activity() {
 	remove_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
 
 	ob_start();
-	if ( bp_has_activities( array( 'include' => $_POST['id'] ) ) ) {
+	if ( bp_has_activities( array( 'include' => $_POST['id'], 'show_hidden' => true ) ) ) {
 		while ( bp_activities() ) {
 			bp_the_activity();
 			bp_get_template_part( 'activity/entry' );

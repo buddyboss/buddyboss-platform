@@ -291,6 +291,7 @@ class BP_Media {
 			'sort'              => 'DESC',          // ASC or DESC.
 			'order_by'          => 'date_created',  // Column to order by.
 			'exclude'           => false,           // Array of ids to exclude.
+			'in'                => false,           // Array of ids to limit query by (IN).
 			'search_terms'      => false,           // Terms to search by.
 			'update_meta_cache' => true,            // Whether or not to update meta cache.
 			'count_total'       => false,           // Whether or not to use count_total.

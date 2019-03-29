@@ -686,6 +686,38 @@ function bp_get_media_attachment_image_thumbnail() {
 }
 
 /**
+ * Output the media attachment activity thumbnail.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_media_attachment_image_activity_thumbnail() {
+	echo bp_get_media_attachment_image_activity_thumbnail();
+}
+
+/**
+ * Return the media attachment activity thumbnail.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return string The media attachment thumbnail url.
+ */
+function bp_get_media_attachment_image_activity_thumbnail() {
+	global $media_template;
+
+	/**
+	 * Filters the media activity thumbnail being displayed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string The media activity thumbnail.
+	 */
+	return apply_filters( 'bp_get_media_attachment_image', $media_template->media->attachment_data->activity_thumb );
+}
+
+/**
  * Output the media attachment.
  *
  * @since BuddyBoss 1.0.0
