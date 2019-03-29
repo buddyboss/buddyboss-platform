@@ -1669,10 +1669,13 @@ function bp_group_type_show_correct_current_menu(){
  * @since BuddyBoss 1.0.0
  */
 function bp_group_type_custom_meta_boxes() {
+	$screen = get_current_screen();
 	add_meta_box( 'bp-group-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_group_type_labels_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-permissions', __( 'Permissions', 'buddyboss' ), 'bp_group_type_permissions_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-key', __( 'Group Type Key &mdash; REMOVE ME', 'buddyboss' ), 'bp_group_type_key_meta_box', null, 'normal', 'high' );
-	add_meta_box( 'bp-group-type-short-code', __( 'Shortcode', 'buddyboss' ), 'bp_group_shortcode_meta_box', null, 'normal', 'high' );
+	if( 'add' != $screen->action ){
+		add_meta_box( 'bp-group-type-short-code', __( 'Shortcode', 'buddyboss' ), 'bp_group_shortcode_meta_box', null, 'normal', 'high' );
+	}
 }
 
 /**
@@ -1998,7 +2001,7 @@ function bp_group_shortcode_meta_box( $post ) {
 			</tr>
 			<tr>
 				<td style="width: 50%">
-					<input id='group-type-shortcode' value='<?php echo '[group type="'. $key .'"]' ?>' style="width: 100%;">
+					<code id="group-type-shortcode" style="width: 100%;"><?php echo '[group type="'. $key .'"]' ?></code>
 				</td>
 				<td>
 					<button class="copy-to-clipboard button"  data-clipboard-target="#group-type-shortcode"><?php _e('Copy to clipboard', 'buddyboss' ) ?></button>
