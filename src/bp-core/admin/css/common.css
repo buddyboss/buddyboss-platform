@@ -657,7 +657,7 @@ table.bp-post-type tbody th {
   width: 23%;
 }
 
-table.bp-post-type tbody td input[type=checkbox] {
+table.bp-post-type tbody td input[type="checkbox"] {
   margin-right: 8px;
 }
 
