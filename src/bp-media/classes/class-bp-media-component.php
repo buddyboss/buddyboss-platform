@@ -209,10 +209,10 @@ class BP_Media_Component extends BP_Component {
 
 		// Only grab count if we're on a user page and current user has access.
 		if ( bp_is_user() && bp_user_has_access() ) {
-			$count    = 0;
+			$count    = bp_media_get_total_media_count( bp_displayed_user_id() );
 			$class    = ( 0 === $count ) ? 'no-count' : 'count';
 			$nav_name = sprintf(
-			/* translators: %s: Unread message count for the current user */
+			/* translators: %s: total media count for the current user */
 				__( 'Media %s', 'buddyboss' ),
 				sprintf(
 					'<span class="%s">%s</span>',
@@ -357,7 +357,8 @@ class BP_Media_Component extends BP_Component {
 		// Global groups.
 		wp_cache_add_global_groups( array(
 			'bp_media',
-			'bp_media_albums'
+			'bp_media_albums',
+			'bp_media_user_media_count'
 		) );
 
 		parent::setup_cache_groups();

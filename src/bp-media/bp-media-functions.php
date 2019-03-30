@@ -461,7 +461,7 @@ function bp_media_add( $args = '' ) {
  *
  * @global object $media_template {@link BP_Media_Template}
  *
- * @return object The media activity object or false.
+ * @return object|boolean The media activity object or false.
  */
 function bp_media_get_media_activity( $activity_id ) {
 
@@ -485,6 +485,32 @@ function bp_media_get_media_activity( $activity_id ) {
 	 * @param object $activity The media activity.
 	 */
 	return apply_filters( 'bp_media_get_media_activity', $result['activities'][0] );
+}
+
+/**
+ * Get the media count of a given user.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param int $user_id ID of the user whose media are being counted.
+ * @return int media count of the user.
+ */
+function bp_media_get_total_media_count( $user_id = 0 ) {
+	if ( empty( $user_id ) )
+		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+
+	$count = BP_Media::total_media_count( $user_id );
+	if ( empty( $count ) )
+		$count = 0;
+
+	/**
+	 * Filters the total media count for a given user.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param int $count Total media count for a given user.
+	 */
+	return apply_filters( 'bp_media_get_total_media_count', $count );
 }
 
 //******************** Albums *********************/

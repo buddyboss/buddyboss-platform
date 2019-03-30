@@ -782,4 +782,34 @@ class BP_Media {
 		return $media_ids;
 	}
 
+	/**
+	 * Count total media for the given user
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param int $user_id
+	 *
+	 * @return array|bool|int
+	 */
+	public static function total_media_count( $user_id = 0 ) {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		$count_sql = "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id}";
+
+		$cache_group = 'bp_media_user_media_count';
+
+		$cached = bp_core_get_incremented_cache( $count_sql, $cache_group );
+		if ( false === $cached ) {
+			$results = $wpdb->get_col( $count_sql );
+			$total_count = intval( $results[0] );
+			bp_core_set_incremented_cache( $count_sql, $cache_group, $total_count );
+		} else {
+			$total_count = $cached;
+		}
+
+		return $total_count;
+	}
+
 }
