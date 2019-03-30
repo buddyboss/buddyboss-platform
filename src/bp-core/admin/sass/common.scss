@@ -656,6 +656,14 @@ body.post-type-bp-group-type .postbox .inside {
 	padding: 0 22px 22px;
 }
 
+body.post-type-bp-member-type #member-type-shortcode,
+body.post-type-bp-group-type #group-type-shortcode {
+	line-height: 1;
+	margin-right: 10px;
+	padding: 7px;
+	display: inline-block;
+}
+
 table.bp-post-type {
 	background: #f9f9f9;
 	margin-top: 22px;

@@ -534,7 +534,7 @@ function bp_core_admin_available_tools_intro() {
 		'page' => 'bp-tools'
 	);
 
-	$page = bp_core_do_network_admin() ? 'admin.php' : 'tools.php' ;
+	$page = bp_core_do_network_admin() ? 'admin.php' : 'admin.php' ;
 	$url  = add_query_arg( $query_arg, bp_get_admin_url( $page ) );
 	?>
 	<div class="card tool-box">
