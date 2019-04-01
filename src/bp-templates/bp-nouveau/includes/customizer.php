@@ -36,12 +36,12 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	 * @param array $value Array of Customizer sections.
 	 */
 	$sections = apply_filters( 'bp_nouveau_customizer_sections', array(
-		'bp_nouveau_general_settings' => array(
-			'title'       => __( 'General Settings', 'buddyboss' ),
-			'panel'       => 'bp_nouveau_panel',
-			'priority'    => 10,
-			'description' => __( 'Configure general BuddyBoss appearance options.', 'buddyboss' ),
-		),
+//		'bp_nouveau_general_settings' => array(
+//			'title'       => __( 'General Settings', 'buddyboss' ),
+//			'panel'       => 'bp_nouveau_panel',
+//			'priority'    => 10,
+//			'description' => __( 'Configure general BuddyBoss appearance options.', 'buddyboss' ),
+//		),
 		'bp_nouveau_user_primary_nav' => array(
 			'title'       => __( 'Profile Navigation', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
