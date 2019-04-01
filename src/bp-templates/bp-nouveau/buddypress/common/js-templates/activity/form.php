@@ -98,7 +98,7 @@
 	<?php endif; ?>
 	<?php if ( bp_is_activity_link_preview_active() ): ?>
         <div class="post-elements-buttons-item post-link">
-			<a href="#" id="activity-link-preview-button" class="toolbar-button bp-tooltip" data-bp-tooltip="<?php _e('Post a Link', 'buddyboss'); ?>">
+			<a href="#" id="activity-link-preview-button" class="toolbar-button bp-tooltip" data-bp-tooltip="<?php _e('Post a link', 'buddyboss'); ?>">
 				<span class="dashicons dashicons-admin-links"></span>
 			</a>
 		</div>
