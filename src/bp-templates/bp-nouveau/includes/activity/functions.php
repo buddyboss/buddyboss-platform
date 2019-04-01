@@ -98,6 +98,10 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		) );
 	}
 
+	if ( bp_is_activity_autoload_active() ) {
+		$activity_params['autoload'] = true;
+	}
+
 	if ( bp_is_activity_link_preview_active() ) {
 		$activity_params['link_preview'] = true;
 	}

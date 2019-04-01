@@ -122,6 +122,20 @@ function bp_admin_setting_callback_heartbeat() {
 }
 
 /**
+ * Automatically load more activity posts when scrolling to the bottom of the page.
+ *
+ * @since BuddyPress 2.0.0
+ */
+function bp_admin_setting_callback_enable_activity_autoload() {
+?>
+
+	<input id="_bp_enable_activity_autoload" name="_bp_enable_activity_autoload" type="checkbox" value="1" <?php checked( bp_is_activity_autoload_active( false ) ); ?> />
+	<label for="_bp_enable_activity_autoload"><?php _e( 'Automatically load more activity posts when scrolling to the bottom of the page ', 'buddyboss' ); ?></label>
+
+<?php
+}
+
+/**
  * Allow following activity stream.
  *
  * @since BuddyBoss 1.0.0

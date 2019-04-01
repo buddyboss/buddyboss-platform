@@ -871,6 +871,27 @@ function bp_is_akismet_active( $default = true ) {
 }
 
 /**
+ * Check whether Activity Autoload is enabled.
+ *
+ * @since BuddyPress 2.0.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if Autoload is enabled, otherwise false.
+ */
+function bp_is_activity_autoload_active( $default = true ) {
+
+	/**
+	 * Filters whether or not Activity Autoload is enabled.
+	 *
+	 * @since BuddyPress 2.0.0
+	 *
+	 * @param bool $value Whether or not Activity Autoload is enabled.
+	 */
+	return (bool) apply_filters( 'bp_is_activity_autoload_active', (bool) bp_get_option( '_bp_enable_activity_autoload', $default ) );
+}
+
+/**
  * Check whether Activity Heartbeat refresh is enabled.
  *
  * @since BuddyPress 2.0.0

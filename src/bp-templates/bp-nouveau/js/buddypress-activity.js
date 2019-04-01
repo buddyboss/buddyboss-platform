@@ -74,7 +74,13 @@ window.bp = window.bp || {};
 			// Activity actions
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions );
 			$( document ).keydown( this.commentFormAction );
-			$(document).on('click', '.gif-image-container', this.playVideo );
+			$(document).on('click', '.gif-image-container', this.playVideo);
+
+			// Activity autoload
+			if ( ! _.isUndefined( BP_Nouveau.activity.params.autoload ) ) {
+				$( window ).scroll( this.loadMoreActivities );
+			}
+
 		},
 
 		/**
@@ -277,7 +283,8 @@ window.bp = window.bp || {};
 				// Stop event propagation
 				event.preventDefault();
 
-				$( event.currentTarget ).find( 'a' ).first().addClass( 'loading' );
+				var targetEl = $( event.currentTarget );
+				targetEl.find( 'a' ).first().addClass( 'loading' );
 
 				// reset the just posted
 				this.just_posted = [];
@@ -302,7 +309,7 @@ window.bp = window.bp || {};
 					target              : '#buddypress [data-bp-list] ul.bp-list'
 				} ).done( function( response ) {
 					if ( true === response.success ) {
-						$( event.currentTarget ).remove();
+						targetEl.remove();
 
 						// Update the current page
 						self.current_page = next_page;
@@ -889,6 +896,7 @@ window.bp = window.bp || {};
 			}
 		},
 
+		// play gif
 		playVideo: function(event) {
 			event.preventDefault();
 			var video = $(this).find('video').get(0),
@@ -905,6 +913,25 @@ window.bp = window.bp || {};
 
 				// Update the button text to 'Play'
 				$button.show();
+			}
+		},
+
+		// activity autoload
+		loadMoreActivities: function () {
+
+			var $load_more_btn = $( '.load-more:visible' ).last(),
+				$window = $(window);
+
+			if ( ! $load_more_btn.get( 0 ) || $load_more_btn.data( 'bp-autoloaded' ) ) {
+				return;
+			}
+
+			var pos = $load_more_btn.offset();
+			var offset = pos.top - 50;
+
+			if ( $window.scrollTop() + $window.height() > offset ) {
+				$load_more_btn.data( 'bp-autoloaded', 1 );
+				$load_more_btn.find( 'a' ).trigger( 'click' );
 			}
 		}
 	};
