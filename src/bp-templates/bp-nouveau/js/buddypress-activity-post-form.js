@@ -27,7 +27,7 @@ window.bp = window.bp || {};
 			this.ActivityObjects = new bp.Collections.ActivityObjects();
 			this.buttons         = new Backbone.Collection();
 
-			if ( typeof window.Dropzone !== 'undefined' ) {
+			if ( !_.isUndefined( window.Dropzone ) ) {
 				this.dropzoneView();
 			}
 
@@ -65,6 +65,14 @@ window.bp = window.bp || {};
 				uploadMultiple: false,
 				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
 			};
+		}
+	};
+
+	bp.Backbone.View.prototype.close = function(){
+		this.remove();
+		this.unbind();
+		if (this.onClose){
+			this.onClose();
 		}
 	};
 
@@ -200,8 +208,17 @@ window.bp = window.bp || {};
 
 			this.model.set( 'media', this.media );
 
-			document.addEventListener( 'activity_media_open', this.open_media_uploader.bind(this) );
-			//document.addEventListener( 'activity_media_close', this.close_media_uploader.bind(this) );
+			document.addEventListener( 'activity_media_toggle', this.toggle_media_uploader.bind(this) );
+			document.addEventListener( 'activity_media_close', this.close_media_uploader.bind(this) );
+		},
+
+		toggle_media_uploader: function() {
+			var self = this;
+			if ( self.$el.find('#activity-post-media-uploader').hasClass('open') ) {
+				self.close_media_uploader();
+			} else {
+				self.open_media_uploader();
+			}
 		},
 
 		close_media_uploader: function() {
@@ -209,13 +226,17 @@ window.bp = window.bp || {};
 			self.media = [];
 			if ( bp.Nouveau.Activity.postForm.dropzone != null ) {
 				bp.Nouveau.Activity.postForm.dropzone.destroy();
+				self.$el.find('#activity-post-media-uploader').html('');
 			}
-			self.$el.find('#activity-post-media-uploader').addClass('open').removeClass('closed');
+			self.$el.find('#activity-post-media-uploader').removeClass('open').addClass('closed');
 		},
 
 		open_media_uploader: function() {
 			var self = this;
 
+			if ( self.$el.find('#activity-post-media-uploader').hasClass('open') ) {
+				return false;
+			}
 			self.close_media_uploader();
 
 			bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone('#activity-post-media-uploader', bp.Nouveau.Activity.postForm.dropzone_options );
@@ -238,13 +259,15 @@ window.bp = window.bp || {};
 			bp.Nouveau.Activity.postForm.dropzone.on('removedfile', function(file) {
 				if ( self.media.length ) {
 					for ( var i in self.media ) {
-						if ( file.id == self.media[i].id ) {
+						if ( file.id === self.media[i].id ) {
 							self.media.splice( i, 1 );
 							self.model.set( 'media', self.media );
 						}
 					}
 				}
 			});
+
+			self.$el.find('#activity-post-media-uploader').addClass('open').removeClass('closed');
 		}
 
 	});
@@ -264,7 +287,10 @@ window.bp = window.bp || {};
 		},
 
 		initialize: function() {
+			this.model.set( 'link_scrapping', false );
 			this.listenTo( this.model, 'change', this.render );
+			document.addEventListener( 'activity_link_preview_open', this.open.bind(this) );
+			document.addEventListener( 'activity_link_preview_close', this.destroy.bind(this) );
 		},
 
 		render: function() {
@@ -288,6 +314,12 @@ window.bp = window.bp || {};
 			}
 		},
 
+		open: function(e) {
+			e.preventDefault();
+			this.model.set( 'link_scrapping', true );
+			this.$el.addClass('open');
+		},
+
 		close: function(e) {
 			e.preventDefault();
 			this.model.set({
@@ -297,7 +329,9 @@ window.bp = window.bp || {};
 		},
 
 		destroy: function( e ) {
-			e.preventDefault();
+			if ( !_.isUndefined(e) ) {
+				e.preventDefault();
+			}
 			// Set default values
 			this.model.set({
 				link_success: false,
@@ -310,6 +344,8 @@ window.bp = window.bp || {};
 				link_description: '',
 				link_url: ''
 			});
+			document.removeEventListener( 'activity_link_preview_open', this.open.bind(this) );
+			document.removeEventListener( 'activity_link_preview_close', this.destroy.bind(this) );
 		},
 
 		updateLinkPreview: function( event ) {
@@ -963,7 +999,19 @@ window.bp = window.bp || {};
 
 		toggleURLInput: function( e ) {
 			e.preventDefault();
-			this.model.set( 'link_scrapping', !this.model.get( 'link_scrapping' ) );
+			var event;
+			if ( this.model.get('link_scrapping') ) {
+				event = new Event('activity_link_preview_close');
+			} else {
+				event = new Event('activity_link_preview_open');
+			}
+			document.dispatchEvent(event);
+			this.closeMediaSelector();
+		},
+
+		closeURLInput: function() {
+			var event = new Event('activity_link_preview_close');
+			document.dispatchEvent(event);
 		},
 
 		toggleGifSelector: function( e ) {
@@ -973,12 +1021,19 @@ window.bp = window.bp || {};
 				this.$gifPickerEl.html( gifMediaSearchDropdownView.render().el );
 			}
 			this.$gifPickerEl.toggleClass('open');
+			this.closeURLInput();
+			this.closeMediaSelector();
 		},
 
 		toggleMediaSelector: function( e ) {
 			e.preventDefault();
+			var event = new Event('activity_media_toggle');
+			document.dispatchEvent(event);
+			this.closeURLInput();
+		},
 
-			var event = new Event('activity_media_open');
+		closeMediaSelector: function() {
+			var event = new Event('activity_media_close');
 			document.dispatchEvent(event);
 		},
 
@@ -1013,17 +1068,24 @@ window.bp = window.bp || {};
 	bp.Views.ActivityAttachments = bp.View.extend( {
 		tagName: 'div',
 		id: 'whats-new-attachments',
+		ActivityLinkPreview: null,
 		initialize: function() {
-			if ( typeof window.Dropzone !== 'undefined' ) {
+			if ( !_.isUndefined( window.Dropzone ) ) {
 				this.views.add(new bp.Views.ActivityMedia({model: this.model}));
 			}
 
 			if ( !_.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
-				this.views.add( new bp.Views.ActivityLinkPreview( { model: this.model } ) );
+				this.ActivityLinkPreview = new bp.Views.ActivityLinkPreview( { model: this.model } );
+				this.views.add( this.ActivityLinkPreview );
 			}
 
 			this.views.add( new bp.Views.ActivityAttachedGifPreview( { model: this.model } ) );
-		}
+		},
+		onClose: function() {
+			if( ! _.isNull( this.ActivityLinkPreview ) ) {
+				this.ActivityLinkPreview.destroy();
+			}
+		},
 	});
 
 		/**
@@ -1271,7 +1333,7 @@ window.bp = window.bp || {};
 		resetForm: function() {
 			_.each( this.views._views[''], function( view, index ) {
 				if ( index > 1 ) {
-					view.remove();
+					view.close();
 				}
 			} );
 
