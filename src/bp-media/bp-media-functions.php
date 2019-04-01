@@ -513,6 +513,34 @@ function bp_media_get_total_media_count( $user_id = 0 ) {
 	return apply_filters( 'bp_media_get_total_media_count', $count );
 }
 
+/**
+ * Return the total media count in your BP instance.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return int Media count.
+ */
+function bp_get_total_media_count() {
+	global $wpdb;
+
+	$count = wp_cache_get( 'bp_total_media_count', 'bp' );
+
+	$bp = buddypress();
+	if ( false === $count ) {
+		$count = $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name}" );
+		wp_cache_set( 'bp_total_media_count', $count, 'bp' );
+	}
+
+	/**
+	 * Filters the total number of media.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param int $count Total number of media.
+	 */
+	return apply_filters( 'bp_get_total_media_count', $count );
+}
+
 //******************** Albums *********************/
 /**
  * Retrieve an album or albums.

@@ -423,3 +423,61 @@ function bp_nouveau_ajax_media_get_activity() {
 		'activity'     => $activity,
 	) );
 }
+
+add_filter('bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_media_tabs', 10, 2);
+/**
+ * Object template results media tabs.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_nouveau_object_template_results_media_tabs( $results, $object ) {
+	if ( $object != 'media' ) {
+		return $results;
+	}
+
+	$results['scopes'] = [];
+
+	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_media_all_scope', 20 );
+	bp_has_media( bp_ajax_querystring( 'media' ) );
+	$results['scopes']['all'] = $GLOBALS["media_template"]->total_media_count;
+	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_media_all_scope', 20 );
+
+	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_media_personal_scope', 20 );
+	bp_has_media( bp_ajax_querystring( 'media' ) );
+	$results['scopes']['personal'] = $GLOBALS["media_template"]->total_media_count;
+	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_media_personal_scope', 20 );
+
+	return $results;
+}
+
+/**
+ * Object template results media all scope.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_nouveau_object_template_results_media_all_scope( $querystring ) {
+	$querystring = wp_parse_args( $querystring );
+
+	$querystring['scope'] = 'all';
+	$querystring['page'] = 1;
+	$querystring['per_page'] = '1';
+	$querystring['user_id'] = 0;
+	$querystring['count_total'] = true;
+	return http_build_query( $querystring );
+}
+
+/**
+ * Object template results members personal scope.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_nouveau_object_template_results_media_personal_scope( $querystring ) {
+	$querystring = wp_parse_args( $querystring );
+
+	$querystring['scope'] = 'personal';
+	$querystring['page'] = 1;
+	$querystring['per_page'] = '1';
+	$querystring['user_id'] = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	$querystring['count_total'] = true;
+	return http_build_query( $querystring );
+}
