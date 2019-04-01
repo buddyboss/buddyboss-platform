@@ -79,13 +79,16 @@ function bp_nouveau_media_add_theatre_template() {
  * Get activity entry media to render on front end
  */
 function bp_nouveau_media_activity_entry() {
+	global $media_template;
 	$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
 
-	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids ) ) ) {
-		while ( bp_media() ) {
-			bp_the_media();
-			bp_get_template_part( 'media/activity-entry' );
-		}
+	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids ) ) ) { ?>
+		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? 'bb-media-length-more' : ''; ?>"><?php
+			while ( bp_media() ) {
+				bp_the_media();
+				bp_get_template_part( 'media/activity-entry' );
+			} ?>
+		</div><?php
 	}
 }
 
