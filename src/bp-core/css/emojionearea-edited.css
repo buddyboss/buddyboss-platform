@@ -650,7 +650,7 @@
 
 .emojionearea .emojionearea-picker.emojionearea-picker-position-bottom {
 	margin-top: 10px;
-	right: -14px;
+	left: -20px;
 	top: 47px;
 }
 
@@ -659,7 +659,7 @@
 	height: 10px;
 	background-position: -2px -100px;
 	top: -10px;
-	right: 20px;
+	left: 20px;
 }
 
 .emojionearea .emojionearea-picker.emojionearea-picker-position-bottom.emojionearea-filters-position-bottom .emojionearea-wrapper:after {
@@ -681,7 +681,7 @@
 }
 
 .emojionearea .emojionearea-button.active + .emojionearea-picker-position-bottom {
-	margin-top: -7px;
+	margin-top: -14px;
 }
 
 .emojionearea.emojionearea-standalone {
@@ -725,7 +725,7 @@
 }
 
 .emojionearea.emojionearea-standalone .emojionearea-button > div {
-	top: 5px;
+	top: 0;
 }
 
 .emojionearea.emojionearea-standalone .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after, .emojionearea.emojionearea-standalone .emojionearea-picker.emojionearea-picker-position-top .emojionearea-wrapper:after {
