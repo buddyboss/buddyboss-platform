@@ -650,7 +650,7 @@ window.bp = window.bp || {};
 
 	// The content of the activity
 	bp.Views.WhatsNew = bp.View.extend( {
-		tagName   : 'textarea',
+		tagName   : 'div',
 		className : 'bp-suggestions',
 		id        : 'whats-new',
 
@@ -659,7 +659,8 @@ window.bp = window.bp || {};
 			cols         : '50',
 			rows         : '4',
 			placeholder  : BP_Nouveau.activity.strings.whatsnewPlaceholder,
-			'aria-label' : BP_Nouveau.activity.strings.whatsnewLabel
+			'aria-label' : BP_Nouveau.activity.strings.whatsnewLabel,
+			contenteditable: true
 		},
 
 		initialize: function() {
@@ -669,6 +670,13 @@ window.bp = window.bp || {};
 		},
 
 		adjustContent: function() {
+
+			// this.$el.toTextarea({
+			// 	allowHTML: true,//allow HTML formatting with CTRL+b, CTRL+i, etc.
+			// 	allowImg: true,//allow drag and drop images
+			// 	pastePlainText: false,//paste text without styling as source
+			// 	placeholder: false
+			// });
 
 			// First adjust layout
 			this.$el.css( {
@@ -690,7 +698,7 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			this.$el.val( activity.get( 'content' ) );
+			this.$el.html( activity.get( 'content' ) );
 		}
 	} );
 
@@ -942,13 +950,14 @@ window.bp = window.bp || {};
 		},
 
 		initialize: function() {
-			document.addEventListener( 'keydown', _.bind( this.closeGifDropdownOnEsc, this ) );
-			$( document ).on( 'click', _.bind( this.closeDropdowns, this ) );
+			document.addEventListener( 'keydown', _.bind( this.closePickersOnEsc, this ) );
+			$( document ).on( 'click', _.bind( this.closePickersOnClick, this ) );
 		},
 
 		render: function() {
 			this.$el.html(this.template(this.model.toJSON()));
-			this.$searchDropdownEl = this.$el.find('.gif-media-search-dropdown');
+			this.$gifPickerEl = this.$el.find('.gif-media-search-dropdown');
+			this.$emojiPickerEl = $('#whats-new');
 			return this;
 		},
 
@@ -959,11 +968,11 @@ window.bp = window.bp || {};
 
 		toggleGifSelector: function( e ) {
 			e.preventDefault();
-			if ( this.$searchDropdownEl.is(':empty') ) {
+			if ( this.$gifPickerEl.is(':empty') ) {
 				var gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown({model: this.model});
-				this.$searchDropdownEl.html( gifMediaSearchDropdownView.render().el );
+				this.$gifPickerEl.html( gifMediaSearchDropdownView.render().el );
 			}
-			this.$searchDropdownEl.toggleClass('open');
+			this.$gifPickerEl.toggleClass('open');
 		},
 
 		toggleMediaSelector: function( e ) {
@@ -973,20 +982,30 @@ window.bp = window.bp || {};
 			document.dispatchEvent(event);
 		},
 
-		closeGifDropdownOnEsc: function( event ) {
-			var key = event.key; // const {key} = event; in ES6+
-			if ( key === 'Escape' ) {
-				this.$searchDropdownEl.removeClass('open');
+		closePickersOnEsc: function( event ) {
+			if ( event.key === 'Escape' || event.keyCode === 27 ) {
+				if (!_.isUndefined(BP_Nouveau.activity.params.gif_api_key)) {
+					this.$gifPickerEl.removeClass('open');
+				}
+
+				if (!_.isUndefined(BP_Nouveau.activity.params.emoji)) {
+					this.$emojiPickerEl.data('emojioneArea').hidePicker();
+				}
 			}
 		},
 
-		closeDropdowns: function( event ) {
-			if (!$(event.target).closest('.post-gif').length) {
-				this.$searchDropdownEl.removeClass('open');
+		closePickersOnClick: function( event ) {
+			var $targetEl = $(event.target);
+
+			if (!_.isUndefined(BP_Nouveau.activity.params.gif_api_key) &&
+				!$targetEl.closest('.post-gif').length) {
+				this.$gifPickerEl.removeClass('open');
 			}
 
-			if (!$(event.target).closest('.post-emoji').length) {
-			//	$('#whats-new').data('emojioneArea').hidePicker();
+			if (!_.isUndefined(BP_Nouveau.activity.params.emoji) &&
+				!$targetEl.closest('.post-emoji').length &&
+				!$targetEl.is('.emojioneemoji,.emojibtn')) {
+				this.$emojiPickerEl.data('emojioneArea').hidePicker();
 			}
 		}
 	} );
@@ -1242,7 +1261,7 @@ window.bp = window.bp || {};
 					container: '.post-emoji',
 					autocomplete: false,
 					pickerPosition: 'bottom',
-					hidePickerOnBlur: true,
+					hidePickerOnBlur: false,
 					useInternalCDN: false
 				});
 			}
@@ -1299,9 +1318,7 @@ window.bp = window.bp || {};
 			// Set the content and meta
 			_.each( this.$el.serializeArray(), function( pair ) {
 				pair.name = pair.name.replace( '[]', '' );
-				if ( 'whats-new' === pair.name ) {
-					self.model.set( 'content', pair.value );
-				} else if ( -1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in'], pair.name ) ) {
+				 if ( -1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in'], pair.name ) ) {
 					if ( _.isUndefined( meta[ pair.name ] ) ) {
 						meta[ pair.name ] = pair.value;
 					} else {
@@ -1313,6 +1330,18 @@ window.bp = window.bp || {};
 					}
 				}
 			} );
+
+			// Post content
+			var $whatsNew = this.$el.find('#whats-new');
+
+			// Transform emoji image into emoji unicode
+			$whatsNew.find('img.emojioneemoji').replaceWith(function () {
+				return this.alt;
+			});
+
+			// Add valid line breaks
+			var content = $whatsNew[0].innerHTML.replace(/<div>/gi,"\n").replace(/<\/div>/gi,'');
+			self.model.set( 'content', content, { silent: true } );
 
 			// Silently add meta
 			this.model.set( meta, { silent: true } );

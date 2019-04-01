@@ -36,6 +36,12 @@
 	// these ID's need replacing with this!
 	//.content-wrap { // #whats-new-content
 
+	#whats-new-form.focus-in {
+		#whats-new {
+			min-height: 100px;
+		}
+	}
+
 	#whats-new-content {
 		padding: 0 0 $marg-lrg 0;
 	}
@@ -191,6 +197,7 @@
 
 	#whats-new-textarea {
 
+		#whats-new,
 		textarea {
 			background: $textarea-bck;
 
@@ -204,8 +211,31 @@
 			width: 100%;
 
 			&:focus {
-
 				@include box-shadow(0 0 6px 0 $med-light-grey);
+			}
+		}
+
+		[contenteditable=true] {
+			&:empty:before{
+				content: attr(placeholder);
+				display: block; /* For Firefox */
+			}
+
+			border: 1px solid #ccc;
+
+			img.emojioneemoji {
+				width: 1.2em;
+				position: relative;
+
+				&:after {
+					content: '>';
+					display: block;
+					width: 1rem;
+					height: 1rem;
+					position: absolute;
+					bottom: 0;
+					right: -1.5rem;
+				}
 			}
 		}
 	}

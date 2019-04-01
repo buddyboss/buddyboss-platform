@@ -646,6 +646,23 @@ document = window.document || {};
 		}
 		return $.extend({}, default_options, options);
 	};
+	function placeCaretAtEnd(el) {
+		el.focus();
+		if (typeof window.getSelection != "undefined"
+			&& typeof document.createRange != "undefined") {
+			var range = document.createRange();
+			range.selectNodeContents(el);
+			range.collapse(false);
+			var sel = window.getSelection();
+			sel.removeAllRanges();
+			sel.addRange(range);
+		} else if (typeof document.body.createTextRange != "undefined") {
+			var textRange = document.body.createTextRange();
+			textRange.moveToElementText(el);
+			textRange.collapse(false);
+			textRange.select();
+		}
+	}
 
 	var saveSelection, restoreSelection;
 	if (window.getSelection && document.createRange) {
@@ -1226,13 +1243,18 @@ document = window.document || {};
 					self.searchSel = null;
 				}
 
-				if (self.standalone) {
-					editor.html(shortnameTo(emojibtn.data("name"), self.emojiTemplate));
-					self.trigger("blur");
-				} else {
-					saveSelection(editor[0]);
-					pasteHtmlAtCaret(shortnameTo(emojibtn.data("name"), self.emojiTemplate));
+				// if (self.standalone) {
+				// 	editor.html(shortnameTo(emojibtn.data("name"), self.emojiTemplate));
+				// 	self.trigger("blur");
+				// } else {
+
+				if ( ! source.is(':focus')) {
+					placeCaretAtEnd(source[0]);
 				}
+
+				saveSelection(editor[0]);
+				pasteHtmlAtCaret(shortnameTo(emojibtn.data("name"), self.emojiTemplate));
+				//}
 
 				if (self.recentEmojis) {
 					setRecent(self, emojibtn.data("name"));
@@ -1266,7 +1288,7 @@ document = window.document || {};
 				if (!html.length || /^<br[^>]*>$/i.test(html)) {
 					self.editor.html(self.content = '');
 				}
-				source[sourceValFunc]( source[sourceValFunc]() + self.getText() );
+				//source[sourceValFunc]( source[sourceValFunc]() + self.getText() );
 			})
 
 			.on("@source.change", function() {
