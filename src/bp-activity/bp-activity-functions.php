@@ -4185,7 +4185,7 @@ function bp_ajax_get_comments() {
 	}
 }
 
-add_action( 'wp_ajax_bp_get_comments', 'bp_ajax_get_comments' );
+//add_action( 'wp_ajax_bp_get_comments', 'bp_ajax_get_comments' );
 
 /**
  * Detect a change in post type status, and initiate an activity update if necessary.

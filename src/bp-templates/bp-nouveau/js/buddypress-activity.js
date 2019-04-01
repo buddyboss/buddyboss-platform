@@ -341,12 +341,12 @@ window.bp = window.bp || {};
 
 				// Keep latest 5 comments
 				comment_items.each( function( i, item ) {
-					if ( i < comment_items.length - 5 ) {
+					if ( i < comment_items.length - 4 ) {
 						$( item ).addClass('bp-hidden').hide();
 
 						// Prepend a link to display all
 						if ( ! i ) {
-							$( item ).before( '<li class="show-all"><button class="text-button" type="button" data-bp-show-comments-id="#' + activity_item.prop( 'id' ) + '/show-all/"><span class="icon dashicons dashicons-visibility" aria-hidden="true"></span> ' + BP_Nouveau.show_x_comments.replace( '%d', comment_count ) + '</button></li>' );
+							$( item ).before( '<li class="show-all"><button class="text-button" type="button" data-bp-show-comments-id="#' + activity_item.prop( 'id' ) + '/show-all/">' + BP_Nouveau.show_x_comments + '</button></li>' );
 						}
 					}
 				} );
@@ -689,7 +689,7 @@ window.bp = window.bp || {};
 				}
 
 				// Roll-down comments
-				if ( activity_item[ 0 ].classList.contains( 'has-comments' ) &&
+				/*if ( activity_item[ 0 ].classList.contains( 'has-comments' ) &&
 				     !activity_item[ 0 ].classList.contains( 'comments-loaded' ) &&
 				     !$activity_comments[ 0 ].classList.contains( 'comments-loading' )
 				) {
@@ -707,7 +707,7 @@ window.bp = window.bp || {};
 						form[ 0 ].insertAdjacentHTML( 'beforebegin', response );
 						activity_item[ 0 ].classList.add( 'comments-loaded' );
 					} );
-				}
+				}*/
 
 				if ( target.closest( 'li' ).data( 'bp-activity-comment-id' ) ) {
 					item_id = target.closest( 'li' ).data( 'bp-activity-comment-id' );
