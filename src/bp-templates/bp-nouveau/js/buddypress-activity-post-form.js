@@ -1340,7 +1340,7 @@ window.bp = window.bp || {};
 			});
 
 			// Add valid line breaks
-			var content = $whatsNew[0].innerHTML.replace(/<div>/gi,"\n").replace(/<\/div>/gi,'');
+			var content = $whatsNew[0].innerHTML.replace(/<div>/gi,'\n').replace(/<\/div>/gi,'');
 			self.model.set( 'content', content, { silent: true } );
 
 			// Silently add meta

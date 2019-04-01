@@ -189,7 +189,7 @@ window.bp = window.bp || {};
 					'action': 'media_save',
 					'_wpnonce': BP_Nouveau.nonces.media,
 					'medias': self.dropzone_media,
-					'content' : $('#bp-media-post-content').val(),
+					'content' : $('#bp-media-post-content').val()
 				};
 
 				$.ajax({

@@ -19,7 +19,7 @@
 .activity-update-form {
 	border: 1px solid $bp-border-dark;
 
-	@include box-shadow( inset 0 0 6px #eee);
+	@include box-shadow(inset 0 0 6px #eee);
 
 	margin: $marg-med 0;
 
@@ -37,6 +37,7 @@
 	//.content-wrap { // #whats-new-content
 
 	#whats-new-form.focus-in {
+
 		#whats-new {
 			min-height: 100px;
 		}
@@ -211,12 +212,14 @@
 			width: 100%;
 
 			&:focus {
+
 				@include box-shadow(0 0 6px 0 $med-light-grey);
 			}
 		}
 
-		[contenteditable=true] {
-			&:empty:before{
+		[contenteditable="true"] {
+
+			&:empty:before {
 				content: attr(placeholder);
 				display: block; /* For Firefox */
 			}
@@ -228,7 +231,7 @@
 				position: relative;
 
 				&:after {
-					content: '>';
+					content: ">";
 					display: block;
 					width: 1rem;
 					height: 1rem;
@@ -329,5 +332,6 @@
 				width: 8em;
 			}
 		}
-	} // close @media
+	}
+	// close @media
 }

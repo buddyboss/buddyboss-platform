@@ -1316,23 +1316,23 @@ a.layout-grid-view {
   box-shadow: 0 0 6px 0 #d6d6d6;
 }
 
-.activity-update-form #whats-new-textarea [contenteditable=true] {
+.activity-update-form #whats-new-textarea [contenteditable="true"] {
   border: 1px solid #ccc;
 }
 
-.activity-update-form #whats-new-textarea [contenteditable=true]:empty:before {
+.activity-update-form #whats-new-textarea [contenteditable="true"]:empty:before {
   content: attr(placeholder);
   display: block;
   /* For Firefox */
 }
 
-.activity-update-form #whats-new-textarea [contenteditable=true] img.emojioneemoji {
+.activity-update-form #whats-new-textarea [contenteditable="true"] img.emojioneemoji {
   width: 1.2em;
   position: relative;
 }
 
-.activity-update-form #whats-new-textarea [contenteditable=true] img.emojioneemoji:after {
-  content: '>';
+.activity-update-form #whats-new-textarea [contenteditable="true"] img.emojioneemoji:after {
+  content: ">";
   display: block;
   width: 1rem;
   height: 1rem;

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-03-30 06:47:17+00:00\n"
+"POT-Creation-Date: 2019-04-01 04:05:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -354,7 +354,7 @@ msgid "Go back and try again."
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:743
-#: bp-activity/classes/class-bp-activity-list-table.php:711
+#: bp-activity/classes/class-bp-activity-list-table.php:714
 msgid "View Activity"
 msgstr ""
 
@@ -363,7 +363,7 @@ msgid "Approved"
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:752
-#: bp-activity/classes/class-bp-activity-list-table.php:627
+#: bp-activity/classes/class-bp-activity-list-table.php:630
 #: bp-activity/classes/class-bp-akismet.php:204
 #: bp-activity/classes/class-bp-akismet.php:233
 #: bp-core/admin/bp-core-admin-functions.php:1360
@@ -391,7 +391,7 @@ msgid "Submitted on: %s"
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:761
-#: bp-activity/classes/class-bp-activity-list-table.php:620
+#: bp-activity/classes/class-bp-activity-list-table.php:623
 #: bp-forums/common/template.php:2217 bp-forums/forums/template.php:52
 #: bp-forums/replies/template.php:52 bp-forums/replies/template.php:1911
 #: bp-forums/topics/template.php:52 bp-forums/topics/template.php:2492
@@ -500,7 +500,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-admin.php:1040
 #: bp-activity/bp-activity-admin.php:1046
-#: bp-activity/classes/class-bp-activity-list-table.php:614
+#: bp-activity/classes/class-bp-activity-list-table.php:617
 #: bp-core/bp-core-wp-emails.php:228 bp-core/bp-core-wp-emails.php:495
 #: bp-core/classes/class-bp-email-tokens.php:536
 #: bp-core/classes/class-bp-email-tokens.php:649
@@ -1033,13 +1033,13 @@ msgid "Mark as Spam"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:343
-#: bp-activity/classes/class-bp-activity-list-table.php:625
+#: bp-activity/classes/class-bp-activity-list-table.php:628
 #: bp-core/admin/bp-core-admin-functions.php:1354
 msgid "Not Spam"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:344
-#: bp-activity/classes/class-bp-activity-list-table.php:630
+#: bp-activity/classes/class-bp-activity-list-table.php:633
 #: bp-forums/admin/replies.php:752 bp-forums/admin/topics.php:822
 #: bp-groups/bp-groups-admin.php:906
 msgid "Delete Permanently"
@@ -1067,41 +1067,41 @@ msgstr ""
 msgid "View all actions"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-list-table.php:470
+#: bp-activity/classes/class-bp-activity-list-table.php:473
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-filters.php:13
 msgid "Filter"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-list-table.php:518
+#: bp-activity/classes/class-bp-activity-list-table.php:521
 #. translators: accessibility text
 msgid "Select activity item %1$d"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-list-table.php:567
+#: bp-activity/classes/class-bp-activity-list-table.php:570
 #: bp-blogs/bp-blogs-activity.php:105
 msgid "New %s published"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-list-table.php:570
+#: bp-activity/classes/class-bp-activity-list-table.php:573
 msgid "Unregistered action - %s"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-list-table.php:616
+#: bp-activity/classes/class-bp-activity-list-table.php:619
 msgid "Replies disabled"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-list-table.php:630
+#: bp-activity/classes/class-bp-activity-list-table.php:633
 #: bp-core/bp-core-cssjs.php:178
 #: bp-templates/bp-nouveau/buddypress-functions.php:545
 msgid "Are you sure?"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-list-table.php:647
+#: bp-activity/classes/class-bp-activity-list-table.php:650
 #. translators: %s: activity date and time
 msgid "Submitted on %s"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-list-table.php:653
+#: bp-activity/classes/class-bp-activity-list-table.php:656
 #: bp-core/bp-core-template.php:425
 #. translators: 1: activity date, 2: activity time
 msgid "%1$s at %2$s"
@@ -2028,7 +2028,7 @@ msgid "General"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:430
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:148
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:151
 msgid "First Name"
 msgstr ""
 
@@ -2037,7 +2037,7 @@ msgid "Last Name"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:438
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:150
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:153
 msgid "Nickname"
 msgstr ""
 
@@ -2619,12 +2619,12 @@ msgstr ""
 msgid "Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:101
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:103
 msgid "Display Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:104
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:107
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:110
 #: bp-core/profile-search/bps-start.php:57
 #: bp-core/profile-search/bps-start.php:60
 #: bp-core/profile-search/bps-start.php:240
@@ -2632,49 +2632,49 @@ msgstr ""
 msgid "Profile Search"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:120
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:123
 msgid "Use a WordPress page as each user's personal Profile Dashboard"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:125
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:128
 msgid ""
 "This page is only accessible to logged-in users. Create a WordPress page "
 "and assign it in the <a href=\"%s\">Pages</a> settings."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:142
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:145
 msgid "Redirect users to their Profile Dashboard on login"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:149
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:152
 msgid "First Name &amp; Last Name"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:169
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:172
 msgid ""
 "After the format has been updated, remember to run <a href=\"%s\">Repair "
 "Community</a> tools to update all the users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:192
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:195
 msgid "Enable <a href=\"%s\">advanced profile search</a> on the members directory."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:200
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:203
 msgid "Enable advanced profile search on the members directory"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:219
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:222
 msgid ""
 "Enable <a href=\"%s\">profile types</a> to give members unique profile "
 "fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:227
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:230
 msgid "Enable profile types to give members unique profile fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:241
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:244
 msgid "Display each member's profile type on their profile page"
 msgstr ""
 
@@ -13194,7 +13194,7 @@ msgstr ""
 msgid "Error while uploading media."
 msgstr ""
 
-#: bp-media/bp-media-functions.php:702
+#: bp-media/bp-media-functions.php:728
 #: bp-templates/bp-nouveau/buddypress/media/add-media.php:13
 msgid "Add Media"
 msgstr ""
@@ -13240,7 +13240,7 @@ msgid "Search Media&hellip;"
 msgstr ""
 
 #: bp-media/classes/class-bp-media-component.php:216
-#. translators: %s: Unread message count for the current user
+#. translators: %s: total media count for the current user
 msgid "Media %s"
 msgstr ""
 
@@ -13286,10 +13286,6 @@ msgstr ""
 
 #: bp-media/screens/albums.php:27
 msgid "The album you tried to access is no longer available"
-msgstr ""
-
-#: bp-media/screens/albums.php:54
-msgid "Album <span class=\"%s\">%s</span>"
 msgstr ""
 
 #: bp-members/bp-members-activity.php:23
