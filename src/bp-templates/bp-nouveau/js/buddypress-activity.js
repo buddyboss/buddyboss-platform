@@ -931,6 +931,7 @@ window.bp = window.bp || {};
 
 			if ( $window.scrollTop() + $window.height() > offset ) {
 				$load_more_btn.data( 'bp-autoloaded', 1 );
+				$load_more_btn.find( 'a' ).text(BP_Nouveau.activity.strings.loadingMore);
 				$load_more_btn.find( 'a' ).trigger( 'click' );
 			}
 		}

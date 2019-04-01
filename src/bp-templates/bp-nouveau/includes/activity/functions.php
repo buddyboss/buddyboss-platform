@@ -189,6 +189,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'cancelButton'        => __( 'Cancel', 'buddyboss' ),
 		'commentLabel'        => __( '%d Comment', 'buddyboss' ),
 		'commentsLabel'       => __( '%d Comments', 'buddyboss' ),
+		'loadingMore'         => __( 'Loading...', 'buddyboss' ),
 	);
 
     if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {
