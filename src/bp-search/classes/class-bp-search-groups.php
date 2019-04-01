@@ -1,10 +1,10 @@
 <?php
 /**
  * @todo add description
- * 
+ *
  * @package BuddyBoss\Search
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -166,6 +166,8 @@ if (!class_exists('Bp_Search_Groups')):
 				$args['search_terms'] = ' ';
 			}
 
+			do_action( 'bp_before_search_groups_html' );
+
 			if( bp_has_groups( $args ) ){
 				while ( bp_groups() ){
 					bp_the_group();
@@ -180,6 +182,8 @@ if (!class_exists('Bp_Search_Groups')):
 					$this->search_results['items'][bp_get_group_id()] = $result;
 				}
 			}
+
+			do_action( 'bp_after_search_groups_html' );
 		}
 	}
 

@@ -1,10 +1,10 @@
 <?php
 /**
  * @todo add description
- * 
+ *
  * @package BuddyBoss\Search
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -224,22 +224,30 @@ if (!class_exists('Bp_Search_Members')):
 				$group_ids[] = $item_id;
 			}
 
+			do_action( 'bp_before_search_members_html' );
+
 			//now we have all the posts
 			//lets do a groups loop
-			if( bp_has_members( array( 'search_terms' => '', 'include'=>$group_ids, 'per_page'=>count($group_ids) ) ) ){
-				while ( bp_members() ){
+			if ( bp_has_members( array(
+				'search_terms' => '',
+				'include'      => $group_ids,
+				'per_page'     => count( $group_ids )
+			) ) ) {
+				while ( bp_members() ) {
 					bp_the_member();
 
 					$result_item = array(
-						'id'	=> bp_get_member_user_id(),
-						'type'	=> $this->type,
-						'title'	=> bp_get_member_name(),
-						'html'	=> bp_search_buffer_template_part( 'loop/member', $template_type, false ),
+						'id'    => bp_get_member_user_id(),
+						'type'  => $this->type,
+						'title' => bp_get_member_name(),
+						'html'  => bp_search_buffer_template_part( 'loop/member', $template_type, false ),
 					);
 
-					$this->search_results['items'][bp_get_member_user_id()] = $result_item;
+					$this->search_results['items'][ bp_get_member_user_id() ] = $result_item;
 				}
 			}
+
+			do_action( 'bp_after_search_members_html' );
 		}
 
 		/**
