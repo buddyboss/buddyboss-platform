@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-04-01 12:03:15+00:00\n"
+"POT-Creation-Date: 2019-04-01 14:38:16+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2489,7 +2489,6 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:27
 #: bp-integrations/appboss/bp-admin-appboss-tab.php:36
-#: bp-templates/bp-nouveau/includes/customizer.php:40
 msgid "General Settings"
 msgstr ""
 
@@ -13204,7 +13203,7 @@ msgstr ""
 msgid "Error while uploading media."
 msgstr ""
 
-#: bp-media/bp-media-functions.php:728
+#: bp-media/bp-media-functions.php:756
 #: bp-templates/bp-nouveau/buddypress/media/add-media.php:13
 msgid "Add Media"
 msgstr ""
@@ -15945,10 +15944,6 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:26
 msgid "Customize the appearance of the BuddyBoss Platform."
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/customizer.php:43
-msgid "Configure general BuddyBoss appearance options."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:46

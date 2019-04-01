@@ -1140,13 +1140,12 @@ a.layout-grid-view {
 
 .activity-update-form #whats-new-avatar img {
   box-shadow: none;
-  display: block;
+  display: inline-block;
   margin-right: 10px;
 }
 
 .activity-update-form .activity-post-avatar {
-  display: flex;
-  align-items: center;
+  display: inline-block;
 }
 
 .activity-update-form #whats-new {
@@ -1302,7 +1301,7 @@ a.layout-grid-view {
 
 .activity-update-form #whats-new-textarea [contenteditable="true"]:empty:before {
   content: attr(placeholder);
-  color: #BBBBBB;
+  color: #bbb;
   display: block;
   /* For Firefox */
 }

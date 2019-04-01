@@ -26,14 +26,13 @@
 
 		img {
 			box-shadow: none;
-			display: block;
+			display: inline-block;
 			margin-right: 10px;
 		}
 	}
 
 	.activity-post-avatar {
-		display: flex;
-		align-items: center;
+		display: inline-block;
 	}
 
 	// these ID's need replacing with this!
@@ -204,7 +203,7 @@
 
 			&:empty:before {
 				content: attr(placeholder);
-				color: #BBBBBB;
+				color: #bbb;
 				display: block; /* For Firefox */
 			}
 
