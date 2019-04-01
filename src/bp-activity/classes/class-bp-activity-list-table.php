@@ -444,9 +444,12 @@ class BP_Activity_List_Table extends WP_List_Table {
 						// Prevent warnings by other plugins if a component is disabled but the activity type has been registered.
 						$component_name = ucfirst( $component );
 					}
+
+					// Change `Bbpress` to `Forums`
+					$component_name = ( 'Bbpress' === $component_name ) ? 'Forums' : $component_name;
 					?>
 
-					<optgroup label="<?php echo esc_html( $component_name ); ?>">
+					<optgroup label="<?php esc_html_e( $component_name , 'buddyboss'); ?>">
 
 						<?php foreach ( $actions as $action_key => $action_values ) : ?>
 
