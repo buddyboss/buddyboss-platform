@@ -1146,6 +1146,10 @@ a.layout-grid-view {
   display: inline-block;
 }
 
+.activity-update-form #whats-new-form.focus-in #whats-new {
+  min-height: 100px;
+}
+
 .activity-update-form #whats-new-content {
   padding: 0 0 20px 0;
 }
@@ -1290,6 +1294,7 @@ a.layout-grid-view {
   min-width: 180px;
 }
 
+.activity-update-form #whats-new-textarea #whats-new,
 .activity-update-form #whats-new-textarea textarea {
   background: #fff;
   -webkit-box-sizing: border-box;
@@ -1304,10 +1309,36 @@ a.layout-grid-view {
   width: 100%;
 }
 
+.activity-update-form #whats-new-textarea #whats-new:focus,
 .activity-update-form #whats-new-textarea textarea:focus {
   -webkit-box-shadow: 0 0 6px 0 #d6d6d6;
   -moz-box-shadow: 0 0 6px 0 #d6d6d6;
   box-shadow: 0 0 6px 0 #d6d6d6;
+}
+
+.activity-update-form #whats-new-textarea [contenteditable=true] {
+  border: 1px solid #ccc;
+}
+
+.activity-update-form #whats-new-textarea [contenteditable=true]:empty:before {
+  content: attr(placeholder);
+  display: block;
+  /* For Firefox */
+}
+
+.activity-update-form #whats-new-textarea [contenteditable=true] img.emojioneemoji {
+  width: 1.2em;
+  position: relative;
+}
+
+.activity-update-form #whats-new-textarea [contenteditable=true] img.emojioneemoji:after {
+  content: '>';
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  position: absolute;
+  bottom: 0;
+  right: -1.5rem;
 }
 
 .activity-update-form #activity-form-submit-wrapper {
