@@ -180,7 +180,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 		'li_class'  => array(),
 		'link'      => bp_get_media_directory_permalink(),
 		'text'      => __( 'All Media', 'buddyboss' ),
-		'count'     => 0,
+		'count'     => bp_get_total_media_count(),
 		'position'  => 5,
 	);
 
@@ -191,7 +191,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 			'li_class'  => array(),
 			'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/my-media/',
 			'text'      => __( 'My Media', 'buddyboss' ),
-			'count'     => 0,
+			'count'     => bp_media_get_total_media_count(),
 			'position'  => 15,
 		);
 	}
