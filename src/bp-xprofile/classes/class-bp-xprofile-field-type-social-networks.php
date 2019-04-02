@@ -201,7 +201,18 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 				$fresh_setup = false;
 
 				if ( empty( $options ) ) {
-					$options     = social_network_provider();
+					$default_options = apply_filters( 'social_network_default_options', array( 'facebook', 'twitter', 'linkedIn' ) );
+					$all_options     = social_network_provider();
+					$options = array();
+					if ( empty( $default_options ) ) {
+						$options = social_network_provider();
+					} else {
+						foreach ( $all_options as $opt ) {
+							if ( in_array( $opt->value, $default_options ) ) {
+								$options[] = $opt;
+							}
+						}
+					}
 					$fresh_setup = true;
 				}
 
