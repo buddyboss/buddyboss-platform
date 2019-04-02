@@ -197,12 +197,12 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 				<?php
 
 				// Does option have children?
-				$options = $current_field->get_children( true );
+				$options     = $current_field->get_children( true );
+				$fresh_setup = false;
 
 				if ( empty( $options ) ) {
-
-					$options = social_network_provider();
-
+					$options     = social_network_provider();
+					$fresh_setup = true;
 				}
 
 				// If no children options exists for this field, check in $_POST
@@ -271,8 +271,8 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 							<select name="<?php echo esc_attr( "{$type}_option[{$j}]" ); ?>" id="<?php echo esc_attr( "{$type}_option{$j}" ); ?>">
 								<?php
 								foreach ( social_network_provider() as $option ) {
-
-									?><option value="<?php echo esc_attr( $option->value ); ?>" <?php echo ( $options[$i]->name === $option->value ) ? 'selected' : ''; ?>><?php esc_html_e( $option->name, 'buddyboss' ); ?></option><?php
+									$compare = ( true === $fresh_setup ) ? $options[$i]->value : $options[$i]->name;
+									?><option class="<?php echo $options[$i]->name.' '.$option->value; ?>" value="<?php echo esc_attr( $option->value ); ?>" <?php echo ( $compare === $option->value ) ? 'selected' : ''; ?>><?php esc_html_e( $option->name, 'buddyboss' ); ?></option><?php
 
 								}
 								?>
