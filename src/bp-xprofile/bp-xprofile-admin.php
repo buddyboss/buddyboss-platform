@@ -459,8 +459,10 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 
 	if ( is_null( $field_id ) ) {
 		$field = new BP_XProfile_Field();
+		$new = true;
 	} else {
 		$field = xprofile_get_field( $field_id );
+		$new = false;
 	}
 
 	$field->group_id = $group_id;
@@ -477,17 +479,21 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 
 
 			if ( 'socialnetworks' === $field->type ) {
-				$disabled_social_networks = false;
-				$exists_social_networks = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' ");
-				if ( $exists_social_networks > 0 ) {
-					$disabled_social_networks = true;
-				}
 
-				if ( true === $disabled_social_networks ) {
-					$message = __( 'You can only have one instance of the "Social Network" profile field.', 'buddyboss' );
-					$type    = 'error';
-					$field->render_admin_form( $message, $type );
-					return false;
+				if ( true === $new ) {
+					$disabled_social_networks = false;
+					$exists_social_networks   = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
+					if ( $exists_social_networks > 0 ) {
+						$disabled_social_networks = true;
+					}
+
+					if ( true === $disabled_social_networks ) {
+						$message = __( 'You can only have one instance of the "Social Network" profile field.','buddyboss' );
+						$type    = 'error';
+						$field->render_admin_form( $message, $type );
+
+						return false;
+					}
 				}
 			}
 

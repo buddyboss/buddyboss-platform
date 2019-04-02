@@ -266,11 +266,9 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 							$default_name = '[' . $j . ']';
 						}
 
-						if ( 1 === $j || 1 === $j ) {
-							$class = '';
-						} else {
-							$class = 'sortable';
-						}
+
+						$class = 'sortable';
+
 						?>
 
 						<div id="<?php echo esc_attr( "{$type}_div{$j}" ); ?>" class="bp-option <?php echo esc_attr( $class ); ?>">
