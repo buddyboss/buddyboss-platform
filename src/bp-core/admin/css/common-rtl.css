@@ -495,11 +495,11 @@ body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
 
 /* Pages */
 .bp-admin-card.section-bp_pages h2:before {
-  content: "\f14a";
+  background-image: url(../../images/admin/icons/fontawesome/solid/check-square.svg);
 }
 
 .bp-admin-card.section-bp_registration_pages h2:before {
-  content: "\f14b";
+  background-image: url(../../images/admin/icons/fontawesome/solid/pen-square.svg);
 }
 
 /* Tools */
