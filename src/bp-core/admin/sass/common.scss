@@ -440,7 +440,7 @@ body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
 
 /* Invites */
 .bp-admin-card.section-bp_invites h2:before {
-	content: "\f0e0";
+	background-image: url(../../images/admin/icons/fontawesome/solid/envelope.svg);
 }
 
 /* Groups */
@@ -459,7 +459,7 @@ body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
 
 /* Connections */
 .bp-admin-card.section-bp_friends h2:before {
-	content: "\f500";
+	background-image: url(../../images/admin/icons/fontawesome/solid/user-friends.svg);
 }
 
 /* Forums */
@@ -483,7 +483,7 @@ body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
 /* Search */
 .bp-admin-card.section-bp_search_settings_community h2:before,
 .bp-admin-card.section-bp_search_settings_post_types h2:before {
-	content: "\f002";
+	background-image: url(../../images/admin/icons/fontawesome/solid/search.svg);
 }
 
 .bp-admin-card.section-bp_search_settings_general h2:before {
