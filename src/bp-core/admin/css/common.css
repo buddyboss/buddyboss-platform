@@ -482,7 +482,7 @@ body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
 }
 
 .bp-admin-card.section-bp_search_settings_general h2:before {
-  content: "\f150";
+  background-image: url(../../images/admin/icons/fontawesome/solid/caret-square-down.svg);
 }
 
 .bp-admin-card.section-bp_search_settings_community table,
