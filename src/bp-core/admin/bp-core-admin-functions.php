@@ -457,7 +457,7 @@ function bp_core_settings_admin_tabs( $active_tab = '' ) {
 	$tabs_html    = '';
 	$idle_class   = '';
 	$active_class = 'current';
-	$active_tab   = isset( $_GET['tab'] ) ? $_GET['tab'] : 'buddypress';
+	$active_tab   = isset( $_GET['tab'] ) ? $_GET['tab'] : 'bp-general';
 
 	/**
 	 * Filters the admin tabs to be displayed.
@@ -638,7 +638,7 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_core_get_admin_active_tab() {
-	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'buddyboss' );
+	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-general' );
 	return isset($_GET['tab'])? $_GET['tab'] : $default_tab;
 }
 
@@ -1498,56 +1498,15 @@ add_filter( 'bp_active_components', 'bp_xprofile_always_active' );
  * @since BuddyBoss 1.0.0
  */
 function bp_member_type_custom_metaboxes() {
+	$screen = get_current_screen();
 	add_meta_box( 'bp-member-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_member_type_labels_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-permissions', __( 'Permissions', 'buddyboss' ), 'bp_member_type_permissions_metabox', null, 'normal', 'high' );
 	add_meta_box( 'bp-member-type-wp-role', __( 'WordPress Role', 'buddyboss' ), 'bp_member_type_wprole_metabox', null, 'normal', 'high' );
-	add_meta_box( 'bp-member-type-shortcode', __( 'Shortcode', 'buddyboss' ), 'bp_profile_shortcode_metabox', null, 'normal', 'high' );
-		add_meta_box( 'bp-member-type-key', __( 'Profile Type Key &mdash; REMOVE ME', 'buddyboss' ), 'bp_member_type_key_metabox', null, 'normal', 'high' );
-
-	if ( false === bp_restrict_group_creation() ) {
-
-		$get_all_registered_group_types = bp_get_active_group_types();
-
-		// Add meta box if group types is entered.
-		if ( true === bp_disable_group_type_creation() && isset( $get_all_registered_group_types ) && !empty( $get_all_registered_group_types ) ) {
-			add_meta_box( 'bp-member-type-group-create', __( 'Group Type Creation', 'buddyboss' ), 'bp_member_type_group_create_metabox', null, 'normal', 'high' );
-		}
-	}
-
-	if ( true === bp_disable_group_type_creation() && true === bp_enable_group_auto_join() && bp_is_active( 'invites' ) ) {
-
-		$get_all_registered_group_types = bp_get_active_group_types();
-
-		// Add meta box if group types is entered.
-		if ( true === bp_disable_group_type_creation() && isset( $get_all_registered_group_types ) && !empty( $get_all_registered_group_types ) ) {
-			add_meta_box( 'bp-member-type-group-auto-join', __( 'Group Type Membership Approval', 'buddyboss' ), 'bp_member_type_group_auto_join_meta_box', null, 'normal', 'high' );
-		}
-	}
-
-	// Metabox for the profile type invite.
-	if ( true === bp_disable_invite_member_type() && bp_is_active( 'invites' ) ) {
-		add_meta_box( 'bp-member-type-invite', __( 'Email Invites', 'buddyboss' ), 'bp_member_type_invite_meta_box', null, 'normal', 'high' );
+	if( 'add' != $screen->action ){
+		add_meta_box( 'bp-member-type-shortcode', __( 'Shortcode', 'buddyboss' ), 'bp_profile_shortcode_metabox', null, 'normal', 'high' );
 	}
 }
 add_action( 'add_meta_boxes_' . bp_get_member_type_post_type(), 'bp_member_type_custom_metaboxes' );
-
-/**
- * Generate profile type Key Meta box.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param WP_Post $post
- */
-function bp_member_type_key_metabox( $post ) {
-
-	$key = get_post_meta($post->ID, '_bp_member_type_key', true );
-	?>
-	<p>
-		<input type="text" name="bp-member-type[member_type_key]" value="<?php echo $key; ?>" placeholder="e.g. students" />
-	</p>
-	<p><?php _e( 'Profile Type Keys are used as internal identifiers. Lowercase alphanumeric characters, dashes and underscores are allowed.', 'buddyboss' ); ?></p>
-	<?php
-}
 
 /**
  * Generate profile type Label Meta box.
@@ -1606,39 +1565,224 @@ function bp_member_type_labels_metabox( $post ) {
 function bp_member_type_permissions_metabox( $post ) {
 
 	$meta = get_post_custom( $post->ID );
-	?>
-	<?php
-	$enable_filter = isset( $meta[ '_bp_member_type_enable_filter' ] ) ? $meta[ '_bp_member_type_enable_filter' ][ 0 ] : 0; //disabled by default
+	?><?php
+	$enable_filter = isset( $meta['_bp_member_type_enable_filter'] ) ? $meta['_bp_member_type_enable_filter'][0] : 0; //disabled by default
 	?>
 
 	<table class="widefat bp-post-type">
 		<thead>
-			<tr>
-				<th scope="col" colspan="2">
-					<?php _e( 'Members Directory', 'buddyboss' ); ?>
-				</th>
-			</tr>
+		<tr>
+			<th scope="col" colspan="2">
+				<?php _e( 'Members Directory', 'buddyboss' ); ?>
+			</th>
+		</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td colspan="2">
-					<input type='checkbox' name='bp-member-type[enable_filter]' value='1' <?php checked( $enable_filter, 1 ); ?> />
-					<?php _e( 'Display this profile type in "Types" filter in Members Directory', 'buddyboss' ); ?>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<?php
-					$enable_remove = isset( $meta[ '_bp_member_type_enable_remove' ] ) ? $meta[ '_bp_member_type_enable_remove' ][ 0 ] : 0; //enabled by default
-					?>
-					<input type='checkbox' name='bp-member-type[enable_remove]' value='1' <?php checked( $enable_remove, 1 ); ?> />
-					<?php _e( 'Hide all members of this type from Members Directory', 'buddyboss' ); ?>
-				</td>
-			</tr>
+		<tr>
+			<td colspan="2">
+				<input type='checkbox' name='bp-member-type[enable_filter]' value='1' <?php checked( $enable_filter,
+					1 ); ?> />
+				<?php _e( 'Display this profile type in "Types" filter in Members Directory', 'buddyboss' ); ?>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<?php
+				$enable_remove = isset( $meta['_bp_member_type_enable_remove'] ) ? $meta['_bp_member_type_enable_remove'][0] : 0; //enabled by default
+				?>
+				<input type='checkbox' name='bp-member-type[enable_remove]' value='1' <?php checked( $enable_remove,
+					1 ); ?> />
+				<?php _e( 'Hide all members of this type from Members Directory', 'buddyboss' ); ?>
+			</td>
+		</tr>
 		</tbody>
 	</table>
 
 	<?php
+	if ( false === bp_restrict_group_creation() ) {
+		$get_all_registered_group_types = bp_get_active_group_types();
+		// Add meta box if group types is entered.
+		if ( true === bp_disable_group_type_creation() && isset( $get_all_registered_group_types ) && ! empty( $get_all_registered_group_types ) ) {
+			// When profile types and group types are enabled, admins may restrict individual profile types from creating specified group types.
+			?>
+			<table class="widefat bp-post-type">
+				<thead>
+				<tr>
+					<th colspan="2">
+						<?php _e( 'Group Type Creation', 'buddyboss' ); ?>
+					</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td colspan="2">
+						<?php _e( 'Select which group types this profile type is allowed to create. (Leave all unchecked to allow creation of any group type.)',
+							'buddyboss' ); ?>
+					</td>
+				</tr>
+
+				<?php
+
+				$get_all_registered_group_types = bp_get_active_group_types();
+
+				$get_selected_group_types = get_post_meta( $post->ID,
+					'_bp_member_type_enabled_group_type_create',
+					true ) ?: [];
+
+				?>
+
+				<tr>
+					<td colspan="2">
+						<input class="group-type-checkboxes" type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( 'none' ); ?>' <?php checked( in_array( 'none',
+							$get_selected_group_types ) ); ?> /> <?php _e( '(None)', 'buddyboss' ); ?>
+					</td>
+				</tr>
+
+				<?php
+
+				foreach ( $get_all_registered_group_types as $group_type_id ) {
+
+					$group_type_key = get_post_meta( $group_type_id, '_bp_group_type_key', true );
+					$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];
+					?>
+
+					<tr>
+						<td colspan="2">
+							<input class="group-type-checkboxes" type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key,
+								$get_selected_group_types ) ); ?> /> <?php echo $group_type_label; ?>
+						</td>
+					</tr>
+
+				<?php } ?>
+
+				</tbody>
+			</table>
+			<script>
+				jQuery(document).ready(function () {
+					jQuery('#bp-member-type-permissions .inside .group-type-checkboxes').click(function () {
+						var checkValues = jQuery(this).val();
+						if ('none' === checkValues && jQuery(this).is(':checked')) {
+							jQuery('#bp-member-type-permissions .inside .group-type-checkboxes').attr('checked', false);
+							jQuery('#bp-member-type-permissions .inside .group-type-checkboxes').attr('disabled', true);
+							jQuery(this).attr('checked', true);
+							jQuery(this).attr('disabled', false);
+						} else {
+							jQuery('#bp-member-type-permissions .inside .group-type-checkboxes').attr('disabled', false);
+						}
+					});
+
+					jQuery("#bp-member-type-permissions .inside .group-type-checkboxes").each(function () {
+						var checkValues = jQuery(this).val();
+						if ('none' === checkValues && jQuery(this).is(':checked')) {
+							jQuery('#bp-member-type-permissions .inside .group-type-checkboxes').attr('checked', false);
+							jQuery('#bp-member-type-permissions .inside .group-type-checkboxes').attr('disabled', true);
+							jQuery(this).attr('checked', true);
+							jQuery(this).attr('disabled', false);
+							return false;
+						} else {
+							jQuery('#bp-member-type-permissions .inside .group-type-checkboxes').attr('disabled', false);
+						}
+					});
+				});
+			</script>
+			<?php
+		}
+	}
+
+	if ( true === bp_disable_group_type_creation() && true === bp_enable_group_auto_join() && bp_is_active( 'invites' ) ) {
+
+		$get_all_registered_group_types = bp_get_active_group_types();
+
+		// Add meta box if group types is entered.
+		if ( true === bp_disable_group_type_creation() && isset( $get_all_registered_group_types ) && ! empty( $get_all_registered_group_types ) ) {
+			?>
+			<table class="widefat bp-post-type">
+				<thead>
+				<tr>
+					<th colspan="2">
+						<?php _e( 'Group Type Membership Approval', 'buddyboss' ); ?>
+					</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td colspan="2">
+						<?php _e( 'Selected group types will automatically approve all membership requests from users of this profile type:', 'buddyboss' ); ?>
+					</td>
+				</tr>
+
+				<?php
+				$get_all_registered_group_types = bp_get_active_group_types();
+
+				$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_auto_join', true )?: [];
+
+				foreach ( $get_all_registered_group_types as $group_type_id ) {
+
+					$group_type_key = get_post_meta( $group_type_id, '_bp_group_type_key', true );
+					$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];
+					?>
+
+					<tr>
+						<td colspan="2">
+							<input type='checkbox' name='bp-group-type-auto-join[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> /> <?php echo $group_type_label; ?>
+						</td>
+					</tr>
+
+				<?php } ?>
+
+				</tbody>
+			</table>
+			<?php
+		}
+	}
+
+	// Metabox for the profile type invite.
+	if ( true === bp_disable_invite_member_type() && bp_is_active( 'invites' ) ) {
+
+		//Allow a specific profile type to send invitations to new members and specify their profile type upon registration.
+		$enable_invite = isset( $meta[ '_bp_member_type_enable_invite' ] ) ? $meta[ '_bp_member_type_enable_invite' ][ 0 ] : 1; //enabled by default
+		?>
+
+		<table class="widefat bp-post-type">
+			<thead>
+			<tr>
+				<th colspan="2">
+					<?php _e( 'Email Invites', 'buddyboss' ); ?>
+				</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td colspan="2">
+					<input type='checkbox' name='bp-member-type-enabled-invite' value='1' <?php checked( $enable_invite, 1 ); ?> /> <?php _e( 'Allow members to select the profile type that the invited recipient will be automatically assigned to on registration. If checked, select which of the below profile types can be assigned to the recipient:', 'buddyboss' ); ?>
+				</td>
+			</tr>
+
+			<?php
+
+			$get_all_registered_profile_types = bp_get_active_member_types();
+
+			$get_selected_profile_types = get_post_meta( $post->ID, '_bp_member_type_allowed_member_type_invite', true )?: [];
+
+			foreach ( $get_all_registered_profile_types as $member_type_id ) {
+
+				$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
+				?>
+
+				<tr>
+					<td colspan="2">
+						<input type='checkbox' name='bp-member-type-invite[]' value='<?php echo esc_attr( $member_type_id ); ?>' <?php checked( in_array( $member_type_id, $get_selected_profile_types ) ); ?> /> <?php echo $member_type_name; ?>
+					</td>
+				</tr>
+
+			<?php } ?>
+
+			</tbody>
+		</table>
+
+		<?php
+
+	}
 }
 
 /**
@@ -1654,23 +1798,9 @@ function bp_profile_shortcode_metabox( $post ) {
 
 	?>
 
-	<table class="widefat bp-post-type">
-		<tbody>
-			<tr>
-				<td colspan="2">
-					<?php _e( 'To display all users with this profile type on a dedicated page, add the below shortcode to any WordPress page.', 'buddyboss' ); ?>
-				</td>
-			</tr>
-			<tr>
-				<td style="width: 50%">
-					<input id='member-type-shortcode' value='<?php echo '[profile type="'. $key .'"]' ?>' style="width: 100%;">
-				</td>
-				<td>
-					<button class="copy-to-clipboard button"  data-clipboard-target="#member-type-shortcode"><?php _e('Copy to clipboard', 'buddyboss' ) ?></button>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+		<p><?php _e( 'To display all users with this profile type on a dedicated page, add the below shortcode to any WordPress page.', 'buddyboss' ); ?></p>
+		<code id="member-type-shortcode"><?php echo '[profile type="'. $key .'"]' ?></code>
+		<button class="copy-to-clipboard button"  data-clipboard-target="#member-type-shortcode"><?php _e('Copy to clipboard', 'buddyboss' ) ?></button>
 
 	<?php
 }
@@ -1732,201 +1862,6 @@ function bp_member_type_wprole_metabox( $post ) {
 }
 
 /**
- * When profile types and group types are enabled, admins may restrict individual profile types from creating specified group types.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $post
- */
-function bp_member_type_group_create_metabox( $post ) {
-
-	?>
-
-	<table class="widefat bp-post-type">
-		<thead>
-			<tr>
-				<th colspan="2">
-					<?php _e( 'Group Type Creation', 'buddyboss' ); ?>
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td colspan="2">
-					<?php _e( 'Select which group types this profile type is allowed to create. (Leave all unchecked to allow creation of any group type.)', 'buddyboss' ); ?>
-				</td>
-			</tr>
-
-		<?php
-
-		$get_all_registered_group_types = bp_get_active_group_types();
-
-		$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_create', true ) ?: [];
-
-		?>
-
-			<tr>
-				<td colspan="2">
-					<input class="group-type-checkboxes" type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( 'none' ); ?>' <?php checked( in_array( 'none', $get_selected_group_types ) ); ?> /> <?php _e( '(None)', 'buddyboss' ); ?>
-				</td>
-			</tr>
-
-		<?php
-
-		foreach ( $get_all_registered_group_types as $group_type_id ) {
-
-			$group_type_key = get_post_meta( $group_type_id, '_bp_group_type_key', true );
-			$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];
-			?>
-
-			<tr>
-				<td colspan="2">
-					<input class="group-type-checkboxes"  type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> /> <?php echo $group_type_label; ?>
-				</td>
-			</tr>
-
-		<?php } ?>
-
-		</tbody>
-	</table>
-	<script>
-		jQuery( document ).ready(function() {
-			jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').click(function () {
-				var checkValues = jQuery(this).val();
-				if ('none' === checkValues && jQuery(this).is(':checked')) {
-					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('checked', false);
-					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('disabled', true);
-					jQuery(this).attr('checked', true);
-					jQuery(this).attr('disabled', false);
-				} else {
-					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('disabled', false);
-				}
-			});
-
-			jQuery("#bp-member-type-group-create .inside .group-type-checkboxes").each(function () {
-				var checkValues = jQuery(this).val();
-				if ('none' === checkValues && jQuery(this).is(':checked')) {
-					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('checked', false);
-					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('disabled', true);
-					jQuery(this).attr('checked', true);
-					jQuery(this).attr('disabled', false);
-					return false;
-				} else {
-					jQuery('#bp-member-type-group-create .inside .group-type-checkboxes').attr('disabled', false);
-				}
-			});
-		});
-	</script>
-	<?php
-}
-
-/**
- * Admin option to enable specified members types to auto approve group membershup within specified group types.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $post
- */
-function bp_member_type_group_auto_join_meta_box( $post ) {
-	?>
-
-	<table class="widefat bp-post-type">
-		<thead>
-			<tr>
-				<th colspan="2">
-					<?php _e( 'Group Type Membership Approval', 'buddyboss' ); ?>
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td colspan="2">
-					<?php _e( 'Selected group types will automatically approve all membership requests from users of this profile type:', 'buddyboss' ); ?>
-				</td>
-			</tr>
-
-		<?php
-		$get_all_registered_group_types = bp_get_active_group_types();
-
-		$get_selected_group_types = get_post_meta( $post->ID, '_bp_member_type_enabled_group_type_auto_join', true )?: [];
-
-		foreach ( $get_all_registered_group_types as $group_type_id ) {
-
-		$group_type_key = get_post_meta( $group_type_id, '_bp_group_type_key', true );
-		$group_type_label = bp_groups_get_group_type_object( $group_type_key )->labels['name'];
-		?>
-
-			<tr>
-				<td colspan="2">
-					<input type='checkbox' name='bp-group-type-auto-join[]' value='<?php echo esc_attr( $group_type_key ); ?>' <?php checked( in_array( $group_type_key, $get_selected_group_types ) ); ?> /> <?php echo $group_type_label; ?>
-				</td>
-			</tr>
-
-		<?php } ?>
-
-		</tbody>
-	</table>
-
-	<?php
-}
-
-/**
- * Allow a specific profile type to send invitations to new members and specify their profile type upon registration.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $post
- */
-function bp_member_type_invite_meta_box( $post ) {
-
-
-	$meta = get_post_custom( $post->ID );
-	?>
-	<?php
-	$enable_invite = isset( $meta[ '_bp_member_type_enable_invite' ] ) ? $meta[ '_bp_member_type_enable_invite' ][ 0 ] : 1; //enabled by default
-	?>
-
-	<table class="widefat bp-post-type">
-		<thead>
-			<tr>
-				<th colspan="2">
-					<?php _e( 'Email Invites', 'buddyboss' ); ?>
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td colspan="2">
-					<input type='checkbox' name='bp-member-type-enabled-invite' value='1' <?php checked( $enable_invite, 1 ); ?> /> <?php _e( 'Allow members to select the profile type that the invited recipient will be automatically assigned to on registration. If checked, select which of the below profile types can be assigned to the recipient:', 'buddyboss' ); ?>
-				</td>
-			</tr>
-
-		<?php
-
-		$get_all_registered_profile_types = bp_get_active_member_types();
-
-		$get_selected_profile_types = get_post_meta( $post->ID, '_bp_member_type_allowed_member_type_invite', true )?: [];
-
-		foreach ( $get_all_registered_profile_types as $member_type_id ) {
-
-		$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
-		?>
-
-			<tr>
-				<td colspan="2">
-					<input type='checkbox' name='bp-member-type-invite[]' value='<?php echo esc_attr( $member_type_id ); ?>' <?php checked( in_array( $member_type_id, $get_selected_profile_types ) ); ?> /> <?php echo $member_type_name; ?>
-				</td>
-			</tr>
-
-		<?php } ?>
-
-		</tbody>
-	</table>
-
-	<?php
-}
-
-/**
  * Save profile type post data.
  *
  * @param $post_id
@@ -1962,7 +1897,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	$post_title = wp_kses( $_POST[ 'post_title' ], wp_kses_allowed_html( 'strip' ) );
 
 	// key
-	$key = isset( $data['member_type_key'] ) ? sanitize_key( $data['member_type_key'] )  : '';
+	$key = get_post_field( 'post_name', $post_id );
 
 	//for label
 	$label_name = isset( $data[ 'label_name' ] ) ? wp_kses( $data[ 'label_name' ], wp_kses_allowed_html( 'strip' ) ) : $post_title;
@@ -1978,7 +1913,13 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	$data[ 'wp_roles' ] = array_filter( $data[ 'wp_roles' ] ); // Remove empty value from wp_roles array
 	$wp_roles = isset( $data[ 'wp_roles' ] ) ? $data[ 'wp_roles' ] : '';
 
-	update_post_meta( $post_id, '_bp_member_type_key', $key );
+	$term = term_exists( sanitize_key( $key ), bp_get_member_type_tax_name() );
+	if ( 0 !== $term && null !== $term ) {
+		$digits = 3;
+		$unique = rand(pow(10, $digits-1), pow(10, $digits)-1);
+		$key = $key.$unique;
+	}
+	update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) );
 	update_post_meta( $post_id, '_bp_member_type_label_name', $label_name );
 	update_post_meta( $post_id, '_bp_member_type_label_singular_name', $singular_name );
 	update_post_meta( $post_id, '_bp_member_type_enable_filter', $enable_filter );
@@ -2234,8 +2175,15 @@ function bp_member_type_import_submenu_page() {
 			$post_id = wp_insert_post($my_post);
 
 			if ( $post_id ) {
+				$key = get_post_field( 'post_name', $post_id );
+				$term = term_exists( sanitize_key( $key ), bp_get_member_type_tax_name() );
+				if ( 0 !== $term && null !== $term ) {
 
-				update_post_meta( $post_id, '_bp_member_type_key', $sing_name );
+					$digits = 3;
+					$unique = rand(pow(10, $digits-1), pow(10, $digits)-1);
+					$key = $key.$unique;
+				}
+				update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) );
 				update_post_meta( $post_id, '_bp_member_type_label_name', $sing_name );
 				update_post_meta( $post_id, '_bp_member_type_label_singular_name', $sing_name );
 

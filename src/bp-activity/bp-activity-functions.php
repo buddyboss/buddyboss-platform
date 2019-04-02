@@ -2149,9 +2149,11 @@ function bp_activity_add( $args = '' ) {
 function bp_activity_post_update( $args = '' ) {
 
 	$r = wp_parse_args( $args, array(
-		'content'    => false,
-		'user_id'    => bp_loggedin_user_id(),
-		'error_type' => 'bool',
+		'content'       => false,
+		'user_id'       => bp_loggedin_user_id(),
+		'hide_sitewide' => false,
+		'type'          => 'activity_update',
+		'error_type'    => 'bool',
 	) );
 
 	if ( empty( $r['content'] ) || !strlen( trim( $r['content'] ) ) ) {
@@ -2186,12 +2188,13 @@ function bp_activity_post_update( $args = '' ) {
 
 	// Now write the values.
 	$activity_id = bp_activity_add( array(
-		'user_id'      => $r['user_id'],
-		'content'      => $add_content,
-		'primary_link' => $add_primary_link,
-		'component'    => buddypress()->activity->id,
-		'type'         => 'activity_update',
-		'error_type'   => $r['error_type']
+		'user_id'       => $r['user_id'],
+		'content'       => $add_content,
+		'primary_link'  => $add_primary_link,
+		'component'     => buddypress()->activity->id,
+		'type'          => $r['type'],
+		'hide_sitewide' => $r['hide_sitewide'],
+		'error_type'    => $r['error_type']
 	) );
 
 	// Bail on failure.
@@ -4182,7 +4185,7 @@ function bp_ajax_get_comments() {
 	}
 }
 
-add_action( 'wp_ajax_bp_get_comments', 'bp_ajax_get_comments' );
+//add_action( 'wp_ajax_bp_get_comments', 'bp_ajax_get_comments' );
 
 /**
  * Detect a change in post type status, and initiate an activity update if necessary.

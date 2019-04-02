@@ -97,8 +97,11 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Enable/Disable profile types.
 		$this->add_field( 'bp-member-type-enable-disable', __( 'Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_enable_disable'], 'intval' );
 
-		// Enable/Disable Display on profiles.
-		$this->add_field( 'bp-member-type-display-on-profile', __( 'Display Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_display_on_profile'], 'intval' );
+		// Profile Type enabled then display profile types.
+		if ( true === bp_member_type_enable_disable() ) {
+			// Enable/Disable Display on profiles.
+			$this->add_field( 'bp-member-type-display-on-profile',__( 'Display Profile Types', 'buddyboss' ),[ $this, 'bp_admin_setting_callback_member_type_display_on_profile' ],'intval' );
+		}
 
 		// Section for profile search.
 		$this->add_section( 'bp_profile_search_settings', __( 'Profile Search', 'buddyboss' ) );

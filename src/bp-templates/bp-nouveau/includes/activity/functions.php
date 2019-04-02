@@ -26,7 +26,7 @@ function bp_nouveau_activity_register_scripts( $scripts = array() ) {
 	return array_merge( $scripts, array(
 		'bp-nouveau-activity' => array(
 			'file'         => 'js/buddypress-activity%s.js',
-			'dependencies' => array( 'bp-nouveau' ),
+			'dependencies' => array( 'bp-nouveau', 'wp-util' ),
 			'footer'       => true,
 		),
 		'bp-nouveau-activity-post-form' => array(
@@ -96,6 +96,10 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 				$user_displayname
 			),
 		) );
+	}
+
+	if ( bp_is_activity_autoload_active() ) {
+		$activity_params['autoload'] = true;
 	}
 
 	if ( bp_is_activity_link_preview_active() ) {
@@ -185,6 +189,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'cancelButton'        => __( 'Cancel', 'buddyboss' ),
 		'commentLabel'        => __( '%d Comment', 'buddyboss' ),
 		'commentsLabel'       => __( '%d Comments', 'buddyboss' ),
+		'loadingMore'         => __( 'Loading...', 'buddyboss' ),
 	);
 
     if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {

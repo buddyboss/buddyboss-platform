@@ -583,11 +583,13 @@ function bp_nouveau_loop_classes() {
 				if ( isset( $grid_classes[ $layout_prefs ] ) && ! $list ) {
 					$classes = array_merge( $classes, array(
 						'grid',
-						$grid_classes[ $layout_prefs ],
+                        'four',/*Remove customizer number of columns in grid view*/
+						//$grid_classes[ $layout_prefs ],/*Remove customizer number of columns in grid view*/
 					) );
 				} else {
 					$classes = array_merge( $classes, array(
-						$grid_classes[ $layout_prefs ],
+                        'four',/*Remove customizer number of columns in grid view*/
+						//$grid_classes[ $layout_prefs ],/*Remove customizer number of columns in grid view*/
 					) );
                 }
 

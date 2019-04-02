@@ -1,10 +1,6 @@
 // BP Whats new form handles user updates to groups or profiles
 // @version 3.0.0
 
-.activity-update-form {
-	padding: 10px 10px 0;
-}
-
 .item-body {
 
 	.activity-update-form {
@@ -19,30 +15,42 @@
 .activity-update-form {
 	border: 1px solid $bp-border-dark;
 
-	@include box-shadow( inset 0 0 6px #eee);
+	@include box-shadow(inset 0 0 6px #eee);
 
 	margin: $marg-med 0;
 
 	#whats-new-avatar {
-		margin: $marg-sml 0;
-		text-align: center;
+		border-bottom: 1px solid #ddd;
+		padding: 10px;
+		margin: 0;
 
 		img {
 			box-shadow: none;
 			display: inline-block;
+			margin-right: 10px;
 		}
+	}
+
+	.activity-post-avatar {
+		display: inline-block;
 	}
 
 	// these ID's need replacing with this!
 	//.content-wrap { // #whats-new-content
 
+	#whats-new {
+		outline: none;
+		box-shadow: none;
+		min-height: 80px;
+		padding: 10px;
+	}
+
 	#whats-new-content {
-		padding: 0 0 $marg-lrg 0;
+		padding: 0;
 	}
 
 	#whats-new-attachments {
-
-		margin-left: 8.5%;
+		padding: 10px;
 
 		.activity-attached-gif-container {
 			position: relative;
@@ -79,7 +87,6 @@
 	}
 
 	#whats-new-toolbar {
-		margin-left: 8.5%;
 		position: relative;
 		display: -webkit-box;
 		display: -ms-flexbox;
@@ -87,6 +94,7 @@
 		-webkit-box-align: center;
 		-ms-flex-align: center;
 		align-items: center;
+		padding: 10px;
 
 		.post-elements-buttons-item {
 			margin-right: 15px;
@@ -191,30 +199,38 @@
 
 	#whats-new-textarea {
 
-		textarea {
-			background: $textarea-bck;
+		[contenteditable="true"] {
 
-			@include box-model();
-			color: #333;
-			font-family: inherit;
-			font-size: medium;
-			height: 2.2em;
-			line-height: 1.4;
-			padding: 6px;
-			width: 100%;
+			&:empty:before {
+				content: attr(placeholder);
+				color: #bbb;
+				display: block; /* For Firefox */
+			}
 
-			&:focus {
+			img.emojioneemoji {
+				width: 1.2em;
+				position: relative;
 
-				@include box-shadow(0 0 6px 0 $med-light-grey);
+				&:after {
+					content: ">";
+					display: block;
+					width: 1rem;
+					height: 1rem;
+					position: absolute;
+					bottom: 0;
+					right: -1.5rem;
+				}
 			}
 		}
 	}
 
 	#activity-form-submit-wrapper {
+		border-top: 1px solid #ddd;
 		display: flex;
 		justify-content: space-between;
 		flex-flow: row wrap;
 		align-items: center;
+		padding: 0 10px;
 	}
 
 	#whats-new-post-in-box {
@@ -268,36 +284,9 @@
 		input {
 
 			@include font-size(14);
-			line-height: inherit;
-			margin-bottom: $marg-sml;
-			margin-right: $marg-sml;
-			padding: 0.2em 0;
-			text-align: center;
-			width: 100%;
+			line-height: 1;
 		}
 	}
 
-	@include medium-up() {
-
-		#whats-new-avatar {
-			display: block;
-			float: left;
-			margin: 0;
-		}
-
-		#whats-new-content,
-		#whats-new-elements,
-		#activity-form-submit-wrapper {
-			margin-left: 8.5%;
-		}
-
-		#whats-new-submit {
-
-			input {
-				margin-bottom: 0;
-				margin-right: $marg-sml;
-				width: 8em;
-			}
-		}
-	} // close @media
+	// close @media
 }

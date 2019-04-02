@@ -608,10 +608,14 @@ body.users_page_bp-signups td.count_sent {
 	width: 15%;
 }
 
-#bp-activities-form #the-comment-list td.comment img {
-	max-width: 300px;
-	display: block;
-	margin: 0.6em 0;
+#bp-activities-form #the-comment-list td.comment {
+
+	img,
+	video {
+		max-width: 300px;
+		display: block;
+		margin: 0.6em 0;
+	}
 }
 
 /*
@@ -716,6 +720,14 @@ body.post-type-bp-group-type .postbox .inside {
 	padding: 0 22px 22px;
 }
 
+body.post-type-bp-member-type #member-type-shortcode,
+body.post-type-bp-group-type #group-type-shortcode {
+	line-height: 1;
+	margin-right: 10px;
+	padding: 7px;
+	display: inline-block;
+}
+
 table.bp-post-type {
 	background: #f9f9f9;
 	margin-top: 22px;
@@ -731,9 +743,10 @@ table.bp-post-type {
 			width: 23%;
 		}
 
-		td input[type=checkbox] {
+		td input[type="checkbox"] {
 			margin-right: 8px;
-		}	
+		}
+
 	}
 }
 

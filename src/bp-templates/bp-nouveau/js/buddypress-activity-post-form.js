@@ -27,7 +27,7 @@ window.bp = window.bp || {};
 			this.ActivityObjects = new bp.Collections.ActivityObjects();
 			this.buttons         = new Backbone.Collection();
 
-			if ( typeof window.Dropzone !== 'undefined' ) {
+			if ( !_.isUndefined( window.Dropzone ) ) {
 				this.dropzoneView();
 			}
 
@@ -65,6 +65,14 @@ window.bp = window.bp || {};
 				uploadMultiple: false,
 				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
 			};
+		}
+	};
+
+	bp.Backbone.View.prototype.close = function(){
+		this.remove();
+		this.unbind();
+		if (this.onClose){
+			this.onClose();
 		}
 	};
 
@@ -200,23 +208,39 @@ window.bp = window.bp || {};
 
 			this.model.set( 'media', this.media );
 
-			document.addEventListener( 'activity_media_open', this.open_media_uploader.bind(this) );
-			//document.addEventListener( 'activity_media_close', this.close_media_uploader.bind(this) );
+			document.addEventListener( 'activity_media_toggle', this.toggle_media_uploader.bind(this) );
+			document.addEventListener( 'activity_media_close', this.destroy.bind(this) );
 		},
 
-		close_media_uploader: function() {
+		toggle_media_uploader: function() {
+			var self = this;
+			if ( self.$el.find('#activity-post-media-uploader').hasClass('open') ) {
+				self.destroy();
+			} else {
+				self.open_media_uploader();
+			}
+		},
+
+		destroy: function() {
 			var self = this;
 			self.media = [];
-			if ( bp.Nouveau.Activity.postForm.dropzone != null ) {
+			if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone ) ) {
 				bp.Nouveau.Activity.postForm.dropzone.destroy();
+				self.$el.find('#activity-post-media-uploader').html('');
 			}
-			self.$el.find('#activity-post-media-uploader').addClass('open').removeClass('closed');
+			self.$el.find('#activity-post-media-uploader').removeClass('open').addClass('closed');
+
+			document.removeEventListener( 'activity_media_toggle', this.toggle_media_uploader.bind(this) );
+			document.removeEventListener( 'activity_media_close', this.destroy.bind(this) );
 		},
 
 		open_media_uploader: function() {
 			var self = this;
 
-			self.close_media_uploader();
+			if ( self.$el.find('#activity-post-media-uploader').hasClass('open') ) {
+				return false;
+			}
+			self.destroy();
 
 			bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone('#activity-post-media-uploader', bp.Nouveau.Activity.postForm.dropzone_options );
 
@@ -238,13 +262,15 @@ window.bp = window.bp || {};
 			bp.Nouveau.Activity.postForm.dropzone.on('removedfile', function(file) {
 				if ( self.media.length ) {
 					for ( var i in self.media ) {
-						if ( file.id == self.media[i].id ) {
+						if ( file.id === self.media[i].id ) {
 							self.media.splice( i, 1 );
 							self.model.set( 'media', self.media );
 						}
 					}
 				}
 			});
+
+			self.$el.find('#activity-post-media-uploader').addClass('open').removeClass('closed');
 		}
 
 	});
@@ -264,7 +290,10 @@ window.bp = window.bp || {};
 		},
 
 		initialize: function() {
+			this.model.set( 'link_scrapping', false );
 			this.listenTo( this.model, 'change', this.render );
+			document.addEventListener( 'activity_link_preview_open', this.open.bind(this) );
+			document.addEventListener( 'activity_link_preview_close', this.destroy.bind(this) );
 		},
 
 		render: function() {
@@ -288,6 +317,12 @@ window.bp = window.bp || {};
 			}
 		},
 
+		open: function(e) {
+			e.preventDefault();
+			this.model.set( 'link_scrapping', true );
+			this.$el.addClass('open');
+		},
+
 		close: function(e) {
 			e.preventDefault();
 			this.model.set({
@@ -297,7 +332,9 @@ window.bp = window.bp || {};
 		},
 
 		destroy: function( e ) {
-			e.preventDefault();
+			if ( !_.isUndefined(e) ) {
+				e.preventDefault();
+			}
 			// Set default values
 			this.model.set({
 				link_success: false,
@@ -310,6 +347,8 @@ window.bp = window.bp || {};
 				link_description: '',
 				link_url: ''
 			});
+			document.removeEventListener( 'activity_link_preview_open', this.open.bind(this) );
+			document.removeEventListener( 'activity_link_preview_close', this.destroy.bind(this) );
 		},
 
 		updateLinkPreview: function( event ) {
@@ -419,6 +458,7 @@ window.bp = window.bp || {};
 
 		initialize: function() {
 			this.listenTo( this.model, 'change', this.render );
+			document.addEventListener( 'activity_gif_close', this.destroy.bind(this) );
 		},
 
 		render: function() {
@@ -435,12 +475,13 @@ window.bp = window.bp || {};
 			return this;
 		},
 
-		handleRemove: function() {
+		destroy: function() {
 			this.model.set('gif_data', {} );
 			this.el.style.backgroundImage = '';
 			this.el.style.backgroundSize = '';
 			this.el.style.height = '0px';
 			this.el.style.width = '0px';
+			document.removeEventListener( 'activity_gif_close', this.destroy.bind(this) );
 		}
 	} );
 
@@ -650,7 +691,7 @@ window.bp = window.bp || {};
 
 	// The content of the activity
 	bp.Views.WhatsNew = bp.View.extend( {
-		tagName   : 'textarea',
+		tagName   : 'div',
 		className : 'bp-suggestions',
 		id        : 'whats-new',
 
@@ -659,7 +700,8 @@ window.bp = window.bp || {};
 			cols         : '50',
 			rows         : '4',
 			placeholder  : BP_Nouveau.activity.strings.whatsnewPlaceholder,
-			'aria-label' : BP_Nouveau.activity.strings.whatsnewLabel
+			'aria-label' : BP_Nouveau.activity.strings.whatsnewLabel,
+			contenteditable: true
 		},
 
 		initialize: function() {
@@ -669,6 +711,13 @@ window.bp = window.bp || {};
 		},
 
 		adjustContent: function() {
+
+			// this.$el.toTextarea({
+			// 	allowHTML: true,//allow HTML formatting with CTRL+b, CTRL+i, etc.
+			// 	allowImg: true,//allow drag and drop images
+			// 	pastePlainText: false,//paste text without styling as source
+			// 	placeholder: false
+			// });
 
 			// First adjust layout
 			this.$el.css( {
@@ -690,7 +739,7 @@ window.bp = window.bp || {};
 				return;
 			}
 
-			this.$el.val( activity.get( 'content' ) );
+			this.$el.html( activity.get( 'content' ) );
 		}
 	} );
 
@@ -942,51 +991,88 @@ window.bp = window.bp || {};
 		},
 
 		initialize: function() {
-			document.addEventListener( 'keydown', _.bind( this.closeGifDropdownOnEsc, this ) );
-			$( document ).on( 'click', _.bind( this.closeDropdowns, this ) );
+			document.addEventListener( 'keydown', _.bind( this.closePickersOnEsc, this ) );
+			$( document ).on( 'click', _.bind( this.closePickersOnClick, this ) );
 		},
 
 		render: function() {
 			this.$el.html(this.template(this.model.toJSON()));
-			this.$searchDropdownEl = this.$el.find('.gif-media-search-dropdown');
+			this.$gifPickerEl = this.$el.find('.gif-media-search-dropdown');
+			this.$emojiPickerEl = $('#whats-new');
 			return this;
 		},
 
 		toggleURLInput: function( e ) {
 			e.preventDefault();
-			this.model.set( 'link_scrapping', !this.model.get( 'link_scrapping' ) );
+			var event;
+			if ( this.model.get('link_scrapping') ) {
+				event = new Event('activity_link_preview_close');
+			} else {
+				event = new Event('activity_link_preview_open');
+			}
+			document.dispatchEvent(event);
+			this.closeMediaSelector();
+			this.closeGifSelector();
+		},
+
+		closeURLInput: function() {
+			var event = new Event('activity_link_preview_close');
+			document.dispatchEvent(event);
 		},
 
 		toggleGifSelector: function( e ) {
 			e.preventDefault();
-			if ( this.$searchDropdownEl.is(':empty') ) {
+			if ( this.$gifPickerEl.is(':empty') ) {
 				var gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown({model: this.model});
-				this.$searchDropdownEl.html( gifMediaSearchDropdownView.render().el );
+				this.$gifPickerEl.html( gifMediaSearchDropdownView.render().el );
 			}
-			this.$searchDropdownEl.toggleClass('open');
+			this.$gifPickerEl.toggleClass('open');
+			this.closeURLInput();
+			this.closeMediaSelector();
+		},
+
+		closeGifSelector: function() {
+			var event = new Event('activity_gif_close');
+			document.dispatchEvent(event);
 		},
 
 		toggleMediaSelector: function( e ) {
 			e.preventDefault();
+			var event = new Event('activity_media_toggle');
+			document.dispatchEvent(event);
+			this.closeURLInput();
+			this.closeGifSelector();
+		},
 
-			var event = new Event('activity_media_open');
+		closeMediaSelector: function() {
+			var event = new Event('activity_media_close');
 			document.dispatchEvent(event);
 		},
 
-		closeGifDropdownOnEsc: function( event ) {
-			var key = event.key; // const {key} = event; in ES6+
-			if ( key === 'Escape' ) {
-				this.$searchDropdownEl.removeClass('open');
+		closePickersOnEsc: function( event ) {
+			if ( event.key === 'Escape' || event.keyCode === 27 ) {
+				if (!_.isUndefined(BP_Nouveau.activity.params.gif_api_key)) {
+					this.$gifPickerEl.removeClass('open');
+				}
+
+				if (!_.isUndefined(BP_Nouveau.activity.params.emoji)) {
+					this.$emojiPickerEl.data('emojioneArea').hidePicker();
+				}
 			}
 		},
 
-		closeDropdowns: function( event ) {
-			if (!$(event.target).closest('.post-gif').length) {
-				this.$searchDropdownEl.removeClass('open');
+		closePickersOnClick: function( event ) {
+			var $targetEl = $(event.target);
+
+			if (!_.isUndefined(BP_Nouveau.activity.params.gif_api_key) &&
+				!$targetEl.closest('.post-gif').length) {
+				this.$gifPickerEl.removeClass('open');
 			}
 
-			if (!$(event.target).closest('.post-emoji').length) {
-			//	$('#whats-new').data('emojioneArea').hidePicker();
+			if (!_.isUndefined(BP_Nouveau.activity.params.emoji) &&
+				!$targetEl.closest('.post-emoji').length &&
+				!$targetEl.is('.emojioneemoji,.emojibtn')) {
+				this.$emojiPickerEl.data('emojioneArea').hidePicker();
 			}
 		}
 	} );
@@ -994,16 +1080,33 @@ window.bp = window.bp || {};
 	bp.Views.ActivityAttachments = bp.View.extend( {
 		tagName: 'div',
 		id: 'whats-new-attachments',
+		activityLinkPreview: null,
+		activityAttachedGifPreview: null,
+		activityMedia: null,
 		initialize: function() {
-			if ( typeof window.Dropzone !== 'undefined' ) {
-				this.views.add(new bp.Views.ActivityMedia({model: this.model}));
+			if ( !_.isUndefined( window.Dropzone ) ) {
+				this.activityMedia = new bp.Views.ActivityMedia({model: this.model});
+				this.views.add(this.activityMedia);
 			}
 
 			if ( !_.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
-				this.views.add( new bp.Views.ActivityLinkPreview( { model: this.model } ) );
+				this.activityLinkPreview = new bp.Views.ActivityLinkPreview( { model: this.model } );
+				this.views.add(this.activityLinkPreview);
 			}
 
-			this.views.add( new bp.Views.ActivityAttachedGifPreview( { model: this.model } ) );
+			this.activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview( { model: this.model } );
+			this.views.add( this.activityAttachedGifPreview );
+		},
+		onClose: function() {
+			if( ! _.isNull( this.activityLinkPreview ) ) {
+				this.activityLinkPreview.destroy();
+			}
+			if( ! _.isNull( this.activityAttachedGifPreview ) ) {
+				this.activityAttachedGifPreview.destroy();
+			}
+			if( ! _.isNull( this.activityMedia ) ) {
+				this.activityMedia.destroy();
+			}
 		}
 	});
 
@@ -1242,7 +1345,7 @@ window.bp = window.bp || {};
 					container: '.post-emoji',
 					autocomplete: false,
 					pickerPosition: 'bottom',
-					hidePickerOnBlur: true,
+					hidePickerOnBlur: false,
 					useInternalCDN: false
 				});
 			}
@@ -1252,7 +1355,7 @@ window.bp = window.bp || {};
 		resetForm: function() {
 			_.each( this.views._views[''], function( view, index ) {
 				if ( index > 1 ) {
-					view.remove();
+					view.close();
 				}
 			} );
 
@@ -1299,9 +1402,7 @@ window.bp = window.bp || {};
 			// Set the content and meta
 			_.each( this.$el.serializeArray(), function( pair ) {
 				pair.name = pair.name.replace( '[]', '' );
-				if ( 'whats-new' === pair.name ) {
-					self.model.set( 'content', pair.value );
-				} else if ( -1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in'], pair.name ) ) {
+				 if ( -1 === _.indexOf( ['aw-whats-new-submit', 'whats-new-post-in'], pair.name ) ) {
 					if ( _.isUndefined( meta[ pair.name ] ) ) {
 						meta[ pair.name ] = pair.value;
 					} else {
@@ -1313,6 +1414,18 @@ window.bp = window.bp || {};
 					}
 				}
 			} );
+
+			// Post content
+			var $whatsNew = this.$el.find('#whats-new');
+
+			// Transform emoji image into emoji unicode
+			$whatsNew.find('img.emojioneemoji').replaceWith(function () {
+				return this.alt;
+			});
+
+			// Add valid line breaks
+			var content = $whatsNew[0].innerHTML.replace(/<div>/gi,'\n').replace(/<\/div>/gi,'');
+			self.model.set( 'content', content, { silent: true } );
 
 			// Silently add meta
 			this.model.set( meta, { silent: true } );

@@ -919,7 +919,7 @@ ul.bb-albums-list {
 	.bs-cover-wrap:after {
 		content: " ";
 		position: absolute;
-		background: #000000;
+		background: #000;
 		background-image: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.01) 70%, rgba(0, 0, 0, 0) 100%);
 		border-radius: 3px;
 		width: 100%;
@@ -1107,4 +1107,29 @@ ul.bb-albums-list {
 
 .bb-add-media {
 	display: inline-block;
+}
+
+div.emojionearea .emojionearea-button > div.emojionearea-button-open {
+	opacity: 0;
+}
+
+div.emojionearea.emojionearea-standalone .emojionearea-button > div {
+	top: 0;
+}
+
+.post-emoji .emojionearea .emojionearea-button {
+	opacity: 1;
+	position: static;
+}
+
+.emojionearea .emojionearea-button:before {
+	content: "\263A";
+	font-size: 24px;
+	position: absolute;
+	top: 0;
+	line-height: 1;
+}
+
+.emojionearea.emojionearea-standalone {
+	vertical-align: top;
 }

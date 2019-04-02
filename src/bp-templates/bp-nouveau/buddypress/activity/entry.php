@@ -53,6 +53,8 @@ bp_nouveau_activity_hook( 'before', 'entry' ); ?>
 
 		<div class="activity-comments">
 
+			<?php bp_activity_comments(); ?>
+
 			<?php bp_nouveau_activity_comment_form(); ?>
 
 		</div>

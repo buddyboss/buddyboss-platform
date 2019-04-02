@@ -78,7 +78,7 @@
 <script type="text/html" id="tmpl-gif-media-search-dropdown">
 	<div class="gif-search-content">
 		<div class="gif-search-query">
-			<input type="text" class="search-query-input" />
+			<input type="search" placeholder="<?php _e('Search GIF', 'buddyboss'); ?>" class="search-query-input" />
 			<span class="search-icon"></span>
 		</div>
 		<div class="gif-search-results" id="gif-search-results">
@@ -90,34 +90,35 @@
 
 <script type="text/html" id="tmpl-whats-new-toolbar">
 	<?php if ( bp_is_active( 'media' ) ): ?>
-        <span class="post-elements-buttons-item post-media">
-				<a href="#" id="activity-media-button" class="toolbar-button">
-					<span class="dashicons dashicons-admin-media"></span>
-				</a>
-			</span>
+        <div class="post-elements-buttons-item post-media">
+			<a href="#" id="activity-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip="<?php _e('Attach a photo', 'buddyboss'); ?>">
+				<span class="dashicons dashicons-admin-media"></span>
+			</a>
+		</div>
 	<?php endif; ?>
 	<?php if ( bp_is_activity_link_preview_active() ): ?>
-        <span class="post-elements-buttons-item post-link">
-				<a href="#" id="activity-link-preview-button" class="toolbar-button">
-					<span class="dashicons dashicons-admin-links"></span>
-				</a>
-			</span>
+        <div class="post-elements-buttons-item post-link">
+			<a href="#" id="activity-link-preview-button" class="toolbar-button bp-tooltip" data-bp-tooltip="<?php _e('Post a link', 'buddyboss'); ?>">
+				<span class="dashicons dashicons-admin-links"></span>
+			</a>
+		</div>
 	<?php endif; ?>
 	<?php if ( bp_is_activity_gif_active() ): ?>
-        <span class="post-elements-buttons-item post-gif">
+        <div class="post-elements-buttons-item post-gif">
 			<div class="gif-media-search">
-				<a href="#" id="activity-gif-button" class="toolbar-button"><span class="dashicons dashicons-smiley"></span></a>
+				<a href="#" id="activity-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip="<?php _e('Post a GIF', 'buddyboss'); ?>"><span class="dashicons dashicons-smiley"></span></a>
 				<div class="gif-media-search-dropdown"></div>
 			</div>
-		</span>
+		</div>
 	<?php endif; ?>
-	<span class="post-elements-buttons-item post-emoji"></span>
+	<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip="<?php _e('Insert an emoji', 'buddyboss'); ?>"></div>
 </script>
 
 <script type="text/html" id="tmpl-activity-post-form-avatar">
 	<# if ( data.display_avatar ) { #>
-		<a href="{{data.user_domain}}">
+		<a class="activity-post-avatar" href="{{data.user_domain}}">
 			<img src="{{data.avatar_url}}" class="avatar user-{{data.user_id}}-avatar avatar-{{data.avatar_width}} photo" width="{{data.avatar_width}}" height="{{data.avatar_width}}" alt="{{data.avatar_alt}}" />
+			<span class="user-name">{{data.user_display_name}}</span>
 		</a>
 	<# } #>
 </script>
