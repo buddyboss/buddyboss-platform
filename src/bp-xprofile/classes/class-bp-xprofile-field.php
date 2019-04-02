@@ -1213,7 +1213,7 @@ class BP_XProfile_Field {
 
 		// Add New
 		if ( empty( $this->id ) ) {
-			$title  = __( 'Add New Field', 'buddyboss' );
+			$title  = __( 'Add New Module', 'buddyboss' );
 			$button	= __( 'Save',          'buddyboss' );
 			$action = add_query_arg( array(
 				'page'     => 'bp-profile-setup',
@@ -1235,7 +1235,7 @@ class BP_XProfile_Field {
 
 		// Edit
 		} else {
-			$title  = __( 'Edit Field', 'buddyboss' );
+			$title  = __( 'Edit Module', 'buddyboss' );
 			$button	= __( 'Update',     'buddyboss' );
 			$action = add_query_arg( array(
 				'page'     => 'bp-profile-setup',

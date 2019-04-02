@@ -1,6 +1,6 @@
 {
     "name": "buddypress/buddypress",
-    "description": "BuddyPress adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!",
+    "description": "BuddyPress adds community features to WordPress. Courses, Activity Feeds, Direct Messaging, Notifications, and more!",
     "type": "wordpress-plugin",
     "keywords": ["activity", "community", "friends", "groups", "messaging", "notifications", "profiles", "social network"],
     "homepage": "https://buddypress.org",

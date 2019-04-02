@@ -11,7 +11,7 @@
 /**
  * Plugin Name: BuddyBoss Platform
  * Plugin URI:  https://buddyboss.com/
- * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
+ * Description: The BuddyBoss Platform adds community features to WordPress. Courses, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
  * Version:     1.0.0

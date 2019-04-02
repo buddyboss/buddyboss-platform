@@ -1,6 +1,6 @@
 {
     "name": "buddyboss/integrations",
-    "description": "BuddyPress adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!",
+    "description": "BuddyPress adds community features to WordPress. Courses, Activity Feeds, Direct Messaging, Notifications, and more!",
     "type": "wordpress-plugin",
     "keywords": ["membership", "all-in-one", "mobile app", "In App Purchase"],
     "homepage": "https://buddyboss.com",

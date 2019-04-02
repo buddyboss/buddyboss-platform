@@ -26,8 +26,8 @@ function xprofile_add_admin_menu() {
 
 	add_submenu_page(
 		'buddyboss-platform',
-		__( 'Profiles', 'buddyboss' ),
-		__( 'Profiles', 'buddyboss' ),
+		__( 'Courses', 'buddyboss' ),
+		__( 'Courses', 'buddyboss' ),
 		'bp_moderate',
 		'bp-profile-setup',
 		'xprofile_admin'
@@ -153,16 +153,16 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 			$users_tab = count( bp_core_get_users_admin_tabs() );
 			if ( $users_tab > 1 ) {
 				?>
-				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddyboss' ) ); ?></h2><?php
+				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Courses', 'buddyboss' ) ); ?></h2><?php
 			}
 		?>
 	</div>
 	<div class="wrap">
 		<?php if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) : ?>
 
-			<h1 class="wp-heading-inline"><?php _e( 'Profile Fields', 'buddyboss'); ?></h1>
+			<h1 class="wp-heading-inline"><?php _e( 'Mathematics 101', 'buddyboss'); ?></h1>
 
-				<a id="add_group" class="page-title-action" href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'New Field Set', 'buddyboss' ); ?></a>
+				<a id="add_group" class="page-title-action" href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'New Section', 'buddyboss' ); ?></a>
 
 			<hr class="wp-header-end">
 
@@ -170,7 +170,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
 			<h1>
 				<?php _e( 'Profile Fields', 'buddyboss'); ?>
-				<a id="add_group" class="add-new-h2" href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'New Field Set', 'buddyboss' ); ?></a>
+				<a id="add_group" class="add-new-h2" href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'New Section', 'buddyboss' ); ?></a>
 			</h1>
 
 		<?php endif; ?>
@@ -247,13 +247,13 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 					<div id="tabs-<?php echo esc_attr( $group->id ); ?>" class="tab-wrapper">
 						<div class="tab-toolbar">
 							<div class="tab-toolbar-left">
-								<a class="button-primary" href="<?php echo esc_url( $add_field_url ); ?>"><?php _e( 'Add New Field', 'buddyboss' ); ?></a>
-								<a class="button edit" href="<?php echo esc_url( $edit_group_url ); ?>"><?php _e( 'Edit Field Set', 'buddyboss' ); ?></a>
+								<a class="button-primary" href="<?php echo esc_url( $add_field_url ); ?>"><?php _e( 'Add New Module', 'buddyboss' ); ?></a>
+								<a class="button edit" href="<?php echo esc_url( $edit_group_url ); ?>"><?php _e( 'Edit Section', 'buddyboss' ); ?></a>
 
 								<?php if ( $group->can_delete ) : ?>
 
 									<div class="delete-button">
-										<a class="confirm submitdelete deletion ajax-option-delete delete-profile-field-group" href="<?php echo esc_url( $delete_group_url ); ?>"><?php _e( 'Delete Field Set', 'buddyboss' ); ?></a>
+										<a class="confirm submitdelete deletion ajax-option-delete delete-profile-field-group" href="<?php echo esc_url( $delete_group_url ); ?>"><?php _e( 'Delete Section', 'buddyboss' ); ?></a>
 									</div>
 
 								<?php endif; ?>
@@ -286,7 +286,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 							<legend class="screen-reader-text"><?php
 							/** This filter is documented in bp-xprofile/bp-xprofile-template.php */
 							/* translators: accessibility text */
-							printf( esc_html__( 'Fields for "%s" Field Set', 'buddyboss' ), apply_filters( 'bp_get_the_profile_group_name', $group->name ) );
+							printf( esc_html__( 'Fields for "%s" Section', 'buddyboss' ), apply_filters( 'bp_get_the_profile_group_name', $group->name ) );
 							?></legend>
 
 							<?php
@@ -329,7 +329,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 				<?php endforeach; else : ?>
 
 					<div id="message" class="error"><p><?php _e( 'You have no field sets.', 'buddyboss' ); ?></p></div>
-					<p><a href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'New Field Set', 'buddyboss' ); ?></a></p>
+					<p><a href="<?php echo esc_url( $add_group_url ); ?>"><?php _e( 'New Section', 'buddyboss' ); ?></a></p>
 
 				<?php endif; ?>
 

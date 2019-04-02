@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 	public function initialize() {
-		$this->tab_label = __( 'Profiles', 'buddyboss' );
+		$this->tab_label = __( 'Courses', 'buddyboss' );
 		$this->tab_name  = 'bp-xprofile';
 		$this->tab_order = 10;
 	}

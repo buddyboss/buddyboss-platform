@@ -3496,7 +3496,7 @@ msgid "Not recently active"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2452
-msgid "Member Profiles"
+msgid "Courses"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2454
@@ -16815,7 +16815,7 @@ msgstr ""
 #: bp-xprofile/bp-xprofile-admin.php:165 bp-xprofile/bp-xprofile-admin.php:173
 #: bp-xprofile/bp-xprofile-admin.php:332
 #: bp-xprofile/classes/class-bp-xprofile-group.php:793
-msgid "New Field Set"
+msgid "New Section"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:207 bp-xprofile/bp-xprofile-admin.php:756
@@ -16830,16 +16830,16 @@ msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:251
 #: bp-xprofile/classes/class-bp-xprofile-group.php:802
-msgid "Edit Field Set"
+msgid "Edit Section"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:256
-msgid "Delete Field Set"
+msgid "Delete Section"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:289
 #. translators: accessibility text
-msgid "Fields for \"%s\" Field Set"
+msgid "Fields for \"%s\" Section"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:315
@@ -17317,11 +17317,11 @@ msgid "Please make sure you give the group a name."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-group.php:835
-msgid "Field Set Name (required)"
+msgid "Section Name (required)"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-group.php:840
-msgid "Field Set Description"
+msgid "Section Description"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-group.php:844

@@ -790,7 +790,7 @@ class BP_XProfile_Group {
 
 		// New field group.
 		if ( empty( $this->id ) ) {
-			$title	= __( 'New Field Set', 'buddyboss' );
+			$title	= __( 'New Section', 'buddyboss' );
 			$button	= __( 'Save',                'buddyboss' );
 			$action	= add_query_arg( array(
 				'page' => 'bp-profile-setup',
@@ -799,7 +799,7 @@ class BP_XProfile_Group {
 
 		// Existing field group.
 		} else {
-			$title  = __( 'Edit Field Set', 'buddyboss' );
+			$title  = __( 'Edit Section', 'buddyboss' );
 			$button	= __( 'Update',           'buddyboss' );
 			$action	= add_query_arg( array(
 				'page'     => 'bp-profile-setup',
@@ -832,12 +832,12 @@ class BP_XProfile_Group {
 						<div id="post-body-content">
 							<div id="titlediv">
 								<div class="titlewrap">
-									<label id="title-prompt-text" for="title"><?php esc_html_e( 'Field Set Name (required)', 'buddyboss') ?></label>
+									<label id="title-prompt-text" for="title"><?php esc_html_e( 'Section Name (required)', 'buddyboss') ?></label>
 									<input type="text" name="group_name" id="title" value="<?php echo esc_attr( $this->name ); ?>" autocomplete="off" />
 								</div>
 							</div>
 							<div class="postbox">
-								<h2><?php esc_html_e( 'Field Set Description', 'buddyboss' ); ?></h2>
+								<h2><?php esc_html_e( 'Section Description', 'buddyboss' ); ?></h2>
 								<div class="inside">
 									<label for="group_description" class="screen-reader-text"><?php
 										/* translators: accessibility text */
