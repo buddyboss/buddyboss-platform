@@ -406,21 +406,21 @@ body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
 
 /* Settings */
 .bp-admin-card.section-bp_main h2:before {
-  content: "\f7d9";
+  background-image: url(../../images/admin/icons/fontawesome/solid/tools.svg);
 }
 
 /* Profiles */
 .bp-admin-card.section-bp_xprofile h2:before {
-  content: "\f007";
+  background-image: url(../../images/admin/icons/fontawesome/solid/user.svg);
 }
 
 .bp-admin-card.section-bp_member_type_settings h2:before {
-  content: "\f507";
+  background-image: url(../../images/admin/icons/fontawesome/solid/user-tag.svg);
   text-align: left;
 }
 
 .bp-admin-card.section-bp_profile_search_settings h2:before {
-  content: "\f234";
+  background-image: url(../../images/admin/icons/fontawesome/solid/user-plus.svg);
   text-align: left;
 }
 
@@ -440,16 +440,16 @@ body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
 
 /* Groups */
 .bp-admin-card.section-bp_groups h2:before {
-  content: "\f1b2";
+  background-image: url(../../images/admin/icons/fontawesome/solid/cube.svg);
 }
 
 .bp-admin-card.section-bp_groups_types h2:before {
-  content: "\f1b3";
-  font-size: 20px;
+  background-image: url(../../images/admin/icons/fontawesome/solid/cubes.svg);
+  /*font-size: 20px;*/
 }
 
 .bp-admin-card.section-bp_groups_hierarchies h2:before {
-  content: "\f5fd";
+  background-image: url(../../images/admin/icons/fontawesome/solid/layer-group.svg);
 }
 
 /* Connections */
@@ -465,13 +465,11 @@ body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
 .bp-admin-card.section-bbp_settings_root_slugs h2:before,
 .bp-admin-card.section-bbp_settings_single_slugs h2:before,
 .bp-admin-card.section-bbp_settings_buddypress h2:before {
-  content: "\f4ad";
+  background-image: url(../../images/admin/icons/fontawesome/solid/comment-dots.svg);
 }
 
 /* Media */
-.bp-admin-card.section-bp_media_settings_general h2:before,
-.bp-admin-card.section-bp_media_settings_groups h2:before,
-.bp-admin-card.section-bp_media_settings_forums h2:before {
+.bp-admin-card.section-bp_media_settings_general h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/camera-retro.svg);
 }
 
@@ -509,7 +507,7 @@ body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
 .bp-admin-card.section-repair_forums h2:before,
 body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
 .bp-admin-card.section-bp-member-type-import h2:before {
-  content: "\f0ad";
+  background-image: url(../../images/admin/icons/fontawesome/solid/wrench.svg);
 }
 
 /* Integrations */
