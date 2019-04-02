@@ -1645,7 +1645,7 @@ function bp_get_user_social_networks_urls() {
 	}
 
 	if ( '' !== $html ) {
-		$html .= '<div class="social-networks-wrap">'.$html.'</div>';
+		$html = '<div class="social-networks-wrap">'.$html.'</div>';
 	}
 
 	return apply_filters( 'bp_get_user_social_networks_urls', $html, $original_option_values, $social_networks_id );
