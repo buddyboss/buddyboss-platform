@@ -510,6 +510,14 @@ body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
   content: "\f14b";
 }
 
+/* Tools */
+.bp-admin-card.section-repair_community h2:before,
+.bp-admin-card.section-repair_forums h2:before,
+body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
+.bp-admin-card.section-bp-member-type-import h2:before {
+  content: "\f0ad";
+}
+
 /* Integrations */
 body.buddyboss_page_bp-integrations .bp-admin-card h2 {
   background-repeat: no-repeat;
