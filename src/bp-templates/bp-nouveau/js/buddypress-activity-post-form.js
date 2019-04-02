@@ -987,7 +987,8 @@ window.bp = window.bp || {};
 		events: {
 			'click #activity-link-preview-button': 'toggleURLInput',
 			'click #activity-gif-button': 'toggleGifSelector',
-			'click #activity-media-button': 'toggleMediaSelector'
+			'click #activity-media-button': 'toggleMediaSelector',
+			'click .post-elements-buttons-item': 'activeButton'
 		},
 
 		initialize: function() {
@@ -1078,6 +1079,11 @@ window.bp = window.bp || {};
 				!$targetEl.is('.emojioneemoji,.emojibtn')) {
 				this.$emojiPickerEl.data('emojioneArea').hidePicker();
 			}
+		},
+
+		activeButton: function (event) {
+			this.$el.find('.post-elements-buttons-item').removeClass('active');
+			event.currentTarget.classList.add('active');
 		}
 	} );
 
