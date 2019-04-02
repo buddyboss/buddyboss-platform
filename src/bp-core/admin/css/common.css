@@ -391,23 +391,17 @@ tr.bp-search-parent-field label {
 }
 
 body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
-  font-family: "Font Awesome 5 Free";
-  font-weight: 900;
-  margin-right: 1em;
-  color: #333;
-  background: #f6f6f6;
-  padding: 7px;
-  border-radius: 100%;
-  -webkit-font-smoothing: antialiased;
   display: inline-block;
-  font-style: normal;
-  font-variant: normal;
-  text-rendering: auto;
-  font-size: 18px;
-  width: 24px;
-  height: 24px;
-  line-height: 24px;
-  text-align: center;
+  content: " ";
+  background-size: 20px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #f6f6f6;
+  height: 40px;
+  width: 40px;
+  border-radius: 50px;
+  vertical-align: middle;
+  margin-right: 15px;
 }
 
 /* Settings */
@@ -478,7 +472,7 @@ body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
 .bp-admin-card.section-bp_media_settings_general h2:before,
 .bp-admin-card.section-bp_media_settings_groups h2:before,
 .bp-admin-card.section-bp_media_settings_forums h2:before {
-  content: "\f083";
+  background-image: url(../../images/admin/camera-retro.svg);
 }
 
 /* Search */
