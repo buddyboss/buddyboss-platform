@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-04-02 04:21:48+00:00\n"
+"POT-Creation-Date: 2019-04-02 12:48:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2696,26 +2696,26 @@ msgstr ""
 msgid "New in BuddyBoss"
 msgstr ""
 
-#: bp-core/admin/templates/about-screen.php:31 bp-core/bp-core-admin.php:24
+#: bp-core/admin/templates/about-screen.php:33 bp-core/bp-core-admin.php:24
 msgid "Maintenance Release"
 msgid_plural "Maintenance Releases"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/admin/templates/about-screen.php:36 bp-core/bp-core-admin.php:36
+#: bp-core/admin/templates/about-screen.php:38 bp-core/bp-core-admin.php:36
 #. translators: 1: BuddyPress version number, 2: plural number of bugs.
 msgid "<strong>Version %1$s</strong> addressed %2$s bug."
 msgid_plural "<strong>Version %1$s</strong> addressed %2$s bugs."
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/admin/templates/about-screen.php:50
 #: bp-core/admin/templates/about-screen.php:53
+#: bp-core/admin/templates/about-screen.php:56
 msgid "Feature"
 msgstr ""
 
-#: bp-core/admin/templates/about-screen.php:51
 #: bp-core/admin/templates/about-screen.php:54
+#: bp-core/admin/templates/about-screen.php:57
 msgid ""
 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod "
 "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim "
@@ -2726,11 +2726,11 @@ msgid ""
 "est laborum."
 msgstr ""
 
-#: bp-core/admin/templates/about-screen.php:56
+#: bp-core/admin/templates/about-screen.php:59
 msgid "Thank you for using BuddyBoss!"
 msgstr ""
 
-#: bp-core/admin/templates/about-screen.php:66
+#: bp-core/admin/templates/about-screen.php:69
 msgid "Built by <a href=\"%s\">BuddyBoss</a>."
 msgstr ""
 

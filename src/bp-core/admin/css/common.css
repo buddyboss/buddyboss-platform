@@ -441,11 +441,11 @@ tr.bp-search-parent-field label {
 
 /* Activity */
 .bp-admin-card.section-bp_activity h2:before {
-  content: "\f09e";
+  content: "\f143";
 }
 
 .buddyboss_page_bp-settings .section-bp_custom_post_type h2:before {
-  content: "\f143";
+  content: "\f08d";
 }
 
 /* Invites */
