@@ -410,11 +410,6 @@ body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
   text-align: center;
 }
 
-/* Default */
-body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
-  content: "\f0ad";
-}
-
 /* Settings */
 .bp-admin-card.section-bp_main h2:before {
   content: "\f7d9";
