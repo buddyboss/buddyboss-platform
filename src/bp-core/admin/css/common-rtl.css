@@ -386,12 +386,11 @@ tr.bp-search-parent-field label {
   border-bottom: 1px solid #eaeaea;
 }
 
-body .bp-admin-card h2 span {
+.bp-admin-card h2 span {
   font-weight: 400;
 }
 
-/* body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before */
-body .bp-admin-card h2:before {
+.bp-admin-card h2:before {
   display: inline-block;
   content: " ";
   background-size: 18px 18px;
@@ -517,35 +516,31 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
   background-image: url(../../images/admin/icons/fontawesome/solid/wrench.svg);
 }
 
-/* Integrations */
-body.buddyboss_page_bp-integrations .bp-admin-card h2 {
-  background-repeat: no-repeat;
-  background-position: right top;
-  background-size: 40px;
-  padding-right: 53px;
-}
-
 /* Integrations - AppBoss */
-.bp-admin-card.section-bp_appboss-integration h2 {
+.bp-admin-card.section-bp_appboss-integration h2:before {
   background-image: url(../../images/admin/icons/logos/appboss.png);
+  background-size: 100% 100%;
 }
 
 /* Integrations - LearnDash */
-.bp-admin-card.section-bp_ld-integration h2,
-.bp-admin-card.section-bp_ld_sync-buddypress h2,
-.bp-admin-card.section-bp_ld_sync-learndash h2,
-.bp-admin-card.section-bp_ld_sync-reports h2 {
+.bp-admin-card.section-bp_ld-integration h2:before,
+.bp-admin-card.section-bp_ld_sync-buddypress h2:before,
+.bp-admin-card.section-bp_ld_sync-learndash h2:before,
+.bp-admin-card.section-bp_ld_sync-reports h2:before {
   background-image: url(../../images/admin/icons/logos/learndash.png);
+  background-size: 100% 100%;
 }
 
 /* Integrations - MemberPress */
-.bp-admin-card.section-bp-memberpress-integration h2 {
+.bp-admin-card.section-bp-memberpress-integration h2:before {
   background-image: url(../../images/admin/icons/logos/memberpress.png);
+  background-size: 100% 100%;
 }
 
 /* Integrations - WooCommerce */
-.bp-admin-card.section-bp-woocommerce-integration h2 {
+.bp-admin-card.section-bp-woocommerce-integration h2:before {
   background-image: url(../../images/admin/icons/logos/woocommerce.png);
+  background-size: 100% 100%;
 }
 
 /*
