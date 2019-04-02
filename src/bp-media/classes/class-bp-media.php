@@ -209,7 +209,9 @@ class BP_Media {
 			return $this->errors;
 		}
 
-		if ( empty( $this->activity_id ) || empty( $this->attachment_id ) ) {
+		if ( empty( $this->attachment_id )
+		//|| empty( $this->activity_id ) //todo: when forums media is saving, it should have activity id assigned if settings enabled need to check this
+		) {
 			if ( 'bool' === $this->error_type ) {
 				return false;
 			} else {

@@ -39,7 +39,7 @@ window.bp = window.bp || {};
 			// Init current page
 			this.current_page   = 1;
 			this.current_page_existing_media   = 1;
-			this.current_tab   = 'bp-dropzone-content';
+			this.current_tab   = $('body').hasClass('bbpress') ? false : 'bp-dropzone-content';
 
 			// set up dropzones auto discover to false so it does not automatically set dropzones
 			window.Dropzone.autoDiscover = false;
@@ -144,7 +144,7 @@ window.bp = window.bp || {};
 					if ( self.dropzone_media.length ) {
 						for ( var i in self.dropzone_media ) {
 							if ( file.upload.uuid == self.dropzone_media[i].uuid ) {
-								self.removeAttachment(self.dropzone_media[i].id);
+								//self.removeAttachment(self.dropzone_media[i].id);
 								self.dropzone_media.splice( i, 1 );
 								break;
 							}
@@ -204,7 +204,7 @@ window.bp = window.bp || {};
 
 			if ( self.current_tab === 'bp-dropzone-content' ) {
 				var post_content = $('#bp-media-post-content').val();
-				if ( _.isEmpty( post_content ) ) {
+				if ( trim(post_content) === '' ) {
 					$('#bp-media-post-content').addClass('error').focus();
 					return false;
 				} else {
@@ -236,7 +236,7 @@ window.bp = window.bp || {};
 
 					}
 				});
-			} else {
+			} else if ( self.current_tab === 'bp-existing-media-content' ) {
 				var selected = [];
 				$('.bp-existing-media-wrap .bb-media-check-wrap [name="bb-media-select"]:checked').each(function() {
 					selected.push($(this).val());
@@ -266,6 +266,8 @@ window.bp = window.bp || {};
 
 					}
 				});
+			} else if ( ! self.current_tab ) {
+				self.closeUploader(event);
 			}
 
 		},
@@ -297,8 +299,9 @@ window.bp = window.bp || {};
 
 		addMediaIdsToReply: function() {
 			var self = this;
-
-			$('#bbp_media').val(JSON.stringify(self.dropzone_media));
+			if( $('#bbp_media').length ) {
+				$('#bbp_media').val(JSON.stringify(self.dropzone_media));
+			}
 		},
 
 		/**
