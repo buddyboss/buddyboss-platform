@@ -444,8 +444,7 @@ window.bp = window.bp || {};
 				activity_state = activity_item.find( '.activity-state' ),
 				comments_text = activity_item.find( '.comments-count' ),
 				likes_text = activity_item.find( '.like-text' ),
-				item_id, form,
-				comment_load_template = wp.template('activity-comments-loading-message');
+				item_id, form;
 
 			// In case the target is set to a span inside the link.
 			if ( $( target ).is( 'span' ) ) {

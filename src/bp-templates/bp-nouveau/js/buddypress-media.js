@@ -135,6 +135,7 @@ window.bp = window.bp || {};
 						self.addMediaIdsToReply();
 					}
 					$('#bp-media-add-more').show();
+					$('#bp-media-submit').show();
 					$('#bp-media-uploader-modal-title').text('Uploading...');
 					$('#bp-media-uploader-modal-status-text').text(self.dropzone_media.length + ' out of ' + self.dropzone_obj.getAcceptedFiles().length + ' uploaded').show();
 				});
@@ -143,6 +144,7 @@ window.bp = window.bp || {};
 					if ( self.dropzone_media.length ) {
 						for ( var i in self.dropzone_media ) {
 							if ( file.upload.uuid == self.dropzone_media[i].uuid ) {
+								self.removeAttachment(self.dropzone_media[i].id);
 								self.dropzone_media.splice( i, 1 );
 								break;
 							}
@@ -150,11 +152,27 @@ window.bp = window.bp || {};
 					}
 					if ( ! self.dropzone_obj.getAcceptedFiles().length ) {
 						$('#bp-media-uploader-modal-status-text').text('');
+						$('#bp-media-add-more').hide();
+						$('#bp-media-submit').hide();
 					} else {
 						$('#bp-media-uploader-modal-status-text').text(self.dropzone_media.length + ' out of ' + self.dropzone_obj.getAcceptedFiles().length + ' uploaded').show();
 					}
 				});
 			}
+		},
+
+		removeAttachment: function( id ) {
+			var data = {
+				'action': 'media_delete_attachment',
+				'_wpnonce': BP_Nouveau.nonces.media,
+				'id': id
+			};
+
+			$.ajax({
+				type: 'POST',
+				url: BP_Nouveau.ajaxurl,
+				data: data
+			});
 		},
 
 		changeUploadModalTab: function(event) {
@@ -185,11 +203,18 @@ window.bp = window.bp || {};
 			var self = this, data;
 
 			if ( self.current_tab === 'bp-dropzone-content' ) {
+				var post_content = $('#bp-media-post-content').val();
+				if ( _.isEmpty( post_content ) ) {
+					$('#bp-media-post-content').addClass('error').focus();
+					return false;
+				} else {
+					$('#bp-media-post-content').removeClass('error');
+				}
 				data = {
 					'action': 'media_save',
 					'_wpnonce': BP_Nouveau.nonces.media,
 					'medias': self.dropzone_media,
-					'content' : $('#bp-media-post-content').val()
+					'content' : post_content
 				};
 
 				$.ajax({

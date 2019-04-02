@@ -47,6 +47,12 @@ add_action( 'admin_init', function() {
 				'nopriv'   => true,
 			),
 		),
+		array(
+			'media_delete_attachment' => array(
+				'function' => 'bp_nouveau_ajax_media_delete_attachment',
+				'nopriv'   => true,
+			),
+		),
 	);
 
 	foreach ( $ajax_actions as $ajax_action ) {
@@ -422,6 +428,43 @@ function bp_nouveau_ajax_media_get_activity() {
 	wp_send_json_success( array(
 		'activity'     => $activity,
 	) );
+}
+
+/**
+ * Delete attachment with its files
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_nouveau_ajax_media_delete_attachment() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback bp-messages error">%s</div>',
+			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Nonce check!
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_nouveau_media' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['id'] ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error">%s</div>',
+			esc_html__( 'Please provide attachment id to delete.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	//delete attachment with its meta
+	$deleted = wp_delete_attachment( $_POST['id'], true );
+
+	if ( ! $deleted ) {
+		wp_send_json_error( $response );
+	}
+
+	wp_send_json_success();
 }
 
 add_filter('bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_media_tabs', 10, 2);

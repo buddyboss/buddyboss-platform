@@ -53,6 +53,11 @@ window.bp = window.bp || {};
 			$( 'body.wp-admin' ).on( 'click', '.bp-xprofile-avatar-user-edit', function() {
 				self.resetViews();
 			} );
+            
+            $( document ).on( 'click', '.avatar-crop-cancel', function( e ) {
+                e.preventDefault();
+                self.resetViews();
+			} );
 		},
 
 		removeLegacyUI: function() {

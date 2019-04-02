@@ -81,6 +81,7 @@ add_filter( 'bp_get_the_profile_field_name', 'xprofile_filter_field_edit_name' )
 // Saving field value
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_nickname_value', 10, 4 );
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_phone_value', 10, 4 );
+add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_social_networks_value', 10, 4 );
 
 // Display name adjustment
 add_filter( 'set_current_user', 'bp_xprofile_adjust_current_user_display_name' );
@@ -184,6 +185,13 @@ function xprofile_sanitize_data_value_before_save( $field_value, $field_id = 0, 
 
 	// Return if empty.
 	if ( empty( $field_value ) ) {
+		return $field_value;
+	}
+
+	$fields = xprofile_get_field( $data_obj->field_id, null, false );
+
+	// Allows storing the 'facebook', 'twitter' and so on as array keys in the data.
+	if ( 'socialnetworks' === $fields->type ) {
 		return $field_value;
 	}
 
@@ -839,4 +847,72 @@ function bp_xprofile_replace_username_to_display_name( $email_content, $user = n
 		bp_custom_display_name_format( $user['display_name'], $user['ID'] ),
 		$email_content
 	);
+}
+
+/**
+ * Validate social networks field values.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @global $wpdb
+ *
+ * @param $retval
+ * @param string $field_name
+ * @param string $value
+ * @param string $user_id
+ * @return $retval
+ */
+function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value, $user_id = null ) {
+
+	$field = xprofile_get_field( $field_id, null, false );
+
+	// Allows storing the 'facebook', 'twitter' and so on as array keys in the data.
+	if ( 'socialnetworks' !== $field->type ) {
+		return $retval;
+	}
+
+	if ( $retval ) {
+		return $retval;
+	}
+
+	$field_name = xprofile_get_field( $field_id )->name;
+
+	if ( 1 === $field->is_required ) {
+		foreach ( $value as $key => $val ) {
+			$value = trim($val);
+			if (empty($value))
+				return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
+		}
+	}
+
+	$providers = social_network_provider();
+	foreach ( $value as $k => $v ) {
+		if ( '' === $v || filter_var( $v, FILTER_VALIDATE_URL) ) {
+
+		} else {
+			$key = bp_social_network_search_key( $k, $providers);
+			return sprintf( __( 'Please enter valid %s profile url.', 'buddyboss' ), $providers[$key]->name );
+		}
+	}
+
+	return $retval;
+}
+
+/**
+ * Search the key for given value from the social networks provider.
+ *
+ * @param $id
+ * @param $array
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return int|string|null
+ */
+function bp_social_network_search_key( $id, $array ) {
+	foreach ($array as $key => $val) {
+		if ($val->value === $id) {
+			return $key;
+		}
+	}
+	return null;
 }

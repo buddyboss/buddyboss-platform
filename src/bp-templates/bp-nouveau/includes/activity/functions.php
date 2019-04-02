@@ -43,7 +43,7 @@ function bp_nouveau_activity_register_scripts( $scripts = array() ) {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_enqueue_scripts() {
-	if ( ! bp_is_activity_component() && ! bp_is_group_activity() && ! bp_is_media_component() && ! bp_is_media_directory() ) {
+	if ( ! bp_is_activity_component() && ! bp_is_group_activity() && ! bp_is_media_component() && ! bp_is_media_directory() ) { // media popup overlay needs activity scripts
 		return;
 	}
 
@@ -63,7 +63,7 @@ function bp_nouveau_activity_enqueue_scripts() {
  * @return array The same array with specific strings for the Activity Post form UI if needed.
  */
 function bp_nouveau_activity_localize_scripts( $params = array() ) {
-	if ( ! bp_is_activity_component() && ! bp_is_group_activity() ) {
+	if ( ! bp_is_activity_component() && ! bp_is_group_activity() && ! bp_is_media_component() && ! bp_is_media_directory() ) { // media popup overlay needs activity scripts
 		return $params;
 	}
 
@@ -108,6 +108,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 
 	if ( bp_is_activity_emoji_active() ) {
 		$activity_params['emoji'] = true;
+		$activity_params['emoji_filter_url'] = buddypress()->plugin_url . 'bp-core/images/emojifilter/';
 	}
 
 	// Gif api key
