@@ -426,11 +426,11 @@ body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
 
 /* Activity */
 .bp-admin-card.section-bp_activity h2:before {
-  content: "\f143";
+  background-image: url(../../images/admin/icons/fontawesome/solid/rss-square.svg);
 }
 
 .buddyboss_page_bp-settings .section-bp_custom_post_type h2:before {
-  content: "\f08d";
+  background-image: url(../../images/admin/icons/fontawesome/solid/thumbtack.svg);
 }
 
 /* Invites */
