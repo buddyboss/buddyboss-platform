@@ -25,7 +25,7 @@ function bp_core_admin_tools() {
 		</div>
 	</div>
 	<div class="wrap">
-		<div class="bp-admin-card">
+		<div class="bp-admin-card section-repair_community">
 
 			<h2><?php esc_html_e( 'Repair Community', 'buddyboss' ) ?></h2>
 

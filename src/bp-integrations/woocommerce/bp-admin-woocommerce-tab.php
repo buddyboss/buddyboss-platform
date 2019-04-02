@@ -20,7 +20,7 @@ class BP_Woocommerce_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	public function initialize() {
 		$this->tab_order = 40;
 		$this->intro_template = $this->root_path . '/templates/admin/integration-tab-intro.php';
-		$this->current_section = 'bp-woocommerce-section';
+		$this->current_section = 'bp-woocommerce-integration';
 	}
 
 	public function settings_save() {
