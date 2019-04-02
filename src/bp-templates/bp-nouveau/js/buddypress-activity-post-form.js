@@ -488,7 +488,7 @@ window.bp = window.bp || {};
 	// Gif search dropdown
 	bp.Views.GifMediaSearchDropdown = bp.View.extend( {
 		tagName: 'div',
-		className: 'activity-attached-gif-container  bp-caret bp-caret--stroked bp-caret--top',
+		className: 'activity-attached-gif-container',
 		template: bp.template( 'gif-media-search-dropdown' ),
 		total_count: 0,
 		offset: 0,
@@ -997,6 +997,7 @@ window.bp = window.bp || {};
 
 		render: function() {
 			this.$el.html(this.template(this.model.toJSON()));
+			this.$self = this.$el.find('#activity-gif-button');
 			this.$gifPickerEl = this.$el.find('.gif-media-search-dropdown');
 			this.$emojiPickerEl = $('#whats-new');
 			return this;
@@ -1026,6 +1027,7 @@ window.bp = window.bp || {};
 				var gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown({model: this.model});
 				this.$gifPickerEl.html( gifMediaSearchDropdownView.render().el );
 			}
+			this.$self.toggleClass('open');
 			this.$gifPickerEl.toggleClass('open');
 			this.closeURLInput();
 			this.closeMediaSelector();
@@ -1052,6 +1054,7 @@ window.bp = window.bp || {};
 		closePickersOnEsc: function( event ) {
 			if ( event.key === 'Escape' || event.keyCode === 27 ) {
 				if (!_.isUndefined(BP_Nouveau.activity.params.gif_api_key)) {
+					this.$self.removeClass('open');
 					this.$gifPickerEl.removeClass('open');
 				}
 
@@ -1066,6 +1069,7 @@ window.bp = window.bp || {};
 
 			if (!_.isUndefined(BP_Nouveau.activity.params.gif_api_key) &&
 				!$targetEl.closest('.post-gif').length) {
+				this.$self.removeClass('open');
 				this.$gifPickerEl.removeClass('open');
 			}
 
