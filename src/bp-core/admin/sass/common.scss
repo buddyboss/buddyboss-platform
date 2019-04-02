@@ -548,10 +548,14 @@ body.users_page_bp-signups td.count_sent {
 	width: 15%;
 }
 
-#bp-activities-form #the-comment-list td.comment img {
-	max-width: 300px;
-	display: block;
-	margin: 0.6em 0;
+#bp-activities-form #the-comment-list td.comment {
+
+	img,
+	video {
+		max-width: 300px;
+		display: block;
+		margin: 0.6em 0;
+	}
 }
 
 /*
