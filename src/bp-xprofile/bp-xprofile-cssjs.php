@@ -52,10 +52,12 @@ function xprofile_add_admin_js() {
 		// types that support options, for use in showing/hiding the
 		// "please enter options for this field" section.
 		$strings = array(
-			'do_settings_section_field_types' => array(),
-			'social_networks_provider'        => array(),
-			'confirm_delete_field_group'      => __( 'Are you sure you want to delete this field set and all of its included fields?','buddyboss' ),
-			'social_networks_provider_count'  => 0,
+			'do_settings_section_field_types'          => array(),
+			'social_networks_provider'                 => array(),
+			'social_networks_provider_value'           => array(),
+			'social_networks_duplicate_value_message'  => __( 'You have already selected this option previously.','buddyboss' ),
+			'confirm_delete_field_group'               => __( 'Are you sure you want to delete this field set and all of its included fields?','buddyboss' ),
+			'social_networks_provider_count'           => 0,
 		);
 
 		foreach ( bp_xprofile_get_field_types() as $field_type => $field_type_class ) {
@@ -68,7 +70,8 @@ function xprofile_add_admin_js() {
 		$providers = social_network_provider();
 		$strings['social_networks_provider_count'] = count( $providers );
 		foreach ( $providers as $provider ) {
-			$strings['social_networks_provider'][] = $provider->name;
+			$strings['social_networks_provider'][]       = $provider->name;
+			$strings['social_networks_provider_value'][] = $provider->value;
 		}
 
 		// Load 'autolink' setting into JS so that we can provide smart defaults when switching field type.

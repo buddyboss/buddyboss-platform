@@ -33,12 +33,15 @@ function add_option(forWhat) {
 	} else if ( 'socialnetworks' === forWhat ) {
 		newOption.setAttribute('name', forWhat + '_option[' + theId + ']');
 		newOption.setAttribute('id', forWhat + '_option' + theId);
+		newOption.setAttribute('class', 'select-social-networks');
 		var option_default = document.createElement('option');
 		option_default.text = 'Select';
+		option_default.setAttribute ( 'value', '');
 		newOption.add(option_default);
 		for ( s = 0; s < XProfileAdmin.social_networks_provider.length; s++ ) {
 			var option = document.createElement('option');
 			option.text = XProfileAdmin.social_networks_provider[s];
+			option.setAttribute ( 'value', XProfileAdmin.social_networks_provider_value[s]);
 			newOption.add(option);
 		}
 	} else {
@@ -538,4 +541,19 @@ jQuery( document ).ready( function() {
     jQuery( '.delete-profile-field-group' ).click( function( ){
         return confirm( XProfileAdmin.confirm_delete_field_group );
     } );
+
+	jQuery( document ).on( 'change', '.select-social-networks',function() {
+		var new_value = this;
+		var new_id = this.id;
+		var selected_value = this.value;
+		jQuery( '.select-social-networks' ).each(function() {
+			if ( new_id !== this.id ) {
+				var existing_value = jQuery('#' + this.id).val();
+				if (selected_value === existing_value) {
+					new_value.value = '';
+					alert(XProfileAdmin.social_networks_duplicate_value_message);
+				}
+			}
+		});
+	});
 });

@@ -279,7 +279,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 								/* translators: accessibility text */
 								esc_html_e( 'Add an option', 'buddyboss' );
 								?></label>
-							<select name="<?php echo esc_attr( "{$type}_option[{$j}]" ); ?>" id="<?php echo esc_attr( "{$type}_option{$j}" ); ?>">
+							<select class="select-social-networks" name="<?php echo esc_attr( "{$type}_option[{$j}]" ); ?>" id="<?php echo esc_attr( "{$type}_option{$j}" ); ?>">
 								<?php
 								foreach ( social_network_provider() as $option ) {
 									$compare = ( true === $fresh_setup ) ? $options[$i]->value : $options[$i]->name;
