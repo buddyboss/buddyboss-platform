@@ -221,6 +221,68 @@ TABLE OF CONTENTS:
   padding-bottom: 15px;
 }
 
+#bp-admin-component-form .wp-list-table.plugins .plugin-title:before {
+  display: inline-block;
+  content: " ";
+  background-size: 18px 18px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #f6f6f6;
+  height: 38px;
+  width: 38px;
+  border-radius: 50px;
+  vertical-align: middle;
+  margin-right: 15px;
+}
+
+#bp-admin-component-form .wp-list-table.plugins #members .plugin-title:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/user.svg);
+}
+
+#bp-admin-component-form .wp-list-table.plugins #xprofile .plugin-title:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/user.svg);
+}
+
+#bp-admin-component-form .wp-list-table.plugins #settings .plugin-title:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/tools.svg);
+}
+
+#bp-admin-component-form .wp-list-table.plugins #notifications .plugin-title:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/bell.svg);
+}
+
+#bp-admin-component-form .wp-list-table.plugins #groups .plugin-title:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/cube.svg);
+}
+
+#bp-admin-component-form .wp-list-table.plugins #forums .plugin-title:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/comment-dots.svg);
+}
+
+#bp-admin-component-form .wp-list-table.plugins #activity .plugin-title:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/rss-square.svg);
+}
+
+#bp-admin-component-form .wp-list-table.plugins #media .plugin-title:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/camera-retro.svg);
+}
+
+#bp-admin-component-form .wp-list-table.plugins #messages .plugin-title:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/tools.svg);
+}
+
+#bp-admin-component-form .wp-list-table.plugins #friends .plugin-title:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/user-friends.svg);
+}
+
+#bp-admin-component-form .wp-list-table.plugins #invites .plugin-title:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/envelope.svg);
+}
+
+#bp-admin-component-form .wp-list-table.plugins #search .plugin-title:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/search.svg);
+}
+
 #bp-admin-component-form .subsubsub {
   padding-bottom: 5px;
 }
