@@ -180,7 +180,7 @@ defined( 'ABSPATH' ) || exit;
 					<div class="appboss-small-dark-block">
 						<h1><?php _e( 'Built with React Native', 'buddyboss' ); ?></h1>
 						<p><?php _e( 'This is a true native app and NOT a "responsive website within an app". It is built with React Native, the app framework created by Facebook and used by Walmart, Airbnb, Instagram, Tesla, and SoundCloud.', 'buddyboss' ); ?></p>
-						<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/icons_react.svg" . '" />'; ?>
+						<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/react.svg" . '" />'; ?>
 					</div>
 
 					<?php
