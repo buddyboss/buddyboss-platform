@@ -223,11 +223,13 @@ TABLE OF CONTENTS:
 
 	.plugin-title {
 		width: 25%;
-		padding-bottom: 15px;
+		padding: 15px 9px;
 	}
 
+	/*
 	.plugin-title:before {
-		display: inline-block;
+		display: block;
+		float: left;
 		content: " ";
 		background-size: 18px 18px;
 		background-repeat: no-repeat;
@@ -287,6 +289,7 @@ TABLE OF CONTENTS:
 	#search .plugin-title:before {
 		background-image: url(../../images/admin/icons/fontawesome/solid/search.svg);
 	}
+	*/
 }
 
 #bp-admin-component-form .subsubsub {

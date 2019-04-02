@@ -156,8 +156,7 @@ function bp_core_admin_components_options() {
 					/* translators: accessibility text */
 					_e( 'Enable or disable all optional components in bulk', 'buddyboss' );
 				?></label></td>
-				<th scope="col" id="name" class="manage-column column-title column-primary"><?php _e( 'Component', 'buddyboss' ); ?></th>
-				<th scope="col" id="description" class="manage-column column-description"><?php _e( 'Description', 'buddyboss' ); ?></th>
+				<th scope="col" id="name" class="manage-column column-title column-primary" colspan="2"><?php _e( 'Component', 'buddyboss' ); ?></th>
 			</tr>
 		</thead>
 
@@ -194,6 +193,9 @@ function bp_core_admin_components_options() {
 								<span aria-hidden="true"></span>
 								<strong><?php echo esc_html( $labels['title'] ); ?></strong>
 							</label>
+							<div class="plugin-description">
+								<p><?php echo $labels['description']; ?></p>
+							</div>
                             <div class="row-actions visible">
 								<?php if ( in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
 									<span class="required">
@@ -201,17 +203,13 @@ function bp_core_admin_components_options() {
                                     </span>
 								<?php elseif ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
                                     <?php if ( isset( $active_components[esc_attr( $name )] ) ) : ?>
-                                        <span class="deactivate">
-                                            <a href="<?php echo wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $action, 'bp_component' => $name, 'do_action' => 'deactivate' ) , $page ) ), 'bp-admin-component-activation' ); ?>">
-                                                <?php _e( 'Deactivate', 'buddyboss' ); ?>
-                                            </a>
-                                        </span>
+                                        <a class="button deactivate" href="<?php echo wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $action, 'bp_component' => $name, 'do_action' => 'deactivate' ) , $page ) ), 'bp-admin-component-activation' ); ?>">
+                                            <?php _e( 'Deactivate', 'buddyboss' ); ?>
+                                        </a>
 	                                <?php else: ?>
-                                        <span class="activate">
-                                            <a href="<?php echo wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $action, 'bp_component' => $name, 'do_action' => 'activate' ) , $page ) ), 'bp-admin-component-activation' ); ?>">
-                                                <?php _e( 'Activate', 'buddyboss' ); ?>
-                                            </a>
-                                        </span>
+                                        <a class="button activate" href="<?php echo wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $action, 'bp_component' => $name, 'do_action' => 'activate' ) , $page ) ), 'bp-admin-component-activation' ); ?>">
+                                            <?php _e( 'Activate', 'buddyboss' ); ?>
+                                        </a>
                                     <?php endif; ?>
 								<?php endif; ?>
 			                    <?php if ( isset( $active_components[esc_attr( $name )] ) && ! empty( $labels['settings'] ) ) : ?>
@@ -230,13 +228,6 @@ function bp_core_admin_components_options() {
 			                    <?php endif; ?>
                             </div>
 						</td>
-
-						<td class="column-description desc">
-							<div class="plugin-description">
-								<p><?php echo $labels['description']; ?></p>
-							</div>
-
-						</td>
 					</tr>
 
 				<?php endforeach ?>
@@ -244,7 +235,7 @@ function bp_core_admin_components_options() {
 			<?php else : ?>
 
 				<tr class="no-items">
-					<td class="colspanchange" colspan="3"><?php _e( 'No components found.', 'buddyboss' ); ?></td>
+					<td class="colspanchange" colspan="2"><?php _e( 'No components found.', 'buddyboss' ); ?></td>
 				</tr>
 
 			<?php endif; ?>
@@ -258,8 +249,7 @@ function bp_core_admin_components_options() {
 					/* translators: accessibility text */
 					_e( 'Enable or disable all optional components in bulk', 'buddyboss' );
 				?></label></td>
-				<th class="manage-column column-title column-primary"><?php _e( 'Component', 'buddyboss' ); ?></th>
-				<th class="manage-column column-description"><?php _e( 'Description', 'buddyboss' ); ?></th>
+				<th class="manage-column column-title column-primary" colspan="2"><?php _e( 'Component', 'buddyboss' ); ?></th>
 			</tr>
 		</tfoot>
 
@@ -270,11 +260,11 @@ function bp_core_admin_components_options() {
 
 	<div class="tablenav bottom">
 		<div class="alignleft actions bulkactions">
-			<label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>
+			<label for="bulk-action-selector-top" class="screen-reader-text"><?php _e( 'Select bulk action', 'buddyboss' ); ?></label>
 			<select name="action2" id="bulk-action-selector-top">
-				<option value="">Bulk Actions</option>
-				<option value="active" class="hide-if-no-js">Activate</option>
-				<option value="inactive">Deactivate</option>
+				<option value=""><?php _e( 'Bulk Actions', 'buddyboss' ); ?></option>
+				<option value="active" class="hide-if-no-js"><?php _e( 'Activate', 'buddyboss' ); ?></option>
+				<option value="inactive"><?php _e( 'Deactivate', 'buddyboss' ); ?></option>
 			</select>
 			<input type="submit" id="doaction" class="button action" name="bp-admin-component-submit" value="Apply">
 		</div>
