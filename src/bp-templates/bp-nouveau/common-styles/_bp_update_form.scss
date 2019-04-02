@@ -51,37 +51,34 @@
 
 	#whats-new-attachments {
 		padding: 10px;
+	}
 
-		.activity-attached-gif-container {
-			position: relative;
+	.activity-attached-gif-container {
+		position: relative;
 
-			.gif-image-remove {
-				border-radius: 10px;
-				height: 19px;
-				right: 2px;
-				top: 4px;
-				width: 19px;
-			}
+		.gif-image-remove {
+			border-radius: 10px;
+			height: 19px;
+			right: 2px;
+			top: 4px;
+			width: 19px;
+		}
 
-			.gif-image-overlay {
-				color: #fff;
-				margin-top: 0;
-				position: absolute;
-			}
+		.gif-image-overlay {
+			color: #fff;
+			margin-top: 0;
+			position: absolute;
 		}
 	}
 
-	#whats-new-elements {
+	#whats-new-elements-buttons {
+		margin: 1em 0;
 
-		#whats-new-elements-buttons {
-			margin: 1em 0;
+		ul {
+			list-style: none;
 
-			ul {
-				list-style: none;
-
-				li {
-					display: inline-block;
-				}
+			li {
+				display: inline-block;
 			}
 		}
 	}

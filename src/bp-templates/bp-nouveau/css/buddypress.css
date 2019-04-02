@@ -1163,11 +1163,11 @@ a.layout-grid-view {
   padding: 10px;
 }
 
-.activity-update-form #whats-new-attachments .activity-attached-gif-container {
+.activity-update-form .activity-attached-gif-container {
   position: relative;
 }
 
-.activity-update-form #whats-new-attachments .activity-attached-gif-container .gif-image-remove {
+.activity-update-form .activity-attached-gif-container .gif-image-remove {
   border-radius: 10px;
   height: 19px;
   right: 2px;
@@ -1175,21 +1175,21 @@ a.layout-grid-view {
   width: 19px;
 }
 
-.activity-update-form #whats-new-attachments .activity-attached-gif-container .gif-image-overlay {
+.activity-update-form .activity-attached-gif-container .gif-image-overlay {
   color: #fff;
   margin-top: 0;
   position: absolute;
 }
 
-.activity-update-form #whats-new-elements #whats-new-elements-buttons {
+.activity-update-form #whats-new-elements-buttons {
   margin: 1em 0;
 }
 
-.activity-update-form #whats-new-elements #whats-new-elements-buttons ul {
+.activity-update-form #whats-new-elements-buttons ul {
   list-style: none;
 }
 
-.activity-update-form #whats-new-elements #whats-new-elements-buttons ul li {
+.activity-update-form #whats-new-elements-buttons ul li {
   display: inline-block;
 }
 
@@ -5419,7 +5419,8 @@ button[data-bp-close]:hover {
   color: #777;
 }
 
-/*-------------------------------------*	HINT.css - A CSS tooltip library
+/*-------------------------------------*\
+	HINT.css - A CSS tooltip library
 \*-------------------------------------*/
 /**
  * HINT.css is a tooltip library made in pure CSS.
@@ -9880,7 +9881,7 @@ ul.bb-albums-list .bb-more-photos strong {
   content: " ";
   position: absolute;
   background: #000;
-  background-image: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.01) 70%, transparent 100%);
+  background-image: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.01) 70%, rgba(0, 0, 0, 0) 100%);
   border-radius: 3px;
   width: 100%;
   height: 100%;

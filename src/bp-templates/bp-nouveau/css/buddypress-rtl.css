@@ -1163,11 +1163,11 @@ a.layout-grid-view {
   padding: 10px;
 }
 
-.activity-update-form #whats-new-attachments .activity-attached-gif-container {
+.activity-update-form .activity-attached-gif-container {
   position: relative;
 }
 
-.activity-update-form #whats-new-attachments .activity-attached-gif-container .gif-image-remove {
+.activity-update-form .activity-attached-gif-container .gif-image-remove {
   border-radius: 10px;
   height: 19px;
   left: 2px;
@@ -1175,21 +1175,21 @@ a.layout-grid-view {
   width: 19px;
 }
 
-.activity-update-form #whats-new-attachments .activity-attached-gif-container .gif-image-overlay {
+.activity-update-form .activity-attached-gif-container .gif-image-overlay {
   color: #fff;
   margin-top: 0;
   position: absolute;
 }
 
-.activity-update-form #whats-new-elements #whats-new-elements-buttons {
+.activity-update-form #whats-new-elements-buttons {
   margin: 1em 0;
 }
 
-.activity-update-form #whats-new-elements #whats-new-elements-buttons ul {
+.activity-update-form #whats-new-elements-buttons ul {
   list-style: none;
 }
 
-.activity-update-form #whats-new-elements #whats-new-elements-buttons ul li {
+.activity-update-form #whats-new-elements-buttons ul li {
   display: inline-block;
 }
 
@@ -3093,6 +3093,11 @@ body.buddypress.bp-user #page #primary .entry-header {
 }
 
 #avatar-crop-actions {
+  margin-top: 15px;
+}
+
+#avatar-crop-actions a.avatar-crop-cancel {
+  color: #555;
   margin-top: 15px;
 }
 

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-04-02 06:50:19+00:00\n"
+"POT-Creation-Date: 2019-04-02 11:45:22+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -397,10 +397,10 @@ msgstr ""
 #: bp-forums/topics/template.php:52 bp-forums/topics/template.php:2492
 #: bp-groups/classes/class-bp-groups-list-table.php:526
 #: bp-invites/bp-invites-admin.php:265 bp-xprofile/bp-xprofile-admin.php:783
-#: bp-xprofile/bp-xprofile-repeaters.php:726
-#: bp-xprofile/bp-xprofile-repeaters.php:728
-#: bp-xprofile/bp-xprofile-repeaters.php:748
-#: bp-xprofile/bp-xprofile-repeaters.php:750
+#: bp-xprofile/bp-xprofile-repeaters.php:739
+#: bp-xprofile/bp-xprofile-repeaters.php:741
+#: bp-xprofile/bp-xprofile-repeaters.php:761
+#: bp-xprofile/bp-xprofile-repeaters.php:763
 #: bp-xprofile/classes/class-bp-xprofile-component.php:272
 #: bp-xprofile/classes/class-bp-xprofile-component.php:386
 msgid "Edit"
@@ -409,7 +409,7 @@ msgstr ""
 #: bp-activity/bp-activity-admin.php:774
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:46
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1239
-#: bp-xprofile/classes/class-bp-xprofile-group.php:783
+#: bp-xprofile/classes/class-bp-xprofile-group.php:803
 msgid "Update"
 msgstr ""
 
@@ -518,10 +518,11 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:908
 #: bp-members/classes/class-bp-members-admin.php:2244
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:29
+#: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/crop.php:22
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/index.php:120
-#: bp-templates/bp-nouveau/includes/activity/functions.php:189
+#: bp-templates/bp-nouveau/includes/activity/functions.php:190
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1394
-#: bp-xprofile/classes/class-bp-xprofile-group.php:881
+#: bp-xprofile/classes/class-bp-xprofile-group.php:901
 msgid "Cancel"
 msgstr ""
 
@@ -891,11 +892,12 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/notifications/functions.php:244
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:114
 #: bp-xprofile/bp-xprofile-admin.php:788
-#: bp-xprofile/bp-xprofile-repeaters.php:730
-#: bp-xprofile/bp-xprofile-repeaters.php:732
-#: bp-xprofile/bp-xprofile-repeaters.php:752
-#: bp-xprofile/bp-xprofile-repeaters.php:754
+#: bp-xprofile/bp-xprofile-repeaters.php:743
+#: bp-xprofile/bp-xprofile-repeaters.php:745
+#: bp-xprofile/bp-xprofile-repeaters.php:765
+#: bp-xprofile/bp-xprofile-repeaters.php:767
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:339
+#: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:285
 #: bp-xprofile/classes/class-bp-xprofile-field-type.php:415
 msgid "Delete"
 msgstr ""
@@ -2623,7 +2625,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:98
 #: bp-members/bp-members-functions.php:2991
 #: bp-members/bp-members-functions.php:2994
-#: bp-xprofile/bp-xprofile-admin.php:946 bp-xprofile/bp-xprofile-admin.php:998
+#: bp-xprofile/bp-xprofile-admin.php:954 bp-xprofile/bp-xprofile-admin.php:1006
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1488
 msgid "Profile Types"
 msgstr ""
@@ -2637,7 +2639,7 @@ msgstr ""
 #: bp-core/profile-search/bps-start.php:57
 #: bp-core/profile-search/bps-start.php:60
 #: bp-core/profile-search/bps-start.php:240
-#: bp-xprofile/bp-xprofile-admin.php:954
+#: bp-xprofile/bp-xprofile-admin.php:962
 msgid "Profile Search"
 msgstr ""
 
@@ -3505,10 +3507,10 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2457 bp-xprofile/bp-xprofile-admin.php:156
 #: bp-xprofile/bp-xprofile-admin.php:163 bp-xprofile/bp-xprofile-admin.php:172
-#: bp-xprofile/bp-xprofile-admin.php:939
+#: bp-xprofile/bp-xprofile-admin.php:947
 #: bp-xprofile/classes/class-bp-xprofile-component.php:48
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1253
-#: bp-xprofile/classes/class-bp-xprofile-group.php:796
+#: bp-xprofile/classes/class-bp-xprofile-group.php:816
 msgid "Profile Fields"
 msgstr ""
 
@@ -5302,8 +5304,9 @@ msgstr ""
 
 #: bp-core/classes/class-bp-email-tokens.php:205
 #: bp-core/classes/class-bp-email-tokens.php:335
-#: bp-groups/bp-groups-template.php:717 bp-groups/bp-groups-template.php:729
-#: bp-groups/bp-groups-template.php:818
+#: bp-groups/bp-groups-template.php:704 bp-groups/bp-groups-template.php:709
+#: bp-groups/bp-groups-template.php:714 bp-groups/bp-groups-template.php:717
+#: bp-groups/bp-groups-template.php:729 bp-groups/bp-groups-template.php:818
 msgid "Group"
 msgstr ""
 
@@ -6720,7 +6723,7 @@ msgstr ""
 
 #: bp-forums/admin/forums.php:123 bp-forums/classes/class-bbpress.php:560
 #: bp-forums/forums/functions.php:1631 bp-groups/bp-groups-admin.php:1020
-#: bp-groups/bp-groups-template.php:708
+#: bp-groups/bp-groups-template.php:708 bp-groups/bp-groups-template.php:709
 #: bp-groups/classes/class-bp-groups-list-table.php:606
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:264
 msgid "Hidden"
@@ -9180,7 +9183,8 @@ msgid "Category"
 msgstr ""
 
 #: bp-forums/forums/functions.php:1629 bp-groups/bp-groups-admin.php:1018
-#: bp-groups/bp-groups-template.php:703 bp-groups/bp-groups-template.php:1369
+#: bp-groups/bp-groups-template.php:703 bp-groups/bp-groups-template.php:704
+#: bp-groups/bp-groups-template.php:1369
 #: bp-groups/classes/class-bp-groups-list-table.php:600
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:262
 #: bp-xprofile/classes/class-bp-xprofile-component.php:181
@@ -9190,7 +9194,7 @@ msgstr ""
 #: bp-forums/forums/functions.php:1630
 #: bp-forums/templates/default/bbpress/feedback-no-access.php:12
 #: bp-groups/bp-groups-admin.php:1019 bp-groups/bp-groups-template.php:713
-#: bp-groups/bp-groups-template.php:1371
+#: bp-groups/bp-groups-template.php:714 bp-groups/bp-groups-template.php:1371
 #: bp-groups/classes/class-bp-groups-list-table.php:603
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:263
 msgid "Private"
@@ -9720,7 +9724,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-topic-merge.php:95
 #: bp-forums/templates/default/bbpress/form-topic-split.php:99
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1367
-#: bp-xprofile/classes/class-bp-xprofile-group.php:857
+#: bp-xprofile/classes/class-bp-xprofile-group.php:877
 msgid "Submit"
 msgstr ""
 
@@ -10997,7 +11001,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/functions.php:1182
 #: bp-templates/bp-nouveau/includes/functions.php:1234
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1217
-#: bp-xprofile/classes/class-bp-xprofile-group.php:774
+#: bp-xprofile/classes/class-bp-xprofile-group.php:794
 msgid "Save"
 msgstr ""
 
@@ -11518,15 +11522,15 @@ msgstr ""
 msgid "Group Types:"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:704 bp-groups/bp-groups-template.php:723
+#: bp-groups/bp-groups-template.php:723
 msgid "Public Group"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:709 bp-groups/bp-groups-template.php:725
+#: bp-groups/bp-groups-template.php:725
 msgid "Hidden Group"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:714 bp-groups/bp-groups-template.php:727
+#: bp-groups/bp-groups-template.php:727
 msgid "Private Group"
 msgstr ""
 
@@ -14298,6 +14302,7 @@ msgstr ""
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:186
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:195
 #: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:176
+#: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:155
 #. translators: accessibility text
 msgid "Select"
 msgstr ""
@@ -14763,7 +14768,7 @@ msgid "Load More"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/post-form.php:17
-#: bp-templates/bp-nouveau/includes/activity/functions.php:188
+#: bp-templates/bp-nouveau/includes/activity/functions.php:189
 msgid "Post Update"
 msgstr ""
 
@@ -15785,7 +15790,8 @@ msgid "There was a problem when deleting. Please try again."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:275
-#: bp-templates/bp-nouveau/includes/media/ajax.php:399
+#: bp-templates/bp-nouveau/includes/media/ajax.php:405
+#: bp-templates/bp-nouveau/includes/media/ajax.php:442
 msgid "There was a problem displaying the content. Please try again."
 msgstr ""
 
@@ -15813,68 +15819,68 @@ msgstr ""
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:159
+#: bp-templates/bp-nouveau/includes/activity/functions.php:160
 msgid "Post in: Profile"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:168
+#: bp-templates/bp-nouveau/includes/activity/functions.php:169
 msgid "Post in: Group"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:169
+#: bp-templates/bp-nouveau/includes/activity/functions.php:170
 msgid "Start typing the group name&hellip;"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:185
+#: bp-templates/bp-nouveau/includes/activity/functions.php:186
 msgid "Write here or use @ to mention someone."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:186
+#: bp-templates/bp-nouveau/includes/activity/functions.php:187
 msgid "Post what's new"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:187
+#: bp-templates/bp-nouveau/includes/activity/functions.php:188
 msgid "Post in"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:190
+#: bp-templates/bp-nouveau/includes/activity/functions.php:191
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:233
 msgid "%d Comment"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:191
+#: bp-templates/bp-nouveau/includes/activity/functions.php:192
 msgid "%d Comments"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:192
+#: bp-templates/bp-nouveau/includes/activity/functions.php:193
 msgid "Loading..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:196
+#: bp-templates/bp-nouveau/includes/activity/functions.php:197
 msgid "Write something to %s..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:200
+#: bp-templates/bp-nouveau/includes/activity/functions.php:201
 msgid "Share something with your group..."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:231
+#: bp-templates/bp-nouveau/includes/activity/functions.php:232
 msgid "All Updates"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:259
+#: bp-templates/bp-nouveau/includes/activity/functions.php:260
 msgid "My Likes"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:480
+#: bp-templates/bp-nouveau/includes/activity/functions.php:481
 msgid "New mentions"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:485
+#: bp-templates/bp-nouveau/includes/activity/functions.php:486
 msgid "New update replies"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/functions.php:490
+#: bp-templates/bp-nouveau/includes/activity/functions.php:491
 msgid "New update comment replies"
 msgstr ""
 
@@ -15951,7 +15957,7 @@ msgid "Customize the appearance of the BuddyBoss Platform."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:46
-#: bp-xprofile/bp-xprofile-admin.php:963
+#: bp-xprofile/bp-xprofile-admin.php:971
 msgid "Profile Navigation"
 msgstr ""
 
@@ -15981,10 +15987,10 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:68
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:47
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:261
-#: bp-templates/bp-nouveau/includes/media/ajax.php:74
-#: bp-templates/bp-nouveau/includes/media/ajax.php:122
-#: bp-templates/bp-nouveau/includes/media/ajax.php:246
-#: bp-templates/bp-nouveau/includes/media/ajax.php:335
+#: bp-templates/bp-nouveau/includes/media/ajax.php:80
+#: bp-templates/bp-nouveau/includes/media/ajax.php:128
+#: bp-templates/bp-nouveau/includes/media/ajax.php:252
+#: bp-templates/bp-nouveau/includes/media/ajax.php:341
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
 
@@ -16542,33 +16548,37 @@ msgstr ""
 msgid "widgets (content blocks)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:102
+#: bp-templates/bp-nouveau/includes/media/ajax.php:108
 msgid "There was a problem when trying to upload this file."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:147
-#: bp-templates/bp-nouveau/includes/media/ajax.php:271
+#: bp-templates/bp-nouveau/includes/media/ajax.php:153
+#: bp-templates/bp-nouveau/includes/media/ajax.php:277
 msgid "Please upload media before saving."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:156
+#: bp-templates/bp-nouveau/includes/media/ajax.php:162
 msgid "Please write something about media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:201
+#: bp-templates/bp-nouveau/includes/media/ajax.php:207
 msgid "There was a problem when trying to add the media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:280
+#: bp-templates/bp-nouveau/includes/media/ajax.php:286
 msgid "Please provide album to move media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:297
+#: bp-templates/bp-nouveau/includes/media/ajax.php:303
 msgid "There was a problem when trying to move the media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:360
+#: bp-templates/bp-nouveau/includes/media/ajax.php:366
 msgid "Please enter title of album."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/media/ajax.php:454
+msgid "Please provide attachment id to delete."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/functions.php:185
@@ -16804,7 +16814,7 @@ msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:165 bp-xprofile/bp-xprofile-admin.php:173
 #: bp-xprofile/bp-xprofile-admin.php:332
-#: bp-xprofile/classes/class-bp-xprofile-group.php:773
+#: bp-xprofile/classes/class-bp-xprofile-group.php:793
 msgid "New Field Set"
 msgstr ""
 
@@ -16819,7 +16829,7 @@ msgid "Add New Field"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:251
-#: bp-xprofile/classes/class-bp-xprofile-group.php:782
+#: bp-xprofile/classes/class-bp-xprofile-group.php:802
 msgid "Edit Field Set"
 msgstr ""
 
@@ -16892,39 +16902,50 @@ msgid ""
 "website."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-cssjs.php:56
+#: bp-xprofile/bp-xprofile-admin.php:1047
+msgid ""
+"You can only have one instance of the \"Social Networks\" profile field on "
+"the website."
+msgstr ""
+
+#: bp-xprofile/bp-xprofile-cssjs.php:57
 msgid ""
 "Are you sure you want to delete this field set and all of its included "
 "fields?"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:671
-#: bp-xprofile/bp-xprofile-filters.php:754 bp-xprofile/screens/edit.php:83
+#: bp-xprofile/bp-xprofile-filters.php:679
+#: bp-xprofile/bp-xprofile-filters.php:762
+#: bp-xprofile/bp-xprofile-filters.php:884 bp-xprofile/screens/edit.php:83
 msgid "%s is required and not allowed to be empty."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:676
+#: bp-xprofile/bp-xprofile-filters.php:684
 msgid "Invalid %s. Only \"a-z\", \"0-9\", \"-\", \"_\" and \".\" are allowed."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:681
+#: bp-xprofile/bp-xprofile-filters.php:689
 msgid "\"-\", \"_\" and \".\" cannot be repeated twice in %s."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:687
+#: bp-xprofile/bp-xprofile-filters.php:695
 msgid "%s must be shorter than %d characters."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:707
+#: bp-xprofile/bp-xprofile-filters.php:715
 msgid "%s has already been taken."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:763
-#: bp-xprofile/bp-xprofile-filters.php:773
+#: bp-xprofile/bp-xprofile-filters.php:771
+#: bp-xprofile/bp-xprofile-filters.php:781
 msgid "Enter valid %s"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-repeaters.php:667
+#: bp-xprofile/bp-xprofile-filters.php:894
+msgid "Please enter valid %s profile url."
+msgstr ""
+
+#: bp-xprofile/bp-xprofile-repeaters.php:680
 #. translators: %s = profile field group name
 msgid "Add Another"
 msgstr ""
@@ -16968,6 +16989,7 @@ msgstr ""
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:27
 #: bp-xprofile/classes/class-bp-xprofile-field-type-radiobutton.php:27
 #: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:27
+#: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:27
 msgid "Multi Fields"
 msgstr ""
 
@@ -17085,26 +17107,31 @@ msgid ""
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:220
+#: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:189
 #: bp-xprofile/classes/class-bp-xprofile-field-type.php:337
 msgid "Sort Order:"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:222
+#: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:191
 #: bp-xprofile/classes/class-bp-xprofile-field-type.php:339
 msgid "Custom"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:223
+#: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:192
 #: bp-xprofile/classes/class-bp-xprofile-field-type.php:340
 msgid "Ascending"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:224
+#: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:193
 #: bp-xprofile/classes/class-bp-xprofile-field-type.php:341
 msgid "Descending"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:313
+#: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:269
 #: bp-xprofile/classes/class-bp-xprofile-field-type.php:405
 #. translators: accessibility text
 msgid "Add an option"
@@ -17119,6 +17146,7 @@ msgid "Female"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:351
+#: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:299
 #: bp-xprofile/classes/class-bp-xprofile-field-type.php:427
 msgid "Add Another Option"
 msgstr ""
@@ -17142,6 +17170,14 @@ msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:28
 msgid "Drop Down Select Box"
+msgstr ""
+
+#: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:28
+msgid "Social Networks"
+msgstr ""
+
+#: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:186
+msgid "Please Select the social networks for this Field:"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-telephone.php:28
@@ -17274,38 +17310,38 @@ msgstr ""
 msgid "Optional"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:633
+#: bp-xprofile/classes/class-bp-xprofile-group.php:653
 msgid "Please make sure you give the group a name."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:815
+#: bp-xprofile/classes/class-bp-xprofile-group.php:835
 msgid "Field Set Name (required)"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:820
+#: bp-xprofile/classes/class-bp-xprofile-group.php:840
 msgid "Field Set Description"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:824
+#: bp-xprofile/classes/class-bp-xprofile-group.php:844
 #. translators: accessibility text
 msgid "Add description"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:910
+#: bp-xprofile/classes/class-bp-xprofile-group.php:930
 msgid "Repeater Set"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:912
+#: bp-xprofile/classes/class-bp-xprofile-group.php:932
 msgid ""
 "Allow the profile fields within this set to be repeated again and again, so "
 "the user can add multiple instances of their data."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:914
+#: bp-xprofile/classes/class-bp-xprofile-group.php:934
 msgid "Disabled"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-group.php:915
+#: bp-xprofile/classes/class-bp-xprofile-group.php:935
 msgid "Enabled"
 msgstr ""
 

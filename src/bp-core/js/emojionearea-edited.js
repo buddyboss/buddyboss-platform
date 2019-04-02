@@ -198,7 +198,7 @@ document = window.document || {};
 			search            : true,
 			placeholder       : null,
 			emojiPlaceholder  : ":smiley:",
-			searchPlaceholder : "SEARCH",
+			searchPlaceholder : "Search",
 			container         : null,
 			hideSource        : true,
 			shortnames        : true,
