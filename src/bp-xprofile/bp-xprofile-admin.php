@@ -484,7 +484,7 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 				}
 
 				if ( true === $disabled_social_networks ) {
-					$message = __( 'You can\'t add multiple Social Networks field. ', 'buddyboss' );
+					$message = __( 'You can only have one instance of the "Social Network" profile field.', 'buddyboss' );
 					$type    = 'error';
 					$field->render_admin_form( $message, $type );
 					return false;
@@ -684,7 +684,7 @@ function xprofile_check_gender_added_previously() {
 	global $wpdb;
 
 	$response = array();
-	$response['message'] = __( 'You can only have one instance of the "Gender" profile field on the website.', 'buddyboss');
+	$response['message'] = __( 'You can only have one instance of the "Gender" profile field.', 'buddyboss');
 
 	$referer = filter_input( INPUT_POST, 'referer', FILTER_SANITIZE_STRING );
 
