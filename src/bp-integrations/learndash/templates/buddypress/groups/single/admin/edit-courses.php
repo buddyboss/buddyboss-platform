@@ -17,6 +17,6 @@
 <p class="checkbox">
 	<label>
 		<input type="checkbox" name="bp-ld-sync-enable" id="bp-ld-sync-enable" value="1" <?php checked($hasLdGroup); ?> />
-		<?php esc_html_e('Yes. I want this group to have LearnDash group.', 'buddyboss'); ?>
+		<?php esc_html_e('Yes. I want this group to sync with a LearnDash group.', 'buddyboss'); ?>
 	</label>
 </p>
