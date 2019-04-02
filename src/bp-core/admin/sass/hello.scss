@@ -7,7 +7,9 @@ Loaded in wp-admin for query string `hello=buddyboss`.
 TABLE OF CONTENTS:
 --------------------------------------------------------------------------------
 1.0 - Typography and colour
-2.0 - Dashicons
+2.0 - Icons
+	2.1 - Dashicons
+	2.2 - Social Icons
 3.0 - Elements
 	3.1 - Backdrop and container
 	3.2 - Modal footer
@@ -64,8 +66,12 @@ TABLE OF CONTENTS:
 }
 
 /*------------------------------------------------------------------------------
- * 2.0 - Dashicons
+ * 2.0 - Icons
  *----------------------------------------------------------------------------*/
+
+/*
+ * 2.1 - Dashicons
+ */
 .bp-hello-close {
 
 	.button {
@@ -94,39 +100,41 @@ TABLE OF CONTENTS:
 	}
 }
 
+/*
+ * 2.2 - Social Icons
+ */
 .bp-hello-social {
 
 	li a {
 
 		&:before {
 			color: #23282d; /* wp toolbar */
-			font-family: "Font Awesome 5 Brands";
-			font-size: 27px;
-			font-weight: 400;
-			speak: none;
-			-webkit-font-smoothing: antialiased;
-			-moz-osx-font-smoothing: grayscale;
-			background-image: none !important;
+			display: inline-block;
+			content: " ";
+			background-size: 20px 20px;
+			background-repeat: no-repeat;
+			background-position: center;
+			background-color: #f6f6f6;
+			height: 38px;
+			width: 38px;
+			border-radius: 50px;
+			vertical-align: middle;
 		}
 
 		&:hover:before {
-			-webkit-transition: all 0.1s ease-in-out;
-			-o-transition: all 0.1s ease-in-out;
-			transition: all 0.1s ease-in-out;
-			color: var(--bp-hello-color-primary);
+			background-color: #eee;
 		}
 
 		&.youtube:before {
-			content: "\f167";
+			background-image: url(../../images/admin/icons/fontawesome/brands/youtube.svg);
 		}
 
 		&.twitter:before {
-			content: "\f099";
-			margin-left: 2px;
+			background-image: url(../../images/admin/icons/fontawesome/brands/twitter.svg);
 		}
 
 		&.facebook:before {
-			content: "\f082";
+			background-image: url(../../images/admin/icons/fontawesome/brands/facebook-square.svg);
 		}
 	}
 }
@@ -184,6 +192,7 @@ TABLE OF CONTENTS:
 
 	ul {
 		display: inline-block;
+		margin: 2px 0 0;
 	}
 }
 
@@ -195,10 +204,7 @@ TABLE OF CONTENTS:
 		display: inline-block;
 		list-style-type: none;
 		margin-bottom: 0;
-
-		&:last-child a {
-			margin-left: 4px;
-		}
+		margin-left: 5px;
 	}
 }
 
