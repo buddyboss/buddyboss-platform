@@ -194,6 +194,9 @@ if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
  * Loads FontAwesome in WordPress admin
 **/
 function bp_font_awesome_icons(){
+    //echo '<link href="//use.fontawesome.com/releases/v5.8.1/css/brands.css" rel="stylesheet" integrity="sha384-QokYePQSOwpBDuhlHOsX0ymF6R/vLk/UQVz3WHa6wygxI5oGTmDTv8wahFOSspdm" crossorigin="anonymous">';
+
+    echo '<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/brands.css" integrity="sha384-n9+6/aSqa9lBidZMRCQHTHKJscPq6NW4pCQBiMmHdUCvPN8ZOg2zJJTkC7WIezWv" crossorigin="anonymous">';
     echo '<link href="//use.fontawesome.com/releases/v5.8.1/css/solid.css" rel="stylesheet" integrity="sha384-QokYePQSOwpBDuhlHOsX0ymF6R/vLk/UQVz3WHa6wygxI5oGTmDTv8wahFOSspdm" crossorigin="anonymous">';
 }
 add_action('admin_head', 'bp_font_awesome_icons');

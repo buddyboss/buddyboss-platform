@@ -75,10 +75,21 @@ defined( 'ABSPATH' ) || exit;
 				<li>
 					<?php
 					printf(
+						'<a class="youtube bp-tooltip" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
+						esc_attr( 'Follow BuddyBoss on YouTube', 'buddyboss' ),
+						esc_url( 'https://www.youtube.com/c/BuddybossWP' ),
+						esc_html( 'Follow BuddyBoss on YouTube', 'buddyboss' )
+					);
+					?>
+				</li>
+
+				<li>
+					<?php
+					printf(
 						'<a class="twitter bp-tooltip" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
 						esc_attr( 'Follow BuddyBoss on Twitter', 'buddyboss' ),
 						esc_url( 'https://twitter.com/BuddyBossWP' ),
-						esc_html( 'Follow BuddyPress on Twitter', 'buddyboss' )
+						esc_html( 'Follow BuddyBoss on Twitter', 'buddyboss' )
 					);
 					?>
 				</li>

@@ -81,7 +81,9 @@ TABLE OF CONTENTS:
 .bp-hello-social li a:before {
   color: #23282d;
   /* wp toolbar */
-  font: 400 30px/0.6 dashicons;
+  font-family: "Font Awesome 5 Brands";
+  font-size: 27px;
+  font-weight: 400;
   speak: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -95,12 +97,16 @@ TABLE OF CONTENTS:
   color: var(--bp-hello-color-primary);
 }
 
+.bp-hello-social li a.youtube:before {
+  content: "\f167";
+}
+
 .bp-hello-social li a.twitter:before {
-  content: "\f301";
+  content: "\f099";
 }
 
 .bp-hello-social li a.facebook:before {
-  content: "\f304";
+  content: "\f082";
 }
 
 /*------------------------------------------------------------------------------
