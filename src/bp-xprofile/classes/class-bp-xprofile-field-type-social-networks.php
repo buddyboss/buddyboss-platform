@@ -183,7 +183,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 		?>
 
 		<div id="<?php echo esc_attr( $type ); ?>" class="postbox bp-options-box" style="<?php echo esc_attr( $class ); ?> margin-top: 15px;">
-			<h3><?php esc_html_e( 'Please Select the social networks for this Field:', 'buddyboss' ); ?></h3>
+			<h3><?php esc_html_e( 'Please select the social networks to allow. If entered, they will display as icons in the user\'s profile.', 'buddyboss' ); ?></h3>
 			<div class="inside" aria-live="polite" aria-atomic="true" aria-relevant="all">
 				<p style="display: none;">
 					<label for="sort_order_<?php echo esc_attr( $type ); ?>"><?php esc_html_e( 'Sort Order:', 'buddyboss' ); ?></label>
