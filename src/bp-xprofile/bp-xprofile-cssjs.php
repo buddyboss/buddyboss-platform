@@ -53,7 +53,9 @@ function xprofile_add_admin_js() {
 		// "please enter options for this field" section.
 		$strings = array(
 			'do_settings_section_field_types' => array(),
-            'confirm_delete_field_group'      => __( 'Are you sure you want to delete this field set and all of its included fields?', 'buddyboss' ),
+			'social_networks_provider'        => array(),
+			'confirm_delete_field_group'      => __( 'Are you sure you want to delete this field set and all of its included fields?','buddyboss' ),
+			'social_networks_provider_count'  => 0,
 		);
 
 		foreach ( bp_xprofile_get_field_types() as $field_type => $field_type_class ) {
@@ -61,6 +63,12 @@ function xprofile_add_admin_js() {
 			if ( $field->do_settings_section() ) {
 				$strings['do_settings_section_field_types'][] = $field_type;
 			}
+		}
+
+		$providers = social_network_provider();
+		$strings['social_networks_provider_count'] = count( $providers );
+		foreach ( $providers as $provider ) {
+			$strings['social_networks_provider'][] = $provider->name;
 		}
 
 		// Load 'autolink' setting into JS so that we can provide smart defaults when switching field type.

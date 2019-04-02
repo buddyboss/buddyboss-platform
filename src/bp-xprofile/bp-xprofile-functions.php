@@ -176,6 +176,7 @@ function bp_xprofile_get_field_types() {
 		'textbox'        => 'BP_XProfile_Field_Type_Textbox',
 		'telephone'      => 'BP_XProfile_Field_Type_Telephone',
 		'gender'         => 'BP_XProfile_Field_Type_Gender',
+		'socialnetworks' => 'BP_XProfile_Field_Type_Social_Networks',
 	);
 
 	/**
@@ -1520,4 +1521,132 @@ function bp_at_mention_default_options() {
 		'insert_tpl' => '@${ID}',
 		'display_tpl' => '<li data-value="@${ID}"><img src="${image}" /><span class="username">@${ID}</span><small>${name}</small></li>'
 	] );
+}
+
+/**
+ * Social Networks xprofile field provider.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return array
+ */
+function social_network_provider() {
+
+	$options = array();
+
+	$options[] = (object) array(
+		'id'                => 1,
+		'is_default_option' => false,
+		'name'              => 'Facebook',
+		'value'             => 'facebook',
+	);
+	$options[] = (object) array(
+		'id'                => 2,
+		'is_default_option' => false,
+		'name'              => 'Flickr',
+		'value'             => 'flickr',
+	);
+	$options[] = (object) array(
+		'id'                => 3,
+		'is_default_option' => false,
+		'name'              => 'Google+',
+		'value'             => 'google',
+	);
+	$options[] = (object) array(
+		'id'                => 4,
+		'is_default_option' => false,
+		'name'              => 'Instagram',
+		'value'             => 'instagram',
+	);
+	$options[] = (object) array(
+		'id'                => 5,
+		'is_default_option' => false,
+		'name'              => 'LinkedIn',
+		'value'             => 'linkedIn',
+	);
+	$options[] = (object) array(
+		'id'                => 6,
+		'is_default_option' => false,
+		'name'              => 'Medium',
+		'value'             => 'medium',
+	);
+	$options[] = (object) array(
+		'id'                => 7,
+		'is_default_option' => false,
+		'name'              => 'Meetup',
+		'value'             => 'meetup',
+	);
+	$options[] = (object) array(
+		'id'                => 8,
+		'is_default_option' => false,
+		'name'              => 'Pinterest',
+		'value'             => 'pinterest',
+	);
+	$options[] = (object) array(
+		'id'                => 9,
+		'is_default_option' => false,
+		'name'              => 'Quora',
+		'value'             => 'quora',
+	);
+	$options[] = (object) array(
+		'id'                => 10,
+		'is_default_option' => false,
+		'name'              => 'Reddit',
+		'value'             => 'reddit',
+	);
+	$options[] = (object) array(
+		'id'                => 11,
+		'is_default_option' => false,
+		'name'              => 'Tumblr',
+		'value'             => 'tumblr',
+	);
+	$options[] = (object) array(
+		'id'                => 12,
+		'is_default_option' => false,
+		'name'              => 'Twitter',
+		'value'             => 'twitter',
+	);
+	$options[] = (object) array(
+		'id'                => 13,
+		'is_default_option' => false,
+		'name'              => 'YouTube',
+		'value'             => 'youTube',
+	);
+
+	return apply_filters( 'bp_xprofile_fields_social_networks_provider', $options );
+}
+
+/**
+ * Add social networks button to the member header area.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string
+ */
+function bp_get_user_social_networks_urls() {
+
+	global $wpdb;
+
+	$social_networks_id = (int) $wpdb->get_var( "SELECT a.id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' ");
+
+	$html = '';
+	$original_option_values = array();
+	if ( $social_networks_id > 0 ) {
+		$providers = social_network_provider();
+		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, bp_displayed_user_id() ) );
+		foreach ( $original_option_values as $key => $original_option_value ) {
+			if ( '' !== $original_option_value ) {
+				$key = bp_social_network_search_key( $key, $providers);
+				$html .= '<span class="social '.$key.'"><a target="_blank" href="'.esc_url( $original_option_value ).'">'.$providers[$key]->name.'</a></span>';
+			}
+		}
+	} else {
+		$html = '';
+	}
+
+	if ( '' !== $html ) {
+		$html .= '<div class="social-networks-wrap">'.$html.'</div>';
+	}
+
+	return apply_filters( 'bp_get_user_social_networks_urls', $html, $original_option_values, $social_networks_id );
 }

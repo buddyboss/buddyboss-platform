@@ -12,12 +12,13 @@ function add_option(forWhat) {
 		theId        = document.getElementById(forWhat + '_option_number').value,
 		newDiv       = document.createElement( 'div' ),
 		grabber      = document.createElement( 'span' ),
-		newOption    = document.createElement( 'input' ),
+		newOption    = ( 'socialnetworks' !== forWhat ) ? document.createElement( 'input' ) : document.createElement( 'select' ),
 		label        = document.createElement( 'label' ),
 		isDefault    = document.createElement( 'input' ),
 		txt1         = document.createTextNode( 'Default Value' ),
 		toDeleteText = document.createTextNode( 'Delete' ),
 		toDeleteWrap = document.createElement( 'div' ),
+		s			 = 0,
 		toDelete     = document.createElement( 'a' );
 
 	newDiv.setAttribute('id', forWhat + '_div' + theId);
@@ -25,13 +26,24 @@ function add_option(forWhat) {
 
 	grabber.setAttribute( 'class', 'bp-option-icon grabber');
 
-	if ( 'gender' !== forWhat ) {
-		newOption.setAttribute('type', 'text');
-		newOption.setAttribute('name', forWhat + '_option[' + theId + ']');
-		newOption.setAttribute('id', forWhat + '_option' + theId);
-	} else {
+	if ( 'gender' === forWhat ) {
 		newOption.setAttribute('type', 'text');
 		newOption.setAttribute('name', forWhat + '_option[' + theId + '_other]');
+		newOption.setAttribute('id', forWhat + '_option' + theId);
+	} else if ( 'socialnetworks' === forWhat ) {
+		newOption.setAttribute('name', forWhat + '_option[' + theId + ']');
+		newOption.setAttribute('id', forWhat + '_option' + theId);
+		var option_default = document.createElement('option');
+		option_default.text = 'Select';
+		newOption.add(option_default);
+		for ( s = 0; s < XProfileAdmin.social_networks_provider.length; s++ ) {
+			var option = document.createElement('option');
+			option.text = XProfileAdmin.social_networks_provider[s];
+			newOption.add(option);
+		}
+	} else {
+		newOption.setAttribute('type', 'text');
+		newOption.setAttribute('name', forWhat + '_option[' + theId + ']');
 		newOption.setAttribute('id', forWhat + '_option' + theId);
 	}
 
@@ -52,21 +64,25 @@ function add_option(forWhat) {
 	toDeleteWrap.setAttribute( 'class', 'delete-button' );
 	toDeleteWrap.appendChild( toDelete );
 
-	if ( 'gender' !== forWhat ) {
+	if ( 'gender' === forWhat ) {
+		txt1         = document.createTextNode( ' Other' );
+		label.appendChild(txt1);
+	} else if ( 'socialnetworks' === forWhat ) {
+
+	} else {
 		label.appendChild(document.createTextNode(' '));
 		label.appendChild(isDefault);
 		label.appendChild(document.createTextNode(' '));
 		label.appendChild(txt1);
 		label.appendChild(document.createTextNode(' '));
-	} else {
-		txt1         = document.createTextNode( ' Other' );
-		label.appendChild(txt1);
 	}
 
 	newDiv.appendChild( grabber );
 	newDiv.appendChild( document.createTextNode( ' ' ) );
 	newDiv.appendChild( newOption );
-	newDiv.appendChild( label );
+	if ( 'socialnetworks' !== forWhat ) {
+		newDiv.appendChild(label);
+	}
 	newDiv.appendChild( toDeleteWrap );
 	holder.appendChild( newDiv );
 
@@ -75,6 +91,10 @@ function add_option(forWhat) {
 
 	// set focus on newly created element
 	document.getElementById(forWhat + '_option' + theId).focus();
+
+	if ( 'socialnetworks' === forWhat && theId === XProfileAdmin.social_networks_provider_count ) {
+		jQuery('.social_networks_add_more').hide();
+	}
 
 	theId++;
 
@@ -88,7 +108,6 @@ function add_option(forWhat) {
  */
 function show_options( forWhat ) {
 	var do_autolink, i;
-
 	if ( forWhat === 'gender' ) {
 
 		jQuery.ajax({
@@ -143,6 +162,62 @@ function show_options( forWhat ) {
 						jQuery( '#do-autolink' ).val( do_autolink );
 					}
 
+					jQuery( document ).trigger( 'bp-xprofile-show-options', forWhat );
+				}
+			}
+		});
+	} else if( forWhat === 'socialnetworks' ) {
+		jQuery.ajax({
+			url : ajaxurl,
+			type : 'post',
+			data : {
+				action : 'xprofile_check_social_networks_added_previously',
+				type   : 'socialnetworks',
+				referer: jQuery('#bp-xprofile-add-field').find('input[name="_wp_http_referer"]').val()
+			},
+			success : function( response ) {
+				var result = jQuery.parseJSON( response );
+
+				if ( 'added' === result.status ) {
+					alert( result.message );
+					jQuery('#fieldtype').val('');
+					jQuery('#fieldtype').val('textbox');
+					forWhat = 'textbox';
+					for ( i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
+						document.getElementById( XProfileAdmin.do_settings_section_field_types[i] ).style.display = 'none';
+					}
+
+					if ( XProfileAdmin.do_settings_section_field_types.indexOf( forWhat ) >= 0 ) {
+						document.getElementById( forWhat ).style.display = '';
+						do_autolink = 'on';
+					} else {
+						jQuery( '#do-autolink' ).val( '' );
+						do_autolink = '';
+					}
+
+					// Only overwrite the do_autolink setting if no setting is saved in the database.
+					if ( '' === XProfileAdmin.do_autolink ) {
+						jQuery( '#do-autolink' ).val( do_autolink );
+					}
+
+					jQuery( document ).trigger( 'bp-xprofile-show-options', forWhat );
+				} else {
+					for ( i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
+						document.getElementById( XProfileAdmin.do_settings_section_field_types[i] ).style.display = 'none';
+					}
+
+					if ( XProfileAdmin.do_settings_section_field_types.indexOf( forWhat ) >= 0 ) {
+						document.getElementById( forWhat ).style.display = '';
+						do_autolink = 'on';
+					} else {
+						jQuery( '#do-autolink' ).val( '' );
+						do_autolink = '';
+					}
+
+					// Only overwrite the do_autolink setting if no setting is saved in the database.
+					if ( '' === XProfileAdmin.do_autolink ) {
+						jQuery( '#do-autolink' ).val( do_autolink );
+					}
 					jQuery( document ).trigger( 'bp-xprofile-show-options', forWhat );
 				}
 			}

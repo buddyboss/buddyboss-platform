@@ -418,6 +418,26 @@ class BP_XProfile_Group {
 
 		$field_ids = array_map( 'intval', $field_ids );
 
+		// Start Remove the social network fields from dashboard page.
+		$social_networks_key = 0;
+		if ( bp_is_user_profile() && ! bp_is_user_profile_edit() && ! bp_is_register_page() ) {
+			foreach ( $field_ids as $profile_fields ) {
+				$field_obj = xprofile_get_field( $profile_fields, null, false );
+				if ( 'socialnetworks' === $field_obj->type ) {
+					$social_networks_key = (int) $profile_fields;
+				}
+			}
+		}
+
+		// If social networks field found then remove from the $field_ids array.
+		if ( $social_networks_key > 0 ) {
+			if (($key = array_search($social_networks_key, $field_ids)) !== false) {
+				unset($field_ids[$key]);
+			}
+		}
+
+		// End Remove the social network fields from dashboard page.
+
 		// Prime the field cache.
 		$uncached_field_ids = bp_get_non_cached_ids( $field_ids, 'bp_xprofile_fields' );
 		if ( ! empty( $uncached_field_ids ) ) {
