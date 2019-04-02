@@ -472,7 +472,7 @@ body:not(.buddyboss_page_bp-integrations) .bp-admin-card h2:before {
 .bp-admin-card.section-bp_media_settings_general h2:before,
 .bp-admin-card.section-bp_media_settings_groups h2:before,
 .bp-admin-card.section-bp_media_settings_forums h2:before {
-  background-image: url(../../images/admin/camera-retro.svg);
+  background-image: url(../../images/admin/icons/fontawesome/solid/camera-retro.svg);
 }
 
 /* Search */
