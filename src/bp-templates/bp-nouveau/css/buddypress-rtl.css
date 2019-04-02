@@ -1894,6 +1894,7 @@ a.layout-grid-view {
 
 .activity-attached-gif-container .gif-player video {
   margin: 0;
+  max-width: 100%;
 }
 
 .activity-attached-gif-container .gif-play-button {

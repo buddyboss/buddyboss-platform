@@ -1107,7 +1107,7 @@ window.bp = window.bp || {};
 			if( ! _.isNull( this.activityMedia ) ) {
 				this.activityMedia.destroy();
 			}
-		},
+		}
 	});
 
 		/**
