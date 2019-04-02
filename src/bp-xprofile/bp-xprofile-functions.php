@@ -1634,10 +1634,12 @@ function bp_get_user_social_networks_urls() {
 	if ( $social_networks_id > 0 ) {
 		$providers = social_network_provider();
 		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, bp_displayed_user_id() ) );
-		foreach ( $original_option_values as $key => $original_option_value ) {
-			if ( '' !== $original_option_value ) {
-				$key = bp_social_network_search_key( $key, $providers);
-				$html .= '<span class="social '.$key.'"><a target="_blank" href="'.esc_url( $original_option_value ).'">'.$providers[$key]->name.'</a></span>';
+		if ( isset( $original_option_values ) && !empty( $original_option_values ) ) {
+			foreach ( $original_option_values as $key => $original_option_value ) {
+				if ( '' !== $original_option_value ) {
+					$key  = bp_social_network_search_key( $key, $providers );
+					$html .= '<span class="social ' . $key . '"><a target="_blank" href="' . esc_url( $original_option_value ) . '">' . $providers[ $key ]->name . '</a></span>';
+				}
 			}
 		}
 	} else {
