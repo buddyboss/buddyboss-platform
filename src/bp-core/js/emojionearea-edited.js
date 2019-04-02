@@ -270,7 +270,7 @@ document = window.document || {};
 				},
 
 				smileys_people: {
-					icon: "yum",
+					icon: "grinning",
 					title: "Smileys & People",
 					emoji: "grinning smiley smile grin laughing sweat_smile joy rofl relaxed blush innocent slight_smile upside_down " +
 						"wink relieved crazy_face star_struck heart_eyes kissing_heart kissing kissing_smiling_eyes kissing_closed_eyes yum " +
@@ -311,7 +311,7 @@ document = window.document || {};
 				},
 
 				animals_nature: {
-					icon: "hamster",
+					icon: "leaves",
 					title: "Animals & Nature",
 					emoji: "dog cat mouse hamster rabbit fox bear panda_face koala tiger lion_face cow pig pig_nose frog monkey_face see_no_evil " +
 						"hear_no_evil speak_no_evil monkey chicken penguin bird baby_chick hatching_chick hatched_chick duck eagle owl bat wolf boar " +
@@ -329,7 +329,7 @@ document = window.document || {};
 				},
 
 				food_drink: {
-					icon: "pizza",
+					icon: "hamburger",
 					title: "Food & Drink",
 					emoji: "green_apple apple pear tangerine lemon banana watermelon grapes strawberry melon cherries peach pineapple kiwi " +
 						"avocado tomato eggplant cucumber carrot corn hot_pepper potato sweet_potato chestnut peanuts honey_pot croissant " +
@@ -342,7 +342,7 @@ document = window.document || {};
 				},
 
 				activity: {
-					icon: "basketball",
+					icon: "football",
 					title: "Activity",
 					emoji: "soccer basketball football baseball tennis volleyball rugby_football 8ball ping_pong badminton goal hockey field_hockey " +
 						"cricket_game golf bow_and_arrow fishing_pole_and_fish boxing_glove martial_arts_uniform ice_skate ski skier snowboarder " +
@@ -358,7 +358,7 @@ document = window.document || {};
 				},
 
 				travel_places: {
-					icon: "rocket",
+					icon: "airplane",
 					title: "Travel & Places",
 					emoji: "red_car taxi blue_car bus trolleybus race_car police_car ambulance fire_engine minibus truck articulated_lorry tractor " +
 						"scooter bike motor_scooter motorcycle rotating_light oncoming_police_car oncoming_bus oncoming_automobile oncoming_taxi " +
@@ -396,7 +396,7 @@ document = window.document || {};
 				},
 
 				symbols: {
-					icon: "heartpulse",
+					icon: "heart",
 					title: "Symbols",
 					emoji: "heart orange_heart yellow_heart green_heart blue_heart purple_heart black_heart broken_heart heart_exclamation two_hearts " +
 						"revolving_hearts heartbeat heartpulse sparkling_heart cupid gift_heart heart_decoration peace cross star_and_crescent " +
@@ -429,7 +429,7 @@ document = window.document || {};
 				},
 
 				flags: {
-					icon: "flag_gb",
+					icon: "flag_white",
 					title: "Flags",
 					emoji: "flag_white flag_black checkered_flag triangular_flag_on_post rainbow_flag flag_af flag_ax flag_al flag_dz flag_as " +
 						"flag_ad flag_ao flag_ai flag_aq flag_ag flag_ar flag_am flag_aw flag_au flag_at flag_az flag_bs flag_bh flag_bd flag_bb " +
@@ -996,7 +996,7 @@ document = window.document || {};
 					"data-filter": filter,
 					title: params.title
 				})
-					.wrapInner(shortnameTo(params.icon, self.emojiTemplateAlt))
+					.wrapInner('<img class="emojioneemoji" src="' + BP_Nouveau.activity.params.emoji_filter_url + filter + '.svg" />')
 					.appendTo(filters);
 			} else if (options.tones) {
 				skin = 5;

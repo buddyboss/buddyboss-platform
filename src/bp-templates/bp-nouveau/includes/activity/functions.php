@@ -108,6 +108,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 
 	if ( bp_is_activity_emoji_active() ) {
 		$activity_params['emoji'] = true;
+		$activity_params['emoji_filter_url'] = buddypress()->plugin_url . 'bp-core/images/emojifilter/';
 	}
 
 	// Gif api key
