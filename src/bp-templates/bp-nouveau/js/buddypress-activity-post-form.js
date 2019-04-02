@@ -453,7 +453,7 @@ window.bp = window.bp || {};
 		className: 'activity-attached-gif-container',
 		template: bp.template( 'activity-attached-gif' ),
 		events: {
-			'click .gif-image-remove': 'handleRemove'
+			'click .gif-image-remove': 'destroy'
 		},
 
 		initialize: function() {
