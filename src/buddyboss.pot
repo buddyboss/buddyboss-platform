@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-04-02 15:32:02+00:00\n"
+"POT-Creation-Date: 2019-04-03 06:53:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -396,7 +396,7 @@ msgstr ""
 #: bp-forums/replies/template.php:52 bp-forums/replies/template.php:1911
 #: bp-forums/topics/template.php:52 bp-forums/topics/template.php:2492
 #: bp-groups/classes/class-bp-groups-list-table.php:526
-#: bp-invites/bp-invites-admin.php:265 bp-xprofile/bp-xprofile-admin.php:783
+#: bp-invites/bp-invites-admin.php:265 bp-xprofile/bp-xprofile-admin.php:805
 #: bp-xprofile/bp-xprofile-repeaters.php:739
 #: bp-xprofile/bp-xprofile-repeaters.php:741
 #: bp-xprofile/bp-xprofile-repeaters.php:761
@@ -891,13 +891,13 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:836
 #: bp-templates/bp-nouveau/includes/notifications/functions.php:244
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:114
-#: bp-xprofile/bp-xprofile-admin.php:788
+#: bp-xprofile/bp-xprofile-admin.php:810
 #: bp-xprofile/bp-xprofile-repeaters.php:743
 #: bp-xprofile/bp-xprofile-repeaters.php:745
 #: bp-xprofile/bp-xprofile-repeaters.php:765
 #: bp-xprofile/bp-xprofile-repeaters.php:767
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:339
-#: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:285
+#: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:294
 #: bp-xprofile/classes/class-bp-xprofile-field-type.php:415
 msgid "Delete"
 msgstr ""
@@ -2450,7 +2450,7 @@ msgid "GIFs Key"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:115
-msgid "Posts in Activity Feed"
+msgid "Posts in Activity Feeds"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
@@ -2625,7 +2625,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:98
 #: bp-members/bp-members-functions.php:2991
 #: bp-members/bp-members-functions.php:2994
-#: bp-xprofile/bp-xprofile-admin.php:954 bp-xprofile/bp-xprofile-admin.php:1006
+#: bp-xprofile/bp-xprofile-admin.php:976 bp-xprofile/bp-xprofile-admin.php:1028
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1488
 msgid "Profile Types"
 msgstr ""
@@ -2639,7 +2639,7 @@ msgstr ""
 #: bp-core/profile-search/bps-start.php:57
 #: bp-core/profile-search/bps-start.php:60
 #: bp-core/profile-search/bps-start.php:240
-#: bp-xprofile/bp-xprofile-admin.php:962
+#: bp-xprofile/bp-xprofile-admin.php:984
 msgid "Profile Search"
 msgstr ""
 
@@ -3507,7 +3507,7 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2457 bp-xprofile/bp-xprofile-admin.php:156
 #: bp-xprofile/bp-xprofile-admin.php:163 bp-xprofile/bp-xprofile-admin.php:172
-#: bp-xprofile/bp-xprofile-admin.php:947
+#: bp-xprofile/bp-xprofile-admin.php:969
 #: bp-xprofile/classes/class-bp-xprofile-component.php:48
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1253
 #: bp-xprofile/classes/class-bp-xprofile-group.php:816
@@ -6226,7 +6226,7 @@ msgstr ""
 
 #: bp-core/profile-search/bps-xprofile.php:313
 #: bp-core/profile-search/bps-xprofile.php:514
-#: bp-xprofile/bp-xprofile-admin.php:834
+#: bp-xprofile/bp-xprofile-admin.php:856
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:332
 msgid "Other"
 msgstr ""
@@ -12668,7 +12668,7 @@ msgid ""
 msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/admin/edit-courses.php:20
-msgid "Yes. I want this group to have LearnDash group."
+msgid "Yes. I want this group to sync with a LearnDash group."
 msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-404.php:1
@@ -15957,7 +15957,7 @@ msgid "Customize the appearance of the BuddyBoss Platform."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:46
-#: bp-xprofile/bp-xprofile-admin.php:971
+#: bp-xprofile/bp-xprofile-admin.php:993
 msgid "Profile Navigation"
 msgstr ""
 
@@ -16818,8 +16818,8 @@ msgstr ""
 msgid "New Field Set"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:207 bp-xprofile/bp-xprofile-admin.php:756
-#: bp-xprofile/bp-xprofile-admin.php:758
+#: bp-xprofile/bp-xprofile-admin.php:207 bp-xprofile/bp-xprofile-admin.php:778
+#: bp-xprofile/bp-xprofile-admin.php:780
 msgid "(Signup)"
 msgstr ""
 
@@ -16872,43 +16872,49 @@ msgstr ""
 msgid "The field set was deleted successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:510
+#: bp-xprofile/bp-xprofile-admin.php:491
+msgid "You can only have one instance of the \"Social Network\" profile field."
+msgstr ""
+
+#: bp-xprofile/bp-xprofile-admin.php:532
 msgid "There was an error saving the field. Please try again."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:513
+#: bp-xprofile/bp-xprofile-admin.php:535
 msgid "The field was saved successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:591
+#: bp-xprofile/bp-xprofile-admin.php:613
 msgid "field"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:591
+#: bp-xprofile/bp-xprofile-admin.php:613
 msgid "option"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:595
+#: bp-xprofile/bp-xprofile-admin.php:617
 msgid "There was an error deleting the %s. Please try again."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:598
+#: bp-xprofile/bp-xprofile-admin.php:620
 msgid "The %s was deleted successfully!"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:671
-msgid ""
-"You can only have one instance of the \"Gender\" profile field on the "
-"website."
+#: bp-xprofile/bp-xprofile-admin.php:693
+msgid "You can only have one instance of the \"Gender\" profile field."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:1047
+#: bp-xprofile/bp-xprofile-admin.php:1069
 msgid ""
 "You can only have one instance of the \"Social Networks\" profile field on "
 "the website."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-cssjs.php:57
+#: bp-xprofile/bp-xprofile-cssjs.php:58
+msgid "You have already selected this option previously."
+msgstr ""
+
+#: bp-xprofile/bp-xprofile-cssjs.php:59
 msgid ""
 "Are you sure you want to delete this field set and all of its included "
 "fields?"
@@ -17131,7 +17137,7 @@ msgid "Descending"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:313
-#: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:269
+#: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:278
 #: bp-xprofile/classes/class-bp-xprofile-field-type.php:405
 #. translators: accessibility text
 msgid "Add an option"
@@ -17146,7 +17152,7 @@ msgid "Female"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:351
-#: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:299
+#: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:308
 #: bp-xprofile/classes/class-bp-xprofile-field-type.php:427
 msgid "Add Another Option"
 msgstr ""
