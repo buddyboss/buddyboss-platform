@@ -199,7 +199,7 @@ function bp_core_admin_registration_pages_description() {
 
 		echo wpautop(
 			sprintf(
-				__( 'Registration is currently disabled. %s To enable registration, please click on the "Registration" checkbox in <a href="%s">General Settings</a>.', 'buddyboss' ),
+				__( 'Registration is currently disabled. %s To enable open registration, please click on the "Registration" checkbox in <a href="%s">General Settings</a>.', 'buddyboss' ),
 				$invite_text,add_query_arg( [
 					'page' => 'bp-settings',
 					'tab'  => 'bp-general',
