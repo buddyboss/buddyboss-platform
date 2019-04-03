@@ -223,7 +223,7 @@ TABLE OF CONTENTS:
 }
 
 #bp-admin-component-form .wp-list-table.plugins .plugin-title {
-  padding: 15px 15px 0;
+  padding: 20px 20px 0;
 }
 
 #bp-admin-component-form .wp-list-table.plugins .plugin-title .plugin-item {
@@ -233,14 +233,20 @@ TABLE OF CONTENTS:
   border-style: solid;
   background-color: #fafafa;
   box-shadow: 0 1px 0 #d2d2d2;
-  padding: 14px;
+  padding: 2em;
   border-radius: 3px;
 }
 
+#bp-admin-component-form .wp-list-table.plugins .plugin-title .plugin-item .row-actions {
+  padding: 1em 0 0;
+}
+
 #bp-admin-component-form .wp-list-table.plugins .plugin-title strong {
-  font-weight: 500;
-  font-size: 15px;
-  margin-bottom: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 1em;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 1em;
 }
 
 #bp-admin-component-form .subsubsub {
