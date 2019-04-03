@@ -1872,7 +1872,6 @@ input.search-query-input {
 
 .activity-attached-gif-container {
   cursor: pointer;
-  max-width: 480px;
 }
 
 .activity-attached-gif-container .gif-player {

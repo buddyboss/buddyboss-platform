@@ -59,7 +59,7 @@
 </script>
 
 <script type="text/html" id="tmpl-activity-attached-gif">
-	<# if ( ! _.isUndefined( data.gif_data.images.original.url ) ) { #>
+	<# if ( ! _.isUndefined( data.gif_data.images ) ) { #>
 	<div class="gif-image-container">
 		<img src="{{data.gif_data.images.original.url}}" alt="">
 	</div>
