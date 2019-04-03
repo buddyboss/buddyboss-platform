@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-04-02 23:17:19+00:00\n"
+"POT-Creation-Date: 2019-04-02 23:35:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1496,39 +1496,34 @@ msgid "Components list"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:157
-#: bp-core/admin/bp-core-admin-components.php:255
+#: bp-core/admin/bp-core-admin-components.php:250
 #. translators: accessibility text
 msgid "Enable or disable all optional components in bulk"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:159
-#: bp-core/admin/bp-core-admin-components.php:257
+#: bp-core/admin/bp-core-admin-components.php:252
 msgid "Component"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:160
-#: bp-core/profile-search/bps-admin.php:85
-#: bp-groups/classes/class-bp-groups-list-table.php:395
-#: bp-templates/bp-nouveau/buddypress/media/create-album.php:26
-msgid "Description"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-components.php:187
+#: bp-core/admin/bp-core-admin-components.php:186
 #. translators: accessibility text
 msgid "Select %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:200
+#: bp-core/admin/bp-core-admin-components.php:201
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1583
 msgid "Required"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:205
+#: bp-core/admin/bp-core-admin-components.php:206
+#: bp-core/admin/bp-core-admin-components.php:267
 #: bp-messages/bp-messages-template.php:1268
 msgid "Deactivate"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:209
+#: bp-core/admin/bp-core-admin-components.php:210
+#: bp-core/admin/bp-core-admin-components.php:266
 #: bp-core/admin/bp-core-admin-functions.php:269
 #: bp-core/bp-core-functions.php:760
 #: bp-members/classes/class-bp-members-list-table.php:165
@@ -1540,15 +1535,15 @@ msgstr ""
 msgid "Activate"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:214
+#: bp-core/admin/bp-core-admin-components.php:215
 msgid "|"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:219
+#: bp-core/admin/bp-core-admin-components.php:220
 msgid "Edit Fields"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:221
+#: bp-core/admin/bp-core-admin-components.php:222
 #: bp-core/admin/bp-core-admin-functions.php:604
 #: bp-core/admin/bp-core-admin-settings.php:407
 #: bp-core/classes/class-bp-admin.php:300
@@ -1562,8 +1557,23 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:243
+#: bp-core/admin/bp-core-admin-components.php:238
 msgid "No components found."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-components.php:263
+#: bp-integrations/memberships/includes/WpListTable.php:466
+msgid "Select bulk action"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-components.php:265
+#: bp-forums/admin/forums.php:177 bp-forums/admin/replies.php:166
+#: bp-forums/admin/topics.php:168
+#: bp-integrations/memberships/includes/WpListTable.php:468
+#: bp-messages/bp-messages-template.php:1030
+#: bp-notifications/bp-notifications-template.php:1022
+#: bp-templates/bp-nouveau/includes/notifications/template-tags.php:107
+msgid "Bulk Actions"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:105
@@ -6010,6 +6020,12 @@ msgstr ""
 msgid "Label"
 msgstr ""
 
+#: bp-core/profile-search/bps-admin.php:85
+#: bp-groups/classes/class-bp-groups-list-table.php:395
+#: bp-templates/bp-nouveau/buddypress/media/create-album.php:26
+msgid "Description"
+msgstr ""
+
 #: bp-core/profile-search/bps-admin.php:86
 msgid "Search Mode"
 msgstr ""
@@ -6793,15 +6809,6 @@ msgid ""
 "<strong>View</strong> will show you what your draft forum will look like if "
 "you publish it. View will take you to your live site to view the forum. "
 "Which link is available depends on your forum's status."
-msgstr ""
-
-#: bp-forums/admin/forums.php:177 bp-forums/admin/replies.php:166
-#: bp-forums/admin/topics.php:168
-#: bp-integrations/memberships/includes/WpListTable.php:468
-#: bp-messages/bp-messages-template.php:1030
-#: bp-notifications/bp-notifications-template.php:1022
-#: bp-templates/bp-nouveau/includes/notifications/template-tags.php:107
-msgid "Bulk Actions"
 msgstr ""
 
 #: bp-forums/admin/forums.php:179
@@ -12828,10 +12835,6 @@ msgstr ""
 
 #: bp-integrations/memberships/includes/WpListTable.php:337
 msgid "No items found."
-msgstr ""
-
-#: bp-integrations/memberships/includes/WpListTable.php:466
-msgid "Select bulk action"
 msgstr ""
 
 #: bp-integrations/memberships/includes/WpListTable.php:478
