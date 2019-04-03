@@ -219,6 +219,7 @@ class BP_Members_Admin {
 			add_action( 'update_site_option_registration',  array( $this, 'multisite_registration_on' ),   10, 2 );
 			add_action( 'update_option_users_can_register', array( $this, 'single_site_registration_on' ), 10, 2 );
 			add_action( 'update_option_bp-enable-site-registration', array( $this, 'bp_registration_update_option' ), 10, 2 );
+			add_action( 'admin_init', array( $this, 'bp_update_registration_update_option' ), 10 );
 		}
 
 		/** Users List - Members Types ***************************************
@@ -237,6 +238,32 @@ class BP_Members_Admin {
 			// Filter WP admin users list table to include users of the specified type.
 			add_filter( 'pre_get_users', array( $this, 'users_table_filter_by_type' ) );
 		}
+	}
+
+	/**
+	 * Update site registrations options based on the wordpress settings on plugin activate.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string $old_value
+	 * @param string $value
+	 */
+	function bp_update_registration_update_option() {
+
+		if ( ! is_multisite() ) {
+			$check_current_wp = (bool) bp_get_option('users_can_register', 0);
+			$check_current_bp = (bool) bp_enable_site_registration();
+			if ( true === $check_current_wp && false === $check_current_bp ) {
+				bp_update_option( 'bp-enable-site-registration', 1 );
+			}
+		} else {
+			$check_current_wp = get_site_option( 'registration', 'none' );
+			$check_current_bp = (bool) bp_enable_site_registration();
+			if ( ( 'all' === $check_current_wp || 'user' === $check_current_wp ) && false === $check_current_bp ) {
+				bp_update_option( 'bp-enable-site-registration', 1 );
+			}
+		}
+
 	}
 
 	/**
