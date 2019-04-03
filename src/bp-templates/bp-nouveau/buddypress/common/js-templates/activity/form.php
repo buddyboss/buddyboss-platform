@@ -32,6 +32,7 @@
 					<i class="dashicons dashicons-no-alt"></i>
 				</a>
 			</div>
+			<# if ( data.link_images.length > 1 ) { #>
 			<div class="activity-url-thumb-nav">
 				<input type="button" id="activity-url-prevPicButton" value="<"/>
 				<input type="button" id="activity-url-nextPicButton" value=">">
@@ -39,6 +40,7 @@
 					<# print(data.link_image_index + 1) #>&nbsp;<?php esc_html_e( 'of', 'buddyboss' ) ?>&nbsp;<# print(data.link_images.length) #>
 				</div>
 			</div>
+			<# } #>
 		</div>
 		<# } #>
 		<div id="activity-url-scrapper-text-holder">
