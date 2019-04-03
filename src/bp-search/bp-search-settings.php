@@ -376,6 +376,9 @@ function bp_search_settings_callback_number_of_results() {
 function bp_search_settings_callback_community_section() {
 	?>
 	<p><?php esc_html_e( 'Search the following BuddyBoss components:', 'buddyboss' ) ?></p>
+	<input id="bp_search_select_all_components" type="checkbox" value="1">
+	<label for="bp_search_select_all_components"><?php esc_html_e('Select All','buddyboss'); ?></label>
+
 	<?php
 }
 
@@ -387,6 +390,8 @@ function bp_search_settings_callback_community_section() {
 function bp_search_settings_callback_post_type_section() {
 	?>
 	<p><?php esc_html_e( 'Search the following WordPress content and custom post types:', 'buddyboss' ) ?></p>
+	<input id="bp_search_select_all_post_types" type="checkbox" value="1">
+	<label for="bp_search_select_all_post_types"><?php esc_html_e('Select All','buddyboss'); ?></label>
 	<?php
 }
 
