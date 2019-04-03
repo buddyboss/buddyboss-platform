@@ -694,7 +694,9 @@ window.bp = window.bp || {};
 		tagName   : 'div',
 		className : 'bp-suggestions',
 		id        : 'whats-new',
-
+		events : {
+			'paste' : 'handlePaste'
+		},
 		attributes: {
 			name         : 'whats-new',
 			cols         : '50',
@@ -740,6 +742,18 @@ window.bp = window.bp || {};
 			}
 
 			this.$el.html( activity.get( 'content' ) );
+		},
+
+		handlePaste: function ( event ) {
+			// Get user's pasted data
+			var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
+				data = clipboardData.getData( 'text/plain' );
+
+			// Insert the filtered content
+			document.execCommand( 'insertHTML', false, data );
+
+			// Prevent the standard paste behavior
+			event.preventDefault();
 		}
 	} );
 
