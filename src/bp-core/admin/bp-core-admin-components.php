@@ -202,11 +202,11 @@ function bp_core_admin_components_options() {
 	                                    </span>
 									<?php elseif ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
 	                                    <?php if ( isset( $active_components[esc_attr( $name )] ) ) : ?>
-	                                        <a class="button deactivate" href="<?php echo wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $action, 'bp_component' => $name, 'do_action' => 'deactivate' ) , $page ) ), 'bp-admin-component-activation' ); ?>">
+	                                        <a class="button-secondary deactivate" href="<?php echo wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $action, 'bp_component' => $name, 'do_action' => 'deactivate' ) , $page ) ), 'bp-admin-component-activation' ); ?>">
 	                                            <?php _e( 'Deactivate', 'buddyboss' ); ?>
 	                                        </a>
 		                                <?php else: ?>
-	                                        <a class="button activate" href="<?php echo wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $action, 'bp_component' => $name, 'do_action' => 'activate' ) , $page ) ), 'bp-admin-component-activation' ); ?>">
+	                                        <a class="button-primary activate" href="<?php echo wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $action, 'bp_component' => $name, 'do_action' => 'activate' ) , $page ) ), 'bp-admin-component-activation' ); ?>">
 	                                            <?php _e( 'Activate', 'buddyboss' ); ?>
 	                                        </a>
 	                                    <?php endif; ?>
