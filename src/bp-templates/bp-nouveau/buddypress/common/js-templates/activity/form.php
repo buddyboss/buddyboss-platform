@@ -59,14 +59,14 @@
 </script>
 
 <script type="text/html" id="tmpl-activity-attached-gif">
+	<# if ( ! _.isUndefined( data.gif_data.images.original.url ) ) { #>
 	<div class="gif-image-container">
-		<# if ( ! _.isEmpty( data.gif_data ) ) { #>
-			<img src="{{data.gif_data.images.original.url}}" alt="">
-		<# } #>
+		<img src="{{data.gif_data.images.original.url}}" alt="">
 	</div>
 	<div class="gif-image-remove gif-image-overlay">
 		<span class="dashicons dashicons-no"></span>
 	</div>
+	<# } #>
 </script>
 
 <script type="text/html" id="tmpl-gif-result-item">

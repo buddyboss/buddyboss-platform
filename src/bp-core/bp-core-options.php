@@ -1225,3 +1225,25 @@ function bp_is_custom_post_type_feed_enable( $default = false ) {
 function bp_platform_is_feed_enable( $activity_type, $default = true ) {
 	return (bool) apply_filters( 'bp_platform_is_feed_enable', (bool) get_option( $activity_type, $default ) );
 }
+
+/**
+ * Is the Registration enabled?
+ *
+ * @since BuddyPress 1.6.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if the registration enable,
+ *              otherwise false.
+ */
+function bp_enable_site_registration( $default = false ) {
+
+	/**
+	 * Filters whether or not the registration enable.
+	 *
+	 * @since BuddyPress 1.6.0
+	 *
+	 * @param bool $value Whether or not the registration enable.
+	 */
+	return (bool) apply_filters( 'bp_enable_site_registration', (bool) bp_get_option( 'bp-enable-site-registration', $default ) );
+}

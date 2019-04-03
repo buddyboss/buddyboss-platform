@@ -218,6 +218,8 @@ class BP_Members_Admin {
 			// Registration is turned on.
 			add_action( 'update_site_option_registration',  array( $this, 'multisite_registration_on' ),   10, 2 );
 			add_action( 'update_option_users_can_register', array( $this, 'single_site_registration_on' ), 10, 2 );
+			add_action( 'update_option_bp-enable-site-registration', array( $this, 'bp_registration_update_option' ), 10, 2 );
+			add_action( 'admin_init', array( $this, 'bp_update_registration_update_option' ), 10 );
 		}
 
 		/** Users List - Members Types ***************************************
@@ -239,6 +241,62 @@ class BP_Members_Admin {
 	}
 
 	/**
+	 * Update site registrations options based on the wordpress settings on plugin activate.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string $old_value
+	 * @param string $value
+	 */
+	function bp_update_registration_update_option() {
+
+		if ( ! is_multisite() ) {
+			$check_current_wp = (bool) bp_get_option('users_can_register', 0);
+			$check_current_bp = (bool) bp_enable_site_registration();
+			if ( true === $check_current_wp && false === $check_current_bp ) {
+				bp_update_option( 'bp-enable-site-registration', 1 );
+			}
+		} else {
+			$check_current_wp = get_site_option( 'registration', 'none' );
+			$check_current_bp = (bool) bp_enable_site_registration();
+			if ( ( 'all' === $check_current_wp || 'user' === $check_current_wp ) && false === $check_current_bp ) {
+				bp_update_option( 'bp-enable-site-registration', 1 );
+			}
+		}
+
+	}
+
+	/**
+	 * Update site registrations options based on the BuddyBoss general registration settings.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string $old_value
+	 * @param string $value
+	 */
+	public function bp_registration_update_option( $old_value, $value ) {
+		if ( 1 === $value ) {
+
+			if ( ! is_multisite() ) {
+				update_option( 'users_can_register', 1 );
+			} else {
+				update_site_option( 'registration', 'all' );
+			}
+
+		} else {
+
+			if ( '' !== $value ) {
+				if ( ! is_multisite() ) {
+					update_option( 'users_can_register', 0 );
+				} else {
+					update_site_option( 'registration', 'none' );
+				}
+			}
+
+		}
+	}
+
+	/**
 	 * Create registration pages when multisite user registration is turned on.
 	 *
 	 * @since BuddyPress 2.7.0
@@ -252,6 +310,15 @@ class BP_Members_Admin {
 				'register' => 1,
 				'activate' => 1
 			) );
+
+			// Update site registrations options based on the BuddyBoss general registration settings.
+			bp_update_option( 'bp-enable-site-registration', 1 );
+
+		} else {
+
+			// Update site registrations options based on the BuddyBoss general registration settings.
+			bp_update_option( 'bp-enable-site-registration', 0 );
+
 		}
 	}
 
@@ -270,6 +337,15 @@ class BP_Members_Admin {
 				'register' => 1,
 				'activate' => 1
 			) );
+
+			// Update site registrations options based on the BuddyBoss general registration settings.
+			bp_update_option( 'bp-enable-site-registration', 1 );
+
+		} else {
+
+			// Update site registrations options based on the BuddyBoss general registration settings.
+			bp_update_option( 'bp-enable-site-registration', 0 );
+
 		}
 	}
 

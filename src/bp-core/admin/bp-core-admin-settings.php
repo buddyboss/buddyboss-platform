@@ -623,3 +623,27 @@ function bp_feed_settings_callback_platform( $args ) {
 		<?php
 
 }
+
+/**
+ * Admin bar for logged out users setting field.
+ *
+ * @since BuddyPress 1.6.0
+ *
+ */
+function bp_admin_setting_callback_register() {
+	?>
+
+	<input id="bp-enable-site-registration" name="bp-enable-site-registration" type="checkbox" value="1" <?php checked( bp_enable_site_registration() ); ?> />
+	<label for="bp-enable-site-registration"><?php _e( 'Allow non-members to register new accounts', 'buddyboss' ); ?></label>
+	<?php
+	if ( true === bp_enable_site_registration() && bp_is_active( 'invites' ) ) {
+		printf( '<p class="description">%s</p>',
+			sprintf( __( 'Because <a href="%s">Email Invites</a> is enabled, invited users will still be allowed to register new accounts.',
+				'buddyboss' ),
+				add_query_arg( [
+					'page' => 'bp-settings',
+					'tab'  => 'bp-invites',
+				],
+					admin_url( 'admin.php' ) ) ) );
+	}
+}

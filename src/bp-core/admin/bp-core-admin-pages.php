@@ -186,21 +186,27 @@ function bp_core_admin_registration_pages_description() {
 	if ( bp_get_signup_allowed() ) :
 		echo wpautop( __( 'Associate a WordPress page with the following Registration sections.', 'buddyboss' ) );
 	else :
-		if ( is_multisite() ) :
-			echo wpautop(
-				sprintf(
-					__( 'Registration is currently disabled. If "Email Invites" is enabled, invited users will still be allowed to register new accounts. To enable registration, please select either the "User accounts may be registered" or "Both sites and user accounts can be registered" option on <a href="%s">this page</a>.', 'buddyboss' ),
-					network_admin_url( 'settings.php' )
-				)
-			);
-		else :
-			echo wpautop(
-				sprintf(
-					__( 'Registration is currently disabled. If "Email Invites" is enabled, invited users will still be allowed to register new accounts. To enable registration, please click on the "Anyone can register" checkbox on <a href="%s">this page</a>.', 'buddyboss' ),
-					network_admin_url( 'options-general.php' )
-				)
-			);
-		endif;
+
+		$invite_text = '';
+		if ( bp_is_active( 'invites' ) ) {
+			$invite_text = sprintf( 'Because <a href="%s">Email Invites</a> is enabled, invited users will still be allowed to register new accounts.',
+					add_query_arg( [
+						'page' => 'bp-settings',
+						'tab'  => 'bp-invites',
+					],
+						admin_url( 'admin.php' ) ) );
+		}
+
+		echo wpautop(
+			sprintf(
+				__( 'Registration is currently disabled. %s To enable registration, please click on the "Registration" checkbox in <a href="%s">General Settings</a>.', 'buddyboss' ),
+				$invite_text,add_query_arg( [
+					'page' => 'bp-settings',
+					'tab'  => 'bp-general',
+				],
+					admin_url( 'admin.php' ) )
+			)
+		);
 	endif;
 }
 
