@@ -1905,7 +1905,6 @@ input.search-query-input {
 
 .activity-attached-gif-container {
   cursor: pointer;
-  max-width: 480px;
 }
 
 .activity-attached-gif-container .gif-player {
@@ -3487,6 +3486,17 @@ body.register .buddypress-wrap .page ul {
 #header-cover-image:hover a.link-change-cover-image,
 #item-header-avatar:hover a.link-change-profile-image {
   opacity: 1;
+}
+
+.social-networks-wrap span.social {
+  display: inline-block;
+  width: 20px;
+  margin-right: 10px;
+}
+
+.social-networks-wrap svg {
+  width: 100%;
+  vertical-align: middle;
 }
 
 @media screen and (max-width: 782px) {
@@ -5379,8 +5389,7 @@ button[data-bp-close]:hover {
   color: #777;
 }
 
-/*-------------------------------------*\
-	HINT.css - A CSS tooltip library
+/*-------------------------------------*	HINT.css - A CSS tooltip library
 \*-------------------------------------*/
 /**
  * HINT.css is a tooltip library made in pure CSS.
@@ -9841,7 +9850,7 @@ ul.bb-albums-list .bb-more-photos strong {
   content: " ";
   position: absolute;
   background: #000;
-  background-image: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.01) 70%, rgba(0, 0, 0, 0) 100%);
+  background-image: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.01) 70%, transparent 100%);
   border-radius: 3px;
   width: 100%;
   height: 100%;

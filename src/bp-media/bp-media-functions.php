@@ -751,28 +751,52 @@ function albums_get_album( $album_id ) {
 
 //********************** Forums ***************************//
 
-function bp_media_forums_reply_media_field() {
-    if ( bp_is_media_forums_media_support_enabled() ) {
+/**
+ * Form field for media uploader for topic and reply
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_forums_media_field() {
+    if ( bp_is_forums_media_support_enabled() ) {
         ?><a href="#" id="bp-add-media" class="bb-add-media button small outline"><?php _e( 'Add Media', 'buddyboss' ); ?></a>
-	    <?php bp_get_template_part( 'members/single/media/uploader' ); ?>
+	    <?php bp_get_template_part( 'media/uploader' ); ?>
         <input name="bbp_media" id="bbp_media" type="hidden" value=""/>
 	    <?php
     }
 }
 add_action( 'bbp_theme_before_reply_form_submit_wrapper', 'bp_media_forums_media_field' );
+add_action( 'bbp_theme_before_topic_form_submit_wrapper', 'bp_media_forums_media_field' );
 
 
+/**
+ * Save media when new topic or reply is saved
+ *
+ * @since BuddyBoss 1.0.0
+ * @param $post_id
+ */
 function bp_media_forums_new_post_media_save( $post_id ) {
 
     if ( ! empty( $_POST['bbp_media'] ) ) {
+
+        // save activity id if it is saved in forums and enabled in platform settings
+	    $main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
+
 	    // save media
 	    $medias = json_decode( stripslashes( $_POST['bbp_media'] ), true );
 	    $media_ids = array();
 	    foreach ( $medias as $media ) {
+
+		    $activity_id = false;
+		    // make an activity for the media
+		    if ( bp_is_active( 'activity' ) && ! empty( $main_activity_id ) ) {
+			    $content = '&nbsp;';
+			    $activity_id = bp_activity_post_update( array( 'content' => $content, 'user_id' => bbp_get_current_user_id(), 'hide_sitewide' => true ) );
+		    }
+
 		    $media_id = bp_media_add( array(
 			    'attachment_id' => $media['id'],
 			    'title'         => $media['name'],
-			    'activity_id'   => false,
+			    'activity_id'   => $activity_id,
 			    'album_id'      => $media['album_id'],
 			    'error_type'    => 'wp_error'
 		    ) );
@@ -782,14 +806,55 @@ function bp_media_forums_new_post_media_save( $post_id ) {
             }
 	    }
 
+	    $media_ids = implode( ',', $media_ids );
+
+	    //save media meta for activity
+	    if ( ! empty( $main_activity_id ) ) {
+		    bp_activity_update_meta( $main_activity_id, 'bp_media_ids', $media_ids );
+	    }
+
 	    //Save all attachment ids in forums post meta
 	    update_post_meta( $post_id, 'bp_media_ids', $media_ids );
     }
 }
 
-add_action( 'bbp_new_reply', 'bp_media_forums_new_post_media_save' );
-add_action( 'bbp_new_topic', 'bp_media_forums_new_post_media_save' );
-add_action( 'edit_post',     'bp_media_forums_new_post_media_save' );
+add_action( 'bbp_new_reply', 'bp_media_forums_new_post_media_save', 999 );
+add_action( 'bbp_new_topic', 'bp_media_forums_new_post_media_save', 999 );
+add_action( 'edit_post',     'bp_media_forums_new_post_media_save', 999 );
 
-//add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 10, 2 );
-//add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 10, 2 );
+add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 10, 2 );
+add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 10, 2 );
+
+/**
+ * Embed topic or reply attachments in a post
+ *
+ * @since BuddyBoss 1.0.0
+ * @param $content
+ * @param $id
+ *
+ * @return string
+ */
+function bp_media_forums_embed_attachments( $content, $id ) {
+	global $media_template;
+
+	// Do not embed attachment in wp-admin area
+	if ( is_admin() ) {
+		return $content;
+	}
+
+	$media_ids = get_post_meta( $id, 'bp_media_ids', true );
+
+	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids ) ) ) {
+	    ob_start();
+	    ?>
+        <div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? 'bb-media-length-more' : ''; ?>"><?php
+		while ( bp_media() ) {
+			bp_the_media();
+			bp_get_template_part( 'media/activity-entry' );
+		} ?>
+        </div><?php
+        $content .= ob_get_clean();
+	}
+
+	return $content;
+}

@@ -37,7 +37,7 @@
 					<button type="button" id="activity-url-prevPicButton"><span class="dashicons dashicons-arrow-left-alt2"></span></button>
 					<button type="button" id="activity-url-nextPicButton"><span class="dashicons dashicons-arrow-right-alt2"></span></button>
 					<div id="activity-url-scrapper-img-count">
-						<# print(data.link_image_index + 1) #>&nbsp;<?php esc_html_e( 'of', 'buddyboss-theme' ) ?>&nbsp;<# print(data.link_images.length) #>
+						<# print(data.link_image_index + 1) #>&nbsp;<?php esc_html_e( 'of', 'buddyboss' ) ?>&nbsp;<# print(data.link_images.length) #>
 					</div>
 				</div>
 			<# } #>
@@ -59,7 +59,7 @@
 </script>
 
 <script type="text/html" id="tmpl-activity-attached-gif">
-	<# if ( ! _.isUndefined( data.gif_data.images.original.url ) ) { #>
+	<# if ( ! _.isUndefined( data.gif_data.images ) ) { #>
 	<div class="gif-image-container">
 		<img src="{{data.gif_data.images.original.url}}" alt="">
 	</div>
