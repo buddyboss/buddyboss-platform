@@ -1142,6 +1142,7 @@ a.layout-grid-view {
   box-shadow: none;
   display: inline-block;
   margin-left: 10px;
+  vertical-align: middle;
 }
 
 .activity-update-form .activity-post-avatar {
@@ -1767,65 +1768,95 @@ input.search-query-input {
 
 .activity-url-scrapper-loading {
   display: block;
+  font-size: 14px;
+  color: #a3a5a9;
+  letter-spacing: -0.24px;
+  margin: 12px 0 10px;
 }
 
-#activity-url-scrapper {
+.activity-link-preview-container {
   border: 1px solid rgba(0, 0, 0, 0.07);
   border-radius: 4px;
   background-color: rgba(250, 250, 250, 0.2);
   margin: 20px 0 10px;
   overflow: hidden;
   position: relative;
-  padding: 15px;
-  max-width: 540px;
+  max-width: 420px;
+  display: flex;
 }
 
-#activity-url-scrapper-text-holder {
-  border: none;
+.activity-link-preview-image-wrap {
+  flex: 0 0 auto;
+  width: 180px;
+  min-height: 200px;
+  position: relative;
+}
+
+.activity-link-preview-image {
+  border-radius: 3px 3px 0 0;
+  position: relative;
   overflow: hidden;
-  text-align: right;
+  background: #809ab4;
+  height: 100%;
 }
 
-#activity-url-scrapper-text-holder #activity-url-scrapper-title {
-  font-weight: 600;
-  font-size: 16px;
-  margin-bottom: 5px;
-}
-
-#activity-url-scrapper-img-holder .activity-url-thumb-nav {
-  text-align: center;
-}
-
-#activity-url-scrapper-img {
-  background-position: center;
-  background-color: #fff;
-  background-repeat: no-repeat;
-  background-size: contain;
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-#activity-url-scrapper-img img {
+.activity-link-preview-image img {
   max-width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+  z-index: 0;
+  min-height: 100%;
+  width: auto;
+  min-width: 100%;
+  object-fit: cover;
 }
 
-#activity-url-prevPicButton,
-#activity-url-nextPicButton {
-  cursor: pointer;
+.activity-link-preview-content {
+  flex: 1;
+  padding: 40px 20px;
+  font-size: 13px;
+  color: #939597;
+  letter-spacing: -0.24px;
+  line-height: 1.38;
+  align-self: center;
+}
+
+.activity-url-thumb-nav {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+  text-align: center;
+}
+
+#buddypress .activity-url-thumb-nav button {
   cursor: pointer;
   width: auto;
-  padding: 6px 15px;
+  padding: 2px 10px;
   margin: 0 5px;
+  height: auto;
+  min-height: 10px;
+}
+
+.activity-url-thumb-nav .dashicons {
+  font-size: 14px;
+  line-height: 1;
+  position: relative;
+  top: 2px;
 }
 
 #activity-url-scrapper-img-count {
-  font-size: 11px;
+  font-size: 12px;
   color: #7f7f7f;
-  text-align: center;
-  margin-top: 10px;
+  margin-top: 5px;
 }
 
-#activity-url-error {
+.activity-url-error {
   color: #f00;
 }
 
@@ -1835,14 +1866,16 @@ input.search-query-input {
 }
 
 .activity-link-preview-title {
-  display: block;
-  margin-bottom: 5px;
-  margin-left: 5px;
+  color: #122b46;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.24px;
+  line-height: 1.21;
+  margin: 0 0 10px;
 }
 
-.activity-link-preview-title > a {
-  font-size: 16px;
-  font-weight: 700;
+.activity-link-preview-title a {
+  color: inherit;
 }
 
 #activity-close-link-suggestion {
@@ -1915,55 +1948,6 @@ input.search-query-input {
   background-size: 40px 30px;
   max-width: 40px;
   max-height: 30px;
-}
-
-/* Media query for only large devices */
-@media only screen and (min-width: 481px) {
-  .activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-img-holder {
-    border: none;
-    float: right;
-    position: relative;
-  }
-  .activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-text-holder {
-    padding: 0 15px;
-  }
-  .activity-url-scrapper-container #activity-url-scrapper #activity-url-scrapper-img-holder #activity-url-scrapper-img img {
-    height: auto;
-    max-height: 120px;
-    width: 200px;
-  }
-  .activity-link-preview-container {
-    overflow: hidden;
-  }
-  .activity-link-preview-image {
-    float: right;
-    max-width: 200px;
-  }
-  .activity-link-preview-image a img {
-    max-width: 100%;
-  }
-  .activity-link-preview-content {
-    overflow: hidden;
-    padding: 0 15px 0 0;
-  }
-}
-
-/* Media query for only small devices */
-@media only screen and (max-width: 480px) {
-  .activity-link-preview-image {
-    margin-bottom: 20px;
-  }
-  #activity-link-preview-close-image {
-    left: 22px;
-    top: 17px;
-  }
-}
-
-@media only screen and (max-width: 640px) {
-  .activity-link-preview-content {
-    width: 100%;
-    clear: both;
-  }
 }
 
 /**
