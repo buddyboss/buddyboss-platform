@@ -1152,6 +1152,7 @@ a.layout-grid-view {
   outline: none;
   box-shadow: none;
   min-height: 80px;
+  overflow: hidden;
   padding: 10px;
 }
 
@@ -1212,6 +1213,7 @@ a.layout-grid-view {
 .activity-update-form #whats-new-textarea [contenteditable="true"]:empty:before {
   content: attr(placeholder);
   color: #bbb;
+  cursor: text;
   display: block;
   /* For Firefox */
 }
@@ -1769,11 +1771,13 @@ input.search-query-input {
 
 #activity-url-scrapper {
   border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 4px;
   background-color: rgba(250, 250, 250, 0.2);
   margin: 20px 0 10px;
   overflow: hidden;
   position: relative;
   padding: 15px;
+  max-width: 540px;
 }
 
 #activity-url-scrapper-text-holder {
