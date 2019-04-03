@@ -29,7 +29,7 @@ $album_id = (int) bp_action_variable( 0 );
 <!--                    <a href="#" v-if="can_edit&&edit"-->
 <!--                       @click.prevent="cancel_edit_album_name">--><?php //_e( 'save', 'buddyboss' ); ?><!--</a>-->
                     <p>
-                        <span><?php bp_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep">&middot;</span><span><?php echo $total_media; ?> <?php _e( 'photos', 'buddyboss' ); ?></span>
+                        <span><?php bp_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep">&middot;</span><span><?php printf( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ), number_format_i18n( $media_album_template->album->media['total'] ) ); ?></span>
                     </p>
                 </div>
 

@@ -14,7 +14,7 @@
 
 		<div class="bb-album-content-wrap">
 			<h4><?php bp_album_title(); ?></h4>
-			<span><?php echo bp_core_format_date( $media_album_template->album->date_created ); ?></span> <span>&middot;</span> <span><?php echo $media_album_template->album->media['total']; ?> <?php _e( 'photos', 'buddyboss' ); ?></span>
+			<span><?php echo bp_core_format_date( $media_album_template->album->date_created ); ?></span> <span>&middot;</span> <span><?php printf( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ), number_format_i18n( $media_album_template->album->media['total'] ) ); ?></span>
 		</div>
     </div>
 </li>
