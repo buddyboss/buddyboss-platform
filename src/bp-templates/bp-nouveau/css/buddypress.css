@@ -2914,6 +2914,14 @@ body.buddypress.bp-user #page #primary .entry-header {
   margin: 30px 0 15px;
 }
 
+.buddypress-wrap .item-body .group-create-buttons {
+  list-style: none;
+}
+
+.buddypress-wrap .item-body .group-create-buttons li {
+  padding-right: 12px;
+}
+
 .buddypress-wrap.bp-single-vert-nav .bp-list:not(.grid) .item-entry {
   padding-left: 0.7em;
 }
@@ -5401,8 +5409,7 @@ button[data-bp-close]:hover {
   color: #777;
 }
 
-/*-------------------------------------*\
-	HINT.css - A CSS tooltip library
+/*-------------------------------------*	HINT.css - A CSS tooltip library
 \*-------------------------------------*/
 /**
  * HINT.css is a tooltip library made in pure CSS.
@@ -9862,7 +9869,7 @@ ul.bb-albums-list .bb-more-photos strong {
 .bb-album-list-item .bs-cover-wrap:after {
   content: " ";
   position: absolute;
-  background-image: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.01) 70%, rgba(0, 0, 0, 0) 100%);
+  background-image: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.01) 70%, transparent 100%);
   border-radius: 3px;
   width: 100%;
   height: 100%;
