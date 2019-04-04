@@ -39,7 +39,7 @@ window.bp = window.bp || {};
 			// Init current page
 			this.current_page   = 1;
 			this.current_page_existing_media   = 1;
-			this.current_tab   = $('body').hasClass('bbpress') ? false : 'bp-dropzone-content';
+			this.current_tab   = $('body').hasClass('single-topic') || $('body').hasClass('single-forum') ? false : 'bp-dropzone-content';
 
 			// set up dropzones auto discover to false so it does not automatically set dropzones
 			window.Dropzone.autoDiscover = false;
@@ -80,6 +80,7 @@ window.bp = window.bp || {};
 			// Fetch Media
 			$( '.bp-nouveau [data-bp-list="media"]' ).on( 'click', 'li.load-more', this.injectMedias.bind( this ) );
 			$( '.bp-existing-media-wrap' ).on( 'click', 'li.load-more', this.appendMedia.bind( this ) );
+			$( '.bp-existing-media-wrap' ).on( 'change', '.bb-media-check-wrap [name="bb-media-select"]', this.toggleSubmitMediaButton.bind( this ) );
 
 		},
 
@@ -132,7 +133,7 @@ window.bp = window.bp || {};
 						response.data.menu_order = self.dropzone_media.length;
 						response.data.album_id = self.album_id;
 						self.dropzone_media.push( response.data );
-						self.addMediaIdsToReply();
+						self.addMediaIdsToForumsForm();
 					}
 					$('#bp-media-add-more').show();
 					$('#bp-media-submit').show();
@@ -182,6 +183,7 @@ window.bp = window.bp || {};
 			$('.bp-media-upload-tab-content').hide();
 			$('#'+content_tab).show();
 			this.current_tab = content_tab;
+			this.toggleSubmitMediaButton();
 		},
 
 		openCreateAlbumModal: function(event){
@@ -261,6 +263,14 @@ window.bp = window.bp || {};
 
 							// Prepend the activity.
 							bp.Nouveau.inject('#media-stream ul.media-list', response.data.media, 'prepend');
+
+							// remove selected media from existing media list
+							$('.bp-existing-media-wrap .bb-media-check-wrap [name="bb-media-select"]:checked').each(function() {
+								if ( $(this).closest('li').data('id') === $(this).val() ) {
+									$(this).closest('li').remove();
+								}
+							});
+
 							self.closeUploader(event);
 						}
 
@@ -297,7 +307,7 @@ window.bp = window.bp || {};
 
 		},
 
-		addMediaIdsToReply: function() {
+		addMediaIdsToForumsForm: function() {
 			var self = this;
 			if( $('#bbp_media').length ) {
 				$('#bbp_media').val(JSON.stringify(self.dropzone_media));
@@ -372,6 +382,7 @@ window.bp = window.bp || {};
 					search_terms        : search_terms,
 					page                : next_page,
 					method              : 'append',
+					caller              : 'bp-existing-media',
 					target              : '.bp-existing-media-wrap ul.bp-list'
 				} ).done( function( response ) {
 					if ( true === response.success ) {
@@ -381,6 +392,26 @@ window.bp = window.bp || {};
 						self.current_page_existing_media = next_page;
 					}
 				} );
+			}
+		},
+
+		toggleSubmitMediaButton: function() {
+			var submit_media_button = $('#bp-media-submit'), add_more_button = $('#bp-media-add-more');
+			if ( this.current_tab === 'bp-dropzone-content' ) {
+				if ( this.dropzone_media.length ) {
+					submit_media_button.show();
+					add_more_button.show();
+				} else {
+					submit_media_button.hide();
+					add_more_button.hide();
+				}
+			} else if ( this.current_tab === 'bp-existing-media-content' ) {
+				if ( $('.bp-existing-media-wrap .bb-media-check-wrap [name="bb-media-select"]:checked').length ) {
+					submit_media_button.show();
+				} else {
+					submit_media_button.hide();
+				}
+				add_more_button.hide();
 			}
 		}
 	};
