@@ -69,8 +69,9 @@ window.bp = window.bp || {};
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-submit', this.submitMedia.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-uploader-close', this.closeUploader.bind( this ) );
 
+			// albums
 			$( '.bp-nouveau' ).on( 'click', '#bb-create-album', this.openCreateAlbumModal.bind( this ) );
-			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-album-submit', this.submitAlbum.bind( this ) );
+			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-album-submit', this.saveAlbum.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-album-close', this.closeCreateAlbumModal.bind( this ) );
 
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-add-more', this.triggerDropzoneSelectFileDialog.bind( this ) );
@@ -82,6 +83,33 @@ window.bp = window.bp || {};
 			$( '.bp-existing-media-wrap' ).on( 'click', 'li.load-more', this.appendMedia.bind( this ) );
 			$( '.bp-existing-media-wrap' ).on( 'change', '.bb-media-check-wrap [name="bb-media-select"]', this.toggleSubmitMediaButton.bind( this ) );
 
+			//single album
+			$( '.bp-nouveau' ).on( 'click', '#bp-edit-album-title', this.editAlbumTitle.bind( this ) );
+			$( '.bp-nouveau' ).on( 'click', '#bp-cancel-edit-album-title', this.cancelEditAlbumTitle.bind( this ) );
+			$( '.bp-nouveau' ).on( 'click', '#bp-save-album-title', this.saveAlbum.bind( this ) );
+			$( '.bp-nouveau' ).on( 'change', '#bp-media-single-album select#bb-album-privacy', this.saveAlbum.bind( this ) );
+			$( '.bp-nouveau' ).on( 'click', '#bb-delete-album', this.deleteAlbum.bind( this ) );
+
+		},
+
+		editAlbumTitle: function(event) {
+			event.preventDefault();
+
+			$('#bb-album-title').show();
+			$('#bp-save-album-title').show();
+			$('#bp-cancel-edit-album-title').show();
+			$('#bp-edit-album-title').hide();
+			$('#bp-media-single-album #bp-single-album-title').hide();
+		},
+
+		cancelEditAlbumTitle: function(event) {
+			event.preventDefault();
+
+			$('#bb-album-title').hide();
+			$('#bp-save-album-title').hide();
+			$('#bp-cancel-edit-album-title').hide();
+			$('#bp-edit-album-title').show();
+			$('#bp-media-single-album #bp-single-album-title').show();
 		},
 
 		triggerDropzoneSelectFileDialog: function() {
@@ -282,15 +310,63 @@ window.bp = window.bp || {};
 
 		},
 
-		submitAlbum: function(event) {
+		saveAlbum: function(event) {
 			event.preventDefault();
-			var self = this;
+			var self = this, title = $('#bb-album-title'), privacy = $('#bb-album-privacy');
+
+			if( $.trim(title.val()) === '' ) {
+				title.addClass('error');
+				return false;
+			}
+
+			if( $.trim(privacy.val()) === '' ) {
+				privacy.addClass('error');
+				return false;
+			}
+
 			var data = {
 				'action': 'media_album_save',
 				'_wpnonce': BP_Nouveau.nonces.media,
-				'title': $('#bb-album-title').val(),
+				'title': title.val(),
 				'description': $('#bb-album-description').val(),
-				'privacy': $('#bb-album-privacy').val()
+				'privacy': privacy.val()
+			};
+
+			if ( self.album_id ) {
+				data['album_id'] = self.album_id;
+			}
+
+			$.ajax({
+				type: 'POST',
+				url: BP_Nouveau.ajaxurl,
+				data: data,
+				success: function (response) {
+					if ( response.success ) {
+						if ( self.album_id ) {
+							$('#bp-single-album-title').text(title.val());
+							$('#bb-album-privacy').val(privacy.val());
+							self.cancelEditAlbumTitle(event);
+						} else {
+							$('#buddypress .bb-albums-list').prepend(response.data.album);
+							self.closeCreateAlbumModal(event);
+						}
+					}
+				}
+			});
+
+		},
+
+		deleteAlbum: function(event) {
+			event.preventDefault();
+
+			if ( ! this.album_id ) {
+				return false;
+			}
+
+			var data = {
+				'action': 'media_album_delete',
+				'_wpnonce': BP_Nouveau.nonces.media,
+				'album_id': this.album_id
 			};
 
 			$.ajax({
@@ -299,8 +375,7 @@ window.bp = window.bp || {};
 				data: data,
 				success: function (response) {
 					if ( response.success ) {
-						$('#buddypress .bb-albums-list').prepend(response.data.album);
-						self.closeCreateAlbumModal(event);
+						window.location.href = response.data.redirect_url;
 					}
 				}
 			});
