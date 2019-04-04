@@ -274,13 +274,13 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				<option value=""><?php esc_html_e( 'Select Profile Type', 'buddyboss' ); ?></option><?php
 				foreach ( $member_types as $member_type_id ) {
 					$type_name = bp_get_member_type_key( $member_type_id );
-					$type_id = bp_member_type_term_taxonomy_id( $type_name );
+					//$type_id = bp_member_type_term_taxonomy_id( $type_name );
 					$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
-					if ( ! empty( $type_id ) ) { ?>
+					//if ( ! empty( $type_id ) ) { ?>
 						<option <?php selected( $existing_selected,
 							$type_name ); ?> value="<?php echo $type_name; ?>"><?php esc_html_e( $member_type_name,
 							'buddyboss' ); ?></option><?php
-					}
+					//}
 				}
 				?>
 			</select>

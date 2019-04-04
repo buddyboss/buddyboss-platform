@@ -1505,6 +1505,8 @@ function bp_member_type_custom_metaboxes() {
 	if( 'add' != $screen->action ){
 		add_meta_box( 'bp-member-type-shortcode', __( 'Shortcode', 'buddyboss' ), 'bp_profile_shortcode_metabox', null, 'normal', 'high' );
 	}
+
+	remove_meta_box( 'slugdiv', bp_get_member_type_post_type(), 'normal' );
 }
 add_action( 'add_meta_boxes_' . bp_get_member_type_post_type(), 'bp_member_type_custom_metaboxes' );
 

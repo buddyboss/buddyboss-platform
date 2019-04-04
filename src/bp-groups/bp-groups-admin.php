@@ -1675,6 +1675,8 @@ function bp_group_type_custom_meta_boxes() {
 	if( 'add' != $screen->action ){
 		add_meta_box( 'bp-group-type-short-code', __( 'Shortcode', 'buddyboss' ), 'bp_group_shortcode_meta_box', null, 'normal', 'high' );
 	}
+
+	remove_meta_box( 'slugdiv', bp_get_group_type_post_type(), 'normal' );
 }
 
 /**
