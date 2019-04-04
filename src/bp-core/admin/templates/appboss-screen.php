@@ -33,7 +33,7 @@ defined( 'ABSPATH' ) || exit;
 					
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_user.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/user.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Unlimited Users', 'buddyboss' ); ?></h3>
@@ -43,7 +43,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_badge.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/badge.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'LearnDash Courses', 'buddyboss' ); ?></h3>
@@ -58,7 +58,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_gear.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/gear.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Synchronized Data', 'buddyboss' ); ?></h3>
@@ -77,7 +77,7 @@ defined( 'ABSPATH' ) || exit;
 			<div class="appboss-learndash-banner-block">
 
 				<div class="appboss-learndash-banner-block-image">
-					<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_man-bench.svg" . '" />'; ?>
+					<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/man-bench.svg" . '" />'; ?>
 				</div>
 				
 				<div class="appboss-learndash-banner-block-content">
@@ -115,7 +115,7 @@ defined( 'ABSPATH' ) || exit;
 						<!-- offline support
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
-								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_offline.svg" . '" />'; ?>
+								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/offline.svg" . '" />'; ?>
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'Offline Support', 'buddyboss' ); ?></h2>
@@ -126,7 +126,7 @@ defined( 'ABSPATH' ) || exit;
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
-								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_notifications.svg" . '" />'; ?>
+								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/notifications.svg" . '" />'; ?>
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'Advanced Push Notifications', 'buddyboss' ); ?></h2>
@@ -136,7 +136,7 @@ defined( 'ABSPATH' ) || exit;
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
-								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_pages.svg" . '" />'; ?>
+								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/pages.svg" . '" />'; ?>
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'Custom Mobile App Pages', 'buddyboss' ); ?></h2>
@@ -180,7 +180,7 @@ defined( 'ABSPATH' ) || exit;
 					<div class="appboss-small-dark-block">
 						<h1><?php _e( 'Built with React Native', 'buddyboss' ); ?></h1>
 						<p><?php _e( 'This is a true native app and NOT a "responsive website within an app". It is built with React Native, the app framework created by Facebook and used by Walmart, Airbnb, Instagram, Tesla, and SoundCloud.', 'buddyboss' ); ?></p>
-						<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons_react.svg" . '" />'; ?>
+						<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/react.svg" . '" />'; ?>
 					</div>
 
 					<?php
@@ -195,7 +195,7 @@ defined( 'ABSPATH' ) || exit;
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
-								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_money.svg" . '" />'; ?>
+								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/money.svg" . '" />'; ?>
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'In-App Purchases', 'buddyboss' ); ?></h2>
@@ -205,7 +205,7 @@ defined( 'ABSPATH' ) || exit;
 
 						<div class="appboss-column-block-item">
 							<div class="appboss-column-block-item-icon">
-								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_user-plus.svg" . '" />'; ?>
+								<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/user-plus.svg" . '" />'; ?>
 							</div>
 							<div class="appboss-column-block-item-content">
 								<h2><?php _e( 'In-App Registration', 'buddyboss' ); ?></h2>
@@ -237,7 +237,7 @@ defined( 'ABSPATH' ) || exit;
 					
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_chess.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/chess.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Advanced Quizzing', 'buddyboss' ); ?></h3>
@@ -247,7 +247,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_locked-content.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/locked-content.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Drip-Feed Content', 'buddyboss' ); ?></h3>
@@ -257,7 +257,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_users.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/users.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Social Learning', 'buddyboss' ); ?></h3>
@@ -270,7 +270,7 @@ defined( 'ABSPATH' ) || exit;
 					
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_clock.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/clock.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Lesson Timers', 'buddyboss' ); ?></h3>
@@ -280,7 +280,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_calendar.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/calendar.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Expire Access', 'buddyboss' ); ?></h3>
@@ -290,7 +290,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_note.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/note.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Assignment Management', 'buddyboss' ); ?></h3>
@@ -303,7 +303,7 @@ defined( 'ABSPATH' ) || exit;
 					
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_badge.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/badge.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Certificates &amp; Badges', 'buddyboss' ); ?></h3>
@@ -313,7 +313,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_forums.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/forums.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Discussion Forums', 'buddyboss' ); ?></h3>
@@ -323,7 +323,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<div class="appboss-banner-block-item">
 						<div class="appboss-banner-block-item-icon">
-							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icon_graph.svg" . '" />'; ?>
+							<?php echo '<img class="appboss-img" src="' . buddypress()->plugin_url . "bp-core/images/admin/icons/appboss/graph.svg" . '" />'; ?>
 						</div>
 						<div class="appboss-banner-block-item-content">
 							<h3><?php _e( 'Google Analytics', 'buddyboss' ); ?></h3>

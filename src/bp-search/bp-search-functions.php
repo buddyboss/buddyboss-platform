@@ -385,7 +385,7 @@ function bp_search_items() {
 			$items[ $component ] = $label;
 
 			if ( 'activity' === $component ) {
-				$items['activity_comment'] = __( 'Activity Comment', 'buddyboss' );
+				$items['activity_comment'] = __( 'Activity Comments', 'buddyboss' );
 			}
 		}
 	}

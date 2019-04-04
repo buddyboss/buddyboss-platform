@@ -69,6 +69,11 @@ class BP_Nouveau_Media {
 		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_media_enqueue_scripts' );
 
 		add_action( 'bp_after_activity_loop', 'bp_nouveau_media_add_theatre_template' );
+		add_action( 'bbp_template_after_single_topic', 'bp_nouveau_media_add_theatre_template' );
+
+		add_action( 'bp_activity_entry_content', 'bp_nouveau_media_activity_entry' );
+		add_action( 'bp_activity_posted_update', 'bp_nouveau_media_update_media_meta', 10, 3 );
+		add_action( 'bp_groups_posted_update', 'bp_nouveau_media_groups_update_media_meta', 10, 4 );
 	}
 
 	/**

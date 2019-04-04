@@ -2927,7 +2927,7 @@ function bp_register_member_type_section() {
 	add_filter( 'body_class', 'bp_member_type_shortcode_add_body_class' );
 
 	// Hook for creating a profile type shortcode.
-	add_shortcode( 'member', 'bp_member_type_shortcode_callback' );
+	add_shortcode( 'profile', 'bp_member_type_shortcode_callback' );
 
 	// action for adding the js for the profile type post type.
 	add_action('admin_enqueue_scripts', 'bp_member_type_changing_listing_label');
@@ -3041,8 +3041,14 @@ function bp_get_member_type_key( $post_id ) {
 	// Fallback to legacy way of generating profile type key from singular label
 	// if Key is not set by admin user
 	if ( empty( $key ) ) {
-		$key = strtolower( get_post_meta( $post_id, '_bp_member_type_label_singular_name', true ) );
-		$key = str_replace( array( ' ', ',' ), array( '-', '-' ), $key );
+		$key = get_post_field( 'post_name', $post_id );
+		$term = term_exists( sanitize_key( $key ), bp_get_member_type_tax_name() );
+		if ( 0 !== $term && null !== $term ) {
+			$digits = 3;
+			$unique = rand(pow(10, $digits-1), pow(10, $digits)-1);
+			$key = $key.$unique;
+		}
+		update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) );
 	}
 
 	return apply_filters( 'bp_get_member_type_key', $key );
@@ -4253,3 +4259,73 @@ function bp_member_add_auto_join_groups( $user_id, $key, $user ) {
 	}
 }
 add_action( 'bp_core_activated_user', 'bp_member_add_auto_join_groups', 99, 3 );
+
+/**
+ * Set default profile type on registration.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $user_id
+ * @param $key
+ * @param $user
+ */
+function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user ) {
+	global $bp;
+
+	// Check whether member type is enabled.
+	if ( true === bp_member_type_enable_disable() ) {
+
+		// return to user if default member type is not set.
+		$existing_selected = bp_member_type_default_on_registration();
+		if ( '' === $existing_selected ) {
+			return;
+		}
+
+		$email = bp_core_get_user_email( $user_id );
+
+		// Check if invites component enabled.
+		if ( bp_is_active( 'invites' ) ) {
+			$inviters = array();
+
+			$args = array(
+				'post_type'      => bp_get_invite_post_type(),
+				'posts_per_page' => - 1,
+				'meta_query'     => array(
+					array(
+						'key'     => '_bp_invitee_email',
+						'value'   => $email,
+						'compare' => '=',
+					),
+				),
+			);
+
+			$bp_get_invitee_email = new WP_Query( $args );
+
+			if ( $bp_get_invitee_email->have_posts() ) {
+
+				$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
+				// Check if user is invited for specific member type
+				if ( isset( $member_type ) && ! empty( $member_type ) ) {
+					// Assign the invited member type to user.
+					bp_set_member_type( $user_id, '' );
+					bp_set_member_type( $user_id, $member_type );
+				} else {
+					// Assign the default member type to user.
+					bp_set_member_type( $user_id, '' );
+					bp_set_member_type( $user_id, $existing_selected );
+				}
+				// If user is not invited by send invites then assign default member type.
+			} else {
+				// Assign the default member type to user.
+				bp_set_member_type( $user_id, '' );
+				bp_set_member_type( $user_id, $existing_selected );
+			}
+		} else {
+			// Assign the default member type to user.
+			bp_set_member_type( $user_id, '' );
+			bp_set_member_type( $user_id, $existing_selected );
+		}
+	}
+
+}
+add_action( 'bp_core_activated_user', 'bp_assign_default_member_type_to_activate_user', 10, 3 );

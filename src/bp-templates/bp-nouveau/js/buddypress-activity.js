@@ -74,7 +74,13 @@ window.bp = window.bp || {};
 			// Activity actions
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions );
 			$( document ).keydown( this.commentFormAction );
-			$(document).on('click', '.gif-image-container', this.playVideo );
+			$(document).on('click', '.gif-image-container', this.playVideo);
+
+			// Activity autoload
+			if ( ! _.isUndefined( BP_Nouveau.activity.params.autoload ) ) {
+				$( window ).scroll( this.loadMoreActivities );
+			}
+
 		},
 
 		/**
@@ -277,7 +283,8 @@ window.bp = window.bp || {};
 				// Stop event propagation
 				event.preventDefault();
 
-				$( event.currentTarget ).find( 'a' ).first().addClass( 'loading' );
+				var targetEl = $( event.currentTarget );
+				targetEl.find( 'a' ).first().addClass( 'loading' );
 
 				// reset the just posted
 				this.just_posted = [];
@@ -302,7 +309,7 @@ window.bp = window.bp || {};
 					target              : '#buddypress [data-bp-list] ul.bp-list'
 				} ).done( function( response ) {
 					if ( true === response.success ) {
-						$( event.currentTarget ).remove();
+						targetEl.remove();
 
 						// Update the current page
 						self.current_page = next_page;
@@ -341,12 +348,12 @@ window.bp = window.bp || {};
 
 				// Keep latest 5 comments
 				comment_items.each( function( i, item ) {
-					if ( i < comment_items.length - 5 ) {
+					if ( i < comment_items.length - 4 ) {
 						$( item ).addClass('bp-hidden').hide();
 
 						// Prepend a link to display all
 						if ( ! i ) {
-							$( item ).before( '<li class="show-all"><button class="text-button" type="button" data-bp-show-comments-id="#' + activity_item.prop( 'id' ) + '/show-all/"><span class="icon dashicons dashicons-visibility" aria-hidden="true"></span> ' + BP_Nouveau.show_x_comments.replace( '%d', comment_count ) + '</button></li>' );
+							$( item ).before( '<li class="show-all"><button class="text-button" type="button" data-bp-show-comments-id="#' + activity_item.prop( 'id' ) + '/show-all/">' + BP_Nouveau.show_x_comments + '</button></li>' );
 						}
 					}
 				} );
@@ -437,8 +444,7 @@ window.bp = window.bp || {};
 				activity_state = activity_item.find( '.activity-state' ),
 				comments_text = activity_item.find( '.comments-count' ),
 				likes_text = activity_item.find( '.like-text' ),
-				item_id, form,
-				comment_load_template = wp.template('activity-comments-loading-message');
+				item_id, form;
 
 			// In case the target is set to a span inside the link.
 			if ( $( target ).is( 'span' ) ) {
@@ -689,7 +695,7 @@ window.bp = window.bp || {};
 				}
 
 				// Roll-down comments
-				if ( activity_item[ 0 ].classList.contains( 'has-comments' ) &&
+				/*if ( activity_item[ 0 ].classList.contains( 'has-comments' ) &&
 				     !activity_item[ 0 ].classList.contains( 'comments-loaded' ) &&
 				     !$activity_comments[ 0 ].classList.contains( 'comments-loading' )
 				) {
@@ -707,7 +713,7 @@ window.bp = window.bp || {};
 						form[ 0 ].insertAdjacentHTML( 'beforebegin', response );
 						activity_item[ 0 ].classList.add( 'comments-loaded' );
 					} );
-				}
+				}*/
 
 				if ( target.closest( 'li' ).data( 'bp-activity-comment-id' ) ) {
 					item_id = target.closest( 'li' ).data( 'bp-activity-comment-id' );
@@ -889,6 +895,7 @@ window.bp = window.bp || {};
 			}
 		},
 
+		// play gif
 		playVideo: function(event) {
 			event.preventDefault();
 			var video = $(this).find('video').get(0),
@@ -905,6 +912,26 @@ window.bp = window.bp || {};
 
 				// Update the button text to 'Play'
 				$button.show();
+			}
+		},
+
+		// activity autoload
+		loadMoreActivities: function () {
+
+			var $load_more_btn = $( '.load-more:visible' ).last(),
+				$window = $(window);
+
+			if ( ! $load_more_btn.get( 0 ) || $load_more_btn.data( 'bp-autoloaded' ) ) {
+				return;
+			}
+
+			var pos = $load_more_btn.offset();
+			var offset = pos.top - 50;
+
+			if ( $window.scrollTop() + $window.height() > offset ) {
+				$load_more_btn.data( 'bp-autoloaded', 1 );
+				$load_more_btn.find( 'a' ).text(BP_Nouveau.activity.strings.loadingMore);
+				$load_more_btn.find( 'a' ).trigger( 'click' );
 			}
 		}
 	};

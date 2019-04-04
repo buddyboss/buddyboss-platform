@@ -44,20 +44,6 @@ function media_screen_single_album() {
 //		}
 //	}
 
-	// Load up BuddyPress one time.
-	$bp = buddypress();
-
-	// Decrease the unread count in the nav before it's rendered.
-	$count    = 0;
-//	$count    = bp_get_total_unread_messages_count();
-	$class    = ( 0 === $count ) ? 'no-count' : 'count';
-	$nav_name = sprintf( __( 'Album <span class="%s">%s</span>', 'buddyboss' ), esc_attr( $class ), bp_core_number_format( $count ) );
-
-	// Edit the Navigation name.
-	$bp->members->nav->edit_nav( array(
-		'name' => $nav_name,
-	), $bp->media->slug );
-
 	/**
 	 * Fires right before the loading of the single album view screen template file.
 	 *

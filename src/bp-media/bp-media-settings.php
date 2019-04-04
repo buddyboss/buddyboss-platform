@@ -167,7 +167,7 @@ function bp_media_settings_callback_delete_media_permanently() {
            id="bp_media_delete_media_permanently"
            type="checkbox"
            value="1"
-		<?php checked( bp_is_media_delete_enabled() ) ?>
+		<?php checked( bp_is_media_delete_enabled() ); ?>
     />
     <label for="bp_media_delete_media_permanently">
 		<?php esc_html_e( 'When a photo upload is removed, permanently delete the associated media file', 'buddyboss' ) ?>
@@ -199,7 +199,7 @@ function bp_media_settings_callback_forums_media_support() {
            id="bp_media_forums_media_support"
            type="checkbox"
            value="1"
-		<?php checked( bp_is_media_forums_media_support_enabled() ) ?>
+		<?php checked( bp_is_forums_media_support_enabled() ); ?>
     />
     <label for="bp_media_forums_media_support">
 		<?php esc_html_e( 'Allow photo posting in forum discussions', 'buddyboss' ) ?>
@@ -216,8 +216,8 @@ function bp_media_settings_callback_forums_media_support() {
  *
  * @return bool Is media forums media support enabled or not
  */
-function bp_is_media_forums_media_support_enabled( $default = 1 ) {
-	return (bool) apply_filters( 'bp_is_media_forums_media_support_enabled', (bool) get_option( 'bp_media_forums_media_support', $default ) );
+function bp_is_forums_media_support_enabled( $default = 1 ) {
+	return (bool) apply_filters( 'bp_is_forums_media_support_enabled', (bool) get_option( 'bp_media_forums_media_support', $default ) );
 }
 
 /**
@@ -231,7 +231,7 @@ function bp_media_settings_callback_group_media_support() {
            id="bp_media_group_media_support"
            type="checkbox"
            value="1"
-		<?php checked( bp_is_media_group_media_support_enabled() ) ?>
+		<?php checked( bp_is_group_media_support_enabled() ); ?>
     />
     <label for="bp_media_group_media_support">
 		<?php esc_html_e( 'Allow photo posting in social group activity updates and comments', 'buddyboss' ) ?>
@@ -248,8 +248,8 @@ function bp_media_settings_callback_group_media_support() {
  *
  * @return bool Is media group media support enabled or not
  */
-function bp_is_media_group_media_support_enabled( $default = 1 ) {
-	return (bool) apply_filters( 'bp_is_media_group_media_support_enabled', (bool) get_option( 'bp_media_group_media_support', $default ) );
+function bp_is_group_media_support_enabled( $default = 1 ) {
+	return (bool) apply_filters( 'bp_is_group_media_support_enabled', (bool) get_option( 'bp_media_group_media_support', $default ) );
 }
 
 
@@ -264,7 +264,7 @@ function bp_media_settings_callback_group_albums() {
            id="bp_media_group_albums"
            type="checkbox"
            value="1"
-		<?php checked( bp_is_media_group_album_support_enabled() ) ?>
+		<?php checked( bp_is_group_album_support_enabled() ); ?>
     />
     <label for="bp_media_group_albums">
 		<?php esc_html_e( 'Enable social group photo albums', 'buddyboss' ) ?>
@@ -281,6 +281,6 @@ function bp_media_settings_callback_group_albums() {
  *
  * @return bool Is media group album support enabled or not
  */
-function bp_is_media_group_album_support_enabled( $default = 1 ) {
-	return (bool) apply_filters( 'bp_is_media_group_album_support_enabled', (bool) get_option( 'bp_media_group_albums', $default ) );
+function bp_is_group_album_support_enabled( $default = 1 ) {
+	return (bool) apply_filters( 'bp_is_group_album_support_enabled', (bool) get_option( 'bp_media_group_albums', $default ) );
 }

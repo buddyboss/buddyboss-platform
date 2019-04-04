@@ -578,8 +578,8 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 		'members_dir_layout' => 0,
 		'bp_emails'          => ''
 	);
-
-	if ( bp_is_active( 'friends' ) ) {
+    
+    if ( bp_is_active( 'friends' ) ) {
 		$default_args['members_friends_layout'] = 4;
 	}
 

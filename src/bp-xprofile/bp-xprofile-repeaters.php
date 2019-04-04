@@ -323,23 +323,36 @@ function bp_clone_field_for_repeater_sets ( $field_id ) {
     $db_row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id = %d", $field_id ), ARRAY_A );
     if ( !empty( $db_row ) && !is_wp_error( $db_row ) ) {
         $template_field_id = $db_row['id'];
-        
-        $new_field_column_names = array( 'group_id', 'parent_id', 'type', 'name', 'description', 'is_required', 
-            'is_default_option', 'field_order', 'option_order', 'order_by', 'can_delete' );
-        $new_field_column_data_types = array( '%d', '%d', '%s', '%s', '%s', '%d', '%d', '%d', '%d', '%s', '%d' );
-        $new_field_column_data = array (
-            'group_id' => $db_row[ 'group_id' ],
-            'parent_id' => $db_row[ 'parent_id' ],
-            'type' => $db_row[ 'type' ],
-            'name' => $db_row[ 'name' ],
-            'description' => $db_row[ 'description' ],
-            'is_required' => $db_row[ 'is_required' ],
-            'is_default_option' => $db_row[ 'is_default_option' ],
-            'field_order' => $db_row[ 'field_order' ],
-            'option_order' => $db_row[ 'option_order' ],
-            'order_by' => $db_row[ 'order_by' ],
-            'can_delete' => $db_row[ 'can_delete' ],
-        );
+
+	    $new_field_column_names = array(
+		    'group_id',
+		    'parent_id',
+		    'type',
+		    'name',
+		    'description',
+		    'is_required',
+		    'is_default_option',
+		    'field_order',
+		    'option_order',
+		    'order_by',
+		    'can_delete',
+	    );
+
+	    $new_field_column_data_types = array( '%d', '%d', '%s', '%s', '%s', '%d', '%d', '%d', '%d', '%s', '%d' );
+
+	    $new_field_column_data = array(
+		    'group_id'          => $db_row['group_id'],
+		    'parent_id'         => $db_row['parent_id'],
+		    'type'              => $db_row['type'],
+		    'name'              => $db_row['name'],
+		    'description'       => $db_row['description'],
+		    'is_required'       => $db_row['is_required'],
+		    'is_default_option' => $db_row['is_default_option'],
+		    'field_order'       => $db_row['field_order'],
+		    'option_order'      => $db_row['option_order'],
+		    'order_by'          => $db_row['order_by'],
+		    'can_delete'        => $db_row['can_delete'],
+	    );
         
         $inserted = $wpdb->insert(
             $bp->profile->table_name_fields,

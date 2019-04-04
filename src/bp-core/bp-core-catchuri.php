@@ -1246,7 +1246,7 @@ function bp_private_network_template_redirect() {
 
 					$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
-					if ( $actual_link !== wc_lostpassword_url() ) {
+					if ( $actual_link !== wc_lostpassword_url() && ! bp_is_activation_page() ) {
 
 						if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration') && $id !== intval( get_option( 'woocommerce_myaccount_page_id') ) ) {
 

@@ -871,6 +871,27 @@ function bp_is_akismet_active( $default = true ) {
 }
 
 /**
+ * Check whether Activity Autoload is enabled.
+ *
+ * @since BuddyPress 2.0.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if Autoload is enabled, otherwise false.
+ */
+function bp_is_activity_autoload_active( $default = true ) {
+
+	/**
+	 * Filters whether or not Activity Autoload is enabled.
+	 *
+	 * @since BuddyPress 2.0.0
+	 *
+	 * @param bool $value Whether or not Activity Autoload is enabled.
+	 */
+	return (bool) apply_filters( 'bp_is_activity_autoload_active', (bool) bp_get_option( '_bp_enable_activity_autoload', $default ) );
+}
+
+/**
  * Check whether Activity Heartbeat refresh is enabled.
  *
  * @since BuddyPress 2.0.0
@@ -1203,4 +1224,48 @@ function bp_is_custom_post_type_feed_enable( $default = false ) {
  */
 function bp_platform_is_feed_enable( $activity_type, $default = true ) {
 	return (bool) apply_filters( 'bp_platform_is_feed_enable', (bool) get_option( $activity_type, $default ) );
+}
+
+/**
+ * Is the Registration enabled?
+ *
+ * @since BuddyPress 1.6.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if the registration enable,
+ *              otherwise false.
+ */
+function bp_enable_site_registration( $default = false ) {
+
+	/**
+	 * Filters whether or not the registration enable.
+	 *
+	 * @since BuddyPress 1.6.0
+	 *
+	 * @param bool $value Whether or not the registration enable.
+	 */
+	return (bool) apply_filters( 'bp_enable_site_registration', (bool) bp_get_option( 'bp-enable-site-registration', $default ) );
+}
+
+/**
+ * Default profile type on registration.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $default blank. Fallback value if not found in the database.
+ *                      Default: blank.
+ * @return string member type if member type set,
+ *              otherwise blank.
+ */
+function bp_member_type_default_on_registration( $default = '' ) {
+
+	/**
+	 * Filters whether default profile type set on registration.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string $value Whether default profile type set on registration.
+	 */
+	return apply_filters( 'bp_member_type_default_on_registration', bp_get_option( 'bp-member-type-default-on-registration', $default ) );
 }

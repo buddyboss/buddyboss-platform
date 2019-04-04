@@ -85,6 +85,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Allow subscriptions setting.
 		$this->add_field( '_bp_enable_heartbeat_refresh', __( 'Activity auto-refresh', 'buddyboss' ), 'bp_admin_setting_callback_heartbeat', 'intval' );
 
+		// Allow autoload
+		$this->add_field( '_bp_enable_activity_autoload', __( 'Activity auto-load', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_autoload', 'intval' );
+
 		// Allow follow.
 		$this->add_field( '_bp_enable_activity_follow', __( 'Follow', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_follow', 'intval' );
 
@@ -109,7 +112,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			// $this->add_field( '_bp_enable_akismet', __( 'Akismet', 'buddyboss' ), 'bp_admin_setting_callback_activity_akismet', 'intval' );
 		}
 
-		$this->add_section( 'bp_custom_post_type', __( 'Posts in Activity Feed', 'buddyboss' ) );
+		$this->add_section( 'bp_custom_post_type', __( 'Posts in Activity Feeds', 'buddyboss' ) );
 
 		// create field for default Platform activity feed.
 		$get_default_platform_activity_types = bp_platform_default_activity_types();

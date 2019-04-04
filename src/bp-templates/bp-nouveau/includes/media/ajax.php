@@ -47,6 +47,12 @@ add_action( 'admin_init', function() {
 				'nopriv'   => true,
 			),
 		),
+		array(
+			'media_delete_attachment' => array(
+				'function' => 'bp_nouveau_ajax_media_delete_attachment',
+				'nopriv'   => true,
+			),
+		),
 	);
 
 	foreach ( $ajax_actions as $ajax_action ) {
@@ -150,17 +156,43 @@ function bp_nouveau_ajax_media_save() {
 		wp_send_json_error( $response );
 	}
 
-	$activity_id = false;
-	// make an activity for the media
+	if ( empty( $_POST['content'] ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error">%s</div>',
+			esc_html__( 'Please write something about media.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	$main_activity_id = false;
+	// make an activity
 	if ( bp_is_active( 'activity' ) ) {
-		$content = '&nbsp;';
-		$activity_id = bp_activity_post_update( array( 'content' => $content, 'user_id' => bp_displayed_user_id() ) );
+
+		/**
+		 * Filters the content provided in the activity input field.
+		 *
+		 * @since BuddyPress 1.2.0
+		 *
+		 * @param string $value Activity message being posted.
+		 */
+		$content = apply_filters( 'bp_activity_post_update_content', $_POST['content'] );
+
+		$main_activity_id = bp_activity_post_update( array( 'content' => $content, 'user_id' => bp_displayed_user_id() ) );
 	}
 
 	// save media
 	$medias = $_POST['medias'];
 	$media_ids = array();
 	foreach( $medias as $media ) {
+
+		$activity_id = false;
+		// make an activity for the media
+		if ( bp_is_active( 'activity' ) ) {
+			$content = '&nbsp;';
+			$activity_id = bp_activity_post_update( array( 'content' => $content, 'user_id' => bp_displayed_user_id(), 'hide_sitewide' => true ) );
+		}
+
 		$media_id = bp_media_add( array(
 			'attachment_id' => $media['id'],
 			'title'         => $media['name'],
@@ -183,8 +215,15 @@ function bp_nouveau_ajax_media_save() {
 
 	$media = '';
 	if ( ! empty( $media_ids ) ) {
+		$media_ids = implode( ',', $media_ids );
+
+		//save media meta for activity
+		if ( ! empty( $main_activity_id ) ) {
+			bp_activity_update_meta( $main_activity_id, 'bp_media_ids', $media_ids );
+		}
+
 		ob_start();
-		if ( bp_has_media( array( 'include' => implode( ',', $media_ids ) ) ) ) {
+		if ( bp_has_media( array( 'include' => $media_ids ) ) ) {
 			while ( bp_media() ) {
 				bp_the_media();
 				bp_get_template_part( 'media/entry' );
@@ -375,7 +414,7 @@ function bp_nouveau_ajax_media_get_activity() {
 	remove_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
 
 	ob_start();
-	if ( bp_has_activities( array( 'include' => $_POST['id'] ) ) ) {
+	if ( bp_has_activities( array( 'include' => $_POST['id'], 'show_hidden' => true ) ) ) {
 		while ( bp_activities() ) {
 			bp_the_activity();
 			bp_get_template_part( 'activity/entry' );
@@ -389,4 +428,99 @@ function bp_nouveau_ajax_media_get_activity() {
 	wp_send_json_success( array(
 		'activity'     => $activity,
 	) );
+}
+
+/**
+ * Delete attachment with its files
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_nouveau_ajax_media_delete_attachment() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback bp-messages error">%s</div>',
+			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Nonce check!
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_nouveau_media' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['id'] ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error">%s</div>',
+			esc_html__( 'Please provide attachment id to delete.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	//delete attachment with its meta
+	$deleted = wp_delete_attachment( $_POST['id'], true );
+
+	if ( ! $deleted ) {
+		wp_send_json_error( $response );
+	}
+
+	wp_send_json_success();
+}
+
+add_filter('bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_media_tabs', 10, 2);
+/**
+ * Object template results media tabs.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_nouveau_object_template_results_media_tabs( $results, $object ) {
+	if ( $object != 'media' ) {
+		return $results;
+	}
+
+	$results['scopes'] = [];
+
+	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_media_all_scope', 20 );
+	bp_has_media( bp_ajax_querystring( 'media' ) );
+	$results['scopes']['all'] = $GLOBALS["media_template"]->total_media_count;
+	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_media_all_scope', 20 );
+
+	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_media_personal_scope', 20 );
+	bp_has_media( bp_ajax_querystring( 'media' ) );
+	$results['scopes']['personal'] = $GLOBALS["media_template"]->total_media_count;
+	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_media_personal_scope', 20 );
+
+	return $results;
+}
+
+/**
+ * Object template results media all scope.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_nouveau_object_template_results_media_all_scope( $querystring ) {
+	$querystring = wp_parse_args( $querystring );
+
+	$querystring['scope'] = 'all';
+	$querystring['page'] = 1;
+	$querystring['per_page'] = '1';
+	$querystring['user_id'] = 0;
+	$querystring['count_total'] = true;
+	return http_build_query( $querystring );
+}
+
+/**
+ * Object template results members personal scope.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_nouveau_object_template_results_media_personal_scope( $querystring ) {
+	$querystring = wp_parse_args( $querystring );
+
+	$querystring['scope'] = 'personal';
+	$querystring['page'] = 1;
+	$querystring['per_page'] = '1';
+	$querystring['user_id'] = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	$querystring['count_total'] = true;
+	return http_build_query( $querystring );
 }

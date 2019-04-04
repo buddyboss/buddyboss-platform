@@ -2950,8 +2950,13 @@ function bp_get_group_type_key( $post_id ) {
 	// Fallback to legacy way of generating group type key from singular label
 	// if Key is not set by admin user
 	if ( empty( $key ) ) {
-		$key = strtolower( get_post_meta( $post_id, '_bp_group_type_label_singular_name', true ) );
-		$key = str_replace( array( ' ', ',' ), array( '-', '-' ), $key );
+		$key = get_post_field( 'post_name', $post_id );
+		$term = term_exists( sanitize_key( $key ), 'bp_group_type' );
+		if ( 0 !== $term && null !== $term ) {
+			$digits = 3;
+			$unique = rand(pow(10, $digits-1), pow(10, $digits)-1);
+			$key = $key.$unique;
+		}
 		update_post_meta( $post_id, '_bp_group_type_key', sanitize_key( $key ) );
 	}
 

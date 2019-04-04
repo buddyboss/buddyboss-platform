@@ -544,7 +544,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 			'is_friend_confirm'   => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss' ),
 			'confirm'             => __( 'Are you sure?', 'buddyboss' ),
 			'confirm_delete_set'  => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
-			'show_x_comments'     => __( 'Show all %d comments', 'buddyboss' ),
+			'show_x_comments'     => __( 'View previous comments', 'buddyboss' ),
 			'unsaved_changes'     => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
 			'object_nav_parent'   => '#buddypress',
 		);
@@ -709,6 +709,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$nav_items = bp_nouveau_get_groups_directory_nav_items();
 		} elseif ( bp_is_blogs_directory() ) {
 			$nav_items = bp_nouveau_get_blogs_directory_nav_items();
+		} elseif ( bp_is_media_directory() ) {
+			$nav_items = bp_nouveau_get_media_directory_nav_items();
 		}
 
 		if ( empty( $nav_items ) ) {

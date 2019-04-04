@@ -459,8 +459,10 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 
 	if ( is_null( $field_id ) ) {
 		$field = new BP_XProfile_Field();
+		$new = true;
 	} else {
 		$field = xprofile_get_field( $field_id );
+		$new = false;
 	}
 
 	$field->group_id = $group_id;
@@ -474,6 +476,26 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 			$field->is_required = $_POST['required'];
 			$field->type        = $_POST['fieldtype'];
 			$field->name        = $_POST['title'];
+
+
+			if ( 'socialnetworks' === $field->type ) {
+
+				if ( true === $new ) {
+					$disabled_social_networks = false;
+					$exists_social_networks   = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' " );
+					if ( $exists_social_networks > 0 ) {
+						$disabled_social_networks = true;
+					}
+
+					if ( true === $disabled_social_networks ) {
+						$message = __( 'You can only have one instance of the "Social Network" profile field.','buddyboss' );
+						$type    = 'error';
+						$field->render_admin_form( $message, $type );
+
+						return false;
+					}
+				}
+			}
 
 			if ( ! empty( $_POST['description'] ) ) {
 				$field->description = $_POST['description'];
@@ -668,7 +690,7 @@ function xprofile_check_gender_added_previously() {
 	global $wpdb;
 
 	$response = array();
-	$response['message'] = __( 'You can only have one instance of the "Gender" profile field on the website.', 'buddyboss');
+	$response['message'] = __( 'You can only have one instance of the "Gender" profile field.', 'buddyboss');
 
 	$referer = filter_input( INPUT_POST, 'referer', FILTER_SANITIZE_STRING );
 
@@ -852,6 +874,12 @@ function bp_xprofile_admin_form_field_types( $select_field_type ) {
 		$disabled_gender = true;
 	}
 
+	$disabled_social_networks = false;
+	$exists_social_networks = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' ");
+	if ( $exists_social_networks > 0 ) {
+		$disabled_social_networks = true;
+	}
+
 	// Loop through each category and output form <options>.
 	foreach ( $categories as $category => $fields ) {
 		printf( '<optgroup label="%1$s">', esc_attr( $category ) );  // Already i18n'd in each profile type class.
@@ -863,6 +891,8 @@ function bp_xprofile_admin_form_field_types( $select_field_type ) {
 			$field_name     = $field_type_obj[0];
 			$field_type_obj = $field_type_obj[1];
 			if ( 'gender' === $field_name && true === $disabled_gender ) {
+				printf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $field_name ), selected( $select_field_type, $field_name, false ), esc_html( $field_type_obj->name ) );
+			} elseif ( 'socialnetworks' === $field_name && true === $disabled_social_networks) {
 				printf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $field_name ), selected( $select_field_type, $field_name, false ), esc_html( $field_type_obj->name ) );
 			} else {
 				printf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $field_name ), selected( $select_field_type, $field_name, false ), esc_html( $field_type_obj->name ) );
@@ -988,7 +1018,7 @@ function bp_users_admin_profile_types_listing_add_users_tab() {
 
 	if ( true === $is_member_type_enabled ) {
 
-		if ( ( isset( $post->post_type ) && $post->post_type == 'bp-member-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-member-type' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-member-type' && $pagenow == 'post.php' ) ) {
+		if ( ( isset( $GLOBALS["wp_list_table"]->screen->post_type ) && $GLOBALS["wp_list_table"]->screen->post_type == 'bp-member-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-member-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-member-type' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-member-type' && $pagenow == 'post.php' ) ) {
 			?>
 			<div class="wrap">
 				<?php
@@ -1024,3 +1054,47 @@ function bp_profile_type_set_platform_tab_submenu_active( $parent_file ) {
 	}
 	return $parent_file;
 }
+
+/**
+ * Check if the social networks field has been added.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function xprofile_check_social_networks_added_previously() {
+
+	global $wpdb;
+
+	$response = array();
+	$response['message'] = __( 'You can only have one instance of the "Social Networks" profile field on the website.', 'buddyboss');
+
+	$referer = filter_input( INPUT_POST, 'referer', FILTER_SANITIZE_STRING );
+
+	parse_str( $referer, $parsed_array);
+
+	if ( 'edit_field' === $parsed_array['mode'] ) {
+
+		$current_edit_id = intval( $parsed_array['field_id'] );
+
+		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' ");
+		if ( intval( $exists_gender[0]->count ) > 0 ) {
+			if ( $current_edit_id === intval( $exists_gender[0]->id ) ) {
+				$response['status'] = 'not_added';
+			} else {
+				$response['status'] = 'added';
+			}
+		} else {
+			$response['status'] = 'not_added';
+		}
+	} else {
+		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' ");
+		if ( intval( $exists_gender[0]->count ) > 0 ) {
+			$response['status'] = 'added';
+		} else {
+			$response['status'] = 'not_added';
+		}
+	}
+	echo wp_json_encode( $response );
+	wp_die();
+}
+add_action( 'wp_ajax_xprofile_check_social_networks_added_previously', 'xprofile_check_social_networks_added_previously' );

@@ -149,6 +149,70 @@
 			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li').find('a[href*="bp-tools"]').parent().addClass('current');
 		}
 
+		if ( $('body .section-bp_search_settings_community').length ) {
+
+			if ($('body .section-bp_search_settings_community table td input:checkbox:checked').length === $('body .section-bp_search_settings_community table td input:checkbox').length) {
+				$('#bp_search_select_all_components').prop( 'checked', true );
+			}
+
+			$('#bp_search_select_all_components').click(function () {
+				var table = $('body .section-bp_search_settings_community table');
+				$('td input:checkbox', table).prop('checked', this.checked);
+			});
+
+			$('body .section-bp_search_settings_community table td input:checkbox').click(function () {
+				if ($('body .section-bp_search_settings_community table td input:checkbox:checked').length === $('body .section-bp_search_settings_community table td input:checkbox').length) {
+					$('#bp_search_select_all_components').prop( 'checked', true );
+				} else {
+					$('#bp_search_select_all_components').prop( 'checked', false );
+				}
+			});
+		}
+
+		if ( $('body .section-bp_search_settings_post_types').length ) {
+
+			if ($('body .section-bp_search_settings_post_types table td input:checkbox:checked').length === $('body .section-bp_search_settings_post_types table td input:checkbox').length) {
+				$('#bp_search_select_all_post_types').prop( 'checked', true );
+			}
+
+			$('#bp_search_select_all_post_types').click(function () {
+				var table = $('body .section-bp_search_settings_post_types table');
+				$('td input:checkbox', table).prop('checked', this.checked);
+			});
+
+			$('body .section-bp_search_settings_post_types table td input:checkbox').click(function () {
+				if ($('body .section-bp_search_settings_post_types table td input:checkbox:checked').length === $('body .section-bp_search_settings_community table td input:checkbox').length) {
+					$('#bp_search_select_all_post_types').prop( 'checked', true );
+				} else {
+					$('#bp_search_select_all_post_types').prop( 'checked', false );
+				}
+			});
+		}
+
+		if ( $('.buddyboss_page_bp-activity').length ) {
+			$(document).on('click', '.activity-attached-gif-container', function () {
+				var video = $(this).find('video').get(0),
+					$button = $(this).find('.gif-play-button');
+				if (video.paused == true) {
+					// Play the video
+					video.play();
+
+					// Update the button text to 'Pause'
+					$button.hide();
+				} else {
+					// Pause the video
+					video.pause();
+
+					// Update the button text to 'Play'
+					$button.show();
+				}
+			} );
+		}
+
 	});
 
+
 }());
+
+
+

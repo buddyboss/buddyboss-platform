@@ -26,7 +26,7 @@ function bp_nouveau_activity_register_scripts( $scripts = array() ) {
 	return array_merge( $scripts, array(
 		'bp-nouveau-activity' => array(
 			'file'         => 'js/buddypress-activity%s.js',
-			'dependencies' => array( 'bp-nouveau' ),
+			'dependencies' => array( 'bp-nouveau', 'wp-util' ),
 			'footer'       => true,
 		),
 		'bp-nouveau-activity-post-form' => array(
@@ -43,7 +43,7 @@ function bp_nouveau_activity_register_scripts( $scripts = array() ) {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_enqueue_scripts() {
-	if ( ! bp_is_activity_component() && ! bp_is_group_activity() && ! bp_is_media_component() && ! bp_is_media_directory() ) {
+	if ( ! bp_is_activity_component() && ! bp_is_group_activity() && ! bp_is_media_component() && ! bp_is_media_directory() ) { // media popup overlay needs activity scripts
 		return;
 	}
 
@@ -63,7 +63,7 @@ function bp_nouveau_activity_enqueue_scripts() {
  * @return array The same array with specific strings for the Activity Post form UI if needed.
  */
 function bp_nouveau_activity_localize_scripts( $params = array() ) {
-	if ( ! bp_is_activity_component() && ! bp_is_group_activity() ) {
+	if ( ! bp_is_activity_component() && ! bp_is_group_activity() && ! bp_is_media_component() && ! bp_is_media_directory() ) { // media popup overlay needs activity scripts
 		return $params;
 	}
 
@@ -98,12 +98,17 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		) );
 	}
 
+	if ( bp_is_activity_autoload_active() ) {
+		$activity_params['autoload'] = true;
+	}
+
 	if ( bp_is_activity_link_preview_active() ) {
 		$activity_params['link_preview'] = true;
 	}
 
 	if ( bp_is_activity_emoji_active() ) {
 		$activity_params['emoji'] = true;
+		$activity_params['emoji_filter_url'] = buddypress()->plugin_url . 'bp-core/images/emojifilter/';
 	}
 
 	// Gif api key
@@ -185,6 +190,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		'cancelButton'        => __( 'Cancel', 'buddyboss' ),
 		'commentLabel'        => __( '%d Comment', 'buddyboss' ),
 		'commentsLabel'       => __( '%d Comments', 'buddyboss' ),
+		'loadingMore'         => __( 'Loading...', 'buddyboss' ),
 	);
 
     if ( bp_get_displayed_user() && ! bp_is_my_profile() ) {

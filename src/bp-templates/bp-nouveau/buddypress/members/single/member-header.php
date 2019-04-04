@@ -43,6 +43,8 @@
 			</div>	
 		<?php endif; ?>
 
+		<?php echo bp_get_user_social_networks_urls(); ?>
+
 		<?php bp_nouveau_member_header_buttons( array( 'container_classes' => array( 'member-header-actions' ) ) ); ?>
 	</div><!-- #item-header-content -->
 

@@ -28,6 +28,8 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 
 	<div class="bp-hello-content">
+		
+		<!--
 		<h2><?php echo esc_html( _n( 'Maintenance Release', 'Maintenance Releases', 1, 'buddyboss' ) ); ?></h2>
 		<p>
 			<?php
@@ -46,6 +48,7 @@ defined( 'ABSPATH' ) || exit;
 		</p>
 
 		<hr>
+		-->
 
 		<h2><?php esc_html_e( 'Feature', 'buddyboss' ); ?></h2>
 		<p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'buddyboss' ); ?></p>
@@ -75,10 +78,21 @@ defined( 'ABSPATH' ) || exit;
 				<li>
 					<?php
 					printf(
+						'<a class="youtube bp-tooltip" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
+						esc_attr( 'Follow BuddyBoss on YouTube', 'buddyboss' ),
+						esc_url( 'https://www.youtube.com/c/BuddybossWP' ),
+						esc_html( 'Follow BuddyBoss on YouTube', 'buddyboss' )
+					);
+					?>
+				</li>
+
+				<li>
+					<?php
+					printf(
 						'<a class="twitter bp-tooltip" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
 						esc_attr( 'Follow BuddyBoss on Twitter', 'buddyboss' ),
 						esc_url( 'https://twitter.com/BuddyBossWP' ),
-						esc_html( 'Follow BuddyPress on Twitter', 'buddyboss' )
+						esc_html( 'Follow BuddyBoss on Twitter', 'buddyboss' )
 					);
 					?>
 				</li>

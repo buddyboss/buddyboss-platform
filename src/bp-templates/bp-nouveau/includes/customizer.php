@@ -36,23 +36,17 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	 * @param array $value Array of Customizer sections.
 	 */
 	$sections = apply_filters( 'bp_nouveau_customizer_sections', array(
-		'bp_nouveau_general_settings' => array(
-			'title'       => __( 'General Settings', 'buddyboss' ),
-			'panel'       => 'bp_nouveau_panel',
-			'priority'    => 10,
-			'description' => __( 'Configure general BuddyBoss appearance options.', 'buddyboss' ),
-		),
+//		'bp_nouveau_general_settings' => array(
+//			'title'       => __( 'General Settings', 'buddyboss' ),
+//			'panel'       => 'bp_nouveau_panel',
+//			'priority'    => 10,
+//			'description' => __( 'Configure general BuddyBoss appearance options.', 'buddyboss' ),
+//		),
 		'bp_nouveau_user_primary_nav' => array(
 			'title'       => __( 'Profile Navigation', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
 			'priority'    => 50,
 			'description' => __( 'Customize the navigation menu for member profiles. In the preview window, navigate to a user to preview your changes.', 'buddyboss' ),
-		),
-		'bp_nouveau_loops_layout' => array(
-			'title'       => __( 'Grid views', 'buddyboss' ),
-			'panel'       => 'bp_nouveau_panel',
-			'priority'    => 70,
-			'description' => __( 'Set the number of columns to use for grid views.', 'buddyboss' ),
 		),
 		'bp_nouveau_mail' => array(
 			'title'       => __( 'BuddyBoss Emails', 'buddyboss' ),
@@ -106,27 +100,6 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'index'             => 'user_nav_order',
 			'capability'        => 'bp_moderate',
 			'sanitize_callback' => 'bp_nouveau_sanitize_nav_order',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-		'bp_nouveau_appearance[members_layout]' => array(
-			'index'             => 'members_layout',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-		'bp_nouveau_appearance[members_group_layout]' => array(
-			'index'             => 'members_group_layout',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-		'bp_nouveau_appearance[members_friends_layout]' => array(
-			'index'             => 'members_friends_layout',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
@@ -226,20 +199,6 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'section'    => 'bp_nouveau_user_primary_nav',
 			'settings'   => 'bp_nouveau_appearance[user_nav_order]',
 			'type'       => 'user',
-		),
-		'members_layout' => array(
-			'label'      => __( 'Members', 'buddyboss' ),
-			'section'    => 'bp_nouveau_loops_layout',
-			'settings'   => 'bp_nouveau_appearance[members_layout]',
-			'type'       => 'select',
-			'choices'    => bp_nouveau_customizer_grid_choices(),
-		),
-		'members_friends_layout' => array(
-			'label'      => __( 'Member > Connections', 'buddyboss' ),
-			'section'    => 'bp_nouveau_loops_layout',
-			'settings'   => 'bp_nouveau_appearance[members_friends_layout]',
-			'type'       => 'select',
-			'choices'    => bp_nouveau_customizer_grid_choices(),
 		),
 		'mail_layout' => array(
 			'section'    => 'bp_nouveau_mail',

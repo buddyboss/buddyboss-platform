@@ -1,10 +1,6 @@
 // BP Whats new form handles user updates to groups or profiles
 // @version 3.0.0
 
-.activity-update-form {
-	padding: 10px 10px 0;
-}
-
 .item-body {
 
 	.activity-update-form {
@@ -19,67 +15,77 @@
 .activity-update-form {
 	border: 1px solid $bp-border-dark;
 
-	@include box-shadow( inset 0 0 6px #eee);
+	@include box-shadow(inset 0 0 6px #eee);
 
 	margin: $marg-med 0;
 
 	#whats-new-avatar {
-		margin: $marg-sml 0;
-		text-align: center;
+		border-bottom: 1px solid #ddd;
+		padding: 10px;
+		margin: 0;
 
 		img {
 			box-shadow: none;
 			display: inline-block;
+			margin-right: 10px;
+			vertical-align: middle;
 		}
+	}
+
+	.activity-post-avatar {
+		display: inline-block;
 	}
 
 	// these ID's need replacing with this!
 	//.content-wrap { // #whats-new-content
 
+	#whats-new {
+		outline: none;
+		box-shadow: none;
+		min-height: 80px;
+		overflow: hidden;
+		padding: 10px;
+	}
+
 	#whats-new-content {
-		padding: 0 0 $marg-lrg 0;
+		padding: 0;
 	}
 
 	#whats-new-attachments {
+		padding: 10px;
+	}
 
-		margin-left: 8.5%;
+	.activity-attached-gif-container {
+		position: relative;
 
-		.activity-attached-gif-container {
-			position: relative;
+		.gif-image-remove {
+			border-radius: 10px;
+			height: 19px;
+			right: 2px;
+			top: 4px;
+			width: 19px;
+		}
 
-			.gif-image-remove {
-				border-radius: 10px;
-				height: 19px;
-				right: 2px;
-				top: 4px;
-				width: 19px;
-			}
-
-			.gif-image-overlay {
-				color: #fff;
-				margin-top: 0;
-				position: absolute;
-			}
+		.gif-image-overlay {
+			color: #fff;
+			margin-top: 0;
+			position: absolute;
 		}
 	}
 
-	#whats-new-elements {
+	#whats-new-elements-buttons {
+		margin: 1em 0;
 
-		#whats-new-elements-buttons {
-			margin: 1em 0;
+		ul {
+			list-style: none;
 
-			ul {
-				list-style: none;
-
-				li {
-					display: inline-block;
-				}
+			li {
+				display: inline-block;
 			}
 		}
 	}
 
 	#whats-new-toolbar {
-		margin-left: 8.5%;
 		position: relative;
 		display: -webkit-box;
 		display: -ms-flexbox;
@@ -87,102 +93,11 @@
 		-webkit-box-align: center;
 		-ms-flex-align: center;
 		align-items: center;
+		padding: 10px;
 
 		.post-elements-buttons-item {
 			margin-right: 15px;
 			position: relative;
-
-			.activity-attached-gif-container:before,
-			.activity-attached-gif-container:after {
-				left: 24px;
-				border-color: #f5f8fa;
-				border-width: 8px;
-			}
-
-			.gif-media-search {
-				position: relative;
-				max-width: 450px;
-
-				.gif-media-search-dropdown {
-					position: absolute;
-					top: 100%;
-					z-index: 900;
-					display: none;
-					float: left;
-					margin: 2px 0 0;
-					background: #fff;
-					border-radius: 4px;
-					box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
-					background-clip: padding-box;
-
-					&.open {
-						display: block;
-						width: 400px;
-					}
-
-					.gif-search-query {
-						background-color: #f5f8fa;
-						background-repeat: repeat-x;
-						background-image: linear-gradient(#fff, #f5f8fa);
-						border: 1px solid #e6ecf0;
-						border-radius: 4px 4px 0 0;
-						position: relative;
-						padding: 8px;
-						margin: 0;
-					}
-
-					.gif-search-results {
-						padding: 3px 6px;
-						overflow: auto;
-						min-height: 270px;
-						max-height: 410px;
-
-						ul {
-							columns: 2 190px;
-							column-gap: 0;
-							margin: 0;
-							padding: 0;
-							list-style: none;
-
-							li {
-								border: 3px solid #fff;
-
-								&.bg1 {
-									background: #e0245e;
-								}
-
-								&.bg2 {
-									background: #f45d22;
-								}
-
-								&.bg3 {
-									background: #ffad1f;
-								}
-
-								&.bg4 {
-									background: #17bf63;
-								}
-
-								&.bg5 {
-									background: #1c94e0;
-								}
-
-								&.bg6 {
-									background: #794bc4;
-								}
-							}
-						}
-
-						.found-media-item img {
-							width: 100%;
-							height: 100%;
-							min-width: 180px;
-						}
-					}
-
-				}
-			}
-
 		}
 	}
 
@@ -191,30 +106,39 @@
 
 	#whats-new-textarea {
 
-		textarea {
-			background: $textarea-bck;
+		[contenteditable="true"] {
 
-			@include box-model();
-			color: #333;
-			font-family: inherit;
-			font-size: medium;
-			height: 2.2em;
-			line-height: 1.4;
-			padding: 6px;
-			width: 100%;
+			&:empty:before {
+				content: attr(placeholder);
+				color: #bbb;
+				cursor: text;
+				display: block; /* For Firefox */
+			}
 
-			&:focus {
+			img.emojioneemoji {
+				width: 1.2em;
+				position: relative;
 
-				@include box-shadow(0 0 6px 0 $med-light-grey);
+				&:after {
+					content: ">";
+					display: block;
+					width: 1rem;
+					height: 1rem;
+					position: absolute;
+					bottom: 0;
+					right: -1.5rem;
+				}
 			}
 		}
 	}
 
 	#activity-form-submit-wrapper {
+		border-top: 1px solid #ddd;
 		display: flex;
 		justify-content: space-between;
 		flex-flow: row wrap;
 		align-items: center;
+		padding: 0 10px;
 	}
 
 	#whats-new-post-in-box {
@@ -268,36 +192,112 @@
 		input {
 
 			@include font-size(14);
-			line-height: inherit;
-			margin-bottom: $marg-sml;
-			margin-right: $marg-sml;
-			padding: 0.2em 0;
-			text-align: center;
-			width: 100%;
+			line-height: 1;
 		}
 	}
 
-	@include medium-up() {
+	// close @media
+}
 
-		#whats-new-avatar {
-			display: block;
-			float: left;
-			margin: 0;
+// GIF styles
+.gif-media-search {
+	position: relative;
+	max-width: 400px;
+}
+
+.gif-media-search-dropdown {
+	position: absolute;
+	top: 100%;
+	z-index: 99;
+	display: none;
+	margin: 10px 0 0 -16px;
+	background: #fff;
+	border-radius: 4px;
+	box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+	padding-bottom: 10px;
+
+	&.open {
+		display: block;
+		width: 400px;
+	}
+
+	&:before {
+		content: " ";
+		position: absolute;
+		width: 0;
+		height: 0;
+		top: 1px;
+		margin: 0 auto;
+		left: 20px;
+		box-sizing: border-box;
+		border: 6px solid #000;
+		border-color: #fff #fff transparent transparent;
+		-webkit-transform-origin: 0 0;
+		transform-origin: 0 0;
+		transform: rotate(-45deg);
+		box-shadow: 2px -3px 3px 0 rgba(0, 0, 0, 0.02);
+		transition: all linear 0.2s;
+		z-index: 101;
+	}
+}
+
+.gif-search-query {
+	background-color: #fff;
+	border-radius: 4px 4px 0 0;
+	position: relative;
+	padding: 10px;
+	margin: 0;
+}
+
+.gif-search-results {
+	padding: 0 10px;
+	overflow: auto;
+	min-height: 280px;
+	max-height: 380px;
+
+	ul {
+		columns: 2 auto;
+		column-gap: 4px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+
+		li {
+			margin-bottom: 4px;
 		}
 
-		#whats-new-content,
-		#whats-new-elements,
-		#activity-form-submit-wrapper {
-			margin-left: 8.5%;
+		.bg1 {
+			background: #e0245e;
 		}
 
-		#whats-new-submit {
-
-			input {
-				margin-bottom: 0;
-				margin-right: $marg-sml;
-				width: 8em;
-			}
+		.bg2 {
+			background: #f45d22;
 		}
-	} // close @media
+
+		.bg3 {
+			background: #ffad1f;
+		}
+
+		.bg4 {
+			background: #17bf63;
+		}
+
+		.bg5 {
+			background: #1c94e0;
+		}
+
+		.bg6 {
+			background: #794bc4;
+		}
+	}
+}
+
+.found-media-item img {
+	width: 100%;
+	height: 100%;
+	min-width: 180px;
+}
+
+input.search-query-input {
+	width: 100%;
 }

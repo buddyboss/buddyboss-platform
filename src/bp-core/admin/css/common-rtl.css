@@ -377,12 +377,8 @@ tr.bp-search-parent-field label {
 }
 
 .bp-admin-card h2 {
-  background-repeat: no-repeat;
-  background-position: right top;
-  background-size: 40px;
   line-height: 40px;
   margin: 0 0 1em;
-  padding-right: 53px;
   padding-bottom: 1.2em;
   font-size: 22px;
   font-weight: 600;
@@ -394,58 +390,103 @@ tr.bp-search-parent-field label {
   font-weight: 400;
 }
 
+.bp-admin-card h2:before {
+  display: inline-block;
+  content: " ";
+  background-size: 18px 18px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #f6f6f6;
+  height: 38px;
+  width: 38px;
+  border-radius: 50px;
+  vertical-align: middle;
+  margin-left: 15px;
+}
+
 /* Settings */
-.bp-admin-card h2,
-.bp-admin-card.section-bp_main h2 {
-  background-image: url(../../images/admin/admin_icon-settings.png);
+.bp-admin-card.section-bp_main h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/tools.svg);
 }
 
-.bp-admin-card.section-bp_xprofile h2,
-.bp-admin-card.section-bp_profile_dashboard_settings h2,
-.bp-admin-card.section-bp_profile_search_settings h2,
-.bp-admin-card.section-bp_member_type_settings h2 {
-  background-image: url(../../images/admin/admin_icon-profiles.png);
+/* Profiles */
+.bp-admin-card.section-bp_xprofile h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/user.svg);
 }
 
-.bp-admin-card.section-bp_activity h2,
-.buddyboss_page_bp-settings .section-bp_custom_post_type h2 {
-  background-image: url(../../images/admin/admin_icon-activity.png);
+.bp-admin-card.section-bp_member_type_settings h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/user-tag.svg);
+  background-size: 22px 22px;
+  background-position-x: 10px;
 }
 
-.bp-admin-card.section-bp_invites h2 {
-  background-image: url(../../images/admin/admin_icon-invites.png);
+.bp-admin-card.section-bp_profile_search_settings h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/user-plus.svg);
+  background-size: 21px 21px;
+  background-position-x: 10px;
 }
 
-.bp-admin-card.section-bp_groups h2,
-.bp-admin-card.section-bp_groups_types h2,
-.bp-admin-card.section-bp_groups_hierarchies h2 {
-  background-image: url(../../images/admin/admin_icon-groups.png);
+/* Activity */
+.bp-admin-card.section-bp_activity h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/rss-square.svg);
 }
 
-.bp-admin-card.section-bp_friends h2 {
-  background-image: url(../../images/admin/admin_icon-friends.png);
+.buddyboss_page_bp-settings .section-bp_custom_post_type h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/thumbtack.svg);
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  background-position-y: 11px;
 }
 
-.bp-admin-card.section-bbp_settings_users h2,
-.bp-admin-card.section-bbp_settings_features h2,
-.bp-admin-card.section-bbp_settings_per_page h2,
-.bp-admin-card.section-bbp_settings_per_rss_page h2,
-.bp-admin-card.section-bbp_settings_root_slugs h2,
-.bp-admin-card.section-bbp_settings_single_slugs h2,
-.bp-admin-card.section-bbp_settings_buddypress h2 {
-  background-image: url(../../images/admin/admin_icon-forums.png);
+/* Invites */
+.bp-admin-card.section-bp_invites h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/envelope.svg);
 }
 
-.bp-admin-card.section-bp_search_settings_community h2,
-.bp-admin-card.section-bp_search_settings_post_types h2,
-.bp-admin-card.section-bp_search_settings_general h2 {
-  background-image: url(../../images/admin/admin_icon-search.png);
+/* Groups */
+.bp-admin-card.section-bp_groups h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/cube.svg);
 }
 
-.bp-admin-card.section-bp_media_settings_general h2,
-.bp-admin-card.section-bp_media_settings_groups h2,
-.bp-admin-card.section-bp_media_settings_forums h2 {
-  background-image: url(../../images/admin/admin_icon-media.png);
+.bp-admin-card.section-bp_groups_types h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/cubes.svg);
+  background-size: 20px 20px;
+}
+
+.bp-admin-card.section-bp_groups_hierarchies h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/layer-group.svg);
+}
+
+/* Connections */
+.bp-admin-card.section-bp_friends h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/user-friends.svg);
+  background-size: 21px 21px;
+}
+
+/* Forums */
+.bp-admin-card.section-bbp_settings_users h2:before,
+.bp-admin-card.section-bbp_settings_features h2:before,
+.bp-admin-card.section-bbp_settings_per_page h2:before,
+.bp-admin-card.section-bbp_settings_per_rss_page h2:before,
+.bp-admin-card.section-bbp_settings_root_slugs h2:before,
+.bp-admin-card.section-bbp_settings_single_slugs h2:before,
+.bp-admin-card.section-bbp_settings_buddypress h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/comment-dots.svg);
+}
+
+/* Media */
+.bp-admin-card.section-bp_media_settings_general h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/camera-retro.svg);
+}
+
+/* Search */
+.bp-admin-card.section-bp_search_settings_community h2:before,
+.bp-admin-card.section-bp_search_settings_post_types h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/search.svg);
+}
+
+.bp-admin-card.section-bp_search_settings_general h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/caret-square-down.svg);
 }
 
 .bp-admin-card.section-bp_search_settings_community table,
@@ -459,37 +500,47 @@ tr.bp-search-parent-field label {
 }
 
 /* Pages */
-.bp-admin-card.section-bp_pages h2 {
-  background-image: url(../../images/admin/admin_icon-pages.png);
+.bp-admin-card.section-bp_pages h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/check-square.svg);
 }
 
-.bp-admin-card.section-bp_registration_pages h2 {
-  background-image: url(../../images/admin/admin_icon-registration.png);
+.bp-admin-card.section-bp_registration_pages h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/pen-square.svg);
+}
+
+/* Tools */
+.bp-admin-card.section-repair_community h2:before,
+.bp-admin-card.section-repair_forums h2:before,
+body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
+.bp-admin-card.section-bp-member-type-import h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/wrench.svg);
 }
 
 /* Integrations - AppBoss */
-.bp-admin-card.section-bp_appboss_disabled h2 {
-  background-image: url(../../images/admin/admin_icon-appboss.png);
+.bp-admin-card.section-bp_appboss-integration h2:before {
+  background-image: url(../../images/admin/icons/logos/appboss.png);
+  background-size: 100% 100%;
 }
 
 /* Integrations - LearnDash */
-.bp-admin-card.section-bp_ld_sync-buddypress h2,
-.bp-admin-card.section-bp_ld_sync-learndash h2,
-.bp-admin-card.section-bp_ld_sync-reports h2,
-.bp-admin-card.section-bp_ld_disabled h2 {
-  background-image: url(../../images/admin/admin_icon-learndash.png);
+.bp-admin-card.section-bp_ld-integration h2:before,
+.bp-admin-card.section-bp_ld_sync-buddypress h2:before,
+.bp-admin-card.section-bp_ld_sync-learndash h2:before,
+.bp-admin-card.section-bp_ld_sync-reports h2:before {
+  background-image: url(../../images/admin/icons/logos/learndash.png);
+  background-size: 100% 100%;
 }
 
 /* Integrations - MemberPress */
-.bp-admin-card.section-bp-memberpress_disabled h2,
-.bp-admin-card.section-bp-memberpress-section h2 {
-  background-image: url(../../images/admin/admin_icon-memberpress.png);
+.bp-admin-card.section-bp-memberpress-integration h2:before {
+  background-image: url(../../images/admin/icons/logos/memberpress.png);
+  background-size: 100% 100%;
 }
 
 /* Integrations - WooCommerce */
-.bp-admin-card.section-bp-woocommerce_disabled h2,
-.bp-admin-card.section-bp-woocommerce-section h2 {
-  background-image: url(../../images/admin/admin_icon-woocommerce.png);
+.bp-admin-card.section-bp-woocommerce-integration h2:before {
+  background-image: url(../../images/admin/icons/logos/woocommerce.png);
+  background-size: 100% 100%;
 }
 
 /*
@@ -541,7 +592,8 @@ body.users_page_bp-signups td.count_sent {
   width: 15%;
 }
 
-#bp-activities-form #the-comment-list td.comment img {
+#bp-activities-form #the-comment-list td.comment img,
+#bp-activities-form #the-comment-list td.comment video {
   max-width: 300px;
   display: block;
   margin: 0.6em 0;
@@ -643,21 +695,30 @@ body.post-type-bp-group-type .postbox .inside {
   padding: 0 22px 22px;
 }
 
-table.bp-post-type {
+body.post-type-bp-member-type #member-type-shortcode,
+body.post-type-bp-group-type #group-type-shortcode {
+  line-height: 1;
+  margin-left: 10px;
+  padding: 7px;
+  display: inline-block;
+}
+
+table.bp-postbox-table {
   background: #f9f9f9;
   margin-top: 22px;
   border-radius: 3px;
 }
 
-table.bp-post-type thead th {
+table.bp-postbox-table thead th {
   font-weight: 600;
 }
 
-table.bp-post-type tbody th {
+table.bp-postbox-table tbody th {
   width: 23%;
+  vertical-align: top;
 }
 
-table.bp-post-type tbody td input[type=checkbox] {
+table.bp-postbox-table tbody td input[type="checkbox"] {
   margin-left: 8px;
 }
 

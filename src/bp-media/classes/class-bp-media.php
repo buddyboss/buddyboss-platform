@@ -209,7 +209,9 @@ class BP_Media {
 			return $this->errors;
 		}
 
-		if ( empty( $this->activity_id ) || empty( $this->attachment_id ) ) {
+		if ( empty( $this->attachment_id )
+		//|| empty( $this->activity_id ) //todo: when forums media is saving, it should have activity id assigned if settings enabled need to check this
+		) {
 			if ( 'bool' === $this->error_type ) {
 				return false;
 			} else {
@@ -291,6 +293,7 @@ class BP_Media {
 			'sort'              => 'DESC',          // ASC or DESC.
 			'order_by'          => 'date_created',  // Column to order by.
 			'exclude'           => false,           // Array of ids to exclude.
+			'in'                => false,           // Array of ids to limit query by (IN).
 			'search_terms'      => false,           // Terms to search by.
 			'update_meta_cache' => true,            // Whether or not to update meta cache.
 			'count_total'       => false,           // Whether or not to use count_total.
@@ -368,6 +371,10 @@ class BP_Media {
 
 		if ( ! empty( $r['album_id'] ) ) {
 			$where_conditions['album'] = "m.album_id = {$r['album_id']}";
+		}
+
+		if ( ! empty( $r['user_id'] ) ) {
+			$where_conditions['user'] = "m.user_id = {$r['user_id']}";
 		}
 
 		/**
@@ -775,6 +782,36 @@ class BP_Media {
 		}
 
 		return $media_ids;
+	}
+
+	/**
+	 * Count total media for the given user
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param int $user_id
+	 *
+	 * @return array|bool|int
+	 */
+	public static function total_media_count( $user_id = 0 ) {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		$count_sql = "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id}";
+
+		$cache_group = 'bp_media_user_media_count';
+
+		$cached = bp_core_get_incremented_cache( $count_sql, $cache_group );
+		if ( false === $cached ) {
+			$results = $wpdb->get_col( $count_sql );
+			$total_count = intval( $results[0] );
+			bp_core_set_incremented_cache( $count_sql, $cache_group, $total_count );
+		} else {
+			$total_count = $cached;
+		}
+
+		return $total_count;
 	}
 
 }

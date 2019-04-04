@@ -38,6 +38,34 @@ function bp_get_media_slug() {
 }
 
 /**
+ * Output the media component root slug.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_media_root_slug() {
+	echo bp_get_media_root_slug();
+}
+/**
+ * Return the media component root slug.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string
+ */
+function bp_get_media_root_slug() {
+
+	/**
+	 * Filters the Media component root slug.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string $slug Media component root slug.
+	 */
+	return apply_filters( 'bp_get_media_root_slug', buddypress()->media->root_slug );
+}
+
+/**
  * Initialize the media loop.
  *
  * Based on the $args passed, bp_has_media() populates the
@@ -686,6 +714,38 @@ function bp_get_media_attachment_image_thumbnail() {
 }
 
 /**
+ * Output the media attachment activity thumbnail.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_media_attachment_image_activity_thumbnail() {
+	echo bp_get_media_attachment_image_activity_thumbnail();
+}
+
+/**
+ * Return the media attachment activity thumbnail.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return string The media attachment thumbnail url.
+ */
+function bp_get_media_attachment_image_activity_thumbnail() {
+	global $media_template;
+
+	/**
+	 * Filters the media activity thumbnail being displayed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string The media activity thumbnail.
+	 */
+	return apply_filters( 'bp_get_media_attachment_image', $media_template->media->attachment_data->activity_thumb );
+}
+
+/**
  * Output the media attachment.
  *
  * @since BuddyBoss 1.0.0
@@ -715,6 +775,34 @@ function bp_get_media_attachment_image() {
 	 * @param string The full image.
 	 */
 	return apply_filters( 'bp_get_media_attachment_image', $media_template->media->attachment_data->full );
+}
+
+/**
+ * Output media directory permalink.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_media_directory_permalink() {
+	echo esc_url( bp_get_media_directory_permalink() );
+}
+/**
+ * Return media directory permalink.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string
+ */
+function bp_get_media_directory_permalink() {
+
+	/**
+	 * Filters the media directory permalink.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string $value Media directory permalink.
+	 */
+	return apply_filters( 'bp_get_media_directory_permalink', trailingslashit( bp_get_root_domain() . '/' . bp_get_media_root_slug() ) );
 }
 
 //****************************** Media Albums *********************************//

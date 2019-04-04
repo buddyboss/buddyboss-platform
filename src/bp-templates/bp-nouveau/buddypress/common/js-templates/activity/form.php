@@ -23,35 +23,35 @@
 	<span class="activity-url-scrapper-loading activity-ajax-loader"><?php esc_html_e( 'Processing...', 'buddyboss' ) ?></span>
 	<# } #>
 	<# if ( data.link_success || data.link_error ) { #>
-	<div id="activity-url-scrapper">
+	<div id="activity-url-scrapper" class="activity-link-preview-container">
 		<# if ( data.link_images.length && data.link_success && ! data.link_error ) { #>
-		<div id="activity-url-scrapper-img-holder">
-			<div id="activity-url-scrapper-img">
+		<div id="activity-url-scrapper-img-holder" class="activity-link-preview-image-wrap">
+			<div id="activity-url-scrapper-img" class="activity-link-preview-image">
 				<img src="{{{data.link_images[data.link_image_index]}}}"/>
 				<a title="Cancel Preview Image" href="#" id="activity-link-preview-close-image">
 					<i class="dashicons dashicons-no-alt"></i>
 				</a>
 			</div>
-			<div class="activity-url-thumb-nav">
-				<input type="button" id="activity-url-prevPicButton" value="<"/>
-				<input type="button" id="activity-url-nextPicButton" value=">">
-				<div id="activity-url-scrapper-img-count">
-					<# print(data.link_image_index + 1) #>&nbsp;<?php esc_html_e( 'of', 'buddyboss' ) ?>&nbsp;<# print(data.link_images.length) #>
+			<# if ( data.link_images.length > 1 ) { #>
+				<div class="activity-url-thumb-nav">
+					<button type="button" id="activity-url-prevPicButton"><span class="dashicons dashicons-arrow-left-alt2"></span></button>
+					<button type="button" id="activity-url-nextPicButton"><span class="dashicons dashicons-arrow-right-alt2"></span></button>
+					<div id="activity-url-scrapper-img-count">
+						<# print(data.link_image_index + 1) #>&nbsp;<?php esc_html_e( 'of', 'buddyboss' ) ?>&nbsp;<# print(data.link_images.length) #>
+					</div>
 				</div>
-			</div>
+			<# } #>
 		</div>
 		<# } #>
-		<div id="activity-url-scrapper-text-holder">
+		<div id="activity-url-scrapper-text-holder" class="activity-link-preview-content">
 			<# if ( data.link_success && ! data.link_error ) { #>
-			<div id="activity-url-scrapper-title">{{data.link_title}}</div>
-			<div id="activity-url-scrapper-description">{{data.link_description}}</div>
+			<div id="activity-url-scrapper-title" class="activity-link-preview-title">{{data.link_title}}</div>
+			<div id="activity-url-scrapper-description" class="activity-link-preview-body">{{data.link_description}}</div>
 			<# } #>
 			<# if ( data.link_error && ! data.link_success ) { #>
-			<div id="activity-url-error">{{data.link_error_msg}}</div>
+			<div id="activity-url-error" class="activity-url-error">{{data.link_error_msg}}</div>
 			<# } #>
-			<a title="Cancel Preview" href="#" id="activity-close-link-suggestion">
-				<i class="dashicons dashicons-no-alt"></i>
-			</a>
+			<a title="Cancel Preview" href="#" id="activity-close-link-suggestion"><i class="dashicons dashicons-no-alt"></i></a>
 		</div>
 	</div>
 	<# } #>
@@ -59,14 +59,14 @@
 </script>
 
 <script type="text/html" id="tmpl-activity-attached-gif">
+	<# if ( ! _.isUndefined( data.gif_data.images ) ) { #>
 	<div class="gif-image-container">
-		<# if ( ! _.isEmpty( data.gif_data ) ) { #>
-			<img src="{{data.gif_data.images.original.url}}" alt="">
-		<# } #>
+		<img src="{{data.gif_data.images.original.url}}" alt="">
 	</div>
 	<div class="gif-image-remove gif-image-overlay">
 		<span class="dashicons dashicons-no"></span>
 	</div>
+	<# } #>
 </script>
 
 <script type="text/html" id="tmpl-gif-result-item">
@@ -78,7 +78,7 @@
 <script type="text/html" id="tmpl-gif-media-search-dropdown">
 	<div class="gif-search-content">
 		<div class="gif-search-query">
-			<input type="text" class="search-query-input" />
+			<input type="search" placeholder="<?php _e('Search GIF', 'buddyboss'); ?>" class="search-query-input" />
 			<span class="search-icon"></span>
 		</div>
 		<div class="gif-search-results" id="gif-search-results">
@@ -90,34 +90,35 @@
 
 <script type="text/html" id="tmpl-whats-new-toolbar">
 	<?php if ( bp_is_active( 'media' ) ): ?>
-        <span class="post-elements-buttons-item post-media">
-				<a href="#" id="activity-media-button" class="toolbar-button">
-					<span class="dashicons dashicons-admin-media"></span>
-				</a>
-			</span>
+        <div class="post-elements-buttons-item post-media">
+			<a href="#" id="activity-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip="<?php _e('Attach a photo', 'buddyboss'); ?>">
+				<span class="dashicons dashicons-admin-media"></span>
+			</a>
+		</div>
 	<?php endif; ?>
 	<?php if ( bp_is_activity_link_preview_active() ): ?>
-        <span class="post-elements-buttons-item post-link">
-				<a href="#" id="activity-link-preview-button" class="toolbar-button">
-					<span class="dashicons dashicons-admin-links"></span>
-				</a>
-			</span>
+        <div class="post-elements-buttons-item post-link">
+			<a href="#" id="activity-link-preview-button" class="toolbar-button bp-tooltip" data-bp-tooltip="<?php _e('Post a link', 'buddyboss'); ?>">
+				<span class="dashicons dashicons-admin-links"></span>
+			</a>
+		</div>
 	<?php endif; ?>
 	<?php if ( bp_is_activity_gif_active() ): ?>
-        <span class="post-elements-buttons-item post-gif">
+        <div class="post-elements-buttons-item post-gif">
 			<div class="gif-media-search">
-				<a href="#" id="activity-gif-button" class="toolbar-button"><span class="dashicons dashicons-smiley"></span></a>
+				<a href="#" id="activity-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip="<?php _e('Post a GIF', 'buddyboss'); ?>"><span class="dashicons dashicons-smiley"></span></a>
 				<div class="gif-media-search-dropdown"></div>
 			</div>
-		</span>
+		</div>
 	<?php endif; ?>
-	<span class="post-elements-buttons-item post-emoji"></span>
+	<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip="<?php _e('Insert an emoji', 'buddyboss'); ?>"></div>
 </script>
 
 <script type="text/html" id="tmpl-activity-post-form-avatar">
 	<# if ( data.display_avatar ) { #>
-		<a href="{{data.user_domain}}">
+		<a class="activity-post-avatar" href="{{data.user_domain}}">
 			<img src="{{data.avatar_url}}" class="avatar user-{{data.user_id}}-avatar avatar-{{data.avatar_width}} photo" width="{{data.avatar_width}}" height="{{data.avatar_width}}" alt="{{data.avatar_alt}}" />
+			<span class="user-name">{{data.user_display_name}}</span>
 		</a>
 	<# } #>
 </script>
