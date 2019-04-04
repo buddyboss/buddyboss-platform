@@ -187,6 +187,16 @@ function bp_admin_repair_list() {
 		'bp_admin_reinstall_emails',
 	);
 
+	// Check whether member type is enabled.
+	if ( true === bp_member_type_enable_disable() ) {
+		// - Assign default member type.
+		$repair_list[101] = array(
+			'bp-assign-member-type',
+			__( 'Assign users without profile type to the default profile type.', 'buddyboss' ),
+			'bp_admin_assign_member_type',
+		);
+	}
+
 	ksort( $repair_list );
 
 	/**
@@ -622,3 +632,7 @@ function bp_core_admin_notice_repopulate_blogs_resume() {
 	echo '<div class="error"><p>' . __( 'It looks like you have more sites to record. Resume recording by checking the "Repopulate site tracking records" option.', 'buddyboss' ) . '</p></div>';
 }
 add_action( 'network_admin_notices', 'bp_core_admin_notice_repopulate_blogs_resume' );
+
+function bp_admin_assign_member_type() {
+
+}
