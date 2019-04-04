@@ -97,6 +97,11 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Enable/Disable profile types.
 		$this->add_field( 'bp-member-type-enable-disable', __( 'Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_enable_disable'], 'intval' );
 
+		// Default profile type on registration.
+		if ( true === bp_member_type_enable_disable() ) {
+			$this->add_field( 'bp-member-type-default-on-registration',__( 'Default Profile Types', 'buddyboss' ),[ $this, 'bp_admin_setting_callback_member_type_default_on_registration' ] );
+		}
+
 		// Profile Type enabled then display profile types.
 		if ( true === bp_member_type_enable_disable() ) {
 			// Enable/Disable Display on profiles.
@@ -242,6 +247,32 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 		<input id="bp-member-type-display-on-profile" name="bp-member-type-display-on-profile" type="checkbox" value="1" <?php checked( bp_member_type_display_on_profile() ); ?> />
 		<label for="bp-member-type-display-on-profile"><?php _e( 'Display each member\'s profile type on their profile page', 'buddyboss' ); ?></label>
+		<?php
+	}
+
+	/**
+	 * Default profile type on registration.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 */
+	public function bp_admin_setting_callback_member_type_default_on_registration(){
+		?>
+		<select name="bp-member-type-default-on-registration" id="bp-member-type-default-on-registration">
+			<?php
+			$member_types = bp_get_active_member_types();
+			$existing_selected = bp_member_type_default_on_registration();?>
+			<option value=""><?php esc_html_e( 'Select Profile Type', 'buddyboss'); ?></option><?php
+			foreach ( $member_types as $member_type_id ) {
+				$type_name = bp_get_member_type_key( $member_type_id );
+				$type_id = bp_member_type_term_taxonomy_id( $type_name );
+				$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
+				if ( !empty( $type_id ) ) { ?>
+					<option <?php selected( $existing_selected, $type_name ); ?> value="<?php echo $type_name; ?>"><?php esc_html_e( $member_type_name, 'buddyboss'); ?></option><?php
+				}
+			}
+			?>
+		</select>
 		<?php
 	}
 }

@@ -1247,3 +1247,25 @@ function bp_enable_site_registration( $default = false ) {
 	 */
 	return (bool) apply_filters( 'bp_enable_site_registration', (bool) bp_get_option( 'bp-enable-site-registration', $default ) );
 }
+
+/**
+ * Default profile type on registration.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $default blank. Fallback value if not found in the database.
+ *                      Default: blank.
+ * @return string member type if member type set,
+ *              otherwise blank.
+ */
+function bp_member_type_default_on_registration( $default = '' ) {
+
+	/**
+	 * Filters whether default profile type set on registration.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string $value Whether default profile type set on registration.
+	 */
+	return apply_filters( 'bp_member_type_default_on_registration', bp_get_option( 'bp-member-type-default-on-registration', $default ) );
+}
