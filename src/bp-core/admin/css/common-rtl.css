@@ -703,22 +703,22 @@ body.post-type-bp-group-type #group-type-shortcode {
   display: inline-block;
 }
 
-table.bp-post-type {
+table.bp-postbox-table {
   background: #f9f9f9;
   margin-top: 22px;
   border-radius: 3px;
 }
 
-table.bp-post-type thead th {
+table.bp-postbox-table thead th {
   font-weight: 600;
 }
 
-table.bp-post-type tbody th {
+table.bp-postbox-table tbody th {
   width: 23%;
   vertical-align: top;
 }
 
-table.bp-post-type tbody td input[type="checkbox"] {
+table.bp-postbox-table tbody td input[type="checkbox"] {
   margin-left: 8px;
 }
 

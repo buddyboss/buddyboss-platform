@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-04-04 08:12:58+00:00\n"
+"POT-Creation-Date: 2019-04-04 08:31:51+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -264,7 +264,7 @@ msgid "Link"
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:248 bp-forums/admin/metaboxes.php:355
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1607
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1609
 msgid "Type"
 msgstr ""
 
@@ -1520,7 +1520,7 @@ msgid "Select %s"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:200
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1584
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1586
 msgid "Required"
 msgstr ""
 
@@ -1663,7 +1663,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:614
 #: bp-core/admin/bp-core-admin-functions.php:2113
 #: bp-core/admin/bp-core-admin-tools.php:20
-#: bp-core/admin/bp-core-admin-tools.php:512
+#: bp-core/admin/bp-core-admin-tools.php:522
 #: bp-core/classes/class-bp-admin.php:457
 #: bp-core/classes/class-bp-admin.php:458
 #: bp-core/classes/class-bp-admin.php:480
@@ -2038,7 +2038,7 @@ msgid "General"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:430
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:151
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:156
 msgid "First Name"
 msgstr ""
 
@@ -2047,7 +2047,7 @@ msgid "Last Name"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:438
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:153
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:158
 msgid "Nickname"
 msgstr ""
 
@@ -2333,13 +2333,17 @@ msgstr ""
 msgid "Reinstall emails (delete and restore from defaults)."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:216
+#: bp-core/admin/bp-core-admin-tools.php:195
+msgid "Assign users without profile type to the default profile type."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-tools.php:226
 msgid "Counting the number of connections for each user&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:217
-#: bp-core/admin/bp-core-admin-tools.php:275
-#: bp-core/admin/bp-core-admin-tools.php:320 bp-forums/admin/tools.php:202
+#: bp-core/admin/bp-core-admin-tools.php:227
+#: bp-core/admin/bp-core-admin-tools.php:285
+#: bp-core/admin/bp-core-admin-tools.php:330 bp-forums/admin/tools.php:202
 #: bp-forums/admin/tools.php:253 bp-forums/admin/tools.php:295
 #: bp-forums/admin/tools.php:340 bp-forums/admin/tools.php:457
 #: bp-forums/admin/tools.php:491 bp-forums/admin/tools.php:534
@@ -2351,15 +2355,15 @@ msgstr ""
 msgid "Failed!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:257
-#: bp-core/admin/bp-core-admin-tools.php:304
-#: bp-core/admin/bp-core-admin-tools.php:332
-#: bp-core/admin/bp-core-admin-tools.php:348
-#: bp-core/admin/bp-core-admin-tools.php:361
-#: bp-core/admin/bp-core-admin-tools.php:384
-#: bp-core/admin/bp-core-admin-tools.php:400
-#: bp-core/admin/bp-core-admin-tools.php:432
-#: bp-core/admin/bp-core-admin-tools.php:455 bp-forums/admin/tools.php:236
+#: bp-core/admin/bp-core-admin-tools.php:267
+#: bp-core/admin/bp-core-admin-tools.php:314
+#: bp-core/admin/bp-core-admin-tools.php:342
+#: bp-core/admin/bp-core-admin-tools.php:358
+#: bp-core/admin/bp-core-admin-tools.php:371
+#: bp-core/admin/bp-core-admin-tools.php:394
+#: bp-core/admin/bp-core-admin-tools.php:410
+#: bp-core/admin/bp-core-admin-tools.php:442
+#: bp-core/admin/bp-core-admin-tools.php:465 bp-forums/admin/tools.php:236
 #: bp-forums/admin/tools.php:279 bp-forums/admin/tools.php:305
 #: bp-forums/admin/tools.php:472 bp-forums/admin/tools.php:517
 #: bp-forums/admin/tools.php:562 bp-forums/admin/tools.php:607
@@ -2371,59 +2375,59 @@ msgstr ""
 msgid "Complete!"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:274
+#: bp-core/admin/bp-core-admin-tools.php:284
 msgid "Counting the number of groups for each user&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:317
+#: bp-core/admin/bp-core-admin-tools.php:327
 msgid "Repopulating Blogs records&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:345
+#: bp-core/admin/bp-core-admin-tools.php:355
 msgid "Counting the number of active members on the site&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:359
+#: bp-core/admin/bp-core-admin-tools.php:369
 msgid "Determining last activity dates for each user&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:383
+#: bp-core/admin/bp-core-admin-tools.php:393
 msgid "Repair default profile set and fields&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:399
+#: bp-core/admin/bp-core-admin-tools.php:409
 msgid "Re-sync user profile data to WordPress; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:431
+#: bp-core/admin/bp-core-admin-tools.php:441
 msgid "Re-sync user WordPress data to BuddyBoss profile fields; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:454
+#: bp-core/admin/bp-core-admin-tools.php:464
 msgid "Update WordPress user display names; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:541
-#: bp-core/admin/bp-core-admin-tools.php:544
+#: bp-core/admin/bp-core-admin-tools.php:551
+#: bp-core/admin/bp-core-admin-tools.php:554
 msgid "BuddyBoss Tools"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:543
+#: bp-core/admin/bp-core-admin-tools.php:553
 msgid ""
 "BuddyBoss keeps track of various relationships between users, groups, and "
 "activity items. Occasionally these relationships become out of sync, most "
 "often after an import, update, or migration."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:544
+#: bp-core/admin/bp-core-admin-tools.php:554
 msgid "Use the %s to repair these relationships."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:602
+#: bp-core/admin/bp-core-admin-tools.php:612
 msgid "Emails have been successfully reinstalled."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:622
+#: bp-core/admin/bp-core-admin-tools.php:632
 msgid ""
 "It looks like you have more sites to record. Resume recording by checking "
 "the \"Repopulate site tracking records\" option."
@@ -2647,16 +2651,20 @@ msgstr ""
 #: bp-members/bp-members-functions.php:2991
 #: bp-members/bp-members-functions.php:2994
 #: bp-xprofile/bp-xprofile-admin.php:976 bp-xprofile/bp-xprofile-admin.php:1028
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1489
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1491
 msgid "Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:103
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:102
+msgid "Default Profile Types"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:108
 msgid "Display Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:107
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:110
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:112
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:115
 #: bp-core/profile-search/bps-start.php:57
 #: bp-core/profile-search/bps-start.php:60
 #: bp-core/profile-search/bps-start.php:240
@@ -2664,50 +2672,65 @@ msgstr ""
 msgid "Profile Search"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:123
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:128
 msgid "Use a WordPress page as each user's personal Profile Dashboard"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:128
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:133
 msgid ""
 "This page is only accessible to logged-in users. Create a WordPress page "
 "and assign it in the <a href=\"%s\">Pages</a> settings."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:145
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:150
 msgid "Redirect users to their Profile Dashboard on login"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:152
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:157
 msgid "First Name &amp; Last Name"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:172
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:177
 msgid ""
 "After the format has been updated, remember to run <a href=\"%s\">Repair "
 "Community</a> tools to update all the users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:195
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:200
 msgid "Enable <a href=\"%s\">advanced profile search</a> on the members directory."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:203
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:208
 msgid "Enable advanced profile search on the members directory"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:222
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:227
 msgid ""
 "Enable <a href=\"%s\">profile types</a> to give members unique profile "
 "fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:230
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:235
 msgid "Enable profile types to give members unique profile fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:244
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:249
 msgid "Display each member's profile type on their profile page"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:266
+msgid "You first need to create some <a href=\"%s\">Profile Types</a>."
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:274
+msgid "Select Profile Type"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:289
+msgid ""
+"Select the default profile type to assign to users during registration. You "
+"can <a href=\"%s\">Repair Community</a> tools to assign the default profile "
+"type to existing users."
 msgstr ""
 
 #: bp-core/admin/templates/about-screen.php:20
@@ -15648,7 +15671,7 @@ msgid "Select who may see your profile details."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:34
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1531
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1533
 msgid "Visibility"
 msgstr ""
 
@@ -17224,7 +17247,7 @@ msgid "Default Value"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field.php:806
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1506
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1508
 msgid "Users with no profile type"
 msgstr ""
 
@@ -17270,38 +17293,46 @@ msgid "Name (required)"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1433
-msgid "Text shown while editing your profile"
+msgid "Text members see when editing this profile field (optional)"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1446
-msgid "Override Title (optional)"
+msgid "Alternate Title"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1452
-msgid "Helper Text (optional)"
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1449
+msgid "For example, \"How old are you?\" could be used instead of \"Age\"."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1491
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1453
+msgid "Instructions"
+msgstr ""
+
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1456
+msgid "Explain to members how best to fill out this field."
+msgstr ""
+
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1493
 msgid "This field should be available to:"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1511
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1513
 msgid "Unavailable to all members."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1551
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1553
 msgid "Allow members to override"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1555
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1557
 msgid "Enforce field visibility"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1580
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1582
 msgid "Requirement"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1583
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1585
 msgid "Optional"
 msgstr ""
 

@@ -1523,7 +1523,7 @@ function bp_member_type_labels_metabox( $post ) {
 	$label_singular_name = isset( $meta[ '_bp_member_type_label_singular_name' ] ) ? $meta[ '_bp_member_type_label_singular_name' ][ 0 ] : '';
 	?>
 
-	<table class="widefat bp-post-type">
+	<table class="widefat bp-postbox-table">
 		<thead>
 			<tr>
 				<th colspan="2">
@@ -1569,7 +1569,7 @@ function bp_member_type_permissions_metabox( $post ) {
 	$enable_filter = isset( $meta['_bp_member_type_enable_filter'] ) ? $meta['_bp_member_type_enable_filter'][0] : 0; //disabled by default
 	?>
 
-	<table class="widefat bp-post-type">
+	<table class="widefat bp-postbox-table">
 		<thead>
 		<tr>
 			<th scope="col" colspan="2">
@@ -1605,7 +1605,7 @@ function bp_member_type_permissions_metabox( $post ) {
 		if ( true === bp_disable_group_type_creation() && isset( $get_all_registered_group_types ) && ! empty( $get_all_registered_group_types ) ) {
 			// When profile types and group types are enabled, admins may restrict individual profile types from creating specified group types.
 			?>
-			<table class="widefat bp-post-type">
+			<table class="widefat bp-postbox-table">
 				<thead>
 				<tr>
 					<th colspan="2">
@@ -1696,7 +1696,7 @@ function bp_member_type_permissions_metabox( $post ) {
 		// Add meta box if group types is entered.
 		if ( true === bp_disable_group_type_creation() && isset( $get_all_registered_group_types ) && ! empty( $get_all_registered_group_types ) ) {
 			?>
-			<table class="widefat bp-post-type">
+			<table class="widefat bp-postbox-table">
 				<thead>
 				<tr>
 					<th colspan="2">
@@ -1743,7 +1743,7 @@ function bp_member_type_permissions_metabox( $post ) {
 		$enable_invite = isset( $meta[ '_bp_member_type_enable_invite' ] ) ? $meta[ '_bp_member_type_enable_invite' ][ 0 ] : 1; //enabled by default
 		?>
 
-		<table class="widefat bp-post-type">
+		<table class="widefat bp-postbox-table">
 			<thead>
 			<tr>
 				<th colspan="2">

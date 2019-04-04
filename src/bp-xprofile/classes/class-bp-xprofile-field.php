@@ -1440,7 +1440,7 @@ class BP_XProfile_Field {
 					 * @since BuddyBoss 1.0.0
 					 */
 				?>
-				<table class="widefat bp-post-type" style="margin-top: 6px;">
+				<table class="widefat bp-postbox-table" style="margin-top: 6px;">
 					<tbody>
 						<tr>
 							<th><?php _e( 'Alternate Title', 'buddyboss' ); ?></th>
