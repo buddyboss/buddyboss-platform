@@ -257,33 +257,43 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 *
 	 */
 	public function bp_admin_setting_callback_member_type_default_on_registration(){
-		?>
-		<select name="bp-member-type-default-on-registration" id="bp-member-type-default-on-registration">
-			<?php
-			$member_types = bp_get_active_member_types();
-			$existing_selected = bp_member_type_default_on_registration();?>
-			<option value=""><?php esc_html_e( 'Select Profile Type', 'buddyboss'); ?></option><?php
-			foreach ( $member_types as $member_type_id ) {
-				$type_name = bp_get_member_type_key( $member_type_id );
-				$type_id = bp_member_type_term_taxonomy_id( $type_name );
-				$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
-				if ( !empty( $type_id ) ) { ?>
-					<option <?php selected( $existing_selected, $type_name ); ?> value="<?php echo $type_name; ?>"><?php esc_html_e( $member_type_name, 'buddyboss'); ?></option><?php
+
+		$member_types = bp_get_active_member_types();
+		$existing_selected = bp_member_type_default_on_registration();
+
+		if ( empty( $member_types ) ) {
+			printf( '<p class="description">%s</p>',
+				sprintf( __( 'You first need to create some <a href="%s">Profile Types</a>.',
+					'buddyboss' ),
+					add_query_arg( [
+						'post_type' => bp_get_member_type_post_type(),
+					],
+						admin_url( 'edit.php' ) ) ) );
+		} else { ?>
+			<select name="bp-member-type-default-on-registration" id="bp-member-type-default-on-registration">
+				<option value=""><?php esc_html_e( 'Select Profile Type', 'buddyboss' ); ?></option><?php
+				foreach ( $member_types as $member_type_id ) {
+					$type_name = bp_get_member_type_key( $member_type_id );
+					$type_id = bp_member_type_term_taxonomy_id( $type_name );
+					$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
+					if ( ! empty( $type_id ) ) { ?>
+						<option <?php selected( $existing_selected,
+							$type_name ); ?> value="<?php echo $type_name; ?>"><?php esc_html_e( $member_type_name,
+							'buddyboss' ); ?></option><?php
+					}
 				}
-			}
-			?>
-		</select>
-		<?php
-		printf(
-			'<p class="description">%s</p>',
-			sprintf(
-				__( 'Select the default profile type to assign to users during registration. You can <a href="%s">Repair Community</a> tools to assign the default profile type to existing users.', 'buddyboss' ),
-				add_query_arg([
-					'page' => 'bp-tools',
-					'tab' => 'bp-tools'
-				], admin_url( 'admin.php' ) )
-			)
-		);
+				?>
+			</select>
+			<?php
+			printf( '<p class="description">%s</p>',
+				sprintf( __( 'Select the default profile type to assign to users during registration. You can <a href="%s">Repair Community</a> tools to assign the default profile type to existing users.',
+					'buddyboss' ),
+					add_query_arg( [
+						'page' => 'bp-tools',
+						'tab'  => 'bp-tools'
+					],
+						admin_url( 'admin.php' ) ) ) );
+		}
 	}
 }
 
