@@ -728,16 +728,13 @@ table.bp-post-type {
 		font-weight: 600;
 	}
 
-	tbody {
+	tbody th {
+		width: 23%;
+		vertical-align: top;
+	}
 
-		th {
-			width: 23%;
-		}
-
-		td input[type="checkbox"] {
-			margin-right: 8px;
-		}
-
+	tbody td input[type="checkbox"] {
+		margin-right: 8px;
 	}
 }
 

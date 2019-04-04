@@ -221,6 +221,15 @@ div#community-profile-page p.not-activated {
 	width: 192px;
 }
 
+#your-profile .field_type_socialnetworks fieldset > legend {
+    float: none;
+} 
+
+.field_type_socialnetworks fieldset .editfield {
+    overflow: hidden;
+    margin: 0 0 10px;
+}
+
 .bp-profile-field .radio .clear-value {
 	margin-top: 10px;
 }

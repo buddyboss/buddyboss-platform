@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-04-03 15:14:15+00:00\n"
+"POT-Creation-Date: 2019-04-04 08:12:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -264,7 +264,7 @@ msgid "Link"
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:248 bp-forums/admin/metaboxes.php:355
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1606
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1607
 msgid "Type"
 msgstr ""
 
@@ -1520,7 +1520,7 @@ msgid "Select %s"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:200
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1583
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1584
 msgid "Required"
 msgstr ""
 
@@ -2016,8 +2016,9 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-pages.php:202
 msgid ""
-"Registration is currently disabled. %s To enable registration, please click "
-"on the \"Registration\" checkbox in <a href=\"%s\">General Settings</a>."
+"Registration is currently disabled. %s To enable open registration, please "
+"click on the \"Registration\" checkbox in <a href=\"%s\">General "
+"Settings</a>."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-pages.php:239
@@ -2646,7 +2647,7 @@ msgstr ""
 #: bp-members/bp-members-functions.php:2991
 #: bp-members/bp-members-functions.php:2994
 #: bp-xprofile/bp-xprofile-admin.php:976 bp-xprofile/bp-xprofile-admin.php:1028
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1488
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1489
 msgid "Profile Types"
 msgstr ""
 
@@ -13207,7 +13208,7 @@ msgstr ""
 msgid "Error while uploading media."
 msgstr ""
 
-#: bp-media/bp-media-functions.php:756
+#: bp-media/bp-media-functions.php:761
 #: bp-templates/bp-nouveau/buddypress/media/add-media.php:13
 msgid "Add Media"
 msgstr ""
@@ -14759,7 +14760,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/activity/activity-loop.php:28
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:43
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:26
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:55
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:57
 msgid "Load More"
 msgstr ""
 
@@ -15360,15 +15361,15 @@ msgstr ""
 msgid "Select Media"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:31
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:32
 msgid "Write something about media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:72
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:74
 msgid "Add More Media"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:73
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:75
 msgid "Done"
 msgstr ""
 
@@ -15647,7 +15648,7 @@ msgid "Select who may see your profile details."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:34
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1530
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1531
 msgid "Visibility"
 msgstr ""
 
@@ -17223,7 +17224,7 @@ msgid "Default Value"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field.php:806
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1505
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1506
 msgid "Users with no profile type"
 msgstr ""
 
@@ -17272,45 +17273,35 @@ msgstr ""
 msgid "Text shown while editing your profile"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1445
-#. translators: accessibility text
-msgid "Override Title"
-msgstr ""
-
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1447
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1446
 msgid "Override Title (optional)"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1453
-#. translators: accessibility text
-msgid "Helper Text"
-msgstr ""
-
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1455
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1452
 msgid "Helper Text (optional)"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1490
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1491
 msgid "This field should be available to:"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1510
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1511
 msgid "Unavailable to all members."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1550
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1551
 msgid "Allow members to override"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1554
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1555
 msgid "Enforce field visibility"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1579
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1580
 msgid "Requirement"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1582
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1583
 msgid "Optional"
 msgstr ""
 

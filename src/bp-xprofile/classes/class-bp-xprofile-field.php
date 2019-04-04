@@ -1430,7 +1430,7 @@ class BP_XProfile_Field {
 		</div>
 
 		<div class="postbox">
-			<h2><?php echo esc_html__( 'Text shown while editing your profile', 'buddyboss' ); ?></h2>
+			<h2><?php echo esc_html__( 'Text members see when editing this profile field (optional)', 'buddyboss' ); ?></h2>
 			<div class="inside">
 				<?php
 					/**
@@ -1440,21 +1440,24 @@ class BP_XProfile_Field {
 					 * @since BuddyBoss 1.0.0
 					 */
 				?>
-				<label for="title_secondary" class="screen-reader-text"><?php
-					/* translators: accessibility text */
-					esc_html_e( 'Override Title', 'buddyboss' );
-				?></label>
-				<p class="description"><?php _e( 'Override Title (optional)', 'buddyboss' ); ?></p>
-                <input type="text" name="title_secondary" id="title_secondary" value="<?php echo esc_attr( $this->get_alternate_name() ) ;?>" autocomplete="off" />
-
-				<?php /* description while editing */ ?>
-				<label for="description" class="screen-reader-text"><?php
-					/* translators: accessibility text */
-					esc_html_e( 'Helper Text', 'buddyboss' );
-				?></label>
-				<p class="description" style="margin-top: 15px;"><?php _e( 'Helper Text (optional)', 'buddyboss' ); ?></p>
-				<textarea name="description" id="description" rows="8" cols="60"><?php echo esc_textarea( $this->description ); ?></textarea>
-
+				<table class="widefat bp-post-type" style="margin-top: 6px;">
+					<tbody>
+						<tr>
+							<th><?php _e( 'Alternate Title', 'buddyboss' ); ?></th>
+							<td>
+								<input type="text" name="title_secondary" id="title_secondary" value="<?php echo esc_attr( $this->get_alternate_name() ) ;?>" autocomplete="off" style="width: 100%;">
+								<p class="description"><?php _e( 'For example, "How old are you?" could be used instead of "Age".', 'buddyboss' ); ?></p>
+							</td>
+						</tr>
+						<tr>
+							<th><?php _e( 'Instructions', 'buddyboss' ); ?></th>
+							<td>
+								<textarea name="description" id="description" rows="6" cols="60"><?php echo esc_textarea( $this->description ); ?></textarea>
+								<p class="description"><?php _e( 'Explain to members how best to fill out this field.', 'buddyboss' ); ?></p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 

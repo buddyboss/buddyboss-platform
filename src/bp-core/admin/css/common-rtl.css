@@ -715,6 +715,7 @@ table.bp-post-type thead th {
 
 table.bp-post-type tbody th {
   width: 23%;
+  vertical-align: top;
 }
 
 table.bp-post-type tbody td input[type="checkbox"] {

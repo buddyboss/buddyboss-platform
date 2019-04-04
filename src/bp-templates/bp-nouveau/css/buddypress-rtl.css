@@ -1905,7 +1905,6 @@ input.search-query-input {
 
 .activity-attached-gif-container {
   cursor: pointer;
-  max-width: 480px;
 }
 
 .activity-attached-gif-container .gif-player {
@@ -3487,6 +3486,17 @@ body.register .buddypress-wrap .page ul {
 #header-cover-image:hover a.link-change-cover-image,
 #item-header-avatar:hover a.link-change-profile-image {
   opacity: 1;
+}
+
+.social-networks-wrap span.social {
+  display: inline-block;
+  width: 20px;
+  margin-left: 10px;
+}
+
+.social-networks-wrap svg {
+  width: 100%;
+  vertical-align: middle;
 }
 
 @media screen and (max-width: 782px) {
