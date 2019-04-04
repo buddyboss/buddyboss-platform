@@ -1782,7 +1782,13 @@ input.search-query-input {
   overflow: hidden;
   position: relative;
   max-width: 420px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
 }
 
 .activity-link-preview-image-wrap {
@@ -1790,6 +1796,12 @@ input.search-query-input {
   width: 180px;
   min-height: 200px;
   position: relative;
+}
+
+@media screen and (max-width: 32em) {
+  .activity-link-preview-image-wrap {
+    width: 100%;
+  }
 }
 
 .activity-link-preview-image {
@@ -9850,7 +9862,6 @@ ul.bb-albums-list .bb-more-photos strong {
 .bb-album-list-item .bs-cover-wrap:after {
   content: " ";
   position: absolute;
-  background: #000;
   background-image: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.01) 70%, rgba(0, 0, 0, 0) 100%);
   border-radius: 3px;
   width: 100%;

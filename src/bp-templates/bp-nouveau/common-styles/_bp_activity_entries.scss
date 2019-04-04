@@ -432,7 +432,13 @@
 	overflow: hidden;
 	position: relative;
 	max-width: 420px;
-	display: flex;
+	display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: normal;
+	-ms-flex-flow: row wrap;
+	flex-flow: row wrap;
 }
 
 .activity-link-preview-image-wrap {
@@ -440,6 +446,10 @@
     width: 180px;
 	min-height: 200px;
 	position: relative;
+
+	@include medium-small-max() {
+		width: 100%;
+	}
 }
 
 .activity-link-preview-image {
