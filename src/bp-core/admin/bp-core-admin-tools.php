@@ -195,7 +195,7 @@ function bp_admin_repair_list() {
 			// - Assign default member type.
 			$repair_list[101] = array(
 				'bp-assign-member-type',
-				__( 'Assign users without profile type to the default profile type.', 'buddyboss' ),
+				__( 'Assign users without profile type to the default profile type. (excludes admins)', 'buddyboss' ),
 				'bp_admin_assign_member_type',
 			);
 		}
