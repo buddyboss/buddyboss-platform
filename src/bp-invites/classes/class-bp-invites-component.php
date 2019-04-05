@@ -282,36 +282,38 @@ class BP_Invites_Component extends BP_Component {
 		// Menus for logged in user.
 		if ( is_user_logged_in() ) {
 
-			// Setup the logged in user variables.
-			$invites_link = trailingslashit( bp_loggedin_user_domain() . bp_get_invites_slug() );
+			if ( true === bp_allow_user_to_send_invites() ) {
+				// Setup the logged in user variables.
+				$invites_link = trailingslashit( bp_loggedin_user_domain() . bp_get_invites_slug() );
 
-			$title   = __( 'Send Invites', 'buddyboss' );
+				$title = __( 'Email Invites', 'buddyboss' );
 
-			// Add the "My Account" sub menus.
-			$wp_admin_nav[] = array(
-				'parent' => buddypress()->my_account_menu_id,
-				'id'     => 'my-account-' . $this->id,
-				'title'  => $title,
-				'href'   => $invites_link
-			);
+				// Add the "My Account" sub menus.
+				$wp_admin_nav[] = array(
+					'parent' => buddypress()->my_account_menu_id,
+					'id'     => 'my-account-' . $this->id,
+					'title'  => $title,
+					'href'   => $invites_link
+				);
 
-			// Invite by Email
-			$wp_admin_nav[] = array(
-				'parent'   => 'my-account-' . $this->id,
-				'id'       => 'my-account-' . $this->id . '-invites',
-				'title'    => __( 'Send Invites', 'buddyboss' ),
-				'href'     => $invites_link,
-				'position' => 10
-			);
+				// Invite by Email
+				$wp_admin_nav[] = array(
+					'parent'   => 'my-account-' . $this->id,
+					'id'       => 'my-account-' . $this->id . '-invites',
+					'title'    => __( 'Send Invites', 'buddyboss' ),
+					'href'     => $invites_link,
+					'position' => 10
+				);
 
-			// Sent Invites
-			$wp_admin_nav[] = array(
-				'parent'   => 'my-account-' . $this->id,
-				'id'       => 'my-account-' . $this->id . '-sent',
-				'title'    => __( 'Sent Invites', 'buddyboss' ),
-				'href'     => $invites_link .'sent-invites',
-				'position' => 20
-			);
+				// Sent Invites
+				$wp_admin_nav[] = array(
+					'parent'   => 'my-account-' . $this->id,
+					'id'       => 'my-account-' . $this->id . '-sent',
+					'title'    => __( 'Sent Invites', 'buddyboss' ),
+					'href'     => $invites_link . 'sent-invites',
+					'position' => 20
+				);
+			}
 
 		}
 
