@@ -2268,7 +2268,7 @@ function bp_groups_admin_group_type_listing_add_groups_tab() {
 
 	if ( true === bp_disable_group_type_creation() ) {
 
-		if ( ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post.php' ) ) {
+		if ( ( isset( $GLOBALS["wp_list_table"]->screen->post_type ) && $GLOBALS["wp_list_table"]->screen->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post.php' ) ) {
 			?>
 			<div class="wrap">
 				<h2 class="nav-tab-wrapper"><?php bp_core_admin_groups_tabs( __( 'Group Types', 'buddyboss' ) ); ?></h2>
