@@ -1647,6 +1647,7 @@ function bp_get_user_social_networks_urls() {
 	if ( $social_networks_id > 0 ) {
 		$providers = social_network_provider();
 		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, bp_displayed_user_id() ) );
+
 		if ( isset( $original_option_values ) && !empty( $original_option_values ) ) {
 			foreach ( $original_option_values as $key => $original_option_value ) {
 				if ( '' !== $original_option_value ) {
@@ -1660,7 +1661,24 @@ function bp_get_user_social_networks_urls() {
 	}
 
 	if ( '' !== $html ) {
-		$html = '<div class="social-networks-wrap">'.$html.'</div>';
+
+		$level = xprofile_get_field_visibility_level( $social_networks_id, bp_displayed_user_id() );
+
+		if ( bp_displayed_user_id() === bp_loggedin_user_id() ) {
+			$html = '<div class="social-networks-wrap">'.$html.'</div>';
+		} elseif ( 'public' === $level ) {
+			$html = '<div class="social-networks-wrap">'.$html.'</div>';
+		} elseif ( 'loggedin' === $level && is_user_logged_in() ) {
+			$html = '<div class="social-networks-wrap">'.$html.'</div>';
+		} elseif ( 'friends' === $level && is_user_logged_in() ) {
+			$member_friend_status = friends_check_friendship_status( bp_loggedin_user_id(), bp_displayed_user_id() );
+			if ( 'is_friend' === $member_friend_status ) {
+				$html = '<div class="social-networks-wrap">' . $html . '</div>';
+			} else {
+				$html = '';
+			}
+		}
+
 	}
 
 	return apply_filters( 'bp_get_user_social_networks_urls', $html, $original_option_values, $social_networks_id );

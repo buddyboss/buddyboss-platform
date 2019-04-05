@@ -1470,6 +1470,10 @@ function bp_nouveau_container_classes() {
 					$customizer_option = 'sites_dir_layout';
 					break;
 
+				case 'media':
+					$customizer_option = 'media_dir_layout';
+					break;
+
 				default:
 					$customizer_option = '';
 					break;

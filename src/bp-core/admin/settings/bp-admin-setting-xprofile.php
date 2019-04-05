@@ -97,15 +97,15 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Enable/Disable profile types.
 		$this->add_field( 'bp-member-type-enable-disable', __( 'Profile Types', 'buddyboss' ), [$this, 'bp_admin_setting_callback_member_type_enable_disable'], 'intval' );
 
-		// Default profile type on registration.
-		if ( true === bp_member_type_enable_disable() ) {
-			$this->add_field( 'bp-member-type-default-on-registration',__( 'Default Profile Types', 'buddyboss' ),[ $this, 'bp_admin_setting_callback_member_type_default_on_registration' ] );
-		}
-
 		// Profile Type enabled then display profile types.
 		if ( true === bp_member_type_enable_disable() ) {
 			// Enable/Disable Display on profiles.
 			$this->add_field( 'bp-member-type-display-on-profile',__( 'Display Profile Types', 'buddyboss' ),[ $this, 'bp_admin_setting_callback_member_type_display_on_profile' ],'intval' );
+		}
+
+		// Default profile type on registration.
+		if ( true === bp_member_type_enable_disable() ) {
+			$this->add_field( 'bp-member-type-default-on-registration',__( 'Default Profile Type', 'buddyboss' ),[ $this, 'bp_admin_setting_callback_member_type_default_on_registration' ] );
 		}
 
 		// Section for profile search.
@@ -271,7 +271,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 						admin_url( 'edit.php' ) ) ) );
 		} else { ?>
 			<select name="bp-member-type-default-on-registration" id="bp-member-type-default-on-registration">
-				<option value=""><?php esc_html_e( 'Select Profile Type', 'buddyboss' ); ?></option><?php
+				<option value=""><?php esc_html_e( '----', 'buddyboss' ); ?></option><?php
 				foreach ( $member_types as $member_type_id ) {
 					$type_name = bp_get_member_type_key( $member_type_id );
 					//$type_id = bp_member_type_term_taxonomy_id( $type_name );
@@ -286,11 +286,12 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			</select>
 			<?php
 			printf( '<p class="description">%s</p>',
-				sprintf( __( 'Select the default profile type to assign to users during registration. You can <a href="%s">Repair Community</a> tools to assign the default profile type to existing users.',
+				sprintf( __( 'Select a default profile type to be auto-assigned to users during registration. After the profile type has been selected, you can run <a href="%s">Repair Community</a> tools to assign the profile type to existing users.',
 					'buddyboss' ),
 					add_query_arg( [
-						'page' => 'bp-tools',
-						'tab'  => 'bp-tools'
+						'page'  => 'bp-tools',
+						'tab'   => 'bp-tools',
+						'tool'  => 'bp-assign-member-type'
 					],
 						admin_url( 'admin.php' ) ) ) );
 		}

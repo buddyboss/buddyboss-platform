@@ -145,7 +145,7 @@ function bp_admin_repair_list() {
 
 	$repair_list[38] = array(
 		'bp-wordpress-update-display-name',
-		__( 'Update display name to selected format in profile setting.', 'buddyboss' ),
+		__( 'Update display name to selected format in profile settings.', 'buddyboss' ),
 		'xprofile_update_display_names',
 	);
 
@@ -195,7 +195,7 @@ function bp_admin_repair_list() {
 			// - Assign default member type.
 			$repair_list[101] = array(
 				'bp-assign-member-type',
-				__( 'Assign users without profile type to the default profile type. (excludes admins)', 'buddyboss' ),
+				__( 'Assign members without a profile type to the default profile type (excludes admins).', 'buddyboss' ),
 				'bp_admin_assign_member_type',
 			);
 		}
@@ -664,7 +664,7 @@ function bp_admin_assign_member_type() {
 	}
 
 	// Description of this tool, displayed to the user.
-	$statement = __( 'Assign users without profile type to the default profile type records&hellip; %s', 'buddyboss' );
+	$statement = __( 'Assign users without a profile type to the default profile type records&hellip; %s', 'buddyboss' );
 
 
 	$result = __( 'Complete!', 'buddyboss' );

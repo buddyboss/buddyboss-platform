@@ -377,7 +377,7 @@ tr.bp-search-parent-field label {
 }
 
 .bp-admin-card h2 {
-  line-height: 40px;
+  line-height: 38px;
   margin: 0 0 1em;
   padding-bottom: 1.2em;
   font-size: 22px;
@@ -428,7 +428,8 @@ tr.bp-search-parent-field label {
 
 /* Activity */
 .bp-admin-card.section-bp_activity h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/rss-square.svg);
+  background-image: url(../../images/admin/icons/buddyboss/activity.svg);
+  background-size: 23px 23px;
 }
 
 .buddyboss_page_bp-settings .section-bp_custom_post_type h2:before {
@@ -501,11 +502,14 @@ tr.bp-search-parent-field label {
 
 /* Pages */
 .bp-admin-card.section-bp_pages h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/check-square.svg);
+  background-image: url(../../images/admin/icons/buddyboss/page.svg);
+  background-size: 22px 22px;
 }
 
 .bp-admin-card.section-bp_registration_pages h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/pen-square.svg);
+  background-image: url(../../images/admin/icons/buddyboss/page-registration.svg);
+  background-size: 22px 22px;
+  background-position-x: 11px;
 }
 
 /* Tools */

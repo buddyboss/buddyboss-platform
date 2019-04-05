@@ -260,6 +260,10 @@ function bp_nouveau_wrapper( $args = array() ) {
 		$generic_class = '';
 	}
 
+	if( bp_current_component() == 'media' ) {
+		$generic_class = ' activity-meta ';
+	}
+
 	$r = wp_parse_args( $args, array(
 		'container'         => 'div',
 		'container_id'      => '',

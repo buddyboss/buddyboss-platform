@@ -41,7 +41,29 @@ class BP_Admin_Setting_Invites extends BP_Admin_Setting_tab {
 		if ( true === bp_member_type_enable_disable() ) {
 
 			// Allow members to invite profile type.
-			$this->add_field( 'bp-disable-invite-member-type', __( 'Set Profile Type', 'buddyboss' ), 'bp_admin_setting_callback_member_invite_member_type', 'intval' );
+			$this->add_field( 'bp-disable-invite-member-type',__( 'Set Profile Type', 'buddyboss' ),'bp_admin_setting_callback_member_invite_member_type','intval' );
+
+			// Allowed Profile Types to Send Invites.
+			$member_types = bp_get_active_member_types();
+			if ( isset( $member_types ) && ! empty( $member_types ) ) {
+				$is_first = true;
+				foreach ( $member_types as $member_type_id ) {
+
+					$type                     = array();
+					$type_name                = bp_get_member_type_key( $member_type_id );
+					$member_type_name         = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
+					$class                    = ( true === $is_first ) ? 'child-no-padding-first' : 'child-no-padding';
+					$type['member_type_name'] = $member_type_name;
+					$type['name']             = $type_name;
+					$type['class']            = $class;
+					$type['description']      = ( true === $is_first ) ? true : false;
+
+					$this->add_field( 'bp-enable-send-invite-member-type-'.$type_name, ( true === $is_first ) ? __( 'Allowed Profile Type', 'buddyboss' ) : '','bp_admin_setting_callback_enable_send_invite_member_type','intval', $type );
+					$is_first = false;
+
+				}
+
+			}
 		}
 	}
 }

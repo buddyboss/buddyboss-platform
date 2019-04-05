@@ -675,7 +675,7 @@ function bp_album_get_specific( $args = '' ) {
  *     @type bool     $is_spam           Should the item be marked as spam? Default: false.
  *     @type string   $error_type        Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
  * }
- * @return WP_Error|bool|int The ID of the activity on success. False on error.
+ * @return WP_Error|bool|int The ID of the album on success. False on error.
  */
 function bp_album_add( $args = '' ) {
 
@@ -720,6 +720,35 @@ function bp_album_add( $args = '' ) {
 	do_action( 'bp_album_add', $r );
 
 	return $album->id;
+}
+
+/**
+ * Delete album item.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param int $album_id ID if album
+ *
+ * @return bool|int The ID of the album on success. False on error.
+ */
+function bp_album_delete( $album_id ) {
+
+	$delete = BP_Media_Album::delete( array( 'id' => $album_id ) );
+
+	if ( ! $delete ) {
+	    return false;
+    }
+
+	/**
+	 * Fires at the end of the execution of delete an album item
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param int $album_id ID of album
+	 */
+	do_action( 'bp_album_delete', $album_id );
+
+	return $album_id;
 }
 
 /**
