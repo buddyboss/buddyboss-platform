@@ -145,7 +145,7 @@ function bp_admin_repair_list() {
 
 	$repair_list[38] = array(
 		'bp-wordpress-update-display-name',
-		__( 'Update display name to selected format in profile setting.', 'buddyboss' ),
+		__( 'Update display name to selected format in profile settings.', 'buddyboss' ),
 		'xprofile_update_display_names',
 	);
 
