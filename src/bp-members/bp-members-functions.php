@@ -4415,6 +4415,7 @@ function bp_allow_user_to_send_invites() {
 	if ( is_user_logged_in() ) {
 		if ( bp_is_active( 'invites' ) ) {
 			// Get all active member type.
+			$member_types = array();
 			$member_types = bp_get_active_member_types();
 			if ( isset( $member_types ) && ! empty( $member_types ) ) {
 				$allowed_member_type    = array();
@@ -4434,7 +4435,7 @@ function bp_allow_user_to_send_invites() {
 					return true;
 				} elseif ( false === $member_type ) {
 					return true;
-				} elseif ( empty( $allowed_member_type ) ) {
+				} elseif ( empty( $allowed_member_type ) || count( $allowed_member_type ) === count( $member_types ) ) {
 					return true;
 				} elseif ( in_array( $member_type, $disallowed_member_type, true) ) {
 					return false;
