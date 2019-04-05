@@ -16,11 +16,13 @@
            href="#">
             <img src="<?php bp_media_attachment_image_thumbnail(); ?>" alt="<?php bp_media_title(); ?>"/>
         </a>
-        <div class="bb-media-check-wrap">
-            <input id="bb-media-<?php bp_media_id(); ?>" class="bb-custom-check" type="checkbox"
-                   value="<?php bp_media_id(); ?>" name="bb-media-select"/>
-            <label for="bb-media-<?php bp_media_id(); ?>"></label>
-        </div>
+        <?php if ( bp_is_my_profile() ) : ?>
+            <div class="bb-media-check-wrap">
+                <input id="bb-media-<?php bp_media_id(); ?>" class="bb-custom-check" type="checkbox"
+                       value="<?php bp_media_id(); ?>" name="bb-media-select"/>
+                <label for="bb-media-<?php bp_media_id(); ?>"></label>
+            </div>
+        <?php endif; ?>
     </div>
 
 </li>
