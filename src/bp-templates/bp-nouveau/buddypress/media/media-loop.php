@@ -11,13 +11,17 @@ bp_nouveau_before_loop(); ?>
 
 	<?php if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
 
-        <header class="bb-member-photos-header flex align-items-center">
-            <div class="push-right bb-photos-meta">
-                <a data-balloon="<?php _e( 'Delete', 'buddyboss' ); ?>" data-balloon-pos="up" class="bb-delete" id="bb-delete-media" href="#">&nbsp;</a>
-                <a data-balloon="<?php _e( 'Select All', 'buddyboss' ); ?>" data-balloon-pos="up" class="bb-select" id="bb-select-all-media" href="#">&nbsp;</a>
-                <a data-balloon="<?php _e( 'Unselect All', 'buddyboss' ); ?>" data-balloon-pos="up" class="bb-select selected" id="bb-deselect-all-media" href="#">&nbsp;</a>
-            </div>
-        </header>
+        <?php if ( bp_is_my_profile() ) : ?>
+
+            <header class="bb-member-photos-header flex align-items-center">
+                <div class="push-right bb-photos-meta">
+                    <a data-balloon="<?php _e( 'Delete', 'buddyboss' ); ?>" data-balloon-pos="up" class="bb-delete" id="bb-delete-media" href="#">&nbsp;</a>
+                    <a data-balloon="<?php _e( 'Select All', 'buddyboss' ); ?>" data-balloon-pos="up" class="bb-select" id="bb-select-all-media" href="#">&nbsp;</a>
+                    <a data-balloon="<?php _e( 'Unselect All', 'buddyboss' ); ?>" data-balloon-pos="up" class="bb-select selected" id="bb-deselect-all-media" href="#">&nbsp;</a>
+                </div>
+            </header>
+
+		<?php endif; ?>
 
         <ul class="media-list item-list bp-list bb-photo-list grid">
 	<?php endif; ?>
