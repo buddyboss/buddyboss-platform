@@ -507,11 +507,14 @@ tr.bp-search-parent-field label {
 
 /* Pages */
 .bp-admin-card.section-bp_pages h2:before {
-	background-image: url(../../images/admin/icons/fontawesome/solid/check-square.svg);
+	background-image: url(../../images/admin/icons/buddyboss/page.svg);
+	background-size: 25px 25px;
 }
 
 .bp-admin-card.section-bp_registration_pages h2:before {
-	background-image: url(../../images/admin/icons/fontawesome/solid/pen-square.svg);
+	background-image: url(../../images/admin/icons/buddyboss/page-registration.svg);
+	background-size: 25px 25px;
+	background-position-x: 9px;
 }
 
 /* Tools */
