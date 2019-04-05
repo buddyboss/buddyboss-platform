@@ -6828,7 +6828,7 @@ body.reply-edit .reply {
 }
 
 #bbpress-forums li {
-  background: none;
+  background: red;
   margin: 0;
   list-style: none;
 }
