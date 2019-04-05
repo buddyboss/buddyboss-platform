@@ -848,8 +848,8 @@ ul.bb-albums-list {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: normal;
 	-ms-flex-flow: row wrap;
 	flex-flow: row wrap;
 	list-style: none;
@@ -858,8 +858,8 @@ ul.bb-albums-list {
 
 	li {
 		-webkit-box-flex: 0;
-    	-ms-flex: 0 0 25%;
-        flex: 0 0 25%;
+		-ms-flex: 0 0 25%;
+		flex: 0 0 25%;
 		max-width: 25%;
 		padding: 5px;
 	}
