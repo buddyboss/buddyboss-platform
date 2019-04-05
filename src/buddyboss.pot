@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-04-05 07:29:56+00:00\n"
+"POT-Creation-Date: 2019-04-05 08:46:10+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -886,6 +886,7 @@ msgstr ""
 #: bp-messages/bp-messages-template.php:1033
 #: bp-notifications/bp-notifications-template.php:783
 #: bp-notifications/bp-notifications-template.php:1029
+#: bp-templates/bp-nouveau/buddypress/media/media-loop.php:16
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:484
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:485
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:836
@@ -1742,6 +1743,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:1154
 #: bp-integrations/memberships/includes/WpListTable.php:1101
 #: bp-search/bp-search-settings.php:380 bp-search/bp-search-settings.php:394
+#: bp-templates/bp-nouveau/buddypress/media/media-loop.php:17
 msgid "Select All"
 msgstr ""
 
@@ -2237,6 +2239,12 @@ msgstr ""
 msgid "Only allow the selected profile types to send invites."
 msgstr ""
 
+#: bp-core/admin/bp-core-admin-settings.php:684
+msgid ""
+"Enter URLs or URI fragments (e.g. /groups/) to remain publicly visible "
+"always. Enter one URL or URI per line. "
+msgstr ""
+
 #: bp-core/admin/bp-core-admin-slugs.php:38
 msgid "Profile Dashboard"
 msgstr ""
@@ -2534,11 +2542,11 @@ msgid "Registrations"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:29
-msgid "Toolbar"
+msgid "Account Deletion"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:30
-msgid "Account Deletion"
+msgid "Toolbar"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:31
@@ -2549,6 +2557,10 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:32
 msgid "Private Network"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-general.php:33
+msgid "Public Content"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-groups.php:23
@@ -13260,7 +13272,7 @@ msgstr ""
 msgid "Error while uploading media."
 msgstr ""
 
-#: bp-media/bp-media-functions.php:790
+#: bp-media/bp-media-functions.php:819
 #: bp-templates/bp-nouveau/buddypress/media/add-media.php:13
 msgid "Add Media"
 msgstr ""
@@ -14804,7 +14816,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/activity-loop.php:28
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:43
-#: bp-templates/bp-nouveau/buddypress/media/media-loop.php:26
+#: bp-templates/bp-nouveau/buddypress/media/media-loop.php:35
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:55
 msgid "Load More"
 msgstr ""
@@ -15400,6 +15412,10 @@ msgstr ""
 msgid "Enter Description"
 msgstr ""
 
+#: bp-templates/bp-nouveau/buddypress/media/media-loop.php:18
+msgid "Unselect All"
+msgstr ""
+
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:29
 msgid "edit"
 msgstr ""
@@ -15850,8 +15866,8 @@ msgid "There was a problem when deleting. Please try again."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:275
-#: bp-templates/bp-nouveau/includes/media/ajax.php:464
-#: bp-templates/bp-nouveau/includes/media/ajax.php:501
+#: bp-templates/bp-nouveau/includes/media/ajax.php:538
+#: bp-templates/bp-nouveau/includes/media/ajax.php:575
 msgid "There was a problem displaying the content. Please try again."
 msgstr ""
 
@@ -16047,11 +16063,12 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:68
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:47
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:261
-#: bp-templates/bp-nouveau/includes/media/ajax.php:86
-#: bp-templates/bp-nouveau/includes/media/ajax.php:134
-#: bp-templates/bp-nouveau/includes/media/ajax.php:258
-#: bp-templates/bp-nouveau/includes/media/ajax.php:347
-#: bp-templates/bp-nouveau/includes/media/ajax.php:410
+#: bp-templates/bp-nouveau/includes/media/ajax.php:92
+#: bp-templates/bp-nouveau/includes/media/ajax.php:140
+#: bp-templates/bp-nouveau/includes/media/ajax.php:264
+#: bp-templates/bp-nouveau/includes/media/ajax.php:332
+#: bp-templates/bp-nouveau/includes/media/ajax.php:421
+#: bp-templates/bp-nouveau/includes/media/ajax.php:484
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
 
@@ -16609,40 +16626,48 @@ msgstr ""
 msgid "widgets (content blocks)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:114
+#: bp-templates/bp-nouveau/includes/media/ajax.php:120
 msgid "There was a problem when trying to upload this file."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:159
-#: bp-templates/bp-nouveau/includes/media/ajax.php:283
+#: bp-templates/bp-nouveau/includes/media/ajax.php:165
+#: bp-templates/bp-nouveau/includes/media/ajax.php:357
 msgid "Please upload media before saving."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:168
+#: bp-templates/bp-nouveau/includes/media/ajax.php:174
 msgid "Please write something about media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:213
+#: bp-templates/bp-nouveau/includes/media/ajax.php:219
 msgid "There was a problem when trying to add the media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:292
+#: bp-templates/bp-nouveau/includes/media/ajax.php:289
+msgid "Please select media to delete."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/media/ajax.php:311
+msgid "There was a problem deleting media."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/media/ajax.php:366
 msgid "Please provide album to move media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:309
+#: bp-templates/bp-nouveau/includes/media/ajax.php:383
 msgid "There was a problem when trying to move the media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:372
+#: bp-templates/bp-nouveau/includes/media/ajax.php:446
 msgid "Please enter title of album."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:435
+#: bp-templates/bp-nouveau/includes/media/ajax.php:509
 msgid "Please ID of album to delete."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:513
+#: bp-templates/bp-nouveau/includes/media/ajax.php:587
 msgid "Please provide attachment id to delete."
 msgstr ""
 
