@@ -2914,6 +2914,14 @@ body.buddypress.bp-user #page #primary .entry-header {
   margin: 30px 0 15px;
 }
 
+.buddypress-wrap .item-body .group-create-buttons {
+  list-style: none;
+}
+
+.buddypress-wrap .item-body .group-create-buttons li {
+  padding-left: 12px;
+}
+
 .buddypress-wrap.bp-single-vert-nav .bp-list:not(.grid) .item-entry {
   padding-right: 0.7em;
 }

@@ -428,7 +428,8 @@ tr.bp-search-parent-field label {
 
 /* Activity */
 .bp-admin-card.section-bp_activity h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/rss-square.svg);
+  background-image: url(../../images/admin/icons/buddyboss/activity.svg);
+  background-size: 23px 23px;
 }
 
 .buddyboss_page_bp-settings .section-bp_custom_post_type h2:before {

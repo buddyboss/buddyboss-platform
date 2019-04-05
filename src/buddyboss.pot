@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-04-04 11:24:17+00:00\n"
+"POT-Creation-Date: 2019-04-05 04:26:46+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2314,7 +2314,7 @@ msgid "Re-sync WordPress profile fields to BuddyBoss profile fields."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:148
-msgid "Update display name to selected format in profile setting."
+msgid "Update display name to selected format in profile settings."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:157
@@ -2335,8 +2335,8 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:198
 msgid ""
-"Assign users without profile type to the default profile type. (excludes "
-"admins)"
+"Assign members without a profile type to the default profile type (excludes "
+"admins)."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:230
@@ -2438,7 +2438,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:667
 msgid ""
-"Assign users without profile type to the default profile type "
+"Assign users without a profile type to the default profile type "
 "records&hellip; %s"
 msgstr ""
 
@@ -2664,12 +2664,12 @@ msgstr ""
 msgid "Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:102
-msgid "Default Profile Types"
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:103
+msgid "Display Profile Types"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:108
-msgid "Display Profile Types"
+msgid "Default Profile Type"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:112
@@ -2732,14 +2732,19 @@ msgid "You first need to create some <a href=\"%s\">Profile Types</a>."
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:274
-msgid "Select Profile Type"
+#: bp-members/classes/class-bp-members-admin.php:1281
+#: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:111
+#: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:111
+#. translators: no option picked in select box
+msgid "----"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:289
 msgid ""
-"Select the default profile type to assign to users during registration. You "
-"can <a href=\"%s\">Repair Community</a> tools to assign the default profile "
-"type to existing users."
+"Select a default profile type to be auto-assigned to users during "
+"registration. After the profile type has been selected, you can run <a "
+"href=\"%s\">Repair Community</a> tools to assign the profile type to "
+"existing users."
 msgstr ""
 
 #: bp-core/admin/templates/about-screen.php:20
@@ -7409,6 +7414,7 @@ msgstr ""
 
 #: bp-forums/admin/replies.php:565
 #: bp-templates/bp-nouveau/buddypress/media/create-album.php:21
+#: bp-templates/bp-nouveau/buddypress/media/single-album.php:27
 msgid "Title"
 msgstr ""
 
@@ -13240,7 +13246,7 @@ msgstr ""
 msgid "Error while uploading media."
 msgstr ""
 
-#: bp-media/bp-media-functions.php:761
+#: bp-media/bp-media-functions.php:790
 #: bp-templates/bp-nouveau/buddypress/media/add-media.php:13
 msgid "Add Media"
 msgstr ""
@@ -13806,13 +13812,6 @@ msgstr ""
 #: bp-members/classes/class-bp-members-admin.php:1276
 #. translators: accessibility text
 msgid "Select profile type"
-msgstr ""
-
-#: bp-members/classes/class-bp-members-admin.php:1281
-#: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:111
-#: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:111
-#. translators: no option picked in select box
-msgid "----"
 msgstr ""
 
 #: bp-members/classes/class-bp-members-admin.php:1340
@@ -15367,7 +15366,7 @@ msgid "More Photos"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/album-entry.php:20
-#: bp-templates/bp-nouveau/buddypress/media/single-album.php:32
+#: bp-templates/bp-nouveau/buddypress/media/single-album.php:34
 msgid "%s photo"
 msgid_plural "%s photos"
 msgstr[0] ""
@@ -15387,7 +15386,23 @@ msgstr ""
 msgid "Enter Description"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/single-album.php:39
+#: bp-templates/bp-nouveau/buddypress/media/single-album.php:29
+msgid "edit"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/single-album.php:30
+msgid "save"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/single-album.php:31
+msgid "cancel"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/single-album.php:42
+msgid "Delete Album"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/single-album.php:46
 msgid "Add Photos"
 msgstr ""
 
@@ -15821,8 +15836,8 @@ msgid "There was a problem when deleting. Please try again."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:275
-#: bp-templates/bp-nouveau/includes/media/ajax.php:405
-#: bp-templates/bp-nouveau/includes/media/ajax.php:442
+#: bp-templates/bp-nouveau/includes/media/ajax.php:464
+#: bp-templates/bp-nouveau/includes/media/ajax.php:501
 msgid "There was a problem displaying the content. Please try again."
 msgstr ""
 
@@ -16018,10 +16033,11 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:68
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:47
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:261
-#: bp-templates/bp-nouveau/includes/media/ajax.php:80
-#: bp-templates/bp-nouveau/includes/media/ajax.php:128
-#: bp-templates/bp-nouveau/includes/media/ajax.php:252
-#: bp-templates/bp-nouveau/includes/media/ajax.php:341
+#: bp-templates/bp-nouveau/includes/media/ajax.php:86
+#: bp-templates/bp-nouveau/includes/media/ajax.php:134
+#: bp-templates/bp-nouveau/includes/media/ajax.php:258
+#: bp-templates/bp-nouveau/includes/media/ajax.php:347
+#: bp-templates/bp-nouveau/includes/media/ajax.php:410
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
 
@@ -16579,36 +16595,40 @@ msgstr ""
 msgid "widgets (content blocks)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:108
+#: bp-templates/bp-nouveau/includes/media/ajax.php:114
 msgid "There was a problem when trying to upload this file."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:153
-#: bp-templates/bp-nouveau/includes/media/ajax.php:277
+#: bp-templates/bp-nouveau/includes/media/ajax.php:159
+#: bp-templates/bp-nouveau/includes/media/ajax.php:283
 msgid "Please upload media before saving."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:162
+#: bp-templates/bp-nouveau/includes/media/ajax.php:168
 msgid "Please write something about media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:207
+#: bp-templates/bp-nouveau/includes/media/ajax.php:213
 msgid "There was a problem when trying to add the media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:286
+#: bp-templates/bp-nouveau/includes/media/ajax.php:292
 msgid "Please provide album to move media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:303
+#: bp-templates/bp-nouveau/includes/media/ajax.php:309
 msgid "There was a problem when trying to move the media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:366
+#: bp-templates/bp-nouveau/includes/media/ajax.php:372
 msgid "Please enter title of album."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:454
+#: bp-templates/bp-nouveau/includes/media/ajax.php:435
+msgid "Please ID of album to delete."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/media/ajax.php:513
 msgid "Please provide attachment id to delete."
 msgstr ""
 
