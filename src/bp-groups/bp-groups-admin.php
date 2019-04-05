@@ -2292,7 +2292,7 @@ function bp_group_type_set_platform_tab_submenu_active( $parent_file ) {
 	global $pagenow, $current_screen, $post;
 
 	if ( true === bp_disable_group_type_creation() ) {
-		if ( ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post.php' ) ) {
+		if ( ( isset( $GLOBALS["wp_list_table"]->screen->post_type ) && $GLOBALS["wp_list_table"]->screen->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post.php' ) ) {
 			$parent_file = 'buddyboss-platform';
 		}
 	}
