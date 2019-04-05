@@ -723,26 +723,3 @@ function bbp_forum_topics_reply_tinymce_settings($settings) {
 
 	return $settings;
 }
-
-/**
- * Make forum extension to default in group.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $component
- *
- * @return mixed
- */
-function bbp_set_group_default_tab( $component ) {
-
-	// Get the group nav order based on the customizer settings.
-	$nav_tabs = bp_nouveau_get_appearance_settings( 'group_nav_order' );
-	if ( isset( $nav_tabs[0] ) && $nav_tabs[0] == get_option( '_bbp_forum_slug', 'forum' ) && bp_is_active( $nav_tabs[0] ) ) {
-		$group = groups_get_group( bp_get_current_group_id() );
-		if ( $group->enable_forum ) {
-			return $nav_tabs[0];
-		}
-	}
-
-	return $component;
-}

@@ -3438,48 +3438,22 @@ function get_group_role_label( $group_id, $label_name ) {
 }
 
 /**
- * Make admin extension to default in group.
+ * Set navigation based on the customizer settings.
  *
  * @since BuddyBoss 1.0.0
- *
- * @param $component
- *
- * @return mixed
  */
-function bp_set_admin_group_default_tab( $component ) {
+function bp_group_tab_set_on_customizer(){
+
+	$bp = buddypress();
 
 	// Get the group nav order based on the customizer settings.
 	$nav_tabs = bp_nouveau_get_appearance_settings( 'group_nav_order' );
-	if ( isset( $nav_tabs[0] ) && 'admin' === $nav_tabs[0] && bp_is_active( 'groups' ) ) {
-		if ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) || groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) || current_user_can( 'bp_moderate')  ) {
-			return $nav_tabs[0];
-		}
-	}
-
-	return $component;
-}
-
-/**
- * Make Subgroups extension to default in group.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $component
- *
- * @return mixed
- */
-function bp_set_subgroups_group_default_tab( $component ) {
-
-	// Get the group nav order based on the customizer settings.
-	$nav_tabs = bp_nouveau_get_appearance_settings( 'group_nav_order' );
-	if ( isset( $nav_tabs[0] ) && 'subgroups' === $nav_tabs[0] && bp_is_active( 'groups' ) ) {
-		if ( bp_enable_group_hierarchies() ) {
-			$descendant_groups = bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() );
-			if ( $total_descendant = count( $descendant_groups ) ) {
-				return $nav_tabs[0];
+	$bav      = $bp->groups->nav->get();
+	foreach ( $nav_tabs as $tab ) {
+		foreach ( $bav as $nav_item ) {
+			if ( $tab === $nav_item['slug'] ) {
+				bp_core_redirect( bp_get_group_permalink( groups_get_current_group() ) . $nav_item['slug'] );
 			}
 		}
 	}
-
-	return $component;
 }

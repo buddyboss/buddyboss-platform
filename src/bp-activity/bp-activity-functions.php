@@ -5001,23 +5001,3 @@ function bp_activity_media_handle_sideload( $file_array, $post_data = array() ) 
 
 	return $id;
 }
-
-/**
- * Make feed extension to default in group.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $component
- *
- * @return mixed
- */
-function bp_set_feed_group_default_tab( $component ) {
-
-	// Get the group nav order based on the customizer settings.
-	$nav_tabs = bp_nouveau_get_appearance_settings( 'group_nav_order' );
-	if ( isset( $nav_tabs[0] ) && 'activity' === $nav_tabs[0] && bp_is_active( $nav_tabs[0] ) ) {
-		return $nav_tabs[0];
-	}
-
-	return $component;
-}
