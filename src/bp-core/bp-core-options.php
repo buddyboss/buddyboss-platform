@@ -1282,3 +1282,25 @@ function bp_member_type_default_on_registration( $default = '' ) {
 function bp_enable_send_invite_member_type( $member_type, $default = false ) {
 	return (bool) apply_filters( 'bp_enable_send_invite_member_type', (bool) get_option( $member_type, $default ) );
 }
+
+/**
+ * Enable private network for site owner.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if users are able to delete their own accounts, otherwise
+ *              false.
+ */
+function bp_enable_private_network_public_content( $default = '' ) {
+
+	/**
+	 * Filters whether or not members are able to delete their own accounts.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param bool $value Whether site owner uses private network.
+	 */
+	return apply_filters( 'bp_enable_private_network_public_content', bp_get_option( 'bp-enable-private-network-public-content', '' ) );
+}

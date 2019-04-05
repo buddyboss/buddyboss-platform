@@ -438,6 +438,7 @@
 		min-height: 100%;
 		width: auto;
 		min-width: 100%;
+		border-radius: 3px;
 		object-fit: cover;
 	}
 
@@ -844,19 +845,23 @@ div#buddypress .bb-album-actions .button.error.outline {
 }
 
 ul.bb-albums-list {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: normal;
+	-ms-flex-flow: row wrap;
+	flex-flow: row wrap;
 	list-style: none;
 	overflow: hidden;
-	margin: 0 -2px;
+	margin: 0 -5px;
 
 	li {
-		width: 14%;
-		float: left;
-		padding: 2px;
-	}
-
-	> li:first-child {
-		max-width: 30%;
-		min-width: 30%;
+		-webkit-box-flex: 0;
+		-ms-flex: 0 0 25%;
+		flex: 0 0 25%;
+		max-width: 25%;
+		padding: 5px;
 	}
 
 	a {
@@ -864,7 +869,7 @@ ul.bb-albums-list {
 		overflow: hidden;
 		padding-top: 100%;
 		display: block;
-		background: #eef0f3;
+		background: #809ab4;
 		text-align: center;
 	}
 
@@ -919,7 +924,7 @@ ul.bb-albums-list {
 	.bs-cover-wrap:after {
 		content: " ";
 		position: absolute;
-		background-image: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.01) 70%, rgba(0, 0, 0, 0) 100%);
+		background-image: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.01) 60%, rgba(0, 0, 0, 0) 100%);
 		border-radius: 3px;
 		width: 100%;
 		height: 100%;
@@ -951,6 +956,10 @@ ul.bb-albums-list {
 		line-height: 1;
 		width: 100%;
 	}
+}
+
+#buddypress .bb-album-content-wrap h4 {
+	margin-bottom: 12px;
 }
 
 .bbm-uploader-model-wrap {
@@ -1006,9 +1015,11 @@ ul.bb-albums-list {
 
 @media (max-width: 580px) {
 
-	ul.bb-albums-list > li:first-child {
-		max-width: 44%;
-		min-width: 44%;
+	ul.bb-albums-list li {
+		-webkit-box-flex: 0;
+		-ms-flex: 0 0 50%;
+		flex: 0 0 50%;
+		max-width: 50%;
 	}
 
 	.bb-album-list-item .bs-cover-wrap {

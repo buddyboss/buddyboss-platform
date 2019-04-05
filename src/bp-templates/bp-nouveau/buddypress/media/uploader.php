@@ -40,7 +40,7 @@
 
                             <?php if ( bp_has_media( array( 'album_id' => 0 ) ) ) : ?>
 
-                                <ul class="media-list item-list bp-list bb-photo-list grid">
+                                <ul class="media-list item-list bp-list bb-photo-list grid existing-media-list">
 
                                     <?php while ( bp_media() ) :
                                         bp_the_media();
