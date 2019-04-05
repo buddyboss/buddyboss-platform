@@ -454,6 +454,35 @@ function bp_media_add( $args = '' ) {
 }
 
 /**
+ * Delete media.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param int $media_id ID of media
+ *
+ * @return bool|int The ID of the media on success. False on error.
+ */
+function bp_media_delete( $media_id ) {
+
+	$delete = BP_Media::delete( array( 'id' => $media_id ) );
+
+	if ( ! $delete ) {
+		return false;
+	}
+
+	/**
+	 * Fires at the end of the execution of delete media item
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param int $media_id ID of media
+	 */
+	do_action( 'bp_media_delete', $media_id );
+
+	return $media_id;
+}
+
+/**
  * Return the media activity.
  *
  * @param $activity_id

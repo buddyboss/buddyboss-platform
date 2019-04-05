@@ -30,6 +30,12 @@ add_action( 'admin_init', function() {
 			),
 		),
 		array(
+			'media_delete' => array(
+				'function' => 'bp_nouveau_ajax_media_delete',
+				'nopriv'   => true,
+			),
+		),
+		array(
 			'media_move_to_album' => array(
 				'function' => 'bp_nouveau_ajax_media_move_to_album',
 				'nopriv'   => true,
@@ -237,6 +243,74 @@ function bp_nouveau_ajax_media_save() {
 		}
 		$media = ob_get_contents();
 		ob_end_clean();
+	}
+
+	wp_send_json_success( array(
+		'media' => $media,
+	) );
+}
+
+/**
+ * Delete media
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string HTML
+ */
+function bp_nouveau_ajax_media_delete() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['_wpnonce'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Use default nonce
+	$nonce = $_POST['_wpnonce'];
+	$check = 'bp_nouveau_media';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['media'] ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error">%s</div>',
+			esc_html__( 'Please select media to delete.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	$media = $_POST['media'];
+
+	$media_ids = array();
+	foreach( $media as $media_id ) {
+
+		// delete media
+		$media_id = bp_media_delete( $media_id );
+
+		if ( ! $media_id ) {
+			$media_ids[] = $media_id;
+		}
+	}
+
+	if ( sizeof( $media_ids ) != sizeof( $media ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error">%s</div>',
+			esc_html__( 'There was a problem deleting media.', 'buddyboss' )
+		);
+		wp_send_json_error( $response );
 	}
 
 	wp_send_json_success( array(
