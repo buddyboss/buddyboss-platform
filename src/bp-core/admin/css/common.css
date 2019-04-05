@@ -476,7 +476,8 @@ tr.bp-search-parent-field label {
 .bp-admin-card.section-bbp_settings_root_slugs h2:before,
 .bp-admin-card.section-bbp_settings_single_slugs h2:before,
 .bp-admin-card.section-bbp_settings_buddypress h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/comment-dots.svg);
+  background-image: url(../../images/admin/icons/buddyboss/forums.svg);
+  background-size: 21px 21px;
 }
 
 /* Media */
