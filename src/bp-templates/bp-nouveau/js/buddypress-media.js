@@ -199,8 +199,8 @@ window.bp = window.bp || {};
 				});
 
 				self.dropzone_obj.on('addedfile', function() {
-					$('#bp-media-uploader-modal-title').text('Uploading...');
-					$('#bp-media-uploader-modal-status-text').text(self.dropzone_media.length + ' out of ' + self.dropzone_obj.getAcceptedFiles().length + ' uploaded').show();
+					$('#bp-media-uploader-modal-title').text(wp.i18n.__( 'Uploading', 'buddyboss' ) + '...');
+					$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf( wp.i18n.__( '%d out of %d uploaded', 'buddyboss' ), self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length )).show();
 				});
 
 				self.dropzone_obj.on('queuecomplete', function() {
@@ -218,8 +218,8 @@ window.bp = window.bp || {};
 					}
 					$('#bp-media-add-more').show();
 					$('#bp-media-submit').show();
-					$('#bp-media-uploader-modal-title').text('Uploading...');
-					$('#bp-media-uploader-modal-status-text').text(self.dropzone_media.length + ' out of ' + self.dropzone_obj.getAcceptedFiles().length + ' uploaded').show();
+					$('#bp-media-uploader-modal-title').text(wp.i18n.__( 'Uploading', 'buddyboss' ) + '...');
+					$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf( wp.i18n.__( '%d out of %d uploaded', 'buddyboss' ), self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length )).show();
 				});
 
 				self.dropzone_obj.on('removedfile', function(file) {
@@ -237,7 +237,7 @@ window.bp = window.bp || {};
 						$('#bp-media-add-more').hide();
 						$('#bp-media-submit').hide();
 					} else {
-						$('#bp-media-uploader-modal-status-text').text(self.dropzone_media.length + ' out of ' + self.dropzone_obj.getAcceptedFiles().length + ' uploaded').show();
+						$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf( wp.i18n.__( '%d out of %d uploaded', 'buddyboss' ), self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length )).show();
 					}
 				});
 			}
@@ -390,7 +390,7 @@ window.bp = window.bp || {};
 			};
 
 			if ( self.album_id ) {
-				data['album_id'] = self.album_id;
+				data.album_id = self.album_id;
 			}
 
 			$.ajax({
@@ -420,7 +420,7 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			if ( ! confirm( 'Are you sure you want to delete this album?' ) ) {
+			if ( ! confirm( wp.i18n.__( 'Are you sure you want to delete this album?', 'buddyboss' ) ) ) {
 				return false;
 			}
 

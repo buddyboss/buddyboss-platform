@@ -413,7 +413,8 @@ function bp_core_get_js_dependencies() {
 		'bp-widget-members',
 		'bp-jquery-query',
 		'bp-jquery-cookie',
-		'bp-jquery-scroll-to'
+		'bp-jquery-scroll-to',
+        'wp-i18n'
 	) );
 }
 
