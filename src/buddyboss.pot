@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-04-05 04:58:11+00:00\n"
+"POT-Creation-Date: 2019-04-05 07:18:52+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1877,6 +1877,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:1752
 #: bp-core/bp-core-functions.php:2511 bp-invites/bp-invites-functions.php:57
 #: bp-invites/classes/class-bp-invites-component.php:214
+#: bp-invites/classes/class-bp-invites-component.php:288
 msgid "Email Invites"
 msgstr ""
 
@@ -2230,6 +2231,10 @@ msgstr ""
 msgid ""
 "Because <a href=\"%s\">Email Invites</a> is enabled, invited users will "
 "still be allowed to register new accounts."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:666
+msgid "Only allow the selected profile types to send invites."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:38
@@ -2612,6 +2617,10 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-invites.php:44
 msgid "Set Profile Type"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-invites.php:61
+msgid "Allowed Profile Type"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-media.php:22
@@ -11853,9 +11862,8 @@ msgid "Subgroups"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:681
-#: bp-invites/classes/class-bp-invites-component.php:236
-#: bp-invites/classes/class-bp-invites-component.php:283
-#: bp-invites/classes/class-bp-invites-component.php:297
+#: bp-invites/classes/class-bp-invites-component.php:238
+#: bp-invites/classes/class-bp-invites-component.php:302
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:5
 #: bp-templates/bp-nouveau/includes/functions.php:1266
 #: bp-templates/bp-nouveau/includes/groups/classes.php:247
@@ -13110,8 +13118,8 @@ msgstr ""
 
 #: bp-invites/bp-invites-functions.php:54
 #: bp-invites/classes/class-bp-invites-component.php:53
-#: bp-invites/classes/class-bp-invites-component.php:248
-#: bp-invites/classes/class-bp-invites-component.php:306
+#: bp-invites/classes/class-bp-invites-component.php:250
+#: bp-invites/classes/class-bp-invites-component.php:311
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:40
 msgid "Sent Invites"
 msgstr ""
@@ -13165,7 +13173,7 @@ msgstr[1] ""
 msgid "To accept this invitation, please visit %%ACCEPTURL%%"
 msgstr ""
 
-#: bp-invites/classes/class-bp-invites-component.php:338
+#: bp-invites/classes/class-bp-invites-component.php:344
 msgid "BuddyBoss Invites"
 msgstr ""
 
