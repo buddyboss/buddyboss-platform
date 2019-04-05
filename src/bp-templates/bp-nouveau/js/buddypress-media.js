@@ -370,11 +370,15 @@ window.bp = window.bp || {};
 			if( $.trim(title.val()) === '' ) {
 				title.addClass('error');
 				return false;
+			} else {
+				title.removeClass('error');
 			}
 
 			if( $.trim(privacy.val()) === '' ) {
 				privacy.addClass('error');
 				return false;
+			} else {
+				privacy.removeClass('error');
 			}
 
 			var data = {
@@ -413,6 +417,10 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			if ( ! this.album_id ) {
+				return false;
+			}
+
+			if ( ! confirm( 'Are you sure you want to delete this album?' ) ) {
 				return false;
 			}
 
