@@ -1269,3 +1269,16 @@ function bp_member_type_default_on_registration( $default = '' ) {
 	 */
 	return apply_filters( 'bp_member_type_default_on_registration', bp_get_option( 'bp-member-type-default-on-registration', $default ) );
 }
+
+/**
+ * Checks if member type have send invites enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $member_type string
+ *
+ * @return bool Is member type send invites enabled or not
+ */
+function bp_enable_send_invite_member_type( $member_type, $default = false ) {
+	return (bool) apply_filters( 'bp_enable_send_invite_member_type', (bool) get_option( $member_type, $default ) );
+}
