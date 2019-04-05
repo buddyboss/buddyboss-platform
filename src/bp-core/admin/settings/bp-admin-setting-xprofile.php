@@ -289,8 +289,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				sprintf( __( 'Select a default profile type to be auto-assigned to users during registration. After the profile type has been selected, you can run <a href="%s">Repair Community</a> tools to assign the profile type to existing users.',
 					'buddyboss' ),
 					add_query_arg( [
-						'page' => 'bp-tools',
-						'tab'  => 'bp-tools'
+						'page'  => 'bp-tools',
+						'tab'   => 'bp-tools',
+						'tool'  => 'bp-assign-member-type'
 					],
 						admin_url( 'admin.php' ) ) ) );
 		}
