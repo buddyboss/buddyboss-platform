@@ -405,7 +405,7 @@ tr.bp-search-parent-field label {
 }
 
 /* Settings */
-.bp-admin-card.section-bp_main h2:before {
+.bp-admin-card.section-bp_main h2:before, .bp-admin-card.section-bp_privacy h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/tools.svg);
 }
 

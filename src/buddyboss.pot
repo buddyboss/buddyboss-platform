@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-04-05 07:18:52+00:00\n"
+"POT-Creation-Date: 2019-04-05 07:29:56+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2542,6 +2542,12 @@ msgid "Account Deletion"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:31
+#: bp-xprofile/classes/class-bp-xprofile-component.php:340
+#: bp-xprofile/classes/class-bp-xprofile-component.php:486
+msgid "Privacy"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-general.php:32
 msgid "Private Network"
 msgstr ""
 
@@ -17042,11 +17048,6 @@ msgstr ""
 
 #: bp-xprofile/bp-xprofile-template.php:1524
 msgid "(optional)"
-msgstr ""
-
-#: bp-xprofile/classes/class-bp-xprofile-component.php:340
-#: bp-xprofile/classes/class-bp-xprofile-component.php:486
-msgid "Privacy"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-checkbox.php:27
