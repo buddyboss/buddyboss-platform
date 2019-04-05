@@ -28,7 +28,11 @@
 
 	<?php if ( bbp_has_forums() ) : ?>
 
-		<?php bbp_get_template_part( 'loop',     'forums'    ); ?>
+		<?php bbp_get_template_part( 'pagination', 'forums' ); ?>
+
+		<?php bbp_get_template_part( 'loop', 'forums' ); ?>
+
+		<?php bbp_get_template_part( 'pagination', 'forums' ); ?>
 
 	<?php else : ?>
 

@@ -112,6 +112,7 @@ function bbp_get_forum_post_type_supports() {
  * @return object Multidimensional array of forum information
  */
 function bbp_has_forums( $args = '' ) {
+	global $wp_rewrite;
 
 	// Forum archive only shows root
 	if ( bbp_is_forum_archive() ) {
@@ -131,15 +132,47 @@ function bbp_has_forums( $args = '' ) {
 		'post_type'           => bbp_get_forum_post_type(),
 		'post_parent'         => $default_post_parent,
 		'post_status'         => bbp_get_public_status_id(),
-		'posts_per_page'      => get_option( '_bbp_forums_per_page', 50 ),
+		'posts_per_page'      => bbp_get_forums_per_page(),
 		'ignore_sticky_posts' => true,
 		'orderby'             => 'menu_order title',
-		'order'               => 'ASC'
+		'order'               => 'ASC',
+		'paged'               => bbp_get_paged(),           // Page Number
 	), 'has_forums' );
 
 	// Run the query
 	$bbp              = bbpress();
 	$bbp->forum_query = new WP_Query( $bbp_f );
+
+	// Add pagination values to query object
+	$bbp->forum_query->posts_per_page = $bbp_f['posts_per_page'];
+	$bbp->forum_query->paged          = $bbp_f['paged'];
+
+	// Only add pagination if query returned results
+	if ( ( (int) $bbp->forum_query->post_count || (int) $bbp->forum_query->found_posts ) && (int) $bbp->forum_query->posts_per_page ) {
+
+		// Limit the number of forums shown based on maximum allowed pages
+		if ( ( !empty( $bbp_f['max_num_pages'] ) ) && $bbp->forum_query->found_posts > $bbp->forum_query->max_num_pages * $bbp->forum_query->post_count )
+			$bbp->forum_query->found_posts = $bbp->forum_query->max_num_pages * $bbp->forum_query->post_count;
+
+		$base = $base = add_query_arg( 'paged', '%#%', bbp_get_forums_url() );
+
+		// Pagination settings with filter
+		$bbp_topic_pagination = apply_filters( 'bbp_forum_pagination', array (
+			'base'      => $base,
+			'format'    => '',
+			'total'     => $bbp_f['posts_per_page'] === $bbp->forum_query->found_posts ? 1 : ceil( (int) $bbp->forum_query->found_posts / (int) $bbp_f['posts_per_page'] ),
+			'current'   => (int) $bbp->forum_query->paged,
+			'prev_text' => is_rtl() ? '&rarr;' : '&larr;',
+			'next_text' => is_rtl() ? '&larr;' : '&rarr;',
+			'mid_size'  => 1
+		) );
+
+		// Add pagination to query object
+		$bbp->forum_query->pagination_links = paginate_links( $bbp_topic_pagination );
+
+		// Remove first page from pagination
+		$bbp->forum_query->pagination_links = str_replace( $wp_rewrite->pagination_base . "/1/'", "'", $bbp->forum_query->pagination_links );
+	}
 
 	return apply_filters( 'bbp_has_forums', $bbp->forum_query->have_posts(), $bbp->forum_query );
 }
@@ -704,7 +737,7 @@ function bbp_forum_get_subforums( $args = '' ) {
 		'post_parent'         => 0,
 		'post_type'           => bbp_get_forum_post_type(),
 		'post_status'         => implode( ',', $post_stati ),
-		'posts_per_page'      => get_option( '_bbp_forums_per_page', 50 ),
+		'posts_per_page'      => bbp_get_forums_per_page(),
 		'orderby'             => 'menu_order title',
 		'order'               => 'ASC',
 		'ignore_sticky_posts' => true,
@@ -800,6 +833,76 @@ function bbp_list_forums( $args = '' ) {
 		echo apply_filters( 'bbp_list_forums', $r['before'] . $output . $r['after'], $r );
 	}
 }
+
+/** Forum Pagination **********************************************************/
+
+function bbp_forum_index_pagination_count() {
+	echo bbp_get_forum_index_pagination_count();
+}
+
+	/**
+	 * Return the forum index pagination count
+	 *
+	 * @since bbPress (r2519)
+	 *
+	 * @uses bbp_number_format() To format the number value
+	 * @uses apply_filters() Calls 'bbp_get_forum_index_pagination_count' with the
+	 *                        pagination count
+	 * @return string Forum Pagintion count
+	 */
+	function bbp_get_forum_index_pagination_count() {
+		$bbp = bbpress();
+
+		if ( empty( $bbp->forum_query ) )
+			return false;
+
+		// Set pagination values
+		$start_num = intval( ( $bbp->forum_query->paged - 1 ) * $bbp->forum_query->posts_per_page ) + 1;
+		$from_num  = bbp_number_format( $start_num );
+		$to_num    = bbp_number_format( ( $start_num + ( $bbp->forum_query->posts_per_page - 1 ) > $bbp->forum_query->found_posts ) ? $bbp->forum_query->found_posts : $start_num + ( $bbp->forum_query->posts_per_page - 1 ) );
+		$total_int = (int) !empty( $bbp->forum_query->found_posts ) ? $bbp->forum_query->found_posts : $bbp->forum_query->post_count;
+		$total     = bbp_number_format( $total_int );
+
+		// Several forums in a forum index with a single page
+		if ( empty( $to_num ) ) {
+			$retstr = sprintf( _n( 'Viewing %1$s forum', 'Viewing %1$s forums', $total_int, 'buddyboss' ), $total );
+
+			// Several forums in a forum index with several pages
+		} else {
+			$retstr = sprintf( _n( 'Viewing %2$s of %4$s forums', 'Viewing %2$s - %3$s of %4$s forums', $total_int, 'buddyboss' ), $bbp->forum_query->post_count, $from_num, $to_num, $total );
+		}
+
+		// Filter and return
+		return apply_filters( 'bbp_get_forum_index_pagination_count', esc_html( $retstr ) );
+	}
+
+/**
+ * Output forum pagination links
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @uses bbp_get_forum_index_pagination_links() To get the forum index pagination links
+ */
+function bbp_forum_index_pagination_links() {
+	echo bbp_get_forum_index_pagination_links();
+}
+	/**
+	 * Return forum pagination links
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @uses apply_filters() Calls 'bbp_get_forum_index_pagination_links' with the
+	 *                        pagination links
+	 * @return string forum pagination links
+	 */
+	function bbp_get_forum_index_pagination_links() {
+		$bbp = bbpress();
+
+		if ( !isset( $bbp->forum_query->pagination_links ) || empty( $bbp->forum_query->pagination_links ) )
+			return false;
+
+		return apply_filters( 'bbp_get_forum_index_pagination_links', $bbp->forum_query->pagination_links );
+	}
 
 /** Forum Subscriptions *******************************************************/
 
