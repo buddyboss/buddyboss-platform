@@ -4402,3 +4402,50 @@ function bp_assign_default_member_type_to_activate_user_on_admin( $user_id) {
 }
 add_action( 'user_register', 'bp_assign_default_member_type_to_activate_user_on_admin', 10, 1 );
 
+/**
+ * Show/Hide Email Invites tab in user profile navigation if member type enabled and restrict member type via
+ * BuddyBoss > Settings > Invites > Allowed Profile Type.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool
+ */
+function bp_allow_user_to_send_invites() {
+
+	if ( is_user_logged_in() ) {
+		if ( bp_is_active( 'invites' ) ) {
+			// Get all active member type.
+			$member_types = bp_get_active_member_types();
+			if ( isset( $member_types ) && ! empty( $member_types ) ) {
+				$allowed_member_type    = array();
+				$disallowed_member_type = array();
+				foreach ( $member_types as $member_type_id ) {
+					$type_name                = bp_get_member_type_key( $member_type_id );
+					$set_value = bp_enable_send_invite_member_type( 'bp-enable-send-invite-member-type-'.$type_name );
+					if ( true === $set_value ) {
+						$allowed_member_type[] = $type_name;
+					} else {
+						$disallowed_member_type[] = $type_name;
+					}
+				}
+				// Get the member type of current logged in user.
+				$member_type = bp_get_member_type( bp_loggedin_user_id() );
+				if ( ( is_admin() || is_network_admin() ) && current_user_can( 'manage_options' ) ) {
+					return true;
+				} elseif ( false === $member_type ) {
+					return true;
+				} elseif ( empty( $allowed_member_type ) ) {
+					return true;
+				} elseif ( in_array( $member_type, $disallowed_member_type, true) ) {
+					return false;
+				}
+			} else {
+				return true;
+			}
+		} else {
+			return false;
+		}
+	} else {
+		return false;
+	}
+}
