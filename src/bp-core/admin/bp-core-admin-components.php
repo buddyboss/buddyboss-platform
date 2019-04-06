@@ -183,7 +183,6 @@ function bp_core_admin_components_options() {
 							<div class="name column-name">
 								<h3>
 									<?php echo esc_html( $labels['title'] ); ?>
-									<img src="http://localhost:8888/buddyboss-theme/wp-content/plugins/buddyboss-platform/src/bp-core/images/forum.svg" class="component-icon" alt="">
 								</h3>
 							</div>
 							<div class="action-links">
@@ -270,18 +269,6 @@ function bp_core_admin_components_options() {
 
 	<input type="hidden" name="bp_components[members]" value="1" />
 	<input type="hidden" name="bp_components[xprofile]" value="1" />
-
-	<div class="tablenav bottom">
-		<div class="alignleft actions bulkactions">
-			<label for="bulk-action-selector-top" class="screen-reader-text"><?php _e( 'Select bulk action', 'buddyboss' ); ?></label>
-			<select name="action2" id="bulk-action-selector-top">
-				<option value=""><?php _e( 'Bulk Actions', 'buddyboss' ); ?></option>
-				<option value="active" class="hide-if-no-js"><?php _e( 'Activate', 'buddyboss' ); ?></option>
-				<option value="inactive"><?php _e( 'Deactivate', 'buddyboss' ); ?></option>
-			</select>
-			<input type="submit" id="doaction" class="button action" name="bp-admin-component-submit" value="Apply">
-		</div>
-	</div>
 	<?php
 }
 
