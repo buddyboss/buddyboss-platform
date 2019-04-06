@@ -208,6 +208,11 @@ function bp_core_admin_components_options() {
 							</div>
 							<div class="desc column-description">
 								<p><?php echo $labels['description']; ?></p>
+								<?php if ( !isset( $active_components[esc_attr( $name )] ) ) : ?>
+	                        	<p class="component-inactive">
+	                        		<?php _e( 'Not activated', 'buddyboss' ); ?>
+	                        	</p>
+                            <?php endif; ?>
 							</div>
 
 	                	</div>
@@ -219,19 +224,19 @@ function bp_core_admin_components_options() {
 								printf( __( 'Select %s', 'buddyboss' ), esc_html( $labels['title'] ) ); ?></label>
 						<?php endif; ?>
 
-	                    <?php if ( isset( $active_components[esc_attr( $name )] ) && ! empty( $labels['settings'] ) ) : ?>
-                            <div class="column-settings">
-                                <a href="<?php echo esc_url( $labels['settings'] ); ?>">
-                                    <?php
-                                        if ( 'xprofile' === $name ) {
-                                            _e( 'Edit Fields', 'buddyboss' );
-                                        } else {
-                                            _e( 'Settings', 'buddyboss' );
-                                        }
-                                    ?>
-                                </a>
-                            </div>
-	                    <?php endif; ?>
+                        <div class="column-settings">
+                        	<?php if ( isset( $active_components[esc_attr( $name )] ) && ! empty( $labels['settings'] ) ) : ?>
+	                            <a href="<?php echo esc_url( $labels['settings'] ); ?>">
+	                                <?php
+	                                    if ( 'xprofile' === $name ) {
+	                                        _e( 'Edit Fields', 'buddyboss' );
+	                                    } else {
+	                                        _e( 'Settings', 'buddyboss' );
+	                                    }
+	                                ?>
+	                            </a>
+	                        <?php endif; ?>
+                        </div>
 							
 						</div>
                     </div>

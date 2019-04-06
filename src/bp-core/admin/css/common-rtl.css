@@ -372,6 +372,10 @@ TABLE OF CONTENTS:
   width: calc(100% - 180px);
 }
 
+#bp-admin-component-form .component-card .component-inactive {
+  color: #dc3232;
+}
+
 @media screen and (max-width: 1100px) and (min-width: 782px), (max-width: 480px) {
   #bp-admin-component-form .component-card .desc,
   #bp-admin-component-form .component-card .name {

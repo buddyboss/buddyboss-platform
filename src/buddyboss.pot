@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-04-06 19:37:22+00:00\n"
+"POT-Creation-Date: 2019-04-06 19:43:43+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1570,7 +1570,12 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:244
+#: bp-core/admin/bp-core-admin-components.php:235
+#: bp-forums/users/template.php:491
+msgid "Inactive"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-components.php:248
 msgid "No components found."
 msgstr ""
 
@@ -10663,10 +10668,6 @@ msgstr ""
 
 #: bp-forums/users/functions.php:1299
 msgid "<strong>ERROR</strong>: There was a problem subscribing to that discussion!"
-msgstr ""
-
-#: bp-forums/users/template.php:491
-msgid "Inactive"
 msgstr ""
 
 #: bp-forums/users/template.php:541
