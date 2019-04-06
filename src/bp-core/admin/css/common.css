@@ -257,8 +257,16 @@ TABLE OF CONTENTS:
   margin: 0 20px 20px 0;
 }
 
+#bp-admin-component-form .component-card.xprofile h3:before {
+  background-image: url(../../images/membership.svg);
+}
+
 #bp-admin-component-form .component-card.forums h3:before {
   background-image: url(../../images/forum.svg);
+}
+
+#bp-admin-component-form .component-card.activity h3:before {
+  background-image: url(../../images/activity.svg);
 }
 
 #bp-admin-component-form .component-card .desc,

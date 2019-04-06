@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-04-06 18:04:17+00:00\n"
+"POT-Creation-Date: 2019-04-06 18:08:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1512,13 +1512,11 @@ msgid "Required"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:200
-#: bp-core/admin/bp-core-admin-components.php:279
 #: bp-messages/bp-messages-template.php:1268
 msgid "Deactivate"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:206
-#: bp-core/admin/bp-core-admin-components.php:278
 #: bp-core/admin/bp-core-admin-functions.php:269
 #: bp-core/bp-core-functions.php:760
 #: bp-members/classes/class-bp-members-list-table.php:165
@@ -1555,21 +1553,6 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:248
 msgid "No components found."
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-components.php:275
-#: bp-integrations/memberships/includes/WpListTable.php:466
-msgid "Select bulk action"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-components.php:277
-#: bp-forums/admin/forums.php:177 bp-forums/admin/replies.php:166
-#: bp-forums/admin/topics.php:168
-#: bp-integrations/memberships/includes/WpListTable.php:468
-#: bp-messages/bp-messages-template.php:1030
-#: bp-notifications/bp-notifications-template.php:1022
-#: bp-templates/bp-nouveau/includes/notifications/template-tags.php:107
-msgid "Bulk Actions"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:105
@@ -6806,6 +6789,15 @@ msgid ""
 "<strong>View</strong> will show you what your draft forum will look like if "
 "you publish it. View will take you to your live site to view the forum. "
 "Which link is available depends on your forum's status."
+msgstr ""
+
+#: bp-forums/admin/forums.php:177 bp-forums/admin/replies.php:166
+#: bp-forums/admin/topics.php:168
+#: bp-integrations/memberships/includes/WpListTable.php:468
+#: bp-messages/bp-messages-template.php:1030
+#: bp-notifications/bp-notifications-template.php:1022
+#: bp-templates/bp-nouveau/includes/notifications/template-tags.php:107
+msgid "Bulk Actions"
 msgstr ""
 
 #: bp-forums/admin/forums.php:179
@@ -12832,6 +12824,10 @@ msgstr ""
 
 #: bp-integrations/memberships/includes/WpListTable.php:337
 msgid "No items found."
+msgstr ""
+
+#: bp-integrations/memberships/includes/WpListTable.php:466
+msgid "Select bulk action"
 msgstr ""
 
 #: bp-integrations/memberships/includes/WpListTable.php:478
