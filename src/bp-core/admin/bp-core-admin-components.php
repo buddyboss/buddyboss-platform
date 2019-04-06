@@ -236,6 +236,31 @@ function bp_core_admin_components_options() {
 	                                ?>
 	                            </a>
 	                        <?php endif; ?>
+	                        <?php if ( isset( $active_components[esc_attr( $name )] ) ) : ?>
+	                            <?php if ( 'members' === $name ) : ?>
+	                            	<span><?php _e( '|', 'buddyboss' ); ?></span> <a href="#"><?php _e( 'View Members', 'buddyboss' ); ?></a>
+	                            <?php elseif ( 'settings' === $name ) : ?>
+	                            	<a href="<?php echo get_site_url(); ?>/members/<?php global $current_user; get_currentuserinfo(); echo $current_user->user_login . "\n";?>/settings/"><?php _e( 'View Account', 'buddyboss' ); ?></a>
+	                            <?php elseif ( 'notifications' === $name ) : ?>
+	                            	<a href="#"><?php _e( 'View Notifications', 'buddyboss' ); ?></a>
+	                            <?php elseif ( 'groups' === $name ) : ?>
+	                            	<span><?php _e( '|', 'buddyboss' ); ?></span> <a href="#"><?php _e( 'View Groups', 'buddyboss' ); ?></a>
+	                            <?php elseif ( 'forums' === $name ) : ?>
+	                            	<span><?php _e( '|', 'buddyboss' ); ?></span> <a href="#"><?php _e( 'View Forums', 'buddyboss' ); ?></a>
+	                            <?php elseif ( 'activity' === $name ) : ?>
+	                            	<span><?php _e( '|', 'buddyboss' ); ?></span> <a href="#"><?php _e( 'View Activity', 'buddyboss' ); ?></a>
+	                            <?php elseif ( 'media' === $name ) : ?>
+	                            	<span><?php _e( '|', 'buddyboss' ); ?></span> <a href="#"><?php _e( 'View Media', 'buddyboss' ); ?></a>
+	                            <?php elseif ( 'messages' === $name ) : ?>
+	                            	<a href="#"><?php _e( 'View Messages', 'buddyboss' ); ?></a>
+	                            <?php elseif ( 'friends' === $name ) : ?>
+	                            	<span><?php _e( '|', 'buddyboss' ); ?></span> <a href="#"><?php _e( 'View Connections', 'buddyboss' ); ?></a>
+	                            <?php elseif ( 'invites' === $name ) : ?>
+	                            	<span><?php _e( '|', 'buddyboss' ); ?></span> <a href="#"><?php _e( 'View Invites', 'buddyboss' ); ?></a>
+	                            <?php elseif ( 'search' === $name ) : ?>
+	                            	<span><?php _e( '|', 'buddyboss' ); ?></span> <a href="#"><?php _e( 'View Search', 'buddyboss' ); ?></a>
+	                            <?php endif; ?>
+	                        <?php endif; ?>
                         </div>
 							
 						</div>
