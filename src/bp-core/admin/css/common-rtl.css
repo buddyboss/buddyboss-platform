@@ -234,6 +234,7 @@ TABLE OF CONTENTS:
 
 #component-filter .filter-select label {
   vertical-align: top;
+  font-size: 14px;
 }
 
 #component-filter .filter-actions {
@@ -399,6 +400,9 @@ TABLE OF CONTENTS:
 }
 
 @media screen and (max-width: 782px) {
+  #component-filter .filter-select {
+    padding-top: 20px;
+  }
   #bp-admin-component-form .component-card {
     margin-right: 0;
     margin-left: 0;
