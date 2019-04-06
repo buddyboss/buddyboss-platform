@@ -279,6 +279,94 @@ TABLE OF CONTENTS:
 }
 */
 
+#bp-admin-component-form .component-card {
+	float: left;
+	margin: 0 8px 16px;
+	width: 48.5%;
+	width: calc(50% - 8px);
+	background-color: #fff;
+	border: 1px solid #ddd;
+	box-sizing: border-box;
+}
+
+#bp-admin-component-form .component-card:nth-child(odd) {
+	clear: both;
+	margin-left: 0;
+}
+
+#bp-admin-component-form .component-card:nth-child(even) {
+	margin-right: 0;
+}
+
+#bp-admin-component-form .component-card h3 {
+	margin: 0 0 12px;
+	font-size: 18px;
+	line-height: 1.3;
+}
+
+#bp-admin-component-form .component-card .desc,
+#bp-admin-component-form .component-card .name {
+	margin-left: 148px;
+	margin-right: 120px;
+}
+
+#bp-admin-component-form .component-card .action-links {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	width: 120px;
+}
+
+#bp-admin-component-form .component-action-buttons {
+	clear: right;
+	float: right;
+	margin-left: 2em;
+	margin-bottom: 1em;
+	text-align: right;
+}
+
+#bp-admin-component-form .component-action-buttons,
+#bp-admin-component-form div.action-links {
+	margin: 0;
+}
+
+#bp-admin-component-form .component-icon {
+	position: absolute;
+	top: 20px;
+	left: 20px;
+	width: 128px;
+	height: 128px;
+	margin: 0 20px 20px 0;
+}
+
+#bp-admin-component-form .component-card-top {
+	position: relative;
+	padding: 20px;
+	min-height: 135px;
+
+	.component-card .desc,
+	.component-card .name {
+		margin-left: 148px;
+		margin-right: 120px;
+	}
+}
+
+#bp-admin-component-form .component-card-bottom {
+	clear: both;
+	padding: 12px 20px;
+	background-color: #fafafa;
+	border-top: 1px solid #ddd;
+	overflow: hidden;
+}
+
+#bp-admin-component-form .component-card .column-updated {
+	text-align: right;
+	float: right;
+	clear: right;
+	width: 65%;
+	width: calc(100% - 180px);
+}
+
 /*
  * 2.3 Tools
  */

@@ -148,7 +148,7 @@ function bp_core_admin_components_options() {
 			<input type="submit" id="doaction" class="button action" name="bp-admin-component-submit" value="Apply">
 		</div>
 	</div>
-	<div class="wp-list-table widefat plugin-install">
+	<div class="wp-list-table widefat component-install">
 		<!--
 		<thead>
 			<tr>
@@ -178,16 +178,16 @@ function bp_core_admin_components_options() {
 						endif;
 					?>
 
-					<div class="plugin-card <?php echo esc_attr( $name ) . ' ' . esc_attr( $class ); ?>">
-						<div class="plugin-card-top">
+					<div class="component-card <?php echo esc_attr( $name ) . ' ' . esc_attr( $class ); ?>">
+						<div class="component-card-top">
 							<div class="name column-name">
 								<h3>
 									<?php echo esc_html( $labels['title'] ); ?>
-									<img src="http://localhost:8888/buddyboss-theme/wp-content/plugins/buddyboss-platform/src/bp-core/images/forum.svg" class="plugin-icon" alt="">
+									<img src="http://localhost:8888/buddyboss-theme/wp-content/plugins/buddyboss-platform/src/bp-core/images/forum.svg" class="component-icon" alt="">
 								</h3>
 							</div>
 							<div class="action-links">
-								<ul class="plugin-action-buttons">
+								<ul class="component-action-buttons">
 								<?php if ( in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
 									<li>
 										<span class="button disabled">
@@ -217,7 +217,7 @@ function bp_core_admin_components_options() {
 
 	                	</div>
 	                	
-						<div class="plugin-card-bottom">
+						<div class="component-card-bottom">
 						<?php if ( !in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
 							<input type="checkbox" id="<?php echo esc_attr( "bp_components[$name]" ); ?>" name="<?php echo esc_attr( "bp_components[$name]" ); ?>" value="1"<?php checked( isset( $active_components[esc_attr( $name )] ) ); ?> /><label for="<?php echo esc_attr( "bp_components[$name]" ); ?>" class="screen-reader-text"><?php
 								/* translators: accessibility text */
@@ -226,7 +226,7 @@ function bp_core_admin_components_options() {
 
 	                    <?php if ( isset( $active_components[esc_attr( $name )] ) && ! empty( $labels['settings'] ) ) : ?>
                             <div class="column-updated">
-                                <a class="thickbox open-plugin-details-modal" href="<?php echo esc_url( $labels['settings'] ); ?>">
+                                <a href="<?php echo esc_url( $labels['settings'] ); ?>">
                                     <?php
                                         if ( 'xprofile' === $name ) {
                                             _e( 'Edit Fields', 'buddyboss' );
@@ -253,7 +253,7 @@ function bp_core_admin_components_options() {
 
 		</div>
 
-		<--
+		<!--
 		<tfoot>
 			<tr>
 				<td class="manage-column column-cb check-column"><input id="cb-select-all-2" type="checkbox" <?php checked( empty( $inactive_components ) ); ?>>
