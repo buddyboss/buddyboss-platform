@@ -180,17 +180,6 @@ function bp_core_admin_components_options() {
 
 					<div class="plugin-card <?php echo esc_attr( $name ) . ' ' . esc_attr( $class ); ?>">
 						<div class="plugin-card-top">
-
-							<!--
-							<?php if ( !in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
-
-								<input type="checkbox" id="<?php echo esc_attr( "bp_components[$name]" ); ?>" name="<?php echo esc_attr( "bp_components[$name]" ); ?>" value="1"<?php checked( isset( $active_components[esc_attr( $name )] ) ); ?> /><label for="<?php echo esc_attr( "bp_components[$name]" ); ?>" class="screen-reader-text"><?php
-									/* translators: accessibility text */
-									printf( __( 'Select %s', 'buddyboss' ), esc_html( $labels['title'] ) ); ?></label>
-
-							<?php endif; ?>
-							-->
-
 							<div class="name column-name">
 								<h3>
 									<?php echo esc_html( $labels['title'] ); ?>
@@ -240,6 +229,14 @@ function bp_core_admin_components_options() {
 							</div>
 
 	                	</div>
+	                	
+						<?php if ( !in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
+							<div class="plugin-card-bottom">
+								<input type="checkbox" id="<?php echo esc_attr( "bp_components[$name]" ); ?>" name="<?php echo esc_attr( "bp_components[$name]" ); ?>" value="1"<?php checked( isset( $active_components[esc_attr( $name )] ) ); ?> /><label for="<?php echo esc_attr( "bp_components[$name]" ); ?>" class="screen-reader-text"><?php
+									/* translators: accessibility text */
+									printf( __( 'Select %s', 'buddyboss' ), esc_html( $labels['title'] ) ); ?></label>
+							</div>
+						<?php endif; ?>
                     </div>
 
 				<?php endforeach ?>
