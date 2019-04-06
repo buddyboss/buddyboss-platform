@@ -148,7 +148,8 @@ function bp_core_admin_components_options() {
 			<input type="submit" id="doaction" class="button action" name="bp-admin-component-submit" value="Apply">
 		</div>
 	</div>
-	<table class="wp-list-table widefat plugins">
+	<div class="wp-list-table widefat plugin-install">
+		<!--
 		<thead>
 			<tr>
 				<td id="cb" class="manage-column column-cb check-column"><input id="cb-select-all-1" type="checkbox" <?php checked( empty( $inactive_components ) ); ?>>
@@ -159,8 +160,9 @@ function bp_core_admin_components_options() {
 				<th scope="col" id="name" class="manage-column column-title column-primary"><?php _e( 'Component', 'buddyboss' ); ?></th>
 			</tr>
 		</thead>
+		-->
 
-		<tbody id="the-list">
+		<div id="the-list">
 
 			<?php if ( !empty( $current_components ) ) : ?>
 
@@ -176,9 +178,10 @@ function bp_core_admin_components_options() {
 						endif;
 					?>
 
-					<tr id="<?php echo esc_attr( $name ); ?>" class="<?php echo esc_attr( $name ) . ' ' . esc_attr( $class ); ?>">
-						<th scope="row" class="check-column">
+					<div class="plugin-card <?php echo esc_attr( $name ) . ' ' . esc_attr( $class ); ?>">
+						<div class="plugin-card-top">
 
+							<!--
 							<?php if ( !in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
 
 								<input type="checkbox" id="<?php echo esc_attr( "bp_components[$name]" ); ?>" name="<?php echo esc_attr( "bp_components[$name]" ); ?>" value="1"<?php checked( isset( $active_components[esc_attr( $name )] ) ); ?> /><label for="<?php echo esc_attr( "bp_components[$name]" ); ?>" class="screen-reader-text"><?php
@@ -186,49 +189,58 @@ function bp_core_admin_components_options() {
 									printf( __( 'Select %s', 'buddyboss' ), esc_html( $labels['title'] ) ); ?></label>
 
 							<?php endif; ?>
+							-->
 
-						</th>
-						<td class="plugin-title column-primary">
-							<div class="plugin-item">
-								<label for="<?php echo esc_attr( "bp_components[$name]" ); ?>">
-									<span aria-hidden="true"></span>
-									<strong><?php echo esc_html( $labels['title'] ); ?></strong>
-								</label>
-								<p class="description"><?php echo $labels['description']; ?></p>
-	                            <div class="row-actions visible">
-									<?php if ( in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
-										<span class="required">
-	                                        <?php _e( 'Required', 'buddyboss' ); ?>
-	                                    </span>
-									<?php elseif ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
-	                                    <?php if ( isset( $active_components[esc_attr( $name )] ) ) : ?>
-	                                        <a class="button-secondary deactivate" href="<?php echo wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $action, 'bp_component' => $name, 'do_action' => 'deactivate' ) , $page ) ), 'bp-admin-component-activation' ); ?>">
-	                                            <?php _e( 'Deactivate', 'buddyboss' ); ?>
-	                                        </a>
-		                                <?php else: ?>
-	                                        <a class="button-primary activate" href="<?php echo wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $action, 'bp_component' => $name, 'do_action' => 'activate' ) , $page ) ), 'bp-admin-component-activation' ); ?>">
-	                                            <?php _e( 'Activate', 'buddyboss' ); ?>
-	                                        </a>
-	                                    <?php endif; ?>
-									<?php endif; ?>
-				                    <?php if ( isset( $active_components[esc_attr( $name )] ) && ! empty( $labels['settings'] ) ) : ?>
-				                    	<span><?php _e( '|', 'buddyboss' ); ?></span>
-	                                    <span class="settings">
-	                                        <a href="<?php echo esc_url( $labels['settings'] ); ?>">
-		                                        <?php
-			                                        if ( 'xprofile' === $name ) {
-			                                            _e( 'Edit Fields', 'buddyboss' );
-			                                        } else {
-			                                            _e( 'Settings', 'buddyboss' );
-			                                        }
-		                                        ?>
-	                                        </a>
-	                                    </span>
-				                    <?php endif; ?>
-	                            </div>
-	                        </div>
-						</td>
-					</tr>
+							<div class="name column-name">
+								<h3>
+									<?php echo esc_html( $labels['title'] ); ?>
+									<img src="http://localhost:8888/buddyboss-theme/wp-content/plugins/buddyboss-platform/src/bp-core/images/mystery-man.jpg" class="plugin-icon" alt="">
+								</h3>
+							</div>
+							<div class="action-links">
+								<ul class="plugin-action-buttons">
+								<?php if ( in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
+									<li>
+										<span class="button disabled">
+		                                    <?php _e( 'Required', 'buddyboss' ); ?>
+		                                </span>
+		                            </li>
+								<?php elseif ( ! in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
+	                                <?php if ( isset( $active_components[esc_attr( $name )] ) ) : ?>
+	                                    <li>
+		                                    <a class="button" href="<?php echo wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $action, 'bp_component' => $name, 'do_action' => 'deactivate' ) , $page ) ), 'bp-admin-component-activation' ); ?>">
+		                                        <?php _e( 'Deactivate', 'buddyboss' ); ?>
+		                                    </a>
+		                                </li>
+	                                <?php else: ?>
+	                                    <li>
+		                                    <a class="button button-primary" href="<?php echo wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $action, 'bp_component' => $name, 'do_action' => 'activate' ) , $page ) ), 'bp-admin-component-activation' ); ?>">
+		                                        <?php _e( 'Activate', 'buddyboss' ); ?>
+		                                    </a>
+		                                </li>
+	                                <?php endif; ?>
+								<?php endif; ?>
+			                    <?php if ( isset( $active_components[esc_attr( $name )] ) && ! empty( $labels['settings'] ) ) : ?>
+	                                <li>
+	                                    <a class="thickbox open-plugin-details-modal" href="<?php echo esc_url( $labels['settings'] ); ?>">
+	                                        <?php
+		                                        if ( 'xprofile' === $name ) {
+		                                            _e( 'Edit Fields', 'buddyboss' );
+		                                        } else {
+		                                            _e( 'Settings', 'buddyboss' );
+		                                        }
+	                                        ?>
+	                                    </a>
+	                                </li>
+			                    <?php endif; ?>
+								</ul>
+							</div>
+							<div class="desc column-description">
+								<p><?php echo $labels['description']; ?></p>
+							</div>
+
+	                	</div>
+                    </div>
 
 				<?php endforeach ?>
 
@@ -240,8 +252,9 @@ function bp_core_admin_components_options() {
 
 			<?php endif; ?>
 
-		</tbody>
+		</div>
 
+		<--
 		<tfoot>
 			<tr>
 				<td class="manage-column column-cb check-column"><input id="cb-select-all-2" type="checkbox" <?php checked( empty( $inactive_components ) ); ?>>
@@ -252,8 +265,9 @@ function bp_core_admin_components_options() {
 				<th class="manage-column column-title column-primary"><?php _e( 'Component', 'buddyboss' ); ?></th>
 			</tr>
 		</tfoot>
+		-->
 
-	</table>
+	</div>
 
 	<input type="hidden" name="bp_components[members]" value="1" />
 	<input type="hidden" name="bp_components[xprofile]" value="1" />

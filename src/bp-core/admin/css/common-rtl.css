@@ -212,62 +212,68 @@ TABLE OF CONTENTS:
 /*
  * 2.2 Settings - Components
  */
+/*
 #bp-admin-component-form .tablenav {
-  margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
-#bp-admin-component-form .wp-list-table.plugins .active td,
-#bp-admin-component-form .wp-list-table.plugins .active th {
-  background: #fff;
-  box-shadow: none;
-}
+#bp-admin-component-form .wp-list-table.plugins {
 
-#bp-admin-component-form .wp-list-table.plugins .plugin-title {
-  padding: 20px 20px 0;
-}
+	.active td,
+	.active th {
+		background: #fff;
+		box-shadow: none;
+	}
 
-#bp-admin-component-form .wp-list-table.plugins .plugin-title .plugin-item {
-  position: relative;
-  border-width: 1px;
-  border-color: #d2d2d2;
-  border-style: solid;
-  background-color: #fafafa;
-  box-shadow: 0 1px 0 #d2d2d2;
-  padding: 2em;
-  border-radius: 3px;
-}
+	.plugin-title {
+		padding: 20px 20px 0;
 
-#bp-admin-component-form .wp-list-table.plugins .plugin-title .plugin-item .row-actions {
-  padding: 1em 0 0;
-}
+		.plugin-item {
+			position: relative;
+			border-width: 1px;
+			border-color: #d2d2d2;
+			border-style: solid;
+			background-color: #fafafa;
+			box-shadow: 0 1px 0 #d2d2d2;
+			padding: 2em;
+			border-radius: 3px;
 
-#bp-admin-component-form .wp-list-table.plugins .plugin-title strong {
-  font-weight: 600;
-  font-size: 16px;
-  margin-bottom: 1em;
-  border-bottom: 1px solid #eaeaea;
-  padding-bottom: 1em;
+			.row-actions {
+				padding: 1em 0 0;
+			}
+		}
+
+		strong {
+			font-weight: 600;
+			font-size: 16px;
+			margin-bottom: 1em;
+			border-bottom: 1px solid #eaeaea;
+			padding-bottom: 1em;
+		}
+	}
 }
 
 #bp-admin-component-form .subsubsub {
-  padding-bottom: 5px;
+	padding-bottom: 5px;
 }
 
 #bp-admin-component-form span.required {
-  color: #32373c;
+	color: #32373c;
 }
 
-@media screen and (max-width: 782px) {
-  #bp-admin-component-form .wp-list-table.plugins .plugin-title {
-    display: block;
-    width: auto;
-  }
-  #bp-admin-component-form .subsubsub {
-    margin-bottom: 0;
-    padding-bottom: 35px;
-  }
-}
+@media screen and ( max-width: 782px ) {
 
+	#bp-admin-component-form .wp-list-table.plugins .plugin-title {
+		display: block;
+		width: auto;
+	}
+
+	#bp-admin-component-form .subsubsub {
+		margin-bottom: 0;
+		padding-bottom: 35px;
+	}
+}
+*/
 /*
  * 2.3 Tools
  */
