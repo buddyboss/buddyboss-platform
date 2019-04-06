@@ -344,7 +344,7 @@ TABLE OF CONTENTS:
 
 #bp-admin-component-form .component-card-top {
   position: relative;
-  padding: 20px;
+  padding: 20px 20px 0;
   min-height: 135px;
 }
 
