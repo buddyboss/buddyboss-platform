@@ -138,11 +138,6 @@ function bp_core_admin_components_options() {
 	?></h3>
 
 	<div id="component-filter">
-		<div id="cb" class="column-cb filter-select">
-			<input id="cb-select-all-1" type="checkbox" <?php checked( empty( $inactive_components ) ); ?>>
-			<label for="cb-select-all-1"><?php _e( 'Select all', 'buddyboss' ); ?></label>
-		</div>
-
 		<div class="alignleft actions bulkactions filter-actions">
 			<label for="bulk-action-selector-top" class="screen-reader-text"><?php _e( 'Select bulk action', 'buddyboss' ); ?></label>
 			<select name="action" id="bulk-action-selector-top">
@@ -151,6 +146,11 @@ function bp_core_admin_components_options() {
 				<option value="inactive"><?php _e( 'Deactivate', 'buddyboss' ); ?></option>
 			</select>
 			<input type="submit" id="doaction" class="button action" name="bp-admin-component-submit" value="Apply">
+		</div>
+
+		<div id="cb" class="column-cb filter-select">
+			<input id="cb-select-all-1" type="checkbox" <?php checked( empty( $inactive_components ) ); ?>>
+			<label for="cb-select-all-1"><?php _e( 'Select all', 'buddyboss' ); ?></label>
 		</div>
 	</div>
 	<br class="clear">
