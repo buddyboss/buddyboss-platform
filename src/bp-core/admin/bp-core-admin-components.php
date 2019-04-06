@@ -258,7 +258,7 @@ function bp_core_admin_components_options() {
 	                            <?php elseif ( 'invites' === $name ) : ?>
 	                            	<span><?php _e( '|', 'buddyboss' ); ?></span> <a href="#"><?php _e( 'View Invites', 'buddyboss' ); ?></a>
 	                            <?php elseif ( 'search' === $name ) : ?>
-	                            	<span><?php _e( '|', 'buddyboss' ); ?></span> <a href="#"><?php _e( 'View Search', 'buddyboss' ); ?></a>
+	                            	<span><?php _e( '|', 'buddyboss' ); ?></span> <a href="<?php echo get_site_url(); ?>/?s=a&bp_search=1"><?php _e( 'View Search', 'buddyboss' ); ?></a>
 	                            <?php endif; ?>
 	                        <?php endif; ?>
                         </div>
