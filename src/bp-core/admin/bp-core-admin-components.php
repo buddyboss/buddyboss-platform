@@ -225,7 +225,7 @@ function bp_core_admin_components_options() {
 						<?php endif; ?>
 
 	                    <?php if ( isset( $active_components[esc_attr( $name )] ) && ! empty( $labels['settings'] ) ) : ?>
-                            <div class="column-updated">
+                            <div class="column-settings">
                                 <a href="<?php echo esc_url( $labels['settings'] ); ?>">
                                     <?php
                                         if ( 'xprofile' === $name ) {

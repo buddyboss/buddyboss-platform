@@ -243,6 +243,11 @@ TABLE OF CONTENTS:
   margin-left: 120px;
 }
 
+#bp-admin-component-form .component-action-buttons,
+#bp-admin-component-form div.action-links {
+  margin: 0;
+}
+
 #bp-admin-component-form .component-card .action-links {
   position: absolute;
   top: 20px;
@@ -256,11 +261,6 @@ TABLE OF CONTENTS:
   margin-right: 2em;
   margin-bottom: 1em;
   text-align: left;
-}
-
-#bp-admin-component-form .component-action-buttons,
-#bp-admin-component-form div.action-links {
-  margin: 0;
 }
 
 #bp-admin-component-form .component-action-buttons li {
@@ -296,7 +296,7 @@ TABLE OF CONTENTS:
   overflow: hidden;
 }
 
-#bp-admin-component-form .component-card .column-updated {
+#bp-admin-component-form .component-card .column-settings {
   text-align: left;
   float: left;
   clear: left;
