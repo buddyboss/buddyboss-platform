@@ -209,19 +209,6 @@ function bp_core_admin_components_options() {
 		                                </li>
 	                                <?php endif; ?>
 								<?php endif; ?>
-			                    <?php if ( isset( $active_components[esc_attr( $name )] ) && ! empty( $labels['settings'] ) ) : ?>
-	                                <li>
-	                                    <a class="thickbox open-plugin-details-modal" href="<?php echo esc_url( $labels['settings'] ); ?>">
-	                                        <?php
-		                                        if ( 'xprofile' === $name ) {
-		                                            _e( 'Edit Fields', 'buddyboss' );
-		                                        } else {
-		                                            _e( 'Settings', 'buddyboss' );
-		                                        }
-	                                        ?>
-	                                    </a>
-	                                </li>
-			                    <?php endif; ?>
 								</ul>
 							</div>
 							<div class="desc column-description">
@@ -230,13 +217,28 @@ function bp_core_admin_components_options() {
 
 	                	</div>
 	                	
+						<div class="plugin-card-bottom">
 						<?php if ( !in_array( $name, array( 'core', 'members', 'xprofile' ) ) ) : ?>
-							<div class="plugin-card-bottom">
-								<input type="checkbox" id="<?php echo esc_attr( "bp_components[$name]" ); ?>" name="<?php echo esc_attr( "bp_components[$name]" ); ?>" value="1"<?php checked( isset( $active_components[esc_attr( $name )] ) ); ?> /><label for="<?php echo esc_attr( "bp_components[$name]" ); ?>" class="screen-reader-text"><?php
-									/* translators: accessibility text */
-									printf( __( 'Select %s', 'buddyboss' ), esc_html( $labels['title'] ) ); ?></label>
-							</div>
+							<input type="checkbox" id="<?php echo esc_attr( "bp_components[$name]" ); ?>" name="<?php echo esc_attr( "bp_components[$name]" ); ?>" value="1"<?php checked( isset( $active_components[esc_attr( $name )] ) ); ?> /><label for="<?php echo esc_attr( "bp_components[$name]" ); ?>" class="screen-reader-text"><?php
+								/* translators: accessibility text */
+								printf( __( 'Select %s', 'buddyboss' ), esc_html( $labels['title'] ) ); ?></label>
 						<?php endif; ?>
+
+	                    <?php if ( isset( $active_components[esc_attr( $name )] ) && ! empty( $labels['settings'] ) ) : ?>
+                            <div class="column-updated">
+                                <a class="thickbox open-plugin-details-modal" href="<?php echo esc_url( $labels['settings'] ); ?>">
+                                    <?php
+                                        if ( 'xprofile' === $name ) {
+                                            _e( 'Edit Fields', 'buddyboss' );
+                                        } else {
+                                            _e( 'Settings', 'buddyboss' );
+                                        }
+                                    ?>
+                                </a>
+                            </div>
+	                    <?php endif; ?>
+							
+						</div>
                     </div>
 
 				<?php endforeach ?>
