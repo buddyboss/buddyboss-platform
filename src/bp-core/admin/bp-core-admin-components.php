@@ -149,19 +149,10 @@ function bp_core_admin_components_options() {
 		</div>
 	</div>
 	<div class="wp-list-table widefat component-install">
-		<!--
-		<thead>
-			<tr>
-				<td id="cb" class="manage-column column-cb check-column"><input id="cb-select-all-1" type="checkbox" <?php checked( empty( $inactive_components ) ); ?>>
-					<label class="screen-reader-text" for="cb-select-all-1"><?php
-					/* translators: accessibility text */
-					_e( 'Enable or disable all optional components in bulk', 'buddyboss' );
-				?></label></td>
-				<th scope="col" id="name" class="manage-column column-title column-primary"><?php _e( 'Component', 'buddyboss' ); ?></th>
-			</tr>
-		</thead>
-		-->
-
+		<div id="cb" class="column-cb">
+			<input id="cb-select-all-1" type="checkbox" <?php checked( empty( $inactive_components ) ); ?>>
+			<label for="cb-select-all-1"><?php _e( 'Select All', 'buddyboss' ); ?></label>
+		</div>
 		<div id="the-list">
 
 			<?php if ( !empty( $current_components ) ) : ?>
@@ -251,19 +242,6 @@ function bp_core_admin_components_options() {
 			<?php endif; ?>
 
 		</div>
-
-		<!--
-		<tfoot>
-			<tr>
-				<td class="manage-column column-cb check-column"><input id="cb-select-all-2" type="checkbox" <?php checked( empty( $inactive_components ) ); ?>>
-					<label class="screen-reader-text" for="cb-select-all-2"><?php
-					/* translators: accessibility text */
-					_e( 'Enable or disable all optional components in bulk', 'buddyboss' );
-				?></label></td>
-				<th class="manage-column column-title column-primary"><?php _e( 'Component', 'buddyboss' ); ?></th>
-			</tr>
-		</tfoot>
-		-->
 
 	</div>
 
