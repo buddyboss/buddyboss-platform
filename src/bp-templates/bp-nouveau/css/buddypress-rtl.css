@@ -5314,6 +5314,20 @@ button[data-bp-close]:hover {
   margin-left: 1em;
 }
 
+.buddypress.widget .activity-update footer {
+  display: flex;
+}
+
+.buddypress.widget .activity-update footer cite {
+  flex: 0 0 50px;
+  margin-left: 10px;
+}
+
+.buddypress.widget .activity-update footer cite img {
+  width: 100%;
+  box-shadow: none;
+}
+
 .widget-area .buddypress.widget ul.item-list li {
   -webkit-flex: 0 1 46%;
   -moz-flex: 0 1 46%;
