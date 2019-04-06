@@ -183,7 +183,7 @@ function bp_core_admin_components_options() {
 							<div class="name column-name">
 								<h3>
 									<?php echo esc_html( $labels['title'] ); ?>
-									<img src="http://localhost:8888/buddyboss-theme/wp-content/plugins/buddyboss-platform/src/bp-core/images/mystery-man.jpg" class="plugin-icon" alt="">
+									<img src="http://localhost:8888/buddyboss-theme/wp-content/plugins/buddyboss-platform/src/bp-core/images/forum.svg" class="plugin-icon" alt="">
 								</h3>
 							</div>
 							<div class="action-links">
