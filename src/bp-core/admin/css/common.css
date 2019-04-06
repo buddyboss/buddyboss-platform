@@ -270,43 +270,8 @@ TABLE OF CONTENTS:
   line-height: 1.3;
 }
 
-#bp-admin-component-form .component-card h3:before {
-  content: " ";
-  background-size: 128px 128px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-color: #f6f6f6;
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 128px;
-  height: 128px;
-  margin: 0 20px 20px 0;
-}
-
-#bp-admin-component-form .component-card.members h3:before {
-  background-image: url(../../images/members.svg);
-}
-
-#bp-admin-component-form .component-card.xprofile h3:before {
-  background-image: url(../../images/membership.svg);
-}
-
-#bp-admin-component-form .component-card.groups h3:before {
-  background-image: url(../../images/groups.svg);
-}
-
-#bp-admin-component-form .component-card.forums h3:before {
-  background-image: url(../../images/forum.svg);
-}
-
-#bp-admin-component-form .component-card.activity h3:before {
-  background-image: url(../../images/activity.svg);
-}
-
 #bp-admin-component-form .component-card .desc,
 #bp-admin-component-form .component-card .name {
-  margin-left: 148px;
   margin-right: 120px;
 }
 
@@ -386,7 +351,6 @@ TABLE OF CONTENTS:
   }
   #bp-admin-component-form .component-card .action-links {
     position: static;
-    margin-left: 148px;
     width: auto;
   }
   #bp-admin-component-form .component-action-buttons {
@@ -408,7 +372,6 @@ TABLE OF CONTENTS:
     padding-top: 20px;
   }
   #bp-admin-component-form .component-card {
-    margin-left: 0;
     margin-right: 0;
     width: 100%;
   }
