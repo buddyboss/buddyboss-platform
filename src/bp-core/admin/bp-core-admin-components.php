@@ -91,7 +91,7 @@ function bp_core_admin_components_options() {
 		$active_components = $default_components;
 	}
 
-	$inactive_components       = array_diff( array_keys( $all_components ) , array_keys( $active_components ) );
+	$inactive_components = array_diff( array_keys( $all_components ) , array_keys( $active_components ) );
 
 	/** Display **************************************************************
 	 */
