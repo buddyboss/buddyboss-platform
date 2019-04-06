@@ -596,15 +596,12 @@ tr.bp-search-parent-field label {
 }
 
 .bp-admin-card.section-bp_member_type_settings h2:before {
-	background-image: url(../../images/admin/icons/fontawesome/solid/user-tag.svg);
-	background-size: 22px 22px;
-	background-position-x: 10px;
+	background-image: url(../../images/admin/icons/fontawesome/solid/cubes.svg);
+	background-size: 20px 20px;
 }
 
 .bp-admin-card.section-bp_profile_search_settings h2:before {
-	background-image: url(../../images/admin/icons/fontawesome/solid/user-plus.svg);
-	background-size: 21px 21px;
-	background-position-x: 10px;
+	background-image: url(../../images/admin/icons/fontawesome/solid/search.svg);
 }
 
 /* Activity */
@@ -627,7 +624,8 @@ tr.bp-search-parent-field label {
 
 /* Groups */
 .bp-admin-card.section-bp_groups h2:before {
-	background-image: url(../../images/admin/icons/fontawesome/solid/cube.svg);
+	background-image: url(../../images/admin/icons/fontawesome/solid/users.svg);
+	background-size: 22px 22px;
 }
 
 .bp-admin-card.section-bp_groups_types h2:before {
