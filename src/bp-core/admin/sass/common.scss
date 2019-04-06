@@ -216,16 +216,34 @@ TABLE OF CONTENTS:
  * 2.2 Settings - Components
  */
 
-#bp-admin-component-form .component-install {
-	margin-top: 20px;
+#component-filter {
+	display: inline-block;
+	position: relative;
+	box-sizing: border-box;
+	margin: 12px 0 0;
+	padding: 0 10px;
+	width: 100%;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	border: 1px solid #e5e5e5;
+	background: #fff;
+	color: #555;
+	font-size: 13px;
 }
 
-#bp-admin-component-form .column-cb {
-	margin: 0 0 10px;
+#component-filter .filter-select {
+	display: inline-block;
+	padding: 16px 0 16px 10px;
+	margin: 0;
 }
 
-#bp-admin-component-form .column-cb label {
+#component-filter .filter-select label {
 	vertical-align: top;
+}
+
+#component-filter .filter-actions {
+	display: inline-block;
+	float: right;
+	margin: 10px 0;
 }
 
 #bp-admin-component-form .component-card {

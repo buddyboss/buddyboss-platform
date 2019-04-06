@@ -137,22 +137,27 @@ function bp_core_admin_components_options() {
 		_e( 'Components list', 'buddyboss' );
 	?></h3>
 
-	<div class="tablenav top">
-		<div class="alignleft actions bulkactions">
-			<label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>
+	<div id="component-filter">
+		<div id="cb" class="column-cb filter-select">
+			<input id="cb-select-all-1" type="checkbox" <?php checked( empty( $inactive_components ) ); ?>>
+			<label for="cb-select-all-1"><?php _e( 'Select all', 'buddyboss' ); ?></label>
+		</div>
+
+		<div class="alignleft actions bulkactions filter-actions">
+			<label for="bulk-action-selector-top" class="screen-reader-text"><?php _e( 'Select bulk action', 'buddyboss' ); ?></label>
 			<select name="action" id="bulk-action-selector-top">
-				<option value="">Bulk Actions</option>
-				<option value="active" class="hide-if-no-js">Activate</option>
-				<option value="inactive">Deactivate</option>
+				<option value=""><?php _e( 'Bulk Actions', 'buddyboss' ); ?></option>
+				<option value="active" class="hide-if-no-js"><?php _e( 'Activate', 'buddyboss' ); ?></option>
+				<option value="inactive"><?php _e( 'Deactivate', 'buddyboss' ); ?></option>
 			</select>
 			<input type="submit" id="doaction" class="button action" name="bp-admin-component-submit" value="Apply">
 		</div>
 	</div>
+	<br class="clear">
+
+	<p><?php _e( 'Components extend the functionality of BuddyBoss Platform. You can activate any component individually or click "Select all" above to bulk activate all components.', 'buddyboss' ); ?></p>
+
 	<div class="wp-list-table widefat component-install">
-		<div id="cb" class="column-cb">
-			<input id="cb-select-all-1" type="checkbox" <?php checked( empty( $inactive_components ) ); ?>>
-			<label for="cb-select-all-1"><?php _e( 'Select All', 'buddyboss' ); ?></label>
-		</div>
 		<div id="the-list">
 
 			<?php if ( !empty( $current_components ) ) : ?>
