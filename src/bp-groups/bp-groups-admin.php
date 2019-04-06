@@ -1675,6 +1675,8 @@ function bp_group_type_custom_meta_boxes() {
 	if( 'add' != $screen->action ){
 		add_meta_box( 'bp-group-type-short-code', __( 'Shortcode', 'buddyboss' ), 'bp_group_shortcode_meta_box', null, 'normal', 'high' );
 	}
+
+	remove_meta_box( 'slugdiv', bp_get_group_type_post_type(), 'normal' );
 }
 
 /**
@@ -1692,7 +1694,7 @@ function bp_group_type_labels_meta_box( $post ) {
 	$label_singular_name = isset( $meta[ '_bp_group_type_label_singular_name' ] ) ? $meta[ '_bp_group_type_label_singular_name' ][ 0 ] : '';
 	?>
 
-	<table class="widefat bp-post-type">
+	<table class="widefat bp-postbox-table">
 		<thead>
 			<tr>
 				<th scope="col" colspan="2">
@@ -1737,7 +1739,7 @@ function bp_group_type_labels_meta_box( $post ) {
 	<h3><?php _e( 'Group Roles', 'buddyboss' ); ?></h3>
 	<p><?php _e( 'Rename the group member roles for groups of this type (optional).', 'buddyboss' ); ?></p>
 
-	<table class="widefat bp-post-type">
+	<table class="widefat bp-postbox-table">
 		<thead>
 			<tr>
 				<th scope="col" colspan="2">
@@ -1765,7 +1767,7 @@ function bp_group_type_labels_meta_box( $post ) {
 		</tbody>
 	</table>
 
-	<table class="widefat bp-post-type">
+	<table class="widefat bp-postbox-table">
 		<thead>
 			<tr>
 				<th scope="col" colspan="2">
@@ -1793,7 +1795,7 @@ function bp_group_type_labels_meta_box( $post ) {
 		</tbody>
 	</table>
 
-	<table class="widefat bp-post-type">
+	<table class="widefat bp-postbox-table">
 		<thead>
 			<tr>
 				<th scope="col" colspan="2">
@@ -1840,7 +1842,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 	$enable_filter = isset( $meta[ '_bp_group_type_enable_filter' ] ) ? $meta[ '_bp_group_type_enable_filter' ][ 0 ] : 0; //disabled by default
 	?>
 
-	<table class="widefat bp-post-type">
+	<table class="widefat bp-postbox-table">
 		<thead>
 			<tr>
 				<th scope="col" colspan="2">
@@ -1873,7 +1875,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 	$get_restrict_invites_same_group_types = isset( $meta[ '_bp_group_type_restrict_invites_user_same_group_type' ] ) ? intval( $meta[ '_bp_group_type_restrict_invites_user_same_group_type' ][ 0 ] ) : 0; //disabled by default
 	?>
 
-	<table class="widefat bp-post-type">
+	<table class="widefat bp-postbox-table">
 		<thead>
 			<tr>
 				<th scope="col" colspan="2">
@@ -1899,7 +1901,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 
 	?>
 
-		<table class="widefat bp-post-type">
+		<table class="widefat bp-postbox-table">
 			<thead>
 				<tr>
 					<th scope="col" colspan="2">
@@ -1937,7 +1939,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 			</tbody>
 		</table>
 
-		<table class="widefat bp-post-type">
+		<table class="widefat bp-postbox-table">
 			<thead>
 				<tr>
 					<th scope="col" colspan="2">
@@ -2266,7 +2268,7 @@ function bp_groups_admin_group_type_listing_add_groups_tab() {
 
 	if ( true === bp_disable_group_type_creation() ) {
 
-		if ( ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post.php' ) ) {
+		if ( ( isset( $GLOBALS["wp_list_table"]->screen->post_type ) && $GLOBALS["wp_list_table"]->screen->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post.php' ) ) {
 			?>
 			<div class="wrap">
 				<h2 class="nav-tab-wrapper"><?php bp_core_admin_groups_tabs( __( 'Group Types', 'buddyboss' ) ); ?></h2>
@@ -2290,7 +2292,7 @@ function bp_group_type_set_platform_tab_submenu_active( $parent_file ) {
 	global $pagenow, $current_screen, $post;
 
 	if ( true === bp_disable_group_type_creation() ) {
-		if ( ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post.php' ) ) {
+		if ( ( isset( $GLOBALS["wp_list_table"]->screen->post_type ) && $GLOBALS["wp_list_table"]->screen->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post.php' ) ) {
 			$parent_file = 'buddyboss-platform';
 		}
 	}

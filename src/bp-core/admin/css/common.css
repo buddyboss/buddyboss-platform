@@ -509,7 +509,7 @@ tr.bp-search-parent-field label {
 }
 
 .bp-admin-card h2 {
-  line-height: 40px;
+  line-height: 38px;
   margin: 0 0 1em;
   padding-bottom: 1.2em;
   font-size: 22px;
@@ -541,6 +541,10 @@ tr.bp-search-parent-field label {
   background-image: url(../../images/admin/icons/fontawesome/solid/tools.svg);
 }
 
+.bp-admin-card.section-bp_privacy h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/user-secret.svg);
+}
+
 /* Profiles */
 .bp-admin-card.section-bp_xprofile h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/user.svg);
@@ -560,7 +564,8 @@ tr.bp-search-parent-field label {
 
 /* Activity */
 .bp-admin-card.section-bp_activity h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/rss-square.svg);
+  background-image: url(../../images/admin/icons/buddyboss/activity.svg);
+  background-size: 23px 23px;
 }
 
 .buddyboss_page_bp-settings .section-bp_custom_post_type h2:before {
@@ -603,7 +608,8 @@ tr.bp-search-parent-field label {
 .bp-admin-card.section-bbp_settings_root_slugs h2:before,
 .bp-admin-card.section-bbp_settings_single_slugs h2:before,
 .bp-admin-card.section-bbp_settings_buddypress h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/comment-dots.svg);
+  background-image: url(../../images/admin/icons/buddyboss/forums.svg);
+  background-size: 21px 21px;
 }
 
 /* Media */
@@ -633,11 +639,14 @@ tr.bp-search-parent-field label {
 
 /* Pages */
 .bp-admin-card.section-bp_pages h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/check-square.svg);
+  background-image: url(../../images/admin/icons/buddyboss/page.svg);
+  background-size: 22px 22px;
 }
 
 .bp-admin-card.section-bp_registration_pages h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/pen-square.svg);
+  background-image: url(../../images/admin/icons/buddyboss/page-registration.svg);
+  background-size: 22px 22px;
+  background-position-x: 11px;
 }
 
 /* Tools */
@@ -835,21 +844,22 @@ body.post-type-bp-group-type #group-type-shortcode {
   display: inline-block;
 }
 
-table.bp-post-type {
+table.bp-postbox-table {
   background: #f9f9f9;
   margin-top: 22px;
   border-radius: 3px;
 }
 
-table.bp-post-type thead th {
+table.bp-postbox-table thead th {
   font-weight: 600;
 }
 
-table.bp-post-type tbody th {
+table.bp-postbox-table tbody th {
   width: 23%;
+  vertical-align: top;
 }
 
-table.bp-post-type tbody td input[type="checkbox"] {
+table.bp-postbox-table tbody td input[type="checkbox"] {
   margin-right: 8px;
 }
 

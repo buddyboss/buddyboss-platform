@@ -209,6 +209,14 @@ function bbp_admin_get_settings_fields() {
 		'bbp_settings_per_page' => array(
 
 			// Replies per page setting
+			'_bbp_forums_per_page' => array(
+				'title'             => __( 'Forums', 'buddyboss' ),
+				'callback'          => 'bbp_admin_setting_callback_forums_per_page',
+				'sanitize_callback' => 'intval',
+				'args'              => array()
+			),
+
+			// Replies per page setting
 			'_bbp_topics_per_page' => array(
 				'title'             => __( 'Discussions', 'buddyboss' ),
 				'callback'          => 'bbp_admin_setting_callback_topics_per_page',
@@ -673,6 +681,22 @@ function bbp_admin_setting_callback_per_page_section() {
 	<p><?php esc_html_e( 'How many discussions and replies to show per page', 'buddyboss' ); ?></p>
 
 <?php
+}
+
+/**
+ * Forums per page setting field
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @uses bbp_form_option() To output the option value
+ */
+function bbp_admin_setting_callback_forums_per_page() {
+	?>
+
+	<input name="_bbp_forums_per_page" id="_bbp_forums_per_page" type="number" min="1" step="1" value="<?php bbp_form_option( '_bbp_forums_per_page', '15' ); ?>" class="small-text"<?php bbp_maybe_admin_setting_disabled( '_bbp_forums_per_page' ); ?> />
+	<label for="_bbp_forums_per_page"><?php esc_html_e( 'per page', 'buddyboss' ); ?></label>
+
+	<?php
 }
 
 /**

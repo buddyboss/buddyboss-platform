@@ -2426,3 +2426,29 @@ function bbp_untrashed_forum( $forum_id = 0 ) {
 
 	do_action( 'bbp_untrashed_forum', $forum_id );
 }
+
+
+/** Settings ******************************************************************/
+
+/**
+ * Return the forums per page setting
+ *
+ * @since bbPress (r3540)
+ *
+ * @param int $default Default replies per page (15)
+ * @uses get_option() To get the setting
+ * @uses apply_filters() To allow the return value to be manipulated
+ * @return int
+ */
+function bbp_get_forums_per_page( $default = 15 ) {
+
+	// Get database option and cast as integer
+	$retval = get_option( '_bbp_forums_per_page', $default );
+
+	// If return val is empty, set it to default
+	if ( empty( $retval ) )
+		$retval = $default;
+
+	// Filter and return
+	return (int) apply_filters( 'bbp_get_forums_per_page', $retval, $default );
+}

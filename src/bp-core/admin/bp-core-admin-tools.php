@@ -145,7 +145,7 @@ function bp_admin_repair_list() {
 
 	$repair_list[38] = array(
 		'bp-wordpress-update-display-name',
-		__( 'Update display name to selected format in profile setting.', 'buddyboss' ),
+		__( 'Update display name to selected format in profile settings.', 'buddyboss' ),
 		'xprofile_update_display_names',
 	);
 
@@ -186,6 +186,20 @@ function bp_admin_repair_list() {
 		__( 'Reinstall emails (delete and restore from defaults).', 'buddyboss' ),
 		'bp_admin_reinstall_emails',
 	);
+
+	// Check whether member type is enabled.
+	if ( true === bp_member_type_enable_disable() ) {
+		$member_types = bp_get_active_member_types();
+		$existing_selected = bp_member_type_default_on_registration();
+		if ( isset( $member_types ) && !empty( $member_types ) && '' !== $existing_selected ) {
+			// - Assign default member type.
+			$repair_list[101] = array(
+				'bp-assign-member-type',
+				__( 'Assign members without a profile type to the default profile type (excludes admins).', 'buddyboss' ),
+				'bp_admin_assign_member_type',
+			);
+		}
+	}
 
 	ksort( $repair_list );
 
@@ -622,3 +636,39 @@ function bp_core_admin_notice_repopulate_blogs_resume() {
 	echo '<div class="error"><p>' . __( 'It looks like you have more sites to record. Resume recording by checking the "Repopulate site tracking records" option.', 'buddyboss' ) . '</p></div>';
 }
 add_action( 'network_admin_notices', 'bp_core_admin_notice_repopulate_blogs_resume' );
+
+function bp_admin_assign_member_type() {
+
+
+	$users = get_users( [
+		'fields' => [ 'ID' ]
+	]);
+
+	foreach ( $users as $user ) {
+
+		$member_type = bp_get_member_type( $user->ID );
+
+		if ( false === $member_type ) {
+
+			// Get the user object.
+			$user1 = get_userdata( $user->ID );
+
+			if ( !in_array( 'administrator', $user1->roles, true ) ) {
+
+				$existing_selected = bp_member_type_default_on_registration();
+				// Assign the default member type to user.
+				bp_set_member_type( $user->ID, '' );
+				bp_set_member_type( $user->ID, $existing_selected );
+			}
+		}
+	}
+
+	// Description of this tool, displayed to the user.
+	$statement = __( 'Assign users without a profile type to the default profile type records&hellip; %s', 'buddyboss' );
+
+
+	$result = __( 'Complete!', 'buddyboss' );
+
+	// All done!
+	return array( 0, sprintf( $statement, $result ) );
+}

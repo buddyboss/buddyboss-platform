@@ -623,3 +623,65 @@ function bp_feed_settings_callback_platform( $args ) {
 		<?php
 
 }
+
+/**
+ * Admin bar for logged out users setting field.
+ *
+ * @since BuddyPress 1.6.0
+ *
+ */
+function bp_admin_setting_callback_register() {
+	?>
+
+	<input id="bp-enable-site-registration" name="bp-enable-site-registration" type="checkbox" value="1" <?php checked( bp_enable_site_registration() ); ?> />
+	<label for="bp-enable-site-registration"><?php _e( 'Allow non-members to register new accounts', 'buddyboss' ); ?></label>
+	<?php
+	if ( true === bp_enable_site_registration() && bp_is_active( 'invites' ) ) {
+		printf( '<p class="description">%s</p>',
+			sprintf( __( 'Because <a href="%s">Email Invites</a> is enabled, invited users will still be allowed to register new accounts.',
+				'buddyboss' ),
+				add_query_arg( [
+					'page' => 'bp-settings',
+					'tab'  => 'bp-invites',
+				],
+					admin_url( 'admin.php' ) ) ) );
+	}
+}
+
+/**
+ * Allow member type to send invites setting field
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $args array
+ *
+ * @uses checked() To display the checked attribute
+ */
+function bp_admin_setting_callback_enable_send_invite_member_type( $args ) {
+
+	$option_name = $args['name'];
+
+
+	if ( true === $args['description'] ) { ?>
+		<p class="description"><?php _e( 'Only allow the selected profile types to send invites.', 'buddyboss' ); ?></p>
+		<?php
+	} ?>
+	<input name="<?php echo esc_attr( 'bp-enable-send-invite-member-type-'.$option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bp_enable_send_invite_member_type( 'bp-enable-send-invite-member-type-'.$option_name, false ) ); ?>/>
+	<label for="<?php echo esc_attr( $option_name ); ?>"><?php esc_html_e( $args['member_type_name'], 'buddyboss' ); ?></label>
+	<?php
+
+}
+
+/**
+ * Allow admin to make the site private network.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_admin_setting_callback_private_network_public_content() {
+	?>
+
+	<label for="bp-enable-private-network-public-content"><?php _e( 'Enter URLs or URI fragments (e.g. /groups/) to remain publicly visible always. Enter one URL or URI per line. ', 'buddyboss' ); ?></label>
+	<textarea rows="10" cols="100" id="bp-enable-private-network-public-content" name="bp-enable-private-network-public-content"><?php echo esc_textarea( bp_enable_private_network_public_content() ); ?></textarea>
+	<?php
+}

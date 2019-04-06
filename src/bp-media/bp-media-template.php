@@ -132,8 +132,10 @@ function bp_has_media( $args = '' ) {
 	}
 
 	// Album filtering
-	if ( empty( $args['album_id'] ) ) {
+	if ( ! isset( $args['album_id'] ) ) {
 		$album_id = bp_is_single_album() ? (int) bp_action_variable( 0 ) : false;
+	} else {
+		$album_id = $args['album_id'];
 	}
 
 	/*
@@ -155,7 +157,7 @@ function bp_has_media( $args = '' ) {
 
 		// Filtering
 		'user_id'           => $user_id,     // user_id to filter on.
-		'album_id'          => $album_id,     // album_id to filter on.
+		'album_id'          => $album_id,    // album_id to filter on.
 		'offset'            => false,        // Return only items >= this ID.
 		'since'             => false,        // Return only items recorded since this Y-m-d H:i:s date.
 

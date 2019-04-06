@@ -79,6 +79,22 @@
 			margin-right: 1em;
 		}
 	}
+
+	.activity-update {
+		footer {
+			display: flex;
+
+			cite {
+				flex: 0 0 50px;
+				margin-right: 10px;
+			}
+
+			cite img {
+				width: 100%;
+				box-shadow: none;
+			}
+		}
+	}
 }
 
 

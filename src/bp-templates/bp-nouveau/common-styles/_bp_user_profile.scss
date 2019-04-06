@@ -310,6 +310,20 @@ body.register .buddypress-wrap .page ul {
 	opacity: 1;
 }
 
+.social-networks-wrap {
+
+	span.social {
+		display: inline-block;
+		width: 20px;
+		margin-right: 10px;
+	}
+
+	svg {
+		width: 100%;
+		vertical-align: middle;
+	}
+}
+
 @media screen and (max-width: 782px) {
 
 	.member-header-actions.action {

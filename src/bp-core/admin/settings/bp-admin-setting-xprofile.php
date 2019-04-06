@@ -103,6 +103,11 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-member-type-display-on-profile',__( 'Display Profile Types', 'buddyboss' ),[ $this, 'bp_admin_setting_callback_member_type_display_on_profile' ],'intval' );
 		}
 
+		// Default profile type on registration.
+		if ( true === bp_member_type_enable_disable() ) {
+			$this->add_field( 'bp-member-type-default-on-registration',__( 'Default Profile Type', 'buddyboss' ),[ $this, 'bp_admin_setting_callback_member_type_default_on_registration' ] );
+		}
+
 		// Section for profile search.
 		$this->add_section( 'bp_profile_search_settings', __( 'Profile Search', 'buddyboss' ) );
 
@@ -243,6 +248,53 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		<input id="bp-member-type-display-on-profile" name="bp-member-type-display-on-profile" type="checkbox" value="1" <?php checked( bp_member_type_display_on_profile() ); ?> />
 		<label for="bp-member-type-display-on-profile"><?php _e( 'Display each member\'s profile type on their profile page', 'buddyboss' ); ?></label>
 		<?php
+	}
+
+	/**
+	 * Default profile type on registration.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 */
+	public function bp_admin_setting_callback_member_type_default_on_registration(){
+
+		$member_types = bp_get_active_member_types();
+		$existing_selected = bp_member_type_default_on_registration();
+
+		if ( empty( $member_types ) ) {
+			printf( '<p class="description">%s</p>',
+				sprintf( __( 'You first need to create some <a href="%s">Profile Types</a>.',
+					'buddyboss' ),
+					add_query_arg( [
+						'post_type' => bp_get_member_type_post_type(),
+					],
+						admin_url( 'edit.php' ) ) ) );
+		} else { ?>
+			<select name="bp-member-type-default-on-registration" id="bp-member-type-default-on-registration">
+				<option value=""><?php esc_html_e( '----', 'buddyboss' ); ?></option><?php
+				foreach ( $member_types as $member_type_id ) {
+					$type_name = bp_get_member_type_key( $member_type_id );
+					//$type_id = bp_member_type_term_taxonomy_id( $type_name );
+					$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
+					//if ( ! empty( $type_id ) ) { ?>
+						<option <?php selected( $existing_selected,
+							$type_name ); ?> value="<?php echo $type_name; ?>"><?php esc_html_e( $member_type_name,
+							'buddyboss' ); ?></option><?php
+					//}
+				}
+				?>
+			</select>
+			<?php
+			printf( '<p class="description">%s</p>',
+				sprintf( __( 'Select a default profile type to be auto-assigned to users during registration. After the profile type has been selected, you can run <a href="%s">Repair Community</a> tools to assign the profile type to existing users.',
+					'buddyboss' ),
+					add_query_arg( [
+						'page'  => 'bp-tools',
+						'tab'   => 'bp-tools',
+						'tool'  => 'bp-assign-member-type'
+					],
+						admin_url( 'admin.php' ) ) ) );
+		}
 	}
 }
 

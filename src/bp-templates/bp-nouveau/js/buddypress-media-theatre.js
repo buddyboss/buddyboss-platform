@@ -201,7 +201,7 @@ window.bp = window.bp || {};
 
 		getActivity: function() {
 			var self = this;
-			if ( self.current_media && typeof self.current_media.activity_id !== 'undefined' ) {
+			if ( self.current_media && self.current_media.activity_id !== 0 ) {
 				$.ajax({
 					type: 'POST',
 					url: BP_Nouveau.ajaxurl,
@@ -213,9 +213,12 @@ window.bp = window.bp || {};
 					success: function (response) {
 						if (response.success) {
 							$('.bb-media-info-section .activity-list').html(response.data.activity);
+							$('.bb-media-info-section').show();
 						}
 					}
 				});
+			} else {
+				$('.bb-media-info-section').hide();
 			}
 		}
 	};

@@ -16,39 +16,29 @@
 			bp_the_activity();
 		?>
 
-			<?php if ( bp_activity_has_content() ) : ?>
+		<div class="activity-update">
 
-				<div>
+			<footer>
 
-					<?php bp_activity_content_body(); ?>
+				<cite>
+					<a href="<?php bp_activity_user_link(); ?>" class="bp-tooltip" data-bp-tooltip="<?php echo esc_attr( bp_activity_member_display_name() ); ?>">
+						<?php
+						bp_activity_avatar(
+							array(
+								'type'   => 'thumb',
+								'width'  => '40',
+								'height' => '40',
+							)
+						);
+						?>
+					</a>
+				</cite>
 
-					<footer>
+				<?php bp_activity_action(); ?>
 
-						<cite>
-							<a href="<?php bp_activity_user_link(); ?>" class="bp-tooltip" data-bp-tooltip="<?php echo esc_attr( bp_activity_member_display_name() ); ?>">
-								<?php
-								bp_activity_avatar(
-									array(
-										'type'   => 'thumb',
-										'width'  => '40',
-										'height' => '40',
-									)
-								);
-								?>
-							</a>
-						</cite>
+			</footer>
 
-						<?php echo bp_insert_activity_meta(); ?>
-
-					</footer>
-
-				</div>
-
-			<?php else : ?>
-
-				<p><?php bp_activity_action(); ?></p>
-
-			<?php endif; ?>
+		</div>
 
 		<?php endwhile; ?>
 

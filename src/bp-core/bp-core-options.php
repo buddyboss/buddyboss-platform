@@ -1225,3 +1225,82 @@ function bp_is_custom_post_type_feed_enable( $default = false ) {
 function bp_platform_is_feed_enable( $activity_type, $default = true ) {
 	return (bool) apply_filters( 'bp_platform_is_feed_enable', (bool) get_option( $activity_type, $default ) );
 }
+
+/**
+ * Is the Registration enabled?
+ *
+ * @since BuddyPress 1.6.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if the registration enable,
+ *              otherwise false.
+ */
+function bp_enable_site_registration( $default = false ) {
+
+	/**
+	 * Filters whether or not the registration enable.
+	 *
+	 * @since BuddyPress 1.6.0
+	 *
+	 * @param bool $value Whether or not the registration enable.
+	 */
+	return (bool) apply_filters( 'bp_enable_site_registration', (bool) bp_get_option( 'bp-enable-site-registration', $default ) );
+}
+
+/**
+ * Default profile type on registration.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $default blank. Fallback value if not found in the database.
+ *                      Default: blank.
+ * @return string member type if member type set,
+ *              otherwise blank.
+ */
+function bp_member_type_default_on_registration( $default = '' ) {
+
+	/**
+	 * Filters whether default profile type set on registration.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string $value Whether default profile type set on registration.
+	 */
+	return apply_filters( 'bp_member_type_default_on_registration', bp_get_option( 'bp-member-type-default-on-registration', $default ) );
+}
+
+/**
+ * Checks if member type have send invites enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $member_type string
+ *
+ * @return bool Is member type send invites enabled or not
+ */
+function bp_enable_send_invite_member_type( $member_type, $default = false ) {
+	return (bool) apply_filters( 'bp_enable_send_invite_member_type', (bool) get_option( $member_type, $default ) );
+}
+
+/**
+ * Enable private network for site owner.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if users are able to delete their own accounts, otherwise
+ *              false.
+ */
+function bp_enable_private_network_public_content( $default = '' ) {
+
+	/**
+	 * Filters whether or not members are able to delete their own accounts.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param bool $value Whether site owner uses private network.
+	 */
+	return apply_filters( 'bp_enable_private_network_public_content', bp_get_option( 'bp-enable-private-network-public-content', '' ) );
+}

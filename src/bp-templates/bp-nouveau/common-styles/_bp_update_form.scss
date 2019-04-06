@@ -28,6 +28,7 @@
 			box-shadow: none;
 			display: inline-block;
 			margin-right: 10px;
+			vertical-align: middle;
 		}
 	}
 
@@ -42,6 +43,7 @@
 		outline: none;
 		box-shadow: none;
 		min-height: 80px;
+		overflow: hidden;
 		padding: 10px;
 	}
 
@@ -109,6 +111,7 @@
 			&:empty:before {
 				content: attr(placeholder);
 				color: #bbb;
+				cursor: text;
 				display: block; /* For Firefox */
 			}
 
