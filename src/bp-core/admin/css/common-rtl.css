@@ -69,7 +69,7 @@ TABLE OF CONTENTS:
   min-width: 255px;
   max-width: 100%;
   border-radius: 6px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #ddd;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   margin: 0 0 20px;
   padding: 2.2em 2.8em 2em;
@@ -212,6 +212,10 @@ TABLE OF CONTENTS:
 /*
  * 2.2 Settings - Components
  */
+#bp-admin-component-form .component-install {
+  margin-top: 20px;
+}
+
 #bp-admin-component-form .component-card {
   float: right;
   margin: 0 8px 16px;
@@ -219,6 +223,8 @@ TABLE OF CONTENTS:
   width: calc(50% - 8px);
   background-color: #fff;
   border: 1px solid #ddd;
+  border-radius: 3px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   box-sizing: border-box;
 }
 
@@ -293,6 +299,7 @@ TABLE OF CONTENTS:
   padding: 12px 20px;
   background-color: #fafafa;
   border-top: 1px solid #ddd;
+  border-radius: 0 0 3px 3px;
   overflow: hidden;
 }
 
@@ -465,7 +472,7 @@ tr.bp-search-parent-field label {
   min-width: 255px;
   max-width: 1050px;
   border-radius: 6px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #ddd;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   background: #fff;
 }
@@ -923,7 +930,7 @@ body.post-type-bp-email .categorydiv label {
   margin: 0 0 20px;
   padding: 2em 2.8em;
   border-radius: 6px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #ddd;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 }
 
@@ -1123,7 +1130,7 @@ body.post-type-bp-email .categorydiv label {
 .bp_appboss_wrap .appboss-small-light-block {
   box-sizing: border-box;
   border-radius: 6px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #ddd;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   margin: 0 0 20px;
   padding: 2em;
