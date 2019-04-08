@@ -295,6 +295,7 @@ class BP_Media {
 			'exclude'           => false,           // Array of ids to exclude.
 			'in'                => false,           // Array of ids to limit query by (IN).
 			'search_terms'      => false,           // Terms to search by.
+			'privacy'           => false,           // public, loggedin, onlyme, friends, grouponly, message.
 			'update_meta_cache' => true,            // Whether or not to update meta cache.
 			'count_total'       => false,           // Whether or not to use count_total.
 		) );
@@ -375,6 +376,11 @@ class BP_Media {
 
 		if ( ! empty( $r['user_id'] ) ) {
 			$where_conditions['user'] = "m.user_id = {$r['user_id']}";
+		}
+
+		if ( ! empty( $r['privacy'] ) ) {
+			$privacy                     = "'" . implode ( "', '", $r['privacy'] ) . "'";
+			$where_conditions['privacy'] = "m.privacy IN ({$privacy})";
 		}
 
 		/**
@@ -465,7 +471,7 @@ class BP_Media {
 
 		if ( 'ids' !== $r['fields'] ) {
 			// Get the fullnames of users so we don't have to query in the loop.
-			$medias = self::append_user_fullnames( $medias );
+			//$medias = self::append_user_fullnames( $medias );
 
 			// Pre-fetch data associated with media users and other objects.
 			$medias = BP_Media::prefetch_object_data( $medias );
@@ -798,6 +804,17 @@ class BP_Media {
 
 		$bp = buddypress();
 
+		$privacy = array( 'public' );
+		if ( is_user_logged_in() ) {
+			$privacy[] = 'loggedin';
+			if ( bp_is_active( 'friends' ) ) {
+				$is_friend = friends_check_friendship( get_current_user_id(), $user_id );
+				if( $is_friend ) {
+					$privacy[] = 'friends';
+				}
+			}
+		}
+
 		$count_sql = "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id}";
 
 		$cache_group = 'bp_media_user_media_count';
@@ -812,6 +829,40 @@ class BP_Media {
 		}
 
 		return $total_count;
+	}
+
+	/**
+	 * Get all media ids for the album
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @param bool $album_id
+	 *
+	 * @return array|bool
+	 */
+	public static function get_album_media_ids( $album_id = false ) {
+
+		if ( ! $album_id ) {
+			return false;
+		}
+
+		global $wpdb;
+
+		$bp = buddypress();
+
+		// Select conditions.
+		$select_sql = "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.album_id = {$album_id}";
+
+		$cache_group = 'bp_media_album_media_ids';
+
+		$cached = bp_core_get_incremented_cache( $select_sql, $cache_group );
+		if ( false === $cached ) {
+			$media_ids = $wpdb->get_col( $select_sql );
+			bp_core_set_incremented_cache( $select_sql, $cache_group, $media_ids );
+		} else {
+			$media_ids = $cached;
+		}
+
+		return $media_ids;
 	}
 
 }

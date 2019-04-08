@@ -358,7 +358,8 @@ class BP_Media_Component extends BP_Component {
 		wp_cache_add_global_groups( array(
 			'bp_media',
 			'bp_media_albums',
-			'bp_media_user_media_count'
+			'bp_media_user_media_count',
+			'bp_media_album_media_ids'
 		) );
 
 		parent::setup_cache_groups();

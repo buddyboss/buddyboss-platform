@@ -294,6 +294,7 @@ function bp_media_get( $args = '' ) {
 		'activity_id'       => false,
 		'album_id'          => false,
 		'search_terms'      => false,        // Pass search terms as a string
+		'privacy'           => false,        // privacy of media
 		'exclude'           => false,        // Comma-separated list of activity IDs to exclude.
 		// want to limit the query.
 		'update_meta_cache' => true,
@@ -309,6 +310,7 @@ function bp_media_get( $args = '' ) {
 		'max'               => $r['max'],
 		'sort'              => $r['sort'],
 		'search_terms'      => $r['search_terms'],
+		'privacy'           => $r['privacy'],
 		'exclude'           => $r['exclude'],
 		'update_meta_cache' => $r['update_meta_cache'],
 		'count_total'       => $r['count_total'],
