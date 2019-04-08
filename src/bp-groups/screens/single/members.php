@@ -21,9 +21,6 @@ function groups_screen_group_members() {
 
 	$bp = buddypress();
 
-	// Set navigation based on the customizer
-	bp_group_tab_set_on_customizer();
-
 	// Refresh the group member count meta.
 	groups_update_groupmeta( $bp->groups->current_group->id, 'total_member_count', groups_get_total_member_count( $bp->groups->current_group->id ) );
 

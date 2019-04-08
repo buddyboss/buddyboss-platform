@@ -580,7 +580,8 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 		'members_layout'     => 4,
 		'members_dir_tabs'   => 0,
 		'members_dir_layout' => 0,
-		'bp_emails'          => ''
+		'bp_emails'          => '',
+		'user_default_tab'   => 'profile'
 	);
     
     if ( bp_is_active( 'friends' ) ) {
@@ -606,6 +607,7 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 			'members_group_layout'    => 4,
 			'groups_dir_layout'       => 0,
 			'groups_dir_tabs'         => 0,
+			'group_default_tab'       => 'members',
 		) );
 	}
 

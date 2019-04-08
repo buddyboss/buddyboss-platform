@@ -241,17 +241,12 @@ class BP_Members_Component extends BP_Component {
 			$bp->default_component = ( 'xprofile' === $bp->profile->id ) ? 'profile' : $bp->profile->id;
 		}
 
-		// Get the user nav order based on the customizer settings.
-		$nav_tabs = bp_nouveau_get_appearance_settings( 'user_nav_order' );
-		if ( isset( $nav_tabs[0] ) ) {
-			if ( bp_core_can_edit_settings() && bp_is_active( $nav_tabs[0] ) && 'invites' === $nav_tabs[0] && true === bp_allow_user_to_send_invites() ) {
-				$bp->default_component = $nav_tabs[0];
-			} elseif ( bp_core_can_edit_settings() && bp_is_active( $nav_tabs[0] ) && 'invites' !== $nav_tabs[0] ) {
-				$bp->default_component = $nav_tabs[0];
-			}
-		}
+		// Get the default tab based on the customizer settings.
+		$customizer_option = 'user_default_tab';
+		$default_tab = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
+		$default_tab = bp_is_active( $default_tab ) ? $default_tab : 'profile';
 
-		$bp->default_component = apply_filters( 'bp_member_default_component', $bp->default_component );
+		$bp->default_component = apply_filters( 'bp_member_default_component', ( '' === $default_tab ) ? $bp->default_component : $default_tab );
 
 
 		/** Canonical Component Stack ****************************************

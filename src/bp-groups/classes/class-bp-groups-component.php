@@ -453,6 +453,10 @@ class BP_Groups_Component extends BP_Component {
 			return;
 		}
 
+		$customizer_option = 'group_default_tab';
+		$default_tab = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
+		$default_tab = bp_is_active( $default_tab ) ? $default_tab : 'members';
+
 		/**
 		 * Filters the default groups extension.
 		 *
@@ -461,7 +465,7 @@ class BP_Groups_Component extends BP_Component {
 		 * @param string $value BP_GROUPS_DEFAULT_EXTENSION constant if defined,
 		 *                      else 'members'.
 		 */
-		$this->default_extension = apply_filters( 'bp_groups_default_extension', defined( 'BP_GROUPS_DEFAULT_EXTENSION' ) ? BP_GROUPS_DEFAULT_EXTENSION : 'members' );
+		$this->default_extension = apply_filters( 'bp_groups_default_extension', defined( 'BP_GROUPS_DEFAULT_EXTENSION' ) ? BP_GROUPS_DEFAULT_EXTENSION : ( '' === $default_tab ) ? 'members' : $default_tab );
 
 		$bp = buddypress();
 

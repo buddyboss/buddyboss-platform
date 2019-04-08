@@ -96,6 +96,12 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
+		'bp_nouveau_appearance[user_default_tab]' => array(
+			'index'             => 'user_default_tab',
+			'capability'        => 'bp_moderate',
+			'transport'         => 'refresh',
+			'type'              => 'option',
+		),
 		'bp_nouveau_appearance[user_nav_order]' => array(
 			'index'             => 'user_nav_order',
 			'capability'        => 'bp_moderate',
@@ -174,6 +180,28 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 		$wp_customize->add_setting( $id_setting, $args );
 	}
 
+	// Default options for the users default tab.
+
+	$options = array('0' => __( 'Select Tab', 'buddyboss' ),);
+	if ( bp_is_active( 'xprofile' ) ) {
+		$options['profile'] = __( 'Profile', 'buddyboss' );
+	}
+	if ( bp_is_active( 'media' ) ) {
+		$options['media'] = __( 'Media', 'buddyboss' );
+	}
+	if ( bp_is_active( 'groups' ) ) {
+		$options['groups'] = __( 'Groups', 'buddyboss' );
+	}
+	if ( bp_is_active( 'activity' ) ) {
+		$options['activity'] = __( 'Timeline', 'buddyboss' );
+	}
+	if ( bp_is_active( 'friends' ) ) {
+		$options['friends'] = __( 'Connections', 'buddyboss' );
+	}
+	if ( bp_is_active( 'forums' ) ) {
+		$options['forums'] = __( 'Forums', 'buddyboss' );
+	}
+
 	$controls = array(
 		'user_nav_display' => array(
 			'label'      => __( 'Display the profile navigation vertically.', 'buddyboss' ),
@@ -192,6 +220,14 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'section'    => 'bp_nouveau_user_primary_nav',
 			'settings'   => 'bp_nouveau_appearance[user_subnav_tabs]',
 			'type'       => 'checkbox',
+		),
+		'user_default_tab' => array(
+			'label'      => __( 'User Default Tab', 'buddyboss' ),
+			'description' => __( 'Using this option you can set the default open tab for the user.', 'buddyboss' ),
+			'section'    => 'bp_nouveau_user_primary_nav',
+			'settings'   => 'bp_nouveau_appearance[user_default_tab]',
+			'type'       => 'select',
+			'choices'    => apply_filters( 'user_default_tab_options_list', $options),
 		),
 		'user_nav_order' => array(
 			'class'      => 'BP_Nouveau_Nav_Customize_Control',

@@ -782,6 +782,12 @@ function bp_nouveau_groups_customizer_settings( $settings = array() ) {
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
+		'bp_nouveau_appearance[group_default_tab]' => array(
+			'index'             => 'group_default_tab',
+			'capability'        => 'bp_moderate',
+			'transport'         => 'refresh',
+			'type'              => 'option',
+		),
 	) );
 }
 
@@ -795,6 +801,23 @@ function bp_nouveau_groups_customizer_settings( $settings = array() ) {
  * @return array the controls to add.
  */
 function bp_nouveau_groups_customizer_controls( $controls = array() ) {
+
+	// Default options for the groups default tab.
+	if ( bp_is_active( 'activity' ) ) {
+		$options = apply_filters( 'group_default_tab_options_list',
+			array(
+				''         => __( 'Select Tab', 'buddyboss' ),
+				'members'  => __( 'Members', 'buddyboss' ),
+				'activity' => __( 'Feed', 'buddyboss' ),
+			) );
+	} else {
+		$options = apply_filters( 'group_default_tab_options_list',
+			array(
+				''        => __( 'Select Tab', 'buddyboss' ),
+				'members' => __( 'Members', 'buddyboss' ),
+			) );
+	}
+
 	return array_merge( $controls, array(
 		'group_nav_display' => array(
 			'label'      => __( 'Display the group navigation vertically.', 'buddyboss' ),
@@ -815,10 +838,18 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 			'type'       => 'checkbox',
 		),
 		'groups_create_tabs' => array(
-			'label'      => __( 'Use tab styling for the group creation process.', 'buddyboss' ),
+			'label'      => __( 'Use tab styling for the group creation process. ss', 'buddyboss' ),
 			'section'    => 'bp_nouveau_group_primary_nav',
 			'settings'   => 'bp_nouveau_appearance[groups_create_tabs]',
 			'type'       => 'checkbox',
+		),
+		'group_default_tab' => array(
+			'label'      => __( 'Group Default Tab', 'buddyboss' ),
+			'description' => __( 'Using this option you set the default open tab for the group.', 'buddyboss' ),
+			'section'    => 'bp_nouveau_group_primary_nav',
+			'settings'   => 'bp_nouveau_appearance[group_default_tab]',
+			'type'       => 'select',
+			'choices'    => $options
 		),
 		'group_nav_order' => array(
 			'class'       => 'BP_Nouveau_Nav_Customize_Control',

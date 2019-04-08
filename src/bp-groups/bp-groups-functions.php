@@ -3436,24 +3436,3 @@ function get_group_role_label( $group_id, $label_name ) {
 	return apply_filters( 'bp_'.$label_name, $label, $group_id , $label_name);
 
 }
-
-/**
- * Set navigation based on the customizer settings.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_group_tab_set_on_customizer(){
-
-	$bp = buddypress();
-
-	// Get the group nav order based on the customizer settings.
-	$nav_tabs = bp_nouveau_get_appearance_settings( 'group_nav_order' );
-	$bav      = $bp->groups->nav->get();
-	foreach ( $nav_tabs as $tab ) {
-		foreach ( $bav as $nav_item ) {
-			if ( $tab === $nav_item['slug'] ) {
-				bp_core_redirect( bp_get_group_permalink( groups_get_current_group() ) . $nav_item['slug'] );
-			}
-		}
-	}
-}
