@@ -480,12 +480,25 @@ function bp_nouveau_ajax_post_update() {
 		wp_send_json_error();
 	}
 
-	if ( empty( $_POST['content'] ) ) {
-		wp_send_json_error(
-			array(
-				'message' => __( 'Please enter some content to post.', 'buddyboss' ),
-			)
-		);
+	if ( !strlen( trim( $_POST['content'] ) ) ) {
+
+		// check activity toolbar options if one of them is set, activity can be empty
+		$toolbar_option = false;
+		if ( bp_is_active( 'media' ) && ! empty( $_POST['media'] ) ) {
+			$toolbar_option = true;
+		} else if ( bp_is_activity_link_preview_active() && ! empty( $_POST['link_url'] ) ) {
+			$toolbar_option = true;
+		} else if ( bp_is_activity_gif_active() && ! empty( $_POST['gif_data'] ) ) {
+			$toolbar_option = true;
+		}
+
+		if ( ! $toolbar_option ) {
+			wp_send_json_error(
+				array(
+					'message' => __( 'Please enter some content to post.', 'buddyboss' ),
+				)
+			);
+		}
 	}
 
 	$activity_id = 0;

@@ -2156,9 +2156,9 @@ function bp_activity_post_update( $args = '' ) {
 		'error_type'    => 'bool',
 	) );
 
-	if ( empty( $r['content'] ) || !strlen( trim( $r['content'] ) ) ) {
-		return false;
-	}
+//	if ( empty( $r['content'] ) || !strlen( trim( $r['content'] ) ) ) {
+//		return false;
+//	}
 
 	if ( bp_is_user_inactive( $r['user_id'] ) ) {
 		return false;
@@ -2202,21 +2202,23 @@ function bp_activity_post_update( $args = '' ) {
 		return $activity_id;
 	}
 
-	/**
-	 * Filters the latest update content for the activity item.
-	 *
-	 * @since BuddyPress 1.6.0
-	 *
-	 * @param string $r                Content of the activity update.
-	 * @param string $activity_content Content of the activity update.
-	 */
-	$activity_content = apply_filters( 'bp_activity_latest_update_content', $r['content'], $activity_content );
+	if ( ! empty( $r['content'] ) && !strlen( trim( $r['content'] ) ) ) {
+		/**
+		 * Filters the latest update content for the activity item.
+		 *
+		 * @since BuddyPress 1.6.0
+		 *
+		 * @param string $r Content of the activity update.
+		 * @param string $activity_content Content of the activity update.
+		 */
+		$activity_content = apply_filters( 'bp_activity_latest_update_content', $r['content'], $activity_content );
 
-	// Add this update to the "latest update" usermeta so it can be fetched anywhere.
-	bp_update_user_meta( bp_loggedin_user_id(), 'bp_latest_update', array(
-		'id'      => $activity_id,
-		'content' => $activity_content
-	) );
+		// Add this update to the "latest update" usermeta so it can be fetched anywhere.
+		bp_update_user_meta( bp_loggedin_user_id(), 'bp_latest_update', array(
+			'id'      => $activity_id,
+			'content' => $activity_content
+		) );
+	}
 
 	/**
 	 * Fires at the end of an activity post update, before returning the updated activity item ID.

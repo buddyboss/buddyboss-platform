@@ -1351,7 +1351,10 @@ function groups_post_update( $args = '' ) {
 	if ( empty( $group_id ) && !empty( $bp->groups->current_group->id ) )
 		$group_id = $bp->groups->current_group->id;
 
-	if ( empty( $content ) || !strlen( trim( $content ) ) || empty( $user_id ) || empty( $group_id ) )
+	if ( //empty( $content ) || !strlen( trim( $content ) ) ||
+         empty( $user_id ) ||
+         empty( $group_id )
+    )
 		return false;
 
 	$bp->groups->current_group = groups_get_group( $group_id );

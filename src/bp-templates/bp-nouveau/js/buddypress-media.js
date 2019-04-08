@@ -287,12 +287,6 @@ window.bp = window.bp || {};
 
 			if ( self.current_tab === 'bp-dropzone-content' ) {
 				var post_content = $('#bp-media-post-content').val();
-				if ( $.trim(post_content) === '' ) {
-					$('#bp-media-post-content').addClass('error').focus();
-					return false;
-				} else {
-					$('#bp-media-post-content').removeClass('error');
-				}
 				data = {
 					'action': 'media_save',
 					'_wpnonce': BP_Nouveau.nonces.media,

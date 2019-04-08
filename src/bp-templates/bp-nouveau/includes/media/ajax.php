@@ -168,14 +168,14 @@ function bp_nouveau_ajax_media_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['content'] ) ) {
-		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error">%s</div>',
-			esc_html__( 'Please write something about media.', 'buddyboss' )
-		);
-
-		wp_send_json_error( $response );
-	}
+//	if ( empty( $_POST['content'] ) ) {
+//		$response['feedback'] = sprintf(
+//			'<div class="bp-feedback error">%s</div>',
+//			esc_html__( 'Please write something about media.', 'buddyboss' )
+//		);
+//
+//		wp_send_json_error( $response );
+//	}
 
 	$main_activity_id = false;
 	// make an activity
@@ -201,8 +201,7 @@ function bp_nouveau_ajax_media_save() {
 		$activity_id = false;
 		// make an activity for the media
 		if ( bp_is_active( 'activity' ) ) {
-			$content = '&nbsp;';
-			$activity_id = bp_activity_post_update( array( 'content' => $content, 'user_id' => bp_displayed_user_id(), 'hide_sitewide' => true ) );
+			$activity_id = bp_activity_post_update( array( 'user_id' => bp_displayed_user_id(), 'hide_sitewide' => true ) );
 		}
 
 		$album_privacy = 'public';

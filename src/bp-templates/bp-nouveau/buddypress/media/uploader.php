@@ -27,9 +27,11 @@
                     </header>
 
                     <div class="bb-dropzone-wrap bp-media-upload-tab-content" id="bp-dropzone-content">
+                        <?php if ( ! bbp_is_single_forum() && ! bbp_is_single_topic() ) : ?>
                         <div class="media-uploader-post-content">
                             <textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php _e( 'Write something about media.' ); ?>"></textarea>
                         </div>
+                        <?php endif; ?>
                         <div class="media-uploader-wrapper">
                             <div class="dropzone" id="media-uploader"></div>
                         </div>
