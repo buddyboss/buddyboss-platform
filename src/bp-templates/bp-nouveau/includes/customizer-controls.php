@@ -66,7 +66,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 			}
 
 			if ( $item_nav ) {
-				$guide = __( 'Drag and drop each tab to change the group navigation order. Whichever tab is in the first position will become the group default tab. If a specific group does not have the first tab enabled, it will use the next tab as the default.', 'buddyboss' );
+				$guide = __( 'Drag and drop each tab to change the group navigation order.', 'buddyboss' );
 			}
 
 		// It's a user!
@@ -74,7 +74,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 			$item_nav = bp_nouveau_member_customizer_nav();
 			$type     = 'user';
 
-			$guide = __( 'Drag and drop each tab to change the profile navigation order. Whichever tab is in the first position will become the profile default tab. If a specific profile does not have the first tab enabled, it will use the next tab as the default.', 'buddyboss' );
+			$guide = __( 'Drag and drop each tab to change the profile navigation order.', 'buddyboss' );
 		}
 		?>
 

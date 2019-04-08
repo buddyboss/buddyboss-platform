@@ -182,7 +182,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 
 	// Default options for the users default tab.
 
-	$options = array('0' => __( 'Select Tab', 'buddyboss' ),);
+	$options = array('0' => __( '----', 'buddyboss' ),);
 	if ( bp_is_active( 'xprofile' ) ) {
 		$options['profile'] = __( 'Profile', 'buddyboss' );
 	}
@@ -222,8 +222,8 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'type'       => 'checkbox',
 		),
 		'user_default_tab' => array(
-			'label'      => __( 'User Default Tab', 'buddyboss' ),
-			'description' => __( 'Using this option you can set the default open tab for the user.', 'buddyboss' ),
+			'label'      => __( 'Profile Navigation Order', 'buddyboss' ),
+			'description' => __( 'Set the default navigation tab when viewing a member profile. The dropdown only shows tabs that are available to all members.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_user_primary_nav',
 			'settings'   => 'bp_nouveau_appearance[user_default_tab]',
 			'type'       => 'select',
