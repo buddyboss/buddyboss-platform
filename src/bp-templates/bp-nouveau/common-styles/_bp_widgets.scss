@@ -81,17 +81,28 @@
 	}
 
 	.activity-update {
-		footer {
+		.update-item {
 			display: flex;
+
+			img {
+				box-shadow: none;	
+			}
 
 			cite {
 				flex: 0 0 50px;
 				margin-right: 10px;
+
+				a {
+					box-shadow: none;
+				}
 			}
 
 			cite img {
 				width: 100%;
-				box-shadow: none;
+			}
+
+			a img {
+				margin-bottom: 0;
 			}
 		}
 	}
