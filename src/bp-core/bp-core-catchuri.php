@@ -1123,7 +1123,7 @@ function bp_private_network_template_redirect() {
 					if ( $_SERVER['REQUEST_URI'] === $url ) {
 						return;
 					} elseif ( strpos( $_SERVER['REQUEST_URI'], $url) !== false ) {
-						return;
+						//return;
 					}
 				}
 			}
