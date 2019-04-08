@@ -1727,7 +1727,7 @@ function bp_activity_format_activity_action_activity_update( $action, $activity 
 			$last_user_link
 		);
 	} else {
-		$action = sprintf( __( '%s', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ) );
+		$action = sprintf( __( '%s posted an update', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ) );
 	}
 
 	/**
