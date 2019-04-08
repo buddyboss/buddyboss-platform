@@ -5314,6 +5314,20 @@ button[data-bp-close]:hover {
   margin-right: 1em;
 }
 
+.buddypress.widget .activity-update footer {
+  display: flex;
+}
+
+.buddypress.widget .activity-update footer cite {
+  flex: 0 0 50px;
+  margin-right: 10px;
+}
+
+.buddypress.widget .activity-update footer cite img {
+  width: 100%;
+  box-shadow: none;
+}
+
 .widget-area .buddypress.widget ul.item-list li {
   -webkit-flex: 0 1 46%;
   -moz-flex: 0 1 46%;
@@ -5409,8 +5423,7 @@ button[data-bp-close]:hover {
   color: #777;
 }
 
-/*-------------------------------------*\
-	HINT.css - A CSS tooltip library
+/*-------------------------------------*	HINT.css - A CSS tooltip library
 \*-------------------------------------*/
 /**
  * HINT.css is a tooltip library made in pure CSS.
@@ -9876,7 +9889,7 @@ ul.bb-albums-list .bb-more-photos strong {
 .bb-album-list-item .bs-cover-wrap:after {
   content: " ";
   position: absolute;
-  background-image: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.01) 60%, rgba(0, 0, 0, 0) 100%);
+  background-image: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.01) 60%, transparent 100%);
   border-radius: 3px;
   width: 100%;
   height: 100%;

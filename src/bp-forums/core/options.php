@@ -49,7 +49,7 @@ function bbp_get_default_options() {
 
 		'_bbp_topics_per_page'      => 15,          // Topics per page
 		'_bbp_replies_per_page'     => 15,          // Replies per page
-		'_bbp_forums_per_page'      => 50,          // Forums per page
+		'_bbp_forums_per_page'      => 15,          // Forums per page
 		'_bbp_topics_per_rss_page'  => 25,          // Topics per RSS page
 		'_bbp_replies_per_rss_page' => 25,          // Replies per RSS page
 
