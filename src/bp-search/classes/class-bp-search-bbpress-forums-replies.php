@@ -30,10 +30,14 @@ if (!class_exists('Bp_Search_bbPress_Replies')):
 
 			$from = "{$wpdb->posts} p LEFT JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = '_bbp_forum_id'";
 
-			$group_memberships = bp_get_user_groups( get_current_user_id(), array(
-				'is_admin' => null,
-				'is_mod'   => null,
-			) );
+			$group_memberships = '';
+			if ( bp_is_active( 'groups' ) ) {
+				$group_memberships = bp_get_user_groups( get_current_user_id(),
+					array(
+						'is_admin' => null,
+						'is_mod'   => null,
+					) );
+			}
 
 			$in = '0';
 			if ( ! empty( $group_memberships ) ) {

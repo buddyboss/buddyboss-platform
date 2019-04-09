@@ -203,7 +203,6 @@ class BP_Media_Component extends BP_Component {
 			return;
 		}
 
-		$access     = bp_core_can_edit_settings();
 		$slug       = bp_get_media_slug();
 		$media_link = trailingslashit( $user_domain . $slug );
 
@@ -231,7 +230,6 @@ class BP_Media_Component extends BP_Component {
 			'position'            => 80,
 			'screen_function'     => 'media_screen',
 			'default_subnav_slug' => 'my-media',
-			'user_has_access'     => $access,
 			'item_css_id'         => $this->id
 		);
 
@@ -254,7 +252,6 @@ class BP_Media_Component extends BP_Component {
 			'parent_slug'     => $slug,
 			'screen_function' => 'media_screen',
 			'position'        => 10,
-			'user_has_access' => $access
 		);
 
 		parent::setup_nav( $main_nav, $sub_nav );
