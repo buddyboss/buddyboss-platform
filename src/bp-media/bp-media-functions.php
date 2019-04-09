@@ -593,23 +593,26 @@ function bp_get_total_media_count() {
 function bp_album_get( $args = '' ) {
 
 	$r = bp_parse_args( $args, array(
-		'max'               => false,        // Maximum number of results to return.
-		'fields'            => 'all',
-		'page'              => 1,            // Page 1 without a per_page will result in no pagination.
-		'per_page'          => false,        // results per page
-		'sort'              => 'DESC',       // sort ASC or DESC
+		'max'      => false,        // Maximum number of results to return.
+		'fields'   => 'all',
+		'page'     => 1,            // Page 1 without a per_page will result in no pagination.
+		'per_page' => false,        // results per page
+		'sort'     => 'DESC',       // sort ASC or DESC
+		'user_id'  => false,
+		'group_id' => false,
 
 		'search_terms'      => false,        // Pass search terms as a string
 		'exclude'           => false,        // Comma-separated list of activity IDs to exclude.
 		// want to limit the query.
 		'update_meta_cache' => true,
 		'count_total'       => false,
-	), 'media_get' );
+	), 'album_get' );
 
 	$album = BP_Media_Album::get( array(
 		'page'              => $r['page'],
 		'per_page'          => $r['per_page'],
 		'user_id'           => $r['user_id'],
+		'group_id'          => $r['group_id'],
 		'max'               => $r['max'],
 		'sort'              => $r['sort'],
 		'search_terms'      => $r['search_terms'],
@@ -806,6 +809,40 @@ function albums_get_album( $album_id ) {
 	 * @param BP_Media_Album $album Single album object.
 	 */
 	return apply_filters( 'albums_get_album', $album );
+}
+
+/**
+ * Check album access for current user or guest
+ *
+ * @since BuddyBoss 1.0.0
+ * @param $album_id
+ *
+ * @return bool
+ */
+function albums_check_album_access( $album_id ) {
+
+    $album = albums_get_album( $album_id );
+
+    if ( ! empty( $album->privacy ) ) {
+
+        if ( 'public' == $album->privacy ) {
+            return true;
+        }
+
+        if ( 'loggedin' == $album->privacy && is_user_logged_in() ) {
+            return true;
+        }
+
+        if ( is_user_logged_in() && 'friends' == $album->privacy && friends_check_friendship( get_current_user_id(), $album->user_id ) ) {
+            return true;
+        }
+
+        if ( bp_is_my_profile() && $album->user_id == bp_loggedin_user_domain() && 'onlyme' == $album->privacy ) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 
