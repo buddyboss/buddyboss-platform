@@ -370,7 +370,18 @@
 }
 
 .bb-member-photos-header {
-	margin-bottom: 20px;
+	display: -webkit-box;
+	display: -ms-flexbox;
+    display: flex;
+}
+
+.bb-photos-meta {
+    margin-left: auto;
+	margin-top: -40px;
+
+	.album-single-view & {
+		margin-top: 0;
+	}
 }
 
 .bb-photos-date {
@@ -378,34 +389,7 @@
 	color: #939597;
 }
 
-.bb-photos-meta {
-
-	.bb-select,
-	.bb-delete {
-		background: url(../images/delete.svg) no-repeat center;
-		background-size: contain;
-		display: inline-block;
-		height: 20px;
-		width: 20px;
-		line-height: 1;
-		z-index: 11;
-		margin-left: 5px;
-	}
-
-	.bb-select {
-		background: url(../images/unselect-gray.svg) no-repeat center;
-	}
-
-	.bb-select.selected {
-		background: url(../images/unselect.svg) no-repeat center;
-		background-color: #007cff;
-		border-radius: 100%;
-		height: 21px;
-		width: 21px;
-	}
-}
-
-.bb-photo-list {
+.buddypress-wrap .bp-list.bb-photo-list {
 	display: flex;
 	flex-flow: row wrap;
 	list-style: none;
@@ -485,7 +469,7 @@
 	font-size: 15px;
 	text-align: center;
 	line-height: 1;
-	z-index: 10;
+	z-index: 2;
 	visibility: hidden;
 	opacity: 0;
 }
@@ -494,7 +478,7 @@
 
 	&.bb-internal-model {
 		position: fixed;
-		z-index: 99999;
+		z-index: 999990;
 		background-color: rgba(0, 0, 0, 0.9);
 		width: 100%;
 		height: 100%;
@@ -514,12 +498,15 @@
 	padding: 20px 0;
 
 	#buddypress & .activity-list {
+		border: 0;
 		margin: 0;
+		padding: 0;
 	}
 }
 
 #buddypress .bb-media-model-container .activity-list .activity-item {
 	border: 0;
+	box-shadow: none;
 	margin: 0;
 	max-height: 90vh;
 	overflow: auto;
@@ -824,7 +811,7 @@ div#buddypress div.bb-album-actions .button {
 	min-height: 24px;
 	padding: 4px 15px;
 	font-size: 12px;
-	margin: 0 3px;
+	margin: 0 10px 0 0;
 }
 
 div#buddypress .bb-album-actions .button.error.outline {
@@ -1032,32 +1019,24 @@ ul.bb-albums-list {
 	opacity: 0; // hide it
 
 	+ label {
+		color: #fff;
 		position: relative;
 		cursor: pointer;
 		padding: 0;
 	}
 
-	// Box.
-	+ label:before {
-		content: " ";
-		background: url(../images/unselect.svg) no-repeat;
-		background-size: contain;
-		display: inline-block;
-		vertical-align: text-top;
-		width: 20px;
-		height: 20px;
-		border-radius: 50%;
-	}
-
 	// Box checked
-	&:checked + label:before {
-		background-color: $highlight;
+	&:checked + label {
+		color: #fff;
 	}
 }
 
 .bb-dropzone-wrap .dropzone {
 	border: 0;
 	padding: 0;
+	display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
 
 	.dz-message {
 		margin-top: 0;
@@ -1142,4 +1121,12 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 
 .emojionearea.emojionearea-standalone {
 	vertical-align: top;
+}
+
+.webui-popover.webui-popover {
+	z-index: 999991;
+}
+
+.text-center {
+	text-align: center;
 }

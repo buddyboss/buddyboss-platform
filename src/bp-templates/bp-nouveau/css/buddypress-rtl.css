@@ -5314,6 +5314,31 @@ button[data-bp-close]:hover {
   margin-left: 1em;
 }
 
+.buddypress.widget .activity-update .update-item {
+  display: flex;
+}
+
+.buddypress.widget .activity-update .update-item img {
+  box-shadow: none;
+}
+
+.buddypress.widget .activity-update .update-item cite {
+  flex: 0 0 50px;
+  margin-left: 10px;
+}
+
+.buddypress.widget .activity-update .update-item cite a {
+  box-shadow: none;
+}
+
+.buddypress.widget .activity-update .update-item cite img {
+  width: 100%;
+}
+
+.buddypress.widget .activity-update .update-item a img {
+  margin-bottom: 0;
+}
+
 .widget-area .buddypress.widget ul.item-list li {
   -webkit-flex: 0 1 46%;
   -moz-flex: 0 1 46%;
@@ -9343,7 +9368,18 @@ body.login .login-popup .mfp-close:hover {
 }
 
 .bb-member-photos-header {
-  margin-bottom: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.bb-photos-meta {
+  margin-right: auto;
+  margin-top: -40px;
+}
+
+.album-single-view .bb-photos-meta {
+  margin-top: 0;
 }
 
 .bb-photos-date {
@@ -9351,31 +9387,7 @@ body.login .login-popup .mfp-close:hover {
   color: #939597;
 }
 
-.bb-photos-meta .bb-select,
-.bb-photos-meta .bb-delete {
-  background: url(../images/delete.svg) no-repeat center;
-  background-size: contain;
-  display: inline-block;
-  height: 20px;
-  width: 20px;
-  line-height: 1;
-  z-index: 11;
-  margin-right: 5px;
-}
-
-.bb-photos-meta .bb-select {
-  background: url(../images/unselect-gray.svg) no-repeat center;
-}
-
-.bb-photos-meta .bb-select.selected {
-  background: url(../images/unselect.svg) no-repeat center;
-  background-color: #007cff;
-  border-radius: 100%;
-  height: 21px;
-  width: 21px;
-}
-
-.bb-photo-list {
+.buddypress-wrap .bp-list.bb-photo-list {
   display: flex;
   flex-flow: row wrap;
   list-style: none;
@@ -9383,7 +9395,7 @@ body.login .login-popup .mfp-close:hover {
   margin: 0 -3px;
 }
 
-.bb-photo-list li {
+.buddypress-wrap .bp-list.bb-photo-list li {
   flex: 0 0 20%;
   padding-right: 3px;
   padding-left: 3px;
@@ -9452,14 +9464,14 @@ body.login .login-popup .mfp-close:hover {
   font-size: 15px;
   text-align: center;
   line-height: 1;
-  z-index: 10;
+  z-index: 2;
   visibility: hidden;
   opacity: 0;
 }
 
 .bb-media-model-wrapper.bb-internal-model {
   position: fixed;
-  z-index: 99999;
+  z-index: 999990;
   background-color: rgba(0, 0, 0, 0.9);
   width: 100%;
   height: 100%;
@@ -9479,11 +9491,14 @@ body.login .login-popup .mfp-close:hover {
 }
 
 #buddypress .bb-media-model-container .activity-list {
+  border: 0;
   margin: 0;
+  padding: 0;
 }
 
 #buddypress .bb-media-model-container .activity-list .activity-item {
   border: 0;
+  box-shadow: none;
   margin: 0;
   max-height: 90vh;
   overflow: auto;
@@ -9778,7 +9793,7 @@ div#buddypress div.bb-album-actions .button {
   min-height: 24px;
   padding: 4px 15px;
   font-size: 12px;
-  margin: 0 3px;
+  margin: 0 0 0 10px;
 }
 
 div#buddypress .bb-album-actions .button.error.outline {
@@ -9971,29 +9986,22 @@ ul.bb-albums-list .bb-more-photos strong {
 }
 
 .bb-custom-check + label {
+  color: #fff;
   position: relative;
   cursor: pointer;
   padding: 0;
 }
 
-.bb-custom-check + label:before {
-  content: " ";
-  background: url(../images/unselect.svg) no-repeat;
-  background-size: contain;
-  display: inline-block;
-  vertical-align: text-top;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.bb-custom-check:checked + label:before {
-  background-color: #5087e5;
+.bb-custom-check:checked + label {
+  color: #fff;
 }
 
 .bb-dropzone-wrap .dropzone {
   border: 0;
   padding: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .bb-dropzone-wrap .dropzone .dz-message {
@@ -10066,6 +10074,14 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 
 .emojionearea.emojionearea-standalone {
   vertical-align: top;
+}
+
+.webui-popover.webui-popover {
+  z-index: 999991;
+}
+
+.text-center {
+  text-align: center;
 }
 
 /**
@@ -10611,7 +10627,7 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 }
 
 .dropzone .dz-default span:before {
-  background: url(../images/upload-large.svg) no-repeat;
+  background: url(../images/upload.svg) no-repeat;
   background-size: cover;
   content: " ";
   height: 41px;

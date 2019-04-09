@@ -144,6 +144,7 @@ window.bp = window.bp || {};
 
 			$('#buddypress').find('.media-list:not(.existing-media-list)').find('.bb-media-check-wrap [name="bb-media-select"]').each(function(){
 				$(this).prop('checked',true);
+                                $(this).closest('.bb-photo-thumb').addClass('selected');
 			});
 		},
 
@@ -152,6 +153,7 @@ window.bp = window.bp || {};
 
 			$('#buddypress').find('.media-list:not(.existing-media-list)').find('.bb-media-check-wrap [name="bb-media-select"]').each(function(){
 				$(this).prop('checked',false);
+                                $(this).closest('.bb-photo-thumb').removeClass('selected');
 			});
 		},
 
