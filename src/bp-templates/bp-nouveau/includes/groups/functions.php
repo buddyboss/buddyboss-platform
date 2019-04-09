@@ -806,14 +806,14 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$options = apply_filters( 'group_default_tab_options_list',
 			array(
-				''         => __( 'Select Tab', 'buddyboss' ),
+				''         => __( '----', 'buddyboss' ),
 				'members'  => __( 'Members', 'buddyboss' ),
 				'activity' => __( 'Feed', 'buddyboss' ),
 			) );
 	} else {
 		$options = apply_filters( 'group_default_tab_options_list',
 			array(
-				''        => __( 'Select Tab', 'buddyboss' ),
+				''        => __( '----', 'buddyboss' ),
 				'members' => __( 'Members', 'buddyboss' ),
 			) );
 	}
@@ -838,14 +838,14 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 			'type'       => 'checkbox',
 		),
 		'groups_create_tabs' => array(
-			'label'      => __( 'Use tab styling for the group creation process. ss', 'buddyboss' ),
+			'label'      => __( 'Use tab styling for the group creation process.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_group_primary_nav',
 			'settings'   => 'bp_nouveau_appearance[groups_create_tabs]',
 			'type'       => 'checkbox',
 		),
 		'group_default_tab' => array(
-			'label'      => __( 'Group Default Tab', 'buddyboss' ),
-			'description' => __( 'Using this option you set the default open tab for the group.', 'buddyboss' ),
+			'label'      => __( 'Group navigation order', 'buddyboss' ),
+			'description' => __( 'Set the default navigation tab when viewing a group. The dropdown only shows tabs that are available to all groups.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_group_primary_nav',
 			'settings'   => 'bp_nouveau_appearance[group_default_tab]',
 			'type'       => 'select',
@@ -858,18 +858,6 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 			'settings'   => 'bp_nouveau_appearance[group_nav_order]',
 			'type'       => 'group',
 		),
-//		'group_dir_layout' => array(
-//			'label'      => __( 'Use column navigation for the Groups directory.', 'buddyboss' ),
-//			'section'    => 'bp_nouveau_dir_layout',
-//			'settings'   => 'bp_nouveau_appearance[groups_dir_layout]',
-//			'type'       => 'checkbox',
-//		),
-//		'group_dir_tabs' => array(
-//			'label'      => __( 'Use tab styling for Groups directory navigation.', 'buddyboss' ),
-//			'section'    => 'bp_nouveau_dir_layout',
-//			'settings'   => 'bp_nouveau_appearance[groups_dir_tabs]',
-//			'type'       => 'checkbox',
-//		),
 	) );
 }
 
