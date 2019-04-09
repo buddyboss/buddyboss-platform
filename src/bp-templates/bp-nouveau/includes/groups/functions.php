@@ -806,14 +806,12 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 	if ( bp_is_active( 'activity' ) ) {
 		$options = apply_filters( 'group_default_tab_options_list',
 			array(
-				''         => __( '----', 'buddyboss' ),
 				'members'  => __( 'Members', 'buddyboss' ),
 				'activity' => __( 'Feed', 'buddyboss' ),
 			) );
 	} else {
 		$options = apply_filters( 'group_default_tab_options_list',
 			array(
-				''        => __( '----', 'buddyboss' ),
 				'members' => __( 'Members', 'buddyboss' ),
 			) );
 	}

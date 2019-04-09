@@ -182,7 +182,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 
 	// Default options for the users default tab.
 
-	$options = array('0' => __( '----', 'buddyboss' ),);
+	$options = array();
 	if ( bp_is_active( 'xprofile' ) ) {
 		$options['profile'] = __( 'Profile', 'buddyboss' );
 	}
