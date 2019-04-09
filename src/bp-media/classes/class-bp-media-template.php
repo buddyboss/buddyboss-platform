@@ -148,6 +148,7 @@ class BP_Media_Template {
 			'include'           => false,
 			'exclude'           => false,
 			'search_terms'      => false,
+			'privacy'           => false,
 			'update_meta_cache' => true,
 		);
 		$r = wp_parse_args( $args, $defaults );
@@ -186,6 +187,7 @@ class BP_Media_Template {
 				'user_id'           => $user_id,
 				'album_id'          => $album_id,
 				'exclude'           => $exclude,
+				'privacy'           => $privacy,
 				'update_meta_cache' => $update_meta_cache,
 			) );
 		}

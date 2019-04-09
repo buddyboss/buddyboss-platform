@@ -61,7 +61,7 @@ function bp_admin_setting_callback_private_network() {
 	printf(
 	'<p class="description">%s</p>',
 			sprintf(
-				__( 'Login and <a href="%s">Registration</a> pages will remain publicly visible.', 'buddyboss' ),
+				__( 'Login and <a href="%s">Registration</a> content will remain publicly visible.', 'buddyboss' ),
 				add_query_arg([
 					'page' => 'bp-pages',
 				], admin_url( 'admin.php' ) )

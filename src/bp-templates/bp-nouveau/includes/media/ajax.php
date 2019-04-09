@@ -168,14 +168,14 @@ function bp_nouveau_ajax_media_save() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_POST['content'] ) ) {
-		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error">%s</div>',
-			esc_html__( 'Please write something about media.', 'buddyboss' )
-		);
-
-		wp_send_json_error( $response );
-	}
+//	if ( empty( $_POST['content'] ) ) {
+//		$response['feedback'] = sprintf(
+//			'<div class="bp-feedback error">%s</div>',
+//			esc_html__( 'Please write something about media.', 'buddyboss' )
+//		);
+//
+//		wp_send_json_error( $response );
+//	}
 
 	$main_activity_id = false;
 	// make an activity
@@ -201,8 +201,14 @@ function bp_nouveau_ajax_media_save() {
 		$activity_id = false;
 		// make an activity for the media
 		if ( bp_is_active( 'activity' ) ) {
-			$content = '&nbsp;';
-			$activity_id = bp_activity_post_update( array( 'content' => $content, 'user_id' => bp_displayed_user_id(), 'hide_sitewide' => true ) );
+			$activity_id = bp_activity_post_update( array( 'user_id' => bp_displayed_user_id(), 'hide_sitewide' => true ) );
+		}
+
+		$album_privacy = 'public';
+		$albums = bp_album_get_specific( array( 'album_ids' => array( $media['album_id'] ) ) );
+		if ( ! empty( $albums['albums'] ) ) {
+			$album = array_pop( $albums['albums'] );
+			$album_privacy = $album->privacy;
 		}
 
 		$media_id = bp_media_add( array(
@@ -210,6 +216,7 @@ function bp_nouveau_ajax_media_save() {
 			'title'         => $media['name'],
 			'activity_id'   => $activity_id,
 			'album_id'      => $media['album_id'],
+			'privacy'       => $album_privacy,
 			'error_type'    => 'wp_error'
 		) );
 
@@ -369,13 +376,21 @@ function bp_nouveau_ajax_media_move_to_album() {
 		wp_send_json_error( $response );
 	}
 
+	$album_privacy = 'public';
+	$albums = bp_album_get_specific( array( 'album_ids' => array( $_POST['album_id'] ) ) );
+	if ( ! empty( $albums['albums'] ) ) {
+		$album = array_pop( $albums['albums'] );
+		$album_privacy = $album->privacy;
+	}
+
 	// save media
 	$medias = $_POST['medias'];
 	$media_ids = array();
 	foreach( $medias as $media_id ) {
 
-		$media_obj = new BP_Media( $media_id );
+		$media_obj           = new BP_Media( $media_id );
 		$media_obj->album_id = (int) $_POST['album_id'];
+		$media_obj->privacy  = $album_privacy;
 
 		if ( ! $media_obj->save() ) {
 			$response['feedback'] = sprintf(

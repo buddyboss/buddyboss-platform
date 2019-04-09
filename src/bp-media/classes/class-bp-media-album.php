@@ -406,7 +406,7 @@ class BP_Media_Album {
 
 		if ( 'ids' !== $r['fields'] ) {
 			// Get the fullnames of users so we don't have to query in the loop.
-			$albums = self::append_user_fullnames( $albums );
+			//$albums = self::append_user_fullnames( $albums );
 
 			// Pre-fetch data associated with media users and other objects.
 			$albums = BP_Media_Album::prefetch_object_data( $albums );

@@ -120,8 +120,7 @@ function bp_nouveau_media_update_media_meta( $content, $user_id, $activity_id ) 
 			remove_action( 'bp_groups_posted_update', 'bp_nouveau_media_groups_update_media_meta', 10, 4 );
 
 			// make an activity for the media
-			$content = '&nbsp;';
-			$a_id = bp_activity_post_update( array( 'content' => $content, 'hide_sitewide' => true ) );
+			$a_id = bp_activity_post_update( array( 'hide_sitewide' => true ) );
 
 			add_action( 'bp_activity_posted_update', 'bp_nouveau_media_update_media_meta', 10, 3 );
 			add_action( 'bp_groups_posted_update', 'bp_nouveau_media_groups_update_media_meta', 10, 4 );
@@ -207,4 +206,27 @@ function bp_nouveau_get_media_directory_nav_items() {
 	 * @param array $nav_items The list of the media directory nav items.
 	 */
 	return apply_filters( 'bp_nouveau_get_media_directory_nav_items', $nav_items );
+}
+
+/**
+ * Update media privacy according to album's privacy
+ *
+ * @since BuddyBoss 1.0.0
+ * @param $album
+ */
+function bp_nouveau_media_update_media_privacy( &$album ) {
+
+    if ( ! empty( $album->id ) ) {
+
+	    $privacy   = $album->privacy;
+	    $media_ids = BP_Media::get_album_media_ids( $album->id );
+
+	    if ( ! empty( $media_ids ) ) {
+	        foreach( $media_ids as $media ) {
+		        $media_obj          = new BP_Media( $media );
+		        $media_obj->privacy = $privacy;
+		        $media_obj->save();
+            }
+        }
+    }
 }

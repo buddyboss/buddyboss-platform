@@ -24,7 +24,7 @@ class BP_Media_Privacy {
 	/**
 	 * Get the instance of this class.
 	 *
-	 * @return Controller|null
+	 * @return BP_Media_Privacy|null
 	 */
 	public static function instance() {
 		static $instance = null;
@@ -83,9 +83,9 @@ class BP_Media_Privacy {
 	 * @since BuddyBoss 1.0.0
 	 * @param bool $media_id
 	 *
-	 * @return bool|mixed|void|WP_Error
+	 * @return bool|mixed|WP_Error
 	 */
-	function is_media_visible( $media_id = false ) {
+	public function is_media_visible( $media_id = false ) {
 		$result = bp_media_get_specific( array( 'media_ids' => $media_id ) );
 
 		if ( empty( $result['medias'] ) || empty( $result['medias'][0] ) ) {
@@ -142,41 +142,6 @@ class BP_Media_Privacy {
 		}
 
 		return apply_filters( 'bp_media_is_media_visible', $visible, $visibility, $media_id );
-	}
-
-	/**
-	 * Get visible media count for the user
-	 *
-	 * @since BuddyBoss 1.0.0
-	 * @param int $user_id
-	 *
-	 * @return int
-	 */
-	function get_visible_media_count( $user_id = 0 ) {
-
-		if ( empty( $user_id ) ) {
-			return 0;
-		}
-
-		if ( is_user_logged_in() ) {
-			$visibility = array( 'public', 'loggedin' );
-			if ( bp_is_active( 'friends' ) ) {
-				$is_friend = friends_check_friendship( get_current_user_id(), $user_id );
-				if( $is_friend ) {
-					$visibility[] = 'friends';
-				}
-			}
-		} else {
-			$visibility = 'public';
-		}
-
-		if ( get_current_user_id() == $user_id || is_super_admin() ) {
-			$visibility = array_keys( $this->get_visibility_options() );
-		}
-
-		$result = bp_media_get_specific( array( 'user_id' => $user_id, 'privacy' => $visibility ) );
-
-		return ! empty( $result['total'] ) ? $result['total'] : 0;
 	}
 
 }
