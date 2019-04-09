@@ -53,14 +53,6 @@ class BP_Media_Album {
 	var $title;
 
 	/**
-	 * Description of the album.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 * @var string
-	 */
-	var $description;
-
-	/**
 	 * Privacy of the album.
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -138,7 +130,6 @@ class BP_Media_Album {
 		$this->user_id      = (int) $row->user_id;
 		$this->group_id     = (int) $row->group_id;
 		$this->title        = $row->title;
-		$this->description  = $row->description;
 		$this->privacy      = $row->privacy;
 		$this->date_created = $row->date_created;
 	}
@@ -160,7 +151,6 @@ class BP_Media_Album {
 		$this->user_id       = apply_filters_ref_array( 'bp_media_user_id_before_save',           array( $this->user_id,           &$this ) );
 		$this->group_id      = apply_filters_ref_array( 'bp_media_group_id_before_save',          array( $this->group_id,          &$this ) );
 		$this->title         = apply_filters_ref_array( 'bp_media_title_before_save',             array( $this->title,             &$this ) );
-		$this->description   = apply_filters_ref_array( 'bp_media_description_before_save',       array( $this->title,             &$this ) );
 		$this->privacy       = apply_filters_ref_array( 'bp_media_privacy_before_save',           array( $this->privacy,           &$this ) );
 		$this->date_created  = apply_filters_ref_array( 'bp_media_date_created_before_save',      array( $this->date_created,      &$this ) );
 
@@ -181,9 +171,9 @@ class BP_Media_Album {
 
 		// If we have an existing ID, update the album, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name_albums} SET user_id = %d, group_id = %d, title = %s, description = %s, privacy = %s, date_created = %s WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->description, $this->privacy, $this->date_created, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name_albums} SET user_id = %d, group_id = %d, title = %s, privacy = %s, date_created = %s WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name_albums} ( user_id, group_id, title, description, privacy, date_created ) VALUES ( %d, %d, %s, %s, %s, %s )", $this->user_id, $this->group_id, $this->title, $this->description, $this->privacy, $this->date_created );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name_albums} ( user_id, group_id, title, privacy, date_created ) VALUES ( %d, %d, %s, %s, %s, %s )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -618,13 +608,9 @@ class BP_Media_Album {
 	 *
 	 * @param array $args {
 	 * @int    $id                Optional. The ID of a specific item to delete.
-	 * @int    $blog_id           Optional. The blog ID to filter by.
-	 * @int    $attachment_id           Optional. The attachment ID to filter by.
 	 * @int    $user_id           Optional. The user ID to filter by.
-	 * @string    $title           Optional. The title to filter by.
-	 * @int    $album_id           Optional. The album ID to filter by.
-	 * @int    $activity_id           Optional. The activity ID to filter by.
-	 * @string    $privacy           Optional. The privacy to filter by.
+	 * @int    $group_id           Optional. The group ID to filter by.
+	 * @string    $title          Optional. The title to filter by.
 	 * @string $date_created      Optional. The date to filter by.
 	 * }
 	 *

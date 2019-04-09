@@ -689,24 +689,13 @@ function bp_album_get_specific( $args = '' ) {
  *     An array of arguments.
  *     @type int|bool $id                Pass an activity ID to update an existing item, or
  *                                       false to create a new item. Default: false.
- *     @type string   $content           Optional. The content of the activity item.
- *     @type string   $component         The unique name of the component associated with
- *                                       the activity item - 'groups', 'profile', etc.
- *     @type string   $type              The specific activity type, used for directory
- *                                       filtering. 'new_blog_post', 'activity_update', etc.
- *     @type string   $primary_link      Optional. The URL for this item, as used in
- *                                       RSS feeds. Defaults to the URL for this activity
- *                                       item's permalink page.
- *     @type int|bool $user_id           Optional. The ID of the user associated with the activity
+ *     @type int|bool $user_id           Optional. The ID of the user associated with the album
  *                                       item. May be set to false or 0 if the item is not related
  *                                       to any user. Default: the ID of the currently logged-in user.
- *     @type int      $item_id           Optional. The ID of the associated item.
- *     @type int      $secondary_item_id Optional. The ID of a secondary associated item.
- *     @type string   $date_recorded     Optional. The GMT time, in Y-m-d h:i:s format, when
+ *     @type int      $group_id          Optional. The ID of the associated group.
+ *     @type string   $title             The title of album.
+ *     @type string   $date_created      Optional. The GMT time, in Y-m-d h:i:s format, when
  *                                       the item was recorded. Defaults to the current time.
- *     @type bool     $hide_sitewide     Should the item be hidden on sitewide streams?
- *                                       Default: false.
- *     @type bool     $is_spam           Should the item be marked as spam? Default: false.
  *     @type string   $error_type        Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
  * }
  * @return WP_Error|bool|int The ID of the album on success. False on error.
@@ -718,8 +707,6 @@ function bp_album_add( $args = '' ) {
 		'user_id'      => bp_loggedin_user_id(),                     // User ID
 		'group_id'     => false,                  // attachment id.
 		'title'        => '',                     // title of album being added.
-		'description'  => '',  // Optional: description of album.
-		'total_items'  => false,                  // Total items of album
 		'privacy'      => 'public',                  // Optional: privacy of the media e.g. public.
 		'date_created' => bp_core_current_time(), // The GMT time that this media was recorded
 		'error_type'   => 'bool'
@@ -730,8 +717,6 @@ function bp_album_add( $args = '' ) {
 	$album->user_id      = $r['user_id'];
 	$album->group_id     = $r['group_id'];
 	$album->title        = $r['title'];
-	$album->description  = $r['description'];
-	$album->total_items  = $r['total_items'];
 	$album->privacy      = $r['privacy'];
 	$album->date_created = $r['date_created'];
 	$album->error_type   = $r['error_type'];
