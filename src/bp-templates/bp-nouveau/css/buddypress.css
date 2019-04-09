@@ -9226,7 +9226,7 @@ body.login .login-popup .mfp-close:hover {
 
 .modal-mask {
   position: fixed;
-  z-index: 9998;
+  z-index: 999901;
   top: 0;
   left: 0;
   width: 100vw;
@@ -10084,6 +10084,20 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
   text-align: center;
 }
 
+.modal-container .bp-existing-media-wrap {
+  max-height: 68vh;
+  overflow: auto;
+}
+
+.bb-model-close-button .dashicons {
+  font-size: 22px;
+}
+
+.bb-field-wrap,
+.bb-dropdown-wrap {
+  margin-bottom: 20px;
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 15.0 - Media Dropzone
@@ -10604,36 +10618,15 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 }
 
 .dropzone .dz-default {
-  background: rgba(240, 243, 247, 0.5);
-  border: 1px dashed #dedfe2;
-  border-radius: 6px;
+  border: 4px dashed #bbb;
   min-height: 20vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  color: #122b46;
-  letter-spacing: -0.24px;
-  line-height: 26px;
-  padding: 20px 0;
-}
-
-.dropzone .dz-default:before {
-  display: none;
-}
-
-.dropzone .dz-default span {
-  margin-top: 0;
-}
-
-.dropzone .dz-default span:before {
-  background: url(../images/upload.svg) no-repeat;
-  background-size: cover;
-  content: " ";
-  height: 41px;
-  width: 48px;
-  display: block;
-  margin: 0 auto 15px;
+  color: #767676;
+  font-size: 110%;
+  margin: 5px 0;
+  text-align: center;
 }
 
 .dz-details {

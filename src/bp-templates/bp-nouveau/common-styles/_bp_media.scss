@@ -215,7 +215,7 @@
 // Modal
 .modal-mask {
 	position: fixed;
-	z-index: 9998;
+	z-index: 999901;
 	top: 0;
 	left: 0;
 	width: 100vw;
@@ -1129,4 +1129,18 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 
 .text-center {
 	text-align: center;
+}
+
+.modal-container .bp-existing-media-wrap {
+	max-height: 68vh;
+    overflow: auto;
+}
+
+.bb-model-close-button .dashicons {
+    font-size: 22px;
+}
+
+.bb-field-wrap,
+.bb-dropdown-wrap {
+    margin-bottom: 20px;
 }

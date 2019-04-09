@@ -557,36 +557,15 @@
 .dropzone {
 
 	.dz-default {
-		background: rgba(240, 243, 247, 0.5);
-		border: 1px dashed #dedfe2;
-		border-radius: 6px;
+		border: 4px dashed #bbb;
 		min-height: 20vh;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		font-size: 16px;
-		color: #122b46;
-		letter-spacing: -0.24px;
-		line-height: 26px;
-		padding: 20px 0;
-
-		&:before {
-			display: none;
-		}
-
-		span {
-			margin-top: 0;
-		}
-
-		span:before {
-			background: url(../images/upload.svg) no-repeat;
-			background-size: cover;
-			content: " ";
-			height: 41px;
-			width: 48px;
-			display: block;
-			margin: 0 auto 15px;
-		}
+		color: #767676;
+		font-size: 110%;
+		margin: 5px 0;
+		text-align: center;
 	}
 }
 
