@@ -84,6 +84,7 @@ window.bp = window.bp || {};
 			// Fetch Media
 			$( '.bp-nouveau [data-bp-list="media"]' ).on( 'click', 'li.load-more', this.injectMedias.bind( this ) );
 			$( '.bp-existing-media-wrap' ).on( 'click', 'li.load-more', this.appendMedia.bind( this ) );
+			$( '.bp-nouveau' ).on( 'change', '.bb-media-check-wrap [name="bb-media-select"]', this.addSelectedClassToWrapper.bind( this ) );
 			$( '.bp-existing-media-wrap' ).on( 'change', '.bb-media-check-wrap [name="bb-media-select"]', this.toggleSubmitMediaButton.bind( this ) );
 
 			//single album
@@ -93,6 +94,15 @@ window.bp = window.bp || {};
 			$( '.bp-nouveau' ).on( 'change', '#bp-media-single-album select#bb-album-privacy', this.saveAlbum.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bb-delete-album', this.deleteAlbum.bind( this ) );
 
+		},
+
+		addSelectedClassToWrapper: function(event) {
+			var target = event.currentTarget;
+			if ( $(target).is(':checked') ) {
+				$(target).closest('.bb-photo-thumb').addClass('selected');
+			} else {
+				$(target).closest('.bb-photo-thumb').removeClass('selected');
+			}
 		},
 
 		deleteMedia: function(event) {
