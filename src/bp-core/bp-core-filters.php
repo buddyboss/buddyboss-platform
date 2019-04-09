@@ -1155,3 +1155,16 @@ function bp_core_render_email_template( $template ) {
 	return '';
 }
 add_action( 'bp_template_include', 'bp_core_render_email_template', 12 );
+
+add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 10 , 2 );
+function bp_core_set_bbpress_buddypress_active( $value, $option ) {
+	define( 'GAMIPRESS_ADMIN_NOTICES', true );
+	if ( strpos( $_SERVER['REQUEST_URI'], '/wp-admin/plugins.php' ) !== false || strpos( $_SERVER['REQUEST_URI'], '/wp-admin/admin-ajax.php' ) !== false ) {
+		return $value;
+	} else {
+		array_push($value, 'bbpress/bbpress.php'); /* Here just replace unyson plugin directory and plugin file*/
+		array_push($value, 'buddypress/bp-loader.php'); /* Here just replace unyson plugin directory and plugin file*/
+	}
+
+	return $value;
+}
