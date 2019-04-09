@@ -59,6 +59,8 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 
 	$params['media'] = array(
 		'max_upload_size' => bp_media_file_upload_max_size(),
+		'group_media'     => bp_is_group_media_support_enabled(),
+		'group_album'     => bp_is_group_album_support_enabled(),
 	);
 
 	if ( bp_is_single_album() ) {

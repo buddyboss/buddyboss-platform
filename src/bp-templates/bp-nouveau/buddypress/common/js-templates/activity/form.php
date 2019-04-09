@@ -89,7 +89,7 @@
 </script>
 
 <script type="text/html" id="tmpl-whats-new-toolbar">
-	<?php if ( bp_is_active( 'media' ) ): ?>
+	<?php if ( bp_is_active( 'media' ) && ( bp_is_activity_directory() || bp_is_user_activity() || ( bp_is_group_activity() && bp_is_group_media_support_enabled() ) ) ): ?>
         <div class="post-elements-buttons-item post-media">
 			<a href="#" id="activity-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip="<?php _e('Attach a photo', 'buddyboss'); ?>">
 				<span class="dashicons dashicons-admin-media"></span>
