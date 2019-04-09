@@ -838,7 +838,7 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 			'type'       => 'checkbox',
 		),
 		'groups_create_tabs' => array(
-			'label'      => __( 'Use tab styling for the group creation process. ss', 'buddyboss' ),
+			'label'      => __( 'Use tab styling for the group creation process.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_group_primary_nav',
 			'settings'   => 'bp_nouveau_appearance[groups_create_tabs]',
 			'type'       => 'checkbox',
