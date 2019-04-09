@@ -222,7 +222,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'type'       => 'checkbox',
 		),
 		'user_default_tab' => array(
-			'label'      => __( 'Profile Navigation Order', 'buddyboss' ),
+			'label'      => __( 'Profile navigation order', 'buddyboss' ),
 			'description' => __( 'Set the default navigation tab when viewing a member profile. The dropdown only shows tabs that are available to all members.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_user_primary_nav',
 			'settings'   => 'bp_nouveau_appearance[user_default_tab]',

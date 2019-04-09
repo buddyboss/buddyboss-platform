@@ -844,7 +844,7 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 			'type'       => 'checkbox',
 		),
 		'group_default_tab' => array(
-			'label'      => __( 'Group Navigation Order', 'buddyboss' ),
+			'label'      => __( 'Group navigation order', 'buddyboss' ),
 			'description' => __( 'Set the default navigation tab when viewing a group. The dropdown only shows tabs that are available to all groups.', 'buddyboss' ),
 			'section'    => 'bp_nouveau_group_primary_nav',
 			'settings'   => 'bp_nouveau_appearance[group_default_tab]',
