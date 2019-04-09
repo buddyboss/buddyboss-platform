@@ -186,7 +186,7 @@ window.bp = window.bp || {};
 
 			$('#bp-media-uploader').hide();
 			$('#bp-media-add-more').hide();
-			$('#bp-media-uploader-modal-title').text('Upload');
+			$('#bp-media-uploader-modal-title').text(wp.i18n.__( 'Upload', 'buddyboss' ));
 			$('#bp-media-uploader-modal-status-text').text('');
 			this.dropzone_obj.destroy();
 			this.dropzone_media = [];
@@ -280,12 +280,14 @@ window.bp = window.bp || {};
 		openCreateAlbumModal: function(event){
 			event.preventDefault();
 
+			this.openUploader(event);
 			$('#bp-media-create-album').show();
 		},
 
 		closeCreateAlbumModal: function(event){
 			event.preventDefault();
 
+			this.closeUploader(event);
 			$('#bp-media-create-album').hide();
 			$('#bb-album-title').val('');
 			$('#bb-album-description').val('');
@@ -389,7 +391,7 @@ window.bp = window.bp || {};
 				'action': 'media_album_save',
 				'_wpnonce': BP_Nouveau.nonces.media,
 				'title': title.val(),
-				'description': $('#bb-album-description').val(),
+				'medias': self.dropzone_media,
 				'privacy': privacy.val()
 			};
 
@@ -410,6 +412,7 @@ window.bp = window.bp || {};
 						} else {
 							$('#buddypress .bb-albums-list').prepend(response.data.album);
 							self.closeCreateAlbumModal(event);
+							window.location.href = response.data.redirect_url;
 						}
 					}
 				}

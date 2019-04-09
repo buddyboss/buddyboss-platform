@@ -14,7 +14,7 @@
 
                     <header class="flex bb-model-header">
                         <h4><?php _e( 'Create Album', 'buddyboss' ); ?></h4>
-                        <a class="push-right bb-model-close-button" id="bp-media-create-album-close" href="#">close</a>
+                        <a class="push-right bb-model-close-button" id="bp-media-create-album-close" href="#"><?php _e( 'close', 'buddyboss' ); ?></a>
                     </header>
 
                     <div class="bb-field-wrap">
@@ -23,8 +23,9 @@
                     </div>
 
                     <div class="bb-field-wrap">
-                        <label for="bb-album-description" class="bb-label"><?php _e( 'Description', 'buddyboss' ); ?></label>
-                        <textarea id="bb-album-description" placeholder="<?php _e( 'Enter Description', 'buddyboss' ); ?>"></textarea>
+                        <div class="media-uploader-wrapper">
+                            <div class="dropzone" id="media-uploader"></div>
+                        </div>
                     </div>
 
                     <footer class="flex align-items-center bb-model-footer">

@@ -14,7 +14,6 @@
         </div>
     </div>
 
-    <?php bp_get_template_part( 'media/uploader' ); ?>
     <?php bp_get_template_part( 'media/create-album' ); ?>
 
 <?php endif; ?>
