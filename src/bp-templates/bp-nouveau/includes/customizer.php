@@ -36,12 +36,6 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	 * @param array $value Array of Customizer sections.
 	 */
 	$sections = apply_filters( 'bp_nouveau_customizer_sections', array(
-//		'bp_nouveau_general_settings' => array(
-//			'title'       => __( 'General Settings', 'buddyboss' ),
-//			'panel'       => 'bp_nouveau_panel',
-//			'priority'    => 10,
-//			'description' => __( 'Configure general BuddyBoss appearance options.', 'buddyboss' ),
-//		),
 		'bp_nouveau_user_primary_nav' => array(
 			'title'       => __( 'Profile Navigation', 'buddyboss' ),
 			'panel'       => 'bp_nouveau_panel',
@@ -54,12 +48,6 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'priority'    => 80,
 			'description' => __( 'Customize the appearance of emails sent by BuddyBoss.', 'buddyboss' ),
 		),
-//		'bp_nouveau_dir_layout' => array(
-//			'title'       => __( 'Directory layouts', 'buddyboss' ),
-//			'panel'       => 'bp_nouveau_panel',
-//			'priority'    => 80,
-//			'description' => __( 'Select the layout style for directory content &amp; navigation.', 'buddyboss' ),
-//		),
 	) );
 
 	// Add the sections to the customizer
@@ -240,12 +228,6 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'section'    => 'bp_nouveau_mail',
 			'settings'   => 'bp_nouveau_appearance[bp_emails]',
 		),
-//		'members_dir_tabs' => array(
-//			'label'      => __( 'Use tab styling for Members directory navigation.', 'buddyboss' ),
-//			'section'    => 'bp_nouveau_dir_layout',
-//			'settings'   => 'bp_nouveau_appearance[members_dir_tabs]',
-//			'type'       => 'checkbox',
-//		),
 	);
 
 	/**
