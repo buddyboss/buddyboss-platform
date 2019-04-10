@@ -4,18 +4,18 @@
 }
 
 .dropzone {
-	// background: rgba(240,243,247,0.5);
-	// border: 1px dashed #DEDFE2;
-	// border-radius: 6px;
-	// min-height: 50vh;
-	// display: flex;
-	// align-items: center;
-	// justify-content: center;
-	// font-size: 16px;
-	// color: #122B46;
-	// letter-spacing: -0.24px;
-	// line-height: 26px;
-	// padding: 20px;
+	border: 0;
+	padding: 0;
+	display: -webkit-box;
+    display: -ms-flexbox;
+	display: flex;
+	flex-flow: row wrap;
+	margin: 0 0 20px;
+
+	.dz-message {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
 }
 
 .dropzone.dz-clickable {
@@ -573,16 +573,8 @@
 	display: none;
 }
 
-.activity-media-container {
-
-	.dropzone {
-		display: flex;
-		flex-flow: row wrap;
-		margin-bottom: 10px;
-	}
-}
-
 .dropzone.dz-started {
+	margin: 0 -5px 20px;
 
 	.dz-default.dz-message {
 		display: flex;

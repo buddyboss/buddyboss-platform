@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-04-09 15:39:12+00:00\n"
+"POT-Creation-Date: 2019-04-10 09:06:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -264,7 +264,7 @@ msgid "Link"
 msgstr ""
 
 #: bp-activity/bp-activity-admin.php:248 bp-forums/admin/metaboxes.php:355
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1609
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1630
 msgid "Type"
 msgstr ""
 
@@ -396,7 +396,7 @@ msgstr ""
 #: bp-forums/replies/template.php:52 bp-forums/replies/template.php:1911
 #: bp-forums/topics/template.php:52 bp-forums/topics/template.php:2492
 #: bp-groups/classes/class-bp-groups-list-table.php:526
-#: bp-invites/bp-invites-admin.php:265 bp-xprofile/bp-xprofile-admin.php:805
+#: bp-invites/bp-invites-admin.php:265 bp-xprofile/bp-xprofile-admin.php:818
 #: bp-xprofile/bp-xprofile-repeaters.php:739
 #: bp-xprofile/bp-xprofile-repeaters.php:741
 #: bp-xprofile/bp-xprofile-repeaters.php:761
@@ -521,7 +521,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/crop.php:22
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/index.php:120
 #: bp-templates/bp-nouveau/includes/activity/functions.php:190
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1394
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1415
 #: bp-xprofile/classes/class-bp-xprofile-group.php:901
 msgid "Cancel"
 msgstr ""
@@ -889,7 +889,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:836
 #: bp-templates/bp-nouveau/includes/notifications/functions.php:244
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:114
-#: bp-xprofile/bp-xprofile-admin.php:810
+#: bp-xprofile/bp-xprofile-admin.php:823
 #: bp-xprofile/bp-xprofile-repeaters.php:743
 #: bp-xprofile/bp-xprofile-repeaters.php:745
 #: bp-xprofile/bp-xprofile-repeaters.php:765
@@ -969,7 +969,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:245
 #: bp-activity/classes/class-bp-activity-component.php:293
-#: bp-templates/bp-nouveau/includes/customizer.php:196
+#: bp-templates/bp-nouveau/includes/customizer.php:178
 msgid "Timeline"
 msgstr ""
 
@@ -1524,7 +1524,7 @@ msgid "Select %s"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:200
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1586
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1607
 msgid "Required"
 msgstr ""
 
@@ -2269,7 +2269,7 @@ msgstr ""
 #: bp-forums/common/widgets.php:686 bp-forums/forums/template.php:46
 #: bp-forums/templates/default/bbpress/content-statistics.php:21
 #: bp-search/bp-search-functions.php:368
-#: bp-templates/bp-nouveau/includes/customizer.php:202
+#: bp-templates/bp-nouveau/includes/customizer.php:187
 msgid "Forums"
 msgstr ""
 
@@ -2523,7 +2523,7 @@ msgstr ""
 #: bp-friends/classes/class-bp-friends-component.php:263
 #: bp-friends/classes/class-bp-friends-component.php:309
 #: bp-members/classes/class-bp-core-whos-online-widget.php:95
-#: bp-templates/bp-nouveau/includes/customizer.php:199
+#: bp-templates/bp-nouveau/includes/customizer.php:181
 msgid "Connections"
 msgstr ""
 
@@ -2582,7 +2582,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-widget.php:74
 #: bp-groups/classes/class-bp-groups-widget.php:203
 #: bp-search/bp-search-functions.php:375 bp-search/bp-search-settings.php:635
-#: bp-templates/bp-nouveau/includes/customizer.php:193
+#: bp-templates/bp-nouveau/includes/customizer.php:184
 msgid "Groups"
 msgstr ""
 
@@ -2694,8 +2694,8 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:98
 #: bp-members/bp-members-functions.php:2991
 #: bp-members/bp-members-functions.php:2994
-#: bp-xprofile/bp-xprofile-admin.php:976 bp-xprofile/bp-xprofile-admin.php:1028
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1491
+#: bp-xprofile/bp-xprofile-admin.php:989 bp-xprofile/bp-xprofile-admin.php:1041
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1512
 msgid "Profile Types"
 msgstr ""
 
@@ -2712,7 +2712,7 @@ msgstr ""
 #: bp-core/profile-search/bps-start.php:57
 #: bp-core/profile-search/bps-start.php:60
 #: bp-core/profile-search/bps-start.php:240
-#: bp-xprofile/bp-xprofile-admin.php:984
+#: bp-xprofile/bp-xprofile-admin.php:997
 msgid "Profile Search"
 msgstr ""
 
@@ -3377,12 +3377,12 @@ msgid "You must log in to access the page you requested dfdfd."
 msgstr ""
 
 #: bp-core/bp-core-customizer-email.php:25
-#: bp-templates/bp-nouveau/includes/customizer.php:55
+#: bp-templates/bp-nouveau/includes/customizer.php:49
 msgid "Customize the appearance of emails sent by BuddyBoss."
 msgstr ""
 
 #: bp-core/bp-core-customizer-email.php:26 bp-core/bp-core-filters.php:1142
-#: bp-templates/bp-nouveau/includes/customizer.php:52
+#: bp-templates/bp-nouveau/includes/customizer.php:46
 msgid "BuddyBoss Emails"
 msgstr ""
 
@@ -3602,7 +3602,7 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2457 bp-xprofile/bp-xprofile-admin.php:156
 #: bp-xprofile/bp-xprofile-admin.php:163 bp-xprofile/bp-xprofile-admin.php:172
-#: bp-xprofile/bp-xprofile-admin.php:969
+#: bp-xprofile/bp-xprofile-admin.php:982
 #: bp-xprofile/classes/class-bp-xprofile-component.php:48
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1253
 #: bp-xprofile/classes/class-bp-xprofile-group.php:816
@@ -6321,7 +6321,7 @@ msgstr ""
 
 #: bp-core/profile-search/bps-xprofile.php:313
 #: bp-core/profile-search/bps-xprofile.php:514
-#: bp-xprofile/bp-xprofile-admin.php:856
+#: bp-xprofile/bp-xprofile-admin.php:869
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:332
 msgid "Other"
 msgstr ""
@@ -9823,7 +9823,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-reply.php:127
 #: bp-forums/templates/default/bbpress/form-topic-merge.php:95
 #: bp-forums/templates/default/bbpress/form-topic-split.php:99
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1367
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1388
 #: bp-xprofile/classes/class-bp-xprofile-group.php:877
 msgid "Submit"
 msgstr ""
@@ -10184,7 +10184,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-admin.php:789
 #: bp-members/classes/class-bp-members-admin.php:994
 #: bp-members/classes/class-bp-members-component.php:339
-#: bp-templates/bp-nouveau/includes/customizer.php:187
+#: bp-templates/bp-nouveau/includes/customizer.php:175
 #: bp-xprofile/classes/class-bp-xprofile-component.php:252
 #: bp-xprofile/classes/class-bp-xprofile-component.php:369
 msgid "Profile"
@@ -15754,7 +15754,7 @@ msgid "Select who may see your profile details."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/profile.php:34
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1533
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1554
 msgid "Visibility"
 msgstr ""
 
@@ -16057,40 +16057,40 @@ msgstr ""
 msgid "Customize the appearance of the BuddyBoss Platform."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer.php:46
-#: bp-xprofile/bp-xprofile-admin.php:993
+#: bp-templates/bp-nouveau/includes/customizer.php:40
+#: bp-xprofile/bp-xprofile-admin.php:1006
 msgid "Profile Navigation"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer.php:49
+#: bp-templates/bp-nouveau/includes/customizer.php:43
 msgid ""
 "Customize the navigation menu for member profiles. In the preview window, "
 "navigate to a user to preview your changes."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer.php:207
+#: bp-templates/bp-nouveau/includes/customizer.php:195
 msgid "Display the profile navigation vertically."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer.php:213
+#: bp-templates/bp-nouveau/includes/customizer.php:201
 msgid "Use tab styling for primary nav."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer.php:219
+#: bp-templates/bp-nouveau/includes/customizer.php:207
 msgid "Use tab styling for secondary nav."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer.php:225
+#: bp-templates/bp-nouveau/includes/customizer.php:213
 msgid "Profile navigation order"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer.php:226
+#: bp-templates/bp-nouveau/includes/customizer.php:214
 msgid ""
 "Set the default navigation tab when viewing a member profile. The dropdown "
 "only shows tabs that are available to all members."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/customizer.php:234
+#: bp-templates/bp-nouveau/includes/customizer.php:222
 msgid "Reorder the primary navigation for a member."
 msgstr ""
 
@@ -16954,13 +16954,14 @@ msgstr ""
 msgid "New Field Set"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:207 bp-xprofile/bp-xprofile-admin.php:778
-#: bp-xprofile/bp-xprofile-admin.php:780
+#: bp-xprofile/bp-xprofile-admin.php:207 bp-xprofile/bp-xprofile-admin.php:791
+#: bp-xprofile/bp-xprofile-admin.php:793
 msgid "(Signup)"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:250
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1216
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1268
 msgid "Add New Field"
 msgstr ""
 
@@ -17017,30 +17018,31 @@ msgid "There was an error saving the field. Please try again."
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:535
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1278
 msgid "The field was saved successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:613
+#: bp-xprofile/bp-xprofile-admin.php:626
 msgid "field"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:613
+#: bp-xprofile/bp-xprofile-admin.php:626
 msgid "option"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:617
+#: bp-xprofile/bp-xprofile-admin.php:630
 msgid "There was an error deleting the %s. Please try again."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:620
+#: bp-xprofile/bp-xprofile-admin.php:633
 msgid "The %s was deleted successfully!"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:693
+#: bp-xprofile/bp-xprofile-admin.php:706
 msgid "You can only have one instance of the \"Gender\" profile field."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:1069
+#: bp-xprofile/bp-xprofile-admin.php:1082
 msgid ""
 "You can only have one instance of the \"Social Networks\" profile field on "
 "the website."
@@ -17358,7 +17360,7 @@ msgid "Default Value"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field.php:806
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1508
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1529
 msgid "Users with no profile type"
 msgstr ""
 
@@ -17399,51 +17401,51 @@ msgstr ""
 msgid "Edit Field"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1427
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1448
 msgid "Name (required)"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1433
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1454
 msgid "Text members see when editing this profile field (optional)"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1446
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1467
 msgid "Alternate Title"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1449
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1470
 msgid "For example, \"How old are you?\" could be used instead of \"Age\"."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1453
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1474
 msgid "Instructions"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1456
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1477
 msgid "Explain to members how best to fill out this field."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1493
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1514
 msgid "This field should be available to:"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1513
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1534
 msgid "Unavailable to all members."
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1553
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1574
 msgid "Allow members to override"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1557
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1578
 msgid "Enforce field visibility"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1582
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1603
 msgid "Requirement"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field.php:1585
+#: bp-xprofile/classes/class-bp-xprofile-field.php:1606
 msgid "Optional"
 msgstr ""
 

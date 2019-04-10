@@ -1155,6 +1155,7 @@ a.layout-grid-view {
   min-height: 80px;
   overflow: hidden;
   padding: 10px;
+  resize: none !important;
 }
 
 .activity-update-form #whats-new-content {
@@ -9283,8 +9284,9 @@ body.login .login-popup .mfp-close:hover {
 }
 
 .bbm-model-wrap textarea {
-  min-height: 120px;
+  min-height: 80px;
   resize: none;
+  margin-bottom: 20px;
 }
 
 .modal-header h3 {
@@ -9996,19 +9998,6 @@ ul.bb-albums-list .bb-more-photos strong {
   color: #fff;
 }
 
-.bb-dropzone-wrap .dropzone {
-  border: 0;
-  padding: 0;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.bb-dropzone-wrap .dropzone .dz-message {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
 #media_uploader.dropzone .bb-dz-preview-wrap .dz-image img {
   cursor: default;
 }
@@ -10035,11 +10024,16 @@ ul.bb-albums-list .bb-more-photos strong {
 }
 
 .bbm-uploader-model-wrap .bb-model-header span {
-  font-size: 17px;
+  font-size: 1rem;
   color: #939597;
   letter-spacing: -0.24px;
   line-height: 24px;
-  margin-left: 20px;
+  margin-right: 15px;
+}
+
+.bbm-uploader-model-wrap .bb-model-header .dashicons {
+  font-size: 22px;
+  margin: 0;
 }
 
 .bb-media-actions-wrap {
@@ -10085,6 +10079,7 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 }
 
 .modal-container .bp-existing-media-wrap {
+  margin-bottom: 20px;
   max-height: 68vh;
   overflow: auto;
 }
@@ -10098,6 +10093,10 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
   margin-bottom: 20px;
 }
 
+.bp-media-upload-tab {
+  margin-right: 15px;
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 15.0 - Media Dropzone
@@ -10106,6 +10105,21 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 .dropzone,
 .dropzone * {
   box-sizing: border-box;
+}
+
+.dropzone {
+  border: 0;
+  padding: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0 0 20px;
+}
+
+.dropzone .dz-message {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .dropzone.dz-clickable {
@@ -10633,10 +10647,8 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
   display: none;
 }
 
-.activity-media-container .dropzone {
-  display: flex;
-  flex-flow: row wrap;
-  margin-bottom: 10px;
+.dropzone.dz-started {
+  margin: 0 -5px 20px;
 }
 
 .dropzone.dz-started .dz-default.dz-message {
