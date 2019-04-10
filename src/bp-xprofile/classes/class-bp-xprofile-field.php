@@ -1271,8 +1271,13 @@ class BP_XProfile_Field {
 			?>
 
 
-			<?php if ( !empty( $message ) ) : ?>
+			<?php if ( ( !empty( $message ) ) || ( isset( $_GET['type'] ) && 'updated' === $_GET['type'] ) ) : ?>
 
+				<?php
+				if ( isset( $_GET['type'] ) && 'updated' === $_GET['type'] ) {
+					$message         = __( 'The field was saved successfully.', 'buddyboss' );
+					$message_type    = 'updated';
+				} ?>
 				<div id="message" class="<?php echo $message_type;?> fade">
 					<p><?php echo esc_html( $message ); ?></p>
 				</div>

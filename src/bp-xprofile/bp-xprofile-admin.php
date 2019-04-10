@@ -585,6 +585,19 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 
 			$field->render_admin_form( $message, $type );
 
+			// Users Admin URL
+			$users_url = bp_get_admin_url( 'admin.php' );
+			$redirect = add_query_arg( array(
+				'page'     => 'bp-profile-setup',
+				'mode'     => 'edit_field',
+				'group_id' => (int) $group_id,
+				'type' => $type,
+				'field_id' => (int) $field_id
+			), $users_url );
+
+			wp_safe_redirect( $redirect );
+			exit();
+
 		} else {
 			$field->render_admin_form( $message );
 		}
