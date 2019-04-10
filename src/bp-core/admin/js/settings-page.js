@@ -181,7 +181,7 @@
 			});
 
 			$('body .section-bp_search_settings_post_types table td input:checkbox').click(function () {
-				if ($('body .section-bp_search_settings_post_types table td input:checkbox:checked').length === $('body .section-bp_search_settings_community table td input:checkbox').length) {
+				if ($('body .section-bp_search_settings_post_types table td input:checkbox:checked').length === $('body .section-bp_search_settings_post_types table td input:checkbox').length) {
 					$('#bp_search_select_all_post_types').prop( 'checked', true );
 				} else {
 					$('#bp_search_select_all_post_types').prop( 'checked', false );
