@@ -1180,6 +1180,5 @@ function bp_core_set_bbpress_buddypress_active( $value, $option ) {
 		array_push($value, 'bbpress/bbpress.php');
 		array_push($value, 'buddypress/bp-loader.php');
 	}
-
 	return $value;
 }
