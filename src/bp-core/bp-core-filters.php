@@ -1170,9 +1170,6 @@ add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 10
  */
 function bp_core_set_bbpress_buddypress_active( $value, $option ) {
 
-	// Constant for removing the GamiPress admin notices of the BuddyPress.
-	define( 'GAMIPRESS_ADMIN_NOTICES', true );
-
 	// Do not add the "bbpress/bbpress.php" & "buddypress/bp-loader.php" on "/wp-admin/plugins.php" page otherwise it will show the plugin file not exists error.
 	if ( strpos( $_SERVER['REQUEST_URI'], '/wp-admin/plugins.php' ) !== false || strpos( $_SERVER['REQUEST_URI'], '/wp-admin/admin-ajax.php' ) !== false ) {
 		return $value;
