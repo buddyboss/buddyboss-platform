@@ -174,20 +174,20 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	if ( bp_is_active( 'xprofile' ) ) {
 		$options['profile'] = __( 'Profile', 'buddyboss' );
 	}
-	if ( bp_is_active( 'media' ) ) {
-		$options['media'] = __( 'Media', 'buddyboss' );
-	}
-	if ( bp_is_active( 'groups' ) ) {
-		$options['groups'] = __( 'Groups', 'buddyboss' );
-	}
 	if ( bp_is_active( 'activity' ) ) {
 		$options['activity'] = __( 'Timeline', 'buddyboss' );
 	}
 	if ( bp_is_active( 'friends' ) ) {
 		$options['friends'] = __( 'Connections', 'buddyboss' );
 	}
+	if ( bp_is_active( 'groups' ) ) {
+		$options['groups'] = __( 'Groups', 'buddyboss' );
+	}
 	if ( bp_is_active( 'forums' ) ) {
 		$options['forums'] = __( 'Forums', 'buddyboss' );
+	}
+	if ( bp_is_active( 'media' ) ) {
+		$options['media'] = __( 'Media', 'buddyboss' );
 	}
 
 	$controls = array(
