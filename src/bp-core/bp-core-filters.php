@@ -1156,14 +1156,29 @@ function bp_core_render_email_template( $template ) {
 }
 add_action( 'bp_template_include', 'bp_core_render_email_template', 12 );
 
+// Filter for setting the spoofing of BuddyPress.
 add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 10 , 2 );
+
+/**
+ * Filter for setting the spoofing of BuddyPress.
+ *
+ * @param $value
+ * @param $option
+ *
+ * @since BuddyBoss 1.0.0
+ * @return mixed
+ */
 function bp_core_set_bbpress_buddypress_active( $value, $option ) {
+
+	// Constant for removing the GamiPress admin notices of the BuddyPress.
 	define( 'GAMIPRESS_ADMIN_NOTICES', true );
+
+	// Do not add the "bbpress/bbpress.php" & "buddypress/bp-loader.php" on "/wp-admin/plugins.php" page otherwise it will show the plugin file not exists error.
 	if ( strpos( $_SERVER['REQUEST_URI'], '/wp-admin/plugins.php' ) !== false || strpos( $_SERVER['REQUEST_URI'], '/wp-admin/admin-ajax.php' ) !== false ) {
 		return $value;
 	} else {
-		array_push($value, 'bbpress/bbpress.php'); /* Here just replace unyson plugin directory and plugin file*/
-		array_push($value, 'buddypress/bp-loader.php'); /* Here just replace unyson plugin directory and plugin file*/
+		array_push($value, 'bbpress/bbpress.php');
+		array_push($value, 'buddypress/bp-loader.php');
 	}
 
 	return $value;
