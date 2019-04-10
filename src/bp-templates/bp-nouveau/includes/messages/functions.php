@@ -198,7 +198,7 @@ function bp_nouveau_messages_adjust_admin_nav( $admin_nav ) {
 		if ( 'notices' === $nav_id ) {
 			$admin_nav[ $nav_iterator ]['href'] = esc_url( add_query_arg( array(
 				'page' => 'bp-notices'
-			), bp_get_admin_url( 'users.php' ) ) );
+			), bp_get_admin_url( 'admin.php' ) ) );
 		}
 	}
 

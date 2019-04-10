@@ -72,7 +72,7 @@ class BP_Messages_Notices_Admin {
 	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_globals() {
-		$this->url = add_query_arg( array( 'page' => 'bp-notices' ), bp_get_admin_url( 'users.php' ) );
+		$this->url = add_query_arg( array( 'page' => 'bp-notices' ), bp_get_admin_url( 'admin.php' ) );
 	}
 
 	/**
