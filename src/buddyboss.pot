@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-04-10 09:06:17+00:00\n"
+"POT-Creation-Date: 2019-04-10 15:35:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2654,6 +2654,7 @@ msgstr ""
 #: bp-media/classes/class-bp-media-component.php:223
 #: bp-media/classes/class-bp-media-component.php:282
 #: bp-media/classes/class-bp-media-theme-compat.php:156
+#: bp-templates/bp-nouveau/buddypress/media/add-media.php:12
 #: bp-templates/bp-nouveau/includes/customizer.php:190
 msgid "Media"
 msgstr ""
@@ -13300,7 +13301,7 @@ msgid "Error while uploading media."
 msgstr ""
 
 #: bp-media/bp-media-functions.php:858
-#: bp-templates/bp-nouveau/buddypress/media/add-media.php:13
+#: bp-templates/bp-nouveau/buddypress/media/add-media.php:14
 msgid "Add Media"
 msgstr ""
 
@@ -13350,6 +13351,7 @@ msgid "Media %s"
 msgstr ""
 
 #: bp-media/classes/class-bp-media-component.php:249
+#: bp-templates/bp-nouveau/buddypress/media/albums.php:12
 msgid "Albums"
 msgstr ""
 
@@ -14388,6 +14390,7 @@ msgid "Select:"
 msgstr ""
 
 #: bp-messages/bp-messages-template.php:998
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:22
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:186
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:195
 #: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:176
@@ -14846,7 +14849,7 @@ msgid "Capabilities"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/activity-loop.php:28
-#: bp-templates/bp-nouveau/buddypress/media/albums.php:42
+#: bp-templates/bp-nouveau/buddypress/media/albums.php:43
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:39
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:55
 msgid "Load More"
@@ -15429,7 +15432,7 @@ msgid_plural "%s photos"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-templates/bp-nouveau/buddypress/media/albums.php:13
+#: bp-templates/bp-nouveau/buddypress/media/albums.php:14
 #: bp-templates/bp-nouveau/buddypress/media/create-album.php:16
 #: bp-templates/bp-nouveau/buddypress/media/create-album.php:42
 msgid "Create Album"

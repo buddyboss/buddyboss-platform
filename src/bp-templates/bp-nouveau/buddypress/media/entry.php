@@ -18,9 +18,8 @@
         </a>
         <?php if ( bp_is_my_profile() ) : ?>
             <div class="bb-media-check-wrap">
-                <input id="bb-media-<?php bp_media_id(); ?>" class="bb-custom-check" type="checkbox"
-                       value="<?php bp_media_id(); ?>" name="bb-media-select"/>
-                <label for="bb-media-<?php bp_media_id(); ?>"><span class="dashicons dashicons-yes"></span></label>
+                <input id="bb-media-<?php bp_media_id(); ?>" class="bb-custom-check" type="checkbox" value="<?php bp_media_id(); ?>" name="bb-media-select" />
+                <label class="bp-tooltip" data-bp-tooltip="<?php _e( 'Select', 'buddyboss' ); ?>" for="bb-media-<?php bp_media_id(); ?>"><span class="dashicons dashicons-yes"></span></label>
             </div>
         <?php endif; ?>
     </div>

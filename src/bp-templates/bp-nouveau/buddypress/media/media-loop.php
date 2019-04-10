@@ -15,9 +15,9 @@ bp_nouveau_before_loop(); ?>
 
             <header class="bb-member-photos-header">
                 <div class="bb-photos-meta">
-                    <a data-bp-tooltip="<?php _e( 'Delete', 'buddyboss' ); ?>" data-balloon-pos="up" class="bb-delete bp-tooltip" id="bb-delete-media" href="#"><span class="dashicons dashicons-trash"></span></a>
-                    <a data-bp-tooltip="<?php _e( 'Select All', 'buddyboss' ); ?>" data-balloon-pos="up" class="bb-select bp-tooltip" id="bb-select-all-media" href="#"><span class="dashicons dashicons-yes"></span></a>
-                    <a data-bp-tooltip="<?php _e( 'Unselect All', 'buddyboss' ); ?>" data-balloon-pos="up" class="bb-select selected bp-tooltip" id="bb-deselect-all-media" href="#"><span class="dashicons dashicons-no-alt"></span></a>
+                    <a data-bp-tooltip="<?php _e( 'Delete', 'buddyboss' ); ?>" class="bb-delete bp-tooltip" id="bb-delete-media" href="#"><span class="dashicons dashicons-trash"></span></a>
+                    <a data-bp-tooltip="<?php _e( 'Select All', 'buddyboss' ); ?>" class="bb-select bp-tooltip" id="bb-select-all-media" href="#"><span class="dashicons dashicons-yes"></span></a>
+                    <a data-bp-tooltip="<?php _e( 'Unselect All', 'buddyboss' ); ?>" class="bb-select selected bp-tooltip" id="bb-deselect-all-media" href="#"><span class="dashicons dashicons-no-alt"></span></a>
                 </div>
             </header>
 

@@ -9,6 +9,7 @@
 <?php if ( bp_is_my_profile() ) : ?>
 
     <div class="bb-media-actions-wrap">
+		<h2 class="bb-title"><?php _e( 'Media', 'buddyboss' ); ?></h2>
         <div class="bb-media-actions">
             <a href="#" id="bp-add-media" class="bb-add-media button small outline"><?php _e( 'Add Media', 'buddyboss' ); ?></a>
         </div>

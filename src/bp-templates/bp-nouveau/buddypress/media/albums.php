@@ -8,7 +8,8 @@
 
 <?php if ( bp_is_my_profile() ) : ?>
 
-    <div class="bb-media-actions-wrap">
+    <div class="bb-media-actions-wrap album-actions-wrap">
+		<h2 class="bb-title"><?php _e( 'Albums', 'buddyboss-theme' ); ?></h2>
         <div class="bb-media-actions">
             <a href="#" id="bb-create-album" class="bb-create-album button small outline">+ <?php _e( 'Create Album', 'buddyboss' ); ?></a>
         </div>
