@@ -277,8 +277,9 @@
 	}
 
 	textarea {
-		min-height: 120px;
+		min-height: 80px;
 		resize: none;
+		margin-bottom: 20px;
 	}
 }
 
@@ -1031,19 +1032,6 @@ ul.bb-albums-list {
 	}
 }
 
-.bb-dropzone-wrap .dropzone {
-	border: 0;
-	padding: 0;
-	display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-
-	.dz-message {
-		margin-top: 0;
-		margin-bottom: 0;
-	}
-}
-
 #media_uploader.dropzone .bb-dz-preview-wrap .dz-image img {
 	cursor: default;
 }
@@ -1080,11 +1068,16 @@ ul.bb-albums-list {
 		}
 
 		span {
-			font-size: 17px;
+			font-size: 1rem;
 			color: #939597;
 			letter-spacing: -0.24px;
 			line-height: 24px;
-			margin-left: 20px;
+			margin-right: 15px;
+		}
+
+		.dashicons {
+			font-size: 22px;
+			margin: 0;
 		}
 	}
 }
@@ -1132,6 +1125,7 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 }
 
 .modal-container .bp-existing-media-wrap {
+	margin-bottom: 20px;
 	max-height: 68vh;
     overflow: auto;
 }
@@ -1143,4 +1137,8 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 .bb-field-wrap,
 .bb-dropdown-wrap {
     margin-bottom: 20px;
+}
+
+.bp-media-upload-tab {
+    margin-right: 15px;
 }
