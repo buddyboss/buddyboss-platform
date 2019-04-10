@@ -726,6 +726,11 @@ function bp_profile_repeaters_print_group_html_start () {
         $current_field_id = bp_get_the_profile_field_id();
         $current_set_number = bp_xprofile_get_meta( $current_field_id, 'field', '_clone_number', true );
         $template_field_id = bp_xprofile_get_meta( $current_field_id, 'field', '_cloned_from', true );
+
+        $is_required = xprofile_check_is_required_field( $current_field_id );
+
+        $can_delete = ( '1' === $current_set_number && true === $is_required ) ? false : true;
+
         
         if ( empty( $first_xpfield_in_repeater ) ) {
             $first_xpfield_in_repeater = $template_field_id;
@@ -739,11 +744,15 @@ function bp_profile_repeaters_print_group_html_start () {
                     <a class="repeater_set_edit bp-tooltip" data-bp-tooltip="<?php _e( 'Edit', 'buddyboss' ); ?>">
                         <i class="dashicons dashicons-edit"></i>
                         <span class="bp-screen-reader-text"><?php _e( 'Edit', 'buddyboss' ); ?></span>
-                    </a> 
-                    <a class="repeater_set_delete bp-tooltip" data-bp-tooltip="<?php _e( 'Delete', 'buddyboss' ); ?>">
-                        <i class="dashicons dashicons-trash"></i>
-                        <span class="bp-screen-reader-text"><?php _e( 'Delete', 'buddyboss' ); ?></span>
                     </a>
+	                <?php
+	                if ( true === $can_delete ) { ?>
+		                <a class="repeater_set_delete bp-tooltip" data-bp-tooltip="<?php _e( 'Delete','buddyboss' ); ?>">
+			                <i class="dashicons dashicons-trash"></i>
+		                    <span class="bp-screen-reader-text"><?php _e( 'Delete', 'buddyboss' ); ?></span>
+		                </a> <?php
+	                } ?>
+
                 </div>
                 <div class='repeater_group_inner'>
 
@@ -761,11 +770,14 @@ function bp_profile_repeaters_print_group_html_start () {
                     <a class="repeater_set_edit bp-tooltip" data-bp-tooltip="<?php _e( 'Edit', 'buddyboss' ); ?>">
                         <i class="dashicons dashicons-edit"></i>
                         <span class="bp-screen-reader-text"><?php _e( 'Edit', 'buddyboss' ); ?></span>
-                    </a> 
+                    </a>
+	            <?php
+	            if ( true === $can_delete ) { ?>
                     <a class="repeater_set_delete bp-tooltip" data-bp-tooltip="<?php _e( 'Delete', 'buddyboss' ); ?>">
                         <i class="dashicons dashicons-trash"></i>
                         <span class="bp-screen-reader-text"><?php _e( 'Delete', 'buddyboss' ); ?></span>
-                    </a>                    
+                    </a> <?php
+	            } ?>
                 </div>
                 <div class='repeater_group_inner'>
 
