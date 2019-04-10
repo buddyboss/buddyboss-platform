@@ -878,14 +878,37 @@ window.bp = window.bp || {};
 				object = 'members';
 			}
 
-			self.objectRequest( {
-				object       : object,
-				scope        : scope,
-				filter       : filter,
-				search_terms : search_terms,
-				page         : 1,
-				template     : template
-			} );
+			if ( 'members' === object ) {
+				self.objectRequest( {
+					object         : object,
+					scope          : scope,
+					filter         : filter,
+					search_terms   : search_terms,
+					page           : 1,
+					template       : template,
+					member_type_id : $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).val()
+				} );
+			} else if ( 'groups' === object ) {
+				self.objectRequest( {
+					object       : object,
+					scope        : scope,
+					filter       : filter,
+					search_terms : search_terms,
+					page         : 1,
+					template     : template,
+					group_type   : $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).val()
+				} );
+			} else {
+				self.objectRequest( {
+					object       : object,
+					scope        : scope,
+					filter       : filter,
+					search_terms : search_terms,
+					page         : 1,
+					template     : template
+				} );
+			}
+
 		},
 
 		/**
