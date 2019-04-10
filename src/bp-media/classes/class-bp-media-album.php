@@ -248,6 +248,8 @@ class BP_Media_Album {
 			'order_by'          => 'date_created',  // Column to order by.
 			'exclude'           => false,           // Array of ids to exclude.
 			'search_terms'      => false,           // Terms to search by.
+			'user_id'           => false,           // user id.
+			'group_id'          => false,           // group id.
 			'update_meta_cache' => true,            // Whether or not to update meta cache.
 			'count_total'       => false,           // Whether or not to use count_total.
 		) );
@@ -292,12 +294,9 @@ class BP_Media_Album {
 		switch( $r['order_by'] ) {
 			case 'id' :
 			case 'user_id' :
-			case 'blog_id' :
+			case 'group_id' :
 			case 'attachment_id' :
 			case 'title' :
-			case 'album_id' :
-			case 'activity_id' :
-			case 'menu_order' :
 				break;
 
 			default :
@@ -316,6 +315,14 @@ class BP_Media_Album {
 		if ( ! empty( $r['in'] ) ) {
 			$in = implode( ',', wp_parse_id_list( $r['in'] ) );
 			$where_conditions['in'] = "m.id IN ({$in})";
+		}
+
+		if ( ! empty( $r['user_id'] ) ) {
+			$where_conditions['user'] = "m.user_id = {$r['user_id']}";
+		}
+
+		if ( ! empty( $r['group_id'] ) ) {
+			$where_conditions['user'] = "m.group_id = {$r['group_id']}";
 		}
 
 		/**

@@ -1253,10 +1253,31 @@ class BP_XProfile_Field {
 				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddyboss' ) ); ?></h2><?php
 			}
 			?>
-			<h1><?php echo esc_html( $title ); ?></h1>
+			<h1 class="wp-heading-inline"><?php echo esc_html( $title ); ?></h1>
 
-			<?php if ( !empty( $message ) ) : ?>
+			<?php
+			if ( $this->id ) {
+				$action_add = add_query_arg( array(
+					'page'     => 'bp-profile-setup',
+					'mode'     => 'add_field',
+					'group_id' => (int) $this->group_id
+				), $users_url . '#tabs-' . (int) $this->group_id );
 
+				?>
+
+				<a href="<?php echo esc_url( $action_add ); ?>" class="page-title-action"><?php esc_html_e( 'Add New Field', 'buddyboss'); ?></a>
+				<?php
+			}
+			?>
+
+
+			<?php if ( ( !empty( $message ) ) || ( isset( $_GET['type'] ) && 'updated' === $_GET['type'] ) ) : ?>
+
+				<?php
+				if ( isset( $_GET['type'] ) && 'updated' === $_GET['type'] ) {
+					$message         = __( 'The field was saved successfully.', 'buddyboss' );
+					$message_type    = 'updated';
+				} ?>
 				<div id="message" class="<?php echo $message_type;?> fade">
 					<p><?php echo esc_html( $message ); ?></p>
 				</div>

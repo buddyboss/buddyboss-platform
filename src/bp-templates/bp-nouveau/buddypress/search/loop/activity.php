@@ -11,9 +11,7 @@
 				<?php echo bp_get_activity_action( [ 'no_timestamp' => true ] ); ?>
 			</div>
 			<?php if ( bp_nouveau_activity_has_content() ) : ?>
-				<div class="activity-inner">
-					<?php echo wp_trim_words( $GLOBALS['activities_template']->activity->content, '20', '...' ) ?>
-				</div>
+				<div class="activity-inner"><?php echo wp_trim_words( $GLOBALS['activities_template']->activity->content, '20', '...' ) ?></div>
 			<?php endif; ?>
 			<div class="item-meta">
 				<time>
