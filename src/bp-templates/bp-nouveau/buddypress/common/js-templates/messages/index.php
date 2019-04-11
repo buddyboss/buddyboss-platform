@@ -16,12 +16,29 @@
 <div class="bp-messages-threads-list"></div>
 <div class="bp-messages-content"></div>
 
+<?php if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+	bp_get_template_part( 'media/theatre' );
+}  ?>
 
 <script type="text/html" id="tmpl-bp-messages-feedback">
 	<div class="bp-feedback {{data.type}}">
 		<span class="bp-icon" aria-hidden="true"></span>
 		<p>{{{data.message}}}</p>
 	</div>
+</script>
+
+<script type="text/html" id="tmpl-whats-new-messages-toolbar">
+	<?php if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ): ?>
+        <div class="post-elements-buttons-item post-media">
+            <a href="#" id="messages-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip="<?php _e('Attach a photo', 'buddyboss'); ?>">
+                <span class="dashicons dashicons-admin-media"></span>
+            </a>
+        </div>
+	<?php endif; ?>
+</script>
+
+<script type="text/html" id="tmpl-messages-media">
+    <div class="dropzone closed" id="messages-post-media-uploader"></div>
 </script>
 
 
@@ -264,6 +281,23 @@
 	<# } #>
 
 	<div class="message-content">{{{data.content}}}</div>
+
+    <# if ( data.media ) { #>
+		<# for ( i in data.media ) { #>
+		<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3" data-id="" data-date-created="">
+
+			<div class="bb-photo-thumb">
+				<a class="bb-open-media-theatre bb-photo-cover-wrap"
+				   data-id="{{data.media[i].id}}"
+				   data-attachment-full="{{data.media[i].full}}"
+				   href="#">
+					<img src="{{data.media[i].thumbnail}}" alt="{{data.media[i].title}}"/>
+				</a>
+			</div>
+
+		</li>
+		<# } #>
+    <# } #>
 
 	<# if ( data.afterContent ) { #>
 		<div class="bp-messages-hook after-message-content">{{{data.afterContent}}}</div>

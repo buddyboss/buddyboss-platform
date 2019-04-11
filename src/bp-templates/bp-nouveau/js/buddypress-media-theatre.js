@@ -201,7 +201,7 @@ window.bp = window.bp || {};
 
 		getActivity: function() {
 			var self = this;
-			if ( self.current_media && self.current_media.activity_id !== 0 ) {
+			if ( self.current_media && typeof self.current_media.activity_id !== 'undefined' ) {
 				$.ajax({
 					type: 'POST',
 					url: BP_Nouveau.ajaxurl,

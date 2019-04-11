@@ -25,7 +25,7 @@
                     </header>
 
                     <div class="bb-dropzone-wrap bp-media-upload-tab-content" id="bp-dropzone-content">
-                        <?php if ( ! bbp_is_single_forum() && ! bbp_is_single_topic() ) : ?>
+                        <?php if ( ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() ) : ?>
                         <div class="media-uploader-post-content">
                             <textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php _e( 'Write something about media.', 'buddyboss' ); ?>"></textarea>
                         </div>

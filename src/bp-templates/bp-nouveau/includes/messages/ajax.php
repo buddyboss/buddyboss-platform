@@ -200,6 +200,24 @@ function bp_nouveau_ajax_messages_send_reply() {
 		$reply['is_starred'] = array_search( 'unstar', explode( '/', $star_link ) );
 	}
 
+	if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+		$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
+
+		if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids ) ) ) {
+			$reply['media'] = array();
+			while ( bp_media() ) {
+				bp_the_media();
+
+				$reply['media'][] = array(
+					'id'        => bp_get_media_id(),
+					'title'     => bp_get_media_title(),
+					'thumbnail' => bp_get_media_attachment_image_thumbnail(),
+					'full'      => bp_get_media_attachment_image()
+				);
+			}
+		}
+	}
+
 	$extra_content = bp_nouveau_messages_catch_hook_content( array(
 		'beforeMeta'    => 'bp_before_message_meta',
 		'afterMeta'     => 'bp_after_message_meta',
@@ -551,6 +569,24 @@ function bp_nouveau_ajax_get_thread_messages() {
 			$thread->messages[ $i ]['star_link']  = $star_link;
 			$thread->messages[ $i ]['is_starred'] = array_search( 'unstar', explode( '/', $star_link ) );
 			$thread->messages[ $i ]['star_nonce'] = wp_create_nonce( 'bp-messages-star-' . bp_get_the_thread_message_id() );
+		}
+
+		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+			$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
+
+			if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids ) ) ) {
+				$thread->messages[ $i ]['media'] = array();
+				while ( bp_media() ) {
+					bp_the_media();
+
+					$thread->messages[ $i ]['media'][] = array(
+						'id'        => bp_get_media_id(),
+						'title'     => bp_get_media_title(),
+						'thumbnail' => bp_get_media_attachment_image_thumbnail(),
+						'full'      => bp_get_media_attachment_image()
+					);
+				}
+			}
 		}
 
 		$extra_content = bp_nouveau_messages_catch_hook_content( array(

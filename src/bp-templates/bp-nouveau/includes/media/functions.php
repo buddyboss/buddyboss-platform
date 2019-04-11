@@ -61,6 +61,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'max_upload_size' => bp_media_file_upload_max_size(),
 		'group_media'     => bp_is_group_media_support_enabled(),
 		'group_album'     => bp_is_group_album_support_enabled(),
+		'messages_media'  => bp_is_messages_media_support_enabled(),
 	);
 
 	if ( bp_is_single_album() ) {
@@ -230,5 +231,33 @@ function bp_nouveau_media_update_media_privacy( &$album ) {
 		        $media_obj->save();
             }
         }
+    }
+}
+
+function bp_nouveau_media_attach_media_to_message( &$message ) {
+
+    if ( bp_is_messages_media_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['media'] ) ) {
+	    $media_list = $_POST['media'];
+        $media_ids = array();
+
+        foreach ( $media_list as $media_index => $media ) {
+
+            $media_id = bp_media_add(
+                array(
+                    'title'         => ! empty( $media['name'] ) ? $media['name'] : '&nbsp;',
+                    'privacy'       => 'message',
+                    'attachment_id' => ! empty( $media['id'] ) ? $media['id'] : 0,
+                )
+            );
+
+            if ( $media_id ) {
+                $media_ids[] = $media_id;
+            }
+        }
+
+        $media_ids = implode( ',', $media_ids );
+
+        //save media meta for message
+        bp_messages_update_meta( $message->id, 'bp_media_ids', $media_ids );
     }
 }

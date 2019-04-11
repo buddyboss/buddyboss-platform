@@ -35,12 +35,33 @@ window.bp = window.bp || {};
 			this.router   = new bp.Nouveau.Messages.Router();
 			this.box      = 'inbox';
 
+			if ( !_.isUndefined( window.Dropzone ) && !_.isUndefined( BP_Nouveau.media ) ) {
+				this.dropzoneView();
+			}
+
 			this.setupNav();
 
 			Backbone.history.start( {
 				pushState: true,
 				root: BP_Nouveau.messages.rootUrl
 			} );
+		},
+
+		dropzoneView: function() {
+			this.dropzone = null;
+
+			// set up dropzones auto discover to false so it does not automatically set dropzones
+			window.Dropzone.autoDiscover = false;
+
+			this.dropzone_options = {
+				url: BP_Nouveau.ajaxurl,
+				timeout: 3 * 60 * 60 * 1000,
+				acceptedFiles: 'image/*',
+				autoProcessQueue: true,
+				addRemoveLinks: true,
+				uploadMultiple: false,
+				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
+			};
 		},
 
 		setupNav: function() {
@@ -546,11 +567,136 @@ window.bp = window.bp || {};
 		}
 	} );
 
+	// Messages Media
+	bp.Views.MessagesMedia = bp.Nouveau.Messages.View.extend({
+		tagName: 'div',
+		className: 'messages-media-container',
+		template: bp.template( 'messages-media' ),
+		media : [],
+
+		initialize: function () {
+
+			this.model.set( 'media', this.media );
+
+			document.addEventListener( 'messages_media_toggle', this.toggle_media_uploader.bind(this) );
+			document.addEventListener( 'messages_media_close', this.destroy.bind(this) );
+		},
+
+		toggle_media_uploader: function() {
+			var self = this;
+			if ( self.$el.find('#messages-post-media-uploader').hasClass('open') ) {
+				self.destroy();
+			} else {
+				self.open_media_uploader();
+			}
+		},
+
+		destroy: function() {
+			var self = this;
+			self.media = [];
+			self.model.set( 'media', self.media );
+			if ( ! _.isNull( bp.Nouveau.Messages.dropzone ) ) {
+				bp.Nouveau.Messages.dropzone.destroy();
+				self.$el.find('#messages-post-media-uploader').html('');
+			}
+			self.$el.find('#messages-post-media-uploader').removeClass('open').addClass('closed');
+
+			document.removeEventListener( 'messages_media_toggle', this.toggle_media_uploader.bind(this) );
+			document.removeEventListener( 'messages_media_close', this.destroy.bind(this) );
+		},
+
+		open_media_uploader: function() {
+			var self = this;
+
+			if ( self.$el.find('#messages-post-media-uploader').hasClass('open') ) {
+				return false;
+			}
+			self.destroy();
+
+			bp.Nouveau.Messages.dropzone = new window.Dropzone('#messages-post-media-uploader', bp.Nouveau.Messages.dropzone_options );
+
+			bp.Nouveau.Messages.dropzone.on('sending', function(file, xhr, formData) {
+				formData.append('action', 'media_upload');
+				formData.append('_wpnonce', BP_Nouveau.nonces.media);
+			});
+
+			bp.Nouveau.Messages.dropzone.on('success', function(file, response) {
+				if ( response.data.id ) {
+					file.id = response.data.id;
+					response.data.uuid = file.upload.uuid;
+					response.data.menu_order = self.media.length;
+					self.media.push( response.data );
+					self.model.set( 'media', self.media );
+				}
+			});
+
+			bp.Nouveau.Messages.dropzone.on('removedfile', function(file) {
+				if ( self.media.length ) {
+					for ( var i in self.media ) {
+						if ( file.id === self.media[i].id ) {
+							self.media.splice( i, 1 );
+							self.model.set( 'media', self.media );
+						}
+					}
+				}
+			});
+
+			self.$el.find('#messages-post-media-uploader').addClass('open').removeClass('closed');
+		}
+
+	});
+
+	bp.Views.MessagesToolbar = bp.Nouveau.Messages.View.extend( {
+		tagName: 'div',
+		id: 'whats-new-messages-toolbar',
+		template: bp.template( 'whats-new-messages-toolbar' ),
+		events: {
+			'click #messages-media-button': 'toggleMediaSelector',
+		},
+
+		initialize: function() {},
+
+		render: function() {
+			this.$el.html(this.template(this.model.toJSON()));
+			return this;
+		},
+
+		toggleMediaSelector: function( e ) {
+			e.preventDefault();
+			var event = new Event('messages_media_toggle');
+			document.dispatchEvent(event);
+		},
+
+		closeMediaSelector: function() {
+			var event = new Event('messsages_media_close');
+			document.dispatchEvent(event);
+		}
+
+	} );
+
+	bp.Views.MessagesAttachments = bp.Nouveau.Messages.View.extend( {
+		tagName: 'div',
+		id: 'whats-new-messages-attachments',
+		messagesMedia: null,
+		initialize: function() {
+			if ( !_.isUndefined( window.Dropzone ) && !_.isUndefined( BP_Nouveau.media ) && BP_Nouveau.media.messages_media ) {
+				this.messagesMedia = new bp.Views.MessagesMedia({model: this.model});
+				this.views.add(this.messagesMedia);
+			}
+		},
+		onClose: function() {
+			if( ! _.isNull( this.messagesMedia ) ) {
+				this.messagesMedia.destroy();
+			}
+		}
+	});
+
 	bp.Views.messageForm = bp.Nouveau.Messages.View.extend( {
 		tagName   : 'form',
 		id        : 'send_message_form',
 		className : 'standard-form',
 		template  : bp.template( 'bp-messages-form' ),
+		messagesAttachments : false,
 
 		events: {
 			'click #bp-messages-send'  : 'sendMessage',
@@ -563,6 +709,9 @@ window.bp = window.bp || {};
 
 			// Add the editor view
 			this.views.add( '#bp-message-content', new bp.Views.messageEditor() );
+			this.messagesAttachments = new bp.Views.MessagesAttachments( { model: this.model } );
+			this.views.add( '#bp-message-content', this.messagesAttachments );
+			this.views.add( '#bp-message-content', new bp.Views.MessagesToolbar( { model: this.model } ) );
 
 			this.model.on( 'change', this.resetFields, this );
 
@@ -622,6 +771,10 @@ window.bp = window.bp || {};
 					$( 'input[name="' + input + '"]' ).val( '' );
 				}
 			} );
+
+			if (this.messageAttachments.onClose){
+				this.messageAttachments.onClose();
+			}
 
 			// Listen to this to eventually reset your custom inputs.
 			$( this.el ).trigger( 'message:reset', _.pick( model.previousAttributes(), 'meta' ) );
@@ -711,6 +864,11 @@ window.bp = window.bp || {};
 
 				// Remove tinyMCE
 				bp.Nouveau.Messages.removeTinyMCE();
+
+				// clear message attachments and toolbar
+				if (this.messageAttachments.onClose){
+					this.messageAttachments.onClose();
+				}
 
 				// Remove the form view
 				var form = bp.Nouveau.Messages.views.get( 'compose' );
@@ -1188,18 +1346,23 @@ window.bp = window.bp || {};
 	bp.Views.userMessages = bp.Nouveau.Messages.View.extend( {
 		tagName  : 'div',
 		template : bp.template( 'bp-messages-single' ),
+		messageAttachments : false,
 
 		initialize: function() {
 			// Load Messages
 			this.requestMessages();
 
 			// Init a reply
-			this.reply = new bp.Models.messageThread();
+			this.model = new bp.Models.messageThread();
 
 			this.collection.on( 'add', this.addMessage, this );
 
 			// Add the editor view
 			this.views.add( '#bp-message-content', new bp.Views.messageEditor() );
+			this.messageAttachments = new bp.Views.MessagesAttachments( { model: this.model } );
+			this.views.add( '#bp-message-content', this.messageAttachments );
+			this.views.add( '#bp-message-content', new bp.Views.MessagesToolbar( { model: this.model } ) );
+
 			this.views.add( '#bp-message-load-more', new bp.Views.userMessagesLoadMore( {
 				collection: this.collection,
 				thread: this.options.thread,
@@ -1315,11 +1478,11 @@ window.bp = window.bp || {};
 		sendReply: function( event ) {
 			event.preventDefault();
 
-			if ( true === this.reply.get( 'sending' ) ) {
+			if ( true === this.model.get( 'sending' ) ) {
 				return;
 			}
 
-			this.reply.set ( {
+			this.model.set ( {
 				thread_id : this.options.thread.get( 'id' ),
 				content   : tinyMCE.activeEditor.getContent(),
 				sending   : true
@@ -1327,7 +1490,7 @@ window.bp = window.bp || {};
 
 			jQuery(tinyMCE.activeEditor.formElement).addClass('loading');
 
-			this.collection.sync( 'create', _.pick( this.reply.attributes, ['thread_id', 'content' ] ), {
+			this.collection.sync( 'create', this.model.attributes, {
 				success : _.bind( this.replySent, this ),
 				error   : _.bind( this.replyError, this )
 			} );
@@ -1338,8 +1501,12 @@ window.bp = window.bp || {};
 
 			// Reset the form
 			tinyMCE.activeEditor.setContent( '' );
-			this.reply.set( 'sending', false );
+			this.model.set( 'sending', false );
 			jQuery(tinyMCE.activeEditor.formElement).removeClass('loading');
+
+			if (this.messageAttachments.onClose){
+				this.messageAttachments.onClose();
+			}
 
 			this.collection.add( _.first( reply ) );
 		},

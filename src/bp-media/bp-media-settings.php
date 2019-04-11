@@ -78,6 +78,16 @@ function bp_media_get_settings_fields() {
 		];
 	}
 
+	if ( bp_is_active( 'messages' ) ) {
+
+		$fields['bp_media_settings_general']['bp_media_messages_media_support'] = [
+			'title'             => __( 'Messages Media', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_messages_media_support',
+			'sanitize_callback' => 'absint',
+			'args'              => []
+		];
+	}
+
 	return (array) apply_filters( 'bp_media_get_settings_fields', $fields );
 }
 
@@ -283,4 +293,36 @@ function bp_media_settings_callback_group_albums() {
  */
 function bp_is_group_album_support_enabled( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_group_album_support_enabled', (bool) get_option( 'bp_media_group_albums', $default ) );
+}
+
+/**
+ * Setting > Media > Messages support
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_settings_callback_messages_media_support() {
+	?>
+    <input name="bp_media_messages_media_support"
+           id="bp_media_messages_media_support"
+           type="checkbox"
+           value="1"
+		<?php checked( bp_is_messages_media_support_enabled() ); ?>
+    />
+    <label for="bp_media_messages_media_support">
+		<?php esc_html_e( 'Allow photo posting in messages', 'buddyboss' ) ?>
+    </label>
+	<?php
+}
+
+/**
+ * Checks if media messages media support is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is media messages media support enabled or not
+ */
+function bp_is_messages_media_support_enabled( $default = 1 ) {
+	return (bool) apply_filters( 'bp_is_messages_media_support_enabled', (bool) get_option( 'bp_media_messages_media_support', $default ) );
 }
