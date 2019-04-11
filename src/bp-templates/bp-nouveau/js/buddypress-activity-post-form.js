@@ -232,6 +232,8 @@ window.bp = window.bp || {};
 
 			document.removeEventListener( 'activity_media_toggle', this.toggle_media_uploader.bind(this) );
 			document.removeEventListener( 'activity_media_close', this.destroy.bind(this) );
+
+			$('#whats-new-attachments').addClass('empty');
 		},
 
 		open_media_uploader: function() {
@@ -271,6 +273,7 @@ window.bp = window.bp || {};
 			});
 
 			self.$el.find('#activity-post-media-uploader').addClass('open').removeClass('closed');
+			$('#whats-new-attachments').removeClass('empty');
 		}
 
 	});
@@ -349,6 +352,8 @@ window.bp = window.bp || {};
 			});
 			document.removeEventListener( 'activity_link_preview_open', this.open.bind(this) );
 			document.removeEventListener( 'activity_link_preview_close', this.destroy.bind(this) );
+
+			$('#whats-new-attachments').addClass('empty');
 		},
 
 		updateLinkPreview: function( event ) {
@@ -435,6 +440,7 @@ window.bp = window.bp || {};
 							link_images: response.images,
 							link_image_index: 0
 						} );
+						$('#whats-new-attachments').removeClass('empty');
 					} else {
 						self.model.set( {
 							link_success: false,
@@ -470,6 +476,7 @@ window.bp = window.bp || {};
 				this.el.style.backgroundSize = 'contain';
 				this.el.style.height = gifData.images.original.height + 'px';
 				this.el.style.width = gifData.images.original.width + 'px';
+				$('#whats-new-attachments').removeClass('empty');
 			}
 
 			return this;
@@ -482,6 +489,7 @@ window.bp = window.bp || {};
 			this.el.style.height = '0px';
 			this.el.style.width = '0px';
 			document.removeEventListener( 'activity_gif_close', this.destroy.bind(this) );
+			$('#whats-new-attachments').addClass('empty');
 		}
 	} );
 
@@ -1035,16 +1043,16 @@ window.bp = window.bp || {};
 		},
 
 		toggleURLInput: function( e ) {
-			e.preventDefault();
 			var event;
+			e.preventDefault();
+			this.closeMediaSelector();
+			this.closeGifSelector();
 			if ( this.model.get('link_scrapping') ) {
 				event = new Event('activity_link_preview_close');
 			} else {
 				event = new Event('activity_link_preview_open');
 			}
 			document.dispatchEvent(event);
-			this.closeMediaSelector();
-			this.closeGifSelector();
 		},
 
 		closeURLInput: function() {
@@ -1054,14 +1062,14 @@ window.bp = window.bp || {};
 
 		toggleGifSelector: function( e ) {
 			e.preventDefault();
+			this.closeURLInput();
+			this.closeMediaSelector();
 			if ( this.$gifPickerEl.is(':empty') ) {
 				var gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown({model: this.model});
 				this.$gifPickerEl.html( gifMediaSearchDropdownView.render().el );
 			}
 			this.$self.toggleClass('open');
 			this.$gifPickerEl.toggleClass('open');
-			this.closeURLInput();
-			this.closeMediaSelector();
 		},
 
 		closeGifSelector: function() {
@@ -1071,10 +1079,10 @@ window.bp = window.bp || {};
 
 		toggleMediaSelector: function( e ) {
 			e.preventDefault();
-			var event = new Event('activity_media_toggle');
-			document.dispatchEvent(event);
 			this.closeURLInput();
 			this.closeGifSelector();
+			var event = new Event('activity_media_toggle');
+			document.dispatchEvent(event);
 		},
 
 		closeMediaSelector: function() {
@@ -1123,6 +1131,7 @@ window.bp = window.bp || {};
 		activityLinkPreview: null,
 		activityAttachedGifPreview: null,
 		activityMedia: null,
+		className : 'empty',
 		initialize: function() {
 			if ( !_.isUndefined( window.Dropzone ) && !_.isUndefined( BP_Nouveau.media ) && ( BP_Nouveau.activity.params.object === 'user' || ( BP_Nouveau.activity.params.object === 'group' && BP_Nouveau.media.group_media ) ) ) {
 				this.activityMedia = new bp.Views.ActivityMedia({model: this.model});
