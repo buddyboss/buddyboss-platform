@@ -215,7 +215,7 @@ function bp_profile_repeaters_update_field_data ( $user_id, $posted_field_ids, $
     if ( !empty( $main_field_data ) ) {
         foreach ( $main_field_data as $main_field_id => $values ) {
             $values_str = implode( ' ', $values );
-            xprofile_set_field_data( $main_field_id, $user_id, $values_str );
+            //xprofile_set_field_data( $main_field_id, $user_id, $values_str );
         }
     }
     
