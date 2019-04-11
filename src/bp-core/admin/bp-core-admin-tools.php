@@ -66,6 +66,113 @@ function bp_core_admin_tools() {
 }
 
 /**
+ * Render help list
+ *
+ * @param $dir
+ * @param $sections
+ * @param bool $parent_dir
+ */
+function bp_list_help_files( $dir ) {
+	$ffs  = scandir( $dir );
+	$path = buddypress()->plugin_dir . 'bp-help';
+
+	unset( $ffs[ array_search( '.', $ffs, true ) ] );
+	unset( $ffs[ array_search( '..', $ffs, true ) ] );
+
+	// prevent empty ordered elements
+	if ( count( $ffs ) < 1 ) {
+		return;
+	}
+
+	?>
+	<ul>
+		<?php foreach ( $ffs as $key => $ff ) :
+
+			$is_dir = is_dir( $dir . '/' . $ff );
+
+			if ( ! $is_dir && $key === 2 ) {
+				continue;
+			}
+			?>
+			<li>
+				<?php if ( $is_dir ):
+					$parent_ffs = scandir( $dir . '/' . $ff );
+					unset( $parent_ffs[ array_search( '.', $parent_ffs, true ) ] );
+					unset( $parent_ffs[ array_search( '..', $parent_ffs, true ) ] );
+					$sub_dir    = str_replace( $path . '/', '', $dir );
+					$parent_dir = $sub_dir != $dir ? $sub_dir . '/' : '';
+					$article_path = $parent_dir . $ff . '/' . current( $parent_ffs );
+					?>
+					<span>
+						<a href="<?php echo add_query_arg( 'article', $article_path ); ?>">
+							<?php echo fgets( fopen( $dir . '/' . $ff . '/' . current( $parent_ffs ), 'r' ) ); ?>
+						</a>
+					</span>
+					<?php bp_list_help_files( $dir . '/' . $ff );
+				else:
+					$article_path = str_replace( $path . '/', '', $dir ) . '/' . $ff;
+					?>
+					<span>
+						<a href="<?php echo add_query_arg( 'article', $article_path ); ?>">
+							<?php echo fgets( fopen( $dir . '/' . $ff, 'r' ) ); ?>
+						</a>
+				</span>
+				<?php endif; ?>
+			</li>
+		<?php endforeach; ?>
+	</ul>
+	<?php
+}
+
+/**
+ * Render the BuddyBoss Help page.
+ *
+ * @since BuddyPress 2.0.0
+ */
+function bp_core_admin_help() {
+	$path = buddypress()->plugin_dir . 'bp-help';
+
+	?>
+	<div class="wrap">
+		<h2 class="nav-tab-wrapper">
+			<?php bp_core_admin_tabs( __( 'Help', 'buddyboss' ) ); ?>
+		</h2>
+	</div>
+	<div class="wrap">
+		<h1><?php _e( 'Documentations', 'buddyboss' ); ?></h1>
+		<?php
+		if ( isset( $_GET['article'] ) ) {
+			require_once $path . '/vendors/parsedown/Parsedown.php';
+			$Parsedown = new Parsedown();
+			$text      = file_get_contents( $path . '/' . $_GET['article'] );
+			$dir       =  strstr( $_GET['article'], '/', true );
+			$ffs       = scandir( $path . '/' . $dir );
+			unset( $ffs[ array_search( '.', $ffs, true ) ] );
+			unset( $ffs[ array_search( '..', $ffs, true ) ] );
+
+			echo fgets( fopen( $path . '/'  . $dir . '/' . current( $ffs ), 'r' ) );
+			 ?>
+			<div class="help-content-wrap">
+				<?php bp_list_help_files( $path . '/'  . $dir ) ?>
+				<div class="bp-help-card">
+					<?php echo $Parsedown->text( $text ); ?>
+				</div>
+			</div>
+			<?php
+
+		} else {
+			?>
+			<div class="help-sections-wrap">
+				<?php bp_list_help_files( $path );?>
+			</div>
+			<?php
+		}
+		?>
+	</div>
+	<?php
+}
+
+/**
  * Handle the processing and feedback of the admin tools page.
  *
  * @since BuddyPress 2.0.0
