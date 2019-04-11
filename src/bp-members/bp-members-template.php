@@ -904,6 +904,36 @@ function bp_member_name() {
 			}
 		}
 
+		$level = xprofile_get_field_visibility_level( bp_xprofile_lastname_field_id(), $members_template->member->ID );
+		$name  = '';
+		if ( $members_template->member->ID === bp_loggedin_user_id() ) {
+			$name = $members_template->member->fullname;
+		} elseif ( 'public' === $level ) {
+			$name = $members_template->member->fullname;
+		} elseif ( 'loggedin' === $level && is_user_logged_in() ) {
+			$name = $members_template->member->fullname;
+		} elseif ( 'friends' === $level && is_user_logged_in() ) {
+			$member_friend_status = friends_check_friendship_status( bp_loggedin_user_id(),$members_template->member->ID );
+			if ( 'is_friend' === $member_friend_status ) {
+				$name = $members_template->member->fullname;
+			} else {
+				$last_name = xprofile_get_field_data( bp_xprofile_lastname_field_id(), $members_template->member->ID );
+				$name      = str_replace( ' ' . $last_name, '', $members_template->member->fullname );
+			}
+		} elseif ( 'loggedin' === $level && ! is_user_logged_in() ) {
+			$last_name = xprofile_get_field_data( bp_xprofile_lastname_field_id(), $members_template->member->ID );
+			$name      = str_replace( $last_name, '', $members_template->member->fullname );
+		} elseif ( 'adminsonly' === $level && ! is_user_logged_in() ) {
+			$last_name = xprofile_get_field_data( bp_xprofile_lastname_field_id(), $members_template->member->ID );
+			$name      = str_replace( $last_name, '', $members_template->member->fullname );
+		} elseif ( 'adminsonly' === $level && is_user_logged_in() ) {
+			$last_name = xprofile_get_field_data( bp_xprofile_lastname_field_id(), $members_template->member->ID );
+			$name      = str_replace( $last_name, '', $members_template->member->fullname );
+		} elseif ( 'friends' === $level && ! is_user_logged_in() ) {
+			$last_name = xprofile_get_field_data( bp_xprofile_lastname_field_id(), $members_template->member->ID );
+			$name      = str_replace( ' ' . $last_name, '', $members_template->member->fullname );
+		}
+
 		/**
 		 * Filters the display name of current member in the loop.
 		 *
@@ -911,7 +941,7 @@ function bp_member_name() {
 		 *
 		 * @param string $fullname Display name for current member.
 		 */
-		return apply_filters( 'bp_get_member_name', $members_template->member->fullname );
+		return apply_filters( 'bp_get_member_name', trim( $name ) );
 	}
 	add_filter( 'bp_get_member_name', 'wp_filter_kses' );
 	add_filter( 'bp_get_member_name', 'stripslashes'   );
