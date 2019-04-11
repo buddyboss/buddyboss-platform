@@ -114,6 +114,8 @@
 
 					<?php endif; ?>
 
+					<?php bbp_get_template_part( 'form', 'attachments' ); ?>
+
 					<?php if ( current_user_can( 'moderate' ) ) : ?>
 
 						<?php do_action( 'bbp_theme_before_topic_form_type' ); ?>

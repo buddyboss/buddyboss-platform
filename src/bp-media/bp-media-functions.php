@@ -417,6 +417,7 @@ function bp_media_add( $args = '' ) {
 		'user_id'       => bp_loggedin_user_id(),                  // user_id of the uploader.
 		'title'         => '',                     // title of media being added.
 		'album_id'      => false,  // Optional: ID of the album.
+		'group_id'      => false,  // Optional: ID of the group.
 		'activity_id'   => false,                  // The ID of activity.
 		'privacy'       => 'public',                  // Optional: privacy of the media e.g. public.
 		'menu_order'    => 0, // Optional:  Menu order.
@@ -431,6 +432,7 @@ function bp_media_add( $args = '' ) {
 	$media->user_id       = $r['user_id'];
 	$media->title         = $r['title'];
 	$media->album_id      = $r['album_id'];
+	$media->group_id      = $r['group_id'];
 	$media->activity_id   = $r['activity_id'];
 	$media->privacy       = $r['privacy'];
 	$media->menu_order    = $r['menu_order'];
@@ -863,23 +865,6 @@ function albums_check_album_access( $album_id ) {
 //********************** Forums ***************************//
 
 /**
- * Form field for media uploader for topic and reply
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_media_forums_media_field() {
-    if ( bp_is_forums_media_support_enabled() ) {
-        ?><a href="#" id="bp-add-media" class="bb-add-media button small outline"><?php _e( 'Add Media', 'buddyboss' ); ?></a>
-	    <?php bp_get_template_part( 'media/uploader' ); ?>
-        <input name="bbp_media" id="bbp_media" type="hidden" value=""/>
-	    <?php
-    }
-}
-add_action( 'bbp_theme_before_reply_form_submit_wrapper', 'bp_media_forums_media_field' );
-add_action( 'bbp_theme_before_topic_form_submit_wrapper', 'bp_media_forums_media_field' );
-
-
-/**
  * Save media when new topic or reply is saved
  *
  * @since BuddyBoss 1.0.0
@@ -900,8 +885,7 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 		    $activity_id = false;
 		    // make an activity for the media
 		    if ( bp_is_active( 'activity' ) && ! empty( $main_activity_id ) ) {
-			    $content = '&nbsp;';
-			    $activity_id = bp_activity_post_update( array( 'content' => $content, 'user_id' => bbp_get_current_user_id(), 'hide_sitewide' => true ) );
+			    $activity_id = bp_activity_post_update( array( 'hide_sitewide' => true ) );
 		    }
 
 		    $media_id = bp_media_add( array(
