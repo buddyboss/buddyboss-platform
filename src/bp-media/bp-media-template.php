@@ -138,7 +138,7 @@ function bp_has_media( $args = '' ) {
 		$album_id = $args['album_id'];
 	}
 
-	$privacy = array( 'public' );
+	$privacy  = array( 'public' );
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
 		if ( bp_is_active( 'friends' ) ) {
@@ -147,6 +147,13 @@ function bp_has_media( $args = '' ) {
 				$privacy[] = 'friends';
 			}
 		}
+	}
+
+	$group_id = false;
+	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+		$privacy[] = 'grouponly';
+		$group_id  = bp_get_current_group_id();
+		$user_id   = false;
 	}
 
 	/*
@@ -169,6 +176,7 @@ function bp_has_media( $args = '' ) {
 		// Filtering
 		'user_id'           => $user_id,     // user_id to filter on.
 		'album_id'          => $album_id,    // album_id to filter on.
+		'group_id'          => $group_id,    // group_id to filter on.
 		'privacy'           => $privacy,     // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
 		'offset'            => false,        // Return only items >= this ID.
 		'since'             => false,        // Return only items recorded since this Y-m-d H:i:s date.
@@ -884,6 +892,12 @@ function bp_has_albums( $args = '' ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
 
+	$group_id = false;
+	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+		$group_id = bp_get_current_group_id();
+		$user_id  = false;
+	}
+
 	/*
 	 * Parse Args.
 	 */
@@ -903,6 +917,7 @@ function bp_has_albums( $args = '' ) {
 
 		// Filtering
 		'user_id'           => $user_id,     // user_id to filter on.
+		'group_id'          => $group_id,     // group_id to filter on.
 		'offset'            => false,        // Return only items >= this ID.
 		'since'             => false,        // Return only items recorded since this Y-m-d H:i:s date.
 
@@ -1266,4 +1281,43 @@ function bp_get_album_description() {
 	 * @param int $id The media album description.
 	 */
 	return apply_filters( 'bp_get_album_description', $media_album_template->album->description );
+}
+
+/**
+ * Output the media album ID.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_album_link() {
+	echo bp_get_album_link();
+}
+
+/**
+ * Return the album description.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @global object $media_album_template {@link BP_Media_Album_Template}
+ *
+ * @return string The media album description.
+ */
+function bp_get_album_link() {
+	global $media_album_template;
+
+	if ( bp_is_group() && ! empty( $media_album_template->album->group_id ) ) {
+		$group_link = bp_get_group_permalink( buddypress()->groups->current_group );
+		$url = trailingslashit( $group_link . '/albums/' . bp_get_album_id() );
+	} else {
+		$url = trailingslashit( bp_displayed_user_domain() . bp_get_media_slug() . '/albums/' . bp_get_album_id() );
+	}
+
+	/**
+	 * Filters the album description being displayed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param int $id The media album description.
+	 */
+	return apply_filters( 'bp_get_album_link', $url );
 }

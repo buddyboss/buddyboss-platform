@@ -1243,6 +1243,10 @@ function bp_nouveau_group_template_part() {
 			$template = 'send-invites';
 		} elseif ( bp_is_group_membership_request() ) {
 			$template = 'request-membership';
+		} elseif ( bp_is_group_media() ) {
+			$template = 'media';
+		} elseif ( bp_is_group_albums() ) {
+			$template = 'albums';
 		}
 
 		bp_nouveau_group_get_template_part( $template );

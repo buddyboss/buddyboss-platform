@@ -590,6 +590,7 @@ function bp_core_install_media() {
 		user_id bigint(20) NOT NULL,
 		title text,
 		album_id bigint(20),
+		group_id bigint(20),
 		activity_id bigint(20) NULL DEFAULT NULL ,
 		privacy varchar(50) NULL DEFAULT 'public',
 		menu_order bigint(20) NULL DEFAULT 0 ,

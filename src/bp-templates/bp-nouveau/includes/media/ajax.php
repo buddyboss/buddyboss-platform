@@ -216,6 +216,7 @@ function bp_nouveau_ajax_media_save() {
 			'title'         => $media['name'],
 			'activity_id'   => $activity_id,
 			'album_id'      => $media['album_id'],
+			'group_id'      => $media['group_id'],
 			'privacy'       => $album_privacy,
 			'error_type'    => 'wp_error'
 		) );
@@ -390,6 +391,7 @@ function bp_nouveau_ajax_media_move_to_album() {
 
 		$media_obj           = new BP_Media( $media_id );
 		$media_obj->album_id = (int) $_POST['album_id'];
+		$media_obj->group_id = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
 		$media_obj->privacy  = $album_privacy;
 
 		if ( ! $media_obj->save() ) {
@@ -465,11 +467,12 @@ function bp_nouveau_ajax_media_album_save() {
 	}
 
 	// save media
-	$id          = ! empty( $_POST['album_id'] ) ? $_POST['album_id'] : false;
-	$title       = $_POST['title'];
-	$privacy     = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : 'public';
+	$id       = ! empty( $_POST['album_id'] ) ? $_POST['album_id'] : false;
+	$group_id = ! empty( $_POST['group_id'] ) ? $_POST['group_id'] : false;
+	$title    = $_POST['title'];
+	$privacy  = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : 'public';
 
-	$album_id = bp_album_add( array( 'id' => $id, 'title' => $title, 'privacy' => $privacy ) );
+	$album_id = bp_album_add( array( 'id' => $id, 'title' => $title, 'privacy' => $privacy, 'group_id' => $group_id ) );
 
 	if ( ! $album_id ) {
 		$response['feedback'] = sprintf(
@@ -495,6 +498,7 @@ function bp_nouveau_ajax_media_album_save() {
 				'title'         => $media['name'],
 				'activity_id'   => $activity_id,
 				'album_id'      => $album_id,
+				'group_id'      => $group_id,
 				'privacy'       => $privacy,
 				'error_type'    => 'wp_error'
 			) );

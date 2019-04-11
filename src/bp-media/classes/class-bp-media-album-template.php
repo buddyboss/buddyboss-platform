@@ -182,6 +182,7 @@ class BP_Media_Album_Template {
 				'sort'              => $sort,
 				'search_terms'      => $search_terms,
 				'user_id'           => $user_id,
+				'group_id'          => $group_id,
 				'exclude'           => $exclude,
 				'update_meta_cache' => $update_meta_cache,
 			) );

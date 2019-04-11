@@ -23,7 +23,7 @@ $album_id = (int) bp_action_variable( 0 );
 
                 <div class="bb-single-album-header text-center">
                     <h4 class="bb-title" id="bp-single-album-title"><?php bp_album_title(); ?></h4>
-                    <?php if ( bp_is_my_profile() ) : ?>
+                    <?php if ( bp_is_my_profile() || bp_is_item_admin() ) : ?>
                         <input type="text" value="<?php bp_album_title(); ?>" placeholder="<?php _e( 'Title', 'buddyboss' ); ?>" id="bb-album-title" style="display: none;" />
                         <input type="hidden" value="<?php bp_album_description(); ?>" id="bb-album-description" style="display: none;" />
                         <a href="#" id="bp-edit-album-title"><?php _e( 'edit', 'buddyboss' ); ?></a>
@@ -35,7 +35,7 @@ $album_id = (int) bp_action_variable( 0 );
                     </p>
                 </div>
 
-	            <?php if ( bp_is_my_profile() ) : ?>
+	            <?php if ( bp_is_my_profile() || bp_is_item_admin() ) : ?>
 
                     <div class="bb-album-actions">
                         <a class="bb-delete button small outline error" id="bb-delete-album" href="#">

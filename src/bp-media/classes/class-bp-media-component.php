@@ -356,6 +356,7 @@ class BP_Media_Component extends BP_Component {
 			'bp_media',
 			'bp_media_albums',
 			'bp_media_user_media_count',
+			'bp_media_group_media_count',
 			'bp_media_album_media_ids'
 		) );
 

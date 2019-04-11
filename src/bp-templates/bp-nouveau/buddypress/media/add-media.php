@@ -6,7 +6,7 @@
  */
 ?>
 
-<?php if ( bp_is_my_profile() ) : ?>
+<?php if ( bp_is_my_profile() || ( bp_is_group() && is_user_logged_in() ) ) : ?>
 
     <div class="bb-media-actions-wrap">
 		<h2 class="bb-title"><?php _e( 'Media', 'buddyboss' ); ?></h2>

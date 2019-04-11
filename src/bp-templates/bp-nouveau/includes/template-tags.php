@@ -759,6 +759,8 @@ function bp_nouveau_has_nav( $args = array() ) {
 
 		if ( 'group_manage' === $bp_nouveau->object_nav && bp_is_group_admin_page() ) {
 			$parent_slug .= '_manage';
+		} else if ( 'group_media' === $bp_nouveau->object_nav && bp_is_group_media() ) {
+			$parent_slug .= '_media';
 		} else if ( 'group_members' === $bp_nouveau->object_nav && bp_is_group_members() ) {
 			$parent_slug .= '_members';
 

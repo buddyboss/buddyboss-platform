@@ -57,6 +57,7 @@ window.bp = window.bp || {};
 			this.dropzone_obj = null;
 			this.dropzone_media = [];
 			this.album_id = typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
+			this.group_id = typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
 
 		},
 
@@ -229,6 +230,7 @@ window.bp = window.bp || {};
 						response.data.uuid = file.upload.uuid;
 						response.data.menu_order = self.dropzone_media.length;
 						response.data.album_id = self.album_id;
+						response.data.group_id = self.group_id;
 						self.dropzone_media.push( response.data );
 						self.addMediaIdsToForumsForm();
 					}
@@ -296,7 +298,6 @@ window.bp = window.bp || {};
 			this.closeUploader(event);
 			$('#bp-media-create-album').hide();
 			$('#bb-album-title').val('');
-			$('#bb-album-description').val('');
 		},
 
 		submitMedia: function(event) {
@@ -340,7 +341,8 @@ window.bp = window.bp || {};
 					'action': 'media_move_to_album',
 					'_wpnonce': BP_Nouveau.nonces.media,
 					'medias': selected,
-					'album_id' : self.album_id
+					'album_id' : self.album_id,
+					'group_id' : self.group_id,
 				};
 				$.ajax({
 					type: 'POST',
@@ -403,6 +405,10 @@ window.bp = window.bp || {};
 
 			if ( self.album_id ) {
 				data.album_id = self.album_id;
+			}
+
+			if ( self.group_id ) {
+				data.group_id = self.group_id;
 			}
 
 			$.ajax({

@@ -293,6 +293,7 @@ function bp_media_get( $args = '' ) {
 		'user_id'           => false,
 		'activity_id'       => false,
 		'album_id'          => false,
+		'group_id'          => false,
 		'search_terms'      => false,        // Pass search terms as a string
 		'privacy'           => false,        // privacy of media
 		'exclude'           => false,        // Comma-separated list of activity IDs to exclude.
@@ -307,6 +308,7 @@ function bp_media_get( $args = '' ) {
 		'user_id'           => $r['user_id'],
 		'activity_id'       => $r['activity_id'],
 		'album_id'          => $r['album_id'],
+		'group_id'          => $r['group_id'],
 		'max'               => $r['max'],
 		'sort'              => $r['sort'],
 		'search_terms'      => $r['search_terms'],
@@ -542,6 +544,33 @@ function bp_media_get_total_media_count( $user_id = 0 ) {
 	 * @param int $count Total media count for a given user.
 	 */
 	return apply_filters( 'bp_media_get_total_media_count', $count );
+}
+
+/**
+ * Get the media count of a given group.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param int $group_id ID of the user whose media are being counted.
+ * @return int media count of the group.
+ */
+function bp_media_get_total_group_media_count( $group_id = 0 ) {
+	if ( empty( $group_id ) && bp_get_current_group_id() ) {
+		$group_id = bp_get_current_group_id();
+	}
+
+	$count = BP_Media::total_group_media_count( $group_id );
+	if ( empty( $count ) )
+		$count = 0;
+
+	/**
+	 * Filters the total media count for a given group.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param int $count Total media count for a given group.
+	 */
+	return apply_filters( 'bp_media_get_total_group_media_count', $count );
 }
 
 /**

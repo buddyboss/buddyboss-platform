@@ -872,6 +872,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'loading',
 			'message' => __( 'Requesting the group leaders. Please wait.', 'buddyboss' ),
 		),
+		'group-media-loading' => array(
+			'type'    => 'loading',
+			'message' => __( 'Requesting the group media. Please wait.', 'buddyboss' ),
+		),
 		'group-members-none' => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, no group members were found.', 'buddyboss' ),
