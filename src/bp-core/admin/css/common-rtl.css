@@ -837,6 +837,10 @@ body.post-type-bp-email .categorydiv label {
   background: #fff;
 }
 
+.buddyboss_page_bp-help .help-sections-wrap > ul > li:nth-child(3n+1) {
+  clear: both;
+}
+
 /*------------------------------------------------------------------------------
  * 7.0 Plugins page
  *----------------------------------------------------------------------------*/

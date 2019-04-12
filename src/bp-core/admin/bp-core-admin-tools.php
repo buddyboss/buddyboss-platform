@@ -116,7 +116,7 @@ function bp_list_help_files( $dir ) {
 						<a href="<?php echo add_query_arg( 'article', $article_path ); ?>">
 							<?php echo fgets( fopen( $dir . '/' . $ff, 'r' ) ); ?>
 						</a>
-				</span>
+					</span>
 				<?php endif; ?>
 			</li>
 		<?php endforeach; ?>
@@ -159,8 +159,7 @@ function bp_core_admin_help() {
 				</div>
 			</div>
 			<?php
-
-		} else {
+			} else {
 			?>
 			<div class="help-sections-wrap">
 				<?php bp_list_help_files( $path );?>

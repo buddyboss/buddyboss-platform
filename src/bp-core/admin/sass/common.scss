@@ -823,6 +823,7 @@ body.post-type-bp-email .categorydiv label {
 		padding: 0 0 0 30px;
 	}
 }
+
 /*------------------------------------------------------------------------------
  * 6.0 Help
  *----------------------------------------------------------------------------*/
@@ -830,7 +831,7 @@ body.post-type-bp-email .categorydiv label {
 	margin-left: 1em;
 }
 
-.buddyboss_page_bp-help .wrap  .bp-help-card {
+.buddyboss_page_bp-help .wrap .bp-help-card {
 	position: relative;
 	margin-top: 20px;
 	padding: 2.2em 2.8em 2em;
@@ -853,6 +854,10 @@ body.post-type-bp-email .categorydiv label {
 	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 	background: #fff;
+}
+
+.buddyboss_page_bp-help .help-sections-wrap > ul > li:nth-child(3n+1) {
+	clear: both;
 }
 
 /*------------------------------------------------------------------------------
