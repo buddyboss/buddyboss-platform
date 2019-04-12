@@ -5314,6 +5314,31 @@ button[data-bp-close]:hover {
   margin-left: 1em;
 }
 
+.buddypress.widget .activity-update .update-item {
+  display: flex;
+}
+
+.buddypress.widget .activity-update .update-item img {
+  box-shadow: none;
+}
+
+.buddypress.widget .activity-update .update-item cite {
+  flex: 0 0 50px;
+  margin-left: 10px;
+}
+
+.buddypress.widget .activity-update .update-item cite a {
+  box-shadow: none;
+}
+
+.buddypress.widget .activity-update .update-item cite img {
+  width: 100%;
+}
+
+.buddypress.widget .activity-update .update-item a img {
+  margin-bottom: 0;
+}
+
 .widget-area .buddypress.widget ul.item-list li {
   -webkit-flex: 0 1 46%;
   -moz-flex: 0 1 46%;

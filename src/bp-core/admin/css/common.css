@@ -26,10 +26,11 @@ TABLE OF CONTENTS:
 	3.4 Site Notices
 	3.5 Post Types
 4.0 Emails - Edit page
-5.0 Tools - BuddyBoss
-6.0 Plugins page
-7.0 AppBoss page
-8.0 Miscellaneous
+5.0 Tools
+6.0 Help
+7.0 Plugins page
+8.0 AppBoss page
+9.0 Miscellaneous
 ------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------
  * 1.0 Welcome Screen
@@ -754,7 +755,7 @@ body.post-type-bp-email .categorydiv label {
 }
 
 /*------------------------------------------------------------------------------
- * 5.0 Tools - BuddyBoss
+ * 5.0 Tools
  *----------------------------------------------------------------------------*/
 .buddyboss_page_bp-tools .wrap,
 .buddyboss_page_bbp-repair .wrap {
@@ -805,7 +806,39 @@ body.post-type-bp-email .categorydiv label {
 }
 
 /*------------------------------------------------------------------------------
- * 6.0 Plugins page
+ * 6.0 Help
+ *----------------------------------------------------------------------------*/
+.buddyboss_page_bp-help .wrap li ul {
+  margin-left: 1em;
+}
+
+.buddyboss_page_bp-help .wrap .bp-help-card {
+  position: relative;
+  margin-top: 20px;
+  padding: 2.2em 2.8em 2em;
+  min-width: 255px;
+  max-width: 1050px;
+  border-radius: 6px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  background: #fff;
+}
+
+.buddyboss_page_bp-help .help-sections-wrap > ul > li {
+  width: 31%;
+  float: left;
+  margin-right: 2%;
+  margin-bottom: 2%;
+  position: relative;
+  min-width: 215px;
+  border: 1px solid #e5e5e5;
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  background: #fff;
+}
+
+/*------------------------------------------------------------------------------
+ * 7.0 Plugins page
  *----------------------------------------------------------------------------*/
 #buddypress-update.not-shiny .update-message {
   border-left: 0;
@@ -817,7 +850,7 @@ body.post-type-bp-email .categorydiv label {
 }
 
 /*------------------------------------------------------------------------------
- * 7.0 AppBoss page
+ * 8.0 AppBoss page
  *----------------------------------------------------------------------------*/
 .bp_appboss_wrap {
   min-width: 255px;
@@ -1105,7 +1138,7 @@ body.post-type-bp-email .categorydiv label {
 }
 
 /*------------------------------------------------------------------------------
- * 8.0 Miscellaneous
+ * 9.0 Miscellaneous
  *----------------------------------------------------------------------------*/
 body.post-type-bp_ps_form .page-title-action {
   display: none;
@@ -1166,33 +1199,4 @@ td label.platform-activity {
   margin-left: 3px;
   display: inline-block;
   vertical-align: top;
-}
-
-.buddyboss_page_bp-help .wrap li ul {
-  margin-left: 1em;
-}
-
-.buddyboss_page_bp-help .wrap .bp-help-card {
-  position: relative;
-  margin-top: 20px;
-  padding: 2.2em 2.8em 2em;
-  min-width: 255px;
-  max-width: 1050px;
-  border-radius: 6px;
-  border: 1px solid #e5e5e5;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-  background: #fff;
-}
-
-.buddyboss_page_bp-help .help-sections-wrap > ul > li {
-  width: 31%;
-  float: left;
-  margin-right: 2%;
-  margin-bottom: 2%;
-  position: relative;
-  min-width: 215px;
-  border: 1px solid #e5e5e5;
-  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-  background: #fff;
 }
