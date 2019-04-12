@@ -154,13 +154,109 @@ function bp_core_admin_help() {
 			 ?>
 			<div class="help-content-wrap">
 				<?php bp_list_help_files( $path . '/'  . $dir ) ?>
-				<div class="bp-help-card">
+				<div class="bp-help-doc">
 					<?php echo $Parsedown->text( $text ); ?>
 				</div>
 			</div>
 			<?php
 			} else {
 			?>
+			<!-- @mehul showing proper HTML output -->
+			<div class="wp-list-table widefat bp-help-card-grid">
+				
+				<div class="bp-help-card">
+					<h3>Getting Started</h3>
+					<div class="inside">
+						<ul>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Upgrading from BuddyPress</a></li>
+							<li><a href="#">Configure BuddyBoss Platform</a></li>
+							<li><a href="#">Installing BuddyBoss Platform Themes & Plugins</a></li>
+							<li><a href="#">Changing Internal Configuration Settings</a></li>
+							<li><a href="#">Translating BuddyBoss Platform</a></li>
+							<li><a href="#">Privacy Policy, Terms of Service, GDPR</a></li>
+							<li><a href="#">BuddyBoss Platform Features</a></li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="bp-help-card">
+					<h3>BuddyBoss Theme</h3>
+					<div class="inside">
+						<ul>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="bp-help-card">
+					<h3>Back-End Administration</h3>
+					<div class="inside">
+						<ul>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="bp-help-card">
+					<h3>Components</h3>
+					<div class="inside">
+						<ul>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="bp-help-card">
+					<h3>Getting Started</h3>
+					<div class="inside">
+						<ul>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+							<li><a href="#">Installation</a></li>
+						</ul>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="clear">
+			<hr />
+
+			<!-- @mehul old logic -->
 			<div class="help-sections-wrap">
 				<?php bp_list_help_files( $path );?>
 			</div>
