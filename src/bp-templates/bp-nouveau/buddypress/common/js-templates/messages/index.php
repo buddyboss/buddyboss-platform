@@ -78,7 +78,7 @@
 
 	<div class="submit">
 		<input type="button" id="bp-messages-send" class="button bp-primary-action" value="<?php esc_attr_e( 'Send', 'buddyboss' ); ?>"/>
-		<input type="button" id="bp-messages-reset" class="text-button small bp-secondary-action" value="<?php esc_attr_e( 'Reset', 'buddyboss' ); ?>"/>
+<!--		<input type="button" id="bp-messages-reset" class="text-button small bp-secondary-action" value="--><?php //esc_attr_e( 'Reset', 'buddyboss' ); ?><!--"/>-->
 	</div>
 </script>
 
