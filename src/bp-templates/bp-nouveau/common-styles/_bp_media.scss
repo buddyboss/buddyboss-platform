@@ -373,7 +373,7 @@
 .bb-member-photos-header {
 	display: -webkit-box;
 	display: -ms-flexbox;
-    display: flex;
+	display: flex;
 }
 
 .bb-photos-meta {
@@ -1077,8 +1077,8 @@ ul.bb-albums-list {
 
 .bb-media-actions-wrap {
 	display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
+	display: -ms-flexbox;
+	display: flex;
 	-webkit-box-pack: justify;
 	-ms-flex-pack: justify;
 	justify-content: space-between;
@@ -1129,18 +1129,18 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 .modal-container .bp-existing-media-wrap {
 	margin-bottom: 20px;
 	max-height: 68vh;
-    overflow: auto;
+	overflow: auto;
 }
 
 .bb-model-close-button .dashicons {
-    font-size: 22px;
+	font-size: 22px;
 }
 
 .bb-field-wrap,
 .bb-dropdown-wrap {
-    margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 .bp-media-upload-tab {
-    margin-right: 15px;
+	margin-right: 15px;
 }

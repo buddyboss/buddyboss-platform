@@ -401,7 +401,7 @@ window.bp = window.bp || {};
 					'_wpnonce': BP_Nouveau.nonces.media,
 					'medias': selected,
 					'album_id' : self.album_id,
-					'group_id' : self.group_id,
+					'group_id' : self.group_id
 				};
 				$.ajax({
 					type: 'POST',

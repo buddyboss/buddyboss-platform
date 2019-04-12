@@ -651,7 +651,7 @@ window.bp = window.bp || {};
 		id: 'whats-new-messages-toolbar',
 		template: bp.template( 'whats-new-messages-toolbar' ),
 		events: {
-			'click #messages-media-button': 'toggleMediaSelector',
+			'click #messages-media-button': 'toggleMediaSelector'
 		},
 
 		initialize: function() {},
