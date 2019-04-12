@@ -1116,6 +1116,11 @@ body.post-type-bp_ps_form .page-title-action {
   min-width: 230px;
 }
 
+body.post-type-reply #edit-slug-box {
+  padding-left: 0;
+  margin-top: 0;
+}
+
 /* Notices */
 .buddypress .wrap div#message,
 .buddypress .wrap div.notice {

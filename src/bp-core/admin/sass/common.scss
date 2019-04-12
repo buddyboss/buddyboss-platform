@@ -1134,6 +1134,10 @@ body.post-type-bp_ps_form .page-title-action {
 #bbpress_group_admin_ui_meta_box fieldset {
 	min-width: 230px;
 }
+body.post-type-reply #edit-slug-box {
+	padding-left: 0;
+	margin-top: 0;
+}
 
 /* Notices */
 .buddypress .wrap div#message,
