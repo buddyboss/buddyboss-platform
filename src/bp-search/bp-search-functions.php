@@ -541,7 +541,7 @@ function bp_search_get_post_thumbnail_default( $post_type ) {
 	return
 		isset( $default[ $post_type ] ) ?
 			$default[ $post_type ] :
-			buddypress()->plugin_url . 'bp-core/images/post-type.svg';
+			buddypress()->plugin_url . 'bp-core/images/search/post-type.svg';
 }
 
 /**
