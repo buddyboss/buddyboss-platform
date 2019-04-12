@@ -824,6 +824,13 @@ body.post-type-bp-email .categorydiv label {
   background: #fff;
 }
 
+.buddyboss_page_bp-help .help-sections-wrap ul {
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  padding: 1em;
+  margin: 1.5em;
+}
+
 .buddyboss_page_bp-help .help-sections-wrap > ul > li {
   width: 31%;
   float: left;
