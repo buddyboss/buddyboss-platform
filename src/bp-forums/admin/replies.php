@@ -372,7 +372,7 @@ class BBP_Replies_Admin {
 
 			strong.label {
 				display: inline-block;
-				width: 60px;
+				width: 74px;
 			}
 
 			.column-bbp_forum_topic_count,

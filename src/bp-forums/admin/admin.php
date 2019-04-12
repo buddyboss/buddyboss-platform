@@ -148,6 +148,7 @@ class BBP_Admin {
 
 		// No _nopriv_ equivalent - users must be logged in
 		add_action( 'wp_ajax_bbp_suggest_topic', array( $this, 'suggest_topic' ) );
+		add_action( 'wp_ajax_bbp_suggest_reply', array( $this, 'suggest_reply' ) );
 		add_action( 'wp_ajax_bbp_suggest_user',  array( $this, 'suggest_user'  ) );
 
 		/** Filters ***********************************************************/
@@ -500,6 +501,10 @@ class BBP_Admin {
 					// Replies admin
 					} elseif ( bbp_get_reply_post_type() === get_current_screen()->post_type ) {
 						wp_enqueue_script( 'bbp-admin-replies-js', $this->js_url . 'replies.js', array( 'jquery' ), $version );
+						$localize_array = array(
+							'loading_text' => __( 'Loading', 'buddyboss' ),
+						);
+						wp_localize_script( 'bbp-admin-replies-js', 'replies_data', $localize_array );
 					}
 
 					break;
@@ -608,7 +613,7 @@ class BBP_Admin {
 	/** Ajax ******************************************************************/
 
 	/**
-	 * Ajax action for facilitating the forum auto-suggest
+	 * Ajax action for facilitating the discussion auto-suggest
 	 *
 	 * @since bbPress (r4261)
 	 *
@@ -618,34 +623,57 @@ class BBP_Admin {
 	 * @uses bbp_get_topic_title()
 	 */
 	public function suggest_topic() {
-		global $wpdb;
 
-		// Bail early if no request
-		if ( empty( $_REQUEST['q'] ) ) {
-			wp_die( '0' );
-		}
+		$html = '<option value="0">'.esc_html__('-- Select Discussion --','buddyboss').'</option>';
 
-		// Bail if user cannot moderate - only moderators can change hierarchy
-		if ( ! current_user_can( 'moderate' ) ) {
-			wp_die( '0' );
-		}
-
-		// Check the ajax nonce
-		check_ajax_referer( 'bbp_suggest_topic_nonce' );
-
-		// Try to get some topics
-		$topics = get_posts( array(
-			's'         => $wpdb->esc_like( $_REQUEST['q'] ),
-			'post_type' => bbp_get_topic_post_type()
+		$posts  = get_posts( array(
+			'post_type'          => bbp_get_topic_post_type(),
+			'post_status'        => 'publish',
+			'post_parent'        => $_POST['post_parent'],
+			'numberposts'        => -1,
+			'orderby'            => 'title',
+			'order'              => 'ASC',
+			'walker'             => '',
 		) );
 
-		// If we found some topics, loop through and display them
-		if ( ! empty( $topics ) ) {
-			foreach ( (array) $topics as $post ) {
-				printf( esc_html__( '%s - %s', 'buddyboss' ), bbp_get_topic_id( $post->ID ), bbp_get_topic_title( $post->ID ) . "\n" );
-			}
-		}
-		die();
+		add_filter( 'list_pages', 'meta_box_title', 99, 2 );
+		$html .= walk_page_dropdown_tree( $posts, 0);
+		remove_filter( 'list_pages', 'meta_box_title', 99, 2  );
+
+		echo $html;
+		wp_die();
+	}
+
+	/**
+	 * Ajax action for facilitating the reply auto-suggest
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @uses get_posts()
+	 * @uses bbp_get_topic_post_type()
+	 * @uses bbp_get_topic_id()
+	 * @uses bbp_get_topic_title()
+	 */
+	public function suggest_reply() {
+
+		$html = '<option value="0">'.esc_html__('-- Select Reply --','buddyboss').'</option>';
+
+		$posts  = get_posts( array(
+			'post_type'          => bbp_get_reply_post_type(),
+			'post_status'        => 'publish',
+			'post_parent'        => $_POST['post_parent'],
+			'numberposts'        => -1,
+			'orderby'            => 'title',
+			'order'              => 'ASC',
+			'walker'             => '',
+		) );
+
+		add_filter( 'list_pages', 'meta_box_title', 99, 2 );
+		$html .= walk_page_dropdown_tree( $posts, 0);
+		remove_filter( 'list_pages', 'meta_box_title', 99, 2  );
+
+		echo $html;
+		wp_die();
 	}
 
 	/**

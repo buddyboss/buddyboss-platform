@@ -432,21 +432,21 @@ function bbp_reply_metabox() {
 			<strong class="label"><?php esc_html_e( 'Forum:', 'buddyboss' ); ?></strong>
 			<label class="screen-reader-text" for="bbp_forum_id"><?php esc_html_e( 'Forum', 'buddyboss' ); ?></label>
 			<?php bbp_dropdown( array(
-				'post_type'          => bbp_get_forum_post_type(),
-				'selected'           => $reply_forum_id,
-				'numberposts'        => -1,
-				'orderby'            => 'title',
-				'order'              => 'ASC',
-				'walker'             => '',
-				'exclude'            => '',
+				'post_type'             => bbp_get_forum_post_type(),
+				'selected'              => $reply_forum_id,
+				'numberposts'           => - 1,
+				'orderby'               => 'title',
+				'order'                 => 'ASC',
+				'walker'                => '',
+				'exclude'               => '',
 
 				// Output-related
-				'select_id'          => 'bbp_forum_id',
-				'tab'                => bbp_get_tab_index(),
-				'options_only'       => false,
-				'show_none'          => __( '- No parent -', 'buddyboss' ),
-				'disable_categories' => current_user_can( 'edit_forums' ),
-				'disabled'           => ''
+				'select_id'             => 'bbp_forum_id',
+				'tab'                   => bbp_get_tab_index(),
+				'options_only'          => false,
+				'show_none'             => __( '- No parent -', 'buddyboss' ),
+				'disable_categories'    => current_user_can( 'edit_forums' ),
+				'disabled'              => '',
 			) ); ?>
 		</p>
 
@@ -455,13 +455,55 @@ function bbp_reply_metabox() {
 	<p>
 		<strong class="label"><?php esc_html_e( 'Discussion:', 'buddyboss' ); ?></strong>
 		<label class="screen-reader-text" for="parent_id"><?php esc_html_e( 'Discussion', 'buddyboss' ); ?></label>
-		<input name="parent_id" id="bbp_topic_id" type="text" value="<?php echo esc_attr( $reply_topic_id ); ?>" data-ajax-url="<?php echo esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'bbp_suggest_topic' ), admin_url( 'admin-ajax.php', 'relative' ) ) ), 'bbp_suggest_topic_nonce' ); ?>" />
+		<?php
+		bbp_dropdown( array(
+			'post_type'             => bbp_get_topic_post_type(),
+			'selected'              => $reply_topic_id,
+			'post_parent'           => $reply_forum_id,
+			'numberposts'           => - 1,
+			'orderby'               => 'title',
+			'order'                 => 'ASC',
+			'walker'                => '',
+			'exclude'               => '',
+
+			// Output-related
+			'select_id'             => 'parent_id',
+			'tab'                   => bbp_get_tab_index(),
+			'options_only'          => false,
+			'show_none'             => __( '- Select Discussion -', 'buddyboss' ),
+			'show_none_default_val' => 0,
+			'disable_categories'    => current_user_can( 'edit_forums' ),
+			'disabled'              => '',
+		) );
+		?>
+<!--		<input name="parent_id" id="bbp_topic_id" type="text" value="--><?php //echo esc_attr( $reply_topic_id ); ?><!--" data-ajax-url="--><?php //echo esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'bbp_suggest_topic' ), admin_url( 'admin-ajax.php', 'relative' ) ) ), 'bbp_suggest_topic_nonce' ); ?><!--" />-->
 	</p>
 
 	<p>
 		<strong class="label"><?php esc_html_e( 'Reply To:', 'buddyboss' ); ?></strong>
 		<label class="screen-reader-text" for="bbp_reply_to"><?php esc_html_e( 'Reply To', 'buddyboss' ); ?></label>
-		<input name="bbp_reply_to" id="bbp_reply_to" type="text" value="<?php echo esc_attr( $reply_to ); ?>" />
+		<?php
+		bbp_dropdown( array(
+			'post_type'             => bbp_get_reply_post_type(),
+			'selected'              => $reply_to,
+			'post_parent'           => $reply_topic_id,
+			'numberposts'           => - 1,
+			'orderby'               => 'title',
+			'order'                 => 'ASC',
+			'walker'                => '',
+			'exclude'               => '',
+
+			// Output-related
+			'select_id'             => 'bbp_reply_to',
+			'tab'                   => bbp_get_tab_index(),
+			'options_only'          => false,
+			'show_none'             => __( '- Select Reply -', 'buddyboss' ),
+			'show_none_default_val' => 0,
+			'disable_categories'    => current_user_can( 'edit_forums' ),
+			'disabled'              => '',
+		) );
+		?>
+<!--		<input name="bbp_reply_to" id="bbp_reply_to" type="text" value="--><?php //echo esc_attr( $reply_to ); ?><!--" />-->
 	</p>
 
 	<input name="ping_status" type="hidden" id="ping_status" value="open" />
@@ -469,6 +511,25 @@ function bbp_reply_metabox() {
 	<?php
 	wp_nonce_field( 'bbp_reply_metabox_save', 'bbp_reply_metabox' );
 	do_action( 'bbp_reply_metabox', $post_id );
+}
+
+/**
+ * Set the ID if title is blank.
+ *
+ * @param $title
+ * @param $post
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return mixed
+ */
+function meta_box_title( $title, $post ) {
+
+	if ( '' === $title ) {
+		$title = $post->ID;
+	}
+
+	return $title;
 }
 
 /** Users *********************************************************************/
