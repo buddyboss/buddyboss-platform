@@ -139,7 +139,7 @@ function bp_core_admin_help() {
 		</h2>
 	</div>
 	<div class="wrap">
-		<h1><?php _e( 'Documentations', 'buddyboss' ); ?></h1>
+		<h1><?php _e( 'Documentation', 'buddyboss' ); ?></h1>
 		<?php
 		if ( isset( $_GET['article'] ) ) {
 			require_once $path . '/vendors/parsedown/Parsedown.php';
