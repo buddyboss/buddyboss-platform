@@ -513,36 +513,6 @@ function bp_core_get_user_displayname( $user_id_or_username ) {
 		return false;
 	}
 
-	$level = xprofile_get_field_visibility_level( bp_xprofile_lastname_field_id(), $user_id );
-	$name  = '';
-	if ( (int) $user_id === bp_loggedin_user_id() ) {
-		$name = get_the_author_meta( 'display_name', $user_id );
-	} elseif ( 'public' === $level ) {
-		$name = get_the_author_meta( 'display_name', $user_id );
-	} elseif ( 'loggedin' === $level && is_user_logged_in() ) {
-		$name = get_the_author_meta( 'display_name', $user_id );
-	} elseif ( 'friends' === $level && is_user_logged_in() ) {
-		$member_friend_status = friends_check_friendship_status( bp_loggedin_user_id(), $user_id );
-		if ( 'is_friend' === $member_friend_status ) {
-			$name = get_the_author_meta( 'display_name', $user_id );
-		} else {
-			$last_name = xprofile_get_field_data( bp_xprofile_lastname_field_id(), $user_id );
-			$name      = str_replace( ' ' . $last_name, '', get_the_author_meta( 'display_name', $user_id ) );
-		}
-	} elseif ( 'loggedin' === $level && ! is_user_logged_in() ) {
-		$last_name = xprofile_get_field_data( bp_xprofile_lastname_field_id(), $user_id );
-		$name      = str_replace( $last_name, '', get_the_author_meta( 'display_name', $user_id ) );
-	} elseif ( 'adminsonly' === $level && ! is_user_logged_in() ) {
-		$last_name = xprofile_get_field_data( bp_xprofile_lastname_field_id(), $user_id );
-		$name      = str_replace( $last_name, '', get_the_author_meta( 'display_name', $user_id ) );
-	} elseif ( 'adminsonly' === $level && is_user_logged_in() ) {
-		$last_name = xprofile_get_field_data( bp_xprofile_lastname_field_id(), $user_id );
-		$name      = str_replace( $last_name, '', get_the_author_meta( 'display_name', $user_id ) );
-	} elseif ( 'friends' === $level && ! is_user_logged_in() ) {
-		$last_name = xprofile_get_field_data( bp_xprofile_lastname_field_id(), $user_id );
-		$name      = str_replace( ' ' . $last_name, '', get_the_author_meta( 'display_name', $user_id ) );
-	}
-
 	/**
 	 * Filters the display name for the passed in user.
 	 *
@@ -551,7 +521,7 @@ function bp_core_get_user_displayname( $user_id_or_username ) {
 	 * @param string $fullname Display name for the user.
 	 * @param int    $user_id  ID of the user to check.
 	 */
-	return apply_filters( 'bp_core_get_user_displayname', trim( $name ), $user_id );
+	return apply_filters( 'bp_core_get_user_displayname', get_the_author_meta( 'display_name', $user_id ), $user_id );
 }
 add_filter( 'bp_core_get_user_displayname', 'strip_tags', 1 );
 add_filter( 'bp_core_get_user_displayname', 'trim'          );
@@ -2882,37 +2852,7 @@ function bp_custom_display_name_format( $display_name, $user_id = null ) {
 			break;
 	}
 
-	$level = xprofile_get_field_visibility_level( bp_xprofile_lastname_field_id(), $user_id );
-	$name  = '';
-	if ( (int) $user_id === get_current_user_id() ) {
-		$name = $display_name;
-	} elseif ( 'public' === $level ) {
-		$name = $display_name;
-	} elseif ( 'loggedin' === $level && is_user_logged_in() ) {
-		$name = $display_name;
-	} elseif ( 'friends' === $level && is_user_logged_in() ) {
-		$member_friend_status = friends_check_friendship_status( bp_loggedin_user_id(), $user_id );
-		if ( 'is_friend' === $member_friend_status ) {
-			$name = $display_name;
-		} else {
-			$last_name = get_user_meta( $user_id, 'last_name', true );
-			$name      = str_replace( ' ' . $last_name, '', $display_name );
-		}
-	} elseif ( 'loggedin' === $level && ! is_user_logged_in() ) {
-		$last_name = get_user_meta( $user_id, 'last_name', true );
-		$name      = str_replace( $last_name, '', $display_name );
-	} elseif ( 'adminsonly' === $level && ! is_user_logged_in() ) {
-		$last_name = get_user_meta( $user_id, 'last_name', true );
-		$name      = str_replace( $last_name, '', $display_name );
-	} elseif ( 'adminsonly' === $level && is_user_logged_in() ) {
-		$last_name = get_user_meta( $user_id, 'last_name', true );
-		$name      = str_replace( $last_name, '', $display_name );
-	} elseif ( 'friends' === $level && ! is_user_logged_in() ) {
-		$last_name = get_user_meta( $user_id, 'last_name', true );
-		$name      = str_replace( ' ' . $last_name, '', $display_name );
-	}
-
-	return trim( $name );
+	return $display_name;
 }
 
 /**
