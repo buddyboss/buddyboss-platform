@@ -159,6 +159,9 @@ class BBP_Admin {
 		// Allow keymasters to save forums settings
 		add_filter( 'option_page_capability_bbpress',  array( $this, 'option_page_capability_bbpress' ) );
 
+		// Remove "Comments" & "Discussion" metabox from bbp_get_reply_post_type() custom post type.
+		add_action( 'admin_init', array( $this, 'bbp_remove_comments_discussion_meta_boxes' ), 9999 );
+
 		/** Network Admin *****************************************************/
 
 		// Add menu item to settings menu
@@ -168,6 +171,19 @@ class BBP_Admin {
 
 		// Allow plugins to modify these actions
 		do_action_ref_array( 'bbp_admin_loaded', array( &$this ) );
+
+
+	}
+
+	/**
+	 * Remove "Comments" & "Discussion" metabox from bbp_get_reply_post_type() custom post type.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 */
+	public function bbp_remove_comments_discussion_meta_boxes() {
+		remove_meta_box( 'commentstatusdiv', bbp_get_reply_post_type(), 'normal' );
+		remove_meta_box( 'commentsdiv', bbp_get_reply_post_type(), 'normal' );
 	}
 
 	/**
