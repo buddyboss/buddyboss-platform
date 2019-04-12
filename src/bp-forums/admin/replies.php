@@ -375,6 +375,14 @@ class BBP_Replies_Admin {
 				width: 74px;
 			}
 
+			body.post-type-reply #titlediv #titlewrap {
+				display: none;
+			}
+
+			body.post-type-reply #titlediv {
+				box-shadow: none;
+			}
+
 			.column-bbp_forum_topic_count,
 			.column-bbp_forum_reply_count,
 			.column-bbp_topic_reply_count,

@@ -13,6 +13,8 @@ jQuery( document ).ready(function() {
 	// );
 
 	if ( jQuery('#bbp_reply_attributes'). length ) {
+
+		jQuery('#titlewrap').hide();
 		jQuery('#bbp_forum_id').on('change', function () {
 
 			var discussion = jQuery('#parent_id');
