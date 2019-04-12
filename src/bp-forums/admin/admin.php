@@ -43,11 +43,6 @@ class BBP_Admin {
 	public $styles_url = '';
 
 	/**
-	 * @var string URL to the Forums admin css directory
-	 */
-	public $css_url = '';
-
-	/**
 	 * @var string URL to the Forums admin js directory
 	 */
 	public $js_url = '';
@@ -95,7 +90,6 @@ class BBP_Admin {
 		$this->admin_url  = trailingslashit( $bbp->includes_url . 'admin'  ); // Admin url
 		$this->images_url = trailingslashit( $this->admin_url   . 'images' ); // Admin images URL
 		$this->styles_url = trailingslashit( $this->admin_url   . 'styles' ); // Admin styles URL
-		$this->css_url    = trailingslashit( $this->admin_url   . 'css'    ); // Admin css URL
 		$this->js_url     = trailingslashit( $this->admin_url   . 'js'     ); // Admin js URL
 	}
 
@@ -488,15 +482,6 @@ class BBP_Admin {
 					break;
 			}
 		}
-	}
-
-	/**
-	 * Enqueue any admin scripts we might need
-	 *
-	 * @since bbPress (r5224)
-	 */
-	public function enqueue_styles() {
-		wp_enqueue_style( 'bbp-admin-css', $this->css_url . 'admin.css', array( 'dashicons' ), bbp_get_version() );
 	}
 
 	/**
