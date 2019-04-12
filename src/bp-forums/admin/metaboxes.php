@@ -310,7 +310,7 @@ function bbp_forum_metabox() {
 			'select_id'          => 'parent_id',
 			'tab'                => bbp_get_tab_index(),
 			'options_only'       => false,
-			'show_none'          => __( '- No parent -', 'buddyboss' ),
+			'show_none'          => __( '- Select Forum -', 'buddyboss' ),
 			'disable_categories' => false,
 			'disabled'           => ''
 		) ); ?>
@@ -390,7 +390,7 @@ function bbp_topic_metabox() {
 			'select_id'          => 'parent_id',
 			'tab'                => bbp_get_tab_index(),
 			'options_only'       => false,
-			'show_none'          => __( '- No parent -', 'buddyboss' ),
+			'show_none'          => __( '- Select Forum -', 'buddyboss' ),
 			'disable_categories' => current_user_can( 'edit_forums' ),
 			'disabled'           => ''
 		) ); ?>
@@ -444,7 +444,7 @@ function bbp_reply_metabox() {
 				'select_id'             => 'bbp_forum_id',
 				'tab'                   => bbp_get_tab_index(),
 				'options_only'          => false,
-				'show_none'             => __( '- No parent -', 'buddyboss' ),
+				'show_none'             => __( '- Select Forum -', 'buddyboss' ),
 				'disable_categories'    => current_user_can( 'edit_forums' ),
 				'disabled'              => '',
 			) ); ?>
