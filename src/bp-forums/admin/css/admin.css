@@ -1,5 +1,7 @@
 
-/* Kludge for too-wide forums dropdown */
+
+/* Metaboxes */
+
 @media only screen and (min-width: 700px) {
 
 	#poststuff #bbp_reply_attributes select {
@@ -7,30 +9,16 @@
 	}
 }
 
-/* Version Badge */
-
-.bbp-badge {
-	padding-top: 142px;
-	height: 50px;
-	width: 173px;
-	color: #fafafa;
-	font-weight: 400;
-	font-size: 14px;
-	text-align: center;
-	margin: 0 -5px;
-	background: url(../images/badge.png) no-repeat;
+body.post-type-reply #edit-slug-box {
+	padding-left: 0;
+	margin-top: 0;
 }
 
-.about-wrap .bbp-badge {
-	position: absolute;
-	top: 0;
-	right: 0;
+#bbpress_group_admin_ui_meta_box fieldset {
+	min-width: 230px;
 }
 
-body.rtl .about-wrap .bbp-badge {
-	right: auto;
-	left: 0;
-}
+/* Dashboard */
 
 #bbp-dashboard-right-now p.sub,
 #bbp-dashboard-right-now .table,
@@ -142,15 +130,6 @@ body.rtl #bbp-dashboard-right-now .t {
 	color: #0f0;
 }
 
-#bbp-dashboard-right-now .versions {
-	padding: 6px 10px 12px;
-	clear: both;
-}
-
-#bbp-dashboard-right-now .versions .b {
-	font-weight: 400;
-}
-
 #bbp-dashboard-right-now a.button {
 	float: right;
 	clear: right;
@@ -161,26 +140,4 @@ body.rtl #bbp-dashboard-right-now .t {
 body.rtl #bbp-dashboard-right-now a.button {
 	float: left;
 	clear: left;
-}
-
-/* Dashicons */
-#adminmenu #menu-posts-forum .wp-menu-image:before {
-	content: "\f449";
-}
-
-#adminmenu #menu-posts-topic .wp-menu-image:before {
-	content: "\f450";
-}
-
-#adminmenu #menu-posts-reply .wp-menu-image:before {
-	content: "\f451";
-}
-
-/* Ratio 2x */
-@media only screen and (-webkit-min-device-pixel-ratio: 1.5) {
-
-	.bbp-badge {
-		background-image: url(../images/badge-2x.png);
-		background-size: 173px 194px;
-	}
 }

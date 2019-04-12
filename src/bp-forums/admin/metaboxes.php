@@ -15,7 +15,6 @@
  *
  * @since bbPress (r2770)
  *
- * @uses bbp_get_version() To get the current Forums version
  * @uses bbp_get_statistics() To get the forum statistics
  * @uses current_user_can() To check if the user is capable of doing things
  * @uses bbp_get_forum_post_type() To get the forum post type
@@ -38,7 +37,7 @@ function bbp_dashboard_widget_right_now() {
 
 	<div class="table table_content">
 
-		<p class="sub"><?php esc_html_e( 'Discussion', 'buddyboss' ); ?></p>
+		<p class="sub"><?php esc_html_e( 'Forum Discussions', 'buddyboss' ); ?></p>
 
 		<table>
 
@@ -76,23 +75,6 @@ function bbp_dashboard_widget_right_now() {
 
 			</tr>
 
-			<tr>
-
-				<?php
-					$num  = $r['reply_count'];
-					$text = _n( 'Reply', 'Replies', $r['reply_count'], 'buddyboss' );
-					if ( current_user_can( 'publish_replies' ) ) {
-						$link = add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), get_admin_url( null, 'edit.php' ) );
-						$num  = '<a href="' . esc_url( $link ) . '">' . $num  . '</a>';
-						$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
-					}
-				?>
-
-				<td class="first b b-replies"><?php echo $num; ?></td>
-				<td class="t replies"><?php echo $text; ?></td>
-
-			</tr>
-
 			<?php if ( bbp_allow_topic_tags() ) : ?>
 
 				<tr>
@@ -113,6 +95,23 @@ function bbp_dashboard_widget_right_now() {
 				</tr>
 
 			<?php endif; ?>
+
+			<tr>
+
+				<?php
+					$num  = $r['reply_count'];
+					$text = _n( 'Reply', 'Replies', $r['reply_count'], 'buddyboss' );
+					if ( current_user_can( 'publish_replies' ) ) {
+						$link = add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), get_admin_url( null, 'edit.php' ) );
+						$num  = '<a href="' . esc_url( $link ) . '">' . $num  . '</a>';
+						$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
+					}
+				?>
+
+				<td class="first b b-replies"><?php echo $num; ?></td>
+				<td class="t replies"><?php echo $text; ?></td>
+
+			</tr>
 
 			<?php do_action( 'bbp_dashboard_widget_right_now_content_table_end' ); ?>
 
@@ -214,14 +213,6 @@ function bbp_dashboard_widget_right_now() {
 	</div>
 
 	<?php do_action( 'bbp_dashboard_widget_right_now_table_end' ); ?>
-
-	<div class="versions">
-
-		<span id="wp-version-message">
-			<?php printf( __( 'You are using <span class="b">Forums %s</span>.', 'buddyboss' ), bbp_get_version() ); ?>
-		</span>
-
-	</div>
 
 	<br class="clear" />
 

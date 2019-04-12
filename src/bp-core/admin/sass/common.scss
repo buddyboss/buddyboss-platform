@@ -22,8 +22,9 @@ TABLE OF CONTENTS:
 	3.1 Users List
 	3.2 Activity List
 	3.3 Groups List & Types
-	3.4 Site Notices
-	3.5 Post Types
+	3.4 Forums
+	3.5 Site Notices
+	3.6 Post Types
 4.0 Emails - Edit page
 5.0 Tools - BuddyBoss
 6.0 Plugins page
@@ -619,7 +620,7 @@ body.users_page_bp-signups td.count_sent {
 }
 
 /*
- * 3.3 Groups List
+ * 3.3 Groups List & Types
  */
 form#bp-groups-form .fixed .column-comment {
 	width: 20%;
@@ -1128,15 +1129,6 @@ body.post-type-bp-email .categorydiv label {
  *----------------------------------------------------------------------------*/
 body.post-type-bp_ps_form .page-title-action {
 	display: none;
-}
-
-/* Discussion Forum */
-#bbpress_group_admin_ui_meta_box fieldset {
-	min-width: 230px;
-}
-body.post-type-reply #edit-slug-box {
-	padding-left: 0;
-	margin-top: 0;
 }
 
 /* Notices */
