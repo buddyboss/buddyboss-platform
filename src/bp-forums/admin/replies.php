@@ -251,7 +251,7 @@ class BBP_Replies_Admin {
 			__( 'Reply Attributes', 'buddyboss' ),
 			'bbp_reply_metabox',
 			$this->post_type,
-			'side',
+			'normal',
 			'high'
 		);
 

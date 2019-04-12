@@ -513,25 +513,6 @@ function bbp_reply_metabox() {
 	do_action( 'bbp_reply_metabox', $post_id );
 }
 
-/**
- * Set the ID if title is blank.
- *
- * @param $title
- * @param $post
- *
- * @since BuddyBoss 1.0.0
- *
- * @return mixed
- */
-function meta_box_title( $title, $post ) {
-
-	if ( '' === $title ) {
-		$title = $post->ID;
-	}
-
-	return $title;
-}
-
 /** Users *********************************************************************/
 
 /**

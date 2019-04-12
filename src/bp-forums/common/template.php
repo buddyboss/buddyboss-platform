@@ -1480,10 +1480,10 @@ function bbp_dropdown( $args = '' ) {
 
 		// Items found so walk the tree
 		if ( !empty( $posts ) ) {
-			add_filter( 'list_pages', 'meta_box_title_add', 999, 2 );
+			add_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 999, 2 );
 			unset( $r['walker']);
 			$retval .= walk_page_dropdown_tree( $posts, 0, $r );
-			remove_filter( 'list_pages', 'meta_box_title_add', 999, 2  );
+			remove_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 999, 2  );
 		}
 
 		// Close the selecet tag
@@ -1504,10 +1504,10 @@ function bbp_dropdown( $args = '' ) {
  *
  * @return mixed
  */
-function meta_box_title_add( $title, $post ) {
+function bbp_reply_attributes_meta_box_discussion_reply_title( $title, $post ) {
 
-	if ( '' === $title ) {
-		$title = $post->ID;
+	if ( bbp_get_topic_post_type() === get_post_type( $post->ID ) || bbp_get_reply_post_type() === get_post_type( $post->ID ) ) {
+		$title = get_the_date('m/d/y', $post->ID ). ' - ' . esc_html__( wp_trim_words( wp_strip_all_tags( $post->post_content ), 5, '...' ), 'buddyboss' );
 	}
 
 	return $title;
