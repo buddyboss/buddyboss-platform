@@ -30,7 +30,11 @@
 
 	</div>
 
-	<div class="acomment-content"><?php bp_activity_comment_content(); ?></div>
+	<div class="acomment-content">
+        <?php bp_activity_comment_content(); ?>
+
+        <?php do_action( 'bp_activity_after_comment_content', bp_get_activity_comment_id() ); ?>
+    </div>
 
 	<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
 

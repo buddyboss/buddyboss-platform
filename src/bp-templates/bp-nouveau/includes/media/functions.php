@@ -100,6 +100,23 @@ function bp_nouveau_media_activity_entry() {
 }
 
 /**
+ * Get activity comment entry media to render on front end
+ */
+function bp_nouveau_media_activity_comment_entry( $comment_id ) {
+	global $media_template;
+	$media_ids = bp_activity_get_meta( $comment_id, 'bp_media_ids', true );
+
+	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids ) ) ) { ?>
+		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? 'bb-media-length-more' : ''; ?>"><?php
+			while ( bp_media() ) {
+				bp_the_media();
+				bp_get_template_part( 'media/activity-entry' );
+			} ?>
+		</div><?php
+	}
+}
+
+/**
  * Update media for activity
  *
  * @param $content
@@ -171,6 +188,10 @@ function bp_nouveau_media_update_media_meta( $content, $user_id, $activity_id ) 
  */
 function bp_nouveau_media_groups_update_media_meta( $content, $user_id, $group_id, $activity_id ) {
 	bp_nouveau_media_update_media_meta( $content, $user_id, $activity_id );
+}
+
+function bp_nouveau_media_comments_update_media_meta( $comment_id, $r, $activity ) {
+	bp_nouveau_media_update_media_meta( false, false, $comment_id );
 }
 
 /**
