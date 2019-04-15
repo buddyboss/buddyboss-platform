@@ -978,7 +978,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		),
 		'member-media-loading' => array(
 			'type'    => 'loading',
-			'message' => __( 'Loading media for the member. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading member\'s media. Please wait.', 'buddyboss' ),
 		),
 		'media-loop-none' => array(
 			'type'    => 'info',
