@@ -146,6 +146,11 @@ function bp_nouveau_media_update_media_meta( $content, $user_id, $activity_id ) 
 			// make an activity for the media
 			$a_id = bp_activity_post_update( array( 'hide_sitewide' => true ) );
 
+			if ( $a_id ) {
+				// update activity meta
+				bp_activity_update_meta( $a_id, 'bp_media_activity', '1' );
+			}
+
 			add_action( 'bp_activity_posted_update', 'bp_nouveau_media_update_media_meta', 10, 3 );
 			add_action( 'bp_groups_posted_update', 'bp_nouveau_media_groups_update_media_meta', 10, 4 );
 

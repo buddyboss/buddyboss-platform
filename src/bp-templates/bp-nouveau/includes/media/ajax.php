@@ -202,6 +202,10 @@ function bp_nouveau_ajax_media_save() {
 		// make an activity for the media
 		if ( bp_is_active( 'activity' ) ) {
 			$activity_id = bp_activity_post_update( array( 'hide_sitewide' => true ) );
+			if ( $activity_id ) {
+				// update activity meta
+				bp_activity_update_meta( $activity_id, 'bp_media_activity', '1' );
+			}
 		}
 
 		$album_privacy = 'public';
@@ -491,6 +495,11 @@ function bp_nouveau_ajax_media_album_save() {
 			// make an activity for the media
 			if ( bp_is_active( 'activity' ) ) {
 				$activity_id = bp_activity_post_update( array( 'hide_sitewide' => true ) );
+
+				if ( $activity_id ) {
+					// update activity meta
+					bp_activity_update_meta( $activity_id, 'bp_media_activity', '1' );
+				}
 			}
 
 			$media_id = bp_media_add( array(
