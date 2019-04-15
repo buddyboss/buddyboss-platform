@@ -576,6 +576,13 @@ function bp_feed_settings_callback_post_type( $args ) {
 	$option_name = 'bp-feed-custom-post-type-' . $post_type;
 
 	$post_type_obj = get_post_type_object( $post_type );
+
+	// Description for the last option of CPT
+	if ( true === $args['description'] && 'post' !== $post_type ) {
+		?>
+		<p class="description"><?php _e( 'Select which Custom Post Types (coming from your plugins) should be shown in the activity feed. For example, if using WooCommerce it could post into the activity feed every time someone creates a new product.', 'buddyboss' ); ?></p>
+		<?php
+	}
 	?>
 	<input
 		name="<?php echo $option_name ?>"
@@ -596,12 +603,7 @@ function bp_feed_settings_callback_post_type( $args ) {
 		<?php
 	}
 
-	// Description for the last option of CPT
-	if ( true === $args['description'] && 'post' !== $post_type ) {
-		?>
-		<p class="description"><?php _e( 'Select which Custom Post Types (coming from your plugins) should be shown in the activity feed. For example, if using WooCommerce it could post into the activity feed every time someone creates a new product.', 'buddyboss' ); ?></p>
-		<?php
-	}
+
 
 }
 
