@@ -74,7 +74,7 @@ if ( $is_bp_active ) {
 	deactivate_plugins( plugin_basename( __FILE__ ) );
 	$plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
 	$link_plugins = sprintf( "<a href='%s'>%s</a>", $plugins_url, __( 'deactivate', 'buddyboss' ) );
-	wp_die( sprintf( esc_html__( 'BuddyBoss Platform is disabled. The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please %s BuddyPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ), 'Youzer dependency check', array( 'back_link' => true ) );
+	wp_die( sprintf( esc_html__( 'BuddyBoss Platform is disabled. The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please %s BuddyPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ), 'BuddyBoss Platform dependency check', array( 'back_link' => true ) );
 	return;
 }
 
@@ -116,7 +116,7 @@ if ( $is_bb_active ) {
 	deactivate_plugins( plugin_basename( __FILE__ ) );
 	$plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
 	$link_plugins = sprintf( "<a href='%s'>%s</a>", $plugins_url, __( 'deactivate', 'buddyboss' ) );
-	wp_die( sprintf( esc_html__( 'BuddyBoss Platform is disabled. The BuddyBoss Platform can\'t work while bbPress plugin is active. Please %s bbPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ), 'Youzer dependency check', array( 'back_link' => true ) );
+	wp_die( sprintf( esc_html__( 'BuddyBoss Platform is disabled. The BuddyBoss Platform can\'t work while bbPress plugin is active. Please %s bbPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ), 'BuddyBoss Platform dependency check', array( 'back_link' => true ) );
 	return;
 }
 
