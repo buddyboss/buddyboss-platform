@@ -74,7 +74,7 @@ function bp_core_admin_tools() {
  */
 function bp_list_help_files( $dir ) {
 	$ffs  = scandir( $dir );
-	$path = buddypress()->plugin_dir . 'bp-help';
+	$path = buddypress()->plugin_dir . 'bp-help/docs';
 
 	unset( $ffs[ array_search( '.', $ffs, true ) ] );
 	unset( $ffs[ array_search( '..', $ffs, true ) ] );
@@ -130,7 +130,8 @@ function bp_list_help_files( $dir ) {
  * @since BuddyPress 2.0.0
  */
 function bp_core_admin_help() {
-	$path = buddypress()->plugin_dir . 'bp-help';
+	$base_path = buddypress()->plugin_dir . 'bp-help';
+	$path = $base_path . 'bp-help/docs';
 
 	?>
 	<div class="wrap">
@@ -142,7 +143,7 @@ function bp_core_admin_help() {
 		<h1><?php _e( 'Documentation', 'buddyboss' ); ?> <a href="https://www.buddyboss.com/resources/docs/" class="page-title-action"><?php _e( 'View Website', 'buddyboss' ); ?></a></h1>
 		<?php
 		if ( isset( $_GET['article'] ) ) {
-			require_once $path . '/vendors/parsedown/Parsedown.php';
+			require_once $base_path . '/vendors/parsedown/Parsedown.php';
 			$Parsedown = new Parsedown();
 			$text      = file_get_contents( $path . '/' . $_GET['article'] );
 			$dir       =  strstr( $_GET['article'], '/', true );
@@ -163,7 +164,7 @@ function bp_core_admin_help() {
 			?>
 			<!-- @mehul showing proper HTML output -->
 			<div class="wp-list-table widefat bp-help-card-grid">
-				
+
 				<div class="bp-help-card">
 					<h3>Getting Started</h3>
 					<div class="inside">
