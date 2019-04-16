@@ -44,7 +44,7 @@ function bp_core_admin_tools() {
 								class="checkbox"
 								name="<?php echo esc_attr( $item[0] ) . '" id="' . esc_attr( str_replace( '_', '-', $item[0] ) ); ?>"
 								value="1"
-								<?php if ( isset( $_GET['tool'] ) && $_GET['tool'] == esc_attr( str_replace( '_', '-', $item[0] ) )) echo 'checked'; ?>
+								<?php if ( isset( $_GET['tool'] ) && $_GET['tool'] == esc_attr( str_replace( '_', '-', $item[0] ) )) {echo 'checked';} ?>
 							/> <?php echo esc_html( $item[1] ); ?></label>
 					<?php endforeach; ?>
 					</div>
@@ -679,6 +679,7 @@ function xprofile_update_display_names() {
  *
  * @param string      $message Feedback message.
  * @param string|bool $class   Unused.
+ *
  * @return false|Closure
  */
 function bp_admin_tools_feedback( $message, $class = false ) {
