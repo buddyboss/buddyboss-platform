@@ -209,9 +209,21 @@
 			} );
 		}
 
+		/**
+		 * Check if the Dashboard BB help page
+		 */
+		if ( $('body.buddyboss_page_bp-help').length ) {
+
+			/**
+			 * Show sub menu when user click on main menu
+			 */
+			$( '.bp-help-card-grid' ).on('click', 'span.open', function ($) {
+
+				jQuery( this ).closest( '.main' ).find( 'ul:first' ).toggle();
+			});
+		}
+
 	});
-
-
 }());
 
 
