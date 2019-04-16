@@ -153,15 +153,15 @@ function bp_core_admin_help_old() {
 	<div class="wrap">
 		<h1>
 		    <?php _e( 'Documentation', 'buddyboss' ); ?>
-		    <a href="https://www.buddyboss.com/resources/docs/" class="page-title-action"><?php _e( 'View Website', 'buddyboss' ); ?></a>
+		    <h1><?php _e( 'Documentation', 'buddyboss' ); ?> <a href="https://www.buddyboss.com/resources/docs/" class="page-title-action" target="_blank"><?php _e( 'Online Docs', 'buddyboss' ); ?></a></h1>
+		    <a href="https://www.buddyboss.com/resources/docs/" class="page-title-action"><?php _e( 'Online Docs', 'buddyboss' ); ?></a>
 		</h1>
 
 
 		<?php
             $dirs = array_filter(glob('*'), 'is_dir');
             $directories = glob($path . '/*' , GLOB_ONLYDIR);
-         ?>
-		<?php
+
 		if ( isset( $_GET['article'] ) ) {
 			require_once $base_path . '/vendors/parsedown/Parsedown.php';
 			$Parsedown = new Parsedown();
@@ -417,7 +417,7 @@ function bp_core_admin_help() {
 	<div class="wrap">
 		<h1>
 		    <?php _e( 'Documentation', 'buddyboss' ); ?>
-		    <a href="https://www.buddyboss.com/resources/docs/" class="page-title-action"><?php _e( 'View Website', 'buddyboss' ); ?></a>
+		    <a href="https://www.buddyboss.com/resources/docs/" class="page-title-action" target="_blank"><?php _e( 'Online Docs', 'buddyboss' ); ?></a>
 		</h1>
 
 		<!-- @mehul showing proper HTML output -->
