@@ -893,7 +893,7 @@ function bp_has_albums( $args = '' ) {
 	}
 
 	$group_id = false;
-	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+	if ( bp_is_group() ) {
 		$group_id = bp_get_current_group_id();
 		$user_id  = false;
 	}
@@ -924,7 +924,7 @@ function bp_has_albums( $args = '' ) {
 		// Searching.
 		'search_terms'      => $search_terms_default,
 		'update_meta_cache' => true,
-	), 'has_album' );
+	), 'has_albums' );
 
 	/*
 	 * Smart Overrides.

@@ -332,10 +332,14 @@ function groups_edit_base_group_details( $args = array() ) {
  * @param string|bool $activity_feed_status Optional. Who is allowed to send invitations
  *                                   to the group. 'members', 'mods', or 'admins'.
  * @param int|bool $parent_id Parent group ID.
+ * @param string|bool $media_status Optional. Who is allowed to manage media
+ *                                   to the group. 'members', 'mods', or 'admins'.
+ * @param string|bool $album_status Optional. Who is allowed to manage albums if media is enabled with album support
+ *                                   to the group. 'members', 'mods', or 'admins'.
  *
  * @return bool True on success, false on failure.
  */
-function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status = false, $activity_feed_status = false, $parent_id = false ) {
+function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status = false, $activity_feed_status = false, $parent_id = false, $media_status = false, $album_status = false ) {
 
 	$group = groups_get_group( $group_id );
 	$group->enable_forum = $enable_forum;
@@ -365,6 +369,14 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 	// Set the activity feed status.
 	if ( $activity_feed_status )
 		groups_update_groupmeta( $group->id, 'activity_feed_status', $activity_feed_status );
+
+	// Set the media status.
+	if ( $media_status )
+		groups_update_groupmeta( $group->id, 'media_status', $media_status );
+
+	// Set the album status.
+	if ( $album_status )
+		groups_update_groupmeta( $group->id, 'album_status', $album_status );
 
 	groups_update_groupmeta( $group->id, 'last_activity', bp_core_current_time() );
 
@@ -1216,6 +1228,86 @@ function groups_is_user_allowed_posting( $user_id, $group_id ) {
 	}
 
 	$status    = bp_group_get_activity_feed_status( $group_id );
+	$is_admin  = groups_is_user_admin( $user_id, $group_id );
+	$is_mod    = groups_is_user_mod( $user_id, $group_id );
+
+	if ( 'members' == $status ) {
+		$is_allowed = true;
+	} else if ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+		$is_allowed = true;
+	} else if ( 'admins' == $status && $is_admin ) {
+		$is_allowed = true;
+	}
+
+	return $is_allowed;
+}
+
+/**
+ * Check whether a user is allowed to manage media in a given group.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param int $user_id ID of the user.
+ * @param int $group_id ID of the group.
+ * @return bool true if the user is allowed, otherwise false.
+ */
+function groups_can_user_manage_media( $user_id, $group_id ) {
+	$is_allowed = false;
+
+	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
+	// Site admins always have access.
+	if ( bp_current_user_can( 'bp_moderate' ) ) {
+		return true;
+	}
+
+	if ( ! groups_is_user_member( $user_id, $group_id ) ) {
+		return false;
+	}
+
+	$status    = bp_group_get_media_status( $group_id );
+	$is_admin  = groups_is_user_admin( $user_id, $group_id );
+	$is_mod    = groups_is_user_mod( $user_id, $group_id );
+
+	if ( 'members' == $status ) {
+		$is_allowed = true;
+	} else if ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
+		$is_allowed = true;
+	} else if ( 'admins' == $status && $is_admin ) {
+		$is_allowed = true;
+	}
+
+	return $is_allowed;
+}
+
+/**
+ * Check whether a user is allowed to manage albums in a given group.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param int $user_id ID of the user.
+ * @param int $group_id ID of the group.
+ * @return bool true if the user is allowed, otherwise false.
+ */
+function groups_can_user_manage_albums( $user_id, $group_id ) {
+	$is_allowed = false;
+
+	if ( ! is_user_logged_in() ) {
+		return false;
+	}
+
+	// Site admins always have access.
+	if ( bp_current_user_can( 'bp_moderate' ) ) {
+		return true;
+	}
+
+	if ( ! groups_is_user_member( $user_id, $group_id ) ) {
+		return false;
+	}
+
+	$status    = bp_group_get_album_status( $group_id );
 	$is_admin  = groups_is_user_admin( $user_id, $group_id );
 	$is_mod    = groups_is_user_mod( $user_id, $group_id );
 

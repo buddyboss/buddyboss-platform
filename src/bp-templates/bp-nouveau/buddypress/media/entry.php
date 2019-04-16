@@ -16,7 +16,7 @@
            href="#">
             <img src="<?php bp_media_attachment_image_thumbnail(); ?>" alt="<?php bp_media_title(); ?>"/>
         </a>
-        <?php if ( bp_is_my_profile() || bp_is_item_admin() ) : ?>
+        <?php if ( bp_is_my_profile() || ( bp_is_group() && ( ( bp_is_group_media() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() ) ) || ( bp_is_group_albums() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) ) : ?>
             <div class="bb-media-check-wrap">
                 <input id="bb-media-<?php bp_media_id(); ?>" class="bb-custom-check" type="checkbox" value="<?php bp_media_id(); ?>" name="bb-media-select" />
                 <label class="bp-tooltip" data-bp-tooltip="<?php _e( 'Select', 'buddyboss' ); ?>" for="bb-media-<?php bp_media_id(); ?>"><span class="dashicons dashicons-yes"></span></label>

@@ -29,16 +29,18 @@
                     </div>
 
                     <footer class="bb-model-footer">
-                        <div class="bb-dropdown-wrap">
-							<?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
-                            <select id="bb-album-privacy">
-								<?php foreach ( $privacy_options as $k => $option ) {
-									?>
-                                    <option value="<?php echo $k; ?>"><?php echo $option; ?></option>
-									<?php
-								} ?>
-                            </select>
-                        </div>
+                        <?php if ( ! bp_is_group() ) : ?>
+                            <div class="bb-dropdown-wrap">
+                                <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
+                                <select id="bb-album-privacy">
+                                    <?php foreach ( $privacy_options as $k => $option ) {
+                                        ?>
+                                        <option value="<?php echo $k; ?>"><?php echo $option; ?></option>
+                                        <?php
+                                    } ?>
+                                </select>
+                            </div>
+                        <?php endif; ?>
                         <a class="button" id="bp-media-create-album-submit" href="#"><?php _e( 'Create Album', 'buddyboss' ); ?></a>
                     </footer>
 

@@ -6,7 +6,7 @@
  */
 ?>
 
-<?php if ( bp_is_my_profile() || ( bp_is_group() && is_user_logged_in() ) ) : ?>
+<?php if ( bp_is_my_profile() || ( bp_is_group() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) : ?>
 
     <div class="bb-media-actions-wrap album-actions-wrap">
 		<h2 class="bb-title"><?php _e( 'Albums', 'buddyboss-theme' ); ?></h2>

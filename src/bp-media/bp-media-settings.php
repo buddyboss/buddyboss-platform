@@ -42,12 +42,12 @@ function bp_media_get_settings_fields() {
 	/** General Section ******************************************************/
 	$fields['bp_media_settings_general'] = [
 
-		'bp_media_delete_media_permanently' => [
-			'title'             => __( 'Media Management', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_delete_media_permanently',
-			'sanitize_callback' => 'absint',
-			'args'              => []
-		],
+//		'bp_media_delete_media_permanently' => [
+//			'title'             => __( 'Media Management', 'buddyboss' ),
+//			'callback'          => 'bp_media_settings_callback_delete_media_permanently',
+//			'sanitize_callback' => 'absint',
+//			'args'              => []
+//		],
 
 	];
 

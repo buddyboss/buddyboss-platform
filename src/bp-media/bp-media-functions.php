@@ -425,6 +425,11 @@ function bp_media_add( $args = '' ) {
 		'error_type'    => 'bool'
 	), 'media_add' );
 
+	// groups media always have privacy to `grouponly`
+	if ( ! empty( $r['group_id'] ) ) {
+	    $r['privacy'] = 'grouponly';
+    }
+
 	// Setup media to be added.
 	$media                = new BP_Media( $r['id'] );
 	$media->blog_id       = $r['blog_id'];
@@ -742,6 +747,10 @@ function bp_album_add( $args = '' ) {
 		'date_created' => bp_core_current_time(), // The GMT time that this media was recorded
 		'error_type'   => 'bool'
 	), 'album_add' );
+
+	if ( ! empty( $r['group_id'] ) ) {
+	    $r['privacy'] = 'grouponly';
+    }
 
 	// Setup media to be added.
 	$album               = new BP_Media_Album( $r['id'] );

@@ -209,10 +209,16 @@ function bp_nouveau_ajax_media_save() {
 		}
 
 		$album_privacy = 'public';
-		$albums = bp_album_get_specific( array( 'album_ids' => array( $media['album_id'] ) ) );
-		if ( ! empty( $albums['albums'] ) ) {
-			$album = array_pop( $albums['albums'] );
-			$album_privacy = $album->privacy;
+		if ( ! empty( $media['album_id'] ) && empty( $media['group_id'] ) ) {
+			$albums        = bp_album_get_specific( array( 'album_ids' => array( $media['album_id'] ) ) );
+			if ( ! empty( $albums['albums'] ) ) {
+				$album         = array_pop( $albums['albums'] );
+				$album_privacy = $album->privacy;
+			}
+		}
+
+		if ( ! empty( $media['group_id'] ) ) {
+			$album_privacy = 'grouponly';
 		}
 
 		$media_id = bp_media_add( array(
@@ -396,7 +402,7 @@ function bp_nouveau_ajax_media_move_to_album() {
 		$media_obj           = new BP_Media( $media_id );
 		$media_obj->album_id = (int) $_POST['album_id'];
 		$media_obj->group_id = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
-		$media_obj->privacy  = $album_privacy;
+		$media_obj->privacy  = ! empty( $media_obj->group_id ) ? 'grouponly' : $album_privacy;
 
 		if ( ! $media_obj->save() ) {
 			$response['feedback'] = sprintf(
@@ -522,8 +528,15 @@ function bp_nouveau_ajax_media_album_save() {
 		}
 	}
 
+	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+		$group_link = bp_get_group_permalink( groups_get_group( $group_id ) );
+		$redirect_url = trailingslashit( $group_link . '/albums/' . $album_id );
+	} else {
+		$redirect_url = trailingslashit( bp_loggedin_user_domain() . bp_get_media_slug() . '/albums/' . $album_id );
+	}
+
 	wp_send_json_success( array(
-		'redirect_url'     => trailingslashit( bp_loggedin_user_domain() . bp_get_media_slug() . '/albums/' . $album_id ),
+		'redirect_url'     => $redirect_url,
 	) );
 }
 

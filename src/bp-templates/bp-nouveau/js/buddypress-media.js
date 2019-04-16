@@ -447,7 +447,7 @@ window.bp = window.bp || {};
 				title.removeClass('error');
 			}
 
-			if( $.trim(privacy.val()) === '' ) {
+			if( ! self.group_id && $.trim(privacy.val()) === '' ) {
 				privacy.addClass('error');
 				return false;
 			} else {

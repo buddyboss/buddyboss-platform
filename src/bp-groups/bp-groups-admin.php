@@ -330,7 +330,27 @@ function bp_groups_admin_load() {
 		$allowed_activity_feed_status = apply_filters( 'groups_allowed_activity_feed_status', array( 'members', 'mods', 'admins' ) );
 		$activity_feed_status	       = in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? $_POST['group-activity-feed-status'] : 'members';
 
-		if ( !groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status ) ) {
+		/**
+		 * Filters the allowed media status values for the group.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 *
+		 * @param array $value Array of allowed media statuses.
+		 */
+		$allowed_media_status = apply_filters( 'groups_allowed_media_status', array( 'members', 'mods', 'admins' ) );
+		$media_status	       = in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : 'members';
+
+		/**
+		 * Filters the allowed album status values for the group.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 *
+		 * @param array $value Array of allowed album statuses.
+		 */
+		$allowed_album_status = apply_filters( 'groups_allowed_album_status', array( 'members', 'mods', 'admins' ) );
+		$album_status	       = in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : 'members';
+
+		if ( !groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, false, $media_status, $album_status ) ) {
 			$error = $group_id;
 		}
 
@@ -1008,8 +1028,10 @@ function bp_groups_admin_index() {
  */
 function bp_groups_admin_edit_metabox_settings( $item ) {
 
-	$invite_status = bp_group_get_invite_status( $item->id );
-	$activity_feed_status = bp_group_get_activity_feed_status( $item->id ); ?>
+	$invite_status        = bp_group_get_invite_status( $item->id );
+	$activity_feed_status = bp_group_get_activity_feed_status( $item->id );
+	$media_status         = bp_group_get_media_status( $item->id );
+	$album_status         = bp_group_get_album_status( $item->id ); ?>
 
 	<div class="bp-groups-settings-section" id="bp-groups-settings-section-status">
 		<fieldset>
@@ -1040,6 +1062,30 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
             <label for="bp-group-activity-feed-status-admins"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-admins" value="admins" <?php checked( $activity_feed_status, 'admins' ) ?> /><?php _e( 'Organizers only', 'buddyboss' ) ?></label>
         </fieldset>
     </div>
+
+	<?php if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) : ?>
+        <div class="bp-groups-settings-section" id="bp-groups-settings-section-album-status">
+            <fieldset>
+                <legend><?php _e( 'Who can manage media in this group?', 'buddyboss' ); ?></legend>
+
+                <label for="bp-group-media-status-members"><input type="radio" name="group-media-status" id="bp-group-media-status-members" value="members" <?php checked( $media_status, 'members' ) ?> /><?php _e( 'All Members', 'buddyboss' ) ?></label>
+                <label for="bp-group-media-status-mods"><input type="radio" name="group-media-status" id="bp-group-media-status-mods" value="mods" <?php checked( $media_status, 'mods' ) ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ) ?></label>
+                <label for="bp-group-media-status-admins"><input type="radio" name="group-media-status" id="bp-group-media-status-admins" value="admins" <?php checked( $media_status, 'admins' ) ?> /><?php _e( 'Organizers', 'buddyboss' ) ?></label>
+            </fieldset>
+        </div>
+	<?php endif; ?>
+
+    <?php if ( bp_is_active( 'media' ) && bp_is_group_album_support_enabled() ) : ?>
+        <div class="bp-groups-settings-section" id="bp-groups-settings-section-album-status">
+            <fieldset>
+                <legend><?php _e( 'Who can manage albums in this group?', 'buddyboss' ); ?></legend>
+
+                <label for="bp-group-album-status-members"><input type="radio" name="group-album-status" id="bp-group-album-status-members" value="members" <?php checked( $album_status, 'members' ) ?> /><?php _e( 'All Members', 'buddyboss' ) ?></label>
+                <label for="bp-group-album-status-mods"><input type="radio" name="group-album-status" id="bp-group-album-status-mods" value="mods" <?php checked( $album_status, 'mods' ) ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ) ?></label>
+                <label for="bp-group-album-status-admins"><input type="radio" name="group-album-status" id="bp-group-album-status-admins" value="admins" <?php checked( $album_status, 'admins' ) ?> /><?php _e( 'Organizers', 'buddyboss' ) ?></label>
+            </fieldset>
+        </div>
+    <?php endif; ?>
 
 <?php
 }

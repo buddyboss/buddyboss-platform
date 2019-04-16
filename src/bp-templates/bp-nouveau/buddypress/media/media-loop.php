@@ -11,7 +11,7 @@ bp_nouveau_before_loop(); ?>
 
 	<?php if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
 
-        <?php if ( bp_is_my_profile() ) : ?>
+        <?php if ( bp_is_my_profile() || ( bp_is_group() && ( bp_is_group_media() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() ) ) || ( bp_is_group_albums() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) : ?>
 
             <header class="bb-member-photos-header">
                 <div class="bb-photos-meta">
