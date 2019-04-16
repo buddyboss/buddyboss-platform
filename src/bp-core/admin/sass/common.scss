@@ -828,6 +828,16 @@ body.post-type-bp-email .categorydiv label {
  * 6.0 Help
  *----------------------------------------------------------------------------*/
 
+.buddyboss_page_bp-help .wrap .page-title-action:after {
+	font-family: dashicons;
+	content: "\f345";
+	margin-left: 3px;
+	display: inline-block;
+	vertical-align: middle;
+	font-weight: 300;
+	margin-bottom: 2px;
+}
+
 .buddyboss_page_bp-help .wrap .bp-help-doc {
 	position: relative;
 	margin-top: 20px;
