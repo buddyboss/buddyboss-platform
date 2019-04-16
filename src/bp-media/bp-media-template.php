@@ -898,6 +898,17 @@ function bp_has_albums( $args = '' ) {
 		$user_id  = false;
 	}
 
+	$privacy  = array( 'public' );
+	if ( is_user_logged_in() ) {
+		$privacy[] = 'loggedin';
+		if ( bp_is_active( 'friends' ) ) {
+			$is_friend = friends_check_friendship( get_current_user_id(), $user_id );
+			if( $is_friend ) {
+				$privacy[] = 'friends';
+			}
+		}
+	}
+
 	/*
 	 * Parse Args.
 	 */
@@ -918,6 +929,7 @@ function bp_has_albums( $args = '' ) {
 		// Filtering
 		'user_id'           => $user_id,     // user_id to filter on.
 		'group_id'          => $group_id,     // group_id to filter on.
+		'privacy'           => $privacy,     // privacy to filter on - public, onlyme, loggedin, friends, grouponly.
 		'offset'            => false,        // Return only items >= this ID.
 		'since'             => false,        // Return only items recorded since this Y-m-d H:i:s date.
 

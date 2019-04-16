@@ -146,6 +146,7 @@ class BP_Media_Album_Template {
 			'sort'              => false,
 			'include'           => false,
 			'exclude'           => false,
+			'privacy'           => false,
 			'search_terms'      => false,
 			'update_meta_cache' => true,
 		);
@@ -184,6 +185,7 @@ class BP_Media_Album_Template {
 				'user_id'           => $user_id,
 				'group_id'          => $group_id,
 				'exclude'           => $exclude,
+				'privacy'           => $privacy,
 				'update_meta_cache' => $update_meta_cache,
 			) );
 		}

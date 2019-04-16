@@ -636,6 +636,7 @@ function bp_album_get( $args = '' ) {
 		'sort'     => 'DESC',       // sort ASC or DESC
 		'user_id'  => false,
 		'group_id' => false,
+		'privacy'  => false,        // privacy of album
 
 		'search_terms'      => false,        // Pass search terms as a string
 		'exclude'           => false,        // Comma-separated list of activity IDs to exclude.
@@ -649,6 +650,7 @@ function bp_album_get( $args = '' ) {
 		'per_page'          => $r['per_page'],
 		'user_id'           => $r['user_id'],
 		'group_id'          => $r['group_id'],
+		'privacy'           => $r['privacy'],
 		'max'               => $r['max'],
 		'sort'              => $r['sort'],
 		'search_terms'      => $r['search_terms'],

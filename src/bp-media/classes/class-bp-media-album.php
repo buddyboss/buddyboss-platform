@@ -240,6 +240,7 @@ class BP_Media_Album {
 			'search_terms'      => false,           // Terms to search by.
 			'user_id'           => false,           // user id.
 			'group_id'          => false,           // group id.
+			'privacy'           => false,           // public, loggedin, onlyme, friends, grouponly.
 			'update_meta_cache' => true,            // Whether or not to update meta cache.
 			'count_total'       => false,           // Whether or not to use count_total.
 		) );
@@ -313,6 +314,11 @@ class BP_Media_Album {
 
 		if ( ! empty( $r['group_id'] ) ) {
 			$where_conditions['user'] = "m.group_id = {$r['group_id']}";
+		}
+
+		if ( ! empty( $r['privacy'] ) ) {
+			$privacy                     = "'" . implode ( "', '", $r['privacy'] ) . "'";
+			$where_conditions['privacy'] = "m.privacy IN ({$privacy})";
 		}
 
 		/**
