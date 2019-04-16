@@ -217,10 +217,15 @@
 			/**
 			 * Show sub menu when user click on main menu
 			 */
-			$( '.bp-help-card-grid' ).on('click', 'span.open', function ($) {
+			$( '.bp-help-card-grid' ).on('click', 'span.open', function () {
 
-				jQuery( this ).closest( '.main' ).find( 'ul:first' ).toggle();
+				$( this ).closest( '.main' ).find( 'ul:first' ).toggle();
 			});
+
+			/**
+			 * show the closest UI
+			 */
+			$( '.bp-help-card-grid li.selected' ).closest( 'ul' ).show();
 		}
 
 	});

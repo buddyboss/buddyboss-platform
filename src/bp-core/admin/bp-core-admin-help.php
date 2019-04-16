@@ -48,41 +48,38 @@ function bp_core_admin_help_main_menu( $main_directories, $docs_path ) {
  * @param $docs_path
  */
 function bp_core_admin_help_sub_menu( $directories, $times, $docs_path ) {
-	$selected   = ! empty( $_REQUEST['article'] ) ? $_REQUEST['article'] : "";
+	$article   = ! empty( $_GET['article'] ) ? $_GET['article'] : '';
 	$ul_classed = $times > 1 ? 'hidden' : '';
 	$ul_classed .= ' loop-' . $times;
 	?>
     <ul class="<?php echo $ul_classed; ?> ">
 		<?php
-
 		// For showing the menu title
 		foreach ( $directories as $directory ) {
-			$selected = ( false !== strpos( $docs_path . $selected, $directory ) ) ? 'selected' : ''; ?>
+			$selected = ( false !== strpos( $docs_path . $article, $directory ) ) ? 'selected main' : 'main'; ?>
             <li class="<?php echo $selected; ?>">
-            <span class="main">
-                <?php
-                // check if it's has directory
-                if ( is_dir( $directory ) ) {
-	                // the the main file from the directory
-	                $dir_index_file = glob( $directory . "/0-*.md" );
-	                $loop_dir       = array_diff( glob( $directory . '/*' ), $dir_index_file );
+				<?php
+				// check if it's has directory
+				if ( is_dir( $directory ) ) {
+					// the the main file from the directory
+					$dir_index_file = glob( $directory . "/0-*.md" );
+					$loop_dir       = array_diff( glob( $directory . '/*' ), $dir_index_file );
 
-	                $dir_index_file = current( $dir_index_file );
-	                $url            = add_query_arg( 'article', str_replace( $docs_path, "", $dir_index_file ) );
+					$dir_index_file = current( $dir_index_file );
+					$url            = add_query_arg( 'article', str_replace( $docs_path, "", $dir_index_file ) );
 
-	                if ( ! empty( $loop_dir ) ) {
-		                printf( '<a href="%s" class="dir">%s <span class="sub-menu-count">(%s)</span></a><span class="actions"><span class="open">+</span></span>', $url, fgets( fopen( $dir_index_file, 'r' ) ), count( $loop_dir ) );
-		                $times ++;
-		                bp_core_admin_help_sub_menu( $loop_dir, $times, $docs_path );
-	                } else {
-		                printf( '<a href="%s" class="dir">%s</a>', $url, fgets( fopen( $dir_index_file, 'r' ) ) );
-	                }
-                } else {
-	                $url = add_query_arg( 'article', str_replace( $docs_path, "", $directory ) );
-	                // print the title if it's a .md file
-	                printf( '<a href="%s" class="file">%s</a>', $url, fgets( fopen( $directory, 'r' ) ) );
-                } ?>
-            </span>
+					if ( ! empty( $loop_dir ) ) {
+						printf( '<span class="main-menu"><a href="%s" class="dir">%s <span class="sub-menu-count">(%s)</span></a><span class="actions"><span class="open">+</span></span></span>', $url, fgets( fopen( $dir_index_file, 'r' ) ), count( $loop_dir ) );
+						$times ++;
+						bp_core_admin_help_sub_menu( $loop_dir, $times, $docs_path );
+					} else {
+						printf( '<span class="main-menu"><a href="%s" class="dir">%s</a></span>', $url, fgets( fopen( $dir_index_file, 'r' ) ) );
+					}
+				} else {
+					$url = add_query_arg( 'article', str_replace( $docs_path, "", $directory ) );
+					// print the title if it's a .md file
+					printf( '<span class="main-menu"><a href="%s" class="file">%s</a></span>', $url, fgets( fopen( $directory, 'r' ) ) );
+				} ?>
             </li>
 			<?php
 		}
