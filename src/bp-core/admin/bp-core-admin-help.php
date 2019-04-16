@@ -22,7 +22,7 @@ function bp_core_admin_help_main_menu( $main_directories, $docs_path ) {
 		// converting array into string.
 		$index_file = current( $index_file );
 		?>
-        <div class="bp-help-card bb-help-content-wrap">
+        <div class="bp-help-card bb-help-menu-wrap">
 			<?php
 			// print the title of the section
 			printf( '<h3><a href="#">%s</a></h3>', fgets( fopen( $index_file, 'r' ) ) );
@@ -47,9 +47,9 @@ function bp_core_admin_help_main_menu( $main_directories, $docs_path ) {
  * @param $times
  * @param $docs_path
  */
-function bp_core_admin_help_sub_menu( $directories, $times, $docs_path ) {
-	$article   = ! empty( $_GET['article'] ) ? $_GET['article'] : '';
-	$ul_classed = $times > 1 ? 'hidden' : '';
+function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_hide = 1 ) {
+	$article    = ! empty( $_GET['article'] ) ? $_GET['article'] : '';
+	$ul_classed = $times > $level_hide ? 'hidden' : '';
 	$ul_classed .= ' loop-' . $times;
 	?>
     <ul class="<?php echo $ul_classed; ?> ">
@@ -71,7 +71,7 @@ function bp_core_admin_help_sub_menu( $directories, $times, $docs_path ) {
 					if ( ! empty( $loop_dir ) ) {
 						printf( '<span class="main-menu"><a href="%s" class="dir">%s <span class="sub-menu-count">(%s)</span></a><span class="actions"><span class="open">+</span></span></span>', $url, fgets( fopen( $dir_index_file, 'r' ) ), count( $loop_dir ) );
 						$times ++;
-						bp_core_admin_help_sub_menu( $loop_dir, $times, $docs_path );
+						bp_core_admin_help_sub_menu( $loop_dir, $times, $docs_path, $level_hide );
 					} else {
 						printf( '<span class="main-menu"><a href="%s" class="dir">%s</a></span>', $url, fgets( fopen( $dir_index_file, 'r' ) ) );
 					}
@@ -100,13 +100,7 @@ function bp_core_admin_help_display_content( $docs_path, $vendor_path ) {
 	require_once $vendor_path . '/parsedown/Parsedown.php';
 	$Parsedown = new Parsedown();
 	$text      = file_get_contents( $docs_path . $_GET['article'] );
-	?>
-    <div class="bb-help-content">
-		<?php
-		echo $Parsedown->text( $text );
-		?>
-    </div>
-	<?php
+	echo $Parsedown->text( $text );
 }
 
 /**
@@ -123,10 +117,37 @@ function bp_core_admin_help_main_page() {
 
 	if ( ! empty( $main_directories ) ) {
 		if ( empty( $_REQUEST['article'] ) ) {
+			?>
+            <div class="bb-help-main-menu-wrap">
+				<?php
+				bp_core_admin_help_main_menu( $main_directories, $docs_path );
+				?>
+            </div>
+			<?php
 		} else {
+			/**
+			 * Sidebar main dir path
+			 */
+			$article_dir_array = explode( "/", $_REQUEST['article'] );
+			$content_main_dir  = $docs_path . '/' . $article_dir_array[1];
+			?>
+
+            <div class="bb-help-content-wrap">
+
+                <div class="bb-help-sidebar">
+	                <?php
+	                bp_core_admin_help_sub_menu( (array)$content_main_dir, '1', $docs_path, 2 );
+	                ?>
+                </div>
+
+                <div class="bb-help-content">
+					<?php
+					bp_core_admin_help_display_content( $docs_path, $vendor_path );
+					?>
+                </div>
+            </div>
+			<?php
 		}
-		bp_core_admin_help_main_menu( $main_directories, $docs_path );
-		bp_core_admin_help_display_content( $docs_path, $vendor_path );
 	}
 }
 
@@ -157,10 +178,6 @@ function bp_core_admin_help() {
 		<?php
 		bp_core_admin_help_main_page();
 		?>
-    </div>
-
-    <div class="clear">
-        <hr/>
     </div>
 	<?php
 }

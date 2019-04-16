@@ -844,14 +844,6 @@ body.post-type-bp-email .categorydiv label {
   box-sizing: border-box;
 }
 
-.bp-help-card-grid .bp-help-card:nth-child(3n) {
-  margin-right: 0;
-}
-
-.bp-help-card-grid .bp-help-card:nth-child(3n+1) {
-  clear: both;
-}
-
 .bp-help-card-grid .bp-help-card h3 {
   border-bottom: 1px solid #e5e5e5;
   font-size: 14px;
@@ -881,6 +873,18 @@ body.post-type-bp-email .categorydiv label {
   border: 1px solid #e5e5e5;
   text-decoration: none;
   width: auto;
+}
+
+.bp-help-card-grid .bp-help-card:nth-child(3n) {
+  margin-right: 0;
+}
+
+.bp-help-card-grid .bp-help-card:nth-child(3n+1) {
+  clear: both;
+}
+
+.bp-help-card-grid .bb-help-content-wrap {
+  display: flex;
 }
 
 /*------------------------------------------------------------------------------
