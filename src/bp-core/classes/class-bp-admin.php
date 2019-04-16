@@ -123,6 +123,7 @@ class BP_Admin {
 		require( $this->admin_dir . 'bp-core-admin-pages.php'      );
 		require( $this->admin_dir . 'bp-core-admin-slugs.php'      );
 		require( $this->admin_dir . 'bp-core-admin-tools.php'      );
+		require( $this->admin_dir . 'bp-core-admin-help.php'       );
 	}
 
 	/**
