@@ -498,7 +498,7 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			if ( ! confirm( wp.i18n.__( 'Are you sure you want to delete this album?', 'buddyboss' ) ) ) {
+			if ( ! confirm( wp.i18n.__( 'Are you sure you want to delete this album? Photos in this album will also be deleted.', 'buddyboss' ) ) ) {
 				return false;
 			}
 

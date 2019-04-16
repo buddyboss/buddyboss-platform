@@ -217,10 +217,6 @@ function bp_nouveau_ajax_media_save() {
 			}
 		}
 
-		if ( ! empty( $media['group_id'] ) ) {
-			$album_privacy = 'grouponly';
-		}
-
 		$media_id = bp_media_add( array(
 			'attachment_id' => $media['id'],
 			'title'         => $media['name'],
@@ -238,6 +234,12 @@ function bp_nouveau_ajax_media_save() {
 			);
 
 			wp_send_json_error( $response );
+		}
+
+		//save media meta for activity
+		if ( ! empty( $main_activity_id ) ) {
+			update_post_meta( $media['id'], 'bp_media_parent_activity_id', $main_activity_id );
+			update_post_meta( $media['id'], 'bp_media_activity_id', $activity_id );
 		}
 
 		$media_ids[] = $media_id;
@@ -316,14 +318,14 @@ function bp_nouveau_ajax_media_delete() {
 	foreach( $media as $media_id ) {
 
 		// delete media
-		$media_id = bp_media_delete( $media_id );
+		$m_id = bp_media_delete( $media_id );
 
-		if ( ! $media_id ) {
-			$media_ids[] = $media_id;
+		if ( $media_id ) {
+			$media_ids[] = $m_id;
 		}
 	}
 
-	if ( sizeof( $media_ids ) != sizeof( $media ) ) {
+	if ( count( $media_ids ) != count( $media ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error">%s</div>',
 			esc_html__( 'There was a problem deleting media.', 'buddyboss' )
@@ -402,7 +404,7 @@ function bp_nouveau_ajax_media_move_to_album() {
 		$media_obj           = new BP_Media( $media_id );
 		$media_obj->album_id = (int) $_POST['album_id'];
 		$media_obj->group_id = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
-		$media_obj->privacy  = ! empty( $media_obj->group_id ) ? 'grouponly' : $album_privacy;
+		$media_obj->privacy  = $media_obj->group_id ? 'grouponly' : $album_privacy;
 
 		if ( ! $media_obj->save() ) {
 			$response['feedback'] = sprintf(

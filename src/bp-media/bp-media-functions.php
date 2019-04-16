@@ -425,24 +425,24 @@ function bp_media_add( $args = '' ) {
 		'error_type'    => 'bool'
 	), 'media_add' );
 
-	// groups media always have privacy to `grouponly`
-	if ( ! empty( $r['group_id'] ) ) {
-	    $r['privacy'] = 'grouponly';
-    }
-
 	// Setup media to be added.
 	$media                = new BP_Media( $r['id'] );
 	$media->blog_id       = $r['blog_id'];
 	$media->attachment_id = $r['attachment_id'];
-	$media->user_id       = $r['user_id'];
+	$media->user_id       = (int) $r['user_id'];
 	$media->title         = $r['title'];
-	$media->album_id      = $r['album_id'];
-	$media->group_id      = $r['group_id'];
-	$media->activity_id   = $r['activity_id'];
+	$media->album_id      = (int) $r['album_id'];
+	$media->group_id      = (int) $r['group_id'];
+	$media->activity_id   = (int) $r['activity_id'];
 	$media->privacy       = $r['privacy'];
 	$media->menu_order    = $r['menu_order'];
 	$media->date_created  = $r['date_created'];
 	$media->error_type    = $r['error_type'];
+
+	// groups media always have privacy to `grouponly`
+	if ( ! empty( $media->group_id ) ) {
+		$media->privacy = 'grouponly';
+	}
 
 	$save = $media->save();
 
@@ -748,18 +748,18 @@ function bp_album_add( $args = '' ) {
 		'error_type'   => 'bool'
 	), 'album_add' );
 
-	if ( ! empty( $r['group_id'] ) ) {
-	    $r['privacy'] = 'grouponly';
-    }
-
 	// Setup media to be added.
 	$album               = new BP_Media_Album( $r['id'] );
-	$album->user_id      = $r['user_id'];
-	$album->group_id     = $r['group_id'];
+	$album->user_id      = (int) $r['user_id'];
+	$album->group_id     = (int) $r['group_id'];
 	$album->title        = $r['title'];
 	$album->privacy      = $r['privacy'];
 	$album->date_created = $r['date_created'];
 	$album->error_type   = $r['error_type'];
+
+	if ( ! empty( $album->group_id ) ) {
+		$album->privacy = 'grouponly';
+	}
 
 	$save = $album->save();
 

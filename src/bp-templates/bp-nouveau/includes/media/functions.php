@@ -167,6 +167,12 @@ function bp_nouveau_media_update_media_meta( $content, $user_id, $activity_id ) 
 
 			if ( $media_id ) {
 				$media_ids[] = $media_id;
+
+				//save media meta for activity
+				if ( ! empty( $activity_id ) && ! empty( $media['id'] ) ) {
+					update_post_meta( $media['id'], 'bp_media_parent_activity_id', $activity_id );
+					update_post_meta( $media['id'], 'bp_media_activity_id', $a_id );
+				}
 			}
 		}
 
@@ -195,8 +201,44 @@ function bp_nouveau_media_groups_update_media_meta( $content, $user_id, $group_i
 	bp_nouveau_media_update_media_meta( $content, $user_id, $activity_id );
 }
 
+/**
+ * Update media for activity comment
+ *
+ * @param $comment_id
+ * @param $r
+ * @param $activity
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool
+ */
 function bp_nouveau_media_comments_update_media_meta( $comment_id, $r, $activity ) {
 	bp_nouveau_media_update_media_meta( false, false, $comment_id );
+}
+
+/**
+ * Delete media when related activity is deleted.
+ *
+ * @since BuddyBoss 1.0.0
+ * @param $activities
+ */
+function bp_nouveau_media_delete_activity_media( $activities ) {
+    if ( ! empty( $activities ) ) {
+	    remove_action( 'bp_activity_after_delete', 'bp_nouveau_media_delete_activity_media' );
+        foreach ( $activities as $activity ) {
+	        $activity_id = $activity->id;
+	        $media_activity = bp_activity_get_meta( $activity_id, 'bp_media_activity', true );
+	        if ( ! empty( $media_activity ) && '1' == $media_activity ) {
+		        $result = bp_media_get( array( 'activity_id' => $activity_id, 'fields' => 'ids' ) );
+		        if ( ! empty( $result['medias'] ) ) {
+                    foreach( $result['medias'] as $media_id ) {
+	                    bp_media_delete( $media_id ); // delete media
+                    }
+                }
+            }
+        }
+	    add_action( 'bp_activity_after_delete', 'bp_nouveau_media_delete_activity_media' );
+    }
 }
 
 /**

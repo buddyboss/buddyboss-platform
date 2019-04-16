@@ -77,6 +77,7 @@ class BP_Nouveau_Media {
 		add_action( 'bp_groups_posted_update', 'bp_nouveau_media_groups_update_media_meta', 10, 4 );
 		add_action( 'bp_activity_comment_posted', 'bp_nouveau_media_comments_update_media_meta', 10, 3 );
 		add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_nouveau_media_comments_update_media_meta', 10, 3 );
+		add_action( 'bp_activity_after_delete', 'bp_nouveau_media_delete_activity_media' );
 
 		add_action( 'bp_media_album_after_save', 'bp_nouveau_media_update_media_privacy' );
 

@@ -799,6 +799,7 @@ class BP_Media {
 
 		// Pluck the media IDs out of the $medias array.
 		$media_ids      = wp_parse_id_list( wp_list_pluck( $medias, 'id' ) );
+		$activity_ids   = wp_parse_id_list( wp_list_pluck( $medias, 'activity_id' ) );
 		$attachment_ids = wp_parse_id_list( wp_list_pluck( $medias, 'attachment_id' ) );
 
 		// Handle accompanying attachments and meta deletion.
@@ -806,10 +807,57 @@ class BP_Media {
 
 			// Loop through attachment ids and attempt to delete.
 			foreach ( $attachment_ids as $attachment_id ) {
+
+				if ( bp_is_active( 'activity' ) ) {
+					$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+					if ( ! empty( $parent_activity_id ) ) {
+						$activity_media_ids = bp_activity_get_meta( $parent_activity_id, 'bp_media_ids', true );
+						if ( ! empty( $activity_media_ids ) ) {
+							$activity_media_ids = explode( ',', $activity_media_ids );
+							$activity_media_ids = array_diff( $activity_media_ids, $media_ids );
+							if ( ! empty( $activity_media_ids ) ) {
+								$activity_media_ids = implode( ',', $activity_media_ids );
+								bp_activity_update_meta( $parent_activity_id, 'bp_media_ids', $activity_media_ids );
+							} else {
+								$activity_ids[] = $parent_activity_id;
+							}
+						}
+					}
+				}
+
 				wp_delete_post( $attachment_id, true );
 			}
 		}
 
+		// delete related activity
+		if ( ! empty( $activity_ids ) && bp_is_active( 'activity' ) ) {
+
+			foreach ( $activity_ids as $activity_id ) {
+				$activity = new BP_Activity_Activity( (int) $activity_id );
+
+				// Check access.
+				if ( bp_activity_user_can_delete( $activity ) ) {
+					/** This action is documented in bp-activity/bp-activity-actions.php */
+					do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
+
+					// Deleting an activity comment.
+					if ( 'activity_comment' == $activity->type ) {
+						if ( bp_activity_delete_comment( $activity->item_id, $activity->id ) ) {
+							/** This action is documented in bp-activity/bp-activity-actions.php */
+							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
+						}
+
+						// Deleting an activity.
+					} else {
+						if ( bp_activity_delete( array( 'id' => $activity->id, 'user_id' => $activity->user_id ) ) ) {
+							/** This action is documented in bp-activity/bp-activity-actions.php */
+							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
+						}
+					}
+				}
+			}
+		}
+		
 		return $media_ids;
 	}
 
