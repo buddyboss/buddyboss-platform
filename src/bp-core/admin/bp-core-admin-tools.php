@@ -138,159 +138,6 @@ function bp_list_help_files( $dir ) {
  *
  * @since BuddyPress 2.0.0
  */
-function bp_core_admin_help_old() {
-	$base_path = buddypress()->plugin_dir . 'bp-help';
-	$path = $base_path . '/docs';
-	require_once $base_path . '/vendors/parsedown/Parsedown.php';
-			$Parsedown = new Parsedown();
-
-	?>
-	<div class="wrap">
-		<h2 class="nav-tab-wrapper">
-			<?php bp_core_admin_tabs( __( 'Help', 'buddyboss' ) ); ?>
-		</h2>
-	</div>
-	<div class="wrap">
-		<h1>
-		    <?php _e( 'Documentation', 'buddyboss' ); ?>
-		    <h1><?php _e( 'Documentation', 'buddyboss' ); ?> <a href="https://www.buddyboss.com/resources/docs/" class="page-title-action" target="_blank"><?php _e( 'Online Docs', 'buddyboss' ); ?></a></h1>
-		    <a href="https://www.buddyboss.com/resources/docs/" class="page-title-action"><?php _e( 'Online Docs', 'buddyboss' ); ?></a>
-		</h1>
-
-
-		<?php
-            $dirs = array_filter(glob('*'), 'is_dir');
-            $directories = glob($path . '/*' , GLOB_ONLYDIR);
-
-		if ( isset( $_GET['article'] ) ) {
-			require_once $base_path . '/vendors/parsedown/Parsedown.php';
-			$Parsedown = new Parsedown();
-			$text      = file_get_contents( $path . '/' . $_GET['article'] );
-			$dir       =  strstr( $_GET['article'], '/', true );
-			$ffs       = scandir( $path . '/' . $dir );
-			unset( $ffs[ array_search( '.', $ffs, true ) ] );
-			unset( $ffs[ array_search( '..', $ffs, true ) ] );
-
-			echo fgets( fopen( $path . '/'  . $dir . '/' . current( $ffs ), 'r' ) );
-			 ?>
-			<div class="help-content-wrap">
-				<?php bp_list_help_files( $path . '/'  . $dir ) ?>
-				<div class="bp-help-doc">
-					<?php echo $Parsedown->text( $text ); ?>
-				</div>
-			</div>
-			<?php
-			} else {
-			?>
-			<!-- @mehul showing proper HTML output -->
-			<div class="wp-list-table widefat bp-help-card-grid">
-
-				<div class="bp-help-card">
-					<h3>Getting Started</h3>
-					<div class="inside">
-						<ul>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Upgrading from BuddyPress</a></li>
-							<li><a href="#">Configure BuddyBoss Platform</a></li>
-							<li><a href="#">Installing BuddyBoss Platform Themes & Plugins</a></li>
-							<li><a href="#">Changing Internal Configuration Settings</a></li>
-							<li><a href="#">Translating BuddyBoss Platform</a></li>
-							<li><a href="#">Privacy Policy, Terms of Service, GDPR</a></li>
-							<li><a href="#">BuddyBoss Platform Features</a></li>
-						</ul>
-					</div>
-				</div>
-
-				<div class="bp-help-card">
-					<h3>BuddyBoss Theme</h3>
-					<div class="inside">
-						<ul>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-						</ul>
-					</div>
-				</div>
-
-				<div class="bp-help-card">
-					<h3>Back-End Administration</h3>
-					<div class="inside">
-						<ul>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-						</ul>
-					</div>
-				</div>
-
-				<div class="bp-help-card">
-					<h3>Components</h3>
-					<div class="inside">
-						<ul>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-						</ul>
-					</div>
-				</div>
-
-				<div class="bp-help-card">
-					<h3>Getting Started</h3>
-					<div class="inside">
-						<ul>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-							<li><a href="#">Installation</a></li>
-						</ul>
-					</div>
-				</div>
-
-			</div>
-
-			<div class="clear">
-			<hr />
-
-			<!-- @mehul old logic -->
-			<div class="help-sections-wrap">
-				<?php bp_list_help_files( $path );?>
-			</div>
-			<?php
-		}
-		?>
-	</div>
-	<?php
-}
-
-/**
- * Display Main Menu of BuddyBoss Help
- */
 function bp_core_admin_help_main_menu( $main_directories, $docs_path ) {
     foreach ( $main_directories  as $sub_directories ) {
         $index_file = glob($sub_directories . "/0-*.md");
@@ -323,14 +170,16 @@ function bp_core_admin_help_main_menu( $main_directories, $docs_path ) {
 * @param $docs_path
  */
 function bp_core_admin_help_sub_menu( $directories, $times, $docs_path ) {
+    $selected = ! empty( $_REQUEST['article'] ) ? $_REQUEST['article'] : "";
     ?>
     <ul class="loop-<?php echo $times; ?>">
         <?php
 
         // For showing the menu title
         foreach ( $directories as $directory ) {
+            $selected = ( false !== strpos( $docs_path . $selected, $directory ) ) ? 'selected' : '';
             ?>
-            <li>
+            <li class="<?php echo $selected;?>">
                 <?php
                 // check if it's has directory
                 if ( is_dir( $directory ) ) {
@@ -391,10 +240,10 @@ function bp_core_admin_help_main_page() {
 
 	if ( ! empty( $main_directories ) ) {
         if ( empty( $_REQUEST['article'] ) ) {
-            bp_core_admin_help_main_menu( $main_directories, $docs_path );
         } else {
-            bp_core_admin_help_display_content( $docs_path, $vendor_path );
         }
+            bp_core_admin_help_main_menu( $main_directories, $docs_path );
+            bp_core_admin_help_display_content( $docs_path, $vendor_path );
 	}
 }
 
