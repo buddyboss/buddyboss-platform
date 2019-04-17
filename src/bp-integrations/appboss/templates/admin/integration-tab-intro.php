@@ -16,7 +16,8 @@
 		<?php
 			printf(
 				'<a href="%s" class="button-secondary">%s</a>',
-				admin_url( 'admin.php?page=bp-appboss' ),
+				//admin_url( 'admin.php?page=bp-appboss' ),
+				esc_url( bp_get_admin_url( '?hello=buddyboss' ) ),
 				__('Learn more', 'buddyboss')
 			);
 		?>
