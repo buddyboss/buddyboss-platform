@@ -746,7 +746,7 @@ class BP_Admin {
 	 *
 	 * @since BuddyBoss 1.0.0 Now outputs Hello AppBoss template.
 	 */
-	public function about_appbboss_screen() {
+	public function about_appboss_screen() {
 		if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'appboss' ) {
 			return;
 		}
