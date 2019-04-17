@@ -763,8 +763,18 @@ function bp_core_get_admin_integrations_tabs( $active_tab = '' ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_core_get_admin_integration_active_tab() {
-	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-appboss' );
-	return isset($_GET['tab'])? $_GET['tab'] : $default_tab;
+
+	if (!is_plugin_active('appboss/appboss.php')) {
+		
+		$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-appboss' );
+		return isset($_GET['tab'])? $_GET['tab'] : $default_tab;
+
+	} else {
+
+		$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-learndash' );
+		return isset($_GET['tab'])? $_GET['tab'] : $default_tab;
+
+	}
 }
 
 /**
