@@ -341,6 +341,8 @@ window.bp = window.bp || {};
 			$('.bp-media-upload-tab-content').hide();
 			$('#'+content_tab).show();
 			this.current_tab = content_tab;
+			$(event.currentTarget).closest('#bp-media-uploader').find('.bp-media-upload-tab').removeClass('selected');
+			$(event.currentTarget).addClass('selected');
 			this.toggleSubmitMediaButton();
 		},
 
