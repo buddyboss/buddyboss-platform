@@ -756,7 +756,7 @@ function bp_core_get_directory_page_default_titles() {
 		'groups'            => __( 'Social Groups', 'buddyboss' ),
 		'blogs'             => __( 'Sites', 'buddyboss' ),
 		'members'           => __( 'Members', 'buddyboss' ),
-		'media'             => __( 'Media', 'buddyboss' ),
+		'photos'             => __( 'Photos', 'buddyboss' ),
 		'activate'          => __( 'Activate', 'buddyboss' ),
 		'register'          => __( 'Register', 'buddyboss' ),
 		'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
@@ -2491,7 +2491,7 @@ function bp_core_get_components( $type = 'all' ) {
 			'default'     => false,
 		),
 		'media'   => array(
-			'title'       => __( 'Media Uploading', 'buddyboss' ),
+			'title'       => __( 'Photo Uploading', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-media' ) , 'admin.php' ) ),
 			'description' => __( 'Allow members to upload photos and create photo albums.', 'buddyboss' ),
 			'default'     => false,

@@ -153,7 +153,7 @@ class BP_Media_Theme_Compat {
 	public function single_dummy_post() {
 		bp_theme_compat_reset_post( array(
 			'ID'             => 0,
-			'post_title'     => __( 'Media', 'buddyboss' ),
+			'post_title'     => __( 'Photos', 'buddyboss' ),
 			'post_author'    => 0,
 			'post_date'      => 0,
 			'post_content'   => '',

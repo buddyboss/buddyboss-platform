@@ -701,7 +701,7 @@ class BP_Groups_Component extends BP_Component {
 
 			if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) {
 				$sub_nav[] = array(
-					'name'                => sprintf( __( 'Media %s', 'buddyboss' ), '<span>' . number_format( bp_media_get_total_group_media_count() ) . '</span>' ),
+					'name'                => sprintf( __( 'Photos %s', 'buddyboss' ), '<span>' . number_format( bp_media_get_total_group_media_count() ) . '</span>' ),
 					'slug'                => 'media',
 					'parent_url'          => $group_link,
 					'parent_slug'         => $this->current_group->slug,

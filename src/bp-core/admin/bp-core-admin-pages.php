@@ -131,7 +131,7 @@ function bp_core_admin_register_page_fields() {
 		} elseif ( 'activity' === $name ) {
 			$description = 'This directory shows all sitewide activity.';
 		} elseif ( 'media' === $name ) {
-			$description = 'This directory shows any media uploaded by members.';
+			$description = 'This directory shows all photos uploaded by members.';
 		}
 		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_pages', compact('existing_pages', 'name', 'label', 'description' ) );
 		register_setting( 'bp-pages', $name, [] );

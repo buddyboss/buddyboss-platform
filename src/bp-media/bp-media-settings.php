@@ -22,7 +22,7 @@ function bp_media_get_settings_sections() {
 	$settings = array(
 		'bp_media_settings_general' => array(
 			'page'  => 'media',
-			'title' => __( 'Media Settings', 'buddyboss' ),
+			'title' => __( 'Photo Settings', 'buddyboss' ),
 		),
 	);
 
@@ -54,7 +54,7 @@ function bp_media_get_settings_fields() {
 	if ( bp_is_active( 'groups' ) ) {
 
 		$fields['bp_media_settings_general']['bp_media_group_media_support'] = [
-			'title'             => __( 'Group Media', 'buddyboss' ),
+			'title'             => __( 'Group Photos', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_group_media_support',
 			'sanitize_callback' => 'absint',
 			'args'              => []
@@ -71,7 +71,7 @@ function bp_media_get_settings_fields() {
 	if ( bp_is_active( 'forums' ) ) {
 
 		$fields['bp_media_settings_general']['bp_media_forums_media_support'] = [
-			'title'             => __( 'Forums Media', 'buddyboss' ),
+			'title'             => __( 'Forum Photos', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_forums_media_support',
 			'sanitize_callback' => 'absint',
 			'args'              => []
@@ -81,7 +81,7 @@ function bp_media_get_settings_fields() {
 	if ( bp_is_active( 'messages' ) ) {
 
 		$fields['bp_media_settings_general']['bp_media_messages_media_support'] = [
-			'title'             => __( 'Messages Media', 'buddyboss' ),
+			'title'             => __( 'Message Photos', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_messages_media_support',
 			'sanitize_callback' => 'absint',
 			'args'              => []

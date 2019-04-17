@@ -187,7 +187,7 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 		$options['forums'] = __( 'Forums', 'buddyboss' );
 	}
 	if ( bp_is_active( 'media' ) ) {
-		$options['media'] = __( 'Media', 'buddyboss' );
+		$options['media'] = __( 'Photos', 'buddyboss' );
 	}
 
 	$controls = array(

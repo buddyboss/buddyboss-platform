@@ -15,7 +15,7 @@
                         <a href="#" class="bp-media-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php _e( 'Upload', 'buddyboss' ); ?></a>
 
                         <?php if ( bp_is_single_album() ) : ?>
-                            <a href="#" class="bp-media-upload-tab" data-content="bp-existing-media-content" id="bp-media-select-from-existing"><?php _e( 'Select Media', 'buddyboss' ); ?></a>
+                            <a href="#" class="bp-media-upload-tab" data-content="bp-existing-media-content" id="bp-media-select-from-existing"><?php _e( 'Select Photos', 'buddyboss' ); ?></a>
                         <?php endif; ?>
 
                         <span id="bp-media-uploader-modal-status-text" style="display: none;"></span>
@@ -28,7 +28,7 @@
                     <div class="bb-dropzone-wrap bp-media-upload-tab-content" id="bp-dropzone-content">
                         <?php if ( ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() ) : ?>
                         <div class="media-uploader-post-content">
-                            <textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php _e( 'Write something about media.', 'buddyboss' ); ?>"></textarea>
+                            <textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php _e( 'Write something about your photos.', 'buddyboss' ); ?>"></textarea>
                         </div>
                         <?php endif; ?>
                         <div class="media-uploader-wrapper">

@@ -256,7 +256,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
 		'li_class'  => array(),
 		'link'      => bp_get_media_directory_permalink(),
-		'text'      => __( 'All Media', 'buddyboss' ),
+		'text'      => __( 'All Photos', 'buddyboss' ),
 		'count'     => bp_get_total_media_count(),
 		'position'  => 5,
 	);
@@ -267,7 +267,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 			'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
 			'li_class'  => array(),
 			'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/my-media/',
-			'text'      => __( 'My Media', 'buddyboss' ),
+			'text'      => __( 'My Photos', 'buddyboss' ),
 			'count'     => bp_media_get_total_media_count(),
 			'position'  => 15,
 		);

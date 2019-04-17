@@ -19,7 +19,7 @@ class BP_Admin_Setting_Media extends BP_Admin_Setting_tab {
 
 	public function initialize() {
 
-		$this->tab_label = __( 'Media', 'buddyboss' );
+		$this->tab_label = __( 'Photos', 'buddyboss' );
 		$this->tab_name  = 'bp-media';
 		$this->tab_order = 50;
 	}
