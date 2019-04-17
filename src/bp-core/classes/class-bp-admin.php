@@ -708,10 +708,6 @@ class BP_Admin {
 		// Settings pages.
 		remove_submenu_page( $this->settings_page, $this->settings_page );
 
-		// remove_submenu_page( $this->settings_page, 'bp-page-settings' );
-		// remove_submenu_page( $this->settings_page, 'bp-settings'      );
-		// remove_submenu_page( $this->settings_page, 'bp-credits'       );
-
 		// Network Admin Tools.
 		remove_submenu_page( 'network-tools', 'network-tools' );
 
@@ -748,7 +744,7 @@ class BP_Admin {
 			return;
 		}
 
-		include $this->admin_dir . 'templates/about-screen.php';
+		include $this->admin_dir . 'templates/about-buddyboss.php';
 	}
 
 	/**
@@ -760,7 +756,7 @@ class BP_Admin {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function credits_screen() {
-		include $this->admin_dir . 'templates/about-screen.php';
+		include $this->admin_dir . 'templates/about-buddyboss.php';
 	}
 
 	/** Emails ****************************************************************/
