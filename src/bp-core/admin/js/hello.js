@@ -1,11 +1,11 @@
 /**
- * Loads for BuddyPress Hello in wp-admin for query string `hello=buddyboss`.
+ * Loads for Hello BuddyBoss in wp-admin for query string `hello=buddyboss` and `hello=appboss`.
  *
  * @since BuddyPress 3.0.0
  */
 (function() {
 	/**
-	 * Open the BuddyPress Hello modal.
+	 * Open the Hello BuddyBoss modal.
 	 */
 	var bp_hello_open_modal = function() {
 		var backdrop = document.getElementById( 'bp-hello-backdrop' ),
@@ -63,7 +63,7 @@
 	};
 
 	/**
-	 * Restrict keyboard focus to elements within the BuddyPress Hello modal.
+	 * Restrict keyboard focus to elements within the Hello BuddyBoss modal.
 	 *
 	 * @param {Event} event - A keyboard focus event.
 	 */
