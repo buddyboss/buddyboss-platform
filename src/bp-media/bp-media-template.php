@@ -147,6 +147,10 @@ function bp_has_media( $args = '' ) {
 				$privacy[] = 'friends';
 			}
 		}
+
+		if ( bp_is_my_profile() ) {
+			$privacy[] = 'onlyme';
+		}
 	}
 
 	$group_id = false;
@@ -906,6 +910,10 @@ function bp_has_albums( $args = '' ) {
 			if( $is_friend ) {
 				$privacy[] = 'friends';
 			}
+		}
+
+		if ( bp_is_my_profile() ) {
+			$privacy[] = 'onlyme';
 		}
 	}
 
