@@ -1,8 +1,8 @@
 <?php
 /**
- * AppBoss Admin Screen.
+ * BuddyBoss Admin Screen.
  *
- * This file contains information about AppBoss. The BuddyBoss application to create a native mobile app with your WordPress site.
+ * This file contains information about BuddyBoss.
  *
  * @package BuddyBoss
  * @since BuddyBoss 1.0.0
