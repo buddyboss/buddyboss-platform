@@ -160,10 +160,6 @@ class BP_Admin {
 		// Add integrations
 		add_action( 'bp_register_admin_integrations', array( $this, 'register_admin_integrations' ), 5 );
 
-		// Add links to Hello BuddyBoss and Hello AppBoss in the admin bar.
-		add_action( 'admin_bar_menu', array( $this, 'admin_bar_hello_buddyboss_link' ), 100 );
-		add_action( 'admin_bar_menu', array( $this, 'admin_bar_hello_appboss_link' ), 100 );
-
 		// Add a description of new BuddyPress tools in the available tools page.
 		add_action( 'tool_box',            'bp_core_admin_available_tools_intro' );
 		add_action( 'bp_network_tool_box', 'bp_core_admin_available_tools_intro' );
