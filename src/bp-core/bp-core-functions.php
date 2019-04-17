@@ -752,14 +752,14 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
  */
 function bp_core_get_directory_page_default_titles() {
 	$page_default_titles = array(
-		'activity'          => __( 'Activity Feed', 'buddyboss' ),
-		'groups'            => __( 'Social Groups', 'buddyboss' ),
+		'activity'          => __( 'News Feed', 'buddyboss' ),
+		'groups'            => __( 'Groups', 'buddyboss' ),
 		'blogs'             => __( 'Sites', 'buddyboss' ),
 		'members'           => __( 'Members', 'buddyboss' ),
-		'photos'             => __( 'Photos', 'buddyboss' ),
+		'photos'            => __( 'Photos', 'buddyboss' ),
 		'activate'          => __( 'Activate', 'buddyboss' ),
 		'register'          => __( 'Register', 'buddyboss' ),
-		'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
+		//'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
 		'new_forums_page'   => __( 'Forums', 'buddyboss' ),
 	);
 
