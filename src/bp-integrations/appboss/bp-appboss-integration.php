@@ -29,7 +29,7 @@ class BP_Appboss_Integration extends BP_Integration {
 		);
 	}
 
-	public function setup_admin_integartion_tab() {
+	public function setup_admin_integration_tab() {
 		require_once trailingslashit($this->path) . 'bp-admin-appboss-tab.php';
 
 		new BP_Appboss_Admin_Integration_Tab(

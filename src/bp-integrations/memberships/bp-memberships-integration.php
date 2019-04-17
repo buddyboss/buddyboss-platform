@@ -33,7 +33,7 @@ class BP_Memberships_Integration extends BP_Integration {
 	 * Memberships Integration Tab
 	 * @return {HTML} - renders html in bp-admin-memberships-tab.php
 	 */
-	public function setup_admin_integartion_tab() {
+	public function setup_admin_integration_tab() {
 		// require_once trailingslashit($this->path) . 'bp-admin-memberships-tab.php';
 
 		// new BP_Memberships_Admin_Integration_Tab(
