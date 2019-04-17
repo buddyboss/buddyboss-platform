@@ -319,17 +319,6 @@ class BP_Admin {
 			'bp-credits',
 			array( $this, 'bp_credits_screen' )
 		);
-
-		if ( ! is_plugin_active( 'appboss/appboss.php' ) ) {
-			$hooks[] = add_submenu_page(
-				$this->settings_page,
-				__( 'Mobile App', 'buddyboss' ),
-				__( 'Mobile App', 'buddyboss' ),
-				$this->capability,
-				'bp-appboss',
-				'bp_core_admin_appboss'
-			);
-		}
 	}
 
 	/**
@@ -433,17 +422,6 @@ class BP_Admin {
 			array( $this, 'bp_credits_screen' )
 		);
 
-		if ( ! is_plugin_active( 'appboss/appboss.php' ) ) {
-			$hooks[] = add_submenu_page(
-				$this->settings_page,
-				__( 'Mobile App', 'buddyboss' ),
-				__( 'Mobile App', 'buddyboss' ),
-				$this->capability,
-				'bp-appboss',
-				'bp_core_admin_appboss'
-			);
-		}
-
 
 
 		// For consistency with non-Multisite, we add a Tools menu in
@@ -539,16 +517,6 @@ class BP_Admin {
 		// only if login user has access to menu
 		if ( ! isset( $submenu[ 'buddyboss-platform' ] ) ) {
 			return;
-		}
-
-		// make sure app integration is last
-		$app_menu = '';
-		foreach ( $submenu[ 'buddyboss-platform' ] as $index => $pmenu ) {
-			if ( $pmenu[2] == 'bp-appboss' ) {
-				$app_menu = $pmenu;
-				unset( $submenu[ 'buddyboss-platform' ][ $index ] );
-				break;
-			}
 		}
 
 		$submenu[ 'buddyboss-platform' ] = array_values( $submenu[ 'buddyboss-platform' ] );
