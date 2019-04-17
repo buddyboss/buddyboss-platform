@@ -653,53 +653,6 @@ class BP_Admin {
 	}
 
 	/**
-	 * Add a link to Hello BuddyBoss to the admin bar.
-	 *
-	 * @since BuddyPress 1.9.0
-	 * @since BuddyPress 3.0.0 Hooked at priority 100 (was 15).
-	 *
-	 * @param WP_Admin_Bar $wp_admin_bar
-	 */
-	public function admin_bar_hello_buddyboss_link( $wp_admin_bar ) {
-		if ( ! is_user_logged_in() ) {
-			return;
-		}
-
-		$wp_admin_bar->add_menu( array(
-			'parent' => 'wp-logo',
-			'id'     => 'bp-hello-buddyboss',
-			'title'  => esc_html__( 'Hello, BuddyBoss!', 'buddyboss' ),
-			'href'   => bp_get_admin_url( '?hello=buddyboss' ),
-			'meta'   => array(
-				'class' => 'say-hello-buddypress',
-			),
-		) );
-	}
-
-	/**
-	 * Add a link to Hello AppBoss to the admin bar.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param WP_Admin_Bar $wp_admin_bar
-	 */
-	public function admin_bar_hello_appboss_link( $wp_admin_bar ) {
-		if ( ! is_user_logged_in() ) {
-			return;
-		}
-
-		$wp_admin_bar->add_menu( array(
-			'parent' => 'wp-logo',
-			'id'     => 'bp-hello-appboss',
-			'title'  => esc_html__( 'Hello, AppBoss!', 'buddyboss' ),
-			'href'   => bp_get_admin_url( '?hello=appboss' ),
-			'meta'   => array(
-				'class' => 'say-hello-appboss',
-			),
-		) );
-	}
-
-	/**
 	 * Add Settings link to plugins area.
 	 *
 	 * @since BuddyPress 1.6.0
@@ -736,9 +689,7 @@ class BP_Admin {
 		// Network Admin Tools.
 		remove_submenu_page( 'network-tools', 'network-tools' );
 
-		// About and Credits pages.
-		remove_submenu_page( 'index.php', 'bp-hello-buddyboss'   );
-		remove_submenu_page( 'index.php', 'bp-hello-appboss'   );
+		// Credits page.
 		remove_submenu_page( 'index.php', 'bp-credits' );
 	}
 
