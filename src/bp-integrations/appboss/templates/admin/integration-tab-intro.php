@@ -17,7 +17,7 @@
 			printf(
 				'<a href="%s" class="button-secondary">%s</a>',
 				esc_url( bp_get_admin_url( '?hello=appboss' ) ),
-				__('Learn more', 'buddyboss')
+				__('Watch the video', 'buddyboss')
 			);
 		?>
 	</div>
