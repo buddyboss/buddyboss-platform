@@ -452,7 +452,7 @@ function bp_core_admin_appboss() {
 		?>
 		 <div class="wrap">
 		    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'AppBoss', 'buddyboss' ) ); ?></h2>
-	        <?php require buddypress()->plugin_dir . 'bp-core/admin/templates/appboss-screen.php'; ?>
+	        <?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-appboss.php'; ?>
 	    </div>
 		<?php
 }
