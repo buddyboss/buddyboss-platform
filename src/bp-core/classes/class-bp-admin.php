@@ -711,7 +711,7 @@ class BP_Admin {
 		}
 	}
 
-	/** About BuddyBoss *****************************************************************/
+	/** About BuddyBoss and AppBoss ********************************************/
 
 	/**
 	 * Output the Hello BuddyBoss template.
@@ -728,41 +728,15 @@ class BP_Admin {
 	}
 
 	/**
-	 * Output the credits screen.
-	 *
-	 * Hardcoding this in here is pretty janky. It's fine for now, but we'll
-	 * want to leverage api.wordpress.org eventually.
-	 *
-	 * @since BuddyPress 1.7.0
-	 */
-	public function credits_buddyboss_screen() {
-		include $this->admin_dir . 'templates/about-buddyboss.php';
-	}
-
-	/** About AppBoss *****************************************************************/
-
-	/**
 	 * Output the Hello AppBoss template.
 	 *
-	 * @since BuddyBoss 1.0.0 Now outputs Hello AppBoss template.
+	 * @since BuddyBoss 1.0.0 Output the Hello AppBoss template.
 	 */
 	public function about_appboss_screen() {
 		if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'appboss' ) {
 			return;
 		}
 
-		include $this->admin_dir . 'templates/about-appboss.php';
-	}
-
-	/**
-	 * Output the credits screen.
-	 *
-	 * Hardcoding this in here is pretty janky. It's fine for now, but we'll
-	 * want to leverage api.wordpress.org eventually.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 */
-	public function credits_appboss_screen() {
 		include $this->admin_dir . 'templates/about-appboss.php';
 	}
 
