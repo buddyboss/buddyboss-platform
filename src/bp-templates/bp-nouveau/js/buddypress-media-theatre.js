@@ -201,6 +201,7 @@ window.bp = window.bp || {};
 
 		getActivity: function() {
 			var self = this;
+			$('.bb-media-info-section .activity-list').html('<i class="bb-icon-loader animate-spin"></i>');
 			if ( self.current_media && typeof self.current_media.activity_id !== 'undefined' ) {
 				$.ajax({
 					type: 'POST',

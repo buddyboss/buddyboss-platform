@@ -943,6 +943,8 @@ add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 10, 2 
 function bp_media_forums_embed_attachments( $content, $id ) {
 	global $media_template;
 
+	error_log("reply content");
+
 	// Do not embed attachment in wp-admin area
 	if ( is_admin() ) {
 		return $content;
