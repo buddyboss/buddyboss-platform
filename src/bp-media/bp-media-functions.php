@@ -99,8 +99,8 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 		require_once( ABSPATH . 'wp-admin/includes/admin.php' );
 	}
 
-	add_image_size( 'bp-bb-media-thumbnail', 400, 400 );
-	add_image_size( 'bp-bb-activity-media-thumbnail', 700, 700, true );
+	add_image_size( 'bp-media-thumbnail', 400, 400 );
+	add_image_size( 'bp-activity-media-thumbnail', 700, 700, true );
 
 	add_filter( 'upload_mimes', 'bp_media_allowed_mimes', 9, 1 );
 
@@ -119,8 +119,8 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 		)
 	) );
 
-	remove_image_size( 'bp-bb-media-thumbnail' );
-	remove_image_size( 'bp-bb-activity-media-thumbnail' );
+	remove_image_size( 'bp-media-thumbnail' );
+	remove_image_size( 'bp-activity-media-thumbnail' );
 
 	// if has wp error then throw it.
 	if ( is_wp_error( $aid ) ) {
@@ -131,18 +131,18 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 
 	if ( ! empty( $attachment ) ) {
 
-		$file_path = get_attached_file( $attachment->ID );
+		//$file_path = get_attached_file( $attachment->ID );
 
 		$attachment_data = wp_get_attachment_metadata( $attachment->ID );
 
-		if ( ! empty( $file_path ) ) {
-			$path        = @pathinfo( $file_path );
-			$newfilename = $path['filename'] . '-buddyboss-reduced-sized-' . time();
-			$newfile     = $path['dirname'] . "/" . $newfilename . "." . $path['extension'];
-			bp_media_compress_image( $file_path, $newfile, 0.1 );
-			$path                                      = @pathinfo( $newfile );
-			$attachment_data['buddyboss_reduced_size'] = $newfilename . '.' . $path['extension'];
-		}
+//		if ( ! empty( $file_path ) ) {
+//			$path        = @pathinfo( $file_path );
+//			$newfilename = $path['filename'] . '-buddyboss-reduced-sized-' . time();
+//			$newfile     = $path['dirname'] . "/" . $newfilename . "." . $path['extension'];
+//			bp_media_compress_image( $file_path, $newfile, 0.1 );
+//			$path                                      = @pathinfo( $newfile );
+//			$attachment_data['buddyboss_reduced_size'] = $newfilename . '.' . $path['extension'];
+//		}
 
 		if ( $attachment_data ) {
 			$attachment_data[ 'buddyboss_media_upload' ] = true;
@@ -942,8 +942,6 @@ add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 10, 2 
  */
 function bp_media_forums_embed_attachments( $content, $id ) {
 	global $media_template;
-
-	error_log("reply content");
 
 	// Do not embed attachment in wp-admin area
 	if ( is_admin() ) {
