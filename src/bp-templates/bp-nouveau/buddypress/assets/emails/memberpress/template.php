@@ -171,17 +171,17 @@ $settings = bp_email_get_appearance_settings();
             }
 
 			.repsonsive-padding {
-				padding: 0px 20px !important;
+				padding: 0 20px !important;
 			}
 
 			.avatar-wrap {
-				width: 80px !important;
+				width: 72px !important;
 			}
 
 			.responsive-set-height {
-				font-size: 5px !important;
-				line-height: 5px !important;
-				height: 5px !important;
+				font-size: 0 !important;
+				line-height: 0 !important;
+				height: 0 !important;
 			}
         }
     </style>
