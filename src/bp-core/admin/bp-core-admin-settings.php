@@ -684,6 +684,6 @@ function bp_admin_setting_callback_private_network_public_content() {
 	?>
 
 	<label for="bp-enable-private-network-public-content"><?php _e( 'Enter URLs or URI fragments (e.g. /groups/) to remain publicly visible always. Enter one URL or URI per line. ', 'buddyboss' ); ?></label>
-	<textarea rows="10" cols="100" id="bp-enable-private-network-public-content" name="bp-enable-private-network-public-content"><?php echo esc_textarea( bp_enable_private_network_public_content() ); ?></textarea>
+	<textarea rows="10" cols="100" id="bp-enable-private-network-public-content" name="bp-enable-private-network-public-content" style="margin-top: 10px;"><?php echo esc_textarea( bp_enable_private_network_public_content() ); ?></textarea>
 	<?php
 }
