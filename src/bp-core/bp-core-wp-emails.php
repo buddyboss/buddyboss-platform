@@ -155,7 +155,7 @@ if ( ! function_exists('wp_notify_postauthor') ) :
 							<tbody>
 							<tr>
 								<td valign="middle" width="12%" style="vertical-align: middle;">
-									<a href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>"
+									<a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>"
 									   target="_blank" rel="nofollow">
 										<?php
 										$avatar_url = bp_core_fetch_avatar( array(
