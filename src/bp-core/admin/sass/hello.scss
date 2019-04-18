@@ -66,6 +66,7 @@ TABLE OF CONTENTS:
 
 	.video-wrapper {
 		margin: 0 auto;
+		height: calc(100%);
 	}
 
 	.video-wrapper .video-container {
@@ -427,7 +428,7 @@ TABLE OF CONTENTS:
 	}
 
 	.bp-hello-appboss .bp-hello-content {
-		height: auto;
+		height: calc(100% - 120px);
 		padding: 0;
 	}
 
@@ -452,7 +453,7 @@ TABLE OF CONTENTS:
 	}
 
 	.bp-hello-appboss .bp-hello-content {
-		height: auto;
+		height: calc(100% - 120px);
 		padding: 0;
 	}
 
