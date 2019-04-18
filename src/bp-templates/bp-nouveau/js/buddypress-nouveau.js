@@ -330,6 +330,10 @@ window.bp = window.bp || {};
 					return;
 				}
 
+				if ( $('body.group-members.members.buddypress').length ) {
+					$('body.group-members.members.buddypress ul li#members-groups-li').find( 'span' ).text(response.data.count);
+				}
+
 				$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).removeClass( 'loading' );
 				$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text('');
 				$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text(response.data.count);
