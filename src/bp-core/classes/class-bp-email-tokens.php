@@ -462,7 +462,7 @@ class BP_Email_Tokens {
                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                         <tbody>
                         <tr>
-                            <td valign="middle" width="12%" style="vertical-align: middle;">
+                            <td valign="middle" width="65px" style="vertical-align: middle;">
                                 <a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $activity->user_id ) ); ?>"
                                    target="_blank" rel="nofollow">
 									<?php
@@ -580,7 +580,7 @@ class BP_Email_Tokens {
                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                         <tbody>
                         <tr>
-                            <td valign="middle" width="12%" style="vertical-align: middle;">
+                            <td valign="middle" width="65px" style="vertical-align: middle;">
                                 <a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $activity_comment->user_id ) ); ?>"
                                    target="_blank" rel="nofollow">
 									<?php
@@ -695,7 +695,7 @@ class BP_Email_Tokens {
                         <table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%">
                             <tbody>
 								<tr>
-									<td valign="middle" width="12%" style="vertical-align: middle;">
+									<td valign="middle" width="65px" style="vertical-align: middle;">
 										<a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $this->_message_sender_id ) ); ?>"
 										   target="_blank" rel="nofollow">
 											<?php $avatar_url = bp_core_fetch_avatar( array(
@@ -1118,7 +1118,7 @@ class BP_Email_Tokens {
                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                         <tbody>
                         <tr>
-                            <td valign="middle" width="12%" style="vertical-align: middle;">
+                            <td valign="middle" width="65px" style="vertical-align: middle;">
                                 <a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( bbp_get_reply_author_id( $formatted_tokens['reply.id'] ) ) ); ?>"
                                    target="_blank" rel="nofollow">
 									<?php
@@ -1214,7 +1214,7 @@ class BP_Email_Tokens {
                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                         <tbody>
                         <tr>
-                            <td valign="middle" width="12%" style="vertical-align: middle;">
+                            <td valign="middle" width="65px" style="vertical-align: middle;">
                                 <a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( bbp_get_topic_author_id( $formatted_tokens['discussion.id'] ) ) ); ?>"
                                    target="_blank" rel="nofollow">
 									<?php

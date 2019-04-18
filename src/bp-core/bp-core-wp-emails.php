@@ -154,7 +154,7 @@ if ( ! function_exists('wp_notify_postauthor') ) :
 						<table cellpadding="0" cellspacing="0" border="0" width="100%">
 							<tbody>
 							<tr>
-								<td valign="middle" width="12%" style="vertical-align: middle;">
+								<td valign="middle" width="65px" style="vertical-align: middle;">
 									<a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>"
 									   target="_blank" rel="nofollow">
 										<?php
@@ -421,7 +421,7 @@ if ( !function_exists('wp_notify_moderator') ) :
 						<table cellpadding="0" cellspacing="0" border="0" width="100%">
 							<tbody>
 							<tr>
-								<td valign="middle" width="12%" style="vertical-align: middle;">
+								<td valign="middle" width="65px" style="vertical-align: middle;">
 									<a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>"
 									   target="_blank" rel="nofollow">
 										<?php
