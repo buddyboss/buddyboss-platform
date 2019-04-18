@@ -52,6 +52,9 @@ window.bp = window.bp || {};
 			// Privacy Policy Popup on Login page and Lost Password page
 			this.loginPopUp();
 
+			$.ajaxPrefilter( this.memberPreFilter );
+			$.ajaxPrefilter( this.groupPreFilter );
+
 		},
 
 		/**
@@ -325,6 +328,10 @@ window.bp = window.bp || {};
 			return this.ajax( postdata, data.object ).done( function( response ) {
 				if ( false === response.success ) {
 					return;
+				}
+
+				if ( $('body.group-members.members.buddypress').length ) {
+					$('body.group-members.members.buddypress ul li#members-groups-li').find( 'span' ).text(response.data.count);
 				}
 
 				$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).removeClass( 'loading' );
@@ -1365,6 +1372,22 @@ window.bp = window.bp || {};
 					e.preventDefault();
 					$.magnificPopup.close();
 				});
+			}
+		},
+		groupPreFilter: function( options ) {
+			if ( typeof options.data === 'string' && -1 !== options.data.indexOf('action=groups_filter') ) {
+				var	group_type = $('#group-type-order-by').find(':selected').val();
+				if (typeof group_type !== 'undefined') {
+					options.data += '&group_type=' + group_type;
+				}
+			}
+		},
+		memberPreFilter: function( options ) {
+			if ( typeof options.data === 'string' && -1 !== options.data.indexOf('action=members_filter') ) {
+				var	member_type_id = $('#member-type-order-by').find(':selected').val();
+				if (typeof member_type_id !== 'undefined') {
+					options.data += '&member_type_id=' + member_type_id;
+				}
 			}
 		}
 	};
