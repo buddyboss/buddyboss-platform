@@ -858,7 +858,7 @@ class BP_Email_Tokens {
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>
+                                                    <td class="responsive-set-height">
 														<div class="spacer responsive-set-height" style="font-size: 30px; line-height: 30px; height: 30px;">&nbsp;</div>
 													</td>
                                                 </tr>
