@@ -39,6 +39,7 @@ window.bp = window.bp || {};
 			// Init current page
 			this.current_page   = 1;
 			this.current_page_existing_media   = 1;
+			this.current_page_albums   = 1;
 			this.current_tab   = $('body').hasClass('single-topic') || $('body').hasClass('single-forum') ? false : 'bp-dropzone-content';
 
 			// set up dropzones auto discover to false so it does not automatically set dropzones
@@ -83,6 +84,7 @@ window.bp = window.bp || {};
 
 			// Fetch Media
 			$( '.bp-nouveau [data-bp-list="media"]' ).on( 'click', 'li.load-more', this.injectMedias.bind( this ) );
+			$( '.bp-nouveau #albums-dir-list' ).on( 'click', 'li.load-more', this.appendAlbums.bind( this ) );
 			$( '.bp-existing-media-wrap' ).on( 'click', 'li.load-more', this.appendMedia.bind( this ) );
 			$( '.bp-nouveau' ).on( 'change', '.bb-media-check-wrap [name="bb-media-select"]', this.addSelectedClassToWrapper.bind( this ) );
 			$( '.bp-existing-media-wrap' ).on( 'change', '.bb-media-check-wrap [name="bb-media-select"]', this.toggleSubmitMediaButton.bind( this ) );
@@ -622,6 +624,43 @@ window.bp = window.bp || {};
 					}
 				} );
 			}
+		},
+
+		/**
+		 * [appendQuery description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		appendAlbums: function( event ) {
+			var next_page = ( Number( this.current_page_albums ) * 1 ) + 1, self = this;
+
+			// Stop event propagation
+			event.preventDefault();
+
+			$( event.currentTarget ).find( 'a' ).first().addClass( 'loading' );
+
+			var data = {
+				'action': 'media_albums_loader',
+				'_wpnonce': BP_Nouveau.nonces.media,
+				'page'      : next_page,
+			};
+
+			$.ajax({
+				type: 'POST',
+				url: BP_Nouveau.ajaxurl,
+				data: data,
+				success: function (response) {
+					if ( true === response.success ) {
+						$( event.currentTarget ).remove();
+						$( '#albums-dir-list ul.bb-albums-list' ).fadeOut( 100, function() {
+							$( '#albums-dir-list ul.bb-albums-list' ).append( response.data.albums );
+							$( this ).fadeIn( 100 );
+						} );
+						// Update the current page
+						self.current_page_albums = next_page;
+					}
+				}
+			});
 		},
 
 		toggleSubmitMediaButton: function() {
