@@ -642,7 +642,7 @@ window.bp = window.bp || {};
 			var data = {
 				'action': 'media_albums_loader',
 				'_wpnonce': BP_Nouveau.nonces.media,
-				'page'      : next_page,
+				'page'      : next_page
 			};
 
 			$.ajax({
