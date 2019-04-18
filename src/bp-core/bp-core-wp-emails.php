@@ -150,35 +150,22 @@ if ( ! function_exists('wp_notify_postauthor') ) :
 		<table cellspacing="0" cellpadding="0" border="0" width="100%">
 			<?php if ( !empty( $comment->user_id ) ) { ?>
 				<tr>
-					<td align="center">
-						<table cellpadding="0" cellspacing="0" border="0" width="100%">
-							<tbody>
-							<tr>
-								<td valign="middle" width="12%" style="vertical-align: middle;">
-									<a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>"
-									   target="_blank" rel="nofollow">
-										<?php
-										$avatar_url = bp_core_fetch_avatar( array(
-											'item_id' => $comment->user_id,
-											'width'   => 100,
-											'height'  => 100,
-											'type'    => 'full',
-											'html'    => false,
-										) );
-										?>
-										<img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47"
-										     style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"
-										     border="0">
-									</a>
-								</td>
-								<td width="88%" style="vertical-align: middle;">
-									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
-										<?php echo bp_core_get_user_displayname( $comment->user_id ); ?>
-									</div>
-								</td>
-							</tr>
-							</tbody>
-						</table>
+					<td align="center" style="vertical-align: middle;">
+						<a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>" target="_blank" rel="nofollow">
+							<?php
+							$avatar_url = bp_core_fetch_avatar( array(
+								'item_id' => $comment->user_id,
+								'width'   => 100,
+								'height'  => 100,
+								'type'    => 'full',
+								'html'    => false,
+							) );
+							?>
+							<img alt="<?php echo bp_core_get_user_displayname( $comment->user_id ); ?>" src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" border="0" />
+						</a>
+						<div style="padding-left: 15px; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
+							<?php echo bp_core_get_user_displayname( $comment->user_id ); ?>
+						</div>
 					</td>
 				</tr>
 
@@ -417,35 +404,22 @@ if ( !function_exists('wp_notify_moderator') ) :
 		<table cellspacing="0" cellpadding="0" border="0" width="100%">
 			<?php if ( !empty( $comment->user_id ) ) { ?>
 				<tr>
-					<td align="center">
-						<table cellpadding="0" cellspacing="0" border="0" width="100%">
-							<tbody>
-							<tr>
-								<td valign="middle" width="12%" style="vertical-align: middle;">
-									<a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>"
-									   target="_blank" rel="nofollow">
-										<?php
-										$avatar_url = bp_core_fetch_avatar( array(
-											'item_id' => $comment->user_id,
-											'width'   => 100,
-											'height'  => 100,
-											'type'    => 'full',
-											'html'    => false,
-										) );
-										?>
-										<img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47"
-										     style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"
-										     border="0">
-									</a>
-								</td>
-								<td width="88%" style="vertical-align: middle;">
-									<div style="color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
-										<?php echo bp_core_get_user_displayname( $comment->user_id ); ?>
-									</div>
-								</td>
-							</tr>
-							</tbody>
-						</table>
+					<td align="center" style="vertical-align: middle;">
+						<a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>" target="_blank" rel="nofollow">
+							<?php
+							$avatar_url = bp_core_fetch_avatar( array(
+								'item_id' => $comment->user_id,
+								'width'   => 100,
+								'height'  => 100,
+								'type'    => 'full',
+								'html'    => false,
+							) );
+							?>
+							<img alt="<?php echo bp_core_get_user_displayname( $comment->user_id ); ?>" src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" border="0" />
+						</a>
+						<div style="padding-left: 15px; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; line-height: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px;">
+							<?php echo bp_core_get_user_displayname( $comment->user_id ); ?>
+						</div>
 					</td>
 				</tr>
 
