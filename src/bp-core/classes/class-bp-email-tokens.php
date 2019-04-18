@@ -216,7 +216,7 @@ class BP_Email_Tokens {
                                                             <tbody>
                                                             <tr>
                                                                 <td>
-                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="left" class="responsive-table">
+                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="left" class="no-responsive-table">
                                                                         <tbody>
 																			<tr>
 																				<td height="34px" style="vertical-align: middle;">
@@ -231,7 +231,7 @@ class BP_Email_Tokens {
 																			</tr>
                                                                         </tbody>
                                                                     </table>
-                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="responsive-table">
+                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="no-responsive-table">
                                                                         <tbody>
 																			<tr>
 																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-text-left">
@@ -858,16 +858,16 @@ class BP_Email_Tokens {
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td height="30px" style="font-size: 30px; line-height: 30px;">&nbsp;
-                                                        
-                                                    </td>
+                                                    <td>
+														<div class="spacer responsive-set-height" style="font-size: 30px; line-height: 30px; height: 30px;">&nbsp;</div>
+													</td>
                                                 </tr>
 												<tr>
 													<td>
 														<table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%;">
 															<tr>
 																<td>
-																	<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="left" class="responsive-table">
+																	<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="left" class="no-responsive-table">
 																		<tr>
 																			<td height="34px" style="vertical-align: middle;">
 																				<?php
@@ -880,7 +880,7 @@ class BP_Email_Tokens {
 																			</td>
 																		</tr>
 																	</table>
-																	<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="responsive-table">
+																	<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="no-responsive-table">
 																		<tr>
 																			<td height="34px" align="right" style="vertical-align: middle;" class="mobile-text-left">
 																				<a href="<?php echo bp_core_get_user_domain( $member_id ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2.125 ) . 'px' ) ?>;line-height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2 ) . 'px' ) ?>;"><?php _e( 'View Profile', 'buddyboss' ); ?></a>

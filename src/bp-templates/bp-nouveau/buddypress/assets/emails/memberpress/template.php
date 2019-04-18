@@ -175,7 +175,13 @@ $settings = bp_email_get_appearance_settings();
 			}
 
 			.avatar-wrap {
-				width: 100% !important;
+				width: 105px !important;
+			}
+
+			.responsive-set-height {
+				font-size: 5px;
+				line-height: 5px;
+				height: 5px;
 			}
         }
     </style>
