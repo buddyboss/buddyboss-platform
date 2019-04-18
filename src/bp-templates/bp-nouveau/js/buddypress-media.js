@@ -49,7 +49,7 @@ window.bp = window.bp || {};
 				url: BP_Nouveau.ajaxurl,
 				timeout: 3 * 60 * 60 * 1000,
 				acceptedFiles: 'image/*',
-				autoProcessQueue: true,
+				autoProcessQueue: false,
 				addRemoveLinks: true,
 				uploadMultiple: false,
 				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
@@ -290,12 +290,54 @@ window.bp = window.bp || {};
 				});
 
 				self.dropzone_obj.on('addedfile', function() {
-					$('#bp-media-uploader-modal-title').text(wp.i18n.__( 'Uploading', 'buddyboss' ) + '...');
-					$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf( wp.i18n.__( '%d out of %d uploaded', 'buddyboss' ), self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length )).show();
+					setTimeout(function(){
+						if ( self.dropzone_obj.getAcceptedFiles().length ) {
+							$('#bp-media-add-more').show();
+							$('#bp-media-submit').show();
+							$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf(wp.i18n.__('%d out of %d uploaded', 'buddyboss'), self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length)).show();
+						}
+					},1000);
 				});
 
 				self.dropzone_obj.on('queuecomplete', function() {
-					$('#bp-media-uploader-modal-title').text('Upload');
+					$('#bp-media-uploader-modal-title').text(wp.i18n.__( 'Upload', 'buddyboss' ));
+
+					if ( ! self.album_id ) {
+						$( '.bp-nouveau #bp-media-create-album-submit' ).prop('disabled',false);
+						$( '.bp-nouveau #bp-media-create-album-submit' ).trigger( 'click' );
+					} else {
+						var post_content = $('#bp-media-post-content').val();
+						var data = {
+							'action': 'media_save',
+							'_wpnonce': BP_Nouveau.nonces.media,
+							'medias': self.dropzone_media,
+							'content' : post_content
+						};
+
+						$.ajax({
+							type: 'POST',
+							url: BP_Nouveau.ajaxurl,
+							data: data,
+							success: function (response) {
+								if (response.success) {
+
+									// It's the very first media, let's make sure the container can welcome it!
+									if (!$('#media-stream ul.media-list').length) {
+										$('#media-stream').html($('<ul></ul>').addClass('media-list item-list bp-list bb-photo-list grid'));
+									}
+
+									// Prepend the activity.
+									bp.Nouveau.inject('#media-stream ul.media-list', response.data.media, 'prepend');
+									self.closeUploader(event);
+								}
+
+							}
+						});
+					}
+				});
+
+				self.dropzone_obj.on('processing', function() {
+					$('#bp-media-uploader-modal-title').text(wp.i18n.__( 'Uploading', 'buddyboss' ) + '...');
 				});
 
 				self.dropzone_obj.on('success', function(file, response) {
@@ -308,8 +350,6 @@ window.bp = window.bp || {};
 						self.dropzone_media.push( response.data );
 						//self.addMediaIdsToForumsForm();
 					}
-					$('#bp-media-add-more').show();
-					$('#bp-media-submit').show();
 					$('#bp-media-uploader-modal-title').text(wp.i18n.__( 'Uploading', 'buddyboss' ) + '...');
 					$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf( wp.i18n.__( '%d out of %d uploaded', 'buddyboss' ), self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length )).show();
 				});
@@ -381,33 +421,9 @@ window.bp = window.bp || {};
 			var self = this, data;
 
 			if ( self.current_tab === 'bp-dropzone-content' ) {
-				var post_content = $('#bp-media-post-content').val();
-				data = {
-					'action': 'media_save',
-					'_wpnonce': BP_Nouveau.nonces.media,
-					'medias': self.dropzone_media,
-					'content' : post_content
-				};
 
-				$.ajax({
-					type: 'POST',
-					url: BP_Nouveau.ajaxurl,
-					data: data,
-					success: function (response) {
-						if (response.success) {
+				self.dropzone_obj.processQueue();
 
-							// It's the very first media, let's make sure the container can welcome it!
-							if (!$('#media-stream ul.media-list').length) {
-								$('#media-stream').html($('<ul></ul>').addClass('media-list item-list bp-list bb-photo-list grid'));
-							}
-
-							// Prepend the activity.
-							bp.Nouveau.inject('#media-stream ul.media-list', response.data.media, 'prepend');
-							self.closeUploader(event);
-						}
-
-					}
-				});
 			} else if ( self.current_tab === 'bp-existing-media-content' ) {
 				var selected = [];
 				$('.bp-existing-media-wrap .bb-media-check-wrap [name="bb-media-select"]:checked').each(function() {
@@ -455,7 +471,7 @@ window.bp = window.bp || {};
 
 		saveAlbum: function(event) {
 			event.preventDefault();
-			var self = this, title = $('#bb-album-title'), privacy = $('#bb-album-privacy');
+			var self = this, title = $('#bb-album-title'), privacy = $('#bb-album-privacy'), i = 0;
 
 			if( $.trim(title.val()) === '' ) {
 				title.addClass('error');
@@ -469,6 +485,22 @@ window.bp = window.bp || {};
 				return false;
 			} else {
 				privacy.removeClass('error');
+			}
+
+			$( event.currentTarget ).prop('disabled',true);
+
+			if ( self.dropzone_obj.getAcceptedFiles().length ) {
+				var processQueue = false;
+				for( i = 0; i < self.dropzone_obj.getAcceptedFiles().length; i++ ) {
+					if ( self.dropzone_obj.getAcceptedFiles()[i].status === 'queued' ) {
+						processQueue = true;
+						break;
+					}
+				}
+				if ( processQueue ) {
+					self.dropzone_obj.processQueue();
+					return false;
+				}
 			}
 
 			var data = {
@@ -492,6 +524,7 @@ window.bp = window.bp || {};
 				url: BP_Nouveau.ajaxurl,
 				data: data,
 				success: function (response) {
+					$( event.currentTarget ).prop('disabled',false);
 					if ( response.success ) {
 						if ( self.album_id ) {
 							$('#bp-single-album-title').text(title.val());
@@ -519,6 +552,8 @@ window.bp = window.bp || {};
 				return false;
 			}
 
+			$(event.currentTarget).prop('disabled',true);
+
 			var data = {
 				'action': 'media_album_delete',
 				'_wpnonce': BP_Nouveau.nonces.media,
@@ -532,6 +567,9 @@ window.bp = window.bp || {};
 				success: function (response) {
 					if ( response.success ) {
 						window.location.href = response.data.redirect_url;
+					} else {
+						alert( wp.i18n.__( 'There was a problem deleting the album.', 'buddyboss' ) );
+						$(event.currentTarget).prop('disabled',false);
 					}
 				}
 			});
@@ -666,7 +704,7 @@ window.bp = window.bp || {};
 		toggleSubmitMediaButton: function() {
 			var submit_media_button = $('#bp-media-submit'), add_more_button = $('#bp-media-add-more');
 			if ( this.current_tab === 'bp-dropzone-content' ) {
-				if ( this.dropzone_media.length ) {
+				if ( this.dropzone_obj.getAcceptedFiles().length ) {
 					submit_media_button.show();
 					add_more_button.show();
 				} else {
