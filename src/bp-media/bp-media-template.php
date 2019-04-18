@@ -155,7 +155,7 @@ function bp_has_media( $args = '' ) {
 
 	$group_id = false;
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
-		$privacy[] = 'grouponly';
+		$privacy = array( 'grouponly' );
 		$group_id  = bp_get_current_group_id();
 		$user_id   = false;
 	}
@@ -896,12 +896,6 @@ function bp_has_albums( $args = '' ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
 
-	$group_id = false;
-	if ( bp_is_group() ) {
-		$group_id = bp_get_current_group_id();
-		$user_id  = false;
-	}
-
 	$privacy  = array( 'public' );
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
@@ -915,6 +909,13 @@ function bp_has_albums( $args = '' ) {
 		if ( bp_is_my_profile() ) {
 			$privacy[] = 'onlyme';
 		}
+	}
+
+	$group_id = false;
+	if ( bp_is_group() ) {
+		$group_id = bp_get_current_group_id();
+		$user_id  = false;
+		$privacy = array( 'grouponly' );
 	}
 
 	/*

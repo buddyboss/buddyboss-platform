@@ -21,7 +21,7 @@
 
 <?php bp_nouveau_media_hook( 'before', 'media_album_content' ); ?>
 
-<?php if ( bp_has_albums() ) : ?>
+<?php if ( bp_has_albums( bp_ajax_querystring( 'albums' ) ) ) : ?>
 
     <div id="albums-dir-list" class="bb-albums bb-albums-dir-list">
 

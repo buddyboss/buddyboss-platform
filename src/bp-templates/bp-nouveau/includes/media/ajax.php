@@ -18,6 +18,12 @@ add_action( 'admin_init', function() {
 			),
 		),
 		array(
+			'media_albums_loader' => array(
+				'function' => 'bp_nouveau_ajax_albums_loader',
+				'nopriv'   => true,
+			),
+		),
+		array(
 			'media_upload' => array(
 				'function' => 'bp_nouveau_ajax_media_upload',
 				'nopriv'   => true,
@@ -77,6 +83,64 @@ add_action( 'admin_init', function() {
 		}
 	}
 }, 12 );
+
+/**
+ * Load the template loop for the albums object.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string Template loop for the albums object
+ */
+function bp_nouveau_ajax_albums_loader() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['_wpnonce'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Use default nonce
+	$nonce = $_POST['_wpnonce'];
+	$check = 'bp_nouveau_media';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$page = ! empty( $_POST['page'] ) ? (int) $_POST['page'] : 1;
+
+	ob_start();
+	if ( bp_has_albums( array( 'page' => $page ) ) ) {
+		while ( bp_album() ) {
+			bp_the_album();
+			bp_get_template_part( 'media/album-entry' );
+
+			if ( bp_album_has_more_items() ) : ?>
+
+                <li class="load-more">
+                    <a href="<?php bp_album_has_more_items(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+                </li>
+
+			<?php endif;
+		}
+	}
+	$albums = ob_get_contents();
+	ob_end_clean();
+
+	wp_send_json_success( array(
+		'albums' => $albums,
+	) );
+}
 
 /**
  * Upload a media via a POST request.
