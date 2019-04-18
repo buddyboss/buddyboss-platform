@@ -826,7 +826,7 @@ class BP_Email_Tokens {
                                 <table cellpadding="0" cellspacing="0" border="0">
                                     <tr>
                                         <td width="20%">
-                                            <a href="<?php echo bp_core_get_user_domain( $member_id ); ?>"
+                                            <a class="avatar-wrap" href="<?php echo bp_core_get_user_domain( $member_id ); ?>"
                                                style="display: block; border-radius: 3px; width: 140px;">
                                                 <img alt="" src="<?php echo bp_core_fetch_avatar( array(
 													'item_id' => $member_id,
