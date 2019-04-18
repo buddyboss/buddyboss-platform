@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <div id="bp-hello-backdrop" style="display: none;"></div>
 
-<div id="bp-hello-container" role="dialog" aria-labelledby="bp-hello-title" style="display: none;">
+<div id="bp-hello-container" class="bp-hello-appboss" role="dialog" aria-labelledby="bp-hello-title" style="display: none;">
 	<div class="bp-hello-header" role="document">
 		<div class="bp-hello-close">
 			<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip="<?php esc_attr_e( 'Close pop-up', 'buddyboss' ); ?>">
@@ -29,10 +29,12 @@ defined( 'ABSPATH' ) || exit;
 
 	<div class="bp-hello-content">
 
-		<h2><?php esc_html_e( 'Video', 'buddyboss' ); ?></h2>
-		<p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'buddyboss' ); ?></p>
+		<div class="video-wrapper">
+			<div class="video-container">
+				<iframe width="560" height="315" src="https://www.youtube.com/embed/SZVB0_hmuoE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+			</div>
+		</div>
 
-		<br /><br />
 	</div>
 
 	<div class="bp-hello-footer">

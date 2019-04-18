@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-04-17 21:56:30+00:00\n"
+"POT-Creation-Date: 2019-04-18 00:45:39+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2793,24 +2793,7 @@ msgstr ""
 msgid "Say hello to AppBoss"
 msgstr ""
 
-#: bp-core/admin/templates/about-appboss.php:32
-msgid "Video"
-msgstr ""
-
-#: bp-core/admin/templates/about-appboss.php:33
-#: bp-core/admin/templates/about-buddyboss.php:54
-#: bp-core/admin/templates/about-buddyboss.php:57
-msgid ""
-"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod "
-"tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim "
-"veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea "
-"commodo consequat. Duis aute irure dolor in reprehenderit in voluptate "
-"velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat "
-"cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id "
-"est laborum."
-msgstr ""
-
-#: bp-core/admin/templates/about-appboss.php:43
+#: bp-core/admin/templates/about-appboss.php:45
 msgid "Native mobile apps by <a href=\"%s\">AppBoss</a>."
 msgstr ""
 
@@ -2834,6 +2817,18 @@ msgstr[1] ""
 #: bp-core/admin/templates/about-buddyboss.php:53
 #: bp-core/admin/templates/about-buddyboss.php:56
 msgid "Feature"
+msgstr ""
+
+#: bp-core/admin/templates/about-buddyboss.php:54
+#: bp-core/admin/templates/about-buddyboss.php:57
+msgid ""
+"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod "
+"tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim "
+"veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea "
+"commodo consequat. Duis aute irure dolor in reprehenderit in voluptate "
+"velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat "
+"cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id "
+"est laborum."
 msgstr ""
 
 #: bp-core/admin/templates/about-buddyboss.php:59
@@ -12367,7 +12362,7 @@ msgid "Associated Group:"
 msgstr ""
 
 #: bp-integrations/learndash/templates/admin/integration-tab-intro.php:4
-msgid "LearnDash <span>&mdash; purchase plugin to activate</span>"
+msgid "LearnDash <span>&mdash; requires plugin to activate</span>"
 msgstr ""
 
 #: bp-integrations/learndash/templates/admin/integration-tab-intro.php:7
@@ -12380,6 +12375,10 @@ msgstr ""
 
 #: bp-integrations/learndash/templates/admin/integration-tab-intro.php:11
 msgid "LearnDash LMS"
+msgstr ""
+
+#: bp-integrations/learndash/templates/admin/integration-tab-intro.php:21
+msgid "Get LearnDash"
 msgstr ""
 
 #: bp-integrations/learndash/templates/admin/learndash/sync-meta-box.php:11
@@ -12508,7 +12507,7 @@ msgid "MemberPress"
 msgstr ""
 
 #: bp-integrations/memberpress/templates/admin/integration-tab-intro.php:4
-msgid "MemberPress <span>&mdash; purchase plugin to activate</span>"
+msgid "MemberPress <span>&mdash; requires plugin to activate</span>"
 msgstr ""
 
 #: bp-integrations/memberpress/templates/admin/integration-tab-intro.php:7
@@ -12517,6 +12516,10 @@ msgid ""
 "add the ability to easily enroll users into courses based on their "
 "purchased membership level. If using our BuddyBoss Theme we also include "
 "styling for MemberPress."
+msgstr ""
+
+#: bp-integrations/memberpress/templates/admin/integration-tab-intro.php:21
+msgid "Get MemberPress"
 msgstr ""
 
 #: bp-integrations/memberships/bp-admin-memberships-tab.php:38
@@ -12750,7 +12753,7 @@ msgid "WooCommerce"
 msgstr ""
 
 #: bp-integrations/woocommerce/templates/admin/integration-tab-intro.php:4
-msgid "WooCommerce <span>&mdash; install plugin to activate</span>"
+msgid "WooCommerce <span>&mdash; requires plugin to activate</span>"
 msgstr ""
 
 #: bp-integrations/woocommerce/templates/admin/integration-tab-intro.php:7
@@ -12759,6 +12762,10 @@ msgid ""
 "add the ability to easily enroll users into courses based on their "
 "purchased WooCommerce product. If using our BuddyBoss Theme we also include "
 "styling for WooCommerce."
+msgstr ""
+
+#: bp-integrations/woocommerce/templates/admin/integration-tab-intro.php:21
+msgid "Get WooCommerce"
 msgstr ""
 
 #: bp-invites/actions/invites.php:54
