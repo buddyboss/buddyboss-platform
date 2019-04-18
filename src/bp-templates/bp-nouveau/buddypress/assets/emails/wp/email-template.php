@@ -187,13 +187,13 @@ $settings = bp_email_get_appearance_settings();
 			}
 
 			.avatar-wrap {
-				width: 105px !important;
+				width: 80px !important;
 			}
 
 			.responsive-set-height {
-				font-size: 5px;
-				line-height: 5px;
-				height: 5px;
+				font-size: 5px !important;
+				line-height: 5px !important;
+				height: 5px !important;
 			}
 		}
 	</style>
