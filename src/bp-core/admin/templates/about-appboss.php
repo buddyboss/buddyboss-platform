@@ -56,7 +56,7 @@ defined( 'ABSPATH' ) || exit;
 					printf(
 						'<a class="youtube bp-tooltip" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
 						esc_attr( 'Follow AppBoss on YouTube', 'buddyboss' ),
-						esc_url( 'https://www.youtube.com/c/AppBossWP' ),
+						esc_url( 'https://www.youtube.com/channel/UCcvCtasowEksYbGwcP1eJOw' ),
 						esc_html( 'Follow BuddyBoss on YouTube', 'buddyboss' )
 					);
 					?>
@@ -68,6 +68,17 @@ defined( 'ABSPATH' ) || exit;
 						'<a class="twitter bp-tooltip" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
 						esc_attr( 'Follow AppBoss on Twitter', 'buddyboss' ),
 						esc_url( 'https://twitter.com/AppBossWP' ),
+						esc_html( 'Follow BuddyBoss on Twitter', 'buddyboss' )
+					);
+					?>
+				</li>
+
+				<li>
+					<?php
+					printf(
+						'<a class="facebook bp-tooltip" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
+						esc_attr( 'Follow AppBoss on Facebook', 'buddyboss' ),
+						esc_url( 'https://facebook.com/AppBossWP' ),
 						esc_html( 'Follow BuddyBoss on Twitter', 'buddyboss' )
 					);
 					?>
