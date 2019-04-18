@@ -837,6 +837,10 @@ function albums_check_album_access( $album_id ) {
 
     $album = albums_get_album( $album_id );
 
+    if ( ! empty( $album->group_id ) ) {
+        return false;
+    }
+
     if ( ! empty( $album->privacy ) ) {
 
         if ( 'public' == $album->privacy ) {
