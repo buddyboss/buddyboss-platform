@@ -130,19 +130,7 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 	$attachment = get_post( $aid );
 
 	if ( ! empty( $attachment ) ) {
-
-		//$file_path = get_attached_file( $attachment->ID );
-
 		$attachment_data = wp_get_attachment_metadata( $attachment->ID );
-
-//		if ( ! empty( $file_path ) ) {
-//			$path        = @pathinfo( $file_path );
-//			$newfilename = $path['filename'] . '-buddyboss-reduced-sized-' . time();
-//			$newfile     = $path['dirname'] . "/" . $newfilename . "." . $path['extension'];
-//			bp_media_compress_image( $file_path, $newfile, 0.1 );
-//			$path                                      = @pathinfo( $newfile );
-//			$attachment_data['buddyboss_reduced_size'] = $newfilename . '.' . $path['extension'];
-//		}
 
 		if ( $attachment_data ) {
 			$attachment_data[ 'buddyboss_media_upload' ] = true;
@@ -150,7 +138,6 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 		}
 
 		return $attachment;
-
 	}
 
 	return new WP_Error( 'error_uploading', __( 'Error while uploading media.', 'buddyboss' ), array( 'status' => 500 ) );
