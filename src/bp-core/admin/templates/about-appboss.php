@@ -42,7 +42,7 @@ defined( 'ABSPATH' ) || exit;
 			<p>
 				<?php
 				printf(
-					__( 'Native mobile apps by <a href="%s">AppBoss</a>.', 'buddyboss' ),
+					__( '<span>Native mobile apps by </span><a href="%s">AppBoss</a><span>.</span>', 'buddyboss' ),
 					esc_url( 'https://appboss.com/' )
 				);
 				?>

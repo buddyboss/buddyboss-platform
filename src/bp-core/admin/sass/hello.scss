@@ -21,9 +21,10 @@ TABLE OF CONTENTS:
 	4.3 - Header content
 	4.4 - Content content
 6.0 - Media Queries
-	6.1 - Desktop Small
-	6.2 - Desktop Medium
-	6.3 - Desktop Large
+	6.1 - Mobile
+	6.2 - Desktop Small
+	6.3 - Desktop Medium
+	6.4 - Desktop Large
 ------------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------
@@ -358,7 +359,17 @@ TABLE OF CONTENTS:
  *----------------------------------------------------------------------------*/
 
 /**
- * 6.1 - Desktop Small
+ * 6.1 - Mobile
+ */
+@media screen and (max-width: 500px) {
+
+	.bp-hello-social-cta p span {
+		display: none;
+	}
+}
+
+/**
+ * 6.2 - Desktop Small
  */
 @media screen and (max-width: 1024px) {
 
@@ -368,7 +379,7 @@ TABLE OF CONTENTS:
 }
 
 /*
- * 6.2 - Desktop Medium
+ * 6.3 - Desktop Medium
  */
 @media only screen and (min-width: 1024px) {
 
@@ -441,7 +452,7 @@ TABLE OF CONTENTS:
 }
 
 /**
- * 6.3 - Desktop Large
+ * 6.4 - Desktop Large
  */
 @media screen and (min-width: 1280px) {
 
