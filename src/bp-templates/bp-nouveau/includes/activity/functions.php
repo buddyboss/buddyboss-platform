@@ -51,6 +51,7 @@ function bp_nouveau_activity_enqueue_scripts() {
 	wp_enqueue_script( 'giphy' );
 	wp_enqueue_script( 'emojionearea' );
 	wp_enqueue_style( 'emojionearea' );
+	wp_enqueue_script( 'isInViewport' );
 }
 
 /**

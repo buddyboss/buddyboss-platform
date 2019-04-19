@@ -78,6 +78,8 @@ function bp_core_register_common_scripts() {
 		'emojione'        => array( 'file' => "{$url}emojione-edited{$min}.js", 'dependencies' => array(), 'footer' => true ),
         'emojionearea'        => array( 'file' => "{$url}emojionearea-edited{$min}.js", 'dependencies' => array( 'emojione' ), 'footer' => true ),
 
+		'isInViewport'        => array( 'file' => "{$url}vendor/isInViewport{$min}.js", 'dependencies' => array(), 'footer' => true ),
+
 	);
 
 	// Version 2.7 - Add Moment.js locale to our $scripts array if we found one.
