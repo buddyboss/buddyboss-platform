@@ -521,7 +521,7 @@ class BP_Admin {
 
 		$submenu[ 'buddyboss-platform' ] = array_values( $submenu[ 'buddyboss-platform' ] );
 
-		if ( $app_menu ) {
+		if ( isset( $app_menu ) ) {
 			$submenu[ 'buddyboss-platform' ][] = $app_menu;
 		}
 
