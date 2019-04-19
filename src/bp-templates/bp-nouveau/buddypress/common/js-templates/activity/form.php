@@ -16,9 +16,6 @@
 
 <script type="text/html" id="tmpl-activity-link-preview">
 	<# if ( data.link_scrapping ) { #>
-	<input type="url" id="activity-link-preview-url" value="{{data.link_url}}" />
-	<# } #>
-	<# if ( data.link_scrapping ) { #>
 	<# if ( data.link_loading ) { #>
 	<span class="activity-url-scrapper-loading activity-ajax-loader"><?php esc_html_e( 'Processing...', 'buddyboss' ) ?></span>
 	<# } #>
@@ -93,13 +90,6 @@
         <div class="post-elements-buttons-item post-media">
 			<a href="#" id="activity-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip="<?php _e('Attach a photo', 'buddyboss'); ?>">
 				<span class="dashicons dashicons-admin-media"></span>
-			</a>
-		</div>
-	<?php endif; ?>
-	<?php if ( bp_is_activity_link_preview_active() ): ?>
-        <div class="post-elements-buttons-item post-link">
-			<a href="#" id="activity-link-preview-button" class="toolbar-button bp-tooltip" data-bp-tooltip="<?php _e('Post a link', 'buddyboss'); ?>">
-				<span class="dashicons dashicons-admin-links"></span>
 			</a>
 		</div>
 	<?php endif; ?>

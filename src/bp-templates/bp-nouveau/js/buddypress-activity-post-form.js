@@ -285,7 +285,6 @@ window.bp = window.bp || {};
 		template: bp.template( 'activity-link-preview' ),
 		events: {
 			'click #activity-link-preview-button': 'toggleURLInput',
-			'keyup #activity-link-preview-url': 'updateLinkPreview',
 			'click #activity-url-prevPicButton': 'prev',
 			'click #activity-url-nextPicButton': 'next',
 			'click #activity-link-preview-close-image': 'close',
@@ -354,102 +353,6 @@ window.bp = window.bp || {};
 			document.removeEventListener( 'activity_link_preview_close', this.destroy.bind(this) );
 
 			$('#whats-new-attachments').addClass('empty');
-		},
-
-		updateLinkPreview: function( event ) {
-			var self = this;
-
-			if ( this.linkTimeout != null ) {
-				clearTimeout( this.linkTimeout );
-			}
-
-			this.linkTimeout = setTimeout( function() {
-				this.linkTimeout = null;
-				self.scrapURL( event.target.value );
-			}, 1000 );
-		},
-
-		scrapURL: function(urlText) {
-			var urlString = '';
-			if ( urlText.indexOf( 'http://' ) >= 0 ) {
-				urlString = this.getURL( 'http://', urlText );
-			} else if ( urlText.indexOf( 'https://' ) >= 0 ) {
-				urlString = this.getURL( 'https://', urlText );
-			} else if ( urlText.indexOf( 'www.' ) >= 0 ) {
-				urlString = this.getURL( 'www', urlText );
-			}
-
-			if( urlString !== '' ){
-				//check if the url of any of the excluded video oembeds
-				var url_a = document.createElement( 'a' );
-				url_a.href = urlString;
-				var hostname = url_a.hostname;
-				if ( BP_Nouveau.activity.params.excluded_hosts.indexOf( hostname ) !== - 1 ) {
-					urlString = '';
-				}
-			}
-
-			if( '' !== urlString ) {
-				this.loadURLPreview( urlString );
-			}
-		},
-
-		getURL: function( prefix, urlText ) {
-			var urlString = '';
-			var startIndex = urlText.indexOf( prefix );
-			for ( var i = startIndex; i < urlText.length; i ++ ) {
-				if ( urlText[i] === ' ' || urlText[i] === '\n' ) {
-					break;
-				} else {
-					urlString += urlText[i];
-				}
-			}
-			if ( prefix === 'www' ) {
-				prefix = 'http://';
-				urlString = prefix + urlString;
-			}
-			return urlString;
-		},
-
-		loadURLPreview: function(url) {
-			var self = this;
-
-			var regexp = /^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
-			if ( regexp.test( url ) ) {
-
-				self.model.set( {
-					link_scrapping: true,
-					link_loading: true,
-					link_error: false,
-					link_url: url
-				} );
-
-				bp.ajax.post( 'bp_activity_parse_url', { url: url } ).always( function( response ) {
-					self.model.set('link_loading', false);
-
-					if ( response.title === '' && response.images === '' ) {
-						self.model.set( 'link_scrapping', false );
-						return;
-					}
-
-					if ( response.error === '' ) {
-						self.model.set( {
-							link_success: true,
-							link_title: response.title,
-							link_description: response.description,
-							link_images: response.images,
-							link_image_index: 0
-						} );
-						$('#whats-new-attachments').removeClass('empty');
-					} else {
-						self.model.set( {
-							link_success: false,
-							link_error: true,
-							link_error_msg: response.error
-						} );
-					}
-				});
-			}
 		}
 	} );
 
@@ -702,8 +605,9 @@ window.bp = window.bp || {};
 		tagName   : 'div',
 		className : 'bp-suggestions',
 		id        : 'whats-new',
-		events : {
-			'paste' : 'handlePaste'
+		events: {
+			'paste': 'handlePaste',
+			'keyup': 'handleKeyUp'
 		},
 		attributes: {
 			name         : 'whats-new',
@@ -716,8 +620,12 @@ window.bp = window.bp || {};
 
 		initialize: function() {
 			this.on( 'ready', this.adjustContent, this );
-
 			this.options.activity.on( 'change:content', this.resetContent, this );
+			this.linkTimeout = null;
+
+			if ( _.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
+				this.$el.off( 'keyup' );
+			}
 		},
 
 		adjustContent: function() {
@@ -762,6 +670,102 @@ window.bp = window.bp || {};
 
 			// Prevent the standard paste behavior
 			event.preventDefault();
+		},
+
+		handleKeyUp: function( event ) {
+			var self = this;
+
+			if ( this.linkTimeout != null ) {
+				clearTimeout( this.linkTimeout );
+			}
+
+			this.linkTimeout = setTimeout( function() {
+				this.linkTimeout = null;
+				self.scrapURL( event.target.textContent );
+			}, 500 );
+		},
+
+		scrapURL: function(urlText) {
+			var urlString = '';
+			if ( urlText.indexOf( 'http://' ) >= 0 ) {
+				urlString = this.getURL( 'http://', urlText );
+			} else if ( urlText.indexOf( 'https://' ) >= 0 ) {
+				urlString = this.getURL( 'https://', urlText );
+			} else if ( urlText.indexOf( 'www.' ) >= 0 ) {
+				urlString = this.getURL( 'www', urlText );
+			}
+
+			if( urlString !== '' ){
+				//check if the url of any of the excluded video oembeds
+				var url_a = document.createElement( 'a' );
+				url_a.href = urlString;
+				var hostname = url_a.hostname;
+				if ( BP_Nouveau.activity.params.excluded_hosts.indexOf( hostname ) !== - 1 ) {
+					urlString = '';
+				}
+			}
+
+			if( '' !== urlString ) {
+				this.loadURLPreview( urlString );
+			}
+		},
+
+		getURL: function( prefix, urlText ) {
+			var urlString = '';
+			var startIndex = urlText.indexOf( prefix );
+			for ( var i = startIndex; i < urlText.length; i ++ ) {
+				if ( urlText[i] === ' ' || urlText[i] === '\n' ) {
+					break;
+				} else {
+					urlString += urlText[i];
+				}
+			}
+			if ( prefix === 'www' ) {
+				prefix = 'http://';
+				urlString = prefix + urlString;
+			}
+			return urlString;
+		},
+
+		loadURLPreview: function(url) {
+			var self = this;
+
+			var regexp = /^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+			if ( regexp.test( url ) ) {
+
+				self.options.activity.set( {
+					link_scrapping: true,
+					link_loading: true,
+					link_error: false,
+					link_url: url
+				} );
+
+				bp.ajax.post( 'bp_activity_parse_url', { url: url } ).always( function( response ) {
+					self.options.activity.set('link_loading', false);
+
+					if ( response.title === '' && response.images === '' ) {
+						self.options.activity.set( 'link_scrapping', false );
+						return;
+					}
+
+					if ( response.error === '' ) {
+						self.options.activity.set( {
+							link_success: true,
+							link_title: response.title,
+							link_description: response.description,
+							link_images: response.images,
+							link_image_index: 0
+						} );
+						$('#whats-new-attachments').removeClass('empty');
+					} else {
+						self.options.activity.set( {
+							link_success: false,
+							link_error: true,
+							link_error_msg: response.error
+						} );
+					}
+				});
+			}
 		}
 	} );
 
@@ -1329,8 +1333,7 @@ window.bp = window.bp || {};
 			'focus #whats-new' : 'displayFull',
 			'reset'            : 'resetForm',
 			'submit'           : 'postUpdate',
-			'keydown'          : 'postUpdate',
-			'keyup'            : 'updateLinkPreview'
+			'keydown'          : 'postUpdate'
 		},
 
 		initialize: function() {
@@ -1342,18 +1345,12 @@ window.bp = window.bp || {};
 			// Clone the model to set the resetted one
 			this.resetModel = this.model.clone();
 
-			this.linkTimeout = null;
-
 			this.views.set( [
 				new bp.Views.FormAvatar(),
 				new bp.Views.FormContent( { activity: this.model, model: this.model } )
 			] );
 
 			this.model.on( 'change:errors', this.displayFeedback, this );
-
-			if ( ! BP_Nouveau.activity.params.link_preview ) {
-				this.$el.off( 'keyup' );
-			}
 		},
 
 		displayFull: function( event ) {
