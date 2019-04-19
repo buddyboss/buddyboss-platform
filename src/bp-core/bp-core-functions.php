@@ -756,7 +756,7 @@ function bp_core_get_directory_page_default_titles() {
 		'groups'            => __( 'Groups', 'buddyboss' ),
 		'blogs'             => __( 'Sites', 'buddyboss' ),
 		'members'           => __( 'Members', 'buddyboss' ),
-		'photos'            => __( 'Photos', 'buddyboss' ),
+		'media'             => __( 'Photos', 'buddyboss' ),
 		'activate'          => __( 'Activate', 'buddyboss' ),
 		'register'          => __( 'Register', 'buddyboss' ),
 		//'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
