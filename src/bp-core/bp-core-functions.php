@@ -3993,7 +3993,7 @@ function bp_core_set_default_pages() {
 		unset( $valid_pages['register'] );
 	}
 
-	// Remove Terms of Service page to create while first time installation.
+	// Remove Terms of Service page from auto-creation on installation.
 	unset( $valid_pages['terms'] );
 
 	foreach ( $valid_pages as $key => $value ) {
