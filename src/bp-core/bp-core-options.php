@@ -1304,3 +1304,25 @@ function bp_enable_private_network_public_content( $default = '' ) {
 	 */
 	return apply_filters( 'bp_enable_private_network_public_content', bp_get_option( 'bp-enable-private-network-public-content', '' ) );
 }
+
+/**
+ * Is the Toolbar hidden for logged in users?
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if the admin bar should be hidden for logged in users,
+ *              otherwise false.
+ */
+function bp_show_login_adminbar( $default = true ) {
+
+	/**
+	 * Filters whether or not the toolbar is hidden for logged in users.
+	 *
+	 * @since BuddyPress 1.6.0
+	 *
+	 * @param bool $value Whether or not the toolbar is hidden.
+	 */
+	return (bool) apply_filters( 'bp_show_login_adminbar', (bool) bp_get_option( 'show-login-adminbar', $default ) );
+}

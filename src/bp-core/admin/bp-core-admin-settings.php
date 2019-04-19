@@ -32,6 +32,21 @@ function bp_admin_setting_callback_admin_bar() {
 }
 
 /**
+ * Admin bar for logged in users setting field.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_admin_setting_callback_login_admin_bar() {
+	?>
+
+	<input id="show-login-adminbar" name="show-login-adminbar" type="checkbox" value="1" <?php checked( bp_show_login_adminbar( true ) ); ?> />
+	<label for="show-login-adminbar"><?php _e( 'Show the Toolbar for logged in members', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
  * Allow members to delete their accounts setting field.
  *
  * @since BuddyPress 1.6.0

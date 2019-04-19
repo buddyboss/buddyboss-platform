@@ -115,6 +115,7 @@ add_action( 'bp_template_redirect', 'bp_private_network_template_redirect',     
  */
 add_action( 'bp_after_setup_theme', 'bp_check_theme_template_pack_dependency',   -10 );
 add_action( 'bp_after_setup_theme', 'bp_load_theme_functions',                    1  );
+add_action( 'bp_after_setup_theme', 'bp_show_hide_toolbar',                       9999999  );
 
 // Load the admin.
 if ( is_admin() ) {
