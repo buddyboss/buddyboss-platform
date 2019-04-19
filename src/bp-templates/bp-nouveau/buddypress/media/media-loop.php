@@ -15,8 +15,8 @@ bp_nouveau_before_loop(); ?>
 
             <header class="bb-member-photos-header">
                 <div class="bb-photos-meta">
-                    <a data-bp-tooltip="<?php _e( 'Delete', 'buddyboss' ); ?>" class="bb-delete bp-tooltip" id="bb-delete-media" href="#"><span class="dashicons dashicons-trash"></span></a>
-                    <a data-bp-tooltip="<?php _e( 'Select All', 'buddyboss' ); ?>" class="bb-select bp-tooltip" id="bb-select-deselect-all-media" href="#"><span class="dashicons dashicons-yes"></span></a>
+                    <a data-bp-tooltip="<?php _e( 'Delete', 'buddyboss' ); ?>" class="bb-delete bp-tooltip" id="bb-delete-media" href="#"><i class="dashicons dashicons-trash"></i></a>
+                    <a data-bp-tooltip="<?php _e( 'Select All', 'buddyboss' ); ?>" class="bb-select bp-tooltip" id="bb-select-deselect-all-media" href="#"><i class="dashicons dashicons-yes"></i></a>
                 </div>
             </header>
 

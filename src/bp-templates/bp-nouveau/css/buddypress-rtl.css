@@ -5435,6 +5435,56 @@ button[data-bp-close]:hover {
   color: #777;
 }
 
+.animate-spin {
+  animation: spin 2s infinite linear;
+  display: inline-block;
+}
+
+@-moz-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-359deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-359deg);
+  }
+}
+
+@-o-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-359deg);
+  }
+}
+
+@-ms-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-359deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-359deg);
+  }
+}
+
 /*-------------------------------------*\
 	HINT.css - A CSS tooltip library
 \*-------------------------------------*/
@@ -9376,8 +9426,45 @@ body.login .login-popup .mfp-close:hover {
 }
 
 .bb-photos-meta {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
   margin-right: auto;
   margin-bottom: 10px;
+}
+
+.bb-photos-meta a {
+  margin-right: 10px;
+}
+
+.bb-photos-meta .bb-delete i {
+  font-size: 21px;
+}
+
+.bb-photos-meta .bb-select i {
+  border: 1px solid;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-size: 15px;
+  border-radius: 50%;
+  width: 19px;
+  height: 19px;
+}
+
+.bb-photos-meta .bb-select.selected i {
+  background: #000;
+  color: #fff;
+  border-color: #000;
 }
 
 .bb-photos-date {
@@ -10097,6 +10184,12 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 
 .bp-media-upload-tab {
   margin-left: 15px;
+}
+
+#buddypress ul.bp-list.loading {
+  background: #fff;
+  padding: 20px;
+  text-align: center;
 }
 
 /**

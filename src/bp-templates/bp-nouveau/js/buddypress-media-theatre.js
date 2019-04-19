@@ -201,7 +201,7 @@ window.bp = window.bp || {};
 
 		getActivity: function() {
 			var self = this;
-			$('.bb-media-info-section .activity-list').html('<i class="bb-icon-loader animate-spin"></i>');
+			$('.bb-media-info-section .activity-list').addClass('loading').html('<i class="dashicons dashicons-update animate-spin"></i>');
 			if ( self.current_media && typeof self.current_media.activity_id !== 'undefined' ) {
 				$.ajax({
 					type: 'POST',
@@ -213,7 +213,7 @@ window.bp = window.bp || {};
 					},
 					success: function (response) {
 						if (response.success) {
-							$('.bb-media-info-section .activity-list').html(response.data.activity);
+							$('.bb-media-info-section .activity-list').removeClass('loading').html(response.data.activity);
 							$('.bb-media-info-section').show();
 						}
 					}
