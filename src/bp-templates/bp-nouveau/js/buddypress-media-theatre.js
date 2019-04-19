@@ -88,6 +88,10 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			var target = $(event.currentTarget), id, self = this;
 
+			if ( target.closest('#bp-existing-media-content').length ) {
+				return false;
+			}
+
 			self.setupGlobals();
 			self.setMedias(target);
 
