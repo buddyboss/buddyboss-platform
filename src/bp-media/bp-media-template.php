@@ -1229,7 +1229,7 @@ function bp_get_album_id() {
 }
 
 /**
- * Output the media album ID.
+ * Output the media album title.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1261,35 +1261,25 @@ function bp_get_album_title() {
 }
 
 /**
- * Output the media album ID.
- *
- * @since BuddyBoss 1.0.0
- *
- */
-function bp_album_description() {
-	echo bp_get_album_description();
-}
-
-/**
- * Return the album description.
+ * Return the album privacy.
  *
  * @since BuddyBoss 1.0.0
  *
  * @global object $media_album_template {@link BP_Media_Album_Template}
  *
- * @return string The media album description.
+ * @return string The media album privacy.
  */
-function bp_get_album_description() {
+function bp_get_album_privacy() {
 	global $media_album_template;
 
 	/**
-	 * Filters the album description being displayed.
+	 * Filters the album privacy being displayed.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param int $id The media album description.
+	 * @param int $id The media album privacy.
 	 */
-	return apply_filters( 'bp_get_album_description', $media_album_template->album->description );
+	return apply_filters( 'bp_get_album_privacy', $media_album_template->album->privacy );
 }
 
 /**

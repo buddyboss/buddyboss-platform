@@ -489,7 +489,7 @@ window.bp = window.bp || {};
 
 			$( event.currentTarget ).prop('disabled',true);
 
-			if ( self.dropzone_obj.getAcceptedFiles().length ) {
+			if ( self.dropzone_obj !== null && self.dropzone_obj.getAcceptedFiles().length ) {
 				var processQueue = false;
 				for( i = 0; i < self.dropzone_obj.getAcceptedFiles().length; i++ ) {
 					if ( self.dropzone_obj.getAcceptedFiles()[i].status === 'queued' ) {
