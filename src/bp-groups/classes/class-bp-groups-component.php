@@ -192,7 +192,7 @@ class BP_Groups_Component extends BP_Component {
 				require $this->path . 'bp-groups/actions/access.php';
 
 				// Public nav items.
-				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'media', 'albums', 'send-invites', 'subgroups' ), true ) ) {
+				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'send-invites', 'subgroups' ), true ) ) {
 					require $this->path . 'bp-groups/screens/single/' . bp_current_action() . '.php';
 				}
 
@@ -701,14 +701,14 @@ class BP_Groups_Component extends BP_Component {
 
 			if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) {
 				$sub_nav[] = array(
-					'name'                => sprintf( __( 'Photos %s', 'buddyboss' ), '<span>' . number_format( bp_media_get_total_group_media_count() ) . '</span>' ),
-					'slug'                => 'media',
+					'name'                => __( 'Photos', 'buddyboss' ),
+					'slug'                => 'photos',
 					'parent_url'          => $group_link,
 					'parent_slug'         => $this->current_group->slug,
 					'screen_function'     => 'groups_screen_group_media',
 					'position'            => 80,
 					'user_has_access'     => $this->current_group->user_has_access,
-					'item_css_id'         => 'media',
+					'item_css_id'         => 'photos',
 					'no_access_url'       => $group_link,
 				);
 

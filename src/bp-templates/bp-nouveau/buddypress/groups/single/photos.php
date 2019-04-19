@@ -11,7 +11,7 @@
 switch ( bp_current_action() ) :
 
 	// Home/Media
-	case 'media':
+	case 'photos':
 
 		if ( bp_is_group_media() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() ) ) :
 		    bp_get_template_part( 'media/add-media' );

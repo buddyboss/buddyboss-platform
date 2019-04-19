@@ -3024,7 +3024,7 @@ function bp_is_blogs_directory() {
 function bp_is_group_media() {
 	$retval = false;
 
-	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'media' ) ) {
+	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'photos' ) ) {
 		$retval = true;
 	}
 

@@ -1,13 +1,13 @@
 <?php
 /**
- * Groups: Single group "Activity" screen handler
+ * Groups: Single group "Albums" screen handler
  *
  * @package BuddyBoss\Groups\Screens
  * @since BuddyPress 3.0.0
  */
 
 /**
- * Handle the loading of a single group's activity.
+ * Handle the loading of a single group's albums.
  *
  * @since BuddyPress 2.4.0
  */

@@ -157,13 +157,13 @@ class BP_Media_Component extends BP_Component {
 		// All globals for media component.
 		// Note that global_tables is included in this array.
 		parent::setup_globals( array(
-			'slug'                  => BP_MEDIA_SLUG,
+			'slug'                  => 'photos',
 			'root_slug'             => isset( $bp->pages->media->slug ) ? $bp->pages->media->slug : BP_MEDIA_SLUG,
 			'has_directory'         => true,
 //			'notification_callback' => 'bp_media_format_notifications',
 			'global_tables'         => $global_tables,
 			'directory_title'       => isset( $bp->pages->media->title ) ? $bp->pages->media->title : $default_directory_title,
-			'search_string'         => __( 'Search Media&hellip;', 'buddyboss' ),
+			'search_string'         => __( 'Search Photos&hellip;', 'buddyboss' ),
 		) );
 
 		/* Single Album Globals **********************************************/

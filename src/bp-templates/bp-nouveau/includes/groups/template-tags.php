@@ -1244,7 +1244,7 @@ function bp_nouveau_group_template_part() {
 		} elseif ( bp_is_group_membership_request() ) {
 			$template = 'request-membership';
 		} elseif ( bp_is_group_media() ) {
-			$template = 'media';
+			$template = 'photos';
 		} elseif ( bp_is_group_albums() ) {
 			$template = 'albums';
 		}

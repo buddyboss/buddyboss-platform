@@ -1,15 +1,15 @@
 <?php
 /**
- * Groups: Single group "Activity" screen handler
+ * Groups: Single group "Photos" screen handler
  *
  * @package BuddyBoss\Groups\Screens
- * @since BuddyPress 3.0.0
+ * @since BuddyBoss 1.0.0
  */
 
 /**
- * Handle the loading of a single group's activity.
+ * Handle the loading of a single group's photos.
  *
- * @since BuddyPress 2.4.0
+ * @since BuddyBoss 1.0.0
  */
 function groups_screen_group_media() {
 
@@ -18,16 +18,16 @@ function groups_screen_group_media() {
 	}
 
 	/**
-	 * Fires before the loading of a single group's activity page.
+	 * Fires before the loading of a single group's photos page.
 	 *
-	 * @since BuddyPress 2.4.0
+	 * @since BuddyBoss 1.0.0
 	 */
 	do_action( 'groups_screen_group_media' );
 
 	/**
-	 * Filters the template to load for a single group's activity page.
+	 * Filters the template to load for a single group's photos page.
 	 *
-	 * @since BuddyPress 2.4.0
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $value Path to a single group's template to load.
 	 */
