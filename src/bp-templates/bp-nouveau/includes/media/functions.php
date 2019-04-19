@@ -306,6 +306,12 @@ function bp_nouveau_media_update_media_privacy( &$album ) {
     }
 }
 
+/**
+ * Attach media to the message object
+ *
+ * @since BuddyBoss 1.0.0
+ * @param $message
+ */
 function bp_nouveau_media_attach_media_to_message( &$message ) {
 
     if ( bp_is_messages_media_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['media'] ) ) {

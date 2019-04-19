@@ -108,8 +108,10 @@ function bp_get_media_root_slug() {
  *     @type int|array|bool    $album_id         The ID(s) of album(s) whose media should be fetched. Pass a single ID or
  *                                               an array of IDs. When viewing a single album page, 'album_id' defaults to
  *                                               the ID of the displayed album. Otherwise the default is false.
- *     @type int               $offset           Return only media items with an ID greater than or equal to this one.
- *                                               Note that providing an offset will disable pagination. Default: false.
+ *     @type int|array|bool    $group_id         The ID(s) of group(s) whose media should be fetched. Pass a single ID or
+ *                                               an array of IDs. When viewing a single group page, 'group_id' defaults to
+ *                                               the ID of the displayed group. Otherwise the default is false.
+ *     @type array             $privacy          Limit results by privacy. Default: public | grouponly.
  * }
  * @return bool Returns true when media found, otherwise false.
  */
@@ -182,22 +184,14 @@ function bp_has_media( $args = '' ) {
 		'album_id'          => $album_id,    // album_id to filter on.
 		'group_id'          => $group_id,    // group_id to filter on.
 		'privacy'           => $privacy,     // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
-		'offset'            => false,        // Return only items >= this ID.
-		'since'             => false,        // Return only items recorded since this Y-m-d H:i:s date.
 
 		// Searching.
 		'search_terms'      => $search_terms_default,
-		'update_meta_cache' => true,
 	), 'has_media' );
 
 	/*
 	 * Smart Overrides.
 	 */
-
-	// Ignore pagination if an offset is passed.
-	if ( ! empty( $r['offset'] ) ) {
-		$r['page'] = 0;
-	}
 
 	// Search terms.
 	if ( ! empty( $_REQUEST['s'] ) && empty( $r['search_terms'] ) ) {
@@ -873,8 +867,10 @@ function bp_get_media_directory_permalink() {
  *     @type int|array|bool    $user_id          The ID(s) of user(s) whose media should be fetched. Pass a single ID or
  *                                               an array of IDs. When viewing a user profile page, 'user_id' defaults to
  *                                               the ID of the displayed user. Otherwise the default is false.
- *     @type int               $offset           Return only media items with an ID greater than or equal to this one.
- *                                               Note that providing an offset will disable pagination. Default: false.
+ *     @type int|array|bool    $group_id         The ID(s) of group(s) whose media should be fetched. Pass a single ID or
+ *                                               an array of IDs. When viewing a group page, 'group_id' defaults to
+ *                                               the ID of the displayed group. Otherwise the default is false.
+ *     @type array             $privacy          Limit results by a privacy. Default: public | grouponly.
  * }
  * @return bool Returns true when media found, otherwise false.
  */
@@ -925,7 +921,7 @@ function bp_has_albums( $args = '' ) {
 	// Note: any params used for filtering can be a single value, or multiple
 	// values comma separated.
 	$r = bp_parse_args( $args, array(
-		'include'           => false,     // Pass an album_id or string of IDs comma-separated.
+		'include'           => false,        // Pass an album_id or string of IDs comma-separated.
 		'exclude'           => false,        // Pass an activity_id or string of IDs comma-separated.
 		'sort'              => 'DESC',       // Sort DESC or ASC.
 		'page'              => 1,            // Which page to load.
@@ -937,24 +933,16 @@ function bp_has_albums( $args = '' ) {
 
 		// Filtering
 		'user_id'           => $user_id,     // user_id to filter on.
-		'group_id'          => $group_id,     // group_id to filter on.
+		'group_id'          => $group_id,    // group_id to filter on.
 		'privacy'           => $privacy,     // privacy to filter on - public, onlyme, loggedin, friends, grouponly.
-		'offset'            => false,        // Return only items >= this ID.
-		'since'             => false,        // Return only items recorded since this Y-m-d H:i:s date.
 
 		// Searching.
 		'search_terms'      => $search_terms_default,
-		'update_meta_cache' => true,
 	), 'has_albums' );
 
 	/*
 	 * Smart Overrides.
 	 */
-
-	// Ignore pagination if an offset is passed.
-	if ( ! empty( $r['offset'] ) ) {
-		$r['page'] = 0;
-	}
 
 	// Search terms.
 	if ( ! empty( $_REQUEST['s'] ) && empty( $r['search_terms'] ) ) {

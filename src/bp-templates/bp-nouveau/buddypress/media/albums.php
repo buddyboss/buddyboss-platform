@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Members Media Albums
+ * BuddyBoss - Media Albums
  *
  * @since BuddyBoss 1.0.0
  */

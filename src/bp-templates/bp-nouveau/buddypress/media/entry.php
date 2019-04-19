@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Members Media Entry
+ * BuddyBoss - Media Entry
  *
  * @since BuddyBoss 1.0.0
  */

@@ -216,7 +216,6 @@ class BP_Media_Album {
 	 *     @type string       $order_by          Column to order results by.
 	 *     @type array        $exclude           Array of media IDs to exclude. Default: false.
 	 *     @type string       $search_terms      Limit results by a search term. Default: false.
-	 *     @type bool         $update_meta_cache Whether to pre-fetch metadata for queried activity items. Default: true.
 	 *     @type string|bool  $count_total       If true, an additional DB query is run to count the total albums
 	 *                                           for the query. Default: false.
 	 * }
@@ -241,7 +240,6 @@ class BP_Media_Album {
 			'user_id'           => false,           // user id.
 			'group_id'          => false,           // group id.
 			'privacy'           => false,           // public, loggedin, onlyme, friends, grouponly.
-			'update_meta_cache' => true,            // Whether or not to update meta cache.
 			'count_total'       => false,           // Whether or not to use count_total.
 		) );
 
@@ -530,7 +528,7 @@ class BP_Media_Album {
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string      $id       ID to check.
-	 * @return int|null Album ID if found; null if not.
+	 * @return int|bool Album ID if found; false if not.
 	 */
 	public static function album_exists( $id ) {
 		if ( empty( $id ) ) {
@@ -538,13 +536,13 @@ class BP_Media_Album {
 		}
 
 		$args = array(
-			'include' => $id,
+			'in' => $id,
 		);
 
 		$albums = BP_Media_Album::get( $args );
 
-		$album_id = null;
-		if ( $albums['albums'] ) {
+		$album_id = false;
+		if ( ! empty( $albums['albums'] ) ) {
 			$album_id = current( $albums['albums'] )->id;
 		}
 
@@ -690,13 +688,20 @@ class BP_Media_Album {
 		 *
 		 * @since BuddyBoss 1.0.0
 		 *
-		 * @param array $albums Array of media albums.
+		 * @param array $albums     Array of media albums.
 		 * @param array $r          Array of parsed arguments.
 		 */
 		do_action_ref_array( 'bp_media_album_after_delete', array( $albums, $r ) );
 
 		// Pluck the media albums IDs out of the $albums array.
 		$album_ids      = wp_parse_id_list( wp_list_pluck( $albums, 'id' ) );
+
+		// delete the media associated with album
+		if ( ! empty( $album_ids ) ) {
+			foreach( $album_ids as $album_id ) {
+				BP_Media::delete( array( 'album_id' => $album_id ) );
+			}
+		}
 
 		return $album_ids;
 	}

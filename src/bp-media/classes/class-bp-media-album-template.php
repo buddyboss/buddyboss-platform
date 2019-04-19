@@ -148,7 +148,6 @@ class BP_Media_Album_Template {
 			'exclude'           => false,
 			'privacy'           => false,
 			'search_terms'      => false,
-			'update_meta_cache' => true,
 		);
 		$r = wp_parse_args( $args, $defaults );
 		extract( $r );
@@ -170,7 +169,6 @@ class BP_Media_Album_Template {
 				'per_page'          => $this->pag_num,
 				'sort'              => $sort,
 				'user_id'           => $user_id,
-				'update_meta_cache' => $update_meta_cache,
 			) );
 
 			// Fetch all albums.
@@ -186,7 +184,6 @@ class BP_Media_Album_Template {
 				'group_id'          => $group_id,
 				'exclude'           => $exclude,
 				'privacy'           => $privacy,
-				'update_meta_cache' => $update_meta_cache,
 			) );
 		}
 

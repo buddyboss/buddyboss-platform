@@ -653,8 +653,17 @@ function bp_nouveau_ajax_media_album_delete() {
 		wp_send_json_error( $response );
 	}
 
+	$group_id = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
+
+	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+		$group_link = bp_get_group_permalink( groups_get_group( $_POST['group_id'] ) );
+		$redirect_url = trailingslashit( $group_link . '/albums/' );
+	} else {
+		$redirect_url = trailingslashit( bp_displayed_user_domain() . bp_get_media_slug() . '/albums/' );
+	}
+
 	wp_send_json_success( array(
-		'redirect_url'     => trailingslashit( bp_loggedin_user_domain() . bp_get_media_slug() ) . 'albums',
+		'redirect_url'     => $redirect_url,
 	) );
 }
 
@@ -777,7 +786,7 @@ function bp_nouveau_object_template_results_media_all_scope( $querystring ) {
 }
 
 /**
- * Object template results members personal scope.
+ * Object template results media personal scope.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -794,6 +803,13 @@ function bp_nouveau_object_template_results_media_personal_scope( $querystring )
 
 add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_albums_existing_media_query', 20 );
 
+/**
+ * Change the querystring based on caller of the albums media query
+ *
+ * @param $querystring
+ *
+ * @return string
+ */
 function bp_nouveau_object_template_results_albums_existing_media_query( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
 

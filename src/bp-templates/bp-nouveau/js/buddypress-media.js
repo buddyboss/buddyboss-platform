@@ -557,7 +557,8 @@ window.bp = window.bp || {};
 			var data = {
 				'action': 'media_album_delete',
 				'_wpnonce': BP_Nouveau.nonces.media,
-				'album_id': this.album_id
+				'album_id': this.album_id,
+				'group_id': this.group_id
 			};
 
 			$.ajax({

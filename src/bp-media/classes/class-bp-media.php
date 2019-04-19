@@ -282,7 +282,6 @@ class BP_Media {
 	 *     @type string       $order_by          Column to order results by.
 	 *     @type array        $exclude           Array of media IDs to exclude. Default: false.
 	 *     @type string       $search_terms      Limit results by a search term. Default: false.
-	 *     @type bool         $update_meta_cache Whether to pre-fetch metadata for queried activity items. Default: true.
 	 *     @type string|bool  $count_total       If true, an additional DB query is run to count the total media items
 	 *                                           for the query. Default: false.
 	 * }
@@ -306,7 +305,6 @@ class BP_Media {
 			'in'                => false,           // Array of ids to limit query by (IN).
 			'search_terms'      => false,           // Terms to search by.
 			'privacy'           => false,           // public, loggedin, onlyme, friends, grouponly, message.
-			'update_meta_cache' => true,            // Whether or not to update meta cache.
 			'count_total'       => false,           // Whether or not to use count_total.
 		) );
 

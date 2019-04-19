@@ -277,6 +277,8 @@ function bp_media_get( $args = '' ) {
 		'page'              => 1,            // Page 1 without a per_page will result in no pagination.
 		'per_page'          => false,        // results per page
 		'sort'              => 'DESC',       // sort ASC or DESC
+
+		// want to limit the query.
 		'user_id'           => false,
 		'activity_id'       => false,
 		'album_id'          => false,
@@ -284,8 +286,6 @@ function bp_media_get( $args = '' ) {
 		'search_terms'      => false,        // Pass search terms as a string
 		'privacy'           => false,        // privacy of media
 		'exclude'           => false,        // Comma-separated list of activity IDs to exclude.
-		// want to limit the query.
-		'update_meta_cache' => true,
 		'count_total'       => false,
 	), 'media_get' );
 
@@ -301,7 +301,6 @@ function bp_media_get( $args = '' ) {
 		'search_terms'      => $r['search_terms'],
 		'privacy'           => $r['privacy'],
 		'exclude'           => $r['exclude'],
-		'update_meta_cache' => $r['update_meta_cache'],
 		'count_total'       => $r['count_total'],
 		'fields'            => $r['fields'],
 	) );
@@ -340,7 +339,6 @@ function bp_media_get_specific( $args = '' ) {
 		'page'              => 1,          // Page 1 without a per_page will result in no pagination.
 		'per_page'          => false,      // Results per page.
 		'sort'              => 'DESC',     // Sort ASC or DESC
-		'update_meta_cache' => true,
 	), 'media_get_specific' );
 
 	$get_args = array(
@@ -349,7 +347,6 @@ function bp_media_get_specific( $args = '' ) {
 		'page'              => $r['page'],
 		'per_page'          => $r['per_page'],
 		'sort'              => $r['sort'],
-		'update_meta_cache' => $r['update_meta_cache'],
 	);
 
 	/**
@@ -371,44 +368,40 @@ function bp_media_get_specific( $args = '' ) {
  *
  * @param array|string $args {
  *     An array of arguments.
- *     @type int|bool $id                Pass an activity ID to update an existing item, or
+ *     @type int|bool $id                Pass an media ID to update an existing item, or
  *                                       false to create a new item. Default: false.
- *     @type string   $content           Optional. The content of the activity item.
- *     @type string   $component         The unique name of the component associated with
- *                                       the activity item - 'groups', 'profile', etc.
- *     @type string   $type              The specific activity type, used for directory
- *                                       filtering. 'new_blog_post', 'activity_update', etc.
- *     @type string   $primary_link      Optional. The URL for this item, as used in
- *                                       RSS feeds. Defaults to the URL for this activity
- *                                       item's permalink page.
+ *     @type int|bool $blog_id           ID of the blog Default: current blog id.
+ *     @type int|bool $attchment_id      ID of the attachment Default: false
  *     @type int|bool $user_id           Optional. The ID of the user associated with the activity
  *                                       item. May be set to false or 0 if the item is not related
  *                                       to any user. Default: the ID of the currently logged-in user.
- *     @type int      $item_id           Optional. The ID of the associated item.
- *     @type int      $secondary_item_id Optional. The ID of a secondary associated item.
- *     @type string   $date_recorded     Optional. The GMT time, in Y-m-d h:i:s format, when
+ *     @type string   $title             Optional. The title of the media item.
+
+ *     @type int      $album_id          Optional. The ID of the associated album.
+ *     @type int      $group_id          Optional. The ID of a associated group.
+ *     @type int      $activity_id       Optional. The ID of a associated activity.
+ *     @type string   $privacy           Optional. Privacy of the media Default: public
+ *     @type int      $menu_order        Optional. Menu order the media Default: false
+ *     @type string   $date_created      Optional. The GMT time, in Y-m-d h:i:s format, when
  *                                       the item was recorded. Defaults to the current time.
- *     @type bool     $hide_sitewide     Should the item be hidden on sitewide streams?
- *                                       Default: false.
- *     @type bool     $is_spam           Should the item be marked as spam? Default: false.
  *     @type string   $error_type        Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
  * }
- * @return WP_Error|bool|int The ID of the activity on success. False on error.
+ * @return WP_Error|bool|int The ID of the media on success. False on error.
  */
 function bp_media_add( $args = '' ) {
 
 	$r = bp_parse_args( $args, array(
-		'id'            => false,                  // Pass an existing media ID to update an existing entry.
-		'blog_id'       => get_current_blog_id(),                     // Blog ID
-		'attachment_id' => false,                  // attachment id.
-		'user_id'       => bp_loggedin_user_id(),                  // user_id of the uploader.
-		'title'         => '',                     // title of media being added.
-		'album_id'      => false,  // Optional: ID of the album.
-		'group_id'      => false,  // Optional: ID of the group.
-		'activity_id'   => false,                  // The ID of activity.
-		'privacy'       => 'public',                  // Optional: privacy of the media e.g. public.
-		'menu_order'    => 0, // Optional:  Menu order.
-		'date_created'  => bp_core_current_time(), // The GMT time that this media was recorded
+		'id'            => false,                   // Pass an existing media ID to update an existing entry.
+		'blog_id'       => get_current_blog_id(),   // Blog ID
+		'attachment_id' => false,                   // attachment id.
+		'user_id'       => bp_loggedin_user_id(),   // user_id of the uploader.
+		'title'         => '',                      // title of media being added.
+		'album_id'      => false,                   // Optional: ID of the album.
+		'group_id'      => false,                   // Optional: ID of the group.
+		'activity_id'   => false,                   // The ID of activity.
+		'privacy'       => 'public',                // Optional: privacy of the media e.g. public.
+		'menu_order'    => 0,                       // Optional:  Menu order.
+		'date_created'  => bp_core_current_time(),  // The GMT time that this media was recorded
 		'error_type'    => 'bool'
 	), 'media_add' );
 
@@ -616,19 +609,18 @@ function bp_get_total_media_count() {
 function bp_album_get( $args = '' ) {
 
 	$r = bp_parse_args( $args, array(
-		'max'      => false,        // Maximum number of results to return.
+		'max'      => false,                    // Maximum number of results to return.
 		'fields'   => 'all',
-		'page'     => 1,            // Page 1 without a per_page will result in no pagination.
-		'per_page' => false,        // results per page
-		'sort'     => 'DESC',       // sort ASC or DESC
+		'page'     => 1,                        // Page 1 without a per_page will result in no pagination.
+		'per_page' => false,                    // results per page
+		'sort'     => 'DESC',                   // sort ASC or DESC
+
+		'search_terms'      => false,           // Pass search terms as a string
+		'exclude'           => false,           // Comma-separated list of activity IDs to exclude.
+		// want to limit the query.
 		'user_id'  => false,
 		'group_id' => false,
-		'privacy'  => false,        // privacy of album
-
-		'search_terms'      => false,        // Pass search terms as a string
-		'exclude'           => false,        // Comma-separated list of activity IDs to exclude.
-		// want to limit the query.
-		'update_meta_cache' => true,
+		'privacy'  => false,                    // privacy of album
 		'count_total'       => false,
 	), 'album_get' );
 
@@ -642,7 +634,6 @@ function bp_album_get( $args = '' ) {
 		'sort'              => $r['sort'],
 		'search_terms'      => $r['search_terms'],
 		'exclude'           => $r['exclude'],
-		'update_meta_cache' => $r['update_meta_cache'],
 		'count_total'       => $r['count_total'],
 		'fields'            => $r['fields'],
 	) );
@@ -690,7 +681,6 @@ function bp_album_get_specific( $args = '' ) {
 		'page'              => $r['page'],
 		'per_page'          => $r['per_page'],
 		'sort'              => $r['sort'],
-		'update_meta_cache' => $r['update_meta_cache'],
 	);
 
 	/**
@@ -719,6 +709,7 @@ function bp_album_get_specific( $args = '' ) {
  *                                       to any user. Default: the ID of the currently logged-in user.
  *     @type int      $group_id          Optional. The ID of the associated group.
  *     @type string   $title             The title of album.
+ *     @type string   $privacy           The privacy of album.
  *     @type string   $date_created      Optional. The GMT time, in Y-m-d h:i:s format, when
  *                                       the item was recorded. Defaults to the current time.
  *     @type string   $error_type        Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.

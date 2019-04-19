@@ -22,7 +22,7 @@ function media_screen_single_album() {
 
 	$album_id = (int) bp_action_variable( 0 );
 
-	if ( empty( $album_id ) ) {
+	if ( empty( $album_id ) || ! BP_Media_Album::album_exists( $album_id ) ) {
 		if ( is_user_logged_in() ) {
 			bp_core_add_message( __( 'The album you tried to access is no longer available', 'buddyboss' ), 'error' );
 		}
