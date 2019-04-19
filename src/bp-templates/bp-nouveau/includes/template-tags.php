@@ -2383,7 +2383,8 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 				 * and deal with the Blog section in Javascript.
 				 */
 				if ( $section !== 'blog_details' ) {
-					$existing_attributes['required'] = 'required';
+					// Removed because we don't have to display the browser error message.
+					//$existing_attributes['required'] = 'required';
 				}
 			}
 
