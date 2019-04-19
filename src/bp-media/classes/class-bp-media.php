@@ -883,8 +883,9 @@ class BP_Media {
 				}
 			}
 		}
+		$privacy = "'" . implode( "', '", $privacy ) . "'";
 
-		$count_sql = "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id}";
+		$count_sql = "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})";
 
 		$cache_group = 'bp_media_user_media_count';
 

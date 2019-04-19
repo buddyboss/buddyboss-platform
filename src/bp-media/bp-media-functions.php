@@ -574,7 +574,14 @@ function bp_get_total_media_count() {
 
 	$bp = buddypress();
 	if ( false === $count ) {
-		$count = $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name}" );
+
+		$privacy = array( 'public' );
+		if ( is_user_logged_in() ) {
+			$privacy[] = 'loggedin';
+		}
+		$privacy = "'" . implode( "', '", $privacy ) . "'";
+
+		$count = $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE privacy IN ({$privacy})" );
 		wp_cache_set( 'bp_total_media_count', $count, 'bp' );
 	}
 
