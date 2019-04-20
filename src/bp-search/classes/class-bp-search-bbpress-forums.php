@@ -1,10 +1,10 @@
 <?php
 /**
  * @todo add description
- * 
+ *
  * @package BuddyBoss\Search
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -30,22 +30,6 @@ if (!class_exists('Bp_Search_bbPress_Forums')):
 
 			$from = "{$wpdb->posts} p LEFT JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = '_bbp_group_ids'";
 
-			$group_memberships = '';
-			if ( bp_is_active( 'groups' ) ) {
-				$group_memberships = bp_get_user_groups( get_current_user_id(),
-					array(
-						'is_admin' => null,
-						'is_mod'   => null,
-					) );
-			}
-
-			$in = '0';
-			if ( ! empty( $group_memberships ) ) {
-				$in = array_reduce( array_keys( $group_memberships ), function ( $carry, $group_id ) {
-					return $carry . ',\'' . maybe_serialize( [$group_id] ) . '\'';
-				} );
-			}
-
 			$where = array();
 			$where[] = "1=1";
 			$where[] = "(post_title LIKE %s OR post_content LIKE %s)";
@@ -59,7 +43,28 @@ if (!class_exists('Bp_Search_bbPress_Forums')):
 				$post_status = [ 'publish' ];
 			}
 
-			$where[] = '(post_status IN (\'' . join( '\',\'', $post_status ) . '\') OR pm.meta_value IN ('. trim( $in, ',' ) .'))';
+			$in = '0';
+
+			if ( ! bp_is_search_groups_enable() ) {
+				$group_memberships = '';
+				if ( bp_is_active( 'groups' ) ) {
+					$group_memberships = bp_get_user_groups( get_current_user_id(),
+						array(
+							'is_admin' => null,
+							'is_mod'   => null,
+						) );
+				}
+
+				if ( ! empty( $group_memberships ) ) {
+					$in = array_reduce( array_keys( $group_memberships ), function ( $carry, $group_id ) {
+						return $carry . ',\'' . maybe_serialize( [ $group_id ] ) . '\'';
+					} );
+				}
+			} else {
+				$where[] = 'pm.post_id IS NULL';
+			}
+
+			$where[] = '( post_status IN (\'' . join( '\',\'', $post_status ) . '\') OR pm.meta_value IN ('. trim( $in, ',' ) .') )';
 
 			$query_placeholder[] = '%'. $search_term .'%';
 			$query_placeholder[] = '%'. $search_term .'%';
