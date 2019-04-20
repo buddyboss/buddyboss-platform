@@ -1,3 +1,4 @@
+/*global replies_data*/
 jQuery( document ).ready(function() {
 
 	// var bbp_topic_id = jQuery( '#bbp_topic_id' );

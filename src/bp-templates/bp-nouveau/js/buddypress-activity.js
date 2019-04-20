@@ -1,5 +1,5 @@
 /* jshint browser: true */
-/* global bp, BP_Nouveau */
+/* global bp, BP_Nouveau, Dropzone */
 /* @version 3.1.0 */
 window.bp = window.bp || {};
 
@@ -823,7 +823,7 @@ window.bp = window.bp || {};
 
 				// add media data if enabled or uploaded
 				if ( this.dropzone_media.length ) {
-					comment_data['media'] = this.dropzone_media;
+					comment_data.media = this.dropzone_media;
 				}
 
 				parent.ajax( comment_data, 'activity' ).done( function( response ) {
@@ -1038,7 +1038,7 @@ window.bp = window.bp || {};
 					$button.show();
 				}
 			} );
-		},
+		}
 
 	};
 
