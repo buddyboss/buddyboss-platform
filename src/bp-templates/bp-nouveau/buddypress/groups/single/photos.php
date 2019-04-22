@@ -19,6 +19,8 @@ switch ( bp_current_action() ) :
 
 		bp_nouveau_group_hook( 'before', 'media_content' );
 
+		bp_get_template_part( 'media/actions' );
+
 		?>
 		<div id="media-stream" class="media" data-bp-list="media">
 

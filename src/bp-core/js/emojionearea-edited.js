@@ -87,13 +87,8 @@ document = window.document || {};
 		template = template.replace('{name}', shortname || '')
 			.replace('{friendlyName}', friendlyName)
 			.replace('{img}', imagePath + (emojioneSupportMode < 2 ? fname.toUpperCase() :  originalUnicode.uc_output ) + '.' + imageType)
-			.replace('{uni}', unicode);
-
-		if(shortname) {
-			template = template.replace('{alt}', emojione.shortnameToUnicode(shortname));
-		} else {
-			template = template.replace('{alt}', emojione.convert(unicode));
-		}
+			.replace('{uni}', unicode)
+			.replace('{alt}', friendlyName);
 
 		return template;
 	};
@@ -900,7 +895,7 @@ document = window.document || {};
 		self.saveEmojisAs = options.saveEmojisAs;
 		self.standalone = options.standalone;
 		self.emojiTemplate = '<img alt="{alt}" class="emojione' + (self.sprite ? '-{uni}" src="' + blankImg + '"/>' : 'emoji" src="{img}"/>');
-		self.emojiTemplateAlt = self.sprite ? '<i class="emojione-{uni}"/>' : '<img class="emojioneemoji" src="{img}"/>';
+		self.emojiTemplateAlt = self.sprite ? '<i class="emojione-{uni}"/>' : '<img class="emojioneemoji" src="{img}" alt="{alt}"/>';
 		self.emojiBtnTemplate = '<i class="emojibtn" role="button" data-name="{name}" title="{friendlyName}">' + self.emojiTemplateAlt + '</i>';
 		self.recentEmojis = options.recentEmojis && supportsLocalStorage();
 
@@ -996,7 +991,7 @@ document = window.document || {};
 					"data-filter": filter,
 					title: params.title
 				})
-					.wrapInner('<img class="emojioneemoji" src="' + BP_Nouveau.activity.params.emoji_filter_url + filter + '.svg" />')
+					.wrapInner( '<img class="emojioneemoji" src="' + BP_Nouveau.activity.params.emoji_filter_url + filter + '.svg" alt="' + params.title + '" />' )
 					.appendTo(filters);
 			} else if (options.tones) {
 				skin = 5;
@@ -1032,7 +1027,7 @@ document = window.document || {};
 				items = shortnameTo(items,
 					self.sprite ?
 						'<i class="emojibtn" role="button" data-name="{name}" title="{friendlyName}"><i class="emojione-{uni}"></i></i>' :
-						'<i class="emojibtn" role="button" data-name="{name}" title="{friendlyName}"><img class="emojioneemoji lazy-emoji" data-src="{img}"/></i>',
+						'<i class="emojibtn" role="button" data-name="{name}" title="{friendlyName}"><img class="emojioneemoji lazy-emoji" data-src="{img}" alt="{alt}"/></i>',
 					true).split('|').join('');
 
 				category.html(items);

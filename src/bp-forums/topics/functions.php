@@ -3379,6 +3379,49 @@ function bbp_topic_content_autoembed() {
 
 	if ( bbp_use_autoembed() && is_a( $wp_embed, 'WP_Embed' ) ) {
 		add_filter( 'bbp_get_topic_content', array( $wp_embed, 'autoembed' ), 2 );
+		// WordPress is not able to convert URLs to oembed if URL is in paragraph.
+		add_filter( 'bbp_get_reply_content', 'bbp_topic_content_autoembed_paragraph', 99999, 1 );
+	}
+}
+
+/**
+ * Add oembed to forum topic.
+ *
+ * @param $content
+ *
+ * @return string
+ */
+function bbp_topic_content_autoembed_paragraph( $content ) {
+
+	// Check if WordPress already embed the link then return the original content.
+	if (strpos($content,'<iframe') !== false) {
+		return $content;
+	} else {
+		// Find all the URLs from the content.
+		preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $content, $match);
+		// Check if URL found.
+		if( isset( $match[0] ) ) {
+			$html = '';
+			// Remove duplicate from array and run the loop
+			foreach ( array_unique( $match[0] ) as $url ) {
+				// Fetch the oembed code for URL.
+				$embed_code = wp_oembed_get( $url );
+				// If oembed found then store into the $html
+				if (strpos($embed_code,'<iframe') !== false) {
+					$html .= '<p>'.$embed_code.'</p>';
+				}
+			}
+			// If $html blank return original content
+			if ( '' === $html ) {
+				return $content;
+				// Return the new content by adding oembed after the content.
+			} else {
+				return $content.$html;
+			}
+			// Else return original content.
+		} else {
+			return $content;
+		}
 	}
 }
 
