@@ -94,7 +94,7 @@ add_action( 'admin_init', function() {
 function bp_nouveau_ajax_albums_loader() {
 	$response = array(
 		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
@@ -152,7 +152,7 @@ function bp_nouveau_ajax_albums_loader() {
 function bp_nouveau_ajax_media_upload() {
 	$response = array(
 		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
@@ -180,7 +180,7 @@ function bp_nouveau_ajax_media_upload() {
 
 	if ( is_wp_error( $result ) ) {
 		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error">%s</div>',
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem when trying to upload this file.', 'buddyboss' )
 		);
 
@@ -200,7 +200,7 @@ function bp_nouveau_ajax_media_upload() {
 function bp_nouveau_ajax_media_save() {
 	$response = array(
 		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
@@ -225,7 +225,7 @@ function bp_nouveau_ajax_media_save() {
 
 	if ( empty( $_POST['medias'] ) ) {
 		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error">%s</div>',
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please upload media before saving.', 'buddyboss' )
 		);
 
@@ -293,7 +293,7 @@ function bp_nouveau_ajax_media_save() {
 
 		if ( is_wp_error( $media_id ) ) {
 			$response['feedback'] = sprintf(
-				'<div class="bp-feedback error">%s</div>',
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 				esc_html__( 'There was a problem when trying to add the media.', 'buddyboss' )
 			);
 
@@ -344,7 +344,7 @@ function bp_nouveau_ajax_media_save() {
 function bp_nouveau_ajax_media_delete() {
 	$response = array(
 		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
@@ -369,7 +369,7 @@ function bp_nouveau_ajax_media_delete() {
 
 	if ( empty( $_POST['media'] ) ) {
 		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error">%s</div>',
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please select media to delete.', 'buddyboss' )
 		);
 
@@ -391,7 +391,7 @@ function bp_nouveau_ajax_media_delete() {
 
 	if ( count( $media_ids ) != count( $media ) ) {
 		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error">%s</div>',
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem deleting media.', 'buddyboss' )
 		);
 		wp_send_json_error( $response );
@@ -412,7 +412,7 @@ function bp_nouveau_ajax_media_delete() {
 function bp_nouveau_ajax_media_move_to_album() {
 	$response = array(
 		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
@@ -472,7 +472,7 @@ function bp_nouveau_ajax_media_move_to_album() {
 
 		if ( ! $media_obj->save() ) {
 			$response['feedback'] = sprintf(
-				'<div class="bp-feedback error">%s</div>',
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 				esc_html__( 'There was a problem when trying to move the media.', 'buddyboss' )
 			);
 
@@ -510,7 +510,7 @@ function bp_nouveau_ajax_media_move_to_album() {
 function bp_nouveau_ajax_media_album_save() {
 	$response = array(
 		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
@@ -535,7 +535,7 @@ function bp_nouveau_ajax_media_album_save() {
 
 	if ( empty( $_POST['title'] ) ) {
 		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error">%s</div>',
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please enter title of album.', 'buddyboss' )
 		);
 
@@ -552,7 +552,7 @@ function bp_nouveau_ajax_media_album_save() {
 
 	if ( ! $album_id ) {
 		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error">%s</div>',
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem when trying to create the album.', 'buddyboss' )
 		);
 		wp_send_json_error( $response );
@@ -586,7 +586,7 @@ function bp_nouveau_ajax_media_album_save() {
 
 			if ( is_wp_error( $media_id ) ) {
 				$response['feedback'] = sprintf(
-					'<div class="bp-feedback error">%s</div>',
+					'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 					esc_html__( 'There was a problem when trying to add the media.', 'buddyboss' )
 				);
 				wp_send_json_error( $response );
@@ -614,7 +614,7 @@ function bp_nouveau_ajax_media_album_save() {
 function bp_nouveau_ajax_media_album_delete() {
 	$response = array(
 		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
@@ -639,8 +639,8 @@ function bp_nouveau_ajax_media_album_delete() {
 
 	if ( empty( $_POST['album_id'] ) ) {
 		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error">%s</div>',
-			esc_html__( 'Please ID of album to delete.', 'buddyboss' )
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'Please provide ID of album to delete.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -677,7 +677,7 @@ function bp_nouveau_ajax_media_album_delete() {
 function bp_nouveau_ajax_media_get_activity() {
 	$response = array(
 		'feedback' => sprintf(
-			'<div class="bp-feedback bp-messages error">%s</div>',
+			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
 		),
 	);
@@ -714,7 +714,7 @@ function bp_nouveau_ajax_media_get_activity() {
 function bp_nouveau_ajax_media_delete_attachment() {
 	$response = array(
 		'feedback' => sprintf(
-			'<div class="bp-feedback bp-messages error">%s</div>',
+			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
 		),
 	);
@@ -726,7 +726,7 @@ function bp_nouveau_ajax_media_delete_attachment() {
 
 	if ( empty( $_POST['id'] ) ) {
 		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error">%s</div>',
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please provide attachment id to delete.', 'buddyboss' )
 		);
 

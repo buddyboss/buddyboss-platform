@@ -113,16 +113,21 @@ window.bp = window.bp || {};
 		},
 
 		deleteMedia: function(event) {
+			var target = $(event.currentTarget);
 			event.preventDefault();
 
 			var media = [];
 			$('#buddypress').find('.media-list:not(.existing-media-list)').find('.bb-media-check-wrap [name="bb-media-select"]:checked').each(function(){
+				$(this).closest('.bb-photo-thumb').addClass('loading deleting');
 				media.push($(this).val());
 			});
 
 			if ( media.length == 0 ) {
 				return false;
 			}
+
+			target.prop('disabled',true);
+			$('#buddypress .media-list .bp-feedback').remove();
 
 			var data = {
 				'action': 'media_delete',
@@ -135,11 +140,16 @@ window.bp = window.bp || {};
 				url: BP_Nouveau.ajaxurl,
 				data: data,
 				success: function (response) {
+					setTimeout(function () {
+						target.prop('disabled',false);
+					},500);
 					if (response.success) {
 
 						$('#buddypress').find('.media-list:not(.existing-media-list)').find('.bb-media-check-wrap [name="bb-media-select"]:checked').each(function(){
 							$(this).closest('li').remove();
 						});
+					} else {
+						$('#buddypress .media-list').prepend(response.data.feedback);
 					}
 
 				}
@@ -314,6 +324,8 @@ window.bp = window.bp || {};
 							'content' : post_content
 						};
 
+						$('#bp-dropzone-content .bp-feedback').remove();
+
 						$.ajax({
 							type: 'POST',
 							url: BP_Nouveau.ajaxurl,
@@ -329,8 +341,9 @@ window.bp = window.bp || {};
 									// Prepend the activity.
 									bp.Nouveau.inject('#media-stream ul.media-list', response.data.media, 'prepend');
 									self.closeUploader(event);
+								} else {
+									$('#bp-dropzone-content').prepend(response.data.feedback);
 								}
-
 							}
 						});
 					}
@@ -436,6 +449,9 @@ window.bp = window.bp || {};
 					'album_id' : self.album_id,
 					'group_id' : self.group_id
 				};
+
+				$('#bp-existing-media-content .bp-feedback').remove();
+
 				$.ajax({
 					type: 'POST',
 					url: BP_Nouveau.ajaxurl,
@@ -459,6 +475,8 @@ window.bp = window.bp || {};
 							});
 
 							self.closeUploader(event);
+						} else {
+							$('#bp-existing-media-content').prepend(response.data.feedback);
 						}
 
 					}
@@ -470,8 +488,8 @@ window.bp = window.bp || {};
 		},
 
 		saveAlbum: function(event) {
+			var target = $( event.currentTarget ), self = this, title = $('#bb-album-title'), privacy = $('#bb-album-privacy'), i = 0;
 			event.preventDefault();
-			var self = this, title = $('#bb-album-title'), privacy = $('#bb-album-privacy'), i = 0;
 
 			if( $.trim(title.val()) === '' ) {
 				title.addClass('error');
@@ -487,7 +505,7 @@ window.bp = window.bp || {};
 				privacy.removeClass('error');
 			}
 
-			$( event.currentTarget ).prop('disabled',true);
+			target.prop('disabled',true);
 
 			if ( self.dropzone_obj !== null && self.dropzone_obj.getAcceptedFiles().length ) {
 				var processQueue = false;
@@ -519,12 +537,18 @@ window.bp = window.bp || {};
 				data.group_id = self.group_id;
 			}
 
+			//remove all feedback erros from the DOM
+			$('.bb-single-album-header .bp-feedback').remove();
+			$('#boss-media-create-album-popup .bp-feedback').remove();
+
 			$.ajax({
 				type: 'POST',
 				url: BP_Nouveau.ajaxurl,
 				data: data,
 				success: function (response) {
-					$( event.currentTarget ).prop('disabled',false);
+					setTimeout(function () {
+						target.prop('disabled',false);
+					},500);
 					if ( response.success ) {
 						if ( self.album_id ) {
 							$('#bp-single-album-title').text(title.val());
@@ -532,8 +556,14 @@ window.bp = window.bp || {};
 							self.cancelEditAlbumTitle(event);
 						} else {
 							$('#buddypress .bb-albums-list').prepend(response.data.album);
-							self.closeCreateAlbumModal(event);
+							//self.closeCreateAlbumModal(event);
 							window.location.href = response.data.redirect_url;
+						}
+					} else {
+						if ( self.album_id ) {
+							$('#bp-media-single-album').prepend(response.data.feedback);
+						} else {
+							$('#boss-media-create-album-popup .bb-model-header').after(response.data.feedback);
 						}
 					}
 				}
