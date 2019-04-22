@@ -177,7 +177,7 @@ class BP_Email_Tokens {
                                     <tbody>
                                     <tr>
                                         <td width="20%" class="mobile-block-full">
-                                            <a class="avatar-wrap mobile-center" href="<?php echo bp_get_group_permalink( $group ); ?>"
+                                            <a class="group-avatar-wrap mobile-center" href="<?php echo bp_get_group_permalink( $group ); ?>"
                                                style="border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display: block; border-radius: 3px; width: 104px;">
 												<?php
 												$group_avatar =  bp_core_fetch_avatar( array(
@@ -216,7 +216,7 @@ class BP_Email_Tokens {
                                                             <tbody>
                                                             <tr>
                                                                 <td>
-                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="left" class="no-responsive-table">
+                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="left" class="responsive-table mobile-text-center">
                                                                         <tbody>
 																			<tr>
 																				<td height="34px" style="vertical-align: middle;">
@@ -231,7 +231,7 @@ class BP_Email_Tokens {
 																			</tr>
                                                                         </tbody>
                                                                     </table>
-                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="no-responsive-table">
+                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="responsive-table mobile-text-center">
                                                                         <tbody>
 																			<tr>
 																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-text-left">
