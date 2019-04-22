@@ -77,6 +77,14 @@ class BP_Media {
 	var $activity_id;
 
 	/**
+	 * Group ID of the media item.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @var int
+	 */
+	var $group_id;
+
+	/**
 	 * Privacy of the media item.
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -165,6 +173,7 @@ class BP_Media {
 		$this->title         = $row->title;
 		$this->album_id      = (int) $row->album_id;
 		$this->activity_id   = (int) $row->activity_id;
+		$this->group_id      = (int) $row->group_id;
 		$this->privacy       = $row->privacy;
 		$this->menu_order    = (int) $row->menu_order;
 		$this->date_created  = $row->date_created;
@@ -190,6 +199,7 @@ class BP_Media {
 		$this->title         = apply_filters_ref_array( 'bp_media_title_before_save',             array( $this->title,             &$this ) );
 		$this->album_id      = apply_filters_ref_array( 'bp_media_album_id_before_save',          array( $this->album_id,          &$this ) );
 		$this->activity_id   = apply_filters_ref_array( 'bp_media_activity_id_before_save',       array( $this->activity_id,       &$this ) );
+		$this->group_id      = apply_filters_ref_array( 'bp_media_group_id_before_save',          array( $this->group_id,          &$this ) );
 		$this->privacy       = apply_filters_ref_array( 'bp_media_privacy_before_save',           array( $this->privacy,           &$this ) );
 		$this->menu_order    = apply_filters_ref_array( 'bp_media_menu_order_before_save',        array( $this->menu_order,        &$this ) );
 		$this->date_created  = apply_filters_ref_array( 'bp_media_date_created_before_save',      array( $this->date_created,      &$this ) );
@@ -227,9 +237,9 @@ class BP_Media {
 
 		// If we have an existing ID, update the media item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, privacy = %s, menu_order = %d, date_created = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->privacy, $this->menu_order, $this->date_created, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, privacy, menu_order, date_created ) VALUES ( %d, %d, %d, %s, %d, %d, %s, %d, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->privacy, $this->menu_order, $this->date_created );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, group_id, privacy, menu_order, date_created ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -272,7 +282,6 @@ class BP_Media {
 	 *     @type string       $order_by          Column to order results by.
 	 *     @type array        $exclude           Array of media IDs to exclude. Default: false.
 	 *     @type string       $search_terms      Limit results by a search term. Default: false.
-	 *     @type bool         $update_meta_cache Whether to pre-fetch metadata for queried activity items. Default: true.
 	 *     @type string|bool  $count_total       If true, an additional DB query is run to count the total media items
 	 *                                           for the query. Default: false.
 	 * }
@@ -296,7 +305,6 @@ class BP_Media {
 			'in'                => false,           // Array of ids to limit query by (IN).
 			'search_terms'      => false,           // Terms to search by.
 			'privacy'           => false,           // public, loggedin, onlyme, friends, grouponly, message.
-			'update_meta_cache' => true,            // Whether or not to update meta cache.
 			'count_total'       => false,           // Whether or not to use count_total.
 		) );
 
@@ -345,6 +353,7 @@ class BP_Media {
 			case 'title' :
 			case 'album_id' :
 			case 'activity_id' :
+			case 'group_id' :
 			case 'menu_order' :
 				break;
 
@@ -376,6 +385,10 @@ class BP_Media {
 
 		if ( ! empty( $r['user_id'] ) ) {
 			$where_conditions['user'] = "m.user_id = {$r['user_id']}";
+		}
+
+		if ( ! empty( $r['group_id'] ) ) {
+			$where_conditions['user'] = "m.group_id = {$r['group_id']}";
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
@@ -560,6 +573,7 @@ class BP_Media {
 				$media->attachment_id = (int) $media->attachment_id;
 				$media->album_id      = (int) $media->album_id;
 				$media->activity_id   = (int) $media->activity_id;
+				$media->group_id      = (int) $media->group_id;
 				$media->menu_order    = (int) $media->menu_order;
 
 				//fetch attachment data
@@ -665,6 +679,7 @@ class BP_Media {
 	 * @string    $title           Optional. The title to filter by.
 	 * @int    $album_id           Optional. The album ID to filter by.
 	 * @int    $activity_id           Optional. The activity ID to filter by.
+	 * @int    $group_id           Optional. The group ID to filter by.
 	 * @string    $privacy           Optional. The privacy to filter by.
 	 * @string $date_created      Optional. The date to filter by.
 	 * }
@@ -683,6 +698,7 @@ class BP_Media {
 			'title'         => false,
 			'album_id'      => false,
 			'activity_id'   => false,
+			'group_id'      => false,
 			'privacy'       => false,
 			'date_created'  => false,
 		) );
@@ -723,6 +739,11 @@ class BP_Media {
 		// activity ID.
 		if ( ! empty( $r['activity_id'] ) ) {
 			$where_args[] = $wpdb->prepare( "activity_id = %d", $r['activity_id'] );
+		}
+
+		// group ID.
+		if ( ! empty( $r['group_id'] ) ) {
+			$where_args[] = $wpdb->prepare( "group_id = %d", $r['group_id'] );
 		}
 
 		// privacy.
@@ -776,6 +797,7 @@ class BP_Media {
 
 		// Pluck the media IDs out of the $medias array.
 		$media_ids      = wp_parse_id_list( wp_list_pluck( $medias, 'id' ) );
+		$activity_ids   = wp_parse_id_list( wp_list_pluck( $medias, 'activity_id' ) );
 		$attachment_ids = wp_parse_id_list( wp_list_pluck( $medias, 'attachment_id' ) );
 
 		// Handle accompanying attachments and meta deletion.
@@ -783,10 +805,57 @@ class BP_Media {
 
 			// Loop through attachment ids and attempt to delete.
 			foreach ( $attachment_ids as $attachment_id ) {
+
+				if ( bp_is_active( 'activity' ) ) {
+					$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+					if ( ! empty( $parent_activity_id ) ) {
+						$activity_media_ids = bp_activity_get_meta( $parent_activity_id, 'bp_media_ids', true );
+						if ( ! empty( $activity_media_ids ) ) {
+							$activity_media_ids = explode( ',', $activity_media_ids );
+							$activity_media_ids = array_diff( $activity_media_ids, $media_ids );
+							if ( ! empty( $activity_media_ids ) ) {
+								$activity_media_ids = implode( ',', $activity_media_ids );
+								bp_activity_update_meta( $parent_activity_id, 'bp_media_ids', $activity_media_ids );
+							} else {
+								$activity_ids[] = $parent_activity_id;
+							}
+						}
+					}
+				}
+
 				wp_delete_post( $attachment_id, true );
 			}
 		}
 
+		// delete related activity
+		if ( ! empty( $activity_ids ) && bp_is_active( 'activity' ) ) {
+
+			foreach ( $activity_ids as $activity_id ) {
+				$activity = new BP_Activity_Activity( (int) $activity_id );
+
+				// Check access.
+				if ( bp_activity_user_can_delete( $activity ) ) {
+					/** This action is documented in bp-activity/bp-activity-actions.php */
+					do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
+
+					// Deleting an activity comment.
+					if ( 'activity_comment' == $activity->type ) {
+						if ( bp_activity_delete_comment( $activity->item_id, $activity->id ) ) {
+							/** This action is documented in bp-activity/bp-activity-actions.php */
+							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
+						}
+
+						// Deleting an activity.
+					} else {
+						if ( bp_activity_delete( array( 'id' => $activity->id, 'user_id' => $activity->user_id ) ) ) {
+							/** This action is documented in bp-activity/bp-activity-actions.php */
+							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
+						}
+					}
+				}
+			}
+		}
+		
 		return $media_ids;
 	}
 
@@ -814,10 +883,41 @@ class BP_Media {
 				}
 			}
 		}
+		$privacy = "'" . implode( "', '", $privacy ) . "'";
 
-		$count_sql = "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id}";
+		$count_sql = "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})";
 
 		$cache_group = 'bp_media_user_media_count';
+
+		$cached = bp_core_get_incremented_cache( $count_sql, $cache_group );
+		if ( false === $cached ) {
+			$results = $wpdb->get_col( $count_sql );
+			$total_count = intval( $results[0] );
+			bp_core_set_incremented_cache( $count_sql, $cache_group, $total_count );
+		} else {
+			$total_count = $cached;
+		}
+
+		return $total_count;
+	}
+
+	/**
+	 * Count total media for the given group
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param int $group_id
+	 *
+	 * @return array|bool|int
+	 */
+	public static function total_group_media_count( $group_id = 0 ) {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		$count_sql = "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE group_id = {$group_id}";
+
+		$cache_group = 'bp_media_group_media_count';
 
 		$cached = bp_core_get_incremented_cache( $count_sql, $cache_group );
 		if ( false === $cached ) {

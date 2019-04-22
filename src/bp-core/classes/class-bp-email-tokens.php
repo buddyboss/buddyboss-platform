@@ -216,7 +216,7 @@ class BP_Email_Tokens {
                                                             <tbody>
                                                             <tr>
                                                                 <td>
-                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="left" class="responsive-table">
+                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="left" class="no-responsive-table">
                                                                         <tbody>
 																			<tr>
 																				<td height="34px" style="vertical-align: middle;">
@@ -231,7 +231,7 @@ class BP_Email_Tokens {
 																			</tr>
                                                                         </tbody>
                                                                     </table>
-                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="responsive-table">
+                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="no-responsive-table">
                                                                         <tbody>
 																			<tr>
 																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-text-left">
@@ -462,8 +462,8 @@ class BP_Email_Tokens {
                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                         <tbody>
                         <tr>
-                            <td valign="middle" width="12%" style="vertical-align: middle;">
-                                <a href="<?php echo esc_attr( bp_core_get_user_domain( $activity->user_id ) ); ?>"
+                            <td valign="middle" width="65px" style="vertical-align: middle;">
+                                <a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $activity->user_id ) ); ?>"
                                    target="_blank" rel="nofollow">
 									<?php
 									$avatar_url = bp_core_fetch_avatar( array(
@@ -580,8 +580,8 @@ class BP_Email_Tokens {
                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                         <tbody>
                         <tr>
-                            <td valign="middle" width="12%" style="vertical-align: middle;">
-                                <a href="<?php echo esc_attr( bp_core_get_user_domain( $activity_comment->user_id ) ); ?>"
+                            <td valign="middle" width="65px" style="vertical-align: middle;">
+                                <a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $activity_comment->user_id ) ); ?>"
                                    target="_blank" rel="nofollow">
 									<?php
 									$avatar_url = bp_core_fetch_avatar( array(
@@ -695,8 +695,8 @@ class BP_Email_Tokens {
                         <table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%">
                             <tbody>
 								<tr>
-									<td valign="middle" width="12%" style="vertical-align: middle;">
-										<a href="<?php echo esc_attr( bp_core_get_user_domain( $this->_message_sender_id ) ); ?>"
+									<td valign="middle" width="65px" style="vertical-align: middle;">
+										<a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $this->_message_sender_id ) ); ?>"
 										   target="_blank" rel="nofollow">
 											<?php $avatar_url = bp_core_fetch_avatar( array(
 												'item_id' => $this->_message_sender_id,
@@ -825,8 +825,8 @@ class BP_Email_Tokens {
                             <td>
                                 <table cellpadding="0" cellspacing="0" border="0">
                                     <tr>
-                                        <td width="20%">
-                                            <a href="<?php echo bp_core_get_user_domain( $member_id ); ?>"
+                                        <td width="20%" class="mobile-block-full">
+                                            <a class="avatar-wrap mobile-center" href="<?php echo bp_core_get_user_domain( $member_id ); ?>"
                                                style="display: block; border-radius: 3px; width: 140px;">
                                                 <img alt="" src="<?php echo bp_core_fetch_avatar( array(
 													'item_id' => $member_id,
@@ -839,14 +839,12 @@ class BP_Email_Tokens {
                                                      border="0"/>
                                             </a>
                                         </td>
-                                        <td width="4%">&nbsp;</td>
-                                        <td width="72%">
+                                        <td width="4%" class="mobile-hide">&nbsp;</td>
+                                        <td width="72%" class="mobile-block-padding-full">
                                             <table cellpadding="0" cellspacing="0" border="0" width="100%"
                                                    style="width: 100%;">
                                                 <tr>
-                                                    <td height="10px" style="font-size: 10px; line-height: 10px;">&nbsp;
-                                                        
-                                                    </td>
+                                                    <td height="10px" style="font-size: 10px; line-height: 10px;">&nbsp;</td>
                                                 </tr>
                                                 <tr>
                                                     <td>
@@ -858,16 +856,16 @@ class BP_Email_Tokens {
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td height="30px" style="font-size: 30px; line-height: 30px;">&nbsp;
-                                                        
-                                                    </td>
+                                                    <td class="responsive-set-height">
+														<div class="spacer responsive-set-height" style="font-size: 30px; line-height: 30px; height: 30px;">&nbsp;</div>
+													</td>
                                                 </tr>
 												<tr>
 													<td>
 														<table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%;">
 															<tr>
 																<td>
-																	<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="left" class="responsive-table">
+																	<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="left" class="no-responsive-table">
 																		<tr>
 																			<td height="34px" style="vertical-align: middle;">
 																				<?php
@@ -880,7 +878,7 @@ class BP_Email_Tokens {
 																			</td>
 																		</tr>
 																	</table>
-																	<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="responsive-table">
+																	<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="no-responsive-table">
 																		<tr>
 																			<td height="34px" align="right" style="vertical-align: middle;" class="mobile-text-left">
 																				<a href="<?php echo bp_core_get_user_domain( $member_id ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2.125 ) . 'px' ) ?>;line-height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2 ) . 'px' ) ?>;"><?php _e( 'View Profile', 'buddyboss' ); ?></a>
@@ -894,7 +892,7 @@ class BP_Email_Tokens {
 												</tr>
                                             </table>
                                         </td>
-                                        <td width="4%">&nbsp;</td>
+                                        <td width="4%" class="mobile-hide">&nbsp;</td>
                                     </tr>
                                 </table>
                             </td>
@@ -1118,8 +1116,8 @@ class BP_Email_Tokens {
                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                         <tbody>
                         <tr>
-                            <td valign="middle" width="12%" style="vertical-align: middle;">
-                                <a href="<?php echo esc_attr( bp_core_get_user_domain( bbp_get_reply_author_id( $formatted_tokens['reply.id'] ) ) ); ?>"
+                            <td valign="middle" width="65px" style="vertical-align: middle;">
+                                <a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( bbp_get_reply_author_id( $formatted_tokens['reply.id'] ) ) ); ?>"
                                    target="_blank" rel="nofollow">
 									<?php
 									$avatar_url = bp_core_fetch_avatar( array(
@@ -1214,8 +1212,8 @@ class BP_Email_Tokens {
                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                         <tbody>
                         <tr>
-                            <td valign="middle" width="12%" style="vertical-align: middle;">
-                                <a href="<?php echo esc_attr( bp_core_get_user_domain( bbp_get_topic_author_id( $formatted_tokens['discussion.id'] ) ) ); ?>"
+                            <td valign="middle" width="65px" style="vertical-align: middle;">
+                                <a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( bbp_get_topic_author_id( $formatted_tokens['discussion.id'] ) ) ); ?>"
                                    target="_blank" rel="nofollow">
 									<?php
 									$avatar_url = bp_core_fetch_avatar( array(

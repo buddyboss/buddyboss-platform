@@ -520,23 +520,28 @@ function bp_get_search_user_fields() {
 function bp_search_get_post_thumbnail_default( $post_type ) {
 
 	$default = [
-		'product'		=> buddypress()->plugin_url . 'bp-core/images/product.svg',
-		'sfwd-courses'	=> buddypress()->plugin_url . 'bp-core/images/course.svg',
-		'sfwd-lessons'	=> buddypress()->plugin_url . 'bp-core/images/topics.svg',
-		'sfwd-topic'	=> buddypress()->plugin_url . 'bp-core/images/topics.svg',
-		'sfwd-quiz'		=> buddypress()->plugin_url . 'bp-core/images/quizzes.svg',
-		'post'			=> buddypress()->plugin_url . 'bp-core/images/blog-post.svg',
-		'forum'			=> buddypress()->plugin_url . 'bp-core/images/forum.svg',
-		'topic'			=> buddypress()->plugin_url . 'bp-core/images/topics.svg',
-		'reply'			=> buddypress()->plugin_url . 'bp-core/images/forum.svg',
-		'bp-member-type'   => buddypress()->plugin_url . 'bp-core/images/membership.svg',
-		'memberpressproduct'   => buddypress()->plugin_url . 'bp-core/images/membership.svg',
+		'product'				=> buddypress()->plugin_url . 'bp-core/images/search/product.svg',
+		'sfwd-courses'			=> buddypress()->plugin_url . 'bp-core/images/search/course.svg',
+		'sfwd-lessons'			=> buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
+		'sfwd-topic'			=> buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
+		'sfwd-quiz'				=> buddypress()->plugin_url . 'bp-core/images/search/quizzes.svg',
+		'post'					=> buddypress()->plugin_url . 'bp-core/images/search/blog-post.svg',
+		'forum'					=> buddypress()->plugin_url . 'bp-core/images/search/forum.svg',
+		'topic'					=> buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
+		'reply'					=> buddypress()->plugin_url . 'bp-core/images/search/forum.svg',
+		'bp-member-type'   		=> buddypress()->plugin_url . 'bp-core/images/search/membership.svg',
+		'memberpressproduct'	=> buddypress()->plugin_url . 'bp-core/images/search/membership.svg',
+		'wp-parser-function'	=> buddypress()->plugin_url . 'bp-core/images/search/code.svg',
+		'wp-parser-class'		=> buddypress()->plugin_url . 'bp-core/images/search/code.svg',
+		'wp-parser-hook'		=> buddypress()->plugin_url . 'bp-core/images/search/code.svg',
+		'wp-parser-method'		=> buddypress()->plugin_url . 'bp-core/images/search/code.svg',
+		'command'				=> buddypress()->plugin_url . 'bp-core/images/search/code.svg',
 	];
 
 	return
 		isset( $default[ $post_type ] ) ?
 			$default[ $post_type ] :
-			buddypress()->plugin_url . 'bp-core/images/post-type.svg';
+			buddypress()->plugin_url . 'bp-core/images/search/post-type.svg';
 }
 
 /**

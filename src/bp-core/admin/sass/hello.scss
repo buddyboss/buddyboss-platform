@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------
-Loaded in wp-admin for query string `hello=buddyboss`.
+Loaded in wp-admin for query string `hello=buddyboss` and `hello=appboss`.
 
 @since BuddyPress 3.0.0
 
@@ -20,10 +20,11 @@ TABLE OF CONTENTS:
 	4.2 - Footer content
 	4.3 - Header content
 	4.4 - Content content
-5.0 - Media
 6.0 - Media Queries
-	6.1 - Desktop Medium
-	6.2 - Desktop Large
+	6.1 - Mobile
+	6.2 - Desktop Small
+	6.3 - Desktop Medium
+	6.4 - Desktop Large
 ------------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------
@@ -62,6 +63,29 @@ TABLE OF CONTENTS:
 
 	p {
 		font-size: 16px;
+	}
+
+	.video-wrapper {
+		margin: 0 auto;
+		height: calc(100%);
+	}
+
+	.video-wrapper .video-container {
+		position: relative;
+		padding-bottom: 56.25%;
+		padding-top: 30px;
+		height: 0;
+		overflow: hidden;
+	}
+
+	.video-wrapper .video-container iframe,
+	.video-wrapper .video-container object,
+	.video-wrapper .video-container embed {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
 	}
 }
 
@@ -260,6 +284,10 @@ TABLE OF CONTENTS:
 	}
 }
 
+.bp-hello-appboss .bp-hello-footer {
+	border-top: none;
+}
+
 .bp-hello-social-cta {
 	text-align: left;
 }
@@ -302,7 +330,7 @@ TABLE OF CONTENTS:
 
 .bp-hello-close {
 	position: absolute;
-	top: 20px;
+	top: 15px;
 	right: 25px;
 	text-align: right;
 }
@@ -314,9 +342,10 @@ TABLE OF CONTENTS:
 	background-color: rgb(255, 255, 255);
 }
 
-/*------------------------------------------------------------------------------
- * 5.0 - Media
- *----------------------------------------------------------------------------*/
+.bp-hello-appboss .bp-hello-content {
+	padding: 0;
+}
+
 .bp-hello-content {
 
 	img {
@@ -329,8 +358,28 @@ TABLE OF CONTENTS:
  * 6.0 - Media Queries
  *----------------------------------------------------------------------------*/
 
+/**
+ * 6.1 - Mobile
+ */
+@media screen and (max-width: 500px) {
+
+	.bp-hello-social-cta p span {
+		display: none;
+	}
+}
+
+/**
+ * 6.2 - Desktop Small
+ */
+@media screen and (max-width: 1024px) {
+
+	#bp-hello-container {
+		width: 100%;
+	}
+}
+
 /*
- * 6.1 - Desktop Medium
+ * 6.3 - Desktop Medium
  */
 @media only screen and (min-width: 1024px) {
 
@@ -387,6 +436,14 @@ TABLE OF CONTENTS:
 		// Very very approx. height of header and footer.
 		height: calc(100% - 90px);
 		padding: 0 30px;
+	}
+
+	.bp-hello-appboss .bp-hello-content {
+		height: calc(100% - 120px);
+		padding: 0;
+	}
+
+	#bp-hello-container {
 
 		p {
 			font-size: 14px;
@@ -395,7 +452,7 @@ TABLE OF CONTENTS:
 }
 
 /**
- * 6.2 - Desktop Large
+ * 6.4 - Desktop Large
  */
 @media screen and (min-width: 1280px) {
 
@@ -405,4 +462,10 @@ TABLE OF CONTENTS:
 		left: calc((100% - 896px) / 2);
 		right: calc((100% - 896px) / 2);
 	}
+
+	.bp-hello-appboss .bp-hello-content {
+		height: calc(100% - 120px);
+		padding: 0;
+	}
+
 }

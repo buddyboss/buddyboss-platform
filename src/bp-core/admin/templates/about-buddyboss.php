@@ -1,8 +1,8 @@
 <?php
 /**
- * AppBoss Admin Screen.
+ * BuddyBoss Admin Screen.
  *
- * This file contains information about AppBoss. The BuddyBoss application to create a native mobile app with your WordPress site.
+ * This file contains information about BuddyBoss.
  *
  * @package BuddyBoss
  * @since BuddyBoss 1.0.0
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <div id="bp-hello-backdrop" style="display: none;"></div>
 
-<div id="bp-hello-container" role="dialog" aria-labelledby="bp-hello-title" style="display: none;">
+<div id="bp-hello-container" class="bp-hello-buddyboss" role="dialog" aria-labelledby="bp-hello-title" style="display: none;">
 	<div class="bp-hello-header" role="document">
 		<div class="bp-hello-close">
 			<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip="<?php esc_attr_e( 'Close pop-up', 'buddyboss' ); ?>">

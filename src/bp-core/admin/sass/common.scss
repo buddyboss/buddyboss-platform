@@ -22,8 +22,9 @@ TABLE OF CONTENTS:
 	3.1 Users List
 	3.2 Activity List
 	3.3 Groups List & Types
-	3.4 Site Notices
-	3.5 Post Types
+	3.4 Forums
+	3.5 Site Notices
+	3.6 Post Types
 4.0 Emails - Edit page
 5.0 Tools
 6.0 Help
@@ -66,44 +67,36 @@ TABLE OF CONTENTS:
 	margin-top: 25px;
 }
 
-.bp-about-wrap .card {
-	background: #fff;
-	min-width: 255px;
-	max-width: 100%;
-	border-radius: 6px;
-	border: 1px solid #e5e5e5;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-	margin: 0 0 20px;
-	padding: 2.2em 2.8em 2em;
+.bp-about-wrap .bp-admin-card {
+	margin: 20px 0 0;
 }
 
-.bp-about-wrap img {
+.bp-about-wrap .bp-admin-card h2 {
+	font-weight: 600;
+}
+
+.bp-about-wrap .bp-admin-card h2:before {
+	content: none;
+}
+
+.bp-about-wrap .bp-admin-card img {
 	margin: 0;
 	max-width: 100%;
 	height: auto;
 	vertical-align: middle;
 }
 
-.bp-about-wrap ul {
+.bp-about-wrap .bp-admin-card ul {
 	margin: 0;
 }
 
-.bp-about-wrap p {
+.bp-about-wrap .bp-admin-card p {
 	line-height: 1.5;
 	font-size: 14px;
 	margin: 0;
 }
 
-.bp-about-wrap h2 {
-	margin: 0 0 1.5em;
-	padding-bottom: 1.3em;
-	font-size: 22px;
-	font-weight: 600;
-	color: #333;
-	border-bottom: 1px solid #eaeaea;
-}
-
-.bp-about-wrap .wp-person {
+.bp-about-wrap .bp-admin-card .wp-person {
 	display: inline-block;
 	vertical-align: top;
 	margin: 0 10px 0 0;
@@ -111,7 +104,7 @@ TABLE OF CONTENTS:
 	width: 280px;
 }
 
-.bp-about-wrap .wp-person .gravatar {
+.bp-about-wrap .bp-admin-card .wp-person .gravatar {
 	float: left;
 	margin: 0 10px 10px 0;
 	border-radius: 100%;
@@ -119,7 +112,7 @@ TABLE OF CONTENTS:
 	height: 60px;
 }
 
-.bp-about-wrap .wp-person .web {
+.bp-about-wrap .bp-admin-card .wp-person .web {
 	margin: 6px 0 2px;
 	font-size: 16px;
 	font-weight: 400;
@@ -127,12 +120,12 @@ TABLE OF CONTENTS:
 	text-decoration: none;
 }
 
-.bp-about-wrap .wp-person .title {
+.bp-about-wrap .bp-admin-card .wp-person .title {
 	display: block;
 	font-weight: 300;
 }
 
-.bp-about-wrap p.wp-credits-list a {
+.bp-about-wrap .bp-admin-card p.wp-credits-list a {
 	white-space: nowrap;
 }
 
@@ -368,7 +361,7 @@ tr.bp-search-parent-field label {
 .bp-admin-card {
 	position: relative;
 	margin-top: 20px;
-	padding: 2.2em 2.8em 2em;
+	padding: 2.2em 2.8em;
 	min-width: 255px;
 	max-width: 1050px;
 	border-radius: 6px;
@@ -387,7 +380,7 @@ tr.bp-search-parent-field label {
 	margin: 0 0 1em;
 	padding-bottom: 1.2em;
 	font-size: 22px;
-	font-weight: 600;
+	font-weight: 700;
 	color: #333;
 	border-bottom: 1px solid #eaeaea;
 }
@@ -620,14 +613,131 @@ body.users_page_bp-signups td.count_sent {
 }
 
 /*
- * 3.3 Groups List
+ * 3.3 Groups List & Types
  */
 form#bp-groups-form .fixed .column-comment {
 	width: 20%;
 }
 
 /*
- * 3.4 Site Notices
+ * 3.4 Forums
+ */
+
+@media only screen and (min-width: 700px) {
+
+	#poststuff #bbp_reply_attributes select {
+		min-width: 70%;
+	}
+}
+
+body.post-type-reply #edit-slug-box {
+	padding-left: 0;
+	margin-top: 0;
+}
+
+#bbpress_group_admin_ui_meta_box fieldset {
+	min-width: 230px;
+}
+
+#bbp-dashboard-right-now p.sub,
+#bbp-dashboard-right-now .table,
+#bbp-dashboard-right-now .versions {
+	margin: -12px;
+}
+
+#bbp-dashboard-right-now .inside {
+	font-size: 12px;
+	padding-top: 20px;
+	margin-bottom: 0;
+}
+
+#bbp-dashboard-right-now p.sub {
+	padding: 5px 0 15px;
+	color: #8f8f8f;
+	font-size: 14px;
+	position: absolute;
+	top: -17px;
+	left: 15px;
+	right: 0;
+}
+
+#bbp-dashboard-right-now .table {
+	margin: 0;
+	padding: 0;
+	position: relative;
+}
+
+#bbp-dashboard-right-now .table_content {
+	float: left;
+	border-top: #ececec 1px solid;
+	width: 45%;
+}
+
+#bbp-dashboard-right-now .table_discussion {
+	float: right;
+	border-top: #ececec 1px solid;
+	width: 45%;
+}
+
+#bbp-dashboard-right-now table td {
+	padding: 3px 0;
+	white-space: nowrap;
+}
+
+#bbp-dashboard-right-now table tr.first td {
+	border-top: none;
+}
+
+#bbp-dashboard-right-now td.b {
+	padding-right: 6px;
+	padding-left: 0;
+	text-align: right;
+	font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
+	font-size: 14px;
+	width: 1%;
+}
+
+#bbp-dashboard-right-now td.b a {
+	font-size: 18px;
+}
+
+#bbp-dashboard-right-now td.b a:hover {
+	color: #d54e21;
+}
+
+#bbp-dashboard-right-now .t {
+	font-size: 12px;
+	padding-right: 12px;
+	padding-left: 0;
+	padding-top: 6px;
+	color: #777;
+}
+
+#bbp-dashboard-right-now .t a {
+	white-space: nowrap;
+}
+
+#bbp-dashboard-right-now .spam {
+	color: #f00;
+}
+
+#bbp-dashboard-right-now .waiting {
+	color: #e66f00;
+}
+
+#bbp-dashboard-right-now .approved {
+	color: #0f0;
+}
+
+#bbp-dashboard-right-now a.button {
+	float: right;
+	clear: right;
+	position: relative;
+	top: -5px;
+}
+
+/*
+ * 3.5 Site Notices
  */
 .bp-new-notice-panel {
 	background: #fff;
@@ -714,7 +824,7 @@ form#bp-groups-form .fixed .column-comment {
 }
 
 /*
- * 3.5 Post Types
+ * 3.6 Post Types
  */
 body.post-type-bp-member-type .postbox .inside,
 body.post-type-bp-group-type .postbox .inside {
@@ -1212,11 +1322,6 @@ body.post-type-bp-email .categorydiv label {
  *----------------------------------------------------------------------------*/
 body.post-type-bp_ps_form .page-title-action {
 	display: none;
-}
-
-/* Discussion Forum */
-#bbpress_group_admin_ui_meta_box fieldset {
-	min-width: 230px;
 }
 
 /* Notices */

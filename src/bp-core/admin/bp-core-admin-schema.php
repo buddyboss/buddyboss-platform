@@ -80,6 +80,11 @@ function bp_core_install( $active_components = false ) {
 	if ( !empty( $active_components['media'] ) ) {
 		bp_core_install_media();
 	}
+
+	// Network search
+	if ( ! empty( $active_components['search'] ) ) {
+		bp_core_install_network_search();
+	}
 }
 
 /**
@@ -579,7 +584,6 @@ function bp_core_install_media() {
 	   group_id bigint(20) NULL,
 	   date_created datetime NULL DEFAULT '0000-00-00 00:00:00',
 	   title text NOT NULL,
-	   description text NULL,
 	   privacy varchar(50) NULL DEFAULT 'public',
 	   PRIMARY KEY  (id)
    ) {$charset_collate};";
@@ -591,6 +595,7 @@ function bp_core_install_media() {
 		user_id bigint(20) NOT NULL,
 		title text,
 		album_id bigint(20),
+		group_id bigint(20),
 		activity_id bigint(20) NULL DEFAULT NULL ,
 		privacy varchar(50) NULL DEFAULT 'public',
 		menu_order bigint(20) NULL DEFAULT 0 ,
@@ -604,6 +609,33 @@ function bp_core_install_media() {
 	) {$charset_collate};";
 
 	dbDelta( $sql );
+}
+
+/** Search *********************************************************/
+
+/**
+ * Create function for network search component.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_core_install_network_search() {
+	global $wpdb;
+	$bp_prefix = bp_core_get_table_prefix();
+
+	$wpdb->query( "
+	CREATE FUNCTION `{$bp_prefix}bp_strip_tags`(str text) RETURNS text CHARSET utf8
+BEGIN
+    DECLARE start, end INT DEFAULT 1;
+    LOOP
+        SET str = COALESCE(str, '');
+        SET start = LOCATE(\"<\", str, start);
+        IF (!start) THEN RETURN str; END IF;
+        SET end = LOCATE(\">\", str, start);
+        IF (!end) THEN SET end = start; END IF;
+        SET str = INSERT(str, start, end - start + 1, \"\");
+    END LOOP;
+END;" );
+
 }
 
 /** Signups *******************************************************************/

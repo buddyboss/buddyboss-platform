@@ -324,7 +324,11 @@ module.exports = function( grunt ) {
 			},
 			src: {
 				files: {
-					src: [SOURCE_DIR + '/**/*.js'].concat( BP_EXCLUDED_MISC )
+					src: [
+						SOURCE_DIR + '/**/*.js',
+						'!**/emojione-edited.js',
+						'!**/emojionearea-edited.js'
+					].concat( BP_EXCLUDED_MISC )
 				}
 			}
 		},

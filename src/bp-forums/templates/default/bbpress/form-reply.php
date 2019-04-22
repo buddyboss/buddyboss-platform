@@ -72,6 +72,8 @@
 
 					<?php endif; ?>
 
+					<?php bbp_get_template_part( 'form', 'attachments' ); ?>
+
 					<?php if ( bbp_is_subscriptions_active() && !bbp_is_anonymous() && ( !bbp_is_reply_edit() || ( bbp_is_reply_edit() && !bbp_is_reply_anonymous() ) ) ) : ?>
 
 						<?php do_action( 'bbp_theme_before_reply_form_subscription' ); ?>

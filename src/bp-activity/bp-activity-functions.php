@@ -4906,7 +4906,7 @@ function bp_activity_media_sideload_attachment( $file ) {
 	}
 
 	// Set variables for storage, fix file filename for query strings.
-	preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png|mp4)\b/i', $file, $matches );
+	preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png|svg|bmp|mp4)\b/i', $file, $matches );
 	$file_array = array();
 
 	if ( empty( $matches ) ) {

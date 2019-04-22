@@ -1,10 +1,10 @@
 <?php
 /**
  * @todo add description
- * 
+ *
  * @package BuddyBoss\Search
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -58,6 +58,9 @@ if (!class_exists('Bp_Search_Posts')):
 			----------------------------------------------------
 			*/
 			global $wpdb;
+
+			$bp_prefix = bp_core_get_table_prefix();
+
 			$query_placeholder = array();
 
 			$sql = " SELECT ";
@@ -89,7 +92,7 @@ if (!class_exists('Bp_Search_Posts')):
 			}
 
 			//WHERE
-			$sql .= ' WHERE 1=1 AND ( p.post_title LIKE %s OR p.post_content LIKE %s ';
+			$sql .= " WHERE 1=1 AND ( p.post_title LIKE %s OR {$bp_prefix}bp_strip_tags(p.post_content) LIKE %s ";
 			$query_placeholder[] = '%'. $search_term .'%';
 			$query_placeholder[] = '%'. $search_term .'%';
 
@@ -110,7 +113,7 @@ if (!class_exists('Bp_Search_Posts')):
 
 			//Meta query
 			if ( bp_is_search_post_type_meta_enable($this->pt_name) ) {
-				$sql .= " OR p.ID IN (SELECT post_id FROM {$wpdb->postmeta} WHERE meta_value LIKE %s )";
+				$sql .= " OR p.ID IN (SELECT post_id FROM {$wpdb->postmeta} WHERE {$bp_prefix}bp_strip_tags(meta_value) LIKE %s )";
 				$query_placeholder[] = '%'. $search_term .'%';
 			}
 

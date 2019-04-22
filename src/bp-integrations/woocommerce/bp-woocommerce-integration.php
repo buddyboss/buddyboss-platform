@@ -33,7 +33,7 @@ class BP_Woocommerce_Integration extends BP_Integration {
 	 * WooCommerce Integration Tab
 	 * @return {HTML} - renders html in bp-admin-woocommerce-tab.php
 	 */
-	public function setup_admin_integartion_tab() {
+	public function setup_admin_integration_tab() {
 		require_once trailingslashit($this->path) . 'bp-admin-woocommerce-tab.php';
 
 		new BP_Woocommerce_Admin_Integration_Tab(

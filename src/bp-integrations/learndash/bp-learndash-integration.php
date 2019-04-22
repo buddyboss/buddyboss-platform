@@ -32,7 +32,7 @@ class BP_Learndash_Integration extends BP_Integration {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function setup_admin_integartion_tab() {
+	public function setup_admin_integration_tab() {
 		require_once trailingslashit($this->path) . 'bp-admin-learndash-tab.php';
 
 		new BP_Learndash_Admin_Integration_Tab(

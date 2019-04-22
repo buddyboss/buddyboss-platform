@@ -102,6 +102,58 @@
 
     </fieldset>
 
+	<?php if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) : ?>
+
+        <fieldset class="radio group-media">
+            <legend><?php esc_html_e( 'Group Media', 'buddyboss' ); ?></legend>
+
+            <p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to manage media?', 'buddyboss' ); ?></p>
+
+            <label for="group-media-status-members">
+                <input type="radio" name="group-media-status" id="group-media-status-members" value="members"<?php bp_group_show_media_status_setting( 'members' ); ?> />
+				<?php esc_html_e( 'All group members', 'buddyboss' ); ?>
+            </label>
+
+            <label for="group-media-status-mods">
+                <input type="radio" name="group-media-status" id="group-media-status-mods" value="mods"<?php bp_group_show_media_status_setting( 'mods' ); ?> />
+				<?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?>
+            </label>
+
+            <label for="group-media-status-admins">
+                <input type="radio" name="group-media-status" id="group-media-status-admins" value="admins"<?php bp_group_show_media_status_setting( 'admins' ); ?> />
+				<?php esc_html_e( 'Organizers only', 'buddyboss' ); ?>
+            </label>
+
+        </fieldset>
+
+	<?php endif; ?>
+
+    <?php if ( bp_is_active( 'media' ) && bp_is_group_album_support_enabled() ) : ?>
+
+        <fieldset class="radio group-albums">
+            <legend><?php esc_html_e( 'Group Albums', 'buddyboss' ); ?></legend>
+
+            <p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to manage albums?', 'buddyboss' ); ?></p>
+
+            <label for="group-albums-status-members">
+                <input type="radio" name="group-album-status" id="group-albums-status-members" value="members"<?php bp_group_show_albums_status_setting( 'members' ); ?> />
+                <?php esc_html_e( 'All group members', 'buddyboss' ); ?>
+            </label>
+
+            <label for="group-albums-status-mods">
+                <input type="radio" name="group-album-status" id="group-albums-status-mods" value="mods"<?php bp_group_show_albums_status_setting( 'mods' ); ?> />
+                <?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?>
+            </label>
+
+            <label for="group-albums-status-admins">
+                <input type="radio" name="group-album-status" id="group-albums-status-admins" value="admins"<?php bp_group_show_albums_status_setting( 'admins' ); ?> />
+                <?php esc_html_e( 'Organizers only', 'buddyboss' ); ?>
+            </label>
+
+        </fieldset>
+
+    <?php endif; ?>
+
 	<?php
 	$group_types = bp_groups_get_group_types( array( 'show_in_create_screen' => true ), 'objects' );
 

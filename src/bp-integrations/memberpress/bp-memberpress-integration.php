@@ -33,7 +33,7 @@ class BP_Memberpress_Integration extends BP_Integration {
 	 * Memberpress Integration Tab
 	 * @return {HTML} - renders html in bp-admin-memberpress-tab.php
 	 */
-	public function setup_admin_integartion_tab() {
+	public function setup_admin_integration_tab() {
 		require_once trailingslashit($this->path) . 'bp-admin-memberpress-tab.php';
 
 		new BP_Memberpress_Admin_Integration_Tab(

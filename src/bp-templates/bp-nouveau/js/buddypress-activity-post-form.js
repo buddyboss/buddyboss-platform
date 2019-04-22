@@ -27,7 +27,7 @@ window.bp = window.bp || {};
 			this.ActivityObjects = new bp.Collections.ActivityObjects();
 			this.buttons         = new Backbone.Collection();
 
-			if ( !_.isUndefined( window.Dropzone ) ) {
+			if ( !_.isUndefined( window.Dropzone ) && !_.isUndefined( BP_Nouveau.media ) ) {
 				this.dropzoneView();
 			}
 
@@ -232,6 +232,8 @@ window.bp = window.bp || {};
 
 			document.removeEventListener( 'activity_media_toggle', this.toggle_media_uploader.bind(this) );
 			document.removeEventListener( 'activity_media_close', this.destroy.bind(this) );
+
+			$('#whats-new-attachments').addClass('empty');
 		},
 
 		open_media_uploader: function() {
@@ -271,6 +273,7 @@ window.bp = window.bp || {};
 			});
 
 			self.$el.find('#activity-post-media-uploader').addClass('open').removeClass('closed');
+			$('#whats-new-attachments').removeClass('empty');
 		}
 
 	});
@@ -282,7 +285,6 @@ window.bp = window.bp || {};
 		template: bp.template( 'activity-link-preview' ),
 		events: {
 			'click #activity-link-preview-button': 'toggleURLInput',
-			'keyup #activity-link-preview-url': 'updateLinkPreview',
 			'click #activity-url-prevPicButton': 'prev',
 			'click #activity-url-nextPicButton': 'next',
 			'click #activity-link-preview-close-image': 'close',
@@ -349,101 +351,8 @@ window.bp = window.bp || {};
 			});
 			document.removeEventListener( 'activity_link_preview_open', this.open.bind(this) );
 			document.removeEventListener( 'activity_link_preview_close', this.destroy.bind(this) );
-		},
 
-		updateLinkPreview: function( event ) {
-			var self = this;
-
-			if ( this.linkTimeout != null ) {
-				clearTimeout( this.linkTimeout );
-			}
-
-			this.linkTimeout = setTimeout( function() {
-				this.linkTimeout = null;
-				self.scrapURL( event.target.value );
-			}, 1000 );
-		},
-
-		scrapURL: function(urlText) {
-			var urlString = '';
-			if ( urlText.indexOf( 'http://' ) >= 0 ) {
-				urlString = this.getURL( 'http://', urlText );
-			} else if ( urlText.indexOf( 'https://' ) >= 0 ) {
-				urlString = this.getURL( 'https://', urlText );
-			} else if ( urlText.indexOf( 'www.' ) >= 0 ) {
-				urlString = this.getURL( 'www', urlText );
-			}
-
-			if( urlString !== '' ){
-				//check if the url of any of the excluded video oembeds
-				var url_a = document.createElement( 'a' );
-				url_a.href = urlString;
-				var hostname = url_a.hostname;
-				if ( BP_Nouveau.activity.params.excluded_hosts.indexOf( hostname ) !== - 1 ) {
-					urlString = '';
-				}
-			}
-
-			if( '' !== urlString ) {
-				this.loadURLPreview( urlString );
-			}
-		},
-
-		getURL: function( prefix, urlText ) {
-			var urlString = '';
-			var startIndex = urlText.indexOf( prefix );
-			for ( var i = startIndex; i < urlText.length; i ++ ) {
-				if ( urlText[i] === ' ' || urlText[i] === '\n' ) {
-					break;
-				} else {
-					urlString += urlText[i];
-				}
-			}
-			if ( prefix === 'www' ) {
-				prefix = 'http://';
-				urlString = prefix + urlString;
-			}
-			return urlString;
-		},
-
-		loadURLPreview: function(url) {
-			var self = this;
-
-			var regexp = /^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
-			if ( regexp.test( url ) ) {
-
-				self.model.set( {
-					link_scrapping: true,
-					link_loading: true,
-					link_error: false,
-					link_url: url
-				} );
-
-				bp.ajax.post( 'bp_activity_parse_url', { url: url } ).always( function( response ) {
-					self.model.set('link_loading', false);
-
-					if ( response.title === '' && response.images === '' ) {
-						self.model.set( 'link_scrapping', false );
-						return;
-					}
-
-					if ( response.error === '' ) {
-						self.model.set( {
-							link_success: true,
-							link_title: response.title,
-							link_description: response.description,
-							link_images: response.images,
-							link_image_index: 0
-						} );
-					} else {
-						self.model.set( {
-							link_success: false,
-							link_error: true,
-							link_error_msg: response.error
-						} );
-					}
-				});
-			}
+			$('#whats-new-attachments').addClass('empty');
 		}
 	} );
 
@@ -470,6 +379,7 @@ window.bp = window.bp || {};
 				this.el.style.backgroundSize = 'contain';
 				this.el.style.height = gifData.images.original.height + 'px';
 				this.el.style.width = gifData.images.original.width + 'px';
+				$('#whats-new-attachments').removeClass('empty');
 			}
 
 			return this;
@@ -482,6 +392,7 @@ window.bp = window.bp || {};
 			this.el.style.height = '0px';
 			this.el.style.width = '0px';
 			document.removeEventListener( 'activity_gif_close', this.destroy.bind(this) );
+			$('#whats-new-attachments').addClass('empty');
 		}
 	} );
 
@@ -694,8 +605,9 @@ window.bp = window.bp || {};
 		tagName   : 'div',
 		className : 'bp-suggestions',
 		id        : 'whats-new',
-		events : {
-			'paste' : 'handlePaste'
+		events: {
+			'paste': 'handlePaste',
+			'keyup': 'handleKeyUp'
 		},
 		attributes: {
 			name         : 'whats-new',
@@ -708,8 +620,12 @@ window.bp = window.bp || {};
 
 		initialize: function() {
 			this.on( 'ready', this.adjustContent, this );
-
 			this.options.activity.on( 'change:content', this.resetContent, this );
+			this.linkTimeout = null;
+
+			if ( _.isUndefined( BP_Nouveau.activity.params.link_preview ) ) {
+				this.$el.off( 'keyup' );
+			}
 		},
 
 		adjustContent: function() {
@@ -754,6 +670,102 @@ window.bp = window.bp || {};
 
 			// Prevent the standard paste behavior
 			event.preventDefault();
+		},
+
+		handleKeyUp: function( event ) {
+			var self = this;
+
+			if ( this.linkTimeout != null ) {
+				clearTimeout( this.linkTimeout );
+			}
+
+			this.linkTimeout = setTimeout( function() {
+				this.linkTimeout = null;
+				self.scrapURL( event.target.textContent );
+			}, 500 );
+		},
+
+		scrapURL: function(urlText) {
+			var urlString = '';
+			if ( urlText.indexOf( 'http://' ) >= 0 ) {
+				urlString = this.getURL( 'http://', urlText );
+			} else if ( urlText.indexOf( 'https://' ) >= 0 ) {
+				urlString = this.getURL( 'https://', urlText );
+			} else if ( urlText.indexOf( 'www.' ) >= 0 ) {
+				urlString = this.getURL( 'www', urlText );
+			}
+
+			if( urlString !== '' ){
+				//check if the url of any of the excluded video oembeds
+				var url_a = document.createElement( 'a' );
+				url_a.href = urlString;
+				var hostname = url_a.hostname;
+				if ( BP_Nouveau.activity.params.excluded_hosts.indexOf( hostname ) !== - 1 ) {
+					urlString = '';
+				}
+			}
+
+			if( '' !== urlString ) {
+				this.loadURLPreview( urlString );
+			}
+		},
+
+		getURL: function( prefix, urlText ) {
+			var urlString = '';
+			var startIndex = urlText.indexOf( prefix );
+			for ( var i = startIndex; i < urlText.length; i ++ ) {
+				if ( urlText[i] === ' ' || urlText[i] === '\n' ) {
+					break;
+				} else {
+					urlString += urlText[i];
+				}
+			}
+			if ( prefix === 'www' ) {
+				prefix = 'http://';
+				urlString = prefix + urlString;
+			}
+			return urlString;
+		},
+
+		loadURLPreview: function(url) {
+			var self = this;
+
+			var regexp = /^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+			if ( regexp.test( url ) ) {
+
+				self.options.activity.set( {
+					link_scrapping: true,
+					link_loading: true,
+					link_error: false,
+					link_url: url
+				} );
+
+				bp.ajax.post( 'bp_activity_parse_url', { url: url } ).always( function( response ) {
+					self.options.activity.set('link_loading', false);
+
+					if ( response.title === '' && response.images === '' ) {
+						self.options.activity.set( 'link_scrapping', false );
+						return;
+					}
+
+					if ( response.error === '' ) {
+						self.options.activity.set( {
+							link_success: true,
+							link_title: response.title,
+							link_description: response.description,
+							link_images: response.images,
+							link_image_index: 0
+						} );
+						$('#whats-new-attachments').removeClass('empty');
+					} else {
+						self.options.activity.set( {
+							link_success: false,
+							link_error: true,
+							link_error_msg: response.error
+						} );
+					}
+				});
+			}
 		}
 	} );
 
@@ -961,8 +973,24 @@ window.bp = window.bp || {};
 				// Set the object type
 				this.model.set( 'object', model.get( 'selected' ) );
 
+				if ( $('#activity-post-media-uploader').length &&
+					! _.isUndefined( BP_Nouveau.media ) &&
+					BP_Nouveau.media.group_media === false
+				) {
+					if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone ) ) {
+						bp.Nouveau.Activity.postForm.dropzone.destroy();
+					}
+					$('#activity-post-media-uploader').html('');
+					this.model.set( 'media', [] );
+					$('#whats-new-toolbar .post-media').hide();
+				}
+
 			} else {
 				this.model.set( { object: 'user', item_id: 0 } );
+
+				if ( $('#whats-new-toolbar .post-media').length ) {
+					$('#whats-new-toolbar .post-media').show();
+				}
 			}
 
 			this.updateDisplay();
@@ -1019,16 +1047,16 @@ window.bp = window.bp || {};
 		},
 
 		toggleURLInput: function( e ) {
-			e.preventDefault();
 			var event;
+			e.preventDefault();
+			this.closeMediaSelector();
+			this.closeGifSelector();
 			if ( this.model.get('link_scrapping') ) {
 				event = new Event('activity_link_preview_close');
 			} else {
 				event = new Event('activity_link_preview_open');
 			}
 			document.dispatchEvent(event);
-			this.closeMediaSelector();
-			this.closeGifSelector();
 		},
 
 		closeURLInput: function() {
@@ -1038,14 +1066,14 @@ window.bp = window.bp || {};
 
 		toggleGifSelector: function( e ) {
 			e.preventDefault();
+			this.closeURLInput();
+			this.closeMediaSelector();
 			if ( this.$gifPickerEl.is(':empty') ) {
 				var gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown({model: this.model});
 				this.$gifPickerEl.html( gifMediaSearchDropdownView.render().el );
 			}
 			this.$self.toggleClass('open');
 			this.$gifPickerEl.toggleClass('open');
-			this.closeURLInput();
-			this.closeMediaSelector();
 		},
 
 		closeGifSelector: function() {
@@ -1055,10 +1083,10 @@ window.bp = window.bp || {};
 
 		toggleMediaSelector: function( e ) {
 			e.preventDefault();
-			var event = new Event('activity_media_toggle');
-			document.dispatchEvent(event);
 			this.closeURLInput();
 			this.closeGifSelector();
+			var event = new Event('activity_media_toggle');
+			document.dispatchEvent(event);
 		},
 
 		closeMediaSelector: function() {
@@ -1107,8 +1135,9 @@ window.bp = window.bp || {};
 		activityLinkPreview: null,
 		activityAttachedGifPreview: null,
 		activityMedia: null,
+		className : 'empty',
 		initialize: function() {
-			if ( !_.isUndefined( window.Dropzone ) ) {
+			if ( !_.isUndefined( window.Dropzone ) && !_.isUndefined( BP_Nouveau.media ) && ( BP_Nouveau.activity.params.object === 'user' || ( BP_Nouveau.activity.params.object === 'group' && BP_Nouveau.media.group_media ) ) ) {
 				this.activityMedia = new bp.Views.ActivityMedia({model: this.model});
 				this.views.add(this.activityMedia);
 			}
@@ -1304,8 +1333,7 @@ window.bp = window.bp || {};
 			'focus #whats-new' : 'displayFull',
 			'reset'            : 'resetForm',
 			'submit'           : 'postUpdate',
-			'keydown'          : 'postUpdate',
-			'keyup'            : 'updateLinkPreview'
+			'keydown'          : 'postUpdate'
 		},
 
 		initialize: function() {
@@ -1317,18 +1345,12 @@ window.bp = window.bp || {};
 			// Clone the model to set the resetted one
 			this.resetModel = this.model.clone();
 
-			this.linkTimeout = null;
-
 			this.views.set( [
 				new bp.Views.FormAvatar(),
 				new bp.Views.FormContent( { activity: this.model, model: this.model } )
 			] );
 
 			this.model.on( 'change:errors', this.displayFeedback, this );
-
-			if ( ! BP_Nouveau.activity.params.link_preview ) {
-				this.$el.off( 'keyup' );
-			}
 		},
 
 		displayFull: function( event ) {
@@ -1553,6 +1575,8 @@ window.bp = window.bp || {};
 					bp.Nouveau.inject( '#activity-stream ul.activity-list', response.activity, 'prepend' );
 				}
 			} ).fail( function( response ) {
+
+				self.model.set( 'posting', false );
 
 				self.model.set( 'errors', { type: 'error', value: response.message } );
 			} );

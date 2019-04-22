@@ -67,7 +67,7 @@ class BP_Integration {
 	}
 
 	public function setup_actions() {
-		add_action( 'bp_register_admin_integrations', array( $this, 'setup_admin_integartion_tab' ) );
+		add_action( 'bp_register_admin_integrations', array( $this, 'setup_admin_integration_tab' ) );
 
 		if ( $this->is_activated() ) {
 			$this->activation();
@@ -98,7 +98,7 @@ class BP_Integration {
 		// place to put default value
 	}
 
-	public function setup_admin_integartion_tab() {
+	public function setup_admin_integration_tab() {
 		if ( $this->admin_tab ) {
 			require_once trailingslashit( $this->path ) . $this->admin_tab;
 		}

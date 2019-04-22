@@ -123,7 +123,7 @@ class BP_Media_Template {
 	 *     differ from the originating function, and are described below.
 	 *     @type string      $page_arg         The string used as a query parameter in
 	 *                                         pagination links. Default: 'acpage'.
-	 *     @type array|bool  $include          Pass an array of activity IDs to
+	 *     @type array|bool  $include          Pass an array of media IDs to
 	 *                                         retrieve only those items, or false to noop the 'include'
 	 *                                         parameter. 'include' differs from 'in' in that 'in' forms
 	 *                                         an IN clause that works in conjunction with other filters
@@ -140,16 +140,16 @@ class BP_Media_Template {
 			'per_page'          => 20,
 			'page_arg'          => 'acpage',
 			'max'               => false,
-			'user_id'           => false,
-			'album_id'          => false,
 			'fields'            => 'all',
 			'count_total'       => false,
 			'sort'              => false,
 			'include'           => false,
 			'exclude'           => false,
 			'search_terms'      => false,
+			'user_id'           => false,
+			'album_id'          => false,
+			'group_id'          => false,
 			'privacy'           => false,
-			'update_meta_cache' => true,
 		);
 		$r = wp_parse_args( $args, $defaults );
 		extract( $r );
@@ -172,7 +172,6 @@ class BP_Media_Template {
 				'sort'              => $sort,
 				'user_id'           => $user_id,
 				'album_id'          => $album_id,
-				'update_meta_cache' => $update_meta_cache,
 			) );
 
 			// Fetch all activity items.
@@ -186,9 +185,9 @@ class BP_Media_Template {
 				'search_terms'      => $search_terms,
 				'user_id'           => $user_id,
 				'album_id'          => $album_id,
+				'group_id'          => $group_id,
 				'exclude'           => $exclude,
 				'privacy'           => $privacy,
-				'update_meta_cache' => $update_meta_cache,
 			) );
 		}
 

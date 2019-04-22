@@ -8,6 +8,8 @@
 
 <?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
 
+<?php bp_get_template_part( 'media/theatre' ); ?>
+
 <?php
 
 switch ( bp_current_action() ) :
@@ -18,6 +20,8 @@ switch ( bp_current_action() ) :
 		bp_get_template_part( 'media/add-media' );
 
 		bp_nouveau_member_hook( 'before', 'media_content' );
+
+		bp_get_template_part( 'media/actions' );
 
 		?>
 		<div id="media-stream" class="media" data-bp-list="media">

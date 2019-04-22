@@ -70,6 +70,15 @@ if ( !$is_bp_active ) {
 }
 
 if ( $is_bp_active ) {
+	require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+	deactivate_plugins( plugin_basename( 'buddyboss-platform/bp-loader.php' ) );
+	$plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
+	$link_plugins = sprintf( "<a href='%s'>%s</a>", $plugins_url, __( 'deactivate', 'buddyboss' ) );
+	wp_die( sprintf( esc_html__( 'BuddyBoss Platform is disabled. The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please %s BuddyPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ), 'BuddyBoss Platform dependency check', array( 'back_link' => true ) );
+	return;
+}
+
+if ( $is_bp_active ) {
 
     /**
      * Displays an admin notice when BuddyPress plugin is active.
@@ -100,6 +109,15 @@ if ( $is_bp_active ) {
     add_action( 'admin_notices',            'bp_duplicate_buddypress_notice' );
 	add_action( 'network_admin_notices',    'bp_duplicate_buddypress_notice' );
 
+}
+
+if ( $is_bb_active ) {
+	require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+	deactivate_plugins( plugin_basename( 'buddyboss-platform/bp-loader.php' ) );
+	$plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
+	$link_plugins = sprintf( "<a href='%s'>%s</a>", $plugins_url, __( 'deactivate', 'buddyboss' ) );
+	wp_die( sprintf( esc_html__( 'BuddyBoss Platform is disabled. The BuddyBoss Platform can\'t work while bbPress plugin is active. Please %s bbPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ), 'BuddyBoss Platform dependency check', array( 'back_link' => true ) );
+	return;
 }
 
 if ( $is_bb_active ) {

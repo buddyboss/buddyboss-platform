@@ -872,6 +872,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'loading',
 			'message' => __( 'Requesting the group leaders. Please wait.', 'buddyboss' ),
 		),
+		'group-media-loading' => array(
+			'type'    => 'loading',
+			'message' => __( 'Requesting the group photos. Please wait.', 'buddyboss' ),
+		),
 		'group-members-none' => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, no group members were found.', 'buddyboss' ),
@@ -974,27 +978,27 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		),
 		'member-media-loading' => array(
 			'type'    => 'loading',
-			'message' => __( 'Loading media for the member. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading member\'s photos. Please wait.', 'buddyboss' ),
 		),
 		'media-loop-none' => array(
 			'type'    => 'info',
-			'message' => __( 'Sorry, no media was found.', 'buddyboss' ),
+			'message' => __( 'Sorry, no photos were found.', 'buddyboss' ),
 		),
 		'member-media-none' => array(
 			'type'    => 'info',
-			'message' => __( 'Sorry, no media was found.', 'buddyboss' ),
+			'message' => __( 'Sorry, no photos were found.', 'buddyboss' ),
 		),
 		'media-album-none' => array(
 			'type'    => 'info',
-			'message' => __( 'Sorry, no album was found.', 'buddyboss' ),
+			'message' => __( 'Sorry, no albums were found.', 'buddyboss' ),
 		),
 		'album-media-loading' => array(
 			'type'    => 'loading',
-			'message' => __( 'Loading media from the album. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading photos from the album. Please wait.', 'buddyboss' ),
 		),
 		'directory-media-loading' => array(
 			'type'    => 'loading',
-			'message' => __( 'Loading media from the community. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading photos from the community. Please wait.', 'buddyboss' ),
 		),
 	) );
 

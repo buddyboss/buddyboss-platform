@@ -19,6 +19,29 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 				<?php esc_html_e( 'Comment', 'buddyboss' ); ?>
 			</label>
 			<textarea id="ac-input-<?php bp_activity_id(); ?>" class="ac-input bp-suggestions" name="ac_input_<?php bp_activity_id(); ?>"></textarea>
+
+            <div id="ac-reply-attachments-<?php bp_activity_id(); ?>">
+
+				<?php if ( bp_is_active( 'media' ) ) : ?>
+                    <div class="dropzone closed" id="ac-reply-post-media-uploader-<?php bp_activity_id(); ?>"></div>
+				<?php endif; ?>
+
+            </div>
+
+            <div id="ac-reply-toolbar-<?php bp_activity_id(); ?>">
+
+				<?php if ( bp_is_active( 'media' ) ) : ?>
+
+                    <div class="post-elements-buttons-item post-media">
+                        <a href="#" id="ac-reply-media-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-media-button"
+                           data-bp-tooltip="<?php _e( 'Attach a photo', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
+                            <span class="dashicons dashicons-admin-media"></span>
+                        </a>
+                    </div>
+
+				<?php endif; ?>
+
+            </div>
 		</div>
 		<input type="hidden" name="comment_form_id" value="<?php bp_activity_id(); ?>" />
 

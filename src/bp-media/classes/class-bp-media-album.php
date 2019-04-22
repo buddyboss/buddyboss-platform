@@ -53,14 +53,6 @@ class BP_Media_Album {
 	var $title;
 
 	/**
-	 * Description of the album.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 * @var string
-	 */
-	var $description;
-
-	/**
 	 * Privacy of the album.
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -138,7 +130,6 @@ class BP_Media_Album {
 		$this->user_id      = (int) $row->user_id;
 		$this->group_id     = (int) $row->group_id;
 		$this->title        = $row->title;
-		$this->description  = $row->description;
 		$this->privacy      = $row->privacy;
 		$this->date_created = $row->date_created;
 	}
@@ -160,7 +151,6 @@ class BP_Media_Album {
 		$this->user_id       = apply_filters_ref_array( 'bp_media_user_id_before_save',           array( $this->user_id,           &$this ) );
 		$this->group_id      = apply_filters_ref_array( 'bp_media_group_id_before_save',          array( $this->group_id,          &$this ) );
 		$this->title         = apply_filters_ref_array( 'bp_media_title_before_save',             array( $this->title,             &$this ) );
-		$this->description   = apply_filters_ref_array( 'bp_media_description_before_save',       array( $this->title,             &$this ) );
 		$this->privacy       = apply_filters_ref_array( 'bp_media_privacy_before_save',           array( $this->privacy,           &$this ) );
 		$this->date_created  = apply_filters_ref_array( 'bp_media_date_created_before_save',      array( $this->date_created,      &$this ) );
 
@@ -181,9 +171,9 @@ class BP_Media_Album {
 
 		// If we have an existing ID, update the album, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name_albums} SET user_id = %d, group_id = %d, title = %s, description = %s, privacy = %s, date_created = %s WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->description, $this->privacy, $this->date_created, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name_albums} SET user_id = %d, group_id = %d, title = %s, privacy = %s, date_created = %s WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name_albums} ( user_id, group_id, title, description, privacy, date_created ) VALUES ( %d, %d, %s, %s, %s, %s )", $this->user_id, $this->group_id, $this->title, $this->description, $this->privacy, $this->date_created );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name_albums} ( user_id, group_id, title, privacy, date_created ) VALUES ( %d, %d, %s, %s, %s )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -226,7 +216,6 @@ class BP_Media_Album {
 	 *     @type string       $order_by          Column to order results by.
 	 *     @type array        $exclude           Array of media IDs to exclude. Default: false.
 	 *     @type string       $search_terms      Limit results by a search term. Default: false.
-	 *     @type bool         $update_meta_cache Whether to pre-fetch metadata for queried activity items. Default: true.
 	 *     @type string|bool  $count_total       If true, an additional DB query is run to count the total albums
 	 *                                           for the query. Default: false.
 	 * }
@@ -248,7 +237,9 @@ class BP_Media_Album {
 			'order_by'          => 'date_created',  // Column to order by.
 			'exclude'           => false,           // Array of ids to exclude.
 			'search_terms'      => false,           // Terms to search by.
-			'update_meta_cache' => true,            // Whether or not to update meta cache.
+			'user_id'           => false,           // user id.
+			'group_id'          => false,           // group id.
+			'privacy'           => false,           // public, loggedin, onlyme, friends, grouponly.
 			'count_total'       => false,           // Whether or not to use count_total.
 		) );
 
@@ -292,12 +283,9 @@ class BP_Media_Album {
 		switch( $r['order_by'] ) {
 			case 'id' :
 			case 'user_id' :
-			case 'blog_id' :
+			case 'group_id' :
 			case 'attachment_id' :
 			case 'title' :
-			case 'album_id' :
-			case 'activity_id' :
-			case 'menu_order' :
 				break;
 
 			default :
@@ -316,6 +304,19 @@ class BP_Media_Album {
 		if ( ! empty( $r['in'] ) ) {
 			$in = implode( ',', wp_parse_id_list( $r['in'] ) );
 			$where_conditions['in'] = "m.id IN ({$in})";
+		}
+
+		if ( ! empty( $r['user_id'] ) ) {
+			$where_conditions['user'] = "m.user_id = {$r['user_id']}";
+		}
+
+		if ( ! empty( $r['group_id'] ) ) {
+			$where_conditions['user'] = "m.group_id = {$r['group_id']}";
+		}
+
+		if ( ! empty( $r['privacy'] ) ) {
+			$privacy                     = "'" . implode ( "', '", $r['privacy'] ) . "'";
+			$where_conditions['privacy'] = "m.privacy IN ({$privacy})";
 		}
 
 		/**
@@ -527,7 +528,7 @@ class BP_Media_Album {
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string      $id       ID to check.
-	 * @return int|null Album ID if found; null if not.
+	 * @return int|bool Album ID if found; false if not.
 	 */
 	public static function album_exists( $id ) {
 		if ( empty( $id ) ) {
@@ -535,13 +536,13 @@ class BP_Media_Album {
 		}
 
 		$args = array(
-			'include' => $id,
+			'in' => $id,
 		);
 
 		$albums = BP_Media_Album::get( $args );
 
-		$album_id = null;
-		if ( $albums['albums'] ) {
+		$album_id = false;
+		if ( ! empty( $albums['albums'] ) ) {
 			$album_id = current( $albums['albums'] )->id;
 		}
 
@@ -611,13 +612,9 @@ class BP_Media_Album {
 	 *
 	 * @param array $args {
 	 * @int    $id                Optional. The ID of a specific item to delete.
-	 * @int    $blog_id           Optional. The blog ID to filter by.
-	 * @int    $attachment_id           Optional. The attachment ID to filter by.
 	 * @int    $user_id           Optional. The user ID to filter by.
-	 * @string    $title           Optional. The title to filter by.
-	 * @int    $album_id           Optional. The album ID to filter by.
-	 * @int    $activity_id           Optional. The activity ID to filter by.
-	 * @string    $privacy           Optional. The privacy to filter by.
+	 * @int    $group_id           Optional. The group ID to filter by.
+	 * @string    $title          Optional. The title to filter by.
 	 * @string $date_created      Optional. The date to filter by.
 	 * }
 	 *
@@ -691,13 +688,20 @@ class BP_Media_Album {
 		 *
 		 * @since BuddyBoss 1.0.0
 		 *
-		 * @param array $albums Array of media albums.
+		 * @param array $albums     Array of media albums.
 		 * @param array $r          Array of parsed arguments.
 		 */
 		do_action_ref_array( 'bp_media_album_after_delete', array( $albums, $r ) );
 
 		// Pluck the media albums IDs out of the $albums array.
 		$album_ids      = wp_parse_id_list( wp_list_pluck( $albums, 'id' ) );
+
+		// delete the media associated with album
+		if ( ! empty( $album_ids ) ) {
+			foreach( $album_ids as $album_id ) {
+				BP_Media::delete( array( 'album_id' => $album_id ) );
+			}
+		}
 
 		return $album_ids;
 	}

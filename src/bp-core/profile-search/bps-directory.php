@@ -70,7 +70,7 @@ function bp_ps_clear_directory ()
 	}
 }
 
-add_shortcode ('bp_ps_directory', 'bp_ps_show_directory');
+// add_shortcode ('bp_ps_directory', 'bp_ps_show_directory');
 /**
  * Output BuddyBoss Profile Search directory template.
  *
@@ -178,7 +178,7 @@ add_filter ('bp_user_query_uid_clauses', 'bp_ps_uid_clauses', 99, 2);
  */
  function bp_ps_uid_clauses ($sql, $object)
 {
-	$code = $object->query_vars['type']; 
+	$code = $object->query_vars['type'];
 	$order = 'ASC';
 	if ($code[0] == '-')
 	{

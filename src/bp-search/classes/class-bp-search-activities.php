@@ -1,10 +1,10 @@
 <?php
 /**
  * @todo add description
- * 
+ *
  * @package BuddyBoss\Search
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -61,6 +61,8 @@ if (!class_exists('Bp_Search_Activities')):
 			 */
 			global $wpdb, $bp;
 
+			$bp_prefix = bp_core_get_table_prefix();
+
 			$query_placeholder = array();
 
 			$sql = " SELECT ";
@@ -78,7 +80,7 @@ if (!class_exists('Bp_Search_Activities')):
 					WHERE 
 						1=1 
 						AND is_spam = 0 
-						AND a.content LIKE %s 
+						AND {$bp_prefix}bp_strip_tags(a.content) LIKE %s 
 						AND a.hide_sitewide = 0 
 						AND a.type = 'activity_update' 
 				";

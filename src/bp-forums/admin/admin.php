@@ -43,11 +43,6 @@ class BBP_Admin {
 	public $styles_url = '';
 
 	/**
-	 * @var string URL to the Forums admin css directory
-	 */
-	public $css_url = '';
-
-	/**
 	 * @var string URL to the Forums admin js directory
 	 */
 	public $js_url = '';
@@ -95,7 +90,6 @@ class BBP_Admin {
 		$this->admin_url  = trailingslashit( $bbp->includes_url . 'admin'  ); // Admin url
 		$this->images_url = trailingslashit( $this->admin_url   . 'images' ); // Admin images URL
 		$this->styles_url = trailingslashit( $this->admin_url   . 'styles' ); // Admin styles URL
-		$this->css_url    = trailingslashit( $this->admin_url   . 'css'    ); // Admin css URL
 		$this->js_url     = trailingslashit( $this->admin_url   . 'js'     ); // Admin js URL
 	}
 
@@ -139,7 +133,7 @@ class BBP_Admin {
 		add_action( 'bbp_admin_notices',           array( $this, 'activation_notice'          )     ); // Add notice if not using a Forums theme
 		add_action( 'bbp_register_admin_style',    array( $this, 'register_admin_style'       )     ); // Add green admin style
 		add_action( 'bbp_activation',              array( $this, 'new_install'                )     ); // Add menu item to settings menu
-		add_action( 'admin_enqueue_scripts',       array( $this, 'enqueue_styles'             )     ); // Add enqueued CSS
+//		add_action( 'admin_enqueue_scripts',       array( $this, 'enqueue_styles'             )     ); // Add enqueued CSS
 		add_action( 'admin_enqueue_scripts',       array( $this, 'enqueue_scripts'            )     ); // Add enqueued JS
 		add_action( 'wp_dashboard_setup',          array( $this, 'dashboard_widget_right_now' )     ); // Forums 'Right now' Dashboard widget
 		add_action( 'admin_bar_menu',              array( $this, 'admin_bar_about_link'       ), 15 ); // Add a link to Forums about page to the admin bar
@@ -148,6 +142,7 @@ class BBP_Admin {
 
 		// No _nopriv_ equivalent - users must be logged in
 		add_action( 'wp_ajax_bbp_suggest_topic', array( $this, 'suggest_topic' ) );
+		add_action( 'wp_ajax_bbp_suggest_reply', array( $this, 'suggest_reply' ) );
 		add_action( 'wp_ajax_bbp_suggest_user',  array( $this, 'suggest_user'  ) );
 
 		/** Filters ***********************************************************/
@@ -164,6 +159,9 @@ class BBP_Admin {
 		// Allow keymasters to save forums settings
 		add_filter( 'option_page_capability_bbpress',  array( $this, 'option_page_capability_bbpress' ) );
 
+		// Remove "Comments" & "Discussion" metabox from bbp_get_reply_post_type() custom post type.
+		add_action( 'admin_init', array( $this, 'bbp_remove_comments_discussion_meta_boxes' ), 9999 );
+
 		/** Network Admin *****************************************************/
 
 		// Add menu item to settings menu
@@ -173,6 +171,19 @@ class BBP_Admin {
 
 		// Allow plugins to modify these actions
 		do_action_ref_array( 'bbp_admin_loaded', array( &$this ) );
+
+
+	}
+
+	/**
+	 * Remove "Comments" & "Discussion" metabox from bbp_get_reply_post_type() custom post type.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 */
+	public function bbp_remove_comments_discussion_meta_boxes() {
+		remove_meta_box( 'commentstatusdiv', bbp_get_reply_post_type(), 'normal' );
+		remove_meta_box( 'commentsdiv', bbp_get_reply_post_type(), 'normal' );
 	}
 
 	/**
@@ -228,28 +239,6 @@ class BBP_Admin {
 				add_action( "admin_head-$hook", 'bbp_tools_modify_menu_highlight' );
 			}
 
-		}
-
-		// These are later removed in admin_head
-		if ( current_user_can( 'bbp_about_page' ) ) {
-
-			// About
-			add_dashboard_page(
-				__( 'Welcome to BuddyBoss Forums',  'buddyboss' ),
-				__( 'Welcome to BuddyBoss Forums',  'buddyboss' ),
-				$this->minimum_capability,
-				'bbp-about',
-				array( $this, 'about_screen' )
-			);
-
-			// Credits
-			add_dashboard_page(
-				__( 'Welcome to BuddyBoss Forums',  'buddyboss' ),
-				__( 'Welcome to BuddyBoss Forums',  'buddyboss' ),
-				$this->minimum_capability,
-				'bbp-credits',
-				array( $this, 'credits_screen' )
-			);
 		}
 
 		// Bail if plugin is not network activated
@@ -500,20 +489,15 @@ class BBP_Admin {
 					// Replies admin
 					} elseif ( bbp_get_reply_post_type() === get_current_screen()->post_type ) {
 						wp_enqueue_script( 'bbp-admin-replies-js', $this->js_url . 'replies.js', array( 'jquery' ), $version );
+						$localize_array = array(
+							'loading_text' => __( 'Loading', 'buddyboss' ),
+						);
+						wp_localize_script( 'bbp-admin-replies-js', 'replies_data', $localize_array );
 					}
 
 					break;
 			}
 		}
-	}
-
-	/**
-	 * Enqueue any admin scripts we might need
-	 *
-	 * @since bbPress (r5224)
-	 */
-	public function enqueue_styles() {
-		wp_enqueue_style( 'bbp-admin-css', $this->css_url . 'admin.css', array( 'dashicons' ), bbp_get_version() );
 	}
 
 	/**
@@ -608,7 +592,7 @@ class BBP_Admin {
 	/** Ajax ******************************************************************/
 
 	/**
-	 * Ajax action for facilitating the forum auto-suggest
+	 * Ajax action for facilitating the discussion auto-suggest
 	 *
 	 * @since bbPress (r4261)
 	 *
@@ -618,34 +602,57 @@ class BBP_Admin {
 	 * @uses bbp_get_topic_title()
 	 */
 	public function suggest_topic() {
-		global $wpdb;
 
-		// Bail early if no request
-		if ( empty( $_REQUEST['q'] ) ) {
-			wp_die( '0' );
-		}
+		$html = '<option value="0">'.esc_html__('-- Select Discussion --','buddyboss').'</option>';
 
-		// Bail if user cannot moderate - only moderators can change hierarchy
-		if ( ! current_user_can( 'moderate' ) ) {
-			wp_die( '0' );
-		}
-
-		// Check the ajax nonce
-		check_ajax_referer( 'bbp_suggest_topic_nonce' );
-
-		// Try to get some topics
-		$topics = get_posts( array(
-			's'         => $wpdb->esc_like( $_REQUEST['q'] ),
-			'post_type' => bbp_get_topic_post_type()
+		$posts  = get_posts( array(
+			'post_type'          => bbp_get_topic_post_type(),
+			'post_status'        => 'publish',
+			'post_parent'        => $_POST['post_parent'],
+			'numberposts'        => -1,
+			'orderby'            => 'title',
+			'order'              => 'ASC',
+			'walker'             => '',
 		) );
 
-		// If we found some topics, loop through and display them
-		if ( ! empty( $topics ) ) {
-			foreach ( (array) $topics as $post ) {
-				printf( esc_html__( '%s - %s', 'buddyboss' ), bbp_get_topic_id( $post->ID ), bbp_get_topic_title( $post->ID ) . "\n" );
-			}
-		}
-		die();
+		add_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 99, 2 );
+		$html .= walk_page_dropdown_tree( $posts, 0);
+		remove_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 99, 2  );
+
+		echo $html;
+		wp_die();
+	}
+
+	/**
+	 * Ajax action for facilitating the reply auto-suggest
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @uses get_posts()
+	 * @uses bbp_get_topic_post_type()
+	 * @uses bbp_get_topic_id()
+	 * @uses bbp_get_topic_title()
+	 */
+	public function suggest_reply() {
+
+		$html = '<option value="0">'.esc_html__('-- Select Reply --','buddyboss').'</option>';
+
+		$posts  = get_posts( array(
+			'post_type'          => bbp_get_reply_post_type(),
+			'post_status'        => 'publish',
+			'post_parent'        => $_POST['post_parent'],
+			'numberposts'        => -1,
+			'orderby'            => 'title',
+			'order'              => 'ASC',
+			'walker'             => '',
+		) );
+
+		add_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 99, 2 );
+		$html .= walk_page_dropdown_tree( $posts, 0);
+		remove_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 99, 2  );
+
+		echo $html;
+		wp_die();
 	}
 
 	/**
@@ -684,186 +691,6 @@ class BBP_Admin {
 			}
 		}
 		die();
-	}
-
-	/** About *****************************************************************/
-
-	/**
-	 * Output the about screen
-	 *
-	 * @since bbPress (r4159)
-	 */
-	public function about_screen() {
-
-		list( $display_version ) = explode( '-', bbp_get_version() ); ?>
-
-		<div class="wrap about-wrap">
-			<h1><?php printf( esc_html__( 'Welcome to BuddyBoss Forums %s', 'buddyboss' ), $display_version ); ?></h1>
-			<div class="about-text"><?php printf( esc_html__( 'Thank you for updating! Forums %s is bundled up and ready to weather the storm of users in your community!', 'buddyboss' ), $display_version ); ?></div>
-			<div class="bbp-badge"><?php printf( esc_html__( 'Version %s', 'buddyboss' ), $display_version ); ?></div>
-
-			<h2 class="nav-tab-wrapper">
-				<a class="nav-tab nav-tab-active" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'bbp-about' ), 'index.php' ) ) ); ?>">
-					<?php esc_html_e( 'What\'s New', 'buddyboss' ); ?>
-				</a><a class="nav-tab" href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'bbp-credits' ), 'index.php' ) ) ); ?>">
-					<?php esc_html_e( 'Credits', 'buddyboss' ); ?>
-				</a>
-			</h2>
-
-			<div class="changelog">
-				<h3><?php esc_html_e( 'Forum Subscriptions', 'buddyboss' ); ?></h3>
-
-				<div class="feature-section col two-col">
-					<div class="last-feature">
-						<h4><?php esc_html_e( 'Subscribe to Forums', 'buddyboss' ); ?></h4>
-						<p><?php esc_html_e( 'Now your users can subscribe to new discussions in specific forums.', 'buddyboss' ); ?></p>
-					</div>
-
-					<div>
-						<h4><?php esc_html_e( 'Manage Subscriptions', 'buddyboss' ); ?></h4>
-						<p><?php esc_html_e( 'Your users can manage all of their subscriptions in one convenient location.', 'buddyboss' ); ?></p>
-					</div>
-				</div>
-			</div>
-
-			<div class="changelog">
-				<h3><?php esc_html_e( 'Converters', 'buddyboss' ); ?></h3>
-
-				<div class="feature-section col one-col">
-					<div class="last-feature">
-						<p><?php esc_html_e( 'We\'re all abuzz about the hive of new importers, AEF, Drupal, FluxBB, Kunena Forums for Joomla, MyBB, Phorum, PHPFox, PHPWind, PunBB, SMF, Xenforo and XMB. Existing importers are now sweeter than honey with improved importing stickies, topic tags, forum categories and the sting is now gone if you need to remove imported users.', 'buddyboss' ); ?></p>
-					</div>
-				</div>
-
-				<div class="feature-section col three-col">
-					<div>
-						<h4><?php esc_html_e( 'Theme Compatibility', 'buddyboss' ); ?></h4>
-						<p><?php esc_html_e( 'Better handling of styles and scripts in the template stack.', 'buddyboss' ); ?></p>
-					</div>
-
-					<div>
-						<h4><?php esc_html_e( 'Polyglot support', 'buddyboss' ); ?></h4>
-						<p><?php esc_html_e( 'Forums fully supports automatic translation updates.', 'buddyboss' ); ?></p>
-					</div>
-
-					<div class="last-feature">
-						<h4><?php esc_html_e( 'User capabilities', 'buddyboss' ); ?></h4>
-						<p><?php esc_html_e( 'Roles and capabilities have been swept through, cleaned up, and simplified.', 'buddyboss' ); ?></p>
-					</div>
-				</div>
-			</div>
-
-			<div class="return-to-dashboard">
-				<a href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'buddyboss' ), 'options-general.php' ) ) ); ?>"><?php esc_html_e( 'Go to Forum Settings', 'buddyboss' ); ?></a>
-			</div>
-
-		</div>
-
-		<?php
-	}
-
-	/**
-	 * Output the credits screen
-	 *
-	 * @todo Remove this? Hardcoding this in here is pretty janky. It's fine for 2.2, but we'll
-	 * want to leverage api.wordpress.org eventually.
-	 *
-	 * @since bbPress (r4159)
-	 */
-	public function credits_screen() {
-
-		list( $display_version ) = explode( '-', bbp_get_version() ); ?>
-
-		<div class="wrap about-wrap">
-			<h1><?php printf( esc_html__( 'Welcome to BuddyBoss Forums %s', 'buddyboss' ), $display_version ); ?></h1>
-			<div class="about-text"><?php printf( esc_html__( 'Thank you for updating! Forums %s is waxed, polished, and ready for you to take it for a lap or two around the block!', 'buddyboss' ), $display_version ); ?></div>
-			<div class="bbp-badge"><?php printf( esc_html__( 'Version %s', 'buddyboss' ), $display_version ); ?></div>
-
-			<h2 class="nav-tab-wrapper">
-				<a href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'bbp-about' ), 'index.php' ) ) ); ?>" class="nav-tab">
-					<?php esc_html_e( 'What\'s New', 'buddyboss' ); ?>
-				</a><a href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'bbp-credits' ), 'index.php' ) ) ); ?>" class="nav-tab nav-tab-active">
-					<?php esc_html_e( 'Credits', 'buddyboss' ); ?>
-				</a>
-			</h2>
-
-			<p class="about-description"><?php esc_html_e( 'Forums is created by a worldwide swarm of busy, busy bees.', 'buddyboss' ); ?></p>
-
-			<h4 class="wp-people-group"><?php esc_html_e( 'Project Leaders', 'buddyboss' ); ?></h4>
-			<ul class="wp-people-group " id="wp-people-group-project-leaders">
-				<li class="wp-person" id="wp-person-matt">
-					<a href="http://profiles.wordpress.org/matt"><img src="http://0.gravatar.com/avatar/767fc9c115a1b989744c755db47feb60?s=60" class="gravatar" alt="Matt Mullenweg" /></a>
-					<a class="web" href="http://profiles.wordpress.org/matt">Matt Mullenweg</a>
-					<span class="title"><?php esc_html_e( 'Founding Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-johnjamesjacoby">
-					<a href="http://profiles.wordpress.org/johnjamesjacoby"><img src="http://0.gravatar.com/avatar/81ec16063d89b162d55efe72165c105f?s=60" class="gravatar" alt="John James Jacoby" /></a>
-					<a class="web" href="http://profiles.wordpress.org/johnjamesjacoby">John James Jacoby</a>
-					<span class="title"><?php esc_html_e( 'Lead Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-jmdodd">
-					<a href="http://profiles.wordpress.org/jmdodd"><img src="http://0.gravatar.com/avatar/6a7c997edea340616bcc6d0fe03f65dd?s=60" class="gravatar" alt="Jennifer M. Dodd" /></a>
-					<a class="web" href="http://profiles.wordpress.org/jmdodd">Jennifer M. Dodd</a>
-					<span class="title"><?php esc_html_e( 'Feature Developer', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-netweb">
-					<a href="http://profiles.wordpress.org/netweb"><img src="http://0.gravatar.com/avatar/97e1620b501da675315ba7cfb740e80f?s=60" class="gravatar" alt="Stephen Edgar" /></a>
-					<a class="web" href="http://profiles.wordpress.org/netweb">Stephen Edgar</a>
-					<span class="title"><?php esc_html_e( 'Converter Specialist', 'buddyboss' ); ?></span>
-				</li>
-			</ul>
-
-			<h4 class="wp-people-group"><?php esc_html_e( 'Contributing Developers', 'buddyboss' ); ?></h4>
-			<ul class="wp-people-group " id="wp-people-group-contributing-developers">
-				<li class="wp-person" id="wp-person-jaredatch">
-					<a href="http://profiles.wordpress.org/jaredatch"><img src="http://0.gravatar.com/avatar/e341eca9e1a85dcae7127044301b4363?s=60" class="gravatar" alt="Jared Atchison" /></a>
-					<a class="web" href="http://profiles.wordpress.org/jaredatch">Jared Atchison</a>
-					<span class="title"><?php esc_html_e( 'Bug Testing', 'buddyboss' ); ?></span>
-				</li>
-				<li class="wp-person" id="wp-person-gautamgupta">
-					<a href="http://profiles.wordpress.org/gautamgupta"><img src="http://0.gravatar.com/avatar/b0810422cbe6e4eead4def5ae7a90b34?s=60" class="gravatar" alt="Gautam Gupta" /></a>
-					<a class="web" href="http://profiles.wordpress.org/gautamgupta">Gautam Gupta</a>
-					<span class="title"><?php esc_html_e( 'Feature Developer', 'buddyboss' ); ?></span>
-				</li>
-			</ul>
-
-			<h4 class="wp-people-group"><?php esc_html_e( 'Core Contributors to Forums 2.5', 'buddyboss' ); ?></h4>
-			<p class="wp-credits-list">
-				<a href="http://profiles.wordpress.org/alex-ye">alex-ye</a>,
-				<a href="http://profiles.wordpress.org/alexvorn2">alexvorn2</a>,
-				<a href="http://profiles.wordpress.org/aliso">aliso</a>,
-				<a href="http://profiles.wordpress.org/boonebgorges">boonebgorges</a>,
-				<a href="http://profiles.wordpress.org/daveshine">daveshine</a>,
-				<a href="http://profiles.wordpress.org/DJPaul">DJPaul</a>,
-				<a href="http://profiles.wordpress.org/ethitter">ethitter</a>,
-				<a href="http://profiles.wordpress.org/fanquake">fanquake</a>,
-				<a href="http://profiles.wordpress.org/GargajCNS">GargajCNS</a>,
-				<a href="http://profiles.wordpress.org/GautamGupta">GautamGupta</a>,
-				<a href="http://profiles.wordpress.org/imath">imath</a>,
-				<a href="http://profiles.wordpress.org/jkudish">jkudish</a>,
-				<a href="http://profiles.wordpress.org/kobenland">kobenland</a>,
-				<a href="http://profiles.wordpress.org/lakrisgubben">lakrisgubben</a>,
-				<a href="http://profiles.wordpress.org/loki_racer">loki_racer</a>,
-				<a href="http://profiles.wordpress.org/mamaduka">mamaduka</a>,
-				<a href="http://profiles.wordpress.org/Maty">Maty</a>,
-				<a href="http://profiles.wordpress.org/mercime">mercime</a>,
-				<a href="http://profiles.wordpress.org/mordauk">mordauk</a>,
-				<a href="http://profiles.wordpress.org/mrcl">mrcl</a>,
-				<a href="http://profiles.wordpress.org/MZAWeb">MZAWeb</a>,
-				<a href="http://profiles.wordpress.org/r-a-y">r-a-y</a>,
-				<a href="http://profiles.wordpress.org/strangerstudios">strangerstudios</a>,
-				<a href="http://profiles.wordpress.org/thebrandonallen">thebrandonallen</a>,
-				<a href="http://profiles.wordpress.org/tlovett1">tlovett1</a>,
-				<a href="http://profiles.wordpress.org/wpdennis">wpdennis</a>,
-			</p>
-
-			<div class="return-to-dashboard">
-				<a href="<?php echo esc_url( admin_url( add_query_arg( array( 'page' => 'buddyboss' ), 'options-general.php' ) ) ); ?>"><?php esc_html_e( 'Go to Forum Settings', 'buddyboss' ); ?></a>
-			</div>
-
-		</div>
-
-		<?php
 	}
 
 	/** Updaters **************************************************************/

@@ -904,6 +904,19 @@ function bp_member_name() {
 			}
 		}
 
+		$list_fields = bp_xprofile_get_hidden_fields_for_user(  $members_template->member->ID, bp_loggedin_user_id() );
+		if ( empty( $list_fields ) ) {
+			$full_name = $members_template->member->fullname;
+		} else {
+			$last_name_field_id = bp_xprofile_lastname_field_id();
+			if ( in_array( $last_name_field_id, $list_fields ) ) {
+				$last_name    = $members_template->member->fullname;
+				$full_name = str_replace( ' ' . $last_name, '', $members_template->member->fullname );
+			} else {
+				$full_name = $members_template->member->fullname;
+			}
+		}
+
 		/**
 		 * Filters the display name of current member in the loop.
 		 *
@@ -911,7 +924,7 @@ function bp_member_name() {
 		 *
 		 * @param string $fullname Display name for current member.
 		 */
-		return apply_filters( 'bp_get_member_name', $members_template->member->fullname );
+		return apply_filters( 'bp_get_member_name', trim( $full_name ) );
 	}
 	add_filter( 'bp_get_member_name', 'wp_filter_kses' );
 	add_filter( 'bp_get_member_name', 'stripslashes'   );

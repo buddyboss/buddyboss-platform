@@ -243,7 +243,11 @@ class BP_Members_Component extends BP_Component {
 
 		// Get the default tab based on the customizer settings.
 		$customizer_option = 'user_default_tab';
-		$default_tab = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
+		$default_tab       = '';
+
+		if ( function_exists( 'bp_nouveau_get_temporary_setting' ) && function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
+			$default_tab = bp_nouveau_get_temporary_setting( $customizer_option,bp_nouveau_get_appearance_settings( $customizer_option ) );
+		}
 		$default_tab = bp_is_active( $default_tab ) ? $default_tab : 'profile';
 
 		$bp->default_component = apply_filters( 'bp_member_default_component', ( '' === $default_tab ) ? $bp->default_component : $default_tab );

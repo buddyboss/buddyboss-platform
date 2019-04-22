@@ -113,7 +113,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 					'page'          => 'bp-notices',
 					'notice_action' => 'activate',
 					'notice_id'     => $item->id
-				), bp_get_admin_url( 'users.php' ) ), 'messages-activate-notice-' . $item->id ) ),
+				), bp_get_admin_url( 'admin.php' ) ), 'messages-activate-notice-' . $item->id ) ),
 				(int) $item->id,
 				esc_html__( 'Activate Notice', 'buddyboss' ) ),
 			'delete' => sprintf( '<a href="%s" data-bp-notice-id="%d" data-bp-action="delete">%s</a>', 
@@ -121,7 +121,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 					'page'          => 'bp-notices',
 					'notice_action' => 'delete',
 					'notice_id'     => $item->id
-				), bp_get_admin_url( 'users.php' ) ), 'messages-delete-notice-' . $item->id ) ),
+				), bp_get_admin_url( 'admin.php' ) ), 'messages-delete-notice-' . $item->id ) ),
 				(int) $item->id,
 				esc_html__( 'Delete Notice', 'buddyboss' ) )
 		);
@@ -133,7 +133,7 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 					'page'          => 'bp-notices',
 					'notice_action' => 'deactivate',
 					'notice_id'     => $item->id
-				), bp_get_admin_url( 'users.php' ) ), 'messages-deactivate-notice-' . $item->id ) ),
+				), bp_get_admin_url( 'admin.php' ) ), 'messages-deactivate-notice-' . $item->id ) ),
 				(int) $item->id,
 				esc_html__( 'Deactivate Notice', 'buddyboss' ) );
 		}

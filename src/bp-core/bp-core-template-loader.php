@@ -618,3 +618,25 @@ function bp_get_theme_compat_templates() {
 		'index.php'
 	) );
 }
+
+/**
+ * Show/Hide WordPress toolbar based on the plugin settings.
+ * BuddyBoss > Settings > General > General Settings.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool.
+ */
+function bp_show_hide_toolbar() {
+
+	if ( is_user_logged_in() ) {
+		if ( true === bp_show_login_adminbar() ) {
+			add_filter( 'show_admin_bar', '__return_true' );
+		}
+	} else {
+		if ( false === bp_hide_loggedout_adminbar() ) {
+			add_filter( 'show_admin_bar', '__return_true' );
+		}
+	}
+
+}

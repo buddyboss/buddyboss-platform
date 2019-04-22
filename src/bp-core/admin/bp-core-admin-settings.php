@@ -32,6 +32,21 @@ function bp_admin_setting_callback_admin_bar() {
 }
 
 /**
+ * Admin bar for logged in users setting field.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_admin_setting_callback_login_admin_bar() {
+	?>
+
+	<input id="show-login-adminbar" name="show-login-adminbar" type="checkbox" value="1" <?php checked( bp_show_login_adminbar( true ) ); ?> />
+	<label for="show-login-adminbar"><?php _e( 'Show the Toolbar for logged in members', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
  * Allow members to delete their accounts setting field.
  *
  * @since BuddyPress 1.6.0
@@ -452,7 +467,7 @@ function bp_core_admin_appboss() {
 		?>
 		 <div class="wrap">
 		    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'AppBoss', 'buddyboss' ) ); ?></h2>
-	        <?php require buddypress()->plugin_dir . 'bp-core/admin/templates/appboss-screen.php'; ?>
+	        <?php require buddypress()->plugin_dir . 'bp-core/admin/templates/about-appboss.php'; ?>
 	    </div>
 		<?php
 }
@@ -576,6 +591,13 @@ function bp_feed_settings_callback_post_type( $args ) {
 	$option_name = 'bp-feed-custom-post-type-' . $post_type;
 
 	$post_type_obj = get_post_type_object( $post_type );
+
+	// Description for the last option of CPT
+	if ( true === $args['description'] && 'post' !== $post_type ) {
+		?>
+		<p class="description"><?php _e( 'Select which Custom Post Types (coming from your plugins) should be shown in the activity feed. For example, if using WooCommerce it could post into the activity feed every time someone creates a new product.', 'buddyboss' ); ?></p>
+		<?php
+	}
 	?>
 	<input
 		name="<?php echo $option_name ?>"
@@ -596,12 +618,7 @@ function bp_feed_settings_callback_post_type( $args ) {
 		<?php
 	}
 
-	// Description for the last option of CPT
-	if ( true === $args['description'] && 'post' !== $post_type ) {
-		?>
-		<p class="description"><?php _e( 'Select which Custom Post Types (coming from your plugins) should be shown in the activity feed. For example, if using WooCommerce it could post into the activity feed every time someone creates a new product.', 'buddyboss' ); ?></p>
-		<?php
-	}
+
 
 }
 
@@ -682,6 +699,6 @@ function bp_admin_setting_callback_private_network_public_content() {
 	?>
 
 	<label for="bp-enable-private-network-public-content"><?php _e( 'Enter URLs or URI fragments (e.g. /groups/) to remain publicly visible always. Enter one URL or URI per line. ', 'buddyboss' ); ?></label>
-	<textarea rows="10" cols="100" id="bp-enable-private-network-public-content" name="bp-enable-private-network-public-content"><?php echo esc_textarea( bp_enable_private_network_public_content() ); ?></textarea>
+	<textarea rows="10" cols="100" id="bp-enable-private-network-public-content" name="bp-enable-private-network-public-content" style="margin-top: 10px;"><?php echo esc_textarea( bp_enable_private_network_public_content() ); ?></textarea>
 	<?php
 }

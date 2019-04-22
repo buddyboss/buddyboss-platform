@@ -1,4 +1,4 @@
-<?php global $current_comment; //var_dump( $current_comment ); ?>
+<?php global $current_comment; ?>
 <li class="bp-search-item bp-search-item_posts_comments">
 	<div class="list-wrap">
 		<div class="item-avatar">

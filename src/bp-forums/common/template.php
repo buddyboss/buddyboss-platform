@@ -1366,25 +1366,28 @@ function bbp_dropdown( $args = '' ) {
 		/** Arguments *********************************************************/
 
 		// Parse arguments against default values
-		$r = bbp_parse_args( $args, array(
-			'post_type'          => bbp_get_forum_post_type(),
-			'post_parent'        => null,
-			'post_status'        => null,
-			'selected'           => 0,
-			'exclude'            => array(),
-			'numberposts'        => -1,
-			'orderby'            => 'menu_order title',
-			'order'              => 'ASC',
-			'walker'             => '',
+		$r = bbp_parse_args( $args,
+			array(
+				'post_type'             => bbp_get_forum_post_type(),
+				'post_parent'           => null,
+				'post_status'           => null,
+				'selected'              => 0,
+				'exclude'               => array(),
+				'numberposts'           => - 1,
+				'orderby'               => 'menu_order title',
+				'order'                 => 'ASC',
+				'walker'                => '',
 
-			// Output-related
-			'select_id'          => 'bbp_forum_id',
-			'tab'                => bbp_get_tab_index(),
-			'options_only'       => false,
-			'show_none'          => false,
-			'disable_categories' => true,
-			'disabled'           => ''
-		), 'get_dropdown' );
+				// Output-related
+				'select_id'             => 'bbp_forum_id',
+				'tab'                   => bbp_get_tab_index(),
+				'options_only'          => false,
+				'show_none'             => false,
+				'show_none_default_val' => '',
+				'disable_categories'    => true,
+				'disabled'              => '',
+			),
+			'get_dropdown' );
 
 		if ( empty( $r['walker'] ) ) {
 			$r['walker']            = new BBP_Walker_Dropdown();
@@ -1434,8 +1437,11 @@ function bbp_dropdown( $args = '' ) {
 		// Display a leading 'no-value' option, with or without custom text
 		if ( !empty( $r['show_none'] ) || !empty( $r['none_found'] ) ) {
 
+			// Set none field value.
+			$val = $r['show_none_default_val'];
+
 			// Open the 'no-value' option tag
-			$retval .= "\t<option value=\"\" class=\"level-0\">";
+			$retval .= "\t<option value=\"$val\" class=\"level-0\">";
 
 			// Use deprecated 'none_found' first for backpat
 			if ( ! empty( $r['none_found'] ) && is_string( $r['none_found'] ) ) {
@@ -1474,7 +1480,10 @@ function bbp_dropdown( $args = '' ) {
 
 		// Items found so walk the tree
 		if ( !empty( $posts ) ) {
+			add_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 999, 2 );
+			unset( $r['walker']);
 			$retval .= walk_page_dropdown_tree( $posts, 0, $r );
+			remove_filter( 'list_pages', 'bbp_reply_attributes_meta_box_discussion_reply_title', 999, 2  );
 		}
 
 		// Close the selecet tag
@@ -1484,6 +1493,25 @@ function bbp_dropdown( $args = '' ) {
 
 		return apply_filters( 'bbp_get_dropdown', $retval, $r );
 	}
+
+/**
+ * Set the ID if title is blank.
+ *
+ * @param $title
+ * @param $post
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return mixed
+ */
+function bbp_reply_attributes_meta_box_discussion_reply_title( $title, $post ) {
+
+	if ( bbp_get_topic_post_type() === get_post_type( $post->ID ) || bbp_get_reply_post_type() === get_post_type( $post->ID ) ) {
+		$title = get_the_date('m/d/y', $post->ID ). ' - ' . esc_html__( wp_trim_words( wp_strip_all_tags( $post->post_content ), 8, '...' ), 'buddyboss' );
+	}
+
+	return $title;
+}
 
 /**
  * Output the required hidden fields when creating/editing a forum

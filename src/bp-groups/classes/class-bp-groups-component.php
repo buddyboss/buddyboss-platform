@@ -192,7 +192,7 @@ class BP_Groups_Component extends BP_Component {
 				require $this->path . 'bp-groups/actions/access.php';
 
 				// Public nav items.
-				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'send-invites', 'subgroups' ), true ) ) {
+				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'send-invites', 'subgroups' ), true ) ) {
 					require $this->path . 'bp-groups/screens/single/' . bp_current_action() . '.php';
 				}
 
@@ -454,7 +454,11 @@ class BP_Groups_Component extends BP_Component {
 		}
 
 		$customizer_option = 'group_default_tab';
-		$default_tab = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
+		$default_tab       = '';
+
+		if ( function_exists( 'bp_nouveau_get_temporary_setting' ) && function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
+			$default_tab = bp_nouveau_get_temporary_setting( $customizer_option,bp_nouveau_get_appearance_settings( $customizer_option ) );
+		}
 		$default_tab = bp_is_active( $default_tab ) ? $default_tab : 'members';
 
 		/**
@@ -511,6 +515,7 @@ class BP_Groups_Component extends BP_Component {
 	 * @param array $sub_nav  Optional. See BP_Component::setup_nav() for description.
 	 */
 	public function setup_nav( $main_nav = array(), $sub_nav = array() ) {
+		$bp = buddypress();
 
 		// Determine user to use.
 		if ( bp_displayed_user_domain() ) {
@@ -692,6 +697,34 @@ class BP_Groups_Component extends BP_Component {
 					'user_has_access' => $this->current_group->user_has_access,
 					'no_access_url'   => $group_link,
 				);
+			}
+
+			if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) {
+				$sub_nav[] = array(
+					'name'                => __( 'Photos', 'buddyboss' ),
+					'slug'                => 'photos',
+					'parent_url'          => $group_link,
+					'parent_slug'         => $this->current_group->slug,
+					'screen_function'     => 'groups_screen_group_media',
+					'position'            => 80,
+					'user_has_access'     => $this->current_group->user_has_access,
+					'item_css_id'         => 'photos',
+					'no_access_url'       => $group_link,
+				);
+
+				if ( bp_is_group_album_support_enabled() ) {
+					$sub_nav[] = array(
+						'name'                => __( 'Albums', 'buddyboss' ),
+						'slug'                => 'albums',
+						'parent_url'          => $group_link,
+						'parent_slug'         => $this->current_group->slug,
+						'screen_function'     => 'groups_screen_group_albums',
+						'position'            => 85,
+						'user_has_access'     => $this->current_group->user_has_access,
+						'item_css_id'         => 'albums',
+						'no_access_url'       => $group_link,
+					);
+				}
 			}
 
 			// If the user is a group admin, then show the group admin nav item.

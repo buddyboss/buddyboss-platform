@@ -59,11 +59,18 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 
 	$params['media'] = array(
 		'max_upload_size' => bp_media_file_upload_max_size(),
+		'group_media'     => bp_is_group_media_support_enabled(),
+		'group_album'     => bp_is_group_album_support_enabled(),
+		'messages_media'  => bp_is_messages_media_support_enabled(),
 	);
 
 	if ( bp_is_single_album() ) {
 		$params['media']['album_id'] = (int) bp_action_variable( 0 );
 	}
+
+	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+		$params['media']['group_id'] = bp_get_current_group_id();
+    }
 
 	return $params;
 }
@@ -81,6 +88,23 @@ function bp_nouveau_media_add_theatre_template() {
 function bp_nouveau_media_activity_entry() {
 	global $media_template;
 	$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
+
+	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids ) ) ) { ?>
+		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? 'bb-media-length-more' : ''; ?>"><?php
+			while ( bp_media() ) {
+				bp_the_media();
+				bp_get_template_part( 'media/activity-entry' );
+			} ?>
+		</div><?php
+	}
+}
+
+/**
+ * Get activity comment entry media to render on front end
+ */
+function bp_nouveau_media_activity_comment_entry( $comment_id ) {
+	global $media_template;
+	$media_ids = bp_activity_get_meta( $comment_id, 'bp_media_ids', true );
 
 	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids ) ) ) { ?>
 		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? 'bb-media-length-more' : ''; ?>"><?php
@@ -122,6 +146,11 @@ function bp_nouveau_media_update_media_meta( $content, $user_id, $activity_id ) 
 			// make an activity for the media
 			$a_id = bp_activity_post_update( array( 'hide_sitewide' => true ) );
 
+			if ( $a_id ) {
+				// update activity meta
+				bp_activity_update_meta( $a_id, 'bp_media_activity', '1' );
+			}
+
 			add_action( 'bp_activity_posted_update', 'bp_nouveau_media_update_media_meta', 10, 3 );
 			add_action( 'bp_groups_posted_update', 'bp_nouveau_media_groups_update_media_meta', 10, 4 );
 
@@ -138,6 +167,12 @@ function bp_nouveau_media_update_media_meta( $content, $user_id, $activity_id ) 
 
 			if ( $media_id ) {
 				$media_ids[] = $media_id;
+
+				//save media meta for activity
+				if ( ! empty( $activity_id ) && ! empty( $media['id'] ) ) {
+					update_post_meta( $media['id'], 'bp_media_parent_activity_id', $activity_id );
+					update_post_meta( $media['id'], 'bp_media_activity_id', $a_id );
+				}
 			}
 		}
 
@@ -167,6 +202,46 @@ function bp_nouveau_media_groups_update_media_meta( $content, $user_id, $group_i
 }
 
 /**
+ * Update media for activity comment
+ *
+ * @param $comment_id
+ * @param $r
+ * @param $activity
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool
+ */
+function bp_nouveau_media_comments_update_media_meta( $comment_id, $r, $activity ) {
+	bp_nouveau_media_update_media_meta( false, false, $comment_id );
+}
+
+/**
+ * Delete media when related activity is deleted.
+ *
+ * @since BuddyBoss 1.0.0
+ * @param $activities
+ */
+function bp_nouveau_media_delete_activity_media( $activities ) {
+    if ( ! empty( $activities ) ) {
+	    remove_action( 'bp_activity_after_delete', 'bp_nouveau_media_delete_activity_media' );
+        foreach ( $activities as $activity ) {
+	        $activity_id = $activity->id;
+	        $media_activity = bp_activity_get_meta( $activity_id, 'bp_media_activity', true );
+	        if ( ! empty( $media_activity ) && '1' == $media_activity ) {
+		        $result = bp_media_get( array( 'activity_id' => $activity_id, 'fields' => 'ids' ) );
+		        if ( ! empty( $result['medias'] ) ) {
+                    foreach( $result['medias'] as $media_id ) {
+	                    bp_media_delete( $media_id ); // delete media
+                    }
+                }
+            }
+        }
+	    add_action( 'bp_activity_after_delete', 'bp_nouveau_media_delete_activity_media' );
+    }
+}
+
+/**
  * Get the nav items for the Media directory
  *
  * @since BuddyBoss 1.0.0
@@ -181,7 +256,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
 		'li_class'  => array(),
 		'link'      => bp_get_media_directory_permalink(),
-		'text'      => __( 'All Media', 'buddyboss' ),
+		'text'      => __( 'All Photos', 'buddyboss' ),
 		'count'     => bp_get_total_media_count(),
 		'position'  => 5,
 	);
@@ -192,7 +267,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 			'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
 			'li_class'  => array(),
 			'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/my-media/',
-			'text'      => __( 'My Media', 'buddyboss' ),
+			'text'      => __( 'My Photos', 'buddyboss' ),
 			'count'     => bp_media_get_total_media_count(),
 			'position'  => 15,
 		);
@@ -228,5 +303,39 @@ function bp_nouveau_media_update_media_privacy( &$album ) {
 		        $media_obj->save();
             }
         }
+    }
+}
+
+/**
+ * Attach media to the message object
+ *
+ * @since BuddyBoss 1.0.0
+ * @param $message
+ */
+function bp_nouveau_media_attach_media_to_message( &$message ) {
+
+    if ( bp_is_messages_media_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['media'] ) ) {
+	    $media_list = $_POST['media'];
+        $media_ids = array();
+
+        foreach ( $media_list as $media_index => $media ) {
+
+            $media_id = bp_media_add(
+                array(
+                    'title'         => ! empty( $media['name'] ) ? $media['name'] : '&nbsp;',
+                    'privacy'       => 'message',
+                    'attachment_id' => ! empty( $media['id'] ) ? $media['id'] : 0,
+                )
+            );
+
+            if ( $media_id ) {
+                $media_ids[] = $media_id;
+            }
+        }
+
+        $media_ids = implode( ',', $media_ids );
+
+        //save media meta for message
+        bp_messages_update_meta( $message->id, 'bp_media_ids', $media_ids );
     }
 }

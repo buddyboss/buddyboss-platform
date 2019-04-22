@@ -17,6 +17,10 @@
 <div class="bp-messages-content"></div>
 
 <?php
+if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+	bp_get_template_part( 'media/theatre' );
+}
+
     /**
      * Split each js template to its own file. Easier for child theme to
      * overwrite individual parts.
@@ -24,27 +28,21 @@
      * @version Buddyboss 1.0.0
      */
     $template_parts = apply_filters( 'bp_messages_js_template_parts', [
-        'parts/bp-message-feedback.php',
-        'parts/bp-message-hook.php',
-        'parts/bp-messages-form.php',
-        'parts/bp-messages-editor.php',
-        'parts/bp-messages-paginate.php',
-        'parts/bp-messages-filters.php',
-        'parts/bp-messages-thread.php',
-        'parts/bp-messages-single-header.php',
-        'parts/bp-messages-single-load-more.php',
-        'parts/bp-messages-single-list.php',
-        'parts/bp-messages-single.php',
+        'parts/bp-messages-feedback',
+        'parts/bp-messages-hook',
+        'parts/bp-messages-form',
+        'parts/bp-messages-editor',
+        'parts/bp-messages-paginate',
+        'parts/bp-messages-filters',
+        'parts/bp-messages-thread',
+        'parts/bp-messages-single-header',
+        'parts/bp-messages-single-load-more',
+        'parts/bp-messages-single-list',
+        'parts/bp-messages-single',
+        'parts/bp-messages-editor-toolbar',
+        'parts/bp-messages-media',
     ] );
 
     foreach ( $template_parts as $template_part ) {
         bp_get_template_part( 'common/js-templates/messages/' . $template_part );
     }
-?>
-
-
-
-
-
-
-

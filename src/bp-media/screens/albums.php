@@ -22,7 +22,7 @@ function media_screen_single_album() {
 
 	$album_id = (int) bp_action_variable( 0 );
 
-	if ( empty( $album_id ) ) {
+	if ( empty( $album_id ) || ! BP_Media_Album::album_exists( $album_id ) ) {
 		if ( is_user_logged_in() ) {
 			bp_core_add_message( __( 'The album you tried to access is no longer available', 'buddyboss' ), 'error' );
 		}
@@ -31,18 +31,10 @@ function media_screen_single_album() {
 	}
 
 	// No access.
-//	if ( ( ! messages_check_thread_access( $thread_id ) || ! bp_is_my_profile() ) && ! bp_current_user_can( 'bp_moderate' ) ) {
-//		// If not logged in, prompt for login.
-//		if ( ! is_user_logged_in() ) {
-//			bp_core_no_access();
-//			return;
-//
-//		// Redirect away.
-//		} else {
-//			bp_core_add_message( __( 'You do not have access to that conversation.', 'buddyboss' ), 'error' );
-//			bp_core_redirect( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) );
-//		}
-//	}
+	if ( ( ! albums_check_album_access( $album_id ) || ! bp_is_my_profile() ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+		bp_core_add_message( __( 'You do not have access to that album.', 'buddyboss' ), 'error' );
+		bp_core_redirect( trailingslashit( bp_loggedin_user_domain() . bp_get_media_slug() . '/albums' ) );
+	}
 
 	/**
 	 * Fires right before the loading of the single album view screen template file.

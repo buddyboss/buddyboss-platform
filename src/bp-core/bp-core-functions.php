@@ -752,14 +752,14 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
  */
 function bp_core_get_directory_page_default_titles() {
 	$page_default_titles = array(
-		'activity'          => __( 'Activity Feed', 'buddyboss' ),
-		'groups'            => __( 'Social Groups', 'buddyboss' ),
+		'activity'          => __( 'News Feed', 'buddyboss' ),
+		'groups'            => __( 'Groups', 'buddyboss' ),
 		'blogs'             => __( 'Sites', 'buddyboss' ),
 		'members'           => __( 'Members', 'buddyboss' ),
-		'media'             => __( 'Media', 'buddyboss' ),
+		'media'             => __( 'Photos', 'buddyboss' ),
 		'activate'          => __( 'Activate', 'buddyboss' ),
 		'register'          => __( 'Register', 'buddyboss' ),
-		'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
+		//'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
 		'new_forums_page'   => __( 'Forums', 'buddyboss' ),
 	);
 
@@ -2491,9 +2491,9 @@ function bp_core_get_components( $type = 'all' ) {
 			'default'     => false,
 		),
 		'media'   => array(
-			'title'       => __( 'Media Uploading', 'buddyboss' ),
+			'title'       => __( 'Photo Uploading', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-media' ) , 'admin.php' ) ),
-			'description' => __( 'Allow members to upload photos and create photo albums.', 'buddyboss' ),
+			'description' => __( 'Allow members to upload photos to activity, groups, forums and messages, and to organize photos into albums.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'messages' => array(
@@ -3992,6 +3992,9 @@ function bp_core_set_default_pages() {
 		unset( $valid_pages['activate'] );
 		unset( $valid_pages['register'] );
 	}
+
+	// Remove Terms of Service page from auto-creation on installation.
+	unset( $valid_pages['terms'] );
 
 	foreach ( $valid_pages as $key => $value ) {
 

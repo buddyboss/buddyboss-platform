@@ -390,12 +390,7 @@ class ReportsGenerator
 			$this->params['date_format'] = $this->args['date_format'] ?: 'Y-m-d';
 		}
 
-
-		// if ($this->hasArg('course')) {
-			$this->params['course_ids'] = learndash_group_enrolled_courses($ldGroupId);
-//		var_dump( learndash_group_enrolled_courses($ldGroupId) );
-//		var_dump( $this->args['course'] );
-		// }
+		$this->params['course_ids'] = learndash_group_enrolled_courses($ldGroupId);
 
 		if ($this->hasArg('step')) {
 			$this->params['post_types'] = $this->args['step'] == 'all'? $this->allSteps() : $this->args['step'];
@@ -447,7 +442,6 @@ class ReportsGenerator
 	protected function allSteps()
 	{
 		global $learndash_post_types;
-// var_dump(array_diff($learndash_post_types, ['groups']));
 		return array_diff($learndash_post_types, ['groups']);
 	}
 

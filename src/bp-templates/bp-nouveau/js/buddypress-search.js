@@ -4,9 +4,10 @@ jQuery(document).ready(function($) {
 	BP_SEARCH.cache = [];
 
 	function initAutoComplete(  ) {
+		var autoCompleteObjects = [];
 		if (BP_SEARCH.enable_ajax_search == '1') {
 			var document_height = $(document).height();
-			$(BP_SEARCH.selector).each(function() {
+			$(BP_SEARCH.autocomplete_selector).each(function() {
 				var $form = $(this),
 					$search_field = $form.find('input[name="s"], input[type=search]');
 				if ($search_field.length > 0) {
@@ -28,6 +29,8 @@ jQuery(document).ready(function($) {
 							ac_position_prop = { collision: 'flip flip' };
 						}
 					}
+
+					autoCompleteObjects.push( $search_field );
 
 					$($search_field).autocomplete({
 						source: function(request, response) {
@@ -107,18 +110,6 @@ jQuery(document).ready(function($) {
 						 */
 
 					};
-
-					/**
-					 * Add hidden input as a flag in a search form. If this hidden input exist in a search form,
-					 * it'll sprint network search feature of the platform in the search query.
-					 */
-					if ( ! $( 'input[name="bp_search"]', $form ).length ) {
-						$( '<input>' ).attr( {
-							type: 'hidden',
-							name: 'bp_search',
-							value: '1'
-						} ).appendTo( $form );
-					}
 				}
 			});
 
@@ -203,10 +194,35 @@ jQuery(document).ready(function($) {
 				}
 			});
 
+			/**
+			 * Close the suggestion box when the page scrolls
+			 */
+			window.addEventListener( 'scroll', function () {
+				var arrayLength = autoCompleteObjects.length;
+				for ( var i = 0; i < arrayLength; i ++ ) {
+					autoCompleteObjects[i].autocomplete( 'close' );
+				}
+			} );
 		}
 	}
 	initAutoComplete();
 
+
+	/**
+	 * Add hidden input as a flag in a search form. If this hidden input exist in a search form,
+	 * it'll sprint network search feature of the platform in the search query.
+	 */
+	$( [ BP_SEARCH.autocomplete_selector, BP_SEARCH.form_selector ].filter(Boolean).join(',') ).each(function () {
+		var $form = $(this);
+
+		if ( ! $( 'input[name="bp_search"]', $form ).length ) {
+			$( '<input>' ).attr( {
+				type: 'hidden',
+				name: 'bp_search',
+				value: '1'
+			} ).appendTo( $form );
+		}
+	});
 	/* ajax load */
 
 	$(document).on('click', '.bp-search-results-wrapper .item-list-tabs li a', function(e) {
@@ -282,6 +298,7 @@ jQuery(document).ready(function($) {
 	$('body.bp-nouveau').on('click', '.bp-search-page button.friendship-button, .bp-search-page button.group-button', function(){
 		window.location = this.getAttribute('data-bp-nonce');
 	});
+
 
 });
 

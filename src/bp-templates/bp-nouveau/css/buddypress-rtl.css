@@ -1155,6 +1155,7 @@ a.layout-grid-view {
   min-height: 80px;
   overflow: hidden;
   padding: 10px;
+  resize: none !important;
 }
 
 .activity-update-form #whats-new-content {
@@ -5434,6 +5435,56 @@ button[data-bp-close]:hover {
   color: #777;
 }
 
+.animate-spin {
+  animation: spin 2s infinite linear;
+  display: inline-block;
+}
+
+@-moz-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-359deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-359deg);
+  }
+}
+
+@-o-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-359deg);
+  }
+}
+
+@-ms-keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-359deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-359deg);
+  }
+}
+
 /*-------------------------------------*\
 	HINT.css - A CSS tooltip library
 \*-------------------------------------*/
@@ -9226,7 +9277,7 @@ body.login .login-popup .mfp-close:hover {
 
 .modal-mask {
   position: fixed;
-  z-index: 9998;
+  z-index: 999901;
   top: 0;
   right: 0;
   width: 100vw;
@@ -9283,8 +9334,9 @@ body.login .login-popup .mfp-close:hover {
 }
 
 .bbm-model-wrap textarea {
-  min-height: 120px;
+  min-height: 80px;
   resize: none;
+  margin-bottom: 20px;
 }
 
 .modal-header h3 {
@@ -9368,7 +9420,51 @@ body.login .login-popup .mfp-close:hover {
 }
 
 .bb-member-photos-header {
-  margin-bottom: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.bb-photos-meta {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-right: auto;
+  margin-bottom: 10px;
+}
+
+.bb-photos-meta a {
+  margin-right: 10px;
+}
+
+.bb-photos-meta .bb-delete i {
+  font-size: 21px;
+}
+
+.bb-photos-meta .bb-select i {
+  border: 1px solid;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-size: 15px;
+  border-radius: 50%;
+  width: 19px;
+  height: 19px;
+}
+
+.bb-photos-meta .bb-select.selected i {
+  background: #000;
+  color: #fff;
+  border-color: #000;
 }
 
 .bb-photos-date {
@@ -9376,44 +9472,18 @@ body.login .login-popup .mfp-close:hover {
   color: #939597;
 }
 
-.bb-photos-meta .bb-select,
-.bb-photos-meta .bb-delete {
-  background: url(../images/delete.svg) no-repeat center;
-  background-size: contain;
-  display: inline-block;
-  height: 20px;
-  width: 20px;
-  line-height: 1;
-  z-index: 11;
-  margin-right: 5px;
-}
-
-.bb-photos-meta .bb-select {
-  background: url(../images/unselect-gray.svg) no-repeat center;
-}
-
-.bb-photos-meta .bb-select.selected {
-  background: url(../images/unselect.svg) no-repeat center;
-  background-color: #007cff;
-  border-radius: 100%;
-  height: 21px;
-  width: 21px;
-}
-
-.bb-photo-list {
+.buddypress-wrap .bp-list.bb-photo-list {
   display: flex;
   flex-flow: row wrap;
   list-style: none;
   padding: 0;
-  margin: 0 -3px;
+  margin: 0 -5px;
 }
 
-.bb-photo-list li {
+.buddypress-wrap .bp-list.bb-photo-list li {
   flex: 0 0 20%;
-  padding-right: 3px;
-  padding-left: 3px;
-  margin-bottom: 3px;
-  margin-top: 3px;
+  margin: 0;
+  padding: 5px;
 }
 
 .bb-photo-cover-wrap {
@@ -9434,7 +9504,6 @@ body.login .login-popup .mfp-close:hover {
   min-height: 100%;
   width: auto;
   min-width: 100%;
-  border-radius: 3px;
   object-fit: cover;
 }
 
@@ -9477,14 +9546,14 @@ body.login .login-popup .mfp-close:hover {
   font-size: 15px;
   text-align: center;
   line-height: 1;
-  z-index: 10;
+  z-index: 2;
   visibility: hidden;
   opacity: 0;
 }
 
 .bb-media-model-wrapper.bb-internal-model {
   position: fixed;
-  z-index: 99999;
+  z-index: 999990;
   background-color: rgba(0, 0, 0, 0.9);
   width: 100%;
   height: 100%;
@@ -9504,11 +9573,14 @@ body.login .login-popup .mfp-close:hover {
 }
 
 #buddypress .bb-media-model-container .activity-list {
+  border: 0;
   margin: 0;
+  padding: 0;
 }
 
 #buddypress .bb-media-model-container .activity-list .activity-item {
   border: 0;
+  box-shadow: none;
   margin: 0;
   max-height: 90vh;
   overflow: auto;
@@ -9803,7 +9875,7 @@ div#buddypress div.bb-album-actions .button {
   min-height: 24px;
   padding: 4px 15px;
   font-size: 12px;
-  margin: 0 3px;
+  margin: 0 0 0 10px;
 }
 
 div#buddypress .bb-album-actions .button.error.outline {
@@ -9996,34 +10068,14 @@ ul.bb-albums-list .bb-more-photos strong {
 }
 
 .bb-custom-check + label {
+  color: #fff;
   position: relative;
   cursor: pointer;
   padding: 0;
 }
 
-.bb-custom-check + label:before {
-  content: " ";
-  background: url(../images/unselect.svg) no-repeat;
-  background-size: contain;
-  display: inline-block;
-  vertical-align: text-top;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.bb-custom-check:checked + label:before {
-  background-color: #5087e5;
-}
-
-.bb-dropzone-wrap .dropzone {
-  border: 0;
-  padding: 0;
-}
-
-.bb-dropzone-wrap .dropzone .dz-message {
-  margin-top: 0;
-  margin-bottom: 0;
+.bb-custom-check:checked + label {
+  color: #fff;
 }
 
 #media_uploader.dropzone .bb-dz-preview-wrap .dz-image img {
@@ -10052,16 +10104,30 @@ ul.bb-albums-list .bb-more-photos strong {
 }
 
 .bbm-uploader-model-wrap .bb-model-header span {
-  font-size: 17px;
+  font-size: 1rem;
   color: #939597;
   letter-spacing: -0.24px;
   line-height: 24px;
-  margin-right: 20px;
+  margin-left: 15px;
+}
+
+.bbm-uploader-model-wrap .bb-model-header .dashicons {
+  font-size: 22px;
+  margin: 0;
 }
 
 .bb-media-actions-wrap {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   margin: 15px 0;
+}
+
+.bb-media-actions-wrap h2 {
+  margin: 0;
 }
 
 .bb-add-media {
@@ -10093,6 +10159,39 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
   vertical-align: top;
 }
 
+.webui-popover.webui-popover {
+  z-index: 999991;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.modal-container .bp-existing-media-wrap {
+  margin-bottom: 20px;
+  max-height: 68vh;
+  overflow: auto;
+}
+
+.bb-model-close-button .dashicons {
+  font-size: 22px;
+}
+
+.bb-field-wrap,
+.bb-dropdown-wrap {
+  margin-bottom: 20px;
+}
+
+.bp-media-upload-tab {
+  margin-left: 15px;
+}
+
+#buddypress ul.bp-list.loading {
+  background: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 15.0 - Media Dropzone
@@ -10101,6 +10200,21 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 .dropzone,
 .dropzone * {
   box-sizing: border-box;
+}
+
+.dropzone {
+  border: 0;
+  padding: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0 0 20px;
+}
+
+.dropzone .dz-message {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .dropzone.dz-clickable {
@@ -10613,46 +10727,23 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 }
 
 .dropzone .dz-default {
-  background: rgba(240, 243, 247, 0.5);
-  border: 1px dashed #dedfe2;
-  border-radius: 6px;
+  border: 4px dashed #bbb;
   min-height: 20vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  color: #122b46;
-  letter-spacing: -0.24px;
-  line-height: 26px;
-  padding: 20px 0;
-}
-
-.dropzone .dz-default:before {
-  display: none;
-}
-
-.dropzone .dz-default span {
-  margin-top: 0;
-}
-
-.dropzone .dz-default span:before {
-  background: url(../images/upload-large.svg) no-repeat;
-  background-size: cover;
-  content: " ";
-  height: 41px;
-  width: 48px;
-  display: block;
-  margin: 0 auto 15px;
+  color: #767676;
+  font-size: 110%;
+  margin: 5px 0;
+  text-align: center;
 }
 
 .dz-details {
   display: none;
 }
 
-.activity-media-container .dropzone {
-  display: flex;
-  flex-flow: row wrap;
-  margin-bottom: 10px;
+.dropzone.dz-started {
+  margin: 0 -5px 20px;
 }
 
 .dropzone.dz-started .dz-default.dz-message {

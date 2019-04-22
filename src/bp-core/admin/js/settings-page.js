@@ -63,11 +63,6 @@
 	});
 
 	$( document ).ready(function() {
-		// Set active class on Integration tab while /wp-admin/admin.php?page=bp-appboss page.
-		if ( $('body.buddypress.buddyboss_page_bp-appboss').length ) {
-			$('body.buddypress.buddyboss_page_bp-appboss #wpwrap #wpcontent #wpbody #wpbody-content .wrap .nav-tab-wrapper .bp-integrations').addClass('nav-tab-active');
-		}
-
 		var menuOpen = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu #toplevel_page_buddyboss-platform ul.wp-submenu li');
 
 		// Set Groups selected on Group Type post types.
@@ -181,7 +176,7 @@
 			});
 
 			$('body .section-bp_search_settings_post_types table td input:checkbox').click(function () {
-				if ($('body .section-bp_search_settings_post_types table td input:checkbox:checked').length === $('body .section-bp_search_settings_community table td input:checkbox').length) {
+				if ($('body .section-bp_search_settings_post_types table td input:checkbox:checked').length === $('body .section-bp_search_settings_post_types table td input:checkbox').length) {
 					$('#bp_search_select_all_post_types').prop( 'checked', true );
 				} else {
 					$('#bp_search_select_all_post_types').prop( 'checked', false );

@@ -88,6 +88,10 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			var target = $(event.currentTarget), id, self = this;
 
+			if ( target.closest('#bp-existing-media-content').length ) {
+				return false;
+			}
+
 			self.setupGlobals();
 			self.setMedias(target);
 
@@ -201,7 +205,8 @@ window.bp = window.bp || {};
 
 		getActivity: function() {
 			var self = this;
-			if ( self.current_media && self.current_media.activity_id !== 0 ) {
+			$('.bb-media-info-section .activity-list').addClass('loading').html('<i class="dashicons dashicons-update animate-spin"></i>');
+			if ( self.current_media && typeof self.current_media.activity_id !== 'undefined' ) {
 				$.ajax({
 					type: 'POST',
 					url: BP_Nouveau.ajaxurl,
@@ -212,7 +217,7 @@ window.bp = window.bp || {};
 					},
 					success: function (response) {
 						if (response.success) {
-							$('.bb-media-info-section .activity-list').html(response.data.activity);
+							$('.bb-media-info-section .activity-list').removeClass('loading').html(response.data.activity);
 							$('.bb-media-info-section').show();
 						}
 					}

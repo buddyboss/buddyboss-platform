@@ -337,6 +337,23 @@ function bp_has_activities( $args = '' ) {
 		$r['spam'] = 'all';
 	}
 
+	// meta query for media activities, we need to explicitly do the meta checking to not include separate media activities
+	if ( empty( $r['meta_query'] ) ) {
+		$r['meta_query'] = array(
+			array(
+				'relation' => 'OR',
+				'key'      => 'bp_media_activity',
+				'compare'  => 'NOT EXISTS',
+			)
+		);
+	} else if ( ! empty( $r['meta_query'] ) ) {
+		$r['meta_query'][] = array(
+			'relation' => 'OR',
+			'key'      => 'bp_media_activity',
+			'compare'  => 'NOT EXISTS',
+		);
+	}
+
 	/*
 	 * Query
 	 */
