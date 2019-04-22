@@ -195,13 +195,28 @@ $settings = bp_email_get_appearance_settings();
 				line-height: 0 !important;
 				height: 0 !important;
 			}
+
+			.mobile-block-full {
+				display: block !important;
+				width: 100% !important;
+			}
+
+			.mobile-block-padding-full {
+				display: block !important;
+				padding: 0 20px !important;
+				width: 92% !important;
+			}
+
+			.avatar-wrap.mobile-center {
+				margin: 20px auto 0 !important;
+			}
 		}
 	</style>
-
 </head>
+
 <body class="email_bg" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="margin: 0; mso-line-height-rule: exactly;">
-<table cellpadding="0" cellspacing="0" border="0" height="100%" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="border-collapse:collapse;" class="email_bg"><tr><td valign="top">
-	<center style="width: 100%; text-align: <?php echo esc_attr( $settings['direction'] ); ?>;">
+	<table cellpadding="0" cellspacing="0" border="0" height="100%" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="border-collapse:collapse;" class="email_bg"><tr><td valign="top">
+		<center style="width: 100%; text-align: <?php echo esc_attr( $settings['direction'] ); ?>;">
 
 		<!-- Visually Hidden Preheader Text : BEGIN -->
 		<div style="display: none; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
@@ -414,7 +429,8 @@ $settings = bp_email_get_appearance_settings();
 			<![endif]-->
 		</div>
 	</center>
-</td></tr></table>
+</td></tr>
+</table>
 <?php
 if ( function_exists( 'is_customize_preview' ) && is_customize_preview() ) {
 	wp_footer();

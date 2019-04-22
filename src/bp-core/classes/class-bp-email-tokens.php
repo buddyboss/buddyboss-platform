@@ -825,8 +825,8 @@ class BP_Email_Tokens {
                             <td>
                                 <table cellpadding="0" cellspacing="0" border="0">
                                     <tr>
-                                        <td width="20%">
-                                            <a class="avatar-wrap" href="<?php echo bp_core_get_user_domain( $member_id ); ?>"
+                                        <td width="20%" class="mobile-block-full">
+                                            <a class="avatar-wrap mobile-center" href="<?php echo bp_core_get_user_domain( $member_id ); ?>"
                                                style="display: block; border-radius: 3px; width: 140px;">
                                                 <img alt="" src="<?php echo bp_core_fetch_avatar( array(
 													'item_id' => $member_id,
@@ -839,14 +839,12 @@ class BP_Email_Tokens {
                                                      border="0"/>
                                             </a>
                                         </td>
-                                        <td width="4%">&nbsp;</td>
-                                        <td width="72%">
+                                        <td width="4%" class="mobile-hide">&nbsp;</td>
+                                        <td width="72%" class="mobile-block-padding-full">
                                             <table cellpadding="0" cellspacing="0" border="0" width="100%"
                                                    style="width: 100%;">
                                                 <tr>
-                                                    <td height="10px" style="font-size: 10px; line-height: 10px;">&nbsp;
-                                                        
-                                                    </td>
+                                                    <td height="10px" style="font-size: 10px; line-height: 10px;">&nbsp;</td>
                                                 </tr>
                                                 <tr>
                                                     <td>
@@ -894,7 +892,7 @@ class BP_Email_Tokens {
 												</tr>
                                             </table>
                                         </td>
-                                        <td width="4%">&nbsp;</td>
+                                        <td width="4%" class="mobile-hide">&nbsp;</td>
                                     </tr>
                                 </table>
                             </td>
