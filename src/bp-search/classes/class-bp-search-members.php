@@ -62,6 +62,9 @@ if (!class_exists('Bp_Search_Members')):
 		 */
 		public function sql( $search_term, $only_totalrow_count=false ){
 			global $wpdb, $bp;
+
+			$bp_prefix = bp_core_get_table_prefix();
+
 			$query_placeholder = array();
 
 			$COLUMNS = " SELECT ";
@@ -95,7 +98,7 @@ if (!class_exists('Bp_Search_Members')):
 
 					if ( 'user_meta' === $user_field ) {
 						//Search in user meta table for terms
-						$conditions_wp_user_table[] = " ID IN ( SELECT user_id FROM {$wpdb->usermeta} WHERE meta_value LIKE %s ) ";
+						$conditions_wp_user_table[] = " ID IN ( SELECT user_id FROM {$wpdb->usermeta} WHERE {$bp_prefix}bp_strip_tags(meta_value) LIKE %s ) ";
 						$query_placeholder[]        = '%' . $search_term . '%';
 					} else {
 						$conditions_wp_user_table[] = $user_field . " LIKE %s ";
@@ -150,7 +153,7 @@ if (!class_exists('Bp_Search_Members')):
 
 					if( !empty( $selected_xprofile_fields ) ){
 						//u.id IN ( SELECT user_id FROM {$bp->profile->table_name_data} WHERE value LIKE %s )
-						$clause_xprofile_table = "u.id IN ( SELECT user_id FROM {$bp->profile->table_name_data} WHERE ( value LIKE %s AND field_id IN ( ";
+						$clause_xprofile_table = "u.id IN ( SELECT user_id FROM {$bp->profile->table_name_data} WHERE ( {$bp_prefix}bp_strip_tags(value) LIKE %s AND field_id IN ( ";
 						$clause_xprofile_table .= implode( ',', $selected_xprofile_fields['char_search'] );
 						$clause_xprofile_table .= ") ) OR ( value REGEXP '[[:<:]]{$search_term}[[:>:]]' AND field_id IN ( ";
 						$clause_xprofile_table .= implode( ',', $selected_xprofile_fields['word_search'] );

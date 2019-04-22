@@ -19,6 +19,9 @@ if (!class_exists('Bp_Search_bbPress_Forums')):
 
 		function sql( $search_term, $only_totalrow_count=false ){
 			global $wpdb;
+
+			$bp_prefix = bp_core_get_table_prefix();
+
 			$query_placeholder = array();
 
 			if( $only_totalrow_count ){
@@ -32,7 +35,7 @@ if (!class_exists('Bp_Search_bbPress_Forums')):
 
 			$where = array();
 			$where[] = "1=1";
-			$where[] = "(post_title LIKE %s OR post_content LIKE %s)";
+			$where[] = "(post_title LIKE %s OR {$bp_prefix}bp_strip_tags(post_content) LIKE %s)";
 			$where[] = "post_type = '{$this->type}'";
 
 			if ( current_user_can( 'read_hidden_forums' ) ) {

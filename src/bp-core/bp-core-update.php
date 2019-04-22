@@ -270,7 +270,7 @@ function bp_version_updater() {
 		}
 
 		// Version 3.1.1
-		if ( $raw_db_version < 13720 ) {
+		if ( $raw_db_version < 13721 ) {
 			bp_update_to_3_1_1();
 		}
 	}
@@ -562,7 +562,7 @@ function bp_update_to_3_1_1() {
 	bp_core_install_invites_email();
 	bp_core_update_activity_favorites();
 	bp_core_install_media();
-
+	bp_core_install_network_search();
 }
 
 /**
