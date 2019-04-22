@@ -398,6 +398,18 @@ function bp_do_activation_redirect() {
 		delete_transient( '_bp_is_new_install' );
 	}
 
+	// In Appearance > Menus, make "BuddyBoss" available by default
+	$get_existing_option = get_user_option( 'metaboxhidden_nav-menus', bp_loggedin_user_id() );
+	if ( '' === $get_existing_option || false === $get_existing_option ) {
+		$hidden_metaboxes = array();
+		update_user_option( bp_loggedin_user_id(), 'metaboxhidden_nav-menus', $hidden_metaboxes ); // update the user metaboxes
+	} else {
+		if ( ( $key = array_search( 'add-buddypress-nav-menu', $get_existing_option)) !== false ) {
+			unset($get_existing_option[$key]);
+		}
+		update_user_option( bp_loggedin_user_id(), 'metaboxhidden_nav-menus', $get_existing_option ); // update the user metaboxes
+	}
+
 	// Redirect to dashboard and trigger the Hello screen.
 	wp_safe_redirect( add_query_arg( $query_args, bp_get_admin_url( '?hello=buddyboss' ) ) );
 }
