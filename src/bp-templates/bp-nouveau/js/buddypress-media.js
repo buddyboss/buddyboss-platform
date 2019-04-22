@@ -302,7 +302,7 @@ window.bp = window.bp || {};
 				self.dropzone_obj.on('queuecomplete', function() {
 					$('#bp-media-uploader-modal-title').text(wp.i18n.__( 'Upload', 'buddyboss' ));
 
-					if ( ! self.album_id ) {
+					if ( $( '.bp-nouveau #bp-media-create-album-submit' ).length ) {
 						$( '.bp-nouveau #bp-media-create-album-submit' ).prop('disabled',false);
 						$( '.bp-nouveau #bp-media-create-album-submit' ).trigger( 'click' );
 					} else {

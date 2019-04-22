@@ -63,6 +63,8 @@ $album_id = (int) bp_action_variable( 0 );
 
 	            <?php endif; ?>
 
+                <?php bp_get_template_part( 'media/actions' ); ?>
+
                 <div id="media-stream" class="media" data-bp-list="media">
 
                     <div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'album-media-loading' ); ?></div>
