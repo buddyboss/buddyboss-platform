@@ -174,10 +174,6 @@ $settings = bp_email_get_appearance_settings();
 				padding: 0 20px !important;
 			}
 
-			.avatar-wrap {
-				width: 72px !important;
-			}
-
 			.responsive-set-height {
 				font-size: 0 !important;
 				line-height: 0 !important;
@@ -192,7 +188,8 @@ $settings = bp_email_get_appearance_settings();
 			.mobile-block-padding-full {
 				display: block !important;
 				padding: 0 20px !important;
-				width: 92% !important;
+				width: 100% !important;
+				box-sizing: border-box;
 			}
 
 			.avatar-wrap.mobile-center {
