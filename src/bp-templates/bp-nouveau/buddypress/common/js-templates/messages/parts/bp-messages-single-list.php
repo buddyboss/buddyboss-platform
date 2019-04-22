@@ -1,52 +1,50 @@
+-<script type="text/html" id="tmpl-bp-messages-single-list">
+	<div class="message-metadata">
+		<# if ( data.beforeMeta ) { #>
+		<div class="bp-messages-hook before-message-meta">{{{data.beforeMeta}}}</div>
+		<# } #>
 
-<script type="text/html" id="tmpl-bp-messages-single">
-	<?php bp_nouveau_messages_hook( 'before', 'thread_content' ); ?>
+		<a href="{{data.sender_link}}" class="user-link">
+			<img class="avatar" src="{{data.sender_avatar}}" alt="" />
+			<# if ( data.sender_is_you ) { #>
+			<strong><?php _e( 'You', 'buddyboss' ); ?></strong>
+			<# } else { #>
+			<strong>{{data.sender_name}}</strong>
+			<# } #>
+		</a>
 
-	<div id="bp-message-thread-header" class="message-thread-header"></div>
-	<div id="bp-message-load-more"></div>
+		<time datetime="{{data.date.toISOString()}}" class="activity">{{data.display_date}}</time>
 
-	<?php bp_nouveau_messages_hook( 'before', 'thread_list' ); ?>
+		<# if ( data.afterMeta ) { #>
+		<div class="bp-messages-hook after-message-meta">{{{data.afterMeta}}}</div>
+		<# } #>
+	</div>
 
-	<ul id="bp-message-thread-list"></ul>
+	<# if ( data.beforeContent ) { #>
+	<div class="bp-messages-hook before-message-content">{{{data.beforeContent}}}</div>
+	<# } #>
 
-	<?php bp_nouveau_messages_hook( 'after', 'thread_list' ); ?>
+	<div class="message-content">{{{data.content}}}</div>
 
-	<?php bp_nouveau_messages_hook( 'before', 'thread_reply' ); ?>
+	<# if ( data.media ) { #>
+	<# for ( i in data.media ) { #>
+	<li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3" data-id="" data-date-created="">
 
-	<form id="send-reply" class="standard-form send-reply">
-		<div class="message-box">
-			<div class="message-metadata">
+		<div class="bb-photo-thumb">
+			<a class="bb-open-media-theatre bb-photo-cover-wrap"
+			   data-id="{{data.media[i].id}}"
+			   data-attachment-full="{{data.media[i].full}}"
+			   href="#">
+				<img src="{{data.media[i].thumbnail}}" alt="{{data.media[i].title}}"/>
+			</a>
+		</div>
 
-				<?php bp_nouveau_messages_hook( 'before', 'reply_meta' ); ?>
+	</li>
+	<# } #>
+	<# } #>
 
-				<div class="avatar-box">
-					<strong><?php esc_html_e( 'Send a Reply', 'buddyboss' ); ?></strong>
-				</div>
+	<# if ( data.afterContent ) { #>
+	<div class="bp-messages-hook after-message-content">{{{data.afterContent}}}</div>
+	<# } #>
 
-				<?php bp_nouveau_messages_hook( 'after', 'reply_meta' ); ?>
-
-			</div><!-- .message-metadata -->
-
-			<div class="message-content">
-
-				<?php bp_nouveau_messages_hook( 'before', 'reply_box' ); ?>
-
-				<label for="message_content" class="bp-screen-reader-text"><?php _e( 'Reply to Message', 'buddyboss' ); ?></label>
-				<div id="bp-message-content"></div>
-
-				<?php bp_nouveau_messages_hook( 'after', 'reply_box' ); ?>
-
-				<div class="submit">
-					<input type="submit" name="send" value="<?php esc_attr_e( 'Send Reply', 'buddyboss' ); ?>" id="send_reply_button"/>
-				</div>
-
-			</div><!-- .message-content -->
-
-		</div><!-- .message-box -->
-	</form>
-
-	<?php bp_nouveau_messages_hook( 'after', 'thread_reply' ); ?>
-
-	<?php bp_nouveau_messages_hook( 'after', 'thread_content' ); ?>
 </script>
-
