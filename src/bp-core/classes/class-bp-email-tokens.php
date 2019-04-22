@@ -847,7 +847,7 @@ class BP_Email_Tokens {
                                                     <td height="10px" style="font-size: 10px; line-height: 10px;">&nbsp;</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>
+                                                    <td class="mobile-text-center">
                                                         <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.25 ) . 'px' ) ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.75 ) . 'px' ) ?>;"><?php echo bp_core_get_user_displayname( $member_id ); ?></div>
 														<div class="spacer" style="font-size: 2px; line-height: 2px; height: 2px;">&nbsp;</div>
 														<p style="opacity: 0.7; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 0.8125 ) . 'px' ) ?>; color : <?php echo esc_attr( $settings[ 'body_text_color' ] ); ?>; margin: 0;">
@@ -878,9 +878,9 @@ class BP_Email_Tokens {
 																			</td>
 																		</tr>
 																	</table>
-																	<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="no-responsive-table">
+																	<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="no-responsive-table mobile-padding-bottom">
 																		<tr>
-																			<td height="34px" align="right" style="vertical-align: middle;" class="mobile-text-left">
+																			<td height="34px" align="right" style="vertical-align: middle;" class="">
 																				<a href="<?php echo bp_core_get_user_domain( $member_id ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2.125 ) . 'px' ) ?>;line-height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2 ) . 'px' ) ?>;"><?php _e( 'View Profile', 'buddyboss' ); ?></a>
 																			</td>
 																		</tr>
