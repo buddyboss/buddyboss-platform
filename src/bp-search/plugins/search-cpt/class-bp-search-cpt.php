@@ -64,7 +64,7 @@ if (!class_exists('BP_Search_CPT')):
 				$sql .= " LEFT JOIN {$wpdb->term_relationships} r ON p.ID = r.object_id ";
 			}
 
-			$sql .= " WHERE 1=1 AND ( p.post_title LIKE %s OR p.{$bp_prefix}bp_strip_tags(post_content) LIKE %s ";
+			$sql .= " WHERE 1=1 AND ( p.post_title LIKE %s OR {$bp_prefix}bp_strip_tags(p.post_content) LIKE %s ";
 			$query_placeholder[] = '%'.$search_term.'%';
 			$query_placeholder[] = '%'.$search_term.'%';
 
