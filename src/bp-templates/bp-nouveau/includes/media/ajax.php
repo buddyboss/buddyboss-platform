@@ -151,19 +151,16 @@ function bp_nouveau_ajax_albums_loader() {
  */
 function bp_nouveau_ajax_media_upload() {
 	$response = array(
-		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
-		),
-	);
+		'feedback' => __( 'There was a problem when trying to upload this file.', 'buddyboss' )
+    );
 
 	// Bail if not a POST action.
 	if ( ! bp_is_post_request() ) {
-		wp_send_json_error( $response );
+		wp_send_json_error( $response, 500 );
 	}
 
 	if ( empty( $_POST['_wpnonce'] ) ) {
-		wp_send_json_error( $response );
+		wp_send_json_error( $response, 500 );
 	}
 
 	// Use default nonce
@@ -172,19 +169,15 @@ function bp_nouveau_ajax_media_upload() {
 
 	// Nonce check!
 	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
-		wp_send_json_error( $response );
+		wp_send_json_error( $response, 500 );
 	}
 
 	// Upload file
 	$result = bp_media_upload();
 
 	if ( is_wp_error( $result ) ) {
-		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem when trying to upload this file.', 'buddyboss' )
-		);
-
-		wp_send_json_error( $response );
+		$response['feedback'] = $result->get_error_message();
+		wp_send_json_error( $response, $result->get_error_code() );
 	}
 
 	wp_send_json_success( $result );

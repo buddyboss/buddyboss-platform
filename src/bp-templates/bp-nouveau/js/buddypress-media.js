@@ -309,7 +309,31 @@ window.bp = window.bp || {};
 					},1000);
 				});
 
+				self.dropzone_obj.on('error', function(file,response,xhr) {
+					$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+				});
+
 				self.dropzone_obj.on('queuecomplete', function() {
+
+					var success = true;
+					if ( self.dropzone_obj.getAcceptedFiles().length ) {
+						for( var j in self.dropzone_obj.getAcceptedFiles() ) {
+							if ( self.dropzone_obj.getAcceptedFiles()[j].status === 'error' ) {
+								success = false;
+								break;
+							}
+						}
+					}
+
+					if ( ! success ) {
+						if ( $( '.bp-nouveau #bp-media-create-album-submit' ).length ) {
+							$( '.bp-nouveau #bp-media-create-album-submit' ).prop('disabled',false);
+						} else {
+							$('#bp-media-submit').prop('disabled',false);
+						}
+						return false;
+					}
+
 					$('#bp-media-uploader-modal-title').text(wp.i18n.__( 'Upload', 'buddyboss' ));
 
 					if ( $( '.bp-nouveau #bp-media-create-album-submit' ).length ) {
