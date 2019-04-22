@@ -1,10 +1,10 @@
 <?php
 /**
  * @todo add description
- * 
+ *
  * @package BuddyBoss\Search
  * @since BuddyBoss 1.0.0
- */ 
+ */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -34,6 +34,9 @@ if (!class_exists('BP_Search_CPT')):
 		public function sql( $search_term, $only_totalrow_count=false ){
 
 			global $wpdb;
+
+			$bp_prefix = bp_core_get_table_prefix();
+
 			$query_placeholder = array();
 
 			$sql = " SELECT ";
@@ -61,7 +64,7 @@ if (!class_exists('BP_Search_CPT')):
 				$sql .= " LEFT JOIN {$wpdb->term_relationships} r ON p.ID = r.object_id ";
 			}
 
-			$sql .= " WHERE 1=1 AND ( p.post_title LIKE %s OR p.post_content LIKE %s ";
+			$sql .= " WHERE 1=1 AND ( p.post_title LIKE %s OR p.{$bp_prefix}bp_strip_tags(post_content) LIKE %s ";
 			$query_placeholder[] = '%'.$search_term.'%';
 			$query_placeholder[] = '%'.$search_term.'%';
 
