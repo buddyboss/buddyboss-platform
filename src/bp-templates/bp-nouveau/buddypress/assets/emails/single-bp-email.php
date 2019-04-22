@@ -213,7 +213,12 @@ $settings = bp_email_get_appearance_settings();
 			}
 
 			.mobile-padding-bottom {
-				padding-bottom: 15px !important;
+				padding-bottom: 10px !important;
+			}
+
+			.mobile-button-center {
+				margin: 5px auto 0 !important;
+				width: 160px !important;
 			}
 		}
 	</style>
