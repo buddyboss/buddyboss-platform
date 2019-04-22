@@ -403,6 +403,20 @@ TABLE OF CONTENTS:
 				line-height: inherit;
 			}
 		}
+
+		&.bp-hello-appboss {
+			bottom: auto;
+			width: 105vmin;
+			left: 0;
+			right: 0;
+			margin-left: auto;
+			margin-right: auto;
+
+			.bp-hello-footer {
+				height: 60px;
+				position: static;
+			}
+		}
 	}
 
 	.bp-hello-header {
