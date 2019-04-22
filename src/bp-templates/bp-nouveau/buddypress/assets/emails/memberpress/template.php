@@ -201,7 +201,7 @@ $settings = bp_email_get_appearance_settings();
 			}
 
 			.mobile-padding-bottom {
-				padding-bottom: 10px !important;
+				padding-bottom: 15px !important;
 			}
         }
     </style>

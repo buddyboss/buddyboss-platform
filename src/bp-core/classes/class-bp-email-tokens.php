@@ -206,9 +206,7 @@ class BP_Email_Tokens {
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td height="16px" style="font-size: 16px; line-height: 16px;">&nbsp;
-                                                        
-                                                    </td>
+                                                    <td height="16px" style="font-size: 16px; line-height: 16px;">&nbsp;</td>
                                                 </tr>
                                                 <tr>
                                                     <td>
@@ -231,10 +229,10 @@ class BP_Email_Tokens {
 																			</tr>
                                                                         </tbody>
                                                                     </table>
-                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="responsive-table mobile-text-center">
+                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="responsive-table">
                                                                         <tbody>
 																			<tr>
-																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-text-left">
+																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-text-center mobile-padding-bottom">
 																					<a href="<?php echo bp_get_group_permalink( $group ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;border: 1px solid <?php echo $settings['highlight_color']; ?>;border-radius: 100px;text-align: center; height: 32px;line-height: 32px;background: <?php echo $settings['highlight_color']; ?>;color: #fff !important;width: 130px;"><?php _e( 'Visit Group', 'buddyboss' ); ?></a>
 																				</td>
 																			</tr>
