@@ -2146,6 +2146,25 @@ form.ac-form .ac-reply-content .ac-textarea textarea:focus {
   box-shadow: 0 0 6px #d6d6d6;
 }
 
+form.ac-form .ac-reply-content .ac-textarea .ac-reply-attachments {
+  padding: 10px 0;
+}
+
+form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar {
+  display: flex;
+}
+
+form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item {
+  margin-right: 15px;
+  position: relative;
+}
+
+form.ac-form .ac-reply-content .ac-textarea .gif-search-results-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-results ul li {
   padding: 0;
 }

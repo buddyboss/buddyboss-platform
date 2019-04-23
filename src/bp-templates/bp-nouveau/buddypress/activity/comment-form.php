@@ -20,7 +20,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 			</label>
 			<textarea id="ac-input-<?php bp_activity_id(); ?>" class="ac-input bp-suggestions" name="ac_input_<?php bp_activity_id(); ?>"></textarea>
 
-            <div id="ac-reply-attachments-<?php bp_activity_id(); ?>">
+            <div id="ac-reply-attachments-<?php bp_activity_id(); ?>" class="ac-reply-attachments">
 
 				<?php if ( bp_is_active( 'media' ) ) : ?>
                     <div class="dropzone closed" id="ac-reply-post-media-uploader-<?php bp_activity_id(); ?>"></div>
@@ -31,7 +31,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 	            <?php endif; ?>
             </div>
 
-            <div id="ac-reply-toolbar-<?php bp_activity_id(); ?>">
+            <div id="ac-reply-toolbar-<?php bp_activity_id(); ?>" class="ac-reply-toolbar">
 
 				<?php if ( bp_is_active( 'media' ) ) : ?>
 
