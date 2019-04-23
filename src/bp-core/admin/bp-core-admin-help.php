@@ -24,8 +24,11 @@ function bp_core_admin_help_main_menu( $main_directories, $docs_path ) {
 		?>
         <div class="bp-help-card bb-help-menu-wrap">
 			<?php
+
+			$url = add_query_arg( 'article', str_replace( $docs_path, "", $index_file ) );
+
 			// print the title of the section
-			printf( '<h3><a href="#">%s</a></h3>', fgets( fopen( $index_file, 'r' ) ) );
+			printf( '<h3><a href="%s">%s</a></h3>', $url, fgets( fopen( $index_file, 'r' ) ) );
 			?>
 
             <div class="inside bb-help-menu">
@@ -47,45 +50,76 @@ function bp_core_admin_help_main_menu( $main_directories, $docs_path ) {
  * @param $times
  * @param $docs_path
  */
-function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_hide = 1 ) {
-	$article    = ! empty( $_GET['article'] ) ? $_GET['article'] : '';
-	$ul_classed = $times > $level_hide ? 'hidden' : '';
-	$ul_classed .= ' loop-' . $times;
-	?>
-    <ul class="<?php echo $ul_classed; ?> ">
-		<?php
-		// For showing the menu title
-		foreach ( $directories as $directory ) {
-			$selected = ( false !== strpos( $docs_path . $article, $directory ) ) ? 'selected main' : 'main'; ?>
-            <li class="<?php echo $selected; ?>">
-				<?php
-				// check if it's has directory
-				if ( is_dir( $directory ) ) {
-					// the the main file from the directory
-					$dir_index_file = glob( $directory . "/0-*.md" );
-					$loop_dir       = array_diff( glob( $directory . '/*' ), $dir_index_file );
+function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_hide = 1, $show_as_heading = false ) {
+	$article = ! empty( $_GET['article'] ) ? $_GET['article'] : '';
 
-					$dir_index_file = current( $dir_index_file );
-					$url            = add_query_arg( 'article', str_replace( $docs_path, "", $dir_index_file ) );
-
-					if ( ! empty( $loop_dir ) ) {
-						printf( '<span class="main-menu"><a href="%s" class="dir">%s <span class="sub-menu-count">(%s)</span></a><span class="actions"><span class="open">+</span></span></span>', $url, fgets( fopen( $dir_index_file, 'r' ) ), count( $loop_dir ) );
-						$times ++;
-						bp_core_admin_help_sub_menu( $loop_dir, $times, $docs_path, $level_hide );
-					} else {
-						printf( '<span class="main-menu"><a href="%s" class="dir">%s</a></span>', $url, fgets( fopen( $dir_index_file, 'r' ) ) );
-					}
-				} else {
-					$url = add_query_arg( 'article', str_replace( $docs_path, "", $directory ) );
-					// print the title if it's a .md file
-					printf( '<span class="main-menu"><a href="%s" class="file">%s</a></span>', $url, fgets( fopen( $directory, 'r' ) ) );
-				} ?>
-            </li>
-			<?php
-		}
+	if ( empty( $show_as_heading ) ) {
+		$ul_classed = $times > $level_hide ? 'hidden' : '';
+		$ul_classed .= ' loop-' . $times;
 		?>
-    </ul>
-	<?php
+        <ul class="<?php echo $ul_classed; ?> ">
+		<?php
+	}
+
+
+	do_action( 'bp_core_admin_help_sub_menu_before', $directories, $times, $docs_path, $level_hide, $show_as_heading );
+
+	// For showing the menu title
+	foreach ( $directories as $directory ) {
+		$dir_pos = false !== strpos( $docs_path . $article, $directory ) ? true : false;
+
+		if ( empty( $dir_pos ) && ! empty( $show_as_heading ) ) {
+			continue;
+		}
+
+		$selected = $dir_pos ? 'selected main' : 'main'; ?>
+    <li class="<?php echo $selected; ?>">
+		<?php
+		// check if it's has directory
+		if ( is_dir( $directory ) ) {
+			// the the main file from the directory
+			$dir_index_file = glob( $directory . "/0-*.md" );
+			$loop_dir       = array_diff( glob( $directory . '/*' ), $dir_index_file );
+
+			$dir_index_file = current( $dir_index_file );
+			$url            = add_query_arg( 'article', str_replace( $docs_path, "", $dir_index_file ) );
+
+			if ( ! empty( $loop_dir ) ) {
+				$count_html = sprintf( '<span class="sub-menu-count">(%s)</span>', count( $loop_dir ) );
+				$action     = '<span class="actions"><span class="open">+</span></span>';
+				if ( ( $article && 1 == $times ) || ! empty( $show_as_heading ) ) {
+					$action     = '';
+					$count_html = '';
+				}
+
+				printf( '<span class="main-menu"><a href="%s" class="dir">%s %s</a>%s</span>', $url, fgets( fopen( $dir_index_file, 'r' ) ), $count_html, $action );
+				$times ++;
+				if ( ! empty( $show_as_heading ) ) {
+					?>
+                    </li>
+					<?php
+				}
+				bp_core_admin_help_sub_menu( $loop_dir, $times, $docs_path, $level_hide, $show_as_heading );
+			} else {
+				printf( '<span class="main-menu"><a href="%s" class="dir">%s</a></span>', $url, fgets( fopen( $dir_index_file, 'r' ) ) );
+			}
+		} else {
+			$url = add_query_arg( 'article', str_replace( $docs_path, "", $directory ) );
+			// print the title if it's a .md file
+			printf( '<span class="main-menu"><a href="%s" class="file">%s</a></span>', $url, fgets( fopen( $directory, 'r' ) ) );
+		} ?>
+        </li>
+		<?php
+
+	}
+
+	add_action( 'bp_core_admin_help_sub_menu_after', $directories, $times, $docs_path, $level_hide, $show_as_heading );
+
+	if ( empty( $show_as_heading ) ) {
+		?>
+        </ul>
+		<?php
+	}
 }
 
 /**
@@ -135,15 +169,27 @@ function bp_core_admin_help_main_page() {
             <div class="bb-help-content-wrap">
 
                 <div class="bb-help-sidebar">
-	                <?php
-	                bp_core_admin_help_sub_menu( (array)$content_main_dir, '1', $docs_path, 2 );
-	                ?>
+					<?php
+					bp_core_admin_help_sub_menu( (array) $content_main_dir, '1', $docs_path, 2 );
+					?>
                 </div>
 
                 <div class="bb-help-content">
-					<?php
-					bp_core_admin_help_display_content( $docs_path, $vendor_path );
-					?>
+
+                    <div class="bb-help-menu">
+
+						<?php
+						add_action( 'bp_core_admin_help_sub_menu_before', 'bp_core_admin_help_sub_menu_before_callback', 10, 5 );
+						bp_core_admin_help_sub_menu( (array) $content_main_dir, '1', $docs_path, 2, true );
+						remove_action( 'bp_core_admin_help_sub_menu_before', 'bp_core_admin_help_sub_menu_before_callback', 10, 5 );
+						?>
+                    </div>
+
+                    <div class="bb-help-file-content">
+						<?php
+						bp_core_admin_help_display_content( $docs_path, $vendor_path );
+						?>
+                    </div>
                 </div>
             </div>
 			<?php
@@ -180,4 +226,11 @@ function bp_core_admin_help() {
 		?>
     </div>
 	<?php
+}
+
+function bp_core_admin_help_sub_menu_before_callback( $directories, $times, $docs_path, $level_hide, $show_as_heading ) {
+	if ( 1 == $times ) {
+		$url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help' ), 'admin.php' ) );
+		printf( '<li class="selected main"><span class="main-menu"><a href="%s" class="dir">%s </a></span></li>', $url, __( 'Help', 'buddyboss' ) );
+	}
 }
