@@ -11,6 +11,13 @@ window.bp = window.bp || {};
 	}
 
 	bp.Nouveau = bp.Nouveau || {};
+	bp.Models      = bp.Models || {};
+
+	bp.Models.ACReply = Backbone.Model.extend( {
+		defaults: {
+			gif_data: {}
+		}
+	} );
 
 	/**
 	 * [Activity description]
@@ -67,6 +74,8 @@ window.bp = window.bp || {};
 
 			this.dropzone_obj = null;
 			this.dropzone_media = [];
+
+			this.models = [];
 		},
 
 		/**
@@ -93,6 +102,7 @@ window.bp = window.bp || {};
 			$(document).on('click', '.gif-image-container', this.playVideo);
 			//forums
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
 
 			// Activity autoload
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.autoload ) ) {
@@ -467,7 +477,7 @@ window.bp = window.bp || {};
 				activity_state = activity_item.find( '.activity-state' ),
 				comments_text = activity_item.find( '.comments-count' ),
 				likes_text = activity_item.find( '.like-text' ),
-				item_id, form;
+				item_id, form, model;
 
 			// In case the target is set to a span inside the link.
 			if ( $( target ).is( 'span' ) ) {
@@ -826,6 +836,12 @@ window.bp = window.bp || {};
 					comment_data.media = this.dropzone_media;
 				}
 
+				// add gif data if enabled or uploaded
+				if ( ! _.isUndefined( this.models[activity_id] ) ) {
+					model = this.models[activity_id];
+					comment_data.gif_data = this.models[activity_id].get('gif_data');
+				}
+
 				parent.ajax( comment_data, 'activity' ).done( function( response ) {
 					target.removeClass( 'loading' );
 					comment_content.removeClass( 'loading' );
@@ -875,6 +891,11 @@ window.bp = window.bp || {};
 						if ( show_all_a ) {
 							show_all_a.html( BP_Nouveau.show_x_comments.replace( '%d', comment_count ) );
 						}
+					}
+
+					if ( !_.isUndefined( model ) ) {
+						model.set( 'gif_data', {} );
+						$( '#ac-reply-post-gif-' + activity_id ).find( '.activity-attached-gif-container' ).removeAttr( 'style' );
 					}
 
 					target.prop( 'disabled', false );
@@ -1038,8 +1059,29 @@ window.bp = window.bp || {};
 					$button.show();
 				}
 			} );
-		}
+		},
 
+		openGifPicker: function ( event ) {
+			event.preventDefault();
+
+			var currentTarget = event.currentTarget,
+				$gifPickerEl = $( currentTarget ).next(),
+				activityID = currentTarget.id.match( /\d+$/ )[0],
+				$gifAttachmentEl = $( '#ac-reply-post-gif-' + activityID );
+
+			if ( $gifPickerEl.is( ':empty' ) ) {
+				var model = new bp.Models.ACReply(),
+					gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown( {model: model} ),
+					activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview( {model: model} );
+
+				$gifPickerEl.html( gifMediaSearchDropdownView.render().el );
+				$gifAttachmentEl.html( activityAttachedGifPreview.render().el );
+
+				this.models[activityID] = model;
+			}
+
+			$gifPickerEl.toggleClass('open');
+		}
 	};
 
 	// Launch BP Nouveau Activity

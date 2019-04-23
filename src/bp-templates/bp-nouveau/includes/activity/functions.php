@@ -26,7 +26,7 @@ function bp_nouveau_activity_register_scripts( $scripts = array() ) {
 	return array_merge( $scripts, array(
 		'bp-nouveau-activity' => array(
 			'file'         => 'js/buddypress-activity%s.js',
-			'dependencies' => array( 'bp-nouveau', 'wp-util' ),
+			'dependencies' => array( 'bp-nouveau', 'wp-util', 'wp-backbone' ),
 			'footer'       => true,
 		),
 		'bp-nouveau-activity-post-form' => array(

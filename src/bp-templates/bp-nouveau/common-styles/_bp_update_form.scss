@@ -56,23 +56,7 @@
 		padding: 10px;
 	}
 
-	.activity-attached-gif-container {
-		position: relative;
 
-		.gif-image-remove {
-			border-radius: 10px;
-			height: 19px;
-			right: 2px;
-			top: 4px;
-			width: 19px;
-		}
-
-		.gif-image-overlay {
-			color: #fff;
-			margin-top: 0;
-			position: absolute;
-		}
-	}
 
 	#whats-new-elements-buttons {
 		margin: 1em 0;
@@ -206,6 +190,24 @@
 	max-width: 400px;
 }
 
+.activity-attached-gif-container {
+	position: relative;
+
+	.gif-image-remove {
+		border-radius: 10px;
+		height: 19px;
+		right: 2px;
+		top: 4px;
+		width: 19px;
+	}
+
+	.gif-image-overlay {
+		color: #fff;
+		margin-top: 0;
+		position: absolute;
+	}
+}
+
 .gif-media-search-dropdown {
 	position: absolute;
 	top: 100%;
@@ -250,7 +252,7 @@
 	margin: 0;
 }
 
-.gif-search-results {
+.gif-search-content .gif-search-results {
 	padding: 0 10px;
 	overflow: auto;
 	min-height: 280px;
@@ -264,7 +266,8 @@
 		list-style: none;
 
 		li {
-			margin-bottom: 4px;
+			margin: 0 0 4px 0;
+			padding: 0;
 		}
 
 		.bg1 {

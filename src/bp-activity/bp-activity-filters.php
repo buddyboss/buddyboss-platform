@@ -111,6 +111,7 @@ add_filter( 'bp_after_has_activities_parse_args', 'bp_activity_display_all_types
 
 add_filter( 'bp_get_activity_content_body', 'bp_activity_link_preview', 20, 2 );
 add_filter( 'bp_get_activity_content_body', 'bp_activity_embed_gif', 20, 2 );
+add_action( 'bp_activity_after_comment_content', 'bp_activity_comment_embed_gif', 20, 1 );
 
 /* Actions *******************************************************************/
 
@@ -569,22 +570,20 @@ function bp_activity_link_preview( $content, $activity ) {
 }
 
 /**
- * Embed gif in activity content
- *
- * @param $content
- * @param $activity
+ * Return activity gif embed HTML
  *
  * @since BuddyBoss 1.0.0
  *
- * @return string
+ * @param $activity_id
+ *
+ * @return false|string|void
  */
-function bp_activity_embed_gif( $content, $activity ) {
-	$activity_id = $activity->id;
+function bp_activity_embed_gif_content( $activity_id ) {
 
 	$gif_data = bp_activity_get_meta( $activity_id, '_gif_data', true );
 
 	if ( empty( $gif_data ) ) {
-		return $content;
+		return;
 	}
 
 	$preview_url = wp_get_attachment_url( $gif_data['still'] );
@@ -606,9 +605,49 @@ function bp_activity_embed_gif( $content, $activity ) {
 		</div>
 	</div>
 	<?php
-	$content .= ob_get_clean();
+	$content = ob_get_clean();
 
 	return $content;
+}
+
+/**
+ * Embed gif in activity content
+ *
+ * @param $content
+ * @param $activity
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string
+ */
+function bp_activity_embed_gif( $content, $activity ) {
+
+	$gif_content = bp_activity_embed_gif_content(  $activity->id );
+
+	if ( ! empty( $gif_content ) ) {
+		$content .= $gif_content;
+	}
+
+	return $content;
+}
+
+/**
+ * Embed gif in activity comment content
+ *
+ * @param $content
+ * @param $activity
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string
+ */
+function bp_activity_comment_embed_gif( $activity_id ) {
+
+	$gif_content = bp_activity_embed_gif_content(  $activity_id );
+
+	if ( ! empty( $gif_content ) ) {
+		echo $gif_content;
+	}
 }
 
 /**

@@ -23,7 +23,6 @@ form.ac-form {
 		.ac-textarea {
 			margin-bottom: $marg-med;
 			padding: 0 $pad-sml;
-			overflow: hidden;
 
 			textarea {
 				background: transparent;
@@ -41,6 +40,10 @@ form.ac-form {
 
 					@include box-shadow( 0 0 6px $med-light-grey );
 				}
+			}
+
+			.gif-search-content .gif-search-results ul li {
+				padding: 0;
 			}
 		}
 
