@@ -72,45 +72,46 @@ function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_h
 			continue;
 		}
 
-		$selected = $dir_pos ? 'selected main' : 'main'; ?>
-    <li class="<?php echo $selected; ?>">
-		<?php
-		// check if it's has directory
-		if ( is_dir( $directory ) ) {
-			// the the main file from the directory
-			$dir_index_file = glob( $directory . "/0-*.md" );
-			$loop_dir       = array_diff( glob( $directory . '/*' ), $dir_index_file );
+		$selected = $dir_pos ? 'selected main' : 'main';
+		?>
+        <li class="<?php echo $selected; ?>">
+            <?php
+            // check if it's has directory
+            if ( is_dir( $directory ) ) {
+                // the the main file from the directory
+                $dir_index_file = glob( $directory . "/0-*.md" );
+                $loop_dir       = array_diff( glob( $directory . '/*' ), $dir_index_file );
 
-			$dir_index_file = current( $dir_index_file );
-			$url            = add_query_arg( 'article', str_replace( $docs_path, "", $dir_index_file ) );
+                $dir_index_file = current( $dir_index_file );
+                $url            = add_query_arg( 'article', str_replace( $docs_path, "", $dir_index_file ) );
 
-			if ( ! empty( $loop_dir ) ) {
-				$count_html = sprintf( '<span class="sub-menu-count">(%s)</span>', count( $loop_dir ) );
-				$action     = '<span class="actions"><span class="open">+</span></span>';
-				if ( ( $article && 1 == $times ) || ! empty( $show_as_heading ) ) {
-					$action     = '';
-					$count_html = '';
-				}
+                if ( ! empty( $loop_dir ) ) {
+                    $count_html = sprintf( '<span class="sub-menu-count">(%s)</span>', count( $loop_dir ) );
+                    $action     = '<span class="actions"><span class="open">+</span></span>';
+                    if ( ( $article && 1 == $times ) || ! empty( $show_as_heading ) ) {
+                        $action     = '';
+                        $count_html = '';
+                    }
 
-				printf( '<span class="main-menu"><a href="%s" class="dir">%s %s</a>%s</span>', $url, fgets( fopen( $dir_index_file, 'r' ) ), $count_html, $action );
-				$times ++;
-				if ( ! empty( $show_as_heading ) ) {
-					?>
-                    </li>
-					<?php
-				}
-				bp_core_admin_help_sub_menu( $loop_dir, $times, $docs_path, $level_hide, $show_as_heading );
-			} else {
-				printf( '<span class="main-menu"><a href="%s" class="dir">%s</a></span>', $url, fgets( fopen( $dir_index_file, 'r' ) ) );
-			}
-		} else {
-			$url = add_query_arg( 'article', str_replace( $docs_path, "", $directory ) );
-			// print the title if it's a .md file
-			printf( '<span class="main-menu"><a href="%s" class="file">%s</a></span>', $url, fgets( fopen( $directory, 'r' ) ) );
-		} ?>
+                    printf( '<span class="main-menu"><a href="%s" class="dir">%s %s</a>%s</span>', $url, fgets( fopen( $dir_index_file, 'r' ) ), $count_html, $action );
+                    $times ++;
+                    if ( ! empty( $show_as_heading ) ) {
+                        ?>
+                        </li>
+                        <?php
+                    }
+                    bp_core_admin_help_sub_menu( $loop_dir, $times, $docs_path, $level_hide, $show_as_heading );
+                } else {
+                    printf( '<span class="main-menu"><a href="%s" class="dir">%s</a></span>', $url, fgets( fopen( $dir_index_file, 'r' ) ) );
+                }
+            } else {
+                $url = add_query_arg( 'article', str_replace( $docs_path, "", $directory ) );
+                // print the title if it's a .md file
+                printf( '<span class="main-menu"><a href="%s" class="file">%s</a></span>', $url, fgets( fopen( $directory, 'r' ) ) );
+            }
+            ?>
         </li>
 		<?php
-
 	}
 
 	add_action( 'bp_core_admin_help_sub_menu_after', $directories, $times, $docs_path, $level_hide, $show_as_heading );
@@ -134,7 +135,8 @@ function bp_core_admin_help_display_content( $docs_path, $vendor_path ) {
 	require_once $vendor_path . '/parsedown/Parsedown.php';
 	$Parsedown = new Parsedown();
 	$text      = file_get_contents( $docs_path . $_GET['article'] );
-	echo $Parsedown->text( $text );
+
+	return $Parsedown->text( $text );
 }
 
 /**
@@ -187,7 +189,7 @@ function bp_core_admin_help_main_page() {
 
                     <div class="bb-help-file-content">
 						<?php
-						bp_core_admin_help_display_content( $docs_path, $vendor_path );
+						echo bp_core_admin_help_display_content( $docs_path, $vendor_path );
 						?>
                     </div>
                 </div>
