@@ -97,7 +97,7 @@ window.bp = window.bp || {};
 			$( '.bp-nouveau' ).on( 'click', '#bb-delete-album', this.deleteAlbum.bind( this ) );
 
 			//forums
-			$( '.bbpress' ).on( 'click', '#forums-media-button', this.openForumsUploader.bind( this ) );
+			$( '.bbpress,.buddypress' ).on( 'click', '#forums-media-button', this.openForumsUploader.bind( this ) );
 
 		},
 
