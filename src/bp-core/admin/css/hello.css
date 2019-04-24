@@ -349,7 +349,6 @@ TABLE OF CONTENTS:
     line-height: inherit;
   }
   #bp-hello-container.bp-hello-appboss {
-    /*top: 50px;*/
     bottom: auto;
     width: 105vmin;
     max-width: 900px;
