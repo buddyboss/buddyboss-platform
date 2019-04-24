@@ -260,7 +260,7 @@ function bp_nouveau_wrapper( $args = array() ) {
 		$generic_class = '';
 	}
 
-	if( bp_current_component() == 'media' ) {
+	if( bp_current_component() == 'photos' || bp_current_component() == 'media' ) {
 		$generic_class = ' activity-meta ';
 	}
 
