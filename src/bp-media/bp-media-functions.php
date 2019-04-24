@@ -917,8 +917,8 @@ add_action( 'bbp_new_reply', 'bp_media_forums_new_post_media_save', 999 );
 add_action( 'bbp_new_topic', 'bp_media_forums_new_post_media_save', 999 );
 add_action( 'edit_post',     'bp_media_forums_new_post_media_save', 999 );
 
-add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 10, 2 );
-add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 10, 2 );
+add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 999, 2 );
+add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 999, 2 );
 
 /**
  * Embed topic or reply attachments in a post
