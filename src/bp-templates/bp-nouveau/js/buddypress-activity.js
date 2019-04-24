@@ -98,6 +98,7 @@ window.bp = window.bp || {};
 
 			// Activity actions
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
+			$( '#bb-media-model-container .activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( document ).keydown( this.commentFormAction );
 			$(document).on('click', '.gif-image-container', this.playVideo);
 			//forums
@@ -977,6 +978,10 @@ window.bp = window.bp || {};
 
 			var $load_more_btn = $( '.load-more:visible' ).last(),
 				$window = $(window);
+
+			if ( ! $load_more_btn.closest('.activity-list').length ) {
+				return;
+			}
 
 			if ( ! $load_more_btn.get( 0 ) || $load_more_btn.data( 'bp-autoloaded' ) ) {
 				return;
