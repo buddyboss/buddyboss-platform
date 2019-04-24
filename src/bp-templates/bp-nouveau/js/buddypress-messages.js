@@ -29,11 +29,12 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		start: function() {
-			this.views    = new Backbone.Collection();
-			this.threads  = new bp.Collections.Threads();
-			this.messages = new bp.Collections.Messages();
-			this.router   = new bp.Nouveau.Messages.Router();
-			this.box      = 'inbox';
+			this.views          = new Backbone.Collection();
+			this.threads        = new bp.Collections.Threads();
+			this.messages       = new bp.Collections.Messages();
+			this.router         = new bp.Nouveau.Messages.Router();
+			this.box            = 'inbox';
+			this.quillEditor    = false;
 
 			if ( !_.isUndefined( window.Dropzone ) && !_.isUndefined( BP_Nouveau.media ) ) {
 				this.dropzoneView();
@@ -561,7 +562,21 @@ window.bp = window.bp || {};
 		},
 
 		activateTinyMce: function() {
-			if ( typeof tinymce !== 'undefined' ) {
+			if ( typeof window.Quill !== 'undefined' ) {
+				var toolbarOptions = [
+					['bold', 'italic'],        // toggled buttons
+					[{ 'list': 'ordered'}, { 'list': 'bullet' }],
+					['blockquote'],
+					['clean']                                         // remove formatting button
+				];
+				bp.Nouveau.Messages.quillEditor = new Quill('#message_content', {
+					modules: {
+						toolbar: toolbarOptions
+					},
+					theme: 'bubble',
+					placeholder: wp.i18n.__('type message here','buddyboss')
+				});
+			} else if ( typeof tinymce !== 'undefined' ) {
 				tinymce.EditorManager.execCommand( 'mceAddEditor', true, 'message_content' );
 			}
 		}
@@ -764,6 +779,8 @@ window.bp = window.bp || {};
 					// tinyMce
 					if ( undefined !== tinyMCE.activeEditor && null !== tinyMCE.activeEditor ) {
 						tinyMCE.activeEditor.setContent( '' );
+					} else if ( undefined !== bp.Nouveau.Messages.quillEditor && false !== bp.Nouveau.Messages.quillEditor ) {
+						bp.Nouveau.Messages.quillEditor.setContents( '' );
 					}
 
 				// All except meta or empty value
@@ -830,6 +847,8 @@ window.bp = window.bp || {};
 						// Message content
 						if ( 'message_content' === pair.name && undefined !== tinyMCE.activeEditor ) {
 							pair.value = tinyMCE.activeEditor.getContent();
+						} else if ( 'message_content' === pair.name && undefined !== bp.Nouveau.Messages.quillEditor ) {
+							pair.value = bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML;
 						}
 
 						if ( ! pair.value ) {
@@ -841,6 +860,11 @@ window.bp = window.bp || {};
 				}
 
 			}, this );
+
+			// quill editor support
+			if ( bp.Nouveau.Messages.quillEditor !== false && typeof bp.Nouveau.Messages.quillEditor !== 'undefined' ) {
+				this.model.set( 'message_content', bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML, { silent: true } );
+			}
 
 			if ( errors.length ) {
 				var feedback = '';
@@ -1487,13 +1511,20 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			var content = '';
+			if ( typeof tinyMCE !== 'undefined' ) {
+				content = tinyMCE.activeEditor.getContent();
+				jQuery(tinyMCE.activeEditor.formElement).addClass('loading');
+			} else if ( typeof bp.Nouveau.Messages.quillEditor !== 'undefined' ) {
+				content = bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML;
+				jQuery(bp.Nouveau.Messages.quillEditor.container).addClass('loading');
+			}
+
 			this.model.set ( {
 				thread_id : this.options.thread.get( 'id' ),
-				content   : tinyMCE.activeEditor.getContent(),
+				content   : content,
 				sending   : true
 			} );
-
-			jQuery(tinyMCE.activeEditor.formElement).addClass('loading');
 
 			this.collection.sync( 'create', this.model.attributes, {
 				success : _.bind( this.replySent, this ),
@@ -1505,9 +1536,16 @@ window.bp = window.bp || {};
 			var reply = this.collection.parse( response );
 
 			// Reset the form
-			tinyMCE.activeEditor.setContent( '' );
+			if ( typeof tinyMCE !== 'undefined' ) {
+				tinyMCE.activeEditor.setContent( '' );
+				jQuery(tinyMCE.activeEditor.formElement).removeClass('loading');
+			} else if ( typeof bp.Nouveau.Messages.quillEditor !== 'undefined' ) {
+				bp.Nouveau.Messages.quillEditor.setContents('');
+				jQuery(bp.Nouveau.Messages.quillEditor.container).removeClass('loading');
+			}
+
 			this.model.set( 'sending', false );
-			jQuery(tinyMCE.activeEditor.formElement).removeClass('loading');
+
 
 			if (this.messageAttachments.onClose){
 				this.messageAttachments.onClose();
