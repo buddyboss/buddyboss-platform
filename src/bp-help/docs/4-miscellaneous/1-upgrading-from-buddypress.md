@@ -1,11 +1,11 @@
-Upgrading from BuddyPress
+Miscellaneous - Upgrading from BuddyPress
 ---
 
 __Advertisement :)__
 
-- [miscellaneous_link text="pica" slug="1-upgrading-from-buddypress.md"] - high quality and fast image
+- __[pica](https://nodeca.github.io/pica/demo/)__ - high quality and fast image
   resize in browser.
-- [babelfish](https://github.com/nodeca/babelfish/)__ - developer friendly
+- __[babelfish](https://github.com/nodeca/babelfish/)__ - developer friendly
   i18n with plurals support and easy syntax.
 
 You will like those projects!

@@ -4145,3 +4145,68 @@ function bp_platform_default_activity_types() {
 
 	return $activity_type;
 }
+
+/**
+ * Dynamically add the URL
+ *
+ * @param $atts
+ *
+ * @return mixed
+ */
+function bp_core_help_miscellaneous_link( $atts ) {
+	$slug = isset( $atts['slug'] ) ? $atts['slug'] : '';
+	$text = isset( $atts['text'] ) ? $atts['text'] : '';
+	if ( is_admin() ) {
+		$url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help', 'article' => $slug ), 'admin.php' ) );
+	} else {
+		$post_ids = bp_core_get_post_id_by_slug( 'miscellaneous' );
+		$post_id = current( $post_ids );
+		$url = get_permalink( $post_id ) . '/' . bp_core_get_post_slug_by_index( $slug );
+	}
+
+	return sprintf( '<a href="%s"> %s </a>', $url, $text );
+}
+
+add_shortcode( 'miscellaneous_link', 'bp_core_help_miscellaneous_link' );
+
+if ( ! function_exists( 'bp_core_get_post_id_by_slug' ) ) {
+	/**
+	 * Get Post id by Post SLUG
+	 *
+	 * @param $slug
+	 *
+	 * @return array
+	 */
+	function bp_core_get_post_id_by_slug( $slug ) {
+		$post_id = array();
+		$args    = array(
+			'posts_per_page' => 1,
+			'post_type'      => 'docs',
+			'name'           => $slug,
+			'post_parent'    => 0,
+		);
+		$docs    = get_posts( $args );
+		if ( ! empty( $docs ) ) {
+			foreach ( $docs as $doc ) {
+				$post_id[] = $doc->ID;
+			}
+		}
+
+		return $post_id;
+	}
+}
+
+/**
+ * Generate post slug by files name
+ *
+ * @param $dir_index_file
+ *
+ * @return string
+ */
+function bp_core_get_post_slug_by_index( $dir_index_file ) {
+	$index_file = str_replace( '.md', '', end( explode( '/', $dir_index_file ) ) );
+	$index_file = explode( '-', $index_file );
+	unset( $index_file[0] );
+
+	return implode( '-', $index_file );
+}
