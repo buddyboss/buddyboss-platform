@@ -705,4 +705,4 @@ function bp_core_enqueue_quill_js_css() {
 	wp_enqueue_script( 'bp-quill' );
 	wp_enqueue_style( 'bp-quill' );
 }
-add_action( 'bp_enqueue_scripts', 'bp_core_enqueue_quill_js_css' );
+//add_action( 'bp_enqueue_scripts', 'bp_core_enqueue_quill_js_css' );
