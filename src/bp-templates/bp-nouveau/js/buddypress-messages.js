@@ -562,14 +562,14 @@ window.bp = window.bp || {};
 		},
 
 		activateTinyMce: function() {
-			if ( typeof window.Quill !== 'undefined' ) {
+			if ( !_.isUndefined(window.Quill) ) {
 				var toolbarOptions = [
 					['bold', 'italic'],        // toggled buttons
 					[{ 'list': 'ordered'}, { 'list': 'bullet' }],
 					['blockquote'],
 					['clean']                                         // remove formatting button
 				];
-				bp.Nouveau.Messages.quillEditor = new Quill('#message_content', {
+				bp.Nouveau.Messages.quillEditor = new window.Quill('#message_content', {
 					modules: {
 						toolbar: toolbarOptions
 					},

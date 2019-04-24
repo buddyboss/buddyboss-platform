@@ -246,7 +246,7 @@ window.bp = window.bp || {};
 						formData.append('_wpnonce', BP_Nouveau.nonces.media);
 					});
 
-					self.dropzone_obj.on('error', function(file,response,xhr) {
+					self.dropzone_obj.on('error', function(file,response) {
 						$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
 					});
 
@@ -315,7 +315,7 @@ window.bp = window.bp || {};
 					},1000);
 				});
 
-				self.dropzone_obj.on('error', function(file,response,xhr) {
+				self.dropzone_obj.on('error', function(file,response) {
 					$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
 				});
 
