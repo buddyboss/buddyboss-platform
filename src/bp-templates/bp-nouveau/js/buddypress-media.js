@@ -236,12 +236,18 @@ window.bp = window.bp || {};
 
 				if ( dropzone_container.hasClass('closed') ) {
 
+					self.options.autoProcessQueue = true;
+
 					// init dropzone
 					self.dropzone_obj = new Dropzone('div#forums-post-media-uploader', self.options);
 
 					self.dropzone_obj.on('sending', function(file, xhr, formData) {
 						formData.append('action', 'media_upload');
 						formData.append('_wpnonce', BP_Nouveau.nonces.media);
+					});
+
+					self.dropzone_obj.on('error', function(file,response,xhr) {
+						$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
 					});
 
 					self.dropzone_obj.on('success', function(file, response) {
