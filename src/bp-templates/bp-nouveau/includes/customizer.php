@@ -192,41 +192,43 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 
 	$controls = array(
 		'user_nav_display' => array(
-			'label'      => __( 'Display the profile navigation vertically.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_user_primary_nav',
-			'settings'   => 'bp_nouveau_appearance[user_nav_display]',
-			'type'       => 'checkbox',
+			'label'    => __( 'Display the profile navigation vertically.', 'buddyboss' ),
+			'section'  => 'bp_nouveau_user_primary_nav',
+			'settings' => 'bp_nouveau_appearance[user_nav_display]',
+			'type'     => 'checkbox',
 		),
-		'user_nav_tabs' => array(
-			'label'      => __( 'Use tab styling for primary nav.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_user_primary_nav',
-			'settings'   => 'bp_nouveau_appearance[user_nav_tabs]',
-			'type'       => 'checkbox',
+		'user_nav_tabs'    => array(
+			'label'           => __( 'Use tab styling for primary nav.', 'buddyboss' ),
+			'section'         => 'bp_nouveau_user_primary_nav',
+			'settings'        => 'bp_nouveau_appearance[user_nav_tabs]',
+			'type'            => 'checkbox',
+			'active_callback' => 'bp_nouveau_appearance_hide_show_primary_nav',
 		),
 		'user_subnav_tabs' => array(
-			'label'      => __( 'Use tab styling for secondary nav.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_user_primary_nav',
-			'settings'   => 'bp_nouveau_appearance[user_subnav_tabs]',
-			'type'       => 'checkbox',
+			'label'           => __( 'Use tab styling for secondary nav.', 'buddyboss' ),
+			'section'         => 'bp_nouveau_user_primary_nav',
+			'settings'        => 'bp_nouveau_appearance[user_subnav_tabs]',
+			'type'            => 'checkbox',
+			'active_callback' => 'bp_nouveau_appearance_hide_show_secondary_nav',
 		),
 		'user_default_tab' => array(
-			'label'      => __( 'Profile navigation order', 'buddyboss' ),
+			'label'       => __( 'Profile navigation order', 'buddyboss' ),
 			'description' => __( 'Set the default navigation tab when viewing a member profile. The dropdown only shows tabs that are available to all members.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_user_primary_nav',
-			'settings'   => 'bp_nouveau_appearance[user_default_tab]',
-			'type'       => 'select',
-			'choices'    => apply_filters( 'user_default_tab_options_list', $options),
+			'section'     => 'bp_nouveau_user_primary_nav',
+			'settings'    => 'bp_nouveau_appearance[user_default_tab]',
+			'type'        => 'select',
+			'choices'     => apply_filters( 'user_default_tab_options_list', $options ),
 		),
-		'user_nav_order' => array(
-			'class'      => 'BP_Nouveau_Nav_Customize_Control',
-			'label'      => __( 'Reorder the primary navigation for a member.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_user_primary_nav',
-			'settings'   => 'bp_nouveau_appearance[user_nav_order]',
-			'type'       => 'user',
+		'user_nav_order'   => array(
+			'class'    => 'BP_Nouveau_Nav_Customize_Control',
+			'label'    => __( 'Reorder the primary navigation for a member.', 'buddyboss' ),
+			'section'  => 'bp_nouveau_user_primary_nav',
+			'settings' => 'bp_nouveau_appearance[user_nav_order]',
+			'type'     => 'user',
 		),
-		'mail_layout' => array(
-			'section'    => 'bp_nouveau_mail',
-			'settings'   => 'bp_nouveau_appearance[bp_emails]',
+		'mail_layout'      => array(
+			'section'  => 'bp_nouveau_mail',
+			'settings' => 'bp_nouveau_appearance[bp_emails]',
 		),
 	);
 
@@ -249,6 +251,43 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	}
 }
 add_action( 'bp_customize_register', 'bp_nouveau_customize_register', 10, 1 );
+
+/**
+ * Show/hide Use tab styling for primary nav based on the Display the profile navigation vertically option.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool
+ */
+function bp_nouveau_appearance_hide_show_primary_nav() {
+
+	$customizer_option = 'user_nav_display';
+
+	$layout_prefs = (int) bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
+
+	if ( 0 === $layout_prefs ) {
+		return true;
+	}
+	return false;
+}
+
+/**
+ * Show/hide Use tab styling for secondary nav based on the Display the profile navigation vertically option.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool
+ */
+function bp_nouveau_appearance_hide_show_secondary_nav() {
+	$customizer_option = 'user_nav_display';
+
+	$layout_prefs = (int) bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
+
+	if ( 1 === $layout_prefs ) {
+		return true;
+	}
+	return false;
+}
 
 /**
  * Enqueue needed JS for our customizer Settings & Controls
