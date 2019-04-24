@@ -277,6 +277,7 @@ function bp_media_get( $args = '' ) {
 		'page'              => 1,            // Page 1 without a per_page will result in no pagination.
 		'per_page'          => false,        // results per page
 		'sort'              => 'DESC',       // sort ASC or DESC
+		'order_by'          => false,       // order by
 
 		// want to limit the query.
 		'user_id'           => false,
@@ -298,6 +299,7 @@ function bp_media_get( $args = '' ) {
 		'group_id'          => $r['group_id'],
 		'max'               => $r['max'],
 		'sort'              => $r['sort'],
+		'order_by'          => $r['order_by'],
 		'search_terms'      => $r['search_terms'],
 		'privacy'           => $r['privacy'],
 		'exclude'           => $r['exclude'],
@@ -339,6 +341,7 @@ function bp_media_get_specific( $args = '' ) {
 		'page'              => 1,          // Page 1 without a per_page will result in no pagination.
 		'per_page'          => false,      // Results per page.
 		'sort'              => 'DESC',     // Sort ASC or DESC
+		'order_by'          => false,     // Sort ASC or DESC
 	), 'media_get_specific' );
 
 	$get_args = array(
@@ -347,6 +350,7 @@ function bp_media_get_specific( $args = '' ) {
 		'page'              => $r['page'],
 		'per_page'          => $r['per_page'],
 		'sort'              => $r['sort'],
+		'order_by'          => $r['order_by'],
 	);
 
 	/**
@@ -939,7 +943,7 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 
 	$media_ids = get_post_meta( $id, 'bp_media_ids', true );
 
-	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids ) ) ) {
+	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) {
 	    ob_start();
 	    ?>
         <div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? 'bb-media-length-more' : ''; ?>"><?php

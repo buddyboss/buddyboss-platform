@@ -89,7 +89,7 @@ function bp_nouveau_media_activity_entry() {
 	global $media_template;
 	$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
 
-	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids ) ) ) { ?>
+	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) { ?>
 		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? 'bb-media-length-more' : ''; ?>"><?php
 			while ( bp_media() ) {
 				bp_the_media();
@@ -106,7 +106,7 @@ function bp_nouveau_media_activity_comment_entry( $comment_id ) {
 	global $media_template;
 	$media_ids = bp_activity_get_meta( $comment_id, 'bp_media_ids', true );
 
-	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids ) ) ) { ?>
+	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) { ?>
 		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? 'bb-media-length-more' : ''; ?>"><?php
 			while ( bp_media() ) {
 				bp_the_media();

@@ -169,21 +169,22 @@ function bp_has_media( $args = '' ) {
 	// Note: any params used for filtering can be a single value, or multiple
 	// values comma separated.
 	$r = bp_parse_args( $args, array(
-		'include'           => false,        // Pass an media_id or string of IDs comma-separated.
-		'exclude'           => false,        // Pass an activity_id or string of IDs comma-separated.
-		'sort'              => 'DESC',       // Sort DESC or ASC.
-		'page'              => 1,            // Which page to load.
-		'per_page'          => 20,           // Number of items per page.
-		'page_arg'          => 'acpage',     // See https://buddypress.trac.wordpress.org/ticket/3679.
-		'max'               => false,        // Max number to return.
+		'include'           => false,           // Pass an media_id or string of IDs comma-separated.
+		'exclude'           => false,           // Pass an activity_id or string of IDs comma-separated.
+		'sort'              => 'DESC',          // Sort DESC or ASC.
+		'order_by'          => false,           // Order by. Default: date_created
+		'page'              => 1,               // Which page to load.
+		'per_page'          => 20,              // Number of items per page.
+		'page_arg'          => 'acpage',        // See https://buddypress.trac.wordpress.org/ticket/3679.
+		'max'               => false,           // Max number to return.
 		'fields'            => 'all',
 		'count_total'       => false,
 
 		// Filtering
-		'user_id'           => $user_id,     // user_id to filter on.
-		'album_id'          => $album_id,    // album_id to filter on.
-		'group_id'          => $group_id,    // group_id to filter on.
-		'privacy'           => $privacy,     // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
+		'user_id'           => $user_id,        // user_id to filter on.
+		'album_id'          => $album_id,       // album_id to filter on.
+		'group_id'          => $group_id,       // group_id to filter on.
+		'privacy'           => $privacy,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
 
 		// Searching.
 		'search_terms'      => $search_terms_default,

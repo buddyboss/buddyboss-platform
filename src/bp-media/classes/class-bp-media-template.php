@@ -143,6 +143,7 @@ class BP_Media_Template {
 			'fields'            => 'all',
 			'count_total'       => false,
 			'sort'              => false,
+			'order_by'          => false,
 			'include'           => false,
 			'exclude'           => false,
 			'search_terms'      => false,
@@ -170,6 +171,7 @@ class BP_Media_Template {
 				'page'              => $this->pag_page,
 				'per_page'          => $this->pag_num,
 				'sort'              => $sort,
+				'order_by'          => $order_by,
 				'user_id'           => $user_id,
 				'album_id'          => $album_id,
 			) );
@@ -182,6 +184,7 @@ class BP_Media_Template {
 				'per_page'          => $this->pag_num,
 				'page'              => $this->pag_page,
 				'sort'              => $sort,
+				'order_by'          => $order_by,
 				'search_terms'      => $search_terms,
 				'user_id'           => $user_id,
 				'album_id'          => $album_id,
