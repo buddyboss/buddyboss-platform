@@ -391,7 +391,8 @@ tr.bp-search-parent-field label {
 }
 
 .bp-admin-card .inside {
-  padding: 1.5em 2em 2em;
+  padding: 2em 2.8em 2.2em;
+  background: #f9f9f9;
 }
 
 .bp-admin-card .inside p {
