@@ -168,8 +168,8 @@ class WpListTable {
 
 		if (empty($this->modes)) {
 			$this->modes = array(
-				'list' => __('List View'),
-				'excerpt' => __('Excerpt View'),
+				'list' => __('List View','buddyboss'),
+				'excerpt' => __('Excerpt View','buddyboss'),
 			);
 		}
 	}
@@ -334,7 +334,7 @@ class WpListTable {
 	 * @since 3.1.0
 	 */
 	public function no_items() {
-		_e('No items found.');
+		_e('No items found.','buddyboss');
 	}
 
 	/**
@@ -365,13 +365,13 @@ class WpListTable {
 			echo '<input type="hidden" name="detached" value="' . esc_attr($_REQUEST['detached']) . '" />';
 		}
 		?>
-<p class="search-box">
-	<label class="screen-reader-text" for="<?php echo esc_attr($input_id); ?>"><?php echo $text; ?>:</label>
-	<input type="search" id="<?php echo esc_attr($input_id); ?>" name="s" value="<?php _admin_search_query();?>" />
-		<?php submit_button($text, '', '', false, array('id' => 'search-submit'));?>
-</p>
+        <p class="search-box">
+            <label class="screen-reader-text" for="<?php echo esc_attr($input_id); ?>"><?php echo $text; ?>:</label>
+            <input type="search" id="<?php echo esc_attr($input_id); ?>" name="s" value="<?php _admin_search_query();?>" />
+			<?php submit_button($text, '', '', false, array('id' => 'search-submit'));?>
+        </p>
 		<?php
-}
+	}
 
 	/**
 	 * Get an associative array ( id => link ) with the list
@@ -463,9 +463,9 @@ class WpListTable {
 			return;
 		}
 
-		echo '<label for="bulk-action-selector-' . esc_attr($which) . '" class="screen-reader-text">' . __('Select bulk action') . '</label>';
+		echo '<label for="bulk-action-selector-' . esc_attr($which) . '" class="screen-reader-text">' . __('Select bulk action','buddyboss') . '</label>';
 		echo '<select name="action' . $two . '" id="bulk-action-selector-' . esc_attr($which) . "\">\n";
-		echo '<option value="-1">' . __('Bulk Actions') . "</option>\n";
+		echo '<option value="-1">' . __('Bulk Actions','buddyboss') . "</option>\n";
 
 		foreach ($this->_actions as $name => $title) {
 			$class = 'edit' === $name ? ' class="hide-if-no-js"' : '';
@@ -475,7 +475,7 @@ class WpListTable {
 
 		echo "</select>\n";
 
-		submit_button(__('Apply'), 'action', '', false, array('id' => "doaction$two"));
+		submit_button(__('Apply','buddyboss'), 'action', '', false, array('id' => "doaction$two"));
 		echo "\n";
 	}
 
@@ -527,7 +527,7 @@ class WpListTable {
 		}
 		$out .= '</div>';
 
-		$out .= '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __('Show more details') . '</span></button>';
+		$out .= '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __('Show more details','buddyboss') . '</span></button>';
 
 		return $out;
 	}
@@ -595,30 +595,30 @@ class WpListTable {
 
 		$m = isset($_GET['m']) ? (int) $_GET['m'] : 0;
 		?>
-		<label for="filter-by-date" class="screen-reader-text"><?php _e('Filter by date');?></label>
-		<select name="m" id="filter-by-date">
-			<option<?php selected($m, 0);?> value="0"><?php _e('All dates');?></option>
-		<?php
-foreach ($months as $arc_row) {
-			if (0 == $arc_row->year) {
-				continue;
+        <label for="filter-by-date" class="screen-reader-text"><?php _e('Filter by date','buddyboss');?></label>
+        <select name="m" id="filter-by-date">
+            <option<?php selected($m, 0);?> value="0"><?php _e('All dates','buddyboss');?></option>
+			<?php
+			foreach ($months as $arc_row) {
+				if (0 == $arc_row->year) {
+					continue;
+				}
+
+				$month = zeroise($arc_row->month, 2);
+				$year = $arc_row->year;
+
+				printf(
+					"<option %s value='%s'>%s</option>\n",
+					selected($m, $year . $month, false),
+					esc_attr($arc_row->year . $month),
+					/* translators: 1: month name, 2: 4-digit year */
+					sprintf('%1$s %2$d', $wp_locale->get_month($month), $year)
+				);
 			}
-
-			$month = zeroise($arc_row->month, 2);
-			$year = $arc_row->year;
-
-			printf(
-				"<option %s value='%s'>%s</option>\n",
-				selected($m, $year . $month, false),
-				esc_attr($arc_row->year . $month),
-				/* translators: 1: month name, 2: 4-digit year */
-				sprintf(__('%1$s %2$d'), $wp_locale->get_month($month), $year)
-			);
-		}
-		?>
-		</select>
+			?>
+        </select>
 		<?php
-}
+	}
 
 	/**
 	 * Display a view switcher
@@ -629,25 +629,25 @@ foreach ($months as $arc_row) {
 	 */
 	protected function view_switcher($current_mode) {
 		?>
-		<input type="hidden" name="mode" value="<?php echo esc_attr($current_mode); ?>" />
-		<div class="view-switch">
-		<?php
-foreach ($this->modes as $mode => $title) {
-			$classes = array('view-' . $mode);
-			if ($current_mode === $mode) {
-				$classes[] = 'current';
+        <input type="hidden" name="mode" value="<?php echo esc_attr($current_mode); ?>" />
+        <div class="view-switch">
+			<?php
+			foreach ($this->modes as $mode => $title) {
+				$classes = array('view-' . $mode);
+				if ($current_mode === $mode) {
+					$classes[] = 'current';
+				}
+				printf(
+					"<a href='%s' class='%s' id='view-switch-$mode'><span class='screen-reader-text'>%s</span></a>\n",
+					esc_url(add_query_arg('mode', $mode)),
+					implode(' ', $classes),
+					$title
+				);
 			}
-			printf(
-				"<a href='%s' class='%s' id='view-switch-$mode'><span class='screen-reader-text'>%s</span></a>\n",
-				esc_url(add_query_arg('mode', $mode)),
-				implode(' ', $classes),
-				$title
-			);
-		}
-		?>
-		</div>
+			?>
+        </div>
 		<?php
-}
+	}
 
 	/**
 	 * Display a comment count bubble
@@ -663,15 +663,15 @@ foreach ($this->modes as $mode => $title) {
 		$approved_comments_number = number_format_i18n($approved_comments);
 		$pending_comments_number = number_format_i18n($pending_comments);
 
-		$approved_only_phrase = sprintf(_n('%s comment', '%s comments', $approved_comments), $approved_comments_number);
-		$approved_phrase = sprintf(_n('%s approved comment', '%s approved comments', $approved_comments), $approved_comments_number);
-		$pending_phrase = sprintf(_n('%s pending comment', '%s pending comments', $pending_comments), $pending_comments_number);
+		$approved_only_phrase = sprintf(_n('%s comment', '%s comments', $approved_comments,'buddyboss'), $approved_comments_number);
+		$approved_phrase = sprintf(_n('%s approved comment', '%s approved comments', $approved_comments,'buddyboss'), $approved_comments_number);
+		$pending_phrase = sprintf(_n('%s pending comment', '%s pending comments', $pending_comments,'buddyboss'), $pending_comments_number);
 
 		// No comments at all.
 		if (!$approved_comments && !$pending_comments) {
 			printf(
 				'<span aria-hidden="true">&#8212;</span><span class="screen-reader-text">%s</span>',
-				__('No comments')
+				__('No comments','buddyboss')
 			);
 			// Approved comments have different display depending on some conditions.
 		} elseif ($approved_comments) {
@@ -693,7 +693,7 @@ foreach ($this->modes as $mode => $title) {
 			printf(
 				'<span class="post-com-count post-com-count-no-comments"><span class="comment-count comment-count-no-comments" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></span>',
 				$approved_comments_number,
-				$pending_comments ? __('No approved comments') : __('No comments')
+				$pending_comments ? __('No approved comments','buddyboss') : __('No comments','buddyboss')
 			);
 		}
 
@@ -716,7 +716,7 @@ foreach ($this->modes as $mode => $title) {
 			printf(
 				'<span class="post-com-count post-com-count-pending post-com-count-no-pending"><span class="comment-count comment-count-no-pending" aria-hidden="true">%s</span><span class="screen-reader-text">%s</span></span>',
 				$pending_comments_number,
-				$approved_comments ? __('No pending comments') : __('No comments')
+				$approved_comments ? __('No pending comments','buddyboss') : __('No comments','buddyboss')
 			);
 		}
 	}
@@ -792,7 +792,7 @@ foreach ($this->modes as $mode => $title) {
 			$this->screen->render_screen_reader_content('heading_pagination');
 		}
 
-		$output = '<span class="displaying-num">' . sprintf(_n('%s item', '%s items', $total_items), number_format_i18n($total_items)) . '</span>';
+		$output = '<span class="displaying-num">' . sprintf(_n('%s item', '%s items', $total_items,'buddyboss'), number_format_i18n($total_items)) . '</span>';
 
 		$current = $this->get_pagenum();
 		$removable_query_args = wp_removable_query_args();
@@ -829,7 +829,7 @@ foreach ($this->modes as $mode => $title) {
 			$page_links[] = sprintf(
 				"<a class='first-page button' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
 				esc_url(remove_query_arg('paged', $current_url)),
-				__('First page'),
+				__('First page','buddyboss'),
 				'&laquo;'
 			);
 		}
@@ -840,24 +840,24 @@ foreach ($this->modes as $mode => $title) {
 			$page_links[] = sprintf(
 				"<a class='prev-page button' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
 				esc_url(add_query_arg('paged', max(1, $current - 1), $current_url)),
-				__('Previous page'),
+				__('Previous page','buddyboss'),
 				'&lsaquo;'
 			);
 		}
 
 		if ('bottom' === $which) {
 			$html_current_page = $current;
-			$total_pages_before = '<span class="screen-reader-text">' . __('Current Page') . '</span><span id="table-paging" class="paging-input"><span class="tablenav-paging-text">';
+			$total_pages_before = '<span class="screen-reader-text">' . __('Current Page','buddyboss') . '</span><span id="table-paging" class="paging-input"><span class="tablenav-paging-text">';
 		} else {
 			$html_current_page = sprintf(
 				"%s<input class='current-page' id='current-page-selector' type='text' name='paged' value='%s' size='%d' aria-describedby='table-paging' /><span class='tablenav-paging-text'>",
-				'<label for="current-page-selector" class="screen-reader-text">' . __('Current Page') . '</label>',
+				'<label for="current-page-selector" class="screen-reader-text">' . __('Current Page','buddyboss') . '</label>',
 				$current,
 				strlen($total_pages)
 			);
 		}
 		$html_total_pages = sprintf("<span class='total-pages'>%s</span>", number_format_i18n($total_pages));
-		$page_links[] = $total_pages_before . sprintf(_x('%1$s of %2$s', 'paging'), $html_current_page, $html_total_pages) . $total_pages_after;
+		$page_links[] = $total_pages_before . sprintf(_x('%1$s of %2$s', 'paging','buddyboss'), $html_current_page, $html_total_pages) . $total_pages_after;
 
 		if ($disable_next) {
 			$page_links[] = '<span class="tablenav-pages-navspan button disabled" aria-hidden="true">&rsaquo;</span>';
@@ -865,7 +865,7 @@ foreach ($this->modes as $mode => $title) {
 			$page_links[] = sprintf(
 				"<a class='next-page button' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
 				esc_url(add_query_arg('paged', min($total_pages, $current + 1), $current_url)),
-				__('Next page'),
+				__('Next page','buddyboss'),
 				'&rsaquo;'
 			);
 		}
@@ -876,7 +876,7 @@ foreach ($this->modes as $mode => $title) {
 			$page_links[] = sprintf(
 				"<a class='last-page button' href='%s'><span class='screen-reader-text'>%s</span><span aria-hidden='true'>%s</span></a>",
 				esc_url(add_query_arg('paged', $total_pages, $current_url)),
-				__('Last page'),
+				__('Last page','buddyboss'),
 				'&raquo;'
 			);
 		}
@@ -1098,8 +1098,8 @@ foreach ($this->modes as $mode => $title) {
 
 		if (!empty($columns['cb'])) {
 			static $cb_counter = 1;
-			$columns['cb'] = '<label class="screen-reader-text" for="cb-select-all-' . $cb_counter . '">' . __('Select All') . '</label>'
-				. '<input id="cb-select-all-' . $cb_counter . '" type="checkbox" />';
+			$columns['cb'] = '<label class="screen-reader-text" for="cb-select-all-' . $cb_counter . '">' . __('Select All','buddyboss') . '</label>'
+			                 . '<input id="cb-select-all-' . $cb_counter . '" type="checkbox" />';
 			$cb_counter++;
 		}
 
@@ -1160,32 +1160,32 @@ foreach ($this->modes as $mode => $title) {
 
 		$this->screen->render_screen_reader_content('heading_list');
 		?>
-<table class="wp-list-table <?php echo implode(' ', $this->get_table_classes()); ?>">
-	<thead>
-	<tr>
-		<?php $this->print_column_headers();?>
-	</tr>
-	</thead>
+        <table class="wp-list-table <?php echo implode(' ', $this->get_table_classes()); ?>">
+            <thead>
+            <tr>
+				<?php $this->print_column_headers();?>
+            </tr>
+            </thead>
 
-	<tbody id="the-list"
+            <tbody id="the-list"
+				<?php
+				if ($singular) {
+					echo " data-wp-lists='list:$singular'";
+				}
+				?>
+            >
+			<?php $this->display_rows_or_placeholder();?>
+            </tbody>
+
+            <tfoot>
+            <tr>
+				<?php $this->print_column_headers(false);?>
+            </tr>
+            </tfoot>
+
+        </table>
 		<?php
-if ($singular) {
-			echo " data-wp-lists='list:$singular'";
-		}
-		?>
-		>
-		<?php $this->display_rows_or_placeholder();?>
-	</tbody>
-
-	<tfoot>
-	<tr>
-		<?php $this->print_column_headers(false);?>
-	</tr>
-	</tfoot>
-
-</table>
-		<?php
-$this->display_tablenav('bottom');
+		$this->display_tablenav('bottom');
 	}
 
 	/**
@@ -1210,22 +1210,22 @@ $this->display_tablenav('bottom');
 			wp_nonce_field('bulk-' . $this->_args['plural']);
 		}
 		?>
-	<div class="tablenav <?php echo esc_attr($which); ?>">
+        <div class="tablenav <?php echo esc_attr($which); ?>">
 
-		<?php if ($this->has_items()): ?>
-		<div class="alignleft actions bulkactions">
-			<?php $this->bulk_actions($which);?>
-		</div>
+			<?php if ($this->has_items()): ?>
+                <div class="alignleft actions bulkactions">
+					<?php $this->bulk_actions($which);?>
+                </div>
 			<?php
-endif;
-		$this->extra_tablenav($which);
-		$this->pagination($which);
-		?>
+			endif;
+			$this->extra_tablenav($which);
+			$this->pagination($which);
+			?>
 
-		<br class="clear" />
-	</div>
+            <br class="clear" />
+        </div>
 		<?php
-}
+	}
 
 	/**
 	 * Extra controls to be displayed between bulk actions and pagination
@@ -1349,7 +1349,7 @@ endif;
 	 * @return string The row actions HTML, or an empty string if the current column is the primary column.
 	 */
 	protected function handle_row_actions($item, $column_name, $primary) {
-		return $column_name === $primary ? '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __('Show more details') . '</span></button>' : '';
+		return $column_name === $primary ? '<button type="button" class="toggle-row"><span class="screen-reader-text">' . __('Show more details','buddyboss') . '</span></button>' : '';
 	}
 
 	/**
@@ -1373,7 +1373,7 @@ endif;
 
 		if (isset($this->_pagination_args['total_items'])) {
 			$response['total_items_i18n'] = sprintf(
-				_n('%s item', '%s items', $this->_pagination_args['total_items']),
+				_n('%s item', '%s items', $this->_pagination_args['total_items'],'buddyboss'),
 				number_format_i18n($this->_pagination_args['total_items'])
 			);
 		}

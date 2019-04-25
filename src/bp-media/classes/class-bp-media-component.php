@@ -183,6 +183,23 @@ class BP_Media_Component extends BP_Component {
 	}
 
 	/**
+	 * Set up the actions.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 */
+	public function setup_actions() {
+
+		// Perform a daily tidy up.
+		if ( ! wp_next_scheduled( 'bp_media_delete_orphaned_attachments_hook' ) )
+			wp_schedule_event( time(), 'daily', 'bp_media_delete_orphaned_attachments_hook' );
+
+		add_action( 'bp_media_delete_orphaned_attachments_hook', 'bp_media_delete_orphaned_attachments' );
+
+		parent::setup_actions();
+	}
+
+	/**
 	 * Set up component navigation.
 	 *
 	 * @since BuddyBoss 1.0.0

@@ -9,7 +9,7 @@
 <?php if ( bp_is_my_profile() || ( bp_is_group() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) : ?>
 
     <div class="bb-media-actions-wrap album-actions-wrap">
-		<h2 class="bb-title"><?php _e( 'Albums', 'buddyboss-theme' ); ?></h2>
+		<h2 class="bb-title"><?php _e( 'Albums', 'buddyboss' ); ?></h2>
         <div class="bb-media-actions">
             <a href="#" id="bb-create-album" class="bb-create-album button small outline">+ <?php _e( 'Create Album', 'buddyboss' ); ?></a>
         </div>

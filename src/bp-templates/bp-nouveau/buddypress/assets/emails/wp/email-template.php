@@ -205,7 +205,20 @@ $settings = bp_email_get_appearance_settings();
 			}
 
 			.avatar-wrap.mobile-center {
-				margin: 20px auto 0 !important;
+				margin: 20px auto 10px !important;
+			}
+
+			.group-avatar-wrap.mobile-center {
+				margin: 10px auto 20px !important;
+			}
+
+			.mobile-padding-bottom {
+				padding-bottom: 10px !important;
+			}
+
+			.mobile-button-center {
+				margin: 5px auto 0 !important;
+				width: 160px !important;
 			}
 		}
 	</style>

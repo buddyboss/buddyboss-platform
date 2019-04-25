@@ -23,7 +23,6 @@ form.ac-form {
 		.ac-textarea {
 			margin-bottom: $marg-med;
 			padding: 0 $pad-sml;
-			overflow: hidden;
 
 			textarea {
 				background: transparent;
@@ -41,6 +40,29 @@ form.ac-form {
 
 					@include box-shadow( 0 0 6px $med-light-grey );
 				}
+			}
+
+			.ac-reply-attachments {
+				padding: 10px 0;
+			}
+
+			.ac-reply-toolbar {
+				display: flex;
+
+				.post-elements-buttons-item {
+					margin-right: 15px;
+					position: relative;
+				}
+			}
+
+			.gif-search-results-list {
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+
+			.gif-search-content .gif-search-results ul li {
+				padding: 0;
 			}
 		}
 

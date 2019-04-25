@@ -176,8 +176,8 @@ class BP_Email_Tokens {
                                 <table cellpadding="0" cellspacing="0" border="0">
                                     <tbody>
                                     <tr>
-                                        <td width="20%">
-                                            <a href="<?php echo bp_get_group_permalink( $group ); ?>"
+                                        <td width="20%" class="mobile-block-full">
+                                            <a class="group-avatar-wrap mobile-center" href="<?php echo bp_get_group_permalink( $group ); ?>"
                                                style="border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; display: block; border-radius: 3px; width: 104px;">
 												<?php
 												$group_avatar =  bp_core_fetch_avatar( array(
@@ -194,21 +194,19 @@ class BP_Email_Tokens {
                                                      style="margin: 2px; padding:0; box-sizing: border-box; border-radius: 3px; border: 3px solid <?php echo esc_attr( $settings['body_bg'] ); ?>; display:block;" />
                                             </a>
                                         </td>
-                                        <td width="4%">&nbsp;</td>
-                                        <td width="76%">
+                                        <td width="4%" class="mobile-hide">&nbsp;</td>
+                                        <td width="76%" class="mobile-block-padding-full">
                                             <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                                 <tbody>
                                                 <tr>
-                                                    <td>
+                                                    <td class="mobile-text-center">
                                                         <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;"><?php echo $group->name; ?></div>
                                                         <div class="spacer" style="font-size: 3px; line-height: 3px; height: 3px;">&nbsp;</div>
                                                         <p style="opacity: 0.7; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ) ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; margin: 0;"><?php echo ucfirst( $group->status ) . " " . __( 'Group', 'buddyboss' ); ?></p>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td height="16px" style="font-size: 16px; line-height: 16px;">&nbsp;
-                                                        
-                                                    </td>
+                                                    <td height="16px" style="font-size: 16px; line-height: 16px;">&nbsp;</td>
                                                 </tr>
                                                 <tr>
                                                     <td>
@@ -216,7 +214,7 @@ class BP_Email_Tokens {
                                                             <tbody>
                                                             <tr>
                                                                 <td>
-                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="left" class="no-responsive-table">
+                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="left" class="responsive-table mobile-text-center">
                                                                         <tbody>
 																			<tr>
 																				<td height="34px" style="vertical-align: middle;">
@@ -231,11 +229,11 @@ class BP_Email_Tokens {
 																			</tr>
                                                                         </tbody>
                                                                     </table>
-                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="no-responsive-table">
+                                                                    <table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="responsive-table">
                                                                         <tbody>
 																			<tr>
-																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-text-left">
-																					<a href="<?php echo bp_get_group_permalink( $group ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;border: 1px solid <?php echo $settings['highlight_color']; ?>;border-radius: 100px;text-align: center; height: 32px;line-height: 32px;background: <?php echo $settings['highlight_color']; ?>;color: #fff !important;width: 130px;"><?php _e( 'Visit Group', 'buddyboss' ); ?></a>
+																				<td height="34px" align="right" style="vertical-align: middle;" class="mobile-padding-bottom">
+																					<a class="mobile-button-center" href="<?php echo bp_get_group_permalink( $group ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;border: 1px solid <?php echo $settings['highlight_color']; ?>;border-radius: 100px;text-align: center; height: 32px;line-height: 32px;background: <?php echo $settings['highlight_color']; ?>;color: #fff !important;width: 130px;"><?php _e( 'Visit Group', 'buddyboss' ); ?></a>
 																				</td>
 																			</tr>
                                                                         </tbody>
@@ -847,7 +845,7 @@ class BP_Email_Tokens {
                                                     <td height="10px" style="font-size: 10px; line-height: 10px;">&nbsp;</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>
+                                                    <td class="mobile-text-center">
                                                         <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.25 ) . 'px' ) ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.75 ) . 'px' ) ?>;"><?php echo bp_core_get_user_displayname( $member_id ); ?></div>
 														<div class="spacer" style="font-size: 2px; line-height: 2px; height: 2px;">&nbsp;</div>
 														<p style="opacity: 0.7; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 0.8125 ) . 'px' ) ?>; color : <?php echo esc_attr( $settings[ 'body_text_color' ] ); ?>; margin: 0;">
@@ -878,9 +876,9 @@ class BP_Email_Tokens {
 																			</td>
 																		</tr>
 																	</table>
-																	<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="no-responsive-table">
+																	<table cellpadding="0" cellspacing="0" border="0" width="47%" style="width: 47%;" align="right" class="no-responsive-table mobile-padding-bottom">
 																		<tr>
-																			<td height="34px" align="right" style="vertical-align: middle;" class="mobile-text-left">
+																			<td height="34px" align="right" style="vertical-align: middle;" class="">
 																				<a href="<?php echo bp_core_get_user_domain( $member_id ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 0.875 ) . 'px' ) ?>;text-decoration: none;display: block;height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2.125 ) . 'px' ) ?>;line-height: <?php echo esc_attr( floor( $settings[ 'body_text_size' ] * 2 ) . 'px' ) ?>;"><?php _e( 'View Profile', 'buddyboss' ); ?></a>
 																			</td>
 																		</tr>

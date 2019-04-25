@@ -223,11 +223,11 @@ window.bp = window.bp || {};
 
 		destroy: function() {
 			var self = this;
-			self.media = [];
 			if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone ) ) {
 				bp.Nouveau.Activity.postForm.dropzone.destroy();
 				self.$el.find('#activity-post-media-uploader').html('');
 			}
+			self.media = [];
 			self.$el.find('#activity-post-media-uploader').removeClass('open').addClass('closed');
 
 			document.removeEventListener( 'activity_media_toggle', this.toggle_media_uploader.bind(this) );
@@ -255,7 +255,8 @@ window.bp = window.bp || {};
 				if ( response.data.id ) {
 					file.id = response.data.id;
 					response.data.uuid = file.upload.uuid;
-					response.data.menu_order = self.media.length;
+					response.data.saved = false;
+					response.data.menu_order = $(file.previewElement).closest('.dropzone').find(file.previewElement).index() - 1;
 					self.media.push( response.data );
 					self.model.set( 'media', self.media );
 				}
@@ -267,6 +268,10 @@ window.bp = window.bp || {};
 						if ( file.id === self.media[i].id ) {
 							self.media.splice( i, 1 );
 							self.model.set( 'media', self.media );
+
+							if ( ! self.media[i].saved ) {
+								bp.Nouveau.Media.removeAttachment(file.id);
+							}
 						}
 					}
 				}
@@ -1555,6 +1560,16 @@ window.bp = window.bp || {};
 				if ( toPrepend && response.is_directory ) {
 					toPrepend = ( 'all' === store.scope && ( 'user' === self.model.get( 'object' ) || false === response.is_private ) ) || ( self.model.get( 'object' ) + 's'  === store.scope );
 				}
+
+				var medias = self.model.get('media');
+				if ( typeof medias !== 'undefined' && medias.length ) {
+					for( var k = 0; k < medias.length; k++ ) {
+						medias[k].saved = true;
+					}
+					self.model.set('media',medias);
+				}
+
+				console.log(self.model.get('media'));
 
 				// Reset the form
 				self.resetForm();

@@ -379,8 +379,11 @@ class BP_Media {
 			$where_conditions['activity'] = "m.activity_id = {$r['activity_id']}";
 		}
 
-		if ( ! empty( $r['album_id'] ) ) {
+		// existing-media check to query media which has no albums assigned
+		if ( ! empty( $r['album_id'] ) && 'existing-media' != $r['album_id'] ) {
 			$where_conditions['album'] = "m.album_id = {$r['album_id']}";
+		} else if ( ! empty( $r['album_id'] ) && 'existing-media' == $r['album_id'] ) {
+			$where_conditions['album'] = "m.album_id = 0";
 		}
 
 		if ( ! empty( $r['user_id'] ) ) {

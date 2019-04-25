@@ -20,15 +20,18 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 			</label>
 			<textarea id="ac-input-<?php bp_activity_id(); ?>" class="ac-input bp-suggestions" name="ac_input_<?php bp_activity_id(); ?>"></textarea>
 
-            <div id="ac-reply-attachments-<?php bp_activity_id(); ?>">
+            <div id="ac-reply-attachments-<?php bp_activity_id(); ?>" class="ac-reply-attachments">
 
 				<?php if ( bp_is_active( 'media' ) ) : ?>
                     <div class="dropzone closed" id="ac-reply-post-media-uploader-<?php bp_activity_id(); ?>"></div>
 				<?php endif; ?>
 
+	            <?php if ( bp_is_activity_gif_active() ): ?>
+		            <div id="ac-reply-post-gif-<?php bp_activity_id(); ?>"></div>
+	            <?php endif; ?>
             </div>
 
-            <div id="ac-reply-toolbar-<?php bp_activity_id(); ?>">
+            <div id="ac-reply-toolbar-<?php bp_activity_id(); ?>" class="ac-reply-toolbar">
 
 				<?php if ( bp_is_active( 'media' ) ) : ?>
 
@@ -40,6 +43,15 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
                     </div>
 
 				<?php endif; ?>
+
+	            <?php if ( bp_is_activity_gif_active() ): ?>
+		            <div class="post-elements-buttons-item post-gif">
+			            <div class="gif-media-search">
+				            <a href="#" id="activate-reply-gif-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-gif-button" data-bp-tooltip="<?php _e('Post a GIF', 'buddyboss'); ?>"><span class="dashicons dashicons-smiley"></span></a>
+				            <div class="gif-media-search-dropdown"></div>
+			            </div>
+		            </div>
+	            <?php endif; ?>
 
             </div>
 		</div>

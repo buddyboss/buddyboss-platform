@@ -2127,6 +2127,11 @@ function bp_activity_comment_content() {
 	function bp_get_activity_comment_content() {
 		global $activities_template;
 
+		// scrape off activity content if it contain empty characters only
+		if ( in_array( $activities_template->activity->current_comment->content , [ '&nbsp;', '&#8203;' ] ) ) {
+			$activities_template->activity->current_comment->content = '';
+		}
+
 		/** This filter is documented in bp-activity/bp-activity-template.php */
 		$content = apply_filters( 'bp_get_activity_content', $activities_template->activity->current_comment->content );
 

@@ -58,12 +58,14 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$this->add_section( 'bp_groups_hierarchies', __( 'Group Hierarchies', 'buddyboss' ) );
 
 		// enable or disable group hierarchies.
-		$this->add_field( 'bp-enable-group-hierarchies', __( 'Hierarchies', 'buddyboss' ), 'bp_admin_setting_callback_group_hierarchies', 'intval' );
+		$type = array();
+		$type['class'] = 'bp-enable-group-hierarchies';
+		$this->add_field( 'bp-enable-group-hierarchies', __( 'Hierarchies', 'buddyboss' ), 'bp_admin_setting_callback_group_hierarchies', 'intval', $type );
 
-		if ( true === bp_enable_group_hierarchies() ) {
-			// enable or disable restrict invites to members who already in specific parent group.
-			$this->add_field( 'bp-enable-group-restrict-invites', __( 'Restrict Invitations', 'buddyboss' ), 'bp_admin_setting_callback_group_restrict_invites', 'intval' );
-		}
+		// enable or disable restrict invites to members who already in specific parent group.
+		$type = array();
+		$type['class'] = 'bp-enable-group-restrict-invites';
+		$this->add_field( 'bp-enable-group-restrict-invites', __( 'Restrict Invitations', 'buddyboss' ), 'bp_admin_setting_callback_group_restrict_invites', 'intval', $type );
 	}
 }
 

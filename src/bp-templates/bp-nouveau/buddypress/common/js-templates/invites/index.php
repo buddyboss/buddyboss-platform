@@ -36,120 +36,23 @@
 
 </div>
 
-<script type="text/html" id="tmpl-bp-group-invites-feedback">
-	<div class="bp-feedback {{data.type}}">
-		<span class="bp-icon" aria-hidden="true"></span>
-		<p>{{{data.message}}}</p>
-	</div>
-</script>
+<?php
+/**
+ * Split each js template to its own file. Easier for child theme to
+ * overwrite individual parts.
+ *
+ * @version Buddyboss 1.0.0
+ */
+$template_parts = apply_filters( 'bp_messages_js_template_parts', [
+	'parts/bp-group-invites-feedback',
+	'parts/bp-invites-filters',
+	'parts/bp-invites-form',
+	'parts/bp-invites-nav',
+	'parts/bp-invites-paginate',
+	'parts/bp-invites-selection',
+	'parts/bp-invites-users'
+] );
 
-<script type="text/html" id="tmpl-bp-invites-nav">
-	<a href="{{data.href}}" class="bp-invites-nav-item" data-nav="{{data.id}}">{{data.name}}</a>
-</script>
-
-<script type="text/html" id="tmpl-bp-invites-users">
-	<div class="item-avatar">
-		<img src="{{data.avatar}}" class="avatar" alt="">
-	</div>
-
-	<div class="item">
-		<div class="list-title member-name">
-			{{data.name}}
-		</div>
-
-		<# if ( undefined !== data.is_sent ) { #>
-			<div class="item-meta">
-
-				<# if ( undefined !== data.invited_by ) { #>
-					<ul class="group-inviters">
-						<li><?php esc_html_e( 'Invited by:', 'buddyboss' ); ?></li>
-						<# for ( i in data.invited_by ) { #>
-							<li><a href="{{data.invited_by[i].user_link}}" class="bp-tooltip" data-bp-tooltip="{{data.invited_by[i].user_name}}"><img src="{{data.invited_by[i].avatar}}" width="30px" class="avatar mini" alt="{{data.invited_by[i].user_name}}"></a></li>
-						<# } #>
-					</ul>
-				<# } #>
-
-				<p class="status">
-					<# if ( false === data.is_sent ) { #>
-						<?php esc_html_e( 'The invite has not been sent.', 'buddyboss' ); ?>
-					<# } else { #>
-						<?php esc_html_e( 'The invite has been sent.', 'buddyboss' ); ?>
-					<# } #>
-				</p>
-
-			</div>
-		<# } #>
-	</div>
-
-	<div class="action">
-		<# if ( undefined === data.is_sent || ( false === data.is_sent && true === data.can_edit ) ) { #>
-			<button type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons<# if ( data.selected ) { #> selected<# } #>" data-bp-tooltip="<# if ( data.selected ) { #><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?><# } else { #><?php esc_attr_e( 'Invite', 'buddyboss' ); ?><# } #>">
-				<span class="icons" aria-hidden="true"></span>
-				<span class="bp-screen-reader-text">
-					<# if ( data.selected ) { #>
-						<?php esc_html_e( 'Cancel invitation', 'buddyboss' ); ?>
-					<# } else { #>
-						<?php esc_html_e( 'Invite', 'buddyboss' ); ?>
-					<# } #>
-				</span>
-			</button>
-		<# } #>
-
-		<# if ( undefined !== data.can_edit && true === data.can_edit ) { #>
-			<button type="button" class="button invite-button group-remove-invite-button bp-tooltip bp-icons" data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
-				<span class=" icons" aria-hidden="true"></span>
-				<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?></span>
-			</button>
-		<# } #>
-	</div>
-
-</script>
-
-<script type="text/html" id="tmpl-bp-invites-selection">
-	<a href="#uninvite-user-{{data.id}}" class="bp-tooltip" data-bp-tooltip="{{data.uninviteTooltip}}" aria-label="{{data.uninviteTooltip}}">
-		<img src="{{data.avatar}}" class="avatar" alt=""/>
-	</a>
-</script>
-
-<script type="text/html" id="tmpl-bp-invites-form">
-
-	<label for="send-invites-control"><?php esc_html_e( 'Optional: Customize the message of your invite.', 'buddyboss' ); ?></label>
-	<textarea id="send-invites-control" class="bp-faux-placeholder-label"></textarea>
-
-	<div class="action">
-		<button type="button" id="bp-invites-reset" class="button bp-secondary-action"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></button>
-		<button type="button" id="bp-invites-send" class="button bp-primary-action"><?php esc_html_e( 'Send', 'buddyboss' ); ?></button>
-	</div>
-</script>
-
-<script type="text/html" id="tmpl-bp-invites-filters">
-	<div class="group-invites-search subnav-search clearfix" role="search" >
-		<div class="bp-search">
-			<form action="" method="get" id="group_invites_search_form" class="bp-invites-search-form" data-bp-search="{{data.scope}}">
-				<label for="group_invites_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( __( 'Search Members', 'buddyboss' ), false ); ?></label>
-				<input type="search" id="group_invites_search" placeholder="<?php esc_attr_e( 'Search', 'buddyboss' ); ?>"/>
-
-				<button type="submit" id="group_invites_search_submit" class="nouveau-search-submit">
-					<span class="dashicons dashicons-search" aria-hidden="true"></span>
-					<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></span>
-				</button>
-			</form>
-		</div>
-	</div>
-</script>
-
-<script type="text/html" id="tmpl-bp-invites-paginate">
-	<# if ( 1 !== data.page ) { #>
-		<a href="#previous-page" id="bp-invites-prev-page" class="button invite-button bp-tooltip" data-bp-tooltip="<?php esc_attr_e( 'Previous page', 'buddyboss' ); ?>">
-			<span class="dashicons dashicons-arrow-left" aria-hidden="true"></span>
-			<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss' ); ?></span>
-		</a>
-	<# } #>
-
-	<# if ( data.total_page !== data.page ) { #>
-		<a href="#next-page" id="bp-invites-next-page" class="button invite-button bp-tooltip" data-bp-tooltip="<?php esc_attr_e( 'Next page', 'buddyboss' ); ?>">
-			<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss' ); ?></span>
-			<span class="dashicons dashicons-arrow-right" aria-hidden="true"></span>
-		</a>
-	<# } #>
-</script>
+foreach ( $template_parts as $template_part ) {
+	bp_get_template_part( 'common/js-templates/invites/' . $template_part );
+}

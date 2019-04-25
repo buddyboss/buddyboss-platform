@@ -293,6 +293,9 @@ function bp_nouveau_ajax_media_save() {
 			wp_send_json_error( $response );
 		}
 
+		//save media is saved in attahchment
+        update_post_meta( $media['id'], 'bp_media_saved', true );
+
 		//save media meta for activity
 		if ( ! empty( $main_activity_id ) ) {
 			update_post_meta( $media['id'], 'bp_media_parent_activity_id', $main_activity_id );
@@ -584,6 +587,9 @@ function bp_nouveau_ajax_media_album_save() {
 				);
 				wp_send_json_error( $response );
 			}
+
+			//save media is saved in attachment
+			update_post_meta( $media['id'], 'bp_media_saved', true );
 		}
 	}
 

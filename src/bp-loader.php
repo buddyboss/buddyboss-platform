@@ -209,6 +209,61 @@ if ( !function_exists( 'bp_prevent_activating_buddypress' ) ) {
 }
 
 /**
+ * BuddyBoss Platform's code is already loaded when BBPress is being activated and BBPress doesn't have function
+ * checks to avoid duplicate function declarations. This leads to a fatal error.
+ * To avoid that, we prevent BBPress from activating and we show a nice notice, instead of the dirty fatal error.
+ */
+if ( !function_exists( 'bp_prevent_activating_bbpress' ) ) {
+
+	add_action( 'admin_init', 'bp_prevent_activating_bbpress' );
+
+	/**
+	 * Check if the current request is to activate BBPress plugins and redirect accordingly.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @global string $pagenow
+	 */
+	function bp_prevent_activating_bbpress () {
+		global $pagenow;
+
+		if ( $pagenow == 'plugins.php' ) {
+
+			if ( isset( $_GET[ 'action' ] ) && $_GET[ 'action' ] == 'activate' && isset( $_GET[ 'plugin' ] ) ) {
+
+				if ( $_GET[ 'plugin' ] == 'bbpress/bbpress.php' ) {
+					wp_redirect( self_admin_url( 'plugins.php?bp_prevent_activating_bbpress=1' ), 301 );
+					exit;
+				}
+
+			}
+
+			if ( isset( $_GET[ 'bp_prevent_activating_bbpress' ] ) ) {
+				add_action( 'admin_notices',            'bp_prevented_activating_bbpress_notice' );
+				add_action( 'network_admin_notices',    'bp_prevented_activating_bbpress_notice' );
+			}
+		}
+	}
+
+	/**
+	 * Show a notice that an attempt to activate BBPress plugin was blocked.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	function bp_prevented_activating_bbpress_notice () {
+		?>
+
+		<div id="message" class="error notice">
+			<p><strong><?php esc_html_e( 'BBPress can\'t be activated.', 'buddyboss' ); ?></strong></p>
+			<p><?php _e( 'The BuddyBoss Platform can\'t work while BBPress plugin is active. Please deactivate BuddyBoss Platform first, if you wish to activate BBPress.', 'buddyboss' ); ?></p>
+		</div>
+
+		<?php
+	}
+
+}
+
+/**
  * Prevent running BuddyBoss Platform if any incompatible plugins are active.
  * Show admin error message instead.
  */

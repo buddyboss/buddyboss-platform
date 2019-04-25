@@ -348,6 +348,21 @@ TABLE OF CONTENTS:
   #bp-hello-container .bp-hello-header h1 {
     line-height: inherit;
   }
+  #bp-hello-container.bp-hello-appboss {
+    bottom: auto;
+    width: 105vmin;
+    max-width: 900px;
+    right: 0;
+    left: 0;
+    margin-right: auto;
+    margin-left: auto;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  #bp-hello-container.bp-hello-appboss .bp-hello-footer {
+    height: 60px;
+    position: static;
+  }
   .bp-hello-header {
     height: auto;
     max-height: inherit;

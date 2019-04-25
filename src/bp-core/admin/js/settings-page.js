@@ -8,7 +8,7 @@
 			var tag= $(this).prop('tagName');
 
 			$(this).on('change.run-condition', function() {
-				if (tag == 'SELECT' && $(this).is(':visible')) {
+				if ( 'SELECT' === tag && $(this).is(':visible') ) {
 					var selector = id + '-' + $(this).val();
 					$('[class*="js-show-on-' + id + '-"]:not(.js-show-on-' + selector + ')').hide();
 					$('.js-show-on-' + selector).show().find('[data-run-js-condition]').trigger('change.run-condition');
@@ -188,7 +188,7 @@
 			$(document).on('click', '.activity-attached-gif-container', function () {
 				var video = $(this).find('video').get(0),
 					$button = $(this).find('.gif-play-button');
-				if (video.paused == true) {
+				if ( true === video.paused ) {
 					// Play the video
 					video.play();
 
@@ -203,6 +203,31 @@
 				}
 			} );
 		}
+
+		// As soon as an admin selects the option "Hierarchies - Allow groups to have subgroups" they
+		// should instantly see the option to "Restrict Invitations".
+		// We should also make it so deselect "hierarchies" will automatically deselect "restrict invitations" to
+		// prevent any unwanted errors.
+		if ( $('.buddyboss_page_bp-settings .section-bp_groups_hierarchies').length ) {
+
+			var checkbox = document.getElementById('bp-enable-group-hierarchies');
+
+			if(checkbox.checked) {
+				$('.bp-enable-group-restrict-invites').show();
+			} else {
+				$('.bp-enable-group-restrict-invites').hide();
+			}
+
+			$(document).on('click', '#bp-enable-group-hierarchies', function () {
+				if( true === this.checked ) {
+					$('.bp-enable-group-restrict-invites').show();
+				} else {
+					$('.bp-enable-group-restrict-invites').hide();
+					$('#bp-enable-group-restrict-invites').prop('checked', false);
+				}
+			} );
+		}
+
 
 		/**
 		 * Check if the Dashboard BB help page

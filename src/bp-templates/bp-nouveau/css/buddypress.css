@@ -1166,24 +1166,6 @@ a.layout-grid-view {
   padding: 10px;
 }
 
-.activity-update-form .activity-attached-gif-container {
-  position: relative;
-}
-
-.activity-update-form .activity-attached-gif-container .gif-image-remove {
-  border-radius: 10px;
-  height: 19px;
-  right: 2px;
-  top: 4px;
-  width: 19px;
-}
-
-.activity-update-form .activity-attached-gif-container .gif-image-overlay {
-  color: #fff;
-  margin-top: 0;
-  position: absolute;
-}
-
 .activity-update-form #whats-new-elements-buttons {
   margin: 1em 0;
 }
@@ -1307,6 +1289,24 @@ a.layout-grid-view {
   max-width: 400px;
 }
 
+.activity-attached-gif-container {
+  position: relative;
+}
+
+.activity-attached-gif-container .gif-image-remove {
+  border-radius: 10px;
+  height: 19px;
+  right: 2px;
+  top: 4px;
+  width: 19px;
+}
+
+.activity-attached-gif-container .gif-image-overlay {
+  color: #fff;
+  margin-top: 0;
+  position: absolute;
+}
+
 .gif-media-search-dropdown {
   position: absolute;
   top: 100%;
@@ -1351,14 +1351,14 @@ a.layout-grid-view {
   margin: 0;
 }
 
-.gif-search-results {
+.gif-search-content .gif-search-results {
   padding: 0 10px;
   overflow: auto;
   min-height: 280px;
   max-height: 380px;
 }
 
-.gif-search-results ul {
+.gif-search-content .gif-search-results ul {
   columns: 2 auto;
   column-gap: 4px;
   margin: 0;
@@ -1366,31 +1366,32 @@ a.layout-grid-view {
   list-style: none;
 }
 
-.gif-search-results ul li {
-  margin-bottom: 4px;
+.gif-search-content .gif-search-results ul li {
+  margin: 0 0 4px;
+  padding: 0;
 }
 
-.gif-search-results ul .bg1 {
+.gif-search-content .gif-search-results ul .bg1 {
   background: #e0245e;
 }
 
-.gif-search-results ul .bg2 {
+.gif-search-content .gif-search-results ul .bg2 {
   background: #f45d22;
 }
 
-.gif-search-results ul .bg3 {
+.gif-search-content .gif-search-results ul .bg3 {
   background: #ffad1f;
 }
 
-.gif-search-results ul .bg4 {
+.gif-search-content .gif-search-results ul .bg4 {
   background: #17bf63;
 }
 
-.gif-search-results ul .bg5 {
+.gif-search-content .gif-search-results ul .bg5 {
   background: #1c94e0;
 }
 
-.gif-search-results ul .bg6 {
+.gif-search-content .gif-search-results ul .bg6 {
   background: #794bc4;
 }
 
@@ -1901,13 +1902,19 @@ input.search-query-input {
   text-decoration: none;
 }
 
+@media screen and (max-width: 32em) {
+  #activity-close-link-suggestion {
+    color: black;
+  }
+}
+
 #activity-link-preview-close-image {
   border: 0;
   color: #fff;
   font-size: 16px;
-  right: 3px;
+  left: 3px;
   position: absolute;
-  top: 0;
+  top: 3px;
   text-decoration: none;
 }
 
@@ -1970,7 +1977,6 @@ input.search-query-input {
 .buddypress-wrap .activity-comments {
   clear: both;
   margin: 0 5%;
-  overflow: hidden;
   position: relative;
   width: auto;
 }
@@ -2119,7 +2125,6 @@ form.ac-form .ac-reply-content a {
 form.ac-form .ac-reply-content .ac-textarea {
   margin-bottom: 15px;
   padding: 0 0.7em;
-  overflow: hidden;
 }
 
 form.ac-form .ac-reply-content .ac-textarea textarea {
@@ -2139,6 +2144,29 @@ form.ac-form .ac-reply-content .ac-textarea textarea:focus {
   -webkit-box-shadow: 0 0 6px #d6d6d6;
   -moz-box-shadow: 0 0 6px #d6d6d6;
   box-shadow: 0 0 6px #d6d6d6;
+}
+
+form.ac-form .ac-reply-content .ac-textarea .ac-reply-attachments {
+  padding: 10px 0;
+}
+
+form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar {
+  display: flex;
+}
+
+form.ac-form .ac-reply-content .ac-textarea .ac-reply-toolbar .post-elements-buttons-item {
+  margin-right: 15px;
+  position: relative;
+}
+
+form.ac-form .ac-reply-content .ac-textarea .gif-search-results-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-results ul li {
+  padding: 0;
 }
 
 form.ac-form .ac-reply-content input {
@@ -2717,7 +2745,6 @@ body.no-js .single-item-header .js-self-profile-button {
 }
 
 #item-header-cover-image #item-header-avatar {
-  margin-top: -80px;
   padding: 0 1em;
   position: relative;
 }
@@ -5485,8 +5512,7 @@ button[data-bp-close]:hover {
   }
 }
 
-/*-------------------------------------*\
-	HINT.css - A CSS tooltip library
+/*-------------------------------------*	HINT.css - A CSS tooltip library
 \*-------------------------------------*/
 /**
  * HINT.css is a tooltip library made in pure CSS.
@@ -7125,8 +7151,8 @@ div.bbp-reply-header {
   visibility: hidden;
 }
 
-#bbpress-forums div.bbp-topic-content a,
-#bbpress-forums div.bbp-reply-content a {
+#bbpress-forums div.bbp-topic-content a:not(.entry-img),
+#bbpress-forums div.bbp-reply-content a:not(.entry-img) {
   background: none;
   border: none;
   display: inline;
@@ -9973,7 +9999,7 @@ ul.bb-albums-list .bb-more-photos strong {
 .bb-album-list-item .bs-cover-wrap:after {
   content: " ";
   position: absolute;
-  background-image: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.01) 60%, rgba(0, 0, 0, 0) 100%);
+  background-image: linear-gradient(0deg, #000 0%, rgba(0, 0, 0, 0.01) 60%, transparent 100%);
   border-radius: 3px;
   width: 100%;
   height: 100%;
