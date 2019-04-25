@@ -1029,7 +1029,11 @@ window.bp = window.bp || {};
 						if ( self.dropzone_media.length ) {
 							for ( var i in self.dropzone_media ) {
 								if ( file.upload.uuid == self.dropzone_media[i].uuid ) {
-									bp.Nouveau.Media.removeAttachment(self.dropzone_media[i].id);
+
+									if ( ! self.dropzone_media[i].saved ) {
+										bp.Nouveau.Media.removeAttachment(self.dropzone_media[i].id);
+									}
+
 									self.dropzone_media.splice( i, 1 );
 									break;
 								}

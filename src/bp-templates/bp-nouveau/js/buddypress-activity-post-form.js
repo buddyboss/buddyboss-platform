@@ -265,10 +265,13 @@ window.bp = window.bp || {};
 			bp.Nouveau.Activity.postForm.dropzone.on('removedfile', function(file) {
 				if ( self.media.length ) {
 					for ( var i in self.media ) {
-						if ( file.id === self.media[i].id && ! self.media[i].saved ) {
+						if ( file.id === self.media[i].id ) {
 							self.media.splice( i, 1 );
 							self.model.set( 'media', self.media );
-							bp.Nouveau.Media.removeAttachment(file.id);
+
+							if ( ! self.media[i].saved ) {
+								bp.Nouveau.Media.removeAttachment(file.id);
+							}
 						}
 					}
 				}

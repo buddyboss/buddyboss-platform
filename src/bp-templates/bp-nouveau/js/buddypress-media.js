@@ -266,8 +266,12 @@ window.bp = window.bp || {};
 					self.dropzone_obj.on('removedfile', function(file) {
 						if ( self.dropzone_media.length ) {
 							for ( var i in self.dropzone_media ) {
-								if ( file.upload.uuid == self.dropzone_media[i].uuid && ! self.dropzone_media[i].saved ) {
-									self.removeAttachment(self.dropzone_media[i].id);
+								if ( file.upload.uuid == self.dropzone_media[i].uuid  ) {
+
+									if ( ! self.dropzone_media[i].saved ) {
+										self.removeAttachment(self.dropzone_media[i].id);
+									}
+
 									self.dropzone_media.splice( i, 1 );
 									break;
 								}
@@ -345,8 +349,12 @@ window.bp = window.bp || {};
 				self.dropzone_obj.on('removedfile', function(file) {
 					if ( self.dropzone_media.length ) {
 						for ( var i in self.dropzone_media ) {
-							if ( file.upload.uuid == self.dropzone_media[i].uuid && ! self.dropzone_media[i].saved ) {
-								self.removeAttachment(self.dropzone_media[i].id);
+							if ( file.upload.uuid == self.dropzone_media[i].uuid ) {
+
+								if ( ! self.dropzone_media[i].saved ) {
+									self.removeAttachment(self.dropzone_media[i].id);
+								}
+
 								self.dropzone_media.splice( i, 1 );
 								break;
 							}
