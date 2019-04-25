@@ -39,7 +39,7 @@
 	                <?php if ( bp_is_single_album() ) : ?>
                         <div class="bp-existing-media-wrap bp-media-upload-tab-content" id="bp-existing-media-content" style="display: none;">
 
-                            <?php if ( bp_has_media( array( 'album_id' => 0 ) ) ) : ?>
+                            <?php if ( bp_has_media( array( 'album_id' => 'existing-media' ) ) ) : ?>
 
                                 <ul class="media-list item-list bp-list bb-photo-list grid existing-media-list">
 
