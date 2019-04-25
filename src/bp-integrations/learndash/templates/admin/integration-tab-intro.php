@@ -1,6 +1,6 @@
 <div class="wrap">
 	
-	<div class="bp-admin-card section-bp_ld-integration">
+	<div class="bp-admin-card no-table section-bp_ld-integration">
 		<h2><?php _e( 'LearnDash <span>&mdash; requires plugin to activate</span>', 'buddyboss' ); ?></h2>
 		<p><?php
 			printf(

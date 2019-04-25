@@ -1,6 +1,6 @@
 <div class="wrap">
 	
-	<div class="bp-admin-card section-bp-woocommerce-integration">
+	<div class="bp-admin-card no-table section-bp-woocommerce-integration">
 		<h2><?php _e( 'WooCommerce <span>&mdash; requires plugin to activate</span>', 'buddyboss' ); ?></h2>
 		<p><?php
 			printf(

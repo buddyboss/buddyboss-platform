@@ -2142,7 +2142,7 @@ function bp_member_type_import_submenu_page() {
 		</div>
 	</div>
 	<div class="wrap">
-		<div class="bp-admin-card section-bp-member-type-import">
+		<div class="bp-admin-card no-table section-bp-member-type-import">
 			<div class="boss-import-area">
 				<form id="bp-member-type-import-form" method="post" action="">
 					<div class="import-panel-content">

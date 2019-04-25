@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 <div class="wrap bp-about-wrap">
 
-	<div class="bp-admin-card">
+	<div class="bp-admin-card no-table">
 		<h2><?php _e( 'Meet the BuddyBoss Team', 'buddyboss' ); ?></h2>
 		<ul class="wp-people-group " id="wp-people-group-core-team">
 			<li class="wp-person" id="wp-person-michaeleisenwasser">
@@ -36,7 +36,7 @@ defined( 'ABSPATH' ) || exit;
 		</ul>
 	</div>
 
-	<div class="bp-admin-card">
+	<div class="bp-admin-card no-table">
 		<h2><?php _e( 'Special thanks to the BuddyPress contributors', 'buddyboss' ); ?></h2>
 		<p class="wp-about-description">
 			<?php
@@ -70,7 +70,7 @@ defined( 'ABSPATH' ) || exit;
 		</p>
 	</div>
 
-	<div class="bp-admin-card">
+	<div class="bp-admin-card no-table">
 		<h2><?php _e( 'Special thanks to these open source projects', 'buddyboss' ); ?></h2>
 		<p class="wp-credits-list">
 			<a href="https://github.com/ichord/At.js">At.js</a>,

@@ -1,6 +1,6 @@
 <div class="wrap">
 	
-	<div class="bp-admin-card section-bp_appboss-integration">
+	<div class="bp-admin-card no-table section-bp_appboss-integration">
 		<h2><?php _e( 'AppBoss <span>&mdash; contact sales to activate</span>', 'buddyboss' ); ?></h2>
 		<p><?php
 			printf(

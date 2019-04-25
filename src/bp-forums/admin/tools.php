@@ -35,7 +35,7 @@ function bbp_admin_repair() {
 	</div>
 	<div class="wrap">
 
-		<div class="bp-admin-card section-repair_forums">
+		<div class="bp-admin-card no-table section-repair_forums">
 
 			<h2><?php esc_html_e( 'Repair Forums', 'buddyboss' ) ?></h2>
 
