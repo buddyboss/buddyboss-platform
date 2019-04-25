@@ -1009,10 +1009,10 @@ body.post-type-bp-email .categorydiv label {
 	}
 }
 
-.bb-help-content {
+.bb-help-content-wrap {
+	display: flex;
 	min-width: 255px;
 	max-width: 1050px;
-	padding: 2.2em 2.8em;
 	background-color: #fff;
 	border-radius: 6px;
 	border: 1px solid #e5e5e5;
@@ -1020,7 +1020,9 @@ body.post-type-bp-email .categorydiv label {
 	box-sizing: border-box;
 
 	.bb-help-sidebar {
+		background: #f9f9f9;
 		border-right: 1px solid #eaeaea;
+		border-radius: 6px 0 0 6px;
 		box-sizing: border-box;
 		float: left;
 		width: 20%;
@@ -1028,7 +1030,7 @@ body.post-type-bp-email .categorydiv label {
 	}
 
 	.bb-help-sidebar > ul {
-		padding-right: 20px;
+		padding: 20px;
 	}
 
 	.bb-help-sidebar > ul > li > ul > li.selected a {
@@ -1050,7 +1052,7 @@ body.post-type-bp-email .categorydiv label {
 		margin-left: 20px;
 	}
 
-	.bb-help-file-content {
+	.bb-help-content {
 		float: right;
 		width: 75%;
 

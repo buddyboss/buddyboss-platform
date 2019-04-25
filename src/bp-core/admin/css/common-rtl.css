@@ -981,10 +981,10 @@ body.post-type-bp-email .categorydiv label {
   display: flex;
 }
 
-.bb-help-content {
+.bb-help-content-wrap {
+  display: flex;
   min-width: 255px;
   max-width: 1050px;
-  padding: 2.2em 2.8em;
   background-color: #fff;
   border-radius: 6px;
   border: 1px solid #e5e5e5;
@@ -992,47 +992,49 @@ body.post-type-bp-email .categorydiv label {
   box-sizing: border-box;
 }
 
-.bb-help-content .bb-help-sidebar {
+.bb-help-content-wrap .bb-help-sidebar {
+  background: #f9f9f9;
   border-left: 1px solid #eaeaea;
+  border-radius: 0 6px 6px 0;
   box-sizing: border-box;
   float: right;
   width: 20%;
   height: 100%;
 }
 
-.bb-help-content .bb-help-sidebar > ul {
-  padding-left: 20px;
+.bb-help-content-wrap .bb-help-sidebar > ul {
+  padding: 20px;
 }
 
-.bb-help-content .bb-help-sidebar > ul > li > ul > li.selected a {
+.bb-help-content-wrap .bb-help-sidebar > ul > li > ul > li.selected a {
   font-weight: 500;
 }
 
-.bb-help-content .bb-help-sidebar > ul > li > a {
+.bb-help-content-wrap .bb-help-sidebar > ul > li > a {
   color: #23282d;
   font-size: 16px;
   font-weight: 600;
 }
 
-.bb-help-content .bb-help-sidebar > ul > li > ul {
+.bb-help-content-wrap .bb-help-sidebar > ul > li > ul {
   margin-top: 20px;
 }
 
-.bb-help-content .bb-help-sidebar > ul > li > ul > li > ul {
+.bb-help-content-wrap .bb-help-sidebar > ul > li > ul > li > ul {
   margin-top: 10px;
   margin-right: 20px;
 }
 
-.bb-help-content .bb-help-file-content {
+.bb-help-content-wrap .bb-help-content {
   float: left;
   width: 75%;
 }
 
-.bb-help-content .bb-help-file-content .bb-help-menu li {
+.bb-help-content-wrap .bb-help-content .bb-help-menu li {
   display: inline;
 }
 
-.bb-help-content .bb-help-file-content .bb-help-menu li:not(:last-child):after {
+.bb-help-content-wrap .bb-help-content .bb-help-menu li:not(:last-child):after {
   font-family: dashicons;
   content: "\f345";
   margin: 0 3px;
@@ -1040,7 +1042,7 @@ body.post-type-bp-email .categorydiv label {
   vertical-align: middle;
 }
 
-.bb-help-content .bb-help-file-content img {
+.bb-help-content-wrap .bb-help-content img {
   max-width: 100%;
   width: 100%;
 }
