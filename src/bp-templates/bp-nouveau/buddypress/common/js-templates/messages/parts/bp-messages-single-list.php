@@ -1,4 +1,4 @@
--<script type="text/html" id="tmpl-bp-messages-single-list">
+<script type="text/html" id="tmpl-bp-messages-single-list">
 	<div class="message-metadata">
 		<# if ( data.beforeMeta ) { #>
 		<div class="bp-messages-hook before-message-meta">{{{data.beforeMeta}}}</div>
