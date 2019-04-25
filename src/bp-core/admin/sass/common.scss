@@ -1035,8 +1035,9 @@ body.post-type-bp-email .categorydiv label {
 			font-weight: 600;
 		}
 
-		> ul > li > ul {
+		> ul > li > ul > li {
 			margin-left: 1.6em;
+			list-style-type: disc;
 		}
 
 	}

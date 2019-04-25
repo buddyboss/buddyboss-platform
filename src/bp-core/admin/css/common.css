@@ -1006,8 +1006,9 @@ body.post-type-bp-email .categorydiv label {
   font-weight: 600;
 }
 
-.bb-help-sidebar > ul > li > ul > li > ul {
+.bb-help-sidebar > ul > li > ul > li > ul > li {
   margin-left: 1.6em;
+  list-style-type: disc;
 }
 
 .bb-help-content ul.bb-help-menu {
