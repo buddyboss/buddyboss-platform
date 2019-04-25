@@ -221,6 +221,14 @@
 			 * show the closest UI
 			 */
 			$( '.bp-help-card-grid li.selected' ).closest( 'ul' ).show();
+
+
+			/**
+			 * Update LI count via JS
+			 */
+			$( '.bp-help-card-grid .sub-menu-count' ).each(function () {
+				$(this).text( '(' + $(this).closest( 'li' ).find( 'ul:first li' ).size() + ')' );
+			});
 		}
 
 	});

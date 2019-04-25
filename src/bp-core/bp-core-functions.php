@@ -4149,6 +4149,8 @@ function bp_platform_default_activity_types() {
 /**
  * Dynamically add the URL
  *
+ * @since BuddyBoss 1.0.0
+ *
  * @param $atts
  *
  * @return mixed
@@ -4160,8 +4162,8 @@ function bp_core_help_miscellaneous_link( $atts ) {
 		$url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help', 'article' => '/miscellaneous/'.$slug ), 'admin.php' ) );
 	} else {
 		$post_ids = bp_core_get_post_id_by_slug( 'miscellaneous' );
-		$post_id = current( $post_ids );
-		$url = get_permalink( $post_id ) . '/' . bp_core_get_post_slug_by_index( $slug );
+		$docs_id = current( $post_ids );
+		$url = get_permalink( $docs_id ) . bp_core_get_post_slug_by_index( $slug );
 	}
 
 	return sprintf( '<a href="%s"> %s </a>', $url, $text );
@@ -4174,6 +4176,8 @@ if ( ! function_exists( 'bp_core_get_post_id_by_slug' ) ) {
 	 * Get Post id by Post SLUG
 	 *
 	 * @param $slug
+     *
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @return array
 	 */
@@ -4198,6 +4202,8 @@ if ( ! function_exists( 'bp_core_get_post_id_by_slug' ) ) {
 
 /**
  * Generate post slug by files name
+ *
+ * @since BuddyBoss 1.0.0
  *
  * @param $dir_index_file
  *
