@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-04-24 15:15:11+00:00\n"
+"POT-Creation-Date: 2019-04-25 21:41:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -797,8 +797,8 @@ msgstr ""
 msgid "A member replies to an update or comment you've posted"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:464 bp-media/bp-media-template.php:313
-#: bp-media/bp-media-template.php:1064
+#: bp-activity/bp-activity-template.php:464 bp-media/bp-media-template.php:314
+#: bp-media/bp-media-template.php:1065
 msgid "Viewing 1 item"
 msgid_plural "Viewing %1$s - %2$s of %3$s items"
 msgstr[0] ""
@@ -824,7 +824,7 @@ msgstr[1] ""
 #: bp-groups/classes/class-bp-groups-invite-template.php:234
 #: bp-groups/classes/class-bp-groups-invite-template.php:235
 #: bp-groups/classes/class-bp-groups-invite-template.php:236
-#: bp-media/classes/class-bp-media-component.php:325
+#: bp-media/classes/class-bp-media-component.php:342
 #: bp-members/bp-members-template.php:798
 #: bp-members/bp-members-template.php:1495
 #: bp-members/bp-members-template.php:1550
@@ -1115,7 +1115,7 @@ msgstr ""
 #: bp-blogs/classes/class-bp-blogs-template.php:149
 #: bp-groups/classes/class-bp-groups-template.php:295
 #: bp-media/classes/class-bp-media-album-template.php:220
-#: bp-media/classes/class-bp-media-template.php:224
+#: bp-media/classes/class-bp-media-template.php:227
 #: bp-members/classes/class-bp-core-members-template.php:190
 #: bp-messages/classes/class-bp-messages-box-template.php:214
 #: bp-notifications/classes/class-bp-notifications-template.php:239
@@ -1126,7 +1126,7 @@ msgstr ""
 #: bp-blogs/classes/class-bp-blogs-template.php:150
 #: bp-groups/classes/class-bp-groups-template.php:296
 #: bp-media/classes/class-bp-media-album-template.php:221
-#: bp-media/classes/class-bp-media-template.php:225
+#: bp-media/classes/class-bp-media-template.php:228
 #: bp-members/classes/class-bp-core-members-template.php:191
 #: bp-messages/classes/class-bp-messages-box-template.php:215
 #: bp-notifications/classes/class-bp-notifications-template.php:240
@@ -2656,8 +2656,8 @@ msgstr ""
 #: bp-core/bp-core-functions.php:759
 #: bp-groups/classes/class-bp-groups-component.php:704
 #: bp-media/classes/class-bp-media-component.php:60
-#: bp-media/classes/class-bp-media-component.php:223
-#: bp-media/classes/class-bp-media-component.php:282
+#: bp-media/classes/class-bp-media-component.php:240
+#: bp-media/classes/class-bp-media-component.php:299
 #: bp-media/classes/class-bp-media-theme-compat.php:156
 #: bp-templates/bp-nouveau/buddypress/media/add-media.php:12
 #: bp-templates/bp-nouveau/includes/customizer.php:190
@@ -11566,7 +11566,7 @@ msgid "Send Invites"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:717
-#: bp-media/classes/class-bp-media-component.php:249
+#: bp-media/classes/class-bp-media-component.php:266
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:12
 msgid "Albums"
 msgstr ""
@@ -12605,12 +12605,8 @@ msgstr ""
 msgid "All dates"
 msgstr ""
 
-#: bp-integrations/memberships/includes/WpListTable.php:615
-#. translators: 1: month name, 2: 4-digit year
-msgid "%1$s %2$d"
-msgstr ""
-
 #: bp-integrations/memberships/includes/WpListTable.php:666
+#. translators: 1: month name, 2: 4-digit year
 msgid "%s comment"
 msgid_plural "%s comments"
 msgstr[0] ""
@@ -12980,7 +12976,7 @@ msgstr ""
 msgid "The uploaded file exceeds "
 msgstr ""
 
-#: bp-media/bp-media-functions.php:143
+#: bp-media/bp-media-functions.php:138
 msgid "Error while uploading media."
 msgstr ""
 
@@ -13029,18 +13025,18 @@ msgstr ""
 msgid "Search Photos&hellip;"
 msgstr ""
 
-#: bp-media/classes/class-bp-media-component.php:215
+#: bp-media/classes/class-bp-media-component.php:232
 #. translators: %s: total media count for the current user
 msgid "Photos %s"
 msgstr ""
 
-#: bp-media/classes/class-bp-media-component.php:290
-#: bp-media/classes/class-bp-media-component.php:319
-#: bp-templates/bp-nouveau/includes/media/functions.php:270
+#: bp-media/classes/class-bp-media-component.php:307
+#: bp-media/classes/class-bp-media-component.php:336
+#: bp-templates/bp-nouveau/includes/media/functions.php:279
 msgid "My Photos"
 msgstr ""
 
-#: bp-media/classes/class-bp-media-component.php:299
+#: bp-media/classes/class-bp-media-component.php:316
 msgid "My Albums"
 msgstr ""
 
@@ -14001,32 +13997,32 @@ msgid "A member sends you a new message"
 msgstr ""
 
 #: bp-messages/bp-messages-star.php:106
-#: bp-templates/bp-nouveau/includes/messages/functions.php:133
+#: bp-templates/bp-nouveau/includes/messages/functions.php:142
 msgid "Unstar"
 msgstr ""
 
 #: bp-messages/bp-messages-star.php:107
-#: bp-templates/bp-nouveau/includes/messages/functions.php:134
+#: bp-templates/bp-nouveau/includes/messages/functions.php:143
 msgid "Star"
 msgstr ""
 
 #: bp-messages/bp-messages-star.php:108
-#: bp-templates/bp-nouveau/includes/messages/functions.php:135
+#: bp-templates/bp-nouveau/includes/messages/functions.php:144
 msgid "Starred"
 msgstr ""
 
 #: bp-messages/bp-messages-star.php:109
-#: bp-templates/bp-nouveau/includes/messages/functions.php:136
+#: bp-templates/bp-nouveau/includes/messages/functions.php:145
 msgid "Not starred"
 msgstr ""
 
 #: bp-messages/bp-messages-star.php:110
-#: bp-templates/bp-nouveau/includes/messages/functions.php:137
+#: bp-templates/bp-nouveau/includes/messages/functions.php:146
 msgid "Remove all starred messages in this thread"
 msgstr ""
 
 #: bp-messages/bp-messages-star.php:111
-#: bp-templates/bp-nouveau/includes/messages/functions.php:138
+#: bp-templates/bp-nouveau/includes/messages/functions.php:147
 msgid "Star the first message in this thread"
 msgstr ""
 
@@ -15569,8 +15565,8 @@ msgid "There was a problem when deleting. Please try again."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:275
-#: bp-templates/bp-nouveau/includes/media/ajax.php:674
-#: bp-templates/bp-nouveau/includes/media/ajax.php:711
+#: bp-templates/bp-nouveau/includes/media/ajax.php:680
+#: bp-templates/bp-nouveau/includes/media/ajax.php:717
 msgid "There was a problem displaying the content. Please try again."
 msgstr ""
 
@@ -15776,10 +15772,10 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:261
 #: bp-templates/bp-nouveau/includes/media/ajax.php:98
 #: bp-templates/bp-nouveau/includes/media/ajax.php:197
-#: bp-templates/bp-nouveau/includes/media/ajax.php:341
-#: bp-templates/bp-nouveau/includes/media/ajax.php:409
-#: bp-templates/bp-nouveau/includes/media/ajax.php:507
-#: bp-templates/bp-nouveau/includes/media/ajax.php:611
+#: bp-templates/bp-nouveau/includes/media/ajax.php:344
+#: bp-templates/bp-nouveau/includes/media/ajax.php:412
+#: bp-templates/bp-nouveau/includes/media/ajax.php:510
+#: bp-templates/bp-nouveau/includes/media/ajax.php:617
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
 
@@ -16356,48 +16352,48 @@ msgid "There was a problem when trying to upload this file."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/ajax.php:222
-#: bp-templates/bp-nouveau/includes/media/ajax.php:434
+#: bp-templates/bp-nouveau/includes/media/ajax.php:437
 msgid "Please upload media before saving."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/ajax.php:290
-#: bp-templates/bp-nouveau/includes/media/ajax.php:583
+#: bp-templates/bp-nouveau/includes/media/ajax.php:586
 msgid "There was a problem when trying to add the media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:366
+#: bp-templates/bp-nouveau/includes/media/ajax.php:369
 msgid "Please select media to delete."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:388
+#: bp-templates/bp-nouveau/includes/media/ajax.php:391
 msgid "There was a problem deleting media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:443
+#: bp-templates/bp-nouveau/includes/media/ajax.php:446
 msgid "Please provide album to move media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:469
+#: bp-templates/bp-nouveau/includes/media/ajax.php:472
 msgid "There was a problem when trying to move the media."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:532
+#: bp-templates/bp-nouveau/includes/media/ajax.php:535
 msgid "Please enter title of album."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:549
+#: bp-templates/bp-nouveau/includes/media/ajax.php:552
 msgid "There was a problem when trying to create the album."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:636
+#: bp-templates/bp-nouveau/includes/media/ajax.php:642
 msgid "Please provide ID of album to delete."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:723
+#: bp-templates/bp-nouveau/includes/media/ajax.php:729
 msgid "Please provide attachment id to delete."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:259
+#: bp-templates/bp-nouveau/includes/media/functions.php:268
 msgid "All Photos"
 msgstr ""
 
@@ -16418,12 +16414,12 @@ msgid "Your message could not be sent. Please try again."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:64
-#: bp-templates/bp-nouveau/includes/messages/functions.php:104
+#: bp-templates/bp-nouveau/includes/messages/functions.php:113
 msgid "Please add at least one recipient."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:123
-#: bp-templates/bp-nouveau/includes/messages/functions.php:105
+#: bp-templates/bp-nouveau/includes/messages/functions.php:114
 msgid "Please add some content to your message."
 msgstr ""
 
@@ -16489,55 +16485,55 @@ msgstr ""
 msgid "There was a problem loading recipients. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:111
+#: bp-templates/bp-nouveau/includes/messages/functions.php:120
 msgid "Loading messages. Please wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:113
+#: bp-templates/bp-nouveau/includes/messages/functions.php:122
 msgid "Marking messages as read. Please wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:114
+#: bp-templates/bp-nouveau/includes/messages/functions.php:123
 msgid "Marking messages as unread. Please wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:115
+#: bp-templates/bp-nouveau/includes/messages/functions.php:124
 msgid "Deleting messages. Please wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:116
+#: bp-templates/bp-nouveau/includes/messages/functions.php:125
 msgid "Starring messages. Please wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:117
+#: bp-templates/bp-nouveau/includes/messages/functions.php:126
 msgid "Unstarring messages. Please wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:119
+#: bp-templates/bp-nouveau/includes/messages/functions.php:128
 msgid ""
 "Are you sure you want to delete this conversation? This will permanently "
 "delete the conversation history and cannot be undone."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:121
+#: bp-templates/bp-nouveau/includes/messages/functions.php:130
 msgid ""
 "Use the select box to define your bulk action and click on the &#10003; "
 "button to apply."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:123
+#: bp-templates/bp-nouveau/includes/messages/functions.php:132
 msgid "1 other"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:124
+#: bp-templates/bp-nouveau/includes/messages/functions.php:133
 msgid "%d others"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:256
+#: bp-templates/bp-nouveau/includes/messages/functions.php:265
 msgid "New sitewide notice"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:475
+#: bp-templates/bp-nouveau/includes/messages/functions.php:484
 msgid "New private messages"
 msgstr ""
 

@@ -354,7 +354,6 @@ tr.bp-search-parent-field label {
 .bp-admin-card {
   position: relative;
   margin-top: 20px;
-  padding: 2.2em 2.8em;
   min-width: 255px;
   max-width: 1050px;
   border-radius: 6px;
@@ -363,15 +362,10 @@ tr.bp-search-parent-field label {
   background: #fff;
 }
 
-.bp-admin-card .form-table td p {
-  color: #999;
-  margin-top: 6px;
-}
-
 .bp-admin-card h2 {
   line-height: 38px;
-  margin: 0 0 1em;
-  padding-bottom: 1.2em;
+  margin: 0;
+  padding: 1.2em;
   font-size: 22px;
   font-weight: 700;
   color: #333;
@@ -394,6 +388,65 @@ tr.bp-search-parent-field label {
   border-radius: 50px;
   vertical-align: middle;
   margin-right: 15px;
+}
+
+.bp-admin-card .form-table {
+  margin-top: 0;
+}
+
+.bp-admin-card .form-table tr th {
+  background: #f9f9f9;
+  border-right: 1px solid #eaeaea;
+  padding: 1.5em 2em;
+}
+
+.bp-admin-card .form-table tr td {
+  padding: 1.5em 2em;
+}
+
+.bp-admin-card .form-table tr:first-child th,
+.bp-admin-card .form-table tr:first-child td {
+  padding-top: 2em;
+}
+
+.bp-admin-card .form-table tr:last-child th,
+.bp-admin-card .form-table tr:last-child td {
+  padding-bottom: 2em;
+}
+
+.bp-admin-card .form-table tr:last-child th {
+  border-radius: 0 0 0 6px;
+}
+
+.bp-admin-card .form-table tr.child-no-padding-first th {
+  padding-top: 20px;
+  padding-bottom: 0;
+}
+
+.bp-admin-card .form-table tr.child-no-padding-first td {
+  padding-top: 15px;
+  padding-bottom: 5px;
+}
+
+.bp-admin-card .form-table tr:not(:last-child).child-no-padding th {
+  padding-bottom: 0;
+}
+
+.bp-admin-card .form-table tr.child-no-padding th {
+  padding-top: 0;
+}
+
+.bp-admin-card .form-table tr:not(:last-child).child-no-padding td {
+  padding-top: 5px;
+}
+
+.bp-admin-card .form-table tr.child-no-padding td {
+  padding-top: 5px;
+}
+
+.bp-admin-card .form-table td p {
+  color: #999;
+  margin-top: 6px;
 }
 
 /* Settings */
@@ -934,22 +987,6 @@ body.post-type-bp_ps_form .page-title-action {
 .buddypress .wrap div#message,
 .buddypress .wrap div.notice {
   margin: 25px 0 0;
-}
-
-tr.child-no-padding th {
-  padding: 0 10px 0 0;
-}
-
-tr.child-no-padding td {
-  padding: 5px 10px;
-}
-
-tr.child-no-padding-first th {
-  padding: 20px 10px 0 0;
-}
-
-tr.child-no-padding-first td {
-  padding: 15px 10px 5px;
 }
 
 td.inviter.column-inviter strong img {
