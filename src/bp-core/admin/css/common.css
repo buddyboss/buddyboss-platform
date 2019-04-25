@@ -999,7 +999,7 @@ body.post-type-bp-email .categorydiv label {
   display: flex;
 }
 
-.bb-help-content .bb-help-file-content {
+.bb-help-content {
   min-width: 255px;
   max-width: 1050px;
   padding: 2.2em 2.8em;
@@ -1011,22 +1011,34 @@ body.post-type-bp-email .categorydiv label {
 }
 
 .bb-help-content .bb-help-sidebar {
-  background-color: #fff;
-  border: 1px solid #000;
+  background: #f5f5f5;
+  border-radius: 6px;
   box-sizing: border-box;
-  padding: 20px;
+  padding: 10px 20px;
+  float: left;
+  width: 30%;
 }
 
-.bb-help-content .bb-help-menu li {
+.bb-help-content .bb-help-file-content {
+  float: right;
+  width: 65%;
+}
+
+.bb-help-content .bb-help-file-content .bb-help-menu li {
   display: inline;
 }
 
-.bb-help-content .bb-help-menu li:after {
+.bb-help-content .bb-help-file-content .bb-help-menu li:after {
   font-family: dashicons;
   content: "\f345";
   margin: 0 3px;
   display: inline-block;
   vertical-align: middle;
+}
+
+.bb-help-content .bb-help-file-content img {
+  max-width: 100%;
+  width: 100%;
 }
 
 /*------------------------------------------------------------------------------
