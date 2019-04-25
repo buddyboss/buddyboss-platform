@@ -993,58 +993,38 @@ body.post-type-bp-email .categorydiv label {
   box-sizing: border-box;
 }
 
-.bb-help-content-wrap .bb-help-sidebar {
-  background: #f9f9f9;
-  border-right: 1px solid #eaeaea;
-  border-radius: 6px 0 0 6px;
-  padding: 2.5em;
-  -webkit-box-flex: 0;
-  -ms-flex: 0 0 200px;
-  flex: 0 0 200px;
-  overflow: initial;
-  width: 100%;
-  min-height: 60vh;
-}
-
-.bb-help-content-wrap .bb-help-sidebar > ul {
+.bb-help-sidebar > ul {
   margin: 0;
 }
 
-.bb-help-content-wrap .bb-help-sidebar > ul > li > ul > li.selected a {
+.bb-help-sidebar > ul > li > ul > li.selected a {
   font-weight: 500;
 }
 
-.bb-help-content-wrap .bb-help-sidebar > ul > li > a {
+.bb-help-sidebar > ul > li > a {
   color: #23282d;
   font-size: 16px;
   font-weight: 600;
 }
 
-.bb-help-content-wrap .bb-help-sidebar > ul > li > ul {
+.bb-help-sidebar > ul > li > ul {
   margin-top: 20px;
 }
 
-.bb-help-content-wrap .bb-help-sidebar > ul > li > ul > li > ul {
+.bb-help-sidebar > ul > li > ul > li > ul {
   margin-top: 10px;
   margin-left: 20px;
 }
 
-.bb-help-content-wrap .bb-help-content {
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  padding: 2.5em 3em;
-}
-
-.bb-help-content-wrap .bb-help-content ul.bb-help-menu {
+.bb-help-content ul.bb-help-menu {
   margin: 0 0 2.5em;
 }
 
-.bb-help-content-wrap .bb-help-content ul.bb-help-menu li {
+.bb-help-content ul.bb-help-menu li {
   display: inline;
 }
 
-.bb-help-content-wrap .bb-help-content ul.bb-help-menu li:not(:last-child):after {
+.bb-help-content ul.bb-help-menu li:not(:last-child):after {
   font-family: dashicons;
   content: "\f345";
   margin: 0 5px;
@@ -1054,13 +1034,49 @@ body.post-type-bp-email .categorydiv label {
   color: #999;
 }
 
-.bb-help-content-wrap .bb-help-content ul.bb-help-menu li:last-child a {
+.bb-help-content ul.bb-help-menu li:last-child a {
   color: #999;
 }
 
-.bb-help-content-wrap .bb-help-content img {
+.bb-help-content img {
   max-width: 100%;
   width: 100%;
+}
+
+@media screen and (min-width: 782px) {
+  .bb-help-sidebar {
+    background: #f9f9f9;
+    padding: 2.5em;
+    border-right: 1px solid #eaeaea;
+    border-radius: 6px 0 0 6px;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 200px;
+    flex: 0 0 200px;
+    overflow: initial;
+    width: 100%;
+    min-height: 60vh;
+  }
+  .bb-help-content {
+    padding: 2.5em 3em;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+  }
+}
+
+@media screen and (max-width: 781px) {
+  .bb-help-sidebar {
+    background: #f9f9f9;
+    padding: 2.5em;
+    width: 100%;
+    min-height: auto;
+    border-bottom: 1px solid #eaeaea;
+    border-radius: 6px 6px 0 0;
+  }
+  .bb-help-content {
+    padding: 2.5em;
+    width: 100%;
+  }
 }
 
 /*------------------------------------------------------------------------------

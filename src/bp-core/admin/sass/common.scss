@@ -1019,12 +1019,68 @@ body.post-type-bp-email .categorydiv label {
 	border: 1px solid #e5e5e5;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 	box-sizing: border-box;
+}
+
+.bb-help-sidebar > ul {
+	margin: 0;
+}
+
+.bb-help-sidebar > ul > li > ul > li.selected a {
+	font-weight: 500;
+}
+
+.bb-help-sidebar > ul > li > a {
+	color: #23282d;
+	font-size: 16px;
+	font-weight: 600;
+}
+
+.bb-help-sidebar > ul > li > ul {
+	margin-top: 20px;
+}
+
+.bb-help-sidebar > ul > li > ul > li > ul {
+	margin-top: 10px;
+	margin-left: 20px;
+}
+
+.bb-help-content {
+
+	ul.bb-help-menu {
+		margin: 0 0 2.5em;
+
+		li {
+			display: inline;
+		}
+
+		li:not(:last-child):after {
+			font-family: dashicons;
+			content: "\f345";
+			margin: 0 5px;
+			display: inline-block;
+			vertical-align: middle;
+			font-size: 10px;
+			color: #999;
+		}
+
+		li:last-child a {
+			color: #999;
+		}
+	}
+
+	img {
+		max-width: 100%;
+		width: 100%;
+	}
+}
+
+@media screen and (min-width: 782px) {
 
 	.bb-help-sidebar {
 		background: #f9f9f9;
+		padding: 2.5em;
 		border-right: 1px solid #eaeaea;
 		border-radius: 6px 0 0 6px;
-		padding: 2.5em;
 		-webkit-box-flex: 0;
 		-ms-flex: 0 0 200px;
 		flex: 0 0 200px;
@@ -1033,63 +1089,29 @@ body.post-type-bp-email .categorydiv label {
 		min-height: 60vh;
 	}
 
-	.bb-help-sidebar > ul {
-		margin: 0;
-	}
-
-	.bb-help-sidebar > ul > li > ul > li.selected a {
-		font-weight: 500;
-	}
-
-	.bb-help-sidebar > ul > li > a {
-		color: #23282d;
-		font-size: 16px;
-		font-weight: 600;
-	}
-
-	.bb-help-sidebar > ul > li > ul {
-		margin-top: 20px;
-	}
-
-	.bb-help-sidebar > ul > li > ul > li > ul {
-		margin-top: 10px;
-		margin-left: 20px;
-	}
-
 	.bb-help-content {
+		padding: 2.5em 3em;
 		-webkit-box-flex: 1;
 		-ms-flex: 1;
 		flex: 1;
-		padding: 2.5em 3em;
+	}
+}
 
-		ul.bb-help-menu {
-			margin: 0 0 2.5em;
+@media screen and (max-width: 781px) {
 
-			li {
-				display: inline;
-			}
-
-			li:not(:last-child):after {
-				font-family: dashicons;
-				content: "\f345";
-				margin: 0 5px;
-				display: inline-block;
-				vertical-align: middle;
-				font-size: 10px;
-				color: #999;
-			}
-
-			li:last-child a{
-				color: #999;
-			}
-		}
-
-		img {
-			max-width: 100%;
-			width: 100%;
-		}
+	.bb-help-sidebar {
+		background: #f9f9f9;
+		padding: 2.5em;
+		width: 100%;
+		min-height: auto;
+		border-bottom: 1px solid #eaeaea;
+		border-radius: 6px 6px 0 0;
 	}
 
+	.bb-help-content {
+		padding: 2.5em;
+		width: 100%;
+	}
 }
 
 /*------------------------------------------------------------------------------
