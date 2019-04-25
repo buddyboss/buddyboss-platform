@@ -1024,17 +1024,17 @@ body.post-type-bp-email .categorydiv label {
 		background: #f9f9f9;
 		border-right: 1px solid #eaeaea;
 		border-radius: 6px 0 0 6px;
-
+		padding: 2.5em;
 		-webkit-box-flex: 0;
-		-ms-flex: 0 0 250px;
-		flex: 0 0 250px;
+		-ms-flex: 0 0 200px;
+		flex: 0 0 200px;
 		overflow: initial;
 		width: 100%;
 		min-height: 60vh;
 	}
 
 	.bb-help-sidebar > ul {
-		padding: 20px;
+		margin: 0;
 	}
 
 	.bb-help-sidebar > ul > li > ul > li.selected a {
@@ -1060,9 +1060,10 @@ body.post-type-bp-email .categorydiv label {
 		-webkit-box-flex: 1;
 		-ms-flex: 1;
 		flex: 1;
-		padding: 55px 80px;
+		padding: 2.5em 3em;
 
-		.bb-help-menu {
+		ul.bb-help-menu {
+			margin: 0 0 2.5em;
 
 			li {
 				display: inline;
@@ -1071,9 +1072,15 @@ body.post-type-bp-email .categorydiv label {
 			li:not(:last-child):after {
 				font-family: dashicons;
 				content: "\f345";
-				margin: 0 3px;
+				margin: 0 5px;
 				display: inline-block;
 				vertical-align: middle;
+				font-size: 10px;
+				color: #999;
+			}
+
+			li:last-child a{
+				color: #999;
 			}
 		}
 
