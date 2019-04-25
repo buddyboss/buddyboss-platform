@@ -1023,25 +1023,34 @@ body.post-type-bp-email .categorydiv label {
 
 .bb-help-sidebar > ul {
 	margin: 0;
-}
 
-.bb-help-sidebar > ul > li > ul > li.selected a {
-	font-weight: 500;
-}
+	> li {
 
-.bb-help-sidebar > ul > li > a {
-	color: #23282d;
-	font-size: 16px;
-	font-weight: 600;
-}
+		> a {
+			color: #23282d;
+			font-size: 16px;
+			font-weight: 600;
+		}
 
-.bb-help-sidebar > ul > li > ul {
-	margin-top: 20px;
-}
+		> ul {
+			margin-top: 20px;
+		}
 
-.bb-help-sidebar > ul > li > ul > li > ul {
-	margin-top: 10px;
-	margin-left: 20px;
+		> ul li {
+			line-height: 1.6;
+			margin: 1.2em 0;
+		}
+
+		> ul > li.selected a {
+			font-weight: 500;
+		}
+
+		> ul > li > ul {
+			margin-left: 1.6em;
+		}
+
+	}
+
 }
 
 .bb-help-content {

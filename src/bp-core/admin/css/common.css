@@ -997,10 +997,6 @@ body.post-type-bp-email .categorydiv label {
   margin: 0;
 }
 
-.bb-help-sidebar > ul > li > ul > li.selected a {
-  font-weight: 500;
-}
-
 .bb-help-sidebar > ul > li > a {
   color: #23282d;
   font-size: 16px;
@@ -1011,9 +1007,17 @@ body.post-type-bp-email .categorydiv label {
   margin-top: 20px;
 }
 
+.bb-help-sidebar > ul > li > ul li {
+  line-height: 1.6;
+  margin: 1.2em 0;
+}
+
+.bb-help-sidebar > ul > li > ul > li.selected a {
+  font-weight: 500;
+}
+
 .bb-help-sidebar > ul > li > ul > li > ul {
-  margin-top: 10px;
-  margin-left: 20px;
+  margin-left: 1.6em;
 }
 
 .bb-help-content ul.bb-help-menu {
