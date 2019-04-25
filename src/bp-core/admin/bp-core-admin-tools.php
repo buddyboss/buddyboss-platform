@@ -28,37 +28,36 @@ function bp_core_admin_tools() {
 		<div class="bp-admin-card section-repair_community">
 
 			<h2><?php esc_html_e( 'Repair Community', 'buddyboss' ) ?></h2>
-			<div class="inside">
-				<p><?php esc_html_e( 'BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
-				</p>
 
-				<form class="settings" method="post" action="">
-					<fieldset>
-						<legend><?php esc_html_e( 'Data to Repair:', 'buddyboss' ) ?></legend>
+			<p><?php esc_html_e( 'BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
+			</p>
 
-						<div class="checkbox">
-						<?php foreach ( bp_admin_repair_list() as $item ) : ?>
-							<label for="<?php echo esc_attr( str_replace( '_', '-', $item[0] ) ); ?>">
-								<input
-									type="checkbox"
-									class="checkbox"
-									name="<?php echo esc_attr( $item[0] ) . '" id="' . esc_attr( str_replace( '_', '-', $item[0] ) ); ?>"
-									value="1"
-									<?php if ( isset( $_GET['tool'] ) && $_GET['tool'] == esc_attr( str_replace( '_', '-', $item[0] ) )) echo 'checked'; ?>
-								/> <?php echo esc_html( $item[1] ); ?></label>
-						<?php endforeach; ?>
-						</div>
+			<form class="settings" method="post" action="">
+				<fieldset>
+					<legend><?php esc_html_e( 'Data to Repair:', 'buddyboss' ) ?></legend>
 
-						<p class="submit">
-							<input class="button-primary" type="submit" name="bp-tools-submit" value="<?php esc_attr_e( 'Repair Items', 'buddyboss' ); ?>" />
-							<?php wp_nonce_field( 'bp-do-counts' ); ?>
-						</p>
+					<div class="checkbox">
+					<?php foreach ( bp_admin_repair_list() as $item ) : ?>
+						<label for="<?php echo esc_attr( str_replace( '_', '-', $item[0] ) ); ?>">
+							<input
+								type="checkbox"
+								class="checkbox"
+								name="<?php echo esc_attr( $item[0] ) . '" id="' . esc_attr( str_replace( '_', '-', $item[0] ) ); ?>"
+								value="1"
+								<?php if ( isset( $_GET['tool'] ) && $_GET['tool'] == esc_attr( str_replace( '_', '-', $item[0] ) )) echo 'checked'; ?>
+							/> <?php echo esc_html( $item[1] ); ?></label>
+					<?php endforeach; ?>
+					</div>
 
-					</fieldset>
-				</form>
+					<p class="submit">
+						<input class="button-primary" type="submit" name="bp-tools-submit" value="<?php esc_attr_e( 'Repair Items', 'buddyboss' ); ?>" />
+						<?php wp_nonce_field( 'bp-do-counts' ); ?>
+					</p>
 
-				<p class="description"><?php esc_html_e( 'Some of these tools utilize substantial database resources. Avoid running more than one repair job at a time.', 'buddyboss' ); ?></p>
-			</div>
+				</fieldset>
+			</form>
+
+			<p class="description"><?php esc_html_e( 'Some of these tools utilize substantial database resources. Avoid running more than one repair job at a time.', 'buddyboss' ); ?></p>
 
 		</div>
 	</div>

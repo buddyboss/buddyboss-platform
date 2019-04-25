@@ -1350,7 +1350,6 @@ function bbp_converter_settings() {
 	</div>
 	<div class="wrap">
 		<div class="bp-admin-card">
-			<div class="inside">
 
 			<form action="#" method="post" id="bbp-converter-settings">
 
@@ -1367,7 +1366,6 @@ function bbp_converter_settings() {
 				<div class="bbp-converter-updated" id="bbp-converter-message"></div>
 			</form>
 
-			</div>
 		</div>
 	</div>
 
