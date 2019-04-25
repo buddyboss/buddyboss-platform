@@ -608,12 +608,12 @@ window.bp = window.bp || {};
 
 		destroy: function() {
 			var self = this;
-			self.media = [];
-			self.model.set( 'media', self.media );
 			if ( ! _.isNull( bp.Nouveau.Messages.dropzone ) ) {
 				bp.Nouveau.Messages.dropzone.destroy();
 				self.$el.find('#messages-post-media-uploader').html('');
 			}
+			self.media = [];
+			self.model.set( 'media', self.media );
 			self.$el.find('#messages-post-media-uploader').removeClass('open').addClass('closed');
 
 			document.removeEventListener( 'messages_media_toggle', this.toggle_media_uploader.bind(this) );
@@ -640,6 +640,7 @@ window.bp = window.bp || {};
 					file.id = response.data.id;
 					response.data.uuid = file.upload.uuid;
 					response.data.menu_order = self.media.length;
+					response.data.saved = false;
 					self.media.push( response.data );
 					self.model.set( 'media', self.media );
 				}
@@ -648,9 +649,10 @@ window.bp = window.bp || {};
 			bp.Nouveau.Messages.dropzone.on('removedfile', function(file) {
 				if ( self.media.length ) {
 					for ( var i in self.media ) {
-						if ( file.id === self.media[i].id ) {
+						if ( file.id === self.media[i].id && ! self.media[i].saved ) {
 							self.media.splice( i, 1 );
 							self.model.set( 'media', self.media );
+							bp.Nouveau.Media.removeAttachment(file.id);
 						}
 					}
 				}

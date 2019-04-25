@@ -154,24 +154,33 @@ function bp_nouveau_media_update_media_meta( $content, $user_id, $activity_id ) 
 			add_action( 'bp_activity_posted_update', 'bp_nouveau_media_update_media_meta', 10, 3 );
 			add_action( 'bp_groups_posted_update', 'bp_nouveau_media_groups_update_media_meta', 10, 4 );
 
+			$title         = ! empty( $media['name'] ) ? $media['name'] : '&nbsp;';
+			$album_id      = ! empty( $media['album_id'] ) ? $media['album_id'] : 0;
+			$privacy       = ! empty( $media['privacy'] ) ? $media['privacy'] : 'public';
+			$attachment_id = ! empty( $media['id'] ) ? $media['id'] : 0;
+			$menu_order    = ! empty( $media['menu_order'] ) ? $media['menu_order'] : $media_index;
+
 			$media_id = bp_media_add(
 				array(
-					'title'         => ! empty( $media['name'] ) ? $media['name'] : '&nbsp;',
-					'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : 0,
+					'title'         => $title,
+					'album_id'      => $album_id,
 					'activity_id'   => $a_id,
-					'privacy'       => ! empty( $media['privacy'] ) ? $media['privacy'] : 'public',
-					'attachment_id' => ! empty( $media['id'] ) ? $media['id'] : 0,
-					'menu_order'    => isset( $media['menu_order'] ) ? absint( $media['menu_order'] ) : $media_index,
+					'privacy'       => $privacy,
+					'attachment_id' => $attachment_id,
+					'menu_order'    => $menu_order,
 				)
 			);
 
 			if ( $media_id ) {
 				$media_ids[] = $media_id;
 
+				//save media is saved in attahchment
+				update_post_meta( $attachment_id, 'bp_media_saved', true );
+
 				//save media meta for activity
-				if ( ! empty( $activity_id ) && ! empty( $media['id'] ) ) {
-					update_post_meta( $media['id'], 'bp_media_parent_activity_id', $activity_id );
-					update_post_meta( $media['id'], 'bp_media_activity_id', $a_id );
+				if ( ! empty( $activity_id ) && ! empty( $attachment_id ) ) {
+					update_post_meta( $attachment_id, 'bp_media_parent_activity_id', $activity_id );
+					update_post_meta( $attachment_id, 'bp_media_activity_id', $a_id );
 				}
 			}
 		}
@@ -319,17 +328,22 @@ function bp_nouveau_media_attach_media_to_message( &$message ) {
         $media_ids = array();
 
         foreach ( $media_list as $media_index => $media ) {
+	        $title         = ! empty( $media['name'] ) ? $media['name'] : '&nbsp;';
+	        $attachment_id = ! empty( $media['id'] ) ? $media['id'] : 0;
 
             $media_id = bp_media_add(
                 array(
-                    'title'         => ! empty( $media['name'] ) ? $media['name'] : '&nbsp;',
+                    'title'         => $title,
                     'privacy'       => 'message',
-                    'attachment_id' => ! empty( $media['id'] ) ? $media['id'] : 0,
+                    'attachment_id' => $attachment_id,
                 )
             );
 
             if ( $media_id ) {
                 $media_ids[] = $media_id;
+
+	            //save media is saved in attachment
+	            update_post_meta( $attachment_id, 'bp_media_saved', true );
             }
         }
 

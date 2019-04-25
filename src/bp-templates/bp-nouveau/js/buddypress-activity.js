@@ -1020,6 +1020,7 @@ window.bp = window.bp || {};
 							response.data.menu_order = self.dropzone_media.length;
 							response.data.album_id = self.album_id;
 							response.data.group_id = self.group_id;
+							response.data.saved    = false;
 							self.dropzone_media.push( response.data );
 						}
 					});
@@ -1028,6 +1029,7 @@ window.bp = window.bp || {};
 						if ( self.dropzone_media.length ) {
 							for ( var i in self.dropzone_media ) {
 								if ( file.upload.uuid == self.dropzone_media[i].uuid ) {
+									bp.Nouveau.Media.removeAttachment(self.dropzone_media[i].id);
 									self.dropzone_media.splice( i, 1 );
 									break;
 								}

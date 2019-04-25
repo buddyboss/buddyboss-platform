@@ -130,13 +130,8 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 	$attachment = get_post( $aid );
 
 	if ( ! empty( $attachment ) ) {
-		$attachment_data = wp_get_attachment_metadata( $attachment->ID );
-
-		if ( $attachment_data ) {
-			$attachment_data[ 'buddyboss_media_upload' ] = true;
-			wp_update_attachment_metadata( $attachment->ID, $attachment_data );
-		}
-
+	    update_post_meta( $attachment->ID, 'bp_media_upload', true );
+	    update_post_meta( $attachment->ID, 'bp_media_saved', '0' );
 		return $attachment;
 	}
 
@@ -865,6 +860,36 @@ function albums_check_album_access( $album_id ) {
     return false;
 }
 
+/**
+ * Delete orphaned attachments uploaded
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_delete_orphaned_attachments() {
+
+	$orphaned_attachment_args = array(
+		'post_type'      => 'attachment',
+		'post_status'    => 'inherit',
+		'fields'         => 'ids',
+		'posts_per_page' => - 1,
+		'meta_query'     => array(
+			array(
+				'key'     => 'bp_media_saved',
+				'value'   => '0',
+				'compare' => '=',
+			),
+		),
+	);
+
+    $orphaned_attachment_query = new WP_Query( $orphaned_attachment_args );
+
+    if ( $orphaned_attachment_query->post_count > 0 ) {
+        foreach( $orphaned_attachment_query->posts as $a_id ) {
+            wp_delete_post( $a_id, true );
+        }
+    }
+}
+
 
 //********************** Forums ***************************//
 
@@ -892,16 +917,23 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 			    $activity_id = bp_activity_post_update( array( 'hide_sitewide' => true ) );
 		    }
 
+		    $title         = ! empty( $media['name'] ) ? $media['name'] : '';
+		    $attachment_id = ! empty( $media['id'] ) ? $media['id'] : 0;
+		    $album_id      = ! empty( $media['album_id'] ) ? $media['album_id'] : 0;
+
 		    $media_id = bp_media_add( array(
-			    'attachment_id' => $media['id'],
-			    'title'         => $media['name'],
+			    'attachment_id' => $attachment_id,
+			    'title'         => $title,
 			    'activity_id'   => $activity_id,
-			    'album_id'      => $media['album_id'],
+			    'album_id'      => $album_id,
 			    'error_type'    => 'wp_error'
 		    ) );
 
 		    if ( ! is_wp_error( $media_id ) ) {
 			    $media_ids[] = $media_id;
+
+			    //save media is saved in attachment
+			    update_post_meta( $attachment_id, 'bp_media_saved', true );
             }
 	    }
 
