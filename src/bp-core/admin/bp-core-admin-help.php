@@ -218,14 +218,13 @@ function bp_core_admin_help_main_page() {
 
                 <div class="bb-help-content">
 
-                    <div class="bb-help-menu">
-
+                    <ul class="bb-help-menu">
 						<?php
 						add_action( 'bp_core_admin_help_sub_menu_before', 'bp_core_admin_help_sub_menu_before_callback', 10, 5 );
 						bp_core_admin_help_sub_menu( (array) $content_main_dir, '1', $docs_path, 2, true );
 						remove_action( 'bp_core_admin_help_sub_menu_before', 'bp_core_admin_help_sub_menu_before_callback', 10, 5 );
 						?>
-                    </div>
+                    </ul>
 
                     <div class="bb-help-file-content">
 						<?php

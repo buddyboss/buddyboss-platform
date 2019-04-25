@@ -938,6 +938,10 @@ body.post-type-bp-email .categorydiv label {
   background: #fff;
 }
 
+.buddyboss_page_bp-help .bb-help-content li.miscellaneous {
+  display: none;
+}
+
 .bp-help-card-grid {
   margin-top: 20px;
 }
@@ -993,6 +997,34 @@ body.post-type-bp-email .categorydiv label {
 
 .bp-help-card-grid .bb-help-content-wrap {
   display: flex;
+}
+
+.bb-help-sidebar {
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.bb-help-content .bb-help-menu li {
+  display: inline;
+}
+
+.bb-help-content .bb-help-menu li:after {
+  font-family: dashicons;
+  content: "\f345";
+  margin: 0 3px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.bb-help-content .bb-help-file-content {
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+  padding: 20px;
 }
 
 /*------------------------------------------------------------------------------
