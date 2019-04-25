@@ -203,30 +203,29 @@ function bp_core_admin_help_main_page() {
 			?>
 
             <div class="bb-help-content-wrap">
-
-				<?php
-				if ( $sidebar ) {
-					?>
-                    <div class="bb-help-sidebar">
-						<?php
-						bp_core_admin_help_sub_menu( (array) $content_main_dir, '1', $docs_path, 2 );
-						?>
-                    </div>
-					<?php
-				}
-				?>
-
                 <div class="bb-help-content">
-
-                    <ul class="bb-help-menu">
-						<?php
-						add_action( 'bp_core_admin_help_sub_menu_before', 'bp_core_admin_help_sub_menu_before_callback', 10, 5 );
-						bp_core_admin_help_sub_menu( (array) $content_main_dir, '1', $docs_path, 2, true );
-						remove_action( 'bp_core_admin_help_sub_menu_before', 'bp_core_admin_help_sub_menu_before_callback', 10, 5 );
-						?>
-                    </ul>
-
+					
                     <div class="bb-help-file-content">
+						<?php
+						if ( $sidebar ) {
+							?>
+		                    <div class="bb-help-sidebar">
+								<?php
+								bp_core_admin_help_sub_menu( (array) $content_main_dir, '1', $docs_path, 2 );
+								?>
+		                    </div>
+							<?php
+						}
+						?>
+
+						<ul class="bb-help-menu">
+							<?php
+							add_action( 'bp_core_admin_help_sub_menu_before', 'bp_core_admin_help_sub_menu_before_callback', 10, 5 );
+							bp_core_admin_help_sub_menu( (array) $content_main_dir, '1', $docs_path, 2, true );
+							remove_action( 'bp_core_admin_help_sub_menu_before', 'bp_core_admin_help_sub_menu_before_callback', 10, 5 );
+							?>
+	                    </ul>
+
 						<?php
 						echo bp_core_admin_help_display_content( $docs_path, $vendor_path );
 						?>

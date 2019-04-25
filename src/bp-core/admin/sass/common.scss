@@ -1027,15 +1027,25 @@ body.post-type-bp-email .categorydiv label {
 	}
 }
 
-.bb-help-sidebar {
-	background-color: #fff;
-	border: 1px solid #e5e5e5;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-	box-sizing: border-box;
-	padding: 20px;
-}
-
 .bb-help-content {
+
+	.bb-help-file-content {
+		min-width: 255px;
+		max-width: 1050px;
+		padding: 2.2em 2.8em;
+		background-color: #fff;
+		border-radius: 6px;
+		border: 1px solid #e5e5e5;
+		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+		box-sizing: border-box;
+	}
+
+	.bb-help-sidebar {
+		background-color: #fff;
+		border: 1px solid #000;
+		box-sizing: border-box;
+		padding: 20px;
+	}
 
 	.bb-help-menu {
 
@@ -1051,14 +1061,6 @@ body.post-type-bp-email .categorydiv label {
 			vertical-align: middle;
 		}
 
-	}
-
-	.bb-help-file-content {
-		background-color: #fff;
-		border: 1px solid #e5e5e5;
-		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-		box-sizing: border-box;
-		padding: 20px;
 	}
 
 }
