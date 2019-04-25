@@ -390,6 +390,14 @@ tr.bp-search-parent-field label {
   margin-right: 15px;
 }
 
+.bp-admin-card .inside {
+  padding: 1.5em 2em 2em;
+}
+
+.bp-admin-card .inside p {
+  margin-top: 0;
+}
+
 .bp-admin-card .form-table {
   margin-top: 0;
 }

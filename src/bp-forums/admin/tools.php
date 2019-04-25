@@ -36,33 +36,33 @@ function bbp_admin_repair() {
 	<div class="wrap">
 
 		<div class="bp-admin-card section-repair_forums">
-
 			<h2><?php esc_html_e( 'Repair Forums', 'buddyboss' ) ?></h2>
+			<div class="inside">
+				<p><?php esc_html_e( 'BuddyBoss keeps track of relationships between forums, discussions, replies, and discussion tags, and users. Occasionally these relationships become out of sync, most often after an import or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
 
-			<p><?php esc_html_e( 'BuddyBoss keeps track of relationships between forums, discussions, replies, and discussion tags, and users. Occasionally these relationships become out of sync, most often after an import or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
+				<form class="settings" method="post" action="">
 
-			<form class="settings" method="post" action="">
+					<fieldset>
+						<legend><?php esc_html_e( 'Relationships to Repair:', 'buddyboss' ) ?></legend>
 
-				<fieldset>
-					<legend><?php esc_html_e( 'Relationships to Repair:', 'buddyboss' ) ?></legend>
+						<div class="checkbox">
+						<?php foreach ( bbp_admin_repair_list() as $item ) : ?>
 
-					<div class="checkbox">
-					<?php foreach ( bbp_admin_repair_list() as $item ) : ?>
+							<label><input type="checkbox" class="checkbox" name="<?php echo esc_attr( $item[0] ) . '" id="' . esc_attr( str_replace( '_', '-', $item[0] ) ); ?>" value="1" /> <?php echo esc_html( $item[1] ); ?></label>
+						<?php endforeach; ?>
+						</div>
 
-						<label><input type="checkbox" class="checkbox" name="<?php echo esc_attr( $item[0] ) . '" id="' . esc_attr( str_replace( '_', '-', $item[0] ) ); ?>" value="1" /> <?php echo esc_html( $item[1] ); ?></label>
-					<?php endforeach; ?>
-					</div>
+						<p class="submit">
+							<input class="button-primary" type="submit" name="submit" value="<?php esc_attr_e( 'Repair Items', 'buddyboss' ); ?>" />
+							<?php wp_nonce_field( 'bbpress-do-counts' ); ?>
+						</p>
 
-					<p class="submit">
-						<input class="button-primary" type="submit" name="submit" value="<?php esc_attr_e( 'Repair Items', 'buddyboss' ); ?>" />
-						<?php wp_nonce_field( 'bbpress-do-counts' ); ?>
-					</p>
+					</fieldset>
+				</form>
 
-				</fieldset>
-			</form>
+				<p class="description"><?php esc_html_e( 'Some of these tools utilize substantial database resources. Avoid running more than 1 repair job at a time.', 'buddyboss' ); ?></p>
 
-			<p class="description"><?php esc_html_e( 'Some of these tools utilize substantial database resources. Avoid running more than 1 repair job at a time.', 'buddyboss' ); ?></p>
-
+			</div>
 		</div>
 	</div>
 

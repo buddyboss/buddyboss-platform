@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-04-25 21:41:11+00:00\n"
+"POT-Creation-Date: 2019-04-25 21:47:56+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2194,7 +2194,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:469
 #: bp-integrations/appboss/bp-appboss-integration.php:22
-#: bp-integrations/appboss/templates/admin/integration-tab-intro.php:11
+#: bp-integrations/appboss/templates/admin/integration-tab-intro.php:12
 msgid "AppBoss"
 msgstr ""
 
@@ -11825,7 +11825,7 @@ msgstr ""
 msgid "AppBoss <span>&mdash; contact sales to activate</span>"
 msgstr ""
 
-#: bp-integrations/appboss/templates/admin/integration-tab-intro.php:7
+#: bp-integrations/appboss/templates/admin/integration-tab-intro.php:8
 msgid ""
 "Access your community from a native mobile app using %s. AppBoss is a paid "
 "service built by BuddyBoss, providing native iOS and Android apps for "
@@ -11835,7 +11835,7 @@ msgid ""
 "your members can also take their courses in the app."
 msgstr ""
 
-#: bp-integrations/appboss/templates/admin/integration-tab-intro.php:20
+#: bp-integrations/appboss/templates/admin/integration-tab-intro.php:21
 msgid "Watch the video"
 msgstr ""
 
