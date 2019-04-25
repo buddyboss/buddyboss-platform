@@ -120,7 +120,7 @@ function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_h
                         $count_html = '';
                     }
 
-                    printf( '<span class="main-menu"><a href="%s" class="dir">%s %s</a>%s</span>', $url, fgets( fopen( $dir_index_file, 'r' ) ), $count_html, $action );
+                    printf( '<a href="%s" class="dir">%s %s</a>%s', $url, fgets( fopen( $dir_index_file, 'r' ) ), $count_html, $action );
                     $times ++;
                     if ( ! empty( $show_as_heading ) ) {
                         ?>
@@ -129,12 +129,12 @@ function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_h
                     }
                     bp_core_admin_help_sub_menu( $loop_dir, $times, $docs_path, $level_hide, $show_as_heading );
                 } else {
-                    printf( '<span class="main-menu"><a href="%s" class="dir">%s</a></span>', $url, fgets( fopen( $dir_index_file, 'r' ) ) );
+                    printf( '<a href="%s" class="dir">%s</a>', $url, fgets( fopen( $dir_index_file, 'r' ) ) );
                 }
             } else {
                 $url = add_query_arg( 'article', str_replace( $docs_path, "", $directory ) );
                 // print the title if it's a .md file
-                printf( '<span class="main-menu"><a href="%s" class="file">%s</a></span>', $url, fgets( fopen( $directory, 'r' ) ) );
+                printf( '<a href="%s" class="file">%s</a>', $url, fgets( fopen( $directory, 'r' ) ) );
             }
             ?>
         </li>
@@ -231,7 +231,7 @@ function bp_core_admin_help_main_page() {
 						?>
                     </div>
                 </div>
-                
+
             </div>
 			<?php
 		}
@@ -283,6 +283,6 @@ function bp_core_admin_help() {
 function bp_core_admin_help_sub_menu_before_callback( $directories, $times, $docs_path, $level_hide, $show_as_heading ) {
 	if ( 1 == $times ) {
 		$url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help' ), 'admin.php' ) );
-		printf( '<li class="selected main"><span class="main-menu"><a href="%s" class="dir">%s </a></span></li>', $url, __( 'Help', 'buddyboss' ) );
+		printf( '<li class="selected main"><a href="%s" class="dir">%s</a></li>', $url, __( 'Help', 'buddyboss' ) );
 	}
 }

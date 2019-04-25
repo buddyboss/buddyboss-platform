@@ -969,24 +969,6 @@ body.post-type-bp-email .categorydiv label {
   min-height: 60px;
 }
 
-.bp-help-card-grid .bp-help-card .inside ul {
-  padding: 0;
-  list-style: none;
-}
-
-.bp-help-card-grid .bp-help-card .inside ul > li {
-  margin-bottom: 10px;
-}
-
-.bp-help-card-grid .bp-help-card .inside span.main-menu {
-  display: block;
-  padding: 7px 10px;
-  background-color: #f7f7f7;
-  border: 1px solid #e5e5e5;
-  text-decoration: none;
-  width: auto;
-}
-
 .bp-help-card-grid .bp-help-card:nth-child(3n) {
   margin-left: 0;
 }
@@ -1011,24 +993,46 @@ body.post-type-bp-email .categorydiv label {
 }
 
 .bb-help-content .bb-help-sidebar {
-  background: #f5f5f5;
-  border-radius: 6px;
+  border-left: 1px solid #eaeaea;
   box-sizing: border-box;
-  padding: 10px 20px;
   float: right;
-  width: 30%;
+  width: 20%;
+  height: 100%;
+}
+
+.bb-help-content .bb-help-sidebar > ul {
+  padding-left: 20px;
+}
+
+.bb-help-content .bb-help-sidebar > ul > li > ul > li.selected a {
+  font-weight: 500;
+}
+
+.bb-help-content .bb-help-sidebar > ul > li > a {
+  color: #23282d;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.bb-help-content .bb-help-sidebar > ul > li > ul {
+  margin-top: 20px;
+}
+
+.bb-help-content .bb-help-sidebar > ul > li > ul > li > ul {
+  margin-top: 10px;
+  margin-right: 20px;
 }
 
 .bb-help-content .bb-help-file-content {
   float: left;
-  width: 65%;
+  width: 75%;
 }
 
 .bb-help-content .bb-help-file-content .bb-help-menu li {
   display: inline;
 }
 
-.bb-help-content .bb-help-file-content .bb-help-menu li:after {
+.bb-help-content .bb-help-file-content .bb-help-menu li:not(:last-child):after {
   font-family: dashicons;
   content: "\f345";
   margin: 0 3px;
