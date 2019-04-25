@@ -4157,7 +4157,7 @@ function bp_core_help_miscellaneous_link( $atts ) {
 	$slug = isset( $atts['slug'] ) ? $atts['slug'] : '';
 	$text = isset( $atts['text'] ) ? $atts['text'] : '';
 	if ( is_admin() ) {
-		$url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help', 'article' => $slug ), 'admin.php' ) );
+		$url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help', 'article' => '/miscellaneous/'.$slug ), 'admin.php' ) );
 	} else {
 		$post_ids = bp_core_get_post_id_by_slug( 'miscellaneous' );
 		$post_id = current( $post_ids );
@@ -4206,7 +4206,10 @@ if ( ! function_exists( 'bp_core_get_post_id_by_slug' ) ) {
 function bp_core_get_post_slug_by_index( $dir_index_file ) {
 	$index_file = str_replace( '.md', '', end( explode( '/', $dir_index_file ) ) );
 	$index_file = explode( '-', $index_file );
-	unset( $index_file[0] );
+
+	if ( count( $index_file ) > 1 ) {
+	    unset( $index_file[0] );
+    }
 
 	return implode( '-', $index_file );
 }

@@ -75,11 +75,14 @@ function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_h
 	foreach ( $directories as $directory ) {
 		$dir_pos = false !== strpos( $docs_path . $article, $directory ) ? true : false;
 
+		$slug =  bp_core_get_post_slug_by_index( $directory );
+
 		if ( empty( $dir_pos ) && ! empty( $show_as_heading ) ) {
 			continue;
 		}
 
 		$selected = $dir_pos ? 'selected main' : 'main';
+		$selected .= ' level-' . $times . ' '. $slug;
 		?>
     <li class="<?php echo $selected; ?>">
 		<?php
@@ -175,15 +178,26 @@ function bp_core_admin_help_main_page() {
 			 */
 			$article_dir_array = explode( "/", $_REQUEST['article'] );
 			$content_main_dir  = $docs_path . '/' . $article_dir_array[1];
+
+			/**
+			 * Show display sidebar or not
+			 */
+			$sidebar = false !== strpos( $_REQUEST['article'], 'miscellaneous' ) ? false : true;
 			?>
 
             <div class="bb-help-content-wrap">
 
-                <div class="bb-help-sidebar">
-					<?php
-					bp_core_admin_help_sub_menu( (array) $content_main_dir, '1', $docs_path, 2 );
+				<?php
+				if ( $sidebar ) {
 					?>
-                </div>
+                    <div class="bb-help-sidebar">
+						<?php
+						bp_core_admin_help_sub_menu( (array) $content_main_dir, '1', $docs_path, 2 );
+						?>
+                    </div>
+					<?php
+				}
+				?>
 
                 <div class="bb-help-content">
 

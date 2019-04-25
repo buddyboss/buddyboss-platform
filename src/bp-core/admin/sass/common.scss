@@ -938,26 +938,34 @@ body.post-type-bp-email .categorydiv label {
  * 6.0 Help
  *----------------------------------------------------------------------------*/
 
-.buddyboss_page_bp-help .wrap .page-title-action:after {
-	font-family: dashicons;
-	content: "\f345";
-	margin-left: 3px;
-	display: inline-block;
-	vertical-align: middle;
-	font-weight: 300;
-	margin-bottom: 2px;
-}
+.buddyboss_page_bp-help {
+	.wrap .page-title-action:after {
+		font-family: dashicons;
+		content: "\f345";
+		margin-left: 3px;
+		display: inline-block;
+		vertical-align: middle;
+		font-weight: 300;
+		margin-bottom: 2px;
+	}
 
-.buddyboss_page_bp-help .wrap .bp-help-doc {
-	position: relative;
-	margin-top: 20px;
-	padding: 2.2em 2.8em 2em;
-	min-width: 255px;
-	max-width: 1050px;
-	border-radius: 6px;
-	border: 1px solid #e5e5e5;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-	background: #fff;
+	.wrap .bp-help-doc {
+		position: relative;
+		margin-top: 20px;
+		padding: 2.2em 2.8em 2em;
+		min-width: 255px;
+		max-width: 1050px;
+		border-radius: 6px;
+		border: 1px solid #e5e5e5;
+		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+		background: #fff;
+	}
+
+	.bb-help-content {
+		li.miscellaneous {
+			display: none;
+		}
+	}
 }
 
 .bp-help-card-grid {

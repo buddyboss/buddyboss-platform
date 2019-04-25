@@ -938,6 +938,10 @@ body.post-type-bp-email .categorydiv label {
   background: #fff;
 }
 
+.buddyboss_page_bp-help .bb-help-content li.miscellaneous {
+  display: none;
+}
+
 .bp-help-card-grid {
   margin-top: 20px;
 }
