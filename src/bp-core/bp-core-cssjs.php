@@ -698,7 +698,7 @@ function bp_core_add_jquery_mask_inline_js () {
  * @since BuddyBoss 1.0.0
  */
 function bp_core_enqueue_quill_js_css() {
-	if ( bp_is_user_messages() || ( is_bbpress() && bbp_use_wp_editor() ) ) {
+	if ( bp_is_user_messages() || ( function_exists( 'is_bbpress' ) && is_bbpress() && bbp_use_wp_editor() ) ) {
 		wp_enqueue_script( 'bp-quill' );
 		wp_enqueue_style( 'bp-quill' );
 	}
