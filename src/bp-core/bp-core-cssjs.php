@@ -78,7 +78,7 @@ function bp_core_register_common_scripts() {
 		'emojione'        => array( 'file' => "{$url}emojione-edited{$min}.js", 'dependencies' => array(), 'footer' => true ),
         'emojionearea'        => array( 'file' => "{$url}emojionearea-edited{$min}.js", 'dependencies' => array( 'emojione' ), 'footer' => true ),
 
-        'bp-quill'        => array( 'file' => "{$url}vendor/quill{$min}.js", 'dependencies' => array(), 'footer' => true ),
+        'bp-quill'        => array( 'file' => "{$url}vendor/quill{$min}.js", 'dependencies' => array(), 'footer' => false ),
 
 		'isInViewport'        => array( 'file' => "{$url}vendor/isInViewport{$min}.js", 'dependencies' => array(), 'footer' => true ),
 
