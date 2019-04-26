@@ -41,6 +41,7 @@ if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
         'parts/bp-messages-single',
         'parts/bp-messages-editor-toolbar',
         'parts/bp-messages-media',
+        'parts/bp-messages-no-threads',
     ] );
 
     foreach ( $template_parts as $template_part ) {

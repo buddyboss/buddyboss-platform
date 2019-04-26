@@ -711,6 +711,23 @@ window.bp = window.bp || {};
 		}
 	});
 
+	bp.Views.MessagesNoThreads = bp.Nouveau.Messages.View.extend( {
+		tagName: 'div',
+		template  : bp.template( 'bp-messages-no-threads' ),
+		events: {
+			'click #bp-new-message'  : 'openComposeMessage',
+		},
+		initialize: function() {
+			this.$el.html(this.template());
+			return this;
+		},
+		openComposeMessage: function(e) {
+			e.preventDefault();
+
+			bp.Nouveau.Messages.router.navigate( 'compose/', { trigger: true } );
+		}
+	});
+
 	bp.Views.messageForm = bp.Nouveau.Messages.View.extend( {
 		tagName   : 'form',
 		id        : 'send_message_form',
@@ -952,7 +969,7 @@ window.bp = window.bp || {};
 			this.collection.fetch( {
 				data    : _.pick( this.options, 'box' ),
 				success : _.bind( this.threadsFetched, this ),
-				error   : this.threadsFetchError
+				error   : _.bind( this.threadsFetchError, this )
 			} );
 		},
 
@@ -1003,6 +1020,10 @@ window.bp = window.bp || {};
 
 			if ( ! collection.length ) {
 				$('.bp-messages-threads-list').addClass('bp-no-messages');
+
+				if ( $('body').hasClass('buddyboss-theme') ) {
+					this.views.add( new bp.Views.MessagesNoThreads() );
+				}
 			}
 		},
 
