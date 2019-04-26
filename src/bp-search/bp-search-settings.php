@@ -30,7 +30,7 @@ function bp_search_get_settings_sections() {
 		'bp_search_settings_general'    => array(
 			'page'  => 'search',
 			'title'    => __( 'Autocomplete Settings', 'buddyboss' ),
-			'callback' => 'bp_search_settings_callback_general_section',
+			//'callback' => 'bp_search_settings_callback_general_section',
 		),
 	) );
 }
