@@ -7,8 +7,6 @@
 
 .ql-container {
 	box-sizing: border-box;
-	font-family: Helvetica, Arial, sans-serif;
-	font-size: 13px;
 	height: 100%;
 	margin: 0;
 	position: relative;
@@ -28,9 +26,12 @@
 }
 
 .ql-editor {
+    border: 1px solid #d6d6d6;
+	border-radius: 4px;
 	box-sizing: border-box;
 	cursor: text;
-	line-height: 1.42;
+    line-height: 1.42;
+	min-height: 80px;
 	height: 100%;
 	outline: none;
 	overflow-y: auto;
@@ -455,7 +456,6 @@
 .ql-editor.ql-blank:before {
 	color: rgba(0, 0, 0, 0.6);
 	content: attr(data-placeholder);
-	font-style: italic;
 	pointer-events: none;
 	position: absolute;
 }

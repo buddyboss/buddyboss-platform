@@ -2745,7 +2745,6 @@ body.no-js .single-item-header .js-self-profile-button {
 }
 
 #item-header-cover-image #item-header-avatar {
-  margin-top: -80px;
   padding: 0 1em;
   position: relative;
 }
@@ -3958,16 +3957,6 @@ input#send-to-input {
 #bp-message-load-more .button:hover {
   background: #fff;
   color: #333;
-}
-
-.single.messages.view .bp-messages-filters,
-.single.messages.view .bp-messages-threads-list {
-  display: none;
-}
-
-.messages.compose .bp-messages-filters,
-.messages.compose .bp-messages-threads-list {
-  display: none;
 }
 
 #send_message_form .select2-selection--multiple {
