@@ -50,6 +50,8 @@
 
 					<?php do_action( 'bbp_theme_after_reply_form_content' ); ?>
 
+					<?php bbp_get_template_part( 'form', 'attachments' ); ?>
+
 					<?php if ( ! ( bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
 
 						<p class="form-allowed-tags">
@@ -71,8 +73,6 @@
 						<?php do_action( 'bbp_theme_after_reply_form_tags' ); ?>
 
 					<?php endif; ?>
-
-					<?php bbp_get_template_part( 'form', 'attachments' ); ?>
 
 					<?php if ( bbp_is_subscriptions_active() && !bbp_is_anonymous() && ( !bbp_is_reply_edit() || ( bbp_is_reply_edit() && !bbp_is_reply_anonymous() ) ) ) : ?>
 
