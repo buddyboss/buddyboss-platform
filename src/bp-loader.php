@@ -69,6 +69,26 @@ if ( !$is_bp_active ) {
     }
 }
 
+// check if function exists or not
+if ( ! function_exists( 'bp_option_active_plugins' ) ) {
+
+	/**
+     * Make BuddyPress plugin fake activate for reset of the plugin
+     *
+	 * @param $active_plugins
+	 *
+	 * @return array
+	 */
+    function bp_option_active_plugins( $active_plugins ) {
+	    $active_plugins[] = 'buddypress/bp-loader.php';
+        return $active_plugins;
+    }
+
+    add_filter( 'option_active_plugins', 'bp_option_active_plugins' );
+    add_filter( 'site_option_active_sitewide_plugins', 'bp_option_active_plugins' );
+}
+
+
 if ( $is_bp_active ) {
 	require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 	deactivate_plugins( plugin_basename( 'buddyboss-platform/bp-loader.php' ) );
