@@ -566,8 +566,7 @@ window.bp = window.bp || {};
 				var toolbarOptions = [
 					['bold', 'italic'],        // toggled buttons
 					[{ 'list': 'ordered'}, { 'list': 'bullet' }],
-					['blockquote'],
-					['clean']                                         // remove formatting button
+					['blockquote','link']                                     // remove formatting button
 				];
 				bp.Nouveau.Messages.quillEditor = new window.Quill('#message_content', {
 					modules: {
