@@ -90,6 +90,12 @@ document = window.document || {};
 			.replace('{uni}', unicode)
 			.replace('{alt}', friendlyName);
 
+
+		if(shortname) {
+			template = template.replace('{char}', emojione.shortnameToUnicode(shortname));
+		} else {
+			template = template.replace('{char}', emojione.convert(unicode));
+		}
 		return template;
 	};
 	function shortnameTo(str, template, clear) {
@@ -894,7 +900,7 @@ document = window.document || {};
 		self.shortnames = options.shortnames;
 		self.saveEmojisAs = options.saveEmojisAs;
 		self.standalone = options.standalone;
-		self.emojiTemplate = '<img alt="{alt}" class="emojione' + (self.sprite ? '-{uni}" src="' + blankImg + '"/>' : 'emoji" src="{img}"/>');
+		self.emojiTemplate = '<img alt="{alt}" class="emojione' + (self.sprite ? '-{uni}" src="' + blankImg + '"/>' : 'emoji" src="{img}" data-char="{char}" />');
 		self.emojiTemplateAlt = self.sprite ? '<i class="emojione-{uni}"/>' : '<img class="emojioneemoji" src="{img}" alt="{alt}"/>';
 		self.emojiBtnTemplate = '<i class="emojibtn" role="button" data-name="{name}" title="{friendlyName}">' + self.emojiTemplateAlt + '</i>';
 		self.recentEmojis = options.recentEmojis && supportsLocalStorage();
