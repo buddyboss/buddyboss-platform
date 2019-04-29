@@ -223,12 +223,14 @@ window.bp = window.bp || {};
 				'box'          : this.box
 			} );
 
-			// Use it in the filters viex
-			filters_view = new bp.Views.messageFilters( { model: this.filters, threads: collection } );
+			if ( collection.length ) {
+				// Use it in the filters viex
+				filters_view = new bp.Views.messageFilters({model: this.filters, threads: collection});
 
-			this.views.add( { id: 'filters', view: filters_view } );
+				this.views.add({id: 'filters', view: filters_view});
 
-			filters_view.inject( '.bp-messages-filters' );
+				filters_view.inject('.bp-messages-filters');
+			}
 		},
 
 		singleView: function( thread ) {
@@ -852,7 +854,7 @@ window.bp = window.bp || {};
 						if ( 'message_content' === pair.name && undefined !== tinyMCE.activeEditor ) {
 							pair.value = tinyMCE.activeEditor.getContent();
 						} else if ( 'message_content' === pair.name && undefined !== bp.Nouveau.Messages.quillEditor ) {
-							pair.value = bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML;
+							pair.value = bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML.replace("<p><br></p>", "");
 						}
 
 						if ( ! pair.value ) {
@@ -867,7 +869,7 @@ window.bp = window.bp || {};
 
 			// quill editor support
 			if ( bp.Nouveau.Messages.quillEditor !== false && typeof bp.Nouveau.Messages.quillEditor !== 'undefined' ) {
-				this.model.set( 'message_content', bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML, { silent: true } );
+				this.model.set( 'message_content', bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML.replace("<p><br></p>", ""), { silent: true } );
 			}
 
 			if ( errors.length ) {
@@ -921,6 +923,7 @@ window.bp = window.bp || {};
 
 	bp.Views.userThreads = bp.Nouveau.Messages.View.extend( {
 		tagName   : 'div',
+		loadingFeedback : false,
 
 		events: {
 			'click .subject' : 'changePreview',
@@ -937,7 +940,11 @@ window.bp = window.bp || {};
 			}, this );
 
 			// Load threads for the active view
-			this.requestThreads();
+			if ( BP_Nouveau.messages.hasThreads ) {
+				this.requestThreads();
+			} else {
+				this.threadsFetchError( {}, { feedback : wp.i18n.__( 'Sorry, no messages were found.', 'buddyboss' ), type: 'info' } );
+			}
 
 			this.collection.on( 'reset', this.cleanContent, this );
 			this.collection.on( 'add', this.addThread, this );
@@ -946,7 +953,14 @@ window.bp = window.bp || {};
 		requestThreads: function() {
 			this.collection.reset();
 
-			bp.Nouveau.Messages.displayFeedback( BP_Nouveau.messages.loading, 'loading' );
+			this.loadingFeedback = new bp.Views.Feedback( {
+				value: BP_Nouveau.messages.loading,
+				type:  'loading'
+			} );
+
+			this.views.add(this.loadingFeedback);
+
+			//bp.Nouveau.Messages.displayFeedback( BP_Nouveau.messages.loading, 'loading', '#bp-messages-threads-list' );
 
 			this.collection.fetch( {
 				data    : _.pick( this.options, 'box' ),
@@ -956,9 +970,7 @@ window.bp = window.bp || {};
 		},
 
 		threadsFetched: function() {
-			if ( bp.Nouveau.Messages.box !== 'single' ) {
-				bp.Nouveau.Messages.removeFeedback();
-			}
+			this.loadingFeedback.remove();
 
 			// Display the bp_after_member_messages_loop hook.
 			if ( this.collection.options.afterLoop ) {
@@ -972,6 +984,23 @@ window.bp = window.bp || {};
 
 			if ( this.collection.length ) {
 				$('.bp-messages-threads-list').removeClass('bp-no-messages');
+
+				bp.Nouveau.Messages.displayFilters( this.collection );
+			}
+		},
+
+		threadsFetchError: function( collection, response ) {
+			if ( ! _.isUndefined( this.options.search_terms ) && this.options.search_terms !== '' ) {
+				this.loadingFeedback = new bp.Views.Feedback({
+					value: response.feedback,
+					type: response.type
+				});
+				this.views.add(this.loadingFeedback);
+			}
+
+			if ( ! collection.length ) {
+				$('.bp-messages-threads-list').addClass('bp-no-messages');
+				this.views.add( new bp.Views.MessagesNoThreads() );
 			}
 		},
 
@@ -984,28 +1013,21 @@ window.bp = window.bp || {};
 			) {
 				this.collection.options.page = this.collection.options.page + 1;
 
-				bp.Nouveau.Messages.displayFeedback( BP_Nouveau.messages.loading, 'loading' );
+				this.loadingFeedback = new bp.Views.Feedback( {
+					value: BP_Nouveau.messages.loading,
+					type:  'loading'
+				} );
+
+				this.views.add(this.loadingFeedback);
 
 				_.extend( this.collection.options, _.pick( bp.Nouveau.Messages.filters.attributes, ['box', 'search_terms'] ) );
 
 				this.collection.fetch( {
 					remove  : false,
 					data    : _.pick( this.collection.options, ['box', 'search_terms', 'page'] ),
-					success : this.threadsFetched,
-					error   : this.threadsFetchError
+					success : _.bind( this.threadsFetched, this ),
+					error   : _.bind( this.threadsFetchError, this )
 				} );
-			}
-		},
-
-		threadsFetchError: function( collection, response ) {
-			bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
-
-			if ( ! collection.length ) {
-				$('.bp-messages-threads-list').addClass('bp-no-messages');
-
-				if ( $('body').hasClass('buddyboss-theme') ) {
-					this.views.add( new bp.Views.MessagesNoThreads() );
-				}
 			}
 		},
 
@@ -1173,7 +1195,7 @@ window.bp = window.bp || {};
 
 		initialize: function() {
 			this.model.on( 'change', this.filterThreads, this );
-			this.options.threads.on( 'sync', this.addPagination, this );
+			//this.options.threads.on( 'sync', this.addPagination, this );
 		},
 
 		addPagination: function( collection ) {
@@ -1258,7 +1280,8 @@ window.bp = window.bp || {};
 			var data = {};
 
 			$(this.$el).find('button').addClass('loading');
-			bp.Nouveau.Messages.displayFeedback( BP_Nouveau.messages.loading, 'loading' );
+
+			//bp.Nouveau.Messages.displayFeedback( BP_Nouveau.messages.loading, 'loading' );
 
 			if ( _.isUndefined( this.options.thread.attributes ) ) {
 				data.id = this.options.thread.id;
@@ -1375,6 +1398,7 @@ window.bp = window.bp || {};
 		messageAttachments : false,
 		firstFetch : true,
 		firstLi : true,
+		loadingFeedback: false,
 
 		initialize: function() {
 			// Load Messages
@@ -1408,7 +1432,13 @@ window.bp = window.bp || {};
 
 			// this.collection.reset();
 
-			bp.Nouveau.Messages.displayFeedback( BP_Nouveau.messages.loading, 'loading' );
+			this.loadingFeedback = new bp.Views.Feedback({
+				value: BP_Nouveau.messages.loading,
+				type: 'loading'
+			});
+			this.views.add('#bp-message-content',this.loadingFeedback);
+
+			//bp.Nouveau.Messages.displayFeedback( BP_Nouveau.messages.loading, 'loading' );
 
 			if ( _.isUndefined( this.options.thread.attributes ) ) {
 				data.id = this.options.thread.id;
@@ -1433,7 +1463,8 @@ window.bp = window.bp || {};
 				this.options.thread = new Backbone.Model( response.thread );
 			}
 
-			bp.Nouveau.Messages.removeFeedback();
+			this.loadingFeedback.remove();
+			//bp.Nouveau.Messages.removeFeedback();
 
 			if ( response.feedback_error && response.feedback_error.feedback && response.feedback_error.type ) {
 				bp.Nouveau.Messages.displayFeedback( response.feedback_error.feedback, response.feedback_error.type );
@@ -1482,7 +1513,7 @@ window.bp = window.bp || {};
 				collection.hasMore = false;
 			}
 
-			bp.Nouveau.Messages.removeFeedback();
+			//bp.Nouveau.Messages.removeFeedback();
 
 			if ( ! response.messages && ! _.isUndefined( this.views.get( '#bp-message-load-more' ) ) ) {
 				loadMore = this.views.get( '#bp-message-load-more' )[0];
@@ -1493,7 +1524,12 @@ window.bp = window.bp || {};
 			}
 
 			if ( response.feedback && response.type ) {
-				bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+				this.loadingFeedback = new bp.Views.Feedback({
+					value: response.feedback,
+					type: response.type
+				});
+				this.views.add('#bp-message-content',this.loadingFeedback);
+				//bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 			}
 		},
 
@@ -1524,7 +1560,7 @@ window.bp = window.bp || {};
 				content = tinyMCE.activeEditor.getContent();
 				jQuery(tinyMCE.activeEditor.formElement).addClass('loading');
 			} else if ( typeof bp.Nouveau.Messages.quillEditor !== 'undefined' ) {
-				content = bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML;
+				content = bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML.replace("<p><br></p>", "");
 				jQuery(bp.Nouveau.Messages.quillEditor.container).addClass('loading');
 			}
 

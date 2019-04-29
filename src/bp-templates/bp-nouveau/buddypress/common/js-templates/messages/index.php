@@ -15,8 +15,8 @@
 <div class="bp-messages-container">
 	<div class="bp-messages-nav-panel">
 		<div class="subnav-filters filters user-subnav bp-messages-filters push-right" id="subsubnav"></div>
-		<!--<div class="bp-messages-feedback"></div>-->
-		<div class="bp-messages-threads-list"></div>
+		<div class="bp-messages-feedback"></div>
+		<div class="bp-messages-threads-list" id="bp-messages-threads-list"></div>
 	</div>
 	<div class="bp-messages-content"></div>
 </div>
