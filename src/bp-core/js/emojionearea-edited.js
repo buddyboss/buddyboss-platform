@@ -932,7 +932,7 @@ document = window.document || {};
 					tabindex: 0
 				}),
 				button = self.button = div('button',
-					div('button-open'),
+					div('button-open')
 				).attr('title', options.buttonTitle),
 				picker = self.picker = div('picker',
 					div('wrapper',
