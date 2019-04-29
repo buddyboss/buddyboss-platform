@@ -9,12 +9,17 @@
  * @version 3.1.0
  */
 ?>
-<div class="subnav-filters filters user-subnav bp-messages-filters" id="subsubnav"></div>
 
 <input type="hidden" id="thread-id" value="" />
-<div class="bp-messages-feedback"></div>
-<div class="bp-messages-threads-list"></div>
-<div class="bp-messages-content"></div>
+
+<div class="bp-messages-container">
+	<div class="bp-messages-nav-panel">
+		<div class="subnav-filters filters user-subnav bp-messages-filters push-right" id="subsubnav"></div>
+		<!--<div class="bp-messages-feedback"></div>-->
+		<div class="bp-messages-threads-list"></div>
+	</div>
+	<div class="bp-messages-content"></div>
+</div>
 
 <?php
 if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {

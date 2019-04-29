@@ -13,8 +13,14 @@
 
 // Visual message threads & preview pane styles
 
+.bp-messages-container {
+	display: flex;
+}
+
 .bp-messages-content {
-	margin: $marg-med 0;
+	flex: 1;
+	min-width: 0;
+	padding-left: 20px;
 
 	.avatar {
 

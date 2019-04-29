@@ -3570,8 +3570,14 @@ body.register .buddypress-wrap .page ul {
   text-decoration: none;
 }
 
+.bp-messages-container {
+  display: flex;
+}
+
 .bp-messages-content {
-  margin: 15px 0;
+  flex: 1;
+  min-width: 0;
+  padding-right: 20px;
 }
 
 .bp-messages-content .avatar {

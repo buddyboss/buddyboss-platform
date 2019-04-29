@@ -26,11 +26,11 @@
 }
 
 .ql-editor {
-    border: 1px solid #d6d6d6;
+	border: 1px solid #d6d6d6;
 	border-radius: 4px;
 	box-sizing: border-box;
 	cursor: text;
-    line-height: 1.42;
+	line-height: 1.42;
 	min-height: 80px;
 	height: 100%;
 	outline: none;
