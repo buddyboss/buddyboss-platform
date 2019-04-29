@@ -954,6 +954,16 @@ window.bp = window.bp || {};
 
 			select.model.on( 'change', this.attachAutocomplete, this );
 			bp.Nouveau.Activity.postForm.ActivityObjects.on( 'change:selected', this.postIn, this );
+
+			if ( ! _.isUndefined( BP_Nouveau.media ) &&
+				BP_Nouveau.media.profile_media === false
+			) {
+				if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone ) ) {
+					bp.Nouveau.Activity.postForm.dropzone.destroy();
+				}
+				$('#activity-post-media-uploader').html('');
+				$('#whats-new-toolbar .post-media').hide();
+			}
 		},
 
 		attachAutocomplete: function( model ) {
@@ -979,22 +989,39 @@ window.bp = window.bp || {};
 				this.model.set( 'object', model.get( 'selected' ) );
 
 				if ( $('#activity-post-media-uploader').length &&
-					! _.isUndefined( BP_Nouveau.media ) &&
-					BP_Nouveau.media.group_media === false
+					! _.isUndefined( BP_Nouveau.media )
 				) {
 					if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone ) ) {
 						bp.Nouveau.Activity.postForm.dropzone.destroy();
 					}
 					$('#activity-post-media-uploader').html('');
 					this.model.set( 'media', [] );
-					$('#whats-new-toolbar .post-media').hide();
+					if ( BP_Nouveau.media.group_media === false ) {
+						$('#whats-new-toolbar .post-media').hide();
+					} else {
+						$('#whats-new-toolbar .post-media').show();
+					}
 				}
-
 			} else {
 				this.model.set( { object: 'user', item_id: 0 } );
 
 				if ( $('#whats-new-toolbar .post-media').length ) {
 					$('#whats-new-toolbar .post-media').show();
+				}
+
+				if ( $('#activity-post-media-uploader').length &&
+					! _.isUndefined( BP_Nouveau.media )
+				) {
+					if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone ) ) {
+						bp.Nouveau.Activity.postForm.dropzone.destroy();
+					}
+					$('#activity-post-media-uploader').html('');
+					this.model.set( 'media', [] );
+					if ( BP_Nouveau.media.profile_media === false ) {
+						$('#whats-new-toolbar .post-media').hide();
+					} else {
+						$('#whats-new-toolbar .post-media').show();
+					}
 				}
 			}
 
@@ -1142,7 +1169,7 @@ window.bp = window.bp || {};
 		activityMedia: null,
 		className : 'empty',
 		initialize: function() {
-			if ( !_.isUndefined( window.Dropzone ) && !_.isUndefined( BP_Nouveau.media ) && ( BP_Nouveau.activity.params.object === 'user' || ( BP_Nouveau.activity.params.object === 'group' && BP_Nouveau.media.group_media ) ) ) {
+			if ( !_.isUndefined( window.Dropzone ) ) {
 				this.activityMedia = new bp.Views.ActivityMedia({model: this.model});
 				this.views.add(this.activityMedia);
 			}

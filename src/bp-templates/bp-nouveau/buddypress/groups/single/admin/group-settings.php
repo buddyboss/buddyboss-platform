@@ -128,7 +128,7 @@
 
 	<?php endif; ?>
 
-    <?php if ( bp_is_active( 'media' ) && bp_is_group_album_support_enabled() ) : ?>
+    <?php if ( bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() ) : ?>
 
         <fieldset class="radio group-albums">
             <legend><?php esc_html_e( 'Group Albums', 'buddyboss' ); ?></legend>

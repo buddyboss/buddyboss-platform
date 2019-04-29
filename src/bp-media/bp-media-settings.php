@@ -49,6 +49,20 @@ function bp_media_get_settings_fields() {
 //			'args'              => []
 //		],
 
+        'bp_media_profile_media_support' => [
+			'title'             => __( 'Profile Photos', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_profile_media_support',
+			'sanitize_callback' => 'absint',
+			'args'              => []
+		],
+
+        'bp_media_profile_albums_support' => [
+	        'title'             => __( 'Profile Albums', 'buddyboss' ),
+	        'callback'          => 'bp_media_settings_callback_profile_albums_support',
+	        'sanitize_callback' => 'absint',
+	        'args'              => []
+        ],
+
 	];
 
 	if ( bp_is_active( 'groups' ) ) {
@@ -226,8 +240,73 @@ function bp_media_settings_callback_forums_media_support() {
  *
  * @return bool Is media forums media support enabled or not
  */
-function bp_is_forums_media_support_enabled( $default = 1 ) {
+function bp_is_forums_media_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_forums_media_support_enabled', (bool) get_option( 'bp_media_forums_media_support', $default ) );
+}
+
+/**
+ * Setting > Media > Profile support
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_settings_callback_profile_media_support() {
+	?>
+    <input name="bp_media_profile_media_support"
+           id="bp_media_profile_media_support"
+           type="checkbox"
+           value="1"
+		<?php checked( bp_is_profile_media_support_enabled() ); ?>
+    />
+    <label for="bp_media_profile_media_support">
+		<?php esc_html_e( 'Allow photo posting in member\'s profile and timeline', 'buddyboss' ) ?>
+    </label>
+	<?php
+}
+
+/**
+ * Checks if media profile media support is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is media profile media support enabled or not
+ */
+function bp_is_profile_media_support_enabled( $default = 1 ) {
+	return (bool) apply_filters( 'bp_is_profile_media_support_enabled', (bool) get_option( 'bp_media_profile_media_support', $default ) );
+}
+
+/**
+ * Setting > Media > Profile albums support
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_settings_callback_profile_albums_support() {
+	?>
+    <input name="bp_media_profile_albums_support"
+           id="bp_media_profile_albums_support"
+           type="checkbox"
+           value="1"
+           <?php echo ! bp_is_profile_media_support_enabled() ? 'disabled="disabled"' : ''; ?>
+		<?php checked( bp_is_profile_albums_support_enabled() ); ?>
+    />
+    <label for="bp_media_profile_albums_support">
+		<?php esc_html_e( 'Enable member\'s profile photo albums', 'buddyboss' ) ?>
+    </label>
+	<?php
+}
+
+/**
+ * Checks if media profile albums support is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is media profile albums support enabled or not
+ */
+function bp_is_profile_albums_support_enabled( $default = 1 ) {
+	return (bool) apply_filters( 'bp_is_profile_albums_support_enabled', (bool) get_option( 'bp_media_profile_albums_support', $default ) );
 }
 
 /**
@@ -270,13 +349,14 @@ function bp_is_group_media_support_enabled( $default = 1 ) {
  */
 function bp_media_settings_callback_group_albums() {
 	?>
-    <input name="bp_media_group_albums"
-           id="bp_media_group_albums"
+    <input name="bp_media_group_albums_support"
+           id="bp_media_group_albums_support"
            type="checkbox"
            value="1"
-		<?php checked( bp_is_group_album_support_enabled() ); ?>
+	    <?php echo ! bp_is_group_media_support_enabled() ? 'disabled="disabled"' : ''; ?>
+		<?php checked( bp_is_group_albums_support_enabled() ); ?>
     />
-    <label for="bp_media_group_albums">
+    <label for="bp_media_group_albums_support">
 		<?php esc_html_e( 'Enable social group photo albums', 'buddyboss' ) ?>
     </label>
 	<?php
@@ -291,8 +371,8 @@ function bp_media_settings_callback_group_albums() {
  *
  * @return bool Is media group album support enabled or not
  */
-function bp_is_group_album_support_enabled( $default = 1 ) {
-	return (bool) apply_filters( 'bp_is_group_album_support_enabled', (bool) get_option( 'bp_media_group_albums', $default ) );
+function bp_is_group_albums_support_enabled( $default = 1 ) {
+	return (bool) apply_filters( 'bp_is_group_albums_support_enabled', (bool) get_option( 'bp_media_group_albums_support', $default ) );
 }
 
 /**
@@ -323,6 +403,6 @@ function bp_media_settings_callback_messages_media_support() {
  *
  * @return bool Is media messages media support enabled or not
  */
-function bp_is_messages_media_support_enabled( $default = 1 ) {
+function bp_is_messages_media_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_messages_media_support_enabled', (bool) get_option( 'bp_media_messages_media_support', $default ) );
 }

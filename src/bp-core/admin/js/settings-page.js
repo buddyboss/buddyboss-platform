@@ -228,8 +228,22 @@
 			} );
 		}
 
-	});
+		$('#bp_media_profile_media_support').change(function () {
+			if (!this.checked) {
+				$('#bp_media_profile_albums_support').prop('disabled', true);
+			} else {
+				$('#bp_media_profile_albums_support').prop('disabled', false);
+			}
+		});
+		$('#bp_media_group_media_support').change(function () {
+			if (!this.checked) {
+				$('#bp_media_group_albums_support').prop('disabled', true);
+			} else {
+				$('#bp_media_group_albums_support').prop('disabled', false);
+			}
+		});
 
+	});
 
 }());
 

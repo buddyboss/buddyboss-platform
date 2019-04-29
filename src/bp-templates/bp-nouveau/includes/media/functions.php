@@ -59,8 +59,10 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 
 	$params['media'] = array(
 		'max_upload_size' => bp_media_file_upload_max_size(),
+		'profile_media'   => bp_is_profile_media_support_enabled(),
+		'profile_album'   => bp_is_profile_albums_support_enabled(),
 		'group_media'     => bp_is_group_media_support_enabled(),
-		'group_album'     => bp_is_group_album_support_enabled(),
+		'group_album'     => bp_is_group_albums_support_enabled(),
 		'messages_media'  => bp_is_messages_media_support_enabled(),
 	);
 
