@@ -2491,9 +2491,9 @@ function bp_core_get_components( $type = 'all' ) {
 			'default'     => false,
 		),
 		'media'   => array(
-			'title'       => __( 'Photo Uploading', 'buddyboss' ),
+			'title'       => __( 'Media Uploading', 'buddyboss' ),
 			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-media' ) , 'admin.php' ) ),
-			'description' => __( 'Allow members to upload photos to activity, groups, forums and messages, and to organize photos into albums.', 'buddyboss' ),
+			'description' => __( 'Allow members to upload photos, emojis and animated GIFs, and to organize photos into albums.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'messages' => array(
