@@ -82,24 +82,7 @@ window.bp = window.bp || {};
 
 				// The compose view is specific (toggle behavior)
 				if ( 'compose' === view_id ) {
-					// If it exists, it means the user wants to remove it
-					if ( ! _.isUndefined( self.views.get( 'compose' ) ) ) {
-						var form = self.views.get( 'compose' );
-						form.get( 'view' ).remove();
-						self.views.remove( { id: 'compose', view: form } );
-
-						// Back to inbox
-						if ( 'single' === self.box ) {
-							self.box = 'inbox';
-						}
-
-						// Navigate back to current box
-						self.router.navigate( self.box + '/', { trigger: true } );
-
-					// Otherwise load it
-					} else {
-						self.router.navigate( 'compose/', { trigger: true } );
-					}
+					self.router.navigate( 'compose/', { trigger: true } );
 
 				// Other views are classic.
 				} else {
