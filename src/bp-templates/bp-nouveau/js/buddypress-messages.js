@@ -714,7 +714,7 @@ window.bp = window.bp || {};
 		tagName: 'div',
 		template  : bp.template( 'bp-messages-no-threads' ),
 		events: {
-			'click #bp-new-message'  : 'openComposeMessage',
+			'click #bp-new-message'  : 'openComposeMessage'
 		},
 		initialize: function() {
 			this.$el.html(this.template());

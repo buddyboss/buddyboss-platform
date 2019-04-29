@@ -505,7 +505,7 @@ window.bp = window.bp || {};
 		},
 
 		saveAlbum: function(event) {
-			var target = $( event.currentTarget ), self = this, title = $('#bb-album-title'), privacy = $('#bb-album-privacy'), i = 0;
+			var target = $( event.currentTarget ), self = this, title = $('#bb-album-title'), privacy = $('#bb-album-privacy');
 			event.preventDefault();
 
 			if( $.trim(title.val()) === '' ) {
