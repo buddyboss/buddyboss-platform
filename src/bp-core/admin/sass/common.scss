@@ -939,15 +939,6 @@ body.post-type-bp-email .categorydiv label {
  *----------------------------------------------------------------------------*/
 
 .buddyboss_page_bp-help {
-	.wrap .page-title-action:after {
-		font-family: dashicons;
-		content: "\f345";
-		margin-left: 3px;
-		display: inline-block;
-		vertical-align: middle;
-		font-weight: 300;
-		margin-bottom: 2px;
-	}
 
 	.wrap .bp-help-doc {
 		position: relative;
@@ -962,6 +953,7 @@ body.post-type-bp-email .categorydiv label {
 	}
 
 	.bb-help-content {
+
 		li.miscellaneous {
 			display: none;
 		}
@@ -991,24 +983,6 @@ body.post-type-bp-email .categorydiv label {
 		.inside {
 			padding: 0 15px;
 			min-height: 60px;
-
-			ul {
-				padding: 0;
-				list-style: none;
-			}
-
-			ul > li {
-				margin-bottom: 10px;
-			}
-
-			span.main-menu {
-				display: block;
-				padding: 7px 10px;
-				background-color: #f7f7f7;
-				border: 1px solid #e5e5e5;
-				text-decoration: none;
-				width: auto;
-			}
 		}
 	}
 
@@ -1022,6 +996,121 @@ body.post-type-bp-email .categorydiv label {
 
 	.bb-help-content-wrap {
 		display: flex;
+	}
+}
+
+.bb-help-content-wrap {
+	display: flex;
+	flex-flow: row wrap;
+	min-width: 255px;
+	max-width: 1050px;
+	background-color: #fff;
+	border-radius: 6px;
+	border: 1px solid #e5e5e5;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	box-sizing: border-box;
+}
+
+.bb-help-sidebar > ul {
+	margin: 0;
+
+	> li {
+
+		> a {
+			color: #23282d;
+			font-size: 16px;
+			font-weight: 600;
+		}
+
+		> ul {
+			margin-top: 20px;
+		}
+
+		> ul li {
+			line-height: 1.6;
+			margin: 1.2em 0;
+		}
+
+		> ul > li.selected a {
+			font-weight: 600;
+		}
+
+		> ul > li > ul > li {
+			margin-left: 1.6em;
+			list-style-type: disc;
+		}
+
+	}
+
+}
+
+.bb-help-content {
+
+	ul.bb-help-menu {
+		margin: 0 0 2.5em;
+
+		li {
+			display: inline;
+		}
+
+		li:not(:last-child):after {
+			font-family: dashicons;
+			content: "\f345";
+			margin: 0 5px;
+			display: inline-block;
+			vertical-align: middle;
+			font-size: 10px;
+			color: #999;
+		}
+
+		li:last-child a {
+			color: #999;
+		}
+	}
+
+	img {
+		max-width: 100%;
+		width: 100%;
+	}
+}
+
+@media screen and (min-width: 782px) {
+
+	.bb-help-sidebar {
+		background: #f9f9f9;
+		padding: 2.5em;
+		border-right: 1px solid #eaeaea;
+		border-radius: 6px 0 0 6px;
+		-webkit-box-flex: 0;
+		-ms-flex: 0 0 200px;
+		flex: 0 0 200px;
+		overflow: initial;
+		width: 100%;
+		min-height: 60vh;
+	}
+
+	.bb-help-content {
+		padding: 2.5em 3em;
+		-webkit-box-flex: 1;
+		-ms-flex: 1;
+		flex: 1;
+	}
+}
+
+@media screen and (max-width: 781px) {
+
+	.bb-help-sidebar {
+		background: #f9f9f9;
+		padding: 2.5em;
+		width: 100%;
+		min-height: auto;
+		border-bottom: 1px solid #eaeaea;
+		border-radius: 6px 6px 0 0;
+	}
+
+	.bb-help-content {
+		padding: 2.5em;
+		width: 100%;
 	}
 }
 
